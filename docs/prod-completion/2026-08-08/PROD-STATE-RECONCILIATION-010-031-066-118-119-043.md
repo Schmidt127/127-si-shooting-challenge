@@ -1,5 +1,10 @@
 # PROD State Reconciliation — 010 / 031 / 066 / 118 / 119 / 043
 
+> **Historical evidence — do not use for current Production decisions.** The
+> 010 v10.6 replay and ON state recorded here were superseded by HF-001:
+> 010 v10.7 is OFF and v10.8 must be pasted and proven before re-enabling.
+> Use `PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md` as current authority.
+
 Date: 2026-08-08
 Environment: PROD Airtable `appn84sqPw03zEbTT`
 Controlling test Enrollment: `recCyFEPeATOVNlr9` — Schmidt, Testing - 2026-2027

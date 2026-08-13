@@ -2,9 +2,9 @@
 GitHub header
 Automation: 079 - Email, Notifications, and External Handoffs - Send Queue Handoff to Communications Hub
 System: 127 SI Shooting Challenge
-Version: v3.0
+Version: v3.1
 Date Written: 2026-08-11
-Last Updated: 2026-08-12
+Last Updated: 2026-08-13
 
 PURPOSE
 - Dispatch one Ready Email Handoff Queue row to the Communications Hub.
@@ -37,10 +37,10 @@ FOLDER
 
 const SCRIPT = {
     scriptName: "079 - Email, Notifications, and External Handoffs - Send Queue Handoff to Communications Hub",
-    version: "v3.0",
-    versionDate: "2026-08-12",
+    version: "v3.1",
+    versionDate: "2026-08-13",
     originalWrittenDate: "2026-08-11",
-    lastUpdated: "2026-08-12",
+    lastUpdated: "2026-08-13",
     folder: "07 - Email, Notifications, and External Handoffs",
     automationName: "079 - Email, Notifications, and External Handoffs - Send Queue Handoff to Communications Hub",
 };
@@ -188,14 +188,11 @@ function parseRecipients(value) {
     if (!Array.isArray(recipients) || recipients.length === 0) {
         throw new Error(`${CONFIG.fields.recipientsJson} must be a non-empty array`);
     }
-    const seenEmails = new Set();
     return recipients.map((recipient, index) => {
         if (!recipient || typeof recipient !== "object" || Array.isArray(recipient)) {
             throw new Error(`Recipient ${index + 1} must be an object`);
         }
         const email = requireEmail(recipient.email, `recipient ${index + 1}`);
-        if (seenEmails.has(email)) throw new Error(`Duplicate recipient email: ${email}`);
-        seenEmails.add(email);
         return { ...recipient, email };
     });
 }

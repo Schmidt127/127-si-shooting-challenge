@@ -227,7 +227,29 @@ test("079 requires the exact canonical handoff key format", async () => {
   assert.deepEqual(result.queue.records.get(DAILY_QUEUE_ID).cells.Status, { name: "Ready" });
 });
 
-test("079 rejects duplicate recipient emails before calling the Hub", async () => {
+test("079 preserves WELCOME parent and athlete roles when they share one email address", async () => {
+  const result = await run079({
+    record: welcomeRecord(),
+  });
+  const sharedAddressRecord = welcomeRecord();
+  sharedAddressRecord.cells["Recipients JSON"] = JSON.stringify([
+    { email: "Family@Example.com", role: "PARENT" },
+    { email: "family@example.com", role: "ATHLETE" },
+  ]);
+  const sharedAddressResult = await run079({
+    record: sharedAddressRecord,
+  });
+
+  assert.equal(result.error, null, result.error?.message);
+  assert.equal(sharedAddressResult.error, null, sharedAddressResult.error?.message);
+  assert.equal(sharedAddressResult.requests.length, 1);
+  assert.deepEqual(sharedAddressResult.requests[0].recipients, [
+    { email: "family@example.com", role: "PARENT" },
+    { email: "family@example.com", role: "ATHLETE" },
+  ]);
+});
+
+test("079 preserves repeated valid addresses for a future Hub-owned recipient contract", async () => {
   const result = await run079({
     record: futureRecord({
       recipients: [
@@ -237,10 +259,12 @@ test("079 rejects duplicate recipient emails before calling the Hub", async () =
     }),
   });
 
-  assert.ok(result.error);
-  assert.match(result.error.message, /Duplicate recipient email/);
-  assert.equal(result.requests.length, 0);
-  assert.deepEqual(result.queue.records.get(FUTURE_QUEUE_ID).cells.Status, { name: "Ready" });
+  assert.equal(result.error, null, result.error?.message);
+  assert.equal(result.requests.length, 1);
+  assert.deepEqual(result.requests[0].recipients, [
+    { email: "parent@example.com", role: "guardian" },
+    { email: "parent@example.com", role: "athlete" },
+  ]);
 });
 
 test("079 rejects a DAILY_SUBMISSION key whose suffix differs from Source Record ID", async () => {

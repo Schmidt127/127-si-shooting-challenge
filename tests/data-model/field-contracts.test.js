@@ -29,6 +29,10 @@ const REGISTRY = path.join(
   ROOT,
   "docs/next-wave/automation-ownership/xp-source-key-registry.json"
 );
+const LEVELS_INVERSE_LINK_CONTRACT = path.join(
+  ROOT,
+  "airtable/schema/current/levels-inverse-link-contract.json"
+);
 const AUTO_DIR = path.join(ROOT, "airtable/automations/shooting-challenge");
 
 let passed = 0;
@@ -181,6 +185,71 @@ test("Config primary is Active School Year", () => {
   assert.ok(/primary field: \*\*Active School Year\*\*/.test(config));
 });
 
+test("Levels inverse-link rename contract preserves current names and IDs", () => {
+  const contract = JSON.parse(read(LEVELS_INVERSE_LINK_CONTRACT));
+  assert.strictEqual(contract.table, "Levels");
+  assert.deepStrictEqual(contract.relationships, [
+    {
+      fieldName: "Enrollments — Current Level",
+      fieldId: "fldIZT5MWgMskwF8s",
+      linkedTable: "Enrollments",
+      inverseFieldName: "Current Level",
+    },
+    {
+      fieldName: "Enrollments — Next Level",
+      fieldId: "fldtaYEIwRvRKYkvb",
+      linkedTable: "Enrollments",
+      inverseFieldName: "Next Level",
+    },
+  ]);
+
+  const currentFieldMap = read(
+    path.join(ROOT, "airtable/schema/current/field-map.md")
+  );
+  assert.ok(currentFieldMap.includes("`Enrollments — Current Level`"));
+  assert.ok(currentFieldMap.includes("`Enrollments — Next Level`"));
+  assert.ok(currentFieldMap.includes("`fldIZT5MWgMskwF8s`"));
+  assert.ok(currentFieldMap.includes("`fldtaYEIwRvRKYkvb`"));
+  assert.ok(!currentFieldMap.includes("Enrollments 4"));
+  assert.ok(!currentFieldMap.includes("Enrollments 5"));
+});
+
+test("041 v5.0 and 042 v4.0 use Enrollment-side progression fields only", () => {
+  const source041 = read(
+    path.join(
+      AUTO_DIR,
+      "041-levels-and-progression-mark-enrollment-for-level-recalculation.js"
+    )
+  );
+  const source042 = read(
+    path.join(
+      AUTO_DIR,
+      "042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js"
+    )
+  );
+  for (const source of [source041, source042]) {
+    assert.ok(!source.includes("Enrollments 4"));
+    assert.ok(!source.includes("Enrollments 5"));
+    assert.ok(!source.includes("fldIZT5MWgMskwF8s"));
+    assert.ok(!source.includes("fldtaYEIwRvRKYkvb"));
+  }
+  assert.ok(source041.includes('version: "5.0"'));
+  assert.ok(source042.includes('version: "4.0"'));
+  assert.ok(source041.includes('"Current Level"'));
+  assert.ok(source041.includes('"Next Level"'));
+  assert.ok(source042.includes('"Current Level"'));
+  assert.ok(source042.includes('"Next Level"'));
+});
+
+test("web Level queries do not depend on Levels inverse-link names or IDs", () => {
+  const queries = read(path.join(ROOT, "web/lib/airtable/queries.ts"));
+  assert.ok(!queries.includes("Enrollments 4"));
+  assert.ok(!queries.includes("Enrollments 5"));
+  assert.ok(!queries.includes("fldIZT5MWgMskwF8s"));
+  assert.ok(!queries.includes("fldtaYEIwRvRKYkvb"));
+  assert.ok(queries.includes('"Next Level"'));
+});
+
 test("XP Source Key registry prefixes appear in named automation scripts", () => {
   const registry = JSON.parse(read(REGISTRY));
   const checks = [
@@ -238,9 +307,9 @@ test("data-model pack documents Week Key vs Week Code vs Week Name", () => {
   assert.ok(!/seed convention only/i.test(audit));
 });
 
-test("118/119 v1.7 allows Live season arming; docs say schedules ON", () => {
+test("118 v2.0 and 119 v1.7 allow Live season arming; docs say schedules ON", () => {
   const s118 = read(path.join(AUTO_DIR, "118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js"));
-  assert.ok(/version:\s*"v1\.7"/.test(s118));
+  assert.ok(/version:\s*"v2\.0"/.test(s118));
   assert.ok(!/refuses sendMode=Live when dryRun=false/.test(s118));
   const s119 = read(path.join(AUTO_DIR, "119-email-notifications-and-external-handoffs-schedule-weekly-summary-email-send.js"));
   assert.ok(/version:\s*"v1\.7"/.test(s119), "119 CONFIG.version must be v1.7");

@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-20
-Last GitHub Update: 2026-08-12
+Last GitHub Update: 2026-08-13
 
 Purpose:
 Finds the unique canonical Weekly Athlete Summary for counted submissions,
@@ -29,10 +29,11 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 031 - WEEKLY SUMMARY AND GOAL LOGIC
  * Resolve Canonical Weekly Athlete Summary from Submission
  *
- * Version: v4.0
+ * Version: v4.1
  * Date Written: 2026-05-20
- * Last Updated: 2026-08-12
- * Updated Reason: Restore authoritative Weekly Athlete Summary find-or-create behavior
+ * Last Updated: 2026-08-13
+ * Updated Reason: Require exact Submission and final WAS Enrollment/Week cardinality;
+ * no first linked identity is accepted under an ambiguous owner state. Restore authoritative Weekly Athlete Summary find-or-create behavior
  * when no fully valid canonical summary exists, while preserving formula-backed
  * readiness inputs, strict writable-checkbox validation, and post-create concurrency
  * revalidation before arming Build Daily Email Now?;
@@ -44,8 +45,10 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Builds the target Summary Key from Enrollment Key + Week Key.
  * - Validates any pre-existing Submission -> Weekly Athlete Summary link against the
  *   current Submission Enrollment + Week + Summary Key.
- * - Finds exactly one fully valid matching Weekly Athlete Summary record.
- * - Fails closed when zero or multiple fully valid candidates exist; it never creates one.
+ * - Reuses exactly one fully valid matching Weekly Athlete Summary record.
+ * - Creates one canonical summary only when no valid candidate exists, then re-queries
+ *   and fails closed unless the record it created is the sole valid candidate.
+ * - Fails closed when multiple fully valid candidates exist; it never picks a winner.
  * - Links the Submission to the Weekly Athlete Summary.
  * - Links the Weekly Athlete Summary back to the Submission.
  * - Repairs matching XP Events for the same Enrollment + Week when they are missing a
@@ -116,7 +119,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 const CONFIG = {
   scriptName:
     "031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission",
-  version: "v4.0",
+  version: "v4.1",
 
   tables: {
     submissions: "Submissions",
@@ -139,6 +142,7 @@ const CONFIG = {
   enrollments: {
     enrollmentKey: "Enrollment Key",
     programInstance: "Program Instance",
+    active: "Active?",
   },
 
   weeks: {
@@ -382,6 +386,11 @@ function getExactlyOneLinkedRecordId(record, table, fieldName, label) {
   }
 
   return ids[0];
+}
+
+function getExactlyOneLinkedRecordIdOrEmpty(record, table, fieldName) {
+  const ids = uniqueIds(getLinkedRecordIds(record, table, fieldName));
+  return ids.length === 1 ? ids[0] : "";
 }
 
 function uniqueIds(ids) {
@@ -667,24 +676,29 @@ async function repairXpEventsForEnrollmentWeek({
 
   try {
     for (const xpRecord of xpQuery.records) {
-      const xpEnrollmentId = getFirstLinkedRecordId(
+      const xpEnrollmentId = getExactlyOneLinkedRecordIdOrEmpty(
         xpRecord,
         xpEventsTable,
         CONFIG.xpEvents.enrollment
       );
-      const xpWeekId = getFirstLinkedRecordId(
+      const xpWeekId = getExactlyOneLinkedRecordIdOrEmpty(
         xpRecord,
         xpEventsTable,
         CONFIG.xpEvents.week
       );
-      const xpSummaryId = getFirstLinkedRecordId(
+      const xpSummaryIds = uniqueIds(getLinkedRecordIds(
         xpRecord,
         xpEventsTable,
         CONFIG.xpEvents.weeklySummary
-      );
+      ));
 
       if (xpEnrollmentId !== enrollmentId || xpWeekId !== weekId) continue;
       if (isSubmissionBaseXpEvent(xpRecord)) continue;
+      // An XP Event may be repaired only when it has an exact owner identity and
+      // no WAS link, or the one stale WAS link proven by this invocation. Never
+      // select a first link from an ambiguous or wrong-owner event.
+      if (xpSummaryIds.length > 1) continue;
+      const xpSummaryId = xpSummaryIds[0] || "";
       if (xpSummaryId && xpSummaryId !== staleSummaryId) continue;
       if (xpSummaryId === weeklySummaryId) continue;
 
@@ -789,6 +803,12 @@ requireField(
   enrollmentsTable,
   CONFIG.enrollments.programInstance,
   "Enrollments -> Program Instance"
+);
+
+requireField(
+  enrollmentsTable,
+  CONFIG.enrollments.active,
+  "Enrollments -> Active?"
 );
 
 // Week Key is a required read-only/formula input; Program Instance is a
@@ -932,16 +952,18 @@ async function main() {
     debugStep = "4 - Read Submission Links";
     setOutputSafe("debugStep", debugStep);
 
-    submissionEnrollmentId = getFirstLinkedRecordId(
+    submissionEnrollmentId = getExactlyOneLinkedRecordId(
       submission,
       submissionsTable,
-      CONFIG.submissions.enrollment
+      CONFIG.submissions.enrollment,
+      `Submission ${recordId}`
     );
 
-    submissionWeekId = getFirstLinkedRecordId(
+    submissionWeekId = getExactlyOneLinkedRecordId(
       submission,
       submissionsTable,
-      CONFIG.submissions.week
+      CONFIG.submissions.week,
+      `Submission ${recordId}`
     );
 
     existingSubmissionSummaryIds = getLinkedRecordIds(
@@ -961,16 +983,6 @@ async function main() {
 
     debugStep = "5 - Validate Submission Links";
     setOutputSafe("debugStep", debugStep);
-
-    if (!submissionEnrollmentId) {
-      throw new Error(`Submission ${recordId} is missing Enrollment link.`);
-    }
-
-    if (!submissionWeekId) {
-      throw new Error(
-        `Submission ${recordId} is missing Week link. Run the Week assignment automation before this automation.`
-      );
-    }
 
     if (existingSubmissionSummaryIds.length > 1) {
       throw new Error(
@@ -992,6 +1004,22 @@ async function main() {
       enrollmentsTable,
       CONFIG.enrollments.enrollmentKey
     );
+
+    if (!isChecked(enrollment, enrollmentsTable, CONFIG.enrollments.active)) {
+      setOutputSafe("ok", false);
+      setOutputSafe("recordId", recordId);
+      setOutputSafe("weeklySummaryId", "");
+      setOutputSafe("summaryKeyOut", "");
+      setOutputSafe("weekId", submissionWeekId);
+      setOutputSafe("weekName", "");
+      setOutputSafe("actionTaken", "skipped_inactive_enrollment");
+      setOutputSafe("actionOut", "skipped_inactive_enrollment");
+      setOutputSafe("readinessOut", "unchanged");
+      setOutputSafe("statusOut", CONFIG.outputStatuses.skipped);
+      setOutputSafe("errorOut", "Enrollment is inactive; no Weekly Athlete Summary or daily-email readiness is changed.");
+      setOutputSafe("debugStep", "Skipped: Enrollment is inactive");
+      return;
+    }
 
     if (!enrollmentKey) {
       throw new Error(`Enrollment Key is blank for Enrollment ${submissionEnrollmentId}.`);
@@ -1208,16 +1236,18 @@ async function main() {
       );
     }
 
-    const finalEnrollmentId = getFirstLinkedRecordId(
+    const finalEnrollmentId = getExactlyOneLinkedRecordId(
       finalSummary,
       summariesTable,
-      CONFIG.summaries.enrollment
+      CONFIG.summaries.enrollment,
+      `Weekly Athlete Summary ${weeklySummaryId}`
     );
 
-    const finalWeekId = getFirstLinkedRecordId(
+    const finalWeekId = getExactlyOneLinkedRecordId(
       finalSummary,
       summariesTable,
-      CONFIG.summaries.week
+      CONFIG.summaries.week,
+      `Weekly Athlete Summary ${weeklySummaryId}`
     );
 
     const finalSubmissionIds = getLinkedRecordIds(

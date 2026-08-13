@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: (new - not yet deployed)
-Last GitHub Update: 2026-07-24
+Last GitHub Update: 2026-08-13
 
 Purpose:
 Sunday 5:00 AM America/Denver batch: ensure Weekly Athlete Summary rows for the
@@ -22,11 +22,19 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
 /************************************************************
  * 118 - Email - Schedule Weekly Summary Email Build
  *
- * Version: v1.7
+ * Version: v2.0
  * Date Written: 2026-07-16
- * Last Updated: 2026-08-06
+ * Last Updated: 2026-08-13
  *
  * VERSION HISTORY
+ * - v2.0 (2026-08-13): Requires a settled exact Summary Key as well as exact
+ *   Enrollment + Week before arming an eligible WAS; formula lag now stops
+ *   safely instead of permitting an email handoff.
+ * - v1.9 (2026-08-13): 031 is the sole Weekly Athlete Summary creator.
+ *   This scheduler filters excluded/inactive enrollments before strict
+ *   validation and only resolves one existing canonical WAS; it never creates
+ *   a summary. Missing or ambiguous eligible identities stop safely.
+ * - v1.8 (2026-08-13): Exact WAS owner identity hardening.
  * - v1.7 (2026-08-06): Program Instance isolation — Week End Date match rejects
  *   multi-PI collisions; enrollments armed only when Enrollment.Program Instance
  *   matches the target Week. Exclude both Schmidt test enrollment RIDs.
@@ -57,7 +65,7 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
  *
  * PURPOSE
  * - Resolve prior ended Week (Saturday just ended at Sunday 05:00 Denver).
- * - For each Active? enrollment (excluding Schmidt), ensure WAS exists.
+ * - For each Active? enrollment (excluding Schmidt), resolve one existing WAS.
  * - Skip if Weekly Email Sent? or no cleaned email.
  * - Set Build Weekly Email Now? = true and WAS sendMode from input when dryRun=false.
  *
@@ -70,7 +78,9 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
  *   (override only via includeSchmidt=true for controlled Test-mode runs)
  * - Never combine includeSchmidt=true with sendMode=Live.
  * - Scheduled date key = prior Saturday Week End (America/Denver).
- * - Idempotent: one WAS per Enrollment+Week (Summary Key when present).
+ * - Automation 031 is the sole create-capable Weekly Athlete Summary owner.
+ * - Idempotent only when exactly one canonical WAS identity is provable;
+ *   ambiguity or absence fails closed rather than selecting or creating one.
  *
  * FOLDER
  * - 07 - Email, Notifications, and External Handoffs
@@ -102,7 +112,7 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
 
 const CONFIG = {
   scriptName: "118 - Email - Schedule Weekly Summary Email Build",
-  version: "v1.7",
+  version: "v2.0",
   timeZone: "America/Denver",
   // Exclude both historical and current Schmidt test enrollments by default.
   schmidtEnrollmentId: "recCyFEPeATOVNlr9",
@@ -207,6 +217,11 @@ function linkedIds(record, fieldName) {
   const v = cell(record, fieldName);
   if (!Array.isArray(v)) return [];
   return v.map((x) => x?.id).filter(Boolean);
+}
+
+function exactlyOneLinkedId(record, fieldName) {
+  const ids = [...new Set(linkedIds(record, fieldName))];
+  return ids.length === 1 ? ids[0] : "";
 }
 
 function parseBool(raw, fallback) {
@@ -392,8 +407,12 @@ async function main() {
   }
 
   const targetWeekProgramInstanceId = fieldExists(weeksTable, CONFIG.weeks.programInstance)
-    ? linkedIds(targetWeek, CONFIG.weeks.programInstance)[0] || ""
+    ? exactlyOneLinkedId(targetWeek, CONFIG.weeks.programInstance)
     : "";
+
+  if (fieldExists(weeksTable, CONFIG.weeks.programInstance) && !targetWeekProgramInstanceId) {
+    throw new Error(`Target Week ${targetWeek.id} must have exactly one Program Instance.`);
+  }
 
   debugStep = "3 - Load enrollments + WAS";
   setOutputSafe("debugStep", debugStep);
@@ -408,26 +427,17 @@ async function main() {
   const wasBySummaryKey = new Map();
   let duplicateWasSkipped = 0;
   for (const row of wasQuery.records) {
-    const eId = linkedIds(row, CONFIG.was.enrollment)[0];
-    const wId = linkedIds(row, CONFIG.was.week)[0];
+    const eId = exactlyOneLinkedId(row, CONFIG.was.enrollment);
+    const wId = exactlyOneLinkedId(row, CONFIG.was.week);
     if (!(eId && wId === targetWeek.id)) continue;
     const summaryKey = fieldExists(wasTable, CONFIG.was.summaryKey)
       ? text(row, CONFIG.was.summaryKey)
       : "";
     if (summaryKey) {
-      if (wasBySummaryKey.has(summaryKey)) {
-        duplicateWasSkipped += 1;
-        continue;
-      }
-      wasBySummaryKey.set(summaryKey, row);
+      wasBySummaryKey.set(summaryKey, [...(wasBySummaryKey.get(summaryKey) || []), row]);
     }
-    if (wasByEnrollment.has(eId)) {
-      duplicateWasSkipped += 1;
-      continue;
-    }
-    wasByEnrollment.set(eId, row);
+    wasByEnrollment.set(eId, [...(wasByEnrollment.get(eId) || []), row]);
   }
-
   let armed = 0;
   let skipped = 0;
   let createdWas = 0;
@@ -451,7 +461,7 @@ async function main() {
         continue;
       }
       if (targetWeekProgramInstanceId && fieldExists(enrollmentsTable, CONFIG.enrollments.programInstance)) {
-        const enrPi = linkedIds(enr, CONFIG.enrollments.programInstance)[0] || "";
+        const enrPi = exactlyOneLinkedId(enr, CONFIG.enrollments.programInstance);
         if (enrPi !== targetWeekProgramInstanceId) {
           skipped += 1;
           continue;
@@ -470,24 +480,32 @@ async function main() {
         : "";
       const expectedSummaryKey =
         enrollmentKey && weekKey ? `${enrollmentKey}|${weekKey}` : "";
+      if (!expectedSummaryKey) {
+        skipped += 1;
+        console.log(
+          `118 skipped unsettled canonical Summary Key for eligible Enrollment ${enr.id} + Week ${targetWeek.id}.`
+        );
+        continue;
+      }
 
-      let wasRow =
-        (expectedSummaryKey && wasBySummaryKey.get(expectedSummaryKey))
-        || wasByEnrollment.get(enr.id);
+      const candidates = (wasBySummaryKey.get(expectedSummaryKey) || []).filter(
+        row =>
+          exactlyOneLinkedId(row, CONFIG.was.enrollment) === enr.id
+          && exactlyOneLinkedId(row, CONFIG.was.week) === targetWeek.id
+      );
+      if (candidates.length > 1) {
+        duplicateWasSkipped += 1;
+        skipped += 1;
+        console.log(`118 skipped ambiguous WAS identity for Enrollment ${enr.id} + Week ${targetWeek.id}: ${candidates.map(row => row.id).join(", ")}`);
+        continue;
+      }
+      let wasRow = candidates[0];
       if (!wasRow) {
-        if (dryRun) {
-          createdWas += 1;
-          armed += 1;
-          continue;
-        }
-        const createFields = {};
-        createFields[CONFIG.was.enrollment] = [{ id: enr.id }];
-        createFields[CONFIG.was.week] = [{ id: targetWeek.id }];
-        const newId = await wasTable.createRecordAsync(createFields);
-        wasRow = { id: newId };
-        createdWas += 1;
-        wasByEnrollment.set(enr.id, wasRow);
-        if (expectedSummaryKey) wasBySummaryKey.set(expectedSummaryKey, wasRow);
+        skipped += 1;
+        console.log(
+          `118 skipped missing canonical WAS for eligible Enrollment ${enr.id} + Week ${targetWeek.id}; 031 is the sole WAS creator.`
+        );
+        continue;
       } else if (booleanish(wasRow, CONFIG.was.sent)) {
         skipped += 1;
         continue;
@@ -508,6 +526,10 @@ async function main() {
     } catch (e) {
       errors += 1;
       console.log(`118 error enrollment ${enr.id}: ${e instanceof Error ? e.message : String(e)}`);
+      // A run that cannot prove a single owner must stop before it can arm
+      // further email builds. Any prior write remains visible for controlled
+      // retry; this script never attempts destructive cleanup.
+      throw e;
     }
   }
 

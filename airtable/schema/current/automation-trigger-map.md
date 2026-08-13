@@ -20,6 +20,11 @@ Maps Airtable automations and extension scripts to triggers, tables, and downstr
 
 ### Submission intake → XP (005–010, 021–023)
 
+PKG-006R schema prerequisite and exact field creation order:
+[daily-submission-xp-reconciliation-fields.md](./daily-submission-xp-reconciliation-fields.md).
+The trigger wording below is the approved target contract; repository text
+does not prove that Production has been configured.
+
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
 | 023 | Submissions | *confirm* | `023-...-assign-enrollment-to-submission.js` | Enrollment link |
@@ -28,7 +33,7 @@ Maps Airtable automations and extension scripts to triggers, tables, and downstr
 | 006 | Submissions | *confirm* | `006-...-set-video-count.js` | Video count fields |
 | 021 | Submissions | *confirm* | `021-...-set-attachment-upload-status.js` | Upload status |
 | 009 | Submissions | *confirm* | `009-submission-intake-create-submission-assets.js` | Submission Assets |
-| **010** | Submissions | `Count This Submission?` + XP eligible | `010-submission-intake-create-xp-event.js` | **XP Events** (SHOOTING_BASE), WAS link |
+| **010** | Submissions | `Reconciliation Needed? = 1`; dynamic `recordId` | `010-submission-intake-create-xp-event.js` | **XP Events** (SHOOTING_BASE); positive and correction branches, exact-key recheck, same-event deactivate/reactivate, bounded settlement, latch acknowledgement |
 
 ### Weekly summary chain (030–034)
 
@@ -46,8 +51,8 @@ Maps Airtable automations and extension scripts to triggers, tables, and downstr
 |---|-------|---------|--------|------------|
 | **020** | Submission Assets | Homework asset ready | `020-homework-link-or-create-homework-completion.js` | Homework Completions |
 | 063 | Homework Completions | *confirm* | `063-...-copy-enrollment-grade-band-to-homework-completion.js` | Grade Band |
-| 064 | Homework Completions | *confirm* | `064-...-prepare-homework-xp-award.js` | XP prep fields |
-| **065** | Homework Completions | Reviewed, satisfactory, XP pending | `065-...-create-homework-xp-event.js` | **XP Events** (HOMEWORK) |
+| 064 | Homework Completions | Satisfactory + Review Complete + Coach Feedback + Enrollment + Homework + Week present; no Submission Date/Base XP/XP Events-empty filter | `064-...-prepare-homework-xp-award.js` | XP prep fields |
+| **065** | Homework Completions | `Homework XP Reconciliation Needed? = 1` (formula-backed local + linked state signature) | `065-...-create-homework-xp-event.js` | **XP Events** (HOMEWORK) award, repair, deactivate, reactivate |
 | **070a** | Submission Assets | Send to Make + homework ready | `070a-...-send-homework-asset-payload-to-make.js` | **Make** upload engine |
 | **071** | Homework Completions | Parent feedback ready, not sent, awarded (see below) | `071-...-send-homework-feedback-email-webhook.js` | **Make** parent email |
 
@@ -79,16 +84,21 @@ Maps Airtable automations and extension scripts to triggers, tables, and downstr
 
 ### Achievements and streaks (053–059, 066)
 
+> **PKG-038 Production hold:** The lifecycle trigger contracts below are
+> repository-ready only. Do not paste, enable, or controlled-test 053, 054,
+> 059, or 066 until Mike explicitly releases both PKG-006R and PKG-036 and
+> confirms no competing lifetime-XP observation window.
+
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
-| 053 | Submissions / Streak Occurrences | *confirm* | `053-...-rebuild-and-upsert-from-submissions.js` | Streak Occurrence rows |
-| **054** | Streak Occurrences | Source Status = Ready for XP | `054-...-create-or-repair-streak-xp-event.js` | **XP Events** (streak) |
+| 053 | Submissions | Record updated; must watch Enrollment, Activity Date, `Count This Submission?`, and `Total Shots Counted` so positive and correction changes reach reconciliation | `053-...-rebuild-and-upsert-from-submissions.js` (**v5.4**) | Canonical Streak Occurrences; unsupported topology becomes inactive |
+| **054** | Streak Occurrences | Record updated; must watch `Active?`, Source Status, Enrollment, Achievement, Week, Streak End Date, and XP Events | `054-...-create-or-repair-streak-xp-event.js` (**v5.8**) | **XP Events** (streak); exact-owned inactive event deactivates/reactivates |
 | 055 | Submissions | *confirm* | `055-...-recalculate-current-shooting-streak-from-submission.js` | Streak rollups |
 | 056 | Enrollments | *scheduled* | `056-...-refresh-current-shooting-streaks-daily.js` | Streak refresh |
 | 057 | Weekly Athlete Summary | *confirm* | `057-...-calculate-perfect-week-eligibility.js` | Perfect week flags |
 | 058 | Weekly Athlete Summary | *confirm* | `058-...-create-perfect-week-unlock.js` | Achievement Unlocks |
-| **059** | Athlete Achievement Unlocks | Pending + Ready for 059 XP | `059-...-create-xp-event-from-achievement-unlock.js` | **XP Events** (achievement) |
-| 066 | Enrollments / Submissions | *confirm* | `066-...-create-shot-milestone-unlocks.js` | Shot milestone unlocks |
+| **059** | Athlete Achievement Unlocks | Lifecycle-reachable record update/create; watch Active?, XP Award Status, XP Events, Enrollment, Shot Milestone, Week, and Milestone Source Key; never filter Ready for 059 XP? or Shot Milestone presence | `059-...-create-xp-event-from-achievement-unlock.js` (**v3.6**) | **XP Events** (achievement); corrected-history milestone lifecycle |
+| 066 | Enrollments | `Run Shot Milestone Check?` checked; the upstream reconciliation must re-arm it after counted-total changes | `066-...-create-shot-milestone-unlocks.js` (**v3.7**) | Canonical shot-milestone unlocks; corrected-history lifecycle |
 
 ### Levels (041–043)
 
@@ -96,7 +106,7 @@ Maps Airtable automations and extension scripts to triggers, tables, and downstr
 |---|-------|---------|--------|------------|
 | 041 | XP Events / Enrollments | *confirm* | `041-...-mark-enrollment-for-level-recalculation.js` | Recalc flag |
 | 042 | Enrollments | *confirm* | `042-...-assign-current-and-next-level-with-gate-blocking.js` | Current/Next Level |
-| 043 | Levels | *confirm* | `043-...-set-level-gate-rule-from-next-level.js` | Gate rules |
+| 043 | Levels | **Retired — do not enable or recreate** | `043-...-set-level-gate-rule-from-next-level.js` (historical source only) | No downstream writer; `042` owns `Level Gate Rule` |
 
 ### Email packages (072, 074–077, 075)
 
@@ -112,7 +122,17 @@ Maps Airtable automations and extension scripts to triggers, tables, and downstr
 
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
-| **101** | Zoom Meetings | `Create XP Events` + ready | `101-zoom-attendance-xp-award-meeting-xp.js` | **XP Events** (meeting) |
+| **101** | Zoom Meetings | **When record matches conditions:** sole condition `Zoom XP Reconciliation Needed? = 1`; dynamic triggering Zoom Meeting `recordId` | `101-zoom-attendance-xp-award-meeting-xp.js` **v6.1 installed in PROD** | **XP Events** (live attendance base + cumulative bonuses; correction/restoration) |
+
+### PKG-034 Production evidence (Mike-supplied, 2026-08-13)
+
+Automation 101 is **ON** in Production base `appn84sqPw03zEbTT`. The live
+trigger has no `Create XP Events`, `Attendees`, or `Completed` condition. The
+nine installed reconciliation fields are documented in
+[`docs/pkg-034-zoom-reconciliation-fields.md`](../../../docs/pkg-034-zoom-reconciliation-fields.md)
+with their Production field IDs. This evidence proves installation and safe
+empty-roster acknowledgement only; live-attendee XP and downstream lifecycle
+proof remain pending.
 
 ### Asset reuse review (116)
 

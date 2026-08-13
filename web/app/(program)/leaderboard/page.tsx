@@ -14,8 +14,8 @@ export const metadata: Metadata = {
     "Live season rankings for the 127 Sports Intensity Shooting Challenge — XP, levels, and total shots.",
 };
 
-/** ISR: refresh leaderboard data every 2 minutes. */
-export const revalidate = 120;
+/** Airtable's 120-second data cache is the sole standings cache layer. */
+export const revalidate = 0;
 
 export default async function LeaderboardPage() {
   try {

@@ -63,7 +63,7 @@ export function PublicDisplayView({ data }: PublicDisplayViewProps) {
           <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {topTen.map((entry) => (
               <div
-                key={entry.id}
+                key={entry.rank}
                 className={`rounded-lg border bg-card p-4 shadow-site-sm ${
                   entry.rank === 1 ? "border-court-gold/35" : "border-border"
                 }`}

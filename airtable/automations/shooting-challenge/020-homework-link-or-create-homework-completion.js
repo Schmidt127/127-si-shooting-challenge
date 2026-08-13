@@ -312,10 +312,12 @@ async function main() {
   const homeworkQuery = await homeworkTable.selectRecordsAsync({ fields: homeworkFields });
   const matchArgs = { submissionId, enrollmentId: enrollmentIds[0], weekId: weekIds[0], homeworkId: libraryId, slot };
   let match = findHomeworkCompletionMatch(homeworkQuery.records, matchArgs);
+  if (match.candidateCount > 1) await markAssetError(asset, `Multiple canonical Homework Completion candidates found (${match.candidateCount}); refusing to choose a preferred record.`);
   let homeworkCompletion = match.homeworkCompletion;
   if (!homeworkCompletion) {
     const recheck = await homeworkTable.selectRecordsAsync({ fields: homeworkFields });
     match = findHomeworkCompletionMatch(recheck.records, matchArgs);
+    if (match.candidateCount > 1) await markAssetError(asset, `Multiple canonical Homework Completion candidates found during create recheck (${match.candidateCount}); refusing to create or choose.`);
     homeworkCompletion = match.homeworkCompletion;
     unloadQuerySafe(recheck);
   }
@@ -330,7 +332,7 @@ async function main() {
   let gradeBandActionOut = gradeBandId ? "" : "skipped_no_enrollment_grade_band";
 
   if (homeworkCompletion) {
-    actionOut = match.candidateCount > 1 ? "linked_existing_duplicate_resolved" : match.matchType === "enrollment_week_homework_slot" ? "linked_existing_enrollment_identity" : "linked_existing";
+    actionOut = match.matchType === "enrollment_week_homework_slot" ? "linked_existing_enrollment_identity" : "linked_existing";
     const updates = {};
     setLink(updates, homeworkTable, CONFIG.homework.submissionAssets, [...linkedIds(homeworkCompletion, CONFIG.homework.submissionAssets), asset.id]);
     setLink(updates, homeworkTable, CONFIG.homework.submission, [...linkedIds(homeworkCompletion, CONFIG.homework.submission), submissionId]);

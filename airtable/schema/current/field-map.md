@@ -30,3 +30,17 @@ See WAS architecture + ownership matrices: Build?, Ready?, Send to Make?, Sent?,
 ## Submission Assets (C-013)
 
 Ownership notes for Canonical File URL / Storage Key / Drive bridge remain valid; prefer snapshot for live types.
+
+## Levels inverse-link contract (PKG-036-HF-001)
+
+The Levels-side inverse links retain their Airtable field IDs after the
+production rename:
+
+| Levels field | Field ID | Inverse Enrollment field |
+|--------------|----------|--------------------------|
+| `Enrollments — Current Level` | `fldIZT5MWgMskwF8s` | `Current Level` |
+| `Enrollments — Next Level` | `fldtaYEIwRvRKYkvb` | `Next Level` |
+
+These are reverse-link fields maintained by Airtable. Automations 041 and 042
+read or write the Enrollment-side fields (`Current Level` and `Next Level`);
+they must not address the Levels-side inverse names directly.

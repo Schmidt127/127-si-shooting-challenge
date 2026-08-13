@@ -9,6 +9,52 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Docs
 
 #### Changed
+- **PKG-040 standings and leaderboard reliability (2026-08-13)** — The public
+  standings adapter now requires the `Web - Leaderboard` view instead of
+  broadening to an unsafe table fallback, resolves the active Config School
+  Year and canonical Program Instance before reading it, validates active
+  Enrollment identity and settled level/XP/shots on every returned row, rejects
+  duplicates and incomplete rows, paginates without a 200-row ceiling, and
+  removes Airtable Enrollment IDs from the public model. Added a read-only
+  integrity audit with executable fixture coverage and a Mike-only Production
+  verification packet. Production Airtable, configuration, automation, email,
+  deployment, and package locks remain untouched.
+- **PKG-038 streak and shot-milestone corrected-history lifecycle (2026-08-13)** —
+  053 v5.4 now rebuilds current canonical streak occurrences, deactivates
+  unsupported topology, and re-arms exact restored occurrences; 054 v5.8
+  deactivates/reactivates only exact-owned `STREAK_XP` events, rejects
+  ambiguity, and rechecks before create. 066 v3.7 calculates milestone totals
+  from `Count This Submission?` rows only and reconciles canonical unlock
+  active state; 059 v3.6 reconciles exact `SHOT_MILESTONE` XP lifecycle while
+  preserving Perfect Week behavior. The Stage I audit now reports lifecycle,
+  ownership, backlink, WAS, prefix, and duplicate-key drift with executable
+  read-only coverage. Production installation and proof remain blocked by
+  PKG-006R and PKG-036; no Airtable change was made.
+- **PKG-007 Video XP final readiness reconciliation (2026-08-13)** —
+  Automation **114 v6.1** now includes `XP Events.Active?` in its exact-event
+  lookup, so the actual selected-field Airtable runtime can deactivate the
+  existing canonical event on inactive, unposted, or Do Not Award Video
+  Feedback rather than silently treating its active state as blank. Added a
+  mocked-runtime suite that executes committed 113/114 source through award,
+  three-row award, replay, all three withdrawals, same-ID restoration,
+  wrong-owner/duplicate fail-closed paths, last-chance concurrency recheck,
+  and canonical WAS repair. The Production Schmidt packet now contains the
+  source-snapshot field/type/ownership contract and explicit three-file proof.
+  **No Production Airtable access, paste, trigger/configuration change, test
+  record change, or XP Reward Rule change was made. All Production actions
+  remain blocked until Mike releases PKG-006R and PKG-036 coordination locks.**
+- **PKG-007 Production Homework XP closeout (2026-08-13)** — Mike supplied
+  Production evidence for 020 v3.5, 064 v12.2, and 065 v10.1: 064/065 ON,
+  071 OFF, and 063/068 absent or retired. The nine-field signature chain was
+  installed; the historical initializer was correctly skipped because
+  Homework Completions and XP Events were empty. Controlled Schmidt completion
+  `rec3FDdZXlXjhcTj4` created 35 points in canonical event
+  `recJGcfipFyKwiSC5`, automatically deactivated it on review withdrawal, and
+  restored the same event on recheck with no duplicate. Evidence was supplied
+  by Mike; Cursor did not access Airtable. This is not a claim that every
+  Homework, progression, standings, or season path is proven. Daily-submission
+  reversal remains a separate P0 item.
+- **PKG-007 Homework XP reliability (2026-08-12)** — Automation 020 now fails closed on multiple canonical Homework Completion candidates. Retired 063 has an explicit runtime stop; 068 remains retired. Automation 064 v12.2 requires exactly one Enrollment/Homework/Week and re-arms Award Status Pending when existing Base XP must be restored. Automation 065 v10.1 owns exact `HOMEWORK_XP|<Homework Completion ID>` create/replay/correction, validates PHA-first ownership including canonical Item/Homework Slot, deactivates the canonical event when review, Enrollment, or PHA eligibility is withdrawn, and reuses/reactivates that same row. A documented nine-field formula/lookup signature chain automatically wakes the existing 065 slot for linked changes without polling. Multiple resubmissions remain a documented identity boundary: an existing event may retain one owned Submission; a new event with multiple candidate Submissions fails closed. Added authoritative read-only audit, offline lifecycle, and Production-only Schmidt packet. 071 email is unchanged/out of scope. No Production Airtable change or live proof is claimed.
 - **Source-of-truth reconciliation (2026-08-10)** — Added the authority map,
   reconciled the Completion Master and CONTROL release metadata to merged
   PRs #137–#139, recorded the 2027 season policy and evidence boundaries, and
@@ -19,7 +65,61 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
-- **Automation 079 v3.0 — generic Communications Hub dispatcher (2026-08-12)** — Replaces WELCOME / DAILY_SUBMISSION branching with universal Email Handoff Queue envelope validation and canonical `<EVENT_TYPE>|<SOURCE_TABLE_TOKEN>|<SOURCE_RECORD_ID>` keys. Event-specific payload and template validation moves to the Communications Hub; a narrow legacy WELCOME compatibility path remains. Offline coverage includes WELCOME, DAILY_SUBMISSION, a synthetic future HOMEWORK_FEEDBACK event, Hub rejection/writeback, and replay. This is a non-blocking post-app repository improvement; no Production Airtable, Hub, secret, schema, or email change was made.
+- **PKG-028 Automation 079 v3.1 generic Hub dispatcher (2026-08-13)** —
+  Refreshed the repository-only generic queue-envelope dispatcher onto current
+  `master`. It preserves repeated valid recipient entries so a shared family
+  address can carry both WELCOME parent and athlete roles; event-specific
+  recipient handling remains owned by the Communications Hub. Added committed
+  runtime coverage for shared-address WELCOME and synthetic future events. No
+  Airtable, Hub, email delivery, secret, deployment, or Production action
+  occurred; Production may remain on proven 079 v2.0 pending explicit review.
+- **PKG-039 WAS and weekly-goal reliability (2026-08-13)** — Automation 031
+  remains the sole create-capable Weekly Athlete Summary (WAS) owner. 101
+  **v6.3** and
+  118 now resolve only one existing canonical WAS; 118 filters excluded and
+  inactive enrollments before strict validation. 032, 057, 058, and 076 require
+  an exact active `Program Instance + Grade Band` goal with an explicitly
+  numeric, settled target; zero remains valid only when that configuration is
+  unique. Added the Mike-operated DEV/Production field, link, paste, settlement,
+  stop-condition, and rollback packet. No Airtable, email, Make, or Production
+  action occurred from this repository change.
+- **PKG-006R-HF-001 Automation 010 v10.8 (2026-08-13)** — Production blocker: 010 v10.7 failed on Submission `recY0o5tpqMfvlCCa` when a legitimate `HOMEWORK_XP` event was also linked. v10.8 scopes duplicate detection to Submission Base identity (`SUBMISSION_XP|{Submission ID}` and approved legacy Submission Base markers), ignores unrelated XP families, appends the Submission XP link without unlinking Homework or other events, and preserves reconciliation latch / withdrawal / restoration behavior. Added offline regression `tests/pipeline/010-submission-base-multi-family.test.mjs`. **010 is OFF in Production; paste v10.8 before re-enable.** No Production Airtable access from agents.
+- **PKG-006R daily submission XP reconciliation (2026-08-13)** — Automation **010 v10.7** installed and **ON** in Production per Mike-supplied baseline. All 12 reconciliation fields verified installed. Lifecycle proof (backlog review, replay, withdrawal/restoration, natural-trigger runs, settled totals) remains pending. Automation **077** deleted from Airtable (retired Make/Gmail slot); GitHub source archived. `Enrollments.Progression Last Reconciled Signature` created. **041 v5.0 / 042 v4.0 paste deferred** until PKG-006R lock release. Unified operator packet: [`PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md`](./docs/deploy-checklists/PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md).
+- **PKG-034 Production installation closeout (2026-08-13)** — Mike supplied
+  authoritative Production evidence for Automation 101 v6.1 in
+  `appn84sqPw03zEbTT`: all nine reconciliation fields exist, the sole trigger
+  is `Zoom XP Reconciliation Needed? = 1` with dynamic `recordId`, and 101 is
+  ON. The read-only audit checked two post-cleanup meetings and 16 XP Events
+  with no Zoom XP Events, unsupported recording XP Events, duplicate rules,
+  ownership, backlink, or lifecycle errors; the two missing-enrollment
+  warnings are the intentionally empty future rosters. Introduction
+  (`recMFP2x5LDqea9ax`) and Motivation (`recb9EjQIJVzaRpZa`) both reached
+  `Needed = 0` with `reconciled_empty_roster_no_award` and no XP Event.
+  Mike manually deleted two unused 2025–2026 meetings
+  (`rec3ToANr5pcs2SRG`, `reczeUT0AJUWMmEOb`). This documents installation and
+  empty-roster acknowledgement only; live-attendee XP, withdrawal, bonuses,
+  progression, standings, and recording XP remain unproven/pending. Cursor
+  did not access or modify Production.
+- **PKG-034-HF-002 Automation 101 v6.1 (2026-08-13)** — Empty-roster
+  reconciliation now accepts a valid unchanged Current Signature when no
+  owned event data changes, writes that exact signature to Last Zoom XP
+  Reconciled Signature, keeps Create XP Events false, and verifies
+  Reconciliation Needed? returns to numeric 0. Exact active owned events are
+  soft-deactivated before bounded formula settlement; inactive events are
+  acknowledged without replacement. Duplicate and wrong-owner events fail
+  closed with IDs. XP Award Status `Error` remains optional; available
+  Production choices are `Pending` and `Awarded`. No Airtable, Production,
+  Automation 010/041/042, schema, email, or deployment change was made.
+- **PKG-036 progression configuration and bidirectional recalculation reliability (2026-08-13)** — Repository-ready Automation **041 v5.0** remains queue-only and fingerprints each Enrollment's relevant current/next ladder, XP/gate inputs, lifecycle, Program Instance, and assignment outputs without churning unrelated future configuration. Automation **042 v4.0** now waits for settled formula/rollup inputs, validates the active ladder and complete year-scoped gate configuration, requires exactly one Enrollment Program Instance, rechecks configuration during the write window, verifies all assignment outputs before acknowledgement, preserves the queue on errors, and records a post-success reconciliation signature. Added a read-only progression integrity audit, executable offline harness, and Production-only promotion packet. **No Production Airtable schema, automation, trigger, XP Event, email, 010, Homework, Video, 101, or 043 change has been made.**
+- **PKG-034 Zoom live-attendance lifecycle reliability (2026-08-13)** —
+  Automation 101 v6.0 now owns formula-backed positive, withdrawal, and
+  restoration reconciliation for live attendance XP, including cumulative
+  bonuses, exact ownership guards, same-event restoration, and bounded
+  formula settlement. Added the read-only lifecycle audit, offline contracts,
+  nine-field Production schema contract, and Schmidt-only Production packet.
+  **Repository-ready only: no Production Airtable schema, automation, or
+  trigger change has been made; recording XP remains deferred.**
+- **PKG-007 Video Feedback XP lifecycle reliability (2026-08-12)** — Automation **113 v6.4** now requires exactly one Video Feedback Enrollment and Submission, matching Submission Enrollment, and exactly one active exact `Rule Key = VIDEO_SUBMISSION` rule before arming; legacy display-name matching and ambiguous rules fail closed, while one correctly owned inactive event can be re-armed. Automation **114 v6.1** matches only exact Video Feedback/source-key identity, deactivates the exact active event when Video Feedback is inactive, unposted, or Do Not Award, and reactivates that same record on restoration—never deletes or creates a replacement. The read-only Stage H audit now verifies exact ownership, lifecycle drift, duplicate events, and canonical WAS linkage. Offline lifecycle coverage added; Production installation/proof remains Mike-only and pending.
 - **Automation 079 v2.0 — shared WELCOME and DAILY_SUBMISSION Hub dispatcher (2026-08-12)** — Adds the authoritative GitHub source for the shared dispatcher, preserving WELCOME validation/retry/replay behavior while accepting only exact `DAILY_SUBMISSION|SUBMISSIONS|<Submission Record ID>` keys whose suffix matches `Source Record ID`. It forwards stored event/template/source/recipient/payload/test-mode values without rebuilding email content; unknown events and invalid keys fail before sending. No Production Airtable or live Hub change was made.
 - **Automation 076 v8.5 — Airtable single-select queue writes (2026-08-12)** — Writes `Event Type` and queue `Status` using Airtable-compatible `{ name: ... }` objects, including `DAILY_SUBMISSION`, `Draft`, `Ready`, and `Needs Review`. Preserves the v8.4 cleaned-recipient source correction and all queue/replay/readiness behavior. No Production Airtable change was made.
 - **Automation 076 v8.4 — cleaned Enrollment recipient source (2026-08-12)** — Uses `Enrollments.Parent Email - Cleaned` as the required authoritative parent recipient and `Enrollments.Athlete Email - Cleaned` when applicable. Raw parent email is no longer a fallback; valid recipients are normalized and deduplicated case-insensitively. Queue identity, payload, replay protection, readiness clearing, and no-direct-send behavior remain unchanged. No Production Airtable change was made.

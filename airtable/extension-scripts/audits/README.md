@@ -33,12 +33,31 @@ See [safe-backfills/README.md](../safe-backfills/README.md) for the full backfil
 | **E. Homework upload** | 020, 070a, 022, 063 | `audit-homework-completion-upload-edge-cases.js`, `audit-stuck-upload-processing.js` | `backfill-homework-completion-upload-status.js`, `backfill-homework-completion-upload-edge-cases.js` |
 | **F. Homework XP + email** | 064, 065, 071 | `audit-homework-pipeline-integrity.js`, `audit-submission-asset-pipeline-duplicate-xp.js` | `backfill-homework-xp-from-reviewed.js`, `dedupe-homework-xp-events.js` |
 | **F2. HW17 Fillout test intake** | 067 | `audit-homework17-reflection-quiz-pipeline.js` | `backfill-homework17-completions-from-reflection-quiz.js` |
-| **G. Video upload** | 013, 070b, 022, 111 | `audit-video-pipeline-integrity.js` | `backfill-video-pipeline-links.js` |
+| **G. Video upload** | 013, 070b, 022 *(111 retired; 112 OFF)* | `audit-video-pipeline-integrity.js` | `backfill-video-pipeline-links.js` |
 | **H. Video XP + email** | 113, 114, 073 | `audit-video-xp-pipeline-integrity.js`, `audit-submission-asset-pipeline-duplicate-xp.js` | `backfill-video-xp-from-posted-feedback.js`, `repair-video-feedback-xp-link.js` |
+| **Homework XP authority** | 064, 065 | `audit-homework-xp-pipeline-integrity.js` (exact identity, reversal, WAS, points, active state) | Preserve canonical event; no automatic destructive repair |
 | **I. Achievements / streaks** | 053–059, 066 | `audit-achievement-xp-pipeline-integrity.js`, `audit-pending-shot-milestone-unlocks.js` | `backfill-legacy-streak-xp-week-and-was.js`, `backfill-legacy-streak-xp-source-keys.js`, `backfill-shot-milestone-xp-week-and-was.js`, `backfill-shot-milestone-unlock-mark-awarded.js` |
 | **J. Field cleanup discovery** | — | `audit-field-coverage-report.js`, `audit-xp-linkage-coverage.js`, `audit-legacy-cleanup-candidates.js` | `archive-legacy-streak-unlock-records.js` + manual field delete |
 
 Run stages **A → J** in order when doing a full historical repair pass.
+
+---
+
+## PKG-034 Zoom live-attendance audit closeout — 2026-08-13
+
+Mike supplied the final successful read-only Production audit evidence after
+historical cleanup. `audit-zoom-live-attendance-xp-lifecycle` v1.0 checked 2
+remaining Zoom Meetings and 16 XP Events:
+
+- Zoom XP Events: 0
+- Unsupported recording XP Events: 0
+- Duplicate, reward-rule, ownership, backlink, and lifecycle errors: 0
+- `missing_enrollment_links`: 2, both intentionally empty future rosters
+
+This audit result documents the installed reconciliation state and safe
+empty-roster baselines only. It does not prove live-attendee XP creation,
+withdrawal/restoration, bonuses, progression, standings, or recording XP.
+Cursor did not access Airtable; the evidence was supplied by Mike.
 
 ---
 
@@ -48,6 +67,7 @@ Run stages **A → J** in order when doing a full historical repair pass.
 |--------|--------|--------|
 | `audit-submission-pipeline-integrity.js` | Counted submissions: Enrollment, Week, WAS, XP, assets, homework/video links | **Ready** |
 | `audit-xp-vs-submissions.js` | Submission ↔ XP Event parity, Source Key, duplicates | **Ready** |
+| `audit-counted-submission-xp-standings-reliability.js` | Counted Submission → Submission Base XP → canonical WAS → lifetime XP → progression/standings inputs; classifies zero goals without collapsing missing, blank lookup, configured zero, and formula settlement | **Ready** |
 | `audit-field-coverage-report.js` | Fill % on canonical fields per table profile (v1.1: video + achievement profiles) | **Ready** |
 | `audit-xp-linkage-coverage.js` | XP Events classified by source type and link completeness | **Ready** |
 | `audit-orphan-xp-events.js` | XP Events missing Weekly Athlete Summary link (v1.1 samples) | **Ready** |
@@ -62,7 +82,7 @@ Run stages **A → J** in order when doing a full historical repair pass.
 **Repair:** `repair-audit-linkage-full.js` in [safe-backfills](../safe-backfills/README.md#linkage-audit-repair-v12); orphan asset links → `repair-orphan-asset-submission-links.js` after `audit-orphan-asset-homework-submission-repair-planner.js`
 | `audit-homework-pipeline-integrity.js` | Reviewed homework → XP parity, Award Status, WAS on XP | **Ready** |
 | `audit-video-pipeline-integrity.js` | Video asset → Video Feedback chain (013/022/111 parity) | **Ready** |
-| `audit-video-xp-pipeline-integrity.js` | Posted Video Feedback → VIDEO_SUBMISSION XP parity (114 logic) | **Ready** |
+| `audit-video-xp-pipeline-integrity.js` | Exact Video Feedback XP lifecycle: source key, active/ineligible drift, exact VF/Enrollment/Submission/Week ownership, duplicate events, and one canonical WAS link | **Ready / read-only** |
 | `audit-achievement-xp-pipeline-integrity.js` | Awarded unlocks (059) + streaks (054) → XP parity | **Ready** |
 | `audit-pending-shot-milestone-unlocks.js` | Why 059/view misses Pending shot-milestone unlocks | **Ready** |
 | `audit-legacy-cleanup-candidates.js` | LEGACY/ZZZ fields + orphan streak unlock inventory | **Ready** |

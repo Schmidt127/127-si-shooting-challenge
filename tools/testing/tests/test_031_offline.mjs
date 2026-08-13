@@ -297,6 +297,46 @@ test("missing Enrollment or Week fails before readiness is armed", async () => {
   }
 });
 
+test("multiple Submission Enrollment or Week links fail closed before creation", async () => {
+  for (const fieldName of ["Enrollment", "Week"]) {
+    const base = build031Base({
+      submissionCells: {
+        [fieldName]: [
+          { id: fieldName === "Enrollment" ? IDS.ENROLLMENT : IDS.WEEK },
+          { id: "recAmbiguous031Identity" },
+        ],
+        "Build Daily Email Now?": false,
+      },
+    });
+    const result = await run031({ base });
+    assert.ok(result.error);
+    assert.match(String(result.error.message), /must have exactly one linked/i);
+    assert.equal(base.getTable("Weekly Athlete Summary").createdPayloads.length, 0);
+    assert.equal(
+      base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("Build Daily Email Now?"),
+      false
+    );
+  }
+});
+
+test("inactive Enrollment skips without summary, backlink, XP, or daily-email writes", async () => {
+  const base = build031Base({ summaries: [], xpEvents: [] });
+  base.getTable("Enrollments").records.get(IDS.ENROLLMENT).cells["Active?"] = false;
+
+  const { output, error } = await run031({ base });
+
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.statusOut, "skipped");
+  assert.equal(output.values.actionOut, "skipped_inactive_enrollment");
+  assert.equal(output.values.readinessOut, "unchanged");
+  assert.equal(base.getTable("Weekly Athlete Summary").createdPayloads.length, 0);
+  assert.equal(totalWrites(base), 0);
+  assert.equal(
+    base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("Build Daily Email Now?"),
+    false
+  );
+});
+
 test("pending Submission XP does not block readiness", async () => {
   const base = build031Base({ xpEvents: [] });
   const { output, error } = await run031({ base });
@@ -483,6 +523,36 @@ test("repairs non-Submission-Base XP Events but leaves Submission Base untouched
   ]);
   assert.equal(
     base.getTable("XP Events").updates.some(update => update.recordId === xpBase.id),
+    false
+  );
+});
+
+test("ambiguous or wrong-owner XP summary links are preserved rather than repaired", async () => {
+  const ambiguous = new MockRecord("recXp031AmbiguousOwner", {
+    Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
+    Week: [{ id: IDS.WEEK, name: "Early Bird" }],
+    "Weekly Athlete Summary": [{ id: IDS.SUMMARY_STALE }, { id: "recOtherSummary031" }],
+    "XP Source": { id: XP_SOURCE_IDS.homeworkCompletion, name: "Homework Completion" },
+  });
+  const wrongOwner = new MockRecord("recXp031WrongOwner", {
+    Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
+    Week: [{ id: IDS.WEEK, name: "Early Bird" }],
+    "Weekly Athlete Summary": [{ id: "recOtherSummary031" }],
+    "XP Source": { id: XP_SOURCE_IDS.homeworkCompletion, name: "Homework Completion" },
+  });
+  const base = build031Base({ xpEvents: [ambiguous, wrongOwner] });
+
+  const { error } = await run031({ base });
+
+  assert.equal(error, null, error && error.message);
+  assert.deepEqual(xpSummaryIds(base, ambiguous.id), [
+    { id: IDS.SUMMARY_STALE }, { id: "recOtherSummary031" },
+  ]);
+  assert.deepEqual(xpSummaryIds(base, wrongOwner.id), [{ id: "recOtherSummary031" }]);
+  assert.equal(
+    base.getTable("XP Events").updates.some(update =>
+      update.recordId === ambiguous.id || update.recordId === wrongOwner.id
+    ),
     false
   );
 });

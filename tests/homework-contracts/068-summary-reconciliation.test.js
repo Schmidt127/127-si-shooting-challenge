@@ -94,66 +94,9 @@ async function run(base) {
 }
 
 (async () => {
-  // PHA/season Week 9 wins even while the reusable library record still points at legacy Week 10.
-  {
-    const base = buildBase([summary("recSummary")]);
-    const output = await run(base);
-    assert.equal(output.actionOut, "linked_deferred");
-    assert.deepEqual(
-      base.tables.get("Homework Completions").records.get("recCompletion")
-        .fields["Weekly Athlete Summary Link"],
-      link("recSummary")
-    );
-    assert.equal(base.tables.get("Homework Completions").updates.length, 1);
-  }
-
-  {
-    const base = buildBase([]);
-    await run(base);
-    assert.deepEqual(
-      base.tables.get("Homework Completions").records.get("recCompletion")
-        .fields["Weekly Athlete Summary Link"],
-      []
-    );
-    assert.equal(base.tables.get("Homework Completions").updates.length, 0);
-  }
-
-  {
-    const base = buildBase([summary("recSummaryA"), summary("recSummaryB")]);
-    await run(base);
-    assert.deepEqual(
-      base.tables.get("Homework Completions").records.get("recCompletion")
-        .fields["Weekly Athlete Summary Link"],
-      []
-    );
-    assert.equal(base.tables.get("Homework Completions").updates.length, 0);
-  }
-
-  {
-    const base = buildBase([summary("recSummary")], link("recSummary"));
-    const output = await run(base);
-    assert.equal(output.actionOut, "no_changes");
-    assert.equal(base.tables.get("Homework Completions").updates.length, 0);
-  }
-
-  {
-    const base = buildBase([summary("recSummary")]);
-    await run(base);
-    await run(base);
-    assert.equal(base.tables.get("Homework Completions").updates.length, 1);
-  }
-
-  // Missing completion Week fails closed instead of borrowing the library Week.
-  {
-    const base = buildBase([summary("recSummary")], [], "");
-    await run(base);
-    assert.equal(base.tables.get("Homework Completions").updates.length, 0);
-  }
-
-  assert.doesNotMatch(source, /curriculumWeek/);
-  assert.doesNotMatch(source, /createRecordAsync/);
-  assert.doesNotMatch(source, /getTable\(["']XP Events["']\)/);
-  console.log("068 deferred-summary reconciliation behavioral tests passed");
+  assert.match(source, /Automation 068 is retired/);
+  assert.match(source, /Automation 033 v4\.2/);
+  console.log("068 retirement contract tests passed");
 })().catch((error) => {
   console.error(error);
   process.exitCode = 1;

@@ -3,7 +3,7 @@
 **Status:** Post-app architecture contract; repository implementation only
 **Backlog:** PKG-028
 **Production blocker:** No
-**Last updated:** 2026-08-12
+**Last updated:** 2026-08-13
 
 ## Purpose
 
@@ -61,7 +61,9 @@ Automation 079 validates only universal transport rules:
 
 - queue record is Ready;
 - envelope fields and JSON are structurally valid;
-- recipient emails are valid and unique case-insensitively;
+- recipient emails are valid; repeated addresses remain separate envelope
+  entries because one family address may legitimately carry both parent and
+  athlete roles, and the Hub owns event-specific recipient handling;
 - canonical key matches Event Type, Source Table, and Source Record ID;
 - optional Airtable record IDs are valid when present.
 

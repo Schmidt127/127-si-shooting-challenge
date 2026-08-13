@@ -26,23 +26,28 @@ Airtable is the deployed/running copy.
  * 032 - WEEKLY SUMMARY AND GOAL LOGIC
  * Link Challenge Goal Record to Weekly Athlete Summary
  *
- * Version: v3.2
+ * Version: v3.4
  * Date Written: 2026-05-27
- * Last Updated: 2026-05-27
+ * Last Updated: 2026-08-13
  *
  * PURPOSE
  * - Runs from one Weekly Athlete Summary record.
- * - Reads the linked Grade Band.
- * - Finds the matching Target Goal Shots record for the entire challenge.
- * - Matches Target Goal Shots by Grade Band only.
+ * - Reads the linked Enrollment and Grade Band.
+ * - Derives Program Instance from the Enrollment (the authoritative season identity).
+ * - Finds exactly one eligible Target Goal Shots record for that Program Instance + Grade Band.
+ * - Validates an existing Goal Record rather than trusting a non-empty link.
+ * - Matches Target Goal Shots by exact Program Instance + Grade Band, Active?, and
+ *   an explicit numeric Total Shot Target; numeric zero remains an allowed configured value.
  * - Requires Target Goal Shots.Active? to be checked if that field exists.
  * - Writes the matching Target Goal Shots record into Weekly Athlete Summary → Goal Record.
  *
  * IMPORTANT DESIGN RULES
- * - Target Goal Shots are challenge-wide goals, not weekly goals.
+ * - Target Goal Shots are Program Instance-scoped goals, not weekly goals.
  * - Do NOT match Target Goal Shots by Week.
  * - Week may exist on Weekly Athlete Summary, but it is not used for goal matching.
- * - One active Target Goal Shots record should exist per Grade Band.
+ * - One active Target Goal Shots record with an explicit numeric target should exist
+ *   per Program Instance + Grade Band; missing, malformed, and ambiguous configuration
+ *   fails closed. Never select a first candidate.
  * - Do not create Target Goal Shots records here.
  * - Do not write to formula, lookup, rollup, or other read-only fields.
  *
@@ -59,7 +64,7 @@ Airtable is the deployed/running copy.
  * - When record enters view
  *
  * RECOMMENDED TRIGGER VIEW CONDITIONS
- * - Grade Band is not empty
+ * - Enrollment and Grade Band are not empty
  * - Goal Record is empty
  * - Week is not empty
  *
@@ -74,6 +79,7 @@ Airtable is the deployed/running copy.
  * - ok
  * - weeklySummaryId
  * - gradeBandId
+ * - Program Instance is verified internally from the authoritative Enrollment link.
  * - goalRecordId
  * - goalLabel
  * - matchCount
@@ -91,23 +97,30 @@ Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "032 - Weekly Summary and Goal Logic - Link Challenge Goal Record to Weekly Athlete Summary",
-  version: "v3.2",
+  version: "v3.4",
 
   tables: {
     weeklySummary: "Weekly Athlete Summary",
+    enrollments: "Enrollments",
     targetGoalShots: "Target Goal Shots",
   },
 
   weeklySummary: {
     week: "Week",
+    enrollment: "Enrollment",
     gradeBand: "Grade Band",
     goalRecord: "Goal Record",
+  },
+
+  enrollments: {
+    programInstance: "Program Instance",
   },
 
   targetGoalShots: {
     targetLabel: "Target Label",
     goalKey: "Goal Key",
     gradeBand: "Grade Band",
+    programInstance: "Program Instance",
     totalShotTarget: "Total Shot Target",
     active: "Active?",
   },
@@ -147,6 +160,7 @@ if (!recordId) {
 ========================================================= */
 
 const weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
+const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
 const targetGoalShotsTable = base.getTable(CONFIG.tables.targetGoalShots);
 
 /* =========================================================
@@ -266,6 +280,20 @@ function getFirstLinkedRecordId(record, table, fieldName) {
   return ids[0] || "";
 }
 
+function getExactlyOneLinkedRecordId(record, table, fieldName, label) {
+  const ids = [...new Set(getLinkedRecordIds(record, table, fieldName))];
+  if (ids.length !== 1) {
+    throw new Error(`${label} must have exactly one ${fieldName} link; found ${ids.length}.`);
+  }
+  return ids[0];
+}
+
+function hasExplicitNumericTarget(record) {
+  const value = getRaw(record, targetGoalShotsTable, CONFIG.targetGoalShots.totalShotTarget);
+  if (value === null || value === undefined || value === "") return false;
+  return Number.isFinite(typeof value === "number" ? value : Number(String(value).replace(/,/g, "")));
+}
+
 async function updateRecordSafe(table, targetRecordId, updates) {
   const safeUpdates = {};
 
@@ -300,6 +328,7 @@ function buildTargetGoalFieldsToLoad() {
     CONFIG.targetGoalShots.targetLabel,
     CONFIG.targetGoalShots.goalKey,
     CONFIG.targetGoalShots.gradeBand,
+    CONFIG.targetGoalShots.programInstance,
     CONFIG.targetGoalShots.totalShotTarget,
     CONFIG.targetGoalShots.active,
   ].filter(fieldName => fieldExists(targetGoalShotsTable, fieldName));
@@ -341,6 +370,12 @@ requireField(
 
 requireField(
   weeklySummaryTable,
+  CONFIG.weeklySummary.enrollment,
+  "Weekly Athlete Summary -> Enrollment"
+);
+
+requireField(
+  weeklySummaryTable,
   CONFIG.weeklySummary.gradeBand,
   "Weekly Athlete Summary -> Grade Band"
 );
@@ -355,6 +390,24 @@ requireField(
   targetGoalShotsTable,
   CONFIG.targetGoalShots.gradeBand,
   "Target Goal Shots -> Grade Band"
+);
+
+requireField(
+  targetGoalShotsTable,
+  CONFIG.targetGoalShots.programInstance,
+  "Target Goal Shots -> Program Instance"
+);
+
+requireField(
+  enrollmentsTable,
+  CONFIG.enrollments.programInstance,
+  "Enrollments -> Program Instance"
+);
+
+requireField(
+  targetGoalShotsTable,
+  CONFIG.targetGoalShots.totalShotTarget,
+  "Target Goal Shots -> Total Shot Target"
 );
 
 if (
@@ -375,6 +428,8 @@ if (
 async function main() {
   let debugStep = "Start";
 
+  let enrollmentId = "";
+  let programInstanceId = "";
   let gradeBandId = "";
   let goalRecordId = "";
   let goalLabel = "";
@@ -409,67 +464,60 @@ async function main() {
     debugStep = "3 - Read Weekly Summary Links";
     setOutputSafe("debugStep", debugStep);
 
-    const weekId = getFirstLinkedRecordId(
+    const weekId = getExactlyOneLinkedRecordId(
       summaryRecord,
       weeklySummaryTable,
-      CONFIG.weeklySummary.week
+      CONFIG.weeklySummary.week,
+      `Weekly Athlete Summary ${recordId}`
     );
 
-    gradeBandId = getFirstLinkedRecordId(
+    enrollmentId = getExactlyOneLinkedRecordId(
       summaryRecord,
       weeklySummaryTable,
-      CONFIG.weeklySummary.gradeBand
+      CONFIG.weeklySummary.enrollment,
+      `Weekly Athlete Summary ${recordId}`
     );
 
-    const existingGoalRecordId = getFirstLinkedRecordId(
+    gradeBandId = getExactlyOneLinkedRecordId(
       summaryRecord,
       weeklySummaryTable,
-      CONFIG.weeklySummary.goalRecord
+      CONFIG.weeklySummary.gradeBand,
+      `Weekly Athlete Summary ${recordId}`
     );
+
+    const enrollmentRecord = await enrollmentsTable.selectRecordAsync(enrollmentId);
+    if (!enrollmentRecord) {
+      throw new Error(`Enrollment not found for Weekly Athlete Summary ${recordId}: ${enrollmentId}`);
+    }
+    programInstanceId = getExactlyOneLinkedRecordId(
+      enrollmentRecord,
+      enrollmentsTable,
+      CONFIG.enrollments.programInstance,
+      `Enrollment ${enrollmentId}`
+    );
+
+    const existingGoalRecordIds = getLinkedRecordIds(
+      summaryRecord, weeklySummaryTable, CONFIG.weeklySummary.goalRecord
+    );
+    const existingGoalRecordId = existingGoalRecordIds.length
+      ? getExactlyOneLinkedRecordId(
+        summaryRecord, weeklySummaryTable, CONFIG.weeklySummary.goalRecord,
+        `Weekly Athlete Summary ${recordId}`
+      )
+      : "";
 
     log("032 input", {
       recordId,
       weekId,
+      enrollmentId,
+      programInstanceId,
       gradeBandId,
       existingGoalRecordId,
-      matchingRule: "Grade Band + Active only. Week is not used.",
+      matchingRule: "Program Instance + Grade Band + Active. Week is not used.",
     });
 
     debugStep = "4 - Validate Weekly Summary State";
     setOutputSafe("debugStep", debugStep);
-
-    if (existingGoalRecordId) {
-      goalRecordId = existingGoalRecordId;
-      actionTaken = CONFIG.actions.alreadyLinked;
-
-      setFinalOutputs({
-        ok: true,
-        weeklySummaryId: recordId,
-        gradeBandId,
-        goalRecordId,
-        goalLabel: "",
-        matchCount: 1,
-        actionTaken,
-        statusOut: CONFIG.statuses.skipped,
-        errorOut: "",
-        debugStep: "Done - Already linked",
-      });
-
-      log("032 skipped because Goal Record was already linked", {
-        recordId,
-        goalRecordId,
-      });
-
-      return;
-    }
-
-    if (!weekId) {
-      throw new Error("Weekly Athlete Summary is missing Week.");
-    }
-
-    if (!gradeBandId) {
-      throw new Error("Weekly Athlete Summary is missing Grade Band.");
-    }
 
     debugStep = "5 - Load Target Goal Shots";
     setOutputSafe("debugStep", debugStep);
@@ -482,13 +530,25 @@ async function main() {
     setOutputSafe("debugStep", debugStep);
 
     const matchingGoals = goalsQuery.records.filter(goalRecord => {
-      const goalGradeBandId = getFirstLinkedRecordId(
+      const goalGradeBandIds = getLinkedRecordIds(
         goalRecord,
         targetGoalShotsTable,
         CONFIG.targetGoalShots.gradeBand
       );
 
-      if (goalGradeBandId !== gradeBandId) {
+      if (goalGradeBandIds.length !== 1 || goalGradeBandIds[0] !== gradeBandId) {
+        return false;
+      }
+
+      const goalProgramInstanceIds = getLinkedRecordIds(
+        goalRecord,
+        targetGoalShotsTable,
+        CONFIG.targetGoalShots.programInstance
+      );
+      if (
+        goalProgramInstanceIds.length !== 1 ||
+        goalProgramInstanceIds[0] !== programInstanceId
+      ) {
         return false;
       }
 
@@ -496,17 +556,34 @@ async function main() {
         CONFIG.debug.requireActiveGoalRecord &&
         fieldExists(targetGoalShotsTable, CONFIG.targetGoalShots.active)
       ) {
-        return getBooleanish(
+        if (!getBooleanish(
           goalRecord,
           targetGoalShotsTable,
           CONFIG.targetGoalShots.active
-        );
+        )) return false;
       }
 
-      return true;
+      return hasExplicitNumericTarget(goalRecord);
     });
 
     matchCount = matchingGoals.length;
+
+    if (existingGoalRecordId) {
+      if (matchCount !== 1 || matchingGoals[0].id !== existingGoalRecordId) {
+        throw new Error(
+          `Existing Goal Record ${existingGoalRecordId} is not the one eligible active configured goal for Program Instance ${programInstanceId} + Grade Band ${gradeBandId}.`
+        );
+      }
+      goalRecordId = existingGoalRecordId;
+      actionTaken = CONFIG.actions.alreadyLinked;
+      setFinalOutputs({
+        ok: true, weeklySummaryId: recordId, gradeBandId, goalRecordId,
+        goalLabel: getText(matchingGoals[0], targetGoalShotsTable, CONFIG.targetGoalShots.targetLabel),
+        matchCount, actionTaken, statusOut: CONFIG.statuses.skipped, errorOut: "",
+        debugStep: "Done - Existing goal validated",
+      });
+      return;
+    }
 
     if (matchCount === 0) {
       actionTaken = CONFIG.actions.skippedNoMatch;
@@ -520,12 +597,13 @@ async function main() {
         matchCount,
         actionTaken,
         statusOut: CONFIG.statuses.skipped,
-        errorOut: "No active challenge-wide Target Goal Shots record found for this Grade Band.",
+        errorOut: "No active Target Goal Shots record found for this Program Instance + Grade Band.",
         debugStep,
       });
 
-      log("032 skipped: no matching challenge-wide Target Goal Shots record", {
+      log("032 skipped: no matching Program Instance-scoped Target Goal Shots record", {
         recordId,
+        programInstanceId,
         gradeBandId,
       });
 
@@ -538,7 +616,7 @@ async function main() {
       actionTaken = CONFIG.actions.errorDuplicateMatches;
 
       throw new Error(
-        `Multiple active challenge-wide Target Goal Shots records found for this Grade Band. Record IDs: ${duplicateIds}`
+        `Multiple active Target Goal Shots records found for Program Instance ${programInstanceId} + Grade Band ${gradeBandId}. Record IDs: ${duplicateIds}`
       );
     }
 
@@ -580,6 +658,8 @@ async function main() {
       scriptName: CONFIG.scriptName,
       version: CONFIG.version,
       recordId,
+      enrollmentId,
+      programInstanceId,
       gradeBandId,
       goalRecordId,
       goalLabel,

@@ -1,9 +1,9 @@
 # PKG-028 — Generic Email Handoff Dispatcher
 
 **Status:** Post-app improvement; not approved or installed in Production
-**Automation:** 079 v3.0
+**Automation:** 079 v3.1
 **Production blocker:** No
-**Last updated:** 2026-08-12
+**Last updated:** 2026-08-13
 
 ## Scope
 
@@ -25,14 +25,16 @@ changed by this package.
    - existing DAILY_SUBMISSION acceptance/replay;
    - one synthetic future envelope reaches a rejecting test Hub without a
      provider Delivery;
-   - malformed key and duplicate-recipient cases do not call the Hub.
+   - malformed keys do not call the Hub;
+   - a WELCOME envelope with the same normalized address for parent and athlete
+     preserves both role entries and reaches the Hub.
 5. Mike reviews the evidence and explicitly approves Production replacement.
 
 ## Safe Production rollout
 
 1. Preserve the existing 079 v2.0 source and current queue evidence.
 2. Pause the 079 trigger only for the paste window; do not alter producers.
-3. Paste the committed v3.0 source into the existing 079 slot, omitting only the
+3. Paste the committed v3.1 source into the existing 079 slot, omitting only the
    GitHub header.
 4. Preserve dynamic `recordId` and existing `ingressSecret` mappings.
 5. Re-enable 079 and test one already-approved allowlisted queue event.

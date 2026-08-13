@@ -26,6 +26,7 @@ import {
 import {
   buildLeaderboardData,
   inferSeasonLabel,
+  requireEligibleLeaderboardRecords,
   type EnrollmentLeaderboardFields,
 } from "@/lib/data/leaderboard";
 import {
@@ -90,11 +91,17 @@ export const AIRTABLE_TABLES = {
 
 /** Enrollments fields used by the public leaderboard (see schema snapshot). */
 export const LEADERBOARD_FIELDS = [
+  "Active?",
+  "Athlete",
+  "Athlete ID Lookup",
+  "Program Instance",
   "Full Athlete Name",
   "School Name Lookup",
   "Grade",
+  "Current Level",
   "Current Level - Public Facing Display",
   "Level Sort Order - For Softr",
+  "Level Status",
   "Athlete Headshot",
   "Lifetime XP Total",
   "Total Shots Counted",
@@ -105,8 +112,29 @@ export const LEADERBOARD_FIELDS = [
 ] as const;
 
 const LEADERBOARD_VIEW = "Web - Leaderboard";
-const LEADERBOARD_MAX_RECORDS = 200;
 const LEADERBOARD_REVALIDATE_SECONDS = 120;
+const STANDINGS_CONFIG_TABLE = "Config";
+const PROGRAM_INSTANCES_TABLE = "Program Instance - Synced";
+const STANDINGS_CONFIG_FIELDS = ["Active School Year"] as const;
+const PROGRAM_INSTANCE_SCOPE_FIELDS = [
+  "Name - Program Instance",
+  "School Year - Linked",
+  "Record Id",
+] as const;
+const STANDINGS_LEVEL_FIELDS = ["Level Name", "Sort Order", "XP Required (Cumulative)", "Active?"] as const;
+
+type StandingsConfigFields = { "Active School Year"?: unknown };
+type ProgramInstanceScopeFields = {
+  "Name - Program Instance"?: unknown;
+  "School Year - Linked"?: unknown;
+  "Record Id"?: unknown;
+};
+type StandingsLevelFields = {
+  "Level Name"?: unknown;
+  "Sort Order"?: unknown;
+  "XP Required (Cumulative)"?: unknown;
+  "Active?"?: unknown;
+};
 
 /**
  * Optional season scope for website queries.
@@ -239,43 +267,97 @@ const ZOOM_MEETING_FIELDS = [
   "Meeting Status",
 ] as const;
 
-/** Fallback when the Web view is missing — mirrors view intent in docs/airtable-data-map.md. */
-const LEADERBOARD_FALLBACK_FILTER =
-  andFormula("{Active?}", "{Lifetime XP Total} >= 0", activeSchoolYearFilterClause()) ||
-  "AND({Active?}, {Lifetime XP Total} >= 0)";
+function exactText(value: unknown): string {
+  return asText(value, "");
+}
+
+/**
+ * Resolve the current season from authoritative configuration before reading the
+ * public view. The Program Instance record id anchors the contract lookup;
+ * Airtable's public REST linked-record response contains display values only, so
+ * returned rows are additionally checked against this resolved canonical name.
+ */
+async function getStandingsScope(): Promise<{
+  schoolYear: string;
+  programInstanceName: string;
+  activeLevelsByName: ReadonlyMap<string, { rank: number; xpRequired: number }>;
+}> {
+  const config = await listAirtableRecords<StandingsConfigFields>({
+    tableName: STANDINGS_CONFIG_TABLE,
+    fields: [...STANDINGS_CONFIG_FIELDS],
+    revalidateSeconds: LEADERBOARD_REVALIDATE_SECONDS,
+  });
+  const schoolYears = [...new Set(
+    config.records.map((record) => exactText(record.fields["Active School Year"])).filter(Boolean),
+  )];
+  if (schoolYears.length !== 1) {
+    throw new Error(
+      `Standings require exactly one Config Active School Year; found ${schoolYears.length}.`,
+    );
+  }
+
+  const schoolYear = schoolYears[0];
+  const expectedName = `Shooting Challenge | ${schoolYear}`;
+  const programInstances = await listAirtableRecords<ProgramInstanceScopeFields>({
+    tableName: PROGRAM_INSTANCES_TABLE,
+    fields: [...PROGRAM_INSTANCE_SCOPE_FIELDS],
+    filterByFormula: `AND({Name - Program Instance}=${JSON.stringify(expectedName)},{School Year - Linked}=${JSON.stringify(schoolYear)})`,
+    revalidateSeconds: LEADERBOARD_REVALIDATE_SECONDS,
+  });
+  if (programInstances.records.length !== 1) {
+    throw new Error(
+      `Standings require exactly one current Shooting Challenge Program Instance for ${schoolYear}; found ${programInstances.records.length}.`,
+    );
+  }
+
+  const programInstanceName = exactText(
+    programInstances.records[0].fields["Name - Program Instance"],
+  );
+  if (!programInstanceName) {
+    throw new Error("Current standings Program Instance has no canonical name.");
+  }
+  const levelResponse = await listAirtableRecords<StandingsLevelFields>({
+    tableName: AIRTABLE_TABLES.levels,
+    fields: [...STANDINGS_LEVEL_FIELDS],
+    filterByFormula: "{Active?}=1",
+    revalidateSeconds: LEADERBOARD_REVALIDATE_SECONDS,
+  });
+  const activeLevelsByName = new Map<string, { rank: number; xpRequired: number }>();
+  for (const level of levelResponse.records) {
+    const name = exactText(level.fields["Level Name"]);
+    const rawRank = level.fields["Sort Order"];
+    const rank = typeof rawRank === "number" ? rawRank : Number(rawRank);
+    const rawThreshold = level.fields["XP Required (Cumulative)"];
+    const xpRequired = typeof rawThreshold === "number" ? rawThreshold : Number(rawThreshold);
+    if (!name || !Number.isFinite(rank) || rank < 0 || !Number.isFinite(xpRequired) || xpRequired < 0 || activeLevelsByName.has(name)) {
+      throw new Error(`Standings found an invalid or duplicate active Level contract for "${name || level.id}".`);
+    }
+    activeLevelsByName.set(name, { rank, xpRequired });
+  }
+  if (activeLevelsByName.size === 0) throw new Error("Standings require at least one active Level.");
+  return { schoolYear, programInstanceName, activeLevelsByName };
+}
 
 /**
  * Public season leaderboard — active enrollments ranked level → XP → shots.
- * Prefer the `Web - Leaderboard` view when present; sort is applied in app code.
+ * The required `Web - Leaderboard` view is an audited public boundary. A missing
+ * or renamed view fails closed; table-wide fallback could leak another season.
  */
 export async function fetchLeaderboard(): Promise<LeaderboardData> {
+  const scope = await getStandingsScope();
   const baseParams = {
     tableName: AIRTABLE_TABLES.enrollments,
-    maxRecords: LEADERBOARD_MAX_RECORDS,
     fields: [...LEADERBOARD_FIELDS],
     revalidateSeconds: LEADERBOARD_REVALIDATE_SECONDS,
   };
 
-  let response: { records: Array<{ id: string; fields: EnrollmentLeaderboardFields }> };
-
-  try {
-    response = await listAirtableRecords<EnrollmentLeaderboardFields>({
-      ...baseParams,
-      view: LEADERBOARD_VIEW,
-    });
-  } catch (error) {
-    if (!isMissingAirtableViewError(error)) {
-      throw error;
-    }
-
-    response = await listAirtableRecords<EnrollmentLeaderboardFields>({
-      ...baseParams,
-      filterByFormula: LEADERBOARD_FALLBACK_FILTER,
-    });
-  }
-
-  const seasonLabel = inferSeasonLabel(response.records);
-  return buildLeaderboardData(response.records, seasonLabel);
+  const response = await listAirtableRecords<EnrollmentLeaderboardFields>({
+    ...baseParams,
+    view: LEADERBOARD_VIEW,
+  });
+  const eligibleRecords = requireEligibleLeaderboardRecords(response.records, scope);
+  const seasonLabel = inferSeasonLabel(eligibleRecords);
+  return buildLeaderboardData(eligibleRecords, seasonLabel);
 }
 
 async function listPublishedHomeworkRecords(): Promise<

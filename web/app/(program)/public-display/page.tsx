@@ -13,7 +13,8 @@ export const metadata: Metadata = {
   description: "Full-screen season leaderboard for gyms and event displays.",
 };
 
-export const revalidate = 120;
+/** Airtable's 120-second data cache is the sole standings cache layer. */
+export const revalidate = 0;
 
 export default async function PublicDisplayPage() {
   try {

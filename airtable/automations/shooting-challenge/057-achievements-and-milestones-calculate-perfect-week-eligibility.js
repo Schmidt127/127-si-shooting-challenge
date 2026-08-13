@@ -24,9 +24,9 @@ Airtable is the deployed/running copy.
 
 /***************************************************************************************************
  * 057 - Achievements and Milestones - Calculate Perfect Week Eligibility
- * Version: 1.5
+ * Version: 1.7
  * Date written: 2026-05-30
- * Last updated: 2026-08-05
+ * Last updated: 2026-08-13
  *
  * Purpose:
  * Calculates Perfect Week helper fields on one Weekly Athlete Summary record.
@@ -34,6 +34,18 @@ Airtable is the deployed/running copy.
  * Version 1.5 updates (2026-08-05):
  * - Airtable runtime compatibility: guard optional QueryResult.unloadData() cleanup
  *   so unsupported cleanup cannot fail an otherwise successful automation run.
+ *
+ * Version 1.6 updates (PKG-039):
+ * - Requires one exact active Target Goal Shots configuration for the WAS
+ *   Enrollment Program Instance + Grade Band before any Perfect Week state can
+ *   become ready. Missing, ambiguous, inactive, wrong-owner, and formula-lag
+ *   goal states remain distinct from explicit numeric zero.
+ *
+ * Version 1.7 updates (PKG-039):
+ * - Stops positive Perfect Week work for inactive Enrollments.
+ * - Requires the linked Goal Record to be the sole active, exact Program
+ *   Instance + Grade Band configuration and requires the WAS lookup to settle
+ *   to that record's numeric target (including explicit zero).
  *
  * Version 1.4 updates (SC-021 date normalization):
  * - getDateKeyFromDateOnly uses America/Denver via Intl (not UTC ISO slice).
@@ -82,6 +94,8 @@ const CONFIG = {
     zoom: "Zoom Meetings",
     zoomAttendance: "Zoom Attendance",
     weeks: "Weeks",
+    enrollments: "Enrollments",
+    targetGoalShots: "Target Goal Shots",
   },
 
   weeklyFields: {
@@ -113,6 +127,16 @@ const CONFIG = {
 
     automationStatus: "Perfect Week Automation Status",
     automationError: "Perfect Week Automation Error",
+  },
+  enrollmentFields: {
+    programInstance: "Program Instance",
+    active: "Active?",
+  },
+  targetGoalFields: {
+    programInstance: "Program Instance",
+    gradeBand: "Grade Band",
+    totalShotTarget: "Total Shot Target",
+    active: "Active?",
   },
 
   weekFields: {
@@ -169,6 +193,14 @@ function getFirstLinkedId(record, fieldName) {
   return value[0].id;
 }
 
+function getExactlyOneLinkedId(record, fieldName, label) {
+  const values = uniqueArray(getLinkedIds(record, fieldName));
+  if (values.length !== 1) {
+    throw new Error(`${label} must have exactly one linked record; found ${values.length}.`);
+  }
+  return values[0];
+}
+
 function getLinkedIds(record, fieldName) {
   const value = record.getCellValue(fieldName);
   if (!Array.isArray(value)) return [];
@@ -199,6 +231,20 @@ function getNumber(record, fieldName) {
 
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function getOptionalNumber(record, fieldName) {
+  const value = record.getCellValue(fieldName);
+  if (value === null || value === undefined || value === "") return null;
+  if (Array.isArray(value)) {
+    if (value.length !== 1) return null;
+    const first = value[0];
+    if (first === null || first === undefined || first === "") return null;
+    const parsed = typeof first === "number" ? first : Number(first);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+  const parsed = typeof value === "number" ? value : Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
 }
 
 function getText(record, fieldName) {
@@ -328,6 +374,8 @@ const videoTable = base.getTable(CONFIG.tables.video);
 const zoomTable = base.getTable(CONFIG.tables.zoom);
 const zoomAttendanceTable = base.getTable(CONFIG.tables.zoomAttendance);
 const weeksTable = base.getTable(CONFIG.tables.weeks);
+const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
+const targetGoalShotsTable = base.getTable(CONFIG.tables.targetGoalShots);
 
 const weeklyRecord = await weeklyTable.selectRecordAsync(recordId);
 
@@ -340,8 +388,14 @@ if (!weeklyRecord) {
  ***************************************************************************************************/
 
 try {
-  const enrollmentId = getFirstLinkedId(weeklyRecord, CONFIG.weeklyFields.enrollment);
-  const weekId = getFirstLinkedId(weeklyRecord, CONFIG.weeklyFields.week);
+  const enrollmentId = getExactlyOneLinkedId(
+    weeklyRecord, CONFIG.weeklyFields.enrollment, "Weekly Athlete Summary Enrollment"
+  );
+  const weekId = getExactlyOneLinkedId(
+    weeklyRecord, CONFIG.weeklyFields.week, "Weekly Athlete Summary Week"
+  );
+  const gradeBandIds = uniqueArray(getLinkedIds(weeklyRecord, CONFIG.weeklyFields.gradeBand));
+  const goalRecordIds = uniqueArray(getLinkedIds(weeklyRecord, CONFIG.weeklyFields.goalRecord));
 
   if (!enrollmentId || !weekId) {
     await updateWeekly({
@@ -359,6 +413,92 @@ try {
     });
 
     return;
+  }
+
+  if (gradeBandIds.length !== 1 || goalRecordIds.length !== 1) {
+    throw new Error(
+      `Perfect Week requires exactly one Grade Band and one Goal Record; found Grade Bands=${gradeBandIds.length}, Goal Records=${goalRecordIds.length}.`
+    );
+  }
+
+  const enrollmentRecord = await enrollmentsTable.selectRecordAsync(enrollmentId);
+  if (!enrollmentRecord) {
+    throw new Error(`Enrollment ${enrollmentId} could not be loaded for goal validation.`);
+  }
+  if (
+    fieldExists(enrollmentsTable, CONFIG.enrollmentFields.active) &&
+    !isTruthyFlag(enrollmentRecord, CONFIG.enrollmentFields.active)
+  ) {
+    await updateWeekly({
+      [CONFIG.weeklyFields.dailyStatus]: { name: "Needs Review" },
+      [CONFIG.weeklyFields.dailyDetail]: "Enrollment is inactive; Perfect Week eligibility is not calculated.",
+      [CONFIG.weeklyFields.dailyMet]: false,
+      [CONFIG.weeklyFields.automationStatus]: { name: "Error" },
+      [CONFIG.weeklyFields.automationError]: "Enrollment is inactive; no Perfect Week positive work is permitted.",
+    });
+    return;
+  }
+  const enrollmentProgramInstanceIds = uniqueArray(
+    getLinkedIds(enrollmentRecord, CONFIG.enrollmentFields.programInstance)
+  );
+  if (enrollmentProgramInstanceIds.length !== 1) {
+    throw new Error(
+      `Enrollment ${enrollmentId} must have exactly one Program Instance; found ${enrollmentProgramInstanceIds.length}.`
+    );
+  }
+
+  const goalRecord = await targetGoalShotsTable.selectRecordAsync(goalRecordIds[0]);
+  if (!goalRecord) {
+    throw new Error(`Goal Record ${goalRecordIds[0]} could not be loaded for validation.`);
+  }
+  const goalProgramInstanceIds = uniqueArray(
+    getLinkedIds(goalRecord, CONFIG.targetGoalFields.programInstance)
+  );
+  const goalGradeBandIds = uniqueArray(
+    getLinkedIds(goalRecord, CONFIG.targetGoalFields.gradeBand)
+  );
+  const configuredGoal = getOptionalNumber(goalRecord, CONFIG.targetGoalFields.totalShotTarget);
+  if (
+    goalProgramInstanceIds.length !== 1 ||
+    goalProgramInstanceIds[0] !== enrollmentProgramInstanceIds[0] ||
+    goalGradeBandIds.length !== 1 ||
+    goalGradeBandIds[0] !== gradeBandIds[0] ||
+    !isTruthyFlag(goalRecord, CONFIG.targetGoalFields.active) ||
+    configuredGoal === null ||
+    configuredGoal < 0
+  ) {
+    throw new Error(
+      `Goal Record ${goalRecord.id} is not one exact active numeric configuration for Enrollment Program Instance + Grade Band.`
+    );
+  }
+  const goalQuery = await targetGoalShotsTable.selectRecordsAsync({
+    fields: [
+      CONFIG.targetGoalFields.programInstance,
+      CONFIG.targetGoalFields.gradeBand,
+      CONFIG.targetGoalFields.totalShotTarget,
+      CONFIG.targetGoalFields.active,
+    ],
+  });
+  const matchingActiveGoals = goalQuery.records.filter((candidate) => {
+    const candidateProgramIds = uniqueArray(
+      getLinkedIds(candidate, CONFIG.targetGoalFields.programInstance)
+    );
+    const candidateGradeBandIds = uniqueArray(
+      getLinkedIds(candidate, CONFIG.targetGoalFields.gradeBand)
+    );
+    return (
+      candidateProgramIds.length === 1 &&
+      candidateProgramIds[0] === enrollmentProgramInstanceIds[0] &&
+      candidateGradeBandIds.length === 1 &&
+      candidateGradeBandIds[0] === gradeBandIds[0] &&
+      isTruthyFlag(candidate, CONFIG.targetGoalFields.active) &&
+      getOptionalNumber(candidate, CONFIG.targetGoalFields.totalShotTarget) !== null
+    );
+  });
+  if (matchingActiveGoals.length !== 1 || matchingActiveGoals[0].id !== goalRecord.id) {
+    throw new Error(
+      `Goal configuration must resolve to exactly one active Program Instance + Grade Band record; found ${matchingActiveGoals.length}.`
+    );
   }
 
   const weekRecord = await weeksTable.selectRecordAsync(weekId, {
@@ -396,19 +536,33 @@ try {
   const requiredDateKeys = buildRequiredWeekDates(weekStartDateKey);
   const requiredDateSet = new Set(requiredDateKeys);
 
-  let weeklyGoal = getNumber(weeklyRecord, CONFIG.weeklyFields.weeklyGoal);
+  // Zero is a valid configuration only when 032 has linked exactly one Goal
+  // Record. Do not use truthiness here: it misclassified an explicit target of
+  // zero (and a settling lookup) as a missing goal.
+  const primaryGoal = getOptionalNumber(weeklyRecord, CONFIG.weeklyFields.weeklyGoal);
+  const fallbackGoal = getOptionalNumber(weeklyRecord, CONFIG.weeklyFields.fallbackGoal);
+  const weeklyGoal = Number.isFinite(primaryGoal)
+    ? primaryGoal
+    : Number.isFinite(fallbackGoal)
+      ? fallbackGoal
+      : null;
 
-  if (!weeklyGoal) {
-    weeklyGoal = getNumber(weeklyRecord, CONFIG.weeklyFields.fallbackGoal);
-  }
-
-  if (!weeklyGoal) {
+  if (
+    weeklyGoal === null ||
+    weeklyGoal < 0 ||
+    weeklyGoal !== configuredGoal
+  ) {
+    const reason = weeklyGoal === null
+      ? "Weekly goal formula/lookup is unsettled or invalid; rereun after settlement."
+      : weeklyGoal < 0
+        ? "Weekly shot goal is negative."
+        : "Weekly goal formula/lookup has not settled to the linked active goal target.";
     await updateWeekly({
       [CONFIG.weeklyFields.dailyStatus]: { name: "Needs Review" },
-      [CONFIG.weeklyFields.dailyDetail]: "Missing weekly shot goal.",
+      [CONFIG.weeklyFields.dailyDetail]: reason,
       [CONFIG.weeklyFields.dailyMet]: false,
       [CONFIG.weeklyFields.automationStatus]: { name: "Error" },
-      [CONFIG.weeklyFields.automationError]: "Missing Weekly Goal Shots Target / Goal Shots Target.",
+      [CONFIG.weeklyFields.automationError]: reason,
     });
 
     return;

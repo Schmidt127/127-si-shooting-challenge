@@ -2,7 +2,7 @@
 Automation: 063 - Homework Review and XP - Copy Enrollment Grade Band to Homework Completion
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: Production Copy
+Status: RETIRED / DELETED IN PRODUCTION — KEEP OFF
 Last Synced From Airtable: 2026-06-20
 
 Purpose:
@@ -71,6 +71,8 @@ Airtable is the deployed/running copy.
  ************************************************************/
 
 // @ts-nocheck
+
+throw new Error("Automation 063 is retired. Keep it OFF; canonical Homework creation owns Grade Band preparation.");
 
 /* =========================================================
    SECTION 1: EASY-EDIT VARIABLES

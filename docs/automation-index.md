@@ -38,7 +38,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 006 | Submission Intake — Set Video Count | *confirm in Airtable* | `006-submission-intake-and-asset-creation-set-video-count.js` |
 | 007 | Submission Intake — Duplicate Checker for Submissions | *confirm in Airtable* | `007-submission-intake-and-asset-creation-duplicate-checker-for-submissions.js` |
 | 009 | Submission Intake — Create Submission Assets | *confirm in Airtable* | `009-submission-intake-create-submission-assets.js` |
-| **010** | Submission Intake — Create XP Event from Submission | Submissions when `Count This Submission?` checked and XP should be awarded | `010-submission-intake-create-xp-event.js` |
+| **010** | Submission Intake — Create/Reconcile XP Event from Submission | Submissions when `Reconciliation Needed? = 1`, dynamic `recordId` | `010-submission-intake-create-xp-event.js` (**v10.8** — **OFF in PROD** after HF-001; paste before re-enable) |
 | **013** | Submission Intake — Create or Link Video Feedback | Submission Assets when video asset ready for Video Feedback prep | `013-submission-intake-create-or-link-video-feedback.js` |
 | 021 | Submission Intake — Set Attachment Upload Status | *confirm in Airtable* | `021-submission-intake-and-asset-creation-set-attachment-upload-status.js` |
 | **022** | Submission Intake — Sync Child Upload Writeback | Submission Assets when Upload Status is Uploaded/Processing/Error and child linked | `022-submission-intake-sync-child-upload-writeback-from-submission-asset.js` |
@@ -50,12 +50,12 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| **020** | Homework — Link or Create Homework Completion | Submission Assets when homework asset ready for Homework Completion prep — **repo v3.5** (PHA-first intake; HC.Homework = library, HC.Program Homework Assignment = PHA; **PROD paste not confirmed**) | `020-homework-link-or-create-homework-completion.js` (**v3.5**) |
-| 063 | ~~Homework Review — Copy Enrollment Grade Band~~ | **DELETED in PROD (attest)** / partial absorb by 020 | `063-homework-review-and-xp-copy-enrollment-grade-band-to-homework-completion.js` *(historical)* |
-| 064 | Homework Review — Prepare Homework XP Award | *confirm in Airtable* | `064-homework-review-and-xp-prepare-homework-xp-award.js` |
-| **065** | Homework Review — Create Homework XP Event | Homework Completions when review complete, satisfactory, XP pending | `065-homework-review-and-xp-create-homework-xp-event.js` |
+| **020** | Homework — Link or Create Homework Completion | Submission Assets when homework asset ready for Homework Completion prep — **v3.5 installed in PROD per Mike evidence** (PHA-first intake; HC.Homework = library, HC.Program Homework Assignment = PHA) | `020-homework-link-or-create-homework-completion.js` (**v3.5**) |
+| 063 | ~~Homework Review — Copy Enrollment Grade Band~~ | **RETIRED / DELETED in PROD; keep OFF**; repository runtime stop | `063-homework-review-and-xp-copy-enrollment-grade-band-to-homework-completion.js` *(historical)* |
+| 064 | Homework Review — Prepare Homework XP Award | **v12.2 installed in PROD per Mike evidence**; positive preparation only, exact Enrollment/Homework/Week and exact active rule; re-arms 065 restoration but does not own correction | `064-homework-review-and-xp-prepare-homework-xp-award.js` |
+| **065** | Homework Review — Create/Reconcile Homework XP Event | **v10.1 installed in PROD per Mike evidence**; trigger `Homework XP Reconciliation Needed? = 1`; formula-backed automatic award/correction for the supplied controlled signature lifecycle; exact `HOMEWORK_XP\|<HC ID>` ownership; same-event withdrawal/restoration passed in controlled Schmidt test | `065-homework-review-and-xp-create-homework-xp-event.js` |
 | **067** | Homework — Link or Create Completion from Reflection Quiz | Final Reflection Quiz Submissions when ready — **repo v3.4** (PHA-first HW17; linked HC fail-closed; **PROD paste not confirmed**) | `067-homework-link-or-create-completion-from-reflection-quiz.js` (**v3.4**) |
-| **068** | Homework — Reconcile Deferred Weekly Summary Links | Scheduled; scans HW17 completions with an empty Weekly Athlete Summary Link | `068-homework-reconcile-deferred-weekly-summary-links.js` |
+| **068** | Homework — Reconcile Deferred Weekly Summary Links | **RETIRED / keep OFF**; 033 v4.2 owns deferred WAS reconciliation | `068-homework-reconcile-deferred-weekly-summary-links.js` |
 | **070a** | Email — Send Homework Asset Payload to Make | Submission Assets when Send to Make Trigger checked and homework asset ready | `070a-email-notifications-and-external-handoffs-send-homework-asset-payload-to-make.js` |
 | **071** | Email — Send Homework Feedback Email Webhook (v3.5: Reviewer File URL → Drive View → Drive File) | Homework Completions when parent feedback ready and not yet sent | `071-email-notifications-and-external-handoffs-send-homework-feedback-email-webhook.js` |
 
@@ -64,43 +64,48 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
 | 030 | Weekly Summary — Copy Enrollment Grade Band to Weekly Summary | *confirm in Airtable* | `030-weekly-summary-and-goal-logic-copy-enrollment-grade-band-to-weekly-summary.js` |
-| **031** | Weekly Summary — Find or Create WAS from Submission | Submissions when formula-backed count readiness evaluates checked and formula-backed stat mode evaluates `Simple Total` or `Detailed Shooting`; reuses or creates the canonical WAS | `031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` (**v4.0** — authoritative find-or-create owner; formula-backed readiness inputs; writable email-readiness checkbox) |
-| 032 | Weekly Summary — Link Challenge Goal to WAS | *confirm in Airtable* | `032-weekly-summary-and-goal-logic-link-challenge-goal-record-to-weekly-athlete-summary.js` |
+| **031** | Weekly Summary — Find or Create WAS from Submission | Submissions when formula-backed count readiness evaluates checked and formula-backed stat mode evaluates `Simple Total` or `Detailed Shooting`; reuses or creates the canonical WAS | `031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` (**v4.1** — authoritative find-or-create owner; exact Enrollment/Week cardinality, formula-backed readiness inputs, writable email-readiness checkbox) |
+| 032 | Weekly Summary — Link Challenge Goal to WAS | WAS with one Enrollment + Grade Band and no Goal Record | `032-weekly-summary-and-goal-logic-link-challenge-goal-record-to-weekly-athlete-summary.js` (**v3.4** — exactly one active explicit-numeric Target Goal Shots match by Program Instance record ID + Grade Band record ID; zero is valid only when configured) |
 | 033 | Weekly Summary — Assign Homework to WAS | **paste v4.1 pending** — PHA-only, exact PI required | `033-weekly-summary-and-goal-logic-assign-homework-to-weekly-athlete-summary.js` (**v4.1**) |
+| **035** | Weekly Summary — Create Weekly Threshold XP Events | WAS when goal completion threshold is eligible; creates threshold XP Events and updates WAS threshold status | `035-weekly-summary-and-goal-logic-create-weekly-threshold-xp-events.js` |
 | 034 | Weekly Summary — Set Previous Week Helper Values | *confirm in Airtable* | `034-weekly-summary-and-goal-logic-set-previous-week-helper-values.js` |
 
 ## Levels and progression (041–043)
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| 041 | Levels — Mark Enrollment for Level Recalculation | *confirm in Airtable* | `041-levels-and-progression-mark-enrollment-for-level-recalculation.js` |
-| 042 | Levels — Assign Current and Next Level with Gate Blocking | *confirm in Airtable* | `042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js` |
-| 043 | Levels — Set Level Gate Rule from Next Level | **Retire** — legacy helper; keep until planned maintenance window, then delete | `043-levels-and-progression-set-level-gate-rule-from-next-level.js` |
+| 041 | Levels — Mark Enrollment for Level Recalculation | **v5.0 repository-ready; Production paste pending** — queue-only scheduled reconciliation | `041-levels-and-progression-mark-enrollment-for-level-recalculation.js` |
+| 042 | Levels — Assign Current and Next Level with Gate Blocking | **v4.0 repository-ready; Production paste pending** — sole progression assignment writer | `042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js` |
+| 043 | Levels — Set Level Gate Rule from Next Level | **Retired; absent from current Production automation inventory; do not recreate** | `043-levels-and-progression-set-level-gate-rule-from-next-level.js` |
 
 ## Achievements and streaks (053–059, 066)
 
+> **PKG-038 hold:** Do not paste, enable, or controlled-test 053, 054, 059, or
+> 066 in Production until Mike explicitly releases both PKG-006R and PKG-036
+> and confirms there is no competing lifetime-XP observation window.
+
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| 053 | Achievements — Streak Occurrences Rebuild from Submissions | *confirm in Airtable* | `053-achievements-and-milestones-streak-occurrences-rebuild-and-upsert-from-submissions.js` |
-| **054** | Achievements — Create or Repair Streak XP Event | Streak Occurrences when Source Status is Ready for XP | `054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js` |
+| 053 | Achievements — Streak Occurrences Rebuild from Submissions | Submissions updated; exact trigger must cover eligibility/identity corrections | `053-achievements-and-milestones-streak-occurrences-rebuild-and-upsert-from-submissions.js` (**v5.4** — corrected canonical topology) |
+| **054** | Achievements — Create or Reconcile Streak XP Event | Streak Occurrences updated; exact trigger must cover Active? withdrawal and Ready/restoration | `054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js` (**v5.8** — exact same-event lifecycle) |
 | 055 | Achievements — Recalculate Current Shooting Streak from Submission | *confirm in Airtable* | `055-achievements-and-milestones-recalculate-current-shooting-streak-from-submission.js` |
 | 056 | Achievements — Refresh Current Shooting Streaks Daily | *confirm in Airtable (scheduled)* | `056-achievements-and-milestones-refresh-current-shooting-streaks-daily.js` |
-| **057** | Achievements — Calculate Perfect Week Eligibility | WAS Perfect Week recalc — **ON** (PROD **v1.5**, 2026-08-05) | `057-achievements-and-milestones-calculate-perfect-week-eligibility.js` (**v1.5** — repo matches PROD; live cross-boundary fixtures still open — `docs/deploy-checklists/057-perfect-week-v1.5-live-verification.md`) |
-| 058 | Achievements — Create Perfect Week Unlock | *confirm in Airtable* | `058-achievements-and-milestones-create-perfect-week-unlock.js` |
-| **059** | Achievements — Create XP Event from Achievement Unlock | **Recommended:** Athlete Achievement Unlocks when record is **created**, Shot Milestone not empty, XP Award Status = Pending — **Do NOT filter on Ready for 059 XP** (formula flips mid-run) | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.5**) |
-| 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.4** on `master` via PR #88 — **PROD paste required**; natural path failed on v3.3 `fields` contract; [paste checklist](./deploy-checklists/2026-08-06-FINAL-AIRTABLE-PASTE-AND-VERIFY.md)) |
+| **057** | Achievements — Calculate Perfect Week Eligibility | WAS Perfect Week recalc | `057-achievements-and-milestones-calculate-perfect-week-eligibility.js` (**v1.7** — inactive enrollment and unsettled/multiple/wrong-scope goals fail closed; requires lookup parity with the linked active goal) |
+| 058 | Achievements — Create Perfect Week Unlock | Lifecycle-capable WAS trigger; dynamic `recordId` | `058-achievements-and-milestones-create-perfect-week-unlock.js` (**v1.3** — exact source-key lifecycle owner; inactive or unsettled/wrong-scope goal state withdraws the same unlock rather than creating a replacement) |
+| **059** | Achievements — Create/Reconcile XP Event from Achievement Unlock | Athlete Achievement Unlock lifecycle; never filter `Ready for 059 XP?` or Shot Milestone presence | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.6** — corrected-history milestone lifecycle; Perfect Week preserved) |
+| 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.7** — counted-submission totals and corrected-history unlock lifecycle) |
 
 ## Email and Make handoffs (070b, 070c, 072–077, 118–119)
 
 ### Weekly Athlete Summary email (verified PROD 2026-07-24)
 
-**Flow:** `118 → 072 → 119 → 074 → Make.com → Gmail → Make.com writeback`  
-**Architecture:** [next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md](./next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md)  
+**Flow:** `118 → 072 → 119 → 074 → Make.com → Gmail → Make.com writeback`
+**Architecture:** [next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md](./next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md)
 **Health / conflicts:** [reliability-command-center/](./reliability-command-center/README.md) offline audit (Ready/Sent/Make writeback mismatches, Test vs Live) — **no new automations**
 
 | # | Airtable automation name | Trigger / schedule | File / notes |
 |---|--------------------------|--------------------|--------------|
-| **118** | Email — Schedule Weekly Summary Email Build | Sunday **5:00 AM** America/Denver — **ON** (verified PROD) | `118-…-schedule-weekly-summary-email-build.js` (**v1.5**) — ensures WAS + arms Build; Live-season arming; does **not** build HTML or call Make |
+| **118** | Email — Schedule Weekly Summary Email Build | Sunday **5:00 AM** America/Denver | `118-…-schedule-weekly-summary-email-build.js` (**v2.0**) — resolves and arms one existing canonical WAS only after its Summary Key settles to the exact expected identity; excludes/inactive rows are filtered before strict validation; it never creates a WAS, builds HTML, or calls Make |
 | **072** | Email — Build Weekly Summary Email Package | WAS when `Build Weekly Email Now?` checked | `072-…-build-weekly-summary-email-package.js` (**v4.0**) — owns **`emptyWeekPolicy`** (`send_short` default); does **not** call Make |
 | **119** | Email — Schedule Weekly Summary Email Send | Sunday **10:00 AM** America/Denver — **ON** (verified PROD) | `119-…-schedule-weekly-summary-email-send.js` (**v1.5**) — arms **`Send to Make?` only**; does **not** post webhook |
 | **074** | Email — Send Weekly Summary Email Package to Make | WAS Ready? + !Sent? + Send to Make? + package fields | `074-…-send-weekly-summary-email-package-to-make.js` (**v2.1**) — **posts webhook**; does **not** mark Sent?; **ON**; PROD **sendMode=Live** (or blank+WAS Live) — **never** fixed Test |
@@ -116,9 +121,9 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **070c** | Email — Verify Async Video Asset Upload | Submission Assets · `Upload Status = Uploaded` · `Writeback Complete?` checked · canonical/hash fields populated · `Upload Error` blank · **repurpose existing slot if at limit** | `070c-email-notifications-and-external-handoffs-verify-async-video-asset-upload.js` (**v1.1** — idempotent; `Send to Make Trigger` optional on trigger) |
 | 073 | Email — Send Video Feedback Parent Email Webhook | *confirm in Airtable* | `073-email-notifications-and-external-handoffs-send-video-feedback-parent-email-webhook.js` |
 | 075 | Email — Build Challenge Welcome Email | *confirm in Airtable* | `075-email-notifications-and-external-handoffs-build-challenge-welcome-email.js` — **build only**; does not send |
-| **079** | Email — Send Queue Handoff to Communications Hub | Email Handoff Queue when Status is Ready — *confirm trigger in Airtable* | `079-email-notifications-and-external-handoffs-send-queue-handoff-to-communications-hub.js` (**v3.0 repository candidate** — generic envelope dispatcher with canonical event/source/record keys and legacy WELCOME compatibility; Production promotion remains separately approved) |
-| **076** | Email — Create Daily Submission Communications Hub Handoff | Consumes the `Build Daily Email Now?` signal checked only by 031 after count readiness, `Simple Total`/`Detailed Shooting` mode validation, and final summary validation; 076 clears it after queue create/reuse | `076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js` (**v8.5** — uses the verified `Program Instance - Sync` table, requires `Enrollments.Parent Email - Cleaned`, and writes queue single-select fields with Airtable-compatible `{ name: ... }` objects; stages one `DAILY_SUBMISSION` Email Handoff Queue row, resolves exact-key conflicts, then promotes one row to Ready; Hub owns content) |
-| **077** | Email — Send Daily Submission Email Package to Make | *Retirement candidate pending controlled Hub proof* | `077-email-notifications-and-external-handoffs-send-daily-submission-email-package-to-make.js` (legacy; do not arm) |
+| **079** | Email — Send generic queue handoffs to Communications Hub | Email Handoff Queue when Status is Ready — *confirm trigger in Airtable* | `079-email-notifications-and-external-handoffs-send-queue-handoff-to-communications-hub.js` (**v3.1 repository candidate; Production remains v2.0 pending approval** — validates the universal envelope, preserves legacy WELCOME keys, exact canonical keys, and repeated parent/athlete role entries sharing one address) |
+| **076** | Email — Create Daily Submission Communications Hub Handoff | Consumes the `Build Daily Email Now?` signal checked only by 031 after count readiness, `Simple Total`/`Detailed Shooting` mode validation, and final summary validation; 076 clears it after queue create/reuse | `076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js` (**v8.6** — requires one settled active exact Program Instance + Grade Band goal before preparing a queue; configured zero is permitted, unconfigured/lagged zero is not) |
+| **077** | Email — Send Daily Submission Email Package to Make | **Retired / deleted from Production** (2026-08-13) | `077-email-notifications-and-external-handoffs-send-daily-submission-email-package-to-make.js` (GitHub archive only; daily email uses Hub 076 → 079) |
 
 ## Video review and XP (112–114) — 111 retired; 112 must stay OFF
 
@@ -128,8 +133,8 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 |---|--------------------------|---------|------|
 | 111 | ~~Video Review — Copy Enrollment Grade Band~~ | **DELETED in PROD (attest)** / replaced by **013 v2.0** | `111-video-review-and-xp-copy-enrollment-grade-band-to-video-feedback.js` *(historical)* |
 | 112 | Video Review — Create Video Feedback from Submission Asset | **OFF / must stay OFF** (legacy duplicate of **013**) | `112-video-review-and-xp-create-video-feedback-from-submission-asset.js` |
-| 113 | Video Review — Assign Base Video XP | *confirm in Airtable* | `113-video-review-and-xp-assign-base-video-xp.js` |
-| **114** | Video Review — Create or Update Video XP Event | Video Feedback posted, XP positive, `Ready for XP Automation?` checked | `114-video-review-and-xp-create-or-update-video-xp-event.js` |
+| 113 | Video Review — Assign Base Video XP | *confirm in Airtable* | `113-video-review-and-xp-assign-base-video-xp.js` (**v6.4** — exactly one canonical `VIDEO_SUBMISSION` rule; inactive exact-event re-arm only) |
+| **114** | Video Review — Create or Update Video XP Event | Video Feedback lifecycle reconciliation; *confirm trigger in Airtable* | `114-video-review-and-xp-create-or-update-video-xp-event.js` (**v6.1** — exact VF/source-key identity; deactivates/reactivates the same XP Event; selected-field runtime regression covered by `tests/video-feedback/video-feedback-xp-mocked-runtime.test.js`) |
 
 ## Asset reuse review (116)
 
@@ -143,14 +148,22 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| **101** | Zoom Attendance XP — Award Meeting XP | Zoom Meetings when `Create XP Events` checked and meeting ready to award (**live Attendees only**) | `101-zoom-attendance-xp-award-meeting-xp.js` |
+| **101** | Zoom Attendance XP — Award Meeting XP | Zoom Meetings when `Zoom XP Reconciliation Needed? = 1`; dynamic `recordId`; no Create XP Events, Attendees, or Completed condition | `101-zoom-attendance-xp-award-meeting-xp.js` (**v6.3** — resolves one existing canonical WAS only; 031 is the sole WAS creator) |
 | **117** | Zoom — Send Recording Approval Email to Make (**v1.1**) | Zoom Attendance · Satisfactory recording path · inputs `webhookUrl`, `recordId`, `enrollmentRid`, `zoomMeetingRid` · payload `automationNumber=117f` · send key `ZOOM_REC_EMAIL\|…\|…\|…` · **writes no Airtable records** | `117-zoom-send-recording-approval-email-to-make.js` · [deploy runbook](./deploy-checklists/117-zoom-recording-approval-email.md) · [go-live one-pager](./deploy-checklists/117-ZOOM-APPROVAL-GO-LIVE.md) · [PROD Make workflow](./deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md) · offline suite `tools/testing/tests/test_117_email_handoff_offline.mjs` |
 | **117f** | **Make** workflow identifier only (not an Airtable automation slot) | Receives Airtable 117 payload; Gmail send + Data Store dedupe (`sent` / `already_sent`) | Make: `Shooting Challenge - PROD - Zoom Recording Approval Email - 117f - v1` |
 | **Stage 17 modular / orchestrator** | Repository design alternatives — **not** PROD Airtable automations | Prefer consolidated paths; do **not** create 117a–e slots (automation-count limit) | `_design-alternatives/stage17-modular-reference/` · [numbering note](./deploy-checklists/C-025-117-numbering.md) |
 
 **Airtable automation-count constraint:** Use consolidated automations where practical. Repository-only modular alternatives must not be represented as active PROD automations. The active canonical automation directory must distinguish deployed scripts from archived/design alternatives.
 
-Live attendance XP remains **101** only. Gate Applied? / Perfect Week Applied? remain **042** / **057**. Recording `ZOOM_CREDIT` XP has **no** currently deployed Airtable writer (orchestrator/117c are design-only). Do **not** paste the Stage 17 orchestrator over PROD Automation 117.
+Live attendance XP remains **101** only. Mike supplied evidence that v6.1 is
+installed and ON in Production with the reconciliation trigger configured.
+The Introduction and Motivation future meetings both safely acknowledged empty
+rosters with no XP Event and Needed = 0. This is installation plus
+empty-roster proof only; live-attendee XP, withdrawal, bonuses, progression,
+standings, and recording XP remain pending. Gate Applied? / Perfect Week
+Applied? remain **042** / **057**. Recording `ZOOM_CREDIT` XP has **no**
+currently deployed Airtable writer (orchestrator/117c are design-only). Do
+**not** paste the Stage 17 orchestrator over PROD Automation 117.
 
 C-025 historical Stage 17 packets: [deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md). Architecture history: [v2/C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md). Downstream ETF scenario: [C-025-stage17-etf-downstream-dev-packet.md](./deploy-checklists/C-025-stage17-etf-downstream-dev-packet.md). PROD approval-email Make path: [C-025-117f-prod-zoom-recording-approval-email.md](./deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md).
 
@@ -165,7 +178,7 @@ C-025 historical Stage 17 packets: [deploy-checklists/C-025-stage17-zoom-recordi
 | C — Weekly summary | 031, 032, 033, 030, 034 | `audit-submission-pipeline-integrity.js`, `audit-orphan-xp-events.js` |
 | D — Assets | 009, 021 | `audit-submission-pipeline-integrity.js` |
 | E — Homework upload | 020, 070a, 022 *(063 retired)* | `audit-homework-completion-upload-edge-cases.js` |
-| F — Homework XP + email | 064, 065, 071 | `audit-homework-pipeline-integrity.js` |
+| F — Homework XP + email | 064, 065, 071 | `audit-homework-xp-pipeline-integrity.js` (XP authority); 071 email separate |
 | F2 — HW17 Fillout test intake | 067 | `audit-homework17-reflection-quiz-pipeline.js` |
 | G — Video upload | **013** (not 112; 111 retired), 070b, 022 | `audit-video-pipeline-integrity.js` |
 | H — Video XP + email | 113, 114, 073 | `audit-video-xp-pipeline-integrity.js` |

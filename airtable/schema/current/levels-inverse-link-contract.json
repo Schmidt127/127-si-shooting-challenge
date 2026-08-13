@@ -1,0 +1,18 @@
+{
+  "backlogId": "PKG-036-HF-001",
+  "table": "Levels",
+  "relationships": [
+    {
+      "fieldName": "Enrollments — Current Level",
+      "fieldId": "fldIZT5MWgMskwF8s",
+      "linkedTable": "Enrollments",
+      "inverseFieldName": "Current Level"
+    },
+    {
+      "fieldName": "Enrollments — Next Level",
+      "fieldId": "fldtaYEIwRvRKYkvb",
+      "linkedTable": "Enrollments",
+      "inverseFieldName": "Next Level"
+    }
+  ]
+}

@@ -1,5 +1,9 @@
 # Launch Certification — Airtable PROD
 
+> **Historical snapshot — do not execute as the current operator packet.**
+> Versions, URLs, and action steps reflect 2026-07-25. Use the Completion
+> Master and current package operator packets for Production decisions.
+
 **Authority:** Final Launch Closure Lead  
 **Date:** 2026-07-25  
 **Base:** PROD `appn84sqPw03zEbTT` — `127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026`  

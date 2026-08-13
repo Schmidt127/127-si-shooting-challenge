@@ -1,5 +1,9 @@
 # 067 Option B — PROD install + Schmidt live test
 
+> **Superseded for Production execution — do not run this packet.** Automation
+> 068 is retired and not deployed; its deferred reconciliation role is owned by
+> 033. Use the current Completion Master and PKG-007 operator packet instead.
+
 **SC items:** SC-013, SC-014  
 **Decision:** Option B attachment-less (locked in `QUIZ-PATH-DECISION.md`)  
 **Script:** `airtable/automations/shooting-challenge/067-homework-link-or-create-completion-from-reflection-quiz.js` **v2.0**  
@@ -12,7 +16,7 @@
 |------|-------|
 | Problem | HW17 Final Reflection quiz must create a reviewable Homework Completion without inventing PDF/assets |
 | Tables | Final Reflection Quiz Submissions, Homework Completions, FBC Curriculum - SYNC, Enrollments, Submissions, Submission Assets |
-| Automations | **067** (bridge), **068** (automatic deferred-summary reconciliation), **064→065** (XP after coach review), **071** (parent email Fillout-aware) |
+| Automations | **067** (bridge), **033** (deferred-summary reconciliation), **064→065** (XP after coach review), **071** (parent email Fillout-aware) |
 | External | Fillout quiz form (or manual quiz row for Schmidt test) |
 | Expected final behavior | Quiz row → one HC (Enrollment+Week+HW17), 0 assets, Ready for Review → coach Satisfactory → exactly one Homework XP → optional 071 |
 | Completion criteria | PROD 067 paste confirmed + Schmidt live proof of HC/0 assets/one XP/no fake assets |
@@ -24,8 +28,8 @@
 | Enrollment link on quiz | Required — 067 never guesses athlete |
 | Active HW 17 curriculum row | Exactly one Active `Homework Number=HW 17` with Week |
 | HC identity | Enrollment + Week + Homework (067 key) — distinct from 020 asset key |
-| XP writers | **064/065 only** — 067 and 068 must never create XP Events |
-| Deferred summary retry | Scheduled **068** scans HW17 completions with an empty summary link; it links only an exact-one Enrollment + Week summary |
+| XP writers | **064/065 only** — 067 and 033 must never create XP Events |
+| Deferred summary retry | **033** owns deferred reconciliation; 068 must not be installed or enabled |
 | Assets / 070a | Optional; Option B expects **no** Quiz Result PDF field and **no** fake assets |
 | 071 | Must stay Fillout-aware without requiring assets |
 | Make | Not required for Option B bridge |
@@ -47,9 +51,9 @@
 4. Paste repo script **from production docblock through end** (skip GitHub header comments above the Airtable docblock).  
 5. Confirm version header shows **v2.0** and Option B / `no_attachment_*` path.  
 6. Leave automation **ON** for Schmidt testing.  
-7. Install **068 - Homework - Reconcile Deferred Weekly Summary Links** as a separate scheduled automation. It requires no record input and must run on the committed 068 script.
-8. Keep 068 scoped to HW17 completions with an empty `Weekly Athlete Summary Link`; it must fail closed on zero or multiple matching summaries and must never create summaries or XP Events.
-7. Confirm **064**, **065**, **071** remain the only XP/email writers for this path.
+7. Do **not** install or enable 068. Confirm 033 is the deployed deferred
+   reconciliation owner and fails closed on zero or multiple canonical summaries.
+8. Confirm **064**, **065**, **071** remain the only XP/email writers for this path.
 
 ## Schmidt live test protocol
 
@@ -73,13 +77,12 @@ Use Enrollment `recgP9qZYjAhE7NXm` only.
 1. Re-trigger 067 on the same quiz row (or create second quiz pointing at same Enrollment+Week+HW17).  
 2. Expect link to **same** HC; no second HC; no second XP after review already awarded.
 
-### T2b — Automatic deferred-summary retry
+### T2b — Deferred-summary ownership (historical 068 steps superseded)
 
 1. Run 067 while no canonical Weekly Athlete Summary exists; expect `weeklySummaryLinkStatus=deferred_no_canonical_summary`.
 2. Allow the applicable upstream flow to establish the one canonical summary.
-3. Wait for the next scheduled 068 run; no operator re-entry is required.
-4. Expect 068 to link the existing HW17 completion exactly once.
-5. With zero or multiple matching summaries, expect no link. A replay after a successful link must produce no write.
+3. Verify 033 owns the deferred reconciliation path; do not create or run 068.
+4. With zero or multiple matching summaries, expect no link. A replay after a successful link must produce no write.
 
 ### T3 — Blank enrollment
 

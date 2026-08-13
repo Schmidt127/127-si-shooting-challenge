@@ -24,7 +24,7 @@ const TARGETS = [
   {
     num: "031",
     file: "031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js",
-    versionRe: /Version:\s*v3\.5/,
+    versionRe: /Version:\s*v4\.1/,
     queryVars: ["xpQuery"],
   },
   {
@@ -36,25 +36,25 @@ const TARGETS = [
   {
     num: "042",
     file: "042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js",
-    versionRe: /Version:\s*3\.4/,
+    versionRe: /Version:\s*4\.0/,
     queryVars: ["zmQuery", "zaQuery"],
   },
   {
     num: "057",
     file: "057-achievements-and-milestones-calculate-perfect-week-eligibility.js",
-    versionRe: /Version:\s*1\.5/,
+    versionRe: /Version:\s*1\.7/,
     queryVars: ["zaQuery"],
   },
   {
     num: "114",
     file: "114-video-review-and-xp-create-or-update-video-xp-event.js",
-    versionRe: /Version:\s*v5\.9/,
+    versionRe: /Version:\s*v6\.1/,
     queryVars: ["xpQuery"],
   },
   {
     num: "118",
     file: "118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js",
-    versionRe: /Version:\s*v1\.7/,
+    versionRe: /Version:\s*v2\.0/,
     queryVars: ["enrollmentsQuery", "weeksQuery", "wasQuery"],
   },
   {
@@ -184,7 +184,7 @@ for (const target of TARGETS) {
   test(`${target.num} exists and declares patched version`, () => {
     assert.ok(fs.existsSync(scriptPath), target.file);
     assert.match(source, target.versionRe);
-    assert.match(source, /2026-08-05|2026-08-06|2026-08-07|2026-08-12/);
+    assert.match(source, /2026-08-05|2026-08-06|2026-08-07|2026-08-12|2026-08-13/);
     assert.match(source, /unloadData|unloadQuerySafe/);
   });
 
