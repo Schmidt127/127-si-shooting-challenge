@@ -304,6 +304,7 @@ node --test tests/pipeline/counted-submission-xp-reversal-lifecycle.test.mjs
 node --test tools/testing/tests/test_010_offline.mjs
 node --test tests/pipeline/010-submission-base-multi-family.test.mjs
 node --test tools/testing/tests/test_041_recalculation_coverage.mjs
+node airtable/automations/shooting-challenge/lib/041-042-reconciled-signature-contract.test.js
 node airtable/automations/shooting-challenge/lib/pkg-036-progression-reliability.test.js
 node airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js
 node airtable/automations/shooting-challenge/lib/042-school-year-gate-rules.test.js
