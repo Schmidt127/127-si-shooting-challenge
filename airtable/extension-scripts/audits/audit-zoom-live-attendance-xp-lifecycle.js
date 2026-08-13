@@ -127,7 +127,10 @@ function numberValue(record, table, fieldName) {
 
 function addIssue(report, type, row) {
   report.issueCounts[type] = (report.issueCounts[type] || 0) + 1;
-  if ((report.samples[type] || []).length < SAMPLE_LIMIT) report.samples[type].push(row);
+  if (!Array.isArray(report.samples[type])) report.samples[type] = [];
+  if (report.samples[type].length < SAMPLE_LIMIT) {
+    report.samples[type].push(row);
+  }
 }
 
 function one(idsValue) {
