@@ -129,7 +129,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 111 | ~~Video Review — Copy Enrollment Grade Band~~ | **DELETED in PROD (attest)** / replaced by **013 v2.0** | `111-video-review-and-xp-copy-enrollment-grade-band-to-video-feedback.js` *(historical)* |
 | 112 | Video Review — Create Video Feedback from Submission Asset | **OFF / must stay OFF** (legacy duplicate of **013**) | `112-video-review-and-xp-create-video-feedback-from-submission-asset.js` |
 | 113 | Video Review — Assign Base Video XP | *confirm in Airtable* | `113-video-review-and-xp-assign-base-video-xp.js` (**v6.4** — exactly one canonical `VIDEO_SUBMISSION` rule; inactive exact-event re-arm only) |
-| **114** | Video Review — Create or Update Video XP Event | Video Feedback lifecycle reconciliation; *confirm trigger in Airtable* | `114-video-review-and-xp-create-or-update-video-xp-event.js` (**v6.1** — exact VF/source-key identity; deactivates/reactivates the same XP Event) |
+| **114** | Video Review — Create or Update Video XP Event | Video Feedback lifecycle reconciliation; *confirm trigger in Airtable* | `114-video-review-and-xp-create-or-update-video-xp-event.js` (**v6.1** — exact VF/source-key identity; deactivates/reactivates the same XP Event; selected-field runtime regression covered by `tests/video-feedback/video-feedback-xp-mocked-runtime.test.js`) |
 
 ## Asset reuse review (116)
 

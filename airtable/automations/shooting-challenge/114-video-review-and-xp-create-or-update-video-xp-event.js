@@ -28,7 +28,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  *
  * Version: v6.1
  * Date Written: 2026-05-23
- * Last Updated: 2026-08-12
+ * Last Updated: 2026-08-13
  * Updated Reason: Reconcile the exact XP Event lifecycle. Eligibility loss
  * deactivates the canonical event; restoration reactivates that same record.
  *
@@ -726,6 +726,7 @@ function buildXpMatchFieldsToLoad() {
     CONFIG.xpEvents.submission,
     CONFIG.xpEvents.week,
     CONFIG.xpEvents.xpBucketKey,
+    CONFIG.xpEvents.active,
   ].filter(fieldName => fieldExists(xpEventsTable, fieldName));
 }
 
