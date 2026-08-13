@@ -25,7 +25,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 /************************************************************************************************
  * 054 - Achievements and Milestones - Streak Occurrences - Create or Repair Streak XP Event
  *
- * Version: v5.7
+ * Version: v5.8
  * Date Written: 2026-06-09
  * Last Updated: 2026-08-13
  *
@@ -37,8 +37,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Streak End Date → Source Key date segment uses America/Denver (not UTC ISO slice).
  * - v5.6: Duplicate active XP Reward Rules for the same Rule Key now error (matches 059),
  *   instead of silently using the first match.
- * - v5.7: An inactive Streak Occurrence deactivates only its exact owned XP Event;
- *   ambiguous or mismatched ownership fails closed and restoration reuses that event.
+ * - v5.8: Full exact-ownership reconciliation: duplicate or wrong-owner candidates
+ *   fail closed, withdrawal/restoration retain the same event/source key, and source
+ *   links are appended rather than replacing unrelated family links.
  *
  * PURPOSE
  * - Reads one Streak Occurrence.
@@ -79,7 +80,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
     scriptName: "054 - Achievements and Milestones - Streak Occurrences - Create or Repair Streak XP Event",
-    version: "v5.7",
+    version: "v5.8",
     timeZone: "America/Denver",
 
     tables: {
@@ -483,6 +484,28 @@ function appendNote(existingNote, newNote) {
     return `${existing}\n${newNote}`;
 }
 
+function appendLinkedId(existingIds, newId) {
+    return [...new Set([...(existingIds || []).filter(Boolean), newId].filter(Boolean))]
+        .map((id) => ({ id }));
+}
+
+function isExactOwnedXpEvent(xpEvent, {
+    sourceKey,
+    occurrenceId,
+    enrollmentId,
+}) {
+    if (!xpEvent) return false;
+    const eventOccurrenceIds = getLinkedIds(xpEvent, xpEventsTable, CONFIG.xpEvents.streakOccurrence);
+    const eventEnrollmentIds = getLinkedIds(xpEvent, xpEventsTable, CONFIG.xpEvents.enrollment);
+    return (
+        getText(xpEvent, xpEventsTable, CONFIG.xpEvents.sourceKey) === sourceKey &&
+        eventOccurrenceIds.length === 1 &&
+        eventOccurrenceIds[0] === occurrenceId &&
+        eventEnrollmentIds.length === 1 &&
+        eventEnrollmentIds[0] === enrollmentId
+    );
+}
+
 async function markOccurrenceError(streakOccurrenceId, reason, debugStep, extraOutputs = {}) {
     const occurrenceForError = await streakOccurrencesTable.selectRecordAsync(streakOccurrenceId);
 
@@ -585,9 +608,9 @@ async function reconcileInactiveOccurrence(streakOccurrenceId, occurrence, debug
         return;
     }
 
-    await xpEventsTable.updateRecordAsync(xpEvent.id, {
-        [CONFIG.xpEvents.active]: false,
-    });
+    const deactivateFields = {};
+    addWritable(deactivateFields, xpEventsTable, CONFIG.xpEvents.active, false);
+    await xpEventsTable.updateRecordAsync(xpEvent.id, deactivateFields);
     const occurrenceFields = {};
     addWritable(
         occurrenceFields,
@@ -884,8 +907,29 @@ async function main() {
         }
 
         const existingXpEvents = [...existingMap.values()].sort((a, b) => a.id.localeCompare(b.id));
-        const canonicalXpEvent = existingXpEvents.length > 0 ? existingXpEvents[0] : null;
-        const duplicateXpEvents = existingXpEvents.slice(1);
+        if (existingXpEvents.length > 1) {
+            await markOccurrenceError(
+                recordId,
+                `Duplicate or ambiguous Streak XP candidates for ${sourceKey}: ${existingXpEvents.map((event) => event.id).join(", ")}`,
+                debugStep,
+                { sourceKey, sameEventRestoration: "blocked_duplicate_candidates" }
+            );
+            return;
+        }
+        const canonicalXpEvent = existingXpEvents[0] || null;
+        if (canonicalXpEvent && !isExactOwnedXpEvent(canonicalXpEvent, {
+            sourceKey,
+            occurrenceId: recordId,
+            enrollmentId,
+        })) {
+            await markOccurrenceError(
+                recordId,
+                `Streak XP candidate ${canonicalXpEvent.id} does not have exact ownership for ${sourceKey}.`,
+                debugStep,
+                { sourceKey, sameEventRestoration: "blocked_ownership_mismatch" }
+            );
+            return;
+        }
 
         debugStep = "9 - Create or Repair XP Event";
         setOutputSafe("debugStep", debugStep);
@@ -935,8 +979,35 @@ async function main() {
                 xpEventId = canonicalXpEvent.id;
                 actionOut = "updated_xp_event";
             } else {
-                xpEventId = await xpEventsTable.createRecordAsync(xpFields);
-                actionOut = "created_xp_event";
+                // Last-chance recheck prevents a concurrent trigger from minting a
+                // second event for the same canonical source identity.
+                const recheck = await xpEventsTable.selectRecordsAsync({
+                    fields: optionalFields(xpEventsTable, [
+                        CONFIG.xpEvents.enrollment,
+                        CONFIG.xpEvents.streakOccurrence,
+                        CONFIG.xpEvents.sourceKey,
+                        CONFIG.xpEvents.active,
+                    ]),
+                });
+                const recheckCandidates = recheck.records.filter((event) =>
+                    getText(event, xpEventsTable, CONFIG.xpEvents.sourceKey) === sourceKey ||
+                    getLinkedIds(event, xpEventsTable, CONFIG.xpEvents.streakOccurrence).includes(recordId)
+                );
+                if (recheckCandidates.length > 1) {
+                    throw new Error(`Duplicate XP Events found during create recheck for ${sourceKey}: ${recheckCandidates.map((event) => event.id).join(", ")}`);
+                }
+                if (recheckCandidates.length === 1) {
+                    const rechecked = recheckCandidates[0];
+                    if (!isExactOwnedXpEvent(rechecked, { sourceKey, occurrenceId: recordId, enrollmentId })) {
+                        throw new Error(`XP Event ${rechecked.id} failed exact ownership during create recheck for ${sourceKey}.`);
+                    }
+                    await xpEventsTable.updateRecordAsync(rechecked.id, xpFields);
+                    xpEventId = rechecked.id;
+                    actionOut = "updated_after_recheck";
+                } else {
+                    xpEventId = await xpEventsTable.createRecordAsync(xpFields);
+                    actionOut = "created_xp_event";
+                }
             }
         } catch (error) {
             await markOccurrenceError(recordId, `Failed to create/update XP Event: ${error.message || error}`, debugStep, {
@@ -948,34 +1019,17 @@ async function main() {
 
         await ensureXpEventWeeklySummaryLink(xpEventId, weeklySummaryId);
 
-        debugStep = "10 - Mark Duplicate XP Events Inactive";
-        setOutputSafe("debugStep", debugStep);
-
-        let duplicateXpEventsMarkedInactive = 0;
-
-        for (const duplicate of duplicateXpEvents) {
-            const duplicateFields = {};
-
-            addWritable(duplicateFields, xpEventsTable, CONFIG.xpEvents.active, false);
-            addWritable(
-                duplicateFields,
-                xpEventsTable,
-                CONFIG.xpEvents.xpReasonPublic,
-                `Duplicate streak XP event. Canonical XP Event: ${xpEventId}. Source Key: ${sourceKey}`
-            );
-
-            if (Object.keys(duplicateFields).length > 0) {
-                await xpEventsTable.updateRecordAsync(duplicate.id, duplicateFields);
-                duplicateXpEventsMarkedInactive++;
-            }
-        }
-
-        debugStep = "11 - Link Streak Occurrence and Mark Awarded";
+        debugStep = "10 - Link Streak Occurrence and Mark Awarded";
         setOutputSafe("debugStep", debugStep);
 
         const occurrenceFields = {};
 
-        addWritableRaw(occurrenceFields, streakOccurrencesTable, CONFIG.streakOccurrences.xpEvents, [{ id: xpEventId }]);
+        addWritableRaw(
+            occurrenceFields,
+            streakOccurrencesTable,
+            CONFIG.streakOccurrences.xpEvents,
+            appendLinkedId(existingLinkedXpEventIds, xpEventId)
+        );
         addWritable(occurrenceFields, streakOccurrencesTable, CONFIG.streakOccurrences.sourceStatus, CONFIG.values.statusAwarded);
         addWritable(occurrenceFields, streakOccurrencesTable, CONFIG.streakOccurrences.lastEvaluatedAt, new Date().toISOString());
 
@@ -990,7 +1044,7 @@ async function main() {
 
         await streakOccurrencesTable.updateRecordAsync(recordId, occurrenceFields);
 
-        debugStep = "12 - Complete";
+        debugStep = "11 - Complete";
         setOutputSafe("debugStep", debugStep);
 
         const statusOut = actionOut === "created_xp_event"
@@ -1014,7 +1068,7 @@ async function main() {
         setOutputSafe("xpAmount", xpAmount);
         setOutputSafe("xpRuleId", matchingRule.id);
         setOutputSafe("sourceKey", sourceKey);
-        setOutputSafe("duplicateXpEventsMarkedInactive", duplicateXpEventsMarkedInactive);
+        setOutputSafe("duplicateXpEventsMarkedInactive", 0);
 
         console.log(JSON.stringify({
             automation: CONFIG.scriptName,
