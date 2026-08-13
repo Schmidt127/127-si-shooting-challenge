@@ -1,6 +1,8 @@
 # Video Feedback XP — Production Schmidt Test Packet
 
-**Status:** Draft — repository readiness only; Production evidence pending
+**Status:** Draft — repository readiness only; Production evidence pending. **All
+Production paste, configuration, and controlled testing are blocked until Mike
+explicitly releases both the PKG-006R and PKG-036 coordination locks.**
 **Scope:** `013 → 113 → 114 → rollups → 041 → 042`
 **Production base:** `appn84sqPw03zEbTT`
 **Owner/executor:** Mike only. Mike alone pastes scripts, changes native Production automations, or initiates this test.
@@ -37,6 +39,27 @@
    - Existing XP Event count for exact `Source Key = VIDEO_SUBMISSION|{VideoFeedbackId}`.
 3. Stop immediately if the audit reports duplicate or mislinked Video XP for the selected row, ambiguous links, missing Program Instance/Athlete/School Year, inactive Enrollment, a blank/multiple Week, a future Activity Date, or an existing active event for a different source.
 4. Do not repair, deactivate, activate, delete, relink, or manually edit an XP Event during this packet. Capture the evidence and stop for a separate approved repair decision.
+
+## Required Production schema — verify; never create or rename
+
+The names, types, select options, and field IDs below are from the dated
+`prod-20260706` repository snapshot, not live-state proof. Mike must verify
+them in the Production UI immediately before paste. A type/option/ownership
+mismatch is a stop condition; do not “fix” it in this packet.
+
+| Table | Required fields, exact type, and runtime ownership |
+|---|---|
+| `Video Feedback` | `Feedback Posted?`, `Do Not Award XP?`, `Active?`, and `Ready for XP Automation?` are writable checkboxes. `Coach Feedback` is multiline text. `Enrollment` and `Submission` are `multipleRecordLinks` configured as single-preferred, but each selected record must contain exactly one link. `XP Events` is a link (one canonical event per Video Feedback). `Base XP Awarded` is a writable number; `Total Video XP Awarded` is a read-only formula. `Award Status` is writable `singleSelect` with exactly `Pending`, `Awarded`, and `Do Not Award`. `Video Feedback Workflow Status` is writable `singleSelect` and must include `Ready for XP` if 113 writes it. `Reviewed By` and `Reviewed At` are optional writable review metadata. |
+| `XP Reward Rules` | `Active?` checkbox, `Rule Key` single-line text, and `XP Amount` number. Exactly one active record has `Rule Key = VIDEO_SUBMISSION`; record its ID and positive amount. `Reward Rule` is display-only for 113 matching. |
+| `Submissions` | `Enrollment` and `Week` are single-preferred record links and must each contain exactly one link. `Activity Date` is a read-only input date and must be present and not future-dated. `Weekly Athlete Summary` is an optional source link; when used it must contain exactly one canonical summary. |
+| `Enrollments` | `Active?` checkbox must be checked. The selected record must be the sole Video Feedback/Submission Enrollment. |
+| `XP Events` | `Enrollment`, `Submission`, `Week`, `Video Feedback`, and `Weekly Athlete Summary` are writable record links. The first four must each contain exactly one matching link; the summary must be the unique canonical Enrollment + Week summary. `XP Source` (`singleSelect`) must include `Video Submission`; `XP Bucket` (`singleSelect`) must include `Video Feedback`; `XP Points` is writable number; `XP Reason Public` and `XP Reason Debug` are writable text; `Active?` is writable checkbox; `Source Key` is writable single-line text. `XP Dedupe Key Normalized` is a formula/read-only match aid and is never written. |
+| `Weekly Athlete Summary` | `Enrollment` and `Week` are single-preferred links. There must be exactly one record for the selected Enrollment + Week. `XP Events` is the reciprocal link; `XP Earned This Week` is a read-only rollup and must be allowed to settle. |
+
+Never write a formula, lookup, rollup, count, or other computed field. In
+particular, `Video Feedback.Total Video XP Awarded`,
+`XP Events.XP Dedupe Key Normalized`, and `Weekly Athlete Summary.XP Earned
+This Week` are read-only.
 
 ## Installed native-automation check — Mike records the result
 
@@ -83,6 +106,11 @@ Before the positive path, open Production Automations and record the version, tr
 
 The 114 trigger must cover both positive award/reactivation changes and withdrawal changes that deactivate an existing exact XP Event. Do not apply any positive-only trigger restriction: `XP Events is empty`, `Award Status is not Awarded`, `Feedback Posted? is checked`, `Active? is checked`, or `Do Not Award XP? is unchecked`. Those restrictions prevent the correction branch from running.
 
+For both automations, the action input must be the dynamic triggering record
+ID—not a pasted `rec...` value. Record the configured watched fields and the
+dynamic mapping in the evidence log. The repository cannot establish
+Production trigger state or ON/OFF status.
+
 ### Countability boundary
 
 `Count This Submission?` and shooting-stat countability do not control Video Feedback XP. Video XP is awarded for eligible reviewed Video Feedback; the required source checks are its exact identity, single Submission Week, and non-future Activity Date.
@@ -112,6 +140,37 @@ The 114 trigger must cover both positive award/reactivation changes and withdraw
 1. Without changing eligibility, rerun only the installed 114 action for the same VF record, or make the same trigger condition re-enter through Mike's controlled native procedure.
 2. Expect `updated` or `updated-after-recheck`, the same XP Event ID, the same source key, and count exactly one matching XP Event afterward.
 3. Save a third read-only audit output. Stop if a second event, changed source key, different source ownership, unexpected deactivation/reactivation, or email-related record/run appears.
+
+## Controlled withdrawal and restoration checks
+
+Run each branch one at a time on the same selected Video Feedback row only
+after the positive award and replay evidence is saved:
+
+1. Set `Do Not Award XP? = checked`; let 114 run. Confirm the same canonical
+   event is inactive, no replacement exists, `Award Status = Do Not Award`,
+   and the ready flag is cleared.
+2. Restore eligibility, run 113 then 114, and confirm that the exact same XP
+   Event ID is active again with the same source key.
+3. Clear `Feedback Posted?`; let 114 run. Confirm that same event becomes
+   inactive, no replacement exists, and the ready flag is cleared. Restore,
+   then run 113 → 114 and retain the same event ID.
+4. Clear `Active?`; let 114 run. Confirm that same event becomes inactive,
+   no replacement exists, and the ready flag is cleared. Restore, then run
+   113 → 114 and retain the same event ID.
+5. For wrong ownership, duplicate canonical key, or multiple canonical WAS
+   candidates, stop on the script error and retain IDs/output. Do not relink,
+   delete, or manually repair records. These are intended fail-closed results.
+
+## Three-file / three-award proof
+
+Use a clean controlled Submission containing three uploaded video files only
+when the coordination locks are released. Verify `013` creates/links three
+distinct Video Feedback rows—one per Submission Asset. Complete the positive
+113 → 114 path for each row. Prove three distinct canonical keys
+`VIDEO_SUBMISSION|<Video Feedback ID>`, three distinct XP Event IDs, and the
+expected settled weekly/lifetime total delta. This policy is intentional:
+three uploaded files may earn three awards; do not consolidate them by
+Enrollment, Submission, or Week.
 
 ## Stop conditions
 

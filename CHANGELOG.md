@@ -9,6 +9,19 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Docs
 
 #### Changed
+- **PKG-007 Video XP final readiness reconciliation (2026-08-13)** —
+  Automation **114 v6.1** now includes `XP Events.Active?` in its exact-event
+  lookup, so the actual selected-field Airtable runtime can deactivate the
+  existing canonical event on inactive, unposted, or Do Not Award Video
+  Feedback rather than silently treating its active state as blank. Added a
+  mocked-runtime suite that executes committed 113/114 source through award,
+  three-row award, replay, all three withdrawals, same-ID restoration,
+  wrong-owner/duplicate fail-closed paths, last-chance concurrency recheck,
+  and canonical WAS repair. The Production Schmidt packet now contains the
+  source-snapshot field/type/ownership contract and explicit three-file proof.
+  **No Production Airtable access, paste, trigger/configuration change, test
+  record change, or XP Reward Rule change was made. All Production actions
+  remain blocked until Mike releases PKG-006R and PKG-036 coordination locks.**
 - **PKG-007 Production Homework XP closeout (2026-08-13)** — Mike supplied
   Production evidence for 020 v3.5, 064 v12.2, and 065 v10.1: 064/065 ON,
   071 OFF, and 063/068 absent or retired. The nine-field signature chain was

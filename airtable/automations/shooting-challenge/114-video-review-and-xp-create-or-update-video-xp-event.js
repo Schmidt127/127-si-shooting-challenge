@@ -4,13 +4,14 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-21
-Last GitHub Update: 2026-06-21
+Last GitHub Update: 2026-08-13
 
 Purpose:
 Creates or updates Video Submission XP Events from Video Feedback records.
 
 Trigger:
-Video Feedback when feedback is posted, XP is positive, and Ready for XP Automation? is checked.
+Video Feedback lifecycle reconciliation; the native trigger must reach both
+positive award/reactivation and withdrawal/deactivation updates.
 
 Important Tables:
 Video Feedback, Submissions, XP Events, Weekly Athlete Summary
@@ -28,7 +29,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  *
  * Version: v6.1
  * Date Written: 2026-05-23
- * Last Updated: 2026-08-12
+ * Last Updated: 2026-08-13
  * Updated Reason: Reconcile the exact XP Event lifecycle. Eligibility loss
  * deactivates the canonical event; restoration reactivates that same record.
  *
@@ -80,20 +81,18 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * TRIGGER TABLE
  * - Video Feedback
  *
- * RECOMMENDED TRIGGER CONDITIONS
- * - Feedback Posted? is checked
- * - Total Video XP Awarded > 0
- * - Enrollment is not empty
- * - Submission is not empty
- * - Do Not Award XP? is unchecked
- * - XP Events is empty
- * - Ready for XP Automation? is checked
+ * REQUIRED LIFECYCLE TRIGGER CONTRACT
+ * - Trigger table: Video Feedback; type: When record updated.
+ * - Watch Active?, Feedback Posted?, Do Not Award XP?,
+ *   Ready for XP Automation?, Total Video XP Awarded, Enrollment, Submission,
+ *   and XP Events.
+ * - Input recordId must dynamically map to the triggering Video Feedback ID.
+ * - The trigger must reach both positive and withdrawal updates.
  *
- * OPTIONAL TRIGGER CONDITIONS
- * - Active? is checked
- *
- * DO NOT USE THIS TRIGGER CONDITION
- * - Award Status is not Awarded
+ * DO NOT USE POSITIVE-ONLY TRIGGER CONDITIONS
+ * - Feedback Posted? is checked, Active? is checked, Do Not Award XP? is
+ *   unchecked, XP Events is empty, Award Status is not Awarded, or a
+ *   positive-XP condition. Any of them can suppress required deactivation.
  *
  * REQUIRED INPUT VARIABLES
  * - recordId = Airtable record ID from the triggering Video Feedback record
@@ -726,6 +725,7 @@ function buildXpMatchFieldsToLoad() {
     CONFIG.xpEvents.submission,
     CONFIG.xpEvents.week,
     CONFIG.xpEvents.xpBucketKey,
+    CONFIG.xpEvents.active,
   ].filter(fieldName => fieldExists(xpEventsTable, fieldName));
 }
 
@@ -968,9 +968,10 @@ function findMatchingXpEvents(xpRecords, matchContext) {
     }
   }
 
-  const selectedTier = tier1Matches.length
-    ? tier1Matches
-    : tier2Matches;
+  // A direct Video Feedback link is the preferred reuse candidate, but it
+  // cannot hide a second event with the same canonical source key. Preserve
+  // both tiers so the caller fails closed on any duplicate identity.
+  const selectedTier = [...tier1Matches, ...tier2Matches];
 
   for (const record of selectedTier) {
     assertXpEventCompatibleOrThrow(record, matchContext);
