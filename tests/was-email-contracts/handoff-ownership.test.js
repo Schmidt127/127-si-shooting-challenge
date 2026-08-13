@@ -39,8 +39,8 @@ const s118 = read(
   "118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js"
 );
 
-test("072 v4.0 enforces empty-week policies and does not call Make/fetch webhook", () => {
-  assert.ok(/version:\s*"v4\.0"/.test(s072));
+test("072 v4.1 enforces empty-week policies and does not call Make/fetch webhook", () => {
+  assert.ok(/Version:\s*v4\.1/.test(s072));
   assert.ok(/emptyWeekPolicy/.test(s072));
   assert.ok(/built_short_empty_week/.test(s072));
   assert.ok(/skipped_empty_week_suppress/.test(s072));
@@ -59,8 +59,8 @@ test("119 v1.7 only arms Send to Make? and does not post webhook", () => {
   assert.ok(/send_short/.test(s119));
 });
 
-test("118 v1.7 does not build HTML or post webhook; arms sendMode from input", () => {
-  assert.ok(/version:\s*"v1\.7"/.test(s118));
+test("118 v1.8 does not build HTML or post webhook; arms sendMode from input", () => {
+  assert.ok(/version:\s*"v1\.8"/.test(s118));
   assert.ok(/Build Weekly Email Now\?/.test(s118) || /buildNow/.test(s118));
   assert.ok(!/\bfetch\s*\(/.test(s118));
   assert.ok(!/emptyWeekPolicy recorded but not enforced/.test(s118));

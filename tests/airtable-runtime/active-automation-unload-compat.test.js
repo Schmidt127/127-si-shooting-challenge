@@ -42,7 +42,7 @@ const TARGETS = [
   {
     num: "057",
     file: "057-achievements-and-milestones-calculate-perfect-week-eligibility.js",
-    versionRe: /Version:\s*1\.5/,
+    versionRe: /Version:\s*1\.6/,
     queryVars: ["zaQuery"],
   },
   {
@@ -54,7 +54,7 @@ const TARGETS = [
   {
     num: "118",
     file: "118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js",
-    versionRe: /Version:\s*v1\.7/,
+    versionRe: /Version:\s*v1\.8/,
     queryVars: ["enrollmentsQuery", "weeksQuery", "wasQuery"],
   },
   {
