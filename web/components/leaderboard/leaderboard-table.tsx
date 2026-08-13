@@ -75,7 +75,7 @@ export function LeaderboardTable({
           </thead>
           <tbody>
             {rest.map((entry) => (
-              <tr key={entry.id} className="transition-colors hover:bg-brand-light-gray">
+              <tr key={entry.rank} className="transition-colors hover:bg-brand-light-gray">
                 <td>
                   <RankCell rank={entry.rank} />
                 </td>
@@ -114,7 +114,7 @@ export function LeaderboardTable({
       <div className="space-y-3 md:hidden">
         {rest.map((entry) => (
           <article
-            key={entry.id}
+            key={entry.rank}
             className="rounded-2xl border border-border bg-card/70 p-4 backdrop-blur-xl"
           >
             <div className="flex items-start justify-between gap-3">
