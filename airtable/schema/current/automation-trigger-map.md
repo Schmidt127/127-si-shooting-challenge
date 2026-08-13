@@ -96,7 +96,7 @@ Maps Airtable automations and extension scripts to triggers, tables, and downstr
 |---|-------|---------|--------|------------|
 | 041 | XP Events / Enrollments | *confirm* | `041-...-mark-enrollment-for-level-recalculation.js` | Recalc flag |
 | 042 | Enrollments | *confirm* | `042-...-assign-current-and-next-level-with-gate-blocking.js` | Current/Next Level |
-| 043 | Levels | *confirm* | `043-...-set-level-gate-rule-from-next-level.js` | Gate rules |
+| 043 | Levels | **Retired — do not enable or recreate** | `043-...-set-level-gate-rule-from-next-level.js` (historical source only) | No downstream writer; `042` owns `Level Gate Rule` |
 
 ### Email packages (072, 074–077, 075)
 

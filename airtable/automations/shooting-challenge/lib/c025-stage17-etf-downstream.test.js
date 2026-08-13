@@ -268,9 +268,9 @@ function testSourceGuards() {
   );
   assert.ok(lib.dailySubmissionBranchMustRemainUntouched(src));
   assert.ok(lib.c025PathMustUseQueryBudget(src));
-  // Authoritative SCRIPT.version in repo is v1.9 (message/header corrections on
-  // top of v1.8 Stage 17 logic). PROD Airtable may still run pasted v1.8.
-  assert.ok(src.includes('version: "v1.9"'));
+  // Authoritative SCRIPT.version in repo is v2.1. Production may still run a
+  // previously pasted version; this test validates the committed source only.
+  assert.ok(src.includes('version: "v2.1"'));
   assert.ok(src.includes("pollAttempts: 5"));
   assert.ok(!src.includes("pollAttempts: 20"));
   assert.ok(src.includes("Timed Out Waiting for 057"));
@@ -298,7 +298,7 @@ function testSourceGuards() {
   const dailyIdx = src.indexOf("scenarioType === CONFIG.scenarioTypes.dailySubmission");
   const c025Idx = src.indexOf("isC025Stage17DownstreamScenario");
   assert.ok(dailyIdx > 0 && c025Idx > 0);
-  ok("115 v1.8 source guards: wait WAS Ready, Queue re-entry, 042 view re-entry, budget, Daily intact");
+  ok("115 v2.1 source guards: wait WAS Ready, Queue re-entry, 042 view re-entry, budget, Daily intact");
 }
 
 function testNoProdBase() {
