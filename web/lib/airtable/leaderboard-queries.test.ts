@@ -134,8 +134,8 @@ describe("fetchLeaderboard Airtable adapter", () => {
 
   it("rejects a duplicate canonical enrollment identity returned by the view", async () => {
     installQueryMock([
-      enrollment("recA", "Avery"),
-      enrollment("recB", "Avery"),
+      enrollment("recA", "Avery", { "Athlete ID Lookup": ["same-athlete"] }),
+      enrollment("recB", "Avery", { "Athlete ID Lookup": ["same-athlete"] }),
     ]);
     await expect(fetchLeaderboard()).rejects.toThrow(/Duplicate canonical Enrollment identity/);
   });
