@@ -14,7 +14,7 @@ pass the listed DEV proofs. Repository tests do not constitute Production proof.
 | 1 | 031 | v4.1 | Counted `Submissions`; dynamic `recordId` |
 | 2 | 032 | v3.4 | Eligible `Weekly Athlete Summary`; dynamic `recordId` |
 | 3 | 057 | v1.7 | Perfect Week recalculation; dynamic `recordId` |
-| 4 | 058 | v1.1 | Perfect Week Eligible + Ready; dynamic `recordId` |
+| 4 | 058 | v1.2 | Lifecycle-capable Perfect Week trigger; dynamic `recordId` |
 | 5 | 076 | v8.6 | `Build Daily Email Now?` checked; dynamic `recordId` |
 | 6 | 101 | v6.3 | `Zoom XP Reconciliation Needed? = 1`; dynamic `recordId` |
 | 7 | 118 | v2.0 | Scheduled Sunday 05:00 America/Denver; inputs `dryRun`, `sendMode`, `excludedEnrollmentIds`, `includeSchmidt`, `emptyWeekPolicy` |
