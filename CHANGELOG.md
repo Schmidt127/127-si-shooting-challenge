@@ -9,6 +9,16 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Docs
 
 #### Changed
+- **PKG-040 standings and leaderboard reliability (2026-08-13)** — The public
+  standings adapter now requires the `Web - Leaderboard` view instead of
+  broadening to an unsafe table fallback, resolves the active Config School
+  Year and canonical Program Instance before reading it, validates active
+  Enrollment identity and settled level/XP/shots on every returned row, rejects
+  duplicates and incomplete rows, paginates without a 200-row ceiling, and
+  removes Airtable Enrollment IDs from the public model. Added a read-only
+  integrity audit with executable fixture coverage and a Mike-only Production
+  verification packet. Production Airtable, configuration, automation, email,
+  deployment, and package locks remain untouched.
 - **PKG-038 streak and shot-milestone corrected-history lifecycle (2026-08-13)** —
   053 v5.4 now rebuilds current canonical streak occurrences, deactivates
   unsupported topology, and re-arms exact restored occurrences; 054 v5.8

@@ -23,26 +23,26 @@ function readSource(relativePath: string): string {
   return readFileSync(path.join(WEB_ROOT, relativePath), "utf-8");
 }
 
+function leaderboardFields(name: string, rank = 2, xp = 300, shots = 150) {
+  return {
+    "Full Athlete Name": name,
+    "Current Level - Public Facing Display": `Level ${rank}`,
+    "Level Sort Order - For Softr": rank,
+    "Lifetime XP Total": xp,
+    "Total Shots Counted": shots,
+  };
+}
+
 describe("Schmidt visibility", () => {
   it("renders a Schmidt enrollment like any other athlete", () => {
     const data = buildLeaderboardData([
       {
         id: "recSCHMIDT0000001",
-        fields: {
-          "Full Athlete Name": "Schmidt Test Athlete",
-          "Level Sort Order - For Softr": 2,
-          "Lifetime XP Total": 300,
-          "Total Shots Counted": 150,
-        },
+        fields: leaderboardFields("Schmidt Test Athlete"),
       },
       {
         id: "recOTHER000000001",
-        fields: {
-          "Full Athlete Name": "Other Athlete",
-          "Level Sort Order - For Softr": 3,
-          "Lifetime XP Total": 500,
-          "Total Shots Counted": 200,
-        },
+        fields: leaderboardFields("Other Athlete", 3, 500, 200),
       },
     ]);
 
@@ -82,23 +82,34 @@ describe("privacy-safe fields", () => {
     }
   });
 
-  it("leaderboard entries expose no contact keys", () => {
+  it("leaderboard entries expose neither contact keys nor Airtable record IDs", () => {
     const data = buildLeaderboardData([
       {
         id: "recX00000000000001",
-        fields: {
-          "Full Athlete Name": "Any Athlete",
-          "Lifetime XP Total": 10,
-        },
+        fields: leaderboardFields("Any Athlete", 1, 10, 0),
       },
     ]);
 
     const entryKeys = Object.keys(data.entries[0]);
+    expect(entryKeys).not.toContain("id");
     for (const key of entryKeys) {
       for (const pattern of FORBIDDEN_FIELD_PATTERNS) {
         expect(key).not.toMatch(pattern);
       }
     }
+  });
+
+  it("reduces Airtable attachment metadata to a public URL only", () => {
+    const data = buildLeaderboardData([{
+      id: "recX00000000000002",
+      fields: {
+        ...leaderboardFields("Any Athlete", 1, 10, 0),
+        "Athlete Headshot": [{ id: "attPrivate", filename: "private-name.jpg", url: "https://example.com/a.jpg" }],
+      },
+    }]);
+    expect(data.entries[0].headshot).toEqual({ url: "https://example.com/a.jpg" });
+    expect(JSON.stringify(data.entries[0])).not.toContain("attPrivate");
+    expect(JSON.stringify(data.entries[0])).not.toContain("private-name.jpg");
   });
 });
 
@@ -107,10 +118,7 @@ describe("deterministic tie ordering", () => {
     const tied = (id: string, name: string) => ({
       id,
       fields: {
-        "Full Athlete Name": name,
-        "Level Sort Order - For Softr": 4,
-        "Lifetime XP Total": 100,
-        "Total Shots Counted": 50,
+        ...leaderboardFields(name, 4, 100, 50),
       },
     });
 

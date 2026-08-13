@@ -7,7 +7,7 @@ Maps Airtable tables and fields to web app features.
 | Doc | Purpose |
 |-----|---------|
 | This file | Table → feature map, env vars |
-| [airtable-views.md](./airtable-views.md) | View names + fallback filters (matches `queries.ts`) |
+| [airtable-views.md](./airtable-views.md) | View names and documented fallback policy (matches `queries.ts`) |
 | [../../airtable/schema/snapshots/](../../airtable/schema/snapshots/) | Dated schema exports — latest: `20260628_130208` |
 | [../../airtable/schema/current/](../../airtable/schema/current/) | Hand-maintained change notes |
 
@@ -54,7 +54,7 @@ These names must match `web/lib/airtable/queries.ts`. Full fallback formulas: [a
 
 | View name | Table | Used for | Fallback if view missing |
 |-----------|-------|----------|--------------------------|
-| `Web - Leaderboard` | Enrollments | Leaderboard, public display | `AND({Active?}, {Lifetime XP Total} >= 0)` |
+| `Web - Leaderboard` | Enrollments | Leaderboard, public display | Required — no table-wide fallback |
 | `Web - Homework Catalog` | FBC Curriculum - SYNC | Homework list | `{Published?} = 1` |
 | `Web - Levels` | Levels | Levels ladder | `{Active?} = 1` |
 | `Web - Tutorials Catalog` | Tutorials | Tutorials, shoutouts, articles | Softr publish + Shooting Challenge program filter |
@@ -86,8 +86,10 @@ Registration consent is the publication basis for game-related profile data;
 require `Active?`; duplicate slugs fail closed (not-found + server log).
 Never use Airtable record IDs in public URLs.
 
-**Wired:** `Web - Leaderboard` preferred for standings; profile query is formula-based (no dedicated view required).  
-**Operator note:** PROD may be missing the `Web - Leaderboard` view — the app falls back to `AND({Active?}, {Lifetime XP Total} >= 0)`.
+**Wired:** `Web - Leaderboard` is required for standings; profile query is
+formula-based (no dedicated view required).
+**Operator note:** a missing `Web - Leaderboard` view is a stop condition. The
+app fails closed rather than broadening to active Enrollments.
 
 ## Environment variables
 

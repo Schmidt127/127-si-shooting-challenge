@@ -4,7 +4,10 @@ Documents every Airtable view and fallback filter used by `web/lib/airtable/quer
 
 **Base:** 127 SI Shooting Challenge (`appn84sqPw03zEbTT`)
 
-When a named view is missing, the app falls back to an equivalent `filterByFormula` (logged via `isMissingAirtableViewError`).
+Most catalog queries may use documented fallback filters. **Standings are the
+exception:** `Web - Leaderboard` is required. A missing or renamed standings
+view fails closed because a broad Enrollments query cannot prove exact Program
+Instance scope from Airtable's public linked-record response.
 
 ---
 
@@ -12,7 +15,7 @@ When a named view is missing, the app falls back to an equivalent `filterByFormu
 
 | Feature | Table | View | Fallback filter | Revalidate (s) |
 |---------|-------|------|-----------------|----------------|
-| Leaderboard | Enrollments | `Web - Leaderboard` | `AND({Active?}, {Lifetime XP Total} >= 0)` | 120 |
+| Leaderboard | Enrollments | `Web - Leaderboard` (required) | None — fail closed | 120 |
 | Homework catalog | FBC Curriculum - SYNC | `Web - Homework Catalog` | `{Published?} = 1` | 300 |
 | Homework detail | FBC Curriculum - SYNC | — | `AND({Published?}, RECORD_ID()='…')` | 300 |
 | Weeks (homework/zoom) | Weeks | *(no view — all weeks)* | — | 300 |
@@ -31,16 +34,27 @@ When a named view is missing, the app falls back to an equivalent `filterByFormu
 |------|--------|
 | Table | `Enrollments` |
 | View | `Web - Leaderboard` |
-| Max records | 200 |
+| Max records | All pages (no silent cap) |
 | Sort | In-app (`buildLeaderboardData`) — level sort order → XP → shots |
 
 **Fields read:**
 
+- `Active?`, `Athlete`, `Athlete ID Lookup`, `Program Instance`, `School Year`
+- `Current Level`, `Current Level - Public Facing Display`, `Level Status`, `Level Sort Order - For Softr`
 - `Full Athlete Name`, `School Name Lookup`, `Grade`
-- `Current Level - Public Facing Display`, `Level Sort Order - For Softr`
 - `Athlete Headshot`, `Lifetime XP Total`, `Total Shots Counted`, `School Year`
 
-**View intent:** Active enrollments suitable for public leaderboard. Create this view in Airtable with the same filters as the fallback if not present.
+**View contract:** exactly the configured active School Year and the one
+`Shooting Challenge | <year>` Program Instance, active Enrollments only,
+exactly one Athlete and Current Level, active Current Level, and settled
+nonnegative Level Rank / Lifetime XP / counted shots. The web adapter resolves
+the current scope through `Config` and `Program Instance - Synced`, validates
+all returned rows again, rejects duplicate Athlete + Program Instance + School
+Year identities, and never serializes Airtable Enrollment IDs.
+
+**Failure behavior:** a missing/renamed view, duplicate identity, off-scope
+row, or incomplete progression/total fails closed. Repair the view/data or use
+the PKG-040 read-only audit; do not add a broad table fallback.
 
 ---
 
