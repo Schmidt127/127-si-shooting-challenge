@@ -307,9 +307,9 @@ test("data-model pack documents Week Key vs Week Code vs Week Name", () => {
   assert.ok(!/seed convention only/i.test(audit));
 });
 
-test("118/119 v1.7 allows Live season arming; docs say schedules ON", () => {
+test("118 v2.0 and 119 v1.7 allow Live season arming; docs say schedules ON", () => {
   const s118 = read(path.join(AUTO_DIR, "118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js"));
-  assert.ok(/version:\s*"v1\.7"/.test(s118));
+  assert.ok(/version:\s*"v2\.0"/.test(s118));
   assert.ok(!/refuses sendMode=Live when dryRun=false/.test(s118));
   const s119 = read(path.join(AUTO_DIR, "119-email-notifications-and-external-handoffs-schedule-weekly-summary-email-send.js"));
   assert.ok(/version:\s*"v1\.7"/.test(s119), "119 CONFIG.version must be v1.7");
