@@ -60,7 +60,8 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Athlete Achievement Unlocks
  *
  * TRIGGER TYPE
- * - When record matches conditions
+ * - When record updated (or an equivalent native configuration that re-enters
+ *   both award/restoration and inactive-withdrawal updates).
  *
  * REQUIRED LIFECYCLE TRIGGER (Airtable UI)
  * - When a record is updated or created on Athlete Achievement Unlocks.
