@@ -27,6 +27,12 @@ Public site: `https://www.fairfieldbasketballclub.com/shoot` (`basePath` `/shoot
 
 A gamified shooting homework program with Airtable as the system of record for XP, progression, streaks, milestones, and Perfect Week — plus a Next.js participant site that presents that truth. Neighboring club apps (JR Ref, Team Shot Tracker, rankings, landing) are separate products; this repo is Shooting Challenge only.
 
+## Confirmed Design Direction
+
+- **Athlete-forward:** Make competition, visible progress, earned accomplishments, and the next training action the first visual read. Parent clarity supports that athlete-centered experience; it must not turn the product into an administrative dashboard.
+- **Public and family-readable:** Shared public surfaces should make sense to athletes and families together. Prefer a single, clear progress story over separate athlete-versus-parent visual modes unless a future approved product requirement introduces distinct permissions or jobs.
+- **Professional sports craft:** The interface should feel authored for a serious youth basketball program: confident, energetic, concise, and credible to parents, coaches, and schools. It must never become childish, generic SaaS, or a promotional landing-page imitation.
+
 ## Operating Context
 
 - Families often use phones; design must be mobile-first.
@@ -69,9 +75,12 @@ Hoop landing, JR Ref, Team Shot Tracker, Dribbling, Brackets, Rankings — separ
 - Shared typography commitments: Magistral (when licensed) for major branded headings; Maven Pro for UI; approved substitutions only per brand standards.
 - Logo assets in-repo (e.g. `web/public/brand/`); do not invent remote logo URLs or distort logos.
 - Primarily light theme; no full dark theme unless Mike explicitly approves.
+- Use the established blue-and-orange system as the visual anchor. Add complementary colors only when a semantic state, accessibility need, or intentional basketball-program emphasis requires them; keep those additions restrained, harmonious with the palette, and subordinate to blue and orange.
+- Use the established font system first. A complementary typeface is acceptable only when it has a clear functional role the existing fonts cannot serve (for example, highly legible numeric data), preserves the sports-program character, and does not compete with Maven Pro or licensed Magistral display headings.
 - Experience should feel like a **premium youth sports product**, not a generic SaaS dashboard.
 - Prefer strong sports typography, scoreboard-inspired data presentation, deliberate hierarchy, restrained basketball motifs, and compact information density.
-- Avoid excessive rounded cards, pills, gradients, glass effects, decorative blobs, repeated icon-stat tiles, and other generic AI-generated patterns.
+- Avoid AI slop and template-led composition. Each visual element must clarify a real program action, metric, or hierarchy; do not add decoration merely to make a screen feel “designed.”
+- Avoid excessive rounded-card grids, pills, gradients, glass effects, decorative blobs, floating dashboard widgets, repeated icon-stat tiles, generic “feature” layouts, stock-SaaS patterns, and other generic AI-generated treatments.
 - Athlete progress, competition, accomplishments, and improvement should be visually prominent.
 - Exciting for athletes; clear and credible for parents, coaches, and schools.
 - Canonical shared brand source: `Schmidt127/hoopchallenges-landing` `BRAND_STANDARDS.md`; leaf copy in this repo must stay synchronized through approved updates. App-specific accents live in `APP_CONTEXT.md`.
