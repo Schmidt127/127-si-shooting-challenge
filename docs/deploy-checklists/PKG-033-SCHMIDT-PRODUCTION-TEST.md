@@ -30,9 +30,9 @@
 | 5 | Re-run the same source only after recording first-state evidence | Same owners; no new source record | Same WAS and XP Event IDs; no total change; repaired backlinks only when exact ownership is proven | Stop if a second event/summary appears; deactivate nothing during this step |
 | 6 | Existing approved Homework and Video package checkpoints are available | Existing PR #166 / #165 paths only | Record dependency evidence without changing 020/064/065/067 or 013/113/114 in PKG-033 | Stop and hand back to the owning package if either dependency is not ready |
 | 7 | One qualifying live Zoom Attendance, exact meeting/week/enrollment, unique reward rules | `101` current live version | One live attendance event/source key, exact WAS, settled weekly/lifetime XP, no unexpected Attendees rewrite | Stop on multiple attendees/enrollments/rules or wrong Week; preserve event |
-| 8 | If supported by approved product policy, one recording participation for the same meeting | Current approved Stage 17 path; `117` email handoff remains separate | Record whether live+recording are exclusive or both allowed; recording event uses exact attendance/meeting/enrollment/WAS identity | Stop if policy is not decided; do not paste alternatives 117a–e |
-| 9 | Withdraw approval/eligibility on the controlled Zoom source | Current lifecycle owner | Canonical XP Event becomes inactive; no deletion/recreation; WAS and lifetime totals settle downward | Stop if a replacement event appears; restore prior state |
-| 10 | Restore the same approval/eligibility | Same lifecycle owner | Same XP Event reactivates, same source key and record ID, totals settle upward once | Stop on duplicate or progression churn |
+| 8 | **Conditional:** run only after PKG-010 product policy and a named canonical recording-XP owner/version are approved; otherwise mark `SKIPPED — owner unresolved` | Mike-approved recording-XP owner; `117` remains email-only and `117a–e` are not canonical until separately approved | If enabled, record whether live+recording are exclusive or both allowed and capture exact attendance/meeting/enrollment/WAS identity | Stop if policy, owner, or version is not decided; do not paste alternatives 117a–e |
+| 9 | **Conditional with Stage 8 only:** withdraw approval/eligibility on the controlled Zoom source | The named PKG-010 owner/version only | If Stage 8 ran, the canonical XP Event becomes inactive; no deletion/recreation; WAS and lifetime totals settle downward | Skip with Stage 8 if owner unresolved; stop if a replacement event appears |
+| 10 | **Conditional with Stage 8 only:** restore the same approval/eligibility | The same named PKG-010 owner/version | If Stage 8 ran, the same XP Event reactivates with the same source key and record ID; totals settle upward once | Skip with Stage 8 if owner unresolved; stop on duplicate or progression churn |
 | 11 | After all XP rollups settle, inspect Enrollment progression inputs | `041` current live version | Signature changes once, queue is set once, upward/downward recalculation is requested | Stop if rollups are stale; wait for documented settling boundary |
 | 12 | Process the pending active Enrollment | `042` current live version; `043` must remain off/retired | Correct Current/Next Level, gate rule by school year/rule set, status, queue clear; no inactive Enrollment write | Stop on duplicate rule or wrong-year gate; fail closed |
 | 13 | Read public standings/leaderboard after settled values | Web read-only consumer; no deployment | Schmidt appears only if current view/filters permit; inactive/test/prior-year rows excluded; deterministic tie order verified | Stop on test leakage or wrong season; no public-data repair in this packet |
@@ -80,8 +80,11 @@ For every stage, capture:
 
 ## Pass criteria
 
-The journey passes only when every stage has recorded evidence, all expected
-IDs and source keys are stable on replay, withdrawals/restorations reuse the
-same XP Event, progression reflects settled values in both directions, and
-standings show the correct scoped deterministic result. Offline tests and
-repository source review alone cannot satisfy this packet.
+The journey passes only when every required stage has recorded evidence, all
+expected IDs and source keys are stable on replay, any enabled
+withdrawal/restoration test reuses the same XP Event, progression reflects
+settled values in both directions, and standings show the correct scoped
+deterministic result. Stages 8–10 are required only after PKG-010 establishes
+the recording-credit owner; otherwise their explicit skipped disposition is
+the expected safe result. Offline tests and repository source review alone
+cannot satisfy this packet.
