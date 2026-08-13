@@ -16,7 +16,7 @@ state, the named live system wins.
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-13** (PKG-006R/036 Production baseline; 010 v10.7 installed ON; 077 deleted; progression field created) |
+| Last updated | **2026-08-13** (PKG-006R-HF-001: 010 v10.8 hotfix; 010 OFF in PROD; PKG-006R/036 locks active) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -259,7 +259,7 @@ packet ([`PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md`](./deploy-checklists/P
 | Item | Current status | Current truth |
 |------|----------------|---------------|
 | PKG-006R reconciliation fields (12) | **Installed / verified** | Verify exact names and types; do not recreate |
-| Automation **010 v10.7** | **Installed in PROD / ON** | Inspect run history and reconciliation backlog before record changes; lifecycle proof (replay, withdrawal/restoration, natural-trigger, settled totals) pending |
+| Automation **010 v10.8** | **v10.7 installed; OFF after HF-001 failure** | Paste v10.8; prove `recY0o5tpqMfvlCCa` reconciles with Homework XP present; lifecycle proof pending before re-enable |
 | Automation **041 v4.0** | **Installed in PROD** | 15-minute cron ON; **v5.0 paste deferred** until PKG-006R lock release |
 | Automation **042 v3.4** | **Installed in PROD** | View-entry trigger preserved; **v4.0 paste deferred** until PKG-006R lock release |
 | `Progression Last Reconciled Signature` | **Created** | Verify writable single-line text and field ID |

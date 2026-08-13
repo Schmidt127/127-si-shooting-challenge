@@ -1,6 +1,6 @@
 /**
  * Loads and executes the REAL Automation 010 script inside the mock environment.
- * Updated for v10.7 PKG-006R reconciliation schema.
+ * Updated for v10.8 PKG-006R-HF-001 multi-family XP lookup.
  */
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -29,6 +29,7 @@ export const IDS = {
   SUMMARY_CANONICAL: "recSummaryCanonical1",
   SUMMARY_STALE: "recSummaryStale0001",
   XP_EVENT: "recXpEvent01000001",
+  HOMEWORK_XP_EVENT: "recHomeworkXp010001",
   XP_RULE: "recXpRule01000001",
 };
 
@@ -64,12 +65,17 @@ function xpEventsFields() {
     {
       name: "XP Source",
       type: "singleSelect",
-      options: { choices: [{ name: "Submission Base" }] },
+      options: {
+        choices: [
+          { id: "selZw4nOkwMJCgGyR", name: "Submission Base" },
+          { name: "Homework" },
+        ],
+      },
     },
     {
       name: "XP Bucket",
       type: "singleSelect",
-      options: { choices: [{ name: "Shooting Base" }] },
+      options: { choices: [{ name: "Shooting Base" }, { name: "Homework" }] },
     },
     { name: "XP Points", type: "number" },
     { name: "XP Reason Public", type: "singleLineText" },
@@ -147,9 +153,14 @@ export function build010Base(opts = {}) {
   const {
     submissionCells = {},
     xpEventCells = {},
-    weeklySummaries = [],
     xpEventActive = true,
+    xpEvents = null,
+    weeklySummaries = [],
   } = opts;
+
+  const defaultSubmissionXpLinks = xpEvents === null
+    ? [{ id: IDS.XP_EVENT, name: "Submission XP" }]
+    : [];
 
   const submissions = new ReconciliationSubmissionsTable("Submissions", submissionsFields(), [
     new MockRecord(IDS.SUBMISSION, {
@@ -161,19 +172,19 @@ export function build010Base(opts = {}) {
       "Total Shots Counted": 150,
       "Count This Submission?": true,
       "XP Award Status": "",
-      "XP Events": [{ id: IDS.XP_EVENT, name: "Submission XP" }],
+      "XP Events": defaultSubmissionXpLinks,
       "Last Reconciled Signature": "",
       ...submissionCells,
     }),
   ]);
 
-  const xpEvents = new MockTable("XP Events", xpEventsFields(), [
+  const defaultXpEvents = [
     new MockRecord(IDS.XP_EVENT, {
       Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
       Submission: [{ id: IDS.SUBMISSION, name: "Submission" }],
       Week: [{ id: IDS.WEEK, name: "Early Bird" }],
       "Weekly Athlete Summary": [{ id: IDS.SUMMARY_CANONICAL, name: "Canonical Summary" }],
-      "XP Source": { name: "Submission Base" },
+      "XP Source": { id: "selZw4nOkwMJCgGyR", name: "Submission Base" },
       "XP Bucket": { name: "Shooting Base" },
       "XP Points": 20,
       "XP Reason Public": "",
@@ -188,7 +199,13 @@ export function build010Base(opts = {}) {
       "Streak Occurrence Key": "",
       ...xpEventCells,
     }),
-  ]);
+  ];
+
+  const xpEventRecords = xpEvents === null
+    ? defaultXpEvents
+    : xpEvents;
+
+  const xpEventsTable = new MockTable("XP Events", xpEventsFields(), xpEventRecords);
 
   const xpRules = new MockTable("XP Reward Rules", xpRulesFields(), [
     new MockRecord(IDS.XP_RULE, {
@@ -234,7 +251,7 @@ export function build010Base(opts = {}) {
 
   return new MockBase([
     submissions,
-    xpEvents,
+    xpEventsTable,
     xpRules,
     enrollments,
     weeks,

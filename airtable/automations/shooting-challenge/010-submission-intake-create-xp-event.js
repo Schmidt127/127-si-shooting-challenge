@@ -31,7 +31,7 @@ ownership cannot be proven.
  * 010 - SUBMISSION INTAKE AND ASSET CREATION
  * Create/Reconcile Submission Base XP Event
  *
- * Version: v10.7
+ * Version: v10.8
  * Date Written: 2026-06-06
  * Last Updated: 2026-08-13
  *
@@ -39,12 +39,15 @@ ownership cannot be proven.
  * - Reconcile one Submission after the approved signature formula changes.
  * - Preserve positive counted-shot XP creation and replay behavior.
  * - Deactivate or reactivate only the exact owned Submission XP Event.
+ * - Ignore unrelated XP families (for example HOMEWORK_XP) that may also link
+ *   to the same source Submission.
  *
  * IMPORTANT DESIGN RULES
  * - Source Key is exactly SUBMISSION_XP|{Submission Record ID}.
  * - XP Events are append-only; no XP Event is deleted.
  * - Exact Enrollment, Week, WAS, and event ownership are required.
- * - Zero/multiple links, duplicate keys, future dates, inactive Enrollment,
+ * - Zero/multiple Submission Base candidates, duplicate canonical keys, conflicting
+ *   canonical/legacy Submission Base pairs, wrong ownership, future dates,
  *   formula lag, and partial writes fail closed.
  * - Airtable has no atomic uniqueness; the final recheck is mandatory.
  * - Last Reconciled Signature is written only after the expected Active? state
@@ -100,7 +103,7 @@ ownership cannot be proven.
 
 const SCRIPT = {
   scriptName: "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
-  version: "v10.7",
+  version: "v10.8",
   versionDate: "2026-08-13",
   originalWrittenDate: "2026-06-06",
   lastUpdated: "2026-08-13",
@@ -175,7 +178,17 @@ const CONFIG = {
     dateSource: "Submission Activity Date",
     awardStatus: "Awarded",
     errorStatus: "Error",
+    submissionBaseSourceOptionId: "selZw4nOkwMJCgGyR",
   },
+  foreignSourceKeyPrefixes: [
+    "HOMEWORK_XP|",
+    "VIDEO_SUBMISSION|",
+    "STREAK_XP|",
+    "SHOT_MILESTONE|",
+    "PERFECT_WEEK|",
+    "WEEKLY_THRESHOLD|",
+    "ZOOM_",
+  ],
 };
 
 /* =========================================================
@@ -335,53 +348,148 @@ async function loadXpEvents() {
 }
 
 function eventOwned(event, submissionId, enrollmentId, weekId, wasId) {
+  return submissionBaseLinkedOwned(event, submissionId, enrollmentId, weekId, wasId)
+    && text(event, xpEventsTable, CONFIG.xpEvents.sourceKey) === sourceKey(submissionId);
+}
+
+function submissionBaseLinkedOwned(event, submissionId, enrollmentId, weekId, wasId) {
   return one(event, xpEventsTable, CONFIG.xpEvents.submission) === submissionId
     && one(event, xpEventsTable, CONFIG.xpEvents.enrollment) === enrollmentId
     && one(event, xpEventsTable, CONFIG.xpEvents.week) === weekId
     && ids(event, xpEventsTable, CONFIG.xpEvents.weeklySummary).length === 1
-    && one(event, xpEventsTable, CONFIG.xpEvents.weeklySummary) === wasId
-    && text(event, xpEventsTable, CONFIG.xpEvents.sourceKey) === sourceKey(submissionId);
+    && one(event, xpEventsTable, CONFIG.xpEvents.weeklySummary) === wasId;
+}
+
+function eventOwnedForAck(event, submissionId, enrollmentId, weekId, wasId) {
+  return eventOwned(event, submissionId, enrollmentId, weekId, wasId)
+    || (submissionBaseLinkedOwned(event, submissionId, enrollmentId, weekId, wasId)
+      && isSubmissionBaseCandidate(event, submissionId));
+}
+
+function sourceKeyText(event) {
+  return text(event, xpEventsTable, CONFIG.xpEvents.sourceKey);
+}
+
+function selectOptionId(record, table, name) {
+  const value = raw(record, table, name);
+  if (value && typeof value === "object" && value.id) return String(value.id);
+  const found = field(table, name);
+  if (!found || found.type !== "singleSelect") return "";
+  const label = text(record, table, name);
+  const choice = (found.options?.choices || []).find((item) => item.name === label);
+  return choice?.id ? String(choice.id) : "";
+}
+
+function submissionLinked(event, submissionId) {
+  return ids(event, xpEventsTable, CONFIG.xpEvents.submission).includes(submissionId);
+}
+
+function isForeignXpFamily(event) {
+  const key = sourceKeyText(event);
+  if (!key) return false;
+  return CONFIG.foreignSourceKeyPrefixes.some((prefix) => key.startsWith(prefix));
+}
+
+function isCanonicalSubmissionBaseKey(event, submissionId) {
+  return sourceKeyText(event) === sourceKey(submissionId);
+}
+
+function isLegacySubmissionBaseCandidate(event, submissionId) {
+  if (!submissionLinked(event, submissionId)) return false;
+  if (isForeignXpFamily(event)) return false;
+  if (isCanonicalSubmissionBaseKey(event, submissionId)) return false;
+  const key = sourceKeyText(event);
+  if (key.startsWith(CONFIG.values.sourceKeyPrefix)) {
+    const suffix = key.slice(CONFIG.values.sourceKeyPrefix.length);
+    if (suffix && suffix !== submissionId) return false;
+  }
+  if (selectOptionId(event, xpEventsTable, CONFIG.xpEvents.xpSource) === CONFIG.values.submissionBaseSourceOptionId) {
+    return true;
+  }
+  if (text(event, xpEventsTable, CONFIG.xpEvents.xpSource) === CONFIG.values.xpSource) return true;
+  if (text(event, xpEventsTable, CONFIG.xpEvents.xpBucket) === CONFIG.values.xpBucket) return true;
+  return false;
+}
+
+function isSubmissionBaseCandidate(event, submissionId) {
+  return isCanonicalSubmissionBaseKey(event, submissionId)
+    || isLegacySubmissionBaseCandidate(event, submissionId);
+}
+
+function findSubmissionBaseCandidates(records, submissionId) {
+  return records.filter((row) => isSubmissionBaseCandidate(row, submissionId));
+}
+
+function resolveSubmissionBaseLookup(records, submissionId) {
+  const exactKeyMatches = records.filter((row) => isCanonicalSubmissionBaseKey(row, submissionId));
+  if (exactKeyMatches.length > 1) {
+    throw new Error(`Duplicate canonical Source Key: ${sourceKey(submissionId)}`);
+  }
+  const linkedCandidates = findSubmissionBaseCandidates(
+    records.filter((row) => submissionLinked(row, submissionId)),
+    submissionId,
+  );
+  const canonicalLinked = linkedCandidates.filter((row) => isCanonicalSubmissionBaseKey(row, submissionId));
+  const legacyLinked = linkedCandidates.filter((row) => isLegacySubmissionBaseCandidate(row, submissionId));
+  if (canonicalLinked.length > 1) {
+    throw new Error(`Multiple Submission Base XP Events are linked to Submission ${submissionId}.`);
+  }
+  if (legacyLinked.length > 1) {
+    throw new Error(`Multiple legacy Submission Base XP Events are linked to Submission ${submissionId}.`);
+  }
+  if (canonicalLinked.length === 1 && legacyLinked.length === 1 && canonicalLinked[0].id !== legacyLinked[0].id) {
+    throw new Error(`Submission ${submissionId} has conflicting canonical and legacy Submission Base XP Events.`);
+  }
+  if (exactKeyMatches[0] && legacyLinked.length === 1 && exactKeyMatches[0].id !== legacyLinked[0].id) {
+    throw new Error(`Submission ${submissionId} has conflicting canonical and legacy Submission Base XP Events.`);
+  }
+  const resolved = exactKeyMatches[0] || canonicalLinked[0] || legacyLinked[0] || null;
+  if (resolved && !submissionLinked(resolved, submissionId) && isCanonicalSubmissionBaseKey(resolved, submissionId)) {
+    throw new Error(`Canonical XP Event ownership mismatch for ${sourceKey(submissionId)}.`);
+  }
+  if (
+    resolved
+    && submissionLinked(resolved, submissionId)
+    && isLegacySubmissionBaseCandidate(resolved, submissionId)
+    && sourceKeyText(resolved)
+    && sourceKeyText(resolved) !== sourceKey(submissionId)
+  ) {
+    throw new Error(`Submission ${submissionId} has an XP Event with a non-canonical Source Key.`);
+  }
+  if (exactKeyMatches[0] && !submissionLinked(exactKeyMatches[0], submissionId)) {
+    throw new Error(`Canonical XP Event ownership mismatch for ${sourceKey(submissionId)}.`);
+  }
+  return resolved;
 }
 
 async function findExactEvent(submissionId, enrollmentId, weekId, wasId) {
   const query = await loadXpEvents();
-  const exactKey = query.records.filter((row) => text(row, xpEventsTable, CONFIG.xpEvents.sourceKey) === sourceKey(submissionId));
-  if (exactKey.length > 1) throw new Error(`Duplicate canonical Source Key: ${sourceKey(submissionId)}`);
-  const linked = query.records.filter((row) => ids(row, xpEventsTable, CONFIG.xpEvents.submission).includes(submissionId));
-  if (linked.some((row) => !eventOwned(row, submissionId, enrollmentId, weekId, wasId))) {
-    throw new Error(`Submission ${submissionId} has an XP Event with wrong ownership or links.`);
-  }
-  if (exactKey[0] && !eventOwned(exactKey[0], submissionId, enrollmentId, weekId, wasId)) {
+  const resolved = resolveSubmissionBaseLookup(query.records, submissionId);
+  const linkedBaseCandidates = findSubmissionBaseCandidates(
+    query.records.filter((row) => submissionLinked(row, submissionId)),
+    submissionId,
+  );
+  const exactKeyMatches = query.records.filter((row) => isCanonicalSubmissionBaseKey(row, submissionId));
+  if (exactKeyMatches.some((row) => !eventOwned(row, submissionId, enrollmentId, weekId, wasId))) {
     throw new Error(`Canonical XP Event ownership mismatch for ${sourceKey(submissionId)}.`);
   }
-  if (linked.length > 1) throw new Error(`Multiple XP Events are linked to Submission ${submissionId}.`);
-  return exactKey[0] || linked[0] || null;
+  if (linkedBaseCandidates.some((row) =>
+    isCanonicalSubmissionBaseKey(row, submissionId)
+    && !eventOwned(row, submissionId, enrollmentId, weekId, wasId))) {
+    throw new Error(`Submission ${submissionId} has an XP Event with wrong ownership or links.`);
+  }
+  if (resolved && !eventOwned(resolved, submissionId, enrollmentId, weekId, wasId)) {
+    if (isCanonicalSubmissionBaseKey(resolved, submissionId)) {
+      throw new Error(`Canonical XP Event ownership mismatch for ${sourceKey(submissionId)}.`);
+    }
+    throw new Error(`Submission ${submissionId} has an XP Event with wrong ownership or links.`);
+  }
+  return resolved;
 }
 
 async function findCanonicalKeyEvent(submissionId) {
   const query = await loadXpEvents();
-  const matches = query.records.filter(
-    (row) => text(row, xpEventsTable, CONFIG.xpEvents.sourceKey) === sourceKey(submissionId),
-  );
-  if (matches.length > 1) {
-    throw new Error(`Duplicate canonical Source Key: ${sourceKey(submissionId)}`);
-  }
-  const linked = query.records.filter((row) =>
-    ids(row, xpEventsTable, CONFIG.xpEvents.submission).includes(submissionId)
-  );
-  if (linked.length > 1) {
-    throw new Error(`Multiple XP Events are linked to Submission ${submissionId}.`);
-  }
-  if (
-    linked[0] &&
-    text(linked[0], xpEventsTable, CONFIG.xpEvents.sourceKey) !== sourceKey(submissionId)
-  ) {
-    throw new Error(`Submission ${submissionId} has an XP Event with a non-canonical Source Key.`);
-  }
-  if (matches[0] && !ids(matches[0], xpEventsTable, CONFIG.xpEvents.submission).includes(submissionId)) {
-    throw new Error(`Canonical XP Event ownership mismatch for ${sourceKey(submissionId)}.`);
-  }
-  return matches[0] || null;
+  return resolveSubmissionBaseLookup(query.records, submissionId);
 }
 
 async function findRule() {
@@ -420,7 +528,7 @@ async function acknowledgeAfterSettlement(recordId, expectedActive, priorSignatu
         || (preAckEnrollmentIds.length === 1
           && preAckWeekIds.length === 1
           && preAckWasIds.length === 1
-          && eventOwned(
+          && eventOwnedForAck(
             preAckEvent,
             recordId,
             preAckEnrollmentIds[0],
@@ -444,7 +552,7 @@ async function acknowledgeAfterSettlement(recordId, expectedActive, priorSignatu
         || (enrollmentIds.length === 1
           && weekIds.length === 1
           && wasIds.length === 1
-          && eventOwned(
+          && eventOwnedForAck(
             acknowledgedEvent,
             recordId,
             enrollmentIds[0],
@@ -550,7 +658,7 @@ async function main() {
         );
       }
       const correctionEvent = canonicalKeyEvent
-        && eventOwned(canonicalKeyEvent, recordId, enrollmentId, weekId, wasId)
+        && eventOwnedForAck(canonicalKeyEvent, recordId, enrollmentId, weekId, wasId)
         ? canonicalKeyEvent
         : null;
       if (canonicalKeyEvent && !correctionEvent) {
@@ -616,7 +724,9 @@ async function main() {
     }
     const currentLinks = ids(submission, submissionsTable, CONFIG.submissions.xpEvents);
     const submissionUpdate = {};
-    if (!currentLinks.includes(xpEventId)) submissionUpdate[CONFIG.submissions.xpEvents] = linked(xpEventId);
+    if (!currentLinks.includes(xpEventId)) {
+      submissionUpdate[CONFIG.submissions.xpEvents] = [...new Set([...currentLinks, xpEventId])].map((id) => ({ id }));
+    }
     if (wasIds.length === 0) submissionUpdate[CONFIG.submissions.weeklySummary] = linked(wasId);
     submissionUpdate[CONFIG.submissions.xpAwardStatus] = selectValue(
       submissionsTable,
