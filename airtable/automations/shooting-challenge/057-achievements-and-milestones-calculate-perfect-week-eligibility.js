@@ -201,6 +201,20 @@ function getNumber(record, fieldName) {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
+function getOptionalNumber(record, fieldName) {
+  const value = record.getCellValue(fieldName);
+  if (value === null || value === undefined || value === "") return null;
+  if (Array.isArray(value)) {
+    if (value.length !== 1) return null;
+    const first = value[0];
+    if (first === null || first === undefined || first === "") return null;
+    const parsed = typeof first === "number" ? first : Number(first);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+  const parsed = typeof value === "number" ? value : Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
 function getText(record, fieldName) {
   try {
     const v = record.getCellValueAsString(fieldName);
@@ -396,19 +410,34 @@ try {
   const requiredDateKeys = buildRequiredWeekDates(weekStartDateKey);
   const requiredDateSet = new Set(requiredDateKeys);
 
-  let weeklyGoal = getNumber(weeklyRecord, CONFIG.weeklyFields.weeklyGoal);
+  // Zero is a valid configuration only when 032 has linked exactly one Goal
+  // Record. Do not use truthiness here: it misclassified an explicit target of
+  // zero (and a settling lookup) as a missing goal.
+  const goalRecordIds = getLinkedIds(weeklyRecord, CONFIG.weeklyFields.goalRecord);
+  const primaryGoal = getOptionalNumber(weeklyRecord, CONFIG.weeklyFields.weeklyGoal);
+  const fallbackGoal = getOptionalNumber(weeklyRecord, CONFIG.weeklyFields.fallbackGoal);
+  const weeklyGoal = Number.isFinite(primaryGoal)
+    ? primaryGoal
+    : Number.isFinite(fallbackGoal)
+      ? fallbackGoal
+      : null;
 
-  if (!weeklyGoal) {
-    weeklyGoal = getNumber(weeklyRecord, CONFIG.weeklyFields.fallbackGoal);
-  }
-
-  if (!weeklyGoal) {
+  if (
+    weeklyGoal === null ||
+    weeklyGoal < 0 ||
+    (weeklyGoal === 0 && goalRecordIds.length !== 1)
+  ) {
+    const reason = weeklyGoal === null
+      ? "Weekly goal formula/lookup is unsettled or invalid; rereun after settlement."
+      : weeklyGoal < 0
+        ? "Weekly shot goal is negative."
+        : "A zero weekly goal requires exactly one linked Goal Record.";
     await updateWeekly({
       [CONFIG.weeklyFields.dailyStatus]: { name: "Needs Review" },
-      [CONFIG.weeklyFields.dailyDetail]: "Missing weekly shot goal.",
+      [CONFIG.weeklyFields.dailyDetail]: reason,
       [CONFIG.weeklyFields.dailyMet]: false,
       [CONFIG.weeklyFields.automationStatus]: { name: "Error" },
-      [CONFIG.weeklyFields.automationError]: "Missing Weekly Goal Shots Target / Goal Shots Target.",
+      [CONFIG.weeklyFields.automationError]: reason,
     });
 
     return;
