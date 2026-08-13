@@ -164,7 +164,13 @@ class FakeTable {
 
   async createRecordAsync(fields) {
     this.fixture.createdEventCount += this.name === "XP Events" ? 1 : 0;
-    throw new Error(`Unexpected createRecordAsync on ${this.name}: ${JSON.stringify(fields)}`);
+    if (this.name !== "XP Events") {
+      throw new Error(`Unexpected createRecordAsync on ${this.name}: ${JSON.stringify(fields)}`);
+    }
+    const id = `recCreatedXp${this.fixture.createdEventCount}`;
+    this.rows.set(id, { id, values: clone(fields) });
+    this.fixture.xpRows.push(this.rows.get(id));
+    return id;
   }
 }
 
@@ -196,6 +202,8 @@ function eventRow(id, {
 
 function makeFixture({
   xpRows = [],
+  attendeeIds = [],
+  wasRows = [],
   signatureMode = "unchanged",
   failLastSignatureWrite = false,
   failEventWrite = false,
@@ -238,7 +246,7 @@ function makeFixture({
       "Meeting Name": "Future Scheduled Meeting",
       "Start Time": "2026-08-13T16:00:00.000Z",
       Week: linked([IDS.week]),
-      Attendees: [],
+      Attendees: linked(attendeeIds),
       "Create XP Events": true,
       "XP Award Status": "Pending",
       "Zoom Meeting Key": "fixture-meeting",
@@ -246,7 +254,7 @@ function makeFixture({
       "Last Zoom XP Reconciled Signature": "",
     },
   };
-  const enrollmentRows = xpRows.length
+  const enrollmentRows = (xpRows.length || attendeeIds.length)
     ? [
       {
         id: IDS.enrollment,
@@ -294,7 +302,7 @@ function makeFixture({
       { id: "recBonus3Rule", values: { "Rule Key": "ZOOM_ATTEND_BONUS_3", "XP Amount": 15, "XP Source Label": "Zoom Attendance: Bonus 3", "Active?": true } },
     ], fixture),
     "XP Events": new FakeTable("XP Events", fieldDefinitions(XP_FIELDS, computed), xpRows, fixture),
-    "Weekly Athlete Summary": new FakeTable("Weekly Athlete Summary", fieldDefinitions(WAS_FIELDS), [], fixture),
+    "Weekly Athlete Summary": new FakeTable("Weekly Athlete Summary", fieldDefinitions(WAS_FIELDS), wasRows, fixture),
   };
 
   return fixture;
@@ -327,6 +335,27 @@ async function test(name, fn) {
 (async () => {
   await test("committed source declares CONFIG.version v6.3", async () => {
     assert(source.includes('version: "v6.3"'));
+  });
+  await test("active attendee uses one existing WAS and creates no WAS", async () => {
+    const wasId = "recCanonicalWas";
+    const fixture = makeFixture({
+      attendeeIds: [IDS.enrollment],
+      wasRows: [{ id: wasId, values: { Enrollment: linked([IDS.enrollment]), Week: linked([IDS.week]) } }],
+      signatureMode: "event",
+    });
+    const result = await runAutomation(fixture);
+    assert.strictEqual(result.ok, true, result.error?.message);
+    assert.strictEqual(fixture.createdEventCount, 1);
+    const created = fixture.tables["XP Events"].rows.get("recCreatedXp1");
+    assert.deepStrictEqual(created.values["Weekly Athlete Summary"], linked([wasId]));
+    assert.strictEqual(fixture.tables["Weekly Athlete Summary"].rows.size, 1);
+  });
+  await test("active attendee without a WAS fails before XP creation", async () => {
+    const fixture = makeFixture({ attendeeIds: [IDS.enrollment], signatureMode: "event" });
+    const result = await runAutomation(fixture);
+    assert.strictEqual(result.ok, false);
+    assert.match(String(result.error.message), /Expected exactly one Weekly Athlete Summary/);
+    assert.strictEqual(fixture.createdEventCount, 0);
   });
   await test("actual source acknowledges unchanged empty roster without XP creation", async () => {
     const fixture = makeFixture();
