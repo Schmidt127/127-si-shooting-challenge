@@ -23,7 +23,9 @@ const IDS = {
   enrollment: "recEnrollment",
   wrongEnrollment: "recWrongEnrollment",
   week: "recWeek",
+  wrongWeek: "recWrongWeek",
   program: "recProgram",
+  wrongProgram: "recWrongProgram",
   xp: "recXp",
   duplicate: "recDuplicateXp",
 };
@@ -71,20 +73,23 @@ function clone(value) {
 }
 
 function makeRecord(table, row) {
+  const values = Object.fromEntries(
+    Object.keys(table.fields).map(fieldName => [fieldName, clone(table.valueFor(row.id, fieldName))])
+  );
   return {
     id: row.id,
     getCellValue(fieldName) {
-      return table.valueFor(row.id, fieldName);
+      return values[fieldName] ?? null;
     },
     getCellValueAsString(fieldName) {
-      const value = table.valueFor(row.id, fieldName);
+      const value = values[fieldName] ?? null;
       if (Array.isArray(value)) {
         return value.map(item => item.name || item.id || item).join(", ");
       }
       return value == null ? "" : String(value);
     },
     get name() {
-      return row.name || row.values?.["Meeting Name"] || row.id;
+      return row.name || values["Meeting Name"] || row.id;
     },
   };
 }
@@ -108,16 +113,28 @@ class FakeTable {
     if (this.name === "Zoom Meetings" && recordId === IDS.meeting) {
       if (fieldName === "Zoom XP Current Signature") {
         if (this.fixture.signatureMode === "timeout") return "same-signature";
-        const activeEvent = this.fixture.xpRows.some(row =>
-          row.values["Zoom Meeting"]?.some(link => link.id === IDS.meeting)
-          && row.values["Active?"] === true
-        );
         if (this.fixture.signatureMode === "event") {
-          return activeEvent ? "event-active" : "event-inactive";
+          const attendeeIds = (row.values.Attendees || [])
+            .map(link => link.id)
+            .sort()
+            .join(",");
+          const activeEventIds = this.fixture.xpRows
+            .filter(xpRow =>
+              xpRow.values["Zoom Meeting"]?.some(link => link.id === IDS.meeting)
+              && xpRow.values["Active?"] === true
+            )
+            .map(xpRow => xpRow.id)
+            .sort()
+            .join(",");
+          return `attendees=${attendeeIds}|activeEvents=${activeEventIds}`;
         }
         return this.fixture.startingSignature;
       }
       if (fieldName === "Zoom XP Reconciliation Needed?") {
+        if (this.fixture.signatureMode === "event") {
+          const currentSignature = this.valueFor(recordId, "Zoom XP Current Signature");
+          return currentSignature === row.values["Last Zoom XP Reconciled Signature"] ? 0 : 1;
+        }
         return row.values["Last Zoom XP Reconciled Signature"]
           ? 0
           : 1;
@@ -176,6 +193,7 @@ class FakeTable {
 
 function eventRow(id, {
   enrollmentId = IDS.enrollment,
+  weekId = IDS.week,
   sourceKey = `ZOOM_ATTEND_BASE|fixture-meeting|${enrollmentId}`,
   active = true,
   meetingId = IDS.meeting,
@@ -184,7 +202,7 @@ function eventRow(id, {
     id,
     values: {
       Enrollment: linked([enrollmentId]),
-      Week: linked([IDS.week]),
+      Week: linked([weekId]),
       "Weekly Athlete Summary": [],
       "XP Source": "Zoom Attendance: Base",
       "XP Bucket": "Zoom Attendance",
@@ -205,6 +223,7 @@ function makeFixture({
   attendeeIds = [],
   wasRows = [],
   signatureMode = "unchanged",
+  enrollmentProgramId = IDS.program,
   failLastSignatureWrite = false,
   failEventWrite = false,
 } = {}) {
@@ -261,7 +280,7 @@ function makeFixture({
         values: {
           "Active?": true,
           "Full Athlete Name": "Fixture Athlete",
-          "Program Instance": linked([IDS.program]),
+          "Program Instance": linked([enrollmentProgramId]),
           "School Year": "2026-2027",
         },
       },
@@ -357,6 +376,24 @@ async function test(name, fn) {
     assert.match(String(result.error.message), /Expected exactly one Weekly Athlete Summary/);
     assert.strictEqual(fixture.createdEventCount, 0);
   });
+  await test("multiple WAS candidates fail with their IDs before XP creation or acknowledgement", async () => {
+    const firstWasId = "recFirstWas";
+    const secondWasId = "recSecondWas";
+    const fixture = makeFixture({
+      attendeeIds: [IDS.enrollment],
+      wasRows: [
+        { id: firstWasId, values: { Enrollment: linked([IDS.enrollment]), Week: linked([IDS.week]) } },
+        { id: secondWasId, values: { Enrollment: linked([IDS.enrollment]), Week: linked([IDS.week]) } },
+      ],
+      signatureMode: "event",
+    });
+    const result = await runAutomation(fixture);
+    assert.strictEqual(result.ok, false);
+    assert.match(fixture.outputs.errorOut, new RegExp(`${firstWasId}.*${secondWasId}`));
+    assert.strictEqual(fixture.createdEventCount, 0);
+    assert.strictEqual(fixture.tables["Zoom Meetings"].valueFor(IDS.meeting, "Last Zoom XP Reconciled Signature"), "");
+    assert.strictEqual(fixture.tables["Zoom Meetings"].valueFor(IDS.meeting, "Zoom XP Reconciliation Needed?"), 1);
+  });
   await test("actual source acknowledges unchanged empty roster without XP creation", async () => {
     const fixture = makeFixture();
     const result = await runAutomation(fixture);
@@ -422,6 +459,34 @@ async function test(name, fn) {
     assert.strictEqual(fixture.createdEventCount, 0);
   });
 
+  await test("wrong-week canonical event fails closed with its ID and no acknowledgement", async () => {
+    const wrongWeek = eventRow(IDS.xp, {
+      weekId: IDS.wrongWeek,
+      sourceKey: `ZOOM_ATTEND_BASE|fixture-meeting|${IDS.enrollment}`,
+    });
+    const fixture = makeFixture({ xpRows: [wrongWeek] });
+    const result = await runAutomation(fixture);
+    assert.strictEqual(result.ok, false);
+    assert.match(fixture.outputs.errorOut, new RegExp(IDS.xp));
+    assert.strictEqual(fixture.createdEventCount, 0);
+    assert.strictEqual(fixture.tables["Zoom Meetings"].valueFor(IDS.meeting, "Last Zoom XP Reconciled Signature"), "");
+    assert.strictEqual(fixture.tables["Zoom Meetings"].valueFor(IDS.meeting, "Zoom XP Reconciliation Needed?"), 1);
+  });
+
+  await test("Program Instance mismatch fails closed without creating or acknowledging XP", async () => {
+    const fixture = makeFixture({
+      attendeeIds: [IDS.enrollment],
+      enrollmentProgramId: IDS.wrongProgram,
+      signatureMode: "event",
+    });
+    const result = await runAutomation(fixture);
+    assert.strictEqual(result.ok, false);
+    assert.match(String(result.error.message), /Program Instance does not match/);
+    assert.strictEqual(fixture.createdEventCount, 0);
+    assert.strictEqual(fixture.tables["Zoom Meetings"].valueFor(IDS.meeting, "Last Zoom XP Reconciled Signature"), "");
+    assert.strictEqual(fixture.tables["Zoom Meetings"].valueFor(IDS.meeting, "Zoom XP Reconciliation Needed?"), 1);
+  });
+
   await test("formula settlement timeout remains unacknowledged", async () => {
     const fixture = makeFixture({
       xpRows: [eventRow(IDS.xp, { active: true })],
@@ -449,6 +514,42 @@ async function test(name, fn) {
     assert.strictEqual(result.ok, true);
     assert.strictEqual(fixture.outputs.actionOut, "skipped_reconciliation_not_needed");
     assert.strictEqual(fixture.createdEventCount, 0);
+  });
+
+  await test("replay, withdrawal, and restoration preserve one XP Event ID", async () => {
+    const wasId = "recCanonicalWas";
+    const fixture = makeFixture({
+      attendeeIds: [IDS.enrollment],
+      wasRows: [{ id: wasId, values: { Enrollment: linked([IDS.enrollment]), Week: linked([IDS.week]) } }],
+      signatureMode: "event",
+    });
+
+    const firstRun = await runAutomation(fixture);
+    assert.strictEqual(firstRun.ok, true, firstRun.error?.message);
+    assert.strictEqual(fixture.outputs.actionOut, "created_owned_event");
+    assert.strictEqual(fixture.createdEventCount, 1);
+    const xpEventId = "recCreatedXp1";
+
+    const replay = await runAutomation(fixture);
+    assert.strictEqual(replay.ok, true, replay.error?.message);
+    assert.strictEqual(fixture.outputs.actionOut, "skipped_reconciliation_not_needed");
+    assert.strictEqual(fixture.createdEventCount, 1);
+    assert.strictEqual(fixture.tables["XP Events"].rows.get(xpEventId).values["Active?"], true);
+
+    fixture.tables["Zoom Meetings"].rows.get(IDS.meeting).values.Attendees = [];
+    const withdrawal = await runAutomation(fixture);
+    assert.strictEqual(withdrawal.ok, true, withdrawal.error?.message);
+    assert.strictEqual(fixture.outputs.actionOut, "deactivated_owned_event");
+    assert.strictEqual(fixture.createdEventCount, 1);
+    assert.strictEqual(fixture.tables["XP Events"].rows.get(xpEventId).values["Active?"], false);
+
+    fixture.tables["Zoom Meetings"].rows.get(IDS.meeting).values.Attendees = linked([IDS.enrollment]);
+    const restoration = await runAutomation(fixture);
+    assert.strictEqual(restoration.ok, true, restoration.error?.message);
+    assert.strictEqual(fixture.outputs.actionOut, "reactivated_owned_event");
+    assert.strictEqual(fixture.createdEventCount, 1);
+    assert.strictEqual(fixture.tables["XP Events"].rows.get(xpEventId).values["Active?"], true);
+    assert.deepStrictEqual([...fixture.tables["XP Events"].rows.keys()], [xpEventId]);
   });
 
   console.log("\nAutomation 101 v6.3 runtime fixtures passed.");

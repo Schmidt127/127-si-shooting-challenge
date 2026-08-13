@@ -1071,12 +1071,18 @@ async function runLiveLifecycleReconciliation(recordId) {
       getLinkedRecordIds(enrollment, enrollmentsTable, "Program Instance")
     );
     const enrollmentSchoolYear = getText(enrollment, enrollmentsTable, "School Year");
+    if (
+      enrollmentProgramIds.length !== 1 ||
+      enrollmentProgramIds[0] !== weekProgramIds[0]
+    ) {
+      throw new Error(
+        `Enrollment ${enrollmentId} Program Instance does not match Week ${weekIds[0]}.`
+      );
+    }
     const eligible =
       normalizeText(meetingStatus) === normalizeText(CONFIG.statuses.completed) &&
       attendeeIds.includes(enrollmentId) &&
       getBooleanish(enrollment, enrollmentsTable, CONFIG.enrollments.active) &&
-      enrollmentProgramIds.length === 1 &&
-      enrollmentProgramIds[0] === weekProgramIds[0] &&
       enrollmentSchoolYear &&
       enrollmentSchoolYear === weekSchoolYear;
     const sourceKey = buildBaseSourceKey(meetingKey, enrollmentId);
@@ -1220,7 +1226,8 @@ async function runLiveLifecycleReconciliation(recordId) {
     );
     if (wasMatches.length !== 1) {
       throw new Error(
-        `Expected exactly one Weekly Athlete Summary for Enrollment ${enrollmentId} + Week ${weekIds[0]}; found ${wasMatches.length}.`
+        `Expected exactly one Weekly Athlete Summary for Enrollment ${enrollmentId} + Week ${weekIds[0]}; found ${wasMatches.length}. ` +
+        `Record IDs: ${wasMatches.map(record => record.id).join(", ")}`
       );
     }
 
