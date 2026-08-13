@@ -10,9 +10,8 @@ Purpose:
 Creates one XP Event from one Athlete Achievement Unlock for Perfect Week or Shot Milestone.
 
 Trigger:
-Athlete Achievement Unlocks when record is created and XP Award Status is Pending.
-Do NOT require Shot Milestone (blocks Perfect Week). Do NOT filter Ready for 059 XP
-(formula flips mid-run). See RECOMMENDED TRIGGER.
+Athlete Achievement Unlock lifecycle reconciliation; native configuration must
+reach both Pending award/restoration and Active? withdrawal updates.
 
 Important Tables:
 Athlete Achievement Unlocks, Achievements, XP Reward Rules, XP Events, Shot Milestones, Weeks, Weekly Athlete Summary
@@ -63,10 +62,13 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * TRIGGER TYPE
  * - When record matches conditions
  *
- * RECOMMENDED TRIGGER (Airtable UI - 2026-08-05 Agent 3 lock)
- * - When a record is **created** (preferred; not "matches conditions" on formula fields)
- * - Table: Athlete Achievement Unlocks
- * - XP Award Status is Pending
+ * REQUIRED LIFECYCLE TRIGGER (Airtable UI)
+ * - When a record is updated or created on Athlete Achievement Unlocks.
+ * - Watch Active?, XP Award Status, XP Events, Enrollment, Shot Milestone,
+ *   Week, and Milestone Source Key.
+ * - Dynamic recordId maps to the triggering Athlete Achievement Unlock ID.
+ * - The configuration must reach inactive Shot Milestone withdrawal as well
+ *   as Pending award/restoration.
  * - Do NOT require Shot Milestone not empty — that filter blocks Perfect Week (058) unlocks.
  *   Script routes by Achievement Reward Rule Key (PERFECT_WEEK vs SHOT_MILESTONE).
  * - Do NOT filter on Ready for 059 XP? or XP Events empty — the formula requires

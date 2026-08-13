@@ -19,6 +19,7 @@ const fieldNames = [...new Set([S053, S054, S059, S066].flatMap((text) =>
   [...text.matchAll(/"([^"\n]+)"/g)].map((match) => match[1])
 ))];
 const selectFields = new Set(["Source Status", "XP Award Status", "XP Source", "XP Bucket", "XP Activity Date Source", "Trigger Type"]);
+const formulaFields = new Set(["Count This Submission?"]);
 const selectChoices = [...new Set([...fieldNames, "3-Day Streak", "Streak", "Streak End Date", "Automatic", "Awarded", "Shot Milestone", "Perfect Week", "Shot Milestone Activity Date", "Perfect Week End Date"])];
 const tableNames = [
   "Submissions", "Achievements", "Streak Occurrences", "Weeks", "Enrollments",
@@ -41,8 +42,13 @@ function runtime(seed) {
   });
   const table = (name) => ({
     name,
-    fields: fieldNames.map((field) => ({ name: field, type: selectFields.has(field) ? "singleSelect" : "singleLineText", isComputed: false, options: { choices: selectChoices.map((name) => ({ name })) } })),
-    getField(field) { return this.fields.find((x) => x.name === field) || { name: field, type: selectFields.has(field) ? "singleSelect" : "singleLineText", options: { choices: selectChoices.map((name) => ({ name })) } }; },
+    fields: fieldNames.map((field) => ({
+      name: field,
+      type: formulaFields.has(field) ? "formula" : selectFields.has(field) ? "singleSelect" : "singleLineText",
+      isComputed: formulaFields.has(field),
+      options: { choices: selectChoices.map((name) => ({ name })) },
+    })),
+    getField(field) { return this.fields.find((x) => x.name === field) || { name: field, type: formulaFields.has(field) ? "formula" : selectFields.has(field) ? "singleSelect" : "singleLineText", isComputed: formulaFields.has(field), options: { choices: selectChoices.map((name) => ({ name })) } }; },
     async selectRecordAsync(id) { const row = rows[name].get(id); return row ? view(row) : null; },
     async selectRecordsAsync() { return { records: [...rows[name].values()].map(view), unloadData() {} }; },
     async updateRecordAsync(id, fields) { Object.assign(rows[name].get(id).fields, clone(fields)); },

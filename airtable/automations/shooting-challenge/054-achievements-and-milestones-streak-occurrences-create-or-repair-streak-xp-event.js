@@ -10,7 +10,8 @@ Purpose:
 Creates or repairs Streak XP Events from Streak Occurrence records.
 
 Trigger:
-Streak Occurrences when Source Status is Ready for XP.
+Streak Occurrences lifecycle reconciliation; trigger must reach both
+Ready-for-XP award/restoration and Active? withdrawal updates.
 
 Important Tables:
 Streak Occurrences, Achievements, XP Events, XP Reward Rules, Weekly Athlete Summary
@@ -60,7 +61,14 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Streak Occurrences
  *
  * TRIGGER TYPE
- * - When record matches conditions
+ * - When record updated
+ *
+ * REQUIRED LIFECYCLE TRIGGER CONTRACT
+ * - Watch Active?, Source Status, Enrollment, Achievement, Week, Streak End
+ *   Date, and XP Events.
+ * - Dynamic recordId maps to the triggering Streak Occurrence record ID.
+ * - Do not require Active? checked or Source Status = Ready for XP as a
+ *   positive-only condition; both suppress required withdrawal reconciliation.
  *
  * REQUIRED INPUT
  * - recordId = triggering Streak Occurrences record ID

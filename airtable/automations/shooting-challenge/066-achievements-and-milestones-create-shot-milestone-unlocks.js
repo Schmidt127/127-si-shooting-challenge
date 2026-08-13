@@ -296,6 +296,16 @@ function requireField(table, fieldName) {
   }
 }
 
+function requireFieldType(table, fieldName, allowedTypes) {
+  requireField(table, fieldName);
+  const field = getFieldSafe(table, fieldName);
+  if (!allowedTypes.includes(field.type)) {
+    throw new Error(
+      `Field ${table.name}.${fieldName} has type "${field.type}" but expected: ${allowedTypes.join(", ")}.`
+    );
+  }
+}
+
 function isWritableField(table, fieldName) {
   const field = getFieldSafe(table, fieldName);
   if (!field) return false;
@@ -360,7 +370,11 @@ function validateRequiredSchema(tables) {
   requireField(tables.submissions, CONFIG.submissionFields.enrollment);
   requireField(tables.submissions, CONFIG.submissionFields.activityDate);
   requireField(tables.submissions, CONFIG.submissionFields.totalShotsCounted);
-  requireField(tables.submissions, CONFIG.submissionFields.countThisSubmission);
+  requireFieldType(
+    tables.submissions,
+    CONFIG.submissionFields.countThisSubmission,
+    ["formula"]
+  );
   requireField(tables.shotMilestones, CONFIG.shotMilestoneFields.gradeBand);
   requireField(tables.shotMilestones, CONFIG.shotMilestoneFields.milestoneShotCount);
   requireField(tables.unlocks, CONFIG.unlockFields.enrollment);
