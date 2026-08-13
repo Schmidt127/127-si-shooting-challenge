@@ -74,15 +74,19 @@ in force until Mike releases them.
 3. Resolve any duplicate canonical identity, wrong-owner link, multiple goal,
    or cross-Program/year result manually before enabling a writer. Stop rather
    than selecting a first row.
-4. In DEV, paste in this order: 031, 032, 033, then 118. Paste docblock through
+4. In DEV, paste in this order: 031, 032, then 118. Paste docblock through
    end (not the GitHub header). Verify the exact triggers before enabling:
-   031 counted Submissions; 032 WAS needing goal; 033 WAS homework reconcile;
-   118 Sunday 05:00 America/Denver.
-5. Leave 010, 035, 057, 072, 076, 101, 114, and all email/Make paths unchanged
-   during the first-create identity proof. Leave 068 OFF.
-6. Enable one writer at a time: 031 → 032 → 033. Run fixture proofs. Enable
-   118 only for the isolated empty-week/concurrency proof, then return the
-   schedule to its documented state. Do not enable an email sender.
+   031 counted Submissions; 032 WAS needing goal; 118 Sunday 05:00
+   America/Denver. `033` is not part of PKG-039 deployment; use its separately
+   approved packet and evidence.
+5. Before any non-dry-run 118 proof, turn OFF (and capture the prior state of)
+   072, 119, 074, and the Make weekly-email scenario. This is mandatory:
+   118 arms `Build Weekly Email Now?`, which 072 would otherwise consume. Keep
+   010, 035, 057, 076, 101, and 114 unchanged and leave 068 OFF.
+6. Enable one writer at a time: 031 → 032. Run fixture proofs. Enable 118 only
+   for the isolated empty-week/concurrency proof, with the email path disabled,
+   then restore 072, 119, 074, and Make to the captured state. Do not enable an
+   email sender during this package.
 7. Only after DEV evidence is accepted and Mike approves Production, repeat the
    exact paste/enable order in Production. Do not merge, deploy, or paste from
    this packet itself.

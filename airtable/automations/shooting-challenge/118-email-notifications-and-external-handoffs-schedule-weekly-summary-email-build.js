@@ -433,6 +433,21 @@ async function main() {
     }
     wasByEnrollment.set(eId, [...(wasByEnrollment.get(eId) || []), row]);
   }
+  for (const [enrollmentId, rows] of wasByEnrollment) {
+    if (rows.length > 1) {
+      throw new Error(
+        `Ambiguous WAS identity before weekly-email arming for Enrollment ${enrollmentId} + Week ${targetWeek.id}: ${rows.map(row => row.id).join(", ")}`
+      );
+    }
+  }
+  for (const [summaryKey, rows] of wasBySummaryKey) {
+    const ownerIds = [...new Set(rows.map(row => exactlyOneLinkedId(row, CONFIG.was.enrollment)))];
+    if (rows.length > 1 || ownerIds.length !== 1) {
+      throw new Error(
+        `Ambiguous Summary Key before weekly-email arming for Week ${targetWeek.id}: ${summaryKey} -> ${rows.map(row => row.id).join(", ")}`
+      );
+    }
+  }
 
   let armed = 0;
   let skipped = 0;
@@ -477,7 +492,11 @@ async function main() {
       const expectedSummaryKey =
         enrollmentKey && weekKey ? `${enrollmentKey}|${weekKey}` : "";
 
-      const keyMatches = expectedSummaryKey ? (wasBySummaryKey.get(expectedSummaryKey) || []) : [];
+      const keyMatches = expectedSummaryKey
+        ? (wasBySummaryKey.get(expectedSummaryKey) || []).filter(
+          row => exactlyOneLinkedId(row, CONFIG.was.enrollment) === enr.id
+        )
+        : [];
       const enrollmentMatches = wasByEnrollment.get(enr.id) || [];
       const candidates = [...new Map([...keyMatches, ...enrollmentMatches].map(row => [row.id, row])).values()];
       if (candidates.length > 1) {
@@ -534,6 +553,10 @@ async function main() {
     } catch (e) {
       errors += 1;
       console.log(`118 error enrollment ${enr.id}: ${e instanceof Error ? e.message : String(e)}`);
+      // A run that cannot prove a single owner must stop before it can arm
+      // further email builds. Any prior write remains visible for controlled
+      // retry; this script never attempts destructive cleanup.
+      throw e;
     }
   }
 
