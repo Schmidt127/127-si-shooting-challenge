@@ -26,15 +26,17 @@ Airtable is the deployed/running copy.
  * 032 - WEEKLY SUMMARY AND GOAL LOGIC
  * Link Challenge Goal Record to Weekly Athlete Summary
  *
- * Version: v3.2
+ * Version: v3.3
  * Date Written: 2026-05-27
- * Last Updated: 2026-05-27
+ * Last Updated: 2026-08-13
  *
  * PURPOSE
  * - Runs from one Weekly Athlete Summary record.
  * - Reads the linked Grade Band.
- * - Finds the matching Target Goal Shots record for the entire challenge.
- * - Matches Target Goal Shots by Grade Band only.
+ * - Finds exactly one eligible Target Goal Shots record for the entire challenge.
+ * - Validates an existing Goal Record rather than trusting a non-empty link.
+ * - Matches Target Goal Shots by exact Grade Band, Active?, and an explicit numeric
+ *   Total Shot Target; numeric zero remains an allowed configured value.
  * - Requires Target Goal Shots.Active? to be checked if that field exists.
  * - Writes the matching Target Goal Shots record into Weekly Athlete Summary → Goal Record.
  *
@@ -42,7 +44,8 @@ Airtable is the deployed/running copy.
  * - Target Goal Shots are challenge-wide goals, not weekly goals.
  * - Do NOT match Target Goal Shots by Week.
  * - Week may exist on Weekly Athlete Summary, but it is not used for goal matching.
- * - One active Target Goal Shots record should exist per Grade Band.
+ * - One active Target Goal Shots record with an explicit numeric target should exist
+ *   per Grade Band; missing, malformed, and ambiguous configuration fails closed.
  * - Do not create Target Goal Shots records here.
  * - Do not write to formula, lookup, rollup, or other read-only fields.
  *
@@ -91,7 +94,7 @@ Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "032 - Weekly Summary and Goal Logic - Link Challenge Goal Record to Weekly Athlete Summary",
-  version: "v3.2",
+  version: "v3.3",
 
   tables: {
     weeklySummary: "Weekly Athlete Summary",
@@ -266,6 +269,20 @@ function getFirstLinkedRecordId(record, table, fieldName) {
   return ids[0] || "";
 }
 
+function getExactlyOneLinkedRecordId(record, table, fieldName, label) {
+  const ids = [...new Set(getLinkedRecordIds(record, table, fieldName))];
+  if (ids.length !== 1) {
+    throw new Error(`${label} must have exactly one ${fieldName} link; found ${ids.length}.`);
+  }
+  return ids[0];
+}
+
+function hasExplicitNumericTarget(record) {
+  const value = getRaw(record, targetGoalShotsTable, CONFIG.targetGoalShots.totalShotTarget);
+  if (value === null || value === undefined || value === "") return false;
+  return Number.isFinite(typeof value === "number" ? value : Number(String(value).replace(/,/g, "")));
+}
+
 async function updateRecordSafe(table, targetRecordId, updates) {
   const safeUpdates = {};
 
@@ -357,6 +374,12 @@ requireField(
   "Target Goal Shots -> Grade Band"
 );
 
+requireField(
+  targetGoalShotsTable,
+  CONFIG.targetGoalShots.totalShotTarget,
+  "Target Goal Shots -> Total Shot Target"
+);
+
 if (
   CONFIG.debug.requireActiveGoalRecord &&
   fieldExists(targetGoalShotsTable, CONFIG.targetGoalShots.active)
@@ -409,23 +432,29 @@ async function main() {
     debugStep = "3 - Read Weekly Summary Links";
     setOutputSafe("debugStep", debugStep);
 
-    const weekId = getFirstLinkedRecordId(
+    const weekId = getExactlyOneLinkedRecordId(
       summaryRecord,
       weeklySummaryTable,
-      CONFIG.weeklySummary.week
+      CONFIG.weeklySummary.week,
+      `Weekly Athlete Summary ${recordId}`
     );
 
-    gradeBandId = getFirstLinkedRecordId(
+    gradeBandId = getExactlyOneLinkedRecordId(
       summaryRecord,
       weeklySummaryTable,
-      CONFIG.weeklySummary.gradeBand
+      CONFIG.weeklySummary.gradeBand,
+      `Weekly Athlete Summary ${recordId}`
     );
 
-    const existingGoalRecordId = getFirstLinkedRecordId(
-      summaryRecord,
-      weeklySummaryTable,
-      CONFIG.weeklySummary.goalRecord
+    const existingGoalRecordIds = getLinkedRecordIds(
+      summaryRecord, weeklySummaryTable, CONFIG.weeklySummary.goalRecord
     );
+    const existingGoalRecordId = existingGoalRecordIds.length
+      ? getExactlyOneLinkedRecordId(
+        summaryRecord, weeklySummaryTable, CONFIG.weeklySummary.goalRecord,
+        `Weekly Athlete Summary ${recordId}`
+      )
+      : "";
 
     log("032 input", {
       recordId,
@@ -438,39 +467,6 @@ async function main() {
     debugStep = "4 - Validate Weekly Summary State";
     setOutputSafe("debugStep", debugStep);
 
-    if (existingGoalRecordId) {
-      goalRecordId = existingGoalRecordId;
-      actionTaken = CONFIG.actions.alreadyLinked;
-
-      setFinalOutputs({
-        ok: true,
-        weeklySummaryId: recordId,
-        gradeBandId,
-        goalRecordId,
-        goalLabel: "",
-        matchCount: 1,
-        actionTaken,
-        statusOut: CONFIG.statuses.skipped,
-        errorOut: "",
-        debugStep: "Done - Already linked",
-      });
-
-      log("032 skipped because Goal Record was already linked", {
-        recordId,
-        goalRecordId,
-      });
-
-      return;
-    }
-
-    if (!weekId) {
-      throw new Error("Weekly Athlete Summary is missing Week.");
-    }
-
-    if (!gradeBandId) {
-      throw new Error("Weekly Athlete Summary is missing Grade Band.");
-    }
-
     debugStep = "5 - Load Target Goal Shots";
     setOutputSafe("debugStep", debugStep);
 
@@ -482,13 +478,13 @@ async function main() {
     setOutputSafe("debugStep", debugStep);
 
     const matchingGoals = goalsQuery.records.filter(goalRecord => {
-      const goalGradeBandId = getFirstLinkedRecordId(
+      const goalGradeBandIds = getLinkedRecordIds(
         goalRecord,
         targetGoalShotsTable,
         CONFIG.targetGoalShots.gradeBand
       );
 
-      if (goalGradeBandId !== gradeBandId) {
+      if (goalGradeBandIds.length !== 1 || goalGradeBandIds[0] !== gradeBandId) {
         return false;
       }
 
@@ -496,17 +492,34 @@ async function main() {
         CONFIG.debug.requireActiveGoalRecord &&
         fieldExists(targetGoalShotsTable, CONFIG.targetGoalShots.active)
       ) {
-        return getBooleanish(
+        if (!getBooleanish(
           goalRecord,
           targetGoalShotsTable,
           CONFIG.targetGoalShots.active
-        );
+        )) return false;
       }
 
-      return true;
+      return hasExplicitNumericTarget(goalRecord);
     });
 
     matchCount = matchingGoals.length;
+
+    if (existingGoalRecordId) {
+      if (matchCount !== 1 || matchingGoals[0].id !== existingGoalRecordId) {
+        throw new Error(
+          `Existing Goal Record ${existingGoalRecordId} is not the one eligible active configured goal for Grade Band ${gradeBandId}.`
+        );
+      }
+      goalRecordId = existingGoalRecordId;
+      actionTaken = CONFIG.actions.alreadyLinked;
+      setFinalOutputs({
+        ok: true, weeklySummaryId: recordId, gradeBandId, goalRecordId,
+        goalLabel: getText(matchingGoals[0], targetGoalShotsTable, CONFIG.targetGoalShots.targetLabel),
+        matchCount, actionTaken, statusOut: CONFIG.statuses.skipped, errorOut: "",
+        debugStep: "Done - Existing goal validated",
+      });
+      return;
+    }
 
     if (matchCount === 0) {
       actionTaken = CONFIG.actions.skippedNoMatch;
