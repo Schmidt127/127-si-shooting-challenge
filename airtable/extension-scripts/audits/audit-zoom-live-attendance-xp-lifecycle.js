@@ -156,11 +156,12 @@ function resolveStartField(zoomTable) {
 
 function dateKey(record, zoomTable, startField) {
   const value = raw(record, zoomTable, startField);
+  if (!startField || value == null || String(value).trim() === "") return "";
   if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value.trim())) {
     return value.trim();
   }
   const date = new Date(value);
-  if (!startField || Number.isNaN(date.getTime())) return "";
+  if (Number.isNaN(date.getTime())) return "";
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: "America/Denver",
     year: "numeric",
