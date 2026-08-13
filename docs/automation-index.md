@@ -67,6 +67,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **031** | Weekly Summary — Find or Create WAS from Submission | Submissions when formula-backed count readiness evaluates checked and formula-backed stat mode evaluates `Simple Total` or `Detailed Shooting`; reuses or creates the canonical WAS | `031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` (**v4.1** — authoritative find-or-create owner; exact Enrollment/Week cardinality, formula-backed readiness inputs, writable email-readiness checkbox) |
 | 032 | Weekly Summary — Link Challenge Goal to WAS | *confirm in Airtable* | `032-weekly-summary-and-goal-logic-link-challenge-goal-record-to-weekly-athlete-summary.js` |
 | 033 | Weekly Summary — Assign Homework to WAS | **paste v4.1 pending** — PHA-only, exact PI required | `033-weekly-summary-and-goal-logic-assign-homework-to-weekly-athlete-summary.js` (**v4.1**) |
+| **035** | Weekly Summary — Create Weekly Threshold XP Events | WAS when goal completion threshold is eligible; creates threshold XP Events and updates WAS threshold status | `035-weekly-summary-and-goal-logic-create-weekly-threshold-xp-events.js` |
 | 034 | Weekly Summary — Set Previous Week Helper Values | *confirm in Airtable* | `034-weekly-summary-and-goal-logic-set-previous-week-helper-values.js` |
 
 ## Levels and progression (041–043)
