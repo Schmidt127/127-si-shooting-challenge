@@ -28,7 +28,7 @@ Maps Airtable automations and extension scripts to triggers, tables, and downstr
 | 006 | Submissions | *confirm* | `006-...-set-video-count.js` | Video count fields |
 | 021 | Submissions | *confirm* | `021-...-set-attachment-upload-status.js` | Upload status |
 | 009 | Submissions | *confirm* | `009-submission-intake-create-submission-assets.js` | Submission Assets |
-| **010** | Submissions | `Count This Submission?` + XP eligible | `010-submission-intake-create-xp-event.js` | **XP Events** (SHOOTING_BASE), WAS link |
+| **010** | Submissions | `Count This Submission?` + XP eligible | `010-submission-intake-create-xp-event.js` | **XP Events** (SHOOTING_BASE), WAS link; later exclusion reversal remains unproven |
 
 ### Weekly summary chain (030–034)
 
@@ -46,7 +46,7 @@ Maps Airtable automations and extension scripts to triggers, tables, and downstr
 |---|-------|---------|--------|------------|
 | **020** | Submission Assets | Homework asset ready | `020-homework-link-or-create-homework-completion.js` | Homework Completions |
 | 063 | Homework Completions | *confirm* | `063-...-copy-enrollment-grade-band-to-homework-completion.js` | Grade Band |
-| 064 | Homework Completions | *confirm* | `064-...-prepare-homework-xp-award.js` | XP prep fields |
+| 064 | Homework Completions | Satisfactory + Review Complete + Coach Feedback + Enrollment + Homework + Week present; no Submission Date/Base XP/XP Events-empty filter | `064-...-prepare-homework-xp-award.js` | XP prep fields |
 | **065** | Homework Completions | `Homework XP Reconciliation Needed? = 1` (formula-backed local + linked state signature) | `065-...-create-homework-xp-event.js` | **XP Events** (HOMEWORK) award, repair, deactivate, reactivate |
 | **070a** | Submission Assets | Send to Make + homework ready | `070a-...-send-homework-asset-payload-to-make.js` | **Make** upload engine |
 | **071** | Homework Completions | Parent feedback ready, not sent, awarded (see below) | `071-...-send-homework-feedback-email-webhook.js` | **Make** parent email |

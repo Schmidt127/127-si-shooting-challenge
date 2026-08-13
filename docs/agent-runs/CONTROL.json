@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-08-10T23:10:00Z",
+  "updated_at": "2026-08-13T00:00:00Z",
   "mode": "controlled-four-agent",
   "canonical": {
     "branch": "master",
-    "sha": "410fa21cadaec67cd36489536487a0dd38f49607",
-    "remote_sha": "410fa21cadaec67cd36489536487a0dd38f49607",
+    "sha": "2f8188bc22b4075fdf24b5d6ed80fc175aa16f72",
+    "remote_sha": "2f8188bc22b4075fdf24b5d6ed80fc175aa16f72",
     "match": true,
-    "note": "Fresh execution-control baseline after merged reconciliation/retirement PRs #137 through #141."
+    "note": "Execution-control baseline synchronized after merged PR #166; unrelated open drafts #161 and #162 remain untouched."
   },
   "release_control": {
     "backlog_id": "SCV2-MASTER-PLAN-TRACEABILITY-001",
@@ -48,10 +48,10 @@
     "merge_to_main_requires": "explicit Mike approval"
   },
   "run": {
-    "state": "idle",
-    "package_id": null,
-    "started_at": null,
-    "stage_id": null
+    "state": "in_progress",
+    "package_id": "PKG-007-closeout-PKG-006R",
+    "started_at": "2026-08-13T00:00:00Z",
+    "stage_id": "architecture-and-closeout"
   },
   "roles": {
     "lead": {
@@ -134,7 +134,7 @@
     "No live Airtable access unless Mike authorizes a named DEV check"
   ],
   "pending_approvals": [],
-  "next_action": "Traceability package SCV2-MASTER-PLAN-TRACEABILITY-001: Mike reviews the Active Execution Matrix and approves whether PKG-001 should be the first implementation package. Keep all live-system changes Mike-owned.",
+  "next_action": "Complete PKG-007 evidence closeout and prepare PKG-006R daily-submission reversal package; keep all Production actions Mike-owned.",
   "stop_reason": null,
   "merge_order": [
     "research",
