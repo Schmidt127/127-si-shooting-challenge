@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: (new - not yet deployed)
-Last GitHub Update: 2026-07-24
+Last GitHub Update: 2026-08-13
 
 Purpose:
 Sunday 5:00 AM America/Denver batch: ensure Weekly Athlete Summary rows for the
@@ -22,11 +22,15 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
 /************************************************************
  * 118 - Email - Schedule Weekly Summary Email Build
  *
- * Version: v1.7
+ * Version: v1.8
  * Date Written: 2026-07-16
- * Last Updated: 2026-08-06
+ * Last Updated: 2026-08-13
  *
  * VERSION HISTORY
+ * - v1.8 (2026-08-13): Exact WAS owner identity hardening — malformed or
+ *   ambiguous Enrollment/Week links and competing candidate summaries fail
+ *   closed; post-create requery must prove this writer created the sole
+ *   Enrollment + Week summary before it can arm an email build.
  * - v1.7 (2026-08-06): Program Instance isolation — Week End Date match rejects
  *   multi-PI collisions; enrollments armed only when Enrollment.Program Instance
  *   matches the target Week. Exclude both Schmidt test enrollment RIDs.
@@ -70,7 +74,8 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
  *   (override only via includeSchmidt=true for controlled Test-mode runs)
  * - Never combine includeSchmidt=true with sendMode=Live.
  * - Scheduled date key = prior Saturday Week End (America/Denver).
- * - Idempotent: one WAS per Enrollment+Week (Summary Key when present).
+ * - Idempotent only when exactly one canonical WAS identity is provable;
+ *   ambiguity fails closed rather than selecting a first record.
  *
  * FOLDER
  * - 07 - Email, Notifications, and External Handoffs
@@ -102,7 +107,7 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
 
 const CONFIG = {
   scriptName: "118 - Email - Schedule Weekly Summary Email Build",
-  version: "v1.7",
+  version: "v1.8",
   timeZone: "America/Denver",
   // Exclude both historical and current Schmidt test enrollments by default.
   schmidtEnrollmentId: "recCyFEPeATOVNlr9",
@@ -207,6 +212,11 @@ function linkedIds(record, fieldName) {
   const v = cell(record, fieldName);
   if (!Array.isArray(v)) return [];
   return v.map((x) => x?.id).filter(Boolean);
+}
+
+function exactlyOneLinkedId(record, fieldName) {
+  const ids = [...new Set(linkedIds(record, fieldName))];
+  return ids.length === 1 ? ids[0] : "";
 }
 
 function parseBool(raw, fallback) {
@@ -392,8 +402,12 @@ async function main() {
   }
 
   const targetWeekProgramInstanceId = fieldExists(weeksTable, CONFIG.weeks.programInstance)
-    ? linkedIds(targetWeek, CONFIG.weeks.programInstance)[0] || ""
+    ? exactlyOneLinkedId(targetWeek, CONFIG.weeks.programInstance)
     : "";
+
+  if (fieldExists(weeksTable, CONFIG.weeks.programInstance) && !targetWeekProgramInstanceId) {
+    throw new Error(`Target Week ${targetWeek.id} must have exactly one Program Instance.`);
+  }
 
   debugStep = "3 - Load enrollments + WAS";
   setOutputSafe("debugStep", debugStep);
@@ -408,24 +422,16 @@ async function main() {
   const wasBySummaryKey = new Map();
   let duplicateWasSkipped = 0;
   for (const row of wasQuery.records) {
-    const eId = linkedIds(row, CONFIG.was.enrollment)[0];
-    const wId = linkedIds(row, CONFIG.was.week)[0];
+    const eId = exactlyOneLinkedId(row, CONFIG.was.enrollment);
+    const wId = exactlyOneLinkedId(row, CONFIG.was.week);
     if (!(eId && wId === targetWeek.id)) continue;
     const summaryKey = fieldExists(wasTable, CONFIG.was.summaryKey)
       ? text(row, CONFIG.was.summaryKey)
       : "";
     if (summaryKey) {
-      if (wasBySummaryKey.has(summaryKey)) {
-        duplicateWasSkipped += 1;
-        continue;
-      }
-      wasBySummaryKey.set(summaryKey, row);
+      wasBySummaryKey.set(summaryKey, [...(wasBySummaryKey.get(summaryKey) || []), row]);
     }
-    if (wasByEnrollment.has(eId)) {
-      duplicateWasSkipped += 1;
-      continue;
-    }
-    wasByEnrollment.set(eId, row);
+    wasByEnrollment.set(eId, [...(wasByEnrollment.get(eId) || []), row]);
   }
 
   let armed = 0;
@@ -451,7 +457,7 @@ async function main() {
         continue;
       }
       if (targetWeekProgramInstanceId && fieldExists(enrollmentsTable, CONFIG.enrollments.programInstance)) {
-        const enrPi = linkedIds(enr, CONFIG.enrollments.programInstance)[0] || "";
+        const enrPi = exactlyOneLinkedId(enr, CONFIG.enrollments.programInstance);
         if (enrPi !== targetWeekProgramInstanceId) {
           skipped += 1;
           continue;
@@ -471,9 +477,16 @@ async function main() {
       const expectedSummaryKey =
         enrollmentKey && weekKey ? `${enrollmentKey}|${weekKey}` : "";
 
-      let wasRow =
-        (expectedSummaryKey && wasBySummaryKey.get(expectedSummaryKey))
-        || wasByEnrollment.get(enr.id);
+      const keyMatches = expectedSummaryKey ? (wasBySummaryKey.get(expectedSummaryKey) || []) : [];
+      const enrollmentMatches = wasByEnrollment.get(enr.id) || [];
+      const candidates = [...new Map([...keyMatches, ...enrollmentMatches].map(row => [row.id, row])).values()];
+      if (candidates.length > 1) {
+        duplicateWasSkipped += 1;
+        skipped += 1;
+        console.log(`118 skipped ambiguous WAS identity for Enrollment ${enr.id} + Week ${targetWeek.id}: ${candidates.map(row => row.id).join(", ")}`);
+        continue;
+      }
+      let wasRow = candidates[0];
       if (!wasRow) {
         if (dryRun) {
           createdWas += 1;
@@ -484,10 +497,23 @@ async function main() {
         createFields[CONFIG.was.enrollment] = [{ id: enr.id }];
         createFields[CONFIG.was.week] = [{ id: targetWeek.id }];
         const newId = await wasTable.createRecordAsync(createFields);
-        wasRow = { id: newId };
+        // Airtable does not enforce a unique Enrollment + Week constraint.
+        // Re-query and require that this writer's candidate is now the sole
+        // canonical identity before any weekly-email build can be armed.
+        wasQuery = await wasTable.selectRecordsAsync({ fields: wasFields });
+        const postCreate = wasQuery.records.filter(row =>
+          exactlyOneLinkedId(row, CONFIG.was.enrollment) === enr.id
+          && exactlyOneLinkedId(row, CONFIG.was.week) === targetWeek.id
+        );
+        if (postCreate.length !== 1 || postCreate[0].id !== newId) {
+          throw new Error(
+            `WAS create conflict for Enrollment ${enr.id} + Week ${targetWeek.id}; created ${newId}, found ${postCreate.map(row => row.id).join(", ") || "(none)"}.`
+          );
+        }
+        wasRow = postCreate[0];
         createdWas += 1;
-        wasByEnrollment.set(enr.id, wasRow);
-        if (expectedSummaryKey) wasBySummaryKey.set(expectedSummaryKey, wasRow);
+        wasByEnrollment.set(enr.id, [wasRow]);
+        if (expectedSummaryKey) wasBySummaryKey.set(expectedSummaryKey, [wasRow]);
       } else if (booleanish(wasRow, CONFIG.was.sent)) {
         skipped += 1;
         continue;
