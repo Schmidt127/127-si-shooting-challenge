@@ -32,6 +32,7 @@ const CONFIG = {
     currentSignature: "Zoom XP Current Signature",
     lastSignature: "Last Zoom XP Reconciled Signature",
     needed: "Zoom XP Reconciliation Needed?",
+    startFieldCandidates: ["Start Time", "Start Date", "Meeting Date", "Date"],
     enrollmentSignatureLookup: "Zoom XP Enrollment Signature - Lkp",
     weekSignatureLookup: "Zoom XP Week Signature - Lkp",
     eventSignatureLookup: "Zoom XP Event Signature - Lkp",
@@ -52,6 +53,7 @@ const CONFIG = {
     key: "Rule Key",
     active: "Active?",
     amount: "XP Amount",
+    source: "XP Source Label",
   },
   xp: {
     sourceKey: "Source Key",
@@ -70,6 +72,10 @@ const CONFIG = {
   },
   sourcePrefixes: ["ZOOM_ATTEND_BASE|", "ZOOM_ATTEND_BONUS_2|", "ZOOM_ATTEND_BONUS_3|"],
   supportedRuleKeys: ["ZOOM_ATTEND_BASE", "ZOOM_ATTEND_BONUS_2", "ZOOM_ATTEND_BONUS_3"],
+  bonusSourceFallbacks: {
+    bonus2: "Zoom Attendance Bonus 2",
+    bonus3: "Zoom Attendance Bonus 3",
+  },
 };
 
 const SAMPLE_LIMIT = 25;
@@ -144,6 +150,24 @@ function canonicalBonusMeeting(meetings, threshold) {
     )[threshold - 1] || null;
 }
 
+function resolveStartField(zoomTable) {
+  return CONFIG.zoom.startFieldCandidates.find((fieldName) => fieldExists(zoomTable, fieldName)) || "";
+}
+
+function dateKey(record, zoomTable, startField) {
+  const value = raw(record, zoomTable, startField);
+  const date = new Date(value);
+  if (!startField || Number.isNaN(date.getTime())) return "";
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Denver",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
+}
+
 function exactRuleMap(ruleRecords, rulesTable) {
   const map = new Map();
   for (const record of ruleRecords) {
@@ -162,6 +186,7 @@ async function main() {
   const rulesTable = base.getTable(CONFIG.tables.rules);
   const xpTable = base.getTable(CONFIG.tables.xp);
   const wasTable = base.getTable(CONFIG.tables.was);
+  const startField = resolveStartField(zoomTable);
 
   const report = {
     script: CONFIG.scriptName,
@@ -273,7 +298,7 @@ async function main() {
   const qualifyingByEnrollment = new Map();
   for (const meeting of zoomQuery.records) {
     const meetingKey = text(meeting, zoomTable, CONFIG.zoom.key);
-    const dateKey = text(meeting, zoomTable, "Meeting Date") || meeting.id;
+    const dateKeyValue = dateKey(meeting, zoomTable, startField) || meeting.id;
     const weekIds = ids(meeting, zoomTable, CONFIG.zoom.week);
     const week = weekIds.length === 1 ? weeks.get(weekIds[0]) : null;
     if (
@@ -297,7 +322,7 @@ async function main() {
       qualifyingByEnrollment.get(enrollmentId).push({
         id: meeting.id,
         meetingKey,
-        dateKey,
+        dateKey: dateKeyValue,
         weekId: weekIds[0],
         programInstanceId: weekPi[0],
         schoolYear: text(week, weekTable, CONFIG.week.schoolYear),
@@ -320,6 +345,10 @@ async function main() {
       }
       const ruleRows = rules.get(type === "bonus2" ? "ZOOM_ATTEND_BONUS_2" : "ZOOM_ATTEND_BONUS_3") || [];
       const expectedPoints = ruleRows.length === 1 ? numberValue(ruleRows[0], rulesTable, CONFIG.rule.amount) : null;
+      const expectedSource = ruleRows.length === 1
+        ? text(ruleRows[0], rulesTable, CONFIG.rule.source) ||
+          CONFIG.bonusSourceFallbacks[type]
+        : "";
       for (const event of events) {
         const active = booleanish(event, xpTable, CONFIG.xp.active);
         const meetingIds = ids(event, xpTable, CONFIG.xp.meeting);
@@ -337,6 +366,7 @@ async function main() {
         if (eventWasIds.length !== 1 || (expectedActive && (expectedWas.length !== 1 || eventWasIds[0] !== expectedWas[0].id))) addIssue(report, "bonus_was_link_ownership", { eventId: event.id, enrollmentId, type, eventWasIds, expectedWasIds: expectedWas.map((row) => row.id) });
         if (meetingIds.length === 1 && (!canonical || meetingIds[0] !== canonical.id)) addIssue(report, "bonus_wrong_canonical_meeting", { eventId: event.id, enrollmentId, type, meetingIds, expectedMeetingId: canonical?.id || "" });
         if (expectedPoints !== null && numberValue(event, xpTable, CONFIG.xp.points) !== expectedPoints) addIssue(report, "bonus_wrong_points_or_rule", { eventId: event.id, enrollmentId, type, expectedPoints, actualPoints: numberValue(event, xpTable, CONFIG.xp.points) });
+        if (expectedSource && text(event, xpTable, CONFIG.xp.source) !== expectedSource) addIssue(report, "bonus_wrong_source_or_rule", { eventId: event.id, enrollmentId, type, expectedSource, actualSource: text(event, xpTable, CONFIG.xp.source) });
         if (text(event, xpTable, CONFIG.xp.bucket) !== "Zoom Attendance") addIssue(report, "bonus_wrong_source_or_bucket", { eventId: event.id, enrollmentId, type, bucket: text(event, xpTable, CONFIG.xp.bucket) });
       }
     }

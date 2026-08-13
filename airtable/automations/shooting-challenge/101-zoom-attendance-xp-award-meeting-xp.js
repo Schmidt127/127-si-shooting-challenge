@@ -33,8 +33,8 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Awards Zoom attendance XP to all linked Attendees.
  * - Creates or updates XP Events using stable Source Keys.
  * - Awards base attendance XP for each qualifying attendee.
- * - Awards one-time bonus XP when an attendee reaches meeting #2.
- * - Awards one-time bonus XP when an attendee reaches meeting #3.
+ * - Keeps cumulative Bonus 2 XP active at two or more qualifying meetings.
+ * - Keeps cumulative Bonus 3 XP active at three or more qualifying meetings.
  * - Writes XP Activity Date / Activity Date from meeting start (America/Denver)
  *   when those fields exist and are writable.
  * - Reconciles the canonical live-attendance event from the formula-backed
@@ -733,6 +733,7 @@ function eventMatchesBonusOwnership(record, {
   wasId,
   rule,
   bucketKey,
+  xpSource,
 }) {
   return (
     normalizeKey(getText(record, xpEventsTable, CONFIG.xpEvents.sourceKey)) === normalizeKey(sourceKey) &&
@@ -746,8 +747,7 @@ function eventMatchesBonusOwnership(record, {
     getFirstLinkedRecordId(record, xpEventsTable, CONFIG.xpEvents.weeklySummary) === wasId &&
     normalizeText(getText(record, xpEventsTable, CONFIG.xpEvents.xpBucketKey)) === normalizeText(bucketKey) &&
     getNumericValue(record, xpEventsTable, CONFIG.xpEvents.xpPoints) === Number(rule.xpAmount) &&
-    (!rule.xpSourceLabel ||
-      normalizeText(getText(record, xpEventsTable, CONFIG.xpEvents.xpSource)) === normalizeText(rule.xpSourceLabel))
+    normalizeText(getText(record, xpEventsTable, CONFIG.xpEvents.xpSource)) === normalizeText(xpSource)
   );
 }
 
@@ -756,6 +756,7 @@ function eventMatchesBonusStructuralOwnership(record, {
   enrollmentId,
   rule,
   bucketKey,
+  xpSource,
 }) {
   return (
     normalizeKey(getText(record, xpEventsTable, CONFIG.xpEvents.sourceKey)) === normalizeKey(sourceKey) &&
@@ -766,8 +767,7 @@ function eventMatchesBonusStructuralOwnership(record, {
     uniqueIds(getLinkedRecordIds(record, xpEventsTable, CONFIG.xpEvents.weeklySummary)).length === 1 &&
     normalizeText(getText(record, xpEventsTable, CONFIG.xpEvents.xpBucketKey)) === normalizeText(bucketKey) &&
     getNumericValue(record, xpEventsTable, CONFIG.xpEvents.xpPoints) === Number(rule.xpAmount) &&
-    (!rule.xpSourceLabel ||
-      normalizeText(getText(record, xpEventsTable, CONFIG.xpEvents.xpSource)) === normalizeText(rule.xpSourceLabel))
+    normalizeText(getText(record, xpEventsTable, CONFIG.xpEvents.xpSource)) === normalizeText(xpSource)
   );
 }
 
@@ -1097,6 +1097,9 @@ async function runLiveLifecycleReconciliation(recordId) {
           enrollmentId,
           rule: bonus.rule,
           bucketKey: CONFIG.xpLabels.bucketKey,
+          xpSource: bonus.rule.xpSourceLabel || (bonus.count === 2
+            ? CONFIG.xpLabels.bonus2SourceFallback
+            : CONFIG.xpLabels.bonus3SourceFallback),
         })) {
           throw new Error(`XP Event ${bonusEvents[0].id} has wrong owner for Source Key ${bonus.sourceKey}.`);
         }
@@ -1163,6 +1166,9 @@ async function runLiveLifecycleReconciliation(recordId) {
             wasId: bonusWasId,
             rule: bonus.rule,
             bucketKey: CONFIG.xpLabels.bucketKey,
+            xpSource: bonus.rule.xpSourceLabel || (bonus.count === 2
+              ? CONFIG.xpLabels.bonus2SourceFallback
+              : CONFIG.xpLabels.bonus3SourceFallback),
           })
         ) {
           throw new Error(`XP Event ${bonusEvents[0].id} has wrong canonical ownership for Source Key ${bonus.sourceKey}.`);
@@ -1174,6 +1180,9 @@ async function runLiveLifecycleReconciliation(recordId) {
           enrollmentId,
           rule: bonus.rule,
           bucketKey: CONFIG.xpLabels.bucketKey,
+          xpSource: bonus.rule.xpSourceLabel || (bonus.count === 2
+            ? CONFIG.xpLabels.bonus2SourceFallback
+            : CONFIG.xpLabels.bonus3SourceFallback),
         })
       ) {
         throw new Error(`XP Event ${bonusEvents[0].id} has wrong owner for Source Key ${bonus.sourceKey}.`);

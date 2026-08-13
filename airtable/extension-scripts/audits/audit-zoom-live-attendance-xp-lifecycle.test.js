@@ -35,6 +35,7 @@ test("audit covers cumulative bonus threshold and ownership contracts", () => {
     "bonus_was_link_ownership",
     "bonus_wrong_canonical_meeting",
     "bonus_wrong_points_or_rule",
+    "bonus_wrong_source_or_rule",
     "bonus_wrong_source_or_bucket",
     "bonus_orphan_or_stolen_event",
   ]) {
@@ -42,6 +43,8 @@ test("audit covers cumulative bonus threshold and ownership contracts", () => {
   }
   assert.match(source, /qualifyingMeetings\.length >= threshold/);
   assert.match(source, /canonicalBonusMeeting/);
+  assert.match(source, /startFieldCandidates/);
+  assert.match(source, /America\/Denver/);
 });
 
 test("audit remains read-only", () => {
