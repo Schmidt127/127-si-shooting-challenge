@@ -43,7 +43,7 @@ test("072 v4.1 enforces empty-week policies and does not call Make/fetch webhook
   assert.ok(/Version:\s*v4\.1/.test(s072));
   assert.ok(/emptyWeekPolicy/.test(s072));
   assert.ok(/built_short_empty_week/.test(s072));
-  assert.ok(/skipped_empty_week_suppress/.test(s072));
+  assert.ok(/suppressed_empty_week/.test(s072));
   assert.ok(/Does NOT send the email to Make\.com or Gmail directly/.test(s072));
   assert.ok(!/\bfetch\s*\(/.test(s072), "072 must not fetch/webhook");
   assert.ok(!/makeWebhookUrl/.test(s072), "072 must not take Make webhook input");
