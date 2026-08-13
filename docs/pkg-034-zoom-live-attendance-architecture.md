@@ -1,8 +1,8 @@
 # PKG-034 — Zoom Live-Attendance XP Lifecycle Reliability
 
-**Status:** Phase 3 repository package prepared; Production installation pending Mike  
-**Base:** `origin/master` `2b43ebcc8d7efe18da2f2c33459ea77f29bbfa66`  
-**Production access:** None by Cursor  
+**Status:** Phase 3 repository package prepared; Production installation pending Mike
+**Base:** `origin/master` `2b43ebcc8d7efe18da2f2c33459ea77f29bbfa66`
+**Production access:** None by Cursor
 **Scope:** Live attendance only. Recording XP is explicitly excluded.
 
 ## Architecture and ownership

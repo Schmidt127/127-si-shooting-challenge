@@ -1,8 +1,8 @@
 # PKG-034 — Production-only Schmidt test packet
 
-**Owner:** Mike  
+**Owner:** Mike
 **Agent boundary:** Cursor has not accessed Airtable, pasted scripts, enabled
-automations, sent email, deployed, or merged.  
+automations, sent email, deployed, or merged.
 **Important:** This packet is controlled Production work because no DEV
 Airtable environment is available. Offline repository tests are not
 Production proof.

@@ -259,7 +259,7 @@ async function main() {
     const completed = text(meeting, zoomTable, CONFIG.zoom.status).toLowerCase() === "completed";
     const eventRows = xpByMeeting.get(meeting.id) || [];
 
-    if (attendeeIds.length !== 1) addIssue(report, "wrong_or_multiple_enrollment_links", { meetingId: meeting.id, attendeeIds });
+    if (attendeeIds.length === 0) addIssue(report, "missing_enrollment_links", { meetingId: meeting.id, attendeeIds });
     if (weekIds.length !== 1) addIssue(report, "wrong_or_multiple_week_links", { meetingId: meeting.id, weekIds });
     if (!meetingKey) addIssue(report, "missing_meeting_identity", { meetingId: meeting.id });
 

@@ -890,6 +890,9 @@ async function runLiveLifecycleReconciliation(recordId) {
     .filter(record => getLinkedRecordIds(record, xpEventsTable, CONFIG.xpEvents.zoomMeeting).includes(recordId))
     .flatMap(record => getLinkedRecordIds(record, xpEventsTable, CONFIG.xpEvents.enrollment));
   const lifecycleEnrollmentIds = uniqueIds([...attendeeIds, ...priorMeetingEnrollmentIds]);
+  if (lifecycleEnrollmentIds.length === 0) {
+    throw new Error("No current or previously owned Enrollment is available for lifecycle reconciliation.");
+  }
 
   for (const enrollmentId of lifecycleEnrollmentIds) {
     const enrollment = enrollmentById.get(enrollmentId);
@@ -933,12 +936,25 @@ async function runLiveLifecycleReconciliation(recordId) {
           const historicalKey = getText(record, zoomTable, CONFIG.zoom.zoomMeetingKey);
           const historicalDate = dateToDateKey(getRaw(record, zoomTable, zoomStartField));
           const historicalStatus = getText(record, zoomTable, CONFIG.zoom.meetingStatus);
+          const historicalWeekIds = uniqueIds(getLinkedRecordIds(record, zoomTable, CONFIG.zoom.week));
+          const historicalWeek = historicalWeekIds.length === 1
+            ? weekQuery.records.find(week => week.id === historicalWeekIds[0])
+            : null;
+          const historicalProgramIds = historicalWeek
+            ? uniqueIds(getLinkedRecordIds(historicalWeek, weeksTable, "Program Instance"))
+            : [];
+          const historicalSchoolYear = historicalWeek
+            ? getText(historicalWeek, weeksTable, "School Year")
+            : "";
           return (
             historicalKey &&
             historicalDate &&
             compareDateKeys(historicalDate, meetingDateKey) <= 0 &&
             normalizeText(historicalStatus) === normalizeText(CONFIG.statuses.completed) &&
-            getLinkedRecordIds(record, zoomTable, CONFIG.zoom.attendees).includes(enrollmentId)
+            getLinkedRecordIds(record, zoomTable, CONFIG.zoom.attendees).includes(enrollmentId) &&
+            historicalProgramIds.length === 1 &&
+            historicalProgramIds[0] === weekProgramIds[0] &&
+            historicalSchoolYear === weekSchoolYear
           );
         })
         .map(record => getText(record, zoomTable, CONFIG.zoom.zoomMeetingKey))
@@ -990,6 +1006,8 @@ async function runLiveLifecycleReconciliation(recordId) {
     }
 
     const wasMatches = wasQuery.records.filter(record =>
+      uniqueIds(getLinkedRecordIds(record, weeklySummaryTable, CONFIG.weeklySummary.enrollment)).length === 1 &&
+      uniqueIds(getLinkedRecordIds(record, weeklySummaryTable, CONFIG.weeklySummary.week)).length === 1 &&
       getFirstLinkedRecordId(record, weeklySummaryTable, CONFIG.weeklySummary.enrollment) === enrollmentId &&
       getFirstLinkedRecordId(record, weeklySummaryTable, CONFIG.weeklySummary.week) === weekIds[0]
     );
@@ -1045,9 +1063,13 @@ async function runLiveLifecycleReconciliation(recordId) {
         await updateRecordSafe(xpEventsTable, bonusEvents[0].id, bonusPayload);
         bonusEventsUpdated += 1;
       } else {
-        const createdBonusId = await xpEventsTable.createRecordAsync(bonusPayload);
-        await ensureXpEventWeeklySummaryLink(createdBonusId, wasMatches[0].id);
-        bonusEventsCreated += 1;
+        try {
+          const createdBonusId = await xpEventsTable.createRecordAsync(bonusPayload);
+          await ensureXpEventWeeklySummaryLink(createdBonusId, wasMatches[0].id);
+          bonusEventsCreated += 1;
+        } catch (error) {
+          eventWarnings.push(`Bonus XP Event ${bonus.sourceKey} writeback failed: ${error.message || error}`);
+        }
       }
     }
 
@@ -1558,6 +1580,11 @@ function assertRequiredSchema() {
   requireField(zoomTable, CONFIG.zoom.createXpEvents, "Zoom Meetings -> Create XP Events");
   requireField(zoomTable, CONFIG.zoom.xpAwardStatus, "Zoom Meetings -> XP Award Status");
   requireField(zoomTable, CONFIG.zoom.zoomMeetingKey, "Zoom Meetings -> Zoom Meeting Key");
+  requireWritableField(zoomTable, CONFIG.zoom.createXpEvents, "Zoom Meetings -> Create XP Events");
+  requireWritableField(zoomTable, CONFIG.zoom.xpAwardStatus, "Zoom Meetings -> XP Award Status");
+  if (fieldExists(zoomTable, CONFIG.zoom.xpAwardError)) {
+    requireWritableField(zoomTable, CONFIG.zoom.xpAwardError, "Zoom Meetings -> XP Award Error");
+  }
   requireField(zoomTable, CONFIG.lifecycle.currentSignature, "Zoom Meetings -> Zoom XP Current Signature");
   requireWritableField(
     zoomTable,
