@@ -84,6 +84,11 @@ does not prove that Production has been configured.
 
 ### Achievements and streaks (053–059, 066)
 
+> **PKG-038 Production hold:** The lifecycle trigger contracts below are
+> repository-ready only. Do not paste, enable, or controlled-test 053, 054,
+> 059, or 066 until Mike explicitly releases both PKG-006R and PKG-036 and
+> confirms no competing lifetime-XP observation window.
+
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
 | 053 | Submissions | Record updated; must watch Enrollment, Activity Date, `Count This Submission?`, and `Total Shots Counted` so positive and correction changes reach reconciliation | `053-...-rebuild-and-upsert-from-submissions.js` (**v5.4**) | Canonical Streak Occurrences; unsupported topology becomes inactive |

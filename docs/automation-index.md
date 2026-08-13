@@ -79,6 +79,10 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 ## Achievements and streaks (053–059, 066)
 
+> **PKG-038 hold:** Do not paste, enable, or controlled-test 053, 054, 059, or
+> 066 in Production until Mike explicitly releases both PKG-006R and PKG-036
+> and confirms there is no competing lifetime-XP observation window.
+
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
 | 053 | Achievements — Streak Occurrences Rebuild from Submissions | Submissions updated; exact trigger must cover eligibility/identity corrections | `053-achievements-and-milestones-streak-occurrences-rebuild-and-upsert-from-submissions.js` (**v5.4** — corrected canonical topology) |

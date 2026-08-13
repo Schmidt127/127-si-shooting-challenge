@@ -56,19 +56,26 @@ Every action input is the dynamic triggering Airtable record ID, never a fixed
 
 ## Paste and controlled proof order
 
-1. Paste 053 v5.4, then 054 v5.8, then 066 v3.7, then 059 v3.6. Leave
-   010/041/042 unchanged.
-2. Confirm ON/OFF state only after each matching trigger is recorded.
-3. Run read-only preflight again.
-4. On one clean Schmidt fixture, prove a streak create, replay, middle-date
+1. Before pasting, record the installed version, trigger, dynamic mapping, and
+   ON/OFF state for 053/054/059/066. Turn **OFF** only these four affected
+   automations; do not touch 010, 041, or 042.
+2. Paste 053 v5.4, then 054 v5.8, then 066 v3.7, then 059 v3.6 while they
+   remain OFF. Save each trigger contract from this packet before enablement.
+3. Run read-only preflight again with all four still OFF. Stop for any
+   ownership, duplicate, WAS, or source-key finding.
+4. Enable in dependency order: 053, then 054, then 066, then 059. After each
+   enablement, record the ON state and do not advance if its trigger/mapping
+   differs from this packet.
+5. Only then begin the controlled fixture proof:
+   - On one clean Schmidt fixture, prove a streak create, replay, middle-date
    withdrawal/split, restoration/rejoin, and same XP Event ID restoration.
-5. Prove first and multi-threshold milestone creation; reduce current counted
+   - Prove first and multi-threshold milestone creation; reduce current counted
    total below one then several thresholds; confirm exact unlocks/events become
    inactive without deletion; restore and confirm same IDs reactivate.
-6. Wait for formula/rollup settlement, then save audit JSON proving WAS XP and
+   - Wait for formula/rollup settlement, then save audit JSON proving WAS XP and
    lifetime XP decrease/restore. Observe 041 queue and 042 downstream result;
    do not manually write levels.
-7. Stop immediately for any duplicate/wrong-owner error, missing/wrong WAS,
+6. Stop immediately for any duplicate/wrong-owner error, missing/wrong WAS,
    stale active award, trigger non-reachability, email/Make activity, or
    unsettled formula that does not converge in the agreed observation window.
 
