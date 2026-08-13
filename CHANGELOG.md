@@ -31,6 +31,21 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **PKG-034 Production installation closeout (2026-08-13)** — Mike supplied
+  authoritative Production evidence for Automation 101 v6.1 in
+  `appn84sqPw03zEbTT`: all nine reconciliation fields exist, the sole trigger
+  is `Zoom XP Reconciliation Needed? = 1` with dynamic `recordId`, and 101 is
+  ON. The read-only audit checked two post-cleanup meetings and 16 XP Events
+  with no Zoom XP Events, unsupported recording XP Events, duplicate rules,
+  ownership, backlink, or lifecycle errors; the two missing-enrollment
+  warnings are the intentionally empty future rosters. Introduction
+  (`recMFP2x5LDqea9ax`) and Motivation (`recb9EjQIJVzaRpZa`) both reached
+  `Needed = 0` with `reconciled_empty_roster_no_award` and no XP Event.
+  Mike manually deleted two unused 2025–2026 meetings
+  (`rec3ToANr5pcs2SRG`, `reczeUT0AJUWMmEOb`). This documents installation and
+  empty-roster acknowledgement only; live-attendee XP, withdrawal, bonuses,
+  progression, standings, and recording XP remain unproven/pending. Cursor
+  did not access or modify Production.
 - **PKG-034-HF-002 Automation 101 v6.1 (2026-08-13)** — Empty-roster
   reconciliation now accepts a valid unchanged Current Signature when no
   owned event data changes, writes that exact signature to Last Zoom XP
