@@ -4,7 +4,7 @@
 
 - Role: Lead / Integrator
 - Branch: `cursor/pkg-033-core-reliability-cc64`
-- Tip SHA at artifact creation: `4bc67a9`
+- Tip SHA at artifact creation: `4866180` (updated by the final test commit)
 - Started: 2026-08-13
 - Assignment: PKG-033 approved plan
 
@@ -28,6 +28,7 @@ Production or DEV Airtable system was accessed.
 | `docs/deploy-checklists/PKG-033-SCHMIDT-PRODUCTION-TEST.md` | add Mike-only controlled test packet |
 | `airtable/automations/shooting-challenge/lib/c025-stage17-etf-downstream.test.js` | correct stale committed-source version assertion |
 | `airtable/schema/current/automation-trigger-map.md` | mark retired 043 as historical-only; preserve 042 ownership |
+| `tests/weekly-athlete-summary/pkg-033-was-integrity.test.js` | add offline WAS ambiguity, formula-lag, repair, and replay harness |
 
 ## Lane summaries
 
@@ -44,8 +45,10 @@ change is justified.
 `031` is the canonical creator/linker with exact Enrollment + Week identity,
 duplicate fail-closed behavior, post-create revalidation, and bounded repair
 ownership. Existing read-only audits cover counted Submission/XP/WAS/Enrollment
-parity. A current live duplicate audit and formula-settling evidence remain
-required. No creator rewrite is justified.
+parity. The new offline harness covers duplicate ambiguity, wrong ownership,
+formula lag, backlink repair, owner-specific XP repair, and replay stability. A
+current live duplicate audit and formula-settling evidence remain required. No
+creator rewrite is justified.
 
 ### Zoom
 
@@ -74,16 +77,17 @@ It is not a pass claim.
 
 | Command | Result |
 |---|---|
-| `node -e "JSON.parse(...CONTROL.json)"` | PASS |
+| `node -e "JSON.parse(require('fs').readFileSync('docs/agent-runs/CONTROL.json','utf8'))"` | PASS |
 | `git diff --check` | PASS |
 | `node --check` on 001, 041, 042, 101, 117, counted audit | PASS |
 | `node tests/enrollment-intake/automation-001-unload-compat.test.js` | PASS — 17 |
 | `node tests/progression/immediate-initial-level-assignment.test.js` | PASS — 7 |
-| `node .../c025-stage17-zoom-attendance.test.js` | PASS |
-| `node .../c025-stage17-combined-zoom-credit.test.js` | PASS |
-| `node .../c025-stage17-etf-downstream.test.js` | PASS after source-version assertion correction |
-| `node .../c025-zoom-recording-credit.test.js` | PASS |
-| `npm test -- --run web/lib/data/leaderboard.test.ts` | BLOCKED — `web/node_modules` is not installed; no package files changed |
+| `node airtable/automations/shooting-challenge/lib/c025-stage17-zoom-attendance.test.js` | PASS |
+| `node airtable/automations/shooting-challenge/lib/c025-stage17-combined-zoom-credit.test.js` | PASS |
+| `node airtable/automations/shooting-challenge/lib/c025-stage17-etf-downstream.test.js` | PASS after source-version assertion correction |
+| `node airtable/automations/shooting-challenge/lib/c025-zoom-recording-credit.test.js` | PASS |
+| `node tests/weekly-athlete-summary/pkg-033-was-integrity.test.js` | PASS — 9 |
+| `npm test -- --run lib/data/leaderboard.test.ts` from `web/` | BLOCKED — `vitest` unavailable because `web/node_modules` is not installed; no package files changed |
 
 ## Review findings and blockers
 
@@ -97,10 +101,7 @@ It is not a pass claim.
    formula settling require Mike’s evidence.
 4. No code change to 001, 031, 041, 042, 101, or 117 is supported without
    live configuration evidence and a narrower approved implementation package.
-5. The required WAS concurrency, formula-lag, and repair harnesses are not
-   present as runnable new fixtures in this package; they remain explicit
-   unexecuted acceptance gaps and are not claimed as passed.
-6. Web unit-test execution is environment-blocked because dependencies are not
+5. Web unit-test execution is environment-blocked because dependencies are not
    installed; this package did not alter web code.
 
 ## Recommended next step
