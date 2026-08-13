@@ -6,7 +6,7 @@ After independent review, the Lead may consolidate these proposed updates:
 
 - Register `PKG-034` in `docs/agent-runs/CONTROL.json` without changing the
   active PKG-033 state or overwriting another package.
-- Add Automation 101 v6.0 and its formula-backed trigger to
+- Add Automation 101 v6.1 and its formula-backed trigger to
   `docs/automation-index.md`.
 - Add the nine-field package to the authoritative schema/current map after
   Mike supplies the Production field IDs and types.

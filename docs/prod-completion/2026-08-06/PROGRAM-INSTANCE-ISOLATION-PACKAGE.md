@@ -1,5 +1,10 @@
 # Program Instance Isolation Package — 2026-08-06
 
+> **Historical package evidence — do not execute its deployment matrix or
+> paste instructions.** Automation 043 is retired and absent from Production;
+> it must not be recreated or enabled. Use the Completion Master and current
+> PKG-006R/PKG-036 operator packet for operational decisions.
+
 **PROD base:** `appn84sqPw03zEbTT`  
 **Branch:** `cursor/program-instance-isolation-b956`  
 **PR:** [#92](https://github.com/Schmidt127/127-si-shooting-challenge/pull/92)  

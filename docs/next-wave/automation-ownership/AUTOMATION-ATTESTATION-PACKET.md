@@ -1,5 +1,10 @@
 # Automation UI Attestation Packet — Agent 9
 
+> **Historical attestation snapshot — do not execute as the current
+> checklist.** Its 010/version expectations are superseded: 010 v10.7 is OFF
+> after HF-001, and v10.8 requires proof before enablement. Use the Completion
+> Master and the current PKG-006R/PKG-036 operator packet.
+
 **Purpose:** Exact manual checklist for Mike in Airtable UI (PROD `appn84sqPw03zEbTT`, then DEV `appTetnuCZlCZdTCT`).  
 **Generated:** 2026-07-24  
 **Do not guess from GitHub.** Fill Observed columns from the live automation panel.

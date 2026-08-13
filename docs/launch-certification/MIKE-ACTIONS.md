@@ -1,5 +1,9 @@
 # Launch Certification — Mike Actions (minimal)
 
+> **Historical snapshot — do not execute as the current operator packet.**
+> This 2026-07-25 checklist includes superseded versions and a legacy domain;
+> use the Completion Master and current package operator packets instead.
+
 **Authority:** Final Launch Closure Lead  
 **Date:** 2026-07-25  
 **Scope:** Authenticated UI only. No code paste unless version drift found.  

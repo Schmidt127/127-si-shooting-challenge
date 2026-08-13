@@ -89,7 +89,12 @@ The progression fixture explicitly requires exactly one active Level with cumula
 have one and only one such lowest active Level; this package does not change Level records or XP
 economics.
 
-## DEV validation — required before Production
+## DEV validation — superseded
+
+Production promotion completed on 2026-08-12 under Mike's documented
+Production-only exception. The DEV procedure below is retained as historical
+evidence; it is not a pending requirement and must not be rerun as part of this
+completed promotion.
 
 Use DEV base `appTetnuCZlCZdTCT` only.
 

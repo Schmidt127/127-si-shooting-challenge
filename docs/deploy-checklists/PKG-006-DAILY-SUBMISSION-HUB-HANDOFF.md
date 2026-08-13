@@ -36,8 +36,9 @@ approved 031 normal-athlete-activity creator ownership documented in
   Submission Enrollment and Week plus `Complete` status when writable; it never
   writes formula `Summary Key`, requeries after creation, and stops on any
   residual duplicate/concurrency conflict.
-- No schema, formula, Automation 010, Automation 077, Make, Gmail, Hub, or
-  email change is included.
+- No schema, formula, Automation 010, Make, Gmail, Hub, or email change is
+  included. Automation 077 is retired/deleted from Production and must not be
+  recreated or enabled.
 
 Before any Production replacement, Mike must complete the controlled Production
 test packet for v4.0/v8.5 using the existing valid Schmidt Submission and Mike's
@@ -110,8 +111,8 @@ Production Airtable is the only Airtable environment for this integration.
    conflict/Needs Review without mutating existing records or sending again.
 7. Provider failure retries the existing Delivery and creates a Delivery Attempt;
    it does not replay the source Event or create another Message/Delivery.
-8. Capture queue, Hub Event, Delivery, Resend id, and replay evidence. Only then
-   consider 077 a retirement candidate; it is not retired by this PR.
+8. Capture queue, Hub Event, Delivery, Resend id, and replay evidence. 077 is
+   already retired/deleted from Production; do not recreate or enable it.
 
 ## Automation 079 v2.0 shared dispatcher replacement and recovery
 
