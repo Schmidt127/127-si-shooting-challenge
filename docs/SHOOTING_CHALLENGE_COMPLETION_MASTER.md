@@ -275,7 +275,7 @@ claim occurred.
 | PKG-006R reconciliation fields (12) | **Installed / verified** | Verify exact names and types; do not recreate |
 | Automation **010 v10.8** | **v10.7 installed; OFF after HF-001 failure** | Paste v10.8; prove `recY0o5tpqMfvlCCa` reconciles with Homework XP present; lifecycle proof pending before re-enable |
 | Automation **041 v4.0** | **Installed in PROD** | 15-minute cron ON; **v5.0 paste deferred** until PKG-006R lock release |
-| Automation **042 v3.4** | **Installed in PROD** | View-entry trigger preserved; **v4.0 paste deferred** until PKG-006R lock release |
+| Automation **042 v3.4** | **Installed in PROD** | View-entry trigger preserved; **v4.1 paste deferred** until PKG-006R lock release |
 | `Progression Last Reconciled Signature` | **Created** | Verify writable single-line text and field ID |
 | `Progression Last Queued Signature` | **Present** | Unchanged (`fldw2p0bfT54vk6ag`) |
 | Levels / Gate Rules | **12 active Levels; 12 school-year gate rules (Level 1–12)** | School Year / Rule Set scope; one Program Instance per school year |
@@ -283,7 +283,7 @@ claim occurred.
 | Automation **043** | **Retired / absent** | Do not recreate |
 | Automation **077** | **Deleted from Airtable** | Retired Make/Gmail path; GitHub source archived; slot recovered |
 
-**PKG-006R lock:** active until backlog review, replay, withdrawal/restoration, audit, totals, and natural-trigger evidence are complete. **041 v5.0 / 042 v4.0 installation deferred** until explicit lock release.
+**PKG-006R lock:** active until backlog review, replay, withdrawal/restoration, audit, totals, and natural-trigger evidence are complete. **041 v5.0 / 042 v4.1 installation deferred** until explicit lock release.
 
 **PKG-007-RDY-001 coordination hold:** Per the approved Video XP readiness
 package, do not paste, configure, enable, disable, or controlled-test Video XP

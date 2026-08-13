@@ -106,7 +106,7 @@ version/state/mapping must still be confirmed in the Airtable UI.
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
 | **041** | Enrollments / Levels / Level Gate Rules | Scheduled every **15 minutes**; optional `recordId` only for a controlled single-Enrollment proof; scheduled mapping blank | `041-...-mark-enrollment-for-level-recalculation.js` **v5.0 target**; paste deferred until PKG-006R lock release | Queue only: `Level Recalc Needed?`, `Progression Last Queued Signature` |
-| **042** | Enrollments | When record enters view `042 - Needs Level Assignment` (`viwm9OgwkPKI2bii3`); filters `Level Recalc Needed?` checked + `Active?` checked; dynamic `recordId` from triggering Enrollment | `042-...-assign-current-and-next-level-with-gate-blocking.js` **v4.0 target**; paste deferred until PKG-006R lock release | Current/Next Level, Gate Rule, Status, reconciled signature |
+| **042** | Enrollments | When record enters view `042 - Needs Level Assignment` (`viwm9OgwkPKI2bii3`); filters `Level Recalc Needed?` checked + `Active?` checked; dynamic `recordId` from triggering Enrollment | `042-...-assign-current-and-next-level-with-gate-blocking.js` **v4.1 target**; paste deferred until PKG-006R lock release | Current/Next Level, Gate Rule, Status, reconciled signature |
 | 043 | Levels | **Retired — do not enable or recreate** | `043-...-set-level-gate-rule-from-next-level.js` (historical source only) | No downstream writer; `042` owns `Level Gate Rule` |
 
 ### Email packages (072, 074–077, 075)

@@ -214,7 +214,7 @@ test("Levels inverse-link rename contract preserves current names and IDs", () =
   assert.ok(!currentFieldMap.includes("Enrollments 5"));
 });
 
-test("041 v5.0 and 042 v4.0 use Enrollment-side progression fields only", () => {
+test("041 v5.0 and 042 v4.1 use Enrollment-side progression fields only", () => {
   const source041 = read(
     path.join(
       AUTO_DIR,
@@ -234,7 +234,7 @@ test("041 v5.0 and 042 v4.0 use Enrollment-side progression fields only", () => 
     assert.ok(!source.includes("fldtaYEIwRvRKYkvb"));
   }
   assert.ok(source041.includes('version: "5.0"'));
-  assert.ok(source042.includes('version: "4.0"'));
+  assert.ok(source042.includes('version: "4.1"'));
   assert.ok(source041.includes('"Current Level"'));
   assert.ok(source041.includes('"Next Level"'));
   assert.ok(source042.includes('"Current Level"'));

@@ -75,7 +75,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
 | 041 | Levels — Mark Enrollment for Level Recalculation | **v5.0 repository-ready; Production paste pending** — queue-only scheduled reconciliation | `041-levels-and-progression-mark-enrollment-for-level-recalculation.js` |
-| 042 | Levels — Assign Current and Next Level with Gate Blocking | **v4.0 repository-ready; Production paste pending** — sole progression assignment writer | `042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js` |
+| 042 | Levels — Assign Current and Next Level with Gate Blocking | **v4.1 repository-ready; Production paste pending** — sole progression assignment writer; v4.1 aligns the acknowledgement signature with 041's relevant ladder scope | `042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js` |
 | 043 | Levels — Set Level Gate Rule from Next Level | **Retired; absent from current Production automation inventory; do not recreate** | `043-levels-and-progression-set-level-gate-rule-from-next-level.js` |
 
 ## Achievements and streaks (053–059, 066)
