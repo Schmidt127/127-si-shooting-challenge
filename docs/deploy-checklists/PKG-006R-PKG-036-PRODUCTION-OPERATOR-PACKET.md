@@ -1,13 +1,13 @@
 # PKG-006R + PKG-036 — Unified Production operator packet
 
-**Date:** 2026-08-13  
-**Repository SHA:** verify `origin/master` before execution (`git rev-parse origin/master`)  
-**Base:** `127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026` (`appn84sqPw03zEbTT`)  
+**Date:** 2026-08-13 (amended with Mike-supplied Production baseline)
+**Repository SHA:** verify `origin/master` before execution (`git rev-parse origin/master`)
+**Base:** `127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026` (`appn84sqPw03zEbTT`)
 **Owner:** Mike performs every Production step. Agents do not access Production.
 
 ## Evidence boundary
 
-Repository text and offline tests are not Production proof. Historical packets that cite **010 v10.6**, **041 v4.0**, or **042 v3.4** describe the **currently installed** Production state, not the **target** state after this work.
+Repository text and offline tests are not Production proof. Historical packets that cite **010 v10.6** replay proof describe prior evidence only. **Lifecycle proof for 010 v10.7** (backlog clearance, natural-trigger runs, withdrawal/restoration, settled totals) remains pending even though the script is installed and ON.
 
 ---
 
@@ -19,33 +19,48 @@ Repository text and offline tests are not Production proof. Historical packets t
 | **041** | **v5.0** | `airtable/automations/shooting-challenge/041-levels-and-progression-mark-enrollment-for-level-recalculation.js` | Queue/request only — sets `Level Recalc Needed?` and `Progression Last Queued Signature` |
 | **042** | **v4.0** | `airtable/automations/shooting-challenge/042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js` | Sole writer of `Current Level`, `Next Level`, `Level Gate Rule`, `Level Status`, `Progression Last Reconciled Signature` |
 | **043** | **Retired / absent** | Historical source only — **do not recreate or enable** | No downstream writer |
+| **077** | **Retired / deleted** | `077-email-notifications-and-external-handoffs-send-daily-submission-email-package-to-make.js` archived in GitHub only | Deleted from Airtable to recover an automation slot; daily email uses Hub path (076 → 079) |
 
-**Levels inverse links (PKG-036-HF-001):** Production renamed the Levels-side reverse links to `Enrollments — Current Level` (`fldIZT5MWgMskwF8s`) and `Enrollments — Next Level` (`fldtaYEIwRvRKYkvb`). Scripts 041/042 read/write Enrollment-side `Current Level` and `Next Level` only.
+**Levels inverse links (PKG-036-HF-001, PR #177):** Production renamed the Levels-side reverse links to `Enrollments — Current Level` (`fldIZT5MWgMskwF8s`) and `Enrollments — Next Level` (`fldtaYEIwRvRKYkvb`). Scripts 041/042 read/write Enrollment-side `Current Level` and `Next Level` only.
+
+**Gate-rule scope:** Mike operates one Program Instance per school year. **School Year / Rule Set** is the approved Level Gate Rule scope. The Levels table contains all **12 active Levels** linked to **Level 1–12 gate rules** for the active school year. Do not treat any incomplete three-rule orientation sample as the Production ladder truth.
 
 ---
 
-## Current Production state Mike must verify first
+## Current Production state (Mike-supplied 2026-08-13)
 
 Record screenshots/exports before any change.
 
-| Item | Expected current (2026-08-13 orientation) | Target after packages |
+| Item | Current Production state | Remaining work |
 |---|---|---|
-| Automation 010 | Installed **v10.6**; trigger may still be positive-only — **verify in UI** | **v10.7** on `Reconciliation Needed? = 1` with dynamic `recordId` |
-| Automation 041 | `wflCRvaopntNPsc64`; cron every 15 min; installed **v4.0** | **v5.0**; same cron; optional `recordId` blank |
-| Automation 042 | `wfl3aiiK8vI2tz0HA`; view `viwm9OgwkPKI2bii3`; installed **v3.4** | **v4.0**; preserve view-entry trigger + dynamic `recordId` |
-| Automation 043 | Absent from automation inventory | Remain absent |
+| PKG-006R reconciliation fields (12) | **Installed and verified** | Verify exact names/types before testing; do not recreate |
+| Automation **010 v10.7** | **Installed and ON** | Inspect run history and reconciliation backlog; complete lifecycle proof |
+| Automation **041** | `wflCRvaopntNPsc64`; cron every **15 min**; installed **v4.0** | Paste **v5.0** deferred until PKG-006R lock release |
+| Automation **042** | `wfl3aiiK8vI2tz0HA`; view `viwm9OgwkPKI2bii3`; installed **v3.4** | Paste **v4.0** deferred until PKG-006R lock release |
+| Automation **043** | Absent from automation inventory | Remain absent |
+| Automation **077** | **Deleted** from Airtable (was OFF) | Do not recreate; GitHub source remains archived |
 | `Enrollments.Progression Last Queued Signature` | Present (`fldw2p0bfT54vk6ag`) | Unchanged |
-| `Enrollments.Progression Last Reconciled Signature` | **Missing** | Create writable single-line text before 041/042 paste |
-| PKG-006R Submission reconciliation fields | **Not installed** (per schema contract) | Create in exact order (see Phase A) |
-| `Level Gate Rules.Program Instance` | **No link field** | Unchanged — gate selection is school-year/rule-set scoped; each Enrollment must have exactly one Program Instance |
+| `Enrollments.Progression Last Reconciled Signature` | **Created** | Verify exact name, type (writable single-line text), and field ID |
+| Levels / Gate Rules | 12 active Levels; 12 active school-year gate rules (Level 1–12) | Verify configuration before PKG-036 testing |
+| `Level Gate Rules.Program Instance` | No link field | School Year / Rule Set scope; each Enrollment must have exactly one Program Instance |
 
-Approved Schmidt orientation Enrollments (read-only baseline): `recCrNNAdVmQ4Y8fL`, `reclc46bQM8Wx0qWP`, `recwuMDL6dqIVfvqH`.
+Approved Schmidt orientation Enrollments: `recCrNNAdVmQ4Y8fL`, `reclc46bQM8Wx0qWP`, `recwuMDL6dqIVfvqH`.
+
+---
+
+## Mike's first action
+
+**Before modifying any records:**
+
+1. Open Automation **010** in Production → inspect **recent run history** (success/error/skipped, run IDs, timestamps, `actionOut` where visible).
+2. Open **Submissions** → filter or view rows where `Reconciliation Needed? = 1` → record the **current reconciliation backlog** (count, record IDs, whether backlog is expected or indicates a stuck latch).
+3. Only after backlog review → proceed to Phase A controlled testing. Do not paste, enable, or disable automations as part of this first step.
 
 ---
 
 ## Phase A — PKG-006R (Submission XP reconciliation)
 
-**Do not start Phase B until Phase A is complete and the lock is released (see Coordination).**
+**PKG-006R lock remains active.** Phase B (041 v5.0 / 042 v4.0 paste) is **deferred** until this phase's evidence is complete and Mike explicitly releases the lock.
 
 ### A1. Preflight (read-only)
 
@@ -53,112 +68,121 @@ Approved Schmidt orientation Enrollments (read-only baseline): `recCrNNAdVmQ4Y8f
 2. Select one valid counted Schmidt Submission; record Submission, Enrollment, Week, WAS, XP Event, milestone unlock, streak occurrence, and Program Instance IDs.
 3. Confirm exactly one canonical WAS for Enrollment + Week and exactly one `SUBMISSION_XP|{Submission ID}` event.
 4. Capture installed versions, enablement, trigger conditions, and recent run history for **010, 031, 041, 042, 053, 054, 059, 066**.
-5. Block email/Make dispatch paths during testing. Do not modify email records as a shortcut.
+5. Block email/Make dispatch paths during testing. Confirm **077 is deleted** and Hub path (076 → 079) is the daily-email boundary.
 
-### A2. Schema — exact creation order
+### A2. Schema — verify installed fields (do not create)
 
-Create fields per [`airtable/schema/current/daily-submission-xp-reconciliation-fields.md`](../../airtable/schema/current/daily-submission-xp-reconciliation-fields.md):
+Verify each field exists with the exact name and type per [`airtable/schema/current/daily-submission-xp-reconciliation-fields.md`](../../airtable/schema/current/daily-submission-xp-reconciliation-fields.md). Record field IDs in the operator log.
 
-1. `Enrollments.Reconciliation Source Signature` (formula)
-2. `Weeks.Reconciliation Source Signature` (formula)
-3. `XP Events.Reconciliation Source Signature` (formula)
+1. `Enrollments.Reconciliation Source Signature` — formula
+2. `Weeks.Reconciliation Source Signature` — formula
+3. `XP Events.Reconciliation Source Signature` — formula
 4. Submission lookups 4–9 (Enrollment/Week/XP propagation)
-5. `Submissions.Current Reconciliation Signature` (formula)
-6. `Submissions.Last Reconciled Signature` (writable text)
-7. `Submissions.Reconciliation Needed?` (formula numeric 1/0)
+5. `Submissions.Current Reconciliation Signature` — formula
+6. `Submissions.Last Reconciled Signature` — writable single-line text
+7. `Submissions.Reconciliation Needed?` — formula numeric 1/0
 
-Wait for formulas to settle. Do **not** enable 010 until the full chain exists.
+Stop if any field is missing, misnamed, or wrong type. Do not recreate fields that already exist.
 
-### A3. Paste Automation 010 v10.7
+### A3. Verify Automation 010 v10.7 (installed ON — do not repaste unless repair required)
 
-| Setting | Value |
+| Setting | Expected value |
 |---|---|
 | Automation | 010 — Submission Intake and Asset Creation — Create XP Event from Submission |
+| Installed script | **v10.7** |
+| Enablement | **ON** (verify; do not toggle without cause) |
 | Table | Submissions |
 | Trigger | When record matches conditions: `Reconciliation Needed? = 1` |
 | Input `recordId` | Dynamic — Airtable record ID from triggering Submission |
-| Script source | Full `010-submission-intake-create-xp-event.js` (docblock through end; skip GitHub header) |
 
 **010 does not write progression fields.** It may set `Run Shot Milestone Check?` after successful reconciliation.
 
-Turn **010 OFF** while saving, then run controlled tests before leaving ON.
+If trigger or version does not match, capture evidence and stop. Repaste only from committed `010-submission-intake-create-xp-event.js` after turning OFF, saving, and restoring from capture on rollback.
 
 ### A4. Controlled test order (PKG-006R)
 
-1. Positive counted Submission: one active Submission XP event, exact key, exact links.
-2. Replay same Submission: same event ID, no duplicate Source Key.
-3. Reversal: make Submission uncountable (approved controlled condition); same event deactivates; no delete/replace.
-4. Restoration: restore Submission; same event ID reactivates.
-5. Allow WAS/lifetime formulas to settle; observe 041 queue → 042 settlement (installed versions during 006R testing may still be v4.0/v3.4 until Phase B).
-6. Milestone/streak: stop if 053/054 or 066/059 do not receive observable transitions — repository fails closed.
+Work through backlog and lifecycle proof in this order:
 
-### A5. Required evidence (PKG-006R)
+1. **Backlog review:** classify each `Reconciliation Needed? = 1` row — expected pending vs stuck.
+2. Positive counted Submission: one active Submission XP event, exact key, exact links.
+3. Replay same Submission: same event ID, no duplicate Source Key.
+4. Reversal: make Submission uncountable (approved controlled condition); same event deactivates; no delete/replace.
+5. Restoration: restore Submission; same event ID reactivates.
+6. Allow WAS/lifetime formulas to settle; observe 041 queue → 042 settlement (currently v4.0/v3.4 until Phase B).
+7. Milestone/streak: stop if 053/054 or 066/059 do not receive observable transitions — repository fails closed.
 
-- Natural-trigger run IDs for 010
-- Before/after field snapshots and formula settlement timestamps
-- Same-event withdrawal/restoration proof
+### A5. Required evidence (PKG-006R lock release)
+
+PKG-006R does not close until Mike captures all of:
+
+- Natural-trigger run IDs for **010 v10.7**
+- Reconciliation backlog cleared or explained with per-record evidence
+- Replay proof (same event ID, no duplicate key)
+- Withdrawal and restoration proof (same event ID)
 - Read-only audit JSON (before and after)
-- Production leaderboard membership readback
+- Settled WAS/lifetime totals and Production leaderboard readback
 
 ### A6. PKG-006R stop conditions
 
-Stop and preserve evidence for: duplicate Submission XP key, duplicate WAS, wrong owner, wrong Week/WAS, inactive Enrollment, future date, missing/ambiguous WAS, formula lag beyond bounded retry, partial failure, retry duplication, concurrent creation, unexpected email activity.
+Stop and preserve evidence for: duplicate Submission XP key, duplicate WAS, wrong owner, wrong Week/WAS, inactive Enrollment, future date, missing/ambiguous WAS, formula lag beyond bounded retry, partial failure, retry duplication, concurrent creation, unexpected email activity, or unexpected 077/Make daily-email dispatch.
 
 ### A7. PKG-006R rollback
 
-1. Turn 010 OFF; preserve run history.
+1. Turn 010 OFF only if unsafe; preserve run history.
 2. Wrong award: deactivate exact owned XP Event only — never delete or create replacement.
 3. Rerun read-only audit; wait for rollup settlement.
-4. If trigger behavior is unsafe: leave records intact; restore prior 010 script/trigger from capture.
+4. If trigger behavior is unsafe: restore prior 010 script/trigger from capture; leave records intact.
 
 ---
 
 ## Coordination — lock release before PKG-036
 
-**PKG-036 must not begin until one of these is true:**
+**PKG-036 must not begin until:**
 
-1. PKG-006R Production proof is recorded (schema installed, 010 v10.7 live-tested, evidence captured), **and**
+1. All Phase A evidence in A5 is captured and Mike signs off PKG-006R, **and**
 2. Mike explicitly releases the progression lock by confirming:
-   - 010 testing is complete or safely paused with 010 OFF, and
-   - 041/042 are OFF with no active observation window that would conflict, **or**
-   - ChatGPT/Mike explicitly authorizes progression install during an approved safe pause.
+   - 010 lifecycle proof is complete or safely paused with 010 OFF, and
+   - 041/042 are OFF with no active observation window that would conflict.
 
-**Exact closeout for PKG-006R:** Mike signs off the Phase A evidence checklist. Only then proceed to Phase B.
+**041 v5.0 and 042 v4.0 installation remain deferred** until this lock is released.
 
 ---
 
 ## Phase B — PKG-036 (Progression bidirectional reliability)
 
+**Deferred until PKG-006R lock release.** Do not paste 041 v5.0 or 042 v4.0 before sign-off.
+
 ### B1. Preflight (read-only)
 
 1. Re-capture 041/042 scripts, trigger IDs, ON/OFF state, input mappings, output mappings, recent run history.
 2. Confirm 043 remains absent.
-3. Confirm `Progression Last Reconciled Signature` is still missing (do not confuse with `Last Reconciled Signature` on another table).
-4. Defer the PKG-036 integrity audit to **B2 step 8** (after the reconciled-signature field is created and settled).
+3. Verify `Enrollments.Progression Last Reconciled Signature` exists as writable single-line text (do not confuse with `Last Reconciled Signature` on another table). Record field ID.
+4. Verify `Progression Last Queued Signature` remains present and unchanged.
+5. Verify 12 active Levels and 12 school-year gate rules (Level 1–12) before progression testing.
 
-### B2. Installation order
+### B2. Installation order (after lock release only)
 
 1. Turn **041** (`wflCRvaopntNPsc64`) and **042** (`wfl3aiiK8vI2tz0HA`) **OFF**. Do not alter 010, 101, or XP pipelines.
-2. Create `Enrollments.Progression Last Reconciled Signature` — writable single-line text. Record new field ID. No formula/lookup/rollup.
-3. Wait for field settlement; verify name and type.
-4. Paste **041 v5.0** into `wflCRvaopntNPsc64`:
-   - Trigger: 15-minute cron (preserve existing schedule)
+2. **Verify** (do not create) `Enrollments.Progression Last Reconciled Signature` — writable single-line text. Record field ID.
+3. Paste **041 v5.0** into `wflCRvaopntNPsc64`:
+   - Trigger: **15-minute** cron (preserve existing schedule)
    - Input `recordId`: **blank** for scheduled path
-5. Paste **042 v4.0** into `wfl3aiiK8vI2tz0HA`:
+4. Paste **042 v4.0** into `wfl3aiiK8vI2tz0HA`:
    - Trigger: Enrollments — when record enters view
    - View: `042 - Needs Level Assignment` (`viwm9OgwkPKI2bii3`)
    - View filters: `Level Recalc Needed?` checked AND `Active?` checked
    - Input `recordId`: dynamic from triggering Enrollment record
-6. Confirm 043 remains absent/OFF.
-7. Save both automations while OFF.
-8. Run read-only PKG-036 audit; stop if field is not writable or required fields are missing.
-9. **Enable 042 first, then 041.**
+5. Confirm 043 remains absent/OFF.
+6. Save both automations while OFF.
+7. Run read-only PKG-036 audit; stop if reconciled-signature field is not writable or required fields are missing.
+8. **Enable 042 first, then 041.**
+9. After enablement, re-run read-only PKG-036 audit and preserve JSON.
 
 ### B3. Trigger and dynamic input summary
 
 | Automation | Workflow ID | Trigger | Dynamic input |
 |---|---|---|---|
-| 041 v5.0 | `wflCRvaopntNPsc64` | Scheduled every 15 minutes | `recordId` blank (optional for single-record proof only) |
+| 041 v5.0 | `wflCRvaopntNPsc64` | Scheduled every **15 minutes** | `recordId` blank (optional for single-record proof only) |
 | 042 v4.0 | `wfl3aiiK8vI2tz0HA` | Record enters view `viwm9OgwkPKI2bii3` | `recordId` = triggering Enrollment record ID |
 
 ### B4. Controlled test order (PKG-036)
@@ -186,7 +210,7 @@ Use approved Schmidt Enrollment `recwuMDL6dqIVfvqH` or another explicitly approv
 
 ### B6. PKG-036 stop conditions
 
-Stop for: active PKG-006R conflict; missing/ambiguous Levels or Gate Rules; missing target field; missing/ambiguous Enrollment Program Instance; same-year multi-program gate ambiguity; any overlap with unsafe 010/101 state; unsafe rollback.
+Stop for: active PKG-006R conflict; missing/ambiguous Levels or Gate Rules; missing or mis-typed reconciled-signature field; missing/ambiguous Enrollment Program Instance; unsafe rollback; any overlap with unsafe 010/101 state.
 
 ### B7. PKG-036 rollback
 
@@ -194,13 +218,13 @@ Stop for: active PKG-006R conflict; missing/ambiguous Levels or Gate Rules; miss
 2. Restore captured scripts/triggers from pre-install export.
 3. Restore isolated test configuration to exact before-state.
 4. Leave XP Events untouched; do not manually guess progression outputs.
-5. Re-run read-only audit. Empty reconciled-signature field is acceptable if rolled back before enablement.
+5. Re-run read-only audit.
 
 ---
 
 ## Required Production fields reference
 
-### PKG-006R (Submissions + lookups)
+### PKG-006R (verify installed — do not create)
 
 | Table | Field | Type | Writer |
 |---|---|---|---|
@@ -214,7 +238,7 @@ Stop for: active PKG-006R conflict; missing/ambiguous Levels or Gate Rules; miss
 
 Full formulas: [`daily-submission-xp-reconciliation-fields.md`](../../airtable/schema/current/daily-submission-xp-reconciliation-fields.md)
 
-### PKG-036 (Enrollments)
+### PKG-036 (verify installed — do not create)
 
 | Field | Type | Writer | Purpose |
 |---|---|---|---|
@@ -249,17 +273,13 @@ node --test tests/data-model/field-contracts.test.js
 
 | Stale source | Why superseded |
 |---|---|
+| `docs/prod-completion/2026-08-13/PKG-036-PRODUCTION-PREFLIGHT-REPORT.md` missing-field rows | Field now created per Mike; verify instead |
 | `docs/deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md` step 6 "043 if Live" | 043 retired; do not paste |
-| `docs/deploy-checklists/PKG-014-immediate-initial-level-assignment-dev-deploy.md` 041/042 versions | Describes prior PROD install (v4.0/v3.4), not PKG-036 target |
-| `docs/prod-completion/2026-08-08/*` 010 v10.6 / 041 v4.0 proofs | Historical installed-state evidence |
-| `docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md` rows citing 041 v4.0 / 042 v3.4 as current | Human-status ledger; verify live UI before acting |
+| `docs/prod-completion/2026-08-08/*` 010 v10.6 replay proof | Historical; v10.7 installed — new lifecycle proof required |
+| Incomplete three-enrollment OMNI orientation samples | Full ladder is 12 Levels + 12 gate rules |
 
 ---
 
-## Mike's first action after lunch
+## Closeout summary
 
-1. Open Production Airtable → confirm current installed versions for **010, 041, 042** match the "Current Production state" table above.
-2. Run the read-only **counted-submission audit** (PKG-006R preflight A1).
-3. Begin **Phase A** schema creation in exact order — do not enable 010 until the latch chain is complete.
-
-**PKG-006R closes** when Phase A evidence is captured and Mike signs off. **PKG-036 begins** only after explicit lock release and Phase B preflight.
+**PKG-006R closes** when backlog is reviewed, lifecycle proof is captured (A5), and Mike signs off. **PKG-036 begins** only after explicit lock release and Phase B preflight. **041 v5.0 / 042 v4.0 paste stays deferred** until then.

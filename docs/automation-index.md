@@ -38,7 +38,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 006 | Submission Intake — Set Video Count | *confirm in Airtable* | `006-submission-intake-and-asset-creation-set-video-count.js` |
 | 007 | Submission Intake — Duplicate Checker for Submissions | *confirm in Airtable* | `007-submission-intake-and-asset-creation-duplicate-checker-for-submissions.js` |
 | 009 | Submission Intake — Create Submission Assets | *confirm in Airtable* | `009-submission-intake-create-submission-assets.js` |
-| **010** | Submission Intake — Create/Reconcile XP Event from Submission | Submissions when `Reconciliation Needed? = 1`, dynamic `recordId` | `010-submission-intake-create-xp-event.js` (**v10.7** repository-ready; Production paste pending) — positive/correction branches, exact-key recheck, same-event deactivate/reactivate, bounded latch acknowledgement |
+| **010** | Submission Intake — Create/Reconcile XP Event from Submission | Submissions when `Reconciliation Needed? = 1`, dynamic `recordId` | `010-submission-intake-create-xp-event.js` (**v10.7 installed ON in PROD** — lifecycle proof pending) |
 | **013** | Submission Intake — Create or Link Video Feedback | Submission Assets when video asset ready for Video Feedback prep | `013-submission-intake-create-or-link-video-feedback.js` |
 | 021 | Submission Intake — Set Attachment Upload Status | *confirm in Airtable* | `021-submission-intake-and-asset-creation-set-attachment-upload-status.js` |
 | **022** | Submission Intake — Sync Child Upload Writeback | Submission Assets when Upload Status is Uploaded/Processing/Error and child linked | `022-submission-intake-sync-child-upload-writeback-from-submission-asset.js` |
@@ -94,8 +94,8 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 ### Weekly Athlete Summary email (verified PROD 2026-07-24)
 
-**Flow:** `118 → 072 → 119 → 074 → Make.com → Gmail → Make.com writeback`  
-**Architecture:** [next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md](./next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md)  
+**Flow:** `118 → 072 → 119 → 074 → Make.com → Gmail → Make.com writeback`
+**Architecture:** [next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md](./next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md)
 **Health / conflicts:** [reliability-command-center/](./reliability-command-center/README.md) offline audit (Ready/Sent/Make writeback mismatches, Test vs Live) — **no new automations**
 
 | # | Airtable automation name | Trigger / schedule | File / notes |
@@ -118,7 +118,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 075 | Email — Build Challenge Welcome Email | *confirm in Airtable* | `075-email-notifications-and-external-handoffs-build-challenge-welcome-email.js` — **build only**; does not send |
 | **079** | Email — Send WELCOME and DAILY_SUBMISSION Handoffs to Communications Hub | Email Handoff Queue when Status is Ready — *confirm trigger in Airtable* | `079-email-notifications-and-external-handoffs-send-queue-handoff-to-communications-hub.js` (**v2.0** — shared dispatcher; preserves WELCOME validation/retry/replay and accepts exact `DAILY_SUBMISSION|SUBMISSIONS|{Submission Record ID}` keys) |
 | **076** | Email — Create Daily Submission Communications Hub Handoff | Consumes the `Build Daily Email Now?` signal checked only by 031 after count readiness, `Simple Total`/`Detailed Shooting` mode validation, and final summary validation; 076 clears it after queue create/reuse | `076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js` (**v8.5** — uses the verified `Program Instance - Sync` table, requires `Enrollments.Parent Email - Cleaned`, and writes queue single-select fields with Airtable-compatible `{ name: ... }` objects; stages one `DAILY_SUBMISSION` Email Handoff Queue row, resolves exact-key conflicts, then promotes one row to Ready; Hub owns content) |
-| **077** | Email — Send Daily Submission Email Package to Make | *Retirement candidate pending controlled Hub proof* | `077-email-notifications-and-external-handoffs-send-daily-submission-email-package-to-make.js` (legacy; do not arm) |
+| **077** | Email — Send Daily Submission Email Package to Make | **Retired / deleted from Production** (2026-08-13) | `077-email-notifications-and-external-handoffs-send-daily-submission-email-package-to-make.js` (GitHub archive only; daily email uses Hub 076 → 079) |
 
 ## Video review and XP (112–114) — 111 retired; 112 must stay OFF
 

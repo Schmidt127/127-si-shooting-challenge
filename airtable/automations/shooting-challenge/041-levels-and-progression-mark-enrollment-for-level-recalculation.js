@@ -39,7 +39,7 @@ OUTPUTS
 - scannedCount
 
 TRIGGER
-- Scheduled reconciliation (recommended: every 5 minutes), or a controlled
+- Scheduled reconciliation (Production: every 15 minutes on `wflCRvaopntNPsc64`), or a controlled
   single-record run using recordId.
 
 REQUIRED PROD ADDITIVE FIELD

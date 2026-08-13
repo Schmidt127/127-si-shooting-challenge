@@ -15,24 +15,15 @@
 
 ## Approved schema and trigger prerequisite
 
-Mike creates the fields in the exact order in
-[`airtable/schema/current/daily-submission-xp-reconciliation-fields.md`](../../airtable/schema/current/daily-submission-xp-reconciliation-fields.md):
+Mike has installed and verified the 12 PKG-006R reconciliation fields per
+[`airtable/schema/current/daily-submission-xp-reconciliation-fields.md`](../../airtable/schema/current/daily-submission-xp-reconciliation-fields.md).
+**Verify** exact field names and types before testing; do not recreate.
 
-1. Enrollments/Reconciliation Source Signature
-2. Weeks/Reconciliation Source Signature
-3. XP Events/Reconciliation Source Signature
-4. Submission linked-signature/cardinality/ownership lookups
-5. Submission/Current Reconciliation Signature
-6. Submission/Last Reconciled Signature (writable text)
-7. Submission/Reconciliation Needed? (numeric 1/0)
-
-After formulas settle, Automation 010 must be configured on Submissions with
-the dynamic triggering `recordId` and `Reconciliation Needed? = 1`. The
-positive and correction branches must recheck the exact key, fail closed on
-ambiguous cardinality or ownership, deactivate/reactivate the same event,
-settle formulas within a bounded reread, and acknowledge the latch only after
-the expected state is visible. This is a prerequisite, not a claim that it is
-installed.
+Automation **010 v10.7** is installed and **ON** with `Reconciliation Needed? = 1`
+and dynamic `recordId`. **First action:** inspect 010 run history and the
+current reconciliation backlog before modifying records. Lifecycle proof
+(replay, withdrawal/restoration, settled totals, natural-trigger evidence)
+remains pending.
 
 ## Current repository versions and ownership
 

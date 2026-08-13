@@ -1,10 +1,10 @@
 # Daily Submission XP reconciliation fields
 
-**Package:** PKG-006R  
-**Status:** Approved Phase 3 schema contract; not installed by this repository-only package.  
-**Owner:** Mike creates and verifies fields in the approved base. Field IDs are intentionally omitted until a real schema export exists.
+**Package:** PKG-006R
+**Status:** Installed and verified in Production (Mike-supplied 2026-08-13). Use this document to **verify** exact field names, types, and formulas — do not recreate existing fields.
+**Owner:** Mike verifies fields in the approved base. Field IDs are intentionally omitted until a real schema export exists.
 
-Create the fields in this exact order. Do not enable Automation 010 until the complete chain exists and existing rows have been audited.
+Verify the fields in this exact order before lifecycle testing. Automation 010 v10.7 is installed and ON; inspect run history and reconciliation backlog before modifying records.
 
 ## 1. Source signatures
 
@@ -30,7 +30,7 @@ These formulas are observability inputs, not uniqueness constraints. Airtable do
 
 ## 2. Submission lookup propagation
 
-Create these lookup fields on **Submissions**, in order, through the linked `Enrollment`, `Week`, and `XP Events` fields:
+Verify these lookup fields on **Submissions** exist with the exact names below, in order, through the linked `Enrollment`, `Week`, and `XP Events` fields:
 
 4. `Reconciliation Enrollment Signature - Lkp` → Enrollment.`Reconciliation Source Signature`
 5. `Reconciliation Week Signature - Lkp` → Week.`Reconciliation Source Signature`
