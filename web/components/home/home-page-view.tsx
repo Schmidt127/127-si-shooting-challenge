@@ -267,29 +267,34 @@ export function HomePageView({ topEntries }: HomePageViewProps) {
         description="Simple enough for families. Structured enough for a full season."
         aria-labelledby="how-heading"
       >
-        <ol className="relative grid gap-3 md:grid-cols-3 md:gap-5">
+        <div className="relative">
           <div
             className="pointer-events-none absolute left-[16.67%] right-[16.67%] top-7 hidden h-px bg-brand-blue/25 md:block"
             aria-hidden
           />
-          {HOW_IT_WORKS.map((item) => (
-            <li key={item.step} className="relative">
-              <Card className="h-full rounded-lg border-t-4 border-t-brand-orange shadow-site-sm">
-              <CardContent className="pt-(--card-spacing)">
-                <p className="font-mono text-sm font-bold text-brand-orange" aria-label={`Step ${item.step}`}>
-                  {item.step}
-                </p>
-                <h3 className="font-display mt-2 text-xl text-foreground">
-                  {item.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {item.description}
-                </p>
-              </CardContent>
-              </Card>
-            </li>
-          ))}
-        </ol>
+          <ol className="relative grid gap-3 md:grid-cols-3 md:gap-5">
+            {HOW_IT_WORKS.map((item) => (
+              <li key={item.step} className="relative">
+                <Card className="h-full rounded-lg border-t-4 border-t-brand-orange shadow-site-sm">
+                  <CardContent className="pt-(--card-spacing)">
+                    <p
+                      className="font-mono text-sm font-bold text-brand-orange"
+                      aria-label={`Step ${item.step}`}
+                    >
+                      {item.step}
+                    </p>
+                    <h3 className="font-display mt-2 text-xl text-foreground">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      {item.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </li>
+            ))}
+          </ol>
+        </div>
       </SiteSection>
 
       <SiteSection

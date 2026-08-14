@@ -133,9 +133,9 @@ export function TutorialsEmptyState() {
   return (
     <ProgramPage
       eyebrow="Film room"
-      title="Skills & storytelling"
-      description="Shooting tutorials and technique breakdowns — curated for the challenge."
-      heroVariant="light"
+      title="The Shooting Playbook"
+      description="Practical technique and film study for focused shooting work."
+      heroVariant="contrast"
       ambientVariant="tutorials"
     >
       <EmptyState
@@ -156,9 +156,9 @@ export function TutorialsErrorState({ message }: { message: string }) {
   return (
     <ProgramPage
       eyebrow="Film room"
-      title="Skills & storytelling"
-      description="Shooting tutorials and technique breakdowns — curated for the challenge."
-      heroVariant="light"
+      title="The Shooting Playbook"
+      description="Practical technique and film study for focused shooting work."
+      heroVariant="contrast"
       ambientVariant="tutorials"
     >
       <ErrorState
