@@ -24,12 +24,12 @@ Airtable is the deployed/running copy.
 
 /************************************************************************************************
  * 053 - Achievements and Milestones - Streak Occurrences - Rebuild and Upsert From Submissions
- * Version: 5.4
+ * Version: 5.5
  * Date Written: 2026-06-09
- * Last Updated: 2026-08-13
- * Updated Reason: Reconcile the complete Enrollment-owned streak occurrence lifecycle,
- * including withdrawal and restoration. The downstream 054 automation receives every
- * positive/restored canonical occurrence through Source Status = Ready for XP.
+ * Last Updated: 2026-08-14
+ * Updated Reason: Preserve Airtable's create/update trigger semantics by creating new
+ * positive/restored occurrences without Source Status = Ready for XP, then setting
+ * that status in a separate update so 054 receives the first-create handoff.
  *
  * SCRIPT TYPE
  * - Airtable Automation Script
@@ -57,8 +57,9 @@ Airtable is the deployed/running copy.
  *   occurrences are deactivated, and an exact restored occurrence is reactivated.
  * - Never chooses a canonical record when an occurrence identity is ambiguous.
  *   Ambiguous candidates are marked Error and no XP ownership is changed.
- * - Sets every positive/restored canonical occurrence to Ready for XP so 054 can
- *   create, reactivate, or repair its exact owned XP Event.
+ * - Creates new positive/restored occurrences without Ready for XP, then sets every
+ *   canonical occurrence to Ready for XP in the separate reconciliation update so
+ *   054 receives a real record-update event.
  *
  * IMPORTANT FIX IN THIS VERSION
  * - Activity / week date keys use America/Denver (not UTC ISO slice) so
@@ -882,7 +883,6 @@ async function main() {
         addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.streakDays, target.streakDays);
         addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.streakStartDate, dateValue(target.streakStartDateKey));
         addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.streakEndDate, dateValue(target.streakEndDateKey));
-        addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.sourceStatus, CONFIG.values.statusReady);
         addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.sourceSubmissionDate, dateValue(target.streakEndDateKey));
         addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.triggerSubmissionDate, dateValue(target.streakEndDateKey));
         addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.lastEvaluatedAt, nowIso);

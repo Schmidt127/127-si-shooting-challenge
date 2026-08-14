@@ -65,6 +65,12 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **PKG-038 first-create streak handoff (2026-08-14)** — Automation 053 is
+  now v5.5: new positive/restored Streak Occurrences are created without
+  `Source Status = Ready for XP`, then receive that status in a separate
+  record update so the native “when record is updated” 054 trigger can create
+  the first exact-owned `STREAK_XP` Event. Replay and withdrawal/restoration
+  preserve canonical occurrence and XP Event IDs. No Airtable change was made.
 - **PKG-039 WAS and weekly-goal reliability (2026-08-13)** — Automation 031
   remains the sole create-capable Weekly Athlete Summary (WAS) owner. 101
   **v6.3** and
