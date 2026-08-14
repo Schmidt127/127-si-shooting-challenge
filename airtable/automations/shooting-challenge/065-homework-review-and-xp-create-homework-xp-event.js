@@ -247,13 +247,9 @@ async function requireCanonicalWas(enr, week) {
     );
   return candidates[0].id;
 }
-async function pause(ms) {
-  if (typeof setTimeout !== "function") return;
-  await new Promise((resolve) => setTimeout(resolve, ms));
-}
 async function settleAndAcknowledge(id, xpId, expectedActive) {
-  // These bounded re-reads only wait for Airtable's formula consistency inside
-  // this invocation. They are not scheduled polling or another automation slot.
+  // These bounded immediate re-reads only accept a formula state that already
+  // reflects the write. They never block this invocation or another slot.
   let settled = "";
   for (let attempt = 1; attempt <= 10; attempt += 1) {
     const fresh = await hcT.selectRecordAsync(id);
@@ -263,7 +259,6 @@ async function settleAndAcknowledge(id, xpId, expectedActive) {
       settled = current;
       break;
     }
-    await pause(200);
   }
   if (!settled)
     throw new Error(
@@ -273,7 +268,6 @@ async function settleAndAcknowledge(id, xpId, expectedActive) {
   for (let attempt = 1; attempt <= 5; attempt += 1) {
     const fresh = await hcT.selectRecordAsync(id);
     if (!yes(fresh, hcT, C.h.reconcileNeeded)) return settled;
-    await pause(100);
   }
   throw new Error(
     `Homework XP reconciliation acknowledgement did not clear the formula trigger.`,
