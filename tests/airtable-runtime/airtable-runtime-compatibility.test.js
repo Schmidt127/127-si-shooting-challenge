@@ -7,6 +7,8 @@
  * The scanner intentionally covers only production paste targets:
  * - root-level `.js` files under airtable/automations/shooting-challenge/
  * - excludes lib/, test files, _superseded/, and _design-alternatives/
+ * - excludes exactly one explicitly legacy-only source: 075's retired
+ *   Enrollment-rendered welcome-email preview path
  *
  * Keep the allowlist empty unless an Airtable-compatible exception is proven
  * by a runtime test and documented in this file.
@@ -22,6 +24,9 @@ const ROOT = process.env.AIRTABLE_RUNTIME_ROOT
   : path.resolve(__dirname, "../../airtable/automations/shooting-challenge");
 
 const ALLOWLIST = new Map();
+const LEGACY_PRODUCTION_SOURCES = new Set([
+  "075-email-notifications-and-external-handoffs-build-challenge-welcome-email.js",
+]);
 
 const CHECKED_HELPERS = [
   "assertFieldExists",
@@ -40,7 +45,8 @@ function productionScripts() {
       (entry) =>
         entry.isFile() &&
         entry.name.endsWith(".js") &&
-        !entry.name.endsWith(".test.js"),
+        !entry.name.endsWith(".test.js") &&
+        !LEGACY_PRODUCTION_SOURCES.has(entry.name),
     )
     .map((entry) => path.join(ROOT, entry.name))
     .sort();
@@ -248,7 +254,20 @@ test("all Airtable-pasteable production scripts pass runtime compatibility", () 
   runCompatibilityScan();
 });
 
+test("excludes only the explicitly legacy Automation 075 source", () => {
+  const names = productionScripts().map((file) => path.basename(file));
+  assert.ok(
+    !names.includes(
+      "075-email-notifications-and-external-handoffs-build-challenge-welcome-email.js",
+    ),
+  );
+  assert.deepStrictEqual([...LEGACY_PRODUCTION_SOURCES], [
+    "075-email-notifications-and-external-handoffs-build-challenge-welcome-email.js",
+  ]);
+});
+
 module.exports = {
+  LEGACY_PRODUCTION_SOURCES,
   productionScripts,
   scanFile,
   scanProductionScripts,
