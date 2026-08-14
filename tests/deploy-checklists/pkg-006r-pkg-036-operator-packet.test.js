@@ -11,6 +11,7 @@ const packetPath = path.join(
   "docs/deploy-checklists/PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md"
 );
 const packet = fs.readFileSync(packetPath, "utf8");
+const { runCompatibilityScan } = require("../airtable-runtime/airtable-runtime-compatibility.test.js");
 
 function test(name, fn) {
   try {
@@ -75,6 +76,10 @@ test("contains an evidence worksheet and offline command coverage", () => {
   ]) {
     assert.match(packet, new RegExp(token.replace(/[?]/g, "\\$&")));
   }
+});
+
+test("enforces the Airtable runtime compatibility gate", () => {
+  runCompatibilityScan();
 });
 
 console.log("PKG-006R/PKG-036 operator packet contract tests passed");
