@@ -804,10 +804,6 @@ function getNumericValue(record, table, fieldName) {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 async function readFormulaSettlement(
   recordId,
   startingSignature,
@@ -839,9 +835,6 @@ async function readFormulaSettlement(
       return { currentSignature, needed };
     }
 
-    if (attempt < CONFIG.formulaSettlementAttempts) {
-      await sleep(CONFIG.formulaSettlementDelayMs);
-    }
   }
 
   throw new Error(

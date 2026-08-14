@@ -551,15 +551,7 @@ async function main() {
             body: JSON.stringify(payload),
         };
 
-        if (typeof fetch === "function") {
-            return await fetch(url, request);
-        }
-
-        if (typeof remoteFetchAsync === "function") {
-            return await remoteFetchAsync(url, request);
-        }
-
-        throw new Error("No supported HTTP method is available in this Airtable environment.");
+        return await remoteFetchAsync(url, request);
     }
 
     function resolveRoute(uploadDestination) {

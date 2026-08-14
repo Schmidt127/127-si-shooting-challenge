@@ -305,10 +305,6 @@ function todayKey() {
   }).format(new Date());
 }
 
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 /* =========================================================
    SECTION 4: RECONCILIATION HELPERS
 ========================================================= */
@@ -569,7 +565,6 @@ async function acknowledgeAfterSettlement(recordId, expectedActive, priorSignatu
         throw new Error("Post-write XP Event ownership changed; reconciliation was not acknowledged.");
       }
     }
-    if (attempt < CONFIG.formulaSettlementAttempts) await sleep(CONFIG.formulaSettlementDelayMs);
   }
   throw new Error("Formula settlement timeout; Last Reconciled Signature was not acknowledged.");
 }

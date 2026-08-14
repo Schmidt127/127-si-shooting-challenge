@@ -335,15 +335,7 @@ async function postJson(url, payload) {
     body: JSON.stringify(payload),
   };
 
-  if (typeof remoteFetchAsync === "function") {
-    return await remoteFetchAsync(url, request);
-  }
-
-  if (typeof fetch === "function") {
-    return await fetch(url, request);
-  }
-
-  throw new Error("No supported HTTP method is available in this Airtable automation environment.");
+  return await remoteFetchAsync(url, request);
 }
 
 /* =========================================================

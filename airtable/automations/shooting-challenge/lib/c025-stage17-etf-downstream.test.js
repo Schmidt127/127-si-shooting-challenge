@@ -279,7 +279,7 @@ function testSourceGuards() {
   assert.ok(src.includes("checked → unchecked → checked"));
   assert.ok(src.includes("unchecked → checked"));
   assert.ok(src.includes("confirm057 left Queue"));
-  assert.ok(src.includes("poll057 WAS"));
+  assert.ok(src.includes("awaiting the later natural 057 run"));
   assert.ok(src.includes("Skipped → Pending") || src.includes('"Skipped"'));
   assert.ok(src.includes("viewReentry042") || src.includes("view_reentry"));
   assert.ok(src.includes("C025 error — Run Test? cleared"));
@@ -292,7 +292,7 @@ function testSourceGuards() {
   assert.ok(!section5b.includes("waitFor057"));
   assert.ok(section5b.includes("confirm042 Level Recalc unchecked"));
   assert.ok(section5b.includes("confirm057 left Queue"));
-  assert.ok(section5b.includes("poll057 WAS"));
+  assert.ok(section5b.includes("awaiting the later natural 057 run"));
   assert.ok(!section5b.includes("poll057 ZA"));
   assert.ok(!section5b.includes('trigger057: "WAS status Ready→Pending'));
   const dailyIdx = src.indexOf("scenarioType === CONFIG.scenarioTypes.dailySubmission");
