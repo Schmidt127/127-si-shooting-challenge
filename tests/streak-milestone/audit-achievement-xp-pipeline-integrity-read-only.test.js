@@ -94,10 +94,46 @@ function makeRuntime(seed) {
         },
       }],
     },
-    "Streak Occurrences": { fields: streakFields, records: [] },
+    "Streak Occurrences": {
+      fields: streakFields,
+      records: [
+        {
+          id: "recStreak3",
+          fields: {
+            "Active?": true,
+            Enrollment: link(["recEnrollment"]),
+            Achievement: link(["recAchievement3"]),
+            Week: link(["recWeek"]),
+            "Streak End Date": "2026-08-01",
+            "Source Status": "Awarded",
+            "XP Events": link(["recStreakXp3"]),
+          },
+        },
+        {
+          id: "recStreak5",
+          fields: {
+            "Active?": true,
+            Enrollment: link(["recEnrollment"]),
+            Achievement: link(["recAchievement5"]),
+            Week: link(["recWeek"]),
+            "Streak End Date": "2026-08-02",
+            "Source Status": "Awarded",
+            "XP Events": link(["recStreakXp5"]),
+          },
+        },
+      ],
+    },
+    Achievements: {
+      fields: ["Achievement Name"],
+      records: [
+        { id: "recAchievement3", fields: { "Achievement Name": "3-Day Streak" } },
+        { id: "recAchievement5", fields: { "Achievement Name": "5-Day Streak" } },
+      ],
+    },
     "XP Events": {
       fields: xpFields,
-      records: ["recXp1", "recXp2"].map((id) => ({
+      records: [
+        ...["recXp1", "recXp2"].map((id) => ({
         id,
         fields: {
           "Active?": true, "Source Key": "PERFECT_WEEK|recEnrollment|recWeek",
@@ -105,7 +141,34 @@ function makeRuntime(seed) {
           Week: link(["recWeek"]), "Weekly Athlete Summary": link(["recWas"]),
           "XP Points": 20, "XP Source": "Perfect Week", "XP Bucket": "Perfect Week",
         },
-      })),
+        })),
+        {
+          id: "recStreakXp3",
+          fields: {
+            "Active?": true,
+            "Source Key": "STREAK_XP|recEnrollment|recAchievement3|2026-08-01",
+            "Streak Occurrence": link(["recStreak3"]),
+            Enrollment: link(["recEnrollment"]),
+            Week: link(["recWeek"]),
+            "Weekly Athlete Summary": link(["recWas"]),
+            "XP Source": "3-Day Streak",
+            "XP Bucket": "Streak",
+          },
+        },
+        {
+          id: "recStreakXp5",
+          fields: {
+            "Active?": true,
+            "Source Key": "STREAK_XP|recEnrollment|recAchievement5|2026-08-02",
+            "Streak Occurrence": link(["recStreak5"]),
+            Enrollment: link(["recEnrollment"]),
+            Week: link(["recWeek"]),
+            "Weekly Athlete Summary": link(["recWas"]),
+            "XP Source": "5-Day Streak",
+            "XP Bucket": "Streak",
+          },
+        },
+      ],
     },
     "Weekly Athlete Summary": {
       fields: ["Enrollment", "Week"],
@@ -117,6 +180,8 @@ function makeRuntime(seed) {
   assert.equal(report.dryRun, true);
   assert.equal(report.issueCounts.active_state_drift, 2, "inactive unlock versus active exact XP is reported");
   assert.equal(report.issueCounts.duplicate_canonical_xp_source_key, 1, "duplicate exact canonical source key is reported");
+  assert.equal(report.issueCounts.wrong_xp_source_or_bucket, undefined, "linked achievement names satisfy streak XP Source");
+  assert.equal(report.streakOccurrencesChecked, 2);
   console.log("PASS achievement XP audit is read-only and finds lifecycle drift plus duplicate keys");
 })().catch((error) => {
   console.error(error);

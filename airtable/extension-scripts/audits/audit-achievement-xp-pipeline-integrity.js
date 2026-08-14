@@ -12,10 +12,11 @@ inactive; duplicate and ownership ambiguity fail closed.
 const SAMPLE_LIMIT = 25;
 const CONFIG = {
   scriptName: "audit-achievement-xp-pipeline-integrity",
-  version: "v2.0",
+  version: "v2.1",
   tables: {
     unlocks: "Athlete Achievement Unlocks",
     streakOccurrences: "Streak Occurrences",
+    achievements: "Achievements",
     xpEvents: "XP Events",
     weeklySummary: "Weekly Athlete Summary",
   },
@@ -29,6 +30,9 @@ const CONFIG = {
     active: "Active?", enrollment: "Enrollment", achievement: "Achievement", week: "Week",
     streakEndDate: "Streak End Date", sourceStatus: "Source Status",
     xpEvents: "XP Events", occurrenceKey: "Streak Occurrence Key",
+  },
+  achievements: {
+    name: "Achievement Name",
   },
   xpEvents: {
     active: "Active?", sourceKey: "Source Key", achievementUnlock: "Achievement Unlock",
@@ -111,12 +115,14 @@ async function main() {
   const unlocksTable = base.getTable(CONFIG.tables.unlocks);
   const streakTable = base.getTable(CONFIG.tables.streakOccurrences);
   const xpTable = base.getTable(CONFIG.tables.xpEvents);
+  const achievementsTable = base.getTable(CONFIG.tables.achievements);
   const wasTable = base.getTable(CONFIG.tables.weeklySummary);
   const fieldsFor = (table, config) => [...new Set(Object.values(config).filter(name => fieldExists(table, name)))];
   // Every field read below is explicitly included in its table query.
-  const [unlocks, streaks, xps, summaries] = await Promise.all([
+  const [unlocks, streaks, achievements, xps, summaries] = await Promise.all([
     unlocksTable.selectRecordsAsync({ fields: fieldsFor(unlocksTable, CONFIG.unlocks) }),
     streakTable.selectRecordsAsync({ fields: fieldsFor(streakTable, CONFIG.streakOccurrences) }),
+    achievementsTable.selectRecordsAsync({ fields: fieldsFor(achievementsTable, CONFIG.achievements) }),
     xpTable.selectRecordsAsync({ fields: fieldsFor(xpTable, CONFIG.xpEvents) }),
     wasTable.selectRecordsAsync({ fields: fieldsFor(wasTable, CONFIG.weeklySummary) }),
   ]);
@@ -130,6 +136,13 @@ async function main() {
   };
   const xpByKey = new Map();
   const xpById = new Map();
+  const achievementNameById = new Map();
+  for (const achievement of achievements.records) {
+    achievementNameById.set(
+      achievement.id,
+      getText(achievement, achievementsTable, CONFIG.achievements.name),
+    );
+  }
   for (const xp of xps.records) {
     xpById.set(xp.id, xp);
     const sourceKey = getText(xp, xpTable, CONFIG.xpEvents.sourceKey);
@@ -175,6 +188,7 @@ async function main() {
   }
   for (const row of streaks.records) {
     const key = expectedStreakKey(row, streakTable);
+    const achievementId = getOneLinkedId(row, streakTable, CONFIG.streakOccurrences.achievement);
     registerSource({
       kind: "streak", id: row.id, name: row.name, key,
       active: booleanish(row, streakTable, CONFIG.streakOccurrences.active),
@@ -182,7 +196,9 @@ async function main() {
       xpIds: getLinkedIds(row, streakTable, CONFIG.streakOccurrences.xpEvents),
       enrollmentId: getOneLinkedId(row, streakTable, CONFIG.streakOccurrences.enrollment),
       weekId: getOneLinkedId(row, streakTable, CONFIG.streakOccurrences.week),
-      expectedPoints: null, expectedSource: "Streak", expectedBucket: "Streak",
+      expectedPoints: null,
+      expectedSource: achievementNameById.get(achievementId) || "",
+      expectedBucket: "Streak",
     });
   }
 
