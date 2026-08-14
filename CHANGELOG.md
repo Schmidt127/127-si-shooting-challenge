@@ -65,6 +65,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **PKG-038 achievement XP audit correction (2026-08-14)** — The read-only
+  achievement XP pipeline audit is now v2.1 and derives a streak XP Event's
+  expected `XP Source` from its linked Streak Occurrence → Achievement →
+  `Achievement Name`, while continuing to require `XP Bucket = Streak`.
+  Canonical-key, ownership, lifecycle, and WAS checks are unchanged.
 - **PKG-038 Automation 066 Notes compatibility (2026-08-14)** — Automation
   066 is now v3.8 and treats `Athlete Achievement Unlocks.Notes` as optional.
   Missing Notes no longer blocks shot-milestone eligibility, source-key
