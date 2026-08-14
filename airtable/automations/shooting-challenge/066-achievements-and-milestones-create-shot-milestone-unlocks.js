@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-20
-Last GitHub Update: 2026-08-13 (v3.7 counted-submission lifecycle reconciliation)
+Last GitHub Update: 2026-08-14 (v3.8 optional Notes-field compatibility)
 
 Purpose:
 Creates Athlete Achievement Unlock rows when an Enrollment crosses configured Shot Milestone thresholds.
@@ -27,13 +27,15 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
  * 066 - ACHIEVEMENTS AND MILESTONES
  * Create Shot Milestone Unlocks
  *
- * Version: v3.7
+ * Version: v3.8
  * Date Written: 2026-06-17
- * Last Updated: 2026-08-13
+ * Last Updated: 2026-08-14
  *
  * VERSION HISTORY
  * - v3.7 (2026-08-13): Require formula-backed Count This Submission? before
  *   current-total milestone eligibility is calculated.
+ * - v3.8 (2026-08-14): Treat Athlete Achievement Unlocks.Notes as optional;
+ *   missing Notes must not block milestone eligibility, lifecycle repair, or XP.
  * - v3.6 (2026-08-13): Reconcile inactive/restored canonical unlocks.
  * - v3.5 (2026-08-06): Program Instance isolation — Week date match scoped to
  *   Enrollment.Program Instance; throw on ambiguous overlaps inside one PI.
@@ -121,10 +123,10 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
 
 const SCRIPT = {
   scriptName: "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
-  version: "v3.7",
-  versionDate: "2026-08-13",
+  version: "v3.8",
+  versionDate: "2026-08-14",
   originalWrittenDate: "2026-06-17",
-  lastUpdated: "2026-08-13",
+  lastUpdated: "2026-08-14",
   folder: "06 - Achievements and Milestones",
   automationName: "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
 };
@@ -414,6 +416,11 @@ function getLinkedNames(record, fieldName) {
 function getText(record, fieldName) {
   if (!fieldName) return "";
   return String(record.getCellValueAsString(fieldName) || "").trim();
+}
+
+function getOptionalText(record, table, fieldName) {
+  if (!fieldExists(table, fieldName)) return "";
+  return getText(record, fieldName);
 }
 
 function getNumber(record, fieldName) {
@@ -1114,7 +1121,7 @@ async function main() {
       unlocksTable,
       payload,
       CONFIG.unlockFields.notes,
-      `${getText(existingUnlock, CONFIG.unlockFields.notes)}\n066 deactivated below-threshold milestone lifecycle: ${sourceKey}.`
+      `${getOptionalText(existingUnlock, unlocksTable, CONFIG.unlockFields.notes)}\n066 deactivated below-threshold milestone lifecycle: ${sourceKey}.`
     );
     withdrawalUpdates.push({ id: existingUnlock.id, fields: payload });
     deactivatedCount += 1;
@@ -1235,7 +1242,7 @@ async function main() {
           updatePayload,
           CONFIG.unlockFields.notes,
           [
-            getText(existingUnlock, CONFIG.unlockFields.notes),
+            getOptionalText(existingUnlock, unlocksTable, CONFIG.unlockFields.notes),
             `Updated by ${SCRIPT.scriptName} ${SCRIPT.version}. Milestone Activity Date: ${formatDateForNotes(crossing.activityDate)}. Week: ${weekResolved.weekName || weekResolved.weekId || "unresolved"}. Crossing Submission: ${crossing.submissionRecordId}.`,
           ]
             .filter(Boolean)

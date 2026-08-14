@@ -11,7 +11,7 @@ there is no competing lifetime-XP observation window.
 | Submission Base XP | 010 (unchanged) |
 | Streak occurrence topology | 053 v5.5 |
 | Streak XP Event | 054 v5.8 |
-| Shot milestone unlock eligibility | 066 v3.7 |
+| Shot milestone unlock eligibility | 066 v3.8 |
 | Shot milestone XP Event | 059 v3.6 |
 | Progression | 041 queues; 042 assigns |
 
@@ -59,7 +59,7 @@ Every action input is the dynamic triggering Airtable record ID, never a fixed
 1. Before pasting, record the installed version, trigger, dynamic mapping, and
    ON/OFF state for 053/054/059/066. Turn **OFF** only these four affected
    automations; do not touch 010, 041, or 042.
-2. Paste 053 v5.5, then 054 v5.8, then 066 v3.7, then 059 v3.6 while they
+2. Paste 053 v5.5, then 054 v5.8, then 066 v3.8, then 059 v3.6 while they
    remain OFF. Save each trigger contract from this packet before enablement.
 3. Run read-only preflight again with all four still OFF. Stop for any
    ownership, duplicate, WAS, or source-key finding.

@@ -65,6 +65,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **PKG-038 Automation 066 Notes compatibility (2026-08-14)** — Automation
+  066 is now v3.8 and treats `Athlete Achievement Unlocks.Notes` as optional.
+  Missing Notes no longer blocks shot-milestone eligibility, source-key
+  dedupe, withdrawal/restoration, or the 059 XP handoff. No Airtable change
+  was made.
 - **PKG-038 first-create streak handoff (2026-08-14)** — Automation 053 is
   now v5.5: new positive/restored Streak Occurrences are created without
   `Source Status = Ready for XP`, then receive that status in a separate
