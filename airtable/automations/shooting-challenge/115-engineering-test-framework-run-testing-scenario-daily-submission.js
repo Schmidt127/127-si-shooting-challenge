@@ -1479,15 +1479,6 @@ async function runVideoBranch({
 
 const C025_MAX_QUERY_BUDGET = 22;
 
-function delayMs(ms) {
-  // Airtable automation scripts do not support real async timers (see 070b v4.4).
-  // Busy-wait is intentional so capped polls actually space out before re-select.
-  const end = Date.now() + Math.max(0, Number(ms) || 0);
-  while (Date.now() < end) {
-    /* busy-wait */
-  }
-}
-
 function createC025QueryBudget(max) {
   const log = [];
   let count = 0;
@@ -1627,7 +1618,6 @@ async function runC025Stage17DownstreamBranch({
     CONFIG.c025Stage17Downstream.maxQueryBudget || C025_MAX_QUERY_BUDGET
   );
   const pollAttempts = CONFIG.c025Stage17Downstream.pollAttempts || 5;
-  const pollDelayMs = CONFIG.c025Stage17Downstream.pollDelayMs || 2500;
 
   let currentStep = "C025-0-start";
   let attempts057 = 0;
@@ -1894,7 +1884,6 @@ async function runC025Stage17DownstreamBranch({
           ),
           [CONFIG.wasFields.automationError]: "",
         });
-        delayMs(400);
         wasRec = await c025SelectRecord(
           budget,
           wasTable,
@@ -1910,7 +1899,6 @@ async function runC025Stage17DownstreamBranch({
             `057 queue re-entry failed: Automation Status still queue-match after leave write (got "${statusAfterLeave}")`
           );
         }
-        delayMs(400);
         await updateRecordNoAttendees(wasTable, fixtures.wasId, {
           [CONFIG.wasFields.automationStatus]: singleSelectValue(
             wasTable,
@@ -1934,62 +1922,14 @@ async function runC025Stage17DownstreamBranch({
       }
       phaseA.queueReentry057 = queueReentry057;
 
-      currentStep = "C025-2-poll-057-was-ready";
-      setOutputSafe("debugStep", currentStep);
-      // 057 success write is WAS Status=Ready (always). ZA Perfect Week Credit Applied? is only
-      // set when a recording credit was newly counted — not a reliable "057 finished" signal.
-      const poll057WasFields = [
-        CONFIG.wasFields.automationStatus,
-        CONFIG.wasFields.automationError,
-        CONFIG.wasFields.zoomMeetingCount,
-        CONFIG.wasFields.zoomAttendanceCount,
-      ].filter((n) => fieldExists(wasTable, n));
-      let wasStatusAfter057 = "";
-      for (let i = 0; i < pollAttempts; i += 1) {
-        attempts057 += 1;
-        await delayMs(pollDelayMs);
-        wasRec = await c025SelectRecord(
-          budget,
-          wasTable,
-          fixtures.wasId,
-          poll057WasFields,
-          `poll057 WAS #${attempts057}`
-        );
-        wasStatusAfter057 = getText(wasRec, CONFIG.wasFields.automationStatus);
-        if (wasStatusAfter057 === "Ready") {
-          phaseA.waitOk = true;
-          break;
-        }
-        if (wasStatusAfter057 === "Error") {
-          phaseA.timedOut = true;
-          phaseA.wasError = getText(wasRec, CONFIG.wasFields.automationError);
-          await finishAwaiting("057", "057 ended Error", {
-            phaseA_057: {
-              ...phaseA,
-              attempts: attempts057,
-              wasAutomationStatus: wasStatusAfter057,
-            },
-            attendeesBefore,
-          });
-          return;
-        }
-      }
       phaseA.attempts = attempts057;
-      phaseA.wasAutomationStatus = wasStatusAfter057;
+      phaseA.wasAutomationStatus = getText(wasRec, CONFIG.wasFields.automationStatus);
       phaseA.pwAppliedBefore = pwAppliedBefore;
-
-      if (!phaseA.waitOk) {
-        phaseA.timedOut = true;
-        await finishAwaiting("057", "Timed Out Waiting for 057", {
-          phaseA_057: phaseA,
-          attendeesBefore,
-        });
-        return;
-      }
-
-      // Applied? is NOT the wait signal — final WAS/ZA snapshot records it for Phase A evaluation.
-      phaseA.pwAppliedAfter = null;
-      phaseA.wasReady = true;
+      await finishAwaiting("057", "057 trigger armed; awaiting the later natural 057 run", {
+        phaseA_057: phaseA,
+        attendeesBefore,
+      });
+      return;
     }
 
     // ---------- Phase B: 042 (view re-entry) ----------
@@ -2055,7 +1995,6 @@ async function runC025Stage17DownstreamBranch({
         await updateRecordNoAttendees(enrollmentsTable, enrollmentId, {
           [CONFIG.enrollmentFields.levelRecalcNeeded]: false,
         });
-        delayMs(400);
         enrRec = await c025SelectRecord(
           budget,
           enrollmentsTable,
@@ -2074,7 +2013,6 @@ async function runC025Stage17DownstreamBranch({
             "042 view re-entry failed: Level Recalc Needed? did not clear after uncheck write"
           );
         }
-        delayMs(400);
         await updateRecordNoAttendees(enrollmentsTable, enrollmentId, {
           [CONFIG.enrollmentFields.levelRecalcNeeded]: true,
         });
@@ -2097,37 +2035,15 @@ async function runC025Stage17DownstreamBranch({
         })
       );
 
-      currentStep = "C025-3-poll-042";
-      setOutputSafe("debugStep", currentStep);
-      for (let i = 0; i < pollAttempts; i += 1) {
-        attempts042 += 1;
-        delayMs(pollDelayMs);
-        zaRec = await c025SelectRecord(
-          budget,
-          zaTable,
-          fixtures.zoomAttendanceId,
-          [CONFIG.zoomAttendanceFields.gateApplied].filter((n) => fieldExists(zaTable, n)),
-          `poll042 ZA #${attempts042}`
-        );
-        if (getBooleanish(zaRec, CONFIG.zoomAttendanceFields.gateApplied, false)) {
-          phaseB.waitOk = true;
-          gateApplied = true;
-          break;
-        }
-      }
       phaseB.attempts = attempts042;
       phaseB.gateAppliedBefore = gateAppliedBefore;
       phaseB.gateAppliedAfter = gateApplied;
-
-      if (!phaseB.waitOk) {
-        phaseB.timedOut = true;
-        await finishAwaiting("042", "Timed Out Waiting for 042", {
-          phaseA_057: phaseA,
-          phaseB_042: phaseB,
-          attendeesBefore,
-        });
-        return;
-      }
+      await finishAwaiting("042", "042 trigger armed; awaiting the later natural 042 run", {
+        phaseA_057: phaseA,
+        phaseB_042: phaseB,
+        attendeesBefore,
+      });
+      return;
     }
 
     // ---------- Final verify + dedupe (no re-trigger; targeted reads only) ----------

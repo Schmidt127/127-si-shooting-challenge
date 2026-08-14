@@ -100,9 +100,7 @@ function semanticFailure(body) {
 }
 async function postJson(url, payload) {
   const req = {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)};
-  if (typeof fetch === "function") return await fetch(url, req);
-  if (typeof remoteFetchAsync === "function") return await remoteFetchAsync(url, req);
-  throw new Error("No supported HTTP method is available in this Airtable automation environment.");
+  return await remoteFetchAsync(url, req);
 }
 function parentVideoUrl(assetRec, assetTable) {
   return first(text(assetRec,assetTable,F.asset.reviewer), text(assetRec,assetTable,F.asset.driveView), text(assetRec,assetTable,F.asset.driveFile));

@@ -408,7 +408,7 @@ function c025PathMustUseQueryBudget(sourceText) {
       sourceText.includes("confirm057 left Queue")) &&
     (sourceText.includes("poll057 WAS") ||
       sourceText.includes("wasAutomationStatus") ||
-      sourceText.includes("Status=Ready"))
+      sourceText.includes("awaiting the later natural 057 run"))
   );
 }
 
