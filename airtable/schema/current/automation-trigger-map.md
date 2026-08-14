@@ -40,8 +40,8 @@ version/state/mapping must still be confirmed in the Airtable UI.
 
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
-| **031** | Submissions | Counted submission, WAS empty | `031-...-find-or-create-weekly-athlete-summary-from-submission.js` | **Weekly Athlete Summary** create/link |
-| 032 | Weekly Athlete Summary | *confirm* | `032-...-link-challenge-goal-record-to-weekly-athlete-summary.js` | Challenge Goal link |
+| **031** | Submissions | Counted submission, WAS empty | `031-...-find-or-create-weekly-athlete-summary-from-submission.js` (**v4.1**) | **Weekly Athlete Summary** create/link |
+| 032 | Weekly Athlete Summary | *confirm* | `032-...-link-challenge-goal-record-to-weekly-athlete-summary.js` (**v3.4**) | Challenge Goal link |
 | 033 | Weekly Athlete Summary | *confirm* | `033-...-assign-homework-to-weekly-athlete-summary.js` | Homework assignment |
 | 030 | Weekly Athlete Summary | *confirm* | `030-...-copy-enrollment-grade-band-to-weekly-summary.js` | Grade Band copy |
 | 034 | Weeks / WAS | *confirm* | `034-...-set-previous-week-helper-values.js` | Previous week helpers |
@@ -96,8 +96,8 @@ version/state/mapping must still be confirmed in the Airtable UI.
 | **054** | Streak Occurrences | Record updated; must watch `Active?`, Source Status, Enrollment, Achievement, Week, Streak End Date, and XP Events | `054-...-create-or-repair-streak-xp-event.js` (**v5.8**) | **XP Events** (streak); exact-owned inactive event deactivates/reactivates |
 | 055 | Submissions | *confirm* | `055-...-recalculate-current-shooting-streak-from-submission.js` | Streak rollups |
 | 056 | Enrollments | *scheduled* | `056-...-refresh-current-shooting-streaks-daily.js` | Streak refresh |
-| 057 | Weekly Athlete Summary | *confirm* | `057-...-calculate-perfect-week-eligibility.js` | Perfect week flags |
-| 058 | Weekly Athlete Summary | *confirm* | `058-...-create-perfect-week-unlock.js` | Achievement Unlocks |
+| 057 | Weekly Athlete Summary | *confirm* | `057-...-calculate-perfect-week-eligibility.js` (**v1.7**) | Perfect week flags |
+| 058 | Weekly Athlete Summary | *confirm* | `058-...-create-perfect-week-unlock.js` (**v1.3**) | Achievement Unlocks |
 | **059** | Athlete Achievement Unlocks | Lifecycle-reachable record update/create; watch Active?, XP Award Status, XP Events, Enrollment, Shot Milestone, Week, and Milestone Source Key; never filter Ready for 059 XP? or Shot Milestone presence | `059-...-create-xp-event-from-achievement-unlock.js` (**v3.6**) | **XP Events** (achievement); corrected-history milestone lifecycle |
 | 066 | Enrollments | `Run Shot Milestone Check?` checked; the upstream reconciliation must re-arm it after counted-total changes | `066-...-create-shot-milestone-unlocks.js` (**v3.7**) | Canonical shot-milestone unlocks; corrected-history lifecycle |
 
@@ -106,24 +106,26 @@ version/state/mapping must still be confirmed in the Airtable UI.
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
 | **041** | Enrollments / Levels / Level Gate Rules | Scheduled every **15 minutes**; optional `recordId` only for a controlled single-Enrollment proof; scheduled mapping blank | `041-...-mark-enrollment-for-level-recalculation.js` **v5.0 target**; paste deferred until PKG-006R lock release | Queue only: `Level Recalc Needed?`, `Progression Last Queued Signature` |
-| **042** | Enrollments | When record enters view `042 - Needs Level Assignment` (`viwm9OgwkPKI2bii3`); filters `Level Recalc Needed?` checked + `Active?` checked; dynamic `recordId` from triggering Enrollment | `042-...-assign-current-and-next-level-with-gate-blocking.js` **v4.1 target**; paste deferred until PKG-006R lock release | Current/Next Level, Gate Rule, Status, reconciled signature |
+| **042** | Enrollments | When record enters view `042 - Needs Level Assignment` (`viwm9OgwkPKI2bii3`); filters `Level Recalc Needed?` checked + `Active?` checked; dynamic `recordId` from triggering Enrollment | `042-...-assign-current-and-next-level-with-gate-blocking.js` **v4.1.2 target**; paste deferred until PKG-006R lock release | Current/Next Level, Gate Rule, Status, reconciled signature |
 | 043 | Levels | **Retired — do not enable or recreate** | `043-...-set-level-gate-rule-from-next-level.js` (historical source only) | No downstream writer; `042` owns `Level Gate Rule` |
 
-### Email packages (072, 074–077, 075)
+### Email packages (072, 074–079, 075, 118–119)
 
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
 | **072** | Weekly Athlete Summary | `Build Weekly Email Now?` | `072-...-build-weekly-summary-email-package.js` | Email package fields |
 | 074 | Weekly Athlete Summary | *confirm* | `074-...-send-weekly-summary-email-package-to-make.js` | **Make** weekly email |
 | 075 | Enrollments | *confirm* | `075-...-build-challenge-welcome-email.js` | Welcome email package |
-| 076 | Submissions / Enrollments | *confirm* | `076-...-build-daily-submission-email-package.js` | Daily email package |
+| 076 | Submissions / Enrollments | *confirm* | `076-...-build-daily-submission-email-package.js` (**v8.6**) | Daily email package |
+| **079** | Email Handoff Queue | Status = Ready — *confirm in Airtable* | `079-...-send-queue-handoff-to-communications-hub.js` (**v2.0**) | Communications Hub WELCOME / DAILY_SUBMISSION handoff |
+| **118** | Weeks / Enrollments | Scheduled Sunday 05:00 America/Denver | `118-...-schedule-weekly-summary-email-build.js` (**v2.0**) | Arms Weekly Athlete Summary email build |
 | 077 | — | **Retired / deleted from Airtable — do not recreate** | `077-...-send-daily-submission-email-package-to-make.js` (GitHub historical source only) | No active native automation; daily-email Hub boundary is 076 → 079 |
 
 ### Zoom (101)
 
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
-| **101** | Zoom Meetings | **When record matches conditions:** sole condition `Zoom XP Reconciliation Needed? = 1`; dynamic triggering Zoom Meeting `recordId` | `101-zoom-attendance-xp-award-meeting-xp.js` **v6.1 installed in PROD** | **XP Events** (live attendance base + cumulative bonuses; correction/restoration) |
+| **101** | Zoom Meetings | **When record matches conditions:** sole condition `Zoom XP Reconciliation Needed? = 1`; dynamic triggering Zoom Meeting `recordId` | `101-zoom-attendance-xp-award-meeting-xp.js` **v6.3 canonical repository source**; historical 2026-08-13 Production evidence records v6.1 installed | **XP Events** (live attendance base + cumulative bonuses; correction/restoration) |
 
 ### PKG-034 Production evidence (Mike-supplied, 2026-08-13)
 

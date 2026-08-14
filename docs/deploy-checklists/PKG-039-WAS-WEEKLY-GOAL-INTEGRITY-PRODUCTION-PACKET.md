@@ -4,33 +4,49 @@
 **Repository baseline:** `b10c93432a7e7bc0a04ada2c39aeca7e8f49e8db` plus the PKG-039 PR head
 **Production boundary:** No record, schema, automation, trigger, email, or lock change was made while preparing this packet.
 
-## Exact target scripts, OFF/ON sequence, and schema change
+## Separate operational lanes, target scripts, and OFF/ON sequence
 
 This is a Mike-operated Production packet only after the same committed files
 pass the listed DEV proofs. Repository tests do not constitute Production proof.
 
-| Paste order | Automation | Target version | Required trigger/input |
+### Lane A — canonical WAS, goal, and weekly schedule
+
+Lane A is the ordered chain **031 → 032 → 118**. It proves canonical WAS
+creation, goal linking, and the weekly scheduler. It does not implicitly
+authorize or execute any Lane B consumer test.
+
+| Order | Automation | Target version | Required trigger/input |
 |---:|---|---|---|
 | 1 | 031 | v4.1 | Counted `Submissions`; dynamic `recordId` |
 | 2 | 032 | v3.4 | Eligible `Weekly Athlete Summary`; dynamic `recordId` |
-| 3 | 057 | v1.7 | Perfect Week recalculation; dynamic `recordId` |
-| 4 | 058 | v1.3 | Lifecycle-capable Perfect Week trigger; dynamic `recordId` |
-| 5 | 076 | v8.6 | `Build Daily Email Now?` checked; dynamic `recordId` |
-| 6 | 101 | v6.3 | `Zoom XP Reconciliation Needed? = 1`; dynamic `recordId` |
-| 7 | 118 | v2.0 | Scheduled Sunday 05:00 America/Denver; inputs `dryRun`, `sendMode`, `excludedEnrollmentIds`, `includeSchmidt`, `emptyWeekPolicy` |
+| 3 | 118 | v2.0 | Scheduled Sunday 05:00 America/Denver; inputs `dryRun`, `sendMode`, `excludedEnrollmentIds`, `includeSchmidt`, `emptyWeekPolicy` |
 
-1. Capture the current ON/OFF state and trigger/input screenshots. Turn **OFF**
-   031, 032, 057, 058, 076, 101, and 118 before pasting; leave 068 OFF.
+### Lane B — separately approved consumer tests
+
+Lane B is a separate set of individually approved tests for **057, 058, 076,
+and 101**. These tests do not become part of the Lane A chain, and Lane A
+completion does not authorize them. Each needs its own fixture, trigger/input
+attestation, email/Make isolation, and approval before enablement.
+
+| Automation | Target version | Required trigger/input |
+|---:|---|---|
+| 057 | v1.7 | Perfect Week recalculation; dynamic `recordId` |
+| 058 | v1.3 | Lifecycle-capable Perfect Week trigger; dynamic `recordId` |
+| 076 | v8.6 | `Build Daily Email Now?` checked; dynamic `recordId` |
+| 101 | v6.3 | `Zoom XP Reconciliation Needed? = 1`; dynamic `recordId` |
+
+1. Capture the current ON/OFF state and trigger/input screenshots for both
+   lanes. Leave 068 OFF.
 2. For isolated DEV proof, also turn OFF 072, 079, 119, 074, and the relevant
    Make scenarios. Do not clear readiness checkboxes as cleanup.
-3. Paste each committed script in the listed order (from docblock through end;
-   omit its GitHub header), confirm the exact trigger/input, then leave it OFF
-   until its preceding proof passes.
-4. Enable only 031 then 032 for canonical WAS/goal proof; enable 057 then 058
-   for Perfect Week proof; enable 076 and 101 only for their isolated fixtures;
-   enable 118 last, first with `dryRun=true`. Restore the captured ON/OFF state
-   only after all stop conditions remain clear. Production activation is
-   Mike-only after DEV evidence and approval.
+3. Paste each committed script from its lane only (docblock through end; omit
+   its GitHub header), confirm the exact trigger/input, then leave it OFF until
+   its preceding proof passes.
+4. Enable Lane A only as **031 → 032 → 118**, with 118 first using
+   `dryRun=true`. Enable Lane B scripts only under their separate approvals and
+   isolated fixtures. Restore captured ON/OFF state only after all applicable
+   stop conditions remain clear. Production activation is Mike-only after DEV
+   evidence and approval.
 
 ### Required `Target Goal Shots.Program Instance` field
 
@@ -129,19 +145,21 @@ in force until Mike releases them.
 3. Resolve any duplicate canonical identity, wrong-owner link, multiple goal,
    or cross-Program/year result manually before enabling a writer. Stop rather
    than selecting a first row.
-4. In DEV, paste in this order: 031, 032, then 118. Paste docblock through
-   end (not the GitHub header). Verify the exact triggers before enabling:
-   031 counted Submissions; 032 WAS needing goal; 118 Sunday 05:00
+4. In DEV, run **Lane A** in this order: 031, 032, then 118. Paste docblock
+   through end (not the GitHub header). Verify the exact triggers before
+   enabling: 031 counted Submissions; 032 WAS needing goal; 118 Sunday 05:00
    America/Denver. `033` is not part of PKG-039 deployment; use its separately
    approved packet and evidence.
 5. Before any non-dry-run 118 proof, turn OFF (and capture the prior state of)
    072, 119, 074, and the Make weekly-email scenario. This is mandatory:
    118 arms `Build Weekly Email Now?`, which 072 would otherwise consume. Keep
    010, 035, 057, 076, 101, and 114 unchanged and leave 068 OFF.
-6. Enable one writer at a time: 031 → 032. Run fixture proofs. Enable 118 only
-   for the isolated empty-week/concurrency proof, with the email path disabled,
-   then restore 072, 119, 074, and Make to the captured state. Do not enable an
-   email sender during this package.
+6. Enable one Lane A writer at a time: 031 → 032. Run fixture proofs. Enable
+   118 only for the isolated empty-week/concurrency proof, with the email path
+   disabled, then restore 072, 119, 074, and Make to the captured state. Run
+   057, 058, 076, or 101 only as separately approved Lane B tests; do not infer
+   their proof from Lane A and do not enable an email sender during this
+   package.
 7. Only after DEV evidence is accepted and Mike approves Production, repeat the
    exact paste/enable order in Production. Do not merge, deploy, or paste from
    this packet itself.

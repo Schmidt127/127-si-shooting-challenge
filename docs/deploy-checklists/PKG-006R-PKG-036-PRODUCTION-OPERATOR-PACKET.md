@@ -79,7 +79,7 @@ Approved Schmidt orientation Enrollments: `recCrNNAdVmQ4Y8fL`, `reclc46bQM8Wx0qW
 
 ## Phase A — PKG-006R (Submission XP reconciliation)
 
-**PKG-006R lock remains active.** Phase B (041 v5.0 / 042 v4.1 paste) is **deferred** until this phase's evidence is complete and Mike explicitly releases the lock.
+**PKG-006R lock remains active.** Phase B (041 v5.0 / 042 v4.1.2 paste) is **deferred** until this phase's evidence is complete and Mike explicitly releases the lock.
 
 ### A1. Preflight (read-only)
 
@@ -177,13 +177,13 @@ Stop and preserve evidence for: duplicate Submission XP key, duplicate WAS, wron
    - 010 lifecycle proof is complete or safely paused with 010 OFF, and
    - 041/042 are OFF with no active observation window that would conflict.
 
-**041 v5.0 and 042 v4.1 installation remain deferred** until this lock is released.
+**041 v5.0 and 042 v4.1.2 installation remain deferred** until this lock is released.
 
 ---
 
 ## Phase B — PKG-036 (Progression bidirectional reliability)
 
-**Deferred until PKG-006R lock release.** Do not paste 041 v5.0 or 042 v4.1 before sign-off.
+**Deferred until PKG-006R lock release.** Do not paste 041 v5.0 or 042 v4.1.2 before sign-off.
 
 ### B1. Preflight (read-only)
 
@@ -200,7 +200,7 @@ Stop and preserve evidence for: duplicate Submission XP key, duplicate WAS, wron
 3. Paste **041 v5.0** into `wflCRvaopntNPsc64`:
    - Trigger: **15-minute** cron (preserve existing schedule)
    - Input `recordId`: **blank** for scheduled path
-4. Paste **042 v4.1** into `wfl3aiiK8vI2tz0HA`:
+4. Paste **042 v4.1.2** into `wfl3aiiK8vI2tz0HA`:
    - Trigger: Enrollments — when record enters view
    - View: `042 - Needs Level Assignment` (`viwm9OgwkPKI2bii3`)
    - View filters: `Level Recalc Needed?` checked AND `Active?` checked
@@ -216,7 +216,7 @@ Stop and preserve evidence for: duplicate Submission XP key, duplicate WAS, wron
 | Automation | Workflow ID | Trigger | Dynamic input |
 |---|---|---|---|
 | 041 v5.0 | `wflCRvaopntNPsc64` | Scheduled every **15 minutes** | `recordId` blank (optional for single-record proof only) |
-| 042 v4.1 | `wfl3aiiK8vI2tz0HA` | Record enters view `viwm9OgwkPKI2bii3` | `recordId` = triggering Enrollment record ID |
+| 042 v4.1.2 | `wfl3aiiK8vI2tz0HA` | Record enters view `viwm9OgwkPKI2bii3` | `recordId` = triggering Enrollment record ID |
 
 ### B4. Controlled test order (PKG-036)
 
@@ -237,7 +237,7 @@ Use approved Schmidt Enrollment `recwuMDL6dqIVfvqH` or another explicitly approv
 | Action | Exact table / automation / state / trigger | Observe and require | Stop condition / evidence / rollback |
 |---|---|---|---|
 | Preflight | **Enrollments**, **Levels**, **Level Gate Rules**; read-only audit `airtable/extension-scripts/audits/audit-pkg-036-progression-integrity.js` | `Progression Last Queued Signature` and `Progression Last Reconciled Signature` exist as writable single-line text; 12 active Levels, 12 active school-year gate rules, one Program Instance per Enrollment; 043 remains absent. | Stop on missing/wrong field, nonunique/ambiguous ladder/rules, or package lock still active. Capture audit JSON and field IDs; no schema changes. |
-| Paste while OFF | **041 v5.0** in `wflCRvaopntNPsc64`, **OFF**; source `airtable/automations/shooting-challenge/041-levels-and-progression-mark-enrollment-for-level-recalculation.js`. **042 v4.1** in `wfl3aiiK8vI2tz0HA`, **OFF**; source `airtable/automations/shooting-challenge/042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js`. | 041 trigger is the approved **15-minute** scheduled reconciliation with blank `recordId` scheduled mapping. 042 is **Enrollments** record-enters-view `042 - Needs Level Assignment` (`viwm9OgwkPKI2bii3`), filters `Level Recalc Needed?` checked + `Active?` checked, dynamic `recordId` = triggering Enrollment ID. | Stop if a version, schedule, filter, mapping, or state differs. Capture both editor configurations and scripts. Restore captured scripts/triggers while OFF. |
+| Paste while OFF | **041 v5.0** in `wflCRvaopntNPsc64`, **OFF**; source `airtable/automations/shooting-challenge/041-levels-and-progression-mark-enrollment-for-level-recalculation.js`. **042 v4.1.2** in `wfl3aiiK8vI2tz0HA`, **OFF**; source `airtable/automations/shooting-challenge/042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js`. | 041 trigger is the approved **15-minute** scheduled reconciliation with blank `recordId` scheduled mapping. 042 is **Enrollments** record-enters-view `042 - Needs Level Assignment` (`viwm9OgwkPKI2bii3`), filters `Level Recalc Needed?` checked + `Active?` checked, dynamic `recordId` = triggering Enrollment ID. | Stop if a version, schedule, filter, mapping, or state differs. Capture both editor configurations and scripts. Restore captured scripts/triggers while OFF. |
 | Enablement | **042 first, then 041**; 043 stays absent. | Record the exact ON transition and run IDs. Never enable/recreate 043; never change 010, XP Events, Video XP, Zoom XP, streak/milestone, or standings logic. | Stop for an unsafe queued backlog or unexpected scope. Turn **041 and 042 OFF**, restore captured scripts/triggers, and preserve logs. |
 | Controlled progression | Approved **Enrollments** record `recwuMDL6dqIVfvqH` or another explicitly approved Schmidt row; 041 schedule and 042 view-entry trigger. | At each state record Current/Next Level, Gate Rule, Level Status, `Level Recalc Needed?`, queued/reconciled signatures, Lifetime XP, WAS XP, Enrollment Lifetime XP, and standings readback. Prove baseline/replay, within-level rise, threshold rise/fall, return to 0/restoration, gate pass/block, maximum level, retry queue preservation, and natural 041 → 042 runs. | Stop for stale queue after bounded retry, output churn on replay, wrong school-year rule, missing Program Instance, bad totals, or unsafe rollback. Capture every run ID/output and before/after state; restore exact isolated test values, keep XP Events untouched, then rerun audit. |
 
@@ -366,4 +366,4 @@ Begin only when every PKG-006R checklist item passes and Mike has explicitly rel
 
 ## Closeout summary
 
-**PKG-006R closes** when backlog is reviewed, lifecycle proof is captured (A6), and Mike signs off. **PKG-036 begins** only after explicit lock release and Phase B preflight. **041 v5.0 / 042 v4.1 paste stays deferred** until then.
+**PKG-006R closes** when backlog is reviewed, lifecycle proof is captured (A6), and Mike signs off. **PKG-036 begins** only after explicit lock release and Phase B preflight. **041 v5.0 / 042 v4.1.2 paste stays deferred** until then.

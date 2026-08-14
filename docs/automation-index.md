@@ -75,7 +75,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
 | 041 | Levels — Mark Enrollment for Level Recalculation | **v5.0 repository-ready; Production paste pending** — queue-only scheduled reconciliation | `041-levels-and-progression-mark-enrollment-for-level-recalculation.js` |
-| 042 | Levels — Assign Current and Next Level with Gate Blocking | **v4.1 repository-ready; Production paste pending** — sole progression assignment writer; v4.1 aligns the acknowledgement signature with 041's relevant ladder scope | `042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js` |
+| 042 | Levels — Assign Current and Next Level with Gate Blocking | **v4.1.2 repository-ready; Production paste pending** — sole progression assignment writer; v4.1.2 aligns the acknowledgement signature with 041's relevant ladder scope and uses bounded immediate formula rereads | `042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js` |
 | 043 | Levels — Set Level Gate Rule from Next Level | **Retired; absent from current Production automation inventory; do not recreate** | `043-levels-and-progression-set-level-gate-rule-from-next-level.js` |
 
 ## Achievements and streaks (053–059, 066)
@@ -155,8 +155,10 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 **Airtable automation-count constraint:** Use consolidated automations where practical. Repository-only modular alternatives must not be represented as active PROD automations. The active canonical automation directory must distinguish deployed scripts from archived/design alternatives.
 
-Live attendance XP remains **101** only. Mike supplied evidence that v6.1 is
-installed and ON in Production with the reconciliation trigger configured.
+Live attendance XP remains **101** only. The canonical repository source is
+**v6.3**. Mike-supplied Production evidence from 2026-08-13 records **v6.1**
+installed and ON with the reconciliation trigger configured; that is historical
+installed-version evidence, not proof of the current installed version.
 The Introduction and Motivation future meetings both safely acknowledged empty
 rosters with no XP Event and Needed = 0. This is installation plus
 empty-roster proof only; live-attendee XP, withdrawal, bonuses, progression,

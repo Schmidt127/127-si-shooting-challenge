@@ -42,7 +42,9 @@ event's ID after exact ownership validation.
 
 ## Proven defects corrected
 
-1. Automation 101 is upgraded from v5.5 to v6.1.
+1. Historical Production correction: Automation 101 was upgraded from v5.5 to
+   v6.1. The canonical repository source is now v6.3; current installation
+   remains a separate Airtable attestation.
 2. Live reconciliation is driven by numeric `Zoom XP Reconciliation Needed? = 1`.
 3. Enrollment, Program Instance, School Year, Week, Meeting identity, and WAS
    are validated before positive creation/reactivation.
@@ -85,11 +87,14 @@ Year, and XP Event backlink changes.
 
 ## Production installation evidence — 2026-08-13
 
-Mike supplied evidence that all nine reconciliation fields are installed in
-`appn84sqPw03zEbTT`, Automation 101 v6.1 is ON, and the trigger is
+Mike supplied historical evidence that all nine reconciliation fields are
+installed in `appn84sqPw03zEbTT`, Automation 101 v6.1 was ON, and the trigger is
 `When record matches conditions` on `Zoom Meetings` with the sole condition
 `Zoom XP Reconciliation Needed? = 1` and dynamic `recordId`. There are no
 `Create XP Events`, `Attendees`, or `Completed` trigger conditions.
+
+The current canonical repository source is Automation 101 v6.3. The historical
+v6.1 evidence does not prove that v6.3 is installed in Airtable.
 
 The final read-only audit checked 2 meetings and 16 XP Events with 0 Zoom XP
 Events, 0 unsupported recording XP Events, and 0 duplicate/rule/ownership/

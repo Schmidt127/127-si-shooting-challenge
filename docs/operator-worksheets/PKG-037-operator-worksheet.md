@@ -10,7 +10,10 @@
 - [ ] Certification athlete / test email / Athlete RID: `________________`
 - [ ] School Year / Program Instance RID: `________________`
 - [ ] PKG-006R lock released with evidence: `________________`
-- [ ] PKG-007 Homework evidence complete; PKG-034 live-attendee evidence complete; PKG-036 041/042 evidence complete.
+- [ ] PKG-007 Homework evidence complete; PKG-034 live-attendee evidence complete;
+      PKG-036 repository prerequisite complete with canonical 041 v5.0 / 042
+      v4.1.2 source; Mike-owned installed/proof evidence remains separately
+      required.
 - [ ] No Production schema, configuration, email, Make, deployment, or retired-writer changes are made by this worksheet.
 
 ## Lane 1 — repository proof
@@ -22,7 +25,7 @@
 
 ## Lane 2 — installed-version proof
 
-- [ ] Installed version, ON/OFF state, trigger, dynamic `recordId`, and latest run ID captured for 001, 023/005/007/031, 010, 020/064/065, 101 **v6.3**, 113/114, 041/042, 076/079.
+- [ ] Installed version, ON/OFF state, trigger, dynamic `recordId`, and latest run ID captured for 001, 023/005/007/031, 010, 020/064/065, 101 **v6.3**, 113/114, 041 **v5.0** / 042 **v4.1.2**, 076 **v8.6** / 079.
 - [ ] 065 trigger is `Homework XP Reconciliation Needed? = 1`.
 - [ ] 101 trigger is `Zoom XP Reconciliation Needed? = 1`; no recording or Attendees trigger condition.
 - [ ] 114 lifecycle trigger reaches both positive and withdrawal transitions.
