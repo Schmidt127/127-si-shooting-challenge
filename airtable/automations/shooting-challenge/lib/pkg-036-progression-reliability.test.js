@@ -288,4 +288,20 @@ test("source ownership contract keeps 041 queue-only, 042 assignment-only, and 0
   assert.ok(source043.includes("043 - Levels and Progression"));
 });
 
+test("042 v4.1.2 uses bounded immediate settlement reads without timers", () => {
+  const source042 = fs.readFileSync(path.join(__dirname, "..", "042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js"), "utf8");
+  assert.match(source042, /Version: 4\.1\.2/);
+  assert.match(source042, /version:\s*"4\.1\.2"/);
+  assert.ok(source042.includes("function getFieldSafe"));
+  assert.ok(source042.includes("function isWritableField"));
+  assert.ok(source042.includes("function requireField"));
+  assert.ok(source042.includes("function requireWritableField"));
+  assert.ok(source042.includes("if (stableReads >= 2)"));
+  assert.ok(source042.includes("Formula/rollup values did not settle"));
+  assert.ok(source042.includes("levelRecalcNeeded]: false"));
+  assert.ok(!/\b(?:setTimeout|setInterval|clearTimeout|clearInterval)\b/.test(source042));
+  assert.ok(!/new Promise\s*\(\s*\(\s*resolve\s*\)\s*=>/.test(source042));
+  assert.ok(!/Date\.now\(\)[\s\S]{0,200}while\s*\(/.test(source042));
+});
+
 console.log("pkg-036-progression-reliability: all tests passed");

@@ -24,9 +24,9 @@ Airtable is the deployed/running copy.
 
 /************************************************************************************************
  * 042 - Levels and Progression - Assign Current and Next Level with Gate Blocking
- * Version: 4.1.1
+ * Version: 4.1.2
  * Date Written: 2026-06-02
- * Last Updated: 2026-08-13
+ * Last Updated: 2026-08-14
  *
  * Purpose:
  * Recalculates an Enrollment's Current Level and Next Level based on Lifetime XP Total,
@@ -54,6 +54,11 @@ Airtable is the deployed/running copy.
  * Version 4.1 (PKG-036, 2026-08-13):
  * - Acknowledges the same reachable level and school-year gate-rule signature
  *   that 041 uses to queue an Enrollment, preventing lower-level requeue churn.
+ *
+ * Version 4.1.2 (PKG-036, 2026-08-14):
+ * - Removes unsupported Airtable timer waits from formula settlement.
+ * - Uses bounded immediate rereads and preserves Level Recalc Needed? when the
+ *   authoritative inputs do not settle during this invocation.
  *
  * Version 3.2 (2026-08-05):
  * - Airtable runtime compatibility: guard optional QueryResult.unloadData() cleanup
@@ -132,7 +137,7 @@ Airtable is the deployed/running copy.
 const CONFIG = {
     automation: {
         name: "042 - Levels and Progression - Assign Current and Next Level with Gate Blocking",
-        version: "4.1.1",
+        version: "4.1.2",
     },
 
     tables: {
@@ -535,10 +540,6 @@ function isSharedSchoolYear(value) {
     );
 }
 
-function sleep(milliseconds) {
-    return new Promise((resolve) => setTimeout(resolve, milliseconds));
-}
-
 function getEnrollmentReadFields() {
     return [
         CONFIG.enrollmentFields.lifetimeXpTotal,
@@ -596,9 +597,6 @@ async function readSettledEnrollment(table, recordId, fields) {
             return enrollment;
         }
 
-        if (attempt < 4) {
-            await sleep(750);
-        }
     }
 
     throw new Error(
