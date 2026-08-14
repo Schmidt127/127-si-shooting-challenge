@@ -24,7 +24,7 @@ Airtable is the deployed/running copy.
 
 /************************************************************************************************
  * 042 - Levels and Progression - Assign Current and Next Level with Gate Blocking
- * Version: 4.1
+ * Version: 4.1.1
  * Date Written: 2026-06-02
  * Last Updated: 2026-08-13
  *
@@ -132,7 +132,7 @@ Airtable is the deployed/running copy.
 const CONFIG = {
     automation: {
         name: "042 - Levels and Progression - Assign Current and Next Level with Gate Blocking",
-        version: "4.1",
+        version: "4.1.1",
     },
 
     tables: {
@@ -434,6 +434,53 @@ async function computeEffectiveZoomAttendanceCount(enrollmentId) {
         liveZoomCount: liveMeetingIds.length,
         recordingMeetingsCounted: recordingZaToMark.length,
     };
+}
+
+function getFieldSafe(table, fieldName) {
+    if (!table || !fieldName) return null;
+
+    try {
+        return table.getField(fieldName);
+    } catch {
+        return null;
+    }
+}
+
+function isWritableField(table, fieldName) {
+    const field = getFieldSafe(table, fieldName);
+    if (!field) return false;
+
+    const nonWritableTypes = new Set([
+        "formula",
+        "rollup",
+        "count",
+        "lookup",
+        "multipleLookupValues",
+        "createdTime",
+        "lastModifiedTime",
+        "createdBy",
+        "lastModifiedBy",
+        "autoNumber",
+        "button",
+        "aiText",
+        "externalSyncSource",
+    ]);
+
+    return !nonWritableTypes.has(field.type);
+}
+
+function requireField(table, fieldName, label) {
+    if (!fieldExists(table, fieldName)) {
+        throw new Error(`Missing required field: ${label} (${table.name} -> ${fieldName})`);
+    }
+}
+
+function requireWritableField(table, fieldName, label) {
+    requireField(table, fieldName, label);
+
+    if (!isWritableField(table, fieldName)) {
+        throw new Error(`Required field is not writable: ${label} (${table.name} -> ${fieldName})`);
+    }
 }
 
 function assertFieldExists(table, fieldName) {
