@@ -18,7 +18,9 @@ Mike supplied the authoritative Production evidence for base
 (`appn84sqPw03zEbTT`). Cursor did not access Airtable or perform the
 Production changes.
 
-- Automation 101 v6.1 is installed and **ON**.
+- Historical Production evidence (2026-08-13): Automation 101 v6.1 was
+  installed and **ON**. The canonical repository source is now v6.3; the
+  current installed version remains unverified.
 - Trigger: `When record matches conditions` on `Zoom Meetings`, sole
   condition `Zoom XP Reconciliation Needed? = 1`.
 - `recordId` maps to the dynamic triggering Zoom Meeting record ID.
@@ -85,7 +87,8 @@ XP Event RID: ___________________________
    wrong PI/SY, inactive Enrollment, and backlink issue before initialization.
 5. Initialize accepted historical signatures using the separately reviewed
    initializer; require Needed = numeric 0.
-6. Paste committed Automation 101 v6.1 from this branch.
+6. For any future controlled paste, use the canonical repository Automation 101
+   v6.3 source after the current installed version and trigger are re-attested.
 7. Configure `When record matches conditions` on Zoom Meetings:
    `Zoom XP Reconciliation Needed? = 1`.
 8. Map `recordId` to the triggering Zoom Meetings record ID.

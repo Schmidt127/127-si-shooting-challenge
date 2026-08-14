@@ -75,7 +75,9 @@ RECORD_ID() & "|STATUS=" & {Meeting Status} & "|KEY=" & {Zoom Meeting Key} & "|C
 ```
 
 2. `Last Zoom XP Reconciled Signature` — Writable single-line text. Production
-   field ID: `fldN8ObYVWOwptoIF`. Automation 101 v6.1 is the sole writer.
+   field ID: `fldN8ObYVWOwptoIF`. Automation 101 is the sole writer; the
+   historical 2026-08-13 installed evidence names v6.1, while the canonical
+   repository source is v6.3.
 3. `Zoom XP Reconciliation Needed?` — Formula returning numeric `1` or `0`.
    Production field ID: `fldxpTxg5IJsfGzHU`
 
