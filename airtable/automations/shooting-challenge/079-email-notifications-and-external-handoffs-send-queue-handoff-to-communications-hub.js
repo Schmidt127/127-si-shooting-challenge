@@ -260,9 +260,10 @@ async function postJson(url, secret, payload) {
         headers: { Authorization: `Bearer ${secret}`, "Content-Type": "application/json" },
         body: JSON.stringify(payload),
     };
-    if (typeof fetch === "function") return fetch(url, request);
-    if (typeof remoteFetchAsync === "function") return remoteFetchAsync(url, request);
-    throw new Error("No supported HTTP method is available in this Airtable automation environment.");
+    if (typeof fetch !== "function") {
+        throw new Error("Airtable Automation fetch is unavailable.");
+    }
+    return fetch(url, request);
 }
 
 function validateHandoff(eventType, templateKey, handoffKey, sourceTable, sourceRecordId) {
