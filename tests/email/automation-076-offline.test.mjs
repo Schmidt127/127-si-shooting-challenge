@@ -55,7 +55,7 @@ function build076Base(
       new MockRecord(SUBMISSION_ID, {
         Enrollment: [{ id: "recEnrollment076001", name: "Schmidt Enrollment" }],
         Week: [{ id: "recWeek07600001", name: "Early Bird" }],
-        "Weekly Athlete Summary": [],
+        "Weekly Athlete Summary": [{ id: "recWas0760001", name: "Schmidt · Early Bird" }],
         "Activity Date": "2026-08-07",
         "Build Daily Email Now?": true,
         "Count This Submission?": true,
@@ -72,6 +72,7 @@ function build076Base(
     [
       { name: "Active?", type: "checkbox" },
       { name: "Program Instance", type: "multipleRecordLinks" },
+      { name: "Grade Band", type: "multipleRecordLinks" },
       { name: "Parent Email - Cleaned", type: "email" },
       { name: "Athlete Email - Cleaned", type: "email" },
       { name: "Full Athlete Name", type: "singleLineText" },
@@ -83,6 +84,7 @@ function build076Base(
       new MockRecord("recEnrollment076001", {
         "Active?": true,
         "Program Instance": [{ id: "recProgram0760001", name: "2026-2027" }],
+        "Grade Band": [{ id: "recGrade0760001", name: "5-6" }],
         "Parent Email - Cleaned": "mschmidt@fairfield.k12.mt.us",
         "Athlete Email - Cleaned": "",
         "Full Athlete Name": "Schmidt Test Athlete",
@@ -116,6 +118,46 @@ function build076Base(
     [new MockRecord("recProgram0760001", { "Name - Program Instance": "2026-2027" })]
   );
 
+  const weeklySummaries = new MockTable(
+    "Weekly Athlete Summary",
+    [
+      { name: "Enrollment", type: "multipleRecordLinks" },
+      { name: "Week", type: "multipleRecordLinks" },
+      { name: "Goal Record", type: "multipleRecordLinks" },
+      { name: "Weekly Goal Shots Target", type: "number" },
+      { name: "Total Shots This Week", type: "number" },
+      { name: "Week - Display", type: "singleLineText" },
+    ],
+    [
+      new MockRecord("recWas0760001", {
+        Enrollment: [{ id: "recEnrollment076001", name: "Schmidt Enrollment" }],
+        Week: [{ id: "recWeek07600001", name: "Early Bird" }],
+        "Goal Record": [{ id: "recGoal0760001", name: "5-6 · 1,000" }],
+        "Weekly Goal Shots Target": 1000,
+        "Total Shots This Week": 20,
+        "Week - Display": "Early Bird",
+      }),
+    ]
+  );
+
+  const targetGoals = new MockTable(
+    "Target Goal Shots",
+    [
+      { name: "Program Instance", type: "multipleRecordLinks" },
+      { name: "Grade Band", type: "multipleRecordLinks" },
+      { name: "Active?", type: "checkbox" },
+      { name: "Total Shot Target", type: "number" },
+    ],
+    [
+      new MockRecord("recGoal0760001", {
+        "Program Instance": [{ id: "recProgram0760001", name: "2026-2027" }],
+        "Grade Band": [{ id: "recGrade0760001", name: "5-6" }],
+        "Active?": true,
+        "Total Shot Target": 1000,
+      }),
+    ]
+  );
+
   const queue = new MockTable(
     "Email Handoff Queue",
     [
@@ -139,7 +181,8 @@ function build076Base(
     submissions,
     enrollments,
     weeks,
-    new MockTable("Weekly Athlete Summary", []),
+    weeklySummaries,
+    targetGoals,
     new MockTable("XP Events", []),
     new MockTable("Homework Completions", []),
     new MockTable("Program Homework Assignments", []),
