@@ -17,10 +17,9 @@ const fs = require("fs");
 const path = require("path");
 const { test } = require("node:test");
 
-const ROOT = path.resolve(
-  __dirname,
-  "../../airtable/automations/shooting-challenge",
-);
+const ROOT = process.env.AIRTABLE_RUNTIME_ROOT
+  ? path.resolve(process.env.AIRTABLE_RUNTIME_ROOT)
+  : path.resolve(__dirname, "../../airtable/automations/shooting-challenge");
 
 const ALLOWLIST = new Map();
 
