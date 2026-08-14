@@ -1,7 +1,7 @@
 # PKG-003 — Documentation and Contract Drift Summary
 
-**Status:** Repository-only reconciliation  
-**Baseline:** `origin/master` `6e0b3ad36dbadb0b211c750695bafcb9262c73e1`  
+**Status:** Repository-only reconciliation
+**Baseline:** `origin/master` `6e0b3ad36dbadb0b211c750695bafcb9262c73e1`
 **Scope:** Active package/operator documentation, automation index, trigger map,
 and source-header contract coverage. No Airtable or runtime changes.
 
