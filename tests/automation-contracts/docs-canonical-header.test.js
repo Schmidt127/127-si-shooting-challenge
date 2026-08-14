@@ -17,6 +17,8 @@ const CURRENT_AUTOMATIONS = [
   ["032", "032-weekly-summary-and-goal-logic-link-challenge-goal-record-to-weekly-athlete-summary.js", "032-"],
   ["057", "057-achievements-and-milestones-calculate-perfect-week-eligibility.js", "057-"],
   ["058", "058-achievements-and-milestones-create-perfect-week-unlock.js", "058-"],
+  ["041", "041-levels-and-progression-mark-enrollment-for-level-recalculation.js", "041-"],
+  ["042", "042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js", "042-"],
   ["076", "076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js", "076-"],
   ["079", "079-email-notifications-and-external-handoffs-send-queue-handoff-to-communications-hub.js", "079-"],
   ["101", "101-zoom-attendance-xp-award-meeting-xp.js", "101-"],
@@ -25,7 +27,7 @@ const CURRENT_AUTOMATIONS = [
 
 function canonicalVersion(fileName) {
   const source = fs.readFileSync(path.join(AUTOMATIONS, fileName), "utf8");
-  const match = source.match(/\bVersion:\s*(v?\d+\.\d+)/);
+  const match = source.match(/\bVersion:\s*(v?\d+\.\d+(?:\.\d+)?)/);
   assert.ok(match, `canonical source header must declare a version: ${fileName}`);
   return `v${match[1].replace(/^v/, "")}`;
 }

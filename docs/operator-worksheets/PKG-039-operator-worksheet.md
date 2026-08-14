@@ -24,7 +24,7 @@
 - [ ] 032 links exactly one active goal for WAS Enrollment Program Instance + Grade Band; no Week matching.
 - [ ] Current installed versions/triggers/inputs captured for 005, 010, 030, 031, 032, 033, 035, 057, 068, 072, 076, 101, 114, and 118.
 
-## Lane A — canonical WAS and goal integrity
+## Lane A — canonical WAS, goal, and weekly schedule
 
 - [ ] 031 DEV trigger is counted `Submissions`; dynamic `recordId`.
 - [ ] 032 DEV trigger is eligible WAS needing goal; dynamic `recordId`.
@@ -33,14 +33,21 @@
 - [ ] Goal cases captured separately: missing goal, explicit zero, positive goal, inactive goal, wrong Grade Band, multiple active candidates.
 - [ ] 031/032 writes do not alter progression fields.
 - [ ] Formula/rollup settlement captured for weekly goal, percentage, shots, XP, 035 eligibility, and 057 boundary.
+- [ ] Lane A sequence is complete and recorded as **031 → 032 → 118**; 118 uses
+      its isolated `dryRun`/email-disabled proof.
 
-## Lane B — isolated consumers and communications
+## Lane B — separately approved consumer tests
 
-- [ ] Before 118 proof, prior states captured and 072, 079, 119, 074, and relevant Make scenarios are OFF/isolated.
-- [ ] 118 target is v2.0, scheduled Sunday 05:00 America/Denver, with `dryRun`, `sendMode`, `excludedEnrollmentIds`, `includeSchmidt`, and `emptyWeekPolicy` inputs captured.
+- [ ] 057 target is v1.7 and its Perfect Week fixture/trigger approval is captured.
+- [ ] 058 target is v1.3 and its lifecycle fixture/trigger approval is captured.
 - [ ] 076 target is v8.6 with `Build Daily Email Now?` checked and dynamic `recordId`; isolate it from this goal proof unless explicitly selected.
+- [ ] 101 target is v6.3 with `Zoom XP Reconciliation Needed? = 1` and dynamic
+      `recordId`; isolate it from this goal proof unless explicitly selected.
+- [ ] Before any Lane B proof, prior states are captured and 072, 079, 119, 074,
+      and relevant Make scenarios are OFF/isolated.
 - [ ] No email handoff, Make webhook, Delivery row, or Communications Hub action occurs.
 - [ ] No progression-field write occurs; 041/042 remain outside this worksheet.
+- [ ] Lane B evidence is not inferred from completion of Lane A.
 - [ ] Restore captured ON/OFF state only after isolated evidence is complete.
 
 ## Evidence and stop

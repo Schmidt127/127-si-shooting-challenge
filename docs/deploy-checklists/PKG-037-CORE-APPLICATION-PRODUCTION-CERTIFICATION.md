@@ -37,9 +37,11 @@ Run packages strictly in this order:
    v6.3, and execute the pending live-attendee, same-event
    reversal/restoration, and downstream proof for the selected certification
    athlete.
-4. **PKG-036:** only after the PKG-006R lock release, install/prove 041 v5.0
-   and 042 v4.1 with the queue/replay/downward/upward evidence in its operator
-   packet. Automation 043 stays retired.
+4. **PKG-036:** the repository prerequisite is complete with canonical source
+   041 v5.0 and 042 v4.1.2. Production installation/proof remains a Mike-owned
+   controlled step after the PKG-006R lock release, using the queue/replay/
+   downward/upward evidence in its operator packet. Automation 043 stays
+   retired.
 5. **PKG-037:** execute this packet as the consolidated cross-family
    certification. A passed child package is evidence consumed here, not a
    reason to skip a linked-record or settled-total check.
@@ -113,7 +115,7 @@ condition fails.
 1. Record `origin/master` SHA and the local committed source versions:
    001 v5.4; current committed headers for 023, 005, 007, and 031; 010 v10.8;
    020 v3.5; 064 v12.2; 065 v10.1; 101 v6.3; 113 v6.4; 114 v6.1;
-   041 v5.0; 042 v4.1; 076 v8.6; and 079 v2.0.
+   041 v5.0; 042 v4.1.2; 076 v8.6; and 079 v2.0.
 2. In Airtable, record installed script headers, ON/OFF state, trigger table,
    condition, dynamic `recordId`, and latest run ID for all rows above.
    “Repository version” is not an installed-version proof.

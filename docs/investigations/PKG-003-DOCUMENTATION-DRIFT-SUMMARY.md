@@ -1,7 +1,7 @@
 # PKG-003 — Documentation and Contract Drift Summary
 
 **Status:** Repository-only reconciliation
-**Baseline:** `origin/master` `6e0b3ad36dbadb0b211c750695bafcb9262c73e1`
+**Baseline:** `origin/master` `414eb7a156ba60df5070e20e35c24a0f7d924a08`
 **Scope:** Active package/operator documentation, automation index, trigger map,
 and source-header contract coverage. No Airtable or runtime changes.
 
@@ -9,6 +9,8 @@ and source-header contract coverage. No Airtable or runtime changes.
 
 | Automation | Canonical repository version |
 |---|---:|
+| 041 | v5.0 |
+| 042 | v4.1.2 |
 | 031 | v4.1 |
 | 032 | v3.4 |
 | 057 | v1.7 |
@@ -34,9 +36,10 @@ and source-header contract coverage. No Airtable or runtime changes.
 ## Contract guard
 
 `tests/automation-contracts/docs-canonical-header.test.js` reads the canonical
-source headers for 031, 032, 057, 058, 076, 079, 101, and 118 and requires both
-the automation index and trigger map to state the same version. It does not
-inspect or modify Airtable state.
+source headers for 041, 042, 031, 032, 057, 058, 076, 079, 101, and 118 and
+requires both the automation index and trigger map to state the same version.
+It supports patch versions such as 042 v4.1.2 and does not inspect or modify
+Airtable state.
 
 ## Evidence boundary
 
