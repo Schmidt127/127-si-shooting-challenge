@@ -29,15 +29,13 @@ import { PROGRAM_HUB_LINKS } from "@/lib/navigation/program-hub-links";
 import type { LeaderboardEntry } from "@/types/leaderboard";
 
 const HERO_CTAS = [
-  { href: "/leaderboard", label: "View leaderboard", variant: "cta" as const, size: "lg" as const },
-  { href: "/homework", label: "Homework", variant: "contrast" as const, size: "default" as const },
-  { href: "/levels", label: "Levels", variant: "contrast" as const, size: "default" as const },
-  { href: "/tutorials", label: "Tutorials", variant: "contrast" as const, size: "default" as const },
-  { href: "/zoom-meetings", label: "Zoom meetings", variant: "contrast" as const, size: "default" as const },
-  { href: "/game-manual", label: "Game manual", variant: "contrast" as const, size: "default" as const },
+  { href: "/homework", label: "Start this week’s work", variant: "cta" as const, size: "lg" as const },
+  { href: "/leaderboard", label: "View standings", variant: "contrast" as const, size: "default" as const },
+  { href: "/tutorials", label: "Film room", variant: "contrast" as const, size: "default" as const },
+  { href: "/levels", label: "Level path", variant: "contrast" as const, size: "default" as const },
 ];
 
-const FEATURES = [
+const TRAINING_PILLARS = [
   {
     title: "XP for real work",
     description: "Earn points for homework, shot volume, and consistency.",
@@ -87,6 +85,12 @@ const FEATURES = [
     icon: Trophy,
   },
 ];
+
+const TRAINING_LEAD = {
+  title: "The work shows up on the board",
+  description:
+    "Every week connects training, submission, feedback, and progress so athletes can see what the next rep is building toward.",
+};
 
 const HOW_IT_WORKS = [
   {
@@ -190,14 +194,14 @@ export function HomePageView({ topEntries }: HomePageViewProps) {
         eyebrow={SHOOTING_CHALLENGE.name}
         title={
           <>
-            Build real shooting skill.{" "}
-            <span className="text-brand-orange">Compete with purpose.</span>
+            Train with intent.{" "}
+            <span className="text-brand-orange">Build a shooter’s edge.</span>
           </>
         }
         description={
           <p>
-            Earn XP, climb levels, keep streaks, hit shot milestones, and compete on a live
-            public leaderboard — with homework, tutorials, and Zoom coaching.
+            A serious basketball-development program built around daily shooting work, clear
+            coaching, and progress athletes can earn in public.
           </p>
         }
         actions={HERO_CTAS.map((cta) => (
@@ -211,25 +215,47 @@ export function HomePageView({ topEntries }: HomePageViewProps) {
       <RegistrationGateway />
 
       <SiteSection
-        eyebrow="Why it works"
-        title="Built for serious shooting progress"
+        eyebrow="The training system"
+        title="Every rep has a reason"
         titleId="features-heading"
-        description="Competitive systems that stay clear for athletes and parents."
+        description="A complete development loop that keeps athletes motivated and families informed."
         aria-labelledby="features-heading"
         className="bg-background"
       >
-        <div className="grid grid-cols-2 gap-2 sm:gap-3 xl:grid-cols-4">
-          {FEATURES.map((feature) => (
-            <FeatureCard
-              key={feature.title}
-              tone="benefit"
-              title={feature.title}
-              description={feature.description}
-              eyebrow={feature.eyebrow}
-              icon={feature.icon}
-              className="[&_[data-slot=card-description]]:text-[0.8125rem] sm:[&_[data-slot=card-description]]:text-sm"
-            />
-          ))}
+        <div className="grid gap-3 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-6">
+          <div className="relative overflow-hidden rounded-lg bg-court-navy p-6 text-brand-white shadow-site-lg ring-1 ring-white/15 sm:p-8">
+            <div className="pointer-events-none absolute inset-0 court-lines opacity-25" aria-hidden />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 shot-arc opacity-80" aria-hidden />
+            <div className="relative">
+              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-orange">
+                Built for the season
+              </p>
+              <h3 className="font-display mt-4 max-w-md text-3xl leading-[1.05] text-brand-white sm:text-4xl">
+                {TRAINING_LEAD.title}
+              </h3>
+              <p className="mt-4 max-w-md text-sm leading-relaxed text-contrast-muted sm:text-base">
+                {TRAINING_LEAD.description}
+              </p>
+              <CtaLink href="/homework" variant="cta" className="mt-7">
+                Open weekly homework
+                <IconChevronRight size={16} />
+              </CtaLink>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 sm:gap-3">
+            {TRAINING_PILLARS.map((feature) => (
+              <FeatureCard
+                key={feature.title}
+                tone="benefit"
+                title={feature.title}
+                description={feature.description}
+                eyebrow={feature.eyebrow}
+                icon={feature.icon}
+                className="[&_[data-slot=card-description]]:text-[0.8125rem] sm:[&_[data-slot=card-description]]:text-sm"
+              />
+            ))}
+          </div>
         </div>
       </SiteSection>
 
@@ -241,11 +267,16 @@ export function HomePageView({ topEntries }: HomePageViewProps) {
         description="Simple enough for families. Structured enough for a full season."
         aria-labelledby="how-heading"
       >
-        <div className="grid gap-3 md:grid-cols-3">
+        <ol className="relative grid gap-3 md:grid-cols-3 md:gap-5">
+          <div
+            className="pointer-events-none absolute left-[16.67%] right-[16.67%] top-7 hidden h-px bg-brand-blue/25 md:block"
+            aria-hidden
+          />
           {HOW_IT_WORKS.map((item) => (
-            <Card key={item.step} className="rounded-lg shadow-site-sm">
+            <li key={item.step} className="relative">
+              <Card className="h-full rounded-lg border-t-4 border-t-brand-orange shadow-site-sm">
               <CardContent className="pt-(--card-spacing)">
-                <p className="font-mono text-sm font-bold text-brand-orange">
+                <p className="font-mono text-sm font-bold text-brand-orange" aria-label={`Step ${item.step}`}>
                   {item.step}
                 </p>
                 <h3 className="font-display mt-2 text-xl text-foreground">
@@ -255,9 +286,10 @@ export function HomePageView({ topEntries }: HomePageViewProps) {
                   {item.description}
                 </p>
               </CardContent>
-            </Card>
+              </Card>
+            </li>
           ))}
-        </div>
+        </ol>
       </SiteSection>
 
       <SiteSection
@@ -275,32 +307,34 @@ export function HomePageView({ topEntries }: HomePageViewProps) {
         eyebrow="Explore the challenge"
         title="Jump into any part of the program"
         titleId="explore-heading"
-        description="Open any public section — rankings, homework, levels, tutorials, and more."
+        description="A quick route to every public part of the challenge."
         aria-labelledby="explore-heading"
       >
-        <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid overflow-hidden rounded-lg border border-white/25 sm:grid-cols-2 lg:grid-cols-3">
           {PROGRAM_HUB_LINKS.map((link) => {
             const Icon = link.icon;
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className="group flex min-h-11 flex-col rounded-md bg-white/10 p-3 ring-1 ring-white/20 transition hover:bg-white/15 hover:ring-brand-orange/55 sm:p-4"
+                className="group flex min-h-11 flex-row items-start gap-3 border-b border-r border-white/15 bg-white/[0.07] p-4 transition hover:bg-white/[0.13] sm:p-5"
               >
                 <span className="inline-flex size-8 items-center justify-center rounded-md bg-brand-orange/20 text-brand-orange sm:size-9">
                   <Icon size={18} aria-hidden />
                 </span>
-                <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.16em] text-contrast-muted sm:mt-3">
-                  {link.eyebrow}
-                </p>
-                <p className="mt-1 text-sm font-bold leading-snug text-brand-white sm:text-base">
-                  {link.title}
-                </p>
-                <p className="mt-1 hidden text-sm leading-snug text-contrast-muted sm:block sm:line-clamp-2">
-                  {link.description}
-                </p>
-                <span className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-brand-orange transition group-hover:gap-1.5 sm:mt-3 sm:text-sm">
-                  Open <IconChevronRight size={14} aria-hidden />
+                <span className="min-w-0">
+                  <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-contrast-muted">
+                    {link.eyebrow}
+                  </span>
+                  <span className="mt-1 block text-sm font-bold leading-snug text-brand-white sm:text-base">
+                    {link.title}
+                  </span>
+                  <span className="mt-1 hidden text-sm leading-snug text-contrast-muted sm:line-clamp-2">
+                    {link.description}
+                  </span>
+                  <span className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-brand-orange transition group-hover:gap-1.5 sm:text-sm">
+                    Open <IconChevronRight size={14} aria-hidden />
+                  </span>
                 </span>
               </Link>
             );

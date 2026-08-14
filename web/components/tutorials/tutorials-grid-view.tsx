@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { catalogCardClass } from "@/components/catalog/catalog-surface";
 import { IconPlay } from "@/components/icons/shoot-icons";
-import { CtaLink, ProgramPage, SectionMarker } from "@/components/site";
+import { CtaLink, ProgramPage } from "@/components/site";
 import { EmptyState, ErrorState } from "@/components/ui";
 import { formatRelativeUpdate } from "@/lib/formatters";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
@@ -20,8 +20,12 @@ function TutorialCard({ tutorial }: { tutorial: TutorialItem }) {
   const accent = CATEGORY_ACCENTS[tutorial.categories[0] ?? ""] ?? "from-brand-light-gray to-brand-medium-gray/30";
 
   return (
-    <Link href={`/tutorials/${tutorial.id}`} className="group block">
-      <article className={catalogCardClass()}>
+    <Link
+      href={`/tutorials/${tutorial.id}`}
+      className="group block h-full rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2"
+      aria-label={`Open tutorial: ${tutorial.name}`}
+    >
+      <article className={`${catalogCardClass()} h-full overflow-hidden rounded-lg`}>
         <div className={`relative aspect-[16/10] overflow-hidden bg-gradient-to-br ${accent}`}>
           {tutorial.thumbnail ? (
             <Image
@@ -34,26 +38,25 @@ function TutorialCard({ tutorial }: { tutorial: TutorialItem }) {
             />
           ) : (
             <div className="flex h-full items-center justify-center">
-              <IconPlay size={56} className="text-white/15" />
+              <IconPlay size={56} className="text-brand-blue/25" />
             </div>
           )}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 transition group-hover:opacity-100">
-            <span className="rounded-full border border-brand-medium-gray bg-black/50 p-3 text-white backdrop-blur-sm">
-              <IconPlay size={28} />
-            </span>
-          </div>
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-          <div className="absolute bottom-3 left-3 right-3">
+          <div className="absolute left-3 top-3">
             {tutorial.categories[0] ? (
-              <span className="rounded-md border border-border bg-black/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white/90 backdrop-blur-sm">
+              <span className="rounded-md border border-white/30 bg-court-navy/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white">
                 {tutorial.categories[0]}
               </span>
             ) : null}
           </div>
+          <span className="absolute bottom-3 left-3 inline-flex min-h-11 items-center gap-2 rounded-md border border-white/35 bg-black/55 px-3 py-2 text-xs font-bold uppercase tracking-[0.14em] text-white transition group-hover:border-brand-orange group-hover:bg-court-navy">
+            <IconPlay size={16} aria-hidden />
+            Watch & read
+          </span>
         </div>
 
-        <div className="p-5">
-          <h3 className="text-lg font-bold leading-snug text-foreground transition group-hover:text-accent-soft">
+        <div className="flex flex-1 flex-col p-5">
+          <h3 className="font-display text-xl leading-[1.08] text-foreground transition group-hover:text-accent-soft">
             {tutorial.name}
           </h3>
           {tutorial.briefDescription ? (
@@ -64,8 +67,8 @@ function TutorialCard({ tutorial }: { tutorial: TutorialItem }) {
               Featuring {tutorial.athlete}
             </p>
           ) : null}
-          <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-accent-soft">
-            Watch & read
+          <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-accent-soft">
+            Open playbook
             <span aria-hidden>→</span>
           </span>
         </div>
@@ -78,24 +81,42 @@ export function TutorialsGridView({ data }: { data: TutorialCatalogData }) {
   return (
     <ProgramPage
       eyebrow="Film room"
-      title="Skills & storytelling"
-      description="Shooting tutorials and technique breakdowns — curated for the challenge."
-      heroVariant="light"
+      title="The Shooting Playbook"
+      description="Practical technique, film study, and athlete features built to turn the next workout into focused work."
+      heroVariant="contrast"
       ambientVariant="tutorials"
-      meta={
-        <>
-          {data.totalTutorials} published · Updated {formatRelativeUpdate(data.updatedAt)}
-        </>
+      aside={
+        <div className="max-w-xs border border-white/20 bg-court-navy/70 p-5 shadow-site-lg">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-orange">Film room index</p>
+          <p className="mt-3 font-mono text-3xl font-bold text-brand-white">{data.totalTutorials}</p>
+          <p className="mt-1 text-sm text-contrast-muted">
+            published {data.totalTutorials === 1 ? "tutorial" : "tutorials"}
+          </p>
+          <p className="mt-5 border-t border-white/15 pt-4 text-xs font-semibold uppercase tracking-[0.14em] text-contrast-muted">
+            Updated {formatRelativeUpdate(data.updatedAt)}
+          </p>
+        </div>
       }
     >
-      <div className="mx-auto max-w-6xl space-y-14">
-        {data.categoryGroups.map((group) => (
-          <section key={group.category}>
-            <SectionMarker
-              label="Category"
-              title={group.category}
-              countLabel={`${group.tutorials.length} clips`}
-            />
+      <div className="mx-auto max-w-6xl space-y-12 sm:space-y-16">
+        {data.categoryGroups.map((group, index) => (
+          <section key={group.category} aria-labelledby={`tutorial-category-${index}`}>
+            <div className="mb-5 flex items-end justify-between gap-4 border-b-2 border-brand-blue pb-3">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-accent-soft">
+                  Training category
+                </p>
+                <h2
+                  id={`tutorial-category-${index}`}
+                  className="font-display mt-1 text-2xl text-foreground sm:text-3xl"
+                >
+                  {group.category}
+                </h2>
+              </div>
+              <p className="shrink-0 font-mono text-sm font-bold text-brand-blue">
+                {group.tutorials.length} {group.tutorials.length === 1 ? "clip" : "clips"}
+              </p>
+            </div>
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {group.tutorials.map((tutorial) => (
                 <TutorialCard key={tutorial.id} tutorial={tutorial} />
