@@ -20,7 +20,7 @@ const SAMPLE_LIMIT = 25;
 
 const CONFIG = {
   scriptName: "audit-video-xp-pipeline-integrity",
-  version: "v1.3",
+  version: "v1.4",
 
   tables: {
     video: "Video Feedback",
@@ -33,6 +33,7 @@ const CONFIG = {
   video: {
     submission: "Submission",
     enrollment: "Enrollment",
+    gradeBand: "Grade Band",
     totalVideoXp: "Total Video XP Awarded",
     doNotAwardXp: "Do Not Award XP?",
     awardStatus: "Award Status",
@@ -420,7 +421,7 @@ async function main() {
     const enrollmentGradeBandIds = enrollmentRecord
       ? getLinkedIds(enrollmentRecord, enrollmentsTable, CONFIG.enrollments.gradeBand)
       : [];
-    const videoGradeBandIds = getLinkedIds(videoRecord, videoTable, "Grade Band");
+    const videoGradeBandIds = getLinkedIds(videoRecord, videoTable, CONFIG.video.gradeBand);
     const invalidIdentity = !submissionRecord ||
       !enrollmentRecord ||
       submissionEnrollmentIds.length !== 1 ||
