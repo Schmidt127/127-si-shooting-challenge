@@ -44,9 +44,12 @@ describe("asUrl", () => {
 });
 
 describe("asBoolean", () => {
-  it("unwraps one-item checkbox lookups", () => {
-    expect(asBoolean([true])).toBe(true);
+  it("uses OR semantics for boolean lookup arrays", () => {
     expect(asBoolean([])).toBe(false);
+    expect(asBoolean([true])).toBe(true);
+    expect(asBoolean([false])).toBe(false);
+    expect(asBoolean([false, true])).toBe(true);
+    expect(asBoolean([true, false])).toBe(true);
   });
 });
 

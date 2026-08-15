@@ -89,10 +89,15 @@ export function asOptionalPercentRatio(value: unknown): number | null {
   return n;
 }
 
+/**
+ * Checkbox / boolean lookup normalization.
+ * Lookup arrays use OR semantics (`some`): any true-ish item makes the whole value true.
+ * Callers that require exactly one settled boolean should validate length themselves.
+ */
 export function asBoolean(value: unknown): boolean {
   if (Array.isArray(value)) {
     if (value.length === 0) return false;
-    return asBoolean(value[0]);
+    return value.some((item) => asBoolean(item));
   }
   return value === true || value === 1 || String(value).toLowerCase() === "true";
 }
