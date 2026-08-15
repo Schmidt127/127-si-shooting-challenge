@@ -40,7 +40,8 @@ export function SiteFooter({
               <p className="text-sm font-medium text-foreground/80">{productName}</p>
               <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
                 A public training hub for shooting reps, weekly homework, levels, and live
-                competition.
+                competition. {BRAND_ORG_NAME} is the legally recognized nonprofit; Fairfield
+                Basketball Club is the program identity for this challenge and related activities.
               </p>
             </div>
           </div>

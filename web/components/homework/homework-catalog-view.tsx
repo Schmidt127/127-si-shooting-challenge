@@ -10,7 +10,7 @@ import {
   ProgramPage,
   SectionMarker,
 } from "@/components/site";
-import { ProgramFeatureImage } from "@/components/site/program-feature-image";
+import { ProgramFeatureBanner } from "@/components/site/program-feature-image";
 import { EmptyState, ErrorState } from "@/components/ui";
 import { formatRelativeUpdate } from "@/lib/formatters";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
@@ -91,7 +91,7 @@ function HomeworkCard({
                 {hwLabel}
               </span>
               {assignment.bookAbbreviation ? (
-                <span className="text-[10px] font-medium uppercase tracking-wider text-muted">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                   {assignment.bookAbbreviation}
                 </span>
               ) : null}
@@ -102,7 +102,7 @@ function HomeworkCard({
             </h3>
 
             {assignment.briefDescription ? (
-              <p className="mt-2 line-clamp-2 text-sm text-muted">{assignment.briefDescription}</p>
+              <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">{assignment.briefDescription}</p>
             ) : null}
 
             {assignment.topics.length > 0 ? (
@@ -110,7 +110,7 @@ function HomeworkCard({
                 {assignment.topics.slice(0, 3).map((topic) => (
                   <span
                     key={topic}
-                    className="rounded-md border border-border px-2 py-0.5 text-[11px] text-muted"
+                    className="rounded-md border border-border bg-brand-light-gray/80 px-2 py-0.5 text-[11px] font-medium text-muted-foreground"
                   >
                     {topic}
                   </span>
@@ -175,11 +175,7 @@ export function HomeworkCatalogView({ data }: HomeworkCatalogViewProps) {
       }
     >
       <div className="space-y-8">
-        <ProgramFeatureImage
-          src="/images/shooting-challenge-homework.webp"
-          alt="Shooting Challenge homework page showing published assignments and curriculum"
-          caption="Find the current curriculum and keep every assignment moving forward."
-        />
+        <ProgramFeatureBanner title="Homework" caption="Find the current curriculum and keep every assignment moving forward." mark="HW" />
         <div className="mx-auto max-w-4xl space-y-14">
           {data.weekGroups.map((group, groupIndex) => (
             <WeekSection
@@ -205,11 +201,7 @@ export function HomeworkEmptyState() {
       ambientVariant="homework"
     >
       <div className="space-y-8">
-        <ProgramFeatureImage
-          src="/images/shooting-challenge-homework.webp"
-          alt="Shooting Challenge homework page showing published assignments and curriculum"
-          caption="Find the current curriculum and keep every assignment moving forward."
-        />
+        <ProgramFeatureBanner title="Homework" caption="Find the current curriculum and keep every assignment moving forward." mark="HW" />
         <EmptyState
           title={EMPTY_STATE_COPY.homework.title}
           description={EMPTY_STATE_COPY.homework.description}
@@ -235,11 +227,7 @@ export function HomeworkErrorState({ message }: { message: string }) {
       ambientVariant="homework"
     >
       <div className="space-y-8">
-        <ProgramFeatureImage
-          src="/images/shooting-challenge-homework.webp"
-          alt="Shooting Challenge homework page showing published assignments and curriculum"
-          caption="Find the current curriculum and keep every assignment moving forward."
-        />
+        <ProgramFeatureBanner title="Homework" caption="Find the current curriculum and keep every assignment moving forward." mark="HW" />
         <ErrorState
           title="Could not load homework"
           message={message}

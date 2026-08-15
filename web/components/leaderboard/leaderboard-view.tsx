@@ -6,7 +6,7 @@ import {
   IconTrophy,
 } from "@/components/icons/shoot-icons";
 import { CtaLink, ProgramPage } from "@/components/site";
-import { ProgramFeatureImage } from "@/components/site/program-feature-image";
+import { ProgramFeatureBanner } from "@/components/site/program-feature-image";
 import { EmptyState, ErrorState, StatTile } from "@/components/ui";
 import { formatRelativeUpdate, formatXp } from "@/lib/formatters";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
@@ -63,11 +63,7 @@ export function LeaderboardView({ data }: LeaderboardViewProps) {
       }
     >
       <div className="space-y-6">
-        <ProgramFeatureImage
-          src="/images/shooting-challenge-leaderboard.webp"
-          alt="Shooting Challenge leaderboard showing athlete rankings, XP, levels, and shots"
-          caption="Track the season standings and celebrate every shot logged."
-        />
+        <ProgramFeatureBanner title="Leaderboard" caption="Track the season standings and celebrate every shot logged." mark="LB" />
         <LeaderboardStats data={data} />
         <LeaderboardTiebreakerLegend />
         <LeaderboardBoard entries={data.entries} />
@@ -86,11 +82,7 @@ export function LeaderboardEmptyState() {
       ambientVariant="leaderboard"
     >
       <div className="space-y-8">
-        <ProgramFeatureImage
-          src="/images/shooting-challenge-leaderboard.webp"
-          alt="Shooting Challenge leaderboard showing athlete rankings, XP, levels, and shots"
-          caption="Track the season standings and celebrate every shot logged."
-        />
+        <ProgramFeatureBanner title="Leaderboard" caption="Track the season standings and celebrate every shot logged." mark="LB" />
         <EmptyState
           title={EMPTY_STATE_COPY.leaderboard.title}
           description={EMPTY_STATE_COPY.leaderboard.description}
@@ -116,11 +108,7 @@ export function LeaderboardErrorState({ message }: { message: string }) {
       ambientVariant="leaderboard"
     >
       <div className="space-y-8">
-        <ProgramFeatureImage
-          src="/images/shooting-challenge-leaderboard.webp"
-          alt="Shooting Challenge leaderboard showing athlete rankings, XP, levels, and shots"
-          caption="Track the season standings and celebrate every shot logged."
-        />
+        <ProgramFeatureBanner title="Leaderboard" caption="Track the season standings and celebrate every shot logged." mark="LB" />
         <ErrorState
           title="Could not load leaderboard"
           message={message}

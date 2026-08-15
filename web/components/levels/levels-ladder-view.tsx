@@ -4,7 +4,7 @@ import { catalogCardClass } from "@/components/catalog/catalog-surface";
 import { IconLevel } from "@/components/icons/shoot-icons";
 import { SafeExternalImage } from "@/components/media/safe-external-image";
 import { AccentRail, CtaLink, ProgramPage } from "@/components/site";
-import { ProgramFeatureImage } from "@/components/site/program-feature-image";
+import { ProgramFeatureBanner } from "@/components/site/program-feature-image";
 import { EmptyState, ErrorState } from "@/components/ui";
 import { formatXp } from "@/lib/formatters";
 import { getLevelStyle } from "@/lib/leaderboard/level-styles";
@@ -66,7 +66,7 @@ function LevelLadderCard({
 
           <div className="flex min-w-0 flex-1 flex-col justify-center gap-0.5 sm:gap-1">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted">
+              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
                 {tierLabel}
               </p>
               <LevelBadge level={level.displayName} />
@@ -74,7 +74,7 @@ function LevelLadderCard({
             <h3 className="text-base font-bold leading-tight text-foreground transition group-hover:text-accent-soft sm:text-lg">
               {level.name}
             </h3>
-            <p className="text-xs leading-snug text-muted sm:text-sm">
+            <p className="text-xs leading-snug text-muted-foreground sm:text-sm">
               {formatXp(level.xpRequired)} lifetime XP
               {level.xpFromPrevious > 0
                 ? ` · +${formatXp(level.xpFromPrevious)} from prior tier`
@@ -158,11 +158,7 @@ export function LevelsLadderView({ data }: LevelsLadderViewProps) {
       }
     >
       <div className="space-y-8">
-        <ProgramFeatureImage
-          src="/images/shooting-challenge-levels.webp"
-          alt="Shooting Challenge levels progression showing XP tiers and advancement"
-          caption="See the progression path from first shots to the highest tier."
-        />
+        <ProgramFeatureBanner title="Levels" caption="See the progression path from first shots to the highest tier." mark="LV" />
         <LevelsOrientation />
         <div className="mx-auto max-w-4xl">
           <AccentRail tone="gold" className="space-y-5">
@@ -201,11 +197,7 @@ export function LevelsEmptyState() {
       ambientVariant="levels"
     >
       <div className="space-y-8">
-        <ProgramFeatureImage
-          src="/images/shooting-challenge-levels.webp"
-          alt="Shooting Challenge levels progression showing XP tiers and advancement"
-          caption="See the progression path from first shots to the highest tier."
-        />
+        <ProgramFeatureBanner title="Levels" caption="See the progression path from first shots to the highest tier." mark="LV" />
         <EmptyState
           title={EMPTY_STATE_COPY.levels.title}
           description={EMPTY_STATE_COPY.levels.description}
@@ -235,11 +227,7 @@ export function LevelsErrorState({ message }: { message: string }) {
       ambientVariant="levels"
     >
       <div className="space-y-8">
-        <ProgramFeatureImage
-          src="/images/shooting-challenge-levels.webp"
-          alt="Shooting Challenge levels progression showing XP tiers and advancement"
-          caption="See the progression path from first shots to the highest tier."
-        />
+        <ProgramFeatureBanner title="Levels" caption="See the progression path from first shots to the highest tier." mark="LV" />
         <ErrorState
           title="Could not load levels"
           message={message}

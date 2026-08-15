@@ -13,8 +13,9 @@ type CatalogCardOptions = {
 /** Clickable catalog list cards (homework, levels, tutorials). */
 export function catalogCardClass(options?: CatalogCardOptions): string {
   const base = cn(
-    "overflow-hidden rounded-lg border border-border bg-card shadow-site-sm transition duration-200",
+    "overflow-hidden rounded-lg border border-border bg-card text-card-foreground shadow-site-sm transition duration-200",
     "hover:-translate-y-0.5 hover:border-brand-blue/35 hover:shadow-site-md",
+    "focus-within:ring-2 focus-within:ring-brand-orange/70",
   );
 
   if (options?.featured === "accent") {

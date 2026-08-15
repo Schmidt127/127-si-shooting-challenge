@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 import { HeroProgressVisual } from "@/components/home/hero-progress-visual";
+import { ProgramPricingSection } from "@/components/home/program-pricing-section";
 import { RegistrationGateway } from "@/components/home/registration-gateway";
 import { AthleteProfileLink } from "@/components/athlete/athlete-profile-link";
 import { IconChevronRight, IconTrophy } from "@/components/icons/shoot-icons";
@@ -24,6 +25,7 @@ import {
 } from "@/components/site";
 import { Card, CardContent } from "@/components/ui/card";
 import { SHOOTING_CHALLENGE } from "@/lib/app-config";
+import type { ProgramPricing } from "@/lib/data/program-pricing";
 import { formatXp } from "@/lib/formatters";
 import { PROGRAM_HUB_LINKS } from "@/lib/navigation/program-hub-links";
 import type { LeaderboardEntry } from "@/types/leaderboard";
@@ -181,9 +183,10 @@ function TopThreePreview({ entries }: { entries: LeaderboardEntry[] }) {
 
 type HomePageViewProps = {
   topEntries: LeaderboardEntry[];
+  pricing?: ProgramPricing | null;
 };
 
-export function HomePageView({ topEntries }: HomePageViewProps) {
+export function HomePageView({ topEntries, pricing = null }: HomePageViewProps) {
   return (
     <div>
       <PageHero
@@ -209,6 +212,8 @@ export function HomePageView({ topEntries }: HomePageViewProps) {
       />
 
       <RegistrationGateway />
+
+      <ProgramPricingSection pricing={pricing} />
 
       <SiteSection
         eyebrow="Why it works"
@@ -320,7 +325,7 @@ export function HomePageStandingsError() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-16" role="alert">
       <h1 className="text-2xl font-bold text-foreground">Live standings are temporarily unavailable</h1>
-      <p className="mt-3 text-muted">
+      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
         The standings data is being verified. Please check the leaderboard again shortly.
       </p>
     </div>
