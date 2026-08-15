@@ -1,6 +1,15 @@
 import type { LeaderboardData, LeaderboardEntry } from "@/types/leaderboard";
 
-import { asBoolean, asText, linkedRecordIds } from "./airtable-values";
+import {
+  AirtableFieldError,
+  asBoolean,
+  asText,
+  requireExactlyOneLinkedRecordId,
+  requireExactlyOneLookupNumber,
+  requireExactlyOneLookupText,
+  requireSelectName,
+  selectName,
+} from "./airtable-values";
 import { mapAttachments } from "./homework";
 import { isValidPublicSlug, normalizeProfileSlug } from "./public-athlete-profile";
 
@@ -51,49 +60,30 @@ export class LeaderboardIntegrityError extends Error {
   }
 }
 
-function linkedTokens(value: unknown): string[] {
-  if (!Array.isArray(value)) return [];
-  return value
-    .map((entry) => {
-      if (typeof entry === "string") return entry.trim();
-      if (typeof entry === "object" && entry !== null && "name" in entry) {
-        const name = (entry as { name?: unknown }).name;
-        return typeof name === "string" ? name.trim() : "";
-      }
-      return "";
-    })
-    .filter(Boolean);
+function integrity<T>(fn: () => T): T {
+  try {
+    return fn();
+  } catch (error) {
+    if (error instanceof AirtableFieldError) {
+      throw new LeaderboardIntegrityError(error.message);
+    }
+    throw error;
+  }
 }
 
-function requiredNonNegativeNumber(value: unknown, fieldName: string, recordId: string): number {
-  if (typeof value === "number" && Number.isFinite(value) && value >= 0) return value;
-  if (typeof value === "string" && value.trim() !== "") {
-    const parsed = Number(value.replace(/,/g, ""));
-    if (Number.isFinite(parsed) && parsed >= 0) return parsed;
-  }
-  throw new LeaderboardIntegrityError(
-    `Enrollment ${recordId} has missing or invalid ${fieldName}; standings remain unavailable until it settles.`,
+function enrollmentLabel(recordId: string): string {
+  return `Enrollment ${recordId}`;
+}
+
+function requireNonNegativeScalar(
+  value: unknown,
+  fieldName: string,
+  recordId: string,
+): number {
+  // Formula/rollup totals arrive as scalars; lookups may arrive as one-item arrays.
+  return integrity(() =>
+    requireExactlyOneLookupNumber(value, fieldName, enrollmentLabel(recordId)),
   );
-}
-
-function requireExactlyOneLinkedToken(value: unknown, fieldName: string, recordId: string): string {
-  const values = linkedTokens(value);
-  if (values.length !== 1) {
-    throw new LeaderboardIntegrityError(
-      `Enrollment ${recordId} requires exactly one ${fieldName}; found ${values.length}.`,
-    );
-  }
-  return values[0];
-}
-
-function requireExactlyOneLinkedRecordId(value: unknown, fieldName: string, recordId: string): string {
-  const values = linkedRecordIds(value);
-  if (values.length !== 1) {
-    throw new LeaderboardIntegrityError(
-      `Enrollment ${recordId} requires exactly one ${fieldName}; found ${values.length}.`,
-    );
-  }
-  return values[0];
 }
 
 function requireText(value: unknown, fieldName: string, recordId: string): string {
@@ -114,13 +104,13 @@ export type LeaderboardSortKeys = {
 
 export function getLeaderboardSortKeys(fields: EnrollmentLeaderboardFields): LeaderboardSortKeys {
   return {
-    levelSortOrder: requiredNonNegativeNumber(
+    levelSortOrder: requireNonNegativeScalar(
       fields["Level Sort Order - For Softr"],
       "Level Sort Order - For Softr",
       "unknown",
     ),
-    xp: requiredNonNegativeNumber(fields["Lifetime XP Total"], "Lifetime XP Total", "unknown"),
-    totalShots: requiredNonNegativeNumber(
+    xp: requireNonNegativeScalar(fields["Lifetime XP Total"], "Lifetime XP Total", "unknown"),
+    totalShots: requireNonNegativeScalar(
       fields["Total Shots Counted"],
       "Total Shots Counted",
       "unknown",
@@ -166,22 +156,22 @@ export function requireEligibleLeaderboardRecords<T extends LeaderboardRecord>(
 
   for (const record of records) {
     const { fields } = record;
+    const label = enrollmentLabel(record.id);
+
     if (!asBoolean(fields["Active?"])) {
       throw new LeaderboardIntegrityError(`Enrollment ${record.id} is inactive but was returned by standings.`);
     }
 
-    requireExactlyOneLinkedToken(fields.Athlete, "Athlete link", record.id);
-    const athlete = requireExactlyOneLinkedToken(
-      fields["Athlete ID Lookup"],
-      "Athlete ID Lookup",
-      record.id,
+    integrity(() => requireExactlyOneLinkedRecordId(fields.Athlete, "Athlete link", label));
+    const athlete = integrity(() =>
+      requireExactlyOneLookupText(fields["Athlete ID Lookup"], "Athlete ID Lookup", label),
     );
-    const programInstanceId = requireExactlyOneLinkedRecordId(
-      fields["Program Instance"],
-      "Program Instance link",
-      record.id,
+    const programInstanceId = integrity(() =>
+      requireExactlyOneLinkedRecordId(fields["Program Instance"], "Program Instance link", label),
     );
-    const schoolYear = requireText(fields["School Year"], "School Year", record.id);
+    const schoolYear = integrity(() =>
+      requireSelectName(fields["School Year"], "School Year", label),
+    );
 
     if (schoolYear !== scope.schoolYear || programInstanceId !== scope.programInstanceId) {
       throw new LeaderboardIntegrityError(
@@ -199,12 +189,12 @@ export function requireEligibleLeaderboardRecords<T extends LeaderboardRecord>(
     canonicalIdentities.set(identity, record.id);
 
     // Live Airtable REST returns Current Level as linked record ids ["rec…"].
-    const currentLevelId = requireExactlyOneLinkedRecordId(
-      fields["Current Level"],
-      "Current Level",
-      record.id,
+    const currentLevelId = integrity(() =>
+      requireExactlyOneLinkedRecordId(fields["Current Level"], "Current Level", label),
     );
-    const status = requireText(fields["Level Status"], "Level Status", record.id);
+    const status = integrity(() =>
+      requireSelectName(fields["Level Status"], "Level Status", label),
+    );
     if (status !== "Assigned" && status !== "Gate Blocked") {
       throw new LeaderboardIntegrityError(
         `Enrollment ${record.id} has non-settled Level Status "${status}".`,
@@ -215,7 +205,8 @@ export function requireEligibleLeaderboardRecords<T extends LeaderboardRecord>(
       "Current Level display",
       record.id,
     );
-    const levelRank = requiredNonNegativeNumber(
+    // Level Sort Order - For Softr is a lookup and may arrive as [n].
+    const levelRank = requireNonNegativeScalar(
       fields["Level Sort Order - For Softr"],
       "Level Rank",
       record.id,
@@ -236,13 +227,13 @@ export function requireEligibleLeaderboardRecords<T extends LeaderboardRecord>(
         `Enrollment ${record.id} has an inactive or mismatched Current Level rank.`,
       );
     }
-    const xp = requiredNonNegativeNumber(fields["Lifetime XP Total"], "Lifetime XP Total", record.id);
+    const xp = requireNonNegativeScalar(fields["Lifetime XP Total"], "Lifetime XP Total", record.id);
     if (xp < activeLevel.xpRequired) {
       throw new LeaderboardIntegrityError(
         `Enrollment ${record.id} has XP below its assigned Current Level threshold.`,
       );
     }
-    requiredNonNegativeNumber(fields["Total Shots Counted"], "Total Shots Counted", record.id);
+    requireNonNegativeScalar(fields["Total Shots Counted"], "Total Shots Counted", record.id);
   }
 
   return records;
@@ -268,7 +259,7 @@ export function mapEnrollmentToLeaderboardEntry(
     rank,
     displayName: asText(fields["Full Athlete Name"], "Unknown Athlete"),
     school: asText(fields["School Name Lookup"]),
-    grade: asText(fields.Grade),
+    grade: selectName(fields.Grade, asText(fields.Grade)),
     level: asText(fields["Current Level - Public Facing Display"]),
     headshot: headshot?.url ? { url: headshot.url } : null,
     xp: sortKeys.xp,

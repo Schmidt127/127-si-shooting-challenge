@@ -8,49 +8,36 @@ vi.mock("@/lib/airtable/client", () => ({
 
 import { fetchLeaderboard } from "@/lib/airtable/queries";
 import { AirtableApiError } from "@/lib/airtable/errors";
+import {
+  FIXTURE_LEVEL_2_ID,
+  FIXTURE_PROGRAM_INSTANCE_ID,
+  FIXTURE_PROGRAM_INSTANCE_NAME,
+  FIXTURE_SCHOOL_YEAR,
+  activeLevel2Fields,
+  registeringProgramInstanceFields,
+  standingsEnrollmentFields,
+} from "@/lib/airtable/public-rest-fixtures";
 
-const SCHOOL_YEAR = "2026-2027";
-const PROGRAM_INSTANCE = `Shooting Challenge | ${SCHOOL_YEAR}`;
-const PROGRAM_INSTANCE_ID = "rec5mEM0YPqPqq0hZ";
 const REGISTERING_FILTER =
   "AND({Program - Linked}='Shooting Challenge',{Status}='Registering')";
 
-function enrollment(
-  id: string,
-  athlete: string,
-  overrides: Record<string, unknown> = {},
-) {
+function enrollment(id: string, athleteName: string, overrides: Record<string, unknown> = {}) {
   return {
     id,
-    fields: {
-      "Active?": true,
-      Athlete: [{ name: athlete }],
+    fields: standingsEnrollmentFields({
+      Athlete: [`recAthlete${id.slice(-8)}`],
       "Athlete ID Lookup": [`athlete-${id}`],
-      "Program Instance": [PROGRAM_INSTANCE_ID],
-      "Full Athlete Name": athlete,
-      "Current Level": ["recLevel2"],
-      "Current Level - Public Facing Display": "Level 2",
-      "Level Sort Order - For Softr": 2,
-      "Level Status": "Assigned",
-      "Lifetime XP Total": 100,
-      "Total Shots Counted": 50,
-      "School Year": SCHOOL_YEAR,
+      "Full Athlete Name": athleteName,
+      "Current Level": [FIXTURE_LEVEL_2_ID],
       ...overrides,
-    },
+    }),
   };
 }
 
 function registeringProgramInstance(overrides: Record<string, unknown> = {}) {
   return {
-    id: PROGRAM_INSTANCE_ID,
-    fields: {
-      "Name - Program Instance": PROGRAM_INSTANCE,
-      "School Year - Linked": SCHOOL_YEAR,
-      "Program - Linked": "Shooting Challenge",
-      Status: "Registering",
-      "Record Id": PROGRAM_INSTANCE_ID,
-      ...overrides,
-    },
+    id: FIXTURE_PROGRAM_INSTANCE_ID,
+    fields: registeringProgramInstanceFields(overrides),
   };
 }
 
@@ -62,8 +49,8 @@ function installQueryMock(records: ReturnType<typeof enrollment>[]) {
     if (params.tableName === "Levels") {
       return {
         records: [{
-          id: "recLevel2",
-          fields: { "Level Name": "Level 2", "Sort Order": 2, "XP Required (Cumulative)": 0, "Active?": true },
+          id: FIXTURE_LEVEL_2_ID,
+          fields: activeLevel2Fields(),
         }],
       };
     }
@@ -79,8 +66,8 @@ describe("fetchLeaderboard Airtable adapter", () => {
 
   it("resolves season from the Registering Shooting Challenge Program Instance without reading Config", async () => {
     installQueryMock([
-      enrollment("recA", "Avery", { "Lifetime XP Total": 200 }),
-      enrollment("recB", "Blair", { "Lifetime XP Total": 300 }),
+      enrollment("recAxxxxxxx00001", "Avery", { "Lifetime XP Total": 200 }),
+      enrollment("recBxxxxxxx00002", "Blair", { "Lifetime XP Total": 300 }),
     ]);
 
     const data = await fetchLeaderboard();
@@ -116,8 +103,7 @@ describe("fetchLeaderboard Airtable adapter", () => {
   });
 
   it("allows multiple retained Config years because Config is not consulted for public standings", async () => {
-    installQueryMock([enrollment("recA", "Avery")]);
-    // Simulate leftover Config rows in the base; public standings must ignore them.
+    installQueryMock([enrollment("recAxxxxxxx00001", "Avery")]);
     listAirtableRecordsMock.mockImplementation(async (params: { tableName: string }) => {
       if (params.tableName === "Config") {
         return {
@@ -135,12 +121,14 @@ describe("fetchLeaderboard Airtable adapter", () => {
       if (params.tableName === "Levels") {
         return {
           records: [{
-            id: "recLevel2",
-            fields: { "Level Name": "Level 2", "Sort Order": 2, "XP Required (Cumulative)": 0, "Active?": true },
+            id: FIXTURE_LEVEL_2_ID,
+            fields: activeLevel2Fields(),
           }],
         };
       }
-      if (params.tableName === "Enrollments") return { records: [enrollment("recA", "Avery")] };
+      if (params.tableName === "Enrollments") {
+        return { records: [enrollment("recAxxxxxxx00001", "Avery")] };
+      }
       throw new Error(`Unexpected table ${params.tableName}`);
     });
 
@@ -155,7 +143,7 @@ describe("fetchLeaderboard Airtable adapter", () => {
   it("accepts enrollments scoped by live Program Instance record id after name validation", async () => {
     installQueryMock([
       enrollment("recCrNNAdVmQ4Y8fL", "Casey", {
-        "Program Instance": ["rec5mEM0YPqPqq0hZ"],
+        "Program Instance": [FIXTURE_PROGRAM_INSTANCE_ID],
         "Lifetime XP Total": 250,
       }),
     ]);
@@ -165,11 +153,12 @@ describe("fetchLeaderboard Airtable adapter", () => {
     expect(data.entries[0].displayName).toBe("Casey");
   });
 
-  it("accepts enrollments with live Current Level record-id link and matching display name", async () => {
+  it("accepts enrollments with live Current Level record-id link, lookup rank array, and matching display name", async () => {
     installQueryMock([
       enrollment("recCrNNAdVmQ4Y8fL", "Casey", {
-        "Current Level": ["recLevel2"],
+        "Current Level": [FIXTURE_LEVEL_2_ID],
         "Current Level - Public Facing Display": "Level 2",
+        "Level Sort Order - For Softr": [2],
         "Lifetime XP Total": 250,
       }),
     ]);
@@ -188,7 +177,7 @@ describe("fetchLeaderboard Airtable adapter", () => {
 
     listAirtableRecordsMock.mockResolvedValue({
       records: [
-        registeringProgramInstance({ "School Year - Linked": "2026-2027" }),
+        registeringProgramInstance({ "School Year - Linked": FIXTURE_SCHOOL_YEAR }),
         {
           id: "recProgram2",
           fields: {
@@ -236,7 +225,9 @@ describe("fetchLeaderboard Airtable adapter", () => {
         return { records: [registeringProgramInstance()] };
       }
       if (params.tableName === "Levels") {
-        return { records: [{ id: "recLevel2", fields: { "Level Name": "Level 2", "Sort Order": 2, "XP Required (Cumulative)": 0, "Active?": true } }] };
+        return {
+          records: [{ id: FIXTURE_LEVEL_2_ID, fields: activeLevel2Fields() }],
+        };
       }
       throw new AirtableApiError(422, JSON.stringify({ error: { type: "VIEW_NAME_NOT_FOUND" } }));
     });
@@ -248,37 +239,46 @@ describe("fetchLeaderboard Airtable adapter", () => {
 
   it("reflects upward and downward corrected values on the next revalidated adapter read", async () => {
     installQueryMock([
-      enrollment("recA", "Avery", { "Lifetime XP Total": 300 }),
-      enrollment("recB", "Blair", { "Lifetime XP Total": 200 }),
+      enrollment("recAxxxxxxx00001", "Avery", { "Lifetime XP Total": 300 }),
+      enrollment("recBxxxxxxx00002", "Blair", { "Lifetime XP Total": 200 }),
     ]);
     expect((await fetchLeaderboard()).entries.map((entry) => entry.displayName)).toEqual(["Avery", "Blair"]);
 
     installQueryMock([
-      enrollment("recA", "Avery", { "Lifetime XP Total": 100 }),
-      enrollment("recB", "Blair", { "Lifetime XP Total": 200 }),
+      enrollment("recAxxxxxxx00001", "Avery", { "Lifetime XP Total": 100 }),
+      enrollment("recBxxxxxxx00002", "Blair", { "Lifetime XP Total": 200 }),
     ]);
     expect((await fetchLeaderboard()).entries.map((entry) => entry.displayName)).toEqual(["Blair", "Avery"]);
   });
 
   it("rejects a duplicate canonical enrollment identity returned by the view", async () => {
     installQueryMock([
-      enrollment("recA", "Avery", { "Athlete ID Lookup": ["same-athlete"] }),
-      enrollment("recB", "Avery", { "Athlete ID Lookup": ["same-athlete"] }),
+      enrollment("recAxxxxxxx00001", "Avery", { "Athlete ID Lookup": ["same-athlete"] }),
+      enrollment("recBxxxxxxx00002", "Avery", { "Athlete ID Lookup": ["same-athlete"] }),
     ]);
     await expect(fetchLeaderboard()).rejects.toThrow(/Duplicate canonical Enrollment identity/);
   });
 
   it("rejects a stale level after a downward XP correction", async () => {
-    installQueryMock([enrollment("recA", "Avery", { "Lifetime XP Total": 100 })]);
+    installQueryMock([enrollment("recAxxxxxxx00001", "Avery", { "Lifetime XP Total": 100 })]);
     listAirtableRecordsMock.mockImplementation(async (params: { tableName: string }) => {
       if (params.tableName === "Program Instance - Sync") {
         return { records: [registeringProgramInstance()] };
       }
       if (params.tableName === "Levels") {
-        return { records: [{ id: "recLevel2", fields: { "Level Name": "Level 2", "Sort Order": 2, "XP Required (Cumulative)": 200, "Active?": true } }] };
+        return {
+          records: [{
+            id: FIXTURE_LEVEL_2_ID,
+            fields: activeLevel2Fields({ "XP Required (Cumulative)": 200 }),
+          }],
+        };
       }
-      return { records: [enrollment("recA", "Avery", { "Lifetime XP Total": 100 })] };
+      return { records: [enrollment("recAxxxxxxx00001", "Avery", { "Lifetime XP Total": 100 })] };
     });
     await expect(fetchLeaderboard()).rejects.toThrow(/below its assigned Current Level threshold/);
+  });
+
+  it("uses the canonical Registering Program Instance name when validating season selection", () => {
+    expect(FIXTURE_PROGRAM_INSTANCE_NAME).toBe(`Shooting Challenge | ${FIXTURE_SCHOOL_YEAR}`);
   });
 });
