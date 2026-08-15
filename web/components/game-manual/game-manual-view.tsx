@@ -40,7 +40,7 @@ function XpRulesSection({ xpCatalog }: { xpCatalog: XpRuleCatalogData | null }) 
               <h3 id={`xp-group-${group.id}`} className="text-base font-semibold text-foreground">
                 {group.title}
               </h3>
-              <p className="mt-1 text-sm text-muted">{group.description}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{group.description}</p>
               <ul className="mt-3 space-y-1.5">
                 {group.rules.map((rule) => (
                   <li
@@ -63,7 +63,7 @@ function XpRulesSection({ xpCatalog }: { xpCatalog: XpRuleCatalogData | null }) 
           description="Configured XP reward rules will appear here when available. Amounts always come from the live program configuration."
         />
       )}
-      <p className="mt-4 text-xs text-muted">
+      <p className="mt-4 text-xs text-muted-foreground">
         XP amounts shown are read live from the program configuration and may be tuned during the
         season.
       </p>
@@ -93,7 +93,7 @@ function LevelLadderSection({ levels }: { levels: LevelLadderData | null }) {
                 className="flex items-baseline justify-between gap-3 text-sm"
               >
                 <span className="text-foreground">
-                  <span className="mr-2 font-mono text-xs text-muted">{index + 1}.</span>
+                  <span className="mr-2 font-mono text-xs text-muted-foreground">{index + 1}.</span>
                   {level.displayName}
                 </span>
                 <span className="shrink-0 font-mono text-xs font-semibold text-foreground">
@@ -102,7 +102,7 @@ function LevelLadderSection({ levels }: { levels: LevelLadderData | null }) {
               </li>
             ))}
           </ol>
-          <p className="mt-3 text-xs text-muted">
+          <p className="mt-3 text-xs text-muted-foreground">
             Some levels also have gate requirements beyond XP — see the{" "}
             <Link href="/levels" className="font-medium text-brand-blue underline underline-offset-2">
               levels catalog
@@ -137,7 +137,7 @@ function QuickStartSection() {
           >
             <p className="font-mono text-xs font-semibold text-brand-blue">0{index + 1}</p>
             <h3 className="mt-3 text-base font-semibold text-foreground">{step.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted">{step.description}</p>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.description}</p>
           </article>
         ))}
       </div>
@@ -173,7 +173,7 @@ export function GameManualView({ manualUrl, xpCatalog, levels }: GameManualViewP
                 <h2 id="game-manual-link-status" className="text-lg font-semibold text-foreground">
                   Official manual link coming soon
                 </h2>
-                <p className="mt-1 text-sm leading-relaxed text-muted">
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                   The configured PDF link is not available yet. The live XP rules and level ladder
                   below are still ready to help you understand the program.
                 </p>

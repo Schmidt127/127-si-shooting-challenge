@@ -36,7 +36,8 @@
   --court-gold: #c9a227;
 
   /* Primarily light UI — blue & orange remain dominant accents */
-  --muted-subtle: #737373;
+  /* #525252 on white ≈ 7.0:1 — stronger secondary text on cards */
+  --muted-subtle: #525252;
   /* Readable orange text on light surfaces (official orange remains CTAs) */
   --accent-soft: #c96e00;
   --card-elevated: var(--brand-white);
@@ -404,7 +405,7 @@ body {
 .sc-field label {
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--muted);
+  color: var(--muted-foreground);
 }
 
 .sc-input,
