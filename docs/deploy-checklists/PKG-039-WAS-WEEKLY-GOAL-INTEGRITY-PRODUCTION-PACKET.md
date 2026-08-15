@@ -1,8 +1,8 @@
 # PKG-039 — Weekly Athlete Summary and Weekly Goal Integrity
 
-**Status:** Mike-only DEV-first and Production packet — not executed by this package
+**Status:** Partially complete — Production goal-link repair verified 2026-08-15; broader first-create/replay and weekly-scheduler proof remains.
 **Repository baseline:** `b10c93432a7e7bc0a04ada2c39aeca7e8f49e8db` plus the PKG-039 PR head
-**Production boundary:** No record, schema, automation, trigger, email, or lock change was made while preparing this packet.
+**Production completion record (2026-08-15):** Two active Early Bird Weekly Athlete Summaries were missing `Goal Record`: Curtis (7-8) and Xavier (K-2). Their exact active Program Instance-scoped goals were linked, then the read-only reliability audit reported zero findings. Automation 032 v3.4 was created in Production and naturally restored Xavier’s K-2 / 2,000-shot goal after a native Goal Record clear. Automation 030 was found stale because it referenced the retired `FBC Curriculum - SYNC` table; it was replaced with v3.0 and naturally restored Curtis’s 7-8 Grade Band. No email, Make, progression, schema, or other automation path was changed by this repair.
 
 ## Separate operational lanes, target scripts, and OFF/ON sequence
 
@@ -151,7 +151,7 @@ in force until Mike releases them.
    America/Denver. `033` is not part of PKG-039 deployment; use its separately
    approved packet and evidence.
 5. Before any non-dry-run 118 proof, turn OFF (and capture the prior state of)
-   072, 119, 074, and the Make weekly-email scenario. This is mandatory:
+   072, 079, 119, 074, and the Make weekly-email scenario. This is mandatory:
    118 arms `Build Weekly Email Now?`, which 072 would otherwise consume. Keep
    010, 035, 057, 076, 101, and 114 unchanged and leave 068 OFF.
 6. Enable one Lane A writer at a time: 031 → 032. Run fixture proofs. Enable
@@ -194,8 +194,8 @@ after links, and screenshots:
 ## Stop conditions, rollback, and next action
 
 Stop immediately on more than one canonical WAS, a Summary Key/identity
-mismatch, any cross-Program/year link, multiple eligible goals, wrong-owner
-backlink, unsettled formula presented as zero, unexpected 068 execution,
+mismatch, any cross-Program/year link, multiple goal, wrong-owner backlink,
+unsettled formula presented as zero, unexpected 068 execution,
 email/Make invocation, or progression-field write. Roll back by turning OFF
 only the just-enabled DEV automation and restoring the prior script from the
 version capture; do not delete records or clear links blindly.
