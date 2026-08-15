@@ -8,6 +8,13 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Web
 
+#### Changed
+- **Website-fix batch WEB-004 / WEB-008 / WEB-010 (2026-08-15)** — Replaced
+  cartoon/AI feature imagery with brand typography banners, strengthened card
+  text contrast, and surface Program Instance pricing on the program home page
+  when available. Registration and program navigation stay available if
+  standings fail closed. Recovers the blocked `3120c01` shoot patch.
+
 #### Fixed
 - **Public Airtable adapter REST-shape hardening (2026-08-15)** — Centralized
   linked-record, lookup-array, and select-object normalization for public
