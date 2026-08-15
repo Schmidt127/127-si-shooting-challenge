@@ -28,6 +28,7 @@ import {
   inferSeasonLabel,
   requireEligibleLeaderboardRecords,
   type EnrollmentLeaderboardFields,
+  type ActiveLevelContract,
 } from "@/lib/data/leaderboard";
 import {
   buildPublicAthleteProfile,
@@ -283,7 +284,7 @@ function exactText(value: unknown): string {
 async function getStandingsScope(): Promise<{
   schoolYear: string;
   programInstanceId: string;
-  activeLevelsByName: ReadonlyMap<string, { rank: number; xpRequired: number }>;
+  activeLevelsById: ReadonlyMap<string, ActiveLevelContract>;
 }> {
   const programInstances = await listAirtableRecords<ProgramInstanceScopeFields>({
     tableName: PROGRAM_INSTANCES_TABLE,
@@ -320,20 +321,31 @@ async function getStandingsScope(): Promise<{
     filterByFormula: "{Active?}=1",
     revalidateSeconds: LEADERBOARD_REVALIDATE_SECONDS,
   });
-  const activeLevelsByName = new Map<string, { rank: number; xpRequired: number }>();
+  const activeLevelsById = new Map<string, ActiveLevelContract>();
   for (const level of levelResponse.records) {
+    const levelId = level.id;
+    if (!levelId.startsWith("rec")) {
+      throw new Error(`Standings found an active Level missing a valid record id (${levelId || "(empty)"}).`);
+    }
     const name = exactText(level.fields["Level Name"]);
     const rawRank = level.fields["Sort Order"];
     const rank = typeof rawRank === "number" ? rawRank : Number(rawRank);
     const rawThreshold = level.fields["XP Required (Cumulative)"];
     const xpRequired = typeof rawThreshold === "number" ? rawThreshold : Number(rawThreshold);
-    if (!name || !Number.isFinite(rank) || rank < 0 || !Number.isFinite(xpRequired) || xpRequired < 0 || activeLevelsByName.has(name)) {
-      throw new Error(`Standings found an invalid or duplicate active Level contract for "${name || level.id}".`);
+    if (
+      !name ||
+      !Number.isFinite(rank) ||
+      rank < 0 ||
+      !Number.isFinite(xpRequired) ||
+      xpRequired < 0 ||
+      activeLevelsById.has(levelId)
+    ) {
+      throw new Error(`Standings found an invalid or duplicate active Level contract for "${name || levelId}".`);
     }
-    activeLevelsByName.set(name, { rank, xpRequired });
+    activeLevelsById.set(levelId, { name, rank, xpRequired });
   }
-  if (activeLevelsByName.size === 0) throw new Error("Standings require at least one active Level.");
-  return { schoolYear, programInstanceId, activeLevelsByName };
+  if (activeLevelsById.size === 0) throw new Error("Standings require at least one active Level.");
+  return { schoolYear, programInstanceId, activeLevelsById };
 }
 
 /**

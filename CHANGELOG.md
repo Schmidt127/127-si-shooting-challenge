@@ -9,6 +9,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Fixed
+- **Public standings Current Level id link (2026-08-15)** — Enrollment
+  standings integrity now treats `Enrollments.Current Level` as a Level record
+  id (live REST shape `["rec…"]`), looks it up in the active-level contract,
+  and compares public display name, sort order, and XP threshold against that
+  matched Level — not by comparing the raw link id to the display name.
 - **Public standings Program Instance id scope (2026-08-15)** — Enrollment
   standings integrity now compares `Enrollments.Program Instance` to the
   Registering Program Instance record id (live REST shape

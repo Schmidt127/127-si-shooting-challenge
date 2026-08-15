@@ -26,11 +26,19 @@ export type EnrollmentLeaderboardFields = {
   "Public Profile Slug"?: unknown;
 };
 
+/** Active Level contract keyed by Airtable Level record id (live REST link shape). */
+export type ActiveLevelContract = {
+  name: string;
+  rank: number;
+  xpRequired: number;
+};
+
 export type LeaderboardScope = {
   schoolYear: string;
   /** Canonical Program Instance record id from the Registering season row. */
   programInstanceId: string;
-  activeLevelsByName: ReadonlyMap<string, { rank: number; xpRequired: number }>;
+  /** Active Levels keyed by Level record id. */
+  activeLevelsById: ReadonlyMap<string, ActiveLevelContract>;
 };
 
 type LeaderboardRecord = { id: string; fields: EnrollmentLeaderboardFields };
@@ -190,7 +198,8 @@ export function requireEligibleLeaderboardRecords<T extends LeaderboardRecord>(
     }
     canonicalIdentities.set(identity, record.id);
 
-    const currentLevel = requireExactlyOneLinkedToken(
+    // Live Airtable REST returns Current Level as linked record ids ["rec…"].
+    const currentLevelId = requireExactlyOneLinkedRecordId(
       fields["Current Level"],
       "Current Level",
       record.id,
@@ -206,18 +215,23 @@ export function requireEligibleLeaderboardRecords<T extends LeaderboardRecord>(
       "Current Level display",
       record.id,
     );
-    if (publicLevel !== currentLevel) {
-      throw new LeaderboardIntegrityError(
-        `Enrollment ${record.id} has mismatched Current Level display and link.`,
-      );
-    }
     const levelRank = requiredNonNegativeNumber(
       fields["Level Sort Order - For Softr"],
       "Level Rank",
       record.id,
     );
-    const activeLevel = scope.activeLevelsByName.get(currentLevel);
-    if (activeLevel === undefined || activeLevel.rank !== levelRank) {
+    const activeLevel = scope.activeLevelsById.get(currentLevelId);
+    if (activeLevel === undefined) {
+      throw new LeaderboardIntegrityError(
+        `Enrollment ${record.id} has an inactive or unknown Current Level.`,
+      );
+    }
+    if (publicLevel !== activeLevel.name) {
+      throw new LeaderboardIntegrityError(
+        `Enrollment ${record.id} has mismatched Current Level display and link.`,
+      );
+    }
+    if (activeLevel.rank !== levelRank) {
       throw new LeaderboardIntegrityError(
         `Enrollment ${record.id} has an inactive or mismatched Current Level rank.`,
       );

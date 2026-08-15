@@ -28,7 +28,7 @@ function enrollment(
       "Athlete ID Lookup": [`athlete-${id}`],
       "Program Instance": [PROGRAM_INSTANCE_ID],
       "Full Athlete Name": athlete,
-      "Current Level": [{ name: "Level 2" }],
+      "Current Level": ["recLevel2"],
       "Current Level - Public Facing Display": "Level 2",
       "Level Sort Order - For Softr": 2,
       "Level Status": "Assigned",
@@ -163,6 +163,21 @@ describe("fetchLeaderboard Airtable adapter", () => {
     const data = await fetchLeaderboard();
     expect(data.entries).toHaveLength(1);
     expect(data.entries[0].displayName).toBe("Casey");
+  });
+
+  it("accepts enrollments with live Current Level record-id link and matching display name", async () => {
+    installQueryMock([
+      enrollment("recCrNNAdVmQ4Y8fL", "Casey", {
+        "Current Level": ["recLevel2"],
+        "Current Level - Public Facing Display": "Level 2",
+        "Lifetime XP Total": 250,
+      }),
+    ]);
+
+    const data = await fetchLeaderboard();
+    expect(data.entries).toHaveLength(1);
+    expect(data.entries[0].displayName).toBe("Casey");
+    expect(data.entries[0].level).toBe("Level 2");
   });
 
   it("fails closed when zero or multiple Registering Shooting Challenge Program Instances exist", async () => {
