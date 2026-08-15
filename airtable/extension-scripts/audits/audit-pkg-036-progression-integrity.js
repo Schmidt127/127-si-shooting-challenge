@@ -31,7 +31,7 @@ const F = {
     gateYear: "School Year / Rule Set",
     minimumSubmissions: "Minimum Submissions",
     minimumHomework: "Minimum Homework",
-    minimumVideos: "Minimum Video Submissions",
+    minimumVideos: "Minimum Videos",
     minimumZoomMeetings: "Minimum Zoom Meetings",
     minimumStreakDays: "Minimum Streak Days",
 };
