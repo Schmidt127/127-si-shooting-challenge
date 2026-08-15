@@ -1,0 +1,132 @@
+diff --git a/airtable/automations/shooting-challenge/101-zoom-attendance-xp-award-meeting-xp.js b/airtable/automations/shooting-challenge/101-zoom-attendance-xp-award-meeting-xp.js
+index 657ef6a..51f6ba9 100644
+--- a/airtable/automations/shooting-challenge/101-zoom-attendance-xp-award-meeting-xp.js
++++ b/airtable/automations/shooting-challenge/101-zoom-attendance-xp-award-meeting-xp.js
+@@ -24,7 +24,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
+ 
+ /************************************************************
+  * 101 - Zoom Attendance XP - Award Meeting XP
+- * Version: v6.3
++ * Version: v6.5
+  * Date Written: 2026-05-28
+  * Last Updated: 2026-08-13
+  *
+@@ -107,7 +107,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
+ 
+ const CONFIG = {
+   scriptName: "101 - Zoom Attendance XP - Award Meeting XP",
+-  version: "v6.3",
++  version: "v6.5",
+ 
+   timeZone: "America/Denver",
+   formulaSettlementAttempts: 5,
+@@ -851,6 +851,7 @@ async function runLiveLifecycleReconciliation(recordId) {
+       zoomStartField,
+       CONFIG.zoom.week,
+       CONFIG.zoom.attendees,
++      CONFIG.zoom.createXpEvents,
+       CONFIG.zoom.xpAwardStatus,
+       CONFIG.zoom.zoomMeetingKey,
+       CONFIG.zoom.meetingStatus,
+@@ -884,6 +885,59 @@ async function runLiveLifecycleReconciliation(recordId) {
+     return;
+   }
+ 
++  const currentAwardStatus = getText(
++    zoomRecord,
++    zoomTable,
++    CONFIG.zoom.xpAwardStatus
++  );
++  const currentAwardStatusRaw = getRaw(
++    zoomRecord,
++    zoomTable,
++    CONFIG.zoom.xpAwardStatus
++  );
++  const isAlreadyAwarded =
++    normalizeText(currentAwardStatus) === normalizeText(CONFIG.statuses.awarded) ||
++    normalizeText(currentAwardStatusRaw?.name) === normalizeText(CONFIG.statuses.awarded);
++
++  /*
++   * A completed, rostered meeting may be staged before XP is intentionally
++   * armed. Acknowledge that state so checking Create XP Events changes the
++   * signature and naturally re-enters this automation. This also acknowledges
++   * the post-award CREATE=0 signature written by this automation itself.
++   */
++  const createXpEvents = getBooleanish(
++    zoomRecord,
++    zoomTable,
++    CONFIG.zoom.createXpEvents
++  );
++  if (
++    !createXpEvents &&
++    !isAlreadyAwarded
++  ) {
++    try {
++      await updateRecordSafe(zoomTable, recordId, {
++        [CONFIG.lifecycle.lastSignature]: startingSignature,
++        [CONFIG.zoom.xpAwardError]: "",
++      });
++    } catch (error) {
++      throw new Error(`Partial writeback warning: Create XP Events-off acknowledgement failed: ${error.message || error}`);
++    }
++    const acknowledgedRecord = await zoomTable.selectRecordAsync(recordId, {
++      fields: buildFieldsToLoad(zoomTable, [CONFIG.lifecycle.reconciliationNeeded]),
++    });
++    if (getNumericValue(acknowledgedRecord, zoomTable, CONFIG.lifecycle.reconciliationNeeded) !== 0) {
++      throw new Error("Create XP Events-off acknowledgement did not settle Reconciliation Needed? to numeric 0.");
++    }
++    setFinalOutputs({
++      ok: true,
++      actionOut: "reconciled_create_xp_events_not_checked",
++      statusOut: CONFIG.outputStatuses.skipped,
++      debugStep: "create_xp_events_off_acknowledged",
++      zoomMeetingId: recordId,
++    });
++    return;
++  }
++
+   const weekIds = exactLinkedIds(
+     zoomRecord,
+     zoomTable,
+@@ -1459,8 +1513,9 @@ async function runLiveLifecycleReconciliation(recordId) {
+     throw new Error(`Partial writeback warning: ${eventWarnings.join(" | ")}`);
+   }
+   try {
++    // Unchecking Create XP Events changes the current signature.  Write that
++    // operational state first, then acknowledge the post-write signature.
+     await updateRecordSafe(zoomTable, recordId, {
+-      [CONFIG.lifecycle.lastSignature]: freshSignature,
+       [CONFIG.zoom.xpAwardStatus]: buildSingleSelectValueOptional(
+         zoomTable,
+         CONFIG.zoom.xpAwardStatus,
+@@ -1469,6 +1524,16 @@ async function runLiveLifecycleReconciliation(recordId) {
+       [CONFIG.zoom.createXpEvents]: false,
+       [CONFIG.zoom.xpAwardError]: "",
+     });
++    const { currentSignature: acknowledgedSignature } =
++      await readFormulaSettlement(recordId, freshSignature, {
++        // A fresh award disarms Create XP Events (and must therefore produce
++        // a new signature).  Withdrawal/restoration already runs with the
++        // checkbox off, so no extra signature change is expected there.
++        requireChangedSignature: createXpEvents,
++      });
++    await updateRecordSafe(zoomTable, recordId, {
++      [CONFIG.lifecycle.lastSignature]: acknowledgedSignature,
++    });
+   } catch (error) {
+     throw new Error(`Partial writeback warning: Zoom Meeting acknowledgement failed: ${error.message || error}`);
+   }
+@@ -2506,11 +2571,8 @@ async function main() {
+ 
+     try {
+       await updateRecordSafe(zoomTable, recordId, {
+-        [CONFIG.zoom.xpAwardStatus]: buildSingleSelectValueOptional(
+-          zoomTable,
+-          CONFIG.zoom.xpAwardStatus,
+-          CONFIG.statuses.error
+-        ),
++        // This base intentionally provides only Pending and Awarded.  Retain
++        // the current status and record diagnostics in the text field.
+         [CONFIG.zoom.xpAwardError]: message,
+       });
+     } catch (writebackError) {
