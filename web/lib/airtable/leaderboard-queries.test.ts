@@ -55,7 +55,7 @@ function registeringProgramInstance(overrides: Record<string, unknown> = {}) {
 
 function installQueryMock(records: ReturnType<typeof enrollment>[]) {
   listAirtableRecordsMock.mockImplementation(async (params: { tableName: string }) => {
-    if (params.tableName === "Program Instance - Synced") {
+    if (params.tableName === "Program Instance - Sync") {
       return { records: [registeringProgramInstance()] };
     }
     if (params.tableName === "Levels") {
@@ -88,7 +88,7 @@ describe("fetchLeaderboard Airtable adapter", () => {
     expect(data.entries.every((entry) => !("id" in entry))).toBe(true);
 
     const programCall = listAirtableRecordsMock.mock.calls.find(
-      ([params]) => params.tableName === "Program Instance - Synced",
+      ([params]) => params.tableName === "Program Instance - Sync",
     )?.[0];
     expect(programCall).toMatchObject({
       filterByFormula: REGISTERING_FILTER,
@@ -128,7 +128,7 @@ describe("fetchLeaderboard Airtable adapter", () => {
           ],
         };
       }
-      if (params.tableName === "Program Instance - Synced") {
+      if (params.tableName === "Program Instance - Sync") {
         return { records: [registeringProgramInstance()] };
       }
       if (params.tableName === "Levels") {
@@ -178,7 +178,7 @@ describe("fetchLeaderboard Airtable adapter", () => {
 
   it("fails closed when School Year - Linked is missing or the Program Instance name is not canonical", async () => {
     listAirtableRecordsMock.mockImplementation(async (params: { tableName: string }) => {
-      if (params.tableName === "Program Instance - Synced") {
+      if (params.tableName === "Program Instance - Sync") {
         return { records: [registeringProgramInstance({ "School Year - Linked": "" })] };
       }
       throw new Error(`Unexpected table ${params.tableName}`);
@@ -186,7 +186,7 @@ describe("fetchLeaderboard Airtable adapter", () => {
     await expect(fetchLeaderboard()).rejects.toThrow(/missing School Year - Linked/);
 
     listAirtableRecordsMock.mockImplementation(async (params: { tableName: string }) => {
-      if (params.tableName === "Program Instance - Synced") {
+      if (params.tableName === "Program Instance - Sync") {
         return {
           records: [registeringProgramInstance({
             "Name - Program Instance": "Shooting Challenge 2026-2027",
@@ -203,7 +203,7 @@ describe("fetchLeaderboard Airtable adapter", () => {
   it("fails closed for an unavailable approved view instead of broadening to the Enrollments table", async () => {
     installQueryMock([]);
     listAirtableRecordsMock.mockImplementation(async (params: { tableName: string }) => {
-      if (params.tableName === "Program Instance - Synced") {
+      if (params.tableName === "Program Instance - Sync") {
         return { records: [registeringProgramInstance()] };
       }
       if (params.tableName === "Levels") {
@@ -242,7 +242,7 @@ describe("fetchLeaderboard Airtable adapter", () => {
   it("rejects a stale level after a downward XP correction", async () => {
     installQueryMock([enrollment("recA", "Avery", { "Lifetime XP Total": 100 })]);
     listAirtableRecordsMock.mockImplementation(async (params: { tableName: string }) => {
-      if (params.tableName === "Program Instance - Synced") {
+      if (params.tableName === "Program Instance - Sync") {
         return { records: [registeringProgramInstance()] };
       }
       if (params.tableName === "Levels") {

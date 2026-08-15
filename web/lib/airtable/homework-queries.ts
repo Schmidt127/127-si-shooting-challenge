@@ -10,7 +10,7 @@ import type { HomeworkAssignment, HomeworkCatalogData } from "@/types/homework";
 const REVALIDATE_SECONDS = 300;
 
 const TABLES = {
-  programInstances: "Program Instance - Synced",
+  programInstances: "Program Instance - Sync",
   programHomeworkAssignments: "Program Homework Assignments",
   homeworkLibrary: "Homework Library",
   weeks: "Weeks",

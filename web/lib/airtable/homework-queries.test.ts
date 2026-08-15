@@ -35,7 +35,7 @@ function registeringProgramInstance(overrides: Record<string, unknown> = {}) {
 
 function installBaseMocks(phaRecords: Array<{ id: string; fields: Record<string, unknown> }>) {
   listAirtableRecordsMock.mockImplementation(async (params) => {
-    if (params.tableName === "Program Instance - Synced") {
+    if (params.tableName === "Program Instance - Sync") {
       return { records: [registeringProgramInstance()] } as never;
     }
     if (params.tableName === "Program Homework Assignments") return { records: phaRecords } as never;
@@ -107,7 +107,7 @@ describe("PHA-backed public homework scheduling", () => {
     expect(catalog.totalAssignments).toBe(1);
 
     const programCall = listAirtableRecordsMock.mock.calls.find(
-      ([params]) => params.tableName === "Program Instance - Synced",
+      ([params]) => params.tableName === "Program Instance - Sync",
     )?.[0];
     expect(programCall).toMatchObject({ filterByFormula: REGISTERING_FILTER });
     expect(listAirtableRecordsMock.mock.calls.every(
@@ -128,7 +128,7 @@ describe("PHA-backed public homework scheduling", () => {
           ],
         } as never;
       }
-      if (params.tableName === "Program Instance - Synced") {
+      if (params.tableName === "Program Instance - Sync") {
         return { records: [registeringProgramInstance()] } as never;
       }
       if (params.tableName === "Program Homework Assignments") {
@@ -197,7 +197,7 @@ describe("PHA-backed public homework scheduling", () => {
 
   it("fails closed when School Year - Linked is missing or the Program Instance name is not canonical", async () => {
     listAirtableRecordsMock.mockImplementation(async (params) => {
-      if (params.tableName === "Program Instance - Synced") {
+      if (params.tableName === "Program Instance - Sync") {
         return { records: [registeringProgramInstance({ "School Year - Linked": "" })] } as never;
       }
       throw new Error(`Unexpected table ${params.tableName}`);
@@ -205,7 +205,7 @@ describe("PHA-backed public homework scheduling", () => {
     await expect(fetchScheduledHomeworkCatalog()).rejects.toThrow(/missing School Year - Linked/);
 
     listAirtableRecordsMock.mockImplementation(async (params) => {
-      if (params.tableName === "Program Instance - Synced") {
+      if (params.tableName === "Program Instance - Sync") {
         return {
           records: [registeringProgramInstance({
             "Name - Program Instance": "Wrong Name",

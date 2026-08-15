@@ -12,7 +12,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 - **Public standings / homework season selection (2026-08-15)** — Public
   leaderboard, home top-three, public display, and scheduled homework no longer
   require exactly one Config `Active School Year`. Season scope is resolved from
-  the single `Program Instance - Synced` row matching
+  the single `Program Instance - Sync` row matching
   `Program - Linked = Shooting Challenge` and `Status = Registering`, then
   validated against the canonical name `Shooting Challenge | <School Year -
   Linked>`. Multiple retained Config years remain valid. The `Web - Leaderboard`

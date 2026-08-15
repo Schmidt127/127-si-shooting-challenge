@@ -113,7 +113,7 @@ export const LEADERBOARD_FIELDS = [
 
 const LEADERBOARD_VIEW = "Web - Leaderboard";
 const LEADERBOARD_REVALIDATE_SECONDS = 120;
-const PROGRAM_INSTANCES_TABLE = "Program Instance - Synced";
+const PROGRAM_INSTANCES_TABLE = "Program Instance - Sync";
 const REGISTERING_SHOOTING_CHALLENGE_FILTER =
   "AND({Program - Linked}='Shooting Challenge',{Status}='Registering')";
 const PROGRAM_INSTANCE_SCOPE_FIELDS = [
