@@ -31,7 +31,7 @@ ownership cannot be proven.
  * 010 - SUBMISSION INTAKE AND ASSET CREATION
  * Create/Reconcile Submission Base XP Event
  *
- * Version: v10.8
+ * Version: v10.9
  * Date Written: 2026-06-06
  * Last Updated: 2026-08-13
  *
@@ -103,7 +103,7 @@ ownership cannot be proven.
 
 const SCRIPT = {
   scriptName: "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
-  version: "v10.8",
+  version: "v10.9",
   versionDate: "2026-08-13",
   originalWrittenDate: "2026-06-06",
   lastUpdated: "2026-08-13",
@@ -513,6 +513,11 @@ async function acknowledgeAfterSettlement(recordId, expectedActive, priorSignatu
         CONFIG.xpEvents.active,
       ) === expectedActive
       : !expectedActive;
+    // A manual script test can be run against a Submission whose latch has
+    // already settled. This is a safe replay, not a formula-settlement failure.
+    if (!signatureChanged && expectedEventState && needed === 0) {
+      return current;
+    }
     if (signatureChanged && expectedEventState && needed === 1) {
       const preAckEnrollmentIds = ids(refreshed, submissionsTable, CONFIG.submissions.enrollment);
       const preAckWeekIds = ids(refreshed, submissionsTable, CONFIG.submissions.week);
