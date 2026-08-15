@@ -9,6 +9,12 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Fixed
+- **Public standings Program Instance id scope (2026-08-15)** — Enrollment
+  standings integrity now compares `Enrollments.Program Instance` to the
+  Registering Program Instance record id (live REST shape
+  `["rec…"]`), not the display name. Canonical name
+  `Shooting Challenge | <School Year - Linked>` is still validated when
+  selecting the season row.
 - **Public standings / homework season selection (2026-08-15)** — Public
   leaderboard, home top-three, public display, and scheduled homework no longer
   require exactly one Config `Active School Year`. Season scope is resolved from

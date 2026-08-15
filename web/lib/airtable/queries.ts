@@ -277,12 +277,12 @@ function exactText(value: unknown): string {
 /**
  * Resolve the current public season from the single Registering Shooting Challenge
  * Program Instance. Multiple historical/future Config rows are expected and must
- * not gate the public site. Airtable's public REST linked-record response contains
- * display values only, so enrollment rows are checked against this canonical name.
+ * not gate the public site. Canonical name is validated at selection time; enrollment
+ * rows from the public REST API are scoped by Program Instance record id.
  */
 async function getStandingsScope(): Promise<{
   schoolYear: string;
-  programInstanceName: string;
+  programInstanceId: string;
   activeLevelsByName: ReadonlyMap<string, { rank: number; xpRequired: number }>;
 }> {
   const programInstances = await listAirtableRecords<ProgramInstanceScopeFields>({
@@ -310,6 +310,10 @@ async function getStandingsScope(): Promise<{
       `Standings Program Instance name must be exactly "${expectedName}"; found "${programInstanceName || "(empty)"}".`,
     );
   }
+  const programInstanceId = programInstance.id;
+  if (!programInstanceId.startsWith("rec")) {
+    throw new Error("Current standings Program Instance is missing a valid record id.");
+  }
   const levelResponse = await listAirtableRecords<StandingsLevelFields>({
     tableName: AIRTABLE_TABLES.levels,
     fields: [...STANDINGS_LEVEL_FIELDS],
@@ -329,7 +333,7 @@ async function getStandingsScope(): Promise<{
     activeLevelsByName.set(name, { rank, xpRequired });
   }
   if (activeLevelsByName.size === 0) throw new Error("Standings require at least one active Level.");
-  return { schoolYear, programInstanceName, activeLevelsByName };
+  return { schoolYear, programInstanceId, activeLevelsByName };
 }
 
 /**

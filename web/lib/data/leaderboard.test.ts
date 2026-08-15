@@ -191,9 +191,10 @@ describe("leaderboard mapping", () => {
 });
 
 describe("leaderboard eligibility contract", () => {
+  const PROGRAM_INSTANCE_ID = "rec5mEM0YPqPqq0hZ";
   const scope = {
     schoolYear: "2026-2027",
-    programInstanceName: "Shooting Challenge | 2026-2027",
+    programInstanceId: PROGRAM_INSTANCE_ID,
     activeLevelsByName: new Map([["Level 2", { rank: 2, xpRequired: 0 }]]),
   };
 
@@ -204,7 +205,8 @@ describe("leaderboard eligibility contract", () => {
         "Active?": true,
         Athlete: [{ name: `Athlete ${id}` }],
         "Athlete ID Lookup": [`athlete-${id}`],
-        "Program Instance": [{ name: scope.programInstanceName }],
+        // Live Airtable REST returns linked Program Instance as record ids.
+        "Program Instance": [PROGRAM_INSTANCE_ID],
         "School Year": scope.schoolYear,
         "Current Level": [{ name: "Level 2" }],
         "Current Level - Public Facing Display": "Level 2",
@@ -221,10 +223,20 @@ describe("leaderboard eligibility contract", () => {
     expect(requireEligibleLeaderboardRecords([validRecord("rec1")], scope)).toHaveLength(1);
   });
 
+  it("accepts a valid Enrollment linked by Program Instance record id from the live REST shape", () => {
+    const records = requireEligibleLeaderboardRecords(
+      [validRecord("recCrNNAdVmQ4Y8fL", { "Program Instance": ["rec5mEM0YPqPqq0hZ"] })],
+      scope,
+    );
+    expect(records).toHaveLength(1);
+    expect(records[0].id).toBe("recCrNNAdVmQ4Y8fL");
+  });
+
   it.each([
     ["inactive enrollment", { "Active?": false }],
     ["prior school year", { "School Year": "2025-2026" }],
-    ["wrong program instance", { "Program Instance": [{ name: "Other | 2026-2027" }] }],
+    ["wrong program instance", { "Program Instance": ["recWrongProgramInst"] }],
+    ["display-name program instance link", { "Program Instance": [{ name: "Shooting Challenge | 2026-2027" }] }],
     ["missing athlete", { Athlete: [] }],
     ["multiple athletes", { Athlete: [{ name: "A" }, { name: "B" }] }],
     ["missing stable athlete identity", { "Athlete ID Lookup": [] }],
