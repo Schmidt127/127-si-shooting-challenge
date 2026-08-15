@@ -1,6 +1,6 @@
 # PKG-040 — Standings and Leaderboard Operator Worksheet
 
-**Status:** Draft companion worksheet; read-only audit and public readback
+**Status:** **Complete — production public-data repair and live verification passed on 2026-08-15.** Retain this worksheet for future scoped data-correction observations; it is not an open package gate.
 **Canonical packet:** [PKG-040 standings verification](../deploy-checklists/PKG-040-STANDINGS-LEADERBOARD-PRODUCTION-VERIFICATION.md)
 **Boundary:** No Airtable record, schema, view, automation, XP, email, configuration, or deployment changes.
 
