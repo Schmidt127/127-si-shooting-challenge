@@ -1,5 +1,5 @@
 /**
- * Automation 101 v6.3 executable runtime fixtures.
+ * Automation 101 v6.5 executable runtime fixtures.
  *
  * Run:
  *   node airtable/automations/shooting-challenge/101-zoom-attendance-xp-award-meeting-xp.test.js
@@ -86,6 +86,9 @@ function makeRecord(table, row) {
       if (Array.isArray(value)) {
         return value.map(item => item.name || item.id || item).join(", ");
       }
+      if (value && typeof value === "object") {
+        return String(value.name || value.id || "");
+      }
       return value == null ? "" : String(value);
     },
     get name() {
@@ -126,7 +129,13 @@ class FakeTable {
             .map(xpRow => xpRow.id)
             .sort()
             .join(",");
-          return `attendees=${attendeeIds}|activeEvents=${activeEventIds}`;
+          // Live reconciliation signature includes Create XP Events so disarming
+          // the checkbox after award produces a new post-write signature.
+          const createXp =
+            row.values["Create XP Events"] === true || row.values["Create XP Events"] === 1
+              ? 1
+              : 0;
+          return `attendees=${attendeeIds}|activeEvents=${activeEventIds}|createXp=${createXp}`;
         }
         return this.fixture.startingSignature;
       }
@@ -168,11 +177,24 @@ class FakeTable {
     const row = this.rows.get(recordId);
     if (!row) throw new Error(`Unknown ${this.name} record ${recordId}`);
     for (const [fieldName, value] of Object.entries(updates)) {
-      row.values[fieldName] = Array.isArray(value)
+      let next = Array.isArray(value)
         ? clone(value)
         : value && typeof value === "object" && "id" in value
           ? { ...value }
           : value;
+      // Airtable returns single-select cell values with id+name after an id-only write.
+      const field = this.fields[fieldName];
+      if (
+        field?.type === "singleSelect"
+        && next
+        && typeof next === "object"
+        && next.id
+        && !next.name
+      ) {
+        const choice = (field.options?.choices || []).find(item => item.id === next.id);
+        if (choice) next = { id: choice.id, name: choice.name };
+      }
+      row.values[fieldName] = next;
     }
     if (this.name === "XP Events") {
       this.fixture.eventUpdates.push({ recordId, updates: clone(updates) });
@@ -352,8 +374,24 @@ async function test(name, fn) {
 }
 
 (async () => {
-  await test("committed source declares CONFIG.version v6.3", async () => {
-    assert(source.includes('version: "v6.3"'));
+  await test("committed source declares CONFIG.version v6.5", async () => {
+    assert(source.includes('version: "v6.5"'));
+    assert(source.includes("* Version: v6.5"));
+    assert(!source.includes('CONFIG.statuses.error'));
+  });
+  await test("acknowledges Create XP Events unchecked before award without XP creation", async () => {
+    const fixture = makeFixture({
+      attendeeIds: [IDS.enrollment],
+      signatureMode: "event",
+    });
+    fixture.tables["Zoom Meetings"].rows.get(IDS.meeting).values["Create XP Events"] = false;
+    fixture.tables["Zoom Meetings"].rows.get(IDS.meeting).values["XP Award Status"] = "Pending";
+    const result = await runAutomation(fixture);
+    assert.strictEqual(result.ok, true, result.error?.message);
+    assert.strictEqual(fixture.outputs.actionOut, "reconciled_create_xp_events_not_checked");
+    assert.strictEqual(fixture.outputs.statusOut, "skipped");
+    assert.strictEqual(fixture.createdEventCount, 0);
+    assert.strictEqual(fixture.tables["Zoom Meetings"].valueFor(IDS.meeting, "Zoom XP Reconciliation Needed?"), 0);
   });
   await test("active attendee uses one existing WAS and creates no WAS", async () => {
     const wasId = "recCanonicalWas";
@@ -421,9 +459,10 @@ async function test(name, fn) {
   await test("actual source acknowledges an already inactive exact event", async () => {
     const fixture = makeFixture({
       xpRows: [eventRow(IDS.xp, { active: false })],
+      signatureMode: "event",
     });
     const result = await runAutomation(fixture);
-    assert.strictEqual(result.ok, true);
+    assert.strictEqual(result.ok, true, result.error?.message);
     assert.strictEqual(fixture.outputs.actionOut, "reconciled");
     assert.strictEqual(fixture.tables["XP Events"].valueFor(IDS.xp, "Active?"), false);
     assert.strictEqual(fixture.createdEventCount, 0);
@@ -552,7 +591,7 @@ async function test(name, fn) {
     assert.deepStrictEqual([...fixture.tables["XP Events"].rows.keys()], [xpEventId]);
   });
 
-  console.log("\nAutomation 101 v6.3 runtime fixtures passed.");
+  console.log("\nAutomation 101 v6.5 runtime fixtures passed.");
 })().catch(error => {
   console.error(error);
   process.exitCode = 1;
