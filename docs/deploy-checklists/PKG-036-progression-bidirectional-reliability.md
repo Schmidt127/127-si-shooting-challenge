@@ -1,12 +1,14 @@
 # PKG-036 — Progression configuration and bidirectional recalculation reliability
 
-**Status:** Draft — repository implementation complete; Production installation and natural-trigger proof pending
+**Status:** **Complete — Production installation and controlled natural-trigger proof passed 2026-08-15.**
 **Unified sequence:** Use [`PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md`](./PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md) as the single current operator source. Do not start until PKG-006R lock is released.
 **Backlog:** PKG-036
 **Production base:** `127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026` (`appn84sqPw03zEbTT`)
 **Environment exception:** Mike authorized this package's Production-only path;
 DEV validation was skipped for this package. Offline tests are not Production
 proof.
+
+> **Completion record — 2026-08-15:** Automation 041 v5.0 and Automation 042 v4.1.2 were installed and enabled after preflight. A controlled Charlie Enrollment manual adjustment 0 → 1 → 0 caused 041 to queue exactly one Enrollment on each change; 042 automatically processed and cleared the queue, restoring the 0-XP Beginner state. The read-only audit returned 12 active Levels, 12 active Gate Rules, 3 active Enrollments, and zero findings. Automation 043 remains absent.
 
 ## Current Production orientation (Mike-supplied 2026-08-13)
 
