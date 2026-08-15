@@ -555,14 +555,17 @@ async function acknowledgeAfterSettlement(recordId, expectedActive, priorSignatu
             weekIds[0],
             wasIds[0],
           ));
-      if (number(acknowledged, submissionsTable, CONFIG.submissions.needed) === 0 && ownershipStillExact) {
-        return current;
-      }
       if (!ownershipStillExact) {
         await submissionsTable.updateRecordAsync(recordId, {
           [CONFIG.submissions.lastSignature]: priorSignature,
         });
         throw new Error("Post-write XP Event ownership changed; reconciliation was not acknowledged.");
+      }
+      // Airtable automation script reads do not guarantee a formula refresh inside
+      // the same run. The persisted text acknowledgement is the safe proof here;
+      // `Reconciliation Needed?` will settle to 0 after this run completes.
+      if (text(acknowledged, submissionsTable, CONFIG.submissions.lastSignature) === current) {
+        return current;
       }
     }
   }
