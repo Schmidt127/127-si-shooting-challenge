@@ -1,6 +1,6 @@
 import type { AchievementCatalogData, AchievementDefinition } from "@/types/achievements";
 
-import { asBoolean, asNumber, asText } from "./airtable-values";
+import { asBoolean, asNumber, asText, selectName } from "./airtable-values";
 
 export type AchievementFields = {
   "Achievement Name"?: unknown;
@@ -19,13 +19,6 @@ export type AchievementFields = {
   "Visible?"?: unknown;
 };
 
-function mapSelectName(value: unknown): string {
-  if (value && typeof value === "object" && "name" in value) {
-    return asText((value as { name?: unknown }).name, "");
-  }
-  return asText(value, "");
-}
-
 export function mapAchievementRecord(record: {
   id: string;
   fields: AchievementFields;
@@ -36,10 +29,10 @@ export function mapAchievementRecord(record: {
     id: record.id,
     name: asText(fields["Achievement Name"], "Achievement"),
     description: asText(fields.Description, ""),
-    type: mapSelectName(fields["Achievement Type"]),
-    category: mapSelectName(fields.Category),
-    rarity: mapSelectName(fields.Rarity) || "Common",
-    triggerType: mapSelectName(fields["Trigger Type"]),
+    type: selectName(fields["Achievement Type"]),
+    category: selectName(fields.Category),
+    rarity: selectName(fields.Rarity) || "Common",
+    triggerType: selectName(fields["Trigger Type"]),
     triggerThreshold: asNumber(fields["Trigger Threshold"]) || null,
     sortOrder: asNumber(fields["Sort Order"]),
     badgeIconName: asText(fields["Badge Icon Name"], ""),

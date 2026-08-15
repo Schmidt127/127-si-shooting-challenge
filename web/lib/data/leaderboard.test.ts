@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
 
+import {
+  FIXTURE_LEVEL_2_ID,
+  FIXTURE_PROGRAM_INSTANCE_ID,
+  FIXTURE_SCHOOL_YEAR,
+  standingsEnrollmentFields,
+} from "@/lib/airtable/public-rest-fixtures";
 import { asNumber, asText } from "@/lib/data/airtable-values";
 import {
   buildLeaderboardData,
@@ -31,21 +37,19 @@ describe("leaderboard mapping", () => {
     const entry = mapEnrollmentToLeaderboardEntry(
       {
         id: "recTEST",
-        fields: {
-          "Active?": true,
-          Athlete: [{ name: "Jordan Athlete" }],
-          "Program Instance": [{ name: "Shooting Challenge | 2026-2027" }],
+        fields: standingsEnrollmentFields({
           "Full Athlete Name": "Jordan S.",
-          "School Name Lookup": "Test High",
-          Grade: "8",
-          "Current Level": [{ name: "Level 3" }],
+          "School Name Lookup": ["Test High"],
+          Grade: { id: "sel8", name: "8", color: "blueLight2" },
+          "Current Level": [FIXTURE_LEVEL_2_ID],
           "Current Level - Public Facing Display": "Level 3",
-          "Level Sort Order - For Softr": 3,
-          "Level Status": "Assigned",
-          "Athlete Headshot": [{ id: "att1", url: "https://example.com/headshot.jpg", filename: "headshot.jpg" }],
+          "Level Sort Order - For Softr": [3],
+          "Athlete Headshot": [
+            { id: "att1", url: "https://example.com/headshot.jpg", filename: "headshot.jpg" },
+          ],
           "Lifetime XP Total": 1500,
           "Total Shots Counted": 900,
-        },
+        }),
       },
       1,
     );
@@ -69,14 +73,14 @@ describe("leaderboard mapping", () => {
     const entry = mapEnrollmentToLeaderboardEntry(
       {
         id: "recTEST2",
-        fields: {
-          "Level Sort Order - For Softr": 1,
+        fields: standingsEnrollmentFields({
           "Full Athlete Name": "Testing Schmidt",
           "Public Profile Enabled": true,
           "Public Profile Slug": "testing-schmidt",
           "Lifetime XP Total": 81,
           "Total Shots Counted": 100,
-        },
+          "Level Sort Order - For Softr": [1],
+        }),
       },
       2,
     );
@@ -87,14 +91,14 @@ describe("leaderboard mapping", () => {
     const entry = mapEnrollmentToLeaderboardEntry(
       {
         id: "recTEST3",
-        fields: {
-          "Level Sort Order - For Softr": 1,
+        fields: standingsEnrollmentFields({
           "Full Athlete Name": "Plain Athlete",
           "Public Profile Enabled": false,
           "Public Profile Slug": "should-not-link",
           "Lifetime XP Total": 0,
           "Total Shots Counted": 0,
-        },
+          "Level Sort Order - For Softr": [1],
+        }),
       },
       3,
     );
@@ -107,7 +111,7 @@ describe("leaderboard mapping", () => {
         id: "recLOW",
         fields: {
           "Full Athlete Name": "Low Level",
-          "Level Sort Order - For Softr": 5,
+          "Level Sort Order - For Softr": [5],
           "Lifetime XP Total": 9999,
           "Total Shots Counted": 9999,
         },
@@ -116,7 +120,7 @@ describe("leaderboard mapping", () => {
         id: "recHIGH",
         fields: {
           "Full Athlete Name": "High Level",
-          "Level Sort Order - For Softr": 8,
+          "Level Sort Order - For Softr": [8],
           "Lifetime XP Total": 100,
           "Total Shots Counted": 50,
         },
@@ -125,7 +129,7 @@ describe("leaderboard mapping", () => {
         id: "recMID",
         fields: {
           "Full Athlete Name": "Same Level More XP",
-          "Level Sort Order - For Softr": 8,
+          "Level Sort Order - For Softr": [8],
           "Lifetime XP Total": 500,
           "Total Shots Counted": 100,
         },
@@ -134,7 +138,7 @@ describe("leaderboard mapping", () => {
         id: "recTIE",
         fields: {
           "Full Athlete Name": "Same Level XP More Shots",
-          "Level Sort Order - For Softr": 8,
+          "Level Sort Order - For Softr": [8],
           "Lifetime XP Total": 500,
           "Total Shots Counted": 250,
         },
@@ -191,40 +195,27 @@ describe("leaderboard mapping", () => {
 });
 
 describe("leaderboard eligibility contract", () => {
-  const PROGRAM_INSTANCE_ID = "rec5mEM0YPqPqq0hZ";
-  const LEVEL_2_ID = "recLevel2XXXXXXXXX";
   const scope = {
-    schoolYear: "2026-2027",
-    programInstanceId: PROGRAM_INSTANCE_ID,
+    schoolYear: FIXTURE_SCHOOL_YEAR,
+    programInstanceId: FIXTURE_PROGRAM_INSTANCE_ID,
     activeLevelsById: new Map([
-      [LEVEL_2_ID, { name: "Level 2", rank: 2, xpRequired: 0 }],
+      [FIXTURE_LEVEL_2_ID, { name: "Level 2", rank: 2, xpRequired: 0 }],
     ]),
   };
 
   function validRecord(id: string, overrides: Record<string, unknown> = {}) {
     return {
       id,
-      fields: {
-        "Active?": true,
-        Athlete: [{ name: `Athlete ${id}` }],
+      fields: standingsEnrollmentFields({
         "Athlete ID Lookup": [`athlete-${id}`],
-        // Live Airtable REST returns linked Program Instance as record ids.
-        "Program Instance": [PROGRAM_INSTANCE_ID],
-        "School Year": scope.schoolYear,
-        // Live Airtable REST returns Current Level as linked record ids.
-        "Current Level": [LEVEL_2_ID],
-        "Current Level - Public Facing Display": "Level 2",
-        "Level Sort Order - For Softr": 2,
-        "Level Status": "Assigned",
-        "Lifetime XP Total": 50,
-        "Total Shots Counted": 20,
+        Athlete: [`recAthlete${id.slice(-8).padStart(8, "0")}`],
         ...overrides,
-      },
+      }),
     };
   }
 
   it("accepts only complete, scoped active enrollment rows", () => {
-    expect(requireEligibleLeaderboardRecords([validRecord("rec1")], scope)).toHaveLength(1);
+    expect(requireEligibleLeaderboardRecords([validRecord("rec1xxxxxxx0001")], scope)).toHaveLength(1);
   });
 
   it("accepts a valid Enrollment linked by Program Instance record id from the live REST shape", () => {
@@ -236,12 +227,13 @@ describe("leaderboard eligibility contract", () => {
     expect(records[0].id).toBe("recCrNNAdVmQ4Y8fL");
   });
 
-  it("accepts a valid Current Level record-id link with matching display name", () => {
+  it("accepts a valid Current Level record-id link with matching display name and lookup rank array", () => {
     const records = requireEligibleLeaderboardRecords(
       [
         validRecord("recCrNNAdVmQ4Y8fL", {
-          "Current Level": [LEVEL_2_ID],
+          "Current Level": [FIXTURE_LEVEL_2_ID],
           "Current Level - Public Facing Display": "Level 2",
+          "Level Sort Order - For Softr": [2],
         }),
       ],
       scope,
@@ -252,39 +244,41 @@ describe("leaderboard eligibility contract", () => {
 
   it.each([
     ["inactive enrollment", { "Active?": false }],
-    ["prior school year", { "School Year": "2025-2026" }],
+    ["prior school year", { "School Year": { id: "selOld", name: "2025-2026", color: "gray" } }],
     ["wrong program instance", { "Program Instance": ["recWrongProgramInst"] }],
     ["display-name program instance link", { "Program Instance": [{ name: "Shooting Challenge | 2026-2027" }] }],
     ["missing athlete", { Athlete: [] }],
-    ["multiple athletes", { Athlete: [{ name: "A" }, { name: "B" }] }],
+    ["multiple athletes", { Athlete: ["recAthleteAAAAAAA1", "recAthleteAAAAAAA2"] }],
     ["missing stable athlete identity", { "Athlete ID Lookup": [] }],
     ["missing current level", { "Current Level": [] }],
     ["display-name current level link", { "Current Level": [{ name: "Level 2" }] }],
     ["mismatched current level display", { "Current Level - Public Facing Display": "Level 9" }],
-    ["inactive level status", { "Level Status": "Error" }],
+    ["inactive level status", { "Level Status": { id: "selErr", name: "Error", color: "red" } }],
     ["blank XP", { "Lifetime XP Total": "" }],
     ["negative XP", { "Lifetime XP Total": -1 }],
     ["blank shots", { "Total Shots Counted": "" }],
     ["negative shots", { "Total Shots Counted": -1 }],
   ])("fails closed for %s", (_label, overrides) => {
-    expect(() => requireEligibleLeaderboardRecords([validRecord("rec1", overrides)], scope)).toThrow();
+    expect(() =>
+      requireEligibleLeaderboardRecords([validRecord("rec1xxxxxxx0001", overrides)], scope),
+    ).toThrow();
   });
 
   it("rejects duplicate canonical Athlete + Program Instance + School Year identities", () => {
-    const first = validRecord("rec1", { "Athlete ID Lookup": ["same-athlete"] });
-    const second = validRecord("rec2", { "Athlete ID Lookup": ["same-athlete"] });
+    const first = validRecord("rec1xxxxxxx0001", { "Athlete ID Lookup": ["same-athlete"] });
+    const second = validRecord("rec2xxxxxxx0002", { "Athlete ID Lookup": ["same-athlete"] });
     expect(() => requireEligibleLeaderboardRecords([first, second], scope)).toThrow(/Duplicate canonical/);
   });
 
   it("rejects an inactive or rank-mismatched Current Level", () => {
     expect(() => requireEligibleLeaderboardRecords([
-      validRecord("rec1", { "Level Sort Order - For Softr": 3 }),
+      validRecord("rec1xxxxxxx0001", { "Level Sort Order - For Softr": [3] }),
     ], scope)).toThrow(/inactive or mismatched/);
   });
 
   it("rejects an unknown Current Level record id", () => {
     expect(() => requireEligibleLeaderboardRecords([
-      validRecord("rec1", { "Current Level": ["recUnknownLevelXXX"] }),
+      validRecord("rec1xxxxxxx0001", { "Current Level": ["recUnknownLevelXXX"] }),
     ], scope)).toThrow(/inactive or unknown Current Level/);
   });
 
@@ -292,11 +286,11 @@ describe("leaderboard eligibility contract", () => {
     const thresholdScope = {
       ...scope,
       activeLevelsById: new Map([
-        [LEVEL_2_ID, { name: "Level 2", rank: 2, xpRequired: 200 }],
+        [FIXTURE_LEVEL_2_ID, { name: "Level 2", rank: 2, xpRequired: 200 }],
       ]),
     };
     expect(() => requireEligibleLeaderboardRecords([
-      validRecord("rec1", { "Lifetime XP Total": 199 }),
+      validRecord("rec1xxxxxxx0001", { "Lifetime XP Total": 199 }),
     ], thresholdScope)).toThrow(/below its assigned Current Level threshold/);
   });
 });

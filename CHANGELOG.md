@@ -9,6 +9,13 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Fixed
+- **Public Airtable adapter REST-shape hardening (2026-08-15)** — Centralized
+  linked-record, lookup-array, and select-object normalization for public
+  `/shoot` adapters. Standings scope Program Instance and Current Level by
+  record id, unwrap `Level Sort Order - For Softr` lookup arrays, share the
+  Registering Program Instance resolver with scheduled homework, and add a
+  permanent REST contract suite so display-name-versus-id mistakes fail before
+  deploy. Config is still not consulted for public season selection.
 - **Public standings Current Level id link (2026-08-15)** — Enrollment
   standings integrity now treats `Enrollments.Current Level` as a Level record
   id (live REST shape `["rec…"]`), looks it up in the active-level contract,

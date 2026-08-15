@@ -5,7 +5,7 @@ import type {
   HomeworkWeekGroup,
 } from "@/types/homework";
 
-import { asNumber, asText, asUrl } from "./airtable-values";
+import { asNumber, asText, asUrl, firstLinkedRecordId, selectNames } from "./airtable-values";
 
 export type FbcCurriculumFields = {
   "Assignment Full Name"?: unknown;
@@ -37,8 +37,6 @@ export type WeekFields = {
   "Start Date"?: unknown;
 };
 
-type AirtableLinkedRecord = { id: string };
-
 type RawAttachment = {
   id?: string;
   url?: string;
@@ -50,14 +48,9 @@ export function parseWeekNumber(weekName: string): number {
   return match ? Number(match[1]) : 0;
 }
 
+/** @deprecated Prefer firstLinkedRecordId from airtable-values. */
 export function getFirstLinkedId(value: unknown): string {
-  if (!Array.isArray(value) || value.length === 0) return "";
-  const first = value[0];
-  if (typeof first === "string") return first;
-  if (typeof first === "object" && first !== null && "id" in first) {
-    return String((first as AirtableLinkedRecord).id);
-  }
-  return "";
+  return firstLinkedRecordId(value);
 }
 
 export function mapAttachments(value: unknown): HomeworkAttachment[] {
@@ -77,23 +70,9 @@ export function mapAttachments(value: unknown): HomeworkAttachment[] {
     .filter((item): item is HomeworkAttachment => item !== null);
 }
 
+/** @deprecated Prefer selectNames from airtable-values. */
 export function mapSelectOptions(value: unknown): string[] {
-  if (!Array.isArray(value)) {
-    if (typeof value === "object" && value !== null && "name" in value) {
-      return [asText((value as { name: unknown }).name, "")].filter(Boolean);
-    }
-    return [];
-  }
-
-  return value
-    .map((item) => {
-      if (typeof item === "string") return item.trim();
-      if (typeof item === "object" && item !== null && "name" in item) {
-        return asText((item as { name: unknown }).name, "");
-      }
-      return "";
-    })
-    .filter(Boolean);
+  return selectNames(value);
 }
 
 export function mapCurriculumToAssignment(

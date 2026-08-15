@@ -6,6 +6,11 @@
 import { isMissingAirtableViewError } from "@/lib/airtable/errors";
 import { listAirtableRecords } from "@/lib/airtable/client";
 import {
+  PUBLIC_AIRTABLE_TABLES,
+  PUBLIC_ENROLLMENT_VIEW,
+} from "@/lib/airtable/public-tables";
+import { resolveRegisteringShootingChallengeProgramInstance } from "@/lib/airtable/registering-program-instance";
+import {
   buildLevelLadder,
   type LevelFields,
   mapLevelRecord,
@@ -48,7 +53,7 @@ import {
   type PublicWasFields,
   type PublicXpEventFields,
 } from "@/lib/data/public-athlete-profile";
-import { asText, linkedRecordIds } from "@/lib/data/airtable-values";
+import { asBoolean, asText, linkedRecordIds, requireExactlyOneLookupNumber } from "@/lib/data/airtable-values";
 import type { PublicAthleteProfile } from "@/types/public-athlete-profile";
 import type { AchievementCatalogData } from "@/types/achievements";
 import type { HomeworkAssignment, HomeworkCatalogData } from "@/types/homework";
@@ -74,20 +79,21 @@ import {
 
 /** Airtable table names used by public queries + reserved for future dashboard/admin. */
 export const AIRTABLE_TABLES = {
-  enrollments: "Enrollments",
-  weeklySummary: "Weekly Athlete Summary",
-  xpEvents: "XP Events",
-  levels: "Levels",
-  achievements: "Achievements",
-  achievementUnlocks: "Athlete Achievement Unlocks",
-  submissions: "Submissions",
-  homeworkCompletions: "Homework Completions",
-  homeworkLibrary: "Homework Library",
-  weeks: "Weeks",
-  tutorials: "Tutorials",
-  zoomMeetings: "Zoom Meetings",
-  xpRewardRules: "XP Reward Rules",
-  videoFeedback: "Video Feedback",
+  enrollments: PUBLIC_AIRTABLE_TABLES.enrollments.name,
+  weeklySummary: PUBLIC_AIRTABLE_TABLES.weeklySummary.name,
+  xpEvents: PUBLIC_AIRTABLE_TABLES.xpEvents.name,
+  levels: PUBLIC_AIRTABLE_TABLES.levels.name,
+  achievements: PUBLIC_AIRTABLE_TABLES.achievements.name,
+  achievementUnlocks: PUBLIC_AIRTABLE_TABLES.achievementUnlocks.name,
+  submissions: PUBLIC_AIRTABLE_TABLES.submissions.name,
+  homeworkCompletions: PUBLIC_AIRTABLE_TABLES.homeworkCompletions.name,
+  homeworkLibrary: PUBLIC_AIRTABLE_TABLES.homeworkLibrary.name,
+  weeks: PUBLIC_AIRTABLE_TABLES.weeks.name,
+  tutorials: PUBLIC_AIRTABLE_TABLES.tutorials.name,
+  zoomMeetings: PUBLIC_AIRTABLE_TABLES.zoomMeetings.name,
+  xpRewardRules: PUBLIC_AIRTABLE_TABLES.xpRewardRules.name,
+  videoFeedback: PUBLIC_AIRTABLE_TABLES.videoFeedback.name,
+  programInstanceSync: PUBLIC_AIRTABLE_TABLES.programInstanceSync.name,
 } as const;
 
 /** Enrollments fields used by the public leaderboard (see schema snapshot). */
@@ -112,27 +118,10 @@ export const LEADERBOARD_FIELDS = [
   "Public Profile Slug",
 ] as const;
 
-const LEADERBOARD_VIEW = "Web - Leaderboard";
+const LEADERBOARD_VIEW = PUBLIC_ENROLLMENT_VIEW;
 const LEADERBOARD_REVALIDATE_SECONDS = 120;
-const PROGRAM_INSTANCES_TABLE = "Program Instance - Sync";
-const REGISTERING_SHOOTING_CHALLENGE_FILTER =
-  "AND({Program - Linked}='Shooting Challenge',{Status}='Registering')";
-const PROGRAM_INSTANCE_SCOPE_FIELDS = [
-  "Name - Program Instance",
-  "School Year - Linked",
-  "Program - Linked",
-  "Status",
-  "Record Id",
-] as const;
 const STANDINGS_LEVEL_FIELDS = ["Level Name", "Sort Order", "XP Required (Cumulative)", "Active?"] as const;
 
-type ProgramInstanceScopeFields = {
-  "Name - Program Instance"?: unknown;
-  "School Year - Linked"?: unknown;
-  "Program - Linked"?: unknown;
-  Status?: unknown;
-  "Record Id"?: unknown;
-};
 type StandingsLevelFields = {
   "Level Name"?: unknown;
   "Sort Order"?: unknown;
@@ -286,35 +275,12 @@ async function getStandingsScope(): Promise<{
   programInstanceId: string;
   activeLevelsById: ReadonlyMap<string, ActiveLevelContract>;
 }> {
-  const programInstances = await listAirtableRecords<ProgramInstanceScopeFields>({
-    tableName: PROGRAM_INSTANCES_TABLE,
-    fields: [...PROGRAM_INSTANCE_SCOPE_FIELDS],
-    filterByFormula: REGISTERING_SHOOTING_CHALLENGE_FILTER,
-    revalidateSeconds: LEADERBOARD_REVALIDATE_SECONDS,
-  });
-  if (programInstances.records.length !== 1) {
-    throw new Error(
-      `Standings require exactly one Registering Shooting Challenge Program Instance; found ${programInstances.records.length}.`,
-    );
-  }
-
-  const programInstance = programInstances.records[0];
-  const schoolYear = exactText(programInstance.fields["School Year - Linked"]);
-  if (!schoolYear) {
-    throw new Error("Current standings Program Instance is missing School Year - Linked.");
-  }
-
-  const expectedName = `Shooting Challenge | ${schoolYear}`;
-  const programInstanceName = exactText(programInstance.fields["Name - Program Instance"]);
-  if (programInstanceName !== expectedName) {
-    throw new Error(
-      `Standings Program Instance name must be exactly "${expectedName}"; found "${programInstanceName || "(empty)"}".`,
-    );
-  }
+  const programInstance = await resolveRegisteringShootingChallengeProgramInstance(
+    LEADERBOARD_REVALIDATE_SECONDS,
+  );
+  const schoolYear = programInstance.schoolYear;
   const programInstanceId = programInstance.id;
-  if (!programInstanceId.startsWith("rec")) {
-    throw new Error("Current standings Program Instance is missing a valid record id.");
-  }
+
   const levelResponse = await listAirtableRecords<StandingsLevelFields>({
     tableName: AIRTABLE_TABLES.levels,
     fields: [...STANDINGS_LEVEL_FIELDS],
@@ -328,18 +294,17 @@ async function getStandingsScope(): Promise<{
       throw new Error(`Standings found an active Level missing a valid record id (${levelId || "(empty)"}).`);
     }
     const name = exactText(level.fields["Level Name"]);
-    const rawRank = level.fields["Sort Order"];
-    const rank = typeof rawRank === "number" ? rawRank : Number(rawRank);
-    const rawThreshold = level.fields["XP Required (Cumulative)"];
-    const xpRequired = typeof rawThreshold === "number" ? rawThreshold : Number(rawThreshold);
-    if (
-      !name ||
-      !Number.isFinite(rank) ||
-      rank < 0 ||
-      !Number.isFinite(xpRequired) ||
-      xpRequired < 0 ||
-      activeLevelsById.has(levelId)
-    ) {
+    const rank = requireExactlyOneLookupNumber(
+      level.fields["Sort Order"],
+      "Sort Order",
+      `Level ${levelId}`,
+    );
+    const xpRequired = requireExactlyOneLookupNumber(
+      level.fields["XP Required (Cumulative)"],
+      "XP Required (Cumulative)",
+      `Level ${levelId}`,
+    );
+    if (!name || activeLevelsById.has(levelId)) {
       throw new Error(`Standings found an invalid or duplicate active Level contract for "${name || levelId}".`);
     }
     activeLevelsById.set(levelId, { name, rank, xpRequired });
@@ -980,18 +945,12 @@ export async function fetchPublicAthleteProfileBySlug(
       : Promise.resolve({ records: [] as Array<{ id: string; fields: PublicLevelFields }> }),
   ]);
 
-  const countedSubmissions = submissionResponse.records.filter((record) => {
-    const counted = record.fields["Count This Submission?"];
-    return counted === 1 || counted === true || Number(counted) === 1;
-  });
+  const countedSubmissions = submissionResponse.records.filter((record) =>
+    asBoolean(record.fields["Count This Submission?"]),
+  );
 
   const visibleUnlocks = unlockResponse.records.filter(
-    (record) =>
-      (record.fields["Active?"] === true || record.fields["Active?"] === 1) &&
-      (record.fields["Visible?"] === true ||
-        record.fields["Visible?"] === 1 ||
-        (Array.isArray(record.fields["Visible?"]) &&
-          record.fields["Visible?"].some((v) => v === true || v === 1))),
+    (record) => asBoolean(record.fields["Active?"]) && asBoolean(record.fields["Visible?"]),
   );
 
   const achievementIds = [

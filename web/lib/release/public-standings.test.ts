@@ -27,7 +27,7 @@ function leaderboardFields(name: string, rank = 2, xp = 300, shots = 150) {
   return {
     "Full Athlete Name": name,
     "Current Level - Public Facing Display": `Level ${rank}`,
-    "Level Sort Order - For Softr": rank,
+    "Level Sort Order - For Softr": [rank],
     "Lifetime XP Total": xp,
     "Total Shots Counted": shots,
   };
