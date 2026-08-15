@@ -113,20 +113,23 @@ export const LEADERBOARD_FIELDS = [
 
 const LEADERBOARD_VIEW = "Web - Leaderboard";
 const LEADERBOARD_REVALIDATE_SECONDS = 120;
-const STANDINGS_CONFIG_TABLE = "Config";
 const PROGRAM_INSTANCES_TABLE = "Program Instance - Synced";
-const STANDINGS_CONFIG_FIELDS = ["Active School Year"] as const;
+const REGISTERING_SHOOTING_CHALLENGE_FILTER =
+  "AND({Program - Linked}='Shooting Challenge',{Status}='Registering')";
 const PROGRAM_INSTANCE_SCOPE_FIELDS = [
   "Name - Program Instance",
   "School Year - Linked",
+  "Program - Linked",
+  "Status",
   "Record Id",
 ] as const;
 const STANDINGS_LEVEL_FIELDS = ["Level Name", "Sort Order", "XP Required (Cumulative)", "Active?"] as const;
 
-type StandingsConfigFields = { "Active School Year"?: unknown };
 type ProgramInstanceScopeFields = {
   "Name - Program Instance"?: unknown;
   "School Year - Linked"?: unknown;
+  "Program - Linked"?: unknown;
+  Status?: unknown;
   "Record Id"?: unknown;
 };
 type StandingsLevelFields = {
@@ -272,49 +275,40 @@ function exactText(value: unknown): string {
 }
 
 /**
- * Resolve the current season from authoritative configuration before reading the
- * public view. The Program Instance record id anchors the contract lookup;
- * Airtable's public REST linked-record response contains display values only, so
- * returned rows are additionally checked against this resolved canonical name.
+ * Resolve the current public season from the single Registering Shooting Challenge
+ * Program Instance. Multiple historical/future Config rows are expected and must
+ * not gate the public site. Airtable's public REST linked-record response contains
+ * display values only, so enrollment rows are checked against this canonical name.
  */
 async function getStandingsScope(): Promise<{
   schoolYear: string;
   programInstanceName: string;
   activeLevelsByName: ReadonlyMap<string, { rank: number; xpRequired: number }>;
 }> {
-  const config = await listAirtableRecords<StandingsConfigFields>({
-    tableName: STANDINGS_CONFIG_TABLE,
-    fields: [...STANDINGS_CONFIG_FIELDS],
-    revalidateSeconds: LEADERBOARD_REVALIDATE_SECONDS,
-  });
-  const schoolYears = [...new Set(
-    config.records.map((record) => exactText(record.fields["Active School Year"])).filter(Boolean),
-  )];
-  if (schoolYears.length !== 1) {
-    throw new Error(
-      `Standings require exactly one Config Active School Year; found ${schoolYears.length}.`,
-    );
-  }
-
-  const schoolYear = schoolYears[0];
-  const expectedName = `Shooting Challenge | ${schoolYear}`;
   const programInstances = await listAirtableRecords<ProgramInstanceScopeFields>({
     tableName: PROGRAM_INSTANCES_TABLE,
     fields: [...PROGRAM_INSTANCE_SCOPE_FIELDS],
-    filterByFormula: `AND({Name - Program Instance}=${JSON.stringify(expectedName)},{School Year - Linked}=${JSON.stringify(schoolYear)})`,
+    filterByFormula: REGISTERING_SHOOTING_CHALLENGE_FILTER,
     revalidateSeconds: LEADERBOARD_REVALIDATE_SECONDS,
   });
   if (programInstances.records.length !== 1) {
     throw new Error(
-      `Standings require exactly one current Shooting Challenge Program Instance for ${schoolYear}; found ${programInstances.records.length}.`,
+      `Standings require exactly one Registering Shooting Challenge Program Instance; found ${programInstances.records.length}.`,
     );
   }
 
-  const programInstanceName = exactText(
-    programInstances.records[0].fields["Name - Program Instance"],
-  );
-  if (!programInstanceName) {
-    throw new Error("Current standings Program Instance has no canonical name.");
+  const programInstance = programInstances.records[0];
+  const schoolYear = exactText(programInstance.fields["School Year - Linked"]);
+  if (!schoolYear) {
+    throw new Error("Current standings Program Instance is missing School Year - Linked.");
+  }
+
+  const expectedName = `Shooting Challenge | ${schoolYear}`;
+  const programInstanceName = exactText(programInstance.fields["Name - Program Instance"]);
+  if (programInstanceName !== expectedName) {
+    throw new Error(
+      `Standings Program Instance name must be exactly "${expectedName}"; found "${programInstanceName || "(empty)"}".`,
+    );
   }
   const levelResponse = await listAirtableRecords<StandingsLevelFields>({
     tableName: AIRTABLE_TABLES.levels,
