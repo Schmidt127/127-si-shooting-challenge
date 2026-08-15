@@ -11,6 +11,7 @@ import { AirtableApiError } from "@/lib/airtable/errors";
 
 const SCHOOL_YEAR = "2026-2027";
 const PROGRAM_INSTANCE = `Shooting Challenge | ${SCHOOL_YEAR}`;
+const PROGRAM_INSTANCE_ID = "rec5mEM0YPqPqq0hZ";
 const REGISTERING_FILTER =
   "AND({Program - Linked}='Shooting Challenge',{Status}='Registering')";
 
@@ -25,7 +26,7 @@ function enrollment(
       "Active?": true,
       Athlete: [{ name: athlete }],
       "Athlete ID Lookup": [`athlete-${id}`],
-      "Program Instance": [{ name: PROGRAM_INSTANCE }],
+      "Program Instance": [PROGRAM_INSTANCE_ID],
       "Full Athlete Name": athlete,
       "Current Level": [{ name: "Level 2" }],
       "Current Level - Public Facing Display": "Level 2",
@@ -41,13 +42,13 @@ function enrollment(
 
 function registeringProgramInstance(overrides: Record<string, unknown> = {}) {
   return {
-    id: "recProgram",
+    id: PROGRAM_INSTANCE_ID,
     fields: {
       "Name - Program Instance": PROGRAM_INSTANCE,
       "School Year - Linked": SCHOOL_YEAR,
       "Program - Linked": "Shooting Challenge",
       Status: "Registering",
-      "Record Id": "recProgram",
+      "Record Id": PROGRAM_INSTANCE_ID,
       ...overrides,
     },
   };
@@ -149,6 +150,19 @@ describe("fetchLeaderboard Airtable adapter", () => {
     expect(listAirtableRecordsMock.mock.calls.every(
       ([params]) => params.tableName !== "Config",
     )).toBe(true);
+  });
+
+  it("accepts enrollments scoped by live Program Instance record id after name validation", async () => {
+    installQueryMock([
+      enrollment("recCrNNAdVmQ4Y8fL", "Casey", {
+        "Program Instance": ["rec5mEM0YPqPqq0hZ"],
+        "Lifetime XP Total": 250,
+      }),
+    ]);
+
+    const data = await fetchLeaderboard();
+    expect(data.entries).toHaveLength(1);
+    expect(data.entries[0].displayName).toBe("Casey");
   });
 
   it("fails closed when zero or multiple Registering Shooting Challenge Program Instances exist", async () => {

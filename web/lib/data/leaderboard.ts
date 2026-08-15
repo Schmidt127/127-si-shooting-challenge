@@ -1,6 +1,6 @@
 import type { LeaderboardData, LeaderboardEntry } from "@/types/leaderboard";
 
-import { asBoolean, asText } from "./airtable-values";
+import { asBoolean, asText, linkedRecordIds } from "./airtable-values";
 import { mapAttachments } from "./homework";
 import { isValidPublicSlug, normalizeProfileSlug } from "./public-athlete-profile";
 
@@ -28,7 +28,8 @@ export type EnrollmentLeaderboardFields = {
 
 export type LeaderboardScope = {
   schoolYear: string;
-  programInstanceName: string;
+  /** Canonical Program Instance record id from the Registering season row. */
+  programInstanceId: string;
   activeLevelsByName: ReadonlyMap<string, { rank: number; xpRequired: number }>;
 };
 
@@ -69,6 +70,16 @@ function requiredNonNegativeNumber(value: unknown, fieldName: string, recordId: 
 
 function requireExactlyOneLinkedToken(value: unknown, fieldName: string, recordId: string): string {
   const values = linkedTokens(value);
+  if (values.length !== 1) {
+    throw new LeaderboardIntegrityError(
+      `Enrollment ${recordId} requires exactly one ${fieldName}; found ${values.length}.`,
+    );
+  }
+  return values[0];
+}
+
+function requireExactlyOneLinkedRecordId(value: unknown, fieldName: string, recordId: string): string {
+  const values = linkedRecordIds(value);
   if (values.length !== 1) {
     throw new LeaderboardIntegrityError(
       `Enrollment ${recordId} requires exactly one ${fieldName}; found ${values.length}.`,
@@ -157,20 +168,20 @@ export function requireEligibleLeaderboardRecords<T extends LeaderboardRecord>(
       "Athlete ID Lookup",
       record.id,
     );
-    const programInstance = requireExactlyOneLinkedToken(
+    const programInstanceId = requireExactlyOneLinkedRecordId(
       fields["Program Instance"],
       "Program Instance link",
       record.id,
     );
     const schoolYear = requireText(fields["School Year"], "School Year", record.id);
 
-    if (schoolYear !== scope.schoolYear || programInstance !== scope.programInstanceName) {
+    if (schoolYear !== scope.schoolYear || programInstanceId !== scope.programInstanceId) {
       throw new LeaderboardIntegrityError(
-        `Enrollment ${record.id} is outside the configured standings scope (${schoolYear} / ${programInstance}).`,
+        `Enrollment ${record.id} is outside the configured standings scope (${schoolYear} / ${programInstanceId}).`,
       );
     }
 
-    const identity = `${athlete}|${programInstance}|${schoolYear}`;
+    const identity = `${athlete}|${programInstanceId}|${schoolYear}`;
     const duplicate = canonicalIdentities.get(identity);
     if (duplicate) {
       throw new LeaderboardIntegrityError(
