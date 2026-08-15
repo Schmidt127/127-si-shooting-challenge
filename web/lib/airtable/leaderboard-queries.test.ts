@@ -11,6 +11,8 @@ import { AirtableApiError } from "@/lib/airtable/errors";
 
 const SCHOOL_YEAR = "2026-2027";
 const PROGRAM_INSTANCE = `Shooting Challenge | ${SCHOOL_YEAR}`;
+const REGISTERING_FILTER =
+  "AND({Program - Linked}='Shooting Challenge',{Status}='Registering')";
 
 function enrollment(
   id: string,
@@ -37,22 +39,24 @@ function enrollment(
   };
 }
 
+function registeringProgramInstance(overrides: Record<string, unknown> = {}) {
+  return {
+    id: "recProgram",
+    fields: {
+      "Name - Program Instance": PROGRAM_INSTANCE,
+      "School Year - Linked": SCHOOL_YEAR,
+      "Program - Linked": "Shooting Challenge",
+      Status: "Registering",
+      "Record Id": "recProgram",
+      ...overrides,
+    },
+  };
+}
+
 function installQueryMock(records: ReturnType<typeof enrollment>[]) {
   listAirtableRecordsMock.mockImplementation(async (params: { tableName: string }) => {
-    if (params.tableName === "Config") {
-      return { records: [{ id: "recConfig", fields: { "Active School Year": SCHOOL_YEAR } }] };
-    }
-    if (params.tableName === "Program Instance - Synced") {
-      return {
-        records: [{
-          id: "recProgram",
-          fields: {
-            "Name - Program Instance": PROGRAM_INSTANCE,
-            "School Year - Linked": SCHOOL_YEAR,
-            "Record Id": "recProgram",
-          },
-        }],
-      };
+    if (params.tableName === "Program Instance - Sync") {
+      return { records: [registeringProgramInstance()] };
     }
     if (params.tableName === "Levels") {
       return {
@@ -72,7 +76,7 @@ describe("fetchLeaderboard Airtable adapter", () => {
     listAirtableRecordsMock.mockReset();
   });
 
-  it("executes the scoped config → Program Instance → approved-view read and returns only public model fields", async () => {
+  it("resolves season from the Registering Shooting Challenge Program Instance without reading Config", async () => {
     installQueryMock([
       enrollment("recA", "Avery", { "Lifetime XP Total": 200 }),
       enrollment("recB", "Blair", { "Lifetime XP Total": 300 }),
@@ -82,6 +86,18 @@ describe("fetchLeaderboard Airtable adapter", () => {
 
     expect(data.entries.map((entry) => entry.displayName)).toEqual(["Blair", "Avery"]);
     expect(data.entries.every((entry) => !("id" in entry))).toBe(true);
+
+    const programCall = listAirtableRecordsMock.mock.calls.find(
+      ([params]) => params.tableName === "Program Instance - Sync",
+    )?.[0];
+    expect(programCall).toMatchObject({
+      filterByFormula: REGISTERING_FILTER,
+      revalidateSeconds: 120,
+    });
+    expect(listAirtableRecordsMock.mock.calls.every(
+      ([params]) => params.tableName !== "Config",
+    )).toBe(true);
+
     const enrollmentCall = listAirtableRecordsMock.mock.calls.find(
       ([params]) => params.tableName === "Enrollments",
     )?.[0];
@@ -98,14 +114,97 @@ describe("fetchLeaderboard Airtable adapter", () => {
     ]));
   });
 
+  it("allows multiple retained Config years because Config is not consulted for public standings", async () => {
+    installQueryMock([enrollment("recA", "Avery")]);
+    // Simulate leftover Config rows in the base; public standings must ignore them.
+    listAirtableRecordsMock.mockImplementation(async (params: { tableName: string }) => {
+      if (params.tableName === "Config") {
+        return {
+          records: [
+            { id: "recCfg1", fields: { "Active School Year": "2025-2026" } },
+            { id: "recCfg2", fields: { "Active School Year": "2026-2027" } },
+            { id: "recCfg3", fields: { "Active School Year": "2027-2028" } },
+            { id: "recCfg4", fields: { "Active School Year": "2028-2029" } },
+          ],
+        };
+      }
+      if (params.tableName === "Program Instance - Sync") {
+        return { records: [registeringProgramInstance()] };
+      }
+      if (params.tableName === "Levels") {
+        return {
+          records: [{
+            id: "recLevel2",
+            fields: { "Level Name": "Level 2", "Sort Order": 2, "XP Required (Cumulative)": 0, "Active?": true },
+          }],
+        };
+      }
+      if (params.tableName === "Enrollments") return { records: [enrollment("recA", "Avery")] };
+      throw new Error(`Unexpected table ${params.tableName}`);
+    });
+
+    await expect(fetchLeaderboard()).resolves.toMatchObject({
+      entries: [{ displayName: "Avery" }],
+    });
+    expect(listAirtableRecordsMock.mock.calls.every(
+      ([params]) => params.tableName !== "Config",
+    )).toBe(true);
+  });
+
+  it("fails closed when zero or multiple Registering Shooting Challenge Program Instances exist", async () => {
+    listAirtableRecordsMock.mockResolvedValue({ records: [] });
+    await expect(fetchLeaderboard()).rejects.toThrow(
+      /exactly one Registering Shooting Challenge Program Instance; found 0/,
+    );
+
+    listAirtableRecordsMock.mockResolvedValue({
+      records: [
+        registeringProgramInstance({ "School Year - Linked": "2026-2027" }),
+        {
+          id: "recProgram2",
+          fields: {
+            "Name - Program Instance": "Shooting Challenge | 2027-2028",
+            "School Year - Linked": "2027-2028",
+            "Program - Linked": "Shooting Challenge",
+            Status: "Registering",
+          },
+        },
+      ],
+    });
+    await expect(fetchLeaderboard()).rejects.toThrow(
+      /exactly one Registering Shooting Challenge Program Instance; found 2/,
+    );
+  });
+
+  it("fails closed when School Year - Linked is missing or the Program Instance name is not canonical", async () => {
+    listAirtableRecordsMock.mockImplementation(async (params: { tableName: string }) => {
+      if (params.tableName === "Program Instance - Sync") {
+        return { records: [registeringProgramInstance({ "School Year - Linked": "" })] };
+      }
+      throw new Error(`Unexpected table ${params.tableName}`);
+    });
+    await expect(fetchLeaderboard()).rejects.toThrow(/missing School Year - Linked/);
+
+    listAirtableRecordsMock.mockImplementation(async (params: { tableName: string }) => {
+      if (params.tableName === "Program Instance - Sync") {
+        return {
+          records: [registeringProgramInstance({
+            "Name - Program Instance": "Shooting Challenge 2026-2027",
+          })],
+        };
+      }
+      throw new Error(`Unexpected table ${params.tableName}`);
+    });
+    await expect(fetchLeaderboard()).rejects.toThrow(
+      /name must be exactly "Shooting Challenge \| 2026-2027"/,
+    );
+  });
+
   it("fails closed for an unavailable approved view instead of broadening to the Enrollments table", async () => {
     installQueryMock([]);
     listAirtableRecordsMock.mockImplementation(async (params: { tableName: string }) => {
-      if (params.tableName === "Config") {
-        return { records: [{ id: "recConfig", fields: { "Active School Year": SCHOOL_YEAR } }] };
-      }
-      if (params.tableName === "Program Instance - Synced") {
-        return { records: [{ id: "recProgram", fields: { "Name - Program Instance": PROGRAM_INSTANCE } }] };
+      if (params.tableName === "Program Instance - Sync") {
+        return { records: [registeringProgramInstance()] };
       }
       if (params.tableName === "Levels") {
         return { records: [{ id: "recLevel2", fields: { "Level Name": "Level 2", "Sort Order": 2, "XP Required (Cumulative)": 0, "Active?": true } }] };
@@ -114,8 +213,8 @@ describe("fetchLeaderboard Airtable adapter", () => {
     });
 
     await expect(fetchLeaderboard()).rejects.toThrow(/VIEW_NAME_NOT_FOUND/);
-    expect(listAirtableRecordsMock).toHaveBeenCalledTimes(4);
-    expect(listAirtableRecordsMock.mock.calls[3][0].filterByFormula).toBeUndefined();
+    expect(listAirtableRecordsMock).toHaveBeenCalledTimes(3);
+    expect(listAirtableRecordsMock.mock.calls[2][0].filterByFormula).toBeUndefined();
   });
 
   it("reflects upward and downward corrected values on the next revalidated adapter read", async () => {
@@ -143,9 +242,12 @@ describe("fetchLeaderboard Airtable adapter", () => {
   it("rejects a stale level after a downward XP correction", async () => {
     installQueryMock([enrollment("recA", "Avery", { "Lifetime XP Total": 100 })]);
     listAirtableRecordsMock.mockImplementation(async (params: { tableName: string }) => {
-      if (params.tableName === "Config") return { records: [{ id: "recConfig", fields: { "Active School Year": SCHOOL_YEAR } }] };
-      if (params.tableName === "Program Instance - Synced") return { records: [{ id: "recProgram", fields: { "Name - Program Instance": PROGRAM_INSTANCE } }] };
-      if (params.tableName === "Levels") return { records: [{ id: "recLevel2", fields: { "Level Name": "Level 2", "Sort Order": 2, "XP Required (Cumulative)": 200, "Active?": true } }] };
+      if (params.tableName === "Program Instance - Sync") {
+        return { records: [registeringProgramInstance()] };
+      }
+      if (params.tableName === "Levels") {
+        return { records: [{ id: "recLevel2", fields: { "Level Name": "Level 2", "Sort Order": 2, "XP Required (Cumulative)": 200, "Active?": true } }] };
+      }
       return { records: [enrollment("recA", "Avery", { "Lifetime XP Total": 100 })] };
     });
     await expect(fetchLeaderboard()).rejects.toThrow(/below its assigned Current Level threshold/);

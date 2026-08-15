@@ -10,12 +10,14 @@ import type { HomeworkAssignment, HomeworkCatalogData } from "@/types/homework";
 const REVALIDATE_SECONDS = 300;
 
 const TABLES = {
-  config: "Config",
-  programInstances: "Program Instance - Synced",
+  programInstances: "Program Instance - Sync",
   programHomeworkAssignments: "Program Homework Assignments",
   homeworkLibrary: "Homework Library",
   weeks: "Weeks",
 } as const;
+
+const REGISTERING_SHOOTING_CHALLENGE_FILTER =
+  "AND({Program - Linked}='Shooting Challenge',{Status}='Registering')";
 
 // Homework Library is reusable content only. Week/Grade Band are intentionally absent.
 const CURRICULUM_CATALOG_FIELDS = [
@@ -61,11 +63,10 @@ const WEEK_FIELDS = ["Week Name", "Start Date"] as const;
 
 type LinkedRecord = { id?: unknown };
 
-type ConfigFields = { "Active School Year"?: unknown };
-
 type ProgramInstanceFields = {
   "Name - Program Instance"?: unknown;
   "School Year - Linked"?: unknown;
+  "Program - Linked"?: unknown;
   Status?: unknown;
   "Record Id"?: unknown;
 };
@@ -127,36 +128,31 @@ function recordIdFormula(ids: string[]): string {
   return `OR(${clauses.join(",")})`;
 }
 
-async function getActiveSchoolYear(): Promise<string> {
-  const response = await listAirtableRecords<ConfigFields>({
-    tableName: TABLES.config,
-    maxRecords: 5,
-    fields: ["Active School Year"],
-    revalidateSeconds: REVALIDATE_SECONDS,
-  });
-  const uniqueYears = [...new Set(response.records.map(r => asString(r.fields["Active School Year"])).filter(Boolean))];
-  if (uniqueYears.length !== 1) {
-    throw new Error(`Public homework requires exactly one active Config school year; found ${uniqueYears.length}.`);
-  }
-  return uniqueYears[0];
-}
-
 async function getCurrentProgramInstance(): Promise<{ id: string; name: string; schoolYear: string }> {
-  const schoolYear = await getActiveSchoolYear();
-  const expectedName = `Shooting Challenge | ${schoolYear}`;
   const response = await listAirtableRecords<ProgramInstanceFields>({
     tableName: TABLES.programInstances,
     maxRecords: 10,
-    fields: ["Name - Program Instance", "School Year - Linked", "Status", "Record Id"],
-    filterByFormula: `AND({Name - Program Instance}='${escapeAirtableString(expectedName)}',{School Year - Linked}='${escapeAirtableString(schoolYear)}')`,
+    fields: ["Name - Program Instance", "School Year - Linked", "Program - Linked", "Status", "Record Id"],
+    filterByFormula: REGISTERING_SHOOTING_CHALLENGE_FILTER,
     revalidateSeconds: REVALIDATE_SECONDS,
   });
   if (response.records.length !== 1) {
-    throw new Error(`Public homework requires exactly one current Shooting Challenge Program Instance for ${schoolYear}; found ${response.records.length}.`);
+    throw new Error(
+      `Public homework requires exactly one Registering Shooting Challenge Program Instance; found ${response.records.length}.`,
+    );
   }
   const record = response.records[0];
+  const schoolYear = asString(record.fields["School Year - Linked"]);
+  if (!schoolYear) {
+    throw new Error("Current Shooting Challenge Program Instance is missing School Year - Linked.");
+  }
+  const expectedName = `Shooting Challenge | ${schoolYear}`;
   const name = asString(record.fields["Name - Program Instance"]);
-  if (!name) throw new Error("Current Shooting Challenge Program Instance has no name.");
+  if (name !== expectedName) {
+    throw new Error(
+      `Public homework Program Instance name must be exactly "${expectedName}"; found "${name || "(empty)"}".`,
+    );
+  }
   return { id: record.id, name, schoolYear };
 }
 

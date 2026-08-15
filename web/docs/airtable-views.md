@@ -48,7 +48,7 @@ Instance scope from Airtable's public linked-record response.
 `Shooting Challenge | <year>` Program Instance, active Enrollments only,
 exactly one Athlete and Current Level, active Current Level, and settled
 nonnegative Level Rank / Lifetime XP / counted shots. The web adapter resolves
-the current scope through `Config` and `Program Instance - Synced`, validates
+the current scope through `Program Instance - Sync` (Registering Shooting Challenge), validates
 all returned rows again, rejects duplicate Athlete + Program Instance + School
 Year identities, and never serializes Airtable Enrollment IDs.
 
