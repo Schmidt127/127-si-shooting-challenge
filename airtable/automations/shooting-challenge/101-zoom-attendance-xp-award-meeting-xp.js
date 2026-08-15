@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-22
-Last GitHub Update: 2026-08-13
+Last GitHub Update: 2026-08-15
 
 Purpose:
 Awards Zoom attendance XP to all linked attendees for one completed meeting.
@@ -24,7 +24,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 /************************************************************
  * 101 - Zoom Attendance XP - Award Meeting XP
- * Version: v6.5
+ * Version: v6.6
  * Date Written: 2026-05-28
  * Last Updated: 2026-08-15
  *
@@ -107,7 +107,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "101 - Zoom Attendance XP - Award Meeting XP",
-  version: "v6.5",
+  version: "v6.6",
 
   timeZone: "America/Denver",
   formulaSettlementAttempts: 5,
@@ -1056,6 +1056,13 @@ async function runLiveLifecycleReconciliation(recordId) {
   let bonusEventsCreated = 0;
   let bonusEventsUpdated = 0;
   let bonusEventsDeactivated = 0;
+  /*
+   * The event-signature formula only changes when the active XP Event set
+   * changes (create / deactivate / reactivate / reuse). Repairing an
+   * already-active event with identical values must still acknowledge
+   * without requiring a fresh formula state.
+   */
+  let formulaSignatureMustChange = false;
 
   const priorMeetingEnrollmentIds = xpQuery.records
     .filter(record => getLinkedRecordIds(record, xpEventsTable, CONFIG.xpEvents.zoomMeeting).includes(recordId))
@@ -1227,6 +1234,7 @@ async function runLiveLifecycleReconciliation(recordId) {
             [CONFIG.xpEvents.error]: "",
           });
           baseEventsDeactivated += 1;
+          formulaSignatureMustChange = true;
           lifecycleAction = "deactivated_owned_event";
         } catch (error) {
           eventWarnings.push(`XP Event ${matching[0].id} deactivation failed: ${error.message || error}`);
@@ -1257,6 +1265,7 @@ async function runLiveLifecycleReconciliation(recordId) {
               [CONFIG.xpEvents.error]: "",
             });
             bonusEventsDeactivated += 1;
+            formulaSignatureMustChange = true;
           } catch (error) {
             eventWarnings.push(`Bonus XP Event ${bonus.sourceKey} deactivation failed: ${error.message || error}`);
           }
@@ -1345,6 +1354,7 @@ async function runLiveLifecycleReconciliation(recordId) {
               [CONFIG.xpEvents.error]: "",
             });
             bonusEventsDeactivated += 1;
+            formulaSignatureMustChange = true;
           } catch (error) {
             eventWarnings.push(`Bonus XP Event ${bonus.sourceKey} deactivation failed: ${error.message || error}`);
           }
@@ -1382,8 +1392,14 @@ async function runLiveLifecycleReconciliation(recordId) {
       });
       if (bonusEvents.length === 1) {
         try {
+          const bonusWasActive = getBooleanish(
+            bonusEvents[0],
+            xpEventsTable,
+            CONFIG.xpEvents.active
+          );
           await updateRecordSafe(xpEventsTable, bonusEvents[0].id, bonusPayload);
           bonusEventsUpdated += 1;
+          if (!bonusWasActive) formulaSignatureMustChange = true;
         } catch (error) {
           eventWarnings.push(`Bonus XP Event ${bonus.sourceKey} update failed: ${error.message || error}`);
         }
@@ -1392,6 +1408,7 @@ async function runLiveLifecycleReconciliation(recordId) {
           const createdBonusId = await xpEventsTable.createRecordAsync(bonusPayload);
           await ensureXpEventWeeklySummaryLink(createdBonusId, bonusWasId);
           bonusEventsCreated += 1;
+          formulaSignatureMustChange = true;
         } catch (error) {
           eventWarnings.push(`Bonus XP Event ${bonus.sourceKey} writeback failed: ${error.message || error}`);
         }
@@ -1422,11 +1439,15 @@ async function runLiveLifecycleReconciliation(recordId) {
         activityDateKey: meetingDateKey,
       });
       try {
+        const wasActive = getBooleanish(existing, xpEventsTable, CONFIG.xpEvents.active);
         await updateRecordSafe(xpEventsTable, existing.id, payload);
         baseEventsUpdated += 1;
-        lifecycleAction = getBooleanish(existing, xpEventsTable, CONFIG.xpEvents.active)
-          ? "repaired_owned_event"
-          : "reactivated_owned_event";
+        if (wasActive) {
+          lifecycleAction = "repaired_owned_event";
+        } else {
+          lifecycleAction = "reactivated_owned_event";
+          formulaSignatureMustChange = true;
+        }
       } catch (error) {
         eventWarnings.push(`XP Event ${existing.id} update failed: ${error.message || error}`);
       }
@@ -1459,6 +1480,7 @@ async function runLiveLifecycleReconciliation(recordId) {
             [CONFIG.xpEvents.weeklySummary]: linkedCell([wasMatches[0].id]),
           });
           baseEventsUpdated += 1;
+          formulaSignatureMustChange = true;
           lifecycleAction = "reused_last_chance_event";
         } catch (error) {
           eventWarnings.push(`XP Event ${sourceKey} last-chance reuse failed: ${error.message || error}`);
@@ -1488,6 +1510,7 @@ async function runLiveLifecycleReconciliation(recordId) {
         try {
           const createdId = await xpEventsTable.createRecordAsync(payload);
           baseEventsCreated += 1;
+          formulaSignatureMustChange = true;
           lifecycleAction = "created_owned_event";
           await ensureXpEventWeeklySummaryLink(createdId, wasMatches[0].id);
         } catch (error) {
@@ -1500,14 +1523,7 @@ async function runLiveLifecycleReconciliation(recordId) {
 
   const { currentSignature: freshSignature } =
     await readFormulaSettlement(recordId, startingSignature, {
-      requireChangedSignature:
-        baseEventsCreated +
-        baseEventsUpdated +
-        baseEventsDeactivated +
-        bonusEventsCreated +
-        bonusEventsUpdated +
-        bonusEventsDeactivated >
-        0,
+      requireChangedSignature: formulaSignatureMustChange,
     });
   if (eventWarnings.length) {
     throw new Error(`Partial writeback warning: ${eventWarnings.join(" | ")}`);

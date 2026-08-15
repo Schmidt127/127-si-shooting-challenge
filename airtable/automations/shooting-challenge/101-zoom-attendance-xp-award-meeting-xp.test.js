@@ -1,5 +1,5 @@
 /**
- * Automation 101 v6.5 executable runtime fixtures.
+ * Automation 101 v6.6 executable runtime fixtures.
  *
  * Run:
  *   node airtable/automations/shooting-challenge/101-zoom-attendance-xp-award-meeting-xp.test.js
@@ -374,9 +374,10 @@ async function test(name, fn) {
 }
 
 (async () => {
-  await test("committed source declares CONFIG.version v6.5", async () => {
-    assert(source.includes('version: "v6.5"'));
-    assert(source.includes("* Version: v6.5"));
+  await test("committed source declares CONFIG.version v6.6", async () => {
+    assert(source.includes('version: "v6.6"'));
+    assert(source.includes("* Version: v6.6"));
+    assert(source.includes("formulaSignatureMustChange"));
     assert(!source.includes('CONFIG.statuses.error'));
   });
   await test("acknowledges Create XP Events unchecked before award without XP creation", async () => {
@@ -393,6 +394,32 @@ async function test(name, fn) {
     assert.strictEqual(fixture.createdEventCount, 0);
     assert.strictEqual(fixture.tables["Zoom Meetings"].valueFor(IDS.meeting, "Zoom XP Reconciliation Needed?"), 0);
   });
+  await test("repairs an already-active exact event without requiring a changed event signature", async () => {
+    const wasId = "recCanonicalWas";
+    const fixture = makeFixture({
+      attendeeIds: [IDS.enrollment],
+      wasRows: [{ id: wasId, values: { Enrollment: linked([IDS.enrollment]), Week: linked([IDS.week]) } }],
+      xpRows: [eventRow(IDS.xp, {
+        enrollmentId: IDS.enrollment,
+        weekId: IDS.week,
+        active: true,
+        meetingId: IDS.meeting,
+        sourceKey: `ZOOM_ATTEND_BASE|fixture-meeting|${IDS.enrollment}`,
+      })],
+      signatureMode: "event",
+    });
+    // Already-active event set is already reflected in the starting signature.
+    // Writing identical payload values must still acknowledge after Create XP
+    // Events is disarmed, without waiting for an event-signature change.
+    const result = await runAutomation(fixture);
+    assert.strictEqual(result.ok, true, result.error?.message);
+    assert.strictEqual(fixture.outputs.actionOut, "repaired_owned_event");
+    assert.strictEqual(fixture.createdEventCount, 0);
+    assert.strictEqual(fixture.tables["XP Events"].valueFor(IDS.xp, "Active?"), true);
+    assert.strictEqual(fixture.tables["Zoom Meetings"].valueFor(IDS.meeting, "Create XP Events"), false);
+    assert.strictEqual(fixture.tables["Zoom Meetings"].valueFor(IDS.meeting, "Zoom XP Reconciliation Needed?"), 0);
+  });
+
   await test("active attendee uses one existing WAS and creates no WAS", async () => {
     const wasId = "recCanonicalWas";
     const fixture = makeFixture({
@@ -591,7 +618,7 @@ async function test(name, fn) {
     assert.deepStrictEqual([...fixture.tables["XP Events"].rows.keys()], [xpEventId]);
   });
 
-  console.log("\nAutomation 101 v6.5 runtime fixtures passed.");
+  console.log("\nAutomation 101 v6.6 runtime fixtures passed.");
 })().catch(error => {
   console.error(error);
   process.exitCode = 1;
