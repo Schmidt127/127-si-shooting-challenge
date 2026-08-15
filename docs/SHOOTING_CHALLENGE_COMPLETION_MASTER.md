@@ -16,7 +16,7 @@ state, the named live system wins.
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-13** (PKG-006R-HF-001: 010 v10.8 hotfix; 010 OFF in PROD; PKG-006R/036 locks active) |
+| Last updated | **2026-08-15** (PKG-006R and PKG-036 controlled Production proofs completed) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -259,6 +259,8 @@ they require Mike-owned schema or live-system decisions.
 | `PKG-040` | Standings and leaderboard data-integrity reliability | `Complete` | [`deploy-checklists/PKG-040-STANDINGS-LEADERBOARD-PRODUCTION-VERIFICATION.md`](./deploy-checklists/PKG-040-STANDINGS-LEADERBOARD-PRODUCTION-VERIFICATION.md) | Production public-data adapter repair and live verification | Cursor; Mike | `Web - Leaderboard` boundary, exactly one active Enrollment identity, settled Level/XP/shots, deterministic public ordering, no private record IDs in public model, realistic adapter coverage, and live route verification | 2026-08-15 — PR #206 merged/deployed. Connected Airtable readback confirmed exactly three active Enrollments linked to Registering `Shooting Challenge | 2026-2027` (Xavier, Curtis, Charlie), each with one Athlete, one Program Instance, one Current Level, settled XP/shots, and level rank. Direct live checks of `/shoot`, `/shoot/leaderboard`, and `/shoot/public-display` returned that same set without “temporarily unavailable”; `/shoot/homework` also returned successfully. No production runtime errors after verification. | Repo; Airtable; Vercel | Closed. Retain the read-only audit for any future data correction or scope change; do not reopen this completed package for unrelated website styling work. | 40 |
 
 ### PKG-006R / PKG-036 Production baseline — 2026-08-13
+
+> **Completion update — 2026-08-15:** **PKG-006R Complete.** Automation 010 v10.9 is ON after manual and native lifecycle proof: same-event create/replay, withdrawal, restoration, settled totals, zero backlog, and read-only audit with zero errors. **PKG-036 Complete.** Automation 041 v5.0 and 042 v4.1.2 are ON after a controlled Charlie adjustment 0 → 1 → 0: 041 queued exactly one record each time, 042 automatically cleared the queue and restored the correct state, and the final progression audit returned 12 active Levels, 12 active Gate Rules, 3 active Enrollments, and zero findings. Automation 043 remains absent. The separate two-row weekly-goal warning remains PKG-039 scope.
 
 Mike supplied the authoritative Production baseline for the unified operator
 packet ([`PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md`](./deploy-checklists/PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md)).
