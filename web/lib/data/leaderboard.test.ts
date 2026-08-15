@@ -192,10 +192,13 @@ describe("leaderboard mapping", () => {
 
 describe("leaderboard eligibility contract", () => {
   const PROGRAM_INSTANCE_ID = "rec5mEM0YPqPqq0hZ";
+  const LEVEL_2_ID = "recLevel2XXXXXXXXX";
   const scope = {
     schoolYear: "2026-2027",
     programInstanceId: PROGRAM_INSTANCE_ID,
-    activeLevelsByName: new Map([["Level 2", { rank: 2, xpRequired: 0 }]]),
+    activeLevelsById: new Map([
+      [LEVEL_2_ID, { name: "Level 2", rank: 2, xpRequired: 0 }],
+    ]),
   };
 
   function validRecord(id: string, overrides: Record<string, unknown> = {}) {
@@ -208,7 +211,8 @@ describe("leaderboard eligibility contract", () => {
         // Live Airtable REST returns linked Program Instance as record ids.
         "Program Instance": [PROGRAM_INSTANCE_ID],
         "School Year": scope.schoolYear,
-        "Current Level": [{ name: "Level 2" }],
+        // Live Airtable REST returns Current Level as linked record ids.
+        "Current Level": [LEVEL_2_ID],
         "Current Level - Public Facing Display": "Level 2",
         "Level Sort Order - For Softr": 2,
         "Level Status": "Assigned",
@@ -232,6 +236,20 @@ describe("leaderboard eligibility contract", () => {
     expect(records[0].id).toBe("recCrNNAdVmQ4Y8fL");
   });
 
+  it("accepts a valid Current Level record-id link with matching display name", () => {
+    const records = requireEligibleLeaderboardRecords(
+      [
+        validRecord("recCrNNAdVmQ4Y8fL", {
+          "Current Level": [LEVEL_2_ID],
+          "Current Level - Public Facing Display": "Level 2",
+        }),
+      ],
+      scope,
+    );
+    expect(records).toHaveLength(1);
+    expect(records[0].id).toBe("recCrNNAdVmQ4Y8fL");
+  });
+
   it.each([
     ["inactive enrollment", { "Active?": false }],
     ["prior school year", { "School Year": "2025-2026" }],
@@ -241,6 +259,8 @@ describe("leaderboard eligibility contract", () => {
     ["multiple athletes", { Athlete: [{ name: "A" }, { name: "B" }] }],
     ["missing stable athlete identity", { "Athlete ID Lookup": [] }],
     ["missing current level", { "Current Level": [] }],
+    ["display-name current level link", { "Current Level": [{ name: "Level 2" }] }],
+    ["mismatched current level display", { "Current Level - Public Facing Display": "Level 9" }],
     ["inactive level status", { "Level Status": "Error" }],
     ["blank XP", { "Lifetime XP Total": "" }],
     ["negative XP", { "Lifetime XP Total": -1 }],
@@ -262,10 +282,18 @@ describe("leaderboard eligibility contract", () => {
     ], scope)).toThrow(/inactive or mismatched/);
   });
 
+  it("rejects an unknown Current Level record id", () => {
+    expect(() => requireEligibleLeaderboardRecords([
+      validRecord("rec1", { "Current Level": ["recUnknownLevelXXX"] }),
+    ], scope)).toThrow(/inactive or unknown Current Level/);
+  });
+
   it("rejects a stale Current Level after a downward XP correction", () => {
     const thresholdScope = {
       ...scope,
-      activeLevelsByName: new Map([["Level 2", { rank: 2, xpRequired: 200 }]]),
+      activeLevelsById: new Map([
+        [LEVEL_2_ID, { name: "Level 2", rank: 2, xpRequired: 200 }],
+      ]),
     };
     expect(() => requireEligibleLeaderboardRecords([
       validRecord("rec1", { "Lifetime XP Total": 199 }),
