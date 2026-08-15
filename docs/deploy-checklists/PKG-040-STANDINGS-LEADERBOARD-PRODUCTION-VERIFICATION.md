@@ -1,12 +1,13 @@
 # PKG-040 — Standings and Leaderboard Production Verification
 
-Status: Repository-ready only — the read-only inventory/audit may run while
+Status: **Complete — production public-data repair and live verification passed on 2026-08-15.** The read-only inventory/audit remains available for future data corrections while
 PKG-006R / PKG-036 locks are active, but **no correction observation or data
 manipulation may begin until the relevant lock owner releases it**.
 Owner: Mike (Production operator)
 Repository boundary: This packet performs read-only inspection and public
 readback only. It does not change Airtable records, fields, views,
 automations, configuration, XP, emails, or deployments.
+> **Closure record — 2026-08-15:** PR #206 repaired the public Airtable adapters and was deployed to production. Connected Airtable readback confirmed exactly three active Enrollments scoped to the Registering `Shooting Challenge | 2026-2027` Program Instance: Xavier Schmidt, Curtis Schmidt, and Charlie Schmidt. Direct production checks confirmed those three athletes on `/shoot`, `/shoot/leaderboard`, and `/shoot/public-display`; `/shoot/homework` also loaded. No “temporarily unavailable” response or production runtime errors were present. This package is closed. The audit below is retained for future correction observations, not as an uncompleted launch gate.
 
 ## Purpose
 
