@@ -103,6 +103,13 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **Reliability packages master readiness (2026-08-16)** — Repository preparation
+  for PKG-039 first-time setup + scheduled checks, PKG-009 season-scope safety,
+  and PKG-037 twelve-step certification. Adds master readiness doc, dependency
+  maps, read-only audits (`audit-pkg-039-first-setup-scheduled-checks.js`,
+  `audit-pkg-009-season-readiness.js`), offline contract tests, and operator
+  worksheet updates. No Airtable schema/data/automation/trigger change or live
+  Production proof claimed.
 - **PKG-038 achievement XP audit correction (2026-08-14)** — The read-only
   achievement XP pipeline audit is now v2.1 and derives a streak XP Event's
   expected `XP Source` from its linked Streak Occurrence → Achievement →

@@ -1,8 +1,31 @@
-# PKG-039 — WAS and Weekly Goal Operator Worksheet
+# PKG-039 — First-Time Setup, Scheduled Checks, and WAS Operator Worksheet
 
-**Status:** Draft companion worksheet; DEV-first, Mike-operated
-**Canonical packet:** [PKG-039 WAS/weekly-goal integrity packet](../deploy-checklists/PKG-039-WAS-WEEKLY-GOAL-INTEGRITY-PRODUCTION-PACKET.md)
+**Status:** Draft companion worksheet; DEV-first, Mike-operated  
+**Canonical packets:**
+- [PKG-039 first-time setup + scheduled checks](../deploy-checklists/PKG-039-FIRST-TIME-SETUP-SCHEDULED-CHECKS-PRODUCTION-PACKET.md)
+- [PKG-039 WAS/weekly-goal integrity](../deploy-checklists/PKG-039-WAS-WEEKLY-GOAL-INTEGRITY-PRODUCTION-PACKET.md)  
 **Boundary:** No schema, data, automation, trigger, email, Make, progression, or lock changes are authorized by this worksheet.
+
+## First-time setup preflight
+
+| Item | Value |
+|---|---|
+| Repository SHA | |
+| Test athlete email | |
+| Enrollment RID | |
+| Registering Program Instance RID | |
+
+| Audit | JSON path | Error count |
+|---|---|---|
+| audit-pkg-039-first-setup-scheduled-checks.js | | |
+| audit-counted-submission-xp-standings-reliability.js | | |
+
+| Fixture | Automation run IDs | Key record RIDs | Pass / stop |
+|---|---|---|---|
+| First Enrollment (001) | | | |
+| First Submission chain | | | |
+| First XP (010) | | | |
+| 118 dryRun zero / one eligible | | | |
 
 ## DEV schema attestation
 

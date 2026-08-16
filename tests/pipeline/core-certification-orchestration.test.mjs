@@ -168,6 +168,17 @@ test("submission, homework, video, and Zoom withdrawal/restoration reactivate th
   assertCanonicalRelationships(s);
 });
 
+test("PKG-037 packet documents twelve executable certification steps", () => {
+  const fs = require("node:fs");
+  const path = require("node:path");
+  const packet = fs.readFileSync(
+    path.join(process.cwd(), "docs/deploy-checklists/PKG-037-CORE-APPLICATION-PRODUCTION-CERTIFICATION.md"),
+    "utf8",
+  );
+  const matches = packet.match(/^\| \d+\. /gm) || [];
+  assert.ok(matches.length >= 12, `expected at least 12 certification steps, found ${matches.length}`);
+});
+
 test("negative cases fail closed without creating or replacing ledger events", () => {
   const s = state();
   const first = reconcile(s, { sourceKey: keys.submission, sourceId: SUBMISSION, points: 20, family: "submission" });

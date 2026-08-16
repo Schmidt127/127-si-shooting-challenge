@@ -1,7 +1,9 @@
 # PKG-037 — Core Application Production Certification Packet
 
-**Status:** Repository-ready; **BLOCKED** pending the prerequisite package
-evidence listed below.
+**Status:** Repository-ready certification packet; **do not run live
+certification until Mike executes preflight and prerequisite gates.** Prior
+blockers PKG-006R and PKG-036 are complete as of 2026-08-15; PKG-034
+live-attendee proof and PKG-038 streak/milestone paste remain separate gates.
 **Authority:** This is the one executable core-certification packet after its
 prerequisites are individually installed and proven. It does not replace their
 packets or make a Production claim from repository text.
@@ -165,31 +167,36 @@ condition fails.
 7. Confirm 043/063/068/077/112 and obsolete Make/Gmail daily writer
    dispositions from section 3.
 
-## 5. Certification sequence and expected results
+## 5. Twelve-step end-to-end certification matrix
 
 Use a dedicated Mike-owned test email and a new or otherwise clean test athlete
 whose existing records are fully documented. Do not reuse a source record
 unless its previous XP events are part of the explicit same-event test.
 
-| Step | Natural transition and proof | Exact expected data result |
-|---|---|---|
-| 1. Register | Submit one controlled registration through the approved registration path; capture 001 run. | One Athlete identity and exactly one canonical active Enrollment for Athlete + School Year + Program Instance; no duplicate Enrollment. |
-| 2. Initial level | Wait for 041/042 natural path; capture runs. | Lifetime XP 0; Current Level = Beginner; correct Next Level and matching gate; Level Status = Assigned; queue clears after 042 acknowledgement. |
-| 3. Counted Submission | Create one simple valid, non-future, non-duplicate counted shooting Submission. Capture 023, 005, 007, 031, and 010 natural runs. | Exactly one Enrollment and one Week on Submission; exactly one canonical WAS for its Enrollment + Week; exactly one active `SUBMISSION_XP|{Submission ID}` with exact Submission/Enrollment/Week/WAS links. |
-| 4. Daily handoff | Observe 031/076/079; do not inspect design or send content. | At most one exact queue key `DAILY_SUBMISSION|SUBMISSIONS|{Submission ID}`; capture queue/Event/Delivery IDs and 079 outcome. No 077 or legacy Make/Gmail daily dispatch. |
-| 5. Homework | Review one eligible Homework Completion related to the certification athlete; capture 064/065 natural runs. | Exactly one active `HOMEWORK_XP|{HC ID}` linked to exact HC, Enrollment, Week, and canonical WAS. |
-| 6. Video | Complete one eligible Video Feedback lifecycle; capture 113/114 natural runs. | Exactly one active `VIDEO_SUBMISSION|{VF ID}` linked to exact VF, Enrollment, Week, and canonical WAS. |
-| 7. Live Zoom | Complete one dedicated live-only Meeting with exactly one test Enrollment attendee; capture 101. | Exactly one active `ZOOM_ATTEND_BASE|{Meeting Key}|{Enrollment ID}` with correct Meeting/Enrollment/Week/WAS/rule. For a first clean meeting, `ZOOM_ATTEND_BONUS_2` and `_3` are absent. No `ZOOM_CREDIT`, `ZOOM_RECORDING`, recording email, or Hub action. |
-| 8. Settlement | Observe records at T+0, T+30s, T+2m, and T+5m after the final relevant natural run. | WAS XP and Enrollment lifetime XP equal the sum of active selected XP Events; formula state is stable on two successive observations; 041 queues and 042 settles Current/Next/Gate/Status. |
-| 9. Standings | Read the approved standings/leaderboard input row only. | The row consumes the settled Enrollment fields/totals, with correct test-athlete identity and no duplicate enrollment representation. |
+**Do not run this live certification until:** preflight §4 passes, PKG-009
+registering PI attestation is recorded, and Mike explicitly starts the run.
 
-For the clean lifecycle, expected cardinalities are: **1** canonical Enrollment,
-**1** counted Submission, **1** canonical Week, **1** canonical WAS, **1**
-Submission Base XP event, **1** Homework XP event, **1** Video XP event, and
-**1** Zoom Base XP event. That is **4 selected active base events** before
-any separately designed Zoom bonus test. Existing unrelated records are not
-silently counted as failures; list them in the baseline and prove source-key
-disjointness.
+| Step | Mike action | Expected Airtable record/field outcome | Expected website or email result | Pass/fail criteria | Safe rollback / cleanup | Evidence to save |
+|---:|---|---|---|---|---|---|
+| 1. Enrollment + identity | Submit one controlled registration; capture **001** run | One Athlete; exactly one active Enrollment (`Athlete` link, `Program Instance` link, `School Year` select) | Registration confirmation path completes without duplicate account | No second canonical Enrollment; 001 `statusOut=success` | Turn OFF 001 if unsafe; preserve records | Athlete RID, Enrollment RID, 001 run ID, before/after screenshots |
+| 2. Submission intake | Create one valid counted Submission; capture **023, 005, 007, 009, 031** | Submission: one `Enrollment`, one `Week`, one `Weekly Athlete Summary`; assets created as expected | No public page change yet | Intake chain completes; no duplicate Submission for same identity/date | Turn OFF failing intake automation only | Submission RID, Week RID, WAS RID, run IDs |
+| 3. Submission Base XP | Wait for **010** on `Reconciliation Needed? = 1` | One active XP Event: `Source Key = SUBMISSION_XP\|{Submission RID}`; links to Submission, Enrollment, Week, WAS | None | Exactly one active event; exact links; no duplicate key | Turn OFF 010; same-event deactivate only via 010 | XP Event RID, Source Key, 010 run ID |
+| 4. Homework assign + complete | Coach review one eligible Homework Completion; capture **020, 064, 065** | HC linked to Enrollment, Week, WAS, PHA; one `HOMEWORK_XP\|{HC RID}` | Homework feedback email only if separately approved — not required for cert pass | One active Homework XP event with exact links | Turn OFF 065; preserve HC | HC RID, XP Event RID, 064/065 run IDs |
+| 5. Video feedback | Complete Video Feedback lifecycle; capture **013, 113, 114** | One `VIDEO_SUBMISSION\|{VF RID}` linked to VF, Enrollment, Week, WAS | Parent video email only if separately approved | One active Video XP event; 112 remains OFF | Turn OFF 114 if unsafe | VF RID, XP Event RID, 113/114 run IDs |
+| 6. Zoom attendance | One live Meeting with test Enrollment attendee; capture **101** | One `ZOOM_ATTEND_BASE\|{Meeting Key}\|{Enrollment RID}`; no recording-credit keys | No recording approval email | Live base event only; bonuses absent on first clean meeting | Turn OFF 101; preserve Meeting/Attendee rows | Meeting RID, Meeting Key, 101 run ID |
+| 7. Streak + milestone | After PKG-038 paste approval only: streak + milestone natural runs; observe **053, 054, 066, 059, 041, 042** | Canonical streak topology + `STREAK_XP` / `SHOT_MILESTONE` keys; unlocks/events inactive-not-deleted on withdrawal | None | Same-event lifecycle; no duplicate keys; 041 queues only | Turn OFF 053/054/066/059; do not delete unlocks/XP | Unlock RIDs, XP Event RIDs, audit JSON |
+| 8. Level calculation | Observe **041/042** after XP settlement | `Lifetime XP Total` settled; `Current Level`, `Next Level`, `Level Gate Rule`, `Level Status` assigned | None | 042 sole progression writer; queue clears | Never edit levels manually; turn OFF 042 only if unsafe | 041/042 run IDs, level links, signatures |
+| 9. Leaderboard + public scope | Read `Web - Leaderboard` row + `/shoot/leaderboard` | Enrollment fields match settled totals; registering PI scope only | Test athlete appears once; no private fields in payload | Matches PKG-040 contract; no duplicate identity | No data repair in cert — stop and open PKG-040 if mismatch | View filter capture, URL screenshot, audit JSON |
+| 10. Homework webpage | Open `/shoot/homework` for test athlete context | PHA rows scoped to registering Program Instance | Page loads; assignments match PI + week context | No cross-season homework leakage | None — read-only | URL screenshot, PI record id used by adapter |
+| 11. Parent communication | Observe **031 → 076 → 079** daily handoff (and weekly only if separately in scope) | Queue key `DAILY_SUBMISSION\|SUBMISSIONS\|{Submission RID}`; Delivery record when Hub enabled | Hub/Delivery outcome recorded; no 077 / legacy Make daily path | At most one queue row per key; handoff succeeds or fails closed with visible status | Turn OFF 076/079; preserve queue rows | Queue RID, Event RID, Delivery RID, 079 run ID |
+| 12. Correction / retry | Replay, withdraw, restore for Submission, Homework, Video, Zoom families | Same XP Event IDs reactivate; totals decrease and restore; no duplicate keys | No duplicate parent emails for same source key | All four families pass same-event table §6 | Turn OFF failing owner only; never delete XP Events | Before/after totals, event IDs, run IDs |
+
+For the clean lifecycle before Step 7, expected cardinalities are: **1**
+canonical Enrollment, **1** counted Submission, **1** canonical Week, **1**
+canonical WAS, **1** Submission Base XP, **1** Homework XP, **1** Video XP,
+and **1** Zoom Base XP. Step 7 is a separate gate requiring PKG-038
+Production paste approval. Existing unrelated records are not silently counted
+as failures; list them in the baseline and prove source-key disjointness.
 
 ## 6. Replay, withdrawal/restoration, and failures
 
@@ -317,14 +324,13 @@ settlement, email delivery, or Production data correctness.
 
 Current blockers:
 
-1. PKG-006R v10.8 must be installed and its lock explicitly released.
-2. PKG-036 v5.0/v4.1 must remain deferred until that release, then be
-   installed and individually proven.
-3. PKG-034 live-attendee lifecycle and downstream proof remain pending despite
-   historical 101 v6.1 installation/empty-roster evidence; current installed
-   version must be re-attested against canonical source v6.3.
+1. PKG-009 registering Program Instance + School Year attestation must be
+   recorded before certification starts.
+2. PKG-034 live-attendee lifecycle and downstream proof remain pending;
+   re-attest installed **101 v6.3** against canonical source.
+3. PKG-038 streak/milestone paste remains a separate gate for Step 7.
 4. Video XP 113/114 installed-version and controlled lifecycle proof remain
-   pending.
+   pending if not already captured in PKG-007 follow-up.
 5. Mike must supply all Production UI/run/audit evidence. No repository test
    can convert any item above into Production certification.
 
