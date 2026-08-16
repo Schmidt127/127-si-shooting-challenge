@@ -1,7 +1,8 @@
 # PKG-037 — Core Application Production Certification Packet
 
-**Status:** Repository-ready; **BLOCKED** pending the prerequisite package
-evidence listed below.
+**Status:** Repository-ready; prerequisites **006R, 036, and 038 are complete**
+(2026-08-15/16). **PKG-034 live-attendee proof** and **PKG-007 Video XP proof**
+remain open before final certification execution.
 **Authority:** This is the one executable core-certification packet after its
 prerequisites are individually installed and proven. It does not replace their
 packets or make a Production claim from repository text.
@@ -26,31 +27,28 @@ Each lane has four independent proofs. Do not collapse them into “passed.”
 
 Run packages strictly in this order:
 
-1. **PKG-006R:** install and prove 010 v10.8, including positive, replay,
-   withdrawal/restoration, read-only audit, settled totals, and natural
-   trigger. Its lock must be explicitly released.
+1. **PKG-006R:** **Complete (2026-08-15).** 010 v10.9 ON; do not retest
+   reconciliation lifecycle unless source/trigger changes.
 2. **PKG-007:** retain its controlled Homework lifecycle evidence. Before this
    packet, reconfirm 020 v3.5, 064 v12.2, and 065 v10.1 state and prove any
-   additional selected path; do not infer Video XP from Homework evidence.
-3. **PKG-034:** retain the historical 101 v6.1 installation/empty-roster
-   evidence, re-attest the current installed version against canonical source
-   v6.3, and execute the pending live-attendee, same-event
-   reversal/restoration, and downstream proof for the selected certification
-   athlete.
-4. **PKG-036:** the repository prerequisite is complete with canonical source
-   041 v5.0 and 042 v4.1.2. Production installation/proof remains a Mike-owned
-   controlled step after the PKG-006R lock release, using the queue/replay/
-   downward/upward evidence in its operator packet. Automation 043 stays
+   additional selected path; Video XP 113/114 Production proof remains open.
+3. **PKG-034:** base installation/empty-roster **proven (2026-08-13).** Do not
+   retest installation. Live-attendee, same-event reversal/restoration, and
+   downstream proof for the certification athlete remain **open**.
+4. **PKG-036:** **Complete (2026-08-15).** 041 v5.0 and 042 v4.1.2 ON; do not
+   retest queue/replay unless source/trigger changes. Automation 043 stays
    retired.
-5. **PKG-037:** execute this packet as the consolidated cross-family
+5. **PKG-038:** **Complete (2026-08-16).** 053/054/066/059 ON; Charlie Early
+   Bird streak/milestone proof; do not retest unless source/trigger changes.
+6. **PKG-037:** execute this packet as the consolidated cross-family
    certification. A passed child package is evidence consumed here, not a
    reason to skip a linked-record or settled-total check.
 
-**First action once PKG-006R, PKG-007, PKG-034, and PKG-036 are individually
-installed and proven:** open a new evidence worksheet, capture the
-read-only baseline for the dedicated test athlete (including zero selected
-source keys and every pre-existing total), then run the preflight in section 4
-before changing the registration or source records.
+**First action once PKG-034 live-attendee and PKG-007 Video paths are proven:**
+open a new evidence worksheet, capture the read-only baseline for the dedicated
+test athlete (including zero selected source keys and every pre-existing total),
+then run the preflight in section 4 before changing the registration or source
+records.
 
 ## 2. Dependency and ownership map
 

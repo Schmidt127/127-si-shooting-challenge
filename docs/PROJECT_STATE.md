@@ -2,9 +2,9 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-08-10** (merged PRs #137–#139; 067 v3.4 and 115 v2.1 controlled PROD evidence reconciled; 2027 season policy recorded)
+Last updated: **2026-08-16** (completion-status reconciliation; PKG-038 Production proof; PKG-006R/036/040 closed)
 
-**Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
+**Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md) — see §2C for current package status table and do-not-retest ledger.
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
 **Prior snapshots and dated evidence:** historical unless explicitly identified as current live-system evidence.
 

@@ -47,7 +47,13 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Docs
 
 #### Changed
-- **PKG-040 standings and leaderboard reliability (2026-08-13)** — The public
+- **Completion-status reconciliation (2026-08-16)** — Updated
+  `SHOOTING_CHALLENGE_COMPLETION_MASTER.md` §2A/§2C with current package status
+  table, do-not-retest ledger, and still-open items. Marked PKG-038 Complete
+  (053/054/066/059 Production proof), PKG-009 Weeks scaffold partially proven,
+  PKG-034 base lifecycle partially proven, PKG-039 goal-link repair partially
+  proven. Reconciled stale PKG-006R baseline table and automation-index hold
+  notes. No Production Airtable, automation, or deployment changes.
   standings adapter now requires the `Web - Leaderboard` view instead of
   broadening to an unsafe table fallback, resolves the active Config School
   Year and canonical Program Instance before reading it, validates active

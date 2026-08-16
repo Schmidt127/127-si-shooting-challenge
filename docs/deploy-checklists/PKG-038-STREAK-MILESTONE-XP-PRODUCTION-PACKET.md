@@ -1,8 +1,8 @@
 # PKG-038 — Streak and Shot Milestone XP Production packet
 
-**Status:** Repository-ready draft; Production installation and testing are
-blocked until Mike explicitly releases both PKG-006R and PKG-036 and confirms
-there is no competing lifetime-XP observation window.
+**Status:** **COMPLETE — Production proof passed (2026-08-16).** 053 v5.5, 054 v5.8,
+066 v3.8, and 059 v3.6 are installed and ON. **Do not retest** unless source,
+trigger, or schema changes. See Production closeout section below.
 
 ## Scope and ownership
 

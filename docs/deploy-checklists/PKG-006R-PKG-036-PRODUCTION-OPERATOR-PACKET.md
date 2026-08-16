@@ -1,15 +1,21 @@
 # PKG-006R + PKG-036 — Unified Production operator packet
 
-**Date:** 2026-08-13 (amended with Mike-supplied Production baseline; **PKG-006R-HF-001** hotfix 2026-08-13)
+> **Completion record — 2026-08-15:** **PKG-006R Complete.** Automation 010 v10.9
+> is ON after lifecycle proof. **PKG-036 Complete.** Automation 041 v5.0 and
+> 042 v4.1.2 are ON after Charlie 0→1→0 queue test. **Do not retest or
+> re-paste** unless source/trigger changes. Sections below retain the historical
+> 2026-08-13 baseline for audit trail only.
+
+**Date:** 2026-08-13 (amended with Mike-supplied Production baseline; **PKG-006R-HF-001** hotfix 2026-08-13; **completion 2026-08-15**)
 **Repository SHA:** verify `origin/master` before execution (`git rev-parse origin/master`)
 **Base:** `127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026` (`appn84sqPw03zEbTT`)
 **Owner:** Mike performs every Production step. Agents do not access Production.
 
 ## Evidence boundary
 
-Repository text and offline tests are not Production proof. Historical packets that cite **010 v10.6** replay proof describe prior evidence only. **Lifecycle proof for 010 v10.8** (backlog clearance, natural-trigger runs, withdrawal/restoration, settled totals) remains pending. **010 v10.7 is OFF in Production** after a multi-family XP lookup failure; paste **v10.8** before re-enabling.
+Repository text and offline tests are not Production proof. **PKG-006R and PKG-036 are complete as of 2026-08-15.** Historical sections below document the pre-completion baseline and hotfix path only.
 
-### PKG-006R-HF-001 — Production blocker (2026-08-13)
+### PKG-006R-HF-001 — Production blocker (resolved 2026-08-15)
 
 | Item | State |
 |---|---|
@@ -17,7 +23,7 @@ Repository text and offline tests are not Production proof. Historical packets t
 | Legitimate events | Submission Base `recacQfNbArf2ygT2` (`SUBMISSION_XP\|recY0o5tpqMfvlCCa`); Homework `recJGcfipFyKwiSC5` (`HOMEWORK_XP` family) |
 | Root cause | 010 v10.7 treated any second linked XP Event as a duplicate instead of scoping duplicate detection to Submission Base identity only |
 | Hotfix | **010 v10.8** — family-scoped lookup; ignore unrelated `HOMEWORK_XP`, `VIDEO_SUBMISSION`, milestone, streak, and Zoom families; append Submission XP link without unlinking unrelated events |
-| Production now | **010 OFF**; both XP Events unchanged; PKG-006R and PKG-036 locks remain active |
+| Production now | **010 v10.9 ON**; lifecycle proof complete; locks released 2026-08-15 |
 | Backlog ID | `PKG-006R-HF-001` |
 
 ---
@@ -38,7 +44,10 @@ Repository text and offline tests are not Production proof. Historical packets t
 
 ---
 
-## Current Production state (Mike-supplied 2026-08-13)
+## Current Production state (historical baseline 2026-08-13 — superseded)
+
+> **Current truth (2026-08-15):** 010 v10.9 ON; 041 v5.0 ON; 042 v4.1.2 ON.
+> PKG-006R and PKG-036 complete. **Do not retest.**
 
 Record screenshots/exports before any change.
 
