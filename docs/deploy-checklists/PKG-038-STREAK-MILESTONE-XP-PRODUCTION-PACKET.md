@@ -1,8 +1,19 @@
 # PKG-038 — Streak and Shot Milestone XP Production packet
 
-**Status:** Repository-ready draft; Production installation and testing are
-blocked until Mike explicitly releases both PKG-006R and PKG-036 and confirms
-there is no competing lifetime-XP observation window.
+**Status:** Repository-ready operator package. Production paste/proof is **not
+claimed**. Start at [PKG-038-CLOSEOUT.md](./PKG-038-CLOSEOUT.md).
+
+**Release gates:** PKG-006R and PKG-036 are marked **complete** in the backlog
+(2026-08-15). Mike must still confirm 010 reversal proof, no competing
+lifetime-XP observation window, and pass
+[PKG-038-DO-NOT-PROCEED-GATE.md](./PKG-038-DO-NOT-PROCEED-GATE.md) before paste.
+
+**Package artifacts:** [field sheet](./PKG-038-FIELD-DEPENDENCY-SHEET.md) ·
+[repo vs PROD audit](./PKG-038-REPOSITORY-VS-PRODUCTION-AUDIT.md) ·
+[test plan](./PKG-038-CONTROLLED-TEST-PLAN.md) ·
+[evidence checklist](./PKG-038-EVIDENCE-CHECKLIST.md) ·
+[rollback](./PKG-038-ROLLBACK-PLAN.md) ·
+[paste packets](./PKG-038-053-PASTE-PACKET.md) (053/054/059/066).
 
 ## Scope and ownership
 
