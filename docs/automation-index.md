@@ -41,7 +41,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **010** | Submission Intake — Create/Reconcile XP Event from Submission | Submissions when `Reconciliation Needed? = 1`, dynamic `recordId` | `010-submission-intake-create-xp-event.js` (**v10.9** — **ON in PROD**; PKG-006R complete 2026-08-15; do not retest) |
 | **013** | Submission Intake — Create or Link Video Feedback | Submission Assets when video asset ready for Video Feedback prep | `013-submission-intake-create-or-link-video-feedback.js` |
 | 021 | Submission Intake — Set Attachment Upload Status | *confirm in Airtable* | `021-submission-intake-and-asset-creation-set-attachment-upload-status.js` |
-| **022** | Submission Intake — Sync Child Upload Writeback | Submission Assets when Upload Status is Uploaded/Processing/Error and child linked | `022-submission-intake-sync-child-upload-writeback-from-submission-asset.js` (**v1.1** — **repository-prepared only**; Production UI presence unverified; no install/live-proof packet) |
+| **022** | Submission Intake — Sync Child Upload Writeback | Submission Assets when Upload Status is Uploaded/Processing/Error and child linked; Video URL precedence Reviewer → Canonical → Drive; post-write verify | `022-submission-intake-sync-child-upload-writeback-from-submission-asset.js` (**v2.0**) |
 | 023 | Submission Intake — Assign Enrollment to Submission | *confirm in Airtable* | `023-submission-intake-and-asset-creation-assign-enrollment-to-submission.js` |
 
 ## Homework (020, 064–065, 067–068, 070a, 071) — 063 retired

@@ -6,6 +6,19 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Airtable
+
+#### Changed
+- **022 (v2.0) — Sync Child Upload Writeback** — Full rewrite. Video Feedback
+  coach URL precedence is Reviewer File URL → Canonical File URL → Google Drive
+  File URL; empty sources never clear an existing Video URL. Child Upload Status
+  copies Uploaded / Processing / Error into the existing single-select (never
+  Pending Link; missing options fail closed). Success requires post-write
+  reread verification. JPEG / MIME does not block video writeback. New outputs:
+  `sourceUrlUsed`, `childUploadStatus`, `writebackVerified`. Offline suite:
+  `tools/testing/tests/test_022_offline.mjs`. Does not create children or XP
+  Events; does not alter asset Upload Status; does not change 070b or Lambda.
+
 ### Web
 
 #### Changed
