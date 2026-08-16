@@ -108,6 +108,17 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Airtable
 
+#### Fixed
+- **Automation 010 v10.10 — Airtable date normalization (2026-08-16)** — `dateKey()` now
+  handles Airtable `Date` objects, ISO datetimes, and `MM/DD/YYYY` local strings in
+  `America/Denver`, matching 034/066 helpers. Fail-closed identity errors now list the
+  specific eligibility predicates that failed instead of a generic canonical-identity
+  message. v10.9 reconciliation / ownership behavior unchanged. Offline:
+  `node --test tools/testing/tests/test_010_offline.mjs` ·
+  `node --test tools/testing/tests/test_010_date_key.mjs` ·
+  `node --test tests/pipeline/010-submission-base-multi-family.test.mjs`.
+  No Production Airtable paste or XP Event writes from agents.
+
 #### Changed
 - **PKG-038 Production proof closeout (2026-08-16)** — Production proof passed for 053 v5.5, 054 v5.8, 066 v3.8, and 059 v3.6 with Early Bird counted. Charlie’s 3-day streak produced one 10-point streak XP event; the 3,000-shot 9–12 Starter milestone produced one 10-point shot-milestone XP event. Final audit v2.1 checked 10 unlocks, 5 streak occurrences, 39 XP events, and 3 weekly summaries with **issueTotal = 0**. Levels smoke test also passed: 041 queued one Enrollment and 042 assigned Current Level Beginner / Next Level Rookie Shooter. Resume after the first regular Week closes (expected May 8, 2027); do not change Early Bird dates.
 - **PKG-038 achievement XP audit correction (2026-08-14)** — The read-only
