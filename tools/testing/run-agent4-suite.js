@@ -92,6 +92,22 @@ const COMMANDS = [
     args: ["airtable/automations/shooting-challenge/lib/066-create-records-batch.test.js"],
   },
   {
+    name: "pkg-038-streak-lifecycle",
+    args: ["airtable/automations/shooting-challenge/lib/pkg-038-streak-lifecycle.test.js"],
+  },
+  {
+    name: "pkg-038-066-notes-optional",
+    args: ["airtable/automations/shooting-challenge/lib/pkg-038-066-notes-optional.test.js"],
+  },
+  {
+    name: "pkg-038-mocked-runtime",
+    args: ["tests/streak-milestone/mocked-runtime.test.js"],
+  },
+  {
+    name: "pkg-038-audit-read-only",
+    args: ["tests/streak-milestone/audit-achievement-xp-pipeline-integrity-read-only.test.js"],
+  },
+  {
     name: "script-header-contract",
     args: ["airtable/automations/shooting-challenge/lib/script-header-contract.test.js"],
   },

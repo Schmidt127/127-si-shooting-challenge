@@ -192,8 +192,8 @@ test("withdrawal and restoration preserve occurrence and XP Event IDs", () => {
 });
 
 test("PKG-038 packet references the corrected 053 version", () => {
-  assert.match(PACKET, /Streak occurrence topology \| 053 v5\.5/);
-  assert.match(PACKET, /Paste 053 v5\.5, then 054 v5\.8/);
+  assert.match(PACKET, /Streak occurrence topology \| 053 \*\*v5\.5\*\*/);
+  assert.match(PACKET, /Paste \*\*053 v5\.5\*\*, then \*\*054 v5\.8\*\*/);
 });
 
 console.log("pkg-038-streak-lifecycle: all tests passed");

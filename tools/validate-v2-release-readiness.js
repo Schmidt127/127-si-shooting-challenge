@@ -466,13 +466,13 @@ const automationIndex = exists("docs/automation-index.md") ? read("docs/automati
 const knownIssues = exists("docs/known-issues.md") ? read("docs/known-issues.md") : "";
 const inventoryText = inventory;
 
-// 066: script is v3.4 (fields-contract fix 2026-08-06); do not claim paste-not-done
+// 066: PKG-038 target is v3.8 (corrected-history lifecycle); do not claim paste-not-done
 // or treat older 3.x as the current sole version in PROJECT_STATE.
 if (byNumber.has("066")) {
   const text066 = fs.readFileSync(byNumber.get("066")[0], "utf8");
   const ver066 = extractDeclaredVersion(text066) || "";
-  if (/v?3\.4/i.test(ver066)) pass("066 script declares v3.4");
-  else fail(`066 script expected v3.4, found: ${ver066 || "(none)"}`);
+  if (/v?3\.8/i.test(ver066)) pass("066 script declares v3.8 (PKG-038 target)");
+  else fail(`066 script expected v3.8 (PKG-038), found: ${ver066 || "(none)"}`);
 
   if (/Airtable paste not done/i.test(projectState) && /H-002.*066/i.test(projectState)) {
     fail("PROJECT_STATE still claims H-002/066 Airtable paste not done (contradicts backlog + automation-index)");

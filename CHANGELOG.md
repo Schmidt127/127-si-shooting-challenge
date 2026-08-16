@@ -103,6 +103,14 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **PKG-038 operator package (2026-08-16)** — Added Production closeout
+  index, field-and-table dependency sheet, repository-vs-Production version
+  audit with uncertainty register, do-not-proceed gate, per-automation paste
+  packets (053 v5.5, 054 v5.8, 066 v3.8, 059 v3.6), Schmidt controlled test
+  plan, before/after evidence checklist, and script-only rollback plan.
+  Registered PKG-038 lifecycle tests in the agent4 suite. Updated backlog
+  status now that PKG-006R and PKG-036 are complete. No Production paste or
+  schema change was made.
 - **PKG-038 achievement XP audit correction (2026-08-14)** — The read-only
   achievement XP pipeline audit is now v2.1 and derives a streak XP Event's
   expected `XP Source` from its linked Streak Occurrence → Achievement →
