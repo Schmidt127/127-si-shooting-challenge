@@ -79,6 +79,24 @@ Every action input is the dynamic triggering Airtable record ID, never a fixed
    stale active award, trigger non-reachability, email/Make activity, or
    unsettled formula that does not converge in the agreed observation window.
 
+## Production closeout — 2026-08-16
+
+**Status: COMPLETE — Production proof passed.** Mike released PKG-006R and PKG-036 with no competing XP observation window. The following automations are installed and ON: 053 v5.5, 054 v5.8, 066 v3.8, and 059 v3.6.
+
+### Evidence completed
+
+- Early Bird remained countable; Charlie’s August 14–16 counted submissions reused one canonical WAS.
+- 053 created one active 3-day Streak Occurrence.
+- 054 created exactly one 10-point Streak XP Event; replay produced no duplicate.
+- 066 created one Shot Milestone unlock for the active 9–12 Starter threshold (3,000 shots / 25%).
+- 059 processed the unlock into exactly one 10-point Shot Milestone XP Event.
+- Final audit v2.1: 10 unlocks, 5 streak occurrences, 39 XP events, 3 weekly summaries, **issueTotal = 0**.
+- Levels smoke test passed: 041 queued one Enrollment and 042 assigned Current Level Beginner / Next Level Rookie Shooter; recalculation cleared.
+
+### Resume point
+
+Do not change Early Bird dates. 118 v2.0 correctly skipped because no regular challenge Week ended on 2026-08-15. Leave 118 and 073 ON; the first real weekly-summary verification resumes after the first regular Week closes (expected May 8, 2027). Next non-time-dependent work is Perfect Week (057/058) readiness review.
+
 ## Rollback
 
 Turn OFF only the failing affected automation. Preserve all records, source
