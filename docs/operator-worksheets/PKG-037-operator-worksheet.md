@@ -10,7 +10,7 @@
 - [ ] Certification athlete / test email / Athlete RID: `________________`
 - [ ] School Year / Program Instance RID: `________________`
 - [ ] PKG-006R lock released with evidence: `________________`
-- [ ] PKG-007 Homework evidence complete; PKG-034 live-attendee evidence complete;
+- [ ] PKG-007 Homework evidence complete; **PKG-034 Zoom live-attendance complete in Production** (consume existing evidence for Step 6; re-verify only on Step 6 failure);
       PKG-036 repository prerequisite complete with canonical 041 v5.0 / 042
       v4.1.2 source; Mike-owned installed/proof evidence remains separately
       required.

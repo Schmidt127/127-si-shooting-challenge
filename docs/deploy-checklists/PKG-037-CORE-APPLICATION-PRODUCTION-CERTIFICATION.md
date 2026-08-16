@@ -2,8 +2,11 @@
 
 **Status:** Repository-ready certification packet; **do not run live
 certification until Mike executes preflight and prerequisite gates.** Prior
-blockers PKG-006R and PKG-036 are complete as of 2026-08-15; PKG-034
-live-attendee proof and PKG-038 streak/milestone paste remain separate gates.
+blockers PKG-006R and PKG-036 are complete as of 2026-08-15; **PKG-034 Zoom
+live-attendance is complete in Production** and is consumed as existing
+evidence for Step 6. PKG-038 streak/milestone paste remains a separate gate
+for Step 7. Gate 3 Communications Hub manual proof must pass before Step 11
+can claim DAILY_SUBMISSION is production-proven.
 **Authority:** This is the one executable core-certification packet after its
 prerequisites are individually installed and proven. It does not replace their
 packets or make a Production claim from repository text.
@@ -34,11 +37,10 @@ Run packages strictly in this order:
 2. **PKG-007:** retain its controlled Homework lifecycle evidence. Before this
    packet, reconfirm 020 v3.5, 064 v12.2, and 065 v10.1 state and prove any
    additional selected path; do not infer Video XP from Homework evidence.
-3. **PKG-034:** retain the historical 101 v6.1 installation/empty-roster
-   evidence, re-attest the current installed version against canonical source
-   v6.3, and execute the pending live-attendee, same-event
-   reversal/restoration, and downstream proof for the selected certification
-   athlete.
+3. **PKG-034:** **complete in Production.** Retain the PKG-034 completion
+   evidence ([`PKG-034-ZOOM-LIVE-ATTENDANCE-PRODUCTION-PACKET.md`](./PKG-034-ZOOM-LIVE-ATTENDANCE-PRODUCTION-PACKET.md))
+   for Step 6. Do not re-run live-attendee proof unless the certification
+   athlete exposes a Step 6 failure.
 4. **PKG-036:** the repository prerequisite is complete with canonical source
    041 v5.0 and 042 v4.1.2. Production installation/proof remains a Mike-owned
    controlled step after the PKG-006R lock release, using the queue/replay/
@@ -183,7 +185,7 @@ registering PI attestation is recorded, and Mike explicitly starts the run.
 | 3. Submission Base XP | Wait for **010** on `Reconciliation Needed? = 1` | One active XP Event: `Source Key = SUBMISSION_XP\|{Submission RID}`; links to Submission, Enrollment, Week, WAS | None | Exactly one active event; exact links; no duplicate key | Turn OFF 010; same-event deactivate only via 010 | XP Event RID, Source Key, 010 run ID |
 | 4. Homework assign + complete | Coach review one eligible Homework Completion; capture **020, 064, 065** | HC linked to Enrollment, Week, WAS, PHA; one `HOMEWORK_XP\|{HC RID}` | Homework feedback email only if separately approved — not required for cert pass | One active Homework XP event with exact links | Turn OFF 065; preserve HC | HC RID, XP Event RID, 064/065 run IDs |
 | 5. Video feedback | Complete Video Feedback lifecycle; capture **013, 113, 114** | One `VIDEO_SUBMISSION\|{VF RID}` linked to VF, Enrollment, Week, WAS | Parent video email only if separately approved | One active Video XP event; 112 remains OFF | Turn OFF 114 if unsafe | VF RID, XP Event RID, 113/114 run IDs |
-| 6. Zoom attendance | One live Meeting with test Enrollment attendee; capture **101** | One `ZOOM_ATTEND_BASE\|{Meeting Key}\|{Enrollment RID}`; no recording-credit keys | No recording approval email | Live base event only; bonuses absent on first clean meeting | Turn OFF 101; preserve Meeting/Attendee rows | Meeting RID, Meeting Key, 101 run ID |
+| 6. Zoom attendance | **Consume PKG-034 completion evidence** for live Zoom XP (`101`); capture installed **101** state in preflight only | One `ZOOM_ATTEND_BASE\|{Meeting Key}\|{Enrollment RID}` per PKG-034 proof; no recording-credit keys | No recording approval email | PKG-034 Production completion accepted; **re-verify live-attendee path only if this step fails during certification** | Turn OFF 101 only if Step 6 exposes unsafe behavior; preserve Meeting/Attendee rows | PKG-034 evidence path + any new 101 run ID if re-verified |
 | 7. Streak + milestone | After PKG-038 paste approval only: streak + milestone natural runs; observe **053, 054, 066, 059, 041, 042** | Canonical streak topology + `STREAK_XP` / `SHOT_MILESTONE` keys; unlocks/events inactive-not-deleted on withdrawal | None | Same-event lifecycle; no duplicate keys; 041 queues only | Turn OFF 053/054/066/059; do not delete unlocks/XP | Unlock RIDs, XP Event RIDs, audit JSON |
 | 8. Level calculation | Observe **041/042** after XP settlement | `Lifetime XP Total` settled; `Current Level`, `Next Level`, `Level Gate Rule`, `Level Status` assigned | None | 042 sole progression writer; queue clears | Never edit levels manually; turn OFF 042 only if unsafe | 041/042 run IDs, level links, signatures |
 | 9. Leaderboard + public scope | Read `Web - Leaderboard` row + `/shoot/leaderboard` | Enrollment fields match settled totals; registering PI scope only | Test athlete appears once; no private fields in payload | Matches PKG-040 contract; no duplicate identity | No data repair in cert — stop and open PKG-040 if mismatch | View filter capture, URL screenshot, audit JSON |
@@ -326,13 +328,18 @@ Current blockers:
 
 1. PKG-009 registering Program Instance + School Year attestation must be
    recorded before certification starts.
-2. PKG-034 live-attendee lifecycle and downstream proof remain pending;
-   re-attest installed **101 v6.3** against canonical source.
-3. PKG-038 streak/milestone paste remains a separate gate for Step 7.
+2. PKG-038 streak/milestone paste remains a separate gate for Step 7.
+3. Gate 3 Communications Hub manual proof must pass before Step 11 can claim
+   DAILY_SUBMISSION is production-proven (`automation-079-offline.test.mjs`
+   has 4/7 failures from a pre-existing `remoteFetchAsync` mock/harness gap —
+   not a substitute for Gate 3).
 4. Video XP 113/114 installed-version and controlled lifecycle proof remain
    pending if not already captured in PKG-007 follow-up.
 5. Mike must supply all Production UI/run/audit evidence. No repository test
    can convert any item above into Production certification.
+
+**Not a blocker:** PKG-034 Zoom live-attendance — complete in Production.
+Step 6 consumes existing PKG-034 evidence; re-verify only on Step 6 failure.
 
 ## 10. Acceptance decision
 

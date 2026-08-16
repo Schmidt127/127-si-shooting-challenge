@@ -1,8 +1,28 @@
 # PKG-006 — Daily Submission Communications Hub promotion
 
-Status: **Repository-ready / promotion pending**
+Status: **Repository-ready — not production-proven until Gate 3 manual proof passes**
 Backlog: `PKG-006` daily-submission communications; `PKG-028` Hub migration
 Production change: **Not applied by Cursor**
+
+**Gate 3 boundary (master readiness):** Until tomorrow's isolated Production
+proof passes, do **not** claim Communications Hub DAILY_SUBMISSION is
+production-proven. Offline `automation-079-offline.test.mjs` currently reports
+**3/7 PASS**; the **4 failures are a pre-existing `remoteFetchAsync`
+mock/harness gap** on master and are not Production evidence.
+
+### Gate 3 manual pass criteria (isolated 076 → 079)
+
+All five criteria are required before Gate 3 closes:
+
+| # | Criterion | Pass evidence |
+|---:|---|---|
+| 1 | Exactly **one** `Email Handoff Queue` row at `Status = Ready` with `Handoff Key = DAILY_SUBMISSION\|SUBMISSIONS\|{Submission RID}` | Queue RID + field screenshot |
+| 2 | Exactly **one accepted Hub request** from Automation **079** (`statusOut = success`) | 079 Automation run ID + output |
+| 3 | Exactly **one Hub Message** record for that handoff key | Message RID in Communications Hub |
+| 4 | Exactly **one Delivery** result (`Sent` or documented provider outcome) | Delivery RID + provider id |
+| 5 | **Replay** of the same key reuses Event/Message/Delivery — **no duplicate send** | Before/after Hub record IDs |
+
+See also: [`RELIABILITY-PACKAGES-MASTER-READINESS-2026-08-16.md`](./RELIABILITY-PACKAGES-MASTER-READINESS-2026-08-16.md) § Gate 3.
 
 ## Automation 031 v4.0 creator-ownership restoration + Automation 076 v8.5
 

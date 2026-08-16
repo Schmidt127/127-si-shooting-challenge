@@ -108,8 +108,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   and PKG-037 twelve-step certification. Adds master readiness doc, dependency
   maps, read-only audits (`audit-pkg-039-first-setup-scheduled-checks.js`,
   `audit-pkg-009-season-readiness.js`), offline contract tests, and operator
-  worksheet updates. No Airtable schema/data/automation/trigger change or live
-  Production proof claimed.
+  worksheet updates. PKG-034 marked complete for PKG-037 Step 6; Gate 3 Hub
+  manual proof criteria strengthened. No Airtable schema/data/automation/trigger
+  change or live Production proof claimed.
 - **PKG-038 achievement XP audit correction (2026-08-14)** — The read-only
   achievement XP pipeline audit is now v2.1 and derives a streak XP Event's
   expected `XP Source` from its linked Streak Occurrence → Achievement →
