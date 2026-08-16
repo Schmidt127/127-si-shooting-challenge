@@ -6,6 +6,18 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Airtable
+
+#### Fixed
+- **Activity Date midnight-UTC → prior Denver day (2026-08-16)** — Submissions
+  **Activity Date Key** and **Submitted Same Day?** now format Activity Date in
+  **UTC** so date-only midnight-UTC values keep the entered calendar day
+  (e.g. `2026-08-16T00:00:00.000Z` → `2026-08-16`, not `2026-08-15`). Applied in
+  PROD + DEV. Automations **005 v5.4** and **010 v10.11** (plus shared
+  `toDateKeyFromDateObject`) treat midnight-UTC the same way for week assignment
+  and XP eligibility. Perfect Week Testing record `rec78GPmoBJCIOCQA` verified
+  Key=`2026-08-16`. Re-run **005** to assign Perfect Testing Week.
+
 ### Web
 
 #### Changed

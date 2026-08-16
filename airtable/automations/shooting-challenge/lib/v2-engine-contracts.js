@@ -117,6 +117,20 @@ function toDateKeyFromDateObject(value, timeZone = DEFAULT_TIME_ZONE) {
   const dateValue = value instanceof Date ? value : new Date(value);
   if (Number.isNaN(dateValue.getTime())) return "";
 
+  // Airtable date-only values are stored as midnight UTC for the entered calendar
+  // day. Do not shift that into the previous America/Denver day.
+  if (
+    dateValue.getUTCHours() === 0 &&
+    dateValue.getUTCMinutes() === 0 &&
+    dateValue.getUTCSeconds() === 0 &&
+    dateValue.getUTCMilliseconds() === 0
+  ) {
+    const year = dateValue.getUTCFullYear();
+    const month = String(dateValue.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(dateValue.getUTCDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone,
     year: "numeric",

@@ -42,7 +42,14 @@ function loadDateHelpers() {
 
 const { dateKey, todayKey, CONFIG } = loadDateHelpers();
 
-test("dateKey normalizes Airtable Date objects in America/Denver", () => {
+test("dateKey keeps Airtable date-only midnight UTC on the entered calendar day", () => {
+  // 2026-08-16 date-only is stored as midnight UTC; Denver conversion would
+  // incorrectly yield 2026-08-15.
+  assert.equal(dateKey(new Date("2026-08-16T00:00:00.000Z")), "2026-08-16");
+  assert.equal(dateKey(new Date("2026-08-16T00:00:00.000Z")), "2026-08-16");
+});
+
+test("dateKey still converts true datetimes in America/Denver", () => {
   // 2026-08-07 18:00 UTC is still 2026-08-07 in Denver (MDT, UTC-6).
   const denverDay = new Date("2026-08-07T18:00:00.000Z");
   assert.equal(dateKey(denverDay), "2026-08-07");
