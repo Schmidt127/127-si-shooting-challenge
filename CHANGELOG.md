@@ -95,6 +95,17 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Airtable
 
+#### Fixed
+- **Automation 010 v10.10 — Airtable date normalization (2026-08-16)** — `dateKey()` now
+  handles Airtable `Date` objects, ISO datetimes, and `MM/DD/YYYY` local strings in
+  `America/Denver`, matching 034/066 helpers. Fail-closed identity errors now list the
+  specific eligibility predicates that failed instead of a generic canonical-identity
+  message. v10.9 reconciliation / ownership behavior unchanged. Offline:
+  `node --test tools/testing/tests/test_010_offline.mjs` ·
+  `node --test tools/testing/tests/test_010_date_key.mjs` ·
+  `node --test tests/pipeline/010-submission-base-multi-family.test.mjs`.
+  No Production Airtable paste or XP Event writes from agents.
+
 #### Changed
 - **PKG-038 achievement XP audit correction (2026-08-14)** — The read-only
   achievement XP pipeline audit is now v2.1 and derives a streak XP Event's
