@@ -1,6 +1,6 @@
 # PKG-037 — Core Certification Evidence Worksheet
 
-**Status:** Draft companion worksheet; blocked until child-package evidence passes
+**Status:** Draft companion worksheet; blocked until PKG-034 live-attendee and PKG-007 Video XP proof complete (006R/036/038 complete as of 2026-08-16)
 **Canonical packet:** [PKG-037 core application certification](../deploy-checklists/PKG-037-CORE-APPLICATION-PRODUCTION-CERTIFICATION.md)
 **Operator:** Mike only. This worksheet records evidence; it authorizes no live action.
 
@@ -9,11 +9,11 @@
 - [ ] `origin/master` SHA immediately before execution: `________________`
 - [ ] Certification athlete / test email / Athlete RID: `________________`
 - [ ] School Year / Program Instance RID: `________________`
-- [ ] PKG-006R lock released with evidence: `________________`
-- [ ] PKG-007 Homework evidence complete; PKG-034 live-attendee evidence complete;
-      PKG-036 repository prerequisite complete with canonical 041 v5.0 / 042
-      v4.1.2 source; Mike-owned installed/proof evidence remains separately
-      required.
+- [ ] PKG-006R complete (010 v10.9 ON; do not retest): `________________`
+- [ ] PKG-036 complete (041 v5.0 / 042 v4.1.2 ON; do not retest): `________________`
+- [ ] PKG-038 complete (053/054/066/059 ON; do not retest): `________________`
+- [ ] PKG-007 Homework evidence complete; Video XP 113/114 Production proof: `________________`
+- [ ] PKG-034 live-attendee evidence complete (base installation proven; do not retest empty-roster): `________________`
 - [ ] No Production schema, configuration, email, Make, deployment, or retired-writer changes are made by this worksheet.
 
 ## Lane 1 — repository proof

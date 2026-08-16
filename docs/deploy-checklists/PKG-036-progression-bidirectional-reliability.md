@@ -1,7 +1,7 @@
 # PKG-036 — Progression configuration and bidirectional recalculation reliability
 
 **Status:** **Complete — Production installation and controlled natural-trigger proof passed 2026-08-15.**
-**Unified sequence:** Use [`PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md`](./PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md) as the single current operator source. Do not start until PKG-006R lock is released.
+**Unified sequence:** Historical operator source. **Both PKG-006R and PKG-036 are complete (2026-08-15). Do not retest or re-paste unless source/trigger changes.**
 **Backlog:** PKG-036
 **Production base:** `127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026` (`appn84sqPw03zEbTT`)
 **Environment exception:** Mike authorized this package's Production-only path;
@@ -10,13 +10,15 @@ proof.
 
 > **Completion record — 2026-08-15:** Automation 041 v5.0 and Automation 042 v4.1.2 were installed and enabled after preflight. A controlled Charlie Enrollment manual adjustment 0 → 1 → 0 caused 041 to queue exactly one Enrollment on each change; 042 automatically processed and cleared the queue, restoring the 0-XP Beginner state. The read-only audit returned 12 active Levels, 12 active Gate Rules, 3 active Enrollments, and zero findings. Automation 043 remains absent.
 
-## Current Production orientation (Mike-supplied 2026-08-13)
+## Current Production orientation (superseded baseline — see completion record above)
 
-- Automation 010: **v10.7 installed and OFF** after HF-001. Paste and prove
-  v10.8 before re-enabling; inspect run history and reconciliation backlog
-  before record changes. The unified packet is authoritative.
-- Automation 041: deployed; `wflCRvaopntNPsc64`; cron trigger every 15 minutes; installed script is v4.0. **v5.0 paste deferred** until PKG-006R lock release.
-- Automation 042: deployed; `wfl3aiiK8vI2tz0HA`; `Enrollments` record-enters-view trigger on view `viwm9OgwkPKI2bii3`; installed script is v3.4. **v4.1 paste deferred** until PKG-006R lock release.
+> **Do not use the table below for current status.** It records the 2026-08-13
+> pre-completion baseline only. Current truth: 010 v10.9 ON; 041 v5.0 ON;
+> 042 v4.1.2 ON; PKG-006R and PKG-036 complete.
+
+- Automation 010: **v10.9 installed and ON** (PKG-006R complete).
+- Automation 041: **v5.0 installed and ON** (PKG-036 complete).
+- Automation 042: **v4.1.2 installed and ON** (PKG-036 complete).
 - Automation 043: absent from the Production automation inventory. It must not be recreated.
 - Automation 077: **deleted** from Airtable (retired Make/Gmail path); GitHub source archived only.
 - Active Levels: **12**; thresholds unique and span 0 through 2200 XP.

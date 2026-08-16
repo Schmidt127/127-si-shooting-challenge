@@ -38,10 +38,10 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 006 | Submission Intake — Set Video Count | *confirm in Airtable* | `006-submission-intake-and-asset-creation-set-video-count.js` |
 | 007 | Submission Intake — Duplicate Checker for Submissions | *confirm in Airtable* | `007-submission-intake-and-asset-creation-duplicate-checker-for-submissions.js` |
 | 009 | Submission Intake — Create Submission Assets | *confirm in Airtable* | `009-submission-intake-create-submission-assets.js` |
-| **010** | Submission Intake — Create/Reconcile XP Event from Submission | Submissions when `Reconciliation Needed? = 1`, dynamic `recordId` | `010-submission-intake-create-xp-event.js` (**v10.8** — **OFF in PROD** after HF-001; paste before re-enable) |
+| **010** | Submission Intake — Create/Reconcile XP Event from Submission | Submissions when `Reconciliation Needed? = 1`, dynamic `recordId` | `010-submission-intake-create-xp-event.js` (**v10.9** — **ON in PROD**; PKG-006R complete 2026-08-15; do not retest) |
 | **013** | Submission Intake — Create or Link Video Feedback | Submission Assets when video asset ready for Video Feedback prep | `013-submission-intake-create-or-link-video-feedback.js` |
 | 021 | Submission Intake — Set Attachment Upload Status | *confirm in Airtable* | `021-submission-intake-and-asset-creation-set-attachment-upload-status.js` |
-| **022** | Submission Intake — Sync Child Upload Writeback | Submission Assets when Upload Status is Uploaded/Processing/Error and child linked | `022-submission-intake-sync-child-upload-writeback-from-submission-asset.js` |
+| **022** | Submission Intake — Sync Child Upload Writeback | Submission Assets when Upload Status is Uploaded/Processing/Error and child linked | `022-submission-intake-sync-child-upload-writeback-from-submission-asset.js` (**v1.1** — **repository-prepared only**; Production UI presence unverified; no install/live-proof packet) |
 | 023 | Submission Intake — Assign Enrollment to Submission | *confirm in Airtable* | `023-submission-intake-and-asset-creation-assign-enrollment-to-submission.js` |
 
 ## Homework (020, 064–065, 067–068, 070a, 071) — 063 retired
@@ -74,26 +74,27 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| 041 | Levels — Mark Enrollment for Level Recalculation | **v5.0 repository-ready; Production paste pending** — queue-only scheduled reconciliation | `041-levels-and-progression-mark-enrollment-for-level-recalculation.js` |
-| 042 | Levels — Assign Current and Next Level with Gate Blocking | **v4.1.2 repository-ready; Production paste pending** — sole progression assignment writer; v4.1.2 aligns the acknowledgement signature with 041's relevant ladder scope and uses bounded immediate formula rereads | `042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js` |
+| 041 | Levels — Mark Enrollment for Level Recalculation | **v5.0 installed in PROD / ON** (PKG-036 complete 2026-08-15) | `041-levels-and-progression-mark-enrollment-for-level-recalculation.js` |
+| 042 | Levels — Assign Current and Next Level with Gate Blocking | **v4.1.2 installed in PROD / ON** (PKG-036 complete 2026-08-15) | `042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js` |
 | 043 | Levels — Set Level Gate Rule from Next Level | **Retired; absent from current Production automation inventory; do not recreate** | `043-levels-and-progression-set-level-gate-rule-from-next-level.js` |
 
 ## Achievements and streaks (053–059, 066)
 
-> **PKG-038 hold:** Do not paste, enable, or controlled-test 053, 054, 059, or
-> 066 in Production until Mike explicitly releases both PKG-006R and PKG-036
-> and confirms there is no competing lifetime-XP observation window.
+> **PKG-038 status:** **COMPLETE** (Production proof passed 2026-08-16). 053 v5.5,
+> 054 v5.8, 066 v3.8, and 059 v3.6 are installed and ON. Charlie Schmidt Early
+> Bird path proven; audit v2.1 issueTotal = 0. **Do not retest** unless source,
+> trigger, or schema changes. Resume after first regular Week closes (~May 8, 2027).
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| 053 | Achievements — Streak Occurrences Rebuild from Submissions | Submissions updated; exact trigger must cover eligibility/identity corrections | `053-achievements-and-milestones-streak-occurrences-rebuild-and-upsert-from-submissions.js` (**v5.4** — corrected canonical topology) |
-| **054** | Achievements — Create or Reconcile Streak XP Event | Streak Occurrences updated; exact trigger must cover Active? withdrawal and Ready/restoration | `054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js` (**v5.8** — exact same-event lifecycle) |
+| 053 | Achievements — Streak Occurrences Rebuild from Submissions | Submissions updated; exact trigger must cover eligibility/identity corrections | `053-achievements-and-milestones-streak-occurrences-rebuild-and-upsert-from-submissions.js` (**v5.5** — first-create Ready handoff; **ON in PROD**) |
+| **054** | Achievements — Create or Reconcile Streak XP Event | Streak Occurrences updated; exact trigger must cover Active? withdrawal and Ready/restoration | `054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js` (**v5.8** — exact same-event lifecycle; **ON in PROD**) |
 | 055 | Achievements — Recalculate Current Shooting Streak from Submission | *confirm in Airtable* | `055-achievements-and-milestones-recalculate-current-shooting-streak-from-submission.js` |
 | 056 | Achievements — Refresh Current Shooting Streaks Daily | *confirm in Airtable (scheduled)* | `056-achievements-and-milestones-refresh-current-shooting-streaks-daily.js` |
 | **057** | Achievements — Calculate Perfect Week Eligibility | WAS Perfect Week recalc | `057-achievements-and-milestones-calculate-perfect-week-eligibility.js` (**v1.7** — inactive enrollment and unsettled/multiple/wrong-scope goals fail closed; requires lookup parity with the linked active goal) |
 | 058 | Achievements — Create Perfect Week Unlock | Lifecycle-capable WAS trigger; dynamic `recordId` | `058-achievements-and-milestones-create-perfect-week-unlock.js` (**v1.3** — exact source-key lifecycle owner; inactive or unsettled/wrong-scope goal state withdraws the same unlock rather than creating a replacement) |
-| **059** | Achievements — Create/Reconcile XP Event from Achievement Unlock | Athlete Achievement Unlock lifecycle; never filter `Ready for 059 XP?` or Shot Milestone presence | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.6** — corrected-history milestone lifecycle; Perfect Week preserved) |
-| 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.7** — counted-submission totals and corrected-history unlock lifecycle) |
+| **059** | Achievements — Create/Reconcile XP Event from Achievement Unlock | Athlete Achievement Unlock lifecycle; never filter `Ready for 059 XP?` or Shot Milestone presence | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.6** — corrected-history milestone lifecycle; Perfect Week preserved; **ON in PROD**) |
+| 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.8** — counted-submission totals and corrected-history unlock lifecycle; **ON in PROD**) |
 
 ## Email and Make handoffs (070b, 070c, 072–077, 118–119)
 
