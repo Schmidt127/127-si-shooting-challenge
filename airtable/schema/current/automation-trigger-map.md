@@ -85,28 +85,25 @@ version/state/mapping must still be confirmed in the Airtable UI.
 
 ### Achievements and streaks (053–059, 066)
 
-> **PKG-038 Production hold:** The lifecycle trigger contracts below are
-> repository-ready only. Do not paste, enable, or controlled-test 053, 054,
-> 059, or 066 until Mike explicitly releases both PKG-006R and PKG-036 and
-> confirms no competing lifetime-XP observation window.
+> **PKG-038 Production status:** COMPLETE (Mike production proof, 2026-08-16). 053 v5.5, 054 v5.8, 066 v3.8, and 059 v3.6 are installed and ON; final audit v2.1 returned issueTotal = 0. Early Bird remains countable.
 
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
-| 053 | Submissions | Record updated; must watch Enrollment, Activity Date, `Count This Submission?`, and `Total Shots Counted` so positive and correction changes reach reconciliation | `053-...-rebuild-and-upsert-from-submissions.js` (**v5.4**) | Canonical Streak Occurrences; unsupported topology becomes inactive |
+| 053 | Submissions | Record updated; must watch Enrollment, Activity Date, `Count This Submission?`, and `Total Shots Counted` so positive and correction changes reach reconciliation | `053-...-rebuild-and-upsert-from-submissions.js` (**v5.5**) | Canonical Streak Occurrences; unsupported topology becomes inactive |
 | **054** | Streak Occurrences | Record updated; must watch `Active?`, Source Status, Enrollment, Achievement, Week, Streak End Date, and XP Events | `054-...-create-or-repair-streak-xp-event.js` (**v5.8**) | **XP Events** (streak); exact-owned inactive event deactivates/reactivates |
 | 055 | Submissions | *confirm* | `055-...-recalculate-current-shooting-streak-from-submission.js` | Streak rollups |
 | 056 | Enrollments | *scheduled* | `056-...-refresh-current-shooting-streaks-daily.js` | Streak refresh |
 | 057 | Weekly Athlete Summary | *confirm* | `057-...-calculate-perfect-week-eligibility.js` (**v1.7**) | Perfect week flags |
 | 058 | Weekly Athlete Summary | *confirm* | `058-...-create-perfect-week-unlock.js` (**v1.3**) | Achievement Unlocks |
 | **059** | Athlete Achievement Unlocks | Lifecycle-reachable record update/create; watch Active?, XP Award Status, XP Events, Enrollment, Shot Milestone, Week, and Milestone Source Key; never filter Ready for 059 XP? or Shot Milestone presence | `059-...-create-xp-event-from-achievement-unlock.js` (**v3.6**) | **XP Events** (achievement); corrected-history milestone lifecycle |
-| 066 | Enrollments | `Run Shot Milestone Check?` checked; the upstream reconciliation must re-arm it after counted-total changes | `066-...-create-shot-milestone-unlocks.js` (**v3.7**) | Canonical shot-milestone unlocks; corrected-history lifecycle |
+| 066 | Enrollments | `Run Shot Milestone Check?` checked; the upstream reconciliation must re-arm it after counted-total changes | `066-...-create-shot-milestone-unlocks.js` (**v3.8**) | Canonical shot-milestone unlocks; corrected-history lifecycle |
 
 ### Levels (041–043)
 
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
-| **041** | Enrollments / Levels / Level Gate Rules | Scheduled every **15 minutes**; optional `recordId` only for a controlled single-Enrollment proof; scheduled mapping blank | `041-...-mark-enrollment-for-level-recalculation.js` **v5.0 target**; paste deferred until PKG-006R lock release | Queue only: `Level Recalc Needed?`, `Progression Last Queued Signature` |
-| **042** | Enrollments | When record enters view `042 - Needs Level Assignment` (`viwm9OgwkPKI2bii3`); filters `Level Recalc Needed?` checked + `Active?` checked; dynamic `recordId` from triggering Enrollment | `042-...-assign-current-and-next-level-with-gate-blocking.js` **v4.1.2 target**; paste deferred until PKG-006R lock release | Current/Next Level, Gate Rule, Status, reconciled signature |
+| **041** | Enrollments / Levels / Level Gate Rules | Scheduled every **15 minutes**; optional `recordId` only for a controlled single-Enrollment proof; scheduled mapping blank | `041-...-mark-enrollment-for-level-recalculation.js` **v5.0 target**; installed and verified in Production 2026-08-16 | Queue only: `Level Recalc Needed?`, `Progression Last Queued Signature` |
+| **042** | Enrollments | When record enters view `042 - Needs Level Assignment` (`viwm9OgwkPKI2bii3`); filters `Level Recalc Needed?` checked + `Active?` checked; dynamic `recordId` from triggering Enrollment | `042-...-assign-current-and-next-level-with-gate-blocking.js` **installed and verified** | Current/Next Level, Gate Rule, Status, reconciled signature |
 | 043 | Levels | **Retired — do not enable or recreate** | `043-...-set-level-gate-rule-from-next-level.js` (historical source only) | No downstream writer; `042` owns `Level Gate Rule` |
 
 ### Email packages (072, 074–079, 075, 118–119)
