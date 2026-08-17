@@ -9,6 +9,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **079 (v2.4) — Airtable-compatible Hub fetch** — Replace `remoteFetchAsync`
+  with `fetch` for Communications Hub ingress. Event Type contract unchanged
+  (`ZOOM_RECORDING_APPROVAL` / Template Key `ZOOM_RECORDING_APPROVED`).
 - **079 (v2.3) — Zoom Event Type / Template Key contract fix** — Email Handoff
   Queue Event Type is `ZOOM_RECORDING_APPROVAL`; Template Key remains
   `ZOOM_RECORDING_APPROVED`. Handoff Key prefix is

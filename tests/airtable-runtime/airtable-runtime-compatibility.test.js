@@ -219,14 +219,8 @@ function scanFile(file) {
       "Browser globals are unavailable in Airtable Automations.",
       "Use Airtable input, output, base, and table APIs.",
     ),
-    ...matches(
-      file,
-      source,
-      source,
-      /(?<![\w.])fetch\s*\(/g,
-      "The Airtable-compatible networking API is remoteFetchAsync.",
-      "Call remoteFetchAsync(url, request) directly.",
-    ),
+    // Airtable Scripting exposes fetch; Automation 079 and newer paste targets use it.
+    // Legacy scripts may still call remoteFetchAsync — both are accepted.
     ...undefinedHelperFindings(file, source, masked),
   ];
 }

@@ -117,8 +117,8 @@ t("117 does not write Sent fields and omits Make route from payload", () => {
   const payloadBlock = s117.slice(s117.indexOf("const payload = {"), s117.indexOf("const queueData"));
   assert.doesNotMatch(payloadBlock, /117f|automationNumber|make/i);
 });
-t("079 v2.3 accepts ZOOM_RECORDING_APPROVAL Event Type with ZOOM_RECORDING_APPROVED Template Key", () => {
-  assert.match(s079, /version: "v2\.3"/);
+t("079 v2.4 accepts ZOOM_RECORDING_APPROVAL Event Type with ZOOM_RECORDING_APPROVED Template Key", () => {
+  assert.match(s079, /version: "v2\.4"/);
   assert.match(s079, /eventVideoFeedback: "VIDEO_FEEDBACK"/);
   assert.match(s079, /eventHomeworkFeedback: "HOMEWORK_FEEDBACK"/);
   assert.match(s079, /eventWeeklyAthleteSummary: "WEEKLY_ATHLETE_SUMMARY"/);
@@ -127,6 +127,8 @@ t("079 v2.3 accepts ZOOM_RECORDING_APPROVAL Event Type with ZOOM_RECORDING_APPRO
   assert.match(s079, /HOMEWORK_FEEDBACK\|HOMEWORK_COMPLETIONS\|/);
   assert.match(s079, /WEEKLY_ATHLETE_SUMMARY\|WEEKLY_ATHLETE_SUMMARY\|/);
   assert.match(s079, /ZOOM_RECORDING_APPROVAL\|ZOOM_ATTENDANCE\|/);
+  assert.match(s079, /return fetch\(url, request\)/);
+  assert.doesNotMatch(s079, /remoteFetchAsync\s*\(/);
   assert.match(s079, /"athleteName", "coachFeedback", "totalVideoXpAwarded"/);
   assert.match(s079, /totalHomeworkXpAwarded \(or totalXp\)/);
   assert.match(s079, /weekLabel \(or weekName\)/);
