@@ -60,8 +60,8 @@ t("071 does not write final sent fields", () => {
   assert.doesNotMatch(s071, /\[["']Parent Feedback Sent On["']\]\s*:/);
   assert.doesNotMatch(s071, /\[["']Parent Feedback Sent\?["']\]\s*:/);
 });
-t("073 v4.0 creates Communications Hub queue handoff (not Make webhook)", () => {
-  assert.match(s073, /Version: v4\.0/);
+t("073 v4.1 creates Communications Hub queue handoff (not Make webhook)", () => {
+  assert.match(s073, /Version: v4\.1/);
   assert.match(s073, /Email Handoff Queue/);
   assert.match(s073, /VIDEO_FEEDBACK\|VIDEO_FEEDBACK\|/);
   assert.match(s073, /created_handoff/);
@@ -74,12 +74,15 @@ t("073 validates active canonical Video Feedback source", () => {
   assert.match(s073, /VIDEO_FEEDBACK\|\$\{assetId\}/);
   assert.match(s073, /No active Video Feedback XP Event matches Enrollment \+ Week \+ source/);
 });
-t("073 uses VF Video URL then asset Reviewer File URL — no Google Drive", () => {
+t("073 uses only VF Video URL or Drive Link — no Reviewer/Canonical/Drive fields", () => {
   assert.match(s073, /videoUrl: "Video URL or Drive Link"/);
-  assert.match(s073, /reviewer: "Reviewer File URL"/);
+  assert.match(s073, /Parent handoff blocked \(022 writeback required; no asset URL fallback\)/);
   assert.doesNotMatch(s073, /Google Drive File URL|Google Drive View URL|Google Drive File ID|Google Drive Folder/);
-  const vfBlock = s073.slice(s073.indexOf("vf: {"), s073.indexOf("enr: {"));
-  assert.doesNotMatch(vfBlock, /Reviewer File URL|Canonical File URL/);
+  assert.doesNotMatch(s073, /parentVideoUrl\(vf, vfTable, asset/);
+  assert.doesNotMatch(s073, /reviewer:\s*"Reviewer File URL"/);
+  assert.doesNotMatch(s073, /canonical:\s*"Canonical File URL"/);
+  const assetBlock = s073.slice(s073.indexOf("asset: {"), s073.indexOf("xp: {"));
+  assert.doesNotMatch(assetBlock, /"Reviewer File URL"|"Canonical File URL"/);
 });
 t("073 does not write final Sent fields", () => {
   assert.match(s073, /Do not write Parent Feedback Sent\? or Parent Feedback Sent On/);

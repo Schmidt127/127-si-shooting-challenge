@@ -6,10 +6,10 @@ Export and document **Make.com scenarios** that support the shooting challenge (
 
 | Blueprint file | Scenario name (Make) | Trigger | Airtable / external |
 |----------------|----------------------|---------|---------------------|
-| [upload-asset-engine-v1.json](./upload-asset-engine-v1.json) | Shooting Challenge - GAME - Upload Engine | Webhook (070a/070b) | Airtable + Google Drive |
-| [c025-117f-zoom-recording-approval-email-dev-v1.template.json](./c025-117f-zoom-recording-approval-email-dev-v1.template.json) | Shooting Challenge - DEV - Zoom Recording Approval Email - 117f - v1 | Custom webhook (117f) | DEV Airtable + Gmail + Data Store — **OFF** (DEV template). PROD workflow (Airtable Automation **117** → Make **117f**, Data Store `C025_117f_PROD_SendKeys`, four-part `ZOOM_REC_EMAIL` key) is **tested, not fully live** — see [PROD 117f workflow](../../docs/deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md) |
-| *(add)*.json | Weekly summary email | Webhook / schedule | Airtable + Gmail |
-| *(add)*.json | Parent notification | Webhook | Gmail |
+| [upload-asset-engine-v1.json](./upload-asset-engine-v1.json) | Shooting Challenge - GAME - Upload Engine | Webhook (070a/070b) | Airtable + Google Drive / AWS path — **asset upload only; keep** |
+| [c025-117f-zoom-recording-approval-email-dev-v1.template.json](./c025-117f-zoom-recording-approval-email-dev-v1.template.json) | Shooting Challenge - DEV - Zoom Recording Approval Email - 117f - v1 | Custom webhook (117f) | **RETIRED for email** — Zoom parent email is now `117 → Email Handoff Queue → 079 → Communications Hub → Resend`. Keep blueprint as archive only; do not re-enable Make Gmail for Zoom. |
+| ~~Weekly summary email~~ | Retired | — | Hub path: **074 → 079** |
+| ~~Parent notification (homework/video/welcome/daily)~~ | Retired | — | Hub path: source → queue → **079** |
 
 ## Naming Convention
 

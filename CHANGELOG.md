@@ -9,6 +9,10 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **073 (v4.1) — Video parent link is VF field only** — Parent-facing URL is
+  exclusively Video Feedback `Video URL or Drive Link` (written by 022). No
+  Reviewer/Canonical File URL fallback on the parent-email path. Missing or
+  non-http(s) URL fails closed.
 - **079 (v2.4) — Airtable-compatible Hub fetch** — Replace `remoteFetchAsync`
   with `fetch` for Communications Hub ingress. Event Type contract unchanged
   (`ZOOM_RECORDING_APPROVAL` / Template Key `ZOOM_RECORDING_APPROVED`).
