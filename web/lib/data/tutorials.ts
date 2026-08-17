@@ -9,7 +9,10 @@ import { mapAttachments, mapSelectOptions } from "./homework";
  */
 export type TutorialFields = {
   Name?: unknown;
+  /** Live primary field name includes a BOM prefix. */
   "\uFEFFName"?: unknown;
+  /** Stable Airtable field ID for the primary Name field. */
+  fldduBizp8qAnAMJW?: unknown;
   "Link to Video"?: unknown;
   Athlete?: unknown;
   "Athlete Headshot"?: unknown;
@@ -30,7 +33,10 @@ const UNCATEGORIZED = "More to explore";
 export type TutorialContentKind = "tutorial" | "shoutout" | "article";
 
 function readName(fields: TutorialFields): string {
-  return asText(fields.Name ?? fields["\uFEFFName"], "Tutorial");
+  return asText(
+    fields.Name ?? fields["\uFEFFName"] ?? fields.fldduBizp8qAnAMJW,
+    "Tutorial",
+  );
 }
 
 /** Multiline video field may include notes — prefer the first http(s) URL. */

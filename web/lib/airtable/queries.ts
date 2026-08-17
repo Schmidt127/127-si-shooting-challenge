@@ -206,8 +206,13 @@ const TUTORIALS_VIEW = "Web - Tutorials Catalog";
 /** `OK to Publish on Softr` is a single-select (`checked` / blank) on Tutorials & Assets. */
 const TUTORIALS_PUBLISH_FILTER =
   'AND({OK to Publish on Softr} = "checked", OR({Associated Program} = "", FIND("Shooting Challenge", ARRAYJOIN({Associated Program}))))';
+/**
+ * Primary Name on Tutorials & Assets carries a BOM in the live schema (`\uFEFFName`).
+ * Request by stable field ID so `fields[]=Name` does not 422.
+ */
+const TUTORIAL_PRIMARY_NAME_FIELD_ID = "fldduBizp8qAnAMJW";
 const TUTORIAL_FIELDS = [
-  "Name",
+  TUTORIAL_PRIMARY_NAME_FIELD_ID,
   "Link to Video",
   "Athlete",
   "Athlete Headshot",

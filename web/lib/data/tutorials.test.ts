@@ -63,6 +63,17 @@ describe("tutorial content kinds", () => {
     expect(tutorial.categories).toEqual([]);
   });
 
+  it("reads BOM-prefixed primary Name from Tutorials & Assets", () => {
+    const tutorial = mapTutorialRecord({
+      id: "recT2",
+      fields: {
+        "\uFEFFName": "BOM title",
+        "Type of Asset": "Tutorial",
+      },
+    });
+    expect(tutorial.name).toBe("BOM title");
+  });
+
   it("extracts the first URL from multiline video fields", () => {
     expect(extractVideoUrl("")).toBe("");
     expect(extractVideoUrl("https://vimeo.com/123")).toBe("https://vimeo.com/123");

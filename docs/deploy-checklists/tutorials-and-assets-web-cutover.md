@@ -10,6 +10,11 @@ Web `/shoot` media catalogs now read **Tutorials & Assets** only.
 | Page title | Skills and Technique Tutorials |
 | Deploy path | Push `master` → Vercel project root `web` |
 
+## Known live schema gotcha
+
+Primary field on Tutorials & Assets is stored as **BOM + Name** (`\uFEFFName`, field ID `fldduBizp8qAnAMJW`).
+Web queries request that field by **ID**, not by the bare name `Name` (bare `Name` returns Airtable 422).
+
 ## Promotion / post-deploy checks
 
 1. Confirm Vercel production deployment succeeded for the cutover commit.
