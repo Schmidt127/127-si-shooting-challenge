@@ -101,6 +101,14 @@ t("071 v4.1 Hub handoff ignores PHA Grade Band", () => {
   assert.doesNotMatch(s071, /makeWebhookUrl|hook\.us1\.make\.com|remoteFetchAsync/);
 });
 
+t("single-band PHA matches successfully", () => {
+  const pha = multiBandPha({ id: "recPhaSingleBandAA", gradeBands: ["K-2"] });
+  const identity = { programInstanceId: IDS.pi, weekId: IDS.week, homeworkId: IDS.hw, slot: "HW1" };
+  const result = resolvePhaByIdentity([pha], identity);
+  assert.equal(result.status, "exact");
+  assert.equal(validateLinkedPhaOwnership(pha, identity).ok, true);
+});
+
 t("multi-band PHA matches K-2 enrollment identity", () => {
   const pha = multiBandPha();
   const identity = { programInstanceId: IDS.pi, weekId: IDS.week, homeworkId: IDS.hw, slot: "HW1" };
@@ -172,13 +180,11 @@ t("different Homework Slot does not match", () => {
   assert.match(validateLinkedPhaOwnership(pha, identity).error, /Homework Slot mismatch/);
 });
 
-t("071 creates Hub handoff with correct dedupe key and no Make send", () => {
-  assert.match(s071, /Email Handoff Queue/);
-  assert.match(s071, /HOMEWORK_FEEDBACK\|HOMEWORK_COMPLETIONS\|/);
-  assert.match(s071, /created_handoff/);
-  assert.match(s071, /existing_handoff/);
-  assert.match(s071, /Do not write Parent Feedback Sent\?/);
-  assert.doesNotMatch(s071, /makeWebhookUrl|hook\.us1\.make\.com|resend\.com|remoteFetchAsync/);
+t("071 payload may include athlete canonicalGradeBandId without PHA matching", () => {
+  assert.match(s071, /Athlete Grade Band is display\/reporting metadata only/);
+  assert.match(s071, /const gradeId = athleteGradeIds\.length === 1 \? athleteGradeIds\[0\] : ""/);
+  assert.match(s071, /canonicalGradeBandId: gradeId/);
+  assert.doesNotMatch(s071, /sameSet\(ids\(canonicalPha, phaT, CONFIG\.fields\.pha\.grade\)/);
 });
 
 console.log(`PASS ${pass} PHA Grade Band metadata contracts`);

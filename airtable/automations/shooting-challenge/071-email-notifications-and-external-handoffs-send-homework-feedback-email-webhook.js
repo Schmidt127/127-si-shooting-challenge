@@ -338,6 +338,11 @@ async function main() {
     throw new Error("Enrollment is missing or inactive. Handoff blocked.");
   }
   const programId = one(ids(enr, enrT, CONFIG.fields.enr.program), "Enrollment Program Instance");
+  // Athlete Grade Band is display/reporting metadata only — never used to match PHA.
+  const hcGradeIds = ids(hc, hcT, CONFIG.fields.hc.grade);
+  const enrGradeIds = ids(enr, enrT, CONFIG.fields.enr.grade);
+  const athleteGradeIds = hcGradeIds.length ? hcGradeIds : enrGradeIds;
+  const gradeId = athleteGradeIds.length === 1 ? athleteGradeIds[0] : "";
   const hcSlot = normalizeSlot(text(hc, hcT, CONFIG.fields.hc.slot));
   if (!hcSlot) throw new Error("Homework Completion Item Slot must resolve to HW1 or HW2.");
 
@@ -353,7 +358,8 @@ async function main() {
     throw new Error("Linked Program Homework Assignment is missing/inactive. Handoff blocked.");
   }
   // Operational identity: Program Instance + Week + Homework Assignment + Homework Slot.
-  // PHA Grade Band is descriptive metadata only and must never reject this handoff.
+  // PHA Grade Band is descriptive metadata only and must never reject this handoff
+  // (including when PHA lists multiple bands such as K-2, 3-4, 5-6, 7-8, 9-12).
   if (!sameSet(ids(canonicalPha, phaT, CONFIG.fields.pha.program), [programId])) {
     throw new Error("PHA Program Instance mismatch.");
   }
@@ -462,9 +468,10 @@ async function main() {
     canonicalProgramHomeworkAssignmentId: canonicalPha.id,
     canonicalProgramInstanceId: programId,
     canonicalWeekId: weekId,
-    canonicalGradeBandId: gradeId,
+    canonicalGradeBandId: gradeId || undefined,
   };
   if (!payload.programName) delete payload.programName;
+  if (!payload.canonicalGradeBandId) delete payload.canonicalGradeBandId;
 
   const queueData = queueFields(queueT, {
     [CONFIG.fields.queue.key]: handoffKey,

@@ -12,8 +12,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 - **071 (v4.1) — PHA Grade Band is metadata only** — Homework Feedback Hub
   handoff validates Program Instance + Week + Homework Assignment + Homework
   Slot. Removes `PHA Grade Band mismatch` rejection so multi-band PHAs
-  (K-2…9-12) no longer block parent email. Requires a linked PHA. Still Hub
-  queue-only (no Make/Gmail/Resend).
+  (K-2…9-12) no longer block parent email. Requires a linked PHA. Athlete
+  `canonicalGradeBandId` remains optional Hub payload metadata only (not a
+  match key). Still Hub queue-only (no Make/Gmail/Resend).
 - **020 (v3.6) — Document multi-band PHA scheduling** — Operational identity
   remains Program Instance + Week + Homework Assignment + Homework Slot.
   Clarifies that multi-band Grade Band never rejects a valid match (behavior
