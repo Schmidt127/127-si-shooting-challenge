@@ -92,6 +92,7 @@ export function build020PhaBase({
   submissionCells = {},
   existingHomeworkCompletions = [],
   assetCells = {},
+  phaRecords = [],
 } = {}) {
   const base = build005PhaBase({
     submissionCells: {
@@ -101,6 +102,7 @@ export function build020PhaBase({
       "Activity Date": "2026-08-07",
       ...submissionCells,
     },
+    phaRecords,
   });
 
   const submissions = base.tables.get("Submissions");

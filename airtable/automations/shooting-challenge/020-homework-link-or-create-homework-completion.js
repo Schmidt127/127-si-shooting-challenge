@@ -1,18 +1,19 @@
 /************************************************************
  * 020 - Homework - Link or Create Homework Completion
  *
- * Version: v3.5
- * Last Updated: 2026-08-10
+ * Version: v3.6
+ * Last Updated: 2026-08-17
  *
  * INTAKE CONTRACT
  * - Submissions.Homework Name 1/2 store Program Homework Assignment (PHA) record IDs.
- * - 020 loads the selected PHA directly and validates PI + Week + Slot + Active.
+ * - 020 loads the selected PHA directly and validates PI + Week + Slot + Active + Homework Assignment.
  * - Homework Library content ID comes from PHA.Homework Assignment (exactly one link).
  * - HC.Homework = library ID; HC.Program Homework Assignment = PHA ID.
  *
  * SCHEDULING RULE
- * - PHA is the sole scheduling authority (PI + Week + Slot + Active).
+ * - Operational identity is Program Instance + Week + Homework Assignment + Homework Slot (+ Active).
  * - PHA Grade Band is eligibility/descriptive metadata only and is NEVER used to resolve schedule ownership.
+ * - A PHA may list all grade bands (K-2 … 9-12). Multi-band Grade Band never rejects a valid match.
  * - Athlete Grade Band may still be copied to Homework Completions as athlete metadata when available.
  *
  * PRODUCT RULE
@@ -24,7 +25,7 @@
 
 const CONFIG = {
   scriptName: "020 - Homework - Link or Create Homework Completion",
-  version: "v3.5",
+  version: "v3.6",
   tables: {
     assets: "Submission Assets",
     submissions: "Submissions",
