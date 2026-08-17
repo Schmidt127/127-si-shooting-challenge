@@ -32,7 +32,8 @@ Web `/shoot` media catalogs now read **Tutorials & Assets** only.
 
 | Step | Status |
 |------|--------|
-| Code + tests + build | Done (session) |
-| Docs / CHANGELOG / C-026 backlog | Done |
-| Merge to `master` + push (Vercel) | Done when this commit is on `origin/master` |
-| Live spot-check | Mike — after deploy green |
+| Code + tests + build | Done |
+| Docs / CHANGELOG / C-026 backlog / PROJECT_STATE | Done |
+| Commit | `5a8bb3a` on `master` |
+| Push to `origin/master` (Vercel trigger) | Done 2026-08-17 |
+| Live spot-check | Mike — after Vercel deploy green |
