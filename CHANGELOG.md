@@ -55,6 +55,14 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **Tutorials → Tutorials & Assets cutover (2026-08-17)** — Public `/shoot/tutorials`,
+  `/shoutouts`, and `/articles` read `Tutorials & Assets` (`tblDOTgsWfqPm18bw`)
+  only. Field map uses `Type of Asset`, `Brief Descriptions`, `Display Image`,
+  `Athlete Headshot`, and publish value `checked`. Page title is **Skills and
+  Technique Tutorials**. Card/detail body text uses darker foreground contrast.
+  Video embeds show Airtable or YouTube poster before click-to-play
+  (`youtube-nocookie`). Deploy checklist:
+  [`docs/deploy-checklists/tutorials-and-assets-web-cutover.md`](./docs/deploy-checklists/tutorials-and-assets-web-cutover.md).
 - **Website-fix batch WEB-004 / WEB-008 / WEB-010 (2026-08-15)** — Replaced
   cartoon/AI feature imagery with brand typography banners, strengthened card
   text contrast, and surface Program Instance pricing on the program home page

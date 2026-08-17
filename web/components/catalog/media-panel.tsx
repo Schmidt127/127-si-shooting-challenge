@@ -1,13 +1,20 @@
 import { catalogCardClass } from "@/components/catalog/catalog-surface";
+import { VideoEmbedPlayer } from "@/components/catalog/video-embed-player";
 import {
   externalLinkHostname,
   shouldOpenExternally,
 } from "@/lib/formatters/external-media";
-import { getVideoEmbedUrl, isDirectVideoUrl } from "@/lib/formatters/video";
+import {
+  getProviderPosterUrl,
+  getVideoEmbedUrl,
+  isDirectVideoUrl,
+} from "@/lib/formatters/video";
 
 type MediaPanelProps = {
   url: string;
   title: string;
+  /** Airtable thumbnail / display image when available. */
+  posterUrl?: string | null;
   openLabel?: string;
   externalHint?: string;
 };
@@ -32,7 +39,7 @@ function ExternalDocumentPanel({
           Hosted on {host}
         </div>
         <p className="max-w-md text-base font-semibold text-foreground">{title}</p>
-        <p className="max-w-lg text-sm leading-relaxed text-muted">{externalHint}</p>
+        <p className="max-w-lg text-sm leading-relaxed text-foreground/80">{externalHint}</p>
         <a href={url} target="_blank" rel="noopener noreferrer" className="btn-primary">
           {openLabel}
           <span aria-hidden>↗</span>
@@ -46,6 +53,7 @@ function ExternalDocumentPanel({
 export function MediaPanel({
   url,
   title,
+  posterUrl,
   openLabel = "Open link",
   externalHint,
 }: MediaPanelProps) {
@@ -64,19 +72,10 @@ export function MediaPanel({
   }
 
   const embedUrl = getVideoEmbedUrl(trimmed);
+  const resolvedPoster = posterUrl?.trim() || getProviderPosterUrl(trimmed) || null;
 
   if (embedUrl) {
-    return (
-      <div className="aspect-video overflow-hidden rounded-2xl border border-border bg-black shadow-[0_10px_36px_-10px_rgba(0,0,0,0.85)]">
-        <iframe
-          src={embedUrl}
-          title={title}
-          className="h-full w-full"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
-      </div>
-    );
+    return <VideoEmbedPlayer embedUrl={embedUrl} title={title} posterUrl={resolvedPoster} />;
   }
 
   if (isDirectVideoUrl(trimmed)) {
@@ -84,6 +83,9 @@ export function MediaPanel({
       <video
         src={trimmed}
         controls
+        playsInline
+        preload="metadata"
+        poster={resolvedPoster ?? undefined}
         className="aspect-video w-full overflow-hidden rounded-2xl border border-border bg-black"
       />
     );
@@ -94,7 +96,7 @@ export function MediaPanel({
       href={trimmed}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex aspect-video items-center justify-center rounded-2xl border border-brand-orange/35 bg-card text-lg font-bold text-accent-soft transition hover:border-brand-orange/55"
+      className="flex aspect-video items-center justify-center rounded-2xl border border-brand-orange/35 bg-court-navy text-lg font-bold text-white transition hover:border-brand-orange/55"
     >
       {openLabel} ↗
     </a>

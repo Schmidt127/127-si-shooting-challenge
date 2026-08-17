@@ -170,7 +170,7 @@ Deploy details: [deployment-notes.md](./deployment-notes.md), [web/docs/deployme
 | Route | Status |
 |-------|--------|
 | `/`, `/leaderboard`, `/homework`, `/homework/[id]` | Live (Airtable) |
-| `/tutorials`, `/shoutouts`, `/articles` (+ detail) | Live (Airtable + Softr publish gate) |
+| `/tutorials`, `/shoutouts`, `/articles` (+ detail) | Live — **Tutorials & Assets** (`tblDOTgsWfqPm18bw`); publish gate `OK to Publish on Softr` = `checked` |
 | `/zoom-meetings`, `/levels`, `/achievements`, `/game-manual`, `/public-display` | Live |
 | `/dashboard` | Live demo — **mock adapter** (no auth) |
 | `/athletes/[slug]` | Demo/mock — slug resolution incomplete |

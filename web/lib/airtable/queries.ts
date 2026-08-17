@@ -203,20 +203,21 @@ const LEVEL_FIELDS = [
 ] as const;
 
 const TUTORIALS_VIEW = "Web - Tutorials Catalog";
+/** `OK to Publish on Softr` is a single-select (`checked` / blank) on Tutorials & Assets. */
 const TUTORIALS_PUBLISH_FILTER =
-  'AND({OK to Publish on Softr}, OR({Associated Program} = "", FIND("Shooting Challenge", ARRAYJOIN({Associated Program}))))';
+  'AND({OK to Publish on Softr} = "checked", OR({Associated Program} = "", FIND("Shooting Challenge", ARRAYJOIN({Associated Program}))))';
 const TUTORIAL_FIELDS = [
   "Name",
   "Link to Video",
   "Athlete",
-  "Athlete Headshot - Lkp",
+  "Athlete Headshot",
   "Thumbnail",
-  "Website Image Resolved",
-  "Tutorial Type",
-  "Tutorial - Category",
+  "Display Image",
+  "Type of Asset",
   "Associated Program",
-  "Brief Description",
+  "Brief Descriptions",
   "Detailed Description",
+  "Assignment Rationale",
   "OK to Publish on Softr",
   "Sort Order",
 ] as const;
@@ -508,14 +509,14 @@ export async function fetchTutorialCatalog(): Promise<TutorialCatalogData> {
   return buildTutorialCatalog(filtered, "tutorial");
 }
 
-/** Published athlete shout-outs from the Tutorials table. */
+/** Published athlete shout-outs from Tutorials & Assets. */
 export async function fetchShoutoutCatalog(): Promise<TutorialCatalogData> {
   const records = await listPublishedTutorialRecords();
   const filtered = records.filter((record) => isPublishedTutorialMedia(record.fields, "shoutout"));
   return buildTutorialCatalog(filtered, "shoutout");
 }
 
-/** Published FBC article book entries from the Tutorials table. */
+/** Published FBC article book entries from Tutorials & Assets. */
 export async function fetchArticleCatalog(): Promise<TutorialCatalogData> {
   const records = await listPublishedTutorialRecords();
   const filtered = records.filter((record) => isPublishedTutorialMedia(record.fields, "article"));
@@ -532,7 +533,7 @@ async function fetchPublishedTutorialItem(
     tableName: AIRTABLE_TABLES.tutorials,
     maxRecords: 1,
     fields: [...TUTORIAL_FIELDS],
-    filterByFormula: `AND({OK to Publish on Softr}, RECORD_ID()='${recordId}')`,
+    filterByFormula: `AND({OK to Publish on Softr} = "checked", RECORD_ID()='${recordId}')`,
     revalidateSeconds: CATALOG_REVALIDATE_SECONDS,
   });
 

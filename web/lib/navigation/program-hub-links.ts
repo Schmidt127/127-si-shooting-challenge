@@ -55,7 +55,7 @@ export const PROGRAM_HUB_LINKS: ProgramHubLink[] = [
   {
     href: "/tutorials",
     label: "Film room",
-    title: "Tutorials",
+    title: "Skills and Technique Tutorials",
     description: "Technique videos and shooting breakdowns.",
     eyebrow: "Watch",
     icon: IconPlay,

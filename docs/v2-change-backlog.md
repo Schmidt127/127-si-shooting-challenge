@@ -138,7 +138,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
 | **C-012** | Stage K — every field has one writer | Field ownership matrix; hide/delete legacy; update field-map | V2-013 | queued |
-| **C-026** | Merge **Tutorials** vs **Tutorials & Assets** — keep one, delete duplicate | Two tables with overlapping purpose (~same fields: video link, type, program, descriptions, thumbnails, publish flag). **Repo today:** **`Tutorials`** is live — web `/tutorials`, `/shoutouts`, `/articles` reads `Web - Tutorials Catalog` (`web/lib/airtable/queries.ts`). **`Tutorials & Assets`** is **not** referenced in automations or web; weaker schema (e.g. `Athlete` as hardcoded single-select, multiline video link vs URL). **Work:** row-count + field diff audit → migrate any unique rows → repoint views/interfaces → delete orphan table on 2026–27 clone. Relates to **C-012**, **C-013** (attachments on tutorial images). | C-012 | queued |
+| **C-026** | Merge **Tutorials** vs **Tutorials & Assets** — keep one, delete duplicate | **2026-08-17 web cutover:** `/shoot` reads **`Tutorials & Assets`** (`tblDOTgsWfqPm18bw`) only — deleted `Tutorials` / `tbldfoVGdhqATi4MS` must not be queried. Field map: `Type of Asset`, `Brief Descriptions`, `Display Image`, `Athlete Headshot`, publish `checked`. Remaining: Softr/interface proof, any leftover Airtable views, archive/delete confirmation. Relates to **C-012**, **C-013**. | C-012 | in progress |
 | **C-024** | Rock-solid dedupe keys + safe backfill reruns | **Duplicates caught instantly** at every layer — Submissions (**007**), Submission Assets, Homework Completions, XP Events (**Source Key** / **XP Dedupe Key**), achievements. One canonical key per source record; automations + extension backfills **idempotent** — rerunning a repair/backfill must **never** create doubles or corrupt rollups. Audit all writers; document key patterns in engine contract. | C-012 | queued |
 | **C-014** | One ladder, spread gates early | **DECIDED** — tune in config Q1 2027, not in docs | C-021, Wave 9 | resolved |
 
@@ -268,12 +268,14 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 
 ### Tutorials table consolidation (C-026)
 
-| Table | Status in repo | Recommendation (pending audit) |
-|-------|----------------|--------------------------------|
-| **Tutorials** | **Production** — web catalog, 13 fields, `Tutorial Type` multi-select | **Keep** as canonical content table |
-| **Tutorials & Assets** | Schema only — no code references; duplicate field set | **Candidate to retire** after row migration |
+| Table | Status in repo | Recommendation |
+|-------|----------------|----------------|
+| **Tutorials & Assets** (`tblDOTgsWfqPm18bw`) | **Canonical for web** — `/tutorials`, `/shoutouts`, `/articles` (2026-08-17) | **Keep** |
+| **Tutorials** (`tbldfoVGdhqATi4MS`) | Deleted / must not be queried by `/shoot` | Retired for web; confirm Softr/UI unbound |
 
-**Decision checklist:** Which table has more/current rows? Any Softr/interface views still on `Tutorials & Assets`? After **C-013**, consolidate image fields to canonical URL pattern on the surviving table.
+**Decision checklist:** Softr/interface bindings cleared? Publish values are `checked`? `Web - Tutorials Catalog` exists on Tutorials & Assets (or formula fallback OK)?
+
+**2026-08-17 web cutover:** Deploy checklist [`tutorials-and-assets-web-cutover.md`](./deploy-checklists/tutorials-and-assets-web-cutover.md). Preview/migration extension scripts remain for historical audit only.
 
 ### Major-event notifications (C-027)
 

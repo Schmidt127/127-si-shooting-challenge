@@ -136,8 +136,8 @@ describe("public route data handling", () => {
     expect(
       isPublishedTutorialMedia(
         {
-          "OK to Publish on Softr": true,
-          "Tutorial Type": ["Tutorial"],
+          "OK to Publish on Softr": "checked",
+          "Type of Asset": "Tutorial",
           "Associated Program": ["Shooting Challenge"],
         },
         "tutorial",
@@ -146,8 +146,8 @@ describe("public route data handling", () => {
     expect(
       isPublishedTutorialMedia(
         {
-          "OK to Publish on Softr": true,
-          "Tutorial Type": ["Tutorial"],
+          "OK to Publish on Softr": "checked",
+          "Type of Asset": "Tutorial",
           "Associated Program": ["Dribbling Challenge"],
         },
         "tutorial",

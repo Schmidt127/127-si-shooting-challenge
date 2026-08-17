@@ -30,6 +30,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "make-021891587263-us-east-2-an.s3.us-east-2.amazonaws.com",
       },
+      {
+        protocol: "https",
+        hostname: "i.ytimg.com",
+      },
+      {
+        protocol: "https",
+        hostname: "img.youtube.com",
+      },
     ],
   },
 };

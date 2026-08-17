@@ -104,7 +104,9 @@ function MediaCard({
             {item.name}
           </h3>
           {item.briefDescription ? (
-            <p className="mt-2 line-clamp-2 text-sm text-muted">{item.briefDescription}</p>
+            <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-foreground/90">
+              {item.briefDescription}
+            </p>
           ) : null}
           {item.athlete ? (
             <p className="mt-3 text-xs font-medium uppercase tracking-wider text-brand-blue">
@@ -189,7 +191,7 @@ export function TutorialMediaDetailView({
             {item.categories.map((category) => (
               <span
                 key={category}
-                className="rounded-md border border-border bg-brand-light-gray px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted"
+                className="rounded-md border border-border bg-brand-light-gray px-3 py-1 text-xs font-semibold uppercase tracking-wider text-foreground/80"
               >
                 {category}
               </span>
@@ -197,7 +199,7 @@ export function TutorialMediaDetailView({
           </div>
 
           {item.briefDescription ? (
-            <p className="mt-6 text-base leading-relaxed text-muted sm:text-lg">
+            <p className="mt-6 text-base leading-relaxed text-foreground sm:text-lg">
               {item.briefDescription}
             </p>
           ) : null}
@@ -228,6 +230,7 @@ export function TutorialMediaDetailView({
           <MediaPanel
             url={item.videoUrl}
             title={item.name}
+            posterUrl={item.thumbnail?.url ?? null}
             openLabel={config.detail.openVideoLabel}
             externalHint={config.detail.externalDocumentHint}
           />
@@ -240,7 +243,7 @@ export function TutorialMediaDetailView({
             label={config.detail.deepDiveLabel}
             title={config.detail.deepDiveTitle}
           />
-          <RichContent text={item.detailedDescription} className="text-foreground/90" />
+          <RichContent text={item.detailedDescription} className="text-foreground" />
         </section>
       ) : null}
 

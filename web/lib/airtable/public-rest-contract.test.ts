@@ -52,6 +52,14 @@ describe("public Airtable table registry", () => {
     );
     expect(PUBLIC_ENROLLMENT_VIEW).toBe("Web - Leaderboard");
   });
+
+  it("pins Tutorials & Assets as the public media table", () => {
+    expect(PUBLIC_AIRTABLE_TABLES.tutorials).toEqual({
+      name: "Tutorials & Assets",
+      id: "tblDOTgsWfqPm18bw",
+    });
+    expect(AIRTABLE_TABLES.tutorials).toBe("Tutorials & Assets");
+  });
 });
 
 describe("public REST shape normalization contract", () => {

@@ -20,6 +20,7 @@ type TutorialDetailViewProps = {
 
 export function TutorialDetailView({ tutorial }: TutorialDetailViewProps) {
   const hasVideo = Boolean(tutorial.videoUrl.trim());
+  const posterUrl = tutorial.thumbnail?.url ?? null;
 
   return (
     <DetailPageShell
@@ -40,7 +41,7 @@ export function TutorialDetailView({ tutorial }: TutorialDetailViewProps) {
             {tutorial.categories.map((category) => (
               <span
                 key={category}
-                className="rounded-md border border-border bg-brand-light-gray px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted"
+                className="rounded-md border border-border bg-brand-light-gray px-3 py-1 text-xs font-semibold uppercase tracking-wider text-foreground/80"
               >
                 {category}
               </span>
@@ -56,7 +57,7 @@ export function TutorialDetailView({ tutorial }: TutorialDetailViewProps) {
           </div>
 
           {tutorial.briefDescription ? (
-            <p className="mt-6 text-base leading-relaxed text-muted sm:text-lg">
+            <p className="mt-6 text-base leading-relaxed text-foreground sm:text-lg">
               {tutorial.briefDescription}
             </p>
           ) : null}
@@ -84,14 +85,26 @@ export function TutorialDetailView({ tutorial }: TutorialDetailViewProps) {
       {hasVideo ? (
         <section className="mt-10">
           <SectionHeading label="Watch" title="Technique in motion" />
-          <MediaPanel url={tutorial.videoUrl} title={tutorial.name} openLabel="Open video" />
+          <MediaPanel
+            url={tutorial.videoUrl}
+            title={tutorial.name}
+            posterUrl={posterUrl}
+            openLabel="Open video"
+          />
         </section>
       ) : null}
 
       {tutorial.detailedDescription ? (
         <section className={cn(catalogPanelClass(), "mt-10")}>
           <SectionHeading label="Deep dive" title="Full breakdown" />
-          <RichContent text={tutorial.detailedDescription} className="text-foreground/90" />
+          <RichContent text={tutorial.detailedDescription} className="text-foreground" />
+        </section>
+      ) : null}
+
+      {tutorial.assignmentRationale ? (
+        <section className={cn(catalogPanelClass(), "mt-10")}>
+          <SectionHeading label="Why it matters" title="Assignment rationale" />
+          <RichContent text={tutorial.assignmentRationale} className="text-foreground" />
         </section>
       ) : null}
 

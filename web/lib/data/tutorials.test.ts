@@ -2,14 +2,16 @@ import { describe, expect, it } from "vitest";
 
 import {
   buildTutorialCatalog,
+  extractVideoUrl,
   hasTutorialContentKind,
   isPublishedTutorialMedia,
+  mapTutorialRecord,
 } from "@/lib/data/tutorials";
 import { buildZoomMeetingCatalog, mapZoomMeetingRecord } from "@/lib/data/zoom-meetings";
 
 describe("tutorial content kinds", () => {
   const baseFields = {
-    "OK to Publish on Softr": true,
+    "OK to Publish on Softr": "checked",
     "Associated Program": ["Shooting Challenge"],
     Name: "Sample",
     "Sort Order": 1,
@@ -17,9 +19,9 @@ describe("tutorial content kinds", () => {
 
   it("separates tutorials, shout-outs, and articles", () => {
     const records = [
-      { id: "recT1", fields: { ...baseFields, "Tutorial Type": ["Tutorial"] } },
-      { id: "recS1", fields: { ...baseFields, "Tutorial Type": ["Shout - Out"] } },
-      { id: "recA1", fields: { ...baseFields, "Tutorial Type": ["FBC Article Book"] } },
+      { id: "recT1", fields: { ...baseFields, "Type of Asset": "Tutorial" } },
+      { id: "recS1", fields: { ...baseFields, "Type of Asset": "Shout Out" } },
+      { id: "recA1", fields: { ...baseFields, "Type of Asset": "FBC Article Book" } },
     ];
 
     expect(buildTutorialCatalog(records, "tutorial").totalTutorials).toBe(1);
@@ -31,15 +33,40 @@ describe("tutorial content kinds", () => {
     expect(
       isPublishedTutorialMedia(
         {
-          "Tutorial Type": ["Shout - Out"],
+          "Type of Asset": "Shout Out",
           "Associated Program": ["Dribbling Challenge"],
         },
         "shoutout",
       ),
     ).toBe(false);
-    expect(
-      hasTutorialContentKind({ "Tutorial Type": ["Shout Out"] }, "shoutout"),
-    ).toBe(true);
+    expect(hasTutorialContentKind({ "Type of Asset": "Shout Out" }, "shoutout")).toBe(true);
+  });
+
+  it("maps Tutorials & Assets field names with defensive fallbacks", () => {
+    const tutorial = mapTutorialRecord({
+      id: "recT1",
+      fields: {
+        Name: "Form shooting",
+        "Link to Video": "Watch this\nhttps://youtu.be/abc123 extra",
+        "Type of Asset": "Tutorial",
+        "Brief Descriptions": "Short tip",
+        "Detailed Description": "Long tip",
+        "Assignment Rationale": "Builds form",
+        "Display Image": [{ id: "att1", url: "https://example.com/display.jpg", filename: "d.jpg" }],
+      },
+    });
+
+    expect(tutorial.videoUrl).toBe("https://youtu.be/abc123");
+    expect(tutorial.briefDescription).toBe("Short tip");
+    expect(tutorial.assignmentRationale).toBe("Builds form");
+    expect(tutorial.thumbnail?.url).toBe("https://example.com/display.jpg");
+    expect(tutorial.categories).toEqual([]);
+  });
+
+  it("extracts the first URL from multiline video fields", () => {
+    expect(extractVideoUrl("")).toBe("");
+    expect(extractVideoUrl("https://vimeo.com/123")).toBe("https://vimeo.com/123");
+    expect(extractVideoUrl("notes\nhttps://youtu.be/xyz\nmore")).toBe("https://youtu.be/xyz");
   });
 });
 

@@ -21,7 +21,7 @@ Maps Airtable tables and fields to web app features.
 | **Levels** | Levels page, profile badge | Use Sort Order for display |
 | **Achievements** | Achievements page, profile badges | Filter `Active?` + `Visible?` |
 | **FBC Curriculum - SYNC** | Homework catalog + detail | Filter `Published?` |
-| **Tutorials** | Tutorials, shoutouts, articles | Split by `Tutorial Type` in app |
+| **Tutorials & Assets** | Tutorials, shoutouts, articles | Split by `Type of Asset` in app |
 | **Zoom Meetings** | Zoom meetings catalog + detail | Exclude cancelled |
 | **Homework Completions** | Homework progress widget | Reviewed / upload status only |
 | **Video Feedback** | Video progress widget | Awarded rows only for public |
@@ -41,7 +41,7 @@ Softr-era fields to honor until renamed:
 |-------|-------|-----|
 | `Active?` + `Visible?` | Achievements | Achievements page (`Web - Achievements` or formula fallback) |
 | `Published?` | FBC Curriculum - SYNC | Homework catalog |
-| `OK to Publish on Softr` | Tutorials | Tutorials / shoutouts / articles |
+| `OK to Publish on Softr` | Tutorials & Assets | Tutorials / shoutouts / articles (`checked`) |
 | `Active?` | Enrollments, Levels | Leaderboard and levels ladder |
 | `Level Sort Order - For Softr` | Enrollments (lookup) | Leaderboard / level ordering |
 
@@ -57,7 +57,7 @@ These names must match `web/lib/airtable/queries.ts`. Full fallback formulas: [a
 | `Web - Leaderboard` | Enrollments | Leaderboard, public display | Required — no table-wide fallback |
 | `Web - Homework Catalog` | FBC Curriculum - SYNC | Homework list | `{Published?} = 1` |
 | `Web - Levels` | Levels | Levels ladder | `{Active?} = 1` |
-| `Web - Tutorials Catalog` | Tutorials | Tutorials, shoutouts, articles | Softr publish + Shooting Challenge program filter |
+| `Web - Tutorials Catalog` | Tutorials & Assets | Tutorials, shoutouts, articles | Softr publish (`checked`) + Shooting Challenge program filter |
 | `Web - Zoom Meetings` | Zoom Meetings | Zoom list | `NOT({Meeting Status} = 'Cancelled')` |
 | `Web - Achievements` | Achievements | Achievements grid | `AND({Active?}, {Visible?})` |
 

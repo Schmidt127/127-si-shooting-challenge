@@ -9,6 +9,10 @@ import { formatRelativeUpdate } from "@/lib/formatters";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import type { TutorialCatalogData, TutorialItem } from "@/types/tutorials";
 
+const PAGE_TITLE = "Skills and Technique Tutorials";
+const PAGE_DESCRIPTION =
+  "Shooting technique tutorials and film breakdowns — curated for the challenge.";
+
 const CATEGORY_ACCENTS: Record<string, string> = {
   Shoot: "from-brand-orange/20 to-brand-orange/5",
   Dribble: "from-brand-blue/20 to-brand-blue/5",
@@ -33,8 +37,8 @@ function TutorialCard({ tutorial }: { tutorial: TutorialItem }) {
               unoptimized
             />
           ) : (
-            <div className="flex h-full items-center justify-center">
-              <IconPlay size={56} className="text-white/15" />
+            <div className="flex h-full items-center justify-center bg-gradient-to-br from-court-navy to-brand-blue">
+              <IconPlay size={56} className="text-white/40" />
             </div>
           )}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 transition group-hover:opacity-100">
@@ -57,7 +61,9 @@ function TutorialCard({ tutorial }: { tutorial: TutorialItem }) {
             {tutorial.name}
           </h3>
           {tutorial.briefDescription ? (
-            <p className="mt-2 line-clamp-2 text-sm text-muted">{tutorial.briefDescription}</p>
+            <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-foreground/90">
+              {tutorial.briefDescription}
+            </p>
           ) : null}
           {tutorial.athlete ? (
             <p className="mt-3 text-xs font-medium uppercase tracking-wider text-brand-blue">
@@ -78,8 +84,8 @@ export function TutorialsGridView({ data }: { data: TutorialCatalogData }) {
   return (
     <ProgramPage
       eyebrow="Film room"
-      title="Skills & storytelling"
-      description="Shooting tutorials and technique breakdowns — curated for the challenge."
+      title={PAGE_TITLE}
+      description={PAGE_DESCRIPTION}
       heroVariant="light"
       ambientVariant="tutorials"
       meta={
@@ -112,8 +118,8 @@ export function TutorialsEmptyState() {
   return (
     <ProgramPage
       eyebrow="Film room"
-      title="Skills & storytelling"
-      description="Shooting tutorials and technique breakdowns — curated for the challenge."
+      title={PAGE_TITLE}
+      description={PAGE_DESCRIPTION}
       heroVariant="light"
       ambientVariant="tutorials"
     >
@@ -135,8 +141,8 @@ export function TutorialsErrorState({ message }: { message: string }) {
   return (
     <ProgramPage
       eyebrow="Film room"
-      title="Skills & storytelling"
-      description="Shooting tutorials and technique breakdowns — curated for the challenge."
+      title={PAGE_TITLE}
+      description={PAGE_DESCRIPTION}
       heroVariant="light"
       ambientVariant="tutorials"
     >

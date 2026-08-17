@@ -20,7 +20,7 @@ Instance scope from Airtable's public linked-record response.
 | Homework detail | FBC Curriculum - SYNC | — | `AND({Published?}, RECORD_ID()='…')` | 300 |
 | Weeks (homework/zoom) | Weeks | *(no view — all weeks)* | — | 300 |
 | Levels | Levels | `Web - Levels` | `{Active?} = 1` | 300 |
-| Tutorials / shoutouts / articles | Tutorials | `Web - Tutorials Catalog` | See publish filter below | 300 |
+| Tutorials / shoutouts / articles | Tutorials & Assets | `Web - Tutorials Catalog` | See publish filter below | 300 |
 | Zoom meetings | Zoom Meetings | `Web - Zoom Meetings` | `NOT({Meeting Status} = 'Cancelled')` | 300 |
 | Achievements | Achievements | `Web - Achievements` | `AND({Active?}, {Visible?})` | 300 |
 
@@ -96,18 +96,19 @@ the PKG-040 read-only audit; do not add a broad table fallback.
 
 **Functions:** `fetchTutorialCatalog()`, `fetchShoutoutCatalog()`, `fetchArticleCatalog()`, detail fetchers
 
-All three content types read from the **Tutorials** table and split by `Tutorial Type` in app code (`isPublishedTutorialMedia`).
+All three content types read from **Tutorials & Assets** (`tblDOTgsWfqPm18bw`) and split by `Type of Asset` in app code (`isPublishedTutorialMedia`). Do not query the deleted `Tutorials` table.
 
 | Item | Value |
 |------|--------|
-| Table | `Tutorials` |
-| View | `Web - Tutorials Catalog` |
-| Fallback filter | `AND({OK to Publish on Softr}, OR({Associated Program} = "", FIND("Shooting Challenge", ARRAYJOIN({Associated Program}))))` |
-| Detail filter | `AND({OK to Publish on Softr}, RECORD_ID()='rec…')` + type check in app |
+| Table | `Tutorials & Assets` |
+| Table ID | `tblDOTgsWfqPm18bw` |
+| View | `Web - Tutorials Catalog` (optional; falls back if missing) |
+| Fallback filter | `AND({OK to Publish on Softr} = "checked", OR({Associated Program} = "", FIND("Shooting Challenge", ARRAYJOIN({Associated Program}))))` |
+| Detail filter | `AND({OK to Publish on Softr} = "checked", RECORD_ID()='rec…')` + type check in app |
 
-**Fields:** `Name`, `Link to Video`, athlete/headshot, thumbnails, `Tutorial Type`, `Tutorial - Category`, `Associated Program`, descriptions, `OK to Publish on Softr`, `Sort Order`
+**Fields:** `Name`, `Link to Video`, `Athlete`, `Athlete Headshot`, `Thumbnail`, `Display Image`, `Type of Asset`, `Associated Program`, `Brief Descriptions`, `Detailed Description`, `Assignment Rationale`, `OK to Publish on Softr`, `Sort Order`
 
-**Publish gate:** `OK to Publish on Softr` (legacy Softr flag still used as public gate)
+**Publish gate:** `OK to Publish on Softr` single-select value `checked` (legacy Softr flag still used as public gate)
 
 ---
 
