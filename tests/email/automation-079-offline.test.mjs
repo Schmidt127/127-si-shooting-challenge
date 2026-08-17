@@ -231,11 +231,14 @@ async function run079({ record, response = acceptedResponse() }) {
   const output = new MockOutput();
   const capturedConsole = makeConsole();
   const requests = [];
-  const remoteFetchAsync = async (_url, request) => {
+  const fetchCalls = [];
+  const fetch = async (url, request) => {
+    fetchCalls.push({ url, request });
     requests.push(JSON.parse(request.body));
     return typeof response === "function" ? response(requests.length) : response;
   };
-  const fn = new AsyncFunction("base", "input", "output", "console", "remoteFetchAsync", SCRIPT_SOURCE);
+  // Airtable Scripting exposes fetch globally; do not inject remoteFetchAsync.
+  const fn = new AsyncFunction("base", "input", "output", "console", "fetch", SCRIPT_SOURCE);
   let error = null;
   try {
     await fn(
@@ -243,22 +246,38 @@ async function run079({ record, response = acceptedResponse() }) {
       makeInput({ recordId: record.id, ingressSecret: "test-secret" }),
       output,
       capturedConsole,
-      remoteFetchAsync
+      fetch
     );
   } catch (caught) {
     error = caught;
   }
-  return { base, queue, output, error, requests, console: capturedConsole };
+  return { base, queue, output, error, requests, fetchCalls, console: capturedConsole };
 }
 
-test("079 script is v2.3 and never calls Make/Gmail/Resend directly", () => {
-  assert.match(SCRIPT_SOURCE, /version:\s*"v2\.3"/);
+test("079 script is v2.4 and dispatches via fetch, not remoteFetchAsync", () => {
+  assert.match(SCRIPT_SOURCE, /version:\s*"v2\.4"/);
   assert.match(SCRIPT_SOURCE, /079 – Send to Communications Hub - NEW/);
   assert.match(SCRIPT_SOURCE, /eventZoomRecordingApproval:\s*"ZOOM_RECORDING_APPROVAL"/);
   assert.match(SCRIPT_SOURCE, /templateZoomRecordingApproved:\s*"ZOOM_RECORDING_APPROVED"/);
+  assert.match(SCRIPT_SOURCE, /eventWeeklyAthleteSummary:\s*"WEEKLY_ATHLETE_SUMMARY"/);
+  assert.match(SCRIPT_SOURCE, /return fetch\(url, request\)/);
+  assert.doesNotMatch(SCRIPT_SOURCE, /remoteFetchAsync\s*\(/);
   assert.doesNotMatch(SCRIPT_SOURCE, /makeWebhookUrl|hook\.us1\.make\.com|resend\.com|api\.resend|gmail\.googleapis/i);
   assert.match(SCRIPT_SOURCE, /Never call Make, Gmail, or Resend directly/);
   assert.match(SCRIPT_SOURCE, /communications-two-blue\.vercel\.app\/api\/events\/ingest/);
+});
+
+test("079 Hub dispatch path calls fetch with URL, bearer headers, and JSON body", async () => {
+  const result = await run079({ record: weeklyRecord() });
+  assert.equal(result.error, null, result.error?.message);
+  assert.equal(result.fetchCalls.length, 1);
+  assert.equal(result.fetchCalls[0].url, "https://communications-two-blue.vercel.app/api/events/ingest");
+  assert.equal(result.fetchCalls[0].request.method, "POST");
+  assert.equal(result.fetchCalls[0].request.headers.Authorization, "Bearer test-secret");
+  assert.equal(result.fetchCalls[0].request.headers["Content-Type"], "application/json");
+  assert.equal(result.requests[0].eventType, "WEEKLY_ATHLETE_SUMMARY");
+  assert.equal(result.requests[0].templateKey, "WEEKLY_ATHLETE_SUMMARY");
+  assert.equal(result.requests[0].testMode, true);
 });
 
 test("079 dispatches an existing WELCOME row and accepts replay without duplicate delivery", async () => {

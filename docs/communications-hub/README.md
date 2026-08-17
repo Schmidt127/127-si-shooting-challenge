@@ -20,7 +20,7 @@
 | **071** v4.0 | `HOMEWORK_FEEDBACK` | `HOMEWORK_FEEDBACK\|HOMEWORK_COMPLETIONS\|{HC}` | Hub queue create in GitHub | Not live until paste |
 | **074** v3.0 | `WEEKLY_ATHLETE_SUMMARY` | `WEEKLY_ATHLETE_SUMMARY\|WEEKLY_ATHLETE_SUMMARY\|{WAS}` | Hub queue create in GitHub | Not live until paste |
 | **117** v2.1 | Event Type `ZOOM_RECORDING_APPROVAL` / Template `ZOOM_RECORDING_APPROVED` | `ZOOM_RECORDING_APPROVAL\|ZOOM_ATTENDANCE\|{ZA}` | Hub queue create in GitHub | Not live until paste |
-| **079** v2.3 | Shared dispatcher | Validates keys above | Accepts WELCOME, DAILY, VIDEO, HOMEWORK, WEEKLY, ZOOM (`ZOOM_RECORDING_APPROVAL` → template `ZOOM_RECORDING_APPROVED`) | Not live until paste |
+| **079** v2.4 | Shared dispatcher | Validates keys above | Accepts WELCOME, DAILY, VIDEO, HOMEWORK, WEEKLY, ZOOM (`ZOOM_RECORDING_APPROVAL` → template `ZOOM_RECORDING_APPROVED`); Hub POST via `fetch` | Not live until paste |
 
 **Shared rule:** Source scripts create **Email Handoff Queue** rows only. **Automation 079** is the only SC script that POSTs to Communications Hub ingress. `testMode` defaults **true** on new Hub creates. Do not enable live parent sends until Mike pastes + controlled test.
 

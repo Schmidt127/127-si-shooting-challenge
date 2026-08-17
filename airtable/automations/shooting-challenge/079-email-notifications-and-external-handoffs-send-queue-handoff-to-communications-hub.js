@@ -2,7 +2,7 @@
 GitHub header
 Automation: 079 – Send to Communications Hub - NEW
 System: 127 SI Shooting Challenge
-Version: v2.3
+Version: v2.4
 Date Written: 2026-08-11
 Last Updated: 2026-08-17
 
@@ -12,6 +12,7 @@ PURPOSE
   HOMEWORK_FEEDBACK, WEEKLY_ATHLETE_SUMMARY, and ZOOM_RECORDING_APPROVAL.
 
 IMPORTANT DESIGN RULES
+- Use Airtable Scripting fetch(...) for Communications Hub ingress.
 - Preserve the existing WELCOME envelope, validation, retry, and replay behavior.
 - DAILY_SUBMISSION accepts only DAILY_SUBMISSION|SUBMISSIONS|<Submission Record ID>
   and requires the key suffix to equal Source Record ID.
@@ -54,7 +55,7 @@ FOLDER
 
 const SCRIPT = {
     scriptName: "079 – Send to Communications Hub - NEW",
-    version: "v2.3",
+    version: "v2.4",
     versionDate: "2026-08-17",
     originalWrittenDate: "2026-08-11",
     lastUpdated: "2026-08-17",
@@ -330,7 +331,7 @@ async function postJson(url, secret, payload) {
         headers: { Authorization: `Bearer ${secret}`, "Content-Type": "application/json" },
         body: JSON.stringify(payload),
     };
-    return remoteFetchAsync(url, request);
+    return fetch(url, request);
 }
 
 function validateHandoff(eventType, templateKey, handoffKey, sourceTable, sourceRecordId) {
