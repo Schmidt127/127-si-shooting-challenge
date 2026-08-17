@@ -70,7 +70,14 @@ function build079Base(record) {
     "Email Handoff Queue",
     [
       singleSelect("Status", ["Ready", "Sending", "Accepted", "Failed", "Needs Review"]),
-      singleSelect("Event Type", ["WELCOME", "DAILY_SUBMISSION"]),
+      singleSelect("Event Type", [
+        "WELCOME",
+        "DAILY_SUBMISSION",
+        "VIDEO_FEEDBACK",
+        "HOMEWORK_FEEDBACK",
+        "WEEKLY_ATHLETE_SUMMARY",
+        "ZOOM_RECORDING_APPROVED",
+      ]),
       { name: "Handoff Key", type: "singleLineText" },
       { name: "Source Table", type: "singleLineText" },
       { name: "Source Record ID", type: "singleLineText" },
@@ -122,6 +129,28 @@ function dailyRecord(overrides = {}) {
   });
 }
 
+const VIDEO_QUEUE_ID = "recVideoFbQueue0001";
+const VIDEO_FEEDBACK_ID = "recVideoFbSrc0001";
+
+function videoRecord(overrides = {}) {
+  return buildQueueRecord({
+    id: VIDEO_QUEUE_ID,
+    eventType: "VIDEO_FEEDBACK",
+    templateKey: "VIDEO_FEEDBACK",
+    handoffKey: `VIDEO_FEEDBACK|VIDEO_FEEDBACK|${VIDEO_FEEDBACK_ID}`,
+    sourceTable: "Video Feedback",
+    sourceRecordId: VIDEO_FEEDBACK_ID,
+    recipients: [{ email: "parent@example.com", role: "guardian" }],
+    payload: {
+      athleteName: "Test Athlete",
+      coachFeedback: "Keep your elbow under the ball.",
+      totalVideoXpAwarded: 20,
+      videoUrl: "https://example.com/reviewer/file",
+    },
+    ...overrides,
+  });
+}
+
 function acceptedResponse({ duplicate = false } = {}) {
   return {
     ok: true,
@@ -135,15 +164,21 @@ async function run079({ record, response = acceptedResponse() }) {
   const output = new MockOutput();
   const capturedConsole = makeConsole();
   const requests = [];
-  const fetch = async (_url, request) => {
+  const remoteFetchAsync = async (_url, request) => {
     requests.push(JSON.parse(request.body));
     return typeof response === "function" ? response(requests.length) : response;
   };
   const code = readFileSync(SCRIPT_PATH, "utf8");
-  const fn = new AsyncFunction("base", "input", "output", "console", "fetch", code);
+  const fn = new AsyncFunction("base", "input", "output", "console", "remoteFetchAsync", code);
   let error = null;
   try {
-    await fn(base, makeInput({ recordId: record.id, ingressSecret: "test-secret" }), output, capturedConsole, fetch);
+    await fn(
+      base,
+      makeInput({ recordId: record.id, ingressSecret: "test-secret" }),
+      output,
+      capturedConsole,
+      remoteFetchAsync
+    );
   } catch (caught) {
     error = caught;
   }
@@ -208,6 +243,33 @@ test("079 rejects a DAILY_SUBMISSION key whose suffix differs from Source Record
   assert.deepEqual(result.queue.records.get(DAILY_QUEUE_ID).cells.Status, { name: "Ready" });
 });
 
+test("079 dispatches VIDEO_FEEDBACK using stored event, recipients, payload, and source IDs", async () => {
+  const record = videoRecord();
+  const result = await run079({ record });
+
+  assert.equal(result.error, null, result.error?.message);
+  assert.equal(result.requests.length, 1);
+  assert.equal(result.requests[0].eventType, "VIDEO_FEEDBACK");
+  assert.equal(result.requests[0].templateKey, "VIDEO_FEEDBACK");
+  assert.equal(result.requests[0].handoffKey, `VIDEO_FEEDBACK|VIDEO_FEEDBACK|${VIDEO_FEEDBACK_ID}`);
+  assert.deepEqual(result.requests[0].source, {
+    table: "Video Feedback",
+    recordId: VIDEO_FEEDBACK_ID,
+  });
+  assert.equal(result.requests[0].data.coachFeedback, "Keep your elbow under the ball.");
+  assert.equal(result.queue.records.get(VIDEO_QUEUE_ID).cells.Status, "Accepted");
+});
+
+test("079 requires the exact VIDEO_FEEDBACK handoff key format", async () => {
+  const result = await run079({
+    record: videoRecord({ handoffKey: `VIDEO_FEEDBACK|VIDEO_FEEDBACK|${VIDEO_FEEDBACK_ID}|extra` }),
+  });
+
+  assert.ok(result.error);
+  assert.match(result.error.message, /Invalid VIDEO_FEEDBACK Handoff Key/);
+  assert.equal(result.requests.length, 0);
+});
+
 test("079 rejects unknown event types without sending", async () => {
   const result = await run079({
     record: dailyRecord({ eventType: "UNKNOWN", templateKey: "UNKNOWN" }),
@@ -217,6 +279,153 @@ test("079 rejects unknown event types without sending", async () => {
   assert.match(result.error.message, /Unknown Email Handoff Queue Event Type/);
   assert.equal(result.requests.length, 0);
   assert.deepEqual(result.queue.records.get(DAILY_QUEUE_ID).cells.Status, { name: "Ready" });
+});
+
+const HOMEWORK_QUEUE_ID = "recHomeworkQ079001";
+const HOMEWORK_COMPLETION_ID = "recHomeworkSrc001";
+const WEEKLY_QUEUE_ID = "recWeeklyQ07900001";
+const WEEKLY_SUMMARY_ID = "recWeeklySrc00001";
+const ZOOM_QUEUE_ID = "recZoomQ0790000001";
+const ZOOM_ATTENDANCE_ID = "recZoomAttSrc0001";
+
+function homeworkRecord(overrides = {}) {
+  return buildQueueRecord({
+    id: HOMEWORK_QUEUE_ID,
+    eventType: "HOMEWORK_FEEDBACK",
+    templateKey: "HOMEWORK_FEEDBACK",
+    handoffKey: `HOMEWORK_FEEDBACK|HOMEWORK_COMPLETIONS|${HOMEWORK_COMPLETION_ID}`,
+    sourceTable: "Homework Completions",
+    sourceRecordId: HOMEWORK_COMPLETION_ID,
+    recipients: [{ email: "parent@example.com", role: "guardian" }],
+    payload: {
+      athleteName: "Test Athlete",
+      coachFeedback: "Nice form on the free throws.",
+      totalHomeworkXpAwarded: 15,
+    },
+    ...overrides,
+  });
+}
+
+function weeklyRecord(overrides = {}) {
+  return buildQueueRecord({
+    id: WEEKLY_QUEUE_ID,
+    eventType: "WEEKLY_ATHLETE_SUMMARY",
+    templateKey: "WEEKLY_ATHLETE_SUMMARY",
+    handoffKey: `WEEKLY_ATHLETE_SUMMARY|WEEKLY_ATHLETE_SUMMARY|${WEEKLY_SUMMARY_ID}`,
+    sourceTable: "Weekly Athlete Summary",
+    sourceRecordId: WEEKLY_SUMMARY_ID,
+    recipients: [{ email: "parent@example.com", role: "guardian" }],
+    payload: {
+      athleteName: "Test Athlete",
+      weekLabel: "Week 3",
+      daysLogged: 4,
+      shots: 250,
+    },
+    ...overrides,
+  });
+}
+
+function zoomRecord(overrides = {}) {
+  return buildQueueRecord({
+    id: ZOOM_QUEUE_ID,
+    eventType: "ZOOM_RECORDING_APPROVED",
+    templateKey: "ZOOM_RECORDING_APPROVED",
+    handoffKey: `ZOOM_RECORDING_APPROVED|ZOOM_ATTENDANCE|${ZOOM_ATTENDANCE_ID}`,
+    sourceTable: "Zoom Attendance",
+    sourceRecordId: ZOOM_ATTENDANCE_ID,
+    recipients: [{ email: "parent@example.com", role: "guardian" }],
+    payload: {
+      athleteName: "Test Athlete",
+      meetingName: "Thursday Recording Quiz",
+      approvalResult: "Satisfactory",
+      timing: "On Satisfactory",
+    },
+    ...overrides,
+  });
+}
+
+test("079 dispatches HOMEWORK_FEEDBACK using stored event, recipients, payload, and source IDs", async () => {
+  const record = homeworkRecord();
+  const result = await run079({ record });
+
+  assert.equal(result.error, null, result.error?.message);
+  assert.equal(result.requests.length, 1);
+  assert.equal(result.requests[0].eventType, "HOMEWORK_FEEDBACK");
+  assert.equal(result.requests[0].templateKey, "HOMEWORK_FEEDBACK");
+  assert.equal(result.requests[0].handoffKey, `HOMEWORK_FEEDBACK|HOMEWORK_COMPLETIONS|${HOMEWORK_COMPLETION_ID}`);
+  assert.deepEqual(result.requests[0].source, {
+    table: "Homework Completions",
+    recordId: HOMEWORK_COMPLETION_ID,
+  });
+  assert.equal(result.requests[0].data.totalHomeworkXpAwarded, 15);
+  assert.equal(result.queue.records.get(HOMEWORK_QUEUE_ID).cells.Status, "Accepted");
+});
+
+test("079 requires the exact HOMEWORK_FEEDBACK handoff key format", async () => {
+  const result = await run079({
+    record: homeworkRecord({ handoffKey: `HOMEWORK_FEEDBACK|HOMEWORK_COMPLETIONS|${HOMEWORK_COMPLETION_ID}|extra` }),
+  });
+
+  assert.ok(result.error);
+  assert.match(result.error.message, /Invalid HOMEWORK_FEEDBACK Handoff Key/);
+  assert.equal(result.requests.length, 0);
+});
+
+test("079 rejects HOMEWORK_FEEDBACK payload missing XP", async () => {
+  const result = await run079({
+    record: homeworkRecord({
+      payload: { athleteName: "Test Athlete", coachFeedback: "Good work." },
+    }),
+  });
+
+  assert.ok(result.error);
+  assert.match(result.error.message, /totalHomeworkXpAwarded \(or totalXp\)/);
+  assert.equal(result.requests.length, 0);
+});
+
+test("079 dispatches WEEKLY_ATHLETE_SUMMARY using stored event and week label", async () => {
+  const record = weeklyRecord();
+  const result = await run079({ record });
+
+  assert.equal(result.error, null, result.error?.message);
+  assert.equal(result.requests.length, 1);
+  assert.equal(result.requests[0].eventType, "WEEKLY_ATHLETE_SUMMARY");
+  assert.equal(result.requests[0].handoffKey, `WEEKLY_ATHLETE_SUMMARY|WEEKLY_ATHLETE_SUMMARY|${WEEKLY_SUMMARY_ID}`);
+  assert.equal(result.requests[0].data.weekLabel, "Week 3");
+  assert.equal(result.queue.records.get(WEEKLY_QUEUE_ID).cells.Status, "Accepted");
+});
+
+test("079 accepts WEEKLY_ATHLETE_SUMMARY with weekName instead of weekLabel", async () => {
+  const result = await run079({
+    record: weeklyRecord({
+      payload: { athleteName: "Test Athlete", weekName: "Week 4" },
+    }),
+  });
+
+  assert.equal(result.error, null, result.error?.message);
+  assert.equal(result.requests[0].data.weekName, "Week 4");
+});
+
+test("079 dispatches ZOOM_RECORDING_APPROVED using stored event and meeting payload", async () => {
+  const record = zoomRecord();
+  const result = await run079({ record });
+
+  assert.equal(result.error, null, result.error?.message);
+  assert.equal(result.requests.length, 1);
+  assert.equal(result.requests[0].eventType, "ZOOM_RECORDING_APPROVED");
+  assert.equal(result.requests[0].handoffKey, `ZOOM_RECORDING_APPROVED|ZOOM_ATTENDANCE|${ZOOM_ATTENDANCE_ID}`);
+  assert.equal(result.requests[0].data.meetingName, "Thursday Recording Quiz");
+  assert.equal(result.queue.records.get(ZOOM_QUEUE_ID).cells.Status, "Accepted");
+});
+
+test("079 requires ZOOM_RECORDING_APPROVED key suffix to match Source Record ID", async () => {
+  const result = await run079({
+    record: zoomRecord({ handoffKey: "ZOOM_RECORDING_APPROVED|ZOOM_ATTENDANCE|rec12345678901234" }),
+  });
+
+  assert.ok(result.error);
+  assert.match(result.error.message, /does not match Source Record ID/);
+  assert.equal(result.requests.length, 0);
 });
 
 test("079 writes failed status and error after a Hub error", async () => {
