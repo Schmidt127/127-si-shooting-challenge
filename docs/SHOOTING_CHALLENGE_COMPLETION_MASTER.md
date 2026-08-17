@@ -16,13 +16,15 @@ state, the named live system wins.
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-16** (controlled Perfect Week path: registration, submission, five assets, homework attachments, canonical WAS, and both Homework XP Events verified) |
+| Last updated | **2026-08-16** (controlled Perfect Week path verified; Automation **022 v2.0** GitHub aligned with Production writeback) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
 ### Current operator reconciliation — 2026-08-16
 
-The current controlled-path evidence is recorded in [`prod-completion/2026-08-16/SC-2026-08-16-CURRENT-STATE-RECONCILIATION.md`](./prod-completion/2026-08-16/SC-2026-08-16-CURRENT-STATE-RECONCILIATION.md). Registration → submission → assets → homework → canonical Weekly Athlete Summary → Homework XP is verified. The Perfect Week test remains open until the remaining six daily dates, video review/XP, and final Perfect Week award are verified.
+The current controlled-path evidence is recorded in [`prod-completion/2026-08-16/SC-2026-08-16-CURRENT-STATE-RECONCILIATION.md`](./prod-completion/2026-08-16/SC-2026-08-16-CURRENT-STATE-RECONCILIATION.md). Registration → submission → assets → homework → canonical Weekly Athlete Summary → Homework XP is verified. Video upload/writeback through **070b v4.4** and **022 v2.0** is live-tested (Reviewer File URL preferred, Canonical File URL fallback, existing Video Feedback Upload Status). The Perfect Week test remains open until the remaining six daily dates, video review/XP, and final Perfect Week award are verified.
+
+**Automation 022:** GitHub source is **v2.0** (aligned 2026-08-16) with Production. Do **not** describe 022 as missing, uninstalled, repository-only, or unverified.
 
 ---
 
