@@ -16,7 +16,7 @@
 |-------------------|------------------|------------|---------------|---------------|
 | **075 / queue** | `WELCOME` | `WELCOME\|…` | Live path (see welcome docs) | Per welcome checklist |
 | **076** | `DAILY_SUBMISSION` | `DAILY_SUBMISSION\|SUBMISSIONS\|{Submission}` | Hub queue create | Paste when approved |
-| **073** v4.0 | `VIDEO_FEEDBACK` | `VIDEO_FEEDBACK\|VIDEO_FEEDBACK\|{VF}` | Hub queue create in GitHub | Not live until paste |
+| **073** v4.1 | `VIDEO_FEEDBACK` | `VIDEO_FEEDBACK\|VIDEO_FEEDBACK\|{VF}` | Hub queue create in GitHub; VF `Video URL or Drive Link` only | Not live until paste |
 | **071** v4.0 | `HOMEWORK_FEEDBACK` | `HOMEWORK_FEEDBACK\|HOMEWORK_COMPLETIONS\|{HC}` | Hub queue create in GitHub | Not live until paste |
 | **074** v3.0 | `WEEKLY_ATHLETE_SUMMARY` | `WEEKLY_ATHLETE_SUMMARY\|WEEKLY_ATHLETE_SUMMARY\|{WAS}` | Hub queue create in GitHub | Not live until paste |
 | **117** v2.1 | Event Type `ZOOM_RECORDING_APPROVAL` / Template `ZOOM_RECORDING_APPROVED` | `ZOOM_RECORDING_APPROVAL\|ZOOM_ATTENDANCE\|{ZA}` | Hub queue create in GitHub | Not live until paste |

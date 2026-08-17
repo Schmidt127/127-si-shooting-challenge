@@ -5,7 +5,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 
-Version: v4.0
+Version: v4.1
 Date Written: 2026-06-17
 Last Updated: 2026-08-17
 
@@ -21,9 +21,9 @@ IMPORTANT DESIGN RULES
 - One Video Feedback maps to VIDEO_FEEDBACK|VIDEO_FEEDBACK|{Video Feedback Record ID}.
 - Idempotent: reuse an existing matching Handoff Key; conflicting payload → Needs Review.
 - Do not write Parent Feedback Sent? or Parent Feedback Sent On (Hub/downstream writeback).
-- Do not use Video Feedback Google Drive fields.
-- Do not invent Reviewer File URL / Canonical File URL on Video Feedback.
-- Parent video link prefers VF Video URL or Drive Link, then Submission Assets Reviewer File URL.
+- Parent-facing video link is ONLY Video Feedback "Video URL or Drive Link" (written by 022).
+- Do not read Reviewer File URL, Canonical File URL, or any Google Drive File/Folder ID/URL/Name.
+- Missing/invalid VF video URL → error (no asset-field fallback).
 - Enrollment Parent Email - Cleaned is the authoritative recipient (076 Hub pattern).
 
 TRIGGER (Airtable UI — keep unless Mike revises)
@@ -57,7 +57,7 @@ AUTOMATION NAME
 
 const SCRIPT = {
   scriptName: "073 - Email, Notifications, and External Handoffs - Create Video Feedback Communications Hub Handoff",
-  version: "v4.0",
+  version: "v4.1",
   versionDate: "2026-08-17",
   originalWrittenDate: "2026-06-17",
   lastUpdated: "2026-08-17",
@@ -120,7 +120,7 @@ const CONFIG = {
       videoFeedback: "Video Feedback",
       trueVideo: "Is True Video Feedback Asset?",
       original: "Original File Name",
-      reviewer: "Reviewer File URL",
+      // Intentionally omit Reviewer/Canonical File URL — parent email must not read them.
     },
     xp: {
       active: "Active?",
@@ -301,11 +301,24 @@ async function markQueueNeedsReview(queueTable, rows) {
   }
 }
 
-function parentVideoUrl(vf, vfTable, asset, assetTable) {
-  return first(
-    text(vf, vfTable, CONFIG.fields.vf.videoUrl),
-    text(asset, assetTable, CONFIG.fields.asset.reviewer)
-  );
+function parentVideoUrl(vf, vfTable) {
+  const url = text(vf, vfTable, CONFIG.fields.vf.videoUrl);
+  if (!url) {
+    throw new Error(
+      'Video Feedback "Video URL or Drive Link" is blank. Parent handoff blocked (022 writeback required; no asset URL fallback).'
+    );
+  }
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      throw new Error("non-http");
+    }
+  } catch {
+    throw new Error(
+      'Video Feedback "Video URL or Drive Link" must be a valid http(s) URL. Parent handoff blocked.'
+    );
+  }
+  return url;
 }
 
 async function main() {
@@ -430,7 +443,7 @@ async function main() {
     text(asset, assetT, CONFIG.fields.asset.original),
     "Video submission"
   );
-  const videoUrl = parentVideoUrl(vf, vfT, asset, assetT);
+  const videoUrl = parentVideoUrl(vf, vfT);
   const recipients = [{ email: parent, role: "guardian", displayName: athleteName }];
   const payload = {
     athleteName,
