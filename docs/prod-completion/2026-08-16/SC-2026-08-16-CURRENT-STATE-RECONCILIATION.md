@@ -23,7 +23,7 @@
 |---|---:|---|
 | 010 — Submission XP | v10.10 | Controlled Testing3 submission passed after the canonical-identity/date correction |
 | 020 — Homework Completion | v3.6 package | v3.5 controlled run passed; v3.6 attachment-copy backfill and 13/13 offline tests reported by Cursor; future automatic copying requires v3.6 paste confirmation |
-| 022 — Child upload writeback | v2.0 | Controlled homework/video writeback passed |
+| 022 — Child upload writeback | **v2.0** (Airtable live + GitHub aligned 2026-08-16) | Controlled homework/video writeback passed; Reviewer File URL preferred; Canonical File URL fallback; existing VF Upload Status; Writeback Complete? verified |
 | 031 — Find/Create Weekly Athlete Summary | current live run | Canonical WAS created for the testing week; exact repository version was not independently polled here |
 | 065 — Homework XP | v10.1 | HW1 and HW2 XP Events created successfully |
 | 070b — Video asset upload | v4.4 | PROD Lambda upload verified successfully |

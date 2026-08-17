@@ -6,6 +6,27 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Airtable
+
+#### Changed
+- **022 (v2.0) — Align GitHub with Production child upload writeback** — Video
+  Feedback writeback prefers **Reviewer File URL**, falls back to **Canonical
+  File URL**, updates the existing Video Feedback **Upload Status** (no duplicate
+  field), writes Video URL or Drive Link / Video Asset File Name / Video Asset
+  Uploaded At, and confirms **Writeback Complete?** when Uploaded. Idempotent;
+  does not create child records. Offline contract:
+  `node airtable/automations/shooting-challenge/lib/022-child-upload-writeback.test.js`.
+  Production already live-tested v2.0 (2026-08-16); GitHub was still labeled
+  v1.1 with Drive-first URL selection.
+
+### Docs
+
+#### Changed
+- **022 v2.0 documentation alignment (2026-08-16)** — Completion Master,
+  automation-index, Automation Version Inventory, PROJECT_STATE, and
+  `SC-2026-08-16-CURRENT-STATE-RECONCILIATION.md` now record 022 as **v2.0
+  live-tested**. Removed stale “repository-prepared only / unverified” claims.
+
 ### Web
 
 #### Changed
