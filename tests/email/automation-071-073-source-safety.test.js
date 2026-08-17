@@ -23,22 +23,25 @@ t("073 syntax", () => checkSyntax(p073));
 t("074 syntax", () => checkSyntax(p074));
 t("079 syntax", () => checkSyntax(p079));
 t("117 syntax", () => checkSyntax(p117));
-t("071 v4.0 creates Communications Hub queue handoff (not Make webhook)", () => {
-  assert.match(s071, /Version: v4\.0/);
+t("071 v4.1 creates Communications Hub queue handoff (not Make webhook)", () => {
+  assert.match(s071, /Version: v4\.1/);
   assert.match(s071, /Email Handoff Queue/);
   assert.match(s071, /HOMEWORK_FEEDBACK\|HOMEWORK_COMPLETIONS\|/);
   assert.match(s071, /created_handoff/);
   assert.match(s071, /existing_handoff/);
   assert.doesNotMatch(s071, /makeWebhookUrl|hook\.us1\.make\.com|remoteFetchAsync|sendTag:"HOMEWORK_FEEDBACK_PARENT"|semanticFailure/);
 });
-t("071 v4.0 requires active canonical PHA when linked", () => {
+t("071 v4.1 requires linked PHA identity without Grade Band matching", () => {
   assert.match(s071, /Program Homework Assignment/);
+  assert.match(s071, /Program Homework Assignment is not linked/);
   assert.match(s071, /Linked Program Homework Assignment is missing\/inactive/);
   assert.match(s071, /PHA Program Instance mismatch/);
   assert.match(s071, /PHA Week mismatch/);
-  assert.match(s071, /PHA Grade Band mismatch/);
   assert.match(s071, /PHA Homework mismatch/);
   assert.match(s071, /PHA Homework Slot mismatch/);
+  assert.match(s071, /PHA Grade Band is descriptive eligibility metadata only/);
+  assert.doesNotMatch(s071, /PHA Grade Band mismatch/);
+  assert.doesNotMatch(s071, /Exactly one Grade Band is required for homework schedule validation/);
 });
 t("071 validates asset ownership and HW slot", () => {
   assert.match(s071, /Asset .* Enrollment mismatch/);

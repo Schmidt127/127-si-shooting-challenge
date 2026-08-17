@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Offline tests for 005 v5.3 + 020 v3.5 PHA-first intake contract.
+ * Offline tests for 005 v5.3 + 020 v3.6 PHA-first intake contract.
  * Run: node --test tests/homework/automation-005-020-pha-direct.test.js
  */
 import test from "node:test";
@@ -37,15 +37,17 @@ test("005 v5.3 source contract — PHA direct load, no library reverse search", 
   assert.doesNotMatch(source, /phaTable\.selectRecordsAsync/);
 });
 
-test("020 v3.5 source contract — PHA direct validate, library dereference", () => {
+test("020 v3.6 source contract — PHA direct validate, library dereference", () => {
   const source = read(
     "airtable/automations/shooting-challenge/020-homework-link-or-create-homework-completion.js"
   );
-  assert.match(source, /version:\s*"v3\.5"/);
+  assert.match(source, /version:\s*"v3\.6"/);
   assert.match(source, /validateSelectedPha/);
   assert.match(source, /libraryId/);
+  assert.match(source, /Multi-band Grade Band never rejects/);
   assert.doesNotMatch(source, /resolveProgramHomeworkAssignmentId/);
   assert.doesNotMatch(source, /phaTable\.selectRecordsAsync/);
+  assert.doesNotMatch(source, /PHA Grade Band mismatch/);
 });
 
 test("005 — correct PHA yields production PHA + library IDs", async () => {

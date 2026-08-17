@@ -5,7 +5,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 
-Version: v4.0
+Version: v4.1
 Date Written: 2026-06-17
 Last Updated: 2026-08-17
 
@@ -22,9 +22,13 @@ IMPORTANT DESIGN RULES
 - Idempotent: reuse an existing matching Handoff Key; conflicting payload → Needs Review.
 - Do not write Parent Feedback Sent? or Parent Feedback Sent On (Hub/downstream writeback).
 - Preserve fail-closed ownership gates: PHA, assets, quiz path, XP, Satisfactory, Ready, Sent block.
+- PHA operational identity is Program Instance + Week + Homework Assignment + Homework Slot.
+- PHA Grade Band is descriptive eligibility metadata only (may list all bands). Never reject a handoff for Grade Band mismatch.
+- Athlete Enrollment Grade Band may exist for display/XP elsewhere; it is not a PHA matching key.
 - Homework asset URL prefers Reviewer File URL, then Google Drive View/File URL (homework path only).
 - Quiz-only path without assets must still work.
 - Enrollment Parent Email - Cleaned is the authoritative recipient.
+- testMode defaults true for controlled Hub sends.
 
 TRIGGER (Airtable UI — keep unless Mike revises)
 - Homework Completions when record matches conditions:
@@ -55,7 +59,7 @@ AUTOMATION NAME
 
 const SCRIPT = {
   scriptName: "071 - Email, Notifications, and External Handoffs - Create Homework Feedback Communications Hub Handoff",
-  version: "v4.0",
+  version: "v4.1",
   versionDate: "2026-08-17",
   originalWrittenDate: "2026-06-17",
   lastUpdated: "2026-08-17",
@@ -109,6 +113,7 @@ const CONFIG = {
       homework: "Homework Assignment",
       program: "Program Instance",
       week: "Week",
+      // Grade Band is descriptive metadata only — never used for operational matching.
       grade: "Grade Band",
       slot: "Homework Slot",
       active: "Active?",
@@ -333,65 +338,33 @@ async function main() {
     throw new Error("Enrollment is missing or inactive. Handoff blocked.");
   }
   const programId = one(ids(enr, enrT, CONFIG.fields.enr.program), "Enrollment Program Instance");
-  const hcGradeIds = ids(hc, hcT, CONFIG.fields.hc.grade);
-  const enrGradeIds = ids(enr, enrT, CONFIG.fields.enr.grade);
-  const gradeIds = hcGradeIds.length ? hcGradeIds : enrGradeIds;
-  if (gradeIds.length !== 1) {
-    throw new Error("Exactly one Grade Band is required for homework schedule validation.");
-  }
-  const gradeId = gradeIds[0];
   const hcSlot = normalizeSlot(text(hc, hcT, CONFIG.fields.hc.slot));
   if (!hcSlot) throw new Error("Homework Completion Item Slot must resolve to HW1 or HW2.");
 
   const phaIds = ids(hc, hcT, CONFIG.fields.hc.pha);
-  let canonicalPha = null;
+  if (phaIds.length === 0) {
+    throw new Error("Program Homework Assignment is not linked. Handoff blocked.");
+  }
   if (phaIds.length > 1) {
     throw new Error("Homework Completion links multiple Program Homework Assignments. Handoff blocked.");
   }
-  if (phaIds.length === 1) {
-    canonicalPha = await phaT.selectRecordAsync(phaIds[0]);
-    if (!canonicalPha || !checked(canonicalPha, phaT, CONFIG.fields.pha.active)) {
-      throw new Error("Linked Program Homework Assignment is missing/inactive. Handoff blocked.");
-    }
-  } else {
-    const q = await phaT.selectRecordsAsync({
-      fields: [
-        CONFIG.fields.pha.homework,
-        CONFIG.fields.pha.program,
-        CONFIG.fields.pha.week,
-        CONFIG.fields.pha.grade,
-        CONFIG.fields.pha.slot,
-        CONFIG.fields.pha.active,
-      ].filter((name) => exists(phaT, name)),
-    });
-    const candidates = q.records.filter(
-      (r) =>
-        checked(r, phaT, CONFIG.fields.pha.active) &&
-        sameSet(ids(r, phaT, CONFIG.fields.pha.program), [programId]) &&
-        sameSet(ids(r, phaT, CONFIG.fields.pha.week), [weekId]) &&
-        sameSet(ids(r, phaT, CONFIG.fields.pha.grade), [gradeId]) &&
-        normalizeSlot(text(r, phaT, CONFIG.fields.pha.slot)) === hcSlot
-    );
-    if (candidates.length > 0) {
-      throw new Error("A current PHA schedule exists but Homework Completion is not linked to it. Handoff blocked.");
-    }
+  const canonicalPha = await phaT.selectRecordAsync(phaIds[0]);
+  if (!canonicalPha || !checked(canonicalPha, phaT, CONFIG.fields.pha.active)) {
+    throw new Error("Linked Program Homework Assignment is missing/inactive. Handoff blocked.");
   }
-  if (canonicalPha) {
-    if (!sameSet(ids(canonicalPha, phaT, CONFIG.fields.pha.program), [programId])) {
-      throw new Error("PHA Program Instance mismatch.");
-    }
-    if (!sameSet(ids(canonicalPha, phaT, CONFIG.fields.pha.week), [weekId])) {
-      throw new Error("PHA Week mismatch.");
-    }
-    if (!sameSet(ids(canonicalPha, phaT, CONFIG.fields.pha.grade), [gradeId])) {
-      throw new Error("PHA Grade Band mismatch.");
-    }
-    if (!sameSet(ids(canonicalPha, phaT, CONFIG.fields.pha.homework), [homeworkId])) {
-      throw new Error("PHA Homework mismatch.");
-    }
-    if (normalizeSlot(text(canonicalPha, phaT, CONFIG.fields.pha.slot)) !== hcSlot) {
-      throw new Error("PHA Homework Slot mismatch.");
-    }
+  // Operational identity: Program Instance + Week + Homework Assignment + Homework Slot.
+  // PHA Grade Band is descriptive metadata only and must never reject this handoff.
+  if (!sameSet(ids(canonicalPha, phaT, CONFIG.fields.pha.program), [programId])) {
+    throw new Error("PHA Program Instance mismatch.");
+  }
+  if (!sameSet(ids(canonicalPha, phaT, CONFIG.fields.pha.week), [weekId])) {
+    throw new Error("PHA Week mismatch.");
+  }
+  if (!sameSet(ids(canonicalPha, phaT, CONFIG.fields.pha.homework), [homeworkId])) {
+    throw new Error("PHA Homework mismatch.");
+  }
+  if (normalizeSlot(text(canonicalPha, phaT, CONFIG.fields.pha.slot)) !== hcSlot) {
+    throw new Error("PHA Homework Slot mismatch.");
   }
 
   debug("04 - Validate linked submissions, assets, and quiz path");
@@ -486,7 +459,7 @@ async function main() {
     submittedFiles: files,
     homeworkSlot: hcSlot,
     programName: programName || undefined,
-    canonicalProgramHomeworkAssignmentId: canonicalPha?.id || "",
+    canonicalProgramHomeworkAssignmentId: canonicalPha.id,
     canonicalProgramInstanceId: programId,
     canonicalWeekId: weekId,
     canonicalGradeBandId: gradeId,
