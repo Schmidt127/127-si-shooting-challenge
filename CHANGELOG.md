@@ -9,6 +9,14 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **079 (v2.3) — Zoom Event Type / Template Key contract fix** — Email Handoff
+  Queue Event Type is `ZOOM_RECORDING_APPROVAL`; Template Key remains
+  `ZOOM_RECORDING_APPROVED`. Handoff Key prefix is
+  `ZOOM_RECORDING_APPROVAL|ZOOM_ATTENDANCE|{ZA}`. Do not add
+  `ZOOM_RECORDING_APPROVED` as an Event Type option. Automation name:
+  `079 – Send to Communications Hub - NEW`.
+- **117 (v2.1) — Align Zoom queue producer with Event Type contract** — Writes
+  Event Type `ZOOM_RECORDING_APPROVAL` and Template Key `ZOOM_RECORDING_APPROVED`.
 - **022 (v2.0) — Align GitHub with Production child upload writeback** — Video
   Feedback writeback prefers **Reviewer File URL**, falls back to **Canonical
   File URL**, updates the existing Video Feedback **Upload Status** (no duplicate

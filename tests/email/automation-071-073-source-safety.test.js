@@ -100,10 +100,12 @@ t("074 clears Send to Make? and does not write Sent fields", () => {
   assert.doesNotMatch(s074, /\[["']Weekly Email Sent\?["']\]\s*:\s*true/);
   assert.doesNotMatch(s074, /\[["']Weekly Email Sent At["']\]\s*:/);
 });
-t("117 v2.0 creates Communications Hub queue handoff (not Make webhook)", () => {
-  assert.match(s117, /version: "v2\.0"/);
+t("117 v2.1 creates Communications Hub queue handoff (not Make webhook)", () => {
+  assert.match(s117, /version: "v2\.1"/);
   assert.match(s117, /Email Handoff Queue/);
-  assert.match(s117, /ZOOM_RECORDING_APPROVED\|ZOOM_ATTENDANCE\|/);
+  assert.match(s117, /eventType: "ZOOM_RECORDING_APPROVAL"/);
+  assert.match(s117, /templateKey: "ZOOM_RECORDING_APPROVED"/);
+  assert.match(s117, /ZOOM_RECORDING_APPROVAL\|ZOOM_ATTENDANCE\|/);
   assert.match(s117, /created_handoff/);
   assert.doesNotMatch(s117, /makeWebhookUrl|webhookUrl|hook\.us1\.make\.com|remoteFetchAsync/);
   assert.doesNotMatch(s117, /automationNumber\s*[:=]/);
@@ -115,18 +117,20 @@ t("117 does not write Sent fields and omits Make route from payload", () => {
   const payloadBlock = s117.slice(s117.indexOf("const payload = {"), s117.indexOf("const queueData"));
   assert.doesNotMatch(payloadBlock, /117f|automationNumber|make/i);
 });
-t("079 v2.2 accepts VIDEO_FEEDBACK and three new Hub event types", () => {
-  assert.match(s079, /version: "v2\.2"/);
+t("079 v2.3 accepts ZOOM_RECORDING_APPROVAL Event Type with ZOOM_RECORDING_APPROVED Template Key", () => {
+  assert.match(s079, /version: "v2\.3"/);
   assert.match(s079, /eventVideoFeedback: "VIDEO_FEEDBACK"/);
   assert.match(s079, /eventHomeworkFeedback: "HOMEWORK_FEEDBACK"/);
   assert.match(s079, /eventWeeklyAthleteSummary: "WEEKLY_ATHLETE_SUMMARY"/);
-  assert.match(s079, /eventZoomRecordingApproved: "ZOOM_RECORDING_APPROVED"/);
+  assert.match(s079, /eventZoomRecordingApproval: "ZOOM_RECORDING_APPROVAL"/);
+  assert.match(s079, /templateZoomRecordingApproved: "ZOOM_RECORDING_APPROVED"/);
   assert.match(s079, /HOMEWORK_FEEDBACK\|HOMEWORK_COMPLETIONS\|/);
   assert.match(s079, /WEEKLY_ATHLETE_SUMMARY\|WEEKLY_ATHLETE_SUMMARY\|/);
-  assert.match(s079, /ZOOM_RECORDING_APPROVED\|ZOOM_ATTENDANCE\|/);
+  assert.match(s079, /ZOOM_RECORDING_APPROVAL\|ZOOM_ATTENDANCE\|/);
   assert.match(s079, /"athleteName", "coachFeedback", "totalVideoXpAwarded"/);
   assert.match(s079, /totalHomeworkXpAwarded \(or totalXp\)/);
   assert.match(s079, /weekLabel \(or weekName\)/);
   assert.match(s079, /approvalResult \(or timing\)/);
+  assert.doesNotMatch(s079, /eventZoomRecordingApproved: "ZOOM_RECORDING_APPROVED"/);
 });
 console.log(`PASS ${pass} 071/073/074/079/117 Hub handoff contracts`);
