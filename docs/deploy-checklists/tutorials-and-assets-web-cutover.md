@@ -39,6 +39,8 @@ Web queries request that field by **ID**, not by the bare name `Name` (bare `Nam
 |------|--------|
 | Code + tests + build | Done |
 | Docs / CHANGELOG / C-026 backlog / PROJECT_STATE | Done |
-| Commit | `5a8bb3a` on `master` |
+| Commit | `5a8bb3a` cutover + `5dd97c0` BOM Name hotfix |
 | Push to `origin/master` (Vercel trigger) | Done 2026-08-17 |
-| Live spot-check | Mike — after Vercel deploy green |
+| Vercel production | Success (`5dd97c0`) |
+| Live smoke | `/shoot/tutorials` returns title + **7 published** (2026-08-17) |
+| Mike follow-up | Spot-check detail poster + shoutouts/articles |
