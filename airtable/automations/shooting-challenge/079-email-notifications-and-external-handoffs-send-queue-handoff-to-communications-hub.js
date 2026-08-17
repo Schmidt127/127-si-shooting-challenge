@@ -1,15 +1,15 @@
 /*
 GitHub header
-Automation: 079 - Email, Notifications, and External Handoffs - Send Queue Handoff to Communications Hub
+Automation: 079 – Send to Communications Hub - NEW
 System: 127 SI Shooting Challenge
-Version: v2.2
+Version: v2.3
 Date Written: 2026-08-11
 Last Updated: 2026-08-17
 
 PURPOSE
 - Dispatch one Ready Email Handoff Queue row to the Communications Hub.
 - Remain the single shared dispatcher for WELCOME, DAILY_SUBMISSION, VIDEO_FEEDBACK,
-  HOMEWORK_FEEDBACK, WEEKLY_ATHLETE_SUMMARY, and ZOOM_RECORDING_APPROVED.
+  HOMEWORK_FEEDBACK, WEEKLY_ATHLETE_SUMMARY, and ZOOM_RECORDING_APPROVAL.
 
 IMPORTANT DESIGN RULES
 - Preserve the existing WELCOME envelope, validation, retry, and replay behavior.
@@ -21,8 +21,14 @@ IMPORTANT DESIGN RULES
   and requires the key suffix to equal Source Record ID.
 - WEEKLY_ATHLETE_SUMMARY accepts only WEEKLY_ATHLETE_SUMMARY|WEEKLY_ATHLETE_SUMMARY|<WAS Record ID>
   and requires the key suffix to equal Source Record ID.
-- ZOOM_RECORDING_APPROVED accepts only ZOOM_RECORDING_APPROVED|ZOOM_ATTENDANCE|<ZA Record ID>
-  and requires the key suffix to equal Source Record ID.
+- ZOOM_RECORDING_APPROVAL (Airtable Event Type) accepts only
+  ZOOM_RECORDING_APPROVAL|ZOOM_ATTENDANCE|<ZA Record ID> and requires Template Key
+  ZOOM_RECORDING_APPROVED (Event Type and Template Key are intentionally different).
+- Validate actual Email Handoff Queue Event Type single-select choices; do not invent options.
+- Reuse the existing queue record by deterministic Handoff Key; never create duplicate
+  queue rows, Hub Messages, or Deliveries from this dispatcher.
+- Never call Make, Gmail, or Resend directly. Never mark source records sent merely
+  because the Hub accepted the request.
 - The Hub owns rendering and delivery; this script never rebuilds email content.
 - The ingress secret is an Airtable input and is never logged or stored.
 
@@ -37,6 +43,9 @@ OUTPUTS
 - statusOut, actionOut, errorOut, debugStep, queueRecordId, handoffKey,
   hubEventId, attemptCount, hubResponseJson
 
+AUTOMATION NAME
+- 079 – Send to Communications Hub - NEW
+
 FOLDER
 - 07 - Email, Notifications, and External Handoffs
 */
@@ -44,13 +53,13 @@ FOLDER
 // @ts-nocheck
 
 const SCRIPT = {
-    scriptName: "079 - Email, Notifications, and External Handoffs - Send Queue Handoff to Communications Hub",
-    version: "v2.2",
+    scriptName: "079 – Send to Communications Hub - NEW",
+    version: "v2.3",
     versionDate: "2026-08-17",
     originalWrittenDate: "2026-08-11",
     lastUpdated: "2026-08-17",
     folder: "07 - Email, Notifications, and External Handoffs",
-    automationName: "079 - Email, Notifications, and External Handoffs - Send Queue Handoff to Communications Hub",
+    automationName: "079 – Send to Communications Hub - NEW",
 };
 
 const CONFIG = {
@@ -85,12 +94,14 @@ const CONFIG = {
         eventVideoFeedback: "VIDEO_FEEDBACK",
         eventHomeworkFeedback: "HOMEWORK_FEEDBACK",
         eventWeeklyAthleteSummary: "WEEKLY_ATHLETE_SUMMARY",
-        eventZoomRecordingApproved: "ZOOM_RECORDING_APPROVED",
+        // Airtable Event Type choice (not the Hub template key).
+        eventZoomRecordingApproval: "ZOOM_RECORDING_APPROVAL",
         templateWelcome: "WELCOME",
         templateDailySubmission: "DAILY_SUBMISSION",
         templateVideoFeedback: "VIDEO_FEEDBACK",
         templateHomeworkFeedback: "HOMEWORK_FEEDBACK",
         templateWeeklyAthleteSummary: "WEEKLY_ATHLETE_SUMMARY",
+        // Hub / registered template key (intentionally differs from Event Type).
         templateZoomRecordingApproved: "ZOOM_RECORDING_APPROVED",
         sourceEnrollments: "Enrollments",
         sourceSubmissions: "Submissions",
@@ -280,7 +291,7 @@ function parsePayload(value, eventType) {
             throw new Error(`${CONFIG.fields.payloadJson} is missing weekLabel (or weekName)`);
         }
     }
-    if (eventType === CONFIG.values.eventZoomRecordingApproved) {
+    if (eventType === CONFIG.values.eventZoomRecordingApproval) {
         for (const key of ["athleteName", "meetingName"]) {
             if (payload?.[key] === undefined || payload?.[key] === null || String(payload?.[key]).trim() === "") {
                 throw new Error(`${CONFIG.fields.payloadJson} is missing ${key}`);
@@ -387,11 +398,11 @@ function validateHandoff(eventType, templateKey, handoffKey, sourceTable, source
         }
         return;
     }
-    if (eventType === CONFIG.values.eventZoomRecordingApproved) {
-        const match = /^ZOOM_RECORDING_APPROVED\|ZOOM_ATTENDANCE\|(rec[A-Za-z0-9]{14})$/.exec(handoffKey);
-        if (!match) throw new Error(`Invalid ZOOM_RECORDING_APPROVED Handoff Key: ${handoffKey || "blank"}`);
+    if (eventType === CONFIG.values.eventZoomRecordingApproval) {
+        const match = /^ZOOM_RECORDING_APPROVAL\|ZOOM_ATTENDANCE\|(rec[A-Za-z0-9]{14})$/.exec(handoffKey);
+        if (!match) throw new Error(`Invalid ZOOM_RECORDING_APPROVAL Handoff Key: ${handoffKey || "blank"}`);
         if (match[1] !== sourceRecordId) {
-            throw new Error("ZOOM_RECORDING_APPROVED Handoff Key does not match Source Record ID");
+            throw new Error("ZOOM_RECORDING_APPROVAL Handoff Key does not match Source Record ID");
         }
         if (templateKey !== CONFIG.values.templateZoomRecordingApproved) {
             throw new Error("Template Key must be ZOOM_RECORDING_APPROVED");
@@ -454,7 +465,7 @@ async function main() {
             CONFIG.values.eventVideoFeedback,
             CONFIG.values.eventHomeworkFeedback,
             CONFIG.values.eventWeeklyAthleteSummary,
-            CONFIG.values.eventZoomRecordingApproved,
+            CONFIG.values.eventZoomRecordingApproval,
         ]) {
             requireSingleSelectValue(queueTable, CONFIG.fields.eventType, eventType);
         }

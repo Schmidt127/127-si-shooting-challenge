@@ -61,8 +61,8 @@ t("074 payload includes athlete and week fields", () => {
 });
 
 t("117 Hub key and event/template", () => {
-  assert.match(s117, /version: "v2\.0"/);
-  assert.match(s117, /eventType: "ZOOM_RECORDING_APPROVED"/);
+  assert.match(s117, /version: "v2\.1"/);
+  assert.match(s117, /eventType: "ZOOM_RECORDING_APPROVAL"/);
   assert.match(s117, /templateKey: "ZOOM_RECORDING_APPROVED"/);
   assert.match(s117, /sourceTableToken: "ZOOM_ATTENDANCE"/);
   assert.match(s117, /handoffKey = `\$\{CONFIG\.values\.eventType\}\|\$\{CONFIG\.values\.sourceTableToken\}\|\$\{zoomAttendanceId\}`/);

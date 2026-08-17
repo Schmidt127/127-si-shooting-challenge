@@ -5,7 +5,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 
-Version: v2.0
+Version: v2.1
 Date Written: 2026-07-20
 Last Updated: 2026-08-17
 
@@ -18,7 +18,8 @@ IMPORTANT DESIGN RULES
 - Hub owns subject, HTML, plain text, branding, delivery, and Delivery proof.
 - This script never calls Make, Gmail, Resend, or the Communications Hub ingress.
 - Only Automation 079 may send Email Handoff Queue rows to the Hub.
-- One Zoom Attendance maps to ZOOM_RECORDING_APPROVED|ZOOM_ATTENDANCE|{ZA Record ID}.
+- Airtable Event Type is ZOOM_RECORDING_APPROVAL; Template Key remains ZOOM_RECORDING_APPROVED.
+- One Zoom Attendance maps to ZOOM_RECORDING_APPROVAL|ZOOM_ATTENDANCE|{ZA Record ID}.
 - Idempotent: reuse an existing matching Handoff Key; conflicting payload → Needs Review.
 - Do not write Airtable "sent" fields (none historically on this path).
 - Validate enrollmentRid and zoomMeetingRid match linked records when links exist.
@@ -58,7 +59,7 @@ OUTPUTS
 
 const SCRIPT = {
   scriptName: "117 - Zoom - Create Zoom Recording Approval Communications Hub Handoff",
-  version: "v2.0",
+  version: "v2.1",
   versionDate: "2026-08-17",
   originalWrittenDate: "2026-07-20",
   lastUpdated: "2026-08-17",
@@ -109,7 +110,9 @@ const CONFIG = {
     },
   },
   values: {
-    eventType: "ZOOM_RECORDING_APPROVED",
+    // Airtable Email Handoff Queue Event Type choice.
+    eventType: "ZOOM_RECORDING_APPROVAL",
+    // Registered Communications Hub template key (intentionally different).
     templateKey: "ZOOM_RECORDING_APPROVED",
     sourceTableToken: "ZOOM_ATTENDANCE",
     approvalResult: "Satisfactory",
