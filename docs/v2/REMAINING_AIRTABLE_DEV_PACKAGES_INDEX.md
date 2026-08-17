@@ -1,4 +1,6 @@
-# Remaining Airtable DEV Installation Packages — Index (Worker A)
+# Remaining Airtable DEV Installation Packages — Historical Index (Worker A)
+
+> **Historical index:** This document is retained for the 2026-07-16 DEV-only package wave. It is not the current PROD completion list. For current 2026-08-16 controlled-path status, use [`docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](../SHOOTING_CHALLENGE_COMPLETION_MASTER.md), [`docs/AUTOMATION_VERSION_INVENTORY.md`](../AUTOMATION_VERSION_INVENTORY.md), and [`docs/prod-completion/2026-08-16/SC-2026-08-16-CURRENT-STATE-RECONCILIATION.md`](../prod-completion/2026-08-16/SC-2026-08-16-CURRENT-STATE-RECONCILIATION.md).
 
 **Date:** 2026-07-16 (updated after field/trigger inventory)  
 **PR:** [#35](https://github.com/Schmidt127/127-si-shooting-challenge/pull/35)  
