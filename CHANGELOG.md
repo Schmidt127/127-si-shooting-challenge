@@ -55,6 +55,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **Tutorials and Shoutouts video + site-wide contrast (2026-08-18)** — Public `/shoot/tutorials` and `/shoutouts` use Tutorials & Assets `Link to Video` as the only catalog video URL. Blank links show a coming-soon state instead of a player. Google Drive / PDF / Adobe links open in a new tab. Site-wide `text-muted` now maps to readable foreground so body copy, nav, and footer meet contrast on light surfaces.
 - **Tutorials → Tutorials & Assets cutover (2026-08-17)** — Public `/shoot/tutorials`,
   `/shoutouts`, and `/articles` read `Tutorials & Assets` (`tblDOTgsWfqPm18bw`)
   only. Field map uses `Type of Asset`, `Brief Descriptions`, `Display Image`,

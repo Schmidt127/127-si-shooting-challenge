@@ -66,7 +66,7 @@ export function PageHeader({
         {description ? (
           <p
             className={cn(
-              "mt-3 max-w-2xl text-base leading-relaxed text-muted",
+              "mt-3 max-w-2xl text-base leading-relaxed text-foreground",
               align === "center" && "mx-auto",
             )}
           >

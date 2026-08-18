@@ -74,10 +74,29 @@ describe("tutorial content kinds", () => {
     expect(tutorial.name).toBe("BOM title");
   });
 
-  it("extracts the first URL from multiline video fields", () => {
+  it("uses the exact Link to Video URL and never invents a fallback", () => {
+    const signed =
+      "https://cdn.example.com/videos/form%20shooting.mp4?X-Amz-Signature=abc+def&X-Amz-Expires=3600";
+    expect(extractVideoUrl(signed)).toBe(signed);
+    expect(extractVideoUrl(`  ${signed}  `)).toBe(signed);
     expect(extractVideoUrl("")).toBe("");
+    expect(extractVideoUrl("   ")).toBe("");
+    expect(extractVideoUrl("Video coming soon")).toBe("");
+    expect(extractVideoUrl("javascript:alert(1)")).toBe("");
     expect(extractVideoUrl("https://vimeo.com/123")).toBe("https://vimeo.com/123");
     expect(extractVideoUrl("notes\nhttps://youtu.be/xyz\nmore")).toBe("https://youtu.be/xyz");
+    expect(
+      extractVideoUrl({
+        id: "att1",
+        url: "https://v5.airtableusercontent.com/v0/clip.mp4",
+        filename: "clip.mp4",
+      }),
+    ).toBe("");
+    expect(
+      extractVideoUrl([
+        { id: "att1", url: "https://v5.airtableusercontent.com/v0/clip.mp4", filename: "clip.mp4" },
+      ]),
+    ).toBe("");
   });
 });
 

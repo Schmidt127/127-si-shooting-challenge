@@ -1,5 +1,16 @@
 /** YouTube / Vimeo embed helpers for tutorial video links. */
 
+export function isValidHttpUrl(url: string): boolean {
+  const trimmed = url.trim();
+  if (!trimmed) return false;
+  try {
+    const parsed = new URL(trimmed);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 export function getYouTubeVideoId(url: string): string | null {
   const trimmed = url.trim();
   if (!trimmed) return null;
@@ -67,5 +78,20 @@ export function getProviderPosterUrl(url: string): string | null {
 }
 
 export function isDirectVideoUrl(url: string): boolean {
-  return /\.(mp4|webm|mov)(\?|$)/i.test(url);
+  const trimmed = url.trim();
+  if (!trimmed) return false;
+
+  try {
+    const path = decodeURIComponent(new URL(trimmed).pathname);
+    return /\.(mp4|webm|mov|m4v)$/i.test(path);
+  } catch {
+    return /\.(mp4|webm|mov|m4v)(?:$|[?#])/i.test(trimmed);
+  }
+}
+
+/** True when the catalog URL can play in-page (YouTube, Vimeo, or a video file). */
+export function isInPageVideoUrl(url: string): boolean {
+  const trimmed = url.trim();
+  if (!isValidHttpUrl(trimmed)) return false;
+  return Boolean(getVideoEmbedUrl(trimmed) || isDirectVideoUrl(trimmed));
 }

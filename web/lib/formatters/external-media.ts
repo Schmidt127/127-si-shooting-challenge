@@ -27,9 +27,16 @@ export function isPdfUrl(url: string): boolean {
   return /\.pdf$/i.test(parsed.pathname);
 }
 
-/** Adobe and PDF links must open in a new tab — embedding returns 502 or is blocked. */
+export function isGoogleDriveUrl(url: string): boolean {
+  const parsed = parseHttpUrl(url);
+  if (!parsed) return false;
+  const host = parsed.hostname.toLowerCase();
+  return host === "drive.google.com" || host === "docs.google.com" || host.endsWith(".googleusercontent.com");
+}
+
+/** Adobe, PDF, and Google Drive links must open in a new tab — they cannot be embedded. */
 export function shouldOpenExternally(url: string): boolean {
-  return isAdobeDocumentUrl(url) || isPdfUrl(url);
+  return isAdobeDocumentUrl(url) || isPdfUrl(url) || isGoogleDriveUrl(url);
 }
 
 export function externalLinkHostname(url: string): string {

@@ -50,7 +50,7 @@ export function RichContent({ text, className = "" }: RichContentProps) {
   if (blocks.length === 0) return null;
 
   return (
-    <div className={`space-y-4 text-sm leading-relaxed text-muted sm:text-base ${className}`}>
+    <div className={`space-y-4 text-sm leading-relaxed text-foreground sm:text-base ${className}`}>
       {blocks.map((block) => (
         <p key={block.slice(0, 48)} className="whitespace-pre-wrap">
           {renderInline(block)}

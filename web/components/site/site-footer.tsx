@@ -37,8 +37,8 @@ export function SiteFooter({
             <BrandLogo variant="circle" className="h-12 w-12 object-contain" />
             <div className="space-y-2">
               <p className="text-base font-bold text-foreground">{BRAND_ORG_NAME}</p>
-              <p className="text-sm font-medium text-foreground/80">{productName}</p>
-              <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
+              <p className="text-sm font-medium text-foreground">{productName}</p>
+              <p className="max-w-md text-sm leading-relaxed text-foreground">
                 A public training hub for shooting reps, weekly homework, levels, and live
                 competition. {BRAND_ORG_NAME} is the legally recognized nonprofit; Fairfield
                 Basketball Club is the program identity for this challenge and related activities.
@@ -70,7 +70,7 @@ export function SiteFooter({
         <Separator className="my-8" />
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-foreground">
             © {new Date().getFullYear()} {BRAND_ORG_NAME}. All rights reserved.
           </p>
           <a

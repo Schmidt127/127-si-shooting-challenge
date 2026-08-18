@@ -39,12 +39,45 @@ function readName(fields: TutorialFields): string {
   );
 }
 
-/** Multiline video field may include notes — prefer the first http(s) URL. */
+/**
+ * Authoritative catalog video URL from `Link to Video` only.
+ * Returns the exact http(s) string from Airtable (query params, encodings, S3
+ * paths preserved). Never invents a URL, never reads attachments.
+ */
 export function extractVideoUrl(value: unknown): string {
-  const text = asText(value, "");
+  if (typeof value === "string") return firstHttpUrl(value);
+  if (Array.isArray(value) && typeof value[0] === "string") {
+    return firstHttpUrl(value[0]);
+  }
+  return "";
+}
+
+export function hasCatalogVideoUrl(url: string): boolean {
+  return Boolean(url.trim());
+}
+
+function firstHttpUrl(raw: string): string {
+  const text = raw.trim();
   if (!text) return "";
+
+  const exact = asHttpUrl(text);
+  if (exact) return exact;
+
   const match = text.match(/https?:\/\/[^\s<>"']+/i);
-  return (match?.[0] ?? text).replace(/[),.;]+$/, "").trim();
+  return match ? asHttpUrl(match[0]) : "";
+}
+
+/** Keep the original character sequence — do not re-serialize via `URL.href`. */
+function asHttpUrl(candidate: string): string {
+  try {
+    const parsed = new URL(candidate);
+    if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+      return candidate;
+    }
+  } catch {
+    return "";
+  }
+  return "";
 }
 
 function normalizeTutorialType(value: string): string {

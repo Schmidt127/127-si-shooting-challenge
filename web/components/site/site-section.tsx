@@ -68,7 +68,7 @@ export function SiteSection({
               <p
                 className={cn(
                   "mt-3 max-w-2xl text-base leading-relaxed",
-                  tone === "blue" ? "text-contrast-muted" : "text-muted-foreground",
+                  tone === "blue" ? "text-contrast-muted" : "text-foreground",
                   tone === "orange" ? "text-brand-charcoal/85" : null,
                 )}
               >

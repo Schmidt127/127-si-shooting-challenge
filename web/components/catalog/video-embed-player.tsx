@@ -9,6 +9,8 @@ type VideoEmbedPlayerProps = {
   embedUrl: string;
   title: string;
   posterUrl?: string | null;
+  /** Original Airtable `Link to Video` value — not the derived embed URL. */
+  canonicalUrl?: string;
 };
 
 function appendAutoplay(embedUrl: string): string {
@@ -23,13 +25,23 @@ function appendAutoplay(embedUrl: string): string {
   }
 }
 
-export function VideoEmbedPlayer({ embedUrl, title, posterUrl }: VideoEmbedPlayerProps) {
+export function VideoEmbedPlayer({
+  embedUrl,
+  title,
+  posterUrl,
+  canonicalUrl,
+}: VideoEmbedPlayerProps) {
   const [playing, setPlaying] = useState(false);
   const resolvedPoster = posterUrl?.trim() || null;
+  const sourceUrl = canonicalUrl?.trim() || embedUrl;
 
   if (playing) {
     return (
-      <div className="aspect-video overflow-hidden rounded-2xl border border-border bg-black shadow-[0_10px_36px_-10px_rgba(0,0,0,0.85)]">
+      <div
+        className="aspect-video overflow-hidden rounded-lg border border-border bg-black shadow-site-md"
+        data-canonical-video-url={sourceUrl}
+        data-video-mode="embed"
+      >
         <iframe
           src={appendAutoplay(embedUrl)}
           title={title}
@@ -46,8 +58,10 @@ export function VideoEmbedPlayer({ embedUrl, title, posterUrl }: VideoEmbedPlaye
     <button
       type="button"
       onClick={() => setPlaying(true)}
-      className="group relative aspect-video w-full overflow-hidden rounded-2xl border border-border bg-court-navy text-left shadow-[0_10px_36px_-10px_rgba(0,0,0,0.85)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2"
+      className="group relative aspect-video w-full overflow-hidden rounded-lg border border-border bg-court-navy text-left shadow-site-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2"
       aria-label={`Play video: ${title}`}
+      data-canonical-video-url={sourceUrl}
+      data-video-mode="embed"
     >
       {resolvedPoster ? (
         <Image

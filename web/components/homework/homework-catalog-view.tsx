@@ -102,7 +102,7 @@ function HomeworkCard({
             </h3>
 
             {assignment.briefDescription ? (
-              <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">{assignment.briefDescription}</p>
+              <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-foreground">{assignment.briefDescription}</p>
             ) : null}
 
             {assignment.topics.length > 0 ? (
