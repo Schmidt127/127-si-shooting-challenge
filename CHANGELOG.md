@@ -13,6 +13,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 #### Changed
 - **Homework Library — `Lesson Key` deleted (2026-08-19)** — Mike removed the obsolete formula field in PROD. Content identity: `Record Id`. Schedule dedupe: PHA `Schedule Key`. Aligns with [`HOMEWORK-LIBRARY-FIELD-MATRIX.md`](./docs/prod-completion/2026-08-09/HOMEWORK-LIBRARY-FIELD-MATRIX.md) cutover step 6.
+- **Submissions — `Week Lkp` deleted (2026-08-19)** — Mike removed the legacy lookup from Homework Name 1 → library week. Submission week authority remains **`Submissions.Week`** (Automation 005). Aligns with field-matrix step 10.
 - **Schema refresh (2026-08-19)** — Read-only Metadata API export for **Production** (`prod-20260819/`, 32 tables, 126 views). Summary: `docs/deploy-checklists/SCHEMA-REFRESH-2026-08-19.md`. Updated `PROJECT_STATE.md`, `airtable/schema/snapshots/README.md`, `airtable/schema/current/schema-notes.md`, and web data-map/view docs for homework table split (`Homework Library` + `Program Homework Assignments`). **No separate DEV base is in use** — PROD is the only live Shooting Challenge base.
 - **071 (v4.1) — PHA Grade Band is metadata only** — Homework Feedback Hub
   handoff validates Program Instance + Week + Homework Assignment + Homework

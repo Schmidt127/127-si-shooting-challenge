@@ -46,13 +46,14 @@ Prior dated snapshots remain preserved (not overwritten), including `prod-202607
 - **51** warnings (mostly high computed-field counts and expected self-links).
 - **Invalid fields at export time** (`invalid_fields_*.json`):
   - `Homework Library.Lesson Key` — **deleted in PROD** (Mike 2026-08-19). Per cutover plan; schedule identity is PHA.`Schedule Key`, content identity is Homework Library.`Record Id`.
-  - `Submissions.Week Lkp` — lookup marked invalid (legacy homework-name link path).
+  - `Submissions.Week Lkp` — **deleted in PROD** (Mike 2026-08-19). Legacy lookup from `Homework Name 1` → library week; submission week is **`Submissions.Week`** (written by 005).
 
 ## Operator / doc follow-ups
 
-1. ~~Fix `Homework Library.Lesson Key`~~ — **done** (field deleted in PROD, Mike 2026-08-19).
-2. Refresh `airtable/schema/current/table-map.md` and `field-map.md` when a dedicated Agent A pass is scheduled (hand maps still stale).
-3. Optional: re-export PROD snapshot after other homework-library field deletes to clear stale `Lesson Key` from `prod-20260819/`.
+1. ~~`Homework Library.Lesson Key`~~ — **done** (deleted in PROD, Mike 2026-08-19).
+2. ~~`Submissions.Week Lkp`~~ — **done** (deleted in PROD, Mike 2026-08-19).
+3. Refresh `airtable/schema/current/table-map.md` and `field-map.md` when a dedicated Agent A pass is scheduled (hand maps still stale).
+4. Optional: re-export PROD snapshot after homework-library field cleanup to clear stale fields from `prod-20260819/`.
 
 ## Export command (repeat)
 
