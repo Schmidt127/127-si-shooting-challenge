@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Static ownership contracts for WAS weekly email handoff.
- * Validates 072 does not send, 119 only arms, 074 owns webhook.
+ * Validates 072 does not send, 119 only arms, and 074 owns the durable
+ * Communications Hub queue handoff. Automation 079 owns network delivery.
  */
 "use strict";
 
@@ -69,16 +70,16 @@ test("118 v2.0 does not create WAS, build HTML, or post webhook; arms sendMode f
   assert.ok(/update\[CONFIG\.was\.sendMode\]\s*=\s*\{\s*name:\s*sendMode\s*\}/.test(s118));
 });
 
-test("074 owns webhook handoff; does not mark Sent?; blocks duplicate Sent?", () => {
-  assert.ok(/makeWebhookUrl/.test(s074));
-  assert.ok(/\bfetch\s*\(/.test(s074) || /postJson\(/.test(s074));
-  assert.ok(/Do NOT write Weekly Email Sent\? = false/.test(s074) || /must NOT clear Weekly Email Sent\?/.test(s074));
-  assert.ok(/Duplicate send blocked/.test(s074));
-  assert.ok(/testRecipientEmail/.test(s074));
-  assert.ok(/sendMode === "test"/.test(s074) || /sendMode === 'test'/.test(s074));
-  assert.ok(/Version:\s*v2\.1/.test(s074));
-  assert.ok(/IMPORTANT PRODUCTION sendMode RULE/.test(s074));
-  assert.ok(/must not force automation input sendMode=Test/i.test(s074));
+test("074 v3.0 owns durable Hub handoff; never sends or marks Sent?", () => {
+  assert.ok(/Version:\s*v3\.0/.test(s074));
+  assert.ok(/Email Handoff Queue/.test(s074));
+  assert.ok(/WEEKLY_ATHLETE_SUMMARY\|WEEKLY_ATHLETE_SUMMARY/.test(s074));
+  assert.ok(/existing_handoff/.test(s074));
+  assert.ok(/needs_review/.test(s074));
+  assert.ok(/Do not write Weekly Email Sent\?/.test(s074));
+  assert.ok(!/\bfetch\s*\(/.test(s074), "074 must not perform network delivery");
+  assert.ok(!/makeWebhookUrl/.test(s074), "074 must not accept a Make webhook");
+  assert.ok(/Only Automation 079 may send/.test(s074));
 });
 
 test("policy matrix: short / normal / suppress + non-empty full", () => {
@@ -101,8 +102,10 @@ test("policy matrix: short / normal / suppress + non-empty full", () => {
   );
 });
 
-test("074 test mode prefers testRecipientEmail over csvemail in payload toEmail", () => {
-  assert.ok(/toEmail:\s*sendMode === "test" \? testRecipientEmail : recipientsCsv/.test(s074));
+test("074 records test mode and a structured guardian recipient for Hub", () => {
+  assert.ok(/testMode defaults true/.test(s074));
+  assert.ok(/role:\s*"guardian"/.test(s074));
+  assert.ok(/JSON\.stringify\(recipients\)/.test(s074));
 });
 
 console.log("handoff-ownership tests passed");

@@ -657,7 +657,7 @@ test("SC-041 weekly email retry decision matrix", () => {
   );
 });
 
-test("074 script keeps Send to Make? on webhook failure path", () => {
+test("074 v3 queues Hub handoff idempotently and leaves delivery proof downstream", () => {
   const fs = require("fs");
   const path = require("path");
   const body = fs.readFileSync(
@@ -668,15 +668,17 @@ test("074 script keeps Send to Make? on webhook failure path", () => {
     ),
     "utf8"
   );
-  assert.ok(body.includes("Do not uncheck Send to Make? on webhook failure"));
-  assert.ok(body.includes("Do NOT check Weekly Email Sent? here"));
-  // Failure catch block must not assign Send to Make? = false
-  const catchIdx = body.indexOf("} catch (error) {");
-  const successIdx = body.indexOf("SECTION 10: SUCCESS WRITEBACK");
-  assert.ok(catchIdx > 0 && successIdx > catchIdx);
-  const failBlock = body.slice(catchIdx, successIdx);
-  assert.ok(!/Send to Make\?\s*[:=]\s*false/.test(failBlock));
-  assert.ok(failBlock.includes("FIELD_EMAIL_ERROR"));
+  assert.ok(body.includes("Email Handoff Queue"));
+  assert.ok(body.includes("Only Automation 079 may send"));
+  assert.ok(body.includes("Do not write Weekly Email Sent?"));
+  assert.ok(body.includes("existing_handoff"));
+  assert.ok(body.includes("needs_review"));
+  assert.ok(!/\bfetch\s*\(/.test(body));
+  const catchIdx = body.lastIndexOf("} catch (error) {");
+  assert.ok(catchIdx > 0);
+  const failBlock = body.slice(catchIdx);
+  assert.ok(!/sendToMake\]\s*=\s*false/.test(failBlock));
+  assert.ok(failBlock.includes("CONFIG.fields.was.error"));
 });
 
 test("weekly email eventId + priorSaturdayKeyDenver match PR #35", () => {

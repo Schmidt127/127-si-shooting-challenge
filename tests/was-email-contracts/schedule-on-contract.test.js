@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 /**
- * Canonical docs must claim 118/119 schedules ON (verified_prod 2026-07-24).
- * Also guards 118 v1.5 Live-season arming contract.
+ * Current source and authority docs must preserve the 118/119 schedule.
  */
 "use strict";
 
@@ -28,6 +27,9 @@ const projectState = read("docs/PROJECT_STATE.md");
 const s118 = read(
   "airtable/automations/shooting-challenge/118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js"
 );
+const s119 = read(
+  "airtable/automations/shooting-challenge/119-email-notifications-and-external-handoffs-schedule-weekly-summary-email-send.js"
+);
 
 test("architecture claims 118/119 schedules ON", () => {
   assert.ok(/\*\*118\*\*.*\*\*ON\*\*/s.test(architecture) || /\| \*\*118\*\* \| \*\*ON\*\*/.test(architecture));
@@ -37,10 +39,10 @@ test("architecture claims 118/119 schedules ON", () => {
   assert.ok(!/Keep 118\/119 schedules OFF/.test(architecture));
 });
 
-test("automation-index claims 118/119 ON with current versions", () => {
-  assert.ok(/118.*\*\*ON\*\*/s.test(index));
-  assert.ok(/119.*\*\*ON\*\*/s.test(index));
-  assert.ok(/v1\.5/.test(index));
+test("automation-index records the current Hub flow and both schedules", () => {
+  assert.ok(/118 → 072 → 119 → 074 → 079 → Communications Hub → Resend/.test(index));
+  assert.ok(/118[\s\S]{0,180}Sunday \*\*5:00 AM\*\*/.test(index));
+  assert.ok(/119[\s\S]{0,180}Sunday \*\*10:00 AM\*\*/.test(index));
 });
 
 test("PROJECT_STATE does not instruct keeping schedules OFF", () => {
@@ -53,6 +55,13 @@ test("118 v2.0 Live season: no Live+!dryRun hard-stop; writes input sendMode", (
   assert.ok(!/refuses sendMode=Live when dryRun=false/.test(s118));
   assert.ok(/refuses sendMode=Live when includeSchmidt=true/.test(s118));
   assert.ok(/\{ name: sendMode \}/.test(s118));
+});
+
+test("119 current source preserves Sunday send arming contract", () => {
+  assert.ok(/version:\s*"v1\.7"/.test(s119));
+  assert.ok(/Send to Make\?/.test(s119));
+  assert.ok(/scheduledWeekEndKeyOut/.test(s119));
+  assert.ok(!/\bfetch\s*\(/.test(s119));
 });
 
 console.log("schedule-on-contract tests passed");

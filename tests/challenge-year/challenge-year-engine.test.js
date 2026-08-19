@@ -115,7 +115,7 @@ test("resolve by explicit Config record ID", () => {
     explicitConfigRecordId: "recNEWCONFIG000001",
   });
   assert.strictEqual(r.ok, true);
-  assert.strictEqual(r.status, "resolved");
+  assert.strictEqual(r.status, "historical");
   assert.strictEqual(r.challengeYearLabel, "2026-2027");
   assert.strictEqual(r.selectionSource, "explicit_config_record_id");
 });

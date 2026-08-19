@@ -30,7 +30,7 @@ const required = [
   { prefix: "STREAK_XP|", scriptToken: "STREAK_XP", script: "airtable/automations/shooting-challenge/054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js" },
   { prefix: "ZOOM_ATTEND_BASE|", scriptToken: "ZOOM_ATTEND_BASE", script: "airtable/automations/shooting-challenge/101-zoom-attendance-xp-award-meeting-xp.js" },
   { prefix: "ZOOM_CREDIT|", scriptToken: "ZOOM_CREDIT", script: "airtable/automations/shooting-challenge/_design-alternatives/stage17-modular-reference/117-zoom-recording-credit-orchestrator.js" },
-  { prefix: "WEEKLY_EMAIL|", scriptToken: "WEEKLY_EMAIL", script: "airtable/automations/shooting-challenge/074-email-notifications-and-external-handoffs-send-weekly-summary-email-package-to-make.js" },
+  { prefix: "WEEKLY_EMAIL|", scriptToken: "WEEKLY_EMAIL", script: "airtable/automations/shooting-challenge/119-email-notifications-and-external-handoffs-schedule-weekly-summary-email-send.js" },
 ];
 
 test("registry lists canonical prefixes used by required scripts", () => {

@@ -8,7 +8,7 @@ import {
   siteAccessQueryParam,
 } from "@/lib/security";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   if (isSiteAccessAuthorized(request)) {
     const required = process.env.SITE_ACCESS_TOKEN?.trim();
     const queryToken = request.nextUrl.searchParams.get(siteAccessQueryParam());

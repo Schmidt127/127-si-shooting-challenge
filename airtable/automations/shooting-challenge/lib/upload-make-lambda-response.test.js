@@ -195,7 +195,7 @@ tests.push(
             !/\bpollForLambdaWritebackAsync\b/.test(source),
             "070b must not define pollForLambdaWritebackAsync",
         );
-        assert.ok(source.includes('version: "v4.4"'), "070b version must be v4.4");
+        assert.ok(source.includes('version: "v4.6"'), "070b version must be v4.6");
     }),
 );
 

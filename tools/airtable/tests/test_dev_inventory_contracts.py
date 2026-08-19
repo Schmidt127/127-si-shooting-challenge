@@ -112,26 +112,26 @@ class TestDevInventorySnapshot(unittest.TestCase):
 class TestRepoScriptsFromInventory(unittest.TestCase):
     def test_067_is_v2(self):
         text = SCRIPT_067.read_text(encoding="utf-8")
-        self.assertIn('version: "v2.0"', text)
+        self.assertIn('version: "v3.4"', text)
         self.assertIn("Quiz Result PDF", text)
         self.assertIn("Submission Assets", text)
         self.assertIn("no_attachment_field", text)
 
-    def test_072_is_v38_with_active_guard(self):
+    def test_072_is_v41_with_active_guard(self):
         text = SCRIPT_072.read_text(encoding="utf-8")
-        self.assertIn('version: "v3.8"', text)
-        self.assertIn('active: "Active?"', text)
+        self.assertIn('VERSION="v4.1"', text)
+        self.assertIn('active:"Active?"', text)
         self.assertIn("skipped_inactive", text)
         self.assertIn("skipped_already_sent", text)
-        self.assertIn("recgP9qZYjAhE7NXm", text)
-        self.assertIn("WEEKLY_EMAIL|${enrollmentId}|${weekId}", text)
-        self.assertIn("eventId", text)
+        self.assertIn("recCyFEPeATOVNlr9", text)
+        self.assertIn("Weekly XP disagreement", text)
+        self.assertNotIn("makeWebhookUrl", text)
 
     def test_118_119_exist_and_default_dry_run(self):
         t118 = SCRIPT_118.read_text(encoding="utf-8")
         t119 = SCRIPT_119.read_text(encoding="utf-8")
-        self.assertIn('version: "v1.1"', t118)
-        self.assertIn('version: "v1.1"', t119)
+        self.assertIn('version: "v2.0"', t118)
+        self.assertIn('version: "v1.7"', t119)
         self.assertIn("parseBool(inputConfig.dryRun, true)", t118)
         self.assertIn("parseBool(inputConfig.dryRun, true)", t119)
         self.assertIn("WEEKLY_EMAIL|", t119)
@@ -148,7 +148,7 @@ class TestRepoScriptsFromInventory(unittest.TestCase):
         self.assertIn('purposeHomework1: "Homework 1"', text)
         self.assertNotIn('purposeHomework2', text)
         self.assertNotIn('slotHw2', text)
-        self.assertIn("setCheckbox(fields, assetsTable, CONFIG.assets.sendToMakeTrigger, false)", text)
+        self.assertIn("setCheckbox(f,assetsTable,CONFIG.assets.sendToMakeTrigger,false)", text)
 
 
 if __name__ == "__main__":
