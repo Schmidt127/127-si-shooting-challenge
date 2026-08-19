@@ -1,0 +1,317 @@
+{
+  "name": "Integration Airtable, Tremendous",
+  "description": "HISTORICAL C-028 v1. Superseded by v2. Preserve as evidence. Do not use as current. Native Tremendous Make app is production-only and returns 401 for TEST_ keys. HTTP POST to https://testflight.tremendous.com/api/v2/orders. Keep scenario OFF. Never commit an API key.",
+  "c028": {
+    "backlog": "C-028",
+    "environment": "Airtable Production + Tremendous Sandbox HTTP",
+    "baseId": "appn84sqPw03zEbTT",
+    "tableId": "tblTyQXl8aEP93ubK",
+    "nativeTremendousModule": "do-not-use",
+    "httpUrl": "https://testflight.tremendous.com/api/v2/orders",
+    "httpMethod": "POST",
+    "apiKey": "Paste Bearer TEST_ key in the Make HTTP header only. Never commit.",
+    "requiredState": "OFF",
+    "documentStatus": "historical-superseded-by-v2",
+    "idempotency": "AWARD|{Award Recipient Unique Key}"
+  },
+  "flow": [
+    {
+      "id": 2,
+      "module": "airtable:TriggerWatchRecords",
+      "version": 3,
+      "parameters": {
+        "__IMTCONN__": 4739462,
+        "base": "appn84sqPw03zEbTT",
+        "table": "tblTyQXl8aEP93ubK",
+        "config": {
+          "triggerField": "Award Status Sort",
+          "labelField": "Award Recipient Display"
+        },
+        "maxRecords": 1,
+        "view": "viwaZilUoe6WANvnP",
+        "useColumnId": false
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 150,
+          "name": "Watch Award Recipients"
+        },
+        "restore": {
+          "parameters": {
+            "__IMTCONN__": {
+              "label": "4_14_2026_New_Shooting_APP"
+            },
+            "base": {
+              "mode": "chose",
+              "label": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026"
+            },
+            "table": {
+              "mode": "chose",
+              "label": "Award Recipients"
+            },
+            "config": {
+              "nested": {
+                "triggerField": {
+                  "mode": "chose",
+                  "label": "Award Status Sort"
+                },
+                "labelField": {
+                  "mode": "chose",
+                  "label": "Award Recipient Display"
+                }
+              }
+            },
+            "view": {
+              "mode": "chose",
+              "label": "Grid view"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": 7,
+      "module": "airtable:ActionUpdateRecords",
+      "version": 3,
+      "parameters": {
+        "__IMTCONN__": 4739462
+      },
+      "filter": {
+        "name": "Approved sandbox awards only",
+        "conditions": [
+          [
+            {
+              "a": "{{2.`Gift Card Needed?`}}",
+              "o": "text:equal",
+              "b": "1"
+            },
+            {
+              "a": "{{2.`Send to Tremendous?`}}",
+              "o": "boolean:equal",
+              "b": "true"
+            },
+            {
+              "a": "{{2.`Award Status`}}",
+              "o": "text:equal",
+              "b": "Approved"
+            },
+            {
+              "a": "{{2.`Recipient Email`}}",
+              "o": "exist"
+            },
+            {
+              "a": "{{2.`Award Amount`}}",
+              "o": "number:greater",
+              "b": "0"
+            },
+            {
+              "a": "{{2.`Tremendous Order ID`}}",
+              "o": "text:equal",
+              "b": "{{emptystring}}"
+            },
+            {
+              "a": "{{2.`Tremendous Reward ID`}}",
+              "o": "text:equal",
+              "b": "{{emptystring}}"
+            },
+            {
+              "a": "{{2.`Tremendous Environment`}}",
+              "o": "text:equal",
+              "b": "Sandbox"
+            }
+          ]
+        ]
+      },
+      "mapper": {
+        "id": "{{2.id}}",
+        "base": "appn84sqPw03zEbTT",
+        "table": "tblTyQXl8aEP93ubK",
+        "typecast": false,
+        "useColumnId": false,
+        "record": {
+          "Award Status": "Sending",
+          "Tremendous Delivery Status": "Pending",
+          "Tremendous External ID": "AWARD|{{2.`Award Recipient Unique Key`}}",
+          "Tremendous Environment": "Sandbox"
+        }
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 150,
+          "name": "Mark Award Sending"
+        },
+        "restore": {
+          "parameters": {
+            "__IMTCONN__": {
+              "label": "4_14_2026_New_Shooting_APP"
+            }
+          },
+          "expect": {
+            "base": {
+              "label": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026"
+            },
+            "table": {
+              "label": "Award Recipients"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "module": "http:ActionSendData",
+      "version": 3,
+      "parameters": {
+        "handleErrors": true
+      },
+      "mapper": {
+        "url": "https://testflight.tremendous.com/api/v2/orders",
+        "serializeUrl": false,
+        "method": "post",
+        "headers": [
+          {
+            "name": "Authorization",
+            "value": "Bearer "
+          },
+          {
+            "name": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "qs": [],
+        "bodyType": "raw",
+        "contentType": "application/json",
+        "input": "{\n  \"external_id\": \"AWARD|{{2.`Award Recipient Unique Key`}}\",\n  \"payment\": {\n    \"funding_source_id\": \"BALANCE\"\n  },\n  \"reward\": {\n    \"campaign_id\": \"\",\n    \"value\": {\n      \"denomination\": {{first(2.`Award Amount`)}},\n      \"currency_code\": \"USD\"\n    },\n    \"delivery\": {\n      \"method\": \"EMAIL\",\n      \"meta\": {\n        \"from_name\": \"127 Sports Intensity\",\n        \"subject_line\": \"127 Sports Intensity Award\",\n        \"message\": \"You earned a 127 Sports Intensity Shooting Challenge award. This email contains your digital reward.\"\n      }\n    },\n    \"recipient\": {\n      \"name\": \"{{2.`Recipient Name`}}\",\n      \"email\": \"{{2.`Recipient Email`}}\"\n    }\n  }\n}",
+        "parseResponse": true,
+        "authPass": "",
+        "authUser": "",
+        "timeout": "30",
+        "shareCookies": false,
+        "rejectUnauthorized": true,
+        "followRedirect": true,
+        "useQuerystring": false,
+        "gzip": true
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 150,
+          "name": "POST Tremendous Sandbox Order"
+        },
+        "restore": {
+          "expect": {
+            "method": {
+              "mode": "chose",
+              "label": "POST"
+            },
+            "bodyType": {
+              "label": "Raw"
+            },
+            "contentType": {
+              "label": "JSON (application/json)"
+            }
+          }
+        }
+      },
+      "onerror": [
+        {
+          "id": 6,
+          "module": "airtable:ActionUpdateRecords",
+          "version": 3,
+          "parameters": {
+            "__IMTCONN__": 4739462
+          },
+          "mapper": {
+            "id": "{{2.id}}",
+            "base": "appn84sqPw03zEbTT",
+            "table": "tblTyQXl8aEP93ubK",
+            "typecast": false,
+            "useColumnId": false,
+            "record": {
+              "Award Status": "Failed",
+              "Tremendous Delivery Status": "Failed",
+              "Tremendous Error Message": "{{ifempty(error.message; 3.error)}}",
+              "Tremendous Response": "{{toString(error)}}"
+            }
+          },
+          "metadata": {
+            "designer": {
+              "x": 900,
+              "y": 300,
+              "name": "Mark Award Failed"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "module": "airtable:ActionUpdateRecords",
+      "version": 3,
+      "parameters": {
+        "__IMTCONN__": 4739462
+      },
+      "mapper": {
+        "id": "{{2.id}}",
+        "base": "appn84sqPw03zEbTT",
+        "table": "tblTyQXl8aEP93ubK",
+        "typecast": false,
+        "useColumnId": false,
+        "record": {
+          "Award Status": "Sent",
+          "Tremendous Delivery Status": "{{if(3.order.rewards[].delivery.status = \"SCHEDULED\"; \"Scheduled\"; \"Pending\")}}",
+          "Tremendous Order ID": "{{3.order.id}}",
+          "Tremendous Reward ID": "{{3.order.rewards[].id}}",
+          "Tremendous Sent At": "{{now}}",
+          "Tremendous Response": "{{toString(3)}}"
+        }
+      },
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 0,
+          "name": "Mark Award Sent"
+        },
+        "restore": {
+          "parameters": {
+            "__IMTCONN__": {
+              "label": "4_14_2026_New_Shooting_APP"
+            }
+          },
+          "expect": {
+            "base": {
+              "label": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026"
+            },
+            "table": {
+              "label": "Award Recipients"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "instant": false,
+    "version": 1,
+    "scenario": {
+      "roundtrips": 1,
+      "maxErrors": 1,
+      "autoCommit": true,
+      "autoCommitTriggerLast": true,
+      "sequential": true,
+      "slots": null,
+      "confidential": false,
+      "dataloss": false,
+      "dlq": false,
+      "freshVariables": false
+    },
+    "designer": {
+      "orphans": []
+    },
+    "zone": "us1.make.com",
+    "notes": []
+  }
+}

@@ -17,7 +17,7 @@ ownership and evidence boundaries are in [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md
 
 **Status key:** `queued` · `planned` · `in-progress` · `done` · `deferred` · `wont-fix`
 
-Last updated: **2026-07-20** (C-025 Stage 17 **COMPLETE** in PROD — verification PASS; webhook blank deferred)
+Last updated: **2026-08-19** (C-028 Tremendous sandbox send validated; production API pending; Make scenario OFF)
 
 ---
 
@@ -210,7 +210,8 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | **V2-008** | Game manual | Published from config tables before Day 1 | Wave 9 | queued |
 | **V2-009** | `/shoot` rules + progress hub | Website mirrors config; not rankings-only | Wave 9, C-022 | queued |
 | **V2-010** | Pre-season parent comms | Rules explained before first submission | V2-008 | queued |
-| **C-027** | **Major-event** notifications — level up, milestones (not daily XP) | **Today:** parent comms are **email** via Make (**071**, **072**, **074**) — batch/weekly or coach-triggered; **no instant athlete alert** on level change (**041** → **042**) or achievement unlock (**059**, **066**). **Owner idea:** notify kids **immediately** on meaningful events (level up, shot milestone, perfect week, gate cleared) — **not** every daily submission. **Possible channel:** SMS/text — **`Athlete Cell Number`** / **`Parent Cell Number`** exist on Enrollments/Athletes. **TBD discussion:** Twilio vs Make vs other; parent vs athlete recipient; opt-in/consent; quiet hours; message templates; idempotent send key (**C-024**); web push later. | C-010, C-024, V2-008 | queued |
+| **C-027** | **Major-event** notifications — level up, milestones (not daily XP) | **Today:** parent comms are **email** via Communications Hub → **Resend** (not Make). Historical Make 071/072/074 Gmail paths are retired for email. **No instant athlete alert** on level change (**041** → **042**) or achievement unlock (**059**, **066**). **Owner idea:** notify kids **immediately** on meaningful events (level up, shot milestone, perfect week, gate cleared) — **not** every daily submission. **Possible channel:** SMS/text — **`Athlete Cell Number`** / **`Parent Cell Number`** exist on Enrollments/Athletes. **TBD discussion:** Twilio vs other; parent vs athlete recipient; opt-in/consent; quiet hours; message templates; idempotent send key (**C-024**); web push later. | C-010, C-024, V2-008 | queued |
+| **C-028** | First Tremendous award send via Make.com sandbox | Production Award Recipients fields + v2-style Make snapshot. Sandbox send **validated** (Mike 2026-08-19); production API **pending**; Make scenario **OFF**. v1 historical. v2 is implementation snapshot, not production-live. Current state: [tremendous-award-fulfillment.md](./integrations/tremendous-award-fulfillment.md). | Gift-card Award Recipients row | **in-progress** |
 | **V2-028** | **Generate Media Kits** — end-of-season publicity from Airtable | **2025–26 manual phase done** — 10 newspaper packets + 12 radio kits sent **2026-07-05**. Platform automation (config-driven generate) remains future work. | C-013, C-022, Wave 0 close-out | **done** (2025–26) / queued (platform) |
 
 ### Wave 11 — Launch gate

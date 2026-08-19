@@ -18,12 +18,7 @@ function test(n, f) {
   console.log(`ok - ${n}`);
 }
 function resolve(fields = {}) {
-  return (
-    String(fields.reviewer || "").trim() ||
-    String(fields.driveView || "").trim() ||
-    String(fields.driveFile || "").trim() ||
-    ""
-  );
+  return String(fields.reviewer || "").trim() || "";
 }
 
 test("syntax", () => {
@@ -35,14 +30,12 @@ test("version is v4.1 Hub handoff", () => {
   assert.match(source, /Email Handoff Queue/);
   assert.match(source, /HOMEWORK_FEEDBACK\|HOMEWORK_COMPLETIONS\|/);
 });
-test("Reviewer File URL is primary for homework assets", () => {
+test("Reviewer File URL is the only homework asset URL source", () => {
   assert.match(source, /reviewer: "Reviewer File URL"/);
   assert.match(source, /function assetUrl/);
   assert.strictEqual(resolve({ reviewer: "reviewer", driveView: "view", driveFile: "file" }), "reviewer");
-});
-test("Drive URL fallback remains for homework path", () => {
-  assert.strictEqual(resolve({ driveView: "view", driveFile: "file" }), "view");
-  assert.strictEqual(resolve({ driveFile: "file" }), "file");
+  assert.strictEqual(resolve({ driveView: "view", driveFile: "file" }), "");
+  assert.doesNotMatch(source, /Google Drive View URL|Google Drive File URL/);
 });
 test("private canonical S3 fields are not selected", () => {
   assert.doesNotMatch(source, /Canonical File URL/);

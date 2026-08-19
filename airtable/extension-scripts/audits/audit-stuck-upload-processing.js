@@ -3,7 +3,7 @@ Extension Script: Audit Stuck Upload Processing
 System: 127 SI Shooting Challenge
 Purpose:
   Read-only report of Submission Assets and Video Feedback stuck in non-terminal
-  upload states (Processing without Drive URL, Ready gate mismatch, etc.).
+  upload states (Processing without Canonical File URL, Ready gate mismatch, etc.).
 
 Default: DRY_RUN = true (always read-only; no writes)
 */
@@ -22,8 +22,8 @@ const CONFIG = {
     name: "Submission Assets Full Name",
     uploadStatus: "Upload Status",
     uploadDestination: "Upload Destination",
-    googleDriveFileUrl: "Google Drive File URL",
-    googleDriveFileId: "Google Drive File ID",
+    canonicalFileUrl: "Canonical File URL",
+    storageKey: "Storage Key",
     uploadError: "Upload Error",
     sendToMakeTrigger: "Send to Make Trigger",
     readyToSendToMake: "Ready to Send to Make?",
@@ -34,8 +34,8 @@ const CONFIG = {
   videoFields: {
     name: "Video Feedback Full Name",
     uploadStatus: "Upload Status",
-    googleDriveFileUrl: "Google Drive File URL",
-    googleDriveFileId: "Google Drive File ID",
+    videoUrlOrDriveLink: "Video URL or Drive Link",
+    videoAssetUploadedAt: "Video Asset Uploaded At",
     uploadError: "Upload Error",
   },
 
@@ -92,24 +92,24 @@ function minutesSince(isoTime) {
 function classifyAsset(record, table) {
   const uploadStatus = getText(record, table, CONFIG.assetFields.uploadStatus);
   const statusKey = normalizeKey(uploadStatus);
-  const driveUrl = getText(record, table, CONFIG.assetFields.googleDriveFileUrl);
-  const driveId = getText(record, table, CONFIG.assetFields.googleDriveFileId);
+  const canonicalUrl = getText(record, table, CONFIG.assetFields.canonicalFileUrl);
+  const storageKey = getText(record, table, CONFIG.assetFields.storageKey);
   const uploadError = getText(record, table, CONFIG.assetFields.uploadError);
   const sendTrigger = getCheckbox(record, table, CONFIG.assetFields.sendToMakeTrigger);
   const readyToSend = getText(record, table, CONFIG.assetFields.readyToSendToMake);
   const ageMinutes = minutesSince(record.lastModifiedTime);
+  const hasCanonical = Boolean(canonicalUrl || storageKey);
 
   const issues = [];
 
   if (
     statusKey === normalizeKey(CONFIG.statuses.processing) &&
-    !driveUrl &&
-    !driveId
+    !hasCanonical
   ) {
     issues.push(
       ageMinutes !== null && ageMinutes >= CONFIG.stuckProcessingMinutes
-        ? "stuck_processing_no_drive"
-        : "processing_no_drive_recent"
+        ? "stuck_processing_no_canonical"
+        : "processing_no_canonical_recent"
     );
   }
 
@@ -121,7 +121,7 @@ function classifyAsset(record, table) {
     statusKey === normalizeKey(CONFIG.statuses.pendingLink) &&
     sendTrigger &&
     String(readyToSend).includes("READY_TO_SEND") &&
-    !driveUrl
+    !hasCanonical
   ) {
     issues.push("ready_to_send_pending_link");
   }
@@ -140,7 +140,8 @@ function classifyAsset(record, table) {
     uploadDestination: getText(record, table, CONFIG.assetFields.uploadDestination),
     sendToMakeTrigger: sendTrigger,
     readyToSendToMake: readyToSend,
-    googleDriveFileUrl: driveUrl,
+    canonicalFileUrl: canonicalUrl,
+    storageKey,
     uploadError,
     ageMinutes,
     issues,
@@ -150,8 +151,8 @@ function classifyAsset(record, table) {
 function classifyVideo(record, table) {
   const uploadStatus = getText(record, table, CONFIG.videoFields.uploadStatus);
   const statusKey = normalizeKey(uploadStatus);
-  const driveUrl = getText(record, table, CONFIG.videoFields.googleDriveFileUrl);
-  const driveId = getText(record, table, CONFIG.videoFields.googleDriveFileId);
+  const videoUrl = getText(record, table, CONFIG.videoFields.videoUrlOrDriveLink);
+  const uploadedAt = getText(record, table, CONFIG.videoFields.videoAssetUploadedAt);
   const uploadError = getText(record, table, CONFIG.videoFields.uploadError);
   const ageMinutes = minutesSince(record.lastModifiedTime);
 
@@ -159,14 +160,20 @@ function classifyVideo(record, table) {
 
   if (
     statusKey === normalizeKey(CONFIG.statuses.processing) &&
-    !driveUrl &&
-    !driveId
+    !videoUrl
   ) {
     issues.push(
       ageMinutes !== null && ageMinutes >= CONFIG.stuckProcessingMinutes
-        ? "stuck_processing_no_drive"
-        : "processing_no_drive_recent"
+        ? "stuck_processing_no_video_url"
+        : "processing_no_video_url_recent"
     );
+  }
+
+  if (
+    statusKey === normalizeKey(CONFIG.statuses.uploaded) &&
+    !uploadedAt
+  ) {
+    issues.push("uploaded_missing_video_asset_uploaded_at");
   }
 
   if (statusKey === normalizeKey(CONFIG.statuses.error) && !uploadError) {
@@ -180,7 +187,8 @@ function classifyVideo(record, table) {
     id: record.id,
     name: getText(record, table, CONFIG.videoFields.name) || record.name,
     uploadStatus,
-    googleDriveFileUrl: driveUrl,
+    videoUrlOrDriveLink: videoUrl,
+    videoAssetUploadedAt: uploadedAt,
     uploadError,
     ageMinutes,
     issues,

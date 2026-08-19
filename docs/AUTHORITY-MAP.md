@@ -2,7 +2,7 @@
 
 **Status:** Active
 **Backlog:** `SCV2-SEASON-LAUNCH-CONSOLIDATION-001`
-**Last updated:** 2026-08-10
+**Last updated:** 2026-08-19 (C-028 Tremendous; email = Resend; 022/020/070b/117/066/010 Airtable confirmed)
 
 This map defines ownership. It does not assert that a repository document proves
 current live configuration.
@@ -17,6 +17,8 @@ current live configuration.
 | Live Airtable configuration and records | Airtable UI / named base, not repository text | Mike; verify with a dated read-only export or controlled UI evidence |
 | Live Fillout enrollment availability | Fillout UI | Mike; verify before launch activation |
 | Live Make, Gmail, Lambda, and email state | Respective service UI / logs | Mike; verify with service evidence; no repository claim substitutes for it |
+| Shooting Challenge email delivery | [`integrations/email-send-plane.md`](./integrations/email-send-plane.md) | Mike 2026-08-19: Resend via Communications Hub; Make.com is not the email sender |
+| Tremendous award send (C-028) | [`integrations/tremendous-award-fulfillment.md`](./integrations/tremendous-award-fulfillment.md) | Mike-dated evidence; v2 blueprint is an implementation snapshot, not production-live |
 | Live Vercel deployment and settings | Vercel project `127-si-shooting-challenge` | Vercel / Mike; verify with read-only CLI or dashboard inspection |
 | Release evidence | Dated evidence packages under `docs/prod-completion/`, `docs/testing/evidence/`, and focused deploy checklists | Cursor records evidence boundaries; Mike supplies live-system evidence |
 | 2027 season calendar | Airtable **Weeks** table, manually maintained | Mike; verify the target-year export before import or activation |
@@ -54,6 +56,8 @@ Homework Completion reuse is a separate contract.
 - Backlog: `v2-change-backlog.md`.
 - Live operations snapshot: `PROJECT_STATE.md`; it must link here and must not
   present itself as the release-status master.
+- Tremendous awards (C-028): `integrations/tremendous-award-fulfillment.md`.
+- Email delivery: `integrations/email-send-plane.md` (Resend; Make is not the email sender).
 - Architecture, operator runbooks, test specifications, and release evidence
   retain their narrow purpose and link current status here.
 - Historical status packets are preserved under `docs/archive/` or carry the

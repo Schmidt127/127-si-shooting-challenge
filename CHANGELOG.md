@@ -8,6 +8,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Airtable
 
+#### Added
+- **C-028 — Award Recipients Tremendous fields (2026-08-18)** — Production table `tblTyQXl8aEP93ubK`: Recipient Name/Email, Ready to Send?, Tremendous Environment/IDs/status/timestamps/error/response, Send to Tremendous?, Tremendous Test Record?. Existing Award Status / Award Amount / Gift Card Needed? / Award Recipient Unique Key reused. [field plan](./airtable/schema/current/C-028-award-recipients-tremendous-fields.md). [current state](./docs/integrations/tremendous-award-fulfillment.md).
+
 #### Changed
 - **071 (v4.1) — PHA Grade Band is metadata only** — Homework Feedback Hub
   handoff validates Program Instance + Week + Homework Assignment + Homework
@@ -47,10 +50,14 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Docs
 
 #### Changed
-- **022 v2.0 documentation alignment (2026-08-16)** — Completion Master,
-  automation-index, Automation Version Inventory, PROJECT_STATE, and
-  `SC-2026-08-16-CURRENT-STATE-RECONCILIATION.md` now record 022 as **v2.0
-  live-tested**. Removed stale “repository-prepared only / unverified” claims.
+- **Email send plane (2026-08-19)** — Mike: Make.com does not handle any Shooting Challenge emails. All of those emails go through Communications Hub → Resend. Historical Make/Gmail weekly and 117f packets are preserved and labeled historical. [email-send-plane.md](./docs/integrations/email-send-plane.md).
+- **Automation 022 Production paste (2026-08-19)** — Mike confirmed Airtable shows **v2.1**. The 2026-08-16 controlled-path packet remains historical for that day’s **v2.0** evidence.
+- **Automation 020 Production paste (2026-08-19)** — Mike confirmed Airtable shows **v3.6**. Earlier v3.5 install evidence remains historical.
+- **Automation 070b Production paste (2026-08-19)** — Mike confirmed Airtable shows **v4.6**. Historical C-013 E2E remains **v4.4** (2026-07-11). Lambda season/Program Instance deploy not claimed from the Airtable version alone.
+- **Automation 117 Production paste (2026-08-19)** — Mike pasted **v2.1** Hub handoff (`Create Zoom Recording Approval Communications Hub Handoff`). Email Handoff Queue only; not XP; not Make 117f; not Stage 17 orchestrator.
+- **Automation 066 Production paste (2026-08-19)** — Mike confirmed Airtable shows **v3.8**. Earlier v3.3–v3.5 proofs remain historical.
+- **Automation 010 Production paste (2026-08-19)** — Mike confirmed Airtable shows **v10.10**. PKG-006R **v10.9** proof remains historical.
+- **Lambda upload season CodeOnly deploy (2026-08-19)** — Mike-requested. `127si-upload-asset` updated (CodeSha256 `lwbLiBzB4cfWdzVmIVo7Z78AkiowqPuV2NmUXb+PK2w=`); 139 unit tests OK. Season from Program Instance School Year - Linked. Rotate secrets exposed by AWS CLI env echo when ready.
 
 ### Web
 
@@ -366,6 +373,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Make
 
 #### Added
+- **C-028 Tremendous sandbox send (2026-08-19)** — v2-style sandbox send **validated** (Get a Record, parent/guardian email, safety filters, external ID, success/failure write-back); reward email received. Production Tremendous API still pending approval. Make scenario remains **OFF**. v1 blueprint preserved as historical. v2 blueprint is the current implementation snapshot, not production-live. Never commit an API key. [current state](./docs/integrations/tremendous-award-fulfillment.md) · [v2 snapshot](./make/blueprints/awards-send-tremendous-sandbox-reward-v2.json) · [v1 historical](./make/blueprints/awards-send-tremendous-sandbox-reward-v1.json).
 - **C-025 117f DEV Make package (2026-07-20)** — Sanitized blueprint `c025-117f-zoom-recording-approval-email-dev-v1.template.json`, offline simulator/tests (`make/lib/c025-117f-make-scenario*.js`), deployment checklist + Agent 2 handoff. Scenario stays **OFF**; no webhook URL in git. [contract](./docs/deploy-checklists/C-025-117f-dev-make-scenario-contract.md).
 
 #### Changed

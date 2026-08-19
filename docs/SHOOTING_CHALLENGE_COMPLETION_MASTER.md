@@ -16,15 +16,33 @@ state, the named live system wins.
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-16** (controlled Perfect Week path verified; Automation **022 v2.0** GitHub aligned with Production writeback) |
+| Last updated | **2026-08-19** (022 **v2.1**, 020 **v3.6**, 070b **v4.6**, 117 **v2.1**, 066 **v3.8**, 010 **v10.10** confirmed; email = Resend; Perfect Week test still open) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
-### Current operator reconciliation — 2026-08-16
+### Current operator reconciliation — 2026-08-16 (path evidence) + 2026-08-19 overlays
 
-The current controlled-path evidence is recorded in [`prod-completion/2026-08-16/SC-2026-08-16-CURRENT-STATE-RECONCILIATION.md`](./prod-completion/2026-08-16/SC-2026-08-16-CURRENT-STATE-RECONCILIATION.md). Registration → submission → assets → homework → canonical Weekly Athlete Summary → Homework XP is verified. Video upload/writeback through **070b v4.4** and **022 v2.0** is live-tested (Reviewer File URL preferred, Canonical File URL fallback, existing Video Feedback Upload Status). The Perfect Week test remains open until the remaining six daily dates, video review/XP, and final Perfect Week award are verified.
+The 2026-08-16 controlled-path evidence is recorded in [`prod-completion/2026-08-16/SC-2026-08-16-CURRENT-STATE-RECONCILIATION.md`](./prod-completion/2026-08-16/SC-2026-08-16-CURRENT-STATE-RECONCILIATION.md). Registration → submission → assets → homework → canonical Weekly Athlete Summary → Homework XP is verified. Video upload/writeback through **070b** and **022** was live-tested on that date (Reviewer File URL preferred, Canonical File URL fallback, existing Video Feedback Upload Status). The Perfect Week test remains **open** until the remaining six daily dates, video review/XP, and final Perfect Week award are verified.
 
-**Automation 022:** GitHub source is **v2.0** (aligned 2026-08-16) with Production. Do **not** describe 022 as missing, uninstalled, repository-only, or unverified.
+**Automation 022 (Mike 2026-08-19):** Production Airtable shows **v2.1**. Do **not** describe 022 as missing, uninstalled, repository-only, or unverified. The 2026-08-16 packet’s **v2.0** claim is historical path evidence for that day; current live paste is **v2.1**.
+
+**Automation 020 (Mike 2026-08-19):** Production Airtable shows **v3.6**. Earlier v3.5 install evidence (Homework XP controlled lifecycle, 2026-08-10 overlay) remains historical. The 2026-08-16 packet’s “confirm v3.6 paste” item is closed for the version string. Optional HW1/HW2 no-duplicate rerun is still not claimed complete.
+
+**Automation 070b (Mike 2026-08-19):** Production Airtable shows **v4.6** (Program Instance / season cross-check package). The C-013 **v4.4** PROD E2E (2026-07-11) and the 2026-08-16 packet’s v4.4 note remain historical path evidence.
+
+**Lambda upload season (Mike-requested deploy 2026-08-19):** Production `127si-upload-asset` **CodeOnly** update succeeded (`LastModified` 2026-08-19T17:29:53Z, CodeSha256 `lwbLiBzB4cfWdzVmIVo7Z78AkiowqPuV2NmUXb+PK2w=`). Season resolves from Enrollment → Program Instance → `School Year - Linked`. Env `SEASON_SLUG` is diagnostic only (`2025-2026` still present; fallback unset). Optional upload retry evidence still open (`recAqoUbBKfDNtTLt` packet). Rotate secrets exposed by AWS CLI deploy output when ready. Checklist: [`deploy-checklists/2026-08-17-lambda-program-instance-season.md`](./deploy-checklists/2026-08-17-lambda-program-instance-season.md).
+
+**Automation 117 (Mike 2026-08-19 paste):** Production script is **`117 - Zoom - Create Zoom Recording Approval Communications Hub Handoff` v2.1**. It creates one **Email Handoff Queue** row for Communications Hub (Event Type `ZOOM_RECORDING_APPROVAL`, Template Key `ZOOM_RECORDING_APPROVED`). It does **not** award Zoom recording XP, call Make/Gmail/Resend, or send email itself — **079** sends Ready queue rows to the Hub → Resend. This is **not** the Stage 17 credit orchestrator. Historical Make **117f** Gmail and older “117 v1.1 email-to-Make” / “117 orchestrator v1.1.1” claims are preserved as history only.
+
+**Automation 066 (Mike 2026-08-19):** Production Airtable shows **v3.8**. Earlier controlled proofs (v3.3 failure historical; v3.4 createRecords fix; v3.5 existing-unlock replay) remain historical path evidence. Do not treat v3.3/v3.4/v3.5 as the current Airtable version string.
+
+**Automation 010 (Mike 2026-08-19):** Production Airtable shows **v10.10**. PKG-006R **v10.9** completion evidence (2026-08-15) remains historical lifecycle proof. Do not treat v10.9 as the current Airtable version string.
+
+### Email send plane — 2026-08-19
+
+Mike: Make.com does **not** handle any Shooting Challenge emails. All of those emails go through **Resend** (Communications Hub). Current-state file: [`integrations/email-send-plane.md`](./integrations/email-send-plane.md).
+
+The 2026-07-24 `118→072→119→074→Make→Gmail` weekly proof remains **historical evidence**. Make 117f Gmail packets are historical. Do not treat Make/Gmail as the current email sender.
 
 ---
 
@@ -64,11 +82,11 @@ These rules apply to this reconciliation and future release-status maintenance.
 | Live Zoom meeting XP | Automation **101** | Yes |
 | Gate Applied? | Automation **042** | Yes |
 | Perfect Week Applied? | Automation **057** | Yes |
-| Recording approval email handoff | Automation **117** | Yes |
-| Make/Gmail email send + dedupe | Make workflow **117f** | No Airtable slot |
+| Recording approval email handoff | Automation **117** (**v2.1** Hub queue create — Mike 2026-08-19) | Yes — creates Email Handoff Queue; **079** → Hub → Resend |
+| Make/Gmail Zoom approval send | Make workflow **117f** | **Historical only** — not current send plane |
 
-Canonical file for Automation 117: `airtable/automations/shooting-challenge/117-zoom-send-recording-approval-email-to-make.js`.
-Runbook: `docs/deploy-checklists/117-zoom-recording-approval-email.md`.
+Canonical file for Automation 117: `airtable/automations/shooting-challenge/117-zoom-send-recording-approval-email-to-make.js` (filename still says Make; live paste is Hub handoff **v2.1**).
+Runbook history: `docs/deploy-checklists/117-zoom-recording-approval-email.md` (older Make path — treat as historical where it conflicts).
 **Do not** paste the Stage 17 orchestrator into PROD Automation 117. **Do not** create 117a/117b/117c Airtable slots.
 
 ## 2. Status Definitions
@@ -1108,7 +1126,7 @@ Map older IDs into SC items so they are not tracked as separate unfinished work.
 
 | Topic | Newer truth | Stale sources |
 |-------|-------------|---------------|
-| Zoom recording | PROD **117** = approval email → Make **117f** (SC-088). Stage 17 credit scripts are design alternatives (SC-074 / SC-086). Live Zoom XP = **101**. | Older docs that call the orchestrator “Automation 117 ON” are stale — see §1A / §9L |
+| Zoom recording | PROD **117 v2.1** = Hub Email Handoff Queue create (SC-088 path evolved). Stage 17 credit scripts are design alternatives (SC-074 / SC-086). Live Zoom XP = **101**. Make **117f** historical. | Older “orchestrator ON as 117” or “email → Make 117f” as current truth are stale — see §1A / §9L |
 | C-013 video | PROD E2E done historically (SC-094) | Brief Wave 7 queued; some close-out “open” rows |
 | H-002 / 066 | The v3.3 `createRecords` failure is historical; current controlled 066 evidence is recorded in the dated release evidence and must be verified against live Airtable state | Older “paste pending” / “checkbox didn’t fire” briefs |
 | C-011 | Repo ready (SC-035+) | Backlog plain “queued” without repo-ready nuance |
@@ -1289,19 +1307,21 @@ The dated audit packet [`docs/prod-completion/2026-08-08/ISSUE-116-FULL-AUDIT.md
 - Repository evidence does not prove Airtable editor installation, trigger configuration, Make state, Vercel environment values, or live email delivery.
 - The audit packet contains the ranked blockers, shortest execution path, exact UI-only actions, and stale queue removals.
 
-### 9L. Automation 117 ownership reconcile — **2026-08-05**
+### 9L. Automation 117 ownership reconcile — **2026-08-05** (overlay 2026-08-19)
 
 | Field | Value |
 |-------|--------|
-| Root cause | Repository treated Stage 17 credit orchestrator (+ modular 117a/117c) as active Automation **117**; PROD slot **117** is the recording-approval email → Make handoff |
-| PROD Automation 117 | `117 — Zoom — Send Recording Approval Email to Make` (**v1.1** / 2026-07-20) |
+| Root cause | Repository once treated Stage 17 credit orchestrator (+ modular 117a/117c) as active Automation **117**; PROD slot **117** is the recording-approval **email handoff** |
+| PROD Automation 117 (Mike paste 2026-08-19) | `117 - Zoom - Create Zoom Recording Approval Communications Hub Handoff` (**v2.1** / Last Updated 2026-08-17) |
+| Historical UI name (2026-08-05 packet) | `117 — Zoom — Send Recording Approval Email to Make` (**v1.1**) — superseded for current version/name |
+| Behavior | Creates one Ready **Email Handoff Queue** row; does **not** write XP; does **not** call Make/Gmail/Resend. **079** → Hub → Resend |
 | Canonical repo file | `airtable/automations/shooting-challenge/117-zoom-send-recording-approval-email-to-make.js` |
-| Make identifier | `117f` (`automationNumber` / `templateKey=ZOOM_RECORDING_APPROVED`) — **not** an Airtable slot |
-| Disposition | Orchestrator + 117a–e moved to `_design-alternatives/stage17-modular-reference/` (not deleted — Stage 17 offline evidence) |
+| Make identifier **117f** | **Historical** Gmail path only — not current send plane |
+| Disposition | Orchestrator + 117a–e remain under `_design-alternatives/stage17-modular-reference/` |
 | unloadData pack correction | §9K paste targets are **031, 035, 042, 057, 114, 118, 119** only — do **not** paste orchestrator over PROD 117 |
-| Status | **Built in Repository** — no PROD paste required when Airtable already matches v1.1 |
+| Status | **Live paste confirmed v2.1** (Mike 2026-08-19 script paste) |
 | Offline tests | `node tests/zoom/automation-117-recording-approval-email.test.js` |
-| Runbook | `docs/deploy-checklists/117-zoom-recording-approval-email.md` |
+| Runbook | Older Make runbooks are historical where they conflict with Hub → Resend |
 
 ### 9K. Active automation unloadData runtime compatibility pack — **2026-08-05**
 

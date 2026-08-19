@@ -245,7 +245,7 @@ Target after Phase 2: **lower average complexity tier** and **~37–38 automatio
 | 010 | Create XP Event from Submission | Award shooting XP | Submissions | Count This Submission? + eligible | Submissions, XP Events, WAS | XP Events, Submissions | 10.4 | Partial | High | **Keep** then Rewrite | 031, 041 | L | P1 |
 | 013 | Create or Link Video Feedback | Create/repair VF; arm 070b | Submission Assets | Video destination; attachment; links | Assets, VF, Enrollments | VF, Assets | v2.0 | Partial | High | **Keep** (production) | 112, 070b, 111 | M | P0 |
 | 021 | Set Attachment Upload Status | Processing / No Files status | Submissions | *confirm* | Submissions | Submissions (Upload Status) | v2.0 | Legacy | Low | **Merge → 006** | 006, 009 | S | P1 |
-| 022 | Sync Child Upload Writeback | Write Make/Lambda upload results to child | Submission Assets | Upload status + child linked | Assets, HW/VF | HW or VF, Assets | **v2.0** (PROD live 2026-08-16) | Live tested | High | **Keep** | 070a/b, Make/Lambda | M | P1 |
+| 022 | Sync Child Upload Writeback | Write Make/Lambda upload results to child | Submission Assets | Upload status + child linked | Assets, HW/VF | HW or VF, Assets | **v2.1** (PROD Airtable Mike 2026-08-19; 2026-08-16 path was v2.0) | Live | High | **Keep** | 070a/b, Make/Lambda | M | P1 |
 | 023 | Assign Enrollment to Submission | Link submission to enrollment | Submissions | *confirm* | Submissions, Enrollments | Submissions | v2.0 | Legacy | Med | **Keep** then Rewrite | 001, C-010 | M | P2 |
 
 ---

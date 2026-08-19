@@ -93,8 +93,10 @@ $EnvVars = @{
     AIRTABLE_TOKEN = $AirtableToken
     S3_BUCKET = "shooting-challenge-assets"
     ENVIRONMENT = "PROD"
-    ALLOW_ROUTE_KEYS = "video_feedback"
-    SEASON_SLUG = "2025-2026"
+    ALLOW_ROUTE_KEYS = "video_feedback,homework_completion"
+    # Diagnostic only. Uploads resolve season from Program Instance School Year - Linked.
+    # Do not set ALLOW_SEASON_SLUG_FALLBACK in production.
+    SEASON_SLUG = "2026-2027"
     CHALLENGE_SLUG = "shooting-challenge"
 }
 if ($env:UPLOAD_WEBHOOK_SECRET_PROD) {

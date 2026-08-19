@@ -25,7 +25,7 @@ IMPORTANT DESIGN RULES
 - PHA operational identity is Program Instance + Week + Homework Assignment + Homework Slot.
 - PHA Grade Band is descriptive eligibility metadata only (may list all bands). Never reject a handoff for Grade Band mismatch.
 - Athlete Enrollment Grade Band may exist for display/XP elsewhere; it is not a PHA matching key.
-- Homework asset URL prefers Reviewer File URL, then Google Drive View/File URL (homework path only).
+- Homework asset URL uses Reviewer File URL only (no Google Drive fallback).
 - Quiz-only path without assets must still work.
 - Enrollment Parent Email - Cleaned is the authoritative recipient.
 - testMode defaults true for controlled Hub sends.
@@ -125,8 +125,6 @@ const CONFIG = {
       original: "Original File Name",
       label: "Asset Label",
       reviewer: "Reviewer File URL",
-      driveView: "Google Drive View URL",
-      driveFile: "Google Drive File URL",
     },
     sub: {
       enr: "Enrollment",
@@ -237,11 +235,7 @@ function normalizeSlot(value) {
 }
 
 function assetUrl(asset, assetTable) {
-  return first(
-    text(asset, assetTable, CONFIG.fields.asset.reviewer),
-    text(asset, assetTable, CONFIG.fields.asset.driveView),
-    text(asset, assetTable, CONFIG.fields.asset.driveFile)
-  );
+  return first(text(asset, assetTable, CONFIG.fields.asset.reviewer));
 }
 
 function selectValue(table, name, value) {

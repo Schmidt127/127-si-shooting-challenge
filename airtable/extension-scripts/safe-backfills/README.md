@@ -82,6 +82,65 @@ Finish with **`audit-field-coverage-report.js`** to identify unused fields.
 | `repair-kimm-lyle-restore-excluded-submissions.js` | Close-out: Lyle Kimm — Count It on two excluded duplicate submissions (+340 shots) | **Ready** |
 | `repair-final-090f-unlock-week-from-source.js` | Final close: fill empty Week on unlocks from milestone activity date | **Stub — DRY_RUN** |
 | `repair-final-090g-build-final-challenge-summary-email.js` | Final close: one-page season recap email (days, HW, streaks, milestones, videos, awards) | **Ready — DRY_RUN** |
+| `migrate-tutorials-into-tutorials-and-assets.js` | **C-026 preview:** Tutorials → Tutorials & Assets; creates unmatched only; overlaps → Tutorial Migration Review; never deletes/merges | **Ready — DRY_RUN** |
+| `merge-three-tutorials-possible-matches.js` | **C-026 possible matches:** merge 3 named Tutorials rows into Tutorials & Assets; Parent Motivation keeps authoritative target video | **Ready — previewOnly default** |
+
+### Merge three possible matches (PROD)
+
+**Script:** `merge-three-tutorials-possible-matches.js` (v1.1)  
+**Titles:** Work Hard, It Pays · Refs Get it Right - NBA · Parent Motivation - Habits & Struggles
+
+- Matches by exact normalized Name on `Tutorials` → `Tutorials & Assets`
+- Never deletes/creates; never touches other rows
+- Fills missing target fields only; appends differing descriptions; merges missing attachments
+- Unresolved video conflict → skip that row
+- **Parent Motivation:** keep target video (`…1x2ZIjLZ0zNl23UYCQiUuXzmgybidWZUL…`); continue other merges; append resolved note to existing Tutorial Migration Review `Notes` only
+- Sets `Legacy Tutorials Record ID` + `Migration Status` = `Migrated - Review Needed`
+- Prints full preview and **all-three-ready** before any confirm
+- `CONFIG.previewOnly = true` by default (stops after preview)
+
+```text
+1. Paste into Scripting extension on PROD (appn84sqPw03zEbTT)
+2. Run with previewOnly=true — confirm console shows ALL THREE RECORDS ARE READY
+3. Set previewOnly=false, re-run, type CONFIRM MERGE to write
+```
+
+### Tutorials → Tutorials & Assets (C-026 reverse-direction preview)
+
+**Decision conflict:** Backlog C-026 still recommends keep `Tutorials` (web-canonical). This script implements Mike's requested reverse preview (`Tutorials` source → `Tutorials & Assets` keep). Do not retire `Tutorials` or repoint `/shoot` until Mike approves the review report and updates C-026.
+
+**Live DEV (2026-08-17):** both tables have **32** rows; **0** link fields on either table; target primary `Name` may carry a BOM; missing `Legacy Tutorials Record ID`, `Migration Status`, and table `Tutorial Migration Review`.
+
+**Prerequisites (create in Airtable UI / OMNI before write mode):**
+
+1. On **Tutorials & Assets**:
+   - `Legacy Tutorials Record ID` (single line text)
+   - `Migration Status` (single select or text; include `Migrated - Review Needed`)
+2. New table **Tutorial Migration Review** with fields:
+   - Source Tutorials Record ID, Target Tutorials and Assets Record ID, Match Classification, Confidence Score, Match Reasons, Conflicting Fields, Source Name, Target Name, Source Video Link, Target Video Link, Source Attachments, Target Attachments, Linked Asset Summary, Review Decision, Reviewed?, Final Action, Notes
+
+**Run:**
+
+```text
+1. node airtable/extension-scripts/safe-backfills/migrate-tutorials-into-tutorials-and-assets.test.js
+2. Paste script into Scripting extension (DEV)
+3. Run DRY_RUN=true — save JSON (schema + classifications)
+4. Review HIGH / POSSIBLE rows in console (and later in Tutorial Migration Review)
+5. After prerequisites exist: DRY_RUN=false, CONFIRM_WRITE=true (batch 25)
+6. Re-run until NO_MATCH_CREATE remaining is 0
+```
+
+Offline tests: `migrate-tutorials-into-tutorials-and-assets.test.js`  
+Compat tests: `migrate-tutorials-into-tutorials-and-assets.compat.test.js`
+
+```bash
+node airtable/extension-scripts/safe-backfills/migrate-tutorials-into-tutorials-and-assets.test.js
+node airtable/extension-scripts/safe-backfills/migrate-tutorials-into-tutorials-and-assets.compat.test.js
+```
+
+**v1.2 notes:** Multi-select → `[{name}]`; single-select → `{name}` with option validation (missing options → Notes, not hard fail); mutations throttled to ≤15/sec with rate-limit retry; runtime locked to PROD base `appn84sqPw03zEbTT` + table IDs. Last dry-run baseline: **28** high / **3** possible / **1** create (`Shooting Challenge Information Poster`).
+
+**v1.1 notes:** `unloadData` is guarded; primary Name writes use field ID `fldduBizp8qAnAMJW` (BOM-safe, no duplicate Name); WRITE aborts on preflight if legacy/migration/report schema is missing.
 
 ### Linkage audit repair (v1.2)
 

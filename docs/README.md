@@ -172,6 +172,8 @@ node tools/validate-v2-release-readiness.js
 | [../make/documentation/README.md](../make/documentation/README.md) | Scenario documentation index |
 | [../make/documentation/upload-asset-engine.md](../make/documentation/upload-asset-engine.md) | Upload asset engine |
 | [../make/blueprints/README.md](../make/blueprints/README.md) | Exported scenario blueprints |
+| [integrations/tremendous-award-fulfillment.md](./integrations/tremendous-award-fulfillment.md) | C-028 Tremendous current state (sandbox validated; production API pending) |
+| [integrations/email-send-plane.md](./integrations/email-send-plane.md) | Current SC email delivery (Resend; Make is not the email sender) |
 
 ## JR Referee Clinics
 

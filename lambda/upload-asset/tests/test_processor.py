@@ -25,6 +25,8 @@ from upload_core.fields import (
 from upload_core.processor import process_upload_asset
 from upload_core.util import DENVER, sha256_hex
 
+from season_support import DEFAULT_SEASON
+
 HASH = sha256_hex(b"test-bytes")
 RECORD = "recTestAsset12345"
 BASE_FIELDS = {
@@ -82,6 +84,7 @@ class ProcessorTests(unittest.TestCase):
             patch("upload_core.processor.http_get_bytes", return_value=(b"test-bytes", "image/png")),
             patch("upload_core.processor.upload_s3", return_value={"bucket": "b", "region": "us-east-2", "etag": "x"}),
             patch("upload_core.processor.lookup_duplicate_matches", return_value=matches),
+            patch("upload_core.processor.resolve_upload_season", return_value=DEFAULT_SEASON),
         ):
             return process_upload_asset(config, _payload())
 
@@ -235,6 +238,9 @@ class ProcessorTests(unittest.TestCase):
         config = _config()
         error_patches: list[dict] = []
 
+        def get_impl(token, base_id, record_id):
+            return {"id": record_id, "fields": dict(fields)}
+
         def patch_impl(token, base_id, record_id, patch_fields):
             fields.update(patch_fields)
             if patch_fields.get(FIELD_UPLOAD_STATUS) == "Error":
@@ -242,11 +248,12 @@ class ProcessorTests(unittest.TestCase):
             return {"id": record_id, "fields": fields}
 
         with (
-            patch("upload_core.processor.get_asset", return_value={"id": RECORD, "fields": dict(fields)}),
+            patch("upload_core.processor.get_asset", side_effect=get_impl),
             patch("upload_core.processor.patch_asset", side_effect=patch_impl),
             patch("upload_core.processor.http_get_bytes", return_value=(b"x", "image/png")),
             patch("upload_core.processor.upload_s3", side_effect=RuntimeError("s3 failed")),
             patch("upload_core.processor.lookup_duplicate_matches", return_value=[]),
+            patch("upload_core.processor.resolve_upload_season", return_value=DEFAULT_SEASON),
         ):
             from upload_core.processor import process_with_error_writeback
 
@@ -257,6 +264,82 @@ class ProcessorTests(unittest.TestCase):
         self.assertTrue(fields.get(FIELD_UPLOAD_CLAIM_RUN_ID))
         self.assertEqual(fields.get(FIELD_UPLOAD_STATUS), "Error")
         self.assertTrue(error_patches)
+
+    def test_late_error_write_does_not_clobber_pending_link_reset(self):
+        from upload_core.fields import FIELD_UPLOAD_ERROR
+        from upload_core.processor import write_failure_fields_without_clobbering_retry
+
+        fields = {
+            **BASE_FIELDS,
+            FIELD_UPLOAD_STATUS: "Pending Link",
+            FIELD_UPLOAD_CLAIM_RUN_ID: "stale-claim",
+        }
+
+        def get_impl(token, base_id, record_id):
+            return {"id": record_id, "fields": dict(fields)}
+
+        def patch_impl(token, base_id, record_id, patch_fields):
+            fields.update(patch_fields)
+            return {"id": record_id, "fields": fields}
+
+        with (
+            patch("upload_core.processor.get_asset", side_effect=get_impl),
+            patch("upload_core.processor.patch_asset", side_effect=patch_impl),
+        ):
+            write_failure_fields_without_clobbering_retry(
+                token="pat",
+                base_id="appTetnuCZlCZdTCT",
+                record_id=RECORD,
+                error_message="late failure after operator reset",
+            )
+
+        self.assertEqual(fields[FIELD_UPLOAD_STATUS], "Pending Link")
+        self.assertIn("late failure", fields[FIELD_UPLOAD_ERROR])
+
+    def test_invalid_upload_status_does_not_restamp_error(self):
+        from upload_core.fields import FIELD_UPLOAD_ERROR
+        from upload_core.processor import process_with_error_writeback
+
+        fields = {
+            **BASE_FIELDS,
+            FIELD_UPLOAD_STATUS: "Error",
+            FIELD_UPLOAD_ERROR: "prior failure",
+        }
+        config = _config()
+        patches: list[dict] = []
+
+        def get_impl(token, base_id, record_id):
+            return {"id": record_id, "fields": dict(fields)}
+
+        def patch_impl(token, base_id, record_id, patch_fields):
+            patches.append(dict(patch_fields))
+            fields.update(patch_fields)
+            return {"id": record_id, "fields": fields}
+
+        with (
+            patch("upload_core.processor.get_asset", side_effect=get_impl),
+            patch("upload_core.processor.patch_asset", side_effect=patch_impl),
+        ):
+            status, body = process_with_error_writeback(config, _payload())
+
+        self.assertEqual(status, 400)
+        self.assertEqual(body["actionOut"], "error_invalid_upload_status")
+        self.assertEqual(body["statusDiagnostics"]["uploadStatusNormalized"], "Error")
+        self.assertEqual(body["statusDiagnostics"]["readSource"], "airtable_api")
+        self.assertEqual(body["statusDiagnostics"]["uploadStatusField"], "Upload Status")
+        self.assertEqual(body["statusDiagnostics"]["table"], "Submission Assets")
+        self.assertFalse(patches)
+
+    def test_missing_canonical_field_maps_to_clear_action(self):
+        from upload_core.processor import classify_airtable_write_failure
+
+        mapped = classify_airtable_write_failure(
+            RuntimeError('PATCH asset -> HTTP 422: {"error":{"type":"UNKNOWN_FIELD_NAME","message":"Unknown field name: \\"Canonical File URL\\""}}')
+        )
+        self.assertIsNotNone(mapped)
+        assert mapped is not None
+        self.assertEqual(mapped.action_out, "error_missing_airtable_field")
+        self.assertIn("Canonical File URL", mapped.message)
 
 
 if __name__ == "__main__":

@@ -29,7 +29,7 @@ All prep and send automations use the **same ladder**. Do not introduce alternat
 
 Custom webhook from Airtable automations **070a** (homework assets) and **070b** (video assets).
 
-**v4.1 payload (2026-06-27):** `sourceName`, `automationNumber`, `sentAtIso`, `routeKey` (`homework_completion` | `video_feedback`), `uploadDestination`, `sourceTable`, `submissionAssetRecordId`, `targetTable`, `targetRecordId`. Make Module 2 re-fetches the Submission Asset; do not send attachment URLs or Drive folder/file names in the webhook.
+**v4.6 payload (2026-08-17):** `sourceName`, `automationNumber`, `sentAtIso`, `routeKey` (`homework_completion` | `video_feedback`), `uploadDestination`, `sourceTable`, `submissionAssetRecordId`, `targetTable`, `targetRecordId`, `enrollmentId`, `programInstanceId`. Make Module 2 still re-fetches the Submission Asset. Do not send `seasonSlug`, attachment URLs, or secrets. Lambda resolves season from Enrollment → Program Instance → `School Year - Linked`.
 
 ## Flow (high level)
 

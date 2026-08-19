@@ -127,6 +127,24 @@ class UploadClaimTests(unittest.TestCase):
         self.assertEqual(evaluation.claim_run_id, "provided-id")
         self.assertEqual((evaluation.claim_patch or {})[FIELD_UPLOAD_CLAIM_RUN_ID], "provided-id")
 
+    def test_error_status_rejected(self):
+        evaluation = evaluate_upload_claim(
+            _fields(**{FIELD_UPLOAD_STATUS: "Error"}),
+            {},
+        )
+        self.assertFalse(evaluation.should_upload)
+        self.assertEqual(evaluation.status_out, "error")
+        self.assertEqual(evaluation.action_out, "error_invalid_upload_status")
+        self.assertIn("Error", evaluation.message)
+
+    def test_uploaded_status_skipped_in_claim_fallback(self):
+        evaluation = evaluate_upload_claim(
+            _fields(**{FIELD_UPLOAD_STATUS: "Uploaded"}),
+            {},
+        )
+        self.assertFalse(evaluation.should_upload)
+        self.assertEqual(evaluation.action_out, "skipped_already_uploaded")
+
 
 if __name__ == "__main__":
     unittest.main()
