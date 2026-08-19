@@ -1,10 +1,11 @@
 # Table Map (pointer)
 
-> **Status:** Detailed hand inventory lives in the Agent 2 pack.  
+> **Status:** Pointer updated 2026-08-19. Full hand inventory still open.  
 > **Canonical SoT:**  
-> 1. PROD snapshot `../snapshots/prod-foundation-reset-20260723-post-ts/`  
-> 2. [`docs/next-wave/data-model/CANONICAL-TABLE-MAP.md`](../../../docs/next-wave/data-model/CANONICAL-TABLE-MAP.md)  
-> 3. Reliability audit context: [`docs/next-wave/reliability-audit-2026-07-24/REPORT.md`](../../../docs/next-wave/reliability-audit-2026-07-24/REPORT.md)
+> 1. PROD snapshot **`../snapshots/prod-20260819/`** (stamp `20260819_184903`) — [refresh summary](../../../docs/deploy-checklists/SCHEMA-REFRESH-2026-08-19.md)  
+> 2. Older: `../snapshots/prod-foundation-reset-20260723-post-ts/`  
+> 3. [`docs/next-wave/data-model/CANONICAL-TABLE-MAP.md`](../../../docs/next-wave/data-model/CANONICAL-TABLE-MAP.md)  
+> 4. Reliability audit context: [`docs/next-wave/reliability-audit-2026-07-24/REPORT.md`](../../../docs/next-wave/reliability-audit-2026-07-24/REPORT.md)
 
 ## Correct hub model
 
@@ -15,6 +16,8 @@ Athletes → Enrollments → Submissions / WAS / XP Events / HC / VF / Zoom
 Weeks ← Program Instance; Weeks → Submissions / WAS
 Config (by Active School Year) → season settings / Zoom config links
 ```
+
+**Homework (2026-08-19 PROD):** reusable content in **Homework Library**; season/week schedule in **Program Homework Assignments** (PHA). Do not treat library `Week` / `Grade Band` as authoritative if still present during cutover.
 
 Week Name pattern (human label): `Week 0` … `Post-Challenge` for 2026–2027.  
 **Week Key** formula is `RECORD_ID()` (not `2026-2027|Week N`) — see Agent 2 unique-key audit.
