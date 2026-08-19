@@ -14,8 +14,10 @@ import { IconMegaphone, IconPlay } from "@/components/icons/shoot-icons";
 import { CtaLink, DetailPageShell, ProgramPage, SectionMarker } from "@/components/site";
 import { EmptyState, ErrorState } from "@/components/ui";
 import { buttonVariants } from "@/components/ui/button";
+import { hasCatalogVideoUrl } from "@/lib/data/tutorials";
 import { formatRelativeUpdate } from "@/lib/formatters";
-import { shouldOpenExternally } from "@/lib/formatters/external-media";
+import { isAdobeDocumentUrl, isPdfUrl, shouldOpenExternally } from "@/lib/formatters/external-media";
+import { isInPageVideoUrl } from "@/lib/formatters/video";
 import type { TutorialMediaSectionConfig } from "@/lib/tutorial-media/config";
 import { cn } from "@/lib/utils";
 import type { TutorialCatalogData, TutorialItem } from "@/types/tutorials";
@@ -42,7 +44,7 @@ function MediaCardLink({
 }) {
   const externalUrl = item.videoUrl.trim();
 
-  if (shouldOpenExternally(externalUrl)) {
+  if (hasCatalogVideoUrl(externalUrl) && (isAdobeDocumentUrl(externalUrl) || isPdfUrl(externalUrl))) {
     return (
       <a href={externalUrl} target="_blank" rel="noopener noreferrer" className="group block">
         {children}
@@ -65,10 +67,18 @@ function MediaCard({
   config: TutorialMediaSectionConfig;
 }) {
   const accent = CATEGORY_ACCENTS[item.categories[0] ?? ""] ?? "from-brand-light-gray to-brand-medium-gray/30";
+  const videoUrl = item.videoUrl.trim();
+  const hasVideo = hasCatalogVideoUrl(videoUrl);
+  const playable = isInPageVideoUrl(videoUrl);
+  const cta = hasVideo ? config.catalog.cardCta : config.catalog.cardCtaUnavailable;
 
   return (
     <MediaCardLink item={item} config={config}>
-      <article className={catalogCardClass()}>
+      <article
+        className={catalogCardClass()}
+        data-has-video={hasVideo ? "true" : "false"}
+        data-canonical-video-url={hasVideo ? videoUrl : undefined}
+      >
         <div className={`relative aspect-[16/10] overflow-hidden bg-gradient-to-br ${accent}`}>
           {item.thumbnail ? (
             <Image
@@ -81,22 +91,29 @@ function MediaCard({
             />
           ) : (
             <div className="flex h-full items-center justify-center">
-              <IconMegaphone size={56} className="text-white/15" />
+              <IconMegaphone size={56} className="text-foreground/20" />
             </div>
           )}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 transition group-hover:opacity-100">
-            <span className="rounded-full border border-brand-medium-gray bg-black/50 p-3 text-white backdrop-blur-sm">
-              <IconPlay size={28} />
-            </span>
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-          {item.categories[0] ? (
-            <div className="absolute bottom-3 left-3 right-3">
-              <span className="rounded-md border border-border bg-black/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white/90 backdrop-blur-sm">
-                {item.categories[0]}
+          {playable ? (
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition group-hover:opacity-100">
+              <span className="rounded-full border border-brand-medium-gray bg-black/50 p-3 text-white backdrop-blur-sm">
+                <IconPlay size={28} />
               </span>
             </div>
           ) : null}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          <div className="absolute bottom-3 left-3 right-3 flex flex-wrap items-center gap-2">
+            {item.categories[0] ? (
+              <span className="rounded-md border border-border bg-black/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-sm">
+                {item.categories[0]}
+              </span>
+            ) : null}
+            {hasVideo ? null : (
+              <span className="rounded-md border border-white/25 bg-black/55 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-sm">
+                {config.detail.unavailableTitle}
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="p-5">
@@ -104,7 +121,9 @@ function MediaCard({
             {item.name}
           </h3>
           {item.briefDescription ? (
-            <p className="mt-2 line-clamp-2 text-sm text-muted">{item.briefDescription}</p>
+            <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-foreground">
+              {item.briefDescription}
+            </p>
           ) : null}
           {item.athlete ? (
             <p className="mt-3 text-xs font-medium uppercase tracking-wider text-brand-blue">
@@ -112,8 +131,8 @@ function MediaCard({
             </p>
           ) : null}
           <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-accent-soft">
-            {config.catalog.cardCta}
-            <span aria-hidden>→</span>
+            {cta}
+            <span aria-hidden>{hasVideo && (isAdobeDocumentUrl(videoUrl) || isPdfUrl(videoUrl)) ? "↗" : "→"}</span>
           </span>
         </div>
       </article>
@@ -168,7 +187,8 @@ export function TutorialMediaDetailView({
   item: TutorialItem;
   config: TutorialMediaSectionConfig;
 }) {
-  const hasVideo = Boolean(item.videoUrl.trim());
+  const videoUrl = item.videoUrl.trim();
+  const hasVideo = hasCatalogVideoUrl(videoUrl);
 
   return (
     <DetailPageShell
@@ -189,15 +209,23 @@ export function TutorialMediaDetailView({
             {item.categories.map((category) => (
               <span
                 key={category}
-                className="rounded-md border border-border bg-brand-light-gray px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted"
+                className="rounded-md border border-border bg-brand-light-gray px-3 py-1 text-xs font-semibold uppercase tracking-wider text-foreground"
               >
                 {category}
+              </span>
+            ))}
+            {item.tutorialTypes.map((type) => (
+              <span
+                key={type}
+                className="rounded-md border border-brand-blue/30 bg-brand-blue/15 px-3 py-1 text-xs font-semibold text-brand-blue"
+              >
+                {type}
               </span>
             ))}
           </div>
 
           {item.briefDescription ? (
-            <p className="mt-6 text-base leading-relaxed text-muted sm:text-lg">
+            <p className="mt-6 text-base leading-relaxed text-foreground sm:text-lg">
               {item.briefDescription}
             </p>
           ) : null}
@@ -222,17 +250,18 @@ export function TutorialMediaDetailView({
         ) : null}
       </div>
 
-      {hasVideo ? (
-        <section className="mt-10">
-          <SectionHeading label={config.detail.watchLabel} title={config.detail.watchTitle} />
-          <MediaPanel
-            url={item.videoUrl}
-            title={item.name}
-            openLabel={config.detail.openVideoLabel}
-            externalHint={config.detail.externalDocumentHint}
-          />
-        </section>
-      ) : null}
+      <section className="mt-10">
+        <SectionHeading label={config.detail.watchLabel} title={config.detail.watchTitle} />
+        <MediaPanel
+          url={videoUrl}
+          title={item.name}
+          posterUrl={item.thumbnail?.url ?? null}
+          openLabel={config.detail.openVideoLabel}
+          externalHint={config.detail.externalDocumentHint}
+          emptyTitle={config.detail.unavailableTitle}
+          emptyDescription={config.detail.unavailableMessage}
+        />
+      </section>
 
       {item.detailedDescription ? (
         <section className={cn(catalogPanelClass(), "mt-10")}>
@@ -240,14 +269,21 @@ export function TutorialMediaDetailView({
             label={config.detail.deepDiveLabel}
             title={config.detail.deepDiveTitle}
           />
-          <RichContent text={item.detailedDescription} className="text-foreground/90" />
+          <RichContent text={item.detailedDescription} className="text-foreground" />
         </section>
       ) : null}
 
-      {hasVideo && shouldOpenExternally(item.videoUrl) ? null : hasVideo ? (
+      {item.assignmentRationale ? (
+        <section className={cn(catalogPanelClass(), "mt-10")}>
+          <SectionHeading label="Why it matters" title="Assignment rationale" />
+          <RichContent text={item.assignmentRationale} className="text-foreground" />
+        </section>
+      ) : null}
+
+      {hasVideo && !shouldOpenExternally(videoUrl) ? (
         <div className="mt-8">
           <a
-            href={item.videoUrl}
+            href={videoUrl}
             target="_blank"
             rel="noopener noreferrer"
             className={buttonVariants({ variant: "secondary" })}

@@ -1,398 +1,438 @@
 /*
-Automation: 117 — Zoom — Send Recording Approval Email to Make
+GitHub header
+Automation: 117 - Zoom - Create Zoom Recording Approval Communications Hub Handoff
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: GitHub Source of Truth — canonical PROD Automation 117
-Last Synced From Airtable: 2026-07-20
-Last GitHub Update: 2026-08-05 (ownership reconcile — filename only; no behavior change)
+Status: GitHub Source of Truth
 
-Purpose:
-POSTs a Zoom recording approval email handoff payload to Make (US1 webhook).
-Does not write Airtable records; Make owns send/dedupe outcomes.
+Version: v2.1
+Date Written: 2026-07-20
+Last Updated: 2026-08-17
 
-Trigger:
-Zoom Attendance — Recording Quiz path after Satisfactory (configure in Airtable UI).
+PURPOSE
+- Validate one Zoom Attendance recording-approval path for parent email.
+- Create exactly one Ready Email Handoff Queue row for Communications Hub.
+- Hand off template data to Automation 079 / Communications Hub / Resend.
 
-Important Tables:
-(none written) — inputs supply Zoom Attendance / Enrollment / Zoom Meeting RIDs
+IMPORTANT DESIGN RULES
+- Hub owns subject, HTML, plain text, branding, delivery, and Delivery proof.
+- This script never calls Make, Gmail, Resend, or the Communications Hub ingress.
+- Only Automation 079 may send Email Handoff Queue rows to the Hub.
+- Airtable Event Type is ZOOM_RECORDING_APPROVAL; Template Key remains ZOOM_RECORDING_APPROVED.
+- One Zoom Attendance maps to ZOOM_RECORDING_APPROVAL|ZOOM_ATTENDANCE|{ZA Record ID}.
+- Idempotent: reuse an existing matching Handoff Key; conflicting payload → Needs Review.
+- Do not write Airtable "sent" fields (none historically on this path).
+- Validate enrollmentRid and zoomMeetingRid match linked records when links exist.
+- Never mention Make route 117f in runtime payload.
+- testMode defaults true for controlled Hub sends.
 
-Important Fields:
-(none written) — outputs only: makeStatus, sendKey, zoomAttendanceId
+THIS IS NOT
+- Automation 117 orchestrator (normalize / XP / gate / perfect-week).
+- Make Gmail composition (retired for this GitHub path).
 
-Notes:
-GitHub is the source-of-truth copy.
-Airtable is the deployed/running copy.
-Webhook URL is an Airtable input variable only — never hard-code or commit secrets.
-Former repository filename: 117f-zoom-recording-send-approval-email.js
-Make route key remains automationNumber="117f" (not a second Airtable slot).
-Do NOT paste the Stage 17 orchestrator or modular 117a–e over this automation.
+FOLDER
+- 17 - Zoom Recording Credit
+
+AUTOMATION NAME
+- 117 - Zoom - Create Zoom Recording Approval Communications Hub Handoff
+
+TRIGGER TABLE
+- Zoom Attendance
+
+RECOMMENDED TRIGGER CONDITIONS
+- Attendance Method is Recording Quiz
+- Recording Quiz Satisfactory? is checked
+
+INPUT
+- recordId (required Zoom Attendance record ID)
+- enrollmentRid (required Enrollment record ID)
+- zoomMeetingRid (required Zoom Meeting record ID)
+- testMode (optional; default true)
+
+OUTPUTS
+- statusOut: success | skipped | error
+- actionOut: created_handoff | existing_handoff | needs_review | error
+- queueRecordId, handoffKey, errorOut, debugStep, zoomAttendanceId
 */
-
-/************************************************************
- * 117 — Zoom — Send Recording Approval Email to Make
- *
- * Version: v1.1
- * Date Written: 2026-07-20
- * Last Updated: 2026-07-20
- *
- * PURPOSE
- * - Validate Make US1 webhook URL and Airtable record ID inputs.
- * - Build canonical send key and fixed Zoom recording approval payload.
- * - POST JSON to Make and accept only sent | already_sent as success.
- * - Expose makeStatus, sendKey, and zoomAttendanceId as script outputs.
- *
- * IMPORTANT DESIGN RULES
- * - Payload automationNumber is always "117f" (Make route key).
- * - templateKey is always ZOOM_RECORDING_APPROVED.
- * - timing is always "On Satisfactory".
- * - Send key: ZOOM_REC_EMAIL|{enrollmentRid}|{zoomMeetingRid}|{zoomAttendanceId}
- * - Duplicate-send safety is Make-side (already_sent); this script does not stamp fields.
- * - No Airtable record writes from this script.
- * - Never invent or hard-code webhook URLs, email recipients, or secrets.
- *
- * THIS IS NOT
- * - Automation 117 orchestrator (normalize / XP / gate / perfect-week).
- * - Make Gmail composition or recipient resolution (Make owns that).
- *
- * FOLDER
- * - 17 - Zoom Recording Credit
- *
- * AUTOMATION NAME
- * - 117 — Zoom — Send Recording Approval Email to Make
- *
- * TRIGGER TABLE
- * - Zoom Attendance
- *
- * RECOMMENDED TRIGGER CONDITIONS
- * - Attendance Method is Recording Quiz
- * - Recording Quiz Satisfactory? is checked
- *
- * REQUIRED INPUT VARIABLES
- * - webhookUrl = Make.com custom webhook URL (US1 hook host only)
- * - recordId = Zoom Attendance record ID (used as zoomAttendanceId)
- * - enrollmentRid = Enrollment record ID
- * - zoomMeetingRid = Zoom Meeting record ID
- *
- * OUTPUTS (automation script action outputs)
- * - statusOut = success | error
- * - actionOut = sent | already_sent | error
- * - errorOut = message or empty
- * - debugStep = last step reached
- * - makeStatus = Make response status (sent | already_sent) on success
- * - sendKey = canonical idempotency key
- * - zoomAttendanceId = same as validated recordId
- *
- * PRIMARY TABLES USED
- * - (none — ID-only handoff)
- *
- * OUTPUT / WRITEBACK FIELDS
- * - none (no record writes)
- ************************************************************/
 
 // @ts-nocheck
 
-/* =========================================================
-   SECTION 1: SCRIPT METADATA + CONFIG
-========================================================= */
-
 const SCRIPT = {
-  scriptName: "117 — Zoom — Send Recording Approval Email to Make",
-  version: "v1.1",
-  versionDate: "2026-07-20",
+  scriptName: "117 - Zoom - Create Zoom Recording Approval Communications Hub Handoff",
+  version: "v2.1",
+  versionDate: "2026-08-17",
   originalWrittenDate: "2026-07-20",
-  lastUpdated: "2026-07-20",
+  lastUpdated: "2026-08-17",
   folder: "17 - Zoom Recording Credit",
-  automationName: "117 — Zoom — Send Recording Approval Email to Make",
+  automationName: "117 - Zoom - Create Zoom Recording Approval Communications Hub Handoff",
 };
 
 const CONFIG = {
-  makeUs1WebhookHost: "hook.us1.make.com",
-  sendKeyPrefix: "ZOOM_REC_EMAIL",
-  automationNumber: "117f",
-  templateKey: "ZOOM_RECORDING_APPROVED",
-  timing: "On Satisfactory",
-  successStatuses: ["sent", "already_sent"],
-  debug: {
-    logToConsole: true,
+  tables: {
+    za: "Zoom Attendance",
+    enr: "Enrollments",
+    zm: "Zoom Meetings",
+    queue: "Email Handoff Queue",
+  },
+  statuses: { draft: "Draft", ready: "Ready", needsReview: "Needs Review" },
+  fields: {
+    za: {
+      enrollment: "Enrollment",
+      zoomMeeting: "Zoom Meeting",
+      satisfactory: "Recording Quiz Satisfactory?",
+      xpAmount: "Zoom XP Amount",
+    },
+    enr: {
+      active: "Active?",
+      program: "Program Instance",
+      parentClean: "Parent Email - Cleaned",
+      parentFirst: "Parent First Name",
+      athlete: "Full Athlete Name",
+    },
+    zm: {
+      meetingName: "Meeting Name",
+      recordingVideo: "Recording Link - Video",
+      startTime: "Start Time",
+    },
+    queue: {
+      key: "Handoff Key",
+      status: "Status",
+      sourceTable: "Source Table",
+      eventType: "Event Type",
+      payload: "Payload JSON",
+      attempts: "Attempt Count",
+      pi: "Program Instance Record ID",
+      source: "Source Record ID",
+      enrollment: "Enrollment Record ID",
+      recipients: "Recipients JSON",
+      template: "Template Key",
+      testMode: "Test Mode?",
+    },
+  },
+  values: {
+    // Airtable Email Handoff Queue Event Type choice.
+    eventType: "ZOOM_RECORDING_APPROVAL",
+    // Registered Communications Hub template key (intentionally different).
+    templateKey: "ZOOM_RECORDING_APPROVED",
+    sourceTableToken: "ZOOM_ATTENDANCE",
+    approvalResult: "Satisfactory",
+    timing: "On Satisfactory",
   },
 };
 
-/* =========================================================
-   SECTION 2: HELPERS
-========================================================= */
+const TZ = "America/Denver";
 
-let debugStep = "0 - Start";
-
-function setOutputSafe(name, value) {
+function setOutput(name, value) {
   try {
     output.set(name, value);
-  } catch {
-    // Ignore unmapped outputs.
-  }
+  } catch {}
 }
 
-function setDebug(step) {
-  debugStep = step;
-  setOutputSafe("debugStep", debugStep);
+function debug(value) {
+  setOutput("debugStep", value);
 }
 
-function log(message, data) {
-  if (!CONFIG.debug.logToConsole) return;
-  if (data === undefined) {
-    console.log(message);
-    return;
-  }
+function exists(table, name) {
   try {
-    console.log(message, JSON.stringify(data, null, 2));
+    table.getField(name);
+    return true;
   } catch {
-    console.log(message, data);
+    return false;
   }
 }
 
-function normalizeText(value) {
-  return String(value ?? "").trim();
+function raw(rec, table, name) {
+  return rec && exists(table, name) ? rec.getCellValue(name) : null;
+}
+
+function text(rec, table, name) {
+  return rec && exists(table, name) ? String(rec.getCellValueAsString(name) || "").trim() : "";
+}
+
+function ids(rec, table, name) {
+  const value = raw(rec, table, name);
+  return Array.isArray(value) ? value.map((item) => item?.id).filter(Boolean) : [];
+}
+
+function checked(rec, table, name) {
+  return raw(rec, table, name) === true;
+}
+
+function number(rec, table, name) {
+  const value = raw(rec, table, name);
+  const n = typeof value === "number" ? value : Number(text(rec, table, name).replace(/,/g, ""));
+  return Number.isFinite(n) ? n : NaN;
+}
+
+function one(values, label) {
+  if (values.length !== 1) throw new Error(`${label} must contain exactly one linked record; found ${values.length}.`);
+  return values[0];
+}
+
+function first(...values) {
+  return values.map((value) => String(value ?? "").trim()).find(Boolean) || "";
+}
+
+function cleanEmail(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function validEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function recipientEmail(rec, table, name) {
+  const email = cleanEmail(text(rec, table, name));
+  return validEmail(email) ? email : "";
 }
 
 function requireRecId(label, value) {
-  const id = normalizeText(value);
-  if (!id) {
-    throw new Error(`Missing required input: ${label}`);
-  }
-  if (!id.startsWith("rec")) {
-    throw new Error(`Invalid ${label}: must begin with "rec" (received: ${id})`);
+  const id = String(value || "").trim();
+  if (!id) throw new Error(`Missing required input: ${label}`);
+  if (!/^rec[A-Za-z0-9]{14}$/.test(id)) {
+    throw new Error(`Invalid ${label}: must be a valid Airtable record ID.`);
   }
   return id;
 }
 
-function requireMakeUs1WebhookUrl(value) {
-  const urlText = normalizeText(value);
-  if (!urlText) {
-    throw new Error("Missing required input: webhookUrl");
-  }
+function parseDate(value) {
+  const date = value instanceof Date ? value : new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
 
-  let parsed;
+function dateText(value) {
+  const date = parseDate(value);
+  if (!date) return "";
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: TZ,
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(date);
+}
+
+function selectValue(table, name, value) {
+  const field = table.getField(name);
+  if (field.type !== "singleSelect") return value;
+  const choice = (field.options?.choices || []).find(
+    (item) => String(item.name || "").toLowerCase() === String(value || "").toLowerCase()
+  );
+  if (!choice) throw new Error(`Missing option ${value} on ${table.name}.${name}`);
+  return { name: choice.name };
+}
+
+function queueFields(queueTable, values) {
+  return Object.fromEntries(Object.entries(values).filter(([name]) => exists(queueTable, name)));
+}
+
+function stableJson(value) {
+  if (Array.isArray(value)) return `[${value.map(stableJson).join(",")}]`;
+  if (value && typeof value === "object") {
+    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stableJson(value[key])}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function samePayload(left, right) {
   try {
-    parsed = new URL(urlText);
+    return stableJson(JSON.parse(left || "{}")) === stableJson(right);
   } catch {
-    throw new Error("Invalid webhookUrl: not a valid URL");
-  }
-
-  if (parsed.protocol !== "https:") {
-    throw new Error("Invalid webhookUrl: must use https");
-  }
-
-  if (parsed.hostname.toLowerCase() !== CONFIG.makeUs1WebhookHost) {
-    throw new Error(
-      `Invalid webhookUrl: host must be ${CONFIG.makeUs1WebhookHost} (Make US1)`
-    );
-  }
-
-  if (!parsed.pathname || parsed.pathname === "/") {
-    throw new Error("Invalid webhookUrl: missing webhook path");
-  }
-
-  return urlText;
-}
-
-function buildSendKey(enrollmentRid, zoomMeetingRid, zoomAttendanceId) {
-  return `${CONFIG.sendKeyPrefix}|${enrollmentRid}|${zoomMeetingRid}|${zoomAttendanceId}`;
-}
-
-async function postJson(url, payload) {
-  const request = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  };
-
-  return await remoteFetchAsync(url, request);
-}
-
-async function readResponseBody(response) {
-  let rawText = "";
-  try {
-    rawText = await response.text();
-  } catch {
-    rawText = "";
-  }
-
-  if (!rawText) {
-    return { rawText: "", json: null };
-  }
-
-  try {
-    return { rawText, json: JSON.parse(rawText) };
-  } catch {
-    return { rawText, json: null, invalidJson: true };
+    return false;
   }
 }
 
-function finishError(actionOut, errorOut, extras = {}) {
-  setOutputSafe("statusOut", "error");
-  setOutputSafe("actionOut", actionOut || "error");
-  setOutputSafe("errorOut", errorOut || "");
-  setOutputSafe("debugStep", debugStep);
-  if (extras.sendKey) setOutputSafe("sendKey", extras.sendKey);
-  if (extras.zoomAttendanceId) setOutputSafe("zoomAttendanceId", extras.zoomAttendanceId);
-  if (extras.makeStatus) setOutputSafe("makeStatus", extras.makeStatus);
-
-  log("117f Make handoff failed", {
-    automation: SCRIPT.scriptName,
-    version: SCRIPT.version,
-    statusOut: "error",
-    actionOut: actionOut || "error",
-    errorOut,
-    debugStep,
-    sendKey: extras.sendKey || "",
-    zoomAttendanceId: extras.zoomAttendanceId || "",
-    makeStatus: extras.makeStatus || "",
-  });
+async function markQueueNeedsReview(queueTable, rows) {
+  for (const row of rows) {
+    if (exists(queueTable, CONFIG.fields.queue.status)) {
+      await queueTable.updateRecordAsync(row.id, {
+        [CONFIG.fields.queue.status]: selectValue(queueTable, CONFIG.fields.queue.status, CONFIG.statuses.needsReview),
+      });
+    }
+  }
 }
-
-/* =========================================================
-   SECTION 3: MAIN
-========================================================= */
 
 async function main() {
-  setDebug("1 - Validate inputs");
-  setOutputSafe("errorOut", "");
-  setOutputSafe("makeStatus", "");
-  setOutputSafe("sendKey", "");
-  setOutputSafe("zoomAttendanceId", "");
-
   const cfg = input.config();
-
-  const webhookUrl = requireMakeUs1WebhookUrl(cfg.webhookUrl);
   const zoomAttendanceId = requireRecId("recordId", cfg.recordId);
   const enrollmentRid = requireRecId("enrollmentRid", cfg.enrollmentRid);
   const zoomMeetingRid = requireRecId("zoomMeetingRid", cfg.zoomMeetingRid);
+  const testMode = cfg.testMode === undefined ? true : Boolean(cfg.testMode);
+  setOutput("zoomAttendanceId", zoomAttendanceId);
 
-  setOutputSafe("zoomAttendanceId", zoomAttendanceId);
+  const zaT = base.getTable(CONFIG.tables.za);
+  const enrT = base.getTable(CONFIG.tables.enr);
+  const zmT = base.getTable(CONFIG.tables.zm);
+  const queueT = base.getTable(CONFIG.tables.queue);
 
-  setDebug("2 - Build payload");
+  debug("01 - Load Zoom Attendance, Enrollment, Zoom Meeting");
+  const [za, enr, zm] = await Promise.all([
+    zaT.selectRecordAsync(zoomAttendanceId),
+    enrT.selectRecordAsync(enrollmentRid),
+    zmT.selectRecordAsync(zoomMeetingRid),
+  ]);
+  if (!za) throw new Error(`Zoom Attendance not found: ${zoomAttendanceId}`);
+  if (!enr) throw new Error(`Enrollment not found: ${enrollmentRid}`);
+  if (!zm) throw new Error(`Zoom Meeting not found: ${zoomMeetingRid}`);
 
-  const sendKey = buildSendKey(enrollmentRid, zoomMeetingRid, zoomAttendanceId);
-  setOutputSafe("sendKey", sendKey);
+  const handoffKey = `${CONFIG.values.eventType}|${CONFIG.values.sourceTableToken}|${zoomAttendanceId}`;
 
+  debug("02 - Validate links and readiness");
+  const linkedEnrollmentIds = ids(za, zaT, CONFIG.fields.za.enrollment);
+  if (linkedEnrollmentIds.length && !linkedEnrollmentIds.includes(enrollmentRid)) {
+    throw new Error("enrollmentRid does not match Zoom Attendance Enrollment link.");
+  }
+  const linkedMeetingIds = ids(za, zaT, CONFIG.fields.za.zoomMeeting);
+  if (linkedMeetingIds.length && !linkedMeetingIds.includes(zoomMeetingRid)) {
+    throw new Error("zoomMeetingRid does not match Zoom Attendance Zoom Meeting link.");
+  }
+  if (exists(zaT, CONFIG.fields.za.satisfactory) && !checked(za, zaT, CONFIG.fields.za.satisfactory)) {
+    throw new Error("Recording Quiz Satisfactory? is not checked. Handoff blocked.");
+  }
+  if (exists(enrT, CONFIG.fields.enr.active) && !checked(enr, enrT, CONFIG.fields.enr.active)) {
+    throw new Error("Enrollment is inactive. Handoff blocked.");
+  }
+
+  debug("03 - Resolve recipients and Hub payload");
+  const programId = one(ids(enr, enrT, CONFIG.fields.enr.program), "Enrollment Program Instance");
+  const parent = recipientEmail(enr, enrT, CONFIG.fields.enr.parentClean);
+  if (!parent) throw new Error("No usable cleaned parent recipient on Enrollment.");
+
+  const athleteName = first(text(enr, enrT, CONFIG.fields.enr.athlete), "Athlete");
+  const meetingName = first(text(zm, zmT, CONFIG.fields.zm.meetingName), zm.name, "Zoom Meeting");
+  const meetingStartText = dateText(raw(zm, zmT, CONFIG.fields.zm.startTime));
+  const recordingUrl = text(zm, zmT, CONFIG.fields.zm.recordingVideo);
+  const recordingXpValue = number(za, zaT, CONFIG.fields.za.xpAmount);
+
+  const recipients = [{ email: parent, role: "guardian" }];
   const payload = {
-    automationNumber: CONFIG.automationNumber,
-    templateKey: CONFIG.templateKey,
-    timing: CONFIG.timing,
-    sendKey,
-    enrollmentRid,
-    zoomMeetingRid,
-    zoomAttendanceId,
+    athleteName,
+    parentFirstName: text(enr, enrT, CONFIG.fields.enr.parentFirst),
+    meetingName,
+    approvalResult: CONFIG.values.approvalResult,
+    timing: CONFIG.values.timing,
   };
+  if (meetingStartText) {
+    payload.meetingDate = meetingStartText;
+    payload.meetingStartText = meetingStartText;
+  }
+  if (recordingUrl) payload.recordingUrl = recordingUrl;
+  if (Number.isFinite(recordingXpValue) && recordingXpValue > 0) {
+    payload.recordingXp = recordingXpValue;
+  }
 
-  log("117f Make handoff payload", {
-    automation: SCRIPT.scriptName,
-    version: SCRIPT.version,
-    payload,
+  const queueData = queueFields(queueT, {
+    [CONFIG.fields.queue.key]: handoffKey,
+    [CONFIG.fields.queue.status]: selectValue(queueT, CONFIG.fields.queue.status, CONFIG.statuses.draft),
+    [CONFIG.fields.queue.sourceTable]: CONFIG.tables.za,
+    [CONFIG.fields.queue.eventType]: selectValue(queueT, CONFIG.fields.queue.eventType, CONFIG.values.eventType),
+    [CONFIG.fields.queue.template]: CONFIG.values.templateKey,
+    [CONFIG.fields.queue.source]: zoomAttendanceId,
+    [CONFIG.fields.queue.enrollment]: enrollmentRid,
+    [CONFIG.fields.queue.pi]: programId,
+    [CONFIG.fields.queue.recipients]: JSON.stringify(recipients),
+    [CONFIG.fields.queue.payload]: JSON.stringify(payload),
+    [CONFIG.fields.queue.testMode]: testMode,
+    [CONFIG.fields.queue.attempts]: 0,
   });
 
-  setDebug("3 - POST to Make webhook");
+  debug("04 - Idempotent Email Handoff Queue create");
+  const existing = (
+    await queueT.selectRecordsAsync({
+      fields: Object.values(CONFIG.fields.queue).filter((name) => exists(queueT, name)),
+    })
+  ).records.filter((row) => text(row, queueT, CONFIG.fields.queue.key) === handoffKey);
 
-  let response;
-  try {
-    response = await postJson(webhookUrl, payload);
-  } catch (fetchError) {
-    const message = fetchError instanceof Error ? fetchError.message : String(fetchError);
-    finishError("error", `Network failure posting to Make: ${message}`, {
-      sendKey,
-      zoomAttendanceId,
-    });
-    throw new Error(`FAILED AT: ${debugStep} — Network failure posting to Make: ${message}`);
+  if (existing.length > 1) {
+    await markQueueNeedsReview(queueT, existing);
+    setOutput("statusOut", "error");
+    setOutput("actionOut", "needs_review");
+    throw new Error(`Multiple Email Handoff Queue rows match ${handoffKey}.`);
   }
 
-  const httpStatus = response && response.status != null ? response.status : "unknown";
-  const responseBody = await readResponseBody(response);
-
-  log("117f Make handoff HTTP response", {
-    automation: SCRIPT.scriptName,
-    version: SCRIPT.version,
-    httpStatus,
-    responseText: responseBody.rawText,
-    responseJson: responseBody.json,
-  });
-
-  if (!response || !response.ok) {
-    const message = `Make webhook returned non-2xx HTTP ${httpStatus}: ${String(responseBody.rawText).slice(0, 500)}`;
-    finishError("error", message, { sendKey, zoomAttendanceId });
-    throw new Error(`FAILED AT: ${debugStep} — ${message}`);
-  }
-
-  if (responseBody.invalidJson || !responseBody.json || typeof responseBody.json !== "object") {
-    const message = `Make webhook returned invalid JSON: ${String(responseBody.rawText).slice(0, 500)}`;
-    finishError("error", message, { sendKey, zoomAttendanceId });
-    throw new Error(`FAILED AT: ${debugStep} — ${message}`);
-  }
-
-  setDebug("4 - Validate Make status");
-
-  const makeStatus = normalizeText(responseBody.json.status);
-  setOutputSafe("makeStatus", makeStatus);
-
-  if (!CONFIG.successStatuses.includes(makeStatus)) {
-    const message = `Unexpected Make status "${makeStatus || "(blank)"}". Expected one of: ${CONFIG.successStatuses.join(", ")}`;
-    finishError("error", message, { sendKey, zoomAttendanceId, makeStatus });
-    throw new Error(`FAILED AT: ${debugStep} — ${message}`);
-  }
-
-  setDebug("5 - Complete");
-  setOutputSafe("statusOut", "success");
-  setOutputSafe("actionOut", makeStatus);
-  setOutputSafe("errorOut", "");
-  setOutputSafe("sendKey", sendKey);
-  setOutputSafe("zoomAttendanceId", zoomAttendanceId);
-  setOutputSafe("makeStatus", makeStatus);
-  setOutputSafe("debugStep", debugStep);
-
-  console.log(
-    JSON.stringify(
-      {
+  if (existing.length === 1) {
+    if (!samePayload(text(existing[0], queueT, CONFIG.fields.queue.payload), payload)) {
+      await markQueueNeedsReview(queueT, existing);
+      setOutput("statusOut", "error");
+      setOutput("actionOut", "needs_review");
+      throw new Error(`Conflicting Email Handoff Queue payload for ${handoffKey}.`);
+    }
+    setOutput("statusOut", "success");
+    setOutput("actionOut", "existing_handoff");
+    setOutput("queueRecordId", existing[0].id);
+    setOutput("handoffKey", handoffKey);
+    setOutput("errorOut", "");
+    console.log(
+      JSON.stringify({
         automation: SCRIPT.scriptName,
         version: SCRIPT.version,
         statusOut: "success",
-        actionOut: makeStatus,
-        makeStatus,
-        sendKey,
+        actionOut: "existing_handoff",
+        queueRecordId: existing[0].id,
+        handoffKey,
         zoomAttendanceId,
-        httpStatus,
-        debugStep,
-      },
-      null,
-      2
-    )
+      })
+    );
+    return;
+  }
+
+  const recheck = (
+    await queueT.selectRecordsAsync({
+      fields: [CONFIG.fields.queue.key].filter((name) => exists(queueT, name)),
+    })
+  ).records.filter((row) => text(row, queueT, CONFIG.fields.queue.key) === handoffKey);
+  if (recheck.length) {
+    if (recheck.length > 1) {
+      await markQueueNeedsReview(queueT, recheck);
+      throw new Error(`Multiple Email Handoff Queue rows match ${handoffKey} after recheck.`);
+    }
+    setOutput("statusOut", "success");
+    setOutput("actionOut", "existing_handoff");
+    setOutput("queueRecordId", recheck[0].id);
+    setOutput("handoffKey", handoffKey);
+    setOutput("errorOut", "");
+    return;
+  }
+
+  const created = await queueT.createRecordAsync(queueData);
+  const afterCreate = (
+    await queueT.selectRecordsAsync({
+      fields: [CONFIG.fields.queue.key].filter((name) => exists(queueT, name)),
+    })
+  ).records.filter((row) => text(row, queueT, CONFIG.fields.queue.key) === handoffKey);
+  if (afterCreate.length !== 1) {
+    await markQueueNeedsReview(queueT, afterCreate);
+    throw new Error(`Concurrent Email Handoff Queue creation requires review for ${handoffKey}.`);
+  }
+
+  await queueT.updateRecordAsync(created, {
+    [CONFIG.fields.queue.status]: selectValue(queueT, CONFIG.fields.queue.status, CONFIG.statuses.ready),
+  });
+
+  setOutput("statusOut", "success");
+  setOutput("actionOut", "created_handoff");
+  setOutput("queueRecordId", created);
+  setOutput("handoffKey", handoffKey);
+  setOutput("errorOut", "");
+  console.log(
+    JSON.stringify({
+      automation: SCRIPT.scriptName,
+      version: SCRIPT.version,
+      statusOut: "success",
+      actionOut: "created_handoff",
+      queueRecordId: created,
+      handoffKey,
+      zoomAttendanceId,
+    })
   );
 }
-
-/* =========================================================
-   SECTION 4: RUN
-========================================================= */
 
 try {
   await main();
 } catch (error) {
-  const message = error instanceof Error ? error.message : String(error);
-  setOutputSafe("statusOut", "error");
-  setOutputSafe("actionOut", "error");
-  setOutputSafe("errorOut", message);
-  setOutputSafe("debugStep", debugStep || "error");
-
-  console.log(
-    JSON.stringify(
-      {
-        automation: SCRIPT.scriptName,
-        version: SCRIPT.version,
-        statusOut: "error",
-        actionOut: "error",
-        errorOut: message,
-        debugStep,
-      },
-      null,
-      2
-    )
-  );
-
+  setOutput("statusOut", "error");
+  setOutput("actionOut", "error");
+  setOutput("errorOut", String(error.message || error));
   throw error;
 }

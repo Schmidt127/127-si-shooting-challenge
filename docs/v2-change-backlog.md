@@ -17,7 +17,7 @@ ownership and evidence boundaries are in [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md
 
 **Status key:** `queued` · `planned` · `in-progress` · `done` · `deferred` · `wont-fix`
 
-Last updated: **2026-07-20** (C-025 Stage 17 **COMPLETE** in PROD — verification PASS; webhook blank deferred)
+Last updated: **2026-08-19** (C-028 Tremendous sandbox send validated; production API pending; Make scenario OFF)
 
 ---
 
@@ -138,7 +138,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
 | **C-012** | Stage K — every field has one writer | Field ownership matrix; hide/delete legacy; update field-map | V2-013 | queued |
-| **C-026** | Merge **Tutorials** vs **Tutorials & Assets** — keep one, delete duplicate | Two tables with overlapping purpose (~same fields: video link, type, program, descriptions, thumbnails, publish flag). **Repo today:** **`Tutorials`** is live — web `/tutorials`, `/shoutouts`, `/articles` reads `Web - Tutorials Catalog` (`web/lib/airtable/queries.ts`). **`Tutorials & Assets`** is **not** referenced in automations or web; weaker schema (e.g. `Athlete` as hardcoded single-select, multiline video link vs URL). **Work:** row-count + field diff audit → migrate any unique rows → repoint views/interfaces → delete orphan table on 2026–27 clone. Relates to **C-012**, **C-013** (attachments on tutorial images). | C-012 | queued |
+| **C-026** | Merge **Tutorials** vs **Tutorials & Assets** — keep one, delete duplicate | **2026-08-17 web cutover:** `/shoot` reads **`Tutorials & Assets`** (`tblDOTgsWfqPm18bw`) only — deleted `Tutorials` / `tbldfoVGdhqATi4MS` must not be queried. Field map: `Type of Asset`, `Brief Descriptions`, `Display Image`, `Athlete Headshot`, publish `checked`. Remaining: Softr/interface proof, any leftover Airtable views, archive/delete confirmation. Relates to **C-012**, **C-013**. | C-012 | in progress |
 | **C-024** | Rock-solid dedupe keys + safe backfill reruns | **Duplicates caught instantly** at every layer — Submissions (**007**), Submission Assets, Homework Completions, XP Events (**Source Key** / **XP Dedupe Key**), achievements. One canonical key per source record; automations + extension backfills **idempotent** — rerunning a repair/backfill must **never** create doubles or corrupt rollups. Audit all writers; document key patterns in engine contract. | C-012 | queued |
 | **C-014** | One ladder, spread gates early | **DECIDED** — tune in config Q1 2027, not in docs | C-021, Wave 9 | resolved |
 
@@ -210,7 +210,8 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | **V2-008** | Game manual | Published from config tables before Day 1 | Wave 9 | queued |
 | **V2-009** | `/shoot` rules + progress hub | Website mirrors config; not rankings-only | Wave 9, C-022 | queued |
 | **V2-010** | Pre-season parent comms | Rules explained before first submission | V2-008 | queued |
-| **C-027** | **Major-event** notifications — level up, milestones (not daily XP) | **Today:** parent comms are **email** via Make (**071**, **072**, **074**) — batch/weekly or coach-triggered; **no instant athlete alert** on level change (**041** → **042**) or achievement unlock (**059**, **066**). **Owner idea:** notify kids **immediately** on meaningful events (level up, shot milestone, perfect week, gate cleared) — **not** every daily submission. **Possible channel:** SMS/text — **`Athlete Cell Number`** / **`Parent Cell Number`** exist on Enrollments/Athletes. **TBD discussion:** Twilio vs Make vs other; parent vs athlete recipient; opt-in/consent; quiet hours; message templates; idempotent send key (**C-024**); web push later. | C-010, C-024, V2-008 | queued |
+| **C-027** | **Major-event** notifications — level up, milestones (not daily XP) | **Today:** parent comms are **email** via Communications Hub → **Resend** (not Make). Historical Make 071/072/074 Gmail paths are retired for email. **No instant athlete alert** on level change (**041** → **042**) or achievement unlock (**059**, **066**). **Owner idea:** notify kids **immediately** on meaningful events (level up, shot milestone, perfect week, gate cleared) — **not** every daily submission. **Possible channel:** SMS/text — **`Athlete Cell Number`** / **`Parent Cell Number`** exist on Enrollments/Athletes. **TBD discussion:** Twilio vs other; parent vs athlete recipient; opt-in/consent; quiet hours; message templates; idempotent send key (**C-024**); web push later. | C-010, C-024, V2-008 | queued |
+| **C-028** | First Tremendous award send via Make.com sandbox | Production Award Recipients fields + v2-style Make snapshot. Sandbox send **validated** (Mike 2026-08-19); production API **pending**; Make scenario **OFF**. v1 historical. v2 is implementation snapshot, not production-live. Current state: [tremendous-award-fulfillment.md](./integrations/tremendous-award-fulfillment.md). | Gift-card Award Recipients row | **in-progress** |
 | **V2-028** | **Generate Media Kits** — end-of-season publicity from Airtable | **2025–26 manual phase done** — 10 newspaper packets + 12 radio kits sent **2026-07-05**. Platform automation (config-driven generate) remains future work. | C-013, C-022, Wave 0 close-out | **done** (2025–26) / queued (platform) |
 
 ### Wave 11 — Launch gate
@@ -268,12 +269,14 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 
 ### Tutorials table consolidation (C-026)
 
-| Table | Status in repo | Recommendation (pending audit) |
-|-------|----------------|--------------------------------|
-| **Tutorials** | **Production** — web catalog, 13 fields, `Tutorial Type` multi-select | **Keep** as canonical content table |
-| **Tutorials & Assets** | Schema only — no code references; duplicate field set | **Candidate to retire** after row migration |
+| Table | Status in repo | Recommendation |
+|-------|----------------|----------------|
+| **Tutorials & Assets** (`tblDOTgsWfqPm18bw`) | **Canonical for web** — `/tutorials`, `/shoutouts`, `/articles` (2026-08-17) | **Keep** |
+| **Tutorials** (`tbldfoVGdhqATi4MS`) | Deleted / must not be queried by `/shoot` | Retired for web; confirm Softr/UI unbound |
 
-**Decision checklist:** Which table has more/current rows? Any Softr/interface views still on `Tutorials & Assets`? After **C-013**, consolidate image fields to canonical URL pattern on the surviving table.
+**Decision checklist:** Softr/interface bindings cleared? Publish values are `checked`? `Web - Tutorials Catalog` exists on Tutorials & Assets (or formula fallback OK)?
+
+**2026-08-17 web cutover:** Deploy checklist [`tutorials-and-assets-web-cutover.md`](./deploy-checklists/tutorials-and-assets-web-cutover.md). Preview/migration extension scripts remain for historical audit only.
 
 ### Major-event notifications (C-027)
 

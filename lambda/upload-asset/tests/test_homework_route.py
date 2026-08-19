@@ -25,6 +25,8 @@ from upload_core.fields import (
 from upload_core.processor import UploadError, process_upload_asset, process_with_error_writeback
 from upload_core.util import DENVER, sha256_hex
 
+from season_support import DEFAULT_SEASON
+
 HASH = sha256_hex(b"test-bytes")
 RECORD = "recHomeworkAsset01"
 HW_FIELDS = {
@@ -34,6 +36,7 @@ HW_FIELDS = {
     "Homework Completions": ["recHc1"],
     "Enrollment - Linked": ["recEnroll1"],
     "Original File Name": "hw.png",
+    "Asset Slot": "HW1",
     "Asset Type": "Homework Image",
 }
 
@@ -84,6 +87,7 @@ class HomeworkRouteTests(unittest.TestCase):
             patch("upload_core.processor.http_get_bytes", return_value=(b"test-bytes", "image/png")),
             patch("upload_core.processor.upload_s3", return_value={"bucket": "b", "region": "us-east-2", "etag": "x"}),
             patch("upload_core.processor.lookup_duplicate_matches", return_value=matches),
+            patch("upload_core.processor.resolve_upload_season", return_value=DEFAULT_SEASON),
         ):
             return process_upload_asset(config, _payload())
 
@@ -94,7 +98,8 @@ class HomeworkRouteTests(unittest.TestCase):
         self.assertEqual(result["routeKey"], "homework_completion")
         self.assertEqual(result["automationNumber"], "070a")
         self.assertEqual(fields[FIELD_UPLOAD_STATUS], "Uploaded")
-        self.assertIn("homework", result["s3"]["storageKey"])
+        self.assertIn("HW1", result["s3"]["storageKey"])
+        self.assertIn("Test_Athlete/", result["s3"]["storageKey"])
 
     def test_invalid_route_rejected(self):
         config = _config()

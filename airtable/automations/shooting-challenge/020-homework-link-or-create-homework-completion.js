@@ -1,18 +1,19 @@
 /************************************************************
  * 020 - Homework - Link or Create Homework Completion
  *
- * Version: v3.5
- * Last Updated: 2026-08-10
+ * Version: v3.6
+ * Last Updated: 2026-08-17
  *
  * INTAKE CONTRACT
  * - Submissions.Homework Name 1/2 store Program Homework Assignment (PHA) record IDs.
- * - 020 loads the selected PHA directly and validates PI + Week + Slot + Active.
+ * - 020 loads the selected PHA directly and validates PI + Week + Slot + Active + Homework Assignment.
  * - Homework Library content ID comes from PHA.Homework Assignment (exactly one link).
  * - HC.Homework = library ID; HC.Program Homework Assignment = PHA ID.
  *
  * SCHEDULING RULE
- * - PHA is the sole scheduling authority (PI + Week + Slot + Active).
+ * - Operational identity is Program Instance + Week + Homework Assignment + Homework Slot (+ Active).
  * - PHA Grade Band is eligibility/descriptive metadata only and is NEVER used to resolve schedule ownership.
+ * - A PHA may list all grade bands (K-2 … 9-12). Multi-band Grade Band never rejects a valid match.
  * - Athlete Grade Band may still be copied to Homework Completions as athlete metadata when available.
  *
  * PRODUCT RULE
@@ -24,7 +25,7 @@
 
 const CONFIG = {
   scriptName: "020 - Homework - Link or Create Homework Completion",
-  version: "v3.5",
+  version: "v3.6",
   tables: {
     assets: "Submission Assets",
     submissions: "Submissions",
@@ -46,10 +47,6 @@ const CONFIG = {
     uploadError: "Upload Error",
     uploadedAt: "Uploaded At",
     assetSlot: "Asset Slot",
-    googleDriveFileUrl: "Google Drive File URL",
-    googleDriveFileId: "Google Drive File ID",
-    googleDriveFolderId: "Google Drive Folder ID",
-    googleDriveFolderUrl: "Google Drive Folder URL",
     sendToMakeTrigger: "Send to Make Trigger",
   },
   submissions: {
@@ -90,10 +87,6 @@ const CONFIG = {
     assetType: "Asset Type",
     assetPurpose: "Asset Purpose",
     sourceSystem: "Source System",
-    googleDriveFileId: "Google Drive File ID",
-    googleDriveFileUrl: "Google Drive File URL",
-    googleDriveFolderId: "Google Drive Folder ID",
-    googleDriveFolderUrl: "Google Drive Folder URL",
     uploadError: "Upload Error",
     uploadedAt: "Uploaded At",
     assetSlot: "Asset Slot",
@@ -217,20 +210,11 @@ function findHomeworkCompletionMatch(records, { submissionId, enrollmentId, week
 }
 function mapAssetUploadStatusToHomeworkStatus(s) { return s === "Uploaded" ? "Uploaded" : s === "Processing" ? "Processing" : s === "Error" ? "Error" : "Pending"; }
 function datesEqual(a,b) { if (!a && !b) return true; if (!a || !b) return false; return new Date(a).getTime() === new Date(b).getTime(); }
-function syncTextFromAsset(fields, childField, childRecord, asset, assetField) {
-  if (!isWritable(homeworkTable, childField) || !fieldExists(assetsTable, assetField)) return;
-  const av = text(asset, assetField), cv = text(childRecord, childField);
-  if (av !== cv) fields[childField] = av;
-}
 function buildHomeworkUploadSyncFields(hw, asset) {
   const fields = {};
   const assetStatus = selectName(asset, CONFIG.assets.uploadStatus);
   const targetStatus = mapAssetUploadStatusToHomeworkStatus(assetStatus);
   if (targetStatus !== selectName(hw, CONFIG.homework.uploadStatus)) setSingleSelect(fields, homeworkTable, CONFIG.homework.uploadStatus, targetStatus);
-  syncTextFromAsset(fields, CONFIG.homework.googleDriveFileUrl, hw, asset, CONFIG.assets.googleDriveFileUrl);
-  syncTextFromAsset(fields, CONFIG.homework.googleDriveFileId, hw, asset, CONFIG.assets.googleDriveFileId);
-  syncTextFromAsset(fields, CONFIG.homework.googleDriveFolderId, hw, asset, CONFIG.assets.googleDriveFolderId);
-  syncTextFromAsset(fields, CONFIG.homework.googleDriveFolderUrl, hw, asset, CONFIG.assets.googleDriveFolderUrl);
   const assetError = text(asset, CONFIG.assets.uploadError), currentError = text(hw, CONFIG.homework.uploadError);
   if (assetError !== currentError && isWritable(homeworkTable, CONFIG.homework.uploadError)) fields[CONFIG.homework.uploadError] = assetError;
   const assetUploadedAt = cell(asset, CONFIG.assets.uploadedAt), currentUploadedAt = cell(hw, CONFIG.homework.uploadedAt);
@@ -370,10 +354,6 @@ async function main() {
     setSingleSelect(fields, homeworkTable, CONFIG.homework.itemType, "Homework");
     setTextField(fields, homeworkTable, CONFIG.homework.assetLabel, text(asset, CONFIG.assets.assetLabel));
     setTextField(fields, homeworkTable, CONFIG.homework.originalFileName, text(asset, CONFIG.assets.originalFileName));
-    setTextField(fields, homeworkTable, CONFIG.homework.googleDriveFileId, text(asset, CONFIG.assets.googleDriveFileId));
-    setTextField(fields, homeworkTable, CONFIG.homework.googleDriveFileUrl, text(asset, CONFIG.assets.googleDriveFileUrl));
-    setTextField(fields, homeworkTable, CONFIG.homework.googleDriveFolderId, text(asset, CONFIG.assets.googleDriveFolderId));
-    setTextField(fields, homeworkTable, CONFIG.homework.googleDriveFolderUrl, text(asset, CONFIG.assets.googleDriveFolderUrl));
     setTextField(fields, homeworkTable, CONFIG.homework.uploadError, text(asset, CONFIG.assets.uploadError));
     setDate(fields, homeworkTable, CONFIG.homework.uploadedAt, cell(asset, CONFIG.assets.uploadedAt));
     if (selectName(asset, CONFIG.assets.uploadStatus) === "Uploaded") setCheckbox(fields, homeworkTable, CONFIG.homework.writebackComplete, true);

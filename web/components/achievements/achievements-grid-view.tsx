@@ -70,7 +70,7 @@ function AchievementCard({ achievement }: { achievement: AchievementDefinition }
             </div>
             <h3 className="mt-2 text-lg font-bold text-foreground">{achievement.name}</h3>
             {achievement.description ? (
-              <p className="mt-2 text-sm leading-relaxed text-muted">{achievement.description}</p>
+              <p className="mt-2 text-sm leading-relaxed text-foreground">{achievement.description}</p>
             ) : null}
             {achievement.triggerType ? (
               <p className="mt-3 font-mono text-xs text-muted-subtle">

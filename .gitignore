@@ -50,3 +50,16 @@ chatgpt-recovery-*.zip
 **/*-SEND-READY.zip
 # Test-output cache
 .pytest_cache/
+test-results/
+
+# Local scratch / one-off probe artifacts (never commit)
+.impeccable/critique/
+.impeccable/questions/
+.impeccable/live/
+tools/airtable/New Text Document*.txt
+tools/testing/probe_*.mjs
+tools/testing/retrigger_*.mjs
+tools/testing/inspect_*.mjs
+docs/testing/perfect-week/fixtures/_*.json
+docs/testing/evidence/**/_*
+duplicate-enrollment-guard-*.patch

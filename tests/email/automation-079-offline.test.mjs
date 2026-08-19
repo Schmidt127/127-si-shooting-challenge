@@ -21,10 +21,12 @@ const SCRIPT_PATH = path.resolve(
   HERE,
   "../../airtable/automations/shooting-challenge/079-email-notifications-and-external-handoffs-send-queue-handoff-to-communications-hub.js"
 );
+const SCRIPT_SOURCE = readFileSync(SCRIPT_PATH, "utf8");
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 const WELCOME_QUEUE_ID = "recWelcome07900001";
 const DAILY_QUEUE_ID = "recaZyyMx9Tf6zzNU";
 const SUBMISSION_ID = "rec58gdymfPKKeVRI";
+const FAILED_ZOOM_QUEUE_ID = "recpbXCopQxIvISq5";
 
 function singleSelect(name, choices) {
   return {
@@ -43,9 +45,12 @@ function buildQueueRecord({
   sourceRecordId,
   recipients,
   payload,
+  status = "Ready",
+  attemptCount = 0,
+  lastError = "",
 }) {
   return new MockRecord(id, {
-    Status: { name: "Ready" },
+    Status: { name: status },
     "Event Type": { name: eventType },
     "Handoff Key": handoffKey,
     "Source Table": sourceTable,
@@ -56,9 +61,9 @@ function buildQueueRecord({
     "Template Key": templateKey,
     "Payload JSON": JSON.stringify(payload),
     "Test Mode?": true,
-    "Attempt Count": 0,
+    "Attempt Count": attemptCount,
     "Last Attempt At": null,
-    "Last Error": "",
+    "Last Error": lastError,
     "Hub Event ID": "",
     "Hub Response JSON": "",
     "Accepted At": null,
@@ -70,7 +75,14 @@ function build079Base(record) {
     "Email Handoff Queue",
     [
       singleSelect("Status", ["Ready", "Sending", "Accepted", "Failed", "Needs Review"]),
-      singleSelect("Event Type", ["WELCOME", "DAILY_SUBMISSION"]),
+      singleSelect("Event Type", [
+        "WELCOME",
+        "DAILY_SUBMISSION",
+        "VIDEO_FEEDBACK",
+        "HOMEWORK_FEEDBACK",
+        "WEEKLY_ATHLETE_SUMMARY",
+        "ZOOM_RECORDING_APPROVAL",
+      ]),
       { name: "Handoff Key", type: "singleLineText" },
       { name: "Source Table", type: "singleLineText" },
       { name: "Source Record ID", type: "singleLineText" },
@@ -122,6 +134,90 @@ function dailyRecord(overrides = {}) {
   });
 }
 
+const VIDEO_QUEUE_ID = "recVideoFbQueue0001";
+const VIDEO_FEEDBACK_ID = "recVideoFbSrc0001";
+const HOMEWORK_QUEUE_ID = "recHomeworkQ079001";
+const HOMEWORK_COMPLETION_ID = "recHomeworkSrc001";
+const WEEKLY_QUEUE_ID = "recWeeklyQ07900001";
+const WEEKLY_SUMMARY_ID = "recWeeklySrc00001";
+const ZOOM_QUEUE_ID = "recZoomQ0790000001";
+const ZOOM_ATTENDANCE_ID = "recZoomAttSrc0001";
+
+function videoRecord(overrides = {}) {
+  return buildQueueRecord({
+    id: VIDEO_QUEUE_ID,
+    eventType: "VIDEO_FEEDBACK",
+    templateKey: "VIDEO_FEEDBACK",
+    handoffKey: `VIDEO_FEEDBACK|VIDEO_FEEDBACK|${VIDEO_FEEDBACK_ID}`,
+    sourceTable: "Video Feedback",
+    sourceRecordId: VIDEO_FEEDBACK_ID,
+    recipients: [{ email: "parent@example.com", role: "guardian" }],
+    payload: {
+      athleteName: "Test Athlete",
+      coachFeedback: "Keep your elbow under the ball.",
+      totalVideoXpAwarded: 20,
+      videoUrl: "https://example.com/reviewer/file",
+    },
+    ...overrides,
+  });
+}
+
+function homeworkRecord(overrides = {}) {
+  return buildQueueRecord({
+    id: HOMEWORK_QUEUE_ID,
+    eventType: "HOMEWORK_FEEDBACK",
+    templateKey: "HOMEWORK_FEEDBACK",
+    handoffKey: `HOMEWORK_FEEDBACK|HOMEWORK_COMPLETIONS|${HOMEWORK_COMPLETION_ID}`,
+    sourceTable: "Homework Completions",
+    sourceRecordId: HOMEWORK_COMPLETION_ID,
+    recipients: [{ email: "parent@example.com", role: "guardian" }],
+    payload: {
+      athleteName: "Test Athlete",
+      coachFeedback: "Nice form on the free throws.",
+      totalHomeworkXpAwarded: 15,
+    },
+    ...overrides,
+  });
+}
+
+function weeklyRecord(overrides = {}) {
+  return buildQueueRecord({
+    id: WEEKLY_QUEUE_ID,
+    eventType: "WEEKLY_ATHLETE_SUMMARY",
+    templateKey: "WEEKLY_ATHLETE_SUMMARY",
+    handoffKey: `WEEKLY_ATHLETE_SUMMARY|WEEKLY_ATHLETE_SUMMARY|${WEEKLY_SUMMARY_ID}`,
+    sourceTable: "Weekly Athlete Summary",
+    sourceRecordId: WEEKLY_SUMMARY_ID,
+    recipients: [{ email: "parent@example.com", role: "guardian" }],
+    payload: {
+      athleteName: "Test Athlete",
+      weekLabel: "Week 3",
+      daysLogged: 4,
+      shots: 250,
+    },
+    ...overrides,
+  });
+}
+
+function zoomRecord(overrides = {}) {
+  return buildQueueRecord({
+    id: ZOOM_QUEUE_ID,
+    eventType: "ZOOM_RECORDING_APPROVAL",
+    templateKey: "ZOOM_RECORDING_APPROVED",
+    handoffKey: `ZOOM_RECORDING_APPROVAL|ZOOM_ATTENDANCE|${ZOOM_ATTENDANCE_ID}`,
+    sourceTable: "Zoom Attendance",
+    sourceRecordId: ZOOM_ATTENDANCE_ID,
+    recipients: [{ email: "parent@example.com", role: "guardian" }],
+    payload: {
+      athleteName: "Test Athlete",
+      meetingName: "Thursday Recording Quiz",
+      approvalResult: "Satisfactory",
+      timing: "On Satisfactory",
+    },
+    ...overrides,
+  });
+}
+
 function acceptedResponse({ duplicate = false } = {}) {
   return {
     ok: true,
@@ -135,20 +231,54 @@ async function run079({ record, response = acceptedResponse() }) {
   const output = new MockOutput();
   const capturedConsole = makeConsole();
   const requests = [];
-  const fetch = async (_url, request) => {
+  const fetchCalls = [];
+  const fetch = async (url, request) => {
+    fetchCalls.push({ url, request });
     requests.push(JSON.parse(request.body));
     return typeof response === "function" ? response(requests.length) : response;
   };
-  const code = readFileSync(SCRIPT_PATH, "utf8");
-  const fn = new AsyncFunction("base", "input", "output", "console", "fetch", code);
+  // Airtable Scripting exposes fetch globally; do not inject remoteFetchAsync.
+  const fn = new AsyncFunction("base", "input", "output", "console", "fetch", SCRIPT_SOURCE);
   let error = null;
   try {
-    await fn(base, makeInput({ recordId: record.id, ingressSecret: "test-secret" }), output, capturedConsole, fetch);
+    await fn(
+      base,
+      makeInput({ recordId: record.id, ingressSecret: "test-secret" }),
+      output,
+      capturedConsole,
+      fetch
+    );
   } catch (caught) {
     error = caught;
   }
-  return { base, queue, output, error, requests, console: capturedConsole };
+  return { base, queue, output, error, requests, fetchCalls, console: capturedConsole };
 }
+
+test("079 script is v2.4 and dispatches via fetch, not remoteFetchAsync", () => {
+  assert.match(SCRIPT_SOURCE, /version:\s*"v2\.4"/);
+  assert.match(SCRIPT_SOURCE, /079 – Send to Communications Hub - NEW/);
+  assert.match(SCRIPT_SOURCE, /eventZoomRecordingApproval:\s*"ZOOM_RECORDING_APPROVAL"/);
+  assert.match(SCRIPT_SOURCE, /templateZoomRecordingApproved:\s*"ZOOM_RECORDING_APPROVED"/);
+  assert.match(SCRIPT_SOURCE, /eventWeeklyAthleteSummary:\s*"WEEKLY_ATHLETE_SUMMARY"/);
+  assert.match(SCRIPT_SOURCE, /return fetch\(url, request\)/);
+  assert.doesNotMatch(SCRIPT_SOURCE, /remoteFetchAsync\s*\(/);
+  assert.doesNotMatch(SCRIPT_SOURCE, /makeWebhookUrl|hook\.us1\.make\.com|resend\.com|api\.resend|gmail\.googleapis/i);
+  assert.match(SCRIPT_SOURCE, /Never call Make, Gmail, or Resend directly/);
+  assert.match(SCRIPT_SOURCE, /communications-two-blue\.vercel\.app\/api\/events\/ingest/);
+});
+
+test("079 Hub dispatch path calls fetch with URL, bearer headers, and JSON body", async () => {
+  const result = await run079({ record: weeklyRecord() });
+  assert.equal(result.error, null, result.error?.message);
+  assert.equal(result.fetchCalls.length, 1);
+  assert.equal(result.fetchCalls[0].url, "https://communications-two-blue.vercel.app/api/events/ingest");
+  assert.equal(result.fetchCalls[0].request.method, "POST");
+  assert.equal(result.fetchCalls[0].request.headers.Authorization, "Bearer test-secret");
+  assert.equal(result.fetchCalls[0].request.headers["Content-Type"], "application/json");
+  assert.equal(result.requests[0].eventType, "WEEKLY_ATHLETE_SUMMARY");
+  assert.equal(result.requests[0].templateKey, "WEEKLY_ATHLETE_SUMMARY");
+  assert.equal(result.requests[0].testMode, true);
+});
 
 test("079 dispatches an existing WELCOME row and accepts replay without duplicate delivery", async () => {
   const first = await run079({ record: welcomeRecord() });
@@ -208,6 +338,33 @@ test("079 rejects a DAILY_SUBMISSION key whose suffix differs from Source Record
   assert.deepEqual(result.queue.records.get(DAILY_QUEUE_ID).cells.Status, { name: "Ready" });
 });
 
+test("079 dispatches VIDEO_FEEDBACK using stored event, recipients, payload, and source IDs", async () => {
+  const record = videoRecord();
+  const result = await run079({ record });
+
+  assert.equal(result.error, null, result.error?.message);
+  assert.equal(result.requests.length, 1);
+  assert.equal(result.requests[0].eventType, "VIDEO_FEEDBACK");
+  assert.equal(result.requests[0].templateKey, "VIDEO_FEEDBACK");
+  assert.equal(result.requests[0].handoffKey, `VIDEO_FEEDBACK|VIDEO_FEEDBACK|${VIDEO_FEEDBACK_ID}`);
+  assert.deepEqual(result.requests[0].source, {
+    table: "Video Feedback",
+    recordId: VIDEO_FEEDBACK_ID,
+  });
+  assert.equal(result.requests[0].data.coachFeedback, "Keep your elbow under the ball.");
+  assert.equal(result.queue.records.get(VIDEO_QUEUE_ID).cells.Status, "Accepted");
+});
+
+test("079 requires the exact VIDEO_FEEDBACK handoff key format", async () => {
+  const result = await run079({
+    record: videoRecord({ handoffKey: `VIDEO_FEEDBACK|VIDEO_FEEDBACK|${VIDEO_FEEDBACK_ID}|extra` }),
+  });
+
+  assert.ok(result.error);
+  assert.match(result.error.message, /Invalid VIDEO_FEEDBACK Handoff Key/);
+  assert.equal(result.requests.length, 0);
+});
+
 test("079 rejects unknown event types without sending", async () => {
   const result = await run079({
     record: dailyRecord({ eventType: "UNKNOWN", templateKey: "UNKNOWN" }),
@@ -217,6 +374,162 @@ test("079 rejects unknown event types without sending", async () => {
   assert.match(result.error.message, /Unknown Email Handoff Queue Event Type/);
   assert.equal(result.requests.length, 0);
   assert.deepEqual(result.queue.records.get(DAILY_QUEUE_ID).cells.Status, { name: "Ready" });
+});
+
+test("079 rejects obsolete Event Type ZOOM_RECORDING_APPROVED", async () => {
+  const result = await run079({
+    record: zoomRecord({
+      eventType: "ZOOM_RECORDING_APPROVED",
+      handoffKey: `ZOOM_RECORDING_APPROVED|ZOOM_ATTENDANCE|${ZOOM_ATTENDANCE_ID}`,
+    }),
+  });
+
+  assert.ok(result.error);
+  assert.match(result.error.message, /Unknown Email Handoff Queue Event Type|Missing option "ZOOM_RECORDING_APPROVED"/);
+  assert.equal(result.requests.length, 0);
+});
+
+test("079 dispatches HOMEWORK_FEEDBACK using stored event, recipients, payload, and source IDs", async () => {
+  const record = homeworkRecord();
+  const result = await run079({ record });
+
+  assert.equal(result.error, null, result.error?.message);
+  assert.equal(result.requests.length, 1);
+  assert.equal(result.requests[0].eventType, "HOMEWORK_FEEDBACK");
+  assert.equal(result.requests[0].templateKey, "HOMEWORK_FEEDBACK");
+  assert.equal(result.requests[0].handoffKey, `HOMEWORK_FEEDBACK|HOMEWORK_COMPLETIONS|${HOMEWORK_COMPLETION_ID}`);
+  assert.deepEqual(result.requests[0].source, {
+    table: "Homework Completions",
+    recordId: HOMEWORK_COMPLETION_ID,
+  });
+  assert.equal(result.requests[0].data.totalHomeworkXpAwarded, 15);
+  assert.equal(result.queue.records.get(HOMEWORK_QUEUE_ID).cells.Status, "Accepted");
+});
+
+test("079 requires the exact HOMEWORK_FEEDBACK handoff key format", async () => {
+  const result = await run079({
+    record: homeworkRecord({ handoffKey: `HOMEWORK_FEEDBACK|HOMEWORK_COMPLETIONS|${HOMEWORK_COMPLETION_ID}|extra` }),
+  });
+
+  assert.ok(result.error);
+  assert.match(result.error.message, /Invalid HOMEWORK_FEEDBACK Handoff Key/);
+  assert.equal(result.requests.length, 0);
+});
+
+test("079 rejects HOMEWORK_FEEDBACK payload missing XP", async () => {
+  const result = await run079({
+    record: homeworkRecord({
+      payload: { athleteName: "Test Athlete", coachFeedback: "Good work." },
+    }),
+  });
+
+  assert.ok(result.error);
+  assert.match(result.error.message, /totalHomeworkXpAwarded \(or totalXp\)/);
+  assert.equal(result.requests.length, 0);
+});
+
+test("079 dispatches WEEKLY_ATHLETE_SUMMARY using stored event and week label", async () => {
+  const record = weeklyRecord();
+  const result = await run079({ record });
+
+  assert.equal(result.error, null, result.error?.message);
+  assert.equal(result.requests.length, 1);
+  assert.equal(result.requests[0].eventType, "WEEKLY_ATHLETE_SUMMARY");
+  assert.equal(result.requests[0].templateKey, "WEEKLY_ATHLETE_SUMMARY");
+  assert.equal(result.requests[0].handoffKey, `WEEKLY_ATHLETE_SUMMARY|WEEKLY_ATHLETE_SUMMARY|${WEEKLY_SUMMARY_ID}`);
+  assert.equal(result.requests[0].data.weekLabel, "Week 3");
+  assert.equal(result.queue.records.get(WEEKLY_QUEUE_ID).cells.Status, "Accepted");
+});
+
+test("079 accepts WEEKLY_ATHLETE_SUMMARY with weekName instead of weekLabel", async () => {
+  const result = await run079({
+    record: weeklyRecord({
+      payload: { athleteName: "Test Athlete", weekName: "Week 4" },
+    }),
+  });
+
+  assert.equal(result.error, null, result.error?.message);
+  assert.equal(result.requests[0].data.weekName, "Week 4");
+});
+
+test("079 accepts ZOOM_RECORDING_APPROVAL Event Type with ZOOM_RECORDING_APPROVED Template Key", async () => {
+  const record = zoomRecord({
+    payload: {
+      athleteName: "Test Athlete",
+      meetingName: "Thursday Recording Quiz",
+      approvalResult: "Satisfactory",
+      recordingUrl: "https://zoom.us/rec/share/abc",
+    },
+  });
+  const result = await run079({ record });
+
+  assert.equal(result.error, null, result.error?.message);
+  assert.equal(result.requests.length, 1);
+  assert.equal(result.requests[0].eventType, "ZOOM_RECORDING_APPROVAL");
+  assert.equal(result.requests[0].templateKey, "ZOOM_RECORDING_APPROVED");
+  assert.equal(result.requests[0].handoffKey, `ZOOM_RECORDING_APPROVAL|ZOOM_ATTENDANCE|${ZOOM_ATTENDANCE_ID}`);
+  assert.equal(result.requests[0].data.meetingName, "Thursday Recording Quiz");
+  assert.equal(result.requests[0].data.recordingUrl, "https://zoom.us/rec/share/abc");
+  assert.equal(result.requests[0].testMode, true);
+  assert.equal(result.queue.records.get(ZOOM_QUEUE_ID).cells.Status, "Accepted");
+});
+
+test("079 accepts ZOOM_RECORDING_APPROVAL without a recording link", async () => {
+  const result = await run079({ record: zoomRecord() });
+
+  assert.equal(result.error, null, result.error?.message);
+  assert.equal(result.requests[0].eventType, "ZOOM_RECORDING_APPROVAL");
+  assert.equal(result.requests[0].templateKey, "ZOOM_RECORDING_APPROVED");
+  assert.equal(result.requests[0].data.recordingUrl, undefined);
+});
+
+test("079 requires ZOOM_RECORDING_APPROVAL key suffix to match Source Record ID", async () => {
+  const result = await run079({
+    record: zoomRecord({ handoffKey: "ZOOM_RECORDING_APPROVAL|ZOOM_ATTENDANCE|rec12345678901234" }),
+  });
+
+  assert.ok(result.error);
+  assert.match(result.error.message, /does not match Source Record ID/);
+  assert.equal(result.requests.length, 0);
+});
+
+test("079 rejects ZOOM_RECORDING_APPROVAL when Template Key is wrong", async () => {
+  const result = await run079({
+    record: zoomRecord({ templateKey: "ZOOM_RECORDING_APPROVAL" }),
+  });
+
+  assert.ok(result.error);
+  assert.match(result.error.message, /Template Key must be ZOOM_RECORDING_APPROVED/);
+  assert.equal(result.requests.length, 0);
+});
+
+test("079 retries a failed Zoom queue row after Event Type contract correction", async () => {
+  const armed = buildQueueRecord({
+    id: FAILED_ZOOM_QUEUE_ID,
+    eventType: "ZOOM_RECORDING_APPROVAL",
+    templateKey: "ZOOM_RECORDING_APPROVED",
+    handoffKey: `ZOOM_RECORDING_APPROVAL|ZOOM_ATTENDANCE|${ZOOM_ATTENDANCE_ID}`,
+    sourceTable: "Zoom Attendance",
+    sourceRecordId: ZOOM_ATTENDANCE_ID,
+    recipients: [{ email: "parent@example.com", role: "guardian" }],
+    payload: {
+      athleteName: "Test Athlete",
+      meetingName: "Thursday Recording Quiz",
+      approvalResult: "Satisfactory",
+    },
+    status: "Ready",
+    attemptCount: 1,
+    lastError: 'Missing option "ZOOM_RECORDING_APPROVED" in Email Handoff Queue.Event Type',
+  });
+  const result = await run079({ record: armed });
+
+  assert.equal(result.error, null, result.error?.message);
+  assert.equal(result.requests.length, 1);
+  assert.equal(result.requests[0].eventType, "ZOOM_RECORDING_APPROVAL");
+  assert.equal(result.requests[0].templateKey, "ZOOM_RECORDING_APPROVED");
+  assert.equal(result.queue.records.get(FAILED_ZOOM_QUEUE_ID).cells.Status, "Accepted");
+  assert.equal(result.queue.records.get(FAILED_ZOOM_QUEUE_ID).cells["Attempt Count"], 2);
+  assert.equal(result.output.values.actionOut, "accepted_new");
 });
 
 test("079 writes failed status and error after a Hub error", async () => {
@@ -247,4 +560,24 @@ test("079 forwards an accepted duplicate without creating a second delivery", as
   assert.equal(second.error, null, second.error?.message);
   assert.equal(second.requests.length, 0);
   assert.equal(second.output.values.actionOut, "skipped_not_ready");
+});
+
+test("079 same-request Zoom replay returns existing Accepted result without a second Hub POST", async () => {
+  const first = await run079({ record: zoomRecord() });
+  assert.equal(first.error, null, first.error?.message);
+  assert.equal(first.output.values.actionOut, "accepted_new");
+
+  const second = await run079({
+    record: first.queue.records.get(ZOOM_QUEUE_ID),
+    response: acceptedResponse({ duplicate: true }),
+  });
+  assert.equal(second.error, null, second.error?.message);
+  assert.equal(second.requests.length, 0);
+  assert.equal(second.output.values.actionOut, "skipped_not_ready");
+});
+
+test("079 preserves testMode true on Zoom Hub payload", async () => {
+  const result = await run079({ record: zoomRecord() });
+  assert.equal(result.error, null, result.error?.message);
+  assert.equal(result.requests[0].testMode, true);
 });

@@ -1,544 +1,481 @@
 /*
-Automation: 074 - Email, Notifications, and External Handoffs - Send Weekly Summary Email Package to Make
+GitHub header
+Automation: 074 - Email, Notifications, and External Handoffs - Create Weekly Athlete Summary Communications Hub Handoff
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: Production Copy
-Last Synced From Airtable: 2026-06-20
+Status: GitHub Source of Truth
 
-Purpose:
-To be confirmed from production script.
+Version: v3.0
+Date Written: 2026-05-29
+Last Updated: 2026-08-17
 
-Trigger:
-To be confirmed from Airtable automation.
+PURPOSE
+- Validate one Weekly Athlete Summary that is ready for parent email handoff.
+- Create exactly one Ready Email Handoff Queue row for Communications Hub.
+- Hand off template data to Automation 079 / Communications Hub / Resend.
 
-Important Tables:
-To be confirmed from production script.
+IMPORTANT DESIGN RULES
+- Hub owns subject, HTML, plain text, branding, delivery, and Delivery proof.
+- This script never calls Make, Gmail, Resend, or the Communications Hub ingress.
+- Only Automation 079 may send Email Handoff Queue rows to the Hub.
+- One WAS maps to WEEKLY_ATHLETE_SUMMARY|WEEKLY_ATHLETE_SUMMARY|{WAS Record ID}.
+- Idempotent: reuse an existing matching Handoff Key; conflicting payload → Needs Review.
+- Do not write Weekly Email Sent? or Weekly Email Sent At (Hub/downstream writeback).
+- Clear Send to Make? on successful handoff; clear Weekly Email Error.
+- testMode defaults true for controlled Hub sends.
+- Trigger conceptually still after weekly package ready / Send to Make? checked.
 
-Important Fields:
-To be confirmed from production script.
+TRIGGER (Airtable UI — keep unless Mike revises)
+- Weekly Athlete Summary when record matches conditions:
+  Weekly Email Ready? checked
+  Weekly Email Sent? unchecked
+  Send to Make? checked
 
-Notes:
-GitHub is the source-of-truth copy.
-Airtable is the deployed/running copy.
+INPUT
+- recordId (required Weekly Athlete Summary record ID)
+- testMode (optional; default true for controlled Hub sends)
+
+OUTPUTS
+- statusOut: success | skipped | error
+- actionOut: created_handoff | existing_handoff | needs_review | error
+- queueRecordId, handoffKey, errorOut, debugStep
+
+FOLDER
+- 07 - Email, Notifications, and External Handoffs
+
+AUTOMATION NAME
+- 074 - Email, Notifications, and External Handoffs - Create Weekly Athlete Summary Communications Hub Handoff
 */
-
-/************************************************************
- * 074 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
- * Send Weekly Summary Email Package to Make
- *
- * Version: v2.1
- * Date Written: 2026-05-29
- * Last Updated: 2026-07-24
- *
- * VERSION HISTORY
- * - v2.1 (2026-07-18): Stop clearing Weekly Email Sent? after Make handoff; emit
- *   deterministic eventId WEEKLY_EMAIL|{enrollmentId}|{weekId} on Make payload.
- * - v2.0: Production send-to-Make handoff package.
- * - Docs note (2026-07-24): PROD must not force automation input sendMode=Test.
- *   Fixed Test input kept Make on the Test branch (email OK, no Sent? writeback).
- *   After setting sendMode=Live, Make Live writeback PASS (Sent?/status/timestamp).
- *
- * PURPOSE
- * - Runs from one Weekly Athlete Summary record.
- * - Reads the prepared weekly email package built by 072.
- * - Sends the package to Make.com.
- * - Clears handoff trigger/status fields after successful webhook handoff.
- *
- * IMPORTANT WRITEBACK RULE
- * - This script does NOT check Weekly Email Sent?.
- * - This script does NOT write Weekly Email Sent At.
- * - This script must NOT clear Weekly Email Sent? (Make owns final sent state).
- * - Duplicate sends are blocked when Weekly Email Sent? is already true.
- * - Make.com owns final Gmail-success writeback after the Gmail module succeeds.
- *
- * IMPORTANT PRODUCTION sendMode RULE (2026-07-24)
- * - Do NOT leave a fixed automation input sendMode = Test in PROD.
- * - Production must either:
- *   1) set sendMode / sendModeInput = Live, or
- *   2) leave sendMode / sendModeInput blank so 074 inherits WAS.sendMode
- *      (then payloadJson.sendMode, then default test — blank alone is not enough
- *      if WAS.sendMode is still Test).
- * - Resolution order: input → WAS.sendMode → payloadJson.sendMode → test.
- * - Controlled tests may temporarily use sendMode=Test + testRecipientEmail.
- *
- * FOLDER
- * - 07 - Email, Notifications, and External Handoffs
- *
- * AUTOMATION NAME
- * - 074 - Email, Notifications, and External Handoffs - Send Weekly Summary Email Package to Make
- *
- * TRIGGER TABLE
- * - Weekly Athlete Summary
- *
- * TRIGGER TYPE
- * - When record matches conditions
- *
- * REQUIRED TRIGGER CONDITIONS
- * - Weekly Email Ready? is checked
- * - Weekly Email Sent? is unchecked
- * - Send to Make? is checked
- * - Weekly Email Subject is not empty
- * - Weekly Email Recipients is not empty
- * - Weekly Email HTML is not empty
- *
- * REQUIRED INPUT VARIABLES
- * - recordId = Airtable record ID from triggering Weekly Athlete Summary record
- * - makeWebhookUrl = Make.com webhook URL
- *
- * OPTIONAL INPUT VARIABLES
- * - sendMode / sendModeInput = Live (PROD) or Test (controlled only); blank =
- *   inherit from WAS.sendMode (see production sendMode rule above)
- * - testRecipientEmail = test recipient email address (required when sendMode=test)
- * - replyTo = reply-to email address
- ************************************************************/
 
 // @ts-nocheck
 
-/* =========================================================
-   SECTION 1: CONSTANTS / EASY-EDIT VARIABLES
-   ========================================================= */
+const SCRIPT = {
+  scriptName: "074 - Email, Notifications, and External Handoffs - Create Weekly Athlete Summary Communications Hub Handoff",
+  version: "v3.0",
+  versionDate: "2026-08-17",
+  originalWrittenDate: "2026-05-29",
+  lastUpdated: "2026-08-17",
+  folder: "07 - Email, Notifications, and External Handoffs",
+  automationName: "074 - Email, Notifications, and External Handoffs - Create Weekly Athlete Summary Communications Hub Handoff",
+};
 
-const TABLE_WEEKLY_SUMMARY = "Weekly Athlete Summary";
+const CONFIG = {
+  tables: {
+    was: "Weekly Athlete Summary",
+    enr: "Enrollments",
+    week: "Weeks",
+    pi: "Program Instance - Sync",
+    queue: "Email Handoff Queue",
+  },
+  statuses: { draft: "Draft", ready: "Ready", needsReview: "Needs Review" },
+  fields: {
+    was: {
+      enrollment: "Enrollment",
+      week: "Week",
+      ready: "Weekly Email Ready?",
+      sent: "Weekly Email Sent?",
+      sendToMake: "Send to Make?",
+      error: "Weekly Email Error",
+      weekLabel: "Weekly Email Week Label",
+      weekDisplay: "Week - Display",
+      days: "Days Logged This Week",
+      shots: "Total Shots This Week",
+      goal: "Weekly Goal Shots Target",
+      weeklyXp: "XP Earned This Week",
+      homeworkAssigned: "Homework Assigned Count",
+      homeworkSat: "Homework Satisfactory Count",
+      payload: "Weekly Email Payload JSON",
+    },
+    enr: {
+      active: "Active?",
+      program: "Program Instance",
+      parentClean: "Parent Email - Cleaned",
+      parentFirst: "Parent First Name",
+      athlete: "Full Athlete Name",
+      level: "Current Level",
+      nextLevel: "Next Level",
+      streak: "Current Shooting Streak",
+      streakStatus: "Current Shooting Streak Status",
+    },
+    week: {
+      name: "Week Name",
+    },
+    pi: {
+      name: "Name - Program Instance",
+    },
+    queue: {
+      key: "Handoff Key",
+      status: "Status",
+      sourceTable: "Source Table",
+      eventType: "Event Type",
+      payload: "Payload JSON",
+      attempts: "Attempt Count",
+      pi: "Program Instance Record ID",
+      source: "Source Record ID",
+      enrollment: "Enrollment Record ID",
+      recipients: "Recipients JSON",
+      template: "Template Key",
+      testMode: "Test Mode?",
+    },
+  },
+  values: {
+    eventType: "WEEKLY_ATHLETE_SUMMARY",
+    templateKey: "WEEKLY_ATHLETE_SUMMARY",
+    sourceTableToken: "WEEKLY_ATHLETE_SUMMARY",
+  },
+};
 
-const FIELD_ENROLLMENT = "Enrollment";
-const FIELD_WEEK = "Week";
-
-const FIELD_EMAIL_READY = "Weekly Email Ready?";
-const FIELD_EMAIL_SENT = "Weekly Email Sent?";
-const FIELD_SEND_TO_MAKE = "Send to Make?";
-
-const FIELD_EMAIL_SUBJECT = "Weekly Email Subject";
-const FIELD_EMAIL_RECIPIENTS = "Weekly Email Recipients";
-const FIELD_EMAIL_HTML = "Weekly Email HTML";
-const FIELD_EMAIL_TEXT = "Weekly Email Text";
-const FIELD_EMAIL_PAYLOAD_JSON = "Weekly Email Payload JSON";
-const FIELD_EMAIL_WEEK_LABEL = "Weekly Email Week Label";
-const FIELD_EMAIL_ERROR = "Weekly Email Error";
-const FIELD_EMAIL_SENT_AT = "Weekly Email Sent At";
-
-const FIELD_SEND_MODE = "sendMode";
-
-const DEFAULT_REPLY_TO = "mschmidt@fairfield.k12.mt.us";
-
-const SEND_TYPE = "weekly_summary";
-const SEND_TAG = "WEEKLY_SUMMARY_PARENT";
-
-/* =========================================================
-   SECTION 2: INPUTS
-   ========================================================= */
-
-const cfg = input.config();
-
-const recordId = String(cfg.recordId || "").trim();
-const makeWebhookUrl = String(cfg.makeWebhookUrl || "").trim();
-
-/*
- * Preferred input variable:
- * - sendMode
- *
- * Legacy supported input variable:
- * - sendModeInput
- */
-const sendModeInput = String(cfg.sendMode || cfg.sendModeInput || "").trim();
-
-const testRecipientEmail = String(cfg.testRecipientEmail || "").trim();
-const replyTo = String(cfg.replyTo || DEFAULT_REPLY_TO).trim();
-
-if (!recordId) {
-    throw new Error("Missing required input: recordId");
+function setOutput(name, value) {
+  try {
+    output.set(name, value);
+  } catch {}
 }
 
-if (!makeWebhookUrl) {
-    throw new Error("Missing required input: makeWebhookUrl");
+function debug(value) {
+  setOutput("debugStep", value);
 }
 
-/* =========================================================
-   SECTION 3: TABLES
-   ========================================================= */
-
-const weeklySummaryTable = base.getTable(TABLE_WEEKLY_SUMMARY);
-
-/* =========================================================
-   SECTION 4: HELPERS
-   ========================================================= */
-
-function fieldExists(table, fieldName) {
-    if (!table || !fieldName) return false;
-
-    try {
-        table.getField(fieldName);
-        return true;
-    } catch {
-        return false;
-    }
+function exists(table, name) {
+  try {
+    table.getField(name);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
-function getRaw(record, table, fieldName) {
-    if (!record || !fieldExists(table, fieldName)) return null;
-    return record.getCellValue(fieldName);
+function raw(rec, table, name) {
+  return rec && exists(table, name) ? rec.getCellValue(name) : null;
 }
 
-function getText(record, table, fieldName) {
-    if (!record || !fieldExists(table, fieldName)) return "";
-    return String(record.getCellValueAsString(fieldName) || "").trim();
+function text(rec, table, name) {
+  return rec && exists(table, name) ? String(rec.getCellValueAsString(name) || "").trim() : "";
 }
 
-function getCheckboxValue(record, table, fieldName) {
-    return getRaw(record, table, fieldName) === true;
+function ids(rec, table, name) {
+  const value = raw(rec, table, name);
+  return Array.isArray(value) ? value.map((item) => item?.id).filter(Boolean) : [];
 }
 
-function getLinkedIds(record, table, fieldName) {
-    const raw = getRaw(record, table, fieldName);
-    if (!Array.isArray(raw)) return [];
-    return raw.map(item => item?.id).filter(Boolean);
+function checked(rec, table, name) {
+  return raw(rec, table, name) === true;
 }
 
-function firstNonBlank(...values) {
-    for (const value of values) {
-        const text = String(value ?? "").trim();
-        if (text) return text;
-    }
-
-    return "";
+function number(rec, table, name) {
+  const value = raw(rec, table, name);
+  const n = typeof value === "number" ? value : Number(text(rec, table, name).replace(/,/g, ""));
+  return Number.isFinite(n) ? n : 0;
 }
 
-function cleanCsvEmails(value) {
-    const items = String(value || "")
-        .split(/[,\n;]+/)
-        .map(v => v.trim())
-        .filter(Boolean);
-
-    return [...new Set(items)].join(",");
+function one(values, label) {
+  if (values.length !== 1) throw new Error(`${label} must contain exactly one linked record; found ${values.length}.`);
+  return values[0];
 }
 
-function normalizeSendMode(value) {
-    const raw = String(value || "").trim().toLowerCase();
+function first(...values) {
+  return values.map((value) => String(value ?? "").trim()).find(Boolean) || "";
+}
 
-    if (["live", "l", "real", "send", "parent"].includes(raw)) {
-        return "live";
-    }
+function cleanEmail(value) {
+  return String(value || "").trim().toLowerCase();
+}
 
-    if (["test", "t", "preview", "practice", "draft"].includes(raw)) {
-        return "test";
-    }
+function validEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
 
-    return "";
+function recipientEmail(rec, table, name) {
+  const email = cleanEmail(text(rec, table, name));
+  return validEmail(email) ? email : "";
 }
 
 function safeJsonParse(value) {
-    const text = String(value || "").trim();
-    if (!text) return null;
+  const s = String(value || "").trim();
+  if (!s) return null;
+  try {
+    return JSON.parse(s);
+  } catch {
+    return null;
+  }
+}
 
-    try {
-        return JSON.parse(text);
-    } catch {
-        return null;
+function selectValue(table, name, value) {
+  const field = table.getField(name);
+  if (field.type !== "singleSelect") return value;
+  const choice = (field.options?.choices || []).find(
+    (item) => String(item.name || "").toLowerCase() === String(value || "").toLowerCase()
+  );
+  if (!choice) throw new Error(`Missing option ${value} on ${table.name}.${name}`);
+  return { name: choice.name };
+}
+
+function queueFields(queueTable, values) {
+  return Object.fromEntries(Object.entries(values).filter(([name]) => exists(queueTable, name)));
+}
+
+function stableJson(value) {
+  if (Array.isArray(value)) return `[${value.map(stableJson).join(",")}]`;
+  if (value && typeof value === "object") {
+    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stableJson(value[key])}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function samePayload(left, right) {
+  try {
+    return stableJson(JSON.parse(left || "{}")) === stableJson(right);
+  } catch {
+    return false;
+  }
+}
+
+async function markQueueNeedsReview(queueTable, rows) {
+  for (const row of rows) {
+    if (exists(queueTable, CONFIG.fields.queue.status)) {
+      await queueTable.updateRecordAsync(row.id, {
+        [CONFIG.fields.queue.status]: selectValue(queueTable, CONFIG.fields.queue.status, CONFIG.statuses.needsReview),
+      });
     }
+  }
 }
 
-async function postJson(url, payload) {
-    const request = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-    };
+async function main() {
+  const cfg = input.config();
+  const recordId = String(cfg.recordId || "").trim();
+  if (!/^rec[A-Za-z0-9]{14}$/.test(recordId)) {
+    throw new Error("recordId must be a valid Airtable record ID.");
+  }
+  const testMode = cfg.testMode === undefined ? true : Boolean(cfg.testMode);
 
-    return await remoteFetchAsync(url, request);
-}
+  const wasT = base.getTable(CONFIG.tables.was);
+  const enrT = base.getTable(CONFIG.tables.enr);
+  const weekT = base.getTable(CONFIG.tables.week);
+  const queueT = base.getTable(CONFIG.tables.queue);
 
-/* =========================================================
-   SECTION 5: LOAD RECORD
-   ========================================================= */
+  debug("01 - Load Weekly Athlete Summary");
+  const was = await wasT.selectRecordAsync(recordId);
+  if (!was) throw new Error(`Weekly Athlete Summary not found: ${recordId}`);
 
-const weeklySummaryRecord = await weeklySummaryTable.selectRecordAsync(recordId);
+  const handoffKey = `${CONFIG.values.eventType}|${CONFIG.values.sourceTableToken}|${recordId}`;
 
-if (!weeklySummaryRecord) {
-    throw new Error(`Weekly Athlete Summary record not found: ${recordId}`);
-}
+  debug("02 - Validate readiness gates");
+  if (!checked(was, wasT, CONFIG.fields.was.ready)) {
+    throw new Error("Weekly Email Ready? is not checked. Handoff blocked.");
+  }
+  if (checked(was, wasT, CONFIG.fields.was.sent)) {
+    throw new Error("Weekly Email Sent? is already checked. Duplicate handoff blocked.");
+  }
+  if (!checked(was, wasT, CONFIG.fields.was.sendToMake)) {
+    throw new Error("Send to Make? is not checked. Handoff blocked.");
+  }
 
-/* =========================================================
-   SECTION 6: READ RECORD VALUES
-   ========================================================= */
+  debug("03 - Load Enrollment and Week");
+  const enrollmentId = one(ids(was, wasT, CONFIG.fields.was.enrollment), "WAS Enrollment");
+  const weekId = one(ids(was, wasT, CONFIG.fields.was.week), "WAS Week");
+  const [enr, week] = await Promise.all([
+    enrT.selectRecordAsync(enrollmentId),
+    weekT.selectRecordAsync(weekId),
+  ]);
+  if (!enr || !week) throw new Error("WAS source Enrollment/Week not found.");
+  if (exists(enrT, CONFIG.fields.enr.active) && !checked(enr, enrT, CONFIG.fields.enr.active)) {
+    throw new Error("Enrollment is inactive. Handoff blocked.");
+  }
+  const programId = one(ids(enr, enrT, CONFIG.fields.enr.program), "Enrollment Program Instance");
 
-const weeklyEmailReady = getCheckboxValue(
-    weeklySummaryRecord,
-    weeklySummaryTable,
-    FIELD_EMAIL_READY
-);
+  debug("04 - Resolve recipients and Hub payload");
+  const parent = recipientEmail(enr, enrT, CONFIG.fields.enr.parentClean);
+  if (!parent) throw new Error("No usable cleaned parent recipient on Enrollment.");
 
-const weeklyEmailSent = getCheckboxValue(
-    weeklySummaryRecord,
-    weeklySummaryTable,
-    FIELD_EMAIL_SENT
-);
+  const athleteName = first(text(enr, enrT, CONFIG.fields.enr.athlete), "Athlete");
+  const weekLabel = first(
+    text(was, wasT, CONFIG.fields.was.weekLabel),
+    text(was, wasT, CONFIG.fields.was.weekDisplay),
+    text(week, weekT, CONFIG.fields.week.name)
+  );
+  if (!weekLabel) throw new Error("Week label/name is blank. Handoff blocked.");
 
-const sendToMake = getCheckboxValue(
-    weeklySummaryRecord,
-    weeklySummaryTable,
-    FIELD_SEND_TO_MAKE
-);
+  const prepared = safeJsonParse(text(was, wasT, CONFIG.fields.was.payload));
+  const daysLogged = number(was, wasT, CONFIG.fields.was.days);
+  const shots = number(was, wasT, CONFIG.fields.was.shots);
+  const weeklyGoal = number(was, wasT, CONFIG.fields.was.goal);
+  const weeklyXp = number(was, wasT, CONFIG.fields.was.weeklyXp);
+  const homeworkAssigned = number(was, wasT, CONFIG.fields.was.homeworkAssigned);
+  const homeworkSat = number(was, wasT, CONFIG.fields.was.homeworkSat);
+  const currentLevel = text(enr, enrT, CONFIG.fields.enr.level);
+  const nextLevel = text(enr, enrT, CONFIG.fields.enr.nextLevel);
+  const streak = number(enr, enrT, CONFIG.fields.enr.streak);
+  const streakStatus = text(enr, enrT, CONFIG.fields.enr.streakStatus);
 
-const enrollmentIds = getLinkedIds(
-    weeklySummaryRecord,
-    weeklySummaryTable,
-    FIELD_ENROLLMENT
-);
+  const homeworkLines = [];
+  if (exists(wasT, CONFIG.fields.was.homeworkAssigned) || exists(wasT, CONFIG.fields.was.homeworkSat)) {
+    homeworkLines.push(`Assigned: ${homeworkAssigned}; Satisfactory: ${homeworkSat}`);
+  }
 
-const weekIds = getLinkedIds(
-    weeklySummaryRecord,
-    weeklySummaryTable,
-    FIELD_WEEK
-);
+  let programName = "";
+  try {
+    const piT = base.getTable(CONFIG.tables.pi);
+    const pi = await piT.selectRecordAsync(programId);
+    if (pi) programName = first(text(pi, piT, CONFIG.fields.pi.name), pi.name);
+  } catch {}
 
-const subjectOut = getText(
-    weeklySummaryRecord,
-    weeklySummaryTable,
-    FIELD_EMAIL_SUBJECT
-);
+  const packageKind = first(prepared?.packageKind, daysLogged === 0 && shots === 0 ? "short_no_activity" : "normal");
 
-const recipientsCsv = cleanCsvEmails(
-    getText(weeklySummaryRecord, weeklySummaryTable, FIELD_EMAIL_RECIPIENTS)
-);
-
-const htmlOut = getText(
-    weeklySummaryRecord,
-    weeklySummaryTable,
-    FIELD_EMAIL_HTML
-);
-
-const textOut = getText(
-    weeklySummaryRecord,
-    weeklySummaryTable,
-    FIELD_EMAIL_TEXT
-);
-
-const weekLabel = getText(
-    weeklySummaryRecord,
-    weeklySummaryTable,
-    FIELD_EMAIL_WEEK_LABEL
-);
-
-const payloadJsonText = getText(
-    weeklySummaryRecord,
-    weeklySummaryTable,
-    FIELD_EMAIL_PAYLOAD_JSON
-);
-
-const payloadJson = safeJsonParse(payloadJsonText);
-
-const sendModeFromRecord = fieldExists(weeklySummaryTable, FIELD_SEND_MODE)
-    ? getText(weeklySummaryRecord, weeklySummaryTable, FIELD_SEND_MODE)
-    : "";
-
-const sendMode = firstNonBlank(
-    normalizeSendMode(sendModeInput),
-    normalizeSendMode(sendModeFromRecord),
-    normalizeSendMode(payloadJson?.sendMode),
-    "test"
-);
-
-/* =========================================================
-   SECTION 7: VALIDATION
-   ========================================================= */
-
-if (!weeklyEmailReady) {
-    throw new Error("Weekly Email Ready? is not checked. Handoff stopped.");
-}
-
-if (weeklyEmailSent) {
-    throw new Error("Weekly Email Sent? is already checked. Duplicate send blocked.");
-}
-
-if (!sendToMake) {
-    throw new Error("Send to Make? is not checked. Handoff stopped.");
-}
-
-if (!enrollmentIds.length) {
-    throw new Error("Weekly Athlete Summary is missing Enrollment.");
-}
-
-if (!weekIds.length) {
-    throw new Error("Weekly Athlete Summary is missing Week.");
-}
-
-if (!subjectOut) {
-    throw new Error("Weekly Email Subject is blank.");
-}
-
-if (!recipientsCsv) {
-    throw new Error("Weekly Email Recipients is blank.");
-}
-
-if (!htmlOut) {
-    throw new Error("Weekly Email HTML is blank.");
-}
-
-if (!["test", "live"].includes(sendMode)) {
-    throw new Error(`Invalid send mode after normalization: ${sendMode}`);
-}
-
-if (sendMode === "test" && !testRecipientEmail) {
-    throw new Error("Missing testRecipientEmail for test mode.");
-}
-
-const eventId = `WEEKLY_EMAIL|${enrollmentIds[0] || ""}|${weekIds[0] || ""}`;
-if (!enrollmentIds[0] || !weekIds[0] || !String(eventId).startsWith("WEEKLY_EMAIL|")) {
-    throw new Error(`Invalid weekly email eventId: ${eventId}`);
-}
-
-/* =========================================================
-   SECTION 8: BUILD MAKE PAYLOAD
-   ========================================================= */
-
-const payload = {
-    recordId,
-    weeklySummaryRecordId: recordId,
-    weeklyEmailRecordId: recordId,
-
-    sourceTable: TABLE_WEEKLY_SUMMARY,
-    sendType: SEND_TYPE,
-    sendTag: SEND_TAG,
-    sendMode,
-
-    enrollmentId: enrollmentIds[0] || "",
-    weekId: weekIds[0] || "",
+  const recipients = [{ email: parent, role: "guardian" }];
+  const payload = {
+    athleteName,
+    parentFirstName: text(enr, enrT, CONFIG.fields.enr.parentFirst),
     weekLabel,
+    weekName: weekLabel,
+    daysLogged,
+    days: daysLogged,
+    shots,
+    weeklyGoal,
+    goal: weeklyGoal,
+    weeklyXp,
+    currentLevel,
+    level: currentLevel,
+    streak,
+    streakStatus,
+    homeworkLines,
+    packageKind,
+  };
+  if (nextLevel) {
+    payload.nextLevel = nextLevel;
+  }
+  if (programName) {
+    payload.programName = programName;
+  }
 
-    /*
-     * Deterministic Make dedupe key (C-011). Same shape as 072 package eventId.
-     */
-    eventId: eventId,
+  const queueData = queueFields(queueT, {
+    [CONFIG.fields.queue.key]: handoffKey,
+    [CONFIG.fields.queue.status]: selectValue(queueT, CONFIG.fields.queue.status, CONFIG.statuses.draft),
+    [CONFIG.fields.queue.sourceTable]: CONFIG.tables.was,
+    [CONFIG.fields.queue.eventType]: selectValue(queueT, CONFIG.fields.queue.eventType, CONFIG.values.eventType),
+    [CONFIG.fields.queue.template]: CONFIG.values.templateKey,
+    [CONFIG.fields.queue.source]: recordId,
+    [CONFIG.fields.queue.enrollment]: enrollmentId,
+    [CONFIG.fields.queue.pi]: programId,
+    [CONFIG.fields.queue.recipients]: JSON.stringify(recipients),
+    [CONFIG.fields.queue.payload]: JSON.stringify(payload),
+    [CONFIG.fields.queue.testMode]: testMode,
+    [CONFIG.fields.queue.attempts]: 0,
+  });
 
-    /*
-     * Current standardized field names
-     */
-    subjectOut,
-    htmlOut,
-    textOut,
-    recipientsCsv,
+  debug("05 - Idempotent Email Handoff Queue create");
+  const existing = (
+    await queueT.selectRecordsAsync({
+      fields: Object.values(CONFIG.fields.queue).filter((name) => exists(queueT, name)),
+    })
+  ).records.filter((row) => text(row, queueT, CONFIG.fields.queue.key) === handoffKey);
 
-    /*
-     * Legacy Make.com field-name aliases
-     * Keep these so the existing Weekly Athlete Summary Make scenario still works.
-     */
-    subject: subjectOut,
-    html: htmlOut,
-    text: textOut,
-    csvemail: recipientsCsv,
-    payloadJson: payloadJsonText || "",
+  if (existing.length > 1) {
+    await markQueueNeedsReview(queueT, existing);
+    setOutput("statusOut", "error");
+    setOutput("actionOut", "needs_review");
+    throw new Error(`Multiple Email Handoff Queue rows match ${handoffKey}.`);
+  }
 
-    toEmail: sendMode === "test" ? testRecipientEmail : recipientsCsv,
-    liveRecipientEmail: recipientsCsv,
-    testRecipientEmail,
-    replyTo,
+  if (existing.length === 1) {
+    if (!samePayload(text(existing[0], queueT, CONFIG.fields.queue.payload), payload)) {
+      await markQueueNeedsReview(queueT, existing);
+      setOutput("statusOut", "error");
+      setOutput("actionOut", "needs_review");
+      throw new Error(`Conflicting Email Handoff Queue payload for ${handoffKey}.`);
+    }
+    const reuseUpdates = {};
+    if (exists(wasT, CONFIG.fields.was.error)) reuseUpdates[CONFIG.fields.was.error] = "";
+    if (exists(wasT, CONFIG.fields.was.sendToMake)) reuseUpdates[CONFIG.fields.was.sendToMake] = false;
+    if (Object.keys(reuseUpdates).length) await wasT.updateRecordAsync(recordId, reuseUpdates);
+    setOutput("statusOut", "success");
+    setOutput("actionOut", "existing_handoff");
+    setOutput("queueRecordId", existing[0].id);
+    setOutput("handoffKey", handoffKey);
+    setOutput("errorOut", "");
+    console.log(
+      JSON.stringify({
+        automation: SCRIPT.scriptName,
+        version: SCRIPT.version,
+        statusOut: "success",
+        actionOut: "existing_handoff",
+        queueRecordId: existing[0].id,
+        handoffKey,
+      })
+    );
+    return;
+  }
 
-    preparedPayload: payloadJson || {},
-    parsedPayload: payloadJson || {},
-    rawPreparedPayloadJson: payloadJsonText || "",
+  const recheck = (
+    await queueT.selectRecordsAsync({
+      fields: [CONFIG.fields.queue.key].filter((name) => exists(queueT, name)),
+    })
+  ).records.filter((row) => text(row, queueT, CONFIG.fields.queue.key) === handoffKey);
+  if (recheck.length) {
+    if (recheck.length > 1) {
+      await markQueueNeedsReview(queueT, recheck);
+      throw new Error(`Multiple Email Handoff Queue rows match ${handoffKey} after recheck.`);
+    }
+    setOutput("statusOut", "success");
+    setOutput("actionOut", "existing_handoff");
+    setOutput("queueRecordId", recheck[0].id);
+    setOutput("handoffKey", handoffKey);
+    setOutput("errorOut", "");
+    return;
+  }
 
-    revision: payloadJson?.revision || "",
-    handoffBuiltAt: new Date().toISOString(),
-};
+  const created = await queueT.createRecordAsync(queueData);
+  const afterCreate = (
+    await queueT.selectRecordsAsync({
+      fields: [CONFIG.fields.queue.key].filter((name) => exists(queueT, name)),
+    })
+  ).records.filter((row) => text(row, queueT, CONFIG.fields.queue.key) === handoffKey);
+  if (afterCreate.length !== 1) {
+    await markQueueNeedsReview(queueT, afterCreate);
+    throw new Error(`Concurrent Email Handoff Queue creation requires review for ${handoffKey}.`);
+  }
 
+  await queueT.updateRecordAsync(created, {
+    [CONFIG.fields.queue.status]: selectValue(queueT, CONFIG.fields.queue.status, CONFIG.statuses.ready),
+  });
 
+  const wasUpdates = {};
+  if (exists(wasT, CONFIG.fields.was.error)) wasUpdates[CONFIG.fields.was.error] = "";
+  if (exists(wasT, CONFIG.fields.was.sendToMake)) wasUpdates[CONFIG.fields.was.sendToMake] = false;
+  if (Object.keys(wasUpdates).length) await wasT.updateRecordAsync(recordId, wasUpdates);
 
-
-/* =========================================================
-   SECTION 9: SEND TO MAKE
-   ========================================================= */
-
-let response;
-let responseText = "";
+  setOutput("statusOut", "success");
+  setOutput("actionOut", "created_handoff");
+  setOutput("queueRecordId", created);
+  setOutput("handoffKey", handoffKey);
+  setOutput("errorOut", "");
+  console.log(
+    JSON.stringify({
+      automation: SCRIPT.scriptName,
+      version: SCRIPT.version,
+      statusOut: "success",
+      actionOut: "created_handoff",
+      queueRecordId: created,
+      handoffKey,
+    })
+  );
+}
 
 try {
-    response = await postJson(makeWebhookUrl, payload);
-    responseText = await response.text();
-
-    if (!response.ok) {
-        throw new Error(`Webhook failed with status ${response.status}: ${responseText}`);
-    }
+  await main();
 } catch (error) {
-    const errorUpdates = {};
-
-    if (fieldExists(weeklySummaryTable, FIELD_EMAIL_ERROR)) {
-        errorUpdates[FIELD_EMAIL_ERROR] = String(error.message || error);
+  setOutput("statusOut", "error");
+  setOutput("actionOut", "error");
+  setOutput("errorOut", String(error.message || error));
+  try {
+    const cfg = input.config();
+    const recordId = String(cfg.recordId || "").trim();
+    if (/^rec[A-Za-z0-9]{14}$/.test(recordId)) {
+      const wasT = base.getTable(CONFIG.tables.was);
+      if (exists(wasT, CONFIG.fields.was.error)) {
+        await wasT.updateRecordAsync(recordId, {
+          [CONFIG.fields.was.error]: String(error.message || error),
+        });
+      }
     }
-
-    /*
-     * Do not uncheck Send to Make? on webhook failure.
-     * Leaving it checked makes the failed handoff visible and retryable.
-     */
-
-    if (Object.keys(errorUpdates).length) {
-        await weeklySummaryTable.updateRecordAsync(recordId, errorUpdates);
-    }
-
-    output.set("ok", false);
-    output.set("recordId", recordId);
-    output.set("sendType", SEND_TYPE);
-    output.set("sendMode", sendMode);
-    output.set("subjectOut", subjectOut);
-    output.set("recipientsCsv", recipientsCsv);
-    output.set("errorOut", String(error.message || error));
-
-    throw error;
+  } catch {}
+  throw error;
 }
-
-/* =========================================================
-   SECTION 10: SUCCESS WRITEBACK
-   ========================================================= */
-
-const successUpdates = {};
-
-/*
-IMPORTANT:
-- This script only confirms successful handoff to Make.com.
-- Make.com owns final Gmail-success writeback.
-- Do NOT check Weekly Email Sent? here.
-- Do NOT write Weekly Email Sent At here.
-*/
-
-if (fieldExists(weeklySummaryTable, FIELD_SEND_TO_MAKE)) {
-    successUpdates[FIELD_SEND_TO_MAKE] = false;
-}
-
-if (fieldExists(weeklySummaryTable, FIELD_EMAIL_ERROR)) {
-    successUpdates[FIELD_EMAIL_ERROR] = "";
-}
-
-if (fieldExists(weeklySummaryTable, FIELD_EMAIL_READY)) {
-    successUpdates[FIELD_EMAIL_READY] = true;
-}
-
-/*
- * Do NOT write Weekly Email Sent? = false here.
- * Make owns final Sent? / Sent At writeback. Clearing Sent? reopened duplicate sends.
- */
-
-if (Object.keys(successUpdates).length) {
-    await weeklySummaryTable.updateRecordAsync(recordId, successUpdates);
-}
-
-/* =========================================================
-   SECTION 11: OUTPUTS
-   ========================================================= */
-
-output.set("ok", true);
-output.set("recordId", recordId);
-output.set("weeklySummaryRecordId", recordId);
-output.set("sourceTable", TABLE_WEEKLY_SUMMARY);
-output.set("sendType", SEND_TYPE);
-output.set("sendTag", SEND_TAG);
-output.set("sendMode", sendMode);
-output.set("subjectOut", subjectOut);
-output.set("recipientsCsv", recipientsCsv);
-output.set("toEmail", payload.toEmail);
-output.set("liveRecipientEmail", recipientsCsv);
-output.set("testRecipientEmail", testRecipientEmail);
-output.set("replyTo", replyTo);
-output.set("htmlOut", htmlOut);
-output.set("textOut", textOut);
-output.set("weekLabel", weekLabel);
-output.set("eventId", eventId);
-output.set("makeResponse", responseText);
-output.set("errorOut", "");

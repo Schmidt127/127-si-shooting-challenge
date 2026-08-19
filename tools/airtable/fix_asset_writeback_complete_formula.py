@@ -15,12 +15,14 @@ TABLE_ID = "tblhMLKxQK77agtME"
 FIELD_ID = "fldtl04LTU3FoMmLL"
 
 # Upload Status=Uploaded + Canonical File URL + Storage Key + SHA-256 + Uploaded At
-WRITEBACK_COMPLETE_FORMULA_IDS = """AND(
-  {fldPybPEvRcEVuNWl} = "Uploaded",
-  {fld9NZBwDc01gxTY9} != BLANK(),
-  {fldJWFKe8ZT3TrSKQ} != BLANK(),
-  {fldMtYyiPhVWbQk6M} != BLANK(),
-  {fldvXvURsGG611cSK} != BLANK()
+# Canonical File URL was recreated 2026-08-17 as fldlVW1gGgnBI697v (prior fld9NZBwDc01gxTY9 deleted).
+CANONICAL_FILE_URL_FIELD_ID = "fldlVW1gGgnBI697v"
+WRITEBACK_COMPLETE_FORMULA_IDS = f"""AND(
+  {{fldPybPEvRcEVuNWl}} = "Uploaded",
+  {{{CANONICAL_FILE_URL_FIELD_ID}}} != BLANK(),
+  {{fldJWFKe8ZT3TrSKQ}} != BLANK(),
+  {{fldMtYyiPhVWbQk6M}} != BLANK(),
+  {{fldvXvURsGG611cSK}} != BLANK()
 )"""
 
 
@@ -49,7 +51,7 @@ def main() -> None:
     if not resp.ok:
         raise SystemExit(f"PATCH failed {resp.status_code}: {resp.text[:500]}")
     formula = resp.json().get("options", {}).get("formula", "")
-    if "fld9NZBwDc01gxTY9" in formula and "fldITNuxNt9xphk7j" not in formula:
+    if CANONICAL_FILE_URL_FIELD_ID in formula and "fldITNuxNt9xphk7j" not in formula:
         print("Writeback Complete? updated: Canonical/S3 fields (Drive gate removed).")
     else:
         raise SystemExit("Formula patch may have failed — Canonical ref missing or Drive still present.")

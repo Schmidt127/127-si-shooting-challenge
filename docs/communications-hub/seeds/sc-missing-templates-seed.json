@@ -1,0 +1,52 @@
+{
+  "baseId": "appYG1t5DBRimHBCT",
+  "baseName": "127SI - COMMUNICATIONS HUB",
+  "tableId": "tblTztep867mryDHk",
+  "tableName": "Templates",
+  "purpose": "Metadata-only catalog seed for missing Shooting Challenge communication types. Does not enable auto-send. Does not change Resend, allowlist, or SC queue Event Types.",
+  "doNotModifyNames": [
+    "SC — Welcome Registration",
+    "SC — Daily Submissions",
+    "SC — Weekly Athlete Summary",
+    "TST — Daily Submissions",
+    "JR Ref Clinic — Welcome Registration"
+  ],
+  "leaveBlank": [
+    "Channel",
+    "Classification",
+    "Status",
+    "Approved Transactional Auto-Send?",
+    "Program"
+  ],
+  "records": [
+    {
+      "Name": "SC — Homework Feedback",
+      "Subject Template": "Shooting Challenge — Homework Feedback",
+      "Body HTML": "<p>Hello {{guardian_name}},</p><p>New homework feedback is ready for {{athlete_name}}.</p><p>{{homework_feedback_html}}</p>",
+      "Body Text": "Hello {{guardian_name}},\n\nNew homework feedback is ready for {{athlete_name}}.\n\n{{homework_feedback_text}}",
+      "Tokens Used": "guardian_name, athlete_name, homework_feedback_html, homework_feedback_text",
+      "Version Notes": "communication_type=homework_feedback; template_key=HOMEWORK_FEEDBACK; source_system=shooting_challenge; source supplies final rendered content and recipient(s)."
+    },
+    {
+      "Name": "SC — Video Feedback",
+      "Subject Template": "Shooting Challenge — Video Feedback",
+      "Body HTML": "<p>Hello {{guardian_name}},</p><p>New video feedback is ready for {{athlete_name}}.</p><p>{{video_feedback_html}}</p><p>{{video_url}}</p>",
+      "Body Text": "Hello {{guardian_name}},\n\nNew video feedback is ready for {{athlete_name}}.\n\n{{video_feedback_text}}\n{{video_url}}",
+      "Tokens Used": "guardian_name, athlete_name, video_feedback_html, video_feedback_text, video_url",
+      "Version Notes": "communication_type=video_feedback; template_key=VIDEO_FEEDBACK; source_system=shooting_challenge; source supplies final rendered content and recipient(s)."
+    },
+    {
+      "Name": "SC — Zoom Recording Approval",
+      "Subject Template": "Shooting Challenge — Zoom Recording Approval",
+      "Body HTML": "<p>Hello {{guardian_name}},</p><p>A Zoom recording is ready for {{athlete_name}}.</p><p>{{zoom_recording_html}}</p>",
+      "Body Text": "Hello {{guardian_name}},\n\nA Zoom recording is ready for {{athlete_name}}.\n\n{{zoom_recording_text}}",
+      "Tokens Used": "guardian_name, athlete_name, zoom_recording_html, zoom_recording_text",
+      "Version Notes": "communication_type=zoom_recording_approval; template_key=ZOOM_RECORDING_APPROVED; source_system=shooting_challenge; source supplies final rendered content and recipient(s). Event Type remains ZOOM_RECORDING_APPROVAL (do not add ZOOM_RECORDING_APPROVED as an Event Type)."
+    }
+  ],
+  "runtimeMappings": {
+    "HOMEWORK_FEEDBACK": "homework_feedback",
+    "VIDEO_FEEDBACK": "video_feedback",
+    "ZOOM_RECORDING_APPROVED": "zoom_recording_approval"
+  }
+}

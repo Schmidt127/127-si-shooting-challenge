@@ -2,11 +2,11 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-08-19** (schema refresh prod/dev snapshots; completion-status reconciliation 2026-08-16)
+Last updated: **2026-08-19** (schema refresh PROD snapshot; 022 **v2.1**, 020 **v3.6**, 070b **v4.6**, 117 **v2.1**, 066 **v3.8**, 010 **v10.10**; email = Resend; Perfect Week still open)
 
-**Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md) — see §2C for current package status table and do-not-retest ledger.
+**Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
-**Prior snapshots and dated evidence:** historical unless explicitly identified as current live-system evidence.
+**Current reconciliation:** [`prod-completion/2026-08-16/SC-2026-08-16-CURRENT-STATE-RECONCILIATION.md`](./prod-completion/2026-08-16/SC-2026-08-16-CURRENT-STATE-RECONCILIATION.md) (path evidence 2026-08-16; **022 live version superseded** — see overlay below)
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
@@ -15,6 +15,24 @@ Last updated: **2026-08-19** (schema refresh prod/dev snapshots; completion-stat
 **Launch certification:** [launch-certification/START-HERE.md](./launch-certification/START-HERE.md)
 
 > **Do not treat** this repository file, `CONTROL.json`, or any dated packet as live production truth. Current Airtable, Fillout, Make, Gmail, Lambda, and Vercel state must be verified in those systems. This file is a live-ops pointer; the Completion Master owns release status.
+
+**C-028 overlay (Mike 2026-08-19):** Tremendous sandbox send validated; production API pending; Make scenario OFF. See [`integrations/tremendous-award-fulfillment.md`](./integrations/tremendous-award-fulfillment.md).
+
+**Email overlay (Mike 2026-08-19):** Make.com does not handle any Shooting Challenge emails. All of those emails go through Resend (Communications Hub). See [`integrations/email-send-plane.md`](./integrations/email-send-plane.md).
+
+**022 overlay (Mike 2026-08-19):** Production Airtable Automation 022 is **v2.1**. The 2026-08-16 packet’s v2.0 claim is historical for that day’s controlled path.
+
+**020 overlay (Mike 2026-08-19):** Production Airtable Automation 020 is **v3.6**. Earlier v3.5 install evidence remains historical.
+
+**070b overlay (Mike 2026-08-19):** Production Airtable Automation 070b is **v4.6**. C-013 **v4.4** E2E (2026-07-11) remains historical proof of the prior upload route.
+
+**Lambda season overlay (Mike-requested 2026-08-19):** `127si-upload-asset` CodeOnly deploy succeeded (CodeSha256 `lwbLiBzB4cfWdzVmIVo7Z78AkiowqPuV2NmUXb+PK2w=`). Program Instance school-year resolution is live in code. Optional retry proof and secret rotation still open. [checklist](./deploy-checklists/2026-08-17-lambda-program-instance-season.md).
+
+**117 overlay (Mike 2026-08-19 paste):** Production Automation 117 is **v2.1** — `Create Zoom Recording Approval Communications Hub Handoff`. Creates Email Handoff Queue only; **079** → Hub → Resend. Not XP credit. Not Make 117f. Not the Stage 17 orchestrator.
+
+**066 overlay (Mike 2026-08-19):** Production Automation 066 is **v3.8**. Historical v3.3 failure / v3.4–v3.5 proofs remain history.
+
+**010 overlay (Mike 2026-08-19):** Production Automation 010 is **v10.10**. PKG-006R v10.9 lifecycle proof (2026-08-15) remains historical.
 
 ---
 
@@ -40,15 +58,19 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 |-----------|--------|
 | **Wave 0 — 2025–26 close-out** | **Closed** — C-001, C-002, C-003, C-008, newspaper + radio outreach complete |
 | **H-001 — 090F audit fix** | **Complete** |
-| **H-002 — Automation 066** | Historical v3.3 failure and v3.4 repository correction are preserved; current 066 live status belongs to the dated controlled evidence and Airtable UI, not this snapshot alone |
-| **C-013 — Video upload Lambda** | **COMPLETE** (2026-07-11) — 070b v4.4 + 070c v1.1 PROD E2E PASS |
+| **H-002 — Automation 066** | **Airtable version v3.8** (Mike 2026-08-19). Historical v3.3 failure and v3.4/v3.5 proofs preserved. Optional OMNI sandbox confirmation (K-H1) remains a separate open check if still needed. |
+| **C-013 — Video upload Lambda** | **Historical COMPLETE 2026-07-11** on 070b **v4.4** + 070c v1.1. **Airtable 070b now v4.6** (Mike 2026-08-19). **Lambda Program Instance season code deployed CodeOnly 2026-08-19** (Mike-requested). Optional retry proof + secret rotation still open. |
 | **C-020 — Engineering Test Framework** | 115 v2.1 controlled PROD proof passed twice; this proves the test harness path only, not downstream XP, summary, Make, email, or full-season behavior |
-| **C-025 — Zoom recording credit** | **Stage 17 COMPLETE** — rollup `ARRAYJOIN(ARRAYUNIQUE(values), "\n")`; conflict PASS (ZA `recfqsgM7zDobxsPf` Conflict=1/Approved=0; XP `recOceuW34jQz7suD` inactive); **117 / 057 / 042 ON**; 101 unchanged; webhook blank ([live](./deploy-checklists/C-025-stage17-prod-live-2026-07-20.md) · [progress](./status/C-025-stage17-current-prod-progress.md)) |
-| **C-011 — Automatic weekly email** | **PROD E2E PASS** (2026-07-24) — flow `118→072 v4.0→119→074→Make Bulk Email May 18→Gmail`; empty-week **`send_short`** verified; **074 PROD sendMode=Live** (never fixed Test) + Make Live writeback (`Sent?` / status / timestamp) **PASS**; **118/119 schedules ON** (Sun 5:00 / 10:00 AM America/Denver); 072+074+Make **ON**; architecture [WAS-WEEKLY-EMAIL-ARCHITECTURE.md](./next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md) |
-| **Automation standards (doc 06)** | **Active** — **066 v3.4** current V2 rewrite reference (v3.3 Grade Band ID match + v3.4 createRecords fields contract) |
+| **C-025 — Zoom recording credit** | **Historical Stage 17 credit evidence 2026-07-20** preserved. **PROD Automation 117 today (Mike paste 2026-08-19) = Hub email handoff v2.1**, not the credit orchestrator. **057 / 042** remain gate/Perfect Week writers per older packets. Live Zoom XP = **101**. Recording `ZOOM_CREDIT` writer under slot 117 is **not** live. |
+| **C-011 — Automatic weekly email** | **Historical Make/Gmail E2E 2026-07-24** (`118→072→119→074→Make Bulk Email May 18→Gmail`) is preserved as evidence. **Current send plane (Mike 2026-08-19):** Communications Hub → **Resend**. Make.com is not the email sender. [email send plane](./integrations/email-send-plane.md) |
+| **Automation standards (doc 06)** | **Active** — **066** remains the V2 rewrite reference pattern. Live paste is **v3.8** (Mike 2026-08-19). Older “v3.4 current reference” wording is historical for the createRecords contract era. |
 | **Multi-year architecture** | **Decided** — one base + Program Instance; **V2-013 queued** |
 | **Phase 2 — Platform Modernization** | Wave 2A planning + Phase 2B docs complete — implementation staged via backlog |
-| **V2-015 — Development base** | **Ready** — DEV-first pipeline permanent |
+| **V2-015 — Development base** | **Not in use** — Mike (2026-08-19): no separate DEV base; all work is in Production |
+
+---
+
+**Airtable overlay (Mike 2026-08-19):** Shooting Challenge has **one live base** — Production `appn84sqPw03zEbTT`. Do not plan DEV-first Airtable work. Historical `dev-*` snapshot folders and `appTetnuCZlCZdTCT` references in older docs are preserved for archaeology only.
 
 ---
 
@@ -76,36 +98,33 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 | Base ID | `appn84sqPw03zEbTT` |
 | Role | **Live season** — system of record |
 
-### Development (V2-015)
+### Development (V2-015) — not in use
 
 | Item | Value |
 |------|--------|
-| Base name | `127SI - SHOOTING CHALLENGE - DEV` |
-| Base ID | `appTetnuCZlCZdTCT` |
-| Status | **Ready** — first testing environment |
-| Setup | [development-base-setup.md](./development-base-setup.md) |
+| Status | **Obsolete / not in use** (Mike 2026-08-19) |
+| Note | Historical docs may reference `appTetnuCZlCZdTCT` and `dev-*` snapshots — **ignore for current ops** |
 
-**Deploy rule:** GitHub → paste **dev** → audit → approve → paste **prod** → `CHANGELOG.md`.
+**Deploy rule:** GitHub → paste **Production** → `CHANGELOG.md`.
 
 ### Schema documentation (important)
 
 | Location | Status |
 |----------|--------|
 | `airtable/schema/current/` | **Stale** — hand-maintained maps; **do not treat as current** until Agent A refreshes table/field maps |
-| Latest dated snapshot (**current**) | **`airtable/schema/snapshots/prod-20260819/`** (prod) and **`dev-20260819/`** (DEV) — export stamp `20260819_184903` / `20260819_185013` |
+| Latest dated snapshot (**current**) | **`airtable/schema/snapshots/prod-20260819/`** — export stamp `20260819_184903` |
 | Refresh summary | [deploy-checklists/SCHEMA-REFRESH-2026-08-19.md](./deploy-checklists/SCHEMA-REFRESH-2026-08-19.md) |
 | Older snapshots | `prod-20260706/`, foundation-reset exports, loose root `20260629_045741` |
 
-**Agent A** owns refreshing `airtable/schema/**` hand maps. This refresh committed read-only Metadata API exports only.
+**Agent A** owns refreshing `airtable/schema/**` hand maps. This refresh committed a read-only Production Metadata API export only.
 
-### Schema snapshot counts (2026-08-19 export)
+### Schema snapshot counts (2026-08-19 export — Production only)
 
 | Base | Folder | Tables | Views |
 |------|--------|--------|-------|
 | **Production** | `airtable/schema/snapshots/prod-20260819/` | **32** | **126** |
-| **Development** | `airtable/schema/snapshots/dev-20260819/` | **32** | **129** |
 
-Notable PROD changes vs 2026-07-06: `Homework Library`, `Program Homework Assignments`, `Email Handoff Queue`, `Testing Scenarios`, `Zoom Attendance`; removed `FBC Curriculum - SYNC` and standalone `Tutorials`; `Program Instance - Synced` renamed to **`Program Instance - Sync`**. DEV still uses legacy homework tables. See [snapshots/README.md](../airtable/schema/snapshots/README.md).
+Notable PROD changes vs 2026-07-06: `Homework Library`, `Program Homework Assignments`, `Email Handoff Queue`, `Testing Scenarios`, `Zoom Attendance`; removed `FBC Curriculum - SYNC` and standalone `Tutorials`; `Program Instance - Synced` renamed to **`Program Instance - Sync`**. See [snapshots/README.md](../airtable/schema/snapshots/README.md).
 
 ---
 
@@ -114,7 +133,7 @@ Notable PROD changes vs 2026-07-06: `Homework Library`, `Program Homework Assign
 | Workflow | Status |
 |----------|--------|
 | **Fillout daily submission form** | **OFF** — contest intake closed (**C-008** done 2026-07-05) |
-| **Video upload (070b/070c + Lambda)** | **PROD complete** — async `Accepted` handoff verified 2026-07-11 |
+| **Video upload (070b/070c + Lambda)** | **Airtable 070b = v4.6** + **Lambda season CodeOnly deploy 2026-08-19** (CodeSha256 `lwbLiBzB4cfWdzVmIVo7Z78AkiowqPuV2NmUXb+PK2w=`). Historical async `Accepted` handoff proven 2026-07-11 on **v4.4**. Optional Storage Key retry proof still open. |
 | **Homework upload (070a)** | **PROD intentionally OFF** — keep OFF per [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md); DEV package exists separately |
 | **C-023 Drive/attachment retirement** | Deferred |
 
@@ -124,14 +143,14 @@ Notable PROD changes vs 2026-07-06: `Homework Library`, `Program Homework Assign
 
 | Item | Status |
 |------|--------|
-| Architecture | **Stage 17 Zoom Attendance** — 117 Orchestrator + **057/042 combined Zoom credit** |
+| Architecture | Stage 17 Zoom Attendance design historically; **PROD slot 117 is email Hub handoff**, not orchestrator |
 | Hard rule | **Never** write `Zoom Meetings.Attendees` (101 double-credit risk) |
-| Preconflict rollup | **`ARRAYJOIN(ARRAYUNIQUE(values), "\n")`** (PROD verified) |
-| Scripts | 117 **v1.1.1** (**ON**) · **057 v1.3** (**ON**) · **042 v3.1** (**ON**) · **101 unchanged** |
-| PROD Stage 17 | **COMPLETE 2026-07-20** — Conflict PASS; webhook **blank** (email deferred) · **115 not installed** |
-| Final verify | ZA `recfqsgM7zDobxsPf` Conflict=1 / Approved=0; XP `recOceuW34jQz7suD` inactive; LIVE+REC tags present |
-| Immediate rollback | Attendees write from recording; dup `ZOOM_CREDIT`; live XP rewrite; unexpected email; 115 in PROD — [rollback](./deploy-checklists/C-025-stage17-rollback-plan.md) |
-| Packet | [live](./deploy-checklists/C-025-stage17-prod-live-2026-07-20.md) · [progress](./status/C-025-stage17-current-prod-progress.md) · [verification](./deploy-checklists/C-025-stage17-prod-117-verification-2026-07-20.md) |
+| Preconflict rollup | **`ARRAYJOIN(ARRAYUNIQUE(values), "\n")`** (PROD verified historically) |
+| Automation **117** (Mike paste 2026-08-19) | **v2.1 ON path** — creates Communications Hub **Email Handoff Queue** row (`ZOOM_RECORDING_APPROVAL` / template `ZOOM_RECORDING_APPROVED`). No XP write. No Make/Gmail/Resend call. **079** sends Ready rows → Hub → Resend |
+| Credit writers | Stage 17 orchestrator / 117c = **design alternatives only**. Historical 2026-07-20 credit packets remain evidence, not current 117 paste target |
+| Companion (historical packets) | **057 v1.3** / **042 v3.1** / **101** — treat live versions as unconfirmed until Mike reads UI |
+| Make **117f** | **Historical** Gmail path only |
+| Packet | [live historical](./deploy-checklists/C-025-stage17-prod-live-2026-07-20.md) · [progress](./status/C-025-stage17-current-prod-progress.md) · [numbering](./deploy-checklists/C-025-117-numbering.md) |
 
 ---
 
@@ -139,16 +158,12 @@ Notable PROD changes vs 2026-07-06: `Homework Library`, `Program Homework Assign
 
 | Item | Status |
 |------|--------|
-| Scripts | **118 v1.5 / 119 v1.4+ / 072 v4.0 / 074 v2.1** — installed + live-proven (118 v1.5 on master) |
-| PROD schedules | **ON** — 118 Sun 5:00 AM Denver; 119 Sun 10:00 AM Denver (**verified_prod** 2026-07-24) |
-| 072 / 074 / Make | **ON** — Make `Weekly Athlete Summary - Bulk Email - May 18` |
-| 074 sendMode | **Live** (or blank + WAS Live) — **never** fixed Test |
-| Live writeback | **PASS** — `Weekly Email Sent?`, `Make Send Status=Sent`, timestamp |
-| Architecture | [WAS-WEEKLY-EMAIL-ARCHITECTURE.md](./next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md) |
-| Activation checklist | [C-011-weekly-email-schedule-activation-checklist.md](./deploy-checklists/C-011-weekly-email-schedule-activation-checklist.md) — activation **COMPLETE** |
-| Stale OFF notes | Superseded — see [STALE-CLAIM-CORRECTION.md](./next-wave/reliability-audit-2026-07-24/STALE-CLAIM-CORRECTION.md) |
+| **Current send plane (Mike 2026-08-19)** | Communications Hub → **Resend**. Make.com is not the email sender. [email send plane](./integrations/email-send-plane.md) |
+| Historical Make/Gmail proof | 2026-07-24 E2E `118→072→119→074→Make Bulk Email May 18→Gmail` — **historical evidence only** |
+| Architecture (historical Make path) | [WAS-WEEKLY-EMAIL-ARCHITECTURE.md](./next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md) |
+| Airtable script versions | Unconfirmed in this pass |
 
-Manual Build/Send checkboxes remain available for controlled one-offs; scheduled path is the production path.
+Manual Build/Send checkboxes remain available for controlled one-offs.
 
 ---
 
@@ -171,7 +186,7 @@ Deploy details: [deployment-notes.md](./deployment-notes.md), [web/docs/deployme
 | Route | Status |
 |-------|--------|
 | `/`, `/leaderboard`, `/homework`, `/homework/[id]` | Live (Airtable) |
-| `/tutorials`, `/shoutouts`, `/articles` (+ detail) | Live (Airtable + Softr publish gate) |
+| `/tutorials`, `/shoutouts`, `/articles` (+ detail) | Live — **Tutorials & Assets** (`tblDOTgsWfqPm18bw`); publish gate `OK to Publish on Softr` = `checked` |
 | `/zoom-meetings`, `/levels`, `/achievements`, `/game-manual`, `/public-display` | Live |
 | `/dashboard` | Live demo — **mock adapter** (no auth) |
 | `/athletes/[slug]` | Demo/mock — slug resolution incomplete |
@@ -206,9 +221,10 @@ Admin roadmap: [web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md)
 |----------|--------|
 | **PROD Upload Engine — Lambda v1** (video) | **Live** — 070b/070c |
 | Homework upload (070a) | PROD **OFF** |
-| Weekly summary email | Verified `118→072→119→074→Make Bulk Email May 18`; **118/119 schedules ON**; 072+074+Make ON; RCC monitors writeback mismatches |
-| Daily / homework / video parent emails | Make webhooks + Airtable scripts |
-| **Welcome email** | **Communications Hub** via Automation **079** (Make welcome scenario **OFF**) — controlled test proven; participant activation pending |
+| Weekly summary email | **Current:** Hub → Resend. **Historical:** 2026-07-24 Make Bulk Email May 18 / Gmail path. Make is not the current email sender. [email send plane](./integrations/email-send-plane.md) |
+| Daily / homework / video parent emails | **Current:** Hub → Resend. Make webhooks are not the email sender. |
+| **Welcome email** | **Communications Hub → Resend** via Automation **079** (Make welcome scenario not used for email) — participant activation still pending |
+| **C-028 Tremendous awards** | Sandbox send **validated** (Mike 2026-08-19). Production API **pending**. Make scenario **OFF**. v2 is an implementation snapshot, not production-live. Make HTTP is not a parent-email path. [current state](./integrations/tremendous-award-fulfillment.md) |
 
 ---
 
@@ -252,8 +268,8 @@ Full register: [KNOWN_ISSUES.md](./KNOWN_ISSUES.md)
 
 | Severity | Theme |
 |----------|--------|
-| High | 066 live OMNI sandbox still unconfirmed; automation version inventory largely UNKNOWN in live bases; athlete E2E matrix mostly untested |
-| Medium | C-025 Stage 17 COMPLETE (email webhook still deferred); C-011 weekly email Live path proven (118/119 ON); 070a homework PROD off; web auth/dashboard incomplete; Softr Obsolete / Not Used |
+| High | Optional 066 OMNI sandbox confirm still open (version string is **v3.8**); automation version inventory still largely UNKNOWN beyond reconciled rows; athlete E2E matrix mostly untested |
+| Medium | 070a homework PROD off; web auth/dashboard incomplete; Softr Obsolete / Not Used; 057/042 live versions still unconfirmed in UI |
 | Low | Root marketing URL depends on landing hub; GitHub trigger headers often “confirm in Airtable” |
 
 ---

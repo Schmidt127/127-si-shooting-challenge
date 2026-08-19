@@ -9,8 +9,9 @@ import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchTutorialCatalog } from "@/lib/airtable/queries";
 
 export const metadata: Metadata = {
-  title: "Tutorials",
-  description: "Shooting Challenge tutorials — technique, film study, and athlete features.",
+  title: "Skills and Technique Tutorials",
+  description:
+    "Skills and Technique Tutorials for the Shooting Challenge — technique clips, film study, and form breakdowns.",
 };
 
 export const revalidate = 300;

@@ -8,12 +8,70 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Airtable
 
+#### Added
+- **C-028 — Award Recipients Tremendous fields (2026-08-18)** — Production table `tblTyQXl8aEP93ubK`: Recipient Name/Email, Ready to Send?, Tremendous Environment/IDs/status/timestamps/error/response, Send to Tremendous?, Tremendous Test Record?. Existing Award Status / Award Amount / Gift Card Needed? / Award Recipient Unique Key reused. [field plan](./airtable/schema/current/C-028-award-recipients-tremendous-fields.md). [current state](./docs/integrations/tremendous-award-fulfillment.md).
+
 #### Changed
-- **Schema refresh (2026-08-19)** — Read-only Metadata API exports for PROD (`prod-20260819/`, 32 tables, 126 views) and DEV (`dev-20260819/`, 32 tables, 129 views). Summary: `docs/deploy-checklists/SCHEMA-REFRESH-2026-08-19.md`. Updated `PROJECT_STATE.md`, `airtable/schema/snapshots/README.md`, `airtable/schema/current/schema-notes.md`, and web data-map/view docs for homework table split (`Homework Library` + `Program Homework Assignments`).
+- **Schema refresh (2026-08-19)** — Read-only Metadata API export for **Production** (`prod-20260819/`, 32 tables, 126 views). Summary: `docs/deploy-checklists/SCHEMA-REFRESH-2026-08-19.md`. Updated `PROJECT_STATE.md`, `airtable/schema/snapshots/README.md`, `airtable/schema/current/schema-notes.md`, and web data-map/view docs for homework table split (`Homework Library` + `Program Homework Assignments`). **No separate DEV base is in use** — PROD is the only live Shooting Challenge base.
+- **071 (v4.1) — PHA Grade Band is metadata only** — Homework Feedback Hub
+  handoff validates Program Instance + Week + Homework Assignment + Homework
+  Slot. Removes `PHA Grade Band mismatch` rejection so multi-band PHAs
+  (K-2…9-12) no longer block parent email. Requires a linked PHA. Athlete
+  `canonicalGradeBandId` remains optional Hub payload metadata only (not a
+  match key). Still Hub queue-only (no Make/Gmail/Resend).
+- **020 (v3.6) — Document multi-band PHA scheduling** — Operational identity
+  remains Program Instance + Week + Homework Assignment + Homework Slot.
+  Clarifies that multi-band Grade Band never rejects a valid match (behavior
+  unchanged from v3.5).
+- **073 (v4.1) — Video parent link is VF field only** — Parent-facing URL is
+  exclusively Video Feedback `Video URL or Drive Link` (written by 022). No
+  Reviewer/Canonical File URL fallback on the parent-email path. Missing or
+  non-http(s) URL fails closed.
+- **079 (v2.4) — Airtable-compatible Hub fetch** — Replace `remoteFetchAsync`
+  with `fetch` for Communications Hub ingress. Event Type contract unchanged
+  (`ZOOM_RECORDING_APPROVAL` / Template Key `ZOOM_RECORDING_APPROVED`).
+- **079 (v2.3) — Zoom Event Type / Template Key contract fix** — Email Handoff
+  Queue Event Type is `ZOOM_RECORDING_APPROVAL`; Template Key remains
+  `ZOOM_RECORDING_APPROVED`. Handoff Key prefix is
+  `ZOOM_RECORDING_APPROVAL|ZOOM_ATTENDANCE|{ZA}`. Do not add
+  `ZOOM_RECORDING_APPROVED` as an Event Type option. Automation name:
+  `079 – Send to Communications Hub - NEW`.
+- **117 (v2.1) — Align Zoom queue producer with Event Type contract** — Writes
+  Event Type `ZOOM_RECORDING_APPROVAL` and Template Key `ZOOM_RECORDING_APPROVED`.
+- **022 (v2.0) — Align GitHub with Production child upload writeback** — Video
+  Feedback writeback prefers **Reviewer File URL**, falls back to **Canonical
+  File URL**, updates the existing Video Feedback **Upload Status** (no duplicate
+  field), writes Video URL or Drive Link / Video Asset File Name / Video Asset
+  Uploaded At, and confirms **Writeback Complete?** when Uploaded. Idempotent;
+  does not create child records. Offline contract:
+  `node airtable/automations/shooting-challenge/lib/022-child-upload-writeback.test.js`.
+  Production already live-tested v2.0 (2026-08-16); GitHub was still labeled
+  v1.1 with Drive-first URL selection.
+
+### Docs
+
+#### Changed
+- **Email send plane (2026-08-19)** — Mike: Make.com does not handle any Shooting Challenge emails. All of those emails go through Communications Hub → Resend. Historical Make/Gmail weekly and 117f packets are preserved and labeled historical. [email-send-plane.md](./docs/integrations/email-send-plane.md).
+- **Automation 022 Production paste (2026-08-19)** — Mike confirmed Airtable shows **v2.1**. The 2026-08-16 controlled-path packet remains historical for that day’s **v2.0** evidence.
+- **Automation 020 Production paste (2026-08-19)** — Mike confirmed Airtable shows **v3.6**. Earlier v3.5 install evidence remains historical.
+- **Automation 070b Production paste (2026-08-19)** — Mike confirmed Airtable shows **v4.6**. Historical C-013 E2E remains **v4.4** (2026-07-11). Lambda season/Program Instance deploy not claimed from the Airtable version alone.
+- **Automation 117 Production paste (2026-08-19)** — Mike pasted **v2.1** Hub handoff (`Create Zoom Recording Approval Communications Hub Handoff`). Email Handoff Queue only; not XP; not Make 117f; not Stage 17 orchestrator.
+- **Automation 066 Production paste (2026-08-19)** — Mike confirmed Airtable shows **v3.8**. Earlier v3.3–v3.5 proofs remain historical.
+- **Automation 010 Production paste (2026-08-19)** — Mike confirmed Airtable shows **v10.10**. PKG-006R **v10.9** proof remains historical.
+- **Lambda upload season CodeOnly deploy (2026-08-19)** — Mike-requested. `127si-upload-asset` updated (CodeSha256 `lwbLiBzB4cfWdzVmIVo7Z78AkiowqPuV2NmUXb+PK2w=`); 139 unit tests OK. Season from Program Instance School Year - Linked. Rotate secrets exposed by AWS CLI env echo when ready.
 
 ### Web
 
 #### Changed
+- **Tutorials and Shoutouts video + site-wide contrast (2026-08-18)** — Public `/shoot/tutorials` and `/shoutouts` use Tutorials & Assets `Link to Video` as the only catalog video URL. Blank links show a coming-soon state instead of a player. Google Drive / PDF / Adobe links open in a new tab. Site-wide `text-muted` now maps to readable foreground so body copy, nav, and footer meet contrast on light surfaces.
+- **Tutorials → Tutorials & Assets cutover (2026-08-17)** — Public `/shoot/tutorials`,
+  `/shoutouts`, and `/articles` read `Tutorials & Assets` (`tblDOTgsWfqPm18bw`)
+  only. Field map uses `Type of Asset`, `Brief Descriptions`, `Display Image`,
+  `Athlete Headshot`, and publish value `checked`. Page title is **Skills and
+  Technique Tutorials**. Card/detail body text uses darker foreground contrast.
+  Video embeds show Airtable or YouTube poster before click-to-play
+  (`youtube-nocookie`). Deploy checklist:
+  [`docs/deploy-checklists/tutorials-and-assets-web-cutover.md`](./docs/deploy-checklists/tutorials-and-assets-web-cutover.md).
 - **Website-fix batch WEB-004 / WEB-008 / WEB-010 (2026-08-15)** — Replaced
   cartoon/AI feature imagery with brand typography banners, strengthened card
   text contrast, and surface Program Instance pricing on the program home page
@@ -112,6 +170,17 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   changes were made.
 
 ### Airtable
+
+#### Fixed
+- **Automation 010 v10.10 — Airtable date normalization (2026-08-16)** — `dateKey()` now
+  handles Airtable `Date` objects, ISO datetimes, and `MM/DD/YYYY` local strings in
+  `America/Denver`, matching 034/066 helpers. Fail-closed identity errors now list the
+  specific eligibility predicates that failed instead of a generic canonical-identity
+  message. v10.9 reconciliation / ownership behavior unchanged. Offline:
+  `node --test tools/testing/tests/test_010_offline.mjs` ·
+  `node --test tools/testing/tests/test_010_date_key.mjs` ·
+  `node --test tests/pipeline/010-submission-base-multi-family.test.mjs`.
+  No Production Airtable paste or XP Event writes from agents.
 
 #### Changed
 - **PKG-038 Production proof closeout (2026-08-16)** — Production proof passed for 053 v5.5, 054 v5.8, 066 v3.8, and 059 v3.6 with Early Bird counted. Charlie’s 3-day streak produced one 10-point streak XP event; the 3,000-shot 9–12 Starter milestone produced one 10-point shot-milestone XP event. Final audit v2.1 checked 10 unlocks, 5 streak occurrences, 39 XP events, and 3 weekly summaries with **issueTotal = 0**. Levels smoke test also passed: 041 queued one Enrollment and 042 assigned Current Level Beginner / Next Level Rookie Shooter. Resume after the first regular Week closes (expected May 8, 2027); do not change Early Bird dates.
@@ -305,6 +374,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Make
 
 #### Added
+- **C-028 Tremendous sandbox send (2026-08-19)** — v2-style sandbox send **validated** (Get a Record, parent/guardian email, safety filters, external ID, success/failure write-back); reward email received. Production Tremendous API still pending approval. Make scenario remains **OFF**. v1 blueprint preserved as historical. v2 blueprint is the current implementation snapshot, not production-live. Never commit an API key. [current state](./docs/integrations/tremendous-award-fulfillment.md) · [v2 snapshot](./make/blueprints/awards-send-tremendous-sandbox-reward-v2.json) · [v1 historical](./make/blueprints/awards-send-tremendous-sandbox-reward-v1.json).
 - **C-025 117f DEV Make package (2026-07-20)** — Sanitized blueprint `c025-117f-zoom-recording-approval-email-dev-v1.template.json`, offline simulator/tests (`make/lib/c025-117f-make-scenario*.js`), deployment checklist + Agent 2 handoff. Scenario stays **OFF**; no webhook URL in git. [contract](./docs/deploy-checklists/C-025-117f-dev-make-scenario-contract.md).
 
 #### Changed

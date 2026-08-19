@@ -6,9 +6,9 @@ Human-readable notes for **Make scenarios** connected to the 127 SI Shooting Cha
 
 | Direction | Pattern | Examples |
 |-----------|---------|----------|
-| Airtable → Make | Webhook module | Homework video uploaded, weekly summary ready |
-| Make → Airtable | Create/update record | Drive URL on Homework, `Email Sent` flag |
-| Make → External | Gmail, Google Drive | Parent emails, video storage |
+| Airtable → Make | Watch Records or webhook | Homework video uploaded; C-028 Award Recipients Tremendous sandbox |
+| Make → Airtable | Create/update record | Drive URL on Homework, `Email Sent` flag; Tremendous order/reward IDs |
+| Make → External | Google Drive / AWS upload; Tremendous Sandbox HTTP | Not parent email. SC emails go through Resend. |
 
 ## Scenario Notes Template
 
@@ -59,5 +59,8 @@ Never point test scenarios at production Gmail without explicit routing rules.
 ## Related
 
 - [Blueprints](../blueprints/README.md)
+- [C-028 Tremendous current state](../../docs/integrations/tremendous-award-fulfillment.md)
+- [C-028 v2 implementation snapshot](./awards-send-tremendous-sandbox-reward-v2.md)
+- [C-028 v1 historical blueprint notes](./awards-send-tremendous-sandbox-reward.md)
 - [Homework flow](../../docs/data-flow/homework-flow.md)
 - [Emergency recovery](../../docs/recovery/emergency-recovery.md)

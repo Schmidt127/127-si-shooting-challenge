@@ -66,15 +66,17 @@ test("067 v3.4 — HW17 PHA PI-first resolution, Submission stores PHA, linked H
   assertNoPattern(source, /homeworkCompletionId=matches\[0\]/, "067 must not assign completion from raw duplicate list");
 });
 
-test("020 v3.5 — PHA direct validate + library dereference", () => {
+test("020 v3.6 — PHA direct validate + library dereference (Grade Band metadata only)", () => {
   const source = read(
     "airtable/automations/shooting-challenge/020-homework-link-or-create-homework-completion.js"
   );
-  assert.match(source, /version:\s*"v3\.5"/);
+  assert.match(source, /version:\s*"v3\.6"/);
   assert.match(source, /validateSelectedPha/);
   assert.match(source, /libraryId/);
+  assert.match(source, /Multi-band Grade Band never rejects/);
   assertNoPattern(source, /resolveProgramHomeworkAssignmentId/, "020 must not reverse-search PHA by library");
   assertNoPattern(source, /phaTable\.selectRecordsAsync/, "020 must load PHA by record ID only");
+  assertNoPattern(source, /PHA Grade Band mismatch/, "020 must not reject on Grade Band");
 });
 
 test("009 — content provenance only, no library table", () => {

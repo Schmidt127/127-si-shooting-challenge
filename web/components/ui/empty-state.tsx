@@ -50,7 +50,7 @@ export function EmptyState({
         >
           {title}
         </TitleTag>
-        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{description}</p>
+        <p className="mt-3 text-sm leading-relaxed text-foreground">{description}</p>
         {action ? (
           <div className="mt-6 flex w-full flex-col justify-center gap-2 sm:w-auto sm:flex-row sm:flex-wrap [&_a]:w-full sm:[&_a]:w-auto [&_a]:justify-center">
             {action}

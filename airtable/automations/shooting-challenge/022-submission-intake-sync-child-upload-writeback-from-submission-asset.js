@@ -3,11 +3,11 @@ Automation: 022 - Submission Intake - Sync Child Upload Writeback from Submissio
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
-Last Synced From Airtable: 2026-06-21
-Last GitHub Update: 2026-06-21
+Last Synced From Airtable: 2026-08-16
+Last GitHub Update: 2026-08-17
 
 Purpose:
-Syncs Homework Completion or Video Feedback upload writeback fields from a Submission Asset after Make updates the asset.
+Syncs Homework Completion or Video Feedback upload writeback fields from a Submission Asset after Make/Lambda updates the asset.
 
 Trigger:
 Submission Assets when Upload Status is Uploaded, Processing, or Error and a child record is linked.
@@ -16,24 +16,27 @@ Important Tables:
 Submission Assets, Homework Completions, Video Feedback
 
 Important Fields:
-Upload Status, Google Drive File URL, Upload Error, Uploaded At, Writeback Complete?
+Upload Status, Reviewer File URL, Canonical File URL, Original File Name, Upload Error,
+Uploaded At, Writeback Complete?, Video URL or Drive Link, Video Asset File Name,
+Video Asset Uploaded At
 
 Notes:
 GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
+Production live proof 2026-08-16: v2.0 video writeback PASS (Perfect Week path).
 */
 
 /************************************************************
  * 022 - SUBMISSION INTAKE
  * Sync Child Upload Writeback from Submission Asset
  *
- * Version: v1.1
+ * Version: v2.1
  * Date Written: 2026-06-21
- * Last Updated: 2026-06-21
+ * Last Updated: 2026-08-17
  *
  * PURPOSE
  * - Runs from one Submission Assets record after Make (or 070a/070b) updates upload state.
- * - Copies upload status, Drive URLs/IDs, upload error, and uploaded-at from the asset
- *   to the linked Homework Completion or Video Feedback child record.
+ * - Copies upload status, preferred file URL, file name, upload error, and uploaded-at
+ *   from the asset to the linked Homework Completion or Video Feedback child record.
  * - Submission Assets remain the upload pipeline source of truth; this keeps child tables in sync.
  *
  * IMPORTANT DESIGN RULES
@@ -41,6 +44,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Does not create Homework Completions or Video Feedback (020 / 013 own that).
  * - Does not send to Make or change asset Upload Status.
  * - Skips when asset is still Pending Link (nothing to write back yet).
+ * - Video Feedback uses the existing single-select Upload Status field (do not create a duplicate).
+ * - Video URL or Drive Link prefers Reviewer File URL, then Canonical File URL.
+ * - Do not mirror obsolete Google Drive fields onto Homework Completions or Video Feedback.
  *
  * FOLDER
  * - 02 - Submission Intake and Asset Creation
@@ -57,7 +63,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Homework Completions is not empty OR Video Feedback is not empty
  *
  * OPTIONAL TRIGGER CONDITIONS
- * - Google Drive File URL is not empty (Uploaded path)
+ * - Reviewer File URL or Canonical File URL is not empty (Uploaded path)
  *
  * DO NOT USE THIS TRIGGER CONDITION
  * - Upload Status is Pending Link (020/013 set child Pending at create; no post-Make data yet)
@@ -78,8 +84,10 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Video Feedback (write when Upload Destination = Video Feedback)
  *
  * OUTPUT / WRITEBACK FIELDS
- * - Homework Completions → Upload Status, Drive fields, Upload Error, Uploaded At, Writeback Complete?
- * - Video Feedback → Upload Status, Drive fields, Video URL or Drive Link, Upload Error, Video Asset Uploaded At
+ * - Homework Completions → Upload Status, Upload Error, Uploaded At, Writeback Complete?
+ * - Video Feedback → existing Upload Status, Video URL or Drive Link (Reviewer then
+ *   Canonical), Video Asset File Name, Video Asset Uploaded At, Upload Error,
+ *   Writeback Complete?
  *
  * IMPORTANT NOTES
  * - This is not the homework link automation (020).
@@ -95,7 +103,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "022 - Submission Intake - Sync Child Upload Writeback from Submission Asset",
-  version: "v1.1",
+  version: "v2.1",
 
   tables: {
     assets: "Submission Assets",
@@ -109,12 +117,8 @@ const CONFIG = {
     uploadError: "Upload Error",
     uploadedAt: "Uploaded At",
     originalFileName: "Original File Name",
-    googleDriveFileUrl: "Google Drive File URL",
-    googleDriveFileId: "Google Drive File ID",
-    googleDriveFolderId: "Google Drive Folder ID",
-    googleDriveFolderUrl: "Google Drive Folder URL",
-    googleDriveViewUrl: "Google Drive View URL",
-    googleDriveDownloadUrl: "Google Drive Download URL",
+    reviewerFileUrl: "Reviewer File URL",
+    canonicalFileUrl: "Canonical File URL",
     homeworkCompletions: "Homework Completions",
     videoFeedback: "Video Feedback",
   },
@@ -123,10 +127,6 @@ const CONFIG = {
     uploadStatus: "Upload Status",
     uploadError: "Upload Error",
     uploadedAt: "Uploaded At",
-    googleDriveFileUrl: "Google Drive File URL",
-    googleDriveFileId: "Google Drive File ID",
-    googleDriveFolderId: "Google Drive Folder ID",
-    googleDriveFolderUrl: "Google Drive Folder URL",
     writebackComplete: "Writeback Complete?",
   },
 
@@ -136,12 +136,7 @@ const CONFIG = {
     videoUrlOrDriveLink: "Video URL or Drive Link",
     videoAssetFileName: "Video Asset File Name",
     videoAssetUploadedAt: "Video Asset Uploaded At",
-    googleDriveFileUrl: "Google Drive File URL",
-    googleDriveFileId: "Google Drive File ID",
-    googleDriveFolderId: "Google Drive Folder ID",
-    googleDriveFolderUrl: "Google Drive Folder URL",
-    googleDriveViewUrl: "Google Drive View URL",
-    googleDriveDownloadUrl: "Google Drive Download URL",
+    writebackComplete: "Writeback Complete?",
   },
 
   values: {
@@ -382,6 +377,15 @@ function mapAssetUploadStatusToVideoStatus(assetStatus) {
   ]);
 }
 
+/** Prefer Reviewer File URL; fall back to Canonical File URL. */
+function resolvePreferredVideoUrl(asset) {
+  const reviewer = getText(asset, assetsTable, CONFIG.assets.reviewerFileUrl);
+  if (reviewer) return reviewer;
+  const canonical = getText(asset, assetsTable, CONFIG.assets.canonicalFileUrl);
+  if (canonical) return canonical;
+  return "";
+}
+
 function buildHomeworkUploadSyncFields(homeworkRecord, asset) {
   const fields = {};
   const assetUploadStatus = getSelectName(asset, assetsTable, CONFIG.assets.uploadStatus);
@@ -395,11 +399,6 @@ function buildHomeworkUploadSyncFields(homeworkRecord, asset) {
     currentStatus,
     targetStatus
   );
-
-  addTextIfChanged(fields, homeworkTable, CONFIG.homework.googleDriveFileUrl, homeworkRecord, asset, CONFIG.assets.googleDriveFileUrl);
-  addTextIfChanged(fields, homeworkTable, CONFIG.homework.googleDriveFileId, homeworkRecord, asset, CONFIG.assets.googleDriveFileId);
-  addTextIfChanged(fields, homeworkTable, CONFIG.homework.googleDriveFolderId, homeworkRecord, asset, CONFIG.assets.googleDriveFolderId);
-  addTextIfChanged(fields, homeworkTable, CONFIG.homework.googleDriveFolderUrl, homeworkRecord, asset, CONFIG.assets.googleDriveFolderUrl);
 
   const assetError = getText(asset, assetsTable, CONFIG.assets.uploadError);
   const currentError = getText(homeworkRecord, homeworkTable, CONFIG.homework.uploadError);
@@ -429,6 +428,7 @@ function buildVideoUploadSyncFields(videoRecord, asset) {
   const targetStatus = mapAssetUploadStatusToVideoStatus(assetUploadStatus);
   const currentStatus = getSelectName(videoRecord, videoTable, CONFIG.video.uploadStatus);
 
+  // Existing Video Feedback → Upload Status only (do not create a duplicate Upload Status field).
   addSingleSelectIfChanged(
     fields,
     videoTable,
@@ -437,17 +437,12 @@ function buildVideoUploadSyncFields(videoRecord, asset) {
     targetStatus
   );
 
-  addTextIfChanged(fields, videoTable, CONFIG.video.googleDriveFileUrl, videoRecord, asset, CONFIG.assets.googleDriveFileUrl);
-  addTextIfChanged(fields, videoTable, CONFIG.video.googleDriveFileId, videoRecord, asset, CONFIG.assets.googleDriveFileId);
-  addTextIfChanged(fields, videoTable, CONFIG.video.googleDriveFolderId, videoRecord, asset, CONFIG.assets.googleDriveFolderId);
-  addTextIfChanged(fields, videoTable, CONFIG.video.googleDriveFolderUrl, videoRecord, asset, CONFIG.assets.googleDriveFolderUrl);
-  addTextIfChanged(fields, videoTable, CONFIG.video.googleDriveViewUrl, videoRecord, asset, CONFIG.assets.googleDriveViewUrl);
-  addTextIfChanged(fields, videoTable, CONFIG.video.googleDriveDownloadUrl, videoRecord, asset, CONFIG.assets.googleDriveDownloadUrl);
-
-  const driveUrl = getText(asset, assetsTable, CONFIG.assets.googleDriveFileUrl);
+  // Prefer Reviewer File URL; Canonical File URL is the fallback.
+  // Do not mirror obsolete Google Drive fields onto Video Feedback.
+  const preferredUrl = resolvePreferredVideoUrl(asset);
   const currentVideoUrl = getText(videoRecord, videoTable, CONFIG.video.videoUrlOrDriveLink);
-  if (driveUrl && driveUrl !== currentVideoUrl) {
-    addIfWritable(fields, videoTable, CONFIG.video.videoUrlOrDriveLink, driveUrl);
+  if (preferredUrl && preferredUrl !== currentVideoUrl) {
+    addIfWritable(fields, videoTable, CONFIG.video.videoUrlOrDriveLink, preferredUrl);
   }
 
   const assetFileName = getText(asset, assetsTable, CONFIG.assets.originalFileName);
@@ -466,6 +461,13 @@ function buildVideoUploadSyncFields(videoRecord, asset) {
   const currentUploadedAt = getRaw(videoRecord, videoTable, CONFIG.video.videoAssetUploadedAt);
   if (!datesEqual(assetUploadedAt, currentUploadedAt)) {
     addIfWritable(fields, videoTable, CONFIG.video.videoAssetUploadedAt, assetUploadedAt);
+  }
+
+  if (
+    assetUploadStatus === "Uploaded" &&
+    getRaw(videoRecord, videoTable, CONFIG.video.writebackComplete) !== true
+  ) {
+    addIfWritable(fields, videoTable, CONFIG.video.writebackComplete, true);
   }
 
   return fields;
@@ -555,12 +557,8 @@ async function main() {
       CONFIG.assets.uploadError,
       CONFIG.assets.uploadedAt,
       CONFIG.assets.originalFileName,
-      CONFIG.assets.googleDriveFileUrl,
-      CONFIG.assets.googleDriveFileId,
-      CONFIG.assets.googleDriveFolderId,
-      CONFIG.assets.googleDriveFolderUrl,
-      CONFIG.assets.googleDriveViewUrl,
-      CONFIG.assets.googleDriveDownloadUrl,
+      CONFIG.assets.reviewerFileUrl,
+      CONFIG.assets.canonicalFileUrl,
       CONFIG.assets.homeworkCompletions,
       CONFIG.assets.videoFeedback,
     ].filter(name => fieldExists(assetsTable, name)),

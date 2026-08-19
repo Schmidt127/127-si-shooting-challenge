@@ -26,12 +26,12 @@ Nav `href` values are **relative to basePath** (e.g. `/leaderboard` → public `
 | `/shoot/leaderboard` | `/leaderboard` | Season leaderboard | Enrollments (`Web - Leaderboard`) | Live |
 | `/shoot/homework` | `/homework` | Homework catalog | FBC Curriculum (`Web - Homework Catalog`) | Live |
 | `/shoot/homework/[id]` | `/homework/[id]` | Homework detail | FBC Curriculum + Weeks | Live |
-| `/shoot/tutorials` | `/tutorials` | Tutorials catalog | Tutorials (`Web - Tutorials Catalog`) | Live |
-| `/shoot/tutorials/[id]` | `/tutorials/[id]` | Tutorial detail | Tutorials | Live |
-| `/shoot/shoutouts` | `/shoutouts` | Shout-outs | Tutorials (shoutout type) | Live |
-| `/shoot/shoutouts/[id]` | `/shoutouts/[id]` | Shout-out detail | Tutorials | Live |
-| `/shoot/articles` | `/articles` | FBC articles | Tutorials (article type) | Live |
-| `/shoot/articles/[id]` | `/articles/[id]` | Article detail | Tutorials | Live |
+| `/shoot/tutorials` | `/tutorials` | Skills and Technique Tutorials | Tutorials & Assets (`Web - Tutorials Catalog`) | Live |
+| `/shoot/tutorials/[id]` | `/tutorials/[id]` | Tutorial detail | Tutorials & Assets | Live |
+| `/shoot/shoutouts` | `/shoutouts` | Shout-outs | Tutorials & Assets (shoutout type) | Live |
+| `/shoot/shoutouts/[id]` | `/shoutouts/[id]` | Shout-out detail | Tutorials & Assets | Live |
+| `/shoot/articles` | `/articles` | FBC articles | Tutorials & Assets (article type) | Live |
+| `/shoot/articles/[id]` | `/articles/[id]` | Article detail | Tutorials & Assets | Live |
 | `/shoot/zoom-meetings` | `/zoom-meetings` | Zoom meetings | Zoom Meetings (`Web - Zoom Meetings`) | Live |
 | `/shoot/zoom-meetings/[id]` | `/zoom-meetings/[id]` | Meeting detail + recording-credit presentation | Zoom Meetings + Weeks | Live |
 | `/shoot/levels` | `/levels` | Level ladder | Levels (`Web - Levels`) | Live |

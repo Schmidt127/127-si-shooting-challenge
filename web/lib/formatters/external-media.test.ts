@@ -24,9 +24,14 @@ describe("isAdobeDocumentUrl", () => {
 });
 
 describe("shouldOpenExternally", () => {
-  it("requires adobe and pdf links to open in a new tab", () => {
+  it("requires adobe, pdf, and Google Drive links to open in a new tab", () => {
     expect(shouldOpenExternally("https://example.com/rules.pdf")).toBe(true);
     expect(shouldOpenExternally("https://acrobat.adobe.com/link/track?uri=x")).toBe(true);
+    expect(
+      shouldOpenExternally(
+        "https://drive.google.com/file/d/16ZdvMtCXTojWJQjgpWXDp2fuIL7kn_jX/view?usp=drive_link",
+      ),
+    ).toBe(true);
     expect(shouldOpenExternally("https://youtu.be/abc123")).toBe(false);
   });
 });

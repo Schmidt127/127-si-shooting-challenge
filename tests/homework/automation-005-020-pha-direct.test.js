@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Offline tests for 005 v5.3 + 020 v3.5 PHA-first intake contract.
+ * Offline tests for 005 v5.3 + 020 v3.6 PHA-first intake contract.
  * Run: node --test tests/homework/automation-005-020-pha-direct.test.js
  */
 import test from "node:test";
@@ -37,15 +37,17 @@ test("005 v5.3 source contract — PHA direct load, no library reverse search", 
   assert.doesNotMatch(source, /phaTable\.selectRecordsAsync/);
 });
 
-test("020 v3.5 source contract — PHA direct validate, library dereference", () => {
+test("020 v3.6 source contract — PHA direct validate, library dereference", () => {
   const source = read(
     "airtable/automations/shooting-challenge/020-homework-link-or-create-homework-completion.js"
   );
-  assert.match(source, /version:\s*"v3\.5"/);
+  assert.match(source, /version:\s*"v3\.6"/);
   assert.match(source, /validateSelectedPha/);
   assert.match(source, /libraryId/);
+  assert.match(source, /Multi-band Grade Band never rejects/);
   assert.doesNotMatch(source, /resolveProgramHomeworkAssignmentId/);
   assert.doesNotMatch(source, /phaTable\.selectRecordsAsync/);
+  assert.doesNotMatch(source, /PHA Grade Band mismatch/);
 });
 
 test("005 — correct PHA yields production PHA + library IDs", async () => {
@@ -130,6 +132,40 @@ test("005 — Grade Band is never part of scheduling match", async () => {
   assert.equal(error, null, error && error.message);
   assert.equal(output.values.homework1PhaId, "recPhaWrongGbOnly");
   assert.equal(output.values.homework1LibraryId, PHA_IDS.LIBRARY_HW1);
+});
+
+test("020 — multi-band PHA (K-2…9-12) creates completion for K-2 enrollment", async () => {
+  const multiBandPhaId = "recPhaMultiBand0001";
+  const base = build020PhaBase({
+    phaRecords: [
+      new MockRecord(multiBandPhaId, {
+        "Homework Assignment": [{ id: PHA_IDS.LIBRARY_HW1 }],
+        "Program Instance": [{ id: PHA_IDS.PI }],
+        Week: [{ id: PHA_IDS.WEEK }],
+        "Homework Slot": { name: "HW1" },
+        "Active?": true,
+        "Grade Band": [
+          { id: "recGbK2AAAAAAA" },
+          { id: "recGb34AAAAAAA" },
+          { id: "recGb56AAAAAAA" },
+          { id: "recGb78AAAAAAA" },
+          { id: "recGb912AAAAAA" },
+        ],
+      }),
+    ],
+    submissionCells: { "Homework Name 1": [{ id: multiBandPhaId }] },
+  });
+  const homework = base.tables.get("Homework Completions");
+  const { output, error } = await run020({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.statusOut, "success");
+  assert.equal(output.values.phaId, multiBandPhaId);
+  assert.equal(output.values.libraryId, PHA_IDS.LIBRARY_HW1);
+  assert.equal(output.values.gradeBandSchedulingUsed, false);
+  assert.equal(homework.createdPayloads.length, 1);
+  assert.deepEqual(homework.createdPayloads[0].payload["Program Homework Assignment"], [
+    { id: multiBandPhaId },
+  ]);
 });
 
 test("020 — creates completion with PHA + library links", async () => {

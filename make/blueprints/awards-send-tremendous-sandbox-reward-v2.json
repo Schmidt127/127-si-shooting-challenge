@@ -1,0 +1,471 @@
+{
+  "name": "Integration Airtable, Tremendous Sandbox v2",
+  "description": "C-028 v2 implementation snapshot, not production-live. Watch → Get a Record → filter → mark Sending → HTTP POST testflight → success/failure. Parent Email receives the gift card; Athlete Name - Display is the recipient name and greeting. Sandbox send validated 2026-08-19. Production API pending Tremendous approval. Keep OFF. Never commit an API key.",
+  "c028": {
+    "backlog": "C-028",
+    "version": "v2.1",
+    "environment": "Airtable Production + Tremendous Sandbox HTTP",
+    "baseId": "appn84sqPw03zEbTT",
+    "tableId": "tblTyQXl8aEP93ubK",
+    "tableName": "Award Recipients",
+    "viewId": "viwCArBlCaoedt4GL",
+    "viewLabel": "Make.com View - Do Not Change / AWARDS - Tremendous Ready",
+    "nativeTremendousModule": "do-not-use",
+    "httpUrl": "https://testflight.tremendous.com/api/v2/orders",
+    "httpMethod": "POST",
+    "campaignId": "HYNKRMGH3QQR",
+    "recipientEmailSource": "first(2.Parent Email) — parent receives the email",
+    "recipientNameSource": "first(9.Athlete Name - Display) — athlete name on reward and greeting",
+    "apiKey": "Make API-key credential only. Must send Authorization: Bearer TEST_[Sandbox key]. Never commit the key. Do not put the key in headers or body.",
+    "requiredState": "OFF",
+    "documentStatus": "implementation-snapshot-not-production-live",
+    "sandboxSend": "validated-2026-08-19-mike",
+    "productionApi": "pending-tremendous-approval",
+    "idempotency": "AWARD|{Award Recipient Unique Key}",
+    "whyGetRecord": "Watch Records freezes its field interface at module create time. Newly added Award Recipients fields do not appear as mapping pills until Get a Record reloads the current table schema.",
+    "httpBodyPreference": "Prefer Make Data structure in the UI so Coach Feedback - Awards can contain line breaks, quotes, and apostrophes. Blueprint ships jsonString with single \\n escapes as an importable fallback (no double-escape).",
+    "moduleOrder": [
+      "2 Watch Records",
+      "9 Get a Record",
+      "10 Filter + Mark Sending",
+      "8 HTTP Tremendous Sandbox",
+      "11 Mark Award Sent",
+      "12 Mark Award Failed (onerror of 8)"
+    ]
+  },
+  "flow": [
+    {
+      "id": 2,
+      "module": "airtable:TriggerWatchRecords",
+      "version": 3,
+      "parameters": {
+        "__IMTCONN__": 4739462,
+        "base": "appn84sqPw03zEbTT",
+        "table": "tblTyQXl8aEP93ubK",
+        "config": {
+          "triggerField": "Last Modified",
+          "labelField": "Award Recipient Display"
+        },
+        "maxRecords": 1,
+        "view": "viwCArBlCaoedt4GL",
+        "formula": "",
+        "useColumnId": false
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 150,
+          "name": "Watch Award Recipients"
+        },
+        "restore": {
+          "parameters": {
+            "__IMTCONN__": {
+              "label": "4_14_2026_New_Shooting_APP (REPLACE_CONNECTION_LABEL)"
+            },
+            "base": {
+              "mode": "chose",
+              "label": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026"
+            },
+            "table": {
+              "mode": "chose",
+              "label": "Award Recipients"
+            },
+            "config": {
+              "nested": {
+                "triggerField": {
+                  "mode": "chose",
+                  "label": "Last Modified"
+                },
+                "labelField": {
+                  "mode": "chose",
+                  "label": "Award Recipient Display"
+                }
+              }
+            },
+            "view": {
+              "mode": "chose",
+              "label": "Make.com View - Do Not Change"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": 9,
+      "module": "airtable:ActionGetRecord",
+      "version": 3,
+      "parameters": {
+        "__IMTCONN__": 4739462
+      },
+      "mapper": {
+        "id": "{{2.id}}",
+        "base": "appn84sqPw03zEbTT",
+        "table": "tblTyQXl8aEP93ubK",
+        "useColumnId": false
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 150,
+          "name": "Get Award Recipient"
+        },
+        "restore": {
+          "parameters": {
+            "__IMTCONN__": {
+              "label": "4_14_2026_New_Shooting_APP (REPLACE_CONNECTION_LABEL)"
+            }
+          },
+          "expect": {
+            "base": {
+              "mode": "chose",
+              "label": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026"
+            },
+            "table": {
+              "mode": "chose",
+              "label": "Award Recipients"
+            },
+            "useColumnId": {
+              "mode": "chose"
+            }
+          }
+        },
+        "c028ExpectedInterfaceFields": [
+          "Athlete Name - Display",
+          "Award - Display",
+          "Coach Feedback - Awards",
+          "Award Recipient Unique Key",
+          "Award Amount",
+          "Parent Email",
+          "Send to Tremendous?",
+          "Award Status",
+          "Gift Card Needed?",
+          "Tremendous Environment",
+          "Tremendous Order ID",
+          "Tremendous Reward ID"
+        ],
+        "c028RefreshNote": "In Make UI: re-select Award Recipients table, save, confirm pills listed above. Do not run the full scenario to refresh schema."
+      }
+    },
+    {
+      "id": 10,
+      "module": "airtable:ActionUpdateRecords",
+      "version": 3,
+      "parameters": {
+        "__IMTCONN__": 4739462
+      },
+      "filter": {
+        "name": "Approved Sandbox Award",
+        "conditions": [
+          [
+            {
+              "a": "{{9.`Send to Tremendous?`}}",
+              "o": "boolean:equal",
+              "b": "true"
+            },
+            {
+              "a": "{{9.`Award Status`}}",
+              "o": "text:equal",
+              "b": "Approved"
+            },
+            {
+              "a": "{{9.`Gift Card Needed?`}}",
+              "o": "text:equal",
+              "b": "1"
+            },
+            {
+              "a": "{{2.`Parent Email`[]}}",
+              "o": "exist"
+            },
+            {
+              "a": "{{first(9.`Award Amount`)}}",
+              "o": "number:greater",
+              "b": "0"
+            },
+            {
+              "a": "{{9.`Tremendous Environment`}}",
+              "o": "text:equal",
+              "b": "Sandbox"
+            },
+            {
+              "a": "{{9.`Tremendous Order ID`}}",
+              "o": "text:equal",
+              "b": "{{emptystring}}"
+            },
+            {
+              "a": "{{9.`Tremendous Reward ID`}}",
+              "o": "text:equal",
+              "b": "{{emptystring}}"
+            }
+          ]
+        ]
+      },
+      "mapper": {
+        "id": "{{9.id}}",
+        "base": "appn84sqPw03zEbTT",
+        "table": "tblTyQXl8aEP93ubK",
+        "typecast": false,
+        "useColumnId": false,
+        "record": {
+          "Award Status": "Sending",
+          "Tremendous Delivery Status": "Pending",
+          "Tremendous External ID": "AWARD|{{9.`Award Recipient Unique Key`}}",
+          "Tremendous Error Message": "{{emptystring}}"
+        }
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 150,
+          "name": "Mark Award Sending"
+        },
+        "restore": {
+          "parameters": {
+            "__IMTCONN__": {
+              "label": "4_14_2026_New_Shooting_APP (REPLACE_CONNECTION_LABEL)"
+            }
+          },
+          "expect": {
+            "base": {
+              "label": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026"
+            },
+            "table": {
+              "label": "Award Recipients"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": 8,
+      "module": "http:MakeRequest",
+      "version": 4,
+      "parameters": {
+        "authenticationType": "apiKey",
+        "tlsType": ""
+      },
+      "mapper": {
+        "url": "https://testflight.tremendous.com/api/v2/orders",
+        "method": "post",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "name": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "contentType": "json",
+        "parseResponse": true,
+        "stopOnHttpError": true,
+        "allowRedirects": true,
+        "shareCookies": false,
+        "requestCompressedContent": true,
+        "inputMethod": "jsonString",
+        "jsonStringBodyContent": "{\n  \"external_id\": \"AWARD|{{9.`Award Recipient Unique Key`}}\",\n  \"payment\": {\n    \"funding_source_id\": \"BALANCE\"\n  },\n  \"reward\": {\n    \"campaign_id\": \"HYNKRMGH3QQR\",\n    \"value\": {\n      \"denomination\": {{first(9.`Award Amount`)}},\n      \"currency_code\": \"USD\"\n    },\n    \"delivery\": {\n      \"method\": \"EMAIL\",\n      \"meta\": {\n        \"sender_name\": \"127 Sports Intensity\",\n        \"subject_line\": \"You earned a 127 Sports Intensity award!\",\n        \"message\": \"Congratulations {{first(9.`Athlete Name - Display`)}}!\\n\\nYou earned the {{9.`Award - Display`}} through the 127 Sports Intensity Shooting Challenge.\\n\\nCoach's feedback:\\n\\n{{9.`Coach Feedback - Awards`}}\\n\\nKeep working hard and continue building your game!\\n\\n— Coach Mike\"\n      }\n    },\n    \"recipient\": {\n      \"name\": \"{{first(9.`Athlete Name - Display`)}}\",\n      \"email\": \"{{first(2.`Parent Email`)}}\"\n    }\n  }\n}"
+      },
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 150,
+          "name": "Send Tremendous Sandbox"
+        },
+        "c028LiveModuleNote": "In the live Make scenario this HTTP module may appear as Module 14. Recipient must be nested under Reward — never a top-level sibling of Reward.",
+        "restore": {
+          "parameters": {
+            "authenticationType": {
+              "label": "API key — Make credential only. Must send Authorization: Bearer TEST_[Sandbox key]. Never commit the key. Do not use No authentication. Do not put the key in a visible header."
+            },
+            "tlsType": {
+              "label": "Empty"
+            },
+            "apiKeyKeychain": {
+              "label": "REPLACE_WITH_MAKE_API_KEY_CREDENTIAL (Sandbox TEST_ Bearer)"
+            }
+          },
+          "expect": {
+            "method": {
+              "mode": "chose",
+              "label": "POST"
+            },
+            "contentType": {
+              "label": "application/json"
+            },
+            "parseResponse": {
+              "mode": "chose"
+            },
+            "stopOnHttpError": {
+              "mode": "chose"
+            },
+            "inputMethod": {
+              "label": "JSON string importable fallback — switch to Data structure in Make UI when available"
+            }
+          }
+        },
+        "c028HttpDataStructureGuide": {
+          "preferredInputMethod": "dataStructure",
+          "why": "Coach Feedback - Awards may contain line breaks, quotes, and apostrophes. Data structure avoids broken JSON.",
+          "requiredHierarchy": [
+            "Reward",
+            "  Campaign ID",
+            "  Value",
+            "  Delivery",
+            "  Recipient",
+            "    Name",
+            "    Email"
+          ],
+          "tree": {
+            "external_id": "AWARD|{{9.Award Recipient Unique Key}}",
+            "payment": {
+              "funding_source_id": "BALANCE"
+            },
+            "reward": {
+              "campaign_id": "HYNKRMGH3QQR",
+              "value": {
+                "denomination": "{{first(9.Award Amount)}}",
+                "currency_code": "USD"
+              },
+              "delivery": {
+                "method": "EMAIL",
+                "meta": {
+                  "sender_name": "127 Sports Intensity",
+                  "subject_line": "You earned a 127 Sports Intensity award!",
+                  "message": "Congratulations {{first(9.Athlete Name - Display)}}!\n\nYou earned the {{9.Award - Display}} through the 127 Sports Intensity Shooting Challenge.\n\nCoach's feedback:\n\n{{9.Coach Feedback - Awards}}\n\nKeep working hard and continue building your game!\n\n— Coach Mike"
+                }
+              },
+              "recipient": {
+                "name": "{{first(9.Athlete Name - Display)}}",
+                "email": "{{first(2.Parent Email)}}"
+              }
+            }
+          },
+          "notes": [
+            "CRITICAL: Recipient is inside Reward. Do not leave Recipient at the top level next to Reward.",
+            "Parent receives the email via first(2.Parent Email).",
+            "Athlete Name - Display is the reward recipient name and greeting only.",
+            "Use singular reward, not rewards[].",
+            "Use delivery.method EMAIL, not delivery_method.",
+            "Use delivery.meta.sender_name (not from_name).",
+            "Do not map the linked Award array; use Award - Display text.",
+            "jsonStringBodyContent uses single \\n escapes only (no \\\\n)."
+          ]
+        }
+      },
+      "onerror": [
+        {
+          "id": 12,
+          "module": "airtable:ActionUpdateRecords",
+          "version": 3,
+          "parameters": {
+            "__IMTCONN__": 4739462
+          },
+          "mapper": {
+            "id": "{{9.id}}",
+            "base": "appn84sqPw03zEbTT",
+            "table": "tblTyQXl8aEP93ubK",
+            "typecast": false,
+            "useColumnId": false,
+            "record": {
+              "Award Status": "Failed",
+              "Tremendous Delivery Status": "Failed",
+              "Tremendous Error Message": "{{ifempty(error.message; error.detail)}}",
+              "Tremendous Response": "{{toString(error)}}"
+            }
+          },
+          "metadata": {
+            "designer": {
+              "x": 1200,
+              "y": 300,
+              "name": "Mark Award Failed"
+            },
+            "restore": {
+              "parameters": {
+                "__IMTCONN__": {
+                  "label": "4_14_2026_New_Shooting_APP (REPLACE_CONNECTION_LABEL)"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "module": "airtable:ActionUpdateRecords",
+      "version": 3,
+      "parameters": {
+        "__IMTCONN__": 4739462
+      },
+      "mapper": {
+        "id": "{{9.id}}",
+        "base": "appn84sqPw03zEbTT",
+        "table": "tblTyQXl8aEP93ubK",
+        "typecast": false,
+        "useColumnId": false,
+        "record": {
+          "Award Status": "Sent",
+          "Tremendous Delivery Status": "{{capitalize(lower(8.data.order.rewards[1].delivery.status))}}",
+          "Tremendous Order ID": "{{8.data.order.id}}",
+          "Tremendous Reward ID": "{{8.data.order.rewards[1].id}}",
+          "Tremendous Sent At": "{{now}}",
+          "Tremendous Error Message": "{{emptystring}}",
+          "Tremendous Response": "{{toString(8.data)}}"
+        }
+      },
+      "metadata": {
+        "designer": {
+          "x": 1200,
+          "y": 0,
+          "name": "Mark Award Sent"
+        },
+        "restore": {
+          "parameters": {
+            "__IMTCONN__": {
+              "label": "4_14_2026_New_Shooting_APP (REPLACE_CONNECTION_LABEL)"
+            }
+          },
+          "expect": {
+            "base": {
+              "label": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026"
+            },
+            "table": {
+              "label": "Award Recipients"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "instant": false,
+    "version": 1,
+    "scenario": {
+      "roundtrips": 1,
+      "maxErrors": 1,
+      "autoCommit": true,
+      "autoCommitTriggerLast": true,
+      "sequential": true,
+      "slots": null,
+      "confidential": false,
+      "dataloss": false,
+      "dlq": false,
+      "freshVariables": false
+    },
+    "designer": {
+      "orphans": []
+    },
+    "zone": "us1.make.com",
+    "notes": [
+      {
+        "moduleId": 9,
+        "note": "Get a Record refreshes Coach Feedback - Awards, Award - Display, Athlete Name - Display, Award Amount, Unique Key. Parent Email for send comes from Watch Records first(2.Parent Email)."
+      },
+      {
+        "moduleId": 8,
+        "note": "Keep scenario OFF. Parent Email receives gift card. Athlete Name - Display is greeting/name only. API-key credential must be Authorization Bearer TEST_ sandbox key. Sandbox send validated 2026-08-19. Not production-live."
+      }
+    ]
+  }
+}

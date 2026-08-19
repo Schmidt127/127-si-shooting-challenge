@@ -1,19 +1,35 @@
 /*
 GitHub header
-Automation: 079 - Email, Notifications, and External Handoffs - Send Queue Handoff to Communications Hub
+Automation: 079 – Send to Communications Hub - NEW
 System: 127 SI Shooting Challenge
-Version: v2.0
+Version: v2.4
 Date Written: 2026-08-11
-Last Updated: 2026-08-12
+Last Updated: 2026-08-17
 
 PURPOSE
 - Dispatch one Ready Email Handoff Queue row to the Communications Hub.
-- Remain the single shared dispatcher for WELCOME and DAILY_SUBMISSION.
+- Remain the single shared dispatcher for WELCOME, DAILY_SUBMISSION, VIDEO_FEEDBACK,
+  HOMEWORK_FEEDBACK, WEEKLY_ATHLETE_SUMMARY, and ZOOM_RECORDING_APPROVAL.
 
 IMPORTANT DESIGN RULES
+- Use Airtable Scripting fetch(...) for Communications Hub ingress.
 - Preserve the existing WELCOME envelope, validation, retry, and replay behavior.
 - DAILY_SUBMISSION accepts only DAILY_SUBMISSION|SUBMISSIONS|<Submission Record ID>
   and requires the key suffix to equal Source Record ID.
+- VIDEO_FEEDBACK accepts only VIDEO_FEEDBACK|VIDEO_FEEDBACK|<Video Feedback Record ID>
+  and requires the key suffix to equal Source Record ID.
+- HOMEWORK_FEEDBACK accepts only HOMEWORK_FEEDBACK|HOMEWORK_COMPLETIONS|<HC Record ID>
+  and requires the key suffix to equal Source Record ID.
+- WEEKLY_ATHLETE_SUMMARY accepts only WEEKLY_ATHLETE_SUMMARY|WEEKLY_ATHLETE_SUMMARY|<WAS Record ID>
+  and requires the key suffix to equal Source Record ID.
+- ZOOM_RECORDING_APPROVAL (Airtable Event Type) accepts only
+  ZOOM_RECORDING_APPROVAL|ZOOM_ATTENDANCE|<ZA Record ID> and requires Template Key
+  ZOOM_RECORDING_APPROVED (Event Type and Template Key are intentionally different).
+- Validate actual Email Handoff Queue Event Type single-select choices; do not invent options.
+- Reuse the existing queue record by deterministic Handoff Key; never create duplicate
+  queue rows, Hub Messages, or Deliveries from this dispatcher.
+- Never call Make, Gmail, or Resend directly. Never mark source records sent merely
+  because the Hub accepted the request.
 - The Hub owns rendering and delivery; this script never rebuilds email content.
 - The ingress secret is an Airtable input and is never logged or stored.
 
@@ -28,6 +44,9 @@ OUTPUTS
 - statusOut, actionOut, errorOut, debugStep, queueRecordId, handoffKey,
   hubEventId, attemptCount, hubResponseJson
 
+AUTOMATION NAME
+- 079 – Send to Communications Hub - NEW
+
 FOLDER
 - 07 - Email, Notifications, and External Handoffs
 */
@@ -35,13 +54,13 @@ FOLDER
 // @ts-nocheck
 
 const SCRIPT = {
-    scriptName: "079 - Email, Notifications, and External Handoffs - Send Queue Handoff to Communications Hub",
-    version: "v2.0",
-    versionDate: "2026-08-12",
+    scriptName: "079 – Send to Communications Hub - NEW",
+    version: "v2.4",
+    versionDate: "2026-08-17",
     originalWrittenDate: "2026-08-11",
-    lastUpdated: "2026-08-12",
+    lastUpdated: "2026-08-17",
     folder: "07 - Email, Notifications, and External Handoffs",
-    automationName: "079 - Email, Notifications, and External Handoffs - Send Queue Handoff to Communications Hub",
+    automationName: "079 – Send to Communications Hub - NEW",
 };
 
 const CONFIG = {
@@ -73,10 +92,24 @@ const CONFIG = {
         statusNeedsReview: "Needs Review",
         eventWelcome: "WELCOME",
         eventDailySubmission: "DAILY_SUBMISSION",
+        eventVideoFeedback: "VIDEO_FEEDBACK",
+        eventHomeworkFeedback: "HOMEWORK_FEEDBACK",
+        eventWeeklyAthleteSummary: "WEEKLY_ATHLETE_SUMMARY",
+        // Airtable Event Type choice (not the Hub template key).
+        eventZoomRecordingApproval: "ZOOM_RECORDING_APPROVAL",
         templateWelcome: "WELCOME",
         templateDailySubmission: "DAILY_SUBMISSION",
+        templateVideoFeedback: "VIDEO_FEEDBACK",
+        templateHomeworkFeedback: "HOMEWORK_FEEDBACK",
+        templateWeeklyAthleteSummary: "WEEKLY_ATHLETE_SUMMARY",
+        // Hub / registered template key (intentionally differs from Event Type).
+        templateZoomRecordingApproved: "ZOOM_RECORDING_APPROVED",
         sourceEnrollments: "Enrollments",
         sourceSubmissions: "Submissions",
+        sourceVideoFeedback: "Video Feedback",
+        sourceHomeworkCompletions: "Homework Completions",
+        sourceWeeklyAthleteSummary: "Weekly Athlete Summary",
+        sourceZoomAttendance: "Zoom Attendance",
         sourceSystem: "SHOOTING_CHALLENGE",
         schemaVersion: "1.0",
         maxAttemptsBeforeReview: 3,
@@ -232,6 +265,44 @@ function parsePayload(value, eventType) {
             }
         }
     }
+    if (eventType === CONFIG.values.eventVideoFeedback) {
+        for (const key of ["athleteName", "coachFeedback", "totalVideoXpAwarded"]) {
+            if (payload?.[key] === undefined || payload?.[key] === null || String(payload?.[key]).trim() === "") {
+                throw new Error(`${CONFIG.fields.payloadJson} is missing ${key}`);
+            }
+        }
+    }
+    if (eventType === CONFIG.values.eventHomeworkFeedback) {
+        for (const key of ["athleteName", "coachFeedback"]) {
+            if (payload?.[key] === undefined || payload?.[key] === null || String(payload?.[key]).trim() === "") {
+                throw new Error(`${CONFIG.fields.payloadJson} is missing ${key}`);
+            }
+        }
+        const xp = payload?.totalHomeworkXpAwarded ?? payload?.totalXp;
+        if (xp === undefined || xp === null || String(xp).trim() === "") {
+            throw new Error(`${CONFIG.fields.payloadJson} is missing totalHomeworkXpAwarded (or totalXp)`);
+        }
+    }
+    if (eventType === CONFIG.values.eventWeeklyAthleteSummary) {
+        if (payload?.athleteName === undefined || payload?.athleteName === null || String(payload.athleteName).trim() === "") {
+            throw new Error(`${CONFIG.fields.payloadJson} is missing athleteName`);
+        }
+        const weekLabel = payload?.weekLabel ?? payload?.weekName;
+        if (weekLabel === undefined || weekLabel === null || String(weekLabel).trim() === "") {
+            throw new Error(`${CONFIG.fields.payloadJson} is missing weekLabel (or weekName)`);
+        }
+    }
+    if (eventType === CONFIG.values.eventZoomRecordingApproval) {
+        for (const key of ["athleteName", "meetingName"]) {
+            if (payload?.[key] === undefined || payload?.[key] === null || String(payload?.[key]).trim() === "") {
+                throw new Error(`${CONFIG.fields.payloadJson} is missing ${key}`);
+            }
+        }
+        const approvalOrTiming = payload?.approvalResult ?? payload?.timing;
+        if (approvalOrTiming === undefined || approvalOrTiming === null || String(approvalOrTiming).trim() === "") {
+            throw new Error(`${CONFIG.fields.payloadJson} is missing approvalResult (or timing)`);
+        }
+    }
     return payload;
 }
 
@@ -260,7 +331,7 @@ async function postJson(url, secret, payload) {
         headers: { Authorization: `Bearer ${secret}`, "Content-Type": "application/json" },
         body: JSON.stringify(payload),
     };
-    return remoteFetchAsync(url, request);
+    return fetch(url, request);
 }
 
 function validateHandoff(eventType, templateKey, handoffKey, sourceTable, sourceRecordId) {
@@ -283,6 +354,62 @@ function validateHandoff(eventType, templateKey, handoffKey, sourceTable, source
         }
         if (sourceTable !== CONFIG.values.sourceSubmissions) {
             throw new Error(`Source Table must be ${CONFIG.values.sourceSubmissions}`);
+        }
+        return;
+    }
+    if (eventType === CONFIG.values.eventVideoFeedback) {
+        const match = /^VIDEO_FEEDBACK\|VIDEO_FEEDBACK\|(rec[A-Za-z0-9]{14})$/.exec(handoffKey);
+        if (!match) throw new Error(`Invalid VIDEO_FEEDBACK Handoff Key: ${handoffKey || "blank"}`);
+        if (match[1] !== sourceRecordId) {
+            throw new Error("VIDEO_FEEDBACK Handoff Key does not match Source Record ID");
+        }
+        if (templateKey !== CONFIG.values.templateVideoFeedback) {
+            throw new Error("Template Key must be VIDEO_FEEDBACK");
+        }
+        if (sourceTable !== CONFIG.values.sourceVideoFeedback) {
+            throw new Error(`Source Table must be ${CONFIG.values.sourceVideoFeedback}`);
+        }
+        return;
+    }
+    if (eventType === CONFIG.values.eventHomeworkFeedback) {
+        const match = /^HOMEWORK_FEEDBACK\|HOMEWORK_COMPLETIONS\|(rec[A-Za-z0-9]{14})$/.exec(handoffKey);
+        if (!match) throw new Error(`Invalid HOMEWORK_FEEDBACK Handoff Key: ${handoffKey || "blank"}`);
+        if (match[1] !== sourceRecordId) {
+            throw new Error("HOMEWORK_FEEDBACK Handoff Key does not match Source Record ID");
+        }
+        if (templateKey !== CONFIG.values.templateHomeworkFeedback) {
+            throw new Error("Template Key must be HOMEWORK_FEEDBACK");
+        }
+        if (sourceTable !== CONFIG.values.sourceHomeworkCompletions) {
+            throw new Error(`Source Table must be ${CONFIG.values.sourceHomeworkCompletions}`);
+        }
+        return;
+    }
+    if (eventType === CONFIG.values.eventWeeklyAthleteSummary) {
+        const match = /^WEEKLY_ATHLETE_SUMMARY\|WEEKLY_ATHLETE_SUMMARY\|(rec[A-Za-z0-9]{14})$/.exec(handoffKey);
+        if (!match) throw new Error(`Invalid WEEKLY_ATHLETE_SUMMARY Handoff Key: ${handoffKey || "blank"}`);
+        if (match[1] !== sourceRecordId) {
+            throw new Error("WEEKLY_ATHLETE_SUMMARY Handoff Key does not match Source Record ID");
+        }
+        if (templateKey !== CONFIG.values.templateWeeklyAthleteSummary) {
+            throw new Error("Template Key must be WEEKLY_ATHLETE_SUMMARY");
+        }
+        if (sourceTable !== CONFIG.values.sourceWeeklyAthleteSummary) {
+            throw new Error(`Source Table must be ${CONFIG.values.sourceWeeklyAthleteSummary}`);
+        }
+        return;
+    }
+    if (eventType === CONFIG.values.eventZoomRecordingApproval) {
+        const match = /^ZOOM_RECORDING_APPROVAL\|ZOOM_ATTENDANCE\|(rec[A-Za-z0-9]{14})$/.exec(handoffKey);
+        if (!match) throw new Error(`Invalid ZOOM_RECORDING_APPROVAL Handoff Key: ${handoffKey || "blank"}`);
+        if (match[1] !== sourceRecordId) {
+            throw new Error("ZOOM_RECORDING_APPROVAL Handoff Key does not match Source Record ID");
+        }
+        if (templateKey !== CONFIG.values.templateZoomRecordingApproved) {
+            throw new Error("Template Key must be ZOOM_RECORDING_APPROVED");
+        }
+        if (sourceTable !== CONFIG.values.sourceZoomAttendance) {
+            throw new Error(`Source Table must be ${CONFIG.values.sourceZoomAttendance}`);
         }
         return;
     }
@@ -333,7 +460,14 @@ async function main() {
             CONFIG.values.statusReady, CONFIG.values.statusSending, CONFIG.values.statusAccepted,
             CONFIG.values.statusFailed, CONFIG.values.statusNeedsReview,
         ]) requireSingleSelectValue(queueTable, CONFIG.fields.status, status);
-        for (const eventType of [CONFIG.values.eventWelcome, CONFIG.values.eventDailySubmission]) {
+        for (const eventType of [
+            CONFIG.values.eventWelcome,
+            CONFIG.values.eventDailySubmission,
+            CONFIG.values.eventVideoFeedback,
+            CONFIG.values.eventHomeworkFeedback,
+            CONFIG.values.eventWeeklyAthleteSummary,
+            CONFIG.values.eventZoomRecordingApproval,
+        ]) {
             requireSingleSelectValue(queueTable, CONFIG.fields.eventType, eventType);
         }
 
@@ -365,6 +499,7 @@ async function main() {
         const recipients = eventType === CONFIG.values.eventWelcome
             ? parseWelcomeRecipients(getText(row, CONFIG.fields.recipientsJson))
             : parseDailyRecipients(getText(row, CONFIG.fields.recipientsJson));
+        // Non-WELCOME event types share the flexible recipient object shape.
         const payload = parsePayload(getText(row, CONFIG.fields.payloadJson), eventType);
         const testMode = getBoolean(row, CONFIG.fields.testMode);
         context.attemptCount = getNumber(row, CONFIG.fields.attemptCount) + 1;

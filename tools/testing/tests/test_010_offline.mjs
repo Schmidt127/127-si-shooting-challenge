@@ -90,7 +90,7 @@ test("fails closed when no canonical Weekly Athlete Summary exists", async () =>
 
   const { error } = await run010({ base });
   assert.ok(error);
-  assert.match(String(error.message), /incomplete or ambiguous canonical identity/i);
+  assert.match(String(error.message), /no canonical Weekly Athlete Summary/i);
   assert.equal(totalWrites(base), 0);
 });
 
@@ -112,7 +112,7 @@ test("multiple valid Weekly Athlete Summary candidates fail closed", async () =>
 
   const { error } = await run010({ base });
   assert.ok(error);
-  assert.match(String(error.message), /incomplete or ambiguous canonical identity/i);
+  assert.match(String(error.message), /multiple Weekly Athlete Summary candidates/i);
   assert.equal(totalWrites(base), 0);
 });
 

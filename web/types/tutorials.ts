@@ -12,6 +12,7 @@ export type TutorialItem = {
   programs: string[];
   briefDescription: string;
   detailedDescription: string;
+  assignmentRationale: string;
   sortOrder: number;
 };
 

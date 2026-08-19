@@ -1,9 +1,13 @@
-# Weekly Athlete Summary email — final architecture (verified PROD)
+# Weekly Athlete Summary email — architecture (historical Make/Gmail path)
 
-**Verified:** 2026-07-24  
+> **HISTORICAL — 2026-07-24 Make.com → Gmail proof.** Current Shooting Challenge email delivery is Communications Hub → **Resend**. Make.com does not handle any SC emails (Mike 2026-08-19). See [`docs/integrations/email-send-plane.md`](../integrations/email-send-plane.md).
+>
+> Do not treat the flow below as the current sender.
+
+**Verified (historical):** 2026-07-24  
 **Base:** PROD `appn84sqPw03zEbTT`  
 **Schmidt Enrollment:** `recgP9qZYjAhE7NXm`  
-**Authority:** Controlled end-to-end proof (empty-week `send_short`)
+**Authority then:** Controlled end-to-end proof (empty-week `send_short`)
 
 ---
 

@@ -56,12 +56,12 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
               {assignment.weekName}
             </span>
             {assignment.homeworkNumber ? (
-              <span className="rounded-md border border-border bg-brand-light-gray px-3 py-1 text-xs font-medium text-muted">
+              <span className="rounded-md border border-border bg-brand-light-gray px-3 py-1 text-xs font-medium text-foreground">
                 {assignment.homeworkNumber}
               </span>
             ) : null}
             {assignment.book ? (
-              <span className="rounded-md border border-border bg-brand-light-gray px-3 py-1 text-xs font-medium text-muted">
+              <span className="rounded-md border border-border bg-brand-light-gray px-3 py-1 text-xs font-medium text-foreground">
                 {assignment.bookAbbreviation || assignment.book}
               </span>
             ) : null}
@@ -102,21 +102,21 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
       {description ? (
         <section className={cn(catalogPanelClass(), "mt-10")}>
           <SectionHeading label="Overview" title="The full assignment" />
-          <RichContent text={description} className="text-foreground/90" />
+          <RichContent text={description} className="text-foreground" />
         </section>
       ) : null}
 
       {assignment.specificSteps ? (
         <section className={cn(catalogPanelClass({ tint: "accent" }), "mt-8")}>
           <SectionHeading label="Action plan" title="Specific steps" />
-          <RichContent text={assignment.specificSteps} className="text-foreground/90" />
+          <RichContent text={assignment.specificSteps} className="text-foreground" />
         </section>
       ) : null}
 
       {assignment.assignmentRationale ? (
         <section className={cn(catalogPanelClass(), "mt-8")}>
           <SectionHeading label="Coaching lens" title="Why this matters" />
-          <RichContent text={assignment.assignmentRationale} className="text-foreground/90" />
+          <RichContent text={assignment.assignmentRationale} className="text-foreground" />
         </section>
       ) : null}
 

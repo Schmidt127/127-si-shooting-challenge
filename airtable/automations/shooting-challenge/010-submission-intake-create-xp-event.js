@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-21
-Last GitHub Update: 2026-08-13
+Last GitHub Update: 2026-08-16
 
 Purpose:
 Reconcile one Submission's canonical Submission Base XP Event.
@@ -31,9 +31,9 @@ ownership cannot be proven.
  * 010 - SUBMISSION INTAKE AND ASSET CREATION
  * Create/Reconcile Submission Base XP Event
  *
- * Version: v10.9
+ * Version: v10.10
  * Date Written: 2026-06-06
- * Last Updated: 2026-08-13
+ * Last Updated: 2026-08-16
  *
  * PURPOSE
  * - Reconcile one Submission after the approved signature formula changes.
@@ -103,10 +103,10 @@ ownership cannot be proven.
 
 const SCRIPT = {
   scriptName: "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
-  version: "v10.9",
-  versionDate: "2026-08-13",
+  version: "v10.10",
+  versionDate: "2026-08-16",
   originalWrittenDate: "2026-06-06",
-  lastUpdated: "2026-08-13",
+  lastUpdated: "2026-08-16",
   folder: "01 - Submission Intake and Asset Creation",
   automationName: "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
 };
@@ -291,18 +291,137 @@ function addWritable(payload, table, name, value) {
   payload[name] = value;
 }
 
-function dateKey(value) {
-  const textValue = String(value || "").trim();
-  const iso = textValue.match(/^(\d{4}-\d{2}-\d{2})/);
+function dateKeyFromText(textValue) {
+  const text = String(textValue || "").trim();
+  if (!text) return "";
+
+  const iso = text.match(/^(\d{4}-\d{2}-\d{2})/);
   if (iso) return iso[1];
-  const local = textValue.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})/);
-  return local ? `${local[3]}-${local[1].padStart(2, "0")}-${local[2].padStart(2, "0")}` : "";
+
+  const local = text.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})/);
+  if (local) {
+    return `${local[3]}-${local[1].padStart(2, "0")}-${local[2].padStart(2, "0")}`;
+  }
+
+  return "";
+}
+
+function dateKeyFromDateObject(value, timeZone = CONFIG.timeZone) {
+  if (!value) return "";
+
+  const dateValue = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(dateValue.getTime())) return "";
+
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(dateValue);
+
+  const year = parts.find((part) => part.type === "year")?.value || "";
+  const month = parts.find((part) => part.type === "month")?.value || "";
+  const day = parts.find((part) => part.type === "day")?.value || "";
+  if (!year || !month || !day) return "";
+
+  return `${year}-${month}-${day}`;
+}
+
+function dateKey(value) {
+  if (value === null || value === undefined || value === "") return "";
+
+  if (typeof value === "string" || typeof value === "number") {
+    return dateKeyFromText(value);
+  }
+
+  if (value instanceof Date) {
+    return dateKeyFromDateObject(value, CONFIG.timeZone);
+  }
+
+  // Airtable may surface date cells as Date-like objects; try text then object.
+  const asText = dateKeyFromText(
+    typeof value?.toISOString === "function"
+      ? value.toISOString()
+      : String(value),
+  );
+  if (asText) return asText;
+  return dateKeyFromDateObject(value, CONFIG.timeZone);
 }
 
 function todayKey() {
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: CONFIG.timeZone, year: "numeric", month: "2-digit", day: "2-digit",
-  }).format(new Date());
+  return dateKeyFromDateObject(new Date(), CONFIG.timeZone);
+}
+
+function collectEligibilityFailures({
+  enrollment,
+  week,
+  enrollmentIds,
+  weekIds,
+  wasCandidates,
+  wasIds,
+  wasId,
+  submission,
+  activityDate,
+  weekStartKey,
+  weekEndKey,
+  today,
+}) {
+  const failures = [];
+
+  if (!enrollmentIds.length) failures.push("missing Enrollment link");
+  else if (enrollmentIds.length !== 1) failures.push("ambiguous Enrollment links");
+  else if (!enrollment) failures.push("Enrollment record not found");
+
+  if (!weekIds.length) failures.push("missing Week link");
+  else if (weekIds.length !== 1) failures.push("ambiguous Week links");
+  else if (!week) failures.push("Week record not found");
+
+  if (wasCandidates.length === 0) failures.push("no canonical Weekly Athlete Summary for Enrollment+Week");
+  else if (wasCandidates.length !== 1) {
+    failures.push(`multiple Weekly Athlete Summary candidates (${wasCandidates.length})`);
+  }
+
+  if (wasIds.length > 1) failures.push("ambiguous Submission Weekly Athlete Summary links");
+  else if (wasIds.length === 1 && wasId && wasIds[0] !== wasId) {
+    failures.push("Submission Weekly Athlete Summary does not match canonical Enrollment+Week summary");
+  }
+
+  if (enrollment && !booleanish(enrollment, enrollmentsTable, CONFIG.enrollments.active)) {
+    failures.push("Enrollment is not Active?");
+  }
+  if (!booleanish(submission, submissionsTable, CONFIG.submissions.countThisSubmission)) {
+    failures.push("Count This Submission? is false");
+  }
+  if ((number(submission, submissionsTable, CONFIG.submissions.totalShotsCounted) || 0) <= 0) {
+    failures.push("Total Shots Counted is not greater than 0");
+  }
+
+  if (!activityDate) failures.push("Activity Date missing or unparseable");
+  else {
+    if (activityDate > today) {
+      failures.push(`Activity Date ${activityDate} is after today ${today} (${CONFIG.timeZone})`);
+    }
+    if (week) {
+      if (!weekStartKey || !weekEndKey) {
+        failures.push("Week Start Date or End Date missing or unparseable");
+      } else if (activityDate < weekStartKey || activityDate > weekEndKey) {
+        failures.push(
+          `Activity Date ${activityDate} is outside Week range ${weekStartKey}..${weekEndKey}`,
+        );
+      }
+    }
+  }
+
+  if (enrollment && week) {
+    const enrollmentPi = one(enrollment, enrollmentsTable, CONFIG.enrollments.programInstance);
+    const weekPi = one(week, weeksTable, CONFIG.weeks.programInstance);
+    if (!enrollmentPi) failures.push("Enrollment missing Program Instance");
+    else if (weekPi !== enrollmentPi) {
+      failures.push("Week Program Instance does not match Enrollment Program Instance");
+    }
+  }
+
+  return failures;
 }
 
 /* =========================================================
@@ -638,6 +757,9 @@ async function main() {
     const enrollment = enrollmentId ? await enrollmentsTable.selectRecordAsync(enrollmentId) : null;
     const week = weekId ? await weeksTable.selectRecordAsync(weekId) : null;
     const activityDate = dateKey(raw(submission, submissionsTable, CONFIG.submissions.activityDate));
+    const weekStartKey = week ? dateKey(raw(week, weeksTable, CONFIG.weeks.startDate)) : "";
+    const weekEndKey = week ? dateKey(raw(week, weeksTable, CONFIG.weeks.endDate)) : "";
+    const today = todayKey();
     const eligible = Boolean(
       enrollment && week && enrollmentIds.length === 1 && weekIds.length === 1
       && wasCandidates.length === 1 && wasIds.length <= 1 && wasId
@@ -645,18 +767,36 @@ async function main() {
       && booleanish(enrollment, enrollmentsTable, CONFIG.enrollments.active)
       && booleanish(submission, submissionsTable, CONFIG.submissions.countThisSubmission)
       && (number(submission, submissionsTable, CONFIG.submissions.totalShotsCounted) || 0) > 0
-      && activityDate && activityDate <= todayKey()
-      && activityDate >= dateKey(raw(week, weeksTable, CONFIG.weeks.startDate))
-      && activityDate <= dateKey(raw(week, weeksTable, CONFIG.weeks.endDate))
+      && activityDate && activityDate <= today
+      && activityDate >= weekStartKey
+      && activityDate <= weekEndKey
       && one(enrollment, enrollmentsTable, CONFIG.enrollments.programInstance)
       && one(week, weeksTable, CONFIG.weeks.programInstance) === one(enrollment, enrollmentsTable, CONFIG.enrollments.programInstance),
     );
 
     if (!eligible) {
       step("5 - Correction or safe ineligible skip");
-      if (!enrollmentId || !weekId || wasCandidates.length !== 1 || !wasId || wasIds.length > 1) {
+      const eligibilityFailures = collectEligibilityFailures({
+        enrollment,
+        week,
+        enrollmentIds,
+        weekIds,
+        wasCandidates,
+        wasIds,
+        wasId,
+        submission,
+        activityDate,
+        weekStartKey,
+        weekEndKey,
+        today,
+      });
+      const identityBroken = !enrollmentId || !weekId || wasCandidates.length !== 1 || !wasId || wasIds.length > 1;
+      if (identityBroken) {
+        const detail = eligibilityFailures.length
+          ? eligibilityFailures.join("; ")
+          : "incomplete or ambiguous canonical identity";
         throw new Error(
-          `Submission ${recordId} is ineligible with incomplete or ambiguous canonical identity; ` +
+          `Submission ${recordId} is ineligible (${detail}); ` +
           "the existing XP Event remains unacknowledged.",
         );
       }

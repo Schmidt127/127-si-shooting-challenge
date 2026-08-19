@@ -53,7 +53,7 @@ export function ProgramPage({
       />
       {meta ? (
         <div className="border-b border-border bg-card/70">
-          <SiteContainer className="py-3 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
+          <SiteContainer className="py-3 text-xs font-medium uppercase tracking-[0.18em] text-foreground">
             {meta}
           </SiteContainer>
         </div>

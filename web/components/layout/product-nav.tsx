@@ -42,7 +42,7 @@ function navLinkClass(active: boolean) {
     "inline-flex min-h-11 shrink-0 items-center rounded-md px-3.5 py-2.5 text-[0.9375rem] font-semibold transition",
     active
       ? "bg-brand-blue text-brand-white shadow-site-sm ring-1 ring-brand-orange/45"
-      : "text-foreground/80 hover:bg-brand-light-gray hover:text-foreground",
+      : "text-foreground hover:bg-brand-light-gray hover:text-foreground",
   );
 }
 

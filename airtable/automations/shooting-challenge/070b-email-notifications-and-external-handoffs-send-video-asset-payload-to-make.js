@@ -7,16 +7,16 @@ Last Synced From Airtable: 2026-06-27
 Last GitHub Update: 2026-07-11
 
 Purpose:
-Sends one video Submission Asset to the shared Make Upload Engine (v4.1 minimal payload).
+Sends one video Submission Asset to the shared Make Upload Engine (v4.6 Program Instance season contract).
 
 Trigger:
 Submission Assets when Send to Make Trigger is checked and video asset is ready.
 
 Important Tables:
-Submission Assets
+Submission Assets, Enrollments
 
 Important Fields:
-Upload Status, Send to Make Trigger, Video Feedback, Google Drive File URL
+Upload Status, Send to Make Trigger, Video Feedback, Canonical File URL, Storage Key, Enrollment - Linked, Program Instance
 
 Notes:
 Same script body as 070a — set input automationNumber to 070b in Airtable.
@@ -37,15 +37,21 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * Submission Assets
  *
  * VERSION:
- * v4.4 - Make Accepted async handoff (070c verifies writeback)
+ * v4.6 - Program Instance season identity on payload (Lambda remains authoritative)
  *
  * CREATED:
  * 2026-06-27
  *
  * LAST UPDATED:
- * 2026-07-11
+ * 2026-08-17
  *
  * CHANGE HISTORY:
+ * 2026-08-17 - v4.6 (070a / 070b Program Instance season contract)
+ * - Require exactly one Enrollment - Linked and exactly one Enrollment Program Instance.
+ * - Payload includes enrollmentId + programInstanceId as cross-checks only.
+ * - Do not send seasonSlug. Lambda resolves Program Instance - Sync.`School Year - Linked`.
+ * - Fail closed before Make if enrollment or Program Instance is missing or ambiguous.
+ *
  * 2026-07-11 - v4.4 (070b / C-013 Make async Accepted + 070c companion)
  * - Make HTTP 2xx body "Accepted" returns pending handoff (no setTimeout poll).
  * - Retains Send to Make Trigger; automation 070c verifies writeback and clears trigger.
@@ -65,8 +71,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Kept one shared script body for 070a and 070b.
  * - Kept minimal canonical webhook payload.
  * - Sends only submissionAssetRecordId and targetRecordId for Make routing.
- * - Prevents duplicate uploads if Google Drive File URL or File ID already exists.
+ * - Prevents duplicate uploads if Canonical File URL or Uploaded+Storage Key already exists.
  * - Stops safely with Pending Link if target Homework Completion or Video Feedback record is missing.
+ * - Do not read or gate on Google Drive File URL / File ID (legacy fields retired).
  *
  * 2026-06-27 - v4.0
  * - Rewritten to use one shared script for both 070a and 070b.
@@ -98,8 +105,13 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  *   "sourceTable": "Submission Assets",
  *   "submissionAssetRecordId": "rec...",
  *   "targetTable": "Homework Completions" | "Video Feedback",
- *   "targetRecordId": "rec..."
+ *   "targetRecordId": "rec...",
+ *   "enrollmentId": "rec...",
+ *   "programInstanceId": "rec..."
  * }
+ *
+ * Season is NOT selected from this payload. Lambda resolves:
+ * Submission Asset → Enrollment - Linked → Program Instance → School Year - Linked.
  *
  * MAKE MAPPING EXPECTATIONS:
  * - Module 2 Get Submission Asset: Record ID = {{1.submissionAssetRecordId}}
@@ -121,10 +133,11 @@ async function main() {
 
     const CONFIG = {
         scriptName: "070a/070b - Send Upload Asset Payload to Make",
-        version: "v4.4",
+        version: "v4.6",
 
         tables: {
             submissionAssets: "Submission Assets",
+            enrollments: "Enrollments",
         },
 
         fields: {
@@ -136,12 +149,13 @@ async function main() {
             airtableAttachment: "Airtable Attachment",
             submissionLinked: "Submission - Linked",
             enrollmentLinked: "Enrollment - Linked",
+            enrollmentProgramInstance: "Program Instance",
 
             homeworkCompletions: "Homework Completions",
             videoFeedback: "Video Feedback",
 
-            googleDriveFileId: "Google Drive File ID",
-            googleDriveFileUrl: "Google Drive File URL",
+            canonicalFileUrl: "Canonical File URL",
+            storageKey: "Storage Key",
         },
 
         values: {
@@ -681,8 +695,9 @@ async function main() {
     const uploadDestination = getText(assetRecord, assetsTable, CONFIG.fields.uploadDestination);
     const submissionRecordIds = getLinkedIds(assetRecord, assetsTable, CONFIG.fields.submissionLinked);
     const enrollmentRecordIds = getLinkedIds(assetRecord, assetsTable, CONFIG.fields.enrollmentLinked);
-    const googleDriveFileId = getText(assetRecord, assetsTable, CONFIG.fields.googleDriveFileId);
-    const googleDriveFileUrl = getText(assetRecord, assetsTable, CONFIG.fields.googleDriveFileUrl);
+    const uploadStatusExisting = getText(assetRecord, assetsTable, CONFIG.fields.uploadStatus);
+    const canonicalFileUrl = getText(assetRecord, assetsTable, CONFIG.fields.canonicalFileUrl);
+    const storageKey = getText(assetRecord, assetsTable, CONFIG.fields.storageKey);
     const attachments = getRaw(assetRecord, assetsTable, CONFIG.fields.airtableAttachment);
     const attachmentCount = Array.isArray(attachments) ? attachments.length : 0;
 
@@ -708,21 +723,26 @@ async function main() {
 
     setDebug("4 - Safety Checks");
 
-    if (googleDriveFileId || googleDriveFileUrl) {
+    const alreadyUploadedCanonical =
+        Boolean(canonicalFileUrl) ||
+        (uploadStatusExisting === CONFIG.values.statusUploaded && Boolean(storageKey));
+
+    if (alreadyUploadedCanonical) {
         await stopWithAssetUpdate({
             statusOut: "skipped",
             actionOut: "skipped_already_uploaded",
             uploadStatus: CONFIG.values.statusUploaded,
-            uploadError:
-                "Upload stopped: Google Drive File URL or File ID already exists. Duplicate upload prevented.",
-            message: "Duplicate upload blocked — Drive file already present.",
+            uploadError: "",
+            uncheckTrigger: true,
+            message: "Duplicate upload blocked — Canonical/S3 upload already present.",
             extra: {
                 uploadDestination,
                 routeKey: route.routeKey,
                 targetTable: route.targetTable,
                 targetRecordId,
-                googleDriveFileId,
-                googleDriveFileUrl,
+                canonicalFileUrl,
+                storageKey,
+                uploadStatusExisting,
             },
         });
         return;
@@ -748,6 +768,86 @@ async function main() {
             uploadError: "Enrollment - Linked is missing.",
             message: "Missing Enrollment - Linked.",
             extra: { uploadDestination, routeKey: route.routeKey, targetTable: route.targetTable },
+        });
+        return;
+    }
+
+    if (enrollmentRecordIds.length > 1) {
+        await stopWithAssetUpdate({
+            statusOut: "error",
+            actionOut: "error_ambiguous_enrollment",
+            uploadStatus: CONFIG.values.statusError,
+            uploadError: `Enrollment - Linked is ambiguous; expected exactly one record, found ${enrollmentRecordIds.length}.`,
+            message: "Ambiguous Enrollment - Linked.",
+            extra: { uploadDestination, routeKey: route.routeKey, targetTable: route.targetTable },
+        });
+        return;
+    }
+
+    const enrollmentId = enrollmentRecordIds[0];
+    let programInstanceId = "";
+
+    setDebug("4b - Resolve Program Instance");
+    try {
+        const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
+        const enrollmentRecord = await enrollmentsTable.selectRecordAsync(enrollmentId, {
+            fields: getSafeFields(enrollmentsTable, [CONFIG.fields.enrollmentProgramInstance]),
+        });
+        if (!enrollmentRecord) {
+            throw new Error(`Enrollment record not found: ${enrollmentId}`);
+        }
+        const programInstanceIds = getLinkedIds(
+            enrollmentRecord,
+            enrollmentsTable,
+            CONFIG.fields.enrollmentProgramInstance
+        );
+        if (programInstanceIds.length === 0) {
+            await stopWithAssetUpdate({
+                statusOut: "error",
+                actionOut: "error_missing_program_instance",
+                uploadStatus: CONFIG.values.statusError,
+                uploadError: "Enrollment Program Instance is missing.",
+                message: "Missing Enrollment Program Instance.",
+                extra: {
+                    uploadDestination,
+                    routeKey: route.routeKey,
+                    targetTable: route.targetTable,
+                    enrollmentId,
+                },
+            });
+            return;
+        }
+        if (programInstanceIds.length > 1) {
+            await stopWithAssetUpdate({
+                statusOut: "error",
+                actionOut: "error_ambiguous_program_instance",
+                uploadStatus: CONFIG.values.statusError,
+                uploadError: `Enrollment Program Instance is ambiguous; expected exactly one record, found ${programInstanceIds.length}.`,
+                message: "Ambiguous Enrollment Program Instance.",
+                extra: {
+                    uploadDestination,
+                    routeKey: route.routeKey,
+                    targetTable: route.targetTable,
+                    enrollmentId,
+                },
+            });
+            return;
+        }
+        programInstanceId = programInstanceIds[0];
+    } catch (error) {
+        const message = `Failed to resolve Enrollment Program Instance: ${error.message || error}`;
+        await stopWithAssetUpdate({
+            statusOut: "error",
+            actionOut: "error_missing_program_instance",
+            uploadStatus: CONFIG.values.statusError,
+            uploadError: message,
+            message,
+            extra: {
+                uploadDestination,
+                routeKey: route.routeKey,
+                targetTable: route.targetTable,
+                enrollmentId,
+            },
         });
         return;
     }
@@ -804,6 +904,8 @@ async function main() {
         submissionAssetRecordId: recordId,
         targetTable: route.targetTable,
         targetRecordId,
+        enrollmentId,
+        programInstanceId,
     };
 
     console.log(`${automationNumber} payload`);

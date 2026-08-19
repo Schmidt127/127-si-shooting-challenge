@@ -118,7 +118,7 @@ function LevelsOrientation() {
         <h2 id="levels-orientation-heading" className="font-display mt-1 text-2xl text-foreground">
           Your path from current level to next level
         </h2>
-        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted">
+        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-foreground">
           Level names, XP thresholds, and gate criteria below come from the configured progression
           ladder. Open any card for the requirements behind that tier.
         </p>
@@ -131,7 +131,7 @@ function LevelsOrientation() {
           >
             <p className="font-mono text-xs font-semibold text-brand-blue">0{index + 1}</p>
             <h3 className="mt-3 text-base font-semibold text-foreground">{step.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted">{step.description}</p>
+            <p className="mt-2 text-sm leading-relaxed text-foreground">{step.description}</p>
           </li>
         ))}
       </ol>

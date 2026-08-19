@@ -22,7 +22,7 @@ Maps Airtable tables and fields to web app features.
 | **Achievements** | Achievements page, profile badges | Filter `Active?` + `Visible?` |
 | **Homework Library** | Homework lesson content (catalog fields) | Reusable content; week/season schedule via PHA |
 | **Program Homework Assignments** | Scheduled homework for current season | Links Homework Library + Week + Program Instance |
-| **Tutorials** / **Tutorials & Assets** | Tutorials, shoutouts, articles | App reads `Tutorials` where present; assets in `Tutorials & Assets` |
+| **Tutorials & Assets** | Tutorials, shoutouts, articles | Split by `Type of Asset` in app |
 | **Zoom Meetings** | Zoom meetings catalog + detail | Exclude cancelled |
 | **Homework Completions** | Homework progress widget | Reviewed / upload status only |
 | **Video Feedback** | Video progress widget | Awarded rows only for public |
@@ -42,7 +42,7 @@ Softr-era fields to honor until renamed:
 |-------|-------|-----|
 | `Active?` + `Visible?` | Achievements | Achievements page (`Web - Achievements` or formula fallback) |
 | `Published?` | Homework Library | Homework catalog (via PHA schedule) |
-| `OK to Publish on Softr` | Tutorials | Tutorials / shoutouts / articles |
+| `OK to Publish on Softr` | Tutorials & Assets | Tutorials / shoutouts / articles (`checked`) |
 | `Active?` | Enrollments, Levels | Leaderboard and levels ladder |
 | `Level Sort Order - For Softr` | Enrollments (lookup) | Leaderboard / level ordering |
 
@@ -58,7 +58,7 @@ These names must match `web/lib/airtable/queries.ts`. Full fallback formulas: [a
 | `Web - Leaderboard` | Enrollments | Leaderboard, public display | Required — no table-wide fallback |
 | `Web - Homework Catalog` | Homework Library | Homework list (legacy view name; app uses PHA + Library) | `{Published?} = 1` on Library |
 | `Web - Levels` | Levels | Levels ladder | `{Active?} = 1` |
-| `Web - Tutorials Catalog` | Tutorials | Tutorials, shoutouts, articles | Softr publish + Shooting Challenge program filter |
+| `Web - Tutorials Catalog` | Tutorials & Assets | Tutorials, shoutouts, articles | Softr publish (`checked`) + Shooting Challenge program filter |
 | `Web - Zoom Meetings` | Zoom Meetings | Zoom list | `NOT({Meeting Status} = 'Cancelled')` |
 | `Web - Achievements` | Achievements | Achievements grid | `AND({Active?}, {Visible?})` |
 

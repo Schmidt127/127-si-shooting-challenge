@@ -31,14 +31,13 @@ describe("level ladder", () => {
 });
 
 describe("tutorial catalog", () => {
-  it("groups tutorials by category", () => {
+  it("groups tutorials without category into More to explore", () => {
     const catalog = buildTutorialCatalog([
       {
         id: "recT1",
         fields: {
           Name: "Form shooting",
-          "Tutorial Type": ["Tutorial"],
-          "Tutorial - Category": ["Shoot"],
+          "Type of Asset": "Tutorial",
           "Sort Order": 1,
         },
       },
@@ -46,15 +45,15 @@ describe("tutorial catalog", () => {
         id: "recT2",
         fields: {
           Name: "Ball handling",
-          "Tutorial Type": ["Tutorial"],
-          "Tutorial - Category": ["Dribble"],
+          "Type of Asset": "Tutorial",
           "Sort Order": 2,
         },
       },
     ]);
 
     expect(catalog.totalTutorials).toBe(2);
-    expect(catalog.categoryGroups).toHaveLength(2);
+    expect(catalog.categoryGroups).toHaveLength(1);
+    expect(catalog.categoryGroups[0].category).toBe("More to explore");
   });
 
   it("filters shooting challenge program", () => {

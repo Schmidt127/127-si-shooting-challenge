@@ -3,18 +3,26 @@ import type { TutorialCatalogData, TutorialCategoryGroup, TutorialItem } from "@
 import { asNumber, asText } from "./airtable-values";
 import { mapAttachments, mapSelectOptions } from "./homework";
 
+/**
+ * Fields on canonical table `Tutorials & Assets` (`tblDOTgsWfqPm18bw`).
+ * Do not reference the deleted `Tutorials` table.
+ */
 export type TutorialFields = {
   Name?: unknown;
+  /** Live primary field name includes a BOM prefix. */
+  "\uFEFFName"?: unknown;
+  /** Stable Airtable field ID for the primary Name field. */
+  fldduBizp8qAnAMJW?: unknown;
   "Link to Video"?: unknown;
   Athlete?: unknown;
-  "Athlete Headshot - Lkp"?: unknown;
+  "Athlete Headshot"?: unknown;
   Thumbnail?: unknown;
-  "Website Image Resolved"?: unknown;
-  "Tutorial Type"?: unknown;
-  "Tutorial - Category"?: unknown;
+  "Display Image"?: unknown;
+  "Type of Asset"?: unknown;
   "Associated Program"?: unknown;
-  "Brief Description"?: unknown;
+  "Brief Descriptions"?: unknown;
   "Detailed Description"?: unknown;
+  "Assignment Rationale"?: unknown;
   "OK to Publish on Softr"?: unknown;
   "Sort Order"?: unknown;
 };
@@ -23,6 +31,54 @@ const SHOOTING_CHALLENGE_PROGRAM = "Shooting Challenge";
 const UNCATEGORIZED = "More to explore";
 
 export type TutorialContentKind = "tutorial" | "shoutout" | "article";
+
+function readName(fields: TutorialFields): string {
+  return asText(
+    fields.Name ?? fields["\uFEFFName"] ?? fields.fldduBizp8qAnAMJW,
+    "Tutorial",
+  );
+}
+
+/**
+ * Authoritative catalog video URL from `Link to Video` only.
+ * Returns the exact http(s) string from Airtable (query params, encodings, S3
+ * paths preserved). Never invents a URL, never reads attachments.
+ */
+export function extractVideoUrl(value: unknown): string {
+  if (typeof value === "string") return firstHttpUrl(value);
+  if (Array.isArray(value) && typeof value[0] === "string") {
+    return firstHttpUrl(value[0]);
+  }
+  return "";
+}
+
+export function hasCatalogVideoUrl(url: string): boolean {
+  return Boolean(url.trim());
+}
+
+function firstHttpUrl(raw: string): string {
+  const text = raw.trim();
+  if (!text) return "";
+
+  const exact = asHttpUrl(text);
+  if (exact) return exact;
+
+  const match = text.match(/https?:\/\/[^\s<>"']+/i);
+  return match ? asHttpUrl(match[0]) : "";
+}
+
+/** Keep the original character sequence — do not re-serialize via `URL.href`. */
+function asHttpUrl(candidate: string): string {
+  try {
+    const parsed = new URL(candidate);
+    if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+      return candidate;
+    }
+  } catch {
+    return "";
+  }
+  return "";
+}
 
 function normalizeTutorialType(value: string): string {
   return value.toLowerCase().replace(/[\s-]+/g, "");
@@ -44,7 +100,7 @@ export function hasTutorialContentKind(
   fields: TutorialFields,
   kind: TutorialContentKind,
 ): boolean {
-  const types = mapSelectOptions(fields["Tutorial Type"]);
+  const types = mapSelectOptions(fields["Type of Asset"]);
   return matchesTutorialContentKind(types, kind);
 }
 
@@ -57,22 +113,24 @@ export function isPublishedTutorialMedia(
 
 export function mapTutorialRecord(record: { id: string; fields: TutorialFields }): TutorialItem {
   const fields = record.fields;
-  const resolvedImage = mapAttachments(fields["Website Image Resolved"]);
+  const displayImage = mapAttachments(fields["Display Image"]);
   const thumbnail = mapAttachments(fields.Thumbnail);
-  const headshot = mapAttachments(fields["Athlete Headshot - Lkp"]);
+  const headshot = mapAttachments(fields["Athlete Headshot"]);
 
   return {
     id: record.id,
-    name: asText(fields.Name, "Tutorial"),
-    videoUrl: asText(fields["Link to Video"], ""),
+    name: readName(fields),
+    videoUrl: extractVideoUrl(fields["Link to Video"]),
     athlete: asText(fields.Athlete, ""),
     athleteHeadshot: headshot[0] ?? null,
-    thumbnail: resolvedImage[0] ?? thumbnail[0] ?? null,
-    tutorialTypes: mapSelectOptions(fields["Tutorial Type"]),
-    categories: mapSelectOptions(fields["Tutorial - Category"]),
+    thumbnail: displayImage[0] ?? thumbnail[0] ?? null,
+    tutorialTypes: mapSelectOptions(fields["Type of Asset"]),
+    /** Category taxonomy lived only on the deleted Tutorials table. */
+    categories: [],
     programs: mapSelectOptions(fields["Associated Program"]),
-    briefDescription: asText(fields["Brief Description"], ""),
+    briefDescription: asText(fields["Brief Descriptions"], ""),
     detailedDescription: asText(fields["Detailed Description"], ""),
+    assignmentRationale: asText(fields["Assignment Rationale"], ""),
     sortOrder: asNumber(fields["Sort Order"]),
   };
 }

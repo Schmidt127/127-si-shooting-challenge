@@ -36,8 +36,8 @@
   --court-gold: #c9a227;
 
   /* Primarily light UI — blue & orange remain dominant accents */
-  /* #525252 on white ≈ 7.0:1 — stronger secondary text on cards */
-  --muted-subtle: #525252;
+  /* Secondary text on white/light-gray — WCAG AA+ without washing out to slate */
+  --muted-subtle: #3a3a3a;
   /* Readable orange text on light surfaces (official orange remains CTAs) */
   --accent-soft: #c96e00;
   --card-elevated: var(--brand-white);
@@ -185,6 +185,12 @@ html {
 body {
   font-family: var(--font-sans), system-ui, sans-serif;
   min-height: 100vh;
+  color: var(--foreground);
+}
+
+::placeholder {
+  color: var(--muted-foreground);
+  opacity: 1;
 }
 
 /* Display headings — Maven Pro bold until Magistral web license ships */
@@ -405,7 +411,7 @@ body {
 .sc-field label {
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--muted-foreground);
+  color: var(--foreground);
 }
 
 .sc-input,
@@ -496,11 +502,17 @@ body {
 }
 
 /**
- * Legacy `text-muted` used across the app meant readable secondary text.
- * Keep that meaning while shadcn uses `bg-muted` / `text-muted-foreground`.
+ * Legacy `text-muted` meant readable secondary text. Tailwind maps
+ * `--color-muted` to the muted *background* (`#e9e9e9`), which makes
+ * `text-muted` nearly invisible on light surfaces. Alias the text utility
+ * to `--muted-foreground` so `bg-muted` stays a wash and body copy stays dark.
  */
 @utility text-muted {
   color: var(--muted-foreground);
+}
+
+@utility text-muted\/80 {
+  color: color-mix(in srgb, var(--muted-foreground) 80%, transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -563,5 +575,18 @@ body {
   }
   html {
     @apply font-sans;
+  }
+}
+
+/*
+ * Guarantee `text-muted` paints as readable foreground even if Tailwind's
+ * generated color utility (from `--color-muted` background token) wins elsewhere.
+ */
+@layer utilities {
+  .text-muted {
+    color: var(--muted-foreground);
+  }
+  .text-muted\/80 {
+    color: color-mix(in srgb, var(--muted-foreground) 80%, transparent);
   }
 }

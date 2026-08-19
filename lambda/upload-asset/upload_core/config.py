@@ -4,6 +4,10 @@ import os
 from dataclasses import dataclass
 
 
+def _env_flag(name: str) -> bool:
+    return (os.getenv(name) or "").strip().lower() in {"1", "true", "yes", "on"}
+
+
 DEV_BASE = "appTetnuCZlCZdTCT"
 PROD_BASE = "appn84sqPw03zEbTT"
 TABLE = "Submission Assets"
@@ -23,6 +27,7 @@ class UploadConfig:
     upload_webhook_secret: str | None
     viewer_presign_ttl_seconds: int = 900
     viewer_base_url: str | None = None
+    allow_season_slug_fallback: bool = False
 
     @classmethod
     def from_env(cls) -> UploadConfig:
@@ -68,10 +73,11 @@ class UploadConfig:
             aws_region=os.getenv("AWS_REGION") or os.getenv("AWS_DEFAULT_REGION") or "us-east-2",
             environment=os.getenv("ENVIRONMENT", "DEV"),
             allow_route_keys=allow_route_keys,
-            season_slug=os.getenv("SEASON_SLUG", "2026-2027"),
+            season_slug=(os.getenv("SEASON_SLUG") or "").strip(),
             challenge_slug=os.getenv("CHALLENGE_SLUG", "shooting-challenge"),
             athlete_slug_override=os.getenv("ATHLETE_SLUG_OVERRIDE") or None,
             upload_webhook_secret=os.getenv("UPLOAD_WEBHOOK_SECRET") or None,
             viewer_presign_ttl_seconds=viewer_ttl,
             viewer_base_url=viewer_base,
+            allow_season_slug_fallback=_env_flag("ALLOW_SEASON_SLUG_FALLBACK"),
         )

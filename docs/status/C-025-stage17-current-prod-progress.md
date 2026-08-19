@@ -1,21 +1,19 @@
 # C-025 Stage 17 — Current PROD progress
 
-> **UPDATED 2026-08-05 — Automation 117 ownership reconcile.**  
-> Authoritative PROD Automation **117** is **only** `117 — Zoom — Send Recording Approval Email to Make` (script **v1.1**).  
-> The Stage 17 credit **orchestrator** is a repository **design alternative**, not the live Automation 117 slot.  
-> See [`C-025-117-numbering.md`](../deploy-checklists/C-025-117-numbering.md) and [`117-zoom-recording-approval-email.md`](../deploy-checklists/117-zoom-recording-approval-email.md).  
+> **Email + 117 overlay 2026-08-19:** Parent emails = Communications Hub → **Resend** ([email-send-plane.md](../integrations/email-send-plane.md)). Make 117f = historical. **PROD Automation 117 (Mike paste) = v2.1 Hub Email Handoff Queue create** — not XP, not Make send, not Stage 17 orchestrator.
+>
+> **UPDATED 2026-08-05 — Automation 117 ownership (credit vs email slot):**
+> The Stage 17 credit **orchestrator** is a repository **design alternative**, not the live Automation 117 slot.
+> See [`C-025-117-numbering.md`](../deploy-checklists/C-025-117-numbering.md).
 > Historical Stage 17 credit live evidence (2026-07-20) remains useful for recording-credit behavior, but **do not** treat the orchestrator filename as the current PROD Automation 117 paste target.
 >
-> **Automation vs Make identifier — keep distinct:**
-> - **Automation 117** = Airtable email handoff → Make (`117-zoom-send-recording-approval-email-to-make.js` v1.1). Writes **no** Airtable records.
-> - **117f** = Make workflow identifier only (`automationNumber` in the payload). Not an Airtable slot.
-> - Stage 17 orchestrator / 117a–e = `_design-alternatives/stage17-modular-reference/` — **not installed** (automation-count limit).
-> - **Canonical send key (four-part):** `ZOOM_REC_EMAIL|{EnrollmentRID}|{ZoomMeetingRID}|{ZoomAttendanceRID}`.
-> - **Make does not write back to Airtable** (no XP Events, no `Attendees`). Duplicate protection is the Make **Data Store** `C025_117f_PROD_SendKeys` (`sent` / `already_sent`).
+> **Identifiers:**
+> - **117f** = historical Make Gmail workflow identifier. Retired for email.
+> - Stage 17 orchestrator / 117a–e = `_design-alternatives/stage17-modular-reference/` — **not installed**.
 > - Live Zoom XP remains **101**. Gate / Perfect Week Applied? remain **042** / **057**.
 
 **Date written:** 2026-07-18  
-**Last updated:** 2026-08-05 (117 ownership reconcile)  
+**Last updated:** 2026-08-19 (117 v2.1 Hub handoff confirmed)  
 **Preserves prior readiness date:** 2026-07-18 ([C-025-stage17-prod-readiness-status.md](./C-025-stage17-prod-readiness-status.md))  
 **PROD:** `appn84sqPw03zEbTT` · **DEV:** `appTetnuCZlCZdTCT`
 
@@ -23,20 +21,20 @@
 
 ## Current verdict
 
-# Automation 117 = email handoff; Stage 17 credit scripts are design alternatives
+# Automation 117 = Hub email handoff v2.1; Stage 17 credit scripts are design alternatives
 
 Historical Stage 17 recording-credit enablement evidence: [C-025-stage17-prod-live-2026-07-20.md](../deploy-checklists/C-025-stage17-prod-live-2026-07-20.md) (do not re-paste orchestrator into slot 117).
 
-**Live automation posture (2026-08-05):**
+**Live automation posture (overlay 2026-08-19):**
 
 | Automation / input | State |
 |--------------------|--------|
-| 101 | **ON** — live Zoom meeting XP |
-| 117 | **ON** — recording approval email → Make (**v1.1**); **not** credit orchestrator |
+| 101 | **ON** — live Zoom meeting XP (exact version still UI-confirm if needed) |
+| 117 | **v2.1** — creates Email Handoff Queue for Hub; **079** → Resend; **not** credit orchestrator; **not** Make 117f |
 | 117a–e | **Not installed** (design alternatives only) |
-| 057 | **ON** (Perfect Week Applied?) |
-| 042 | **ON** (Gate Applied?) |
-| Approval email Make **117f** | Controlled tests PASS — go-live checklist may still apply |
+| 057 | **ON** historically (Perfect Week Applied?) — confirm live version separately |
+| 042 | **ON** historically (Gate Applied?) — confirm live version separately |
+| Approval email Make **117f** | **Historical** only |
 ## Confirmed complete
 
 - Schema + formulas (incl. Effective Recording XP % Program Config link gate)
