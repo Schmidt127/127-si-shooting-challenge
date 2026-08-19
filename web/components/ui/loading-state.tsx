@@ -26,7 +26,7 @@ export function LoadingState({ label = "Loading…", className }: LoadingStatePr
             aria-hidden="true"
           />
         </div>
-        <p className="mt-5 text-sm font-medium leading-relaxed text-muted-foreground">{label}</p>
+        <p className="mt-5 text-sm font-medium leading-relaxed text-foreground">{label}</p>
       </div>
     </div>
   );

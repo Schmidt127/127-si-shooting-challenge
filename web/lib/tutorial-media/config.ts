@@ -11,6 +11,7 @@ export type TutorialMediaSectionConfig = {
     subtitle: string;
     itemCountLabel: string;
     cardCta: string;
+    cardCtaUnavailable: string;
   };
   detail: {
     backLabel: string;
@@ -19,6 +20,8 @@ export type TutorialMediaSectionConfig = {
     deepDiveLabel: string;
     deepDiveTitle: string;
     openVideoLabel: string;
+    unavailableTitle: string;
+    unavailableMessage: string;
     externalDocumentHint?: string;
   };
   empty: {
@@ -34,6 +37,41 @@ export type TutorialMediaSectionConfig = {
   };
 };
 
+export const TUTORIALS_SECTION: TutorialMediaSectionConfig = {
+  basePath: "/tutorials",
+  ambientVariant: "tutorials",
+  catalog: {
+    eyebrow: "Film room",
+    title: "Skills and Technique Tutorials",
+    titleAccent: "",
+    subtitle: "Shooting technique tutorials and film breakdowns — curated for the challenge.",
+    itemCountLabel: "clips",
+    cardCta: "Watch & read",
+    cardCtaUnavailable: "View tutorial",
+  },
+  detail: {
+    backLabel: "All tutorials",
+    watchLabel: "Watch",
+    watchTitle: "Technique in motion",
+    deepDiveLabel: "Deep dive",
+    deepDiveTitle: "Full breakdown",
+    openVideoLabel: "Open video in new tab",
+    unavailableTitle: "Video coming soon",
+    unavailableMessage: "This tutorial will play here when a video link is published.",
+  },
+  empty: {
+    title: EMPTY_STATE_COPY.tutorials.title,
+    message: EMPTY_STATE_COPY.tutorials.description,
+  },
+  error: {
+    title: "Could not load tutorials",
+  },
+  notFound: {
+    title: "Tutorial not found",
+    message: "This clip may be unpublished or the link is incorrect.",
+  },
+};
+
 export const SHOUTOUTS_SECTION: TutorialMediaSectionConfig = {
   basePath: "/shoutouts",
   ambientVariant: "shoutouts",
@@ -43,7 +81,8 @@ export const SHOUTOUTS_SECTION: TutorialMediaSectionConfig = {
     titleAccent: "outs",
     subtitle: "Celebrate athletes in the challenge — features, highlights, and encouragement.",
     itemCountLabel: "shoutouts",
-    cardCta: "Read shoutout",
+    cardCta: "Watch shoutout",
+    cardCtaUnavailable: "Read shoutout",
   },
   detail: {
     backLabel: "All shoutouts",
@@ -52,6 +91,8 @@ export const SHOUTOUTS_SECTION: TutorialMediaSectionConfig = {
     deepDiveLabel: "Story",
     deepDiveTitle: "Full shoutout",
     openVideoLabel: "Open video in new tab",
+    unavailableTitle: "Video coming soon",
+    unavailableMessage: "This shoutout will play here when a video link is published.",
   },
   empty: {
     title: EMPTY_STATE_COPY.shoutouts.title,
@@ -76,6 +117,7 @@ export const ARTICLES_SECTION: TutorialMediaSectionConfig = {
     subtitle: "FBC article book readings and reflections — faith, mindset, and character for athletes.",
     itemCountLabel: "articles",
     cardCta: "Read article",
+    cardCtaUnavailable: "View article",
   },
   detail: {
     backLabel: "All articles",
@@ -84,6 +126,8 @@ export const ARTICLES_SECTION: TutorialMediaSectionConfig = {
     deepDiveLabel: "Reading",
     deepDiveTitle: "Full article",
     openVideoLabel: "Open article",
+    unavailableTitle: "Reading coming soon",
+    unavailableMessage: "This article will appear here when a link is published.",
     externalDocumentHint:
       "This article is hosted on Adobe. Open it in a new tab for the full reading experience.",
   },

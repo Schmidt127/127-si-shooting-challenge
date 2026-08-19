@@ -96,7 +96,7 @@ export function PageHero({
               <div
                 className={cn(
                   "motion-rise motion-delay-1 mt-4 max-w-2xl text-base leading-relaxed sm:text-[1.05rem]",
-                  contrast ? "text-contrast-muted" : "text-muted-foreground",
+                  contrast ? "text-contrast-muted" : "text-foreground",
                 )}
               >
                 {description}

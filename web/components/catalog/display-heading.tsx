@@ -52,7 +52,7 @@ export function DisplayHeading({
       </h1>
 
       {subtitle ? (
-        <p className={`mt-5 max-w-2xl text-base text-muted sm:text-lg ${align === "center" ? "mx-auto" : ""}`}>
+        <p className={`mt-5 max-w-2xl text-base leading-relaxed text-foreground sm:text-lg ${align === "center" ? "mx-auto" : ""}`}>
           {subtitle}
         </p>
       ) : null}
@@ -79,7 +79,7 @@ export function DetailTitle({ overline, title, accent, className = "" }: DetailT
         {title}
       </h1>
       {accent ? (
-        <p className="mt-2 text-lg font-medium italic text-muted sm:text-xl">{accent}</p>
+        <p className="mt-2 text-lg font-medium italic text-foreground sm:text-xl">{accent}</p>
       ) : null}
     </div>
   );
@@ -96,7 +96,7 @@ export function SectionHeading({ label, title, description }: SectionHeadingProp
     <div className="mb-6">
       <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-brand-blue">{label}</p>
       <h2 className="font-display mt-2 text-xl text-foreground sm:text-2xl">{title}</h2>
-      {description ? <p className="mt-2 text-sm text-muted">{description}</p> : null}
+      {description ? <p className="mt-2 text-sm leading-relaxed text-foreground">{description}</p> : null}
     </div>
   );
 }

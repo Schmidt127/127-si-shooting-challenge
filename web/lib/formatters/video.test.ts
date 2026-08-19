@@ -4,6 +4,9 @@ import {
   getProviderPosterUrl,
   getVideoEmbedUrl,
   getYouTubeVideoId,
+  isDirectVideoUrl,
+  isInPageVideoUrl,
+  isValidHttpUrl,
 } from "@/lib/formatters/video";
 
 describe("getVideoEmbedUrl", () => {
@@ -36,5 +39,21 @@ describe("video posters", () => {
 
   it("returns null poster for unknown providers", () => {
     expect(getProviderPosterUrl("https://example.com/clip.mp4")).toBeNull();
+  });
+});
+
+describe("direct catalog video URLs", () => {
+  it("treats signed S3 paths with encoded spaces as direct files", () => {
+    const signed =
+      "https://media.example.com/shoot/form%20shooting.mp4?X-Amz-Signature=abc+def&X-Amz-Expires=3600";
+    expect(isDirectVideoUrl(signed)).toBe(true);
+    expect(isInPageVideoUrl(signed)).toBe(true);
+    expect(getVideoEmbedUrl(signed)).toBeNull();
+  });
+
+  it("does not treat blank or non-http values as playable", () => {
+    expect(isValidHttpUrl("")).toBe(false);
+    expect(isInPageVideoUrl("")).toBe(false);
+    expect(isInPageVideoUrl("Video coming soon")).toBe(false);
   });
 });

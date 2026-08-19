@@ -69,10 +69,10 @@ function MeetingCard({ meeting }: { meeting: ZoomMeeting }) {
               {meeting.name}
             </h3>
 
-            <p className="mt-2 text-sm text-muted">{formatMeetingDateTime(meeting.startTime)}</p>
+            <p className="mt-2 text-sm text-foreground">{formatMeetingDateTime(meeting.startTime)}</p>
 
             {meeting.briefDescription ? (
-              <p className="mt-2 line-clamp-2 text-sm text-muted">
+            <p className="mt-2 line-clamp-2 text-sm text-foreground">
                 {plainTextFromRichText(meeting.briefDescription)}
               </p>
             ) : null}
@@ -244,7 +244,7 @@ export function ZoomMeetingDetailView({ meeting }: { meeting: ZoomMeeting }) {
             title="Makeup XP from the recording quiz"
             description="Missed the live call? Watching alone does not award XP — complete the Zoom Recording Quiz after the recording is available."
           />
-          <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-relaxed text-foreground/90">
+          <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-relaxed text-foreground">
             <li>
               Recording credit uses the{" "}
               <span className="font-semibold text-foreground">Zoom Recording</span> XP source and
@@ -282,28 +282,28 @@ export function ZoomMeetingDetailView({ meeting }: { meeting: ZoomMeeting }) {
       {meeting.briefDescription ? (
         <section className={cn(catalogPanelClass(), "mt-8")}>
           <SectionHeading label="Overview" title="What this session covers" />
-          <RichContent text={meeting.briefDescription} className="text-foreground/90" />
+          <RichContent text={meeting.briefDescription} className="text-foreground" />
         </section>
       ) : null}
 
       {meeting.fullDescription ? (
         <section className={cn(catalogPanelClass(), "mt-8")}>
           <SectionHeading label="Details" title="Full meeting brief" />
-          <RichContent text={meeting.fullDescription} className="text-foreground/90" />
+          <RichContent text={meeting.fullDescription} className="text-foreground" />
         </section>
       ) : null}
 
       {meeting.meetingAgenda ? (
         <section className={cn(catalogPanelClass({ tint: "accent" }), "mt-8")}>
           <SectionHeading label="Agenda" title="Session plan" />
-          <RichContent text={meeting.meetingAgenda} className="text-foreground/90" />
+          <RichContent text={meeting.meetingAgenda} className="text-foreground" />
         </section>
       ) : null}
 
       {meeting.meetingSummary ? (
         <section className={cn(catalogPanelClass({ tint: "blue" }), "mt-8")}>
           <SectionHeading label="Recap" title="Meeting summary" />
-          <RichContent text={meeting.meetingSummary} className="text-foreground/90" />
+          <RichContent text={meeting.meetingSummary} className="text-foreground" />
         </section>
       ) : null}
     </DetailPageShell>
