@@ -2,7 +2,7 @@
 """Read-only probe: C-013/C-023 asset storage field inventory + record stats.
 
 Uses tools/airtable/.env (never print token).
-Default base: DEV appTetnuCZlCZdTCT
+Default base: Production appn84sqPw03zEbTT
 
 Outputs JSON summary: schema field presence, upload-status breakdown, URL/hash coverage.
 """
@@ -27,7 +27,7 @@ if web_env.exists():
 
 API = "https://api.airtable.com/v0"
 META = "https://api.airtable.com/v0/meta"
-DEV_BASE = "appTetnuCZlCZdTCT"
+DEV_BASE = "appn84sqPw03zEbTT"
 SCHMIDT_ENROLLMENT = "recgP9qZYjAhE7NXm"
 
 TABLES = [

@@ -1,8 +1,8 @@
 # Agent 9 Report — Automation Ownership, Attestation, and Dedupe Contract
 
-**Date:** 2026-07-24  
-**Branch:** `agent9/automation-ownership-contract`  
-**Exclusive paths:** `docs/next-wave/automation-ownership/` · `tools/testing/automation-ownership/` · `tests/automation-ownership/`  
+**Date:** 2026-07-24
+**Branch:** `agent9/automation-ownership-contract`
+**Exclusive paths:** `docs/next-wave/automation-ownership/` · `tools/testing/automation-ownership/` · `tests/automation-ownership/`
 **Did not edit:** completion master, production automation scripts, website, other next-wave agent folders.
 
 ---
@@ -47,27 +47,27 @@ Authoritative ownership and dedupe contracts are documented and machine-checked.
 
 ## Authoritative owners proven (repo + overnight evidence)
 
-- **010** — `SUBMISSION_XP\|{submissionId}`  
-- **013** — VF create `VIDEO_FEEDBACK\|{assetId}`  
-- **020** — HC create (submission asset path)  
-- **031** — primary WAS from submission (Enrollment+Week)  
-- **042** — Enrollment Current/Next Level  
-- **054 / 058→059 / 066→059 / 065 / 101 (live XP) / 114** — XP/unlock families  
-- **072/074** — weekly email package/send (`WEEKLY_EMAIL\|…`)  
-- **076/077** — daily email  
-- **117f** — `ZOOM_REC_EMAIL\|…` send key  
+- **010** — `SUBMISSION_XP\|{submissionId}`
+- **013** — VF create `VIDEO_FEEDBACK\|{assetId}`
+- **020** — HC create (submission asset path)
+- **031** — primary WAS from submission (Enrollment+Week)
+- **042** — Enrollment Current/Next Level
+- **054 / 058→059 / 066→059 / 065 / 101 (live XP) / 114** — XP/unlock families
+- **072/074** — weekly email package/send (`WEEKLY_EMAIL\|…`)
+- **076/077** — daily email
+- **117f** — `ZOOM_REC_EMAIL\|…` send key
 - Formula fields **XP Dedupe Key / Normalized** — never written by scripts (read-only use in 010/114)
 
 ---
 
 ## Unresolved ownership
 
-1. Live UI exclusivity **117 XOR 117c**  
-2. **020 vs 067** product rule  
-3. Whether a **Weekly Threshold** automation still exists in Airtable UI  
-4. Long-term fate of **101 WAS side-create**  
-5. Exact Make writeback field parity vs 074/077/022  
-6. Install/ON state of **118/119** in DEV/PROD UI  
+1. Live UI exclusivity **117 XOR 117c**
+2. **020 vs 067** product rule
+3. Whether a **Weekly Threshold** automation still exists in Airtable UI
+4. Long-term fate of **101 WAS side-create**
+5. Exact Make writeback field parity vs 074/077/022
+6. Install/ON state of **118/119** in Production UI
 
 ---
 

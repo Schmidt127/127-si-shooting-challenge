@@ -1,6 +1,6 @@
 # Cleaned Master TODO List
 
-**Date:** 2026-07-24 · Agent 5  
+**Date:** 2026-07-24 · Agent 5
 Statuses controlled by `docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`.
 
 | Item | Classification | Notes |
@@ -12,7 +12,7 @@ Statuses controlled by `docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`.
 | Agent 13 status packet | superseded (status) | Evidence retained |
 | Agent 4 “schedules OFF” readiness | superseded | Corrected |
 | Keep schedules OFF guidance | superseded | STALE-CLAIM-CORRECTION |
-| DEV-first forever | superseded | Completion Master §1 |
+| production-only forever | superseded | Completion Master §1 |
 | Stage 16 Zoom | superseded | Stage 17 |
 | Team Shot Tracker inactivity alerts | out of scope | |
 | Config year collapse | do not do | |

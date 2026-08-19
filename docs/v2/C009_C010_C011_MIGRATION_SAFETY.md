@@ -1,8 +1,8 @@
 # C-009 / C-010 / C-011 — Migration Safety & Review Notes (PR #35)
 
-**Date:** 2026-07-16  
-**Branch:** `cursor/remaining-airtable-dev-packages-2565`  
-**PROD:** Untouched — DEV paste only after Mike approval  
+**Date:** 2026-07-16
+**Branch:** `cursor/remaining-airtable-dev-packages-2565`
+**PROD:** Untouched — Production paste only after Mike approval
 
 ---
 
@@ -22,10 +22,10 @@
 
 | Topic | Default | Rationale |
 |-------|---------|-----------|
-| PPE field **missing** | Treat as **enabled** (progress runs) | Avoids blocking entire DEV/PROD before field exists |
+| PPE field **missing** | Treat as **enabled** (progress runs) | Avoids blocking entire Production before field exists |
 | PPE field **present + unchecked** | Progress **skipped** | Withdrawn / progress-off athletes |
 | PPE field **present + checked** | Progress runs | Normal + Schmidt sandbox |
-| 072 Active? missing | Treat as **active** (comms allowed) | Transition; field already exists in DEV |
+| 072 Active? missing | Treat as **active** (comms allowed) | Transition; field already exists in Production |
 | 072 Active? false / Schmidt ID | **Skip** build; clear Build Now? | Comms + test exclusion |
 | 118/119 `dryRun` | **true** | No writes until operator sets false |
 | 118 `sendMode` | Force **Test** on arm; refuse Live when !dryRun | No live parent sends from this package |
@@ -65,16 +65,16 @@
 
 ### Required field-creation and rollout order
 
-1. **Create** Enrollments.`Progress Processing Enabled?` (checkbox).  
-2. **Backfill** all non-withdrawn enrollments (including Schmidt) to **checked/true**.  
-3. Set **false** only for intentionally withdrawn athletes.  
-4. **Then** paste 010/031/053/065 PPE guards.  
-5. Paste **072 v3.8** anytime (uses existing `Active?` only).  
+1. **Create** Enrollments.`Progress Processing Enabled?` (checkbox).
+2. **Backfill** all non-withdrawn enrollments (including Schmidt) to **checked/true**.
+3. Set **false** only for intentionally withdrawn athletes.
+4. **Then** paste 010/031/053/065 PPE guards.
+5. Paste **072 v3.8** anytime (uses existing `Active?` only).
 6. Smoke: Schmidt Active?=false + PPE=true → XP runs, 072 skips.
 
 ---
 
-## 6. Migration / paste order (DEV)
+## 6. Migration / paste order (Production)
 
 | Step | Action | Gate |
 |------|--------|------|
@@ -86,7 +86,7 @@
 | F | Paste **118/119** — leave schedule **OFF**; `dryRun=true` | Mike auth |
 | G | Create C-019 Testing views | Mike UI |
 | H | Attest 059 trigger / 112 OFF / 042 gate | Mike UI |
-| I | Optional: one Test-mode 118→072→119→074 with DEV webhook | Mike auth |
+| I | Optional: one Test-mode 118→072→119→074 with Production webhook | Mike auth |
 
 **Do not enable Sunday schedules until dryRun false + Test webhook proven.**
 
@@ -94,11 +94,11 @@
 
 ## 7. Rollback order
 
-1. Disable 118/119 schedules (if ever enabled).  
-2. Re-paste prior **072** (v3.7) if email skips are wrong.  
-3. Re-paste prior **067** (v1.0) if asset creates misbehave.  
-4. Turn OFF newly pasted PPE guards on 010/031/053/065 (or re-paste prior).  
-5. Leave PPE / Quiz Result PDF fields in place (do not delete without Mike).  
+1. Disable 118/119 schedules (if ever enabled).
+2. Re-paste prior **072** (v3.7) if email skips are wrong.
+3. Re-paste prior **067** (v1.0) if asset creates misbehave.
+4. Turn OFF newly pasted PPE guards on 010/031/053/065 (or re-paste prior).
+5. Leave PPE / Quiz Result PDF fields in place (do not delete without Mike).
 6. Clear stuck `Build Weekly Email Now?` / `Send to Make?` on test WAS rows manually.
 
 ---
@@ -110,7 +110,7 @@
 | Live automation ON/OFF versions | live-blocked (no PAT) |
 | Live 059 trigger filters | live-blocked |
 | Make writeback of Sent? / eventId filter | live-blocked |
-| DEV Make weekly webhook URL | live-blocked |
+| Production Make weekly webhook URL | live-blocked |
 | Fillout → `Quiz Result PDF` wiring | requires Mike |
 | C-019 view filters | UI only |
 

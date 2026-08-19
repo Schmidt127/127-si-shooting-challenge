@@ -1,12 +1,12 @@
 # Promotion steps — C-028 Tremendous sandbox award send
 
-**Status:** Sandbox send **validated** (Mike 2026-08-19). Production Tremendous API **pending approval**. Make scenario **OFF**. v2 is the current implementation snapshot, not production-live.  
-**Backlog:** C-028  
-**Airtable:** Production `appn84sqPw03zEbTT` / Award Recipients `tblTyQXl8aEP93ubK`  
-**Tremendous:** Sandbox only until production API access is approved  
+**Status:** Sandbox send **validated** (Mike 2026-08-19). Production Tremendous API **pending approval**. Make scenario **OFF**. v2 is the current implementation snapshot, not production-live.
+**Backlog:** C-028
+**Airtable:** Production `appn84sqPw03zEbTT` / Award Recipients `tblTyQXl8aEP93ubK`
+**Tremendous:** Sandbox only until production API access is approved
 **Current state:** [`docs/integrations/tremendous-award-fulfillment.md`](../integrations/tremendous-award-fulfillment.md)
 
-This is not a DEV→prod copy. Fields were added on Production because that is the live operating base.
+This is not a Production→prod copy. Fields were added on Production because that is the live operating base.
 
 The 2026-08-18 checklist below is retained as historical setup evidence. It is not a claim that every unchecked UI box is still incomplete. The sandbox send used the later v2-style process.
 

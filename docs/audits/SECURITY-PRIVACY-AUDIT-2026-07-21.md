@@ -146,7 +146,7 @@ review/relocate the tracked minor-PII files (see Critical/High findings).
 - **Representative file:** `docs/airtable-base-map.md` (base ID documented), plus
   many docs, schema snapshots, and fixtures.
 - **Value type (redacted):** Production base ID of the form `app…` (Shooting
-  Challenge production base). The DEV base ID (`app…`) is likewise present.
+  Challenge production base). The Production base ID (`app…`) is likewise present.
 - **Type of exposure:** Airtable base IDs are identifiers, not secrets — they are
   useless without a valid token. Still, broad exposure weakens defense-in-depth if a
   token ever leaks.
@@ -167,10 +167,10 @@ review/relocate the tracked minor-PII files (see Critical/High findings).
 - **Recommended action:** Added a `.gitignore` rule for recovery ZIPs (see below).
   Recommend Mike move/delete the local ZIP manually once no longer needed.
 
-### M3 — Temp DEV export left in repo and NOT ignored
+### M3 — Temp Production export left in repo and NOT ignored
 
 - **File:** `docs/audits/_tmp_missing_sa_fields_dev.json`
-- **Type of exposure:** Temporary DEV data dump (schema/field gap output). Untracked
+- **Type of exposure:** Temporary Production data dump (schema/field gap output). Untracked
   but not ignored → accidental-commit risk.
 - **Git-tracked:** No (untracked); **not ignored**
 - **Immediate credential rotation recommended:** No.

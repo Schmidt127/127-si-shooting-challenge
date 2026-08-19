@@ -1,23 +1,23 @@
 # PROD Submission Assets Field Promotion — Validation
 
-**Validation date:** 2026-07-11 (final classification correction)  
-**DEV base:** `appTetnuCZlCZdTCT`  
-**PROD base:** `appn84sqPw03zEbTT`  
-**Table:** Submission Assets (`tblhMLKxQK77agtME`)  
-**Validation script:** `tools/airtable/_preview/pv2_sa_field_validation.py`  
-**Approved differences:** `tools/airtable/pv2_approved_schema_differences.py`  
-**Gap audit:** `tools/airtable/pv2_dev_prod_gap_audit.py`  
+**Validation date:** 2026-07-11 (final classification correction)
+**Production base:** `appn84sqPw03zEbTT`
+**PROD base:** `appn84sqPw03zEbTT`
+**Table:** Submission Assets (`tblhMLKxQK77agtME`)
+**Validation script:** `tools/airtable/_preview/pv2_sa_field_validation.py`
+**Approved differences:** `tools/airtable/pv2_approved_schema_differences.py`
+**Gap audit:** `tools/airtable/pv2_dev_prod_gap_audit.py`
 
 ## Overall result
 
-**PASS** — All required Production v2 Submission Assets fields exist on PROD with matching configuration. The sole raw DEV-only field difference (`Calculation`) is an **approved intentional environment difference** (NO ACTION).
+**PASS** — All required Production v2 Submission Assets fields exist on PROD with matching configuration. The sole raw Production-only field difference (`Calculation`) is an **approved intentional environment difference** (NO ACTION).
 
 ## Field counts
 
-| Metric | DEV | PROD | Notes |
+| Metric | Production | PROD | Notes |
 |---|---|---|---|
 | Raw field count | 97 | 96 | Raw count parity not required |
-| Raw DEV-only fields | 1 | — | `Calculation` only |
+| Raw Production-only fields | 1 | — | `Calculation` only |
 | Required missing fields | 0 | 0 | Target **0** |
 | Approved differences | 1 | — | `Submission Assets.Calculation` |
 | Promotion duplicate/copy fields | 0 | — | Target **0** |
@@ -27,43 +27,43 @@
 
 | Field | Classification | Reason |
 |---|---|---|
-| `Calculation` | **NO ACTION** | Redundant DEV helper formula `{RecordId}`; PROD already contains `RecordId` and no production dependency references `Calculation`. **Do not create on PROD.** |
+| `Calculation` | **NO ACTION** | Redundant Production helper formula `{RecordId}`; PROD already contains `RecordId` and no production dependency references `Calculation`. **Do not create on PROD.** |
 
 ## Required promoted fields (16)
 
-All 16 required promoted fields present on PROD with configuration matching DEV:
+All 16 required promoted fields present on PROD with configuration matching Production:
 
-- Asset Reuse Review Primary Reason  
-- Asset Reuse Review Reasons  
-- Asset Reuse Review Summary  
-- Asset Reuse Reviewed At  
-- Asset Reuse Reviewed By  
-- Asset Sequence  
-- Duplicate Match Records (All) — self-link PASS, inverse PASS  
-- Exact Hash Match Found?  
-- From field: Duplicate Match Records (All)  
-- Potential Asset Reuse?  
-- Processing Started At — `America/Denver`, `M/D/YYYY`, `h:mma` PASS  
-- Same Enrollment Match Found?  
-- Storage Key  
-- Upload Claim Run ID  
-- Upload Naming Status  
-- Video Feedback Focus  
+- Asset Reuse Review Primary Reason
+- Asset Reuse Review Reasons
+- Asset Reuse Review Summary
+- Asset Reuse Reviewed At
+- Asset Reuse Reviewed By
+- Asset Sequence
+- Duplicate Match Records (All) — self-link PASS, inverse PASS
+- Exact Hash Match Found?
+- From field: Duplicate Match Records (All)
+- Potential Asset Reuse?
+- Processing Started At — `America/Denver`, `M/D/YYYY`, `h:mma` PASS
+- Same Enrollment Match Found?
+- Storage Key
+- Upload Claim Run ID
+- Upload Naming Status
+- Video Feedback Focus
 
 ## RecordId vs Calculation
 
-| Field | DEV | PROD | Production dependency |
+| Field | Production | PROD | Production dependency |
 |---|---|---|---|
 | `RecordId` | Present — formula `RECORD_ID()` | Present — formula `RECORD_ID()` | **Used** by scripts, backfills, integrations |
-| `Calculation` | Present — formula `{RecordId}` (API: `{fldXz9TNOnGeRXEL8}`) | **Absent by design** | **None** — redundant DEV helper |
+| `Calculation` | Present — formula `{RecordId}` (API: `{fldXz9TNOnGeRXEL8}`) | **Absent by design** | **None** — redundant Production helper |
 
 ## Repository dependency search
 
 Searched `airtable/automations`, `lambda`, `make`, `web`, and production tooling for:
 
-- Field name `Calculation` on Submission Assets  
-- `{Calculation}`  
-- DEV field ID `fldzFo5To0DXi94OS`  
+- Field name `Calculation` on Submission Assets
+- `{Calculation}`
+- Production field ID `fldzFo5To0DXi94OS`
 
 **Result:** No production dependency references Submission Assets `Calculation`. Production code uses `RecordId`, `recordId`, or Airtable record IDs directly. Unrelated matches (e.g. `Summary Calculation Status` on Weekly Athlete Summary) are out of scope.
 

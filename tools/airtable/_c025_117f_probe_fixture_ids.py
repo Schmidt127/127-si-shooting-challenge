@@ -2,7 +2,7 @@
 from pathlib import Path
 import json, urllib.request, urllib.error
 ENV = Path(__file__).resolve().parent / ".env"
-BASE = "appTetnuCZlCZdTCT"
+BASE = "appn84sqPw03zEbTT"
 env = {}
 for line in ENV.read_text(encoding="utf-8").splitlines():
     line = line.strip()

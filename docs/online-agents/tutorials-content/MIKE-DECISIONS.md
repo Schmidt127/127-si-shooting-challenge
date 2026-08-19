@@ -1,7 +1,7 @@
 # Mike Decisions — Tutorials Content Consolidation
 
-**Agent:** Online Agent 8  
-**Date:** 2026-07-23  
+**Agent:** Online Agent 8
+**Date:** 2026-07-23
 **Rule:** Only product judgment items. Technical matters settled by dependency evidence are excluded.
 
 ## Decisions required
@@ -78,7 +78,7 @@ Historical preservation is **not** required, but discarding is a product call.
 
 | Option | Meaning |
 |--------|---------|
-| A | Yes, delete after DEV+PROD verification |
+| A | Yes, delete after Production+PROD verification |
 | B | Hide/archive table for one season; delete later |
 | C | Keep indefinitely |
 

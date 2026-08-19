@@ -1,10 +1,10 @@
 {
   "purpose": "C-013/C-023 hash patch re-test — manual Make webhook (070b still OFF)",
   "probedAt": "2026-07-08",
-  "baseId": "appTetnuCZlCZdTCT",
+  "baseId": "appn84sqPw03zEbTT",
   "table": "Submission Assets",
   "recordId": "recBBi80bYuxXifVj",
-  "makeScenario": "Shooting Challenge - DEV - Upload Engine - S3 - v1",
+  "makeScenario": "Shooting Challenge - Production - Upload Engine - S3 - v1",
   "prerequisite": "Insert SHA-256 hash module after HTTP download (module 3); map digest to File Content Hash on Airtable update",
   "retestNote": "Same asset as partial PASS — row may already be Uploaded; Make webhook path does not require Pending Link while 070b is OFF",
   "route": {

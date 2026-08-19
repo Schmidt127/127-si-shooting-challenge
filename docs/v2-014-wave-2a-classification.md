@@ -1,8 +1,8 @@
 # V2-014 Wave 2A — Complete Automation Classification
 
-**Status:** **Planning complete** — implementation not complete (OMNI trigger spot-check optional)  
-**Date:** 2026-07-05  
-**Sprint:** Phase 2A Engineering Sprint — Cursor Mission 1–3  
+**Status:** **Planning complete** — implementation not complete (OMNI trigger spot-check optional)
+**Date:** 2026-07-05
+**Sprint:** Phase 2A Engineering Sprint — Cursor Mission 1–3
 **Parent:** [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md)
 
 **Rules tonight:** Classification only — **no rewrites, no production pastes, no merges executed.**
@@ -88,7 +88,7 @@ Email builders/senders (**071–077**) are tagged **C/E** — merge to EMC (Cate
 | 063 | Legacy | 298 | 2 | Simple | C | P2 | **→ 020** | Low | Grade band copy |
 | 064 | Partial | 653 | 6 | Simple | **A** | P1 | **Do not merge 065** | High | HW XP prep |
 | 065 | Partial | 1129 | 11 | Medium | **A** | P1 | **Do not merge 064** | **High** | HW XP create — keep |
-| 066 | **V2** | 1113 | 16 | Complex | **A** | P0 | — | **High** | Reference — DEV test then prod |
+| 066 | **V2** | 1113 | 16 | Complex | **A** | P0 | — | **High** | Reference — Production test then prod |
 | 067 | Partial | 541 | 7 | Medium | B | P2 | — | Med | HW17 quiz — C-009 |
 | 070a | Partial | 682 | 6 | Simple | **E** | P1 | — | **High** | HW upload Make — keep |
 | 070b | Partial | 682 | 6 | Simple | **E** | P1 | — | **High** | Video upload Make — keep |
@@ -166,7 +166,7 @@ Priority order follows **complexity reduction**, not slot recovery.
 | Area | Issue | Recommendation |
 |------|-------|----------------|
 | Email cluster **071–077** | 7 automations, duplicated HTML patterns | EMC wave 2d–2g |
-| **072** + **076** size | 2400+ / 1800+ lines | V2 rewrite only in dedicated wave; full audit + DEV test |
+| **072** + **076** size | 2400+ / 1800+ lines | V2 rewrite only in dedicated wave; full audit + Production test |
 | Legacy intake **005**, **009**, **023** | No full schema validation | Category B when C-018/C-013 touched |
 | Inactive enrollment skips **056**, **066**, **101** | C-019/C-020 test friction | Document; optional narrow Active? semantics later — **not tonight** |
 

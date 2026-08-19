@@ -1,9 +1,9 @@
 # Tutorial Dependency Inventory
 
-**Agent:** Online Agent 8 — Tutorials, Curriculum, and Content-Migration Readiness  
-**Date:** 2026-07-23  
-**Scope:** Repository evidence only (no live Airtable reads)  
-**Canonical snapshot:** `airtable/schema/snapshots/prod-foundation-reset-20260723-post-ts/schema_doc_appn84sqPw03zEbTT_20260723_152229.md`  
+**Agent:** Online Agent 8 — Tutorials, Curriculum, and Content-Migration Readiness
+**Date:** 2026-07-23
+**Scope:** Repository evidence only (no live Airtable reads)
+**Canonical snapshot:** `airtable/schema/snapshots/prod-foundation-reset-20260723-post-ts/schema_doc_appn84sqPw03zEbTT_20260723_152229.md`
 **Related backlog:** C-026 · SC-052 · SC-053 · supporting SC-054 / SC-127–SC-132 (content-only)
 
 ## Verdict (validated)
@@ -30,7 +30,7 @@ Repository searched for: `Tutorials`, `Tutorials & Assets`, table IDs, publish f
 | `airtable/automations/**/*.js` | None | None |
 | `airtable/extension-scripts/` | None | None |
 | `make/` | None | None |
-| Schema snapshots (PROD + DEV) | Both tables present | Both tables present |
+| Schema snapshots (PROD + Production) | Both tables present | Both tables present |
 | Docs / backlog | C-026 / SC-052 / SC-053 | Same recommendation language |
 
 ## Dependency records
@@ -105,7 +105,7 @@ Repository searched for: `Tutorials`, `Tutorials & Assets`, table IDs, publish f
 | Attribute | Value |
 |-----------|-------|
 | Source file | Multiple schema snapshots under `airtable/schema/snapshots/` |
-| Component/script/document | Schema docs (PROD 2026-07-23 post-ts, DEV 2026-07-06, earlier PROD) |
+| Component/script/document | Schema docs (PROD 2026-07-23 post-ts, Production 2026-07-06, earlier PROD) |
 | Table expected | Both tables |
 | Field expected | 13 fields each; **0 link fields** each; **0 computed fields** each |
 | Read/write | Read (documentation) |
@@ -214,7 +214,7 @@ Repository searched for: `Tutorials`, `Tutorials & Assets`, table IDs, publish f
 | Field expected | Unknown |
 | Read/write | Unknown |
 | Criticality | **Critical blocker for deletion** |
-| Migration impact | Before any orphan-table deletion decision, Mike (or authorized DEV check) must confirm no Softr pages / Interfaces still bind to `Tutorials & Assets`. **Not provable from repository alone.** |
+| Migration impact | Before any orphan-table deletion decision, Mike (or authorized Production check) must confirm no Softr pages / Interfaces still bind to `Tutorials & Assets`. **Not provable from repository alone.** |
 | Current evidence | Explicit open question in C-026 decision checklist |
 
 ### D-015 — Row counts / live content (unknown in-repo)

@@ -1,8 +1,8 @@
 # V2 End-to-End Test Matrix — Shooting Challenge
 
-**Status:** Launch athlete-scenario matrix + executable PROD runner (SC-005)  
-**Last updated:** 2026-08-04 (SC-003–SC-006 testing control center)  
-**Environment:** **PROD** `appn84sqPw03zEbTT` is the active construction/testing base (completion master §1). DEV optional.  
+**Status:** Launch athlete-scenario matrix + executable PROD runner (SC-005)
+**Last updated:** 2026-08-04 (SC-003–SC-006 testing control center)
+**Environment:** **PROD** `appn84sqPw03zEbTT` is the active construction/testing base (completion master §1). Production optional.
 **Companions:** [V2_RELEASE_CHECKLIST.md](./V2_RELEASE_CHECKLIST.md) · [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) · [v2/08-testing-standards.md](./v2/08-testing-standards.md) · [v2/V2_DEV_EXECUTION_RUNBOOK.md](./v2/V2_DEV_EXECUTION_RUNBOOK.md) · [v2/V2_LAUNCH_SMOKE_TESTS.md](./v2/V2_LAUNCH_SMOKE_TESTS.md) · [deploy-checklists/C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) · [overnight/testing-integrity/CURRENT-PROD-BASELINE.md](./overnight/testing-integrity/CURRENT-PROD-BASELINE.md) · [testing/scenarios/README.md](./testing/scenarios/README.md) · [testing/evidence/2026-08-04-sc-003-006-testing-control-center/](./testing/evidence/2026-08-04-sc-003-006-testing-control-center/)
 
 **Prep status (2026-08-04):** Automation **115** installed in PROD; dry + live + rerun PASS on Schmidt. Executable matrix runner lives at `tools/testing/run_e2e_matrix.mjs` (read-only safe rows). Do not upgrade BLOCKED/NOT_TESTED rows to PASS without new evidence.
@@ -57,7 +57,7 @@ cd web && npm test
 
 ## A. Intake and identity
 
-| ID | Athlete scenario | Setup | Automations | Pass criteria | DEV | PROD smoke |
+| ID | Athlete scenario | Setup | Automations | Pass criteria | Production | PROD smoke |
 |----|------------------|-------|-------------|---------------|-----|------------|
 | A1 | New enrollment creates/links athlete | Fresh test registrant | 001–003 | Athlete linked; grade band assigned | U | U |
 | A2 | Grade change reassigns band | Change grade on enrollment | 003 | Band updates once; no loop | U | U |
@@ -68,7 +68,7 @@ cd web && npm test
 
 ## B. Daily shooting XP and duplicates
 
-| ID | Athlete scenario | Setup | Automations | Pass criteria | DEV | PROD smoke |
+| ID | Athlete scenario | Setup | Automations | Pass criteria | Production | PROD smoke |
 |----|------------------|-------|-------------|---------------|-----|------------|
 | B1 | First counted submission day awards XP | Count This Submission? checked | 010 | One XP Event; Source Key `SUBMISSION_XP\|{submissionId}` | U | P — live PROD pass after reset (`recOodD23MQrP1O9F` / `recovVbiZynRUtDwF`) |
 | B2 | Same submission automation rerun | Re-run 010 on awarded row | 010 | Skip/repair; **no second** XP Event | U | P — independently verified inventory (0 Subs with >1 XP); UI re-trigger still MANUAL_REQUIRED |
@@ -80,7 +80,7 @@ cd web && npm test
 
 ## C. Homework
 
-| ID | Athlete scenario | Setup | Automations | Pass criteria | DEV | PROD smoke |
+| ID | Athlete scenario | Setup | Automations | Pass criteria | Production | PROD smoke |
 |----|------------------|-------|-------------|---------------|-----|------------|
 | C1 | Homework asset creates completion | Homework attachment path | 009/020 | One Homework Completion linked | U | U |
 | C2 | Homework asset rerun / duplicate | Re-trigger 020 | 020 | Links existing; no second completion | U | U |
@@ -88,13 +88,13 @@ cd web && npm test
 | C4 | Satisfactory review awards XP | Coach marks satisfactory | 064/065 | One Event `HOMEWORK_XP\|{completionId}` | U | P — 2026-08-04 HC `recrBnHbLvDpFyIeO` → XP `rec6xE4V1t0atiTIP` |
 | C5 | Homework XP rerun | Re-run 065 after Awarded | 065 | Skip/link existing; no duplicate | U | U |
 | C6 | Reflection quiz → completion | Final reflection path | 067 | Completion linked/created once | U | P — Option B quiz links on HC (matrix C6) |
-| C7 | Homework upload to storage (optional wave) | 070a enabled in DEV only | 070a | Payload accepted; PROD remains OFF until scheduled | U | N |
+| C7 | Homework upload to storage (optional wave) | 070a enabled in Production only | 070a | Payload accepted; PROD remains OFF until scheduled | U | N |
 
 ---
 
 ## D. Video feedback and upload
 
-| ID | Athlete scenario | Setup | Automations | Pass criteria | DEV | PROD smoke |
+| ID | Athlete scenario | Setup | Automations | Pass criteria | Production | PROD smoke |
 |----|------------------|-------|-------------|---------------|-----|------------|
 | D1 | Video asset → Video Feedback | Video upload on submission | 013/112 | Feedback row linked once | U | P — VF `recBqqe0uGMsqjUrF` linked to Schmidt (enrollment presence; 114 award still open) |
 | D2 | Base video XP assigned | Review path | 113 | Base XP field set per rules | U | U |
@@ -109,7 +109,7 @@ cd web && npm test
 
 ## E. Streaks
 
-| ID | Athlete scenario | Setup | Automations | Pass criteria | DEV | PROD smoke |
+| ID | Athlete scenario | Setup | Automations | Pass criteria | Production | PROD smoke |
 |----|------------------|-------|-------------|---------------|-----|------------|
 | E1 | Build 3-day contiguous streak | Three counted days in a row | 053, 055 | Streak occurrence upserted | U | U |
 | E2 | Gap breaks streak blocks | Day skipped mid-week | 053 | Separate blocks; no false merge | U | U |
@@ -121,7 +121,7 @@ cd web && npm test
 
 ## F. Shot milestones
 
-| ID | Athlete scenario | Setup | Automations | Pass criteria | DEV | PROD smoke |
+| ID | Athlete scenario | Setup | Automations | Pass criteria | Production | PROD smoke |
 |----|------------------|-------|-------------|---------------|-----|------------|
 | F1 | Cross single threshold | Shots move 90 → 120 | 066 | One unlock `SHOT_MILESTONE\|enr\|ms` | U | U |
 | F2 | Cross multiple thresholds same run | 90 → 260 | 066 | One unlock per newly crossed milestone | U | U |
@@ -134,7 +134,7 @@ cd web && npm test
 
 Canonical fixture pack (PROD): `docs/testing/perfect-week/` — Automation **057 v1.5** installed/running; verification open (do not treat as Complete).
 
-| ID | Athlete scenario | Setup | Automations | Pass criteria | DEV | PROD smoke |
+| ID | Athlete scenario | Setup | Automations | Pass criteria | Production | PROD smoke |
 |----|------------------|-------|-------------|---------------|-----|------------|
 | G1 | Eligible Perfect Week | Required daily days + homework (+ video/zoom if configured) | 057 v1.5 → 058 → 059 | Eligible flag set; missing days empty; one PERFECT_WEEK XP | U | Fixture CASE-01 (pending) |
 | G2 | Missing one required day | Six of seven days (Sun–Sat product rule) | 057 | Not eligible; missing day listed | U | Fixture CASE-03 (pending) |
@@ -146,7 +146,7 @@ Canonical fixture pack (PROD): `docs/testing/perfect-week/` — Automation **057
 
 ## H. Levels and gates
 
-| ID | Athlete scenario | Setup | Automations | Pass criteria | DEV | PROD smoke |
+| ID | Athlete scenario | Setup | Automations | Pass criteria | Production | PROD smoke |
 |----|------------------|-------|-------------|---------------|-----|------------|
 | H1 | XP-only advance (no gate) | Lifetime XP crosses next level; gate disabled/absent | 041, 042 | Status Assigned; Current/Next correct | U | U |
 | H2 | Gate Blocked | XP enough; homework/videos below gate | 042 | Status Gate Blocked; Current stays; Next = gated level | U | U |
@@ -157,20 +157,20 @@ Canonical fixture pack (PROD): `docs/testing/perfect-week/` — Automation **057
 
 ## I. Weekly summaries and email packages
 
-| ID | Athlete scenario | Setup | Automations | Pass criteria | DEV | PROD smoke |
+| ID | Athlete scenario | Setup | Automations | Pass criteria | Production | PROD smoke |
 |----|------------------|-------|-------------|---------------|-----|------------|
 | I1 | WAS create from counted submission | New week submission | 031 | One WAS per enrollment+week | U | P — WAS `recuxvGq2kY8WKcey` unique Enrollment+Week (2026-08-04) |
 | I2 | WAS rerun | Re-run 031 | 031 | Links existing; no duplicate WAS | U | U |
 | I3 | Goal + homework attach | Goal/homework present | 032, 033 | Links set once | U | U |
 | I4 | Previous week helpers | Multi-week history | 034 | Previous week ordered by Week Start Date | U | U |
 | I5 | Build weekly email package | Build flag checked | 072 | Package fields populated; send still OFF | U | U |
-| I6 | Send weekly package (controlled) | Make DEV webhook | 074 | Send once; failure does not clear incorrectly | U | N |
+| I6 | Send weekly package (controlled) | Make Production webhook | 074 | Send once; failure does not clear incorrectly | U | N |
 
 ---
 
 ## J. Zoom
 
-| ID | Athlete scenario | Setup | Automations | Pass criteria | DEV | PROD smoke |
+| ID | Athlete scenario | Setup | Automations | Pass criteria | Production | PROD smoke |
 |----|------------------|-------|-------------|---------------|-----|------------|
 | J1 | Live attendance base XP | Meeting + enrollment attendance | 101 | `ZOOM_ATTEND_BASE\|meeting\|enr` once | U | P — attendance rows linked (XP key assert optional/not forced 2026-08-04) |
 | J2 | Live attendance bonuses | 2nd / 3rd meeting rules | 101 | Bonus keys once per enrollment rules | U | U |
@@ -183,7 +183,7 @@ Canonical fixture pack (PROD): `docs/testing/perfect-week/` — Automation **057
 
 ## K. Asset upload validation and malformed records
 
-| ID | Athlete scenario | Setup | Automations | Pass criteria | DEV | PROD smoke |
+| ID | Athlete scenario | Setup | Automations | Pass criteria | Production | PROD smoke |
 |----|------------------|-------|-------------|---------------|-----|------------|
 | K1 | Valid uploaded writeback | Complete hash/URL/key | 070b/070c | Verification pass; trigger clear per design | U | U |
 | K2 | Invalid SHA-256 | Short/non-hex hash | 070c | Fail closed; no false success | U | U |
@@ -194,17 +194,17 @@ Canonical fixture pack (PROD): `docs/testing/perfect-week/` — Automation **057
 
 ## L. Automation reruns (cross-cutting)
 
-| ID | Athlete scenario | Setup | Automations | Pass criteria | DEV | PROD smoke |
+| ID | Athlete scenario | Setup | Automations | Pass criteria | Production | PROD smoke |
 |----|------------------|-------|-------------|---------------|-----|------------|
 | L1 | XP Source Key idempotency battery | Re-run 010, 065, 114, 054, 101 | listed | Event counts unchanged | U | U |
 | L2 | Unlock Source Key idempotency | Re-run 058, 066, 059 | listed | Unlock/XP counts unchanged | U | U |
-| L3 | Email send trigger resilience | Force webhook 5xx in DEV | 071/073/074 | Trigger not cleared on failure | U | N |
+| L3 | Email send trigger resilience | Force webhook 5xx in Production | 071/073/074 | Trigger not cleared on failure | U | N |
 
 ---
 
 ## M. Web / public smoke (non-styling)
 
-| ID | Scenario | Pass criteria | DEV/local | PROD |
+| ID | Scenario | Pass criteria | Production/local | PROD |
 |----|----------|---------------|-----------|------|
 | M1 | `/shoot` loads | 200; brand shell intact | U | U |
 | M2 | Airtable health | `/shoot/api/airtable` tokenValid | U | U |
@@ -218,7 +218,7 @@ Do not use this matrix to redesign frontend styling.
 
 | Wave | Operator | Date | Result | Notes |
 |------|----------|------|--------|-------|
-| DEV full matrix | | | | |
+| Production full matrix | | | | |
 | PROD smoke subset (B1–B2, C4, D3, F1, G3, H2, J1, M1–M2) | | | | |
 | PROD executable safe matrix (SC-005) | Cursor agent | 2026-08-04 | 11 PASS / 4 BLOCKED / 2 NOT_TESTED / 0 FAIL | `E2E-MATRIX-RESULTS.json`; views install still Mike/Omni (SC-003) |
 

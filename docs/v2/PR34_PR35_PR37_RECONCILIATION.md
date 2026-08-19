@@ -1,8 +1,8 @@
 # PR #34 / #35 / #37 — Contract Reconciliation
 
-**Date:** 2026-07-16  
-**Authoritative tip:** PR **#35** @ `8ded6fa` (migration-safety review)  
-**Reconcile branch:** `cursor/pr-reconcile-contracts-2565`  
+**Date:** 2026-07-16
+**Authoritative tip:** PR **#35** @ `8ded6fa` (migration-safety review)
+**Reconcile branch:** `cursor/pr-reconcile-contracts-2565`
 **Merge to master:** **Do not merge** until Mike/Lead approve after this reconciliation.
 
 ---
@@ -11,9 +11,9 @@
 
 | PR | Tip (at reconcile) | Owns |
 |----|--------------------|------|
-| **#35** | `8ded6fa` | C-009/010/011/019 DEV install docs + 067 v2.0, 072 v3.8, 118/119 + Python contracts |
+| **#35** | `8ded6fa` | C-009/010/011/019 Production install docs + 067 v2.0, 072 v3.8, 118/119 + Python contracts |
 | **#37** | `d4104e2` | `v2-engine-contracts` blocker closure + release-readiness validator gates |
-| **#34** | `e48fb4d` | DEV operator CLI / runbook / launch smoke fixtures |
+| **#34** | `e48fb4d` | Production operator CLI / runbook / launch smoke fixtures |
 
 ---
 
@@ -71,20 +71,20 @@ No other path overlaps between the three PRs.
 
 ---
 
-## Remaining live DEV actions (unchanged — Mike)
+## Remaining live Production actions (unchanged — Mike)
 
-1. Create **Quiz Result PDF** and **Progress Processing Enabled?**  
-2. Backfill PPE **true** on intended active enrollments  
-3. Paste **067 v2.0**, **072 v3.8**, **010/031/053/065** PPE guards, **118/119**  
-4. Keep **118/119** schedules **OFF** and `dryRun=true`  
-5. Create C-019 Testing views  
-6. Attest **059**, **112**, **042**  
-7. Verify DEV Make Test webhook  
+1. Create **Quiz Result PDF** and **Progress Processing Enabled?**
+2. Backfill PPE **true** on intended active enrollments
+3. Paste **067 v2.0**, **072 v3.8**, **010/031/053/065** PPE guards, **118/119**
+4. Keep **118/119** schedules **OFF** and `dryRun=true`
+5. Create C-019 Testing views
+6. Attest **059**, **112**, **042**
+7. Verify Production Make Test webhook
 
 ---
 
 ## Merge guidance (Lead / Mike)
 
-1. Prefer merging this reconcile branch **or** merge #37 → #35 → #34 with the same README union + contract fixes.  
-2. Do **not** merge individual worker PRs to master until this checklist is green.  
+1. Prefer merging this reconcile branch **or** merge #37 → #35 → #34 with the same README union + contract fixes.
+2. Do **not** merge individual worker PRs to master until this checklist is green.
 3. Workers must not merge; Mike approves master.

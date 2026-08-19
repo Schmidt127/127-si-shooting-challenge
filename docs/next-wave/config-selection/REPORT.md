@@ -1,8 +1,8 @@
 # REPORT — Agent 10 Year-Aware Config Selection
 
-**Date:** 2026-07-24  
-**Branch:** `agent10/config-selection`  
-**Scope:** Deterministic year-aware Config resolver + consumer audit  
+**Date:** 2026-07-24
+**Branch:** `agent10/config-selection`
+**Scope:** Deterministic year-aware Config resolver + consumer audit
 **Config records modified:** **0** (none deleted, none edited)
 
 ## Verdict
@@ -42,12 +42,12 @@ Hierarchy: explicit Config id → Program Instance school year → Enrollment Sc
 
 ## Tests run
 
-`node tests/config-selection/resolve-config.test.js` — 15 assertions, all pass.  
+`node tests/config-selection/resolve-config.test.js` — 15 assertions, all pass.
 Proposed 042 guard smoke — mismatch blocks when mode=`error`.
 
 ## Scripts needing later paste
 
-None in this wave. Future paste candidates after DEV dry-run: 042 (proposed guard), any revived Config-reading automation. Tools adopt without Airtable paste.
+None in this wave. Future paste candidates after Production dry-run: 042 (proposed guard), any revived Config-reading automation. Tools adopt without Airtable paste.
 
 ## Mike actions
 

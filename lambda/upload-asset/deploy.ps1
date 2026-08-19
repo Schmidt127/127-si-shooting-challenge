@@ -1,4 +1,4 @@
-# Deploy DEV upload Lambda (code + optional config)
+# Deploy Production upload Lambda (code + optional config)
 param(
     [string]$FunctionName = "127si-upload-asset-dev",
     [string]$ExistingRoleArn = "",
@@ -105,11 +105,11 @@ if (-not $RoleArn -and -not $SkipIam -and -not $CodeOnly) {
 }
 
 $EnvVars = @{
-    AIRTABLE_BASE_ID = "appTetnuCZlCZdTCT"
+    AIRTABLE_BASE_ID = "appn84sqPw03zEbTT"
     AIRTABLE_API_TOKEN = $AirtableToken
     AIRTABLE_TOKEN = $AirtableToken
     S3_BUCKET = "shooting-challenge-assets"
-    ENVIRONMENT = "DEV"
+    ENVIRONMENT = "Production"
     ALLOW_ROUTE_KEYS = "video_feedback,homework_completion"
     SEASON_SLUG = "2026-2027"
     CHALLENGE_SLUG = "shooting-challenge"

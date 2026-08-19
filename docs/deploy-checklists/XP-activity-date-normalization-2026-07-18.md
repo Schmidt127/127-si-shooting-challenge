@@ -1,7 +1,7 @@
 # XP Activity Date Normalization — Findings & Safe Repo Fixes
 
-**Date:** 2026-07-18  
-**Scope:** Repository-only · no Airtable backfill · no PROD paste  
+**Date:** 2026-07-18
+**Scope:** Repository-only · no Airtable backfill · no PROD paste
 **Timezone authority:** America/Denver · Sunday–Saturday week boundaries
 
 ---
@@ -51,8 +51,8 @@
 
 ## Sunday–Saturday boundary note
 
-Official challenge weeks are Sunday start → Saturday end in America/Denver.  
-Weekly email schedule keys (118/119) use **prior Saturday** as the completed week end.  
+Official challenge weeks are Sunday start → Saturday end in America/Denver.
+Weekly email schedule keys (118/119) use **prior Saturday** as the completed week end.
 Streak week assignment must use the same Denver calendar day as submission Activity Date — UTC slicing violated that contract near midnight.
 
 ---
@@ -60,4 +60,4 @@ Streak week assignment must use the same Denver calendar day as submission Activ
 ## Validation
 
 - Offline: `node airtable/automations/shooting-challenge/lib/xp-date-normalization.test.js`
-- Live DEV paste of 053/054/101 still requires Mike authorization
+- Live Production paste of 053/054/101 still requires Mike authorization

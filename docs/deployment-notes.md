@@ -17,9 +17,9 @@
 | Environment | Base ID | Where configured |
 |-------------|---------|------------------|
 | **Production** | `appn84sqPw03zEbTT` | Vercel, live Make, Fillout (form currently OFF) |
-| **Development** | `appTetnuCZlCZdTCT` | Local `web/.env.local`, `tools/airtable/.env` |
+| **Development** | `appn84sqPw03zEbTT` | Local `web/.env.local`, `tools/airtable/.env` |
 
-**Never** set the dev base ID on Vercel production. Setup: [development-base-setup.md](./development-base-setup.md).
+**Never** set the Production base ID on Vercel production. Setup: [production-base-setup.md](./production-base-setup.md).
 
 **Automation deploy:** GitHub → paste **dev** → audit → Mike approves → paste **prod** → `CHANGELOG.md`.
 
@@ -28,7 +28,7 @@
 | Variable | Required | Notes |
 |----------|----------|-------|
 | `AIRTABLE_API_TOKEN` | Yes (server) | PAT with `data.records:read` on the target base. Never expose to the browser. |
-| `AIRTABLE_BASE_ID` | Yes (server) | Production on Vercel; DEV optional locally |
+| `AIRTABLE_BASE_ID` | Yes (server) | Production on Vercel; Production optional locally |
 | `NEXT_PUBLIC_BASE_PATH` | Yes | Always `/shoot` |
 | `NEXT_PUBLIC_LANDING_URL` | Yes | Landing hub URL |
 | `NEXT_PUBLIC_SITE_URL` | Recommended | Canonical site URL for metadata |
@@ -42,7 +42,7 @@ Template: [`web/.env.local.example`](../web/.env.local.example)
 ```powershell
 cd web
 copy .env.local.example .env.local
-# Edit .env.local — use DEV AIRTABLE_BASE_ID for safe local reads (optional)
+# Edit .env.local — use Production AIRTABLE_BASE_ID for safe local reads (optional)
 npm run dev
 ```
 

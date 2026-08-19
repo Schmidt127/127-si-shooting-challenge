@@ -121,7 +121,7 @@
       "Webhook response = HTTP status without Lambda JSON",
       "Wrapping Lambda JSON so actionOut is not at top level",
       "Amazon S3 Upload module in Make",
-      "Reusing DEV webhook URL or DEV upload secret"
+      "Reusing Production webhook URL or Production upload secret"
     ]
   },
   "flow": [

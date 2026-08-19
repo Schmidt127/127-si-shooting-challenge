@@ -1,7 +1,7 @@
 # Common Engineering Patterns — Shooting Challenge Automations
 
-**Status:** Active — Wave 2A inventory output  
-**Last updated:** 2026-07-05  
+**Status:** Active — Wave 2A inventory output
+**Last updated:** 2026-07-05
 **Reference implementation:** **066 v3.1** ([066 script](../airtable/automations/shooting-challenge/066-achievements-and-milestones-create-shot-milestone-unlocks.js))
 
 **Related:** [v2/06-automation-standards.md](./v2/06-automation-standards.md) · [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md)
@@ -169,7 +169,7 @@ Document **recurring patterns** across production automations so V2 rewrites and
 | Idempotent per-record logic | One-time cleanup |
 | Make webhook handoff | Bulk repair across many rows |
 
-**C-020 Engineering Test Framework:** **Testing Scenarios** table on DEV — script **blocked** until OMNI final field list. See [testing-and-intake-architecture.md](./testing-and-intake-architecture.md); [script checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
+**C-020 Engineering Test Framework:** **Testing Scenarios** table on Production — script **blocked** until OMNI final field list. See [testing-and-intake-architecture.md](./testing-and-intake-architecture.md); [script checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
 
 ---
 

@@ -4,7 +4,7 @@ Guidance for AI assistants (Cursor, etc.) working in this repository.
 
 ## Start here
 
-0. [docs/ENGINEERING_CONSTITUTION.md](./docs/ENGINEERING_CONSTITUTION.md) — **highest-level engineering law** (GitHub, DEV-first, priorities)
+0. [docs/ENGINEERING_CONSTITUTION.md](./docs/ENGINEERING_CONSTITUTION.md) — **highest-level engineering law** (GitHub, production-only, priorities)
 1. [docs/SESSION_HANDOFF-2026-07-06.md](./docs/SESSION_HANDOFF-2026-07-06.md) — **latest session handoff** (bases, blockers, schema snapshots)
 2. [docs/v2/04-ai-development-standards.md](./docs/v2/04-ai-development-standards.md) — **permanent workflow** (Mike / ChatGPT / Cursor / **OMNI-first** for in-Airtable work)
 3. [docs/v2/README.md](./docs/v2/README.md) — **V2 numbered doc pack** (`01`–`09`)
@@ -30,9 +30,9 @@ Guidance for AI assistants (Cursor, etc.) working in this repository.
 ## Hard constraints
 
 - **Never commit secrets** — `.env`, PATs, webhook URLs with tokens
-- **DEV before Production** — automations, formulas, views, interfaces, Make scenarios, scripts, schema — test in DEV first ([doc 04](./docs/v2/04-ai-development-standards.md))
-- **Promotion doc required** — DEV changes are not official until Cursor documents prod steps in `docs/deploy-checklists/` ([doc 04 § Official promotion documentation](./docs/v2/04-ai-development-standards.md#official-promotion-documentation-required))
-- **Airtable production writes** — GitHub → DEV test → Mike approval → prod paste → `CHANGELOG.md`
+- **Production before Production** — automations, formulas, views, interfaces, Make scenarios, scripts, schema — test in production-only validation ([doc 04](./docs/v2/04-ai-development-standards.md))
+- **Promotion doc required** — Production changes are not official until Cursor documents prod steps in `docs/deploy-checklists/` ([doc 04 § Official promotion documentation](./docs/v2/04-ai-development-standards.md#official-promotion-documentation-required))
+- **Airtable production writes** — GitHub → Production test → Mike approval → prod paste → `CHANGELOG.md`
 - **Audits/backfills** — dry-run first; explicit `CONFIRM_WRITE` / `CONFIRM_DELETE` for writes
 - **Web Airtable reads** — server-side only (`lib/airtable/`); never expose `AIRTABLE_API_TOKEN` to the browser
 - **XP idempotency** — one source record → one XP Event; use Source Key patterns from automation scripts

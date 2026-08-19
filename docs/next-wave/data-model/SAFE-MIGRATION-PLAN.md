@@ -87,7 +87,7 @@
 
 | Proposed | Rename → Registration Referrer |
 | Risk | Fillout/Make/mappings |
-| Order | Inventory all consumers → rename in DEV first → PROD with checklist |
+| Order | Inventory all consumers → rename in production-only validation → PROD with checklist |
 | Rollback | Rename back |
 | Verify | No broken filters |
 
@@ -95,18 +95,18 @@
 
 ## Explicitly deferred / forbidden without new approval
 
-- Changing Weeks primary from Week Name  
-- Changing Enrollment primary formula  
-- Deleting Google Drive URL fields  
-- Creating new Config link on Weeks without Program Instance strategy  
-- Any Team Shot Tracker alert fields  
+- Changing Weeks primary from Week Name
+- Changing Enrollment primary formula
+- Deleting Google Drive URL fields
+- Creating new Config link on Weeks without Program Instance strategy
+- Any Team Shot Tracker alert fields
 
 ---
 
 ## Recommended migration sequence (priority)
 
-1. **P0** Docs correction Week Key vs Week Name (done in this pack)  
-2. **P1** Mike attest Make writeback field list; hide overlapping WAS status fields in views  
-3. **P1** Confirm 074 PROD sendMode remains Live (ops — not schema)  
-4. **P2** Hide Weeks text stubs after inventory  
+1. **P0** Docs correction Week Key vs Week Name (done in this pack)
+2. **P1** Mike attest Make writeback field list; hide overlapping WAS status fields in views
+3. **P1** Confirm 074 PROD sendMode remains Live (ops — not schema)
+4. **P2** Hide Weeks text stubs after inventory
 5. **P3** Gate summary / typo renames / HC RID key (approved tickets only)

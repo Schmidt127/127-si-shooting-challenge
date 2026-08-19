@@ -252,13 +252,13 @@ test("fields-map Active School Year is accepted", () => {
   assert.strictEqual(result.configRecordId, "rectmrnvo9a79wgq3");
 });
 
-test("local environment example defaults to the DEV base", () => {
+test("local environment example defaults to the Production base", () => {
   const example = fs.readFileSync(
     path.join(__dirname, "..", "..", "web", ".env.local.example"),
     "utf8",
   );
-  assert.match(example, /^AIRTABLE_BASE_ID=appTetnuCZlCZdTCT$/m);
-  assert.doesNotMatch(example, /^AIRTABLE_BASE_ID=appn84sqPw03zEbTT$/m);
+  assert.match(example, /^AIRTABLE_BASE_ID=appn84sqPw03zEbTT$/m);
+  assert.doesNotMatch(example, /AIRTABLE_DEV_BASE_ID|appTetnuCZlCZdTCT/);
 });
 
 console.log("\nAll config-selection tests passed.");

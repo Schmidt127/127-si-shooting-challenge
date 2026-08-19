@@ -1,9 +1,9 @@
 # C-025 Stage 17 — Production release packet
 
-**Status:** **COMPLETE** — Stage 17 PROD verification PASS (2026-07-20); 117 / 057 / 042 **ON**  
-**Date:** 2026-07-18 · **Updated:** 2026-07-20  
-**DEV:** `appTetnuCZlCZdTCT`  
-**PROD:** `appn84sqPw03zEbTT`  
+**Status:** **COMPLETE** — Stage 17 PROD verification PASS (2026-07-20); 117 / 057 / 042 **ON**
+**Date:** 2026-07-18 · **Updated:** 2026-07-20
+**Production:** `appn84sqPw03zEbTT`
+**PROD:** `appn84sqPw03zEbTT`
 **Companion:** [live enablement](./C-025-stage17-prod-live-2026-07-20.md) · [progress](../status/C-025-stage17-current-prod-progress.md) · [117 verification](./C-025-stage17-prod-117-verification-2026-07-20.md) · [rollback](./C-025-stage17-rollback-plan.md)
 
 ---
@@ -12,7 +12,7 @@
 
 | Gate | State |
 |------|--------|
-| DEV one-click `C025_STAGE17_DOWNSTREAM` | **PASS** |
+| Production one-click `C025_STAGE17_DOWNSTREAM` | **PASS** |
 | PROD 117 create + idempotency | **PASS** — ZA `recfqsgM7zDobxsPf` → XP `recOceuW34jQz7suD` |
 | Preconflict rollup | **PASS** — `ARRAYJOIN(ARRAYUNIQUE(values), "\n")`; LIVE+REC tags confirmed |
 | Conflict exclusivity | **PASS** — recording Conflict=1, Approved=0; XP inactive |
@@ -39,30 +39,30 @@
 
 ### A — Actions safe while automations remain OFF
 
-1. **Repository backup** — Confirm feature branch committed with 117/057/042 paste bodies + **115 v1.8** (DEV align). Tag or note tip SHA.  
-2. **Airtable schema export / screenshots** — Export PROD base meta (or run read-only `_c025_stage17_prod_readiness_audit.py`) before changes.  
-3. **Existing PROD script backups** — UI copy current 057 / 042 / 101 script text into dated files under `docs/deploy-checklists/rollback/` (Mike).  
-4. **Required table creation** — OMNI: create **Zoom Attendance**.  
-5. **Required field creation** — OMNI: ZA fields/selects/formulas/lookups to match DEV; Zoom Meetings Stage 17 support (no `ZZZ` archives); Config Stage 17 recording fields; Enrollments ↔ ZA link.  
-6. **Required select-option additions** — XP Events → XP Source → **`Zoom Meeting Recording Quiz`**.  
-7. **Required views** — Recreate `Zoom Recording Quiz - Past Deadline` (and default Grid).  
-8. **XP Reward Rule** — Confirm `ZOOM_ATTEND_BASE` = **60** active; **do not change**. Set Config **Zoom Recording XP Percent of Live = 50**.  
-9. **Optional data backfill** — **Skip** for prospective go-live (default).  
+1. **Repository backup** — Confirm feature branch committed with 117/057/042 paste bodies + **115 v1.8** (Production align). Tag or note tip SHA.
+2. **Airtable schema export / screenshots** — Export PROD base meta (or run read-only `_c025_stage17_prod_readiness_audit.py`) before changes.
+3. **Existing PROD script backups** — UI copy current 057 / 042 / 101 script text into dated files under `docs/deploy-checklists/rollback/` (Mike).
+4. **Required table creation** — OMNI: create **Zoom Attendance**.
+5. **Required field creation** — OMNI: ZA fields/selects/formulas/lookups to match Production; Zoom Meetings Stage 17 support (no `ZZZ` archives); Config Stage 17 recording fields; Enrollments ↔ ZA link.
+6. **Required select-option additions** — XP Events → XP Source → **`Zoom Meeting Recording Quiz`**.
+7. **Required views** — Recreate `Zoom Recording Quiz - Past Deadline` (and default Grid).
+8. **XP Reward Rule** — Confirm `ZOOM_ATTEND_BASE` = **60** active; **do not change**. Set Config **Zoom Recording XP Percent of Live = 50**.
+9. **Optional data backfill** — **Skip** for prospective go-live (default).
 10. **Read-only re-audit** — curated missing = **0** for automation blockers; formula amount **30** verified.
 
 ### B — Automation install (still OFF; Mike approval)
 
-11. **Paste 117 v1.1.1** — OFF; map `recordId`; blank webhook unless approved.  
-12. **Paste 057 v1.3** — preserve Queue?=1 trigger; OFF until smoke.  
-13. **Paste 042 v3.1** — preserve view `042` / Level Recalc trigger; OFF until smoke.  
+11. **Paste 117 v1.1.1** — OFF; map `recordId`; blank webhook unless approved.
+12. **Paste 057 v1.3** — preserve Queue?=1 trigger; OFF until smoke.
+13. **Paste 042 v3.1** — preserve view `042` / Level Recalc trigger; OFF until smoke.
 14. **Initial OFF states** — 117/057/042 OFF; 101 ON unchanged.
 
 ### C — Could generate XP or affect live athletes (Mike approval)
 
-15. **Controlled smoke-test records** — designated test athlete + meeting only (§ Smoke).  
-16. **Verification** — S0–S6 pass criteria.  
-17. **Gradual enablement** — 057 → 042 → 117 with monitoring windows.  
-18. **Monitoring** — Attendees unchanged; no unexpected `ZOOM_ATTEND_BASE` from recording; Source Keys unique.  
+15. **Controlled smoke-test records** — designated test athlete + meeting only (§ Smoke).
+16. **Verification** — S0–S6 pass criteria.
+17. **Gradual enablement** — 057 → 042 → 117 with monitoring windows.
+18. **Monitoring** — Attendees unchanged; no unexpected `ZOOM_ATTEND_BASE` from recording; Source Keys unique.
 19. **Final signoff** — CHANGELOG + readiness status update + Mike signoff.
 
 ---
@@ -102,30 +102,30 @@ Schema that should remain even if scripts roll back: Zoom Attendance table shell
 
 ## Stop conditions
 
-- Curated schema blockers > 0  
-- Any Attendees write from recording path  
-- New live `ZOOM_ATTEND_BASE` XP from recording-only test  
-- Historical live XP deleted or bulk-deactivated  
-- `ZOOM_ATTEND_BASE` amount changed without approval  
-- 117 enabled before smoke Pass  
-- Make / Gmail / Softr used as part of this package  
+- Curated schema blockers > 0
+- Any Attendees write from recording path
+- New live `ZOOM_ATTEND_BASE` XP from recording-only test
+- Historical live XP deleted or bulk-deactivated
+- `ZOOM_ATTEND_BASE` amount changed without approval
+- 117 enabled before smoke Pass
+- Make / Gmail / Softr used as part of this package
 
 ---
 
 ## Mike approval checklist (do not tick until authorized)
 
-- [ ] Commit 115 v1.8 / align DEV paste  
-- [ ] Approve PROD schema migration plan  
-- [ ] OMNI schema + Config 50% + XP Source option  
-- [ ] Re-audit blockers = 0  
-- [ ] PROD script UI backups saved  
-- [ ] Paste 117/057/042 OFF  
-- [ ] Smoke Pass on isolated fixture  
-- [ ] Gradual enable approval  
-- [ ] CHANGELOG + close-out  
+- [ ] Commit 115 v1.8 / align Production paste
+- [ ] Approve PROD schema migration plan
+- [ ] OMNI schema + Config 50% + XP Source option
+- [ ] Re-audit blockers = 0
+- [ ] PROD script UI backups saved
+- [ ] Paste 117/057/042 OFF
+- [ ] Smoke Pass on isolated fixture
+- [ ] Gradual enable approval
+- [ ] CHANGELOG + close-out
 
 ---
 
 ## Safety
 
-PROD and DEV Airtable were **not modified** by this packet authoring. No merge to `master`.
+PROD and Production Airtable were **not modified** by this packet authoring. No merge to `master`.

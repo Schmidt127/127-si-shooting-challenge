@@ -82,15 +82,15 @@ test("safe behavior: create only NO_MATCH_CREATE; no merge/overwrite path", () =
   assert.doesNotMatch(source, /targetTable\.updateRecordAsync/);
 });
 
-test("PROD base and table IDs are locked; no stale DEV runtime wording", () => {
+test("PROD base and table IDs are locked; no stale Production runtime wording", () => {
   assert.match(source, /baseId:\s*"appn84sqPw03zEbTT"/);
   assert.match(source, /source:\s*"tbldfoVGdhqATi4MS"/);
   assert.match(source, /target:\s*"tblDOTgsWfqPm18bw"/);
   assert.match(source, /report:\s*"tblxualvnUsgcpu0z"/);
   assert.match(source, /getConfiguredTable\(/);
   assert.match(source, /assertProdBaseContext\(/);
-  assert.doesNotMatch(source, /live DEV schema/i);
-  assert.doesNotMatch(source, /appTetnuCZlCZdTCT/);
+  assert.doesNotMatch(source, /live Production schema/i);
+  assert.doesNotMatch(source, /appn84sqPw03zEbTT/);
 });
 
 test("full report baseline 28 high / 3 possible / 1 create is embedded", () => {

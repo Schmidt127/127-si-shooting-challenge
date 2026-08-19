@@ -1,6 +1,6 @@
 # Phase 2A Engineering Sprint — Deliverables (2026-07-05)
 
-**Mission:** Reduce platform complexity — **not** build features tonight.  
+**Mission:** Reduce platform complexity — **not** build features tonight.
 **Rules honored:** No production Airtable pastes · No Make/Fillout prod changes · GitHub documentation only (Cursor).
 
 ---
@@ -24,7 +24,7 @@
 | 2 | **Common engineering patterns** | [v2-common-engineering-patterns.md](./v2-common-engineering-patterns.md) |
 | 3 | **Simplification recommendations** | § Simplification in classification doc + [v2-014 roadmap](./v2-014-automation-modernization-roadmap.md) |
 | 4 | **Questions requiring Mike approval** | [v2-014-questions-for-mike.md](./v2-014-questions-for-mike.md) |
-| 5 | **DEV schema snapshot** (supporting OMNI/ChatGPT) | `airtable/schema/snapshots/dev-20260705/` |
+| 5 | **Production schema snapshot** (supporting OMNI/ChatGPT) | `airtable/schema/snapshots/dev-20260705/` |
 
 ---
 
@@ -41,14 +41,14 @@
 
 ---
 
-## OMNI deliverables (pending — Mike in DEV base)
+## OMNI deliverables (pending — Mike in Production base)
 
 | # | Deliverable | Spec reference |
 |---|-------------|----------------|
 | 1 | Testing views on pipeline tables | [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) § C-020 |
 | 2 | Test Intake table (schema only) | Same + ChatGPT field map when ready |
 | 3 | Scenario Type matrix | Sprint OMNI Mission 3 list |
-| 4 | Operator UX recommendations | Interfaces/dashboards — DEV only |
+| 4 | Operator UX recommendations | Interfaces/dashboards — Production only |
 
 Attach for OMNI: `airtable/schema/snapshots/dev-20260705/schema_doc_*.md`
 
@@ -63,7 +63,7 @@ Attach for OMNI: `airtable/schema/snapshots/dev-20260705/schema_doc_*.md`
 | Complexity scores + tiers | ✅ (static; OMNI refine) |
 | Common engineering standards | ✅ patterns doc |
 | Test Intake design | ⏳ ChatGPT |
-| DEV testing workspace | ⏳ OMNI |
+| Production testing workspace | ⏳ OMNI |
 | Long-term workflow documented | ✅ doc 04 + V2-015 + this sprint |
 | Modernization priorities clear | ✅ P0–P3 in classification |
 | No unintended production changes | ✅ |
@@ -74,10 +74,10 @@ Attach for OMNI: `airtable/schema/snapshots/dev-20260705/schema_doc_*.md`
 
 | # | Step | Owner |
 |---|------|-------|
-| 1 | **066 DEV audit** + one sandbox test | Mike / Cursor |
-| 2 | After DEV pass → **Mike decides** 066 prod promote | Mike |
+| 1 | **066 Production audit** + one sandbox test | Mike / Cursor |
+| 2 | After Production pass → **Mike decides** 066 prod promote | Mike |
 | 3 | Prod maintenance window → delete **112**, retire **043** | Mike |
-| 4 | Begin **C-020** Engineering Test Framework (**Testing Scenarios**; script after OMNI) | OMNI + Cursor (DEV) |
+| 4 | Begin **C-020** Engineering Test Framework (**Testing Scenarios**; script after OMNI) | OMNI + Cursor (Production) |
 
 Wave 2A = **planning complete**, **implementation not complete**.
 

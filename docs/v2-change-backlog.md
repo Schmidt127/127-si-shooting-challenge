@@ -79,7 +79,7 @@ flowchart TD
 | **3** | **C-021** grade bands — link-based matching | Must work before tuning **XP Reward Rules** (Wave 9) |
 | **4** | **C-022** public display fields | Schema + automations; affects **071**, **072**, web |
 | **5** | **C-010**, **C-011**, **066** Airtable deploy | Production safety + automation before heavy testing |
-| **6** | **C-019**, **C-020** test sandbox + **Testing Scenarios** | **C-020 DEV functional complete** (115 v1.3; Tests A–D + E/F/G); C-019 Testing views partial; needed before S3 cutover |
+| **6** | **C-019**, **C-020** test sandbox + **Testing Scenarios** | **C-020 Production functional complete** (115 v1.3; Tests A–D + E/F/G); C-019 Testing views partial; needed before S3 cutover |
 | **7** | **C-013** AWS S3 canonical URLs; **C-023** file content hash dedup | **C-013 done (2026-07-11)** — PROD video upload route complete (070b v4.4 + 070c v1.1). **C-023** in progress separately. |
 | **8** | **C-017**, **C-018**, **C-009** intake | Fillout + Weeks + HW17 quiz — after storage model is clear |
 | **9** | Levels, gates, XP rules; **C-025** Zoom recording attendance | Config tuning + fair gate path for missed live Zoom |
@@ -111,7 +111,7 @@ flowchart TD
 |----|---------|--------|------------|--------|
 | **V2-001** | Archive 2025–26 base; clone for 2026–27 | **Superseded** by **V2-013** (one base + Program Instance). Doc kept: [base-cutover](./shooting-challenge-v2-base-cutover.md) | Wave 0 | **deferred** |
 | **H-001** | Fix 090F achievement unlock audit | Audit v1.1 — shot milestones on Milestone Source Key; other on Enrollment+Achievement+Week; **0 data deletes** | Wave 0 | **done** |
-| **H-002** | **066** v3.2 V2 rewrite + Week write | GitHub `36a2e95`; DEV verified (Easton Hill idempotency + clean-create); **PROD pasted** v3.2 2026-07-06 (`appn84sqPw03zEbTT`); monitor first natural run | Wave 0 | **done** |
+| **H-002** | **066** v3.2 V2 rewrite + Week write | GitHub `36a2e95`; Production verified (Easton Hill idempotency + clean-create); **PROD pasted** v3.2 2026-07-06 (`appn84sqPw03zEbTT`); monitor first natural run | Wave 0 | **done** |
 | **H-003** | Award Recipients scope metadata | Accepted for 2025–26; optional cleanup | — | deferred |
 | **H-004** | Awards catalog duplicate bucket | `thanks_for_playing` class | — | deferred |
 
@@ -129,9 +129,9 @@ flowchart TD
 | **V2-014a** | Wave 2A — classify all automations | **Planning complete** (2026-07-05) — classification, patterns, Mike decisions; ChatGPT review accepted. **Implementation not complete** — no rewrites/merges/retirements executed. Retirements **approved:** **112**, **043** (pending maintenance window) | V2-014, V2-015 | **planning done** |
 | **V2-014c** | Phase 2B — engineering documentation | **Done** (2026-07-06) — [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md), SCRIPT+CONFIG header standard, [phase-2b review](./phase-2b-engineering-review-2026-07-06.md). **No code / no Airtable changes** | V2-014a | **done** (doc) |
 | **V2-014b** | Email Message Center (EMC) | Replace **071, 072, 073, 074, 075, 076, 077** with builder + sender automations | V2-014, C-011 | queued |
-| **V2-015** | **Permanent Development Airtable base** | **Ready** — `appTetnuCZlCZdTCT`; 6 test enrollments; 066 v3.2 DEV verified + PROD deployed; first test env for merges/schema/backfills/Testing Scenarios/Make | V2-014 | **done** |
+| **V2-015** | **Permanent Development Airtable base** | **Ready** — `appn84sqPw03zEbTT`; 6 test enrollments; 066 v3.2 Production verified + PROD deployed; first test env for merges/schema/backfills/Testing Scenarios/Make | V2-014 | **done** |
 
-Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) · Dev base: [v2-015-development-base-architecture.md](./v2-015-development-base-architecture.md)
+Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) · Production base: [v2-015-production-base-architecture.md](./v2-015-production-base-architecture.md)
 
 ### Wave 2 — Schema, field ownership & dedupe engine
 
@@ -174,17 +174,17 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
 | **C-019** | Schmidt test enrollment | `Active?` = false for standings only; **no test flags** on pipeline rows; **Testing** views on 8 pipeline tables — [manual UI checklist](./deploy-checklists/C-019-testing-views-verification-checklist.md) | C-010 partial | queued |
-| **C-020** | **Engineering Test Framework** | **115 v1.3 DEV functional complete** — Tests A–D + functional live E/F/G (Daily, Video 2-file, Homework 2-file). [Checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md), [upload workflow](./upload-workflow-homework-video.md). **Not tested:** Homework XP, Make/S3, combined HW+Video. Production paste pending. | C-019, V2-013 | **DEV functional complete** |
-| **C-020a** | C-020 Homework branch (115 v1.1) | Tests A/B PASS on DEV | C-020 | **done (DEV)** |
-| **C-020b** | C-020 Video branch (115 v1.3) | Tests C/D PASS; Intake Attachments → Video Upload | C-020a | **done (DEV)** |
+| **C-020** | **Engineering Test Framework** | **115 v1.3 Production functional complete** — Tests A–D + functional live E/F/G (Daily, Video 2-file, Homework 2-file). [Checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md), [upload workflow](./upload-workflow-homework-video.md). **Not tested:** Homework XP, Make/S3, combined HW+Video. Production paste pending. | C-019, V2-013 | **Production functional complete** |
+| **C-020a** | C-020 Homework branch (115 v1.1) | Tests A/B PASS on Production | C-020 | **done (Production)** |
+| **C-020b** | C-020 Video branch (115 v1.3) | Tests C/D PASS; Intake Attachments → Video Upload | C-020a | **done (Production)** |
 
 ### Wave 7 — Asset storage
 
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
 | **C-013** | AWS S3 canonical URLs | **DONE (2026-07-11)** — PROD video upload route complete on Schmidt asset `recGQ8EjAMz3bEBiW`: Lambda + Make + Airtable-triggered 070b v4.4 (`Accepted` async handoff) + 070c v1.1 idempotent verify. Manual smoke + 47 unit tests PASS. Commits `5d5f27b`, `9f8495d`. Optional hygiene: rotate exposed PROD upload secret. Attachment retirement / expanded hash-dedup → **C-023**. | C-012, C-020 | **done** |
-| **C-023** | File dedup by **content hash**, not title/filename | **Stage 4C** PASS · **4D-R** Parts A–E PASS · **H3b–H3p** matrix **16/16 PASS** · **Stage 5 DEV complete** — automation **116** (`992677d`) live validated: S5 **12/12 PASS**; confirm + reversal PASS on `recF86pJTIMFoEypJ` / XP `recx2MvUh2WP0tbjO` (same row restored; no duplicate XP); retired **008** slot-neutral. Prod paste pending. | C-013, C-024 | **in progress** |
-| **C-013-SEC** | Rotate DEV Lambda/Airtable secrets after validation | **Done (2026-07-09)** — PAT + `UPLOAD_WEBHOOK_SECRET` rotated; Lambda env synced; HTTP verify PASS. Exposed PAT revoked in Airtable UI. Script: `tools/airtable/c013_dev_rotate_secrets.py` | C-013 | **done** |
+| **C-023** | File dedup by **content hash**, not title/filename | **Stage 4C** PASS · **4D-R** Parts A–E PASS · **H3b–H3p** matrix **16/16 PASS** · **Stage 5 Production complete** — automation **116** (`992677d`) live validated: S5 **12/12 PASS**; confirm + reversal PASS on `recF86pJTIMFoEypJ` / XP `recx2MvUh2WP0tbjO` (same row restored; no duplicate XP); retired **008** slot-neutral. Prod paste pending. | C-013, C-024 | **in progress** |
+| **C-013-SEC** | Rotate Production Lambda/Airtable secrets after validation | **Done (2026-07-09)** — PAT + `UPLOAD_WEBHOOK_SECRET` rotated; Lambda env synced; HTTP verify PASS. Exposed PAT revoked in Airtable UI. Script: `tools/airtable/c013_dev_rotate_secrets.py` | C-013 | **done** |
 
 ### Wave 8 — Intake & calendar
 

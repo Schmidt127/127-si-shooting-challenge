@@ -141,7 +141,7 @@ None. No isolated test defects, stale fixtures, or broken test paths were found.
 
 ## Remaining risks / notes
 
-1. **Offline-only coverage.** All suites are offline contract/logic tests and static-source assertions. They verify Source Key shapes, exclusivity, XP field plans, Denver date handling, header/version contracts, and Make-scenario decision logic — but they do **not** exercise a live Airtable base, live Make scenario, or Gmail send. End-to-end DEV verification (per `docs/deploy-checklists/`) remains a separate, human-authorized step.
+1. **Offline-only coverage.** All suites are offline contract/logic tests and static-source assertions. They verify Source Key shapes, exclusivity, XP field plans, Denver date handling, header/version contracts, and Make-scenario decision logic — but they do **not** exercise a live Airtable base, live Make scenario, or Gmail send. End-to-end Production verification (per `docs/deploy-checklists/`) remains a separate, human-authorized step.
 2. **`node --check` is parse-only.** It confirms the 117x scripts and Make helper are syntactically valid JavaScript; it does not run them against the Airtable automation runtime (`input.config()`, `output.set`, etc., are provided only inside Airtable).
 3. **Branch base deviation** (see "Branch note"): audit ran against `147b5f7`, not `master`. The Stage 17 / 117f code is not yet on `master`.
 4. **Release-readiness warning** (informational): `known-issues.md` does not mention the 066 offline harness evidence. Documentation-only; no functional impact.

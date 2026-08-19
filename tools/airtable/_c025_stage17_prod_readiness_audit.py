@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only C-025 Stage 17 DEV vs PROD schema readiness audit.
+"""Read-only C-025 Stage 17 Production vs PROD schema readiness audit.
 
 READ-ONLY: meta schema + filtered record reads only.
 Never creates/updates/deletes tables, fields, views, records, or automations.
@@ -23,7 +23,7 @@ ENV_CANDIDATES = [
     Path(r"C:\Users\mschmidt_fairfield\Documents\GitHub\127-si-shooting-challenge\tools\airtable\.env"),
 ]
 
-DEV = "appTetnuCZlCZdTCT"
+Production = "appn84sqPw03zEbTT"
 PROD = "appn84sqPw03zEbTT"
 
 FOCUS_TABLES = [
@@ -114,7 +114,7 @@ XP_REQUIRED = {
     "XP Reason Debug": {"types_any": ["singleLineText", "multilineText"]},
     "XP Activity Date": {"types_any": ["date", "dateTime"]},
     "Zoom Meeting": {"type": "multipleRecordLinks"},
-    "Zoom Attendance": {"type": "multipleRecordLinks"},  # optional in DEV historically
+    "Zoom Attendance": {"type": "multipleRecordLinks"},  # optional in Production historically
     "Week": {"type": "multipleRecordLinks"},
     "Awarded By": {"types_any": ["singleLineText", "singleSelect"]},
     "Weekly Athlete Summary": {"type": "multipleRecordLinks"},
@@ -528,7 +528,7 @@ def compare(dev: dict, prod: dict) -> dict:
         if d and not p:
             gaps["missing_tables_in_prod"].append(tname)
 
-    # Field-level: for shared tables, compare names present in DEV inventory vs PROD
+    # Field-level: for shared tables, compare names present in Production inventory vs PROD
     for tname in FOCUS_TABLES:
         dinv = (dev.get("field_inventories") or {}).get(tname)
         pinv = (prod.get("field_inventories") or {}).get(tname)
@@ -680,14 +680,14 @@ def main() -> None:
     env = load_env()
     token = env.get("AIRTABLE_API_TOKEN") or env.get("AIRTABLE_TOKEN")
     assert token
-    # Safety: do not require AIRTABLE_BASE_ID to equal DEV — we explicitly read both.
+    # Safety: do not require AIRTABLE_BASE_ID to equal Production — we explicitly read both.
     # Never write.
 
     print("READ-ONLY audit starting…")
     print("env:", env.get("_env_path"))
-    print("DEV", DEV, "PROD", PROD)
+    print("Production", Production, "PROD", PROD)
 
-    dev = analyze_base("DEV", DEV, token)
+    dev = analyze_base("Production", Production, token)
     time.sleep(0.3)
     prod = analyze_base("PROD", PROD, token)
     gaps = compare(dev, prod)
@@ -700,7 +700,7 @@ def main() -> None:
         "audit": "C-025 Stage 17 PROD schema readiness",
         "mode": "read-only",
         "fetched_at": datetime.now(timezone.utc).isoformat(),
-        "dev_base": DEV,
+        "dev_base": Production,
         "prod_base": PROD,
         "dev": dev,
         "prod": prod,

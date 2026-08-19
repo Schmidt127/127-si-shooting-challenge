@@ -7,7 +7,7 @@ Development and Production Airtable actions. Cursor has not created or
 modified fields,
 pasted scripts, changed the Automation 101 trigger/state, sent email, deployed,
 or merged.
-**Important:** This packet is controlled Production work because no DEV
+**Important:** This packet is controlled Production work because no Production
 Airtable environment is available. Offline repository tests are not
 Production proof.
 

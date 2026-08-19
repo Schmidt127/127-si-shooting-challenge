@@ -66,6 +66,6 @@ Re-add Shot Milestone filter only if Perfect Week must be isolated — not recom
 
 ## Related
 
-- `docs/v2/AUTOMATION_059_TRIGGER_RESOLUTION.md` (DEV-era; Perfect Week caveat §4.2 now resolved as P1)
+- `docs/v2/AUTOMATION_059_TRIGGER_RESOLUTION.md` (Production-era; Perfect Week caveat §4.2 now resolved as P1)
 - `tools/testing/award_perfect_week_059.mjs`
 - `tools/testing/verify_perfect_week_chain.mjs`

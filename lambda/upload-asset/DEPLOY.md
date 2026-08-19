@@ -1,8 +1,8 @@
-# DEV Lambda deployment — `127si-upload-asset-dev`
+# Production Lambda deployment — `127si-upload-asset-dev`
 
 **Status:** AWS **shell complete** (2026-07-08). **Code deploy + Function URL test** — [C-013-dev-lambda-deploy-and-url-test.md](../../docs/deploy-checklists/C-013-dev-lambda-deploy-and-url-test.md) (**awaiting Mike approval**).
 
-**Hard stops:** DEV only. Production untouched. **070a / 070b OFF.** No Make changes in deploy slice.
+**Hard stops:** Production only. Production untouched. **070a / 070b OFF.** No Make changes in deploy slice.
 
 ## AWS shell (live)
 

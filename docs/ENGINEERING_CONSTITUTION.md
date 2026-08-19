@@ -1,7 +1,7 @@
 # Engineering Constitution — 127 SI Shooting Challenge
 
-**Status:** **Active** — highest-level engineering authority for this repository.  
-**Last updated:** 2026-07-06 (Phase 2B)  
+**Status:** **Active** — highest-level engineering authority for this repository.
+**Last updated:** 2026-08-19
 **Scope:** How we build, test, document, and ship — not game rules (see [v2/01-constitution.md](./v2/01-constitution.md)).
 
 ---
@@ -22,7 +22,7 @@
 
 | Layer | Source of truth | Deployed copy |
 |-------|-----------------|---------------|
-| Automations `001`–`114` | `airtable/automations/shooting-challenge/` | Airtable (DEV then Production) |
+| Automations | `airtable/automations/shooting-challenge/` | Airtable Production |
 | Audit / backfill extensions | `airtable/extension-scripts/` | Airtable Scripting extension (paste) |
 | Schema documentation | `airtable/schema/snapshots/` + `airtable/schema/current/` | Airtable (live schema) |
 | Web app | `web/` | Vercel (`/shoot`) |
@@ -38,23 +38,11 @@
 
 ---
 
-## 2. DEV first
+## 2. Production-only operation
 
-**Permanent model:** one repo · one **Production** base · one **Development** base.
+The repository uses one Airtable environment: Production `appn84sqPw03zEbTT`, the live system of record.
 
-| Base | ID | Role |
-|------|-----|------|
-| **Production** | `appn84sqPw03zEbTT` | Live season — system of record |
-| **Development** | `appTetnuCZlCZdTCT` | Paste test, schema experiments, audits, C-020 |
-
-**Rule:** Nothing ships to **Production** until it passes in **DEV** (or documented exception with Mike approval).
-
-Structural changes promote incrementally — **DEV first. Production soon after approval. Not Production last.**
-
-Full architecture: [v2-015-development-base-architecture.md](./v2-015-development-base-architecture.md)  
-Ops runbook: [development-base-setup.md](./development-base-setup.md)
-
-**After DEV clone:** verify intake automations are **ON** before pipeline tests (see [066 dev checklist](./deploy-checklists/066-v3.1-dev-deploy.md) § Discovery).
+Repository and fixture tests must run offline before any live action. Live Airtable checks are read-only by default. Every Production mutation requires Mike's explicit authorization, a narrowly defined target, a rollback plan, and post-change verification.
 
 ---
 
@@ -64,16 +52,15 @@ Official promotion is **not complete** until documented in GitHub.
 
 | Step | Owner | Artifact |
 |------|-------|----------|
-| 1. Implement in GitHub | Cursor | Commit on `master` |
-| 2. Paste / apply in **DEV** | Mike / Cursor | DEV base |
-| 3. Audit + sandbox test | Mike / Cursor | Dry-run extension; test enrollment |
-| 4. **Promotion doc** | Cursor | `docs/deploy-checklists/` or wave doc |
-| 5. Mike approves | Mike | — |
-| 6. Paste / apply in **Production** | Mike | Same script as DEV |
-| 7. Post-deploy audit | Mike / Cursor | Dry-run on prod |
-| 8. `CHANGELOG.md` | Cursor | `### Airtable` / `### Web` / `### Make` |
+| 1. Implement in GitHub | Cursor | Feature branch / pull request |
+| 2. Run offline validation | Cursor | Tests, lint, dry-run fixtures |
+| 3. Document live action and rollback | Cursor | `docs/deploy-checklists/` or wave doc |
+| 4. Mike approves | Mike | Explicit Production authorization |
+| 5. Apply the controlled Production change | Mike / authorized operator | Production base |
+| 6. Post-change verification | Mike / Cursor | Read-only audit and expected-record proof |
+| 7. `CHANGELOG.md` | Cursor | `### Airtable` / `### Web` / `### Make` |
 
-Template: [deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md](./deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md)  
+Template: [deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md](./deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md)
 Authority: [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) § Official promotion documentation
 
 ---
@@ -124,17 +111,17 @@ Index: [README.md](./README.md)
 | Safe backfills | `CONFIRM_WRITE` / dry-run — [safe-backfills README](../airtable/extension-scripts/safe-backfills/README.md) |
 | Engineering Test Framework (C-020) | [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) |
 
-**No test metadata on pipeline tables.** Framework fields live on **Testing Scenarios** only (DEV).
+**No test metadata on pipeline tables.** Framework fields live on **Testing Scenarios** only (Production).
 
 ---
 
 ## 7. Golden Test Dataset philosophy
 
-A **golden test dataset** is a small, known set of DEV enrollments and scenarios used to prove the pipeline — not production data and not ad-hoc manual rows.
+A **golden test dataset** is a small, known set of Production enrollments and scenarios used to prove the pipeline — not production data and not ad-hoc manual rows.
 
 | Principle | Detail |
 |-----------|--------|
-| **Fixed test identities** | Schmidt/testing enrollment + **5** retained DEV test enrollments ([V2-015](./v2-015-development-base-architecture.md)) |
+| **Fixed test identities** | Schmidt/testing enrollment + **5** retained Production test enrollments ([V2-015](./v2-015-production-base-architecture.md)) |
 | **Production-shaped pipeline rows** | Submissions must look like **Fillout** output — intake chain **023 → 005 → 009 → 010 → 031** must run |
 | **Manual rows are not enough** | Typing into Submissions without intake is invalid for milestone/upload/HW tests |
 | **C-020 creates golden scenarios** | **Testing Scenarios** table drives Fillout-shaped Submissions on demand |
@@ -152,7 +139,7 @@ Enrollment IDs: document under **C-019** when OMNI exports them.
 |------|------|----------|
 | **Mike** | Product decisions, approvals, Airtable paste, OMNI in-base work | — |
 | **ChatGPT** | Architecture, planning, requirements, review, doc drafts | Repo edits, unapproved schema changes |
-| **Cursor** | GitHub implementation, audits, commits, promotion docs | Unapproved architecture; Production paste without DEV pass |
+| **Cursor** | GitHub implementation, audits, commits, promotion docs | Unapproved architecture; Production paste without Production pass |
 | **OMNI** | In-base exploration, views, formulas, table shells, live automation audit | Production script source of truth; bypass GitHub for `001`–`114` |
 
 **Tool priority for Airtable work:** OMNI first when sufficient → else GitHub/Cursor.
@@ -172,11 +159,11 @@ Phase 2 goal: **reduce platform complexity first**; automation capacity recovery
 | Does it follow V2 standard? | **High** |
 | Does merge save a slot? | **Medium** |
 
-**Do not merge** solely to save slots if readability suffers.  
-**Do not rewrite** outside an approved wave.  
+**Do not merge** solely to save slots if readability suffers.
+**Do not rewrite** outside an approved wave.
 **One reference template:** **066 v3.2** — all Category B rewrites converge on this structure.
 
-Roadmap: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md)  
+Roadmap: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md)
 Phase 2B review: [phase-2b-engineering-review-2026-07-06.md](./phase-2b-engineering-review-2026-07-06.md)
 
 ---
@@ -206,7 +193,7 @@ Semantic intent:
 
 ### Schema snapshots
 
-- Folder: `dev-YYYYMMDD` / `prod-YYYYMMDD`
+- Folder: `prod-YYYYMMDD`
 - Commit manifests with snapshot
 
 ---
@@ -227,7 +214,7 @@ When trade-offs conflict, decide in this order:
 
 ## 12. Hard constraints (never without Mike approval)
 
-- Paste to **Production** before DEV pass + promotion doc
+- Paste to **Production** before Production pass + promotion doc
 - Write to Production base for experiments
 - Add test flags to pipeline tables (`Is Test Record?`, `Test Status` on Submissions, etc.)
 - Delete production data in audits without dry-run proof
@@ -244,7 +231,7 @@ When trade-offs conflict, decide in this order:
 | Business rules (engine) | [v2/03-business-rules.md](./v2/03-business-rules.md) |
 | AI workflow | [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) |
 | Automation modernization | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) |
-| DEV base | [v2-015-development-base-architecture.md](./v2-015-development-base-architecture.md) |
+| Production base | [v2-015-production-base-architecture.md](./v2-015-production-base-architecture.md) |
 | Agent startup | [AGENTS.md](../AGENTS.md) |
 
 ---

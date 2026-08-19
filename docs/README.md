@@ -22,7 +22,7 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 
 | Doc | Purpose |
 |-----|---------|
-| [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md) | **Highest-level engineering law** — GitHub, DEV-first, promotion, testing, priorities |
+| [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md) | **Highest-level engineering law** — GitHub, production-only, promotion, testing, priorities |
 | [phase-2b-engineering-review-2026-07-06.md](./phase-2b-engineering-review-2026-07-06.md) | Phase 2B — V2-014 review, C-020 gaps, risks |
 
 ---
@@ -65,8 +65,8 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 | [platform-config-improvements.md](./platform-config-improvements.md) | Grade bands + public display fields (C-021, C-022) |
 | [v2-change-backlog.md](./v2-change-backlog.md) | **Owner change list** — all requests, dependency waves, **V2-013 Program Instance** |
 | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) | **Phase 2 master doc** — automation inventory, disposition, capacity plan |
-| [development-base-setup.md](./development-base-setup.md) | **V2-015 ops runbook** — clone, PAT, webhook isolation, dev-first deploy |
-| [v2-015-development-base-architecture.md](./v2-015-development-base-architecture.md) | **Approved** — dev Airtable base + one prod + one repo |
+| [production-base-setup.md](./production-base-setup.md) | **V2-015 ops runbook** — clone, PAT, webhook isolation, production-only deploy |
+| [v2-015-production-base-architecture.md](./v2-015-production-base-architecture.md) | **Approved** — dev Airtable base + one prod + one repo |
 | [CHATGPT-MASTER-PLAN-BRIEF.md](./CHATGPT-MASTER-PLAN-BRIEF.md) | **Planning aggregate** — Wave 0 closed; H-001/H-002; session progress |
 | [v2/06-automation-standards.md](./v2/06-automation-standards.md) | **V2 automation rewrite pattern** — 066 v3.2 reference |
 | [v2/08-testing-standards.md](./v2/08-testing-standards.md) | **Audit-first testing** — fix the audit, not the data |
@@ -81,15 +81,15 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 | [KNOWN_ISSUES.md](./KNOWN_ISSUES.md) | **Canonical known issues** — Critical / High / Medium / Low with owners |
 | [deploy-checklists/SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md) | Softr → Next.js cutover checklist (no cutover until approved) |
 | [UNTRACKED-RECOVERY-TRIAGE.md](./UNTRACKED-RECOVERY-TRIAGE.md) | Triage plan for untracked recovery material (do not delete without approval) |
-| [V2_RELEASE_CHECKLIST.md](./V2_RELEASE_CHECKLIST.md) | **Go-live checklist** — pre-promotion, DEV/PROD, smoke, rollback, sign-off |
-| [deploy-checklists/DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md) | **Online Agent 2** DEV verification package (2026-07-16) — offline PASS; live install pending |
-| [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) | Automation # / version / trigger / DEV·PROD status / evidence |
+| [V2_RELEASE_CHECKLIST.md](./V2_RELEASE_CHECKLIST.md) | **Go-live checklist** — pre-promotion, Production, smoke, rollback, sign-off |
+| [deploy-checklists/Production-release-readiness-verification-2026-07-16.md](./deploy-checklists/Production-release-readiness-verification-2026-07-16.md) | **Online Agent 2** Production verification package (2026-07-16) — offline PASS; live install pending |
+| [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) | Automation # / version / trigger / Production·PROD status / evidence |
 | [V2_END_TO_END_TEST_MATRIX.md](./V2_END_TO_END_TEST_MATRIX.md) | Full athlete-scenario launch matrix |
 | [known-issues.md](./known-issues.md) | Legacy pointer → [KNOWN_ISSUES.md](./KNOWN_ISSUES.md) |
 | [status/C-025-stage17-current-prod-progress.md](./status/C-025-stage17-current-prod-progress.md) | **C-025 Stage 17 — authoritative current state** (Zoom Attendance credit COMPLETE; Automation **117** vs Make **117f**; four-part send key) |
 | [deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md](./deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md) | C-025 PROD Zoom Recording **Approval Email** workflow (Airtable **117** → Make **117f**) — tested, not fully live |
-| [v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) | C-025 / **117a–117b** DEV install packet (**superseded S16 design** — Stage 17 is current) |
-| [v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md](./v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md) | C-011 weekly email DEV install packet (historical) |
+| [v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) | C-025 / **117a–117b** Production install packet (**superseded S16 design** — Stage 17 is current) |
+| [v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md](./v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md) | C-011 weekly email Production install packet (historical) |
 | [next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md](./next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md) | **C-011 PROD verified** weekly email architecture (`118→072→119→074→Make`) |
 | [reliability-command-center/README.md](./reliability-command-center/README.md) | **Reliability Command Center** (SC-147) — workflow health model, offline audit CLI, retry policy (Interface **Designed**, not installed) |
 | [reliability-command-center/MVP-PRODUCTION-RELEASE.md](./reliability-command-center/MVP-PRODUCTION-RELEASE.md) | RCC minimum PROD release — existing fields, export format, exact views |

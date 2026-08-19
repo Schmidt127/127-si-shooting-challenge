@@ -64,7 +64,7 @@ to prevent them from competing with the active authority:
 ## Contradictions corrected
 
 - Replaced the old PROD-first/no-preservation operating posture with the
-  repository’s DEV-first, Mike-approval, no-live-mutation guardrails.
+  repository’s production-only, Mike-approval, no-live-mutation guardrails.
 - Reconciled CONTROL.json’s stale July SHA and next action to the merged
   PR #137–#139 baseline.
 - Corrected Automation 115’s active source header from v2.0/paste-pending to

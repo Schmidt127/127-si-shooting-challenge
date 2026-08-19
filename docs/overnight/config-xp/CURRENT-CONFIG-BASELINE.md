@@ -99,4 +99,4 @@ Full detail in `CONFIG-HARDCODE-AUDIT.md`. Highlights:
 
 - Any handoff/plan stating 043 assigns levels: stale — 042 is the sole owner and 043 is deleted.
 - Historical streak XP amounts (35/60/90/140): stale — see § 2.
-- DEV-first requirement: superseded — PROD is the active build/test environment for this run.
+- production-only requirement: superseded — PROD is the active build/test environment for this run.

@@ -1,12 +1,12 @@
 # C-013 / C-023 — Production promotion plan
 
-**Status:** **C-013 PROD video upload workflow COMPLETE (2026-07-11)** · Airtable-triggered Schmidt test PASS · commits `5d5f27b` + `9f8495d`  
+**Status:** **C-013 PROD video upload workflow COMPLETE (2026-07-11)** · Airtable-triggered Schmidt test PASS · commits `5d5f27b` + `9f8495d`
 **Closeout:** [C-013-prod-closeout-2026-07-11.md](./C-013-prod-closeout-2026-07-11.md)
-**Backlog:** C-013 (AWS S3 canonical URLs) · C-023 (file content hash dedup)  
-**DEV base:** `appTetnuCZlCZdTCT`  
-**Production base:** `appn84sqPw03zEbTT` — Lambda deployed + direct smoke PASS; Make scenario built + manual route smoke PASS (`overallPass=true`)  
-**Make build:** [C-013-prod-make-build-2026-07-11.md](./C-013-prod-make-build-2026-07-11.md) · [closeout](./C-013-prod-closeout-2026-07-11.md) · *(historical v4.2 UI package:* [070b UI verification](./C-013-prod-070b-ui-verification-2026-07-11.md) · [script paste v4.2](./C-013-prod-070b-script-paste-v4.2.txt)*)  
-**Make deployment:** [C-013-prod-make-deployment-2026-07-11.md](./C-013-prod-make-deployment-2026-07-11.md) · [make smoke result](../audits/C-013-prod-make-smoke-result-2026-07-11.md)  
+**Backlog:** C-013 (AWS S3 canonical URLs) · C-023 (file content hash dedup)
+**Production base:** `appn84sqPw03zEbTT`
+**Production base:** `appn84sqPw03zEbTT` — Lambda deployed + direct smoke PASS; Make scenario built + manual route smoke PASS (`overallPass=true`)
+**Make build:** [C-013-prod-make-build-2026-07-11.md](./C-013-prod-make-build-2026-07-11.md) · [closeout](./C-013-prod-closeout-2026-07-11.md) · *(historical v4.2 UI package:* [070b UI verification](./C-013-prod-070b-ui-verification-2026-07-11.md) · [script paste v4.2](./C-013-prod-070b-script-paste-v4.2.txt)*)
+**Make deployment:** [C-013-prod-make-deployment-2026-07-11.md](./C-013-prod-make-deployment-2026-07-11.md) · [make smoke result](../audits/C-013-prod-make-smoke-result-2026-07-11.md)
 **Readiness audit:** [C-013-prod-infrastructure-readiness-2026-07-11.md](../audits/C-013-prod-infrastructure-readiness-2026-07-11.md) · [smoke test](./C-013-prod-smoke-test-2026-07-11.md)
 
 **This document does not authorize Production deployment.** Committing this plan to GitHub records promotion steps only. **Separate explicit Mike approval** is required before any Production Airtable, Make, AWS, or secret change.
@@ -21,7 +21,7 @@
 
 ### Purpose
 
-Define the **official Production promotion path** for Wave 7 asset storage after DEV proof of:
+Define the **official Production promotion path** for Wave 7 asset storage after Production proof of:
 
 ```text
 Airtable 070b → Make → authenticated Lambda Function URL → S3 → Airtable canonical URL + SHA-256 hash writeback
@@ -42,35 +42,35 @@ Airtable 070b → Make → authenticated Lambda Function URL → S3 → Airtable
 - Attachment clearing after upload (later approved slice)
 - Web `/shoot` changes
 - Bulk historical migration / backfill
-- **C-023 H3** duplicate-bytes validation (remains **next DEV test** before final Production cutover decision)
+- **C-023 H3** duplicate-bytes validation (remains **next Production test** before final Production cutover decision)
 - Make **Amazon S3 Upload** module (remains **parked** unless architecture reopens)
 
 ### Design note — attachments
 
-The **proven DEV design retains Airtable Attachment** after upload. Attachment clearing is **not** part of this promotion slice.
+The **proven Production design retains Airtable Attachment** after upload. Attachment clearing is **not** part of this promotion slice.
 
 ---
 
-## 2. Current DEV evidence
+## 2. Current Production evidence
 
-All evidence is **DEV only**. Proof artifacts are local (`_preview/`, `tools/airtable/_preview/`) — **not in GitHub**.
+All evidence is **Production only**. Proof artifacts are local (`_preview/`, `tools/airtable/_preview/`) — **not in GitHub**.
 
 | Gate | Asset | Result | Date |
 |------|-------|--------|------|
 | SDK + hash writeback | `recBBi80bYuxXifVj` | `allPass=true` | 2026-07-08 |
 | C-020 H2 harness | `recL9r4a7navUxEhg` | Lambda/SDK path proven | 2026-07-08 |
 | Lambda Function URL B0–B4 | `rec9Pk14BJjFuNpf7` | HTTP 200 · `actionOut=uploaded` | 2026-07-09 |
-| **C-013-SEC** rotation | DEV PAT + webhook secret | Rotated · verify PASS | 2026-07-09 |
+| **C-013-SEC** rotation | Production PAT + webhook secret | Rotated · verify PASS | 2026-07-09 |
 | Make manual webhook (**070b OFF**) | `recthL2wrTha5nWHL` | `allPass=true` | 2026-07-10 |
 | **070b hybrid controlled test** | **`recF86pJTIMFoEypJ`** | **`allPass=true`** end-to-end | 2026-07-09 |
 | Close-out re-probe (read-only) | **`recF86pJTIMFoEypJ`** | **`allPass=true`** | 2026-07-10 |
 | C-023 duplicate lookup (SDK/Lambda) | B4 + SDK assets | Flag-only PASS | 2026-07-09 |
 
-**DEV components:** Lambda `127si-upload-asset-dev` · region `us-east-2` · bucket `shooting-challenge-assets` · Make `Shooting Challenge - DEV - Upload Engine - Lambda - v1` · **070a OFF** · **070b OFF** (post controlled test).
+**Production components:** Lambda `127si-upload-asset-dev` · region `us-east-2` · bucket `shooting-challenge-assets` · Make `Shooting Challenge - Production - Upload Engine - Lambda - v1` · **070a OFF** · **070b OFF** (post controlled test).
 
 **Not counted as PASS:** Accidental 070b Test on `recIYFnfmsPcy7iop` (stuck **Processing** — Lambda never ran). **Do not repair** as part of promotion planning.
 
-**Open before Production cutover:** **C-023 H3** — duplicate-bytes validation on a fresh DEV hybrid run under separate approval.
+**Open before Production cutover:** **C-023 H3** — duplicate-bytes validation on a fresh Production hybrid run under separate approval.
 
 ---
 
@@ -80,7 +80,7 @@ All evidence is **DEV only**. Proof artifacts are local (`_preview/`, `tools/air
 |---|--------------|-------|------|
 | 1 | This promotion plan reviewed by **Mike** | Mike | [ ] |
 | 2 | Phase 2 / backlog approval for Production execution | ChatGPT + Mike | [ ] |
-| 3 | DEV video hybrid path proven (`recF86pJTIMFoEypJ`) | Cursor | [x] |
+| 3 | Production video hybrid path proven (`recF86pJTIMFoEypJ`) | Cursor | [x] |
 | 4 | **C-023 H3** completed or explicitly dispositioned for cutover | Mike | [ ] |
 | 5 | GitHub source current (`lambda/upload-asset/`, **070b** v4.2, `deploy-prod.ps1`) | Cursor | [x] |
 | 6 | Production schema parity (§5) | Mike / OMNI | [x] |
@@ -100,13 +100,13 @@ All evidence is **DEV only**. Proof artifacts are local (`_preview/`, `tools/air
 | Secret | Production requirement |
 |--------|------------------------|
 | Airtable PAT | **New** Production token — `appn84sqPw03zEbTT` only |
-| `UPLOAD_WEBHOOK_SECRET` | **New** value — never reuse DEV |
-| Lambda `AIRTABLE_BASE_ID` | `appn84sqPw03zEbTT` — reject DEV base |
+| `UPLOAD_WEBHOOK_SECRET` | **New** value — never reuse Production |
+| Lambda `AIRTABLE_BASE_ID` | `appn84sqPw03zEbTT` — reject Production base |
 | Make `X-Upload-Secret` | Scenario variable matching Production Lambda |
 | Make webhook URL | **New** Production hook — ops notes only |
 | AWS | Lambda **IAM role** only — no long-term keys in env |
 
-**Rotation:** After any exposure, rotate immediately. Reference pattern: `tools/airtable/c013_dev_rotate_secrets.py` (DEV only — adapt for Production ops notes).
+**Rotation:** After any exposure, rotate immediately. Reference pattern: `tools/airtable/c013_dev_rotate_secrets.py` (Production only — adapt for Production ops notes).
 
 ---
 
@@ -150,11 +150,11 @@ Canonical File URL · Storage Key · File Content Hash · File Hash Algorithm (S
 
 | Check | Expected |
 |-------|----------|
-| Base guard rejects DEV | Yes |
+| Base guard rejects Production | Yes |
 | Isolated smoke (`actionOut=uploaded`) | Before **070b** enable |
 | CloudWatch `/aws/lambda/127si-upload-asset` | No secrets in logs |
 
-**Reference:** [`lambda/upload-asset/deploy-prod.ps1`](../../lambda/upload-asset/deploy-prod.ps1) · [`deploy.ps1`](../../lambda/upload-asset/deploy.ps1) (DEV) · [PROD smoke test](./C-013-prod-smoke-test-2026-07-11.md) · [DEV URL test](./C-013-dev-lambda-deploy-and-url-test.md)
+**Reference:** [`lambda/upload-asset/deploy-prod.ps1`](../../lambda/upload-asset/deploy-prod.ps1) · [`deploy.ps1`](../../lambda/upload-asset/deploy.ps1) (Production) · [PROD smoke test](./C-013-prod-smoke-test-2026-07-11.md) · [Production URL test](./C-013-dev-lambda-deploy-and-url-test.md)
 
 ---
 
@@ -171,7 +171,7 @@ Canonical File URL · Storage Key · File Content Hash · File Hash Algorithm (S
 
 **Module chain:** Webhook → Router (`070b` + `video_feedback`) → HTTP POST Lambda → 2xx router → Webhook response **200 only on Lambda success**.
 
-**Lesson from DEV:** Webhook response must **not** return 200 if HTTP→Lambda did not succeed (see `recIYFnfmsPcy7iop` false positive).
+**Lesson from Production:** Webhook response must **not** return 200 if HTTP→Lambda did not succeed (see `recIYFnfmsPcy7iop` false positive).
 
 ---
 
@@ -212,7 +212,7 @@ Rollback does **not** auto-delete S3 objects or clear canonical fields.
 
 ## 10. Validation — pass / fail criteria
 
-### Pass (match DEV `recF86pJTIMFoEypJ`)
+### Pass (match Production `recF86pJTIMFoEypJ`)
 
 - Upload Status = **Uploaded**
 - Canonical File URL + Storage Key populated
@@ -290,7 +290,7 @@ Rollback does **not** auto-delete S3 objects or clear canonical fields.
 
 | Doc | Topic |
 |-----|--------|
-| [C-013-dev-070b-hybrid-prep.md](./C-013-dev-070b-hybrid-prep.md) | DEV controlled hybrid PASS |
+| [C-013-dev-070b-hybrid-prep.md](./C-013-dev-070b-hybrid-prep.md) | Production controlled hybrid PASS |
 | [C-013-make-upload-migration-plan.md](./C-013-make-upload-migration-plan.md) | Legacy migration phases |
 | [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md) | Wave 7 slices |
 | [v2-change-backlog.md](../v2-change-backlog.md) | C-013 / C-023 status |
@@ -307,6 +307,6 @@ Rollback does **not** auto-delete S3 objects or clear canonical fields.
 - [ ] Optional: rotate exposed upload secret (AWS Lambda + Make header + local env), then re-smoke
 - [ ] Optional: update Automations table documentation rows (070b v4.4, 070c v1.1)
 
-**Repository closeout:** **COMPLETE**  
-**C-013 video upload workflow:** **COMPLETE** (2026-07-11)  
+**Repository closeout:** **COMPLETE**
+**C-013 video upload workflow:** **COMPLETE** (2026-07-11)
 **Attachment retirement / hash-dedup expansion:** **C-023** (separate backlog)

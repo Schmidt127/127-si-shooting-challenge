@@ -3,7 +3,7 @@ Automation: 116 - Submission Assets - Apply Asset Reuse Decision Consequences
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
-Last Synced From Airtable: 2026-07-10 (DEV deployed and validated)
+Last Synced From Airtable: 2026-07-10 (Production deployed and validated)
 Last GitHub Update: 2026-07-10
 
 Purpose:
@@ -32,7 +32,7 @@ Does not modify Lambda detection or upload automations 070a/070b.
  * Last Updated: 2026-07-10
  *
  * VERSION HISTORY
- * - v1.0 (2026-07-10): Initial DEV Stage 5 consequence workflow.
+ * - v1.0 (2026-07-10): Initial Production Stage 5 consequence workflow.
  * - v1.0.1 (2026-07-10): Write dateTime fields with Date objects; notes-only Upload Destination read.
  *
  * PURPOSE
@@ -50,7 +50,7 @@ Does not modify Lambda detection or upload automations 070a/070b.
  * - Do not write computed fields (rollups, formulas, lookups).
  *
  * THIS IS NOT
- * - Upload or duplicate detection (DEV Lambda / 070a / 070b).
+ * - Upload or duplicate detection (Production Lambda / 070a / 070b).
  * - Athlete or parent notification.
  * - Automatic blocking on detection alone.
  *
@@ -435,7 +435,7 @@ async function applyConfirmedDuplicate({
     await requireField(assetTable, CONFIG.assetFields.resolutionLastApplied, ["singleLineText"]);
     assetPatch[CONFIG.assetFields.resolutionLastApplied] = "Confirmed Duplicate";
   } catch (_optionalField) {
-    // DEV may not yet have Duplicate Resolution Last Applied Decision
+    // Production may not yet have Duplicate Resolution Last Applied Decision
   }
 
   await assetTable.updateRecordAsync(assetRecord.id, assetPatch);

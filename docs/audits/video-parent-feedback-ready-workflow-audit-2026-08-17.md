@@ -1,8 +1,8 @@
 # Audit — Video Feedback `Parent Feedback Ready?` → Communications Hub
 
-Date: 2026-08-17 (Hub-corrected)  
-Base: Production `appn84sqPw03zEbTT`  
-Method: Repository scripts/docs + live Airtable MCP (`list_automations`, `get_automation`, `get_table_schema`)  
+Date: 2026-08-17 (Hub-corrected)
+Base: Production `appn84sqPw03zEbTT`
+Method: Repository scripts/docs + live Airtable MCP (`list_automations`, `get_automation`, `get_table_schema`)
 Scope: What runs when Video Feedback → **Parent Feedback Ready?** is checked
 
 ---
@@ -85,9 +85,9 @@ AND(
 
 ## D. Trigger audit (keep unless Mike revises)
 
-**Automation:** 073  
-**Table:** Video Feedback (`tblOV6pJDxQFBSQ3q`)  
-**Trigger type:** When a record matches conditions  
+**Automation:** 073
+**Table:** Video Feedback (`tblOV6pJDxQFBSQ3q`)
+**Trigger type:** When a record matches conditions
 
 | Condition | Verdict |
 |-----------|---------|
@@ -140,7 +140,7 @@ Any VF Google Drive File/Folder ID/URL/Name fields; do not recommend or write th
 
 ---
 
-## G. Mike paste / turn-on checklist (DEV then PROD)
+## G. Mike paste / turn-on checklist (Production then PROD)
 
 1. Paste **073 v4.0** (remove Make webhook / sendMode inputs; optional `testMode`, default true).
 2. Paste **079 v2.1** (VIDEO_FEEDBACK acceptance).

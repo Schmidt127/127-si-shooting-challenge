@@ -4,14 +4,14 @@
 **Status:** **Wave 7 Slice 2 SDK proof PASS (2026-07-08)** — controlled confirm-write recheck same day. Full writeback + C-023 duplicate flags on `recBBi80bYuxXifVj`. Upload runtime = **Lambda** (Make S3 **dropped**). **070a/070b OFF**; Production untouched. **Not** full migration.
 
 **PROD update (2026-07-11):** C-013 PROD video upload workflow **COMPLETE** — Airtable-triggered PASS on `recGQ8EjAMz3bEBiW` (070b v4.4 + 070c v1.1). See [C-013-prod-closeout-2026-07-11.md](./C-013-prod-closeout-2026-07-11.md).
-**Depends on:** C-020 DEV functional complete (115 harness); C-012 field ownership (partial — document as we go)
+**Depends on:** C-020 Production functional complete (115 harness); C-012 field ownership (partial — document as we go)
 **Architecture:** [asset-storage-migration.md](../asset-storage-migration.md) · [upload-workflow-homework-video.md](../upload-workflow-homework-video.md) · [make/documentation/upload-asset-engine.md](../../make/documentation/upload-asset-engine.md) · [Slice 2 mapping](./C-013-make-s3-writeback-mapping.md) · **[Make build packet](./C-013-make-s3-dev-build-packet.md)**
-**Test harness:** [C-020 checklist](./C-020-testing-scenarios-script-checklist.md) — Tests **F** (video) and **G** (homework) for upload path after DEV Make is wired
-**DEV probe:** `tools/airtable/_probe_c013_asset_storage_fields.py` (read-only)
+**Test harness:** [C-020 checklist](./C-020-testing-scenarios-script-checklist.md) — Tests **F** (video) and **G** (homework) for upload path after Production Make is wired
+**Production probe:** `tools/airtable/_probe_c013_asset_storage_fields.py` (read-only)
 
-**Environment:** DEV `appTetnuCZlCZdTCT` first. **070a/070b OFF**. Upload runtime = **[SDK / hybrid interim](./C-013-sdk-hybrid-runtime.md)** (Make S3 **parked**).
+**Environment:** Production `appn84sqPw03zEbTT` first. **070a/070b OFF**. Upload runtime = **[SDK / hybrid interim](./C-013-sdk-hybrid-runtime.md)** (Make S3 **parked**).
 
-**DEV baselines (read-only):**
+**Production baselines (read-only):**
 
 | File | When | Notes |
 |------|------|-------|
@@ -23,7 +23,7 @@
 
 ---
 
-## 2026-07-08 — DEV SDK proof PASS (C-013 + C-023 hash writeback)
+## 2026-07-08 — Production SDK proof PASS (C-013 + C-023 hash writeback)
 
 **Tool:** `tools/airtable/c013_dev_s3_upload_proof.py` (AWS SDK — bypasses Make S3 timeout)
 **Record:** `recBBi80bYuxXifVj` (Video Feedback / **070b** route)
@@ -33,12 +33,12 @@
 
 | Track | Status |
 |-------|--------|
-| **C-013 DEV S3 + canonical writeback** | **PASS** (SDK, one video asset) |
+| **C-013 Production S3 + canonical writeback** | **PASS** (SDK, one video asset) |
 | **C-023 hash writeback** | **PASS** (SHA-256 on asset row) |
-| **C-023 duplicate lookup (module 52)** | **PASS** (SDK/Lambda — flag-only; not Make module 52 on DEV) |
-| **Make DEV scenario S3 path** | **DROPPED** — S3 Upload timeout; use **Lambda** orchestration |
+| **C-023 duplicate lookup (module 52)** | **PASS** (SDK/Lambda — flag-only; not Make module 52 on Production) |
+| **Make Production scenario S3 path** | **DROPPED** — S3 Upload timeout; use **Lambda** orchestration |
 | **Upload runtime** | **Lambda** — [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md) · [Make migration plan](./C-013-make-upload-migration-plan.md) |
-| **DEV 070a/070b connection** | **NOT STARTED** — gated on **H2** + C-023 duplicate test |
+| **Production 070a/070b connection** | **NOT STARTED** — gated on **H2** + C-023 duplicate test |
 | **C-020 H2 harness** | **NEXT BUILD** |
 | **Production cutover** | **NOT STARTED** |
 
@@ -60,13 +60,13 @@
 
 ### What this proves vs not
 
-**Proven:** DEV program S3 bucket accepts upload; Airtable DEV accepts full §6 success writeback including **true byte-hash**; Mike path pattern works via SDK (`season/challenge/athlete-slug` + dated filename).
+**Proven:** Production program S3 bucket accepts upload; Airtable Production accepts full §6 success writeback including **true byte-hash**; Mike path pattern works via SDK (`season/challenge/athlete-slug` + dated filename).
 
 **Not proven:** Make.com end-to-end path; homework route; **070a/070b** automation send; C-020 **H2**; duplicate-hash detection; attachment cleanup; Production; formula/view cutover.
 
 ### Next steps (ordered) — runtime locked 2026-07-08
 
-**Decision:** **Option 3 — SDK / hybrid interim.** Make S3 **parked**. Lambda deferred until after DEV harness proof.
+**Decision:** **Option 3 — SDK / hybrid interim.** Make S3 **parked**. Lambda deferred until after Production harness proof.
 
 1. Extend SDK path: **C-023 duplicate lookup** on [`c013_dev_s3_upload_proof.py`](../../tools/airtable/c013_dev_s3_upload_proof.py).
 2. Build **C-020 H2** (video 1-file harness) → SDK processes harness asset → verify `allPass`.
@@ -77,23 +77,23 @@ Full spec: [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md).
 
 ---
 
-## 2026-07-07 End-of-night checkpoint — DEV S3 partial writeback proof
+## 2026-07-07 End-of-night checkpoint — Production S3 partial writeback proof
 
-**Resume here tomorrow morning.** Mike stopped for the night after first live DEV Make S3 proof. Production untouched.
+**Resume here tomorrow morning.** Mike stopped for the night after first live Production Make S3 proof. Production untouched.
 
 ### Status summary
 
 | Track | Status |
 |-------|--------|
-| **C-013 DEV S3 partial writeback proof** | **PASS** |
+| **C-013 Production S3 partial writeback proof** | **PASS** |
 | **C-023 hash completion** | **PENDING** |
 | **Dynamic path mapping** | **PENDING** (hardcoded test values in Make tonight) |
-| **DEV 070a/070b connection** | **NOT STARTED** |
+| **Production 070a/070b connection** | **NOT STARTED** |
 | **Production cutover** | **NOT STARTED** |
 
-### Make scenario (DEV only)
+### Make scenario (Production only)
 
-**Name:** `Shooting Challenge - DEV - Upload Engine - S3 - v1`
+**Name:** `Shooting Challenge - Production - Upload Engine - S3 - v1`
 
 | # | Module | Status tonight |
 |---|--------|----------------|
@@ -109,7 +109,7 @@ Full spec: [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md).
 
 | Item | Value |
 |------|-------|
-| **Base** | DEV `appTetnuCZlCZdTCT` |
+| **Base** | Production `appn84sqPw03zEbTT` |
 | **Table** | Submission Assets |
 | **Record** | `recBBi80bYuxXifVj` |
 | **Route** | Video Feedback — **070b**-style webhook (`routeKey = video_feedback`) |
@@ -162,7 +162,7 @@ https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/
 - **Upload Error** clearing on success — verify/document on next run
 - S3 path/file/canonical URL still **hardcoded test values** — convert to dynamic Make mappings from Get Record fields
 - Canonical URL uses **direct S3 URL**; final CloudFront vs presigned decision pending
-- DEV **070a/070b** not enabled
+- Production **070a/070b** not enabled
 - Production untouched
 - Attachments not cleared; Google Drive fields not removed
 - Formulas/views/scripts not switched to Canonical File URL
@@ -176,12 +176,12 @@ https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/
 | **C** | Convert hardcoded folder/file/canonical URL values to **dynamic** mappings (`seasonSlug`, `challengeSlug`, `athleteSlug`, date, asset type, record id, safe filename) |
 | **D** | Re-test same video asset or a fresh `Pending Link` video asset via manual webhook |
 | **E** | Document **full** C-013/C-023 manual webhook PASS (all §6 success fields including hash) |
-| **F** | **Only after manual PASS** — prepare controlled DEV **070b** connection (webhook URL in Make only; do not paste Production) |
+| **F** | **Only after manual PASS** — prepare controlled Production **070b** connection (webhook URL in Make only; do not paste Production) |
 | **G** | Run C-020 **H2** video test **before** homework **H1** |
 
 ### Hard stops (still in force)
 
-- Do **not** enable DEV **070a/070b** tonight or before full manual PASS
+- Do **not** enable Production **070a/070b** tonight or before full manual PASS
 - Do **not** touch Production
 - Do **not** clear Airtable attachments
 - Do **not** remove Google Drive fields
@@ -214,7 +214,7 @@ https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/
 
 ---
 
-## 2026-07-08 — Controlled DEV confirm-write recheck (C-013 + C-023)
+## 2026-07-08 — Controlled Production confirm-write recheck (C-013 + C-023)
 
 **Purpose:** Re-verify SDK path after dry-run recheck; force **`schmidt-mike`** athlete slug to match prior writeback on canonical test record.
 
@@ -222,7 +222,7 @@ https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/
 |------|--------|
 | **Tool** | `c013_dev_s3_upload_proof.py` |
 | **Command** | `--confirm-write --athlete-slug schmidt-mike` |
-| **Base** | `appTetnuCZlCZdTCT` only |
+| **Base** | `appn84sqPw03zEbTT` only |
 | **Record** | `recBBi80bYuxXifVj` |
 | **Bucket / region** | `shooting-challenge-assets` / `us-east-2` |
 | **Verifier** | `allPass=true` (probe) |
@@ -243,11 +243,11 @@ https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/
 
 **Artifacts:** Local-only recheck JSON under `tools/airtable/_preview/` (`*-confirm-recheck*.json`) — not required for Git; prior committed proof artifacts remain canonical.
 
-**Next:** **C-023:** Stage **4A** Lambda deploy + Stage **4B** 070b Option A **repo complete** — paste DEV 070b v4.2 (OFF); **Stage 4C** runtime next.
+**Next:** **C-023:** Stage **4A** Lambda deploy + Stage **4B** 070b Option A **repo complete** — paste Production 070b v4.2 (OFF); **Stage 4C** runtime next.
 
 ---
 
-## 2026-07-10 — Stage 4C direct DEV Lambda smoke test (C-013 + C-023)
+## 2026-07-10 — Stage 4C direct Production Lambda smoke test (C-013 + C-023)
 
 **Purpose:** Prove deployed `127si-upload-asset-dev` can claim, upload, write back, initialize reuse-review fields, and skip retry — **without Make or 070b**.
 
@@ -303,7 +303,7 @@ All storage/claim/review fields **blank**; `Upload Status = Pending Link`; no Ca
 | Upload Error | blank |
 | Asset Reuse Decision | `Not Reviewed` |
 
-### C-023 duplicate + contextual review (same bytes as prior DEV tests)
+### C-023 duplicate + contextual review (same bytes as prior Production tests)
 
 | Field | Result |
 |-------|--------|
@@ -351,7 +351,7 @@ Primary match `recBBi80bYuxXifVj` retains its own Storage Key (`…/schmidt-mike
 
 ---
 
-## 2026-07-10 — Stage 4D DEV Make + claim proof (partial)
+## 2026-07-10 — Stage 4D Production Make + claim proof (partial)
 
 | Part | Result | Notes |
 |------|--------|-------|
@@ -374,11 +374,11 @@ Detail: [C-013-dev-make-lambda-scenario-prep.md](./C-013-dev-make-lambda-scenari
 |-------|--------|
 | **H3b–H3d, H3e, H3g–H3k, H3n–H3p** | **PASS** (direct Lambda; independent S3 per asset) |
 | **H3l / H3m** | **PASS** (cited Stage 4D-D/E — not rerun) |
-| **H3e** | **PASS** (2026-07-10) | DEV Lambda homework route deployed |
+| **H3e** | **PASS** (2026-07-10) | Production Lambda homework route deployed |
 | **H3f** | **PASS** (2026-07-10) | second enrollment `recKPxp0RlPhCLwDp`; cross-enrollment informational only |
 | **Regression** | Lambda **38/38** + Node **10/10** |
 
-**070a / 070b / Make:** **OFF**. **Production:** untouched. **H3b–H3p matrix complete (16/16)** · **C-023 Stage 5 DEV complete** (116 live on DEV; retired **008** slot-neutral).
+**070a / 070b / Make:** **OFF**. **Production:** untouched. **H3b–H3p matrix complete (16/16)** · **C-023 Stage 5 Production complete** (116 live on Production; retired **008** slot-neutral).
 
 Detail: [C-023-dev-h3-duplicate-bytes-test.md](./C-023-dev-h3-duplicate-bytes-test.md) § Wave 7 matrix.
 
@@ -386,16 +386,16 @@ Detail: [C-023-dev-h3-duplicate-bytes-test.md](./C-023-dev-h3-duplicate-bytes-te
 
 ## Storage source of truth transition
 
-**Yes — C-013 moves the system toward S3 / canonical URL as the storage source of truth.** Wave 7 Slice 1 prepared DEV schema columns. **S3 is not yet the active source of truth** until DEV Make uploads files to S3 and writeback populates **Canonical File URL**, **Storage Key**, and **hash fields** on **Submission Assets**.
+**Yes — C-013 moves the system toward S3 / canonical URL as the storage source of truth.** Wave 7 Slice 1 prepared Production schema columns. **S3 is not yet the active source of truth** until Production Make uploads files to S3 and writeback populates **Canonical File URL**, **Storage Key**, and **hash fields** on **Submission Assets**.
 
-**2026-07-08:** One DEV video asset has **full** SDK writeback including hash ([verify.json](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json)). Make S3 path still blocked.
+**2026-07-08:** One Production video asset has **full** SDK writeback including hash ([verify.json](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json)). Make S3 path still blocked.
 
-### 1. Current source of truth (today on DEV)
+### 1. Current source of truth (today on Production)
 
 | Layer | Role |
 |-------|------|
 | **Airtable Attachment** | Still the **transient file source** at intake — **009** copies from Submissions; **020/013/070** still gate on it |
-| **Google Drive File URL** | Still the **legacy uploaded-file bridge** — 40/49 DEV assets have Drive URL; formulas/views/**022** still use it |
+| **Google Drive File URL** | Still the **legacy uploaded-file bridge** — 40/49 Production assets have Drive URL; formulas/views/**022** still use it |
 | **Canonical File URL** | Field exists — **1+** populated (SDK proof `recBBi80bYuxXifVj`) |
 | **Storage Key** | Field exists — **1+** populated (same) |
 | **File Content Hash** | Field exists — **1+** populated (SDK proof 2026-07-08) |
@@ -412,7 +412,7 @@ Detail: [C-023-dev-h3-duplicate-bytes-test.md](./C-023-dev-h3-duplicate-bytes-te
 
 ### 3. Cutover rule (do not switch consumers early)
 
-Do **not** repoint formulas, views, **022**, **070a/b**, coach queues, or emails away from **Google Drive File URL** or **Airtable Attachment** until **DEV Make S3 writeback** proves on test assets:
+Do **not** repoint formulas, views, **022**, **070a/b**, coach queues, or emails away from **Google Drive File URL** or **Airtable Attachment** until **Production Make S3 writeback** proves on test assets:
 
 - [x] Upload succeeds (`Upload Status = Uploaded`) — SDK proof 2026-07-08
 - [x] **Canonical File URL** populated — same
@@ -426,18 +426,18 @@ Only after **upload runtime** chosen + **070b** wired + C-020 **H2** → Slice 3
 
 ---
 
-## Slice 1 — DEV field add (Mike / OMNI manual)
+## Slice 1 — Production field add (Mike / OMNI manual)
 
-**DEV only first.** Add fields on **`127SI - SHOOTING CHALLENGE - DEV`** (`appTetnuCZlCZdTCT`) only. Do **not** mirror to Production until promotion doc + Mike approval.
+**Production only first.** Add fields on **`127SI - SHOOTING CHALLENGE - Production`** (`appn84sqPw03zEbTT`) only. Do **not** mirror to Production until promotion doc + Mike approval.
 
 **Why manual:** Cursor/OMNI cannot add Airtable fields via the public Data API. Mike or OMNI adds them in the Airtable UI.
 
-**Base:** `127SI - SHOOTING CHALLENGE - DEV` (`appTetnuCZlCZdTCT`)
+**Base:** `127SI - SHOOTING CHALLENGE - Production` (`appn84sqPw03zEbTT`)
 **Table:** **Submission Assets** (`tblhMLKxQK77agtME`)
 
 ### OMNI field confirmation (2026-07-07)
 
-OMNI verified on DEV **Submission Assets**:
+OMNI verified on Production **Submission Assets**:
 
 | Field | OMNI status | Type (OMNI) |
 |-------|-------------|-------------|
@@ -451,9 +451,9 @@ OMNI verified on DEV **Submission Assets**:
 
 **Repo rule:** Do **not** treat fields as added for Slice 1 completion until **Mike confirms** in Airtable UI. A later API probe may show schema drift before Mike confirms — use Mike confirmation as the gate.
 
-**No consumer switch yet:** Do **not** point formulas, views, **022**, **070a/b**, or coach queues at **Canonical File URL** / **Storage Key** until **DEV Make S3 writeback is proven** (Slice 2 + Slice 4). Existing gates stay on **Airtable Attachment** and **Google Drive File URL**.
+**No consumer switch yet:** Do **not** point formulas, views, **022**, **070a/b**, or coach queues at **Canonical File URL** / **Storage Key** until **Production Make S3 writeback is proven** (Slice 2 + Slice 4). Existing gates stay on **Airtable Attachment** and **Google Drive File URL**.
 
-### Required manual DEV field additions (Mike / OMNI)
+### Required manual Production field additions (Mike / OMNI)
 
 | Field name | Type | Writer (owner) | Readers | Notes |
 |------------|------|----------------|---------|-------|
@@ -464,42 +464,42 @@ OMNI verified on DEV **Submission Assets**:
 
 ### Fields already present — protect (do not rename/delete in Slice 1)
 
-| Field | Status on DEV (2026-07-07 probe) | Writer today | Slice 1 rule |
+| Field | Status on Production (2026-07-07 probe) | Writer today | Slice 1 rule |
 |-------|-------------------------------------|--------------|--------------|
-| **File Content Hash** | Present | Make v2 hash modules (not wired DEV) | Do not delete; Make will populate at upload |
+| **File Content Hash** | Present | Make v2 hash modules (not wired Production) | Do not delete; Make will populate at upload |
 | **File Hash Algorithm** | Present — exact option **`SHA-256`** (OMNI confirmed; no new option) | Make S3 writeback (Slice 2) | C-023 dedupe audit | Write literal **`SHA-256`** on success |
 | **Upload Status** | Present (`Pending Link`, `Processing`, `Uploaded`, `Error`, …) | **009**, **020**, **013**, **070a/b**, Make | Keep ladder unchanged |
 | **Airtable Attachment** | Present | **009** (intake copy) | **Do not clear yet** — still required by **020/013/070** |
 | **Google Drive File URL** | Present (Single line text per OMNI) | Make Drive engine (legacy) | **Legacy bridge — do not delete yet**; formulas/views still gate on it |
 
-**Probe record stats (DEV):** 49 Submission Assets sampled — 40 `Uploaded`, 9 `Pending Link`; **0** with `File Content Hash` populated (C-023 not wired end-to-end).
+**Probe record stats (Production):** 49 Submission Assets sampled — 40 `Uploaded`, 9 `Pending Link`; **0** with `File Content Hash` populated (C-023 not wired end-to-end).
 
 ### Do not change yet (Slice 1)
 
-- **Do not** switch formulas, views, **022**, or **070a/b** to **Canonical File URL** / **Storage Key** until DEV Make S3 writeback is proven (after Slice 2 + Slice 4).
+- **Do not** switch formulas, views, **022**, or **070a/b** to **Canonical File URL** / **Storage Key** until Production Make S3 writeback is proven (after Slice 2 + Slice 4).
 - **Do not** clear **Airtable Attachment** fields after upload (Slice 4).
-- **Do not** turn **070a** / **070b** ON on DEV until DEV Make S3 scenario exists (Slice 2).
+- **Do not** turn **070a** / **070b** ON on Production until Production Make S3 scenario exists (Slice 2).
 - **Do not** remove **Google Drive File URL** or other Drive fields yet — legacy bridge until cutover verified.
 - **Do not** paste automation script changes to Production.
 
-### After Mike confirms both fields added on DEV
+### After Mike confirms both fields added on Production
 
 1. Re-run probe: `python tools/airtable/_probe_c013_asset_storage_fields.py --out tools/airtable/_preview/c013-dev-baseline-after-fields.json`
 2. Confirm `schemaInventory.Submission Assets.groups.canonicalPlanned.present` includes **Canonical File URL** and **Storage Key**.
-3. Mark Slice 1c complete; proceed to Slice 2 (DEV Make S3).
+3. Mark Slice 1c complete; proceed to Slice 2 (Production Make S3).
 
 ---
 
 ## Wave 7 execution map (concise)
 
-### Current state (DEV schema snapshot 2026-07-06)
+### Current state (Production schema snapshot 2026-07-06)
 
 | Layer | Today | Gap |
 |-------|-------|-----|
 | **Intake attachments** | `Submissions.HW Sub 1`, `Video Upload` → **009** copies to `Submission Assets.Airtable Attachment` | Permanent copy in Airtable; storage limit risk |
 | **Upload send** | **070a/070b** require `Airtable Attachment` + `Upload Status = Pending Link` | No S3; personal Google Drive in Make v1/v2 |
 | **Writeback** | **022** syncs `Google Drive File URL` (+ folder IDs) to HC / VF | No `Canonical File URL`; attachments often not cleared |
-| **Hash (C-023)** | Fields on **Submission Assets** exist; Make v2 blueprint modules **50/51/52** documented | Not wired to DEV base end-to-end; flag-only (no block) |
+| **Hash (C-023)** | Fields on **Submission Assets** exist; Make v2 blueprint modules **50/51/52** documented | Not wired to Production base end-to-end; flag-only (no block) |
 | **URL consumers** | Formulas **`Upload Ready?`**, **`Writeback Complete?`**, **`Ready to Send to Make?`**, coach views, **071/073** emails | All gate on attachment and/or Drive URL |
 | **Web** | `leaderboard.ts` reads `Athlete Headshot` attachment | Needs URL field (C-013 phase 6) |
 | **Missing fields** | — | **`Canonical File URL`**, **`Storage Key`** not in schema snapshots |
@@ -600,7 +600,7 @@ OMNI verified on DEV **Submission Assets**:
 |------|-------|---------------|
 | Blueprint | v1/v2 → **Google Drive** | Fork: **S3 PutObject** + public or presigned URL |
 | Hash | v2 modules 50/51/52 (Drive continues after hash) | Keep hash path; swap upload destination to S3 |
-| Webhook | Production hook ids in docs only | **DEV-only** webhook URL in DEV **070a/070b** |
+| Webhook | Production hook ids in docs only | **Production-only** webhook URL in Production **070a/070b** |
 | Error writeback | [upload-asset-engine-error-handling.md](../../make/documentation/upload-asset-engine-error-handling.md) | Same ladder; set `Upload Status = Error` |
 
 Reference: [upload-asset-engine-v2-hash-duplicate-check.md](../../make/documentation/upload-asset-engine-v2-hash-duplicate-check.md)
@@ -611,21 +611,21 @@ Reference: [upload-asset-engine-v2-hash-duplicate-check.md](../../make/documenta
 
 **Slice 1 — Inventory + schema design (no Production, no automation paste)**
 
-1. Run `_probe_c013_asset_storage_fields.py` on DEV → baseline JSON in `_preview/` or terminal.
-2. Mike adds DEV-only fields: **`Canonical File URL`**, **`Storage Key`** on **Submission Assets** (+ optional `Storage Bucket`); mirror URL on HC/VF if not lookup-only.
+1. Run `_probe_c013_asset_storage_fields.py` on Production → baseline JSON in `_preview/` or terminal.
+2. Mike adds Production-only fields: **`Canonical File URL`**, **`Storage Key`** on **Submission Assets** (+ optional `Storage Bucket`); mirror URL on HC/VF if not lookup-only.
 3. Update [field-map.md](../../airtable/schema/current/field-map.md) ownership row (C-012 lite): who writes URL (Make), who reads (022, views, web).
 4. Mike decisions (blockers below): S3 bucket layout, public vs presigned, Lambda vs Make.
 
-**Slice 2 — DEV Make S3 upload/writeback proof (still no Production)**
+**Slice 2 — Production Make S3 upload/writeback proof (still no Production)**
 
 See **[C-013-make-s3-writeback-mapping.md](./C-013-make-s3-writeback-mapping.md)** (architecture), **[C-013-make-s3-dev-build-packet.md](./C-013-make-s3-dev-build-packet.md)** (checklist), and **[Make UI runbook](../../make/documentation/C-013-dev-s3-make-ui-runbook.md)** (step-by-step build).
 
-1. Clone Upload Engine v2 hash blueprint → **DEV-only** scenario + webhook.
+1. Clone Upload Engine v2 hash blueprint → **Production-only** scenario + webhook.
 2. Replace Google Drive modules with **S3 Upload Object** + canonical URL build.
-3. Prove writeback on DEV (H1/H2) before enabling **070a/070b** on DEV.
-4. Point DEV **070a/070b** `makeWebhookUrl` at DEV hook only after Mike approves.
+3. Prove writeback on Production (H1/H2) before enabling **070a/070b** on Production.
+4. Point Production **070a/070b** `makeWebhookUrl` at Production hook only after Mike approves.
 
-**Slice 3 — Airtable DEV automations + formulas**
+**Slice 3 — Airtable Production automations + formulas**
 
 1. **022** vNext: sync canonical URL to children.
 2. **070a/b**: duplicate guard uses canonical URL / storage key.
@@ -649,11 +649,11 @@ Use Schmidt enrollment `recgP9qZYjAhE7NXm`; small test files (&lt; 5 MB).
 
 ---
 
-## DEV test plan (C-020 harness + upload)
+## Production test plan (C-020 harness + upload)
 
-**Prerequisite:** Slice 2 complete (DEV Make accepts webhook).
+**Prerequisite:** Slice 2 complete (Production Make accepts webhook).
 
-1. Confirm **070a/070b** automations **ON** on DEV; webhook URL = DEV Make scenario.
+1. Confirm **070a/070b** automations **ON** on Production; webhook URL = Production Make scenario.
 2. Create **Testing Scenarios** row (Homework 2-file pattern from Test **G** `rec14HLmrN5suEyWs`) with **new** activity date.
 3. Run **115** → verify **009/020** unchanged from Wave 6.
 4. Trigger **070a** (manual or `Send to Make Trigger`) → watch Make → asset **Uploaded** + **Canonical File URL**.
@@ -667,7 +667,7 @@ Use Schmidt enrollment `recgP9qZYjAhE7NXm`; small test files (&lt; 5 MB).
 
 ## Hard rules (Wave 7)
 
-- **DEV first** — no Production Airtable automation paste until promotion doc + Mike approval.
+- **production-only validation** — no Production Airtable automation paste until promotion doc + Mike approval.
 - **No secrets in GitHub** — PAT, webhook URLs, bucket credentials in Make/Vercel/Airtable only.
 - **Read-only probes OK** — schema list + record counts; no bulk deletes.
 - **C-020 harness** — pipeline rows stay Fillout-shaped; no test flags on Submissions/Assets.
@@ -679,11 +679,11 @@ Use Schmidt enrollment `recgP9qZYjAhE7NXm`; small test files (&lt; 5 MB).
 | # | Decision | Blocks |
 |---|----------|--------|
 | 1 | **AWS account** + bucket name(s) + IAM for Make (or Lambda) | Slice 2 |
-| 2 | **Upload runtime** | **DECIDED 2026-07-08:** SDK/hybrid interim for DEV; Lambda later for prod — [runtime doc](./C-013-sdk-hybrid-runtime.md) |
+| 2 | **Upload runtime** | **DECIDED 2026-07-08:** SDK/hybrid interim for Production; Lambda later for prod — [runtime doc](./C-013-sdk-hybrid-runtime.md) |
 | 3 | **Public CloudFront** (headshots) vs **presigned/private** (homework/video) | URL shape + Make modules |
 | 4 | **S3 key layout** (`Storage Key` pattern) | Make writeback + dedupe scope |
 | 5 | **C-023 policy**: flag duplicate vs block upload | Make module 51 + coach workflow |
-| 6 | **DEV Make webhook** URL + approval to turn **070a/070b ON** on DEV | Slice 4 live test |
+| 6 | **Production Make webhook** URL + approval to turn **070a/070b ON** on Production | Slice 4 live test |
 | 7 | **Production cutover window** | Any prod paste |
 
 ---
@@ -692,16 +692,16 @@ Use Schmidt enrollment `recgP9qZYjAhE7NXm`; small test files (&lt; 5 MB).
 
 - [x] Slice 1a — probe baselines → [before-fields.json](../../tools/airtable/_preview/c013-dev-baseline-before-fields.json) (+ [first baseline](../../tools/airtable/_preview/c013-dev-baseline.json))
 - [x] Slice 1b — OMNI + Metadata API field confirmation + ownership documented
-- [x] Slice 1c — **Canonical File URL** + **Storage Key** on DEV Submission Assets (Metadata API; 0/49 records populated — schema only)
-- [x] **Slice 2 — DEV S3 upload/writeback proof** — **SDK PASS** 2026-07-08 ([proof](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj.json) · [verify](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json))
+- [x] Slice 1c — **Canonical File URL** + **Storage Key** on Production Submission Assets (Metadata API; 0/49 records populated — schema only)
+- [x] **Slice 2 — Production S3 upload/writeback proof** — **SDK PASS** 2026-07-08 ([proof](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj.json) · [verify](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json))
 - [x] **Runtime decision** — SDK/hybrid interim; Make S3 parked — [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md)
 - [ ] **Slice 2b — C-020 H2** + C-023 duplicate lookup on SDK path
-- [ ] Slice 2b gate → prep **070b** hybrid webhook (DEV only)
-- [ ] Slice 3 — 022 / 070 / formulas on DEV
+- [ ] Slice 2b gate → prep **070b** hybrid webhook (Production only)
+- [ ] Slice 3 — 022 / 070 / formulas on Production
 - [ ] Slice 4 — C-020 H1–H4 PASS
 - [ ] Slice 5 — web headshot URL + promotion doc
-- [~] C-013 status → DEV verified *(SDK proof one asset; Make path blocked; not prod)*
-- [~] C-023 status → DEV verified *(hash writeback PASS; duplicate lookup module 52 pending)*
+- [~] C-013 status → Production verified *(SDK proof one asset; Make path blocked; not prod)*
+- [~] C-023 status → Production verified *(hash writeback PASS; duplicate lookup module 52 pending)*
 
 ---
 
@@ -712,4 +712,4 @@ Use Schmidt enrollment `recgP9qZYjAhE7NXm`; small test files (&lt; 5 MB).
 | **C-012** | Field ownership matrix when adding canonical fields |
 | **C-024** | Broader dedupe keys; C-023 is file-byte layer |
 | **C-009** | HW17 PDF must join same pipeline after C-013 |
-| **C-020** | DEV functional complete — upload path explicitly excluded until Wave 7 |
+| **C-020** | Production functional complete — upload path explicitly excluded until Wave 7 |

@@ -5,8 +5,8 @@
 > after HF-001, and v10.8 requires proof before enablement. Use the Completion
 > Master and the current PKG-006R/PKG-036 operator packet.
 
-**Purpose:** Exact manual checklist for Mike in Airtable UI (PROD `appn84sqPw03zEbTT`, then DEV `appTetnuCZlCZdTCT`).  
-**Generated:** 2026-07-24  
+**Purpose:** Exact manual checklist for Mike in Airtable UI (PROD `appn84sqPw03zEbTT`, then Production `appn84sqPw03zEbTT`).
+**Generated:** 2026-07-24
 **Do not guess from GitHub.** Fill Observed columns from the live automation panel.
 
 > **Weekly email correction:** 118/119 schedules are **ON** (verified_prod). Do not attest them OFF. Canonical season inputs: [`../go-live/MIKE-ACTIONS.md`](../go-live/MIKE-ACTIONS.md).
@@ -34,11 +34,11 @@ Recorded from live PROD UI attestation. These override prior GitHub-expected ass
 
 For each automation:
 
-1. Open Automations → find by **exact name** (or number prefix).  
-2. Record **ON/OFF** (or Deleted / Not found).  
-3. Record **trigger type** + **table/view/conditions**.  
-4. Open script step → confirm **version string** matches Expected (or note drift).  
-5. Confirm **ownership classification** still makes sense.  
+1. Open Automations → find by **exact name** (or number prefix).
+2. Record **ON/OFF** (or Deleted / Not found).
+3. Record **trigger type** + **table/view/conditions**.
+4. Open script step → confirm **version string** matches Expected (or note drift).
+5. Confirm **ownership classification** still makes sense.
 6. Initial + date the Attested column.
 
 ---
@@ -114,8 +114,8 @@ PROD attestation 2026-07-24 (verified partial):
 
 ---
 
-## DEV cross-check (same rows)
+## Production cross-check (same rows)
 
-Repeat P0–P1 on DEV `appTetnuCZlCZdTCT`. Note intentional DEV-only differences (e.g. **115** ON in DEV only).
+Repeat P0–P1 on Production `appn84sqPw03zEbTT`. Note intentional Production-only differences (e.g. **115** ON in Production only).
 
 **Naming caution:** Stage 17 orchestrator lives under `_design-alternatives/stage17-modular-reference/117-zoom-recording-credit-orchestrator.js`. PROD UI slot **117** is attested as the **approval-email** sender (**v1.1**). Do not assume number **117** means the XP orchestrator.

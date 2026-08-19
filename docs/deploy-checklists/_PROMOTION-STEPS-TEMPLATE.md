@@ -1,27 +1,27 @@
 # Promotion steps — [Backlog ID] [Short name]
 
-**Status:** Draft | Ready for Mike review | Promoted to Production  
-**Backlog:** [e.g. C-012, H-002, V2-015]  
-**DEV base:** `appTetnuCZlCZdTCT`  
+**Status:** Draft | Ready for Mike review | Promoted to Production
+**Backlog:** [e.g. C-012, H-002, V2-015]
+**Production base:** `appn84sqPw03zEbTT`
 **Production base:** `appn84sqPw03zEbTT` — **do not execute until Mike approves**
 
-**Rule:** DEV changes are not official until this document exists in GitHub. See [v2/04 § Official promotion documentation](../v2/04-ai-development-standards.md#official-promotion-documentation-required).
+**Rule:** Production changes are not official until this document exists in GitHub. See [v2/04 § Official promotion documentation](../v2/04-ai-development-standards.md#official-promotion-documentation-required).
 
 ---
 
-## What changed in DEV
+## What changed in Production
 
 Brief summary of the experiment (tables, automations, views, Make, web, etc.).
 
-| Artifact | DEV location / name | Notes |
+| Artifact | Production location / name | Notes |
 |----------|---------------------|-------|
 | | | |
 
 ---
 
-## DEV test evidence
+## Production test evidence
 
-What was run in DEV and what passed.
+What was run in Production and what passed.
 
 | Test | Result | Date |
 |------|--------|------|
@@ -35,7 +35,7 @@ What was run in DEV and what passed.
 
 ```powershell
 cd tools/airtable
-# DEV export
+# Production export
 python export_airtable_schema.py -v --out-dir ../../airtable/schema/snapshots/dev-YYYYMMDD
 # PROD export (before promote, for diff)
 python export_airtable_schema.py -v --out-dir ../../airtable/schema/snapshots/prod-YYYYMMDD
@@ -43,7 +43,7 @@ python export_airtable_schema.py -v --out-dir ../../airtable/schema/snapshots/pr
 
 Snapshot paths committed (if applicable):
 
-- DEV: `airtable/schema/snapshots/dev-YYYYMMDD/`
+- Production: `airtable/schema/snapshots/dev-YYYYMMDD/`
 - PROD (pre-promote): `airtable/schema/snapshots/prod-YYYYMMDD/`
 
 ---

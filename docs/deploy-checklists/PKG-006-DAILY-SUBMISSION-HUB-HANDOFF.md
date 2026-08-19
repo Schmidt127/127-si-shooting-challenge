@@ -42,7 +42,7 @@ approved 031 normal-athlete-activity creator ownership documented in
 
 Before any Production replacement, Mike must complete the controlled Production
 test packet for v4.0/v8.5 using the existing valid Schmidt Submission and Mike's
-allowlisted email. No DEV Airtable evidence is required or claimed.
+allowlisted email. No Production Airtable evidence is required or claimed.
 
 Recommended Production trigger conditions:
 

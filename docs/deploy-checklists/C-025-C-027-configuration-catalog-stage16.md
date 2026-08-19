@@ -1,8 +1,8 @@
 # C-025 / C-027 — Configuration catalog (Stage 16)
 
-**Status:** COMPLETE (repo proposal — no Airtable writes)  
-**Date:** 2026-07-13  
-**Owner decisions:** Approved 2026-07-13 (this package)  
+**Status:** COMPLETE (repo proposal — no Airtable writes)
+**Date:** 2026-07-13
+**Owner decisions:** Approved 2026-07-13 (this package)
 **Architecture rule:** Adjustable business values live in Airtable **configuration / rules tables**. Scripts **read active config at runtime**. Reuse existing tables before proposing new ones. **Do not** hardcode tunable percentages, day counts, milestone lists, or notification toggles into automations.
 
 ---
@@ -121,7 +121,7 @@ No extra recording bonus beyond configured recording XP %.
 | `Parent Notification Enabled?` | Checkbox | Unchecked until seeded | Achievement row | **No notify** | MEN enqueue on streak unlock |
 | Existing | `Trigger Type` = Streak Length, `Trigger Threshold` | — | Row | — | Defines 10/20/30/40/50/60 without script lists |
 
-**Seed (DEV OMNI):** check `Parent Notification Enabled?` on streak achievements with thresholds **10, 20, 30, 40, 50, 60**. Leave 3/5/7 unchecked unless owner later enables.
+**Seed (Production OMNI):** check `Parent Notification Enabled?` on streak achievements with thresholds **10, 20, 30, 40, 50, 60**. Leave 3/5/7 unchecked unless owner later enables.
 
 ### 4.3 Shot Milestones
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""C-019 — offline contract: required DEV Testing views specification."""
+"""C-019 — offline contract: required Production Testing views specification."""
 
 from __future__ import annotations
 
@@ -95,7 +95,7 @@ class TestC019TestingViewsContract(unittest.TestCase):
         self.assertEqual(len(tables), len(set(tables)))
 
     def test_snapshot_only_unlocks_has_testing_view_name(self):
-        # DEV snapshot 2026-07-06: only Athlete Achievement Unlocks has Testing
+        # Production snapshot 2026-07-06: only Athlete Achievement Unlocks has Testing
         snapshot_present = {"Athlete Achievement Unlocks"}
         required = {v["table"] for v in REQUIRED_VIEWS}
         missing = required - snapshot_present

@@ -18,7 +18,7 @@
  * - 066 — SHOT_MILESTONE|{enrollmentId}|{shotMilestoneId}
  * - 101 — ZOOM_ATTEND_BASE|{meetingId}|{enrollmentId} (+ bonuses)
  * - 114 — VIDEO_SUBMISSION|{videoFeedbackId}
- * - 117a — ZOOM_RECORDING|{meetingId}|{enrollmentId} (repo-ready; live DEV install open)
+ * - 117a — ZOOM_RECORDING|{meetingId}|{enrollmentId} (repo-ready; live Production install open)
  * - 009 — Asset Slot HW1 / HW2 / VIDEO mapping + source-attachment dedupe
  * - 020 — infer HW1/HW2 from Asset Slot / Purpose / Label
  * - 067 — HW17 quiz Enrollment+Week+Homework dedupe; assets HW1-only

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only Submission Assets field promotion validation (DEV vs PROD)."""
+"""Read-only Submission Assets field promotion validation (Production vs PROD)."""
 
 from __future__ import annotations
 
@@ -24,7 +24,7 @@ from pv2_approved_schema_differences import (  # noqa: E402
     split_missing_fields,
 )
 
-DEV = "appTetnuCZlCZdTCT"
+Production = "appn84sqPw03zEbTT"
 PROD = "appn84sqPw03zEbTT"
 TABLE = "Submission Assets"
 
@@ -90,7 +90,7 @@ def compare_required_promoted(dev_f: dict, prod_f: dict, dev_t: dict, prod_t: di
 
     for name in REQUIRED_PROMOTED:
         if name not in dev_f:
-            mismatches.append({"field": name, "issues": ["missing on DEV"]})
+            mismatches.append({"field": name, "issues": ["missing on Production"]})
             continue
         if name not in prod_f:
             mismatches.append({"field": name, "issues": ["missing on PROD"]})
@@ -167,7 +167,7 @@ def compare_required_promoted(dev_f: dict, prod_f: dict, dev_t: dict, prod_t: di
 
 
 def main() -> None:
-    dev_t = fetch(DEV)
+    dev_t = fetch(Production)
     prod_t = fetch(PROD)
     dev_f = field_map(dev_t)
     prod_f = field_map(prod_t)

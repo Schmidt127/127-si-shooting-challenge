@@ -15,8 +15,8 @@ settling behavior. Historical documents that identify an environment as PROD
 remain dated evidence; they are not new access or current proof for this
 package.
 
-The repository contains dated DEV snapshots, but this package did not access a
-DEV or Production base. Any DEV-first or Production test step below is a Mike
+The repository contains dated Production snapshots, but this package did not access a
+Production or Production base. Any production-only or Production test step below is a Mike
 runbook requirement, not a completed test.
 
 ## Lane 1 — registration through first participation

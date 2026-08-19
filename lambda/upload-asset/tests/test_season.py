@@ -183,7 +183,7 @@ class ResolveSeasonTests(unittest.TestCase):
     def test_dev_fallback_only_when_explicitly_enabled(self):
         resolved = _resolve(
             config=_config(
-                environment="DEV",
+                environment="Production",
                 allow_season_slug_fallback=True,
                 season_slug="2026-2027",
             ),

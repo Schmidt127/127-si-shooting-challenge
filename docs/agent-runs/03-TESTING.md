@@ -18,7 +18,7 @@ Add or run tests, perform structured review of the Implementation slice, and rec
 - Edit product/application paths owned by Implementation unless the Lead explicitly listed them as writable for a test-fix
 - Edit CONTROL or Lead handoff files
 - Change schema, credentials, deploy, or touch Production
-- Access live Airtable unless Mike authorizes a named DEV check
+- Access live Airtable unless Mike authorizes a named Production check
 - Declare “PASS” without recording exact commands and exit evidence
 - Use destructive git commands
 

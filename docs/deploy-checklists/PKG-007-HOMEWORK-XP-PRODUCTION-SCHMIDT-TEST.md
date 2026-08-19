@@ -2,7 +2,7 @@
 
 **Status:** Partial — Production installed; controlled Schmidt Homework XP
 lifecycle proof passed; full PKG-007 scope remains open
-**Environment:** Production Airtable only; no DEV claim
+**Environment:** Production Airtable only; no Production claim
 **Evidence source:** Mike supplied the Production installation and run evidence. Cursor did not independently access Airtable.
 
 The passed scope is the Homework XP lifecycle for the supplied Schmidt test:

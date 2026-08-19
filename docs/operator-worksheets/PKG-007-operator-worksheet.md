@@ -1,6 +1,6 @@
 # PKG-007 — Homework and Video Operator Worksheet
 
-**Status:** Draft companion worksheet; Mike-owned DEV/Production execution only
+**Status:** Draft companion worksheet; Mike-owned Production/Production execution only
 **Canonical packet:** [PKG-007 Homework XP production test](../deploy-checklists/PKG-007-HOMEWORK-XP-PRODUCTION-SCHMIDT-TEST.md)
 **Rule:** Capture live installed versions, trigger configuration, run IDs, and record values. Repository source is not installed-version proof.
 
@@ -8,7 +8,7 @@
 
 - [ ] Repository SHA captured: `________________`
 - [ ] Environment and operator recorded: `________________`
-- [ ] DEV-first gate / approved Production window confirmed: `________________`
+- [ ] production-only gate / approved Production window confirmed: `________________`
 - [ ] No schema, code, automation state, email, Make, or historical-evidence changes made by this worksheet
 - [ ] Retired 063/068 remain absent or OFF; 071 remains OFF
 

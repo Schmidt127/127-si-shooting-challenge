@@ -1,8 +1,8 @@
 """
-Prepare isolated DEV fixtures for final Airtable UI Tests of 057/042.
+Prepare isolated Production fixtures for final Airtable UI Tests of 057/042.
 
 Hard rules:
-- DEV only
+- Production only
 - Never write Attendees
 - Do not enable automations (API 403 anyway)
 - Clear Applied? on named C-025 eligible fixture before Mike Test
@@ -19,7 +19,7 @@ from typing import Any
 
 ENV = Path(__file__).resolve().parent / ".env"
 OUT = Path(__file__).resolve().parent / "_preview" / "c025_stage17_final_ui_test_prep.json"
-BASE_EXPECTED = "appTetnuCZlCZdTCT"
+BASE_EXPECTED = "appn84sqPw03zEbTT"
 
 SCHMIDT = "recgP9qZYjAhE7NXm"
 WEEK = "rec7fCckt1zj9CbmP"

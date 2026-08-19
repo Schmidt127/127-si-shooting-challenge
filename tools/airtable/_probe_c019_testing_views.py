@@ -2,7 +2,7 @@
 """One-off probe: C-019 Testing views — list views, filter metadata, Schmidt row counts.
 
 Read-only. Uses tools/airtable/.env (never print token).
-DEV base default: appTetnuCZlCZdTCT
+Production base default: appn84sqPw03zEbTT
 """
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ if web_env.exists():
     load_dotenv(web_env, override=True)
 
 API = "https://api.airtable.com/v0"
-DEV_BASE = "appTetnuCZlCZdTCT"
+DEV_BASE = "appn84sqPw03zEbTT"
 SCHMIDT_ENROLLMENT = "recgP9qZYjAhE7NXm"
 
 TABLES = [

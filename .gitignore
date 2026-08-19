@@ -35,7 +35,7 @@ web/.vercel/
 # Lambda build artifacts (source in lambda/upload-asset/)
 lambda/upload-asset/dist/
 
-# V2 DEV runbook local operator state (owned record IDs; never commit tokens)
+# V2 Production runbook local operator state (owned record IDs; never commit tokens)
 tools/airtable/v2_dev_runbook/.run-state/
 
 # --- Repository health audit 2026-07-21: local artifacts (never track) ---

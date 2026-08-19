@@ -7,7 +7,7 @@ Create (if needed) and run C025_STAGE17_DOWNSTREAM via Engineering Test Framewor
    (WAS status toggle + Level Recalc Needed?) while 057/042 are ON, then write results
    back to the Testing Scenarios row.
 
-DEV only. Never writes Attendees. Never touches PROD.
+Production only. Never writes Attendees. Never touches PROD.
 """
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ from typing import Any
 
 ENV = Path(__file__).resolve().parent / ".env"
 OUT = Path(__file__).resolve().parent / "_preview" / "c025_stage17_etf_live_run.json"
-BASE_EXPECTED = "appTetnuCZlCZdTCT"
+BASE_EXPECTED = "appn84sqPw03zEbTT"
 
 NAME = "C025_STAGE17_DOWNSTREAM"
 SCHMIDT = "recgP9qZYjAhE7NXm"

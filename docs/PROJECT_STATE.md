@@ -66,7 +66,7 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 | **Automation standards (doc 06)** | **Active** — **066** remains the V2 rewrite reference pattern. Live paste is **v3.8** (Mike 2026-08-19). Older “v3.4 current reference” wording is historical for the createRecords contract era. |
 | **Multi-year architecture** | **Decided** — one base + Program Instance; **V2-013 queued** |
 | **Phase 2 — Platform Modernization** | Wave 2A planning + Phase 2B docs complete — implementation staged via backlog |
-| **V2-015 — Development base** | **Ready** — DEV-first pipeline permanent |
+| **V2-015 — Production base** | **Ready** — production-only pipeline permanent |
 
 ---
 
@@ -94,23 +94,14 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 | Base ID | `appn84sqPw03zEbTT` |
 | Role | **Live season** — system of record |
 
-### Development (V2-015)
-
-| Item | Value |
-|------|--------|
-| Base name | `127SI - SHOOTING CHALLENGE - DEV` |
-| Base ID | `appTetnuCZlCZdTCT` |
-| Status | **Ready** — first testing environment |
-| Setup | [development-base-setup.md](./development-base-setup.md) |
-
-**Deploy rule:** GitHub → paste **dev** → audit → approve → paste **prod** → `CHANGELOG.md`.
+**Operating rule:** GitHub → offline validation → Mike approval → controlled Production action → read-only verification → `CHANGELOG.md`.
 
 ### Schema documentation (important)
 
 | Location | Status |
 |----------|--------|
 | `airtable/schema/current/` | **Stale** — hand-maintained maps; **do not treat as current** until Agent A refreshes |
-| Latest dated snapshot (treat as current until refresh) | **`airtable/schema/snapshots/prod-20260706/`** (prod) and **`dev-20260706/`** (DEV) — export stamp `20260706_161830` / `20260706_161606` |
+| Latest dated snapshot (treat as current until refresh) | **`airtable/schema/snapshots/prod-20260706/`** — export stamp `20260706_161830` |
 | Older loose exports | Root of `snapshots/` includes `20260629_045741` and earlier |
 
 **Agent A** owns refreshing `airtable/schema/**`. Agent B documented staleness only. Lead integration did **not** refresh schema snapshots or claim live XP Reward Rules verification (offline fixture verifier only).
@@ -120,9 +111,8 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 | Base | Folder | Tables | Views |
 |------|--------|--------|-------|
 | **Production** | `airtable/schema/snapshots/prod-20260706/` | **29** | **118** |
-| **Development** | `airtable/schema/snapshots/dev-20260706/` | **30** | **120** |
 
-DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md](../airtable/schema/snapshots/README.md).
+See [snapshots/README.md](../airtable/schema/snapshots/README.md).
 
 ---
 
@@ -132,7 +122,7 @@ DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md]
 |----------|--------|
 | **Fillout daily submission form** | **OFF** — contest intake closed (**C-008** done 2026-07-05) |
 | **Video upload (070b/070c + Lambda)** | **Airtable 070b = v4.6** + **Lambda season CodeOnly deploy 2026-08-19** (CodeSha256 `lwbLiBzB4cfWdzVmIVo7Z78AkiowqPuV2NmUXb+PK2w=`). Historical async `Accepted` handoff proven 2026-07-11 on **v4.4**. Optional Storage Key retry proof still open. |
-| **Homework upload (070a)** | **PROD intentionally OFF** — keep OFF per [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md); DEV package exists separately |
+| **Homework upload (070a)** | **PROD intentionally OFF** — keep OFF per [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md); Production package exists separately |
 | **C-023 Drive/attachment retirement** | Deferred |
 
 ---
@@ -175,7 +165,7 @@ Manual Build/Send checkboxes remain available for controlled one-offs.
 | `NEXT_PUBLIC_GAME_MANUAL_URL` | Optional — game manual embed URL |
 | `SITE_ACCESS_TOKEN` | Optional preview gate (middleware + `/api/airtable`) |
 | `AIRTABLE_API_TOKEN` / `AIRTABLE_BASE_ID` | Server-only; **production base on Vercel** |
-| Local / tools DEV base | `web/.env.local` or `tools/airtable/.env` |
+| Local / tools Production base | `web/.env.local` or `tools/airtable/.env` |
 
 Deploy details: [deployment-notes.md](./deployment-notes.md), [web/docs/deployment-notes.md](../web/docs/deployment-notes.md)
 

@@ -1,6 +1,6 @@
 # PKG-006R — Counted-Submission XP and Standings Production Schmidt Packet
 
-Status: Production-only packet; no DEV Airtable evidence is claimed or required.
+Status: Production-only packet; no Production Airtable evidence is claimed or required.
 This is distinct from Completion Master `PKG-006` Fillout-intake proof work.
 
 ## Scope and safety

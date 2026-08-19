@@ -1,10 +1,10 @@
 # Deploy Checklist — 035 Weekly Threshold XP v1.1
 
-**SC items:** SC-049 (XP-D1), SC-022  
-**Script:** `airtable/automations/shooting-challenge/035-weekly-summary-and-goal-logic-create-weekly-threshold-xp-events.js`  
-**Version:** **v1.1** (supersedes v1.0 checklist)  
-**Date:** 2026-07-25  
-**Status:** Ready for PROD Paste — not installed / not live-tested  
+**SC items:** SC-049 (XP-D1), SC-022
+**Script:** `airtable/automations/shooting-challenge/035-weekly-summary-and-goal-logic-create-weekly-threshold-xp-events.js`
+**Version:** **v1.1** (supersedes v1.0 checklist)
+**Date:** 2026-07-25
+**Status:** Ready for PROD Paste — not installed / not live-tested
 
 > **Superseded for current status by v1.2** (`docs/deploy-checklists/035-weekly-threshold-xp-v1.2.md`). Keep this file as historical paste instructions for the v1.1 body.
 
@@ -12,7 +12,7 @@
 
 | Item | Value |
 |------|-------|
-| Airtable base | Shooting Challenge **PROD** (not DEV for this paste — Mike only) |
+| Airtable base | Shooting Challenge **PROD** (not Production for this paste — Mike only) |
 | Automation folder | `03 - Weekly Summary and Goal Logic` |
 | Automation name | `035 - Weekly Summary and Goal Logic - Create Weekly Threshold XP Events` |
 | Script version in paste | **v1.1** |

@@ -1,23 +1,23 @@
-# C-013 — DEV Make S3 upload/writeback mapping
+# C-013 — Production Make S3 upload/writeback mapping
 
-**Backlog:** C-013 (Wave 7 Slice 2)  
-**Environment:** DEV only — base `appTetnuCZlCZdTCT`  
-**Status:** **SDK proof PASS** — runtime = **[Lambda](./C-013-sdk-hybrid-runtime.md)**. Make S3 **dropped**. **Make migration plan:** [C-013-make-upload-migration-plan.md](./C-013-make-upload-migration-plan.md).  
+**Backlog:** C-013 (Wave 7 Slice 2)
+**Environment:** Production only — base `appn84sqPw03zEbTT`
+**Status:** **SDK proof PASS** — runtime = **[Lambda](./C-013-sdk-hybrid-runtime.md)**. Make S3 **dropped**. **Make migration plan:** [C-013-make-upload-migration-plan.md](./C-013-make-upload-migration-plan.md).
 **Parent checklist:** [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md)
 
 ---
 
-## 2026-07-07 End-of-night checkpoint — DEV S3 partial writeback proof
+## 2026-07-07 End-of-night checkpoint — Production S3 partial writeback proof
 
 | Track | Status |
 |-------|--------|
-| **C-013 DEV S3 partial writeback proof** | **PASS** |
+| **C-013 Production S3 partial writeback proof** | **PASS** |
 | **C-023 hash completion** | **PENDING** |
 | **Dynamic path mapping** | **PENDING** |
-| **DEV 070a/070b connection** | **NOT STARTED** |
+| **Production 070a/070b connection** | **NOT STARTED** |
 | **Production cutover** | **NOT STARTED** |
 
-**Live DEV scenario:** `Shooting Challenge - DEV - Upload Engine - S3 - v1`. Working chain: webhook → Get Record → HTTP download attachment → S3 `shooting-challenge-assets` → Airtable success update on **Submission Assets**.
+**Live Production scenario:** `Shooting Challenge - Production - Upload Engine - S3 - v1`. Working chain: webhook → Get Record → HTTP download attachment → S3 `shooting-challenge-assets` → Airtable success update on **Submission Assets**.
 
 **Test record:** `recBBi80bYuxXifVj` (Video Feedback / **070b**).
 
@@ -48,7 +48,7 @@ Replaces earlier draft pattern `shooting-challenge/dev/{assetType}/{enrollmentRe
 
 ### Tomorrow A→G
 
-A. Hash module → B. Write **File Content Hash** → C. Dynamic path/URL → D. Re-test video → E. Full manual PASS doc → F. DEV **070b** prep (after PASS) → G. C-020 **H2** before **H1**. Full detail: [Wave 7 checkpoint](./C-013-wave7-asset-storage-checklist.md#2026-07-07-end-of-night-checkpoint--dev-s3-partial-writeback-proof).
+A. Hash module → B. Write **File Content Hash** → C. Dynamic path/URL → D. Re-test video → E. Full manual PASS doc → F. Production **070b** prep (after PASS) → G. C-020 **H2** before **H1**. Full detail: [Wave 7 checkpoint](./C-013-wave7-asset-storage-checklist.md#2026-07-07-end-of-night-checkpoint--dev-s3-partial-writeback-proof).
 
 ---
 
@@ -56,7 +56,7 @@ A. Hash module → B. Write **File Content Hash** → C. Dynamic path/URL → D.
 
 | Field | Table | Type | Exact write value |
 |-------|-------|------|-------------------|
-| **File Hash Algorithm** | Submission Assets | Single select | **`SHA-256`** — only option on DEV; **no new option needed** |
+| **File Hash Algorithm** | Submission Assets | Single select | **`SHA-256`** — only option on Production; **no new option needed** |
 
 Make module **63** (success) and partial-failure paths must write the literal string **`SHA-256`** to match the single-select option name.
 
@@ -68,18 +68,18 @@ Make module **63** (success) and partial-failure paths must write the literal st
 
 **Working assumptions (Slice 2):**
 
-- Make.com first for DEV; Lambda deferred unless Make cannot hash/upload reliably.
+- Make.com first for Production; Lambda deferred unless Make cannot hash/upload reliably.
 - **Storage Key pattern (Mike 2026-07-07):** `shooting-challenge/{seasonSlug}/{challengeSlug}/{athleteSlug}/{date}-{assetType}-{assetRecordId}-{safeOriginalFileName}` — **hardcoded in Make tonight**; dynamic mapping pending (step **C**). Earlier draft `shooting-challenge/dev/{assetType}/…` superseded for path layout.
 - **Hash:** SHA-256
 - Attachments stay in Airtable until later cleanup slice.
 - **Google Drive File URL** stays legacy bridge until S3 proven.
-- **070a/070b** remain OFF on DEV until this scenario is ready and Mike approves DEV webhook wiring.
+- **070a/070b** remain OFF on Production until this scenario is ready and Mike approves Production webhook wiring.
 
 ---
 
 ## 1. Purpose
 
-This document maps the **DEV Make upload scenario** from today’s **Google Drive writeback** to **S3 + canonical URL writeback** on **Submission Assets**.
+This document maps the **Production Make upload scenario** from today’s **Google Drive writeback** to **S3 + canonical URL writeback** on **Submission Assets**.
 
 Slice 1 added empty schema columns (**Canonical File URL**, **Storage Key**, hash fields). Slice 2 builds the Make path that:
 
@@ -88,9 +88,9 @@ Slice 1 added empty schema columns (**Canonical File URL**, **Storage Key**, has
 3. Uploads to **program-owned S3**.
 4. Writes **Canonical File URL**, **Storage Key**, and **SHA-256** hash back to Airtable.
 
-Until this scenario succeeds on DEV test assets, **S3 is not the storage source of truth** — see [storage transition section](./C-013-wave7-asset-storage-checklist.md#storage-source-of-truth-transition) in the Wave 7 checklist.
+Until this scenario succeeds on Production test assets, **S3 is not the storage source of truth** — see [storage transition section](./C-013-wave7-asset-storage-checklist.md#storage-source-of-truth-transition) in the Wave 7 checklist.
 
-**2026-07-07 partial proof:** One DEV video asset has S3 object + **Canonical File URL** + **Storage Key** populated; **File Content Hash** still blank — see [partial PASS artifact](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json).
+**2026-07-07 partial proof:** One Production video asset has S3 object + **Canonical File URL** + **Storage Key** populated; **File Content Hash** still blank — see [partial PASS artifact](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json).
 
 ---
 
@@ -113,7 +113,7 @@ Today’s Upload Engine (v1 / v2 hash blueprint):
 
 ---
 
-## 3. Target DEV Make behavior
+## 3. Target Production Make behavior
 
 For each **Submission Asset** webhook run:
 
@@ -123,9 +123,9 @@ Webhook (070a/070b v4.1)
   → Router: attachment missing? → Error writeback
   → HTTP GET file from attachment URL
   → SHA-256 hash (Make crypto module OR reuse v2 hash-helper HTTP)
-  → Optional: C-023 duplicate hash lookup (HTTP GET Airtable API — same as v2 module 52, DEV base)
+  → Optional: C-023 duplicate hash lookup (HTTP GET Airtable API — same as v2 module 52, Production base)
   → Build Storage Key from pattern + field lookups
-  → AWS S3 Upload Object (DEV bucket)
+  → AWS S3 Upload Object (Production bucket)
   → Build Canonical File URL (CloudFront or S3 HTTPS URL — Mike config)
   → Airtable Update Record — success fields on Submission Assets
   → (Optional) mirror URL/status to Homework Completions / Video Feedback via existing 022 chain later — Slice 2 proof is asset row first
@@ -148,16 +148,16 @@ Draft module plan — clone **v2 hash blueprint**, **remove Drive modules 20–4
 
 | # | Module | App / action | Purpose | Notes |
 |---|--------|--------------|---------|-------|
-| **1** | Custom webhook | Intake | Same v4.1 fields as today: `submissionAssetRecordId`, `routeKey`, `uploadDestination`, `targetRecordId`, … | New **DEV-only** hook URL; do not overwrite Production hook |
-| **2** | Airtable → Get a record | Load asset | Base **DEV** `appTetnuCZlCZdTCT`, table **Submission Assets**, id `{{1.submissionAssetRecordId}}` | Fields: `Airtable Attachment`, `Original File Name`, `Asset Purpose`, `Asset Type`, `Enrollment - Linked`, `Submission - Linked`, `Upload Status`, `Upload Error` |
+| **1** | Custom webhook | Intake | Same v4.1 fields as today: `submissionAssetRecordId`, `routeKey`, `uploadDestination`, `targetRecordId`, … | New **Production-only** hook URL; do not overwrite Production hook |
+| **2** | Airtable → Get a record | Load asset | Base **Production** `appn84sqPw03zEbTT`, table **Submission Assets**, id `{{1.submissionAssetRecordId}}` | Fields: `Airtable Attachment`, `Original File Name`, `Asset Purpose`, `Asset Type`, `Enrollment - Linked`, `Submission - Linked`, `Upload Status`, `Upload Error` |
 | **30** | Router | Attachment gate | Branch: `Airtable Attachment` URL exists | No URL → module **31** error writeback |
 | **31** | Airtable → Update record | Error (no file) | `Upload Status = Error`, `Upload Error = No Airtable Attachment URL` | Same record id |
 | **5** | HTTP → Get a file | Download | URL = `{{2.Airtable Attachment[1].url}}` (fresh from module 2) | Binary body for hash + S3 |
 | **50** | HTTP → Make a request **or** Crypto | Hash | Output: `sha256`, `sizeBytes`, `mimeType` | Reuse v2 hash-helper if already deployed; else Make **Hash** module with SHA-256 |
-| **52** | HTTP → GET Airtable API | Duplicate lookup (C-023) | Same formula as v2 doc; base **DEV** `appTetnuCZlCZdTCT`, table `tblhMLKxQK77agtME` | Flag only — do not block upload in Slice 2 unless Mike changes policy |
+| **52** | HTTP → GET Airtable API | Duplicate lookup (C-023) | Same formula as v2 doc; base **Production** `appn84sqPw03zEbTT`, table `tblhMLKxQK77agtME` | Flag only — do not block upload in Slice 2 unless Mike changes policy |
 | **51** | Airtable → Update record | Duplicate flags | Optional mid-path: hash + duplicate fields; if writing algorithm here use **`File Hash Algorithm = SHA-256`** | Can merge into module **63** |
 | **60** | Tools → Set variable **or** Text parser | Build **Storage Key** | See pattern below | Sanitize `originalFileName` (spaces → `-`, strip path chars) |
-| **61** | AWS → S3 → Upload a file | Put object | Bucket: **DEV bucket** (Mike); Key: `{{60.storageKey}}`; Body: module **5** output | IAM connection in Make — not in GitHub |
+| **61** | AWS → S3 → Upload a file | Put object | Bucket: **Production bucket** (Mike); Key: `{{60.storageKey}}`; Body: module **5** output | IAM connection in Make — not in GitHub |
 | **62** | Tools → Set variable | Build **Canonical File URL** | `https://{cloudfront-or-bucket-host}/{{60.storageKey}}` OR presigned URL module | Mike chooses public CloudFront vs private + presigned |
 | **63** | Airtable → Update record | **Success writeback** | §5 locked contract — includes **`File Hash Algorithm = SHA-256`** | Record id `{{1.submissionAssetRecordId}}` |
 | **EH** | Scenario error handler | Failure path | See §6 | Never leave `Processing` stuck |
@@ -184,9 +184,9 @@ shooting-challenge/dev/{assetType}/{enrollmentRecordId}/{submissionRecordId}/{as
 
 ## 5. Airtable success writeback
 
-**Table:** Submission Assets  
-**Record:** `{{1.submissionAssetRecordId}}`  
-**Base:** DEV `appTetnuCZlCZdTCT`
+**Table:** Submission Assets
+**Record:** `{{1.submissionAssetRecordId}}`
+**Base:** Production `appn84sqPw03zEbTT`
 
 ### Locked success contract (module 63)
 
@@ -232,9 +232,9 @@ If hash was written in module **51** before S3 failure, leave hash fields popula
 
 ---
 
-## 7. DEV test plan (C-020 harness)
+## 7. Production test plan (C-020 harness)
 
-**Prerequisites:** DEV Make S3 scenario live; **070a/070b ON** on DEV with DEV webhook URL only; Schmidt enrollment `recgP9qZYjAhE7NXm`.
+**Prerequisites:** Production Make S3 scenario live; **070a/070b ON** on Production with Production webhook URL only; Schmidt enrollment `recgP9qZYjAhE7NXm`.
 
 | Test | C-020 pattern | Pass criteria |
 |------|---------------|---------------|
@@ -257,7 +257,7 @@ Confirm counts: `withCanonicalFileUrl`, `withStorageKey`, `withFileContentHash` 
 
 ## 8. Do not switch yet
 
-Until Slice 2 + Slice 4 pass on DEV:
+Until Slice 2 + Slice 4 pass on Production:
 
 - **Do not** clear **Airtable Attachment** on success.
 - **Do not** remove **Google Drive File URL** or Drive ID fields.
@@ -271,10 +271,10 @@ Until Slice 2 + Slice 4 pass on DEV:
 
 | Input | Used by |
 |-------|---------|
-| DEV S3 bucket name | Module **61** |
+| Production S3 bucket name | Module **61** |
 | Make AWS connection (IAM) | Module **61** |
 | CloudFront distribution host **or** presigned URL policy | Module **62** |
-| DEV Make webhook URL | DEV **070a/070b** input `makeWebhookUrl` when enabled |
+| Production Make webhook URL | Production **070a/070b** input `makeWebhookUrl` when enabled |
 | Scoped Airtable PAT (duplicate lookup only) | Module **52** — store in Make, not repo |
 
 ---

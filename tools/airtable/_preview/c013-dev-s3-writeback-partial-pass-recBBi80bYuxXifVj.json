@@ -1,5 +1,5 @@
 {
-  "purpose": "C-013 Slice 2 DEV manual Make S3 writeback — partial PASS + 2026-07-07 end-of-night checkpoint",
+  "purpose": "C-013 Slice 2 Production manual Make S3 writeback — partial PASS + 2026-07-07 end-of-night checkpoint",
   "recordedAt": "2026-07-07",
   "checkpoint": "end-of-night",
   "result": "partial_PASS",
@@ -12,10 +12,10 @@
   },
   "notFullMigration": true,
   "c023HashComplete": false,
-  "baseId": "appTetnuCZlCZdTCT",
+  "baseId": "appn84sqPw03zEbTT",
   "table": "Submission Assets",
   "recordId": "recBBi80bYuxXifVj",
-  "makeScenario": "Shooting Challenge - DEV - Upload Engine - S3 - v1",
+  "makeScenario": "Shooting Challenge - Production - Upload Engine - S3 - v1",
   "makeModulesWorking": [
     "1 Custom webhook",
     "2 Airtable Get Record",
@@ -54,7 +54,7 @@
     "Writeback Complete?": 1
   },
   "remainingGap": {
-    "File Content Hash": "blank — hash module not wired in DEV Make scenario yet",
+    "File Content Hash": "blank — hash module not wired in Production Make scenario yet",
     "Upload Error": "verify cleared on success on next run",
     "dynamicPathMapping": "convert hardcoded folder/file/canonical URL to Make field mappings",
     "canonicalUrlMode": "direct S3 HTTPS tonight; CloudFront/presigned decision pending",
@@ -66,12 +66,12 @@
     "C": "Convert hardcoded folder/file/canonical URL to dynamic mappings",
     "D": "Re-test same video asset or fresh Pending Link video asset",
     "E": "Document full C-013/C-023 manual webhook PASS",
-    "F": "Only after manual PASS — prepare controlled DEV 070b connection",
+    "F": "Only after manual PASS — prepare controlled Production 070b connection",
     "G": "Run C-020 H2 video test before homework H1"
   },
-  "provenScope": "One video Submission Asset — S3 upload + Canonical File URL + Storage Key writeback on DEV; not homework path; not C-020 harness; not Production",
+  "provenScope": "One video Submission Asset — S3 upload + Canonical File URL + Storage Key writeback on Production; not homework path; not C-020 harness; not Production",
   "hardStopsStillInForce": [
-    "Do not enable DEV 070a/070b until full Slice 2 success contract (including File Content Hash)",
+    "Do not enable Production 070a/070b until full Slice 2 success contract (including File Content Hash)",
     "Do not clear Airtable Attachment",
     "Do not remove Google Drive fields",
     "Do not switch formulas/views/scripts to Canonical File URL",

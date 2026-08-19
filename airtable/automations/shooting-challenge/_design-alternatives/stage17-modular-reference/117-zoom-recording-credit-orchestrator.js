@@ -24,10 +24,10 @@ Folder: 17 - Zoom Recording Credit
  *   never mutate Zoom Meetings.Attendees (avoids Automation 101 double-credit).
  *   Correct trigger: Zoom Attendance · Recording Quiz · links present.
  *   Email send owned by 117f only — this script never POSTs or stamps email keys.
- * - v1.0.0 (2026-07-14): Initial combined orchestrator (DEV slot limit).
+ * - v1.0.0 (2026-07-14): Initial combined orchestrator (Production slot limit).
  *
  * PURPOSE
- * - Single DEV automation for Stage 17 recording-quiz credit:
+ * - Single Production automation for Stage 17 recording-quiz credit:
  *   normalize → coach review sync → create/soft-void XP → report gate/PW eligibility.
  * - Replace incorrect "Recording Quiz Submitted At is one week from now" trigger.
  *
@@ -42,7 +42,7 @@ Folder: 17 - Zoom Recording Credit
  *   when those automations actually count the credit (not by this orchestrator).
  * - Email: owned by Automation 117f (ZOOM_REC_EMAIL|…). Keep webhookUrl blank here;
  *   do not prepare or stamp Recording Approval Email Send Key / Sent At.
- * - Leave automation OFF except controlled DEV runs (PROD: Mike-approved permanent ON OK).
+ * - Leave automation OFF except controlled Production runs (PROD: Mike-approved permanent ON OK).
  *
  * INPUT
  * - recordId (required) = Zoom Attendance record id from trigger
@@ -250,7 +250,7 @@ function requireSingleSelectOption(table, fieldName, optionName) {
   if (!match) {
     throw new Error(
       `Missing single-select option "${optionName}" on ${table.name}.${fieldName}. ` +
-        `Add this DEV option before enabling 117 orchestrator.`
+        `Add this Production option before enabling 117 orchestrator.`
     );
   }
   return { id: match.id, name: match.name };

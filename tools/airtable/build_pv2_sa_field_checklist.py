@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build PROD Submission Assets field promotion checklist from live DEV metadata."""
+"""Build PROD Submission Assets field promotion checklist from live Production metadata."""
 from __future__ import annotations
 
 import json
@@ -11,7 +11,7 @@ TMP = REPO / "docs" / "audits" / "_tmp_missing_sa_fields_dev.json"
 OUT_JSON = REPO / "docs" / "audits" / "pv2-prod-submission-assets-field-promotion-checklist-2026-07-11.json"
 OUT_MD = REPO / "docs" / "audits" / "pv2-prod-submission-assets-field-promotion-checklist-2026-07-11.md"
 
-DEV_BASE = "appTetnuCZlCZdTCT"
+DEV_BASE = "appn84sqPw03zEbTT"
 PROD_BASE = "appn84sqPw03zEbTT"
 AUDIT_COMMIT = "fdf7116420360c74462df4ce786d0dea13c45d50"
 RECONCILED_AT = "2026-07-11T12:45:00Z"
@@ -103,7 +103,7 @@ PURPOSE = {
     "Upload Naming Status": "File naming pipeline readiness for Make upload.",
     "Video Feedback Focus": "Video skill focus category on video submission assets.",
     "Asset Sequence": "Optional asset ordering integer within submission.",
-    "Calculation": "Debug formula displaying RecordId — cosmetic on DEV.",
+    "Calculation": "Debug formula displaying RecordId — cosmetic on Production.",
 }
 
 BLOCKS = {
@@ -230,7 +230,7 @@ def build_omni_prompt(fields: list[dict]) -> str:
         "- Do NOT create, update, or delete any records.",
         "- Do NOT change views, interfaces, or permissions.",
         "- Create ONLY the OMNI fields listed below, in order.",
-        "- Before creating each field, check whether a field with the EXACT same name already exists. If it exists, STOP that field and report it — do not create a duplicate or suffix variant (no '2', 'copy', or '(from DEV)').",
+        "- Before creating each field, check whether a field with the EXACT same name already exists. If it exists, STOP that field and report it — do not create a duplicate or suffix variant (no '2', 'copy', or '(from Production)').",
         "- After each creation, report: field name, field type, and confirmation it was newly created.",
         "",
         "Promotion sequence for all 17 missing fields:",
@@ -302,16 +302,16 @@ def build_md(data: dict) -> str:
         "# PROD Submission Assets — Field Promotion Checklist",
         "",
         f"**Date:** 2026-07-11  ",
-        f"**DEV base:** `{DEV_BASE}`  ",
+        f"**Production base:** `{DEV_BASE}`  ",
         f"**PROD base:** `{PROD_BASE}`  ",
         f"**Table:** Submission Assets (`tblhMLKxQK77agtME`)  ",
-        f"**Source audit:** `docs/audits/pv2-dev-prod-gap-inventory-2026-07-11.md` (commit `{AUDIT_COMMIT}`)  ",
+        f"**Source audit:** `docs/audits/pv2-production-gap-inventory-2026-07-11.md` (commit `{AUDIT_COMMIT}`)  ",
         "",
         "## 1. Live reconciliation",
         "",
         f"| Metric | Value |",
         f"|--------|-------|",
-        f"| DEV field count | **{data['reconciliation']['devFieldCount']}** |",
+        f"| Production field count | **{data['reconciliation']['devFieldCount']}** |",
         f"| PROD field count | **{data['reconciliation']['prodFieldCount']}** |",
         f"| Missing in PROD | **{data['reconciliation']['missingFieldCount']}** |",
         f"| Prior audit count (2026-07-11) | **{PRIOR_AUDIT_COUNT}** |",
@@ -323,7 +323,7 @@ def build_md(data: dict) -> str:
         "",
     ]
     for f in data["fields"]:
-        lines.append(f"- `{f['name']}` — DEV `{f['devFieldId']}` · `{f['type']}` · {f['classification']}")
+        lines.append(f"- `{f['name']}` — Production `{f['devFieldId']}` · `{f['type']}` · {f['classification']}")
     disp = data["dispositionAccounting"]
     lines.extend([
         "",
@@ -376,13 +376,13 @@ def build_md(data: dict) -> str:
         "",
         "**Step 16 auto-inverse:** `From field: Duplicate Match Records (All)` — verify only after step 15.",
         "",
-        "## 4. Field definitions (DEV source of truth)",
+        "## 4. Field definitions (Production source of truth)",
         "",
     ])
     for f in data["fields"]:
         lines.append(f"### {f['name']}")
         lines.append(f"- Type: `{f['type']}`")
-        lines.append(f"- DEV ID: `{f['devFieldId']}`")
+        lines.append(f"- Production ID: `{f['devFieldId']}`")
         lines.append(f"- Classification: **{f['classification']}**")
         lines.append(f"- Purpose: {f['operationalPurpose']}")
         if f["type"] in ("singleSelect", "multipleSelects"):
@@ -446,8 +446,8 @@ def build_md(data: dict) -> str:
         "1. `submission_assets_missing_in_prod` = **0** (or only NOT REQUIRED fields if intentionally deferred).",
         "2. PROD Submission Assets field count = **97**.",
         "3. Each missing field name exists **exactly once** on PROD.",
-        "4. Field types match DEV for all 17 fields.",
-        "5. Single/multiple select options match DEV lists above.",
+        "4. Field types match Production for all 17 fields.",
+        "5. Single/multiple select options match Production lists above.",
         "6. Self-link pair exists: Duplicate Match Records (All) ↔ From field: Duplicate Match Records (All).",
         "7. Script 116 PROD dependency check = PASS (already PASS before this promotion).",
         "8. Script 070b PROD dependency check = PASS (requires Storage Key).",
@@ -564,7 +564,7 @@ def main() -> None:
             "python tools/airtable/pv2_dev_prod_gap_audit.py",
             "PROD Submission Assets field count = 97",
             "All 17 field names present exactly once",
-            "Types and select options match DEV",
+            "Types and select options match Production",
             "070b script matrix PROD = PASS",
             "116 script matrix PROD = PASS",
         ],

@@ -3,9 +3,9 @@
 > **SUPERSEDED (2026-07-25):** Rows that say 118/119 **OFF** are historical. PROD truth: **118/119 ON** (Sun 5:00 / 10:00 AM America/Denver); **118 v1.5** on master; live writeback verified. Canonical: [`../../launch-certification/START-HERE.md`](../../launch-certification/START-HERE.md) · [`../reliability-audit-2026-07-24/STALE-CLAIM-CORRECTION.md`](../reliability-audit-2026-07-24/STALE-CLAIM-CORRECTION.md).
 
 
-**Generated:** 2026-07-24  
-**Machine twin:** [`writer-inventory.json`](./writer-inventory.json)  
-**Source Key registry:** [`xp-source-key-registry.json`](./xp-source-key-registry.json)  
+**Generated:** 2026-07-24
+**Machine twin:** [`writer-inventory.json`](./writer-inventory.json)
+**Source Key registry:** [`xp-source-key-registry.json`](./xp-source-key-registry.json)
 **Scope:** Create/update writers for XP Events, WAS, Homework Completions, Submission Assets, Video Feedback, Athlete Achievement Unlocks, Streak Occurrences, Zoom Attendance, Enrollment level fields, email send keys/statuses.
 
 Honesty rule: live ON/OFF is **not** proven from GitHub alone. Expected state is contractual; current evidence cites repo + overnight audits. Mike UI attestation fills gaps.
@@ -123,7 +123,7 @@ Hard rule: recording path **must never** write `Zoom Meetings.Attendees`.
 | **042** | Current Level, Next Level, Level Gate Rule, Level Status | ON | authoritative_writer |
 | **041** | Level Recalc Needed? | ON | orchestrator |
 | **002/003** | Grade Band | ON | authoritative for band |
-| **115** | May toggle Level Recalc Needed? on C025 test path | DEV only | orchestrator (test) |
+| **115** | May toggle Level Recalc Needed? on C025 test path | Production only | orchestrator (test) |
 
 ---
 

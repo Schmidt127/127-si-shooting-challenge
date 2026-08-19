@@ -9,7 +9,7 @@ Authoritative production schema (base appn84sqPw03zEbTT, verified 2026-08-17):
 - Program Instance - Sync.`Season` is Fall/Spring/etc — never used as the S3 season slug
 
 Table ids (not display names) are used for Enrollments / Program Instance GETs so
-DEV/PROD stay aligned when names differ (DEV PI table is \"Program Instance - Synced\").
+Production stay aligned when names differ (Production PI table is \"Program Instance - Synced\").
 """
 
 from __future__ import annotations

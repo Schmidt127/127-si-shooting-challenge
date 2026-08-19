@@ -52,7 +52,7 @@ These rules apply to this reconciliation and future release-status maintenance.
 
 1. **GitHub is the source of truth for committed code, scripts, and documentation.**
 2. **Airtable, Fillout, Make, Gmail, Lambda, and Vercel live state belongs to those systems.** Repository text must not be used to claim current live configuration.
-3. **DEV-first and Mike approval rules remain in force.** This reconciliation makes no live-system changes.
+3. **production-only and Mike approval rules remain in force.** This reconciliation makes no live-system changes.
 4. **Historical evidence is preserved.** Do not delete historical documents, records, or useful test evidence as a documentation cleanup.
 5. **Controlled tests, natural triggers, offline tests, and full end-to-end proof are distinct evidence classes.**
 6. **Automation 115 is intentionally request-based, not idempotent:** every explicit checked Run Test request creates one new production-shaped Submission; downstream dedupe is a separate contract.
@@ -218,7 +218,7 @@ quick-start orientation added; no approved 2027 rules, live proof, or
 activation claim.
 
 Execution matrix IDs advanced: PKG-002 — repository-only configuration
-inventory and DEV-safe local configuration boundary; no live-system proof.
+inventory and Production-safe local configuration boundary; no live-system proof.
 
 Execution matrix IDs advanced: PKG-037 — repository-only core-certification
 packet, offline mixed-XP contract, and stale operator-instruction corrections;
@@ -245,7 +245,7 @@ they require Mike-owned schema or live-system decisions.
 | ID | Exact feature / fix / improvement | State | Source section / link | Dependency | Owner | Evidence required for completion | Current evidence / updated | Systems involved | Recommended next action | Order |
 |---|---|---|---|---|---|---|---|---|---|---:|
 | `PKG-001` | Investigate unresolved Automation 005 failure behavior and the remaining SC-076 first-create versus replay boundary | `needs live proof` | §4 SC-005, SC-076; §5 Testing / XP | Current 005/066 source and fixtures; no live write | Cursor | Reproducible offline result, source-level root cause, explicit controlled-proof card, and separate natural-trigger requirement | 2026-08-10 — Execution matrix IDs advanced: PKG-001 — diagnosis report `docs/agent-runs/results/PKG-001-AUTOMATION-005-SC-076-DIAGNOSIS.md`; no safe code fix; deployed intake mapping and controlled live readback remain unverified | Repo; Airtable; Mike | Mike supplies deployed 005/023 versions, trigger/action trace, and controlled record values before a repair package | 1 |
-| `PKG-002` | Finish the config-over-code and hardcoded-value inventory across active automations | `needs repo work` | §4 SC-021, SC-034; backlog V2-002 | `PKG-001`; current automation inventory | Cursor | Complete inventory, contract tests, exception list, and evidence row; no unsupported PROD claim | 2026-08-10 — Execution matrix IDs advanced: PKG-002 — inventory report `docs/investigations/PKG-002-CONFIGURATION-OVER-CODE-INVENTORY.md`; no runtime values changed; DEV-safe configuration boundary and follow-up tests remain | Repo | Add deterministic configuration-boundary tests only; defer runtime rewrites and live verification to a separate approved package | 2 |
+| `PKG-002` | Finish the config-over-code and hardcoded-value inventory across active automations | `needs repo work` | §4 SC-021, SC-034; backlog V2-002 | `PKG-001`; current automation inventory | Cursor | Complete inventory, contract tests, exception list, and evidence row; no unsupported PROD claim | 2026-08-10 — Execution matrix IDs advanced: PKG-002 — inventory report `docs/investigations/PKG-002-CONFIGURATION-OVER-CODE-INVENTORY.md`; no runtime values changed; Production-safe configuration boundary and follow-up tests remain | Repo | Add deterministic configuration-boundary tests only; defer runtime rewrites and live verification to a separate approved package | 2 |
 | `PKG-003` | Reconcile remaining stale operational/status references after each approved package | `needs repo work` | §4 SC-139; [Authority Map](./AUTHORITY-MAP.md) | `PKG-001` and later package evidence | Cursor | Audit pass, corrected active wording, preserved historical notices, and changed-file traceability | 2026-08-10 — queued; no package evidence yet | Repo | Sweep only named stale rows; do not create another status document | 3 |
 | `PKG-004` | Establish field ownership and dedupe-key contracts before new schema/features | `blocked` | §4 C-012, C-024; backlog Wave 2 | V2-013 architecture boundary and Mike schema authority | Cursor; Mike | Ownership matrix, one-writer decisions, key contract, safe rerun tests, and approved schema scope | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Mike | Keep as a gate for schema work; do not modify Airtable schema here | 4 |
 | `PKG-005` | Add Learning Activities catalog, response routing, and `countsAsHomework` behavior without a second XP pipeline | `Mike decision` | §4 SC-018–SC-020; backlog C-009 / LA-000–002 | `PKG-004`; Mike authorization for schema | Cursor; Mike | Approved schema, seed/readback evidence, routing tests, Fillout/web mapping, and coach-view proof | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Fillout; Mike | Mike approves schema direction; then implement repo contract before any base change | 5 |
@@ -282,6 +282,9 @@ they require Mike-owned schema or live-system decisions.
 | `PKG-039` | WAS and weekly-goal reliability | `partially complete — production goal-link path verified` | [`deploy-checklists/PKG-039-WAS-WEEKLY-GOAL-INTEGRITY-PRODUCTION-PACKET.md`](./deploy-checklists/PKG-039-WAS-WEEKLY-GOAL-INTEGRITY-PRODUCTION-PACKET.md) | Target Goal Shots.Program Instance field and formula contract; canonical WAS first-create and weekly scheduler proof remain separate | Cursor; Mike | 030 copies Grade Band; 032 links one active goal by Program Instance + Grade Band; no duplicate WAS/unlock/XP/email handoff | 2026-08-15 — repaired missing Goal Record links on Curtis and Xavier. Installed 032 v3.4, then proved native restoration of Xavier’s K-2 / 2,000 goal. Replaced stale 030 (retired FBC Curriculum - SYNC dependency) with v3.0 and proved native restoration of Curtis’s 7-8 Grade Band. Final read-only reliability audit: 0 findings. | Repo; Airtable; Mike | Retain only the broader 031 first-create/replay and 118 weekly-scheduler proof as separate remaining scope; the active goal-link data issue is closed. | 39 |
 | `PKG-040` | Standings and leaderboard data-integrity reliability | `repository-ready / Production verification blocked` | [`deploy-checklists/PKG-040-STANDINGS-LEADERBOARD-PRODUCTION-VERIFICATION.md`](./deploy-checklists/PKG-040-STANDINGS-LEADERBOARD-PRODUCTION-VERIFICATION.md) | PKG-006R and PKG-036 correction-observation locks; coordinate with PKG-039 WAS reliability | Cursor; Mike | Required scoped view, exactly one active Enrollment identity, settled Level/XP/shots, deterministic ordering, no record IDs/private fields in public model, read-only audit, adapter execution tests, and operator worksheet | 2026-08-13 — repository query now fails closed on missing `Web - Leaderboard` rather than broadening; validates current Config year / Program Instance and candidate rows; audit, fixtures, and packet added. No Production Airtable, web deployment, or lock change occurred. | Repo; Airtable; Vercel; Mike | After lock release, Mike runs the read-only audit and captures the packet evidence before any correction observation. | 40 |
 | `PKG-041` | Repository-wide QA gate, security refresh, and production-source contract reconciliation | `repository-ready / live systems not tested` | `.github/workflows/repository-qa.yml`; root Node/Python contracts; web dependency audit | Current GitHub production-aligned automation sources; no Airtable, Make, Hub, AWS, Vercel, or Production writes | Codex; Mike | Web CI plus root automation/season contracts, Airtable tooling tests, Lambda tests, source-of-truth audit, zero known npm vulnerabilities, and version/ownership expectations aligned to current source | 2026-08-19 — Execution matrix IDs advanced: PKG-041 — restored 29/29 root suites, 158 Airtable Python tests, and 139 Lambda tests; upgraded Next.js 15 to 16.3.1 and migrated `middleware.ts` to `proxy.ts`; npm audit reduced 11 findings (9 high) to 0; added CI coverage preventing these layers from bypassing pull-request checks. Repository evidence only; no live-system certification. | Repo | Review and publish the QA branch; conduct separately authorized read-only live configuration comparison before Production certification. | 41 |
+| `PKG-042` | Retire the obsolete Airtable test environment and adopt production-only governance | `repository-ready` | `AGENTS.md`; `docs/ENGINEERING_CONSTITUTION.md`; `docs/v2/04-ai-development-standards.md`; Production environment examples | Mike confirmed the separate test base and its saved work are retired | Codex; Mike | No retired base ID or environment variable remains; environment-specific snapshots, runbooks, fixtures, and tooling are removed; offline-first and explicitly approved Production controls are authoritative | 2026-08-19 — Execution matrix IDs advanced: PKG-042 — removed retired environment artifacts and rewrote active governance/configuration for one Production Airtable base. No live Airtable data or automation was changed. | Repo | Keep Production mutations narrowly scoped, explicitly approved, rollback-ready, and verified. | 42 |
+
+Execution matrix IDs advanced: PKG-042 — retired the obsolete Airtable test environment and adopted production-only governance.
 
 ### PKG-006R / PKG-036 Production baseline — 2026-08-13
 
@@ -363,8 +366,8 @@ Bird record is temporary testing only.
 ### Current PROD reconciliation (2026-08-12)
 
 This is the closeout evidence for the immediate initial-level assignment
-promotion. DEV validation was skipped under Mike’s explicit Production
-authorization; no DEV proof is claimed. The next scheduled 041 idempotency
+promotion. Production validation was skipped under Mike’s explicit Production
+authorization; no Production proof is claimed. The next scheduled 041 idempotency
 observation was not supplied and remains pending.
 
 | Item | Current status | Current truth |
@@ -826,7 +829,7 @@ Columns:
 | SC-012 | Homework | Written / reflection responses work | Installed in PROD | Fillout questions + HC path historically used | Re-test written-only HC; coach review + 071 | SC-019 | No attachment required for written | LA `reflection` / `fillout_questions` | — | P1 | 2026-07-23 |
 | SC-013 | Homework | Online quizzes create a reviewable completion | Live Tested in PROD | **067 v2.0** pasted; Schmidt quizzes `recxtTv0AD7G3XpGv` + `recFsN2KruSnerfns` → HC `recrBnHbLvDpFyIeO` (HW1, Fillout, 0 assets); coach review → XP `rec6xE4V1t0atiTIP` (35 pts, `HOMEWORK_XP\|recrBnHbLvDpFyIeO`); multi-attempt reuse of same HC; 067 created no XP | Optional: expand to non-Schmidt enrollment; keep 071 path smoke if needed | SC-014 | 067 must not award XP itself; no fake attachments; preserve quiz attempts | `docs/testing/evidence/2026-08-04-package-02-critical-pastes/`; `067-OPTION-B-PROD-INSTALL.md` | — | P0 | 2026-08-04 |
 | SC-014 | Homework | Final Reflection quiz completion path (PDF vs attachment-less) | Live Tested in PROD | **Option B proven in PROD** — attachment-less; 0 Submission Assets; Enrollment+Week+Homework HC identity; attempts preserved separately | No further path decision; do not reopen Option A / Quiz Result PDF | SC-013 | Do not invent a second quiz XP path; do not mint placeholder assets | `067-HOMEWORK-XP-CONTINUATION.md`; `QUIZ-PATH-DECISION.md` | **DECIDED Option B** | P0 | 2026-08-04 |
-| SC-015 | Homework | Multiple files per homework response | Installed in PROD | Submission Assets fan-out pattern; C-020 multi-file DEV tests | Re-test N files → N assets → one HC | SC-019 | One HC, many assets | LA-001; C-020b | — | P1 | 2026-07-23 |
+| SC-015 | Homework | Multiple files per homework response | Installed in PROD | Submission Assets fan-out pattern; C-020 multi-file Production tests | Re-test N files → N assets → one HC | SC-019 | One HC, many assets | LA-001; C-020b | — | P1 | 2026-07-23 |
 | SC-016 | Homework | Exactly one Homework Completion per assignment per enrollment | Live Tested in PROD | **020 v3.2.0** repo: prefer Enrollment+Week+Homework+Slot (re-submits merge onto one HC); PROD duplicate audit found 3 groups / consolidated keepers + deleted 4 extras + orphan XP; post-cleanup **0** dupes on Enr/Week/HW/Slot and Submission lenses; offline identity test PASS | Paste **020 v3.2.0**; live Schmidt re-submit proof that second Submission attaches to same HC (no new row / no second XP) | SC-066, SC-014 | Competing writers create extras; quiz **067** remains Enr+Week+HW | `docs/testing/evidence/2026-08-05-agent1-homework/`; `tests/homework/automation-020-sc016-identity.test.js` | — | P0 | 2026-08-05 |
 | SC-017 | Homework | Unified coach review → satisfactory → XP → parent email | Complete | **071 v3.5** PROD paste 2026-08-05 + operator-attested live path on HC `recH71jEgjxzLup6F` / asset `recaGfnTzKFnCDazA`: Reviewer File URL → Make → Gmail → Parent Feedback Sent?/Sent On by Make; no duplicate on rerun (gates already included Satisfactory + Awarded + XP) | None for unified review→XP→parent email; optional expand non-Schmidt | SC-009–SC-016 | Do not invent second credit path; do not require Google Drive when Reviewer File URL present | `docs/deploy-checklists/071-homework-feedback-email-closeout.md`; homework-flow.md; PR #77 | — | P0 | 2026-08-05 |
 | SC-018 | Homework | Learning Activities table (catalog of activities) | Built in Repository | Agent 11: LA schema MD + JSON schema + fixtures/tests; LA-000 types remain | Mike-authorized Airtable schema; seed catalog; keep FBC Curriculum SYNC unless decided otherwise | SC-020 | No parallel XP model | `docs/next-wave/homework-pipeline/LEARNING-ACTIVITIES-SCHEMA.md` | Approve schema creation in PROD | P1 | 2026-07-24 |
@@ -920,10 +923,10 @@ Columns:
 
 | ID | Area | Mike’s Goal | Current Status | What Already Exists | What Is Still Needed | Dependencies | PROD Safety/Dependency Notes | Evidence | Mike Decision | Priority | Last Updated |
 |----|------|-------------|----------------|---------------------|----------------------|--------------|------------------------------|----------|---------------|----------|--------------|
-| SC-119 | Platform | Engineering constitution + automation standards active | Complete | ENGINEERING_CONSTITUTION; doc 06; SCRIPT+CONFIG | Keep docs aligned with PROD-direct rules (update later) | — | Operating rules in §1 supersede DEV-first where they conflict | V2-014c | — | P1 | 2026-07-23 |
+| SC-119 | Platform | Engineering constitution + automation standards active | Complete | ENGINEERING_CONSTITUTION; doc 06; SCRIPT+CONFIG | Keep docs aligned with PROD-direct rules (update later) | — | Operating rules in §1 supersede production-only where they conflict | V2-014c | — | P1 | 2026-07-23 |
 | SC-120 | Platform | Automation modernization roadmap documented | Complete | V2-014 done (doc) | Execute remaining retirements via SC-059 | — | — | V2-014 | — | P2 | 2026-07-23 |
 | SC-121 | Platform | Wave 2A classification decisions captured | Complete | Planning complete; Mike decisions recorded | Implementation of merges/rewrites still open | SC-059 | — | V2-014a | — | P2 | 2026-07-23 |
-| SC-122 | Platform | Permanent DEV base exists (optional now) | Complete | `appTetnuCZlCZdTCT` ready | Optional use only under new rules | — | Not required for daily work | V2-015 | — | P3 | 2026-07-23 |
+| SC-122 | Platform | Permanent Production base exists (optional now) | Complete | `appn84sqPw03zEbTT` ready | Optional use only under new rules | — | Not required for daily work | V2-015 | — | P3 | 2026-07-23 |
 | SC-123 | Historical | 2025–26 close-out repairs (Lyle shots, final emails, Koen HW17, Fillout OFF) | Complete | Wave 0 closed | None for empty-base rebuild | — | Historical only | C-001–C-003, C-008 | — | — | 2026-07-23 |
 | SC-124 | Historical | 090F achievement audit false-duplicate fix | Complete | H-001 done | Principles still apply going forward | SC-083 | — | H-001; C-006 | — | — | 2026-07-23 |
 | SC-125 | Historical | Archive+clone season rollover | Superseded | Cutover doc kept | Use Program Instance (SC-067) instead | SC-067 | — | V2-001 | — | — | 2026-07-23 |
@@ -938,11 +941,11 @@ Columns:
 | SC-134 | Platform | Full pre-season audit pack green | Planned | Stages A–J tooling exist | Extend audits; run on rebuilt PROD | SC-046–SC-058 | Dry-run first | V2-011 | — | P1 | 2026-07-23 |
 | SC-135 | Platform | Dry-run full season on Schmidt before public intake | Planned | Depends testing + pipelines | Execute after phases 1–13 | SC-005 | Controlled emails only | V2-012 | — | P0 | 2026-07-23 |
 | SC-136 | Zoom | Stage 16 Homework Completions Zoom design | Superseded | Old 117a/117b S16 scripts moved to `_superseded/` | Do not install S16 | SC-074 | Inventory/KNOWN_ISSUES may still mention S16 (stale) | C025_ARCHITECTURE_RECONCILIATION; `_superseded/` | — | — | 2026-07-23 |
-| SC-137 | Testing | “Never install 115 in PROD” old rule | Superseded | Old DEV-only rule under DEV-first model | Replaced by SC-001 decision under empty PROD rules | SC-001 | If 115 enters PROD, isolate carefully | C-020 old guidance | Decide via SC-001 | — | 2026-07-23 |
+| SC-137 | Testing | “Never install 115 in PROD” old rule | Superseded | Old Production-only rule under production-only model | Replaced by SC-001 decision under empty PROD rules | SC-001 | If 115 enters PROD, isolate carefully | C-020 old guidance | Decide via SC-001 | — | 2026-07-23 |
 | SC-138 | Platform | Close stale overnight GitHub issues/PRs for 070a | Planned | Issues #1/#8/#9/#11/#17; PRs still open despite claimed PASS | Close or update with current truth | SC-095 | — | gh issues/PRs | — | P2 | 2026-07-23 |
 | SC-139 | Platform | Refresh stale status docs (KNOWN_ISSUES, inventory, E2E Zoom rows, brief) | Built in Repository | Completion master + homework Mike actions + prod-completion 2026-07-25 pack started; launch-certification already on master | Continue sweeping KNOWN_ISSUES / Zoom E2E stale rows / brief after each SC | — | Stale docs cause wrong installs | `docs/prod-completion/2026-07-25/`; K-M1 etc. | — | P1 | 2026-07-25 |
 | SC-140 | Config | One ladder decision (no dual-track) | Complete | C-014 resolved | Tuning only via SC-082 | — | — | C-014 | — | — | 2026-07-23 |
-| SC-141 | Assets | C-013-SEC DEV secret rotation | Complete | Done 2026-07-09 | Optional PROD rotate remains hygiene | SC-094 | — | C-013-SEC | — | — | 2026-07-23 |
+| SC-141 | Assets | C-013-SEC Production secret rotation | Complete | Done 2026-07-09 | Optional PROD rotate remains hygiene | SC-094 | — | C-013-SEC | — | — | 2026-07-23 |
 | SC-142 | Historical | Monitoring-only close-out leftovers (C-004/C-005/C-007) | Not Needed | Season closed; data wiped | Drop unless Mike wants award history research | — | — | close-out-considerations | — | — | 2026-07-23 |
 | SC-143 | Platform | Educational Athletics multi-challenge platform (Dribble, etc.) | Deferred | Long-term vision | Separate repos/bases recommended | — | Out of this repo | master direction § long-term | — | P3 | 2026-07-23 |
 | SC-144 | Website | Rename Softr-named publish flag | Planned | Flag still Softr-named in schema | Rename in schema wave; update web queries | SC-054 | Breaking rename | K-M7 | — | P2 | 2026-07-23 |
@@ -1114,7 +1117,7 @@ Map older IDs into SC items so they are not tracked as separate unfinished work.
 | V2-011, V2-012 | SC-134, SC-135 | Audit pack + dry-run |
 | V2-001 | SC-125 → SC-067 | Archive/clone superseded by Program Instance |
 | V2-013 | SC-067 | Multi-year |
-| V2-015 | SC-122 | DEV base (optional now) |
+| V2-015 | SC-122 | Production base (optional now) |
 | H-001, C-006 | SC-124, SC-083 | Achievement dedupe |
 | H-002, K-H1 | SC-027, SC-076 | 066 milestones |
 | H-003/H-004/H-006, C-015/C-016 | SC-127–SC-129 | Low deferred |
@@ -1131,8 +1134,8 @@ Map older IDs into SC items so they are not tracked as separate unfinished work.
 | C-013 video | PROD E2E done historically (SC-094) | Brief Wave 7 queued; some close-out “open” rows |
 | H-002 / 066 | The v3.3 `createRecords` failure is historical; current controlled 066 evidence is recorded in the dated release evidence and must be verified against live Airtable state | Older “paste pending” / “checkbox didn’t fire” briefs |
 | C-011 | Repo ready (SC-035+) | Backlog plain “queued” without repo-ready nuance |
-| C-023 / 116 | Historical installation and DEV evidence remain evidence only; current live state belongs to Airtable and the named release package | Older install and paste queues |
-| DEV-first workflow | Remains the repository guardrail; this reconciliation made no live-system change | Historical PROD-first operating-mode packet |
+| C-023 / 116 | Historical installation and Production evidence remain evidence only; current live state belongs to Airtable and the named release package | Older install and paste queues |
+| production-only workflow | Remains the repository guardrail; this reconciliation made no live-system change | Historical PROD-first operating-mode packet |
 | Testing Scenarios / 115 | Controlled PROD proof for 115 v2.1 is recorded in §2A; one explicit checked request creates one Submission by design | Older “never paste 115” or v2.0 status text |
 
 ---
@@ -1143,9 +1146,9 @@ Map older IDs into SC items so they are not tracked as separate unfinished work.
 
 Still open from that pack: **115 paste**, remaining **Testing views**, leaderboard Schmidt exclusion view filter.
 
-### 9B. DEV↔PROD Automation Reconciliation — **SUPERSEDED IN PART by overnight Agent 1 baseline (2026-07-23)**
+### 9B. Production Automation Reconciliation — **SUPERSEDED IN PART by overnight Agent 1 baseline (2026-07-23)**
 
-**Prior deliverables (still useful history):** `docs/foundation-reset/DEV-PROD-AUTOMATION-RECONCILIATION-2026-07-23.md` + `.json`
+**Prior deliverables (still useful history):** `docs/foundation-reset/Production-PROD-AUTOMATION-RECONCILIATION-2026-07-23.md` + `.json`
 
 **Overnight Agent 1 live baseline (controlling for current PROD facts):** `docs/overnight/testing-integrity/CURRENT-PROD-BASELINE.md`
 

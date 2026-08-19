@@ -5,7 +5,7 @@
 **Backlog ID:** C-025
 **Date:** 2026-07-18
 **Mode:** Read-only synthesize + document (no Airtable writes; no live Meta re-probe in this finalize pass)
-**DEV:** `appTetnuCZlCZdTCT`
+**Production:** `appn84sqPw03zEbTT`
 **PROD:** `appn84sqPw03zEbTT`
 **Feature branch:** `feature/c025-stage17-zoom-attendance`
 **Committed tip at audit start:** `e8db32e` (115 **v1.6**)
@@ -18,9 +18,9 @@
 
 # BLOCKED — SCHEMA MIGRATION REQUIRED
 
-Zoom Attendance and Stage 17 support schema are **missing in PROD**. DEV one-click Pass does **not** make PROD ready.
+Zoom Attendance and Stage 17 support schema are **missing in PROD**. Production one-click Pass does **not** make PROD ready.
 
-**Repo / DEV alignment (115):** Resolved by committing **115 v1.8** + paste packet on this branch. PROD remains blocked on schema migration only.
+**Repo / Production alignment (115):** Resolved by committing **115 v1.8** + paste packet on this branch. PROD remains blocked on schema migration only.
 
 ---
 
@@ -38,15 +38,15 @@ Zoom Attendance and Stage 17 support schema are **missing in PROD**. DEV one-cli
 
 | Automation | Repo version | Paste path | Notes |
 |------------|--------------|------------|-------|
-| **115** ETF (DEV only) | **v1.8** | `docs/deploy-checklists/C-025-stage17-115-etf-v1.8-PASTE.txt` | DEV Pass proven; do not promote to PROD |
-| **117** Orchestrator | **v1.1.1** | `…-117-orchestrator-v1.1.1-PASTE.txt` | Remained **OFF** during DEV ETF Pass |
-| **057** Perfect Week | **1.3** | `…-057-perfect-week-v1.3-PASTE.txt` | Fired successfully in DEV ETF; OFF after |
-| **042** Level gates | **3.1** | `…-042-level-gates-v3.1-PASTE.txt` | Fired successfully in DEV ETF; OFF after |
+| **115** ETF (Production only) | **v1.8** | `docs/deploy-checklists/C-025-stage17-115-etf-v1.8-PASTE.txt` | Production Pass proven; do not promote to PROD |
+| **117** Orchestrator | **v1.1.1** | `…-117-orchestrator-v1.1.1-PASTE.txt` | Remained **OFF** during Production ETF Pass |
+| **057** Perfect Week | **1.3** | `…-057-perfect-week-v1.3-PASTE.txt` | Fired successfully in Production ETF; OFF after |
+| **042** Level gates | **3.1** | `…-042-level-gates-v3.1-PASTE.txt` | Fired successfully in Production ETF; OFF after |
 | **101** Live Zoom XP | Unchanged | — | Must not change |
 
 ---
 
-## 2. DEV proof (Phase 2) — confirmed PASS
+## 2. Production proof (Phase 2) — confirmed PASS
 
 | Item | Result |
 |------|--------|
@@ -60,9 +60,9 @@ Zoom Attendance and Stage 17 support schema are **missing in PROD**. DEV one-cli
 | Automation **117** | **Remained OFF** |
 | Post-test | 057 / 042 instructed **OFF** |
 | PROD | **Blocked on schema migration** (Zoom Attendance missing) |
-| Authoritative DEV script | Automation **115 v1.8** |
+| Authoritative Production script | Automation **115 v1.8** |
 
-**Architecture conclusion:** DEV Stage 17 **downstream path proven** (115 v1.8 → 057 + 042) with 117 OFF.
+**Architecture conclusion:** Production Stage 17 **downstream path proven** (115 v1.8 → 057 + 042) with 117 OFF.
 
 ---
 
@@ -83,7 +83,7 @@ Evidence: live read-only Meta audit **2026-07-18** (`0510663` gap analysis) + st
 | WAS Perfect Week Queue / Zoom count fields | **Present and compatible** (for base 057) |
 | Enrollment Level Recalc / levels / live Total Zoom Attendances | **Present and compatible** (live count only) |
 | Enrollment → Zoom Attendance link | **Missing** |
-| Testing Scenarios | DEV-only — **not required** for PROD athlete path |
+| Testing Scenarios | Production-only — **not required** for PROD athlete path |
 | Automations 057/042/117/101 exact live versions | **Unknown** / **Manual verification required** (API 403) |
 
 Full tables: [C-025-stage17-prod-schema-gap-analysis.md](../deploy-checklists/C-025-stage17-prod-schema-gap-analysis.md).
@@ -107,7 +107,7 @@ Full tables: [C-025-stage17-prod-schema-gap-analysis.md](../deploy-checklists/C-
 | **057** | Expected present (pre–v1.3 likely); exact version **Unknown** | Manual verification required |
 | **042** | Expected present (pre–v3.1 likely); exact version **Unknown** | Manual verification required |
 | **117** | **Not installable / not present** as Stage 17 orchestrator until schema exists | Missing surface |
-| **115** | DEV-only — **do not promote** | — |
+| **115** | Production-only — **do not promote** | — |
 
 Repo paste backups exist for 117 v1.1.1 / 057 v1.3 / 042 v3.1. Prior PROD script text for rollback must be **copied from Airtable UI** before overwrite (API cannot export).
 
@@ -135,7 +135,7 @@ Any recording path that writes athletes into **`Zoom Meetings.Attendees`** can *
 
 **Not** paste. First Mike-approved action after repo align:
 
-1. Commit / align **115 v1.8** on the feature branch (DEV/repo match).
+1. Commit / align **115 v1.8** on the feature branch (Production/repo match).
 2. Then start PROD OMNI schema: create **Zoom Attendance** + Config recording fields + XP Source option (automations still OFF).
 
 Exact first Production Airtable action: **OMNI create Zoom Attendance table scaffold** (or Config Stage 17 fields first — either order is fine while automations OFF). Prefer Config % + XP Source option early so formulas can target stable selects.
@@ -157,7 +157,7 @@ Exact first Production Airtable action: **OMNI create Zoom Attendance table scaf
 
 | Base | This finalize pass |
 |------|--------------------|
-| DEV | **Untouched** (no API writes; no retest) |
+| Production | **Untouched** (no API writes; no retest) |
 | PROD | **Untouched** |
 | Make / Gmail / Softr | Not accessed |
 
@@ -171,4 +171,4 @@ Exact first Production Airtable action: **OMNI create Zoom Attendance table scaf
 - [C-025-stage17-prod-schema-gap-analysis.md](../deploy-checklists/C-025-stage17-prod-schema-gap-analysis.md)
 - [C-025-stage17-production-release-packet.md](../deploy-checklists/C-025-stage17-production-release-packet.md)
 - [C-025-stage17-etf-downstream-dev-packet.md](../deploy-checklists/C-025-stage17-etf-downstream-dev-packet.md) (115 **v1.8**)
-- Prior STOP (DEV gate cleared): [C-025-stage17-prod-promotion-STOP-2026-07-18.md](../deploy-checklists/C-025-stage17-prod-promotion-STOP-2026-07-18.md)
+- Prior STOP (Production gate cleared): [C-025-stage17-prod-promotion-STOP-2026-07-18.md](../deploy-checklists/C-025-stage17-prod-promotion-STOP-2026-07-18.md)

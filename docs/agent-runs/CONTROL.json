@@ -219,7 +219,7 @@
     }
   ],
   "hard_stops": [
-    "DEV only \u2014 no Production access",
+    "Production only \u2014 no Production access",
     "No Airtable schema changes without Mike authorization",
     "No credential or secret changes",
     "No deployment (Vercel, AWS, Make prod, Airtable prod)",
@@ -227,7 +227,7 @@
     "Workers cannot merge",
     "Only Lead may integrate worker branches",
     "Mike must approve merge to master/main",
-    "No live Airtable access unless Mike authorizes a named DEV check"
+    "No live Airtable access unless Mike authorizes a named Production check"
   ],
   "pending_approvals": [],
   "next_action": "Mike reviews PKG-033 evidence and separately approves the PKG-006R observable reconciliation schema/trigger design; keep all Production actions Mike-owned and do not overlap communications drafts #161/#162.",

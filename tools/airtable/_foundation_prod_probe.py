@@ -9,7 +9,7 @@ import urllib.request
 from pathlib import Path
 
 PROD = "appn84sqPw03zEbTT"
-DEV = "appTetnuCZlCZdTCT"
+Production = "appn84sqPw03zEbTT"
 
 
 def load_env() -> dict[str, str]:
@@ -144,8 +144,8 @@ def main():
             } or "active" in k.lower() or "leaderboard" in k.lower() or "public" in k.lower() or "exclude" in k.lower() or "version" in k.lower() or "script" in k.lower() or "enabled" in k.lower()}
             print(" ", r["id"], json.dumps(summary)[:400])
 
-    # DEV Testing Scenarios field inventory for clone plan
-    st, dmeta = api(tok, f"https://api.airtable.com/v0/meta/bases/{DEV}/tables")
+    # Production Testing Scenarios field inventory for clone plan
+    st, dmeta = api(tok, f"https://api.airtable.com/v0/meta/bases/{Production}/tables")
     print("dev_meta", st)
     if st == 200:
         ts = next((t for t in dmeta.get("tables", []) if t["name"] == "Testing Scenarios"), None)

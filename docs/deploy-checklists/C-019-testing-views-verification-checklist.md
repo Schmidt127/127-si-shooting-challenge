@@ -1,9 +1,9 @@
 # C-019 — Testing views verification checklist (manual Airtable UI)
 
-**Backlog:** C-019 (Schmidt test enrollment) · pairs with **C-020** (Engineering Test Framework)  
-**Wave:** 6 — Testing & sandbox  
-**Status:** **Manual verification required** — repo cannot confirm live view definitions  
-**Environment:** DEV base `appTetnuCZlCZdTCT` (verify on prod only if Mike explicitly promotes the same pattern)
+**Backlog:** C-019 (Schmidt test enrollment) · pairs with **C-020** (Engineering Test Framework)
+**Wave:** 6 — Testing & sandbox
+**Status:** **Manual verification required** — repo cannot confirm live view definitions
+**Environment:** Production base `appn84sqPw03zEbTT` (verify on prod only if Mike explicitly promotes the same pattern)
 
 **Related:**
 
@@ -24,7 +24,7 @@ OMNI (and Cursor agents working from GitHub) **cannot inspect Airtable view defi
 | Forbidden filters (no test flag, no `Active?`) | Whether extra AND/OR conditions were added |
 | Schmidt enrollment record ID | Whether the picker shows the correct enrollment label |
 
-**Do not ask OMNI to audit view metadata.** Use this checklist in the Airtable UI after C-020 runs or when onboarding a new DEV clone.
+**Do not ask OMNI to audit view metadata.** Use this checklist in the Airtable UI after C-020 runs or when onboarding a new Production clone.
 
 ---
 
@@ -42,9 +42,9 @@ Cursor **does not** have an Airtable UI driver or OMNI view-admin access. The re
 
 **Helper (read-only, local):** `tools/airtable/_probe_c019_testing_views.py` — lists `Testing` views per table and attempts Schmidt row counts. Re-run after PAT/`DEV_BASE_ID` changes. **Not** a substitute for UI filter verification.
 
-### Live DEV probe — view existence (2026-07-07)
+### Live Production probe — view existence (2026-07-07)
 
-Base `appTetnuCZlCZdTCT`. Schmidt enrollment `recgP9qZYjAhE7NXm` **exists**; C-020 test Submissions (e.g. `reca8SxXfri7aRZiB`) link to it.
+Base `appn84sqPw03zEbTT`. Schmidt enrollment `recgP9qZYjAhE7NXm` **exists**; C-020 test Submissions (e.g. `reca8SxXfri7aRZiB`) link to it.
 
 | Table | `Testing` view on table? | View ID (if any) | Notes |
 |-------|--------------------------|------------------|-------|
@@ -91,7 +91,7 @@ After a **115** live run, row counts in these views should increase for the tabl
 
 ## Manual Airtable UI steps (repeat per table)
 
-1. Open base **127 SI Shooting Challenge (DEV)** — `appTetnuCZlCZdTCT`.
+1. Open base **127 SI Shooting Challenge (Production)** — `appn84sqPw03zEbTT`.
 2. Open the **table** from the checklist below.
 3. In the view tabs, select **`Testing`**, or **Create… → Grid view** named `Testing`.
 4. Open **Filter** (toolbar).
@@ -111,14 +111,14 @@ After a **115** live run, row counts in these views should increase for the tabl
 |-------|--------|
 | Verifier | |
 | Date | |
-| Base | DEV `appTetnuCZlCZdTCT` |
+| Base | Production `appn84sqPw03zEbTT` |
 | Trigger context | e.g. post C-020 Test D, new clone, quarterly hygiene |
 
 ---
 
 ## Per-table verification matrix
 
-Enrollment link field names below match **prod schema snapshot 2026-07-06** (`schema_doc_appn84sqPw03zEbTT_20260706_161830.md`). If DEV field labels differ, use the link field that points to **Enrollments** and note the label in **Notes**.
+Enrollment link field names below match **prod schema snapshot 2026-07-06** (`schema_doc_appn84sqPw03zEbTT_20260706_161830.md`). If Production field labels differ, use the link field that points to **Enrollments** and note the label in **Notes**.
 
 | # | Table | Required view name | Required filter field | Required filter value | Forbidden filters | Verified? | Visible row count | Notes |
 |---|-------|-------------------|----------------------|----------------------|-------------------|-----------|-------------------|-------|
@@ -135,9 +135,9 @@ Enrollment link field names below match **prod schema snapshot 2026-07-06** (`sc
 
 ## Post C-020 smoke (optional row-count expectations)
 
-Use after Automation **115** live writes on DEV. Counts are **examples**, not pass/fail thresholds — record what you see.
+Use after Automation **115** live writes on Production. Counts are **examples**, not pass/fail thresholds — record what you see.
 
-| 115 scenario | Tables that should gain rows | DEV reference (2026-07-07) |
+| 115 scenario | Tables that should gain rows | Production reference (2026-07-07) |
 |--------------|------------------------------|----------------------------|
 | Homework live (Test B) | Submissions, Submission Assets, Homework Completions | Submission `reca8SxXfri7aRZiB` |
 | Video live (Test D) | Submissions, Submission Assets (×2), Video Feedback (×2) | Submission `recj2rU2XtmCGBNpn` |
@@ -153,7 +153,7 @@ If counts are zero but **115** reported Pass, check: wrong view filters, wrong e
 |------|----------------|
 | **Testing Scenarios** operator table | [C-020 script checklist](./C-020-testing-scenarios-script-checklist.md) |
 | **Web** leaderboard / catalog views | [web/docs/airtable-views.md](../../web/docs/airtable-views.md) |
-| Other DEV test enrollments (5 retained) | Separate views or duplicate `Testing` pattern with documented enrollment ID — not Schmidt MVP |
+| Other Production test enrollments (5 retained) | Separate views or duplicate `Testing` pattern with documented enrollment ID — not Schmidt MVP |
 | Creating Airtable fields or automations | OMNI / Mike — no repo script changes |
 
 ---
@@ -165,4 +165,4 @@ If counts are zero but **115** reported Pass, check: wrong view filters, wrong e
 - [ ] Verifier, date, and row counts recorded above.
 - [ ] Any intentional extra filters documented in **Notes** with reason.
 
-When complete, update [v2-change-backlog.md](../v2-change-backlog.md) **C-019** status if Mike promotes from `queued` to `done (DEV)`.
+When complete, update [v2-change-backlog.md](../v2-change-backlog.md) **C-019** status if Mike promotes from `queued` to `done (Production)`.

@@ -1,8 +1,8 @@
 # Quiz path decision — HW17 Final Reflection
 
-**Agent:** 11 · **Date:** 2026-07-24  
-**Product decision owner:** Mike  
-**Status:** APPROVED — **Option B** (attachment-less completion)  
+**Agent:** 11 · **Date:** 2026-07-24
+**Product decision owner:** Mike
+**Status:** APPROVED — **Option B** (attachment-less completion)
 **Machine helpers:** `lib/homework-contracts/quiz-path.js`
 
 Confirmed facts:
@@ -55,9 +55,9 @@ Recorded on completion master **SC-014** / **SC-013** → status **Live Tested i
 | Score/result presentation | Keep auto-score on quiz table; HC Review Status = Ready for Review |
 | XP | **064 → 065** after coach Satisfactory + Review Complete |
 | No fake attachment | Do **not** mint empty Submission Assets or placeholder files |
-| Testing | PROD/DEV: 067 → HC created, 0 assets → coach review → one XP → 071 without asset trigger requirement |
+| Testing | Production: 067 → HC created, 0 assets → coach review → one XP → 071 without asset trigger requirement |
 
-**Pros:** Matches current PROD schema; ships without OMNI field create; already coded.  
+**Pros:** Matches current PROD schema; ships without OMNI field create; already coded.
 **Cons:** No file artifact in Drive; coach UX must be score-centric.
 
 ---
@@ -66,10 +66,10 @@ Recorded on completion master **SC-014** / **SC-013** → status **Live Tested i
 
 **Install packet (controlling):** [`067-OPTION-B-PROD-INSTALL.md`](./067-OPTION-B-PROD-INSTALL.md)
 
-1. Confirm PROD **067** paste matches repo attachment-less path (install/update if drifted).  
-2. Coach review Interface/view shows Score / Target Score Met? without Drive URL.  
-3. Schmidt live test: 067 → HC, 0 assets → review → one XP (protocol in install packet T1–T4).  
-4. Do **not** create `Quiz Result PDF` or fake attachments.  
+1. Confirm PROD **067** paste matches repo attachment-less path (install/update if drifted).
+2. Coach review Interface/view shows Score / Target Score Met? without Drive URL.
+3. Schmidt live test: 067 → HC, 0 assets → review → one XP (protocol in install packet T1–T4).
+4. Do **not** create `Quiz Result PDF` or fake attachments.
 5. Fixtures: `docs/testing/scenarios/scn-027-*.json`, `scn-028-*.json`.
 
 Helpers (historical recommendation; decision now locked):

@@ -18,10 +18,10 @@ the 2026-07-23/24 overnight assignment.
 | 115 dry run | **PASS** (scenario `recPdyfYRFgDtpzQ8`, Daily Submission, mode `dry_run`, shot total 25) |
 | 115 live run | **PASS** (mode `created`, Submission `recuuTBgstSTGg2E3`, shot total 25) |
 | Deleted PROD automations | **043, 032, 033, 063, 111** |
-| Replaced with newer DEV versions | **030, 020, 013** |
+| Replaced with newer Production versions | **030, 020, 013** |
 | Free PROD automation slots | ~4 |
 | Weeks | Manually created/seeded in advance; manual Week naming is **by design**, not a defect |
-| DEV-first | **No longer required**; PROD is the active construction/testing base |
+| production-only | **No longer required**; PROD is the active construction/testing base |
 
 ## 2. Known record IDs (live-verified 2026-07-23 by read-only API probe)
 
@@ -109,12 +109,12 @@ in `MIKE-ACTIONS.md`.
 | Stale claim | Where it appears | Current truth |
 |-------------|------------------|---------------|
 | "115 not installed in PROD; paste required" | `docs/foundation-reset/FOUNDATION-RESET-PACK-TEST-EVIDENCE-2026-07-23.md`, `MIKE-ACTION-INSTALL-115-PROD.md`, completion master SC-001 | 115 installed; dry + live PASS |
-| "PROD at 50/50 automation limit" | `DEV-PROD-AUTOMATION-RECONCILIATION-2026-07-23.md`, completion master SC-001/SC-058/SC-059 | ~4 free slots after deletions |
+| "PROD at 50/50 automation limit" | `Production-PROD-AUTOMATION-RECONCILIATION-2026-07-23.md`, completion master SC-001/SC-058/SC-059 | ~4 free slots after deletions |
 | "Delete 112 first to free a slot" | reconciliation + completion master §9B | Capacity already freed via 043/032/033/063/111 deletions |
 | "Do not delete 032/033/063/111" | reconciliation audit | They were deleted deliberately; do not reinstall |
 | "Schmidt exclusion view filter needed" / "exclude Schmidt from leaderboard" | completion master SC-004, foundation evidence | **Superseded** — Schmidt must remain visible everywhere (standings, leaderboards, website, dashboards) |
-| "Never install 115 in PROD" (C-020 rule) | old C-020 docs, 115 file header note "DEV only until promotion doc" | Superseded by SC-001/SC-137; 115 runs in PROD |
-| "DEV-first mandatory" | doc 04 / constitution language | Superseded by completion master §1 operating rules |
+| "Never install 115 in PROD" (C-020 rule) | old C-020 docs, 115 file header note "Production only until promotion doc" | Superseded by SC-001/SC-137; 115 runs in PROD |
+| "production-only mandatory" | doc 04 / constitution language | Superseded by completion master §1 operating rules |
 | "Week creation should be automated" | various backlog notes | Weeks are manual by design; not a defect |
 
 ## 9. Evidence sources

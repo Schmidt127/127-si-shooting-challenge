@@ -3,7 +3,7 @@
   "agent": "agent-9-automation-ownership",
   "base_refs": {
     "prod": "appn84sqPw03zEbTT",
-    "dev": "appTetnuCZlCZdTCT"
+    "dev": "appn84sqPw03zEbTT"
   },
   "evidence_sources": [
     "airtable/automations/shooting-challenge/*.js",
@@ -394,7 +394,7 @@
       "competing_writer": null,
       "expected_on_off": "ON",
       "classification": "orchestrator",
-      "current_evidence": "DEV/PROD Stage 5 PASS; replaced retired 008",
+      "current_evidence": "Production Stage 5 PASS; replaced retired 008",
       "risk_rating": "medium"
     },
     {

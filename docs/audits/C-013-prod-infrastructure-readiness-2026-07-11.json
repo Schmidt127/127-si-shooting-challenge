@@ -10,9 +10,9 @@
   "infrastructureBlockerCount": 0,
   "manualDeploymentActionCount": 8,
   "automation070bCanBeEnabled": false,
-  "executiveSummary": "DEV hybrid upload path is proven (070b→Make→Lambda→S3→Airtable). PROD Submission Assets schema and automation 116 are PASS. PROD Lambda deployed and direct smoke PASS. PROD Make scenario built and manual route smoke PASS (overallPass=true, 2026-07-11). Repository closeout package complete. Operational closure waits on exposed upload secret rotation, re-smoke, 070b UI/isolation verification, and one Mike-approved Airtable-triggered Schmidt test. 070b remains OFF.",
+  "executiveSummary": "Production hybrid upload path is proven (070b→Make→Lambda→S3→Airtable). PROD Submission Assets schema and automation 116 are PASS. PROD Lambda deployed and direct smoke PASS. PROD Make scenario built and manual route smoke PASS (overallPass=true, 2026-07-11). Repository closeout package complete. Operational closure waits on exposed upload secret rotation, re-smoke, 070b UI/isolation verification, and one Mike-approved Airtable-triggered Schmidt test. 070b remains OFF.",
   "bases": {
-    "dev": "appTetnuCZlCZdTCT",
+    "dev": "appn84sqPw03zEbTT",
     "prod": "appn84sqPw03zEbTT"
   },
   "verifiedUpstream": {
@@ -39,12 +39,12 @@
   "repositoryComponents": [
     {"path": "lambda/upload-asset/handler.py", "role": "Lambda entry"},
     {"path": "lambda/upload-asset/upload_core/", "role": "Claim, processor, S3, Airtable writeback, duplicate review"},
-    {"path": "lambda/upload-asset/deploy.ps1", "role": "DEV deploy"},
+    {"path": "lambda/upload-asset/deploy.ps1", "role": "Production deploy"},
     {"path": "lambda/upload-asset/deploy-prod.ps1", "role": "PROD deploy (new)"},
-    {"path": "lambda/upload-asset/iam-policy-dev.json", "role": "DEV IAM template"},
+    {"path": "lambda/upload-asset/iam-policy-dev.json", "role": "Production IAM template"},
     {"path": "lambda/upload-asset/iam-policy-prod.json", "role": "PROD IAM template (new)"},
     {"path": "airtable/automations/shooting-challenge/070b-email-notifications-and-external-handoffs-send-video-asset-payload-to-make.js", "role": "070b v4.2 Make handoff"},
-    {"path": "tools/airtable/c013_dev_lambda_invoke.py", "role": "DEV Lambda invoke helper"},
+    {"path": "tools/airtable/c013_dev_lambda_invoke.py", "role": "Production Lambda invoke helper"},
     {"path": "tools/airtable/_probe_c013_asset_storage_fields.py", "role": "Writeback probe"},
     {"path": "tools/airtable/c013_prod_readiness_probe.py", "role": "PROD read-only Automations probe (new)"},
     {"path": "make/documentation/C-013-dev-make-lambda-scenario-prep.md", "role": "Make module chain reference"},
@@ -60,9 +60,9 @@
     {"item": "Architecture", "dev": "x86_64", "prodIntended": "x86_64", "prodStatus": "DEPLOYED"},
     {"item": "Function URL", "dev": "EXISTS (AuthType NONE)", "prodIntended": "Create with AuthType NONE", "prodStatus": "DEPLOYED"},
     {"item": "Function URL app auth", "dev": "NONE + X-Upload-Secret in handler", "prodIntended": "Same", "prodStatus": "DEPLOYED"},
-    {"item": "X-Upload-Secret enforcement", "dev": "VERIFIED (unit + DEV runtime)", "prodIntended": "Required", "prodStatus": "VERIFIED"},
-    {"item": "AIRTABLE_BASE_ID", "dev": "appTetnuCZlCZdTCT", "prodIntended": "appn84sqPw03zEbTT", "prodStatus": "DEPLOYED"},
-    {"item": "AIRTABLE_TOKEN", "dev": "DEV PAT (non-empty)", "prodIntended": "New PROD PAT", "prodStatus": "CONFIGURED"},
+    {"item": "X-Upload-Secret enforcement", "dev": "VERIFIED (unit + Production runtime)", "prodIntended": "Required", "prodStatus": "VERIFIED"},
+    {"item": "AIRTABLE_BASE_ID", "dev": "appn84sqPw03zEbTT", "prodIntended": "appn84sqPw03zEbTT", "prodStatus": "DEPLOYED"},
+    {"item": "AIRTABLE_TOKEN", "dev": "Production PAT (non-empty)", "prodIntended": "New PROD PAT", "prodStatus": "CONFIGURED"},
     {"item": "S3_BUCKET", "dev": "shooting-challenge-assets", "prodIntended": "shooting-challenge-assets", "prodStatus": "VERIFIED_READY"},
     {"item": "S3 prefix", "dev": "shooting-challenge/{season}/{challenge}/{athlete-slug}/", "prodIntended": "Same pattern; PROD season 2025-2026", "prodStatus": "VERIFIED_READY"},
     {"item": "SEASON_SLUG", "dev": "2026-2027", "prodIntended": "2025-2026", "prodStatus": "DEPLOYED"},
@@ -74,10 +74,10 @@
     {"item": "S3 ListBucket", "dev": "ALLOWED", "prodIntended": "Same", "prodStatus": "VERIFIED"},
     {"item": "CloudWatch log group", "dev": "/aws/lambda/127si-upload-asset-dev", "prodIntended": "/aws/lambda/127si-upload-asset", "prodStatus": "DEPLOYED"},
     {"item": "Dead-letter queue", "dev": "NOT REQUIRED", "prodIntended": "NOT REQUIRED", "prodStatus": "NOT_REQUIRED"},
-    {"item": "DEV deploy command", "dev": "deploy.ps1 -CodeOnly", "prodIntended": "deploy-prod.ps1", "prodStatus": "VERIFIED_READY"},
+    {"item": "Production deploy command", "dev": "deploy.ps1 -CodeOnly", "prodIntended": "deploy-prod.ps1", "prodStatus": "VERIFIED_READY"},
     {"item": "PROD rollback", "dev": "reserved concurrency 0", "prodIntended": "Same + 070b OFF", "prodStatus": "VERIFIED_READY"},
     {"item": "Code package evidence", "dev": "CodeSha256 MiQYYa8YQER1uwh5xKimm1efXurWNqwxqq4aqhY5Qr4=", "prodIntended": "Record post-deploy CodeSha256", "prodStatus": "RECORDED"},
-    {"item": "Make scenario", "dev": "Shooting Challenge - DEV - Upload Engine - Lambda - v1", "prodIntended": "Shooting Challenge - GAME - Upload Engine - Lambda - v1", "prodStatus": "BUILT_MANUAL_SMOKE_PASS"},
+    {"item": "Make scenario", "dev": "Shooting Challenge - Production - Upload Engine - Lambda - v1", "prodIntended": "Shooting Challenge - GAME - Upload Engine - Lambda - v1", "prodStatus": "BUILT_MANUAL_SMOKE_PASS"},
     {"item": "070b path", "dev": "Airtable→Make→Lambda", "prodIntended": "Same (not direct Lambda)", "prodStatus": "VERIFIED_READY"}
   ],
   "awsReadOnlyInspection": {
@@ -190,7 +190,7 @@
   ],
   "topRisks": [
     "Exposed PROD upload secret must be rotated in AWS Lambda, Make X-Upload-Secret, and local tools/airtable/.env before activation",
-    "Shared S3 bucket across DEV/PROD — rely on season slug prefix isolation (2025-2026 vs 2026-2027)",
+    "Shared S3 bucket across Production — rely on season slug prefix isolation (2025-2026 vs 2026-2027)",
     "Premature 070b enable could send live athlete assets before isolated Schmidt Testing trigger test PASS",
     "Isolation view C-013 PROD Smoke — Schmidt Testing Only must exist before controlled trigger test",
     "Invalid-route smoke reaches Lambda and writes Upload Status=Error by design; Make router may still be tightened in a future slice"

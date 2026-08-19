@@ -1,16 +1,16 @@
 # PROD Submission Assets — Field Promotion Checklist
 
-**Date:** 2026-07-11  
-**DEV base:** `appTetnuCZlCZdTCT`  
-**PROD base:** `appn84sqPw03zEbTT`  
-**Table:** Submission Assets (`tblhMLKxQK77agtME`)  
-**Source audit:** `docs/audits/pv2-dev-prod-gap-inventory-2026-07-11.md` (commit `fdf7116420360c74462df4ce786d0dea13c45d50`)  
+**Date:** 2026-07-11
+**Production base:** `appn84sqPw03zEbTT`
+**PROD base:** `appn84sqPw03zEbTT`
+**Table:** Submission Assets (`tblhMLKxQK77agtME`)
+**Source audit:** `docs/audits/pv2-production-gap-inventory-2026-07-11.md` (commit `fdf7116420360c74462df4ce786d0dea13c45d50`)
 
 ## 1. Live reconciliation
 
 | Metric | Value |
 |--------|-------|
-| DEV field count | **97** |
+| Production field count | **97** |
 | PROD field count | **80** |
 | Missing in PROD | **17** |
 | Prior audit count (2026-07-11) | **17** |
@@ -20,23 +20,23 @@
 
 ### Missing field list (live verified)
 
-- `Storage Key` — DEV `fldB4X0dqVUf6lplz` · `singleLineText` · BLOCKER
-- `Upload Claim Run ID` — DEV `fldLMzAxwd9AffgbJ` · `singleLineText` · BLOCKER
-- `Potential Asset Reuse?` — DEV `fldNjXKr8jaUXAEKR` · `checkbox` · REQUIRED BEFORE LAUNCH
-- `Exact Hash Match Found?` — DEV `fldVvlCSTDPMYKI2n` · `checkbox` · REQUIRED BEFORE LAUNCH
-- `Same Enrollment Match Found?` — DEV `fldoAF3gUaBAzPVRI` · `checkbox` · REQUIRED BEFORE LAUNCH
-- `Processing Started At` — DEV `fldSlCe9nuGvymdvQ` · `dateTime` · REQUIRED BEFORE LAUNCH
-- `Asset Reuse Review Summary` — DEV `flduuIThdtc5q0a12` · `multilineText` · REQUIRED BEFORE LAUNCH
-- `Asset Reuse Reviewed By` — DEV `fldYpqMsyo0Dcvg0q` · `singleLineText` · REQUIRED BEFORE LAUNCH
-- `Asset Sequence` — DEV `fldYPCnUe1RQSEzu0` · `number` · NOT REQUIRED
-- `Asset Reuse Reviewed At` — DEV `fld4N90PQqB1wVql1` · `dateTime` · REQUIRED BEFORE LAUNCH
-- `Upload Naming Status` — DEV `fldj98NjKTnwQOIgz` · `singleSelect` · REQUIRED BEFORE LAUNCH
-- `Video Feedback Focus` — DEV `fldFCExyojIkXG0t9` · `singleSelect` · REQUIRED BEFORE LAUNCH
-- `Asset Reuse Review Primary Reason` — DEV `fld5RMMPKIIxYoI1L` · `singleSelect` · REQUIRED BEFORE LAUNCH
-- `Asset Reuse Review Reasons` — DEV `fldIRI7T1rY5R9mdg` · `multipleSelects` · REQUIRED BEFORE LAUNCH
-- `Duplicate Match Records (All)` — DEV `fld3mKhVv4RMIPBjc` · `multipleRecordLinks` · REQUIRED BEFORE LAUNCH
-- `From field: Duplicate Match Records (All)` — DEV `fldhk3rFwECkaTLrD` · `multipleRecordLinks` · REQUIRED BEFORE LAUNCH
-- `Calculation` — DEV `fldzFo5To0DXi94OS` · `formula` · NOT REQUIRED
+- `Storage Key` — Production `fldB4X0dqVUf6lplz` · `singleLineText` · BLOCKER
+- `Upload Claim Run ID` — Production `fldLMzAxwd9AffgbJ` · `singleLineText` · BLOCKER
+- `Potential Asset Reuse?` — Production `fldNjXKr8jaUXAEKR` · `checkbox` · REQUIRED BEFORE LAUNCH
+- `Exact Hash Match Found?` — Production `fldVvlCSTDPMYKI2n` · `checkbox` · REQUIRED BEFORE LAUNCH
+- `Same Enrollment Match Found?` — Production `fldoAF3gUaBAzPVRI` · `checkbox` · REQUIRED BEFORE LAUNCH
+- `Processing Started At` — Production `fldSlCe9nuGvymdvQ` · `dateTime` · REQUIRED BEFORE LAUNCH
+- `Asset Reuse Review Summary` — Production `flduuIThdtc5q0a12` · `multilineText` · REQUIRED BEFORE LAUNCH
+- `Asset Reuse Reviewed By` — Production `fldYpqMsyo0Dcvg0q` · `singleLineText` · REQUIRED BEFORE LAUNCH
+- `Asset Sequence` — Production `fldYPCnUe1RQSEzu0` · `number` · NOT REQUIRED
+- `Asset Reuse Reviewed At` — Production `fld4N90PQqB1wVql1` · `dateTime` · REQUIRED BEFORE LAUNCH
+- `Upload Naming Status` — Production `fldj98NjKTnwQOIgz` · `singleSelect` · REQUIRED BEFORE LAUNCH
+- `Video Feedback Focus` — Production `fldFCExyojIkXG0t9` · `singleSelect` · REQUIRED BEFORE LAUNCH
+- `Asset Reuse Review Primary Reason` — Production `fld5RMMPKIIxYoI1L` · `singleSelect` · REQUIRED BEFORE LAUNCH
+- `Asset Reuse Review Reasons` — Production `fldIRI7T1rY5R9mdg` · `multipleSelects` · REQUIRED BEFORE LAUNCH
+- `Duplicate Match Records (All)` — Production `fld3mKhVv4RMIPBjc` · `multipleRecordLinks` · REQUIRED BEFORE LAUNCH
+- `From field: Duplicate Match Records (All)` — Production `fldhk3rFwECkaTLrD` · `multipleRecordLinks` · REQUIRED BEFORE LAUNCH
+- `Calculation` — Production `fldzFo5To0DXi94OS` · `formula` · NOT REQUIRED
 
 ### 17-field disposition accounting
 
@@ -77,8 +77,8 @@
 
 ## 3. Dependency order
 
-**First field to create:** `Storage Key`  
-**Last promotion step:** `Calculation` (manual formula)  
+**First field to create:** `Storage Key`
+**Last promotion step:** `Calculation` (manual formula)
 
 | Step | Field | Method | Waits for |
 |------|-------|--------|-----------|
@@ -104,99 +104,99 @@
 
 **Step 16 auto-inverse:** `From field: Duplicate Match Records (All)` — verify only after step 15.
 
-## 4. Field definitions (DEV source of truth)
+## 4. Field definitions (Production source of truth)
 
 ### Storage Key
 - Type: `singleLineText`
-- DEV ID: `fldB4X0dqVUf6lplz`
+- Production ID: `fldB4X0dqVUf6lplz`
 - Classification: **BLOCKER**
 - Purpose: S3 object path written by Lambda/Make; required for canonical storage and 070b route.
 
 ### Upload Claim Run ID
 - Type: `singleLineText`
-- DEV ID: `fldLMzAxwd9AffgbJ`
+- Production ID: `fldLMzAxwd9AffgbJ`
 - Classification: **BLOCKER**
 - Purpose: Lambda single-worker upload claim token; prevents concurrent upload collisions.
 
 ### Potential Asset Reuse?
 - Type: `checkbox`
-- DEV ID: `fldNjXKr8jaUXAEKR`
+- Production ID: `fldNjXKr8jaUXAEKR`
 - Classification: **REQUIRED BEFORE LAUNCH**
 - Purpose: Flags same-enrollment contextual duplicate for operator review queue (C-023).
 
 ### Exact Hash Match Found?
 - Type: `checkbox`
-- DEV ID: `fldVvlCSTDPMYKI2n`
+- Production ID: `fldVvlCSTDPMYKI2n`
 - Classification: **REQUIRED BEFORE LAUNCH**
 - Purpose: Lambda flag: byte-identical hash match detected.
 
 ### Same Enrollment Match Found?
 - Type: `checkbox`
-- DEV ID: `fldoAF3gUaBAzPVRI`
+- Production ID: `fldoAF3gUaBAzPVRI`
 - Classification: **REQUIRED BEFORE LAUNCH**
 - Purpose: Lambda flag: same-enrollment duplicate context detected.
 
 ### Processing Started At
 - Type: `dateTime`
-- DEV ID: `fldSlCe9nuGvymdvQ`
+- Production ID: `fldSlCe9nuGvymdvQ`
 - Classification: **REQUIRED BEFORE LAUNCH**
 - Purpose: Timestamp when Lambda claims asset for upload (America/Denver).
 
 ### Asset Reuse Review Summary
 - Type: `multilineText`
-- DEV ID: `flduuIThdtc5q0a12`
+- Production ID: `flduuIThdtc5q0a12`
 - Classification: **REQUIRED BEFORE LAUNCH**
 - Purpose: Human-readable reuse review summary from Lambda.
 
 ### Asset Reuse Reviewed By
 - Type: `singleLineText`
-- DEV ID: `fldYpqMsyo0Dcvg0q`
+- Production ID: `fldYpqMsyo0Dcvg0q`
 - Classification: **REQUIRED BEFORE LAUNCH**
 - Purpose: Operator identifier for reuse review.
 
 ### Asset Sequence
 - Type: `number`
-- DEV ID: `fldYPCnUe1RQSEzu0`
+- Production ID: `fldYPCnUe1RQSEzu0`
 - Classification: **NOT REQUIRED**
 - Purpose: Optional asset ordering integer within submission.
 
 ### Asset Reuse Reviewed At
 - Type: `dateTime`
-- DEV ID: `fld4N90PQqB1wVql1`
+- Production ID: `fld4N90PQqB1wVql1`
 - Classification: **REQUIRED BEFORE LAUNCH**
 - Purpose: When operator finalized reuse decision (UTC).
 
 ### Upload Naming Status
 - Type: `singleSelect`
-- DEV ID: `fldj98NjKTnwQOIgz`
+- Production ID: `fldj98NjKTnwQOIgz`
 - Classification: **REQUIRED BEFORE LAUNCH**
 - Purpose: File naming pipeline readiness for Make upload.
 - Options: Pending Metadata, Ready, Blocked, Error
 
 ### Video Feedback Focus
 - Type: `singleSelect`
-- DEV ID: `fldFCExyojIkXG0t9`
+- Production ID: `fldFCExyojIkXG0t9`
 - Classification: **REQUIRED BEFORE LAUNCH**
 - Purpose: Video skill focus category on video submission assets.
 - Options: Shooting, Layups / Finishing, Ball Handling, Free Throws, Footwork / Defense, Strength / Movement, General Basketball, Other
 
 ### Asset Reuse Review Primary Reason
 - Type: `singleSelect`
-- DEV ID: `fld5RMMPKIIxYoI1L`
+- Production ID: `fld5RMMPKIIxYoI1L`
 - Classification: **REQUIRED BEFORE LAUNCH**
 - Purpose: Primary contextual reuse classification for operator review.
 - Options: Same Assignment Resubmission, Different Assignment Reuse, Different Week Reuse, Different Submission Reuse, Cross-Type Reuse, Homework Used for Video Feedback, Video Feedback Used for Homework, Missing Context, Multiple Prior Uses, Cross-Enrollment Match — Informational
 
 ### Asset Reuse Review Reasons
 - Type: `multipleSelects`
-- DEV ID: `fldIRI7T1rY5R9mdg`
+- Production ID: `fldIRI7T1rY5R9mdg`
 - Classification: **REQUIRED BEFORE LAUNCH**
 - Purpose: All contextual reuse reason tags (multi-select).
 - Options: Same Assignment Resubmission, Different Assignment Reuse, Different Week Reuse, Different Submission Reuse, Cross-Type Reuse, Homework Used for Video Feedback, Video Feedback Used for Homework, Missing Context, Multiple Prior Uses, Cross-Enrollment Match — Informational
 
 ### Duplicate Match Records (All)
 - Type: `multipleRecordLinks`
-- DEV ID: `fld3mKhVv4RMIPBjc`
+- Production ID: `fld3mKhVv4RMIPBjc`
 - Classification: **REQUIRED BEFORE LAUNCH**
 - Purpose: Self-link to all same-enrollment uploaded hash matches.
 - Link: `Submission Assets` (self-link, multiple records)
@@ -204,7 +204,7 @@
 
 ### From field: Duplicate Match Records (All)
 - Type: `multipleRecordLinks`
-- DEV ID: `fldhk3rFwECkaTLrD`
+- Production ID: `fldhk3rFwECkaTLrD`
 - Classification: **REQUIRED BEFORE LAUNCH**
 - Purpose: Inverse self-link — auto-created with Duplicate Match Records (All).
 - Link: `Submission Assets` (self-link, multiple records)
@@ -212,9 +212,9 @@
 
 ### Calculation
 - Type: `formula`
-- DEV ID: `fldzFo5To0DXi94OS`
+- Production ID: `fldzFo5To0DXi94OS`
 - Classification: **NOT REQUIRED**
-- Purpose: Debug formula displaying RecordId — cosmetic on DEV.
+- Purpose: Debug formula displaying RecordId — cosmetic on Production.
 - Formula (PROD): `{RecordId}`
 - Note: PROD already has RecordId (fldXz9TNOnGeRXEL8). Formula must reference {RecordId}, not a missing field.
 
@@ -237,7 +237,7 @@ STRICT RULES:
 - Do NOT create, update, or delete any records.
 - Do NOT change views, interfaces, or permissions.
 - Create ONLY the OMNI fields listed below, in order.
-- Before creating each field, check whether a field with the EXACT same name already exists. If it exists, STOP that field and report it — do not create a duplicate or suffix variant (no '2', 'copy', or '(from DEV)').
+- Before creating each field, check whether a field with the EXACT same name already exists. If it exists, STOP that field and report it — do not create a duplicate or suffix variant (no '2', 'copy', or '(from Production)').
 - After each creation, report: field name, field type, and confirmation it was newly created.
 
 Promotion sequence for all 17 missing fields:
@@ -358,8 +358,8 @@ python pv2_dev_prod_gap_audit.py
 1. `submission_assets_missing_in_prod` = **0** (or only NOT REQUIRED fields if intentionally deferred).
 2. PROD Submission Assets field count = **97**.
 3. Each missing field name exists **exactly once** on PROD.
-4. Field types match DEV for all 17 fields.
-5. Single/multiple select options match DEV lists above.
+4. Field types match Production for all 17 fields.
+5. Single/multiple select options match Production lists above.
 6. Self-link pair exists: Duplicate Match Records (All) ↔ From field: Duplicate Match Records (All).
 7. Script 116 PROD dependency check = PASS (already PASS before this promotion).
 8. Script 070b PROD dependency check = PASS (requires Storage Key).

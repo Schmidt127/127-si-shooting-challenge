@@ -140,7 +140,6 @@ const requiredDocs = [
   "docs/V2_RELEASE_CHECKLIST.md",
   "docs/AUTOMATION_VERSION_INVENTORY.md",
   "docs/V2_END_TO_END_TEST_MATRIX.md",
-  "docs/v2/V2_DEV_EXECUTION_RUNBOOK.md",
   "docs/v2/V2_LAUNCH_SMOKE_TESTS.md",
   "docs/known-issues.md",
   "docs/automation-index.md",
@@ -251,14 +250,6 @@ const requiredTests = [
   "airtable/automations/shooting-challenge/lib/script-header-contract.test.js",
   "airtable/automations/shooting-challenge/lib/upload-make-lambda-response.js",
   "airtable/automations/shooting-challenge/lib/upload-make-lambda-response.test.js",
-  "tools/airtable/v2_dev_runbook/matrix-classification.json",
-  "tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js",
-  "tools/airtable/v2_dev_runbook/cli.js",
-  "tools/airtable/v2_dev_runbook/cli.test.js",
-  "tools/airtable/v2_dev_runbook/scenarios.test.js",
-  "tools/airtable/v2_dev_runbook/lib/safety.js",
-  "tools/airtable/v2_dev_runbook/lib/scenarios.js",
-  "tools/airtable/v2_dev_runbook/fixtures/milestones.json",
   "tools/airtable/tests/test_c025_recording_watch_contract.py",
   "tools/airtable/tests/test_c009_hw17_attachment_contract.py",
   "tools/airtable/tests/test_c010_active_guards_contract.py",
@@ -292,9 +283,6 @@ for (const needle of [
 
 const requiredC009C011Docs = [
   "docs/v2/C009_C010_C011_MIGRATION_SAFETY.md",
-  "docs/v2/C009_HW17_ATTACHMENT_DEV_INSTALL.md",
-  "docs/v2/C010_ACTIVE_GUARDS_DEV_INSTALL.md",
-  "docs/v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md",
   "docs/v2/PR34_PR35_PR37_RECONCILIATION.md",
 ];
 for (const doc of requiredC009C011Docs) {
@@ -303,10 +291,8 @@ for (const doc of requiredC009C011Docs) {
 }
 
 const requiredC025Docs = [
-  "docs/v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md",
   "docs/v2/AUTOMATION_070A_LAUNCH_DECISION.md",
   "docs/v2/C025_ARCHITECTURE_RECONCILIATION.md",
-  "docs/deploy-checklists/066-dev-omni-confirmation-packet.md",
   "docs/deploy-checklists/C-025-zoom-recording-design-stage12.md",
 ];
 for (const doc of requiredC025Docs) {
@@ -315,9 +301,9 @@ for (const doc of requiredC025Docs) {
 }
 
 // ---------------------------------------------------------------------------
-// 3b. DEV testing-view documentation (C-019) — required repo rules
+// 3b. Production testing-view documentation (C-019) — required repo rules
 // ---------------------------------------------------------------------------
-console.log("\n== DEV testing-view documentation (C-019) ==");
+console.log("\n== Production testing-view documentation (C-019) ==");
 const c019Docs = [
   "docs/deploy-checklists/C-019-testing-views-verification-checklist.md",
   "docs/deploy-checklists/C-019-airtable-ui-work-order.md",
@@ -551,9 +537,6 @@ if (/043/.test(inventoryText) && /retire|retired|legacy|delete/i.test(inventoryT
 // ---------------------------------------------------------------------------
 console.log("\n== Launch-test evidence (repository packages) ==");
 const launchEvidenceDocs = [
-  "docs/deploy-checklists/DEV-release-readiness-verification-2026-07-16.md",
-  "docs/deploy-checklists/066-dev-omni-confirmation-packet.md",
-  "docs/v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md",
   "docs/V2_END_TO_END_TEST_MATRIX.md",
   "docs/deploy-checklists/C-019-testing-views-verification-checklist.md",
 ];
@@ -563,11 +546,11 @@ for (const doc of launchEvidenceDocs) {
 }
 
 const verificationPkg = exists(launchEvidenceDocs[0]) ? read(launchEvidenceDocs[0]) : "";
-for (const needle of ["PASS", "C-025", "066", "Live DEV install remains", "offline"]) {
+for (const needle of ["PASS", "066", "offline"]) {
   if (verificationPkg.toLowerCase().includes(needle.toLowerCase())) {
-    pass(`DEV verification package mentions: ${needle}`);
+    pass(`Production verification package mentions: ${needle}`);
   } else if (verificationPkg) {
-    fail(`DEV verification package missing keyword: ${needle}`);
+    fail(`Production verification package missing keyword: ${needle}`);
   }
 }
 

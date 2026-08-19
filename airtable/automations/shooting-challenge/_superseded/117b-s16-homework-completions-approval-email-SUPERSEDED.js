@@ -2,7 +2,7 @@
 Automation: 117b - Zoom Recording Credit - Send Approval Email Webhook
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: GitHub Source of Truth — READY FOR DEV INSTALL (not live-verified)
+Status: GitHub Source of Truth — READY FOR Production INSTALL (not live-verified)
 Last GitHub Update: 2026-07-15
 
 Purpose:
@@ -47,7 +47,7 @@ Does not award XP (117a). Does not alter 071 homework feedback email.
  *
  * RECOMMENDED TRIGGER CONDITIONS
  * - Completion Status is Satisfactory
- * - Send Recording Approval Email? is checked (operator/automation flag — confirm field name in DEV)
+ * - Send Recording Approval Email? is checked (operator/automation flag — confirm field name in Production)
  *
  * REQUIRED INPUT VARIABLES
  * - recordId = Homework Completion record ID

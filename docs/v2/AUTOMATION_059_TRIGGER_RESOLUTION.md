@@ -1,14 +1,14 @@
-# Automation 059 — Trigger Conflict Resolution (DEV)
+# Automation 059 — Trigger Conflict Resolution (Production)
 
-**Status:** Design authority locked · formula **verified in DEV (snapshot)** · live trigger type/filters **live-blocked**  
-**Base:** DEV `appTetnuCZlCZdTCT` first  
-**Inventory:** [DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md)  
-**Script:** `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.5**)  
+**Status:** Design authority locked · formula **verified in Production (snapshot)** · live trigger type/filters **live-blocked**
+**Base:** Production `appn84sqPw03zEbTT` first
+**Inventory:** [DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md)
+**Script:** `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.5**)
 **Hard stops:** No PROD changes · Confirm UI before relying on inventory rows
 
 | Item | Label |
 |------|-------|
-| `Ready for 059 XP?` formula exists | **verified in DEV (snapshot)** |
+| `Ready for 059 XP?` formula exists | **verified in Production (snapshot)** |
 | Authoritative trigger = record created, no Ready filter | **repository-ready** |
 | Live Airtable trigger/filters/ON | **live-blocked** — **requires Mike approval** (UI attest) |
 
@@ -43,7 +43,7 @@ Three repo statements disagree:
 
 `Ready for 059 XP?` (formula) requires Pending **and** empty `XP Events`. When 059 creates an XP Event, Airtable reverse-links it onto the unlock → formula flips to **0 mid-run**. If the Awarded writeback then fails, the row is stuck: **Pending + XP linked + Ready=0** and will never re-enter a Ready-filtered trigger.
 
-Repair for stuck rows: `backfill-shot-milestone-unlock-mark-awarded.js` (status only).  
+Repair for stuck rows: `backfill-shot-milestone-unlock-mark-awarded.js` (status only).
 Diagnostic: `audit-pending-shot-milestone-unlocks.js`.
 
 ---
@@ -57,23 +57,23 @@ Diagnostic: `audit-pending-shot-milestone-unlocks.js`.
 | Ready-filter re-fire after unlink | Do not use Ready in trigger — eliminates thrash |
 | Created-only miss on status repair | Status-only backfill; do not re-create XP |
 
-**Created vs matches-conditions:** Prefer **created**. If DEV must use matches-conditions, still **omit** Ready and XP Events empty — Pending (+ Shot Milestone for shot path) only. Document the choice in UI notes.
+**Created vs matches-conditions:** Prefer **created**. If Production must use matches-conditions, still **omit** Ready and XP Events empty — Pending (+ Shot Milestone for shot path) only. Document the choice in UI notes.
 
 ---
 
-## 4. Exact DEV trigger and script expectations
+## 4. Exact Production trigger and script expectations
 
 ### 4.1 Airtable UI
 
-1. Open automation **059**.  
-2. Set trigger: **When record created** on **Athlete Achievement Unlocks**.  
+1. Open automation **059**.
+2. Set trigger: **When record created** on **Athlete Achievement Unlocks**.
 3. Conditions:
    - `XP Award Status` is `Pending`
-   - `Shot Milestone` is not empty *(shot-milestone path)*  
-4. Remove any condition on `Ready for 059 XP?` or `XP Events`.  
-5. Paste GitHub v3.5 (skip GitHub header).  
-6. Map `recordId` + required outputs.  
-7. DEV soak ON after one fixture unlock.
+   - `Shot Milestone` is not empty *(shot-milestone path)*
+4. Remove any condition on `Ready for 059 XP?` or `XP Events`.
+5. Paste GitHub v3.5 (skip GitHub header).
+6. Map `recordId` + required outputs.
+7. Production soak ON after one fixture unlock.
 
 ### 4.2 Perfect Week caveat — **RESOLVED (Agent 3 MVP lock, 2026-08-05)**
 
@@ -111,9 +111,9 @@ Related: C-019 Testing view on Athlete Achievement Unlocks.
 
 ## 6. Rollback
 
-1. Turn 059 OFF.  
-2. Re-paste prior script if needed.  
-3. Do **not** re-add Ready formula to trigger.  
+1. Turn 059 OFF.
+2. Re-paste prior script if needed.
+3. Do **not** re-add Ready formula to trigger.
 4. Use mark-awarded backfill for stuck Pending+linked rows.
 
 ---
@@ -122,16 +122,16 @@ Related: C-019 Testing view on Athlete Achievement Unlocks.
 
 | Item | Status |
 |------|--------|
-| Live DEV/PROD trigger type & conditions | **UNKNOWN** — UI attest |
+| Live Production trigger type & conditions | **UNKNOWN** — UI attest |
 | Live pasted version vs v3.5 | **UNKNOWN** |
 | Perfect Week trigger coverage | **UNKNOWN** |
 
-**Mike:** Confirm DEV UI matches §4; approve Perfect Week option P1 or P2; no PROD until soak.
+**Mike:** Confirm Production UI matches §4; approve Perfect Week option P1 or P2; no PROD until soak.
 
 ---
 
 ## 8. Related
 
-- Stage J: `docs/airtable/stage-j-legacy-cleanup.md`  
-- Audit: `airtable/extension-scripts/audits/audit-pending-shot-milestone-unlocks.js`  
+- Stage J: `docs/airtable/stage-j-legacy-cleanup.md`
+- Audit: `airtable/extension-scripts/audits/audit-pending-shot-milestone-unlocks.js`
 - Offline: `tools/airtable/tests/test_automation_059_043_112_contracts.py`

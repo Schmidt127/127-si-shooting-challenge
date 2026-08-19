@@ -1,7 +1,7 @@
 # Launch Certification — Baseline
 
-**Authority:** Final Launch Closure Lead session  
-**Captured:** 2026-07-25 (~06:53 America/Denver session start; refreshed during certification)  
+**Authority:** Final Launch Closure Lead session
+**Captured:** 2026-07-25 (~06:53 America/Denver session start; refreshed during certification)
 **Branch for certification work:** `launch/final-production-certification`
 
 ## Authoritative Git SHAs
@@ -70,7 +70,7 @@
 | 20 | Cloud dev environment setup | 1 / 231 | yes |
 | 21 | Cloud dev environment setup | 1 / 231 | yes |
 | 31 | OA2 066 OMNI blocked note | 1 / 183 | yes |
-| 32 | OA1 C-025 DEV install blocked | 1 / 183 | yes |
+| 32 | OA1 C-025 Production install blocked | 1 / 183 | yes |
 | 33 | V2 frontend functional readiness | 1 / 183 | yes |
 | 36 | V2 execution board | 3 / 168 | yes |
 

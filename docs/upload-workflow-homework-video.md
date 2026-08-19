@@ -1,8 +1,8 @@
 # Upload workflow — homework and video (accepted design)
 
-**Status:** Owner-approved architecture — **PROD photo path Live Tested (SC-009, 2026-08-04)**  
-**Backlog:** SC-009 / SC-010 / C-020 / C-013 / C-023 / SC-150  
-**Last updated:** 2026-08-05  
+**Status:** Owner-approved architecture — **PROD photo path Live Tested (SC-009, 2026-08-04)**
+**Backlog:** SC-009 / SC-010 / C-020 / C-013 / C-023 / SC-150
+**Last updated:** 2026-08-05
 **Environment:** PROD `appn84sqPw03zEbTT` is the active construction base (see completion master)
 
 **Related:**
@@ -79,7 +79,7 @@ Intake (Fillout / C-020)
   → 005 Week
   → 009 → N Submission Assets (HW1-1 … HW1-N)
   → 020 per asset → find/create ONE Homework Completion; merge asset links
-  → 070a → Make upload (DEV: OFF until dev webhook)
+  → 070a → Make upload (Production: OFF until dev webhook)
   → 022 writeback URL
   → coach review → 064/065 XP → 071 parent email
 ```
@@ -110,7 +110,7 @@ Intake (Fillout / C-020)
   → 009 → N video Submission Assets (VIDEO-1 … VIDEO-N sequence)
   → 013 per asset → one Video Feedback row; copy Focus + Question
   → naming metadata complete → asset ready for 070b
-  → 070b → Make upload using Formatted Upload Name (DEV: OFF until dev webhook)
+  → 070b → Make upload using Formatted Upload Name (Production: OFF until dev webhook)
   → 022 writeback Canonical/Drive URL
   → coach review once → 113/114 XP → 073 parent email
 ```
@@ -144,7 +144,7 @@ Intake (Fillout / C-020)
 | **Fillout** | Max 3 files on HW upload; assignment required | Max 3 on Video Upload; Focus + Question required | Assignment-level limits from curriculum |
 | **Config table** | Future: **Default Homework File Limit**, **Max Homework File Limit** | Reuse / align **Max Videos Per Submission**; add **Default Video File Limit** if needed | Per-assignment overrides on **FBC Curriculum - SYNC** (post-MVP) |
 
-**File size:** Use small test files on DEV (&lt; ~5 MB). Airtable attachment limit ~20 MB/file. Fillout enforces its own upload limits in production intake.
+**File size:** Use small test files on Production (&lt; ~5 MB). Airtable attachment limit ~20 MB/file. Fillout enforces its own upload limits in production intake.
 
 ---
 
@@ -184,9 +184,9 @@ Intake (Fillout / C-020)
 
 ---
 
-## DEV safety (external sends)
+## Production safety (external sends)
 
-Per [development-base-setup.md](./development-base-setup.md) — verified OFF on DEV:
+Per [production-base-setup.md](./production-base-setup.md) — verified OFF on Production:
 
 | Automation | Status |
 |------------|--------|
@@ -201,7 +201,7 @@ Per [development-base-setup.md](./development-base-setup.md) — verified OFF on
 
 ---
 
-## Implementation sequence (repo + DEV)
+## Implementation sequence (repo + Production)
 
 | Step | Work | Owner |
 |------|------|-------|
@@ -212,9 +212,9 @@ Per [development-base-setup.md](./development-base-setup.md) — verified OFF on
 | 5 | **013** VF metadata copy | Cursor |
 | 6 | **070b** readiness formula / trigger (naming gate) | OMNI + Cursor review |
 | 7 | **115 v1.1** — Homework branch only | Cursor |
-| 8 | DEV tests A–D (homework) | Mike |
+| 8 | Production tests A–D (homework) | Mike |
 | 9 | **115 v1.2** — Video branch | Cursor |
-| 10 | DEV tests (video 1–3 files, naming gate, 070b OFF) | Mike |
+| 10 | Production tests (video 1–3 files, naming gate, 070b OFF) | Mike |
 | 11 | Commit + push; promotion doc before Production | Mike |
 
 **115 branching order:** **Homework first**, then **Video**. Homework needs fewer schema changes and validates multi-asset → single completion. Video depends on new metadata fields and **009** sequence/naming before meaningful **070b** tests.

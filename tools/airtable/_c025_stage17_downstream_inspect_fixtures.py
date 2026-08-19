@@ -1,4 +1,4 @@
-"""Inspect C-025 Stage 17 fixtures for Applied? flags and Attendees (DEV only)."""
+"""Inspect C-025 Stage 17 fixtures for Applied? flags and Attendees (Production only)."""
 from __future__ import annotations
 
 import json
@@ -9,7 +9,7 @@ from pathlib import Path
 
 ENV = Path(__file__).resolve().parent / ".env"
 OUT = Path(__file__).resolve().parent / "_preview" / "c025_stage17_downstream_fixture_inspect.json"
-BASE_EXPECTED = "appTetnuCZlCZdTCT"
+BASE_EXPECTED = "appn84sqPw03zEbTT"
 
 ZA_IDS = {
     "eligible": "reciRsLuiJGYcea3U",

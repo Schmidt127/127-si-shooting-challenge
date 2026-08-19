@@ -2,7 +2,7 @@
 Automation: 117c - Zoom Recording Credit - Create Zoom XP Event (Stage 17)
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: GitHub Source of Truth — DEV paste only when Mike authorizes
+Status: GitHub Source of Truth — Production paste only when Mike authorizes
 Last GitHub Update: 2026-07-18
 
 Purpose:
@@ -34,7 +34,7 @@ Skip GitHub header when pasting into Airtable.
  * - v1.1.1 (2026-08-05): Airtable runtime compatibility — guard optional
  *   QueryResult.unloadData() cleanup so unsupported cleanup cannot fail an
  *   otherwise successful automation run.
- * - v1.1.0 (2026-07-18): Canonical XP Activity Date + XP Bucket/Source for DEV;
+ * - v1.1.0 (2026-07-18): Canonical XP Activity Date + XP Bucket/Source for Production;
  *   link Zoom Meeting; America/Denver date; validate select options; no HC writes.
  * - v1.0.0 (2026-07-14): Initial Stage 17 XP create/soft-void.
  *
@@ -47,7 +47,7 @@ Skip GitHub header when pasting into Airtable.
  * - Source Key = Zoom Credit Key = ZOOM_CREDIT|{Enrollment RID}|{Zoom Meeting RID}
  * - Disjoint from live 101 keys (ZOOM_ATTEND_BASE|…).
  * - Amount from Zoom XP Amount formula (Config % of live) — do not rewrite Reward Rules.
- * - XP Bucket = Zoom Attendance; XP Source = Zoom Meeting Recording Quiz (DEV option).
+ * - XP Bucket = Zoom Attendance; XP Source = Zoom Meeting Recording Quiz (Production option).
  * - Date field = XP Activity Date (canonical on this base).
  * - Reasons: XP Reason Public / XP Reason Debug only.
  * - Never write Homework Completions.
@@ -218,7 +218,7 @@ function requireSingleSelectOption(table, fieldName, optionName) {
   if (!match) {
     throw new Error(
       `Missing single-select option "${optionName}" on ${table.name}.${fieldName}. ` +
-        `Add this DEV option before enabling 117c (Stage 17).`
+        `Add this Production option before enabling 117c (Stage 17).`
     );
   }
   return { id: match.id, name: match.name };

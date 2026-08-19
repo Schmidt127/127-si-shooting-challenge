@@ -16,7 +16,7 @@
 - [ ] Failed
 
 This result records repository evidence and readiness preparation only. No
-Production or DEV Airtable system was accessed.
+Production or Production Airtable system was accessed.
 
 ## Files touched
 

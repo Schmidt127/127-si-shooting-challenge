@@ -1,7 +1,7 @@
 # C-025 117f Send-Key Reconciliation — Overnight Run 2026-07-21
 
 **Branch:** `overnight/c025-send-key-reconciliation-2026-07-21`
-**Scope:** DEV / repo-only. No Airtable, Make, Gmail, webhook, env-var, production-record, or live-setting changes.
+**Scope:** Production / repo-only. No Airtable, Make, Gmail, webhook, env-var, production-record, or live-setting changes.
 **Reconciliation commit:** `845a3c43e41545fe06e5d81af694f24de981a560`
 **Report commit:** this file's commit (follows the reconciliation commit).
 
@@ -36,10 +36,10 @@ that were actively switching branches during this run.
 The reconciliation branch was therefore based on the current integration tip, which is `master` **plus** the
 already-merged C-025 work this task depends on:
 - the live **117f v1.1** four-part send-key script, and
-- the concurrent **docs-cleanup** commit that added `SUPERSEDED — HISTORICAL` banners + four-part keys to most DEV docs.
+- the concurrent **docs-cleanup** commit that added `SUPERSEDED — HISTORICAL` banners + four-part keys to most Production docs.
 
 Basing here (rather than on stale `master`) keeps the branch internally consistent: active code is four-part **and**
-the historical DEV docs are already clearly labeled.
+the historical Production docs are already clearly labeled.
 
 ---
 
@@ -54,7 +54,7 @@ and `chatgpt-recovery-2026-07-14/` (both untracked recovery artifacts).
 | File | Occurrence | Classification | Action |
 |---|---|---|---|
 | `make/lib/c025-117f-make-scenario.js` | exact-equality validator + error message were three-part | **Active code** | Updated to four-part (`enrollmentRid\|zoomMeetingRid\|zoomAttendanceId`). This was a real bug: the three-part exact check would have **rejected** the live four-part 117f payload. |
-| `airtable/automations/shooting-challenge/lib/c025-stage17-zoom-attendance.js` | `buildApprovalEmailSendKey(enrollmentId, meetingId)` built three-part; used by `evaluateApprovalEmailSendDecision` | **Active code** (exported, tested, used by a DEV fixture tool; **not** in the live orchestrator path — 117 Section F is `deferred_to_117f`) | Added `zoomAttendanceId` param → four-part; updated the call site. |
+| `airtable/automations/shooting-challenge/lib/c025-stage17-zoom-attendance.js` | `buildApprovalEmailSendKey(enrollmentId, meetingId)` built three-part; used by `evaluateApprovalEmailSendDecision` | **Active code** (exported, tested, used by a Production fixture tool; **not** in the live orchestrator path — 117 Section F is `deferred_to_117f`) | Added `zoomAttendanceId` param → four-part; updated the call site. |
 
 ### 3b. Active tests — UPDATED to four-part
 
@@ -78,7 +78,7 @@ and `chatgpt-recovery-2026-07-14/` (both untracked recovery artifacts).
 | `make/blueprints/c025-117f-zoom-recording-approval-email-dev-v1.template.json` | Data Store `keyPattern` three-part | Updated to four-part. |
 | `docs/deploy-checklists/C-025-stage17-prod-schema-manifest.json` | field `description` three-part | Updated to four-part. |
 
-### 3e. Tracked DEV tools — UPDATED to four-part (example/expected strings only)
+### 3e. Tracked Production tools — UPDATED to four-part (example/expected strings only)
 
 | File | Occurrence | Action |
 |---|---|---|
@@ -161,7 +161,7 @@ All run locally (Node v22.16.0, Python 3.13.7). Baseline (pre-edit) and post-edi
 | JSON validity | `JSON.parse` on all 5 edited JSON files | **PASS** |
 
 pytest is not installed in this environment; `unittest` was used for the Python contract suite.
-Live-Airtable / network-dependent Python tools were **not** run (no live access per DEV-only guardrails).
+Live-Airtable / network-dependent Python tools were **not** run (no live access per Production-only guardrails).
 
 ### Invariant checks (targeted assertions, all PASS)
 

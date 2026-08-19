@@ -1,17 +1,17 @@
 # C-025 — PROD Zoom Recording Attendance Approval Email (117 → Make 117f)
 
-**Backlog ID:** C-025  
-**Feature:** Zoom Recording Attendance Approval Email  
-**Airtable Automation:** **117** (Zoom Attendance trigger → HTTP POST to Make)  
-**Make workflow identifier:** **117f**  
-**PROD base:** `appn84sqPw03zEbTT`  
-**Date documented:** 2026-07-20  
+**Backlog ID:** C-025
+**Feature:** Zoom Recording Attendance Approval Email
+**Airtable Automation:** **117** (Zoom Attendance trigger → HTTP POST to Make)
+**Make workflow identifier:** **117f**
+**PROD base:** `appn84sqPw03zEbTT`
+**Date documented:** 2026-07-20
 **Mode:** Documentation only — no Airtable / Make / Gmail / webhook / deploy changes in this package
 
-**Companions (DEV package — historical):**
+**Companions (Production package — historical):**
 
-- [DEV Make contract](./C-025-117f-dev-make-scenario-contract.md)
-- [DEV deployment checklist](./C-025-117f-dev-make-deployment-checklist.md)
+- [Production Make contract](./C-025-117f-dev-make-scenario-contract.md)
+- [Production deployment checklist](./C-025-117f-dev-make-deployment-checklist.md)
 - [Stage 17 PROD live (credit path)](./C-025-stage17-prod-live-2026-07-20.md)
 
 ---
@@ -67,7 +67,7 @@ Make: Shooting Challenge - PROD - Zoom Recording Approval Email - 117f - v1
 | Data Store | `C025_117f_PROD_SendKeys` |
 | Send key | `ZOOM_REC_EMAIL\|{EnrollmentRID}\|{ZoomMeetingRID}\|{ZoomAttendanceRID}` |
 
-**Note:** Older DEV contract docs used a **three-part** send key (`…\|Enrollment\|Meeting`). PROD completed workflow uses the **four-part** key above (includes Zoom Attendance RID). Prefer this document for PROD operations.
+**Note:** Older Production contract docs used a **three-part** send key (`…\|Enrollment\|Meeting`). PROD completed workflow uses the **four-part** key above (includes Zoom Attendance RID). Prefer this document for PROD operations.
 
 ### Hard rules
 
@@ -80,7 +80,7 @@ Make: Shooting Challenge - PROD - Zoom Recording Approval Email - 117f - v1
 
 ## 2. Airtable Automation 117 — input variables
 
-**Trigger table:** Zoom Attendance  
+**Trigger table:** Zoom Attendance
 **Role in this workflow:** Script action posts the approval-email payload to Make (workflow id **117f**).
 
 ### Script input variables
@@ -136,8 +136,8 @@ Stage 17 **recording credit** for Automation **117** (XP create / conflict / gat
 
 ## 3. Make scenario — module-by-module
 
-**Scenario name:** `Shooting Challenge - PROD - Zoom Recording Approval Email - 117f - v1`  
-**Data Store:** `C025_117f_PROD_SendKeys` (key = `sendKey`)  
+**Scenario name:** `Shooting Challenge - PROD - Zoom Recording Approval Email - 117f - v1`
+**Data Store:** `C025_117f_PROD_SendKeys` (key = `sendKey`)
 **Airtable connection:** PROD base `appn84sqPw03zEbTT`
 
 | # | Module | Purpose | Success / branch notes |
@@ -231,7 +231,7 @@ Complete before treating approval email as **fully live** for all eligible Recor
 - [ ] Recipient mapping reviewed for **live** parent To: (`Parent Email - Cleaned` → fallback `Parent Email`)
 - [ ] Confirm test-mode / override inboxes are **not** still intercepting live sends (if any were used during controlled tests)
 - [ ] Spot-check one Schmidt Testing–only live parent send (or Mike-approved equivalent) after permanent enable
-- [ ] Confirm no double-send vs historical three-part keys (if any DEV/test keys exist in other stores)
+- [ ] Confirm no double-send vs historical three-part keys (if any Production/test keys exist in other stores)
 - [ ] Confirm Stage 17 credit path still healthy (117 XP / conflict / 057 / 042) after email enable — no Attendees writes
 - [ ] Update [current PROD progress](../status/C-025-stage17-current-prod-progress.md) and [automation index](../automation-index.md) to **LIVE** only after the above
 - [ ] Ops: webhook URL rotation plan if URL was exposed outside Make + Airtable
@@ -277,7 +277,7 @@ Until this checklist is checked off in-repo, status remains: **tested / built �
 
 | Doc | Role |
 |-----|------|
-| [C-025-117f-dev-make-scenario-contract.md](./C-025-117f-dev-make-scenario-contract.md) | DEV design contract (historical; three-part key) |
+| [C-025-117f-dev-make-scenario-contract.md](./C-025-117f-dev-make-scenario-contract.md) | Production design contract (historical; three-part key) |
 | [C-025-stage17-prod-live-2026-07-20.md](./C-025-stage17-prod-live-2026-07-20.md) | Stage 17 credit COMPLETE |
 | [C-025-stage17-rollback-plan.md](./C-025-stage17-rollback-plan.md) | Broader Stage 17 rollback |
 | [automation-index.md](../automation-index.md) | Automation inventory |

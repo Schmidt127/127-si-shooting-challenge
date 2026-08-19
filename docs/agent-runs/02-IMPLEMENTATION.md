@@ -19,7 +19,7 @@ Deliver one **bounded, path-disjoint** implementation slice on your assigned fea
 - Edit `docs/agent-runs/CONTROL.json`
 - Edit another worker’s exclusive paths
 - Change Airtable schema, credentials, or deploy anything
-- Access Production or live Airtable unless the assignment and Mike explicitly authorize a named DEV check
+- Access Production or live Airtable unless the assignment and Mike explicitly authorize a named Production check
 - Expand scope past the bounded deliverable
 - Use destructive git commands
 

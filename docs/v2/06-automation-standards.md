@@ -8,18 +8,18 @@
 
 ---
 
-## DEV-first rule (permanent)
+## production-only rule (permanent)
 
-**Nothing** is pasted into **Production** until tested successfully in **DEV**.
+**Nothing** is pasted into **Production** until tested successfully in **Production**.
 
 | Step | Where |
 |------|--------|
 | Design | ChatGPT (plan) |
 | Write | Cursor → **GitHub** (reference version) |
-| Validate | **DEV** base — test + audit |
+| Validate | **Production** base — test + audit |
 | Ship | Mike approval → **Production** |
 
-Full pipeline: [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) § DEV-first delivery pipeline.
+Full pipeline: [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) § production-only delivery pipeline.
 
 Every rewrite becomes the **GitHub reference version** before any Production paste.
 

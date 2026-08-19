@@ -1,5 +1,5 @@
 {
-  "purpose": "C-013/C-023 DEV manual Make S3 writeback — FULL PASS template (fill after hash re-test)",
+  "purpose": "C-013/C-023 Production manual Make S3 writeback — FULL PASS template (fill after hash re-test)",
   "recordedAt": "YYYY-MM-DD",
   "result": "full_PASS",
   "statusSummary": {
@@ -9,10 +9,10 @@
     "dev070a070bConnection": "NOT_STARTED",
     "productionCutover": "NOT_STARTED"
   },
-  "baseId": "appTetnuCZlCZdTCT",
+  "baseId": "appn84sqPw03zEbTT",
   "table": "Submission Assets",
   "recordId": "recXXXXXXXXXXXXXX",
-  "makeScenario": "Shooting Challenge - DEV - Upload Engine - S3 - v1",
+  "makeScenario": "Shooting Challenge - Production - Upload Engine - S3 - v1",
   "s3Bucket": "shooting-challenge-assets",
   "route": {
     "automationNumber": "070b",
@@ -46,7 +46,7 @@
     }
   },
   "hardStopsStillInForce": [
-    "Do not enable DEV 070a/070b until dynamic path mapping + Mike approval",
+    "Do not enable Production 070a/070b until dynamic path mapping + Mike approval",
     "Do not clear Airtable Attachment",
     "Do not remove Google Drive fields",
     "Do not switch formulas/views/scripts to Canonical File URL",

@@ -14,7 +14,7 @@ Own package planning, worker assignments, integration, verification, CONTROL upd
 | Verification | Independent diff review; **re-run** required tests after merge |
 | State | Update `docs/agent-runs/CONTROL.json` |
 | Handoff | End-of-run summary for Mike |
-| Hard stops | Enforce DEV-only / no deploy / no secrets / no destructive git |
+| Hard stops | Enforce Production-only / no deploy / no secrets / no destructive git |
 
 ## Must not
 

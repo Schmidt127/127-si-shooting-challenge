@@ -1,7 +1,7 @@
 # REPORT — Online Agent 8 (Tutorials, Curriculum, Content-Migration Readiness)
 
-**Date:** 2026-07-23  
-**Branch:** `master`  
+**Date:** 2026-07-23
+**Branch:** `master`
 **Owned paths:** `docs/online-agents/tutorials-content/`, `tools/tutorials-content/`, `tests/fixtures/tutorials-content/`
 
 ## Task Classification
@@ -39,7 +39,7 @@ Created a full consolidation readiness package:
 
 | SC | Treatment |
 |----|-----------|
-| SC-052 | Analysis + tooling readiness; proposed **Ready for DEV execution** |
+| SC-052 | Analysis + tooling readiness; proposed **Ready for Production execution** |
 | SC-053 | Spec/runbook only; proposed **Blocked on SC-052 execution** |
 | SC-054 | Supporting Presentation content spec only |
 | SC-127–SC-132 | Content-only dependency check — no Tutorials merge coupling |

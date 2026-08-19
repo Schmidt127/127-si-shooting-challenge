@@ -1,7 +1,7 @@
 # Four-Agent Run Kit — Start Here
 
-**Status:** Minimal controlled workflow  
-**Control file:** [CONTROL.json](./CONTROL.json)  
+**Status:** Minimal controlled workflow
+**Control file:** [CONTROL.json](./CONTROL.json)
 **Authority:** [AGENTS.md](../../AGENTS.md) · [.cursor/rules/four-agent-workflow.mdc](../../.cursor/rules/four-agent-workflow.mdc)
 
 ## Purpose
@@ -21,8 +21,8 @@ Launch prompts: [05-LAUNCH-PROMPTS.md](./05-LAUNCH-PROMPTS.md)
 
 ## Hard limits (all agents)
 
-- **DEV only** — no Production Airtable, Make, Lambda, or live traffic changes
-- **No live Airtable access** from agents unless Mike explicitly authorizes a named DEV check
+- **Production only** — no Production Airtable, Make, Lambda, or live traffic changes
+- **No live Airtable access** from agents unless Mike explicitly authorizes a named Production check
 - **No Airtable schema changes** (create/rename/delete fields, tables, views) unless Mike authorizes
 - **No credential or secret changes**
 - **No deployment** (Vercel, AWS, Make prod, Airtable prod paste)

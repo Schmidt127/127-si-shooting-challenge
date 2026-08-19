@@ -1,9 +1,9 @@
 # LA-000 — Shooting Challenge V2 current-state handoff
 
-**Role:** Online Agent 1 architecture reconstruction  
-**Date:** 2026-07-16  
-**Repo SHA inspected:** `babe74c49bf8d16eda5e55e72ed276e8958e7ce6` (`master`)  
-**Working branch for this package:** `cursor/learning-activities-handoff-2ca9`  
+**Role:** Online Agent 1 architecture reconstruction
+**Date:** 2026-07-16
+**Repo SHA inspected:** `babe74c49bf8d16eda5e55e72ed276e8958e7ce6` (`master`)
+**Working branch for this package:** `cursor/learning-activities-handoff-2ca9`
 **Scope:** Evidence-based status only. No Airtable schema, credentials, production settings, deployments, or GitHub settings changed.
 
 ---
@@ -20,9 +20,9 @@
 | Backlog ID | None assigned yet — Learning Activities is an approved architecture direction ahead of a numbered backlog item |
 | Estimated Scope | Docs + pure TypeScript routing contract (no schema, no automations, no deploy) |
 | Phase | Research / pre–Phase 3 prep |
-| Correct tool | Cursor (repo evidence); OMNI later for any DEV schema |
+| Correct tool | Cursor (repo evidence); OMNI later for any Production schema |
 | Repo | `127-si-shooting-challenge` |
-| Mike's role | Review handoff; authorize next package / backlog ID / DEV schema |
+| Mike's role | Review handoff; authorize next package / backlog ID / Production schema |
 
 ---
 
@@ -127,7 +127,7 @@ Legend: **Full** · **Partial** · **Stub/planned** · **External** · **Broken/
 
 ### Schema snapshot tables (2026-07-06)
 
-Prod 29 / DEV 30 (+ **Testing Scenarios**). Includes: Enrollments, Athletes, Submissions, Submission Assets, XP Events, Homework Completions, FBC Curriculum - SYNC, Video Feedback, Weekly Athlete Summary, Levels, Level Gate Rules, Achievements, Streak Occurrences, Shot Milestones, Zoom Meetings, Final Reflection Quiz Submissions, …  
+Prod 29 / Production 30 (+ **Testing Scenarios**). Includes: Enrollments, Athletes, Submissions, Submission Assets, XP Events, Homework Completions, FBC Curriculum - SYNC, Video Feedback, Weekly Athlete Summary, Levels, Level Gate Rules, Achievements, Streak Occurrences, Shot Milestones, Zoom Meetings, Final Reflection Quiz Submissions, …
 **Not present:** Learning Activities, Learning Activity Responses.
 
 ---
@@ -164,9 +164,9 @@ Prod 29 / DEV 30 (+ **Testing Scenarios**). Includes: Enrollments, Athletes, Sub
 | Brand redesign web (`#24`) | Merged | Tip `babe74c` after docs standardization |
 | FA-001 four-agent pilot | Complete | Docs/rules/CONTROL; kit idle |
 | C-013 video upload PROD | Complete (2026-07-11) | 070b v4.4 + 070c v1.1 |
-| C-020 Engineering Test Framework | DEV functional complete | Fillout-shaped scenarios; not all XP/Make paths |
+| C-020 Engineering Test Framework | Production functional complete | Fillout-shaped scenarios; not all XP/Make paths |
 | H-001 090F audit fix | Complete | Shot milestone dedupe |
-| 066 v3.1 | DEV ready / sandbox pending | Per PROJECT_STATE |
+| 066 v3.1 | Production ready / sandbox pending | Per PROJECT_STATE |
 | Wave 0 2025–26 close-out | Closed | Awards, final emails, outreach |
 
 ---
@@ -191,7 +191,7 @@ Prod 29 / DEV 30 (+ **Testing Scenarios**). Includes: Enrollments, Athletes, Sub
 | Stand-alone quiz → accidental HC | Must require explicit “counts as homework” + Homework link. |
 | Asset fan-out | One response → N Submission Assets must reuse `009`/`020` semantics, not bypass them. |
 | Catalog rename | Renaming `FBC Curriculum - SYNC` or Homework Completions would break web views + dozens of automations. |
-| Schema without Mike auth | Hard stop — DEV schema only after explicit authorization. |
+| Schema without Mike auth | Hard stop — Production schema only after explicit authorization. |
 | HW17 hybrid left in place | Learning Activities must absorb or supersede C-009 path cleanly. |
 
 ---
@@ -262,7 +262,7 @@ No browser e2e suite in repo.
 
 | Now (safe) | Later (after backlog + Mike auth) |
 |------------|-----------------------------------|
-| `docs/learning-activities/LA-000-current-state-handoff.md` | DEV schema for Learning Activities + Responses |
+| `docs/learning-activities/LA-000-current-state-handoff.md` | Production schema for Learning Activities + Responses |
 | `web/types/learning-activities.ts` | New automation(s) Response → assets / optional HC |
 | `web/lib/learning-activities/routing.ts` (+ test) | Adapt `067` or replace with Response intake |
 | (optional) backlog entry in `docs/v2-change-backlog.md` | Wire `009`/`020` from Response-produced assets |
@@ -271,7 +271,7 @@ No browser e2e suite in repo.
 
 ### Suggested LA-002 (after LA-001 + schema auth)
 
-DEV-only schema sketch + automation stub that: Response with files → N Submission Assets; if routing says HC → find/create Homework Completion (`Enrollment | Week | Homework`) without awarding XP itself.
+Production-only schema sketch + automation stub that: Response with files → N Submission Assets; if routing says HC → find/create Homework Completion (`Enrollment | Week | Homework`) without awarding XP itself.
 
 ---
 

@@ -1,10 +1,10 @@
 # C-013 — PROD Make deployment and 070b enablement prep
 
-**Date:** 2026-07-11  
+**Date:** 2026-07-11
 **Status:** **Make scenario BUILT** · manual webhook smoke **PASS** (`overallPass=true`) · **070b OFF**
-**Lambda smoke:** [PASS](../audits/C-013-prod-lambda-smoke-result-2026-07-11.md)  
+**Lambda smoke:** [PASS](../audits/C-013-prod-lambda-smoke-result-2026-07-11.md)
 **Make smoke:** [PASS](../audits/C-013-prod-make-smoke-result-2026-07-11.md)
-**Runbook:** [C-013-prod-upload-engine-lambda-runbook.md](../../make/documentation/C-013-prod-upload-engine-lambda-runbook.md)  
+**Runbook:** [C-013-prod-upload-engine-lambda-runbook.md](../../make/documentation/C-013-prod-upload-engine-lambda-runbook.md)
 **Blueprint:** [upload-asset-engine-lambda-prod-v1.template.json](../../make/blueprints/upload-asset-engine-lambda-prod-v1.template.json)
 
 **Hard stops:** Do **not** enable **070b** or **070a** until Make manual webhook PASS + Mike explicit approval.
@@ -45,7 +45,7 @@ Values live in `tools/airtable/_preview/c013-prod-deploy-session.local.json` (gi
 | 5 | Webhook response (success) | **Body = complete Lambda JSON** (`statusOut`, `actionOut`, `writebackVerification`, etc.) |
 | 6 | Webhook response (failure) | Deterministic error JSON — not generic 200 success |
 
-### Anti-patterns (DEV lesson)
+### Anti-patterns (Production lesson)
 
 - Returning **`Accepted`** only while Lambda runs async — 070b v4.2 **fails** with `error_lambda_response_unverified`
 - HTTP 200 when Lambda returned 4xx/5xx
@@ -55,7 +55,7 @@ Values live in `tools/airtable/_preview/c013-prod-deploy-session.local.json` (gi
 
 ## 4. 070b v4.2 audit (Phase 1)
 
-**Script:** `airtable/automations/shooting-challenge/070b-email-notifications-and-external-handoffs-send-video-asset-payload-to-make.js`  
+**Script:** `airtable/automations/shooting-challenge/070b-email-notifications-and-external-handoffs-send-video-asset-payload-to-make.js`
 **Version:** **v4.2** (GitHub confirmed)
 
 ### Required inputs

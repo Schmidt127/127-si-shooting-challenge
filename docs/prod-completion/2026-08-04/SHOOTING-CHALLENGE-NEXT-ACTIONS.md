@@ -78,7 +78,7 @@ Open issues: [#57](https://github.com/Schmidt127/127-si-shooting-challenge/issue
 
 | Work | SC | Note |
 |------|-----|------|
-| Stale-doc banners (118 OFF, DEV-first, never-115, Softr, hoopchallenges) | SC-139 | Repo docs only |
+| Stale-doc banners (118 OFF, production-only, never-115, Softr, hoopchallenges) | SC-139 | Repo docs only |
 | Close overnight GitHub issues | SC-138 | Docs/issues |
 | RCC fixture re-runs (no PROD write) | SC-147 | Offline |
 | Install SCN-021–043 into Testing Scenarios table | SC-002 | After views exist |

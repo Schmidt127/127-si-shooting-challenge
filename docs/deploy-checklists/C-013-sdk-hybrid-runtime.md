@@ -1,10 +1,10 @@
-# C-013 — Upload runtime architecture (DEV)
+# C-013 — Upload runtime architecture (Production)
 
-**Decision date:** 2026-07-08 (Mike)  
-**Architecture lock (2026-07-08):** **Airtable → Make → Lambda → S3 → Airtable**  
-**Implementation plan:** [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md) — **IMPLEMENTED** (code + local PASS 2026-07-08); **AWS deploy** pending admin IAM  
-**Backlog:** C-013, C-023, C-020 (H2)  
-**Environment:** DEV `appTetnuCZlCZdTCT` only  
+**Decision date:** 2026-07-08 (Mike)
+**Architecture lock (2026-07-08):** **Airtable → Make → Lambda → S3 → Airtable**
+**Implementation plan:** [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md) — **IMPLEMENTED** (code + local PASS 2026-07-08); **AWS deploy** pending admin IAM
+**Backlog:** C-013, C-023, C-020 (H2)
+**Environment:** Production `appn84sqPw03zEbTT` only
 **Parent:** [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md)
 
 ---
@@ -73,7 +73,7 @@ C-020 H2 (115 harness)
 
 ---
 
-## Gate — required before enabling DEV **070b**
+## Gate — required before enabling Production **070b**
 
 All must pass on a **harness-origin** video asset (H2), not manual-only proof:
 
@@ -87,7 +87,7 @@ All must pass on a **harness-origin** video asset (H2), not manual-only proof:
 | 6 | No formula/view/script cutover to Canonical File URL | **Enforced** |
 | 7 | **070a / 070b** remain **OFF** until Lambda AWS deploy + Make dry-run PASS | **Enforced** (handler gate rows 1–3 PASS; **070b still OFF**) |
 
-**After gate:** Deploy DEV Lambda to AWS (admin IAM) → Make scenario dry-run → prep **070b** `makeWebhookUrl` → **DEV URL only**. **H1** homework after video path stable.
+**After gate:** Deploy Production Lambda to AWS (admin IAM) → Make scenario dry-run → prep **070b** `makeWebhookUrl` → **Production URL only**. **H1** homework after video path stable.
 
 **Lambda deploy:** [lambda/upload-asset/DEPLOY.md](../../lambda/upload-asset/DEPLOY.md). **070b prep:** [C-013-dev-070b-hybrid-prep.md](./C-013-dev-070b-hybrid-prep.md) (still OFF).
 
@@ -111,11 +111,11 @@ All must pass on a **harness-origin** video asset (H2), not manual-only proof:
 | Step | Task | Owner | Status |
 |------|------|-------|--------|
 | **1** | Extend SDK script: C-023 duplicate lookup (Airtable GET `File Content Hash` match, enrollment scope TBD) | Cursor / Mike | **DONE** (2026-07-08) |
-| **2** | Implement DEV Lambda (`lambda/upload-asset/`) from SDK proof logic | Cursor / Mike | **DONE** (2026-07-08) — local PASS; AWS deploy pending admin |
+| **2** | Implement Production Lambda (`lambda/upload-asset/`) from SDK proof logic | Cursor / Mike | **DONE** (2026-07-08) — local PASS; AWS deploy pending admin |
 | **3** | Run **H2**: new Testing Scenarios Video 1-file row → **115** → SDK on resulting asset | Mike | **DONE** (`recL9r4a7navUxEhg`) |
 | **4** | Save `_preview/c013-dev-h2-sdk-proof-<assetId>.json` + probe verify | Cursor | **DONE** |
 | **4b** | H2 through Lambda handler (`c013_dev_lambda_invoke.py`) | Cursor | **DONE** (`recLAk8TA4lfbA6eu`, `allPass=true`) |
-| **5** | Deploy DEV Lambda to AWS + Make Lambda scenario; prep **070b** (still OFF) | Mike | **IN PROGRESS** — code in repo; IAM blocked on storage uploader user |
+| **5** | Deploy Production Lambda to AWS + Make Lambda scenario; prep **070b** (still OFF) | Mike | **IN PROGRESS** — code in repo; IAM blocked on storage uploader user |
 
 **Parked (do not work):** Make **Amazon S3 Upload** module troubleshooting.
 
@@ -126,9 +126,9 @@ All must pass on a **harness-origin** video asset (H2), not manual-only proof:
 Implemented in `c013_dev_s3_upload_proof.py` (2026-07-08):
 
 1. SHA-256 computed from downloaded bytes **before** S3 upload.
-2. DEV `Submission Assets` filtered by `File Content Hash`, excluding current record.
+2. Production `Submission Assets` filtered by `File Content Hash`, excluding current record.
 3. Upload **continues** regardless of match (flag-only; no duplicate-block status in architecture).
-4. Existing DEV fields written via `typecast`: `File is Duplicate?`, `Duplicate File Status`, `Duplicate Match Strength`, `Duplicate Match Record`, `Duplicate Match Notes`, `Duplicate Checked At`, `Duplicate Check Error`.
+4. Existing Production fields written via `typecast`: `File is Duplicate?`, `Duplicate File Status`, `Duplicate Match Strength`, `Duplicate Match Record`, `Duplicate Match Notes`, `Duplicate Checked At`, `Duplicate Check Error`.
 5. JSON report block `c023Duplicate`: `currentAssetId`, `computedSha256`, `duplicateLookupPerformed`, `duplicateMatchCount`, `duplicateMatches[]`, `duplicateBehaviorDecision`.
 
 | Decision | Meaning |
@@ -158,5 +158,5 @@ Implemented in `c013_dev_s3_upload_proof.py` (2026-07-08):
 | [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md) | Wave 7 slices |
 | [C-020-testing-scenarios-script-checklist.md](./C-020-testing-scenarios-script-checklist.md) | H2 harness |
 | [C-013-make-s3-dev-build-packet.md](./C-013-make-s3-dev-build-packet.md) | Writeback contract |
-| [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md) | **Lambda implementation plan (DEV)** |
+| [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md) | **Lambda implementation plan (Production)** |
 | [C-013-dev-070b-hybrid-prep.md](./C-013-dev-070b-hybrid-prep.md) | 070b trigger prep (OFF until approved) |

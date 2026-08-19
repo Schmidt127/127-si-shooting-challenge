@@ -2,7 +2,7 @@
 
 Exports schema metadata and optional record audits from the **127 SI Shooting Challenge** Airtable base.
 
-GitHub holds the script and dated snapshots. **Production** base ID: `appn84sqPw03zEbTT`. **Development** base: set `BASE_ID` in `.env` after clone — see [docs/development-base-setup.md](../../docs/development-base-setup.md).
+GitHub holds the script and dated snapshots. **Production** base ID: `appn84sqPw03zEbTT`. **Development** base: set `BASE_ID` in `.env` after clone — see [docs/production-base-setup.md](../../docs/production-base-setup.md).
 
 ## Setup
 
@@ -142,9 +142,9 @@ python generate_june29_snapshot_data.py
 
 **Status (2026-07-02):** Award Recipients historical cleanup and Goal Met / Conquered Goal reconciliation both passed (14/14 aligned).
 
-## Wave 7 — C-013 DEV S3 upload proof (AWS SDK)
+## Wave 7 — C-013 Production S3 upload proof (AWS SDK)
 
-Make.com **S3 Upload** module times out on DEV. Use **`c013_dev_s3_upload_proof.py`** instead — downloads attachment, SHA-256 hash, `PutObject` to `shooting-challenge-assets`, Airtable writeback on DEV only.
+Make.com **S3 Upload** module times out on Production. Use **`c013_dev_s3_upload_proof.py`** instead — downloads attachment, SHA-256 hash, `PutObject` to `shooting-challenge-assets`, Airtable writeback on Production only.
 
 ```powershell
 cd tools/airtable
@@ -200,4 +200,4 @@ Docs: [C-013-prod-make-build-2026-07-11.md](../../docs/deploy-checklists/C-013-p
 - Hand-maintained schema notes: `airtable/schema/current/`
 - Airtable extension audits (in-base JS): `airtable/extension-scripts/audits/`
 - Live ops snapshot: [docs/PROJECT_STATE.md](../../docs/PROJECT_STATE.md)
-- V2 DEV execution fixtures (offline-safe): [v2_dev_runbook/README.md](./v2_dev_runbook/README.md)
+- V2 Production execution fixtures (offline-safe): [v2_dev_runbook/README.md](./v2_dev_runbook/README.md)

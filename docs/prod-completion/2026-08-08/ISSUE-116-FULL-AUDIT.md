@@ -1,15 +1,15 @@
 # GitHub Issue #116 — Full Production-Readiness Audit
 
-**Date:** 2026-08-08  
-**Authority:** GitHub Issue [#116](https://github.com/Schmidt127/127-si-shooting-challenge/issues/116)  
-**Controlling source:** `docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`  
+**Date:** 2026-08-08
+**Authority:** GitHub Issue [#116](https://github.com/Schmidt127/127-si-shooting-challenge/issues/116)
+**Controlling source:** `docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`
 **Scope:** Repository truth, current completion evidence, open issues, tests, web readiness, and Airtable/Make proof gaps.
 
 ## Executive result
 
 The repository is substantially ready for controlled production operation, but the product is not fully production-complete. The highest-risk remaining work is not broad code construction; it is controlled Airtable/Make installation and replay proof for the canonical submission/summary/XP chain and the reconciliation paths that prevent stale or orphan awards.
 
-**Estimated final-product readiness: 72%**  
+**Estimated final-product readiness: 72%**
 This is an evidence-weighted estimate, not a release approval. Core daily submission, weekly summary, homework, video storage, public web, and weekly email paths have meaningful proof. The estimate remains below launch-complete because several current scripts are only Built/Merged, live editor versions are stale or unknown, and eligibility-loss/orphan reconciliation is not installed and live-tested.
 
 ## 1. Truth table
@@ -90,41 +90,41 @@ This is an evidence-weighted estimate, not a release approval. Core daily submis
 
 These actions require Airtable Automation Editor, Airtable trigger/view controls, Make UI, or Vercel settings unavailable to repository execution:
 
-1. **Automation 053 — Rebuild/Upsert Streak Occurrences**  
-   - Table/trigger: `Submissions`, current documented trigger/input mapping.  
-   - Paste: repository `053...js`, v5.3.  
-   - Test: controlled Enrollment `recCyFEPeATOVNlr9`, current PI Week.  
+1. **Automation 053 — Rebuild/Upsert Streak Occurrences**
+   - Table/trigger: `Submissions`, current documented trigger/input mapping.
+   - Paste: repository `053...js`, v5.3.
+   - Test: controlled Enrollment `recCyFEPeATOVNlr9`, current PI Week.
    - Expected: PI-scoped streak occurrence/update; replay creates no duplicate occurrence or XP.
-2. **Automation 066 — Create Shot Milestone Unlocks**  
-   - Table/trigger: `Enrollments`, controlled `Run Check?`/configured trigger.  
-   - Paste: repository `066...js`, v3.5.  
-   - Test: `recCyFEPeATOVNlr9`.  
+2. **Automation 066 — Create Shot Milestone Unlocks**
+   - Table/trigger: `Enrollments`, controlled `Run Check?`/configured trigger.
+   - Paste: repository `066...js`, v3.5.
+   - Test: `recCyFEPeATOVNlr9`.
    - Expected: existing unlocks link/skip, no duplicate milestone XP, no `records[0] should have a 'fields' property`.
-3. **Automation 031 — Find/Create Weekly Athlete Summary**  
-   - Table/trigger: `Submissions`; input `recordId` from the triggering Submission.  
+3. **Automation 031 — Find/Create Weekly Athlete Summary**
+   - Table/trigger: `Submissions`; input `recordId` from the triggering Submission.
    - Paste: repository `031...js`, v3.5.
-   - Test: stale-summary controlled fixture, then replay.  
+   - Test: stale-summary controlled fixture, then replay.
    - Expected: exactly one canonical Enrollment+Week summary; safe stale repair; ambiguous/no replacement fails closed.
-4. **Automation 118 / 119 — scheduled weekly build/send**  
-   - Tables/triggers: `Weekly Athlete Summary` / season schedule; inputs from current Program Instance and season config.  
-   - Paste: repository v1.7 files.  
-   - Test: controlled Schmidt-only package; keep `includeSchmidt=false` for normal traffic and `sendMode=Live` only where approved.  
+4. **Automation 118 / 119 — scheduled weekly build/send**
+   - Tables/triggers: `Weekly Athlete Summary` / season schedule; inputs from current Program Instance and season config.
+   - Paste: repository v1.7 files.
+   - Test: controlled Schmidt-only package; keep `includeSchmidt=false` for normal traffic and `sendMode=Live` only where approved.
    - Expected: 118 arms Build, 072 builds, 119 arms Send to Make, 074 posts, Make owns final Sent/writeback.
-5. **Automation 059 trigger coverage**  
-   - Trigger table: `Achievement Unlocks`; remove the obsolete Shot Milestone-only filter while preserving Pending-only and source gates.  
-   - Test: Perfect Week CASE-01 and remaining fixture cases.  
+5. **Automation 059 trigger coverage**
+   - Trigger table: `Achievement Unlocks`; remove the obsolete Shot Milestone-only filter while preserving Pending-only and source gates.
+   - Test: Perfect Week CASE-01 and remaining fixture cases.
    - Expected: one Perfect Week XP Event, idempotent replay, no milestone-trigger regression.
-6. **Make / communications**  
-   - Use test recipient first for 071/073/074/117f.  
+6. **Make / communications**
+   - Use test recipient first for 071/073/074/117f.
    - Confirm HTTP 200 semantic payload is success, not merely transport success; confirm Make owns final send writeback.
-7. **RCC and inventory**  
+7. **RCC and inventory**
    - Create the documented four Airtable health views; re-export Automation inventory and attest 112 OFF, 043 disposition, and 117 email-only ownership.
 
 No Airtable schema changes, production deployments, credential changes, or uncontrolled sends were performed by this audit.
 
 ## 6. Removed from the active queue
 
-- Do not reopen old DEV-first-only or “never install 115” instructions; current completion evidence supersedes them for this empty/controlled PROD operating model.
+- Do not reopen old production-only-only or “never install 115” instructions; current completion evidence supersedes them for this empty/controlled PROD operating model.
 - Do not treat Stage 17 orchestrator/117a–e as the owner of PROD Automation 117; 117 is the recording-approval email handoff.
 - Do not treat 023 as blocked: controlled primary and replay proof is recorded in the 2026-08-07 evidence.
 - Do not reopen Softr cutover as a launch dependency; `/shoot` is the active web product.

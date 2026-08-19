@@ -1,12 +1,12 @@
 """
-C-025 Stage 17 downstream DEV harness (057 v1.3 + 042 v3.1 Zoom logic).
+C-025 Stage 17 downstream Production harness (057 v1.3 + 042 v3.1 Zoom logic).
 
 Automations Meta API returns 403 — Cursor cannot paste/enable/run Airtable
 Automations. This harness mirrors repository 057/042 combined Zoom-credit
-logic against DEV fixtures via Records API while leaving 057/042/117 OFF.
+logic against Production fixtures via Records API while leaving 057/042/117 OFF.
 
 Hard rules:
-- DEV base only (appTetnuCZlCZdTCT)
+- Production base only (appn84sqPw03zEbTT)
 - Never write Zoom Meetings.Attendees (101 trigger risk)
 - Never write Level Gate Rules / XP amounts / thresholds
 - Do not enable automations
@@ -27,7 +27,7 @@ from zoneinfo import ZoneInfo
 
 ENV = Path(__file__).resolve().parent / ".env"
 OUT = Path(__file__).resolve().parent / "_preview" / "c025_stage17_downstream_test_results.json"
-BASE_EXPECTED = "appTetnuCZlCZdTCT"
+BASE_EXPECTED = "appn84sqPw03zEbTT"
 SCHMIDT = "recgP9qZYjAhE7NXm"
 DENVER = ZoneInfo("America/Denver")
 

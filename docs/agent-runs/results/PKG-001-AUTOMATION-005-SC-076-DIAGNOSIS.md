@@ -36,7 +36,7 @@ Do not change 005 logic or weaken 020 matching yet. The next package should be a
 1. Mike provides the deployed 005/023 script exports and versions, trigger types, trigger views, all view filters/formulas, and one run-history/action-order trace for a fresh controlled Submission.
 2. Mike provides read-only values for the controlled failing Submission/Asset, Enrollment PI/Grade Band, Activity Date, selected Homework IDs and record names/types, all matching active PI Weeks, and the target PHA's PI/Week/slot/Active/library links.
 3. Verify whether Fillout writes PHA RIDs or Library RIDs. If Library RIDs are live, repair the Fillout/pre-intake mapping to active PHA choices (or obtain an explicitly approved compatibility package); do not make 005 guess.
-4. If the tuple is only stale data, repair the controlled Submission/PHA/Week alignment under a separate Mike-approved DEV/live package, then rerun 005→009→020 and verify 031/010 outputs.
+4. If the tuple is only stale data, repair the controlled Submission/PHA/Week alignment under a separate Mike-approved Production/live package, then rerun 005→009→020 and verify 031/010 outputs.
 5. Keep fixture cleanup separate: deactivate/isolate overlapping PWTEST Weeks only after dependency inspection; do not delete historical evidence.
 
 ## Offline validation

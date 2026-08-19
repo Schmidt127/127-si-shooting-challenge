@@ -4,7 +4,7 @@
 
 Last updated: **2026-07-06** (Phase 2B — Engineering Constitution; schema snapshots 2026-07-06)
 
-**Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)  
+**Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
 
 ---
@@ -15,12 +15,12 @@ Last updated: **2026-07-06** (Phase 2B — Engineering Constitution; schema snap
 |-----------|--------|
 | **Wave 0 — 2025–26 close-out** | **Closed** — C-001, C-002, C-003, C-008, newspaper + radio outreach complete |
 | **H-001 — 090F audit fix** | **Complete** — audit v1.1; shot milestones dedupe on Milestone Source Key; **0 data deleted** |
-| **H-002 — Automation 066 v3.1** | **DEV ready** — intake automations ON (Mike 2026-07-05); sandbox test **pending** OMNI confirm Schmidt submission through pipeline + expected milestone behavior |
-| **C-020 — Engineering Test Framework** | **Schema on DEV complete** — manual DEV Submissions unreliable; **066** + C-020 sequencing blocked on pipeline-ready Fillout-shaped Submission — [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) |
+| **H-002 — Automation 066 v3.1** | **Production ready** — intake automations ON (Mike 2026-07-05); sandbox test **pending** OMNI confirm Schmidt submission through pipeline + expected milestone behavior |
+| **C-020 — Engineering Test Framework** | **Schema on Production complete** — manual Production Submissions unreliable; **066** + C-020 sequencing blocked on pipeline-ready Fillout-shaped Submission — [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) |
 | **Automation standards (doc 06)** | **Active** — 066 v3.1 canonical V2 rewrite pattern |
 | **Multi-year architecture** | **Decided** — one base + **Program Instance** (not separate bases per year); **V2-013 queued** — do not implement until dedicated wave |
 | **Phase 2 — Platform Modernization** | **Wave 2A planning complete** · **Phase 2B docs complete** ([Constitution](./ENGINEERING_CONSTITUTION.md), [review](./phase-2b-engineering-review-2026-07-06.md)) — **implementation not started** |
-| **V2-015 — Development base** | **Ready** — DEV-first pipeline is permanent ([doc 04](./v2/04-ai-development-standards.md)) |
+| **V2-015 — Production base** | **Ready** — production-only pipeline is permanent ([doc 04](./v2/04-ai-development-standards.md)) |
 | **Wave 1** | Hygiene items done; **V2-001 base cutover deferred** pending V2-013 architecture wave |
 
 **Engineering principle (H-001):** **Fix the audit, not the data** — see [v2/08-testing-standards.md](./v2/08-testing-standards.md).
@@ -53,34 +53,34 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 
 | Item | Value |
 |------|--------|
-| Base name | `127SI - SHOOTING CHALLENGE - DEV` |
-| Base ID | `appTetnuCZlCZdTCT` |
+| Base name | `127SI - SHOOTING CHALLENGE - Production` |
+| Base ID | `appn84sqPw03zEbTT` |
 | Status | **Ready** — first testing environment for Phase 2 work |
 | Clone + scrub | **2026-07-05** — production **unchanged** |
 | Test enrollments retained | **6 total** — Schmidt/testing enrollment + **5** additional test enrollments |
 | Test data scope (Mike 2026-07-05) | Test rows in **registrant/pipeline tables** only — Submissions, Submission Assets, Homework Completions, Video Feedback, XP Events, Weekly Athlete Summary, etc. **Not** config/reference tables (Milestones, Levels, Gates, XP Rules, Weeks, …). Document enrollment record IDs when OMNI exports them (C-019). |
-| Setup runbook | [development-base-setup.md](./development-base-setup.md) |
-| Architecture | [v2-015-development-base-architecture.md](./v2-015-development-base-architecture.md) |
+| Setup runbook | [production-base-setup.md](./production-base-setup.md) |
+| Architecture | [v2-015-production-base-architecture.md](./v2-015-production-base-architecture.md) |
 
-**DEV is the first testing location for:**
+**Production is the first testing location for:**
 
-- Automation **066 v3.1** — **ON in DEV**; DEV intake automations turned **ON** after clone (Mike 2026-07-05); **066 sandbox pending** OMNI confirm Schmidt submission through pipeline + expected milestone behavior (H-002)
+- Automation **066 v3.1** — **ON in Production**; Production intake automations turned **ON** after clone (Mike 2026-07-05); **066 sandbox pending** OMNI confirm Schmidt submission through pipeline + expected milestone behavior (H-002)
 - Automation merge experiments (V2-014)
 - Schema changes (Stage K, C-026, etc.)
 - Extension backfills (`CONFIRM_WRITE` rehearsal)
-- **C-020** Engineering Test Framework — justified by Fillout-shaped pipeline need; **066** test and C-020 script sequencing blocked on pipeline-ready DEV submission
+- **C-020** Engineering Test Framework — justified by Fillout-shaped pipeline need; **066** test and C-020 script sequencing blocked on pipeline-ready Production submission
 - Make dry-runs (when dev scenarios configured)
 
-**V2-015 completion gate:** base ID recorded ✓ · **066 ON in DEV** ✓ · **DEV intake automations ON** ✓ · **066 sandbox pending** — OMNI confirm Schmidt submission through pipeline + expected milestone behavior · webhook/Make isolation — verify per runbook
+**V2-015 completion gate:** base ID recorded ✓ · **066 ON in Production** ✓ · **Production intake automations ON** ✓ · **066 sandbox pending** — OMNI confirm Schmidt submission through pipeline + expected milestone behavior · webhook/Make isolation — verify per runbook
 
 ### Phase 2 next sequence (locked 2026-07-05)
 
 | # | Step |
 |---|------|
-| 1 | **066 DEV sandbox test** — **pending** OMNI confirm Schmidt submission through intake pipeline + expected milestone behavior (DEV automations now ON) |
-| 2 | After DEV pass → Mike decides **066 prod promote** |
+| 1 | **066 Production sandbox test** — **pending** OMNI confirm Schmidt submission through intake pipeline + expected milestone behavior (Production automations now ON) |
+| 2 | After Production pass → Mike decides **066 prod promote** |
 | 3 | Approved prod maintenance window → delete **112**, retire **043** |
-| 4 | **C-020** — script after pipeline-ready submission path + sequencing approval | DEV |
+| 4 | **C-020** — script after pipeline-ready submission path + sequencing approval | Production |
 
 **Testing architecture (OMNI correction):** No test flags on pipeline tables — [testing-and-intake-architecture.md § OMNI correction](./testing-and-intake-architecture.md#omni-correction--rejected-2026-07-05).
 
@@ -93,7 +93,7 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 | **Production** | `airtable/schema/snapshots/prod-20260706/` | **29** | **118** |
 | **Development** | `airtable/schema/snapshots/dev-20260706/` | **30** | **120** |
 
-DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md](../airtable/schema/snapshots/README.md).
+Production-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md](../airtable/schema/snapshots/README.md).
 
 ### Schema (legacy reference)
 
@@ -107,7 +107,7 @@ DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md]
 
 `AIRTABLE_API_TOKEN`, `AIRTABLE_BASE_ID` (**production only on Vercel**), `NEXT_PUBLIC_BASE_PATH` (`/shoot`), `NEXT_PUBLIC_LANDING_URL`, `NEXT_PUBLIC_SITE_URL`
 
-**Local / tools:** optional dev base via `web/.env.local` or `tools/airtable/.env` — see [development-base-setup.md](./development-base-setup.md).
+**Local / tools:** optional Production base via `web/.env.local` or `tools/airtable/.env` — see [production-base-setup.md](./production-base-setup.md).
 
 **Schema export PAT (`tools/airtable/.env`):** `AIRTABLE_TOKEN` or `AIRTABLE_API_TOKEN` with **`schema.bases:read`** (optional `data.records:read` for audits).
 
@@ -188,9 +188,9 @@ Reports (historical): `tools/airtable/_preview/final-emails/stage-report-v2.json
 | **GitHub scripts** | 46 numbered files (`012` gap — deleted in Airtable) |
 | **012** | **Deleted** — legacy, unused (+1 slot) |
 | **112** | **OFF** — monitor before delete; **013** is production Video Feedback path |
-| **066 deploy** | v3.1 — **DEV paste/test** ([checklist](./deploy-checklists/066-v3.1-dev-deploy.md)); prod after pass |
+| **066 deploy** | v3.1 — **Production paste/test** ([checklist](./deploy-checklists/066-v3.1-dev-deploy.md)); prod after pass |
 | **Roadmap** | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) — complexity-first modernization; Category A–F; capacity secondary |
-| **Dev base (V2-015)** | **Ready** — `appTetnuCZlCZdTCT`; 6 test enrollments; prod unchanged; **not complete** until 066 dev test |
+| **Production base (V2-015)** | **Ready** — `appn84sqPw03zEbTT`; 6 test enrollments; prod unchanged; **not complete** until 066 dev test |
 
 ### Multi-year architecture (2026-07-05 decision)
 

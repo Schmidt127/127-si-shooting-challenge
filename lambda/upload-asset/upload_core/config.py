@@ -8,7 +8,6 @@ def _env_flag(name: str) -> bool:
     return (os.getenv(name) or "").strip().lower() in {"1", "true", "yes", "on"}
 
 
-DEV_BASE = "appTetnuCZlCZdTCT"
 PROD_BASE = "appn84sqPw03zEbTT"
 TABLE = "Submission Assets"
 
@@ -31,23 +30,16 @@ class UploadConfig:
 
     @classmethod
     def from_env(cls) -> UploadConfig:
-        environment = (os.getenv("ENVIRONMENT") or "DEV").strip().upper()
+        environment = (os.getenv("ENVIRONMENT") or "PRODUCTION").strip().upper()
+        if environment not in {"PROD", "PRODUCTION"}:
+            raise ValueError("ENVIRONMENT must be PROD or PRODUCTION")
         base = (os.getenv("AIRTABLE_BASE_ID") or "").strip()
         if not base:
-            base = PROD_BASE if environment == "PROD" else DEV_BASE
-
-        if environment == "PROD":
-            if base != PROD_BASE:
-                raise ValueError(
-                    f"ENVIRONMENT=PROD requires AIRTABLE_BASE_ID={PROD_BASE}; got {base}"
-                )
-        else:
-            if base == PROD_BASE:
-                raise ValueError(
-                    f"Production base {PROD_BASE} is blocked when ENVIRONMENT={environment}"
-                )
-            if base != DEV_BASE:
-                raise ValueError(f"Only DEV base {DEV_BASE} allowed; got {base}")
+            base = PROD_BASE
+        if base != PROD_BASE:
+            raise ValueError(
+                f"Production-only configuration requires AIRTABLE_BASE_ID={PROD_BASE}; got {base}"
+            )
 
         token = os.getenv("AIRTABLE_TOKEN") or os.getenv("AIRTABLE_API_TOKEN") or ""
         if not token:
@@ -71,7 +63,7 @@ class UploadConfig:
             airtable_token=token,
             s3_bucket=os.getenv("S3_BUCKET", "shooting-challenge-assets"),
             aws_region=os.getenv("AWS_REGION") or os.getenv("AWS_DEFAULT_REGION") or "us-east-2",
-            environment=os.getenv("ENVIRONMENT", "DEV"),
+            environment=os.getenv("ENVIRONMENT", "Production"),
             allow_route_keys=allow_route_keys,
             season_slug=(os.getenv("SEASON_SLUG") or "").strip(),
             challenge_slug=os.getenv("CHALLENGE_SLUG", "shooting-challenge"),
