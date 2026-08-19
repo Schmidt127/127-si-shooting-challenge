@@ -52,8 +52,9 @@ Prior dated snapshots remain preserved (not overwritten), including `prod-202607
 
 1. ~~`Homework Library.Lesson Key`~~ — **done** (deleted in PROD, Mike 2026-08-19).
 2. ~~`Submissions.Week Lkp`~~ — **done** (deleted in PROD, Mike 2026-08-19).
-3. Refresh `airtable/schema/current/table-map.md` and `field-map.md` when a dedicated Agent A pass is scheduled (hand maps still stale).
-4. Optional: re-export PROD snapshot after homework-library field cleanup to clear stale fields from `prod-20260819/`.
+3. Refresh `airtable/schema/current/table-map.md` and `field-map.md` when a dedicated Agent A pass is scheduled (pointers updated 2026-08-19; full hand inventory still open).
+4. Track homework cutover progress: [`HOMEWORK-CUTOVER-OPERATOR-CHECKLIST-2026-08-19.md`](./HOMEWORK-CUTOVER-OPERATOR-CHECKLIST-2026-08-19.md).
+5. Optional: re-export PROD snapshot after homework-library field cleanup to clear stale fields from `prod-20260819/`.
 
 ## Export command (repeat)
 

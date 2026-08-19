@@ -5,12 +5,16 @@
 > - [`docs/next-wave/data-model/UNIQUE-KEY-AUDIT.md`](../../../docs/next-wave/data-model/UNIQUE-KEY-AUDIT.md)  
 > - [`docs/next-wave/automation-ownership/xp-source-key-registry.json`](../../../docs/next-wave/automation-ownership/xp-source-key-registry.json)  
 > - [`docs/next-wave/reliability-audit-2026-07-24/FIELD-OWNERSHIP-AUDIT.md`](../../../docs/next-wave/reliability-audit-2026-07-24/FIELD-OWNERSHIP-AUDIT.md)  
-> - PROD schema doc in `../snapshots/prod-foundation-reset-20260723-post-ts/`
+> - PROD schema doc: **`../snapshots/prod-20260819/`** ([summary](../../../docs/deploy-checklists/SCHEMA-REFRESH-2026-08-19.md))  
+> - Older: `../snapshots/prod-foundation-reset-20260723-post-ts/`
 
-## Quick identity contracts (verified against 2026-07-23 snapshot)
+## Quick identity contracts (verified against 2026-08-19 PROD snapshot)
 
 | Table | Field | Type | Contract |
 |-------|-------|------|----------|
+| Homework Library | Record Id | formula | `RECORD_ID()` — reusable content identity |
+| Program Homework Assignments | Schedule Key | formula | `PI RID \| Week RID \| Homework Slot \| Homework Assignment RID` |
+| Submissions | Week | link | Written by **005**; ~~Week Lkp~~ deleted 2026-08-19 |
 | Enrollments | Enrollment Key | formula | `{Athlete ID Lookup}\|{School Year}` |
 | Weeks | Week Key | formula | `RECORD_ID()` — relational identity |
 | Weeks | Week Code | formula (PROD; attest) | Annual ops code e.g. `2026-2027\|Week 0` — separate from Week Key |
