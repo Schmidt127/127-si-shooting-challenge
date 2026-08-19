@@ -44,11 +44,35 @@ python -m unittest discover -s tests -p "test_*.py" -v
 | `S3_BUCKET` | `shooting-challenge-assets` |
 | `ENVIRONMENT` | `PROD` or `DEV` |
 | `ALLOW_ROUTE_KEYS` | `video_feedback,homework_completion` |
-| `SEASON_SLUG` / `CHALLENGE_SLUG` | season path segments |
+| `SEASON_SLUG` | Optional diagnostic / emergency fallback only. **Not** the upload season source. |
+| `ALLOW_SEASON_SLUG_FALLBACK` | Must stay unset in PROD. If `true` in DEV, `SEASON_SLUG` is used only when Program Instance `School Year - Linked` is missing. |
+| `CHALLENGE_SLUG` | Unused in the current object-key shape; kept for env compatibility |
 | `UPLOAD_WEBHOOK_SECRET` | Upload POST secret |
 | `VIEWER_PRESIGN_TTL_SECONDS` | Optional; default `900` |
 
 Do not set `AWS_REGION` in Lambda env (reserved). Region = `us-east-2` on the function.
+
+## Season and S3 object keys
+
+Uploads do **not** use `SEASON_SLUG` as the S3 year. Lambda resolves:
+
+`Submission Assets.Enrollment - Linked` → `Enrollments.Program Instance` → `Program Instance - Sync.School Year - Linked`
+
+`Program Instance - Sync.Season` is Fall/Spring and is ignored. Filename and current date are not used as the season. Production fails closed if Program Instance, school year, or athlete name is missing or ambiguous. Optional payload `enrollmentId` / `programInstanceId` / `seasonSlug` are cross-checks only.
+
+Object key (070a homework and 070b video share this builder):
+
+```text
+{LastName}_{FirstName}/{ProgramInstance}/{YYYY-MM-DD}/{UTC}_{AssetSlot}_{SubmissionAssetRecordId}_{OriginalFileName}
+
+Schmidt_Xavier/Shooting_Challenge_2026-2027/2026-08-17/20260817T172732Z_HW1_recAqoUbBKfDNtTLt_Straughn_Stetson_316.jpg
+```
+
+- Athlete folder comes from Enrollment `Athlete Last Name` / `Athlete First Name`.
+- Program Instance folder comes from `Name - Program Instance` (spaces/`|` → `_`).
+- Date and UTC stamp come from the asset `Created Time` / `Created` fields.
+- Lambda writes `Storage Key` before S3. Retries reuse that exact key.
+- `ATHLETE_SLUG_OVERRIDE` and `CHALLENGE_SLUG` do not shape this path.
 
 ## Deploy
 

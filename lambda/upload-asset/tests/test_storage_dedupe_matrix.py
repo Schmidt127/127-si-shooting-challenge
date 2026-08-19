@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import sys
 import unittest
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import patch
 
@@ -40,7 +40,10 @@ from upload_core.fields import (
     FIELD_UPLOAD_STATUS,
 )
 from upload_core.processor import process_upload_asset, process_with_error_writeback
-from upload_core.util import DENVER, build_storage_key, canonical_url, guess_mime, sha256_hex
+from upload_core.storage_key import build_storage_key
+from upload_core.util import DENVER, canonical_url, guess_mime, sha256_hex
+
+from season_support import DEFAULT_SEASON
 
 RECORD = "recDedupeAsset001"
 HASH = sha256_hex(b"same-bytes")
@@ -97,6 +100,7 @@ def _run(fields: dict, *, matches=None, body=b"same-bytes", mime="video/mp4", pa
         patch("upload_core.processor.http_get_bytes", return_value=(body, mime)),
         patch("upload_core.processor.upload_s3", return_value={"bucket": "b", "region": "us-east-2", "etag": "x"}),
         patch("upload_core.processor.lookup_duplicate_matches", return_value=list(matches or [])),
+        patch("upload_core.processor.resolve_upload_season", return_value=DEFAULT_SEASON),
     ):
         return process_upload_asset(_config(), payload or _payload())
 
@@ -225,11 +229,10 @@ class DifferentBytesSameNameTests(unittest.TestCase):
 
     def test_storage_keys_isolate_by_record_id(self):
         common = dict(
-            fields=BASE_FIELDS,
-            athlete_slug="schmidt-test",
-            season_slug="2026-2027",
-            challenge_slug="shooting-challenge",
-            date_str="2026-07-23",
+            athlete_folder="Schmidt_Test",
+            program_instance_folder="Shooting_Challenge_2026-2027",
+            created_at=datetime(2026, 7, 23, 18, 0, 0, tzinfo=timezone.utc),
+            slot_token="VIDEO",
             filename="a.mp4",
         )
         key1 = build_storage_key(record_id="recAAA", **common)
@@ -268,6 +271,7 @@ class MissingHashTests(unittest.TestCase):
                 "upload_core.processor.lookup_duplicate_matches",
                 side_effect=RuntimeError("Airtable 503"),
             ),
+            patch("upload_core.processor.resolve_upload_season", return_value=DEFAULT_SEASON),
         ):
             result = process_upload_asset(_config(), _payload())
 
@@ -319,12 +323,15 @@ class ExpiredSourceUrlTests(unittest.TestCase):
     def test_expired_attachment_url_writes_error_and_keeps_claim(self):
         fields = dict(BASE_FIELDS)
 
+        def get_impl(token, base_id, record_id):
+            return {"id": record_id, "fields": dict(fields)}
+
         def patch_impl(token, base_id, record_id, patch_fields):
             fields.update(patch_fields)
             return {"id": record_id, "fields": fields}
 
         with (
-            patch("upload_core.processor.get_asset", return_value={"id": RECORD, "fields": dict(fields)}),
+            patch("upload_core.processor.get_asset", side_effect=get_impl),
             patch("upload_core.processor.patch_asset", side_effect=patch_impl),
             patch(
                 "upload_core.processor.http_get_bytes",
@@ -332,6 +339,7 @@ class ExpiredSourceUrlTests(unittest.TestCase):
             ),
             patch("upload_core.processor.upload_s3") as mock_s3,
             patch("upload_core.processor.lookup_duplicate_matches", return_value=[]),
+            patch("upload_core.processor.resolve_upload_season", return_value=DEFAULT_SEASON),
         ):
             status, body = process_with_error_writeback(_config(), _payload())
 
@@ -380,16 +388,20 @@ class PartialUploadTests(unittest.TestCase):
     def test_s3_failure_leaves_error_status_for_manual_recovery(self):
         fields = dict(BASE_FIELDS)
 
+        def get_impl(token, base_id, record_id):
+            return {"id": record_id, "fields": dict(fields)}
+
         def patch_impl(token, base_id, record_id, patch_fields):
             fields.update(patch_fields)
             return {"id": record_id, "fields": fields}
 
         with (
-            patch("upload_core.processor.get_asset", return_value={"id": RECORD, "fields": dict(fields)}),
+            patch("upload_core.processor.get_asset", side_effect=get_impl),
             patch("upload_core.processor.patch_asset", side_effect=patch_impl),
             patch("upload_core.processor.http_get_bytes", return_value=(b"same-bytes", "video/mp4")),
             patch("upload_core.processor.upload_s3", side_effect=RuntimeError("s3 timeout")),
             patch("upload_core.processor.lookup_duplicate_matches", return_value=[]),
+            patch("upload_core.processor.resolve_upload_season", return_value=DEFAULT_SEASON),
         ):
             status, body = process_with_error_writeback(_config(), _payload())
 
@@ -413,11 +425,10 @@ class UrlAndKeyConventionTests(unittest.TestCase):
     def test_storage_key_sanitizes_filename(self):
         key = build_storage_key(
             record_id="recX",
-            fields=BASE_FIELDS,
-            athlete_slug="schmidt-test",
-            season_slug="2026-2027",
-            challenge_slug="shooting-challenge",
-            date_str="2026-07-23",
+            athlete_folder="Schmidt_Test",
+            program_instance_folder="Shooting_Challenge_2026-2027",
+            created_at=datetime(2026, 7, 23, 18, 0, 0, tzinfo=timezone.utc),
+            slot_token="VIDEO",
             filename="../..\\weird name?.mp4",
         )
         self.assertNotIn("..", key.split("/")[-1])

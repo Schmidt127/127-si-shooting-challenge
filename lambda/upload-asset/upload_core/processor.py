@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 
 import boto3
 
-from upload_core.airtable import get_asset, get_enrollment_slug, patch_asset
+from upload_core.airtable import get_asset, get_enrollment, get_program_instance, patch_asset
 from upload_core.config import TABLE, UploadConfig
 from upload_core.duplicate import (
     build_c023_duplicate_report,
@@ -27,15 +27,19 @@ from upload_core.fields import (
     FIELD_UPLOADED_AT,
 )
 from upload_core.routes import resolve_upload_route
+from upload_core.season import SeasonResolutionError, resolve_upload_season
+from upload_core.storage_key import resolve_storage_key
 from upload_core.token import resolve_reviewer_token
-from upload_core.upload_claim import ClaimEvaluation, evaluate_upload_claim
+from upload_core.upload_claim import (
+    STATUS_ERROR,
+    STATUS_PROCESSING,
+    ClaimEvaluation,
+    evaluate_upload_claim,
+)
 from upload_core.util import (
     DENVER,
-    athlete_slug_from_asset,
-    build_storage_key,
     canonical_url,
     first_attachment,
-    first_link,
     guess_mime,
     http_get_bytes,
     select_name,
@@ -198,6 +202,35 @@ def already_uploaded(fields: dict) -> bool:
     return bool(canonical) and verify_hash_hex(file_hash)
 
 
+def id_suffix(value: str, *, keep: int = 6) -> str:
+    text = str(value or "").strip()
+    if len(text) <= keep:
+        return text
+    return text[-keep:]
+
+
+def build_upload_status_diagnostics(
+    *,
+    config: UploadConfig,
+    record_id: str,
+    fields: dict,
+    source: str = "airtable_api",
+) -> dict:
+    """Safe diagnostics when Upload Status disagrees with an expected retry state."""
+    return {
+        "environment": config.environment,
+        "baseIdSuffix": id_suffix(config.airtable_base_id),
+        "table": TABLE,
+        "tableSuffix": id_suffix(TABLE.replace(" ", "")),
+        "submissionAssetRecordId": record_id,
+        "uploadStatusField": FIELD_UPLOAD_STATUS,
+        "uploadStatusNormalized": select_name(fields.get(FIELD_UPLOAD_STATUS)) or "[blank]",
+        "uploadErrorPresent": bool(str(fields.get(FIELD_UPLOAD_ERROR) or "").strip()),
+        "readSource": source,
+        "readAtIso": datetime.now(DENVER_TZ).isoformat(timespec="milliseconds"),
+    }
+
+
 def claim_response_from_evaluation(
     evaluation: ClaimEvaluation,
     *,
@@ -206,11 +239,12 @@ def claim_response_from_evaluation(
     route_key: str,
     automation_number: str,
     started: float,
+    fields: dict | None = None,
 ) -> dict | None:
     if evaluation.should_upload:
         return None
     duration_ms = int((time.time() - started) * 1000)
-    return {
+    body = {
         "ok": evaluation.status_out != "error",
         "statusOut": evaluation.status_out,
         "actionOut": evaluation.action_out,
@@ -222,6 +256,39 @@ def claim_response_from_evaluation(
         "uploadClaimRunId": evaluation.claim_run_id,
         "durationMs": duration_ms,
     }
+    if evaluation.action_out == "error_invalid_upload_status" and fields is not None:
+        body["statusDiagnostics"] = build_upload_status_diagnostics(
+            config=config,
+            record_id=record_id,
+            fields=fields,
+            source="airtable_api",
+        )
+    return body
+
+
+def classify_airtable_write_failure(exc: Exception) -> UploadError | None:
+    message = str(exc)
+    lowered = message.lower()
+    if "unknown field name" in lowered or "UNKNOWN_FIELD_NAME" in message:
+        missing = FIELD_CANONICAL_FILE_URL
+        if FIELD_CANONICAL_FILE_URL.lower() in lowered:
+            missing = FIELD_CANONICAL_FILE_URL
+        return UploadError(
+            f"Airtable writeback field missing or renamed ({missing}): {message[:400]}",
+            status_code=500,
+            action_out="error_missing_airtable_field",
+        )
+    return None
+
+
+def safe_patch_asset(token: str, base_id: str, record_id: str, fields: dict) -> dict:
+    try:
+        return patch_asset(token, base_id, record_id, fields)
+    except Exception as exc:
+        mapped = classify_airtable_write_failure(exc)
+        if mapped is not None:
+            raise mapped from exc
+        raise
 
 
 def apply_upload_claim(
@@ -231,9 +298,39 @@ def apply_upload_claim(
     evaluation: ClaimEvaluation,
 ) -> dict:
     if evaluation.claim_patch:
-        patched = patch_asset(token, base_id, record_id, evaluation.claim_patch)
+        patched = safe_patch_asset(token, base_id, record_id, evaluation.claim_patch)
         return patched.get("fields", evaluation.claim_patch)
     return {}
+
+
+def write_failure_fields_without_clobbering_retry(
+    *,
+    token: str,
+    base_id: str,
+    record_id: str,
+    error_message: str,
+) -> dict:
+    """
+    Write Upload Error, and Upload Status=Error only when safe.
+
+    Never overwrite Pending Link (manual retry arm) or Uploaded (success).
+    A late failure writeback must not beat a concurrent Pending Link reset.
+    """
+    try:
+        latest = get_asset(token, base_id, record_id)
+        latest_fields = latest.get("fields", {}) if isinstance(latest, dict) else {}
+    except Exception:
+        latest_fields = {}
+
+    status = select_name(latest_fields.get(FIELD_UPLOAD_STATUS))
+    patch_fields: dict = {FIELD_UPLOAD_ERROR: error_message[:1000]}
+    if status in ("", STATUS_PROCESSING, STATUS_ERROR):
+        patch_fields[FIELD_UPLOAD_STATUS] = STATUS_ERROR
+    # Pending Link / Uploaded / Ready / other: leave status alone; error text still recorded.
+    try:
+        return safe_patch_asset(token, base_id, record_id, patch_fields)
+    except Exception:
+        return {}
 
 
 def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
@@ -303,45 +400,66 @@ def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
         route_key=route_key,
         automation_number=effective_automation,
         started=started,
+        fields=fields,
     )
     if early is not None:
         if claim_eval.action_out == "error_invalid_upload_status":
-            raise UploadError(claim_eval.message, action_out=claim_eval.action_out)
+            raise UploadError(
+                claim_eval.message,
+                action_out=claim_eval.action_out,
+            )
         return early
 
     validate_pre_upload(fields, record_id, route)
 
-    if claim_eval.claim_patch:
-        claim_fields = apply_upload_claim(token, base_id, record_id, claim_eval)
-        fields = {**fields, **claim_fields}
+    try:
+        season = resolve_upload_season(
+            asset_fields=fields,
+            payload=payload,
+            config=config,
+            get_enrollment=lambda enrollment_id: get_enrollment(token, base_id, enrollment_id),
+            get_program_instance=lambda pi_id: get_program_instance(
+                token, base_id, pi_id
+            ),
+        )
+    except SeasonResolutionError as exc:
+        raise UploadError(exc.message, status_code=400, action_out=exc.action_out) from exc
+
+    if not season.athlete_folder or season.athlete_folder == "Unknown_Athlete":
+        raise UploadError(
+            "Athlete folder could not be derived from Enrollment names.",
+            action_out="error_missing_athlete_name",
+        )
+    if (
+        not season.program_instance_folder
+        or season.program_instance_folder == "Unknown_Program_Instance"
+    ):
+        raise UploadError(
+            "Program Instance folder could not be derived from Program Instance name.",
+            action_out="error_missing_program_instance",
+        )
+
+    storage_key, reused_storage_key = resolve_storage_key(
+        record_id=record_id,
+        fields=fields,
+        athlete_folder=season.athlete_folder,
+        program_instance_folder=season.program_instance_folder,
+    )
+    persist_fields = dict(claim_eval.claim_patch or {})
+    if not reused_storage_key:
+        persist_fields[FIELD_STORAGE_KEY] = storage_key
+    if persist_fields:
+        patched_claim = safe_patch_asset(token, base_id, record_id, persist_fields)
+        fields = {**fields, **patched_claim.get("fields", persist_fields)}
+    fields[FIELD_STORAGE_KEY] = storage_key
 
     attachment = first_attachment(fields)
     assert attachment is not None
-
-    enrollment_id = first_link(fields, "Enrollment - Linked")
-    if config.athlete_slug_override:
-        athlete_slug = config.athlete_slug_override
-    else:
-        athlete_slug = athlete_slug_from_asset(fields)
-        if not athlete_slug and enrollment_id:
-            athlete_slug = get_enrollment_slug(token, base_id, enrollment_id)
-        if not athlete_slug:
-            athlete_slug = "unknown-athlete"
 
     original_name = (
         str(fields.get("Original File Name") or "").strip()
         or str(attachment.get("filename") or "").strip()
         or "upload.bin"
-    )
-    date_str = datetime.now(DENVER_TZ).strftime("%Y-%m-%d")
-    storage_key = build_storage_key(
-        record_id=record_id,
-        fields=fields,
-        athlete_slug=athlete_slug,
-        season_slug=config.season_slug,
-        challenge_slug=config.challenge_slug,
-        date_str=date_str,
-        filename=original_name,
     )
     canonical = canonical_url(config.s3_bucket, config.aws_region, storage_key)
 
@@ -396,7 +514,7 @@ def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
         mime_type=mime_type,
         reviewer_access_token=reviewer_token,
     )
-    patched_upload = patch_asset(token, base_id, record_id, upload_wb)
+    patched_upload = safe_patch_asset(token, base_id, record_id, upload_wb)
 
     readback_checks = verify_uploaded_writeback(
         token=token,
@@ -410,12 +528,12 @@ def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
     review_writeback_applied = False
     review_writeback_error = ""
     try:
-        patch_asset(token, base_id, record_id, review_wb)
+        safe_patch_asset(token, base_id, record_id, review_wb)
         review_writeback_applied = True
     except Exception as exc:
         review_writeback_error = str(exc)[:1000]
         try:
-            patch_asset(
+            safe_patch_asset(
                 token,
                 base_id,
                 record_id,
@@ -488,6 +606,16 @@ def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
         "automationNumber": effective_automation,
         "uploadClaimRunId": claim_eval.claim_run_id,
         "claimActionOut": claim_eval.action_out,
+        "season": {
+            "slug": season.season_slug,
+            "source": season.source,
+            "fallbackUsed": season.fallback_used,
+            "programInstanceId": season.program_instance_id,
+            "enrollmentId": season.enrollment_id,
+            "athleteFolder": season.athlete_folder,
+            "programInstanceFolder": season.program_instance_folder,
+            "storageKeyReused": reused_storage_key,
+        },
         "s3": {
             "bucket": s3_result["bucket"],
             "region": s3_result["region"],
@@ -509,7 +637,12 @@ def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
 
 def _should_write_error_status(action_out: str) -> bool:
     # Do not overwrite a successful Uploaded writeback when only verification failed.
-    return action_out != "error_writeback_verification"
+    # Do not re-stamp Error when rejecting an already-invalid starting status (keeps
+    # Pending Link resets from racing with a redundant Error write).
+    return action_out not in (
+        "error_writeback_verification",
+        "error_invalid_upload_status",
+    )
 
 
 def process_with_error_writeback(config: UploadConfig, payload: dict) -> tuple[int, dict]:
@@ -518,45 +651,75 @@ def process_with_error_writeback(config: UploadConfig, payload: dict) -> tuple[i
         result = process_upload_asset(config, payload)
         return 200, result
     except UploadError as exc:
-        if record_id.startswith("rec") and _should_write_error_status(exc.action_out):
-            try:
-                patch_asset(
-                    config.airtable_token,
-                    config.airtable_base_id,
-                    record_id,
-                    {
-                        FIELD_UPLOAD_STATUS: "Error",
-                        FIELD_UPLOAD_ERROR: exc.message,
-                    },
-                )
-            except Exception:
-                pass
-        return exc.status_code, {
+        body = {
             "ok": False,
             "statusOut": "error",
             "actionOut": exc.action_out,
             "errorOut": exc.message,
+            "environment": config.environment,
             "submissionAssetRecordId": record_id,
         }
-    except Exception as exc:
-        message = str(exc)
-        if record_id.startswith("rec"):
+        if (
+            record_id.startswith("rec")
+            and exc.action_out == "error_invalid_upload_status"
+        ):
             try:
-                patch_asset(
-                    config.airtable_token,
-                    config.airtable_base_id,
-                    record_id,
-                    {
-                        FIELD_UPLOAD_STATUS: "Error",
-                        FIELD_UPLOAD_ERROR: message[:1000],
-                    },
+                latest = get_asset(config.airtable_token, config.airtable_base_id, record_id)
+                latest_fields = latest.get("fields", {}) if isinstance(latest, dict) else {}
+                body["statusDiagnostics"] = build_upload_status_diagnostics(
+                    config=config,
+                    record_id=record_id,
+                    fields=latest_fields,
+                    source="airtable_api",
                 )
             except Exception:
-                pass
+                body["statusDiagnostics"] = {
+                    "environment": config.environment,
+                    "baseIdSuffix": id_suffix(config.airtable_base_id),
+                    "table": TABLE,
+                    "submissionAssetRecordId": record_id,
+                    "uploadStatusField": FIELD_UPLOAD_STATUS,
+                    "readSource": "airtable_api_failed",
+                }
+        if record_id.startswith("rec") and _should_write_error_status(exc.action_out):
+            write_failure_fields_without_clobbering_retry(
+                token=config.airtable_token,
+                base_id=config.airtable_base_id,
+                record_id=record_id,
+                error_message=exc.message,
+            )
+        return exc.status_code, body
+    except Exception as exc:
+        message = str(exc)
+        mapped = classify_airtable_write_failure(exc)
+        if mapped is not None:
+            if record_id.startswith("rec"):
+                write_failure_fields_without_clobbering_retry(
+                    token=config.airtable_token,
+                    base_id=config.airtable_base_id,
+                    record_id=record_id,
+                    error_message=mapped.message,
+                )
+            return mapped.status_code, {
+                "ok": False,
+                "statusOut": "error",
+                "actionOut": mapped.action_out,
+                "errorOut": mapped.message,
+                "environment": config.environment,
+                "submissionAssetRecordId": record_id,
+            }
+        if record_id.startswith("rec"):
+            write_failure_fields_without_clobbering_retry(
+                token=config.airtable_token,
+                base_id=config.airtable_base_id,
+                record_id=record_id,
+                error_message=message,
+            )
         return 500, {
             "ok": False,
             "statusOut": "error",
             "actionOut": "error_internal",
             "errorOut": message,
+            "environment": config.environment,
             "submissionAssetRecordId": record_id,
         }

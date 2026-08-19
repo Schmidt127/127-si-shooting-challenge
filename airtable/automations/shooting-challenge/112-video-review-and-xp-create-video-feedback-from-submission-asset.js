@@ -105,7 +105,8 @@ const FIELD_ASSET_UPLOAD_DESTINATION = "Upload Destination";
 const FIELD_ASSET_ASSET_PURPOSE = "Asset Purpose";
 const FIELD_ASSET_ATTACHMENT = "Airtable Attachment";
 const FIELD_ASSET_ORIGINAL_FILE_NAME = "Original File Name";
-const FIELD_ASSET_GOOGLE_FILE_URL = "Google Drive File URL";
+const FIELD_ASSET_REVIEWER_FILE_URL = "Reviewer File URL";
+const FIELD_ASSET_CANONICAL_FILE_URL = "Canonical File URL";
 const FIELD_ASSET_UPLOADED_AT = "Uploaded At";
 
 /* ---------- Video Feedback fields ---------- */
@@ -251,7 +252,8 @@ const assetFieldsToLoad = [
     FIELD_ASSET_ASSET_PURPOSE,
     FIELD_ASSET_ATTACHMENT,
     FIELD_ASSET_ORIGINAL_FILE_NAME,
-    FIELD_ASSET_GOOGLE_FILE_URL,
+    FIELD_ASSET_REVIEWER_FILE_URL,
+    FIELD_ASSET_CANONICAL_FILE_URL,
     FIELD_ASSET_UPLOADED_AT,
 ].filter(fieldName => fieldExists(assetsTable, fieldName));
 
@@ -305,11 +307,9 @@ const originalFileName = getText(
     FIELD_ASSET_ORIGINAL_FILE_NAME
 );
 
-const googleFileUrl = getText(
-    assetRecord,
-    assetsTable,
-    FIELD_ASSET_GOOGLE_FILE_URL
-);
+const preferredVideoUrl =
+    getText(assetRecord, assetsTable, FIELD_ASSET_REVIEWER_FILE_URL) ||
+    getText(assetRecord, assetsTable, FIELD_ASSET_CANONICAL_FILE_URL);
 
 const uploadedAtRaw = getRaw(
     assetRecord,
@@ -412,7 +412,7 @@ addIfFieldExists(payload, videoTable, FIELD_VIDEO_SUBMISSION, [{ id: submissionI
 addIfFieldExists(payload, videoTable, FIELD_VIDEO_ENROLLMENT, [{ id: enrollmentId }]);
 addIfFieldExists(payload, videoTable, FIELD_VIDEO_KEY, videoFeedbackKey);
 addIfFieldExists(payload, videoTable, FIELD_VIDEO_ACTIVE, true);
-addIfFieldExists(payload, videoTable, FIELD_VIDEO_URL, googleFileUrl);
+addIfFieldExists(payload, videoTable, FIELD_VIDEO_URL, preferredVideoUrl);
 addIfFieldExists(payload, videoTable, FIELD_VIDEO_FILE_NAME, originalFileName);
 
 if (uploadedAtRaw) {

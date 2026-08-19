@@ -4,24 +4,31 @@
 
 | Doc | Purpose |
 |-----|---------|
-| [WELCOME-EMAIL-INTEGRATION.md](./WELCOME-EMAIL-INTEGRATION.md) | Live contract, proven vs pending, audit notes |
+| [WELCOME-EMAIL-INTEGRATION.md](./WELCOME-EMAIL-INTEGRATION.md) | Welcome contract, proven vs pending |
+| [../integrations/email-send-plane.md](../integrations/email-send-plane.md) | **Current** email delivery plane (Resend; Make is not the email sender) |
+| [TEMPLATES-REGISTRY-AUDIT-2026-08-17.md](./TEMPLATES-REGISTRY-AUDIT-2026-08-17.md) | Hub `Templates` catalog vs SC communication types (metadata only) |
+| [seeds/sc-missing-templates-seed.json](./seeds/sc-missing-templates-seed.json) | Safe seed for Homework / Video / Zoom catalog rows |
 | [../deploy-checklists/WELCOME-EMAIL-ACTIVATION-CHECKLIST.md](../deploy-checklists/WELCOME-EMAIL-ACTIVATION-CHECKLIST.md) | Pre-participant-send gates |
 | [../deploy-checklists/WELCOME-EMAIL-CONTROLLED-TEST-RUNBOOK.md](../deploy-checklists/WELCOME-EMAIL-CONTROLLED-TEST-RUNBOOK.md) | Controlled test procedure |
 
 **Naming note:** Completion item **SC-079** (*gate blocking*) uses Automation **042** — it is unrelated to **Automation slot 079** (*shared Email Handoff Queue → Communications Hub dispatcher*).
 
-## Parent-email Hub migration status (GitHub only — not live until paste)
+## Parent-email send plane (current)
 
-| Source automation | Event / template | Dedupe key | GitHub status | Live Airtable |
-|-------------------|------------------|------------|---------------|---------------|
-| **075 / queue** | `WELCOME` | `WELCOME\|…` | Live path (see welcome docs) | Per welcome checklist |
-| **076** | `DAILY_SUBMISSION` | `DAILY_SUBMISSION\|SUBMISSIONS\|{Submission}` | Hub queue create | Paste when approved |
-| **073** v4.1 | `VIDEO_FEEDBACK` | `VIDEO_FEEDBACK\|VIDEO_FEEDBACK\|{VF}` | Hub queue create in GitHub; VF `Video URL or Drive Link` only | Not live until paste |
-| **071** v4.1 | `HOMEWORK_FEEDBACK` | `HOMEWORK_FEEDBACK\|HOMEWORK_COMPLETIONS\|{HC}` | Hub queue create; PHA identity = PI+Week+Homework+Slot (Grade Band metadata only) | Not live until paste |
-| **074** v3.0 | `WEEKLY_ATHLETE_SUMMARY` | `WEEKLY_ATHLETE_SUMMARY\|WEEKLY_ATHLETE_SUMMARY\|{WAS}` | Hub queue create in GitHub | Not live until paste |
-| **117** v2.1 | Event Type `ZOOM_RECORDING_APPROVAL` / Template `ZOOM_RECORDING_APPROVED` | `ZOOM_RECORDING_APPROVAL\|ZOOM_ATTENDANCE\|{ZA}` | Hub queue create in GitHub | Not live until paste |
-| **079** v2.4 | Shared dispatcher | Validates keys above | Accepts WELCOME, DAILY, VIDEO, HOMEWORK, WEEKLY, ZOOM (`ZOOM_RECORDING_APPROVAL` → template `ZOOM_RECORDING_APPROVED`); Hub POST via `fetch` | Not live until paste |
+**Mike 2026-08-19:** Make.com does **not** handle any Shooting Challenge emails. All of those emails go through **Resend** (Communications Hub). See [`../integrations/email-send-plane.md`](../integrations/email-send-plane.md).
 
-**Shared rule:** Source scripts create **Email Handoff Queue** rows only. **Automation 079** is the only SC script that POSTs to Communications Hub ingress. `testMode` defaults **true** on new Hub creates. Do not enable live parent sends until Mike pastes + controlled test.
+Exact Airtable script versions are still unconfirmed. This table is the Hub event map in GitHub, not a live version poll.
 
-**Make.com:** Remains **OFF** for welcome and for GitHub Hub-migrated parent-email paths above. Production Make scenarios stay untouched until an explicit paste/cutover.
+| Source automation | Event / template | Dedupe key | GitHub contract | Live delivery |
+|-------------------|------------------|------------|-----------------|---------------|
+| **075 / queue** | `WELCOME` | `WELCOME\|…` | Hub queue | Resend (Hub) |
+| **076** | `DAILY_SUBMISSION` | `DAILY_SUBMISSION\|SUBMISSIONS\|{Submission}` | Hub queue create | Resend (Hub) |
+| **073** | `VIDEO_FEEDBACK` | `VIDEO_FEEDBACK\|VIDEO_FEEDBACK\|{VF}` | Hub queue create in GitHub | Resend (Hub) |
+| **071** | `HOMEWORK_FEEDBACK` | `HOMEWORK_FEEDBACK\|HOMEWORK_COMPLETIONS\|{HC}` | Hub queue create in GitHub | Resend (Hub) |
+| **074** | `WEEKLY_ATHLETE_SUMMARY` | `WEEKLY_ATHLETE_SUMMARY\|WEEKLY_ATHLETE_SUMMARY\|{WAS}` | Hub queue create in GitHub | Resend (Hub) |
+| **117** | Event Type `ZOOM_RECORDING_APPROVAL` / Template `ZOOM_RECORDING_APPROVED` | `ZOOM_RECORDING_APPROVAL\|ZOOM_ATTENDANCE\|{ZA}` | Hub queue create in GitHub | Resend (Hub) |
+| **079** | Shared dispatcher | Validates keys above | Only SC script that POSTs to Hub ingress | Resend (Hub) |
+
+**Shared rule:** Source scripts create **Email Handoff Queue** rows only. **Automation 079** is the only SC script that POSTs to Communications Hub ingress.
+
+**Make.com:** Not the email sender. Historical Make/Gmail weekly and Zoom 117f packets remain evidence only. Do not re-enable Make Gmail for these paths.

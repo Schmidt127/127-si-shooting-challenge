@@ -22,8 +22,8 @@
 Fillout/API Submission (Enrollment + Week + Homework Name 1 + HW Sub 1 image)
   → 009 creates Submission Asset (Asset Type = Homework Image)
   → 020 finds/creates ONE Homework Completion; Pending Link + Send to Make Trigger
-  → 070a payload routeKey=homework_completion → Make → PROD Lambda
-  → Lambda private S3 writeback (Uploaded + Canonical + Storage Key + SHA-256 + Reviewer Access Token)
+  → 070a payload routeKey=homework_completion + enrollmentId/programInstanceId → Make → PROD Lambda
+  → Lambda resolves season from Program Instance `School Year - Linked`, private S3 writeback (Uploaded + Canonical + Storage Key + SHA-256 + Reviewer Access Token)
   → Coach: Satisfactory? + Review Complete + Coach Feedback
   → 064/065 exactly one XP (HOMEWORK_XP|{hcId})
   → 071 parent-feedback ready (Schmidt-only recipients)

@@ -6,7 +6,6 @@ import mimetypes
 import re
 import urllib.error
 import urllib.request
-from pathlib import Path
 from urllib.parse import quote
 from zoneinfo import ZoneInfo
 
@@ -33,11 +32,23 @@ def select_name(value: object) -> str:
     return str(value or "").strip()
 
 
+def record_link_ids(value: object) -> tuple[str, ...]:
+    if not isinstance(value, list):
+        return ()
+    ids: list[str] = []
+    for item in value:
+        if isinstance(item, str) and item.startswith("rec"):
+            ids.append(item)
+        elif isinstance(item, dict):
+            record_id = str(item.get("id") or "").strip()
+            if record_id.startswith("rec"):
+                ids.append(record_id)
+    return tuple(ids)
+
+
 def first_link(fields: dict, key: str) -> str:
-    val = fields.get(key)
-    if isinstance(val, list) and val and isinstance(val[0], str):
-        return val[0]
-    return ""
+    ids = record_link_ids(fields.get(key))
+    return ids[0] if ids else ""
 
 
 def first_attachment(fields: dict) -> dict | None:
@@ -46,42 +57,6 @@ def first_attachment(fields: dict) -> dict | None:
         return None
     att = val[0]
     return att if isinstance(att, dict) and att.get("url") else None
-
-
-def asset_type_token(fields: dict) -> str:
-    for key in ("Upload Destination", "Asset Type", "Asset Purpose"):
-        raw = select_name(fields.get(key))
-        if not raw:
-            continue
-        low = raw.lower()
-        if "video" in low:
-            return "video-feedback"
-        if "homework" in low:
-            return "homework"
-    return "asset"
-
-
-def safe_filename(name: str) -> str:
-    base = Path(name).name or "upload.bin"
-    base = re.sub(r"[^\w.\-]+", "-", base)
-    base = re.sub(r"-+", "-", base).strip("-")
-    return base or "upload.bin"
-
-
-def build_storage_key(
-    *,
-    record_id: str,
-    fields: dict,
-    athlete_slug: str,
-    season_slug: str,
-    challenge_slug: str,
-    date_str: str,
-    filename: str,
-) -> str:
-    asset_type = asset_type_token(fields)
-    safe_name = safe_filename(filename)
-    file_segment = f"{date_str}-{asset_type}-{record_id}-{safe_name}"
-    return f"shooting-challenge/{season_slug}/{challenge_slug}/{athlete_slug}/{file_segment}"
 
 
 def canonical_url(bucket: str, region: str, storage_key: str) -> str:

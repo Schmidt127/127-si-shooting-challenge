@@ -1,11 +1,11 @@
 # C-025 / 117 numbering note
 
 **Date:** 2026-07-18  
-**Updated:** 2026-08-05 — PROD ownership reconcile (email-only Automation 117)
+**Updated:** 2026-08-19 — Mike paste confirms **117 v2.1** Hub Email Handoff Queue (not Make send; not XP)
 
-**See also:** [117-zoom-recording-approval-email.md](./117-zoom-recording-approval-email.md) · [automation-index Zoom section](../automation-index.md)
+**See also:** [117-zoom-recording-approval-email.md](./117-zoom-recording-approval-email.md) · [automation-index Zoom section](../automation-index.md) · [email-send-plane.md](../integrations/email-send-plane.md)
 
-## Authoritative PROD model (2026-08-05)
+## Authoritative PROD model (overlay 2026-08-19)
 
 Airtable has a strict automation-count limit. **Only one** Automation **117** is used in PROD:
 
@@ -16,20 +16,21 @@ Airtable has a strict automation-count limit. **Only one** Automation **117** is
 | Live Zoom meeting XP | **101** | Yes |
 | Gate Applied? | **042** | Yes |
 | Perfect Week Applied? | **057** | Yes |
-| Recording approval email handoff | **Automation 117** | Yes |
-| Make/Gmail send + dedupe | Make workflow **117f** | No Airtable slot |
+| Recording approval email handoff | **Automation 117 v2.1** — creates Email Handoff Queue | Yes |
+| Queue → Hub ingress | **Automation 079** | Yes |
+| Email delivery | Communications Hub → **Resend** | No |
+| Make/Gmail Zoom approval (**117f**) | **Historical only** | No Airtable slot |
 
-Canonical Airtable script:
+Canonical Airtable script (filename still says Make):
 
-`airtable/automations/shooting-challenge/117-zoom-send-recording-approval-email-to-make.js` (**v1.1** / 2026-07-20)
-
-Make payload identifier: `automationNumber = "117f"` (not a second Airtable automation).
+`airtable/automations/shooting-challenge/117-zoom-send-recording-approval-email-to-make.js` (**v2.1** live paste / Mike 2026-08-19; older **v1.1** Make-era name is historical)
 
 **Hard rules:**
 
 - Do **not** paste the Stage 17 credit orchestrator into PROD Automation 117.
 - Do **not** create Airtable automations 117a / 117b / 117c / 117d / 117e.
 - Do **not** count design-alternative scripts as active PROD automations.
+- Do **not** re-enable Make **117f** for email.
 
 ## A. Stage 17 modular package — **design alternatives only**
 

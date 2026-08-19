@@ -36,10 +36,10 @@ test("syntax check", () => {
   assert.strictEqual(result.status, 0, result.stderr || result.stdout);
 });
 
-test("version is v2.0", () => {
-  assert.match(source, /Version:\s*v2\.0/);
-  assert.match(source, /version:\s*"v2\.0"/);
-  assert.match(source, /Last Updated:\s*2026-08-16/);
+test("version is v2.1", () => {
+  assert.match(source, /Version:\s*v2\.1/);
+  assert.match(source, /version:\s*"v2\.1"/);
+  assert.match(source, /Last Updated:\s*2026-08-17/);
 });
 
 test("Reviewer File URL is preferred over Canonical", () => {
@@ -148,4 +148,4 @@ test("automation never creates Video Feedback or Homework Completions", () => {
   assert.match(source, /Does not create Homework Completions or Video Feedback/);
 });
 
-console.log(`PASS ${passed} Automation 022 v2.0 writeback contracts`);
+console.log(`PASS ${passed} Automation 022 v2.1 writeback contracts`);

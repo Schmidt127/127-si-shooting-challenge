@@ -52,10 +52,9 @@ t("071 preserves attachment-less quiz source", () => {
   assert.match(s071, /Final Reflection Quiz/);
   assert.match(s071, /neither validated Submission Assets nor Final Reflection Quiz source/);
 });
-t("071 homework asset URL may use Reviewer then Google Drive", () => {
+t("071 homework asset URL uses Reviewer File URL only (no Google Drive)", () => {
   assert.match(s071, /Reviewer File URL/);
-  assert.match(s071, /Google Drive View URL/);
-  assert.match(s071, /Google Drive File URL/);
+  assert.doesNotMatch(s071, /Google Drive View URL|Google Drive File URL/);
 });
 t("071 does not write final sent fields", () => {
   assert.match(s071, /Do not write Parent Feedback Sent\?/);
