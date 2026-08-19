@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-08-16** (completion-status reconciliation; PKG-038 Production proof; PKG-006R/036/040 closed)
+Last updated: **2026-08-19** (schema refresh prod/dev snapshots; completion-status reconciliation 2026-08-16)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md) — see §2C for current package status table and do-not-retest ledger.
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
@@ -91,20 +91,21 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 
 | Location | Status |
 |----------|--------|
-| `airtable/schema/current/` | **Stale** — hand-maintained maps; **do not treat as current** until Agent A refreshes |
-| Latest dated snapshot (treat as current until refresh) | **`airtable/schema/snapshots/prod-20260706/`** (prod) and **`dev-20260706/`** (DEV) — export stamp `20260706_161830` / `20260706_161606` |
-| Older loose exports | Root of `snapshots/` includes `20260629_045741` and earlier |
+| `airtable/schema/current/` | **Stale** — hand-maintained maps; **do not treat as current** until Agent A refreshes table/field maps |
+| Latest dated snapshot (**current**) | **`airtable/schema/snapshots/prod-20260819/`** (prod) and **`dev-20260819/`** (DEV) — export stamp `20260819_184903` / `20260819_185013` |
+| Refresh summary | [deploy-checklists/SCHEMA-REFRESH-2026-08-19.md](./deploy-checklists/SCHEMA-REFRESH-2026-08-19.md) |
+| Older snapshots | `prod-20260706/`, foundation-reset exports, loose root `20260629_045741` |
 
-**Agent A** owns refreshing `airtable/schema/**`. Agent B documented staleness only. Lead integration did **not** refresh schema snapshots or claim live XP Reward Rules verification (offline fixture verifier only).
+**Agent A** owns refreshing `airtable/schema/**` hand maps. This refresh committed read-only Metadata API exports only.
 
-### Schema snapshot counts (2026-07-06 export notes)
+### Schema snapshot counts (2026-08-19 export)
 
 | Base | Folder | Tables | Views |
 |------|--------|--------|-------|
-| **Production** | `airtable/schema/snapshots/prod-20260706/` | **29** | **118** |
-| **Development** | `airtable/schema/snapshots/dev-20260706/` | **30** | **120** |
+| **Production** | `airtable/schema/snapshots/prod-20260819/` | **32** | **126** |
+| **Development** | `airtable/schema/snapshots/dev-20260819/` | **32** | **129** |
 
-DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md](../airtable/schema/snapshots/README.md).
+Notable PROD changes vs 2026-07-06: `Homework Library`, `Program Homework Assignments`, `Email Handoff Queue`, `Testing Scenarios`, `Zoom Attendance`; removed `FBC Curriculum - SYNC` and standalone `Tutorials`; `Program Instance - Synced` renamed to **`Program Instance - Sync`**. DEV still uses legacy homework tables. See [snapshots/README.md](../airtable/schema/snapshots/README.md).
 
 ---
 

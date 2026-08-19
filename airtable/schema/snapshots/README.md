@@ -4,14 +4,14 @@ Dated exports from `tools/airtable/export_airtable_schema.py`.
 
 | Base | ID | Latest snapshot |
 |------|-----|-----------------|
-| **Production** | `appn84sqPw03zEbTT` | **`prod-foundation-reset-20260723-post-ts/`** — `20260723_152229` (includes Testing Scenarios). Pre-create export: `prod-foundation-reset-20260723/`. Older: `prod-20260706/` |
-| **Development** | `appTetnuCZlCZdTCT` | `dev-20260706/` — `20260706_161606` — `manifest_appTetnuCZlCZdTCT_latest.json` |
+| **Production** | `appn84sqPw03zEbTT` | **`prod-20260819/`** — `20260819_184903` (32 tables, 126 views). Summary: [`docs/deploy-checklists/SCHEMA-REFRESH-2026-08-19.md`](../../../docs/deploy-checklists/SCHEMA-REFRESH-2026-08-19.md) |
+| **Development** | `appTetnuCZlCZdTCT` | **`dev-20260819/`** — `20260819_185013` (32 tables, 129 views) |
 
-Prior snapshots: `20260629_045741` (prod), `dev-20260705/` (DEV). Foundation Reset index: [`docs/foundation-reset/README.md`](../../../docs/foundation-reset/README.md).
+Older snapshots: `prod-20260706/`, `dev-20260706/`, `prod-foundation-reset-20260723-post-ts/`, loose root exports (`20260629_045741`, etc.). Foundation Reset index: [`docs/foundation-reset/README.md`](../../../docs/foundation-reset/README.md).
 
 ## Export commands
 
-```powershell
+```bash
 cd tools/airtable
 # Production (read-only API export — does not change the live base)
 python export_airtable_schema.py -v --base-id appn84sqPw03zEbTT --out-dir ../../airtable/schema/snapshots/prod-YYYYMMDD
@@ -21,18 +21,23 @@ python export_airtable_schema.py -v --base-id appTetnuCZlCZdTCT --out-dir ../../
 
 ## What is exported
 
-| Included | Production (2026-07-06) | DEV (2026-07-06) |
+| Included | Production (2026-08-19) | DEV (2026-08-19) |
 |----------|-------------------------|------------------|
-| Tables, fields, types, formulas, links | **29 tables** | **30 tables** (+ **Testing Scenarios**) |
+| Tables, fields, types, formulas, links | **32 tables** | **32 tables** |
 | `schema_doc_*.md`, ERD, dependencies, health report | Yes | Yes |
-| View metadata | **118 views** | **120 views** |
+| View metadata | **126 views** | **129 views** |
+| JSON artifacts | raw, enhanced, field index, manifests | same |
 
-## DEV vs Production schema delta (2026-07-06)
+## PROD vs DEV schema delta (2026-08-19)
 
-| Item | DEV only |
-|------|----------|
-| **Testing Scenarios** table | C-020 Engineering Test Framework operator table |
-| Inverse links on pipeline tables | Submissions, Enrollments, Homework Completions, Final Reflection Quiz Submissions → Testing Scenarios |
+| Item | PROD | DEV |
+|------|------|-----|
+| Homework content | `Homework Library` + `Program Homework Assignments` | Legacy `FBC Curriculum - SYNC` |
+| Program Instance table | `Program Instance - Sync` | `Program Instance - Synced` |
+| Tutorial content | `Tutorials & Assets` (+ app reads legacy `Tutorials` name where still present) | `Tutorials` + `Tutorials & Assets` |
+| Email handoff | `Email Handoff Queue` | absent |
+| Brackets sync | absent | `SYNC - Brackets` |
+| C-020 | `Testing Scenarios` | `Testing Scenarios` |
 
 ## Views policy
 

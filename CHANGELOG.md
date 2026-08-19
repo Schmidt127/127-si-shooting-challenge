@@ -6,6 +6,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Airtable
+
+#### Changed
+- **Schema refresh (2026-08-19)** — Read-only Metadata API exports for PROD (`prod-20260819/`, 32 tables, 126 views) and DEV (`dev-20260819/`, 32 tables, 129 views). Summary: `docs/deploy-checklists/SCHEMA-REFRESH-2026-08-19.md`. Updated `PROJECT_STATE.md`, `airtable/schema/snapshots/README.md`, `airtable/schema/current/schema-notes.md`, and web data-map/view docs for homework table split (`Homework Library` + `Program Homework Assignments`).
+
 ### Web
 
 #### Changed

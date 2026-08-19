@@ -8,7 +8,7 @@ Maps Airtable tables and fields to web app features.
 |-----|---------|
 | This file | Table → feature map, env vars |
 | [airtable-views.md](./airtable-views.md) | View names and documented fallback policy (matches `queries.ts`) |
-| [../../airtable/schema/snapshots/](../../airtable/schema/snapshots/) | Dated schema exports — latest: `20260628_130208` |
+| [../../airtable/schema/snapshots/](../../airtable/schema/snapshots/) | Dated schema exports — latest: **`prod-20260819/`** (`20260819_184903`) |
 | [../../airtable/schema/current/](../../airtable/schema/current/) | Hand-maintained change notes |
 
 ## Primary tables
@@ -20,8 +20,9 @@ Maps Airtable tables and fields to web app features.
 | **XP Events** | Activity feed, XP breakdown | Read-only; respect Active? |
 | **Levels** | Levels page, profile badge | Use Sort Order for display |
 | **Achievements** | Achievements page, profile badges | Filter `Active?` + `Visible?` |
-| **FBC Curriculum - SYNC** | Homework catalog + detail | Filter `Published?` |
-| **Tutorials** | Tutorials, shoutouts, articles | Split by `Tutorial Type` in app |
+| **Homework Library** | Homework lesson content (catalog fields) | Reusable content; week/season schedule via PHA |
+| **Program Homework Assignments** | Scheduled homework for current season | Links Homework Library + Week + Program Instance |
+| **Tutorials** / **Tutorials & Assets** | Tutorials, shoutouts, articles | App reads `Tutorials` where present; assets in `Tutorials & Assets` |
 | **Zoom Meetings** | Zoom meetings catalog + detail | Exclude cancelled |
 | **Homework Completions** | Homework progress widget | Reviewed / upload status only |
 | **Video Feedback** | Video progress widget | Awarded rows only for public |
@@ -40,7 +41,7 @@ Softr-era fields to honor until renamed:
 | Field | Table | Use |
 |-------|-------|-----|
 | `Active?` + `Visible?` | Achievements | Achievements page (`Web - Achievements` or formula fallback) |
-| `Published?` | FBC Curriculum - SYNC | Homework catalog |
+| `Published?` | Homework Library | Homework catalog (via PHA schedule) |
 | `OK to Publish on Softr` | Tutorials | Tutorials / shoutouts / articles |
 | `Active?` | Enrollments, Levels | Leaderboard and levels ladder |
 | `Level Sort Order - For Softr` | Enrollments (lookup) | Leaderboard / level ordering |
@@ -55,7 +56,7 @@ These names must match `web/lib/airtable/queries.ts`. Full fallback formulas: [a
 | View name | Table | Used for | Fallback if view missing |
 |-----------|-------|----------|--------------------------|
 | `Web - Leaderboard` | Enrollments | Leaderboard, public display | Required — no table-wide fallback |
-| `Web - Homework Catalog` | FBC Curriculum - SYNC | Homework list | `{Published?} = 1` |
+| `Web - Homework Catalog` | Homework Library | Homework list (legacy view name; app uses PHA + Library) | `{Published?} = 1` on Library |
 | `Web - Levels` | Levels | Levels ladder | `{Active?} = 1` |
 | `Web - Tutorials Catalog` | Tutorials | Tutorials, shoutouts, articles | Softr publish + Shooting Challenge program filter |
 | `Web - Zoom Meetings` | Zoom Meetings | Zoom list | `NOT({Meeting Status} = 'Cancelled')` |
