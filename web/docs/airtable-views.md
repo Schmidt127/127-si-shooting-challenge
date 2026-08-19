@@ -16,8 +16,8 @@ Instance scope from Airtable's public linked-record response.
 | Feature | Table | View | Fallback filter | Revalidate (s) |
 |---------|-------|------|-----------------|----------------|
 | Leaderboard | Enrollments | `Web - Leaderboard` (required) | None — fail closed | 120 |
-| Homework catalog | FBC Curriculum - SYNC | `Web - Homework Catalog` | `{Published?} = 1` | 300 |
-| Homework detail | FBC Curriculum - SYNC | — | `AND({Published?}, RECORD_ID()='…')` | 300 |
+| Homework catalog | Homework Library + Program Homework Assignments | *(PHA formula filter)* | Active PHA for Registering PI | 300 |
+| Homework detail | Homework Library | — | `RECORD_ID()='…'` on Library | 300 |
 | Weeks (homework/zoom) | Weeks | *(no view — all weeks)* | — | 300 |
 | Levels | Levels | `Web - Levels` | `{Active?} = 1` | 300 |
 | Tutorials / shoutouts / articles | Tutorials & Assets | `Web - Tutorials Catalog` | See publish filter below | 300 |
@@ -60,20 +60,23 @@ the PKG-040 read-only audit; do not add a broad table fallback.
 
 ## Homework
 
-**Functions:** `fetchHomeworkCatalog()`, `fetchHomeworkAssignment(id)`
+**Functions:** `fetchHomeworkCatalog()`, `fetchHomeworkAssignment(id)` — see `web/lib/airtable/homework-queries.ts`
 
 | Item | Catalog | Detail |
 |------|---------|--------|
-| Table | `FBC Curriculum - SYNC` | same |
-| View | `Web - Homework Catalog` | formula only |
-| Filter | via view | `AND({Published?}, RECORD_ID()='rec…')` |
-| Sort | view or `Order` asc | — |
+| Tables | `Program Homework Assignments` (schedule) + `Homework Library` (content) | `Homework Library` |
+| View | Active PHA filter by Registering Program Instance | formula / record id |
+| Sort | `Order` asc on Library | — |
 
-**Catalog fields:** Assignment names, descriptions, week link, order, book, topic, cover images, `Published?`
+**Catalog fields (Library):** Assignment names, descriptions, order, book, topic, cover images, `Published?`
 
-**Detail-only fields:** Full description, steps, rationale, age band, docs, URLs, grade band
+**PHA fields:** Week link, Grade Band, Program Instance, Active?
 
-**Weeks table:** `Week Name`, `Start Date` — joined in app for grouping
+**Detail-only fields (Library):** Full description, steps, rationale, age band, docs, URLs, grade band
+
+**Weeks table:** `Week Name`, `Start Date` — joined from PHA for grouping
+
+*Historical:* pre-2026-08 homework used `FBC Curriculum - SYNC` and `Web - Homework Catalog`. PROD schema export `prod-20260819` confirms that table is removed.
 
 ---
 

@@ -4,6 +4,8 @@
 **Branch:** `master`  
 **Purpose:** This is the one operator-facing location for the current Shooting Challenge PROD paste/cutover work. **Do not hunt through old PRs.** All links below point to the current files on `master`.
 
+**Progress tracker:** [`docs/deploy-checklists/HOMEWORK-CUTOVER-OPERATOR-CHECKLIST-2026-08-19.md`](./docs/deploy-checklists/HOMEWORK-CUTOVER-OPERATOR-CHECKLIST-2026-08-19.md)
+
 ## Current homework cutover
 
 | Order | Automation | Current repo version | PROD status | Action |
@@ -12,7 +14,7 @@
 | 2 | 033 — Assign Homework to WAS + reconcile deferred completions | **v4.2** | **Needs paste over v4.1** | Paste current master file |
 | 3 | 067 — Link/Create Completion from Reflection Quiz | **v3.1** | Mike pasted | Keep current |
 | — | 068 — Reconcile Deferred Weekly Summary Links | **RETIRED** | Do not create | Logic absorbed into 033 v4.2 |
-| — | 020 — Link/Create Homework Completion | **v3.3.0** | Existing | Do not downgrade |
+| — | 020 — Link/Create Homework Completion | **v3.6** | **v3.6 live** (Mike 2026-08-19) | Do not downgrade |
 | — | 009 — Create Submission Assets | **v1.1** | Existing | Do not downgrade |
 
 ### Copy/paste files
@@ -26,7 +28,7 @@
 - **067 v3.1**  
   [`airtable/automations/shooting-challenge/067-homework-link-or-create-completion-from-reflection-quiz.js`](./airtable/automations/shooting-challenge/067-homework-link-or-create-completion-from-reflection-quiz.js)
 
-- **020 v3.3.0 — unchanged / strict PHA**  
+- **020 v3.6 — live / strict PHA**  
   [`airtable/automations/shooting-challenge/020-homework-link-or-create-homework-completion.js`](./airtable/automations/shooting-challenge/020-homework-link-or-create-homework-completion.js)
 
 - **009 v1.1 — unchanged**  
@@ -86,8 +88,11 @@ Scheduling-only fields such as:
 - Program Instance
 - school-year scheduling fields
 - library Homework Slot
-- Lesson Key
+- ~~Lesson Key~~ **deleted** (Mike 2026-08-19)
 - PWTEST/test-only scheduling helpers
+
+**Submissions (done):**
+- ~~`Week Lkp`~~ **deleted** (Mike 2026-08-19) — use **`Submissions.Week`** (005)
 
 ## Fresh JIT PHA proof rows
 
@@ -111,7 +116,7 @@ Create only after the corrected scripts/schema are installed.
 
 ## Immediate operator sequence
 
-1. Open this file on `master`.
+1. Open this file on `master` and the [operator checklist](./docs/deploy-checklists/HOMEWORK-CUTOVER-OPERATOR-CHECKLIST-2026-08-19.md).
 2. Paste **033 v4.2** from the direct link above over current Airtable 033 v4.1.
 3. Delete Airtable Automation **075** to recover one automation slot.
 4. Rewrite `Assignment Full Name - Display`.

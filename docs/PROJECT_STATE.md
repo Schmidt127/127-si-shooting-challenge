@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-08-19** (022 **v2.1**, 020 **v3.6**, 070b **v4.6**, 117 **v2.1**, 066 **v3.8**, 010 **v10.10**; email = Resend; Perfect Week still open)
+Last updated: **2026-08-19** (schema refresh PROD snapshot; 022 **v2.1**, 020 **v3.6**, 070b **v4.6**, 117 **v2.1**, 066 **v3.8**, 010 **v10.10**; email = Resend; Perfect Week still open)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
@@ -68,6 +68,8 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 | **Phase 2 — Platform Modernization** | Wave 2A planning + Phase 2B docs complete — implementation staged via backlog |
 | **V2-015 — Production base** | **Ready** — production-only pipeline permanent |
 
+**Airtable overlay (Mike 2026-08-19):** Shooting Challenge has one live base — Production `appn84sqPw03zEbTT`. Validate offline first and use controlled Production actions only with Mike's authorization.
+
 ---
 
 ## Repos and public URLs
@@ -100,19 +102,20 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 
 | Location | Status |
 |----------|--------|
-| `airtable/schema/current/` | **Stale** — hand-maintained maps; **do not treat as current** until Agent A refreshes |
-| Latest dated snapshot (treat as current until refresh) | **`airtable/schema/snapshots/prod-20260706/`** — export stamp `20260706_161830` |
-| Older loose exports | Root of `snapshots/` includes `20260629_045741` and earlier |
+| `airtable/schema/current/` | **Stale** — hand-maintained maps; **do not treat as current** until Agent A refreshes table/field maps |
+| Latest dated snapshot (**current**) | **`airtable/schema/snapshots/prod-20260819/`** — export stamp `20260819_184903` |
+| Refresh summary | [deploy-checklists/SCHEMA-REFRESH-2026-08-19.md](./deploy-checklists/SCHEMA-REFRESH-2026-08-19.md) |
+| Older snapshots | `prod-20260706/`, foundation-reset exports, loose root `20260629_045741` |
 
-**Agent A** owns refreshing `airtable/schema/**`. Agent B documented staleness only. Lead integration did **not** refresh schema snapshots or claim live XP Reward Rules verification (offline fixture verifier only).
+**Agent A** owns refreshing `airtable/schema/**` hand maps. This refresh committed a read-only Production Metadata API export only.
 
-### Schema snapshot counts (2026-07-06 export notes)
+### Schema snapshot counts (2026-08-19 export — Production only)
 
 | Base | Folder | Tables | Views |
 |------|--------|--------|-------|
-| **Production** | `airtable/schema/snapshots/prod-20260706/` | **29** | **118** |
+| **Production** | `airtable/schema/snapshots/prod-20260819/` | **32** | **126** |
 
-See [snapshots/README.md](../airtable/schema/snapshots/README.md).
+Notable PROD changes vs 2026-07-06: `Homework Library`, `Program Homework Assignments`, `Email Handoff Queue`, `Testing Scenarios`, `Zoom Attendance`; removed `FBC Curriculum - SYNC` and standalone `Tutorials`; `Program Instance - Synced` renamed to **`Program Instance - Sync`**. See [snapshots/README.md](../airtable/schema/snapshots/README.md).
 
 ---
 

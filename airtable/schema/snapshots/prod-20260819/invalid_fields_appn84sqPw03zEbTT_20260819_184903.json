@@ -1,0 +1,47 @@
+{
+  "exportMeta": {
+    "scriptVersion": "2.4.0",
+    "generatedAt": "2026-08-19T18:50:07",
+    "baseId": "appn84sqPw03zEbTT",
+    "baseName": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026",
+    "invalidFieldCount": 2
+  },
+  "invalidFields": [
+    {
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "tableName": "Submissions",
+      "fieldId": "fldmopSNL9aZf6K1A",
+      "fieldName": "Week Lkp",
+      "fieldType": "multipleLookupValues",
+      "optionsSummary": {
+        "isValid": false,
+        "recordLinkFieldId": "fldBuHIpIwxTy60js",
+        "recordLinkFieldName": "Homework Name 1"
+      }
+    },
+    {
+      "tableId": "tblUuxwYlX4EQ9MKE",
+      "tableName": "Homework Library",
+      "fieldId": "fldimsdazEpj0Z8Av",
+      "fieldName": "Lesson Key",
+      "fieldType": "formula",
+      "optionsSummary": {
+        "isValid": false,
+        "referencedFieldIds": [
+          "fld3w0F60Pijeo63p"
+        ],
+        "referencedFieldNames": [
+          "Assignment Title"
+        ],
+        "formula": "ARRAYJOIN({column_value_flddMQ8OZdvSsvak8}) & \"|\" & ARRAYJOIN({column_value_fld69DQxhTVlmGoWh}) & \"|\" & {fld3w0F60Pijeo63p}",
+        "fieldReferencesById": [
+          "fld3w0F60Pijeo63p"
+        ],
+        "fieldReferencesByName": [
+          "Assignment Title"
+        ],
+        "dependencySource": "metadata"
+      }
+    }
+  ]
+}

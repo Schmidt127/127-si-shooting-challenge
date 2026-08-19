@@ -1,18 +1,17 @@
 # Schema snapshots
 
-Dated exports from `tools/airtable/export_airtable_schema.py`.
+Dated read-only exports from `tools/airtable/export_airtable_schema.py`.
 
 | Base | ID | Latest snapshot |
-|------|-----|-----------------|
-| **Production** | `appn84sqPw03zEbTT` | **`prod-foundation-reset-20260723-post-ts/`** — `20260723_152229` (includes Testing Scenarios). Pre-create export: `prod-foundation-reset-20260723/`. Older: `prod-20260706/` |
+|------|----|-----------------|
+| **Production** | `appn84sqPw03zEbTT` | **`prod-20260819/`** — `20260819_184903` (32 tables, 126 views). Summary: [`docs/deploy-checklists/SCHEMA-REFRESH-2026-08-19.md`](../../../docs/deploy-checklists/SCHEMA-REFRESH-2026-08-19.md) |
 
-Prior snapshots: `20260629_045741` (prod), `prod-20260705/` (Production). Foundation Reset index: [`docs/foundation-reset/README.md`](../../../docs/foundation-reset/README.md).
+Older production snapshots include `prod-20260706/`, `prod-foundation-reset-20260723-post-ts/`, and loose root exports.
 
-## Export commands
+## Export command
 
-```powershell
+```bash
 cd tools/airtable
-# Production (read-only API export — does not change the live base)
 python export_airtable_schema.py -v --base-id appn84sqPw03zEbTT --out-dir ../../airtable/schema/snapshots/prod-YYYYMMDD
 ```
 
@@ -20,9 +19,10 @@ python export_airtable_schema.py -v --base-id appn84sqPw03zEbTT --out-dir ../../
 
 | Included | Production |
 |----------|------------|
-| Tables, fields, types, formulas, links | Yes |
+| Tables, fields, types, formulas, links | **32 tables** |
 | `schema_doc_*.md`, ERD, dependencies, health report | Yes |
-| View metadata | Yes |
+| View metadata | **126 views** |
+| JSON artifacts | Raw schema, enhanced schema, field index, and manifest |
 
 ## Views policy
 
@@ -31,4 +31,4 @@ python export_airtable_schema.py -v --base-id appn84sqPw03zEbTT --out-dir ../../
 
 ## Refresh
 
-Commit new snapshot folders + manifests. Note in `CHANGELOG.md` under `### Airtable` when production schema is refreshed.
+Commit new production snapshot folders and manifests. Record refreshes in `CHANGELOG.md` under `### Airtable`.
