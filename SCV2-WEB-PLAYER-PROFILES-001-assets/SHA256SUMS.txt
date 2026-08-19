@@ -1,0 +1,4 @@
+b24a35fa73c16e6c4dc5e1657a8099ad9b408e823c16bed48987f8491fe0ef6c  /workspace/scratch/52bb21e2db84/SCV2-WEB-PLAYER-PROFILES-001-assets/web/public/images/shooting-challenge-achievements-profile.webp
+43a698c06752649fb33cf9b3062d9c312e669a70fee32069dc5573307c6c7165  /workspace/scratch/52bb21e2db84/SCV2-WEB-PLAYER-PROFILES-001-assets/web/public/images/shooting-challenge-homework.webp
+acf3f4bbc07e2f579a0c46489a57ba2c2fed0595bc29b9e4aeb3614e801f14a6  /workspace/scratch/52bb21e2db84/SCV2-WEB-PLAYER-PROFILES-001-assets/web/public/images/shooting-challenge-leaderboard.webp
+f27ee72c99c34a955acc603eb4fc0af65029785999382ae0132e52d598fe3d62  /workspace/scratch/52bb21e2db84/SCV2-WEB-PLAYER-PROFILES-001-assets/web/public/images/shooting-challenge-levels.webp

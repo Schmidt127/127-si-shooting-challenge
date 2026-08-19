@@ -31,6 +31,7 @@ Living pointer for the **127 SI Shooting Challenge** Airtable base.
 
 - [table-map.md](./table-map.md)
 - [field-map.md](./field-map.md)
+- [C-028 Award Recipients Tremendous fields](./C-028-award-recipients-tremendous-fields.md)
 - [automation-trigger-map.md](./automation-trigger-map.md)
 - [docs/foundation-reset/PROD-SCHEMA-EXPORT-2026-07-23.md](../../../docs/foundation-reset/PROD-SCHEMA-EXPORT-2026-07-23.md)
 - [docs/next-wave/data-model/README.md](../../../docs/next-wave/data-model/README.md)

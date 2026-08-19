@@ -54,12 +54,42 @@ function normalizeUrl(value) {
   try {
     const url = new URL(raw);
     if (url.protocol !== "http:" && url.protocol !== "https:") return "";
+    const host = url.hostname.toLowerCase().replace(/^www\./, "");
+
+    if (host === "youtu.be") {
+      const id = url.pathname.split("/").filter(Boolean)[0] || "";
+      return id ? `youtube:${id}` : "";
+    }
+    if (host === "youtube.com" || host === "m.youtube.com" || host === "youtube-nocookie.com") {
+      let id = url.searchParams.get("v") || "";
+      if (!id && url.pathname.startsWith("/embed/")) id = url.pathname.split("/")[2] || "";
+      if (!id && url.pathname.startsWith("/shorts/")) id = url.pathname.split("/")[2] || "";
+      return id ? `youtube:${id}` : "";
+    }
+    if (host === "vimeo.com" || host.endsWith(".vimeo.com")) {
+      const parts = url.pathname.split("/").filter(Boolean);
+      const id = parts.find((p) => /^\d+$/.test(p)) || "";
+      return id ? `vimeo:${id}` : "";
+    }
+    if (host === "drive.google.com") {
+      const fileMatch = url.pathname.match(/\/file\/d\/([^/]+)/);
+      if (fileMatch) return `drive:${fileMatch[1]}`;
+      const openId = url.searchParams.get("id");
+      if (openId) return `drive:${openId}`;
+    }
+    if (host === "docs.google.com") {
+      const docMatch = url.pathname.match(/\/(document|spreadsheets|presentation)\/d\/([^/]+)/);
+      if (docMatch) return `gdoc:${docMatch[1]}:${docMatch[2]}`;
+    }
+    if (host === "indd.adobe.com") {
+      const id = url.pathname.replace(/\/+$/, "").split("/").pop() || "";
+      return id ? `indd:${id}` : "";
+    }
+
     url.hash = "";
-    // Drop common tracking params; keep path/query identity otherwise.
-    ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "fbclid", "gclid"].forEach(
+    ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "fbclid", "gclid", "usp"].forEach(
       (key) => url.searchParams.delete(key),
     );
-    let host = url.hostname.toLowerCase().replace(/^www\./, "");
     let pathname = url.pathname.replace(/\/+$/, "") || "";
     const query = url.searchParams.toString();
     return `${url.protocol}//${host}${pathname}${query ? `?${query}` : ""}`;

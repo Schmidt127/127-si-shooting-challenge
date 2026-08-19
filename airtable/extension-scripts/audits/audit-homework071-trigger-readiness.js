@@ -5,11 +5,11 @@ Purpose:
   Read-only check for why automation 071 may not fire on Homework Completions.
   Reports script-level send gates vs common Airtable trigger blockers (upload fields).
   Also reports per-linked Submission Asset parent-facing URL resolution
-  (Reviewer File URL → Google Drive View URL → Google Drive File URL).
+  (Reviewer File URL only — Google Drive fallbacks retired).
 
 Default: read-only (no writes)
-Version: v1.1
-Last Updated: 2026-08-05
+Version: v1.2
+Last Updated: 2026-08-17
 */
 
 // @ts-nocheck
@@ -18,8 +18,8 @@ const SAMPLE_LIMIT = 30;
 
 const CONFIG = {
   scriptName: "audit-homework071-trigger-readiness",
-  version: "v1.1",
-  expectedAutomationVersion: "v3.5",
+  version: "v1.2",
+  expectedAutomationVersion: "v4.1",
 
   tables: {
     homework: "Homework Completions",
@@ -51,8 +51,6 @@ const CONFIG = {
     originalFileName: "Original File Name",
     assetLabel: "Asset Label",
     reviewerFileUrl: "Reviewer File URL",
-    googleDriveViewUrl: "Google Drive View URL",
-    googleDriveFileUrl: "Google Drive File URL",
   },
 
   values: {
@@ -104,8 +102,6 @@ function getNumberish(record, table, fieldName) {
 
 function resolveParentFacingAssetUrl(fields) {
   if (fields.reviewerFileUrl) return { source: "reviewerFileUrl", present: true };
-  if (fields.googleDriveViewUrl) return { source: "googleDriveViewUrl", present: true };
-  if (fields.googleDriveFileUrl) return { source: "googleDriveFileUrl", present: true };
   return { source: "(none)", present: false };
 }
 
@@ -184,25 +180,15 @@ function diagnoseAssetLinks(assetRecord, assetsTable) {
   const reviewerPresent = Boolean(
     getText(assetRecord, assetsTable, CONFIG.asset.reviewerFileUrl)
   );
-  const viewPresent = Boolean(
-    getText(assetRecord, assetsTable, CONFIG.asset.googleDriveViewUrl)
-  );
-  const filePresent = Boolean(
-    getText(assetRecord, assetsTable, CONFIG.asset.googleDriveFileUrl)
-  );
   const originalFileName = getText(assetRecord, assetsTable, CONFIG.asset.originalFileName);
   const assetLabel = getText(assetRecord, assetsTable, CONFIG.asset.assetLabel);
   const resolved = resolveParentFacingAssetUrl({
     reviewerFileUrl: reviewerPresent ? "present" : "",
-    googleDriveViewUrl: viewPresent ? "present" : "",
-    googleDriveFileUrl: filePresent ? "present" : "",
   });
 
   return {
     assetRecordId: assetRecord.id,
     reviewerFileUrlPresent: reviewerPresent,
-    googleDriveViewUrlPresent: viewPresent,
-    googleDriveFileUrlPresent: filePresent,
     resolvedUrlSource: resolved.source,
     resolvedDisplayLabel: resolveAssetDisplayLabel({ originalFileName, assetLabel }),
   };
@@ -272,8 +258,6 @@ async function main() {
       // Presence/source only — do not log full private/tokenized URLs.
       console.log(`    assetRecordId: ${diag.assetRecordId}`);
       console.log(`      Reviewer File URL present?: ${diag.reviewerFileUrlPresent}`);
-      console.log(`      Google Drive View URL present?: ${diag.googleDriveViewUrlPresent}`);
-      console.log(`      Google Drive File URL present?: ${diag.googleDriveFileUrlPresent}`);
       console.log(`      resolved URL source: ${diag.resolvedUrlSource}`);
       console.log(`      resolved display label: ${diag.resolvedDisplayLabel}`);
     }
@@ -287,7 +271,7 @@ async function main() {
   console.log(`If 071 trigger includes Upload Ready / Writeback / Submission Assets,`);
   console.log(`quiz rows show blockers above and the automation will NOT run on checkbox toggle.`);
   console.log(`Fix: edit 071 trigger in Airtable — use only conditions in automation-trigger-map.md.`);
-  console.log(`Parent email asset URL priority: Reviewer File URL → Google Drive View URL → Google Drive File URL.`);
+  console.log(`Parent email asset URL: Reviewer File URL only (no Google Drive fallback).`);
   console.log(`Then uncheck + recheck Parent Feedback Ready? on each row.`);
 }
 
