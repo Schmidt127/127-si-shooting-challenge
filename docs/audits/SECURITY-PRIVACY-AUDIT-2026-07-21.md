@@ -41,7 +41,7 @@ and `.gitignore` improvements are staged in the audit commit.
   Access Token, no real Make webhook URL, no real Bearer token, and no AWS/Google/
   Slack/GitHub/OpenAI keys or private keys were detected. All such references are
   placeholders (e.g. `patXXXX…`, `REPLACE_WITH_AIRTABLE_TOKEN`,
-  `REPLACE_WITH_DEV_CUSTOM_WEBHOOK`) or validation-only hostnames.
+  `REPLACE_WITH_PROD_CUSTOM_WEBHOOK`) or validation-only hostnames.
 - **The primary risk is privacy, not secrets.** Multiple Git-tracked files contain
   **PII of minors** (athlete full names, schools, towns, grades, gender) and, in one
   file, **parent email addresses**. Binary media packets containing athlete photos
@@ -169,7 +169,7 @@ review/relocate the tracked minor-PII files (see Critical/High findings).
 
 ### M3 — Temp Production export left in repo and NOT ignored
 
-- **File:** `docs/audits/_tmp_missing_sa_fields_dev.json`
+- **File:** `docs/audits/_tmp_missing_sa_fields_prod.json`
 - **Type of exposure:** Temporary Production data dump (schema/field gap output). Untracked
   but not ignored → accidental-commit risk.
 - **Git-tracked:** No (untracked); **not ignored**
@@ -238,11 +238,11 @@ review/relocate the tracked minor-PII files (see Critical/High findings).
 |----|-------------|
 | I1 | `.env.local` exists locally, is **gitignored**, and is **not tracked** — correct. Its secret values were intentionally not opened. |
 | I2 | Only `.env.example` files are tracked (`.env.example`, `tools/airtable/.env.example`, `web/.env.local.example`, `web/.env.example`) and use placeholders (e.g. `AIRTABLE_TOKEN=patXXXX…`). |
-| I3 | Make blueprints are sanitized: `make/blueprints/upload-asset-engine-v2-with-file-hash-duplicate-check.json` and `make/blueprints/c025-117f-zoom-recording-approval-email-dev-v1.blueprint.json` use `Bearer REPLACE_WITH_AIRTABLE_TOKEN` / `REPLACE_WITH_DEV_CUSTOM_WEBHOOK` and include an explicit "Do not commit webhook URL" note. |
+| I3 | Make blueprints are sanitized: `make/blueprints/upload-asset-engine-v2-with-file-hash-duplicate-check.json` and `make/blueprints/c025-117f-zoom-recording-approval-email-production-v1.blueprint.json` use `Bearer REPLACE_WITH_AIRTABLE_TOKEN` / `REPLACE_WITH_PROD_CUSTOM_WEBHOOK` and include an explicit "Do not commit webhook URL" note. |
 | I4 | `hook.us1.make.com` appears only as a validation **hostname** (e.g. `117f-zoom-recording-send-approval-email.js`), never a full webhook URL with a token path. |
 | I5 | `web/lib/security/index.test.ts` uses a dummy literal `"secret-token"` in tests — not a real secret. |
 | I6 | `tools/overnight/` (ignored) holds editor/agent cache dumps (`_tmp_state_out.txt`) with local paths and Cursor workspace/agent IDs — no credentials. |
-| I7 | Git history contains **no** committed `.env`/`.env.local`; the only history hit was a *script named* `tools/airtable/c013_dev_rotate_secrets.py`, which contains no hardcoded secret. |
+| I7 | Git history contains **no** committed `.env`/`.env.local`; the only history hit was a *script named* `tools/airtable/c013_prod_rotate_secrets.py`, which contains no hardcoded secret. |
 | I8 | No AWS (`AKIA…`), Google (`AIza…`), Slack (`xox…`), GitHub (`ghp_…`), OpenAI (`sk-…`), or PEM private keys found anywhere scanned. |
 
 ---
@@ -295,7 +295,7 @@ git check-ignore .env.local
 
 # Confirm new ignore rules take effect
 git check-ignore chatgpt-recovery-2026-07-14.zip
-git check-ignore docs/audits/_tmp_missing_sa_fields_dev.json
+git check-ignore docs/audits/_tmp_missing_sa_fields_prod.json
 
 # History hygiene (read-only)
 git log --all --oneline --name-only --diff-filter=A -- ".env" ".env.local" "**/.env" "**/.env.local"

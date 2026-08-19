@@ -24,7 +24,7 @@
 | 2 | **Common engineering patterns** | [v2-common-engineering-patterns.md](./v2-common-engineering-patterns.md) |
 | 3 | **Simplification recommendations** | § Simplification in classification doc + [v2-014 roadmap](./v2-014-automation-modernization-roadmap.md) |
 | 4 | **Questions requiring Mike approval** | [v2-014-questions-for-mike.md](./v2-014-questions-for-mike.md) |
-| 5 | **Production schema snapshot** (supporting OMNI/ChatGPT) | `airtable/schema/snapshots/dev-20260705/` |
+| 5 | **Production schema snapshot** (supporting OMNI/ChatGPT) | `airtable/schema/snapshots/prod-20260705/` |
 
 ---
 
@@ -50,7 +50,7 @@
 | 3 | Scenario Type matrix | Sprint OMNI Mission 3 list |
 | 4 | Operator UX recommendations | Interfaces/dashboards — Production only |
 
-Attach for OMNI: `airtable/schema/snapshots/dev-20260705/schema_doc_*.md`
+Attach for OMNI: `airtable/schema/snapshots/prod-20260705/schema_doc_*.md`
 
 ---
 

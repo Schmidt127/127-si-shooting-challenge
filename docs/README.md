@@ -66,7 +66,7 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 | [v2-change-backlog.md](./v2-change-backlog.md) | **Owner change list** — all requests, dependency waves, **V2-013 Program Instance** |
 | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) | **Phase 2 master doc** — automation inventory, disposition, capacity plan |
 | [production-base-setup.md](./production-base-setup.md) | **V2-015 ops runbook** — clone, PAT, webhook isolation, production-only deploy |
-| [v2-015-production-base-architecture.md](./v2-015-production-base-architecture.md) | **Approved** — dev Airtable base + one prod + one repo |
+| [v2-015-production-base-architecture.md](./v2-015-production-base-architecture.md) | **Approved** — production Airtable base + one prod + one repo |
 | [CHATGPT-MASTER-PLAN-BRIEF.md](./CHATGPT-MASTER-PLAN-BRIEF.md) | **Planning aggregate** — Wave 0 closed; H-001/H-002; session progress |
 | [v2/06-automation-standards.md](./v2/06-automation-standards.md) | **V2 automation rewrite pattern** — 066 v3.2 reference |
 | [v2/08-testing-standards.md](./v2/08-testing-standards.md) | **Audit-first testing** — fix the audit, not the data |
@@ -88,14 +88,14 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 | [known-issues.md](./known-issues.md) | Legacy pointer → [KNOWN_ISSUES.md](./KNOWN_ISSUES.md) |
 | [status/C-025-stage17-current-prod-progress.md](./status/C-025-stage17-current-prod-progress.md) | **C-025 Stage 17 — authoritative current state** (Zoom Attendance credit COMPLETE; Automation **117** vs Make **117f**; four-part send key) |
 | [deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md](./deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md) | C-025 PROD Zoom Recording **Approval Email** workflow (Airtable **117** → Make **117f**) — tested, not fully live |
-| [v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) | C-025 / **117a–117b** Production install packet (**superseded S16 design** — Stage 17 is current) |
-| [v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md](./v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md) | C-011 weekly email Production install packet (historical) |
+| [v2/ZOOM_RECORDING_CREDIT_PROD_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_PROD_INSTALL.md) | C-025 / **117a–117b** Production install packet (**superseded S16 design** — Stage 17 is current) |
+| [v2/C011_AUTOMATIC_WEEKLY_EMAIL_PROD_INSTALL.md](./v2/C011_AUTOMATIC_WEEKLY_EMAIL_PROD_INSTALL.md) | C-011 weekly email Production install packet (historical) |
 | [next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md](./next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md) | **C-011 PROD verified** weekly email architecture (`118→072→119→074→Make`) |
 | [reliability-command-center/README.md](./reliability-command-center/README.md) | **Reliability Command Center** (SC-147) — workflow health model, offline audit CLI, retry policy (Interface **Designed**, not installed) |
 | [reliability-command-center/MVP-PRODUCTION-RELEASE.md](./reliability-command-center/MVP-PRODUCTION-RELEASE.md) | RCC minimum PROD release — existing fields, export format, exact views |
 | [deploy-checklists/RELIABILITY-COMMAND-CENTER-PRODUCTION-INSTALL.md](./deploy-checklists/RELIABILITY-COMMAND-CENTER-PRODUCTION-INSTALL.md) | RCC production installation packet (MVP views; no automation changes; 118/119 stay ON) |
 | [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md) | 070a PROD keep-OFF decision |
-| [deploy-checklists/066-dev-omni-confirmation-packet.md](./deploy-checklists/066-dev-omni-confirmation-packet.md) | 066 OMNI confirmation support |
+| [deploy-checklists/066-production-omni-confirmation-packet.md](./deploy-checklists/066-production-omni-confirmation-packet.md) | 066 OMNI confirmation support |
 | [deploy-checklists/PROD-promotion-rollback-index-stage10.md](./deploy-checklists/PROD-promotion-rollback-index-stage10.md) | Track-level promotion / rollback index |
 | [challenge-year/README.md](./challenge-year/README.md) | **Challenge-Year Config + season rollover engine** (Built in Repository) |
 | [deploy-checklists/challenge-year-rollover-installation-packet.md](./deploy-checklists/challenge-year-rollover-installation-packet.md) | Annual rollover installation / usage packet |

@@ -14,7 +14,7 @@
 |-----|------|
 | [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) | Script versions, triggers, Production status |
 | [V2_END_TO_END_TEST_MATRIX.md](./V2_END_TO_END_TEST_MATRIX.md) | Athlete-scenario launch matrix |
-| [v2/V2_DEV_EXECUTION_RUNBOOK.md](./v2/V2_DEV_EXECUTION_RUNBOOK.md) | Executable Production runbook (modes, fixtures, cleanup) |
+| [v2/V2_PROD_EXECUTION_RUNBOOK.md](./v2/V2_PROD_EXECUTION_RUNBOOK.md) | Executable Production runbook (modes, fixtures, cleanup) |
 | [v2/V2_LAUNCH_SMOKE_TESTS.md](./v2/V2_LAUNCH_SMOKE_TESTS.md) | Pre-PROD promotion smoke subset |
 | [known-issues.md](./known-issues.md) | Active gaps and accepted exceptions |
 | [deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md](./deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md) | Per-change promotion template |
@@ -22,9 +22,9 @@
 | [deploy-checklists/Production-release-readiness-verification-2026-07-16.md](./deploy-checklists/Production-release-readiness-verification-2026-07-16.md) | Online Agent 2 Production verification package |
 | [v2/08-testing-standards.md](./v2/08-testing-standards.md) | Audit-first testing standards |
 | [PROJECT_STATE.md](./PROJECT_STATE.md) | Live base IDs and milestone snapshot |
-| [v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) | C-025 / 117a–117b Production install packet |
+| [v2/ZOOM_RECORDING_CREDIT_PROD_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_PROD_INSTALL.md) | C-025 / 117a–117b Production install packet |
 | [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md) | 070a PROD keep-OFF decision |
-| [deploy-checklists/066-dev-omni-confirmation-packet.md](./deploy-checklists/066-dev-omni-confirmation-packet.md) | 066 OMNI confirmation support |
+| [deploy-checklists/066-production-omni-confirmation-packet.md](./deploy-checklists/066-production-omni-confirmation-packet.md) | 066 OMNI confirmation support |
 
 **Safe repo validation (no secrets / no Airtable):**
 
@@ -75,7 +75,7 @@ Run on Production only (`appn84sqPw03zEbTT`) with Schmidt / named test enrollmen
 | Level gates | **042** Gate Blocked when XP ok / gate fail | [ ] |
 | Weekly summary | **031–034** WAS create + previous-week helpers | [ ] |
 | Zoom live attendance | **101** awards live keys only | [ ] |
-| Zoom recording credit (C-025) | **117a/117b** repo-ready — [ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md); not live-verified | [ ] |
+| Zoom recording credit (C-025) | **117a/117b** repo-ready — [ZOOM_RECORDING_CREDIT_PROD_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_PROD_INSTALL.md); not live-verified | [ ] |
 | Asset upload | **070b/070c** writeback + hash validation (if in scope) | [ ] |
 | Audits | Stages A–J / relevant 090 dry-runs clean or documented exceptions | [ ] |
 
@@ -176,7 +176,7 @@ Use Schmidt / isolated fixture enrollment only.
 | Audit dry-run | No new unexpected integrity failures | [ ] |
 
 Detailed athlete matrix: [V2_END_TO_END_TEST_MATRIX.md](./V2_END_TO_END_TEST_MATRIX.md).
-Production execution + launch smoke gate: [v2/V2_DEV_EXECUTION_RUNBOOK.md](./v2/V2_DEV_EXECUTION_RUNBOOK.md) · [v2/V2_LAUNCH_SMOKE_TESTS.md](./v2/V2_LAUNCH_SMOKE_TESTS.md).
+Production execution + launch smoke gate: [v2/V2_PROD_EXECUTION_RUNBOOK.md](./v2/V2_PROD_EXECUTION_RUNBOOK.md) · [v2/V2_LAUNCH_SMOKE_TESTS.md](./v2/V2_LAUNCH_SMOKE_TESTS.md).
 
 ---
 

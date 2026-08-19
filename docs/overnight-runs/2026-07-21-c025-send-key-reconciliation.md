@@ -75,31 +75,31 @@ and `chatgpt-recovery-2026-07-14/` (both untracked recovery artifacts).
 
 | File | Occurrence | Action |
 |---|---|---|
-| `make/blueprints/c025-117f-zoom-recording-approval-email-dev-v1.template.json` | Data Store `keyPattern` three-part | Updated to four-part. |
+| `make/blueprints/c025-117f-zoom-recording-approval-email-production-v1.template.json` | Data Store `keyPattern` three-part | Updated to four-part. |
 | `docs/deploy-checklists/C-025-stage17-prod-schema-manifest.json` | field `description` three-part | Updated to four-part. |
 
 ### 3e. Tracked Production tools — UPDATED to four-part (example/expected strings only)
 
 | File | Occurrence | Action |
 |---|---|---|
-| `tools/airtable/_c025_117f_reverify_dev_fixtures.py` | `canonical_send_key_happy` three-part | Appended `\|{FIXTURES['happy']['za']}`. |
-| `tools/airtable/_c025_117f_prepare_dev_fixture.py` | `expected_send_key` three-part | Appended `\|{rid}` (the Zoom Attendance id already in scope). |
+| `tools/airtable/_c025_117f_reverify_prod_fixtures.py` | `canonical_send_key_happy` three-part | Appended `\|{FIXTURES['happy']['za']}`. |
+| `tools/airtable/_c025_117f_prepare_prod_fixture.py` | `expected_send_key` three-part | Appended `\|{rid}` (the Zoom Attendance id already in scope). |
 
 ### 3f. Historical / superseded material — PRESERVED and clearly labeled
 
 | File | Occurrence | Classification | Action |
 |---|---|---|---|
 | `docs/deploy-checklists/C-025-stage17-117f-v1.2.0-PASTE.txt` | v1.2.0 paste body uses three-part | **Superseded** (current shipped script is v1.1) | Left the historical body intact; **added a `SUPERSEDED — HISTORICAL PASTE PACKET` banner** in the header region (excluded from the paste body) noting the canonical four-part key. |
-| `docs/deploy-checklists/C-025-117f-dev-agent2-evidence-2026-07-20.md` | line ~62 three-part example | **Historical evidence** | Left unchanged — already carries a `SUPERSEDED — HISTORICAL` banner explicitly noting the example is the older three-part form retained for evidence. |
-| `docs/deploy-checklists/C-025-117f-dev-manual-action-sheet.md` | line ~41 three-part example | **Historical** | Left unchanged — already labeled superseded. |
-| `docs/deploy-checklists/C-025-117f-dev-make-scenario-contract.md` | lines ~31/57 three-part | **Historical (v1.2.0 contract)** | Left unchanged — already labeled superseded. |
+| `docs/deploy-checklists/C-025-117f-production-agent2-evidence-2026-07-20.md` | line ~62 three-part example | **Historical evidence** | Left unchanged — already carries a `SUPERSEDED — HISTORICAL` banner explicitly noting the example is the older three-part form retained for evidence. |
+| `docs/deploy-checklists/C-025-117f-production-manual-action-sheet.md` | line ~41 three-part example | **Historical** | Left unchanged — already labeled superseded. |
+| `docs/deploy-checklists/C-025-117f-production-make-scenario-contract.md` | lines ~31/57 three-part | **Historical (v1.2.0 contract)** | Left unchanged — already labeled superseded. |
 
 ### 3g. Untracked / out-of-committed-scope — LEFT UNTOUCHED
 
 | File | Occurrence | Reason left unchanged |
 |---|---|---|
 | `tools/airtable/_c025_stage17_prod_batch_deploy.py` | `email_key_format` three-part | **Untracked** production deploy tool — out of committed scope; not run (no prod access). |
-| `make/blueprints/c025-117f-...-dev-v1.blueprint.json` | prefix-only `ZOOM_REC_EMAIL\|` | **Untracked**; prefix-only (not a stale three-part key). |
+| `make/blueprints/c025-117f-...-production-v1.blueprint.json` | prefix-only `ZOOM_REC_EMAIL\|` | **Untracked**; prefix-only (not a stale three-part key). |
 | `127-si-shooting-challenge/**` (nested copy), `chatgpt-recovery-2026-07-14/**` | three-part in copies of 117f/generator/tests | **Untracked** duplicate/recovery trees — not part of the repo. |
 
 ### 3h. Already-correct occurrences — NO CHANGE (verified four-part or prefix-only)
@@ -122,20 +122,20 @@ docs/deploy-checklists/C-025-stage17-117f-v1.2.0-PASTE.txt   (superseded banner 
 docs/deploy-checklists/C-025-stage17-prod-schema-manifest.json
 docs/testing/C-025-stage17-expected-results.json
 docs/testing/C-025-stage17-test-fixtures.json
-make/blueprints/c025-117f-zoom-recording-approval-email-dev-v1.template.json
+make/blueprints/c025-117f-zoom-recording-approval-email-production-v1.template.json
 make/lib/c025-117f-make-scenario.js
 make/lib/c025-117f-make-scenario.test.js
 make/test-payloads/c025-117f-zoom-recording-approved.sample.json
-tools/airtable/_c025_117f_prepare_dev_fixture.py
-tools/airtable/_c025_117f_reverify_dev_fixtures.py
+tools/airtable/_c025_117f_prepare_prod_fixture.py
+tools/airtable/_c025_117f_reverify_prod_fixtures.py
 ```
 Plus this report: `docs/overnight-runs/2026-07-21-c025-send-key-reconciliation.md`.
 
 ## 5. Historical files left unchanged (intentional)
 
-- `docs/deploy-checklists/C-025-117f-dev-agent2-evidence-2026-07-20.md` (already labeled superseded).
-- `docs/deploy-checklists/C-025-117f-dev-manual-action-sheet.md` (already labeled superseded).
-- `docs/deploy-checklists/C-025-117f-dev-make-scenario-contract.md` (already labeled superseded).
+- `docs/deploy-checklists/C-025-117f-production-agent2-evidence-2026-07-20.md` (already labeled superseded).
+- `docs/deploy-checklists/C-025-117f-production-manual-action-sheet.md` (already labeled superseded).
+- `docs/deploy-checklists/C-025-117f-production-make-scenario-contract.md` (already labeled superseded).
 - Untracked trees: nested `127-si-shooting-challenge/`, `chatgpt-recovery-2026-07-14/`, and the untracked
   `tools/airtable/_c025_stage17_prod_batch_deploy.py` / `...blueprint.json`.
 

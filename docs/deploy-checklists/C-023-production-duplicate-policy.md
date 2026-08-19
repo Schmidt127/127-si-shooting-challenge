@@ -4,7 +4,7 @@
 **Last revised:** 2026-07-10 — **Stage 4C** direct Production Lambda smoke test PASS
 **Status:** **Stage 4C PASS** — claim + upload + writeback + reuse review + retry skip proven on Production Lambda (no Make/070b). **Not complete** — Stage 4D Make path + H3b–H3p pending.
 **Backlog:** C-023 (parents: C-013, C-024)
-**Evidence:** [C-023-dev-h3-duplicate-bytes-test.md](./C-023-dev-h3-duplicate-bytes-test.md) — H3 **PASS** on Production
+**Evidence:** [C-023-production-h3-duplicate-bytes-test.md](./C-023-production-h3-duplicate-bytes-test.md) — H3 **PASS** on Production
 **Supersedes:** Prior draft sections recommending canonical S3 reuse, skip PutObject, `reused_canonical_duplicate`, and `Allowed Reuse` as automatic processing outcomes (2026-07-10 revision).
 
 **Hard stops:** No Lambda deploy · no Airtable field creation · no Production changes
@@ -486,7 +486,7 @@ Sections **10–18** contain the current Stage 1 specification, staged execution
 
 ## 11. Stage 1 — v1 schema proposal (final for Mike approval)
 
-**Source:** Production schema snapshot `dev-20260706` + Lambda field audit. **Do not create fields in Stage 1.**
+**Source:** Production schema snapshot `prod-20260706` + Lambda field audit. **Do not create fields in Stage 1.**
 
 ### 11.1 Field reuse vs new
 
@@ -603,7 +603,7 @@ When `Potential Asset Reuse? = true` and `Asset Reuse Decision = Not Reviewed`:
 | Reversible | Approved Reuse / False Positive restore same XP Event via Source Key |
 | Evidence preserved | Never delete S3, assets, or activity rows |
 
-Detail + S5A–S5L matrix: [C-023-dev-stage5-duplicate-consequences.md](./C-023-dev-stage5-duplicate-consequences.md)
+Detail + S5A–S5L matrix: [C-023-production-stage5-duplicate-consequences.md](./C-023-production-stage5-duplicate-consequences.md)
 
 **Trigger:** Airtable automation on `Asset Reuse Decision` change (Submission Assets) — **not** upload Lambda.
 
@@ -642,7 +642,7 @@ Detail + S5A–S5L matrix: [C-023-dev-stage5-duplicate-consequences.md](./C-023-
 | **H3o** | Mike → Allowed — Correction/Resubmission | **PASS** | `recF86pJTIMFoEypJ` | Decision persists |
 | **H3p** | Mike → Confirmed Duplicate | **PASS** | `recF86pJTIMFoEypJ` | Evidence intact; no consequence automation |
 
-Detail: [C-023-dev-h3-duplicate-bytes-test.md](./C-023-dev-h3-duplicate-bytes-test.md) § Wave 7 matrix.
+Detail: [C-023-production-h3-duplicate-bytes-test.md](./C-023-production-h3-duplicate-bytes-test.md) § Wave 7 matrix.
 
 ---
 
@@ -716,7 +716,7 @@ C-023 **done** only when:
 
 ## 19. Stage 3 Production schema verification (2026-07-10, read-only)
 
-**Source:** `export_airtable_schema.py` against `appn84sqPw03zEbTT` only (snapshot `airtable/schema/snapshots/c023-stage3-verify-dev/` — local, not committed).
+**Source:** `export_airtable_schema.py` against `appn84sqPw03zEbTT` only (snapshot `airtable/schema/snapshots/c023-stage3-verify-production/` — local, not committed).
 
 ### Field contract
 
@@ -752,10 +752,10 @@ Em dash in `Allowed — …` and `Cross-Enrollment Match — Informational` = U+
 
 | Step | Action |
 |------|--------|
-| Lambda | ~~Code-only deploy: `127si-upload-asset-dev`~~ **Done 2026-07-10** (`8c94475`, no invoke) |
+| Lambda | ~~Code-only deploy: `127si-upload-asset`~~ **Done 2026-07-10** (`8c94475`, no invoke) |
 | 070b Option A | ~~Remove Processing writeback~~ **Done in repo v4.2** (`c0f91d3`) — Mike paste Production 070b script (automation OFF) |
 | **4C direct Lambda smoke** | **PASS 2026-07-10** — asset `recXUc3010h16Usmo`; `uploaded` + `allPass=true`; claim `44d2b856-30cd-45b6-9cdf-d642faa58220`; retry `skipped_already_uploaded`; 1 S3 object. See [Wave 7 checklist § Stage 4C](./C-013-wave7-asset-storage-checklist.md). |
-| **4D Make path** | **4D-R Part A PASS** · **Part B BLOCKED** (070b auto-upload path) — see [Make scenario prep](./C-013-dev-make-lambda-scenario-prep.md) |
+| **4D Make path** | **4D-R Part A PASS** · **Part B BLOCKED** (070b auto-upload path) — see [Make scenario prep](./C-013-production-make-lambda-scenario-prep.md) |
 | Runtime gates (remaining) | 070b Production paste verify → Make smoke → H3l claim via Make → H3b–H3p |
 
 ---
@@ -764,6 +764,6 @@ Em dash in `Allowed — …` and `Cross-Enrollment Match — Informational` = U+
 
 | Doc | Topic |
 |-----|--------|
-| [C-023-dev-h3-duplicate-bytes-test.md](./C-023-dev-h3-duplicate-bytes-test.md) | H3 evidence |
+| [C-023-production-h3-duplicate-bytes-test.md](./C-023-production-h3-duplicate-bytes-test.md) | H3 evidence |
 | [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md) | Wave 7 gates |
 | [C-013-production-promotion-plan.md](./C-013-production-promotion-plan.md) | Prod promotion |

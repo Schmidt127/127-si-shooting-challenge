@@ -16,7 +16,7 @@
 |------|--------|
 | **Wave 0 close-out** | **Closed** — C-001, C-002, C-003, C-008, newspaper + radio |
 | **H-001** | **Done** — 090F audit v1.1; fix audit not data; 0 deletes |
-| **H-002** | **066** v3.1 — Production deploy in progress | GitHub done; [066 dev checklist](./deploy-checklists/066-v3.1-dev-deploy.md) |
+| **H-002** | **066** v3.1 — Production deploy in progress | GitHub done; [066 production checklist](./deploy-checklists/066-v3.1-production-deploy.md) |
 | **Automation standards** | Doc **06 Active**; 066 v3.1 canonical template |
 | **Multi-year architecture** | **V2-013 queued** — Program Instance; one base; do not implement now |
 | **V2-014** | **Active** — [Automation Modernization Roadmap](./v2-014-automation-modernization-roadmap.md); Phase 2 current |
@@ -167,7 +167,7 @@ From C-023 and C-024 in [v2-change-backlog.md](./v2-change-backlog.md):
 | **V2-014** | Automation Modernization Roadmap | Category A–F inventory; four-axis evaluation; Complexity Score; complexity-first (capacity secondary); **066 v3.1** reference; **112 OFF** | Wave 0, H-002 | **done** (doc) | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) |
 | **V2-014a** | Wave 2A — automation classification | **Active** — inventory all 46; no rewrites/merges | V2-014 | **in-progress** | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) |
 | **V2-014b** | Email Message Center | Replace 7 email automations with builder + sender | V2-014, C-011 | queued | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) |
-| **V2-015** | Permanent Development Airtable base | **Ready** — `appn84sqPw03zEbTT`; 6 test enrollments; prod unchanged; 066 dev test pending | V2-014 | **in-progress** | [v2-015-production-base-architecture.md](./v2-015-production-base-architecture.md) |
+| **V2-015** | Permanent Development Airtable base | **Ready** — `appn84sqPw03zEbTT`; 6 test enrollments; prod unchanged; 066 production test pending | V2-014 | **in-progress** | [v2-015-production-base-architecture.md](./v2-015-production-base-architecture.md) |
 
 ### Wave 2 — Schema, field ownership & dedupe engine
 
@@ -241,7 +241,7 @@ From C-023 and C-024 in [v2-change-backlog.md](./v2-change-backlog.md):
 | **C-027** | Major-event SMS notifications | Level up, milestones — not daily XP; Twilio/Make TBD | C-010, C-024, V2-008 | queued | [v2-change-backlog.md](./v2-change-backlog.md) |
 | **V2-028** | **Generate Media Kits** platform | 2025–26 manual send **done**; platform automation queued | C-013, C-022 | done (2025–26) | [media-kits.md](./media-kits.md) |
 
-**Note:** **V2-013** = Program Instance multi-year architecture. **V2-014** = Automation Modernization Roadmap (Phase 2, **active**). **V2-015** = Production base **ready** (`appn84sqPw03zEbTT`; **in-progress** until 066 dev test). **V2-016–V2-027** unused. **V2-028** = media kits.
+**Note:** **V2-013** = Program Instance multi-year architecture. **V2-014** = Automation Modernization Roadmap (Phase 2, **active**). **V2-015** = Production base **ready** (`appn84sqPw03zEbTT`; **in-progress** until 066 production test). **V2-016–V2-027** unused. **V2-028** = media kits.
 
 ### Wave 11 — Launch gate (before May 2027)
 

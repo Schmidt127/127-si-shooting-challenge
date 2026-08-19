@@ -2,7 +2,7 @@
 
 **Status:** Verification checklist — **112 must remain OFF**; live toggle **live-blocked** this run
 **Base:** Production attest first; PROD attest before any delete
-**Inventory:** [DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md)
+**Inventory:** [PROD_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./PROD_FIELD_TRIGGER_INVENTORY_2026-07-16.md)
 **Scripts:**
 - Production path: `013-…create-video-feedback…` (**v2.0**) — expected **ON**
 - Legacy: `112-video-review-and-xp-create-video-feedback-from-submission-asset.js` (**v2.1**) — expected **OFF**
@@ -117,5 +117,5 @@ OFF alone does **not** recover an automation slot. Delete only when:
 
 - `docs/automation-index.md` · `docs/PROJECT_STATE.md`
 - Audit: `airtable/extension-scripts/audits/audit-video-pipeline-integrity.js`
-- C-019 Video Feedback Testing view: [C019_DEV_TESTING_VIEWS.md](./C019_DEV_TESTING_VIEWS.md)
+- C-019 Video Feedback Testing view: [C019_PROD_TESTING_VIEWS.md](./C019_PROD_TESTING_VIEWS.md)
 - Offline: `tools/airtable/tests/test_automation_059_043_112_contracts.py`

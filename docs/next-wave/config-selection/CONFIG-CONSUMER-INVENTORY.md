@@ -99,7 +99,7 @@ Status: superseded by Stage 17 path; still documents the anti-pattern.
 
 | File | Selection | Risk |
 |---|---|---|
-| `tools/airtable/pv2_dev_prod_gap_audit.py` | Fetches all Config rows; compares keys | LOW for read; may mislabel multi-year as “mismatch” |
+| `tools/airtable/pv2_prod_prod_gap_audit.py` | Fetches all Config rows; compares keys | LOW for read; may mislabel multi-year as “mismatch” |
 | `tools/airtable/overnight_config_xp_analyze.py` | Iterates all Config rows | LOW |
 | `tools/airtable/c013_prod_readiness_probe.py` | Lists Config | LOW |
 | `tools/airtable/_c025_stage17_*` schema/install probes | Schema + sample Config | LOW |

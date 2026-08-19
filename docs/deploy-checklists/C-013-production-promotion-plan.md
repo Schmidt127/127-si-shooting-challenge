@@ -13,7 +13,7 @@
 
 **Rule:** [v2/04 § Official promotion documentation](../v2/04-ai-development-standards.md#official-promotion-documentation-required) · Template: [`_PROMOTION-STEPS-TEMPLATE.md`](./_PROMOTION-STEPS-TEMPLATE.md)
 
-**Parents:** [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md) · [C-013-dev-070b-hybrid-prep.md](./C-013-dev-070b-hybrid-prep.md) · [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md) · [C-013-dev-make-lambda-scenario-prep.md](./C-013-dev-make-lambda-scenario-prep.md)
+**Parents:** [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md) · [C-013-production-070b-hybrid-prep.md](./C-013-production-070b-hybrid-prep.md) · [C-013-production-lambda-upload-plan.md](./C-013-production-lambda-upload-plan.md) · [C-013-production-make-lambda-scenario-prep.md](./C-013-production-make-lambda-scenario-prep.md)
 
 ---
 
@@ -66,7 +66,7 @@ All evidence is **Production only**. Proof artifacts are local (`_preview/`, `to
 | Close-out re-probe (read-only) | **`recF86pJTIMFoEypJ`** | **`allPass=true`** | 2026-07-10 |
 | C-023 duplicate lookup (SDK/Lambda) | B4 + SDK assets | Flag-only PASS | 2026-07-09 |
 
-**Production components:** Lambda `127si-upload-asset-dev` · region `us-east-2` · bucket `shooting-challenge-assets` · Make `Shooting Challenge - Production - Upload Engine - Lambda - v1` · **070a OFF** · **070b OFF** (post controlled test).
+**Production components:** Lambda `127si-upload-asset` · region `us-east-2` · bucket `shooting-challenge-assets` · Make `Shooting Challenge - Production - Upload Engine - Lambda - v1` · **070a OFF** · **070b OFF** (post controlled test).
 
 **Not counted as PASS:** Accidental 070b Test on `recIYFnfmsPcy7iop` (stuck **Processing** — Lambda never ran). **Do not repair** as part of promotion planning.
 
@@ -106,7 +106,7 @@ All evidence is **Production only**. Proof artifacts are local (`_preview/`, `to
 | Make webhook URL | **New** Production hook — ops notes only |
 | AWS | Lambda **IAM role** only — no long-term keys in env |
 
-**Rotation:** After any exposure, rotate immediately. Reference pattern: `tools/airtable/c013_dev_rotate_secrets.py` (Production only — adapt for Production ops notes).
+**Rotation:** After any exposure, rotate immediately. Reference pattern: `tools/airtable/c013_prod_rotate_secrets.py` (Production only — adapt for Production ops notes).
 
 ---
 
@@ -154,7 +154,7 @@ Canonical File URL · Storage Key · File Content Hash · File Hash Algorithm (S
 | Isolated smoke (`actionOut=uploaded`) | Before **070b** enable |
 | CloudWatch `/aws/lambda/127si-upload-asset` | No secrets in logs |
 
-**Reference:** [`lambda/upload-asset/deploy-prod.ps1`](../../lambda/upload-asset/deploy-prod.ps1) · [`deploy.ps1`](../../lambda/upload-asset/deploy.ps1) (Production) · [PROD smoke test](./C-013-prod-smoke-test-2026-07-11.md) · [Production URL test](./C-013-dev-lambda-deploy-and-url-test.md)
+**Reference:** [`lambda/upload-asset/deploy-prod.ps1`](../../lambda/upload-asset/deploy-prod.ps1) · [`deploy.ps1`](../../lambda/upload-asset/deploy.ps1) (Production) · [PROD smoke test](./C-013-prod-smoke-test-2026-07-11.md) · [Production URL test](./C-013-production-lambda-deploy-and-url-test.md)
 
 ---
 
@@ -290,7 +290,7 @@ Rollback does **not** auto-delete S3 objects or clear canonical fields.
 
 | Doc | Topic |
 |-----|--------|
-| [C-013-dev-070b-hybrid-prep.md](./C-013-dev-070b-hybrid-prep.md) | Production controlled hybrid PASS |
+| [C-013-production-070b-hybrid-prep.md](./C-013-production-070b-hybrid-prep.md) | Production controlled hybrid PASS |
 | [C-013-make-upload-migration-plan.md](./C-013-make-upload-migration-plan.md) | Legacy migration phases |
 | [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md) | Wave 7 slices |
 | [v2-change-backlog.md](../v2-change-backlog.md) | C-013 / C-023 status |

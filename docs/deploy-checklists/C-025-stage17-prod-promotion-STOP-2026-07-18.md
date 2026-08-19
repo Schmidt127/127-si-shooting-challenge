@@ -31,7 +31,7 @@ Stuck `Run Test?` on `recEuHFTjBftoJGMc` was cleared after the stop.
 
 | Evidence | Value |
 |----------|--------|
-| Prior ETF Pass | `recEuHFTjBftoJGMc` Pass via Records API mirror while 057/042 were ON ([downstream results](./C-025-stage17-downstream-dev-test-results-2026-07-18.md)) |
+| Prior ETF Pass | `recEuHFTjBftoJGMc` Pass via Records API mirror while 057/042 were ON ([downstream results](./C-025-stage17-downstream-production-test-results-2026-07-18.md)) |
 | Repo 115 v1.4 | Ready — [C-025-stage17-115-etf-v1.4-PASTE.txt](./C-025-stage17-115-etf-v1.4-PASTE.txt) |
 | Repo 117 / 057 / 042 | v1.1.1 / v1.3 / v3.1 paste bodies ready |
 

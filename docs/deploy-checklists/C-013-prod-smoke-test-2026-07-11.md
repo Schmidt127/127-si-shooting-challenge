@@ -93,7 +93,7 @@ cd tools/airtable
 $env:BASE_ID = "appn84sqPw03zEbTT"
 $env:LAMBDA_FUNCTION_NAME = "127si-upload-asset"
 # Set LAMBDA_FUNCTION_URL and UPLOAD_WEBHOOK_SECRET to PROD values in .env locally
-python c013_dev_lambda_invoke.py recSUBMISSION_ASSET --aws --target-record-id recVIDEO_FEEDBACK --out _preview/c013-prod-smoke-T1-upload.json
+python c013_prod_lambda_invoke.py recSUBMISSION_ASSET --aws --target-record-id recVIDEO_FEEDBACK --out _preview/c013-prod-smoke-T1-upload.json
 ```
 
 **Expected Lambda response:**
@@ -225,5 +225,5 @@ Confirm structured log lines contain `statusOut`, `actionOut`, `allPass` — **n
 | Doc | Topic |
 |-----|--------|
 | [C-013-production-promotion-plan.md](./C-013-production-promotion-plan.md) | Full promotion sequence |
-| [C-013-dev-lambda-deploy-and-url-test.md](./C-013-dev-lambda-deploy-and-url-test.md) | Production reference |
+| [C-013-production-lambda-deploy-and-url-test.md](./C-013-production-lambda-deploy-and-url-test.md) | Production reference |
 | [lambda/upload-asset/deploy-prod.ps1](../../lambda/upload-asset/deploy-prod.ps1) | PROD deploy |

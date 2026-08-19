@@ -55,7 +55,7 @@
 
 ## Pre-season checklist (2026–27)
 
-- Stages A–J on **dev** base first, then **prod**, with test enrollments.
+- Stages A–J on **production** base first, then **prod**, with test enrollments.
 - Final 090A–090G adapted for new season.
 - Schema export to `airtable/schema/snapshots/`.
 - Re-verify audit dedupe keys match [03-business-rules.md](./03-business-rules.md) Source Key patterns.

@@ -10,8 +10,8 @@
 
 **Companions (Production package â€” historical):**
 
-- [Production Make contract](./C-025-117f-dev-make-scenario-contract.md)
-- [Production deployment checklist](./C-025-117f-dev-make-deployment-checklist.md)
+- [Production Make contract](./C-025-117f-production-make-scenario-contract.md)
+- [Production deployment checklist](./C-025-117f-production-make-deployment-checklist.md)
 - [Stage 17 PROD live (credit path)](./C-025-stage17-prod-live-2026-07-20.md)
 
 ---
@@ -277,7 +277,7 @@ Until this checklist is checked off in-repo, status remains: **tested / built â€
 
 | Doc | Role |
 |-----|------|
-| [C-025-117f-dev-make-scenario-contract.md](./C-025-117f-dev-make-scenario-contract.md) | Production design contract (historical; three-part key) |
+| [C-025-117f-production-make-scenario-contract.md](./C-025-117f-production-make-scenario-contract.md) | Production design contract (historical; three-part key) |
 | [C-025-stage17-prod-live-2026-07-20.md](./C-025-stage17-prod-live-2026-07-20.md) | Stage 17 credit COMPLETE |
 | [C-025-stage17-rollback-plan.md](./C-025-stage17-rollback-plan.md) | Broader Stage 17 rollback |
 | [automation-index.md](../automation-index.md) | Automation inventory |

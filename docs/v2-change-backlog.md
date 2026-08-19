@@ -184,7 +184,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 |----|---------|--------|------------|--------|
 | **C-013** | AWS S3 canonical URLs | **DONE (2026-07-11)** — PROD video upload route complete on Schmidt asset `recGQ8EjAMz3bEBiW`: Lambda + Make + Airtable-triggered 070b v4.4 (`Accepted` async handoff) + 070c v1.1 idempotent verify. Manual smoke + 47 unit tests PASS. Commits `5d5f27b`, `9f8495d`. Optional hygiene: rotate exposed PROD upload secret. Attachment retirement / expanded hash-dedup → **C-023**. | C-012, C-020 | **done** |
 | **C-023** | File dedup by **content hash**, not title/filename | **Stage 4C** PASS · **4D-R** Parts A–E PASS · **H3b–H3p** matrix **16/16 PASS** · **Stage 5 Production complete** — automation **116** (`992677d`) live validated: S5 **12/12 PASS**; confirm + reversal PASS on `recF86pJTIMFoEypJ` / XP `recx2MvUh2WP0tbjO` (same row restored; no duplicate XP); retired **008** slot-neutral. Prod paste pending. | C-013, C-024 | **in progress** |
-| **C-013-SEC** | Rotate Production Lambda/Airtable secrets after validation | **Done (2026-07-09)** — PAT + `UPLOAD_WEBHOOK_SECRET` rotated; Lambda env synced; HTTP verify PASS. Exposed PAT revoked in Airtable UI. Script: `tools/airtable/c013_dev_rotate_secrets.py` | C-013 | **done** |
+| **C-013-SEC** | Rotate Production Lambda/Airtable secrets after validation | **Done (2026-07-09)** — PAT + `UPLOAD_WEBHOOK_SECRET` rotated; Lambda env synced; HTTP verify PASS. Exposed PAT revoked in Airtable UI. Script: `tools/airtable/c013_prod_rotate_secrets.py` | C-013 | **done** |
 
 ### Wave 8 — Intake & calendar
 

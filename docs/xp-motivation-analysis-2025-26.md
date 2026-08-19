@@ -322,7 +322,7 @@ Suggested sections:
 
 User preference leans **full-program** — spread gates + manual **signal early that HW helps**, while dual-track still protects families who truly cannot do the parent-heavy path.
 
-### Weekly email additions (low dev cost)
+### Weekly email additions (low production cost)
 
 - **Level progress block** — current level, XP to next, **next gate item** (1 line).
 - **Program vs shooter** — if dual-track: two lines every week.

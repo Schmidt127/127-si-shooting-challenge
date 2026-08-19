@@ -60,11 +60,11 @@ Decision: created `overnight/test-audit-2026-07-21` from the current HEAD (`147b
 | `node airtable/.../lib/066-milestone-crossing-harness.test.js` | PASS | 39 ms | 4 |
 | `node airtable/.../lib/upload-make-lambda-response.test.js` | PASS | 41 ms | 18 |
 | `node airtable/.../lib/c011-weekly-email-schedule.test.js` | PASS | 53 ms | 4 |
-| `node tools/airtable/v2_dev_runbook/cli.test.js` | PASS | 74 ms | 17 |
-| `node tools/airtable/v2_dev_runbook/scenarios.test.js` | PASS | 105 ms | 26 |
+| `node tools/airtable/v2_prod_runbook/cli.test.js` | PASS | 74 ms | 17 |
+| `node tools/airtable/v2_prod_runbook/scenarios.test.js` | PASS | 105 ms | 26 |
 
 Node subtotal: **13 files, 218 test cases, 0 failures.**
-All `v2_dev_runbook` CLI/scenario tests ran in dry-run mode with no Airtable writes (preflight prints `writes allowed: NO`).
+All `v2_prod_runbook` CLI/scenario tests ran in dry-run mode with no Airtable writes (preflight prints `writes allowed: NO`).
 
 ### 2. Python contract tests (`python -m unittest`)
 
@@ -74,7 +74,7 @@ All `v2_dev_runbook` CLI/scenario tests ran in dry-run mode with no Airtable wri
 | `python -m unittest discover -s tools/airtable/tests -p "test_*.py" -v` | PASS (OK) | 937 ms | 115 |
 
 Python subtotal (full discovery, which includes the 6 Stage 17 contract tests): **115 tests, 0 failures.**
-Files covered by discovery: `test_automation_059_043_112_contracts`, `test_c009_hw17_attachment_contract`, `test_c010_active_guards_contract`, `test_c011_weekly_email_contract`, `test_c013_prod_make_smoke_run`, `test_c019_testing_views_contract`, `test_c025_recording_watch_contract`, `test_c025_stage17_contracts`, `test_dev_inventory_contracts`, `test_verify_xp_reward_rules`.
+Files covered by discovery: `test_automation_059_043_112_contracts`, `test_c009_hw17_attachment_contract`, `test_c010_active_guards_contract`, `test_c011_weekly_email_contract`, `test_c013_prod_make_smoke_run`, `test_c019_testing_views_contract`, `test_c025_recording_watch_contract`, `test_c025_stage17_contracts`, `test_prod_inventory_contracts`, `test_verify_xp_reward_rules`.
 
 ### 3. Web unit tests (`npm test` → `vitest run`)
 

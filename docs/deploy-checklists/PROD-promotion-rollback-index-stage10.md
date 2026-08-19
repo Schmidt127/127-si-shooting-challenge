@@ -22,8 +22,8 @@ Single entry point for Mike when promoting Production-proven work to PROD, with 
 | C-019 Testing views | Repo verification complete | Production views not created | After C-010 + OMNI views |
 | C-011 weekly email auto | Design audit complete | Not implemented | After C-010 gates in **072**/**074** |
 | 070a homework S3 | Production E2E historical; re-verify on current SHA | **PROD OFF** (affirmed 2026-07-16) | Keep OFF — [AUTOMATION_070A_LAUNCH_DECISION.md](../v2/AUTOMATION_070A_LAUNCH_DECISION.md) |
-| C-025 Zoom recording (**117a/117b**) | **Repo ready** — offline tests PASS 2026-07-16; executable Production sequence | Not installed | [Production-release-readiness-verification-2026-07-16.md](./Production-release-readiness-verification-2026-07-16.md) + [ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](../v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) + Production evidence |
-| 066 shot milestones | Offline harness PASS 2026-07-16; live OMNI pending | Confirm UI version | [066-dev-omni-confirmation-packet.md](./066-dev-omni-confirmation-packet.md) |
+| C-025 Zoom recording (**117a/117b**) | **Repo ready** — offline tests PASS 2026-07-16; executable Production sequence | Not installed | [Production-release-readiness-verification-2026-07-16.md](./Production-release-readiness-verification-2026-07-16.md) + [ZOOM_RECORDING_CREDIT_PROD_INSTALL.md](../v2/ZOOM_RECORDING_CREDIT_PROD_INSTALL.md) + Production evidence |
+| 066 shot milestones | Offline harness PASS 2026-07-16; live OMNI pending | Confirm UI version | [066-production-omni-confirmation-packet.md](./066-production-omni-confirmation-packet.md) |
 | C-009 Learning Activities | Proposal + LA-000/#27 routing contract (merge pending) | **Blocked Airtable** | After owner schema approval |
 
 ### Status distinctions
@@ -76,8 +76,8 @@ Any secret rotation (PAT, webhook secret, Lambda env) requires **explicit Mike a
 |------|------|
 | C-023 PROD 116 validation | `docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md` |
 | C-013 PROD lambda | `docs/deploy-checklists/C-013-prod-lambda-deployment-2026-07-11.md` |
-| C-010 Production OMNI | `docs/deploy-checklists/C-010-dev-omni-implementation-stage4.md` |
-| C-010 post-OMNI verify | `docs/deploy-checklists/C-010-post-omni-dev-verification-stage5.md` |
+| C-010 Production OMNI | `docs/deploy-checklists/C-010-production-omni-implementation-stage4.md` |
+| C-010 post-OMNI verify | `docs/deploy-checklists/C-010-post-omni-production-verification-stage5.md` |
 | Desktop OS control | `docs/overnight-runs/CONTROL.json` |
 
 **Status:** **COMPLETE** (index only)

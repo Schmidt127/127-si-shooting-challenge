@@ -28,7 +28,7 @@ Production proves the full design: **Airtable 070b v4.4 → Make → Lambda → 
 | Component | Value |
 |-----------|--------|
 | Base | `appn84sqPw03zEbTT` |
-| Lambda | `127si-upload-asset-dev` · python3.12 · 512 MB · 120 s · x86_64 |
+| Lambda | `127si-upload-asset` · python3.12 · 512 MB · 120 s · x86_64 |
 | Function URL | EXISTS · AuthType `NONE` · header auth in handler |
 | S3 | `shooting-challenge-assets` · prefix `shooting-challenge/2026-2027/...` |
 | Make | `Shooting Challenge - Production - Upload Engine - Lambda - v1` |
@@ -82,9 +82,9 @@ Production proves the full design: **Airtable 070b v4.4 → Make → Lambda → 
 | `lambda/upload-asset/deploy-prod.ps1` | PROD deploy script |
 | `lambda/upload-asset/iam-policy-prod.json` | PROD S3 + logs IAM |
 | `airtable/automations/.../070b-...-send-video-asset-payload-to-make.js` | 070b v4.2 |
-| `tools/airtable/c013_dev_lambda_invoke.py` | Invoke helper (adapt for PROD) |
+| `tools/airtable/c013_prod_lambda_invoke.py` | Invoke helper (adapt for PROD) |
 | `tools/airtable/_probe_c013_asset_storage_fields.py` | Writeback probe |
-| `make/documentation/C-013-dev-make-lambda-scenario-prep.md` | Make chain reference |
+| `make/documentation/C-013-production-make-lambda-scenario-prep.md` | Make chain reference |
 
 **070b does NOT call Lambda directly.** Approved path is **070b → Make → Lambda**.
 
@@ -114,10 +114,10 @@ See JSON file for full matrix. Summary:
 | Check | Result |
 |-------|--------|
 | PROD Lambda `127si-upload-asset` | **Not found** |
-| Production Lambda `127si-upload-asset-dev` | **Exists** |
+| Production Lambda `127si-upload-asset` | **Exists** |
 | Production Function URL | **Exists** · AuthType NONE |
 | S3 `shooting-challenge-assets` | **Exists** · us-east-2 |
-| Production log group | `/aws/lambda/127si-upload-asset-dev` |
+| Production log group | `/aws/lambda/127si-upload-asset` |
 | PROD log group | **Missing** |
 | Production IAM inline S3 policy | PutObject, GetObject, HeadObject on `bucket/*`; ListBucket on bucket |
 

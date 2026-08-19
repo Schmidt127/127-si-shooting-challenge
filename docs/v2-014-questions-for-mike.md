@@ -22,7 +22,7 @@
 | **Q10** | **Yes — Cursor recommendation** | **Parallel:** OMNI **Testing Scenarios** table + Testing views in Production now. **Cursor script blocked** until OMNI final field list. Full pipeline test after 066 Production audit pass. |
 | **Q11** | **Yes** | Document test enrollment/record scope in PROJECT_STATE. Test rows live in **registrant/pipeline tables** (Submissions, Submission Assets, Homework Completions, Video Feedback, XP Events, etc.) — **not** config tables (Milestones, Levels, Gates, XP Rules, …). |
 | **Q12** | **Yes — accept for now** | See [Q12 explained](#q12-explained) below. |
-| **Q13** | **Default: dev Make before full video test** | Mike did not specify — using recommendation. Configure dev Make webhooks before C-020 multi-video upload test. |
+| **Q13** | **Default: production Make before full video test** | Mike did not specify — using recommendation. Configure production Make webhooks before C-020 multi-video upload test. |
 | **Q14** | **Yes** | **066 v3.1** mandatory template for all Category B rewrites. |
 | **Q15** | **Yes** | Create `airtable/automations/_patterns/` snippet folder. |
 | **Q16** | **Yes** | ChatGPT Automation Standard v4 review before editing doc 06. |
@@ -91,7 +91,7 @@
 |---|----------|----------------|
 | Q11 | Schmidt + 5 Production test enrollments — document record IDs in PROJECT_STATE or C-019 doc? | Yes — OMNI export IDs |
 | Q12 | **056/066/101** skip inactive enrollments — accept for C-020 upload tests, or revisit Active? semantics for **standings-only** false? | Accept for now — upload path unaffected |
-| Q13 | Production Make webhooks — configure before C-020 multi-video test, or mock without upload? | Dev Make before full video test |
+| Q13 | Production Make webhooks — configure before C-020 multi-video test, or mock without upload? | Production Make before full video test |
 
 ---
 

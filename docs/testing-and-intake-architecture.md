@@ -227,7 +227,7 @@ An unchecked `Run Test?` is a no-op guard. Re-checking it is an explicit new req
 
 ### Downstream automations expected to fire
 
-After **Testing Scenarios** creates a Submission, the **normal** chain should run. Use this map when verifying in Production (Make webhooks → **dev** scenarios per [production-base-setup.md](./production-base-setup.md)).
+After **Testing Scenarios** creates a Submission, the **normal** chain should run. Use this map when verifying in Production (Make webhooks → **production** scenarios per [production-base-setup.md](./production-base-setup.md)).
 
 #### Stage A — Submission intake (immediate)
 
@@ -276,8 +276,8 @@ Coach review → **113**, **114**, **073** fire when review/XP fields set.
 
 | # | Automation | Risk in Production |
 |---|------------|-------------|
-| **070a**, **070b** | Upload to Make | Must use **dev** webhook URLs |
-| **071**, **073**, **074**, **077** | Parent email send | **OFF or dev Make** until dev scenarios exist |
+| **070a**, **070b** | Upload to Make | Must use **production** webhook URLs |
+| **071**, **073**, **074**, **077** | Parent email send | **OFF or production Make** until production scenarios exist |
 
 **Audit verification:** After a test run, dry-run [Stage A–H audits](../airtable/extension-scripts/audits/README.md) filtered to test Enrollment — especially `audit-submission-pipeline-integrity.js`, `audit-homework-pipeline-integrity.js`, `audit-video-pipeline-integrity.js`.
 

@@ -22,7 +22,7 @@
 | Gate / PW | Mark `Gate Credit Applied?` / `Perfect Week Credit Applied?` **only** |
 | Gaps (unchanged product debt) | **057** still counts live `Attendees`; **042** still reads `Total Zoom Attendances` (live link count) — do **not** bypass by impersonating live attendance |
 
-Packet: [C-025-stage17-zoom-recording-dev-installation-packet.md](../deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md)
+Packet: [C-025-stage17-zoom-recording-production-installation-packet.md](../deploy-checklists/C-025-stage17-zoom-recording-production-installation-packet.md)
 
 ---
 
@@ -61,7 +61,7 @@ Packet: [C-025-stage17-zoom-recording-dev-installation-packet.md](../deploy-chec
 ## 2. Proposed current architecture (S16 / PR #26)
 
 **Authority:** Owner-approved Stage 12 design + Stage 16 config catalog
-**Docs:** `docs/deploy-checklists/C-025-zoom-recording-design-stage12.md`, `C-025-C-027-configuration-catalog-stage16.md`, `docs/v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md`
+**Docs:** `docs/deploy-checklists/C-025-zoom-recording-design-stage12.md`, `C-025-C-027-configuration-catalog-stage16.md`, `docs/v2/ZOOM_RECORDING_CREDIT_PROD_INSTALL.md`
 **Primary table:** `Homework Completions` (HW17-style **Zoom Recording Quiz**)
 **Credit key:** `ZOOM_RECORDING|{meetingId}|{enrollmentId}`
 **Live keys unchanged:** `ZOOM_ATTEND_BASE|…` (101) · future `ZOOM_LIVE|…`
@@ -159,7 +159,7 @@ Until (1)–(2) are answered, **do not paste** either automation set.
 
 | File | Role |
 |------|------|
-| `docs/v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md` | S16 Production install packet |
+| `docs/v2/ZOOM_RECORDING_CREDIT_PROD_INSTALL.md` | S16 Production install packet |
 | `docs/deploy-checklists/C-025-117-numbering.md` | Corrected numbering disposition |
 | `docs/deploy-checklists/C-025-zoom-recording-design-stage12.md` | Owner-approved design |
 | `chatgpt-recovery-2026-07-14/docs/deploy-checklists/C-025-automation-packages-stage17.md` | Stage 17 six-pack design |

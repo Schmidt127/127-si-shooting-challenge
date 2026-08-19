@@ -19,7 +19,7 @@
 | Nested clone | `127-si-shooting-challenge/` is a **full ~477 MB / 1,402-file accidental clone** of this repo (has its own `.git`), created today | **High** (space + confusion) |
 | `.git` size | 289 MiB objects, **7,476 loose objects**, only 725 KiB packed -> `git gc` candidate | Medium |
 | Tracked binaries | ~19 large `.zip` packet/photo archives tracked (top file 31 MB) -> ~200 MB of the repo is media zips | Medium |
-| Branches | 60 local / 69 remote; **5 duplicate `cursor/setup-dev-environment-*`** remotes; many merged branches safe to prune | Medium |
+| Branches | 60 local / 69 remote; **5 duplicate `cursor/setup-production-environment-*`** remotes; many merged branches safe to prune | Medium |
 | Worktrees | 14 registered worktrees incl. stale `_sc_pr26_temp`, `pr25-light-theme`, `pr26-release-readiness` (detached) | Medium |
 | Untracked local artifacts | 205 untracked paths: recovery folder+zip, `_tmp_*` scratch, diagnostic Python, schema exports, send-ready zip | Low-Medium |
 
@@ -66,7 +66,7 @@ Legend for columns: **Tracked?** = currently in git index; **Ref'd?** = referenc
 | `tools/overnight/_tmp_*.py` and `_tmp_*.txt` (21) | **4** | Scratch scripts probing Cursor settings/UI; `_tmp_` prefix; entire dir untracked. | None. | Ignored via `**/_tmp_*` (Section 8). Delete locally when done. | No | No |
 | `tools/airtable/_tmp_*.py` (4) | **4** | Preflight/scratch (`_tmp_c025_*`, `_tmp_list_zoom_fields`, `_tmp_bump_stage17_versions`). | None. | Ignored via `**/_tmp_*`. | No | `_tmp_list_zoom_fields.py` name appears in one doc note only |
 | `tools/airtable/_c025_*.py` (~33), `_probe_*.py` (6), `_phase_d_*.py`, `_scan_packet_status.py`, `_build_send_ready_zip.py` | **5 / 6** | One-off C-025 Stage-17 diagnostic / install / probe utilities. **Not `_tmp_`-prefixed**, so *not* auto-ignored. Several referenced only by their own paste-body docs. | Low-Medium — some may still be handy for re-runs. | Owner decision per file: promote the reusable ones into `tools/airtable/` with a README + tests, archive the rest to `tools/airtable/_archive/`, or delete. Not ignored by this run. | No | A few referenced in `docs/deploy-checklists/*` paste bodies |
-| `docs/audits/_tmp_missing_sa_fields_dev.json` | **4** | Temp audit JSON, `_tmp_` prefix. | None. | Ignored via `**/_tmp_*`. | No | No |
+| `docs/audits/_tmp_missing_sa_fields_prod.json` | **4** | Temp audit JSON, `_tmp_` prefix. | None. | Ignored via `**/_tmp_*`. | No | No |
 | `docs/overnight-runs/results/_stale_branch_raw.json` | **6** | Generated JSON output from a prior stale-branch scan; `_`-prefixed but not `_tmp_`. | None. | Owner: keep as evidence or ignore `docs/overnight-runs/results/`. Not auto-ignored (outside sanctioned patterns). | No | No |
 | `docs/overnight-runs/_status-update-ready.md` | **6** | Overnight run status scratch; dir is untracked. | Low. | Owner: commit if it is a real deliverable, else archive. | No | No |
 
@@ -74,10 +74,10 @@ Legend for columns: **Tracked?** = currently in git index; **Ref'd?** = referenc
 
 | File / folder | Class | Reason | Risk of removal | Recommended action | Tracked? | Ref'd? |
 |---|---|---|---|---|---|---|
-| `make/blueprints/c025-117f-zoom-recording-approval-email-dev-v1.blueprint.json` | **1** | Make template. **Referenced by test** `make/lib/c025-117f-make-scenario.test.js` and 4 deploy docs. | High if lost. | Owner: commit through normal workflow. **Never ignore** (Make template + test-referenced). | No | Yes (test + docs) |
-| `docs/deploy-checklists/PHASE-A-021-combined-v1.0.0-PASTE.txt`, `PROD-021-v1.0.0-nofile-smoke-2026-07-20.md`, `PROD-021-vs-Production-combined-audit-2026-07-20.md`, `C-025-117f-dev-make-blueprint-import-repair.md` | **1 / 2** | Deployment documentation not yet committed. | Medium. | Owner: commit (deployment docs are in-scope for the repo). Do not ignore. | No | Cross-referenced by other deploy docs |
+| `make/blueprints/c025-117f-zoom-recording-approval-email-production-v1.blueprint.json` | **1** | Make template. **Referenced by test** `make/lib/c025-117f-make-scenario.test.js` and 4 deploy docs. | High if lost. | Owner: commit through normal workflow. **Never ignore** (Make template + test-referenced). | No | Yes (test + docs) |
+| `docs/deploy-checklists/PHASE-A-021-combined-v1.0.0-PASTE.txt`, `PROD-021-v1.0.0-nofile-smoke-2026-07-20.md`, `PROD-021-vs-Production-combined-audit-2026-07-20.md`, `C-025-117f-production-make-blueprint-import-repair.md` | **1 / 2** | Deployment documentation not yet committed. | Medium. | Owner: commit (deployment docs are in-scope for the repo). Do not ignore. | No | Cross-referenced by other deploy docs |
 | `docs/v2/SHOOTING-V2-PROJECT-HANDOFF.md` | **1** | V2 handoff doc referenced by other v2 docs. | Medium. | Owner: commit. | No | Yes (docs) |
-| `airtable/schema/snapshots/c023-stage3-verify/` and `c023-stage3-verify-dev/` (30 files) | **2** | Dated Production schema export snapshots (2026-07-10). Snapshot dir pattern matches `airtable/schema/snapshots/README.md`. | Low (regenerable via export tool). | Owner: commit as historical evidence or archive. Do **not** ignore (schema snapshots are sanctioned content). | No | Snapshot convention in `airtable/schema/snapshots/README.md` |
+| `airtable/schema/snapshots/c023-stage3-verify/` and `c023-stage3-verify-production/` (30 files) | **2** | Dated Production schema export snapshots (2026-07-10). Snapshot dir pattern matches `airtable/schema/snapshots/README.md`. | Low (regenerable via export tool). | Owner: commit as historical evidence or archive. Do **not** ignore (schema snapshots are sanctioned content). | No | Snapshot convention in `airtable/schema/snapshots/README.md` |
 | `media/2025-2026/MORNING-DISTRIBUTION-LIST.md` | **1 / 2** | Media ops doc. | Low. | Owner: commit or archive. | No | `media/**/README.md` |
 | `media/2025-2026/newspapers/final-packets/01-belgrade-...-SEND-READY.zip` (untracked) | **4 / 6** | Generated send-ready zip (matches sanctioned "generated send-ready ZIP" ignore class). Note: sibling packet zips are already tracked (inconsistency). | Low. | Ignored via `**/*-SEND-READY.zip` (Section 8). Owner: decide whether to unify by un-tracking the others. | No | No |
 
@@ -112,7 +112,7 @@ audit-followup/lead-integration
 feature/shooting-challenge-brand-redesign
 feature/shooting-challenge-mvp                       (checked out in worktree -mvp-wt -> remove worktree first)
 feature/shooting-v2-release-readiness
-feature/v2-dev-completion-package-117-070a
+feature/v2-production-completion-package-117-070a
 master                                               (default branch — DO NOT delete; checked out in -integration worktree)
 ```
 
@@ -125,15 +125,15 @@ origin/audit-followup/agent-a-xp-automation-contracts
 origin/audit-followup/agent-b-web-docs-release-hygiene
 origin/audit-followup/lead-integration
 origin/cursor/control-tipsync-2ca9
-origin/cursor/dev-release-verify-2ca9
+origin/cursor/production-release-verify-2ca9
 origin/cursor/fa-001-four-agent-pilot-cfc9
 origin/cursor/fa-001-implementation-cfc9
 origin/cursor/fa-001-research-cfc9
 origin/cursor/fa-001-testing-cfc9
 origin/cursor/learning-activities-handoff-2ca9
 origin/cursor/pr-reconcile-contracts-2565
-origin/cursor/remaining-airtable-dev-packages-2565
-origin/cursor/v2-dev-execution-runbook-3ea4
+origin/cursor/remaining-airtable-production-packages-2565
+origin/cursor/v2-production-execution-runbook-3ea4
 origin/feature/shooting-challenge-brand-redesign
 origin/feature/shooting-v2-blocker-closure-followup
 origin/feature/shooting-v2-release-readiness
@@ -149,14 +149,14 @@ origin/feature/shooting-v2-release-readiness
 
 - **5 near-duplicate branches**, all "add Cursor Cloud setup instructions", unmerged:
   ```
-  origin/cursor/setup-dev-environment-3ded
-  origin/cursor/setup-dev-environment-5578
-  origin/cursor/setup-dev-environment-86cb
-  origin/cursor/setup-dev-environment-bdba
-  origin/cursor/setup-dev-environment-e61f
+  origin/cursor/setup-production-environment-3ded
+  origin/cursor/setup-production-environment-5578
+  origin/cursor/setup-production-environment-86cb
+  origin/cursor/setup-production-environment-bdba
+  origin/cursor/setup-production-environment-e61f
   ```
   Recommend collapsing to at most one (or deleting all if the content already landed on `master`).
-- `origin/cursor/066-omni-live-blocked-b7bd`, `origin/cursor/c025-dev-install-attempt-e6f3`, `origin/cursor/overnight-live-status-251a`, `origin/cursor/v2-execution-board-e0f4` — status/attempt branches; confirm captured in docs then prune.
+- `origin/cursor/066-omni-live-blocked-b7bd`, `origin/cursor/c025-production-install-attempt-e6f3`, `origin/cursor/overnight-live-status-251a`, `origin/cursor/v2-execution-board-e0f4` — status/attempt branches; confirm captured in docs then prune.
 
 ---
 
@@ -280,7 +280,7 @@ git worktree add .../127-si-shooting-challenge-repo-health overnight/repository-
 1. Confirm the nested `127-si-shooting-challenge/` clone has no unique commits, then delete the folder (~477 MB reclaimed).
 2. `git gc --prune=now` (or `git repack -ad`) to compact 289 MiB of loose objects.
 3. Remove finished worktrees (`_sc_pr26_temp`, `pr25-light-theme`, `pr26-release-readiness`, and merged-branch worktrees), then prune the merged local branches (Section 4.1).
-4. Prune merged remote branches (Section 4.2) and collapse the 5 duplicate `setup-dev-environment-*` remotes (Section 4.4).
+4. Prune merged remote branches (Section 4.2) and collapse the 5 duplicate `setup-production-environment-*` remotes (Section 4.4).
 5. Decide on media-zip storage strategy (Section 3.2 / 7).
 6. Review untracked real content (Section 3.4) for proper commit; archive/delete the diagnostic Python (Section 3.3) per file.
 7. Follow `docs/UNTRACKED-RECOVERY-TRIAGE.md` for the recovery folder + zip.

@@ -37,7 +37,7 @@ Do **not** paste the webhook URL into git, chat logs, or Airtable 117f until Mik
 
 ## References
 
-- [Blueprint](../../make/blueprints/c025-117f-zoom-recording-approval-email-dev-v1.template.json)
-- [Deployment checklist](./C-025-117f-dev-make-deployment-checklist.md)
-- [Contract](./C-025-117f-dev-make-scenario-contract.md)
+- [Blueprint](../../make/blueprints/c025-117f-zoom-recording-approval-email-production-v1.template.json)
+- [Deployment checklist](./C-025-117f-production-make-deployment-checklist.md)
+- [Contract](./C-025-117f-production-make-scenario-contract.md)
 - Offline: `node make/lib/c025-117f-make-scenario.test.js`

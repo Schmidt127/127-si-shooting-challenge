@@ -2,7 +2,7 @@
 
 **Status:** Design authority locked · formula **verified in Production (snapshot)** · live trigger type/filters **live-blocked**
 **Base:** Production `appn84sqPw03zEbTT` first
-**Inventory:** [DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md)
+**Inventory:** [PROD_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./PROD_FIELD_TRIGGER_INVENTORY_2026-07-16.md)
 **Script:** `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.5**)
 **Hard stops:** No PROD changes · Confirm UI before relying on inventory rows
 

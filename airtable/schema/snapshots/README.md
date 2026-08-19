@@ -5,9 +5,8 @@ Dated exports from `tools/airtable/export_airtable_schema.py`.
 | Base | ID | Latest snapshot |
 |------|-----|-----------------|
 | **Production** | `appn84sqPw03zEbTT` | **`prod-foundation-reset-20260723-post-ts/`** — `20260723_152229` (includes Testing Scenarios). Pre-create export: `prod-foundation-reset-20260723/`. Older: `prod-20260706/` |
-| **Development** | `appn84sqPw03zEbTT` | `dev-20260706/` — `20260706_161606` — `manifest_appn84sqPw03zEbTT_latest.json` |
 
-Prior snapshots: `20260629_045741` (prod), `dev-20260705/` (Production). Foundation Reset index: [`docs/foundation-reset/README.md`](../../../docs/foundation-reset/README.md).
+Prior snapshots: `20260629_045741` (prod), `prod-20260705/` (Production). Foundation Reset index: [`docs/foundation-reset/README.md`](../../../docs/foundation-reset/README.md).
 
 ## Export commands
 
@@ -15,24 +14,15 @@ Prior snapshots: `20260629_045741` (prod), `dev-20260705/` (Production). Foundat
 cd tools/airtable
 # Production (read-only API export — does not change the live base)
 python export_airtable_schema.py -v --base-id appn84sqPw03zEbTT --out-dir ../../airtable/schema/snapshots/prod-YYYYMMDD
-# Development
-python export_airtable_schema.py -v --base-id appn84sqPw03zEbTT --out-dir ../../airtable/schema/snapshots/dev-YYYYMMDD
 ```
 
 ## What is exported
 
-| Included | Production (2026-07-06) | Production (2026-07-06) |
-|----------|-------------------------|------------------|
-| Tables, fields, types, formulas, links | **29 tables** | **30 tables** (+ **Testing Scenarios**) |
-| `schema_doc_*.md`, ERD, dependencies, health report | Yes | Yes |
-| View metadata | **118 views** | **120 views** |
-
-## Production vs Production schema delta (2026-07-06)
-
-| Item | Production only |
-|------|----------|
-| **Testing Scenarios** table | C-020 Engineering Test Framework operator table |
-| Inverse links on pipeline tables | Submissions, Enrollments, Homework Completions, Final Reflection Quiz Submissions → Testing Scenarios |
+| Included | Production |
+|----------|------------|
+| Tables, fields, types, formulas, links | Yes |
+| `schema_doc_*.md`, ERD, dependencies, health report | Yes |
+| View metadata | Yes |
 
 ## Views policy
 

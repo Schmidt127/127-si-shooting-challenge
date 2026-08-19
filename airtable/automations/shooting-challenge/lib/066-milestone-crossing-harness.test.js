@@ -80,4 +80,3 @@ test("no crossing when already above thresholds before run", () => {
 });
 
 console.log("\nAll 066-milestone-crossing-harness tests passed.");
-console.log("NOTE: Live OMNI Schmidt confirmation remains pending — see docs/deploy-checklists/066-dev-omni-confirmation-packet.md");

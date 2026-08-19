@@ -69,7 +69,7 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 - Schema changes (Stage K, C-026, etc.)
 - Extension backfills (`CONFIRM_WRITE` rehearsal)
 - **C-020** Engineering Test Framework — justified by Fillout-shaped pipeline need; **066** test and C-020 script sequencing blocked on pipeline-ready Production submission
-- Make dry-runs (when dev scenarios configured)
+- Make dry-runs (when production scenarios configured)
 
 **V2-015 completion gate:** base ID recorded ✓ · **066 ON in Production** ✓ · **Production intake automations ON** ✓ · **066 sandbox pending** — OMNI confirm Schmidt submission through pipeline + expected milestone behavior · webhook/Make isolation — verify per runbook
 
@@ -84,14 +84,14 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 
 **Testing architecture (OMNI correction):** No test flags on pipeline tables — [testing-and-intake-architecture.md § OMNI correction](./testing-and-intake-architecture.md#omni-correction--rejected-2026-07-05).
 
-**Deploy rule:** GitHub → paste **dev** → audit → approve → paste **prod** → `CHANGELOG.md`.
+**Deploy rule:** GitHub → paste **production** → audit → approve → paste **prod** → `CHANGELOG.md`.
 
 ### Schema snapshots (2026-07-06)
 
 | Base | Folder | Tables | Views |
 |------|--------|--------|-------|
 | **Production** | `airtable/schema/snapshots/prod-20260706/` | **29** | **118** |
-| **Development** | `airtable/schema/snapshots/dev-20260706/` | **30** | **120** |
+| **Development** | `airtable/schema/snapshots/prod-20260706/` | **30** | **120** |
 
 Production-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md](../airtable/schema/snapshots/README.md).
 
@@ -188,9 +188,9 @@ Reports (historical): `tools/airtable/_preview/final-emails/stage-report-v2.json
 | **GitHub scripts** | 46 numbered files (`012` gap — deleted in Airtable) |
 | **012** | **Deleted** — legacy, unused (+1 slot) |
 | **112** | **OFF** — monitor before delete; **013** is production Video Feedback path |
-| **066 deploy** | v3.1 — **Production paste/test** ([checklist](./deploy-checklists/066-v3.1-dev-deploy.md)); prod after pass |
+| **066 deploy** | v3.1 — **Production paste/test** ([checklist](./deploy-checklists/066-v3.1-production-deploy.md)); prod after pass |
 | **Roadmap** | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) — complexity-first modernization; Category A–F; capacity secondary |
-| **Production base (V2-015)** | **Ready** — `appn84sqPw03zEbTT`; 6 test enrollments; prod unchanged; **not complete** until 066 dev test |
+| **Production base (V2-015)** | **Ready** — `appn84sqPw03zEbTT`; 6 test enrollments; prod unchanged; **not complete** until 066 production test |
 
 ### Multi-year architecture (2026-07-05 decision)
 
@@ -230,7 +230,7 @@ Reports (historical): `tools/airtable/_preview/final-emails/stage-report-v2.json
 | `NEXT_PUBLIC_BASE_PATH` | `/shoot` |
 | `NEXT_PUBLIC_LANDING_URL` | `https://www.hoopchallenges.com` |
 | `NEXT_PUBLIC_SITE_URL` | Production shoot URL (set in Vercel) |
-| Local dev | `http://localhost:3001/shoot` |
+| Local development | `http://localhost:3001/shoot` |
 | Health check | `GET /shoot/api/airtable` → `{ ok: true, airtable: { tokenValid: true } }` |
 | Production status | Live at `/shoot` — Airtable token validated 2026-06-28 |
 | CI | `.github/workflows/web.yml` (lint, typecheck, test on `web/**` changes) |

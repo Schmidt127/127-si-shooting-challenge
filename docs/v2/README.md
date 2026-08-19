@@ -39,23 +39,23 @@
 | [../V2_RELEASE_CHECKLIST.md](../V2_RELEASE_CHECKLIST.md) | **Release checklist** — promote, smoke, rollback, sign-off |
 | [../AUTOMATION_VERSION_INVENTORY.md](../AUTOMATION_VERSION_INVENTORY.md) | Automation version / trigger / Production·PROD inventory |
 | [../V2_END_TO_END_TEST_MATRIX.md](../V2_END_TO_END_TEST_MATRIX.md) | End-to-end athlete scenario matrix |
-| [ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) | C-025 Zoom recording credit Production install |
+| [ZOOM_RECORDING_CREDIT_PROD_INSTALL.md](./ZOOM_RECORDING_CREDIT_PROD_INSTALL.md) | C-025 Zoom recording credit Production install |
 | [C025_ARCHITECTURE_RECONCILIATION.md](./C025_ARCHITECTURE_RECONCILIATION.md) | Stage 17 six-pack vs S16 117a/b — responsibility matrix |
 | [AUTOMATION_070A_LAUNCH_DECISION.md](./AUTOMATION_070A_LAUNCH_DECISION.md) | 070a homework upload launch decision |
-| [REMAINING_AIRTABLE_DEV_PACKAGES_INDEX.md](./REMAINING_AIRTABLE_DEV_PACKAGES_INDEX.md) | Worker A index — C-009/010/011/019 + 059/043/112 |
-| [DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md) | Production field/trigger inventory (snapshot + auth blocker) |
+| [REMAINING_AIRTABLE_PROD_PACKAGES_INDEX.md](./REMAINING_AIRTABLE_PROD_PACKAGES_INDEX.md) | Worker A index — C-009/010/011/019 + 059/043/112 |
+| [PROD_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./PROD_FIELD_TRIGGER_INVENTORY_2026-07-16.md) | Production field/trigger inventory (snapshot + auth blocker) |
 | [C009_C010_C011_MIGRATION_SAFETY.md](./C009_C010_C011_MIGRATION_SAFETY.md) | Migration order, safe defaults, dedupe keys, rollback |
-| [C009_HW17_ATTACHMENT_DEV_INSTALL.md](./C009_HW17_ATTACHMENT_DEV_INSTALL.md) | C-009 HW17 attachment intake (067 correction) |
-| [C010_ACTIVE_GUARDS_DEV_INSTALL.md](./C010_ACTIVE_GUARDS_DEV_INSTALL.md) | C-010 Active?/PPE guards for 010/031/053/065/072 |
-| [C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md](./C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md) | C-011 automatic weekly email (118/119 design) |
-| [C019_DEV_TESTING_VIEWS.md](./C019_DEV_TESTING_VIEWS.md) | C-019 Production Testing views specification |
+| [C009_HW17_ATTACHMENT_PROD_INSTALL.md](./C009_HW17_ATTACHMENT_PROD_INSTALL.md) | C-009 HW17 attachment intake (067 correction) |
+| [C010_ACTIVE_GUARDS_PROD_INSTALL.md](./C010_ACTIVE_GUARDS_PROD_INSTALL.md) | C-010 Active?/PPE guards for 010/031/053/065/072 |
+| [C011_AUTOMATIC_WEEKLY_EMAIL_PROD_INSTALL.md](./C011_AUTOMATIC_WEEKLY_EMAIL_PROD_INSTALL.md) | C-011 automatic weekly email (118/119 design) |
+| [C019_PROD_TESTING_VIEWS.md](./C019_PROD_TESTING_VIEWS.md) | C-019 Production Testing views specification |
 | [AUTOMATION_059_TRIGGER_RESOLUTION.md](./AUTOMATION_059_TRIGGER_RESOLUTION.md) | 059 created vs Ready-filter conflict |
 | [AUTOMATION_043_RETIREMENT_PLAN.md](./AUTOMATION_043_RETIREMENT_PLAN.md) | 043 superseded by 042 — retirement procedure |
 | [AUTOMATION_112_OFF_STATE_VERIFICATION.md](./AUTOMATION_112_OFF_STATE_VERIFICATION.md) | 112 OFF-state verification packet |
 | [PR34_PR35_PR37_RECONCILIATION.md](./PR34_PR35_PR37_RECONCILIATION.md) | PR #34/#35/#37 contract reconciliation (authoritative #35) |
-| [V2_DEV_EXECUTION_RUNBOOK.md](./V2_DEV_EXECUTION_RUNBOOK.md) | Executable Production test runbook (modes, fixtures, cleanup) |
+| [V2_PROD_EXECUTION_RUNBOOK.md](./V2_PROD_EXECUTION_RUNBOOK.md) | Executable Production test runbook (modes, fixtures, cleanup) |
 | [V2_LAUNCH_SMOKE_TESTS.md](./V2_LAUNCH_SMOKE_TESTS.md) | Pre-PROD promotion smoke subset |
-| [evidence/_TEMPLATE-dev-test-evidence.md](./evidence/_TEMPLATE-dev-test-evidence.md) | Per-test Production evidence form |
+| [evidence/_TEMPLATE-production-test-evidence.md](./evidence/_TEMPLATE-production-test-evidence.md) | Per-test Production evidence form |
 
 ## Workflow: Mike + ChatGPT + Cursor
 

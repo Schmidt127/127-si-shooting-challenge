@@ -40,7 +40,7 @@ Cursor **does not** have an Airtable UI driver or OMNI view-admin access. The re
 | **Count rows through an existing view** (Data API `?view=viw…`) | **Yes** — applies the view’s saved filters, but **does not expose** what those filters are |
 | **Verify forbidden filters programmatically** | **No** — requires UI inspection |
 
-**Helper (read-only, local):** `tools/airtable/_probe_c019_testing_views.py` — lists `Testing` views per table and attempts Schmidt row counts. Re-run after PAT/`DEV_BASE_ID` changes. **Not** a substitute for UI filter verification.
+**Helper (read-only, local):** `tools/airtable/_probe_c019_testing_views.py` — lists `Testing` views per table and attempts Schmidt row counts. Re-run after PAT/`AIRTABLE_BASE_ID` changes. **Not** a substitute for UI filter verification.
 
 ### Live Production probe — view existence (2026-07-07)
 

@@ -97,4 +97,4 @@ Does not alter **071** / video feedback.
 
 ## 6. Implementation next (Airtable — not this commit)
 
-See [C-025-dev-omni-runbook-stage12.md](./C-025-dev-omni-runbook-stage12.md) (S16-updated). Package: `C-025-dev-omni-implementation` → **BLOCKED_AIRTABLE**.
+See [C-025-production-omni-runbook-stage12.md](./C-025-production-omni-runbook-stage12.md) (S16-updated). Package: `C-025-production-omni-implementation` → **BLOCKED_AIRTABLE**.

@@ -22,7 +22,7 @@ if web_env.exists():
     load_dotenv(web_env, override=True)
 
 API = "https://api.airtable.com/v0"
-DEV_BASE = "appn84sqPw03zEbTT"
+PROD_BASE = "appn84sqPw03zEbTT"
 SCHMIDT_ENROLLMENT = "recgP9qZYjAhE7NXm"
 
 TABLES = [
@@ -111,7 +111,7 @@ def summarize_filters(meta: dict) -> dict:
 
 
 def main() -> None:
-    base_id = os.getenv("DEV_BASE_ID") or DEV_BASE
+    base_id = os.getenv("AIRTABLE_BASE_ID") or PROD_BASE
     print(f"base_id={base_id}")
 
     status, views_payload = get(f"{API}/meta/bases/{base_id}/views")

@@ -79,7 +79,7 @@ Intake (Fillout / C-020)
   → 005 Week
   → 009 → N Submission Assets (HW1-1 … HW1-N)
   → 020 per asset → find/create ONE Homework Completion; merge asset links
-  → 070a → Make upload (Production: OFF until dev webhook)
+  → 070a → Make upload (Production: OFF until production webhook)
   → 022 writeback URL
   → coach review → 064/065 XP → 071 parent email
 ```
@@ -110,7 +110,7 @@ Intake (Fillout / C-020)
   → 009 → N video Submission Assets (VIDEO-1 … VIDEO-N sequence)
   → 013 per asset → one Video Feedback row; copy Focus + Question
   → naming metadata complete → asset ready for 070b
-  → 070b → Make upload using Formatted Upload Name (Production: OFF until dev webhook)
+  → 070b → Make upload using Formatted Upload Name (Production: OFF until production webhook)
   → 022 writeback Canonical/Drive URL
   → coach review once → 113/114 XP → 073 parent email
 ```
@@ -197,7 +197,7 @@ Per [production-base-setup.md](./production-base-setup.md) — verified OFF on P
 | **074** weekly summary | OFF |
 | **077** daily submission email | OFF |
 
-**C-020 live tests:** Safe through **009 → 020** (homework) or **009 → 013** (video) with uploads OFF. Phase 2: enable dev Make webhooks before **070a/070b** live file tests.
+**C-020 live tests:** Safe through **009 → 020** (homework) or **009 → 013** (video) with uploads OFF. Phase 2: enable production Make webhooks before **070a/070b** live file tests.
 
 ---
 

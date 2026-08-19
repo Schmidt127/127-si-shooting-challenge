@@ -23,7 +23,7 @@
 | **Testing Scenarios must create Fillout-shaped Submissions** | Only production-shaped intake produces trustworthy downstream state for **066**, upload, homework, and video tests |
 | **066 depends on real pipeline state** | Shot milestone logic uses counted submissions from a enrollment that went through intake — not ad-hoc manual fields |
 
-**066 Production test** completed separately (Easton Hill) — see [066 dev checklist](./066-v3.1-dev-deploy.md). C-020 provides ongoing Fillout-shaped Production intake for Schmidt and future scenarios.
+**066 Production test** completed separately (Easton Hill) — see [066 production checklist](./066-v3.1-production-deploy.md). C-020 provides ongoing Fillout-shaped Production intake for Schmidt and future scenarios.
 
 ---
 
@@ -31,7 +31,7 @@
 
 ### Required
 
-- **Pipeline-ready submission path defined** for Production testing — Fillout-shaped Submission via C-020 **or** verified existing Production row ([066 dev deploy checklist](./066-v3.1-dev-deploy.md))
+- **Pipeline-ready submission path defined** for Production testing — Fillout-shaped Submission via C-020 **or** verified existing Production row ([066 production deploy checklist](./066-v3.1-production-deploy.md))
 
 **Daily Submission MVP verified** 2026-07-06 — Homework and Video branches may proceed per [upload-workflow-homework-video.md](../upload-workflow-homework-video.md).
 
@@ -545,7 +545,7 @@ Intentionally deferred — do not build during Phase 2:
 
 **Runtime:** [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md) — **Lambda** (`lambda/upload-asset/`). Make **Amazon S3 Upload** **dropped**.
 
-**070a / 070b:** **OFF** — [H2 gate](./C-013-sdk-hybrid-runtime.md#gate--required-before-enabling-dev-070b) **PASS** (SDK + Lambda handler); **AWS deploy + Make dry-run** next.
+**070a / 070b:** **OFF** — [H2 gate](./C-013-sdk-hybrid-runtime.md#gate--required-before-enabling-production-070b) **PASS** (SDK + Lambda handler); **AWS deploy + Make dry-run** next.
 
 ### H2 — Video 1-file — SDK **PASS** (2026-07-08)
 
@@ -554,9 +554,9 @@ Intentionally deferred — do not build during Phase 2:
 | **Scenario** | `recd9CxYgdJD2T435` (clone Test F, 1 file, Activity Date `2026-06-30` / Week 10) |
 | **Submission** | `recv5dbLefJipUvmh` |
 | **Asset** | `recL9r4a7navUxEhg` (`Pending Link` → SDK `Uploaded`) |
-| **Probe** | `allPass=true` — [verify](../../tools/airtable/_preview/c013-dev-h2-sdk-proof-recL9r4a7navUxEhg-verify.json) |
+| **Probe** | `allPass=true` — [verify](../../tools/airtable/_preview/c013-prod-h2-sdk-proof-recL9r4a7navUxEhg-verify.json) |
 | **C-023** | Exact duplicate of `recBBi80bYuxXifVj`; flags written; upload not blocked |
-| **Artifact** | [proof](../../tools/airtable/_preview/c013-dev-h2-sdk-proof-recL9r4a7navUxEhg.json) |
+| **Artifact** | [proof](../../tools/airtable/_preview/c013-prod-h2-sdk-proof-recL9r4a7navUxEhg.json) |
 
 ### H2 — Video 1-file — Lambda handler **PASS** (2026-07-08)
 
@@ -565,13 +565,13 @@ Intentionally deferred — do not build during Phase 2:
 | **Scenario** | `rec1fPdnIkhHfyLUN` |
 | **Submission** | `reckdsMrSJFADmopS` |
 | **Asset** | `recLAk8TA4lfbA6eu` (`Pending Link` → handler `Uploaded`) |
-| **Invoke** | `python c013_dev_lambda_invoke.py recLAk8TA4lfbA6eu` (in-process; same code as Lambda zip) |
-| **Probe** | `allPass=true` — [verify](../../tools/airtable/_preview/c013-dev-lambda-h2-proof-recLAk8TA4lfbA6eu-verify.json) |
+| **Invoke** | `python c013_prod_lambda_invoke.py recLAk8TA4lfbA6eu` (in-process; same code as Lambda zip) |
+| **Probe** | `allPass=true` — [verify](../../tools/airtable/_preview/c013-prod-lambda-h2-proof-recLAk8TA4lfbA6eu-verify.json) |
 | **C-023** | `match_found_written_to_existing_field` → first match `recBBi80bYuxXifVj` (4 prior hashes) |
-| **Artifact** | [proof](../../tools/airtable/_preview/c013-dev-lambda-h2-proof-recLAk8TA4lfbA6eu.json) |
+| **Artifact** | [proof](../../tools/airtable/_preview/c013-prod-lambda-h2-proof-recLAk8TA4lfbA6eu.json) |
 | **AWS Lambda** | Not deployed yet — admin IAM required ([DEPLOY.md](../../lambda/upload-asset/DEPLOY.md)) |
 
-Orchestrator: `python c013_dev_h2_video_run.py --confirm-write --prepare-only` then `--poll-only`; invoke: `c013_dev_lambda_invoke.py`.
+Orchestrator: `python c013_prod_h2_video_run.py --confirm-write --prepare-only` then `--poll-only`; invoke: `c013_prod_lambda_invoke.py`.
 
 **Make scenario (prep):** `Shooting Challenge - Production - Upload Engine - Lambda - v1` — webhook → HTTP → Lambda URL. **Not live-tested** until AWS deploy.
 

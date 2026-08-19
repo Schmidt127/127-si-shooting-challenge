@@ -97,7 +97,7 @@ flowchart TD
 
 ## 2. C-020 documentation review
 
-Sources: [testing-and-intake-architecture.md](./testing-and-intake-architecture.md), [C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md), Production schema `dev-20260706/`
+Sources: [testing-and-intake-architecture.md](./testing-and-intake-architecture.md), [C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md), Production schema `prod-20260706/`
 
 ### What is complete
 

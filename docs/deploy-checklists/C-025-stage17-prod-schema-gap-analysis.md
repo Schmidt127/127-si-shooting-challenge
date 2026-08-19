@@ -17,7 +17,7 @@
 | Item | Update |
 |------|--------|
 | Production one-click ETF | **Pass** on `recEuHFTjBftoJGMc` (`C025_STAGE17_DOWNSTREAM`, query **11/22**, **057+042 fired**, **117 OFF**, Run Test? cleared). Schema gap verdict **unchanged**. |
-| Dated schema snapshots | `prod-20260706` / `dev-20260706` **lack** Zoom Attendance (Production ZA created later). Live Meta audit supersedes snapshots for table presence. |
+| Dated schema snapshots | `prod-20260706` / `prod-20260706` **lack** Zoom Attendance (Production ZA created later). Live Meta audit supersedes snapshots for table presence. |
 | Repo alignment gate | **115 v1.8** + paste packet committed on `feature/c025-stage17-zoom-attendance`. PROD still **blocked on schema migration**. |
 
 ---
@@ -397,7 +397,7 @@ These were **not** fully proven by API meta/record reads alone:
 
 ## Related docs
 
-- [C-025-stage17-zoom-recording-dev-installation-packet.md](./C-025-stage17-zoom-recording-dev-installation-packet.md)
-- [C-025-stage17-perfect-week-level-gate-dev-installation-packet.md](./C-025-stage17-perfect-week-level-gate-dev-installation-packet.md)
+- [C-025-stage17-zoom-recording-production-installation-packet.md](./C-025-stage17-zoom-recording-production-installation-packet.md)
+- [C-025-stage17-perfect-week-level-gate-production-installation-packet.md](./C-025-stage17-perfect-week-level-gate-production-installation-packet.md)
 - [C-025-stage17-prod-promotion-STOP-2026-07-18.md](./C-025-stage17-prod-promotion-STOP-2026-07-18.md)
 - PASTE: 117 v1.1.1 · 057 v1.3 · 042 v3.1 under `docs/deploy-checklists/`

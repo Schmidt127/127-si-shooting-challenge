@@ -180,7 +180,7 @@ class ResolveSeasonTests(unittest.TestCase):
             )
         self.assertEqual(raised.exception.action_out, "error_missing_season")
 
-    def test_dev_fallback_only_when_explicitly_enabled(self):
+    def test_prod_fallback_only_when_explicitly_enabled(self):
         resolved = _resolve(
             config=_config(
                 environment="Production",

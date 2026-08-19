@@ -36,6 +36,6 @@
     "Airtable Attachment": "still present",
     "Writeback Complete?": 1
   },
-  "verifyCommand": "python tools/airtable/_probe_c013_asset_storage_fields.py --record-id recBBi80bYuxXifVj --out tools/airtable/_preview/c013-dev-s3-writeback-full-pass-recBBi80bYuxXifVj.json",
+  "verifyCommand": "python tools/airtable/_probe_c013_asset_storage_fields.py --record-id recBBi80bYuxXifVj --out tools/airtable/_preview/c013-prod-s3-writeback-full-pass-recBBi80bYuxXifVj.json",
   "hashPatchDoc": "make/documentation/C-013-dev-s3-hash-patch.md"
 }

@@ -5,7 +5,7 @@
 
 **PROD update (2026-07-11):** C-013 PROD video upload workflow **COMPLETE** — Airtable-triggered PASS on `recGQ8EjAMz3bEBiW` (070b v4.4 + 070c v1.1). See [C-013-prod-closeout-2026-07-11.md](./C-013-prod-closeout-2026-07-11.md).
 **Depends on:** C-020 Production functional complete (115 harness); C-012 field ownership (partial — document as we go)
-**Architecture:** [asset-storage-migration.md](../asset-storage-migration.md) · [upload-workflow-homework-video.md](../upload-workflow-homework-video.md) · [make/documentation/upload-asset-engine.md](../../make/documentation/upload-asset-engine.md) · [Slice 2 mapping](./C-013-make-s3-writeback-mapping.md) · **[Make build packet](./C-013-make-s3-dev-build-packet.md)**
+**Architecture:** [asset-storage-migration.md](../asset-storage-migration.md) · [upload-workflow-homework-video.md](../upload-workflow-homework-video.md) · [make/documentation/upload-asset-engine.md](../../make/documentation/upload-asset-engine.md) · [Slice 2 mapping](./C-013-make-s3-writeback-mapping.md) · **[Make build packet](./C-013-make-s3-production-build-packet.md)**
 **Test harness:** [C-020 checklist](./C-020-testing-scenarios-script-checklist.md) — Tests **F** (video) and **G** (homework) for upload path after Production Make is wired
 **Production probe:** `tools/airtable/_probe_c013_asset_storage_fields.py` (read-only)
 
@@ -15,19 +15,19 @@
 
 | File | When | Notes |
 |------|------|-------|
-| [c013-dev-baseline.json](../../tools/airtable/_preview/c013-dev-baseline.json) | 2026-07-07 (first probe) | Both canonical fields missing |
-| [c013-dev-baseline-before-fields.json](../../tools/airtable/_preview/c013-dev-baseline-before-fields.json) | 2026-07-07 (post-OMNI) | OMNI report stale; Metadata API later confirmed fields |
-| [c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json) | 2026-07-07 (EOD) | Make partial PASS (no hash) |
-| [c013-dev-s3-sdk-proof-recBBi80bYuxXifVj.json](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj.json) | 2026-07-08 | **SDK live proof** — S3 + full writeback |
-| [c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json) | 2026-07-08 | Probe verify `allPass=true` |
+| [c013-prod-baseline.json](../../tools/airtable/_preview/c013-prod-baseline.json) | 2026-07-07 (first probe) | Both canonical fields missing |
+| [c013-prod-baseline-before-fields.json](../../tools/airtable/_preview/c013-prod-baseline-before-fields.json) | 2026-07-07 (post-OMNI) | OMNI report stale; Metadata API later confirmed fields |
+| [c013-prod-s3-writeback-partial-pass-recBBi80bYuxXifVj.json](../../tools/airtable/_preview/c013-prod-s3-writeback-partial-pass-recBBi80bYuxXifVj.json) | 2026-07-07 (EOD) | Make partial PASS (no hash) |
+| [c013-prod-s3-sdk-proof-recBBi80bYuxXifVj.json](../../tools/airtable/_preview/c013-prod-s3-sdk-proof-recBBi80bYuxXifVj.json) | 2026-07-08 | **SDK live proof** — S3 + full writeback |
+| [c013-prod-s3-sdk-proof-recBBi80bYuxXifVj-verify.json](../../tools/airtable/_preview/c013-prod-s3-sdk-proof-recBBi80bYuxXifVj-verify.json) | 2026-07-08 | Probe verify `allPass=true` |
 
 ---
 
 ## 2026-07-08 — Production SDK proof PASS (C-013 + C-023 hash writeback)
 
-**Tool:** `tools/airtable/c013_dev_s3_upload_proof.py` (AWS SDK — bypasses Make S3 timeout)
+**Tool:** `tools/airtable/c013_prod_s3_upload_proof.py` (AWS SDK — bypasses Make S3 timeout)
 **Record:** `recBBi80bYuxXifVj` (Video Feedback / **070b** route)
-**Verifier:** `allPass=true` — [verify.json](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json)
+**Verifier:** `allPass=true` — [verify.json](../../tools/airtable/_preview/c013-prod-s3-sdk-proof-recBBi80bYuxXifVj-verify.json)
 
 ### Status summary
 
@@ -68,7 +68,7 @@
 
 **Decision:** **Option 3 — SDK / hybrid interim.** Make S3 **parked**. Lambda deferred until after Production harness proof.
 
-1. Extend SDK path: **C-023 duplicate lookup** on [`c013_dev_s3_upload_proof.py`](../../tools/airtable/c013_dev_s3_upload_proof.py).
+1. Extend SDK path: **C-023 duplicate lookup** on [`c013_prod_s3_upload_proof.py`](../../tools/airtable/c013_prod_s3_upload_proof.py).
 2. Build **C-020 H2** (video 1-file harness) → SDK processes harness asset → verify `allPass`.
 3. **Only after H2 gate** — prep **070b** hybrid webhook (Make orchestration → SDK; **not** Make S3).
 4. **H1** homework after video path stable.
@@ -188,13 +188,13 @@ https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/
 - Do **not** switch formulas/views/scripts to Canonical File URL
 - Do **not** store secrets/env values in repo (webhook URL, AWS creds → Make only)
 
-**Artifacts:** [preflight](../../tools/airtable/_preview/c013-manual-webhook-recBBi80bYuxXifVj.json) · [partial PASS](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json) · [build packet §8.1](./C-013-make-s3-dev-build-packet.md#81-manual-test-result--partial-pass-2026-07-07) · [runbook](../../make/documentation/C-013-dev-s3-make-ui-runbook.md) · **[hash patch (Step A)](../../make/documentation/C-013-dev-s3-hash-patch.md)**
+**Artifacts:** [preflight](../../tools/airtable/_preview/c013-manual-webhook-recBBi80bYuxXifVj.json) · [partial PASS](../../tools/airtable/_preview/c013-prod-s3-writeback-partial-pass-recBBi80bYuxXifVj.json) · [build packet §8.1](./C-013-make-s3-production-build-packet.md#81-manual-test-result--partial-pass-2026-07-07) · [runbook](../../make/documentation/C-013-production-s3-make-ui-runbook.md) · **[hash patch (Step A)](../../make/documentation/C-013-production-s3-hash-patch.md)**
 
 ---
 
 ## 2026-07-08 — C-023 hash patch (SDK path — PASS)
 
-**Result:** **PASS** via [c013_dev_s3_upload_proof.py](../../tools/airtable/c013_dev_s3_upload_proof.py) — see [SDK proof section](#2026-07-08--dev-sdk-proof-pass-c-013--c-023-hash-writeback). Make hash/S3 modules still blocked (S3 timeout).
+**Result:** **PASS** via [c013_prod_s3_upload_proof.py](../../tools/airtable/c013_prod_s3_upload_proof.py) — see [SDK proof section](#2026-07-08--production-sdk-proof-pass-c-013--c-023-hash-writeback). Make hash/S3 modules still blocked (S3 timeout).
 
 ### 2026-07-08 End-of-test — C-023 hash SDK proof
 
@@ -208,7 +208,7 @@ https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/
 | Probe `allPass` | **PASS** |
 | Airtable Attachment retained | **PASS** |
 
-**Artifacts:** [live proof](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj.json) · [verify](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json)
+**Artifacts:** [live proof](../../tools/airtable/_preview/c013-prod-s3-sdk-proof-recBBi80bYuxXifVj.json) · [verify](../../tools/airtable/_preview/c013-prod-s3-sdk-proof-recBBi80bYuxXifVj-verify.json)
 
 **Next:** Upload runtime = **Make → Lambda → S3**; C-020 **H2** gate complete; AWS Lambda deploy pending admin IAM.
 
@@ -220,7 +220,7 @@ https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/
 
 | Item | Value |
 |------|--------|
-| **Tool** | `c013_dev_s3_upload_proof.py` |
+| **Tool** | `c013_prod_s3_upload_proof.py` |
 | **Command** | `--confirm-write --athlete-slug schmidt-mike` |
 | **Base** | `appn84sqPw03zEbTT` only |
 | **Record** | `recBBi80bYuxXifVj` |
@@ -249,13 +249,13 @@ https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/
 
 ## 2026-07-10 — Stage 4C direct Production Lambda smoke test (C-013 + C-023)
 
-**Purpose:** Prove deployed `127si-upload-asset-dev` can claim, upload, write back, initialize reuse-review fields, and skip retry — **without Make or 070b**.
+**Purpose:** Prove deployed `127si-upload-asset` can claim, upload, write back, initialize reuse-review fields, and skip retry — **without Make or 070b**.
 
 | Item | Value |
 |------|--------|
 | **Git checkpoint** | `c0f91d3` on `master` (= `origin/master`); tracked tree clean |
-| **Lambda** | `127si-upload-asset-dev` · `us-east-2` · `CodeSha256=32fweHbTjypwvD3PYwkN53TSwDH1rDjrxLE0/UAppbs=` (Stage 4A; config unchanged) |
-| **Invoke method** | `python c013_dev_lambda_invoke.py <assetId> --aws` (direct AWS Lambda invoke; `X-Upload-Secret` from local `.env` — not logged) |
+| **Lambda** | `127si-upload-asset` · `us-east-2` · `CodeSha256=32fweHbTjypwvD3PYwkN53TSwDH1rDjrxLE0/UAppbs=` (Stage 4A; config unchanged) |
+| **Invoke method** | `python c013_prod_lambda_invoke.py <assetId> --aws` (direct AWS Lambda invoke; `X-Upload-Secret` from local `.env` — not logged) |
 | **070a / 070b** | **OFF** (not enabled for this test) |
 | **Make** | **Not used** |
 | **Production** | **Untouched** |
@@ -341,7 +341,7 @@ Primary match `recBBi80bYuxXifVj` retains its own Storage Key (`…/schmidt-mike
 
 ### Artifacts (local only — not committed)
 
-`tools/airtable/_preview/c013-dev-4c-before-recXUc3010h16Usmo.json` · `c013-dev-4c-upload-recXUc3010h16Usmo.json` · `c013-dev-4c-retry-recXUc3010h16Usmo.json` · `c013-dev-4c-after-recXUc3010h16Usmo.json`
+`tools/airtable/_preview/c013-prod-4c-before-recXUc3010h16Usmo.json` · `c013-prod-4c-upload-recXUc3010h16Usmo.json` · `c013-prod-4c-retry-recXUc3010h16Usmo.json` · `c013-prod-4c-after-recXUc3010h16Usmo.json`
 
 ### Pass / fail
 
@@ -364,7 +364,7 @@ Primary match `recBBi80bYuxXifVj` retains its own Storage Key (`…/schmidt-mike
 
 **070a / 070b:** **OFF** (unchanged). **C-013 / C-023 not complete.**
 
-Detail: [C-013-dev-make-lambda-scenario-prep.md](./C-013-dev-make-lambda-scenario-prep.md) § Stage 4D.
+Detail: [C-013-production-make-lambda-scenario-prep.md](./C-013-production-make-lambda-scenario-prep.md) § Stage 4D.
 
 ---
 
@@ -380,7 +380,7 @@ Detail: [C-013-dev-make-lambda-scenario-prep.md](./C-013-dev-make-lambda-scenari
 
 **070a / 070b / Make:** **OFF**. **Production:** untouched. **H3b–H3p matrix complete (16/16)** · **C-023 Stage 5 Production complete** (116 live on Production; retired **008** slot-neutral).
 
-Detail: [C-023-dev-h3-duplicate-bytes-test.md](./C-023-dev-h3-duplicate-bytes-test.md) § Wave 7 matrix.
+Detail: [C-023-production-h3-duplicate-bytes-test.md](./C-023-production-h3-duplicate-bytes-test.md) § Wave 7 matrix.
 
 ---
 
@@ -388,7 +388,7 @@ Detail: [C-023-dev-h3-duplicate-bytes-test.md](./C-023-dev-h3-duplicate-bytes-te
 
 **Yes — C-013 moves the system toward S3 / canonical URL as the storage source of truth.** Wave 7 Slice 1 prepared Production schema columns. **S3 is not yet the active source of truth** until Production Make uploads files to S3 and writeback populates **Canonical File URL**, **Storage Key**, and **hash fields** on **Submission Assets**.
 
-**2026-07-08:** One Production video asset has **full** SDK writeback including hash ([verify.json](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json)). Make S3 path still blocked.
+**2026-07-08:** One Production video asset has **full** SDK writeback including hash ([verify.json](../../tools/airtable/_preview/c013-prod-s3-sdk-proof-recBBi80bYuxXifVj-verify.json)). Make S3 path still blocked.
 
 ### 1. Current source of truth (today on Production)
 
@@ -484,7 +484,7 @@ OMNI verified on Production **Submission Assets**:
 
 ### After Mike confirms both fields added on Production
 
-1. Re-run probe: `python tools/airtable/_probe_c013_asset_storage_fields.py --out tools/airtable/_preview/c013-dev-baseline-after-fields.json`
+1. Re-run probe: `python tools/airtable/_probe_c013_asset_storage_fields.py --out tools/airtable/_preview/c013-prod-baseline-after-fields.json`
 2. Confirm `schemaInventory.Submission Assets.groups.canonicalPlanned.present` includes **Canonical File URL** and **Storage Key**.
 3. Mark Slice 1c complete; proceed to Slice 2 (Production Make S3).
 
@@ -618,7 +618,7 @@ Reference: [upload-asset-engine-v2-hash-duplicate-check.md](../../make/documenta
 
 **Slice 2 — Production Make S3 upload/writeback proof (still no Production)**
 
-See **[C-013-make-s3-writeback-mapping.md](./C-013-make-s3-writeback-mapping.md)** (architecture), **[C-013-make-s3-dev-build-packet.md](./C-013-make-s3-dev-build-packet.md)** (checklist), and **[Make UI runbook](../../make/documentation/C-013-dev-s3-make-ui-runbook.md)** (step-by-step build).
+See **[C-013-make-s3-writeback-mapping.md](./C-013-make-s3-writeback-mapping.md)** (architecture), **[C-013-make-s3-production-build-packet.md](./C-013-make-s3-production-build-packet.md)** (checklist), and **[Make UI runbook](../../make/documentation/C-013-production-s3-make-ui-runbook.md)** (step-by-step build).
 
 1. Clone Upload Engine v2 hash blueprint → **Production-only** scenario + webhook.
 2. Replace Google Drive modules with **S3 Upload Object** + canonical URL build.
@@ -690,10 +690,10 @@ Use Schmidt enrollment `recgP9qZYjAhE7NXm`; small test files (&lt; 5 MB).
 
 ## Checklist progress
 
-- [x] Slice 1a — probe baselines → [before-fields.json](../../tools/airtable/_preview/c013-dev-baseline-before-fields.json) (+ [first baseline](../../tools/airtable/_preview/c013-dev-baseline.json))
+- [x] Slice 1a — probe baselines → [before-fields.json](../../tools/airtable/_preview/c013-prod-baseline-before-fields.json) (+ [first baseline](../../tools/airtable/_preview/c013-prod-baseline.json))
 - [x] Slice 1b — OMNI + Metadata API field confirmation + ownership documented
 - [x] Slice 1c — **Canonical File URL** + **Storage Key** on Production Submission Assets (Metadata API; 0/49 records populated — schema only)
-- [x] **Slice 2 — Production S3 upload/writeback proof** — **SDK PASS** 2026-07-08 ([proof](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj.json) · [verify](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json))
+- [x] **Slice 2 — Production S3 upload/writeback proof** — **SDK PASS** 2026-07-08 ([proof](../../tools/airtable/_preview/c013-prod-s3-sdk-proof-recBBi80bYuxXifVj.json) · [verify](../../tools/airtable/_preview/c013-prod-s3-sdk-proof-recBBi80bYuxXifVj-verify.json))
 - [x] **Runtime decision** — SDK/hybrid interim; Make S3 parked — [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md)
 - [ ] **Slice 2b — C-020 H2** + C-023 duplicate lookup on SDK path
 - [ ] Slice 2b gate → prep **070b** hybrid webhook (Production only)

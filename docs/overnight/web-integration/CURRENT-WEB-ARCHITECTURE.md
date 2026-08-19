@@ -15,7 +15,7 @@ Related: `web/docs/site-hierarchy.md`, `web/docs/public-data-rules.md`, `web/doc
 | basePath | `/shoot` (`NEXT_PUBLIC_BASE_PATH`, default in `next.config.ts`) |
 | Hosting | Vercel — project Root Directory = `web`; mounted at `hoopchallenges.com/shoot` via landing rewrite |
 | `vercel.json` | Redirects project root `/` → `/shoot` (non-permanent) |
-| Local dev | `npm run dev` → port 3001 (`web/dev.ps1` helper) |
+| Local development | `npm run dev` → port 3001 (`web/dev.ps1` helper) |
 | Unit tests | Vitest (`npm run test`) — 15+ test files in `web/lib/**` |
 | E2E tests | Playwright (`web/playwright.config.ts`, chromium, `npx next start -p 3001`) |
 

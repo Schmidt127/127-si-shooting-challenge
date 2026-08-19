@@ -36,14 +36,14 @@ What was run in Production and what passed.
 ```powershell
 cd tools/airtable
 # Production export
-python export_airtable_schema.py -v --out-dir ../../airtable/schema/snapshots/dev-YYYYMMDD
+python export_airtable_schema.py -v --out-dir ../../airtable/schema/snapshots/prod-YYYYMMDD
 # PROD export (before promote, for diff)
 python export_airtable_schema.py -v --out-dir ../../airtable/schema/snapshots/prod-YYYYMMDD
 ```
 
 Snapshot paths committed (if applicable):
 
-- Production: `airtable/schema/snapshots/dev-YYYYMMDD/`
+- Production: `airtable/schema/snapshots/prod-YYYYMMDD/`
 - PROD (pre-promote): `airtable/schema/snapshots/prod-YYYYMMDD/`
 
 ---

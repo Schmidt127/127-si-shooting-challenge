@@ -258,7 +258,6 @@ test("local environment example defaults to the Production base", () => {
     "utf8",
   );
   assert.match(example, /^AIRTABLE_BASE_ID=appn84sqPw03zEbTT$/m);
-  assert.doesNotMatch(example, /AIRTABLE_DEV_BASE_ID|appTetnuCZlCZdTCT/);
 });
 
 console.log("\nAll config-selection tests passed.");

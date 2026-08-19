@@ -19,7 +19,7 @@
 
 | Base | Folder | Tables | Views | Notes |
 |------|--------|--------|-------|-------|
-| **Production** | `airtable/schema/snapshots/dev-20260706/` | **30** | **120** | Includes **Testing Scenarios** (C-020) — not in prod |
+| **Production** | `airtable/schema/snapshots/prod-20260706/` | **30** | **120** | Includes **Testing Scenarios** (C-020) — not in prod |
 | **Production** | `airtable/schema/snapshots/prod-20260706/` | **29** | **118** | No Testing Scenarios table |
 
 Human-readable: `schema_doc_*.md` in each folder. Manifest: `manifest_*_latest.json`.
@@ -37,7 +37,7 @@ Human-readable: `schema_doc_*.md` in each folder. Manifest: `manifest_*_latest.j
 
 Checklists:
 
-- [066-v3.1-dev-deploy.md](./deploy-checklists/066-v3.1-dev-deploy.md)
+- [066-v3.1-production-deploy.md](./deploy-checklists/066-v3.1-production-deploy.md)
 - [C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md)
 
 ---

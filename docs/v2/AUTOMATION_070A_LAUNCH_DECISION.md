@@ -3,7 +3,7 @@
 **Status:** Decision record only — **do not enable PROD 070a** from this document
 **Date:** 2026-07-15
 **Script:** `070a-email-notifications-and-external-handoffs-send-homework-asset-payload-to-make.js`
-**Evidence sources:** [C-070a-dev-overnight-package-2026-07-11.md](../deploy-checklists/C-070a-dev-overnight-package-2026-07-11.md) · [PROD-promotion-rollback-index-stage10.md](../deploy-checklists/PROD-promotion-rollback-index-stage10.md) · [PROJECT_STATE.md](../PROJECT_STATE.md)
+**Evidence sources:** [C-070a-production-overnight-package-2026-07-11.md](../deploy-checklists/C-070a-production-overnight-package-2026-07-11.md) · [PROD-promotion-rollback-index-stage10.md](../deploy-checklists/PROD-promotion-rollback-index-stage10.md) · [PROJECT_STATE.md](../PROJECT_STATE.md)
 
 ---
 

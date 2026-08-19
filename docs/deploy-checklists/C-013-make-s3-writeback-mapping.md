@@ -40,7 +40,7 @@ https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/
 | Folder prefix | `shooting-challenge/{seasonSlug}/{challengeSlug}/{athleteSlug}` |
 | File name | `{date}-{assetType}-{assetRecordId}-{safeOriginalFileName}` |
 
-Replaces earlier draft pattern `shooting-challenge/dev/{assetType}/{enrollmentRecordId}/…` for production path layout — update module **60** / **62** when converting to dynamic mappings (tomorrow step **C**).
+Replaces earlier draft pattern `shooting-challenge/production/{assetType}/{enrollmentRecordId}/…` for production path layout — update module **60** / **62** when converting to dynamic mappings (tomorrow step **C**).
 
 ### Confirmed writeback fields (partial)
 
@@ -48,7 +48,7 @@ Replaces earlier draft pattern `shooting-challenge/dev/{assetType}/{enrollmentRe
 
 ### Tomorrow A→G
 
-A. Hash module → B. Write **File Content Hash** → C. Dynamic path/URL → D. Re-test video → E. Full manual PASS doc → F. Production **070b** prep (after PASS) → G. C-020 **H2** before **H1**. Full detail: [Wave 7 checkpoint](./C-013-wave7-asset-storage-checklist.md#2026-07-07-end-of-night-checkpoint--dev-s3-partial-writeback-proof).
+A. Hash module → B. Write **File Content Hash** → C. Dynamic path/URL → D. Re-test video → E. Full manual PASS doc → F. Production **070b** prep (after PASS) → G. C-020 **H2** before **H1**. Full detail: [Wave 7 checkpoint](./C-013-wave7-asset-storage-checklist.md#2026-07-07-end-of-night-checkpoint--production-s3-partial-writeback-proof).
 
 ---
 
@@ -69,7 +69,7 @@ Make module **63** (success) and partial-failure paths must write the literal st
 **Working assumptions (Slice 2):**
 
 - Make.com first for Production; Lambda deferred unless Make cannot hash/upload reliably.
-- **Storage Key pattern (Mike 2026-07-07):** `shooting-challenge/{seasonSlug}/{challengeSlug}/{athleteSlug}/{date}-{assetType}-{assetRecordId}-{safeOriginalFileName}` — **hardcoded in Make tonight**; dynamic mapping pending (step **C**). Earlier draft `shooting-challenge/dev/{assetType}/…` superseded for path layout.
+- **Storage Key pattern (Mike 2026-07-07):** `shooting-challenge/{seasonSlug}/{challengeSlug}/{athleteSlug}/{date}-{assetType}-{assetRecordId}-{safeOriginalFileName}` — **hardcoded in Make tonight**; dynamic mapping pending (step **C**). Earlier draft `shooting-challenge/production/{assetType}/…` superseded for path layout.
 - **Hash:** SHA-256
 - Attachments stay in Airtable until later cleanup slice.
 - **Google Drive File URL** stays legacy bridge until S3 proven.
@@ -90,7 +90,7 @@ Slice 1 added empty schema columns (**Canonical File URL**, **Storage Key**, has
 
 Until this scenario succeeds on Production test assets, **S3 is not the storage source of truth** — see [storage transition section](./C-013-wave7-asset-storage-checklist.md#storage-source-of-truth-transition) in the Wave 7 checklist.
 
-**2026-07-07 partial proof:** One Production video asset has S3 object + **Canonical File URL** + **Storage Key** populated; **File Content Hash** still blank — see [partial PASS artifact](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json).
+**2026-07-07 partial proof:** One Production video asset has S3 object + **Canonical File URL** + **Storage Key** populated; **File Content Hash** still blank — see [partial PASS artifact](../../tools/airtable/_preview/c013-prod-s3-writeback-partial-pass-recBBi80bYuxXifVj.json).
 
 ---
 
@@ -169,7 +169,7 @@ Draft module plan — clone **v2 hash blueprint**, **remove Drive modules 20–4
 Template:
 
 ```text
-shooting-challenge/dev/{assetType}/{enrollmentRecordId}/{submissionRecordId}/{assetRecordId}/{originalFileName}
+shooting-challenge/production/{assetType}/{enrollmentRecordId}/{submissionRecordId}/{assetRecordId}/{originalFileName}
 ```
 
 | Token | Source (module 2) |
@@ -246,7 +246,7 @@ If hash was written in module **51** before S3 failure, leave hash fields popula
 **Verification commands (read-only):**
 
 ```powershell
-python tools/airtable/_probe_c013_asset_storage_fields.py --out tools/airtable/_preview/c013-dev-after-s3-h1.json
+python tools/airtable/_probe_c013_asset_storage_fields.py --out tools/airtable/_preview/c013-prod-after-s3-h1.json
 ```
 
 Confirm counts: `withCanonicalFileUrl`, `withStorageKey`, `withFileContentHash` > 0 for new test assets only.

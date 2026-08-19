@@ -104,7 +104,6 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
  * - emptyWeekPolicyOut
  *
  * AUTHORITY
- * - docs/v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md
  * - docs/next-wave/was-email/EMPTY-WEEK-EMAIL-DECISION.md
  ************************************************************/
 

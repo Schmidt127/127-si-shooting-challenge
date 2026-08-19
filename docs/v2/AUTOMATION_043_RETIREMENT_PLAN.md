@@ -7,7 +7,7 @@
 
 **Status:** Plan only — **do not disable or delete** without Mike · live ON/OFF **live-blocked**
 **Base:** Document for Production soak → Mike-approved maintenance window
-**Inventory:** [DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md)
+**Inventory:** [PROD_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./PROD_FIELD_TRIGGER_INVENTORY_2026-07-16.md)
 **Scripts:**
 - Keep: `042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js` (**v3.0**)
 - Retire: `043-levels-and-progression-set-level-gate-rule-from-next-level.js` (**v2.0**)

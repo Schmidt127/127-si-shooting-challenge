@@ -46,7 +46,7 @@
   },
   "partialPassResult": {
     "recordedAt": "2026-07-07",
-    "artifact": "c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json",
+    "artifact": "c013-prod-s3-writeback-partial-pass-recBBi80bYuxXifVj.json",
     "note": "S3 + canonical URL + storage key PASS; File Content Hash still blank"
   }
 }

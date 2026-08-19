@@ -24,7 +24,7 @@ _None open in repository evidence as of this refresh._
 
 | ID | Issue | Owner | Next action |
 |----|-------|-------|-------------|
-| K-H1 | **066** version is **v3.8** in Production (Mike 2026-08-19). Optional live OMNI sandbox confirmation may still be open if not already done. | Mike + OMNI | If sandbox still needed: [066-dev-omni-confirmation-packet.md](./deploy-checklists/066-dev-omni-confirmation-packet.md). Version string itself is no longer unknown. |
+| K-H1 | **066** version is **v3.8** in Production (Mike 2026-08-19). Optional live OMNI sandbox confirmation may still be open if not already done. | Mike + OMNI | If sandbox still needed: [066-production-omni-confirmation-packet.md](./deploy-checklists/066-production-omni-confirmation-packet.md). Version string itself is no longer unknown. |
 | K-H2 | Most automation Production live versions still **UNKNOWN** in inventory | Mike (UI) + Agent A (docs) | Fill [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) from Airtable UI |
 | K-H3 | Full athlete E2E matrix largely **Untested** in docs | Mike + Testing | Execute [V2_END_TO_END_TEST_MATRIX.md](./V2_END_TO_END_TEST_MATRIX.md) on Production |
 | K-H4 | Softr dual-run (historical) — **Obsolete / Not Used**; `/shoot` is the active public UI | — | Historical Reference Only: [SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md); Season Launch uses [WEB-SEASON-ACTIVATION.md](./challenge-year/WEB-SEASON-ACTIVATION.md) |
@@ -42,7 +42,7 @@ _None open in repository evidence as of this refresh._
 | K-M5 | Web **dashboard / athlete profiles** still mock; no participant auth | Agent B / web | Auth design first; do not publish private data |
 | K-M6 | `/shoot/admin` is placeholder — no staff auth; diagnostics must not leak PII | Agent B | Follow [web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md); read-only + gated only |
 | K-M7 | Publish gate still named **`OK to Publish on Softr`** while Softr is Obsolete | Mike / schema wave | Rename via SC-144; not an active Softr dependency |
-| K-M8 | `airtable/schema/current/` **stale**; latest dated snapshot is `prod-20260706` / `dev-20260706` | Agent A | Refresh schema exports; do not edit `current/` from Agent B |
+| K-M8 | `airtable/schema/current/` **stale**; latest dated snapshot is `prod-20260706` | Agent A | Refresh schema exports; do not edit `current/` from Agent B |
 
 ---
 

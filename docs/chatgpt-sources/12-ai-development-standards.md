@@ -138,7 +138,7 @@ This applies to **all** platform changes:
 | Views | **Yes** | [web/docs/airtable-views.md](../../web/docs/airtable-views.md) when web-facing |
 | Make scenarios | **Yes** | Blueprint export in `make/blueprints/` |
 | Extension scripts | **Yes** | `airtable/extension-scripts/` |
-| Schema changes (fields, tables) | **Yes** | Promotion doc + schema snapshot after intentional dev divergence |
+| Schema changes (fields, tables) | **Yes** | Promotion doc + schema snapshot after intentional production divergence |
 
 **Production base** (`appn84sqPw03zEbTT`) is the live season system of record. **Production base** (`appn84sqPw03zEbTT`) is the mandatory test environment. See [production-base-setup.md](../production-base-setup.md).
 
@@ -156,7 +156,7 @@ flowchart TB
         GitHub[GitHub]
     end
     subgraph validate [Validate]
-        Production[DEV_Base]
+        Production[PROD_Base]
         Testing[Testing]
     end
     subgraph ship [Ship]
@@ -192,10 +192,10 @@ Create or update a promotion document when Production receives an **intentional*
 
 | Change type | Promotion doc location |
 |-------------|------------------------|
-| **Automations** | `docs/deploy-checklists/{backlog-id}-{name}-dev-deploy.md` (Production + prod sections) |
+| **Automations** | `docs/deploy-checklists/{backlog-id}-{name}-production-deploy.md` (Production + prod sections) |
 | **Schema** (fields, tables, formulas, views) | `docs/deploy-checklists/{backlog-id}-{name}-schema-promotion.md` |
 | **Extension scripts** (audits / backfills) | Same deploy checklist or note in extension README |
-| **Make scenarios** | `make/documentation/` + blueprint header (prod vs dev mapping) |
+| **Make scenarios** | `make/documentation/` + blueprint header (prod vs production mapping) |
 | **Web** (routes, env, Airtable views) | `docs/deployment-notes.md` or deploy checklist |
 
 **Template:** [deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md](../deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md)
@@ -209,7 +209,7 @@ Every promotion document must include:
 3. **Numbered Production steps** — exact field names, types, formula text, paste line ranges, Make/Fillout/web changes
 4. **Smoke test** — how to verify prod after promote (Schmidt / dry-run audit)
 5. **Risk / rollback notes** — what breaks if wrong; undo path if any
-6. **Schema snapshots** (when schema changed) — dev export path; prod pre-promote export for diff
+6. **Schema snapshots** (when schema changed) — production export path; prod pre-promote export for diff
 
 #### Cursor obligation (end of session)
 
@@ -623,7 +623,7 @@ Use Cursor for:
 | **Production history** | [CHANGELOG.md](../../CHANGELOG.md) — Cursor updates on production-impacting ship |
 | **ChatGPT sync** | Run `tools/docs/sync-chatgpt-sources.ps1` after doc commits |
 
-**Docblock rule:** Airtable automation changes → GitHub first → paste into **dev** → audit → paste into **prod** → `CHANGELOG.md`. See [production-base-setup.md](../production-base-setup.md).
+**Docblock rule:** Airtable automation changes → GitHub first → paste into **production** → audit → paste into **prod** → `CHANGELOG.md`. See [production-base-setup.md](../production-base-setup.md).
 
 ---
 
@@ -634,7 +634,7 @@ All automation work follows [../../airtable/automations/AUTOMATION_SCRIPT_STANDA
 | Rule | Requirement |
 |------|-------------|
 | Source of truth | GitHub `airtable/automations/shooting-challenge/{nnn}-{kebab}.js` |
-| Deploy | GitHub first → paste **dev** → audit → Mike approves → paste **prod** → `CHANGELOG.md` (see [production-base-setup.md](../production-base-setup.md)) |
+| Deploy | GitHub first → paste **production** → audit → Mike approves → paste **prod** → `CHANGELOG.md` (see [production-base-setup.md](../production-base-setup.md)) |
 | Structure | `async function main()`, CONFIG block, SECTION blocks, required outputs |
 | Idempotency | Source Key patterns; one source → one XP Event; skip vs error |
 | Schema | Validate fields early; never write formula/rollup/lookup fields |

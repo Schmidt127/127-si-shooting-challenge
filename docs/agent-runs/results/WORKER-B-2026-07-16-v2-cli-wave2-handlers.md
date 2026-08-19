@@ -3,7 +3,7 @@
 ## Identity
 
 - Role: testing
-- Branch: `cursor/v2-dev-execution-runbook-3ea4` (PR #34)
+- Branch: `cursor/v2-production-execution-runbook-3ea4` (PR #34)
 - Date: 2026-07-16
 - Scope: Expand Production Operator CLI to remaining non-Make launch smoke tests
 
@@ -33,4 +33,4 @@ Still excluded: M1, M2, Make/email (I6, J6, L3, C7, …)
 
 ## Safety preserved
 
-Production base only · dry-run default · `--dev-confirm` + `--execute` for writes · no secret printing · owned cleanup/rollback · PROD refused
+Production base only · dry-run default · `--production-confirm` + `--execute` for writes · no secret printing · owned cleanup/rollback · PROD refused

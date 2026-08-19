@@ -43,7 +43,7 @@ Last updated: **2026-08-19** (022 **v2.1**, 020 **v3.6**, 070b **v4.6**, 117 **v
 | **Production branch** | `master` |
 | **Current repository baseline** | `origin/master` `410fa21cadaec67cd36489536487a0dd38f49607` at reconciliation start; verify dynamically before relying on it |
 | **Public URL** | https://www.fairfieldbasketballclub.com/shoot |
-| **Local dev** | http://localhost:3001/shoot |
+| **Local development** | http://localhost:3001/shoot |
 | **Health check** | `GET /shoot/api/airtable` → `{ ok: true, airtable: { tokenValid: true } }` |
 | **Vercel root** | `web/` |
 | **CI** | `.github/workflows/web.yml` (lint, typecheck, test on `web/**` changes) |

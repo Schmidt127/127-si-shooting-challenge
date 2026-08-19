@@ -7,7 +7,7 @@
 
 **Architecture lock (2026-07-08):** Make is **orchestration only**. Upload + SHA-256 + C-023 duplicate lookup + Airtable writeback run in **AWS Lambda** (or SDK CLI for regression). **Do not** use Make **Amazon S3 Upload** (timeout) or extend Production **Google Drive** upload for new Production work.
 
-**Production proof baseline:** `recBBi80bYuxXifVj` — SDK confirm-write PASS with full C-013/C-023 writeback ([checkpoint](./C-013-wave7-asset-storage-checklist.md#2026-07-08--controlled-dev-confirm-write-recheck-c-013--c-023)).
+**Production proof baseline:** `recBBi80bYuxXifVj` — SDK confirm-write PASS with full C-013/C-023 writeback ([checkpoint](./C-013-wave7-asset-storage-checklist.md#2026-07-08--controlled-production-confirm-write-recheck-c-013--c-023)).
 
 ---
 
@@ -59,9 +59,9 @@ Full module map for reference: [C-013-make-s3-writeback-mapping.md §4](./C-013-
 ## 3. Proposed Production Make scenario (locked target)
 
 **Scenario name:** `Shooting Challenge - Production - Upload Engine - Lambda - v1`
-**Lambda:** `127si-dev-shooting-challenge-asset-upload` — [lambda/upload-asset/DEPLOY.md](../../lambda/upload-asset/DEPLOY.md)
+**Lambda:** `127si-production-shooting-challenge-asset-upload` — [lambda/upload-asset/DEPLOY.md](../../lambda/upload-asset/DEPLOY.md)
 
-Make **does not** download, hash, upload to S3, or PATCH Airtable in the locked design. Lambda owns the full upload runtime (ported from [`c013_dev_s3_upload_proof.py`](../../tools/airtable/c013_dev_s3_upload_proof.py)).
+Make **does not** download, hash, upload to S3, or PATCH Airtable in the locked design. Lambda owns the full upload runtime (ported from [`c013_prod_s3_upload_proof.py`](../../tools/airtable/c013_prod_s3_upload_proof.py)).
 
 ### Proposed Make steps (orchestration only)
 
@@ -140,7 +140,7 @@ Full mapping: [C-013-make-s3-writeback-mapping.md §5](./C-013-make-s3-writeback
 | **Make Crypto module** | **No** | Same timeout/size limits as S3 module risk |
 | **AWS Lambda** | **Yes (locked)** | Same logic as SDK proof; bytes already in memory |
 | **Airtable automation script** | **No** | No binary access; wrong layer |
-| **SDK CLI (`c013_dev_s3_upload_proof.py`)** | **Regression / dry-run only** | Default dry-run; `--confirm-write` for controlled ops |
+| **SDK CLI (`c013_prod_s3_upload_proof.py`)** | **Regression / dry-run only** | Default dry-run; `--confirm-write` for controlled ops |
 
 **Rule:** One authoritative runtime computes hash **once** from downloaded bytes **before** S3 upload. Make forwards webhook only.
 
@@ -165,7 +165,7 @@ Full mapping: [C-013-make-s3-writeback-mapping.md §5](./C-013-make-s3-writeback
 | Layer | Dry-run / test pattern |
 |-------|------------------------|
 | **SDK CLI** | Default = dry-run (plan JSON only). `--confirm-write` requires explicit flag. |
-| **Lambda** | Idempotent skip if already `Uploaded` + canonical + hash. Manual invoke via `c013_dev_lambda_invoke.py` without AWS deploy. |
+| **Lambda** | Idempotent skip if already `Uploaded` + canonical + hash. Manual invoke via `c013_prod_lambda_invoke.py` without AWS deploy. |
 | **Make Production scenario** | Keep **OFF** until Lambda AWS deploy PASS. Test with **Run once** + sample webhook JSON; **070a/070b OFF** in Airtable. |
 | **Airtable 070b** | Enable **last** — only after Lambda direct test + Make manual test PASS |
 | **Verifier** | `_probe_c013_asset_storage_fields.py --record-id <rec>` → `allPass` |
@@ -210,6 +210,6 @@ Full mapping: [C-013-make-s3-writeback-mapping.md §5](./C-013-make-s3-writeback
 |-----|--------|
 | [upload-asset-engine.md](../../make/documentation/upload-asset-engine.md) | Drive-era status ladder + module overview |
 | [upload-asset-engine-v2-hash-duplicate-check.md](../../make/documentation/upload-asset-engine-v2-hash-duplicate-check.md) | Drive v2 hash modules 50–52 |
-| [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md) | Lambda payload/response contract |
-| [C-013-dev-070b-hybrid-prep.md](./C-013-dev-070b-hybrid-prep.md) | 070b trigger prep (OFF until Lambda PASS) |
+| [C-013-production-lambda-upload-plan.md](./C-013-production-lambda-upload-plan.md) | Lambda payload/response contract |
+| [C-013-production-070b-hybrid-prep.md](./C-013-production-070b-hybrid-prep.md) | 070b trigger prep (OFF until Lambda PASS) |
 | [upload-asset-engine-error-handling.md](../../make/documentation/upload-asset-engine-error-handling.md) | Error writeback (Lambda owns terminal status) |

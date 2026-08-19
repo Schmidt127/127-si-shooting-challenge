@@ -53,7 +53,7 @@
 
 | Command | Script |
 |---------|--------|
-| Dev | `npm run dev` → `next dev -p 3001` |
+| Production | `npm run dev` → `next dev -p 3001` |
 | Build | `npm run build` |
 | Start | `npm start` |
 | Lint | `npm run lint` |
@@ -153,7 +153,7 @@ Prod 29 / Production 30 (+ **Testing Scenarios**). Includes: Enrollments, Athlet
 
 - `docs/v2-change-backlog.md` (C-009, C-013, C-020, C-023, C-024)
 - `docs/PROJECT_STATE.md`, `docs/v2/03-business-rules.md`, `docs/v2/05-system-architecture.md`
-- Schema: `airtable/schema/snapshots/prod-20260706/`, `dev-20260706/`
+- Schema: `airtable/schema/snapshots/prod-20260706/`, `prod-20260706/`
 
 ---
 

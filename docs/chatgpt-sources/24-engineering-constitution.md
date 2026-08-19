@@ -54,7 +54,7 @@ Structural changes promote incrementally — **production-only validation. Produ
 Full architecture: [v2-015-production-base-architecture.md](./v2-015-production-base-architecture.md)
 Ops runbook: [production-base-setup.md](./production-base-setup.md)
 
-**After Production clone:** verify intake automations are **ON** before pipeline tests (see [066 dev checklist](./deploy-checklists/066-v3.1-dev-deploy.md) § Discovery).
+**After Production clone:** verify intake automations are **ON** before pipeline tests (see [066 production checklist](./deploy-checklists/066-v3.1-production-deploy.md) § Discovery).
 
 ---
 
@@ -206,7 +206,7 @@ Semantic intent:
 
 ### Schema snapshots
 
-- Folder: `dev-YYYYMMDD` / `prod-YYYYMMDD`
+- Folder: `prod-YYYYMMDD` / `prod-YYYYMMDD`
 - Commit manifests with snapshot
 
 ---

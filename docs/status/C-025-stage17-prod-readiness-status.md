@@ -170,5 +170,5 @@ Exact first Production Airtable action: **OMNI create Zoom Attendance table scaf
 - [C-025-stage17-prod-smoke-test.md](../deploy-checklists/C-025-stage17-prod-smoke-test.md)
 - [C-025-stage17-prod-schema-gap-analysis.md](../deploy-checklists/C-025-stage17-prod-schema-gap-analysis.md)
 - [C-025-stage17-production-release-packet.md](../deploy-checklists/C-025-stage17-production-release-packet.md)
-- [C-025-stage17-etf-downstream-dev-packet.md](../deploy-checklists/C-025-stage17-etf-downstream-dev-packet.md) (115 **v1.8**)
+- [C-025-stage17-etf-downstream-production-packet.md](../deploy-checklists/C-025-stage17-etf-downstream-production-packet.md) (115 **v1.8**)
 - Prior STOP (Production gate cleared): [C-025-stage17-prod-promotion-STOP-2026-07-18.md](../deploy-checklists/C-025-stage17-prod-promotion-STOP-2026-07-18.md)

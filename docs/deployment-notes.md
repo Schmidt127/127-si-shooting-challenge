@@ -21,7 +21,7 @@
 
 **Never** set the Production base ID on Vercel production. Setup: [production-base-setup.md](./production-base-setup.md).
 
-**Automation deploy:** GitHub → paste **dev** → audit → Mike approves → paste **prod** → `CHANGELOG.md`.
+**Automation deploy:** GitHub → paste **production** → audit → Mike approves → paste **prod** → `CHANGELOG.md`.
 
 ## Environment variables
 
@@ -37,7 +37,7 @@
 
 Template: [`web/.env.local.example`](../web/.env.local.example)
 
-## Local dev
+## Local development
 
 ```powershell
 cd web

@@ -143,7 +143,7 @@ Automations **056**, **066**, **101** skip inactive enrollments today. Upload/vi
 
 ### Script development — **paused**
 
-**Do not start Cursor/GitHub script work** until a pipeline-ready Production submission path is defined for **066** testing (see [066 dev checklist](./deploy-checklists/066-v3.1-dev-deploy.md) — blocked on Fillout-shaped submission, not manual rows).
+**Do not start Cursor/GitHub script work** until a pipeline-ready Production submission path is defined for **066** testing (see [066 production checklist](./deploy-checklists/066-v3.1-production-deploy.md) — blocked on Fillout-shaped submission, not manual rows).
 
 Field list recorded in [C-020 script checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
 
@@ -222,7 +222,7 @@ See [deploy-checklists/C-020-testing-scenarios-script-checklist.md](./deploy-che
 
 ### Downstream automations expected to fire
 
-After **Testing Scenarios** creates a Submission, the **normal** chain should run. Use this map when verifying in Production (Make webhooks → **dev** scenarios per [production-base-setup.md](./production-base-setup.md)).
+After **Testing Scenarios** creates a Submission, the **normal** chain should run. Use this map when verifying in Production (Make webhooks → **production** scenarios per [production-base-setup.md](./production-base-setup.md)).
 
 #### Stage A — Submission intake (immediate)
 
@@ -271,8 +271,8 @@ Coach review → **113**, **114**, **073** fire when review/XP fields set.
 
 | # | Automation | Risk in Production |
 |---|------------|-------------|
-| **070a**, **070b** | Upload to Make | Must use **dev** webhook URLs |
-| **071**, **073**, **074**, **077** | Parent email send | **OFF or dev Make** until dev scenarios exist |
+| **070a**, **070b** | Upload to Make | Must use **production** webhook URLs |
+| **071**, **073**, **074**, **077** | Parent email send | **OFF or production Make** until production scenarios exist |
 
 **Audit verification:** After a test run, dry-run [Stage A–H audits](../airtable/extension-scripts/audits/README.md) filtered to test Enrollment — especially `audit-submission-pipeline-integrity.js`, `audit-homework-pipeline-integrity.js`, `audit-video-pipeline-integrity.js`.
 
