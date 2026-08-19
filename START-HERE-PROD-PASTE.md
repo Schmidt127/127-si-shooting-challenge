@@ -86,7 +86,7 @@ Scheduling-only fields such as:
 - Program Instance
 - school-year scheduling fields
 - library Homework Slot
-- Lesson Key
+- ~~Lesson Key~~ **deleted** (Mike 2026-08-19)
 - PWTEST/test-only scheduling helpers
 
 ## Fresh JIT PHA proof rows
