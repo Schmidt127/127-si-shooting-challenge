@@ -1,4 +1,4 @@
-C-025 Stage 17 ï¿½ Automation 117f v1.2.0 PASTE BODY
+C-025 Stage 17 — Automation 117f v1.2.0 PASTE BODY
 ====================================================
 ** SUPERSEDED - HISTORICAL PASTE PACKET (v1.2.0). ** The current shipped script is
 117f v1.1 (pure Make handoff, writes NO Airtable records; Make owns dedupe). The
