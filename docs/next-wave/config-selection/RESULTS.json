@@ -74,7 +74,7 @@
     }
   ],
   "scripts_needing_later_paste": [],
-  "future_paste_candidates_after_dev_dry_run": [
+  "future_paste_candidates_after_prod_dry_run": [
     "042 with year-aware zoom gate guard (proposed only)"
   ],
   "mike_actions_doc": "docs/next-wave/config-selection/MIKE-ACTIONS.md",

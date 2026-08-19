@@ -5,7 +5,7 @@
 **Status:** **PROD COMPLETE** — manual smoke PASS · Airtable-triggered Schmidt test PASS (`recGQ8EjAMz3bEBiW`)  
 **Scripts:** **070b v4.4** · **070c v1.1**  
 **Closeout:** [C-013-prod-closeout-2026-07-11.md](../../docs/deploy-checklists/C-013-prod-closeout-2026-07-11.md)  
-**Parents:** [C-013-prod-make-deployment-2026-07-11.md](../../docs/deploy-checklists/C-013-prod-make-deployment-2026-07-11.md) · [C-013-dev-make-lambda-scenario-prep.md](../deploy-checklists/C-013-dev-make-lambda-scenario-prep.md)
+**Parents:** [C-013-prod-make-deployment-2026-07-11.md](../../docs/deploy-checklists/C-013-prod-make-deployment-2026-07-11.md) · [C-013-production-make-lambda-scenario-prep.md](../deploy-checklists/C-013-production-make-lambda-scenario-prep.md)
 
 **Hard stops:** Schmidt Testing only for experiments · no secrets in GitHub
 

@@ -56,7 +56,7 @@
 | Daily Submission | intake create | live PASS in PROD 2026-07-23 |
 | Homework | intake create (1–3 files, one assignment) | not live-tested in PROD post-reset |
 | Video / Three Video Upload | intake create (1–3 attachments) | not live-tested in PROD post-reset |
-| Other / Perfect Week + `C025_STAGE17_DOWNSTREAM` marker | Stage 17 downstream verifier (057/042 re-trigger + verify) | DEV-proven; PROD fixture IDs in CONFIG are DEV records (see defects) |
+| Other / Perfect Week + `C025_STAGE17_DOWNSTREAM` marker | Stage 17 downstream verifier (057/042 re-trigger + verify) | Production-proven; PROD fixture IDs in CONFIG are Production records (see defects) |
 | Anything else | `skipped_wrong_scenario`, Last Run Status `Blocked` | verified in code |
 
 ## 6. Dry-run behavior
@@ -115,8 +115,8 @@ operator-driven. C025 branch clears `Level Recalc Needed?` if it left it set.
 
 | # | Severity | Finding | Status |
 |---|----------|---------|--------|
-| 115-D1 | Low | GitHub header + docblock still say "DEV only until promotion doc + Mike approval" and "070b OFF on DEV" — stale now that 115 is installed and passing in PROD under SC-001 | **Fixed tonight** (header note updated; logic untouched) |
-| 115-D2 | Medium | C025 fixture IDs in CONFIG (`weekId rec7fCckt1zj9CbmP`, `zoomAttendanceId reciRsLuiJGYcea3U`, `zoomMeetingId recwnEKJAW8hxPSNL`, `wasId recvtukGFL7u74Tme`) are DEV records; running the C025 branch in PROD without `Scenario Requirements` JSON overrides will fail record lookups (safe fail: `skipped_missing_input`) | Documented; override via Scenario Requirements JSON when needed. Not changed (values are correct for DEV; PROD fixtures do not exist yet) |
+| 115-D1 | Low | GitHub header + docblock still say "Production only until promotion doc + Mike approval" and "070b OFF on Production" — stale now that 115 is installed and passing in PROD under SC-001 | **Fixed tonight** (header note updated; logic untouched) |
+| 115-D2 | Medium | C025 fixture IDs in CONFIG (`weekId rec7fCckt1zj9CbmP`, `zoomAttendanceId reciRsLuiJGYcea3U`, `zoomMeetingId recwnEKJAW8hxPSNL`, `wasId recvtukGFL7u74Tme`) are Production records; running the C025 branch in PROD without `Scenario Requirements` JSON overrides will fail record lookups (safe fail: `skipped_missing_input`) | Documented; override via Scenario Requirements JSON when needed. Not changed (values are correct for Production; PROD fixtures do not exist yet) |
 | 115-D3 | Low-Med | Daily branch presets `Duplicate Review Status = Count It`, so intentional duplicate-day scenarios never enter the duplicate review flow; a "duplicate daily submission" test therefore tests XP-per-submission, not the duplicate-day policy | Documented in scenario catalog (SCN-005); product decision logged in MIKE-ACTIONS |
 | 115-D4 | Info | Rerun overwrites `Linked Submission` (single link) — prior run's Submission ID only recoverable from Submissions table | Documented; acceptable |
 | 115-D5 | Info | `skipped_wrong_scenario` message says "v1.4 supports…" (stale version string in message only) | **Fixed tonight** (message text corrected) |

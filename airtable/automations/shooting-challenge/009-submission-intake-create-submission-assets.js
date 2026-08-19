@@ -18,7 +18,9 @@
 const SCRIPT = {
   scriptName: "009 - Submission Intake - Create Submission Assets",
   version: "v1.1",
+  versionNumber: "v1.1",
   versionDate: "2026-08-09",
+  originalWrittenDate: "2026-08-09",
 };
 
 const { recordId } = input.config();

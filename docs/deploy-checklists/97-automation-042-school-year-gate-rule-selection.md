@@ -1,6 +1,6 @@
 # Issue #97 — Automation 042 School-Year Gate-Rule Selection
 
-Status: **Repository implemented; DEV/PROD install and Schmidt live proof pending**
+Status: **Repository implemented; Production install and Schmidt live proof pending**
 
 ## Change
 
@@ -32,21 +32,21 @@ node "airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js"
 Required offline cases are covered by
 `lib/042-school-year-gate-rules.test.js`: same-year selection, prior-year-only rejection, shared fallback, duplicate same-year rejection, inactive same-year handling, and deterministic replay/no link churn.
 
-## DEV install and test — Mike/authorized operator
+## Production install and test — Mike/authorized operator
 
 Do not paste into Production first.
 
-1. Confirm DEV base: `appTetnuCZlCZdTCT`.
+1. Confirm Production base: `appn84sqPw03zEbTT`.
 2. Paste the exact committed Automation 042 v3.3 source into the Automation 042 editor.
 3. Confirm trigger remains `Enrollments` → `When record enters view` → `042 - Needs Level Assignment`.
 4. Confirm input variable `recordId` maps to the triggering Enrollment record ID.
 5. Confirm the editor exposes these fields without schema changes:
    - `Enrollments.School Year`
    - `Level Gate Rules.School Year / Rule Set`
-6. Run a DEV enrollment with a same-year rule and verify the selected `Level Gate Rule`.
-7. Run a DEV enrollment with only a prior-year rule and verify the run errors / sets `Level Status = Error`; it must not link the prior-year rule.
-8. Run a DEV enrollment with a single `Shared`/`Default` rule and verify fallback.
-9. Add two active same-year candidates in DEV only and verify fail-closed error.
+6. Run a Production enrollment with a same-year rule and verify the selected `Level Gate Rule`.
+7. Run a Production enrollment with only a prior-year rule and verify the run errors / sets `Level Status = Error`; it must not link the prior-year rule.
+8. Run a Production enrollment with a single `Shared`/`Default` rule and verify fallback.
+9. Add two active same-year candidates in Production only and verify fail-closed error.
 10. Deactivate the same-year candidate and verify it is ignored.
 11. Replay the same enrollment and verify the five owned links/status fields do not churn.
 
@@ -54,7 +54,7 @@ Record the editor version, trigger/input mapping, run output, and affected recor
 
 ## PROD install and controlled Schmidt proof — Mike/authorized operator
 
-Only after DEV passes and Mike approves promotion:
+Only after Production passes and Mike approves promotion:
 
 1. Confirm the current PROD rule inventory has one active intended rule per Level for `2026-2027`; do not create parallel rows during the test.
 2. Paste the exact committed v3.3 source into the PROD Automation 042 editor.

@@ -5,7 +5,7 @@
   "generatedFrom": {
     "schemaDump": "tools/airtable/_preview/c025_stage17_prod_schema_manifest_source.json",
     "schemaDumpGeneratedAt": "2026-07-18T23:44:22Z",
-    "devBaseId": "appTetnuCZlCZdTCT",
+    "prodBaseId": "appn84sqPw03zEbTT",
     "prodBaseId": "appn84sqPw03zEbTT",
     "featureBranchTipNote": "Build against feature/c025-stage17-zoom-attendance with 115 v1.8 committed",
     "mode": "read_only_meta"
@@ -147,7 +147,7 @@
         "pasteFile": "docs/deploy-checklists/C-025-stage17-115-etf-v1.8-PASTE.txt",
         "stateDuringSchema": "N/A",
         "stateDuringPaste": "DO NOT PASTE TO PROD by default",
-        "stateDuringInitialSmoke": "DEV-only unless Mike authorizes Testing Scenarios table in PROD",
+        "stateDuringInitialSmoke": "Production-only unless Mike authorizes Testing Scenarios table in PROD",
         "notes": "Requires Testing Scenarios table \u2014 not in PROD"
       }
     ],
@@ -202,13 +202,13 @@
   },
   "firstProdSchemaAction": "OMNI: create table Zoom Attendance (empty) OR add missing Config Stage 17 fields first \u2014 both are safe while all Stage 17 automations remain OFF. Recommended first click: create Zoom Attendance table.",
   "previouslyUnknownResolved": [
-    "Exact DEV Zoom Attendance table ID and full field inventory with types/formulas/choices",
+    "Exact Production Zoom Attendance table ID and full field inventory with types/formulas/choices",
     "Exact PROD confirmation Zoom Attendance absent (live Meta)",
-    "Exact Config Stage 17 field name inventory from DEV",
+    "Exact Config Stage 17 field name inventory from Production",
     "Exact Zoom Meetings Stage 17 support field inventory (excl ZZZ)",
     "Exact XP Source / Bucket choices from live Meta",
     "ZOOM_ATTEND_BASE presence check via record samples",
-    "View list on DEV Zoom Attendance",
+    "View list on Production Zoom Attendance",
     "Linked-table targets for ZA Enrollment/Meeting links"
   ],
   "unresolvedUnknowns": [
@@ -2470,7 +2470,7 @@
       "fieldName": null,
       "fieldType": "table",
       "action": "create",
-      "description": "Create table Zoom Attendance matching DEV; primary field = Name (or DEV primary)",
+      "description": "Create table Zoom Attendance matching Production; primary field = Name (or Production primary)",
       "requiredBeforeAutomationPaste": true,
       "requiredBeforeAutomationEnablement": true,
       "validationRuleAfterCreation": "Table Zoom Attendance exists in PROD meta",

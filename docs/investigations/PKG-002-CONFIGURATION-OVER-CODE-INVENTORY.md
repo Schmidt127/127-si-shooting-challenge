@@ -22,20 +22,20 @@
 
 - `web/lib/airtable/homework-queries.test.ts`, `tests/config-selection/resolve-config.test.js`, `tools/testing/tests/*`, and `airtable/.../lib/*test.js` contain synthetic or controlled fixture IDs such as `rec00000000000000`, `recWeek0000000001`, `recPI2026`, `recOtherEnrollment01`, and `appn84sqPw03zEbTT`. They are safe only within offline tests; they must not be interpreted as live selection.
 - Date fixtures (`2026-07-15`, `2026-08-02` through `2026-08-09`, `2026-08-01` through `2026-08-31`) and season labels (`2025-2026`, `2026-2027`) are test/evidence snapshots. They become stale when reused as defaults outside their named test or evidence scenario.
-- `tools/testing/tests/run_*`, `fixtures/live-115-bundle.json`, and `tools/testing/verify_*` intentionally use named controlled records to reproduce DEV/PROD evidence. The verifier comments and `CONTROL.json` prohibit treating this as full production proof.
+- `tools/testing/tests/run_*`, `fixtures/live-115-bundle.json`, and `tools/testing/verify_*` intentionally use named controlled records to reproduce Production evidence. The verifier comments and `CONTROL.json` prohibit treating this as full production proof.
 
 ### Should become configuration (season/program selection)
 
 - `tests/config-selection/resolve-config.test.js` hardcodes four Config record IDs and year-specific `Max Videos Per Submission` values for `2025-2026` through `2028-2029`. The test demonstrates the desired config-selection behavior, but production callers should obtain the matching row by explicit Program Instance/enrollment school year, with no arbitrary-first-record fallback.
 - `web/lib/airtable/queries.ts` hardcodes Airtable table names, views (`Web - Leaderboard`, `Web - Homework Catalog`, and related web views), field names, record caps (`200`), and revalidation windows (`120`/`300` seconds). Table/field names are schema contracts; season scope belongs in Airtable views or `AIRTABLE_ACTIVE_SCHOOL_YEAR`, not a source edit.
-- `web/.env.local.example` defaults `AIRTABLE_BASE_ID` to production `appn84sqPw03zEbTT` while its comment says DEV should use `appTetnuCZlCZdTCT`. This is the clearest configuration-over-code hazard: a fresh local setup can target the live base unless the operator overrides it.
+- `web/.env.local.example` defaults `AIRTABLE_BASE_ID` to production `appn84sqPw03zEbTT` while its comment says Production should use `appn84sqPw03zEbTT`. This is the clearest configuration-over-code hazard: a fresh local setup can target the live base unless the operator overrides it.
 - `web/lib/airtable/queries.ts` has an optional `AIRTABLE_ACTIVE_SCHOOL_YEAR`; absence means the fallback formula has no year clause. This is an environment assumption that should be explicit in deployment/local run configuration.
 - Season policy in `CONTROL.json` is `2027-05-01`–`2027-06-30`, early bird `2027-04-25`–`2027-05-01`, week 1 `2027-05-02`, but many fixtures and scripts still contain 2026 dates. Keep policy/config authoritative and label historical fixtures; do not copy dates into runtime logic.
-- Email defaults in `074...` and `073...` (`mschmidt@fairfield.k12.mt.us`) and `071...` (`coach@127sportsintensity.com`) are operational configuration, not business logic. They are not secrets, but should be environment/Make configuration with an explicit DEV/PROD mode.
+- Email defaults in `074...` and `073...` (`mschmidt@fairfield.k12.mt.us`) and `071...` (`coach@127sportsintensity.com`) are operational configuration, not business logic. They are not secrets, but should be environment/Make configuration with an explicit Production mode.
 
 ### Live-system dependencies
 
-- Production base ID documented in `docs/PROJECT_STATE.md`, `web/docs/airtable-data-map.md`, and web defaults: `appn84sqPw03zEbTT`. DEV base: `appTetnuCZlCZdTCT`. Record IDs in `tools/testing/verify_schmidt_identity.mjs`, `verify_scenario.mjs`, `verify_perfect_week_chain.mjs`, and `verify_case01_was_link.mjs` are named live/controlled-system dependencies, not portable configuration.
+- Production base ID documented in `docs/PROJECT_STATE.md`, `web/docs/airtable-data-map.md`, and web defaults: `appn84sqPw03zEbTT`. Production base: `appn84sqPw03zEbTT`. Record IDs in `tools/testing/verify_schmidt_identity.mjs`, `verify_scenario.mjs`, `verify_perfect_week_chain.mjs`, and `verify_case01_was_link.mjs` are named live/controlled-system dependencies, not portable configuration.
 - `web/lib/airtable/client.ts` depends on `AIRTABLE_API_TOKEN` and `AIRTABLE_BASE_ID`; `tools/testing/verify_*` depends on `AIRTABLE_API_TOKEN`. The token is correctly environment-only; no secret was inventoried or accessed.
 - Airtable table/view names are live schema dependencies: `Enrollments`, `Program Instance - Synced`, `Weekly Athlete Summary`, `XP Events`, `XP Reward Rules`, `Weeks`, `Levels`, `Achievements`, `Athlete Achievement Unlocks`, `Submissions`, `Homework Completions`, `Homework Library`, `Tutorials`, `Zoom Meetings`, `Zoom Attendance`, and `Video Feedback`.
 - `071`, `073`, `074`, `077`, `118`, and `119` depend on Make/webhooks/email handoffs; `070a`–`070c` depend on Make/Lambda asset upload flow; `117` depends on Zoom/Make. Their URLs, mode flags, response status handling, and send gates are external integration contracts.
@@ -52,14 +52,14 @@
 
 ## Ordered follow-up recommendation
 
-1. **Lead/Mike:** Confirm the intended target environment for every local/verification command; change the example/default flow so DEV is the safe default and PROD requires an explicit opt-in.
+1. **Lead/Mike:** Confirm the intended target environment for every local/verification command; change the example/default flow so Production is the safe default and PROD requires an explicit opt-in.
 2. **Implementation:** Add one season/program-instance configuration boundary for base ID, school year, Config row, operational email/mode, and external endpoints; preserve table/field names as schema contracts unless a schema migration is approved.
-3. **Testing:** Add offline assertions that reject missing season, duplicate year/config rows, production base selection in DEV, stale dates, and arbitrary first-record fallback; keep synthetic IDs and historical dates clearly fixture-scoped.
+3. **Testing:** Add offline assertions that reject missing season, duplicate year/config rows, production base selection in Production, stale dates, and arbitrary first-record fallback; keep synthetic IDs and historical dates clearly fixture-scoped.
 4. **Research/Lead:** Audit active automation headers and current Airtable/Make/Vercel UI separately. Use the repository inventory only as a candidate list; do not infer live status from source text.
-5. **Closeout:** Record approved DEV-to-PROD promotion steps in the appropriate deploy checklist and update the production changelog only after Mike-owned live verification.
+5. **Closeout:** Record approved Production-to-PROD promotion steps in the appropriate deploy checklist and update the production changelog only after Mike-owned live verification.
 
 ## Open questions for Mike
 
-- Should local web defaults be DEV-only, or should `AIRTABLE_BASE_ID` be mandatory with no production fallback?
+- Should local web defaults be Production-only, or should `AIRTABLE_BASE_ID` be mandatory with no production fallback?
 - Which runtime should own season selection: Program Instance, enrollment school year, an explicit environment variable, or a combined fail-closed resolver?
-- Which email addresses and webhook/mode values are approved for DEV versus PROD?
+- Which email addresses and webhook/mode values are approved for Production versus PROD?

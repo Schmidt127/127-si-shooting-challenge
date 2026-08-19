@@ -1,17 +1,17 @@
 # Automation 112 — OFF-State Verification Packet
 
-**Status:** Verification checklist — **112 must remain OFF**; live toggle **live-blocked** this run  
-**Base:** DEV attest first; PROD attest before any delete  
-**Inventory:** [DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md)  
-**Scripts:**  
-- Production path: `013-…create-video-feedback…` (**v2.0**) — expected **ON**  
-- Legacy: `112-video-review-and-xp-create-video-feedback-from-submission-asset.js` (**v2.1**) — expected **OFF**  
+**Status:** Verification checklist — **112 must remain OFF**; live toggle **live-blocked** this run
+**Base:** Production attest first; PROD attest before any delete
+**Inventory:** [PROD_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./PROD_FIELD_TRIGGER_INVENTORY_2026-07-16.md)
+**Scripts:**
+- Production path: `013-…create-video-feedback…` (**v2.0**) — expected **ON**
+- Legacy: `112-video-review-and-xp-create-video-feedback-from-submission-asset.js` (**v2.1**) — expected **OFF**
 **Authority:** V2-014 · PROJECT_STATE · Mike Q1 **2026-07-05** (delete approved, not executed)
 
 | Item | Label |
 |------|-------|
 | Docs / inventory claim 112 OFF | **repository-ready** (not live UI proof) |
-| Live DEV/PROD toggle | **live-blocked** — **requires Mike approval** (UI attest) |
+| Live Production toggle | **live-blocked** — **requires Mike approval** (UI attest) |
 | Delete 112 | **requires Mike approval** · **requires PROD promotion** window |
 
 ---
@@ -26,9 +26,9 @@
 
 Re-enabling 112 risks:
 
-1. Duplicate Video Feedback rows for the same asset  
-2. Wrong / non-prefixed Source Keys (audit `legacy_video_feedback_key`)  
-3. Assets stuck without Pending Link → **070b** never runs  
+1. Duplicate Video Feedback rows for the same asset
+2. Wrong / non-prefixed Source Keys (audit `legacy_video_feedback_key`)
+3. Assets stuck without Pending Link → **070b** never runs
 4. Divergent coach review / XP paths (114 expects 013-shaped rows)
 
 **Do not re-enable 112** “to test video.” Use **013** only.
@@ -55,7 +55,7 @@ If any check fails because 112 is ON: **turn 112 OFF immediately** in that base;
 ## 3. OFF-state verification packet (copy for run log)
 
 ```text
-Base: ____________________  (must be DEV appTetnuCZlCZdTCT or named PROD window)
+Base: ____________________  (must be Production appn84sqPw03zEbTT or named PROD window)
 Date: ____________________
 Verifier: ________________
 
@@ -77,9 +77,9 @@ If NO — stop; do not delete; file findings.
 
 OFF alone does **not** recover an automation slot. Delete only when:
 
-1. OFF-state packet PASS on that base  
-2. Monitor period complete (PROJECT_STATE / V2-014a)  
-3. Mike explicit maintenance-window approval  
+1. OFF-state packet PASS on that base
+2. Monitor period complete (PROJECT_STATE / V2-014a)
+3. Mike explicit maintenance-window approval
 4. GitHub retains `112-…js` for rollback re-paste until delete is accepted
 
 **This Worker packet does not delete 112.**
@@ -88,9 +88,9 @@ OFF alone does **not** recover an automation slot. Delete only when:
 
 ## 5. Rollback if someone turns 112 ON
 
-1. Disable 112 immediately.  
-2. Audit VF duplicates / bare keys.  
-3. Prefer 013 re-run / safe repair — do not “fix” by leaving 112 ON.  
+1. Disable 112 immediately.
+2. Audit VF duplicates / bare keys.
+3. Prefer 013 re-run / safe repair — do not “fix” by leaving 112 ON.
 4. Re-paste 013 if overwritten.
 
 ---
@@ -99,7 +99,7 @@ OFF alone does **not** recover an automation slot. Delete only when:
 
 | Item | Status |
 |------|--------|
-| Live DEV/PROD toggle state | **UNKNOWN** until UI attest (docs claim OFF) |
+| Live Production toggle state | **UNKNOWN** until UI attest (docs claim OFF) |
 | Historical bare-key VF rows remaining | **UNKNOWN** — audit |
 | Whether any private Make scenario still names 112 | **UNKNOWN** — Make UI |
 
@@ -107,15 +107,15 @@ OFF alone does **not** recover an automation slot. Delete only when:
 
 ## 7. Mike approvals needed
 
-1. Complete §3 packet on DEV (and PROD before delete).  
-2. Approve delete only at maintenance window (already conceptually approved 2026-07-05 — still needs execution go).  
+1. Complete §3 packet on Production (and PROD before delete).
+2. Approve delete only at maintenance window (already conceptually approved 2026-07-05 — still needs execution go).
 3. Do not authorize re-enable for experiments.
 
 ---
 
 ## 8. Related
 
-- `docs/automation-index.md` · `docs/PROJECT_STATE.md`  
-- Audit: `airtable/extension-scripts/audits/audit-video-pipeline-integrity.js`  
-- C-019 Video Feedback Testing view: [C019_DEV_TESTING_VIEWS.md](./C019_DEV_TESTING_VIEWS.md)  
+- `docs/automation-index.md` · `docs/PROJECT_STATE.md`
+- Audit: `airtable/extension-scripts/audits/audit-video-pipeline-integrity.js`
+- C-019 Video Feedback Testing view: [C019_PROD_TESTING_VIEWS.md](./C019_PROD_TESTING_VIEWS.md)
 - Offline: `tools/airtable/tests/test_automation_059_043_112_contracts.py`

@@ -7,7 +7,7 @@ Goal: adopt `lib/config-selection` **without** a simultaneous risky rewrite of e
 **Hard rules**
 
 - Do **not** delete or modify Config records to “fix” selection.
-- Do **not** paste PROD until DEV dry-run passes.
+- Do **not** paste PROD until Production dry-run passes.
 - Do **not** default to first Config record during migration.
 
 ---
@@ -28,7 +28,7 @@ Goal: adopt `lib/config-selection` **without** a simultaneous risky rewrite of e
    - `configSelectionSourceOut`
    - `configLegacyFirstRecordIdOut` (what `records[0]` would have been)
    - `configMismatchOut` (boolean)
-2. Run DEV on known enrollments for each of the four years (or fixtures).
+2. Run Production on known enrollments for each of the four years (or fixtures).
 3. Log mismatch rate; **do not fail closed yet**.
 
 Exit criteria: mismatch report reviewed; zero unexplained mismatches (or documented data fixes).

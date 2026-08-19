@@ -79,7 +79,7 @@ async function main() {
     process.exit(1);
   }
   // Overnight testing baseline is PROD. Prefer explicit --base, else PROD default.
-  // Do not silently use web/.env.local AIRTABLE_BASE_ID when it points at DEV.
+  // Do not silently use web/.env.local AIRTABLE_BASE_ID when it points at Production.
   const argBase = process.argv.includes("--base")
     ? process.argv[process.argv.indexOf("--base") + 1]
     : null;

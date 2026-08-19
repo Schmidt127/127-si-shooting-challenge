@@ -54,7 +54,7 @@ GitHub is the source-of-truth copy. Controlled PROD proof passed for v2.1 on
  *   (057’s real done write). v1.7 incorrectly polled Zoom Attendance Perfect Week Credit Applied?
  *   which can stay false even after a successful 057 run.
  * - v1.9 (2026-07-23): Message/comment corrections only (no logic change): skip message no longer
- *   says "v1.4"; stale DEV-only header notes replaced with PROD install status (SC-001).
+ *   says "v1.4"; stale Production-only header notes replaced with PROD install status (SC-001).
  *   Airtable may keep running v1.8 — repaste optional.
  * - v2.0 (2026-08-10): Homework scenarios require Testing Scenarios.Homework Assignment to link
  *   an active Program Homework Assignment (PHA) record ID. Submissions.Homework Name 1 receives
@@ -80,7 +80,7 @@ GitHub is the source-of-truth copy. Controlled PROD proof passed for v2.1 on
  *   Omit Shot Total and Duplicate Review Status (homework-only; no shot-count XP path).
  * - Homework: max 3 Intake Attachments; do not write Homework Name 2 / HW Sub 2.
  * - Video: read **Intake Attachments** on Testing Scenarios; copy to Submissions **Video Upload**.
- *   (Testing Scenarios has no Video Upload field — confirmed DEV schema + reck9d758vX5yLneq.)
+ *   (Testing Scenarios has no Video Upload field — confirmed Production schema + reck9d758vX5yLneq.)
  * - Do NOT write Week, Submission Assets, Homework Completions, Video Feedback, XP Events, or computed fields.
  * - Dry Run? = preview/log only; no Submission create.
  * - Clear Run Test? on success, dry-run, skip, and blocked paths; intake leave checked on error for triage.
@@ -126,7 +126,7 @@ GitHub is the source-of-truth copy. Controlled PROD proof passed for v2.1 on
  * - Submissions → production-shaped intake fields only (no test metadata)
  * - C025 may clear Applied? on the named Zoom Attendance fixture and toggle WAS/Enrollment trigger fields only
  *
- * PROD/DEV DEPENDENCY
+ * Production DEPENDENCY
  * - Testing Scenarios table (PROD table created 2026-07-23: tblagI7Q5wXQm2XGS).
  * - Testing Scenarios.Shot Total (number) — Daily Submission only.
  * - Testing Scenarios.Homework Assignment, Intake Attachments — Homework only.
@@ -184,7 +184,7 @@ const CONFIG = {
     perfectWeek: "Perfect Week",
   },
 
-  /** C-025 Stage 17 downstream fixture defaults (DEV). Override via Scenario Requirements JSON. */
+  /** C-025 Stage 17 downstream fixture defaults (Production). Override via Scenario Requirements JSON. */
   c025Stage17Downstream: {
     scenarioKey: "C025_STAGE17_DOWNSTREAM",
     enrollmentId: "recgP9qZYjAhE7NXm",
@@ -197,7 +197,7 @@ const CONFIG = {
     maxQueryBudget: 22,
   },
 
-  /** Testing Scenarios video file source — canonical DEV field (no Video Upload on this table). */
+  /** Testing Scenarios video file source — canonical Production field (no Video Upload on this table). */
   testingScenarioVideoAttachmentFields: ["Intake Attachments"],
 
   testingScenarioFields: {
@@ -689,7 +689,7 @@ function buildVideoDryRunPreview({
       "HW Sub 2",
     ],
     downstreamExpectation:
-      "005 (Week) → 009 (N video assets) → 013 (N Video Feedback rows). 070b OFF on DEV.",
+      "005 (Week) → 009 (N video assets) → 013 (N Video Feedback rows). 070b OFF on Production.",
     note: "No Submission created. Uncheck Dry Run? and re-trigger to create.",
   };
 }
@@ -798,7 +798,7 @@ async function runDailySubmissionBranch({
       actionOut: CONFIG.actions.skippedMissingInput,
       errorOut: "Shot Total must be a positive number on Testing Scenarios.",
       actualResult:
-        "Missing or invalid Shot Total. Add Testing Scenarios.Shot Total on DEV.",
+        "Missing or invalid Shot Total. Add Testing Scenarios.Shot Total on Production.",
     });
     return;
   }
@@ -1155,7 +1155,7 @@ async function runHomeworkBranch({
     `Homework Library (derived): ${libraryId}.`,
     `HW Sub 1 file count: ${hwSub1Payload.length}.`,
     "Omitted: Shot Total, Duplicate Review Status, Homework Name 2, HW Sub 2, Video fields.",
-    "Downstream: 005 (Week) → 009 (assets) → 020 (one Homework Completion). 070a OFF on DEV.",
+    "Downstream: 005 (Week) → 009 (assets) → 020 (one Homework Completion). 070a OFF on Production.",
   ];
 
   const summary = `Homework Submission ${createdSubmissionId}; ${hwSub1Payload.length} file(s); PHA ${phaId}; Library ${libraryId}.`;
@@ -1344,7 +1344,7 @@ async function runVideoBranch({
         ),
         [CONFIG.testingScenarioFields.actualResult]: JSON.stringify(preview, null, 2),
         [CONFIG.testingScenarioFields.passFailNotes]:
-          "Dry run — no Submission created. Expect 005 → 009 → 013 on live run. 070b OFF on DEV.",
+          "Dry run — no Submission created. Expect 005 → 009 → 013 on live run. 070b OFF on Production.",
       },
     });
 
@@ -1416,7 +1416,7 @@ async function runVideoBranch({
     `Video source field (Testing Scenarios): ${videoAttachmentSourceField}.`,
     `Filenames: ${videoFilenames.join(", ")}.`,
     "Omitted: Shot Total, Duplicate Review Status, Homework fields, Week.",
-    "Downstream: 005 (Week) → 009 (N video assets) → 013 (N Video Feedback rows). 070b OFF on DEV.",
+    "Downstream: 005 (Week) → 009 (N video assets) → 013 (N Video Feedback rows). 070b OFF on Production.",
   ];
 
   const summary = `Video Submission ${createdSubmissionId}; ${videoUploadPayload.length} file(s); focus ${videoFeedbackFocus}.`;

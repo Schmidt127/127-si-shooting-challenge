@@ -1,5 +1,5 @@
 """
-Capture DEV record state after Mike runs Airtable UI Tests for 057/042.
+Capture Production record state after Mike runs Airtable UI Tests for 057/042.
 
 Usage (after Mike enables → Test → OFF):
   python tools/airtable/_c025_stage17_capture_final_ui_tests.py
@@ -16,7 +16,7 @@ from typing import Any
 ENV = Path(__file__).resolve().parent / ".env"
 PREP = Path(__file__).resolve().parent / "_preview" / "c025_stage17_final_ui_test_prep.json"
 OUT = Path(__file__).resolve().parent / "_preview" / "c025_stage17_final_ui_test_capture.json"
-BASE_EXPECTED = "appTetnuCZlCZdTCT"
+BASE_EXPECTED = "appn84sqPw03zEbTT"
 
 
 def load_env() -> dict[str, str]:

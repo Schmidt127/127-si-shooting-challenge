@@ -1,20 +1,20 @@
 # C-013 — Make upload migration plan (Drive → S3)
 
-**Date:** 2026-07-08  
-**Status:** **PLAN ONLY** — no Production Make, Production Airtable, or web changes  
-**Environment:** DEV first (`appTetnuCZlCZdTCT`)  
+**Date:** 2026-07-08
+**Status:** **PLAN ONLY** — no Production Make, Production Airtable, or web changes
+**Environment:** production-only validation (`appn84sqPw03zEbTT`)
 **Parents:** [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md) · [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md) · [C-013-make-s3-writeback-mapping.md](./C-013-make-s3-writeback-mapping.md)
 
-**Architecture lock (2026-07-08):** Make is **orchestration only**. Upload + SHA-256 + C-023 duplicate lookup + Airtable writeback run in **AWS Lambda** (or SDK CLI for regression). **Do not** use Make **Amazon S3 Upload** (timeout) or extend Production **Google Drive** upload for new DEV work.
+**Architecture lock (2026-07-08):** Make is **orchestration only**. Upload + SHA-256 + C-023 duplicate lookup + Airtable writeback run in **AWS Lambda** (or SDK CLI for regression). **Do not** use Make **Amazon S3 Upload** (timeout) or extend Production **Google Drive** upload for new Production work.
 
-**DEV proof baseline:** `recBBi80bYuxXifVj` — SDK confirm-write PASS with full C-013/C-023 writeback ([checkpoint](./C-013-wave7-asset-storage-checklist.md#2026-07-08--controlled-dev-confirm-write-recheck-c-013--c-023)).
+**Production proof baseline:** `recBBi80bYuxXifVj` — SDK confirm-write PASS with full C-013/C-023 writeback ([checkpoint](./C-013-wave7-asset-storage-checklist.md#2026-07-08--controlled-production-confirm-write-recheck-c-013--c-023)).
 
 ---
 
 ## 1. Current state — Production Make (Google Drive)
 
-**Scenario:** `Shooting Challenge - GAME - Upload Engine - April 2026`  
-**Blueprint:** [upload-asset-engine-v1.json](../../make/blueprints/upload-asset-engine-v1.json)  
+**Scenario:** `Shooting Challenge - GAME - Upload Engine - April 2026`
+**Blueprint:** [upload-asset-engine-v1.json](../../make/blueprints/upload-asset-engine-v1.json)
 **Hash + duplicate variant:** [upload-asset-engine-v2-with-file-hash-duplicate-check.json](../../make/blueprints/upload-asset-engine-v2-with-file-hash-duplicate-check.json) — see [upload-asset-engine-v2-hash-duplicate-check.md](../../make/documentation/upload-asset-engine-v2-hash-duplicate-check.md)
 
 ### Current Drive module chain (v2 good-URL branch)
@@ -41,9 +41,9 @@
 
 ---
 
-## 2. Abandoned intermediate — DEV Make S3 path
+## 2. Abandoned intermediate — Production Make S3 path
 
-**Scenario (DEV):** `Shooting Challenge - DEV - Upload Engine - S3 - v1`  
+**Scenario (Production):** `Shooting Challenge - Production - Upload Engine - S3 - v1`
 **Result:** Partial PASS 2026-07-07 (canonical URL + storage key, no hash). **Amazon S3 Upload module timed out** — **dropped permanently**. Do not troubleshoot.
 
 | Step | Module | Action |
@@ -56,12 +56,12 @@ Full module map for reference: [C-013-make-s3-writeback-mapping.md §4](./C-013-
 
 ---
 
-## 3. Proposed DEV Make scenario (locked target)
+## 3. Proposed Production Make scenario (locked target)
 
-**Scenario name:** `Shooting Challenge - DEV - Upload Engine - Lambda - v1`  
-**Lambda:** `127si-dev-shooting-challenge-asset-upload` — [lambda/upload-asset/DEPLOY.md](../../lambda/upload-asset/DEPLOY.md)
+**Scenario name:** `Shooting Challenge - Production - Upload Engine - Lambda - v1`
+**Lambda:** `127si-production-shooting-challenge-asset-upload` — [lambda/upload-asset/DEPLOY.md](../../lambda/upload-asset/DEPLOY.md)
 
-Make **does not** download, hash, upload to S3, or PATCH Airtable in the locked design. Lambda owns the full upload runtime (ported from [`c013_dev_s3_upload_proof.py`](../../tools/airtable/c013_dev_s3_upload_proof.py)).
+Make **does not** download, hash, upload to S3, or PATCH Airtable in the locked design. Lambda owns the full upload runtime (ported from [`c013_prod_s3_upload_proof.py`](../../tools/airtable/c013_prod_s3_upload_proof.py)).
 
 ### Proposed Make steps (orchestration only)
 
@@ -73,15 +73,15 @@ Make **does not** download, hash, upload to S3, or PATCH Airtable in the locked 
 | 4 | **4** | Router | HTTP status 2xx vs error |
 | 5 | **5** | Webhooks | Response **200** to close 070b webhook (070b sets `Processing` on 2xx) |
 
-**Removed vs Drive v2:** modules **5, 50, 51, 52, 20–45** (download, hash, duplicate, Drive).  
-**Removed vs DEV S3 attempt:** **Amazon S3 Upload** module.  
+**Removed vs Drive v2:** modules **5, 50, 51, 52, 20–45** (download, hash, duplicate, Drive).
+**Removed vs Production S3 attempt:** **Amazon S3 Upload** module.
 **Not in Make:** Airtable success PATCH — Lambda writes **Submission Assets** directly.
 
 ### What Lambda does (not Make)
 
 | Step | Owner | Action |
 |------|-------|--------|
-| Validate DEV base + route | Lambda | Reject prod base / wrong `routeKey` |
+| Validate Production base + route | Lambda | Reject prod base / wrong `routeKey` |
 | Get asset + download attachment | Lambda | Airtable API + HTTP GET |
 | SHA-256 | Lambda | `hashlib` on downloaded bytes |
 | C-023 duplicate lookup | Lambda | Airtable filter on `File Content Hash` |
@@ -93,7 +93,7 @@ Make **does not** download, hash, upload to S3, or PATCH Airtable in the locked 
 
 ## 4. Airtable writeback fields (target contract)
 
-**Table:** Submission Assets · **Base:** DEV `appTetnuCZlCZdTCT` (prod later, separate promotion)
+**Table:** Submission Assets · **Base:** Production `appn84sqPw03zEbTT` (prod later, separate promotion)
 
 ### C-013 success (written by upload runtime — Lambda)
 
@@ -123,9 +123,9 @@ Make **does not** download, hash, upload to S3, or PATCH Airtable in the locked 
 
 ### Do not write / clear (this wave)
 
-- **Airtable Attachment** — retain  
-- **Google Drive** * fields — leave legacy values; do not remove  
-- Formula / rollup / lookup fields  
+- **Airtable Attachment** — retain
+- **Google Drive** * fields — leave legacy values; do not remove
+- Formula / rollup / lookup fields
 - Video Feedback child URLs (**022** scope later)
 
 Full mapping: [C-013-make-s3-writeback-mapping.md §5](./C-013-make-s3-writeback-mapping.md#5-airtable-success-writeback).
@@ -136,11 +136,11 @@ Full mapping: [C-013-make-s3-writeback-mapping.md §5](./C-013-make-s3-writeback
 
 | Option | Verdict | Notes |
 |--------|---------|-------|
-| **Make hash helper (module 50)** | **No** for new DEV path | Was designed for Drive v2; duplicates download path; Make S3 path abandoned |
+| **Make hash helper (module 50)** | **No** for new Production path | Was designed for Drive v2; duplicates download path; Make S3 path abandoned |
 | **Make Crypto module** | **No** | Same timeout/size limits as S3 module risk |
 | **AWS Lambda** | **Yes (locked)** | Same logic as SDK proof; bytes already in memory |
 | **Airtable automation script** | **No** | No binary access; wrong layer |
-| **SDK CLI (`c013_dev_s3_upload_proof.py`)** | **Regression / dry-run only** | Default dry-run; `--confirm-write` for controlled ops |
+| **SDK CLI (`c013_prod_s3_upload_proof.py`)** | **Regression / dry-run only** | Default dry-run; `--confirm-write` for controlled ops |
 
 **Rule:** One authoritative runtime computes hash **once** from downloaded bytes **before** S3 upload. Make forwards webhook only.
 
@@ -151,12 +151,12 @@ Full mapping: [C-013-make-s3-writeback-mapping.md §5](./C-013-make-s3-writeback
 | Layer | Role |
 |-------|------|
 | **Make module 52 (Production v2)** | Historical — HTTP GET Airtable API after hash helper; flag-only; upload continues to Drive |
-| **Make (DEV Lambda scenario)** | **None** — no duplicate modules |
-| **Lambda / SDK** | **Authoritative for DEV** — `filterByFormula` on `File Content Hash`, exclude current record; write duplicate fields on live run; `match_found_report_only` on dry-run |
+| **Make (Production Lambda scenario)** | **None** — no duplicate modules |
+| **Lambda / SDK** | **Authoritative for Production** — `filterByFormula` on `File Content Hash`, exclude current record; write duplicate fields on live run; `match_found_report_only` on dry-run |
 
 **Recommendation:** **Do not duplicate** C-023 in both Make and Lambda. Single runtime (Lambda) writes duplicate fields. Make logs Lambda JSON `c023Duplicate` block only.
 
-**Not both:** Avoid reintroducing Make module **52** on DEV while Lambda also writes duplicate flags — risk double-PATCH or conflicting match notes.
+**Not both:** Avoid reintroducing Make module **52** on Production while Lambda also writes duplicate flags — risk double-PATCH or conflicting match notes.
 
 ---
 
@@ -165,8 +165,8 @@ Full mapping: [C-013-make-s3-writeback-mapping.md §5](./C-013-make-s3-writeback
 | Layer | Dry-run / test pattern |
 |-------|------------------------|
 | **SDK CLI** | Default = dry-run (plan JSON only). `--confirm-write` requires explicit flag. |
-| **Lambda** | Idempotent skip if already `Uploaded` + canonical + hash. Manual invoke via `c013_dev_lambda_invoke.py` without AWS deploy. |
-| **Make DEV scenario** | Keep **OFF** until Lambda AWS deploy PASS. Test with **Run once** + sample webhook JSON; **070a/070b OFF** in Airtable. |
+| **Lambda** | Idempotent skip if already `Uploaded` + canonical + hash. Manual invoke via `c013_prod_lambda_invoke.py` without AWS deploy. |
+| **Make Production scenario** | Keep **OFF** until Lambda AWS deploy PASS. Test with **Run once** + sample webhook JSON; **070a/070b OFF** in Airtable. |
 | **Airtable 070b** | Enable **last** — only after Lambda direct test + Make manual test PASS |
 | **Verifier** | `_probe_c013_asset_storage_fields.py --record-id <rec>` → `allPass` |
 | **C-020 H2** | Harness creates fresh `Pending Link` asset; never use prod enrollment |
@@ -175,31 +175,31 @@ Full mapping: [C-013-make-s3-writeback-mapping.md §5](./C-013-make-s3-writeback
 
 ---
 
-## 8. Migration phases (DEV → Production)
+## 8. Migration phases (Production → Production)
 
 | Phase | Scope | Production touched? |
 |-------|--------|---------------------|
-| **A** | SDK/Lambda proof on DEV (`recBBi80bYuxXifVj`, H2 harness assets) | **No** |
-| **B** | Deploy DEV Lambda + Function URL | **No** |
-| **C** | Create DEV Make Lambda scenario (webhook → HTTP → Lambda) | **No** |
+| **A** | SDK/Lambda proof on Production (`recBBi80bYuxXifVj`, H2 harness assets) | **No** |
+| **B** | Deploy Production Lambda + Function URL | **No** |
+| **C** | Create Production Make Lambda scenario (webhook → HTTP → Lambda) | **No** |
 | **D** | Manual Make test + probe verify | **No** |
-| **E** | Enable DEV **070b** only (one asset) | DEV Airtable only |
-| **F** | **070a** homework route (H1 gate) | DEV only |
+| **E** | Enable Production **070b** only (one asset) | Production Airtable only |
+| **F** | **070a** homework route (H1 gate) | Production only |
 | **G** | Production Lambda + Make + 070a/070b | **Promotion doc required** — separate approval |
 
-**Production Drive scenario:** Stays live until phase **G** promotion. Do not edit `Shooting Challenge - GAME - Upload Engine` for DEV experiments.
+**Production Drive scenario:** Stays live until phase **G** promotion. Do not edit `Shooting Challenge - GAME - Upload Engine` for Production experiments.
 
 ---
 
 ## 9. Hard stops (unchanged)
 
-- No Production Make scenario edits in this plan  
-- No Production Airtable automation paste  
-- No web code changes  
-- No Make **Amazon S3 Upload** module  
-- No clearing **Airtable Attachment**  
-- No removing **Google Drive** fields  
-- No formula/view cutover to **Canonical File URL**  
+- No Production Make scenario edits in this plan
+- No Production Airtable automation paste
+- No web code changes
+- No Make **Amazon S3 Upload** module
+- No clearing **Airtable Attachment**
+- No removing **Google Drive** fields
+- No formula/view cutover to **Canonical File URL**
 - No secrets in GitHub (webhook URLs, PATs, AWS keys)
 
 ---
@@ -210,6 +210,6 @@ Full mapping: [C-013-make-s3-writeback-mapping.md §5](./C-013-make-s3-writeback
 |-----|--------|
 | [upload-asset-engine.md](../../make/documentation/upload-asset-engine.md) | Drive-era status ladder + module overview |
 | [upload-asset-engine-v2-hash-duplicate-check.md](../../make/documentation/upload-asset-engine-v2-hash-duplicate-check.md) | Drive v2 hash modules 50–52 |
-| [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md) | Lambda payload/response contract |
-| [C-013-dev-070b-hybrid-prep.md](./C-013-dev-070b-hybrid-prep.md) | 070b trigger prep (OFF until Lambda PASS) |
+| [C-013-production-lambda-upload-plan.md](./C-013-production-lambda-upload-plan.md) | Lambda payload/response contract |
+| [C-013-production-070b-hybrid-prep.md](./C-013-production-070b-hybrid-prep.md) | 070b trigger prep (OFF until Lambda PASS) |
 | [upload-asset-engine-error-handling.md](../../make/documentation/upload-asset-engine-error-handling.md) | Error writeback (Lambda owns terminal status) |

@@ -12,7 +12,7 @@
 
 ## Before you start
 
-- [ ] Confirm you are in **PROD** (not DEV)
+- [ ] Confirm you are in **PROD** (not Production)
 - [ ] Confirm Schmidt Enrollment `recgP9qZYjAhE7NXm` still exists and **Active?=true**
 - [ ] Prefer Omni paste of `OMNI-INSTALL-PROMPT.md`, or create views manually
 

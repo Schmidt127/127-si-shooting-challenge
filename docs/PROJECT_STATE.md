@@ -43,7 +43,7 @@ Last updated: **2026-08-19** (schema refresh PROD snapshot; 022 **v2.1**, 020 **
 | **Production branch** | `master` |
 | **Current repository baseline** | `origin/master` `410fa21cadaec67cd36489536487a0dd38f49607` at reconciliation start; verify dynamically before relying on it |
 | **Public URL** | https://www.fairfieldbasketballclub.com/shoot |
-| **Local dev** | http://localhost:3001/shoot |
+| **Local development** | http://localhost:3001/shoot |
 | **Health check** | `GET /shoot/api/airtable` → `{ ok: true, airtable: { tokenValid: true } }` |
 | **Vercel root** | `web/` |
 | **CI** | `.github/workflows/web.yml` (lint, typecheck, test on `web/**` changes) |
@@ -66,11 +66,9 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 | **Automation standards (doc 06)** | **Active** — **066** remains the V2 rewrite reference pattern. Live paste is **v3.8** (Mike 2026-08-19). Older “v3.4 current reference” wording is historical for the createRecords contract era. |
 | **Multi-year architecture** | **Decided** — one base + Program Instance; **V2-013 queued** |
 | **Phase 2 — Platform Modernization** | Wave 2A planning + Phase 2B docs complete — implementation staged via backlog |
-| **V2-015 — Development base** | **Not in use** — Mike (2026-08-19): no separate DEV base; all work is in Production |
+| **V2-015 — Production base** | **Ready** — production-only pipeline permanent |
 
----
-
-**Airtable overlay (Mike 2026-08-19):** Shooting Challenge has **one live base** — Production `appn84sqPw03zEbTT`. Do not plan DEV-first Airtable work. Historical `dev-*` snapshot folders and `appTetnuCZlCZdTCT` references in older docs are preserved for archaeology only.
+**Airtable overlay (Mike 2026-08-19):** Shooting Challenge has one live base — Production `appn84sqPw03zEbTT`. Validate offline first and use controlled Production actions only with Mike's authorization.
 
 ---
 
@@ -98,14 +96,7 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 | Base ID | `appn84sqPw03zEbTT` |
 | Role | **Live season** — system of record |
 
-### Development (V2-015) — not in use
-
-| Item | Value |
-|------|--------|
-| Status | **Obsolete / not in use** (Mike 2026-08-19) |
-| Note | Historical docs may reference `appTetnuCZlCZdTCT` and `dev-*` snapshots — **ignore for current ops** |
-
-**Deploy rule:** GitHub → paste **Production** → `CHANGELOG.md`.
+**Operating rule:** GitHub → offline validation → Mike approval → controlled Production action → read-only verification → `CHANGELOG.md`.
 
 ### Schema documentation (important)
 
@@ -134,7 +125,7 @@ Notable PROD changes vs 2026-07-06: `Homework Library`, `Program Homework Assign
 |----------|--------|
 | **Fillout daily submission form** | **OFF** — contest intake closed (**C-008** done 2026-07-05) |
 | **Video upload (070b/070c + Lambda)** | **Airtable 070b = v4.6** + **Lambda season CodeOnly deploy 2026-08-19** (CodeSha256 `lwbLiBzB4cfWdzVmIVo7Z78AkiowqPuV2NmUXb+PK2w=`). Historical async `Accepted` handoff proven 2026-07-11 on **v4.4**. Optional Storage Key retry proof still open. |
-| **Homework upload (070a)** | **PROD intentionally OFF** — keep OFF per [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md); DEV package exists separately |
+| **Homework upload (070a)** | **PROD intentionally OFF** — keep OFF per [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md); Production package exists separately |
 | **C-023 Drive/attachment retirement** | Deferred |
 
 ---
@@ -177,7 +168,7 @@ Manual Build/Send checkboxes remain available for controlled one-offs.
 | `NEXT_PUBLIC_GAME_MANUAL_URL` | Optional — game manual embed URL |
 | `SITE_ACCESS_TOKEN` | Optional preview gate (middleware + `/api/airtable`) |
 | `AIRTABLE_API_TOKEN` / `AIRTABLE_BASE_ID` | Server-only; **production base on Vercel** |
-| Local / tools DEV base | `web/.env.local` or `tools/airtable/.env` |
+| Local / tools Production base | `web/.env.local` or `tools/airtable/.env` |
 
 Deploy details: [deployment-notes.md](./deployment-notes.md), [web/docs/deployment-notes.md](../web/docs/deployment-notes.md)
 

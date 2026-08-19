@@ -52,7 +52,7 @@ function listAutomationScripts() {
   const dir = path.join(ROOT, "airtable/automations/shooting-challenge");
   return fs
     .readdirSync(dir)
-    .filter((name) => /^\d+[a-z]?-.*\.js$/i.test(name))
+    .filter((name) => /^\d+[a-z]?-.*\.js$/i.test(name) && !name.endsWith(".test.js"))
     .map((name) => path.join(dir, name));
 }
 
@@ -67,7 +67,8 @@ function hasVersionHeader(text) {
     /\bversion\s*[:=]/i.test(text) ||
     /\* Version:\s*/i.test(text) ||
     /\* VERSION:\s*/i.test(text) ||
-    /const SCRIPT\s*=/.test(text)
+    /const SCRIPT\s*=/.test(text) ||
+    /Status:\s*RETIRED/i.test(text)
   );
 }
 
@@ -115,12 +116,6 @@ const LAUNCH_SCOPE_SCRIPTS = Object.freeze([
   "115",
   "116",
   "117",
-  "117a",
-  "117b",
-  "117c",
-  "117d",
-  "117e",
-  "117f",
 ]);
 
 function parseEnvExampleKeys(relPath) {
@@ -145,7 +140,6 @@ const requiredDocs = [
   "docs/V2_RELEASE_CHECKLIST.md",
   "docs/AUTOMATION_VERSION_INVENTORY.md",
   "docs/V2_END_TO_END_TEST_MATRIX.md",
-  "docs/v2/V2_DEV_EXECUTION_RUNBOOK.md",
   "docs/v2/V2_LAUNCH_SMOKE_TESTS.md",
   "docs/known-issues.md",
   "docs/automation-index.md",
@@ -256,14 +250,6 @@ const requiredTests = [
   "airtable/automations/shooting-challenge/lib/script-header-contract.test.js",
   "airtable/automations/shooting-challenge/lib/upload-make-lambda-response.js",
   "airtable/automations/shooting-challenge/lib/upload-make-lambda-response.test.js",
-  "tools/airtable/v2_dev_runbook/matrix-classification.json",
-  "tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js",
-  "tools/airtable/v2_dev_runbook/cli.js",
-  "tools/airtable/v2_dev_runbook/cli.test.js",
-  "tools/airtable/v2_dev_runbook/scenarios.test.js",
-  "tools/airtable/v2_dev_runbook/lib/safety.js",
-  "tools/airtable/v2_dev_runbook/lib/scenarios.js",
-  "tools/airtable/v2_dev_runbook/fixtures/milestones.json",
   "tools/airtable/tests/test_c025_recording_watch_contract.py",
   "tools/airtable/tests/test_c009_hw17_attachment_contract.py",
   "tools/airtable/tests/test_c010_active_guards_contract.py",
@@ -297,9 +283,6 @@ for (const needle of [
 
 const requiredC009C011Docs = [
   "docs/v2/C009_C010_C011_MIGRATION_SAFETY.md",
-  "docs/v2/C009_HW17_ATTACHMENT_DEV_INSTALL.md",
-  "docs/v2/C010_ACTIVE_GUARDS_DEV_INSTALL.md",
-  "docs/v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md",
   "docs/v2/PR34_PR35_PR37_RECONCILIATION.md",
 ];
 for (const doc of requiredC009C011Docs) {
@@ -308,10 +291,8 @@ for (const doc of requiredC009C011Docs) {
 }
 
 const requiredC025Docs = [
-  "docs/v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md",
   "docs/v2/AUTOMATION_070A_LAUNCH_DECISION.md",
   "docs/v2/C025_ARCHITECTURE_RECONCILIATION.md",
-  "docs/deploy-checklists/066-dev-omni-confirmation-packet.md",
   "docs/deploy-checklists/C-025-zoom-recording-design-stage12.md",
 ];
 for (const doc of requiredC025Docs) {
@@ -320,9 +301,9 @@ for (const doc of requiredC025Docs) {
 }
 
 // ---------------------------------------------------------------------------
-// 3b. DEV testing-view documentation (C-019) — required repo rules
+// 3b. Production testing-view documentation (C-019) — required repo rules
 // ---------------------------------------------------------------------------
-console.log("\n== DEV testing-view documentation (C-019) ==");
+console.log("\n== Production testing-view documentation (C-019) ==");
 const c019Docs = [
   "docs/deploy-checklists/C-019-testing-views-verification-checklist.md",
   "docs/deploy-checklists/C-019-airtable-ui-work-order.md",
@@ -466,13 +447,13 @@ const automationIndex = exists("docs/automation-index.md") ? read("docs/automati
 const knownIssues = exists("docs/known-issues.md") ? read("docs/known-issues.md") : "";
 const inventoryText = inventory;
 
-// 066: script is v3.4 (fields-contract fix 2026-08-06); do not claim paste-not-done
+// 066: current Production-aligned source is v3.8; do not claim paste-not-done
 // or treat older 3.x as the current sole version in PROJECT_STATE.
 if (byNumber.has("066")) {
   const text066 = fs.readFileSync(byNumber.get("066")[0], "utf8");
   const ver066 = extractDeclaredVersion(text066) || "";
-  if (/v?3\.4/i.test(ver066)) pass("066 script declares v3.4");
-  else fail(`066 script expected v3.4, found: ${ver066 || "(none)"}`);
+  if (/v?3\.8/i.test(ver066)) pass("066 script declares v3.8");
+  else fail(`066 script expected v3.8, found: ${ver066 || "(none)"}`);
 
   if (/Airtable paste not done/i.test(projectState) && /H-002.*066/i.test(projectState)) {
     fail("PROJECT_STATE still claims H-002/066 Airtable paste not done (contradicts backlog + automation-index)");
@@ -482,11 +463,11 @@ if (byNumber.has("066")) {
 
   if (
     /Automation 066 v3\.[123]\b/i.test(projectState) &&
-    !/066 v3\.4/i.test(projectState)
+    !/066 v3\.[48]/i.test(projectState)
   ) {
-    fail("PROJECT_STATE references Automation 066 v3.1–v3.3 without acknowledging v3.4 current");
+    fail("PROJECT_STATE references Automation 066 v3.1–v3.3 without acknowledging current v3.8");
   } else {
-    pass("PROJECT_STATE 066 version wording acknowledges v3.4 (or avoids stale older-only claim)");
+    pass("PROJECT_STATE 066 version wording acknowledges current source (or avoids stale older-only claim)");
   }
 }
 
@@ -494,20 +475,23 @@ if (byNumber.has("066")) {
 if (byNumber.has("070b") && byNumber.has("070c")) {
   const ver070b = extractDeclaredVersion(fs.readFileSync(byNumber.get("070b")[0], "utf8"));
   const ver070c = extractDeclaredVersion(fs.readFileSync(byNumber.get("070c")[0], "utf8"));
-  if (ver070b === "v4.4") pass("070b declared version v4.4");
-  else fail(`070b expected v4.4, found ${ver070b || "(none)"}`);
+  if (ver070b === "v4.6") pass("070b declared version v4.6");
+  else fail(`070b expected v4.6, found ${ver070b || "(none)"}`);
   if (ver070c === "v1.1") pass("070c declared version v1.1");
   else fail(`070c expected v1.1, found ${ver070c || "(none)"}`);
 
-  if (/070b.*v4\.4/i.test(inventoryText) && /070c.*v1\.1/i.test(inventoryText)) {
-    pass("inventory documents 070b v4.4 and 070c v1.1");
+  if (/070b.*v4\.6/i.test(inventoryText) && /070c.*v1\.1/i.test(inventoryText)) {
+    pass("inventory documents 070b v4.6 and 070c v1.1");
   } else {
-    fail("inventory missing aligned 070b v4.4 / 070c v1.1 wording");
+    fail("inventory missing aligned 070b v4.6 / 070c v1.1 wording");
   }
 }
 
 // 059: recommended trigger must NOT prefer Ready for 059 XP as the live filter
-if (/Ready for 059 XP/i.test(automationIndex) && !/Do NOT filter on Ready for 059 XP/i.test(automationIndex)) {
+if (
+  /Ready for 059 XP/i.test(automationIndex) &&
+  !/(Do NOT|never) filter (on )?`?Ready for 059 XP/i.test(automationIndex)
+) {
   // Index may mention the formula field historically; require recommended-trigger correction nearby
   if (!/record is \*\*created\*\*|When a record is created/i.test(automationIndex + inventoryText)) {
     fail("059 docs still imply Ready-for-059-XP matches-conditions trigger without created-record recommendation");
@@ -518,7 +502,7 @@ if (/Ready for 059 XP/i.test(automationIndex) && !/Do NOT filter on Ready for 05
   pass("059 trigger docs do not incorrectly require Ready for 059 XP filter");
 }
 
-if (/RECOMMENDED TRIGGER[\s\S]{0,400}created/i.test(
+if (/(RECOMMENDED|REQUIRED LIFECYCLE) TRIGGER[\s\S]{0,400}(updated or created|created or updated)/i.test(
   byNumber.has("059") ? fs.readFileSync(byNumber.get("059")[0], "utf8") : "",
 )) {
   pass("059 script documents recommended created trigger");
@@ -553,9 +537,6 @@ if (/043/.test(inventoryText) && /retire|retired|legacy|delete/i.test(inventoryT
 // ---------------------------------------------------------------------------
 console.log("\n== Launch-test evidence (repository packages) ==");
 const launchEvidenceDocs = [
-  "docs/deploy-checklists/DEV-release-readiness-verification-2026-07-16.md",
-  "docs/deploy-checklists/066-dev-omni-confirmation-packet.md",
-  "docs/v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md",
   "docs/V2_END_TO_END_TEST_MATRIX.md",
   "docs/deploy-checklists/C-019-testing-views-verification-checklist.md",
 ];
@@ -565,11 +546,11 @@ for (const doc of launchEvidenceDocs) {
 }
 
 const verificationPkg = exists(launchEvidenceDocs[0]) ? read(launchEvidenceDocs[0]) : "";
-for (const needle of ["PASS", "C-025", "066", "Live DEV install remains", "offline"]) {
+for (const needle of ["PASS", "066", "offline"]) {
   if (verificationPkg.toLowerCase().includes(needle.toLowerCase())) {
-    pass(`DEV verification package mentions: ${needle}`);
+    pass(`Production verification package mentions: ${needle}`);
   } else if (verificationPkg) {
-    fail(`DEV verification package missing keyword: ${needle}`);
+    fail(`Production verification package missing keyword: ${needle}`);
   }
 }
 

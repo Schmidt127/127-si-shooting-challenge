@@ -10,7 +10,7 @@ Use for a docs-only controlled four-agent package. Mark PASS / FAIL / N/A.
 | P2 | `.cursor/permissions.json` valid JSON | PASS |
 | P3 | Package `run.state` was `active` with exclusive claims | PASS |
 | P4 | Assignments exist under `docs/agent-runs/assignments/` with non-overlapping writable paths | PASS |
-| P5 | Hard stops documented (DEV only, no schema/secrets/deploy, no worker merges) | PASS |
+| P5 | Hard stops documented (Production only, no schema/secrets/deploy, no worker merges) | PASS |
 
 ## Worker execution
 

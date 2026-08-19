@@ -208,9 +208,9 @@ The schema snapshot proves Award Recipients links to Awards, Enrollments, and We
 
 1. What are the exact current Fillout form IDs, field mappings, hidden values, defaults, redirects, and confirmation copy?
 2. Is the daily form Enrollment lookup scoped by current School Year/Program Instance, or does it rely on a legacy lookup?
-3. Which Program Instance and Week records are currently active in DEV and Production, and do their date ranges overlap?
+3. Which Program Instance and Week records are currently active in Production and Production, and do their date ranges overlap?
 4. Are live Grade Band ranges/options aligned with the repository's documented scripts and config?
-5. Which versions of 023, 005, 007, 009, 010, and 031 are installed and ON in DEV versus Production?
+5. Which versions of 023, 005, 007, 009, 010, and 031 are installed and ON in Production versus Production?
 6. Is `Progress Processing Enabled?` present and consistently interpreted by every XP, streak, summary, and communication consumer?
 7. What is the approved participant correction policy for a counted or duplicate shooting Submission?
 8. Which automation or process creates Award Recipients, and what completion/eligibility source does it use?
@@ -228,9 +228,9 @@ The schema snapshot proves Award Recipients links to Awards, Enrollments, and We
 5. Run `test_expected_actual.mjs` and the reliability fixture suite for duplicate XP/WAS and prohibited-side-effect checks.
 6. Add future fixtures for SCN-013, SCN-014, and SCN-019 only when the harness can model the relevant failure without live Airtable or operational side effects.
 
-### P1 — DEV controlled chain (Mike approval required before execution)
+### P1 — Production controlled chain (Mike approval required before execution)
 
-Use the DEV base and a named test Enrollment. Seed or verify exactly one active Week for the test Activity Date and the intended Program Instance. Observe, in order, Enrollment match, Week assignment, duplicate status, asset state, XP, Weekly Athlete Summary, level/gate state, streak/achievement state, and public/read-model totals. Capture before/after IDs and verify a rerun does not create a second XP Event or Weekly Athlete Summary. Keep outbound email/upload actions disabled or stubbed unless separately approved.
+Use the Production base and a named test Enrollment. Seed or verify exactly one active Week for the test Activity Date and the intended Program Instance. Observe, in order, Enrollment match, Week assignment, duplicate status, asset state, XP, Weekly Athlete Summary, level/gate state, streak/achievement state, and public/read-model totals. Capture before/after IDs and verify a rerun does not create a second XP Event or Weekly Athlete Summary. Keep outbound email/upload actions disabled or stubbed unless separately approved.
 
 ### P2 — Production evidence and one controlled participant path (Mike approval required)
 
@@ -238,7 +238,7 @@ Before any live submission, Mike should attest the live form mapping and current
 
 ### P3 — Failure and correction matrix
 
-After P1 is stable, test in DEV first:
+After P1 is stable, test in production-only validation:
 
 - no matching Week;
 - duplicate stat key;

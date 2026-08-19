@@ -1,10 +1,10 @@
 # C-013 — PROD isolated smoke test plan
 
-**Date:** 2026-07-11  
+**Date:** 2026-07-11
 **Status:** **Direct Lambda smoke PASS** · **Make manual route PASS** (`overallPass=true`) · secret rotation + 070b Airtable-triggered test pending
-**Make build spec:** [C-013-prod-make-build-2026-07-11.md](./C-013-prod-make-build-2026-07-11.md) · [070b UI verification](./C-013-prod-070b-ui-verification-2026-07-11.md)  
-**Make deployment:** [C-013-prod-make-deployment-2026-07-11.md](./C-013-prod-make-deployment-2026-07-11.md) · [make smoke result](../audits/C-013-prod-make-smoke-result-2026-07-11.md)  
-**Parent audit:** [C-013-prod-infrastructure-readiness-2026-07-11.md](../audits/C-013-prod-infrastructure-readiness-2026-07-11.md)  
+**Make build spec:** [C-013-prod-make-build-2026-07-11.md](./C-013-prod-make-build-2026-07-11.md) · [070b UI verification](./C-013-prod-070b-ui-verification-2026-07-11.md)
+**Make deployment:** [C-013-prod-make-deployment-2026-07-11.md](./C-013-prod-make-deployment-2026-07-11.md) · [make smoke result](../audits/C-013-prod-make-smoke-result-2026-07-11.md)
+**Parent audit:** [C-013-prod-infrastructure-readiness-2026-07-11.md](../audits/C-013-prod-infrastructure-readiness-2026-07-11.md)
 **Hard stops:** Automation **070b OFF** until steps 1–10 PASS · Schmidt Testing only · no live athlete records
 
 ---
@@ -17,7 +17,7 @@
 | **Display name** | Schmidt, Testing - 2025-2026 |
 | **Route key** | `video_feedback` only |
 | **Automation number** | `070b` (in payload only — automation stays OFF) |
-| **Test file** | Small PNG ≤ 50 KB (e.g. `BlueOrangeCircleLogo.png` from DEV proofs — non-sensitive) |
+| **Test file** | Small PNG ≤ 50 KB (e.g. `BlueOrangeCircleLogo.png` from Production proofs — non-sensitive) |
 
 ---
 
@@ -93,7 +93,7 @@ cd tools/airtable
 $env:BASE_ID = "appn84sqPw03zEbTT"
 $env:LAMBDA_FUNCTION_NAME = "127si-upload-asset"
 # Set LAMBDA_FUNCTION_URL and UPLOAD_WEBHOOK_SECRET to PROD values in .env locally
-python c013_dev_lambda_invoke.py recSUBMISSION_ASSET --aws --target-record-id recVIDEO_FEEDBACK --out _preview/c013-prod-smoke-T1-upload.json
+python c013_prod_lambda_invoke.py recSUBMISSION_ASSET --aws --target-record-id recVIDEO_FEEDBACK --out _preview/c013-prod-smoke-T1-upload.json
 ```
 
 **Expected Lambda response:**
@@ -225,5 +225,5 @@ Confirm structured log lines contain `statusOut`, `actionOut`, `allPass` — **n
 | Doc | Topic |
 |-----|--------|
 | [C-013-production-promotion-plan.md](./C-013-production-promotion-plan.md) | Full promotion sequence |
-| [C-013-dev-lambda-deploy-and-url-test.md](./C-013-dev-lambda-deploy-and-url-test.md) | DEV reference |
+| [C-013-production-lambda-deploy-and-url-test.md](./C-013-production-lambda-deploy-and-url-test.md) | Production reference |
 | [lambda/upload-asset/deploy-prod.ps1](../../lambda/upload-asset/deploy-prod.ps1) | PROD deploy |

@@ -1,4 +1,4 @@
-"""Create DEV Testing Scenarios row for C025_STAGE17_DOWNSTREAM (no Run Test yet)."""
+"""Create Production Testing Scenarios row for C025_STAGE17_DOWNSTREAM (no Run Test yet)."""
 from __future__ import annotations
 
 import json
@@ -9,7 +9,7 @@ from pathlib import Path
 
 ENV = Path(__file__).resolve().parent / ".env"
 OUT = Path(__file__).resolve().parent / "_preview" / "c025_stage17_etf_scenario_row.json"
-BASE_EXPECTED = "appTetnuCZlCZdTCT"
+BASE_EXPECTED = "appn84sqPw03zEbTT"
 SCHMIDT = "recgP9qZYjAhE7NXm"
 NAME = "C025_STAGE17_DOWNSTREAM"
 

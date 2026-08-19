@@ -1,12 +1,12 @@
 # V2-014 — Automation Modernization Roadmap
 
-**Backlog ID:** V2-014  
-**Status:** Active — **Wave 2A planning complete** (implementation **not** complete — no rewrites, merges, or prod retirements executed yet)  
+**Backlog ID:** V2-014
+**Status:** Active — **Wave 2A planning complete** (implementation **not** complete — no rewrites, merges, or prod retirements executed yet)
 **Last updated:** 2026-07-05 (ChatGPT review accepted; next sequence locked)
 
 **Current focus:** Wave 2A **planning complete** — classification, patterns, Mike decisions recorded. **Implementation waves (2b+) not started.** See [Phase 2 next sequence](#phase-2-next-sequence-post-wave-2a).
 
-**Delivery rule:** [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) — DEV test before Production for all changes.
+**Delivery rule:** [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) — Production test before Production for all changes.
 
 **Related:**
 
@@ -89,7 +89,7 @@ Phase 2 workstreams: (1) Automation inventory, (2) Capacity, (3) V2 standard, (4
 
 Counts as of **2026-07-05** (GitHub + Mike confirmations). Reconcile live count in Airtable OMNI after each retirement.
 
-**Primary metric:** platform complexity reduction (classification complete, duplicates removed, legacy marked).  
+**Primary metric:** platform complexity reduction (classification complete, duplicates removed, legacy marked).
 **Secondary metric:** automation capacity recovered (side effect of good merges and retirements).
 
 | Metric | Count | Notes |
@@ -145,7 +145,7 @@ Legacy **Disposition** column in inventory tables maps to categories; Wave 2a ad
 
 **Objective:** Know the automation ecosystem as well as we know the tables. **Do not rewrite. Do not merge. Just understand.**
 
-**Planning complete (2026-07-05):** GitHub classification, common patterns, Mike decisions — ChatGPT review **accepted**.  
+**Planning complete (2026-07-05):** GitHub classification, common patterns, Mike decisions — ChatGPT review **accepted**.
 **Implementation not complete:** No V2 rewrites, no approved merges, **112** / **043** not yet deleted in Production.
 
 ---
@@ -156,10 +156,10 @@ Locked after ChatGPT review (2026-07-05):
 
 | Step | Action | Environment |
 |------|--------|-------------|
-| **1** | **066 DEV audit** + one sandbox test | DEV |
-| **2** | After DEV pass → **Mike decides** whether to promote **066** to Production | Promotion doc → prod paste |
+| **1** | **066 Production audit** + one sandbox test | Production |
+| **2** | After Production pass → **Mike decides** whether to promote **066** to Production | Promotion doc → prod paste |
 | **3** | During **approved production maintenance window** → delete **112**, retire **043** | Production |
-| **4** | Begin **C-020** Engineering Test Framework (**Testing Scenarios**) | DEV first — **blocked on OMNI field list** |
+| **4** | Begin **C-020** Engineering Test Framework (**Testing Scenarios**) | production-only validation — **blocked on OMNI field list** |
 
 **Not in this sequence yet:** merge waves (006+021, etc.), EMC, Lambda/C-013 implementation.
 
@@ -369,9 +369,9 @@ Target after Phase 2: **lower average complexity tier** and **~37–38 automatio
 4. Set **modernization priority** (P0–P3).
 5. If Category B rewrite: full script to **066 v3.1** structure.
 6. If Category C merge: confirm clarity benefit before combining.
-7. Dry-run matching audit extension on **dev** base.
+7. Dry-run matching audit extension on **production** base.
 8. Test one sandbox record (Complex/Critical tiers required).
-9. GitHub commit → paste to **dev** Airtable → audit → Mike approves → paste to **prod** → `CHANGELOG.md`. See [V2-015](./v2-015-development-base-architecture.md).
+9. GitHub commit → paste to **production** Airtable → audit → Mike approves → paste to **prod** → `CHANGELOG.md`. See [V2-015](./v2-015-production-base-architecture.md).
 10. Update this roadmap row + [automation-index.md](./automation-index.md).
 
 ---
@@ -402,6 +402,6 @@ Run in Airtable OMNI to complete Wave 2a classification. Record results in this 
 | 2026-07-05 | V2-014 created — Phase 2 Platform Modernization master inventory; 012 deleted; 112 OFF; 066 V2 reference |
 | 2026-07-05 | Cross-linked from backlog, PROJECT_STATE, automation-index, ChatGPT brief |
 | 2026-07-05 | Philosophy update — complexity-first framing; Category A–F; four-axis evaluation; Complexity Score in doc 06; Wave 2a = classify everything; Lambda deferred |
-| 2026-07-05 | **Wave 2A active** — classification-only; infrastructure stable; DEV-first rule in doc 04 |
+| 2026-07-05 | **Wave 2A active** — classification-only; infrastructure stable; production-only rule in doc 04 |
 | 2026-07-05 | **Wave 2A GitHub complete** — [v2-014-wave-2a-classification.md](./v2-014-wave-2a-classification.md); [patterns](./v2-common-engineering-patterns.md); [sprint deliverables](./phase-2a-sprint-deliverables-2026-07-05.md) |
 | 2026-07-06 | **Phase 2B** — [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md); [phase-2b review](./phase-2b-engineering-review-2026-07-06.md); permanent SCRIPT+CONFIG header in [doc 06](./v2/06-automation-standards.md) |

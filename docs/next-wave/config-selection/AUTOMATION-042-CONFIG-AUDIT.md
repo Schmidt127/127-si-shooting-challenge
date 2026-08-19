@@ -83,4 +83,4 @@ setOutputSafe("configSchoolYearOut", resolve.schoolYearKey);
 
 ## PROD paste status
 
-**None.** No production script change in this wave. Paste only after DEV dry-run per `CONFIG-ROLLOUT-RUNBOOK.md`.
+**None.** No production script change in this wave. Paste only after Production dry-run per `CONFIG-ROLLOUT-RUNBOOK.md`.

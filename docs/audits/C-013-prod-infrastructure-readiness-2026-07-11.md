@@ -1,10 +1,10 @@
 # C-013 — PROD infrastructure readiness audit
 
-**Audit date:** 2026-07-11  
-**Backlog:** C-013 (Wave 7 asset storage) · C-023 (hash duplicate review)  
-**Repo commit at audit start:** `5f96cac`  
-**Machine-readable:** [C-013-prod-infrastructure-readiness-2026-07-11.json](./C-013-prod-infrastructure-readiness-2026-07-11.json)  
-**Smoke test plan:** [C-013-prod-smoke-test-2026-07-11.md](../deploy-checklists/C-013-prod-smoke-test-2026-07-11.md)  
+**Audit date:** 2026-07-11
+**Backlog:** C-013 (Wave 7 asset storage) · C-023 (hash duplicate review)
+**Repo commit at audit start:** `5f96cac`
+**Machine-readable:** [C-013-prod-infrastructure-readiness-2026-07-11.json](./C-013-prod-infrastructure-readiness-2026-07-11.json)
+**Smoke test plan:** [C-013-prod-smoke-test-2026-07-11.md](../deploy-checklists/C-013-prod-smoke-test-2026-07-11.md)
 **Promotion plan:** [C-013-production-promotion-plan.md](../deploy-checklists/C-013-production-promotion-plan.md)
 
 ---
@@ -19,26 +19,26 @@
 | **070b / 070c** | **v4.4 / v1.1** deployed for controlled PROD test · Schmidt PASS |
 | **Optional hygiene** | Rotate exposed PROD upload secret |
 
-DEV proves the full design: **Airtable 070b v4.4 → Make → Lambda → S3 → Airtable writeback** with async `Accepted` handoff + **070c v1.1** idempotent verify. PROD Submission Assets schema promotion is **PASS**. Automation **116** schema and runtime are **PASS** and **ON**. **C-013 PROD video upload workflow COMPLETE** on Schmidt fixture `recGQ8EjAMz3bEBiW` (2026-07-11). See [closeout](../deploy-checklists/C-013-prod-closeout-2026-07-11.md).
+Production proves the full design: **Airtable 070b v4.4 → Make → Lambda → S3 → Airtable writeback** with async `Accepted` handoff + **070c v1.1** idempotent verify. PROD Submission Assets schema promotion is **PASS**. Automation **116** schema and runtime are **PASS** and **ON**. **C-013 PROD video upload workflow COMPLETE** on Schmidt fixture `recGQ8EjAMz3bEBiW` (2026-07-11). See [closeout](../deploy-checklists/C-013-prod-closeout-2026-07-11.md).
 
 ---
 
-## 2. Current DEV state
+## 2. Current Production state
 
 | Component | Value |
 |-----------|--------|
-| Base | `appTetnuCZlCZdTCT` |
-| Lambda | `127si-upload-asset-dev` · python3.12 · 512 MB · 120 s · x86_64 |
+| Base | `appn84sqPw03zEbTT` |
+| Lambda | `127si-upload-asset` · python3.12 · 512 MB · 120 s · x86_64 |
 | Function URL | EXISTS · AuthType `NONE` · header auth in handler |
 | S3 | `shooting-challenge-assets` · prefix `shooting-challenge/2026-2027/...` |
-| Make | `Shooting Challenge - DEV - Upload Engine - Lambda - v1` |
+| Make | `Shooting Challenge - Production - Upload Engine - Lambda - v1` |
 | 070b script | GitHub **v4.2** · automation **OFF** |
 | 070a | **OFF** · homework route proven but out of first PROD slice |
 | Evidence | `recF86pJTIMFoEypJ` hybrid PASS · `recthL2wrTha5nWHL` Make PASS |
 
-**DEV Lambda env var names (all non-empty in AWS):** `AIRTABLE_BASE_ID`, `AIRTABLE_TOKEN`, `AIRTABLE_API_TOKEN`, `S3_BUCKET`, `ENVIRONMENT`, `ALLOW_ROUTE_KEYS`, `SEASON_SLUG`, `CHALLENGE_SLUG`, `UPLOAD_WEBHOOK_SECRET`
+**Production Lambda env var names (all non-empty in AWS):** `AIRTABLE_BASE_ID`, `AIRTABLE_TOKEN`, `AIRTABLE_API_TOKEN`, `S3_BUCKET`, `ENVIRONMENT`, `ALLOW_ROUTE_KEYS`, `SEASON_SLUG`, `CHALLENGE_SLUG`, `UPLOAD_WEBHOOK_SECRET`
 
-**DEV CodeSha256 (2026-07-10):** `MiQYYa8YQER1uwh5xKimm1efXurWNqwxqq4aqhY5Qr4=`
+**Production CodeSha256 (2026-07-10):** `MiQYYa8YQER1uwh5xKimm1efXurWNqwxqq4aqhY5Qr4=`
 
 ---
 
@@ -82,15 +82,15 @@ DEV proves the full design: **Airtable 070b v4.4 → Make → Lambda → S3 → 
 | `lambda/upload-asset/deploy-prod.ps1` | PROD deploy script |
 | `lambda/upload-asset/iam-policy-prod.json` | PROD S3 + logs IAM |
 | `airtable/automations/.../070b-...-send-video-asset-payload-to-make.js` | 070b v4.2 |
-| `tools/airtable/c013_dev_lambda_invoke.py` | Invoke helper (adapt for PROD) |
+| `tools/airtable/c013_prod_lambda_invoke.py` | Invoke helper (adapt for PROD) |
 | `tools/airtable/_probe_c013_asset_storage_fields.py` | Writeback probe |
-| `make/documentation/C-013-dev-make-lambda-scenario-prep.md` | Make chain reference |
+| `make/documentation/C-013-production-make-lambda-scenario-prep.md` | Make chain reference |
 
 **070b does NOT call Lambda directly.** Approved path is **070b → Make → Lambda**.
 
 ---
 
-## 5. DEV vs PROD infrastructure matrix
+## 5. Production vs PROD infrastructure matrix
 
 See JSON file for full matrix. Summary:
 
@@ -103,7 +103,7 @@ See JSON file for full matrix. Summary:
 | Env vars | **REQUIRES SECRET** + **REQUIRES DEPLOYMENT** |
 | Make scenario | **MISSING** |
 | 070b script paste | **REQUIRES DEPLOYMENT** (after smoke) |
-| Code guard DEV↔PROD | **VERIFIED READY** (after this commit) |
+| Code guard Production | **VERIFIED READY** (after this commit) |
 
 ---
 
@@ -114,14 +114,14 @@ See JSON file for full matrix. Summary:
 | Check | Result |
 |-------|--------|
 | PROD Lambda `127si-upload-asset` | **Not found** |
-| DEV Lambda `127si-upload-asset-dev` | **Exists** |
-| DEV Function URL | **Exists** · AuthType NONE |
+| Production Lambda `127si-upload-asset` | **Exists** |
+| Production Function URL | **Exists** · AuthType NONE |
 | S3 `shooting-challenge-assets` | **Exists** · us-east-2 |
-| DEV log group | `/aws/lambda/127si-upload-asset-dev` |
+| Production log group | `/aws/lambda/127si-upload-asset` |
 | PROD log group | **Missing** |
-| DEV IAM inline S3 policy | PutObject, GetObject, HeadObject on `bucket/*`; ListBucket on bucket |
+| Production IAM inline S3 policy | PutObject, GetObject, HeadObject on `bucket/*`; ListBucket on bucket |
 
-**Never log secret values.** DEV confirms `UPLOAD_WEBHOOK_SECRET` and Airtable token env vars are **non-empty**.
+**Never log secret values.** Production confirms `UPLOAD_WEBHOOK_SECRET` and Airtable token env vars are **non-empty**.
 
 ---
 
@@ -137,13 +137,13 @@ python tests/test_config.py                                 # 4/4 PASS
 | Check | Result |
 |-------|--------|
 | PROD base when `ENVIRONMENT=PROD` | **PASS** (after config fix) |
-| DEV blocks PROD base | **PASS** |
+| Production blocks PROD base | **PASS** |
 | X-Upload-Secret required | **PASS** |
 | Unsupported route keys rejected | **PASS** |
 | Storage key deterministic | **PASS** (`upload_core/util.py`) |
 | SHA-256 writeback | **PASS** |
 | Idempotent / duplicate behavior | **PASS** (processor + claim tests) |
-| No hard-coded DEV endpoint in PROD deploy path | **PASS** (`deploy-prod.ps1`) |
+| No hard-coded Production endpoint in PROD deploy path | **PASS** (`deploy-prod.ps1`) |
 
 **Failed tests:** none.
 
@@ -270,7 +270,7 @@ See §15 below (full prompt for Mike).
 ## 15. Remaining risks
 
 1. Exposed PROD upload secret must be rotated before activation
-2. Shared S3 bucket — season prefix must differ DEV vs PROD
+2. Shared S3 bucket — season prefix must differ Production vs PROD
 3. Live athlete exposure if 070b enabled outside the approved Schmidt-only window
 4. Isolation view missing — create/verify before controlled trigger test
 

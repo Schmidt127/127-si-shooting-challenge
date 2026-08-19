@@ -1,7 +1,7 @@
 # Lambda — asset upload + private reviewer viewer
 
-**PROD function:** `127si-upload-asset` (`us-east-2`)  
-**Function URL:** `https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/`  
+**PROD function:** `127si-upload-asset` (`us-east-2`)
+**Function URL:** `https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/`
 **Architecture:** Airtable 070a/070b → Make → **Lambda POST upload** → private S3 → Airtable writeback; coaches open **`Reviewer File URL`** → **Lambda GET viewer** → short-lived S3 presigned redirect.
 
 ## Layout
@@ -39,13 +39,13 @@ python -m unittest discover -s tests -p "test_*.py" -v
 
 | Variable | Value |
 |----------|--------|
-| `AIRTABLE_BASE_ID` | PROD `appn84sqPw03zEbTT` / DEV `appTetnuCZlCZdTCT` |
+| `AIRTABLE_BASE_ID` | PROD `appn84sqPw03zEbTT` / Production `appn84sqPw03zEbTT` |
 | `AIRTABLE_API_TOKEN` / `AIRTABLE_TOKEN` | *(secret — not in Git)* |
 | `S3_BUCKET` | `shooting-challenge-assets` |
-| `ENVIRONMENT` | `PROD` or `DEV` |
+| `ENVIRONMENT` | `PROD` or `Production` |
 | `ALLOW_ROUTE_KEYS` | `video_feedback,homework_completion` |
 | `SEASON_SLUG` | Optional diagnostic / emergency fallback only. **Not** the upload season source. |
-| `ALLOW_SEASON_SLUG_FALLBACK` | Must stay unset in PROD. If `true` in DEV, `SEASON_SLUG` is used only when Program Instance `School Year - Linked` is missing. |
+| `ALLOW_SEASON_SLUG_FALLBACK` | Must stay unset in PROD. If `true` in Production, `SEASON_SLUG` is used only when Program Instance `School Year - Linked` is missing. |
 | `CHALLENGE_SLUG` | Unused in the current object-key shape; kept for env compatibility |
 | `UPLOAD_WEBHOOK_SECRET` | Upload POST secret |
 | `VIEWER_PRESIGN_TTL_SECONDS` | Optional; default `900` |
@@ -76,7 +76,7 @@ Schmidt_Xavier/Shooting_Challenge_2026-2027/2026-08-17/20260817T172732Z_HW1_recA
 
 ## Deploy
 
-- DEV: [DEPLOY.md](./DEPLOY.md)
+- Production: [DEPLOY.md](./DEPLOY.md)
 - PROD reviewer-link package: [SC-150-prod-reviewer-file-links.md](../../docs/deploy-checklists/SC-150-prod-reviewer-file-links.md)
 
 ```powershell

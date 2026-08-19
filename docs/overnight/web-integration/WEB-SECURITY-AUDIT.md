@@ -33,6 +33,6 @@
 ## Residual risks / recommendations
 
 1. **PAT scope hygiene:** keep the Vercel `AIRTABLE_API_TOKEN` scoped to `data.records:read` on the Shooting Challenge base only (cannot be verified from repo — Mike checks at airtable.com/create/tokens).
-2. **`app/error.tsx`** (global boundary) still shows `error.message` — Next.js production builds redact server error messages to a digest automatically, so exposure is dev-only. No change made.
+2. **`app/error.tsx`** (global boundary) still shows `error.message` — Next.js production builds redact server error messages to a digest automatically, so exposure is production-only. No change made.
 3. When real athlete auth lands (SC-112), revisit finding 12 (constant-time compare, rate limiting) — see ATHLETE-AUTH-DECISION.md.
 4. Consider a repo-level secret scanner in CI (SC-145 follow-up).

@@ -46,9 +46,9 @@
 
 The minimal `docs/agent-runs/` kit is intentionally thinner than `docs/overnight-runs/`. Confirmed gaps relevant to FA-001:
 
-1. **No Lead end-of-run handoff template** in the minimal kit (overnight has `06-MORNING-HANDOFF-TEMPLATE.md` with worker table, tests, live DEV, Mike decisions).
+1. **No Lead end-of-run handoff template** in the minimal kit (overnight has `06-MORNING-HANDOFF-TEMPLATE.md` with worker table, tests, live Production, Mike decisions).
 2. **No pilot / run checklist** for proving a four-agent docs package end-to-end.
-3. Overnight has richer CONTROL surfaces (`queue.json`, `agent-status.json`, approval profile, stage authorization files, worker-a/b/c/d lanes, live DEV gates). Minimal kit correctly omits these for v1.
+3. Overnight has richer CONTROL surfaces (`queue.json`, `agent-status.json`, approval profile, stage authorization files, worker-a/b/c/d lanes, live Production gates). Minimal kit correctly omits these for v1.
 4. Overnight is task/backlog-heavy (070a/c, Make, Lambda); minimal kit is role-based (Lead / Implementation / Testing / Research) on the current development line — correct non-goal: do not port overnight live-ops complexity into FA-001.
 5. FA-001 Implementation assignment already scopes the two highest-value gaps (#1–#2). Research should not create those files.
 
@@ -57,7 +57,7 @@ The minimal `docs/agent-runs/` kit is intentionally thinner than `docs/overnight
 | Option | Pros | Cons |
 |--------|------|------|
 | A — Ship FA-001 Implementation templates only | Closes stated gaps; keeps kit minimal | Does not add queue/status machinery |
-| B — Also port overnight morning handoff fields wholesale | More complete handoff | Overfits overnight live-DEV model into daytime docs kit |
+| B — Also port overnight morning handoff fields wholesale | More complete handoff | Overfits overnight live-Production model into daytime docs kit |
 | C — Defer templates; only keep result files | Smaller diff | Leaves kit without reusable handoff/checklist |
 
 **Recommended:** Option A (already assigned). After merge, optionally link `06`/`07` from `00-START-HERE.md` in a follow-up Lead edit (out of FA-001 Implementation writable set).

@@ -1,14 +1,14 @@
 # Mike Actions — Tutorials Content Consolidation
 
-**Agent:** Online Agent 8  
-**Date:** 2026-07-23  
+**Agent:** Online Agent 8
+**Date:** 2026-07-23
 **Note:** Actions Mike (or an authorized operator) must perform. Agent does not require Mike during analysis execution; these are post-package follow-through items.
 
 ## Immediate (unblock SC-052 execution later)
 
 | # | Action | Why | Done? |
 |---|--------|-----|-------|
-| A1 | In Airtable UI, note row counts for `Tutorials` and `Tutorials & Assets` (DEV + PROD) | Live volume unknown in repo | [ ] |
+| A1 | In Airtable UI, note row counts for `Tutorials` and `Tutorials & Assets` (Production + PROD) | Live volume unknown in repo | [ ] |
 | A2 | List Softr pages / Interfaces using either table | Deletion blocker (D-014) | [ ] |
 | A3 | Export both tables (rows + attachment metadata) to a private working folder | Enables dry-run mapping | [ ] |
 | A4 | Resolve `MIKE-DECISIONS.md` D1–D5 | Product judgment gates | [ ] |
@@ -17,8 +17,8 @@
 
 | # | Action | Why | Done? |
 |---|--------|-----|-------|
-| A5 | Authorize DEV migration dry-run → write | DEV-first rule | [ ] |
-| A6 | Confirm website `/shoot/tutorials` smoke on DEV data | Protect SC-105 | [ ] |
+| A5 | Authorize Production migration dry-run → write | production-only rule | [ ] |
+| A6 | Confirm website `/shoot/tutorials` smoke on Production data | Protect SC-105 | [ ] |
 | A7 | Confirm no Make scenarios outside repo bind orphan table | Repo cannot see live Make UI | [ ] |
 
 ## After successful migration

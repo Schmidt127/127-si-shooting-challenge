@@ -15,9 +15,9 @@
 | Schema gate | Complete the Stage 17 schema, select choices, Config values, formula rebuild, and read-only re-audit with zero critical blockers before any paste. |
 | 101 safety | Keep the live path unchanged. It may remain ON only if it is already operating normally; do not use recording rows to alter `Zoom Meetings.Attendees`. |
 | Stage 17 safety | Paste 117, 057, and 042 OFF. Enable only for the prescribed isolated smoke window. |
-| Package choice | Use 117 v1.1.1 **or** modular 117a–f, never both concurrently. The orchestrator is preferred under DEV slot limits. |
+| Package choice | Use 117 v1.1.1 **or** modular 117a–f, never both concurrently. The orchestrator is preferred under Production slot limits. |
 | Ledger safety | Never rewrite or delete historical live `ZOOM_ATTEND_BASE|…` XP. Correct new recording errors with `Active? = false`. |
-| ETF boundary | 115 v1.8 is DEV-only; never paste or install it in PROD. |
+| ETF boundary | 115 v1.8 is Production-only; never paste or install it in PROD. |
 
 ## Automation map
 
@@ -33,7 +33,7 @@
 | **117f — Send Approval Email** (Airtable automation name `117 — Zoom — Send Recording Approval Email to Make`; Make identifier **117f**) | `Zoom Attendance`; exact trigger must target satisfactory eligible recording rows | `recordId`, `webhookUrl`, `enrollmentRid`, `zoomMeetingRid` | `117f-zoom-recording-send-approval-email.js` **v1.1** | ZA / Enrollments / Zoom Meetings (read only via Make) | **None** — script writes **no** Airtable records; Make owns send/dedupe (Data Store `C025_117f_PROD_SendKeys`) | satisfactory/approval/conflict, effective email config; canonical four-part send key `ZOOM_REC_EMAIL\|{EnrollmentRID}\|{ZoomMeetingRID}\|{ZoomAttendanceRID}` | Outputs `makeStatus` (`sent`\|`already_sent`), `sendKey`, `zoomAttendanceId`; blank webhook skips safely. |
 | **057 — Calculate Perfect Week Eligibility** | `Weekly Athlete Summary`; automation condition `Perfect Week Calculation Queue? = 1` | `recordId` required | `057-achievements-and-milestones-calculate-perfect-week-eligibility.js` v1.3 | WAS, Submissions, Homework Completions, Video Feedback, Zoom Meetings, ZA, Weeks | WAS helper/status fields; qualifying ZA `Perfect Week Credit Applied?` | recording must be approved, non-conflicting, effective PW, not Needs Correction; live wins by meeting | Computes helper status; no unlock; error status/error field on failure. |
 | **042 — Assign Current / Next Level with Gate Blocking** | `Enrollments`; enters view `042 - Needs Level Assignment`, filter `Level Recalc Needed?` checked | `recordId` required | `042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js` v3.1 | Enrollments, Levels, Level Gate Rules, Zoom Meetings, ZA | Enrollment level/status/recalc fields; qualifying ZA `Gate Credit Applied?` | recording approved, non-conflicting, gate-earned, not Needs Correction; live wins by meeting | `statusOut`, level/gate outputs; status `Assigned`, `Gate Blocked`, or `Error`. |
-| **115 — Engineering Test Framework** | `Testing Scenarios`; `Run Test?` checked | `recordId` required | `115-engineering-test-framework-run-testing-scenario-daily-submission.js` v1.8 | Testing Scenarios, Enrollments, Submissions; C-025 also WAS, ZA, Zoom Meetings, goals | Testing Scenarios; controlled synthetic Submissions; C-025 trigger fields | Testing Scenarios table and DEV allowlist; scenario/run state | `statusOut/actionOut/errorOut/debugStep`; clears C-025 run flag. **DEV only; table absent in PROD.** |
+| **115 — Engineering Test Framework** | `Testing Scenarios`; `Run Test?` checked | `recordId` required | `115-engineering-test-framework-run-testing-scenario-daily-submission.js` v1.8 | Testing Scenarios, Enrollments, Submissions; C-025 also WAS, ZA, Zoom Meetings, goals | Testing Scenarios; controlled synthetic Submissions; C-025 trigger fields | Testing Scenarios table and Production allowlist; scenario/run state | `statusOut/actionOut/errorOut/debugStep`; clears C-025 run flag. **Production only; table absent in PROD.** |
 
 ## Confirmed field and outcome controls
 
@@ -50,7 +50,7 @@
 - [117 v1.1.1 paste packet](./C-025-stage17-117-orchestrator-v1.1.1-PASTE.txt)
 - [057 v1.3 paste packet](./C-025-stage17-057-perfect-week-v1.3-PASTE.txt)
 - [042 v3.1 paste packet](./C-025-stage17-042-level-gates-v3.1-PASTE.txt)
-- [115 v1.8 paste packet — DEV only](./C-025-stage17-115-etf-v1.8-PASTE.txt)
+- [115 v1.8 paste packet — Production only](./C-025-stage17-115-etf-v1.8-PASTE.txt)
 
 ## First script after schema completion
 

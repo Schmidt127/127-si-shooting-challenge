@@ -1,6 +1,6 @@
 # ChatGPT Project Sources — Shooting Challenge V2
 
-**Repo:** `127-si-shooting-challenge`  
+**Repo:** `127-si-shooting-challenge`
 **Purpose:** Import **all files in this folder** into your ChatGPT Project **Sources** so planning sessions start aligned with GitHub.
 
 **Canonical source of truth:** GitHub (`docs/` and `docs/v2/`). This folder is a **synced export** for ChatGPT — not edited directly.
@@ -19,7 +19,7 @@
 
 | Order | File | What it is |
 |-------|------|------------|
-| 1 | `24-engineering-constitution.md` | **Engineering law** — GitHub, DEV-first, promotion, priorities |
+| 1 | `24-engineering-constitution.md` | **Engineering law** — GitHub, production-only, promotion, priorities |
 | 2 | `01-constitution.md` | Configurable game engine + four layers (product) |
 | 3 | `02-master-direction.md` | Mission, vision, locked 2026–27 decisions |
 | 3 | `03-business-rules.md` | **Engine contract** — platform behavior (not season numbers) |

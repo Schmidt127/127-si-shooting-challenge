@@ -9,7 +9,7 @@ import urllib.request
 from pathlib import Path
 
 PROD = "appn84sqPw03zEbTT"
-DEV = "appTetnuCZlCZdTCT"
+Production = "appn84sqPw03zEbTT"
 
 
 def load_env() -> dict[str, str]:
@@ -144,13 +144,13 @@ def main():
             } or "active" in k.lower() or "leaderboard" in k.lower() or "public" in k.lower() or "exclude" in k.lower() or "version" in k.lower() or "script" in k.lower() or "enabled" in k.lower()}
             print(" ", r["id"], json.dumps(summary)[:400])
 
-    # DEV Testing Scenarios field inventory for clone plan
-    st, dmeta = api(tok, f"https://api.airtable.com/v0/meta/bases/{DEV}/tables")
-    print("dev_meta", st)
+    # Production Testing Scenarios field inventory for clone plan
+    st, dmeta = api(tok, f"https://api.airtable.com/v0/meta/bases/{Production}/tables")
+    print("prod_meta", st)
     if st == 200:
         ts = next((t for t in dmeta.get("tables", []) if t["name"] == "Testing Scenarios"), None)
         if ts:
-            print("dev_testing_scenarios_id", ts["id"])
+            print("prod_testing_scenarios_id", ts["id"])
             fields_out = []
             for f in ts.get("fields", []):
                 fields_out.append(
@@ -162,10 +162,10 @@ def main():
                     }
                 )
             Path("docs/foundation-reset").mkdir(parents=True, exist_ok=True)
-            out = Path("docs/foundation-reset/dev-testing-scenarios-schema.json")
+            out = Path("docs/foundation-reset/production-testing-scenarios-schema.json")
             out.write_text(json.dumps({"tableId": ts["id"], "fields": fields_out}, indent=2), encoding="utf-8")
             print("wrote", out)
-            print("dev_ts_field_count", len(fields_out))
+            print("prod_ts_field_count", len(fields_out))
             for f in fields_out:
                 print("  TS", f["type"], "|", f["name"])
 

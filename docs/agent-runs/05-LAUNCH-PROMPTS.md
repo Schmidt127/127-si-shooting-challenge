@@ -21,7 +21,7 @@ Backlog: [BACKLOG_IDS]
 Integration branch: [INTEGRATION_BRANCH]
 Base tip SHA: [SHA]
 
-Rules: DEV only. No production. No Airtable schema changes. No credentials. No deploy.
+Rules: Production only. No production. No Airtable schema changes. No credentials. No deploy.
 No destructive git. Only you may merge worker branches. Mike must approve merge to master/main.
 Workers must not merge.
 

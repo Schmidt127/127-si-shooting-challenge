@@ -3,7 +3,7 @@
 > **⚠️ SUPERSEDED — HISTORICAL RECORD (executed 2026-07-20).** This schema-migration checklist has been **executed**: the PROD Stage 17 schema/formulas/select options were created and Stage 17 recording **credit** is **COMPLETE** (Airtable Automation **117** v1.1.1 / **057** v1.3 / **042** v3.1 ON; **101** unchanged). Retained for historical evidence and rollback reference only. **Authoritative current state:** [Stage 17 current PROD progress](../status/C-025-stage17-current-prod-progress.md) · credit evidence [prod-live](./C-025-stage17-prod-live-2026-07-20.md) · email workflow [PROD 117f](./C-025-117f-prod-zoom-recording-approval-email.md).
 
 **Status:** Ready for Mike OMNI execution after approval
-**PROD:** `appn84sqPw03zEbTT` · **DEV reference:** `appTetnuCZlCZdTCT`
+**PROD:** `appn84sqPw03zEbTT` · **Production reference:** `appn84sqPw03zEbTT`
 **Branch tip (repo):** `feature/c025-stage17-zoom-attendance` (115 **v1.8** committed)
 **Authority:** [C-025-stage17-prod-schema-manifest.json](./C-025-stage17-prod-schema-manifest.json)
 **Smoke:** [C-025-stage17-prod-smoke-test.md](./C-025-stage17-prod-smoke-test.md)
@@ -16,8 +16,8 @@
 1. **Do not enable** 117 / 117a–f / 057-v1.3 / 042-v3.1 until schema re-audit passes.
 2. **Never write** `Zoom Meetings → Attendees` from any recording path (Automation **101** protection).
 3. **Do not rewrite** historical `ZOOM_ATTEND_BASE|…` XP. Soft-void only for wrong **new** `ZOOM_CREDIT|…` events.
-4. Formulas in the manifest contain **DEV field IDs** — after creating PROD fields, rebuild formulas so references point at **PROD field IDs** (or paste then remapped in OMNI).
-5. Skip all `ZZZ C025 Archive*` DEV fields — do **not** migrate archives.
+4. Formulas in the manifest contain **Production field IDs** — after creating PROD fields, rebuild formulas so references point at **PROD field IDs** (or paste then remapped in OMNI).
+5. Skip all `ZZZ C025 Archive*` Production fields — do **not** migrate archives.
 6. Prefer **117 orchestrator v1.1.1** over modular 117a–f unless Mike requires slots.
 
 ---
@@ -39,7 +39,7 @@
 | # | Action | Manifest group | Validation |
 |---|--------|----------------|------------|
 | 1.1 | **Create table `Zoom Attendance`** (empty) | `Zoom Attendance.table` | Table appears in PROD base |
-| 1.2 | Set primary field to match DEV primary | same | Primary editable |
+| 1.2 | Set primary field to match Production primary | same | Primary editable |
 
 **Exact first PROD schema action:** Step **1.1** (create `Zoom Attendance`).
 
@@ -56,9 +56,9 @@ Do one field at a time. Use manifest `items[]` where `group` is:
 | # | Action | Done |
 |---|--------|:----:|
 | 2.1 | Create all **Config** Stage 17 fields from manifest (`group=Config.fields`) | ☐ |
-| 2.2 | Set Config values: **Zoom Recording XP Percent of Live = 50**; path/makeup/gate/PW/email toggles per DEV samples (confirm which Config row is global) | ☐ |
+| 2.2 | Set Config values: **Zoom Recording XP Percent of Live = 50**; path/makeup/gate/PW/email toggles per Production samples (confirm which Config row is global) | ☐ |
 | 2.3 | Create ZA base fields (singleSelect / checkbox / number / dateTime / text) from `Zoom Attendance.fields_base` | ☐ |
-| 2.4 | Create ZA selects with **exact choices**: Attendance Method = `Live`, `Recording Quiz`; Review Status per DEV choices | ☐ |
+| 2.4 | Create ZA selects with **exact choices**: Attendance Method = `Live`, `Recording Quiz`; Review Status per Production choices | ☐ |
 | 2.5 | Create non-formula Zoom Meetings support fields (Recording Available At, overrides, config links as targets after Config exists) | ☐ |
 | 2.6 | Add XP Events → XP Source option exactly: **`Zoom Meeting Recording Quiz`** | ☐ |
 | 2.7 | Verify XP Bucket includes **`Zoom Attendance`** | ☐ |
@@ -111,7 +111,7 @@ Do one field at a time. Use manifest `items[]` where `group` is:
 
 | # | Action | Done |
 |---|--------|:----:|
-| 7.1 | Recreate DEV views on ZA (Grid + `Zoom Recording Quiz - Past Deadline` if listed in manifest) | ☐ |
+| 7.1 | Recreate Production views on ZA (Grid + `Zoom Recording Quiz - Past Deadline` if listed in manifest) | ☐ |
 | 7.2 | Confirm Automation 042 trigger (view `042` / Level Recalc Needed?) still valid | ☐ |
 | 7.3 | Confirm 057 trigger still `Perfect Week Calculation Queue? = 1` | ☐ |
 
@@ -178,7 +178,7 @@ Follow [C-025-stage17-prod-smoke-test.md](./C-025-stage17-prod-smoke-test.md) wi
 | 2 | **042** | After gate smoke cases Pass |
 | 3 | **117** | After recording XP smoke Pass and monitoring window agreed |
 | — | **101** | Remains ON throughout |
-| — | **115** | Remains DEV-only |
+| — | **115** | Remains Production-only |
 
 ---
 

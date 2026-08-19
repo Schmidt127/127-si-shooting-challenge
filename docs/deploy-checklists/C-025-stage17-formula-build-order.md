@@ -1,13 +1,13 @@
 # C-025 Stage 17 — Formula build order
 
-**Date written:** 2026-07-18  
-**Branch:** `feature/c025-stage17-zoom-attendance` @ `2db98a0`  
-**Authority:** [C-025-stage17-prod-schema-manifest.json](./C-025-stage17-prod-schema-manifest.json)  
-**Related:** [C-025-stage17-lookup-map.md](./C-025-stage17-lookup-map.md)  
-**Mode:** Documentation only — no Airtable writes from this doc  
+**Date written:** 2026-07-18
+**Branch:** `feature/c025-stage17-zoom-attendance` @ `2db98a0`
+**Authority:** [C-025-stage17-prod-schema-manifest.json](./C-025-stage17-prod-schema-manifest.json)
+**Related:** [C-025-stage17-lookup-map.md](./C-025-stage17-lookup-map.md)
+**Mode:** Documentation only — no Airtable writes from this doc
 **Stage 17 status:** **COMPLETE** (2026-07-20) — **117 / 057 / 042 ON** in PROD; **101** unchanged; do **not** install **115**
 
-Formulas below use **field names** (not DEV field IDs). After creating PROD fields, paste into Airtable so references resolve to **PROD** field IDs automatically.
+Formulas below use **field names** (not Production field IDs). After creating PROD fields, paste into Airtable so references resolve to **PROD** field IDs automatically.
 
 ---
 
@@ -25,7 +25,7 @@ Formulas below use **field names** (not DEV field IDs). After creating PROD fiel
 
 ---
 
-## Override precedence (verified from DEV Effective formulas)
+## Override precedence (verified from Production Effective formulas)
 
 For Yes/No Effective flags and numeric/text Effective values:
 
@@ -64,7 +64,7 @@ IF({Recording Makeup Enabled?}, "Yes", "No")
 
 | Item | Value |
 |------|--------|
-| Exact DEV formula | `RECORD_ID()` |
+| Exact Production formula | `RECORD_ID()` |
 | Field-name version | `RECORD_ID()` |
 | Dependencies | none |
 | Expected result | Meeting record id string |
@@ -76,7 +76,7 @@ IF({Recording Makeup Enabled?}, "Yes", "No")
 
 | Item | Value |
 |------|--------|
-| Exact DEV formula | `RECORD_ID()` |
+| Exact Production formula | `RECORD_ID()` |
 | Dependencies | none |
 | Status | Expected already present in PROD live path — **verify** |
 
@@ -95,7 +95,7 @@ IF({Recording Makeup Enabled?}, "Yes", "No")
 | Item | Value |
 |------|--------|
 | Referenced by | ZM `Calculated Recording Quiz Deadline` (`!= "Recording Quiz"` → blank) |
-| Status | **Unknown and needs verification** — legacy per config-linkage notes, but **live DEV deadline formula still references it** |
+| Status | **Unknown and needs verification** — legacy per config-linkage notes, but **live Production deadline formula still references it** |
 
 ---
 
@@ -105,8 +105,8 @@ Create order: any order among Effective\* except deadline last among this sectio
 
 ### C1. `Effective Recording Approval Email Enabled?` (order 11006)
 
-**Result type (manifest):** number (TRUE/FALSE)  
-**Automation-critical:** No  
+**Result type (manifest):** number (TRUE/FALSE)
+**Automation-critical:** No
 **Override precedence:** Meeting → Program → Global → default **`FALSE()`**
 
 ```airtable
@@ -133,7 +133,7 @@ IF(
 
 ### C2. `Effective Recording Approval Email Template Key` (order 11007)
 
-**Result type:** singleLineText  
+**Result type:** singleLineText
 **Default:** `BLANK()`
 
 ```airtable
@@ -154,7 +154,7 @@ IF(
 
 ### C3. `Effective Recording Approval Email Timing` (order 11008)
 
-**Result type:** singleLineText  
+**Result type:** singleLineText
 **Default:** `"On Satisfactory"`
 
 ```airtable
@@ -175,7 +175,7 @@ IF(
 
 ### C4. `Effective Recording Counts for Level Gate?` (order 11009)
 
-**Default:** `TRUE()`  
+**Default:** `TRUE()`
 **Override fields:** `Full Gate Credit — Meeting Override` / Program+Global `Full Gate Credit`
 
 ```airtable
@@ -320,7 +320,7 @@ IF(
 
 ### C10. `Effective Recording XP Percentage` (order 11015)
 
-**Default:** `50`  
+**Default:** `50`
 **Expected with live base 60:** recording XP = `FLOOR(60 * 50 / 100)` = **30** (on ZA amount formula)
 
 **PROD fix (2026-07-20):** Use Program Config XP % **only when** `Config (Program Scope)` is populated; otherwise fall back to Global Config (then 50). Do not prefer Program Config solely because the Program Config rollup cell is non-blank. Evidence: [117 PROD verification](./C-025-stage17-prod-117-verification-2026-07-20.md).
@@ -346,9 +346,9 @@ IF(
 
 ### C11. `Calculated Recording Quiz Deadline` (order 11003) — **create after C6 + C8 + Week End Date + Recording Available At**
 
-**Result type:** date  
-**Automation-critical:** No (feeds ZA lookup + view marker)  
-**Blank-safe:** Blank if `Recording Available At` blank **or** ZM `Attendance Method` ≠ `"Recording Quiz"`  
+**Result type:** date
+**Automation-critical:** No (feeds ZA lookup + view marker)
+**Blank-safe:** Blank if `Recording Available At` blank **or** ZM `Attendance Method` ≠ `"Recording Quiz"`
 **Dependencies:** `Recording Available At`, `Attendance Method` (ZM), `Effective Recording Deadline Mode`, `Effective Recording Makeup Window Days`, `Week End Date`
 
 ```airtable
@@ -647,6 +647,6 @@ AND(
 
 ## F. Do not invent
 
-- No alternate deadline formula that drops ZM `Attendance Method` unless Mike authorizes a DEV formula change first.
+- No alternate deadline formula that drops ZM `Attendance Method` unless Mike authorizes a Production formula change first.
 - No ZM `Zoom Credit Approved?` recreate for Stage 17 runtime (legacy on Zoom Meetings per config-linkage design; ZA formula is authoritative).
 - Skip all `ZZZ C025 Archive*` fields.

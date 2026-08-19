@@ -1,18 +1,18 @@
 # C-013 — PROD closeout (final)
 
-**Date:** 2026-07-11  
-**Repository status:** **COMPLETE**  
-**Operational status (video / 070b slice):** **COMPLETE — PASS**  
-**Automation 070b:** **v4.4** (deployed for controlled PROD test)  
-**Automation 070c:** **v1.1** (idempotent writeback verify)  
-**Make scenario:** `Shooting Challenge - GAME - Upload Engine - Lambda - v1`  
+**Date:** 2026-07-11
+**Repository status:** **COMPLETE**
+**Operational status (video / 070b slice):** **COMPLETE — PASS**
+**Automation 070b:** **v4.4** (deployed for controlled PROD test)
+**Automation 070c:** **v1.1** (idempotent writeback verify)
+**Make scenario:** `Shooting Challenge - GAME - Upload Engine - Lambda - v1`
 **Automation 070a:** **OFF** (homework out of first PROD slice)
 
 ---
 
 ## A. Production evidence (Schmidt fixture — do not reset)
 
-**Submission Asset:** `recGQ8EjAMz3bEBiW`  
+**Submission Asset:** `recGQ8EjAMz3bEBiW`
 **Enrollment:** `recgP9qZYjAhE7NXm` (Schmidt Testing only)
 
 ### End-to-end Airtable-triggered path (async Accepted handoff)
@@ -115,7 +115,7 @@ Earlier C-013 package commits include manual smoke tooling, blueprint, and readi
 | Item | Owner | Notes |
 |------|-------|-------|
 | **PROD upload secret rotation** | Mike / AWS / Make | Security hygiene — secret was exposed during prep; rotate AWS Lambda + Make header + local env, then re-smoke |
-| **070a homework PROD slice** | Future wave | DEV proven; not in first PROD slice |
+| **070a homework PROD slice** | Future wave | Production proven; not in first PROD slice |
 | **C-023** attachment retirement, Drive field sunset, broader hash-dedup policy | C-023 backlog | Separate from C-013 upload route |
 | **Automations table doc row** | Mike / docs | Update `recUu0el5XmtmLTX0` script version to v4.4; add 070c row |
 | **Legacy docs** | — | v4.2 paste artifact retained for history; superseded by v4.4 in GitHub |

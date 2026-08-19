@@ -25,7 +25,7 @@ Folder: 17 - Zoom Recording Credit
  * - Do NOT add Enrollment to Zoom Meetings.Attendees.
  *
  * Prefer Automation 042 v3.1 for actual gate counting + Applied? updates.
- * This modular script remains for diagnostics / optional DEV runs only.
+ * This modular script remains for diagnostics / optional Production runs only.
  ************************************************************/
 
 // @ts-nocheck

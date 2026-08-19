@@ -28,11 +28,11 @@ Paste the exclusivity sign-off block from the attestation packet into your overn
 
 ## Do not
 
-- Re-enable **112**  
-- Turn on both **117** and **117c**  
-- Reinstall **063** / **111** without a new design  
-- Enable **118/119** schedules without race + send authorization  
-- Invent a Weekly Threshold writer overnight if UI hunt finds nothing  
+- Re-enable **112**
+- Turn on both **117** and **117c**
+- Reinstall **063** / **111** without a new design
+- Enable **118/119** schedules without race + send authorization
+- Invent a Weekly Threshold writer overnight if UI hunt finds nothing
 
 ---
 
@@ -47,6 +47,6 @@ Paste the exclusivity sign-off block from the attestation packet into your overn
 
 ---
 
-## DEV
+## Production
 
-Repeat P0–P1 on DEV `appTetnuCZlCZdTCT`. **115** may be ON in DEV only.
+Repeat P0–P1 on Production `appn84sqPw03zEbTT`. **115** may be ON in Production only.

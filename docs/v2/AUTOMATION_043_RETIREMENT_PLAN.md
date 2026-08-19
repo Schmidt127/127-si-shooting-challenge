@@ -5,18 +5,18 @@
 > not be recreated or enabled; 042 is the sole progression-output writer. Use
 > the Completion Master and current PKG-006R/PKG-036 operator packet.
 
-**Status:** Plan only — **do not disable or delete** without Mike · live ON/OFF **live-blocked**  
-**Base:** Document for DEV soak → Mike-approved maintenance window  
-**Inventory:** [DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md)  
-**Scripts:**  
-- Keep: `042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js` (**v3.0**)  
-- Retire: `043-levels-and-progression-set-level-gate-rule-from-next-level.js` (**v2.0**)  
+**Status:** Plan only — **do not disable or delete** without Mike · live ON/OFF **live-blocked**
+**Base:** Document for Production soak → Mike-approved maintenance window
+**Inventory:** [PROD_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./PROD_FIELD_TRIGGER_INVENTORY_2026-07-16.md)
+**Scripts:**
+- Keep: `042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js` (**v3.0**)
+- Retire: `043-levels-and-progression-set-level-gate-rule-from-next-level.js` (**v2.0**)
 **Authority:** V2-014 / V2-014a · S26 recommendation · Mike Q2 **2026-07-05** (retire approved, not executed)
 
 | Item | Label |
 |------|-------|
 | 042 writes Level Gate Rule (GitHub v3.0) | **repository-ready** |
-| View `042 - Needs Level Assignment` exists | **verified in DEV (snapshot)** |
+| View `042 - Needs Level Assignment` exists | **verified in Production (snapshot)** |
 | Live 042/043 ON/OFF + gate population evidence | **live-blocked** |
 | Delete 043 | **requires Mike approval** · **requires PROD promotion** window |
 
@@ -40,11 +40,11 @@
 
 ## 2. Safe retirement procedure
 
-### Phase A — DEV evidence (required)
+### Phase A — Production evidence (required)
 
 | # | Check | Pass |
 |---|-------|------|
-| A1 | DEV pasted script is **042 v3.0** (gate write present) | [ ] |
+| A1 | Production pasted script is **042 v3.0** (gate write present) | [ ] |
 | A2 | Spot-check ≥3 enrollments after 041→042: Level Gate Rule populated | [ ] |
 | A3 | Status is Assigned or Gate Blocked as expected | [ ] |
 | A4 | Query: Next Level set + Level Gate Rule empty ≈ **0** | [ ] |
@@ -55,16 +55,16 @@
 | Option | Action | When |
 |--------|--------|------|
 | **A — Keep both ON** | Default | Until A1–A4 PASS |
-| **B — Disable 043 only** | Toggle OFF; keep automation slot | After DEV soak PASS |
+| **B — Disable 043 only** | Toggle OFF; keep automation slot | After Production soak PASS |
 | **C — Delete 043** | Remove automation | Approved **maintenance window** only (V2-014a) |
 
 **Lead recommendation:** A → B → C. Never jump to C without B soak.
 
 ### Phase C — PROD (Mike only)
 
-1. Repeat A1–A4 on PROD during maintenance window.  
-2. Disable 043 (Option B) and monitor level assignment for one week.  
-3. Delete 043 (Option C) only with explicit Mike go.  
+1. Repeat A1–A4 on PROD during maintenance window.
+2. Disable 043 (Option B) and monitor level assignment for one week.
+3. Delete 043 (Option C) only with explicit Mike go.
 4. Update `CHANGELOG.md` + automation inventory.
 
 ### Rollback
@@ -89,7 +89,7 @@ Some index rows incorrectly list 043’s table as **Levels**. Script operates on
 
 | Item | Status |
 |------|--------|
-| Live DEV/PROD ON/OFF for 042/043 | **UNKNOWN** — UI |
+| Live Production ON/OFF for 042/043 | **UNKNOWN** — UI |
 | Live pasted 042 includes gate write | **UNKNOWN** — verify |
 | Docs “Status=Live” ≠ UI enabled proof | Always re-check UI |
 
@@ -97,15 +97,15 @@ Some index rows incorrectly list 043’s table as **Levels**. Script operates on
 
 ## 5. Mike approvals needed
 
-1. Confirm DEV 042 v3.0 soak PASS (A1–A4).  
-2. Choose Option A/B/C timing.  
-3. Explicit go before PROD disable or delete.  
+1. Confirm Production 042 v3.0 soak PASS (A1–A4).
+2. Choose Option A/B/C timing.
+3. Explicit go before PROD disable or delete.
 4. This Worker packet does **not** execute retirement.
 
 ---
 
 ## 6. Related
 
-- S26: overnight `S26-043-042-recommendation.md`  
-- Investigation: overnight `LEVELS-043-042-investigation.md`  
+- S26: overnight `S26-043-042-recommendation.md`
+- Investigation: overnight `LEVELS-043-042-investigation.md`
 - Offline: `tools/airtable/tests/test_automation_059_043_112_contracts.py` · `test_levels_042_043_contracts.py` (if present on branch)

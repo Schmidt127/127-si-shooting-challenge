@@ -2,7 +2,7 @@
 
 **Status:** **Active** — permanent operating procedure for this project.
 
-**Last updated:** 2026-07-05 (official promotion documentation — DEV changes not official until documented)
+**Last updated:** 2026-07-05 (official promotion documentation — Production changes not official until documented)
 
 ---
 
@@ -124,13 +124,13 @@ flowchart LR
 
 ---
 
-## DEV-first delivery pipeline (permanent — V2-015)
+## production-only delivery pipeline (permanent — V2-015)
 
-**Permanent rule:** Nothing new ships to **Production** until it has been tested successfully in **DEV**.
+**Permanent rule:** Nothing new ships to **Production** until it has been tested successfully in **Production**.
 
 This applies to **all** platform changes:
 
-| Artifact | DEV first? | GitHub / docs |
+| Artifact | production-only validation? | GitHub / docs |
 |----------|------------|---------------|
 | Airtable automations | **Yes** | Script in repo before paste |
 | Formulas | **Yes** | Document in schema notes or field-map when non-trivial |
@@ -138,9 +138,9 @@ This applies to **all** platform changes:
 | Views | **Yes** | [web/docs/airtable-views.md](../../web/docs/airtable-views.md) when web-facing |
 | Make scenarios | **Yes** | Blueprint export in `make/blueprints/` |
 | Extension scripts | **Yes** | `airtable/extension-scripts/` |
-| Schema changes (fields, tables) | **Yes** | Promotion doc + schema snapshot after intentional dev divergence |
+| Schema changes (fields, tables) | **Yes** | Promotion doc + schema snapshot after intentional production divergence |
 
-**Production base** (`appn84sqPw03zEbTT`) is the live season system of record. **DEV base** (`appTetnuCZlCZdTCT`) is the mandatory test environment. See [development-base-setup.md](../development-base-setup.md).
+**Production base** (`appn84sqPw03zEbTT`) is the live season system of record. **Production base** (`appn84sqPw03zEbTT`) is the mandatory test environment. See [production-base-setup.md](../production-base-setup.md).
 
 ### Canonical delivery diagram
 
@@ -156,7 +156,7 @@ flowchart TB
         GitHub[GitHub]
     end
     subgraph validate [Validate]
-        DEV[DEV_Base]
+        Production[PROD_Base]
         Testing[Testing]
     end
     subgraph ship [Ship]
@@ -166,36 +166,36 @@ flowchart TB
 
     ChatGPT --> Cursor
     Cursor --> GitHub
-    GitHub --> DEV
-    DEV --> Testing
+    GitHub --> Production
+    Production --> Testing
     Testing --> Approval
     Approval --> Prod
 ```
 
-**In words:** ChatGPT designs → Cursor writes → GitHub stores → DEV validates → Mike approves → Production receives.
+**In words:** ChatGPT designs → Cursor writes → GitHub stores → Production validates → Mike approves → Production receives.
 
 ### Official promotion documentation (required)
 
-**Rule:** Changes in DEV are **experiments** until **Cursor documents the promotion steps** in GitHub. Undocumented DEV work is not backlog-official and must not be treated as the plan for Production.
+**Rule:** Changes in Production are **experiments** until **Cursor documents the promotion steps** in GitHub. Undocumented Production work is not backlog-official and must not be treated as the plan for Production.
 
-This keeps DEV useful as a lab without becoming a confusing second system of record.
+This keeps Production useful as a lab without becoming a confusing second system of record.
 
 | State | Meaning |
 |-------|---------|
-| **DEV experiment** | Someone changed DEV (Mike, OMNI, or Cursor); no promotion doc yet |
+| **Production experiment** | Someone changed Production (Mike, OMNI, or Cursor); no promotion doc yet |
 | **Promotion documented** | Cursor committed numbered prod steps; ready for Mike review |
 | **Promoted** | Mike approved; steps executed in Production |
 
 #### When Cursor must write promotion steps
 
-Create or update a promotion document when DEV receives an **intentional** change that may ship to Production:
+Create or update a promotion document when Production receives an **intentional** change that may ship to Production:
 
 | Change type | Promotion doc location |
 |-------------|------------------------|
-| **Automations** | `docs/deploy-checklists/{backlog-id}-{name}-dev-deploy.md` (DEV + prod sections) |
+| **Automations** | `docs/deploy-checklists/{backlog-id}-{name}-production-deploy.md` (Production + prod sections) |
 | **Schema** (fields, tables, formulas, views) | `docs/deploy-checklists/{backlog-id}-{name}-schema-promotion.md` |
 | **Extension scripts** (audits / backfills) | Same deploy checklist or note in extension README |
-| **Make scenarios** | `make/documentation/` + blueprint header (prod vs dev mapping) |
+| **Make scenarios** | `make/documentation/` + blueprint header (prod vs production mapping) |
 | **Web** (routes, env, Airtable views) | `docs/deployment-notes.md` or deploy checklist |
 
 **Template:** [deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md](../deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md)
@@ -204,29 +204,29 @@ Create or update a promotion document when DEV receives an **intentional** chang
 
 Every promotion document must include:
 
-1. **Backlog ID** and what changed in DEV
-2. **DEV test evidence** — audit dry-run, sandbox record, automation run (what passed)
+1. **Backlog ID** and what changed in Production
+2. **Production test evidence** — audit dry-run, sandbox record, automation run (what passed)
 3. **Numbered Production steps** — exact field names, types, formula text, paste line ranges, Make/Fillout/web changes
 4. **Smoke test** — how to verify prod after promote (Schmidt / dry-run audit)
 5. **Risk / rollback notes** — what breaks if wrong; undo path if any
-6. **Schema snapshots** (when schema changed) — dev export path; prod pre-promote export for diff
+6. **Schema snapshots** (when schema changed) — production export path; prod pre-promote export for diff
 
 #### Cursor obligation (end of session)
 
-If DEV was intentionally changed during the session, Cursor must **before stopping**:
+If Production was intentionally changed during the session, Cursor must **before stopping**:
 
 - **(a)** Write or update the promotion document and link it from the backlog item, **or**
-- **(b)** Mark the change as **throwaway** in the backlog item notes (`DEV experiment only — do not promote`)
+- **(b)** Mark the change as **throwaway** in the backlog item notes (`Production experiment only — do not promote`)
 
 #### Mike rule
 
-**Do not mirror DEV → Production from memory.** Use the promotion document only. If there is no doc, the DEV change is not official.
+**Do not mirror Production → Production from memory.** Use the promotion document only. If there is no doc, the Production change is not official.
 
 #### Relationship to five-phase workflow
 
 | Phase | Promotion doc |
 |-------|----------------|
-| Phase 3 (Implementation) | Cursor creates doc when DEV change is part of the work |
+| Phase 3 (Implementation) | Cursor creates doc when Production change is part of the work |
 | Phase 4 (Review) | ChatGPT checks promotion steps against acceptance criteria |
 | Phase 5 (Close) | Promotion doc status → `Promoted to Production` after prod execute |
 
@@ -237,18 +237,18 @@ Every **new or rewritten** production automation:
 1. **ChatGPT** — design trigger, inputs, outputs, idempotency (Phase 2 plan).
 2. **Cursor** — implement to [06-automation-standards.md](./06-automation-standards.md) (**066 v3.1** pattern).
 3. **GitHub** — commit; docblock version is the reference version.
-4. **DEV** — paste, sandbox test, matching audit dry-run.
+4. **Production** — paste, sandbox test, matching audit dry-run.
 5. **Mike** — approve promote.
 6. **Production** — paste **same** committed script → `CHANGELOG.md`.
 
-**Never** paste a script into Production that is not already committed in GitHub and tested in DEV.
+**Never** paste a script into Production that is not already committed in GitHub and tested in Production.
 
-### OMNI and DEV
+### OMNI and Production
 
-OMNI may **prototype** formulas, views, and interfaces in **DEV** (or prod read-only exploration). Before any prototype becomes production:
+OMNI may **prototype** formulas, views, and interfaces in **Production** (or prod read-only exploration). Before any prototype becomes production:
 
 - Pull into GitHub/docs if it is an automation or extension script.
-- Test in DEV.
+- Test in Production.
 - Promote to Production only after approval.
 
 ### Five-phase workflow (roles)
@@ -476,7 +476,7 @@ What to open / paste:
 | Planning session but Mike asks Cursor to implement | Phase skip | Classify task; if plan missing, return to ChatGPT Phase 2. |
 | Wave 1+ work while Wave 0 close-out items still open | Wave skip | Flag open C-001–C-008; confirm Mike wants to defer close-out. |
 | Production Airtable paste before GitHub commit | Deploy order | GitHub first → Airtable paste → CHANGELOG ([monorepo rule](../../.cursor/rules/monorepo.mdc)). |
-| Promote DEV → Production without promotion doc | Process skip | Stop. Cursor must document promotion steps in `docs/deploy-checklists/` first. |
+| Promote Production → Production without promotion doc | Process skip | Stop. Cursor must document promotion steps in `docs/deploy-checklists/` first. |
 | Audit/backfill with writes and no dry-run | Safety | Dry-run first; require `CONFIRM_WRITE` / `CONFIRM_DELETE`. |
 | Constitution or business-rules change during a code-only task | Layer violation | Stop. Route to ChatGPT; Mike must approve [01](./01-constitution.md) / [03](./03-business-rules.md) edits. |
 
@@ -623,7 +623,7 @@ Use Cursor for:
 | **Production history** | [CHANGELOG.md](../../CHANGELOG.md) — Cursor updates on production-impacting ship |
 | **ChatGPT sync** | Run `tools/docs/sync-chatgpt-sources.ps1` after doc commits |
 
-**Docblock rule:** Airtable automation changes → GitHub first → paste into **dev** → audit → paste into **prod** → `CHANGELOG.md`. See [development-base-setup.md](../development-base-setup.md).
+**Docblock rule:** Airtable automation changes → GitHub first → paste into **production** → audit → paste into **prod** → `CHANGELOG.md`. See [production-base-setup.md](../production-base-setup.md).
 
 ---
 
@@ -634,7 +634,7 @@ All automation work follows [../../airtable/automations/AUTOMATION_SCRIPT_STANDA
 | Rule | Requirement |
 |------|-------------|
 | Source of truth | GitHub `airtable/automations/shooting-challenge/{nnn}-{kebab}.js` |
-| Deploy | GitHub first → paste **dev** → audit → Mike approves → paste **prod** → `CHANGELOG.md` (see [development-base-setup.md](../development-base-setup.md)) |
+| Deploy | GitHub first → paste **production** → audit → Mike approves → paste **prod** → `CHANGELOG.md` (see [production-base-setup.md](../production-base-setup.md)) |
 | Structure | `async function main()`, CONFIG block, SECTION blocks, required outputs |
 | Idempotency | Source Key patterns; one source → one XP Event; skip vs error |
 | Schema | Validate fields early; never write formula/rollup/lookup fields |
@@ -739,9 +739,9 @@ Use in Phase 4 (ChatGPT + Mike):
 These apply to ChatGPT, Cursor, and Mike's production actions:
 
 - **Never commit secrets** — `.env`, PATs, webhook URLs with tokens
-- **DEV before Production** — nothing new ships to prod until tested in DEV ([DEV-first pipeline](#dev-first-delivery-pipeline-permanent--v2-015))
-- **Promotion doc required** — DEV changes are not official until Cursor documents prod steps ([Official promotion documentation](#official-promotion-documentation-required))
-- **Airtable production writes** — GitHub first → DEV test → Mike approval → paste prod → `CHANGELOG.md`
+- **Production before Production** — nothing new ships to prod until tested in Production ([production-only pipeline](#production-only-delivery-pipeline-permanent--v2-015))
+- **Promotion doc required** — Production changes are not official until Cursor documents prod steps ([Official promotion documentation](#official-promotion-documentation-required))
+- **Airtable production writes** — GitHub first → Production test → Mike approval → paste prod → `CHANGELOG.md`
 - **Audits/backfills** — dry-run first; explicit `CONFIRM_WRITE` / `CONFIRM_DELETE` for writes
 - **Web** — Airtable reads server-side only; never expose `AIRTABLE_API_TOKEN` to the browser
 - **XP idempotency** — one source record → one XP Event
@@ -767,5 +767,5 @@ These apply to ChatGPT, Cursor, and Mike's production actions:
 | 2026-07-05 | Promoted from shell to **Active** — three-role, five-phase permanent operating procedure |
 | 2026-07-05 | Added workspace guardrails, Workspace Check, extended Task Classification |
 | 2026-07-05 | **OMNI-first** priority for in-Airtable work (Mike's Airtable credits) |
-| 2026-07-05 | **DEV-first delivery pipeline** — permanent rule + canonical diagram; nothing to prod without DEV test |
-| 2026-07-05 | **Official promotion documentation** — DEV changes not official until Cursor documents prod steps |
+| 2026-07-05 | **production-only delivery pipeline** — permanent rule + canonical diagram; nothing to prod without Production test |
+| 2026-07-05 | **Official promotion documentation** — Production changes not official until Cursor documents prod steps |

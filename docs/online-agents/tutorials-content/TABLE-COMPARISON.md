@@ -1,9 +1,9 @@
 # Table Comparison — Tutorials vs Tutorials & Assets
 
-**Agent:** Online Agent 8  
-**Date:** 2026-07-23  
-**Evidence baseline:** `airtable/schema/snapshots/prod-foundation-reset-20260723-post-ts/schema_doc_appn84sqPw03zEbTT_20260723_152229.md`  
-**Also checked:** PROD 2026-07-23 pre-ts, PROD 2026-07-06, DEV 2026-07-06 (same 13-field shapes)
+**Agent:** Online Agent 8
+**Date:** 2026-07-23
+**Evidence baseline:** `airtable/schema/snapshots/prod-foundation-reset-20260723-post-ts/schema_doc_appn84sqPw03zEbTT_20260723_152229.md`
+**Also checked:** PROD 2026-07-23 pre-ts, PROD 2026-07-06, Production 2026-07-06 (same 13-field shapes)
 
 > Rule: Do **not** assert fields that cannot be confirmed. Unknowns are marked **UNKNOWN**.
 

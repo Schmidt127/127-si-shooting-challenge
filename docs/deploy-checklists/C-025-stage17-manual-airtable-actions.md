@@ -1,8 +1,8 @@
 # C-025 Stage 17 — Manual Airtable actions (PROD)
 
-**Date written:** 2026-07-18  
-**Branch:** `feature/c025-stage17-zoom-attendance` @ `2db98a0`  
-**PROD:** `appn84sqPw03zEbTT`  
+**Date written:** 2026-07-18
+**Branch:** `feature/c025-stage17-zoom-attendance` @ `2db98a0`
+**PROD:** `appn84sqPw03zEbTT`
 **Hard rules:** Do **not** enable 117 / 057 / 042 during schema work. Do **not** install Automation **115**. Do **not** write `Zoom Meetings.Attendees` from any recording path. Leave **101** alone unless Mike says otherwise (currently OFF per progress note — confirm before go-live).
 
 Authority: [C-025-stage17-prod-schema-manifest.json](./C-025-stage17-prod-schema-manifest.json), [lookup map](./C-025-stage17-lookup-map.md), [formula build order](./C-025-stage17-formula-build-order.md).
@@ -16,7 +16,7 @@ Do these in the **Airtable UI** (or OMNI with explicit UI confirmation):
 | Category | Why manual |
 |----------|------------|
 | Lookup wiring (link field + source field) | Connector/Meta often creates incomplete lookups |
-| Rollup aggregation formula (e.g. `ARRAYJOIN(values)`) | DEV proved Meta may accept create but **not store** rollup formula |
+| Rollup aggregation formula (e.g. `ARRAYJOIN(values)`) | Production proved Meta may accept create but **not store** rollup formula |
 | Autonumber primary field behavior | Verify `Id` is primary + autonumber |
 | `prefersSingleRecordLink` | Manifest requires True/False; connector often cannot set |
 | View filters | Views Meta POST historically 422 |
@@ -57,7 +57,7 @@ Do these in the **Airtable UI** (or OMNI with explicit UI confirmation):
 9. Confirm Enrollments field **Record Id** is Formula `RECORD_ID()`.
 10. If missing: create Zoom Meetings field **RecordId** as Formula `RECORD_ID()`.
 11. If missing: create Zoom Meetings field **Week End Date** as Lookup through **Week** of Weeks field **End Date**.
-12. If missing: create Zoom Meetings field **Attendance Method** as Single select with choice **Recording Quiz** (and **Live** if matching DEV).
+12. If missing: create Zoom Meetings field **Attendance Method** as Single select with choice **Recording Quiz** (and **Live** if matching Production).
 13. Spot-check Config field **Zoom Recording XP Percent of Live** = **50** on the Config row linked as Global/Program default.
 14. Spot-check XP Reward Rule **ZOOM_ATTEND_BASE** is active at **60**.
 
@@ -112,14 +112,14 @@ Do these in the **Airtable UI** (or OMNI with explicit UI confirmation):
 ### Record / Config values
 
 51. On the Global default Config row, set **Recording Path Enabled?** = checked (true).
-52. Set **Recording Makeup Enabled?** per program decision (DEV sample enabled row uses Yes).
+52. Set **Recording Makeup Enabled?** per program decision (Production sample enabled row uses Yes).
 53. Set **Zoom Recording Makeup Window Days** = **7** (Stage 17 default).
 54. Set **Zoom Recording Deadline Mode** = **Later of Both** (default).
 55. Set **Zoom Recording XP Percent of Live** = **50**.
-56. Set **Recording Quiz Requires Coach Approval?** per decision (DEV enabled sample = Yes).
-57. Set **Recording Gives Full Zoom Gate Credit?** per decision (DEV enabled sample = Yes).
-58. Set **Recording Makeup Counts for Perfect Week?** per decision (DEV enabled sample = Yes).
-59. Set **Recording Approval Email Enabled?** per decision (DEV enabled sample = Yes).
+56. Set **Recording Quiz Requires Coach Approval?** per decision (Production enabled sample = Yes).
+57. Set **Recording Gives Full Zoom Gate Credit?** per decision (Production enabled sample = Yes).
+58. Set **Recording Makeup Counts for Perfect Week?** per decision (Production enabled sample = Yes).
+59. Set **Recording Approval Email Enabled?** per decision (Production enabled sample = Yes).
 60. Set **Recording Approval Email Timing** = **On Satisfactory**.
 61. Set **Recording Approval Email Template Key** = **ZOOM_RECORDING_APPROVED**.
 62. Bulk-link Zoom Meetings **Config (Global Scope)** / **Config (Program Scope)** to the correct Config rows.
@@ -184,7 +184,7 @@ Safe for connector / OMNI automation **if** Mike authorizes writes — still kee
 Agents may do without touching Airtable:
 
 - Maintain these deploy-checklists / status docs.
-- Keep paste bodies aligned: 117 v1.1.1, 057 v1.3, 042 v3.1, 115 v1.8 DEV-only.
+- Keep paste bodies aligned: 117 v1.1.1, 057 v1.3, 042 v3.1, 115 v1.8 Production-only.
 - Run local unit tests under `airtable/automations/.../c025-stage17-zoom-attendance.test.js` if present.
 - Prepare rollback file templates in repo (empty placeholders) — do not pull live PROD script text via API (403).
 - Re-run read-only readiness audit script when Mike provides PAT + approval: `tools/airtable/_c025_stage17_prod_readiness_audit.py`.

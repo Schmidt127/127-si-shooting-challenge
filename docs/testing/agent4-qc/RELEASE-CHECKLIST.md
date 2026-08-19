@@ -6,7 +6,7 @@ Companion to [`docs/V2_RELEASE_CHECKLIST.md`](../../V2_RELEASE_CHECKLIST.md).
 
 - [ ] Commit SHA recorded; version/SCRIPT metadata updated if logic changed
 - [ ] `node tools/testing/run-agent4-suite.js` PASS
-- [ ] DEV paste + named smoke; promotion doc if DEV→PROD
+- [ ] Production paste + named smoke; promotion doc if Production→PROD
 - [ ] Re-verify 074 inputs (`sendMode`, webhook, testRecipientEmail)
 - [ ] CHANGELOG if production-impacting
 
@@ -26,7 +26,7 @@ Companion to [`docs/V2_RELEASE_CHECKLIST.md`](../../V2_RELEASE_CHECKLIST.md).
 
 ## E–F. Fillout / Softr
 
-- [ ] Field keys match intake automations; DEV first; one shaped submission through XP
+- [ ] Field keys match intake automations; production-only validation; one shaped submission through XP
 
 ## G. Live email activation
 

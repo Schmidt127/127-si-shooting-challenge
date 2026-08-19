@@ -1,4 +1,4 @@
-"""Read-only fetch of DEV + PROD Automations inventory tables for reconciliation."""
+"""Read-only fetch of Production + PROD Automations inventory tables for reconciliation."""
 from __future__ import annotations
 
 import json
@@ -7,7 +7,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-DEV = "appTetnuCZlCZdTCT"
+Production = "appn84sqPw03zEbTT"
 PROD = "appn84sqPw03zEbTT"
 OUT = Path(__file__).resolve().parents[2] / "docs" / "foundation-reset"
 
@@ -56,7 +56,7 @@ def main():
         raise SystemExit("Missing AIRTABLE token in tools/airtable/.env")
     OUT.mkdir(parents=True, exist_ok=True)
     summary = {}
-    for label, base in [("DEV", DEV), ("PROD", PROD)]:
+    for label, base in [("Production", Production), ("PROD", PROD)]:
         try:
             meta = get_json(tok, f"https://api.airtable.com/v0/meta/bases/{base}/tables")
             tables = [t["name"] for t in meta["tables"]]
@@ -96,7 +96,7 @@ def main():
             body = e.read().decode("utf-8", errors="replace")[:500]
             print(f"{label}: HTTP {e.code} {body}")
             summary[label] = {"error": f"HTTP {e.code}", "body": body}
-    (OUT / "dev-prod-automations-fetch-summary.json").write_text(
+    (OUT / "production-automations-fetch-summary.json").write_text(
         json.dumps(summary, indent=2), encoding="utf-8"
     )
 

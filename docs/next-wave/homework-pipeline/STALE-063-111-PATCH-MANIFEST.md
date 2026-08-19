@@ -1,7 +1,7 @@
 # Stale 063 / 111 documentation — patch manifest
 
-**Agent:** 11 · **Date:** 2026-07-24  
-**Purpose:** Exact stale statements for Agent 14 to reconcile later.  
+**Agent:** 11 · **Date:** 2026-07-24
+**Purpose:** Exact stale statements for Agent 14 to reconcile later.
 **Rule:** This agent does **not** edit shared docs during concurrent work.
 
 Confirmed conclusions this manifest encodes:
@@ -29,7 +29,7 @@ Confirmed conclusions this manifest encodes:
 | P11 | `airtable/schema/current/automation-trigger-map.md` Video section | 111 row active | Annotate deleted; GB via 013 | Trigger map lies |
 | P12 | `airtable/extension-scripts/audits/audit-video-pipeline-integrity.js` ~L511 | `recommendedAction: "Run 111 - Copy Enrollment Grade Band to Video Feedback"` | `recommendedAction: "Run 013 repair path (Grade Band) — do not reinstall 111"` | Operators reinstall deleted 111 |
 | P13 | `docs/overnight/testing-integrity/MIKE-ACTIONS.md` | Confirm deleted set includes 063, 111; “Do not reinstall … without new design” | Keep “do not reinstall”; add exception notes: 111 unnecessary if 013 v2.0; 063 only if orphan HC blank-GB backfill requires a temporary repair script (not full 063 restore) | Ambiguous reinstall guidance |
-| P14 | `docs/foundation-reset/DEV-PROD-AUTOMATION-RECONCILIATION-2026-07-23.json` | `gradeBand_063_111.claim` / `063→020` Planned only / “Do NOT delete 063/111” | Update claims to Agent 11 classifications; mark 111→013 proven; 063→020 partial | Stale JSON drives wrong capacity decisions |
+| P14 | `docs/foundation-reset/Production-PROD-AUTOMATION-RECONCILIATION-2026-07-23.json` | `gradeBand_063_111.claim` / `063→020` Planned only / “Do NOT delete 063/111” | Update claims to Agent 11 classifications; mark 111→013 proven; 063→020 partial | Stale JSON drives wrong capacity decisions |
 
 ---
 

@@ -1,4 +1,4 @@
-# PHA-first homework package — DEV → PROD promotion
+# PHA-first homework package — Production → PROD promotion
 
 | Field | Value |
 |-------|--------|
@@ -8,17 +8,17 @@
 | PROD status | **Controlled proof recorded 2026-08-10** — 067 quiz→Homework Completion idempotency passed; 115 produced one Submission per explicit checked request. This is not full downstream or season E2E proof. |
 | Completion Master | **Do not** mark Installed or Live Tested until Mike captures live evidence |
 | PROD base | `appn84sqPw03zEbTT` |
-| DEV base | per `docs/PROJECT_STATE.md` |
+| Production base | per `docs/PROJECT_STATE.md` |
 
 ## Purpose
 
 `Submissions.Homework Name 1/2` store **Program Homework Assignment (PHA) record IDs**, not Homework Library IDs. Automations validate PHA directly, dereference library content from `PHA.Homework Assignment`, and write both IDs on Homework Completions. **067 v3.4** adds fail-closed validation for quiz-linked and discovered Homework Completions (exactly one link each for Enrollment, Week, Library, and PHA; duplicate matches fail closed).
 
-## Capture active DEV PHA and Library IDs (required before testing)
+## Capture active Production PHA and Library IDs (required before testing)
 
 **Do not assume offline fixture RIDs are the live HW17 quiz PHA.** Repository tests use fixture IDs such as `recgj8dPk4ouTwCOj` / `rechVLOeyEVIqmy2v`; production evidence tied `recgj8dPk4ouTwCOj` to a **failed submission’s selected PHA**, not independently to the HW17 reflection-quiz schedule.
 
-Before DEV or PROD controlled tests, capture the **active** IDs from the target base:
+Before Production or PROD controlled tests, capture the **active** IDs from the target base:
 
 | Step | Where | Record |
 |------|--------|--------|
@@ -30,7 +30,7 @@ Before DEV or PROD controlled tests, capture the **active** IDs from the target 
 
 Fill in captured values below and use **only these** in controlled tests:
 
-| Role | Record ID (capture in DEV) | Notes |
+| Role | Record ID (capture in Production) | Notes |
 |------|----------------------------|--------|
 | Program Instance | `rec5mEM0YPqPqq0hZ` | Schmidt 3-4 Early Bird — confirm on Enrollment |
 | Active HW17 PHA (HW1 slot) | *(capture)* | Must be active, PI match, HW1 slot, library = HW 17 |
@@ -39,7 +39,7 @@ Fill in captured values below and use **only these** in controlled tests:
 | Controlled Enrollment | `recCyFEPeATOVNlr9` | Schmidt test athlete |
 | HW2 library reference (slot B) | `rec6WmXjpLtIWDERo` | Optional second-slot reference only |
 
-## DEV paste order (required)
+## Production paste order (required)
 
 Paste **only** the production docblock through end of script (skip GitHub header). Save each automation before pasting the next.
 
@@ -54,9 +54,9 @@ Paste **only** the production docblock through end of script (skip GitHub header
 
 After **115** paste: update **Testing Scenarios** Homework rows so `Homework Assignment` = captured **PHA** RID (not library RID).
 
-## Controlled test sequence (DEV)
+## Controlled test sequence (Production)
 
-Run in order after full DEV paste. Capture automation run history JSON (statusOut, actionOut, errorOut, debugStep, version). Substitute **captured PHA / library / week** RIDs everywhere below.
+Run in order after full Production paste. Capture automation run history JSON (statusOut, actionOut, errorOut, debugStep, version). Substitute **captured PHA / library / week** RIDs everywhere below.
 
 ### A — Submission intake chain (005 → 009 → 020)
 
@@ -71,7 +71,7 @@ Run in order after full DEV paste. Capture automation run history JSON (statusOu
 1. Final Reflection Quiz Submission on Enrollment `recCyFEPeATOVNlr9` with no HC link (or legacy HC with blank PHA only).
 2. Trigger **067** — expect `statusOut=success`, `phaId` = captured HW17 PHA, `libraryId` = captured library, HC created or linked with both IDs.
 3. **Replay** same quiz row — expect success, no second HC, no PHA overwrite on correct link.
-4. Negative spot-check (optional): link quiz to HC with wrong Week — expect **fail closed** with mismatch error (clean up DEV row afterward).
+4. Negative spot-check (optional): link quiz to HC with wrong Week — expect **fail closed** with mismatch error (clean up Production row afterward).
 
 ### C — ETF homework scenario (115)
 
@@ -106,16 +106,16 @@ git diff --check
 
 **Stop — do not paste to PROD until Mike explicitly approves** after:
 
-- [ ] Active DEV PHA + library IDs captured and filled in above
-- [ ] DEV controlled sequence A + B + C PASS with captured run JSON
-- [ ] No unexpected HC / Submission duplicates in DEV
-- [ ] Fillout / Testing Scenarios updated to PHA RIDs in DEV
+- [ ] Active Production PHA + library IDs captured and filled in above
+- [ ] Production controlled sequence A + B + C PASS with captured run JSON
+- [ ] No unexpected HC / Submission duplicates in Production
+- [ ] Fillout / Testing Scenarios updated to PHA RIDs in Production
 - [ ] Mike reviews this checklist and PR #132 diff
 
 ## PROD paste and evidence capture
 
-1. Re-capture active PROD HW17 PHA + library IDs (do not copy DEV RIDs blindly).
-2. Repeat **DEV paste order** in PROD: **005 → 020 → 067 → 115**.
+1. Re-capture active PROD HW17 PHA + library IDs (do not copy Production RIDs blindly).
+2. Repeat **Production paste order** in PROD: **005 → 020 → 067 → 115**.
 3. Update PROD Fillout choice lists and Testing Scenarios to **captured PHA** RIDs.
 4. Run **one** controlled Schmidt submission (`recCyFEPeATOVNlr9`) through 005→009→020 — capture outputs.
 5. Run **one** controlled HW17 quiz (or approved ETF scenario) through 067 / 115 — capture outputs.

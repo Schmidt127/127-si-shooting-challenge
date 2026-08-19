@@ -1,30 +1,30 @@
 # V2 Release Checklist — Shooting Challenge
 
-**Status:** Active release-readiness runbook  
-**Last updated:** 2026-07-16  
-**Repo:** `Schmidt127/127-si-shooting-challenge`  
-**Environments:** DEV `appTetnuCZlCZdTCT` · PROD `appn84sqPw03zEbTT`  
-**Hard rules:** DEV first · no unattended PROD paste · Mike approves PROD · no Vercel setting changes from agents · do not merge without Mike
+**Status:** Active release-readiness runbook
+**Last updated:** 2026-07-16
+**Repo:** `Schmidt127/127-si-shooting-challenge`
+**Environments:** Production `appn84sqPw03zEbTT` · PROD `appn84sqPw03zEbTT`
+**Hard rules:** production-only validation · no unattended PROD paste · Mike approves PROD · no Vercel setting changes from agents · do not merge without Mike
 
-**Offline suite (2026-07-16):** Validator + C-025/066/header/engine/upload/web lint·typecheck·test·build **PASS** — see [DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md). Live DEV install **not** performed. Merge gate **closed** 2026-07-16 (#25/#26/#27 on `master`); OA2 package reconciled after merges.
+**Offline suite (2026-07-16):** Validator + C-025/066/header/engine/upload/web lint·typecheck·test·build **PASS** — see [Production-release-readiness-verification-2026-07-16.md](./deploy-checklists/Production-release-readiness-verification-2026-07-16.md). Live Production install **not** performed. Merge gate **closed** 2026-07-16 (#25/#26/#27 on `master`); OA2 package reconciled after merges.
 
 **Companion docs:**
 
 | Doc | Role |
 |-----|------|
-| [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) | Script versions, triggers, DEV/PROD status |
+| [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) | Script versions, triggers, Production status |
 | [V2_END_TO_END_TEST_MATRIX.md](./V2_END_TO_END_TEST_MATRIX.md) | Athlete-scenario launch matrix |
-| [v2/V2_DEV_EXECUTION_RUNBOOK.md](./v2/V2_DEV_EXECUTION_RUNBOOK.md) | Executable DEV runbook (modes, fixtures, cleanup) |
+| [v2/V2_PROD_EXECUTION_RUNBOOK.md](./v2/V2_PROD_EXECUTION_RUNBOOK.md) | Executable Production runbook (modes, fixtures, cleanup) |
 | [v2/V2_LAUNCH_SMOKE_TESTS.md](./v2/V2_LAUNCH_SMOKE_TESTS.md) | Pre-PROD promotion smoke subset |
 | [known-issues.md](./known-issues.md) | Active gaps and accepted exceptions |
 | [deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md](./deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md) | Per-change promotion template |
 | [deploy-checklists/PROD-promotion-rollback-index-stage10.md](./deploy-checklists/PROD-promotion-rollback-index-stage10.md) | Track-level promotion/rollback index (if present from overnight S10) |
-| [deploy-checklists/DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md) | Online Agent 2 DEV verification package |
+| [deploy-checklists/Production-release-readiness-verification-2026-07-16.md](./deploy-checklists/Production-release-readiness-verification-2026-07-16.md) | Online Agent 2 Production verification package |
 | [v2/08-testing-standards.md](./v2/08-testing-standards.md) | Audit-first testing standards |
 | [PROJECT_STATE.md](./PROJECT_STATE.md) | Live base IDs and milestone snapshot |
-| [v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) | C-025 / 117a–117b DEV install packet |
+| [v2/ZOOM_RECORDING_CREDIT_PROD_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_PROD_INSTALL.md) | C-025 / 117a–117b Production install packet |
 | [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md) | 070a PROD keep-OFF decision |
-| [deploy-checklists/066-dev-omni-confirmation-packet.md](./deploy-checklists/066-dev-omni-confirmation-packet.md) | 066 OMNI confirmation support |
+| [deploy-checklists/066-production-omni-confirmation-packet.md](./deploy-checklists/066-production-omni-confirmation-packet.md) | 066 OMNI confirmation support |
 
 **Safe repo validation (no secrets / no Airtable):**
 
@@ -44,13 +44,13 @@ python3 -m unittest tools.airtable.tests.test_c025_recording_watch_contract
 ## 1. Pre-promotion checks
 
 - [ ] Working tree on an approved feature branch; intended commit SHA recorded
-- [ ] `docs/PROJECT_STATE.md` base IDs still match DEV/PROD above
+- [ ] `docs/PROJECT_STATE.md` base IDs still match Production above
 - [ ] No secrets committed (`.env`, PATs, webhook URLs with tokens)
 - [ ] Frontend styling PRs from other agents reviewed for conflict (do not restyle here)
 - [ ] Backlog items being promoted have Phase 2 approval + promotion docs under `docs/deploy-checklists/`
 - [ ] [known-issues.md](./known-issues.md) launch blockers reviewed (accept, fix, or defer with owner)
 - [x] Repository validation script **PASS** (includes 009 SCRIPT metadata + 117a/117b presence) — 2026-07-16 offline
-- [x] C-025 DEV install packet reviewed if recording credit in scope — reviewed; live install still open
+- [x] C-025 Production install packet reviewed if recording credit in scope — reviewed; live install still open
 - [x] 070a PROD remains OFF unless Mike-approved decision flips — decision record affirmed 2026-07-16
 - [ ] 066 OMNI confirmation packet followed if milestones in scope (do not mark live-complete without evidence) — offline PASS; **live pending**
 - [x] Web lint / typecheck / tests / production build **PASS** — 2026-07-16
@@ -58,11 +58,11 @@ python3 -m unittest tools.airtable.tests.test_c025_recording_watch_contract
 
 ---
 
-## 2. DEV test requirements
+## 2. Production test requirements
 
-Run on DEV only (`appTetnuCZlCZdTCT`) with Schmidt / named test enrollments.
+Run on Production only (`appn84sqPw03zEbTT`) with Schmidt / named test enrollments.
 
-| Area | Required DEV proof | Done |
+| Area | Required Production proof | Done |
 |------|--------------------|------|
 | Fillout-shaped intake | C-020 / **115** or verified Fillout-shaped Submission | [ ] |
 | Daily submission → XP | Counted submission creates `SUBMISSION_XP\|{id}` once; rerun skips | [ ] |
@@ -75,7 +75,7 @@ Run on DEV only (`appTetnuCZlCZdTCT`) with Schmidt / named test enrollments.
 | Level gates | **042** Gate Blocked when XP ok / gate fail | [ ] |
 | Weekly summary | **031–034** WAS create + previous-week helpers | [ ] |
 | Zoom live attendance | **101** awards live keys only | [ ] |
-| Zoom recording credit (C-025) | **117a/117b** repo-ready — [ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md); not live-verified | [ ] |
+| Zoom recording credit (C-025) | **117a/117b** repo-ready — [ZOOM_RECORDING_CREDIT_PROD_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_PROD_INSTALL.md); not live-verified | [ ] |
 | Asset upload | **070b/070c** writeback + hash validation (if in scope) | [ ] |
 | Audits | Stages A–J / relevant 090 dry-runs clean or documented exceptions | [ ] |
 
@@ -85,7 +85,7 @@ Full scenario rows: [V2_END_TO_END_TEST_MATRIX.md](./V2_END_TO_END_TEST_MATRIX.m
 
 ## 3. Airtable field / view verification
 
-- [ ] Schema snapshot exported for DEV (and PROD pre-promote if schema changed)
+- [ ] Schema snapshot exported for Production (and PROD pre-promote if schema changed)
 - [ ] New/changed fields match promotion checklist (type, options, formula text)
 - [ ] No accidental writes to formula / rollup / lookup / count fields in scripts
 - [ ] Testing views (C-019) filter by Related Enrollment / test enrollments only
@@ -101,7 +101,7 @@ Use [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md).
 For each automation in the promotion set:
 
 - [ ] GitHub script `#` / name / version / version date match intended release
-- [ ] Airtable DEV automation script paste matches GitHub (skip GitHub-only header)
+- [ ] Airtable Production automation script paste matches GitHub (skip GitHub-only header)
 - [ ] Airtable PROD version recorded (or explicitly **UNKNOWN** until verified in UI)
 - [ ] No duplicate automation numbers in repo (`validate-v2-release-readiness.js`)
 
@@ -121,7 +121,7 @@ For each automation in the promotion set (confirm in Airtable UI — many GitHub
 
 ## 6. Make.com verification
 
-- [ ] Correct environment scenario (DEV vs PROD) — no DEV webhook pointed at PROD
+- [ ] Correct environment scenario (Production vs PROD) — no Production webhook pointed at PROD
 - [ ] Upload / email scenarios match GitHub blueprints under `make/` when changed
 - [ ] Webhook URLs stored only in secrets managers / Airtable input config — not in git
 - [ ] Failed webhook does not clear send triggers incorrectly (070 / 074 patterns)
@@ -131,7 +131,7 @@ For each automation in the promotion set (confirm in Airtable UI — many GitHub
 
 ## 7. Email verification
 
-- [ ] Welcome / daily / weekly / homework feedback / video feedback packages build in DEV
+- [ ] Welcome / daily / weekly / homework feedback / video feedback packages build in Production
 - [ ] Parent-facing copy reviewed (ChatGPT / Mike) before PROD send enable
 - [ ] Send triggers remain unchecked until package content verified
 - [ ] No mass-send from test enrollments
@@ -150,7 +150,7 @@ Execute **in order**. Stop on first failure.
 6. **Web** — Vercel deploy from approved `master` commit only after Mike approval (agents do not deploy)
 7. **Enable automations** — smallest blast radius first (intake → XP → achievements → email)
 8. **CHANGELOG.md** — production-impacting entries under Airtable / Web / Make
-9. **Inventory update** — mark DEV/PROD status + test evidence in automation inventory
+9. **Inventory update** — mark Production status + test evidence in automation inventory
 
 Per-item template: [deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md](./deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md).
 
@@ -175,8 +175,8 @@ Use Schmidt / isolated fixture enrollment only.
 | Upload (if in scope) | 070b/070c writeback fields + hash | [ ] |
 | Audit dry-run | No new unexpected integrity failures | [ ] |
 
-Detailed athlete matrix: [V2_END_TO_END_TEST_MATRIX.md](./V2_END_TO_END_TEST_MATRIX.md).  
-DEV execution + launch smoke gate: [v2/V2_DEV_EXECUTION_RUNBOOK.md](./v2/V2_DEV_EXECUTION_RUNBOOK.md) · [v2/V2_LAUNCH_SMOKE_TESTS.md](./v2/V2_LAUNCH_SMOKE_TESTS.md).
+Detailed athlete matrix: [V2_END_TO_END_TEST_MATRIX.md](./V2_END_TO_END_TEST_MATRIX.md).
+Production execution + launch smoke gate: [v2/V2_PROD_EXECUTION_RUNBOOK.md](./v2/V2_PROD_EXECUTION_RUNBOOK.md) · [v2/V2_LAUNCH_SMOKE_TESTS.md](./v2/V2_LAUNCH_SMOKE_TESTS.md).
 
 ---
 
@@ -201,13 +201,13 @@ Broader ops: [recovery/emergency-recovery.md](./recovery/emergency-recovery.md).
 
 | Role | Name | Date | Result |
 |------|------|------|--------|
-| DEV test operator | | | Pass / Fail |
+| Production test operator | | | Pass / Fail |
 | Automation inventory verified | | | Pass / Fail / Partial |
 | Make / email verified | | | Pass / Fail / N/A |
 | PROD smoke verified | | | Pass / Fail |
 | **Mike — PROD promote approved** | | | Approved / Hold |
 | **Mike — release closed** | | | Closed / Rolled back |
 
-**Release commit SHA:** _______________________  
-**PROD smoke notes:** _______________________  
+**Release commit SHA:** _______________________
+**PROD smoke notes:** _______________________
 **Deferred blockers:** link to [known-issues.md](./known-issues.md)

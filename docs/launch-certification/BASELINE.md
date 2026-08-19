@@ -1,7 +1,7 @@
 # Launch Certification — Baseline
 
-**Authority:** Final Launch Closure Lead session  
-**Captured:** 2026-07-25 (~06:53 America/Denver session start; refreshed during certification)  
+**Authority:** Final Launch Closure Lead session
+**Captured:** 2026-07-25 (~06:53 America/Denver session start; refreshed during certification)
 **Branch for certification work:** `launch/final-production-certification`
 
 ## Authoritative Git SHAs
@@ -60,17 +60,17 @@
 
 | # | Title | Ahead / Behind master | Draft |
 |---|-------|------------------------|-------|
-| 2 | Cloud dev environment setup | 1 / 231 | yes |
-| 3 | Cloud dev environment setup | 1 / 231 | yes |
-| 4 | Cloud dev environment setup | 1 / 231 | yes |
+| 2 | Cloud production environment setup | 1 / 231 | yes |
+| 3 | Cloud production environment setup | 1 / 231 | yes |
+| 4 | Cloud production environment setup | 1 / 231 | yes |
 | 5 | Overnight Worker-D 070a docs | 3 / 231 | yes |
 | 12 | Overnight Worker-B 070a backend | 5 / 231 | yes |
 | 13 | Overnight Worker-C 070a tests | 7 / 231 | yes |
 | 19 | Overnight Lead 070a E2E status | 57 / 231 | yes |
-| 20 | Cloud dev environment setup | 1 / 231 | yes |
-| 21 | Cloud dev environment setup | 1 / 231 | yes |
+| 20 | Cloud production environment setup | 1 / 231 | yes |
+| 21 | Cloud production environment setup | 1 / 231 | yes |
 | 31 | OA2 066 OMNI blocked note | 1 / 183 | yes |
-| 32 | OA1 C-025 DEV install blocked | 1 / 183 | yes |
+| 32 | OA1 C-025 Production install blocked | 1 / 183 | yes |
 | 33 | V2 frontend functional readiness | 1 / 183 | yes |
 | 36 | V2 execution board | 3 / 168 | yes |
 

@@ -1,10 +1,10 @@
 # C-023 — Production duplicate policy (specification)
 
 **Date:** 2026-07-10
-**Last revised:** 2026-07-10 — **Stage 4C** direct DEV Lambda smoke test PASS
-**Status:** **Stage 4C PASS** — claim + upload + writeback + reuse review + retry skip proven on DEV Lambda (no Make/070b). **Not complete** — Stage 4D Make path + H3b–H3p pending.
+**Last revised:** 2026-07-10 — **Stage 4C** direct Production Lambda smoke test PASS
+**Status:** **Stage 4C PASS** — claim + upload + writeback + reuse review + retry skip proven on Production Lambda (no Make/070b). **Not complete** — Stage 4D Make path + H3b–H3p pending.
 **Backlog:** C-023 (parents: C-013, C-024)
-**Evidence:** [C-023-dev-h3-duplicate-bytes-test.md](./C-023-dev-h3-duplicate-bytes-test.md) — H3 **PASS** on DEV
+**Evidence:** [C-023-production-h3-duplicate-bytes-test.md](./C-023-production-h3-duplicate-bytes-test.md) — H3 **PASS** on Production
 **Supersedes:** Prior draft sections recommending canonical S3 reuse, skip PutObject, `reused_canonical_duplicate`, and `Allowed Reuse` as automatic processing outcomes (2026-07-10 revision).
 
 **Hard stops:** No Lambda deploy · no Airtable field creation · no Production changes
@@ -41,7 +41,7 @@ Every submitted asset:
 
 ## 1. H3 baseline (proven today)
 
-| Finding | Proven on DEV |
+| Finding | Proven on Production |
 |---------|----------------|
 | SHA-256 computed and written back | Yes — `rec1ZyqOfljt4foEX` |
 | Lookup timing | After download, **before** S3 PutObject |
@@ -51,7 +51,7 @@ Every submitted asset:
 | Same-record retry | `skipped_already_uploaded` — idempotent |
 | Upload blocked on duplicate | **No** |
 
-**H3 proves hash detection and independent upload.** C-023 remains open until contextual review classification, visibility fields, and DEV scenario matrix (H3b–H3i) are implemented and proven.
+**H3 proves hash detection and independent upload.** C-023 remains open until contextual review classification, visibility fields, and Production scenario matrix (H3b–H3i) are implemented and proven.
 
 ---
 
@@ -300,7 +300,7 @@ Automation may set `Potential Asset Reuse?` and review reasons/summary. Automati
 
 ## 7. Read-only implementation assessment
 
-### 7.1 Context fields on Submission Assets (DEV schema 2026-07-06)
+### 7.1 Context fields on Submission Assets (Production schema 2026-07-06)
 
 | Field | Type | Writable by Lambda | Notes |
 |-------|------|-------------------|-------|
@@ -405,7 +405,7 @@ Sections **10–18** contain the current Stage 1 specification, staged execution
 
 ## 10. Upload status, claim sequence, and H3 collision (Stage 1 assessment)
 
-**Status:** **Open** — separate from C-023 review logic but **blocks reliable DEV/Production upload testing** until resolved.
+**Status:** **Open** — separate from C-023 review logic but **blocks reliable Production/Production upload testing** until resolved.
 
 ### 10.1 Current sequence (code — Stage 2A implemented locally)
 
@@ -472,7 +472,7 @@ Sections **10–18** contain the current Stage 1 specification, staged execution
 | Detection | `audit-stuck-upload-processing.js` (exists) — extend for canonical/hash blank + age > 30 min |
 | New fields | `Processing Started At` (datetime), `Upload Claim Run ID` (text) |
 | Recovery | Ops or Lambda `stale_claim_recovery`: if Processing, no canonical, started > TTL → reset `Pending Link` or allow reclaim on next invoke |
-| Manual DEV test SOP | **070b OFF**; invoke within seconds of prep; never leave asset `READY_TO_SEND` idle |
+| Manual Production test SOP | **070b OFF**; invoke within seconds of prep; never leave asset `READY_TO_SEND` idle |
 
 ### 10.5 Production blocker?
 
@@ -480,13 +480,13 @@ Sections **10–18** contain the current Stage 1 specification, staged execution
 |------|----------|
 | C-023 review specification | **No** |
 | Upload path reliability with 070b ON | **Yes** until claim design deployed |
-| DEV H3b–H3p runtime tests | **Yes** without claim SOP or fix |
+| Production H3b–H3p runtime tests | **Yes** without claim SOP or fix |
 
 ---
 
 ## 11. Stage 1 — v1 schema proposal (final for Mike approval)
 
-**Source:** DEV schema snapshot `dev-20260706` + Lambda field audit. **Do not create fields in Stage 1.**
+**Source:** Production schema snapshot `prod-20260706` + Lambda field audit. **Do not create fields in Stage 1.**
 
 ### 11.1 Field reuse vs new
 
@@ -592,9 +592,9 @@ When `Potential Asset Reuse? = true` and `Asset Reuse Decision = Not Reviewed`:
 | `Confirmed Duplicate` | **No auto-change** until consequence workflow | Cleared after review | **Triggers/enables** Stage 5 workflow |
 | `Resolved — Duplicate Record Error` | Normal | Cleared | None |
 
-### 12.3 Consequence architecture — `Confirmed Duplicate` (Stage 5 — **DEV implemented 2026-07-10**)
+### 12.3 Consequence architecture — `Confirmed Duplicate` (Stage 5 — **Production implemented 2026-07-10**)
 
-**Automation 116** (GitHub v1.0.1 · **DEV deployed and validated 2026-07-10**):
+**Automation 116** (GitHub v1.0.1 · **Production deployed and validated 2026-07-10**):
 
 | Principle | Rule |
 |-----------|------|
@@ -603,7 +603,7 @@ When `Potential Asset Reuse? = true` and `Asset Reuse Decision = Not Reviewed`:
 | Reversible | Approved Reuse / False Positive restore same XP Event via Source Key |
 | Evidence preserved | Never delete S3, assets, or activity rows |
 
-Detail + S5A–S5L matrix: [C-023-dev-stage5-duplicate-consequences.md](./C-023-dev-stage5-duplicate-consequences.md)
+Detail + S5A–S5L matrix: [C-023-production-stage5-duplicate-consequences.md](./C-023-production-stage5-duplicate-consequences.md)
 
 **Trigger:** Airtable automation on `Asset Reuse Decision` change (Submission Assets) — **not** upload Lambda.
 
@@ -615,14 +615,14 @@ Detail + S5A–S5L matrix: [C-023-dev-stage5-duplicate-consequences.md](./C-023-
 |-------|--------|--------|
 | **1** | Assessment, schema proposal, claim design, docs | **Complete** (this revision) |
 | **2** | Lambda + local tests | **Blocked** — Mike approval of §11 schema + §10 claim design |
-| **3** | DEV Airtable fields + OMNI Interface | **Blocked** — separate approval |
-| **4** | DEV runtime H3b–H3p + claim tests | **Blocked** — after Stage 2–3 |
-| **5** | Consequence workflow | **DEV complete** (116 live + S5 12/12 + live confirm/reversal) — prod paste pending |
+| **3** | Production Airtable fields + OMNI Interface | **Blocked** — separate approval |
+| **4** | Production runtime H3b–H3p + claim tests | **Blocked** — after Stage 2–3 |
+| **5** | Consequence workflow | **Production complete** (116 live + S5 12/12 + live confirm/reversal) — prod paste pending |
 | **6** | Production readiness | **Blocked** — after Stage 4 pass |
 
 ---
 
-## 14. DEV runtime test matrix — **executed 2026-07-10 (H3b–H3p)**
+## 14. Production runtime test matrix — **executed 2026-07-10 (H3b–H3p)**
 
 | ID | Scenario | Result | Current asset | Primary reason / evidence |
 |----|----------|--------|---------------|---------------------------|
@@ -642,7 +642,7 @@ Detail + S5A–S5L matrix: [C-023-dev-stage5-duplicate-consequences.md](./C-023-
 | **H3o** | Mike → Allowed — Correction/Resubmission | **PASS** | `recF86pJTIMFoEypJ` | Decision persists |
 | **H3p** | Mike → Confirmed Duplicate | **PASS** | `recF86pJTIMFoEypJ` | Evidence intact; no consequence automation |
 
-Detail: [C-023-dev-h3-duplicate-bytes-test.md](./C-023-dev-h3-duplicate-bytes-test.md) § Wave 7 matrix.
+Detail: [C-023-production-h3-duplicate-bytes-test.md](./C-023-production-h3-duplicate-bytes-test.md) § Wave 7 matrix.
 
 ---
 
@@ -678,11 +678,11 @@ After schema approval, Mike builds in OMNI:
 | # | Decision | Status |
 |---|----------|--------|
 | 1 | Approve §11 v1 schema (new fields + deprecate `File is Duplicate?` writer) | **Pending** — Stage 3 |
-| 2 | Approve §10 claim design (070b Option A) | **Approved** — **repo v4.2 complete** (DEV paste pending Mike) |
+| 2 | Approve §10 claim design (070b Option A) | **Approved** — **repo v4.2 complete** (Production paste pending Mike) |
 | 3 | `Same Assignment Resubmission` always queues (`Potential Asset Reuse?`) | **Implemented** locally |
 | 4 | Skip `Asset Reuse Review Queue Status` | **Implemented** locally |
 | 5 | Stage 2 code (local tests only, no deploy) | **Complete** (2026-07-10) |
-| 6 | Stage 3 DEV schema + OMNI | **Pending** |
+| 6 | Stage 3 Production schema + OMNI | **Pending** |
 | 7 | Stage 5 consequence scope | **Pending** |
 | 8 | Lambda deploy + 070b Option A Airtable change | **Pending** — Stage 4 |
 
@@ -694,7 +694,7 @@ C-023 **done** only when:
 
 1. Policy + schema approved
 2. ~~Stage 2 local tests pass~~ **Done (2026-07-10)**
-3. Stage 3 schema + OMNI review queue live on DEV
+3. Stage 3 schema + OMNI review queue live on Production
 4. Stage 4 H3b–H3p (+ claim tests) PASS
 5. Stage 5 consequence workflow approved (or explicitly deferred with disposition)
 6. Audit checks defined
@@ -707,26 +707,26 @@ C-023 **done** only when:
 | Independent upload + manual review policy | **Approved** |
 | Stage 1 assessment + schema proposal | **Complete** |
 | Stage 2A/2B local code + unit tests | **Complete (2026-07-10)** |
-| Stage 3 DEV schema verification (read-only) | **Complete (2026-07-10)** — see **§19** |
+| Stage 3 Production schema verification (read-only) | **Complete (2026-07-10)** — see **§19** |
 | Stage 4–6 (deploy, runtime, consequences) | **Not started** |
 | Processing claim | **Implemented locally** — deploy + 070b change pending |
 | C-023 | **in progress** |
 
 ---
 
-## 19. Stage 3 DEV schema verification (2026-07-10, read-only)
+## 19. Stage 3 Production schema verification (2026-07-10, read-only)
 
-**Source:** `export_airtable_schema.py` against `appTetnuCZlCZdTCT` only (snapshot `airtable/schema/snapshots/c023-stage3-verify-dev/` — local, not committed).
+**Source:** `export_airtable_schema.py` against `appn84sqPw03zEbTT` only (snapshot `airtable/schema/snapshots/c023-stage3-verify-production/` — local, not committed).
 
 ### Field contract
 
-All **16** C-023 fields exist on DEV **Submission Assets** with expected types (checkbox, `dateTime` with time, `multilineText`, links). `Duplicate Match Record` = `multipleRecordLinks` + `prefersSingleRecordLink: true`. `Duplicate Match Records (All)` = multi-link self-reference.
+All **16** C-023 fields exist on Production **Submission Assets** with expected types (checkbox, `dateTime` with time, `multilineText`, links). `Duplicate Match Record` = `multipleRecordLinks` + `prefersSingleRecordLink: true`. `Duplicate Match Records (All)` = multi-link self-reference.
 
 ### Select options
 
 All reason/decision option **sets** match code except one string corrected in repo:
 
-| Option | DEV Airtable | Code (after fix) |
+| Option | Production Airtable | Code (after fix) |
 |--------|--------------|------------------|
 | VF→Homework reason | `Video Feedback Used for Homework` | **Aligned** (`847aa6e` had `Used as`) |
 
@@ -736,7 +736,7 @@ Em dash in `Allowed — …` and `Cross-Enrollment Match — Informational` = U+
 
 | Item | Status |
 |------|--------|
-| Prior-use lookup fields (`Prior Athlete Full Name`, etc.) | **MISSING** on DEV |
+| Prior-use lookup fields (`Prior Athlete Full Name`, etc.) | **MISSING** on Production |
 | View `Asset Reuse — Pending Review` | **MISSING** (only 4 table views in metadata) |
 | View `Asset Reuse — Reviewed` | **MISSING** |
 | Interface `Asset Reuse Review` | **Not verifiable** via Metadata API — confirm in Airtable UI |
@@ -752,11 +752,11 @@ Em dash in `Allowed — …` and `Cross-Enrollment Match — Informational` = U+
 
 | Step | Action |
 |------|--------|
-| Lambda | ~~Code-only deploy: `127si-upload-asset-dev`~~ **Done 2026-07-10** (`8c94475`, no invoke) |
-| 070b Option A | ~~Remove Processing writeback~~ **Done in repo v4.2** (`c0f91d3`) — Mike paste DEV 070b script (automation OFF) |
+| Lambda | ~~Code-only deploy: `127si-upload-asset`~~ **Done 2026-07-10** (`8c94475`, no invoke) |
+| 070b Option A | ~~Remove Processing writeback~~ **Done in repo v4.2** (`c0f91d3`) — Mike paste Production 070b script (automation OFF) |
 | **4C direct Lambda smoke** | **PASS 2026-07-10** — asset `recXUc3010h16Usmo`; `uploaded` + `allPass=true`; claim `44d2b856-30cd-45b6-9cdf-d642faa58220`; retry `skipped_already_uploaded`; 1 S3 object. See [Wave 7 checklist § Stage 4C](./C-013-wave7-asset-storage-checklist.md). |
-| **4D Make path** | **4D-R Part A PASS** · **Part B BLOCKED** (070b auto-upload path) — see [Make scenario prep](./C-013-dev-make-lambda-scenario-prep.md) |
-| Runtime gates (remaining) | 070b DEV paste verify → Make smoke → H3l claim via Make → H3b–H3p |
+| **4D Make path** | **4D-R Part A PASS** · **Part B BLOCKED** (070b auto-upload path) — see [Make scenario prep](./C-013-production-make-lambda-scenario-prep.md) |
+| Runtime gates (remaining) | 070b Production paste verify → Make smoke → H3l claim via Make → H3b–H3p |
 
 ---
 
@@ -764,6 +764,6 @@ Em dash in `Allowed — …` and `Cross-Enrollment Match — Informational` = U+
 
 | Doc | Topic |
 |-----|--------|
-| [C-023-dev-h3-duplicate-bytes-test.md](./C-023-dev-h3-duplicate-bytes-test.md) | H3 evidence |
+| [C-023-production-h3-duplicate-bytes-test.md](./C-023-production-h3-duplicate-bytes-test.md) | H3 evidence |
 | [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md) | Wave 7 gates |
 | [C-013-production-promotion-plan.md](./C-013-production-promotion-plan.md) | Prod promotion |

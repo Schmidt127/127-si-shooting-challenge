@@ -11,7 +11,7 @@
 
 ## Addendum 2026-07-18 — Attendees double-credit correction (Stage 17)
 
-**Authoritative for DEV now:** Stage 17 Zoom Attendance + single orchestrator
+**Authoritative for Production now:** Stage 17 Zoom Attendance + single orchestrator
 `117-zoom-recording-credit-orchestrator.js` **v1.1.0**.
 
 | Rule | Detail |
@@ -22,7 +22,7 @@
 | Gate / PW | Mark `Gate Credit Applied?` / `Perfect Week Credit Applied?` **only** |
 | Gaps (unchanged product debt) | **057** still counts live `Attendees`; **042** still reads `Total Zoom Attendances` (live link count) — do **not** bypass by impersonating live attendance |
 
-Packet: [C-025-stage17-zoom-recording-dev-installation-packet.md](../deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md)
+Packet: [C-025-stage17-zoom-recording-production-installation-packet.md](../deploy-checklists/C-025-stage17-zoom-recording-production-installation-packet.md)
 
 ---
 
@@ -42,7 +42,7 @@ Packet: [C-025-stage17-zoom-recording-dev-installation-packet.md](../deploy-chec
 
 **Authority:** `chatgpt-recovery-2026-07-14/docs/deploy-checklists/C-025-automation-packages-stage17.md`
 **Primary table:** `Zoom Attendance` (`Attendance Method = Recording Quiz`)
-**Credit key:** `ZOOM_CREDIT|{Enrollment RID}|{Zoom Meeting RID}` (formula layer already applied in DEV per S18)
+**Credit key:** `ZOOM_CREDIT|{Enrollment RID}|{Zoom Meeting RID}` (formula layer already applied in Production per S18)
 **Exclusivity:** Formula `Zoom Credit Conflict?` / `Zoom Credit Approved?`
 
 | # | Stage 17 name | Intended responsibility |
@@ -61,7 +61,7 @@ Packet: [C-025-stage17-zoom-recording-dev-installation-packet.md](../deploy-chec
 ## 2. Proposed current architecture (S16 / PR #26)
 
 **Authority:** Owner-approved Stage 12 design + Stage 16 config catalog
-**Docs:** `docs/deploy-checklists/C-025-zoom-recording-design-stage12.md`, `C-025-C-027-configuration-catalog-stage16.md`, `docs/v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md`
+**Docs:** `docs/deploy-checklists/C-025-zoom-recording-design-stage12.md`, `C-025-C-027-configuration-catalog-stage16.md`, `docs/v2/ZOOM_RECORDING_CREDIT_PROD_INSTALL.md`
 **Primary table:** `Homework Completions` (HW17-style **Zoom Recording Quiz**)
 **Credit key:** `ZOOM_RECORDING|{meetingId}|{enrollmentId}`
 **Live keys unchanged:** `ZOOM_ATTEND_BASE|…` (101) · future `ZOOM_LIVE|…`
@@ -80,7 +80,7 @@ Packet: [C-025-stage17-zoom-recording-dev-installation-packet.md](../deploy-chec
 
 | Responsibility | Still required? | Stage 17 owner | S16 / PR #26 owner | Functional gap if Stage 17 removed? | Evidence |
 |----------------|-----------------|----------------|--------------------|-------------------------------------|----------|
-| Quiz normalize / dedupe credit identity | Yes (identity) | Stage17 **117a** | HC row + Enrollment+Meeting links (no separate normalize automation) | **No** *if* HC path is chosen; **Yes** if DEV stays on ZA formula path | Stage12 §1; Stage17 §1 / §1a Option B |
+| Quiz normalize / dedupe credit identity | Yes (identity) | Stage17 **117a** | HC row + Enrollment+Meeting links (no separate normalize automation) | **No** *if* HC path is chosen; **Yes** if Production stays on ZA formula path | Stage12 §1; Stage17 §1 / §1a Option B |
 | Coach approval / Needs Correction | Yes | Stage17 **117b** | Coach marks HC `Completion Status` / `Satisfactory?` | **Partial** — no automated Needs Correction cycle on HC; ops = manual status | Stage12 rules 1,7; PR 117a trigger docs |
 | Recording XP award | **Yes** | Stage17 **117c** | PR **117a** | **Yes** if PR 117a absent — **101 does not award recording XP** | 101 Source Keys `ZOOM_ATTEND_*`; PR 117a `ZOOM_RECORDING\|*` |
 | Conflict / exclusivity at award | **Yes** | ZA formulas + Stage17 **117c** deactivate | PR 117a `skipped_live_exists` / `skipped_already_awarded` | **Partial** — award-time skip exists; **post-award** live-after-recording soft-void **not** automated; 101 does not dual-detect recording | Install packet §10 R3 UNKNOWN; `canAwardRecordingCredit` |
@@ -95,13 +95,13 @@ Packet: [C-025-stage17-zoom-recording-dev-installation-packet.md](../deploy-chec
 
 | Capability | Fully supported by PR 117a/b alone? | Notes |
 |------------|-------------------------------------|-------|
-| Zoom recording XP | **Yes (repo)** | Requires DEV paste + Config + `ZOOM_ATTEND_BASE` rule |
+| Zoom recording XP | **Yes (repo)** | Requires Production paste + Config + `ZOOM_ATTEND_BASE` rule |
 | Level gates | **Not yet** | Roster write exists; counting formula / OMNI review still required |
 | Perfect Week | **Not yet** | Config intent only; **057 must be extended** or a companion automation must write a roster **057** already counts |
 | Dedup vs live attendance | **At award time yes** | Live-after-recording and recording-after-ops-mistake dual path still open |
 | Approval conflicts | **Partial** | Skip when live XP present; no Stage17-style formula conflict soft-void on ZA |
 | Corrections | **Partial** | Coach can un-satisfy HC; no Needs Correction automation; XP soft-void manual |
-| Required email communications | **Yes (repo)** | 117b + Config safe defaults; DEV webhook only |
+| Required email communications | **Yes (repo)** | 117b + Config safe defaults; Production webhook only |
 
 ---
 
@@ -118,9 +118,9 @@ Packet: [C-025-stage17-zoom-recording-dev-installation-packet.md](../deploy-chec
 
 ---
 
-## 6. Unresolved live Airtable checks (Mike / OMNI — DEV only)
+## 6. Unresolved live Airtable checks (Mike / OMNI — Production only)
 
-Do **not** guess. Confirm in DEV `appTetnuCZlCZdTCT`:
+Do **not** guess. Confirm in Production `appn84sqPw03zEbTT`:
 
 1. Does overnight **Zoom Attendance** credit formula layer (`Zoom Credit Key` / `ZOOM_CREDIT|…`, Approved?, Conflict?) still exist and is it authoritative?
 2. Are recording quizzes expected on **Homework Completions** (S16) or **Zoom Attendance** (Stage 17)?
@@ -137,9 +137,9 @@ Until (1)–(2) are answered, **do not paste** either automation set.
 
 1. **Product authority:** S16 Stage 12/16 owner approvals (Homework Completions quiz; Config %; `Recording Attendees`; exclusivity).
 2. **Automation surface:** Keep PR **117a** + **117b**; do **not** claim Stage 17 117c–f are obsolete because 101 replaces them.
-3. **Before DEV activation:** close Perfect Week + Total Zoom Attendances gaps (formula and/or 057 update — prefer schema/formula over new automations when possible).
+3. **Before Production activation:** close Perfect Week + Total Zoom Attendances gaps (formula and/or 057 update — prefer schema/formula over new automations when possible).
 4. **Before PROD:** add or verify 101 dual-detect / soft-void when the opposite family already exists for the same meeting+enrollment.
-5. **Stage 17 scripts:** retain only as recovery/historical design unless Mike selects the ZA intake path; if selected, restore/correct Stage 17 117a–f with real DEV field names (do not invent).
+5. **Stage 17 scripts:** retain only as recovery/historical design unless Mike selects the ZA intake path; if selected, restore/correct Stage 17 117a–f with real Production field names (do not invent).
 6. **Worker A audit:** remains valid for the Stage 17 path. For the S16 path, replace “must ship six automations” with “must ship 117a/b **plus** gate/PW/conflict companions documented here.”
 
 ---
@@ -149,7 +149,7 @@ Until (1)–(2) are answered, **do not paste** either automation set.
 | Worker A conclusion (Stage 17 lens) | Amendment under S16 |
 |-------------------------------------|---------------------|
 | 117a–f all launch-blocking | **117a + 117b** are the automation blockers; **Perfect Week wiring**, **Total Zoom union**, and **post-award conflict** remain launch-blocking *behaviors* even without Stage17 117c–f files |
-| 117c–f defects block DEV paste of six-pack | Correct for Stage 17; N/A if Stage 17 not chosen |
+| 117c–f defects block Production paste of six-pack | Correct for Stage 17; N/A if Stage 17 not chosen |
 | Recovery-only scripts | Stage 17 yes; S16 scripts are on this PR branch |
 | PROD untouched | Still true |
 
@@ -159,7 +159,7 @@ Until (1)–(2) are answered, **do not paste** either automation set.
 
 | File | Role |
 |------|------|
-| `docs/v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md` | S16 DEV install packet |
+| `docs/v2/ZOOM_RECORDING_CREDIT_PROD_INSTALL.md` | S16 Production install packet |
 | `docs/deploy-checklists/C-025-117-numbering.md` | Corrected numbering disposition |
 | `docs/deploy-checklists/C-025-zoom-recording-design-stage12.md` | Owner-approved design |
 | `chatgpt-recovery-2026-07-14/docs/deploy-checklists/C-025-automation-packages-stage17.md` | Stage 17 six-pack design |

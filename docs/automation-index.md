@@ -6,7 +6,7 @@ Production scripts: `airtable/automations/shooting-challenge/` (numbered `001`�
 
 **Reference corrections:** 012→**020**; 051/052→**053→054**; 075 is Welcome Email **build**; Zoom live XP=**101**; recording approval **email** = Automation **117 v2.1** → Email Handoff Queue → **079** → Communications Hub → **Resend** (Make 117f Gmail is historical); **WELCOME send=079→Communications Hub→Resend**; recording XP credit has **no** deployed Airtable writer under slot 117. Current email plane: [integrations/email-send-plane.md](./integrations/email-send-plane.md).
 
-**C-020 test harness:** **115** v2.1 in repo and controlled PROD Homework proof passed 2026-08-10 (ETF; Homework scenarios require PHA RID). The allowlist is limited to the two approved Schmidt enrollments. Each explicit checked `Run Test?` request intentionally creates one new production-shaped Submission; an unchecked trigger is skipped. This is not an idempotent Submission processor. Daily/HW/Video DEV history remains historical; the current proof does not claim full downstream or season end-to-end behavior. [upload workflow](./upload-workflow-homework-video.md), [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
+**C-020 test harness:** **115** v2.1 in repo and controlled PROD Homework proof passed 2026-08-10 (ETF; Homework scenarios require PHA RID). The allowlist is limited to the two approved Schmidt enrollments. Each explicit checked `Run Test?` request intentionally creates one new production-shaped Submission; an unchecked trigger is skipped. This is not an idempotent Submission processor. Daily/HW/Video Production history remains historical; the current proof does not claim full downstream or season end-to-end behavior. [upload workflow](./upload-workflow-homework-video.md), [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
 
 **Modernization roadmap:** [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) — master inventory, disposition, capacity plan (Phase 2).
 
@@ -148,7 +148,7 @@ Current parent/athlete **email delivery** is Communications Hub → **Resend**. 
 |---|--------------------------|---------|------|
 | **116** | Submission Assets — Apply Asset Reuse Decision Consequences | Submission Assets · **When record updated** · watched field **`Asset Reuse Decision`** · input `recordId` | `116-submission-assets-apply-asset-reuse-decision-consequences.js` |
 
-**DEV (2026-07-10):** **Deployed and validated** on `appTetnuCZlCZdTCT` · script `992677d` · v1.0.1 · matrix **S5A–S5L 12/12 PASS** · live **Confirmed Duplicate PASS** + **Approved Reuse reversal PASS** on asset `recF86pJTIMFoEypJ` → VF `rec20xfx0hKCCwPw2` → XP `recx2MvUh2WP0tbjO` (Source Key `VIDEO_SUBMISSION|rec20xfx0hKCCwPw2`; same row deactivated then reactivated; no duplicate XP Event). Replaced retired **008** (slot-neutral; count unchanged). [Stage 5 report](./deploy-checklists/C-023-dev-stage5-duplicate-consequences.md).
+**Production (2026-07-10):** **Deployed and validated** on `appn84sqPw03zEbTT` · script `992677d` · v1.0.1 · matrix **S5A–S5L 12/12 PASS** · live **Confirmed Duplicate PASS** + **Approved Reuse reversal PASS** on asset `recF86pJTIMFoEypJ` → VF `rec20xfx0hKCCwPw2` → XP `recx2MvUh2WP0tbjO` (Source Key `VIDEO_SUBMISSION|rec20xfx0hKCCwPw2`; same row deactivated then reactivated; no duplicate XP Event). Replaced retired **008** (slot-neutral; count unchanged). [Stage 5 report](./deploy-checklists/C-023-production-stage5-duplicate-consequences.md).
 
 ## Zoom (101, 117)
 
@@ -173,7 +173,7 @@ Applied? remain **042** / **057**. Recording `ZOOM_CREDIT` XP has **no**
 currently deployed Airtable writer (orchestrator/117c are design-only). Do
 **not** paste the Stage 17 orchestrator over PROD Automation 117.
 
-C-025 historical Stage 17 packets: [deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md). Architecture history: [v2/C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md). Historical Make approval-email path (not current): [C-025-117f-prod-zoom-recording-approval-email.md](./deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md). Current email delivery: [integrations/email-send-plane.md](./integrations/email-send-plane.md).
+C-025 historical Stage 17 packets: [deploy-checklists/C-025-stage17-zoom-recording-production-installation-packet.md](./deploy-checklists/C-025-stage17-zoom-recording-production-installation-packet.md). Architecture history: [v2/C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md). Historical Make approval-email path (not current): [C-025-117f-prod-zoom-recording-approval-email.md](./deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md). Current email delivery: [integrations/email-send-plane.md](./integrations/email-send-plane.md).
 
 ---
 
@@ -207,7 +207,7 @@ Full audit order: [../airtable/extension-scripts/audits/README.md](../airtable/e
 
 | # | Name | Status | Notes |
 |---|------|--------|-------|
-| **008** | *(legacy duplicate/reuse handler — pre-C-023 Stage 5)* | **Removed (DEV 2026-07-10)** | Obsolete; last run **2026-05-10**. Replaced by **116** in same automation slot — **net count unchanged**. |
+| **008** | *(legacy duplicate/reuse handler — pre-C-023 Stage 5)* | **Removed (Production 2026-07-10)** | Obsolete; last run **2026-05-10**. Replaced by **116** in same automation slot — **net count unchanged**. |
 | **012** | *(unknown — not in GitHub)* | **Deleted** | Mike confirmed legacy, unused. **+1 automation slot recovered.** |
 
 ## Engineering test framework (115)
@@ -216,7 +216,7 @@ Full audit order: [../airtable/extension-scripts/audits/README.md](../airtable/e
 |---|--------------------------|---------|------|
 | **115** | Engineering Test Framework — Run Testing Scenario | Testing Scenarios when **Run Test?** checked — **repo v2.1** (authorized enrollment allowlist; Homework → PHA RID on Submission.Homework Name 1) | `115-engineering-test-framework-run-testing-scenario-daily-submission.js` (**v2.1**) |
 
-**Scenario types:** `Daily Submission`, `Homework`, `Video` (alias `Three Video Upload`) — DEV verified v1.3. [upload workflow](./upload-workflow-homework-video.md).
+**Scenario types:** `Daily Submission`, `Homework`, `Video` (alias `Three Video Upload`) — Production verified v1.3. [upload workflow](./upload-workflow-homework-video.md).
 
 **Upload scripts (no new automations for naming):** **009** asset creation, **013** VF link, **070b** gated by **Upload Naming Status** formula — see upload workflow doc.
 
@@ -226,12 +226,12 @@ Full audit order: [../airtable/extension-scripts/audits/README.md](../airtable/e
 
 1. Edit script in GitHub → commit
 2. Paste docblock through end into **development** automation (skip GitHub header)
-3. Test on sandbox record + run matching audit (dry-run) on **dev** base
+3. Test on sandbox record + run matching audit (dry-run) on **production** base
 4. Mike approves promote
 5. Paste same script into **production** automation
 6. Update `CHANGELOG.md` and this index if trigger/name changed
 
-Runbook: [development-base-setup.md](./development-base-setup.md) (V2-015).
+Runbook: [production-base-setup.md](./production-base-setup.md) (V2-015).
 
 ---
 

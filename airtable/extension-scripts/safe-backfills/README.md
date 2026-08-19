@@ -10,11 +10,11 @@ After audit + backfill passes, run `audit-field-coverage-report.js` to see which
 
 ## Safety rules
 
-1. **Dry-run first** — Every script defaults to reporting planned changes only.  
-2. **Explicit confirm flag** — e.g. `CONFIRM_WRITE = false` must be set true manually for writes.  
-3. **Batch limits** — Cap records per run (typically 50); re-run until `remainingCount` is 0.  
-4. **Dedupe keys** — Use same keys as production automations (`SUBMISSION_XP|`, `HOMEWORK_XP|`, etc.).  
-5. **No deletes** — Backfills create or update; deletions are manual with recovery doc.  
+1. **Dry-run first** — Every script defaults to reporting planned changes only.
+2. **Explicit confirm flag** — e.g. `CONFIRM_WRITE = false` must be set true manually for writes.
+3. **Batch limits** — Cap records per run (typically 50); re-run until `remainingCount` is 0.
+4. **Dedupe keys** — Use same keys as production automations (`SUBMISSION_XP|`, `HOMEWORK_XP|`, etc.).
+5. **No deletes** — Backfills create or update; deletions are manual with recovery doc.
 6. **Log everything** — Record IDs and before/after in script output.
 
 ---
@@ -87,7 +87,7 @@ Finish with **`audit-field-coverage-report.js`** to identify unused fields.
 
 ### Merge three possible matches (PROD)
 
-**Script:** `merge-three-tutorials-possible-matches.js` (v1.1)  
+**Script:** `merge-three-tutorials-possible-matches.js` (v1.1)
 **Titles:** Work Hard, It Pays · Refs Get it Right - NBA · Parent Motivation - Habits & Struggles
 
 - Matches by exact normalized Name on `Tutorials` → `Tutorials & Assets`
@@ -109,7 +109,7 @@ Finish with **`audit-field-coverage-report.js`** to identify unused fields.
 
 **Decision conflict:** Backlog C-026 still recommends keep `Tutorials` (web-canonical). This script implements Mike's requested reverse preview (`Tutorials` source → `Tutorials & Assets` keep). Do not retire `Tutorials` or repoint `/shoot` until Mike approves the review report and updates C-026.
 
-**Live DEV (2026-08-17):** both tables have **32** rows; **0** link fields on either table; target primary `Name` may carry a BOM; missing `Legacy Tutorials Record ID`, `Migration Status`, and table `Tutorial Migration Review`.
+**Live Production (2026-08-17):** both tables have **32** rows; **0** link fields on either table; target primary `Name` may carry a BOM; missing `Legacy Tutorials Record ID`, `Migration Status`, and table `Tutorial Migration Review`.
 
 **Prerequisites (create in Airtable UI / OMNI before write mode):**
 
@@ -123,14 +123,14 @@ Finish with **`audit-field-coverage-report.js`** to identify unused fields.
 
 ```text
 1. node airtable/extension-scripts/safe-backfills/migrate-tutorials-into-tutorials-and-assets.test.js
-2. Paste script into Scripting extension (DEV)
+2. Paste script into Scripting extension (Production)
 3. Run DRY_RUN=true — save JSON (schema + classifications)
 4. Review HIGH / POSSIBLE rows in console (and later in Tutorial Migration Review)
 5. After prerequisites exist: DRY_RUN=false, CONFIRM_WRITE=true (batch 25)
 6. Re-run until NO_MATCH_CREATE remaining is 0
 ```
 
-Offline tests: `migrate-tutorials-into-tutorials-and-assets.test.js`  
+Offline tests: `migrate-tutorials-into-tutorials-and-assets.test.js`
 Compat tests: `migrate-tutorials-into-tutorials-and-assets.compat.test.js`
 
 ```bash
@@ -157,22 +157,22 @@ Use `repair-audit-001` … `009` only for one-off spot fixes with explicit recor
 
 ## Runbook
 
-1. Run relevant **audit** script; save output.  
-2. Run matching **backfill** with `DRY_RUN = true`; verify planned changes.  
-3. Set `CONFIRM_WRITE = true` on a batch.  
-4. Re-run audit until clean.  
-5. Run `audit-field-coverage-report.js`.  
+1. Run relevant **audit** script; save output.
+2. Run matching **backfill** with `DRY_RUN = true`; verify planned changes.
+3. Set `CONFIRM_WRITE = true` on a batch.
+4. Re-run audit until clean.
+5. Run `audit-field-coverage-report.js`.
 6. Update `CHANGELOG.md` with date, scope, and record counts.
 
 ## When not to use backfills
 
-- Widespread logic bugs in live automations — **fix automation first**, then backfill.  
-- Suspected duplicate Make emails — fix scenario idempotency before resetting send flags.  
+- Widespread logic bugs in live automations — **fix automation first**, then backfill.
+- Suspected duplicate Make emails — fix scenario idempotency before resetting send flags.
 - Orphan completions with no file anywhere — link or archive manually (see upload edge audit).
 
 ## Related
 
-- [Audits](../audits/README.md) — Stages A–J pipeline map  
-- [Documentation index](../../../docs/README.md)  
-- [Emergency recovery](../../../docs/recovery/emergency-recovery.md)  
+- [Audits](../audits/README.md) — Stages A–J pipeline map
+- [Documentation index](../../../docs/README.md)
+- [Emergency recovery](../../../docs/recovery/emergency-recovery.md)
 - [Homework flow](../../../docs/data-flow/homework-flow.md)

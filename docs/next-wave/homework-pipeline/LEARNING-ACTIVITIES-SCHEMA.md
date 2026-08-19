@@ -1,8 +1,8 @@
 # Learning Activities — repository-ready schema contract
 
-**Agent:** 11 · **Date:** 2026-07-24  
-**Status:** Contract only — **no Airtable tables created** (Mike/OMNI authorization required for DEV schema).  
-**JSON Schema:** `schemas/learning-activity.schema.json`  
+**Agent:** 11 · **Date:** 2026-07-24
+**Status:** Contract only — **no Airtable tables created** (Mike/OMNI authorization required for Production schema).
+**JSON Schema:** `schemas/learning-activity.schema.json`
 **Prior art:** `docs/learning-activities/LA-000-current-state-handoff.md`, `web/types/learning-activities.ts`
 
 ---

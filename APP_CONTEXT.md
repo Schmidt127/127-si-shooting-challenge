@@ -34,7 +34,7 @@ Keep shared brand consistent; do not borrow JR Ref stripes, TST dashboard chrome
 - **Preserve** Airtable, XP, achievement, level, summary, and automation logic.
 - XP idempotency: one source record → one XP Event (Source Key patterns in automation scripts).
 - Web Airtable reads: server-side only (`lib/airtable/`); never expose `AIRTABLE_API_TOKEN` to the browser.
-- DEV before Production for automations, schema, Make, and related changes.
+- Production-only environment: validate offline first and require explicit Mike approval for live mutations.
 
 ## Repo layout (high level)
 

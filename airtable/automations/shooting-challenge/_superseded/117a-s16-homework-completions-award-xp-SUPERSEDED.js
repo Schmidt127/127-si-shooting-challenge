@@ -2,7 +2,7 @@
 Automation: 117a - Zoom Recording Credit - Award XP from Quiz Completion
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: GitHub Source of Truth — READY FOR DEV INSTALL (not installed/verified in live Airtable by this commit)
+Status: GitHub Source of Truth — READY FOR Production INSTALL (not installed/verified in live Airtable by this commit)
 Last GitHub Update: 2026-07-18
 
 Purpose:
@@ -10,7 +10,7 @@ Award partial Zoom XP when a Zoom Recording Quiz Homework Completion is marked S
 
 Trigger:
 Homework Completions when Completion Status becomes Satisfactory and Zoom Meeting is linked
-(confirm exact conditions in Airtable UI after DEV install).
+(confirm exact conditions in Airtable UI after Production install).
 
 Important Tables:
 Homework Completions, Zoom Meetings, Enrollments, XP Reward Rules, XP Events, Config, Weeks
@@ -20,7 +20,7 @@ Completion Status, Enrollment, Zoom Meeting, Source Key, Recording Attendees
 
 Notes:
 GitHub is the source-of-truth copy.
-Airtable is the deployed/running copy — DEV paste only after Mike/OMNI schema prep.
+Airtable is the deployed/running copy — Production paste only after Mike/OMNI schema prep.
 Does NOT modify automation 101 live attendance logic.
 */
 
@@ -73,7 +73,7 @@ Does NOT modify automation 101 live attendance logic.
  * - Enrollment is not empty
  *
  * OPTIONAL TRIGGER CONDITIONS
- * - Homework Assignment name/type indicates Zoom Recording Quiz (confirm catalog naming in DEV)
+ * - Homework Assignment name/type indicates Zoom Recording Quiz (confirm catalog naming in Production)
  *
  * DO NOT USE THIS TRIGGER CONDITION
  * - Needs Review alone (would award before coach approval when Config requires Satisfactory)

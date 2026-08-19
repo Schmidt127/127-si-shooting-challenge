@@ -5,7 +5,7 @@
 **Backlog:** PKG-036
 **Production base:** `127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026` (`appn84sqPw03zEbTT`)
 **Environment exception:** Mike authorized this package's Production-only path;
-DEV validation was skipped for this package. Offline tests are not Production
+Production validation was skipped for this package. Offline tests are not Production
 proof.
 
 > **Completion record — 2026-08-15:** Automation 041 v5.0 and Automation 042 v4.1.2 were installed and enabled after preflight. A controlled Charlie Enrollment manual adjustment 0 → 1 → 0 caused 041 to queue exactly one Enrollment on each change; 042 automatically processed and cleared the queue, restoring the 0-XP Beginner state. The read-only audit returned 12 active Levels, 12 active Gate Rules, 3 active Enrollments, and zero findings. Automation 043 remains absent.

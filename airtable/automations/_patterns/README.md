@@ -10,4 +10,4 @@ Airtable automations **cannot import** shared modules. This folder holds **snipp
 | [docs/v2-common-engineering-patterns.md](../../../docs/v2-common-engineering-patterns.md) | Pattern catalog |
 | [AUTOMATION_SCRIPT_STANDARD.md](../AUTOMATION_SCRIPT_STANDARD.md) | Authoritative standard |
 
-**Rule:** GitHub first → DEV test → promotion doc → Production paste.
+**Rule:** GitHub first → Production test → promotion doc → Production paste.

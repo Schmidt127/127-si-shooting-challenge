@@ -1,14 +1,14 @@
 # PROD promotion and rollback index (Stage 10)
 
-**Date:** 2026-07-13  
-**Package:** `prod-promotion-rollback-docs`  
+**Date:** 2026-07-13
+**Package:** `prod-promotion-rollback-docs`
 **Status:** Documentation only — **no PROD execution**
 
 ---
 
 ## 1. Purpose
 
-Single entry point for Mike when promoting DEV-proven work to PROD, with rollback for each track.
+Single entry point for Mike when promoting Production-proven work to PROD, with rollback for each track.
 
 ---
 
@@ -17,13 +17,13 @@ Single entry point for Mike when promoting DEV-proven work to PROD, with rollbac
 | Track | Repo readiness | PROD status | Promote when |
 |-------|----------------|-------------|--------------|
 | C-013 video S3 / 070b / 070c | **Done** | PROD proven | Optional hygiene only (secret rotate) |
-| C-023 / **116** asset reuse | DEV complete; PROD runtime PASS on fixture | Doc row hygiene pending | After checklist sign-off |
-| C-010 two-field enrollment | Repo audit + verify tooling complete | **No field/automation yet** | After DEV OMNI + live scenarios |
-| C-019 Testing views | Repo verification complete | DEV views not created | After C-010 + OMNI views |
+| C-023 / **116** asset reuse | Production complete; PROD runtime PASS on fixture | Doc row hygiene pending | After checklist sign-off |
+| C-010 two-field enrollment | Repo audit + verify tooling complete | **No field/automation yet** | After Production OMNI + live scenarios |
+| C-019 Testing views | Repo verification complete | Production views not created | After C-010 + OMNI views |
 | C-011 weekly email auto | Design audit complete | Not implemented | After C-010 gates in **072**/**074** |
-| 070a homework S3 | DEV E2E historical; re-verify on current SHA | **PROD OFF** (affirmed 2026-07-16) | Keep OFF — [AUTOMATION_070A_LAUNCH_DECISION.md](../v2/AUTOMATION_070A_LAUNCH_DECISION.md) |
-| C-025 Zoom recording (**117a/117b**) | **Repo ready** — offline tests PASS 2026-07-16; executable DEV sequence | Not installed | [DEV-release-readiness-verification-2026-07-16.md](./DEV-release-readiness-verification-2026-07-16.md) + [ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](../v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) + DEV evidence |
-| 066 shot milestones | Offline harness PASS 2026-07-16; live OMNI pending | Confirm UI version | [066-dev-omni-confirmation-packet.md](./066-dev-omni-confirmation-packet.md) |
+| 070a homework S3 | Production E2E historical; re-verify on current SHA | **PROD OFF** (affirmed 2026-07-16) | Keep OFF — [AUTOMATION_070A_LAUNCH_DECISION.md](../v2/AUTOMATION_070A_LAUNCH_DECISION.md) |
+| C-025 Zoom recording (**117a/117b**) | **Repo ready** — offline tests PASS 2026-07-16; executable Production sequence | Not installed | [Production-release-readiness-verification-2026-07-16.md](./Production-release-readiness-verification-2026-07-16.md) + [ZOOM_RECORDING_CREDIT_PROD_INSTALL.md](../v2/ZOOM_RECORDING_CREDIT_PROD_INSTALL.md) + Production evidence |
+| 066 shot milestones | Offline harness PASS 2026-07-16; live OMNI pending | Confirm UI version | [066-production-omni-confirmation-packet.md](./066-production-omni-confirmation-packet.md) |
 | C-009 Learning Activities | Proposal + LA-000/#27 routing contract (merge pending) | **Blocked Airtable** | After owner schema approval |
 
 ### Status distinctions
@@ -31,8 +31,8 @@ Single entry point for Mike when promoting DEV-proven work to PROD, with rollbac
 | State | Tracks above |
 |-------|----------------|
 | Implemented in repository | C-025 scripts/tests/docs; 009 header; 066 support packet; 070a decision |
-| Ready for DEV installation | C-025 packet |
-| Verified in DEV | C-013 video; 116 fixture (partial); **not** C-025; **not** 066 OMNI close |
+| Ready for Production installation | C-025 packet |
+| Verified in Production | C-013 video; 116 fixture (partial); **not** C-025; **not** 066 OMNI close |
 | Ready for PROD promotion | Only Mike-approved tracks with promotion docs |
 | Verified in PROD | C-013 video 070b/070c |
 
@@ -41,7 +41,7 @@ Single entry point for Mike when promoting DEV-proven work to PROD, with rollbac
 ## 3. Standard promotion sequence (every automation)
 
 1. GitHub script matches intended version.
-2. Paste to **DEV** automation (skip GitHub header).
+2. Paste to **Production** automation (skip GitHub header).
 3. Dry-run audit + smoke on Schmidt enrollment.
 4. Mike approval recorded.
 5. Paste identical script to **PROD**.
@@ -76,8 +76,8 @@ Any secret rotation (PAT, webhook secret, Lambda env) requires **explicit Mike a
 |------|------|
 | C-023 PROD 116 validation | `docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md` |
 | C-013 PROD lambda | `docs/deploy-checklists/C-013-prod-lambda-deployment-2026-07-11.md` |
-| C-010 DEV OMNI | `docs/deploy-checklists/C-010-dev-omni-implementation-stage4.md` |
-| C-010 post-OMNI verify | `docs/deploy-checklists/C-010-post-omni-dev-verification-stage5.md` |
+| C-010 Production OMNI | `docs/deploy-checklists/C-010-production-omni-implementation-stage4.md` |
+| C-010 post-OMNI verify | `docs/deploy-checklists/C-010-post-omni-production-verification-stage5.md` |
 | Desktop OS control | `docs/overnight-runs/CONTROL.json` |
 
 **Status:** **COMPLETE** (index only)

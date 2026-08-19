@@ -3,9 +3,9 @@
 ## Identity
 
 - Role: testing
-- Branch: `cursor/v2-dev-execution-runbook-3ea4` (PR #34)
+- Branch: `cursor/v2-production-execution-runbook-3ea4` (PR #34)
 - Date: 2026-07-16
-- Scope: Expand DEV Operator CLI to remaining non-Make launch smoke tests
+- Scope: Expand Production Operator CLI to remaining non-Make launch smoke tests
 
 ## Deliverable status
 
@@ -16,7 +16,7 @@
 
 ## Live handlers added
 
-C4, D3, G3, H2, J1, J4, J5, L1, L2  
+C4, D3, G3, H2, J1, J4, J5, L1, L2
 (Full set now: A3, B1, B2, C4, D3, F1, F2, F3, G3, H2, J1, J4, J5, L1, L2)
 
 Still excluded: M1, M2, Make/email (I6, J6, L3, C7, …)
@@ -33,4 +33,4 @@ Still excluded: M1, M2, Make/email (I6, J6, L3, C7, …)
 
 ## Safety preserved
 
-DEV base only · dry-run default · `--dev-confirm` + `--execute` for writes · no secret printing · owned cleanup/rollback · PROD refused
+Production base only · dry-run default · `--production-confirm` + `--execute` for writes · no secret printing · owned cleanup/rollback · PROD refused

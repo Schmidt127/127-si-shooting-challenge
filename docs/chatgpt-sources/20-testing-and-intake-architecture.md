@@ -1,7 +1,7 @@
 # Testing, intake validation, and flexible weeks
 
-**Status:** V2 architecture / ops planning — **C-020 Engineering Test Framework**  
-**Last updated:** 2026-07-05 (Testing Scenarios table; script blocked on OMNI field list)  
+**Status:** V2 architecture / ops planning — **C-020 Engineering Test Framework**
+**Last updated:** 2026-07-05 (Testing Scenarios table; script blocked on OMNI field list)
 **Tracked in:** [close-out-considerations.md](./close-out-considerations.md) **C-017** – **C-020**
 
 ---
@@ -13,7 +13,7 @@
 | **C-017** | Fillout → **Athletes** intake validation and field hygiene |
 | **C-018** | **Two calendars** — intake opens (early bird) vs challenge run dates (all in **Weeks** config) |
 | **C-019** | **Schmidt test enrollment** — `Active?` = false for standings only; **no test flags** |
-| **C-020** | **Engineering Test Framework** — **Testing Scenarios** table on DEV; production-shaped pipeline runs without Fillout |
+| **C-020** | **Engineering Test Framework** — **Testing Scenarios** table on Production; production-shaped pipeline runs without Fillout |
 
 ---
 
@@ -24,7 +24,7 @@
 | **Test identification** | **No `Is Test Record?` checkbox.** Base does not know a row is a test. |
 | **Schmidt sandbox** | Dedicated Athlete + Enrollment; **`Active?` = false** — excluded from leaderboard, standings, close-out audits, production emails. |
 | **Automation behavior** | **Same as production.** All intake, asset, upload, XP, and video-feedback automations run normally so failures surface. |
-| **Testing views** | Filter by **Enrollment link** (Schmidt/testing or retained DEV test enrollments) — **not** a test flag on pipeline tables |
+| **Testing views** | Filter by **Enrollment link** (Schmidt/testing or retained Production test enrollments) — **not** a test flag on pipeline tables |
 | **Early bird** | Date on **Weeks** row = when app **starts accepting input** (intake open). |
 | **Challenge run** | Separate configured period = when the **challenge officially runs** (Week 1+). |
 
@@ -46,7 +46,7 @@ ChatGPT reviewed OMNI output. The following OMNI suggestions are **rejected** an
 |-------|---------------------|
 | **Testing Scenarios table only** | `Scenario Type`, `Test Status`, `Expected Result`, `Actual Result`, `Pass/Fail Notes`, `Last Run Status`, `Last Run At`, `Related Enrollment`, link to created Submission |
 | **Pipeline tables** | **None** — records as if created by Fillout |
-| **Testing views** | Filter `Enrollment =` Schmidt/testing or selected DEV test enrollment |
+| **Testing views** | Filter `Enrollment =` Schmidt/testing or selected Production test enrollment |
 | **Enrollment** | `Active?` = false for standings visibility only — not a pipeline test flag |
 | **Testing Scenario Library** | **Future option** — do not build now |
 
@@ -129,27 +129,27 @@ Automations **056**, **066**, **101** skip inactive enrollments today. Upload/vi
 
 ## C-020 — Engineering Test Framework (Testing Scenarios)
 
-**Priority:** **Confirmed** — DEV testing framework for Phase 2 / V2-015.  
-**Build order:** Step **4** in [Phase 2 next sequence](./v2-015-development-base-architecture.md#phase-2-next-sequence-postwave-2a) — **after** pipeline-ready submission path exists for **066** DEV test (C-020 scenario or verified existing DEV row) and approved **112**/**043** maintenance (unless Mike reprioritizes).  
-**Environment:** **DEV first** (`appTetnuCZlCZdTCT`).
+**Priority:** **Confirmed** — Production testing framework for Phase 2 / V2-015.
+**Build order:** Step **4** in [Phase 2 next sequence](./v2-015-production-base-architecture.md#phase-2-next-sequence-postwave-2a) — **after** pipeline-ready submission path exists for **066** Production test (C-020 scenario or verified existing Production row) and approved **112**/**043** maintenance (unless Mike reprioritizes).
+**Environment:** **production-only validation** (`appn84sqPw03zEbTT`).
 
 ### What this is (and is not)
 
 | Is | Is not |
 |----|--------|
 | **Engineering Test Framework** — run defined scenarios against the real pipeline | “Fake Fillout” intake only — Fillout parity is one scenario type among many |
-| **Testing Scenarios** operator table on DEV | Test flags on Submissions or downstream pipeline tables |
+| **Testing Scenarios** operator table on Production | Test flags on Submissions or downstream pipeline tables |
 | Production-shaped Submissions + normal automations | A second production base or test metadata on pipeline rows |
 
 ### Script development — **paused**
 
-**Do not start Cursor/GitHub script work** until a pipeline-ready DEV submission path is defined for **066** testing (see [066 dev checklist](./deploy-checklists/066-v3.1-dev-deploy.md) — blocked on Fillout-shaped submission, not manual rows).
+**Do not start Cursor/GitHub script work** until a pipeline-ready Production submission path is defined for **066** testing (see [066 production checklist](./deploy-checklists/066-v3.1-production-deploy.md) — blocked on Fillout-shaped submission, not manual rows).
 
 Field list recorded in [C-020 script checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
 
 ### Problem
 
-Manual Fillout for every pipeline test is slow. **Manual DEV Submissions are also unreliable** — rows typed directly into the Submissions table may not move through the normal intake chain unless they match Fillout field shapes and trigger **023**, **005**, **009**, **010**, **031**, etc. That makes them unsuitable for **066** milestone testing (which depends on counted submissions, Week, and XP/WAS state from a real pipeline run).
+Manual Fillout for every pipeline test is slow. **Manual Production Submissions are also unreliable** — rows typed directly into the Submissions table may not move through the normal intake chain unless they match Fillout field shapes and trigger **023**, **005**, **009**, **010**, **031**, etc. That makes them unsuitable for **066** milestone testing (which depends on counted submissions, Week, and XP/WAS state from a real pipeline run).
 
 Need repeatable **scenarios** → **Fillout-shaped** production pipeline run → compare **Expected** vs **Actual** — without polluting pipeline tables with test metadata.
 
@@ -157,20 +157,20 @@ Need repeatable **scenarios** → **Fillout-shaped** production pipeline run →
 
 | Finding | Implication |
 |---------|-------------|
-| Manual DEV Submissions may skip or mis-run intake automations | **066** tests on manual rows do not prove production behavior |
+| Manual Production Submissions may skip or mis-run intake automations | **066** tests on manual rows do not prove production behavior |
 | Fillout-shaped Submissions move through **023 → 005 → 009 → 010 → 031** (and downstream) | **Testing Scenarios** must create Submissions that match what Fillout sends |
-| **066** needs counted submissions + correct enrollment/week state | **066 DEV sandbox** waits until C-020 can create a pipeline-ready Submission **or** until an existing real DEV Submission is identified that already completed intake |
+| **066** needs counted submissions + correct enrollment/week state | **066 Production sandbox** waits until C-020 can create a pipeline-ready Submission **or** until an existing real Production Submission is identified that already completed intake |
 
 **Locked:** Manual operator rows alone are **not** sufficient for Engineering Test Framework validation. C-020 exists to create pipeline-ready Submissions on demand.
 
 ### Goal
 
-Create a **Testing Scenarios** table (DEV) and a future **automation + extension script** (GitHub) that:
+Create a **Testing Scenarios** table (Production) and a future **automation + extension script** (GitHub) that:
 
-1. Reads a scenario row  
-2. Creates a **normal Submission** (Fillout-shaped when the scenario requires it)  
-3. Links Submission back to the scenario row  
-4. Lets existing automations run  
+1. Reads a scenario row
+2. Creates a **normal Submission** (Fillout-shaped when the scenario requires it)
+3. Links Submission back to the scenario row
+4. Lets existing automations run
 5. Writes run results **only** to **Testing Scenarios**
 
 ### Requirements (locked)
@@ -178,16 +178,16 @@ Create a **Testing Scenarios** table (DEV) and a future **automation + extension
 | Rule | Detail |
 |------|--------|
 | **Table name** | **`Testing Scenarios`** — not “Test Intake” |
-| **DEV first** | Build and prove on DEV before Production mirror |
+| **production-only validation** | Build and prove on Production before Production mirror |
 | **No pipeline test fields** | No `Is Test Record?`, no **Test Status**, no test flags on Submissions, Submission Assets, Homework Completions, Video Feedback, XP Events, Weekly Athlete Summary, or any downstream pipeline table |
 | **Framework fields on Testing Scenarios only** | **Scenario Type**, **Test Status**, **Expected Result**, **Actual Result**, **Pass/Fail Notes**, **Last Run Status**, **Last Run At**, **Related Enrollment**, link to created Submission |
-| **Related Enrollment** | Schmidt/testing or any retained DEV test enrollment |
+| **Related Enrollment** | Schmidt/testing or any retained Production test enrollment |
 | **Fillout-shaped Submissions** | When scenario requires intake — match field shapes **005**, **009**, **023** expect; Enrollment pre-linked |
 | **Multi-file video** | Support when scenario requires (N attachments → N assets) |
 | **Testing Scenario Library** | **Future option** — separate template/library table; **do not build now** |
 | **Promotion doc** | Required before prod ([doc 04 § Official promotion documentation](./v2/04-ai-development-standards.md#official-promotion-documentation-required)) |
 
-### Testing Scenarios table (DEV — OMNI complete 2026-07-05)
+### Testing Scenarios table (Production — OMNI complete 2026-07-05)
 
 **Authoritative field list:** [deploy-checklists/C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md)
 
@@ -196,7 +196,7 @@ Create a **Testing Scenarios** table (DEV) and a future **automation + extension
 | Field | Purpose |
 |-------|---------|
 | **Scenario Type** | Preset label (Daily Submission, Homework, 3-video upload, Milestone crossing, etc.) |
-| **Related Enrollment** | Link — Schmidt/testing or DEV test enrollment |
+| **Related Enrollment** | Link — Schmidt/testing or Production test enrollment |
 | **Test Status** | Operator workflow state (**Testing Scenarios only**) |
 | **Expected Result** | Pass criteria description |
 | **Actual Result** | Filled after run (script or operator) |
@@ -212,17 +212,17 @@ Create a **Testing Scenarios** table (DEV) and a future **automation + extension
 
 See [deploy-checklists/C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md):
 
-1. Read one **Testing Scenarios** row  
-2. Validate **Related Enrollment**  
-3. Create normal **Submission** (Fillout-shaped when applicable)  
-4. Link Submission back to **Testing Scenarios**  
-5. Let normal pipeline automations run  
-6. Write **Last Run Status**, **Last Run At**, **Actual Result**, **Pass/Fail Notes** to **Testing Scenarios** only  
-7. Never write test metadata to pipeline tables  
+1. Read one **Testing Scenarios** row
+2. Validate **Related Enrollment**
+3. Create normal **Submission** (Fillout-shaped when applicable)
+4. Link Submission back to **Testing Scenarios**
+5. Let normal pipeline automations run
+6. Write **Last Run Status**, **Last Run At**, **Actual Result**, **Pass/Fail Notes** to **Testing Scenarios** only
+7. Never write test metadata to pipeline tables
 
 ### Downstream automations expected to fire
 
-After **Testing Scenarios** creates a Submission, the **normal** chain should run. Use this map when verifying in DEV (Make webhooks → **dev** scenarios per [development-base-setup.md](./development-base-setup.md)).
+After **Testing Scenarios** creates a Submission, the **normal** chain should run. Use this map when verifying in Production (Make webhooks → **production** scenarios per [production-base-setup.md](./production-base-setup.md)).
 
 #### Stage A — Submission intake (immediate)
 
@@ -267,12 +267,12 @@ Coach review → **113**, **114**, **073** fire when review/XP fields set.
 | **053**, **055** | Streak rebuild from Submission | Submission counted | May run |
 | **056**, **066**, **101** | Streak refresh / shot milestones / Zoom XP | Various | **May skip inactive enrollments today** — document in test notes; upload/video path does not depend on these |
 
-#### Email / Make (DEV isolation required)
+#### Email / Make (Production isolation required)
 
-| # | Automation | Risk in DEV |
+| # | Automation | Risk in Production |
 |---|------------|-------------|
-| **070a**, **070b** | Upload to Make | Must use **dev** webhook URLs |
-| **071**, **073**, **074**, **077** | Parent email send | **OFF or dev Make** until dev scenarios exist |
+| **070a**, **070b** | Upload to Make | Must use **production** webhook URLs |
+| **071**, **073**, **074**, **077** | Parent email send | **OFF or production Make** until production scenarios exist |
 
 **Audit verification:** After a test run, dry-run [Stage A–H audits](../airtable/extension-scripts/audits/README.md) filtered to test Enrollment — especially `audit-submission-pipeline-integrity.js`, `audit-homework-pipeline-integrity.js`, `audit-video-pipeline-integrity.js`.
 
@@ -283,7 +283,7 @@ Operator goal: verify upload engine creates **3 S3 URLs** and **3 Video Feedback
 ```
 Testing Scenarios row:
   Scenario Type → 3-video upload
-  Related Enrollment → Schmidt (or DEV test enrollment)
+  Related Enrollment → Schmidt (or Production test enrollment)
   Expected Result → 3 assets, 3 VF rows, 3 upload URLs
   [trigger run per OMNI final design]
 
@@ -299,7 +299,7 @@ Verify:
 
 ### Testing views (every submission-data table)
 
-**View name:** `Testing`  
+**View name:** `Testing`
 **Filter:** `Enrollment` (or linked enrollment) **=** test enrollment used on **Testing Scenarios** row
 
 Tables (minimum): Submissions, Submission Assets, Homework Completions, Video Feedback, XP Events, Weekly Athlete Summary, Streak Occurrences, Athlete Achievement Unlocks.
@@ -309,7 +309,7 @@ Tables (minimum): Submissions, Submission Assets, Homework Completions, Video Fe
 ```
 1. Testing Scenarios → new row (Scenario Type, Related Enrollment, Expected Result, inputs per OMNI)
 2. Trigger run (per final OMNI design) → future script creates Submission + back-link
-3. Wait for automation chain (or audit dry-run on DEV)
+3. Wait for automation chain (or audit dry-run on Production)
 4. Testing views → confirm pipeline; update Actual Result / Pass/Fail Notes on Testing Scenarios
 5. Re-run scenario as needed
 ```
@@ -318,8 +318,8 @@ Tables (minimum): Submissions, Submission Assets, Homework Completions, Video Fe
 
 | Order | Item | Status |
 |-------|------|--------|
-| 1 | **066 v3.1** DEV audit + sandbox test | **Next** |
-| 2 | Optional **066** prod promote | After DEV pass — Mike decides |
+| 1 | **066 v3.1** Production audit + sandbox test | **Next** |
+| 2 | Optional **066** prod promote | After Production pass — Mike decides |
 | 3 | Delete **112**, retire **043** | Approved maintenance window |
 | 4 | **C-020** — OMNI finishes **Testing Scenarios** table; then Cursor script | **Script paused** until OMNI field list final |
 
@@ -329,9 +329,9 @@ Tables (minimum): Submissions, Submission Assets, Homework Completions, Video Fe
 
 | Order | Item | Why |
 |-------|------|-----|
-| 1 | **066 DEV test** (H-002) | Blocks V2-015 done; milestone unlock reference |
-| 2 | **C-020** | Engineering Test Framework — **Testing Scenarios** on DEV; script after OMNI |
-| 3 | **C-019** | Document Schmidt + DEV test enrollment IDs; Testing views |
+| 1 | **066 Production test** (H-002) | Blocks V2-015 done; milestone unlock reference |
+| 2 | **C-020** | Engineering Test Framework — **Testing Scenarios** on Production; script after OMNI |
+| 3 | **C-019** | Document Schmidt + Production test enrollment IDs; Testing views |
 | 4 | **C-018** | Intake-open vs challenge-run dates before launch |
 | 5 | **C-017** | Fillout validation before enrollment wave |
 

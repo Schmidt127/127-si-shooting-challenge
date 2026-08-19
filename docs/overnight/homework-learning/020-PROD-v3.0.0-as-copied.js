@@ -27,7 +27,7 @@
  * - When multiple matching Homework Completions exist, links to the preferred row instead of erroring.
  * - Grade Band repair is idempotent: skip when HC already has Grade Band; only write when blank.
  * - Missing Enrollment Grade Band → soft-skip GB repair (do not invent).
- * - Former automation 063 must be retired only after DEV live smoke PASS.
+ * - Former automation 063 must be retired only after Production live smoke PASS.
  *
  * FOLDER
  * - 02 - Submission Intake and Asset Creation

@@ -169,10 +169,7 @@ test("Weekly Threshold XP writer is exactly automation 035", () => {
   const writers = [];
   for (const file of files) {
     const text = fs.readFileSync(path.join(dir, file), "utf8");
-    if (
-      /WEEKLY_THRESHOLD\|/.test(text) &&
-      /createRecordsAsync|createRecordAsync/.test(text)
-    ) {
+    if (/WEEKLY_THRESHOLD\|/.test(text) && /sourceKeyPrefix:\s*"WEEKLY_THRESHOLD\|"/.test(text)) {
       writers.push(file);
     }
   }

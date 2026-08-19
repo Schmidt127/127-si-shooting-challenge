@@ -2,9 +2,9 @@
 
 > **⚠️ SUPERSEDED — HISTORICAL RECORD (resolved 2026-07-20).** The STOP / BLOCKED / pre-migration conditions below have been **resolved**. C-025 Stage 17 Zoom recording **credit** is **COMPLETE in PROD** (Airtable Automation **117** v1.1.1 / **057** v1.3 / **042** v3.1 ON; **101** unchanged). The Zoom Recording **Approval Email** is Airtable Automation **117** → **Make** identifier **117f** (canonical four-part send key `ZOOM_REC_EMAIL|{EnrollmentRID}|{ZoomMeetingRID}|{ZoomAttendanceRID}`) — **tested, not documented as fully live**. Retained for historical evidence only. **Authoritative current state:** [Stage 17 current PROD progress](../status/C-025-stage17-current-prod-progress.md) · credit evidence [prod-live](./C-025-stage17-prod-live-2026-07-20.md) · email workflow [PROD 117f](./C-025-117f-prod-zoom-recording-approval-email.md).
 
-**Status:** **STOPPED at Step 1** — final DEV one-click verification did not Pass  
-**Feature tip:** `3431ca9`  
-**DEV:** `appTetnuCZlCZdTCT` · **PROD:** `appn84sqPw03zEbTT` (untouched this session)
+**Status:** **STOPPED at Step 1** — final Production one-click verification did not Pass
+**Feature tip:** `3431ca9`
+**Production:** `appn84sqPw03zEbTT` · **PROD:** `appn84sqPw03zEbTT` (untouched this session)
 
 ---
 
@@ -31,7 +31,7 @@ Stuck `Run Test?` on `recEuHFTjBftoJGMc` was cleared after the stop.
 
 | Evidence | Value |
 |----------|--------|
-| Prior ETF Pass | `recEuHFTjBftoJGMc` Pass via Records API mirror while 057/042 were ON ([downstream results](./C-025-stage17-downstream-dev-test-results-2026-07-18.md)) |
+| Prior ETF Pass | `recEuHFTjBftoJGMc` Pass via Records API mirror while 057/042 were ON ([downstream results](./C-025-stage17-downstream-production-test-results-2026-07-18.md)) |
 | Repo 115 v1.4 | Ready — [C-025-stage17-115-etf-v1.4-PASTE.txt](./C-025-stage17-115-etf-v1.4-PASTE.txt) |
 | Repo 117 / 057 / 042 | v1.1.1 / v1.3 / v3.1 paste bodies ready |
 
@@ -41,13 +41,13 @@ Step 1 requires a **fresh** one-click Pass with **115 v1.4** driving the run whi
 
 ## Mike card to unblock Step 1 (then re-ask Cursor to promote)
 
-1. Paste **115 v1.4** from `docs/deploy-checklists/C-025-stage17-115-etf-v1.4-PASTE.txt` into DEV Automation 115 (if not already).
+1. Paste **115 v1.4** from `docs/deploy-checklists/C-025-stage17-115-etf-v1.4-PASTE.txt` into Production Automation 115 (if not already).
 2. Confirm **117 OFF**.
-3. Turn **115 ON** (DEV only).
+3. Turn **115 ON** (Production only).
 4. Turn **057 ON** and **042 ON**.
 5. On Testing Scenarios `recEuHFTjBftoJGMc` (`C025_STAGE17_DOWNSTREAM`), uncheck Dry Run?, check **`Run Test?`**.
 6. Wait until **Last Run Status** updates and **`Run Test?` clears** — expect **Pass** with Actual Result JSON containing `phaseA_057` / `phaseB_042` / `c025_pass`.
-7. Turn **057 OFF**, **042 OFF**. Leave **117 OFF**. 115 may return to normal DEV state.
+7. Turn **057 OFF**, **042 OFF**. Leave **117 OFF**. 115 may return to normal Production state.
 8. Reply **one-click Pass** + paste Last Run Status / notes.
 
 Then Cursor will resume: merge → PROD preflight → paste packet → smoke → gradual enable.

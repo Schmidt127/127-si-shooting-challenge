@@ -85,8 +85,8 @@ def build_when_already_sent_behavior(sent: bool) -> str:
     return "build_package"
 
 
-def resolve_send_mode(*, configured: str, force_dev_test: bool) -> str:
-    if force_dev_test:
+def resolve_send_mode(*, configured: str, force_prod_test: bool) -> str:
+    if force_prod_test:
         return "test"
     return (configured or "test").lower()
 
@@ -208,9 +208,9 @@ class TestC011WeeklyEmailContract(unittest.TestCase):
         self.assertIn("Build Weekly Email Now?", fields)
         self.assertIn("Send to Make?", fields)
 
-    def test_dev_send_mode_locked_to_test(self):
+    def test_prod_send_mode_locked_to_test(self):
         self.assertEqual(
-            resolve_send_mode(configured="Live", force_dev_test=True),
+            resolve_send_mode(configured="Live", force_prod_test=True),
             "test",
         )
         self.assertFalse(refuse_live_when_not_dry_run("Live", False))

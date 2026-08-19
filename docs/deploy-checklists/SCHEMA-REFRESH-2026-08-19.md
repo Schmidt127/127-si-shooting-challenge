@@ -8,7 +8,7 @@ Read-only Metadata API export of the **Production** Shooting Challenge base. No 
 | Export script | `tools/airtable/export_airtable_schema.py` v2.4.0 |
 | Live base | **Production only** — `appn84sqPw03zEbTT` |
 
-**Mike (2026-08-19):** No separate DEV base is in use. All Shooting Challenge Airtable work is in Production. A `dev-20260819/` folder may exist in the repo from an export mistake — treat it as **non-authoritative**; do not plan against it.
+**Mike (2026-08-19):** All Shooting Challenge Airtable work is in Production. The mistaken non-production export was removed from the repository.
 
 ## Snapshot folder (current authority)
 

@@ -1,12 +1,12 @@
 # PKG-039 — WAS and Weekly Goal Operator Worksheet
 
-**Status:** Draft companion worksheet; DEV-first, Mike-operated
+**Status:** Draft companion worksheet; production-only, Mike-operated
 **Canonical packet:** [PKG-039 WAS/weekly-goal integrity packet](../deploy-checklists/PKG-039-WAS-WEEKLY-GOAL-INTEGRITY-PRODUCTION-PACKET.md)
 **Boundary:** No schema, data, automation, trigger, email, Make, progression, or lock changes are authorized by this worksheet.
 
-## DEV schema attestation
+## Production schema attestation
 
-- [ ] DEV base and timestamp recorded: `________________`
+- [ ] Production base and timestamp recorded: `________________`
 - [ ] `Target Goal Shots.Program Instance` exists, is a linked-record field to `Program Instance - Sync`, and has field ID **`fldmgJgCQTIHKqhD6`**.
 - [ ] Every active usable goal has exactly one `Program Instance` link; no historical inactive variant is reactivated.
 - [ ] Existing `Goal Key` and related formula text exported before any approved formula change.
@@ -26,8 +26,8 @@
 
 ## Lane A — canonical WAS, goal, and weekly schedule
 
-- [ ] 031 DEV trigger is counted `Submissions`; dynamic `recordId`.
-- [ ] 032 DEV trigger is eligible WAS needing goal; dynamic `recordId`.
+- [ ] 031 Production trigger is counted `Submissions`; dynamic `recordId`.
+- [ ] 032 Production trigger is eligible WAS needing goal; dynamic `recordId`.
 - [ ] First create, replay, and two concurrent starts produce one canonical WAS; loser fails closed.
 - [ ] Duplicate WAS, wrong owner, zero/multiple links, wrong Program Instance/year, same Week in another Program, and inactive Enrollment fail closed.
 - [ ] Goal cases captured separately: missing goal, explicit zero, positive goal, inactive goal, wrong Grade Band, multiple active candidates.

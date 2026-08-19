@@ -1,4 +1,4 @@
-"""Approved DEV/PROD schema environment differences for Production v2 audits."""
+"""Approved Production schema environment differences for Production v2 audits."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ APPROVED_ENV_DIFFERENCES: list[dict[str, Any]] = [
         "launch_blocker": False,
         "required_before_launch": False,
         "justification": (
-            "Redundant DEV helper formula {RecordId}; PROD already contains RecordId "
+            "Redundant Production helper formula {RecordId}; PROD already contains RecordId "
             "and no production dependency references Calculation."
         ),
     },

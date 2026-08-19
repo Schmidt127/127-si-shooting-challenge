@@ -119,7 +119,7 @@ No fields added to Submissions or WAS (context derived via Enrollment + HC + PHA
 | `115-…js` | **v2.0** — ETF Homework scenarios require PHA RID |
 | PROD Same Day / Perfect Week formulas | Not part of this package |
 
-**DEV/PROD paste:** Follow [`pha-first-homework-package-promotion.md`](./pha-first-homework-package-promotion.md) — order **005 → 020 → 067 → 115**. Repository status **Built/Verified** only until Mike live evidence.
+**Production paste:** Follow [`pha-first-homework-package-promotion.md`](./pha-first-homework-package-promotion.md) — order **005 → 020 → 067 → 115**. Repository status **Built/Verified** only until Mike live evidence.
 
 ## Backfilled junction + HC (Perfect Week CASE-01)
 

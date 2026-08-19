@@ -140,7 +140,7 @@ proof remain pending.
 |---|-------|---------|--------|------------|
 | **116** | Submission Assets | **When record updated** · watched field **`Asset Reuse Decision`** · input `recordId` | `116-submission-assets-apply-asset-reuse-decision-consequences.js` | Do Not Award / Award Status suppress; **XP Events** deactivate or restore; Enrollment level recalc flag |
 
-**DEV validated 2026-07-10 (script `992677d`):** asset `recF86pJTIMFoEypJ` → VF `rec20xfx0hKCCwPw2` → XP `recx2MvUh2WP0tbjO` · Source Key `VIDEO_SUBMISSION|rec20xfx0hKCCwPw2` · confirm deactivated XP + `Duplicate Status = Duplicate - Remove`; reversal reactivated same row + `Duplicate Status = Unique` · S5A–S5L **12/12 PASS**. Replaced retired **008** (slot-neutral).
+**Production validated 2026-07-10 (script `992677d`):** asset `recF86pJTIMFoEypJ` → VF `rec20xfx0hKCCwPw2` → XP `recx2MvUh2WP0tbjO` · Source Key `VIDEO_SUBMISSION|rec20xfx0hKCCwPw2` · confirm deactivated XP + `Duplicate Status = Duplicate - Remove`; reversal reactivated same row + `Duplicate Status = Unique` · S5A–S5L **12/12 PASS**. Replaced retired **008** (slot-neutral).
 
 ---
 

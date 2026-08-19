@@ -44,7 +44,7 @@ Source: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-moderni
 ```mermaid
 flowchart TD
     W2A[Wave 2A classify - DONE]
-    H002[066 DEV sandbox test]
+    H002[066 Production sandbox test]
     H002P[066 prod promote optional]
     RET[112 delete + 043 retire]
     EMC[EMC design 2d]
@@ -61,7 +61,7 @@ flowchart TD
     MERGE --> REWRITE
 ```
 
-**Current gate:** **066 DEV sandbox** pending OMNI pipeline confirm — blocks V2-015 `done` and informs C-020 sequencing.
+**Current gate:** **066 Production sandbox** pending OMNI pipeline confirm — blocks V2-015 `done` and informs C-020 sequencing.
 
 ### Expected slot recovery (secondary)
 
@@ -83,21 +83,21 @@ flowchart TD
 | Risk | Severity | Mitigation |
 |------|----------|------------|
 | **030+032+033** merged with different triggers | **High** | OMNI confirm trigger parity; **do not merge** if timing differs |
-| **006+021** same trigger assumption | **Medium** | OMNI confirm; test on DEV with multi-attachment submission |
+| **006+021** same trigger assumption | **Medium** | OMNI confirm; test on Production with multi-attachment submission |
 | **112 delete** while old VF rows reference 112-era keys | **Medium** | Monitor period + 090F audit before delete |
 | **043 retire** while enrollments still depend on 043-only path | **Medium** | Verify **042** writes gate rule on all recalc paths |
 | **EMC** scope creep | **High** | Design wave only until schema approved |
 | **~17 legacy scripts** without `main()` | **Medium** | Rewrite in approved waves only — no emergency mass migration |
 | **`*confirm in Airtable*` triggers** | **Medium** | OMNI Wave 2a checklist still partially open |
 | **066 / C-020 chicken-and-egg** | **Medium** | Pipeline-ready submission path before meaningful 066 test |
-| **DEV automations OFF after clone** | **Medium** | Checklist: verify ON before pipeline tests (documented) |
+| **Production automations OFF after clone** | **Medium** | Checklist: verify ON before pipeline tests (documented) |
 | **Slot pressure drives bad merges** | **High** | Constitution priority: understandability > capacity |
 
 ---
 
 ## 2. C-020 documentation review
 
-Sources: [testing-and-intake-architecture.md](./testing-and-intake-architecture.md), [C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md), DEV schema `dev-20260706/`
+Sources: [testing-and-intake-architecture.md](./testing-and-intake-architecture.md), [C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md), Production schema `prod-20260706/`
 
 ### What is complete
 
@@ -105,12 +105,12 @@ Sources: [testing-and-intake-architecture.md](./testing-and-intake-architecture.
 |------|--------|
 | Architecture (no pipeline test fields) | ✓ |
 | OMNI correction (rejected test flags) | ✓ |
-| DEV field list (24 fields + IDs) | ✓ |
+| Production field list (24 fields + IDs) | ✓ |
 | Script behavior checklist (7 steps) | ✓ |
 | Downstream automation map | ✓ |
 | Future enhancements deferred | ✓ |
 | C-020 justification (manual submissions) | ✓ |
-| DEV schema snapshot includes Testing Scenarios | ✓ |
+| Production schema snapshot includes Testing Scenarios | ✓ |
 
 ### Gaps before implementation (document — not code)
 
@@ -118,16 +118,16 @@ Sources: [testing-and-intake-architecture.md](./testing-and-intake-architecture.
 |---|-----|-------|----------|
 | **G1** | **Fillout field map** — exact Submission fields/values per Scenario Type (Daily, HW, 3-video, etc.) | ChatGPT + Cursor | **P0** |
 | **G2** | **Automation trigger design** — extension-only vs Airtable automation on `Run Test?`; uncheck behavior | ChatGPT + Mike | **P0** |
-| **G3** | **Allowed test enrollment list** — `rec…` IDs for Schmidt + 5 DEV enrollments (C-019) | OMNI / Mike | **P0** |
+| **G3** | **Allowed test enrollment list** — `rec…` IDs for Schmidt + 5 Production enrollments (C-019) | OMNI / Mike | **P0** |
 | **G4** | **Scenario Type → expected downstream map** (which automations must fire per type) | ChatGPT | **P1** |
 | **G5** | **Promotion doc template** for Testing Scenarios table → Production mirror | Cursor | **P1** (before prod) |
-| **G6** | **Make/webhook DEV isolation checklist** per scenario run | Mike | **P1** |
+| **G6** | **Make/webhook Production isolation checklist** per scenario run | Mike | **P1** |
 | **G7** | **Dry Run?** semantics — log destination, no-write guarantees | Cursor at implement | **P2** |
 | **G8** | **Homework / reflection paths** — `Pipeline Entity Linked`, `Relevant Homework Completion` usage per scenario | ChatGPT | **P2** |
 | **G9** | **Script numbering** — new automation number vs extension-only (capacity) | Mike + ChatGPT | **P2** |
 | **G10** | Rename primary **Test Intake Name** → **Scenario Name** (cosmetic) | OMNI optional | **P3** |
 
-**Verdict:** Architecture and checklist are **implementation-ready at the framework level**. **G1–G3** block meaningful script work. **Sequencing:** resolve 066 DEV path first OR approve C-020 ahead of 066 per Mike.
+**Verdict:** Architecture and checklist are **implementation-ready at the framework level**. **G1–G3** block meaningful script work. **Sequencing:** resolve 066 Production path first OR approve C-020 ahead of 066 per Mike.
 
 ---
 

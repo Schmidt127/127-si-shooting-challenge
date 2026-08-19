@@ -1,11 +1,11 @@
 # V2 Launch Smoke Tests
 
-**Status:** Pre-PROD promotion gate (DEV first)  
-**Last updated:** 2026-07-16  
-**Parent runbook:** [V2_DEV_EXECUTION_RUNBOOK.md](./V2_DEV_EXECUTION_RUNBOOK.md)  
-**Matrix source:** [../V2_END_TO_END_TEST_MATRIX.md](../V2_END_TO_END_TEST_MATRIX.md)  
+**Status:** Pre-PROD promotion gate (production-only validation)
+**Last updated:** 2026-07-16
+**Parent runbook:** [V2_PROD_EXECUTION_RUNBOOK.md](./V2_PROD_EXECUTION_RUNBOOK.md)
+**Matrix source:** [../V2_END_TO_END_TEST_MATRIX.md](../V2_END_TO_END_TEST_MATRIX.md)
 
-These are the **only** matrix rows that must be green on **DEV** before asking Mike for PROD promotion smoke. Full matrix remains required for season confidence; this subset is the launch gate.
+These are the **only** matrix rows that must be green on **Production** before asking Mike for PROD promotion smoke. Full matrix remains required for season confidence; this subset is the launch gate.
 
 **Rule:** No Pass without evidence under `docs/v2/evidence/`. Offline PASS does not clear a live smoke row.
 
@@ -13,7 +13,7 @@ These are the **only** matrix rows that must be green on **DEV** before asking M
 
 ## 1. Smoke subset (must pass before PROD promotion)
 
-Aligned with matrix sign-off plus C-025 DEV recording readiness.
+Aligned with matrix sign-off plus C-025 Production recording readiness.
 
 | Order | ID | Scenario | Modes | Automations | Pass criteria (short) |
 |---|---|---|---|---|---|
@@ -35,11 +35,11 @@ Aligned with matrix sign-off plus C-025 DEV recording readiness.
 | 16 | M1 | `/shoot` loads | Offline / deploy check | — | 200; brand shell |
 | 17 | M2 | Airtable health | API / Mike | — | `tokenValid` on `/shoot/api/airtable` |
 
-Machine-readable flags: `launch_smoke: true` in [../../tools/airtable/v2_dev_runbook/matrix-classification.json](../../tools/airtable/v2_dev_runbook/matrix-classification.json).
+Machine-readable flags: `launch_smoke: true` in [../../tools/airtable/v2_prod_runbook/matrix-classification.json](../../tools/airtable/v2_prod_runbook/matrix-classification.json).
 
 ```bash
-node tools/airtable/v2_dev_runbook/cli.js plan --smoke-only
-node tools/airtable/v2_dev_runbook/print_live_plan.js --smoke-only
+node tools/airtable/v2_prod_runbook/cli.js plan --smoke-only
+node tools/airtable/v2_prod_runbook/print_live_plan.js --smoke-only
 ```
 
 ### CLI-supported live smoke
@@ -51,15 +51,15 @@ Safe operator CLI implements dry-run/execute for all non-Make launch-smoke rows 
 Still not in CLI: **M1 · M2** (web) · Make/email rows.
 
 ```bash
-node tools/airtable/v2_dev_runbook/cli.js verify-env --dev-confirm
-node tools/airtable/v2_dev_runbook/cli.js run-test A3 --dev-confirm --enrollment recYOUR_DEV_ENROLLMENT
-node tools/airtable/v2_dev_runbook/cli.js run-test C4 --dev-confirm --enrollment rec… --assignment rec…
-node tools/airtable/v2_dev_runbook/cli.js run-test J4 --dev-confirm --enrollment rec… --meeting rec…
-# After Mike named DEV auth only:
-node tools/airtable/v2_dev_runbook/cli.js run-test A3 --dev-confirm --execute --enrollment recYOUR_DEV_ENROLLMENT --operator Mike
+node tools/airtable/v2_prod_runbook/cli.js verify-env --production-confirm
+node tools/airtable/v2_prod_runbook/cli.js run-test A3 --production-confirm --enrollment recYOUR_PROD_ENROLLMENT
+node tools/airtable/v2_prod_runbook/cli.js run-test C4 --production-confirm --enrollment rec… --assignment rec…
+node tools/airtable/v2_prod_runbook/cli.js run-test J4 --production-confirm --enrollment rec… --meeting rec…
+# After Mike named Production auth only:
+node tools/airtable/v2_prod_runbook/cli.js run-test A3 --production-confirm --execute --enrollment recYOUR_PROD_ENROLLMENT --operator Mike
 ```
 
-Evidence: `docs/v2/evidence/dev-runs/<date>/<test-id>.md`
+Evidence: `docs/v2/evidence/prod-runs/<date>/<test-id>.md`
 
 ---
 
@@ -82,10 +82,10 @@ Do **not** block PROD promotion wait on these unless Mike expands the gate:
 Run from repo root. These clear the offline half of smoke-tagged rows; they do **not** clear live UI/API rows.
 
 ```bash
-node tools/airtable/v2_dev_runbook/cli.test.js
-node tools/airtable/v2_dev_runbook/scenarios.test.js
-node tools/airtable/v2_dev_runbook/cli.js run-offline
-node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js
+node tools/airtable/v2_prod_runbook/cli.test.js
+node tools/airtable/v2_prod_runbook/scenarios.test.js
+node tools/airtable/v2_prod_runbook/cli.js run-offline
+node tools/airtable/v2_prod_runbook/run_offline_fixture_suite.js
 node airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js
 node airtable/automations/shooting-challenge/lib/066-milestone-crossing-harness.test.js
 node airtable/automations/shooting-challenge/lib/c025-zoom-recording-credit.test.js
@@ -102,45 +102,45 @@ cd web && npm test
 
 ---
 
-## 4. Live DEV smoke sequence (Mike / OMNI)
+## 4. Live Production smoke sequence (Mike / OMNI)
 
 **Prereqs**
 
-- Base `appTetnuCZlCZdTCT` confirmed  
-- Mike named DEV authorization for “V2 launch smoke”  
-- Webhook isolation verified  
-- Email send automations OFF (smoke subset does not include I6/J6)  
-- C-020 available for A3/B1  
-- 066 ON in DEV  
-- For J4/J5: C-025 schema + 117a installed per [ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./ZOOM_RECORDING_CREDIT_DEV_INSTALL.md); leave 117b out of this smoke  
+- Base `appn84sqPw03zEbTT` confirmed
+- Mike named Production authorization for “V2 launch smoke”
+- Webhook isolation verified
+- Email send automations OFF (smoke subset does not include I6/J6)
+- C-020 available for A3/B1
+- 066 ON in Production
+- For J4/J5: C-025 schema + 117a installed per [ZOOM_RECORDING_CREDIT_PROD_INSTALL.md](./ZOOM_RECORDING_CREDIT_PROD_INSTALL.md); leave 117b out of this smoke
 
 **Sequence**
 
-1. **A3** — C-020 Daily Submission on Schmidt/sandbox → Enrollment+Week.  
-2. **B1** — Confirm one `SUBMISSION_XP\|…`.  
-3. **B2** — Re-run 010 → still one Event.  
-4. **F1–F3** — Drive shots across threshold(s); rerun 066.  
-5. **C4** — Satisfactory homework → one `HOMEWORK_XP\|…` (coach review).  
-6. **D3** — Ready for XP on Video Feedback → one `VIDEO_SUBMISSION\|…`.  
-7. **J1** — Live attendance Create XP → one `ZOOM_ATTEND_BASE\|…`.  
-8. **J4–J5** — Recording quiz path on **different** meeting than J1 live conflict case as designed; rerun 117a.  
-9. **G3** — Eligible week → one Perfect Week unlock.  
-10. **H2** — Gate Blocked enrollment state.  
-11. **L1–L2** — Rerun battery; counts unchanged.  
+1. **A3** — C-020 Daily Submission on Schmidt/sandbox → Enrollment+Week.
+2. **B1** — Confirm one `SUBMISSION_XP\|…`.
+3. **B2** — Re-run 010 → still one Event.
+4. **F1–F3** — Drive shots across threshold(s); rerun 066.
+5. **C4** — Satisfactory homework → one `HOMEWORK_XP\|…` (coach review).
+6. **D3** — Ready for XP on Video Feedback → one `VIDEO_SUBMISSION\|…`.
+7. **J1** — Live attendance Create XP → one `ZOOM_ATTEND_BASE\|…`.
+8. **J4–J5** — Recording quiz path on **different** meeting than J1 live conflict case as designed; rerun 117a.
+9. **G3** — Eligible week → one Perfect Week unlock.
+10. **H2** — Gate Blocked enrollment state.
+11. **L1–L2** — Rerun battery; counts unchanged.
 12. **M1–M2** — Deployed or local `/shoot` + airtable health with authorized token.
 
-After each step: file evidence using [evidence/_TEMPLATE-dev-test-evidence.md](./evidence/_TEMPLATE-dev-test-evidence.md).
+After each step: file evidence using [evidence/_TEMPLATE-production-test-evidence.md](./evidence/_TEMPLATE-production-test-evidence.md).
 
 **Cleanup after smoke**
 
-- Uncheck Run Test? / Ready for XP / Create XP triggers.  
-- Leave 117a OFF if Mike wants DEV quiet after pass.  
-- Soft-void only Mike-approved true duplicates.  
+- Uncheck Run Test? / Ready for XP / Create XP triggers.
+- Leave 117a OFF if Mike wants Production quiet after pass.
+- Soft-void only Mike-approved true duplicates.
 - Do not touch PROD.
 
 ---
 
-## 5. PROD smoke (Mike only — after DEV smoke green)
+## 5. PROD smoke (Mike only — after Production smoke green)
 
 Matrix sign-off subset for PROD (stricter / smaller):
 
@@ -163,7 +163,7 @@ Do not start PROD smoke from this Worker package. Use [../V2_RELEASE_CHECKLIST.m
 
 ## 6. Smoke scorecard
 
-| ID | Offline | Live DEV | Evidence path | Result |
+| ID | Offline | Live Production | Evidence path | Result |
 |---|---|---|---|---|
 | A3 | n/a | U | | U |
 | B1 | partial (keys) | U | | U |
@@ -192,7 +192,7 @@ Update cells only with dated evidence. Result key: P / F / B / U.
 | Check | Required |
 |---|---|
 | Offline preflight exit 0 | Yes |
-| Live DEV smoke rows P with evidence | Yes |
+| Live Production smoke rows P with evidence | Yes |
 | 070a PROD OFF reconfirmed | Yes |
 | 117a/117b PROD still OFF (unless Mike scheduled) | Yes |
 | Mike approval for PROD smoke | Yes |

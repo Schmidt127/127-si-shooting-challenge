@@ -1,5 +1,5 @@
 ---
-description: Controlled four-agent workflow — Lead integrates; workers never merge; DEV-only hard stops
+description: Controlled four-agent workflow — Lead integrates; workers never merge; Production-only hard stops
 alwaysApply: true
 ---
 
@@ -11,12 +11,12 @@ When operating in the four-agent model (Lead, Implementation, Testing, Research)
 
 ## Environment and safety
 
-- **DEV only** — do not change Production Airtable, Make, Lambda, or live traffic.
+- **Production only** — do not change Production Airtable, Make, Lambda, or live traffic.
 - **No production access** as part of normal agent work.
 - **No Airtable schema changes** (create/rename/delete fields, tables, views) unless Mike explicitly authorizes the change.
 - **No credential or secret changes** — never commit or rotate `.env`, tokens, webhook secrets, or AWS keys.
 - **No deployment** — no Vercel/AWS/Make prod deploys and no Production Airtable paste from agents.
-- **No live Airtable access** unless Mike authorizes a named DEV check.
+- **No live Airtable access** unless Mike authorizes a named Production check.
 - **No destructive Git** — never `git reset --hard`, `git clean`, force push, or branch/file deletion as a workaround.
 
 ## Integration authority

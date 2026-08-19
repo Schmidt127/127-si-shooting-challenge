@@ -26,7 +26,7 @@ from upload_core.season import (
 )
 
 PROD_BASE = "appn84sqPw03zEbTT"
-# Live meta.bases IDs verified 2026-08-17 (PROD). Same Enrollments id on DEV.
+# Live meta.bases IDs verified 2026-08-17 (PROD). Same Enrollments id on Production.
 LIVE_ENROLLMENTS_TABLE_ID = "tbl3PFmwbRoabu1YV"
 LIVE_PROGRAM_INSTANCE_TABLE_ID = "tblMfALZa4YYUy70P"
 STALE_ENROLLMENTS_TABLE_ID = "tblStaleEnroll0001"

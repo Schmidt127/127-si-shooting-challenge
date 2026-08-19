@@ -50,7 +50,7 @@
 | Recording path writes `Zoom Meetings.Attendees` | Turn OFF 117/modular path; stop promotion; do not attempt compensating XP writes. |
 | Two active XP rows for one recording key or live/recording conflict | Turn OFF actor; preserve rows; soft-void only wrong new recording entry after review. |
 | Historical live XP changed/deactivated/deleted | Stop all work and escalate immediately; do not self-repair history. |
-| 057/042 count both live and recording for one meeting | Turn OFF owning automation; restore only synthetic state; fix/retest in DEV. |
+| 057/042 count both live and recording for one meeting | Turn OFF owning automation; restore only synthetic state; fix/retest in Production. |
 | 115 proposed/installed in PROD | Stop; do not create missing table or test data; escalate as a hard boundary violation. |
 
 Related: [enable order](./C-025-stage17-automation-enable-order.md), [expanded smoke tests](./C-025-stage17-expanded-smoke-tests.md), [production smoke baseline](./C-025-stage17-prod-smoke-test.md), [schema gap analysis](./C-025-stage17-prod-schema-gap-analysis.md).

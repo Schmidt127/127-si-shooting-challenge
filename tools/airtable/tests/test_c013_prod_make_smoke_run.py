@@ -149,8 +149,10 @@ class TestResetFieldSets(unittest.TestCase):
             file_hash="a" * 64,
             size_bytes=100,
             mime_type="image/png",
+            reviewer_access_token="test-reviewer-token",
         )
         self.assertEqual(fields["File Hash Algorithm"], "SHA-256")
+        self.assertEqual(fields["Reviewer Access Token"], "test-reviewer-token")
 
 
 def live_fixture_fields(**overrides) -> dict:

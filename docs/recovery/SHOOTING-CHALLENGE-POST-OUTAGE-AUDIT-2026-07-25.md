@@ -296,8 +296,8 @@ Reflog (recent): local activity on 2026-07-25 morning was launch certification c
 | Process env `AIRTABLE_TOKEN` | Present but **len=23**, prefix `PAST…` — **placeholder**; MCP `whoami` shows it; **`airtable-mcp tools` auth fails** |
 | Root `.env.local` `AIRTABLE_API_TOKEN` | len=82, `patL…` — **works** |
 | Root `.env.local` `AIRTABLE_BASE_ID` | `appn84sqPw03zEbTT` (**PROD**) |
-| `web/.env.local` base | `appTetnu…` (**DEV**) |
-| `tools/airtable/.env` | Separate `patK…` + DEV base |
+| `web/.env.local` base | `appTetnu…` (**Production**) |
+| `tools/airtable/.env` | Separate `patK…` + Production base |
 | Scripts/web client expect | Primarily **`AIRTABLE_API_TOKEN`** (+ `AIRTABLE_BASE_ID`) |
 | PROD meta read | **HTTP 200**, 31 tables |
 | PROD Automations inventory read | **48 rows** |
@@ -360,10 +360,10 @@ See [SHOOTING-CHALLENGE-RECOVERY-MATRIX-2026-07-25.md](./SHOOTING-CHALLENGE-RECO
 
 Rationale vs priority order:
 
-1. No uncommitted/unpushed recovery needed.  
-2. No repository corruption.  
-3. 057 overlap **resolved as Identical** — authoritative paste source = **PR #43** (no further code work).  
-4. Nearest **dependency-safe** live package: web/Vercel only — no email, no Airtable mutations, Preview already green.  
+1. No uncommitted/unpushed recovery needed.
+2. No repository corruption.
+3. 057 overlap **resolved as Identical** — authoritative paste source = **PR #43** (no further code work).
+4. Nearest **dependency-safe** live package: web/Vercel only — no email, no Airtable mutations, Preview already green.
 5. Live PROD HTML **currently broken** on hub links (`hooopchallenges.com`) and favicon path — highest confidence live defect.
 
 Defer (ordered later): 057 v1.4 paste (PR #43), 035 install, 067 Option B live proof, SC-041 failure test.

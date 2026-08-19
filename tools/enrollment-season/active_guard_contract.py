@@ -31,7 +31,7 @@ ACTIVE_CONSUMERS = [
         "whenActive": "Awards submission XP when counted path ready",
         "whenInactive": "Spec: skip only when PPE false; Active?-only would block Schmidt if false",
         "riskIfMissing": "Withdrawn athletes keep earning XP",
-        "evidence": "C010_ACTIVE_GUARDS_DEV_INSTALL.md; ENROLLMENT_ACTIVE_GUARD_COVERAGE.gaps",
+        "evidence": "ENROLLMENT_ACTIVE_GUARD_COVERAGE.gaps",
         "recommendedOwnerAgent": "xp-pipeline",
     },
     {

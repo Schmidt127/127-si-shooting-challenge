@@ -2,7 +2,7 @@
 """
 Read-only XP Reward Rules verification utility.
 
-Compares live/DEV XP Reward Rules against expected *families* of keys and reports
+Compares live/Production XP Reward Rules against expected *families* of keys and reports
 configured amounts. Does NOT modify records. Does NOT treat any historical streak
 ladder as authoritative for writes.
 
@@ -10,7 +10,7 @@ Usage:
   python tools/airtable/verify_xp_reward_rules.py              # live read (requires PAT)
   python tools/airtable/verify_xp_reward_rules.py --dry-run    # same (default)
   python tools/airtable/verify_xp_reward_rules.py --fixture path/to/rules.json
-  python tools/airtable/verify_xp_reward_rules.py --base-id appTetnuCZlCZdTCT
+  python tools/airtable/verify_xp_reward_rules.py --base-id appn84sqPw03zEbTT
 
 Exit codes:
   0 = report completed (findings may still list missing/duplicate keys)
@@ -288,8 +288,8 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--base-id",
-        default=os.getenv("AIRTABLE_BASE_ID") or "appTetnuCZlCZdTCT",
-        help="Airtable base id (default DEV)",
+        default=os.getenv("AIRTABLE_BASE_ID") or "appn84sqPw03zEbTT",
+        help="Airtable base id (default Production)",
     )
     parser.add_argument(
         "--json-out",

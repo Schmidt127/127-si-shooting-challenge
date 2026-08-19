@@ -11,12 +11,12 @@
 ## Do before any PROD automation paste
 
 4. Review `CONFIG-SELECTION-CONTRACT.md` and `CONFIG-ROLLOUT-RUNBOOK.md`.
-5. Authorize Phase 1 dry-run logging on one DEV automation (prefer tools first — no paste).
+5. Authorize Phase 1 dry-run logging on one Production automation (prefer tools first — no paste).
 6. For Zoom: spot-check that meetings’ **Global Config** / **Program Config** links point at the Config row whose `Active School Year` matches the meeting’s season (OMNI).
 
 ## Optional later
 
-7. Authorize DEV test of proposed 042 guard (`proposals/042-year-aware-zoom-gate-guard.PROPOSED.js`) — **no PROD paste until dry-run passes**.
+7. Authorize Production test of proposed 042 guard (`proposals/042-year-aware-zoom-gate-guard.PROPOSED.js`) — **no PROD paste until dry-run passes**.
 8. Decide whether Perfect Week video minimum stays hardcoded `3` or moves to a new Config field (still year-resolved).
 9. When opening 2026–2027+ seasons for recording credit, **copy Stage 17 flags onto that year’s Config row** deliberately — do not rely on the 2025–2026-only populated row.
 

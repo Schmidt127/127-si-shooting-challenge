@@ -2,7 +2,7 @@
 """Read-only probe: C-013/C-023 asset storage field inventory + record stats.
 
 Uses tools/airtable/.env (never print token).
-Default base: DEV appTetnuCZlCZdTCT
+Default base: Production appn84sqPw03zEbTT
 
 Outputs JSON summary: schema field presence, upload-status breakdown, URL/hash coverage.
 """
@@ -27,7 +27,7 @@ if web_env.exists():
 
 API = "https://api.airtable.com/v0"
 META = "https://api.airtable.com/v0/meta"
-DEV_BASE = "appTetnuCZlCZdTCT"
+PROD_BASE = "appn84sqPw03zEbTT"
 SCHMIDT_ENROLLMENT = "recgP9qZYjAhE7NXm"
 
 TABLES = [
@@ -306,7 +306,7 @@ def main() -> None:
     parser.add_argument(
         "--out",
         default=os.getenv("C013_PROBE_OUT"),
-        help="Write JSON summary to this path (e.g. tools/airtable/_preview/c013-dev-baseline.json)",
+        help="Write JSON summary to this path (e.g. tools/airtable/_preview/c013-prod-baseline.json)",
     )
     parser.add_argument(
         "--record-id",
@@ -315,7 +315,7 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    base_id = os.getenv("WAVE7_PROBE_BASE") or os.getenv("DEV_BASE_ID") or DEV_BASE
+    base_id = os.getenv("WAVE7_PROBE_BASE") or os.getenv("AIRTABLE_BASE_ID") or PROD_BASE
     print(f"probe=C-013/C-023 asset storage")
     print(f"base_id={base_id}")
     print(f"schmidt_enrollment={SCHMIDT_ENROLLMENT}")

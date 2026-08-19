@@ -1,8 +1,8 @@
-# C-019 — Airtable UI work order: create Testing views (DEV)
+# C-019 — Airtable UI work order: create Testing views (Production)
 
-**Operator:** Mike  
-**Backlog:** C-019 · Wave 6  
-**Base:** DEV `appTetnuCZlCZdTCT` (127 SI Shooting Challenge — Development)  
+**Operator:** Mike
+**Backlog:** C-019 · Wave 6
+**Base:** Production `appn84sqPw03zEbTT` (127 SI Shooting Challenge — Development)
 **Why manual:** Airtable API cannot create views or read filter definitions. See [C-019 verification checklist](./C-019-testing-views-verification-checklist.md).
 
 ---
@@ -20,9 +20,9 @@
 
 ## Click path (repeat for each table below)
 
-1. Open base **DEV** → `appTetnuCZlCZdTCT`.
+1. Open base **Production** → `appn84sqPw03zEbTT`.
 2. Open the **table** (left sidebar).
-3. **Create view:** click **+** next to view tabs → **Grid** → name **`Testing`** → **Create new view**.  
+3. **Create view:** click **+** next to view tabs → **Grid** → name **`Testing`** → **Create new view**.
    *(Athlete Achievement Unlocks: open existing **Testing** view instead.)*
 4. Click **Filter** in the toolbar.
 5. **Add condition** → choose the **Filter Field** from the work table below → operator **is** → pick **Schmidt, Testing - 2025-2026** / **Testing Schmidt**.
@@ -67,7 +67,7 @@
 
 2. **Confirm:** all **8** tables report a `Testing` view (probe maps views per table via schema).
 3. **Remember:** the probe **cannot** confirm filter field, filter value, or forbidden filters — only that a view named `Testing` exists. Filter correctness is **UI sign-off** in the table above.
-4. When complete, update [C-019 verification checklist](./C-019-testing-views-verification-checklist.md) sign-off and [v2-change-backlog.md](../v2-change-backlog.md) **C-019** status if promoting to `done (DEV)`.
+4. When complete, update [C-019 verification checklist](./C-019-testing-views-verification-checklist.md) sign-off and [v2-change-backlog.md](../v2-change-backlog.md) **C-019** status if promoting to `done (Production)`.
 
 ---
 

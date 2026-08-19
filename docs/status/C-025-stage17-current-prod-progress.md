@@ -12,10 +12,10 @@
 > - Stage 17 orchestrator / 117a–e = `_design-alternatives/stage17-modular-reference/` — **not installed**.
 > - Live Zoom XP remains **101**. Gate / Perfect Week Applied? remain **042** / **057**.
 
-**Date written:** 2026-07-18  
-**Last updated:** 2026-08-19 (117 v2.1 Hub handoff confirmed)  
-**Preserves prior readiness date:** 2026-07-18 ([C-025-stage17-prod-readiness-status.md](./C-025-stage17-prod-readiness-status.md))  
-**PROD:** `appn84sqPw03zEbTT` · **DEV:** `appTetnuCZlCZdTCT`
+**Date written:** 2026-07-18
+**Last updated:** 2026-08-19 (117 v2.1 Hub handoff confirmed)
+**Preserves prior readiness date:** 2026-07-18 ([C-025-stage17-prod-readiness-status.md](./C-025-stage17-prod-readiness-status.md))
+**PROD:** `appn84sqPw03zEbTT` · **Production:** `appn84sqPw03zEbTT`
 
 ---
 

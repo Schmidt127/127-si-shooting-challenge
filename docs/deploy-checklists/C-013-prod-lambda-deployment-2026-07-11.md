@@ -1,6 +1,6 @@
 # C-013 — PROD Lambda deployment record
 
-**Date:** 2026-07-11  
+**Date:** 2026-07-11
 **Status:** **DEPLOYED** · direct smoke **PASS** · Make manual route **PASS** · **070b OFF**
 **Parent:** [C-013-production-promotion-plan.md](./C-013-production-promotion-plan.md)
 
@@ -55,7 +55,7 @@
 | `CHALLENGE_SLUG` | CONFIGURED (`shooting-challenge`) |
 | `UPLOAD_WEBHOOK_SECRET` | CONFIGURED (new PROD value — ops only) |
 
-**Secret source:** `AIRTABLE_PROD_TOKEN` from `web/.env.local` at deploy time; new `UPLOAD_WEBHOOK_SECRET_PROD` generated for PROD (not reused from DEV).
+**Secret source:** `AIRTABLE_PROD_TOKEN` from `web/.env.local` at deploy time; new `UPLOAD_WEBHOOK_SECRET_PROD` generated for PROD (not reused from Production).
 
 ---
 
@@ -104,7 +104,7 @@ Full machine-readable summary: [C-013-prod-lambda-smoke-result-2026-07-11.json](
 
 1. **070b OFF** · **070a OFF** (unchanged)
 2. Make Production upload scenario **OFF** (built and tested; leave OFF until Mike approves activation)
-3. Throttle Lambda:  
+3. Throttle Lambda:
    `aws lambda put-function-concurrency --function-name 127si-upload-asset --reserved-concurrent-executions 0 --region us-east-2`
 4. Code rollback: redeploy prior zip by `CodeSha256` from AWS console versions
 5. Fixture reset: set Schmidt Testing asset `recGQ8EjAMz3bEBiW` to `Pending Link` or delete test rows only

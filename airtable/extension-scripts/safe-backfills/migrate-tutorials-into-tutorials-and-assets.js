@@ -39,7 +39,7 @@ v1.2:
   - Multi-select writes use [{name}] ; single-select writes use {name}
   - Validate select options before write; skip missing options into Notes
   - Throttle mutations (max 15 / 1000ms) with rate-limit retry
-  - Lock runtime to PROD base/table IDs; remove stale DEV wording from output
+  - Lock runtime to PROD base/table IDs; remove stale Production wording from output
 v1.1:
   - Guard unloadData (Extension QueryResult may not support it)
   - Resolve Tutorials & Assets primary Name by stable field ID (BOM-safe); never create Name

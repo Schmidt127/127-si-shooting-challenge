@@ -40,11 +40,11 @@
 | 117a–f | OFF / not installed when 117 is used | Modular alternative only. |
 | 057 v1.3 | OFF except short PW smoke window | It owns the PW Applied? write. |
 | 042 v3.1 | OFF except short gate smoke window | It owns the Gate Applied? write. |
-| 115 v1.8 | Not installed in PROD | DEV-only ETF; requires `Testing Scenarios`, which PROD lacks. |
+| 115 v1.8 | Not installed in PROD | Production-only ETF; requires `Testing Scenarios`, which PROD lacks. |
 
 ## Why 115 is prohibited in PROD
 
-**CONFIRMED:** 115 creates or orchestrates synthetic testing scenarios/submissions and forces 057/042 test flow. Production has no `Testing Scenarios` table. Installing it risks fake data plus unintended XP and Weekly Athlete Summary writes. It is a DEV-only harness, not a production dependency.
+**CONFIRMED:** 115 creates or orchestrates synthetic testing scenarios/submissions and forces 057/042 test flow. Production has no `Testing Scenarios` table. Installing it risks fake data plus unintended XP and Weekly Athlete Summary writes. It is a Production-only harness, not a production dependency.
 
 ## Required log entry
 

@@ -1,9 +1,9 @@
 # C-025 Stage 17 — Zoom Attendance lookup map
 
-**Date written:** 2026-07-18  
-**Branch:** `feature/c025-stage17-zoom-attendance` @ `2db98a0`  
-**Authority:** [C-025-stage17-prod-schema-manifest.json](./C-025-stage17-prod-schema-manifest.json)  
-**DEV base:** `appTetnuCZlCZdTCT` · **PROD base:** `appn84sqPw03zEbTT`  
+**Date written:** 2026-07-18
+**Branch:** `feature/c025-stage17-zoom-attendance` @ `2db98a0`
+**Authority:** [C-025-stage17-prod-schema-manifest.json](./C-025-stage17-prod-schema-manifest.json)
+**Production base:** `appn84sqPw03zEbTT` · **PROD base:** `appn84sqPw03zEbTT`
 **Mode:** Documentation only — no Airtable writes
 
 ---
@@ -162,7 +162,7 @@
 | Later formulas that depend on it | `Zoom Credit Key`; `Preconflict Pair Tag`; `Zoom Credit Debug` |
 | Notes | Source field name is **`RecordId`** (no space). **Not listed as a create item in the Stage 17 manifest** — treat as prerequisite / verify-or-create. |
 
-### 12–14. Approval email Effective lookups (117f) — DEV created 2026-07-20
+### 12–14. Approval email Effective lookups (117f) — Production created 2026-07-20
 
 Required by Automation **117f v1.2.0** (reads these on Zoom Attendance). Not in original Stage 17 “11 lookups” list.
 
@@ -172,7 +172,7 @@ Required by Automation **117f v1.2.0** (reads these on Zoom Attendance). Not in 
 | `Effective Recording Approval Email Timing` | `Zoom Meeting` | `Effective Recording Approval Email Timing` | **Yes** (117f) |
 | `Effective Recording Approval Email Template Key` | `Zoom Meeting` | `Effective Recording Approval Email Template Key` | **Yes** (117f) |
 
-**DEV evidence:** created via Meta API on `appTetnuCZlCZdTCT`. **PROD:** do not create until Mike authorizes PROD 117f prep.
+**Production evidence:** created via Meta API on `appn84sqPw03zEbTT`. **PROD:** do not create until Mike authorizes PROD 117f prep.
 
 ---
 
@@ -210,17 +210,17 @@ IF({Recording Quiz Requires Coach Approval?}, "Yes", "No")
 
 These are referenced by Stage 17 formulas/lookups but **absent from `items[]` create list**. Status in PROD is **Unknown and needs verification** unless Mike confirms.
 
-| Field | Table | Type | Wiring (from DEV / repair docs) | Needed by |
+| Field | Table | Type | Wiring (from Production / repair docs) | Needed by |
 |-------|-------|------|----------------------------------|-----------|
 | `Week End Date` | Zoom Meetings | Lookup | Link `Week` → Weeks.`End Date` | ZM `Calculated Recording Quiz Deadline` |
 | `RecordId` | Zoom Meetings | Formula | `RECORD_ID()` | ZA `Zoom Meeting RID` |
 | `Record Id` | Enrollments | Formula | `RECORD_ID()` | ZA `Enrollment RID` |
 | `Approved Preconflict Pair Tags` | Zoom Meetings | Rollup | Link `Zoom Attendance` → `Preconflict Pair Tag`; agg **`ARRAYJOIN(ARRAYUNIQUE(values), "\n")`** (PROD verified 2026-07-20; Meta often fails to store formula — set in UI) | ZA `Meeting Approved Preconflict Pair Tags` |
-| `Attendance Method` | Zoom Meetings | Single select | Choices include `Recording Quiz` (DEV) | ZM `Calculated Recording Quiz Deadline` |
+| `Attendance Method` | Zoom Meetings | Single select | Choices include `Recording Quiz` (Production) | ZM `Calculated Recording Quiz Deadline` |
 | `Config (Global Scope)` | Zoom Meetings | Link → Config | Mike: exists | Global Config lookups |
 | `Config (Program Scope)` | Zoom Meetings | Link → Config | Implied by Program Config lookups | Program Config lookups |
 
-**Uncertainty:** Config-linkage design notes ZM `Attendance Method` / ZM `Zoom Credit Approved?` as possible **legacy** fields. However the **live DEV formula** for `Calculated Recording Quiz Deadline` **does** reference ZM `Attendance Method`. Do not invent an alternate formula — verify or recreate that field before pasting the DEV deadline formula.
+**Uncertainty:** Config-linkage design notes ZM `Attendance Method` / ZM `Zoom Credit Approved?` as possible **legacy** fields. However the **live Production formula** for `Calculated Recording Quiz Deadline` **does** reference ZM `Attendance Method`. Do not invent an alternate formula — verify or recreate that field before pasting the Production deadline formula.
 
 ---
 
@@ -229,7 +229,7 @@ These are referenced by Stage 17 formulas/lookups but **absent from `items[]` cr
 | Setting | Connector / Meta API | Manual Airtable UI |
 |---------|----------------------|--------------------|
 | Lookup field create + wiring | Unreliable / often incomplete | **Required** |
-| Rollup aggregation formula | Meta often **cannot** store formula (DEV lesson) | **Required** |
+| Rollup aggregation formula | Meta often **cannot** store formula (Production lesson) | **Required** |
 | `prefersSingleRecordLink` | Often not settable via connector | **Required** |
 | Autonumber primary | Limited | **Verify in UI** |
 

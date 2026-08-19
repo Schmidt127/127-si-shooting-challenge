@@ -1,7 +1,7 @@
 # Admin roadmap — `/shoot/admin`
 
-**Status:** Placeholder UI only. **No Airtable write controls** in this phase.  
-**Auth:** Not implemented. Until staff authentication exists, do **not** expose private participant diagnostics on this route.  
+**Status:** Placeholder UI only. **No Airtable write controls** in this phase.
+**Auth:** Not implemented. Until staff authentication exists, do **not** expose private participant diagnostics on this route.
 **As of:** 2026-07-18
 
 Related: [site-hierarchy.md](./site-hierarchy.md) · [public-data-rules.md](./public-data-rules.md) · [PROJECT_STATE.md](../../docs/PROJECT_STATE.md)
@@ -107,6 +107,6 @@ Public pages must continue to use publish-safe views only.
 
 - [ ] Staff auth enforced server-side
 - [ ] No PII in HTML payloads for Priority 1 aggregates
-- [ ] Uses production or explicit DEV base via env — never mixed accidentally
+- [ ] Uses production or explicit Production base via env — never mixed accidentally
 - [ ] Feature flagged or `SITE_ACCESS_TOKEN` protected on Preview
 - [ ] Tests cover: unauthenticated redirect/deny; no data leak on placeholder; health-only without auth

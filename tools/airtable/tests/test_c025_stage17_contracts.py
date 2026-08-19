@@ -89,10 +89,10 @@ class TestStage17Contracts(unittest.TestCase):
         s42 = (ROOT / "042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js").read_text(
             encoding="utf-8"
         )
-        self.assertIn("Version: 1.5", s57)
+        self.assertIn("Version: 1.7", s57)
         self.assertIn("Zoom Attendance", s57)
         self.assertIn("Perfect Week Credit Applied?", s57)
-        self.assertIn('version: "3.2"', s42)
+        self.assertIn('version: "4.1.2"', s42)
         self.assertIn("computeEffectiveZoomAttendanceCount", s42)
         self.assertIn("Gate Credit Applied?", s42)
 

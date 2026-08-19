@@ -20,7 +20,7 @@
 | 117f **v1.1** (Airtable automation `117 — Zoom — Send Recording Approval Email to Make`; Make identifier **117f**) | `recordId`: ZA record ID; `webhookUrl`; `enrollmentRid`; `zoomMeetingRid` | None | Outputs only (`makeStatus`, `sendKey`, `zoomAttendanceId`) — **no Airtable writes** |
 | 057 v1.3 | `recordId`: WAS record ID | None | Script updates WAS status/error helper fields; confirm automation output mapping in Airtable UI if needed |
 | 042 v3.1 | `recordId`: Enrollment record ID | None | `statusOut`, `messageOut`, Enrollment/lifetime XP/current/next/gate outputs |
-| 115 v1.8 — DEV only | `recordId`: Testing Scenarios record ID | Scenario data lives in Testing Scenarios; do not add PROD inputs | `statusOut`, `actionOut`, `errorOut`, `debugStep`, testing scenario/submission/scenario type outputs |
+| 115 v1.8 — Production only | `recordId`: Testing Scenarios record ID | Scenario data lives in Testing Scenarios; do not add PROD inputs | `statusOut`, `actionOut`, `errorOut`, `debugStep`, testing scenario/submission/scenario type outputs |
 
 ## Trigger and filter checklist
 
@@ -36,7 +36,7 @@
 | 117f | `Zoom Attendance` / header does not specify condition | **ASSUMPTION:** satisfactory, approved, non-conflicting Recording Quiz | Disabled/blank webhook must skip; do not test real delivery in PROD. |
 | 057 | `Weekly Athlete Summary` / current queue condition | `Perfect Week Calculation Queue? = 1` | Confirm status transition genuinely re-matches condition; Ready → Pending alone may not re-fire. |
 | 042 | `Enrollments` / when record enters view | View `042 - Needs Level Assignment`; filter `Level Recalc Needed?` checked | Confirm leave/re-enter behavior, not merely writing checked again. |
-| 115 | `Testing Scenarios` / when record matches conditions | `Run Test?` checked | DEV only; PROD table is absent. |
+| 115 | `Testing Scenarios` / when record matches conditions | `Run Test?` checked | Production only; PROD table is absent. |
 
 ## Field-readiness checklist
 
@@ -58,4 +58,4 @@
 | Live/recording same meeting | Conflict formula suppresses recording approval; live wins; no duplicate count or XP. |
 | Applied flags | 042 only writes Gate Applied; 057 only writes PW Applied; 117/117d/117e do not claim consumption. |
 
-Related: [readiness map](./C-025-stage17-automation-readiness.md), [enable order](./C-025-stage17-automation-enable-order.md), [117 packet](./C-025-stage17-117-orchestrator-v1.1.1-PASTE.txt), [057 packet](./C-025-stage17-057-perfect-week-v1.3-PASTE.txt), [042 packet](./C-025-stage17-042-level-gates-v3.1-PASTE.txt), [115 packet — DEV only](./C-025-stage17-115-etf-v1.8-PASTE.txt).
+Related: [readiness map](./C-025-stage17-automation-readiness.md), [enable order](./C-025-stage17-automation-enable-order.md), [117 packet](./C-025-stage17-117-orchestrator-v1.1.1-PASTE.txt), [057 packet](./C-025-stage17-057-perfect-week-v1.3-PASTE.txt), [042 packet](./C-025-stage17-042-level-gates-v3.1-PASTE.txt), [115 packet — Production only](./C-025-stage17-115-etf-v1.8-PASTE.txt).

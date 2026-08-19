@@ -9,7 +9,7 @@ ZOOM_REC_EMAIL|{Enrollment RID}|{Zoom Meeting RID}|{Zoom Attendance RID}.
 Authoritative current state: airtable/automations/shooting-challenge/117f-zoom-recording-send-approval-email.js
 and docs/deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md. Do NOT paste this v1.2.0 body.
 ----------------------------------------------------
-Base: DEV appTetnuCZlCZdTCT ONLY
+Base: Production appn84sqPw03zEbTT ONLY
 Automation name: 117f - Zoom Recording Credit - Send Approval Email
 Folder: 17 - Zoom Recording Credit
 Keep OFF after paste. Inputs: recordId, webhookUrl (leave blank until controlled test).

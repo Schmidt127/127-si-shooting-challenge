@@ -8,7 +8,7 @@
 > [`Authority Map`](./AUTHORITY-MAP.md).
 
 This document records the temporary operating posture used during the 2026
-empty-base rebuild. It does not override the repository's DEV-first,
+empty-base rebuild. It does not override the repository's production-only,
 Mike-approval, no-production-mutation, or historical-preservation guardrails.
 Do not use its old PROD-first instructions for new work.
 
@@ -29,7 +29,7 @@ posture. They are not current operating instructions.
 
 1. **Airtable PROD `appn84sqPw03zEbTT` is the active construction, configuration, and testing environment.**
 
-2. **Do not require DEV-first work unless Mike explicitly requests it.**
+2. **Do not require production-only work unless Mike explicitly requests it.**
 
 3. **Historical participant data does not need to be preserved.**
 
@@ -74,5 +74,5 @@ posture. They are not current operating instructions.
 
 15. **Do not make unrelated cleanup changes inside a functional work package.**
 
-16. **The controlling source of truth remains:**  
+16. **The controlling source of truth remains:**
     `docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`

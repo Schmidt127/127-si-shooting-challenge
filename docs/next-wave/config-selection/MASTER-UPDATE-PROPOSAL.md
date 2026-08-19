@@ -38,6 +38,6 @@ Agent 10 did **not** edit `docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md` (owners
 
 1. Wire tools (preview email) to resolver.
 2. Year-validate Zoom Meetings Global/Program Config links (OMNI or script).
-3. DEV dry-run 042 proposed guard, then paste.
+3. Production dry-run 042 proposed guard, then paste.
 4. Optional Config field for Perfect Week video minimum (replace hardcoded `3`).
 5. Populate sparse future-year Config rows when those seasons go live (copy Stage 17 flags intentionally — do not assume first-row).

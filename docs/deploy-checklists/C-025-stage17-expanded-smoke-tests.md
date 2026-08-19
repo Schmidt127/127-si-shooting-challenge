@@ -37,7 +37,7 @@ This expands [C-025-stage17-prod-smoke-test.md](./C-025-stage17-prod-smoke-test.
 | N3 Needs Correction | ZA review `Needs Correction`; satisfactory false. | No active recording XP; 057/042 do not count it; flags remain untouched. | Retain row for evidence or delete only if it is an approved disposable synthetic record; preferred safe rollback is no ledger write. |
 | N4 Duplicate XP | Precreate synthetic active XP with exact `ZOOM_CREDIT|…` key. | 117 recheck skips; does not create a second key. | Keep legitimate fixture row; soft-void only a wrong extra synthetic row. |
 | N5 Live/recording conflict | Add same Enrollment to meeting Attendees while approved ZA exists. | Live key wins; recording approval resolves false/conflict true or recording XP becomes inactive. | Remove only synthetic live Attendee link if it was solely the test; preserve live control evidence. |
-| N6 Email webhook failure | Use a deliberately invalid/non-delivering test endpoint **only in DEV**. In PROD keep webhook blank. | 117/117f reports email error/skip without changing XP, Attendees, gate, or PW records. | Do not retry delivery in PROD; clear only synthetic sent/error state as appropriate. |
+| N6 Email webhook failure | Use a deliberately invalid/non-delivering test endpoint **only in Production**. In PROD keep webhook blank. | 117/117f reports email error/skip without changing XP, Attendees, gate, or PW records. | Do not retry delivery in PROD; clear only synthetic sent/error state as appropriate. |
 
 ## Pass / stop matrix
 

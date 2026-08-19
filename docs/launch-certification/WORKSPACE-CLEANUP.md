@@ -1,8 +1,8 @@
 # Launch Certification — Workspace Cleanup
 
-**Authority:** Final Launch Closure Lead  
-**Date:** 2026-07-25  
-**Branch:** `launch/final-production-certification`  
+**Authority:** Final Launch Closure Lead
+**Date:** 2026-07-25
+**Branch:** `launch/final-production-certification`
 **Master tip:** `267d473`
 
 **Policy:** Inventory + proposed local cleanup only. **Do not delete remote branches** from this list without Mike explicit authorization. Preserve `stash@{1}` (go-live schema dumps/probes) as historical — do not commit secrets.
@@ -50,7 +50,7 @@ Do **not** run mass remote `git push origin --delete` from this packet.
 | Index | Message | Guidance |
 |-------|---------|----------|
 | stash@{0} | agent5-partial-docs | Review then drop if superseded by master docs |
-| stash@{1} | go-live-preserve-untracked-probes-snapshots-2026-07-24 | **PRESERVE** — DEV+PROD schema dumps / overnight notes; historical; mostly similar to `airtable/schema`; **do not commit secrets** |
+| stash@{1} | go-live-preserve-untracked-probes-snapshots-2026-07-24 | **PRESERVE** — Production+PROD schema dumps / overnight notes; historical; mostly similar to `airtable/schema`; **do not commit secrets** |
 | stash@{2} | wip-all-agents | Review / drop after inventory |
 | stash@{3} | agent9-temp-preserve | Likely droppable after ownership package on master |
 | stash@{4} | agent11-temp-keep-staged | Review |
@@ -89,7 +89,7 @@ Open PR remaining: **#33** only ([GITHUB-PR-CLOSEOUT.md](./GITHUB-PR-CLOSEOUT.md
 
 ## Explicit non-actions
 
-1. Do not discard `stash@{1}` blindly.  
-2. Do not commit schema dump secrets from stash into git.  
-3. Do not delete remotes as part of certification closeout automation.  
+1. Do not discard `stash@{1}` blindly.
+2. Do not commit schema dump secrets from stash into git.
+3. Do not delete remotes as part of certification closeout automation.
 4. Do not reset hard / clean force across worktrees.

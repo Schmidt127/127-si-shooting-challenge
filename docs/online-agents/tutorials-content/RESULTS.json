@@ -100,7 +100,7 @@
     }
   },
   "proposedStatuses": {
-    "SC-052": "Ready for DEV execution (not Complete)",
+    "SC-052": "Ready for Production execution (not Complete)",
     "SC-053": "Blocked on SC-052 execution (not Complete)",
     "SC-054": "No change — supporting spec only",
     "SC-127_to_SC-132": "No Tutorials merge status changes"

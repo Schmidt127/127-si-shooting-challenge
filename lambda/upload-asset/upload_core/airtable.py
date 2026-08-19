@@ -45,15 +45,15 @@ def get_asset(token: str, base_id: str, record_id: str) -> dict:
 def get_enrollment(token: str, base_id: str, enrollment_id: str) -> dict:
     from upload_core.season import TABLE_ENROLLMENTS
 
-    # Live PROD/DEV Enrollments table id (verified 2026-08-17). Name also works;
-    # id is preferred so DEV/PROD stay aligned when display names drift.
+    # Live Production Enrollments table id (verified 2026-08-17). Name also works;
+    # id is preferred so Production stay aligned when display names drift.
     return get_record(token, base_id, TABLE_ENROLLMENTS, enrollment_id)
 
 
 def get_program_instance(token: str, base_id: str, program_instance_id: str) -> dict:
     from upload_core.season import TABLE_PROGRAM_INSTANCE
 
-    # Live PROD table name is "Program Instance - Sync"; DEV uses
+    # Live PROD table name is "Program Instance - Sync"; Production uses
     # "Program Instance - Synced". Shared table id is the stable identifier.
     return get_record(token, base_id, TABLE_PROGRAM_INSTANCE, program_instance_id)
 

@@ -83,8 +83,8 @@ test("057 Perfect Week date keys use America/Denver (not UTC ISO slice)", () => 
   );
   assert.ok(/timezone:\s*"America\/Denver"/.test(s057));
   assert.ok(
-    /Version:\s*v?1\.5/.test(s057) || /version:\s*"v?1\.5"/.test(s057),
-    "057 header must declare version 1.5"
+    /Version:\s*v?1\.7/.test(s057) || /version:\s*"v?1\.7"/.test(s057),
+    "057 header must declare current production version 1.7"
   );
   const fnMatch = s057.match(
     /function getDateKeyFromDateOnly\(value\) \{[\s\S]*?\n\}/

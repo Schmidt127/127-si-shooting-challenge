@@ -1,7 +1,7 @@
 # Overnight Agent 1 — Testing / Integrity REPORT
 
-**Date:** 2026-07-24  
-**Branch:** `master`  
+**Date:** 2026-07-24
+**Branch:** `master`
 **Scope:** Packages A–L (testing framework, scenario catalog, verifier, XP/uniqueness/field-writer audits, safe PROD Schmidt tests)
 
 ---
@@ -20,57 +20,57 @@
 ## Work completed
 
 ### PACKAGE A — Current PROD baseline
-- **Result:** Refreshed `CURRENT-PROD-BASELINE.md` with 2026-07-24 re-verify + deliverable index  
-- **Files:** `docs/overnight/testing-integrity/CURRENT-PROD-BASELINE.md`  
+- **Result:** Refreshed `CURRENT-PROD-BASELINE.md` with 2026-07-24 re-verify + deliverable index
+- **Files:** `docs/overnight/testing-integrity/CURRENT-PROD-BASELINE.md`
 - **Evidence:** `prod-probe-latest.json` (verifier PASS)
 
 ### PACKAGE B — Automation 115 audit
-- **Result:** Prior audit retained; live rerun proved create + Linked Submission overwrite; no direct XP writes  
-- **Files:** `AUTOMATION-115-AUDIT.md` (existing); `live-115-rerun-latest.json`  
+- **Result:** Prior audit retained; live rerun proved create + Linked Submission overwrite; no direct XP writes
+- **Files:** `AUTOMATION-115-AUDIT.md` (existing); `live-115-rerun-latest.json`
 - **Tests:** 17 offline 115 tests PASS
 
 ### PACKAGE C — Scenario catalog
-- **Result:** SCN-001–020 JSON fixtures + README + catalog.json  
+- **Result:** SCN-001–020 JSON fixtures + README + catalog.json
 - **Files:** `docs/testing/scenarios/*`
 
 ### PACKAGE D — Expected-versus-actual verifier
-- **Result:** Read-only library + CLI + fixture; live probe integration  
-- **Files:** `tools/testing/lib/expected_actual.js`, `verify_scenario.mjs`, `fixtures/live-115-bundle.json`  
+- **Result:** Read-only library + CLI + fixture; live probe integration
+- **Files:** `tools/testing/lib/expected_actual.js`, `verify_scenario.mjs`, `fixtures/live-115-bundle.json`
 - **Tests:** 7 verifier tests PASS
 
 ### PACKAGE E — XP idempotency audit
-- **Result:** Full source catalog MD+JSON; XP-D1 documented  
+- **Result:** Full source catalog MD+JSON; XP-D1 documented
 - **Files:** `XP-IDEMPOTENCY-AUDIT.md`, `xp-idempotency-audit.json`
 
 ### PACKAGE F — Core uniqueness audit
-- **Result:** WAS / HC / Unlock / VF / Submission XP contracts documented  
-- **Files:** `CORE-UNIQUENESS-AUDIT.md`  
+- **Result:** WAS / HC / Unlock / VF / Submission XP contracts documented
+- **Files:** `CORE-UNIQUENESS-AUDIT.md`
 - **Live:** WAS uniqueness PASS after 115 rerun (still 1 WAS; 4 Subs; 100 shots)
 
 ### PACKAGE G — Field writer audit
-- **Result:** High-risk ownership matrix expanded; dual writers flagged; stale Schmidt exclusion advice superseded  
+- **Result:** High-risk ownership matrix expanded; dual writers flagged; stale Schmidt exclusion advice superseded
 - **Files:** `FIELD-WRITER-AUDIT.md`
 
 ### PACKAGE H — Testing views Mike actions
-- **Result:** Exact view specs for 11 tables  
+- **Result:** Exact view specs for 11 tables
 - **Files:** `TESTING-VIEWS-MIKE-ACTIONS.md`
 
 ### PACKAGE I — E2E matrix
-- **Result:** Evidence categories added; A3/A4/B1/B2 updated; B3/B5 blocked notes; 115 evidence block  
+- **Result:** Evidence categories added; A3/A4/B1/B2 updated; B3/B5 blocked notes; 115 evidence block
 - **Files:** `docs/V2_END_TO_END_TEST_MATRIX.md`
 
 ### PACKAGE J — Safe PROD testing
-- **Result:** Read-only probe PASS; controlled 115 rerun EXECUTE PASS  
-- **Created:** Submission `recjt6QpUcprSIxAk`; XP `recovVbiZynRUtDwF`  
-- **Unchanged uniqueness:** WAS `rechWp330MqSgRWzN`  
+- **Result:** Read-only probe PASS; controlled 115 rerun EXECUTE PASS
+- **Created:** Submission `recjt6QpUcprSIxAk`; XP `recovVbiZynRUtDwF`
+- **Unchanged uniqueness:** WAS `rechWp330MqSgRWzN`
 - **Not run:** email failure inject; backdate (no prior Week); 010 UI re-trigger
 
 ### PACKAGE K — Repository tests
-- **Result:** 115 offline expanded (null shot, high shot, stale link); verifier suite  
+- **Result:** 115 offline expanded (null shot, high shot, stale link); verifier suite
 - **Tests run:** 24 pass / 0 fail (`node --test tools/testing/tests/test_115_offline.mjs tools/testing/tests/test_expected_actual.mjs`)
 
 ### PACKAGE L — Safe fixes
-- **Result:** Probe defaults to PROD base (ignore DEV `AIRTABLE_BASE_ID` in `.env.local`); no XP amount/key format changes; no second pipelines
+- **Result:** Probe defaults to PROD base (ignore Production `AIRTABLE_BASE_ID` in `.env.local`); no XP amount/key format changes; no second pipelines
 
 ---
 
@@ -96,7 +96,7 @@
 | FW-D1 | High | 115/007 | Dual writer on Duplicate Review Status (`Count It` preset) | 115 audit; live Subs | Bypasses duplicate-day review | Documented | Product decision |
 | FW-D2 | High | HC | Possible 020+067 dual create | Uniqueness audit | Duplicate HC risk | Documented | SC-013/014 |
 | PROBE-1 | Medium | tooling | ARRAYJOIN(link) returns names not RIDs | Failed FIND filters | False empty counts | **Fixed** in probe | Use Source Key / direct RID |
-| 115-D2 | Medium | 115 C025 | DEV fixture IDs in CONFIG | Prior audit | C025 fails in PROD without overrides | Documented | Seed PROD fixtures |
+| 115-D2 | Medium | 115 C025 | Production fixture IDs in CONFIG | Prior audit | C025 fails in PROD without overrides | Documented | Seed PROD fixtures |
 | SCN-018 | Low | 115 | No Test Status=Rejected gate | Scenario catalog | Disabled scenarios can still run | Documented | Product decision |
 
 ---

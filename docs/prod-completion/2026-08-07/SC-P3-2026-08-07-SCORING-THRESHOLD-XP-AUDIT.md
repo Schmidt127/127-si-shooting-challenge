@@ -59,7 +59,7 @@ Therefore:
 
 - Do not claim PROD v1.3 installed.
 - Keep 035 OFF until Mike confirms the exact pasted version and no competing Threshold XP writer is enabled.
-- After DEV installation, rerun the Schmidt threshold scenario and expect the same first-run/replay behavior: three tier events on the first qualifying run, then zero new events on replay.
+- After Production installation, rerun the Schmidt threshold scenario and expect the same first-run/replay behavior: three tier events on the first qualifying run, then zero new events on replay.
 
 ## Airtable evidence required before enablement
 

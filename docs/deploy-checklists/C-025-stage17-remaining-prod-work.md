@@ -2,10 +2,10 @@
 
 > **⚠️ SUPERSEDED — HISTORICAL RECORD (resolved 2026-07-20).** The "remaining PROD work" below is **done**. C-025 Stage 17 Zoom recording **credit** is **COMPLETE in PROD** (Airtable Automation **117** v1.1.1 / **057** v1.3 / **042** v3.1 ON; **101** unchanged; schema/formulas/lookups migrated). The § 6 "Approval email" note still shows the old **three-part** send key — the canonical key is the **four-part** `ZOOM_REC_EMAIL|{EnrollmentRID}|{ZoomMeetingRID}|{ZoomAttendanceRID}` (Airtable Automation **117** → **Make** identifier **117f**), and the current 117f script (**v1.1**) writes **no** Airtable records (Make owns dedupe). Retained for historical evidence only. **Authoritative current state:** [Stage 17 current PROD progress](../status/C-025-stage17-current-prod-progress.md) · credit evidence [prod-live](./C-025-stage17-prod-live-2026-07-20.md) · email workflow [PROD 117f](./C-025-117f-prod-zoom-recording-approval-email.md).
 
-**Date written:** 2026-07-18  
-**Original readiness docs dated:** 2026-07-18  
-**Branch:** `feature/c025-stage17-zoom-attendance` @ `2db98a0`  
-**Manifest version:** `1.0.0`  
+**Date written:** 2026-07-18
+**Original readiness docs dated:** 2026-07-18
+**Branch:** `feature/c025-stage17-zoom-attendance` @ `2db98a0`
+**Manifest version:** `1.0.0`
 **Mode:** Read-only audit + documentation — **no PROD Airtable changes** · **no automation enablement** · **115 not installed**
 
 **Companion docs:**
@@ -139,7 +139,7 @@ PROD Stage 17 schema migration is **in progress**. Mike-stated progress has move
 | Bucket `Zoom Attendance` | Verify |
 | Source option `Zoom Meeting Recording Quiz` | Requires manual Airtable setup / connector if supported (**update** in manifest) |
 | Live source `Zoom Meeting Attendance Base` | Verify |
-| No ZA link required (missing in DEV too) | Leave unchanged |
+| No ZA link required (missing in Production too) | Leave unchanged |
 
 ### Automation changes
 
@@ -202,11 +202,11 @@ See §7. Status: Complete but requires configuration verification.
 
 ## 4. Description mismatches (manifest vs intended architecture)
 
-| Field | Manifest / DEV description issue | Correct intent |
+| Field | Manifest / Production description issue | Correct intent |
 |-------|----------------------------------|----------------|
 | Zoom Attendance.`Gate Credit Applied?` | “Enrollment added to Zoom Meeting **Attendees** for gate” | Flag-only stamp; recording path **must never** write Attendees |
 | Zoom Attendance.`Perfect Week Credit Applied?` | “counted for Perfect Week **via Attendees**” | Flag-only; 057 v1.3 should count recording without Attendees write |
-| Zoom Attendance table create item | “primary field = **Name**” | DEV primary is **`Id` autonumber** (matches Mike progress) |
+| Zoom Attendance table create item | “primary field = **Name**” | Production primary is **`Id` autonumber** (matches Mike progress) |
 | XP Events.`XP Source` update item | Description `Achivement Unlock` (typo / wrong) | Add option **`Zoom Meeting Recording Quiz`** |
 | Config.`Recording Path Enabled?` | “no ZM Effective this slice” | Accurate — path switch is Config-only |
 | Reciprocal links | Generic “Stage 17…” on ZA side | Acceptable; Attendees description correctly says LIVE ONLY |
@@ -256,7 +256,7 @@ Fix descriptions in Airtable UI when convenient; do not let outdated Attendees w
 
 ## 7. Required Config values (Stage 17 defaults)
 
-| Field | Expected Stage 17 default / DEV enabled sample |
+| Field | Expected Stage 17 default / Production enabled sample |
 |-------|-----------------------------------------------|
 | Recording Path Enabled? | **true** |
 | Recording Makeup Enabled? | true on enabled sample |

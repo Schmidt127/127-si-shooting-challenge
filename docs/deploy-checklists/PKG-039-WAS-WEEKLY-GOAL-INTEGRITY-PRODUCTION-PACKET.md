@@ -7,7 +7,7 @@
 ## Separate operational lanes, target scripts, and OFF/ON sequence
 
 This is a Mike-operated Production packet only after the same committed files
-pass the listed DEV proofs. Repository tests do not constitute Production proof.
+pass the listed Production proofs. Repository tests do not constitute Production proof.
 
 ### Lane A — canonical WAS, goal, and weekly schedule
 
@@ -37,7 +37,7 @@ attestation, email/Make isolation, and approval before enablement.
 
 1. Capture the current ON/OFF state and trigger/input screenshots for both
    lanes. Leave 068 OFF.
-2. For isolated DEV proof, also turn OFF 072, 079, 119, 074, and the relevant
+2. For isolated Production proof, also turn OFF 072, 079, 119, 074, and the relevant
    Make scenarios. Do not clear readiness checkboxes as cleanup.
 3. Paste each committed script from its lane only (docblock through end; omit
    its GitHub header), confirm the exact trigger/input, then leave it OFF until
@@ -45,7 +45,7 @@ attestation, email/Make isolation, and approval before enablement.
 4. Enable Lane A only as **031 → 032 → 118**, with 118 first using
    `dryRun=true`. Enable Lane B scripts only under their separate approvals and
    isolated fixtures. Restore captured ON/OFF state only after all applicable
-   stop conditions remain clear. Production activation is Mike-only after DEV
+   stop conditions remain clear. Production activation is Mike-only after Production
    evidence and approval.
 
 ### Required `Target Goal Shots.Program Instance` field
@@ -145,7 +145,7 @@ in force until Mike releases them.
 3. Resolve any duplicate canonical identity, wrong-owner link, multiple goal,
    or cross-Program/year result manually before enabling a writer. Stop rather
    than selecting a first row.
-4. In DEV, run **Lane A** in this order: 031, 032, then 118. Paste docblock
+4. In Production, run **Lane A** in this order: 031, 032, then 118. Paste docblock
    through end (not the GitHub header). Verify the exact triggers before
    enabling: 031 counted Submissions; 032 WAS needing goal; 118 Sunday 05:00
    America/Denver. `033` is not part of PKG-039 deployment; use its separately
@@ -160,11 +160,11 @@ in force until Mike releases them.
    057, 058, 076, or 101 only as separately approved Lane B tests; do not infer
    their proof from Lane A and do not enable an email sender during this
    package.
-7. Only after DEV evidence is accepted and Mike approves Production, repeat the
+7. Only after Production evidence is accepted and Mike approves Production, repeat the
    exact paste/enable order in Production. Do not merge, deploy, or paste from
    this packet itself.
 
-## Required DEV/Production evidence worksheet
+## Required Production/Production evidence worksheet
 
 For each controlled fixture, record Enrollment, School Year, Program Instance,
 Week, WAS ID, Summary Key, source record, action/status/debug outputs, before/
@@ -197,9 +197,9 @@ Stop immediately on more than one canonical WAS, a Summary Key/identity
 mismatch, any cross-Program/year link, multiple goal, wrong-owner backlink,
 unsettled formula presented as zero, unexpected 068 execution,
 email/Make invocation, or progression-field write. Roll back by turning OFF
-only the just-enabled DEV automation and restoring the prior script from the
+only the just-enabled Production automation and restoring the prior script from the
 version capture; do not delete records or clear links blindly.
 
 After Mike releases PKG-006R and PKG-036 locks, the first action is a fresh
-read-only preflight followed by one controlled DEV first-create/replay fixture,
+read-only preflight followed by one controlled production-only validation-create/replay fixture,
 with all email and progression side effects disabled.

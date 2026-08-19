@@ -17,7 +17,7 @@ Guidance for AI assistants (Cursor, etc.) working in **`127-si-shooting-challeng
 
 ## Start here
 
-0. [docs/ENGINEERING_CONSTITUTION.md](./docs/ENGINEERING_CONSTITUTION.md)  -  **highest-level engineering law** (GitHub, DEV-first, priorities)
+0. [docs/ENGINEERING_CONSTITUTION.md](./docs/ENGINEERING_CONSTITUTION.md)  -  **highest-level engineering law** (GitHub, production safety, priorities)
 1. [docs/agent-runs/00-START-HERE.md](./docs/agent-runs/00-START-HERE.md)  -  **controlled four-agent workflow** (Lead / Implementation / Testing / Research)
 2. [docs/agent-runs/CONTROL.json](./docs/agent-runs/CONTROL.json)  -  **four-agent resume source of truth** (read before multi-agent work; verify git SHA)
 3. [docs/SESSION_HANDOFF-2026-07-06.md](./docs/SESSION_HANDOFF-2026-07-06.md)  -  **latest session handoff** (bases, blockers, schema snapshots)
@@ -75,14 +75,14 @@ Use this model for controlled multi-agent packages. Role docs live under `docs/a
 
 **Hard stops (all four roles):**
 
-- DEV only  -  no Production access
+- Production-only environment  -  use read-only checks by default
 - No Airtable schema changes without Mike authorization
 - No credential or secret changes
 - No deployment (Vercel, AWS, Make prod, Airtable prod)
 - No destructive Git (`reset --hard`, `clean`, force push, branch delete)
 - Workers cannot merge  -  only Lead integrates worker branches
 - Mike must approve any merge to `master` / `main`
-- No live Airtable access unless Mike authorizes a named DEV check
+- No live Airtable mutation unless Mike explicitly authorizes the named Production action
 
 Launch prompts: [docs/agent-runs/05-LAUNCH-PROMPTS.md](./docs/agent-runs/05-LAUNCH-PROMPTS.md).
 
@@ -117,9 +117,9 @@ Include:
 ## Hard constraints
 
 - **Never commit secrets**  -  `.env`, PATs, webhook URLs with tokens
-- **DEV before Production**  -  automations, formulas, views, interfaces, Make scenarios, scripts, schema  -  test in DEV first ([doc 04](./docs/v2/04-ai-development-standards.md))
-- **Promotion doc required**  -  DEV changes are not official until Cursor documents prod steps in `docs/deploy-checklists/` ([doc 04 Â§ Official promotion documentation](./docs/v2/04-ai-development-standards.md#official-promotion-documentation-required))
-- **Airtable production writes**  -  GitHub â†' DEV test â†' Mike approval â†' prod paste â†' `CHANGELOG.md`
+- **Production-only operation**  -  validate offline first, use dry-runs/read-only probes where available, and require Mike's explicit authorization for live mutations ([doc 04](./docs/v2/04-ai-development-standards.md))
+- **Change evidence required**  -  live changes are not official until implementation and verification evidence is documented in `docs/deploy-checklists/`
+- **Airtable production writes**  -  GitHub â†' offline validation â†' Mike approval â†' controlled Production action â†' verification â†' `CHANGELOG.md`
 - **Audits/backfills**  -  dry-run first; explicit `CONFIRM_WRITE` / `CONFIRM_DELETE` for writes
 - **Web Airtable reads**  -  server-side only (`lib/airtable/`); never expose `AIRTABLE_API_TOKEN` to the browser
 - **XP idempotency**  -  one source record â†' one XP Event; use Source Key patterns from automation scripts

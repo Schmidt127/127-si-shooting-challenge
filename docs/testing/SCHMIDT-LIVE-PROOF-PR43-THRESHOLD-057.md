@@ -1,9 +1,9 @@
 # Schmidt Live-Proof Pack — PR #43 (035 v1.1 + 057 v1.4)
 
-**Enrollment:** Schmidt `recgP9qZYjAhE7NXm`  
-**Athlete:** `recgqVstObQRzgXJF`  
-**Must remain:** `Active?` = true; public visibility unchanged  
-**Date:** 2026-07-25  
+**Enrollment:** Schmidt `recgP9qZYjAhE7NXm`
+**Athlete:** `recgqVstObQRzgXJF`
+**Must remain:** `Active?` = true; public visibility unchanged
+**Date:** 2026-07-25
 **Repo status:** Ready for PROD Paste — do not mark Complete until this pack passes
 
 ---
@@ -76,7 +76,7 @@
 | Step | Exact action |
 |------|----------------|
 | 1 | From Preflight step 3: if a legacy Source Key exists for Schmidt + same week + XP Source `Weekly Threshold 100`, note it. |
-| 2 | If **no** legacy row exists: create **one controlled** XP Event manually (DEV preferred; PROD only if Mike approves): Enrollment=Schmidt, Week=same, XP Bucket=`Weekly Threshold`, XP Source=`Weekly Threshold 100`, Source Key=`LEGACY_THRESHOLD_TEST\|recgP9qZYjAhE7NXm\|{weekId}` (intentionally non-canonical). |
+| 2 | If **no** legacy row exists: create **one controlled** XP Event manually (Production preferred; PROD only if Mike approves): Enrollment=Schmidt, Week=same, XP Bucket=`Weekly Threshold`, XP Source=`Weekly Threshold 100`, Source Key=`LEGACY_THRESHOLD_TEST\|recgP9qZYjAhE7NXm\|{weekId}` (intentionally non-canonical). |
 | 3 | Ensure Goal Completion ≥ 100%; Requeue; run 035. |
 
 **Expected:** No second award for 100% tier (`skipVia` = `xp_source_label`). Higher unmet tiers may still create.

@@ -107,8 +107,8 @@
 + * - errorOut, debugStep, quizSubmissionId, homeworkCompletionId, submissionIdOut, assetIdsOut
 + *
 + * AUTHORITY
-+ * - docs/v2/C009_HW17_ATTACHMENT_DEV_INSTALL.md
-+ * - docs/v2/DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md
++ * - docs/v2/C009_HW17_ATTACHMENT_PROD_INSTALL.md
++ * - docs/v2/PROD_FIELD_TRIGGER_INVENTORY_2026-07-16.md
   ************************************************************/
  
  // @ts-nocheck

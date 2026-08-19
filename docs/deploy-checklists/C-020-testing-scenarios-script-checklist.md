@@ -1,16 +1,16 @@
 # C-020 — Testing Scenarios script checklist (future)
 
-**Backlog:** C-020  
-**Status:** **DEV functional complete** — Automation **115** v1.3 (Tests A–D + functional live **E/F/G** PASS 2026-07-07). Production not deployed  
-**Environment:** DEV only (`appTetnuCZlCZdTCT`) until promotion doc + Mike approval
+**Backlog:** C-020
+**Status:** **Production functional complete** — Automation **115** v1.3 (Tests A–D + functional live **E/F/G** PASS 2026-07-07). Production not deployed
+**Environment:** Production only (`appn84sqPw03zEbTT`) until promotion doc + Mike approval
 
-**Functional complete scope (2026-07-07):** Daily, Homework, and Video intake paths verified on DEV via **115**. **Out of scope / not tested:** Homework XP after coach review (**064/065**); **070a/070b** Make/S3 upload; combined **Homework + Video** scenario (115 v1.3); Production Airtable paste.
+**Functional complete scope (2026-07-07):** Daily, Homework, and Video intake paths verified on Production via **115**. **Out of scope / not tested:** Homework XP after coach review (**064/065**); **070a/070b** Make/S3 upload; combined **Homework + Video** scenario (115 v1.3); Production Airtable paste.
 
 **Wave 7 upload (2026-07-08):** Runtime = **Lambda** ([C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md)). SDK proof + **Lambda handler PASS** on H2 asset `recLAk8TA4lfbA6eu`. Make S3 **dropped**. **070a/070b OFF.**
 
-**Architecture:** [testing-and-intake-architecture.md](../testing-and-intake-architecture.md) § C-020  
-**Testing views (C-019):** [C-019 Testing views verification checklist](./C-019-testing-views-verification-checklist.md) — manual Airtable UI; OMNI cannot audit view filters  
-**Table:** **Testing Scenarios** (`tblEQLsXTCwx0iOd8`) on DEV
+**Architecture:** [testing-and-intake-architecture.md](../testing-and-intake-architecture.md) § C-020
+**Testing views (C-019):** [C-019 Testing views verification checklist](./C-019-testing-views-verification-checklist.md) — manual Airtable UI; OMNI cannot audit view filters
+**Table:** **Testing Scenarios** (`tblEQLsXTCwx0iOd8`) on Production
 
 ---
 
@@ -18,12 +18,12 @@
 
 | Finding | Why it matters |
 |---------|----------------|
-| **Manual DEV Submissions are not reliable** | Rows typed into Submissions may not run **023**, **005**, **009**, **010**, **031**, etc. unless shaped exactly like Fillout |
+| **Manual Production Submissions are not reliable** | Rows typed into Submissions may not run **023**, **005**, **009**, **010**, **031**, etc. unless shaped exactly like Fillout |
 | **Manual rows are not enough** | Operator-created incomplete rows cannot validate pipeline behavior |
 | **Testing Scenarios must create Fillout-shaped Submissions** | Only production-shaped intake produces trustworthy downstream state for **066**, upload, homework, and video tests |
 | **066 depends on real pipeline state** | Shot milestone logic uses counted submissions from a enrollment that went through intake — not ad-hoc manual fields |
 
-**066 DEV test** completed separately (Easton Hill) — see [066 dev checklist](./066-v3.1-dev-deploy.md). C-020 provides ongoing Fillout-shaped DEV intake for Schmidt and future scenarios.
+**066 Production test** completed separately (Easton Hill) — see [066 production checklist](./066-v3.1-production-deploy.md). C-020 provides ongoing Fillout-shaped Production intake for Schmidt and future scenarios.
 
 ---
 
@@ -31,7 +31,7 @@
 
 ### Required
 
-- **Pipeline-ready submission path defined** for DEV testing — Fillout-shaped Submission via C-020 **or** verified existing DEV row ([066 dev deploy checklist](./066-v3.1-dev-deploy.md))
+- **Pipeline-ready submission path defined** for Production testing — Fillout-shaped Submission via C-020 **or** verified existing Production row ([066 production deploy checklist](./066-v3.1-production-deploy.md))
 
 **Daily Submission MVP verified** 2026-07-06 — Homework and Video branches may proceed per [upload-workflow-homework-video.md](../upload-workflow-homework-video.md).
 
@@ -62,9 +62,9 @@ When implemented, the Cursor script **must** follow these steps in order:
 
 ---
 
-## Final DEV field list (OMNI — 2026-07-05)
+## Final Production field list (OMNI — 2026-07-05)
 
-Authoritative export: DEV base `appTetnuCZlCZdTCT`, table **Testing Scenarios** (`tblEQLsXTCwx0iOd8`).
+Authoritative export: Production base `appn84sqPw03zEbTT`, table **Testing Scenarios** (`tblEQLsXTCwx0iOd8`).
 
 | Field | Airtable type | Field ID | Script / operator role |
 |-------|---------------|----------|------------------------|
@@ -72,13 +72,13 @@ Authoritative export: DEV base `appTetnuCZlCZdTCT`, table **Testing Scenarios** 
 | **Scenario Type** | singleSelect | `fldcTd7qaFhyKZp5Q` | Preset — Daily Submission, Homework, Homework + Video, Three Video Upload, Milestone Crossing, Perfect Week, Backdated Submission, Parent Feedback, Weekly Summary, Award Generation, Other |
 | **Test Status** | singleSelect | `fldji9YCoxcTIR6Cu` | Operator workflow — Not Started, Queued, In Progress, Blocked, Completed, Rejected |
 | **Operator Assigned** | collaborator | `fldTGPN6emJvYb03J` | Operator UX — recommended; does not affect script behavior |
-| **Related Enrollment** | link → Enrollments | `fldPylkKBdhFTTDCL` | Required — Schmidt/testing or DEV test enrollment; pre-link on created Submission |
+| **Related Enrollment** | link → Enrollments | `fldPylkKBdhFTTDCL` | Required — Schmidt/testing or Production test enrollment; pre-link on created Submission |
 | **Submission Date** | date | `fldNCS0y5Ez4pFccA` | Maps to Submission activity date |
-| **Shot Total** | number | *(added DEV 2026-07-06)* | Maps to Submission **Shot Total** — Daily Submission MVP |
+| **Shot Total** | number | *(added Production 2026-07-06)* | Maps to Submission **Shot Total** — Daily Submission MVP |
 | **Intake Attachments** | multipleAttachments | `fldYubBWgAKHstQ6P` | **Homework** → Submission **HW Sub 1**; **Video** → Submission **Video Upload** |
-| **Homework Assignment** | link → FBC Curriculum - SYNC | *(OMNI DEV 2026-07-06)* | Required for **Homework** scenario — maps to **Homework Name 1** |
-| **Video Feedback Focus** | singleSelect | *(OMNI DEV 2026-07-06)* | Required for **Video Upload** / **Homework + Video** — submission-level focus |
-| **Video Feedback Question** | multilineText | *(OMNI DEV 2026-07-06)* | Required for video scenarios — maps to Submission **Video Feedback Note** |
+| **Homework Assignment** | link → FBC Curriculum - SYNC | *(OMNI Production 2026-07-06)* | Required for **Homework** scenario — maps to **Homework Name 1** |
+| **Video Feedback Focus** | singleSelect | *(OMNI Production 2026-07-06)* | Required for **Video Upload** / **Homework + Video** — submission-level focus |
+| **Video Feedback Question** | multilineText | *(OMNI Production 2026-07-06)* | Required for video scenarios — maps to Submission **Video Feedback Note** |
 | **Scenario Requirements** | multilineText | `fldVWP6MVqrBXqa6J` | Operator scenario inputs / constraints |
 | **Test Notes** | multilineText | `fldD8y9YrgIhjiqfu` | Operator notes |
 | **Operator Feedback** | multilineText | `fldslXpxwlEBxousb` | Operator feedback |
@@ -120,7 +120,7 @@ Authoritative export: DEV base `appTetnuCZlCZdTCT`, table **Testing Scenarios** 
 |-------------------------|---------------|
 | **Related Enrollment** | Must be one approved controlled Schmidt enrollment: `recgP9qZYjAhE7NXm` or `recCyFEPeATOVNlr9` |
 | **Submission Date** | Submission **Activity Date** |
-| **Shot Total** | Submission **Shot Total** (number — added DEV 2026-07-06) |
+| **Shot Total** | Submission **Shot Total** (number — added Production 2026-07-06) |
 | **Run Test?** | Trigger; cleared after run |
 | **Dry Run?** | Preview only — no Submission create |
 | **Scenario Requirements** | Not used in v1.0 (optional operator notes) |
@@ -148,14 +148,14 @@ Week, Submission Assets, XP Events, Homework/Video attachment fields, computed/f
 | Enrollment | Record ID | Notes |
 |------------|-----------|-------|
 | Schmidt, Testing - 2025-2026 | `recgP9qZYjAhE7NXm` | Athlete `recgqVstObQRzgXJF`; Grade Band K-2; `Active?` false |
-| *Expanded allowlist* | *Deferred* | Five other DEV test enrollments + Bakken — post-MVP |
+| *Expanded allowlist* | *Deferred* | Five other Production test enrollments + Bakken — post-MVP |
 
 ---
 
-## G2 — Homework Upload field map (115 v1.1 — DEV verified 2026-07-07)
+## G2 — Homework Upload field map (115 v1.1 — Production verified 2026-07-07)
 
-**Scenario Type:** `Homework`  
-**Design:** [upload-workflow-homework-video.md](../upload-workflow-homework-video.md)  
+**Scenario Type:** `Homework`
+**Design:** [upload-workflow-homework-video.md](../upload-workflow-homework-video.md)
 **Script:** `115-engineering-test-framework-run-testing-scenario-daily-submission.js` **v1.1**
 
 ### Testing Scenarios → read
@@ -194,7 +194,7 @@ Week, Submission Assets, XP Events, Homework/Video attachment fields, computed/f
 
 ### Downstream (normal automations — do not chain manually)
 
-**005** → **009** (N assets: HW1-1 … HW1-N) → **020** (one Homework Completion, all assets linked) → **070a** (DEV OFF).
+**005** → **009** (N assets: HW1-1 … HW1-N) → **020** (one Homework Completion, all assets linked) → **070a** (Production OFF).
 
 ### Acceptance criteria
 
@@ -207,13 +207,13 @@ Week, Submission Assets, XP Events, Homework/Video attachment fields, computed/f
 
 ---
 
-## G3 — Video Upload field map (115 v1.3 — DEV verified 2026-07-07)
+## G3 — Video Upload field map (115 v1.3 — Production verified 2026-07-07)
 
-**Scenario Type:** `Video` (alias: `Three Video Upload`)  
-**Design:** [upload-workflow-homework-video.md](../upload-workflow-homework-video.md)  
+**Scenario Type:** `Video` (alias: `Three Video Upload`)
+**Design:** [upload-workflow-homework-video.md](../upload-workflow-homework-video.md)
 **Script:** `115-engineering-test-framework-run-testing-scenario-daily-submission.js` **v1.3**
 
-**v1.3 field model (confirmed):** Video files live on Testing Scenarios **Intake Attachments** only. Script copies to Submissions **Video Upload** for 009.  
+**v1.3 field model (confirmed):** Video files live on Testing Scenarios **Intake Attachments** only. Script copies to Submissions **Video Upload** for 009.
 **Design:** [upload-workflow-homework-video.md](../upload-workflow-homework-video.md)
 
 ### Testing Scenarios → read
@@ -239,7 +239,7 @@ Week, Submission Assets, XP Events, Homework/Video attachment fields, computed/f
 
 ### Downstream
 
-**005** → **009** (VIDEO-1 … VIDEO-N assets + sequence) → **013** (one VF per asset, inherit Focus + Question) → naming gate → **070b** (DEV OFF).
+**005** → **009** (VIDEO-1 … VIDEO-N assets + sequence) → **013** (one VF per asset, inherit Focus + Question) → naming gate → **070b** (Production OFF).
 
 ### Acceptance criteria
 
@@ -254,7 +254,7 @@ Week, Submission Assets, XP Events, Homework/Video attachment fields, computed/f
 
 ## OMNI — pipeline fields still needed (post Testing Scenarios)
 
-Testing Scenarios intake fields are **complete** on DEV. Pipeline tables still need:
+Testing Scenarios intake fields are **complete** on Production. Pipeline tables still need:
 
 | Table | Field | Type | MVP |
 |-------|-------|------|-----|
@@ -275,7 +275,7 @@ Testing Scenarios intake fields are **complete** on DEV. Pipeline tables still n
 
 ---
 
-## 115 — automation approach (closed DEV MVP)
+## 115 — automation approach (closed Production MVP)
 
 | Decision | Choice |
 |----------|--------|
@@ -287,11 +287,11 @@ Testing Scenarios intake fields are **complete** on DEV. Pipeline tables still n
 
 ---
 
-## DEV test log — Automation 115 v1.1/v1.3 Homework + Video (2026-07-07)
+## Production test log — Automation 115 v1.1/v1.3 Homework + Video (2026-07-07)
 
-**Base:** DEV `appTetnuCZlCZdTCT`  
-**Script:** `115-engineering-test-framework-run-testing-scenario-daily-submission.js` **v1.3** (Homework from v1.1; Video v1.3)  
-**External sends:** **070a** / **070b** OFF on DEV
+**Base:** Production `appn84sqPw03zEbTT`
+**Script:** `115-engineering-test-framework-run-testing-scenario-daily-submission.js` **v1.3** (Homework from v1.1; Video v1.3)
+**External sends:** **070a** / **070b** OFF on Production
 
 ### Test A — Homework dry run
 
@@ -335,11 +335,11 @@ Testing Scenarios intake fields are **complete** on DEV. Pipeline tables still n
 
 ---
 
-## DEV test log — Automation 115 Daily functional live (2026-07-07)
+## Production test log — Automation 115 Daily functional live (2026-07-07)
 
-**Base:** DEV `appTetnuCZlCZdTCT`  
-**Script:** `115-engineering-test-framework-run-testing-scenario-daily-submission.js` **v1.3** (Daily branch unchanged from v1.0)  
-**Row:** `C-020 Functional — Daily shots Schmidt`  
+**Base:** Production `appn84sqPw03zEbTT`
+**Script:** `115-engineering-test-framework-run-testing-scenario-daily-submission.js` **v1.3** (Daily branch unchanged from v1.0)
+**Row:** `C-020 Functional — Daily shots Schmidt`
 **Trigger:** API flip **Dry Run?** off + **Run Test?** on (prior run on same row was dry_run only)
 
 ### Test E — Daily Submission live (functional retest)
@@ -369,11 +369,11 @@ Testing Scenarios intake fields are **complete** on DEV. Pipeline tables still n
 
 ---
 
-## DEV test log — Automation 115 Video functional live (2026-07-07)
+## Production test log — Automation 115 Video functional live (2026-07-07)
 
-**Base:** DEV `appTetnuCZlCZdTCT`  
-**Script:** `115-engineering-test-framework-run-testing-scenario-daily-submission.js` **v1.3**  
-**Row:** `C-020 Functional — Video 2-file Schmidt`  
+**Base:** Production `appn84sqPw03zEbTT`
+**Script:** `115-engineering-test-framework-run-testing-scenario-daily-submission.js` **v1.3**
+**Row:** `C-020 Functional — Video 2-file Schmidt`
 **Trigger:** New scenario row created with **Dry Run?** off + **Run Test?** on (2 files copied from Test D **Intake Attachments**)
 
 ### Test F — Video functional live (2 files)
@@ -407,11 +407,11 @@ Testing Scenarios intake fields are **complete** on DEV. Pipeline tables still n
 
 ---
 
-## DEV test log — Automation 115 Homework functional live (2026-07-07)
+## Production test log — Automation 115 Homework functional live (2026-07-07)
 
-**Base:** DEV `appTetnuCZlCZdTCT`  
-**Script:** `115-engineering-test-framework-run-testing-scenario-daily-submission.js` **v1.3**  
-**Row:** `C-020 Functional — Homework 2-file Schmidt`  
+**Base:** Production `appn84sqPw03zEbTT`
+**Script:** `115-engineering-test-framework-run-testing-scenario-daily-submission.js` **v1.3**
+**Row:** `C-020 Functional — Homework 2-file Schmidt`
 **Trigger:** New scenario row created with **Dry Run?** off + **Run Test?** on (2 files + same **Homework Assignment** as Test B)
 
 ### Test G — Homework functional live (2 files)
@@ -446,9 +446,9 @@ Testing Scenarios intake fields are **complete** on DEV. Pipeline tables still n
 
 ---
 
-## DEV functional live summary (2026-07-07)
+## Production functional live summary (2026-07-07)
 
-All three **115** scenario branches exercised end-to-end on DEV (Schmidt enrollment; intake automations ON; **070a/070b OFF**):
+All three **115** scenario branches exercised end-to-end on Production (Schmidt enrollment; intake automations ON; **070a/070b OFF**):
 
 | Test | Scenario Type | Testing Scenarios | Submission | Result |
 |------|---------------|-------------------|--------------|--------|
@@ -464,7 +464,7 @@ All three **115** scenario branches exercised end-to-end on DEV (Schmidt enrollm
 
 | Item | Detail |
 |------|--------|
-| **Shot Total** on **Testing Scenarios** | **Done** — number field added DEV 2026-07-06 (writable, not computed). |
+| **Shot Total** on **Testing Scenarios** | **Done** — number field added Production 2026-07-06 (writable, not computed). |
 | **Test Intake Name** (primary) | Legacy label from earlier naming — acceptable; optional rename to **Scenario Name** later. |
 
 ---
@@ -484,14 +484,14 @@ Intentionally deferred — do not build during Phase 2:
 
 - Pipeline records must look as if created by **Fillout** — no `Is Test Record?`, no **Test Status** on pipeline tables.
 - Framework fields (**Scenario Type**, **Test Status**, **Expected/Actual Result**, **Pass/Fail Notes**, **Last Run** fields) live on **Testing Scenarios only**.
-- DEV first → promotion doc → Production mirror (structure only).
+- production-only validation → promotion doc → Production mirror (structure only).
 
 ---
 
 ## After script exists
 
-- [x] Dry-run on DEV with one scenario row (2026-07-06)
-- [x] Homework + Video DEV tests A–D (2026-07-07, v1.3)
+- [x] Dry-run on Production with one scenario row (2026-07-06)
+- [x] Homework + Video Production tests A–D (2026-07-07, v1.3)
 - [x] Daily functional live retest E (2026-07-07) — `recQRaFbqTiiBbrcU` → `recAKNWwD6zn8hxwv`
 - [x] Video functional live retest F (2026-07-07) — `recvuvDdglwY2I7nu` → `recMkN0fcgKDt9AOn`
 - [x] Homework functional live retest G (2026-07-07) — `rec14HLmrN5suEyWs` → `recfVEP3SAmPP6jiw`
@@ -501,11 +501,11 @@ Intentionally deferred — do not build during Phase 2:
 
 ---
 
-## DEV test log — Automation 115 v1.0 (2026-07-06)
+## Production test log — Automation 115 v1.0 (2026-07-06)
 
-**Base:** DEV `appTetnuCZlCZdTCT`  
-**Automation:** 115 - Engineering Test Framework - Run Testing Scenario Daily Submission  
-**Script:** `115-engineering-test-framework-run-testing-scenario-daily-submission.js` v1.0  
+**Base:** Production `appn84sqPw03zEbTT`
+**Automation:** 115 - Engineering Test Framework - Run Testing Scenario Daily Submission
+**Script:** `115-engineering-test-framework-run-testing-scenario-daily-submission.js` v1.0
 **Result:** **PASS**
 
 | Item | Value |
@@ -545,7 +545,7 @@ Intentionally deferred — do not build during Phase 2:
 
 **Runtime:** [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md) — **Lambda** (`lambda/upload-asset/`). Make **Amazon S3 Upload** **dropped**.
 
-**070a / 070b:** **OFF** — [H2 gate](./C-013-sdk-hybrid-runtime.md#gate--required-before-enabling-dev-070b) **PASS** (SDK + Lambda handler); **AWS deploy + Make dry-run** next.
+**070a / 070b:** **OFF** — [H2 gate](./C-013-sdk-hybrid-runtime.md#gate--required-before-enabling-production-070b) **PASS** (SDK + Lambda handler); **AWS deploy + Make dry-run** next.
 
 ### H2 — Video 1-file — SDK **PASS** (2026-07-08)
 
@@ -554,9 +554,9 @@ Intentionally deferred — do not build during Phase 2:
 | **Scenario** | `recd9CxYgdJD2T435` (clone Test F, 1 file, Activity Date `2026-06-30` / Week 10) |
 | **Submission** | `recv5dbLefJipUvmh` |
 | **Asset** | `recL9r4a7navUxEhg` (`Pending Link` → SDK `Uploaded`) |
-| **Probe** | `allPass=true` — [verify](../../tools/airtable/_preview/c013-dev-h2-sdk-proof-recL9r4a7navUxEhg-verify.json) |
+| **Probe** | `allPass=true` — [verify](../../tools/airtable/_preview/c013-prod-h2-sdk-proof-recL9r4a7navUxEhg-verify.json) |
 | **C-023** | Exact duplicate of `recBBi80bYuxXifVj`; flags written; upload not blocked |
-| **Artifact** | [proof](../../tools/airtable/_preview/c013-dev-h2-sdk-proof-recL9r4a7navUxEhg.json) |
+| **Artifact** | [proof](../../tools/airtable/_preview/c013-prod-h2-sdk-proof-recL9r4a7navUxEhg.json) |
 
 ### H2 — Video 1-file — Lambda handler **PASS** (2026-07-08)
 
@@ -565,15 +565,15 @@ Intentionally deferred — do not build during Phase 2:
 | **Scenario** | `rec1fPdnIkhHfyLUN` |
 | **Submission** | `reckdsMrSJFADmopS` |
 | **Asset** | `recLAk8TA4lfbA6eu` (`Pending Link` → handler `Uploaded`) |
-| **Invoke** | `python c013_dev_lambda_invoke.py recLAk8TA4lfbA6eu` (in-process; same code as Lambda zip) |
-| **Probe** | `allPass=true` — [verify](../../tools/airtable/_preview/c013-dev-lambda-h2-proof-recLAk8TA4lfbA6eu-verify.json) |
+| **Invoke** | `python c013_prod_lambda_invoke.py recLAk8TA4lfbA6eu` (in-process; same code as Lambda zip) |
+| **Probe** | `allPass=true` — [verify](../../tools/airtable/_preview/c013-prod-lambda-h2-proof-recLAk8TA4lfbA6eu-verify.json) |
 | **C-023** | `match_found_written_to_existing_field` → first match `recBBi80bYuxXifVj` (4 prior hashes) |
-| **Artifact** | [proof](../../tools/airtable/_preview/c013-dev-lambda-h2-proof-recLAk8TA4lfbA6eu.json) |
+| **Artifact** | [proof](../../tools/airtable/_preview/c013-prod-lambda-h2-proof-recLAk8TA4lfbA6eu.json) |
 | **AWS Lambda** | Not deployed yet — admin IAM required ([DEPLOY.md](../../lambda/upload-asset/DEPLOY.md)) |
 
-Orchestrator: `python c013_dev_h2_video_run.py --confirm-write --prepare-only` then `--poll-only`; invoke: `c013_dev_lambda_invoke.py`.
+Orchestrator: `python c013_prod_h2_video_run.py --confirm-write --prepare-only` then `--poll-only`; invoke: `c013_prod_lambda_invoke.py`.
 
-**Make scenario (prep):** `Shooting Challenge - DEV - Upload Engine - Lambda - v1` — webhook → HTTP → Lambda URL. **Not live-tested** until AWS deploy.
+**Make scenario (prep):** `Shooting Challenge - Production - Upload Engine - Lambda - v1` — webhook → HTTP → Lambda URL. **Not live-tested** until AWS deploy.
 
 ### H1 — Homework 1-file
 
@@ -581,8 +581,8 @@ Orchestrator: `python c013_dev_h2_video_run.py --confirm-write --prepare-only` t
 
 ### Gate before **070b** (summary)
 
-1. Harness-origin video asset processed by upload runtime — **PASS** (SDK + Lambda handler)  
-2. Full writeback contract — **PASS**  
-3. C-023 duplicate behavior tested — **PASS**  
-4. No attachment clear · no Production · no formula cutover — **Enforced**  
+1. Harness-origin video asset processed by upload runtime — **PASS** (SDK + Lambda handler)
+2. Full writeback contract — **PASS**
+3. C-023 duplicate behavior tested — **PASS**
+4. No attachment clear · no Production · no formula cutover — **Enforced**
 5. **070b** still OFF until AWS Lambda deploy + Make dry-run PASS

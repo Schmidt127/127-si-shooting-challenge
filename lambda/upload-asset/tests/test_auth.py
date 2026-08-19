@@ -20,11 +20,11 @@ TEST_SECRET = "test-upload-secret-do-not-commit"
 
 def _config(secret: str | None = TEST_SECRET) -> UploadConfig:
     return UploadConfig(
-        airtable_base_id="appTetnuCZlCZdTCT",
+        airtable_base_id="appn84sqPw03zEbTT",
         airtable_token="pat-test",
         s3_bucket="shooting-challenge-assets",
         aws_region="us-east-2",
-        environment="DEV",
+        environment="Production",
         allow_route_keys=frozenset({"video_feedback"}),
         season_slug="2026-2027",
         challenge_slug="shooting-challenge",
@@ -71,10 +71,10 @@ def test_handler_unauthorized_does_not_process():
     from handler import lambda_handler
 
     env = {
-        "AIRTABLE_BASE_ID": "appTetnuCZlCZdTCT",
+        "AIRTABLE_BASE_ID": "appn84sqPw03zEbTT",
         "AIRTABLE_TOKEN": "pat-test",
         "UPLOAD_WEBHOOK_SECRET": TEST_SECRET,
-        "ENVIRONMENT": "DEV",
+        "ENVIRONMENT": "Production",
         "ALLOW_ROUTE_KEYS": "video_feedback",
     }
     event = {
@@ -94,10 +94,10 @@ def test_handler_authorized_calls_processor():
     from handler import lambda_handler
 
     env = {
-        "AIRTABLE_BASE_ID": "appTetnuCZlCZdTCT",
+        "AIRTABLE_BASE_ID": "appn84sqPw03zEbTT",
         "AIRTABLE_TOKEN": "pat-test",
         "UPLOAD_WEBHOOK_SECRET": TEST_SECRET,
-        "ENVIRONMENT": "DEV",
+        "ENVIRONMENT": "Production",
         "ALLOW_ROUTE_KEYS": "video_feedback",
     }
     payload = {"submissionAssetRecordId": "recTest123456789", "routeKey": "video_feedback"}

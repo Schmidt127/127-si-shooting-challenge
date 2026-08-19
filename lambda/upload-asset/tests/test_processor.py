@@ -41,11 +41,11 @@ BASE_FIELDS = {
 
 def _config() -> UploadConfig:
     return UploadConfig(
-        airtable_base_id="appTetnuCZlCZdTCT",
+        airtable_base_id="appn84sqPw03zEbTT",
         airtable_token="pat-test",
         s3_bucket="shooting-challenge-assets",
         aws_region="us-east-2",
-        environment="DEV",
+        environment="Production",
         allow_route_keys=frozenset({"video_feedback"}),
         season_slug="2026-2027",
         challenge_slug="shooting-challenge",
@@ -288,7 +288,7 @@ class ProcessorTests(unittest.TestCase):
         ):
             write_failure_fields_without_clobbering_retry(
                 token="pat",
-                base_id="appTetnuCZlCZdTCT",
+                base_id="appn84sqPw03zEbTT",
                 record_id=RECORD,
                 error_message="late failure after operator reset",
             )

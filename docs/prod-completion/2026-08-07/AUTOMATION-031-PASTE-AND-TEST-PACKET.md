@@ -18,7 +18,7 @@ This packet documents repository repair status only.
 - The required test is a controlled Production test using the existing valid
   Schmidt Submission; `rec58gdymfPKKeVRI` is a temporary manual-test record
   selection only, with Mike's allowlisted email.
-- No DEV Airtable evidence is required or claimed.
+- No Production Airtable evidence is required or claimed.
 
 ## Airtable automation identity
 

@@ -19,7 +19,7 @@ Shooting Challenge V2 is **not season-ready**. Independently recounting Section 
 
 The shortest safe path is not “build more features.” It is:
 
-1. **Stop following stale OFF/DEV-first/Softr/hoopchallenges guidance** (High conflict set — §12).
+1. **Stop following stale OFF/production-only/Softr/hoopchallenges guidance** (High conflict set — §12).
 2. **Close foundation gaps Mike alone can finish** — automation UI attestation, Testing views, paste packages (067, 057 v1.4), enable decisions (035 OFF→ON when approved).
 3. **Re-prove athlete paths on Schmidt** after the empty-base reset (homework → video → Zoom → streak/milestone → Perfect Week → gates → non-weekly emails).
 4. **Season launch control** (Weeks import, Fillout gates, dry-run SC-135) before reopening intake (SC-146 Deferred).
@@ -82,7 +82,7 @@ Source: all `| SC-… |` rows in master §4 (149 unique IDs, SC-001…SC-149, no
 | B6 | **035 Live Tested but OFF** | Weekly threshold XP not season-enabled | Mike enable after reconcile | SC-049 |
 | B7 | **070a homework S3 intentionally OFF** | Photo/PDF HW upload path incomplete until authorized | Mike decision SC-095 | SC-095, SC-009/010 |
 | B8 | **Season launch not live-installed** | Weeks import / Launch Status / Fillout gates unfinished | Mike + repo CLI | SC-032, SC-065 |
-| B9 | **Stale docs still instruct 118/119 OFF & DEV-first** | Wrong operator actions | Doc refresh SC-139 | — |
+| B9 | **Stale docs still instruct 118/119 OFF & production-only** | Wrong operator actions | Doc refresh SC-139 | — |
 | B10 | **Agent Airtable PAT often missing** | Blocks unattended Schmidt mutation proofs | Mike env | ACCESS-BLOCKER |
 
 ---
@@ -328,7 +328,7 @@ See §6.3. Launch-critical Planned items: **SC-003, SC-005, SC-047, SC-048, SC-1
 | **Make — homework Module 2** | Checklist open | 070a router | SC-101; issues #8 |
 | **Fillout** | Form OFF since C-008 | Season UI defaults; reopen after SC-135 | SC-146; FILLOUT-CERTIFICATION |
 | **Lambda / S3 video** | Historical PROD E2E | Schmidt re-proof | SC-094 |
-| **Lambda / S3 homework 070a** | DEV package | PROD OFF until SC-095 | AUTOMATION_070A_LAUNCH_DECISION |
+| **Lambda / S3 homework 070a** | Production package | PROD OFF until SC-095 | AUTOMATION_070A_LAUNCH_DECISION |
 | **Gmail** | Weekly Live send historically | Non-weekly templates | SC-045 |
 | **Vercel `/shoot`** | Smoke 2026-07-25 + 2026-08-04 HTTP/Playwright | Confirm Fairfield env; Game Manual PDF URL; plaque deploy | SC-149/109/111 |
 | **Webhooks in git** | Never | Secrets only in external systems | operating rules |
@@ -393,9 +393,9 @@ Highest-severity conflicts with master §1 / SC-031 / SC-114 / SC-137 / SC-149:
 | Severity | Stale claim | Where (examples) | Master truth |
 |----------|-------------|------------------|--------------|
 | **High** | Keep 118/119 OFF | `docs/next-wave/automation-ownership/MIKE-ACTIONS.md`; `docs/overnight/MIKE-ACTIONS-TOMORROW.md`; final-reconciliation docs; PR34 reconciliation | Schedules **ON** |
-| **High** | DEV-first forever / never paste without DEV | `docs/ENGINEERING_CONSTITUTION.md`; `docs/v2/04-ai-development-standards.md` | PROD-direct approved |
+| **High** | production-only forever / never paste without Production | `docs/ENGINEERING_CONSTITUTION.md`; `docs/v2/04-ai-development-standards.md` | PROD-direct approved |
 | **High** | Never install 115 in PROD | `AUTOMATION_VERSION_INVENTORY.md`; C-025 release packets | 115 Live Tested (SC-001) |
-| **High** | Stage 16 / 117a–b current | KNOWN_ISSUES K-M1; V2 Zoom DEV install docs | Stage 17 **117**; SC-136 Superseded |
+| **High** | Stage 16 / 117a–b current | KNOWN_ISSUES K-M1; V2 Zoom Production install docs | Stage 17 **117**; SC-136 Superseded |
 | **High** | Softr as launch dependency | SOFTR-CUTOVER-READINESS body | SC-114 Superseded |
 | **High** | Landing = hoopchallenges.com | launch-certification START-HERE/VERCEL; recovery MIKE-NEXT-ACTIONS; truth audit §4 step 1 | Fairfield (SC-149) |
 | **Med** | Prefer quiz PDF | overnight MIKE-ACTIONS-TOMORROW SC-014 | Option B decided |
@@ -521,9 +521,9 @@ All of A, plus:
 11. **XP duplicate / competing writer risks:** 020 vs 067 HC identity; 013 vs 112 Video Feedback; 117 vs 117c Zoom XP; hybrid WAS creators 031/101/118; Threshold dual-ON risk if old writer re-enabled; formula XP vs SHOOTING_BASE economics.
 12. **Not re-tested with Schmidt:** HW/video/Zoom/streak/milestone/PW/gates/homework email/video email/welcome; level-up past Rookie; achievements unlocks; many catalog pages content.
 13. **Unsupported/stale statuses:** Dashboard Built/Planned off-by-one; SC-021 informal bucket; SC-028 “Installed” easy to misread as v1.4; SC-049 LT while OFF; SC-148/149 may need Production verify; overnight decision table still says Prefer PDF.
-14. **Obsolete instruction spreaders:** listed in §12 (OFF schedules, DEV-first, never 115, Stage 16, Softr, hoopchallenges).
+14. **Obsolete instruction spreaders:** listed in §12 (OFF schedules, production-only, never 115, Stage 16, Softr, hoopchallenges).
 15. **Mike decisions before continue:** SC-044/066/081/112/115; 070a timing; 035 enable; Video XP 1vs25; 117 XOR attest; LA/Launch schema authorize; Fairfield env confirm.
-16. **Shortest safe path:** Execute packages **1→10** in §15; do not reopen Fillout until P09 PASS; ignore stale OFF/DEV-first docs.
+16. **Shortest safe path:** Execute packages **1→10** in §15; do not reopen Fillout until P09 PASS; ignore stale OFF/production-only docs.
 
 ---
 
@@ -565,39 +565,39 @@ SC-126 (dual-track), SC-142 (monitoring-only close-out leftovers).
 
 ### P02 — Critical pastes
 
-- **SC:** SC-013, SC-014, SC-021, SC-028, SC-077, SC-049  
-- **Repo:** use `docs/next-wave/homework-pipeline/067-OPTION-B-PROD-INSTALL.md`; `docs/deploy-checklists/057-perfect-week-denver-v1.4.md`; `docs/deploy-checklists/035-weekly-threshold-xp-v1.2.md`  
-- **PROD:** paste scripts; leave 035 OFF until enable approved  
-- **Test:** Option B HC 0 assets → 1 XP; Denver boundary PW; 035 already has proof — enable smoke only  
-- **Risk:** Medium–High (XP writers)  
+- **SC:** SC-013, SC-014, SC-021, SC-028, SC-077, SC-049
+- **Repo:** use `docs/next-wave/homework-pipeline/067-OPTION-B-PROD-INSTALL.md`; `docs/deploy-checklists/057-perfect-week-denver-v1.4.md`; `docs/deploy-checklists/035-weekly-threshold-xp-v1.2.md`
+- **PROD:** paste scripts; leave 035 OFF until enable approved
+- **Test:** Option B HC 0 assets → 1 XP; Denver boundary PW; 035 already has proof — enable smoke only
+- **Risk:** Medium–High (XP writers)
 - **Proof:** record IDs + evidence markdown under `docs/testing/evidence/`
 
 ### P03 — Homework E2E
 
-- **SC:** SC-009–017, SC-071  
-- **Depends:** P01–P02 (067 for quiz)  
-- **Test:** photo (may need 070a decision), written, multi-file, duplicate HC attempt, coach satisfactory → XP → 071 email  
-- **Risk:** Medium  
+- **SC:** SC-009–017, SC-071
+- **Depends:** P01–P02 (067 for quiz)
+- **Test:** photo (may need 070a decision), written, multi-file, duplicate HC attempt, coach satisfactory → XP → 071 email
+- **Risk:** Medium
 - **Watch:** 020 vs 067 dual create
 
 ### P05 — Zoom
 
-- **SC:** SC-073/074, SC-084–091  
-- **Depends:** attest 117 XOR 117c  
-- **Test:** live attend XP; recording credit; Conflict=1 soft-void; gate + PW integration after 057 v1.4  
+- **SC:** SC-073/074, SC-084–091
+- **Depends:** attest 117 XOR 117c
+- **Test:** live attend XP; recording credit; Conflict=1 soft-void; gate + PW integration after 057 v1.4
 - **Risk:** High (double XP)
 
 ### P08 — Season launch
 
-- **SC:** SC-032, SC-065, SC-068  
-- **Repo:** `tools/challenge-year/cli.js generate-week-package`  
-- **PROD:** manual Weeks import; Launch Status fields if authorized  
+- **SC:** SC-032, SC-065, SC-068
+- **Repo:** `tools/challenge-year/cli.js generate-week-package`
+- **PROD:** manual Weeks import; Launch Status fields if authorized
 - **Risk:** Medium (date mapping)
 
 ### P09 — Dry-run gate
 
-- **SC:** SC-005, SC-007, SC-008, SC-135  
-- **Exit:** matrix mostly green on Schmidt; failure paths exercised or explicitly waived  
+- **SC:** SC-005, SC-007, SC-008, SC-135
+- **Exit:** matrix mostly green on Schmidt; failure paths exercised or explicitly waived
 - **Then:** SC-146 reopen decision
 
 ---

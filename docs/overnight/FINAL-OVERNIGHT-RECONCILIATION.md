@@ -10,7 +10,7 @@
 
 > **Agent 13 banner (2026-07-24):** Authoritative completion state after next-wave Agents 9–12 lives in `docs/next-wave/final-reconciliation/FINAL-RECONCILIATION.md` and the updated Completion Master. Key supersessions: (1) Config rows are **year-specific — do not collapse**; (2) **020 v3.0.0** partially replaces **063**; **013 v2.0** replaces **111**; (3) **115** installed + live-tested; (4) WAS creators hybrid **031/118/101**; (5) XP Dedupe Key fields are formula-only.
 
-**Reconciler:** Agent 6 · Branch: `master` · Environment: PROD `appn84sqPw03zEbTT`  
+**Reconciler:** Agent 6 · Branch: `master` · Environment: PROD `appn84sqPw03zEbTT`
 **Controlling plan:** `docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`
 
 ---
@@ -87,7 +87,7 @@ Follow-up from evidence inventory: Agent 3 was mis-located as “commits only”
 
 ### Stale statements corrected in master
 
-1. **PROD is active** — reinforced (not DEV-first).
+1. **PROD is active** — reinforced (not production-only).
 2. **Automation 115** — installed + live-tested (no longer blocked solely on 50/50 slot).
 3. **Deleted automations** — Agent 1 baseline: 043, 032, 033, 063, 111 (UI attestation still required). Classification (Agent 11): **013 v2.0 fully replaces 111** for VF Grade Band; **020 v3.0.0 only partially replaces 063** (asset-path GB; orphan blank-GB HCs may need one-time repair — do not blindly restore 063).
 4. **Upgraded 013 / 020 / 030** — confirmed replaced with newer versions in PROD; **020 PROD canonical = v3.0.0** in Git (`444046e`).

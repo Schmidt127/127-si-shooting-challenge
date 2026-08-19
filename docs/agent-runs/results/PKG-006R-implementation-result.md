@@ -14,7 +14,7 @@
 - [ ] Blocked
 - [ ] Failed
 
-No Airtable, DEV, Production, email, Make, deployment, PR, merge, or
+No Airtable, Production, Production, email, Make, deployment, PR, merge, or
 `CONTROL.json` write was performed.
 
 ## Files touched

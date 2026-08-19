@@ -79,7 +79,7 @@
     ],
     "notes": [
       "Scenario must remain OFF until manual webhook PASS",
-      "Webhook response must map Lambda body to caller (DEV lesson recIYFnfmsPcy7iop)",
+      "Webhook response must map Lambda body to caller (Production lesson recIYFnfmsPcy7iop)",
       "Do not use Amazon S3 Upload module"
     ]
   },

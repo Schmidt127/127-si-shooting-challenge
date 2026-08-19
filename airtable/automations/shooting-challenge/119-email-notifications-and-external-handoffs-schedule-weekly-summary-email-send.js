@@ -76,7 +76,6 @@ At a scheduled time — Weekly — Sunday 10:00 — America/Denver
  * - emptyWeekPolicyOut
  *
  * AUTHORITY
- * - docs/v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md
  * - docs/next-wave/was-email/EMPTY-WEEK-EMAIL-DECISION.md
  ************************************************************/
 

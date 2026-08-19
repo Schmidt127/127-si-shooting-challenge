@@ -35,7 +35,7 @@ test("118/119 default dryRun true; 118 allows Live input and refuses Live+Schmid
   );
   assert.ok(/refuses sendMode=Live when includeSchmidt=true/.test(s118));
   assert.ok(/update\[CONFIG\.was\.sendMode\]\s*=\s*\{\s*name:\s*sendMode\s*\}/.test(s118));
-  assert.ok(/version:\s*"v1\.7"/.test(s118));
+  assert.ok(/version:\s*"v2\.0"/.test(s118));
   assert.ok(/version:\s*"v1\.7"/.test(s119));
   assert.ok(/Program Instance/.test(s118));
   assert.ok(/Program Instance/.test(s119));
@@ -56,13 +56,13 @@ test("118/119 default dryRun true; 118 allows Live input and refuses Live+Schmid
   assert.ok(!/\bfetch\s*\(/.test(s119), "119 must not webhook");
 });
 
-test("074 emits eventId and never clears Weekly Email Sent?", () => {
+test("074 creates the canonical Hub handoff and never writes Weekly Email Sent?", () => {
   const s074 = read("074-email-notifications-and-external-handoffs-send-weekly-summary-email-package-to-make.js");
-  assert.ok(/eventId/.test(s074));
-  assert.ok(/WEEKLY_EMAIL\|/.test(s074));
-  assert.ok(/Do NOT write Weekly Email Sent\? = false/.test(s074));
-  assert.ok(!/successUpdates\[FIELD_EMAIL_SENT\]\s*=\s*false/.test(s074));
-  assert.ok(/Version:\s*v2\.1/.test(s074));
+  assert.ok(/handoffKey/.test(s074));
+  assert.ok(/WEEKLY_ATHLETE_SUMMARY\|WEEKLY_ATHLETE_SUMMARY/.test(s074));
+  assert.ok(/Do not write Weekly Email Sent\?/.test(s074));
+  assert.ok(/Do not write Weekly Email Sent\? or Weekly Email Sent At/.test(s074));
+  assert.ok(/Version:\s*v3\.0/.test(s074));
 });
 
 test("priorSaturdayKeyDenver Sunday→Saturday boundary", () => {
