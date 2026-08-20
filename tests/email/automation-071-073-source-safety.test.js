@@ -62,8 +62,8 @@ t("071 does not write final sent fields", () => {
   assert.doesNotMatch(s071, /\[["']Parent Feedback Sent On["']\]\s*:/);
   assert.doesNotMatch(s071, /\[["']Parent Feedback Sent\?["']\]\s*:/);
 });
-t("073 v4.1 creates Communications Hub queue handoff (not Make webhook)", () => {
-  assert.match(s073, /Version: v4\.1/);
+t("073 v4.2 creates Communications Hub queue handoff (not Make webhook)", () => {
+  assert.match(s073, /Version: v4\.2/);
   assert.match(s073, /Email Handoff Queue/);
   assert.match(s073, /VIDEO_FEEDBACK\|VIDEO_FEEDBACK\|/);
   assert.match(s073, /created_handoff/);
@@ -92,8 +92,8 @@ t("073 does not write final Sent fields", () => {
   assert.doesNotMatch(s073, /\[["']Parent Feedback Sent On["']\]\s*:/);
   assert.doesNotMatch(s073, /\[["']Parent Feedback Sent\?["']\]\s*:/);
 });
-t("074 v3.0 creates Communications Hub queue handoff (not Make webhook)", () => {
-  assert.match(s074, /Version: v3\.0/);
+t("074 v3.1 creates Communications Hub queue handoff (not Make webhook)", () => {
+  assert.match(s074, /Version: v3\.1/);
   assert.match(s074, /Email Handoff Queue/);
   assert.match(s074, /WEEKLY_ATHLETE_SUMMARY\|WEEKLY_ATHLETE_SUMMARY\|/);
   assert.match(s074, /created_handoff/);
@@ -122,8 +122,8 @@ t("117 does not write Sent fields and omits Make route from payload", () => {
   const payloadBlock = s117.slice(s117.indexOf("const payload = {"), s117.indexOf("const queueData"));
   assert.doesNotMatch(payloadBlock, /117f|automationNumber|make/i);
 });
-t("079 v2.4 accepts ZOOM_RECORDING_APPROVAL Event Type with ZOOM_RECORDING_APPROVED Template Key", () => {
-  assert.match(s079, /version: "v2\.4"/);
+t("079 v2.5 accepts ZOOM_RECORDING_APPROVAL Event Type with ZOOM_RECORDING_APPROVED Template Key", () => {
+  assert.match(s079, /version: "v2\.5"/);
   assert.match(s079, /eventVideoFeedback: "VIDEO_FEEDBACK"/);
   assert.match(s079, /eventHomeworkFeedback: "HOMEWORK_FEEDBACK"/);
   assert.match(s079, /eventWeeklyAthleteSummary: "WEEKLY_ATHLETE_SUMMARY"/);

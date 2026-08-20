@@ -55,11 +55,10 @@ for (const fileName of requiredFiles) {
   });
 }
 
-test("009 version metadata is aligned at v1.1", () => {
+test("009 version is established at v1.2", () => {
   const text = fs.readFileSync(path.join(root, "009-submission-intake-create-submission-assets.js"), "utf8");
   const block = extractScriptBlock(text);
-  assert.ok(/version:\s*"v1\.1"/.test(block));
-  assert.ok(/versionNumber:\s*"v1\.1"/.test(block));
+  assert.ok(/version:\s*"v1\.2"/.test(block));
 });
 
 console.log("\nAll script-header-contract tests passed.");

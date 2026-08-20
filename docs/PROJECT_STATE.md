@@ -1,11 +1,14 @@
 # Project state — live snapshot
 
-**Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
+**Primary current-state document:** [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) — read that first for branch/SHA, bases, email plane, automation overlays, and work ledger. This file is the detailed ops companion.
 
-Last updated: **2026-08-19** (schema refresh PROD snapshot; 022 **v2.1**, 020 **v3.6**, 070b **v4.6**, 117 **v2.1**, 066 **v3.8**, 010 **v10.10**; email = Resend; Perfect Week still open)
+Update after major deploys, audit passes, or architecture changes.
+
+Last updated: **2026-08-20** (integrity/authority refresh + obsolete Automations-table ban; schema refresh PROD snapshot from 2026-08-19; production-only operation)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
+**Integrity / security:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md) · [`SECURITY-AND-SENSITIVE-FILES.md`](./SECURITY-AND-SENSITIVE-FILES.md)
 **Current reconciliation:** [`prod-completion/2026-08-16/SC-2026-08-16-CURRENT-STATE-RECONCILIATION.md`](./prod-completion/2026-08-16/SC-2026-08-16-CURRENT-STATE-RECONCILIATION.md) (path evidence 2026-08-16; **022 live version superseded** — see overlay below)
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)
@@ -16,9 +19,11 @@ Last updated: **2026-08-19** (schema refresh PROD snapshot; 022 **v2.1**, 020 **
 
 > **Do not treat** this repository file, `CONTROL.json`, or any dated packet as live production truth. Current Airtable, Fillout, Make, Gmail, Lambda, and Vercel state must be verified in those systems. This file is a live-ops pointer; the Completion Master owns release status.
 
+> **Obsolete Production `Automations` table:** Not an authority source — never use for V2 audits or ops decisions ([`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md)).
+
 **C-028 overlay (Mike 2026-08-19):** Tremendous sandbox send validated; production API pending; Make scenario OFF. See [`integrations/tremendous-award-fulfillment.md`](./integrations/tremendous-award-fulfillment.md).
 
-**Email overlay (Mike 2026-08-19):** Make.com does not handle any Shooting Challenge emails. All of those emails go through Resend (Communications Hub). See [`integrations/email-send-plane.md`](./integrations/email-send-plane.md).
+**Email overlay (Mike 2026-08-19):** Make.com does not handle any Shooting Challenge emails. All of those emails go through Resend (Communications Hub). See [`integrations/email-send-plane.md`](./integrations/email-send-plane.md). Automation **077** (Make daily send) is **deleted from Production** (2026-08-13 docs); daily path is **076 → 079 → Hub → Resend**.
 
 **022 overlay (Mike 2026-08-19):** Production Airtable Automation 022 is **v2.1**. The 2026-08-16 packet’s v2.0 claim is historical for that day’s controlled path.
 
@@ -41,9 +46,9 @@ Last updated: **2026-08-19** (schema refresh PROD snapshot; 022 **v2.1**, 020 **
 | Item | Value |
 |------|--------|
 | **Production branch** | `master` |
-| **Current repository baseline** | `origin/master` `410fa21cadaec67cd36489536487a0dd38f49607` at reconciliation start; verify dynamically before relying on it |
+| **Current repository baseline** | Verify dynamically: `git fetch origin && git rev-parse HEAD origin/master` — recorded in [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) (`0b1d634…` integrity ship on 2026-08-20). Do not trust older tip SHAs in dated packets. |
 | **Public URL** | https://www.fairfieldbasketballclub.com/shoot |
-| **Local development** | http://localhost:3001/shoot |
+| **Local dev** | http://localhost:3001/shoot |
 | **Health check** | `GET /shoot/api/airtable` → `{ ok: true, airtable: { tokenValid: true } }` |
 | **Vercel root** | `web/` |
 | **CI** | `.github/workflows/web.yml` (lint, typecheck, test on `web/**` changes) |
@@ -66,9 +71,7 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 | **Automation standards (doc 06)** | **Active** — **066** remains the V2 rewrite reference pattern. Live paste is **v3.8** (Mike 2026-08-19). Older “v3.4 current reference” wording is historical for the createRecords contract era. |
 | **Multi-year architecture** | **Decided** — one base + Program Instance; **V2-013 queued** |
 | **Phase 2 — Platform Modernization** | Wave 2A planning + Phase 2B docs complete — implementation staged via backlog |
-| **V2-015 — Production base** | **Ready** — production-only pipeline permanent |
-
-**Airtable overlay (Mike 2026-08-19):** Shooting Challenge has one live base — Production `appn84sqPw03zEbTT`. Validate offline first and use controlled Production actions only with Mike's authorization.
+| **V2-015 — Development base** | **Ready** — DEV-first pipeline permanent |
 
 ---
 
@@ -96,26 +99,35 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 | Base ID | `appn84sqPw03zEbTT` |
 | Role | **Live season** — system of record |
 
-**Operating rule:** GitHub → offline validation → Mike approval → controlled Production action → read-only verification → `CHANGELOG.md`.
+### Development (V2-015)
+
+| Item | Value |
+|------|--------|
+| Base name | `127SI - SHOOTING CHALLENGE - DEV` |
+| Base ID | `appTetnuCZlCZdTCT` |
+| Status | **Ready** — first testing environment |
+| Setup | [development-base-setup.md](./development-base-setup.md) |
+
+**Deploy rule:** GitHub → paste **dev** → audit → approve → paste **prod** → `CHANGELOG.md`.
 
 ### Schema documentation (important)
 
 | Location | Status |
 |----------|--------|
-| `airtable/schema/current/` | **Stale** — hand-maintained maps; **do not treat as current** until Agent A refreshes table/field maps |
-| Latest dated snapshot (**current**) | **`airtable/schema/snapshots/prod-20260819/`** — export stamp `20260819_184903` |
-| Refresh summary | [deploy-checklists/SCHEMA-REFRESH-2026-08-19.md](./deploy-checklists/SCHEMA-REFRESH-2026-08-19.md) |
-| Older snapshots | `prod-20260706/`, foundation-reset exports, loose root `20260629_045741` |
+| `airtable/schema/current/` | **Stale** — hand-maintained maps; **do not treat as current** until Agent A refreshes |
+| Latest dated snapshot (treat as current until refresh) | **`airtable/schema/snapshots/prod-20260706/`** (prod) and **`dev-20260706/`** (DEV) — export stamp `20260706_161830` / `20260706_161606` |
+| Older loose exports | Root of `snapshots/` includes `20260629_045741` and earlier |
 
-**Agent A** owns refreshing `airtable/schema/**` hand maps. This refresh committed a read-only Production Metadata API export only.
+**Agent A** owns refreshing `airtable/schema/**`. Agent B documented staleness only. Lead integration did **not** refresh schema snapshots or claim live XP Reward Rules verification (offline fixture verifier only).
 
-### Schema snapshot counts (2026-08-19 export — Production only)
+### Schema snapshot counts (2026-07-06 export notes)
 
 | Base | Folder | Tables | Views |
 |------|--------|--------|-------|
-| **Production** | `airtable/schema/snapshots/prod-20260819/` | **32** | **126** |
+| **Production** | `airtable/schema/snapshots/prod-20260706/` | **29** | **118** |
+| **Development** | `airtable/schema/snapshots/dev-20260706/` | **30** | **120** |
 
-Notable PROD changes vs 2026-07-06: `Homework Library`, `Program Homework Assignments`, `Email Handoff Queue`, `Testing Scenarios`, `Zoom Attendance`; removed `FBC Curriculum - SYNC` and standalone `Tutorials`; `Program Instance - Synced` renamed to **`Program Instance - Sync`**. See [snapshots/README.md](../airtable/schema/snapshots/README.md).
+DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md](../airtable/schema/snapshots/README.md).
 
 ---
 
@@ -125,7 +137,7 @@ Notable PROD changes vs 2026-07-06: `Homework Library`, `Program Homework Assign
 |----------|--------|
 | **Fillout daily submission form** | **OFF** — contest intake closed (**C-008** done 2026-07-05) |
 | **Video upload (070b/070c + Lambda)** | **Airtable 070b = v4.6** + **Lambda season CodeOnly deploy 2026-08-19** (CodeSha256 `lwbLiBzB4cfWdzVmIVo7Z78AkiowqPuV2NmUXb+PK2w=`). Historical async `Accepted` handoff proven 2026-07-11 on **v4.4**. Optional Storage Key retry proof still open. |
-| **Homework upload (070a)** | **PROD intentionally OFF** — keep OFF per [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md); Production package exists separately |
+| **Homework upload (070a)** | **PROD intentionally OFF** — keep OFF per [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md); DEV package exists separately |
 | **C-023 Drive/attachment retirement** | Deferred |
 
 ---
@@ -168,7 +180,7 @@ Manual Build/Send checkboxes remain available for controlled one-offs.
 | `NEXT_PUBLIC_GAME_MANUAL_URL` | Optional — game manual embed URL |
 | `SITE_ACCESS_TOKEN` | Optional preview gate (middleware + `/api/airtable`) |
 | `AIRTABLE_API_TOKEN` / `AIRTABLE_BASE_ID` | Server-only; **production base on Vercel** |
-| Local / tools Production base | `web/.env.local` or `tools/airtable/.env` |
+| Local / tools DEV base | `web/.env.local` or `tools/airtable/.env` |
 
 Deploy details: [deployment-notes.md](./deployment-notes.md), [web/docs/deployment-notes.md](../web/docs/deployment-notes.md)
 

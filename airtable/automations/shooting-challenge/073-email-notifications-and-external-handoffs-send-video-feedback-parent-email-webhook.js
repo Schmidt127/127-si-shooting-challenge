@@ -1,80 +1,157 @@
 /*
-GitHub header
 Automation: 073 - Email, Notifications, and External Handoffs - Create Video Feedback Communications Hub Handoff
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
+Last Synced From Airtable: 2026-08-17
+Last GitHub Update: 2026-08-20 (v4.2 V2 standard structure)
 
-Version: v4.1
-Date Written: 2026-06-17
-Last Updated: 2026-08-17
+Purpose:
+Validate one Video Feedback record ready for parent email and create exactly
+one Ready Email Handoff Queue row for Communications Hub (079 → Resend).
 
-PURPOSE
-- Validate one Video Feedback record that is ready for parent email.
-- Create exactly one Ready Email Handoff Queue row for Communications Hub.
-- Hand off template data to Automation 079 / Communications Hub / Resend.
+Trigger:
+Video Feedback when Parent Feedback Ready? and related gates match
+(confirm exact conditions in Airtable UI); pass the dynamic recordId.
 
-IMPORTANT DESIGN RULES
-- Hub owns subject, HTML, plain text, branding, delivery, and Delivery proof.
-- This script never calls Make, Gmail, Resend, or the Communications Hub ingress.
-- Only Automation 079 may send Email Handoff Queue rows to the Hub.
-- One Video Feedback maps to VIDEO_FEEDBACK|VIDEO_FEEDBACK|{Video Feedback Record ID}.
-- Idempotent: reuse an existing matching Handoff Key; conflicting payload → Needs Review.
-- Do not write Parent Feedback Sent? or Parent Feedback Sent On (Hub/downstream writeback).
-- Parent-facing video link is ONLY Video Feedback "Video URL or Drive Link" (written by 022).
-- Do not read Reviewer File URL, Canonical File URL, or any Google Drive File/Folder ID/URL/Name.
-- Missing/invalid VF video URL → error (no asset-field fallback).
-- Enrollment Parent Email - Cleaned is the authoritative recipient (076 Hub pattern).
+Important Tables:
+Video Feedback, Enrollments, Submissions, Submission Assets, XP Events,
+Email Handoff Queue
 
-TRIGGER (Airtable UI — keep unless Mike revises)
-- Video Feedback when record matches conditions:
-  Parent Feedback Ready? checked
-  Parent Feedback Sent? unchecked
-  Feedback Posted? checked
-  Coach Feedback not empty
-  Enrollment not empty
-  Submission not empty
-  Total Video XP Awarded > 0
-  Base XP Awarded > 0
+Important Fields:
+Parent Feedback Ready?, Parent Feedback Sent?, Feedback Posted?, Coach Feedback,
+Video URL or Drive Link, Handoff Key, Status
 
-INPUT
-- recordId (required Video Feedback record ID)
-- testMode (optional; default true for controlled Hub sends)
-
-OUTPUTS
-- statusOut: success | skipped | error
-- actionOut: created_handoff | existing_handoff | needs_review | error
-- queueRecordId, handoffKey, errorOut, debugStep
-
-FOLDER
-- 07 - Email, Notifications, and External Handoffs
-
-AUTOMATION NAME
-- 073 - Email, Notifications, and External Handoffs - Create Video Feedback Communications Hub Handoff
+Notes:
+GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
+Filename may still say webhook; current path is Hub queue create only.
 */
+
+/************************************************************
+ * 073 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
+ * Create Video Feedback Communications Hub Handoff
+ *
+ * Version: v4.2
+ * Date Written: 2026-06-17
+ * Last Updated: 2026-08-20
+ *
+ * VERSION HISTORY
+ * - v4.2 (2026-08-20): V2 Automation Standard structure — GitHub header,
+ *   production docblock, numbered sections, hoisted debugStep, outer run
+ *   wrapper. Business logic unchanged from v4.1.
+ * - v4.1 (2026-08-17): Require VF Video URL or Drive Link only for parent
+ *   Hub handoff (022 writeback); no asset URL / Drive field fallback.
+ *
+ * PURPOSE
+ * - Validate one Video Feedback record that is ready for parent email.
+ * - Create exactly one Ready Email Handoff Queue row for Communications Hub.
+ * - Hand off template data to Automation 079 / Communications Hub / Resend.
+ *
+ * IMPORTANT DESIGN RULES
+ * - Hub owns subject, HTML, plain text, branding, delivery, and Delivery proof.
+ * - This script never calls Make, Gmail, Resend, or the Communications Hub ingress.
+ * - Only Automation 079 may send Email Handoff Queue rows to the Hub.
+ * - One Video Feedback maps to VIDEO_FEEDBACK|VIDEO_FEEDBACK|{Video Feedback Record ID}.
+ * - Idempotent: reuse an existing matching Handoff Key; conflicting payload → Needs Review.
+ * - Do not write Parent Feedback Sent? or Parent Feedback Sent On (Hub/downstream writeback).
+ * - Parent-facing video link is ONLY Video Feedback "Video URL or Drive Link" (written by 022).
+ * - Do not read Reviewer File URL, Canonical File URL, or any Google Drive File/Folder ID/URL/Name.
+ * - Missing/invalid VF video URL → error (no asset-field fallback).
+ * - Enrollment Parent Email - Cleaned is the authoritative recipient (076 Hub pattern).
+ *
+ * THIS IS NOT
+ * - Video Feedback create/link (013).
+ * - Child upload writeback (022).
+ * - Video XP create (114).
+ * - Homework feedback Hub handoff (071).
+ * - Queue dispatcher to Hub (079).
+ *
+ * FOLDER
+ * - 07 - Email, Notifications, and External Handoffs
+ *
+ * AUTOMATION NAME
+ * - 073 - Email, Notifications, and External Handoffs - Create Video Feedback Communications Hub Handoff
+ *
+ * TRIGGER TABLE
+ * - Video Feedback
+ *
+ * RECOMMENDED TRIGGER CONDITIONS
+ * - Parent Feedback Ready? checked
+ * - Parent Feedback Sent? unchecked
+ * - Feedback Posted? checked
+ * - Coach Feedback not empty
+ * - Enrollment not empty
+ * - Submission not empty
+ * - Total Video XP Awarded > 0
+ * - Base XP Awarded > 0
+ *
+ * REQUIRED INPUT VARIABLES
+ * - recordId = Video Feedback record ID
+ *
+ * OPTIONAL INPUT VARIABLES
+ * - testMode = optional; default true for controlled Hub sends
+ *
+ * OUTPUTS (automation script action outputs)
+ * - statusOut = success | skipped | error
+ * - actionOut = created_handoff | existing_handoff | needs_review | error
+ * - queueRecordId / handoffKey / errorOut / debugStep
+ *
+ * PRIMARY TABLES USED
+ * - Video Feedback, Enrollments, Submissions, Submission Assets, XP Events,
+ *   Email Handoff Queue
+ *
+ * OUTPUT / WRITEBACK FIELDS
+ * - Email Handoff Queue → Handoff Key, Status, payload/recipients, Test Mode?
+ * - Video Feedback → Parent Feedback Send Error (clear on success), Subject (prep note)
+ *
+ * HANDOFF KEY
+ * - VIDEO_FEEDBACK|VIDEO_FEEDBACK|{Video Feedback Record ID}
+ ************************************************************/
 
 // @ts-nocheck
 
+/* =========================================================
+   SECTION 1: SCRIPT METADATA
+========================================================= */
+
 const SCRIPT = {
   scriptName: "073 - Email, Notifications, and External Handoffs - Create Video Feedback Communications Hub Handoff",
-  version: "v4.1",
-  versionDate: "2026-08-17",
+  version: "v4.2",
+  versionDate: "2026-08-20",
   originalWrittenDate: "2026-06-17",
-  lastUpdated: "2026-08-17",
+  lastUpdated: "2026-08-20",
   folder: "07 - Email, Notifications, and External Handoffs",
   automationName: "073 - Email, Notifications, and External Handoffs - Create Video Feedback Communications Hub Handoff",
 };
 
+/* =========================================================
+   SECTION 2: CONFIGURATION
+========================================================= */
+
 const CONFIG = {
+  timeZone: "America/Denver",
   tables: {
-    vf: "Video Feedback",
-    enr: "Enrollments",
-    sub: "Submissions",
+    videoFeedback: "Video Feedback",
+    enrollments: "Enrollments",
+    submissions: "Submissions",
     assets: "Submission Assets",
-    xp: "XP Events",
+    xpEvents: "XP Events",
     queue: "Email Handoff Queue",
   },
-  statuses: { draft: "Draft", ready: "Ready", needsReview: "Needs Review" },
+  statuses: {
+    draft: "Draft",
+    ready: "Ready",
+    needsReview: "Needs Review",
+    success: "success",
+    skipped: "skipped",
+    error: "error",
+  },
+  actions: {
+    createdHandoff: "created_handoff",
+    existingHandoff: "existing_handoff",
+    needsReview: "needs_review",
+    error: "error",
+  },
   fields: {
     vf: {
       enrollment: "Enrollment",
@@ -151,19 +228,26 @@ const CONFIG = {
   },
 };
 
-const TZ = "America/Denver";
+/* =========================================================
+   SECTION 3: OUTPUT AND FIELD HELPERS
+========================================================= */
 
-function setOutput(name, value) {
+let debugStep = "0 - Start";
+
+function setOutputSafe(name, value) {
   try {
     output.set(name, value);
-  } catch {}
+  } catch {
+    // Ignore unmapped output keys.
+  }
 }
 
-function debug(value) {
-  setOutput("debugStep", value);
+function step(name) {
+  debugStep = name;
+  setOutputSafe("debugStep", debugStep);
 }
 
-function exists(table, name) {
+function fieldExists(table, name) {
   try {
     table.getField(name);
     return true;
@@ -172,51 +256,53 @@ function exists(table, name) {
   }
 }
 
-function raw(rec, table, name) {
-  return rec && exists(table, name) ? rec.getCellValue(name) : null;
+function getRaw(rec, table, name) {
+  return rec && fieldExists(table, name) ? rec.getCellValue(name) : null;
 }
 
-function text(rec, table, name) {
-  return rec && exists(table, name) ? String(rec.getCellValueAsString(name) || "").trim() : "";
+function getText(rec, table, name) {
+  return rec && fieldExists(table, name) ? String(rec.getCellValueAsString(name) || "").trim() : "";
 }
 
-function ids(rec, table, name) {
-  const value = raw(rec, table, name);
+function linkedIds(rec, table, name) {
+  const value = getRaw(rec, table, name);
   return Array.isArray(value) ? value.map((item) => item?.id).filter(Boolean) : [];
 }
 
 function checked(rec, table, name) {
-  return raw(rec, table, name) === true;
+  return getRaw(rec, table, name) === true;
 }
 
-function number(rec, table, name) {
-  const value = raw(rec, table, name);
-  const n = typeof value === "number" ? value : Number(text(rec, table, name).replace(/,/g, ""));
+function getNumber(rec, table, name) {
+  const value = getRaw(rec, table, name);
+  const n = typeof value === "number" ? value : Number(getText(rec, table, name).replace(/,/g, ""));
   return Number.isFinite(n) ? n : 0;
 }
 
 function truthyFormula(rec, table, name) {
-  const value = raw(rec, table, name);
+  const value = getRaw(rec, table, name);
   if (value === true || value === 1) return true;
-  const s = text(rec, table, name).toLowerCase();
+  const s = getText(rec, table, name).toLowerCase();
   return ["1", "true", "yes", "y", "count", "counted"].includes(s);
 }
 
-function one(values, label) {
+function oneLinkedId(values, label) {
   if (values.length !== 1) throw new Error(`${label} must contain exactly one linked record; found ${values.length}.`);
   return values[0];
 }
 
-function same(left, right) {
+function sameIds(left, right) {
   return left.length === right.length && left.every((value) => right.includes(value));
 }
 
-function first(...values) {
+function firstNonEmpty(...values) {
   return values.map((value) => String(value ?? "").trim()).find(Boolean) || "";
 }
 
 function cleanEmail(value) {
-  return String(value || "").trim().toLowerCase();
+  return String(value || "")
+    .trim()
+    .toLowerCase();
 }
 
 function validEmail(value) {
@@ -224,7 +310,7 @@ function validEmail(value) {
 }
 
 function recipientEmail(rec, table, name) {
-  const email = cleanEmail(text(rec, table, name));
+  const email = cleanEmail(getText(rec, table, name));
   return validEmail(email) ? email : "";
 }
 
@@ -237,7 +323,7 @@ function denverDateKey(value) {
   const date = parseDate(value);
   if (!date) return "";
   return new Intl.DateTimeFormat("en-CA", {
-    timeZone: TZ,
+    timeZone: CONFIG.timeZone,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -252,7 +338,7 @@ function dateText(value) {
   const date = parseDate(value);
   if (!date) return "";
   return new Intl.DateTimeFormat("en-US", {
-    timeZone: TZ,
+    timeZone: CONFIG.timeZone,
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -272,13 +358,16 @@ function selectValue(table, name, value) {
 }
 
 function queueFields(queueTable, values) {
-  return Object.fromEntries(Object.entries(values).filter(([name]) => exists(queueTable, name)));
+  return Object.fromEntries(Object.entries(values).filter(([name]) => fieldExists(queueTable, name)));
 }
 
 function stableJson(value) {
   if (Array.isArray(value)) return `[${value.map(stableJson).join(",")}]`;
   if (value && typeof value === "object") {
-    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stableJson(value[key])}`).join(",")}}`;
+    return `{${Object.keys(value)
+      .sort()
+      .map((key) => `${JSON.stringify(key)}:${stableJson(value[key])}`)
+      .join(",")}}`;
   }
   return JSON.stringify(value);
 }
@@ -293,7 +382,7 @@ function samePayload(left, right) {
 
 async function markQueueNeedsReview(queueTable, rows) {
   for (const row of rows) {
-    if (exists(queueTable, CONFIG.fields.queue.status)) {
+    if (fieldExists(queueTable, CONFIG.fields.queue.status)) {
       await queueTable.updateRecordAsync(row.id, {
         [CONFIG.fields.queue.status]: selectValue(queueTable, CONFIG.fields.queue.status, CONFIG.statuses.needsReview),
       });
@@ -302,7 +391,7 @@ async function markQueueNeedsReview(queueTable, rows) {
 }
 
 function parentVideoUrl(vf, vfTable) {
-  const url = text(vf, vfTable, CONFIG.fields.vf.videoUrl);
+  const url = getText(vf, vfTable, CONFIG.fields.vf.videoUrl);
   if (!url) {
     throw new Error(
       'Video Feedback "Video URL or Drive Link" is blank. Parent handoff blocked (022 writeback required; no asset URL fallback).'
@@ -321,154 +410,167 @@ function parentVideoUrl(vf, vfTable) {
   return url;
 }
 
+/* =========================================================
+   SECTION 4: MAIN
+========================================================= */
+
 async function main() {
-  const cfg = input.config();
+  step("1 - Validate recordId");
+  const cfg = typeof input !== "undefined" && input?.config ? input.config() : {};
   const recordId = String(cfg.recordId || "").trim();
   if (!/^rec[A-Za-z0-9]{14}$/.test(recordId)) {
     throw new Error("recordId must be a valid Airtable record ID.");
   }
   const testMode = cfg.testMode === undefined ? true : Boolean(cfg.testMode);
 
-  const vfT = base.getTable(CONFIG.tables.vf);
-  const enrT = base.getTable(CONFIG.tables.enr);
-  const subT = base.getTable(CONFIG.tables.sub);
-  const assetT = base.getTable(CONFIG.tables.assets);
-  const xpT = base.getTable(CONFIG.tables.xp);
-  const queueT = base.getTable(CONFIG.tables.queue);
+  step("2 - Load tables");
+  const vfTable = base.getTable(CONFIG.tables.videoFeedback);
+  const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
+  const submissionsTable = base.getTable(CONFIG.tables.submissions);
+  const assetsTable = base.getTable(CONFIG.tables.assets);
+  const xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
+  const queueTable = base.getTable(CONFIG.tables.queue);
 
-  debug("01 - Load Video Feedback");
-  const vf = await vfT.selectRecordAsync(recordId);
+  step("01 - Load Video Feedback");
+  const vf = await vfTable.selectRecordAsync(recordId);
   if (!vf) throw new Error(`Video Feedback not found: ${recordId}`);
 
   const handoffKey = `${CONFIG.values.eventType}|${CONFIG.values.sourceTableToken}|${recordId}`;
 
-  debug("02 - Validate readiness gates");
-  if (!checked(vf, vfT, CONFIG.fields.vf.active)) {
+  step("02 - Validate readiness gates");
+  if (!checked(vf, vfTable, CONFIG.fields.vf.active)) {
     throw new Error("Video Feedback is inactive/retired. Handoff blocked.");
   }
-  if (!checked(vf, vfT, CONFIG.fields.vf.posted)) {
+  if (!checked(vf, vfTable, CONFIG.fields.vf.posted)) {
     throw new Error("Feedback Posted? is not checked. Handoff blocked.");
   }
-  if (!checked(vf, vfT, CONFIG.fields.vf.ready)) {
+  if (!checked(vf, vfTable, CONFIG.fields.vf.ready)) {
     throw new Error("Parent Feedback Ready? is not checked. Handoff blocked.");
   }
-  if (checked(vf, vfT, CONFIG.fields.vf.sent)) {
+  if (checked(vf, vfTable, CONFIG.fields.vf.sent)) {
     throw new Error("Parent Feedback Sent? is already checked. Duplicate handoff blocked.");
   }
-  const coachFeedback = text(vf, vfT, CONFIG.fields.vf.coach);
+  const coachFeedback = getText(vf, vfTable, CONFIG.fields.vf.coach);
   if (!coachFeedback) throw new Error("Coach Feedback is blank. Handoff blocked.");
 
-  debug("03 - Validate canonical source chain");
-  const enrollmentId = one(ids(vf, vfT, CONFIG.fields.vf.enrollment), "Video Feedback Enrollment");
-  const submissionId = one(ids(vf, vfT, CONFIG.fields.vf.submission), "Video Feedback Submission");
-  const assetId = one(ids(vf, vfT, CONFIG.fields.vf.asset), "Video Feedback Submission Asset");
-  const [enr, sub, asset] = await Promise.all([
-    enrT.selectRecordAsync(enrollmentId),
-    subT.selectRecordAsync(submissionId),
-    assetT.selectRecordAsync(assetId),
+  step("03 - Validate canonical source chain");
+  const enrollmentId = oneLinkedId(linkedIds(vf, vfTable, CONFIG.fields.vf.enrollment), "Video Feedback Enrollment");
+  const submissionId = oneLinkedId(linkedIds(vf, vfTable, CONFIG.fields.vf.submission), "Video Feedback Submission");
+  const assetId = oneLinkedId(linkedIds(vf, vfTable, CONFIG.fields.vf.asset), "Video Feedback Submission Asset");
+  const [enrollment, submission, asset] = await Promise.all([
+    enrollmentsTable.selectRecordAsync(enrollmentId),
+    submissionsTable.selectRecordAsync(submissionId),
+    assetsTable.selectRecordAsync(assetId),
   ]);
-  if (!enr || !sub || !asset) {
+  if (!enrollment || !submission || !asset) {
     throw new Error("Canonical Video Feedback source chain contains a missing record.");
   }
-  if (!checked(enr, enrT, CONFIG.fields.enr.active)) {
+  if (!checked(enrollment, enrollmentsTable, CONFIG.fields.enr.active)) {
     throw new Error("Enrollment is inactive. Handoff blocked.");
   }
 
   const expectedKey = `VIDEO_FEEDBACK|${assetId}`;
-  if (text(vf, vfT, CONFIG.fields.vf.key) !== expectedKey) {
+  if (getText(vf, vfTable, CONFIG.fields.vf.key) !== expectedKey) {
     throw new Error(`Video Feedback Key mismatch. Expected ${expectedKey}.`);
   }
-  if (!same(ids(asset, assetT, CONFIG.fields.asset.submission), [submissionId])) {
+  if (!sameIds(linkedIds(asset, assetsTable, CONFIG.fields.asset.submission), [submissionId])) {
     throw new Error("Submission Asset does not belong exclusively to the linked Submission.");
   }
-  if (!same(ids(asset, assetT, CONFIG.fields.asset.enrollment), [enrollmentId])) {
+  if (!sameIds(linkedIds(asset, assetsTable, CONFIG.fields.asset.enrollment), [enrollmentId])) {
     throw new Error("Submission Asset Enrollment does not match Video Feedback Enrollment.");
   }
-  if (!ids(asset, assetT, CONFIG.fields.asset.videoFeedback).includes(recordId)) {
+  if (!linkedIds(asset, assetsTable, CONFIG.fields.asset.videoFeedback).includes(recordId)) {
     throw new Error("Submission Asset does not link back to this canonical Video Feedback.");
   }
-  if (!truthyFormula(asset, assetT, CONFIG.fields.asset.trueVideo)) {
+  if (!truthyFormula(asset, assetsTable, CONFIG.fields.asset.trueVideo)) {
     throw new Error("Submission Asset is not a true Video Feedback asset.");
   }
 
-  if (!same(ids(sub, subT, CONFIG.fields.sub.enrollment), [enrollmentId])) {
+  if (!sameIds(linkedIds(submission, submissionsTable, CONFIG.fields.sub.enrollment), [enrollmentId])) {
     throw new Error("Submission Enrollment does not match Video Feedback Enrollment.");
   }
-  const weekIds = ids(sub, subT, CONFIG.fields.sub.week);
+  const weekIds = linkedIds(submission, submissionsTable, CONFIG.fields.sub.week);
   if (weekIds.length !== 1) {
     throw new Error(`Submission must have exactly one Week; found ${weekIds.length}.`);
   }
   const weekId = weekIds[0];
-  if (!text(vf, vfT, CONFIG.fields.vf.week)) {
+  if (!getText(vf, vfTable, CONFIG.fields.vf.week)) {
     throw new Error("Video Feedback Week lookup is blank. Handoff blocked.");
   }
-  if (!truthyFormula(sub, subT, CONFIG.fields.sub.countable)) {
+  if (!truthyFormula(submission, submissionsTable, CONFIG.fields.sub.countable)) {
     throw new Error("Linked Submission is not countable/current. Handoff blocked.");
   }
-  if (!Array.isArray(raw(sub, subT, CONFIG.fields.sub.videoUpload)) || raw(sub, subT, CONFIG.fields.sub.videoUpload).length === 0) {
+  if (
+    !Array.isArray(getRaw(submission, submissionsTable, CONFIG.fields.sub.videoUpload)) ||
+    getRaw(submission, submissionsTable, CONFIG.fields.sub.videoUpload).length === 0
+  ) {
     throw new Error("Linked Submission has no Video Upload. Handoff blocked.");
   }
-  const activityDate = raw(sub, subT, CONFIG.fields.sub.activityDate);
+  const activityDate = getRaw(submission, submissionsTable, CONFIG.fields.sub.activityDate);
   if (!parseDate(activityDate)) throw new Error("Submission Activity Date is missing/invalid.");
   if (denverDateKey(activityDate) > todayDenverKey()) {
     throw new Error("Submission Activity Date is in the future. Handoff blocked.");
   }
 
-  debug("04 - Validate active Video XP ownership");
-  const xpIds = ids(vf, vfT, CONFIG.fields.vf.xpEvents);
+  step("04 - Validate active Video XP ownership");
+  const xpIds = linkedIds(vf, vfTable, CONFIG.fields.vf.xpEvents);
   if (!xpIds.length) throw new Error("Video Feedback has no linked XP Events. Handoff blocked.");
   let activeVideoXp = 0;
   for (const xpId of xpIds) {
-    const xp = await xpT.selectRecordAsync(xpId);
-    if (!xp || !checked(xp, xpT, CONFIG.fields.xp.active)) continue;
-    if (!same(ids(xp, xpT, CONFIG.fields.xp.enrollment), [enrollmentId])) continue;
-    if (!same(ids(xp, xpT, CONFIG.fields.xp.week), [weekId])) continue;
-    if (!ids(xp, xpT, CONFIG.fields.xp.videoFeedback).includes(recordId)) continue;
-    activeVideoXp += Math.max(0, number(xp, xpT, CONFIG.fields.xp.points));
+    const xpEvent = await xpEventsTable.selectRecordAsync(xpId);
+    if (!xpEvent || !checked(xpEvent, xpEventsTable, CONFIG.fields.xp.active)) continue;
+    if (!sameIds(linkedIds(xpEvent, xpEventsTable, CONFIG.fields.xp.enrollment), [enrollmentId])) continue;
+    if (!sameIds(linkedIds(xpEvent, xpEventsTable, CONFIG.fields.xp.week), [weekId])) continue;
+    if (!linkedIds(xpEvent, xpEventsTable, CONFIG.fields.xp.videoFeedback).includes(recordId)) continue;
+    activeVideoXp += Math.max(0, getNumber(xpEvent, xpEventsTable, CONFIG.fields.xp.points));
   }
   if (activeVideoXp <= 0) {
     throw new Error("No active Video Feedback XP Event matches Enrollment + Week + source. Handoff blocked.");
   }
-  if (number(vf, vfT, CONFIG.fields.vf.totalXp) <= 0 || number(vf, vfT, CONFIG.fields.vf.baseXp) <= 0) {
+  if (getNumber(vf, vfTable, CONFIG.fields.vf.totalXp) <= 0 || getNumber(vf, vfTable, CONFIG.fields.vf.baseXp) <= 0) {
     throw new Error("Video Feedback XP award fields are not positive. Handoff blocked.");
   }
 
-  debug("05 - Resolve recipients and Hub payload");
-  const programId = one(ids(enr, enrT, CONFIG.fields.enr.program), "Enrollment Program Instance");
-  const parent = recipientEmail(enr, enrT, CONFIG.fields.enr.parentClean);
+  step("05 - Resolve recipients and Hub payload");
+  const programId = oneLinkedId(linkedIds(enrollment, enrollmentsTable, CONFIG.fields.enr.program), "Enrollment Program Instance");
+  const parent = recipientEmail(enrollment, enrollmentsTable, CONFIG.fields.enr.parentClean);
   if (!parent) throw new Error("No usable cleaned parent recipient on Enrollment.");
-  const athleteName = first(text(enr, enrT, CONFIG.fields.enr.athlete), text(vf, vfT, CONFIG.fields.vf.name), "Athlete");
-  const originalFileName = first(
-    text(vf, vfT, CONFIG.fields.vf.fileName),
-    text(asset, assetT, CONFIG.fields.asset.original),
+  const athleteName = firstNonEmpty(
+    getText(enrollment, enrollmentsTable, CONFIG.fields.enr.athlete),
+    getText(vf, vfTable, CONFIG.fields.vf.name),
+    "Athlete"
+  );
+  const originalFileName = firstNonEmpty(
+    getText(vf, vfTable, CONFIG.fields.vf.fileName),
+    getText(asset, assetsTable, CONFIG.fields.asset.original),
     "Video submission"
   );
-  const videoUrl = parentVideoUrl(vf, vfT);
+  const videoUrl = parentVideoUrl(vf, vfTable);
   const recipients = [{ email: parent, role: "guardian", displayName: athleteName }];
   const payload = {
     athleteName,
-    parentFirstName: text(enr, enrT, CONFIG.fields.enr.parentFirst),
+    parentFirstName: getText(enrollment, enrollmentsTable, CONFIG.fields.enr.parentFirst),
     coachFeedback,
-    reviewedAt: dateText(raw(vf, vfT, CONFIG.fields.vf.reviewedAt)),
-    weekName: text(vf, vfT, CONFIG.fields.vf.week),
+    reviewedAt: dateText(getRaw(vf, vfTable, CONFIG.fields.vf.reviewedAt)),
+    weekName: getText(vf, vfTable, CONFIG.fields.vf.week),
     originalFileName,
     videoUrl,
-    videoSubmissionNote: text(sub, subT, CONFIG.fields.sub.note),
+    videoSubmissionNote: getText(submission, submissionsTable, CONFIG.fields.sub.note),
     totalVideoXpAwarded: activeVideoXp,
-    baseXpAwarded: number(vf, vfT, CONFIG.fields.vf.baseXp),
-    uploadStatus: text(vf, vfT, CONFIG.fields.vf.uploadStatus),
-    videoAssetUploadedAt: dateText(raw(vf, vfT, CONFIG.fields.vf.uploadedAt)),
+    baseXpAwarded: getNumber(vf, vfTable, CONFIG.fields.vf.baseXp),
+    uploadStatus: getText(vf, vfTable, CONFIG.fields.vf.uploadStatus),
+    videoAssetUploadedAt: dateText(getRaw(vf, vfTable, CONFIG.fields.vf.uploadedAt)),
     videoFeedbackKey: expectedKey,
     canonicalSubmissionId: submissionId,
     canonicalSubmissionAssetId: assetId,
     canonicalWeekId: weekId,
   };
 
-  const queueData = queueFields(queueT, {
+  const queueData = queueFields(queueTable, {
     [CONFIG.fields.queue.key]: handoffKey,
-    [CONFIG.fields.queue.status]: selectValue(queueT, CONFIG.fields.queue.status, CONFIG.statuses.draft),
-    [CONFIG.fields.queue.sourceTable]: CONFIG.tables.vf,
-    [CONFIG.fields.queue.eventType]: selectValue(queueT, CONFIG.fields.queue.eventType, CONFIG.values.eventType),
+    [CONFIG.fields.queue.status]: selectValue(queueTable, CONFIG.fields.queue.status, CONFIG.statuses.draft),
+    [CONFIG.fields.queue.sourceTable]: CONFIG.tables.videoFeedback,
+    [CONFIG.fields.queue.eventType]: selectValue(queueTable, CONFIG.fields.queue.eventType, CONFIG.values.eventType),
     [CONFIG.fields.queue.template]: CONFIG.values.templateKey,
     [CONFIG.fields.queue.source]: recordId,
     [CONFIG.fields.queue.enrollment]: enrollmentId,
@@ -479,112 +581,134 @@ async function main() {
     [CONFIG.fields.queue.attempts]: 0,
   });
 
-  debug("06 - Idempotent Email Handoff Queue create");
-  const existing = (await queueT.selectRecordsAsync({
-    fields: Object.values(CONFIG.fields.queue).filter((name) => exists(queueT, name)),
-  })).records.filter((row) => text(row, queueT, CONFIG.fields.queue.key) === handoffKey);
+  step("06 - Idempotent Email Handoff Queue create");
+  const existing = (
+    await queueTable.selectRecordsAsync({
+      fields: Object.values(CONFIG.fields.queue).filter((name) => fieldExists(queueTable, name)),
+    })
+  ).records.filter((row) => getText(row, queueTable, CONFIG.fields.queue.key) === handoffKey);
 
   if (existing.length > 1) {
-    await markQueueNeedsReview(queueT, existing);
-    setOutput("statusOut", "error");
-    setOutput("actionOut", "needs_review");
+    await markQueueNeedsReview(queueTable, existing);
+    setOutputSafe("statusOut", CONFIG.statuses.error);
+    setOutputSafe("actionOut", CONFIG.actions.needsReview);
     throw new Error(`Multiple Email Handoff Queue rows match ${handoffKey}.`);
   }
 
   if (existing.length === 1) {
-    if (!samePayload(text(existing[0], queueT, CONFIG.fields.queue.payload), payload)) {
-      await markQueueNeedsReview(queueT, existing);
-      setOutput("statusOut", "error");
-      setOutput("actionOut", "needs_review");
+    if (!samePayload(getText(existing[0], queueTable, CONFIG.fields.queue.payload), payload)) {
+      await markQueueNeedsReview(queueTable, existing);
+      setOutputSafe("statusOut", CONFIG.statuses.error);
+      setOutputSafe("actionOut", CONFIG.actions.needsReview);
       throw new Error(`Conflicting Email Handoff Queue payload for ${handoffKey}.`);
     }
-    if (exists(vfT, CONFIG.fields.vf.error)) {
-      await vfT.updateRecordAsync(recordId, { [CONFIG.fields.vf.error]: "" });
+    if (fieldExists(vfTable, CONFIG.fields.vf.error)) {
+      await vfTable.updateRecordAsync(recordId, { [CONFIG.fields.vf.error]: "" });
     }
-    setOutput("statusOut", "success");
-    setOutput("actionOut", "existing_handoff");
-    setOutput("queueRecordId", existing[0].id);
-    setOutput("handoffKey", handoffKey);
-    setOutput("errorOut", "");
-    console.log(JSON.stringify({
-      automation: SCRIPT.scriptName,
-      version: SCRIPT.version,
-      statusOut: "success",
-      actionOut: "existing_handoff",
-      queueRecordId: existing[0].id,
-      handoffKey,
-    }));
+    setOutputSafe("statusOut", CONFIG.statuses.success);
+    setOutputSafe("actionOut", CONFIG.actions.existingHandoff);
+    setOutputSafe("queueRecordId", existing[0].id);
+    setOutputSafe("handoffKey", handoffKey);
+    setOutputSafe("errorOut", "");
+    setOutputSafe("debugStep", debugStep);
+    console.log(
+      JSON.stringify({
+        automation: SCRIPT.scriptName,
+        version: SCRIPT.version,
+        statusOut: CONFIG.statuses.success,
+        actionOut: CONFIG.actions.existingHandoff,
+        queueRecordId: existing[0].id,
+        handoffKey,
+      })
+    );
     return;
   }
 
-  const recheck = (await queueT.selectRecordsAsync({
-    fields: [CONFIG.fields.queue.key].filter((name) => exists(queueT, name)),
-  })).records.filter((row) => text(row, queueT, CONFIG.fields.queue.key) === handoffKey);
+  const recheck = (
+    await queueTable.selectRecordsAsync({
+      fields: [CONFIG.fields.queue.key].filter((name) => fieldExists(queueTable, name)),
+    })
+  ).records.filter((row) => getText(row, queueTable, CONFIG.fields.queue.key) === handoffKey);
   if (recheck.length) {
     if (recheck.length > 1) {
-      await markQueueNeedsReview(queueT, recheck);
+      await markQueueNeedsReview(queueTable, recheck);
       throw new Error(`Multiple Email Handoff Queue rows match ${handoffKey} after recheck.`);
     }
-    setOutput("statusOut", "success");
-    setOutput("actionOut", "existing_handoff");
-    setOutput("queueRecordId", recheck[0].id);
-    setOutput("handoffKey", handoffKey);
-    setOutput("errorOut", "");
+    setOutputSafe("statusOut", CONFIG.statuses.success);
+    setOutputSafe("actionOut", CONFIG.actions.existingHandoff);
+    setOutputSafe("queueRecordId", recheck[0].id);
+    setOutputSafe("handoffKey", handoffKey);
+    setOutputSafe("errorOut", "");
+    setOutputSafe("debugStep", debugStep);
     return;
   }
 
-  const created = await queueT.createRecordAsync(queueData);
-  const afterCreate = (await queueT.selectRecordsAsync({
-    fields: [CONFIG.fields.queue.key].filter((name) => exists(queueT, name)),
-  })).records.filter((row) => text(row, queueT, CONFIG.fields.queue.key) === handoffKey);
+  const created = await queueTable.createRecordAsync(queueData);
+  const afterCreate = (
+    await queueTable.selectRecordsAsync({
+      fields: [CONFIG.fields.queue.key].filter((name) => fieldExists(queueTable, name)),
+    })
+  ).records.filter((row) => getText(row, queueTable, CONFIG.fields.queue.key) === handoffKey);
   if (afterCreate.length !== 1) {
-    await markQueueNeedsReview(queueT, afterCreate);
+    await markQueueNeedsReview(queueTable, afterCreate);
     throw new Error(`Concurrent Email Handoff Queue creation requires review for ${handoffKey}.`);
   }
 
-  await queueT.updateRecordAsync(created, {
-    [CONFIG.fields.queue.status]: selectValue(queueT, CONFIG.fields.queue.status, CONFIG.statuses.ready),
+  await queueTable.updateRecordAsync(created, {
+    [CONFIG.fields.queue.status]: selectValue(queueTable, CONFIG.fields.queue.status, CONFIG.statuses.ready),
   });
 
   const vfUpdates = {};
-  if (exists(vfT, CONFIG.fields.vf.error)) vfUpdates[CONFIG.fields.vf.error] = "";
-  if (exists(vfT, CONFIG.fields.vf.subject)) {
+  if (fieldExists(vfTable, CONFIG.fields.vf.error)) vfUpdates[CONFIG.fields.vf.error] = "";
+  if (fieldExists(vfTable, CONFIG.fields.vf.subject)) {
     vfUpdates[CONFIG.fields.vf.subject] = `Video Feedback Hub handoff prepared for ${athleteName}`;
   }
-  if (Object.keys(vfUpdates).length) await vfT.updateRecordAsync(recordId, vfUpdates);
+  if (Object.keys(vfUpdates).length) await vfTable.updateRecordAsync(recordId, vfUpdates);
 
-  setOutput("statusOut", "success");
-  setOutput("actionOut", "created_handoff");
-  setOutput("queueRecordId", created);
-  setOutput("handoffKey", handoffKey);
-  setOutput("errorOut", "");
-  console.log(JSON.stringify({
-    automation: SCRIPT.scriptName,
-    version: SCRIPT.version,
-    statusOut: "success",
-    actionOut: "created_handoff",
-    queueRecordId: created,
-    handoffKey,
-  }));
+  step("07 - Complete");
+  setOutputSafe("statusOut", CONFIG.statuses.success);
+  setOutputSafe("actionOut", CONFIG.actions.createdHandoff);
+  setOutputSafe("queueRecordId", created);
+  setOutputSafe("handoffKey", handoffKey);
+  setOutputSafe("errorOut", "");
+  setOutputSafe("debugStep", debugStep);
+  console.log(
+    JSON.stringify({
+      automation: SCRIPT.scriptName,
+      version: SCRIPT.version,
+      statusOut: CONFIG.statuses.success,
+      actionOut: CONFIG.actions.createdHandoff,
+      queueRecordId: created,
+      handoffKey,
+    })
+  );
 }
+
+/* =========================================================
+   SECTION 5: RUN
+========================================================= */
 
 try {
   await main();
 } catch (error) {
-  setOutput("statusOut", "error");
-  setOutput("actionOut", "error");
-  setOutput("errorOut", String(error.message || error));
+  const message = error instanceof Error ? error.message : String(error);
+  setOutputSafe("statusOut", CONFIG.statuses.error);
+  setOutputSafe("actionOut", CONFIG.actions.error);
+  setOutputSafe("errorOut", `FAILED AT: ${debugStep} | ${message}`);
+  setOutputSafe("debugStep", debugStep);
   try {
-    const cfg = input.config();
+    const cfg = typeof input !== "undefined" && input?.config ? input.config() : {};
     const recordId = String(cfg.recordId || "").trim();
     if (/^rec[A-Za-z0-9]{14}$/.test(recordId)) {
-      const vfT = base.getTable(CONFIG.tables.vf);
-      if (exists(vfT, CONFIG.fields.vf.error)) {
-        await vfT.updateRecordAsync(recordId, {
-          [CONFIG.fields.vf.error]: String(error.message || error),
+      const vfTable = base.getTable(CONFIG.tables.videoFeedback);
+      if (fieldExists(vfTable, CONFIG.fields.vf.error)) {
+        await vfTable.updateRecordAsync(recordId, {
+          [CONFIG.fields.vf.error]: message,
         });
       }
     }
-  } catch {}
+  } catch {
+    // Best-effort error writeback.
+  }
   throw error;
 }

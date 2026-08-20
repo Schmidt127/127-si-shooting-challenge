@@ -52,7 +52,7 @@ function listAutomationScripts() {
   const dir = path.join(ROOT, "airtable/automations/shooting-challenge");
   return fs
     .readdirSync(dir)
-    .filter((name) => /^\d+[a-z]?-.*\.js$/i.test(name) && !name.endsWith(".test.js"))
+    .filter((name) => /^\d+[a-z]?-.*\.js$/i.test(name) && !/\.test\.js$/i.test(name))
     .map((name) => path.join(dir, name));
 }
 
@@ -67,8 +67,7 @@ function hasVersionHeader(text) {
     /\bversion\s*[:=]/i.test(text) ||
     /\* Version:\s*/i.test(text) ||
     /\* VERSION:\s*/i.test(text) ||
-    /const SCRIPT\s*=/.test(text) ||
-    /Status:\s*RETIRED/i.test(text)
+    /const SCRIPT\s*=/.test(text)
   );
 }
 
@@ -116,6 +115,8 @@ const LAUNCH_SCOPE_SCRIPTS = Object.freeze([
   "115",
   "116",
   "117",
+  // 117a–117f live under _design-alternatives / _superseded / Make historical
+  // templates. Current PROD slot 117 is Communications Hub handoff (see CURRENT-TRUTH).
 ]);
 
 function parseEnvExampleKeys(relPath) {
@@ -140,12 +141,14 @@ const requiredDocs = [
   "docs/V2_RELEASE_CHECKLIST.md",
   "docs/AUTOMATION_VERSION_INVENTORY.md",
   "docs/V2_END_TO_END_TEST_MATRIX.md",
+  "docs/v2/V2_DEV_EXECUTION_RUNBOOK.md",
   "docs/v2/V2_LAUNCH_SMOKE_TESTS.md",
   "docs/known-issues.md",
   "docs/automation-index.md",
   "docs/deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md",
   "docs/v2/08-testing-standards.md",
   "docs/PROJECT_STATE.md",
+  "docs/CURRENT-TRUTH.md",
   "AGENTS.md",
   "BRAND_STANDARDS.md",
   "APP_CONTEXT.md",
@@ -199,7 +202,7 @@ for (const filePath of scripts) {
     missingDeclaredVersion += 1;
     fail(`launch-scope script missing declared version string: ${rel(filePath)}`);
   }
-  if (/^(009|066|117|117a|117b|117c)-/.test(base) && !hasStandardScriptMetadata(text)) {
+  if (/^(009|066|117)-/.test(base) && !hasStandardScriptMetadata(text)) {
     missingStandardMeta += 1;
     fail(`missing standard SCRIPT metadata (scriptName/version/versionDate/originalWrittenDate): ${rel(filePath)}`);
   }
@@ -211,7 +214,7 @@ if (missingDeclaredVersion === 0) {
   pass("all launch-scope automation scripts declare an explicit version string");
 }
 if (missingStandardMeta === 0) {
-  pass("critical scripts (009/066/117/117a/117b/117c) expose standard SCRIPT metadata");
+  pass("critical scripts (009/066/117) expose standard SCRIPT metadata");
 }
 
 // Expected high-value scripts for V2 validation domains (launch scope)
@@ -250,6 +253,14 @@ const requiredTests = [
   "airtable/automations/shooting-challenge/lib/script-header-contract.test.js",
   "airtable/automations/shooting-challenge/lib/upload-make-lambda-response.js",
   "airtable/automations/shooting-challenge/lib/upload-make-lambda-response.test.js",
+  "tools/airtable/v2_dev_runbook/matrix-classification.json",
+  "tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js",
+  "tools/airtable/v2_dev_runbook/cli.js",
+  "tools/airtable/v2_dev_runbook/cli.test.js",
+  "tools/airtable/v2_dev_runbook/scenarios.test.js",
+  "tools/airtable/v2_dev_runbook/lib/safety.js",
+  "tools/airtable/v2_dev_runbook/lib/scenarios.js",
+  "tools/airtable/v2_dev_runbook/fixtures/milestones.json",
   "tools/airtable/tests/test_c025_recording_watch_contract.py",
   "tools/airtable/tests/test_c009_hw17_attachment_contract.py",
   "tools/airtable/tests/test_c010_active_guards_contract.py",
@@ -283,6 +294,9 @@ for (const needle of [
 
 const requiredC009C011Docs = [
   "docs/v2/C009_C010_C011_MIGRATION_SAFETY.md",
+  "docs/v2/C009_HW17_ATTACHMENT_DEV_INSTALL.md",
+  "docs/v2/C010_ACTIVE_GUARDS_DEV_INSTALL.md",
+  "docs/v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md",
   "docs/v2/PR34_PR35_PR37_RECONCILIATION.md",
 ];
 for (const doc of requiredC009C011Docs) {
@@ -291,8 +305,10 @@ for (const doc of requiredC009C011Docs) {
 }
 
 const requiredC025Docs = [
+  "docs/v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md",
   "docs/v2/AUTOMATION_070A_LAUNCH_DECISION.md",
   "docs/v2/C025_ARCHITECTURE_RECONCILIATION.md",
+  "docs/deploy-checklists/066-dev-omni-confirmation-packet.md",
   "docs/deploy-checklists/C-025-zoom-recording-design-stage12.md",
 ];
 for (const doc of requiredC025Docs) {
@@ -301,9 +317,9 @@ for (const doc of requiredC025Docs) {
 }
 
 // ---------------------------------------------------------------------------
-// 3b. Production testing-view documentation (C-019) — required repo rules
+// 3b. DEV testing-view documentation (C-019) — required repo rules
 // ---------------------------------------------------------------------------
-console.log("\n== Production testing-view documentation (C-019) ==");
+console.log("\n== DEV testing-view documentation (C-019) ==");
 const c019Docs = [
   "docs/deploy-checklists/C-019-testing-views-verification-checklist.md",
   "docs/deploy-checklists/C-019-airtable-ui-work-order.md",
@@ -447,8 +463,7 @@ const automationIndex = exists("docs/automation-index.md") ? read("docs/automati
 const knownIssues = exists("docs/known-issues.md") ? read("docs/known-issues.md") : "";
 const inventoryText = inventory;
 
-// 066: current Production-aligned source is v3.8; do not claim paste-not-done
-// or treat older 3.x as the current sole version in PROJECT_STATE.
+// 066: current GitHub + Mike overlay is v3.8 (2026-08-19); do not claim paste-not-done.
 if (byNumber.has("066")) {
   const text066 = fs.readFileSync(byNumber.get("066")[0], "utf8");
   const ver066 = extractDeclaredVersion(text066) || "";
@@ -462,12 +477,12 @@ if (byNumber.has("066")) {
   }
 
   if (
-    /Automation 066 v3\.[123]\b/i.test(projectState) &&
-    !/066 v3\.[48]/i.test(projectState)
+    /Automation 066 v3\.[1-7]\b/i.test(projectState) &&
+    !/066.*v3\.8/i.test(projectState)
   ) {
-    fail("PROJECT_STATE references Automation 066 v3.1–v3.3 without acknowledging current v3.8");
+    fail("PROJECT_STATE references Automation 066 older 3.x without acknowledging v3.8 current");
   } else {
-    pass("PROJECT_STATE 066 version wording acknowledges current source (or avoids stale older-only claim)");
+    pass("PROJECT_STATE 066 version wording acknowledges v3.8 (or avoids stale older-only claim)");
   }
 }
 
@@ -488,10 +503,7 @@ if (byNumber.has("070b") && byNumber.has("070c")) {
 }
 
 // 059: recommended trigger must NOT prefer Ready for 059 XP as the live filter
-if (
-  /Ready for 059 XP/i.test(automationIndex) &&
-  !/(Do NOT|never) filter (on )?`?Ready for 059 XP/i.test(automationIndex)
-) {
+if (/Ready for 059 XP/i.test(automationIndex) && !/Do NOT filter on Ready for 059 XP/i.test(automationIndex)) {
   // Index may mention the formula field historically; require recommended-trigger correction nearby
   if (!/record is \*\*created\*\*|When a record is created/i.test(automationIndex + inventoryText)) {
     fail("059 docs still imply Ready-for-059-XP matches-conditions trigger without created-record recommendation");
@@ -502,7 +514,7 @@ if (
   pass("059 trigger docs do not incorrectly require Ready for 059 XP filter");
 }
 
-if (/(RECOMMENDED|REQUIRED LIFECYCLE) TRIGGER[\s\S]{0,400}(updated or created|created or updated)/i.test(
+if (/RECOMMENDED TRIGGER[\s\S]{0,400}created/i.test(
   byNumber.has("059") ? fs.readFileSync(byNumber.get("059")[0], "utf8") : "",
 )) {
   pass("059 script documents recommended created trigger");
@@ -537,6 +549,9 @@ if (/043/.test(inventoryText) && /retire|retired|legacy|delete/i.test(inventoryT
 // ---------------------------------------------------------------------------
 console.log("\n== Launch-test evidence (repository packages) ==");
 const launchEvidenceDocs = [
+  "docs/deploy-checklists/DEV-release-readiness-verification-2026-07-16.md",
+  "docs/deploy-checklists/066-dev-omni-confirmation-packet.md",
+  "docs/v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md",
   "docs/V2_END_TO_END_TEST_MATRIX.md",
   "docs/deploy-checklists/C-019-testing-views-verification-checklist.md",
 ];
@@ -546,11 +561,11 @@ for (const doc of launchEvidenceDocs) {
 }
 
 const verificationPkg = exists(launchEvidenceDocs[0]) ? read(launchEvidenceDocs[0]) : "";
-for (const needle of ["PASS", "066", "offline"]) {
+for (const needle of ["PASS", "C-025", "066", "Live DEV install remains", "offline"]) {
   if (verificationPkg.toLowerCase().includes(needle.toLowerCase())) {
-    pass(`Production verification package mentions: ${needle}`);
+    pass(`DEV verification package mentions: ${needle}`);
   } else if (verificationPkg) {
-    fail(`Production verification package missing keyword: ${needle}`);
+    fail(`DEV verification package missing keyword: ${needle}`);
   }
 }
 

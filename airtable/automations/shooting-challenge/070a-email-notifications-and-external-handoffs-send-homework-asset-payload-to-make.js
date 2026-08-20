@@ -1,4 +1,4 @@
-﻿/*
+/*
 Automation: 070a - Email, Notifications, and External Handoffs - Send Homework Asset Payload to Make
 System: 127 SI Shooting Challenge
 Source: Airtable Automation

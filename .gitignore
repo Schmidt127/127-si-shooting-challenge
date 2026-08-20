@@ -6,6 +6,10 @@
 **/.env.new-token
 **/c013-prod-deploy-session.local.json
 
+# Accidental root exports with recipient PII (use docs/archive/sensitive/ after redaction)
+/Award Recipients*.csv
+/Award-Recipients*.csv
+
 # Generated operational previews (previously tracked files remain tracked)
 _preview/
 **/_preview/**
@@ -53,6 +57,7 @@ chatgpt-recovery-*.zip
 test-results/
 
 # Local scratch / one-off probe artifacts (never commit)
+docs/audits/_scratch*/
 .impeccable/critique/
 .impeccable/questions/
 .impeccable/live/

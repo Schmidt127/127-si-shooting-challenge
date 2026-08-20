@@ -1,18 +1,22 @@
 # PROD Automation Version Inventory — Foundation Reset Pack
 
+> **⛔ NON-AUTHORITY (2026-08-20).** This file was built from the obsolete Production **`Automations` data table**. That table is **not** an authority source for Version 2 audits or operational decisions. **Do not** use Status, versions, triggers, or “missing row” inferences from this document. Prefer Airtable Automations UI, Mike-dated evidence, and current GitHub sources ([`CURRENT-TRUTH.md`](../CURRENT-TRUTH.md) · [`AUTHORITY-MAP.md`](../AUTHORITY-MAP.md)).
+>
+> **Retraction example:** This export lists Automation **077** as Status `Live`. That claim is **retracted**. Mike-dated docs state **077 was deleted from Production on 2026-08-13**. Preserve this file as historical archaeology only.
+
 **Base:** PROD `appn84sqPw03zEbTT`  
 **Inventory date:** 2026-07-23  
-**Source:** Airtable `Automations` table (operator inventory) + GitHub script headers  
+**Source (historical only):** Airtable `Automations` table (obsolete operator inventory) + GitHub script headers  
 **Important limit:** Airtable API cannot read live automation script source. **PROD vs repo match = UNKNOWN** unless Mike pastes/attests a version.
 
-**Rows in Automations table:** 48  
-**Notable repo scripts missing from Automations table:** 115, 116, 117, 117f, 118, 119, 070c
+**Rows in Automations table (historical count):** 48  
+**Notable repo scripts missing from Automations table (non-authoritative absence):** 115, 116, 117, 117f, 118, 119, 070c
 
-## Summary findings
+## Summary findings (historical — do not operationalize)
 
-- **115** is **not** listed in the PROD Automations table → treat as **not installed**.
-- **117 / 117f / 118 / 119 / 116 / 070c** also not listed in this operator table (may still exist as UI automations not inventoried — needs Mike UI attestation).
-- Many rows show Status `Live`, but script version/date fields are **not stored** in the Automations table.
+- ~~**115** is **not** listed in the PROD Automations table → treat as **not installed**.~~ **Retracted** — absence from the obsolete table proves nothing about Automations UI install state.
+- ~~**117 / 117f / 118 / 119 / 116 / 070c** also not listed~~ **Retracted** as install proof; Mike UI attestation / GitHub + overlays required.
+- Many rows show Status `Live`, but those Status values from the obsolete table are **not** trustworthy.
 
 ## Inventory table
 

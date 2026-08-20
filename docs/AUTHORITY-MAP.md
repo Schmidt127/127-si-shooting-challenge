@@ -2,19 +2,35 @@
 
 **Status:** Active
 **Backlog:** `SCV2-SEASON-LAUNCH-CONSOLIDATION-001`
-**Last updated:** 2026-08-19 (C-028 Tremendous; email = Resend; 022/020/070b/117/066/010 Airtable confirmed)
+**Last updated:** 2026-08-20 (Production `Automations` table Name/Status/Code authority refresh)
 
 This map defines ownership. It does not assert that a repository document proves
 current live configuration.
+
+## Production `Automations` table — scoped authority (2026-08-20)
+
+> Mike intentionally refreshed the Production `Automations` data table. For Version 2 automation **code / Live / identity** audits, use **only**:
+>
+> 1. `Name`  
+> 2. `Status`  
+> 3. `Automation Code`  
+>
+> Do **not** use other columns on that table as audit authority.
+
+**Pre-refresh history:** The old unmaintained table was non-authority. Conclusions that depended on the **pre-refresh** table alone remain retracted for that era. See [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) and [`audits/2026-08-20-automation-49-code-audit.md`](./audits/2026-08-20-automation-49-code-audit.md).
 
 ## Current authority
 
 | Concern | Authority | Owner / update trigger |
 |---|---|---|
+| **Primary current-state document** | [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) | Cursor; update on git tip changes, Mike overlays, or integrity audits |
 | Source code and automation source | GitHub `master` and the committed repository paths | Cursor; update on approved code changes |
 | Human-readable release status | [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md) | Cursor; update when release evidence or blockers change |
+| Repository integrity / security registers | [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md) · [`SECURITY-AND-SENSITIVE-FILES.md`](./SECURITY-AND-SENSITIVE-FILES.md) · [`ARCHIVED-AND-SUPERSEDED-FILES.md`](./ARCHIVED-AND-SUPERSEDED-FILES.md) | Cursor; refresh after integrity passes |
 | Machine-readable run control | [`agent-runs/CONTROL.json`](./agent-runs/CONTROL.json) | Lead / Integrator; update when a controlled agent package starts, completes, or changes state |
-| Live Airtable configuration and records | Airtable UI / named base, not repository text | Mike; verify with a dated read-only export or controlled UI evidence |
+| Live Airtable **automation Name / Status / Code** | Production `Automations` table (**those three columns only**) | Mike refresh 2026-08-20; Cursor audits against Code |
+| Live Airtable **automation triggers / UI wiring** | **Airtable Automations UI** (not other Automations-table columns) | Mike; dated UI attestation |
+| Live Airtable **records** (athletes, submissions, XP, etc.) | Airtable UI / named base, not repository text | Mike; verify with a dated read-only export or controlled UI evidence |
 | Live Fillout enrollment availability | Fillout UI | Mike; verify before launch activation |
 | Live Make, Gmail, Lambda, and email state | Respective service UI / logs | Mike; verify with service evidence; no repository claim substitutes for it |
 | Shooting Challenge email delivery | [`integrations/email-send-plane.md`](./integrations/email-send-plane.md) | Mike 2026-08-19: Resend via Communications Hub; Make.com is not the email sender |
@@ -23,6 +39,7 @@ current live configuration.
 | Release evidence | Dated evidence packages under `docs/prod-completion/`, `docs/testing/evidence/`, and focused deploy checklists | Cursor records evidence boundaries; Mike supplies live-system evidence |
 | 2027 season calendar | Airtable **Weeks** table, manually maintained | Mike; verify the target-year export before import or activation |
 | Historical records | Dated files under `docs/archive/` and historical evidence folders | Preserve; never treat as current status |
+| **Other Automations-table columns** (trigger type, conditions, etc.) | **Not authority** | May still be stale; ignore for V2 audits |
 
 ## 2027 season policy
 
@@ -45,17 +62,22 @@ testing is not natural-trigger proof, offline tests are not controlled PROD
 proof, and successful 115 creation does not prove 005/009/020/064/XP/summary or
 email behavior.
 
+The Production base’s **`Automations` data table** is authority for **`Name` / `Status` / `Automation Code` only** after the 2026-08-20 refresh. Other columns on that table may still be stale. Pre-refresh historical exports (for example
+`foundation-reset/PROD-AUTOMATION-VERSION-INVENTORY-2026-07-23.md`) remain
+**historical / non-authority** for Version 2 decisions.
+
 Automation 115 intentionally creates one new production-shaped Submission per
 explicit checked Run Test request. That behavior is not idempotency. Downstream
 Homework Completion reuse is a separate contract.
 
 ## Document routing
 
+- Current state (git, bases, overlays, ledger): `CURRENT-TRUTH.md`.
 - Release status: Completion Master.
 - Run coordination: `agent-runs/CONTROL.json`.
 - Backlog: `v2-change-backlog.md`.
-- Live operations snapshot: `PROJECT_STATE.md`; it must link here and must not
-  present itself as the release-status master.
+- Live operations snapshot: `PROJECT_STATE.md`; it must link here and to
+  `CURRENT-TRUTH.md`, and must not present itself as the release-status master.
 - Tremendous awards (C-028): `integrations/tremendous-award-fulfillment.md`.
 - Email delivery: `integrations/email-send-plane.md` (Resend; Make is not the email sender).
 - Architecture, operator runbooks, test specifications, and release evidence

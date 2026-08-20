@@ -4,13 +4,14 @@
   "mode": "controlled-expanded-workflow",
   "canonical": {
     "branch": "master",
-    "sha": "2f8188bc22b4075fdf24b5d6ed80fc175aa16f72",
-    "remote_sha": "2f8188bc22b4075fdf24b5d6ed80fc175aa16f72",
+    "sha": "010a8b3a48917771c77ee47e53822ec736558b5b",
+    "remote_sha": "010a8b3a48917771c77ee47e53822ec736558b5b",
     "match": true,
-    "note": "PKG-033 registration baseline refreshed from origin/master; PKG-006R remains a draft package; unrelated open drafts #161 and #162 remain untouched."
+    "note": "2026-08-19 integrity audit: refreshed to origin/master tip before audit commits. PKG-033 baseline SHA 2f8188bc… remains historical for that package. Always re-verify with git rev-parse before relying on this field. Primary current-state doc: docs/CURRENT-TRUTH.md."
   },
   "release_control": {
     "backlog_id": "SCV2-MASTER-PLAN-TRACEABILITY-001",
+    "current_truth": "docs/CURRENT-TRUTH.md",
     "human_status_authority": "docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md",
     "authority_map": "docs/AUTHORITY-MAP.md",
     "live_system_authority": {

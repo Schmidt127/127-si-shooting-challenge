@@ -5,6 +5,7 @@ Total output lines: 1039
 
 **Controlling source of truth** for finishing Shooting Challenge V2.
 
+**Current project state (git / bases / overlays):** [`docs/CURRENT-TRUTH.md`](./CURRENT-TRUTH.md)  
 **Authority map:** [`docs/AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
 
 Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`,

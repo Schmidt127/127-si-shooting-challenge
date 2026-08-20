@@ -62,8 +62,8 @@ t("020/033/065/071 syntax", () => {
   }
 });
 
-t("020 v3.6 treats Grade Band as metadata only", () => {
-  assert.match(s020, /version:\s*"v3\.6"/);
+t("020 v3.7 treats Grade Band as metadata only", () => {
+  assert.match(s020, /version:\s*"v3\.7"/);
   assert.match(s020, /Grade Band is eligibility\/descriptive metadata only/i);
   assert.match(s020, /Multi-band Grade Band never rejects/);
   assert.match(s020, /gradeBandSchedulingUsed:\s*false/);

@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 /**
  * Static ownership contracts for WAS weekly email handoff.
- * Validates 072 does not send, 119 only arms, and 074 owns the durable
- * Communications Hub queue handoff. Automation 079 owns network delivery.
+ * Validates 072 does not send, 119 only arms, 074 owns Hub queue handoff.
  */
 "use strict";
 
@@ -40,8 +39,8 @@ const s118 = read(
   "118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js"
 );
 
-test("072 v4.1 enforces empty-week policies and does not call Make/fetch webhook", () => {
-  assert.ok(/Version:\s*v4\.1/.test(s072));
+test("072 v4.2 enforces empty-week policies and does not call Make/fetch webhook", () => {
+  assert.ok(/Version:\s*v4\.2/.test(s072));
   assert.ok(/emptyWeekPolicy/.test(s072));
   assert.ok(/built_short_empty_week/.test(s072));
   assert.ok(/suppressed_empty_week/.test(s072));
@@ -70,16 +69,17 @@ test("118 v2.0 does not create WAS, build HTML, or post webhook; arms sendMode f
   assert.ok(/update\[CONFIG\.was\.sendMode\]\s*=\s*\{\s*name:\s*sendMode\s*\}/.test(s118));
 });
 
-test("074 v3.0 owns durable Hub handoff; never sends or marks Sent?", () => {
-  assert.ok(/Version:\s*v3\.0/.test(s074));
+test("074 owns Hub queue handoff; does not mark Sent?; blocks duplicate Sent?", () => {
+  assert.ok(/Version:\s*v3\.1/.test(s074));
   assert.ok(/Email Handoff Queue/.test(s074));
-  assert.ok(/WEEKLY_ATHLETE_SUMMARY\|WEEKLY_ATHLETE_SUMMARY/.test(s074));
-  assert.ok(/existing_handoff/.test(s074));
-  assert.ok(/needs_review/.test(s074));
+  assert.ok(/WEEKLY_ATHLETE_SUMMARY\|WEEKLY_ATHLETE_SUMMARY\|/.test(s074));
+  assert.ok(/created_handoff/.test(s074));
+  assert.ok(!/\bfetch\s*\(/.test(s074), "074 must not fetch/webhook");
+  assert.ok(!/makeWebhookUrl/.test(s074), "074 must not take Make webhook input");
   assert.ok(/Do not write Weekly Email Sent\?/.test(s074));
-  assert.ok(!/\bfetch\s*\(/.test(s074), "074 must not perform network delivery");
-  assert.ok(!/makeWebhookUrl/.test(s074), "074 must not accept a Make webhook");
-  assert.ok(/Only Automation 079 may send/.test(s074));
+  assert.ok(/Duplicate handoff blocked/.test(s074));
+  assert.ok(/testMode/.test(s074));
+  assert.ok(/sendToMake/.test(s074));
 });
 
 test("policy matrix: short / normal / suppress + non-empty full", () => {
@@ -102,10 +102,10 @@ test("policy matrix: short / normal / suppress + non-empty full", () => {
   );
 });
 
-test("074 records test mode and a structured guardian recipient for Hub", () => {
-  assert.ok(/testMode defaults true/.test(s074));
-  assert.ok(/role:\s*"guardian"/.test(s074));
-  assert.ok(/JSON\.stringify\(recipients\)/.test(s074));
+test("074 clears Send to Make? and leaves Sent fields to Hub writeback", () => {
+  assert.ok(/CONFIG\.fields\.was\.sendToMake\]\s*=\s*false/.test(s074));
+  assert.ok(!/\[["']Weekly Email Sent\?["']\]\s*:\s*true/.test(s074));
+  assert.ok(!/\[["']Weekly Email Sent At["']\]\s*:/.test(s074));
 });
 
 console.log("handoff-ownership tests passed");

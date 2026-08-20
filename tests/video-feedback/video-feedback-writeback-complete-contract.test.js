@@ -83,8 +83,8 @@ test("022 does not mirror Google Drive fields onto Video Feedback", () => {
   assert.match(sync022, /Do not mirror obsolete Google Drive fields onto Video Feedback/);
 });
 
-test("073 v4.1 Hub handoff uses only VF Video URL or Drive Link", () => {
-  assert.match(email073, /Version: v4\.1/);
+test("073 v4.2 Hub handoff uses only VF Video URL or Drive Link", () => {
+  assert.match(email073, /Version: v4\.2/);
   assert.match(email073, /Email Handoff Queue/);
   assert.doesNotMatch(email073, /Google Drive File URL|Google Drive View URL|Google Drive File ID|Google Drive Folder/);
   assert.doesNotMatch(email073, /reviewer:\s*"Reviewer File URL"/);

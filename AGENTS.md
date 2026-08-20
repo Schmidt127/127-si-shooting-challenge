@@ -17,17 +17,19 @@ Guidance for AI assistants (Cursor, etc.) working in **`127-si-shooting-challeng
 
 ## Start here
 
-0. [docs/ENGINEERING_CONSTITUTION.md](./docs/ENGINEERING_CONSTITUTION.md)  -  **highest-level engineering law** (GitHub, production safety, priorities)
-1. [docs/agent-runs/00-START-HERE.md](./docs/agent-runs/00-START-HERE.md)  -  **controlled four-agent workflow** (Lead / Implementation / Testing / Research)
-2. [docs/agent-runs/CONTROL.json](./docs/agent-runs/CONTROL.json)  -  **four-agent resume source of truth** (read before multi-agent work; verify git SHA)
-3. [docs/SESSION_HANDOFF-2026-07-06.md](./docs/SESSION_HANDOFF-2026-07-06.md)  -  **latest session handoff** (bases, blockers, schema snapshots)
-4. [docs/v2/04-ai-development-standards.md](./docs/v2/04-ai-development-standards.md)  -  **permanent workflow** (Mike / ChatGPT / Cursor / **OMNI-first** for in-Airtable work)
-5. [docs/v2/README.md](./docs/v2/README.md)  -  **V2 numbered doc pack** (`01`-`09`)
-6. [docs/PROJECT_STATE.md](./docs/PROJECT_STATE.md)  -  live snapshot (bases, audits, Vercel, Softr)
-7. [docs/v2-change-backlog.md](./docs/v2-change-backlog.md)  -  live backlog (add new items here)
-8. [docs/CHATGPT-MASTER-PLAN-BRIEF.md](./docs/CHATGPT-MASTER-PLAN-BRIEF.md)  -  aggregated planning view for ChatGPT
-9. [APP_CONTEXT.md](./APP_CONTEXT.md)  -  route, theme, product boundaries
-10. [BRAND_STANDARDS.md](./BRAND_STANDARDS.md)  -  shared 127 SI brand foundation
+0. [docs/CURRENT-TRUTH.md](./docs/CURRENT-TRUTH.md)  -  **primary current-state document** (branch/SHA, bases, email, automations, pending work). Production `Automations` table is authority for **`Name` / `Status` / `Automation Code` only** (Mike refresh 2026-08-20); ignore other columns on that table.
+1. [docs/ENGINEERING_CONSTITUTION.md](./docs/ENGINEERING_CONSTITUTION.md)  -  **highest-level engineering law** (GitHub, DEV-first, priorities)
+2. [docs/agent-runs/00-START-HERE.md](./docs/agent-runs/00-START-HERE.md)  -  **controlled four-agent workflow** (Lead / Implementation / Testing / Research)
+3. [docs/agent-runs/CONTROL.json](./docs/agent-runs/CONTROL.json)  -  **four-agent resume source of truth** (read before multi-agent work; verify git SHA)
+4. [docs/SESSION_HANDOFF-2026-07-06.md](./docs/SESSION_HANDOFF-2026-07-06.md)  -  **latest session handoff** (bases, blockers, schema snapshots)
+5. [docs/v2/04-ai-development-standards.md](./docs/v2/04-ai-development-standards.md)  -  **permanent workflow** (Mike / ChatGPT / Cursor / **OMNI-first** for in-Airtable work)
+6. [docs/v2/README.md](./docs/v2/README.md)  -  **V2 numbered doc pack** (`01`-`09`)
+7. [docs/PROJECT_STATE.md](./docs/PROJECT_STATE.md)  -  live ops snapshot (must agree with CURRENT-TRUTH)
+8. [docs/v2-change-backlog.md](./docs/v2-change-backlog.md)  -  live backlog (add new items here)
+9. [docs/CHATGPT-MASTER-PLAN-BRIEF.md](./docs/CHATGPT-MASTER-PLAN-BRIEF.md)  -  aggregated planning view for ChatGPT
+10. [APP_CONTEXT.md](./APP_CONTEXT.md)  -  route, theme, product boundaries
+11. [BRAND_STANDARDS.md](./BRAND_STANDARDS.md)  -  shared 127 SI brand foundation
+12. [docs/REPOSITORY-INTEGRITY-AUDIT.md](./docs/REPOSITORY-INTEGRITY-AUDIT.md) · [docs/SECURITY-AND-SENSITIVE-FILES.md](./docs/SECURITY-AND-SENSITIVE-FILES.md) · [docs/ARCHIVED-AND-SUPERSEDED-FILES.md](./docs/ARCHIVED-AND-SUPERSEDED-FILES.md)
 
 ## Repo scope
 
@@ -75,14 +77,14 @@ Use this model for controlled multi-agent packages. Role docs live under `docs/a
 
 **Hard stops (all four roles):**
 
-- Production-only environment  -  use read-only checks by default
+- DEV only  -  no Production access
 - No Airtable schema changes without Mike authorization
 - No credential or secret changes
 - No deployment (Vercel, AWS, Make prod, Airtable prod)
 - No destructive Git (`reset --hard`, `clean`, force push, branch delete)
 - Workers cannot merge  -  only Lead integrates worker branches
 - Mike must approve any merge to `master` / `main`
-- No live Airtable mutation unless Mike explicitly authorizes the named Production action
+- No live Airtable access unless Mike authorizes a named DEV check
 
 Launch prompts: [docs/agent-runs/05-LAUNCH-PROMPTS.md](./docs/agent-runs/05-LAUNCH-PROMPTS.md).
 
@@ -117,9 +119,9 @@ Include:
 ## Hard constraints
 
 - **Never commit secrets**  -  `.env`, PATs, webhook URLs with tokens
-- **Production-only operation**  -  validate offline first, use dry-runs/read-only probes where available, and require Mike's explicit authorization for live mutations ([doc 04](./docs/v2/04-ai-development-standards.md))
-- **Change evidence required**  -  live changes are not official until implementation and verification evidence is documented in `docs/deploy-checklists/`
-- **Airtable production writes**  -  GitHub â†' offline validation â†' Mike approval â†' controlled Production action â†' verification â†' `CHANGELOG.md`
+- **DEV before Production**  -  automations, formulas, views, interfaces, Make scenarios, scripts, schema  -  test in DEV first ([doc 04](./docs/v2/04-ai-development-standards.md))
+- **Promotion doc required**  -  DEV changes are not official until Cursor documents prod steps in `docs/deploy-checklists/` ([doc 04 Â§ Official promotion documentation](./docs/v2/04-ai-development-standards.md#official-promotion-documentation-required))
+- **Airtable production writes**  -  GitHub â†' DEV test â†' Mike approval â†' prod paste â†' `CHANGELOG.md`
 - **Audits/backfills**  -  dry-run first; explicit `CONFIRM_WRITE` / `CONFIRM_DELETE` for writes
 - **Web Airtable reads**  -  server-side only (`lib/airtable/`); never expose `AIRTABLE_API_TOKEN` to the browser
 - **XP idempotency**  -  one source record â†' one XP Event; use Source Key patterns from automation scripts

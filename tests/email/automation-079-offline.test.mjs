@@ -254,8 +254,8 @@ async function run079({ record, response = acceptedResponse() }) {
   return { base, queue, output, error, requests, fetchCalls, console: capturedConsole };
 }
 
-test("079 script is v2.4 and dispatches via fetch, not remoteFetchAsync", () => {
-  assert.match(SCRIPT_SOURCE, /version:\s*"v2\.4"/);
+test("079 script is v2.5 and dispatches via fetch, not remoteFetchAsync", () => {
+  assert.match(SCRIPT_SOURCE, /version:\s*"v2\.5"/);
   assert.match(SCRIPT_SOURCE, /079 – Send to Communications Hub - NEW/);
   assert.match(SCRIPT_SOURCE, /eventZoomRecordingApproval:\s*"ZOOM_RECORDING_APPROVAL"/);
   assert.match(SCRIPT_SOURCE, /templateZoomRecordingApproved:\s*"ZOOM_RECORDING_APPROVED"/);

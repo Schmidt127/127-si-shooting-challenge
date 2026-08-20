@@ -6,6 +6,8 @@
 **Scope:** Shooting Challenge only — **not** Team Shot Tracker; **no** 3/7/10-day inactivity alerts  
 **Evidence classes:** `verified_prod` · `repo_evidence` · `inferred` · `unverified`
 
+> **⛔ 2026-08-20 authority note:** Findings that relied on the obsolete Production **`Automations` data table** (including “Live” status and “missing from Automations table”) are **non-authority** for Version 2. Prefer Automations UI + Mike-dated evidence + GitHub. See [`CURRENT-TRUTH.md`](../../CURRENT-TRUTH.md). Weekly Make→Gmail email path described below is also **historical** (current send plane is Hub → Resend).
+
 > Canonical indexes are **not** replaced here.  
 > Automation index: [`docs/automation-index.md`](../../automation-index.md)  
 > Source keys: [`../automation-ownership/xp-source-key-registry.json`](../automation-ownership/xp-source-key-registry.json)  

@@ -4,13 +4,17 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 
 > **Repo:** `127-si-shooting-challenge` — public app at `/shoot` on fairfieldbasketballclub.com. Official landing: https://www.fairfieldbasketballclub.com.
 
-**Completion plan (controlling)?** Use [SHOOTING_CHALLENGE_COMPLETION_MASTER.md](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md). Older backlog files remain evidence/history only.
+**Current project truth?** Use [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) first (branch/SHA, bases, email plane, automation overlays, pending/blocked work). Integrity companions: [REPOSITORY-INTEGRITY-AUDIT.md](./REPOSITORY-INTEGRITY-AUDIT.md) · [ARCHIVED-AND-SUPERSEDED-FILES.md](./ARCHIVED-AND-SUPERSEDED-FILES.md) · [SECURITY-AND-SENSITIVE-FILES.md](./SECURITY-AND-SENSITIVE-FILES.md).
+
+> **Authority:** The obsolete Production `Automations` data table is **not** a source of truth — see CURRENT-TRUTH Authority rule.
+
+**Completion plan (controlling release narrative)?** Use [SHOOTING_CHALLENGE_COMPLETION_MASTER.md](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md). Older backlog files remain evidence/history only.
 
 **Current reconciliation (2026-07-24):** [next-wave/agent5-lead-reconciliation-2026-07-24/](./next-wave/agent5-lead-reconciliation-2026-07-24/) · go-live [next-wave/go-live/](./next-wave/go-live/) · Mike actions [next-wave/final-reconciliation/MIKE-ACTIONS-NEXT.md](./next-wave/final-reconciliation/MIKE-ACTIONS-NEXT.md).
 
 **Foundation Reset Pack (2026-07-23):** [foundation-reset/README.md](./foundation-reset/README.md).
 
-**New session?** Read [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md) and [PROJECT_STATE.md](./PROJECT_STATE.md) first, then [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) for the permanent AI workflow.
+**New session?** Read [CURRENT-TRUTH.md](./CURRENT-TRUTH.md), [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md), and [PROJECT_STATE.md](./PROJECT_STATE.md), then [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) for the permanent AI workflow.
 
 **Four-agent run?** Start at [agent-runs/00-START-HERE.md](./agent-runs/00-START-HERE.md) and [agent-runs/CONTROL.json](./agent-runs/CONTROL.json).
 
@@ -42,7 +46,7 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 | 04 | [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) | **Active** — AI workflow, task classification, five phases |
 | — | [v2/season-configuration-design.md](./v2/season-configuration-design.md) | Season gate design (Layer 2, DRAFT) |
 | 05 | [v2/05-system-architecture.md](./v2/05-system-architecture.md) | Shell |
-| 06 | [v2/06-automation-standards.md](./v2/06-automation-standards.md) | **Active** — V2 rewrite pattern; **066 v3.2** reference |
+| 06 | [v2/06-automation-standards.md](./v2/06-automation-standards.md) | **Active** — V2 rewrite pattern; **066** reference script (live paste **v3.8** per CURRENT-TRUTH) |
 | 07 | [v2/07-ui-standards.md](./v2/07-ui-standards.md) | Shell |
 | 08 | [v2/08-testing-standards.md](./v2/08-testing-standards.md) | **Active** — audit-first; **fix the audit, not the data** |
 | 09 | [v2/09-release-notes.md](./v2/09-release-notes.md) | Shell — points to CHANGELOG |
@@ -68,7 +72,7 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 | [production-base-setup.md](./production-base-setup.md) | **V2-015 ops runbook** — clone, PAT, webhook isolation, production-only deploy |
 | [v2-015-production-base-architecture.md](./v2-015-production-base-architecture.md) | **Approved** — production Airtable base + one prod + one repo |
 | [CHATGPT-MASTER-PLAN-BRIEF.md](./CHATGPT-MASTER-PLAN-BRIEF.md) | **Planning aggregate** — Wave 0 closed; H-001/H-002; session progress |
-| [v2/06-automation-standards.md](./v2/06-automation-standards.md) | **V2 automation rewrite pattern** — 066 v3.2 reference |
+| [v2/06-automation-standards.md](./v2/06-automation-standards.md) | **V2 automation rewrite pattern** — 066 reference (live **v3.8**) |
 | [v2/08-testing-standards.md](./v2/08-testing-standards.md) | **Audit-first testing** — fix the audit, not the data |
 
 ---
@@ -77,7 +81,8 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 
 | Doc | Purpose |
 |-----|---------|
-| [PROJECT_STATE.md](./PROJECT_STATE.md) | **Live ops snapshot** — commit, routes, C-025/C-011, Softr dual-state |
+| [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) | **Primary current-state document** — git identity, bases, email, overlays, work ledger |
+| [PROJECT_STATE.md](./PROJECT_STATE.md) | **Live ops snapshot** — must agree with CURRENT-TRUTH; routes, C-025/C-011, Softr obsolete |
 | [KNOWN_ISSUES.md](./KNOWN_ISSUES.md) | **Canonical known issues** — Critical / High / Medium / Low with owners |
 | [deploy-checklists/SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md) | Softr → Next.js cutover checklist (no cutover until approved) |
 | [UNTRACKED-RECOVERY-TRIAGE.md](./UNTRACKED-RECOVERY-TRIAGE.md) | Triage plan for untracked recovery material (do not delete without approval) |

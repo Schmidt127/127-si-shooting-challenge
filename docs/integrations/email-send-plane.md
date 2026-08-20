@@ -14,8 +14,10 @@ This file owns the live **email delivery** question. Automation **117 v2.1** is 
 | Who sends Shooting Challenge emails | **Resend**, through the Communications Hub |
 | Make.com email | **None.** Make.com does not handle any Shooting Challenge emails. |
 | Gmail Make scenarios | **Not** the current email sender. Historical only. |
+| Daily submission | **076** creates Hub queue → **079** → Hub → Resend. Automation **077** (Make daily send) is **deleted from Production** (2026-08-13 docs). |
 | Covered mail | Weekly summary, homework feedback, video feedback, welcome, daily submission, Zoom recording approval, and any other SC parent/athlete notification email |
 | Not this file | File upload (070a/070b → Make/Lambda). Tremendous gift-card delivery (Tremendous sends that email after a Make HTTP API call). |
+| Production `Automations` table | **Authority for Name / Status / Automation Code only** (Mike refresh 2026-08-20). Ignore other columns. See [`CURRENT-TRUTH.md`](../CURRENT-TRUTH.md) and [`audits/2026-08-20-automation-49-code-audit.md`](../audits/2026-08-20-automation-49-code-audit.md). |
 
 Make may still run **non-email** work (upload engine, Tremendous HTTP). That is not email handling.
 

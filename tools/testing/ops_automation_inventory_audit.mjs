@@ -2,11 +2,16 @@
 /**
  * Agent 4 ops — PROD automation inventory drift audit.
  *
- * Reads the operator Automations table (script bodies) + Meta tables list,
- * compares numbered slots vs repo shooting-challenge scripts, extracts live
- * version headers, and flags stale / missing / unexpected rows.
+ * ⛔ RETIRED AUTHORITY PATH (2026-08-20):
+ * This script historically read the Production base's obsolete `Automations`
+ * *data table*. That table is NOT an authority source for Version 2 audits.
+ * Do not use its Status/version/trigger rows for operational decisions.
+ * See docs/CURRENT-TRUTH.md and docs/AUTHORITY-MAP.md.
  *
- * Usage:
+ * Prefer: Airtable Automations UI attestation, Mike-dated evidence, and
+ * GitHub SCRIPT headers in airtable/automations/shooting-challenge/.
+ *
+ * Usage (historical only — do not treat output as live truth):
  *   node tools/testing/ops_automation_inventory_audit.mjs
  *   node tools/testing/ops_automation_inventory_audit.mjs --write-evidence
  *
@@ -50,6 +55,17 @@ if (!TOKEN || !TOKEN.startsWith("pat")) {
   console.error("BLOCKED: AIRTABLE_API_TOKEN missing or invalid");
   process.exit(1);
 }
+
+// Hard stop: obsolete Production Automations *data table* is not V2 authority.
+console.error(
+  [
+    "BLOCKED: ops_automation_inventory_audit.mjs must not query the obsolete Production Automations data table.",
+    "That table is not an authority source for Version 2 audits or operational decisions.",
+    "Use Airtable Automations UI attestation, Mike-dated evidence, and GitHub SCRIPT headers instead.",
+    "See docs/CURRENT-TRUTH.md and docs/AUTHORITY-MAP.md.",
+  ].join("\n")
+);
+process.exit(2);
 
 const headers = { Authorization: `Bearer ${TOKEN}` };
 

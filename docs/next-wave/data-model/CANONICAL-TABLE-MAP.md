@@ -11,7 +11,7 @@
 
 | Table | Table ID | Primary field | Role |
 |-------|----------|---------------|------|
-| Automations | `tbl…` (see snapshot) | Automation inventory / ops | Admin |
+| Automations | `tbl…` (see snapshot) | **Obsolete pre-V2 ops inventory** — **not an authority** for live automation state (do not audit against it) | Ignore for V2 |
 | Enrollments | `tbl3PFmwbRoabu1YV` | Full Athlete Name - Backward (formula) | Hub |
 | Athletes | `tblTluxBr3DcVrh6h` | Athlete identity | Person |
 | Level Gate Rules | — | Gate rule definitions | Config |

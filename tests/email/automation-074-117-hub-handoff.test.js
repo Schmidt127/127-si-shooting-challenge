@@ -36,7 +36,7 @@ t("074 syntax", () => checkSyntax(p074));
 t("117 syntax", () => checkSyntax(p117));
 
 t("074 Hub key and event/template", () => {
-  assert.match(s074, /version: "v3\.0"/);
+  assert.match(s074, /version: "v3\.1"/);
   assert.match(s074, /eventType: "WEEKLY_ATHLETE_SUMMARY"/);
   assert.match(s074, /templateKey: "WEEKLY_ATHLETE_SUMMARY"/);
   assert.match(s074, /sourceTableToken: "WEEKLY_ATHLETE_SUMMARY"/);

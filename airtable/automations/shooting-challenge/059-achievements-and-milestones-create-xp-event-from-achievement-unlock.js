@@ -77,6 +77,10 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Script handles existing XP (marks Awarded) and duplicate protection.
  * - PROD closeout: docs/deploy-checklists/059-perfect-week-trigger-coverage.md
  *
+ * RECOMMENDED TRIGGER
+ * - Prefer When a record is created or updated on Athlete Achievement Unlocks
+ *   (Pending award/restoration + Active? withdrawal). Do NOT filter on Ready for 059 XP.
+ *
  * STUCK ROW REPAIR
  * - Pending + XP Events linked + Ready for 059 XP? = 0 → run extension script
  *   backfill-shot-milestone-unlock-mark-awarded.js

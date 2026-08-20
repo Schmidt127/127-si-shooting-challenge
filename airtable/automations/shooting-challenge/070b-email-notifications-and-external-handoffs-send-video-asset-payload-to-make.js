@@ -1,4 +1,4 @@
-﻿/*
+/*
 Automation: 070b - Email, Notifications, and External Handoffs - Send Video Asset Payload to Make
 System: 127 SI Shooting Challenge
 Source: Airtable Automation

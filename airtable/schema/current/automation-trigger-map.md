@@ -113,8 +113,8 @@ version/state/mapping must still be confirmed in the Airtable UI.
 | **072** | Weekly Athlete Summary | `Build Weekly Email Now?` | `072-...-build-weekly-summary-email-package.js` | Email package fields |
 | 074 | Weekly Athlete Summary | *confirm* | `074-...-send-weekly-summary-email-package-to-make.js` | **Make** weekly email |
 | 075 | Enrollments | *confirm* | `075-...-build-challenge-welcome-email.js` | Welcome email package |
-| 076 | Submissions / Enrollments | *confirm* | `076-...-build-daily-submission-email-package.js` (**v8.6**) | Daily email package |
-| **079** | Email Handoff Queue | Status = Ready — *confirm in Airtable* | `079-...-send-queue-handoff-to-communications-hub.js` (**v2.0**) | Communications Hub WELCOME / DAILY_SUBMISSION handoff |
+| 076 | Submissions / Enrollments | *confirm* | `076-...-build-daily-submission-email-package.js` (**v8.7**) | Daily email package |
+| **079** | Email Handoff Queue | Status = Ready — *confirm in Airtable* | `079-...-send-queue-handoff-to-communications-hub.js` (**v2.5**) | Communications Hub WELCOME / DAILY_SUBMISSION handoff |
 | **118** | Weeks / Enrollments | Scheduled Sunday 05:00 America/Denver | `118-...-schedule-weekly-summary-email-build.js` (**v2.0**) | Arms Weekly Athlete Summary email build |
 | 077 | — | **Retired / deleted from Airtable — do not recreate** | `077-...-send-daily-submission-email-package-to-make.js` (GitHub historical source only) | No active native automation; daily-email Hub boundary is 076 → 079 |
 

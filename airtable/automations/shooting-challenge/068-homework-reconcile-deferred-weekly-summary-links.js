@@ -1,5 +1,6 @@
 /*
 Automation: 068 - Homework - Reconcile Deferred Weekly Summary Links
+Version: retired-2026-08-09
 Status: RETIRED — DO NOT INSTALL AS AN AIRTABLE AUTOMATION
 Retired: 2026-08-09
 

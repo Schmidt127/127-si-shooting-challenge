@@ -2,7 +2,8 @@
 
 Documentation and automation source for the **127 Sports Intensity Shooting Challenge** — an Airtable-based youth basketball shooting challenge system.
 
-> **Hoop Challenges:** This repo is **Shooting Challenge only** at `/shoot`. Landing: `hoopchallenges-landing`.
+> **Current truth:** Start at [`docs/CURRENT-TRUTH.md`](./docs/CURRENT-TRUTH.md) for branch/SHA, bases, email plane, automation overlays, and pending work.  
+> **Hoop Challenges:** This repo is **Shooting Challenge only** at `/shoot`. Landing: separate landing project (historical repo name may still be `hoopchallenges-landing`).
 
 ## Purpose
 
@@ -17,10 +18,11 @@ The app tracks athlete enrollments, shooting submissions, XP, levels, streaks, h
 | System | Role |
 |--------|------|
 | **Airtable** | Live production environment — data, automations, and extensions |
-| **Make.com** | External workflows (Google Drive, Gmail, webhooks, and related scenarios) |
+| **Communications Hub → Resend** | Current Shooting Challenge parent/athlete **email** delivery (Make.com is not the email sender) |
+| **Make.com** | Non-email integrations (upload engine / Lambda, Tremendous HTTP sandbox) — historical Gmail paths are retired for SC email |
 | **GitHub** | Versioned scripts, schema notes, blueprints, docs, and recovery procedures |
 | **Cursor** | Local code and documentation editor |
-| **Next.js / Vercel** | Participant website (Softr replacement) — see [`web/`](./web/) |
+| **Next.js / Vercel** | Participant website (Softr obsolete) — see [`web/`](./web/) |
 | **ChatGPT** | Architecture review, script review, debugging, audit design, and documentation support |
 
 ## Repository Layout
@@ -31,7 +33,7 @@ The app tracks athlete enrollments, shooting submissions, XP, levels, streaks, h
 ├── CHANGELOG.md              # Notable changes (Airtable / Web / Make sections)
 ├── SYSTEM_OVERVIEW.md        # App modules, data flow, and architecture goals
 ├── AGENTS.md                 # AI assistant instructions
-├── docs/                     # Ops docs — start at docs/PROJECT_STATE.md
+├── docs/                     # Ops docs — start at docs/CURRENT-TRUTH.md
 ├── airtable/
 │   ├── schema/               # Schema notes and snapshots (Shooting Challenge only)
 │   ├── automations/          # Native Airtable automation scripts
@@ -61,15 +63,15 @@ The app tracks athlete enrollments, shooting submissions, XP, levels, streaks, h
 └── cursor/rules.md           # Pointer to .cursor/rules/
 ```
 
-See [docs/README.md](./docs/README.md) for the full documentation map and [SYSTEM_OVERVIEW.md](./SYSTEM_OVERVIEW.md) for module-level detail.
+See [docs/CURRENT-TRUTH.md](./docs/CURRENT-TRUTH.md) for current state, [docs/README.md](./docs/README.md) for the documentation map, and [SYSTEM_OVERVIEW.md](./SYSTEM_OVERVIEW.md) for module-level detail.
 
 ## Development Workflow
 
 1. **Edit locally in Cursor** — Scripts, schema notes, and documentation live in this repo.
 2. **Review with ChatGPT** — Use for architecture, script review, debugging, and audit design before deploying changes.
 3. **Deploy to Airtable** — Copy or sync automation scripts and schema updates into the live Airtable base.
-4. **Update Make.com** — Apply blueprint changes and test external workflows (Drive, Gmail, webhooks).
-5. **Document changes** — Update `CHANGELOG.md` and schema notes for any production-impacting change.
+4. **Update integrations** — Apply Make blueprints for non-email paths (upload/Tremendous); SC notification email stays on Hub → Resend.
+5. **Document changes** — Update `CHANGELOG.md`, `docs/CURRENT-TRUTH.md` when state changes, and schema notes for production-impacting work.
 6. **Run audit scripts** — Use dry-run audit scripts to verify data integrity before and after changes.
 7. **Reliability Command Center** — Offline workflow health audits (fixtures/exports): see [`docs/reliability-command-center/README.md`](./docs/reliability-command-center/README.md). Airtable Interface is **Designed**, not installed.
 
