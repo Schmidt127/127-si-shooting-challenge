@@ -57,11 +57,11 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | `010a8b3a48917771c77ee47e53822ec736558b5b` |
-| `origin/master` | Identical (`010a8b3…`) |
-| Ahead / behind | **0 / 0** |
+| HEAD SHA | Integrity ship `0b1d6341420e74af06c159345135fd0d6ff71d38` — re-verify tip with `git rev-parse HEAD` |
+| `origin/master` | Must match tip after push (re-verify) |
+| Ahead / behind | **0 / 0** (target after this push) |
 | Working tree at audit start | Clean (no uncommitted tracked files) |
-| Working tree after this audit | **Dirty until committed** — integrity docs, PII redaction, validator/header fixes (see integrity audit §8) |
+| Integrity audit base tip | `010a8b3…` (audit start); content ship `0b1d634…` |
 | True merge markers (`<<<<<<<`) | None found |
 | Nested clone (ignored) | Local folder `127-si-shooting-challenge/` — gitignored; **do not treat as source of truth** |
 
