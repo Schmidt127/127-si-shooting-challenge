@@ -23,7 +23,7 @@ Exact Airtable script versions are still unconfirmed. This table is the Hub even
 |-------------------|------------------|------------|-----------------|---------------|
 | **075 / queue** | `WELCOME` | `WELCOME\|…` | Hub queue | Resend (Hub) |
 | **076** | `DAILY_SUBMISSION` | `DAILY_SUBMISSION\|SUBMISSIONS\|{Submission}` | Hub queue create | Resend (Hub) |
-| **073** | `VIDEO_FEEDBACK` | `VIDEO_FEEDBACK\|VIDEO_FEEDBACK\|{VF}` | Hub queue create in GitHub | Resend (Hub) |
+| **073** | `VIDEO_FEEDBACK` | `VIDEO_FEEDBACK\|VIDEO_FEEDBACK\|{VF}` | Hub queue create in GitHub | Resend (Hub) + **Hub→VF source writeback** |
 | **071** | `HOMEWORK_FEEDBACK` | `HOMEWORK_FEEDBACK\|HOMEWORK_COMPLETIONS\|{HC}` | Hub queue create in GitHub | Resend (Hub) |
 | **074** | `WEEKLY_ATHLETE_SUMMARY` | `WEEKLY_ATHLETE_SUMMARY\|WEEKLY_ATHLETE_SUMMARY\|{WAS}` | Hub queue create in GitHub | Resend (Hub) |
 | **117** | Event Type `ZOOM_RECORDING_APPROVAL` / Template `ZOOM_RECORDING_APPROVED` | `ZOOM_RECORDING_APPROVAL\|ZOOM_ATTENDANCE\|{ZA}` | Hub queue create in GitHub | Resend (Hub) |

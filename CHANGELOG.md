@@ -8,10 +8,25 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Airtable
 
+#### Changed
+- **Video Feedback parent-email writeback owner (2026-08-20)** — Communications Hub
+  now owns VF `Parent Feedback Sent?` / `Sent On` / Delivery Status / Delivery Error /
+  Hub Event ID / Resend Message ID after Resend outcomes. **073** / **079** unchanged
+  (queue + Hub accept only). Docs: `docs/integrations/email-send-plane.md`,
+  `airtable/schema/current/automation-trigger-map.md`. Hub contract:
+  `communications` repo `docs/contracts/VIDEO_FEEDBACK_SOURCE_WRITEBACK_v1.md`.
+  No Make/Gmail parent-email path.
+
 #### Added
 - **C-028 — Award Recipients Tremendous fields (2026-08-18)** — Production table `tblTyQXl8aEP93ubK`: Recipient Name/Email, Ready to Send?, Tremendous Environment/IDs/status/timestamps/error/response, Send to Tremendous?, Tremendous Test Record?. Existing Award Status / Award Amount / Gift Card Needed? / Award Recipient Unique Key reused. [field plan](./airtable/schema/current/C-028-award-recipients-tremendous-fields.md). [current state](./docs/integrations/tremendous-award-fulfillment.md).
 
 #### Changed
+- **070b (v4.7) — Airtable Automation fetch for Make upload webhook** — Replace
+  `remoteFetchAsync` with `fetch` (Automation “Run a script” global). Production
+  failure was `remoteFetchAsync is not defined`. Preserve POST JSON payload,
+  Accepted async → 070c verify path, trigger retention on failure, and webhook URL
+  sanitization in Upload Error / response previews. Paste GitHub script to
+  Production when Mike approves (skip GitHub header lines 1–24).
 - **005 (v5.4) / 010 (v10.11) — Date-only midnight UTC Activity Date keys** — Airtable
   date-only values stored as `YYYY-MM-DDT00:00:00.000Z` no longer shift to the previous
   America/Denver calendar day. Shared helper in `lib/v2-engine-contracts.js` matches.

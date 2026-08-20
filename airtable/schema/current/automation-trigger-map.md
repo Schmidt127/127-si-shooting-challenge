@@ -54,34 +54,46 @@ version/state/mapping must still be confirmed in the Airtable UI.
 | 063 | Homework Completions | *confirm* | `063-...-copy-enrollment-grade-band-to-homework-completion.js` | Grade Band |
 | 064 | Homework Completions | Satisfactory + Review Complete + Coach Feedback + Enrollment + Homework + Week present; no Submission Date/Base XP/XP Events-empty filter | `064-...-prepare-homework-xp-award.js` | XP prep fields |
 | **065** | Homework Completions | `Homework XP Reconciliation Needed? = 1` (formula-backed local + linked state signature) | `065-...-create-homework-xp-event.js` | **XP Events** (HOMEWORK) award, repair, deactivate, reactivate |
-| **070a** | Submission Assets | Send to Make + homework ready | `070a-...-send-homework-asset-payload-to-make.js` | **Make** upload engine |
-| **071** | Homework Completions | Parent feedback ready, not sent, awarded (see below) | `071-...-send-homework-feedback-email-webhook.js` | **Make** parent email |
+| **070a** | Submission Assets | Send to Make + homework ready (**PROD OFF** intentionally) | `070a-...-send-homework-asset-payload-to-make.js` | **Make** upload engine (not parent email) |
+| **078** | Homework Completions | Satisfactory? + Coach Feedback (native Update Record) | *(no script)* | Sets Homework `Parent Feedback Ready?` |
+| **071** | Homework Completions | Parent Feedback Ready? + gates (see below) | `071-...-send-homework-feedback-email-webhook.js` (**v4.1**) | **Email Handoff Queue** → **079** → Hub → Resend |
 
-**071 trigger (live Airtable UI — must match script v3.4):**
+**071 trigger (Hub handoff — GitHub v4.1; confirm UI matches):**
 
-| Include | Exclude (blocks HW17 quiz) |
-|---------|----------------------------|
-| Parent Feedback Ready? checked | Upload Ready? = 1 |
-| Parent Feedback Sent? unchecked | Writeback Complete? checked |
-| Satisfactory? checked | Submission Assets not empty |
-| Coach Feedback not empty | Airtable Attachment not empty |
-| Award Status = Awarded | Upload Status = Uploaded |
-| XP Events not empty | |
+| Include | Notes |
+|---------|--------|
+| Parent Feedback Ready? checked | Written by **078** (native Update Record), **not** by **065** |
+| Parent Feedback Sent? unchecked | 071 does not write Sent / Sent On |
+| Satisfactory? checked | Product gate |
+| Coach Feedback not empty | Required for Hub payload |
 
-`Parent Feedback Ready?` is written by **065** when homework XP is awarded. Manual checkbox toggles only fire 071 if the trigger does **not** require upload fields.
+Do **not** treat Make/Gmail as the homework parent-email sender.
 
-### Video pipeline (013, 070b, 022, 111–114, 073)
+### Video pipeline (013, 070b, 070c, 022, 111–114, 073)
 
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
-| **013** | Submission Assets | Video asset ready | `013-...-create-or-link-video-feedback.js` | Video Feedback |
-| **022** | Submission Assets | Upload status + child linked | `022-...-sync-child-upload-writeback-from-submission-asset.js` | Upload writeback |
-| 070b | Submission Assets | *confirm* | `070b-...-send-video-asset-payload-to-make.js` | **Make** upload engine |
-| 111 | Video Feedback | *confirm* | `111-...-copy-enrollment-grade-band-to-video-feedback.js` | Grade Band |
-| 112 | Submission Assets | *confirm* | `112-...-create-video-feedback-from-submission-asset.js` | Video Feedback |
-| 113 | Video Feedback | *confirm* | `113-...-assign-base-video-xp.js` | Base video XP fields |
-| **114** | Video Feedback | Posted, XP positive, Ready for XP | `114-...-create-or-update-video-xp-event.js` | **XP Events** (VIDEO_SUBMISSION) |
-| 073 | Video Feedback | *confirm* | `073-...-send-video-feedback-parent-email-webhook.js` | **Make** parent email |
+| **013** | Submission Assets | Video asset ready | `013-...-create-or-link-video-feedback.js` (**v3.2.0**) | Video Feedback create/link + Grade Band blank-only repair; arms upload for **070b** |
+| **022** | Submission Assets | Upload status + child linked | `022-...-sync-child-upload-writeback-from-submission-asset.js` (**v2.1**) | VF upload fields / `Video URL or Drive Link` |
+| **070b** | Submission Assets | Send to Make Trigger + Pending Link + Video Feedback destination | `070b-...-send-video-asset-payload-to-make.js` (**v4.7** — Airtable `fetch`) | **Make** upload engine → Lambda (not parent email) |
+| **070c** | Submission Assets | `Writeback Complete?` greater than 0 (+ writeback fields) | `070c-...-verify-async-video-asset-upload.js` (**v1.1**) | Verifies writeback; clears `Send to Make Trigger` — does **not** upload |
+| 111 | — | **Absent / retired** — do not recreate | Historical Grade Band copy only | Grade Band prep owned by **013** |
+| 112 | Submission Assets | **Expected OFF** | `112-...-create-video-feedback-from-submission-asset.js` | Legacy duplicate of **013** — keep OFF |
+| 113 | Video Feedback | *confirm in Airtable UI* | `113-...-assign-base-video-xp.js` (**v6.4**) | Base video XP fields from XP Reward Rule `VIDEO_SUBMISSION` |
+| **114** | Video Feedback | Lifecycle update (posted / Ready for XP / withdrawal) | `114-...-create-or-update-video-xp-event.js` (**v6.1**) | **XP Events** (`VIDEO_SUBMISSION\|{vfId}`) |
+| **073** | Video Feedback | Parent Feedback Ready? (manual) + gates (see below) | `073-...-send-video-feedback-parent-email-webhook.js` (**v4.2**) | **Email Handoff Queue** → **079** → Hub → Resend |
+
+**073 trigger / ownership (Live PROD Code MATCH v4.2 — 2026-08-20):**
+
+| Gate | Owner / rule |
+|------|----------------|
+| `Parent Feedback Ready?` checked | **Manual** coach/operator — no mark-ready automation for Video |
+| `Parent Feedback Sent?` unchecked | Required; **073 does not write** Sent / Sent On |
+| `Feedback Posted?` checked | Coach gate (required by script) |
+| Coach Feedback not empty | Required by script |
+| Delivery | Hub renders + Resend sends; Make/Gmail do **not** send parent feedback email |
+
+**Writeback owner (resolved 2026-08-20):** Communications Hub PATCHes Video Feedback after Resend success/failure (`Parent Feedback Sent?`, `Sent On`, `Delivery Status`, `Delivery Error`, `Hub Event ID`, `Resend Message ID`). **079** only marks Email Handoff Queue Accepted. See Hub `docs/contracts/VIDEO_FEEDBACK_SOURCE_WRITEBACK_v1.md`.
 
 ### Achievements and streaks (053–059, 066)
 
@@ -122,7 +134,7 @@ version/state/mapping must still be confirmed in the Airtable UI.
 
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
-| **101** | Zoom Meetings | **When record matches conditions:** sole condition `Zoom XP Reconciliation Needed? = 1`; dynamic triggering Zoom Meeting `recordId` | `101-zoom-attendance-xp-award-meeting-xp.js` **v6.3 canonical repository source**; historical 2026-08-13 Production evidence records v6.1 installed | **XP Events** (live attendance base + cumulative bonuses; correction/restoration) |
+| **101** | Zoom Meetings | **When record matches conditions:** sole condition `Zoom XP Reconciliation Needed? = 1`; dynamic triggering Zoom Meeting `recordId` | `101-zoom-attendance-xp-award-meeting-xp.js` (**v6.6** GitHub + Live MATCH 2026-08-20). Do **not** use `Create XP Events` as the primary trigger condition. | **XP Events** (live attendance base + cumulative bonuses; correction/restoration). Source Key base: `ZOOM_ATTEND_BASE\|{Zoom Meeting Key}\|{Enrollment RID}` |
 
 ### PKG-034 Production evidence (Mike-supplied, 2026-08-13)
 
@@ -146,14 +158,14 @@ proof remain pending.
 
 ## Make.com webhooks (outbound from Airtable)
 
+**Upload plane only** (not parent email). Parent feedback / weekly / welcome / daily notification email is **Communications Hub → Resend** via queue producers (**071** / **073** / **074** / **076** / **117**) and dispatcher **079**.
+
 | Script | Scenario / blueprint | Payload highlights |
 |--------|---------------------|-------------------|
-| 070a | Upload Asset Engine — homework | athlete, homework, drive URL, asset metadata |
-| 070b | Upload Asset Engine — video | athlete, submission, video asset metadata |
-| 071 | Homework parent feedback | homework completion, parent email fields |
-| 073 | Video parent feedback | video feedback, parent email fields |
-| 074 | Weekly summary email | WAS package, athlete, week |
-| 077 | Historical only — deleted from Airtable; do not recreate | — |
+| 070a | Upload Asset Engine — homework (**PROD OFF**) | Submission Asset routing payload |
+| 070b | Upload Asset Engine — video | Submission Asset routing payload → Lambda writeback → **070c** verify |
+| 071 / 073 / 074 / 076 / 117 | — | **Not Make parent-email senders** — Hub queue create (historical Make email rows obsolete) |
+| 077 | Historical only — deleted from Airtable; do not recreate | Former Make daily email |
 
 Blueprint: [../../../make/blueprints/upload-asset-engine-v1.json](../../../make/blueprints/upload-asset-engine-v1.json)
 
@@ -175,10 +187,10 @@ Docs: [../../../make/documentation/upload-asset-engine.md](../../../make/documen
 
 | Output | Guard |
 |--------|-------|
-| XP Events | Source Key / Dedupe Key per script (010, 054, 059, 065, 114) |
-| Weekly summary email | `Weekly Email Sent?` / send flags |
-| Parent feedback emails | Send trigger cleared only on webhook success (071, 073, 074) |
-| Make upload | `Send to Make Trigger` + scenario-side dedupe |
+| XP Events | Source Key / Dedupe Key per script (010, 054, 059, 065, 101, 114) |
+| Weekly summary email | Hub queue key + Hub/Delivery writeback (not Make Gmail) |
+| Parent feedback emails | Handoff Key on Email Handoff Queue (`071` / `073`); Hub → Resend. **VF Sent?/Delivery fields:** Hub source writeback. **HC Sent?:** still Hub PATCH TBD |
+| Make upload | `Send to Make Trigger` + Lambda claim; **070c** clears trigger after verified video writeback |
 
 See [field-map.md](./field-map.md) for canonical field names.
 
