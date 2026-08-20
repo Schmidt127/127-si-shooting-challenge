@@ -12,6 +12,10 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 - **C-028 — Award Recipients Tremendous fields (2026-08-18)** — Production table `tblTyQXl8aEP93ubK`: Recipient Name/Email, Ready to Send?, Tremendous Environment/IDs/status/timestamps/error/response, Send to Tremendous?, Tremendous Test Record?. Existing Award Status / Award Amount / Gift Card Needed? / Award Recipient Unique Key reused. [field plan](./airtable/schema/current/C-028-award-recipients-tremendous-fields.md). [current state](./docs/integrations/tremendous-award-fulfillment.md).
 
 #### Changed
+- **005 (v5.4) / 010 (v10.11) — Date-only midnight UTC Activity Date keys** — Airtable
+  date-only values stored as `YYYY-MM-DDT00:00:00.000Z` no longer shift to the previous
+  America/Denver calendar day. Shared helper in `lib/v2-engine-contracts.js` matches.
+  Formula docs: Activity Date Key uses UTC. Ported from PR #218 onto current master.
 - **Homework cutover operator checklist (2026-08-19)** — [`HOMEWORK-CUTOVER-OPERATOR-CHECKLIST-2026-08-19.md`](./docs/deploy-checklists/HOMEWORK-CUTOVER-OPERATOR-CHECKLIST-2026-08-19.md); `START-HERE-PROD-PASTE.md` reconciled (020 **v3.6**, `Week Lkp` deleted); `KNOWN_ISSUES.md` and schema pointer files updated for PROD-only + `prod-20260819`.
 - **Homework Library — `Lesson Key` deleted (2026-08-19)** — Mike removed the obsolete formula field in PROD. Content identity: `Record Id`. Schedule dedupe: PHA `Schedule Key`. Aligns with [`HOMEWORK-LIBRARY-FIELD-MATRIX.md`](./docs/prod-completion/2026-08-09/HOMEWORK-LIBRARY-FIELD-MATRIX.md) cutover step 6.
 - **Submissions — `Week Lkp` deleted (2026-08-19)** — Mike removed the legacy lookup from Homework Name 1 → library week. Submission week authority remains **`Submissions.Week`** (Automation 005). Aligns with field-matrix step 10.

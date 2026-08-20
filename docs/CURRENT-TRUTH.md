@@ -149,7 +149,7 @@ Authority: [`integrations/tremendous-award-fulfillment.md`](./integrations/treme
 
 | # | GitHub `SCRIPT.version` | Production paste claim |
 |---|-------------------------|------------------------|
-| **010** | `v10.10` | **v10.10** |
+| **010** | `v10.11` | **v10.10** (Mike 2026-08-19); GitHub advanced to v10.11 midnight-UTC date keys — paste pending |
 | **020** | `v3.6` | **v3.6** |
 | **022** | `v2.1` | **v2.1** |
 | **066** | `v3.8` | **v3.8** |
@@ -169,7 +169,8 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | 079 | v2.5 (GitHub) | Ready queue → Hub → Resend |
 | 101 | v6.6 (GitHub) | Live Zoom attendance XP writer |
 | 112 | legacy | Expected **OFF** |
-| 115 | v2.1 ETF | **DEV only** — never paste to PROD |
+| 115 | v2.1 ETF | **Production-only ETF** — never paste as normal season automation |
+| 005 | v5.4 (GitHub) | Midnight-UTC Activity Date keys |
 | 117a / 117b | design / historical S16 | **Not** current PROD 117 |
 
 **Contradiction resolved:** Older Completion Master paste-queue rows that still say “010 v10.8 pending” or “020 v3.5” are **historical** relative to the 2026-08-19 Mike overlays. Prefer this file + inventory banner + PROJECT_STATE overlays for those six numbers.
@@ -180,7 +181,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 
 | Domain | Owner (repo contract) | Live proof |
 |--------|----------------------|------------|
-| Submission XP | **010** — Source Key `SUBMISSION_XP\|{submissionId}` | Controlled path evidence 2026-08-16; version v10.10 overlay |
+| Submission XP | **010** — Source Key `SUBMISSION_XP\|{submissionId}` | Controlled path evidence 2026-08-16; Production paste v10.10; GitHub **v10.11** midnight-UTC date keys |
 | Homework XP | **064 / 065** (+ **020** HC create) | PKG-007 evidence exists; treat exact live versions as mostly `UNVERIFIED` beyond documented packets |
 | Video XP | **113 / 114** (+ **013** VF create) | Partial evidence; broader proof open |
 | Shot milestones | **066** | Production paste **v3.8** |

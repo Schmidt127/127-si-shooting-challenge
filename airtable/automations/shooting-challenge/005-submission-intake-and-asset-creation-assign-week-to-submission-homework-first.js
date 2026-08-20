@@ -4,8 +4,8 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 
-Version: v5.3
-Last Updated: 2026-08-10
+Version: v5.4
+Last Updated: 2026-08-20
 
 Scheduling authority:
 - Week comes from Activity Date within the Enrollment Program Instance calendar.
@@ -22,8 +22,8 @@ Input:
 
 const SCRIPT = {
   scriptName: "005 - Submission Intake — Assign Week (Activity Date + PHA validate)",
-  version: "v5.3",
-  versionDate: "2026-08-10",
+  version: "v5.4",
+  versionDate: "2026-08-20",
 };
 
 const CONFIG = {
@@ -112,6 +112,21 @@ function dateKeyFromDate(value) {
   if (!value) return "";
   const d = value instanceof Date ? value : new Date(value);
   if (Number.isNaN(d.getTime())) return "";
+
+  // Airtable date-only values are stored as midnight UTC for the entered calendar
+  // day. Do not shift that into the previous America/Denver day.
+  if (
+    d.getUTCHours() === 0 &&
+    d.getUTCMinutes() === 0 &&
+    d.getUTCSeconds() === 0 &&
+    d.getUTCMilliseconds() === 0
+  ) {
+    const y = d.getUTCFullYear();
+    const m = String(d.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(d.getUTCDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  }
+
   const parts = new Intl.DateTimeFormat("en-CA", { timeZone: CONFIG.timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(d);
   const y = parts.find(p => p.type === "year")?.value;
   const m = parts.find(p => p.type === "month")?.value;
@@ -119,7 +134,9 @@ function dateKeyFromDate(value) {
   return y && m && day ? `${y}-${m}-${day}` : "";
 }
 function safeDateKey(record, table, fieldName) {
-  return dateKeyFromText(getText(record, table, fieldName)) || dateKeyFromDate(getRaw(record, table, fieldName));
+  // Prefer the raw Date/object path first so Denver display strings for midnight-UTC
+  // date-only values cannot win with the previous Mountain calendar day.
+  return dateKeyFromDate(getRaw(record, table, fieldName)) || dateKeyFromText(getText(record, table, fieldName));
 }
 async function updateSubmissionSafe(id, updates) {
   const safe = {};

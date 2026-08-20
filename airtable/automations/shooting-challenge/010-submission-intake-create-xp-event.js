@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-21
-Last GitHub Update: 2026-08-16
+Last GitHub Update: 2026-08-20
 
 Purpose:
 Reconcile one Submission's canonical Submission Base XP Event.
@@ -31,9 +31,9 @@ ownership cannot be proven.
  * 010 - SUBMISSION INTAKE AND ASSET CREATION
  * Create/Reconcile Submission Base XP Event
  *
- * Version: v10.10
+ * Version: v10.11
  * Date Written: 2026-06-06
- * Last Updated: 2026-08-16
+ * Last Updated: 2026-08-20
  *
  * PURPOSE
  * - Reconcile one Submission after the approved signature formula changes.
@@ -103,10 +103,10 @@ ownership cannot be proven.
 
 const SCRIPT = {
   scriptName: "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
-  version: "v10.10",
-  versionDate: "2026-08-16",
+  version: "v10.11",
+  versionDate: "2026-08-20",
   originalWrittenDate: "2026-06-06",
-  lastUpdated: "2026-08-16",
+  lastUpdated: "2026-08-20",
   folder: "01 - Submission Intake and Asset Creation",
   automationName: "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
 };
@@ -311,6 +311,20 @@ function dateKeyFromDateObject(value, timeZone = CONFIG.timeZone) {
 
   const dateValue = value instanceof Date ? value : new Date(value);
   if (Number.isNaN(dateValue.getTime())) return "";
+
+  // Airtable date-only values are stored as midnight UTC for the entered calendar
+  // day. Do not shift that into the previous America/Denver day.
+  if (
+    dateValue.getUTCHours() === 0 &&
+    dateValue.getUTCMinutes() === 0 &&
+    dateValue.getUTCSeconds() === 0 &&
+    dateValue.getUTCMilliseconds() === 0
+  ) {
+    const year = dateValue.getUTCFullYear();
+    const month = String(dateValue.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(dateValue.getUTCDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
 
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone,
