@@ -96,7 +96,7 @@ Full register: [`SECURITY-AND-SENSITIVE-FILES.md`](./SECURITY-AND-SENSITIVE-FILE
 | 020 | v3.6 | v3.6 | Aligned |
 | 022 | v2.1 | v2.1 | Aligned |
 | 066 | v3.8 | v3.8 | Aligned |
-| 070b | v4.6 | v4.6 | Aligned |
+| 070b | v4.7 | v4.7 | Aligned (2026-08-21) |
 | 076 | v8.6 | Hub daily queue (inventory refreshed) | GitHub aligned; PROD paste `UNVERIFIED` in UI |
 | 077 | v5.0 archive | **Deleted from Production** (2026-08-13 docs) | Aligned — obsolete-table “Live” **retracted** |
 | 079 | v2.4 | Hub dispatcher | GitHub aligned; PROD paste `UNVERIFIED` in UI |

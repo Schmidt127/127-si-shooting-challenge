@@ -54,7 +54,7 @@ version/state/mapping must still be confirmed in the Airtable UI.
 | 063 | Homework Completions | *confirm* | `063-...-copy-enrollment-grade-band-to-homework-completion.js` | Grade Band |
 | 064 | Homework Completions | Satisfactory + Review Complete + Coach Feedback + Enrollment + Homework + Week present; no Submission Date/Base XP/XP Events-empty filter | `064-...-prepare-homework-xp-award.js` | XP prep fields |
 | **065** | Homework Completions | `Homework XP Reconciliation Needed? = 1` (formula-backed local + linked state signature) | `065-...-create-homework-xp-event.js` | **XP Events** (HOMEWORK) award, repair, deactivate, reactivate |
-| **070a** | Submission Assets | Send to Make + homework ready (**PROD OFF** intentionally) | `070a-...-send-homework-asset-payload-to-make.js` | **Make** upload engine (not parent email) |
+| **070a** | Submission Assets | Send to Make + homework ready (**verify Live/Off in UI**) | `070a-...-send-homework-asset-payload-to-make.js` (**v4.7** — Airtable `fetch`) | **Make** upload engine (not parent email) |
 | **078** | Homework Completions | Satisfactory? + Coach Feedback (native Update Record) | *(no script)* | Sets Homework `Parent Feedback Ready?` |
 | **071** | Homework Completions | Parent Feedback Ready? + gates (see below) | `071-...-send-homework-feedback-email-webhook.js` (**v4.1**) | **Email Handoff Queue** → **079** → Hub → Resend |
 

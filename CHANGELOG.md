@@ -29,13 +29,19 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 #### Added
 - **C-028 — Award Recipients Tremendous fields (2026-08-18)** — Production table `tblTyQXl8aEP93ubK`: Recipient Name/Email, Ready to Send?, Tremendous Environment/IDs/status/timestamps/error/response, Send to Tremendous?, Tremendous Test Record?. Existing Award Status / Award Amount / Gift Card Needed? / Award Recipient Unique Key reused. [field plan](./airtable/schema/current/C-028-award-recipients-tremendous-fields.md). [current state](./docs/integrations/tremendous-award-fulfillment.md).
 
+#### Added
+- **Manual test cards (2026-08-21)** — `docs/testing/manual-test-cards/` — operator cards for 010, 064/065, XP dedupe checklist, 041/042, Saturday Perfect Week (057→058→059), and 010 v10.10 vs v10.11 comparison (analysis only; no paste).
+
 #### Changed
-- **070b (v4.7) — Airtable Automation fetch for Make upload webhook** — Replace
-  `remoteFetchAsync` with `fetch` (Automation “Run a script” global). Production
-  failure was `remoteFetchAsync is not defined`. Preserve POST JSON payload,
-  Accepted async → 070c verify path, trigger retention on failure, and webhook URL
-  sanitization in Upload Error / response previews. Paste GitHub script to
-  Production when Mike approves (skip GitHub header lines 1–24).
+- **070a / 070b (v4.7) — GitHub synced from confirmed Production v4.7** — Replace
+  `remoteFetchAsync` with `fetch` in both shared upload scripts. Source labeled
+  Production v4.7 in script change history. Does not downgrade Production.
+- **070b (v4.7) — Airtable Automation fetch for Make upload webhook** — (Production
+  already on v4.7; this entry documents the fix.) Replace `remoteFetchAsync` with
+  `fetch` (Automation “Run a script” global). Production failure was
+  `remoteFetchAsync is not defined`. Preserve POST JSON payload, Accepted async →
+  070c verify path, trigger retention on failure, and webhook URL sanitization in
+  Upload Error / response previews.
 - **005 (v5.4) / 010 (v10.11) — Date-only midnight UTC Activity Date keys** — Airtable
   date-only values stored as `YYYY-MM-DDT00:00:00.000Z` no longer shift to the previous
   America/Denver calendar day. Shared helper in `lib/v2-engine-contracts.js` matches.

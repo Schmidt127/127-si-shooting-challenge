@@ -4,10 +4,10 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-27
-Last GitHub Update: 2026-08-17
+Last GitHub Update: 2026-08-21
 
 Purpose:
-Sends one homework Submission Asset to the shared Make Upload Engine (v4.6 Program Instance season contract + v4.5 Canonical/S3 already-uploaded gate).
+Sends one homework Submission Asset to the shared Make Upload Engine (v4.7 Production sync — Airtable fetch; v4.6 Program Instance season contract retained).
 
 Trigger:
 Submission Assets when Send to Make Trigger is checked and homework asset is ready.
@@ -36,15 +36,21 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * Submission Assets
  *
  * VERSION:
- * v4.6 - Program Instance season identity on payload (Lambda remains authoritative)
+ * v4.7 - Airtable Automation fetch for Make upload webhook (Production v4.7 sync)
  *
  * CREATED:
  * 2026-06-27
  *
  * LAST UPDATED:
- * 2026-08-17
+ * 2026-08-21
  *
  * CHANGE HISTORY:
+ * 2026-08-21 - v4.7 (070a / 070b — synced from confirmed Production v4.7)
+ * - Replace remoteFetchAsync with fetch (Automation "Run a script" global).
+ * - Production failure was remoteFetchAsync is not defined.
+ * - Preserve POST JSON payload, Accepted async → 070c verify path, trigger
+ *   retention on failure, and webhook URL sanitization in Upload Error previews.
+ *
  * 2026-08-17 - v4.6 (070a / 070b Program Instance season contract)
  * - Require exactly one Enrollment - Linked and exactly one Enrollment Program Instance.
  * - Payload includes enrollmentId + programInstanceId as cross-checks only.
@@ -137,7 +143,7 @@ async function main() {
 
     const CONFIG = {
         scriptName: "070a/070b - Send Upload Asset Payload to Make",
-        version: "v4.6",
+        version: "v4.7",
 
         tables: {
             submissionAssets: "Submission Assets",
@@ -569,7 +575,7 @@ async function main() {
             body: JSON.stringify(payload),
         };
 
-        return await remoteFetchAsync(url, request);
+        return await fetch(url, request);
     }
 
     function resolveRoute(uploadDestination) {

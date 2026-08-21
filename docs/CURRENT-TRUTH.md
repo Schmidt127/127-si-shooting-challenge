@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-20  
+**Last verification (repo):** 2026-08-21  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -153,7 +153,7 @@ Authority: [`integrations/tremendous-award-fulfillment.md`](./integrations/treme
 | **020** | `v3.6` | **v3.6** |
 | **022** | `v2.1` | **v2.1** |
 | **066** | `v3.8` | **v3.8** |
-| **070b** | `v4.6` | **v4.6** |
+| **070b** | `v4.7` | **v4.7** (Production confirmed; GitHub synced 2026-08-21) |
 | **117** | `v2.1` | **v2.1** Hub handoff |
 
 ### Repository source (GitHub) — other notable scripts
@@ -162,7 +162,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 
 | # | GitHub version (header) | Notes |
 |---|-------------------------|--------|
-| 070a | v4.6 (GitHub) | Keep **PROD OFF** |
+| 070a | v4.7 (GitHub; synced from Production v4.7) | Homework upload — verify **Live/Off** in Automations UI; [launch decision](./v2/AUTOMATION_070A_LAUNCH_DECISION.md) historically **PROD OFF** |
 | 070c | v1.1 | Historical C-013 verify path |
 | 076 | v8.7 (GitHub) | Daily Hub queue create (not Make send) |
 | 077 | v5.0 archive | **Deleted from Production** (2026-08-13 docs) — not live Make send |
@@ -198,7 +198,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 |------|--------|
 | Homework completion (**020**) | Production **v3.6** |
 | Homework upload Make (**070a**) | **OFF** in PROD |
-| Video upload (**070b** + Lambda) | **070b v4.6**; Lambda Program Instance season CodeOnly deploy evidenced 2026-08-19 (`CodeSha256` in PROJECT_STATE). Optional retry proof + secret rotation **PENDING** |
+| Video upload (**070b** + Lambda) | **070b v4.7** (Production + GitHub aligned 2026-08-21); Lambda Program Instance season CodeOnly deploy evidenced 2026-08-19 (`CodeSha256` in PROJECT_STATE). Optional retry proof + secret rotation **PENDING** |
 | Child upload writeback (**022**) | Production **v2.1** |
 | Zoom live attendance | **101** |
 | Zoom recording approval email | **117 v2.1** → Hub → Resend |

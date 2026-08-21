@@ -29,7 +29,7 @@ Last updated: **2026-08-20** (integrity/authority refresh + obsolete Automations
 
 **020 overlay (Mike 2026-08-19):** Production Airtable Automation 020 is **v3.6**. Earlier v3.5 install evidence remains historical.
 
-**070b overlay (Mike 2026-08-19):** Production Airtable Automation 070b is **v4.6**. C-013 **v4.4** E2E (2026-07-11) remains historical proof of the prior upload route.
+**070b overlay (Mike 2026-08-19, v4.7 confirm 2026-08-21):** Production Airtable Automation 070b is **v4.7** (`fetch` replaces undefined `remoteFetchAsync`). GitHub synced 2026-08-21. C-013 **v4.4** E2E (2026-07-11) remains historical proof of the prior upload route; **v4.6** was Program Instance season cross-check.
 
 **Lambda season overlay (Mike-requested 2026-08-19):** `127si-upload-asset` CodeOnly deploy succeeded (CodeSha256 `lwbLiBzB4cfWdzVmIVo7Z78AkiowqPuV2NmUXb+PK2w=`). Program Instance school-year resolution is live in code. Optional retry proof and secret rotation still open. [checklist](./deploy-checklists/2026-08-17-lambda-program-instance-season.md).
 
@@ -64,7 +64,7 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 | **Wave 0 — 2025–26 close-out** | **Closed** — C-001, C-002, C-003, C-008, newspaper + radio outreach complete |
 | **H-001 — 090F audit fix** | **Complete** |
 | **H-002 — Automation 066** | **Airtable version v3.8** (Mike 2026-08-19). Historical v3.3 failure and v3.4/v3.5 proofs preserved. Optional OMNI sandbox confirmation (K-H1) remains a separate open check if still needed. |
-| **C-013 — Video upload Lambda** | **Historical COMPLETE 2026-07-11** on 070b **v4.4** + 070c v1.1. **Airtable 070b now v4.6** (Mike 2026-08-19). **Lambda Program Instance season code deployed CodeOnly 2026-08-19** (Mike-requested). Optional retry proof + secret rotation still open. |
+| **C-013 — Video upload Lambda** | **Historical COMPLETE 2026-07-11** on 070b **v4.4** + 070c v1.1. **Airtable 070b now v4.7** (Production + GitHub 2026-08-21). **Lambda Program Instance season code deployed CodeOnly 2026-08-19** (Mike-requested). Optional retry proof + secret rotation still open. |
 | **C-020 — Engineering Test Framework** | 115 v2.1 controlled PROD proof passed twice; this proves the test harness path only, not downstream XP, summary, Make, email, or full-season behavior |
 | **C-025 — Zoom recording credit** | **Historical Stage 17 credit evidence 2026-07-20** preserved. **PROD Automation 117 today (Mike paste 2026-08-19) = Hub email handoff v2.1**, not the credit orchestrator. **057 / 042** remain gate/Perfect Week writers per older packets. Live Zoom XP = **101**. Recording `ZOOM_CREDIT` writer under slot 117 is **not** live. |
 | **C-011 — Automatic weekly email** | **Historical Make/Gmail E2E 2026-07-24** (`118→072→119→074→Make Bulk Email May 18→Gmail`) is preserved as evidence. **Current send plane (Mike 2026-08-19):** Communications Hub → **Resend**. Make.com is not the email sender. [email send plane](./integrations/email-send-plane.md) |
@@ -136,7 +136,7 @@ DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md]
 | Workflow | Status |
 |----------|--------|
 | **Fillout daily submission form** | **OFF** — contest intake closed (**C-008** done 2026-07-05) |
-| **Video upload (070b/070c + Lambda)** | **Airtable 070b = v4.6** + **Lambda season CodeOnly deploy 2026-08-19** (CodeSha256 `lwbLiBzB4cfWdzVmIVo7Z78AkiowqPuV2NmUXb+PK2w=`). Historical async `Accepted` handoff proven 2026-07-11 on **v4.4**. Optional Storage Key retry proof still open. |
+| **Video upload (070b/070c + Lambda)** | **Airtable 070b = v4.7** (Production + GitHub 2026-08-21) + **Lambda season CodeOnly deploy 2026-08-19** (CodeSha256 `lwbLiBzB4cfWdzVmIVo7Z78AkiowqPuV2NmUXb+PK2w=`). Historical async `Accepted` handoff proven 2026-07-11 on **v4.4**. Optional Storage Key retry proof still open. |
 | **Homework upload (070a)** | **PROD intentionally OFF** — keep OFF per [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md); DEV package exists separately |
 | **C-023 Drive/attachment retirement** | Deferred |
 
