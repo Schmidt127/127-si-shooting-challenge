@@ -1,5 +1,5 @@
 /**
- * Offline harness for Automation 005 PHA-direct validation (v5.3+).
+ * Offline harness for Automation 005 PHA-direct validation (v5.5+).
  */
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -27,12 +27,16 @@ export const PHA_IDS = {
   WEEK_PROD_FAIL: "recBrZ1sV8byWEHZU",
   GB: "reclWDQZzKbVBtdhG",
   PHA_HW1: "recgj8dPk4ouTwCOj",
+  PHA_HW2: "recPhaOfficialHw2001",
+  PHA_HW1_DUP: "recPhaHw1Duplicate01",
   LIBRARY_HW1: "rechVLOeyEVIqmy2v",
   LIBRARY_HW2: "rec6WmXjpLtIWDERo",
   PHA_INACTIVE: "recPhaInactive0001",
   PHA_WRONG_PI: "recPhaWrongPi00001",
   PHA_WRONG_WEEK: "recPhaWrongWeek001",
-  PHA_WRONG_SLOT: "recPhaWrongSlot001",
+  PHA_OFFICIAL_HW2: "recPhaWrongSlot001", // official HW2 (legacy id kept for harness stability)
+  PHA_BLANK_SLOT: "recPhaBlankSlot0001",
+  PHA_INVALID_SLOT: "recPhaInvalidSlot01",
   PHA_ZERO_LIB: "recPhaZeroLib00001",
   PHA_MULTI_LIB: "recPhaMultiLib0001",
   WRONG_PI: "recWrongProgramPi01",
@@ -113,6 +117,20 @@ export function build005PhaBase({
   const defaultPha = [
     new MockRecord(PHA_IDS.PHA_HW1, goodPhaCells()),
     new MockRecord(
+      PHA_IDS.PHA_HW2,
+      goodPhaCells({
+        "Homework Assignment": [{ id: PHA_IDS.LIBRARY_HW2 }],
+        "Homework Slot": { name: "HW2" },
+      })
+    ),
+    new MockRecord(
+      PHA_IDS.PHA_HW1_DUP,
+      goodPhaCells({
+        "Homework Assignment": [{ id: PHA_IDS.LIBRARY_HW2 }],
+        "Homework Slot": { name: "HW1" },
+      })
+    ),
+    new MockRecord(
       PHA_IDS.PHA_INACTIVE,
       goodPhaCells({ "Active?": false })
     ),
@@ -125,8 +143,19 @@ export function build005PhaBase({
       goodPhaCells({ Week: [{ id: PHA_IDS.WRONG_WEEK }] })
     ),
     new MockRecord(
-      PHA_IDS.PHA_WRONG_SLOT,
-      goodPhaCells({ "Homework Slot": { name: "HW2" } })
+      PHA_IDS.PHA_OFFICIAL_HW2,
+      goodPhaCells({
+        "Homework Assignment": [{ id: PHA_IDS.LIBRARY_HW2 }],
+        "Homework Slot": { name: "HW2" },
+      })
+    ),
+    new MockRecord(
+      PHA_IDS.PHA_BLANK_SLOT,
+      goodPhaCells({ "Homework Slot": null })
+    ),
+    new MockRecord(
+      PHA_IDS.PHA_INVALID_SLOT,
+      goodPhaCells({ "Homework Slot": { name: "HW3" } })
     ),
     new MockRecord(
       PHA_IDS.PHA_ZERO_LIB,

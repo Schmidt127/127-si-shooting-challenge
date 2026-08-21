@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Offline tests for 005 v5.3 + 020 v3.6 PHA-first intake contract.
+ * Offline tests for 005 v5.5 + 020 v3.7 PHA-first intake contract.
  * Run: node --test tests/homework/automation-005-020-pha-direct.test.js
  */
 import test from "node:test";
@@ -25,29 +25,57 @@ import { IDS as CHAIN_IDS } from "../../tools/testing/tests/run_023_script.mjs";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const read = (rel) => readFileSync(path.join(ROOT, rel), "utf8");
 
-test("005 v5.3 source contract — PHA direct load, no library reverse search", () => {
+test("005 v5.5 source contract — PHA direct load, slot-authoritative normalize", () => {
   const source = read(
     "airtable/automations/shooting-challenge/005-submission-intake-and-asset-creation-assign-week-to-submission-homework-first.js"
   );
-  assert.match(source, /version:\s*"v5\.3"/);
+  assert.match(source, /version:\s*"v5\.5"/);
   assert.match(source, /validateSelectedPha/);
+  assert.match(source, /normalizeHomeworkPlacement/);
   assert.match(source, /homework1PhaId/);
   assert.match(source, /homework1LibraryId/);
+  assert.match(source, /originalHomework1PhaId/);
+  assert.match(source, /normalizedHomework1PhaId/);
+  assert.match(source, /homeworkSlotNormalized/);
+  assert.doesNotMatch(source, /slot mismatch: expected/);
   assert.doesNotMatch(source, /validateHomeworkSelectionAgainstPha/);
   assert.doesNotMatch(source, /phaTable\.selectRecordsAsync/);
 });
 
-test("020 v3.6 source contract — PHA direct validate, library dereference", () => {
+test("020 v3.7 source contract — PHA direct validate, library dereference", () => {
   const source = read(
     "airtable/automations/shooting-challenge/020-homework-link-or-create-homework-completion.js"
   );
-  assert.match(source, /version:\s*"v3\.6"/);
+  assert.match(source, /version:\s*"v3\.7"/);
   assert.match(source, /validateSelectedPha/);
   assert.match(source, /libraryId/);
   assert.match(source, /Multi-band Grade Band never rejects/);
   assert.doesNotMatch(source, /resolveProgramHomeworkAssignmentId/);
   assert.doesNotMatch(source, /phaTable\.selectRecordsAsync/);
   assert.doesNotMatch(source, /PHA Grade Band mismatch/);
+});
+
+test("005 — correct HW1/HW2 placement succeeds without normalization", async () => {
+  const base = build005PhaBase({
+    submissionCells: {
+      "Homework Name 1": [{ id: PHA_IDS.PHA_HW1 }],
+      "Homework Name 2": [{ id: PHA_IDS.PHA_HW2 }],
+    },
+  });
+  const { output, error } = await run005({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.statusOut, "Complete");
+  assert.equal(output.values.homework1PhaId, PHA_IDS.PHA_HW1);
+  assert.equal(output.values.homework2PhaId, PHA_IDS.PHA_HW2);
+  assert.equal(output.values.homework1LibraryId, PHA_IDS.LIBRARY_HW1);
+  assert.equal(output.values.homework2LibraryId, PHA_IDS.LIBRARY_HW2);
+  assert.equal(output.values.originalHomework1PhaId, PHA_IDS.PHA_HW1);
+  assert.equal(output.values.originalHomework2PhaId, PHA_IDS.PHA_HW2);
+  assert.equal(output.values.normalizedHomework1PhaId, PHA_IDS.PHA_HW1);
+  assert.equal(output.values.normalizedHomework2PhaId, PHA_IDS.PHA_HW2);
+  assert.equal(output.values.homeworkSlotNormalized, false);
+  assert.equal(output.values.homeworkSlotNormalizationMessage, "");
+  assert.equal(output.values.gradeBandSchedulingUsed, false);
 });
 
 test("005 — correct PHA yields production PHA + library IDs", async () => {
@@ -58,6 +86,110 @@ test("005 — correct PHA yields production PHA + library IDs", async () => {
   assert.equal(output.values.homework1PhaId, PHA_IDS.PHA_HW1);
   assert.equal(output.values.homework1LibraryId, PHA_IDS.LIBRARY_HW1);
   assert.equal(output.values.gradeBandSchedulingUsed, false);
+});
+
+test("005 — HW1 assignment entered in HW2 field is normalized to Homework Name 1", async () => {
+  const base = build005PhaBase({
+    submissionCells: {
+      "Homework Name 1": null,
+      "Homework Name 2": [{ id: PHA_IDS.PHA_HW1 }],
+    },
+  });
+  const submissions = base.tables.get("Submissions");
+  const { output, console, error } = await run005({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.statusOut, "Complete");
+  assert.equal(output.values.homeworkSlotNormalized, true);
+  assert.match(String(output.values.homeworkSlotNormalizationMessage), /HW2 input to official HW1/);
+  assert.equal(output.values.originalHomework1PhaId, "");
+  assert.equal(output.values.originalHomework2PhaId, PHA_IDS.PHA_HW1);
+  assert.equal(output.values.normalizedHomework1PhaId, PHA_IDS.PHA_HW1);
+  assert.equal(output.values.normalizedHomework2PhaId, "");
+  assert.equal(output.values.homework1PhaId, PHA_IDS.PHA_HW1);
+  assert.equal(output.values.homework2PhaId, "");
+  assert.ok(console.lines.some((line) => /Normalized selected assignment from HW2 input to official HW1 slot/.test(line)));
+  const lastUpdate = submissions.updates[submissions.updates.length - 1];
+  assert.deepEqual(lastUpdate.fields["Homework Name 1"], [{ id: PHA_IDS.PHA_HW1 }]);
+  assert.deepEqual(lastUpdate.fields["Homework Name 2"], []);
+});
+
+test("005 — HW2 assignment entered in HW1 field is normalized to Homework Name 2", async () => {
+  const base = build005PhaBase({
+    submissionCells: {
+      "Homework Name 1": [{ id: PHA_IDS.PHA_OFFICIAL_HW2 }],
+      "Homework Name 2": null,
+    },
+  });
+  const submissions = base.tables.get("Submissions");
+  const { output, console, error } = await run005({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.statusOut, "Complete");
+  assert.equal(output.values.homeworkSlotNormalized, true);
+  assert.match(String(output.values.homeworkSlotNormalizationMessage), /HW1 input to official HW2/);
+  assert.equal(output.values.originalHomework1PhaId, PHA_IDS.PHA_OFFICIAL_HW2);
+  assert.equal(output.values.normalizedHomework1PhaId, "");
+  assert.equal(output.values.normalizedHomework2PhaId, PHA_IDS.PHA_OFFICIAL_HW2);
+  assert.equal(output.values.homework1LibraryId, "");
+  assert.equal(output.values.homework2LibraryId, PHA_IDS.LIBRARY_HW2);
+  assert.ok(console.lines.some((line) => /Normalized selected assignment from HW1 input to official HW2 slot/.test(line)));
+  const lastUpdate = submissions.updates[submissions.updates.length - 1];
+  assert.deepEqual(lastUpdate.fields["Homework Name 1"], []);
+  assert.deepEqual(lastUpdate.fields["Homework Name 2"], [{ id: PHA_IDS.PHA_OFFICIAL_HW2 }]);
+});
+
+test("005 — both assignments entered in opposite fields are swapped", async () => {
+  const base = build005PhaBase({
+    submissionCells: {
+      "Homework Name 1": [{ id: PHA_IDS.PHA_HW2 }],
+      "Homework Name 2": [{ id: PHA_IDS.PHA_HW1 }],
+    },
+  });
+  const submissions = base.tables.get("Submissions");
+  const { output, console, error } = await run005({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.statusOut, "Complete");
+  assert.equal(output.values.homeworkSlotNormalized, true);
+  assert.equal(output.values.originalHomework1PhaId, PHA_IDS.PHA_HW2);
+  assert.equal(output.values.originalHomework2PhaId, PHA_IDS.PHA_HW1);
+  assert.equal(output.values.normalizedHomework1PhaId, PHA_IDS.PHA_HW1);
+  assert.equal(output.values.normalizedHomework2PhaId, PHA_IDS.PHA_HW2);
+  assert.equal(output.values.homework1PhaId, PHA_IDS.PHA_HW1);
+  assert.equal(output.values.homework2PhaId, PHA_IDS.PHA_HW2);
+  assert.ok(console.lines.some((line) => /HW1 input to official HW2/.test(line)));
+  assert.ok(console.lines.some((line) => /HW2 input to official HW1/.test(line)));
+  const lastUpdate = submissions.updates[submissions.updates.length - 1];
+  assert.deepEqual(lastUpdate.fields["Homework Name 1"], [{ id: PHA_IDS.PHA_HW1 }]);
+  assert.deepEqual(lastUpdate.fields["Homework Name 2"], [{ id: PHA_IDS.PHA_HW2 }]);
+});
+
+test("005 — duplicate assignments resolving to the same slot fail closed", async () => {
+  const base = build005PhaBase({
+    submissionCells: {
+      "Homework Name 1": [{ id: PHA_IDS.PHA_HW1 }],
+      "Homework Name 2": [{ id: PHA_IDS.PHA_HW1_DUP }],
+    },
+  });
+  const { error } = await run005({ base });
+  assert.ok(error);
+  assert.match(String(error.message), /Duplicate official HW1 slot/i);
+});
+
+test("005 — blank PHA Homework Slot fails closed", async () => {
+  const base = build005PhaBase({
+    submissionCells: { "Homework Name 1": [{ id: PHA_IDS.PHA_BLANK_SLOT }] },
+  });
+  const { error } = await run005({ base });
+  assert.ok(error);
+  assert.match(String(error.message), /blank Homework Slot/i);
+});
+
+test("005 — invalid PHA Homework Slot fails closed", async () => {
+  const base = build005PhaBase({
+    submissionCells: { "Homework Name 1": [{ id: PHA_IDS.PHA_INVALID_SLOT }] },
+  });
+  const { error } = await run005({ base });
+  assert.ok(error);
+  assert.match(String(error.message), /invalid Homework Slot/i);
 });
 
 test("005 — inactive PHA fails closed", async () => {
@@ -85,15 +217,6 @@ test("005 — wrong Week fails closed", async () => {
   const { error } = await run005({ base });
   assert.ok(error);
   assert.match(String(error.message), /Week mismatch/i);
-});
-
-test("005 — wrong slot fails closed", async () => {
-  const base = build005PhaBase({
-    submissionCells: { "Homework Name 1": [{ id: PHA_IDS.PHA_WRONG_SLOT }] },
-  });
-  const { error } = await run005({ base });
-  assert.ok(error);
-  assert.match(String(error.message), /slot mismatch/i);
 });
 
 test("005 — zero linked Homework Assignments fails closed", async () => {
@@ -132,6 +255,37 @@ test("005 — Grade Band is never part of scheduling match", async () => {
   assert.equal(error, null, error && error.message);
   assert.equal(output.values.homework1PhaId, "recPhaWrongGbOnly");
   assert.equal(output.values.homework1LibraryId, PHA_IDS.LIBRARY_HW1);
+});
+
+test("005 — replay after normalization is idempotent (no homework field rewrite)", async () => {
+  const base = build005PhaBase({
+    submissionCells: {
+      "Homework Name 1": [{ id: PHA_IDS.PHA_OFFICIAL_HW2 }],
+      "Homework Name 2": null,
+    },
+  });
+  const submissions = base.tables.get("Submissions");
+
+  const first = await run005({ base });
+  assert.equal(first.error, null, first.error && first.error.message);
+  assert.equal(first.output.values.homeworkSlotNormalized, true);
+  assert.equal(first.output.values.normalizedHomework1PhaId, "");
+  assert.equal(first.output.values.normalizedHomework2PhaId, PHA_IDS.PHA_OFFICIAL_HW2);
+  const updatesAfterFirst = submissions.updates.length;
+  assert.ok(updatesAfterFirst >= 1);
+
+  const second = await run005({ base });
+  assert.equal(second.error, null, second.error && second.error.message);
+  assert.equal(second.output.values.statusOut, "Complete");
+  assert.equal(second.output.values.homeworkSlotNormalized, false);
+  assert.equal(second.output.values.originalHomework1PhaId, "");
+  assert.equal(second.output.values.originalHomework2PhaId, PHA_IDS.PHA_OFFICIAL_HW2);
+  assert.equal(second.output.values.normalizedHomework1PhaId, "");
+  assert.equal(second.output.values.normalizedHomework2PhaId, PHA_IDS.PHA_OFFICIAL_HW2);
+  assert.equal(second.output.values.homework1PhaId, "");
+  assert.equal(second.output.values.homework2PhaId, PHA_IDS.PHA_OFFICIAL_HW2);
+  assert.equal(submissions.updates.length, updatesAfterFirst);
+  assert.equal(String(second.output.values.updatedFields || ""), "");
 });
 
 test("020 — multi-band PHA (K-2…9-12) creates completion for K-2 enrollment", async () => {
