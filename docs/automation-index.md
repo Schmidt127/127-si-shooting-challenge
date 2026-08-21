@@ -34,7 +34,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| 005 | Submission Intake — Assign Week (Activity Date + PHA validate) | **paste v5.3 pending** | `005-submission-intake-and-asset-creation-assign-week-to-submission-homework-first.js` (**v5.3** — Homework Name 1/2 = PHA IDs; library via dereference) |
+| 005 | Submission Intake — Assign Week (Activity Date + PHA validate) | Submissions when week/homework assignment needed — dynamic `recordId` | `005-submission-intake-and-asset-creation-assign-week-to-submission-homework-first.js` (**v5.5** — Live in PROD 2026-08-21; Homework Name 1/2 = PHA IDs; wrong-slot normalization) |
 | 006 | Submission Intake — Set Video Count | *confirm in Airtable* | `006-submission-intake-and-asset-creation-set-video-count.js` |
 | 007 | Submission Intake — Duplicate Checker for Submissions | *confirm in Airtable* | `007-submission-intake-and-asset-creation-duplicate-checker-for-submissions.js` |
 | 009 | Submission Intake — Create Submission Assets | *confirm in Airtable* | `009-submission-intake-create-submission-assets.js` |
@@ -56,7 +56,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **065** | Homework Review — Create/Reconcile Homework XP Event | **v10.1 installed in PROD per Mike evidence**; trigger `Homework XP Reconciliation Needed? = 1`; formula-backed automatic award/correction for the supplied controlled signature lifecycle; exact `HOMEWORK_XP\|<HC ID>` ownership; same-event withdrawal/restoration passed in controlled Schmidt test | `065-homework-review-and-xp-create-homework-xp-event.js` |
 | **067** | Homework — Link or Create Completion from Reflection Quiz | Final Reflection Quiz Submissions when ready — **repo v3.4** (PHA-first HW17; linked HC fail-closed; **PROD paste not confirmed**) | `067-homework-link-or-create-completion-from-reflection-quiz.js` (**v3.4**) |
 | **068** | Homework — Reconcile Deferred Weekly Summary Links | **RETIRED / keep OFF**; 033 v4.2 owns deferred WAS reconciliation | `068-homework-reconcile-deferred-weekly-summary-links.js` |
-| **070a** | Email — Send Homework Asset Payload to Make | Submission Assets when Send to Make Trigger checked and homework asset ready | `070a-email-notifications-and-external-handoffs-send-homework-asset-payload-to-make.js` (**v4.6** — enrollment + Program Instance cross-check; Lambda resolves season) |
+| **070a** | Email — Send Homework Asset Payload to Make | Submission Assets when Send to Make Trigger checked and homework asset ready | `070a-email-notifications-and-external-handoffs-send-homework-asset-payload-to-make.js` (**v4.7** Live in PROD 2026-08-21; GitHub still **v4.6** until synced — enrollment + Program Instance cross-check; Lambda resolves season) |
 | **071** | Email — Homework feedback Hub handoff | Homework Completions when parent feedback ready and not yet sent | GitHub Hub queue create. Current delivery is Hub → Resend. Exact Airtable version unconfirmed. Filename may still say webhook. |
 
 ## Weekly summary and goals (030–034)
@@ -66,7 +66,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 030 | Weekly Summary — Copy Enrollment Grade Band to Weekly Summary | *confirm in Airtable* | `030-weekly-summary-and-goal-logic-copy-enrollment-grade-band-to-weekly-summary.js` |
 | **031** | Weekly Summary — Find or Create WAS from Submission | Submissions when formula-backed count readiness evaluates checked and formula-backed stat mode evaluates `Simple Total` or `Detailed Shooting`; reuses or creates the canonical WAS | `031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` (**v4.1** — authoritative find-or-create owner; exact Enrollment/Week cardinality, formula-backed readiness inputs, writable email-readiness checkbox) |
 | 032 | Weekly Summary — Link Challenge Goal to WAS | WAS with one Enrollment + Grade Band and no Goal Record | `032-weekly-summary-and-goal-logic-link-challenge-goal-record-to-weekly-athlete-summary.js` (**v3.4** — exactly one active explicit-numeric Target Goal Shots match by Program Instance record ID + Grade Band record ID; zero is valid only when configured) |
-| 033 | Weekly Summary — Assign Homework to WAS | **paste v4.1 pending** — PHA-only, exact PI required | `033-weekly-summary-and-goal-logic-assign-homework-to-weekly-athlete-summary.js` (**v4.1**) |
+| 033 | Weekly Summary — Assign Homework to WAS | WAS when homework assignment reconciliation needed — dynamic `recordId` | `033-weekly-summary-and-goal-logic-assign-homework-to-weekly-athlete-summary.js` (**v4.4** — Live in PROD 2026-08-21; PHA-only, exact PI required) |
 | **035** | Weekly Summary — Create Weekly Threshold XP Events | WAS when goal completion threshold is eligible; creates threshold XP Events and updates WAS threshold status | `035-weekly-summary-and-goal-logic-create-weekly-threshold-xp-events.js` |
 | 034 | Weekly Summary — Set Previous Week Helper Values | *confirm in Airtable* | `034-weekly-summary-and-goal-logic-set-previous-week-helper-values.js` |
 
@@ -123,7 +123,7 @@ Current parent/athlete **email delivery** is Communications Hub → **Resend**. 
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| 070b | Upload — Send Video Asset Payload to Make | Submission Assets · `Send to Make Trigger` checked · `Upload Status = Pending Link` · `Upload Destination = Video Feedback` | Upload path, **not parent email**. **v4.6 in Production Airtable (Mike 2026-08-19)**. Historical C-013 proof was **v4.4** (2026-07-11). |
+| 070b | Upload — Send Video Asset Payload to Make | Submission Assets · `Send to Make Trigger` checked · `Upload Status = Pending Link` · `Upload Destination = Video Feedback` | Upload path, **not parent email**. **v4.7 Live in PROD (2026-08-21 poll)**; GitHub still **v4.6** until synced. Historical C-013 proof was **v4.4** (2026-07-11). |
 | **070c** | Email — Verify Async Video Asset Upload | Submission Assets · `Upload Status = Uploaded` · `Writeback Complete?` checked · canonical/hash fields populated · `Upload Error` blank · **repurpose existing slot if at limit** | `070c-email-notifications-and-external-handoffs-verify-async-video-asset-upload.js` (**v1.1** — idempotent; `Send to Make Trigger` optional on trigger) |
 | 073 | Email — Video feedback Hub handoff | *confirm in Airtable* | GitHub is Hub queue create. Current delivery is Hub → Resend. Filename may still say webhook. |
 | **078** | Email — Mark Homework Parent Feedback Ready | Homework Completions · Satisfactory? + Coach Feedback | **No script** — native Update Record only (`NO SCRIPT - UPDATE RECORD is all.` in Automations Code column). Not an email sender. |
@@ -156,7 +156,7 @@ Current parent/athlete **email delivery** is Communications Hub → **Resend**. 
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| **101** | Zoom Attendance XP — Award Meeting XP | Zoom Meetings when `Zoom XP Reconciliation Needed? = 1`; dynamic `recordId`; no Create XP Events, Attendees, or Completed condition | `101-zoom-attendance-xp-award-meeting-xp.js` (**v6.3** — resolves one existing canonical WAS only; 031 is the sole WAS creator) |
+| **101** | Zoom Attendance XP — Award Meeting XP | Zoom Meetings when `Zoom XP Reconciliation Needed? = 1`; dynamic `recordId`; no Create XP Events, Attendees, or Completed condition | `101-zoom-attendance-xp-award-meeting-xp.js` (**v6.6** Live in PROD 2026-08-21; GitHub matches — resolves one existing canonical WAS only; 031 is the sole WAS creator) |
 | **117** | Zoom — Create Zoom Recording Approval Communications Hub Handoff (**v2.1**). Automations table **Name** still says “Orchestrator”; **Status = Off** (2026-08-20 audit). | Zoom Attendance · Satisfactory recording path | `117-zoom-send-recording-approval-email-to-make.js` — creates Email Handoff Queue only (Event Type `ZOOM_RECORDING_APPROVAL`, Template Key `ZOOM_RECORDING_APPROVED`). Does **not** write XP or call Make/Gmail/Resend. **079** → Hub → Resend. Not the Stage 17 orchestrator. Historical Make 117f: [C-025-117f-prod-zoom-recording-approval-email.md](./deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md) |
 | **117f** | Historical Make workflow identifier (not an Airtable slot) | Retired for email | Do not re-enable Make Gmail for Zoom. Current send plane: [email-send-plane.md](./integrations/email-send-plane.md) |
 | **Stage 17 modular / orchestrator** | Repository design alternatives — **not** PROD Airtable automations | Prefer consolidated paths; do **not** create 117a–e slots (automation-count limit) | `_design-alternatives/stage17-modular-reference/` · [numbering note](./deploy-checklists/C-025-117-numbering.md) |
@@ -164,9 +164,8 @@ Current parent/athlete **email delivery** is Communications Hub → **Resend**. 
 **Airtable automation-count constraint:** Use consolidated automations where practical. Repository-only modular alternatives must not be represented as active PROD automations. The active canonical automation directory must distinguish deployed scripts from archived/design alternatives.
 
 Live attendance XP remains **101** only. The canonical repository source is
-**v6.3**. Mike-supplied Production evidence from 2026-08-13 records **v6.1**
-installed and ON with the reconciliation trigger configured; that is historical
-installed-version evidence, not proof of the current installed version.
+**v6.6** (Production Automations Code poll 2026-08-21). Mike-supplied Production
+evidence from 2026-08-13 records **v6.1** installed and ON — historical only.
 The Introduction and Motivation future meetings both safely acknowledged empty
 rosters with no XP Event and Needed = 0. This is installation plus
 empty-roster proof only; live-attendee XP, withdrawal, bonuses, progression,

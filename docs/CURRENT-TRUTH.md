@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-20  
+**Last verification (repo):** 2026-08-21 (Perfect Week PROD read + automation version poll)  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -145,15 +145,21 @@ Authority: [`integrations/tremendous-award-fulfillment.md`](./integrations/treme
 
 ## 8. Airtable automation versions (repo source + Mike overlays)
 
-### Confirmed Production paste (Mike 2026-08-19 overlays in-repo)
+### Confirmed Production paste (Mike 2026-08-19 overlays + 2026-08-21 Automations table poll)
 
 | # | GitHub `SCRIPT.version` | Production paste claim |
 |---|-------------------------|------------------------|
+| **005** | `v5.5` | **v5.5** Live (2026-08-21 poll) |
+| **009** | `v1.2` | **v1.2** Live (2026-08-21 poll) |
 | **010** | `v10.11` | **v10.10** (Mike 2026-08-19); GitHub advanced to v10.11 midnight-UTC date keys — paste pending |
-| **020** | `v3.6` | **v3.6** |
+| **020** | `v3.7` | **v3.7** Live (2026-08-21 poll; v3.6 logic, structure-only delta) |
 | **022** | `v2.1` | **v2.1** |
-| **066** | `v3.8` | **v3.8** |
-| **070b** | `v4.6` | **v4.6** |
+| **033** | `v4.4` | **v4.4** Live (2026-08-21 poll) |
+| **059** | `v3.6` | **v3.6** Live (2026-08-21 poll) |
+| **066** | `v3.8` | **v3.8** Live (2026-08-21 poll) |
+| **070a** | `v4.6` | **v4.7** Live — **GitHub behind PROD** (2026-08-21 poll) |
+| **070b** | `v4.6` | **v4.7** Live — **GitHub behind PROD** (2026-08-21 poll) |
+| **101** | `v6.6` | **v6.6** Live (2026-08-21 poll) |
 | **117** | `v2.1` | **v2.1** Hub handoff |
 
 ### Repository source (GitHub) — other notable scripts
@@ -162,15 +168,15 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 
 | # | GitHub version (header) | Notes |
 |---|-------------------------|--------|
-| 070a | v4.6 (GitHub) | Keep **PROD OFF** |
+| 070a | v4.6 (GitHub) | **v4.7 Live in PROD** (2026-08-21 poll); GitHub sync pending |
 | 070c | v1.1 | Historical C-013 verify path |
 | 076 | v8.7 (GitHub) | Daily Hub queue create (not Make send) |
 | 077 | v5.0 archive | **Deleted from Production** (2026-08-13 docs) — not live Make send |
 | 079 | v2.5 (GitHub) | Ready queue → Hub → Resend |
-| 101 | v6.6 (GitHub) | Live Zoom attendance XP writer |
+| 101 | v6.6 (GitHub) | **Live** Zoom attendance XP writer (2026-08-21 poll) |
 | 112 | legacy | Expected **OFF** |
 | 115 | v2.1 ETF | **Production-only ETF** — never paste as normal season automation |
-| 005 | v5.4 (GitHub) | Midnight-UTC Activity Date keys |
+| 005 | v5.5 (GitHub) | Live in PROD (2026-08-21 poll) |
 | 117a / 117b | design / historical S16 | **Not** current PROD 117 |
 
 **Contradiction resolved:** Older Completion Master paste-queue rows that still say “010 v10.8 pending” or “020 v3.5” are **historical** relative to the 2026-08-19 Mike overlays. Prefer this file + inventory banner + PROJECT_STATE overlays for those six numbers.
@@ -197,8 +203,8 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Path | State |
 |------|--------|
 | Homework completion (**020**) | Production **v3.6** |
-| Homework upload Make (**070a**) | **OFF** in PROD |
-| Video upload (**070b** + Lambda) | **070b v4.6**; Lambda Program Instance season CodeOnly deploy evidenced 2026-08-19 (`CodeSha256` in PROJECT_STATE). Optional retry proof + secret rotation **PENDING** |
+| Homework upload Make (**070a**) | **Live v4.7** in PROD (Perfect Week test PASS 2026-08-21); GitHub still v4.6 |
+| Video upload (**070b** + Lambda) | **Live v4.7** in PROD (Perfect Week test PASS 2026-08-21); GitHub still v4.6; Lambda Program Instance season CodeOnly deploy evidenced 2026-08-19 |
 | Child upload writeback (**022**) | Production **v2.1** |
 | Zoom live attendance | **101** |
 | Zoom recording approval email | **117 v2.1** → Hub → Resend |
