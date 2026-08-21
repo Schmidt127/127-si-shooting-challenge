@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-08-20** (integrity/authority refresh + obsolete Automations-table ban; schema refresh PROD snapshot from 2026-08-19; production-only operation)
+Last updated: **2026-08-21** (final Production version reconciliation; Perfect Week still calendar-blocked)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
@@ -27,17 +27,21 @@ Last updated: **2026-08-20** (integrity/authority refresh + obsolete Automations
 
 **022 overlay (Mike 2026-08-19):** Production Airtable Automation 022 is **v2.1**. The 2026-08-16 packet’s v2.0 claim is historical for that day’s controlled path.
 
-**020 overlay (Mike 2026-08-19):** Production Airtable Automation 020 is **v3.6**. Earlier v3.5 install evidence remains historical.
+**020 overlay (Mike 2026-08-19, superseded for version string):** Historical note said Production 020 was **v3.6**. **Final 2026-08-21 verification: Production 020 = v3.7.**
 
 **070b overlay (Mike 2026-08-19, v4.7 confirm 2026-08-21):** Production Airtable Automation 070b is **v4.7** (`fetch` replaces undefined `remoteFetchAsync`). GitHub synced 2026-08-21. C-013 **v4.4** E2E (2026-07-11) remains historical proof of the prior upload route; **v4.6** was Program Instance season cross-check.
 
 **Lambda season overlay (Mike-requested 2026-08-19):** `127si-upload-asset` CodeOnly deploy succeeded (CodeSha256 `lwbLiBzB4cfWdzVmIVo7Z78AkiowqPuV2NmUXb+PK2w=`). Program Instance school-year resolution is live in code. Optional retry proof and secret rotation still open. [checklist](./deploy-checklists/2026-08-17-lambda-program-instance-season.md).
 
-**117 overlay (Mike 2026-08-19 paste):** Production Automation 117 is **v2.1** — `Create Zoom Recording Approval Communications Hub Handoff`. Creates Email Handoff Queue only; **079** → Hub → Resend. Not XP credit. Not Make 117f. Not the Stage 17 orchestrator.
+**117 overlay (final 2026-08-21):** Production Automation 117 is **v2.1 Live** — Hub handoff with dynamic inputs `recordId`, `enrollmentRid`, `zoomMeetingRid`. Creates Email Handoff Queue only; **079** → Hub → Resend. Not XP credit. Not Make 117f. Not the Stage 17 orchestrator. Older “Off / Orchestrator Name” notes are historical.
 
 **066 overlay (Mike 2026-08-19):** Production Automation 066 is **v3.8**. Historical v3.3 failure / v3.4–v3.5 proofs remain history.
 
-**010 overlay (Mike 2026-08-19):** Production Automation 010 is **v10.10**. PKG-006R v10.9 lifecycle proof (2026-08-15) remains historical.
+**010 overlay (final 2026-08-21):** Production Automation 010 is **v10.11** (run history `version: "v10.11"`). The 2026-08-19 **v10.10** note and midday Automations Code-column **v10.10** snapshot are **historical**. PKG-006R v10.9 lifecycle proof (2026-08-15) remains historical.
+
+**101 overlay (final 2026-08-21):** Production Automation 101 is **v6.7** (live script body). Midday Automations Code-column **v6.6** snapshot is **historical / superseded**. Meeting `recxtpMu4ONbdDD45` safely skipped when reconciliation not needed.
+
+**Final production version reconciliation (2026-08-21):** See [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) §8. Confirmed: **010 v10.11**, **041 v5.1**, **057 v1.7**, **058 v1.3**, **059 v3.6**, **101 v6.7**, **117 v2.1 Live**, **070a/070b v4.7**, **070c current live (repo v1.1)**, **020 v3.7**, **033 v4.4**, **064 Production-verified current live**, **065 v10.2**, **066 v3.8**. Perfect Week remains **pending** (Days Logged 5; Eligible false).
 
 ---
 
@@ -149,7 +153,7 @@ DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md]
 | Architecture | Stage 17 Zoom Attendance design historically; **PROD slot 117 is email Hub handoff**, not orchestrator |
 | Hard rule | **Never** write `Zoom Meetings.Attendees` (101 double-credit risk) |
 | Preconflict rollup | **`ARRAYJOIN(ARRAYUNIQUE(values), "\n")`** (PROD verified historically) |
-| Automation **117** (Mike paste 2026-08-19) | **v2.1 ON path** — creates Communications Hub **Email Handoff Queue** row (`ZOOM_RECORDING_APPROVAL` / template `ZOOM_RECORDING_APPROVED`). No XP write. No Make/Gmail/Resend call. **079** sends Ready rows → Hub → Resend |
+| Automation **117** (final 2026-08-21) | **v2.1 Live** — Hub queue create; dynamic `recordId` / `enrollmentRid` / `zoomMeetingRid`. No XP. **079** → Hub → Resend |
 | Credit writers | Stage 17 orchestrator / 117c = **design alternatives only**. Historical 2026-07-20 credit packets remain evidence, not current 117 paste target |
 | Companion (historical packets) | **057 v1.3** / **042 v3.1** / **101** — treat live versions as unconfirmed until Mike reads UI |
 | Make **117f** | **Historical** Gmail path only |
@@ -223,7 +227,7 @@ Admin roadmap: [web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md)
 | Scenario | Status |
 |----------|--------|
 | **PROD Upload Engine — Lambda v1** (video) | **Live** — 070b/070c |
-| Homework upload (070a) | PROD **OFF** |
+| Homework upload (070a) | **Live v4.7** during Perfect Week controlled window (historically intentional OFF) |
 | Weekly summary email | **Current:** Hub → Resend. **Historical:** 2026-07-24 Make Bulk Email May 18 / Gmail path. Make is not the current email sender. [email send plane](./integrations/email-send-plane.md) |
 | Daily / homework / video parent emails | **Current:** Hub → Resend. Make webhooks are not the email sender. |
 | **Welcome email** | **Communications Hub → Resend** via Automation **079** (Make welcome scenario not used for email) — participant activation still pending |
@@ -272,7 +276,7 @@ Full register: [KNOWN_ISSUES.md](./KNOWN_ISSUES.md)
 | Severity | Theme |
 |----------|--------|
 | High | Optional 066 OMNI sandbox confirm still open (version string is **v3.8**); automation version inventory still largely UNKNOWN beyond reconciled rows; athlete E2E matrix mostly untested |
-| Medium | 070a homework PROD off; web auth/dashboard incomplete; Softr Obsolete / Not Used; 057/042 live versions still unconfirmed in UI |
+| Medium | 070a post-test ON/OFF policy still Mike decision; Perfect Week calendar-blocked (Days Logged 5); web auth/dashboard incomplete; Softr Obsolete / Not Used |
 | Low | Root marketing URL depends on landing hub; GitHub trigger headers often “confirm in Airtable” |
 
 ---

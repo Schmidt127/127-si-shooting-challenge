@@ -9,6 +9,26 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **Docs: final Production version reconciliation (2026-08-21)** — Authority docs
+  now record Mike-verified live versions: **010 v10.11**, **041 v5.1**, **057 v1.7**,
+  **058 v1.3**, **059 v3.6**, **101 v6.7**, **117 v2.1 Live**, **070a/070b v4.7**,
+  **070c current live**, **020 v3.7**, **033 v4.4**, **064 Production-verified current
+  live**, **065 v10.2**, **066 v3.8**. Midday Automations Code-column snapshots that
+  showed **010 v10.10** / **101 v6.6** are labeled historical. Perfect Week remains
+  calendar-blocked (Days Logged 5; Eligible false); order **057 → 058 → 059**. No
+  Production Airtable writes from this documentation pass.
+- **059 — Reason Debug version string aligned to SCRIPT v3.6 (2026-08-21)** —
+  Cosmetic only (`Created by 059 v3.6`); no award logic change. Existing XP Events
+  still show historical `v3.5` debug text until new awards.
+  Production evidence on `recxtpMu4ONbdDD45`: Current Signature already included
+  the full Attendees list and matched Last (Needed=0) after a lifecycle run while
+  Meeting Status was **Scheduled**. Prior v6.6 treated non-Completed as
+  ineligible withdrawal, deactivated Curtis’s owned event, and acknowledged the
+  full roster without creating XP for new attendees. v6.7 awards only when
+  **Completed**; Scheduled/In Progress **hold** rostered events; Cancelled /
+  roster-remove / inactive Enrollment / School Year mismatch still deactivate.
+  Offline: `node --test tests/zoom/automation-101-lifecycle-eligibility.test.js`.
+  Paste Automation **101** only.
 - **005 (v5.5) — PHA Homework Slot is authoritative for HW1/HW2 placement (2026-08-21)** —
   Wrong Fillout field placement no longer fatal. 005 still validates each selected
   PHA for Program Instance, Week, Active?, and exactly one Homework Assignment link,

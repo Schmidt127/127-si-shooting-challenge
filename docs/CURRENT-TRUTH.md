@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-21  
+**Last verification (repo):** 2026-08-21 (final Production version reconciliation — Mike live script / run-history evidence) (final Production version reconciliation — Mike live script / run-history evidence)  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -111,7 +111,7 @@ Evidence pointer: [`PROJECT_STATE.md`](./PROJECT_STATE.md) § Vercel / web app.
 | Daily submission path | **076** (Hub queue create) → **079** → Hub → Resend |
 | Automation **077** | **Retired / deleted from Production** (Mike-dated docs: 2026-08-13). Do not restore Make daily email. GitHub source retained as archive only. **Do not** trust obsolete `Automations` table rows that once showed 077 as Live. |
 | Queue producers (repo) | Include Hub handoff scripts; **079** dispatches Ready queue → Hub → Resend |
-| Automation **117** | **v2.1** Hub queue create for Zoom recording approval (code). Automations table **Name** still says “Orchestrator”; **Status = Off** (2026-08-20 audit). Not XP; not Make 117f. |
+| Automation **117** | **v2.1** Hub queue create for Zoom recording approval. Automations **Name** = Hub handoff title; **Status = Live** (2026-08-21 evening re-read). Not XP; not Make 117f. |
 
 Authority: [`integrations/email-send-plane.md`](./integrations/email-send-plane.md) · Completion Master · [`automation-index.md`](./automation-index.md). Live Automations UI attestation still preferred if Mike re-confirms.
 
@@ -145,16 +145,37 @@ Authority: [`integrations/tremendous-award-fulfillment.md`](./integrations/treme
 
 ## 8. Airtable automation versions (repo source + Mike overlays)
 
-### Confirmed Production paste (Mike 2026-08-19 overlays in-repo)
+### Confirmed Production versions (Mike final verification 2026-08-21)
 
-| # | GitHub `SCRIPT.version` | Production paste claim |
-|---|-------------------------|------------------------|
-| **010** | `v10.11` | **v10.10** (Mike 2026-08-19); GitHub advanced to v10.11 midnight-UTC date keys — paste pending |
-| **020** | `v3.6` | **v3.6** |
-| **022** | `v2.1` | **v2.1** |
-| **066** | `v3.8` | **v3.8** |
-| **070b** | `v4.7` | **v4.7** (Production confirmed; GitHub synced 2026-08-21) |
-| **117** | `v2.1` | **v2.1** Hub handoff |
+Authority precedence for this reconciliation:
+
+1. **Live Automation script body / run-history `version` output** (Mike-attested)
+2. Production `Automations` columns **Name / Status / Automation Code** (post-2026-08-20 refresh only)
+3. Repository SCRIPT headers
+
+Do **not** treat older Automations-table Code-column snapshots as stronger than live script/run history when they disagree.
+
+| # | Production (final verified) | GitHub | Status | Notes |
+|---|-----------------------------|--------|--------|-------|
+| **010** | **v10.11** | v10.11 | Live | Run history reported `version: "v10.11"` |
+| **020** | **v3.7** | v3.7 | Live | |
+| **033** | **v4.4** | v4.4 | Live | |
+| **041** | **v5.1** | v5.1 | Live | Optional inputs only |
+| **057** | **v1.7** | 1.7 | Live | Perfect Week eligibility only |
+| **058** | **v1.3** | 1.3 | Live | Unlock only after Eligible + Ready |
+| **059** | **v3.6** | v3.6 | Live | |
+| **064** | **Production-verified current live** | v12.2 in repo | Live | Do not invent a new version string |
+| **065** | **v10.2** | v10.2 | Live | |
+| **066** | **v3.8** | v3.8 | Live | |
+| **070a** | **v4.7** | v4.7 | Live | Controlled Perfect Week upload window (historically intentional OFF) |
+| **070b** | **v4.7** | v4.7 | Live | |
+| **070c** | **current live (repo v1.1)** | v1.1 | Live/enabled | Do not invent a new version |
+| **101** | **v6.7** | v6.7 | Live | Live script body `Version: v6.7` / `version: "v6.7"`; meeting `recxtpMu4ONbdDD45` safely skipped (reconciliation not needed) |
+| **117** | **v2.1** | v2.1 | **Live** | Dynamic inputs: `recordId`, `enrollmentRid`, `zoomMeetingRid` |
+
+**Record-ID classification (Mike final):** Dynamic for all record-based automations; optional on **041** only; intentionally blank on **056 / 078 / 118 / 119**; **hardcoded: none**. No Perfect Week test record IDs hardcoded in Production or GitHub automation code.
+
+**Historical snapshot (midday 2026-08-21):** An earlier Automations Code-column read briefly showed **010 v10.10** and **101 v6.6**. That snapshot is **superseded** by Mike’s live script / run-history verification above. See [`deploy-checklists/2026-08-21-perfect-week-test-prep-report.md`](./deploy-checklists/2026-08-21-perfect-week-test-prep-report.md).
 
 ### Repository source (GitHub) — other notable scripts
 
@@ -162,18 +183,17 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 
 | # | GitHub version (header) | Notes |
 |---|-------------------------|--------|
-| 070a | v4.7 (GitHub; synced from Production v4.7) | Homework upload — verify **Live/Off** in Automations UI; [launch decision](./v2/AUTOMATION_070A_LAUNCH_DECISION.md) historically **PROD OFF** |
-| 070c | v1.1 | Historical C-013 verify path |
+| 070a | v4.7 | **Live** during Perfect Week controlled window (historically intentional OFF) |
+| 070c | v1.1 | **Enabled in PROD** — async video writeback verify after **070b**; do not invent a new version |
 | 076 | v8.7 (GitHub) | Daily Hub queue create (not Make send) |
 | 077 | v5.0 archive | **Deleted from Production** (2026-08-13 docs) — not live Make send |
 | 079 | v2.5 (GitHub) | Ready queue → Hub → Resend |
-| 101 | v6.6 (GitHub) | Live Zoom attendance XP writer |
 | 112 | legacy | Expected **OFF** |
 | 115 | v2.1 ETF | **Production-only ETF** — never paste as normal season automation |
-| 005 | v5.4 (GitHub) | Midnight-UTC Activity Date keys |
+| 005 | v5.5 (GitHub) | PHA slot normalize (see CHANGELOG) |
 | 117a / 117b | design / historical S16 | **Not** current PROD 117 |
 
-**Contradiction resolved:** Older Completion Master paste-queue rows that still say “010 v10.8 pending” or “020 v3.5” are **historical** relative to the 2026-08-19 Mike overlays. Prefer this file + inventory banner + PROJECT_STATE overlays for those six numbers.
+**Contradiction resolved:** Older Completion Master paste-queue rows that still say “010 v10.8 pending,” “020 v3.5,” or “070b v4.6 paste pending” are **historical**. Prefer this file’s final 2026-08-21 verification table.
 
 ---
 
@@ -181,14 +201,14 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 
 | Domain | Owner (repo contract) | Live proof |
 |--------|----------------------|------------|
-| Submission XP | **010** — Source Key `SUBMISSION_XP\|{submissionId}` | Controlled path evidence 2026-08-16; Production paste v10.10; GitHub **v10.11** midnight-UTC date keys |
-| Homework XP | **064 / 065** (+ **020** HC create) | PKG-007 evidence exists; treat exact live versions as mostly `UNVERIFIED` beyond documented packets |
+| Submission XP | **010** — Source Key `SUBMISSION_XP\|{submissionId}` | Production **v10.11** (run history); midnight-UTC date keys |
+| Homework XP | **064** prepares (`HOMEWORK_COMPLETION` rule); **065** creates/reconciles `HOMEWORK_XP\|{hcId}` (**020** HC create; **078** marks Parent Feedback Ready?) | **065 Production v10.2**; **064** Production-verified current live; [homework-assets/HOMEWORK-ASSET-COMPLETION-RUNBOOK.md](./online-agents/homework-assets/HOMEWORK-ASSET-COMPLETION-RUNBOOK.md) |
 | Video XP | **113 / 114** (+ **013** VF create) | Partial evidence; broader proof open |
-| Shot milestones | **066** | Production paste **v3.8** |
-| Levels | **041 / 042** | Initial assignment proof exists; broader progression `PENDING` |
-| Perfect Week | **057 / 058 / 059** chain | **Open** — remaining daily dates + award verification incomplete |
-| Zoom live attendance XP | **101** | PKG-034 base lifecycle complete; bonus/downstream deferred |
-| Zoom recording XP under slot 117 | Not live | Slot **117** is email Hub handoff |
+| Shot milestones | **066** | Production **v3.8** |
+| Levels | **041 / 042** | **041 Production v5.1**; broader progression proof still open |
+| Perfect Week | **057 → 058 → 059** | **Calendar-blocked / PENDING** — enrollment `rec93mAfo5jKqP3g5` / WAS `reczxTIpVI8ZJLex0` / week `recT3EXo4Tz7BKFIb`. Days Logged=**5**; Eligible?=**false/0**. Do **not** claim awarded or ready. |
+| Zoom live attendance XP | **101** | Production **v6.7** (live script body). Meeting `recxtpMu4ONbdDD45` safe skip when reconciliation not needed. |
+| Zoom recording XP under slot 117 | Not live | Slot **117** is email Hub handoff (**v2.1 Live**) |
 
 ---
 
@@ -196,12 +216,15 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 
 | Path | State |
 |------|--------|
-| Homework completion (**020**) | Production **v3.6** |
-| Homework upload Make (**070a**) | **OFF** in PROD |
-| Video upload (**070b** + Lambda) | **070b v4.7** (Production + GitHub aligned 2026-08-21); Lambda Program Instance season CodeOnly deploy evidenced 2026-08-19 (`CodeSha256` in PROJECT_STATE). Optional retry proof + secret rotation **PENDING** |
+| Homework assets → HC → XP → parent | **009** → **020 v3.7** → **070a v4.7 Live** (controlled window) → **064** prepare / **065 v10.2** → **078** Ready → **071** Hub |
+| Homework completion (**020**) | Production **v3.7**. **012** / **063** deleted — do not restore |
+| Homework upload Make (**070a**) | Production **v4.7 Live** during Perfect Week controlled window (historically intentional OFF). Formula Ready alone does not send; **Send to Make Trigger** required |
+| Video upload (**070b** + Lambda + **070c**) | Production **070b v4.7** → Make → Lambda → **070c current live (repo v1.1)** verify. Optional retry proof + secret rotation **PENDING** |
 | Child upload writeback (**022**) | Production **v2.1** |
-| Zoom live attendance | **101** |
-| Zoom recording approval email | **117 v2.1** → Hub → Resend |
+| Homework parent email | **078** Ready → **071** → **079** → Hub → Resend |
+| Video parent email | Video `Parent Feedback Ready?` **manual** → **073** → Hub → Resend |
+| Zoom live attendance | **101 v6.7** |
+| Zoom recording approval email | **117 v2.1 Live** → Hub → Resend |
 | Fillout daily submission | **OFF** (contest intake closed) |
 
 ---
@@ -211,8 +234,10 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Item | State |
 |------|--------|
 | Controlled path through WAS / homework | Path evidence 2026-08-16 |
-| Full Perfect Week award proof | **Open / PENDING** — remaining six daily dates, video review/XP, final award |
-| Authority | Completion Master + Perfect Week testing docs under `docs/testing/perfect-week/` |
+| Full Perfect Week award proof | **PENDING / calendar-blocked** — not ready, not awarded. See [2026-08-21-perfect-week-test-prep-report.md](./deploy-checklists/2026-08-21-perfect-week-test-prep-report.md) |
+| Required order | **057 → 058 → 059** only after Eligible?=1 and Days Logged=7 |
+| Verified status (2026-08-21) | Days Logged=**5**; Eligible?=**false/0**; Lifetime XP **740**; Active XP Events **21** (total 740); no duplicate Source Keys; five VF Awarded+Delivered. Stop until Days Logged=7 and Eligible=true. |
+| Authority | Completion Master + Perfect Week prep report + Perfect Week testing docs under `docs/testing/perfect-week/` |
 
 ---
 
