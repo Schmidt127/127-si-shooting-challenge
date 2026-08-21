@@ -195,7 +195,9 @@ tests.push(
             !/\bpollForLambdaWritebackAsync\b/.test(source),
             "070b must not define pollForLambdaWritebackAsync",
         );
-        assert.ok(source.includes('version: "v4.6"'), "070b version must be v4.6");
+        assert.ok(source.includes('version: "v4.7"'), "070b version must be v4.7");
+        assert.ok(/\bfetch\s*\(/.test(source), "070b must use fetch for Make webhook");
+        assert.ok(!/\bremoteFetchAsync\s*\(/.test(source), "070b must not use remoteFetchAsync");
     }),
 );
 
