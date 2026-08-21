@@ -1,11 +1,38 @@
-# Repository Integrity Audit — 2026-08-19 (corrected 2026-08-20)
+# Repository Integrity Audit — 2026-08-19 (corrected 2026-08-20; version overlay 2026-08-21)
 
-**Status:** Active correction pass (authority rules)  
+**Status:** Active correction pass (authority rules) + final Production version overlay  
 **Auditor:** Cursor (Mike-directed exhaustive integrity / truth mandate)  
 **Tip audited:** `010a8b3a48917771c77ee47e53822ec736558b5b` on `master` (= `origin/master` at audit start)  
 **Primary truth doc:** [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md)
 
 Hard rules honored: no `git reset --hard`; no branch/commit deletion; no secret exposure; no invented live-system facts; fix repository-resolvable issues; label unverified claims.
+
+---
+
+## 0a. Final Production version overlay (2026-08-21)
+
+Mike verified live Production script bodies / run history. Prefer that evidence over midday Automations Code-column snapshots.
+
+| Automation | Final Production | Notes |
+|------------|------------------|-------|
+| 010 | **v10.11** | Run history `version: "v10.11"` |
+| 041 | **v5.1** | |
+| 057 | **v1.7** | |
+| 058 | **v1.3** | |
+| 059 | **v3.6** | |
+| 101 | **v6.7** | Live script `Version: v6.7` |
+| 117 | **v2.1 Live** | Dynamic `recordId` / `enrollmentRid` / `zoomMeetingRid` |
+| 070a / 070b | **v4.7** | |
+| 070c | **current live** (repo v1.1) | Do not invent a new version |
+| 020 | **v3.7** | |
+| 033 | **v4.4** | |
+| 064 | **Production-verified current live** | Do not invent a new version |
+| 065 | **v10.2** | |
+| 066 | **v3.8** | |
+
+Perfect Week remains **pending / calendar-blocked** (Days Logged 5; Eligible false). Order **057 → 058 → 059**. Record-ID inputs: dynamic for record-based automations; optional on 041; intentionally blank on 056/078/118/119; hardcoded none.
+
+Authority note: live script/run history outranks older Automations-table Code-column snapshots when they disagree (e.g. midday **010 v10.10** / **101 v6.6** reads).
 
 ---
 
@@ -90,19 +117,37 @@ Full register: [`SECURITY-AND-SENSITIVE-FILES.md`](./SECURITY-AND-SENSITIVE-FILE
 
 ## 4. Source vs documentation (spot audit)
 
+### Historical spot audit (2026-08-20 integrity pass)
+
 | Automation | GitHub version | Docs / Mike overlay | Verdict |
 |------------|----------------|---------------------|---------|
-| 010 | v10.10 | v10.10 | Aligned |
-| 020 | v3.6 | v3.6 | Aligned |
+| 010 | v10.10 | v10.10 | Aligned **at that audit tip** (superseded 2026-08-21 → Production **v10.11**) |
+| 020 | v3.6 | v3.6 | Aligned **at that audit tip** (superseded → Production **v3.7**) |
 | 022 | v2.1 | v2.1 | Aligned |
 | 066 | v3.8 | v3.8 | Aligned |
-| 070b | v4.7 | v4.7 | Aligned (2026-08-21) |
+| 070b | v4.6 | v4.6 | Aligned **at that audit tip** (superseded → Production **v4.7**) |
 | 076 | v8.6 | Hub daily queue (inventory refreshed) | GitHub aligned; PROD paste `UNVERIFIED` in UI |
 | 077 | v5.0 archive | **Deleted from Production** (2026-08-13 docs) | Aligned — obsolete-table “Live” **retracted** |
 | 079 | v2.4 | Hub dispatcher | GitHub aligned; PROD paste `UNVERIFIED` in UI |
 | 117 | v2.1 | v2.1 Hub handoff | Aligned (filename still historical “to-make”; behavior is Hub queue) |
 
-Other inventory rows remain intentionally UNKNOWN for live ON/OFF until Mike Automations **UI** confirmation. Do not fill those gaps from the obsolete `Automations` data table.
+### Final reconciliation spot audit (2026-08-21)
+
+| Automation | Production (final) | GitHub | Verdict |
+|------------|--------------------|--------|---------|
+| 010 | v10.11 | v10.11 | Aligned |
+| 041 | v5.1 | v5.1 | Aligned |
+| 057 | v1.7 | 1.7 | Aligned |
+| 058 | v1.3 | 1.3 | Aligned |
+| 059 | v3.6 | v3.6 | Aligned |
+| 065 | v10.2 | v10.2 | Aligned |
+| 066 | v3.8 | v3.8 | Aligned |
+| 070a / 070b | v4.7 | v4.7 | Aligned |
+| 070c | current live | v1.1 | Aligned (no invented version) |
+| 101 | v6.7 | v6.7 | Aligned |
+| 117 | v2.1 Live | v2.1 | Aligned |
+
+Other inventory rows remain intentionally UNKNOWN for live ON/OFF until Mike Automations **UI** confirmation. Do not fill those gaps from stale Automations-table metadata columns.
 
 ---
 

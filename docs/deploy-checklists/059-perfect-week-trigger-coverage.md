@@ -3,9 +3,9 @@
 | Field | Value |
 |-------|--------|
 | SC items | SC-077, SC-028, SC-026 (adjacent), SC-107 (Visible?) |
-| Script | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` **v3.5** (logic unchanged; trigger docs locked 2026-08-05) |
+| Script | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` **v3.6** (GitHub + Automations Code 2026-08-21; cosmetic Reason Debug still said v3.5 in Prod Code until next paste) |
 | PROD base | `appn84sqPw03zEbTT` |
-| Status | **Trigger fix required in Airtable UI** — CASE-01 data path proven via 059-contract award |
+| Status | Trigger guidance remains: Pending-only (no Shot Milestone filter). CASE-01 data path proven via 059-contract award. Run **only after** 057 eligibility + 058 unlock. |
 | Evidence | `docs/testing/evidence/2026-08-05-agent3-perfect-week/` |
 
 ## Problem proven in PROD (2026-08-05)
@@ -29,7 +29,7 @@
    - **Remove** `Shot Milestone is not empty` (if present)
 4. Do **not** filter on `Ready for 059 XP?` or `XP Events` empty.
 5. Confirm script input `recordId` mapped; outputs `statusOut` / `actionOut` / `errorOut` / `debugStep`.
-6. Script body: keep **v3.5** (no paste required unless UI drift). Repo header only updated for trigger guidance.
+6. Script body: keep **v3.6** (cosmetic debug-string paste optional). Do not run before 057→058 confirms one Pending Perfect Week unlock.
 
 ### Optional soak test after trigger fix
 

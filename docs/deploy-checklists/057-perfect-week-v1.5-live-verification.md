@@ -1,15 +1,18 @@
 # Deploy / Live Verification — Automation 057 Perfect Week v1.5
 
+> **Version banner (2026-08-21 evening audit):** Production Automations Code and GitHub are both **1.7** (exact body match). This filename remains historical for the gated-fixture package that landed at **v1.5**. Do **not** paste/downgrade to v1.4 or treat “v1.5” in the title as the live version.
+
 | Field | Value |
 |-------|--------|
 | SC items | SC-021, SC-028, SC-077, SC-091 |
 | Script | `airtable/automations/shooting-challenge/057-achievements-and-milestones-calculate-perfect-week-eligibility.js` |
-| PROD version (Mike attestation 2026-08-05) | **1.5** — enabled and running |
-| Repository version | **1.5** — **matches PROD** |
+| PROD version (2026-08-21 Automations Code) | **1.7** — Live |
+| Repository version | **1.7** — **matches PROD** |
 | Fixture method | **`GATED_TEST_TIMESTAMP`** (primary) — [`PERFECT-WEEK-FIXTURE-METHOD.md`](../testing/perfect-week/PERFECT-WEEK-FIXTURE-METHOD.md) |
 | Prior runbook | [`057-perfect-week-denver-v1.4.md`](./057-perfect-week-denver-v1.4.md) — **historical**; do **not** paste/downgrade to v1.4 |
-| Status | **Installed in PROD / running** — CASE-01 eligibility + unlock + XP data path proven (Agent 3) via **gated test timestamp** fixtures; **059 auto-fire still open** |
+| Status | **Installed in PROD / running** — CASE-01 eligibility + unlock + XP data path proven (Agent 3) via **gated test timestamp** fixtures; Perfect Week award for current test week still waits for Sat Aug 22 |
 | Do not mark Complete | Until required cases pass; gated path is Schmidt-only (not athlete-facing) |
+| Operator order | After helpers show Eligible / Ready: **057 confirms first** → then **058** (one unlock) → then **059** (one XP). Do **not** run 058/059 before 057 confirms eligibility. |
 
 ## What this package is
 
