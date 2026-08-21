@@ -9,6 +9,15 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **005 (v5.5) — PHA Homework Slot is authoritative for HW1/HW2 placement (2026-08-21)** —
+  Wrong Fillout field placement no longer fatal. 005 still validates each selected
+  PHA for Program Instance, Week, Active?, and exactly one Homework Assignment link,
+  then stores official HW1/HW2 PHAs in `Homework Name 1` / `Homework Name 2` from
+  `PHA.Homework Slot`. Supports single-field misplacement and swapped fields; fails
+  closed on duplicate official slots or blank/invalid slots. Adds original/normalized
+  PHA outputs plus `homeworkSlotNormalized` / message. Offline:
+  `node --test tests/homework/automation-005-020-pha-direct.test.js`. Production
+  paste pending Mike approval (do not change Production from agents).
 - **Video Feedback parent-email writeback owner (2026-08-20)** — Communications Hub
   now owns VF `Parent Feedback Sent?` / `Sent On` / Delivery Status / Delivery Error /
   Hub Event ID / Resend Message ID after Resend outcomes. **073** / **079** unchanged
