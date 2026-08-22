@@ -1,6 +1,6 @@
 /**
  * Loads and executes the REAL Automation 010 script inside the mock environment.
- * Updated for v10.8 PKG-006R-HF-001 multi-family XP lookup.
+ * Updated for v10.12 formula/link settlement grace.
  */
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";

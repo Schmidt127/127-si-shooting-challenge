@@ -9,6 +9,14 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **010 v10.12 — formula/link settlement grace (2026-08-22)** — Temporary
+  unsettled Enrollment, Week, WAS, Count This Submission?, or Total Shots
+  Counted now returns `skipped_not_ready` without throwing, without latch
+  acknowledgement, and without XP writes. Permanent ineligible and integrity
+  failures keep v10.11 behavior. Recommended trigger adds settled-field gates.
+  Paste checklist: `docs/deploy-checklists/010-v10.12-formula-settlement-grace.md`.
+  Offline: `node --test tools/testing/tests/test_010_offline.mjs` and pipeline
+  010 XP dedupe suites.
 - **057 v1.9 — Perfect Week goal settlement uses season lookup (2026-08-21)** —
   Settlement now compares WAS **Goal Shots Target** to Goal Record **Total Shot
   Target**. **Weekly Goal Shots Target** (`Goal/9`) is used only for daily math.

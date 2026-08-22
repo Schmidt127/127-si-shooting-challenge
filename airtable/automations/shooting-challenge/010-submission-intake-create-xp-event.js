@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-21
-Last GitHub Update: 2026-08-20
+Last GitHub Update: 2026-08-22
 
 Purpose:
 Reconcile one Submission's canonical Submission Base XP Event.
@@ -31,9 +31,16 @@ ownership cannot be proven.
  * 010 - SUBMISSION INTAKE AND ASSET CREATION
  * Create/Reconcile Submission Base XP Event
  *
- * Version: v10.11
+ * Version: v10.12
  * Date Written: 2026-06-06
- * Last Updated: 2026-08-20
+ * Last Updated: 2026-08-22
+ *
+ * Version v10.12 updates (formula/link settlement grace):
+ * - Temporary not-ready states (unsettled Enrollment, Week, WAS, Count This
+ *   Submission?, or Total Shots Counted) return skipped_not_ready without
+ *   throwing, without acknowledging the reconciliation latch, and without
+ *   creating or modifying XP Events.
+ * - Permanent ineligible and integrity failures keep v10.11 fail-closed rules.
  *
  * PURPOSE
  * - Reconcile one Submission after the approved signature formula changes.
@@ -64,9 +71,19 @@ ownership cannot be proven.
  * TRIGGER TABLE
  * - Submissions
  *
- * RECOMMENDED TRIGGER CONDITIONS
+ * RECOMMENDED TRIGGER CONDITIONS (all AND)
  * - Reconciliation Needed? = 1
+ * - Enrollment is not empty
+ * - Week is not empty
+ * - Weekly Athlete Summary is not empty
+ * - Count This Submission? = 1
+ * - Total Shots Counted > 0
  * - Input variable recordId = triggering Submission record ID
+ *
+ * TRIGGER NOTE
+ * - Airtable "When record matches conditions" fires when the record starts
+ *   matching. Turning the automation on while a record already matches does
+ *   not rerun the trigger for that record.
  *
  * DO NOT USE THIS TRIGGER CONDITION
  * - Count This Submission? alone; that positive-only filter cannot observe
@@ -78,8 +95,8 @@ ownership cannot be proven.
  * OUTPUTS (automation script action outputs)
  * - statusOut = success | skipped | error
  * - actionOut = created | reactivated_same_event | repaired_same_event |
- *   deactivated_same_event | skipped_ineligible | skipped_already_reconciled |
- *   blocked_* | error
+ *   deactivated_same_event | skipped_ineligible | skipped_not_ready |
+ *   skipped_already_reconciled | blocked_* | error
  * - errorOut = message or empty
  * - debugStep = last step reached
  * - reconciliationAcknowledged = true only after post-write latch proof
@@ -103,10 +120,10 @@ ownership cannot be proven.
 
 const SCRIPT = {
   scriptName: "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
-  version: "v10.11",
-  versionDate: "2026-08-20",
+  version: "v10.12",
+  versionDate: "2026-08-22",
   originalWrittenDate: "2026-06-06",
-  lastUpdated: "2026-08-20",
+  lastUpdated: "2026-08-22",
   folder: "01 - Submission Intake and Asset Creation",
   automationName: "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
 };
@@ -261,6 +278,18 @@ function booleanish(record, table, name) {
   if (value === true || value === 1) return true;
   if (value === false || value === 0 || value === null || value === undefined) return false;
   return ["true", "1", "yes", "checked", "active"].includes(String(value).toLowerCase().trim());
+}
+
+function checkboxSettled(record, table, name) {
+  const value = raw(record, table, name);
+  return value !== null && value !== undefined;
+}
+
+function numberSettled(record, table, name) {
+  const value = raw(record, table, name);
+  if (value === null || value === undefined || value === "") return false;
+  if (Array.isArray(value) && value.length === 0) return false;
+  return true;
 }
 
 function ids(record, table, name) {
@@ -436,6 +465,58 @@ function collectEligibilityFailures({
   }
 
   return failures;
+}
+
+function collectNotReadyReasons({
+  enrollmentIds,
+  weekIds,
+  wasCandidates,
+  submission,
+}) {
+  const reasons = [];
+
+  if (!enrollmentIds.length) reasons.push("Enrollment");
+  if (!weekIds.length) reasons.push("Week");
+  if (
+    enrollmentIds.length === 1
+    && weekIds.length === 1
+    && wasCandidates.length === 0
+  ) {
+    reasons.push("Weekly Athlete Summary");
+  }
+  if (!checkboxSettled(submission, submissionsTable, CONFIG.submissions.countThisSubmission)) {
+    reasons.push("Count This Submission?");
+  }
+  if (!numberSettled(submission, submissionsTable, CONFIG.submissions.totalShotsCounted)) {
+    reasons.push("Total Shots Counted");
+  }
+
+  return reasons;
+}
+
+function returnNotReady(recordId, notReadyFields) {
+  const diagnostic = {
+    automation: SCRIPT.scriptName,
+    version: SCRIPT.version,
+    statusOut: "skipped",
+    actionOut: "skipped_not_ready",
+    submissionId: recordId,
+    notReadyFields,
+    reconciliationAcknowledged: false,
+    debugStep,
+  };
+  setOutputs({
+    ok: true,
+    statusOut: "skipped",
+    actionOut: "skipped_not_ready",
+    errorOut: "",
+    debugStep,
+    submissionId: recordId,
+    notReadyFields,
+    reconciliationAcknowledged: false,
+    milestoneStreakReconciliation: "blocked_no_canonical_owner",
+  });
+  console.log(JSON.stringify(diagnostic));
 }
 
 /* =========================================================
@@ -766,7 +847,29 @@ async function main() {
     const enrollmentId = enrollmentIds[0] || "";
     const weekId = weekIds[0] || "";
     const wasCandidates = enrollmentId && weekId ? await validWasIds(enrollmentId, weekId) : [];
-    const wasId = wasCandidates.length === 1 ? wasCandidates[0] : "";
+
+    step("4A - Temporary formula/link settlement grace");
+    const notReadyFields = collectNotReadyReasons({
+      enrollmentIds,
+      weekIds,
+      wasCandidates,
+      submission,
+    });
+    if (notReadyFields.length > 0) {
+      returnNotReady(recordId, notReadyFields);
+      return;
+    }
+
+    if (wasCandidates.length > 1) {
+      throw new Error(
+        `Submission ${recordId} has multiple Weekly Athlete Summary candidates (${wasCandidates.length}).`,
+      );
+    }
+    if (wasIds.length > 1) {
+      throw new Error(`Submission ${recordId} has ambiguous Weekly Athlete Summary links.`);
+    }
+
+    const wasId = wasCandidates[0];
     const canonicalKeyEvent = await findCanonicalKeyEvent(recordId);
     const enrollment = enrollmentId ? await enrollmentsTable.selectRecordAsync(enrollmentId) : null;
     const week = weekId ? await weeksTable.selectRecordAsync(weekId) : null;
@@ -790,28 +893,9 @@ async function main() {
 
     if (!eligible) {
       step("5 - Correction or safe ineligible skip");
-      const eligibilityFailures = collectEligibilityFailures({
-        enrollment,
-        week,
-        enrollmentIds,
-        weekIds,
-        wasCandidates,
-        wasIds,
-        wasId,
-        submission,
-        activityDate,
-        weekStartKey,
-        weekEndKey,
-        today,
-      });
-      const identityBroken = !enrollmentId || !weekId || wasCandidates.length !== 1 || !wasId || wasIds.length > 1;
-      if (identityBroken) {
-        const detail = eligibilityFailures.length
-          ? eligibilityFailures.join("; ")
-          : "incomplete or ambiguous canonical identity";
+      if (wasIds.length === 1 && wasIds[0] !== wasId) {
         throw new Error(
-          `Submission ${recordId} is ineligible (${detail}); ` +
-          "the existing XP Event remains unacknowledged.",
+          "Submission Weekly Athlete Summary does not match canonical Enrollment+Week summary.",
         );
       }
       const correctionEvent = canonicalKeyEvent
