@@ -84,7 +84,10 @@ function buildBase({
   extraGoals = [],
   zoomRecords = [],
   zoomAttendanceRecords = [],
+  weekStart = "2026-08-02",
+  submissionRecords = [],
 } = {}) {
+  const submissionIds = submissionRecords.map((record) => record.id);
   const weekly = new MockTable("Weekly Athlete Summary", WEEKLY_FIELDS, [
     new MockRecord(IDS.was, {
       Enrollment: linked(IDS.enrollment),
@@ -93,16 +96,17 @@ function buildBase({
       "Goal Record": linked(IDS.goal),
       "Weekly Goal Shots Target": weeklyGoal,
       "Goal Shots Target": fallbackGoal,
-      Submissions: [],
+      Submissions: submissionIds.map((id) => ({ id, name: id })),
       Homework: [],
       "Homework Completions Link": [],
     }),
   ]);
   const submissions = new MockTable("Submissions", [
     { name: "Activity Date", type: "date" },
+    { name: "Counted Activity Date Key", type: "singleLineText" },
     { name: "Total Shots Counted", type: "number" },
     { name: "Perfect Week Countable Submission?", type: "checkbox" },
-  ]);
+  ], submissionRecords);
   const homeworkCompletions = new MockTable("Homework Completions", [
     { name: "Homework", type: "multipleRecordLinks" },
     { name: "Satisfactory?", type: "checkbox" },
@@ -127,7 +131,7 @@ function buildBase({
     { name: "Recording Quiz Review Status", type: "singleSelect" },
   ], zoomAttendanceRecords);
   const weeks = new MockTable("Weeks", [{ name: "Start Date", type: "date" }], [
-    new MockRecord(IDS.week, { "Start Date": "2026-08-02" }),
+    new MockRecord(IDS.week, { "Start Date": weekStart }),
   ]);
   const enrollments = new MockTable("Enrollments", [
     { name: "Program Instance", type: "multipleRecordLinks" },
@@ -182,9 +186,46 @@ function lastWeeklyUpdate(base) {
 
 test("executes the committed Automation 057 source", () => {
   assert.match(SOURCE, /057 - Achievements and Milestones - Calculate Perfect Week Eligibility/);
-  assert.match(SOURCE, /Version: 1\.7/);
+  assert.match(SOURCE, /Version: 1\.10/);
   console.log(`SOURCE_EXECUTED ${SCRIPT_PATH} sha256=${SOURCE_SHA256}`);
 });
+
+function makeCountableSubmission(id, dateKey, {
+  activityDate = new Date(`${dateKey}T00:00:00.000Z`),
+  shots = 100,
+} = {}) {
+  return new MockRecord(id, {
+    "Activity Date": activityDate,
+    "Counted Activity Date Key": dateKey,
+    "Total Shots Counted": shots,
+    "Perfect Week Countable Submission?": 1,
+  });
+}
+
+function buildSevenDayWeekSubmissions(weekStart, {
+  lastDayActivityDate = null,
+  lastDayDateKey = null,
+  duplicateLastDay = null,
+} = {}) {
+  const start = new Date(`${weekStart}T12:00:00.000Z`);
+  const records = [];
+  for (let offset = 0; offset < 7; offset += 1) {
+    const date = new Date(start);
+    date.setUTCDate(start.getUTCDate() + offset);
+    const dateKey = date.toISOString().slice(0, 10);
+    const isLastDay = offset === 6;
+    const activityDate = isLastDay && lastDayActivityDate ? lastDayActivityDate : new Date(`${dateKey}T00:00:00.000Z`);
+    const canonicalKey = isLastDay && lastDayDateKey ? lastDayDateKey : dateKey;
+    records.push(makeCountableSubmission(`recSub057Day${offset}`, canonicalKey, { activityDate }));
+  }
+  if (duplicateLastDay) {
+    records.push(makeCountableSubmission("recSub057DupLast", duplicateLastDay.dateKey, {
+      activityDate: duplicateLastDay.activityDate,
+      shots: duplicateLastDay.shots,
+    }));
+  }
+  return records;
+}
 
 test("positive configured target reaches Ready", async () => {
   const base = buildBase({ target: 700, weeklyGoal: 700 });
@@ -296,5 +337,96 @@ test("recording-credit replay does not reapply an already applied attendance row
   assert.equal(error, null);
   assert.equal(weeklyCells(base)["Perfect Week Automation Status"], "Ready");
   assert.equal(weeklyCells(base)["Perfect Week Zoom Attendance Count"], 1);
+  assert.equal(base.getTable("Zoom Attendance").updates.length, 0);
+});
+
+test("Fillout midnight-UTC Activity Date stays on canonical Counted Activity Date Key", async () => {
+  const base = buildBase({
+    target: 700,
+    weeklyGoal: 700,
+    weekStart: "2026-08-16",
+    submissionRecords: buildSevenDayWeekSubmissions("2026-08-16", {
+      lastDayActivityDate: new Date("2026-08-22T00:00:00.000Z"),
+      lastDayDateKey: "2026-08-22",
+    }),
+  });
+  const { error } = await run057(base);
+  assert.equal(error, null);
+  assert.equal(weeklyCells(base)["Perfect Week Daily Requirement Met?"], true);
+  assert.match(weeklyCells(base)["Perfect Week Daily Check Detail"], /2026-08-22: 100\/100/);
+});
+
+test("August 19 evening remains August 19 using Counted Activity Date Key", async () => {
+  const base = buildBase({
+    target: 700,
+    weeklyGoal: 700,
+    weekStart: "2026-08-16",
+    submissionRecords: buildSevenDayWeekSubmissions("2026-08-16", {
+      lastDayActivityDate: new Date("2026-08-22T00:00:00.000Z"),
+      lastDayDateKey: "2026-08-22",
+    }).map((record) => {
+      if (record.id === "recSub057Day3") {
+        record.cells["Activity Date"] = new Date("2026-08-19T23:34:00.000Z");
+        record.cells["Counted Activity Date Key"] = "2026-08-19";
+      }
+      return record;
+    }),
+  });
+  const { error } = await run057(base);
+  assert.equal(error, null);
+  assert.match(weeklyCells(base)["Perfect Week Daily Check Detail"], /2026-08-19: 100\/100/);
+  assert.doesNotMatch(weeklyCells(base)["Perfect Week Daily Check Detail"], /Missing official week days:.*2026-08-19/);
+});
+
+test("duplicate same-day submissions aggregate shots for one official day", async () => {
+  const base = buildBase({
+    target: 700,
+    weeklyGoal: 700,
+    weekStart: "2026-08-16",
+    submissionRecords: buildSevenDayWeekSubmissions("2026-08-16", {
+      lastDayActivityDate: new Date("2026-08-22T00:00:00.000Z"),
+      lastDayDateKey: "2026-08-22",
+      duplicateLastDay: {
+        dateKey: "2026-08-22",
+        activityDate: new Date("2026-08-22T00:00:00.000Z"),
+        shots: 50,
+      },
+    }),
+  });
+  const { error } = await run057(base);
+  assert.equal(error, null);
+  assert.equal(weeklyCells(base)["Perfect Week Daily Requirement Met?"], true);
+  assert.match(weeklyCells(base)["Perfect Week Daily Check Detail"], /Passing official days: 7\/7/);
+  assert.match(weeklyCells(base)["Perfect Week Daily Check Detail"], /2026-08-22: 150\/100/);
+});
+
+test("blank Counted Activity Date Key fails closed for countable submissions", async () => {
+  const submissions = buildSevenDayWeekSubmissions("2026-08-16");
+  submissions[0].cells["Counted Activity Date Key"] = "";
+  const base = buildBase({
+    target: 700,
+    weeklyGoal: 700,
+    weekStart: "2026-08-16",
+    submissionRecords: submissions,
+  });
+  const { error } = await run057(base);
+  assert.match(error?.message ?? "", /blank or malformed Counted Activity Date Key/);
+  assert.equal(lastWeeklyUpdate(base)["Perfect Week Automation Status"].name, "Error");
+});
+
+test("unsettled weekly goal still fails closed without positive Perfect Week work", async () => {
+  const base = buildBase({
+    target: 700,
+    weeklyGoal: 699,
+    weekStart: "2026-08-16",
+    submissionRecords: buildSevenDayWeekSubmissions("2026-08-16"),
+  });
+  const { error } = await run057(base);
+  assert.equal(error, null);
+  assert.equal(weeklyCells(base)["Perfect Week Automation Status"], "Error");
+  assert.match(
+    weeklyCells(base)["Perfect Week Automation Error"],
+    /has not settled to the linked active goal target/
+  );
   assert.equal(base.getTable("Zoom Attendance").updates.length, 0);
 });
