@@ -4,26 +4,6 @@
       "source": "/",
       "destination": "/shoot",
       "permanent": false
-    },
-    {
-      "source": "/shooting",
-      "destination": "/shoot",
-      "permanent": false
-    },
-    {
-      "source": "/shootingchallenge",
-      "destination": "/shoot",
-      "permanent": false
-    },
-    {
-      "source": "/shootchallenge",
-      "destination": "/shoot",
-      "permanent": false
-    },
-    {
-      "source": "/challengeshooting",
-      "destination": "/shoot",
-      "permanent": false
     }
   ]
 }

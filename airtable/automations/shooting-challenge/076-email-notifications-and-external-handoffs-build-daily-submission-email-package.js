@@ -33,11 +33,13 @@ Filename may still say email package; current path is Hub queue create only.
  * 076 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Daily Submission Communications Hub Handoff
  *
- * Version: v8.10
+ * Version: v8.11
  * Date Written: 2026-05-29
  * Last Updated: 2026-08-22
  *
  * VERSION HISTORY
+ * - v8.11 (2026-08-22): Daily Submission payload adds canonical homeworkPageUrl
+ *   (`/shoot/homework`); homeworkItems omit per-assignment library URLs.
  * - v8.10 (2026-08-22): Daily Submission payload — submissionStatMode,
  *   structured shootingDetails for Detailed Shooting, level cover image URLs,
  *   PHA grade-band filter allows all-grade assignments (legacy parity).
@@ -140,7 +142,7 @@ Filename may still say email package; current path is Hub queue create only.
 
 const SCRIPT = {
   scriptName: "076 - Daily Submission Communications Hub Handoff",
-  version: "v8.10",
+  version: "v8.11",
   versionDate: "2026-08-22",
   originalWrittenDate: "2026-05-29",
   lastUpdated: "2026-08-22",
@@ -151,6 +153,7 @@ const SCRIPT = {
 const CANONICAL_URLS = {
   landing: "https://www.fairfieldbasketballclub.com",
   shoot: "https://www.fairfieldbasketballclub.com/shoot",
+  homework: "https://www.fairfieldbasketballclub.com/shoot/homework",
   dailyForm: "https://forms.fairfieldbasketballclub.com/shoot-dailysubmissions",
 };
 
@@ -801,10 +804,8 @@ async function main() {
         text(row, phaT, CONFIG.fields.pha.homework)
       );
       if (!name) return null;
-      const link = lib ? text(lib, currT, CONFIG.fields.curr.url) : "";
       return {
         name,
-        ...(link ? { link } : {}),
         status: mapHomeworkStatus(hcByPha.get(row.id), hcT),
       };
     })
@@ -814,10 +815,8 @@ async function main() {
       .map((row) => {
         const name = first(text(row, currT, CONFIG.fields.curr.title), text(row, currT, CONFIG.fields.curr.full), row.name);
         if (!name) return null;
-        const link = text(row, currT, CONFIG.fields.curr.url);
         return {
           name,
-          ...(link ? { link } : {}),
           status: "Not submitted",
         };
       })
@@ -874,6 +873,7 @@ async function main() {
     xpPageUrl: buildXpPageUrl(enrollment, enrT),
     landingPageUrl: CANONICAL_URLS.landing,
     shootPageUrl: CANONICAL_URLS.shoot,
+    homeworkPageUrl: CANONICAL_URLS.homework,
     dailySubmissionFormUrl: first(text(program, piT, CONFIG.fields.pi.dailySubmissionUrl), CANONICAL_URLS.dailyForm),
     ...(homeworkItems.length ? { homeworkItems } : {}),
     ...(assignments.length ? { homeworkAssignments: assignments } : {}),

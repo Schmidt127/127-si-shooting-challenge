@@ -18,17 +18,19 @@ End-to-end Daily Submission email improvements:
 
 ### 2. Shooting Challenge web (`127-si-shooting-challenge` / `web`)
 
-1. Merge/push `master` with `web/vercel.json` redirect aliases.
-2. Confirm Vercel production deploy for project `127-si-shooting-challenge`.
-3. Smoke-test redirects (if domain mounts this project at root):
+Not used for apex shoot aliases — those live on the landing hub (below).
+
+### 3. Landing hub (`127si-landing-page` / `hoopchallenges-landing`)
+
+1. Merge/push `master` with `web/next.config.ts` shoot alias redirects.
+2. Confirm Vercel production deploy for project `hoopchallenges-landing`.
+3. Live-verify on https://www.fairfieldbasketballclub.com:
    - `/shooting` → `/shoot`
    - `/shootingchallenge` → `/shoot`
    - `/shootchallenge` → `/shoot`
    - `/challengeshooting` → `/shoot`
 
-**Note:** If Fairfield landing owns the apex domain and only mounts this app at `/shoot`, apex aliases may require a matching landing-project redirect. Test on production after deploy.
-
-### 3. Airtable Production — **076 v8.10** (required)
+### 4. Airtable Production — **076 v8.11** (required)
 
 Paste from GitHub (docblock through end; skip GitHub header):
 
@@ -36,9 +38,12 @@ Paste from GitHub (docblock through end; skip GitHub header):
 
 Automation name in Airtable: **076 - Daily Submission Communications Hub Handoff**
 
+Payload must include `homeworkPageUrl`:
+`https://www.fairfieldbasketballclub.com/shoot/homework`
+
 **Do not paste until Hub deploy is live** — template expects new optional payload fields but remains backward compatible.
 
-### 4. Controlled send proof
+### 5. Controlled send proof
 
 1. Re-arm Curtis test submission (`recwofzVvYsAYMibR`) or Schmidt test submission.
 2. Confirm queue payload includes:

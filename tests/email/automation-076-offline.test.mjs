@@ -315,6 +315,7 @@ test("076 creates one deterministic queue row from a valid cleaned parent email"
   assert.equal(payload.xpPageUrl, "https://www.fairfieldbasketballclub.com/shoot/dashboard");
   assert.equal(payload.landingPageUrl, "https://www.fairfieldbasketballclub.com");
   assert.equal(payload.dailySubmissionFormUrl, "https://forms.fairfieldbasketballclub.com/shoot-dailysubmissions");
+  assert.equal(payload.homeworkPageUrl, "https://www.fairfieldbasketballclub.com/shoot/homework");
   assert.deepEqual(recipients, [{
     email: "mschmidt@fairfield.k12.mt.us",
     role: "guardian",
