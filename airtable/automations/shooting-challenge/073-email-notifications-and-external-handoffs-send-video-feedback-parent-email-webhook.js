@@ -31,11 +31,13 @@ Filename may still say webhook; current path is Hub queue create only.
  * 073 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Create Video Feedback Communications Hub Handoff
  *
- * Version: v4.2
+ * Version: v4.3
  * Date Written: 2026-06-17
- * Last Updated: 2026-08-20
+ * Last Updated: 2026-08-22
  *
  * VERSION HISTORY
+ * - v4.3 (2026-08-22): Branded Communications Hub template payload enrichment —
+ *   programName, reviewStatus, landingPageUrl, shootPageUrl. Business gates unchanged.
  * - v4.2 (2026-08-20): V2 Automation Standard structure — GitHub header,
  *   production docblock, numbered sections, hoisted debugStep, outer run
  *   wrapper. Business logic unchanged from v4.1.
@@ -116,10 +118,10 @@ Filename may still say webhook; current path is Hub queue create only.
 
 const SCRIPT = {
   scriptName: "073 - Email, Notifications, and External Handoffs - Create Video Feedback Communications Hub Handoff",
-  version: "v4.2",
-  versionDate: "2026-08-20",
+  version: "v4.3",
+  versionDate: "2026-08-22",
   originalWrittenDate: "2026-06-17",
-  lastUpdated: "2026-08-20",
+  lastUpdated: "2026-08-22",
   folder: "07 - Email, Notifications, and External Handoffs",
   automationName: "073 - Email, Notifications, and External Handoffs - Create Video Feedback Communications Hub Handoff",
 };
@@ -127,6 +129,13 @@ const SCRIPT = {
 /* =========================================================
    SECTION 2: CONFIGURATION
 ========================================================= */
+
+const CANONICAL_URLS = {
+  landing: "https://www.fairfieldbasketballclub.com",
+  shoot: "https://www.fairfieldbasketballclub.com/shoot",
+  homework: "https://www.fairfieldbasketballclub.com/shoot/homework",
+  dailyForm: "https://forms.fairfieldbasketballclub.com/shoot-dailysubmissions",
+};
 
 const CONFIG = {
   timeZone: "America/Denver",
@@ -136,6 +145,7 @@ const CONFIG = {
     submissions: "Submissions",
     assets: "Submission Assets",
     xpEvents: "XP Events",
+    programInstances: "Program Instance - Sync",
     queue: "Email Handoff Queue",
   },
   statuses: {
@@ -205,6 +215,9 @@ const CONFIG = {
       week: "Week",
       videoFeedback: "Video Feedback",
       points: "XP Points",
+    },
+    pi: {
+      name: "Name - Program Instance",
     },
     queue: {
       key: "Handoff Key",
@@ -546,6 +559,16 @@ async function main() {
     "Video submission"
   );
   const videoUrl = parentVideoUrl(vf, vfTable);
+  let programName = "";
+  try {
+    const piTable = base.getTable(CONFIG.tables.programInstances);
+    const pi = await piTable.selectRecordAsync(programId);
+    if (pi) {
+      programName = firstNonEmpty(getText(pi, piTable, CONFIG.fields.pi.name), pi.name);
+    }
+  } catch {
+    // Optional display field only.
+  }
   const recipients = [{ email: parent, role: "guardian", displayName: athleteName }];
   const payload = {
     athleteName,
@@ -560,11 +583,16 @@ async function main() {
     baseXpAwarded: getNumber(vf, vfTable, CONFIG.fields.vf.baseXp),
     uploadStatus: getText(vf, vfTable, CONFIG.fields.vf.uploadStatus),
     videoAssetUploadedAt: dateText(getRaw(vf, vfTable, CONFIG.fields.vf.uploadedAt)),
+    programName: programName || undefined,
+    reviewStatus: "Review complete",
+    landingPageUrl: CANONICAL_URLS.landing,
+    shootPageUrl: CANONICAL_URLS.shoot,
     videoFeedbackKey: expectedKey,
     canonicalSubmissionId: submissionId,
     canonicalSubmissionAssetId: assetId,
     canonicalWeekId: weekId,
   };
+  if (!payload.programName) delete payload.programName;
 
   const queueData = queueFields(queueTable, {
     [CONFIG.fields.queue.key]: handoffKey,
