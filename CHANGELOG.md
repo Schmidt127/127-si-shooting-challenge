@@ -9,6 +9,16 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **057 v1.9 — Perfect Week goal settlement uses season lookup (2026-08-21)** —
+  Settlement now compares WAS **Goal Shots Target** to Goal Record **Total Shot
+  Target**. **Weekly Goal Shots Target** (`Goal/9`) is used only for daily math.
+  v1.7/v1.8 incorrectly required weekly === season total, which kept live WAS
+  `reczxTIpVI8ZJLex0` in Error after a settled 12000 goal. Keeps v1.8 Mountain
+  Time date keys. Paste + dynamic `recordId` mapping required (builder currently
+  hardcodes the test WAS). Checklist:
+  `docs/deploy-checklists/057-v1.9-goal-settlement-fix.md`. Offline:
+  `node --test tools/testing/tests/test_057_runtime.mjs` and
+  `node --test airtable/automations/shooting-challenge/lib/xp-date-normalization.test.js`.
 - **Docs: final Production version reconciliation (2026-08-21)** — Authority docs
   now record Mike-verified live versions: **010 v10.11**, **041 v5.1**, **057 v1.7**,
   **058 v1.3**, **059 v3.6**, **101 v6.7**, **117 v2.1 Live**, **070a/070b v4.7**,
