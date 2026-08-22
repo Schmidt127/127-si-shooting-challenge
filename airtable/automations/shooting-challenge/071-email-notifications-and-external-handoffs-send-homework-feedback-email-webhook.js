@@ -5,9 +5,9 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 
-Version: v4.1
+Version: v4.2
 Date Written: 2026-06-17
-Last Updated: 2026-08-17
+Last Updated: 2026-08-22
 
 PURPOSE
 - Validate one Homework Completion record that is ready for parent email.
@@ -59,12 +59,19 @@ AUTOMATION NAME
 
 const SCRIPT = {
   scriptName: "071 - Email, Notifications, and External Handoffs - Create Homework Feedback Communications Hub Handoff",
-  version: "v4.1",
-  versionDate: "2026-08-17",
+  version: "v4.2",
+  versionDate: "2026-08-22",
   originalWrittenDate: "2026-06-17",
-  lastUpdated: "2026-08-17",
+  lastUpdated: "2026-08-22",
   folder: "07 - Email, Notifications, and External Handoffs",
   automationName: "071 - Email, Notifications, and External Handoffs - Create Homework Feedback Communications Hub Handoff",
+};
+
+const CANONICAL_URLS = {
+  landing: "https://www.fairfieldbasketballclub.com",
+  shoot: "https://www.fairfieldbasketballclub.com/shoot",
+  homework: "https://www.fairfieldbasketballclub.com/shoot/homework",
+  dailyForm: "https://forms.fairfieldbasketballclub.com/shoot-dailysubmissions",
 };
 
 const CONFIG = {
@@ -76,6 +83,7 @@ const CONFIG = {
     sub: "Submissions",
     quiz: "Final Reflection Quiz Submissions",
     pi: "Program Instance - Sync",
+    week: "Weeks",
     queue: "Email Handoff Queue",
   },
   statuses: { draft: "Draft", ready: "Ready", needsReview: "Needs Review" },
@@ -136,6 +144,9 @@ const CONFIG = {
     },
     pi: {
       name: "Name - Program Instance",
+    },
+    week: {
+      name: "Week Name",
     },
     queue: {
       key: "Handoff Key",
@@ -447,6 +458,13 @@ async function main() {
     if (pi) programName = first(text(pi, piT, CONFIG.fields.pi.name), pi.name);
   } catch {}
 
+  let weekName = "";
+  try {
+    const weekT = base.getTable(CONFIG.tables.week);
+    const weekRec = await weekT.selectRecordAsync(weekId);
+    if (weekRec) weekName = text(weekRec, weekT, CONFIG.fields.week.name);
+  } catch {}
+
   const recipients = [{ email: parent, role: "guardian" }];
   const payload = {
     athleteName,
@@ -459,12 +477,18 @@ async function main() {
     submittedFiles: files,
     homeworkSlot: hcSlot,
     programName: programName || undefined,
+    weekName: weekName || undefined,
+    reviewStatus: "Satisfactory",
+    landingPageUrl: CANONICAL_URLS.landing,
+    shootPageUrl: CANONICAL_URLS.shoot,
+    homeworkPageUrl: CANONICAL_URLS.homework,
     canonicalProgramHomeworkAssignmentId: canonicalPha.id,
     canonicalProgramInstanceId: programId,
     canonicalWeekId: weekId,
     canonicalGradeBandId: gradeId || undefined,
   };
   if (!payload.programName) delete payload.programName;
+  if (!payload.weekName) delete payload.weekName;
   if (!payload.canonicalGradeBandId) delete payload.canonicalGradeBandId;
 
   const queueData = queueFields(queueT, {

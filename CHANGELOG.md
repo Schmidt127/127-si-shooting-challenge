@@ -9,6 +9,16 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **071 v4.2 + 073 v4.3 — Homework/Video Feedback parent email redesign (2026-08-22)** —
+  Communications Hub branded React Email templates (`HOMEWORK_FEEDBACK`,
+  `VIDEO_FEEDBACK`) aligned with Welcome and Weekly Athlete Summary. **071**
+  payload adds `weekName`, `reviewStatus`, and canonical footer URLs; **073**
+  adds `programName`, `reviewStatus`, and footer URLs. Paste checklists:
+  `docs/deploy-checklists/homework-feedback-email-redesign-2026-08-22.md`,
+  `docs/deploy-checklists/video-feedback-email-redesign-2026-08-22.md`. Offline:
+  `node --test tests/email/homework-video-feedback-email.test.mjs` and
+  `node tests/email/automation-071-073-source-safety.test.js`. Hub tests in
+  `Schmidt127/communications`.
 - **076 v8.11 — canonical homeworkPageUrl (2026-08-22)** — Payload always
   includes `https://www.fairfieldbasketballclub.com/shoot/homework`; homework
   items omit per-assignment library URLs. Paste with v8.10 checklist update.
