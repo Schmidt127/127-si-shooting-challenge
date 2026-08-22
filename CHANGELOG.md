@@ -9,6 +9,15 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **Automation 010 v10.12 (2026-08-22)** — Fixes false error emails when Enrollment,
+  Week, Weekly Athlete Summary, `Count This Submission?`, or `Total Shots Counted`
+  were still settling after `Reconciliation Needed?` flipped to 1. Temporary lag
+  returns `skipped_not_ready` without throwing; latch stays open for retry. Trigger
+  contract adds readiness filters (Enrollment, Week, WAS present; counted + shots > 0).
+  Offline: `node --test tools/testing/tests/test_010_offline.mjs`,
+  `node --test tools/testing/tests/test_010_not_ready.mjs`. Paste card:
+  [`010-v10.12-paste-card.md`](./docs/deploy-checklists/010-v10.12-paste-card.md).
+  **Production paste pending Mike verification** — do not claim fixed until pasted.
 - **Docs: final Production version reconciliation (2026-08-21)** — Authority docs
   now record Mike-verified live versions: **010 v10.11**, **041 v5.1**, **057 v1.7**,
   **058 v1.3**, **059 v3.6**, **101 v6.7**, **117 v2.1 Live**, **070a/070b v4.7**,

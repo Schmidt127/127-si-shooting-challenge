@@ -1,5 +1,5 @@
 /**
- * Offline regression tests for Automation 010 v10.8 reconciliation writer.
+ * Offline regression tests for Automation 010 v10.12 reconciliation writer.
  * Run: node --test tools/testing/tests/test_010_offline.mjs
  */
 import test from "node:test";
@@ -73,7 +73,7 @@ test("deactivates the exact owned XP Event when the Submission becomes ineligibl
   assert.equal(xpEventRecord(base).getCellValue("Active?"), false);
 });
 
-test("fails closed when no canonical Weekly Athlete Summary exists", async () => {
+test("missing canonical Weekly Athlete Summary returns skipped_not_ready without writes", async () => {
   const base = build010Base({
     weeklySummaries: [
       new MockRecord(IDS.SUMMARY_STALE, {
@@ -88,9 +88,11 @@ test("fails closed when no canonical Weekly Athlete Summary exists", async () =>
     xpEvents: [],
   });
 
-  const { error } = await run010({ base });
-  assert.ok(error);
-  assert.match(String(error.message), /no canonical Weekly Athlete Summary/i);
+  const { output, error } = await run010({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.statusOut, "skipped");
+  assert.equal(output.values.actionOut, "skipped_not_ready");
+  assert.equal(output.values.reconciliationAcknowledged, false);
   assert.equal(totalWrites(base), 0);
 });
 

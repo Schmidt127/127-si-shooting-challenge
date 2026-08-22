@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-21
-Last GitHub Update: 2026-08-20
+Last GitHub Update: 2026-08-22
 
 Purpose:
 Reconcile one Submission's canonical Submission Base XP Event.
@@ -31,9 +31,9 @@ ownership cannot be proven.
  * 010 - SUBMISSION INTAKE AND ASSET CREATION
  * Create/Reconcile Submission Base XP Event
  *
- * Version: v10.11
+ * Version: v10.12
  * Date Written: 2026-06-06
- * Last Updated: 2026-08-20
+ * Last Updated: 2026-08-22
  *
  * PURPOSE
  * - Reconcile one Submission after the approved signature formula changes.
@@ -64,13 +64,19 @@ ownership cannot be proven.
  * TRIGGER TABLE
  * - Submissions
  *
- * RECOMMENDED TRIGGER CONDITIONS
+ * RECOMMENDED TRIGGER CONDITIONS (all required — reduces formula/link lag runs)
  * - Reconciliation Needed? = 1
+ * - Enrollment is not empty
+ * - Week is not empty
+ * - Weekly Athlete Summary is not empty
+ * - Count This Submission? = checked / 1
+ * - Total Shots Counted > 0
  * - Input variable recordId = triggering Submission record ID
  *
  * DO NOT USE THIS TRIGGER CONDITION
  * - Count This Submission? alone; that positive-only filter cannot observe
  *   later exclusion, future-date, link, or Enrollment changes.
+ * - Reconciliation Needed? = 1 alone; formulas and links may still be settling.
  *
  * REQUIRED INPUT VARIABLES
  * - recordId = triggering Submission record ID
@@ -78,8 +84,8 @@ ownership cannot be proven.
  * OUTPUTS (automation script action outputs)
  * - statusOut = success | skipped | error
  * - actionOut = created | reactivated_same_event | repaired_same_event |
- *   deactivated_same_event | skipped_ineligible | skipped_already_reconciled |
- *   blocked_* | error
+ *   deactivated_same_event | skipped_ineligible | skipped_not_ready |
+ *   skipped_already_reconciled | blocked_* | error
  * - errorOut = message or empty
  * - debugStep = last step reached
  * - reconciliationAcknowledged = true only after post-write latch proof
@@ -103,10 +109,10 @@ ownership cannot be proven.
 
 const SCRIPT = {
   scriptName: "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
-  version: "v10.11",
-  versionDate: "2026-08-20",
+  version: "v10.12",
+  versionDate: "2026-08-22",
   originalWrittenDate: "2026-06-06",
-  lastUpdated: "2026-08-20",
+  lastUpdated: "2026-08-22",
   folder: "01 - Submission Intake and Asset Creation",
   automationName: "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
 };
@@ -436,6 +442,72 @@ function collectEligibilityFailures({
   }
 
   return failures;
+}
+
+function isStructurallyReady({
+  enrollmentId,
+  weekId,
+  enrollment,
+  week,
+  wasCandidates,
+  wasId,
+  wasIds,
+}) {
+  return Boolean(
+    enrollmentId && weekId && enrollment && week
+    && wasCandidates.length === 1 && wasId
+    && wasIds.length <= 1,
+  );
+}
+
+function collectNotReadyReasons({
+  enrollmentId,
+  weekId,
+  enrollment,
+  week,
+  wasCandidates,
+  wasId,
+  wasIds,
+}) {
+  const reasons = [];
+
+  if (!enrollmentId) reasons.push("Enrollment link not yet present");
+  else if (!enrollment) reasons.push("Enrollment record not yet readable");
+
+  if (!weekId) reasons.push("Week link not yet present");
+  else if (!week) reasons.push("Week record not yet readable");
+
+  if (wasCandidates.length === 0) {
+    reasons.push("canonical Weekly Athlete Summary not yet available for Enrollment+Week");
+  } else   if (!wasId) {
+    reasons.push("Weekly Athlete Summary identity not yet resolved");
+  }
+
+  return reasons;
+}
+
+function setSkippedNotReadyOutputs(recordId, reasons) {
+  const detail = reasons.length ? reasons.join("; ") : "formula or link fields still settling";
+  setOutputs({
+    ok: true,
+    statusOut: "skipped",
+    actionOut: "skipped_not_ready",
+    errorOut: "",
+    debugStep,
+    submissionId: recordId,
+    reconciliationAcknowledged: false,
+    milestoneStreakReconciliation: "blocked_no_canonical_owner",
+    notReadyReason: detail,
+  });
+  console.log(JSON.stringify({
+    automation: SCRIPT.scriptName,
+    version: SCRIPT.version,
+    statusOut: "skipped",
+    actionOut: "skipped_not_ready",
+    submissionId: recordId,
+    notReadyReason: detail,
+    debugStep,
+  }));
 }
 
 /* =========================================================
@@ -770,6 +842,43 @@ async function main() {
     const canonicalKeyEvent = await findCanonicalKeyEvent(recordId);
     const enrollment = enrollmentId ? await enrollmentsTable.selectRecordAsync(enrollmentId) : null;
     const week = weekId ? await weeksTable.selectRecordAsync(weekId) : null;
+
+    if (enrollmentId && !enrollment) {
+      throw new Error(`Enrollment not found: ${enrollmentId}`);
+    }
+    if (weekId && !week) {
+      throw new Error(`Week not found: ${weekId}`);
+    }
+    if (wasCandidates.length > 1) {
+      throw new Error(
+        `Submission ${recordId} has multiple Weekly Athlete Summary candidates (${wasCandidates.length}).`,
+      );
+    }
+
+    const structurallyReady = isStructurallyReady({
+      enrollmentId,
+      weekId,
+      enrollment,
+      week,
+      wasCandidates,
+      wasId,
+      wasIds,
+    });
+
+    if (!structurallyReady) {
+      step("5 - Temporary not-ready (formula/link settlement)");
+      setSkippedNotReadyOutputs(recordId, collectNotReadyReasons({
+        enrollmentId,
+        weekId,
+        enrollment,
+        week,
+        wasCandidates,
+        wasId,
+        wasIds,
+      }));
+      return;
+    }
+
     const activityDate = dateKey(raw(submission, submissionsTable, CONFIG.submissions.activityDate));
     const weekStartKey = week ? dateKey(raw(week, weeksTable, CONFIG.weeks.startDate)) : "";
     const weekEndKey = week ? dateKey(raw(week, weeksTable, CONFIG.weeks.endDate)) : "";
@@ -789,7 +898,7 @@ async function main() {
     );
 
     if (!eligible) {
-      step("5 - Correction or safe ineligible skip");
+      step("6 - Correction or permanent ineligible skip");
       const eligibilityFailures = collectEligibilityFailures({
         enrollment,
         week,
@@ -804,16 +913,6 @@ async function main() {
         weekEndKey,
         today,
       });
-      const identityBroken = !enrollmentId || !weekId || wasCandidates.length !== 1 || !wasId || wasIds.length > 1;
-      if (identityBroken) {
-        const detail = eligibilityFailures.length
-          ? eligibilityFailures.join("; ")
-          : "incomplete or ambiguous canonical identity";
-        throw new Error(
-          `Submission ${recordId} is ineligible (${detail}); ` +
-          "the existing XP Event remains unacknowledged.",
-        );
-      }
       const correctionEvent = canonicalKeyEvent
         && eventOwnedForAck(canonicalKeyEvent, recordId, enrollmentId, weekId, wasId)
         ? canonicalKeyEvent
@@ -847,7 +946,7 @@ async function main() {
       return;
     }
 
-    step("6 - Load SHOOTING_BASE rule and build canonical payload");
+    step("7 - Load SHOOTING_BASE rule and build canonical payload");
     const xpPoints = await findRule();
     const payload = {
       [CONFIG.xpEvents.enrollment]: linked(enrollmentId),
@@ -865,7 +964,7 @@ async function main() {
     if (isWritable(field(xpEventsTable, CONFIG.xpEvents.xpActivityDate))) payload[CONFIG.xpEvents.xpActivityDate] = raw(submission, submissionsTable, CONFIG.submissions.activityDate);
     if (isWritable(field(xpEventsTable, CONFIG.xpEvents.xpActivityDateSource))) payload[CONFIG.xpEvents.xpActivityDateSource] = selectValue(xpEventsTable, CONFIG.xpEvents.xpActivityDateSource, CONFIG.values.dateSource);
 
-    step("7 - Exact-key last-chance recheck and write");
+    step("8 - Exact-key last-chance recheck and write");
     const lastChance = await findExactEvent(recordId, enrollmentId, weekId, wasId);
     let xpEventId;
     let actionOut;
@@ -892,9 +991,9 @@ async function main() {
     );
     await submissionsTable.updateRecordAsync(recordId, submissionUpdate);
 
-    step("8 - Request downstream recalculation");
+    step("9 - Request downstream recalculation");
     const downstreamRequested = await requestDownstreamRecalculation(enrollmentId);
-    step("9 - Settle formulas and acknowledge latch");
+    step("10 - Settle formulas and acknowledge latch");
     const signature = await acknowledgeAfterSettlement(recordId, true, priorSignature, xpEventId);
     setOutputs({
       ok: true, statusOut: "success", actionOut, errorOut: "", debugStep,
