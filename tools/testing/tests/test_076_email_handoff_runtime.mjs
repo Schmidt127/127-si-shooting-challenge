@@ -177,8 +177,13 @@ function makeTables(overrides = {}) {
     ),
     new MockTable(
       "Homework Library",
-      [field("Assignment Title"), field("Assignment Full Name"), field("Week"), field("Grade Band"), field("Active?", "checkbox"), field("Published?", "checkbox"), field("Order")],
-      []
+      [field("Assignment Title"), field("Assignment Full Name"), field("Week"), field("Grade Band"), field("Active?", "checkbox"), field("Published?", "checkbox"), field("Order"), field("URL")],
+      overrides.homeworkLibrary || []
+    ),
+    new MockTable(
+      "Levels",
+      [field("Level Name"), field("Cover Image")],
+      overrides.levels || []
     ),
     new MockTable(
       "Email Handoff Queue",

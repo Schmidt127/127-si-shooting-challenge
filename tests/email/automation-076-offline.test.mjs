@@ -50,6 +50,12 @@ function build076Base(
       { name: "Submission Stat Mode", type: "formula", isComputed: true },
       { name: "Total Shots Counted", type: "number" },
       { name: "Total Makes Counted", type: "number" },
+      { name: "2PT Attempted Counted", type: "number" },
+      { name: "2PT Made Counted", type: "number" },
+      { name: "3PT Attempted Counted", type: "number" },
+      { name: "3PT Made Counted", type: "number" },
+      { name: "FT Attempted Counted", type: "number" },
+      { name: "FT Made Counted", type: "number" },
     ],
     [
       new MockRecord(SUBMISSION_ID, {
@@ -77,8 +83,8 @@ function build076Base(
       { name: "Athlete Email - Cleaned", type: "email" },
       { name: "Full Athlete Name", type: "singleLineText" },
       { name: "Current Shooting Streak", type: "number" },
-      { name: "Current Level", type: "singleLineText" },
-      { name: "Next Level", type: "singleLineText" },
+      { name: "Current Level", type: "multipleRecordLinks" },
+      { name: "Next Level", type: "multipleRecordLinks" },
       { name: "Public Profile Enabled", type: "checkbox" },
       { name: "Public Profile Slug", type: "singleLineText" },
     ],
@@ -91,8 +97,8 @@ function build076Base(
         "Athlete Email - Cleaned": "",
         "Full Athlete Name": "Schmidt Test Athlete",
         "Current Shooting Streak": 0,
-        "Current Level": "Beginner",
-        "Next Level": "Rookie Shooter",
+        "Current Level": [{ id: "recLevelCurrent01", name: "Beginner" }],
+        "Next Level": [{ id: "recLevelNext00001", name: "Rookie Shooter" }],
         ...enrollmentCells,
       }),
     ]
@@ -167,6 +173,24 @@ function build076Base(
     ]
   );
 
+  const levels = new MockTable(
+    "Levels",
+    [
+      { name: "Level Name", type: "singleLineText" },
+      { name: "Cover Image", type: "multipleAttachments" },
+    ],
+    [
+      new MockRecord("recLevelCurrent01", {
+        "Level Name": "Beginner",
+        "Cover Image": [{ url: "https://v5.airtableusercontent.com/beginner.png" }],
+      }),
+      new MockRecord("recLevelNext00001", {
+        "Level Name": "Rookie Shooter",
+        "Cover Image": [{ url: "https://v5.airtableusercontent.com/rookie.png" }],
+      }),
+    ]
+  );
+
   const queue = new MockTable(
     "Email Handoff Queue",
     [
@@ -192,10 +216,41 @@ function build076Base(
     weeks,
     weeklySummaries,
     targetGoals,
+    levels,
     new MockTable("XP Events", []),
-    new MockTable("Homework Completions", []),
-    new MockTable("Program Homework Assignments", []),
-    new MockTable("Homework Library", []),
+    new MockTable(
+      "Homework Completions",
+      [
+        { name: "Enrollment", type: "multipleRecordLinks" },
+        { name: "Week", type: "multipleRecordLinks" },
+        { name: "Program Homework Assignment", type: "multipleRecordLinks" },
+        { name: "Homework", type: "multipleRecordLinks" },
+        { name: "Satisfactory?", type: "checkbox" },
+        { name: "Completion Status", type: "singleLineText" },
+      ],
+      []
+    ),
+    new MockTable(
+      "Program Homework Assignments",
+      [
+        { name: "Homework Assignment", type: "multipleRecordLinks" },
+        { name: "Program Instance", type: "multipleRecordLinks" },
+        { name: "Week", type: "multipleRecordLinks" },
+        { name: "Grade Band", type: "multipleRecordLinks" },
+        { name: "Homework Slot", type: "singleLineText" },
+        { name: "Active?", type: "checkbox" },
+      ],
+      []
+    ),
+    new MockTable(
+      "Homework Library",
+      [
+        { name: "Assignment Title", type: "singleLineText" },
+        { name: "Assignment Full Name", type: "singleLineText" },
+        { name: "URL", type: "url" },
+      ],
+      []
+    ),
     ...(includeProgramInstanceTable ? [programInstances] : []),
     queue,
   ]);
@@ -252,6 +307,9 @@ test("076 creates one deterministic queue row from a valid cleaned parent email"
   const recipients = JSON.parse(queue.records.values().next().value.cells["Recipients JSON"]);
   assert.equal(payload.shots, 20);
   assert.equal(payload.makes, 10);
+  assert.equal(payload.submissionStatMode, "Simple Total");
+  assert.equal(payload.currentLevel, "Beginner");
+  assert.equal(payload.currentLevelImageUrl, "https://v5.airtableusercontent.com/beginner.png");
   assert.equal(payload.shootingPercentage, 50);
   assert.match(payload.weekDateRange, /–/);
   assert.equal(payload.xpPageUrl, "https://www.fairfieldbasketballclub.com/shoot/dashboard");
@@ -351,6 +409,12 @@ test("076 rejects missing or invalid cleaned parent email before queue creation"
 test("076 accepts Detailed Shooting mode and preserves payload numbers", async () => {
   const base = build076Base([], {
     "Submission Stat Mode": "  dEtAiLeD sHoOtInG  ",
+    "2PT Attempted Counted": 20,
+    "2PT Made Counted": 12,
+    "3PT Attempted Counted": 10,
+    "3PT Made Counted": 4,
+    "FT Attempted Counted": 5,
+    "FT Made Counted": 4,
   });
   const result = await run076({ base });
 
@@ -359,9 +423,43 @@ test("076 accepts Detailed Shooting mode and preserves payload numbers", async (
   const submission = base.getTable("Submissions").records.get(SUBMISSION_ID);
   const payload = JSON.parse(queue.records.values().next().value.cells["Payload JSON"]);
   assert.equal(queue.records.size, 1);
+  assert.equal(payload.submissionStatMode, "Detailed Shooting");
   assert.equal(payload.shots, 20);
   assert.equal(payload.makes, 10);
+  assert.deepEqual(payload.shootingDetails.twoPoint, { made: 12, missed: 8, percentage: 60 });
   assert.equal(submission.cells["Build Daily Email Now?"], false);
+});
+
+test("076 includes PHA rows with blank grade band when enrollment has a grade band", async () => {
+  const base = build076Base();
+  base.getTable("Program Homework Assignments").records.set(
+    "recPha0760001",
+    new MockRecord("recPha0760001", {
+      "Homework Assignment": [{ id: "recHomeworkLib01", name: "Perfect Testing Week Journal" }],
+      "Program Instance": [{ id: "recProgram0760001", name: "2026-2027" }],
+      Week: [{ id: "recWeek07600001", name: "Early Bird" }],
+      "Grade Band": [],
+      "Homework Slot": "HW1",
+      "Active?": true,
+    })
+  );
+  base.getTable("Homework Library").records.set(
+    "recHomeworkLib01",
+    new MockRecord("recHomeworkLib01", {
+      "Assignment Title": "Perfect Testing Week Journal",
+      "Assignment Full Name": "Perfect Testing Week Journal",
+      URL: "https://example.com/hw",
+    })
+  );
+
+  const result = await run076({ base });
+  assert.equal(result.error, null, result.error?.message);
+  const payload = JSON.parse(
+    base.getTable("Email Handoff Queue").records.values().next().value.cells["Payload JSON"]
+  );
+  assert.equal(payload.homeworkItems.length, 1);
+  assert.equal(payload.homeworkItems[0].name, "Perfect Testing Week Journal");
+  assert.equal(payload.homeworkItems[0].status, "Not submitted");
 });
 
 test("076 skips count formula 0 without creating a queue row", async () => {

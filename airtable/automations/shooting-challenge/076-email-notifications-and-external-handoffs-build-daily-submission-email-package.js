@@ -33,11 +33,14 @@ Filename may still say email package; current path is Hub queue create only.
  * 076 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Daily Submission Communications Hub Handoff
  *
- * Version: v8.9
+ * Version: v8.10
  * Date Written: 2026-05-29
  * Last Updated: 2026-08-22
  *
  * VERSION HISTORY
+ * - v8.10 (2026-08-22): Daily Submission payload — submissionStatMode,
+ *   structured shootingDetails for Detailed Shooting, level cover image URLs,
+ *   PHA grade-band filter allows all-grade assignments (legacy parity).
  * - v8.9 (2026-08-22): Goal settlement aligned with 057 v1.9 — compare WAS
  *   Goal Shots Target (season lookup) to Goal Record Total Shot Target; use
  *   Weekly Goal Shots Target only for weekly math. Fixes false fail-closed on
@@ -137,7 +140,7 @@ Filename may still say email package; current path is Hub queue create only.
 
 const SCRIPT = {
   scriptName: "076 - Daily Submission Communications Hub Handoff",
-  version: "v8.9",
+  version: "v8.10",
   versionDate: "2026-08-22",
   originalWrittenDate: "2026-05-29",
   lastUpdated: "2026-08-22",
@@ -167,6 +170,7 @@ const CONFIG = {
     hc: "Homework Completions",
     pha: "Program Homework Assignments",
     curr: "Homework Library",
+    levels: "Levels",
     queue: "Email Handoff Queue",
   },
   statuses: {
@@ -185,6 +189,12 @@ const CONFIG = {
       mode: "Submission Stat Mode",
       shots: "Total Shots Counted",
       makes: "Total Makes Counted",
+      twoPtAttempted: "2PT Attempted Counted",
+      twoPtMade: "2PT Made Counted",
+      threePtAttempted: "3PT Attempted Counted",
+      threePtMade: "3PT Made Counted",
+      ftAttempted: "FT Attempted Counted",
+      ftMade: "FT Made Counted",
       hw1: "HW Sub 1",
       hw2: "HW Sub 2",
       video: "Video Upload",
@@ -253,6 +263,10 @@ const CONFIG = {
       homework: "Homework",
       satisfactory: "Satisfactory?",
       status: "Completion Status",
+    },
+    level: {
+      name: "Level Name",
+      coverImage: "Cover Image",
     },
     curr: {
       title: "Assignment Title",
@@ -446,10 +460,89 @@ function mapHomeworkStatus(hc, hcT) {
   const normalized = status.toLowerCase();
   if (!status) return "Not submitted";
   if (normalized === "not submitted") return "Not submitted";
-  if (normalized === "submitted" || normalized === "under review") return "Pending review";
-  if (normalized === "needs revision") return "In progress";
-  if (normalized === "satisfactory") return "Complete";
+  if (normalized === "complete" || normalized === "satisfactory") return "Complete";
+  if (normalized === "in progress" || normalized === "needs revision") return "In progress";
+  if (normalized === "submitted" || normalized === "under review" || normalized === "pending review") {
+    return "Pending review";
+  }
   return status;
+}
+
+function firstAttachmentUrl(value) {
+  if (!value) return "";
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      const found = firstAttachmentUrl(item);
+      if (found) return found;
+    }
+    return "";
+  }
+  if (typeof value === "object" && value.url) {
+    return String(value.url).trim();
+  }
+  return "";
+}
+
+function optionalNonnegativeInteger(r, t, name) {
+  if (!exists(t, name)) return null;
+  const v = raw(r, t, name);
+  if (v === null || v === undefined || v === "") return null;
+  const n =
+    typeof v === "number"
+      ? v
+      : Number(
+          String(v ?? "")
+            .replace(/,/g, "")
+            .trim()
+        );
+  if (!Number.isInteger(n) || n < 0) return null;
+  return n;
+}
+
+function buildShootingSplit(r, t, attemptedField, madeField) {
+  const attempted = optionalNonnegativeInteger(r, t, attemptedField);
+  const made = optionalNonnegativeInteger(r, t, madeField);
+  if (attempted === null && made === null) return null;
+  const att = attempted ?? 0;
+  const mk = made ?? 0;
+  if (mk > att) return null;
+  return {
+    made: mk,
+    missed: att - mk,
+    percentage: att > 0 ? Math.round((mk / att) * 100) : null,
+  };
+}
+
+function buildShootingDetails(sub, subT) {
+  const twoPoint = buildShootingSplit(sub, subT, CONFIG.fields.sub.twoPtAttempted, CONFIG.fields.sub.twoPtMade);
+  const threePoint = buildShootingSplit(
+    sub,
+    subT,
+    CONFIG.fields.sub.threePtAttempted,
+    CONFIG.fields.sub.threePtMade
+  );
+  const freeThrow = buildShootingSplit(sub, subT, CONFIG.fields.sub.ftAttempted, CONFIG.fields.sub.ftMade);
+  const details = {};
+  if (twoPoint) details.twoPoint = twoPoint;
+  if (threePoint) details.threePoint = threePoint;
+  if (freeThrow) details.freeThrow = freeThrow;
+  return Object.keys(details).length ? details : null;
+}
+
+async function resolveLevelInfo(enrollment, enrT, levelT, fieldName) {
+  const levelIds = ids(enrollment, enrT, fieldName);
+  const fallbackName = text(enrollment, enrT, fieldName);
+  if (!levelIds.length) {
+    return { name: fallbackName, imageUrl: "" };
+  }
+  const level = await levelT.selectRecordAsync(levelIds[0]);
+  if (!level) {
+    return { name: fallbackName, imageUrl: "" };
+  }
+  return {
+    name: first(text(level, levelT, CONFIG.fields.level.name), level.name, fallbackName),
+    imageUrl: firstAttachmentUrl(raw(level, levelT, CONFIG.fields.level.coverImage)),
+  };
 }
 
 function buildXpPageUrl(enrollment, enrT) {
@@ -549,6 +642,7 @@ async function main() {
   const phaT = table(CONFIG.tables.pha);
   const currT = table(CONFIG.tables.curr);
   const hcT = table(CONFIG.tables.hc);
+  const levelT = table(CONFIG.tables.levels);
   const queueT = table(CONFIG.tables.queue);
 
   const sub = await subT.selectRecordAsync(recordId);
@@ -653,7 +747,9 @@ async function main() {
       bool(row, phaT, CONFIG.fields.pha.active) &&
       same(ids(row, phaT, CONFIG.fields.pha.program), [programId]) &&
       same(ids(row, phaT, CONFIG.fields.pha.week), [weekId]) &&
-      (!gradeId || same(ids(row, phaT, CONFIG.fields.pha.grade), [gradeId]))
+      (!gradeId ||
+        !ids(row, phaT, CONFIG.fields.pha.grade).length ||
+        ids(row, phaT, CONFIG.fields.pha.grade).includes(gradeId))
   );
   const homeworkAssignments = phaRows
     .sort((a, b) => slot(text(a, phaT, CONFIG.fields.pha.slot)).localeCompare(slot(text(b, phaT, CONFIG.fields.pha.slot))))
@@ -742,15 +838,26 @@ async function main() {
   }
   if (!parent) throw new Error("No usable cleaned parent recipient.");
 
+  const statModeNormalized = normalizedStatMode(sub, subT, CONFIG.fields.sub.mode);
+  const submissionStatMode = statModeNormalized === "detailed shooting" ? "Detailed Shooting" : "Simple Total";
+  const [currentLevelInfo, nextLevelInfo] = await Promise.all([
+    resolveLevelInfo(enrollment, enrT, levelT, CONFIG.fields.enr.currentLevel),
+    resolveLevelInfo(enrollment, enrT, levelT, CONFIG.fields.enr.nextLevel),
+  ]);
+
   const shots = nonnegativeInteger(sub, subT, CONFIG.fields.sub.shots);
   const makes = nonnegativeInteger(sub, subT, CONFIG.fields.sub.makes);
+  const shootingDetails =
+    submissionStatMode === "Detailed Shooting" ? buildShootingDetails(sub, subT) : null;
   const payload = {
     athleteName: first(text(enrollment, enrT, CONFIG.fields.enr.name), "Athlete"),
     activityDate: dateText(raw(sub, subT, CONFIG.fields.sub.activity)),
     weekName: first(text(was, wasT, CONFIG.fields.was.weekName), text(week, weekT, CONFIG.fields.week.name)),
     weekDateRange: weekDateRangeText(week, weekT),
+    submissionStatMode,
     shots,
     makes,
+    ...(shootingDetails ? { shootingDetails } : {}),
     shootingPercentage: shots > 0 ? Math.round((makes / shots) * 100) : null,
     submissionXp,
     ...(submissionXp === null ? { submissionXpStatus: "Pending / not yet awarded" } : {}),
@@ -759,8 +866,10 @@ async function main() {
     weeklyGoalPercentage: pct(weeklyShots, weeklyGoal),
     weeklyXp,
     currentStreak: num(enrollment, enrT, CONFIG.fields.enr.streak),
-    currentLevel: text(enrollment, enrT, CONFIG.fields.enr.currentLevel),
-    nextLevel: text(enrollment, enrT, CONFIG.fields.enr.nextLevel),
+    currentLevel: first(currentLevelInfo.name, text(enrollment, enrT, CONFIG.fields.enr.currentLevel)),
+    nextLevel: first(nextLevelInfo.name, text(enrollment, enrT, CONFIG.fields.enr.nextLevel)),
+    ...(currentLevelInfo.imageUrl ? { currentLevelImageUrl: currentLevelInfo.imageUrl } : {}),
+    ...(nextLevelInfo.imageUrl ? { nextLevelImageUrl: nextLevelInfo.imageUrl } : {}),
     programName: first(text(program, piT, CONFIG.fields.pi.name), program.name, "Shooting Challenge"),
     xpPageUrl: buildXpPageUrl(enrollment, enrT),
     landingPageUrl: CANONICAL_URLS.landing,

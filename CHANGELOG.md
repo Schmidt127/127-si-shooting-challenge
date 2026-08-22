@@ -9,6 +9,13 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **076 v8.10 — Daily Submission payload + homework PHA filter (2026-08-22)** —
+  Adds `submissionStatMode`, structured `shootingDetails` (Detailed Shooting),
+  level cover image URLs, and PHA grade-band filter parity with legacy homework
+  (blank PHA grade band no longer excludes all-grade assignments). Paste:
+  `docs/deploy-checklists/daily-submission-email-fix-2026-08-22.md`. Offline:
+  `node --test tests/email/automation-076-offline.test.mjs` and
+  `node tools/testing/tests/test_076_email_handoff_runtime.mjs`.
 - **076 v8.9 + 058 v1.4 — goal settlement aligned with 057 v1.9 (2026-08-22)** —
   Settlement now compares WAS **Goal Shots Target** (season lookup) to Goal
   Record **Total Shot Target**. **Weekly Goal Shots Target** (`Goal/9`) is
@@ -156,6 +163,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **Shoot route aliases (2026-08-22)** — `web/vercel.json` redirects
+  `/shooting`, `/shootingchallenge`, `/shootchallenge`, and `/challengeshooting`
+  to `/shoot` (temporary redirect, same as existing `/` alias).
 - **Tutorials and Shoutouts video + site-wide contrast (2026-08-18)** — Public `/shoot/tutorials` and `/shoutouts` use Tutorials & Assets `Link to Video` as the only catalog video URL. Blank links show a coming-soon state instead of a player. Google Drive / PDF / Adobe links open in a new tab. Site-wide `text-muted` now maps to readable foreground so body copy, nav, and footer meet contrast on light surfaces.
 - **Tutorials → Tutorials & Assets cutover (2026-08-17)** — Public `/shoot/tutorials`,
   `/shoutouts`, and `/articles` read `Tutorials & Assets` (`tblDOTgsWfqPm18bw`)
