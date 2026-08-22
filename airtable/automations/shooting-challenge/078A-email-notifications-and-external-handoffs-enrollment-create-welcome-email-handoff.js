@@ -32,11 +32,13 @@ send email, render subject/HTML, modify Automation 079, or restore 075.
  * 078A - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Enrollment -> Create WELCOME Email Handoff
  *
- * Version: v1.3
+ * Version: v1.4
  * Date Written: 2026-08-11
- * Last Updated: 2026-08-11
+ * Last Updated: 2026-08-22
  *
  * VERSION HISTORY
+ * - v1.4 (2026-08-22): Enrich WELCOME Payload JSON with enrollment and Program
+ *   Instance fields required by the redesigned Hub welcome template.
  * - v1.3 (2026-08-11): Use the verified Hub recipient contract with explicit
  *   PARENT and ATHLETE roles; preserve the Enrollment Program Instance link.
  * - v1.2 (2026-08-11): Initial repository implementation.
@@ -109,25 +111,47 @@ send email, render subject/HTML, modify Automation 079, or restore 075.
 
 const SCRIPT = {
     scriptName: "078A - Enrollment -> Create WELCOME Email Handoff",
-    version: "v1.3",
-    versionDate: "2026-08-11",
+    version: "v1.4",
+    versionDate: "2026-08-22",
     originalWrittenDate: "2026-08-11",
-    lastUpdated: "2026-08-11",
+    lastUpdated: "2026-08-22",
     folder: "07 - Email, Notifications, and External Handoffs",
     automationName: "078A - Enrollment -> Create WELCOME Email Handoff",
+};
+
+const CANONICAL_URLS = {
+    landing: "https://www.fairfieldbasketballclub.com",
+    shoot: "https://www.fairfieldbasketballclub.com/shoot",
+    homework: "https://www.fairfieldbasketballclub.com/shoot/homework",
+    dailyForm: "https://forms.fairfieldbasketballclub.com/shoot-dailysubmissions",
 };
 
 const CONFIG = {
     tables: {
         enrollments: "Enrollments",
         athletes: "Athletes",
+        programInstances: "Program Instance - Sync",
         queue: "Email Handoff Queue",
     },
     enrollmentFields: {
         athlete: "Athlete",
         parentEmailCleaned: "Parent Email - Cleaned",
+        parentFirstName: "Parent First Name",
         programInstance: "Program Instance",
         fullAthleteName: "Full Athlete Name",
+        grade: "Grade",
+        gradeBand: "Grade Band",
+        schoolYear: "School Year",
+        schoolNameLookup: "School Name Lookup",
+    },
+    programInstanceFields: {
+        name: "Name - Program Instance",
+        schoolYearLinked: "School Year - Linked",
+        dailySubmissionUrl: "Daily Submission URL",
+        welcomeWebsiteUrl: "Welcome - Website URL",
+        welcomeIntro: "Welcome - Intro Note",
+        whyThisMatters: "Why This Matters",
+        description: "Description",
     },
     athleteFields: {
         fullName: "Full Name",
@@ -286,11 +310,36 @@ function buildRecipientsJson(recipient) {
     ]);
 }
 
-function buildPayloadJson(athleteName, programName) {
+function firstNonBlank(...values) {
+    for (const value of values) {
+        const text = String(value || "").trim();
+        if (text) return text;
+    }
+    return "";
+}
+
+function buildPayloadJson(payload) {
+    const athleteName = String(payload.athleteName || "").trim();
+    const programName = String(payload.programName || "").trim();
     return JSON.stringify({
         athleteName,
         programName,
-        message: `Welcome to ${programName}, ${athleteName}.`,
+        programInstanceName: programName,
+        parentName: payload.parentFirstName || undefined,
+        parentFirstName: payload.parentFirstName || undefined,
+        grade: payload.grade || undefined,
+        gradeBand: payload.gradeBand || undefined,
+        schoolYear: payload.schoolYear || undefined,
+        school: payload.school || undefined,
+        welcomeIntro: payload.welcomeIntro || undefined,
+        programDescription: payload.programDescription || undefined,
+        whyThisMatters: payload.whyThisMatters || undefined,
+        dailySubmissionFormUrl: payload.dailySubmissionFormUrl || CANONICAL_URLS.dailyForm,
+        landingPageUrl: CANONICAL_URLS.landing,
+        shootPageUrl: CANONICAL_URLS.shoot,
+        homeworkPageUrl: CANONICAL_URLS.homework,
+        programInstanceUrl: payload.programInstanceUrl || undefined,
+        message: payload.welcomeIntro || `Welcome to ${programName}, ${athleteName}.`,
     });
 }
 
@@ -411,7 +460,16 @@ async function main() {
             throw new Error("Enrollment must have exactly one linked Program Instance");
         }
         const programInstanceRecordId = requireRecordId(programLinks[0]?.id, "Program Instance");
-        const programName = String(programLinks[0]?.name || "").trim();
+        const programInstancesTable = base.getTable(CONFIG.tables.programInstances);
+        requireField(programInstancesTable, CONFIG.programInstanceFields.name, [
+            "singleLineText", "multilineText", "formula",
+        ]);
+        const programInstance = await programInstancesTable.selectRecordAsync(programInstanceRecordId);
+        if (!programInstance) throw new Error(`Program Instance record not found: ${programInstanceRecordId}`);
+        const programName = firstNonBlank(
+            getText(programInstance, CONFIG.programInstanceFields.name),
+            String(programLinks[0]?.name || "").trim()
+        );
         if (!programName) throw new Error("Program Instance displayed name is blank");
         const recipient = requireEmail(
             getText(enrollment, CONFIG.enrollmentFields.parentEmailCleaned),
@@ -421,12 +479,35 @@ async function main() {
         const athlete = await athletesTable.selectRecordAsync(context.athleteRecordId);
         if (!athlete) throw new Error(`Athlete record not found: ${context.athleteRecordId}`);
         const athleteName = buildAthleteName(enrollment, athlete);
+        const gradeBandLinks = getRaw(enrollment, CONFIG.enrollmentFields.gradeBand);
+        const gradeBandName = Array.isArray(gradeBandLinks) && gradeBandLinks[0]?.name
+            ? String(gradeBandLinks[0].name).trim()
+            : "";
 
         debugStep = "4 - Build and validate WELCOME JSON";
         setOutputSafe("debugStep", debugStep);
         context.handoffKey = `${CONFIG.values.handoffPrefix}${context.enrollmentRecordId}`;
         context.recipientsJson = buildRecipientsJson(recipient);
-        const payloadJson = buildPayloadJson(athleteName, programName);
+        const payloadJson = buildPayloadJson({
+            athleteName,
+            programName,
+            parentFirstName: getText(enrollment, CONFIG.enrollmentFields.parentFirstName),
+            grade: getText(enrollment, CONFIG.enrollmentFields.grade),
+            gradeBand: gradeBandName,
+            schoolYear: firstNonBlank(
+                getText(enrollment, CONFIG.enrollmentFields.schoolYear),
+                getText(programInstance, CONFIG.programInstanceFields.schoolYearLinked)
+            ),
+            school: getText(enrollment, CONFIG.enrollmentFields.schoolNameLookup),
+            welcomeIntro: getText(programInstance, CONFIG.programInstanceFields.welcomeIntro),
+            programDescription: getText(programInstance, CONFIG.programInstanceFields.description),
+            whyThisMatters: getText(programInstance, CONFIG.programInstanceFields.whyThisMatters),
+            dailySubmissionFormUrl: firstNonBlank(
+                getText(programInstance, CONFIG.programInstanceFields.dailySubmissionUrl),
+                CANONICAL_URLS.dailyForm
+            ),
+            programInstanceUrl: getText(programInstance, CONFIG.programInstanceFields.welcomeWebsiteUrl),
+        });
         parseObjectArrayJson(context.recipientsJson, CONFIG.queueFields.recipientsJson);
         parsePayloadJson(payloadJson);
 
