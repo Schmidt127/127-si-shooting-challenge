@@ -83,8 +83,12 @@ test("057 Perfect Week date keys use America/Denver (not UTC ISO slice)", () => 
   );
   assert.ok(/timezone:\s*"America\/Denver"/.test(s057));
   assert.ok(
-    /Version:\s*v?1\.7/.test(s057) || /version:\s*"v?1\.7"/.test(s057),
-    "057 header must declare current production version 1.7"
+    /Version:\s*v?1\.9/.test(s057) || /version:\s*"v?1\.9"/.test(s057),
+    "057 header must declare current repository version 1.9"
+  );
+  assert.ok(
+    /settledSeasonGoal/.test(s057) && /Goal Shots Target/.test(s057),
+    "057 must settle on Goal Shots Target, not Weekly Goal vs season total"
   );
   const fnMatch = s057.match(
     /function getDateKeyFromDateOnly\(value\) \{[\s\S]*?\n\}/
@@ -92,6 +96,10 @@ test("057 Perfect Week date keys use America/Denver (not UTC ISO slice)", () => 
   assert.ok(fnMatch, "getDateKeyFromDateOnly function not found");
   const body = fnMatch[0];
   assert.ok(/Intl\.DateTimeFormat/.test(body), "057 getDateKeyFromDateOnly must use Intl");
+  assert.ok(
+    /isoMatch = trimmed\.match\(\/\^\(\\d\{4\}\)-\(\\d\{2\}\)-\(\\d\{2\}\)\$\//.test(body),
+    "057 must only short-circuit true date-only YYYY-MM-DD strings"
+  );
   assert.ok(
     !/toISOString\(\)\.slice\(0,\s*10\)/.test(body),
     "057 getDateKeyFromDateOnly must not use UTC ISO slice"
@@ -103,7 +111,7 @@ function getDateKeyFromDateOnly057(value) {
   if (!value) return "";
   if (typeof value === "string") {
     const trimmed = String(value).trim();
-    const isoMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    const isoMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if (isoMatch) return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
     const localMatch = trimmed.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
     if (localMatch) {
@@ -124,6 +132,17 @@ function getDateKeyFromDateOnly057(value) {
   if (!year || !month || !day) return "";
   return `${year}-${month}-${day}`;
 }
+
+test("057 mirror: Fillout Aug 19 6:00 PM Mountain stays Aug 19", () => {
+  // 2026-08-19 18:00 America/Denver (MDT) = 2026-08-20T00:00:00.000Z
+  const filloutEvening = new Date("2026-08-20T00:00:00.000Z");
+  assert.strictEqual(getDateKeyFromDateOnly057(filloutEvening), "2026-08-19");
+  assert.strictEqual(filloutEvening.toISOString().slice(0, 10), "2026-08-20");
+  assert.strictEqual(
+    getDateKeyFromDateOnly057("2026-08-20T00:00:00.000Z"),
+    "2026-08-19"
+  );
+});
 
 test("057 mirror: Saturday 11:59 PM Denver stays Saturday", () => {
   // 2026-07-25 23:59 MDT = 2026-07-26 05:59 UTC

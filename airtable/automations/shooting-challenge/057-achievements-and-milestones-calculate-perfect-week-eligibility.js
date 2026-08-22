@@ -24,9 +24,9 @@ Airtable is the deployed/running copy.
 
 /***************************************************************************************************
  * 057 - Achievements and Milestones - Calculate Perfect Week Eligibility
- * Version: 1.7
+ * Version: 1.9
  * Date written: 2026-05-30
- * Last updated: 2026-08-13
+ * Last updated: 2026-08-21
  *
  * Purpose:
  * Calculates Perfect Week helper fields on one Weekly Athlete Summary record.
@@ -46,6 +46,17 @@ Airtable is the deployed/running copy.
  * - Requires the linked Goal Record to be the sole active, exact Program
  *   Instance + Grade Band configuration and requires the WAS lookup to settle
  *   to that record's numeric target (including explicit zero).
+ *
+ * Version 1.8 updates (Fillout/Mountain Time date correction):
+ * - Converts datetime values through America/Denver before extracting the
+ *   calendar date. This preserves evening Fillout submissions on their local
+ *   date instead of incorrectly using the following UTC date.
+ *
+ * Version 1.9 updates (goal settlement field correction):
+ * - Settlement compares WAS Goal Shots Target (season lookup) to the linked
+ *   Goal Record Total Shot Target. Weekly Goal Shots Target (= Goal/9) is used
+ *   only for daily Perfect Week math. Comparing weekly to season incorrectly
+ *   forced Needs Review after the goal lookup had already settled.
  *
  * Version 1.4 updates (SC-021 date normalization):
  * - getDateKeyFromDateOnly uses America/Denver via Intl (not UTC ISO slice).
@@ -297,10 +308,12 @@ function unloadQuerySafe(queryResult) {
 function getDateKeyFromDateOnly(value) {
   if (!value) return "";
 
-  // Prefer calendar text so date-only Airtable values never shift by timezone.
+  // Preserve true date-only values. Datetime values must be converted through
+  // the configured local timezone; Fillout evening submissions arrive as UTC
+  // timestamps and their ISO prefix can represent the following calendar day.
   if (typeof value === "string") {
     const trimmed = String(value).trim();
-    const isoMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    const isoMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if (isoMatch) return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
     const localMatch = trimmed.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
     if (localMatch) {
@@ -539,22 +552,24 @@ try {
   // Zero is a valid configuration only when 032 has linked exactly one Goal
   // Record. Do not use truthiness here: it misclassified an explicit target of
   // zero (and a settling lookup) as a missing goal.
-  const primaryGoal = getOptionalNumber(weeklyRecord, CONFIG.weeklyFields.weeklyGoal);
-  const fallbackGoal = getOptionalNumber(weeklyRecord, CONFIG.weeklyFields.fallbackGoal);
-  const weeklyGoal = Number.isFinite(primaryGoal)
-    ? primaryGoal
-    : Number.isFinite(fallbackGoal)
-      ? fallbackGoal
-      : null;
+  //
+  // Settlement field = Goal Shots Target (lookup of Goal Record Total Shot Target).
+  // Calculation field = Weekly Goal Shots Target (formula: Goal Shots Target / 9).
+  // Never require Weekly Goal === season Total Shot Target.
+  const settledSeasonGoal = getOptionalNumber(
+    weeklyRecord,
+    CONFIG.weeklyFields.fallbackGoal
+  );
+  const weeklyGoal = getOptionalNumber(weeklyRecord, CONFIG.weeklyFields.weeklyGoal);
 
   if (
-    weeklyGoal === null ||
-    weeklyGoal < 0 ||
-    weeklyGoal !== configuredGoal
+    settledSeasonGoal === null ||
+    settledSeasonGoal < 0 ||
+    settledSeasonGoal !== configuredGoal
   ) {
-    const reason = weeklyGoal === null
+    const reason = settledSeasonGoal === null
       ? "Weekly goal formula/lookup is unsettled or invalid; rereun after settlement."
-      : weeklyGoal < 0
+      : settledSeasonGoal < 0
         ? "Weekly shot goal is negative."
         : "Weekly goal formula/lookup has not settled to the linked active goal target.";
     await updateWeekly({
@@ -565,6 +580,42 @@ try {
       [CONFIG.weeklyFields.automationError]: reason,
     });
 
+    console.log(
+      JSON.stringify({
+        automation: "057",
+        version: "1.9",
+        recordId,
+        action: "skipped_unsettled_goal",
+        configuredGoal,
+        settledSeasonGoal,
+        weeklyGoal,
+      })
+    );
+    return;
+  }
+
+  if (weeklyGoal === null || weeklyGoal < 0) {
+    const reason =
+      "Weekly Goal Shots Target is unsettled or invalid; rereun after settlement.";
+    await updateWeekly({
+      [CONFIG.weeklyFields.dailyStatus]: { name: "Needs Review" },
+      [CONFIG.weeklyFields.dailyDetail]: reason,
+      [CONFIG.weeklyFields.dailyMet]: false,
+      [CONFIG.weeklyFields.automationStatus]: { name: "Error" },
+      [CONFIG.weeklyFields.automationError]: reason,
+    });
+
+    console.log(
+      JSON.stringify({
+        automation: "057",
+        version: "1.9",
+        recordId,
+        action: "skipped_unsettled_weekly_goal",
+        configuredGoal,
+        settledSeasonGoal,
+        weeklyGoal,
+      })
+    );
     return;
   }
 
@@ -906,6 +957,24 @@ try {
     [CONFIG.weeklyFields.automationStatus]: { name: "Ready" },
     [CONFIG.weeklyFields.automationError]: "",
   });
+
+  console.log(
+    JSON.stringify({
+      automation: "057",
+      version: "1.9",
+      recordId,
+      action: "ready",
+      configuredGoal,
+      settledSeasonGoal,
+      weeklyGoal,
+      dailyMet,
+      dailyStatusName,
+      videoCount,
+      zoomMeetingCount,
+      zoomAttendanceCount,
+      homeworkMet,
+    })
+  );
 
 } catch (error) {
   await updateWeekly({

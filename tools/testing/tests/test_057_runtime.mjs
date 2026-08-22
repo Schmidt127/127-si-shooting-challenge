@@ -78,8 +78,9 @@ function buildBase({
   goalActive = true,
   goalProgramInstance = IDS.programInstance,
   goalGradeBand = IDS.gradeBand,
-  weeklyGoal = target,
-  fallbackGoal = null,
+  // Production formula: Weekly Goal Shots Target = Goal Shots Target / 9
+  weeklyGoal = target / 9,
+  fallbackGoal = target,
   enrollmentActive = true,
   extraGoals = [],
   zoomRecords = [],
@@ -182,20 +183,36 @@ function lastWeeklyUpdate(base) {
 
 test("executes the committed Automation 057 source", () => {
   assert.match(SOURCE, /057 - Achievements and Milestones - Calculate Perfect Week Eligibility/);
-  assert.match(SOURCE, /Version: 1\.7/);
+  assert.match(SOURCE, /Version: 1\.9/);
   console.log(`SOURCE_EXECUTED ${SCRIPT_PATH} sha256=${SOURCE_SHA256}`);
 });
 
 test("positive configured target reaches Ready", async () => {
-  const base = buildBase({ target: 700, weeklyGoal: 700 });
+  const base = buildBase({ target: 700 });
   const { error } = await run057(base);
   assert.equal(error, null);
   assert.equal(weeklyCells(base)["Perfect Week Automation Status"], "Ready");
   assert.equal(weeklyCells(base)["Perfect Week Automation Error"], "");
 });
 
+test("settled season lookup with fractional weekly goal reaches Ready", async () => {
+  const base = buildBase({
+    target: 12000,
+    fallbackGoal: 12000,
+    weeklyGoal: 12000 / 9,
+  });
+  const { error, console: captured } = await run057(base);
+  assert.equal(error, null);
+  assert.equal(weeklyCells(base)["Perfect Week Automation Status"], "Ready");
+  assert.equal(weeklyCells(base)["Perfect Week Daily Check Status"], "Fail");
+  assert.ok(
+    captured.lines.some((line) => /"version":"1\.9"/.test(line) && /"action":"ready"/.test(line)),
+    "success path must emit versioned console JSON"
+  );
+});
+
 test("explicit configured zero is accepted rather than treated as missing", async () => {
-  const base = buildBase({ target: 0, weeklyGoal: 0 });
+  const base = buildBase({ target: 0, weeklyGoal: 0, fallbackGoal: 0 });
   const { error } = await run057(base);
   assert.equal(error, null);
   assert.equal(weeklyCells(base)["Perfect Week Automation Status"], "Ready");
@@ -203,7 +220,7 @@ test("explicit configured zero is accepted rather than treated as missing", asyn
 });
 
 test("missing configured target fails closed", async () => {
-  const base = buildBase({ target: null, weeklyGoal: 700 });
+  const base = buildBase({ target: null, weeklyGoal: 700, fallbackGoal: 700 });
   const { error } = await run057(base);
   assert.match(error?.message ?? "", /not one exact active numeric configuration/);
   assert.equal(lastWeeklyUpdate(base)["Perfect Week Automation Status"].name, "Error");
@@ -237,13 +254,17 @@ test("multiple active matching target configurations fail closed", async () => {
 });
 
 test("blank configured target fails closed", async () => {
-  const base = buildBase({ target: "", weeklyGoal: 700 });
+  const base = buildBase({ target: "", weeklyGoal: 700, fallbackGoal: 700 });
   const { error } = await run057(base);
   assert.match(error?.message ?? "", /not one exact active numeric configuration/);
 });
 
-test("unsettled or mismatched weekly lookup writes Needs Review without positive work", async () => {
-  const base = buildBase({ target: 700, weeklyGoal: 699 });
+test("unsettled or mismatched season Goal Shots Target writes Needs Review without positive work", async () => {
+  const base = buildBase({
+    target: 700,
+    fallbackGoal: 699,
+    weeklyGoal: 700 / 9,
+  });
   const { error } = await run057(base);
   assert.equal(error, null);
   assert.equal(weeklyCells(base)["Perfect Week Automation Status"], "Error");
@@ -251,7 +272,54 @@ test("unsettled or mismatched weekly lookup writes Needs Review without positive
     weeklyCells(base)["Perfect Week Automation Error"],
     /has not settled to the linked active goal target/
   );
+  assert.equal(weeklyCells(base)["Perfect Week Daily Check Status"], "Needs Review");
   assert.equal(base.getTable("Zoom Attendance").updates.length, 0);
+});
+
+test("fractional weekly goal alone does not falsely fail settlement", async () => {
+  const base = buildBase({
+    target: 12000,
+    fallbackGoal: 12000,
+    weeklyGoal: 1333.3333333333333,
+  });
+  const { error } = await run057(base);
+  assert.equal(error, null);
+  assert.equal(weeklyCells(base)["Perfect Week Automation Status"], "Ready");
+  assert.notEqual(
+    weeklyCells(base)["Perfect Week Automation Error"],
+    "Weekly goal formula/lookup has not settled to the linked active goal target."
+  );
+});
+
+test("missing Weekly Goal Shots Target writes Needs Review without positive work", async () => {
+  const base = buildBase({
+    target: 12000,
+    fallbackGoal: 12000,
+    weeklyGoal: null,
+  });
+  const { error } = await run057(base);
+  assert.equal(error, null);
+  assert.equal(weeklyCells(base)["Perfect Week Automation Status"], "Error");
+  assert.match(
+    weeklyCells(base)["Perfect Week Automation Error"],
+    /Weekly Goal Shots Target is unsettled/
+  );
+  assert.equal(base.getTable("Zoom Attendance").updates.length, 0);
+});
+
+test("missing recordId fails before Perfect Week writes", async () => {
+  const base = buildBase();
+  const output = new MockOutput();
+  const capturedConsole = makeConsole();
+  const fn = new AsyncFunction("base", "input", "output", "console", SOURCE);
+  let error = null;
+  try {
+    await fn(base, makeInput({}), output, capturedConsole);
+  } catch (caught) {
+    error = caught;
+  }
+  assert.match(error?.message ?? "", /Missing input variable: recordId/);
+  assert.equal(base.getTable("Weekly Athlete Summary").updates.length, 0);
 });
 
 test("inactive enrollment blocks positive Perfect Week work", async () => {
