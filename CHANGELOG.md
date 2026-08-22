@@ -9,6 +9,15 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **076 v8.9 + 058 v1.4 — goal settlement aligned with 057 v1.9 (2026-08-22)** —
+  Settlement now compares WAS **Goal Shots Target** (season lookup) to Goal
+  Record **Total Shot Target**. **Weekly Goal Shots Target** (`Goal/9`) is
+  required separately for weekly math only. Fixes false fail-closed on settled
+  weeks such as Curtis `recwofzVvYsAYMibR` (10,000 vs 1,111.11…). Paste:
+  `docs/deploy-checklists/076-v8.9-goal-settlement-fix.md`. Offline:
+  `node --test tests/email/automation-076-offline.test.mjs`,
+  `node tools/testing/tests/test_076_email_handoff_runtime.mjs`, and
+  `node tools/testing/tests/test_058_perfect_week_lifecycle_runtime.mjs`.
 - **076 v8.8 + Daily Submission email redesign (2026-08-22)** — Communications
   Hub React Email template replaced (blue/orange branding, scoreboard recap,
   homework rows, XP page CTA, footer links). **076** payload adds

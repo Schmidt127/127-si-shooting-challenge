@@ -31,9 +31,9 @@ const IDS = {
   wrongUnlock: "recUnlock058Wrong",
 };
 
-test("loads committed Automation 058 v1.3 source", () => {
+test("loads committed Automation 058 v1.4 source", () => {
   const source = readFileSync(SCRIPT, "utf8");
-  assert.match(source, /Version:\s*1\.3/);
+  assert.match(source, /Version:\s*1\.4/);
 });
 
 const sourceKey = `PERFECT_WEEK|${IDS.enrollment}|${IDS.week}`;
@@ -64,6 +64,7 @@ function buildBase({
     { name: "Week", type: "multipleRecordLinks" },
     { name: "Grade Band", type: "multipleRecordLinks" },
     { name: "Goal Record", type: "multipleRecordLinks" },
+    { name: "Goal Shots Target", type: "number" },
     { name: "Weekly Goal Shots Target", type: "number" },
     { name: "Perfect Week Eligible?", type: "checkbox" },
     { name: "Perfect Week Unlock", type: "multipleRecordLinks" },
@@ -74,6 +75,7 @@ function buildBase({
     Week: [{ id: IDS.week }],
     "Grade Band": [{ id: IDS.band }],
     "Goal Record": [{ id: IDS.goal }],
+    "Goal Shots Target": 100,
     "Weekly Goal Shots Target": 100,
     "Perfect Week Eligible?": eligible,
     "Perfect Week Unlock": weeklyUnlock,
@@ -265,9 +267,14 @@ test("058 deactivates the exact owned unlock for every invalid goal state", asyn
       reason: "Weekly Goal Shots Target is not a settled number",
     },
     {
-      name: "mismatched settled target",
-      weeklyOverrides: { "Weekly Goal Shots Target": 101 },
-      reason: "does not match Goal Record Total Shot Target (100)",
+      name: "unsettled season goal lookup",
+      weeklyOverrides: { "Goal Shots Target": null },
+      reason: "Goal Shots Target is not a settled number",
+    },
+    {
+      name: "mismatched season goal lookup",
+      weeklyOverrides: { "Goal Shots Target": 101 },
+      reason: "Goal Shots Target (101) does not match Goal Record Total Shot Target (100)",
     },
     {
       name: "missing goal link",

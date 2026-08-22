@@ -81,7 +81,8 @@ function makeTables(overrides = {}) {
     "Homework Completions Link": [],
     "XP Events": [],
     "Total Shots This Week": 50,
-    "Weekly Goal Shots Target": 250,
+    "Goal Shots Target": 250,
+    "Weekly Goal Shots Target": 28,
     "Week - Display": "Week 1",
     ...(overrides.was || {}),
   });
@@ -142,6 +143,7 @@ function makeTables(overrides = {}) {
         field("Homework Completions Link"),
         field("XP Events"),
         field("Total Shots This Week"),
+        field("Goal Shots Target"),
         field("Weekly Goal Shots Target"),
         field("Week - Display"),
       ],
@@ -282,7 +284,7 @@ await test("positive settled goal creates one Ready queue handoff and clears rea
 await test("explicit configured zero goal creates a queue handoff", async () => {
   const tables = makeTables({
     goal: { "Total Shot Target": 0 },
-    was: { "Weekly Goal Shots Target": 0 },
+    was: { "Goal Shots Target": 0, "Weekly Goal Shots Target": 0 },
   });
   const result = await run076(tables);
   const queue = table(tables, "Email Handoff Queue");
@@ -292,6 +294,24 @@ await test("explicit configured zero goal creates a queue handoff", async () => 
   assert.equal(queue.createdPayloads.length, 1);
   assert.equal(payload.weeklyGoal, 0);
   assert.equal(payload.weeklyGoalPercentage, 0);
+  assert.equal(result.output.values.actionOut, "created_handoff");
+});
+
+await test("settled season lookup with fractional weekly target creates a queue handoff", async () => {
+  const tables = makeTables({
+    goal: { "Total Shot Target": 10000 },
+    was: {
+      "Goal Shots Target": 10000,
+      "Weekly Goal Shots Target": 1111.111111111111,
+    },
+  });
+  const result = await run076(tables);
+  const queue = table(tables, "Email Handoff Queue");
+
+  assert.equal(result.threw, null);
+  assert.equal(queue.createdPayloads.length, 1);
+  const payload = JSON.parse(queue.createdPayloads[0].payload["Payload JSON"]);
+  assert.equal(payload.weeklyGoal, 1111.111111111111);
   assert.equal(result.output.values.actionOut, "created_handoff");
 });
 
@@ -306,9 +326,11 @@ const invalidGoalCases = [
   ["wrong goal grade", { goal: { "Grade Band": linked("recGRADEBAND00002") } }, /Weekly goal configuration/],
   ["blank configured target", { goal: { "Total Shot Target": null } }, /Total Shot Target must be a settled nonnegative numeric value/],
   ["negative configured target", { goal: { "Total Shot Target": -1 } }, /Total Shot Target must be a settled nonnegative numeric value/],
+  ["blank season goal lookup", { was: { "Goal Shots Target": null } }, /Goal Shots Target must be a settled nonnegative numeric value/],
+  ["negative season goal lookup", { was: { "Goal Shots Target": -1 } }, /Goal Shots Target must be a settled nonnegative numeric value/],
   ["blank settled weekly target", { was: { "Weekly Goal Shots Target": null } }, /Weekly Goal Shots Target must be a settled nonnegative numeric value/],
   ["negative settled weekly target", { was: { "Weekly Goal Shots Target": -1 } }, /Weekly Goal Shots Target must be a settled nonnegative numeric value/],
-  ["lagged weekly target", { was: { "Weekly Goal Shots Target": 249 } }, /Weekly goal configuration/],
+  ["lagged season goal lookup", { was: { "Goal Shots Target": 249 } }, /Weekly goal configuration/],
 ];
 
 for (const [name, overrides, expectedMessage] of invalidGoalCases) {

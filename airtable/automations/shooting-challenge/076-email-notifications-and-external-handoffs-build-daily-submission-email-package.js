@@ -33,11 +33,15 @@ Filename may still say email package; current path is Hub queue create only.
  * 076 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Daily Submission Communications Hub Handoff
  *
- * Version: v8.8
+ * Version: v8.9
  * Date Written: 2026-05-29
  * Last Updated: 2026-08-22
  *
  * VERSION HISTORY
+ * - v8.9 (2026-08-22): Goal settlement aligned with 057 v1.9 — compare WAS
+ *   Goal Shots Target (season lookup) to Goal Record Total Shot Target; use
+ *   Weekly Goal Shots Target only for weekly math. Fixes false fail-closed on
+ *   settled 10,000 / 1,111… Production weeks.
  * - v8.8 (2026-08-22): Daily Submission payload enrichment for redesigned Hub
  *   template — weekDateRange, shootingPercentage, structured homeworkItems,
  *   athlete xpPageUrl, and footer URLs. Business guards unchanged.
@@ -63,8 +67,11 @@ Filename may still say email package; current path is Hub queue create only.
  * - Program Instance, Enrollment, Week, Weekly Athlete Summary, and PHA
  *   ownership are fail-closed.
  * - The WAS must resolve one active, exact Program Instance + Grade Band
- *   goal and a settled numeric weekly target. Explicit configured zero is
- *   valid; blank, unconfigured, or lagged zero never produces a daily email.
+ *   goal and settled season + weekly targets. Settlement compares WAS
+ *   Goal Shots Target to Goal Record Total Shot Target (057 v1.9 pattern).
+ *   Weekly Goal Shots Target (= Goal/9) is required for weekly math only.
+ *   Explicit configured zero is valid; blank, unconfigured, or lagged zero
+ *   never produces a daily email.
  * - Enrollment `Parent Email - Cleaned` is the authoritative parent recipient;
  *   raw `Parent Email` is never used as a fallback.
  * - 077 is retired as a pending retirement candidate and is never armed by
@@ -130,7 +137,7 @@ Filename may still say email package; current path is Hub queue create only.
 
 const SCRIPT = {
   scriptName: "076 - Daily Submission Communications Hub Handoff",
-  version: "v8.8",
+  version: "v8.9",
   versionDate: "2026-08-22",
   originalWrittenDate: "2026-05-29",
   lastUpdated: "2026-08-22",
@@ -204,7 +211,8 @@ const CONFIG = {
       hcs: "Homework Completions Link",
       xps: "XP Events",
       shots: "Total Shots This Week",
-      goal: "Weekly Goal Shots Target",
+      seasonGoal: "Goal Shots Target",
+      weeklyGoal: "Weekly Goal Shots Target",
       weekName: "Week - Display",
     },
     goals: {
@@ -608,13 +616,14 @@ async function main() {
   const goalGradeIds = ids(goal, goalsT, CONFIG.fields.goals.grade);
   const enrollmentGradeIds = ids(enrollment, enrT, CONFIG.fields.enr.grade);
   const goalTarget = settledNonnegativeNumber(goal, goalsT, CONFIG.fields.goals.target);
-  const settledWeeklyGoal = settledNonnegativeNumber(was, wasT, CONFIG.fields.was.goal);
+  const settledSeasonGoal = settledNonnegativeNumber(was, wasT, CONFIG.fields.was.seasonGoal);
+  const weeklyGoalTarget = settledNonnegativeNumber(was, wasT, CONFIG.fields.was.weeklyGoal);
   if (
     !bool(goal, goalsT, CONFIG.fields.goals.active) ||
     !same(goalProgramIds, [programId]) ||
     enrollmentGradeIds.length !== 1 ||
     !same(goalGradeIds, enrollmentGradeIds) ||
-    settledWeeklyGoal !== goalTarget
+    settledSeasonGoal !== goalTarget
   ) {
     throw new Error(
       "Weekly goal configuration is missing, ambiguous, wrong-scope, inactive, or unsettled; Daily Submission email is not prepared."
@@ -635,7 +644,7 @@ async function main() {
     : null;
   const weeklyXp = activeXp.reduce((sum, row) => sum + num(row, xpT, CONFIG.fields.xp.points), 0);
   const weeklyShots = num(was, wasT, CONFIG.fields.was.shots);
-  const weeklyGoal = settledWeeklyGoal;
+  const weeklyGoal = weeklyGoalTarget;
 
   step("03 - Resolve PHA-first homework context");
   const phaQuery = await load(phaT, Object.values(CONFIG.fields.pha));

@@ -22,8 +22,12 @@ Repo: `127si-communications-hub` (`communications`)
 
 ## Airtable — Automation 076 v8.8
 
+Repo: `127-si-shooting-challenge`
+
 1. Open Production Automation **076 - Daily Submission Communications Hub Handoff**.
-2. Paste committed v8.8 source (docblock through end; skip GitHub header).
+2. Paste committed **v8.9** source (docblock through end; skip GitHub header).
+   v8.9 includes the 057-aligned goal settlement fix required for settled
+   10,000 / 1,111… weeks (see `docs/deploy-checklists/076-v8.9-goal-settlement-fix.md`).
 3. Confirm input `recordId` mapping unchanged.
 4. Trigger one Schmidt test Submission through 031 → 076 → 079.
 5. Confirm queue payload includes:

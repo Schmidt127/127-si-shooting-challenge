@@ -24,13 +24,17 @@ Airtable is the deployed/running copy.
 
 /***************************************************************************************************
  * 058 - Achievements and Milestones - Create Perfect Week Unlock
- * Version: 1.3
+ * Version: 1.4
  * Date written: 2026-05-30
- * Last updated: 2026-08-13
+ * Last updated: 2026-08-22
  *
  * Purpose:
  * Creates one Athlete Achievement Unlock when a Weekly Athlete Summary record qualifies
  * for Perfect Week.
+ *
+ * v1.4 (2026-08-22): Goal settlement aligned with 057 v1.9 — compare WAS Goal Shots
+ * Target (season lookup) to Goal Record Total Shot Target; require Weekly Goal Shots
+ * Target separately for weekly math only.
  *
  * This automation does NOT create the XP Event directly.
  * The unlock should later be processed by the achievement/unlock-to-XP automation using
@@ -50,7 +54,9 @@ Airtable is the deployed/running copy.
  * PKG-039 safety boundary:
  * - An inactive Enrollment never creates or replays a Perfect Week Unlock.
  * - The linked Goal Record must be the one active, exact Program Instance +
- *   Grade Band configuration with an explicit numeric target. Blank/unsettled
+ *   Grade Band configuration with an explicit numeric target. Settlement compares
+ *   WAS Goal Shots Target to Goal Record Total Shot Target (057 v1.9 pattern).
+ *   Weekly Goal Shots Target is required separately for weekly math. Blank/unsettled
  *   goal state never qualifies as configured zero.
  ***************************************************************************************************/
 
@@ -77,6 +83,7 @@ const CONFIG = {
     week: "Week",
     gradeBand: "Grade Band",
     goalRecord: "Goal Record",
+    seasonGoal: "Goal Shots Target",
     weeklyGoal: "Weekly Goal Shots Target",
     perfectWeekEligible: "Perfect Week Eligible?",
     perfectWeekUnlock: "Perfect Week Unlock",
@@ -441,7 +448,8 @@ try {
     const goalProgramInstanceIds = getLinkedIds(goalRecord, CONFIG.targetGoalFields.programInstance);
     const goalGradeBandIds = getLinkedIds(goalRecord, CONFIG.targetGoalFields.gradeBand);
     const goalTarget = getOptionalNumber(goalRecord, CONFIG.targetGoalFields.totalShotTarget);
-    const settledWeeklyGoal = getOptionalNumber(weeklyRecord, CONFIG.weeklyFields.weeklyGoal);
+    const settledSeasonGoal = getOptionalNumber(weeklyRecord, CONFIG.weeklyFields.seasonGoal);
+    const weeklyGoal = getOptionalNumber(weeklyRecord, CONFIG.weeklyFields.weeklyGoal);
 
     if (!isTruthy(goalRecord.getCellValue(CONFIG.targetGoalFields.active))) {
       goalValidationReasons.push(`Goal Record ${goalRecord.id} is inactive`);
@@ -459,12 +467,15 @@ try {
     if (goalTarget === null) {
       goalValidationReasons.push(`Goal Record ${goalRecord.id} Total Shot Target is not an explicit number`);
     }
-    if (settledWeeklyGoal === null) {
-      goalValidationReasons.push("Weekly Goal Shots Target is not a settled number");
-    } else if (goalTarget !== null && settledWeeklyGoal !== goalTarget) {
+    if (settledSeasonGoal === null) {
+      goalValidationReasons.push("Goal Shots Target is not a settled number");
+    } else if (goalTarget !== null && settledSeasonGoal !== goalTarget) {
       goalValidationReasons.push(
-        `Weekly Goal Shots Target (${settledWeeklyGoal}) does not match Goal Record Total Shot Target (${goalTarget})`
+        `Goal Shots Target (${settledSeasonGoal}) does not match Goal Record Total Shot Target (${goalTarget})`
       );
+    }
+    if (weeklyGoal === null) {
+      goalValidationReasons.push("Weekly Goal Shots Target is not a settled number");
     }
   }
 
