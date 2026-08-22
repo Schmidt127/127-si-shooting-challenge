@@ -34,7 +34,7 @@ version/state/mapping must still be confirmed in the Airtable UI.
 | 006 | Submissions | *confirm* | `006-...-set-video-count.js` | Video count fields |
 | 021 | Submissions | *confirm* | `021-...-set-attachment-upload-status.js` | Upload status |
 | 009 | Submissions | *confirm* | `009-submission-intake-create-submission-assets.js` | Submission Assets |
-| **010** | Submissions | `Reconciliation Needed? = 1`; dynamic `recordId` | `010-submission-intake-create-xp-event.js` | **XP Events** (SHOOTING_BASE); positive and correction branches, exact-key recheck, same-event deactivate/reactivate, bounded settlement, latch acknowledgement |
+| **010** | Submissions | `Reconciliation Needed? = 1` **and** Enrollment, Week, Weekly Athlete Summary present; `Count This Submission? = 1`; `Total Shots Counted > 0`; dynamic `recordId` | `010-submission-intake-create-xp-event.js` (**v10.12**) | **XP Events** (SHOOTING_BASE); positive and correction branches, exact-key recheck, same-event deactivate/reactivate, bounded settlement, latch acknowledgement; `skipped_not_ready` when formulas/links still settling |
 
 ### Weekly summary chain (030–034)
 
