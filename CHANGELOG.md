@@ -9,6 +9,14 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **057 v1.10 — Perfect Week uses Counted Activity Date Key (2026-08-22)** — Daily
+  shooting eligibility now reads `Submissions.Counted Activity Date Key` as the
+  canonical calendar day (aligned with `Days Logged This Week`). Stops shifting
+  Fillout date-only `Activity Date` values stored as midnight UTC into the prior
+  America/Denver day. Fails closed when a countable submission has a blank or
+  malformed key. Preserves v1.7 goal-settlement gates, Sunday–Saturday week
+  boundaries, same-day requirement, video/zoom/homework rules, and duplicate-safe
+  day aggregation. Paste: `docs/deploy-checklists/057-perfect-week-v1.10-paste-card.md`.
 - **Docs: final Production version reconciliation (2026-08-21)** — Authority docs
   now record Mike-verified live versions: **010 v10.11**, **041 v5.1**, **057 v1.7**,
   **058 v1.3**, **059 v3.6**, **101 v6.7**, **117 v2.1 Live**, **070a/070b v4.7**,
