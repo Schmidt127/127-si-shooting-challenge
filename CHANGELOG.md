@@ -9,6 +9,15 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **076 v8.8 + Daily Submission email redesign (2026-08-22)** — Communications
+  Hub React Email template replaced (blue/orange branding, scoreboard recap,
+  homework rows, XP page CTA, footer links). **076** payload adds
+  `weekDateRange`, `shootingPercentage`, structured `homeworkItems`,
+  `xpPageUrl`, and footer URLs. Paste checklist:
+  `docs/deploy-checklists/daily-submission-email-redesign-2026-08-22.md`.
+  Offline: `node --test tests/email/automation-076-offline.test.mjs` and
+  `node tools/testing/tests/test_076_email_handoff_runtime.mjs`. Hub tests in
+  `127si-communications-hub`.
 - **010 v10.12 — formula/link settlement grace (2026-08-22)** — Temporary
   unsettled Enrollment, Week, WAS, Count This Submission?, or Total Shots
   Counted now returns `skipped_not_ready` without throwing, without latch

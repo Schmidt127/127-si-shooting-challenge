@@ -79,6 +79,8 @@ function build076Base(
       { name: "Current Shooting Streak", type: "number" },
       { name: "Current Level", type: "singleLineText" },
       { name: "Next Level", type: "singleLineText" },
+      { name: "Public Profile Enabled", type: "checkbox" },
+      { name: "Public Profile Slug", type: "singleLineText" },
     ],
     [
       new MockRecord("recEnrollment076001", {
@@ -108,13 +110,18 @@ function build076Base(
       new MockRecord("recWeek07600001", {
         "Week Name": "Early Bird",
         "Program Instance": [{ id: "recProgram0760001", name: "2026-2027" }],
+        "Start Date": "2026-08-03",
+        "End Date": "2026-08-09",
       }),
     ]
   );
 
   const programInstances = new MockTable(
     "Program Instance - Sync",
-    [{ name: "Name - Program Instance", type: "singleLineText" }],
+    [
+      { name: "Name - Program Instance", type: "singleLineText" },
+      { name: "Daily Submission URL", type: "url" },
+    ],
     [new MockRecord("recProgram0760001", { "Name - Program Instance": "2026-2027" })]
   );
 
@@ -243,6 +250,11 @@ test("076 creates one deterministic queue row from a valid cleaned parent email"
   const recipients = JSON.parse(queue.records.values().next().value.cells["Recipients JSON"]);
   assert.equal(payload.shots, 20);
   assert.equal(payload.makes, 10);
+  assert.equal(payload.shootingPercentage, 50);
+  assert.match(payload.weekDateRange, /–/);
+  assert.equal(payload.xpPageUrl, "https://www.fairfieldbasketballclub.com/shoot/dashboard");
+  assert.equal(payload.landingPageUrl, "https://www.fairfieldbasketballclub.com");
+  assert.equal(payload.dailySubmissionFormUrl, "https://forms.fairfieldbasketballclub.com/shoot-dailysubmissions");
   assert.deepEqual(recipients, [{
     email: "mschmidt@fairfield.k12.mt.us",
     role: "guardian",

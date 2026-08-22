@@ -33,11 +33,14 @@ Filename may still say email package; current path is Hub queue create only.
  * 076 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Daily Submission Communications Hub Handoff
  *
- * Version: v8.7
+ * Version: v8.8
  * Date Written: 2026-05-29
- * Last Updated: 2026-08-20
+ * Last Updated: 2026-08-22
  *
  * VERSION HISTORY
+ * - v8.8 (2026-08-22): Daily Submission payload enrichment for redesigned Hub
+ *   template — weekDateRange, shootingPercentage, structured homeworkItems,
+ *   athlete xpPageUrl, and footer URLs. Business guards unchanged.
  * - v8.7 (2026-08-20): V2 Automation Standard structure — GitHub header,
  *   production docblock, numbered sections, hoisted debugStep, outer run
  *   wrapper. Business logic unchanged from v8.6.
@@ -127,12 +130,18 @@ Filename may still say email package; current path is Hub queue create only.
 
 const SCRIPT = {
   scriptName: "076 - Daily Submission Communications Hub Handoff",
-  version: "v8.7",
-  versionDate: "2026-08-20",
+  version: "v8.8",
+  versionDate: "2026-08-22",
   originalWrittenDate: "2026-05-29",
-  lastUpdated: "2026-08-20",
+  lastUpdated: "2026-08-22",
   folder: "07 - Email, Notifications, and External Handoffs",
   automationName: "076 - Daily Submission Communications Hub Handoff",
+};
+
+const CANONICAL_URLS = {
+  landing: "https://www.fairfieldbasketballclub.com",
+  shoot: "https://www.fairfieldbasketballclub.com/shoot",
+  dailyForm: "https://forms.fairfieldbasketballclub.com/shoot-dailysubmissions",
 };
 
 /* =========================================================
@@ -185,6 +194,8 @@ const CONFIG = {
       streak: "Current Shooting Streak",
       currentLevel: "Current Level",
       nextLevel: "Next Level",
+      publicProfileEnabled: "Public Profile Enabled",
+      publicProfileSlug: "Public Profile Slug",
     },
     was: {
       enrollment: "Enrollment",
@@ -210,6 +221,7 @@ const CONFIG = {
     },
     pi: {
       name: "Name - Program Instance",
+      dailySubmissionUrl: "Daily Submission URL",
     },
     xp: {
       active: "Active?",
@@ -226,6 +238,14 @@ const CONFIG = {
       slot: "Homework Slot",
       active: "Active?",
     },
+    hc: {
+      enrollment: "Enrollment",
+      week: "Week",
+      pha: "Program Homework Assignment",
+      homework: "Homework",
+      satisfactory: "Satisfactory?",
+      status: "Completion Status",
+    },
     curr: {
       title: "Assignment Title",
       full: "Assignment Full Name",
@@ -234,6 +254,7 @@ const CONFIG = {
       active: "Active?",
       published: "Published?",
       order: "Order",
+      url: "URL",
     },
     queue: {
       key: "Handoff Key",
@@ -391,14 +412,45 @@ function recipientEmail(r, t, name) {
 
 function dateText(value) {
   const date = value instanceof Date ? value : new Date(value);
-  return !value || Number.isNaN(date.getTime())
-    ? ""
-    : new Intl.DateTimeFormat("en-US", {
-        timeZone: TZ,
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      }).format(date);
+  if (!value || Number.isNaN(date.getTime())) {
+    return "";
+  }
+  const formatted = new Intl.DateTimeFormat("en-US", {
+    timeZone: TZ,
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
+  return formatted.replace(/^([A-Za-z]{3})\s/, "$1. ");
+}
+
+function weekDateRangeText(week, weekT) {
+  const start = dateText(raw(week, weekT, CONFIG.fields.week.start));
+  const end = dateText(raw(week, weekT, CONFIG.fields.week.end));
+  if (start && end) return `${start} – ${end}`;
+  return first(start, end);
+}
+
+function mapHomeworkStatus(hc, hcT) {
+  if (!hc) return "Not submitted";
+  if (bool(hc, hcT, CONFIG.fields.hc.satisfactory)) return "Complete";
+  const status = text(hc, hcT, CONFIG.fields.hc.status);
+  const normalized = status.toLowerCase();
+  if (!status) return "Not submitted";
+  if (normalized === "not submitted") return "Not submitted";
+  if (normalized === "submitted" || normalized === "under review") return "Pending review";
+  if (normalized === "needs revision") return "In progress";
+  if (normalized === "satisfactory") return "Complete";
+  return status;
+}
+
+function buildXpPageUrl(enrollment, enrT) {
+  const enabled = bool(enrollment, enrT, CONFIG.fields.enr.publicProfileEnabled);
+  const slug = text(enrollment, enrT, CONFIG.fields.enr.publicProfileSlug);
+  if (enabled && slug) {
+    return `${CANONICAL_URLS.shoot}/athletes/${encodeURIComponent(slug)}`;
+  }
+  return `${CANONICAL_URLS.shoot}/dashboard`;
 }
 
 function pct(value, target) {
@@ -488,6 +540,7 @@ async function main() {
   const xpT = table(CONFIG.tables.xp);
   const phaT = table(CONFIG.tables.pha);
   const currT = table(CONFIG.tables.curr);
+  const hcT = table(CONFIG.tables.hc);
   const queueT = table(CONFIG.tables.queue);
 
   const sub = await subT.selectRecordAsync(recordId);
@@ -598,7 +651,7 @@ async function main() {
     .map((row) => `${slot(text(row, phaT, CONFIG.fields.pha.slot)) || "Homework"}: ${text(row, phaT, CONFIG.fields.pha.homework)}`)
     .filter(Boolean);
   const currQuery = phaRows.length ? null : await load(currT, Object.values(CONFIG.fields.curr));
-  const legacyAssignments = currQuery
+  const legacyRows = currQuery
     ? currQuery.records
         .filter(
           (row) =>
@@ -608,12 +661,63 @@ async function main() {
         )
         .sort((a, b) => num(a, currT, CONFIG.fields.curr.order, 9999) - num(b, currT, CONFIG.fields.curr.order, 9999))
         .slice(0, 2)
-        .map(
-          (row, index) =>
-            `HW${index + 1}: ${first(text(row, currT, CONFIG.fields.curr.title), text(row, currT, CONFIG.fields.curr.full), row.name)}`
-        )
     : [];
+  const legacyAssignments = legacyRows.map(
+    (row, index) =>
+      `HW${index + 1}: ${first(text(row, currT, CONFIG.fields.curr.title), text(row, currT, CONFIG.fields.curr.full), row.name)}`
+  );
   const assignments = [...homeworkAssignments, ...legacyAssignments];
+
+  const hcQuery = await load(hcT, Object.values(CONFIG.fields.hc));
+  const hcRows = hcQuery.records.filter(
+    (row) =>
+      same(ids(row, hcT, CONFIG.fields.hc.enrollment), [enrollmentId]) &&
+      same(ids(row, hcT, CONFIG.fields.hc.week), [weekId])
+  );
+  const hcByPha = new Map();
+  for (const row of hcRows) {
+    const phaId = ids(row, hcT, CONFIG.fields.hc.pha)[0];
+    if (phaId) hcByPha.set(phaId, row);
+  }
+  const libraryIds = [...new Set(phaRows.flatMap((row) => ids(row, phaT, CONFIG.fields.pha.homework)))];
+  const libraryById = new Map();
+  for (const libId of libraryIds) {
+    const lib = await currT.selectRecordAsync(libId);
+    if (lib) libraryById.set(libId, lib);
+  }
+  let homeworkItems = phaRows
+    .sort((a, b) => slot(text(a, phaT, CONFIG.fields.pha.slot)).localeCompare(slot(text(b, phaT, CONFIG.fields.pha.slot))))
+    .map((row) => {
+      const libId = ids(row, phaT, CONFIG.fields.pha.homework)[0];
+      const lib = libId ? libraryById.get(libId) : null;
+      const name = first(
+        lib ? text(lib, currT, CONFIG.fields.curr.title) : "",
+        lib ? text(lib, currT, CONFIG.fields.curr.full) : "",
+        text(row, phaT, CONFIG.fields.pha.homework)
+      );
+      if (!name) return null;
+      const link = lib ? text(lib, currT, CONFIG.fields.curr.url) : "";
+      return {
+        name,
+        ...(link ? { link } : {}),
+        status: mapHomeworkStatus(hcByPha.get(row.id), hcT),
+      };
+    })
+    .filter(Boolean);
+  if (!homeworkItems.length && legacyRows.length) {
+    homeworkItems = legacyRows
+      .map((row) => {
+        const name = first(text(row, currT, CONFIG.fields.curr.title), text(row, currT, CONFIG.fields.curr.full), row.name);
+        if (!name) return null;
+        const link = text(row, currT, CONFIG.fields.curr.url);
+        return {
+          name,
+          ...(link ? { link } : {}),
+          status: "Not submitted",
+        };
+      })
+      .filter(Boolean);
+  }
 
   const parent = recipientEmail(enrollment, enrT, CONFIG.fields.enr.parent);
   const athlete = recipientEmail(enrollment, enrT, CONFIG.fields.enr.athlete);
@@ -629,12 +733,16 @@ async function main() {
   }
   if (!parent) throw new Error("No usable cleaned parent recipient.");
 
+  const shots = nonnegativeInteger(sub, subT, CONFIG.fields.sub.shots);
+  const makes = nonnegativeInteger(sub, subT, CONFIG.fields.sub.makes);
   const payload = {
     athleteName: first(text(enrollment, enrT, CONFIG.fields.enr.name), "Athlete"),
     activityDate: dateText(raw(sub, subT, CONFIG.fields.sub.activity)),
     weekName: first(text(was, wasT, CONFIG.fields.was.weekName), text(week, weekT, CONFIG.fields.week.name)),
-    shots: nonnegativeInteger(sub, subT, CONFIG.fields.sub.shots),
-    makes: nonnegativeInteger(sub, subT, CONFIG.fields.sub.makes),
+    weekDateRange: weekDateRangeText(week, weekT),
+    shots,
+    makes,
+    shootingPercentage: shots > 0 ? Math.round((makes / shots) * 100) : null,
     submissionXp,
     ...(submissionXp === null ? { submissionXpStatus: "Pending / not yet awarded" } : {}),
     weeklyShots,
@@ -645,6 +753,11 @@ async function main() {
     currentLevel: text(enrollment, enrT, CONFIG.fields.enr.currentLevel),
     nextLevel: text(enrollment, enrT, CONFIG.fields.enr.nextLevel),
     programName: first(text(program, piT, CONFIG.fields.pi.name), program.name, "Shooting Challenge"),
+    xpPageUrl: buildXpPageUrl(enrollment, enrT),
+    landingPageUrl: CANONICAL_URLS.landing,
+    shootPageUrl: CANONICAL_URLS.shoot,
+    dailySubmissionFormUrl: first(text(program, piT, CONFIG.fields.pi.dailySubmissionUrl), CANONICAL_URLS.dailyForm),
+    ...(homeworkItems.length ? { homeworkItems } : {}),
     ...(assignments.length ? { homeworkAssignments: assignments } : {}),
   };
   if (!payload.activityDate || !payload.weekName) throw new Error("Submission Activity Date and Week Name are required.");
