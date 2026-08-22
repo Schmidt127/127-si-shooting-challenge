@@ -1,7 +1,12 @@
 # Video Feedback email redesign — promotion checklist
 
+<<<<<<< Updated upstream
 Status: **Repository-ready / promotion pending**
 Production change: **Not applied by Cursor**
+=======
+Status: **Communications Hub deployed / Airtable paste pending**
+Production change: **Hub live on Vercel; 073 paste required in Airtable (Mike)**
+>>>>>>> Stashed changes
 
 ## Scope
 
