@@ -174,6 +174,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Web
 
+#### Added
+- **Athlete profile XP activity performance redesign (2026-08-23)** — Enrollment-scoped XP Events query, segmented profile shell + Suspense XP table, cursor pagination (`GET /shoot/api/athletes/[slug]/xp-activity`), 120s server cache, 8s Airtable timeouts, cached leaderboard rank lookup, and per-page related-record hydration (Zoom `Meeting Name` / `Meeting Display Name`).
+
 #### Changed
 - **Shoot route aliases (2026-08-22)** — moved to landing hub
   (`127si-landing-page` / `hoopchallenges-landing` `web/next.config.ts`).
