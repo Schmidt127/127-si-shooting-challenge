@@ -29,8 +29,8 @@ function test(name, fn) {
   console.log(`PASS  ${name}`);
 }
 
-test("072 v4.2 owns escaped HTML and plain-text package rendering", () => {
-  assert.ok(/Version:\s*v4\.2/.test(s072));
+test("072 v4.3 owns escaped HTML and plain-text package rendering", () => {
+  assert.ok(/Version:\s*v4\.3/.test(s072));
   assert.ok(/function escapeHtml\(value\)/.test(s072));
   for (const entity of ["&amp;", "&lt;", "&gt;", "&quot;", "&#39;"]) {
     assert.ok(s072.includes(entity), `072 escapeHtml must emit ${entity}`);
@@ -45,7 +45,8 @@ test("072 remains Denver-safe and fails closed on reporting disagreement", () =>
   assert.ok(/Intl\.DateTimeFormat/.test(s072));
   assert.ok(/Weekly shots disagreement/.test(s072));
   assert.ok(/Weekly XP disagreement/.test(s072));
-  assert.ok(/active canonical XP/.test(s072));
+  assert.ok(/WAS-linked active XP/.test(s072));
+  assert.ok(/Unlinked canonical XP/.test(s072));
 });
 
 test("072 never performs external delivery", () => {

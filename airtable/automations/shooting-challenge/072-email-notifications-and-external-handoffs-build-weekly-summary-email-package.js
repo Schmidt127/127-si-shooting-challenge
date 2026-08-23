@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-09
-Last GitHub Update: 2026-08-20 (v4.2 V2 standard structure)
+Last GitHub Update: 2026-08-23 (v4.3 WAS-linked XP reconciliation)
 
 Purpose:
 Build the Weekly Athlete Summary email package (subject/HTML/text/payload)
@@ -32,11 +32,15 @@ Send plane: 118 → 072 → 119 → 074 → 079 → Communications Hub → Resen
  * 072 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Build Weekly Summary Email Package
  *
- * Version: v4.2
+ * Version: v4.3
  * Date Written: 2026-06-20
- * Last Updated: 2026-08-20
+ * Last Updated: 2026-08-23
  *
  * VERSION HISTORY
+ * - v4.3 (2026-08-23): Weekly XP validation compares WAS rollup to WAS-linked
+ *   active XP only; fails with explicit unlinked canonical XP when enrollment+week
+ *   events exist but are not on the summary (fixes false disagreement when rollup
+ *   matched linked XP but milestone XP was not yet linked to WAS).
  * - v4.2 (2026-08-20): V2 Automation Standard structure — GitHub header,
  *   production docblock, SCRIPT metadata, readable CONFIG, numbered sections,
  *   debugStep, outer run wrapper. Business logic unchanged from v4.1.
@@ -112,10 +116,10 @@ Send plane: 118 → 072 → 119 → 074 → 079 → Communications Hub → Resen
 
 const SCRIPT = {
   scriptName: "072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package",
-  version: "v4.2",
-  versionDate: "2026-08-20",
+  version: "v4.3",
+  versionDate: "2026-08-23",
   originalWrittenDate: "2026-06-20",
-  lastUpdated: "2026-08-20",
+  lastUpdated: "2026-08-23",
   folder: "07 - Email, Notifications, and External Handoffs",
   automationName: "072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package",
 };
@@ -550,13 +554,17 @@ async function main() {
     CONFIG.xpEvents.reason,
     CONFIG.xpEvents.sourceKey,
   ]);
-  const activeXp = xpQuery.records.filter(
+  const wasLinkedXpIds = linkedIds(summary, weeklySummaryTable, CONFIG.was.xpEvents);
+  const activeXpAll = xpQuery.records.filter(
     (x) =>
       booleanish(x, xpEventsTable, CONFIG.xpEvents.active) &&
       sameIds(linkedIds(x, xpEventsTable, CONFIG.xpEvents.enrollment), [enrollmentId]) &&
       sameIds(linkedIds(x, xpEventsTable, CONFIG.xpEvents.week), [weekId])
   );
-  for (const xid of linkedIds(summary, weeklySummaryTable, CONFIG.was.xpEvents)) {
+  const wasLinkedXpIdSet = new Set(wasLinkedXpIds);
+  const activeXp = activeXpAll.filter((x) => wasLinkedXpIdSet.has(x.id));
+  const orphanXp = activeXpAll.filter((x) => !wasLinkedXpIdSet.has(x.id));
+  for (const xid of wasLinkedXpIds) {
     const xpEvent = xpQuery.getRecord(xid);
     if (!xpEvent) throw new Error(`WAS linked XP Event missing: ${xid}`);
     if (
@@ -567,10 +575,21 @@ async function main() {
       throw new Error(`WAS active XP Event ${xid} belongs to another Enrollment/Week.`);
     }
   }
+  if (orphanXp.length) {
+    const orphanPoints = orphanXp.reduce(
+      (sum, x) => sum + getNumber(x, xpEventsTable, CONFIG.xpEvents.points),
+      0
+    );
+    throw new Error(
+      `Unlinked canonical XP: ${orphanXp.length} active XP Event(s) (+${orphanPoints} XP) match Enrollment+Week but are not linked on this Weekly Athlete Summary. Reconcile WAS XP links before building email.`
+    );
+  }
   const weekXp = activeXp.reduce((sum, x) => sum + getNumber(x, xpEventsTable, CONFIG.xpEvents.points), 0);
   const summaryXp = nullableNumber(summary, weeklySummaryTable, CONFIG.was.weeklyXp);
   if (summaryXp !== null && Math.abs(summaryXp - weekXp) > 0.001) {
-    throw new Error(`Weekly XP disagreement: summary=${summaryXp}, active canonical XP=${weekXp}.`);
+    throw new Error(
+      `Weekly XP disagreement: summary rollup=${summaryXp}, WAS-linked active XP=${weekXp}. Wait for rollup settlement or reconcile XP links.`
+    );
   }
   const xpLines = activeXp.length
     ? activeXp.map(

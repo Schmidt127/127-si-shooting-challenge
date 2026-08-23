@@ -39,11 +39,12 @@ const s118 = read(
   "118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js"
 );
 
-test("072 v4.2 enforces empty-week policies and does not call Make/fetch webhook", () => {
-  assert.ok(/Version:\s*v4\.2/.test(s072));
+test("072 v4.3 enforces empty-week policies and does not call Make/fetch webhook", () => {
+  assert.ok(/Version:\s*v4\.3/.test(s072));
   assert.ok(/emptyWeekPolicy/.test(s072));
   assert.ok(/built_short_empty_week/.test(s072));
   assert.ok(/suppressed_empty_week/.test(s072));
+  assert.ok(/Unlinked canonical XP/.test(s072));
   assert.ok(!/\bfetch\s*\(/.test(s072), "072 must not fetch/webhook");
   assert.ok(!/makeWebhookUrl/.test(s072), "072 must not take Make webhook input");
 });
