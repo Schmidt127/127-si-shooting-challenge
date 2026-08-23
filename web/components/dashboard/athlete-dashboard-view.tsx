@@ -259,7 +259,11 @@ export function AthleteDashboardView({ data }: AthleteDashboardViewProps) {
 
       <section className="mt-10 mb-2" aria-labelledby="recent-xp-heading">
         {data.source === "airtable" ? (
-          <XpActivityTable rows={data.recentXp} />
+          <XpActivityTable
+            rows={data.recentXp}
+            warning={data.xpWarning}
+            totalAvailableRows={data.recentXpTotal}
+          />
         ) : (
           <>
             <SectionMarker label="XP" title="Recent XP" />

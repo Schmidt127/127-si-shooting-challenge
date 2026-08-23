@@ -40,19 +40,16 @@ import {
   escapeAirtableString,
   isValidPublicSlug,
   mapPublicAchievements,
-  mapRecentSubmissions,
-  mapRecentXpEvents,
   mapWeeklySummaries,
-  mergeRecentActivity,
+  mapXpSummariesToPublicActivity,
   normalizeProfileSlug,
   type PublicAchievementDefFields,
   type PublicEnrollmentFields,
   type PublicLevelFields,
-  type PublicSubmissionFields,
   type PublicUnlockFields,
   type PublicWasFields,
-  type PublicXpEventFields,
 } from "@/lib/data/public-athlete-profile";
+import { loadXpActivityForEnrollment } from "@/lib/data/xp-activity-loader";
 import { asBoolean, asText, linkedRecordIds, requireExactlyOneLookupNumber } from "@/lib/data/airtable-values";
 import type { PublicAthleteProfile } from "@/types/public-athlete-profile";
 import type { AchievementCatalogData } from "@/types/achievements";
@@ -784,17 +781,8 @@ export const PUBLIC_PROFILE_ENROLLMENT_FIELDS = [
 ] as const;
 
 const PUBLIC_PROFILE_REVALIDATE_SECONDS = 120;
-const PUBLIC_PROFILE_RECENT_SUBMISSIONS = 12;
-const PUBLIC_PROFILE_RECENT_XP = 12;
+const PUBLIC_PROFILE_XP_ACTIVITY_MAX = 200;
 const PUBLIC_PROFILE_WEEKLY_LIMIT = 8;
-
-const PUBLIC_SUBMISSION_FIELDS = [
-  "Activity Date",
-  "Total Shots Counted",
-  "Total Makes Counted",
-  "Submission Stat Mode",
-  "Count This Submission?",
-] as const;
 
 const PUBLIC_WAS_FIELDS = [
   "Weekly Email Week Label",
@@ -820,14 +808,6 @@ const PUBLIC_UNLOCK_FIELDS = [
   "XP Awarded",
   "Trigger Value",
   "Shot Milestone",
-] as const;
-
-const PUBLIC_XP_EVENT_FIELDS = [
-  "Active?",
-  "Active XP Points",
-  "XP Reason Public",
-  "XP Source",
-  "Created",
 ] as const;
 
 /**
@@ -876,10 +856,8 @@ export async function fetchPublicAthleteProfileBySlug(
 
   const nextLevelIds = linkedRecordIds(fields["Next Level"]);
   const nextLevelId = nextLevelIds[0] ?? null;
-  const submissionIds = linkedRecordIds(fields.Submissions).slice(0, 40);
   const wasIds = linkedRecordIds(fields["Weekly Athlete Summary"]).slice(0, 20);
   const unlockIds = linkedRecordIds(fields["Athlete Achievement Unlocks"]).slice(0, 50);
-  const xpIds = linkedRecordIds(fields["XP Events"]).slice(0, 40);
 
   function recordIdOrFilter(ids: string[]): string | null {
     if (ids.length === 0) return null;
@@ -887,29 +865,11 @@ export async function fetchPublicAthleteProfileBySlug(
     return `OR(${ids.map((id) => `RECORD_ID()="${id}"`).join(",")})`;
   }
 
-  const submissionFilter = recordIdOrFilter(submissionIds);
   const wasFilter = recordIdOrFilter(wasIds);
   const unlockFilter = recordIdOrFilter(unlockIds);
-  const xpFilter = recordIdOrFilter(xpIds);
 
-  const [
-    submissionResponse,
-    wasResponse,
-    unlockResponse,
-    xpResponse,
-    leaderboard,
-    nextLevelResponse,
-  ] = await Promise.all([
-    submissionFilter
-      ? listAirtableRecords<PublicSubmissionFields>({
-          tableName: AIRTABLE_TABLES.submissions,
-          maxRecords: PUBLIC_PROFILE_RECENT_SUBMISSIONS,
-          fields: [...PUBLIC_SUBMISSION_FIELDS],
-          filterByFormula: submissionFilter,
-          sort: [{ field: "Activity Date", direction: "desc" }],
-          revalidateSeconds: PUBLIC_PROFILE_REVALIDATE_SECONDS,
-        })
-      : Promise.resolve({ records: [] as Array<{ id: string; fields: PublicSubmissionFields }> }),
+  const [wasResponse, unlockResponse, xpActivity, leaderboard, nextLevelResponse] =
+    await Promise.all([
     wasFilter
       ? listAirtableRecords<PublicWasFields>({
           tableName: AIRTABLE_TABLES.weeklySummary,
@@ -929,16 +889,10 @@ export async function fetchPublicAthleteProfileBySlug(
           revalidateSeconds: PUBLIC_PROFILE_REVALIDATE_SECONDS,
         })
       : Promise.resolve({ records: [] as Array<{ id: string; fields: PublicUnlockFields }> }),
-    xpFilter
-      ? listAirtableRecords<PublicXpEventFields>({
-          tableName: AIRTABLE_TABLES.xpEvents,
-          maxRecords: PUBLIC_PROFILE_RECENT_XP,
-          fields: [...PUBLIC_XP_EVENT_FIELDS],
-          filterByFormula: xpFilter,
-          sort: [{ field: "Created", direction: "desc" }],
-          revalidateSeconds: PUBLIC_PROFILE_REVALIDATE_SECONDS,
-        })
-      : Promise.resolve({ records: [] as Array<{ id: string; fields: PublicXpEventFields }> }),
+    loadXpActivityForEnrollment(enrollment.id, {
+      maxRows: PUBLIC_PROFILE_XP_ACTIVITY_MAX,
+      revalidateSeconds: PUBLIC_PROFILE_REVALIDATE_SECONDS,
+    }),
     fetchLeaderboard().catch(() => null),
     nextLevelId
       ? listAirtableRecords<PublicLevelFields>({
@@ -950,10 +904,6 @@ export async function fetchPublicAthleteProfileBySlug(
         })
       : Promise.resolve({ records: [] as Array<{ id: string; fields: PublicLevelFields }> }),
   ]);
-
-  const countedSubmissions = submissionResponse.records.filter((record) =>
-    asBoolean(record.fields["Count This Submission?"]),
-  );
 
   const visibleUnlocks = unlockResponse.records.filter(
     (record) => asBoolean(record.fields["Active?"]) && asBoolean(record.fields["Visible?"]),
@@ -1036,11 +986,19 @@ export async function fetchPublicAthleteProfileBySlug(
         (displayName && entry.displayName === displayName),
     )?.rank ?? null;
 
-  const recentActivity = mergeRecentActivity(
-    mapRecentSubmissions(countedSubmissions),
-    mapRecentXpEvents(xpResponse.records),
-    12,
-  );
+  const recentActivity = mapXpSummariesToPublicActivity(xpActivity.rows);
+  const activityLedgerNoticeParts: string[] = [];
+  if (xpActivity.warning) activityLedgerNoticeParts.push(xpActivity.warning);
+  if (xpActivity.missingXpSubmissionIds.length > 0) {
+    activityLedgerNoticeParts.push(
+      `${xpActivity.missingXpSubmissionIds.length} counted submission(s) are missing XP awards. Ops is reconciling.`,
+    );
+  }
+  if (xpActivity.totalAvailableRows > xpActivity.rows.length) {
+    activityLedgerNoticeParts.push(
+      `Complete XP ledger: ${xpActivity.totalAvailableRows} events loaded. Use Load more below — not limited to 12 items.`,
+    );
+  }
 
   return buildPublicAthleteProfile({
     slug,
@@ -1048,6 +1006,9 @@ export async function fetchPublicAthleteProfileBySlug(
     rank,
     nextLevelName: nextLevelName === "—" ? null : nextLevelName,
     recentActivity,
+    activityLedgerTotal: xpActivity.totalAvailableRows,
+    activityLedgerNotice:
+      activityLedgerNoticeParts.length > 0 ? activityLedgerNoticeParts.join(" ") : null,
     weekly: mapWeeklySummaries(wasResponse.records, weekNameById),
     achievements: mapPublicAchievements(visibleUnlocks, defsById),
   });

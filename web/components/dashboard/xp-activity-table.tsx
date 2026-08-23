@@ -5,13 +5,17 @@ type XpActivityTableProps = {
   rows: XpEventSummary[];
   warning?: string;
   emptyMessage?: string;
+  totalAvailableRows?: number;
 };
 
 export function XpActivityTable({
   rows,
   warning,
   emptyMessage = "No XP events to show yet.",
+  totalAvailableRows,
 }: XpActivityTableProps) {
+  const total = totalAvailableRows ?? rows.length;
+  const truncated = total > rows.length;
   return (
     <section aria-labelledby="xp-activity-heading" data-testid="xp-activity-table">
       <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-brand-blue">XP ledger</p>
@@ -22,6 +26,13 @@ export function XpActivityTable({
       {warning ? (
         <p className="mt-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
           {warning}
+        </p>
+      ) : null}
+
+      {truncated ? (
+        <p className="mt-3 text-xs text-muted" data-testid="xp-activity-truncation-notice">
+          Showing {rows.length} of {total} XP events (dashboard cap). Open dashboard preview for
+          the full ledger (up to 100 rows).
         </p>
       ) : null}
 

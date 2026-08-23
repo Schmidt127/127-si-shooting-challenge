@@ -123,6 +123,8 @@ export type XpActivityLoadStrategy = "enrollment_record_id" | "linked_ids_fallba
 
 export type XpActivityLoadResult = {
   rows: XpEventSummary[];
+  /** Active, enrollment-matched XP Events before the maxRows slice. */
+  totalAvailableRows: number;
   strategy: XpActivityLoadStrategy;
   warning?: string;
   reconciliation: XpActivityReconciliationRow[];
@@ -618,6 +620,8 @@ export async function loadXpActivityForEnrollment(
     return true;
   });
 
+  const totalAvailableRows = displayCandidates.length;
+
   const rows = sortXpEventsNewestFirst(
     displayCandidates.map((record) => {
       const submissionIds = linkedRecordIds(record.fields.Submission);
@@ -645,5 +649,12 @@ export async function loadXpActivityForEnrollment(
     warning = warning ? `${warning} ${missingNote}` : missingNote;
   }
 
-  return { rows, strategy, warning, reconciliation, missingXpSubmissionIds };
+  return {
+    rows,
+    totalAvailableRows,
+    strategy,
+    warning,
+    reconciliation,
+    missingXpSubmissionIds,
+  };
 }

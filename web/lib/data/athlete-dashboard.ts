@@ -62,6 +62,8 @@ export type AthleteDashboardModel = {
   };
   /** Recent XP Events for source-label presentation (mock until XP Events adapter). */
   recentXp: XpEventSummary[];
+  recentXpTotal?: number;
+  xpWarning?: string;
 };
 
 export function homeworkStatusTone(status: DashboardHomeworkStatus): StatusBadgeTone {
@@ -212,6 +214,13 @@ export async function loadAthleteDashboard(options?: {
 
   try {
     const xpResult = await loadXpActivityForEnrollment(enrollmentId, { maxRows: 25 });
+    const warningParts: string[] = [];
+    if (xpResult.warning) warningParts.push(xpResult.warning);
+    if (xpResult.missingXpSubmissionIds.length > 0) {
+      warningParts.push(
+        `${xpResult.missingXpSubmissionIds.length} counted submission(s) have no XP Event.`,
+      );
+    }
     return {
       ...mock,
       source: "airtable",
@@ -221,6 +230,8 @@ export async function loadAthleteDashboard(options?: {
         slug,
       },
       recentXp: xpResult.rows,
+      recentXpTotal: xpResult.totalAvailableRows,
+      xpWarning: warningParts.length > 0 ? warningParts.join(" ") : undefined,
     };
   } catch (error) {
     if (error instanceof XpActivityLoadError) {
