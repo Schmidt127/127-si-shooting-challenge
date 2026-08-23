@@ -174,6 +174,14 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Web
 
+#### Fixed
+- **XP activity loader — enrollment filter (2026-08-23)** — `web/lib/data/xp-activity-loader.ts`
+  now scopes XP Events by `Enrollment Record ID` (lookup of Enrollments.Record Id) instead of
+  `FIND(recordId, ARRAYJOIN({Enrollment}))`, which returns athlete display names and always
+  matched zero rows. Adds linked-record fallback with bounded chunking/cache, throws when linked
+  XP Events cannot be resolved, and surfaces a warning instead of a silent empty table. Preview:
+  `/shoot/dashboard/preview?enrollmentId=rec…`. Regression: `web/lib/data/xp-activity-loader.test.ts`.
+
 #### Changed
 - **Shoot route aliases (2026-08-22)** — moved to landing hub
   (`127si-landing-page` / `hoopchallenges-landing` `web/next.config.ts`).

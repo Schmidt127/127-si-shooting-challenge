@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { XpActivityTable } from "@/components/dashboard/xp-activity-table";
 import { catalogPanelClass } from "@/components/catalog/catalog-surface";
 import {
   IconBolt,
@@ -257,39 +258,45 @@ export function AthleteDashboardView({ data }: AthleteDashboardViewProps) {
       </section>
 
       <section className="mt-10 mb-2" aria-labelledby="recent-xp-heading">
-        <SectionMarker label="XP" title="Recent XP" />
-        <div className={catalogPanelClass({ tint: "neutral" })}>
-          <p id="recent-xp-heading" className="sr-only">
-            Recent XP
-          </p>
-          {data.recentXp.length === 0 ? (
-            <p className="text-sm text-muted" role="status">
-              No XP events to show yet.
-            </p>
-          ) : (
-            <ul className="divide-y divide-border">
-              {data.recentXp.slice(0, 5).map((event) => (
-                <li
-                  key={event.id}
-                  className="flex flex-wrap items-baseline justify-between gap-2 py-3 first:pt-0 last:pb-0"
-                >
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold text-foreground">
-                      {formatXpSourceLabel(event.sourceLabel)}
-                    </p>
-                    <p className="mt-0.5 text-xs text-muted">
-                      {event.reasonPublic || "XP awarded"}
-                      {event.activityDate ? ` · ${event.activityDate}` : null}
-                    </p>
-                  </div>
-                  <p className="font-mono text-sm font-bold text-brand-blue">
-                    +{formatXp(event.points)}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        {data.source === "airtable" ? (
+          <XpActivityTable rows={data.recentXp} />
+        ) : (
+          <>
+            <SectionMarker label="XP" title="Recent XP" />
+            <div className={catalogPanelClass({ tint: "neutral" })}>
+              <p id="recent-xp-heading" className="sr-only">
+                Recent XP
+              </p>
+              {data.recentXp.length === 0 ? (
+                <p className="text-sm text-muted" role="status">
+                  No XP events to show yet.
+                </p>
+              ) : (
+                <ul className="divide-y divide-border">
+                  {data.recentXp.slice(0, 5).map((event) => (
+                    <li
+                      key={event.id}
+                      className="flex flex-wrap items-baseline justify-between gap-2 py-3 first:pt-0 last:pb-0"
+                    >
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-foreground">
+                          {formatXpSourceLabel(event.sourceLabel)}
+                        </p>
+                        <p className="mt-0.5 text-xs text-muted">
+                          {event.reasonPublic || "XP awarded"}
+                          {event.activityDate ? ` · ${event.activityDate}` : null}
+                        </p>
+                      </div>
+                      <p className="font-mono text-sm font-bold text-brand-blue">
+                        +{formatXp(event.points)}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </>
+        )}
       </section>
     </ProgramPage>
   );
