@@ -421,9 +421,25 @@ async function main() {
     prepared?.days,
     rollupDaysLogged
   );
-  const daysLoggedDisplay = firstNonEmpty(
-    prepared?.daysLoggedDisplay,
-    prepared?.perfectWeekCriteria?.daysLoggedDisplay
+  const generalShootingDays = firstFiniteNumber(
+    prepared?.generalShootingDays,
+    prepared?.canonicalDaysLogged,
+    daysLogged
+  );
+  const perfectWeekQualifyingDays = firstFiniteNumber(
+    prepared?.perfectWeekQualifyingDays,
+    prepared?.perfectWeekCriteria?.perfectWeekQualifyingDays,
+    prepared?.perfectWeekCriteria?.daysLogged,
+    daysLogged
+  );
+  const generalShootingDaysDisplay = firstNonEmpty(
+    prepared?.generalShootingDaysDisplay,
+    String(generalShootingDays)
+  );
+  const perfectWeekQualifyingDaysDisplay = firstNonEmpty(
+    prepared?.perfectWeekQualifyingDaysDisplay,
+    prepared?.perfectWeekCriteria?.perfectWeekQualifyingDaysDisplay,
+    daysLoggedDisplay
   );
   const shots = firstFiniteNumber(prepared?.canonicalShots, prepared?.shots, rollupShots);
   const makes = firstFiniteNumber(prepared?.canonicalMakes, prepared?.makes);
@@ -487,9 +503,13 @@ async function main() {
     weekLabel,
     weekName: weekLabel,
     weekDateRange,
-    daysLogged,
-    days: daysLogged,
-    daysLoggedDisplay,
+    daysLogged: generalShootingDays,
+    days: generalShootingDays,
+    daysLoggedDisplay: generalShootingDaysDisplay,
+    generalShootingDays,
+    generalShootingDaysDisplay,
+    perfectWeekQualifyingDays,
+    perfectWeekQualifyingDaysDisplay,
     shots,
     makes,
     weeklyGoal,

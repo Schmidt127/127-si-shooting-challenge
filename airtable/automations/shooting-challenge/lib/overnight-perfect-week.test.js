@@ -2,8 +2,8 @@
 /**
  * Overnight Agent 2 — Perfect Week qualification coverage.
  * Product rules under test (completion master / 057):
- *   Sunday–Saturday week, same-day submissions only, seven distinct qualifying
- *   dates, daily minimum = weekly goal / 7 (enforced upstream when building
+ *   Sunday–Saturday week, grace-period uploads (default 48h after Activity Date end),
+ *   seven distinct qualifying dates, daily minimum = weekly goal / 7 (enforced upstream when building
  *   countedSubmissionDateKeys), >= 3 qualifying videos, Zoom required only
  *   when a Zoom Meeting exists, XP amount owned by the PERFECT_WEEK rule (100).
  * Run: node airtable/automations/shooting-challenge/lib/overnight-perfect-week.test.js
@@ -115,12 +115,9 @@ test("Zoom meeting exists with attendance: passes", () => {
   assert.strictEqual(result.eligible, true);
 });
 
-test("backdated qualifying submission completes the week on recalculation", () => {
+test("backdated qualifying submission within grace completes the week on recalculation", () => {
   const missingTuesday = FULL_WEEK.filter((d) => d !== "2026-07-21");
   assert.strictEqual(evaluate({ countedSubmissionDateKeys: missingTuesday }).eligible, false);
-  // Same-day rule means a *backdated entry* cannot qualify; only a submission
-  // whose Activity Date and Submitted At agree does. Once such a record exists
-  // the recalculation sees the full set.
   const repaired = [...missingTuesday, "2026-07-21"];
   assert.strictEqual(evaluate({ countedSubmissionDateKeys: repaired }).eligible, true);
 });

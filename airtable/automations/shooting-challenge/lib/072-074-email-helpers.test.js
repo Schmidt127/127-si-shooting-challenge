@@ -29,8 +29,8 @@ function test(name, fn) {
   console.log(`PASS  ${name}`);
 }
 
-test("072 v4.5 owns escaped HTML and plain-text package rendering", () => {
-  assert.ok(/Version:\s*v4\.5/.test(s072));
+test("072 v4.6 owns escaped HTML and plain-text package rendering", () => {
+  assert.ok(/Version:\s*v4\.6/.test(s072));
   assert.ok(/function escapeHtml\(value\)/.test(s072));
   for (const entity of ["&amp;", "&lt;", "&gt;", "&quot;", "&#39;"]) {
     assert.ok(s072.includes(entity), `072 escapeHtml must emit ${entity}`);
@@ -50,7 +50,10 @@ test("072 remains Denver-safe and fails closed on reporting disagreement", () =>
   assert.ok(/Weekly XP disagreement/.test(s072));
   assert.ok(/WAS-linked active XP/.test(s072));
   assert.ok(/Unlinked canonical XP/.test(s072));
-  assert.ok(/Perfect Week Progress/.test(s072));
+  assert.ok(/Shooting Days Logged/.test(s072));
+  assert.ok(/Perfect Week Qualifying Days/.test(s072));
+  assert.ok(/generalShootingDays/.test(s072));
+  assert.ok(/perfectWeekQualifyingDays/.test(s072));
   assert.ok(/perfectWeekCountable/.test(s072));
   assert.ok(/buildPerfectWeekEmailCriteria/.test(s072));
   assert.ok(/Achievements/.test(s072));
@@ -74,7 +77,8 @@ test("074 v3.2 creates one canonical Hub handoff", () => {
 test("074 delegates delivery and delivery proof", () => {
   assert.ok(!/\bfetch\s*\(/.test(s074));
   assert.ok(/Only Automation 079 may send/.test(s074));
-  assert.ok(/canonicalDaysLogged/.test(s074));
+  assert.ok(/generalShootingDays/.test(s074));
+  assert.ok(/perfectWeekQualifyingDays/.test(s074));
   assert.ok(/videoSubmissions/.test(s074));
   assert.ok(/perfectWeekCriteria/.test(s074));
   assert.ok(/goalCompletionPercent/.test(s074));
