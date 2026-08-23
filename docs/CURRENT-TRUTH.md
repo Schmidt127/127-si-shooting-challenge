@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-23 (production-readiness cleanup — XP activity ledger, Perfect Week Testing repair, production-only doc reconciliation)  
+**Last verification (repo):** 2026-08-23 (autonomous QA production-readiness pass — harness, E2E baseline fallback, Perfect Week ledger live-tested)  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -210,7 +210,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Video XP | **113 / 114** (+ **013** VF create) | Partial evidence; broader proof open |
 | Shot milestones | **066** | Production **v3.8** |
 | Levels | **041 / 042** | **041 Production v5.1**; broader progression proof still open |
-| Perfect Week | **057 → 058 → 059** | **XP ledger repaired 2026-08-23** for enrollment `rec93mAfo5jKqP3g5` (39 active XP Events). Calendar award still **PENDING** until Days Logged=7 and Eligible?=true. See [2026-08-23-production-readiness-inventory.md](./audits/2026-08-23-production-readiness-inventory.md). |
+| Perfect Week | **057 → 058 → 059** | **XP ledger live-tested 2026-08-23** (39 active events on `rec93mAfo5jKqP3g5`). Calendar award still **PENDING** until Days Logged=7 and Eligible?=true. Public slug: `perfect-week-testing`. |
 | Zoom live attendance XP | **101** | Production **v6.7** (live script body). Meeting `recxtpMu4ONbdDD45` safe skip when reconciliation not needed. |
 | Zoom recording XP under slot 117 | Not live | Slot **117** is email Hub handoff (**v2.1 Live**) |
 

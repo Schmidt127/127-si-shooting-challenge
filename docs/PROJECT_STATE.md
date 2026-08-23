@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-08-23** (production-readiness cleanup — XP activity ledger, production-only reconciliation)
+Last updated: **2026-08-23** (autonomous QA production-readiness — harness, live reconciliation, web verification)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
