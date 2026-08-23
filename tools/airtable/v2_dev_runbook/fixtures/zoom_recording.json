@@ -1,0 +1,39 @@
+{
+  "domain": "zoom_recording",
+  "matrix_ids": ["J4", "J5", "J6"],
+  "source_key_pattern": "ZOOM_RECORDING|{meetingId}|{enrollmentId}",
+  "pre_test_state": {
+    "require": [
+      "C-025 schema + 117a installed in DEV (see ZOOM_RECORDING_CREDIT_DEV_INSTALL.md)",
+      "Homework Completion Satisfactory + Zoom Meeting + Enrollment",
+      "No live ZOOM_ATTEND_BASE for same meeting+enrollment when testing award path",
+      "117a ON in DEV for live smoke; 117b needs DEV Make webhook"
+    ],
+    "forbid": ["PROD paste of 117a/117b without Mike schedule", "PROD Make webhook"]
+  },
+  "records_to_create_shape": {
+    "Homework Completions": {
+      "Enrollment": ["{{enrollment}}"],
+      "Zoom Meeting": ["{{zoom_meeting}}"],
+      "Satisfactory?": true
+    }
+  },
+  "automation_expected": {
+    "J4": "ZOOM_RECORDING|… once; blocked if live exists; Config % of live",
+    "J5": "skipped_already_awarded",
+    "J6": "Approval email send once after Satisfactory"
+  },
+  "expected_output": {
+    "source_key": "ZOOM_RECORDING|{{zoom_meeting}}|{{enrollment}}",
+    "actionOut_rerun": "skipped_already_awarded",
+    "statusOut": "success|skipped"
+  },
+  "cleanup": [
+    "Leave 117a/117b OFF after smoke if Mike requests",
+    "Do not enable in PROD from this runbook"
+  ],
+  "rollback": [
+    "Soft-void recording XP if awarded against live attendance conflict"
+  ],
+  "evidence_location": "docs/v2/evidence/YYYY-MM-DD-J{n}-{enrollmentId}.md"
+}

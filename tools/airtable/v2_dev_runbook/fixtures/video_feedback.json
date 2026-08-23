@@ -1,0 +1,38 @@
+{
+  "domain": "video_feedback",
+  "matrix_ids": ["D1", "D2", "D3", "D4", "D5"],
+  "source_key_pattern": "VIDEO_SUBMISSION|{videoFeedbackId}",
+  "pre_test_state": {
+    "require": [
+      "Video upload on submission or C-020 Video scenario",
+      "Video Feedback row linked once before 114",
+      "Ready for XP Automation? for D3"
+    ]
+  },
+  "records_to_create_shape": {
+    "Video Feedback": {
+      "Enrollment": ["{{enrollment}}"],
+      "Ready for XP Automation?": true
+    }
+  },
+  "automation_expected": {
+    "D1": "Feedback row linked once",
+    "D2": "Base XP field set",
+    "D3": "VIDEO_SUBMISSION|{vfId} once",
+    "D4": "Steal-guard error; no reassignment",
+    "D5": "Update/repair same Event only"
+  },
+  "expected_output": {
+    "source_key": "VIDEO_SUBMISSION|{{video_feedback}}",
+    "xp_event_count_for_key": 1,
+    "steal_guard": "error_or_manual_review"
+  },
+  "cleanup": [
+    "Uncheck Ready for XP Automation? after pass",
+    "Retain Event for L1 battery if scheduled"
+  ],
+  "rollback": [
+    "If Event stolen: restore original VF link; escalate"
+  ],
+  "evidence_location": "docs/v2/evidence/YYYY-MM-DD-D{n}-{enrollmentId}.md"
+}
