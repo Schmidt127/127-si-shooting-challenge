@@ -186,6 +186,14 @@ Authoritative GitHub SCRIPT headers + [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) o
 | PKG-007 lifecycle proof | **needs live proof** — Schmidt packet |
 | Investigation | [`PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md`](../investigations/PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md) |
 
+### 0C.3 Video Feedback 073 contract test — 2026-08-23
+
+| Check | Result |
+|-------|--------|
+| Stale contract test expected 073 **v4.2** | **Corrected** — aligned to GitHub **073 v4.3** writeback + branded Hub payload contracts |
+| Production Video XP (113 v6.4 / 114 v6.1) | **Unchanged** — repository test/documentation only |
+| Email / Airtable | **No send or data change** |
+
 ### 0C.1 Autonomous QA — 2026-08-23 (post-XP-deletion)
 
 | Check | Result | Evidence |
@@ -445,6 +453,11 @@ inventory and Production-safe local configuration boundary; no live-system proof
 Execution matrix IDs advanced: PKG-037 — repository-only core-certification
 packet, offline mixed-XP contract, and stale operator-instruction corrections;
 no live-system proof, activation, or Production data claim.
+
+Execution matrix IDs advanced: PKG-007 — repository-only Video Feedback 073 v4.3
+writeback contract test alignment (`tests/video-feedback/video-feedback-writeback-complete-contract.test.js`);
+stale v4.2 version-header expectation updated to production-aligned v4.3 branded-payload
+regression; no automation script, Airtable data, email send, or Video XP logic changes.
 
 ### Recommended sequence
 
