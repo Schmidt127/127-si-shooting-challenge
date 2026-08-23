@@ -115,12 +115,9 @@ test("Zoom meeting exists with attendance: passes", () => {
   assert.strictEqual(result.eligible, true);
 });
 
-test("backdated qualifying submission completes the week on recalculation", () => {
+test("backdated submission within grace period can qualify on recalculation", () => {
   const missingTuesday = FULL_WEEK.filter((d) => d !== "2026-07-21");
   assert.strictEqual(evaluate({ countedSubmissionDateKeys: missingTuesday }).eligible, false);
-  // Same-day rule means a *backdated entry* cannot qualify; only a submission
-  // whose Activity Date and Submitted At agree does. Once such a record exists
-  // the recalculation sees the full set.
   const repaired = [...missingTuesday, "2026-07-21"];
   assert.strictEqual(evaluate({ countedSubmissionDateKeys: repaired }).eligible, true);
 });

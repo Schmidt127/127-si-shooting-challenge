@@ -3,6 +3,7 @@
  * Agent 4 — Perfect Week edge-case supplement (alongside overnight-perfect-week).
  * Product rules: Sun–Sat, seven distinct dates, daily min via upstream keys,
  * video min, Zoom only when meeting exists, homework required when configured,
+ * submission grace period enforced upstream via Perfect Week Countable formula,
  * no one-day bulk award, no duplicate unlock/XP.
  *
  * Test-override behavior is NOT implemented in v2-engine-contracts helpers;

@@ -29,8 +29,10 @@ function test(name, fn) {
   console.log(`PASS  ${name}`);
 }
 
-test("072 v4.5 owns escaped HTML and plain-text package rendering", () => {
-  assert.ok(/Version:\s*v4\.5/.test(s072));
+test("072 v4.6 owns escaped HTML and plain-text package rendering", () => {
+  assert.ok(/Version:\s*v4\.6/.test(s072));
+  assert.ok(/Shooting Days Logged/.test(s072));
+  assert.ok(/Perfect Week Qualifying Days/.test(s072));
   assert.ok(/function escapeHtml\(value\)/.test(s072));
   for (const entity of ["&amp;", "&lt;", "&gt;", "&quot;", "&#39;"]) {
     assert.ok(s072.includes(entity), `072 escapeHtml must emit ${entity}`);

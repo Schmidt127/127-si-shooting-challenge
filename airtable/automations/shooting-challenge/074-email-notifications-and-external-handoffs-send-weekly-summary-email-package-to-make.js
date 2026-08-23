@@ -418,12 +418,24 @@ async function main() {
   const daysLogged = firstFiniteNumber(
     prepared?.canonicalDaysLogged,
     prepared?.perfectWeekCriteria?.daysLogged,
+    prepared?.perfectWeekDaysLogged,
     prepared?.days,
+    rollupDaysLogged
+  );
+  const shootingDaysLogged = firstFiniteNumber(
+    prepared?.canonicalShootingDaysLogged,
+    prepared?.perfectWeekCriteria?.shootingDaysLogged,
+    prepared?.shootingDaysLogged,
     rollupDaysLogged
   );
   const daysLoggedDisplay = firstNonEmpty(
     prepared?.daysLoggedDisplay,
-    prepared?.perfectWeekCriteria?.daysLoggedDisplay
+    prepared?.perfectWeekCriteria?.daysLoggedDisplay,
+    prepared?.perfectWeekDaysDisplay
+  );
+  const shootingDaysDisplay = firstNonEmpty(
+    prepared?.shootingDaysDisplay,
+    prepared?.perfectWeekCriteria?.shootingDaysDisplay
   );
   const shots = firstFiniteNumber(prepared?.canonicalShots, prepared?.shots, rollupShots);
   const makes = firstFiniteNumber(prepared?.canonicalMakes, prepared?.makes);
@@ -487,6 +499,10 @@ async function main() {
     weekLabel,
     weekName: weekLabel,
     weekDateRange,
+    shootingDaysLogged,
+    shootingDaysDisplay,
+    perfectWeekDaysLogged: daysLogged,
+    perfectWeekDaysDisplay: daysLoggedDisplay,
     daysLogged,
     days: daysLogged,
     daysLoggedDisplay,

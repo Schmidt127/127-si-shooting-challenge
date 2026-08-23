@@ -28,6 +28,12 @@ IF(
 
 **Submitted Same Day?** compares Denver `Submitted At` to the same UTC Activity Date key.
 
+**Perfect Week grace period (2026-08-23):** `Perfect Week Submission Timing Eligible?` allows
+upload up to **N hours** after end of Activity Date (America/Denver). N defaults to 48 from
+Config `Perfect Week Submission Grace Hours`. Repository mirror:
+`lib/was-email-contracts/perfect-week-submission-timing.js`. Deploy plan:
+`docs/deploy-checklists/perfect-week-grace-period-2026-08-23.md`.
+
 ## Streak (Example Template)
 
 ```
@@ -65,6 +71,7 @@ IF({Attempts}, {Makes} / {Attempts}, BLANK())
 | Date | Table | Field | Notes |
 |------|-------|-------|-------|
 | 2026-08-16 | Submissions | Activity Date Key | UTC calendar date so midnight-UTC date-only values keep the entered day (not prior Denver day) |
+| 2026-08-23 | Submissions | Perfect Week timing | 48-hour grace after Activity Date (Denver); see deploy checklist |
 | 2026-08-16 | Submissions | Submitted Same Day? | Activity Date side uses UTC to match Activity Date Key |
 
 ## Review Process
