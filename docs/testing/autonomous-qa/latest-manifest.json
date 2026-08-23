@@ -1,6 +1,6 @@
 {
-  "run_id": "AUTONOMOUS_QA_20260823T145220",
-  "started_at": "2026-08-23T14:52:20.790Z",
+  "run_id": "AUTONOMOUS_QA_20260823T151321",
+  "started_at": "2026-08-23T15:13:21.121Z",
   "mode": "read_only",
   "base_id": "appn84sqPw03zEbTT",
   "created": [],
@@ -10,7 +10,7 @@
     {
       "enrollmentId": "rec93mAfo5jKqP3g5",
       "label": "perfect_week_testing",
-      "slug": "perfect-week",
+      "slug": "perfect-week-testing",
       "reconciliationExitCode": 0,
       "activeXpEvents": 39,
       "missingSubmissionXp": [],
@@ -22,15 +22,9 @@
       "label": "xavier_schmidt",
       "slug": "xavier-schmidt",
       "reconciliationExitCode": 0,
-      "activeXpEvents": 3,
-      "missingSubmissionXp": [
-        {
-          "type": "submission_xp",
-          "subId": "rece0krfrEqiUEBVu",
-          "sourceKey": "SUBMISSION_XP|rece0krfrEqiUEBVu"
-        }
-      ],
-      "pass": false,
+      "activeXpEvents": 4,
+      "missingSubmissionXp": [],
+      "pass": true,
       "artifact": "/opt/cursor/artifacts/autonomous-qa/reconcile-recCrNNAdVmQ4Y8fL.json"
     },
     {
@@ -38,20 +32,9 @@
       "label": "testing3_schmidt",
       "slug": "testing3-schmidt",
       "reconciliationExitCode": 0,
-      "activeXpEvents": 5,
-      "missingSubmissionXp": [
-        {
-          "type": "submission_xp",
-          "subId": "rec3zlR7xneAOatKh",
-          "sourceKey": "SUBMISSION_XP|rec3zlR7xneAOatKh"
-        },
-        {
-          "type": "submission_xp",
-          "subId": "recNqAXXzXAnac1GE",
-          "sourceKey": "SUBMISSION_XP|recNqAXXzXAnac1GE"
-        }
-      ],
-      "pass": false,
+      "activeXpEvents": 7,
+      "missingSubmissionXp": [],
+      "pass": true,
       "artifact": "/opt/cursor/artifacts/autonomous-qa/reconcile-recNu6fcBpF1GG3u5.json"
     },
     {
@@ -59,15 +42,9 @@
       "label": "curtis_schmidt",
       "slug": "curtis-schmidt",
       "reconciliationExitCode": 0,
-      "activeXpEvents": 7,
-      "missingSubmissionXp": [
-        {
-          "type": "submission_xp",
-          "subId": "recLD7Fb6ph0yovyq",
-          "sourceKey": "SUBMISSION_XP|recLD7Fb6ph0yovyq"
-        }
-      ],
-      "pass": false,
+      "activeXpEvents": 8,
+      "missingSubmissionXp": [],
+      "pass": true,
       "artifact": "/opt/cursor/artifacts/autonomous-qa/reconcile-reclc46bQM8Wx0qWP.json"
     },
     {
@@ -99,36 +76,36 @@
     },
     {
       "component": "XP reconciliation xavier_schmidt",
-      "current_state": "needs live proof",
+      "current_state": "live-tested",
       "test_method": "web/scripts/full-xp-reconciliation.mjs",
       "expected_result": "No counted submission missing canonical SUBMISSION_XP per full-xp-reconciliation.mjs",
-      "actual_result": "missing 1 submission XP row(s)",
+      "actual_result": "pass (4 active XP events)",
       "failure": null,
       "fix": null,
       "evidence": "/opt/cursor/artifacts/autonomous-qa/reconcile-recCrNNAdVmQ4Y8fL.json",
-      "final_status": "FINDING"
+      "final_status": "PASS"
     },
     {
       "component": "XP reconciliation testing3_schmidt",
-      "current_state": "needs live proof",
+      "current_state": "live-tested",
       "test_method": "web/scripts/full-xp-reconciliation.mjs",
       "expected_result": "No counted submission missing canonical SUBMISSION_XP per full-xp-reconciliation.mjs",
-      "actual_result": "missing 2 submission XP row(s)",
+      "actual_result": "pass (7 active XP events)",
       "failure": null,
       "fix": null,
       "evidence": "/opt/cursor/artifacts/autonomous-qa/reconcile-recNu6fcBpF1GG3u5.json",
-      "final_status": "FINDING"
+      "final_status": "PASS"
     },
     {
       "component": "XP reconciliation curtis_schmidt",
-      "current_state": "needs live proof",
+      "current_state": "live-tested",
       "test_method": "web/scripts/full-xp-reconciliation.mjs",
       "expected_result": "No counted submission missing canonical SUBMISSION_XP per full-xp-reconciliation.mjs",
-      "actual_result": "missing 1 submission XP row(s)",
+      "actual_result": "pass (8 active XP events)",
       "failure": null,
       "fix": null,
       "evidence": "/opt/cursor/artifacts/autonomous-qa/reconcile-reclc46bQM8Wx0qWP.json",
-      "final_status": "FINDING"
+      "final_status": "PASS"
     },
     {
       "component": "Perfect Week Testing ledger",
@@ -197,14 +174,36 @@
       "final_status": "PASS"
     },
     {
-      "component": "Web route https://www.fairfieldbasketballclub.com/shoot/athletes/perfect-week",
+      "component": "Web route https://www.fairfieldbasketballclub.com/shoot/athletes/perfect-week-testing",
       "current_state": "production",
       "test_method": "HTTP GET",
       "expected_result": "2xx/3xx within 15s",
       "actual_result": "status 200",
       "failure": null,
       "fix": null,
-      "evidence": "https://www.fairfieldbasketballclub.com/shoot/athletes/perfect-week",
+      "evidence": "https://www.fairfieldbasketballclub.com/shoot/athletes/perfect-week-testing",
+      "final_status": "PASS"
+    },
+    {
+      "component": "Web route https://www.fairfieldbasketballclub.com/shoot/athletes/testing3-schmidt",
+      "current_state": "production",
+      "test_method": "HTTP GET",
+      "expected_result": "2xx/3xx within 15s",
+      "actual_result": "status 200",
+      "failure": null,
+      "fix": null,
+      "evidence": "https://www.fairfieldbasketballclub.com/shoot/athletes/testing3-schmidt",
+      "final_status": "PASS"
+    },
+    {
+      "component": "Web route https://www.fairfieldbasketballclub.com/shoot/athletes/curtis-schmidt",
+      "current_state": "production",
+      "test_method": "HTTP GET",
+      "expected_result": "2xx/3xx within 15s",
+      "actual_result": "status 200",
+      "failure": null,
+      "fix": null,
+      "evidence": "https://www.fairfieldbasketballclub.com/shoot/athletes/curtis-schmidt",
       "final_status": "PASS"
     },
     {
@@ -237,7 +236,7 @@
       "actual_result": "pass",
       "failure": null,
       "fix": null,
-      "evidence": "PASS  upload-make-lambda-response (18ms)\nPASS  c025-zoom-recording-credit (19ms)\nPASS  tools/testing node --test (115/117/verifier) (92ms)\nPASS  validate-v2-release-readiness (28ms)\nPASS  challenge-year-engine (48ms)\nPASS  season-launch-control (112ms)\n\nAgent 4 suite: 29 passed, 0 failed, 29 total",
+      "evidence": "PASS  upload-make-lambda-response (19ms)\nPASS  c025-zoom-recording-credit (20ms)\nPASS  tools/testing node --test (115/117/verifier) (95ms)\nPASS  validate-v2-release-readiness (28ms)\nPASS  challenge-year-engine (49ms)\nPASS  season-launch-control (113ms)\n\nAgent 4 suite: 29 passed, 0 failed, 29 total",
       "final_status": "PASS"
     },
     {
@@ -270,7 +269,7 @@
       "actual_result": "pass",
       "failure": null,
       "fix": null,
-      "evidence": "...................................................................................................................................................\n----------------------------------------------------------------------\nRan 147 tests in 0.136s\n\nOK",
+      "evidence": "...................................................................................................................................................\n----------------------------------------------------------------------\nRan 147 tests in 0.138s\n\nOK",
       "final_status": "PASS"
     },
     {
@@ -281,7 +280,7 @@
       "actual_result": "pass",
       "failure": null,
       "fix": null,
-      "evidence": "........................................................................{\"event\": \"season_fallback_used\", \"environment\": \"Production\", \"seasonSlug\": \"2026-2027\", \"enrollmentId\": \"recEnroll2027\", \"programInstanceId\": \"recPi202627\"}\n...................................................................\n----------------------------------------------------------------------\nRan 139 tests in 0.036s\n\nOK",
+      "evidence": "........................................................................{\"event\": \"season_fallback_used\", \"environment\": \"Production\", \"seasonSlug\": \"2026-2027\", \"enrollmentId\": \"recEnroll2027\", \"programInstanceId\": \"recPi202627\"}\n...................................................................\n----------------------------------------------------------------------\nRan 139 tests in 0.037s\n\nOK",
       "final_status": "PASS"
     },
     {
@@ -292,7 +291,7 @@
       "actual_result": "pass",
       "failure": null,
       "fix": null,
-      "evidence": " ✓ lib/formatters/video.test.ts (7 tests) 3ms\n ✓ lib/formatters/external-media.test.ts (4 tests) 2ms\n ✓ components/levels/levels-orientation.test.ts (2 tests) 2ms\n\n Test Files  33 passed (33)\n      Tests  260 passed (260)\n   Start at  14:52:23\n   Duration  1.97s (transform 530ms, setup 0ms, collect 1.02s, tests 254ms, environment 4ms, prepare 1.75s)",
+      "evidence": " ✓ lib/airtable/errors.test.ts (5 tests) 3ms\n ✓ lib/game-manual/config.test.ts (2 tests) 2ms\n ✓ components/public-display/public-display-refresh.test.ts (1 test) 1ms\n\n Test Files  33 passed (33)\n      Tests  260 passed (260)\n   Start at  15:13:23\n   Duration  2.03s (transform 486ms, setup 0ms, collect 1.00s, tests 257ms, environment 6ms, prepare 1.82s)",
       "final_status": "PASS"
     },
     {
@@ -347,7 +346,7 @@
       "actual_result": "pass",
       "failure": null,
       "fix": null,
-      "evidence": "PASS  sc-007-idempotency-proof-pack (25ms)\nPASS  sc-008-failure-path-pack (662ms)\nPASS  upload-make-lambda-response (20ms)\nPASS  agent4-xp-dedupe-matrix (27ms)\nPASS  072-074-email-helpers (19ms)\nPASS  expected-actual-offline (71ms)\n\nSC-007/008 suite: 6 passed, 0 failed, 6 total",
+      "evidence": "PASS  sc-008-failure-path-pack (655ms)\nPASS  upload-make-lambda-response (22ms)\nPASS  agent4-xp-dedupe-matrix (26ms)\nPASS  072-074-email-helpers (18ms)\nPASS  072-weekly-xp-reconciliation (22ms)\nPASS  expected-actual-offline (70ms)\n\nSC-007/008 suite: 7 passed, 0 failed, 7 total",
       "final_status": "PASS"
     }
   ],
@@ -356,9 +355,9 @@
       "name": "agent4-suite",
       "command": "node tools/testing/run-agent4-suite.js",
       "exitCode": 0,
-      "durationMs": 886,
+      "durationMs": 909,
       "pass": true,
-      "outputTail": "PASS  upload-make-lambda-response (18ms)\nPASS  c025-zoom-recording-credit (19ms)\nPASS  tools/testing node --test (115/117/verifier) (92ms)\nPASS  validate-v2-release-readiness (28ms)\nPASS  challenge-year-engine (48ms)\nPASS  season-launch-control (112ms)\n\nAgent 4 suite: 29 passed, 0 failed, 29 total"
+      "outputTail": "PASS  upload-make-lambda-response (19ms)\nPASS  c025-zoom-recording-credit (20ms)\nPASS  tools/testing node --test (115/117/verifier) (95ms)\nPASS  validate-v2-release-readiness (28ms)\nPASS  challenge-year-engine (49ms)\nPASS  season-launch-control (113ms)\n\nAgent 4 suite: 29 passed, 0 failed, 29 total"
     },
     {
       "name": "validate-v2-release-readiness",
@@ -372,7 +371,7 @@
       "name": "audit-source-of-truth",
       "command": "node tools/testing/audit-source-of-truth.mjs",
       "exitCode": 0,
-      "durationMs": 109,
+      "durationMs": 111,
       "pass": true,
       "outputTail": "PASS source-of-truth audit: active references are reconciled"
     },
@@ -380,31 +379,31 @@
       "name": "python-airtable-tests",
       "command": "python3 -m unittest discover -s tools/airtable/tests",
       "exitCode": 0,
-      "durationMs": 653,
+      "durationMs": 667,
       "pass": true,
-      "outputTail": "...................................................................................................................................................\n----------------------------------------------------------------------\nRan 147 tests in 0.136s\n\nOK"
+      "outputTail": "...................................................................................................................................................\n----------------------------------------------------------------------\nRan 147 tests in 0.138s\n\nOK"
     },
     {
       "name": "lambda-upload-tests",
       "command": "python3 -m unittest discover -s lambda/upload-asset/tests",
       "exitCode": 0,
-      "durationMs": 631,
+      "durationMs": 646,
       "pass": true,
-      "outputTail": "........................................................................{\"event\": \"season_fallback_used\", \"environment\": \"Production\", \"seasonSlug\": \"2026-2027\", \"enrollmentId\": \"recEnroll2027\", \"programInstanceId\": \"recPi202627\"}\n...................................................................\n----------------------------------------------------------------------\nRan 139 tests in 0.036s\n\nOK"
+      "outputTail": "........................................................................{\"event\": \"season_fallback_used\", \"environment\": \"Production\", \"seasonSlug\": \"2026-2027\", \"enrollmentId\": \"recEnroll2027\", \"programInstanceId\": \"recPi202627\"}\n...................................................................\n----------------------------------------------------------------------\nRan 139 tests in 0.037s\n\nOK"
     },
     {
       "name": "web-test",
       "command": "npm test",
       "exitCode": 0,
-      "durationMs": 2326,
+      "durationMs": 2402,
       "pass": true,
-      "outputTail": " ✓ lib/formatters/video.test.ts (7 tests) 3ms\n ✓ lib/formatters/external-media.test.ts (4 tests) 2ms\n ✓ components/levels/levels-orientation.test.ts (2 tests) 2ms\n\n Test Files  33 passed (33)\n      Tests  260 passed (260)\n   Start at  14:52:23\n   Duration  1.97s (transform 530ms, setup 0ms, collect 1.02s, tests 254ms, environment 4ms, prepare 1.75s)"
+      "outputTail": " ✓ lib/airtable/errors.test.ts (5 tests) 3ms\n ✓ lib/game-manual/config.test.ts (2 tests) 2ms\n ✓ components/public-display/public-display-refresh.test.ts (1 test) 1ms\n\n Test Files  33 passed (33)\n      Tests  260 passed (260)\n   Start at  15:13:23\n   Duration  2.03s (transform 486ms, setup 0ms, collect 1.00s, tests 257ms, environment 6ms, prepare 1.82s)"
     },
     {
       "name": "web-typecheck",
       "command": "npm run typecheck",
       "exitCode": 0,
-      "durationMs": 1388,
+      "durationMs": 1422,
       "pass": true,
       "outputTail": "> 127-si-shooting-challenge-web@0.1.0 typecheck\n> tsc --noEmit"
     },
@@ -412,7 +411,7 @@
       "name": "web-lint",
       "command": "npm run lint",
       "exitCode": 0,
-      "durationMs": 4620,
+      "durationMs": 4534,
       "pass": true,
       "outputTail": "> 127-si-shooting-challenge-web@0.1.0 lint\n> eslint ."
     },
@@ -420,7 +419,7 @@
       "name": "web-build",
       "command": "npm run build",
       "exitCode": 0,
-      "durationMs": 4386,
+      "durationMs": 3645,
       "pass": true,
       "outputTail": "├ ○ /zoom-meetings               5m      1y\n└ ƒ /zoom-meetings/[id]\n\n\nƒ Proxy (Middleware)\n\n○  (Static)   prerendered as static content\nƒ  (Dynamic)  server-rendered on demand"
     },
@@ -428,7 +427,7 @@
       "name": "e2e-matrix",
       "command": "node tools/testing/run_e2e_matrix.mjs --out /opt/cursor/artifacts/autonomous-qa/E2E-MATRIX-RESULTS.json",
       "exitCode": 0,
-      "durationMs": 5416,
+      "durationMs": 2317,
       "pass": true,
       "outputTail": "    \"I1:PASS\",\n    \"I6:BLOCKED\",\n    \"J1:NOT_TESTED\",\n    \"L1:PASS\",\n    \"L3:BLOCKED\",\n    \"SC006-WRITEBACK:PASS\"\n  ]\n}"
     },
@@ -436,17 +435,17 @@
       "name": "sc007-008",
       "command": "node tools/testing/sc-007-008/run-suite.js",
       "exitCode": 0,
-      "durationMs": 848,
+      "durationMs": 859,
       "pass": true,
-      "outputTail": "PASS  sc-007-idempotency-proof-pack (25ms)\nPASS  sc-008-failure-path-pack (662ms)\nPASS  upload-make-lambda-response (20ms)\nPASS  agent4-xp-dedupe-matrix (27ms)\nPASS  072-074-email-helpers (19ms)\nPASS  expected-actual-offline (71ms)\n\nSC-007/008 suite: 6 passed, 0 failed, 6 total"
+      "outputTail": "PASS  sc-008-failure-path-pack (655ms)\nPASS  upload-make-lambda-response (22ms)\nPASS  agent4-xp-dedupe-matrix (26ms)\nPASS  072-074-email-helpers (18ms)\nPASS  072-weekly-xp-reconciliation (22ms)\nPASS  expected-actual-offline (70ms)\n\nSC-007/008 suite: 7 passed, 0 failed, 7 total"
     }
   ],
-  "completed_at": "2026-08-23T14:52:55.262Z",
+  "completed_at": "2026-08-23T15:13:52.809Z",
   "summary": {
-    "total": 24,
-    "pass": 20,
+    "total": 26,
+    "pass": 25,
     "fail": 0,
-    "finding": 3,
+    "finding": 0,
     "blocked": 0,
     "not_tested": 1
   }

@@ -55,7 +55,7 @@ Reconciled against [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md), [`PROJECT_STATE.md`
 | **Shot milestones** | `live-tested` | **066 v3.8**; Perfect Week Testing repair proved milestone XP path |
 | **Perfect Week** | `needs live proof` | Ledger repair complete (39 events on `rec93mAfo5jKqP3g5`); **award certification pending** |
 | **Weekly Athlete Summary** | `live-tested` | WAS create/link path partially proven; scheduler positive arm `needs live proof` |
-| **Weekly email** | `needs live proof` | Hub path **072 v4.2 → 074 v3.1 → 079 v2.5 → Resend**; positive send `needs live proof` |
+| **Weekly email** | `needs live proof` | Hub path **072 v4.3 → 074 v3.1 → 079 v2.5 → Resend**; WAS `reczxTIpVI8ZJLex0` settled at 1260 XP; positive send blocked until 072 v4.3 paste |
 | **Levels and gates** | `live-tested` | 041 **v5.1** / 042 progression partially proven; broader gate-clear `needs live proof` |
 | **Leaderboard / standings** | `repository-ready` | Adapter hardening merged; Production verification `needs live proof` |
 | **Public athlete profile** | `repository-ready` | XP ledger merged/deployed; live profile proof partial |
@@ -96,7 +96,7 @@ Authoritative GitHub SCRIPT headers + [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) o
 | **070a** | v4.7 | retired / off | Homework upload Make — **off by design** except controlled windows |
 | **070b** | v4.7 | live-tested | Video upload → Make → Lambda |
 | **070c** | v1.1 | live-tested | Async writeback verify |
-| **072** | **v4.2** | live-tested | Weekly summary email package |
+| **072** | **v4.3** | repository-ready | Weekly summary email package; WAS-linked XP reconciliation |
 | **074** | **v3.1** | live-tested | Weekly summary Hub handoff |
 | **076** | v8.11 | live-tested | Daily submission Hub queue create |
 | **077** | v5.0 (archive) | **retired** | Deleted from Production; GitHub archive only |

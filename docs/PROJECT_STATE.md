@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-08-23** (autonomous QA production-readiness — harness, live reconciliation, web verification)
+Last updated: **2026-08-23** (autonomous QA continuation — 072 v4.3, SUBMISSION_XP repairs, reconciliation PASS)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
@@ -37,7 +37,13 @@ Last updated: **2026-08-23** (autonomous QA production-readiness — harness, li
 
 **066 overlay (Mike 2026-08-19):** Production Automation 066 is **v3.8**. Historical v3.3 failure / v3.4–v3.5 proofs remain history.
 
-**010 overlay (final 2026-08-21):** Production Automation 010 is **v10.11** (run history `version: "v10.11"`). The 2026-08-19 **v10.10** note and midday Automations Code-column **v10.10** snapshot are **historical**. PKG-006R v10.9 lifecycle proof (2026-08-15) remains historical.
+**010 overlay (2026-08-23 API read):** Production Automations Code column = **v10.10**. GitHub = **v10.12**. Paste needed per [`deploy-checklists/010-v10.12-formula-settlement-grace.md`](./deploy-checklists/010-v10.12-formula-settlement-grace.md). Prior v10.11 run-history note remains historical.
+
+**057 overlay (2026-08-23 API read):** Production Automations Code column = **v1.8**. GitHub = **v1.9**. Paste needed per [`deploy-checklists/057-v1.9-goal-settlement-fix.md`](./deploy-checklists/057-v1.9-goal-settlement-fix.md).
+
+**072 overlay (2026-08-23):** GitHub **v4.3** fixes weekly XP false disagreement on WAS `reczxTIpVI8ZJLex0`. Production still **v4.2** until paste. Checklist: [`deploy-checklists/072-v4.3-was-linked-xp-reconciliation.md`](./deploy-checklists/072-v4.3-was-linked-xp-reconciliation.md).
+
+**Submission XP repair (2026-08-23):** Authorized idempotent repair created `SUBMISSION_XP` for submissions `rece0krfrEqiUEBVu`, `rec3zlR7xneAOatKh`, `recNqAXXzXAnac1GE`, `recLD7Fb6ph0yovyq` (XP Events `recWV95wEywdDJRO2`, `rec4M2QFrJFhSnvSG`, `recwWLcTOnTBQAwHo`, `recObGIdFNx7bfTMp`). Full reconciliation PASS on Xavier, Testing3, Curtis enrollments.
 
 **101 overlay (final 2026-08-21):** Production Automation 101 is **v6.7** (live script body). Midday Automations Code-column **v6.6** snapshot is **historical / superseded**. Meeting `recxtpMu4ONbdDD45` safely skipped when reconciliation not needed.
 

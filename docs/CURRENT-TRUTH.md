@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-23 (autonomous QA production-readiness pass — harness, E2E baseline fallback, Perfect Week ledger live-tested)  
+**Last verification (repo):** 2026-08-23 (autonomous QA continuation — 072 v4.3, SUBMISSION_XP repairs, 25/26 PASS)  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -159,17 +159,17 @@ Do **not** treat older Automations-table Code-column snapshots as stronger than 
 
 | # | Production (final verified) | GitHub | Status | Notes |
 |---|-----------------------------|--------|--------|-------|
-| **010** | **v10.12** (GitHub) | v10.12 | Live / paste verify | GitHub v10.12 settlement grace; prior run history v10.11 |
+| **010** | **v10.10** (Automations Code 2026-08-23) | v10.12 | Live / **paste needed** | GitHub v10.12 settlement grace; prod Code column still v10.10 |
 | **020** | **v3.7** | v3.7 | Live | |
 | **033** | **v4.4** | v4.4 | Live | |
 | **041** | **v5.1** | v5.1 | Live | Optional inputs only |
-| **057** | **v1.9** (GitHub) | 1.9 | Live / paste verify | Perfect Week goal settlement uses season lookup |
+| **057** | **v1.8** (Automations Code 2026-08-23) | 1.9 | Live / **paste needed** | GitHub v1.9 goal settlement; prod Code column still v1.8 |
 | **058** | **v1.3** | 1.3 | Live | Unlock only after Eligible + Ready |
 | **059** | **v3.6** | v3.6 | Live | |
 | **064** | **Production-verified current live** | v12.2 in repo | Live | Do not invent a new version string |
 | **065** | **v10.2** | v10.2 | Live | |
 | **066** | **v3.8** | v3.8 | Live | |
-| **072** | **v4.2** (GitHub) | v4.2 | Live / paste verify | Weekly summary email package |
+| **072** | **v4.2** (prod) | **v4.3** | Live / **paste needed** | v4.3 fixes WAS weekly XP false disagreement (`reczxTIpVI8ZJLex0`); see [`deploy-checklists/072-v4.3-was-linked-xp-reconciliation.md`](./deploy-checklists/072-v4.3-was-linked-xp-reconciliation.md) |
 | **074** | **v3.1** (GitHub) | v3.1 | Live / paste verify | Weekly summary Hub handoff |
 | **070a** | **v4.7** | v4.7 | **Off** by design | Homework upload Make path |
 | **070b** | **v4.7** | v4.7 | Live | |
@@ -240,7 +240,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Controlled path through WAS / homework | Path evidence 2026-08-16 |
 | Full Perfect Week award proof | **PENDING / calendar-blocked** — not ready, not awarded. XP ledger repair complete 2026-08-23. See [2026-08-21-perfect-week-test-prep-report.md](./deploy-checklists/2026-08-21-perfect-week-test-prep-report.md) and [2026-08-23-production-readiness-inventory.md](./audits/2026-08-23-production-readiness-inventory.md) |
 | Required order | **057 → 058 → 059** only after Eligible?=1 and Days Logged=7 |
-| Verified status (2026-08-23) | Enrollment `rec93mAfo5jKqP3g5`: **39 active XP Events** after authorized repair (5 Submission Base + 5 shot milestones + prior events). Homework/video skipped per contract. Live re-read requires Production API token. |
+| Weekly XP disagreement (`reczxTIpVI8ZJLex0`) | **Root cause identified 2026-08-23:** shot milestone XP (+235) was active on Enrollment+Week but not yet linked on WAS when 072 v4.2 ran; rollup=1025 matched linked XP, not all canonical XP (1260). WAS now settled (1260/40 events). **072 v4.3** in GitHub compares rollup to WAS-linked XP and surfaces unlinked canonical XP explicitly. Email should send after Mike pastes v4.3 and re-arms build. |
 | Authority | Completion Master + Perfect Week prep report + Perfect Week testing docs under `docs/testing/perfect-week/` |
 
 ---
@@ -268,10 +268,12 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - Tremendous sandbox validation
 - Lambda season CodeOnly deploy (optional follow-ups open)
 - Repository integrity + PII redaction pass (this audit)
+- **2026-08-23 autonomous QA continuation:** SUBMISSION_XP repairs (4 submissions); 072 v4.3 root-cause fix for WAS `reczxTIpVI8ZJLex0`; full XP reconciliation PASS on all four Schmidt test enrollments; autonomous QA **25 PASS / 0 FINDING**
 
 ### Pending / needs live proof
 
-- Perfect Week end-to-end award
+- **072 v4.3**, **010 v10.12**, **057 v1.9** — Mike paste from GitHub (Automations Code column lags: 072 v4.2, 010 v10.10, 057 v1.8 as of 2026-08-23 API read)
+- Weekly email positive send after 072 paste (`reczxTIpVI8ZJLex0` has `Build Weekly Email Now?=true`; WAS settled at 1260 XP)
 - Broader progression / standings certification packages
 - Automation version inventory rows still UNKNOWN in Airtable UI
 - Optional 066 OMNI sandbox confirm (K-H1)

@@ -15,18 +15,28 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   rows skipped (not review-eligible / zero XP). Script:
   `tools/testing/repair_perfect_week_testing.mjs`. Evidence:
   `/opt/cursor/artifacts/POST-REPAIR-REPORT-rec93mAfo5jKqP3g5.md`.
+- **072 v4.3 — WAS-linked XP reconciliation (2026-08-23)** — Weekly email build compares
+  rollup to WAS-linked active XP only; surfaces unlinked canonical XP before misleading
+  disagreement. Paste checklist:
+  `docs/deploy-checklists/072-v4.3-was-linked-xp-reconciliation.md`. Offline:
+  `node tools/testing/tests/test_072_weekly_xp_reconciliation.mjs`.
+- **Schmidt SUBMISSION_XP repair (2026-08-23)** — Four missing submission XP rows created
+  idempotently (Xavier, Testing3×2, Curtis). Script:
+  `tools/testing/repair_missing_submission_xp.mjs`.
 
 ### Web
 
 #### Changed
-<<<<<<< HEAD
-=======
+- **Autonomous QA continuation (2026-08-23)** — **072 v4.3** WAS-linked XP validation
+  (fixes false disagreement on WAS `reczxTIpVI8ZJLex0`). Authorized
+  `SUBMISSION_XP` repair for four Schmidt test submissions via
+  `tools/testing/repair_missing_submission_xp.mjs`. Autonomous QA **25 PASS /
+  0 FINDING**. Paste still needed: **010 v10.12**, **057 v1.9**, **072 v4.3**.
 - **Production-readiness cleanup (2026-08-23)** — Reconciled `CURRENT-TRUTH.md`,
   `PROJECT_STATE.md`, and `AUTOMATION_VERSION_INVENTORY.md` for production-only
   operation (DEV base retired). Inventory:
   `docs/audits/2026-08-23-production-readiness-inventory.md`. Validation:
   29/29 agent4 suites, 260 web tests, typecheck, lint, build PASS.
->>>>>>> cursor/production-readiness-cleanup-1079
 - **Public athlete XP activity ledger (2026-08-23)** — Profile activity uses enrollment-scoped
   XP loader (up to 200 events), **XP Activity Date** for display, Load more pagination, and
   dashboard truncation notice (25 vs full ledger). Tests in `public-athlete-activity.test.ts`.

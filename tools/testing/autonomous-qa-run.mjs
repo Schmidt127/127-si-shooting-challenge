@@ -35,7 +35,7 @@ const CLEANUP = process.argv.includes("--cleanup");
 const DRY_RUN = !LIVE_CREATE && !CLEANUP;
 
 const ENROLLMENT_TARGETS = [
-  { id: "rec93mAfo5jKqP3g5", label: "perfect_week_testing", slug: "perfect-week" },
+  { id: "rec93mAfo5jKqP3g5", label: "perfect_week_testing", slug: "perfect-week-testing" },
   { id: "recCrNNAdVmQ4Y8fL", label: "xavier_schmidt", slug: "xavier-schmidt" },
   { id: "recNu6fcBpF1GG3u5", label: "testing3_schmidt", slug: "testing3-schmidt" },
   { id: "reclc46bQM8Wx0qWP", label: "curtis_schmidt", slug: "curtis-schmidt" },
@@ -47,7 +47,9 @@ const WEB_ROUTES = [
   "https://www.fairfieldbasketballclub.com/shoot/dashboard",
   "https://www.fairfieldbasketballclub.com/shoot/dashboard/preview",
   "https://www.fairfieldbasketballclub.com/shoot/athletes/xavier-schmidt",
-  "https://www.fairfieldbasketballclub.com/shoot/athletes/perfect-week",
+  "https://www.fairfieldbasketballclub.com/shoot/athletes/perfect-week-testing",
+  "https://www.fairfieldbasketballclub.com/shoot/athletes/testing3-schmidt",
+  "https://www.fairfieldbasketballclub.com/shoot/athletes/curtis-schmidt",
   "https://www.fairfieldbasketballclub.com/shoot/leaderboard",
 ];
 
