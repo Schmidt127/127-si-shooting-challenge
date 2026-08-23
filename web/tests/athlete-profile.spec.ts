@@ -20,6 +20,7 @@ test.describe("public athlete profiles", () => {
     await expect(page.getByTestId("shooting-stat-line")).toBeVisible();
     await expect(page.getByTestId("progression-panel")).toBeVisible();
     await expect(page.getByTestId("streak-section")).toBeVisible();
+    await expect(page.getByTestId("xp-activity-skeleton").or(page.getByTestId("xp-activity-table")).or(page.getByTestId("xp-activity-error"))).toBeVisible();
     await expect(page.getByTestId("recent-activity")).toBeVisible();
     await expect(page.getByTestId("weekly-performance")).toBeVisible();
     await expect(page.getByTestId("achievement-collection")).toBeVisible();

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 
 import { AchievementCollection } from "@/components/athlete/achievement-collection";
 import { PerformanceSnapshot } from "@/components/athlete/performance-snapshot";
@@ -7,6 +8,10 @@ import { ProgressionPanel } from "@/components/athlete/progression-panel";
 import { RecentActivityLog } from "@/components/athlete/recent-activity-log";
 import { ShootingStatLine } from "@/components/athlete/shooting-stat-line";
 import { StreakSection } from "@/components/athlete/streak-section";
+import {
+  XpActivitySection,
+  XpActivitySkeleton,
+} from "@/components/athlete/xp-activity-section";
 import { WeeklyPerformance } from "@/components/athlete/weekly-performance";
 import { AmbientPage } from "@/components/catalog/ambient-page";
 import { SiteContainer } from "@/components/site/site-container";
@@ -28,6 +33,9 @@ export function AthleteProfileView({ data }: AthleteProfileViewProps) {
         <ShootingStatLine shooting={data.shooting} />
         <ProgressionPanel progression={data.progression} />
         <StreakSection streaks={data.streaks} streakAchievements={streakAchievements} />
+        <Suspense fallback={<XpActivitySkeleton />}>
+          <XpActivitySection slug={data.identity.slug} />
+        </Suspense>
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-10">
           <RecentActivityLog items={data.recentActivity} />
           <WeeklyPerformance weeks={data.weekly} />

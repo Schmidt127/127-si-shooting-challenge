@@ -102,6 +102,8 @@ export type AirtableSort = {
   direction?: "asc" | "desc";
 };
 
+export const AIRTABLE_REQUEST_TIMEOUT_MS = 8_000;
+
 export type AirtableListParams = {
   tableName: string;
   view?: string;
@@ -110,6 +112,8 @@ export type AirtableListParams = {
   fields?: string[];
   sort?: AirtableSort[];
   revalidateSeconds?: number;
+  /** When true, bypass Next fetch cache (errors must not be cached as data). */
+  noStore?: boolean;
 };
 
 type AirtableListResponse<TFields extends Record<string, unknown>> = {
@@ -176,7 +180,10 @@ export async function listAirtableRecordsForBase<TFields extends Record<string, 
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      next: { revalidate: params.revalidateSeconds ?? 60 },
+      signal: AbortSignal.timeout(AIRTABLE_REQUEST_TIMEOUT_MS),
+      ...(params.noStore
+        ? { cache: "no-store" as const }
+        : { next: { revalidate: params.revalidateSeconds ?? 60 } }),
     });
 
     if (!response.ok) {

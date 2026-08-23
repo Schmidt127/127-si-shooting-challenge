@@ -2,6 +2,8 @@
  * Public athlete profile loader — Airtable-backed, privacy-safe.
  */
 
+import { cache } from "react";
+
 import { fetchPublicAthleteProfileBySlug } from "@/lib/airtable/queries";
 import {
   isValidPublicSlug,
@@ -18,11 +20,7 @@ export type AthleteProfileLoadResult =
 
 export { normalizeProfileSlug, isValidPublicSlug };
 
-/**
- * Resolve a public athlete profile by slug.
- * Missing, disabled, inactive, invalid, and duplicate slugs → not_found.
- */
-export async function loadAthleteProfileResult(
+async function resolveAthleteProfileResult(
   slug: string,
 ): Promise<AthleteProfileLoadResult> {
   const cleaned = normalizeProfileSlug(slug);
@@ -44,6 +42,12 @@ export async function loadAthleteProfileResult(
     };
   }
 }
+
+/**
+ * Resolve a public athlete profile by slug.
+ * Wrapped in React cache so metadata + page rendering deduplicate per request.
+ */
+export const loadAthleteProfileResult = cache(resolveAthleteProfileResult);
 
 export async function loadAthleteProfile(
   slug: string,
