@@ -1,6 +1,6 @@
 # Video Feedback XP — Production Schmidt Test Packet
 
-**Status:** **Lifecycle proof complete 2026-08-23** — autonomous run `AUTONOMOUS_VIDEO_QA_20260823_164549` (Testing3 Schmidt). Report: [`PKG-007_VIDEO_XP_PROOF_FINAL_REPORT.md`](../testing/autonomous-qa/PKG-007_VIDEO_XP_PROOF_FINAL_REPORT.md). Native trigger attestation and 073 OFF UI check remain open.
+**Status:** **Lifecycle proof complete 2026-08-23** — autonomous run `AUTONOMOUS_VIDEO_QA_20260823_164549` (Testing3 Schmidt). Report: [`PKG-007_VIDEO_XP_PROOF_FINAL_REPORT.md`](../testing/autonomous-qa/PKG-007_VIDEO_XP_PROOF_FINAL_REPORT.md). **Parent email proof complete 2026-08-23** — autonomous run `AUTONOMOUS_VIDEO_EMAIL_QA_20260823_204900` (073 → 079 → Hub → Resend; allowlisted Schmidt test recipient only). Native trigger attestation remains open for XP-only runs that keep 073 OFF.
 **PKG-006R / PKG-036 locks:** **Released 2026-08-15** — no longer block paste or controlled testing. See [`PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md`](../investigations/PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md).
 **Scope:** `013 → 113 → 114 → rollups → 041 → 042`
 **Production base:** `appn84sqPw03zEbTT`
@@ -48,7 +48,7 @@ mismatch is a stop condition; do not “fix” it in this packet.
 
 | Table | Required fields, exact type, and runtime ownership |
 |---|---|
-| `Video Feedback` | `Feedback Posted?`, `Do Not Award XP?`, `Active?`, and `Ready for XP Automation?` are writable checkboxes. `Coach Feedback` is multiline text. `Enrollment` and `Submission` are `multipleRecordLinks` configured as single-preferred, but each selected record must contain exactly one link. `XP Events` is a link (one canonical event per Video Feedback). `Base XP Awarded` is a writable number; `Total Video XP Awarded` is a read-only formula. `Award Status` is writable `singleSelect` with exactly `Pending`, `Awarded`, and `Do Not Award`. `Video Feedback Workflow Status` is writable `singleSelect` and must include `Ready for XP` if 113 writes it. `Reviewed By` and `Reviewed At` are optional writable review metadata. |
+| `Video Feedback` | `Feedback Posted?`, `Do Not Award XP?`, `Active?`, and `Ready for XP Automation?` are writable checkboxes. `Coach Feedback` is multiline text. `Enrollment` and `Submission` are `multipleRecordLinks` configured as single-preferred, but each selected record must contain exactly one link. `Submission Asset` (canonical video asset link) is required for 073. `Video Feedback Key` is writable single-line text; 073 requires `VIDEO_FEEDBACK|{linked Submission Asset record ID}` (013 sets this in normal intake). `Parent Feedback Ready?`, `Parent Feedback Sent?`, `Test Mode?`, and parent delivery writeback fields are required for controlled email tests. `XP Events` is a link (one canonical event per Video Feedback). `Base XP Awarded` is a writable number; `Total Video XP Awarded` is a read-only formula. `Award Status` is writable `singleSelect` with exactly `Pending`, `Awarded`, and `Do Not Award`. `Video Feedback Workflow Status` is writable `singleSelect` and must include `Ready for XP` if 113 writes it. `Reviewed By` and `Reviewed At` are optional writable review metadata. |
 | `XP Reward Rules` | `Active?` checkbox, `Rule Key` single-line text, and `XP Amount` number. Exactly one active record has `Rule Key = VIDEO_SUBMISSION`; record its ID and positive amount. `Reward Rule` is display-only for 113 matching. |
 | `Submissions` | `Enrollment` and `Week` are single-preferred record links and must each contain exactly one link. `Activity Date` is a read-only input date and must be present and not future-dated. `Weekly Athlete Summary` is an optional source link; when used it must contain exactly one canonical summary. |
 | `Enrollments` | `Active?` checkbox must be checked. The selected record must be the sole Video Feedback/Submission Enrollment. |
@@ -134,6 +134,41 @@ Production trigger state or ON/OFF status.
 9. Record the settled lifetime value and 041 signature before/after. Allow 041's normal scheduled pass (or Mike's explicit controlled action) to queue the enrollment. Verify `Level Recalc Needed? = checked` before 042 consumes it.
 10. Allow 042 to consume the queue. Verify it alone updates/retains Current Level, Next Level, Level Gate Rule, and Level Status, then clears `Level Recalc Needed?`. Verify 043 remains absent/off.
 
+## Video Feedback parent email test (Automation 073)
+
+Use this section only for a **controlled disposable parent-email proof** with
+Mike's allowlisted test recipient, `Test Mode? = true`, and 073 enabled at the
+current Production version. The XP lifecycle steps above still require 073 OFF
+or unable to enter unless Mike explicitly runs this separate email packet.
+
+### Before checking Parent Feedback Ready?
+
+Do **not** check `Parent Feedback Ready?` until the Video Feedback Key is
+confirmed:
+
+1. Open the selected Video Feedback record and confirm **Video Feedback Key**
+   is populated.
+2. The required format is:
+
+   `VIDEO_FEEDBACK|{Video Feedback Record ID}`
+
+   In normal production intake, **013** writes this key using the linked
+   **Submission Asset** record ID (`VIDEO_FEEDBACK|{Submission Asset record
+   ID}`). Automation **073** validates against that canonical asset ID on the
+   row—not the Handoff Key pattern `VIDEO_FEEDBACK|VIDEO_FEEDBACK|{Video
+   Feedback record ID}`.
+3. If the key is missing or blank, **do not** check `Parent Feedback Ready?`.
+   Populate the key first, then continue with the test.
+4. A **manually created** Video Feedback record (for example when **013** did
+   not auto-link within the wait window) may not receive this key
+   automatically. A normal production workflow should populate it through the
+   existing **013** create/link process.
+
+After the key is confirmed, complete the remaining 073 gates (XP awarded,
+`Feedback Posted?`, coach feedback, allowlisted recipient, `Test Mode?`,
+`Parent Feedback Sent?` unchecked) and then check `Parent Feedback Ready?`
+once.
+
 ## Controlled replay / idempotency check
 
 1. Without changing eligibility, rerun only the installed 114 action for the same VF record, or make the same trigger condition re-enter through Mike's controlled native procedure.
@@ -181,6 +216,27 @@ Stop and retain evidence before any repair if:
 - the source Submission has a future Activity Date or missing Week, or the Enrollment is inactive/missing identity;
 - active-point, weekly, lifetime, 041 queue, 042 result, or standings input is blank after a reasonable settlement re-read;
 - an Email Handoff Queue record, Make webhook run, Gmail action, or parent-recipient path appears.
+
+## Troubleshooting
+
+### Problem: Automation 073 does not trigger
+
+Work through these checks in order before re-running 073 or manually marking an
+email as sent:
+
+1. **Video Feedback Key** exists and is correctly formatted
+   (`VIDEO_FEEDBACK|{linked Submission Asset record ID}`; see section above).
+2. **Parent Feedback Ready?** is checked (after the key is confirmed).
+3. **Parent Feedback Sent?** is unchecked.
+4. **Feedback Posted?** is checked.
+5. **Coach Feedback** is not empty.
+6. **Test recipient** is allowlisted (and not suppressed).
+7. **Test Mode?** is enabled for disposable tests.
+8. **Automation 073** is enabled and using the current Production version.
+
+If 073 still does not fire, capture the automation run history and any
+`Parent Feedback Send Error` / delivery error text on the Video Feedback row.
+Do not create a duplicate Email Handoff Queue record or manually check Sent?.
 
 ## Explicitly out of scope
 
