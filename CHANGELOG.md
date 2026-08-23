@@ -8,6 +8,13 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Airtable
 
+#### Added
+- **Production QA paste bundles (2026-08-23)** — Complete paste-ready scripts:
+  `docs/deploy-checklists/010-v10.12-PASTE.txt`, `057-v1.9-PASTE.txt`,
+  `072-v4.3-PASTE.txt`. Operator guide:
+  `docs/deploy-checklists/2026-08-23-production-qa-paste-bundle.md`.
+  Regenerate: `python3 tools/airtable/extract_production_qa_paste_bundles.py`.
+
 #### Changed
 - **Perfect Week Testing XP repair (2026-08-23)** — Authorized PROD backfill for enrollment
   `rec93mAfo5jKqP3g5`: five `SUBMISSION_XP|{id}` events (010 contract), five shot-milestone
