@@ -29,19 +29,19 @@ function test(name, fn) {
   console.log(`PASS  ${name}`);
 }
 
-test("072 v4.1 owns escaped HTML and plain-text package rendering", () => {
-  assert.ok(/Version:\s*v4\.1/.test(s072));
-  assert.ok(/function esc\(v\)/.test(s072));
+test("072 v4.2 owns escaped HTML and plain-text package rendering", () => {
+  assert.ok(/Version:\s*v4\.2/.test(s072));
+  assert.ok(/function escapeHtml\(value\)/.test(s072));
   for (const entity of ["&amp;", "&lt;", "&gt;", "&quot;", "&#39;"]) {
-    assert.ok(s072.includes(entity), `072 esc must emit ${entity}`);
+    assert.ok(s072.includes(entity), `072 escapeHtml must emit ${entity}`);
   }
-  assert.ok(/function fullHtml\(d\)/.test(s072));
-  assert.ok(/function shortHtml\(d\)/.test(s072));
-  assert.ok(/function plain\(d,short\)/.test(s072));
+  assert.ok(/function fullHtml\(data\)/.test(s072));
+  assert.ok(/function shortHtml\(data\)/.test(s072));
+  assert.ok(/function plainText\(data, short\)/.test(s072));
 });
 
 test("072 remains Denver-safe and fails closed on reporting disagreement", () => {
-  assert.ok(/TZ="America\/Denver"/.test(s072));
+  assert.ok(/timeZone:\s*"America\/Denver"/.test(s072));
   assert.ok(/Intl\.DateTimeFormat/.test(s072));
   assert.ok(/Weekly shots disagreement/.test(s072));
   assert.ok(/Weekly XP disagreement/.test(s072));
@@ -53,8 +53,8 @@ test("072 never performs external delivery", () => {
   assert.ok(!/makeWebhookUrl/.test(s072));
 });
 
-test("074 v3.0 creates one canonical Hub handoff", () => {
-  assert.ok(/Version:\s*v3\.0/.test(s074));
+test("074 v3.1 creates one canonical Hub handoff", () => {
+  assert.ok(/Version:\s*v3\.1/.test(s074));
   assert.ok(/Email Handoff Queue/.test(s074));
   assert.ok(/CONFIG\.values\.eventType\}\|\$\{CONFIG\.values\.sourceTableToken\}\|\$\{recordId\}/.test(s074));
   assert.ok(/existing_handoff/.test(s074));

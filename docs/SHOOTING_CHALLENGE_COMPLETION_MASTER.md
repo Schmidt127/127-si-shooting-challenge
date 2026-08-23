@@ -17,7 +17,7 @@ state, the named live system wins.
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-19** (022 **v2.1**, 020 **v3.6**, 070b **v4.6**, 117 **v2.1**, 066 **v3.8**, 010 **v10.10** confirmed; email = Resend; Perfect Week test still open) |
+| Last updated | **2026-08-23** (XP activity ledger merge; production-only doc reconciliation) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -286,6 +286,8 @@ they require Mike-owned schema or live-system decisions.
 | `PKG-042` | Retire the obsolete Airtable test environment and adopt production-only governance | `repository-ready` | `AGENTS.md`; `docs/ENGINEERING_CONSTITUTION.md`; `docs/v2/04-ai-development-standards.md`; Production environment examples | Mike confirmed the separate test base and its saved work are retired | Codex; Mike | No retired base ID or environment variable remains; environment-specific snapshots, runbooks, fixtures, and tooling are removed; offline-first and explicitly approved Production controls are authoritative | 2026-08-19 — Execution matrix IDs advanced: PKG-042 — removed retired environment artifacts and rewrote active governance/configuration for one Production Airtable base. No live Airtable data or automation was changed. | Repo | Keep Production mutations narrowly scoped, explicitly approved, rollback-ready, and verified. | 42 |
 
 Execution matrix IDs advanced: PKG-042 — retired the obsolete Airtable test environment and adopted production-only governance.
+
+Execution matrix IDs advanced: PKG-041 — 2026-08-23 production-readiness cleanup: merged XP activity ledger (enrollment-scoped loader, pagination, date normalization), Perfect Week Testing XP repair tooling, restored offline DEV runbook fixtures with historical banners, reconciled CURRENT-TRUTH/PROJECT_STATE for production-only operation, and validated 29/29 agent4 suites + web build. No live Airtable writes; no automation logic changed for test convenience. Inventory: [`audits/2026-08-23-production-readiness-inventory.md`](./audits/2026-08-23-production-readiness-inventory.md).
 
 ### PKG-006R / PKG-036 Production baseline — 2026-08-13
 

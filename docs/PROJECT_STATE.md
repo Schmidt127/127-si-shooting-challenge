@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-08-21** (final Production version reconciliation; Perfect Week still calendar-blocked)
+Last updated: **2026-08-23** (production-readiness cleanup — XP activity ledger, production-only reconciliation)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
@@ -75,7 +75,7 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 | **Automation standards (doc 06)** | **Active** — **066** remains the V2 rewrite reference pattern. Live paste is **v3.8** (Mike 2026-08-19). Older “v3.4 current reference” wording is historical for the createRecords contract era. |
 | **Multi-year architecture** | **Decided** — one base + Program Instance; **V2-013 queued** |
 | **Phase 2 — Platform Modernization** | Wave 2A planning + Phase 2B docs complete — implementation staged via backlog |
-| **V2-015 — Development base** | **Ready** — DEV-first pipeline permanent |
+| **V2-015 — Development base** | **Retired 2026-08-19** — production-only operation; historical snapshots remain |
 
 ---
 
@@ -103,16 +103,16 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 | Base ID | `appn84sqPw03zEbTT` |
 | Role | **Live season** — system of record |
 
-### Development (V2-015)
+### Development (V2-015) — **RETIRED 2026-08-19**
 
 | Item | Value |
 |------|--------|
-| Base name | `127SI - SHOOTING CHALLENGE - DEV` |
-| Base ID | `appTetnuCZlCZdTCT` |
-| Status | **Ready** — first testing environment |
-| Setup | [development-base-setup.md](./development-base-setup.md) |
+| Base name | ~~`127SI - SHOOTING CHALLENGE - DEV`~~ |
+| Base ID | ~~`appTetnuCZlCZdTCT`~~ |
+| Status | **Retired** — do not recreate or paste automations |
+| Historical setup | [development-base-setup.md](./development-base-setup.md) (read-only) |
 
-**Deploy rule:** GitHub → paste **dev** → audit → approve → paste **prod** → `CHANGELOG.md`.
+**Deploy rule (current):** GitHub → Mike-approved Production paste → `CHANGELOG.md`. Offline fixtures in `tools/airtable/v2_dev_runbook/` support contract tests only.
 
 ### Schema documentation (important)
 

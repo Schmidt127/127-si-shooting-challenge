@@ -1,0 +1,39 @@
+{
+  "domain": "milestones",
+  "matrix_ids": ["F1", "F2", "F3", "F4"],
+  "source_key_pattern": "SHOT_MILESTONE|{enrollmentId}|{shotMilestoneId}",
+  "pre_test_state": {
+    "require": [
+      "Test enrollment cumulative shots below target threshold",
+      "Fillout-shaped counted submissions to cross threshold",
+      "066 ON in DEV",
+      "Known milestone record IDs for 100/250 (or season thresholds)"
+    ],
+    "recommended_first_live_block": "F1-F3 per matrix prep status"
+  },
+  "synthetic_crossing": {
+    "before_shots": 90,
+    "after_single": 120,
+    "after_multi": 260,
+    "thresholds": [100, 250]
+  },
+  "automation_expected": {
+    "F1": "One unlock SHOT_MILESTONE|enr|ms",
+    "F2": "One unlock per newly crossed milestone",
+    "F3": "No duplicate unlocks for same Source Key",
+    "F4": "One XP Event per unlock Source Key via 059"
+  },
+  "expected_output": {
+    "source_key": "SHOT_MILESTONE|{{enrollment}}|{{shot_milestone_100}}",
+    "unlock_count_f1": 1,
+    "unlock_count_f2_new": 2
+  },
+  "cleanup": [
+    "Do not delete milestone config rows",
+    "Retain unlocks for F3 rerun evidence"
+  ],
+  "rollback": [
+    "If false unlocks: soft-void; re-run 066 after state fix"
+  ],
+  "evidence_location": "docs/v2/evidence/YYYY-MM-DD-F{n}-{enrollmentId}.md"
+}

@@ -19,6 +19,14 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+<<<<<<< HEAD
+=======
+- **Production-readiness cleanup (2026-08-23)** — Reconciled `CURRENT-TRUTH.md`,
+  `PROJECT_STATE.md`, and `AUTOMATION_VERSION_INVENTORY.md` for production-only
+  operation (DEV base retired). Inventory:
+  `docs/audits/2026-08-23-production-readiness-inventory.md`. Validation:
+  29/29 agent4 suites, 260 web tests, typecheck, lint, build PASS.
+>>>>>>> cursor/production-readiness-cleanup-1079
 - **Public athlete XP activity ledger (2026-08-23)** — Profile activity uses enrollment-scoped
   XP loader (up to 200 events), **XP Activity Date** for display, Load more pagination, and
   dashboard truncation notice (25 vs full ledger). Tests in `public-athlete-activity.test.ts`.

@@ -109,15 +109,47 @@ test("findOverlappingConfigs detects overlap", () => {
 // Config resolution
 // ---------------------------------------------------------------------------
 
-test("resolve by explicit Config record ID", () => {
+test("resolve by explicit Config record ID (current config) → resolved", () => {
   const r = resolveChallengeYearConfig({
     configRows: validConfigs,
     explicitConfigRecordId: "recNEWCONFIG000001",
   });
   assert.strictEqual(r.ok, true);
-  assert.strictEqual(r.status, "historical");
+  assert.strictEqual(r.status, "resolved");
   assert.strictEqual(r.challengeYearLabel, "2026-2027");
   assert.strictEqual(r.selectionSource, "explicit_config_record_id");
+});
+
+test("resolve by explicit Config record ID (ended config) → historical", () => {
+  const r = resolveChallengeYearConfig({
+    configRows: validConfigs,
+    explicitConfigRecordId: "recPRIORCONFIG0001",
+  });
+  assert.strictEqual(r.ok, true);
+  assert.strictEqual(r.status, "historical");
+  assert.strictEqual(r.challengeYearLabel, "2025-2026");
+  assert.strictEqual(r.selectionSource, "explicit_config_record_id");
+});
+
+test("resolve by explicit Config record ID (test config) → test_only", () => {
+  const r = resolveChallengeYearConfig({
+    configRows: validConfigs,
+    explicitConfigRecordId: "recTESTCONFIG00001",
+  });
+  assert.strictEqual(r.ok, true);
+  assert.strictEqual(r.status, "test_only");
+  assert.strictEqual(r.challengeYearLabel, "2027-2028");
+  assert.strictEqual(r.selectionSource, "explicit_config_record_id");
+});
+
+test("explicit ended Config with allowHistorical false → historical fail closed", () => {
+  const r = resolveChallengeYearConfig({
+    configRows: validConfigs,
+    explicitConfigRecordId: "recPRIORCONFIG0001",
+    allowHistorical: false,
+  });
+  assert.strictEqual(r.ok, false);
+  assert.strictEqual(r.status, "historical");
 });
 
 test("resolve by Enrollment school year", () => {
