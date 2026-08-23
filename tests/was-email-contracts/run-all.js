@@ -10,4 +10,5 @@ require("./send-mode-live-test-regression.test.js");
 require("./schedule-on-contract.test.js");
 require("./weekly-summary-email-content.test.js");
 require("./perfect-week-criteria.test.js");
+require("./perfect-week-grace-period.test.js");
 console.log("all was-email-contracts tests passed");

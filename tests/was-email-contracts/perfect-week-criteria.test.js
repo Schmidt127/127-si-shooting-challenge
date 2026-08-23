@@ -116,17 +116,15 @@ test("zoom conditional rule: no meeting means no attendance required", () => {
   );
 });
 
-test("rollup 8 vs canonical 7: email uses canonical days logged against criteria", () => {
-  const rollupDays = 8;
-  const canonicalDays = 7;
+test("rollup 8 vs canonical 7: email separates general shooting days from PW qualifying days", () => {
   const criteria = buildPerfectWeekEmailCriteria({
     dailyDetail: DETAIL_057,
-    daysLogged: canonicalDays,
+    generalShootingDays: 7,
+    perfectWeekQualifyingDays: 4,
     achievementRequiredDays: 7,
   });
-  assert.notEqual(rollupDays, canonicalDays);
-  assert.equal(criteria.daysLoggedDisplay, "7/7");
-  assert.equal(formatDaysLoggedAgainstCriteria(rollupDays, 7), "8/7");
+  assert.equal(criteria.generalShootingDaysDisplay, "7");
+  assert.equal(criteria.perfectWeekQualifyingDaysDisplay, "4/7");
 });
 
 console.log("perfect-week-criteria tests passed");
