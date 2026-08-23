@@ -83,8 +83,8 @@ test("022 does not mirror Google Drive fields onto Video Feedback", () => {
   assert.match(sync022, /Do not mirror obsolete Google Drive fields onto Video Feedback/);
 });
 
-test("073 v4.2 Hub handoff uses only VF Video URL or Drive Link", () => {
-  assert.match(email073, /Version: v4\.2/);
+test("073 v4.3 Hub handoff uses only VF Video URL or Drive Link", () => {
+  assert.match(email073, /Version: v4\.3/);
   assert.match(email073, /Email Handoff Queue/);
   assert.doesNotMatch(email073, /Google Drive File URL|Google Drive View URL|Google Drive File ID|Google Drive Folder/);
   assert.doesNotMatch(email073, /reviewer:\s*"Reviewer File URL"/);
@@ -92,6 +92,16 @@ test("073 v4.2 Hub handoff uses only VF Video URL or Drive Link", () => {
   const vfBlock = email073.slice(email073.indexOf("vf: {"), email073.indexOf("enr: {"));
   assert.doesNotMatch(vfBlock, /Reviewer File URL/);
   assert.match(vfBlock, /videoUrl: "Video URL or Drive Link"/);
+});
+
+test("073 v4.3 enriches branded Hub template payload without changing writeback gates", () => {
+  assert.match(email073, /programName, reviewStatus, landingPageUrl, shootPageUrl/);
+  assert.match(email073, /reviewStatus: "Review complete"/);
+  assert.match(email073, /landingPageUrl: CANONICAL_URLS\.landing/);
+  assert.match(email073, /shootPageUrl: CANONICAL_URLS\.shoot/);
+  assert.match(email073, /if \(!payload\.programName\) delete payload\.programName/);
+  assert.match(email073, /Conflicting Email Handoff Queue payload/);
+  assert.match(email073, /Do not write Parent Feedback Sent\? or Parent Feedback Sent On/);
 });
 
 test("073 is Parent Feedback Ready consumer; 111 is not referenced as email sender", () => {
