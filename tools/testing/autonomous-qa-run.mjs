@@ -142,7 +142,7 @@ async function createDisposableSubmission(token, baseId, manifest) {
       Athlete: athleteId ? [athleteId] : undefined,
       "Activity Date": activityDate,
       "Shot Total": 25,
-      "Duplicate Review Status": "OK",
+      "Duplicate Review Status": "Count It",
       "Daily Email Subject": `${RUN_ID} disposable submission`,
     },
   };
@@ -166,9 +166,9 @@ async function createDisposableSubmission(token, baseId, manifest) {
   });
 
   const sourceKey = `SUBMISSION_XP|${submission.id}`;
-  await sleep(20000);
+  await sleep(25000);
   let xpEvents = await fetchXpBySourceKey(token, baseId, sourceKey);
-  if (!xpEvents.length) {
+  for (let attempt = 0; attempt < 4 && !xpEvents.length; attempt++) {
     await sleep(15000);
     xpEvents = await fetchXpBySourceKey(token, baseId, sourceKey);
   }

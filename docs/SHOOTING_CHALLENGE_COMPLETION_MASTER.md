@@ -177,15 +177,17 @@ Authoritative GitHub SCRIPT headers + [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) o
 | Game Manual | Cursor | repository-ready | PKG-021 orientation | Quick-start UI | 2027 rules content | — | P2 | 2026-08-23 |
 | Documentation / Governance | Cursor | repository-ready | PKG-041/042; autonomous QA 2026-08-23 | Production-only docs; `autonomous-qa-run.mjs` | CONTROL.json SHA refresh | — | P1 | 2026-08-23 |
 
-### 0C.1 Autonomous QA — 2026-08-23
+### 0C.1 Autonomous QA — 2026-08-23 (post-XP-deletion)
 
 | Check | Result | Evidence |
 |-------|--------|----------|
-| Repository validation suite | `live-tested` (repo) | Agent 4 29/29; web 260 tests; Python 147+139 |
-| Perfect Week ledger (`rec93mAfo5jKqP3g5`) | `live-tested` | 39 active XP; `full-xp-reconciliation.mjs` zero missing |
-| Disposable submission → 010 XP | `live-tested` | API create + SUBMISSION_XP (cleaned up) |
-| Production web `/shoot` | `live-tested` | Browser + HTTP 200 |
-| Secondary Schmidt enrollments XP gaps | `needs live proof` | 1–2 missing SUBMISSION_XP per enrollment — operator repair |
+| Disposable submission → 010 XP | `live-tested` | `SUBMISSION_XP\|recbHnmVsvYUog9CE`; 20pts; idempotent replay |
+| Perfect Week ledger (`rec93mAfo5jKqP3g5`) | `live-tested` | 39 active XP; zero missing |
+| Xavier / Testing3 / Curtis missing repair XP | `needs live proof` (expected) | 4 deleted repair rows not recreated |
+| Stale fields on source submissions | `live-tested` | No phantom XP links |
+| Production web `/shoot` (8 routes) | `live-tested` | Browser + HTTP 200; mobile 390px |
+| Automation pastes 010/057/072 | `blocked` | Prod v10.10 / v1.8 / v4.2 vs GitHub |
+| Weekly email positive path | `blocked` | Pending 072 paste |
 | Harness | `repository-ready` | `docs/testing/autonomous-qa/` |
 
 ---

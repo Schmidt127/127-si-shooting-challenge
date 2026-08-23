@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-08-23** (autonomous QA continuation — 072 v4.3, SUBMISSION_XP repairs, reconciliation PASS)
+Last updated: **2026-08-23** (post-XP-deletion autonomous QA — live-create PASS, orchestrator Count It fix)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
@@ -43,7 +43,9 @@ Last updated: **2026-08-23** (autonomous QA continuation — 072 v4.3, SUBMISSIO
 
 **072 overlay (2026-08-23):** GitHub **v4.3** fixes weekly XP false disagreement on WAS `reczxTIpVI8ZJLex0`. Production still **v4.2** until paste. Checklist: [`deploy-checklists/072-v4.3-was-linked-xp-reconciliation.md`](./deploy-checklists/072-v4.3-was-linked-xp-reconciliation.md).
 
-**Submission XP repair (2026-08-23):** Authorized idempotent repair created `SUBMISSION_XP` for submissions `rece0krfrEqiUEBVu`, `rec3zlR7xneAOatKh`, `recNqAXXzXAnac1GE`, `recLD7Fb6ph0yovyq` (XP Events `recWV95wEywdDJRO2`, `rec4M2QFrJFhSnvSG`, `recwWLcTOnTBQAwHo`, `recObGIdFNx7bfTMp`). Full reconciliation PASS on Xavier, Testing3, Curtis enrollments.
+**Submission XP repair (2026-08-23):** Authorized idempotent repair created then **deleted** `SUBMISSION_XP` for submissions `rece0krfrEqiUEBVu`, `rec3zlR7xneAOatKh`, `recNqAXXzXAnac1GE`, `recLD7Fb6ph0yovyq` (XP Events `recWV95wEywdDJRO2`, `rec4M2QFrJFhSnvSG`, `recwWLcTOnTBQAwHo`, `recObGIdFNx7bfTMp`). Post-deletion reconciliation: Perfect Week **PASS**; Xavier/Testing3/Curtis show expected missing-XP **FINDING** (not recreated). Disposable live-create **PASS** on Testing3.
+
+**Autonomous QA harness (2026-08-23):** `tools/testing/autonomous-qa-run.mjs` — `--live-create` uses `Count It` + extended poll; manifest at `docs/testing/autonomous-qa/latest-manifest.json`.
 
 **101 overlay (final 2026-08-21):** Production Automation 101 is **v6.7** (live script body). Midday Automations Code-column **v6.6** snapshot is **historical / superseded**. Meeting `recxtpMu4ONbdDD45` safely skipped when reconciliation not needed.
 

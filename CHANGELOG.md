@@ -27,7 +27,10 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   disagreement. Paste checklist:
   `docs/deploy-checklists/072-v4.3-was-linked-xp-reconciliation.md`. Offline:
   `node tools/testing/tests/test_072_weekly_xp_reconciliation.mjs`.
-- **Schmidt SUBMISSION_XP repair (2026-08-23)** — Four missing submission XP rows created
+- **Autonomous QA post-XP-deletion (2026-08-23)** — Disposable live-create PASS after
+  `Count It` + extended poll fix in `autonomous-qa-run.mjs`. Four deleted repair XP rows
+  not recreated; Xavier/Testing3/Curtis show expected FINDING. Stale-field check: no
+  phantom links. Report: `docs/testing/autonomous-qa/AUTONOMOUS_QA_20260823_POST_XP_DELETION_REPORT.md`.
   idempotently (Xavier, Testing3×2, Curtis). Script:
   `tools/testing/repair_missing_submission_xp.mjs`.
 

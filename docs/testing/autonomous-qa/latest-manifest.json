@@ -1,11 +1,94 @@
 {
-  "run_id": "AUTONOMOUS_QA_20260823T151321",
-  "started_at": "2026-08-23T15:13:21.121Z",
-  "mode": "read_only",
+  "run_id": "AUTONOMOUS_QA_20260823_POST_XP_DELETION",
+  "started_at": "2026-08-23T15:40:42.014Z",
+  "completed_at": "2026-08-23T15:58:30.000Z",
+  "mode": "live_create_post_xp_deletion",
   "base_id": "appn84sqPw03zEbTT",
-  "created": [],
-  "changed": [],
+  "prior_deleted_xp_events": [
+    "recWV95wEywdDJRO2",
+    "rec4M2QFrJFhSnvSG",
+    "recwWLcTOnTBQAwHo",
+    "recObGIdFNx7bfTMp"
+  ],
+  "created": [
+    {
+      "table": "Submissions",
+      "id": "recbHnmVsvYUog9CE",
+      "enrollmentId": "recNu6fcBpF1GG3u5",
+      "runId": "AUTONOMOUS_QA_20260823T154042",
+      "cleanup": "pending_mike_delete"
+    },
+    {
+      "table": "XP Events",
+      "id": "rec6Wbxt9421Etg2s",
+      "sourceKey": "SUBMISSION_XP|recbHnmVsvYUog9CE",
+      "runId": "AUTONOMOUS_QA_20260823T154042",
+      "cleanup": "deactivated"
+    },
+    {
+      "table": "Submissions",
+      "id": "recaMbJStO2I12b58",
+      "enrollmentId": "recNu6fcBpF1GG3u5",
+      "runId": "AUTONOMOUS_QA_20260823T154508",
+      "cleanup": "pending_mike_delete"
+    },
+    {
+      "table": "XP Events",
+      "id": "recGxpIdiPPocbAOc",
+      "sourceKey": "SUBMISSION_XP|recaMbJStO2I12b58",
+      "runId": "AUTONOMOUS_QA_20260823T154508",
+      "cleanup": "deactivated"
+    }
+  ],
+  "changed": [
+    {
+      "table": "XP Events",
+      "id": "rec6Wbxt9421Etg2s",
+      "field": "Active?",
+      "value": false,
+      "reason": "disposable cleanup"
+    },
+    {
+      "table": "XP Events",
+      "id": "recGxpIdiPPocbAOc",
+      "field": "Active?",
+      "value": false,
+      "reason": "disposable cleanup"
+    },
+    {
+      "table": "Submissions",
+      "id": "recbHnmVsvYUog9CE",
+      "field": "Duplicate Review Status",
+      "value": "Count It",
+      "reason": "trigger 010 chain on disposable test"
+    }
+  ],
   "deleted": [],
+  "live_create_verification": {
+    "primary_submission_id": "recbHnmVsvYUog9CE",
+    "primary_xp_event_id": "rec6Wbxt9421Etg2s",
+    "source_key": "SUBMISSION_XP|recbHnmVsvYUog9CE",
+    "xp_points": 20,
+    "xp_bucket": "Shooting Base",
+    "enrollment_id": "recNu6fcBpF1GG3u5",
+    "activity_date": "2026-08-23T15:41:02.616Z",
+    "is_disposable": true,
+    "no_duplicate_on_replay": true,
+    "pass": true,
+    "artifact": "/opt/cursor/artifacts/autonomous-qa/disposable-submission-verification.json"
+  },
+  "stale_field_check": {
+    "artifact": "/opt/cursor/artifacts/autonomous-qa/stale-submission-fields.json",
+    "phantom_xp_links": false,
+    "stale_award_status": false,
+    "reconciliation_needed_expected": true,
+    "submissions_checked": [
+      "rece0krfrEqiUEBVu",
+      "rec3zlR7xneAOatKh",
+      "recNqAXXzXAnac1GE",
+      "recLD7Fb6ph0yovyq"
+    ]
+  },
   "verifications": [
     {
       "enrollmentId": "rec93mAfo5jKqP3g5",
@@ -22,9 +105,16 @@
       "label": "xavier_schmidt",
       "slug": "xavier-schmidt",
       "reconciliationExitCode": 0,
-      "activeXpEvents": 4,
-      "missingSubmissionXp": [],
-      "pass": true,
+      "activeXpEvents": 3,
+      "missingSubmissionXp": [
+        {
+          "type": "submission_xp",
+          "subId": "rece0krfrEqiUEBVu",
+          "sourceKey": "SUBMISSION_XP|rece0krfrEqiUEBVu",
+          "reason": "deleted_repair_xp_not_recreated"
+        }
+      ],
+      "pass": false,
       "artifact": "/opt/cursor/artifacts/autonomous-qa/reconcile-recCrNNAdVmQ4Y8fL.json"
     },
     {
@@ -32,9 +122,22 @@
       "label": "testing3_schmidt",
       "slug": "testing3-schmidt",
       "reconciliationExitCode": 0,
-      "activeXpEvents": 7,
-      "missingSubmissionXp": [],
-      "pass": true,
+      "activeXpEvents": 6,
+      "missingSubmissionXp": [
+        {
+          "type": "submission_xp",
+          "subId": "rec3zlR7xneAOatKh",
+          "sourceKey": "SUBMISSION_XP|rec3zlR7xneAOatKh",
+          "reason": "deleted_repair_xp_not_recreated"
+        },
+        {
+          "type": "submission_xp",
+          "subId": "recNqAXXzXAnac1GE",
+          "sourceKey": "SUBMISSION_XP|recNqAXXzXAnac1GE",
+          "reason": "deleted_repair_xp_not_recreated"
+        }
+      ],
+      "pass": false,
       "artifact": "/opt/cursor/artifacts/autonomous-qa/reconcile-recNu6fcBpF1GG3u5.json"
     },
     {
@@ -42,411 +145,130 @@
       "label": "curtis_schmidt",
       "slug": "curtis-schmidt",
       "reconciliationExitCode": 0,
-      "activeXpEvents": 8,
-      "missingSubmissionXp": [],
-      "pass": true,
+      "activeXpEvents": 7,
+      "missingSubmissionXp": [
+        {
+          "type": "submission_xp",
+          "subId": "recLD7Fb6ph0yovyq",
+          "sourceKey": "SUBMISSION_XP|recLD7Fb6ph0yovyq",
+          "reason": "deleted_repair_xp_not_recreated"
+        }
+      ],
+      "pass": false,
       "artifact": "/opt/cursor/artifacts/autonomous-qa/reconcile-reclc46bQM8Wx0qWP.json"
     },
     {
-      "check": "perfect_week_testing_ledger",
-      "activeXpCount": 39,
-      "buckets": [
-        "Shooting Base",
-        "Streak",
-        "Video Feedback",
-        "Weekly Threshold",
-        "Zoom Attendance",
-        "Shot Milestone",
-        "Homework Completion"
-      ],
-      "pass": true
+      "check": "read_only_integrity",
+      "duplicateSourceKeys": 0,
+      "incorrectEnrollmentLinks": 0,
+      "pass": true,
+      "artifact": "/opt/cursor/artifacts/autonomous-qa/read-only-integrity.json"
+    }
+  ],
+  "blocked_manual": [
+    {
+      "item": "010 v10.12 paste",
+      "production": "v10.10",
+      "github": "v10.12",
+      "checklist": "docs/deploy-checklists/010-v10.12-PASTE.txt"
+    },
+    {
+      "item": "057 v1.9 paste",
+      "production": "v1.8",
+      "github": "v1.9",
+      "checklist": "docs/deploy-checklists/057-v1.9-PASTE.txt"
+    },
+    {
+      "item": "072 v4.3 paste",
+      "production": "v4.2",
+      "github": "v4.3",
+      "checklist": "docs/deploy-checklists/072-v4.3-PASTE.txt"
+    },
+    {
+      "item": "weekly_email_positive_path",
+      "reason": "requires 072 v4.3 paste + WAS reczxTIpVI8ZJLex0 re-arm"
     }
   ],
   "checklist": [
     {
+      "component": "Disposable submission XP live-create",
+      "final_status": "PASS",
+      "actual_result": "SUBMISSION_XP created; 20pts Shooting Base; idempotent replay"
+    },
+    {
       "component": "XP reconciliation perfect_week_testing",
-      "current_state": "live-tested",
-      "test_method": "web/scripts/full-xp-reconciliation.mjs",
-      "expected_result": "No counted submission missing canonical SUBMISSION_XP per full-xp-reconciliation.mjs",
-      "actual_result": "pass (39 active XP events)",
-      "failure": null,
-      "fix": null,
-      "evidence": "/opt/cursor/artifacts/autonomous-qa/reconcile-rec93mAfo5jKqP3g5.json",
-      "final_status": "PASS"
+      "final_status": "PASS",
+      "actual_result": "39 active XP events; zero missing"
     },
     {
       "component": "XP reconciliation xavier_schmidt",
-      "current_state": "live-tested",
-      "test_method": "web/scripts/full-xp-reconciliation.mjs",
-      "expected_result": "No counted submission missing canonical SUBMISSION_XP per full-xp-reconciliation.mjs",
-      "actual_result": "pass (4 active XP events)",
-      "failure": null,
-      "fix": null,
-      "evidence": "/opt/cursor/artifacts/autonomous-qa/reconcile-recCrNNAdVmQ4Y8fL.json",
-      "final_status": "PASS"
+      "final_status": "FINDING",
+      "actual_result": "1 missing (deleted repair XP — not recreated)"
     },
     {
       "component": "XP reconciliation testing3_schmidt",
-      "current_state": "live-tested",
-      "test_method": "web/scripts/full-xp-reconciliation.mjs",
-      "expected_result": "No counted submission missing canonical SUBMISSION_XP per full-xp-reconciliation.mjs",
-      "actual_result": "pass (7 active XP events)",
-      "failure": null,
-      "fix": null,
-      "evidence": "/opt/cursor/artifacts/autonomous-qa/reconcile-recNu6fcBpF1GG3u5.json",
-      "final_status": "PASS"
+      "final_status": "FINDING",
+      "actual_result": "2 missing (deleted repair XP — not recreated)"
     },
     {
       "component": "XP reconciliation curtis_schmidt",
-      "current_state": "live-tested",
-      "test_method": "web/scripts/full-xp-reconciliation.mjs",
-      "expected_result": "No counted submission missing canonical SUBMISSION_XP per full-xp-reconciliation.mjs",
-      "actual_result": "pass (8 active XP events)",
-      "failure": null,
-      "fix": null,
-      "evidence": "/opt/cursor/artifacts/autonomous-qa/reconcile-reclc46bQM8Wx0qWP.json",
-      "final_status": "PASS"
+      "final_status": "FINDING",
+      "actual_result": "1 missing (deleted repair XP — not recreated)"
     },
     {
-      "component": "Perfect Week Testing ledger",
-      "current_state": "live-tested",
-      "test_method": "XP Events filter by enrollment",
-      "expected_result": ">=39 active XP events after repair",
-      "actual_result": "39 active; buckets: Shooting Base, Streak, Video Feedback, Weekly Threshold, Zoom Attendance, Shot Milestone, Homework Completion",
-      "failure": null,
-      "fix": null,
-      "evidence": null,
-      "final_status": "PASS"
+      "component": "Stale fields on deleted-XP submissions",
+      "final_status": "PASS",
+      "actual_result": "No phantom links; Reconciliation Needed expected"
     },
     {
-      "component": "Web route https://www.fairfieldbasketballclub.com/shoot",
-      "current_state": "production",
-      "test_method": "HTTP GET",
-      "expected_result": "2xx/3xx within 15s",
-      "actual_result": "status 200",
-      "failure": null,
-      "fix": null,
-      "evidence": "https://www.fairfieldbasketballclub.com/shoot",
-      "final_status": "PASS"
+      "component": "Read-only duplicate Source Keys",
+      "final_status": "PASS",
+      "actual_result": "0 active duplicates"
     },
     {
-      "component": "Web route https://www.fairfieldbasketballclub.com/shoot/api/airtable",
-      "current_state": "production",
-      "test_method": "HTTP GET",
-      "expected_result": "2xx/3xx within 15s",
-      "actual_result": "status 200",
-      "failure": null,
-      "fix": null,
-      "evidence": "https://www.fairfieldbasketballclub.com/shoot/api/airtable",
-      "final_status": "PASS"
+      "component": "Production web routes (8)",
+      "final_status": "PASS",
+      "actual_result": "HTTP 200 + browser screenshots"
     },
     {
-      "component": "Web route https://www.fairfieldbasketballclub.com/shoot/dashboard",
-      "current_state": "production",
-      "test_method": "HTTP GET",
-      "expected_result": "2xx/3xx within 15s",
-      "actual_result": "status 200",
-      "failure": null,
-      "fix": null,
-      "evidence": "https://www.fairfieldbasketballclub.com/shoot/dashboard",
-      "final_status": "PASS"
+      "component": "Mobile layout athlete profiles",
+      "final_status": "PASS",
+      "actual_result": "390px viewport OK on Xavier + Perfect Week"
     },
     {
-      "component": "Web route https://www.fairfieldbasketballclub.com/shoot/dashboard/preview",
-      "current_state": "production",
-      "test_method": "HTTP GET",
-      "expected_result": "2xx/3xx within 15s",
-      "actual_result": "status 200",
-      "failure": null,
-      "fix": null,
-      "evidence": "https://www.fairfieldbasketballclub.com/shoot/dashboard/preview",
-      "final_status": "PASS"
+      "component": "Repo validation suite",
+      "final_status": "PASS",
+      "actual_result": "Agent4 29/29; web 260; Python 147+139; build"
     },
     {
-      "component": "Web route https://www.fairfieldbasketballclub.com/shoot/athletes/xavier-schmidt",
-      "current_state": "production",
-      "test_method": "HTTP GET",
-      "expected_result": "2xx/3xx within 15s",
-      "actual_result": "status 200",
-      "failure": null,
-      "fix": null,
-      "evidence": "https://www.fairfieldbasketballclub.com/shoot/athletes/xavier-schmidt",
-      "final_status": "PASS"
+      "component": "010 v10.12 paste",
+      "final_status": "BLOCKED",
+      "actual_result": "Production v10.10 — Mike paste required"
     },
     {
-      "component": "Web route https://www.fairfieldbasketballclub.com/shoot/athletes/perfect-week-testing",
-      "current_state": "production",
-      "test_method": "HTTP GET",
-      "expected_result": "2xx/3xx within 15s",
-      "actual_result": "status 200",
-      "failure": null,
-      "fix": null,
-      "evidence": "https://www.fairfieldbasketballclub.com/shoot/athletes/perfect-week-testing",
-      "final_status": "PASS"
+      "component": "057 v1.9 paste",
+      "final_status": "BLOCKED",
+      "actual_result": "Production v1.8 — Mike paste required"
     },
     {
-      "component": "Web route https://www.fairfieldbasketballclub.com/shoot/athletes/testing3-schmidt",
-      "current_state": "production",
-      "test_method": "HTTP GET",
-      "expected_result": "2xx/3xx within 15s",
-      "actual_result": "status 200",
-      "failure": null,
-      "fix": null,
-      "evidence": "https://www.fairfieldbasketballclub.com/shoot/athletes/testing3-schmidt",
-      "final_status": "PASS"
+      "component": "072 v4.3 paste",
+      "final_status": "BLOCKED",
+      "actual_result": "Production v4.2 — Mike paste required"
     },
     {
-      "component": "Web route https://www.fairfieldbasketballclub.com/shoot/athletes/curtis-schmidt",
-      "current_state": "production",
-      "test_method": "HTTP GET",
-      "expected_result": "2xx/3xx within 15s",
-      "actual_result": "status 200",
-      "failure": null,
-      "fix": null,
-      "evidence": "https://www.fairfieldbasketballclub.com/shoot/athletes/curtis-schmidt",
-      "final_status": "PASS"
-    },
-    {
-      "component": "Web route https://www.fairfieldbasketballclub.com/shoot/leaderboard",
-      "current_state": "production",
-      "test_method": "HTTP GET",
-      "expected_result": "2xx/3xx within 15s",
-      "actual_result": "status 200",
-      "failure": null,
-      "fix": null,
-      "evidence": "https://www.fairfieldbasketballclub.com/shoot/leaderboard",
-      "final_status": "PASS"
-    },
-    {
-      "component": "Disposable submission XP",
-      "current_state": "repository-ready",
-      "test_method": "node tools/testing/autonomous-qa-run.mjs --live-create",
-      "expected_result": "XP Event created after API submission",
-      "actual_result": "Skipped in read-only mode",
-      "failure": null,
-      "fix": null,
-      "evidence": null,
-      "final_status": "NOT_TESTED"
-    },
-    {
-      "component": "Repo check agent4-suite",
-      "current_state": "repository-ready",
-      "test_method": "node tools/testing/run-agent4-suite.js",
-      "expected_result": "exit 0",
-      "actual_result": "pass",
-      "failure": null,
-      "fix": null,
-      "evidence": "PASS  upload-make-lambda-response (19ms)\nPASS  c025-zoom-recording-credit (20ms)\nPASS  tools/testing node --test (115/117/verifier) (95ms)\nPASS  validate-v2-release-readiness (28ms)\nPASS  challenge-year-engine (49ms)\nPASS  season-launch-control (113ms)\n\nAgent 4 suite: 29 passed, 0 failed, 29 total",
-      "final_status": "PASS"
-    },
-    {
-      "component": "Repo check validate-v2-release-readiness",
-      "current_state": "repository-ready",
-      "test_method": "node tools/validate-v2-release-readiness.js",
-      "expected_result": "exit 0",
-      "actual_result": "pass",
-      "failure": null,
-      "fix": null,
-      "evidence": "PASS  DEV verification package mentions: Live DEV install remains\nPASS  DEV verification package mentions: offline\n\n== Summary ==\nFailures: 0\nWarnings: 1\nRESULT: PASS\nWARN  known-issues does not mention 066 offline harness evidence",
-      "final_status": "PASS"
-    },
-    {
-      "component": "Repo check audit-source-of-truth",
-      "current_state": "repository-ready",
-      "test_method": "node tools/testing/audit-source-of-truth.mjs",
-      "expected_result": "exit 0",
-      "actual_result": "pass",
-      "failure": null,
-      "fix": null,
-      "evidence": "PASS source-of-truth audit: active references are reconciled",
-      "final_status": "PASS"
-    },
-    {
-      "component": "Repo check python-airtable-tests",
-      "current_state": "repository-ready",
-      "test_method": "python3 -m unittest discover -s tools/airtable/tests",
-      "expected_result": "exit 0",
-      "actual_result": "pass",
-      "failure": null,
-      "fix": null,
-      "evidence": "...................................................................................................................................................\n----------------------------------------------------------------------\nRan 147 tests in 0.138s\n\nOK",
-      "final_status": "PASS"
-    },
-    {
-      "component": "Repo check lambda-upload-tests",
-      "current_state": "repository-ready",
-      "test_method": "python3 -m unittest discover -s lambda/upload-asset/tests",
-      "expected_result": "exit 0",
-      "actual_result": "pass",
-      "failure": null,
-      "fix": null,
-      "evidence": "........................................................................{\"event\": \"season_fallback_used\", \"environment\": \"Production\", \"seasonSlug\": \"2026-2027\", \"enrollmentId\": \"recEnroll2027\", \"programInstanceId\": \"recPi202627\"}\n...................................................................\n----------------------------------------------------------------------\nRan 139 tests in 0.037s\n\nOK",
-      "final_status": "PASS"
-    },
-    {
-      "component": "Repo check web-test",
-      "current_state": "repository-ready",
-      "test_method": "npm test",
-      "expected_result": "exit 0",
-      "actual_result": "pass",
-      "failure": null,
-      "fix": null,
-      "evidence": " ✓ lib/airtable/errors.test.ts (5 tests) 3ms\n ✓ lib/game-manual/config.test.ts (2 tests) 2ms\n ✓ components/public-display/public-display-refresh.test.ts (1 test) 1ms\n\n Test Files  33 passed (33)\n      Tests  260 passed (260)\n   Start at  15:13:23\n   Duration  2.03s (transform 486ms, setup 0ms, collect 1.00s, tests 257ms, environment 6ms, prepare 1.82s)",
-      "final_status": "PASS"
-    },
-    {
-      "component": "Repo check web-typecheck",
-      "current_state": "repository-ready",
-      "test_method": "npm run typecheck",
-      "expected_result": "exit 0",
-      "actual_result": "pass",
-      "failure": null,
-      "fix": null,
-      "evidence": "> 127-si-shooting-challenge-web@0.1.0 typecheck\n> tsc --noEmit",
-      "final_status": "PASS"
-    },
-    {
-      "component": "Repo check web-lint",
-      "current_state": "repository-ready",
-      "test_method": "npm run lint",
-      "expected_result": "exit 0",
-      "actual_result": "pass",
-      "failure": null,
-      "fix": null,
-      "evidence": "> 127-si-shooting-challenge-web@0.1.0 lint\n> eslint .",
-      "final_status": "PASS"
-    },
-    {
-      "component": "Repo check web-build",
-      "current_state": "repository-ready",
-      "test_method": "npm run build",
-      "expected_result": "exit 0",
-      "actual_result": "pass",
-      "failure": null,
-      "fix": null,
-      "evidence": "├ ○ /zoom-meetings               5m      1y\n└ ƒ /zoom-meetings/[id]\n\n\nƒ Proxy (Middleware)\n\n○  (Static)   prerendered as static content\nƒ  (Dynamic)  server-rendered on demand",
-      "final_status": "PASS"
-    },
-    {
-      "component": "Repo check e2e-matrix",
-      "current_state": "repository-ready",
-      "test_method": "node tools/testing/run_e2e_matrix.mjs --out /opt/cursor/artifacts/autonomous-qa/E2E-MATRIX-RESULTS.json",
-      "expected_result": "exit 0",
-      "actual_result": "pass",
-      "failure": null,
-      "fix": null,
-      "evidence": "    \"I1:PASS\",\n    \"I6:BLOCKED\",\n    \"J1:NOT_TESTED\",\n    \"L1:PASS\",\n    \"L3:BLOCKED\",\n    \"SC006-WRITEBACK:PASS\"\n  ]\n}",
-      "final_status": "PASS"
-    },
-    {
-      "component": "Repo check sc007-008",
-      "current_state": "repository-ready",
-      "test_method": "node tools/testing/sc-007-008/run-suite.js",
-      "expected_result": "exit 0",
-      "actual_result": "pass",
-      "failure": null,
-      "fix": null,
-      "evidence": "PASS  sc-008-failure-path-pack (655ms)\nPASS  upload-make-lambda-response (22ms)\nPASS  agent4-xp-dedupe-matrix (26ms)\nPASS  072-074-email-helpers (18ms)\nPASS  072-weekly-xp-reconciliation (22ms)\nPASS  expected-actual-offline (70ms)\n\nSC-007/008 suite: 7 passed, 0 failed, 7 total",
-      "final_status": "PASS"
+      "component": "Weekly email positive path",
+      "final_status": "BLOCKED",
+      "actual_result": "Pending 072 paste + live send proof"
     }
   ],
-  "repo_checks": [
-    {
-      "name": "agent4-suite",
-      "command": "node tools/testing/run-agent4-suite.js",
-      "exitCode": 0,
-      "durationMs": 909,
-      "pass": true,
-      "outputTail": "PASS  upload-make-lambda-response (19ms)\nPASS  c025-zoom-recording-credit (20ms)\nPASS  tools/testing node --test (115/117/verifier) (95ms)\nPASS  validate-v2-release-readiness (28ms)\nPASS  challenge-year-engine (49ms)\nPASS  season-launch-control (113ms)\n\nAgent 4 suite: 29 passed, 0 failed, 29 total"
-    },
-    {
-      "name": "validate-v2-release-readiness",
-      "command": "node tools/validate-v2-release-readiness.js",
-      "exitCode": 0,
-      "durationMs": 28,
-      "pass": true,
-      "outputTail": "PASS  DEV verification package mentions: Live DEV install remains\nPASS  DEV verification package mentions: offline\n\n== Summary ==\nFailures: 0\nWarnings: 1\nRESULT: PASS\nWARN  known-issues does not mention 066 offline harness evidence"
-    },
-    {
-      "name": "audit-source-of-truth",
-      "command": "node tools/testing/audit-source-of-truth.mjs",
-      "exitCode": 0,
-      "durationMs": 111,
-      "pass": true,
-      "outputTail": "PASS source-of-truth audit: active references are reconciled"
-    },
-    {
-      "name": "python-airtable-tests",
-      "command": "python3 -m unittest discover -s tools/airtable/tests",
-      "exitCode": 0,
-      "durationMs": 667,
-      "pass": true,
-      "outputTail": "...................................................................................................................................................\n----------------------------------------------------------------------\nRan 147 tests in 0.138s\n\nOK"
-    },
-    {
-      "name": "lambda-upload-tests",
-      "command": "python3 -m unittest discover -s lambda/upload-asset/tests",
-      "exitCode": 0,
-      "durationMs": 646,
-      "pass": true,
-      "outputTail": "........................................................................{\"event\": \"season_fallback_used\", \"environment\": \"Production\", \"seasonSlug\": \"2026-2027\", \"enrollmentId\": \"recEnroll2027\", \"programInstanceId\": \"recPi202627\"}\n...................................................................\n----------------------------------------------------------------------\nRan 139 tests in 0.037s\n\nOK"
-    },
-    {
-      "name": "web-test",
-      "command": "npm test",
-      "exitCode": 0,
-      "durationMs": 2402,
-      "pass": true,
-      "outputTail": " ✓ lib/airtable/errors.test.ts (5 tests) 3ms\n ✓ lib/game-manual/config.test.ts (2 tests) 2ms\n ✓ components/public-display/public-display-refresh.test.ts (1 test) 1ms\n\n Test Files  33 passed (33)\n      Tests  260 passed (260)\n   Start at  15:13:23\n   Duration  2.03s (transform 486ms, setup 0ms, collect 1.00s, tests 257ms, environment 6ms, prepare 1.82s)"
-    },
-    {
-      "name": "web-typecheck",
-      "command": "npm run typecheck",
-      "exitCode": 0,
-      "durationMs": 1422,
-      "pass": true,
-      "outputTail": "> 127-si-shooting-challenge-web@0.1.0 typecheck\n> tsc --noEmit"
-    },
-    {
-      "name": "web-lint",
-      "command": "npm run lint",
-      "exitCode": 0,
-      "durationMs": 4534,
-      "pass": true,
-      "outputTail": "> 127-si-shooting-challenge-web@0.1.0 lint\n> eslint ."
-    },
-    {
-      "name": "web-build",
-      "command": "npm run build",
-      "exitCode": 0,
-      "durationMs": 3645,
-      "pass": true,
-      "outputTail": "├ ○ /zoom-meetings               5m      1y\n└ ƒ /zoom-meetings/[id]\n\n\nƒ Proxy (Middleware)\n\n○  (Static)   prerendered as static content\nƒ  (Dynamic)  server-rendered on demand"
-    },
-    {
-      "name": "e2e-matrix",
-      "command": "node tools/testing/run_e2e_matrix.mjs --out /opt/cursor/artifacts/autonomous-qa/E2E-MATRIX-RESULTS.json",
-      "exitCode": 0,
-      "durationMs": 2317,
-      "pass": true,
-      "outputTail": "    \"I1:PASS\",\n    \"I6:BLOCKED\",\n    \"J1:NOT_TESTED\",\n    \"L1:PASS\",\n    \"L3:BLOCKED\",\n    \"SC006-WRITEBACK:PASS\"\n  ]\n}"
-    },
-    {
-      "name": "sc007-008",
-      "command": "node tools/testing/sc-007-008/run-suite.js",
-      "exitCode": 0,
-      "durationMs": 859,
-      "pass": true,
-      "outputTail": "PASS  sc-008-failure-path-pack (655ms)\nPASS  upload-make-lambda-response (22ms)\nPASS  agent4-xp-dedupe-matrix (26ms)\nPASS  072-074-email-helpers (18ms)\nPASS  072-weekly-xp-reconciliation (22ms)\nPASS  expected-actual-offline (70ms)\n\nSC-007/008 suite: 7 passed, 0 failed, 7 total"
-    }
-  ],
-  "completed_at": "2026-08-23T15:13:52.809Z",
   "summary": {
-    "total": 26,
-    "pass": 25,
+    "total": 14,
+    "pass": 8,
     "fail": 0,
-    "finding": 0,
-    "blocked": 0,
-    "not_tested": 1
-  }
+    "finding": 3,
+    "blocked": 4,
+    "not_tested": 0
+  },
+  "cleanup_report": "/opt/cursor/artifacts/autonomous-qa/cleanup-report.json",
+  "full_report": "docs/testing/autonomous-qa/AUTONOMOUS_QA_20260823_POST_XP_DELETION_REPORT.md"
 }

@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-23 (autonomous QA continuation — 072 v4.3, SUBMISSION_XP repairs, 25/26 PASS)  
+**Last verification (repo):** 2026-08-23 (post-XP-deletion autonomous QA — live-create PASS, 3 expected FINDINGs, 4 BLOCKED pastes)  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -268,7 +268,8 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - Tremendous sandbox validation
 - Lambda season CodeOnly deploy (optional follow-ups open)
 - Repository integrity + PII redaction pass (this audit)
-- **2026-08-23 autonomous QA continuation:** SUBMISSION_XP repairs (4 submissions); 072 v4.3 root-cause fix for WAS `reczxTIpVI8ZJLex0`; full XP reconciliation PASS on all four Schmidt test enrollments; autonomous QA **25 PASS / 0 FINDING**
+- **2026-08-23 post-XP-deletion autonomous QA:** Four temporary repair XP Events deleted by Mike; disposable live-create **PASS** (010 → SUBMISSION_XP, idempotent); Perfect Week **PASS** (39 active); Xavier/Testing3/Curtis **FINDING** (4 missing repair rows not recreated); stale-field check **PASS** (no phantom links); **010/057/072 paste BLOCKED** pending Mike
+- **2026-08-23 autonomous QA continuation:** SUBMISSION_XP repairs (4 submissions, later deleted); 072 v4.3 root-cause fix for WAS `reczxTIpVI8ZJLex0`; autonomous QA harness
 
 ### Pending / needs live proof
 
