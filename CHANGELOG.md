@@ -9,6 +9,23 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **Perfect Week Testing XP repair (2026-08-23)** — Authorized PROD backfill for enrollment
+  `rec93mAfo5jKqP3g5`: five `SUBMISSION_XP|{id}` events (010 contract), five shot-milestone
+  XP events from Pending unlocks (059 contract). Homework `recbPYfZlM7aC9HWg` and three video
+  rows skipped (not review-eligible / zero XP). Script:
+  `tools/testing/repair_perfect_week_testing.mjs`. Evidence:
+  `/opt/cursor/artifacts/POST-REPAIR-REPORT-rec93mAfo5jKqP3g5.md`.
+
+### Web
+
+#### Changed
+- **Public athlete XP activity ledger (2026-08-23)** — Profile activity uses enrollment-scoped
+  XP loader (up to 200 events), **XP Activity Date** for display, Load more pagination, and
+  dashboard truncation notice (25 vs full ledger). Tests in `public-athlete-activity.test.ts`.
+
+### Airtable
+
+#### Changed
 - **071 v4.2 + 073 v4.3 — Homework/Video Feedback parent email redesign (2026-08-22)** —
   Communications Hub branded React Email templates (`HOMEWORK_FEEDBACK`,
   `VIDEO_FEEDBACK`) aligned with Welcome and Weekly Athlete Summary. **071**
