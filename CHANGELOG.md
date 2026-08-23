@@ -21,6 +21,14 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   Regenerate: `python3 tools/airtable/extract_production_qa_paste_bundles.py`.
 
 #### Changed
+- **057 v2.0 / 072 v4.6 Perfect Week grace period (2026-08-23)** — Backdated
+  submissions qualify when uploaded within a configurable grace window (default 48 hours
+  after end of Activity Date in America/Denver). Repository contract:
+  `lib/was-email-contracts/perfect-week-grace-period.js`. Email separates **Shooting
+  Days Logged** (Count This Submission?) from **Perfect Week Qualifying Days**
+  (grace-aware countable). Paste checklist:
+  `docs/deploy-checklists/057-v2.0-perfect-week-grace-period.md`. **Airtable formula
+  + schema changes require Mike approval before Production paste.**
 - **072 v4.5 / 074 v3.2 Perfect Week criteria (2026-08-23)** — Weekly email days logged
   uses Perfect Week Countable submissions + Activity Date against Achievements
   `PERFECT_WEEK` Trigger Threshold (not `Days Logged This Week` rollup). Criteria
