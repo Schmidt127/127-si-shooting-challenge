@@ -29,7 +29,11 @@ export function AthleteProfileView({ data }: AthleteProfileViewProps) {
         <ProgressionPanel progression={data.progression} />
         <StreakSection streaks={data.streaks} streakAchievements={streakAchievements} />
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-10">
-          <RecentActivityLog items={data.recentActivity} />
+          <RecentActivityLog
+            items={data.recentActivity}
+            totalCount={data.activityLedgerTotal}
+            notice={data.activityLedgerNotice}
+          />
           <WeeklyPerformance weeks={data.weekly} />
         </div>
         <AchievementCollection achievements={data.achievements} />

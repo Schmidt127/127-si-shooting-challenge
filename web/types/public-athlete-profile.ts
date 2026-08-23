@@ -117,6 +117,10 @@ export type PublicAthleteProfile = {
   progression: PublicProgression;
   streaks: PublicStreaks;
   recentActivity: PublicActivityItem[];
+  /** Full count of XP activity rows loaded server-side (may exceed first-page UI slice). */
+  activityLedgerTotal: number;
+  /** Optional integrity or pagination notice — never includes raw Airtable record IDs. */
+  activityLedgerNotice: string | null;
   weekly: PublicWeeklySummary[];
   achievements: PublicAchievement[];
   fetchedAt: string;
