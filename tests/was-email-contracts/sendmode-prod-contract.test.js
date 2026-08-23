@@ -21,8 +21,8 @@ const s079 = read(
 const architecture = read("docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md");
 const index = read("docs/automation-index.md");
 
-test("074 v3.1 records test mode but never owns network delivery", () => {
-  assert.ok(/Version:\s*v3\.1/.test(s074));
+test("074 v3.2 records test mode but never owns network delivery", () => {
+  assert.ok(/Version:\s*v3\.2/.test(s074));
   assert.ok(/testMode defaults true/.test(s074));
   assert.ok(/Email Handoff Queue/.test(s074));
   assert.ok(/Only Automation 079 may send/.test(s074));

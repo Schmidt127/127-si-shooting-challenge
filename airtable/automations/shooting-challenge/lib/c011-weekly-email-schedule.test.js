@@ -62,7 +62,7 @@ test("074 creates the canonical Hub handoff and never writes Weekly Email Sent?"
   assert.ok(/WEEKLY_ATHLETE_SUMMARY\|WEEKLY_ATHLETE_SUMMARY/.test(s074));
   assert.ok(/Do not write Weekly Email Sent\?/.test(s074));
   assert.ok(/Do not write Weekly Email Sent\? or Weekly Email Sent At/.test(s074));
-  assert.ok(/Version:\s*v3\.1/.test(s074));
+  assert.ok(/Version:\s*v3\.2/.test(s074));
 });
 
 test("priorSaturdayKeyDenver Sunday→Saturday boundary", () => {

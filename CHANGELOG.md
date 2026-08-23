@@ -21,6 +21,18 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   Regenerate: `python3 tools/airtable/extract_production_qa_paste_bundles.py`.
 
 #### Changed
+- **072 v4.5 / 074 v3.2 Perfect Week criteria (2026-08-23)** — Weekly email days logged
+  uses Perfect Week Countable submissions + Activity Date against Achievements
+  `PERFECT_WEEK` Trigger Threshold (not `Days Logged This Week` rollup). Criteria
+  sourced from Achievements, XP Reward Rules, Automation 057 WAS writeback, and WAS
+  formula fields (video, zoom, homework, eligibility). Shared contract:
+  `lib/was-email-contracts/perfect-week-criteria.js`. Regression tests cover criteria
+  changes for required days, video count, and zoom conditional rules.
+- **072 v4.4 / 074 v3.2 weekly email metrics (2026-08-23)** — Canonical Denver date-key
+  day count, weekly scoped shots/makes, goal completion %, shooting %, Video Feedback
+  week list, and Zoom attendance in package build + Hub payload. Shared contract:
+  `lib/was-email-contracts/weekly-summary-email-content.js`. 074 prefers 072 canonical
+  payload fields over WAS rollups for days logged and goal display.
 - **Perfect Week Testing XP repair (2026-08-23)** — Authorized PROD backfill for enrollment
   `rec93mAfo5jKqP3g5`: five `SUBMISSION_XP|{id}` events (010 contract), five shot-milestone
   XP events from Pending unlocks (059 contract). Homework `recbPYfZlM7aC9HWg` and three video

@@ -29,8 +29,8 @@ function test(name, fn) {
   console.log(`PASS  ${name}`);
 }
 
-test("072 v4.3 owns escaped HTML and plain-text package rendering", () => {
-  assert.ok(/Version:\s*v4\.3/.test(s072));
+test("072 v4.5 owns escaped HTML and plain-text package rendering", () => {
+  assert.ok(/Version:\s*v4\.5/.test(s072));
   assert.ok(/function escapeHtml\(value\)/.test(s072));
   for (const entity of ["&amp;", "&lt;", "&gt;", "&quot;", "&#39;"]) {
     assert.ok(s072.includes(entity), `072 escapeHtml must emit ${entity}`);
@@ -43,10 +43,17 @@ test("072 v4.3 owns escaped HTML and plain-text package rendering", () => {
 test("072 remains Denver-safe and fails closed on reporting disagreement", () => {
   assert.ok(/timeZone:\s*"America\/Denver"/.test(s072));
   assert.ok(/Intl\.DateTimeFormat/.test(s072));
+  assert.ok(/toDateKey/.test(s072));
+  assert.ok(/canonicalDaysLogged/.test(s072));
   assert.ok(/Weekly shots disagreement/.test(s072));
+  assert.ok(/Weekly makes disagreement/.test(s072));
   assert.ok(/Weekly XP disagreement/.test(s072));
   assert.ok(/WAS-linked active XP/.test(s072));
   assert.ok(/Unlinked canonical XP/.test(s072));
+  assert.ok(/Perfect Week Progress/.test(s072));
+  assert.ok(/perfectWeekCountable/.test(s072));
+  assert.ok(/buildPerfectWeekEmailCriteria/.test(s072));
+  assert.ok(/Achievements/.test(s072));
 });
 
 test("072 never performs external delivery", () => {
@@ -54,8 +61,8 @@ test("072 never performs external delivery", () => {
   assert.ok(!/makeWebhookUrl/.test(s072));
 });
 
-test("074 v3.1 creates one canonical Hub handoff", () => {
-  assert.ok(/Version:\s*v3\.1/.test(s074));
+test("074 v3.2 creates one canonical Hub handoff", () => {
+  assert.ok(/Version:\s*v3\.2/.test(s074));
   assert.ok(/Email Handoff Queue/.test(s074));
   assert.ok(/CONFIG\.values\.eventType\}\|\$\{CONFIG\.values\.sourceTableToken\}\|\$\{recordId\}/.test(s074));
   assert.ok(/existing_handoff/.test(s074));
@@ -67,6 +74,10 @@ test("074 v3.1 creates one canonical Hub handoff", () => {
 test("074 delegates delivery and delivery proof", () => {
   assert.ok(!/\bfetch\s*\(/.test(s074));
   assert.ok(/Only Automation 079 may send/.test(s074));
+  assert.ok(/canonicalDaysLogged/.test(s074));
+  assert.ok(/videoSubmissions/.test(s074));
+  assert.ok(/perfectWeekCriteria/.test(s074));
+  assert.ok(/goalCompletionPercent/.test(s074));
   assert.ok(/Do not write Weekly Email Sent\?/.test(s074));
   assert.ok(/sendToMake\]\s*=\s*false/.test(s074));
 });
