@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-09
-Last GitHub Update: 2026-08-23 (v4.5 Perfect Week criteria from Airtable + canonical metrics)
+Last GitHub Update: 2026-08-23 (v4.6 Perfect Week grace + email day separation)
 
 Purpose:
 Build the Weekly Athlete Summary email package (subject/HTML/text/payload)
@@ -32,11 +32,14 @@ Send plane: 118 → 072 → 119 → 074 → 079 → Communications Hub → Resen
  * 072 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Build Weekly Summary Email Package
  *
- * Version: v4.5
+ * Version: v4.6
  * Date Written: 2026-06-20
  * Last Updated: 2026-08-23
  *
  * VERSION HISTORY
+ * - v4.6 (2026-08-23): Email separates General Shooting Days Logged from Perfect Week
+ *   Qualifying Days; Perfect Week timing uses 48-hour grace contract (Airtable formula
+ *   authority via Perfect Week Countable Submission?).
  * - v4.5 (2026-08-23): Perfect Week criteria from Achievements + XP Reward Rules + WAS
  *   fields (057 writeback); days logged uses Perfect Week Countable + Activity Date
  *   against authoritative required-day threshold (not Days Logged rollup).
@@ -123,7 +126,7 @@ Send plane: 118 → 072 → 119 → 074 → 079 → Communications Hub → Resen
 
 const SCRIPT = {
   scriptName: "072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package",
-  version: "v4.5",
+  version: "v4.6",
   versionDate: "2026-08-23",
   originalWrittenDate: "2026-06-20",
   lastUpdated: "2026-08-23",
@@ -554,6 +557,8 @@ function buildPerfectWeekEmailCriteria(input) {
       ? Math.ceil(weeklyGoal / requiredShootingDays)
       : null);
   const daysLogged = Number(input.daysLogged ?? parsed.passingOfficialDays ?? 0);
+  const shootingDaysLogged =
+    input.shootingDaysLogged != null ? Number(input.shootingDaysLogged) : null;
   const videoCount = Number(input.videoCount || 0);
   const videoRequirementMet =
     input.videoRequirementMet === true ||
@@ -563,8 +568,14 @@ function buildPerfectWeekEmailCriteria(input) {
   return {
     requiredShootingDays,
     dailyShootingMinimum,
+    shootingDaysLogged,
+    shootingDaysDisplay:
+      shootingDaysLogged != null
+        ? formatDaysLoggedAgainstCriteria(shootingDaysLogged, requiredShootingDays)
+        : null,
     daysLogged,
     daysLoggedDisplay: formatDaysLoggedAgainstCriteria(daysLogged, requiredShootingDays),
+    perfectWeekQualifyingDaysDisplay: formatDaysLoggedAgainstCriteria(daysLogged, requiredShootingDays),
     videoCount,
     videoRequired: input.videoRequired ?? null,
     videoRequirementMet,
@@ -636,7 +647,16 @@ function fullHtml(data) {
     data.goalCompletionPercent != null ? `${formatNumber(data.goalCompletionPercent)}%` : "—";
   const shootingPct =
     data.shootingPercentage != null ? `${formatNumber(data.shootingPercentage)}%` : "—";
-  return `<!doctype html><html><body style="margin:0;background:#F2F2F2;font-family:Arial,sans-serif;color:#262626"><div style="max-width:700px;margin:auto;background:#fff"><div style="background:#0034B7;color:#fff;padding:22px;border-bottom:6px solid #FF8B00"><h2 style="margin:0">Weekly Shooting Challenge Summary</h2><p style="margin:6px 0 0">${escapeHtml(data.weekLabel)}</p></div><div style="padding:22px"><p>Hi ${escapeHtml(data.firstName || data.athleteName)}, here is your weekly progress.</p><h3>Shooting</h3><p>Days Logged: <strong>${escapeHtml(data.daysLoggedDisplay || formatNumber(data.days))}</strong><br>Shots: <strong>${formatNumber(data.shots)}</strong><br>Makes: <strong>${formatNumber(data.makes)}</strong><br>Shooting %: <strong>${shootingPct}</strong><br>Weekly Goal: <strong>${data.goal ? formatNumber(data.goal) : "—"}</strong><br>Goal Completion: <strong>${goalCompletion}</strong></p><h3>Perfect Week Progress</h3><p>Daily minimum: <strong>${data.perfectWeekDailyMinimum != null ? formatNumber(data.perfectWeekDailyMinimum) : "—"}</strong><br>Videos: <strong>${escapeHtml(data.perfectWeekVideoProgress || "—")}</strong><br>Zoom: <strong>${escapeHtml(data.zoomSummary)}</strong><br>Homework: <strong>${escapeHtml(data.perfectWeekHomeworkStatus || "—")}</strong><br>Eligible: <strong>${data.perfectWeekEligible ? "Yes" : "No"}</strong>${data.perfectWeekXpAmount != null ? `<br>Perfect Week XP: <strong>${formatNumber(data.perfectWeekXpAmount)}</strong>` : ""}</p><h3>Video Submissions</h3>${listHtml(data.videoLines)}<h3>Homework Assigned</h3>${listHtml(data.assignments)}<h3>Homework Progress</h3>${listHtml(data.homework)}<h3>XP Earned</h3><p><strong>${formatNumber(data.weekXp)} XP</strong></p>${listHtml(data.xpLines)}<h3>Progression</h3><p>Current Level: <strong>${escapeHtml(data.level || "Not yet assigned")}</strong><br>Current Streak: <strong>${formatNumber(data.streak)} days</strong>${data.streakStatus ? `<br>Streak Status: <strong>${escapeHtml(data.streakStatus)}</strong>` : ""}</p></div></div></body></html>`;
+  const shootingDaysLine = escapeHtml(
+    data.shootingDaysDisplay || formatNumber(data.shootingDaysLogged || data.days)
+  );
+  const perfectWeekDaysLine = escapeHtml(
+    data.perfectWeekDaysDisplay ||
+      data.perfectWeekQualifyingDaysDisplay ||
+      data.daysLoggedDisplay ||
+      formatNumber(data.perfectWeekDaysLogged || data.days)
+  );
+  return `<!doctype html><html><body style="margin:0;background:#F2F2F2;font-family:Arial,sans-serif;color:#262626"><div style="max-width:700px;margin:auto;background:#fff"><div style="background:#0034B7;color:#fff;padding:22px;border-bottom:6px solid #FF8B00"><h2 style="margin:0">Weekly Shooting Challenge Summary</h2><p style="margin:6px 0 0">${escapeHtml(data.weekLabel)}</p></div><div style="padding:22px"><p>Hi ${escapeHtml(data.firstName || data.athleteName)}, here is your weekly progress.</p><h3>Shooting</h3><p>Shooting Days Logged: <strong>${shootingDaysLine}</strong><br>Shots: <strong>${formatNumber(data.shots)}</strong><br>Makes: <strong>${formatNumber(data.makes)}</strong><br>Shooting %: <strong>${shootingPct}</strong><br>Weekly Goal: <strong>${data.goal ? formatNumber(data.goal) : "—"}</strong><br>Goal Completion: <strong>${goalCompletion}</strong></p><h3>Perfect Week Progress</h3><p>Perfect Week Qualifying Days: <strong>${perfectWeekDaysLine}</strong><br>Daily minimum: <strong>${data.perfectWeekDailyMinimum != null ? formatNumber(data.perfectWeekDailyMinimum) : "—"}</strong><br>Videos: <strong>${escapeHtml(data.perfectWeekVideoProgress || "—")}</strong><br>Zoom: <strong>${escapeHtml(data.zoomSummary)}</strong><br>Homework: <strong>${escapeHtml(data.perfectWeekHomeworkStatus || "—")}</strong><br>Eligible: <strong>${data.perfectWeekEligible ? "Yes" : "No"}</strong>${data.perfectWeekXpAmount != null ? `<br>Perfect Week XP: <strong>${formatNumber(data.perfectWeekXpAmount)}</strong>` : ""}</p><h3>Video Submissions</h3>${listHtml(data.videoLines)}<h3>Homework Assigned</h3>${listHtml(data.assignments)}<h3>Homework Progress</h3>${listHtml(data.homework)}<h3>XP Earned</h3><p><strong>${formatNumber(data.weekXp)} XP</strong></p>${listHtml(data.xpLines)}<h3>Progression</h3><p>Current Level: <strong>${escapeHtml(data.level || "Not yet assigned")}</strong><br>Current Streak: <strong>${formatNumber(data.streak)} days</strong>${data.streakStatus ? `<br>Streak Status: <strong>${escapeHtml(data.streakStatus)}</strong>` : ""}</p></div></div></body></html>`;
 }
 
 function shortHtml(data) {
@@ -647,7 +667,7 @@ function plainText(data, short) {
   if (short) {
     return `Shooting Challenge Weekly Reminder\n${data.weekLabel}\n\nNo countable shooting activity was recorded this week.`;
   }
-  return `Weekly Shooting Challenge Summary\n${data.weekLabel}\nAthlete: ${data.athleteName}\nDays Logged: ${data.daysLoggedDisplay || data.days}\nShots: ${data.shots}\nMakes: ${data.makes}\nShooting %: ${data.shootingPercentage}\nWeekly Goal: ${data.goal}\nGoal Completion: ${data.goalCompletionPercent}\nPerfect Week Videos: ${data.perfectWeekVideoProgress}\nPerfect Week Zoom: ${data.zoomSummary}\nPerfect Week Homework: ${data.perfectWeekHomeworkStatus}\nVideo: ${data.videoLines.join(" | ")}\nWeekly XP: ${data.weekXp}\nHomework: ${data.homework.join(" | ")}\nXP: ${data.xpLines.join(" | ")}`;
+  return `Weekly Shooting Challenge Summary\n${data.weekLabel}\nAthlete: ${data.athleteName}\nShooting Days Logged: ${data.shootingDaysDisplay || data.shootingDaysLogged || data.days}\nPerfect Week Qualifying Days: ${data.perfectWeekDaysDisplay || data.perfectWeekQualifyingDaysDisplay || data.daysLoggedDisplay || data.perfectWeekDaysLogged || data.days}\nShots: ${data.shots}\nMakes: ${data.makes}\nShooting %: ${data.shootingPercentage}\nWeekly Goal: ${data.goal}\nGoal Completion: ${data.goalCompletionPercent}\nPerfect Week Videos: ${data.perfectWeekVideoProgress}\nPerfect Week Zoom: ${data.zoomSummary}\nPerfect Week Homework: ${data.perfectWeekHomeworkStatus}\nVideo: ${data.videoLines.join(" | ")}\nWeekly XP: ${data.weekXp}\nHomework: ${data.homework.join(" | ")}\nXP: ${data.xpLines.join(" | ")}`;
 }
 
 async function skipBuild(recordId, action, message) {
@@ -794,6 +814,7 @@ async function main() {
     if (!activityDateKey || !isDateKeyInWeekRange(activityDateKey, weekStartKey, weekEndKey)) continue;
     perfectWeekDayKeys.add(activityDateKey);
   }
+  const shootingDaysLogged = days.size;
   const perfectWeekDaysLogged = perfectWeekDayKeys.size;
   const scannedShots = countableSubs.reduce(
     (sum, s) => sum + getNumber(s, submissionsTable, CONFIG.submissions.shots),
@@ -1104,6 +1125,7 @@ async function main() {
     weeklyGoalShots,
     dailyDetail: pwDailyDetail,
     daysLogged: perfectWeekDaysLogged,
+    shootingDaysLogged,
     achievementRequiredDays,
     achievementXpAmount,
     videoCount: pwVideoCount,
@@ -1174,6 +1196,10 @@ async function main() {
     athleteName,
     firstName,
     weekLabel,
+    shootingDaysLogged,
+    shootingDaysDisplay: perfectWeekCriteria.shootingDaysDisplay,
+    perfectWeekDaysLogged,
+    perfectWeekDaysDisplay: perfectWeekCriteria.perfectWeekQualifyingDaysDisplay,
     days: perfectWeekCriteria.daysLogged,
     daysLoggedDisplay: perfectWeekCriteria.daysLoggedDisplay,
     shots,
@@ -1212,7 +1238,9 @@ async function main() {
     canonicalShots: shots,
     canonicalMakes: makes,
     canonicalDaysLogged: perfectWeekCriteria.daysLogged,
+    canonicalShootingDaysLogged: shootingDaysLogged,
     daysLoggedDisplay: perfectWeekCriteria.daysLoggedDisplay,
+    shootingDaysDisplay: perfectWeekCriteria.shootingDaysDisplay,
     requiredShootingDays: perfectWeekCriteria.requiredShootingDays,
     dailyShootingMinimum: perfectWeekCriteria.dailyShootingMinimum,
     perfectWeekCriteria,

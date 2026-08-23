@@ -21,6 +21,12 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   Regenerate: `python3 tools/airtable/extract_production_qa_paste_bundles.py`.
 
 #### Changed
+- **Perfect Week 48-hour submission grace (2026-08-23)** — Repository contract
+  `lib/was-email-contracts/perfect-week-submission-timing.js` mirrors Denver end-of-activity-day
+  + configurable grace hours (default 48). Email **072 v4.6** labels Shooting Days Logged
+  separately from Perfect Week Qualifying Days; **074** Hub payload carries both counts.
+  Airtable formula paste plan (no prod schema change in repo):
+  `docs/deploy-checklists/perfect-week-grace-period-2026-08-23.md`.
 - **072 v4.5 / 074 v3.2 Perfect Week criteria (2026-08-23)** — Weekly email days logged
   uses Perfect Week Countable submissions + Activity Date against Achievements
   `PERFECT_WEEK` Trigger Threshold (not `Days Logged This Week` rollup). Criteria
