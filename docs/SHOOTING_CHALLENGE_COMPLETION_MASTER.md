@@ -153,7 +153,7 @@ Authoritative GitHub SCRIPT headers + [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) o
 | Homework XP | Mike | live-tested | 064/065 lifecycle proof | Prepare/create split | Broader eligibility paths | PKG-007 | P1 | 2026-08-23 |
 | Video Upload | Mike | live-tested | C-013 E2E; 070b v4.7 | Lambda season code | Retry proof; secret rotation | — | P1 | 2026-08-23 |
 | Video Feedback | Mike | live-tested | 013/022 paths | VF create/link | Full review/XP paths | PKG-007 | P1 | 2026-08-23 |
-| Video XP | Mike | blocked | PKG-007-RDY hold | 113/114 in repo | Production paste until lock release | PKG-006R lock | P1 | 2026-08-23 |
+| Video XP | Mike | needs live proof | **113 v6.4 / 114 v6.1 Live** (2026-08-23) | PKG-007 Schmidt lifecycle packet | Controlled award/withdrawal proof | PKG-007 proof | P1 | 2026-08-23 |
 | Zoom Attendance | Mike | live-tested | PKG-034; 101 v6.7 | Base XP lifecycle | Bonus tiers proof | — | P1 | 2026-08-23 |
 | Zoom Approval Email | Mike | live-tested | 117 v2.1 Hub handoff | Queue create only | Template live proof | Hub | P1 | 2026-08-23 |
 | Zoom Recording XP | Mike | Mike decision | C-025 design alts | Email path live | Credit writer decision (PKG-010) | Product decision | P2 | 2026-08-23 |
@@ -176,6 +176,15 @@ Authoritative GitHub SCRIPT headers + [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) o
 | SEO | Mike | deferred | noindex active | — | Cutover approval | SC-115 | P2 | 2026-08-23 |
 | Game Manual | Cursor | repository-ready | PKG-021 orientation | Quick-start UI | 2027 rules content | — | P2 | 2026-08-23 |
 | Documentation / Governance | Cursor | repository-ready | PKG-041/042; autonomous QA 2026-08-23 | Production-only docs; `autonomous-qa-run.mjs` | CONTROL.json SHA refresh | — | P1 | 2026-08-23 |
+
+### 0C.2 Video XP / PKG-006R lock (2026-08-23)
+
+| Check | Result |
+|-------|--------|
+| PKG-006R lock blocking 113/114 | **Released** — complete 2026-08-15 |
+| 113 / 114 Production install | **Live** — v6.4 / v6.1 MATCH GitHub |
+| PKG-007 lifecycle proof | **needs live proof** — Schmidt packet |
+| Investigation | [`PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md`](../investigations/PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md) |
 
 ### 0C.1 Autonomous QA — 2026-08-23 (post-XP-deletion)
 
@@ -217,7 +226,7 @@ Authoritative GitHub SCRIPT headers + [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) o
 | Mobile readability improvements | Cursor | `deferred` |
 | Documentation cleanup (ongoing) | Cursor | `repository-ready` |
 | Lambda upload retry and secret rotation | Mike | `needs live proof` |
-| Video XP Production paste after PKG-006R lock release | Mike | `blocked` |
+| Video XP Production lifecycle proof (PKG-007) | Mike | `needs live proof` |
 
 ### P2 — Future decisions or enhancements
 
@@ -530,14 +539,9 @@ claim occurred.
 | Automation **043** | **Retired / absent** | Do not recreate |
 | Automation **077** | **Deleted from Airtable** | Retired Make/Gmail path; GitHub source archived; slot recovered |
 
-**PKG-006R lock:** active until backlog review, replay, withdrawal/restoration, audit, totals, and natural-trigger evidence are complete. **041 v5.0 / 042 v4.1 installation deferred** until explicit lock release.
+**PKG-006R / PKG-036 locks:** **Complete 2026-08-15** — no longer block Video XP. **113 v6.4** and **114 v6.1** are **Live** in Production (API 2026-08-23). Remaining: PKG-007 controlled lifecycle proof per [`VIDEO-FEEDBACK-XP-PRODUCTION-SCHMIDT-TEST.md`](./deploy-checklists/VIDEO-FEEDBACK-XP-PRODUCTION-SCHMIDT-TEST.md). Investigation: [`PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md`](./investigations/PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md).
 
-**PKG-007-RDY-001 coordination hold:** Per the approved Video XP readiness
-package, do not paste, configure, enable, disable, or controlled-test Video XP
-Automations 113/114 in Production until Mike explicitly releases both the
-PKG-006R and PKG-036 coordination locks. This is a scheduling hold for the
-Video proof package; it does not alter the existing 041/042 ownership or
-release criteria.
+**PKG-007-RDY-001 (superseded for paste):** Historical scheduling hold until PKG-006R/PKG-036 release. Both complete; scripts installed. Hold now applies only to **missing lifecycle proof**, not paste.
 
 ---
 

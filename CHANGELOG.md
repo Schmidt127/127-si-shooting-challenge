@@ -27,7 +27,12 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   disagreement. Paste checklist:
   `docs/deploy-checklists/072-v4.3-was-linked-xp-reconciliation.md`. Offline:
   `node tools/testing/tests/test_072_weekly_xp_reconciliation.mjs`.
-- **Autonomous QA post-XP-deletion (2026-08-23)** — Disposable live-create PASS after
+- **PKG-006R Video XP lock investigation (2026-08-23)** — PKG-006R/PKG-036
+  locks complete; 113 v6.4 / 114 v6.1 already Live in Production. Stale
+  coordination-hold language removed from Video XP packet and Completion Master.
+  Remaining: PKG-007 lifecycle proof. Report:
+  `docs/investigations/PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md`.
+  Readiness test updated for 073 Hub handoff error strings.
   `Count It` + extended poll fix in `autonomous-qa-run.mjs`. Four deleted repair XP rows
   not recreated; Xavier/Testing3/Curtis show expected FINDING. Stale-field check: no
   phantom links. Report: `docs/testing/autonomous-qa/AUTONOMOUS_QA_20260823_POST_XP_DELETION_REPORT.md`.

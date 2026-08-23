@@ -1,8 +1,7 @@
 # Video Feedback XP — Production Schmidt Test Packet
 
-**Status:** Draft — repository readiness only; Production evidence pending. **All
-Production paste, configuration, and controlled testing are blocked until Mike
-explicitly releases both the PKG-006R and PKG-036 coordination locks.**
+**Status:** Draft — repository readiness + **Production install confirmed** (113 v6.4 / 114 v6.1 Live 2026-08-23). **Lifecycle proof pending** per PKG-007.
+**PKG-006R / PKG-036 locks:** **Released 2026-08-15** — no longer block paste or controlled testing. See [`PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md`](../investigations/PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md).
 **Scope:** `013 → 113 → 114 → rollups → 041 → 042`
 **Production base:** `appn84sqPw03zEbTT`
 **Owner/executor:** Mike only. Mike alone pastes scripts, changes native Production automations, or initiates this test.

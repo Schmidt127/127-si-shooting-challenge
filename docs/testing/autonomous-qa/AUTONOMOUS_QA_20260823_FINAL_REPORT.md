@@ -33,7 +33,7 @@ Live proof highlights:
 | Perfect Week award (057→058→059) | Calendar-blocked | Days Logged=7 + Eligible?=true |
 | Weekly email positive send | Needs live proof | 072→074→079→Resend on eligible week |
 | Tremendous production API | Blocked | Mike / Tremendous approval |
-| Video XP **113/114** | PKG-007-RDY hold | Paste when lock released |
+| Video XP **113/114** | PKG-007 lifecycle proof pending | **Live-installed** v6.4/v6.1 — not blocked by PKG-006R |
 
 ## Test matrix (condensed)
 
