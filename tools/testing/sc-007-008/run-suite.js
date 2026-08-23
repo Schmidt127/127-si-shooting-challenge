@@ -39,6 +39,16 @@ const COMMANDS = [
     ],
   },
   {
+    name: "072-weekly-xp-reconciliation",
+    cmd: process.execPath,
+    args: ["tools/testing/tests/test_072_weekly_xp_reconciliation.mjs"],
+  },
+  {
+    name: "paste-bundle-integrity",
+    cmd: process.execPath,
+    args: ["tools/testing/tests/test_paste_bundle_integrity.mjs"],
+  },
+  {
     name: "expected-actual-offline",
     cmd: process.execPath,
     args: ["--test", "tools/testing/tests/test_expected_actual.mjs"],

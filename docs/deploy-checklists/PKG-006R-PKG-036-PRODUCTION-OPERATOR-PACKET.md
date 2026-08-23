@@ -1,10 +1,9 @@
 # PKG-006R + PKG-036 — Unified Production operator packet
 
 > **Completion record — 2026-08-15:** **PKG-006R Complete.** Automation 010 v10.9
-> is ON after lifecycle proof. **PKG-036 Complete.** Automation 041 v5.0 and
-> 042 v4.1.2 are ON after Charlie 0→1→0 queue test. **Do not retest or
-> re-paste** unless source/trigger changes. Sections below retain the historical
-> 2026-08-13 baseline for audit trail only.
+> is ON after lifecycle proof. **PKG-006R and PKG-036 complete. Do not retest or
+> re-paste** unless source/trigger changes. **Video XP 113/114:** not blocked by
+> this lock — see [`PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md`](../investigations/PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md).
 
 **Date:** 2026-08-13 (amended with Mike-supplied Production baseline; **PKG-006R-HF-001** hotfix 2026-08-13; **completion 2026-08-15**)
 **Repository SHA:** verify `origin/master` before execution (`git rev-parse origin/master`)

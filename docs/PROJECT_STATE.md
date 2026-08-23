@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-08-21** (final Production version reconciliation; Perfect Week still calendar-blocked)
+Last updated: **2026-08-23** (post-XP-deletion autonomous QA — live-create PASS, orchestrator Count It fix)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
@@ -37,7 +37,17 @@ Last updated: **2026-08-21** (final Production version reconciliation; Perfect W
 
 **066 overlay (Mike 2026-08-19):** Production Automation 066 is **v3.8**. Historical v3.3 failure / v3.4–v3.5 proofs remain history.
 
-**010 overlay (final 2026-08-21):** Production Automation 010 is **v10.11** (run history `version: "v10.11"`). The 2026-08-19 **v10.10** note and midday Automations Code-column **v10.10** snapshot are **historical**. PKG-006R v10.9 lifecycle proof (2026-08-15) remains historical.
+**010 overlay (2026-08-23 API read):** Production Automations Code column = **v10.10**. GitHub = **v10.12**. Paste needed per [`deploy-checklists/010-v10.12-formula-settlement-grace.md`](./deploy-checklists/010-v10.12-formula-settlement-grace.md). Prior v10.11 run-history note remains historical.
+
+**057 overlay (2026-08-23 API read):** Production Automations Code column = **v1.8**. GitHub = **v1.9**. Paste needed per [`deploy-checklists/057-v1.9-goal-settlement-fix.md`](./deploy-checklists/057-v1.9-goal-settlement-fix.md).
+
+**072 overlay (2026-08-23):** GitHub **v4.3** fixes weekly XP false disagreement on WAS `reczxTIpVI8ZJLex0`. Production still **v4.2** until paste. Checklist: [`deploy-checklists/072-v4.3-was-linked-xp-reconciliation.md`](./deploy-checklists/072-v4.3-was-linked-xp-reconciliation.md).
+
+**Submission XP repair (2026-08-23):** Authorized idempotent repair created then **deleted** `SUBMISSION_XP` for submissions `rece0krfrEqiUEBVu`, `rec3zlR7xneAOatKh`, `recNqAXXzXAnac1GE`, `recLD7Fb6ph0yovyq` (XP Events `recWV95wEywdDJRO2`, `rec4M2QFrJFhSnvSG`, `recwWLcTOnTBQAwHo`, `recObGIdFNx7bfTMp`). Post-deletion reconciliation: Perfect Week **PASS**; Xavier/Testing3/Curtis show expected missing-XP **FINDING** (not recreated). Disposable live-create **PASS** on Testing3.
+
+**Autonomous QA harness (2026-08-23):** `tools/testing/autonomous-qa-run.mjs` — `--live-create` uses `Count It` + extended poll; manifest at `docs/testing/autonomous-qa/latest-manifest.json`.
+
+**Video XP / PKG-007 proof (2026-08-23):** PKG-006R/PKG-036 locks remain **complete**. Automations **113 v6.4** and **114 v6.1** are **Live**. **Controlled lifecycle proof PASS** — run `AUTONOMOUS_VIDEO_QA_20260823_164549` on Testing3 Schmidt (`recNu6fcBpF1GG3u5`): award/replay/withdrawal/restoration + 10 negative fail-closed cases. Report: [`testing/autonomous-qa/PKG-007_VIDEO_XP_PROOF_FINAL_REPORT.md`](./testing/autonomous-qa/PKG-007_VIDEO_XP_PROOF_FINAL_REPORT.md). Open: native 113/114 trigger UI attestation; 073 OFF confirmation; PAT cannot delete disposable assets (Mike cleanup).
 
 **101 overlay (final 2026-08-21):** Production Automation 101 is **v6.7** (live script body). Midday Automations Code-column **v6.6** snapshot is **historical / superseded**. Meeting `recxtpMu4ONbdDD45` safely skipped when reconciliation not needed.
 
@@ -75,7 +85,7 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 | **Automation standards (doc 06)** | **Active** — **066** remains the V2 rewrite reference pattern. Live paste is **v3.8** (Mike 2026-08-19). Older “v3.4 current reference” wording is historical for the createRecords contract era. |
 | **Multi-year architecture** | **Decided** — one base + Program Instance; **V2-013 queued** |
 | **Phase 2 — Platform Modernization** | Wave 2A planning + Phase 2B docs complete — implementation staged via backlog |
-| **V2-015 — Development base** | **Ready** — DEV-first pipeline permanent |
+| **V2-015 — Development base** | **Retired 2026-08-19** — production-only operation; historical snapshots remain |
 
 ---
 
@@ -103,16 +113,16 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 | Base ID | `appn84sqPw03zEbTT` |
 | Role | **Live season** — system of record |
 
-### Development (V2-015)
+### Development (V2-015) — **RETIRED 2026-08-19**
 
 | Item | Value |
 |------|--------|
-| Base name | `127SI - SHOOTING CHALLENGE - DEV` |
-| Base ID | `appTetnuCZlCZdTCT` |
-| Status | **Ready** — first testing environment |
-| Setup | [development-base-setup.md](./development-base-setup.md) |
+| Base name | ~~`127SI - SHOOTING CHALLENGE - DEV`~~ |
+| Base ID | ~~`appTetnuCZlCZdTCT`~~ |
+| Status | **Retired** — do not recreate or paste automations |
+| Historical setup | [development-base-setup.md](./development-base-setup.md) (read-only) |
 
-**Deploy rule:** GitHub → paste **dev** → audit → approve → paste **prod** → `CHANGELOG.md`.
+**Deploy rule (current):** GitHub → Mike-approved Production paste → `CHANGELOG.md`. Offline fixtures in `tools/airtable/v2_dev_runbook/` support contract tests only.
 
 ### Schema documentation (important)
 

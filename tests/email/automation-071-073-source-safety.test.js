@@ -23,13 +23,18 @@ t("073 syntax", () => checkSyntax(p073));
 t("074 syntax", () => checkSyntax(p074));
 t("079 syntax", () => checkSyntax(p079));
 t("117 syntax", () => checkSyntax(p117));
-t("071 v4.1 creates Communications Hub queue handoff (not Make webhook)", () => {
-  assert.match(s071, /Version: v4\.1/);
+t("071 v4.2 creates Communications Hub queue handoff (not Make webhook)", () => {
+  assert.match(s071, /Version: v4\.2/);
   assert.match(s071, /Email Handoff Queue/);
   assert.match(s071, /HOMEWORK_FEEDBACK\|HOMEWORK_COMPLETIONS\|/);
   assert.match(s071, /created_handoff/);
   assert.match(s071, /existing_handoff/);
   assert.doesNotMatch(s071, /makeWebhookUrl|hook\.us1\.make\.com|remoteFetchAsync|sendTag:"HOMEWORK_FEEDBACK_PARENT"|semanticFailure/);
+});
+t("071 v4.2 enriches branded template URLs and review status", () => {
+  assert.match(s071, /landingPageUrl: CANONICAL_URLS\.landing/);
+  assert.match(s071, /homeworkPageUrl: CANONICAL_URLS\.homework/);
+  assert.match(s071, /reviewStatus: "Satisfactory"/);
 });
 t("071 v4.1 requires linked PHA identity without Grade Band matching", () => {
   assert.match(s071, /Program Homework Assignment/);
@@ -62,13 +67,17 @@ t("071 does not write final sent fields", () => {
   assert.doesNotMatch(s071, /\[["']Parent Feedback Sent On["']\]\s*:/);
   assert.doesNotMatch(s071, /\[["']Parent Feedback Sent\?["']\]\s*:/);
 });
-t("073 v4.2 creates Communications Hub queue handoff (not Make webhook)", () => {
-  assert.match(s073, /Version: v4\.2/);
+t("073 v4.3 creates Communications Hub queue handoff (not Make webhook)", () => {
+  assert.match(s073, /Version: v4\.3/);
   assert.match(s073, /Email Handoff Queue/);
   assert.match(s073, /VIDEO_FEEDBACK\|VIDEO_FEEDBACK\|/);
   assert.match(s073, /created_handoff/);
   assert.match(s073, /existing_handoff/);
   assert.doesNotMatch(s073, /makeWebhookUrl|hook\.us1\.make\.com|remoteFetchAsync|sendTag:"VIDEO_FEEDBACK_PARENT"/);
+});
+t("073 v4.3 enriches branded template URLs and review status", () => {
+  assert.match(s073, /landingPageUrl: CANONICAL_URLS\.landing/);
+  assert.match(s073, /reviewStatus: "Review complete"/);
 });
 t("073 validates active canonical Video Feedback source", () => {
   assert.match(s073, /Video Feedback is inactive\/retired/);

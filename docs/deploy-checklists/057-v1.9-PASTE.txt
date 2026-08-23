@@ -1,0 +1,964 @@
+/***************************************************************************************************
+ * 057 - Achievements and Milestones - Calculate Perfect Week Eligibility
+ * Version: 1.9
+ * Date written: 2026-05-30
+ * Last updated: 2026-08-21
+ *
+ * Purpose:
+ * Calculates Perfect Week helper fields on one Weekly Athlete Summary record.
+ *
+ * Version 1.5 updates (2026-08-05):
+ * - Airtable runtime compatibility: guard optional QueryResult.unloadData() cleanup
+ *   so unsupported cleanup cannot fail an otherwise successful automation run.
+ *
+ * Version 1.6 updates (PKG-039):
+ * - Requires one exact active Target Goal Shots configuration for the WAS
+ *   Enrollment Program Instance + Grade Band before any Perfect Week state can
+ *   become ready. Missing, ambiguous, inactive, wrong-owner, and formula-lag
+ *   goal states remain distinct from explicit numeric zero.
+ *
+ * Version 1.7 updates (PKG-039):
+ * - Stops positive Perfect Week work for inactive Enrollments.
+ * - Requires the linked Goal Record to be the sole active, exact Program
+ *   Instance + Grade Band configuration and requires the WAS lookup to settle
+ *   to that record's numeric target (including explicit zero).
+ *
+ * Version 1.8 updates (Fillout/Mountain Time date correction):
+ * - Converts datetime values through America/Denver before extracting the
+ *   calendar date. This preserves evening Fillout submissions on their local
+ *   date instead of incorrectly using the following UTC date.
+ *
+ * Version 1.9 updates (goal settlement field correction):
+ * - Settlement compares WAS Goal Shots Target (season lookup) to the linked
+ *   Goal Record Total Shot Target. Weekly Goal Shots Target (= Goal/9) is used
+ *   only for daily Perfect Week math. Comparing weekly to season incorrectly
+ *   forced Needs Review after the goal lookup had already settled.
+ *
+ * Version 1.4 updates (SC-021 date normalization):
+ * - getDateKeyFromDateOnly uses America/Denver via Intl (not UTC ISO slice).
+ * - Date-only YYYY-MM-DD / M/D/YYYY text still passes through unchanged.
+ *
+ * Version 1.3 updates (C-025 Stage 17):
+ * - Zoom attendance count = live Attendees ∪ qualifying Recording Quiz credits.
+ * - Never writes Zoom Meetings.Attendees.
+ * - Prefer live when both live and recording exist for the same meeting.
+ * - Sets Perfect Week Credit Applied? on Zoom Attendance rows actually counted.
+ *
+ * Version 1.2 updates:
+ * - Keeps official Sunday-Saturday week logic from Version 1.1.
+ * - Keeps same-day submission requirement.
+ * - Keeps conditional Zoom requirement.
+ * - Rewrites homework requirement:
+ *   Perfect Week now requires 100% of assigned homework for the week to be satisfactorily completed.
+ *
+ * Perfect Week requirements calculated by this script:
+ * 1. Athlete must have one qualifying same-day shooting submission day for each official day
+ *    of the linked Week, Sunday through Saturday.
+ * 2. Each official day must meet at least 1/7 of the weekly shot goal.
+ * 3. Athlete must have at least 3 qualifying Video Feedback records for the week.
+ * 4. Athlete must attend Zoom if a Zoom meeting exists for the linked Week
+ *    (live Attendees OR Stage 17 approved recording credit that counts for Perfect Week).
+ * 5. Athlete must satisfactorily complete 100% of homework assignments assigned for the week.
+ *
+ * Notes:
+ * - This script only calculates helper fields.
+ * - It does not create the Perfect Week unlock.
+ * - It expects the automation input variable to be named recordId.
+ ***************************************************************************************************/
+
+/***************************************************************************************************
+ * 1. Configuration
+ ***************************************************************************************************/
+
+const CONFIG = {
+  timezone: "America/Denver",
+
+  tables: {
+    weekly: "Weekly Athlete Summary",
+    submissions: "Submissions",
+    homeworkCompletions: "Homework Completions",
+    video: "Video Feedback",
+    zoom: "Zoom Meetings",
+    zoomAttendance: "Zoom Attendance",
+    weeks: "Weeks",
+    enrollments: "Enrollments",
+    targetGoalShots: "Target Goal Shots",
+  },
+
+  weeklyFields: {
+    enrollment: "Enrollment",
+    week: "Week",
+    gradeBand: "Grade Band",
+    goalRecord: "Goal Record",
+
+    weeklyGoal: "Weekly Goal Shots Target",
+    fallbackGoal: "Goal Shots Target",
+
+    submissions: "Submissions",
+
+    homeworkAssigned: "Homework",
+    homeworkCompletionsLink: "Homework Completions Link",
+
+    dailyStatus: "Perfect Week Daily Check Status",
+    dailyDetail: "Perfect Week Daily Check Detail",
+    dailyMet: "Perfect Week Daily Requirement Met?",
+
+    videoCount: "Perfect Week Video Count",
+
+    zoomMeetingCount: "Perfect Week Zoom Meeting Count",
+    zoomAttendanceCount: "Perfect Week Zoom Attendance Count",
+
+    homeworkAssignedCount: "Perfect Week Homework Assigned Count",
+    homeworkSatisfactoryCount: "Perfect Week Homework Satisfactory Count",
+    homeworkMet: "Perfect Week Homework Requirement Met?",
+
+    automationStatus: "Perfect Week Automation Status",
+    automationError: "Perfect Week Automation Error",
+  },
+  enrollmentFields: {
+    programInstance: "Program Instance",
+    active: "Active?",
+  },
+  targetGoalFields: {
+    programInstance: "Program Instance",
+    gradeBand: "Grade Band",
+    totalShotTarget: "Total Shot Target",
+    active: "Active?",
+  },
+
+  weekFields: {
+    startDate: "Start Date",
+  },
+
+  submissionFields: {
+    activityDate: "Activity Date",
+    totalShotsCounted: "Total Shots Counted",
+    perfectWeekCountable: "Perfect Week Countable Submission?",
+  },
+
+  homeworkCompletionFields: {
+    homework: "Homework",
+    satisfactory: "Satisfactory?",
+    completionStatus: "Completion Status",
+  },
+
+  videoFields: {
+    enrollment: "Enrollment",
+    submission: "Submission",
+  },
+
+  zoomFields: {
+    week: "Week",
+    attendees: "Attendees",
+  },
+
+  zoomAttendanceFields: {
+    attendanceMethod: "Attendance Method",
+    enrollment: "Enrollment",
+    zoomMeeting: "Zoom Meeting",
+    approved: "Zoom Credit Approved?",
+    conflict: "Zoom Credit Conflict?",
+    pwFlag: "Effective Recording Counts for Perfect Week?",
+    pwApplied: "Perfect Week Credit Applied?",
+    reviewStatus: "Recording Quiz Review Status",
+  },
+
+  recordingMethod: "Recording Quiz",
+  reviewNeedsCorrection: "Needs Correction",
+
+  requiredVideoCount: 3,
+  requiredDailyCount: 7,
+};
+
+/***************************************************************************************************
+ * 2. Helper Functions
+ ***************************************************************************************************/
+
+function getFirstLinkedId(record, fieldName) {
+  const value = record.getCellValue(fieldName);
+  if (!Array.isArray(value) || value.length === 0) return null;
+  return value[0].id;
+}
+
+function getExactlyOneLinkedId(record, fieldName, label) {
+  const values = uniqueArray(getLinkedIds(record, fieldName));
+  if (values.length !== 1) {
+    throw new Error(`${label} must have exactly one linked record; found ${values.length}.`);
+  }
+  return values[0];
+}
+
+function getLinkedIds(record, fieldName) {
+  const value = record.getCellValue(fieldName);
+  if (!Array.isArray(value)) return [];
+  return value.map((item) => item.id);
+}
+
+function getLinkedNames(record, fieldName) {
+  const value = record.getCellValue(fieldName);
+  if (!Array.isArray(value)) return [];
+  return value.map((item) => item.name || item.id);
+}
+
+function uniqueArray(values) {
+  return [...new Set(values.filter(Boolean))];
+}
+
+function getNumber(record, fieldName) {
+  const value = record.getCellValue(fieldName);
+
+  if (typeof value === "number") return value;
+
+  if (Array.isArray(value) && value.length > 0) {
+    const first = value[0];
+    if (typeof first === "number") return first;
+    const parsed = Number(first);
+    return Number.isFinite(parsed) ? parsed : 0;
+  }
+
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function getOptionalNumber(record, fieldName) {
+  const value = record.getCellValue(fieldName);
+  if (value === null || value === undefined || value === "") return null;
+  if (Array.isArray(value)) {
+    if (value.length !== 1) return null;
+    const first = value[0];
+    if (first === null || first === undefined || first === "") return null;
+    const parsed = typeof first === "number" ? first : Number(first);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+  const parsed = typeof value === "number" ? value : Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function getText(record, fieldName) {
+  try {
+    const v = record.getCellValueAsString(fieldName);
+    return v == null ? "" : String(v).trim();
+  } catch (e) {
+    return "";
+  }
+}
+
+function isTruthyFlag(record, fieldName) {
+  const v = record.getCellValue(fieldName);
+  if (v === true || v === 1 || v === "1") return true;
+  if (Array.isArray(v) && v.length === 1) {
+    const first = v[0];
+    return first === true || first === 1 || first === "1";
+  }
+  return false;
+}
+
+function fieldExists(table, name) {
+  try {
+    table.getField(name);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+/**
+ * Airtable Scripting sometimes exposes unloadData on QueryResult; some automation
+ * runtimes do not. Never let cleanup throw after successful business work.
+ */
+function unloadQuerySafe(queryResult) {
+  if (typeof queryResult?.unloadData === "function") {
+    try {
+      queryResult.unloadData();
+    } catch (error) {
+      console.log(
+        "Query unloadData skipped/failed (non-fatal)",
+        JSON.stringify({
+          error: error instanceof Error ? error.message : String(error),
+        })
+      );
+    }
+  }
+}
+
+function getDateKeyFromDateOnly(value) {
+  if (!value) return "";
+
+  // Preserve true date-only values. Datetime values must be converted through
+  // the configured local timezone; Fillout evening submissions arrive as UTC
+  // timestamps and their ISO prefix can represent the following calendar day.
+  if (typeof value === "string") {
+    const trimmed = String(value).trim();
+    const isoMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (isoMatch) return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
+    const localMatch = trimmed.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    if (localMatch) {
+      return `${localMatch[3]}-${localMatch[1].padStart(2, "0")}-${localMatch[2].padStart(2, "0")}`;
+    }
+  }
+
+  const dateValue = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(dateValue.getTime())) return "";
+
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: CONFIG.timezone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(dateValue);
+  const year = parts.find((part) => part.type === "year")?.value || "";
+  const month = parts.find((part) => part.type === "month")?.value || "";
+  const day = parts.find((part) => part.type === "day")?.value || "";
+  if (!year || !month || !day) return "";
+  return `${year}-${month}-${day}`;
+}
+
+function addDaysToDateKey(dateKey, daysToAdd) {
+  const [year, month, day] = dateKey.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  date.setUTCDate(date.getUTCDate() + daysToAdd);
+  return date.toISOString().slice(0, 10);
+}
+
+function buildRequiredWeekDates(startDateKey) {
+  const dates = [];
+  for (let i = 0; i < CONFIG.requiredDailyCount; i += 1) {
+    dates.push(addDaysToDateKey(startDateKey, i));
+  }
+  return dates;
+}
+
+function isTruthyNumber(record, fieldName) {
+  const value = record.getCellValue(fieldName);
+  return value === 1 || value === true || value === "1";
+}
+
+function isHomeworkSatisfactory(record) {
+  const satisfactory = record.getCellValue(CONFIG.homeworkCompletionFields.satisfactory);
+  if (satisfactory === true) return true;
+
+  const status = record.getCellValueAsString(CONFIG.homeworkCompletionFields.completionStatus);
+  return status.toLowerCase().includes("satisfactory");
+}
+
+async function updateWeekly(fields) {
+  await weeklyTable.updateRecordAsync(weeklyRecord.id, fields);
+}
+
+/***************************************************************************************************
+ * 3. Load Tables and Trigger Record
+ ***************************************************************************************************/
+
+const inputConfig = input.config();
+const recordId = inputConfig.recordId;
+
+if (!recordId) {
+  throw new Error("Missing input variable: recordId");
+}
+
+const weeklyTable = base.getTable(CONFIG.tables.weekly);
+const submissionsTable = base.getTable(CONFIG.tables.submissions);
+const homeworkCompletionsTable = base.getTable(CONFIG.tables.homeworkCompletions);
+const videoTable = base.getTable(CONFIG.tables.video);
+const zoomTable = base.getTable(CONFIG.tables.zoom);
+const zoomAttendanceTable = base.getTable(CONFIG.tables.zoomAttendance);
+const weeksTable = base.getTable(CONFIG.tables.weeks);
+const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
+const targetGoalShotsTable = base.getTable(CONFIG.tables.targetGoalShots);
+
+const weeklyRecord = await weeklyTable.selectRecordAsync(recordId);
+
+if (!weeklyRecord) {
+  throw new Error(`Weekly Athlete Summary record not found: ${recordId}`);
+}
+
+/***************************************************************************************************
+ * 4. Main Processing
+ ***************************************************************************************************/
+
+try {
+  const enrollmentId = getExactlyOneLinkedId(
+    weeklyRecord, CONFIG.weeklyFields.enrollment, "Weekly Athlete Summary Enrollment"
+  );
+  const weekId = getExactlyOneLinkedId(
+    weeklyRecord, CONFIG.weeklyFields.week, "Weekly Athlete Summary Week"
+  );
+  const gradeBandIds = uniqueArray(getLinkedIds(weeklyRecord, CONFIG.weeklyFields.gradeBand));
+  const goalRecordIds = uniqueArray(getLinkedIds(weeklyRecord, CONFIG.weeklyFields.goalRecord));
+
+  if (!enrollmentId || !weekId) {
+    await updateWeekly({
+      [CONFIG.weeklyFields.dailyStatus]: { name: "Needs Review" },
+      [CONFIG.weeklyFields.dailyDetail]: "Missing Enrollment or Week.",
+      [CONFIG.weeklyFields.dailyMet]: false,
+      [CONFIG.weeklyFields.videoCount]: 0,
+      [CONFIG.weeklyFields.zoomMeetingCount]: 0,
+      [CONFIG.weeklyFields.zoomAttendanceCount]: 0,
+      [CONFIG.weeklyFields.homeworkAssignedCount]: 0,
+      [CONFIG.weeklyFields.homeworkSatisfactoryCount]: 0,
+      [CONFIG.weeklyFields.homeworkMet]: 0,
+      [CONFIG.weeklyFields.automationStatus]: { name: "Error" },
+      [CONFIG.weeklyFields.automationError]: "Missing Enrollment or Week.",
+    });
+
+    return;
+  }
+
+  if (gradeBandIds.length !== 1 || goalRecordIds.length !== 1) {
+    throw new Error(
+      `Perfect Week requires exactly one Grade Band and one Goal Record; found Grade Bands=${gradeBandIds.length}, Goal Records=${goalRecordIds.length}.`
+    );
+  }
+
+  const enrollmentRecord = await enrollmentsTable.selectRecordAsync(enrollmentId);
+  if (!enrollmentRecord) {
+    throw new Error(`Enrollment ${enrollmentId} could not be loaded for goal validation.`);
+  }
+  if (
+    fieldExists(enrollmentsTable, CONFIG.enrollmentFields.active) &&
+    !isTruthyFlag(enrollmentRecord, CONFIG.enrollmentFields.active)
+  ) {
+    await updateWeekly({
+      [CONFIG.weeklyFields.dailyStatus]: { name: "Needs Review" },
+      [CONFIG.weeklyFields.dailyDetail]: "Enrollment is inactive; Perfect Week eligibility is not calculated.",
+      [CONFIG.weeklyFields.dailyMet]: false,
+      [CONFIG.weeklyFields.automationStatus]: { name: "Error" },
+      [CONFIG.weeklyFields.automationError]: "Enrollment is inactive; no Perfect Week positive work is permitted.",
+    });
+    return;
+  }
+  const enrollmentProgramInstanceIds = uniqueArray(
+    getLinkedIds(enrollmentRecord, CONFIG.enrollmentFields.programInstance)
+  );
+  if (enrollmentProgramInstanceIds.length !== 1) {
+    throw new Error(
+      `Enrollment ${enrollmentId} must have exactly one Program Instance; found ${enrollmentProgramInstanceIds.length}.`
+    );
+  }
+
+  const goalRecord = await targetGoalShotsTable.selectRecordAsync(goalRecordIds[0]);
+  if (!goalRecord) {
+    throw new Error(`Goal Record ${goalRecordIds[0]} could not be loaded for validation.`);
+  }
+  const goalProgramInstanceIds = uniqueArray(
+    getLinkedIds(goalRecord, CONFIG.targetGoalFields.programInstance)
+  );
+  const goalGradeBandIds = uniqueArray(
+    getLinkedIds(goalRecord, CONFIG.targetGoalFields.gradeBand)
+  );
+  const configuredGoal = getOptionalNumber(goalRecord, CONFIG.targetGoalFields.totalShotTarget);
+  if (
+    goalProgramInstanceIds.length !== 1 ||
+    goalProgramInstanceIds[0] !== enrollmentProgramInstanceIds[0] ||
+    goalGradeBandIds.length !== 1 ||
+    goalGradeBandIds[0] !== gradeBandIds[0] ||
+    !isTruthyFlag(goalRecord, CONFIG.targetGoalFields.active) ||
+    configuredGoal === null ||
+    configuredGoal < 0
+  ) {
+    throw new Error(
+      `Goal Record ${goalRecord.id} is not one exact active numeric configuration for Enrollment Program Instance + Grade Band.`
+    );
+  }
+  const goalQuery = await targetGoalShotsTable.selectRecordsAsync({
+    fields: [
+      CONFIG.targetGoalFields.programInstance,
+      CONFIG.targetGoalFields.gradeBand,
+      CONFIG.targetGoalFields.totalShotTarget,
+      CONFIG.targetGoalFields.active,
+    ],
+  });
+  const matchingActiveGoals = goalQuery.records.filter((candidate) => {
+    const candidateProgramIds = uniqueArray(
+      getLinkedIds(candidate, CONFIG.targetGoalFields.programInstance)
+    );
+    const candidateGradeBandIds = uniqueArray(
+      getLinkedIds(candidate, CONFIG.targetGoalFields.gradeBand)
+    );
+    return (
+      candidateProgramIds.length === 1 &&
+      candidateProgramIds[0] === enrollmentProgramInstanceIds[0] &&
+      candidateGradeBandIds.length === 1 &&
+      candidateGradeBandIds[0] === gradeBandIds[0] &&
+      isTruthyFlag(candidate, CONFIG.targetGoalFields.active) &&
+      getOptionalNumber(candidate, CONFIG.targetGoalFields.totalShotTarget) !== null
+    );
+  });
+  if (matchingActiveGoals.length !== 1 || matchingActiveGoals[0].id !== goalRecord.id) {
+    throw new Error(
+      `Goal configuration must resolve to exactly one active Program Instance + Grade Band record; found ${matchingActiveGoals.length}.`
+    );
+  }
+
+  const weekRecord = await weeksTable.selectRecordAsync(weekId, {
+    fields: [CONFIG.weekFields.startDate],
+  });
+
+  if (!weekRecord) {
+    await updateWeekly({
+      [CONFIG.weeklyFields.dailyStatus]: { name: "Needs Review" },
+      [CONFIG.weeklyFields.dailyDetail]: "Linked Week record could not be found.",
+      [CONFIG.weeklyFields.dailyMet]: false,
+      [CONFIG.weeklyFields.automationStatus]: { name: "Error" },
+      [CONFIG.weeklyFields.automationError]: "Linked Week record could not be found.",
+    });
+
+    return;
+  }
+
+  const weekStartDateKey = getDateKeyFromDateOnly(
+    weekRecord.getCellValue(CONFIG.weekFields.startDate)
+  );
+
+  if (!weekStartDateKey) {
+    await updateWeekly({
+      [CONFIG.weeklyFields.dailyStatus]: { name: "Needs Review" },
+      [CONFIG.weeklyFields.dailyDetail]: "Missing Week Start Date.",
+      [CONFIG.weeklyFields.dailyMet]: false,
+      [CONFIG.weeklyFields.automationStatus]: { name: "Error" },
+      [CONFIG.weeklyFields.automationError]: "Missing Weeks -> Start Date.",
+    });
+
+    return;
+  }
+
+  const requiredDateKeys = buildRequiredWeekDates(weekStartDateKey);
+  const requiredDateSet = new Set(requiredDateKeys);
+
+  // Zero is a valid configuration only when 032 has linked exactly one Goal
+  // Record. Do not use truthiness here: it misclassified an explicit target of
+  // zero (and a settling lookup) as a missing goal.
+  //
+  // Settlement field = Goal Shots Target (lookup of Goal Record Total Shot Target).
+  // Calculation field = Weekly Goal Shots Target (formula: Goal Shots Target / 9).
+  // Never require Weekly Goal === season Total Shot Target.
+  const settledSeasonGoal = getOptionalNumber(
+    weeklyRecord,
+    CONFIG.weeklyFields.fallbackGoal
+  );
+  const weeklyGoal = getOptionalNumber(weeklyRecord, CONFIG.weeklyFields.weeklyGoal);
+
+  if (
+    settledSeasonGoal === null ||
+    settledSeasonGoal < 0 ||
+    settledSeasonGoal !== configuredGoal
+  ) {
+    const reason = settledSeasonGoal === null
+      ? "Weekly goal formula/lookup is unsettled or invalid; rereun after settlement."
+      : settledSeasonGoal < 0
+        ? "Weekly shot goal is negative."
+        : "Weekly goal formula/lookup has not settled to the linked active goal target.";
+    await updateWeekly({
+      [CONFIG.weeklyFields.dailyStatus]: { name: "Needs Review" },
+      [CONFIG.weeklyFields.dailyDetail]: reason,
+      [CONFIG.weeklyFields.dailyMet]: false,
+      [CONFIG.weeklyFields.automationStatus]: { name: "Error" },
+      [CONFIG.weeklyFields.automationError]: reason,
+    });
+
+    console.log(
+      JSON.stringify({
+        automation: "057",
+        version: "1.9",
+        recordId,
+        action: "skipped_unsettled_goal",
+        configuredGoal,
+        settledSeasonGoal,
+        weeklyGoal,
+      })
+    );
+    return;
+  }
+
+  if (weeklyGoal === null || weeklyGoal < 0) {
+    const reason =
+      "Weekly Goal Shots Target is unsettled or invalid; rereun after settlement.";
+    await updateWeekly({
+      [CONFIG.weeklyFields.dailyStatus]: { name: "Needs Review" },
+      [CONFIG.weeklyFields.dailyDetail]: reason,
+      [CONFIG.weeklyFields.dailyMet]: false,
+      [CONFIG.weeklyFields.automationStatus]: { name: "Error" },
+      [CONFIG.weeklyFields.automationError]: reason,
+    });
+
+    console.log(
+      JSON.stringify({
+        automation: "057",
+        version: "1.9",
+        recordId,
+        action: "skipped_unsettled_weekly_goal",
+        configuredGoal,
+        settledSeasonGoal,
+        weeklyGoal,
+      })
+    );
+    return;
+  }
+
+  const roundedWeeklyGoal = Math.ceil(weeklyGoal);
+  const dailyMinimum = Math.ceil(weeklyGoal / CONFIG.requiredDailyCount);
+
+  /*************************************************************************************************
+   * 4A. Daily Shooting Requirement
+   *************************************************************************************************/
+
+  const linkedSubmissionIds = getLinkedIds(weeklyRecord, CONFIG.weeklyFields.submissions);
+
+  let submissionRecords = [];
+
+  if (linkedSubmissionIds.length > 0) {
+    const submissionsQuery = await submissionsTable.selectRecordsAsync({
+      fields: [
+        CONFIG.submissionFields.activityDate,
+        CONFIG.submissionFields.totalShotsCounted,
+        CONFIG.submissionFields.perfectWeekCountable,
+      ],
+    });
+
+    submissionRecords = linkedSubmissionIds
+      .map((id) => submissionsQuery.getRecord(id))
+      .filter(Boolean);
+  }
+
+  const dayMap = new Map();
+  let ignoredCount = 0;
+  let outsideOfficialWeekCount = 0;
+
+  for (const sub of submissionRecords) {
+    const isCountable = isTruthyNumber(sub, CONFIG.submissionFields.perfectWeekCountable);
+
+    if (!isCountable) {
+      ignoredCount += 1;
+      continue;
+    }
+
+    const dateKey = getDateKeyFromDateOnly(
+      sub.getCellValue(CONFIG.submissionFields.activityDate)
+    );
+
+    if (!dateKey) {
+      ignoredCount += 1;
+      continue;
+    }
+
+    if (!requiredDateSet.has(dateKey)) {
+      outsideOfficialWeekCount += 1;
+      continue;
+    }
+
+    const shots = getNumber(sub, CONFIG.submissionFields.totalShotsCounted);
+
+    if (!dayMap.has(dateKey)) {
+      dayMap.set(dateKey, 0);
+    }
+
+    dayMap.set(dateKey, dayMap.get(dateKey) + shots);
+  }
+
+  const missingDays = [];
+  const failingDays = [];
+  const passingDays = [];
+
+  for (const dateKey of requiredDateKeys) {
+    const shots = dayMap.get(dateKey) || 0;
+
+    if (shots <= 0) {
+      missingDays.push(dateKey);
+    } else if (shots < dailyMinimum) {
+      failingDays.push(`${dateKey}: ${shots}/${dailyMinimum}`);
+    } else {
+      passingDays.push(`${dateKey}: ${shots}/${dailyMinimum}`);
+    }
+  }
+
+  const allOfficialDaysPresent = missingDays.length === 0;
+  const allDaysMeetMinimum = failingDays.length === 0;
+  const dailyMet = allOfficialDaysPresent && allDaysMeetMinimum;
+
+  const dailyStatusName = dailyMet ? "Pass" : "Fail";
+
+  const dailyDetailLines = [];
+  dailyDetailLines.push(`Official week: ${requiredDateKeys[0]} through ${requiredDateKeys[6]}`);
+  dailyDetailLines.push(`Weekly goal: ${roundedWeeklyGoal}`);
+  dailyDetailLines.push(`Daily minimum: ${dailyMinimum}`);
+  dailyDetailLines.push(`Passing official days: ${passingDays.length}/7`);
+  dailyDetailLines.push(`Ignored non-countable submissions: ${ignoredCount}`);
+  dailyDetailLines.push(`Ignored countable submissions outside official week: ${outsideOfficialWeekCount}`);
+
+  if (passingDays.length > 0) {
+    dailyDetailLines.push(`Passing days: ${passingDays.join("; ")}`);
+  }
+
+  if (missingDays.length > 0) {
+    dailyDetailLines.push(`FAIL: Missing official week days: ${missingDays.join("; ")}`);
+  }
+
+  if (failingDays.length > 0) {
+    dailyDetailLines.push(`FAIL: Below daily minimum: ${failingDays.join("; ")}`);
+  }
+
+  if (dailyMet) {
+    dailyDetailLines.push("PASS: All seven official Sunday-Saturday dates met the same-day daily shooting requirement.");
+  }
+
+  /*************************************************************************************************
+   * 4B. Homework Requirement
+   *
+   * Rule:
+   * Perfect Week requires 100% of assigned homework to be satisfactorily completed.
+   *
+   * Source of assigned homework:
+   * - Weekly Athlete Summary -> Homework
+   *
+   * Source of completed homework:
+   * - Weekly Athlete Summary -> Homework Completions Link
+   *
+   * If no homework is assigned, homework is treated as not required and therefore passed.
+   *************************************************************************************************/
+
+  const assignedHomeworkIds = uniqueArray(
+    getLinkedIds(weeklyRecord, CONFIG.weeklyFields.homeworkAssigned)
+  );
+
+  const linkedHomeworkCompletionIds = uniqueArray(
+    getLinkedIds(weeklyRecord, CONFIG.weeklyFields.homeworkCompletionsLink)
+  );
+
+  let assignedHomeworkCount = assignedHomeworkIds.length;
+  let satisfactoryHomeworkCount = 0;
+
+  if (linkedHomeworkCompletionIds.length > 0) {
+    const homeworkQuery = await homeworkCompletionsTable.selectRecordsAsync({
+      fields: [
+        CONFIG.homeworkCompletionFields.homework,
+        CONFIG.homeworkCompletionFields.satisfactory,
+        CONFIG.homeworkCompletionFields.completionStatus,
+      ],
+    });
+
+    const satisfactoryAssignedHomeworkIds = new Set();
+    let satisfactoryUnmatchedCompletionCount = 0;
+
+    for (const id of linkedHomeworkCompletionIds) {
+      const hwCompletion = homeworkQuery.getRecord(id);
+      if (!hwCompletion) continue;
+
+      if (!isHomeworkSatisfactory(hwCompletion)) continue;
+
+      const completionHomeworkIds = getLinkedIds(
+        hwCompletion,
+        CONFIG.homeworkCompletionFields.homework
+      );
+
+      if (assignedHomeworkIds.length === 0) {
+        satisfactoryUnmatchedCompletionCount += 1;
+        continue;
+      }
+
+      for (const homeworkId of completionHomeworkIds) {
+        if (assignedHomeworkIds.includes(homeworkId)) {
+          satisfactoryAssignedHomeworkIds.add(homeworkId);
+        }
+      }
+    }
+
+    if (assignedHomeworkIds.length > 0) {
+      satisfactoryHomeworkCount = satisfactoryAssignedHomeworkIds.size;
+    } else {
+      satisfactoryHomeworkCount = satisfactoryUnmatchedCompletionCount;
+    }
+  }
+
+  /*
+   * Fallback:
+   * If Weekly Athlete Summary -> Homework is empty but linked homework completions exist,
+   * use the unique Homework records from those linked completions as the assigned count.
+   * This prevents older weekly summaries with linked completions but missing assigned homework
+   * from always appearing as "No Homework This Week."
+   */
+  if (assignedHomeworkCount === 0 && linkedHomeworkCompletionIds.length > 0) {
+    const homeworkQuery = await homeworkCompletionsTable.selectRecordsAsync({
+      fields: [
+        CONFIG.homeworkCompletionFields.homework,
+        CONFIG.homeworkCompletionFields.satisfactory,
+        CONFIG.homeworkCompletionFields.completionStatus,
+      ],
+    });
+
+    const homeworkIdsFromCompletions = new Set();
+    const satisfactoryHomeworkIdsFromCompletions = new Set();
+
+    for (const id of linkedHomeworkCompletionIds) {
+      const hwCompletion = homeworkQuery.getRecord(id);
+      if (!hwCompletion) continue;
+
+      const completionHomeworkIds = getLinkedIds(
+        hwCompletion,
+        CONFIG.homeworkCompletionFields.homework
+      );
+
+      for (const homeworkId of completionHomeworkIds) {
+        homeworkIdsFromCompletions.add(homeworkId);
+
+        if (isHomeworkSatisfactory(hwCompletion)) {
+          satisfactoryHomeworkIdsFromCompletions.add(homeworkId);
+        }
+      }
+    }
+
+    assignedHomeworkCount = homeworkIdsFromCompletions.size;
+    satisfactoryHomeworkCount = satisfactoryHomeworkIdsFromCompletions.size;
+  }
+
+  const homeworkMet =
+    assignedHomeworkCount === 0 || satisfactoryHomeworkCount >= assignedHomeworkCount
+      ? 1
+      : 0;
+
+  /*************************************************************************************************
+   * 4C. Video Requirement
+   *************************************************************************************************/
+
+  const videoQuery = await videoTable.selectRecordsAsync({
+    fields: [
+      CONFIG.videoFields.enrollment,
+      CONFIG.videoFields.submission,
+    ],
+  });
+
+  let videoCount = 0;
+
+  for (const video of videoQuery.records) {
+    const videoEnrollmentId = getFirstLinkedId(video, CONFIG.videoFields.enrollment);
+    if (videoEnrollmentId !== enrollmentId) continue;
+
+    const videoSubmissionId = getFirstLinkedId(video, CONFIG.videoFields.submission);
+    if (!linkedSubmissionIds.includes(videoSubmissionId)) continue;
+
+    videoCount += 1;
+  }
+
+  /*************************************************************************************************
+   * 4D. Zoom Requirement (live Attendees ∪ Stage 17 recording credit)
+   * Never writes Zoom Meetings.Attendees.
+   *************************************************************************************************/
+
+  const zoomQuery = await zoomTable.selectRecordsAsync({
+    fields: [
+      CONFIG.zoomFields.week,
+      CONFIG.zoomFields.attendees,
+    ],
+  });
+
+  const weekMeetingIds = [];
+  const liveAttendedMeetingIds = [];
+
+  for (const zoom of zoomQuery.records) {
+    const zoomWeekId = getFirstLinkedId(zoom, CONFIG.zoomFields.week);
+    if (zoomWeekId !== weekId) continue;
+
+    weekMeetingIds.push(zoom.id);
+
+    const attendeeIds = getLinkedIds(zoom, CONFIG.zoomFields.attendees);
+    if (attendeeIds.includes(enrollmentId)) {
+      liveAttendedMeetingIds.push(zoom.id);
+    }
+  }
+
+  const weekMeetingSet = new Set(weekMeetingIds);
+  const attendedMeetingSet = new Set(liveAttendedMeetingIds);
+  const recordingZaToMarkApplied = [];
+
+  const zaFieldNames = Object.values(CONFIG.zoomAttendanceFields).filter((n) =>
+    fieldExists(zoomAttendanceTable, n)
+  );
+  const zaQuery = await zoomAttendanceTable.selectRecordsAsync({ fields: zaFieldNames });
+
+  try {
+    for (const za of zaQuery.records) {
+      if (getText(za, CONFIG.zoomAttendanceFields.attendanceMethod) !== CONFIG.recordingMethod) continue;
+      const zaEnrollmentId = getFirstLinkedId(za, CONFIG.zoomAttendanceFields.enrollment);
+      if (zaEnrollmentId !== enrollmentId) continue;
+      const meetingId = getFirstLinkedId(za, CONFIG.zoomAttendanceFields.zoomMeeting);
+      if (!meetingId || !weekMeetingSet.has(meetingId)) continue;
+      if (isTruthyFlag(za, CONFIG.zoomAttendanceFields.conflict)) continue;
+      if (!isTruthyFlag(za, CONFIG.zoomAttendanceFields.approved)) continue;
+      if (!isTruthyFlag(za, CONFIG.zoomAttendanceFields.pwFlag)) continue;
+      if (getText(za, CONFIG.zoomAttendanceFields.reviewStatus) === CONFIG.reviewNeedsCorrection) continue;
+
+      // Prefer live: if already live-attended, do not double-count; still may mark applied if we counted recording-only.
+      if (!attendedMeetingSet.has(meetingId)) {
+        attendedMeetingSet.add(meetingId);
+        recordingZaToMarkApplied.push(za.id);
+      }
+    }
+  } finally {
+    unloadQuerySafe(zaQuery);
+  }
+
+  const zoomMeetingCount = weekMeetingIds.length;
+  const zoomAttendanceCount = attendedMeetingSet.size;
+
+  // Applied? = actually consumed by this Perfect Week calculation (not mere eligibility).
+  for (const zaId of recordingZaToMarkApplied) {
+    if (!fieldExists(zoomAttendanceTable, CONFIG.zoomAttendanceFields.pwApplied)) break;
+    const zaRec = await zoomAttendanceTable.selectRecordAsync(zaId, {
+      fields: [CONFIG.zoomAttendanceFields.pwApplied],
+    });
+    if (zaRec && !isTruthyFlag(zaRec, CONFIG.zoomAttendanceFields.pwApplied)) {
+      await zoomAttendanceTable.updateRecordAsync(zaId, {
+        [CONFIG.zoomAttendanceFields.pwApplied]: true,
+      });
+    }
+  }
+
+  /*************************************************************************************************
+   * 4E. Write Results
+   *************************************************************************************************/
+
+  await updateWeekly({
+    [CONFIG.weeklyFields.dailyStatus]: { name: dailyStatusName },
+    [CONFIG.weeklyFields.dailyDetail]: dailyDetailLines.join("\n"),
+    [CONFIG.weeklyFields.dailyMet]: dailyMet,
+
+    [CONFIG.weeklyFields.videoCount]: videoCount,
+
+    [CONFIG.weeklyFields.zoomMeetingCount]: zoomMeetingCount,
+    [CONFIG.weeklyFields.zoomAttendanceCount]: zoomAttendanceCount,
+
+    [CONFIG.weeklyFields.homeworkAssignedCount]: assignedHomeworkCount,
+    [CONFIG.weeklyFields.homeworkSatisfactoryCount]: satisfactoryHomeworkCount,
+    [CONFIG.weeklyFields.homeworkMet]: homeworkMet,
+
+    [CONFIG.weeklyFields.automationStatus]: { name: "Ready" },
+    [CONFIG.weeklyFields.automationError]: "",
+  });
+
+  console.log(
+    JSON.stringify({
+      automation: "057",
+      version: "1.9",
+      recordId,
+      action: "ready",
+      configuredGoal,
+      settledSeasonGoal,
+      weeklyGoal,
+      dailyMet,
+      dailyStatusName,
+      videoCount,
+      zoomMeetingCount,
+      zoomAttendanceCount,
+      homeworkMet,
+    })
+  );
+
+} catch (error) {
+  await updateWeekly({
+    [CONFIG.weeklyFields.dailyStatus]: { name: "Needs Review" },
+    [CONFIG.weeklyFields.dailyMet]: false,
+    [CONFIG.weeklyFields.automationStatus]: { name: "Error" },
+    [CONFIG.weeklyFields.automationError]: error.message,
+  });
+
+  throw error;
+}

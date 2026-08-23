@@ -3,47 +3,250 @@ Total output lines: 1039
 
 # Shooting Challenge Completion Master
 
-**Controlling source of truth** for finishing Shooting Challenge V2.
+## Document purpose
 
-**Current project state (git / bases / overlays):** [`docs/CURRENT-TRUTH.md`](./CURRENT-TRUTH.md)  
-**Authority map:** [`docs/AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
-
-Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`,
-close-out notes, overnight packets, deploy checklists) remain as **narrow
-purpose documents, evidence, or history**. Do not delete them. When they
-describe release status, this document wins; when they describe live-system
-state, the named live system wins.
+This is the **detailed completion matrix and historical traceability record** for Shooting Challenge V2. It tracks packages, SC items, components, evidence, and remaining work across the full product.
 
 | Field | Value |
 |-------|--------|
-| Created | 2026-07-23 |
-| Last updated | **2026-08-19** (022 **v2.1**, 020 **v3.6**, 070b **v4.6**, 117 **v2.1**, 066 **v3.8**, 010 **v10.10** confirmed; email = Resend; Perfect Week test still open) |
-| Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
-| Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
+| **Purpose** | Completion matrix, package traceability, and preserved historical evidence |
+| **Last updated** | **2026-08-23** (Completion Master reconciliation) |
+| **Production branch** | `master` |
+| **Vercel root** | `web/` |
+| **Production website** | https://www.fairfieldbasketballclub.com/shoot |
+| **Production Airtable base** | `appn84sqPw03zEbTT` (only active base) |
+| **Retired DEV base** | `appTetnuCZlCZdTCT` — retired **2026-08-19**; historical snapshots and read-only install docs only |
+| **Created** | 2026-07-23 |
 
-### Current operator reconciliation — 2026-08-16 (path evidence) + 2026-08-19 overlays
+### Authority and evidence boundary
 
-The 2026-08-16 controlled-path evidence is recorded in [`prod-completion/2026-08-16/SC-2026-08-16-CURRENT-STATE-RECONCILIATION.md`](./prod-completion/2026-08-16/SC-2026-08-16-CURRENT-STATE-RECONCILIATION.md). Registration → submission → assets → homework → canonical Weekly Athlete Summary → Homework XP is verified. Video upload/writeback through **070b** and **022** was live-tested on that date (Reviewer File URL preferred, Canonical File URL fallback, existing Video Feedback Upload Status). The Perfect Week test remains **open** until the remaining six daily dates, video review/XP, and final Perfect Week award are verified.
+| Role | Document |
+|------|----------|
+| **Current operational summary** | [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) — read this first for live overlays |
+| **Detailed ops companion** | [`PROJECT_STATE.md`](./PROJECT_STATE.md) |
+| **Automation version inventory** | [`AUTOMATION_VERSION_INVENTORY.md`](./AUTOMATION_VERSION_INVENTORY.md) |
+| **Ownership / evidence map** | [`docs/AUTHORITY-MAP.md`](./AUTHORITY-MAP.md) |
+| **2026-08-23 inventory** | [`audits/2026-08-23-production-readiness-inventory.md`](./audits/2026-08-23-production-readiness-inventory.md) |
+| **Historical production-first experiment** | [`SHOOTING_CHALLENGE_PROD_OPERATING_MODE.md`](./SHOOTING_CHALLENGE_PROD_OPERATING_MODE.md) — context only |
 
-**Automation 022 (Mike 2026-08-19):** Production Airtable shows **v2.1**. Do **not** describe 022 as missing, uninstalled, repository-only, or unverified. The 2026-08-16 packet’s **v2.0** claim is historical path evidence for that day; current live paste is **v2.1**.
+**Evidence boundary:** Repository tests, offline fixtures, and contract suites are **not** production proof. A feature is not complete merely because code exists in GitHub. Live Airtable, Vercel, Make (non-email), Communications Hub, and Resend claims require **dated live evidence** from Mike or named system attestation.
 
-**Automation 020 (Mike 2026-08-19):** Production Airtable shows **v3.6**. Earlier v3.5 install evidence (Homework XP controlled lifecycle, 2026-08-10 overlay) remains historical. The 2026-08-16 packet’s “confirm v3.6 paste” item is closed for the version string. Optional HW1/HW2 no-duplicate rerun is still not claimed complete.
+**Historical rows:** Sections dated before 2026-08-23 below are **preserved evidence**. They may describe superseded versions, retired DEV workflows, or pre-reconciliation status. Do not treat them as current production instructions unless this document’s **Current Status Dashboard** or [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) explicitly says so.
 
-**Automation 070b (Mike 2026-08-19):** Production Airtable shows **v4.6** (Program Instance / season cross-check package). The C-013 **v4.4** PROD E2E (2026-07-11) and the 2026-08-16 packet’s v4.4 note remain historical path evidence.
+Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, close-out notes, overnight packets, deploy checklists) remain as narrow-purpose documents, evidence, or history. Do not delete them.
 
-**Lambda upload season (Mike-requested deploy 2026-08-19):** Production `127si-upload-asset` **CodeOnly** update succeeded (`LastModified` 2026-08-19T17:29:53Z, CodeSha256 `lwbLiBzB4cfWdzVmIVo7Z78AkiowqPuV2NmUXb+PK2w=`). Season resolves from Enrollment → Program Instance → `School Year - Linked`. Env `SEASON_SLUG` is diagnostic only (`2025-2026` still present; fallback unset). Optional upload retry evidence still open (`recAqoUbBKfDNtTLt` packet). Rotate secrets exposed by AWS CLI deploy output when ready. Checklist: [`deploy-checklists/2026-08-17-lambda-program-instance-season.md`](./deploy-checklists/2026-08-17-lambda-program-instance-season.md).
+---
 
-**Automation 117 (Mike 2026-08-19 paste):** Production script is **`117 - Zoom - Create Zoom Recording Approval Communications Hub Handoff` v2.1**. It creates one **Email Handoff Queue** row for Communications Hub (Event Type `ZOOM_RECORDING_APPROVAL`, Template Key `ZOOM_RECORDING_APPROVED`). It does **not** award Zoom recording XP, call Make/Gmail/Resend, or send email itself — **079** sends Ready queue rows to the Hub → Resend. This is **not** the Stage 17 credit orchestrator. Historical Make **117f** Gmail and older “117 v1.1 email-to-Make” / “117 orchestrator v1.1.1” claims are preserved as history only.
+## 0. Current Status Dashboard — 2026-08-23
 
-**Automation 066 (Mike 2026-08-19):** Production Airtable shows **v3.8**. Earlier controlled proofs (v3.3 failure historical; v3.4 createRecords fix; v3.5 existing-unlock replay) remain historical path evidence. Do not treat v3.3/v3.4/v3.5 as the current Airtable version string.
+Reconciled against [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md), [`PROJECT_STATE.md`](./PROJECT_STATE.md), and production-aligned repository sources. Status labels: `complete` · `repository-ready` · `live-tested` · `needs live proof` · `Mike decision` · `blocked` · `deferred` · `historical only` · `retired`.
 
-**Automation 010 (Mike 2026-08-19):** Production Airtable shows **v10.10**. PKG-006R **v10.9** completion evidence (2026-08-15) remains historical lifecycle proof. Do not treat v10.9 as the current Airtable version string.
+| Component | Status | Notes |
+|-----------|--------|-------|
+| **Repository and deployment** | `repository-ready` | `master` merged; Vercel auto-deploy; `/shoot` returns 200; health API token-valid |
+| **Production Airtable governance** | `live-tested` | Production-only; DEV retired 2026-08-19; controlled Schmidt testing per Mike authorization |
+| **Enrollment and athlete identity** | `live-tested` | 001/023 path evidence; broader natural Fillout intake `needs live proof` |
+| **Daily submission intake** | `live-tested` | 005/009/010/031 chain partially proven on Schmidt paths |
+| **Submission XP** | `live-tested` | **Submission Base** bucket; Source Key `SUBMISSION_XP\|{id}`; GitHub **010 v10.12** |
+| **Homework pipeline** | `live-tested` | 009→020→070a assets; 020 **v3.7**; broader multi-path proof `needs live proof` |
+| **Video pipeline** | `live-tested` | 070b **v4.7** + Lambda + 070c; 022 **v2.1** writeback; full PKG-007 scope open |
+| **Zoom pipeline** | `live-tested` | **101 v6.7** live attendance XP; recording credit `Mike decision` |
+| **Streaks** | `needs live proof` | 053/054 contracts in repo; full natural-trigger proof open |
+| **Shot milestones** | `live-tested` | **066 v3.8**; Perfect Week Testing repair proved milestone XP path |
+| **Perfect Week** | `needs live proof` | Ledger repair complete (39 events on `rec93mAfo5jKqP3g5`); **award certification pending** |
+| **Weekly Athlete Summary** | `live-tested` | WAS create/link path partially proven; scheduler positive arm `needs live proof` |
+| **Weekly email** | `needs live proof` | Hub path **072 v4.3 → 074 v3.1 → 079 v2.5 → Resend**; WAS `reczxTIpVI8ZJLex0` settled at 1260 XP; positive send blocked until 072 v4.3 paste |
+| **Levels and gates** | `live-tested` | 041 **v5.1** / 042 progression partially proven; broader gate-clear `needs live proof` |
+| **Leaderboard / standings** | `repository-ready` | Adapter hardening merged; Production verification `needs live proof` |
+| **Public athlete profile** | `repository-ready` | XP ledger merged/deployed; live profile proof partial |
+| **XP Activity Ledger (web)** | `repository-ready` | Enrollment Record ID filter; pagination; date normalization — deployed, not full-season certified |
+| **Mobile / accessibility** | `deferred` | Backlog items; not launch-blocking in current matrix |
+| **Communications Hub / Resend** | `live-tested` | Current parent-email plane; Make/Gmail **retired** for SC email |
+| **Tremendous awards** | `blocked` | Sandbox validated; production API `Mike decision` |
+| **Lambda / private asset links** | `live-tested` | C-013 historical E2E; season code deployed 2026-08-19 |
+| **SEO and public launch** | `deferred` | Sitewide `noindex` until cutover approval |
+| **Fillout intake reopening** | `Mike decision` | Closed for contest; 2027 reopen `needs live proof` |
+| **Learning Activities / schema** | `Mike decision` | PKG-005 blocked on schema authority |
 
-### Email send plane — 2026-08-19
+### Email send plane (current)
 
-Mike: Make.com does **not** handle any Shooting Challenge emails. All of those emails go through **Resend** (Communications Hub). Current-state file: [`integrations/email-send-plane.md`](./integrations/email-send-plane.md).
+All Shooting Challenge parent/athlete notification email goes through **Communications Hub → Resend**. Make.com does **not** send SC email. Automation **077** is **retired/deleted**. Historical `118→072→119→074→Make→Gmail` weekly proof is **historical only**. Authority: [`integrations/email-send-plane.md`](./integrations/email-send-plane.md).
 
-The 2026-07-24 `118→072→119→074→Make→Gmail` weekly proof remains **historical evidence**. Make 117f Gmail packets are historical. Do not treat Make/Gmail as the current email sender.
+---
+
+## 0A. Current Automation Versions — 2026-08-23
+
+Authoritative GitHub SCRIPT headers + [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) overlays. Production paste may lag GitHub for **010 v10.12** and **057 v1.9** — verify in Automations UI before claiming live.
+
+| # | Current (GitHub / production-aligned) | Status | Notes |
+|---|--------------------------------------|--------|-------|
+| **001** | v5.1 | live-tested | Enrollment intake |
+| **005** | v5.5 | live-tested | PHA slot normalize |
+| **009** | v1.2 | live-tested | Submission Assets |
+| **010** | **v10.12** | live-tested | Formula/link settlement grace; prior v10.11 historical |
+| **020** | **v3.7** | live-tested | Homework HC create/link |
+| **022** | v2.1 | live-tested | Child upload writeback |
+| **041** | v5.1 | live-tested | Level recalc queue |
+| **057** | **v1.9** | live-tested | Perfect Week eligibility; prior v1.7 historical |
+| **058** | v1.3 | live-tested | Perfect Week unlock |
+| **059** | v3.6 | live-tested | Achievement XP from unlock |
+| **064** | v12.2 (repo) | live-tested | Homework XP prepare — production-verified current live |
+| **065** | v10.2 | live-tested | Homework XP create/reconcile |
+| **066** | v3.8 | live-tested | Shot milestones |
+| **070a** | v4.7 | retired / off | Homework upload Make — **off by design** except controlled windows |
+| **070b** | v4.7 | live-tested | Video upload → Make → Lambda |
+| **070c** | v1.1 | live-tested | Async writeback verify |
+| **072** | **v4.3** | repository-ready | Weekly summary email package; WAS-linked XP reconciliation |
+| **074** | **v3.1** | live-tested | Weekly summary Hub handoff |
+| **076** | v8.11 | live-tested | Daily submission Hub queue create |
+| **077** | v5.0 (archive) | **retired** | Deleted from Production; GitHub archive only |
+| **079** | v2.5 | live-tested | Ready queue → Hub → Resend |
+| **101** | v6.7 | live-tested | Zoom live attendance XP |
+| **117** | v2.1 | live-tested | Zoom recording approval Hub handoff — not recording XP |
+
+**Historical entry retained.** Superseded version claims in §2A (2026-08-10), §3 dashboards, and PKG-006R baseline (010 v10.8, 020 v3.6, 070b v4.6) are preserved below with disposition notes — do not use them as current paste instructions.
+
+---
+
+## 0B. XP and Website Status — 2026-08-23
+
+### XP rules (repository + deployed web)
+
+| Rule | Current state |
+|------|---------------|
+| Daily shooting bucket | **Submission Base** (not legacy bucket names) |
+| Source Key | `SUBMISSION_XP\|{submissionId}` |
+| Enrollment filter | **Enrollment Record ID** lookup — not ARRAYJOIN on link display names |
+| Activity dates | Established normalization: Submission → Activity Date; Homework → submission date; Video → Video Activity Date; Zoom → Zoom date; Streak → Streak End Date; Perfect Week → week-end Saturday; milestones → latest counted submission date |
+| Date-only fields | Midnight UTC / America/Denver rules — no local-date shift |
+| Ledger loading | Up to 200 events; inactive and Duplicate - Remove excluded; Source Key dedupe deterministic |
+| Missing XP | Reported in UI (reconciliation warnings), not silently omitted |
+| Same-date ordering | Parent submissions before dependent milestones |
+| Multiple submissions per date | All remain visible |
+| Perfect Week Testing (`rec93mAfo5jKqP3g5`) | **39 active XP Events** after authorized 2026-08-23 repair; 2026-08-23 submission date unchanged |
+| Perfect Week award | **Not certified** — Days Logged / Eligible? / 057→058→059 award path `needs live proof` |
+| Homework / video XP | Do **not** claim production-certified unless eligibility + live proof exist per enrollment |
+
+### Website (deployed)
+
+| Feature | Status |
+|---------|--------|
+| Public athlete profile activity | Pagination (“Load more”); full ledger up to loader cap |
+| Dashboard preview | Larger ledger than main dashboard |
+| Main dashboard | Documented row cap with truncation notice |
+| Repository tests | **Not** production certification |
+
+---
+
+## 0C. Current Component Reconciliation
+
+| Component | Owner | Current state | Evidence | Completed work | Remaining work | Dependency | Priority | Last reconciled |
+|-----------|-------|---------------|----------|----------------|----------------|------------|----------|-----------------|
+| Airtable Production Base | Mike | live-tested | `appn84sqPw03zEbTT` | Production-only governance (PKG-042) | Schema refresh; live UI attestation | — | P0 | 2026-08-23 |
+| Automations | Mike; Cursor | live-tested | SCRIPT headers; CURRENT-TRUTH §8 | Version reconciliation; contract tests | Paste verify 010 v10.12, 057 v1.9 if lagging | — | P0 | 2026-08-23 |
+| Enrollment / Athlete Identity | Mike | live-tested | 2026-08-16 path packet | 001/023 proofs | Natural Fillout intake (PKG-006) | Fillout decision | P0 | 2026-08-23 |
+| Fillout Intake | Mike | retired | Contest closed | Historical intake proofs | 2027 reopen decision | PKG-009 | P1 | 2026-08-23 |
+| Submissions | Mike | live-tested | Schmidt controlled paths | 005/009/010 chain | Natural-trigger proof | PKG-006 | P0 | 2026-08-23 |
+| Submission XP | Mike; Cursor | live-tested | 010 contract; repair script | Submission Base bucket; ledger UI | Full-season certification | — | P0 | 2026-08-23 |
+| Homework Assets | Mike | live-tested | Perfect Week asset proofs | 009/070a paths | Broader HC reuse proof | PKG-007 | P1 | 2026-08-23 |
+| Homework Completions | Mike | live-tested | 020 v3.7 | HC create/link | Multi-path proof | PKG-007 | P1 | 2026-08-23 |
+| Homework XP | Mike | live-tested | 064/065 lifecycle proof | Prepare/create split | Broader eligibility paths | PKG-007 | P1 | 2026-08-23 |
+| Video Upload | Mike | live-tested | C-013 E2E; 070b v4.7 | Lambda season code | Retry proof; secret rotation | — | P1 | 2026-08-23 |
+| Video Feedback | Mike | live-tested | 013/022 paths | VF create/link | Full review/XP paths | PKG-007 | P1 | 2026-08-23 |
+| Video XP | Mike | live-tested | **113 v6.4 / 114 v6.1** + PKG-007 proof **PASS 2026-08-23** (`AUTONOMOUS_VIDEO_QA_20260823_164549`) | Native trigger attestation; 073 OFF UI | Mike disposable asset cleanup (PAT 403) | PKG-007 proof | P1 | 2026-08-23 |
+| Zoom Attendance | Mike | live-tested | PKG-034; 101 v6.7 | Base XP lifecycle | Bonus tiers proof | — | P1 | 2026-08-23 |
+| Zoom Approval Email | Mike | live-tested | 117 v2.1 Hub handoff | Queue create only | Template live proof | Hub | P1 | 2026-08-23 |
+| Zoom Recording XP | Mike | Mike decision | C-025 design alts | Email path live | Credit writer decision (PKG-010) | Product decision | P2 | 2026-08-23 |
+| Streaks | Mike | needs live proof | Repo contracts | 053/054 sources | Natural-trigger proof | — | P1 | 2026-08-23 |
+| Shot Milestones | Mike | live-tested | 066 v3.8; PW repair | Milestone XP on test enrollment | Broader season proof | — | P1 | 2026-08-23 |
+| Perfect Week | Mike | needs live proof | 39-event ledger repair | 057 v1.9 settlement in repo | Award certification; Days Logged=7 | Calendar | P0 | 2026-08-23 |
+| Weekly Athlete Summary | Mike | live-tested | WAS proofs | 031/032/030 paths | 118 positive build arm | Eligible week | P0 | 2026-08-23 |
+| Weekly Summary Email | Mike | needs live proof | Hub architecture | 072/074/079 in repo | Positive send path | PKG-008 | P0 | 2026-08-23 |
+| Communications Hub | Mike | live-tested | Email send plane doc | Resend migration | Template registry live IDs | — | P1 | 2026-08-23 |
+| Resend | Mike | live-tested | Hub integration | Current send plane | Deliverability monitoring | Hub | P1 | 2026-08-23 |
+| XP Activity Ledger | Cursor | repository-ready | Web merge 2026-08-23 | Loader, pagination, dates | Live enrollment audit | Airtable token | P0 | 2026-08-23 |
+| Public Athlete Profile | Cursor | repository-ready | `/athletes/{slug}` live 200 | Activity mapping tests | Full profile certification | — | P1 | 2026-08-23 |
+| Dashboard | Cursor | repository-ready | Row cap documented | Preview vs main ledger | Auth decision (SC-112) | — | P2 | 2026-08-23 |
+| Leaderboard | Cursor | repository-ready | Adapter hardening | PI-scoped queries | PKG-040 live audit | — | P1 | 2026-08-23 |
+| Levels | Mike | live-tested | 041 v5.1; 042 proofs | Progression on Schmidt | Broader gate-clear | PKG-014 | P1 | 2026-08-23 |
+| Level Gates | Mike | needs live proof | Gate rules in base | Blocked-gate proof partial | Full progression matrix | PKG-014 | P1 | 2026-08-23 |
+| Lambda Asset Service | Mike | live-tested | C-013; season deploy | Presigned reviewer URLs | Secret rotation | — | P1 | 2026-08-23 |
+| Make / Tremendous Awards | Mike | blocked | Sandbox only | Blueprint snapshot | Production API approval | Tremendous | P2 | 2026-08-23 |
+| Mobile / Accessibility | Cursor | deferred | Backlog | — | Usability pass | — | P2 | 2026-08-23 |
+| SEO | Mike | deferred | noindex active | — | Cutover approval | SC-115 | P2 | 2026-08-23 |
+| Game Manual | Cursor | repository-ready | PKG-021 orientation | Quick-start UI | 2027 rules content | — | P2 | 2026-08-23 |
+| Documentation / Governance | Cursor | repository-ready | PKG-041/042; autonomous QA 2026-08-23 | Production-only docs; `autonomous-qa-run.mjs` | CONTROL.json SHA refresh | — | P1 | 2026-08-23 |
+
+### 0C.2 Video XP / PKG-006R lock (2026-08-23)
+
+| Check | Result |
+|-------|--------|
+| PKG-006R lock blocking 113/114 | **Released** — complete 2026-08-15 |
+| 113 / 114 Production install | **Live** — v6.4 / v6.1 MATCH GitHub |
+| PKG-007 lifecycle proof | **needs live proof** — Schmidt packet |
+| Investigation | [`PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md`](../investigations/PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md) |
+
+### 0C.1 Autonomous QA — 2026-08-23 (post-XP-deletion)
+
+| Check | Result | Evidence |
+|-------|--------|----------|
+| Disposable submission → 010 XP | `live-tested` | `SUBMISSION_XP\|recbHnmVsvYUog9CE`; 20pts; idempotent replay |
+| Perfect Week ledger (`rec93mAfo5jKqP3g5`) | `live-tested` | 39 active XP; zero missing |
+| Xavier / Testing3 / Curtis missing repair XP | `needs live proof` (expected) | 4 deleted repair rows not recreated |
+| Stale fields on source submissions | `live-tested` | No phantom XP links |
+| Production web `/shoot` (8 routes) | `live-tested` | Browser + HTTP 200; mobile 390px |
+| Automation pastes 010/057/072 | `blocked` | Prod v10.10 / v1.8 / v4.2 vs GitHub |
+| Weekly email positive path | `blocked` | Pending 072 paste |
+| Harness | `repository-ready` | `docs/testing/autonomous-qa/` |
+
+---
+
+## 0D. Remaining Work (Prioritized)
+
+### P0 — Required before broad participant launch
+
+| Item | Owner | Status |
+|------|-------|--------|
+| Perfect Week award certification (057→058→059 after Eligible?=true, Days Logged=7) | Mike | `needs live proof` |
+| Weekly email positive-path proof (072→074→079→Resend) | Mike | `needs live proof` |
+| Natural Fillout-shaped intake proof (PKG-006) | Mike | `needs live proof` |
+| 118/119 positive build/send arm on eligible completed Week | Mike | `needs live proof` |
+| Critical automation paste attestation (010 v10.12, 057 v1.9 if UI lags GitHub) | Mike | `needs live proof` |
+| Production XP reconciliation on operator enrollments (missing-submission warnings) | Mike; Cursor | `needs live proof` |
+| 2027 Weeks / season activation package (PKG-009) | Mike | `Mike decision` |
+
+### P1 — Important operational work
+
+| Item | Owner | Status |
+|------|-------|--------|
+| Broader homework/video/written/multi-file proof (PKG-007) | Mike | `needs live proof` |
+| Progression and gate-clear proof (PKG-014) | Mike | `needs live proof` |
+| Standings live verification (PKG-040) | Mike | `needs live proof` |
+| Streak natural-trigger proof | Mike | `needs live proof` |
+| Mobile readability improvements | Cursor | `deferred` |
+| Documentation cleanup (ongoing) | Cursor | `repository-ready` |
+| Lambda upload retry and secret rotation | Mike | `needs live proof` |
+| Video XP Production lifecycle proof (PKG-007) | Mike | `live-tested` (2026-08-23 autonomous proof) |
+
+### P2 — Future decisions or enhancements
+
+| Item | Owner | Status |
+|------|-------|--------|
+| SEO / public indexing (SC-115) | Mike | `deferred` |
+| Learning Activities schema (PKG-005) | Mike | `Mike decision` |
+| Zoom recording-credit architecture (PKG-010) | Mike | `Mike decision` |
+| Tremendous production activation (C-028) | Mike | `blocked` |
+| Softr legacy cleanup | — | `historical only` |
+| Multi-year Program Instance architecture (V2-013) | Mike | `deferred` |
+| Major-event notifications (PKG-011) | Mike | `Mike decision` |
+
+---
+
+### Historical operator overlays (superseded — preserved evidence)
+
+> **Historical entry retained.** The block below records 2026-08-16 path evidence and 2026-08-19 overlays. Superseded by §0–§0D and [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) on **2026-08-23**. Do not use version strings here as current paste instructions.
+
+The 2026-08-16 controlled-path evidence is in [`prod-completion/2026-08-16/SC-2026-08-16-CURRENT-STATE-RECONCILIATION.md`](./prod-completion/2026-08-16/SC-2026-08-16-CURRENT-STATE-RECONCILIATION.md). **022 v2.1**, **020 v3.7** (not v3.6), **070b v4.7** (not v4.6), **066 v3.8**, **010 v10.12** (not v10.10), **117 v2.1** Hub handoff remain current per §0A. Lambda season deploy evidence: [`deploy-checklists/2026-08-17-lambda-program-instance-season.md`](./deploy-checklists/2026-08-17-lambda-program-instance-season.md).
 
 ---
 
@@ -92,6 +295,22 @@ Runbook history: `docs/deploy-checklists/117-zoom-recording-approval-email.md` (
 
 ## 2. Status Definitions
 
+**Reconciled labels (2026-08-23):** Use these in §0C and new reconciliation work:
+
+| Label | Meaning |
+|-------|---------|
+| `complete` | Repository + install + live proof all satisfied where applicable |
+| `repository-ready` | Code/docs/tests merged; live proof not claimed |
+| `live-tested` | Controlled or natural live Production proof on record |
+| `needs live proof` | Repository work exists; live evidence missing |
+| `Mike decision` | Product, schema, or external-service authorization required |
+| `blocked` | Dependency or lock prevents safe work |
+| `deferred` | Intentionally postponed |
+| `historical only` | Preserved evidence; not current instruction |
+| `retired` | Deliberately off, deleted, or superseded |
+
+**Legacy labels** below remain on older SC rows and dashboards. When updating rows, map to the reconciled labels above.
+
 | Status | Plain-language meaning |
 |--------|------------------------|
 | **Brainstormed** | Idea exists; no firm plan yet. |
@@ -110,6 +329,8 @@ Runbook history: `docs/deploy-checklists/117-zoom-recording-approval-email.md` (
 ---
 
 ## 2A. Current release-control truth — 2026-08-10
+
+> **Partially superseded.** Core proven/not-proven boundaries remain valid. For current component and automation status, prefer **§0–§0D** (reconciled 2026-08-23). This section preserves the 2026-08-10 evidence ledger.
 
 This section is the current release-status overlay. Dated sections below are
 historical evidence ledgers and technical records; they do not supersede this
@@ -287,7 +508,13 @@ they require Mike-owned schema or live-system decisions.
 
 Execution matrix IDs advanced: PKG-042 — retired the obsolete Airtable test environment and adopted production-only governance.
 
+Execution matrix IDs advanced: PKG-041 — 2026-08-23 Completion Master reconciliation: added §0 dashboard, §0A automation versions, §0B XP/website status, §0C component table, §0D prioritized remaining work; superseded stale operator overlays; preserved all historical evidence. No live-system changes.
+
+Execution matrix IDs advanced: PKG-041 — 2026-08-23 production-readiness cleanup: merged XP activity ledger (enrollment-scoped loader, pagination, date normalization), Perfect Week Testing XP repair tooling, restored offline DEV runbook fixtures with historical banners, reconciled CURRENT-TRUTH/PROJECT_STATE for production-only operation, and validated 29/29 agent4 suites + web build. No live Airtable writes; no automation logic changed for test convenience. Inventory: [`audits/2026-08-23-production-readiness-inventory.md`](./audits/2026-08-23-production-readiness-inventory.md).
+
 ### PKG-006R / PKG-036 Production baseline — 2026-08-13
+
+> **Historical entry retained.** Superseded by §0A and [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) on **2026-08-23**. Version strings below (010 v10.8, 041 v4.0, 042 v3.4) are **not** current — see §0A for 010 **v10.12**, 041 **v5.1**, 042 current live version.
 
 Mike supplied the authoritative Production baseline for the unified operator
 packet ([`PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md`](./deploy-checklists/PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md)).
@@ -312,14 +539,9 @@ claim occurred.
 | Automation **043** | **Retired / absent** | Do not recreate |
 | Automation **077** | **Deleted from Airtable** | Retired Make/Gmail path; GitHub source archived; slot recovered |
 
-**PKG-006R lock:** active until backlog review, replay, withdrawal/restoration, audit, totals, and natural-trigger evidence are complete. **041 v5.0 / 042 v4.1 installation deferred** until explicit lock release.
+**PKG-006R / PKG-036 locks:** **Complete 2026-08-15** — no longer block Video XP. **113 v6.4** and **114 v6.1** are **Live** in Production (API 2026-08-23). Remaining: PKG-007 controlled lifecycle proof per [`VIDEO-FEEDBACK-XP-PRODUCTION-SCHMIDT-TEST.md`](./deploy-checklists/VIDEO-FEEDBACK-XP-PRODUCTION-SCHMIDT-TEST.md). Investigation: [`PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md`](./investigations/PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md).
 
-**PKG-007-RDY-001 coordination hold:** Per the approved Video XP readiness
-package, do not paste, configure, enable, disable, or controlled-test Video XP
-Automations 113/114 in Production until Mike explicitly releases both the
-PKG-006R and PKG-036 coordination locks. This is a scheduling hold for the
-Video proof package; it does not alter the existing 041/042 ownership or
-release criteria.
+**PKG-007-RDY-001 (superseded for paste):** Historical scheduling hold until PKG-006R/PKG-036 release. Both complete; scripts installed. Hold now applies only to **missing lifecycle proof**, not paste.
 
 ---
 
@@ -432,7 +654,9 @@ No status in this overlay is marked Complete or Live Tested solely from a govern
 
 ## 3. Completion Dashboard
 
-The bucket counts below are the historical **2026-08-06** snapshot. For the affected automations, the dated Current PROD reconciliation above supersedes these older aggregate counts and rows.
+> **Historical dashboards below.** Bucket counts and reconciliation tables are preserved evidence from 2026-08-05 through 2026-08-12. For **current** component status, use **§0 Current Status Dashboard** and **§0C Current Component Reconciliation**. Superseded by [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) on 2026-08-23 where they conflict.
+
+The bucket counts below are the historical **2026-08-06** snapshot.
 
 | Bucket | Count |
 |--------|------:|
@@ -1118,7 +1342,7 @@ Map older IDs into SC items so they are not tracked as separate unfinished work.
 | V2-011, V2-012 | SC-134, SC-135 | Audit pack + dry-run |
 | V2-001 | SC-125 → SC-067 | Archive/clone superseded by Program Instance |
 | V2-013 | SC-067 | Multi-year |
-| V2-015 | SC-122 | Production base (optional now) |
+| V2-015 | SC-122 | Production base — **retired DEV 2026-08-19**; production-only |
 | H-001, C-006 | SC-124, SC-083 | Achievement dedupe |
 | H-002, K-H1 | SC-027, SC-076 | 066 milestones |
 | H-003/H-004/H-006, C-015/C-016 | SC-127–SC-129 | Low deferred |
@@ -1136,7 +1360,7 @@ Map older IDs into SC items so they are not tracked as separate unfinished work.
 | H-002 / 066 | The v3.3 `createRecords` failure is historical; current controlled 066 evidence is recorded in the dated release evidence and must be verified against live Airtable state | Older “paste pending” / “checkbox didn’t fire” briefs |
 | C-011 | Repo ready (SC-035+) | Backlog plain “queued” without repo-ready nuance |
 | C-023 / 116 | Historical installation and Production evidence remain evidence only; current live state belongs to Airtable and the named release package | Older install and paste queues |
-| production-only workflow | Remains the repository guardrail; this reconciliation made no live-system change | Historical PROD-first operating-mode packet |
+| production-only workflow | Production-only since DEV retirement 2026-08-19; repository guardrail | Historical production-first operating-mode packet; retired DEV runbooks (read-only banners) |
 | Testing Scenarios / 115 | Controlled PROD proof for 115 v2.1 is recorded in §2A; one explicit checked request creates one Submission by design | Older “never paste 115” or v2.0 status text |
 
 ---

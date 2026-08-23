@@ -62,7 +62,13 @@ async function getOne(baseId, table, id) {
     `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(table)}/${id}`,
     { headers: { Authorization: `Bearer ${token}` } }
   );
-  if (!res.ok) throw new Error(`${table}/${id} ${res.status}`);
+  if (!res.ok) {
+    if (res.status === 403) {
+      const rows = await listAll(baseId, table, { filterByFormula: `RECORD_ID()="${id}"` });
+      if (rows.length) return rows[0];
+    }
+    throw new Error(`${table}/${id} ${res.status}`);
+  }
   return res.json();
 }
 

@@ -1,0 +1,576 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-07-16",
+  "source_matrix": "docs/V2_END_TO_END_TEST_MATRIX.md",
+  "dev_base_id": "appTetnuCZlCZdTCT",
+  "prod_base_id": "appn84sqPw03zEbTT",
+  "execution_modes": [
+    "offline",
+    "airtable_api",
+    "airtable_ui",
+    "make",
+    "email_evidence",
+    "mike_approval"
+  ],
+  "notes": {
+    "offline": "Pure repo contract/fixture tests — no credentials, no live writes.",
+    "airtable_api": "Requires AIRTABLE_TOKEN (or AIRTABLE_API_TOKEN) scoped to DEV base only + Mike named DEV authorization.",
+    "airtable_ui": "Requires Mike/OMNI in DEV Airtable UI (views, Run Test?, paste, toggles).",
+    "make": "Requires DEV Make scenario + DEV webhook URL (never PROD webhooks).",
+    "email_evidence": "Requires inbox/webhook capture proof; never send to real parents from DEV without isolation.",
+    "mike_approval": "Hard gate before live DEV named check, email send, or any PROD smoke."
+  },
+  "tests": [
+    {
+      "id": "A1",
+      "domain": "enrollment",
+      "modes": ["airtable_ui", "mike_approval"],
+      "automations": ["001", "002", "003"],
+      "fixture": "enrollment",
+      "launch_smoke": false
+    },
+    {
+      "id": "A2",
+      "domain": "enrollment",
+      "modes": ["airtable_ui", "mike_approval"],
+      "automations": ["003"],
+      "fixture": "enrollment",
+      "launch_smoke": false
+    },
+    {
+      "id": "A3",
+      "domain": "enrollment",
+      "modes": ["airtable_ui", "airtable_api", "mike_approval"],
+      "automations": ["023", "005"],
+      "fixture": "enrollment",
+      "launch_smoke": true,
+      "smoke_reason": "Intake identity must work before XP/milestone smoke"
+    },
+    {
+      "id": "A4",
+      "domain": "duplicate_prevention",
+      "modes": ["offline"],
+      "automations": ["any-v2"],
+      "fixture": "duplicate_prevention",
+      "launch_smoke": false,
+      "offline_command": "node airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js"
+    },
+    {
+      "id": "B1",
+      "domain": "submission_xp",
+      "modes": ["airtable_ui", "airtable_api", "mike_approval"],
+      "automations": ["010"],
+      "fixture": "submission_xp",
+      "launch_smoke": true
+    },
+    {
+      "id": "B2",
+      "domain": "submission_xp",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["010"],
+      "fixture": "submission_xp",
+      "launch_smoke": true,
+      "offline_command": "node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js"
+    },
+    {
+      "id": "B3",
+      "domain": "submission_xp",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["010"],
+      "fixture": "submission_xp",
+      "launch_smoke": false,
+      "offline_command": "node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js"
+    },
+    {
+      "id": "B4",
+      "domain": "duplicate_prevention",
+      "modes": ["airtable_ui", "airtable_api", "mike_approval"],
+      "automations": ["007"],
+      "fixture": "duplicate_prevention",
+      "launch_smoke": false
+    },
+    {
+      "id": "B5",
+      "domain": "submission_xp",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["005", "010", "031"],
+      "fixture": "submission_xp",
+      "launch_smoke": false,
+      "offline_command": "node airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js"
+    },
+    {
+      "id": "C1",
+      "domain": "homework_completion",
+      "modes": ["airtable_ui", "mike_approval"],
+      "automations": ["009", "020"],
+      "fixture": "homework_completion",
+      "launch_smoke": false
+    },
+    {
+      "id": "C2",
+      "domain": "homework_completion",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["020"],
+      "fixture": "homework_completion",
+      "launch_smoke": false,
+      "offline_command": "node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js"
+    },
+    {
+      "id": "C3",
+      "domain": "homework_completion",
+      "modes": ["airtable_ui", "mike_approval"],
+      "automations": ["064", "065"],
+      "fixture": "homework_completion",
+      "launch_smoke": false
+    },
+    {
+      "id": "C4",
+      "domain": "homework_completion",
+      "modes": ["airtable_ui", "mike_approval"],
+      "automations": ["064", "065"],
+      "fixture": "homework_completion",
+      "launch_smoke": true
+    },
+    {
+      "id": "C5",
+      "domain": "homework_completion",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["065"],
+      "fixture": "homework_completion",
+      "launch_smoke": false,
+      "offline_command": "node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js"
+    },
+    {
+      "id": "C6",
+      "domain": "homework_completion",
+      "modes": ["airtable_ui", "mike_approval"],
+      "automations": ["067"],
+      "fixture": "homework_completion",
+      "launch_smoke": false
+    },
+    {
+      "id": "C7",
+      "domain": "asset_reuse",
+      "modes": ["make", "mike_approval"],
+      "automations": ["070a"],
+      "fixture": "asset_reuse",
+      "launch_smoke": false,
+      "blocked_note": "070a remains OFF in PROD; DEV-only when Mike schedules"
+    },
+    {
+      "id": "D1",
+      "domain": "video_feedback",
+      "modes": ["airtable_ui", "mike_approval"],
+      "automations": ["013", "112"],
+      "fixture": "video_feedback",
+      "launch_smoke": false
+    },
+    {
+      "id": "D2",
+      "domain": "video_feedback",
+      "modes": ["airtable_ui", "mike_approval"],
+      "automations": ["113"],
+      "fixture": "video_feedback",
+      "launch_smoke": false
+    },
+    {
+      "id": "D3",
+      "domain": "video_feedback",
+      "modes": ["airtable_ui", "mike_approval"],
+      "automations": ["114"],
+      "fixture": "video_feedback",
+      "launch_smoke": true
+    },
+    {
+      "id": "D4",
+      "domain": "video_feedback",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["114"],
+      "fixture": "video_feedback",
+      "launch_smoke": false,
+      "offline_command": "node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js"
+    },
+    {
+      "id": "D5",
+      "domain": "video_feedback",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["114"],
+      "fixture": "video_feedback",
+      "launch_smoke": false,
+      "offline_command": "node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js"
+    },
+    {
+      "id": "D6",
+      "domain": "asset_reuse",
+      "modes": ["make", "airtable_api", "mike_approval"],
+      "automations": ["070b", "070c"],
+      "fixture": "asset_reuse",
+      "launch_smoke": false
+    },
+    {
+      "id": "D7",
+      "domain": "asset_reuse",
+      "modes": ["offline", "airtable_api", "mike_approval"],
+      "automations": ["116"],
+      "fixture": "asset_reuse",
+      "launch_smoke": false,
+      "offline_command": "node airtable/automations/shooting-challenge/lib/upload-make-lambda-response.test.js"
+    },
+    {
+      "id": "D8",
+      "domain": "asset_reuse",
+      "modes": ["offline", "make", "mike_approval"],
+      "automations": ["070c"],
+      "fixture": "asset_reuse",
+      "launch_smoke": false,
+      "offline_command": "node airtable/automations/shooting-challenge/lib/upload-make-lambda-response.test.js"
+    },
+    {
+      "id": "E1",
+      "domain": "streaks",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["053", "055"],
+      "fixture": "streaks",
+      "launch_smoke": false,
+      "offline_command": "node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js"
+    },
+    {
+      "id": "E2",
+      "domain": "streaks",
+      "modes": ["offline"],
+      "automations": ["053"],
+      "fixture": "streaks",
+      "launch_smoke": false,
+      "offline_command": "node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js"
+    },
+    {
+      "id": "E3",
+      "domain": "streaks",
+      "modes": ["airtable_ui", "mike_approval"],
+      "automations": ["054"],
+      "fixture": "streaks",
+      "launch_smoke": false
+    },
+    {
+      "id": "E4",
+      "domain": "streaks",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["054"],
+      "fixture": "streaks",
+      "launch_smoke": false,
+      "offline_command": "node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js"
+    },
+    {
+      "id": "E5",
+      "domain": "streaks",
+      "modes": ["airtable_ui", "mike_approval"],
+      "automations": ["056"],
+      "fixture": "streaks",
+      "launch_smoke": false
+    },
+    {
+      "id": "F1",
+      "domain": "milestones",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["066"],
+      "fixture": "milestones",
+      "launch_smoke": true,
+      "offline_command": "node airtable/automations/shooting-challenge/lib/066-milestone-crossing-harness.test.js"
+    },
+    {
+      "id": "F2",
+      "domain": "milestones",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["066"],
+      "fixture": "milestones",
+      "launch_smoke": true,
+      "offline_command": "node airtable/automations/shooting-challenge/lib/066-milestone-crossing-harness.test.js"
+    },
+    {
+      "id": "F3",
+      "domain": "milestones",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["066"],
+      "fixture": "milestones",
+      "launch_smoke": true,
+      "offline_command": "node airtable/automations/shooting-challenge/lib/066-milestone-crossing-harness.test.js"
+    },
+    {
+      "id": "F4",
+      "domain": "milestones",
+      "modes": ["airtable_ui", "mike_approval"],
+      "automations": ["059"],
+      "fixture": "milestones",
+      "launch_smoke": false
+    },
+    {
+      "id": "G1",
+      "domain": "perfect_week",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["057"],
+      "fixture": "perfect_week",
+      "launch_smoke": false,
+      "offline_command": "node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js"
+    },
+    {
+      "id": "G2",
+      "domain": "perfect_week",
+      "modes": ["offline"],
+      "automations": ["057"],
+      "fixture": "perfect_week",
+      "launch_smoke": false,
+      "offline_command": "node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js"
+    },
+    {
+      "id": "G3",
+      "domain": "perfect_week",
+      "modes": ["airtable_ui", "mike_approval"],
+      "automations": ["058"],
+      "fixture": "perfect_week",
+      "launch_smoke": true
+    },
+    {
+      "id": "G4",
+      "domain": "perfect_week",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["058"],
+      "fixture": "perfect_week",
+      "launch_smoke": false,
+      "offline_command": "node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js"
+    },
+    {
+      "id": "G5",
+      "domain": "perfect_week",
+      "modes": ["airtable_ui", "mike_approval"],
+      "automations": ["059"],
+      "fixture": "perfect_week",
+      "launch_smoke": false
+    },
+    {
+      "id": "H1",
+      "domain": "levels_gates",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["041", "042"],
+      "fixture": "levels_gates",
+      "launch_smoke": false,
+      "offline_command": "node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js"
+    },
+    {
+      "id": "H2",
+      "domain": "levels_gates",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["042"],
+      "fixture": "levels_gates",
+      "launch_smoke": true,
+      "offline_command": "node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js"
+    },
+    {
+      "id": "H3",
+      "domain": "levels_gates",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["042"],
+      "fixture": "levels_gates",
+      "launch_smoke": false,
+      "offline_command": "node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js"
+    },
+    {
+      "id": "H4",
+      "domain": "levels_gates",
+      "modes": ["airtable_ui", "mike_approval"],
+      "automations": ["041", "042"],
+      "fixture": "levels_gates",
+      "launch_smoke": false
+    },
+    {
+      "id": "I1",
+      "domain": "weekly_summary",
+      "modes": ["airtable_ui", "airtable_api", "mike_approval"],
+      "automations": ["031"],
+      "fixture": "weekly_summary",
+      "launch_smoke": false
+    },
+    {
+      "id": "I2",
+      "domain": "weekly_summary",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["031"],
+      "fixture": "weekly_summary",
+      "launch_smoke": false,
+      "offline_command": "node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js"
+    },
+    {
+      "id": "I3",
+      "domain": "weekly_summary",
+      "modes": ["airtable_ui", "mike_approval"],
+      "automations": ["032", "033"],
+      "fixture": "weekly_summary",
+      "launch_smoke": false
+    },
+    {
+      "id": "I4",
+      "domain": "weekly_summary",
+      "modes": ["offline"],
+      "automations": ["034"],
+      "fixture": "weekly_summary",
+      "launch_smoke": false,
+      "offline_command": "node airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js"
+    },
+    {
+      "id": "I5",
+      "domain": "weekly_summary",
+      "modes": ["airtable_ui", "mike_approval"],
+      "automations": ["072"],
+      "fixture": "weekly_summary",
+      "launch_smoke": false
+    },
+    {
+      "id": "I6",
+      "domain": "weekly_summary",
+      "modes": ["make", "email_evidence", "mike_approval"],
+      "automations": ["074"],
+      "fixture": "weekly_summary",
+      "launch_smoke": false,
+      "blocked_note": "PROD smoke N — DEV Make webhook only"
+    },
+    {
+      "id": "J1",
+      "domain": "zoom_attendance",
+      "modes": ["airtable_ui", "mike_approval"],
+      "automations": ["101"],
+      "fixture": "zoom_attendance",
+      "launch_smoke": true
+    },
+    {
+      "id": "J2",
+      "domain": "zoom_attendance",
+      "modes": ["airtable_ui", "mike_approval"],
+      "automations": ["101"],
+      "fixture": "zoom_attendance",
+      "launch_smoke": false
+    },
+    {
+      "id": "J3",
+      "domain": "zoom_attendance",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["101"],
+      "fixture": "zoom_attendance",
+      "launch_smoke": false,
+      "offline_command": "node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js"
+    },
+    {
+      "id": "J4",
+      "domain": "zoom_recording",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["117a"],
+      "fixture": "zoom_recording",
+      "launch_smoke": true,
+      "smoke_note": "DEV only until Mike schedules PROD; offline contracts PASS",
+      "offline_command": "node airtable/automations/shooting-challenge/lib/c025-zoom-recording-credit.test.js"
+    },
+    {
+      "id": "J5",
+      "domain": "zoom_recording",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["117a"],
+      "fixture": "zoom_recording",
+      "launch_smoke": true,
+      "offline_command": "node airtable/automations/shooting-challenge/lib/c025-zoom-recording-credit.test.js"
+    },
+    {
+      "id": "J6",
+      "domain": "zoom_recording",
+      "modes": ["make", "email_evidence", "mike_approval"],
+      "automations": ["117b"],
+      "fixture": "zoom_recording",
+      "launch_smoke": false,
+      "blocked_note": "Requires DEV Make webhook + email capture; PROD N"
+    },
+    {
+      "id": "K1",
+      "domain": "asset_reuse",
+      "modes": ["make", "airtable_api", "mike_approval"],
+      "automations": ["070b", "070c"],
+      "fixture": "asset_reuse",
+      "launch_smoke": false
+    },
+    {
+      "id": "K2",
+      "domain": "asset_reuse",
+      "modes": ["offline"],
+      "automations": ["070c"],
+      "fixture": "asset_reuse",
+      "launch_smoke": false,
+      "offline_command": "node airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js"
+    },
+    {
+      "id": "K3",
+      "domain": "perfect_week",
+      "modes": ["airtable_ui", "mike_approval"],
+      "automations": ["057"],
+      "fixture": "perfect_week",
+      "launch_smoke": false
+    },
+    {
+      "id": "K4",
+      "domain": "duplicate_prevention",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["007"],
+      "fixture": "duplicate_prevention",
+      "launch_smoke": false,
+      "offline_command": "node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js"
+    },
+    {
+      "id": "L1",
+      "domain": "duplicate_prevention",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["010", "065", "114", "054", "101"],
+      "fixture": "duplicate_prevention",
+      "launch_smoke": true,
+      "offline_command": "node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js"
+    },
+    {
+      "id": "L2",
+      "domain": "duplicate_prevention",
+      "modes": ["offline", "airtable_ui", "mike_approval"],
+      "automations": ["058", "066", "059"],
+      "fixture": "duplicate_prevention",
+      "launch_smoke": true,
+      "offline_command": "node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js"
+    },
+    {
+      "id": "L3",
+      "domain": "weekly_summary",
+      "modes": ["make", "email_evidence", "mike_approval"],
+      "automations": ["071", "073", "074"],
+      "fixture": "weekly_summary",
+      "launch_smoke": false
+    },
+    {
+      "id": "M1",
+      "domain": "web",
+      "modes": ["offline"],
+      "automations": [],
+      "fixture": null,
+      "launch_smoke": true,
+      "offline_command": "cd web && npm test -- --runInBand --testPathPattern=levels|homework"
+    },
+    {
+      "id": "M2",
+      "domain": "web",
+      "modes": ["airtable_api", "mike_approval"],
+      "automations": [],
+      "fixture": null,
+      "launch_smoke": true,
+      "blocked_note": "Needs AIRTABLE_API_TOKEN + DEV/PROD base env for /shoot/api/airtable"
+    },
+    {
+      "id": "M3",
+      "domain": "web",
+      "modes": ["offline", "airtable_api"],
+      "automations": [],
+      "fixture": null,
+      "launch_smoke": false,
+      "offline_command": "cd web && npm test"
+    }
+  ]
+}

@@ -1,4 +1,8 @@
 import type { StatusBadgeTone } from "@/components/ui/status-badge";
+import {
+  loadXpActivityForEnrollment,
+  XpActivityLoadError,
+} from "@/lib/data/xp-activity-loader";
 import type { XpEventSummary } from "@/types/xp";
 
 /** Presentational athlete dashboard model — mockable without Airtable auth. */
@@ -58,6 +62,8 @@ export type AthleteDashboardModel = {
   };
   /** Recent XP Events for source-label presentation (mock until XP Events adapter). */
   recentXp: XpEventSummary[];
+  recentXpTotal?: number;
+  xpWarning?: string;
 };
 
 export function homeworkStatusTone(status: DashboardHomeworkStatus): StatusBadgeTone {
@@ -184,18 +190,55 @@ export function getMockAthleteDashboard(): AthleteDashboardModel {
 }
 
 /**
- * Safe adapter entry point. Live Airtable athlete dashboard requires auth — returns mock until then.
+ * Safe adapter entry point. When `enrollmentId` is provided, loads live XP activity
+ * from Airtable; other dashboard sections remain mock until athlete auth ships.
  */
 export async function loadAthleteDashboard(options?: {
   slug?: string;
+  enrollmentId?: string;
 }): Promise<AthleteDashboardModel> {
   const mock = getMockAthleteDashboard();
-  if (!options?.slug) return mock;
-  return {
-    ...mock,
-    athlete: {
-      ...mock.athlete,
-      slug: options.slug,
-    },
-  };
+  const slug = options?.slug ?? mock.athlete.slug;
+  const enrollmentId = options?.enrollmentId?.trim();
+
+  if (!enrollmentId) {
+    if (!options?.slug) return mock;
+    return {
+      ...mock,
+      athlete: {
+        ...mock.athlete,
+        slug,
+      },
+    };
+  }
+
+  try {
+    const xpResult = await loadXpActivityForEnrollment(enrollmentId, { maxRows: 25 });
+    const warningParts: string[] = [];
+    if (xpResult.warning) warningParts.push(xpResult.warning);
+    if (xpResult.missingXpSubmissionIds.length > 0) {
+      warningParts.push(
+        `${xpResult.missingXpSubmissionIds.length} counted submission(s) have no XP Event.`,
+      );
+    }
+    return {
+      ...mock,
+      source: "airtable",
+      athlete: {
+        ...mock.athlete,
+        id: enrollmentId,
+        slug,
+      },
+      recentXp: xpResult.rows,
+      recentXpTotal: xpResult.totalAvailableRows,
+      xpWarning: warningParts.length > 0 ? warningParts.join(" ") : undefined,
+    };
+  } catch (error) {
+    if (error instanceof XpActivityLoadError) {
+      throw error;
+    }
+    throw new XpActivityLoadError("Failed to load athlete dashboard XP activity.", {
+      cause: error,
+    });
+  }
 }

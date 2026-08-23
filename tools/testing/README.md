@@ -11,6 +11,15 @@ Inventory, coverage matrix, release/rollback checklists:
 node tools/testing/run-agent4-suite.js
 ```
 
+## Autonomous production-readiness QA (2026-08-23)
+
+Full orchestrator + manifest: `docs/testing/autonomous-qa/`
+
+```bash
+node tools/testing/autonomous-qa-run.mjs
+node tools/testing/autonomous-qa-run.mjs --live-create
+```
+
 ## Offline tests (no Airtable)
 
 ```bash

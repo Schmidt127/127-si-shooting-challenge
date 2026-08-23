@@ -1,0 +1,53 @@
+{
+  "domain": "weekly_summary",
+  "matrix_ids": ["I1", "I2", "I3", "I4", "I5", "I6", "L3"],
+  "event_id_pattern": "WEEKLY_EMAIL|{enrollmentId}|{weekId}",
+  "week_key_rule": "priorSaturdayKeyDenver",
+  "comms_guard": {
+    "field": "Active?",
+    "schmidt_enrollment_id": "recgP9qZYjAhE7NXm",
+    "notes": "072/118/119 skip Schmidt + Active?=false; do not use PPE for weekly email"
+  },
+  "schedule_safety": {
+    "118_119_default_dry_run": true,
+    "keep_schedules_off_until_mike": true,
+    "send_mode_dev": "Test"
+  },
+  "pre_test_state": {
+    "require": [
+      "Counted submission in target week",
+      "031 ON for WAS create",
+      "072 build flag for I5; send OFF until I6",
+      "Week End Date matches priorSaturdayKeyDenver for the run day",
+      "DEV Make webhook only for I6/L3",
+      "072 payload includes eventId WEEKLY_EMAIL|{enrollment}|{week}"
+    ],
+    "forbid": ["PROD Make webhook", "Real parent email without isolation", "118/119 dryRun=false without Mike"]
+  },
+  "records_to_create_shape": {
+    "Weekly Athlete Summary": {
+      "Enrollment": ["{{enrollment}}"],
+      "Week": ["{{week}}"]
+    }
+  },
+  "automation_expected": {
+    "I1": "One WAS per enrollment+week",
+    "I2": "Links existing; no duplicate WAS",
+    "I3": "Goal/homework links once",
+    "I4": "Previous week ordered by Week Start Date",
+    "I5": "Package fields populated; eventId set; send OFF",
+    "I6": "Send once; failure does not clear incorrectly",
+    "L3": "Trigger not cleared on webhook 5xx"
+  },
+  "expected_output": {
+    "was_count_per_enrollment_week": 1,
+    "event_id": "WEEKLY_EMAIL|{{enrollment}}|{{week}}",
+    "send_trigger_on_webhook_failure": "still_checked"
+  },
+  "cleanup": [
+    "Uncheck build/send flags",
+    "Do not clear send trigger on failed webhook (verify left checked)"
+  ],
+  "rollback": ["Disable send automations if emails escaped isolation"],
+  "evidence_location": "docs/v2/evidence/YYYY-MM-DD-I{n}-{enrollmentId}.md"
+}

@@ -8,7 +8,68 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Airtable
 
+#### Added
+- **PKG-007 Video XP production proof orchestrator (2026-08-23)** —
+  `tools/testing/pkg-007-video-xp-proof.mjs` runs disposable Testing3 lifecycle proof
+  (`AUTONOMOUS_VIDEO_QA_*`): preflight, positive/replay/withdrawal/restoration, negative
+  paths, reconciliation manifest. Certified run `AUTONOMOUS_VIDEO_QA_20260823_164549` PASS.
+  Report: `docs/testing/autonomous-qa/PKG-007_VIDEO_XP_PROOF_FINAL_REPORT.md`.
+- **Production QA paste bundles (2026-08-23)** — Complete paste-ready scripts:
+  `docs/deploy-checklists/010-v10.12-PASTE.txt`, `057-v1.9-PASTE.txt`,
+  `072-v4.3-PASTE.txt`. Operator guide:
+  `docs/deploy-checklists/2026-08-23-production-qa-paste-bundle.md`.
+  Regenerate: `python3 tools/airtable/extract_production_qa_paste_bundles.py`.
+
 #### Changed
+- **Perfect Week Testing XP repair (2026-08-23)** — Authorized PROD backfill for enrollment
+  `rec93mAfo5jKqP3g5`: five `SUBMISSION_XP|{id}` events (010 contract), five shot-milestone
+  XP events from Pending unlocks (059 contract). Homework `recbPYfZlM7aC9HWg` and three video
+  rows skipped (not review-eligible / zero XP). Script:
+  `tools/testing/repair_perfect_week_testing.mjs`. Evidence:
+  `/opt/cursor/artifacts/POST-REPAIR-REPORT-rec93mAfo5jKqP3g5.md`.
+- **072 v4.3 — WAS-linked XP reconciliation (2026-08-23)** — Weekly email build compares
+  rollup to WAS-linked active XP only; surfaces unlinked canonical XP before misleading
+  disagreement. Paste checklist:
+  `docs/deploy-checklists/072-v4.3-was-linked-xp-reconciliation.md`. Offline:
+  `node tools/testing/tests/test_072_weekly_xp_reconciliation.mjs`.
+- **PKG-006R Video XP lock investigation (2026-08-23)** — PKG-006R/PKG-036
+  locks complete; 113 v6.4 / 114 v6.1 already Live in Production. Stale
+  coordination-hold language removed from Video XP packet and Completion Master.
+  Remaining: PKG-007 lifecycle proof. Report:
+  `docs/investigations/PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md`.
+  Readiness test updated for 073 Hub handoff error strings.
+  `Count It` + extended poll fix in `autonomous-qa-run.mjs`. Four deleted repair XP rows
+  not recreated; Xavier/Testing3/Curtis show expected FINDING. Stale-field check: no
+  phantom links. Report: `docs/testing/autonomous-qa/AUTONOMOUS_QA_20260823_POST_XP_DELETION_REPORT.md`.
+  idempotently (Xavier, Testing3×2, Curtis). Script:
+  `tools/testing/repair_missing_submission_xp.mjs`.
+
+### Web
+
+#### Changed
+- **Autonomous QA continuation (2026-08-23)** — **072 v4.3** WAS-linked XP validation
+  (fixes false disagreement on WAS `reczxTIpVI8ZJLex0`). Authorized
+  `SUBMISSION_XP` repair for four Schmidt test submissions via
+  `tools/testing/repair_missing_submission_xp.mjs`. Autonomous QA **25 PASS /
+  0 FINDING**. Paste still needed: **010 v10.12**, **057 v1.9**, **072 v4.3**.
+- **Production-readiness cleanup (2026-08-23)** — Reconciled `CURRENT-TRUTH.md`,
+  `PROJECT_STATE.md`, and `AUTOMATION_VERSION_INVENTORY.md` for production-only
+  operation (DEV base retired). Inventory:
+  `docs/audits/2026-08-23-production-readiness-inventory.md`. Validation:
+  29/29 agent4 suites, 260 web tests, typecheck, lint, build PASS.
+- **Public athlete XP activity ledger (2026-08-23)** — Profile activity uses enrollment-scoped
+  XP loader (up to 200 events), **XP Activity Date** for display, Load more pagination, and
+  dashboard truncation notice (25 vs full ledger). Tests in `public-athlete-activity.test.ts`.
+- **071 v4.2 + 073 v4.3 — Homework/Video Feedback parent email redesign (2026-08-22)** —
+  Communications Hub branded React Email templates (`HOMEWORK_FEEDBACK`,
+  `VIDEO_FEEDBACK`) aligned with Welcome and Weekly Athlete Summary. **071**
+  payload adds `weekName`, `reviewStatus`, and canonical footer URLs; **073**
+  adds `programName`, `reviewStatus`, and footer URLs. Paste checklists:
+  `docs/deploy-checklists/homework-feedback-email-redesign-2026-08-22.md`,
+  `docs/deploy-checklists/video-feedback-email-redesign-2026-08-22.md`. Offline:
+  `node --test tests/email/homework-video-feedback-email.test.mjs` and
+  `node tests/email/automation-071-073-source-safety.test.js`. Hub tests in
+  `Schmidt127/communications`.
 - **076 v8.11 — canonical homeworkPageUrl (2026-08-22)** — Payload always
   includes `https://www.fairfieldbasketballclub.com/shoot/homework`; homework
   items omit per-assignment library URLs. Paste with v8.10 checklist update.
@@ -163,6 +224,19 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 - **Lambda upload season CodeOnly deploy (2026-08-19)** — Mike-requested. `127si-upload-asset` updated (CodeSha256 `lwbLiBzB4cfWdzVmIVo7Z78AkiowqPuV2NmUXb+PK2w=`); 139 unit tests OK. Season from Program Instance School Year - Linked. Rotate secrets exposed by AWS CLI env echo when ready.
 
 ### Web
+
+#### Fixed
+- **XP activity loader — enrollment filter (2026-08-23)** — `web/lib/data/xp-activity-loader.ts`
+  now scopes XP Events by `Enrollment Record ID` (lookup of Enrollments.Record Id) instead of
+  `FIND(recordId, ARRAYJOIN({Enrollment}))`, which returns athlete display names and always
+  matched zero rows. Adds linked-record fallback with bounded chunking/cache, throws when linked
+  XP Events cannot be resolved, and surfaces a warning instead of a silent empty table. Preview:
+  `/shoot/dashboard/preview?enrollmentId=rec…`. Regression: `web/lib/data/xp-activity-loader.test.ts`.
+- **XP activity date integrity (2026-08-23)** — Submission Base rows now use linked Submission
+  `Activity Date` as the authoritative display date; `toAirtableDateKey` mirrors automation
+  Denver/midnight-UTC rules so UTC instants cannot shift an athlete-visible day (e.g. 8/22 → 8/23).
+  Excludes `Duplicate - Remove`, dedupes by Source Key, reports counted submissions missing XP
+  Events, and adds `scripts/xp-activity-reconciliation-report.mjs` for enrollment reconciliation.
 
 #### Changed
 - **Shoot route aliases (2026-08-22)** — moved to landing hub

@@ -22,6 +22,8 @@ import type {
   PublicShootingStats,
   PublicWeeklySummary,
 } from "@/types/public-athlete-profile";
+import type { XpEventSummary } from "@/types/xp";
+import { formatXpSourceLabel } from "@/lib/formatters";
 
 export type PublicEnrollmentFields = {
   "Full Athlete Name"?: unknown;
@@ -115,6 +117,7 @@ export type PublicXpEventFields = {
   "Active XP Points"?: unknown;
   "XP Reason Public"?: unknown;
   "XP Source"?: unknown;
+  "XP Activity Date"?: unknown;
   Created?: unknown;
 };
 
@@ -315,6 +318,31 @@ export function mapRecentSubmissions(
   });
 }
 
+export function mapXpSummariesToPublicActivity(rows: XpEventSummary[]): PublicActivityItem[] {
+  return rows.map((row, index) => {
+    const reason = asText(row.reasonPublic, "");
+    const source = asText(row.sourceLabel, "");
+    const title =
+      reason && reason !== "—"
+        ? reason
+        : source
+          ? formatXpSourceLabel(source)
+          : "XP earned";
+    const xp = row.points;
+    return {
+      key: `xp-${row.activityDate ?? "undated"}-${source || "xp"}-${index}`,
+      kind: "xp" as const,
+      date: row.activityDate ?? null,
+      title,
+      detail: xp != null ? `+${xp} XP` : null,
+      shots: null,
+      makes: null,
+      xp,
+      hasDetailedStats: false,
+    };
+  });
+}
+
 export function mapRecentXpEvents(
   records: Array<{ fields: PublicXpEventFields }>,
 ): PublicActivityItem[] {
@@ -324,7 +352,8 @@ export function mapRecentXpEvents(
       const fields = record.fields;
       const xp = asOptionalNumber(fields["Active XP Points"]);
       const reason = asText(fields["XP Reason Public"], "") || asText(fields["XP Source"], "XP");
-      const date = asOptionalDateKey(fields.Created);
+      const date =
+        asOptionalDateKey(fields["XP Activity Date"]) ?? asOptionalDateKey(fields.Created);
       return {
         key: `xp-${date ?? "undated"}-${index}`,
         kind: "xp" as const,
@@ -392,6 +421,8 @@ export type BuildPublicProfileInput = {
   rank: number | null;
   nextLevelName: string | null;
   recentActivity: PublicActivityItem[];
+  activityLedgerTotal?: number;
+  activityLedgerNotice?: string | null;
   weekly: PublicWeeklySummary[];
   achievements: PublicAchievement[];
 };
@@ -404,7 +435,12 @@ export function buildPublicAthleteProfile(input: BuildPublicProfileInput): Publi
   const shooting = mapShooting(fields);
   const progression = mapProgression(fields, input.nextLevelName);
   const lastSubmissionDate =
-    input.recentActivity.find((item) => item.kind === "submission" && item.date)?.date ?? null;
+    input.recentActivity.find(
+      (item) =>
+        item.kind === "submission" ||
+        /shooting submission/i.test(item.title) ||
+        item.title === "Shooting submission completed.",
+    )?.date ?? input.recentActivity.find((item) => item.date)?.date ?? null;
 
   const currentStreak = asOptionalNumber(fields["Current Shooting Streak"]) ?? 0;
   const longestStreak = asOptionalNumber(fields["Longest Streak Days"]) ?? 0;
@@ -441,6 +477,8 @@ export function buildPublicAthleteProfile(input: BuildPublicProfileInput): Publi
       asOfDate: asOptionalDateKey(fields["Current Shooting Streak As Of"]),
     },
     recentActivity: input.recentActivity,
+    activityLedgerTotal: input.activityLedgerTotal ?? input.recentActivity.length,
+    activityLedgerNotice: input.activityLedgerNotice ?? null,
     weekly: input.weekly,
     achievements: input.achievements,
     fetchedAt: new Date().toISOString(),

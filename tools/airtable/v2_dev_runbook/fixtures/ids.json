@@ -1,0 +1,29 @@
+{
+  "description": "Synthetic DEV-shaped record IDs for offline fixtures only. Never write these to PROD. Replace with real DEV IDs after Mike/OMNI export for live runs.",
+  "environment": "synthetic-offline",
+  "dev_base_id_expected": "appTetnuCZlCZdTCT",
+  "prod_base_id_forbidden": "appn84sqPw03zEbTT",
+  "ids": {
+    "enrollment": "recEnrollFixture001",
+    "enrollment_alt": "recEnrollFixture002",
+    "athlete": "recAthleteFixture01",
+    "week": "recWeekFixture00001",
+    "week_prev": "recWeekFixture00000",
+    "submission": "recSubmissionFix001",
+    "submission_b": "recSubmissionFix002",
+    "homework_completion": "recHwCompFixture001",
+    "video_feedback": "recVfFixture000001",
+    "achievement_streak": "recAchStreakFix001",
+    "shot_milestone_100": "recMs100Fixture001",
+    "shot_milestone_250": "recMs250Fixture001",
+    "zoom_meeting": "recZoomMeetFix0001",
+    "zoom_meeting_2": "recZoomMeetFix0002",
+    "submission_asset_video": "recAssetVidFix0001",
+    "submission_asset_hw": "recAssetHwFix0001"
+  },
+  "live_placeholders": {
+    "schmidt_enrollment_id": "REPLACE_AFTER_OMNI_EXPORT",
+    "testing_scenario_table_id": "tblEQLsXTCwx0iOd8",
+    "notes": "C-019/C-020 DEV table IDs documented in deploy checklists; enrollment IDs must be confirmed in DEV before live API writes."
+  }
+}
