@@ -1,0 +1,453 @@
+{
+  "run_id": "AUTONOMOUS_QA_20260823T145220",
+  "started_at": "2026-08-23T14:52:20.790Z",
+  "mode": "read_only",
+  "base_id": "appn84sqPw03zEbTT",
+  "created": [],
+  "changed": [],
+  "deleted": [],
+  "verifications": [
+    {
+      "enrollmentId": "rec93mAfo5jKqP3g5",
+      "label": "perfect_week_testing",
+      "slug": "perfect-week",
+      "reconciliationExitCode": 0,
+      "activeXpEvents": 39,
+      "missingSubmissionXp": [],
+      "pass": true,
+      "artifact": "/opt/cursor/artifacts/autonomous-qa/reconcile-rec93mAfo5jKqP3g5.json"
+    },
+    {
+      "enrollmentId": "recCrNNAdVmQ4Y8fL",
+      "label": "xavier_schmidt",
+      "slug": "xavier-schmidt",
+      "reconciliationExitCode": 0,
+      "activeXpEvents": 3,
+      "missingSubmissionXp": [
+        {
+          "type": "submission_xp",
+          "subId": "rece0krfrEqiUEBVu",
+          "sourceKey": "SUBMISSION_XP|rece0krfrEqiUEBVu"
+        }
+      ],
+      "pass": false,
+      "artifact": "/opt/cursor/artifacts/autonomous-qa/reconcile-recCrNNAdVmQ4Y8fL.json"
+    },
+    {
+      "enrollmentId": "recNu6fcBpF1GG3u5",
+      "label": "testing3_schmidt",
+      "slug": "testing3-schmidt",
+      "reconciliationExitCode": 0,
+      "activeXpEvents": 5,
+      "missingSubmissionXp": [
+        {
+          "type": "submission_xp",
+          "subId": "rec3zlR7xneAOatKh",
+          "sourceKey": "SUBMISSION_XP|rec3zlR7xneAOatKh"
+        },
+        {
+          "type": "submission_xp",
+          "subId": "recNqAXXzXAnac1GE",
+          "sourceKey": "SUBMISSION_XP|recNqAXXzXAnac1GE"
+        }
+      ],
+      "pass": false,
+      "artifact": "/opt/cursor/artifacts/autonomous-qa/reconcile-recNu6fcBpF1GG3u5.json"
+    },
+    {
+      "enrollmentId": "reclc46bQM8Wx0qWP",
+      "label": "curtis_schmidt",
+      "slug": "curtis-schmidt",
+      "reconciliationExitCode": 0,
+      "activeXpEvents": 7,
+      "missingSubmissionXp": [
+        {
+          "type": "submission_xp",
+          "subId": "recLD7Fb6ph0yovyq",
+          "sourceKey": "SUBMISSION_XP|recLD7Fb6ph0yovyq"
+        }
+      ],
+      "pass": false,
+      "artifact": "/opt/cursor/artifacts/autonomous-qa/reconcile-reclc46bQM8Wx0qWP.json"
+    },
+    {
+      "check": "perfect_week_testing_ledger",
+      "activeXpCount": 39,
+      "buckets": [
+        "Shooting Base",
+        "Streak",
+        "Video Feedback",
+        "Weekly Threshold",
+        "Zoom Attendance",
+        "Shot Milestone",
+        "Homework Completion"
+      ],
+      "pass": true
+    }
+  ],
+  "checklist": [
+    {
+      "component": "XP reconciliation perfect_week_testing",
+      "current_state": "live-tested",
+      "test_method": "web/scripts/full-xp-reconciliation.mjs",
+      "expected_result": "No counted submission missing canonical SUBMISSION_XP per full-xp-reconciliation.mjs",
+      "actual_result": "pass (39 active XP events)",
+      "failure": null,
+      "fix": null,
+      "evidence": "/opt/cursor/artifacts/autonomous-qa/reconcile-rec93mAfo5jKqP3g5.json",
+      "final_status": "PASS"
+    },
+    {
+      "component": "XP reconciliation xavier_schmidt",
+      "current_state": "needs live proof",
+      "test_method": "web/scripts/full-xp-reconciliation.mjs",
+      "expected_result": "No counted submission missing canonical SUBMISSION_XP per full-xp-reconciliation.mjs",
+      "actual_result": "missing 1 submission XP row(s)",
+      "failure": null,
+      "fix": null,
+      "evidence": "/opt/cursor/artifacts/autonomous-qa/reconcile-recCrNNAdVmQ4Y8fL.json",
+      "final_status": "FINDING"
+    },
+    {
+      "component": "XP reconciliation testing3_schmidt",
+      "current_state": "needs live proof",
+      "test_method": "web/scripts/full-xp-reconciliation.mjs",
+      "expected_result": "No counted submission missing canonical SUBMISSION_XP per full-xp-reconciliation.mjs",
+      "actual_result": "missing 2 submission XP row(s)",
+      "failure": null,
+      "fix": null,
+      "evidence": "/opt/cursor/artifacts/autonomous-qa/reconcile-recNu6fcBpF1GG3u5.json",
+      "final_status": "FINDING"
+    },
+    {
+      "component": "XP reconciliation curtis_schmidt",
+      "current_state": "needs live proof",
+      "test_method": "web/scripts/full-xp-reconciliation.mjs",
+      "expected_result": "No counted submission missing canonical SUBMISSION_XP per full-xp-reconciliation.mjs",
+      "actual_result": "missing 1 submission XP row(s)",
+      "failure": null,
+      "fix": null,
+      "evidence": "/opt/cursor/artifacts/autonomous-qa/reconcile-reclc46bQM8Wx0qWP.json",
+      "final_status": "FINDING"
+    },
+    {
+      "component": "Perfect Week Testing ledger",
+      "current_state": "live-tested",
+      "test_method": "XP Events filter by enrollment",
+      "expected_result": ">=39 active XP events after repair",
+      "actual_result": "39 active; buckets: Shooting Base, Streak, Video Feedback, Weekly Threshold, Zoom Attendance, Shot Milestone, Homework Completion",
+      "failure": null,
+      "fix": null,
+      "evidence": null,
+      "final_status": "PASS"
+    },
+    {
+      "component": "Web route https://www.fairfieldbasketballclub.com/shoot",
+      "current_state": "production",
+      "test_method": "HTTP GET",
+      "expected_result": "2xx/3xx within 15s",
+      "actual_result": "status 200",
+      "failure": null,
+      "fix": null,
+      "evidence": "https://www.fairfieldbasketballclub.com/shoot",
+      "final_status": "PASS"
+    },
+    {
+      "component": "Web route https://www.fairfieldbasketballclub.com/shoot/api/airtable",
+      "current_state": "production",
+      "test_method": "HTTP GET",
+      "expected_result": "2xx/3xx within 15s",
+      "actual_result": "status 200",
+      "failure": null,
+      "fix": null,
+      "evidence": "https://www.fairfieldbasketballclub.com/shoot/api/airtable",
+      "final_status": "PASS"
+    },
+    {
+      "component": "Web route https://www.fairfieldbasketballclub.com/shoot/dashboard",
+      "current_state": "production",
+      "test_method": "HTTP GET",
+      "expected_result": "2xx/3xx within 15s",
+      "actual_result": "status 200",
+      "failure": null,
+      "fix": null,
+      "evidence": "https://www.fairfieldbasketballclub.com/shoot/dashboard",
+      "final_status": "PASS"
+    },
+    {
+      "component": "Web route https://www.fairfieldbasketballclub.com/shoot/dashboard/preview",
+      "current_state": "production",
+      "test_method": "HTTP GET",
+      "expected_result": "2xx/3xx within 15s",
+      "actual_result": "status 200",
+      "failure": null,
+      "fix": null,
+      "evidence": "https://www.fairfieldbasketballclub.com/shoot/dashboard/preview",
+      "final_status": "PASS"
+    },
+    {
+      "component": "Web route https://www.fairfieldbasketballclub.com/shoot/athletes/xavier-schmidt",
+      "current_state": "production",
+      "test_method": "HTTP GET",
+      "expected_result": "2xx/3xx within 15s",
+      "actual_result": "status 200",
+      "failure": null,
+      "fix": null,
+      "evidence": "https://www.fairfieldbasketballclub.com/shoot/athletes/xavier-schmidt",
+      "final_status": "PASS"
+    },
+    {
+      "component": "Web route https://www.fairfieldbasketballclub.com/shoot/athletes/perfect-week",
+      "current_state": "production",
+      "test_method": "HTTP GET",
+      "expected_result": "2xx/3xx within 15s",
+      "actual_result": "status 200",
+      "failure": null,
+      "fix": null,
+      "evidence": "https://www.fairfieldbasketballclub.com/shoot/athletes/perfect-week",
+      "final_status": "PASS"
+    },
+    {
+      "component": "Web route https://www.fairfieldbasketballclub.com/shoot/leaderboard",
+      "current_state": "production",
+      "test_method": "HTTP GET",
+      "expected_result": "2xx/3xx within 15s",
+      "actual_result": "status 200",
+      "failure": null,
+      "fix": null,
+      "evidence": "https://www.fairfieldbasketballclub.com/shoot/leaderboard",
+      "final_status": "PASS"
+    },
+    {
+      "component": "Disposable submission XP",
+      "current_state": "repository-ready",
+      "test_method": "node tools/testing/autonomous-qa-run.mjs --live-create",
+      "expected_result": "XP Event created after API submission",
+      "actual_result": "Skipped in read-only mode",
+      "failure": null,
+      "fix": null,
+      "evidence": null,
+      "final_status": "NOT_TESTED"
+    },
+    {
+      "component": "Repo check agent4-suite",
+      "current_state": "repository-ready",
+      "test_method": "node tools/testing/run-agent4-suite.js",
+      "expected_result": "exit 0",
+      "actual_result": "pass",
+      "failure": null,
+      "fix": null,
+      "evidence": "PASS  upload-make-lambda-response (18ms)\nPASS  c025-zoom-recording-credit (19ms)\nPASS  tools/testing node --test (115/117/verifier) (92ms)\nPASS  validate-v2-release-readiness (28ms)\nPASS  challenge-year-engine (48ms)\nPASS  season-launch-control (112ms)\n\nAgent 4 suite: 29 passed, 0 failed, 29 total",
+      "final_status": "PASS"
+    },
+    {
+      "component": "Repo check validate-v2-release-readiness",
+      "current_state": "repository-ready",
+      "test_method": "node tools/validate-v2-release-readiness.js",
+      "expected_result": "exit 0",
+      "actual_result": "pass",
+      "failure": null,
+      "fix": null,
+      "evidence": "PASS  DEV verification package mentions: Live DEV install remains\nPASS  DEV verification package mentions: offline\n\n== Summary ==\nFailures: 0\nWarnings: 1\nRESULT: PASS\nWARN  known-issues does not mention 066 offline harness evidence",
+      "final_status": "PASS"
+    },
+    {
+      "component": "Repo check audit-source-of-truth",
+      "current_state": "repository-ready",
+      "test_method": "node tools/testing/audit-source-of-truth.mjs",
+      "expected_result": "exit 0",
+      "actual_result": "pass",
+      "failure": null,
+      "fix": null,
+      "evidence": "PASS source-of-truth audit: active references are reconciled",
+      "final_status": "PASS"
+    },
+    {
+      "component": "Repo check python-airtable-tests",
+      "current_state": "repository-ready",
+      "test_method": "python3 -m unittest discover -s tools/airtable/tests",
+      "expected_result": "exit 0",
+      "actual_result": "pass",
+      "failure": null,
+      "fix": null,
+      "evidence": "...................................................................................................................................................\n----------------------------------------------------------------------\nRan 147 tests in 0.136s\n\nOK",
+      "final_status": "PASS"
+    },
+    {
+      "component": "Repo check lambda-upload-tests",
+      "current_state": "repository-ready",
+      "test_method": "python3 -m unittest discover -s lambda/upload-asset/tests",
+      "expected_result": "exit 0",
+      "actual_result": "pass",
+      "failure": null,
+      "fix": null,
+      "evidence": "........................................................................{\"event\": \"season_fallback_used\", \"environment\": \"Production\", \"seasonSlug\": \"2026-2027\", \"enrollmentId\": \"recEnroll2027\", \"programInstanceId\": \"recPi202627\"}\n...................................................................\n----------------------------------------------------------------------\nRan 139 tests in 0.036s\n\nOK",
+      "final_status": "PASS"
+    },
+    {
+      "component": "Repo check web-test",
+      "current_state": "repository-ready",
+      "test_method": "npm test",
+      "expected_result": "exit 0",
+      "actual_result": "pass",
+      "failure": null,
+      "fix": null,
+      "evidence": " ✓ lib/formatters/video.test.ts (7 tests) 3ms\n ✓ lib/formatters/external-media.test.ts (4 tests) 2ms\n ✓ components/levels/levels-orientation.test.ts (2 tests) 2ms\n\n Test Files  33 passed (33)\n      Tests  260 passed (260)\n   Start at  14:52:23\n   Duration  1.97s (transform 530ms, setup 0ms, collect 1.02s, tests 254ms, environment 4ms, prepare 1.75s)",
+      "final_status": "PASS"
+    },
+    {
+      "component": "Repo check web-typecheck",
+      "current_state": "repository-ready",
+      "test_method": "npm run typecheck",
+      "expected_result": "exit 0",
+      "actual_result": "pass",
+      "failure": null,
+      "fix": null,
+      "evidence": "> 127-si-shooting-challenge-web@0.1.0 typecheck\n> tsc --noEmit",
+      "final_status": "PASS"
+    },
+    {
+      "component": "Repo check web-lint",
+      "current_state": "repository-ready",
+      "test_method": "npm run lint",
+      "expected_result": "exit 0",
+      "actual_result": "pass",
+      "failure": null,
+      "fix": null,
+      "evidence": "> 127-si-shooting-challenge-web@0.1.0 lint\n> eslint .",
+      "final_status": "PASS"
+    },
+    {
+      "component": "Repo check web-build",
+      "current_state": "repository-ready",
+      "test_method": "npm run build",
+      "expected_result": "exit 0",
+      "actual_result": "pass",
+      "failure": null,
+      "fix": null,
+      "evidence": "├ ○ /zoom-meetings               5m      1y\n└ ƒ /zoom-meetings/[id]\n\n\nƒ Proxy (Middleware)\n\n○  (Static)   prerendered as static content\nƒ  (Dynamic)  server-rendered on demand",
+      "final_status": "PASS"
+    },
+    {
+      "component": "Repo check e2e-matrix",
+      "current_state": "repository-ready",
+      "test_method": "node tools/testing/run_e2e_matrix.mjs --out /opt/cursor/artifacts/autonomous-qa/E2E-MATRIX-RESULTS.json",
+      "expected_result": "exit 0",
+      "actual_result": "pass",
+      "failure": null,
+      "fix": null,
+      "evidence": "    \"I1:PASS\",\n    \"I6:BLOCKED\",\n    \"J1:NOT_TESTED\",\n    \"L1:PASS\",\n    \"L3:BLOCKED\",\n    \"SC006-WRITEBACK:PASS\"\n  ]\n}",
+      "final_status": "PASS"
+    },
+    {
+      "component": "Repo check sc007-008",
+      "current_state": "repository-ready",
+      "test_method": "node tools/testing/sc-007-008/run-suite.js",
+      "expected_result": "exit 0",
+      "actual_result": "pass",
+      "failure": null,
+      "fix": null,
+      "evidence": "PASS  sc-007-idempotency-proof-pack (25ms)\nPASS  sc-008-failure-path-pack (662ms)\nPASS  upload-make-lambda-response (20ms)\nPASS  agent4-xp-dedupe-matrix (27ms)\nPASS  072-074-email-helpers (19ms)\nPASS  expected-actual-offline (71ms)\n\nSC-007/008 suite: 6 passed, 0 failed, 6 total",
+      "final_status": "PASS"
+    }
+  ],
+  "repo_checks": [
+    {
+      "name": "agent4-suite",
+      "command": "node tools/testing/run-agent4-suite.js",
+      "exitCode": 0,
+      "durationMs": 886,
+      "pass": true,
+      "outputTail": "PASS  upload-make-lambda-response (18ms)\nPASS  c025-zoom-recording-credit (19ms)\nPASS  tools/testing node --test (115/117/verifier) (92ms)\nPASS  validate-v2-release-readiness (28ms)\nPASS  challenge-year-engine (48ms)\nPASS  season-launch-control (112ms)\n\nAgent 4 suite: 29 passed, 0 failed, 29 total"
+    },
+    {
+      "name": "validate-v2-release-readiness",
+      "command": "node tools/validate-v2-release-readiness.js",
+      "exitCode": 0,
+      "durationMs": 28,
+      "pass": true,
+      "outputTail": "PASS  DEV verification package mentions: Live DEV install remains\nPASS  DEV verification package mentions: offline\n\n== Summary ==\nFailures: 0\nWarnings: 1\nRESULT: PASS\nWARN  known-issues does not mention 066 offline harness evidence"
+    },
+    {
+      "name": "audit-source-of-truth",
+      "command": "node tools/testing/audit-source-of-truth.mjs",
+      "exitCode": 0,
+      "durationMs": 109,
+      "pass": true,
+      "outputTail": "PASS source-of-truth audit: active references are reconciled"
+    },
+    {
+      "name": "python-airtable-tests",
+      "command": "python3 -m unittest discover -s tools/airtable/tests",
+      "exitCode": 0,
+      "durationMs": 653,
+      "pass": true,
+      "outputTail": "...................................................................................................................................................\n----------------------------------------------------------------------\nRan 147 tests in 0.136s\n\nOK"
+    },
+    {
+      "name": "lambda-upload-tests",
+      "command": "python3 -m unittest discover -s lambda/upload-asset/tests",
+      "exitCode": 0,
+      "durationMs": 631,
+      "pass": true,
+      "outputTail": "........................................................................{\"event\": \"season_fallback_used\", \"environment\": \"Production\", \"seasonSlug\": \"2026-2027\", \"enrollmentId\": \"recEnroll2027\", \"programInstanceId\": \"recPi202627\"}\n...................................................................\n----------------------------------------------------------------------\nRan 139 tests in 0.036s\n\nOK"
+    },
+    {
+      "name": "web-test",
+      "command": "npm test",
+      "exitCode": 0,
+      "durationMs": 2326,
+      "pass": true,
+      "outputTail": " ✓ lib/formatters/video.test.ts (7 tests) 3ms\n ✓ lib/formatters/external-media.test.ts (4 tests) 2ms\n ✓ components/levels/levels-orientation.test.ts (2 tests) 2ms\n\n Test Files  33 passed (33)\n      Tests  260 passed (260)\n   Start at  14:52:23\n   Duration  1.97s (transform 530ms, setup 0ms, collect 1.02s, tests 254ms, environment 4ms, prepare 1.75s)"
+    },
+    {
+      "name": "web-typecheck",
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "durationMs": 1388,
+      "pass": true,
+      "outputTail": "> 127-si-shooting-challenge-web@0.1.0 typecheck\n> tsc --noEmit"
+    },
+    {
+      "name": "web-lint",
+      "command": "npm run lint",
+      "exitCode": 0,
+      "durationMs": 4620,
+      "pass": true,
+      "outputTail": "> 127-si-shooting-challenge-web@0.1.0 lint\n> eslint ."
+    },
+    {
+      "name": "web-build",
+      "command": "npm run build",
+      "exitCode": 0,
+      "durationMs": 4386,
+      "pass": true,
+      "outputTail": "├ ○ /zoom-meetings               5m      1y\n└ ƒ /zoom-meetings/[id]\n\n\nƒ Proxy (Middleware)\n\n○  (Static)   prerendered as static content\nƒ  (Dynamic)  server-rendered on demand"
+    },
+    {
+      "name": "e2e-matrix",
+      "command": "node tools/testing/run_e2e_matrix.mjs --out /opt/cursor/artifacts/autonomous-qa/E2E-MATRIX-RESULTS.json",
+      "exitCode": 0,
+      "durationMs": 5416,
+      "pass": true,
+      "outputTail": "    \"I1:PASS\",\n    \"I6:BLOCKED\",\n    \"J1:NOT_TESTED\",\n    \"L1:PASS\",\n    \"L3:BLOCKED\",\n    \"SC006-WRITEBACK:PASS\"\n  ]\n}"
+    },
+    {
+      "name": "sc007-008",
+      "command": "node tools/testing/sc-007-008/run-suite.js",
+      "exitCode": 0,
+      "durationMs": 848,
+      "pass": true,
+      "outputTail": "PASS  sc-007-idempotency-proof-pack (25ms)\nPASS  sc-008-failure-path-pack (662ms)\nPASS  upload-make-lambda-response (20ms)\nPASS  agent4-xp-dedupe-matrix (27ms)\nPASS  072-074-email-helpers (19ms)\nPASS  expected-actual-offline (71ms)\n\nSC-007/008 suite: 6 passed, 0 failed, 6 total"
+    }
+  ],
+  "completed_at": "2026-08-23T14:52:55.262Z",
+  "summary": {
+    "total": 24,
+    "pass": 20,
+    "fail": 0,
+    "finding": 3,
+    "blocked": 0,
+    "not_tested": 1
+  }
+}

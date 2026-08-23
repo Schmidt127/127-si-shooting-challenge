@@ -175,7 +175,18 @@ Authoritative GitHub SCRIPT headers + [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) o
 | Mobile / Accessibility | Cursor | deferred | Backlog | — | Usability pass | — | P2 | 2026-08-23 |
 | SEO | Mike | deferred | noindex active | — | Cutover approval | SC-115 | P2 | 2026-08-23 |
 | Game Manual | Cursor | repository-ready | PKG-021 orientation | Quick-start UI | 2027 rules content | — | P2 | 2026-08-23 |
-| Documentation / Governance | Cursor | repository-ready | PKG-041/042; inventory audit | Production-only docs | CONTROL.json SHA refresh | — | P1 | 2026-08-23 |
+| Documentation / Governance | Cursor | repository-ready | PKG-041/042; autonomous QA 2026-08-23 | Production-only docs; `autonomous-qa-run.mjs` | CONTROL.json SHA refresh | — | P1 | 2026-08-23 |
+
+### 0C.1 Autonomous QA — 2026-08-23
+
+| Check | Result | Evidence |
+|-------|--------|----------|
+| Repository validation suite | `live-tested` (repo) | Agent 4 29/29; web 260 tests; Python 147+139 |
+| Perfect Week ledger (`rec93mAfo5jKqP3g5`) | `live-tested` | 39 active XP; `full-xp-reconciliation.mjs` zero missing |
+| Disposable submission → 010 XP | `live-tested` | API create + SUBMISSION_XP (cleaned up) |
+| Production web `/shoot` | `live-tested` | Browser + HTTP 200 |
+| Secondary Schmidt enrollments XP gaps | `needs live proof` | 1–2 missing SUBMISSION_XP per enrollment — operator repair |
+| Harness | `repository-ready` | `docs/testing/autonomous-qa/` |
 
 ---
 

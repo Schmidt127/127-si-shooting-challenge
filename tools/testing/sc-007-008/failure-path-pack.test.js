@@ -271,7 +271,12 @@ test("Lambda auth + viewer unit suites cover secret/token failure paths", () => 
     const run = spawnSync(bin, args, {
       cwd,
       encoding: "utf8",
-      env: process.env,
+      env: {
+        ...process.env,
+        PYTHONPATH: [cwd, path.join(cwd, "tests"), process.env.PYTHONPATH]
+          .filter(Boolean)
+          .join(path.delimiter),
+      },
     });
     last = run;
     if (run.error && run.error.code === "ENOENT") continue;
