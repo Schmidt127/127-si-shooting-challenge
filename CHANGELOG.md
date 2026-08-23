@@ -23,8 +23,6 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   XP loader (up to 200 events), **XP Activity Date** for display, Load more pagination, and
   dashboard truncation notice (25 vs full ledger). Tests in `public-athlete-activity.test.ts`.
 
-### Airtable
-
 #### Changed
 - **071 v4.2 + 073 v4.3 — Homework/Video Feedback parent email redesign (2026-08-22)** —
   Communications Hub branded React Email templates (`HOMEWORK_FEEDBACK`,
