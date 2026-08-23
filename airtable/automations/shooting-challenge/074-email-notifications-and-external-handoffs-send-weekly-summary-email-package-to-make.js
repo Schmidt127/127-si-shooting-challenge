@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-17
-Last GitHub Update: 2026-08-20 (v3.1 V2 standard structure)
+Last GitHub Update: 2026-08-23 (v3.2 canonical 072 payload enrichment)
 
 Purpose:
 Validate one Weekly Athlete Summary ready for parent email and create exactly
@@ -31,11 +31,13 @@ Filename may still say Make; current path is Hub queue create only.
  * 074 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Create Weekly Athlete Summary Communications Hub Handoff
  *
- * Version: v3.1
+ * Version: v3.2
  * Date Written: 2026-05-29
- * Last Updated: 2026-08-20
+ * Last Updated: 2026-08-23
  *
  * VERSION HISTORY
+ * - v3.2 (2026-08-23): Prefer canonical days/shots/makes/goal % from 072 payload JSON;
+ *   enrich Hub payload with shooting %, video submissions, and Zoom attendance status.
  * - v3.1 (2026-08-20): V2 Automation Standard structure — GitHub header,
  *   production docblock, numbered sections, hoisted debugStep, outer run
  *   wrapper. Business logic unchanged from v3.0.
@@ -107,10 +109,10 @@ Filename may still say Make; current path is Hub queue create only.
 
 const SCRIPT = {
   scriptName: "074 - Email, Notifications, and External Handoffs - Create Weekly Athlete Summary Communications Hub Handoff",
-  version: "v3.1",
-  versionDate: "2026-08-20",
+  version: "v3.2",
+  versionDate: "2026-08-23",
   originalWrittenDate: "2026-05-29",
-  lastUpdated: "2026-08-20",
+  lastUpdated: "2026-08-23",
   folder: "07 - Email, Notifications, and External Handoffs",
   automationName: "074 - Email, Notifications, and External Handoffs - Create Weekly Athlete Summary Communications Hub Handoff",
 };
@@ -258,6 +260,27 @@ function firstNonEmpty(...values) {
   return values.map((value) => String(value ?? "").trim()).find(Boolean) || "";
 }
 
+function firstFiniteNumber(...values) {
+  for (const value of values) {
+    const n = Number(value);
+    if (Number.isFinite(n)) return n;
+  }
+  return 0;
+}
+
+function goalCompletionPercentFromRatio(ratio) {
+  const raw = Number(ratio);
+  if (!Number.isFinite(raw)) return null;
+  return Math.round(raw * 100);
+}
+
+function goalCompletionPercentFromShotsAndGoal(shots, goal, ratioFromWas) {
+  const weeklyShots = Number(shots || 0);
+  const weeklyGoal = Number(goal || 0);
+  if (weeklyGoal > 0) return Math.round((weeklyShots / weeklyGoal) * 100);
+  return goalCompletionPercentFromRatio(ratioFromWas);
+}
+
 function cleanEmail(value) {
   return String(value || "")
     .trim()
@@ -388,10 +411,31 @@ async function main() {
   if (!weekLabel) throw new Error("Week label/name is blank. Handoff blocked.");
 
   const prepared = safeJsonParse(getText(was, wasTable, CONFIG.fields.was.payload));
-  const daysLogged = getNumber(was, wasTable, CONFIG.fields.was.days);
-  const shots = getNumber(was, wasTable, CONFIG.fields.was.shots);
+  const rollupDaysLogged = getNumber(was, wasTable, CONFIG.fields.was.days);
+  const rollupShots = getNumber(was, wasTable, CONFIG.fields.was.shots);
   const weeklyGoal = getNumber(was, wasTable, CONFIG.fields.was.goal);
   const weeklyXp = getNumber(was, wasTable, CONFIG.fields.was.weeklyXp);
+  const daysLogged = firstFiniteNumber(
+    prepared?.canonicalDaysLogged,
+    prepared?.perfectWeekCriteria?.daysLogged,
+    prepared?.days,
+    rollupDaysLogged
+  );
+  const daysLoggedDisplay = firstNonEmpty(
+    prepared?.daysLoggedDisplay,
+    prepared?.perfectWeekCriteria?.daysLoggedDisplay
+  );
+  const shots = firstFiniteNumber(prepared?.canonicalShots, prepared?.shots, rollupShots);
+  const makes = firstFiniteNumber(prepared?.canonicalMakes, prepared?.makes);
+  const goalCompletionPercent = firstFiniteNumber(
+    prepared?.canonicalGoalCompletionPercent,
+    prepared?.goalCompletionPercent,
+    goalCompletionPercentFromShotsAndGoal(shots, weeklyGoal, prepared?.goalCompletionRatio)
+  );
+  const shootingPercentage = firstFiniteNumber(
+    prepared?.shootingPercentage,
+    makes > 0 && shots > 0 ? Math.round((makes / shots) * 100) : 0
+  );
   const homeworkAssigned = getNumber(was, wasTable, CONFIG.fields.was.homeworkAssigned);
   const homeworkSat = getNumber(was, wasTable, CONFIG.fields.was.homeworkSat);
   const currentLevel = getText(enrollment, enrollmentsTable, CONFIG.fields.enr.level);
@@ -418,17 +462,40 @@ async function main() {
     daysLogged === 0 && shots === 0 ? "short_no_activity" : "normal"
   );
 
+  const weekDateRange =
+    prepared?.weekStartKey && prepared?.weekEndKey
+      ? `${prepared.weekStartKey} to ${prepared.weekEndKey}`
+      : "";
+  const videoSubmissions = Array.isArray(prepared?.videoSubmissions) ? prepared.videoSubmissions : [];
+  const zoomAttendanceStatus = firstNonEmpty(
+    prepared?.zoomAttendanceStatus,
+    prepared?.perfectWeekCriteria?.zoomRequirementStatus,
+    prepared?.zoomSummary
+  );
+  const perfectWeekCriteria = prepared?.perfectWeekCriteria || null;
+  const videoFeedbackStatus =
+    videoSubmissions.length > 0
+      ? videoSubmissions
+          .map((row) => `${row.label || "Video"}: ${row.status || "Pending"}`)
+          .join("; ")
+      : "No video submissions recorded for this week.";
+
   const recipients = [{ email: parent, role: "guardian" }];
   const payload = {
     athleteName,
     parentFirstName: getText(enrollment, enrollmentsTable, CONFIG.fields.enr.parentFirst),
     weekLabel,
     weekName: weekLabel,
+    weekDateRange,
     daysLogged,
     days: daysLogged,
+    daysLoggedDisplay,
     shots,
+    makes,
     weeklyGoal,
     goal: weeklyGoal,
+    goalCompletionPercent,
+    shootingPercentage,
     weeklyXp,
     currentLevel,
     level: currentLevel,
@@ -436,6 +503,10 @@ async function main() {
     streakStatus,
     homeworkLines,
     packageKind,
+    videoSubmissions,
+    videoFeedbackStatus,
+    zoomAttendanceStatus,
+    perfectWeekCriteria,
   };
   if (nextLevel) payload.nextLevel = nextLevel;
   if (programName) payload.programName = programName;
