@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-21 (final Production version reconciliation — Mike live script / run-history evidence) (final Production version reconciliation — Mike live script / run-history evidence)  
+**Last verification (repo):** 2026-08-23 (production-readiness cleanup — XP activity ledger, Perfect Week Testing repair, production-only doc reconciliation)  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -57,11 +57,11 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | Integrity ship `0b1d6341420e74af06c159345135fd0d6ff71d38` — re-verify tip with `git rev-parse HEAD` |
+| HEAD SHA | Re-verify tip with `git rev-parse HEAD` after each push |
 | `origin/master` | Must match tip after push (re-verify) |
-| Ahead / behind | **0 / 0** (target after this push) |
+| Ahead / behind | **0 / 0** (target after production-readiness merge) |
 | Working tree at audit start | Clean (no uncommitted tracked files) |
-| Integrity audit base tip | `010a8b3…` (audit start); content ship `0b1d634…` |
+| Prior integrity ship | `0b1d634…` (2026-08-20); XP activity ledger merge follows |
 | True merge markers (`<<<<<<<`) | None found |
 | Nested clone (ignored) | Local folder `127-si-shooting-challenge/` — gitignored; **do not treat as source of truth** |
 
@@ -77,12 +77,14 @@ git status -sb
 
 ## 3. Airtable bases
 
+> **Production-only (2026-08-19):** The separate DEV base (`appTetnuCZlCZdTCT`) is **retired**. Do not recreate, re-enable, or paste automations to it. Historical DEV install docs remain read-only with banners. Controlled testing uses Production with Schmidt enrollments per Mike authorization.
+
 | Environment | Base UI name | Base ID | Role |
 |-------------|--------------|---------|------|
-| **Production** | `127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026` | `appn84sqPw03zEbTT` | Live season system of record |
-| **Development** | `127SI - SHOOTING CHALLENGE - DEV` | `appTetnuCZlCZdTCT` | DEV-first testing |
+| **Production** | `127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026` | `appn84sqPw03zEbTT` | **Only active** system of record |
+| ~~Development~~ | ~~`127SI - SHOOTING CHALLENGE - DEV`~~ | ~~`appTetnuCZlCZdTCT`~~ | **Retired 2026-08-19** — historical snapshots only |
 
-Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260706/` are the latest dated exports in-repo. `airtable/schema/current/` remains **stale** until refreshed — do not treat as live schema.
+Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260706/` are dated exports in-repo (DEV snapshot is historical). `airtable/schema/current/` remains **stale** until refreshed — do not treat as live schema.
 
 ---
 
@@ -157,17 +159,19 @@ Do **not** treat older Automations-table Code-column snapshots as stronger than 
 
 | # | Production (final verified) | GitHub | Status | Notes |
 |---|-----------------------------|--------|--------|-------|
-| **010** | **v10.11** | v10.11 | Live | Run history reported `version: "v10.11"` |
+| **010** | **v10.12** (GitHub) | v10.12 | Live / paste verify | GitHub v10.12 settlement grace; prior run history v10.11 |
 | **020** | **v3.7** | v3.7 | Live | |
 | **033** | **v4.4** | v4.4 | Live | |
 | **041** | **v5.1** | v5.1 | Live | Optional inputs only |
-| **057** | **v1.7** | 1.7 | Live | Perfect Week eligibility only |
+| **057** | **v1.9** (GitHub) | 1.9 | Live / paste verify | Perfect Week goal settlement uses season lookup |
 | **058** | **v1.3** | 1.3 | Live | Unlock only after Eligible + Ready |
 | **059** | **v3.6** | v3.6 | Live | |
 | **064** | **Production-verified current live** | v12.2 in repo | Live | Do not invent a new version string |
 | **065** | **v10.2** | v10.2 | Live | |
 | **066** | **v3.8** | v3.8 | Live | |
-| **070a** | **v4.7** | v4.7 | Live | Controlled Perfect Week upload window (historically intentional OFF) |
+| **072** | **v4.2** (GitHub) | v4.2 | Live / paste verify | Weekly summary email package |
+| **074** | **v3.1** (GitHub) | v3.1 | Live / paste verify | Weekly summary Hub handoff |
+| **070a** | **v4.7** | v4.7 | **Off** by design | Homework upload Make path |
 | **070b** | **v4.7** | v4.7 | Live | |
 | **070c** | **current live (repo v1.1)** | v1.1 | Live/enabled | Do not invent a new version |
 | **101** | **v6.7** | v6.7 | Live | Live script body `Version: v6.7` / `version: "v6.7"`; meeting `recxtpMu4ONbdDD45` safely skipped (reconciliation not needed) |
@@ -201,12 +205,12 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 
 | Domain | Owner (repo contract) | Live proof |
 |--------|----------------------|------------|
-| Submission XP | **010** — Source Key `SUBMISSION_XP\|{submissionId}` | Production **v10.11** (run history); midnight-UTC date keys |
+| Submission XP | **010** — Source Key `SUBMISSION_XP\|{submissionId}` | GitHub **v10.12**; prior Production run history v10.11 |
 | Homework XP | **064** prepares (`HOMEWORK_COMPLETION` rule); **065** creates/reconciles `HOMEWORK_XP\|{hcId}` (**020** HC create; **078** marks Parent Feedback Ready?) | **065 Production v10.2**; **064** Production-verified current live; [homework-assets/HOMEWORK-ASSET-COMPLETION-RUNBOOK.md](./online-agents/homework-assets/HOMEWORK-ASSET-COMPLETION-RUNBOOK.md) |
 | Video XP | **113 / 114** (+ **013** VF create) | Partial evidence; broader proof open |
 | Shot milestones | **066** | Production **v3.8** |
 | Levels | **041 / 042** | **041 Production v5.1**; broader progression proof still open |
-| Perfect Week | **057 → 058 → 059** | **Calendar-blocked / PENDING** — enrollment `rec93mAfo5jKqP3g5` / WAS `reczxTIpVI8ZJLex0` / week `recT3EXo4Tz7BKFIb`. Days Logged=**5**; Eligible?=**false/0**. Do **not** claim awarded or ready. |
+| Perfect Week | **057 → 058 → 059** | **XP ledger repaired 2026-08-23** for enrollment `rec93mAfo5jKqP3g5` (39 active XP Events). Calendar award still **PENDING** until Days Logged=7 and Eligible?=true. See [2026-08-23-production-readiness-inventory.md](./audits/2026-08-23-production-readiness-inventory.md). |
 | Zoom live attendance XP | **101** | Production **v6.7** (live script body). Meeting `recxtpMu4ONbdDD45` safe skip when reconciliation not needed. |
 | Zoom recording XP under slot 117 | Not live | Slot **117** is email Hub handoff (**v2.1 Live**) |
 
@@ -234,9 +238,9 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Item | State |
 |------|--------|
 | Controlled path through WAS / homework | Path evidence 2026-08-16 |
-| Full Perfect Week award proof | **PENDING / calendar-blocked** — not ready, not awarded. See [2026-08-21-perfect-week-test-prep-report.md](./deploy-checklists/2026-08-21-perfect-week-test-prep-report.md) |
+| Full Perfect Week award proof | **PENDING / calendar-blocked** — not ready, not awarded. XP ledger repair complete 2026-08-23. See [2026-08-21-perfect-week-test-prep-report.md](./deploy-checklists/2026-08-21-perfect-week-test-prep-report.md) and [2026-08-23-production-readiness-inventory.md](./audits/2026-08-23-production-readiness-inventory.md) |
 | Required order | **057 → 058 → 059** only after Eligible?=1 and Days Logged=7 |
-| Verified status (2026-08-21) | Days Logged=**5**; Eligible?=**false/0**; Lifetime XP **740**; Active XP Events **21** (total 740); no duplicate Source Keys; five VF Awarded+Delivered. Stop until Days Logged=7 and Eligible=true. |
+| Verified status (2026-08-23) | Enrollment `rec93mAfo5jKqP3g5`: **39 active XP Events** after authorized repair (5 Submission Base + 5 shot milestones + prior events). Homework/video skipped per contract. Live re-read requires Production API token. |
 | Authority | Completion Master + Perfect Week prep report + Perfect Week testing docs under `docs/testing/perfect-week/` |
 
 ---
