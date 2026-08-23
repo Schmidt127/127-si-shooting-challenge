@@ -22,8 +22,6 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 - **Public athlete XP activity ledger (2026-08-23)** — Profile activity uses enrollment-scoped
   XP loader (up to 200 events), **XP Activity Date** for display, Load more pagination, and
   dashboard truncation notice (25 vs full ledger). Tests in `public-athlete-activity.test.ts`.
-
-#### Changed
 - **071 v4.2 + 073 v4.3 — Homework/Video Feedback parent email redesign (2026-08-22)** —
   Communications Hub branded React Email templates (`HOMEWORK_FEEDBACK`,
   `VIDEO_FEEDBACK`) aligned with Welcome and Weekly Athlete Summary. **071**
