@@ -181,6 +181,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   matched zero rows. Adds linked-record fallback with bounded chunking/cache, throws when linked
   XP Events cannot be resolved, and surfaces a warning instead of a silent empty table. Preview:
   `/shoot/dashboard/preview?enrollmentId=rec…`. Regression: `web/lib/data/xp-activity-loader.test.ts`.
+- **XP activity date integrity (2026-08-23)** — Submission Base rows now use linked Submission
+  `Activity Date` as the authoritative display date; `toAirtableDateKey` mirrors automation
+  Denver/midnight-UTC rules so UTC instants cannot shift an athlete-visible day (e.g. 8/22 → 8/23).
+  Excludes `Duplicate - Remove`, dedupes by Source Key, reports counted submissions missing XP
+  Events, and adds `scripts/xp-activity-reconciliation-report.mjs` for enrollment reconciliation.
 
 #### Changed
 - **Shoot route aliases (2026-08-22)** — moved to landing hub
