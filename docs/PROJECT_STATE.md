@@ -47,7 +47,7 @@ Last updated: **2026-08-23** (post-XP-deletion autonomous QA — live-create PAS
 
 **Autonomous QA harness (2026-08-23):** `tools/testing/autonomous-qa-run.mjs` — `--live-create` uses `Count It` + extended poll; manifest at `docs/testing/autonomous-qa/latest-manifest.json`.
 
-**Video XP / PKG-006R lock (2026-08-23):** Investigation confirms PKG-006R and PKG-036 locks **complete** (2026-08-15). Automations **113 v6.4** and **114 v6.1** are **Live** in Production with GitHub-matching versions. Stale docs that blocked paste on PKG-006R are reconciled. Remaining gap: PKG-007 controlled lifecycle proof — [`VIDEO-FEEDBACK-XP-PRODUCTION-SCHMIDT-TEST.md`](./deploy-checklists/VIDEO-FEEDBACK-XP-PRODUCTION-SCHMIDT-TEST.md). See [`investigations/PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md`](./investigations/PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md).
+**Video XP / PKG-007 proof (2026-08-23):** PKG-006R/PKG-036 locks remain **complete**. Automations **113 v6.4** and **114 v6.1** are **Live**. **Controlled lifecycle proof PASS** — run `AUTONOMOUS_VIDEO_QA_20260823_164549` on Testing3 Schmidt (`recNu6fcBpF1GG3u5`): award/replay/withdrawal/restoration + 10 negative fail-closed cases. Report: [`testing/autonomous-qa/PKG-007_VIDEO_XP_PROOF_FINAL_REPORT.md`](./testing/autonomous-qa/PKG-007_VIDEO_XP_PROOF_FINAL_REPORT.md). Open: native 113/114 trigger UI attestation; 073 OFF confirmation; PAT cannot delete disposable assets (Mike cleanup).
 
 **101 overlay (final 2026-08-21):** Production Automation 101 is **v6.7** (live script body). Midday Automations Code-column **v6.6** snapshot is **historical / superseded**. Meeting `recxtpMu4ONbdDD45` safely skipped when reconciliation not needed.
 

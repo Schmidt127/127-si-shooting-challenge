@@ -153,7 +153,7 @@ Authoritative GitHub SCRIPT headers + [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) o
 | Homework XP | Mike | live-tested | 064/065 lifecycle proof | Prepare/create split | Broader eligibility paths | PKG-007 | P1 | 2026-08-23 |
 | Video Upload | Mike | live-tested | C-013 E2E; 070b v4.7 | Lambda season code | Retry proof; secret rotation | — | P1 | 2026-08-23 |
 | Video Feedback | Mike | live-tested | 013/022 paths | VF create/link | Full review/XP paths | PKG-007 | P1 | 2026-08-23 |
-| Video XP | Mike | needs live proof | **113 v6.4 / 114 v6.1 Live** (2026-08-23) | PKG-007 Schmidt lifecycle packet | Controlled award/withdrawal proof | PKG-007 proof | P1 | 2026-08-23 |
+| Video XP | Mike | live-tested | **113 v6.4 / 114 v6.1** + PKG-007 proof **PASS 2026-08-23** (`AUTONOMOUS_VIDEO_QA_20260823_164549`) | Native trigger attestation; 073 OFF UI | Mike disposable asset cleanup (PAT 403) | PKG-007 proof | P1 | 2026-08-23 |
 | Zoom Attendance | Mike | live-tested | PKG-034; 101 v6.7 | Base XP lifecycle | Bonus tiers proof | — | P1 | 2026-08-23 |
 | Zoom Approval Email | Mike | live-tested | 117 v2.1 Hub handoff | Queue create only | Template live proof | Hub | P1 | 2026-08-23 |
 | Zoom Recording XP | Mike | Mike decision | C-025 design alts | Email path live | Credit writer decision (PKG-010) | Product decision | P2 | 2026-08-23 |
@@ -226,7 +226,7 @@ Authoritative GitHub SCRIPT headers + [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) o
 | Mobile readability improvements | Cursor | `deferred` |
 | Documentation cleanup (ongoing) | Cursor | `repository-ready` |
 | Lambda upload retry and secret rotation | Mike | `needs live proof` |
-| Video XP Production lifecycle proof (PKG-007) | Mike | `needs live proof` |
+| Video XP Production lifecycle proof (PKG-007) | Mike | `live-tested` (2026-08-23 autonomous proof) |
 
 ### P2 — Future decisions or enhancements
 

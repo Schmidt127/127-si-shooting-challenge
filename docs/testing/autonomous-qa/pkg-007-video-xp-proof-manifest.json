@@ -1,0 +1,732 @@
+{
+  "run_id": "AUTONOMOUS_VIDEO_QA_20260823_164549",
+  "started_at": "2026-08-23T16:45:49.969Z",
+  "base_id": "appn84sqPw03zEbTT",
+  "enrollment_id": "recNu6fcBpF1GG3u5",
+  "created": [
+    {
+      "table": "Submission Assets",
+      "id": "reccIzpANZNb2FIcM",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|POS"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recAejfvSZ3hXqFgW",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|POS"
+    },
+    {
+      "table": "XP Events",
+      "id": "recYSGNi5zDGTPbJp",
+      "sourceKey": "VIDEO_SUBMISSION|recAejfvSZ3hXqFgW",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|POS"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recHCovvZ8nc0ZB8v",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|NEG|missing_coach_feedback"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recO6WMciwb1gQyCp",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|NEG|missing_coach_feedback"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recn16SMhJ5DRR5CZ",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|NEG|feedback_not_posted"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recFQtuubwCbnQzBX",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|NEG|feedback_not_posted"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recTqKlOornRosCdp",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|NEG|do_not_award_initial"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recEKJjvmsG1kyf9E",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|NEG|do_not_award_initial"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recT724fOtvtVC0HD",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|NEG|missing_enrollment"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "reczy52b7AOpLLzvT",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|NEG|missing_enrollment"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recIxCVAMGjg00rG8",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|NEG|wrong_enrollment"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recn6kQjLhVWipcCu",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|NEG|wrong_enrollment"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recqJvFjqId0RUjq4",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|NEG|inactive_source"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "rec93PUrWKEAikzmH",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|NEG|inactive_source"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recqYXmacO3lyMJO3",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|NEG|missing_video_asset"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recrr92dvEsaIwOqE",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|NEG|missing_video_asset"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recPOI1iUxqCuPmEl",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|NEG|invalid_asset_url"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recAuHRSSMdtEmAwf",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|NEG|invalid_asset_url"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recynwi577evnqehJ",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|NEG|zero_xp_not_armed"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recvsI6xA7FGr2Ppt",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|NEG|zero_xp_not_armed"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "reca2UH2MbbWcxke0",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|NEG|duplicate_vf"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "rec9ZvPFdEDMtgdet",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|NEG|duplicate_vf"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "rechnNbVqopeM5usy",
+      "label": "AUTONOMOUS_VIDEO_QA_20260823_164549|duplicate"
+    }
+  ],
+  "changed": [],
+  "notes": [
+    "013 did not auto-link VF within 60s; created VF via API fallback",
+    "013 did not auto-link VF within 60s; created VF via API fallback",
+    "013 did not auto-link VF within 60s; created VF via API fallback",
+    "013 did not auto-link VF within 60s; created VF via API fallback",
+    "013 did not auto-link VF within 60s; created VF via API fallback",
+    "013 did not auto-link VF within 60s; created VF via API fallback",
+    "013 did not auto-link VF within 60s; created VF via API fallback",
+    "013 did not auto-link VF within 60s; created VF via API fallback",
+    "013 did not auto-link VF within 60s; created VF via API fallback",
+    "013 did not auto-link VF within 60s; created VF via API fallback",
+    "013 did not auto-link VF within 60s; created VF via API fallback"
+  ],
+  "results": [
+    {
+      "name": "preflight_audit",
+      "status": "PASS",
+      "detail": "Read-only video XP preflight clean",
+      "evidence": {
+        "enrollmentId": "recNu6fcBpF1GG3u5",
+        "enrollmentActive": true,
+        "videoRule": {
+          "id": "rec06c1tu3IO8EZqG",
+          "amount": 25
+        },
+        "duplicateActiveSourceKeys": [],
+        "issues": [],
+        "pass": true
+      },
+      "at": "2026-08-23T16:45:50.479Z"
+    },
+    {
+      "name": "automation_versions",
+      "status": "PASS",
+      "detail": "{\"113\":{\"id\":\"recxDRvpiuvCeeAhC\",\"name\":\"113 - Video Review and XP - Assign Base Video XP by Grade Band\",\"status\":\"Live\",\"version\":\"v6.4\"},\"114\":{\"id\":\"rec0qiy0iXVqrU3c2\",\"name\":\"114 - Video Review and XP - Create or Update Video XP Event\",\"status\":\"Live\",\"version\":\"v6.1\"},\"073\":{\"id\":\"rec225JiTrNmomB4G\",\"name\":\"073 - Email, Notifications, and External Handoffs - Create Video Feedback Communications Hub Handoff\",\"status\":\"Live\",\"version\":\"v4.3\"}}",
+      "evidence": {
+        "rows": {
+          "113": {
+            "id": "recxDRvpiuvCeeAhC",
+            "name": "113 - Video Review and XP - Assign Base Video XP by Grade Band",
+            "status": "Live",
+            "version": "v6.4"
+          },
+          "114": {
+            "id": "rec0qiy0iXVqrU3c2",
+            "name": "114 - Video Review and XP - Create or Update Video XP Event",
+            "status": "Live",
+            "version": "v6.1"
+          },
+          "073": {
+            "id": "rec225JiTrNmomB4G",
+            "name": "073 - Email, Notifications, and External Handoffs - Create Video Feedback Communications Hub Handoff",
+            "status": "Live",
+            "version": "v4.3"
+          }
+        },
+        "pass": true
+      },
+      "at": "2026-08-23T16:45:50.571Z"
+    },
+    {
+      "name": "automation_112",
+      "status": "PASS",
+      "detail": "112 absent from operator table",
+      "evidence": null,
+      "at": "2026-08-23T16:45:50.571Z"
+    },
+    {
+      "name": "automation_073",
+      "status": "MANUAL ACTION REQUIRED",
+      "detail": "Operator table shows 073 Live v4.3; native trigger OFF state NOT VERIFIED via browser",
+      "evidence": null,
+      "at": "2026-08-23T16:45:50.571Z"
+    },
+    {
+      "name": "video_submission_rule",
+      "status": "PASS",
+      "detail": "rule rec06c1tu3IO8EZqG amount=25",
+      "evidence": null,
+      "at": "2026-08-23T16:45:50.571Z"
+    },
+    {
+      "name": "prior_run_records",
+      "status": "FINDING",
+      "detail": "found 5 prior AUTONOMOUS_VIDEO_QA_ VF rows (probe residue)",
+      "evidence": null,
+      "at": "2026-08-23T16:45:50.629Z"
+    },
+    {
+      "name": "native_trigger_wiring",
+      "status": "NOT VERIFIED",
+      "detail": "Airtable Automations UI browser access unavailable in cloud agent; trigger table/fields/conditions not attested",
+      "evidence": null,
+      "at": "2026-08-23T16:45:50.629Z"
+    },
+    {
+      "name": "asset_upload_reference",
+      "status": "FINDING",
+      "detail": "Upload/reference incomplete",
+      "evidence": {
+        "assetId": "reccIzpANZNb2FIcM",
+        "reviewerUrl": ""
+      },
+      "at": "2026-08-23T16:46:53.080Z"
+    },
+    {
+      "name": "positive_path_113_114",
+      "status": "PASS",
+      "detail": "XP recYSGNi5zDGTPbJp created; 113 base=25; award=Awarded",
+      "evidence": {
+        "vfId": "recAejfvSZ3hXqFgW",
+        "submissionId": "recNqAXXzXAnac1GE",
+        "assetId": "reccIzpANZNb2FIcM",
+        "sourceKey": "VIDEO_SUBMISSION|recAejfvSZ3hXqFgW",
+        "xpEventId": "recYSGNi5zDGTPbJp",
+        "waitedMs": 10297,
+        "before113": {
+          "id": "recAejfvSZ3hXqFgW",
+          "active": true,
+          "feedbackPosted": true,
+          "doNotAward": false,
+          "ready": false,
+          "coachFeedback": "AUTONOMOUS_VIDEO_QA_20260823_164549 positive path coach feedback",
+          "baseXp": 25,
+          "totalXp": 25,
+          "awardStatus": "Awarded",
+          "enrollment": "recNu6fcBpF1GG3u5",
+          "submission": "recNqAXXzXAnac1GE",
+          "asset": "reccIzpANZNb2FIcM",
+          "uploadStatus": "Uploaded",
+          "reviewerUrl": "",
+          "xpLinks": [
+            "recYSGNi5zDGTPbJp"
+          ]
+        },
+        "xp": {
+          "Source Key": "VIDEO_SUBMISSION|recAejfvSZ3hXqFgW",
+          "Active?": true,
+          "XP Bucket": "Video Feedback",
+          "Enrollment": [
+            "recNu6fcBpF1GG3u5"
+          ],
+          "Submission": [
+            "recNqAXXzXAnac1GE"
+          ],
+          "Weekly Athlete Summary": [
+            "recQ0CNrjOW2CpgAv"
+          ],
+          "XP Source": "Video Submission",
+          "XP Points": 25,
+          "Video Feedback": [
+            "recAejfvSZ3hXqFgW"
+          ]
+        }
+      },
+      "at": "2026-08-23T16:47:06.917Z"
+    },
+    {
+      "name": "replay_idempotency",
+      "status": "PASS",
+      "detail": "Same XP Event; no duplicate",
+      "evidence": null,
+      "at": "2026-08-23T16:47:17.343Z"
+    },
+    {
+      "name": "withdrawal",
+      "status": "PASS",
+      "detail": "XP recYSGNi5zDGTPbJp deactivated; no replacement",
+      "evidence": {
+        "activeBeforeWithdraw": true
+      },
+      "at": "2026-08-23T16:47:29.813Z"
+    },
+    {
+      "name": "restoration",
+      "status": "PASS",
+      "detail": "Same XP Event recYSGNi5zDGTPbJp reactivated at 25",
+      "evidence": null,
+      "at": "2026-08-23T16:47:48.388Z"
+    },
+    {
+      "name": "negative_paths",
+      "status": "PASS",
+      "detail": "10/10 cases fail-closed",
+      "evidence": [
+        {
+          "id": "missing_coach_feedback",
+          "vfId": "recO6WMciwb1gQyCp",
+          "submissionId": "recNqAXXzXAnac1GE",
+          "sourceKey": "VIDEO_SUBMISSION|recO6WMciwb1gQyCp",
+          "activeXpIds": [],
+          "xpEventCount": 0,
+          "pass": true,
+          "status": "PASS",
+          "detail": "No active XP Event"
+        },
+        {
+          "id": "feedback_not_posted",
+          "vfId": "recFQtuubwCbnQzBX",
+          "submissionId": "recNqAXXzXAnac1GE",
+          "sourceKey": "VIDEO_SUBMISSION|recFQtuubwCbnQzBX",
+          "activeXpIds": [],
+          "xpEventCount": 0,
+          "pass": true,
+          "status": "PASS",
+          "detail": "No active XP Event"
+        },
+        {
+          "id": "do_not_award_initial",
+          "vfId": "recEKJjvmsG1kyf9E",
+          "submissionId": "recNqAXXzXAnac1GE",
+          "sourceKey": "VIDEO_SUBMISSION|recEKJjvmsG1kyf9E",
+          "activeXpIds": [],
+          "xpEventCount": 0,
+          "pass": true,
+          "status": "PASS",
+          "detail": "No active XP Event"
+        },
+        {
+          "id": "missing_enrollment",
+          "vfId": "reczy52b7AOpLLzvT",
+          "submissionId": "recNqAXXzXAnac1GE",
+          "sourceKey": "VIDEO_SUBMISSION|reczy52b7AOpLLzvT",
+          "activeXpIds": [],
+          "xpEventCount": 0,
+          "pass": true,
+          "status": "PASS",
+          "detail": "No active XP Event"
+        },
+        {
+          "id": "wrong_enrollment",
+          "vfId": "recn6kQjLhVWipcCu",
+          "submissionId": "recNqAXXzXAnac1GE",
+          "sourceKey": "VIDEO_SUBMISSION|recn6kQjLhVWipcCu",
+          "activeXpIds": [],
+          "xpEventCount": 0,
+          "pass": true,
+          "status": "PASS",
+          "detail": "No active XP Event"
+        },
+        {
+          "id": "inactive_source",
+          "vfId": "rec93PUrWKEAikzmH",
+          "submissionId": "recNqAXXzXAnac1GE",
+          "sourceKey": "VIDEO_SUBMISSION|rec93PUrWKEAikzmH",
+          "activeXpIds": [],
+          "xpEventCount": 0,
+          "pass": true,
+          "status": "PASS",
+          "detail": "No active XP Event"
+        },
+        {
+          "id": "missing_video_asset",
+          "vfId": "recrr92dvEsaIwOqE",
+          "submissionId": "recNqAXXzXAnac1GE",
+          "sourceKey": "VIDEO_SUBMISSION|recrr92dvEsaIwOqE",
+          "activeXpIds": [],
+          "xpEventCount": 0,
+          "pass": true,
+          "status": "PASS",
+          "detail": "No active XP Event"
+        },
+        {
+          "id": "invalid_asset_url",
+          "vfId": "recAuHRSSMdtEmAwf",
+          "submissionId": "recNqAXXzXAnac1GE",
+          "sourceKey": "VIDEO_SUBMISSION|recAuHRSSMdtEmAwf",
+          "activeXpIds": [],
+          "xpEventCount": 0,
+          "pass": true,
+          "status": "PASS",
+          "detail": "No active XP Event"
+        },
+        {
+          "id": "zero_xp_not_armed",
+          "vfId": "recvsI6xA7FGr2Ppt",
+          "submissionId": "recNqAXXzXAnac1GE",
+          "sourceKey": "VIDEO_SUBMISSION|recvsI6xA7FGr2Ppt",
+          "activeXpIds": [],
+          "xpEventCount": 0,
+          "pass": true,
+          "status": "PASS",
+          "detail": "No active XP Event"
+        },
+        {
+          "id": "duplicate_video_feedback",
+          "vfIds": [
+            "rec9ZvPFdEDMtgdet",
+            "rechnNbVqopeM5usy"
+          ],
+          "pass": true,
+          "status": "PASS",
+          "detail": "distinct keys; active counts 0+2"
+        }
+      ],
+      "at": "2026-08-23T17:00:22.149Z"
+    },
+    {
+      "name": "negative_missing_xp_rule",
+      "status": "NOT VERIFIED",
+      "detail": "Cannot deactivate VIDEO_SUBMISSION rule in autonomous production proof",
+      "evidence": null,
+      "at": "2026-08-23T17:00:22.149Z"
+    },
+    {
+      "name": "negative_wrong_owner",
+      "status": "NOT VERIFIED",
+      "detail": "Requires conflicting XP Event seed; skipped to avoid touching non-disposable data",
+      "evidence": null,
+      "at": "2026-08-23T17:00:22.149Z"
+    },
+    {
+      "name": "no_parent_email_handoff",
+      "status": "PASS",
+      "detail": "No Video Feedback Email Handoff Queue rows for disposable VF/assets in this run",
+      "evidence": null,
+      "at": "2026-08-23T17:00:24.817Z"
+    },
+    {
+      "name": "perfect_week_ledger_unchanged",
+      "status": "PASS",
+      "detail": "XP link count 40 -> 40",
+      "evidence": null,
+      "at": "2026-08-23T17:00:24.928Z"
+    },
+    {
+      "name": "offline_video_tests",
+      "status": "FINDING",
+      "detail": "video_lifecycle:ok, video_readiness:ok, video_mocked_runtime:ok, video_writeback_contract:fail",
+      "evidence": [
+        {
+          "name": "video_lifecycle",
+          "pass": true,
+          "tail": "ibility loss deactivates the exact event and restoration reactivates it\nok - inactive and unposted feedback deactivate instead of replacing\nok - wrong linked event and duplicate exact events fail closed\nok - 114 v6.1 uses exact identity lifecycle and preserves canonical WAS repair\nok - authoritative audit covers exact ownership and canonical WAS failures\nPASS 10 PKG-007 offline lifecycle contracts"
+        },
+        {
+          "name": "video_readiness",
+          "pass": true,
+          "tail": "e inputs fail closed\nok - 114 implements all source eligibility guards before XP Event matching\nok - 114 writes the active Video Submission / Video Feedback contract links\nok - read-only audit detects required Video XP integrity states\nok - 114 does not contain email or queue side effects\nok - 114 neither references nor recreates retired Automation 043\nPASS 11 Video Feedback XP readiness contracts"
+        },
+        {
+          "name": "video_mocked_runtime",
+          "pass": true,
+          "tail": "\": \"2026-08-12\",\n  \"xpSourceDateWritten\": \"yes\",\n  \"xpDateSourceWritten\": \"Video Submission Activity Date\",\n  \"videoUpdateFieldsWritten\": [\n    \"Award Status\",\n    \"Ready for XP Automation?\"\n  ],\n  \"deactivatedOut\": \"no\",\n  \"videoFeedbackWritebackWarningOut\": \"\",\n  \"debugStep\": \"12 - Outputs\"\n}\nok - existing canonical event receives the canonical WAS repair\nPASS 7 Video XP mocked-runtime contracts"
+        },
+        {
+          "name": "video_writeback_contract",
+          "pass": false,
+          "tail": "  '  const value = getRaw(rec, table, name);\\n' +\n    '  if (value === true || value === 1) return true;\\n' +\n    '  const s = getText(rec, table, name).toLowerCase();\\n' +\n    '  return [\"1\", \"true\", \"yes\", \"y\", \"count\", \"counted\"].includes(s);\\n' +\n    '}\\n' +\n    '\\n' +\n    'function oneLinkedId(val'... 17891 more characters,\n  expected: /Version: v4\\.2/,\n  operator: 'match'\n}\n\nNode.js v22.14.0"
+        }
+      ],
+      "at": "2026-08-23T17:00:25.089Z"
+    },
+    {
+      "name": "production_routes",
+      "status": "PASS",
+      "detail": "https://www.fairfieldbasketballclub.com/shoot:200; https://www.fairfieldbasketballclub.com/shoot/athletes/testing3-schmidt:200",
+      "evidence": null,
+      "at": "2026-08-23T17:00:27.172Z"
+    }
+  ],
+  "cleanup": [
+    {
+      "table": "XP Events",
+      "id": "recYSGNi5zDGTPbJp",
+      "action": "deactivated"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recAejfvSZ3hXqFgW",
+      "action": "delete_blocked",
+      "error": "DELETE Video%20Feedback?records[]=recAejfvSZ3hXqFgW 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recAejfvSZ3hXqFgW",
+      "action": "deactivated_fallback"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recO6WMciwb1gQyCp",
+      "action": "delete_blocked",
+      "error": "DELETE Video%20Feedback?records[]=recO6WMciwb1gQyCp 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recO6WMciwb1gQyCp",
+      "action": "deactivated_fallback"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recFQtuubwCbnQzBX",
+      "action": "delete_blocked",
+      "error": "DELETE Video%20Feedback?records[]=recFQtuubwCbnQzBX 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recFQtuubwCbnQzBX",
+      "action": "deactivated_fallback"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recEKJjvmsG1kyf9E",
+      "action": "delete_blocked",
+      "error": "DELETE Video%20Feedback?records[]=recEKJjvmsG1kyf9E 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recEKJjvmsG1kyf9E",
+      "action": "deactivated_fallback"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "reczy52b7AOpLLzvT",
+      "action": "delete_blocked",
+      "error": "DELETE Video%20Feedback?records[]=reczy52b7AOpLLzvT 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Video Feedback",
+      "id": "reczy52b7AOpLLzvT",
+      "action": "deactivated_fallback"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recn6kQjLhVWipcCu",
+      "action": "delete_blocked",
+      "error": "DELETE Video%20Feedback?records[]=recn6kQjLhVWipcCu 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recn6kQjLhVWipcCu",
+      "action": "deactivated_fallback"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "rec93PUrWKEAikzmH",
+      "action": "delete_blocked",
+      "error": "DELETE Video%20Feedback?records[]=rec93PUrWKEAikzmH 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Video Feedback",
+      "id": "rec93PUrWKEAikzmH",
+      "action": "deactivated_fallback"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recrr92dvEsaIwOqE",
+      "action": "delete_blocked",
+      "error": "DELETE Video%20Feedback?records[]=recrr92dvEsaIwOqE 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recrr92dvEsaIwOqE",
+      "action": "deactivated_fallback"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recAuHRSSMdtEmAwf",
+      "action": "delete_blocked",
+      "error": "DELETE Video%20Feedback?records[]=recAuHRSSMdtEmAwf 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recAuHRSSMdtEmAwf",
+      "action": "deactivated_fallback"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recvsI6xA7FGr2Ppt",
+      "action": "delete_blocked",
+      "error": "DELETE Video%20Feedback?records[]=recvsI6xA7FGr2Ppt 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Video Feedback",
+      "id": "recvsI6xA7FGr2Ppt",
+      "action": "deactivated_fallback"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "rec9ZvPFdEDMtgdet",
+      "action": "delete_blocked",
+      "error": "DELETE Video%20Feedback?records[]=rec9ZvPFdEDMtgdet 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Video Feedback",
+      "id": "rec9ZvPFdEDMtgdet",
+      "action": "deactivated_fallback"
+    },
+    {
+      "table": "Video Feedback",
+      "id": "rechnNbVqopeM5usy",
+      "action": "delete_blocked",
+      "error": "DELETE Video%20Feedback?records[]=rechnNbVqopeM5usy 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Video Feedback",
+      "id": "rechnNbVqopeM5usy",
+      "action": "deactivated_fallback"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "reccIzpANZNb2FIcM",
+      "action": "delete_blocked",
+      "error": "DELETE Submission%20Assets?records[]=reccIzpANZNb2FIcM 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recHCovvZ8nc0ZB8v",
+      "action": "delete_blocked",
+      "error": "DELETE Submission%20Assets?records[]=recHCovvZ8nc0ZB8v 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recn16SMhJ5DRR5CZ",
+      "action": "delete_blocked",
+      "error": "DELETE Submission%20Assets?records[]=recn16SMhJ5DRR5CZ 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recTqKlOornRosCdp",
+      "action": "delete_blocked",
+      "error": "DELETE Submission%20Assets?records[]=recTqKlOornRosCdp 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recT724fOtvtVC0HD",
+      "action": "delete_blocked",
+      "error": "DELETE Submission%20Assets?records[]=recT724fOtvtVC0HD 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recIxCVAMGjg00rG8",
+      "action": "delete_blocked",
+      "error": "DELETE Submission%20Assets?records[]=recIxCVAMGjg00rG8 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recqJvFjqId0RUjq4",
+      "action": "delete_blocked",
+      "error": "DELETE Submission%20Assets?records[]=recqJvFjqId0RUjq4 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recqYXmacO3lyMJO3",
+      "action": "delete_blocked",
+      "error": "DELETE Submission%20Assets?records[]=recqYXmacO3lyMJO3 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recPOI1iUxqCuPmEl",
+      "action": "delete_blocked",
+      "error": "DELETE Submission%20Assets?records[]=recPOI1iUxqCuPmEl 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recynwi577evnqehJ",
+      "action": "delete_blocked",
+      "error": "DELETE Submission%20Assets?records[]=recynwi577evnqehJ 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    },
+    {
+      "table": "Submission Assets",
+      "id": "reca2UH2MbbWcxke0",
+      "action": "delete_blocked",
+      "error": "DELETE Submission%20Assets?records[]=reca2UH2MbbWcxke0 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}",
+      "status": 403
+    }
+  ],
+  "completed_at": "2026-08-23T17:00:33.549Z",
+  "primary": {
+    "run_id": "AUTONOMOUS_VIDEO_QA_20260823_164549",
+    "video_feedback_id": "recAejfvSZ3hXqFgW",
+    "submission_id": "recNqAXXzXAnac1GE",
+    "asset_id": "reccIzpANZNb2FIcM",
+    "enrollment_id": "recNu6fcBpF1GG3u5",
+    "xp_event_id": "recYSGNi5zDGTPbJp",
+    "source_key": "VIDEO_SUBMISSION|recAejfvSZ3hXqFgW",
+    "xp_amount": 25,
+    "xp_bucket": "Video Feedback",
+    "activity_date": null
+  }
+}

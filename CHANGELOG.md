@@ -9,6 +9,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Added
+- **PKG-007 Video XP production proof orchestrator (2026-08-23)** —
+  `tools/testing/pkg-007-video-xp-proof.mjs` runs disposable Testing3 lifecycle proof
+  (`AUTONOMOUS_VIDEO_QA_*`): preflight, positive/replay/withdrawal/restoration, negative
+  paths, reconciliation manifest. Certified run `AUTONOMOUS_VIDEO_QA_20260823_164549` PASS.
+  Report: `docs/testing/autonomous-qa/PKG-007_VIDEO_XP_PROOF_FINAL_REPORT.md`.
 - **Production QA paste bundles (2026-08-23)** — Complete paste-ready scripts:
   `docs/deploy-checklists/010-v10.12-PASTE.txt`, `057-v1.9-PASTE.txt`,
   `072-v4.3-PASTE.txt`. Operator guide:

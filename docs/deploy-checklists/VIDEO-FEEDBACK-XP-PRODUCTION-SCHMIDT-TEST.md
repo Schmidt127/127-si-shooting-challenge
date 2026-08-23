@@ -1,6 +1,6 @@
 # Video Feedback XP — Production Schmidt Test Packet
 
-**Status:** Draft — repository readiness + **Production install confirmed** (113 v6.4 / 114 v6.1 Live 2026-08-23). **Lifecycle proof pending** per PKG-007.
+**Status:** **Lifecycle proof complete 2026-08-23** — autonomous run `AUTONOMOUS_VIDEO_QA_20260823_164549` (Testing3 Schmidt). Report: [`PKG-007_VIDEO_XP_PROOF_FINAL_REPORT.md`](../testing/autonomous-qa/PKG-007_VIDEO_XP_PROOF_FINAL_REPORT.md). Native trigger attestation and 073 OFF UI check remain open.
 **PKG-006R / PKG-036 locks:** **Released 2026-08-15** — no longer block paste or controlled testing. See [`PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md`](../investigations/PKG-006R-VIDEO-XP-LOCK-INVESTIGATION-2026-08-23.md).
 **Scope:** `013 → 113 → 114 → rollups → 041 → 042`
 **Production base:** `appn84sqPw03zEbTT`
