@@ -102,19 +102,66 @@ export function asBoolean(value: unknown): boolean {
   return value === true || value === 1 || String(value).toLowerCase() === "true";
 }
 
-export function asOptionalDateKey(value: unknown): string | null {
+const AIRTABLE_ACTIVITY_TIME_ZONE = "America/Denver";
+
+/**
+ * Normalize Airtable date / dateTime REST values to YYYY-MM-DD using the same
+ * midnight-UTC calendar-day rule as automation `toDateKeyFromDateObject` (005/034/066).
+ * Avoids shifting date-only midnight UTC values into the previous Denver day, and
+ * avoids using raw UTC ISO prefixes for non-midnight instants (e.g. 05:59Z → prior Denver day).
+ */
+export function toAirtableDateKey(
+  value: unknown,
+  timeZone = AIRTABLE_ACTIVITY_TIME_ZONE,
+): string | null {
   if (value == null || value === "") return null;
+  if (Array.isArray(value)) {
+    if (value.length === 0) return null;
+    return toAirtableDateKey(value[0], timeZone);
+  }
   if (typeof value === "string") {
     const trimmed = value.trim();
     if (!trimmed) return null;
-    // Airtable date fields often YYYY-MM-DD
-    if (/^\d{4}-\d{2}-\d{2}/.test(trimmed)) return trimmed.slice(0, 10);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) return trimmed;
+    const fromText = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (fromText && trimmed.length === 10) {
+      return `${fromText[1]}-${fromText[2]}-${fromText[3]}`;
+    }
     const parsed = new Date(trimmed);
     if (Number.isNaN(parsed.getTime())) return trimmed;
-    return parsed.toLocaleDateString("en-CA", { timeZone: "America/Denver" });
+    if (
+      parsed.getUTCHours() === 0 &&
+      parsed.getUTCMinutes() === 0 &&
+      parsed.getUTCSeconds() === 0 &&
+      parsed.getUTCMilliseconds() === 0
+    ) {
+      const year = parsed.getUTCFullYear();
+      const month = String(parsed.getUTCMonth() + 1).padStart(2, "0");
+      const day = String(parsed.getUTCDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+    return parsed.toLocaleDateString("en-CA", { timeZone });
   }
-  if (Array.isArray(value) && value.length > 0) return asOptionalDateKey(value[0]);
+  if (value instanceof Date) {
+    if (Number.isNaN(value.getTime())) return null;
+    if (
+      value.getUTCHours() === 0 &&
+      value.getUTCMinutes() === 0 &&
+      value.getUTCSeconds() === 0 &&
+      value.getUTCMilliseconds() === 0
+    ) {
+      const year = value.getUTCFullYear();
+      const month = String(value.getUTCMonth() + 1).padStart(2, "0");
+      const day = String(value.getUTCDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+    return value.toLocaleDateString("en-CA", { timeZone });
+  }
   return null;
+}
+
+export function asOptionalDateKey(value: unknown): string | null {
+  return toAirtableDateKey(value);
 }
 
 /** Linked-record IDs from a classic REST link field (`["rec…"]`). */

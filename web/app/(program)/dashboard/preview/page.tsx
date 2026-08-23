@@ -46,9 +46,14 @@ export default async function XpActivityPreviewPage({ searchParams }: XpActivity
       <ProgramPage
         eyebrow="Preview"
         title="XP activity preview"
-        description={`Enrollment ${trimmed} · strategy ${result.strategy} · ${result.rows.length} row(s)`}
+        description={`Enrollment ${trimmed} · strategy ${result.strategy} · ${result.rows.length} displayed row(s) · ${result.reconciliation.length} reconciliation row(s)`}
       >
         <XpActivityTable rows={result.rows} warning={result.warning} />
+        {result.missingXpSubmissionIds.length > 0 ? (
+          <p className="mt-4 text-xs text-amber-900">
+            Missing XP for submissions: {result.missingXpSubmissionIds.join(", ")}
+          </p>
+        ) : null}
       </ProgramPage>
     );
   } catch (error) {

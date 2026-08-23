@@ -12,7 +12,19 @@ import {
   requireSelectName,
   selectName,
   selectNames,
+  toAirtableDateKey,
 } from "@/lib/data/airtable-values";
+
+describe("toAirtableDateKey", () => {
+  it("preserves date-only values and midnight UTC calendar days", () => {
+    expect(toAirtableDateKey("2026-08-22")).toBe("2026-08-22");
+    expect(toAirtableDateKey("2026-08-22T00:00:00.000Z")).toBe("2026-08-22");
+  });
+
+  it("uses Denver for non-midnight instants", () => {
+    expect(toAirtableDateKey("2026-08-23T05:59:00.000Z")).toBe("2026-08-22");
+  });
+});
 
 describe("asText", () => {
   it("reads aiText value objects", () => {

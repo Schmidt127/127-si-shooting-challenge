@@ -1,18 +1,23 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AirtableApiError } from "@/lib/airtable/errors";
+import { toAirtableDateKey } from "@/lib/data/airtable-values";
 import {
   buildBrokenEnrollmentJoinFilter,
   buildEnrollmentRecordIdFilter,
   buildRecordIdOrFilter,
+  buildXpActivityReconciliation,
   chunkRecordIds,
   clearLinkedXpIdsCache,
   dedupeXpEventRecords,
   fetchLinkedXpEventIds,
   loadXpActivityForEnrollment,
   mapXpEventRecordToSummary,
+  resolveXpEventDisplayDate,
   sortXpEventsNewestFirst,
+  submissionExpectsXp,
   XpActivityLoadError,
+  type SubmissionRecordFields,
   type XpEventRecordFields,
 } from "@/lib/data/xp-activity-loader";
 
@@ -26,6 +31,7 @@ const ENR_WITH_XP = "recCyFEPeATOVNlr9";
 const ENR_NO_XP = "recEmptyEnrollment1";
 const ENR_SIMILAR_NAME_A = "recAthleteSmithA01";
 const ENR_SIMILAR_NAME_B = "recAthleteSmithB02";
+const ENR_SCHMIDT_PREVIEW = "rec93mAfo5jKqP3g5";
 
 function xpRecord(
   id: string,
@@ -46,6 +52,42 @@ function xpRecord(
     },
   };
 }
+
+function submissionRecord(
+  id: string,
+  fields: Partial<SubmissionRecordFields> = {},
+): { id: string; fields: SubmissionRecordFields } {
+  return {
+    id,
+    fields: {
+      "Activity Date": "2026-08-22T00:00:00.000Z",
+      Created: "2026-08-22T12:00:00.000Z",
+      "Count This Submission?": true,
+      "Total Shots Counted": 100,
+      "XP Events": [],
+      ...fields,
+    },
+  };
+}
+
+describe("toAirtableDateKey (Denver + midnight UTC)", () => {
+  it("keeps date-only YYYY-MM-DD strings", () => {
+    expect(toAirtableDateKey("2026-08-22")).toBe("2026-08-22");
+  });
+
+  it("keeps midnight UTC calendar day for Airtable date-only storage", () => {
+    expect(toAirtableDateKey("2026-08-22T00:00:00.000Z")).toBe("2026-08-22");
+  });
+
+  it("does not shift 8/22 to 8/23 when UTC prefix would disagree with Denver", () => {
+    // 2026-08-23T05:59:00Z = 2026-08-22 23:59 America/Denver (MDT)
+    expect(toAirtableDateKey("2026-08-23T05:59:00.000Z")).toBe("2026-08-22");
+  });
+
+  it("maps Denver midnight instants to the local calendar day", () => {
+    expect(toAirtableDateKey("2026-08-22T06:00:00.000Z")).toBe("2026-08-22");
+  });
+});
 
 describe("xp-activity-loader filters", () => {
   it("documents that ARRAYJOIN({Enrollment}) is not a record-id filter", () => {
@@ -69,30 +111,32 @@ describe("xp-activity-loader filters", () => {
 });
 
 describe("xp-activity-loader mapping", () => {
-  it("sorts newest-to-oldest by activity date then record id", () => {
+  it("sorts newest-to-oldest by activity date then source rank", () => {
     const sorted = sortXpEventsNewestFirst([
+      {
+        id: "recMilestone",
+        points: 10,
+        sourceLabel: "Shot Milestone",
+        activityDate: "2026-08-22",
+      },
+      {
+        id: "recSub",
+        points: 20,
+        sourceLabel: "Submission Base",
+        activityDate: "2026-08-22",
+      },
       {
         id: "recOld",
         points: 10,
         activityDate: "2026-08-01",
       },
-      {
-        id: "recNew",
-        points: 15,
-        activityDate: "2026-08-10",
-      },
-      {
-        id: "recMid",
-        points: 12,
-        activityDate: "2026-08-05",
-      },
     ]);
 
-    expect(sorted.map((row) => row.id)).toEqual(["recNew", "recMid", "recOld"]);
+    expect(sorted.map((row) => row.id)).toEqual(["recSub", "recMilestone", "recOld"]);
   });
 
   it("dedupes duplicate source keys preferring active and newest created", () => {
-    const deduped = dedupeXpEventRecords([
+    const { kept } = dedupeXpEventRecords([
       xpRecord("recDupInactive", {
         "Active?": false,
         "Source Key": "HOMEWORK_XP|recHW1",
@@ -108,21 +152,168 @@ describe("xp-activity-loader mapping", () => {
       }),
     ]);
 
-    expect(deduped.map((row) => row.id)).toEqual(["recDupActive", "recUnique"]);
+    expect(kept.map((row) => row.id)).toEqual(["recDupActive", "recUnique"]);
   });
 
-  it("maps XP event records to summaries", () => {
+  it("uses Submission Activity Date for Submission Base rows", () => {
     const summary = mapXpEventRecordToSummary(
       xpRecord("recMap1", {
-        "XP Source": "Homework Completion",
-        "XP Reason Public": "Homework marked satisfactory.",
+        "XP Source": "Submission Base",
+        "XP Activity Date": "2026-08-23T05:59:00.000Z",
+      }),
+      "2026-08-22T00:00:00.000Z",
+    );
+
+    expect(summary.activityDate).toBe("2026-08-22");
+  });
+
+  it("prefers XP Activity Date over Created for non-submission sources", () => {
+    const resolved = resolveXpEventDisplayDate({
+      "XP Source": "Homework Completion",
+      "XP Activity Date": "2026-08-20T06:00:00.000Z",
+      Created: "2026-08-21T14:59:48.000Z",
+    });
+    expect(resolved.displayedDate).toBe("2026-08-20");
+    expect(resolved.usedCreatedFallback).toBe(false);
+  });
+});
+
+describe("Schmidt preview regression fixtures", () => {
+  const aug22SubIds = [
+    "recvtQh5Rq6yTFotc",
+    "recqYLtep74I0tvDF",
+    "recoin44RERFMChHg",
+    "rec0Yu4js37Xk5dHX",
+  ];
+
+  it("submissionExpectsXp follows Count This Submission?", () => {
+    expect(submissionExpectsXp({ "Count This Submission?": true })).toBe(true);
+    expect(submissionExpectsXp({ "Count This Submission?": false })).toBe(false);
+  });
+
+  it("reports missing XP Event for counted submissions", () => {
+    const missingId = "recMissingSub01";
+    const reconciliation = buildXpActivityReconciliation(
+      [
+        submissionRecord(missingId, {
+          "Activity Date": "2026-08-22T00:00:00.000Z",
+          "XP Events": [],
+        }),
+      ],
+      [],
+      ENR_SCHMIDT_PREVIEW,
+      [],
+    );
+
+    expect(reconciliation).toEqual([
+      expect.objectContaining({
+        expectedSubmissionId: missingId,
+        xpEventExists: false,
+        exclusionReason: "missing_xp_event",
+        submissionActivityDate: "2026-08-22",
+      }),
+    ]);
+  });
+
+  it("marks inactive and duplicate-remove XP Events as excluded", () => {
+    const subId = "recSubInactive01";
+    const reconciliation = buildXpActivityReconciliation(
+      [submissionRecord(subId, { "XP Events": ["recInactiveXp"] })],
+      [
+        xpRecord("recInactiveXp", {
+          "Active?": false,
+          "Enrollment Record ID": [ENR_SCHMIDT_PREVIEW],
+          "Source Key": `SUBMISSION_XP|${subId}`,
+          Submission: [subId],
+        }),
+        xpRecord("recDupRemove", {
+          "Enrollment Record ID": [ENR_SCHMIDT_PREVIEW],
+          "Duplicate Status": "Duplicate - Remove",
+          "Source Key": "SUBMISSION_XP|recOther",
+          Submission: ["recOther"],
+        }),
+      ],
+      ENR_SCHMIDT_PREVIEW,
+      [],
+    );
+
+    expect(reconciliation.find((row) => row.xpEventId === "recInactiveXp")).toMatchObject({
+      excluded: true,
+      exclusionReason: "inactive",
+    });
+  });
+
+  it("renders all four 8/22 submission fixtures with submission activity dates", () => {
+    const submissions = aug22SubIds.map((id) =>
+      submissionRecord(id, {
+        "Activity Date": "2026-08-22T00:00:00.000Z",
+        "XP Events": [`recXpFor${id}`],
+      }),
+    );
+    const xpEvents = aug22SubIds.map((id) =>
+      xpRecord(`recXpFor${id}`, {
+        "Enrollment Record ID": [ENR_SCHMIDT_PREVIEW],
+        "XP Activity Date": "2026-08-23T05:59:00.000Z",
+        "Source Key": `SUBMISSION_XP|${id}`,
+        Submission: [id],
       }),
     );
 
-    expect(summary.sourceLabel).toBe("Homework Completion");
-    expect(summary.reasonPublic).toBe("Homework marked satisfactory.");
-    expect(summary.points).toBe(20);
-    expect(summary.activityDate).toBe("2026-08-10");
+    const summaries = xpEvents.map((record) => {
+      const sub = submissions.find((s) => s.id === record.fields.Submission?.[0]);
+      return mapXpEventRecordToSummary(record, sub?.fields["Activity Date"]);
+    });
+
+    expect(summaries.every((row) => row.activityDate === "2026-08-22")).toBe(true);
+  });
+
+  it("supports multiple submissions on the same date", () => {
+    const summaries = sortXpEventsNewestFirst(
+      aug22SubIds.map((id) =>
+        mapXpEventRecordToSummary(
+          xpRecord(`recXpFor${id}`, {
+            Submission: [id],
+            "Source Key": `SUBMISSION_XP|${id}`,
+          }),
+          "2026-08-22T00:00:00.000Z",
+        ),
+      ),
+    );
+
+    expect(summaries).toHaveLength(4);
+    expect(new Set(summaries.map((row) => row.activityDate))).toEqual(new Set(["2026-08-22"]));
+  });
+
+  it("orders parent submission before shot milestone on the same date", () => {
+    const sorted = sortXpEventsNewestFirst([
+      {
+        id: "recMilestone",
+        points: 15,
+        sourceLabel: "Shot Milestone",
+        activityDate: "2026-08-22",
+      },
+      {
+        id: "recSubmission",
+        points: 20,
+        sourceLabel: "Submission Base",
+        activityDate: "2026-08-22",
+      },
+    ]);
+
+    expect(sorted[0].id).toBe("recSubmission");
+    expect(sorted[1].id).toBe("recMilestone");
+  });
+
+  it("handles backdated submission activity dates", () => {
+    const summary = mapXpEventRecordToSummary(
+      xpRecord("recBackdatedXp", {
+        "XP Activity Date": "2026-08-22T12:00:00.000Z",
+        Submission: ["recBackdatedSub"],
+      }),
+      "2026-08-17T06:00:00.000Z",
+    );
+
+    expect(summary.activityDate).toBe("2026-08-17");
   });
 });
 
@@ -153,7 +344,14 @@ describe("loadXpActivityForEnrollment", () => {
         };
       }
       if (params.tableName === "Enrollments") {
-        return { records: [{ id: ENR_WITH_XP, fields: { "XP Events": ["recXp1", "recXp2"] } }] };
+        return {
+          records: [
+            {
+              id: ENR_WITH_XP,
+              fields: { "XP Events": ["recXp1", "recXp2"], Submissions: [] },
+            },
+          ],
+        };
       }
       return { records: [] };
     });
@@ -164,15 +362,17 @@ describe("loadXpActivityForEnrollment", () => {
     expect(result.rows).toHaveLength(2);
     expect(result.rows[0].id).toBe("recXp2");
     expect(result.rows[1].id).toBe("recXp1");
-    expect(listAirtableRecordsMock.mock.calls[0][0].filterByFormula).toBe(
-      buildEnrollmentRecordIdFilter(ENR_WITH_XP),
+    expect(result.reconciliation).toEqual([]);
+    const xpCall = listAirtableRecordsMock.mock.calls.find(
+      (call) => call[0].tableName === "XP Events",
     );
+    expect(xpCall?.[0].filterByFormula).toBe(buildEnrollmentRecordIdFilter(ENR_WITH_XP));
   });
 
   it("returns an empty array for an athlete with no XP Events", async () => {
     listAirtableRecordsMock.mockImplementation(async (params: { tableName: string }) => {
       if (params.tableName === "Enrollments") {
-        return { records: [{ id: ENR_NO_XP, fields: { "XP Events": [] } }] };
+        return { records: [{ id: ENR_NO_XP, fields: { "XP Events": [], Submissions: [] } }] };
       }
       return { records: [] };
     });
@@ -181,6 +381,7 @@ describe("loadXpActivityForEnrollment", () => {
 
     expect(result.rows).toEqual([]);
     expect(result.warning).toBeUndefined();
+    expect(result.missingXpSubmissionIds).toEqual([]);
   });
 
   it("scopes XP rows per enrollment even when athlete names are similar", async () => {
@@ -217,7 +418,10 @@ describe("loadXpActivityForEnrollment", () => {
             records: [
               {
                 id,
-                fields: { "XP Events": id === ENR_SIMILAR_NAME_A ? ["recXpA"] : ["recXpB"] },
+                fields: {
+                  "XP Events": id === ENR_SIMILAR_NAME_A ? ["recXpA"] : ["recXpB"],
+                  Submissions: [],
+                },
               },
             ],
           };
@@ -265,7 +469,10 @@ describe("loadXpActivityForEnrollment", () => {
           records: [
             {
               id: ENR_WITH_XP,
-              fields: { "XP Events": ["recActive", "recInactive", "recOtherInactive"] },
+              fields: {
+                "XP Events": ["recActive", "recInactive", "recOtherInactive"],
+                Submissions: [],
+              },
             },
           ],
         };
@@ -299,7 +506,12 @@ describe("loadXpActivityForEnrollment", () => {
         }
         if (params.tableName === "Enrollments") {
           return {
-            records: [{ id: ENR_WITH_XP, fields: { "XP Events": ["recXpFallback"] } }],
+            records: [
+              {
+                id: ENR_WITH_XP,
+                fields: { "XP Events": ["recXpFallback"], Submissions: [] },
+              },
+            ],
           };
         }
         return { records: [] };
@@ -318,7 +530,12 @@ describe("loadXpActivityForEnrollment", () => {
     listAirtableRecordsMock.mockImplementation(async (params: { tableName: string }) => {
       if (params.tableName === "Enrollments") {
         return {
-          records: [{ id: ENR_WITH_XP, fields: { "XP Events": ["recMissing1", "recMissing2"] } }],
+          records: [
+            {
+              id: ENR_WITH_XP,
+              fields: { "XP Events": ["recMissing1", "recMissing2"], Submissions: [] },
+            },
+          ],
         };
       }
       return { records: [] };
@@ -350,7 +567,12 @@ describe("loadXpActivityForEnrollment", () => {
         }
         if (params.tableName === "Enrollments") {
           return {
-            records: [{ id: ENR_WITH_XP, fields: { "XP Events": ["recXpFieldFallback"] } }],
+            records: [
+              {
+                id: ENR_WITH_XP,
+                fields: { "XP Events": ["recXpFieldFallback"], Submissions: [] },
+              },
+            ],
           };
         }
         return { records: [] };
@@ -363,6 +585,45 @@ describe("loadXpActivityForEnrollment", () => {
     expect(result.warning).toContain("Enrollment Record ID is unavailable");
     expect(result.rows[0].sourceLabel).toBe("Perfect Week");
   });
+
+  it("warns when counted submissions are missing XP Events", async () => {
+    const missingSub = "recMissingCountedSub";
+    listAirtableRecordsMock.mockImplementation(async (params: { tableName: string }) => {
+      if (params.tableName === "XP Events") {
+        return { records: [] };
+      }
+      if (params.tableName === "Enrollments") {
+        return {
+          records: [
+            {
+              id: ENR_WITH_XP,
+              fields: { "XP Events": [], Submissions: [missingSub] },
+            },
+          ],
+        };
+      }
+      if (params.tableName === "Submissions") {
+        return {
+          records: [
+            {
+              id: missingSub,
+              fields: {
+                "Activity Date": "2026-08-22T00:00:00.000Z",
+                "Count This Submission?": true,
+                "XP Events": [],
+              },
+            },
+          ],
+        };
+      }
+      return { records: [] };
+    });
+
+    const result = await loadXpActivityForEnrollment(ENR_WITH_XP);
+
+    expect(result.missingXpSubmissionIds).toEqual([missingSub]);
+    expect(result.warning).toContain("no XP Event");
+  });
 });
 
 describe("fetchLinkedXpEventIds cache", () => {
@@ -373,7 +634,12 @@ describe("fetchLinkedXpEventIds cache", () => {
 
   it("caches enrollment linked XP ids within the TTL", async () => {
     listAirtableRecordsMock.mockResolvedValue({
-      records: [{ id: ENR_WITH_XP, fields: { "XP Events": ["recCache1"] } }],
+      records: [
+        {
+          id: ENR_WITH_XP,
+          fields: { "XP Events": ["recCache1"], Submissions: [] },
+        },
+      ],
     });
 
     const first = await fetchLinkedXpEventIds(ENR_WITH_XP);
