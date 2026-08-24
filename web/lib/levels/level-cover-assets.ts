@@ -48,12 +48,6 @@ export const LEVEL_COVER_FILES_BY_NAME: Record<string, string> = {
 
 const LEVEL_COVER_DIR = "/images/levels";
 
-export type LevelCoverAssetSources = {
-  stem: string;
-  webp: string;
-  png: string;
-};
-
 /**
  * Resolve the permanent repo filename stem for a level cover image.
  */
@@ -91,31 +85,10 @@ export function getLevelCoverAssetPath(levelName: string, sortOrder?: number): s
   return stem ? `${LEVEL_COVER_DIR}/${stem}.png` : null;
 }
 
-/** Root-relative WebP path (without basePath) when the derivative exists in repo. */
-export function getLevelCoverWebpPath(levelName: string, sortOrder?: number): string | null {
-  const stem = resolveLevelCoverFileStem(levelName, sortOrder);
-  return stem ? `${LEVEL_COVER_DIR}/${stem}.webp` : null;
-}
-
-/** Permanent WebP + PNG sources with basePath applied for Next.js static assets. */
-export function getLevelCoverAssetSources(
-  levelName: string,
-  sortOrder?: number,
-): LevelCoverAssetSources | null {
-  const stem = resolveLevelCoverFileStem(levelName, sortOrder);
-  if (!stem) return null;
-  const base = `${LEVEL_COVER_DIR}/${stem}`;
-  return {
-    stem,
-    webp: withBasePath(`${base}.webp`),
-    png: withBasePath(`${base}.png`),
-  };
-}
-
-/** Primary PNG src under `/shoot` (legacy helper). */
+/** Full path for Next.js static assets under `/shoot`. */
 export function getLevelCoverAssetSrc(levelName: string, sortOrder?: number): string | null {
-  const sources = getLevelCoverAssetSources(levelName, sortOrder);
-  return sources?.png ?? null;
+  const path = getLevelCoverAssetPath(levelName, sortOrder);
+  return path ? withBasePath(path) : null;
 }
 
 export function getLevelCoverAltText(displayName: string, levelName: string): string {

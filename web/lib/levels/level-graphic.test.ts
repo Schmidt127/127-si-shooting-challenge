@@ -12,7 +12,7 @@ describe("level graphic helpers", () => {
     expect(getLevelGraphicAltText("")).toBe("Athlete level emblem");
   });
 
-  it("prefers permanent repo assets over expiring Airtable attachment URLs", () => {
+  it("prefers the linked cover URL over ladder lookup", () => {
     const ladder = [
       {
         displayName: "Beginner",
@@ -22,24 +22,26 @@ describe("level graphic helpers", () => {
     ];
     expect(
       resolveLevelCoverImageUrl("https://example.com/linked.webp", "Beginner", ladder),
-    ).toBe("/shoot/images/levels/01_beginner.png");
+    ).toBe("https://example.com/linked.webp");
   });
 
   it("falls back to ladder lookup by display name", () => {
     const ladder = [
       {
         displayName: "Rookie Shooter",
-        name: "Rookie Shooter",
-        sortOrder: 2,
+        name: "Rookie",
         coverImageUrl: "https://example.com/rookie.webp",
       },
     ];
     expect(resolveLevelCoverImageUrl(null, "Rookie Shooter", ladder)).toBe(
-      "/shoot/images/levels/02_rookie_shooter.png",
+      "https://example.com/rookie.webp",
+    );
+    expect(resolveLevelCoverImageUrl("", "Rookie", ladder)).toBe(
+      "https://example.com/rookie.webp",
     );
   });
 
-  it("returns null when no local cover is available", () => {
+  it("returns null when no cover is available", () => {
     expect(resolveLevelCoverImageUrl(null, "Unknown Tier", [])).toBeNull();
     expect(resolveLevelCoverImageUrl(undefined, null, undefined)).toBeNull();
   });

@@ -2,9 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   getLevelCoverAssetPath,
-  getLevelCoverAssetSources,
   getLevelCoverAssetSrc,
-  getLevelCoverWebpPath,
   resolveLevelCoverFileStem,
 } from "@/lib/levels/level-cover-assets";
 
@@ -16,16 +14,6 @@ describe("level cover assets", () => {
     );
     expect(getLevelCoverAssetPath("Pro")).toBe("/images/levels/09_professional.png");
     expect(getLevelCoverAssetPath("G.O.A.T.")).toBe("/images/levels/12_goat.png");
-  });
-
-  it("exposes matching WebP derivatives beside PNG masters", () => {
-    expect(getLevelCoverWebpPath("Beginner")).toBe("/images/levels/01_beginner.webp");
-    const sources = getLevelCoverAssetSources("Beginner");
-    expect(sources).toEqual({
-      stem: "01_beginner",
-      webp: "/shoot/images/levels/01_beginner.webp",
-      png: "/shoot/images/levels/01_beginner.png",
-    });
   });
 
   it("accepts slug-style Level Name values directly", () => {

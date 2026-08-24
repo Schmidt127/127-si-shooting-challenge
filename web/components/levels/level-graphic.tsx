@@ -1,9 +1,8 @@
 "use client";
 
+import { SafeExternalImage } from "@/components/media/safe-external-image";
 import { LevelBadge } from "@/components/leaderboard/level-badge";
-import { LevelCoverImage, type LevelCoverImageSize } from "@/components/levels/level-cover-image";
 import { getLevelStyle } from "@/lib/leaderboard/level-styles";
-import { getLevelCoverAssetSources } from "@/lib/levels/level-cover-assets";
 import {
   getLevelGraphicAltText,
   getLevelGraphicPlaceholderLabel,
@@ -15,7 +14,6 @@ type LevelGraphicSize = "sm" | "md" | "lg";
 type LevelGraphicProps = {
   level: string;
   coverImageUrl?: string | null;
-  sortOrder?: number;
   size?: LevelGraphicSize;
   className?: string;
 };
@@ -26,16 +24,16 @@ const frameSizeClasses: Record<LevelGraphicSize, string> = {
   lg: "h-16 w-16 rounded-2xl",
 };
 
+const imageSizeClasses: Record<LevelGraphicSize, string> = {
+  sm: "max-h-7 max-w-9",
+  md: "max-h-10 max-w-14",
+  lg: "max-h-14 max-w-20",
+};
+
 const placeholderTextClasses: Record<LevelGraphicSize, string> = {
   sm: "text-[10px]",
   md: "text-xs",
   lg: "text-sm",
-};
-
-const graphicSizeMap: Record<LevelGraphicSize, LevelCoverImageSize> = {
-  sm: "graphic-sm",
-  md: "graphic-md",
-  lg: "graphic-lg",
 };
 
 function LevelGraphicPlaceholder({
@@ -71,16 +69,16 @@ function LevelGraphicPlaceholder({
 }
 
 /**
- * Level cover art from permanent repo assets, with a brand-gradient placeholder when missing.
+ * Level cover art from Airtable, with a brand-gradient placeholder when missing or expired.
  */
 export function LevelGraphic({
   level,
   coverImageUrl,
-  sortOrder,
   size = "md",
   className,
 }: LevelGraphicProps) {
   const trimmedLevel = level.trim();
+  const alt = getLevelGraphicAltText(trimmedLevel);
   const placeholder = (
     <LevelGraphicPlaceholder level={trimmedLevel || "Unranked"} size={size} className={className} />
   );
@@ -89,9 +87,7 @@ export function LevelGraphic({
     return placeholder;
   }
 
-  const sources = getLevelCoverAssetSources(trimmedLevel, sortOrder);
-  if (!sources) {
-    void coverImageUrl;
+  if (!coverImageUrl?.trim()) {
     return placeholder;
   }
 
@@ -104,12 +100,11 @@ export function LevelGraphic({
       )}
       data-testid="level-graphic"
     >
-      <LevelCoverImage
-        levelName={trimmedLevel}
-        displayName={trimmedLevel}
-        sortOrder={sortOrder}
-        size={graphicSizeMap[size]}
-        className="h-full w-full"
+      <SafeExternalImage
+        src={coverImageUrl}
+        alt={alt}
+        className={cn("object-contain", imageSizeClasses[size])}
+        fallback={placeholder}
       />
     </div>
   );
@@ -118,7 +113,6 @@ export function LevelGraphic({
 type AthleteLevelDisplayProps = {
   level: string | null;
   coverImageUrl?: string | null;
-  sortOrder?: number;
   badgeSize?: "sm" | "md" | "lg";
   graphicSize?: LevelGraphicSize;
   className?: string;
@@ -130,7 +124,6 @@ type AthleteLevelDisplayProps = {
 export function AthleteLevelDisplay({
   level,
   coverImageUrl,
-  sortOrder,
   badgeSize = "md",
   graphicSize = "md",
   className,
@@ -139,12 +132,7 @@ export function AthleteLevelDisplay({
 
   return (
     <div className={cn("flex items-center gap-2", className)} data-testid="athlete-level-display">
-      <LevelGraphic
-        level={level}
-        coverImageUrl={coverImageUrl}
-        sortOrder={sortOrder}
-        size={graphicSize}
-      />
+      <LevelGraphic level={level} coverImageUrl={coverImageUrl} size={graphicSize} />
       <LevelBadge level={level} size={badgeSize} />
     </div>
   );
