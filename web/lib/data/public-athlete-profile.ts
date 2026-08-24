@@ -10,7 +10,9 @@ import {
   asOptionalPercentRatio,
   asText,
   linkedRecordIds,
+  toAirtableDateKey,
 } from "@/lib/data/airtable-values";
+import { parseWeekNumber } from "@/lib/data/homework";
 import { mapAttachments } from "@/lib/data/homework";
 import type {
   PublicAchievement,
@@ -42,6 +44,7 @@ export type PublicEnrollmentFields = {
   "Current Level XP Required"?: unknown;
   "Next Level XP Required"?: unknown;
   "Next Level"?: unknown;
+  "Current Level"?: unknown;
   "Total Shots Counted"?: unknown;
   "Total Makes Submitted"?: unknown;
   "Overall FG Attempted"?: unknown;
@@ -134,6 +137,7 @@ export type PublicAchievementDefFields = {
 export type PublicLevelFields = {
   "Level Name"?: unknown;
   "Level Name with Color"?: unknown;
+  "Cover Image"?: unknown;
 };
 
 export function normalizeProfileSlug(slug: string): string {
@@ -216,6 +220,7 @@ function collectMissing(fields: PublicEnrollmentFields): string[] {
 function mapProgression(
   fields: PublicEnrollmentFields,
   nextLevelName: string | null,
+  currentLevelCoverImageUrl: string | null,
 ): PublicProgression {
   const totalShots = asOptionalNumber(fields["Total Shots Counted"]) ?? 0;
   const target = asOptionalNumber(fields["Target Goal Shots"]);
@@ -226,6 +231,7 @@ function mapProgression(
 
   return {
     currentLevel: asText(fields["Current Level - Public Facing Display"], "") || null,
+    currentLevelCoverImageUrl,
     nextLevel: nextLevelName,
     lifetimeXp: asOptionalNumber(fields["Lifetime XP Total"]) ?? 0,
     xpIntoLevel: asOptionalNumber(fields["XP Progress in Current Level"]),
@@ -378,27 +384,69 @@ export function mergeRecentActivity(
     .slice(0, limit);
 }
 
-export function mapWeeklySummaries(
-  records: Array<{ fields: PublicWasFields }>,
-  weekNameById: Map<string, string>,
-): PublicWeeklySummary[] {
-  return records.map((record, index) => {
-    const fields = record.fields;
-    const weekIds = linkedRecordIds(fields.Week);
-    const weekFromLink = weekIds[0] ? weekNameById.get(weekIds[0]) : undefined;
-    const weekLabel =
-      asText(fields["Weekly Email Week Label"], "") ||
-      weekFromLink ||
-      `Week ${index + 1}`;
+export type PublicWeekMeta = {
+  name: string;
+  startDate: string | null;
+  endDate: string | null;
+};
 
-    const homeworkRaw = asOptionalNumber(fields["Homework Completed?"]);
-    const homeworkCompleted =
-      homeworkRaw == null ? null : homeworkRaw === 1 || homeworkRaw > 0;
+/** Challenge calendar day in America/Denver (matches XP / automation date keys). */
+export function challengeTodayDateKey(now = new Date()): string {
+  return now.toLocaleDateString("en-CA", { timeZone: "America/Denver" });
+}
 
-    const perfectEligible = asOptionalNumber(fields["Perfect Week Eligible?"]) === 1;
-    const perfectUnlock = linkedRecordIds(fields["Perfect Week Unlock"]).length > 0;
+export function buildPublicWeekMetaIndex(
+  weekRecords: Array<{
+    id: string;
+    fields: { "Week Name"?: unknown; "Start Date"?: unknown; "End Date"?: unknown };
+  }>,
+): Map<string, PublicWeekMeta> {
+  return new Map(
+    weekRecords.map((record) => [
+      record.id,
+      {
+        name: asText(record.fields["Week Name"], "Week"),
+        startDate: asOptionalDateKey(record.fields["Start Date"]),
+        endDate: asOptionalDateKey(record.fields["End Date"]),
+      },
+    ]),
+  );
+}
 
-    return {
+/** True when the week has started (Start Date on or before today). Missing dates stay visible. */
+export function isWeekCurrentOrPast(
+  weekMeta: PublicWeekMeta | undefined,
+  todayKey: string,
+): boolean {
+  const startKey = weekMeta?.startDate ?? null;
+  if (!startKey) return true;
+  return startKey <= todayKey;
+}
+
+function mapSingleWeeklySummary(
+  record: { fields: PublicWasFields },
+  index: number,
+  weekMetaById: Map<string, PublicWeekMeta>,
+): { summary: PublicWeeklySummary; weekMeta: PublicWeekMeta | undefined } {
+  const fields = record.fields;
+  const weekIds = linkedRecordIds(fields.Week);
+  const weekMeta = weekIds[0] ? weekMetaById.get(weekIds[0]) : undefined;
+  const weekFromLink = weekMeta?.name;
+  const weekLabel =
+    asText(fields["Weekly Email Week Label"], "") ||
+    weekFromLink ||
+    `Week ${index + 1}`;
+
+  const homeworkRaw = asOptionalNumber(fields["Homework Completed?"]);
+  const homeworkCompleted =
+    homeworkRaw == null ? null : homeworkRaw === 1 || homeworkRaw > 0;
+
+  const perfectEligible = asOptionalNumber(fields["Perfect Week Eligible?"]) === 1;
+  const perfectUnlock = linkedRecordIds(fields["Perfect Week Unlock"]).length > 0;
+
+  return {
+    weekMeta,
+    summary: {
       key: normalizeProfileSlug(`${weekLabel}-${index}`) || `week-${index}`,
       weekLabel,
       totalShots: asOptionalNumber(fields["Total Shots This Week"]) ?? 0,
@@ -411,8 +459,45 @@ export function mapWeeklySummaries(
       momentumStatus: asText(fields["Momentum Status"], "") || null,
       homeworkCompleted,
       perfectWeek: perfectEligible || perfectUnlock,
-    };
+    },
+  };
+}
+
+function compareWeeklySummariesByRecency(
+  a: { summary: PublicWeeklySummary; weekMeta: PublicWeekMeta | undefined },
+  b: { summary: PublicWeeklySummary; weekMeta: PublicWeekMeta | undefined },
+): number {
+  const aStart = a.weekMeta?.startDate ? toAirtableDateKey(a.weekMeta.startDate) : null;
+  const bStart = b.weekMeta?.startDate ? toAirtableDateKey(b.weekMeta.startDate) : null;
+  if (aStart && bStart && aStart !== bStart) {
+    return bStart.localeCompare(aStart);
+  }
+  if (aStart && !bStart) return -1;
+  if (!aStart && bStart) return 1;
+
+  const aNum = parseWeekNumber(a.summary.weekLabel);
+  const bNum = parseWeekNumber(b.summary.weekLabel);
+  if (aNum !== bNum) return bNum - aNum;
+
+  return a.summary.weekLabel.localeCompare(b.summary.weekLabel, undefined, {
+    sensitivity: "base",
   });
+}
+
+export function mapWeeklySummaries(
+  records: Array<{ fields: PublicWasFields }>,
+  weekMetaById: Map<string, PublicWeekMeta>,
+  options: { todayKey?: string; limit?: number } = {},
+): PublicWeeklySummary[] {
+  const todayKey = options.todayKey ?? challengeTodayDateKey();
+  const limit = options.limit ?? 8;
+
+  return records
+    .map((record, index) => mapSingleWeeklySummary(record, index, weekMetaById))
+    .filter(({ weekMeta }) => isWeekCurrentOrPast(weekMeta, todayKey))
+    .sort(compareWeeklySummariesByRecency)
+    .slice(0, limit)
+    .map(({ summary }) => summary);
 }
 
 export type BuildPublicProfileInput = {
@@ -420,6 +505,7 @@ export type BuildPublicProfileInput = {
   fields: PublicEnrollmentFields;
   rank: number | null;
   nextLevelName: string | null;
+  currentLevelCoverImageUrl?: string | null;
   recentActivity: PublicActivityItem[];
   activityLedgerTotal?: number;
   activityLedgerNotice?: string | null;
@@ -433,7 +519,8 @@ export function buildPublicAthleteProfile(input: BuildPublicProfileInput): Publi
   const seasonLabel = schoolYear && schoolYear !== "—" ? `${schoolYear} Season` : "Current Season";
   const headshot = mapAttachments(fields["Athlete Headshot"])[0];
   const shooting = mapShooting(fields);
-  const progression = mapProgression(fields, input.nextLevelName);
+  const currentLevelCoverImageUrl = input.currentLevelCoverImageUrl?.trim() || null;
+  const progression = mapProgression(fields, input.nextLevelName, currentLevelCoverImageUrl);
   const lastSubmissionDate =
     input.recentActivity.find(
       (item) =>
@@ -454,6 +541,7 @@ export function buildPublicAthleteProfile(input: BuildPublicProfileInput): Publi
       seasonLabel,
       programLabel: asText(fields["Program Instance Name Only"], "") || null,
       level: asText(fields["Current Level - Public Facing Display"], "") || null,
+      levelCoverImageUrl: currentLevelCoverImageUrl,
       rank: input.rank,
       headshotUrl: headshot?.url ?? null,
       progressionStatus: asText(fields["Public Progression Status"], "") || null,
@@ -462,6 +550,7 @@ export function buildPublicAthleteProfile(input: BuildPublicProfileInput): Publi
       totalShots: asOptionalNumber(fields["Total Shots Counted"]) ?? 0,
       lifetimeXp: asOptionalNumber(fields["Lifetime XP Total"]) ?? 0,
       currentLevel: asText(fields["Current Level - Public Facing Display"], "") || null,
+      currentLevelCoverImageUrl,
       xpNeededForNextLevel: asOptionalNumber(fields["XP Needed for Next Level"]),
       currentStreak,
       longestStreak,

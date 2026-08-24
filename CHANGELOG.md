@@ -112,6 +112,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **Public athlete weekly activity (2026-08-24)** — Profile weekly summaries fetch Weeks
+  `Start Date` / `End Date`, hide future weeks, and sort current/past weeks newest-first (up to 8).
+  Tests: `web/lib/data/public-athlete-profile-weekly.test.ts`.
 - **Autonomous QA continuation (2026-08-23)** — **072 v4.3** WAS-linked XP validation
   (fixes false disagreement on WAS `reczxTIpVI8ZJLex0`). Authorized
   `SUBMISSION_XP` repair for four Schmidt test submissions via
