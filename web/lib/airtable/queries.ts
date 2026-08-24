@@ -1013,7 +1013,8 @@ export async function fetchPublicAthleteProfileBySlug(
     levelLadder?.levels.map((level) => ({
       displayName: level.displayName,
       name: level.name,
-      coverImageUrl: level.coverImage?.url ?? null,
+      sortOrder: level.sortOrder,
+      coverImageUrl: null,
     })) ?? [];
   const currentLevelCoverImageUrl = resolveLevelCoverImageUrl(
     linkedCurrentCoverUrl,

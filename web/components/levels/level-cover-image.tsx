@@ -2,11 +2,11 @@ import Image from "next/image";
 
 import {
   getLevelCoverAltText,
-  getLevelCoverAssetSrc,
+  getLevelCoverAssetSources,
 } from "@/lib/levels/level-cover-assets";
 import { cn } from "@/lib/utils";
 
-type LevelCoverImageSize = "card" | "hero";
+export type LevelCoverImageSize = "card" | "hero" | "graphic-sm" | "graphic-md" | "graphic-lg";
 
 type LevelCoverImageProps = {
   levelName: string;
@@ -22,6 +22,24 @@ const SIZE_CONFIG: Record<
   LevelCoverImageSize,
   { width: number; height: number; sizes: string; className: string }
 > = {
+  "graphic-sm": {
+    width: 36,
+    height: 36,
+    sizes: "36px",
+    className: "max-h-7 max-w-9",
+  },
+  "graphic-md": {
+    width: 56,
+    height: 44,
+    sizes: "56px",
+    className: "max-h-10 max-w-14",
+  },
+  "graphic-lg": {
+    width: 80,
+    height: 64,
+    sizes: "80px",
+    className: "max-h-14 max-w-20",
+  },
   card: {
     width: 144,
     height: 112,
@@ -38,6 +56,7 @@ const SIZE_CONFIG: Record<
 
 /**
  * Permanent level cover art from repo assets (`public/images/levels/`).
+ * Serves WebP when available with PNG fallback; PNG masters remain in repo.
  */
 export function LevelCoverImage({
   levelName,
@@ -48,22 +67,25 @@ export function LevelCoverImage({
   imageClassName = "",
   priority = false,
 }: LevelCoverImageProps) {
-  const src = getLevelCoverAssetSrc(levelName, sortOrder);
-  if (!src) return null;
+  const sources = getLevelCoverAssetSources(levelName, sortOrder);
+  if (!sources) return null;
 
   const config = SIZE_CONFIG[size];
   const alt = getLevelCoverAltText(displayName, levelName);
 
   return (
-    <Image
-      src={src}
-      alt={alt}
-      width={config.width}
-      height={config.height}
-      sizes={config.sizes}
-      priority={priority}
-      unoptimized
-      className={cn("object-contain", config.className, imageClassName)}
-    />
+    <picture className={cn("block leading-none", className)}>
+      <source srcSet={sources.webp} type="image/webp" />
+      <Image
+        src={sources.png}
+        alt={alt}
+        width={config.width}
+        height={config.height}
+        sizes={config.sizes}
+        priority={priority}
+        unoptimized
+        className={cn("object-contain", config.className, imageClassName)}
+      />
+    </picture>
   );
 }
