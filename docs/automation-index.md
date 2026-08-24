@@ -54,7 +54,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 012 | ~~Legacy HC create~~ | **DELETED** — do not restore | — |
 | 063 | ~~Homework Review — Copy Enrollment Grade Band~~ | **DELETED / RETIRED in PROD** — do not restore; repo runtime stop | `063-…js` *(historical only)* |
 | 064 | Homework Review — Prepare Homework XP Award | **Production-verified current live** — prepares XP from rule `HOMEWORK_COMPLETION`; **does not create XP Event** (repo header v12.2) | `064-homework-review-and-xp-prepare-homework-xp-award.js` |
-| **065** | Homework Review — Create/Reconcile Homework XP Event | `Homework XP Reconciliation Needed? = 1` — **Production v10.3** (paste pending); Source Key `HOMEWORK_XP\|{HC ID}`; input `recordId` = **triggering HC** | `065-homework-review-and-xp-create-homework-xp-event.js` |
+| **065** | Homework Review — Create/Reconcile Homework XP Event | `Homework XP Reconciliation Needed? = 1` — **Production v10.3 live-tested** (2026-08-24); Source Key `HOMEWORK_XP\|{HC ID}`; input `recordId` = **triggering HC** (dynamic) | `065-homework-review-and-xp-create-homework-xp-event.js` |
 | **067** | Homework — Link or Create Completion from Reflection Quiz | Final Reflection Quiz Submissions when ready — **repo v3.4** | `067-homework-link-or-create-completion-from-reflection-quiz.js` |
 | **068** | Homework — Reconcile Deferred Weekly Summary Links | **RETIRED / keep OFF**; 033 owns deferred WAS reconciliation | `068-homework-reconcile-deferred-weekly-summary-links.js` |
 | **070a** | Send Homework Asset Payload to Make | Send to Make Trigger checked **and** homework ready — **Live v4.7** (Perfect Week test window 2026-08-21; historically intentional OFF) | `070a-…js` (**v4.7** `fetch`) |
@@ -85,7 +85,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 ## Achievements and streaks (053–059, 066)
 
 > **PKG-038 status:** **COMPLETE** (Production proof passed 2026-08-16). 053 v5.5,
-> 054 v5.8, 066 v3.8, and 059 v3.6 are installed and ON. Charlie Schmidt Early
+> 054 v5.8, **066 v3.9** (dynamic trigger live-tested 2026-08-24), and 059 v3.6 are installed and ON. Charlie Schmidt Early
 > Bird path proven; audit v2.1 issueTotal = 0. **Do not retest** unless source,
 > trigger, or schema changes. Resume after first regular Week closes (~May 8, 2027).
 
@@ -98,7 +98,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **057** | Achievements — Calculate Perfect Week Eligibility | WAS Perfect Week recalc | `057-achievements-and-milestones-calculate-perfect-week-eligibility.js` (**v1.7** — inactive enrollment and unsettled/multiple/wrong-scope goals fail closed; requires lookup parity with the linked active goal) |
 | 058 | Achievements — Create Perfect Week Unlock | Lifecycle-capable WAS trigger; dynamic `recordId` | `058-achievements-and-milestones-create-perfect-week-unlock.js` (**v1.3** — exact source-key lifecycle owner; inactive or unsettled/wrong-scope goal state withdraws the same unlock rather than creating a replacement) |
 | **059** | Achievements — Create/Reconcile XP Event from Achievement Unlock | Athlete Achievement Unlock lifecycle; **Do NOT filter on Ready for 059 XP**; prefer When a record is **created** or updated | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.6** — corrected-history milestone lifecycle; Perfect Week preserved; **ON in PROD**) |
-| 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.9** in GitHub — dynamic `recordId` from trigger; paste pending) |
+| 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.9** — dynamic `recordId` from trigger; **live-tested 2026-08-24**) |
 
 ## Email handoffs (070b/070c upload are not parent email)
 
