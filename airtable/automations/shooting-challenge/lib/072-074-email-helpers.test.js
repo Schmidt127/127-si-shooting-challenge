@@ -29,8 +29,8 @@ function test(name, fn) {
   console.log(`PASS  ${name}`);
 }
 
-test("072 v4.6 owns escaped HTML and plain-text package rendering", () => {
-  assert.ok(/Version:\s*v4\.6/.test(s072));
+test("072 v4.7 owns escaped HTML and plain-text package rendering", () => {
+  assert.ok(/Version:\s*v4\.7/.test(s072));
   assert.ok(/Shooting Days Logged/.test(s072));
   assert.ok(/Perfect Week Qualifying Days/.test(s072));
   assert.ok(/function escapeHtml\(value\)/.test(s072));
@@ -46,7 +46,8 @@ test("072 remains Denver-safe and fails closed on reporting disagreement", () =>
   assert.ok(/timeZone:\s*"America\/Denver"/.test(s072));
   assert.ok(/Intl\.DateTimeFormat/.test(s072));
   assert.ok(/toDateKey/.test(s072));
-  assert.ok(/canonicalDaysLogged/.test(s072));
+  assert.ok(/canonicalShootingDaysLogged/.test(s072));
+  assert.ok(/goalCompletionDisplay/.test(s072));
   assert.ok(/Weekly shots disagreement/.test(s072));
   assert.ok(/Weekly makes disagreement/.test(s072));
   assert.ok(/Weekly XP disagreement/.test(s072));
@@ -63,8 +64,8 @@ test("072 never performs external delivery", () => {
   assert.ok(!/makeWebhookUrl/.test(s072));
 });
 
-test("074 v3.2 creates one canonical Hub handoff", () => {
-  assert.ok(/Version:\s*v3\.2/.test(s074));
+test("074 v3.3 creates one canonical Hub handoff", () => {
+  assert.ok(/Version:\s*v3\.3/.test(s074));
   assert.ok(/Email Handoff Queue/.test(s074));
   assert.ok(/CONFIG\.values\.eventType\}\|\$\{CONFIG\.values\.sourceTableToken\}\|\$\{recordId\}/.test(s074));
   assert.ok(/existing_handoff/.test(s074));
@@ -79,7 +80,7 @@ test("074 delegates delivery and delivery proof", () => {
   assert.ok(/canonicalDaysLogged/.test(s074));
   assert.ok(/videoSubmissions/.test(s074));
   assert.ok(/perfectWeekCriteria/.test(s074));
-  assert.ok(/goalCompletionPercent/.test(s074));
+  assert.ok(/goalCompletionDisplay/.test(s074));
   assert.ok(/Do not write Weekly Email Sent\?/.test(s074));
   assert.ok(/sendToMake\]\s*=\s*false/.test(s074));
 });

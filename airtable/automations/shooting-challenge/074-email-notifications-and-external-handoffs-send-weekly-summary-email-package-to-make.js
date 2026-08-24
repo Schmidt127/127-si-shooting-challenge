@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-17
-Last GitHub Update: 2026-08-23 (v3.2 canonical 072 payload enrichment)
+Last GitHub Update: 2026-08-24 (v3.3 072 v4.7 payload forwarding)
 
 Purpose:
 Validate one Weekly Athlete Summary ready for parent email and create exactly
@@ -31,11 +31,13 @@ Filename may still say Make; current path is Hub queue create only.
  * 074 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Create Weekly Athlete Summary Communications Hub Handoff
  *
- * Version: v3.2
+ * Version: v3.3
  * Date Written: 2026-05-29
- * Last Updated: 2026-08-23
+ * Last Updated: 2026-08-24
  *
  * VERSION HISTORY
+ * - v3.3 (2026-08-24): Forward 072 v4.7 shootingDaysDisplay, goalCompletionDisplay,
+ *   and secure-url video submissions; prefer canonical shooting days over PW fields.
  * - v3.2 (2026-08-23): Prefer canonical days/shots/makes/goal % from 072 payload JSON;
  *   enrich Hub payload with shooting %, video submissions, and Zoom attendance status.
  * - v3.1 (2026-08-20): V2 Automation Standard structure — GitHub header,
@@ -109,10 +111,10 @@ Filename may still say Make; current path is Hub queue create only.
 
 const SCRIPT = {
   scriptName: "074 - Email, Notifications, and External Handoffs - Create Weekly Athlete Summary Communications Hub Handoff",
-  version: "v3.2",
-  versionDate: "2026-08-23",
+  version: "v3.3",
+  versionDate: "2026-08-24",
   originalWrittenDate: "2026-05-29",
-  lastUpdated: "2026-08-23",
+  lastUpdated: "2026-08-24",
   folder: "07 - Email, Notifications, and External Handoffs",
   automationName: "074 - Email, Notifications, and External Handoffs - Create Weekly Athlete Summary Communications Hub Handoff",
 };
@@ -274,11 +276,32 @@ function goalCompletionPercentFromRatio(ratio) {
   return Math.round(raw * 100);
 }
 
-function goalCompletionPercentFromShotsAndGoal(shots, goal, ratioFromWas) {
+function goalCompletionRatioFromShotsAndGoal(shots, goal, ratioFromWas) {
   const weeklyShots = Number(shots || 0);
   const weeklyGoal = Number(goal || 0);
-  if (weeklyGoal > 0) return Math.round((weeklyShots / weeklyGoal) * 100);
-  return goalCompletionPercentFromRatio(ratioFromWas);
+  if (weeklyGoal > 0) return weeklyShots / weeklyGoal;
+  const raw = Number(ratioFromWas);
+  if (!Number.isFinite(raw)) return null;
+  return raw;
+}
+
+function goalCompletionPercentFromShotsAndGoal(shots, goal, ratioFromWas) {
+  const ratio = goalCompletionRatioFromShotsAndGoal(shots, goal, ratioFromWas);
+  return ratio == null ? null : goalCompletionPercentFromRatio(ratio);
+}
+
+function formatGoalCompletionDisplayForEmail(ratio) {
+  const raw = Number(ratio);
+  if (!Number.isFinite(raw)) return "—";
+  if (raw + 1e-9 >= 1.5) return "150%+";
+  if (raw + 1e-9 >= 1.25) return "125%";
+  if (raw + 1e-9 >= 1.0) return "100%";
+  return `${Math.round(raw * 100)}%`;
+}
+
+function nullableFiniteNumber(value) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
 }
 
 function cleanEmail(value) {
@@ -424,7 +447,6 @@ async function main() {
   );
   const shootingDaysLogged = firstFiniteNumber(
     prepared?.canonicalShootingDaysLogged,
-    prepared?.perfectWeekCriteria?.shootingDaysLogged,
     prepared?.shootingDaysLogged,
     rollupDaysLogged
   );
@@ -439,11 +461,21 @@ async function main() {
   );
   const shots = firstFiniteNumber(prepared?.canonicalShots, prepared?.shots, rollupShots);
   const makes = firstFiniteNumber(prepared?.canonicalMakes, prepared?.makes);
-  const goalCompletionPercent = firstFiniteNumber(
-    prepared?.canonicalGoalCompletionPercent,
-    prepared?.goalCompletionPercent,
-    goalCompletionPercentFromShotsAndGoal(shots, weeklyGoal, prepared?.goalCompletionRatio)
+  const goalCompletionRatio =
+    nullableFiniteNumber(prepared?.goalCompletionRatio) ??
+    goalCompletionRatioFromShotsAndGoal(shots, weeklyGoal, prepared?.goalCompletionRatio);
+  const goalCompletionDisplay = firstNonEmpty(
+    prepared?.goalCompletionDisplay,
+    formatGoalCompletionDisplayForEmail(goalCompletionRatio)
   );
+  const goalCompletionPercent =
+    goalCompletionRatio != null
+      ? goalCompletionPercentFromRatio(goalCompletionRatio)
+      : firstFiniteNumber(
+          prepared?.canonicalGoalCompletionPercent,
+          prepared?.goalCompletionPercent,
+          goalCompletionPercentFromShotsAndGoal(shots, weeklyGoal, prepared?.goalCompletionRatio)
+        );
   const shootingPercentage = firstFiniteNumber(
     prepared?.shootingPercentage,
     makes > 0 && shots > 0 ? Math.round((makes / shots) * 100) : 0
@@ -488,7 +520,12 @@ async function main() {
   const videoFeedbackStatus =
     videoSubmissions.length > 0
       ? videoSubmissions
-          .map((row) => `${row.label || "Video"}: ${row.status || "Pending"}`)
+          .map((row) => {
+            const label = row.label || row.originalFileName || "Video";
+            const date = row.reviewedAt ? ` (${row.reviewedAt})` : "";
+            const url = row.secureUrl ? ` — ${row.secureUrl}` : "";
+            return `${label}${date}${url}`;
+          })
           .join("; ")
       : "No video submissions recorded for this week.";
 
@@ -510,7 +547,9 @@ async function main() {
     makes,
     weeklyGoal,
     goal: weeklyGoal,
+    goalCompletionRatio,
     goalCompletionPercent,
+    goalCompletionDisplay,
     shootingPercentage,
     weeklyXp,
     currentLevel,

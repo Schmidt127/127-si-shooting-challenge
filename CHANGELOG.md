@@ -21,6 +21,12 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   Regenerate: `python3 tools/airtable/extract_production_qa_paste_bundles.py`.
 
 #### Changed
+- **072 v4.7 / 074 v3.3 weekly email fixes (2026-08-24)** — Fix general shooting days
+  writeback (`shootingDayKeys.size` bug caused `undefined` and email fallback to PW days);
+  parent-friendly goal display capped at **150%+** (Weekly Threshold tier alignment);
+  weekly video list with date, name, and secure `Video URL or Drive Link`; Submission
+  fallback when VF Week lookup is blank. Deploy:
+  `docs/deploy-checklists/072-v4.7-weekly-email-fixes-2026-08-24.md`.
 - **057 v2.0 Perfect Week grace-period automation (2026-08-23)** — Automation 057
   evaluates configurable submission grace hours (default 48 after end of Activity Date in
   America/Denver), prefers `Perfect Week Grace Eligible?` when present, and writes grace

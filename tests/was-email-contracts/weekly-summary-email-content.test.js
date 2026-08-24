@@ -10,9 +10,13 @@ const {
   sumWeeklyShots,
   sumWeeklyMakes,
   goalCompletionPercentFromRatio,
+  goalCompletionRatioFromShotsAndGoal,
   goalCompletionPercentFromShotsAndGoal,
+  formatGoalCompletionDisplayForEmail,
   formatShootingPercentage,
   buildVideoSubmissionLines,
+  buildWeeklyVideoSubmissionPayload,
+  isSafeHttpUrl,
   buildZoomAttendanceSummary,
   filterCountableSubmissionsInWeek,
   buildVideoSubmissionPayload,
@@ -45,7 +49,9 @@ test("goal completion below, above, and decimal weekly goals", () => {
   assert.equal(goalCompletionPercentFromShotsAndGoal(1500, 1000, null), 150);
   assert.equal(goalCompletionPercentFromShotsAndGoal(667, 1333, null), 50);
   assert.equal(goalCompletionPercentFromRatio(0.837), 84);
-  assert.equal(goalCompletionPercentFromRatio(36.0495), 3605);
+  assert.equal(formatGoalCompletionDisplayForEmail(0.837), "84%");
+  assert.equal(formatGoalCompletionDisplayForEmail(1.5), "150%+");
+  assert.equal(formatGoalCompletionDisplayForEmail(36.0495), "150%+");
 });
 
 test("weekly shots exclude out-of-week and non-countable submissions (not cumulative enrollment)", () => {
@@ -72,16 +78,22 @@ test("shooting percentage uses weekly makes and shots", () => {
 
 test("video submission lines and payload objects", () => {
   const entries = [
-    { id: "recVF1", label: "Aug 18 shooting clip", status: "Feedback posted", reviewedAt: "Aug 20, 2026", posted: true },
-    { id: "recVF2", label: "Aug 19 form clip", status: "Pending review", posted: false },
+    {
+      label: "Aug 18 shooting clip",
+      reviewedAt: "Aug 20, 2026",
+      secureUrl: "https://example.lambda-url.us-east-2.on.aws/file/recX?token=abc",
+    },
+    { label: "Aug 19 form clip", reviewedAt: "Aug 21, 2026" },
   ];
   const lines = buildVideoSubmissionLines(entries);
   assert.match(lines[0], /Aug 18 shooting clip/);
-  assert.match(lines[1], /Pending review/);
-  const payload = buildVideoSubmissionPayload(entries);
+  assert.match(lines[0], /token=abc/);
+  assert.match(lines[1], /Aug 19 form clip/);
+  const payload = buildWeeklyVideoSubmissionPayload(entries);
   assert.equal(payload.length, 2);
-  assert.equal(payload[0].id, "recVF1");
-  assert.equal(payload[0].posted, true);
+  assert.equal(payload[0].secureUrl.includes("token=abc"), true);
+  assert.equal(payload[1].secureUrl, "");
+  assert.equal(isSafeHttpUrl("ftp://bad"), false);
 });
 
 test("zoom attendance summary and Hub status", () => {
