@@ -76,8 +76,8 @@ The old pre-v4.7 email and queue conflict are **historical test artifacts**, not
 
 | Item | Status | Notes |
 |------|--------|-------|
-| **065** hardcoded `recordId` in Production automation input | `optional/future` | Disposable homework XP required canonical settlement |
-| **066** hardcoded `recordId` in Production automation input | `optional/future` | Disposable shot-milestone unlocks required canonical settlement |
+| **065** hardcoded `recordId` in Production automation input | `resolved in repo v10.3` | Paste v10.3 + map input to triggering HC Record ID |
+| **066** hardcoded `recordId` in Production automation input | `resolved in repo v3.9` | Paste v3.9 + map input to triggering Enrollment Record ID |
 | Disposable fixture deletion | `needs manual cleanup` | Mike decision — not required for pipeline operation |
 | **010 v10.12** / **057 v1.9** paste lag | `optional/future` | Unrelated to weekly-email E2E success |
 

@@ -27,6 +27,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   Regenerate: `python3 tools/airtable/extract_production_qa_paste_bundles.py`.
 
 #### Changed
+- **065 v10.3 / 066 v3.9 dynamic triggering recordId (2026-08-24)** — Scripts require
+  `recordId` from `input.config()` only (no hardcoded record literals in executable
+  logic). Explicit missing/invalid input errors. Deploy:
+  `docs/deploy-checklists/065-066-v10.3-v3.9-dynamic-trigger-record.md`. Paste:
+  `065-v10.3-PASTE.txt`, `066-v3.9-PASTE.txt`.
 - **072 v4.7 / 074 v3.3 weekly email fixes (2026-08-24)** — Fix general shooting days
   writeback (`shootingDayKeys.size` bug caused `undefined` and email fallback to PW days);
   parent-friendly goal display capped at **150%+** (Weekly Threshold tier alignment);

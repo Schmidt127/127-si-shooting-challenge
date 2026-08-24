@@ -125,22 +125,22 @@ test("static contracts are canonical and retired writers stay retired", () => {
   );
   assert.doesNotMatch(a, /Parent Feedback Ready/);
   assert.ok(
-    a.indexOf("if (xp) assertOwned") <
+    a.indexOf("if (xpEvent) assertOwned") <
       a.indexOf("const linkedEligibility = await validatePha"),
   );
-  for (const field of [
-    "C.x.key",
-    "C.x.hc",
-    "C.x.enr",
-    "C.x.week",
-    "C.x.sub",
-    "C.x.points",
-    "C.x.active",
-    "C.x.was",
-    "C.x.source",
-    "C.x.bucket",
-  ])
-    assert.match(a, new RegExp(field.replaceAll(".", "\\.")));
+  assert.match(a, /readTriggerRecordId/);
+  assert.match(a, /input\.config\(\)/);
+  assert.match(a, /ownershipContext/);
+  assert.match(a, /CONFIG\.xpEvents\.sourceKey/);
+  assert.match(a, /CONFIG\.xpEvents\.homeworkCompletion/);
+  assert.match(a, /CONFIG\.xpEvents\.enrollment/);
+  assert.match(a, /CONFIG\.xpEvents\.week/);
+  assert.match(a, /CONFIG\.xpEvents\.submission/);
+  assert.match(a, /CONFIG\.xpEvents\.points/);
+  assert.match(a, /CONFIG\.xpEvents\.active/);
+  assert.match(a, /CONFIG\.xpEvents\.weeklySummary/);
+  assert.match(a, /CONFIG\.xpEvents\.source/);
+  assert.match(a, /CONFIG\.xpEvents\.bucket/);
   assert.ok(a.indexOf("settleAndAcknowledge") < a.indexOf("async function validatePha"));
 });
 test("authoritative audit is read-only and checks full ownership", () => {

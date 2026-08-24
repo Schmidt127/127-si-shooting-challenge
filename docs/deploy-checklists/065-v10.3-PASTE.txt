@@ -1,33 +1,3 @@
-/*
-Automation: 065 - Homework Review and XP - Create or Reconcile Homework XP Event
-System: 127 SI Shooting Challenge
-Source: Airtable Automation
-Status: GitHub Source of Truth
-Last Synced From Airtable: 2026-08-14
-Last GitHub Update: 2026-08-24 (v10.3 dynamic triggering recordId)
-
-Purpose:
-Create, replay, repair, deactivate, or reactivate the exact canonical
-HOMEWORK_XP|<Homework Completion ID> XP Event for one Homework Completion.
-
-Trigger:
-Homework Completions when Homework XP Reconciliation Needed? = 1;
-pass the dynamic recordId.
-
-Important Tables:
-Homework Completions, XP Events, Weekly Athlete Summary,
-Program Homework Assignments, Enrollments
-
-Important Fields:
-Homework XP Current Signature, Last Homework XP Reconciled Signature,
-Homework XP Reconciliation Needed?, Satisfactory?, Review Complete,
-Coach Feedback, Total Homework XP Awarded, Source Key, Active?
-
-Notes:
-GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
-v10.1 installed in Production per Mike evidence; v10.2 is structure-only.
-*/
-
 /************************************************************
  * 065 - HOMEWORK REVIEW AND XP
  * Create or Reconcile Homework XP Event

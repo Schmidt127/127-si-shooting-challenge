@@ -44,6 +44,26 @@ SPECS: list[tuple[Path, Path, str, str]] = [
         "v4.3",
         "/************************************************************\n * 072 - EMAIL",
     ),
+    (
+        ROOT
+        / "airtable"
+        / "automations"
+        / "shooting-challenge"
+        / "065-homework-review-and-xp-create-homework-xp-event.js",
+        OUT_DIR / "065-v10.3-PASTE.txt",
+        "v10.3",
+        "/************************************************************\n * 065 - HOMEWORK REVIEW AND XP",
+    ),
+    (
+        ROOT
+        / "airtable"
+        / "automations"
+        / "shooting-challenge"
+        / "066-achievements-and-milestones-create-shot-milestone-unlocks.js",
+        OUT_DIR / "066-v3.9-PASTE.txt",
+        "v3.9",
+        "/************************************************************\n * 066 - ACHIEVEMENTS AND MILESTONES",
+    ),
 ]
 
 

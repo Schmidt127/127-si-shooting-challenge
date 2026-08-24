@@ -463,12 +463,12 @@ const automationIndex = exists("docs/automation-index.md") ? read("docs/automati
 const knownIssues = exists("docs/known-issues.md") ? read("docs/known-issues.md") : "";
 const inventoryText = inventory;
 
-// 066: current GitHub + Mike overlay is v3.8 (2026-08-19); do not claim paste-not-done.
+// 066: current GitHub + Mike overlay is v3.9 (2026-08-24); do not claim paste-not-done.
 if (byNumber.has("066")) {
   const text066 = fs.readFileSync(byNumber.get("066")[0], "utf8");
   const ver066 = extractDeclaredVersion(text066) || "";
-  if (/v?3\.8/i.test(ver066)) pass("066 script declares v3.8");
-  else fail(`066 script expected v3.8, found: ${ver066 || "(none)"}`);
+  if (/v?3\.9/i.test(ver066)) pass("066 script declares v3.9");
+  else fail(`066 script expected v3.9, found: ${ver066 || "(none)"}`);
 
   if (/Airtable paste not done/i.test(projectState) && /H-002.*066/i.test(projectState)) {
     fail("PROJECT_STATE still claims H-002/066 Airtable paste not done (contradicts backlog + automation-index)");
@@ -477,12 +477,12 @@ if (byNumber.has("066")) {
   }
 
   if (
-    /Automation 066 v3\.[1-7]\b/i.test(projectState) &&
-    !/066.*v3\.8/i.test(projectState)
+    /Automation 066 v3\.[1-8]\b/i.test(projectState) &&
+    !/066.*v3\.9/i.test(projectState)
   ) {
-    fail("PROJECT_STATE references Automation 066 older 3.x without acknowledging v3.8 current");
+    fail("PROJECT_STATE references Automation 066 older 3.x without acknowledging v3.9 current");
   } else {
-    pass("PROJECT_STATE 066 version wording acknowledges v3.8 (or avoids stale older-only claim)");
+    pass("PROJECT_STATE 066 version wording acknowledges v3.9 (or avoids stale older-only claim)");
   }
 }
 

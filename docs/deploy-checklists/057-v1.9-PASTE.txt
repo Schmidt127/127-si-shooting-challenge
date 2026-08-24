@@ -1,11 +1,21 @@
 /***************************************************************************************************
  * 057 - Achievements and Milestones - Calculate Perfect Week Eligibility
- * Version: 1.9
+ * Version: 2.0
  * Date written: 2026-05-30
- * Last updated: 2026-08-21
+ * Last updated: 2026-08-23
  *
  * Purpose:
  * Calculates Perfect Week helper fields on one Weekly Athlete Summary record.
+ *
+ * Version 2.0 updates (backdated-submission grace period):
+ * - Perfect Week daily shooting accepts uploads within a configurable grace window
+ *   (default 48 hours after end of Activity Date in America/Denver).
+ * - Grace hours load from Achievements (PERFECT_WEEK) when Submission Grace Period Hours
+ *   exists; otherwise default 48.
+ * - Prefers formula field Perfect Week Grace Eligible? when present; otherwise evaluates
+ *   grace inline from Activity Date + Submitted At (never Created).
+ * - Preserves auditable timing: on-time, grace-period, late, manual exception.
+ * - Submitted Same Day? remains unchanged for audit; no longer the sole PW gate.
  *
  * Version 1.5 updates (2026-08-05):
  * - Airtable runtime compatibility: guard optional QueryResult.unloadData() cleanup
@@ -52,8 +62,10 @@
  *   Perfect Week now requires 100% of assigned homework for the week to be satisfactorily completed.
  *
  * Perfect Week requirements calculated by this script:
- * 1. Athlete must have one qualifying same-day shooting submission day for each official day
- *    of the linked Week, Sunday through Saturday.
+ * 1. Athlete must have one qualifying shooting submission day for each official day
+ *    of the linked Week, Sunday through Saturday. Qualifying submissions must be
+ *    Count This Submission? = true, Activity Date inside the official week, not
+ *    future-dated, and uploaded within the configured grace period (or manual exception).
  * 2. Each official day must meet at least 1/7 of the weekly shot goal.
  * 3. Athlete must have at least 3 qualifying Video Feedback records for the week.
  * 4. Athlete must attend Zoom if a Zoom meeting exists for the linked Week
@@ -72,6 +84,7 @@
 
 const CONFIG = {
   timezone: "America/Denver",
+  defaultGracePeriodHours: 48,
 
   tables: {
     weekly: "Weekly Athlete Summary",
@@ -83,6 +96,7 @@ const CONFIG = {
     weeks: "Weeks",
     enrollments: "Enrollments",
     targetGoalShots: "Target Goal Shots",
+    achievements: "Achievements",
   },
 
   weeklyFields: {
@@ -132,9 +146,22 @@ const CONFIG = {
 
   submissionFields: {
     activityDate: "Activity Date",
+    submittedAt: "Submitted At",
     totalShotsCounted: "Total Shots Counted",
+    countThisSubmission: "Count This Submission?",
     perfectWeekCountable: "Perfect Week Countable Submission?",
+    perfectWeekGraceEligible: "Perfect Week Grace Eligible?",
+    perfectWeekManualException: "Perfect Week Manual Exception?",
+    perfectWeekTimingStatus: "Perfect Week Submission Timing Status",
   },
+
+  achievementFields: {
+    active: "Active?",
+    rewardRuleKey: "Reward Rule Key",
+    gracePeriodHours: "Submission Grace Period Hours",
+  },
+
+  perfectWeekRuleKey: "PERFECT_WEEK",
 
   homeworkCompletionFields: {
     homework: "Homework",
@@ -328,6 +355,102 @@ function buildRequiredWeekDates(startDateKey) {
   return dates;
 }
 
+function denverDayStartMs(dateKey) {
+  const [year, month, day] = String(dateKey).split("-").map(Number);
+  if (!year || !month || !day) return NaN;
+  const utcNoon = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: CONFIG.timezone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).formatToParts(utcNoon);
+  const byType = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  const denverHour = Number(byType.hour);
+  const denverMinute = Number(byType.minute);
+  const denverSecond = Number(byType.second);
+  const offsetFromUtcNoonMs =
+    (denverHour - 12) * 3600000 + denverMinute * 60000 + denverSecond * 1000;
+  return utcNoon.getTime() - offsetFromUtcNoonMs;
+}
+
+function endOfDenverActivityDayMs(dateKey) {
+  const [year, month, day] = String(dateKey).split("-").map(Number);
+  const nextDay = new Date(Date.UTC(year, month - 1, day + 1, 12, 0, 0));
+  const nextKey = `${nextDay.getUTCFullYear()}-${String(nextDay.getUTCMonth() + 1).padStart(2, "0")}-${String(nextDay.getUTCDate()).padStart(2, "0")}`;
+  return denverDayStartMs(nextKey);
+}
+
+function resolveGracePeriodHours(value) {
+  if (value === null || value === undefined || value === "") {
+    return CONFIG.defaultGracePeriodHours;
+  }
+  const hours = Number(value);
+  if (Number.isFinite(hours) && hours >= 0) return hours;
+  return CONFIG.defaultGracePeriodHours;
+}
+
+function graceDeadlineMs(activityDateKey, gracePeriodHours) {
+  return endOfDenverActivityDayMs(activityDateKey) + resolveGracePeriodHours(gracePeriodHours) * 3600000;
+}
+
+function classifySubmissionTiming(sub, gracePeriodHours) {
+  const activityDateKey = getDateKeyFromDateOnly(
+    sub.getCellValue(CONFIG.submissionFields.activityDate)
+  );
+  const submittedRaw = sub.getCellValue(CONFIG.submissionFields.submittedAt);
+  const submittedMs = submittedRaw ? new Date(submittedRaw).getTime() : NaN;
+  const manualException = isTruthyFlag(sub, CONFIG.submissionFields.perfectWeekManualException);
+
+  if (manualException) {
+    return { activityDateKey, timingStatus: "manual_exception", graceEligible: Boolean(activityDateKey) };
+  }
+  if (!activityDateKey) {
+    return { activityDateKey: "", timingStatus: "ineligible", graceEligible: false };
+  }
+  if (!Number.isFinite(submittedMs)) {
+    return { activityDateKey, timingStatus: "ineligible", graceEligible: false };
+  }
+
+  const submittedDateKey = getDateKeyFromDateOnly(submittedRaw);
+  if (submittedDateKey === activityDateKey) {
+    return { activityDateKey, timingStatus: "on_time", graceEligible: true };
+  }
+
+  const deadline = graceDeadlineMs(activityDateKey, gracePeriodHours);
+  if (submittedMs <= deadline) {
+    return { activityDateKey, timingStatus: "grace_period", graceEligible: true };
+  }
+  return { activityDateKey, timingStatus: "late", graceEligible: false };
+}
+
+function isPerfectWeekQualifyingSubmission(sub, gracePeriodHours) {
+  if (!isTruthyNumber(sub, CONFIG.submissionFields.countThisSubmission)) return false;
+  if (isTruthyFlag(sub, CONFIG.submissionFields.perfectWeekManualException)) return true;
+
+  if (
+    fieldExists(submissionsTable, CONFIG.submissionFields.perfectWeekGraceEligible) &&
+    isTruthyNumber(sub, CONFIG.submissionFields.perfectWeekGraceEligible)
+  ) {
+    return true;
+  }
+
+  if (
+    fieldExists(submissionsTable, CONFIG.submissionFields.perfectWeekCountable) &&
+    isTruthyNumber(sub, CONFIG.submissionFields.perfectWeekCountable)
+  ) {
+    return true;
+  }
+
+  const timing = classifySubmissionTiming(sub, gracePeriodHours);
+  if (!timing.graceEligible) return false;
+  return getNumber(sub, CONFIG.submissionFields.totalShotsCounted) > 0;
+}
+
 function isTruthyNumber(record, fieldName) {
   const value = record.getCellValue(fieldName);
   return value === 1 || value === true || value === "1";
@@ -365,6 +488,12 @@ const zoomAttendanceTable = base.getTable(CONFIG.tables.zoomAttendance);
 const weeksTable = base.getTable(CONFIG.tables.weeks);
 const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
 const targetGoalShotsTable = base.getTable(CONFIG.tables.targetGoalShots);
+let achievementsTable = null;
+try {
+  achievementsTable = base.getTable(CONFIG.tables.achievements);
+} catch (e) {
+  achievementsTable = null;
+}
 
 const weeklyRecord = await weeklyTable.selectRecordAsync(recordId);
 
@@ -559,7 +688,7 @@ try {
     console.log(
       JSON.stringify({
         automation: "057",
-        version: "1.9",
+        version: "2.0",
         recordId,
         action: "skipped_unsettled_goal",
         configuredGoal,
@@ -584,7 +713,7 @@ try {
     console.log(
       JSON.stringify({
         automation: "057",
-        version: "1.9",
+        version: "2.0",
         recordId,
         action: "skipped_unsettled_weekly_goal",
         configuredGoal,
@@ -598,6 +727,44 @@ try {
   const roundedWeeklyGoal = Math.ceil(weeklyGoal);
   const dailyMinimum = Math.ceil(weeklyGoal / CONFIG.requiredDailyCount);
 
+  let gracePeriodHours = CONFIG.defaultGracePeriodHours;
+  if (achievementsTable) {
+    const achievementFields = [
+      CONFIG.achievementFields.active,
+      CONFIG.achievementFields.rewardRuleKey,
+      CONFIG.achievementFields.gracePeriodHours,
+    ].filter((name) => fieldExists(achievementsTable, name));
+    if (achievementFields.length > 0) {
+      const achievementQuery = await achievementsTable.selectRecordsAsync({
+        fields: achievementFields,
+      });
+      try {
+        const perfectWeekAchievement = achievementQuery.records.find((row) => {
+          if (
+            fieldExists(achievementsTable, CONFIG.achievementFields.active) &&
+            !isTruthyFlag(row, CONFIG.achievementFields.active)
+          ) {
+            return false;
+          }
+          const ruleKey = getText(row, CONFIG.achievementFields.rewardRuleKey);
+          return ruleKey === CONFIG.perfectWeekRuleKey;
+        });
+        if (
+          perfectWeekAchievement &&
+          fieldExists(achievementsTable, CONFIG.achievementFields.gracePeriodHours)
+        ) {
+          const configuredGrace = getOptionalNumber(
+            perfectWeekAchievement,
+            CONFIG.achievementFields.gracePeriodHours
+          );
+          if (configuredGrace !== null) gracePeriodHours = resolveGracePeriodHours(configuredGrace);
+        }
+      } finally {
+        unloadQuerySafe(achievementQuery);
+      }
+    }
+  }
+
   /*************************************************************************************************
    * 4A. Daily Shooting Requirement
    *************************************************************************************************/
@@ -607,12 +774,11 @@ try {
   let submissionRecords = [];
 
   if (linkedSubmissionIds.length > 0) {
+    const submissionFieldNames = Object.values(CONFIG.submissionFields).filter((name) =>
+      fieldExists(submissionsTable, name)
+    );
     const submissionsQuery = await submissionsTable.selectRecordsAsync({
-      fields: [
-        CONFIG.submissionFields.activityDate,
-        CONFIG.submissionFields.totalShotsCounted,
-        CONFIG.submissionFields.perfectWeekCountable,
-      ],
+      fields: submissionFieldNames,
     });
 
     submissionRecords = linkedSubmissionIds
@@ -623,16 +789,26 @@ try {
   const dayMap = new Map();
   let ignoredCount = 0;
   let outsideOfficialWeekCount = 0;
+  const timingCounts = {
+    on_time: 0,
+    grace_period: 0,
+    late: 0,
+    manual_exception: 0,
+    ineligible: 0,
+  };
 
   for (const sub of submissionRecords) {
-    const isCountable = isTruthyNumber(sub, CONFIG.submissionFields.perfectWeekCountable);
+    const timing = classifySubmissionTiming(sub, gracePeriodHours);
+    if (timing.timingStatus in timingCounts) timingCounts[timing.timingStatus] += 1;
+
+    const isCountable = isPerfectWeekQualifyingSubmission(sub, gracePeriodHours);
 
     if (!isCountable) {
       ignoredCount += 1;
       continue;
     }
 
-    const dateKey = getDateKeyFromDateOnly(
+    const dateKey = timing.activityDateKey || getDateKeyFromDateOnly(
       sub.getCellValue(CONFIG.submissionFields.activityDate)
     );
 
@@ -681,9 +857,13 @@ try {
   dailyDetailLines.push(`Official week: ${requiredDateKeys[0]} through ${requiredDateKeys[6]}`);
   dailyDetailLines.push(`Weekly goal: ${roundedWeeklyGoal}`);
   dailyDetailLines.push(`Daily minimum: ${dailyMinimum}`);
+  dailyDetailLines.push(`Submission grace period (hours): ${gracePeriodHours}`);
   dailyDetailLines.push(`Passing official days: ${passingDays.length}/7`);
-  dailyDetailLines.push(`Ignored non-countable submissions: ${ignoredCount}`);
-  dailyDetailLines.push(`Ignored countable submissions outside official week: ${outsideOfficialWeekCount}`);
+  dailyDetailLines.push(
+    `Timing breakdown: on-time=${timingCounts.on_time}; grace-period=${timingCounts.grace_period}; late=${timingCounts.late}; manual=${timingCounts.manual_exception}`
+  );
+  dailyDetailLines.push(`Ignored non-qualifying submissions: ${ignoredCount}`);
+  dailyDetailLines.push(`Ignored qualifying submissions outside official week: ${outsideOfficialWeekCount}`);
 
   if (passingDays.length > 0) {
     dailyDetailLines.push(`Passing days: ${passingDays.join("; ")}`);
@@ -698,7 +878,7 @@ try {
   }
 
   if (dailyMet) {
-    dailyDetailLines.push("PASS: All seven official Sunday-Saturday dates met the same-day daily shooting requirement.");
+    dailyDetailLines.push("PASS: All seven official Sunday-Saturday dates met the grace-period daily shooting requirement.");
   }
 
   /*************************************************************************************************
@@ -937,7 +1117,7 @@ try {
   console.log(
     JSON.stringify({
       automation: "057",
-      version: "1.9",
+      version: "2.0",
       recordId,
       action: "ready",
       configuredGoal,
