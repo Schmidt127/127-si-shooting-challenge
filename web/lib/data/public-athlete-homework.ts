@@ -59,10 +59,11 @@ type WeekMeta = {
   weekNumber: number;
 };
 
-type LibraryMeta = {
-  displayName: string;
-  order: number;
-  assignmentNumber: number;
+type SortableHomeworkRow = PublicHomeworkAssignment & {
+  sortWeekStart: string | null;
+  sortSlot: number;
+  sortOrder: number;
+  sortAssignmentNumber: number;
 };
 
 export function resolveAssignmentDisplayName(fields: PublicHomeworkLibraryFields): string {
@@ -165,20 +166,7 @@ export function resolveHomeworkCreditEligibility(input: {
   return { creditEligible: null, pastDue, lateSubmission: false };
 }
 
-function comparePublicHomeworkAssignments(
-  a: PublicHomeworkAssignment & {
-    sortWeekStart: string | null;
-    sortSlot: number;
-    sortOrder: number;
-    sortAssignmentNumber: number;
-  },
-  b: PublicHomeworkAssignment & {
-    sortWeekStart: string | null;
-    sortSlot: number;
-    sortOrder: number;
-    sortAssignmentNumber: number;
-  },
-): number {
+function comparePublicHomeworkAssignments(a: SortableHomeworkRow, b: SortableHomeworkRow): number {
   const aStart = a.sortWeekStart ?? "";
   const bStart = b.sortWeekStart ?? "";
   if (aStart !== bStart) return aStart.localeCompare(bStart);
@@ -203,14 +191,7 @@ export function buildPublicHomeworkAssignments(input: {
   enrollmentGradeBandId: string | null;
   todayKey?: string;
 }): PublicHomeworkAssignment[] {
-  const rows: Array<
-    PublicHomeworkAssignment & {
-      sortWeekStart: string | null;
-      sortSlot: number;
-      sortOrder: number;
-      sortAssignmentNumber: number;
-    }
-  > = [];
+  const rows: SortableHomeworkRow[] = [];
 
   for (const [index, pha] of input.phaRecords.entries()) {
     if (pha.fields["Active?"] !== true) continue;
@@ -272,9 +253,16 @@ export function buildPublicHomeworkAssignments(input: {
     });
   }
 
-  return rows
-    .sort(comparePublicHomeworkAssignments)
-    .map(({ sortWeekStart: _a, sortSlot: _b, sortOrder: _c, sortAssignmentNumber: _d, ...row }) => row);
+  return rows.sort(comparePublicHomeworkAssignments).map((row) => {
+    const {
+      sortWeekStart: _sortWeekStart,
+      sortSlot: _sortSlot,
+      sortOrder: _sortOrder,
+      sortAssignmentNumber: _sortAssignmentNumber,
+      ...publicRow
+    } = row;
+    return publicRow;
+  });
 }
 
 export function buildWeekMetaIndex(
