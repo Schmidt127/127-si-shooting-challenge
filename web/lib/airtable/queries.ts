@@ -983,31 +983,11 @@ export async function fetchPublicAthleteProfileBySlug(
 
   const weekMetaById = buildPublicWeekMetaIndex(weekRecords.records);
 
-  const linkedLevelsById = new Map(
-    linkedLevelsResponse.records.map((record) => [record.id, record.fields] as const),
-  );
-
-  const nextLevelFields = nextLevelId ? linkedLevelsById.get(nextLevelId) : undefined;
+  const nextLevelFields = nextLevelResponse.records[0]?.fields;
   const nextLevelName =
     asText(nextLevelFields?.["Level Name with Color"], "") ||
     asText(nextLevelFields?.["Level Name"], "") ||
     null;
-
-  const currentLevelFields = currentLevelId ? linkedLevelsById.get(currentLevelId) : undefined;
-  const linkedCurrentCoverUrl = mapAttachments(currentLevelFields?.["Cover Image"])[0]?.url ?? null;
-  const currentLevelDisplay =
-    asText(fields["Current Level - Public Facing Display"], "") || null;
-  const ladderCandidates =
-    levelLadder?.levels.map((level) => ({
-      displayName: level.displayName,
-      name: level.name,
-      coverImageUrl: level.coverImage?.url ?? null,
-    })) ?? [];
-  const currentLevelCoverImageUrl = resolveLevelCoverImageUrl(
-    linkedCurrentCoverUrl,
-    currentLevelDisplay,
-    ladderCandidates,
-  );
 
   const displayName = asText(fields["Full Athlete Name"], "");
   const rank =
@@ -1036,7 +1016,6 @@ export async function fetchPublicAthleteProfileBySlug(
     fields,
     rank,
     nextLevelName: nextLevelName === "—" ? null : nextLevelName,
-    currentLevelCoverImageUrl,
     recentActivity,
     activityLedgerTotal: xpActivity.totalAvailableRows,
     activityLedgerNotice:
