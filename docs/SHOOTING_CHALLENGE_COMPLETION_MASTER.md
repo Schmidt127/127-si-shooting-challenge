@@ -49,7 +49,8 @@ Reconciled against [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md), [`PROJECT_STATE.md`
 | **Daily submission intake** | `live-tested` | 005/009/010/031 chain partially proven on Schmidt paths |
 | **Submission XP** | `live-tested` | **Submission Base** bucket; Source Key `SUBMISSION_XP\|{id}`; GitHub **010 v10.12** |
 | **Homework pipeline** | `live-tested` | 009→020→070a assets; 020 **v3.7**; broader multi-path proof `needs live proof` |
-| **Video pipeline** | `live-tested` | 070b **v4.7** + Lambda + 070c; 022 **v2.1** writeback; full PKG-007 scope open |
+| **Video pipeline** | `repository-ready` | 070b **v4.7** + Lambda + 070c; GitHub **022 v2.2** (Lambda-only parent URL — paste pending); Production still **022 v2.1** |
+| **Secure parent video URLs** | `repository-ready` | **022 v2.2 / 072 v4.8 / 073 v4.4** — block direct S3 in emails; S3 stays private; repair tool for missing reviewer tokens. Deploy: [`022-v2.2-secure-video-url-pipeline.md`](./deploy-checklists/022-v2.2-secure-video-url-pipeline.md) |
 | **Zoom pipeline** | `live-tested` | **101 v6.7** live attendance XP; recording credit `Mike decision` |
 | **Streaks** | `needs live proof` | 053/054 contracts in repo; full natural-trigger proof open |
 | **Shot milestones** | `live-tested` | **066 v3.9** live with dynamic `recordId`; replay verified idempotent |
@@ -58,7 +59,7 @@ Reconciled against [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md), [`PROJECT_STATE.md`
 | **Weekly Athlete Summary** | `live-tested` | WAS create/link path proven; disposable fixture E2E 2026-08-24; scheduler positive arm `needs live proof` |
 | **Weekly email payload generation** | `live-tested` | **072 v4.7** — verified 7/7, 4/7 PW, 48,066 shots, 1,280 XP, 40 events, 150%+, 8 videos, Attended, Homework Complete |
 | **Weekly email end-to-end delivery** | `live-tested` | **072 v4.7 → 074 v3.3 → 079 v2.5 → Hub → Resend**; Test Mode; no duplicate send |
-| **Video-feedback parent email delivery** | `live-tested` | **073 v4.3** Live; PKG-007 proof 2026-08-23; weekly email verified 8 secure video URLs in package |
+| **Video-feedback parent email delivery** | `live-tested` | **073 v4.3** Live; PKG-007 proof 2026-08-23; **073 v4.4** paste pending for Lambda-only URL gate |
 | **Duplicate / conflict protection** | `live-tested` | No duplicate weekly email; queue proof `recoikFrli3m0xDRa` preserved unchanged — historical evidence only |
 | **Weekly email** | `live-tested` | **072 v4.7 → 074 v3.3 → 079 v2.5 → Hub → Resend** E2E disposable send 2026-08-24. Old pre-v4.7 email on `reczxTIpVI8ZJLex0` is **historical test evidence** — not a current defect. Queue `recoikFrli3m0xDRa` **must remain unchanged** |
 | **Levels and gates** | `live-tested` | 041 **v5.1** / 042 progression partially proven; broader gate-clear `needs live proof` |

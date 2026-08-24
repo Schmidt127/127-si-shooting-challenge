@@ -81,7 +81,7 @@ test("video submission lines and payload objects", () => {
     {
       label: "Aug 18 shooting clip",
       reviewedAt: "Aug 20, 2026",
-      secureUrl: "https://example.lambda-url.us-east-2.on.aws/file/recX?token=abc",
+      secureUrl: "https://example.lambda-url.us-east-2.on.aws/file/recaXBfjeeu3bcm0t?token=abc",
     },
     { label: "Aug 19 form clip", reviewedAt: "Aug 21, 2026" },
   ];

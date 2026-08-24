@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Automation 022 v2.0 — Video Feedback writeback contract (offline).
+ * Automation 022 v2.2 — Video Feedback writeback contract (offline).
  * Run: node airtable/automations/shooting-challenge/lib/022-child-upload-writeback.test.js
  */
 "use strict";
@@ -10,9 +10,10 @@ const fs = require("fs");
 const path = require("path");
 const { spawnSync } = require("child_process");
 const {
-  resolvePreferredVideoUrl,
+  resolveParentFacingVideoUrl,
   planVideoFeedbackWriteback,
   isIdempotentReplay,
+  classifySecureVideoUrl,
 } = require("./022-child-upload-writeback");
 
 const SCRIPT_PATH = path.join(
@@ -21,6 +22,10 @@ const SCRIPT_PATH = path.join(
   "022-submission-intake-sync-child-upload-writeback-from-submission-asset.js"
 );
 const source = fs.readFileSync(SCRIPT_PATH, "utf8");
+
+const LAMBDA_BASE = "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws";
+const VALID_LAMBDA = `${LAMBDA_BASE}/file/recaXBfjeeu3bcm0t?token=abc123def456ghi789jkl012mno345pq`;
+const S3_URL = "https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/private.mp4";
 
 let passed = 0;
 function test(name, fn) {
@@ -36,92 +41,61 @@ test("syntax check", () => {
   assert.strictEqual(result.status, 0, result.stderr || result.stdout);
 });
 
-test("version is v2.1", () => {
-  assert.match(source, /Version:\s*v2\.1/);
-  assert.match(source, /version:\s*"v2\.1"/);
-  assert.match(source, /Last Updated:\s*2026-08-17/);
+test("version is v2.2", () => {
+  assert.match(source, /Version:\s*v2\.2/);
+  assert.match(source, /version:\s*"v2\.2"/);
+  assert.match(source, /Last Updated:\s*2026-08-24/);
 });
 
-test("Reviewer File URL is preferred over Canonical", () => {
-  assert.match(source, /reviewerFileUrl:\s*"Reviewer File URL"/);
-  assert.match(source, /canonicalFileUrl:\s*"Canonical File URL"/);
-  assert.match(source, /function resolvePreferredVideoUrl/);
-  assert.strictEqual(
-    resolvePreferredVideoUrl({
-      reviewerFileUrl: "https://reviewer.example/file",
-      canonicalFileUrl: "https://canonical.example/file",
-    }),
-    "https://reviewer.example/file"
-  );
-});
-
-test("Canonical File URL is the fallback", () => {
-  assert.strictEqual(
-    resolvePreferredVideoUrl({
-      reviewerFileUrl: "",
-      canonicalFileUrl: "https://canonical.example/file",
-    }),
-    "https://canonical.example/file"
-  );
-  assert.strictEqual(resolvePreferredVideoUrl({}), "");
-});
-
-test("existing Upload Status is updated", () => {
+test("Reviewer File URL present writes Lambda URL", () => {
   const planned = planVideoFeedbackWriteback({
     assetUploadStatus: "Uploaded",
-    childUploadStatus: "Pending Link",
-    assetReviewerFileUrl: "https://reviewer.example/a",
-  });
-  assert.strictEqual(planned.uploadStatus, "Uploaded");
-  assert.match(source, /CONFIG\.video\.uploadStatus/);
-  assert.doesNotMatch(source, /Upload Status 2|Duplicate Upload Status/);
-});
-
-test("Video URL or Drive Link is written from preferred URL", () => {
-  const planned = planVideoFeedbackWriteback({
-    assetUploadStatus: "Uploaded",
-    assetReviewerFileUrl: "https://reviewer.example/a",
+    assetReviewerFileUrl: VALID_LAMBDA,
     childVideoUrlOrDriveLink: "",
   });
-  assert.strictEqual(planned.videoUrlOrDriveLink, "https://reviewer.example/a");
-  assert.match(source, /videoUrlOrDriveLink:\s*"Video URL or Drive Link"/);
+  assert.strictEqual(planned.videoUrlOrDriveLink, VALID_LAMBDA);
+  assert.match(source, /function resolveParentFacingVideoUrl/);
+  assert.match(source, /function classifySecureVideoUrl/);
 });
 
-test("Video Asset File Name is written", () => {
+test("Reviewer File URL missing does not write Canonical S3 URL", () => {
   const planned = planVideoFeedbackWriteback({
     assetUploadStatus: "Uploaded",
-    assetOriginalFileName: "clip.mp4",
-    childVideoAssetFileName: "",
+    assetCanonicalFileUrl: S3_URL,
+    childVideoUrlOrDriveLink: "",
   });
-  assert.strictEqual(planned.videoAssetFileName, "clip.mp4");
-  assert.match(source, /videoAssetFileName:\s*"Video Asset File Name"/);
+  assert.strictEqual(planned.videoUrlOrDriveLink, undefined);
+  assert.match(planned.uploadError, /Missing Reviewer File URL/);
+  assert.doesNotMatch(source, /fall back to Canonical File URL/);
 });
 
-test("Video Asset Uploaded At is written", () => {
-  const when = "2026-08-16T18:00:00.000Z";
-  const planned = planVideoFeedbackWriteback({
+test("Canonical URL present but Reviewer URL missing leaves parent field blank", () => {
+  const plan = resolveParentFacingVideoUrl({
+    reviewerFileUrl: "",
+    canonicalFileUrl: S3_URL,
+    currentChildUrl: S3_URL,
     assetUploadStatus: "Uploaded",
-    assetUploadedAt: when,
-    childVideoAssetUploadedAt: null,
   });
-  assert.strictEqual(planned.videoAssetUploadedAt, when);
-  assert.match(source, /videoAssetUploadedAt:\s*"Video Asset Uploaded At"/);
+  assert.strictEqual(plan.url, "");
+  assert.strictEqual(plan.shouldWriteUrl, true);
 });
 
-test("Writeback Complete? is confirmed when Uploaded", () => {
-  const planned = planVideoFeedbackWriteback({
+test("existing valid Lambda URL remains unchanged when reviewer blank", () => {
+  const plan = resolveParentFacingVideoUrl({
+    reviewerFileUrl: "",
+    canonicalFileUrl: S3_URL,
+    currentChildUrl: VALID_LAMBDA,
     assetUploadStatus: "Uploaded",
-    childWritebackComplete: false,
   });
-  assert.strictEqual(planned.writebackComplete, true);
-  assert.match(source, /writebackComplete:\s*"Writeback Complete\?"/);
+  assert.strictEqual(plan.url, null);
+  assert.strictEqual(plan.shouldWriteUrl, false);
 });
 
-test("re-run does not plan duplicate writeback when already synced", () => {
+test("replay is idempotent when already synced", () => {
   const when = "2026-08-16T18:00:00.000Z";
   const first = planVideoFeedbackWriteback({
     assetUploadStatus: "Uploaded",
-    assetReviewerFileUrl: "https://reviewer.example/a",
+    assetReviewerFileUrl: VALID_LAMBDA,
     assetOriginalFileName: "clip.mp4",
     assetUploadedAt: when,
     childUploadStatus: "Pending",
@@ -131,16 +105,21 @@ test("re-run does not plan duplicate writeback when already synced", () => {
 
   const second = planVideoFeedbackWriteback({
     assetUploadStatus: "Uploaded",
-    assetReviewerFileUrl: "https://reviewer.example/a",
+    assetReviewerFileUrl: VALID_LAMBDA,
     assetOriginalFileName: "clip.mp4",
     assetUploadedAt: when,
     childUploadStatus: "Uploaded",
-    childVideoUrlOrDriveLink: "https://reviewer.example/a",
+    childVideoUrlOrDriveLink: VALID_LAMBDA,
     childVideoAssetFileName: "clip.mp4",
     childVideoAssetUploadedAt: when,
+    childUploadError: "",
     childWritebackComplete: true,
   });
   assert.strictEqual(isIdempotentReplay(second), true);
+});
+
+test("direct S3 URL in reviewer field is rejected", () => {
+  assert.strictEqual(classifySecureVideoUrl(S3_URL).classification, "direct_s3_rejected");
 });
 
 test("automation never creates Video Feedback or Homework Completions", () => {
@@ -148,4 +127,4 @@ test("automation never creates Video Feedback or Homework Completions", () => {
   assert.match(source, /Does not create Homework Completions or Video Feedback/);
 });
 
-console.log(`PASS ${passed} Automation 022 v2.1 writeback contracts`);
+console.log(`PASS ${passed} Automation 022 v2.2 writeback contracts`);

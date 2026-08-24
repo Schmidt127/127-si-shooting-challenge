@@ -224,9 +224,9 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Homework completion (**020**) | Production **v3.7**. **012** / **063** deleted — do not restore |
 | Homework upload Make (**070a**) | Production **v4.7 Live** during Perfect Week controlled window (historically intentional OFF). Formula Ready alone does not send; **Send to Make Trigger** required |
 | Video upload (**070b** + Lambda + **070c**) | Production **070b v4.7** → Make → Lambda → **070c current live (repo v1.1)** verify. Optional retry proof + secret rotation **PENDING** |
-| Child upload writeback (**022**) | Production **v2.1** |
+| Child upload writeback (**022**) | GitHub **v2.2** (paste pending) — Lambda viewer URL only; no Canonical S3 fallback |
 | Homework parent email | **078** Ready → **071** → **079** → Hub → Resend |
-| Video parent email | Video `Parent Feedback Ready?` **manual** → **073 v4.3** → Hub → Resend — **`live-tested`** (PKG-007 2026-08-23; operator table Live v4.3) |
+| Video parent email | Video `Parent Feedback Ready?` **manual** → **073 v4.4** (GitHub) / **v4.3** (prod until paste) → Hub → Resend — parent URL must be Lambda viewer only |
 | Zoom live attendance | **101 v6.7** |
 | Zoom recording approval email | **117 v2.1 Live** → Hub → Resend |
 | Fillout daily submission | **OFF** (contest intake closed) |
@@ -270,7 +270,11 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - Lambda season CodeOnly deploy (optional follow-ups open)
 - Repository integrity + PII redaction pass (this audit)
 - **2026-08-23 post-XP-deletion autonomous QA:** Four temporary repair XP Events deleted by Mike; disposable live-create **PASS** (010 → SUBMISSION_XP, idempotent); Perfect Week **PASS** (39 active); Xavier/Testing3/Curtis **FINDING** (4 missing repair rows not recreated); stale-field check **PASS** (no phantom links); **010/057/072 paste BLOCKED** pending Mike
-- **2026-08-24 weekly-summary E2E:** **072 v4.7 → 074 v3.3 → 079 v2.5 → Hub → Resend** live-tested on disposable WAS `recdj8MD0szplMW5r`. Content verified: 7/7, 4/7 PW, 48,066 shots, 1,280 XP, 40 events, 150%+, 8 videos. No duplicate send. Report: [`testing/autonomous-qa/WAS_EMAIL_QA_20260824_FINAL_REPORT.md`](./testing/autonomous-qa/WAS_EMAIL_QA_20260824_FINAL_REPORT.md)
+- **Secure video URL pipeline (2026-08-24):** GitHub **022 v2.2**, **072 v4.8**, **073 v4.4** —
+  parent-facing video links must be Lambda viewer URLs only; direct S3 AccessDenied is expected;
+  missing `Reviewer File URL` requires token repair (not public S3). Deploy checklist:
+  [`deploy-checklists/022-v2.2-secure-video-url-pipeline.md`](./deploy-checklists/022-v2.2-secure-video-url-pipeline.md).
+  **Production Airtable not updated until Mike pastes 022.**
 - **2026-08-24 master closeout:** **065 v10.3** / **066 v3.9** Production dynamic `recordId` verified; historical audit artifacts documented ([`deploy-checklists/2026-08-24-historical-audit-artifacts.md`](./deploy-checklists/2026-08-24-historical-audit-artifacts.md))
 
 ### Pending / needs live proof
