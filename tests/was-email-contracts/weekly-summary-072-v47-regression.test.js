@@ -37,8 +37,8 @@ test("072 source fixes days.size bug — uses shootingDayKeys.size", () => {
   assert.doesNotMatch(s072, /const shootingDaysLogged = days\.size/);
 });
 
-test("072 v4.7 writes canonical shooting day payload fields", () => {
-  assert.match(s072, /Version:\s*v4\.7/);
+test("072 v4.8 writes canonical shooting day payload fields", () => {
+  assert.match(s072, /Version:\s*v4\.8/);
   assert.match(s072, /canonicalShootingDaysLogged: shootingDaysLogged/);
   assert.match(s072, /goalCompletionDisplay/);
   assert.match(s072, /secureUrl/);
@@ -88,7 +88,7 @@ test("eight weekly videos with date, name, and secure URL", () => {
   const entries = Array.from({ length: 8 }, (_, index) => ({
     label: `Testing clip ${index + 1}`,
     reviewedAt: `Aug ${19 + (index % 4)}, 2026`,
-    secureUrl: `https://example.lambda-url.us-east-2.on.aws/file/recTest${index}?token=safe${index}`,
+    secureUrl: `https://example.lambda-url.us-east-2.on.aws/file/recaXBfjeeu3bcm0t?token=safe${index}`,
   }));
   const payload = buildWeeklyVideoSubmissionPayload(entries);
   assert.equal(payload.length, 8);
@@ -101,17 +101,29 @@ test("eight weekly videos with date, name, and secure URL", () => {
 });
 
 test("unsafe or missing video URLs are omitted safely", () => {
-  assert.equal(isSafeHttpUrl("javascript:alert(1)"), false);
-  assert.equal(isSafeHttpUrl(""), false);
+  const { isSafeParentVideoUrl } = require("../../lib/was-email-contracts/weekly-summary-email-content");
+  assert.equal(isSafeParentVideoUrl("javascript:alert(1)"), false);
+  assert.equal(isSafeParentVideoUrl(""), false);
   const payload = buildWeeklyVideoSubmissionPayload([
     { label: "Clip A", reviewedAt: "Aug 19, 2026", secureUrl: "not-a-url" },
-    { label: "Clip B", reviewedAt: "Aug 20, 2026", secureUrl: "https://safe.example/file" },
+    {
+      label: "Clip B",
+      reviewedAt: "Aug 20, 2026",
+      secureUrl: "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/recaXBfjeeu3bcm0t?token=abc",
+    },
+    {
+      label: "Clip C",
+      reviewedAt: "Aug 21, 2026",
+      secureUrl: "https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/private.mp4",
+    },
   ]);
   assert.equal(payload[0].secureUrl, "");
-  assert.equal(payload[1].secureUrl, "https://safe.example/file");
+  assert.match(payload[1].secureUrl, /token=abc/);
+  assert.equal(payload[2].secureUrl, "");
   const lines = buildVideoSubmissionLines(payload);
   assert.doesNotMatch(lines[0], /not-a-url/);
-  assert.match(lines[1], /https:\/\/safe\.example\/file/);
+  assert.match(lines[1], /token=abc/);
+  assert.doesNotMatch(lines[2], /amazonaws\.com/);
 });
 
 console.log("weekly-summary-072-v47-regression tests passed");

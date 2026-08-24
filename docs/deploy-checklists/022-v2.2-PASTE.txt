@@ -1,31 +1,4 @@
-/*
-Automation: 022 - Submission Intake - Sync Child Upload Writeback from Submission Asset
-System: 127 SI Shooting Challenge
-Source: Airtable Automation
-Status: GitHub Source of Truth
-Last Synced From Airtable: 2026-08-16
-Last GitHub Update: 2026-08-24
-
-Purpose:
-Syncs Homework Completion or Video Feedback upload writeback fields from a Submission Asset after Make/Lambda updates the asset.
-
-Trigger:
-Submission Assets when Upload Status is Uploaded, Processing, or Error and a child record is linked.
-
-Important Tables:
-Submission Assets, Homework Completions, Video Feedback
-
-Important Fields:
-Upload Status, Reviewer File URL, Canonical File URL, Original File Name, Upload Error,
-Uploaded At, Writeback Complete?, Video URL or Drive Link, Video Asset File Name,
-Video Asset Uploaded At
-
-Notes:
-GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
-Production live proof 2026-08-16: v2.0 video writeback PASS (Perfect Week path).
-*/
-
-/************************************************************
+﻿/************************************************************
  * 022 - SUBMISSION INTAKE
  * Sync Child Upload Writeback from Submission Asset
  *
@@ -46,7 +19,7 @@ Production live proof 2026-08-16: v2.0 video writeback PASS (Perfect Week path).
  * - Skips when asset is still Pending Link (nothing to write back yet).
  * - Video Feedback uses the existing single-select Upload Status field (do not create a duplicate).
  * - Video URL or Drive Link uses Reviewer File URL only (Lambda viewer). Never Canonical/S3.
- * - Missing Reviewer File URL → parent URL blank + repair note on Upload Error; no unsafe fallback.
+ * - Missing Reviewer File URL â†’ parent URL blank + repair note on Upload Error; no unsafe fallback.
  * - Do not mirror obsolete Google Drive fields onto Homework Completions or Video Feedback.
  *
  * FOLDER
@@ -85,8 +58,8 @@ Production live proof 2026-08-16: v2.0 video writeback PASS (Perfect Week path).
  * - Video Feedback (write when Upload Destination = Video Feedback)
  *
  * OUTPUT / WRITEBACK FIELDS
- * - Homework Completions → Upload Status, Upload Error, Uploaded At, Writeback Complete?
- * - Video Feedback → existing Upload Status, Video URL or Drive Link (Reviewer/Lambda only),
+ * - Homework Completions â†’ Upload Status, Upload Error, Uploaded At, Writeback Complete?
+ * - Video Feedback â†’ existing Upload Status, Video URL or Drive Link (Reviewer/Lambda only),
  *   Video Asset File Name, Video Asset Uploaded At, Upload Error (includes repair notes),
  *   Writeback Complete?
  *
@@ -99,7 +72,7 @@ Production live proof 2026-08-16: v2.0 video writeback PASS (Perfect Week path).
 // @ts-nocheck
 
 /* =========================================================
-   SECTION 1 — CONFIGURATION
+   SECTION 1 â€” CONFIGURATION
 ========================================================= */
 
 const CONFIG = {
@@ -161,7 +134,7 @@ let videoTable = null;
 const fieldCache = new Map();
 
 /* =========================================================
-   SECTION 2 — HELPERS
+   SECTION 2 â€” HELPERS
 ========================================================= */
 
 function setOutputSafe(name, value) {
@@ -420,7 +393,7 @@ function classifySecureVideoUrl(url) {
   return { classification: "invalid_host", safeUrl: "" };
 }
 
-/** Reviewer/Lambda URL only — never Canonical File URL. Preserves existing valid Lambda URL. */
+/** Reviewer/Lambda URL only â€” never Canonical File URL. Preserves existing valid Lambda URL. */
 function resolveParentFacingVideoUrl(asset, currentChildUrl, assetUploadStatus) {
   const reviewer = classifySecureVideoUrl(getText(asset, assetsTable, CONFIG.assets.reviewerFileUrl));
   if (reviewer.classification === "valid_lambda_viewer") {
@@ -448,12 +421,12 @@ function resolveParentFacingVideoUrl(asset, currentChildUrl, assetUploadStatus) 
   let repairNote = "";
   if (uploaded && reviewer.classification === "missing_reviewer_url") {
     repairNote =
-      "022: Missing Reviewer File URL — parent video link withheld (repair Reviewer Access Token required).";
+      "022: Missing Reviewer File URL â€” parent video link withheld (repair Reviewer Access Token required).";
   } else if (uploaded) {
-    repairNote = `022: Unsafe reviewer URL (${reviewer.classification}) — parent video link withheld.`;
+    repairNote = `022: Unsafe reviewer URL (${reviewer.classification}) â€” parent video link withheld.`;
   } else if (hasCanonical) {
     repairNote =
-      "022: Canonical File URL is internal-only — parent video link requires Reviewer File URL.";
+      "022: Canonical File URL is internal-only â€” parent video link requires Reviewer File URL.";
   }
 
   const currentText = String(currentChildUrl || "").trim();
@@ -507,7 +480,7 @@ function buildVideoUploadSyncFields(videoRecord, asset) {
   const targetStatus = mapAssetUploadStatusToVideoStatus(assetUploadStatus);
   const currentStatus = getSelectName(videoRecord, videoTable, CONFIG.video.uploadStatus);
 
-  // Existing Video Feedback → Upload Status only (do not create a duplicate Upload Status field).
+  // Existing Video Feedback â†’ Upload Status only (do not create a duplicate Upload Status field).
   addSingleSelectIfChanged(
     fields,
     videoTable,
@@ -516,7 +489,7 @@ function buildVideoUploadSyncFields(videoRecord, asset) {
     targetStatus
   );
 
-  // Reviewer/Lambda URL only — never Canonical File URL or Google Drive mirrors.
+  // Reviewer/Lambda URL only â€” never Canonical File URL or Google Drive mirrors.
   const currentVideoUrl = getText(videoRecord, videoTable, CONFIG.video.videoUrlOrDriveLink);
   const urlPlan = resolveParentFacingVideoUrl(asset, currentVideoUrl, assetUploadStatus);
   if (urlPlan.shouldWriteUrl) {
@@ -607,7 +580,7 @@ function assertRequiredSchema() {
 }
 
 /* =========================================================
-   SECTION 3 — MAIN
+   SECTION 3 â€” MAIN
 ========================================================= */
 
 async function main() {

@@ -77,7 +77,7 @@ Finish with **`audit-field-coverage-report.js`** to identify unused fields.
 | `repair-audit-linkage-full.js` | All v1.2 linkage audit issues (multi-asset HW, send trigger, VF flags, orphans) | **Ready** |
 | `repair-orphan-asset-submission-links.js` | Orphan Submission Assets → Submission - Linked (planner follow-up) | **Ready** |
 | `repair-audit-010-linkage-drive-writeback-and-hw-credit.js` | Ryder/Maizee/Clara HW Drive writeback + XP credit after linkage-full | **Ready** |
-| `repair-audit-001` … `009` | Single-record targeted repairs (use linkage-full for batch) | **Ready** |
+| `repair-missing-reviewer-access-tokens.js` | Restore missing Reviewer Access Token on Uploaded assets (formula fills Reviewer File URL) | **Ready — DRY_RUN** |
 | `repair-final-090e-xp-rollup-duplicate-status.js` | Final close: clear false Duplicate - Remove on XP Events blocking Lifetime XP Earned rollup | **Ready** |
 | `repair-kimm-lyle-restore-excluded-submissions.js` | Close-out: Lyle Kimm — Count It on two excluded duplicate submissions (+340 shots) | **Ready** |
 | `repair-final-090f-unlock-week-from-source.js` | Final close: fill empty Week on unlocks from milestone activity date | **Stub — DRY_RUN** |

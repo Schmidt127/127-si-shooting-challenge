@@ -8,6 +8,14 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Airtable
 
+#### Fixed
+- **Secure video URL pipeline (2026-08-24)** — **022 v2.2** stops falling back to private
+  `Canonical File URL` for Video Feedback parent links; **072 v4.8** and **073 v4.4** accept
+  only validated Lambda viewer URLs in parent-facing payloads. Shared validator:
+  `lib/secure-video-url.js`. Repair: `repair-missing-reviewer-access-tokens.js`,
+  `tools/airtable/repair_missing_reviewer_tokens.py`. Deploy:
+  [`022-v2.2-secure-video-url-pipeline.md`](./docs/deploy-checklists/022-v2.2-secure-video-url-pipeline.md).
+
 #### Added
 - **Master closeout (2026-08-24)** — Authoritative docs updated after Production verification of
   **065 v10.3** / **066 v3.9** dynamic triggering, historical audit artifact preservation

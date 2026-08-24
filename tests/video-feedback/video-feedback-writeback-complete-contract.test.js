@@ -62,10 +62,12 @@ test("022 syncs VF Upload Status and Video Asset Uploaded At (formula inputs)", 
   assert.match(sync022, /function buildVideoUploadSyncFields/);
 });
 
-test("022 prefers Reviewer File URL on Submission Assets for VF Video URL — does not invent VF Reviewer File URL", () => {
+test("022 uses Reviewer/Lambda URL only for VF Video URL — never Canonical fallback", () => {
   assert.match(sync022, /reviewerFileUrl: "Reviewer File URL"/);
   assert.match(sync022, /videoUrlOrDriveLink: "Video URL or Drive Link"/);
-  assert.match(sync022, /Prefer Reviewer File URL; Canonical File URL is the fallback/);
+  assert.match(sync022, /Reviewer\/Lambda URL only/);
+  assert.match(sync022, /function classifySecureVideoUrl/);
+  assert.doesNotMatch(sync022, /fall back to Canonical File URL/);
   const videoConfigBlock = sync022.slice(
     sync022.indexOf("video: {"),
     sync022.indexOf("values: {")
@@ -80,11 +82,11 @@ test("022 does not mirror Google Drive fields onto Video Feedback", () => {
     sync022.indexOf("values: {")
   );
   assert.doesNotMatch(videoConfigBlock, /googleDrive/);
-  assert.match(sync022, /Do not mirror obsolete Google Drive fields onto Video Feedback/);
+  assert.match(sync022, /Do not mirror obsolete Google Drive fields onto Homework Completions or Video Feedback/);
 });
 
-test("073 v4.3 Hub handoff uses only VF Video URL or Drive Link", () => {
-  assert.match(email073, /Version: v4\.3/);
+test("073 v4.4 Hub handoff uses only VF Video URL or Drive Link", () => {
+  assert.match(email073, /Version: v4\.4/);
   assert.match(email073, /Email Handoff Queue/);
   assert.doesNotMatch(email073, /Google Drive File URL|Google Drive View URL|Google Drive File ID|Google Drive Folder/);
   assert.doesNotMatch(email073, /reviewer:\s*"Reviewer File URL"/);
@@ -94,7 +96,7 @@ test("073 v4.3 Hub handoff uses only VF Video URL or Drive Link", () => {
   assert.match(vfBlock, /videoUrl: "Video URL or Drive Link"/);
 });
 
-test("073 v4.3 enriches branded Hub template payload without changing writeback gates", () => {
+test("073 v4.4 enriches branded Hub template payload without changing writeback gates", () => {
   assert.match(email073, /programName, reviewStatus, landingPageUrl, shootPageUrl/);
   assert.match(email073, /reviewStatus: "Review complete"/);
   assert.match(email073, /landingPageUrl: CANONICAL_URLS\.landing/);

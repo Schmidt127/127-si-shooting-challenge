@@ -1,33 +1,4 @@
-/*
-Automation: 073 - Email, Notifications, and External Handoffs - Create Video Feedback Communications Hub Handoff
-System: 127 SI Shooting Challenge
-Source: Airtable Automation
-Status: GitHub Source of Truth
-Last Synced From Airtable: 2026-08-17
-Last GitHub Update: 2026-08-20 (v4.2 V2 standard structure)
-
-Purpose:
-Validate one Video Feedback record ready for parent email and create exactly
-one Ready Email Handoff Queue row for Communications Hub (079 → Resend).
-
-Trigger:
-Video Feedback when Parent Feedback Ready? and related gates match
-(confirm exact conditions in Airtable UI); pass the dynamic recordId.
-
-Important Tables:
-Video Feedback, Enrollments, Submissions, Submission Assets, XP Events,
-Email Handoff Queue
-
-Important Fields:
-Parent Feedback Ready?, Parent Feedback Sent?, Feedback Posted?, Coach Feedback,
-Video URL or Drive Link, Handoff Key, Status
-
-Notes:
-GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
-Filename may still say webhook; current path is Hub queue create only.
-*/
-
-/************************************************************
+﻿/************************************************************
  * 073 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Create Video Feedback Communications Hub Handoff
  *
@@ -38,9 +9,9 @@ Filename may still say webhook; current path is Hub queue create only.
  * VERSION HISTORY
  * - v4.4 (2026-08-24): Block parent handoff unless Video URL or Drive Link is a valid
  *   Lambda viewer URL; reject direct S3, presigned S3, and Google Drive links.
- * - v4.3 (2026-08-22): Branded Communications Hub template payload enrichment —
+ * - v4.3 (2026-08-22): Branded Communications Hub template payload enrichment â€”
  *   programName, reviewStatus, landingPageUrl, shootPageUrl. Business gates unchanged.
- * - v4.2 (2026-08-20): V2 Automation Standard structure — GitHub header,
+ * - v4.2 (2026-08-20): V2 Automation Standard structure â€” GitHub header,
  *   production docblock, numbered sections, hoisted debugStep, outer run
  *   wrapper. Business logic unchanged from v4.1.
  * - v4.1 (2026-08-17): Require VF Video URL or Drive Link only for parent
@@ -56,11 +27,11 @@ Filename may still say webhook; current path is Hub queue create only.
  * - This script never calls Make, Gmail, Resend, or the Communications Hub ingress.
  * - Only Automation 079 may send Email Handoff Queue rows to the Hub.
  * - One Video Feedback maps to VIDEO_FEEDBACK|VIDEO_FEEDBACK|{Video Feedback Record ID}.
- * - Idempotent: reuse an existing matching Handoff Key; conflicting payload → Needs Review.
+ * - Idempotent: reuse an existing matching Handoff Key; conflicting payload â†’ Needs Review.
  * - Do not write Parent Feedback Sent? or Parent Feedback Sent On (Hub/downstream writeback).
  * - Parent-facing video link is ONLY Video Feedback "Video URL or Drive Link" (written by 022).
  * - Do not read Reviewer File URL, Canonical File URL, or any Google Drive File/Folder ID/URL/Name.
- * - Missing/invalid/unsafe VF video URL → error (no asset-field fallback; Lambda only).
+ * - Missing/invalid/unsafe VF video URL â†’ error (no asset-field fallback; Lambda only).
  * - Enrollment Parent Email - Cleaned is the authoritative recipient (076 Hub pattern).
  *
  * THIS IS NOT
@@ -105,8 +76,8 @@ Filename may still say webhook; current path is Hub queue create only.
  *   Email Handoff Queue
  *
  * OUTPUT / WRITEBACK FIELDS
- * - Email Handoff Queue → Handoff Key, Status, payload/recipients, Test Mode?
- * - Video Feedback → Parent Feedback Send Error (clear on success), Subject (prep note)
+ * - Email Handoff Queue â†’ Handoff Key, Status, payload/recipients, Test Mode?
+ * - Video Feedback â†’ Parent Feedback Send Error (clear on success), Subject (prep note)
  *
  * HANDOFF KEY
  * - VIDEO_FEEDBACK|VIDEO_FEEDBACK|{Video Feedback Record ID}
@@ -209,7 +180,7 @@ const CONFIG = {
       videoFeedback: "Video Feedback",
       trueVideo: "Is True Video Feedback Asset?",
       original: "Original File Name",
-      // Intentionally omit Reviewer/Canonical File URL — parent email must not read them.
+      // Intentionally omit Reviewer/Canonical File URL â€” parent email must not read them.
     },
     xp: {
       active: "Active?",
@@ -457,7 +428,7 @@ function parentVideoUrl(vf, vfTable) {
   const classified = classifySecureVideoUrl(url);
   if (classified.classification !== "valid_lambda_viewer") {
     throw new Error(
-      `Video Feedback "Video URL or Drive Link" is unsafe (${classified.classification}). Parent handoff blocked — Lambda viewer URL required.`
+      `Video Feedback "Video URL or Drive Link" is unsafe (${classified.classification}). Parent handoff blocked â€” Lambda viewer URL required.`
     );
   }
   return classified.safeUrl;

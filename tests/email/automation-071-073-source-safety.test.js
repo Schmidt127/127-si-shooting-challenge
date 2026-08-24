@@ -67,15 +67,15 @@ t("071 does not write final sent fields", () => {
   assert.doesNotMatch(s071, /\[["']Parent Feedback Sent On["']\]\s*:/);
   assert.doesNotMatch(s071, /\[["']Parent Feedback Sent\?["']\]\s*:/);
 });
-t("073 v4.3 creates Communications Hub queue handoff (not Make webhook)", () => {
-  assert.match(s073, /Version: v4\.3/);
+t("073 v4.4 creates Communications Hub queue handoff (not Make webhook)", () => {
+  assert.match(s073, /Version: v4\.4/);
   assert.match(s073, /Email Handoff Queue/);
   assert.match(s073, /VIDEO_FEEDBACK\|VIDEO_FEEDBACK\|/);
   assert.match(s073, /created_handoff/);
   assert.match(s073, /existing_handoff/);
   assert.doesNotMatch(s073, /makeWebhookUrl|hook\.us1\.make\.com|remoteFetchAsync|sendTag:"VIDEO_FEEDBACK_PARENT"/);
 });
-t("073 v4.3 enriches branded template URLs and review status", () => {
+t("073 v4.4 enriches branded template URLs and review status", () => {
   assert.match(s073, /landingPageUrl: CANONICAL_URLS\.landing/);
   assert.match(s073, /reviewStatus: "Review complete"/);
 });
@@ -85,8 +85,10 @@ t("073 validates active canonical Video Feedback source", () => {
   assert.match(s073, /VIDEO_FEEDBACK\|\$\{assetId\}/);
   assert.match(s073, /No active Video Feedback XP Event matches Enrollment \+ Week \+ source/);
 });
-t("073 uses only VF Video URL or Drive Link — no Reviewer/Canonical/Drive fields", () => {
+t("073 requires valid Lambda viewer URL on VF Video URL or Drive Link", () => {
   assert.match(s073, /videoUrl: "Video URL or Drive Link"/);
+  assert.match(s073, /function classifySecureVideoUrl/);
+  assert.match(s073, /Lambda viewer URL required/);
   assert.match(s073, /Parent handoff blocked \(022 writeback required; no asset URL fallback\)/);
   assert.doesNotMatch(s073, /Google Drive File URL|Google Drive View URL|Google Drive File ID|Google Drive Folder/);
   assert.doesNotMatch(s073, /parentVideoUrl\(vf, vfTable, asset/);
