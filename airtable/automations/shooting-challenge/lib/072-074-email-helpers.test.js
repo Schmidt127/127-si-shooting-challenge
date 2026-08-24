@@ -29,8 +29,8 @@ function test(name, fn) {
   console.log(`PASS  ${name}`);
 }
 
-test("072 v4.7 owns escaped HTML and plain-text package rendering", () => {
-  assert.ok(/Version:\s*v4\.7/.test(s072));
+test("072 v4.8 owns escaped HTML and plain-text package rendering", () => {
+  assert.ok(/Version:\s*v4\.8/.test(s072));
   assert.ok(/Shooting Days Logged/.test(s072));
   assert.ok(/Perfect Week Qualifying Days/.test(s072));
   assert.ok(/function escapeHtml\(value\)/.test(s072));
