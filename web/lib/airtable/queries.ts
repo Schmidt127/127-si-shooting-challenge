@@ -50,11 +50,12 @@ import {
   type PublicUnlockFields,
   type PublicWasFields,
 } from "@/lib/data/public-athlete-profile";
+import { fetchPublicAthleteHomeworkAssignments } from "@/lib/airtable/public-athlete-homework-queries";
 import { mapAttachments } from "@/lib/data/homework";
 import { loadXpActivityForEnrollment } from "@/lib/data/xp-activity-loader";
 import { resolveLevelCoverImageUrl } from "@/lib/levels/level-graphic";
 import { asBoolean, asText, linkedRecordIds, requireExactlyOneLookupNumber } from "@/lib/data/airtable-values";
-import type { PublicAthleteProfile } from "@/types/public-athlete-profile";
+import type { PublicAthleteProfile, PublicHomeworkAssignment } from "@/types/public-athlete-profile";
 import type { AchievementCatalogData } from "@/types/achievements";
 import type { HomeworkAssignment, HomeworkCatalogData } from "@/types/homework";
 import type { LevelDefinition, LevelLadderData } from "@/types/levels";
@@ -320,7 +321,7 @@ async function getStandingsScope(): Promise<{
 }
 
 /**
- * Public season leaderboard â active enrollments ranked level â XP â shots.
+ * Public season leaderboard Ã¢ÂÂ active enrollments ranked level Ã¢ÂÂ XP Ã¢ÂÂ shots.
  * The required `Web - Leaderboard` view is an audited public boundary. A missing
  * or renamed view fails closed; table-wide fallback could leak another season.
  */
@@ -455,7 +456,7 @@ async function listActiveLevelRecords(): Promise<Array<{ id: string; fields: Lev
   }
 }
 
-/** Active level ladder â highest tier first. */
+/** Active level ladder Ã¢ÂÂ highest tier first. */
 export async function fetchLevelLadder(): Promise<LevelLadderData> {
   const records = await listActiveLevelRecords();
   return buildLevelLadder(records);
@@ -674,7 +675,7 @@ async function listVisibleAchievementRecords(): Promise<
   }
 }
 
-/** Public achievement definitions â milestones, streaks, and unlocks. */
+/** Public achievement definitions Ã¢ÂÂ milestones, streaks, and unlocks. */
 export async function fetchAchievementCatalog(): Promise<AchievementCatalogData> {
   const records = await listVisibleAchievementRecords();
   return buildAchievementCatalog(records);
@@ -723,7 +724,7 @@ async function listActiveXpRuleRecords(): Promise<
 
 /**
  * Live XP Reward Rules configuration for the game manual.
- * The Airtable table is the runtime authority â the site never hardcodes amounts.
+ * The Airtable table is the runtime authority Ã¢ÂÂ the site never hardcodes amounts.
  */
 export async function fetchXpRuleCatalog(): Promise<XpRuleCatalogData> {
   const records = await listActiveXpRuleRecords();
@@ -778,6 +779,8 @@ export const PUBLIC_PROFILE_ENROLLMENT_FIELDS = [
   "Public Missing Zoom",
   "Public Missing Streak",
   "Program Instance Name Only",
+  "Grade Band",
+  "Homework Completions",
   "Submissions",
   "Weekly Athlete Summary",
   "Athlete Achievement Unlocks",
@@ -850,7 +853,7 @@ export async function fetchPublicAthleteProfileBySlug(
     console.error(
       `[public-athlete-profile] Duplicate enabled Public Profile Slug "${slug}" (${enrollmentResponse.records.length} enrollments` +
         `${schoolYearClause ? ` after School Year filter` : ""}). ` +
-        `Do not select Enrollment by Athlete alone â ensure one Active enrollment per Program Instance/slug. Failing closed.`
+        `Do not select Enrollment by Athlete alone Ã¢ÂÂ ensure one Active enrollment per Program Instance/slug. Failing closed.`
     );
     return null;
   }
@@ -865,6 +868,8 @@ export async function fetchPublicAthleteProfileBySlug(
   const linkedLevelIds = [...new Set([currentLevelId, nextLevelId].filter(Boolean) as string[])];
   const wasIds = linkedRecordIds(fields["Weekly Athlete Summary"]).slice(0, 20);
   const unlockIds = linkedRecordIds(fields["Athlete Achievement Unlocks"]).slice(0, 50);
+  const homeworkCompletionIds = linkedRecordIds(fields["Homework Completions"]);
+  const enrollmentGradeBandId = linkedRecordIds(fields["Grade Band"])[0] ?? null;
 
   function recordIdOrFilter(ids: string[]): string | null {
     if (ids.length === 0) return null;
@@ -875,7 +880,7 @@ export async function fetchPublicAthleteProfileBySlug(
   const wasFilter = recordIdOrFilter(wasIds);
   const unlockFilter = recordIdOrFilter(unlockIds);
 
-  const [wasResponse, unlockResponse, xpActivity, leaderboard, linkedLevelsResponse, levelLadder] =
+  const [wasResponse, unlockResponse, xpActivity, leaderboard, linkedLevelsResponse, levelLadder, homeworkAssignments] =
     await Promise.all([
     wasFilter
       ? listAirtableRecords<PublicWasFields>({
@@ -914,6 +919,13 @@ export async function fetchPublicAthleteProfileBySlug(
         })
       : Promise.resolve({ records: [] as Array<{ id: string; fields: PublicLevelFields }> }),
     fetchLevelLadder().catch(() => null),
+    fetchPublicAthleteHomeworkAssignments({
+      enrollmentGradeBandId,
+      homeworkCompletionIds,
+    }).catch((error) => {
+      console.error("[public-athlete-profile] Homework assignments load failed:", error);
+      return [] as PublicHomeworkAssignment[];
+    }),
   ]);
 
   const visibleUnlocks = unlockResponse.records.filter(
@@ -1027,7 +1039,7 @@ export async function fetchPublicAthleteProfileBySlug(
   }
   if (xpActivity.totalAvailableRows > xpActivity.rows.length) {
     activityLedgerNoticeParts.push(
-      `Complete XP ledger: ${xpActivity.totalAvailableRows} events loaded. Use Load more below â not limited to 12 items.`,
+      `Complete XP ledger: ${xpActivity.totalAvailableRows} events loaded. Use Load more below Ã¢ÂÂ not limited to 12 items.`,
     );
   }
 
@@ -1044,6 +1056,7 @@ export async function fetchPublicAthleteProfileBySlug(
     weekly: mapWeeklySummaries(wasResponse.records, weekMetaById, {
       limit: PUBLIC_PROFILE_WEEKLY_LIMIT,
     }),
+    homeworkAssignments,
     achievements: mapPublicAchievements(visibleUnlocks, defsById),
   });
 }

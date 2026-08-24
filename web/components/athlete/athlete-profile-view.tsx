@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { AchievementCollection } from "@/components/athlete/achievement-collection";
+import { HomeworkAssignments } from "@/components/athlete/homework-assignments";
 import { PerformanceSnapshot } from "@/components/athlete/performance-snapshot";
 import { ProfileHero } from "@/components/athlete/profile-hero";
 import { ProgressionPanel } from "@/components/athlete/progression-panel";
@@ -27,6 +28,7 @@ export function AthleteProfileView({ data }: AthleteProfileViewProps) {
         <PerformanceSnapshot performance={data.performance} />
         <ShootingStatLine shooting={data.shooting} />
         <ProgressionPanel progression={data.progression} />
+        <HomeworkAssignments assignments={data.homeworkAssignments} />
         <StreakSection streaks={data.streaks} streakAchievements={streakAchievements} />
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-10">
           <RecentActivityLog

@@ -19,6 +19,7 @@ import type {
   PublicAchievementGroup,
   PublicActivityItem,
   PublicAthleteProfile,
+  PublicHomeworkAssignment,
   PublicProgression,
   PublicShootingSplit,
   PublicShootingStats,
@@ -74,7 +75,9 @@ export type PublicEnrollmentFields = {
   "Public Missing Zoom"?: unknown;
   "Public Missing Streak"?: unknown;
   "Program Instance Name Only"?: unknown;
+  "Grade Band"?: unknown;
   /** Server-only link ids — never serialized to the public model. */
+  "Homework Completions"?: unknown;
   Submissions?: unknown;
   "Weekly Athlete Summary"?: unknown;
   "Athlete Achievement Unlocks"?: unknown;
@@ -510,6 +513,7 @@ export type BuildPublicProfileInput = {
   activityLedgerTotal?: number;
   activityLedgerNotice?: string | null;
   weekly: PublicWeeklySummary[];
+  homeworkAssignments?: PublicHomeworkAssignment[];
   achievements: PublicAchievement[];
 };
 
@@ -569,6 +573,7 @@ export function buildPublicAthleteProfile(input: BuildPublicProfileInput): Publi
     activityLedgerTotal: input.activityLedgerTotal ?? input.recentActivity.length,
     activityLedgerNotice: input.activityLedgerNotice ?? null,
     weekly: input.weekly,
+    homeworkAssignments: input.homeworkAssignments ?? [],
     achievements: input.achievements,
     fetchedAt: new Date().toISOString(),
     mayBeStale: true,

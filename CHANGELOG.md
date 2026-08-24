@@ -9,6 +9,10 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Added
+- **Athlete profile homework assignments (2026-08-24)** — Public athlete profiles list every
+  active Program Homework Assignment for the Registering 2026–2027 scope and athlete grade band,
+  joined to Homework Completions for status, XP, feedback, and due-date credit display (no
+  hardcoded 18-item cap). Tests: `web/lib/data/public-athlete-homework.test.ts`.
 - **Athlete profile level graphics (2026-08-24)** — Public athlete profiles show the
   Airtable Levels cover image beside the current level in the hero, performance snapshot,
   and progression panel, with brand-gradient placeholder fallback. Tests:

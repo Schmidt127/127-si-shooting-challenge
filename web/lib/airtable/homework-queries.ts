@@ -91,7 +91,7 @@ function recordIdFormula(ids: string[]): string {
   return `OR(${clauses.join(",")})`;
 }
 
-async function listCurrentPhaRecords(): Promise<Array<{ id: string; fields: ProgramHomeworkAssignmentFields }>> {
+export async function listCurrentPhaRecords(): Promise<Array<{ id: string; fields: ProgramHomeworkAssignmentFields }>> {
   const programInstance = await resolveRegisteringShootingChallengeProgramInstance(REVALIDATE_SECONDS);
   const response = await listAirtableRecords<ProgramHomeworkAssignmentFields>({
     tableName: TABLES.programHomeworkAssignments,

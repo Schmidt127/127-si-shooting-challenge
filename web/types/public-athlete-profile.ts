@@ -94,6 +94,36 @@ export type PublicWeeklySummary = {
   perfectWeek: boolean;
 };
 
+export type PublicHomeworkCompletionStatus =
+  | "not_started"
+  | "submitted"
+  | "under_review"
+  | "approved"
+  | "needs_revision"
+  | "not_accepted";
+
+/** One scheduled Program Homework Assignment row for this athlete's grade band. */
+export type PublicHomeworkAssignment = {
+  /** Opaque client key — never an Airtable record id. */
+  key: string;
+  /** Primary label — assignment name, not HW slot number. */
+  assignmentName: string;
+  weekLabel: string;
+  /** ISO date key (YYYY-MM-DD) from Week End Date until PHA Due Date exists. */
+  dueDate: string | null;
+  completionStatus: PublicHomeworkCompletionStatus;
+  completionStatusLabel: string;
+  submissionDate: string | null;
+  /** Total XP awarded on the linked Homework Completion, when present. */
+  xpAwarded: number | null;
+  coachFeedback: string | null;
+  /** Whether credit is eligible per due-date + existing completion/XP outcomes. */
+  creditEligible: boolean | null;
+  pastDue: boolean;
+  lateSubmission: boolean;
+  homeworkDetailHref: string | null;
+};
+
 export type PublicAchievementGroup =
   | "Streaks"
   | "Shot Milestones"
@@ -126,6 +156,7 @@ export type PublicAthleteProfile = {
   /** Optional integrity or pagination notice — never includes raw Airtable record IDs. */
   activityLedgerNotice: string | null;
   weekly: PublicWeeklySummary[];
+  homeworkAssignments: PublicHomeworkAssignment[];
   achievements: PublicAchievement[];
   fetchedAt: string;
   mayBeStale: boolean;
