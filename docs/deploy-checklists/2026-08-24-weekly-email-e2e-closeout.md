@@ -9,8 +9,10 @@
 ## What was proven
 
 - Disposable WAS fixture (`recdj8MD0szplMW5r`) sent successfully in **Test Mode** to `mschmidt@fairfield.k12.mt.us`.
+- **Corrected disposable email** received and content-verified (not the old pre-v4.7 send).
 - Email content verified: **7/7** shooting days, **4/7** Perfect Week days, **48,066** shots, **1,280** XP, **40** active events, **150%+** goal, **8** videos with secure URLs, **Attended** Zoom, **Complete** homework.
 - **No duplicate email** (idempotency / conflict protection held).
+- **Perfect Week 48-hour grace period** live-tested via **057 v2.0** (4/7 PW qualifying vs 7/7 general shooting days).
 - Production scripts **072 v4.7**, **074 v3.3**, **079 v2.5** match GitHub source of truth.
 
 ---
@@ -19,8 +21,8 @@
 
 | Record | Role |
 |--------|------|
-| `reczxTIpVI8ZJLex0` | Old reference WAS — pre-v4.7 XP disagreement investigation |
-| `recoikFrli3m0xDRa` | Old queue proof — **must not be reused** for sends |
+| `reczxTIpVI8ZJLex0` | Old reference WAS — **weekly email sent before v4.7 corrections**; preserved historical test evidence |
+| `recoikFrli3m0xDRa` | Old queue proof — **must remain unchanged**; must not be reused for sends |
 
 ---
 
@@ -37,10 +39,26 @@ Mike may delete when evidence is no longer needed:
 
 ---
 
-## Follow-up (`optional/future`)
+## Follow-up engineering
 
-- Fix Production **065** and **066** automation script inputs (hardcoded reference `recordId` values prevent disposable fixture settlement via normal triggers).
-- Paste **010 v10.12** and **057 v1.9** if Automations Code column still lags GitHub.
+| Item | Status | Notes |
+|------|--------|-------|
+| **065 v10.3** Production paste | `needs live proof` | GitHub dynamic `recordId` merged PR #256; at E2E test time Production v10.2 had hardcoded reference input — fixture settlement required canonical manual writes |
+| **066 v3.9** Production paste | `needs live proof` | Same as 065 — fixture automation triggering **not fully solved** until paste + input mapping verified |
+| **010 v10.12** paste | `optional/future` | Unrelated to weekly-email E2E success |
+
+Deploy: [`065-066-v10.3-v3.9-dynamic-trigger-record.md`](./065-066-v10.3-v3.9-dynamic-trigger-record.md)
+
+---
+
+## Optional future email-content refinements
+
+Non-blocking improvements for a later pass:
+
+- Parent-facing copy polish in Hub templates
+- Additional weekly summary metrics or formatting
+- Mobile email rendering tweaks
+- Localization or accessibility review
 
 ---
 
@@ -54,4 +72,5 @@ Mike may delete when evidence is no longer needed:
 | 072 XP reconciliation offline test | **PASS** |
 | Lambda upload-asset pytest | **146 PASS** |
 | Airtable Python tests (`PYTHONPATH=.` pytest) | **147 PASS** |
-| Web lint/typecheck/build | **Not in this PR** — untracked athlete-profile WIP in `web/` breaks local build; excluded from commit |
+| Completion master integrity | **PASS** |
+| Web lint/typecheck/build | **Excluded** — untracked athlete-profile WIP in `web/` |

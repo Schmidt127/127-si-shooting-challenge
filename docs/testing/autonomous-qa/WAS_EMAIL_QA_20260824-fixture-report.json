@@ -72,14 +72,19 @@
   },
   "follow_up_engineering": [
     {
-      "item": "065 hardcoded script input recordId",
-      "status": "optional/future",
-      "notes": "Fixture homework XP required canonical settlement; automation triggering not fully solved"
+      "item": "065 v10.3 Production paste",
+      "status": "needs live proof",
+      "notes": "GitHub dynamic recordId merged PR #256; at test time Production had hardcoded input — canonical manual settlement required"
     },
     {
-      "item": "066 hardcoded script input recordId",
+      "item": "066 v3.9 Production paste",
+      "status": "needs live proof",
+      "notes": "Fixture automation triggering not fully solved until Production paste verified"
+    },
+    {
+      "item": "Optional email-content refinements",
       "status": "optional/future",
-      "notes": "Fixture shot-milestone unlocks required canonical settlement; automation triggering not fully solved"
+      "notes": "Template copy, formatting, mobile rendering — non-blocking"
     }
   ],
   "final_report": "docs/testing/autonomous-qa/WAS_EMAIL_QA_20260824_FINAL_REPORT.md"

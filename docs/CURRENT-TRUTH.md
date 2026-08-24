@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-24 (weekly-summary E2E live-tested — 072 v4.7 / 074 v3.3 / 079 v2.5; disposable WAS email QA complete)  
+**Last verification (repo):** 2026-08-24 (master reconciliation — weekly-summary E2E live-tested; Perfect Week 48-hour grace; 057 v2.0)  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -163,12 +163,12 @@ Do **not** treat older Automations-table Code-column snapshots as stronger than 
 | **020** | **v3.7** | v3.7 | Live | |
 | **033** | **v4.4** | v4.4 | Live | |
 | **041** | **v5.1** | v5.1 | Live | Optional inputs only |
-| **057** | **v1.8** (Automations Code 2026-08-23) | 1.9 | Live / **paste needed** | GitHub v1.9 goal settlement; prod Code column still v1.8 |
+| **057** | **v2.0** (prod) | **v2.0** | **Live / live-tested** | 48-hour submission grace period; disposable E2E showed 4/7 PW qualifying days |
 | **058** | **v1.3** | 1.3 | Live | Unlock only after Eligible + Ready |
 | **059** | **v3.6** | v3.6 | Live | |
 | **064** | **Production-verified current live** | v12.2 in repo | Live | Do not invent a new version string |
-| **065** | **v10.2** | v10.2 | Live | |
-| **066** | **v3.8** | v3.8 | Live | |
+| **065** | **v10.2** (prod at E2E test) | **v10.3** | Live / **paste needed** | GitHub dynamic `recordId` (PR #256); disposable fixture required canonical manual settlement at test time |
+| **066** | **v3.8** (prod at E2E test) | **v3.9** | Live / **paste needed** | GitHub dynamic `recordId` (PR #256); disposable fixture required canonical manual settlement at test time |
 | **072** | **v4.7** (prod) | **v4.7** | **Live / live-tested** | v4.7 shooting days 7/7, goal 150%+, video list, XP 1280; E2E disposable send 2026-08-24 |
 | **074** | **v3.3** (prod) | **v3.3** | **Live / live-tested** | Weekly summary Hub handoff; E2E with 072 v4.7 2026-08-24 |
 | **070a** | **v4.7** | v4.7 | **Off** by design | Homework upload Make path |
@@ -177,7 +177,7 @@ Do **not** treat older Automations-table Code-column snapshots as stronger than 
 | **101** | **v6.7** | v6.7 | Live | Live script body `Version: v6.7` / `version: "v6.7"`; meeting `recxtpMu4ONbdDD45` safely skipped (reconciliation not needed) |
 | **117** | **v2.1** | v2.1 | **Live** | Dynamic inputs: `recordId`, `enrollmentRid`, `zoomMeetingRid` |
 
-**Record-ID classification (Mike final):** Dynamic for all record-based automations; optional on **041** only; intentionally blank on **056 / 078 / 118 / 119**; **hardcoded: none**. No Perfect Week test record IDs hardcoded in Production or GitHub automation code.
+**Record-ID classification (Mike final):** Dynamic for all record-based automations; optional on **041** only; intentionally blank on **056 / 078 / 118 / 119**. **At weekly-email E2E test time (2026-08-24):** Production **065** and **066** still had hardcoded reference `recordId` in automation script inputs — fixture settlement required canonical manual writes. GitHub **065 v10.3** / **066 v3.9** (PR #256) resolves this in repo; **awaiting Mike Production install**. Fixture automation triggering is **not fully solved** until install + input mapping verified.
 
 **Historical snapshot (midday 2026-08-21):** An earlier Automations Code-column read briefly showed **010 v10.10** and **101 v6.6**. That snapshot is **superseded** by Mike’s live script / run-history verification above. See [`deploy-checklists/2026-08-21-perfect-week-test-prep-report.md`](./deploy-checklists/2026-08-21-perfect-week-test-prep-report.md).
 
@@ -210,7 +210,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Video XP | **113 / 114** (+ **013** VF create) | **Live v6.4 / v6.1**; **PKG-007 lifecycle proof PASS 2026-08-23** (`AUTONOMOUS_VIDEO_QA_20260823_164549`, Testing3). Native trigger + 073 OFF UI attestation open |
 | Shot milestones | **066** | Production **v3.8** |
 | Levels | **041 / 042** | **041 Production v5.1**; broader progression proof still open |
-| Perfect Week | **057 → 058 → 059** | **XP ledger live-tested 2026-08-23** (39 active events on `rec93mAfo5jKqP3g5`). Calendar award still **PENDING** until Days Logged=7 and Eligible?=true. Public slug: `perfect-week-testing`. |
+| Perfect Week | **057 → 058 → 059** | **48-hour grace period `live-tested`** (057 v2.0 + formulas; 4/7 PW days in disposable E2E). XP ledger **live-tested 2026-08-23** (39 active events on `rec93mAfo5jKqP3g5`). Full calendar award still **PENDING** until Days Logged=7 and Eligible?=true. |
 | Zoom live attendance XP | **101** | Production **v6.7** (live script body). Meeting `recxtpMu4ONbdDD45` safe skip when reconciliation not needed. |
 | Zoom recording XP under slot 117 | Not live | Slot **117** is email Hub handoff (**v2.1 Live**) |
 
@@ -226,7 +226,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Video upload (**070b** + Lambda + **070c**) | Production **070b v4.7** → Make → Lambda → **070c current live (repo v1.1)** verify. Optional retry proof + secret rotation **PENDING** |
 | Child upload writeback (**022**) | Production **v2.1** |
 | Homework parent email | **078** Ready → **071** → **079** → Hub → Resend |
-| Video parent email | Video `Parent Feedback Ready?` **manual** → **073** → Hub → Resend |
+| Video parent email | Video `Parent Feedback Ready?` **manual** → **073 v4.3** → Hub → Resend — **`live-tested`** (PKG-007 2026-08-23; operator table Live v4.3) |
 | Zoom live attendance | **101 v6.7** |
 | Zoom recording approval email | **117 v2.1 Live** → Hub → Resend |
 | Fillout daily submission | **OFF** (contest intake closed) |
@@ -238,9 +238,10 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Item | State |
 |------|--------|
 | Controlled path through WAS / homework | Path evidence 2026-08-16 |
-| Full Perfect Week award proof | **PENDING / calendar-blocked** — not ready, not awarded. XP ledger repair complete 2026-08-23. See [2026-08-21-perfect-week-test-prep-report.md](./deploy-checklists/2026-08-21-perfect-week-test-prep-report.md) and [2026-08-23-production-readiness-inventory.md](./audits/2026-08-23-production-readiness-inventory.md) |
+| Perfect Week 48-hour grace period | **Live-tested** — **057 v2.0** + Airtable formulas; disposable weekly email showed **4/7** PW qualifying days vs **7/7** general shooting days |
+| Full Perfect Week award proof | **PENDING / calendar-blocked** — not ready, not awarded. Grace period and ledger repair complete. See deploy checklists under `docs/deploy-checklists/057-v2.0-perfect-week-grace-period.md` |
 | Required order | **057 → 058 → 059** only after Eligible?=1 and Days Logged=7 |
-| Weekly XP disagreement (`reczxTIpVI8ZJLex0`) | **Historical artifact (2026-08-23):** root cause was unlinked milestone XP when 072 v4.2 ran. Resolved by v4.3+ reconciliation and **072 v4.7** production install. **Weekly-summary E2E live-tested 2026-08-24** on disposable WAS (`recdj8MD0szplMW5r`). Old WAS `reczxTIpVI8ZJLex0` and queue proof `recoikFrli3m0xDRa` remain preserved — not current defects. |
+| Weekly XP disagreement (`reczxTIpVI8ZJLex0`) | **Historical artifact:** old weekly email sent **before v4.7 corrections** — preserved evidence only. Resolved by **072 v4.7** + disposable E2E **2026-08-24** on `recdj8MD0szplMW5r`. Queue proof `recoikFrli3m0xDRa` **must remain unchanged** — not reused |
 | Authority | Completion Master + Perfect Week prep report + Perfect Week testing docs under `docs/testing/perfect-week/` |
 
 ---
@@ -269,12 +270,15 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - Lambda season CodeOnly deploy (optional follow-ups open)
 - Repository integrity + PII redaction pass (this audit)
 - **2026-08-23 post-XP-deletion autonomous QA:** Four temporary repair XP Events deleted by Mike; disposable live-create **PASS** (010 → SUBMISSION_XP, idempotent); Perfect Week **PASS** (39 active); Xavier/Testing3/Curtis **FINDING** (4 missing repair rows not recreated); stale-field check **PASS** (no phantom links); **010/057/072 paste BLOCKED** pending Mike
-- **2026-08-24 weekly-summary E2E:** **072 v4.7 → 074 v3.3 → 079 v2.5 → Hub → Resend** live-tested on disposable WAS `recdj8MD0szplMW5r` (Test Mode, allowlisted recipient). Content verified: 7/7 shooting days, 4/7 PW days, 48,066 shots, 1,280 XP, 40 events, 150%+, 8 videos, Attended, Homework Complete. No duplicate send. Report: [`testing/autonomous-qa/WAS_EMAIL_QA_20260824_FINAL_REPORT.md`](./testing/autonomous-qa/WAS_EMAIL_QA_20260824_FINAL_REPORT.md)
+- **2026-08-24 weekly-summary E2E:** **072 v4.7 → 074 v3.3 → 079 v2.5 → Hub → Resend** live-tested on disposable WAS `recdj8MD0szplMW5r`. Content verified: 7/7, 4/7 PW, 48,066 shots, 1,280 XP, 40 events, 150%+, 8 videos. No duplicate send. Report: [`testing/autonomous-qa/WAS_EMAIL_QA_20260824_FINAL_REPORT.md`](./testing/autonomous-qa/WAS_EMAIL_QA_20260824_FINAL_REPORT.md)
+- **2026-08-24 master reconciliation:** Perfect Week grace + **057 v2.0** live-tested; **065/066** repo fix merged (PR #256) — awaiting Mike Production install
 
 ### Pending / needs live proof
 
-- **010 v10.12**, **057 v1.9** — Mike paste from GitHub if Automations Code column still lags (010 v10.10, 057 v1.8 as of 2026-08-23 API read)
-- **065 / 066** — Production script inputs use hardcoded reference `recordId` values; disposable fixture XP settlement required canonical manual writes (follow-up engineering — not blocking weekly email)
+- **010 v10.12** — Mike paste from GitHub if Automations Code column still lags (v10.10 as of 2026-08-23 API read)
+- **065 v10.3 / 066 v3.9** — Paste from GitHub after PR #256 dynamic `recordId` fix; disposable fixture settlement at E2E test time required canonical manual writes — **fixture automation triggering not fully solved until Production paste verified**
+- Optional disposable fixture cleanup: `recdj8MD0szplMW5r`, `recxIzdVil9ewhBxN`, `recPg14iNRkxblMLs`
+- Optional weekly email template / copy refinements
 - Broader progression / standings certification packages
 - Automation version inventory rows still UNKNOWN in Airtable UI
 - Optional 066 OMNI sandbox confirm (K-H1)
