@@ -1,0 +1,86 @@
+{
+  "run_id": "WAS_EMAIL_QA_20260824",
+  "status": "live-tested_e2e_complete",
+  "send_executed": true,
+  "send_mode": "test",
+  "recipient": "mschmidt@fairfield.k12.mt.us",
+  "duplicate_send": false,
+  "settlement_pass": 5,
+  "production_chain": {
+    "072": "v4.7",
+    "074": "v3.3",
+    "079": "v2.5",
+    "hub_resend": "verified"
+  },
+  "protected_records_verified": {
+    "old_was_reczxTIpVI8ZJLex0": "unchanged — historical evidence preserved",
+    "old_queue_recoikFrli3m0xDRa": "not modified — must not be reused"
+  },
+  "created": {
+    "athlete": "recPg14iNRkxblMLs",
+    "enrollment": "recxIzdVil9ewhBxN",
+    "was": "recdj8MD0szplMW5r",
+    "week": "recT3EXo4Tz7BKFIb"
+  },
+  "keys": {
+    "summary_key": "ATH-recPg14iNRkxblMLs|2026-2027|2026-2027|Perfect Testing Week",
+    "handoff_key": "WEEKLY_ATHLETE_SUMMARY|WEEKLY_ATHLETE_SUMMARY|recdj8MD0szplMW5r"
+  },
+  "verified_email_content": {
+    "shootingDaysDisplay": "7/7",
+    "perfectWeekQualifyingDaysDisplay": "4/7",
+    "canonicalShots": 48066,
+    "canonicalWeekXp": 1280,
+    "activeXpCount": 40,
+    "goalCompletionDisplay": "150%+",
+    "videoSubmissionCount": 8,
+    "zoomAttendanceStatus": "Attended",
+    "homeworkRequirementStatus": "Complete - 100%"
+  },
+  "settlement": {
+    "057_perfect_week": { "pass": true, "method": "automation" },
+    "homework_xp_064_065": {
+      "pass": true,
+      "method": "canonical_manual_settlement",
+      "blocker": "Production 065 hardcoded recordId recQSVjvYB8Sv14u0"
+    },
+    "shot_milestones_066_059": {
+      "pass": true,
+      "method": "canonical_manual_settlement",
+      "blocker": "Production 066 hardcoded recordId rec93mAfo5jKqP3g5"
+    },
+    "streak_xp_053_054": { "pass": true, "method": "canonical_manual_settlement" },
+    "video_xp_113_114": { "pass": true, "method": "update_existing_video_xp_events" }
+  },
+  "xp_ledger": {
+    "active_event_count": 40,
+    "xp_earned_this_week": 1280
+  },
+  "072_build": {
+    "version": "v4.7",
+    "payload_activeXpCount": 40,
+    "payload_canonicalWeekXp": 1280
+  },
+  "disposable_cleanup": {
+    "status": "needs manual cleanup",
+    "optional": true,
+    "record_ids": [
+      "recdj8MD0szplMW5r",
+      "recxIzdVil9ewhBxN",
+      "recPg14iNRkxblMLs"
+    ]
+  },
+  "follow_up_engineering": [
+    {
+      "item": "065 hardcoded script input recordId",
+      "status": "optional/future",
+      "notes": "Fixture homework XP required canonical settlement; automation triggering not fully solved"
+    },
+    {
+      "item": "066 hardcoded script input recordId",
+      "status": "optional/future",
+      "notes": "Fixture shot-milestone unlocks required canonical settlement; automation triggering not fully solved"
+    }
+  ],
+  "final_report": "docs/testing/autonomous-qa/WAS_EMAIL_QA_20260824_FINAL_REPORT.md"
+}

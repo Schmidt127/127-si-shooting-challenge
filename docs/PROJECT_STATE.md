@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-08-23** (post-XP-deletion autonomous QA — live-create PASS, orchestrator Count It fix)
+Last updated: **2026-08-24** (weekly-summary E2E live-tested — documentation closeout)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
@@ -41,7 +41,9 @@ Last updated: **2026-08-23** (post-XP-deletion autonomous QA — live-create PAS
 
 **057 overlay (2026-08-23 API read):** Production Automations Code column = **v1.8**. GitHub = **v1.9**. Paste needed per [`deploy-checklists/057-v1.9-goal-settlement-fix.md`](./deploy-checklists/057-v1.9-goal-settlement-fix.md).
 
-**072 overlay (2026-08-23):** GitHub **v4.3** fixes weekly XP false disagreement on WAS `reczxTIpVI8ZJLex0`. Production still **v4.2** until paste. Checklist: [`deploy-checklists/072-v4.3-was-linked-xp-reconciliation.md`](./deploy-checklists/072-v4.3-was-linked-xp-reconciliation.md).
+**072 overlay (2026-08-24):** Production **072 v4.7**, **074 v3.3**, **079 v2.5** — weekly-summary E2E **live-tested** on disposable WAS `recdj8MD0szplMW5r` (Test Mode → Hub → Resend). Verified: 7/7 shooting days, 4/7 PW days, 48,066 shots, 1,280 XP, 40 events, 150%+, 8 videos, Attended, Homework Complete. Closeout: [`deploy-checklists/2026-08-24-weekly-email-e2e-closeout.md`](./deploy-checklists/2026-08-24-weekly-email-e2e-closeout.md). Historical WAS `reczxTIpVI8ZJLex0` and queue proof `recoikFrli3m0xDRa` preserved.
+
+**065/066 overlay (2026-08-24):** Production automations **065** and **066** have **hardcoded reference `recordId`** in script inputs — disposable fixture XP settlement required canonical manual writes. **Not solved** for fixture automation triggering; follow-up engineering item (`optional/future`).
 
 **Submission XP repair (2026-08-23):** Authorized idempotent repair created then **deleted** `SUBMISSION_XP` for submissions `rece0krfrEqiUEBVu`, `rec3zlR7xneAOatKh`, `recNqAXXzXAnac1GE`, `recLD7Fb6ph0yovyq` (XP Events `recWV95wEywdDJRO2`, `rec4M2QFrJFhSnvSG`, `recwWLcTOnTBQAwHo`, `recObGIdFNx7bfTMp`). Post-deletion reconciliation: Perfect Week **PASS**; Xavier/Testing3/Curtis show expected missing-XP **FINDING** (not recreated). Disposable live-create **PASS** on Testing3.
 

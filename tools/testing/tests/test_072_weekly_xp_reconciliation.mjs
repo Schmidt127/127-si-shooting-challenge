@@ -72,7 +72,8 @@ const settled = simulateXpCheck({
 assert.equal(settled.v42Error, null);
 assert.equal(settled.v43Error, null);
 
-assert.match(s072, /Version: v4\.5/);
+assert.match(s072, /Version: v4\.7/);
 assert.match(s072, /orphanXp/);
+assert.match(s072, /shootingDayKeys\.size/);
 
 console.log("PASS test_072_weekly_xp_reconciliation.mjs");

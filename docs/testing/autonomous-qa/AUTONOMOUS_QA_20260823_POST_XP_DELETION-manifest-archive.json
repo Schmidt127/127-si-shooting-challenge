@@ -1,0 +1,274 @@
+﻿{
+  "run_id": "AUTONOMOUS_QA_20260823_POST_XP_DELETION",
+  "started_at": "2026-08-23T15:40:42.014Z",
+  "completed_at": "2026-08-23T15:58:30.000Z",
+  "mode": "live_create_post_xp_deletion",
+  "base_id": "appn84sqPw03zEbTT",
+  "prior_deleted_xp_events": [
+    "recWV95wEywdDJRO2",
+    "rec4M2QFrJFhSnvSG",
+    "recwWLcTOnTBQAwHo",
+    "recObGIdFNx7bfTMp"
+  ],
+  "created": [
+    {
+      "table": "Submissions",
+      "id": "recbHnmVsvYUog9CE",
+      "enrollmentId": "recNu6fcBpF1GG3u5",
+      "runId": "AUTONOMOUS_QA_20260823T154042",
+      "cleanup": "pending_mike_delete"
+    },
+    {
+      "table": "XP Events",
+      "id": "rec6Wbxt9421Etg2s",
+      "sourceKey": "SUBMISSION_XP|recbHnmVsvYUog9CE",
+      "runId": "AUTONOMOUS_QA_20260823T154042",
+      "cleanup": "deactivated"
+    },
+    {
+      "table": "Submissions",
+      "id": "recaMbJStO2I12b58",
+      "enrollmentId": "recNu6fcBpF1GG3u5",
+      "runId": "AUTONOMOUS_QA_20260823T154508",
+      "cleanup": "pending_mike_delete"
+    },
+    {
+      "table": "XP Events",
+      "id": "recGxpIdiPPocbAOc",
+      "sourceKey": "SUBMISSION_XP|recaMbJStO2I12b58",
+      "runId": "AUTONOMOUS_QA_20260823T154508",
+      "cleanup": "deactivated"
+    }
+  ],
+  "changed": [
+    {
+      "table": "XP Events",
+      "id": "rec6Wbxt9421Etg2s",
+      "field": "Active?",
+      "value": false,
+      "reason": "disposable cleanup"
+    },
+    {
+      "table": "XP Events",
+      "id": "recGxpIdiPPocbAOc",
+      "field": "Active?",
+      "value": false,
+      "reason": "disposable cleanup"
+    },
+    {
+      "table": "Submissions",
+      "id": "recbHnmVsvYUog9CE",
+      "field": "Duplicate Review Status",
+      "value": "Count It",
+      "reason": "trigger 010 chain on disposable test"
+    }
+  ],
+  "deleted": [],
+  "live_create_verification": {
+    "primary_submission_id": "recbHnmVsvYUog9CE",
+    "primary_xp_event_id": "rec6Wbxt9421Etg2s",
+    "source_key": "SUBMISSION_XP|recbHnmVsvYUog9CE",
+    "xp_points": 20,
+    "xp_bucket": "Shooting Base",
+    "enrollment_id": "recNu6fcBpF1GG3u5",
+    "activity_date": "2026-08-23T15:41:02.616Z",
+    "is_disposable": true,
+    "no_duplicate_on_replay": true,
+    "pass": true,
+    "artifact": "/opt/cursor/artifacts/autonomous-qa/disposable-submission-verification.json"
+  },
+  "stale_field_check": {
+    "artifact": "/opt/cursor/artifacts/autonomous-qa/stale-submission-fields.json",
+    "phantom_xp_links": false,
+    "stale_award_status": false,
+    "reconciliation_needed_expected": true,
+    "submissions_checked": [
+      "rece0krfrEqiUEBVu",
+      "rec3zlR7xneAOatKh",
+      "recNqAXXzXAnac1GE",
+      "recLD7Fb6ph0yovyq"
+    ]
+  },
+  "verifications": [
+    {
+      "enrollmentId": "rec93mAfo5jKqP3g5",
+      "label": "perfect_week_testing",
+      "slug": "perfect-week-testing",
+      "reconciliationExitCode": 0,
+      "activeXpEvents": 39,
+      "missingSubmissionXp": [],
+      "pass": true,
+      "artifact": "/opt/cursor/artifacts/autonomous-qa/reconcile-rec93mAfo5jKqP3g5.json"
+    },
+    {
+      "enrollmentId": "recCrNNAdVmQ4Y8fL",
+      "label": "xavier_schmidt",
+      "slug": "xavier-schmidt",
+      "reconciliationExitCode": 0,
+      "activeXpEvents": 3,
+      "missingSubmissionXp": [
+        {
+          "type": "submission_xp",
+          "subId": "rece0krfrEqiUEBVu",
+          "sourceKey": "SUBMISSION_XP|rece0krfrEqiUEBVu",
+          "reason": "deleted_repair_xp_not_recreated"
+        }
+      ],
+      "pass": false,
+      "artifact": "/opt/cursor/artifacts/autonomous-qa/reconcile-recCrNNAdVmQ4Y8fL.json"
+    },
+    {
+      "enrollmentId": "recNu6fcBpF1GG3u5",
+      "label": "testing3_schmidt",
+      "slug": "testing3-schmidt",
+      "reconciliationExitCode": 0,
+      "activeXpEvents": 6,
+      "missingSubmissionXp": [
+        {
+          "type": "submission_xp",
+          "subId": "rec3zlR7xneAOatKh",
+          "sourceKey": "SUBMISSION_XP|rec3zlR7xneAOatKh",
+          "reason": "deleted_repair_xp_not_recreated"
+        },
+        {
+          "type": "submission_xp",
+          "subId": "recNqAXXzXAnac1GE",
+          "sourceKey": "SUBMISSION_XP|recNqAXXzXAnac1GE",
+          "reason": "deleted_repair_xp_not_recreated"
+        }
+      ],
+      "pass": false,
+      "artifact": "/opt/cursor/artifacts/autonomous-qa/reconcile-recNu6fcBpF1GG3u5.json"
+    },
+    {
+      "enrollmentId": "reclc46bQM8Wx0qWP",
+      "label": "curtis_schmidt",
+      "slug": "curtis-schmidt",
+      "reconciliationExitCode": 0,
+      "activeXpEvents": 7,
+      "missingSubmissionXp": [
+        {
+          "type": "submission_xp",
+          "subId": "recLD7Fb6ph0yovyq",
+          "sourceKey": "SUBMISSION_XP|recLD7Fb6ph0yovyq",
+          "reason": "deleted_repair_xp_not_recreated"
+        }
+      ],
+      "pass": false,
+      "artifact": "/opt/cursor/artifacts/autonomous-qa/reconcile-reclc46bQM8Wx0qWP.json"
+    },
+    {
+      "check": "read_only_integrity",
+      "duplicateSourceKeys": 0,
+      "incorrectEnrollmentLinks": 0,
+      "pass": true,
+      "artifact": "/opt/cursor/artifacts/autonomous-qa/read-only-integrity.json"
+    }
+  ],
+  "blocked_manual": [
+    {
+      "item": "010 v10.12 paste",
+      "production": "v10.10",
+      "github": "v10.12",
+      "checklist": "docs/deploy-checklists/010-v10.12-PASTE.txt"
+    },
+    {
+      "item": "057 v1.9 paste",
+      "production": "v1.8",
+      "github": "v1.9",
+      "checklist": "docs/deploy-checklists/057-v1.9-PASTE.txt"
+    },
+    {
+      "item": "072 v4.3 paste",
+      "production": "v4.2",
+      "github": "v4.3",
+      "checklist": "docs/deploy-checklists/072-v4.3-PASTE.txt"
+    },
+    {
+      "item": "weekly_email_positive_path",
+      "reason": "requires 072 v4.3 paste + WAS reczxTIpVI8ZJLex0 re-arm"
+    }
+  ],
+  "checklist": [
+    {
+      "component": "Disposable submission XP live-create",
+      "final_status": "PASS",
+      "actual_result": "SUBMISSION_XP created; 20pts Shooting Base; idempotent replay"
+    },
+    {
+      "component": "XP reconciliation perfect_week_testing",
+      "final_status": "PASS",
+      "actual_result": "39 active XP events; zero missing"
+    },
+    {
+      "component": "XP reconciliation xavier_schmidt",
+      "final_status": "FINDING",
+      "actual_result": "1 missing (deleted repair XP ΓÇö not recreated)"
+    },
+    {
+      "component": "XP reconciliation testing3_schmidt",
+      "final_status": "FINDING",
+      "actual_result": "2 missing (deleted repair XP ΓÇö not recreated)"
+    },
+    {
+      "component": "XP reconciliation curtis_schmidt",
+      "final_status": "FINDING",
+      "actual_result": "1 missing (deleted repair XP ΓÇö not recreated)"
+    },
+    {
+      "component": "Stale fields on deleted-XP submissions",
+      "final_status": "PASS",
+      "actual_result": "No phantom links; Reconciliation Needed expected"
+    },
+    {
+      "component": "Read-only duplicate Source Keys",
+      "final_status": "PASS",
+      "actual_result": "0 active duplicates"
+    },
+    {
+      "component": "Production web routes (8)",
+      "final_status": "PASS",
+      "actual_result": "HTTP 200 + browser screenshots"
+    },
+    {
+      "component": "Mobile layout athlete profiles",
+      "final_status": "PASS",
+      "actual_result": "390px viewport OK on Xavier + Perfect Week"
+    },
+    {
+      "component": "Repo validation suite",
+      "final_status": "PASS",
+      "actual_result": "Agent4 29/29; web 260; Python 147+139; build"
+    },
+    {
+      "component": "010 v10.12 paste",
+      "final_status": "BLOCKED",
+      "actual_result": "Production v10.10 ΓÇö Mike paste required"
+    },
+    {
+      "component": "057 v1.9 paste",
+      "final_status": "BLOCKED",
+      "actual_result": "Production v1.8 ΓÇö Mike paste required"
+    },
+    {
+      "component": "072 v4.3 paste",
+      "final_status": "BLOCKED",
+      "actual_result": "Production v4.2 ΓÇö Mike paste required"
+    },
+    {
+      "component": "Weekly email positive path",
+      "final_status": "BLOCKED",
+      "actual_result": "Pending 072 paste + live send proof"
+    }
+  ],
+  "summary": {
+    "total": 14,
+    "pass": 8,
+    "fail": 0,
+    "finding": 3,
+    "blocked": 4,
+    "not_tested": 0
+  },
+  "cleanup_report": "/opt/cursor/artifacts/autonomous-qa/cleanup-report.json",
+  "full_report": "docs/testing/autonomous-qa/AUTONOMOUS_QA_20260823_POST_XP_DELETION_REPORT.md"
+}
