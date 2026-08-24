@@ -50,9 +50,7 @@ import {
   type PublicUnlockFields,
   type PublicWasFields,
 } from "@/lib/data/public-athlete-profile";
-import { mapAttachments } from "@/lib/data/homework";
 import { loadXpActivityForEnrollment } from "@/lib/data/xp-activity-loader";
-import { resolveLevelCoverImageUrl } from "@/lib/levels/level-graphic";
 import { asBoolean, asText, linkedRecordIds, requireExactlyOneLookupNumber } from "@/lib/data/airtable-values";
 import type { PublicAthleteProfile } from "@/types/public-athlete-profile";
 import type { AchievementCatalogData } from "@/types/achievements";
@@ -740,7 +738,6 @@ export const PUBLIC_PROFILE_ENROLLMENT_FIELDS = [
   "Public Profile Enabled",
   "Public Profile Slug",
   "Active?",
-  "Current Level",
   "Current Level - Public Facing Display",
   "Level Sort Order - For Softr",
   "Lifetime XP Total",
@@ -860,9 +857,6 @@ export async function fetchPublicAthleteProfileBySlug(
 
   const nextLevelIds = linkedRecordIds(fields["Next Level"]);
   const nextLevelId = nextLevelIds[0] ?? null;
-  const currentLevelIds = linkedRecordIds(fields["Current Level"]);
-  const currentLevelId = currentLevelIds[0] ?? null;
-  const linkedLevelIds = [...new Set([currentLevelId, nextLevelId].filter(Boolean) as string[])];
   const wasIds = linkedRecordIds(fields["Weekly Athlete Summary"]).slice(0, 20);
   const unlockIds = linkedRecordIds(fields["Athlete Achievement Unlocks"]).slice(0, 50);
 
@@ -875,7 +869,7 @@ export async function fetchPublicAthleteProfileBySlug(
   const wasFilter = recordIdOrFilter(wasIds);
   const unlockFilter = recordIdOrFilter(unlockIds);
 
-  const [wasResponse, unlockResponse, xpActivity, leaderboard, linkedLevelsResponse, levelLadder] =
+  const [wasResponse, unlockResponse, xpActivity, leaderboard, nextLevelResponse] =
     await Promise.all([
     wasFilter
       ? listAirtableRecords<PublicWasFields>({
@@ -901,19 +895,15 @@ export async function fetchPublicAthleteProfileBySlug(
       revalidateSeconds: PUBLIC_PROFILE_REVALIDATE_SECONDS,
     }),
     fetchLeaderboard().catch(() => null),
-    linkedLevelIds.length
+    nextLevelId
       ? listAirtableRecords<PublicLevelFields>({
           tableName: AIRTABLE_TABLES.levels,
-          maxRecords: linkedLevelIds.length,
-          fields: ["Level Name", "Level Name with Color", "Cover Image"],
-          filterByFormula:
-            linkedLevelIds.length === 1
-              ? `RECORD_ID()="${linkedLevelIds[0]}"`
-              : `OR(${linkedLevelIds.map((id) => `RECORD_ID()="${id}"`).join(",")})`,
+          maxRecords: 1,
+          fields: ["Level Name", "Level Name with Color"],
+          filterByFormula: `RECORD_ID()="${nextLevelId}"`,
           revalidateSeconds: PUBLIC_PROFILE_REVALIDATE_SECONDS,
         })
       : Promise.resolve({ records: [] as Array<{ id: string; fields: PublicLevelFields }> }),
-    fetchLevelLadder().catch(() => null),
   ]);
 
   const visibleUnlocks = unlockResponse.records.filter(
@@ -1025,56 +1015,4 @@ export async function fetchPublicAthleteProfileBySlug(
     }),
     achievements: mapPublicAchievements(visibleUnlocks, defsById),
   });
-}
-
-/** Cached profile shell — same payload as the full public profile loader. */
-export async function fetchPublicAthleteProfileShellBySlug(
-  slug: string,
-): Promise<PublicAthleteProfile | null> {
-  return fetchPublicAthleteProfileBySlug(slug);
-}
-
-export type ResolvedPublicEnrollment = {
-  enrollmentId: string;
-  fields: PublicEnrollmentFields;
-};
-
-/**
- * Resolve one enabled public enrollment by slug for segmented profile reads.
- * Returns null for missing, disabled, inactive, invalid, or duplicate slugs.
- */
-export async function resolvePublicEnrollmentBySlug(
-  rawSlug: string,
-): Promise<ResolvedPublicEnrollment | null> {
-  const slug = normalizeProfileSlug(rawSlug);
-  if (!isValidPublicSlug(slug)) return null;
-
-  const escaped = escapeAirtableString(slug);
-  const schoolYearClause = activeSchoolYearFilterClause();
-  const filterByFormula = andFormula(
-    "{Public Profile Enabled}=1",
-    "{Active?}",
-    `LOWER({Public Profile Slug})=LOWER("${escaped}")`,
-    schoolYearClause,
-  );
-
-  const enrollmentResponse = await listAirtableRecords<PublicEnrollmentFields>({
-    tableName: AIRTABLE_TABLES.enrollments,
-    maxRecords: 5,
-    fields: [...PUBLIC_PROFILE_ENROLLMENT_FIELDS],
-    filterByFormula,
-    revalidateSeconds: PUBLIC_PROFILE_REVALIDATE_SECONDS,
-  });
-
-  if (enrollmentResponse.records.length !== 1) {
-    if (enrollmentResponse.records.length > 1) {
-      console.error(
-        `[public-athlete-profile] Duplicate enabled Public Profile Slug "${slug}" (${enrollmentResponse.records.length} enrollments). Failing closed.`,
-      );
-    }
-    return null;
-  }
-
-  const enrollment = enrollmentResponse.records[0];
-  return { enrollmentId: enrollment.id, fields: enrollment.fields };
 }
