@@ -9,12 +9,18 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Added
+- **Master closeout (2026-08-24)** — Authoritative docs updated after Production verification of
+  **065 v10.3** / **066 v3.9** dynamic triggering, historical audit artifact preservation
+  (`recYIn2CHdvIaiYg6`, `rec1QYofvoDBHIsSS`, `recgP3pc7mXUccsdC`, plus protected WAS/queue rows),
+  flexible HW1/HW2 follow-up plan (deferred), and master component list §0E.
+  Closeout: `docs/deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md`,
+  `docs/deploy-checklists/2026-08-24-historical-audit-artifacts.md`.
 - **Master document reconciliation (2026-08-24)** — Authoritative docs updated after
   successful weekly-summary Production E2E: Perfect Week 48-hour grace + **057 v2.0**,
   **072 v4.7 / 074 v3.3 / 079 v2.5** live-tested, video-feedback parent email,
   duplicate/conflict protection, historical artifact preservation (`reczxTIpVI8ZJLex0`,
-  `recoikFrli3m0xDRa`), disposable fixture cleanup status, and **065/066** follow-up
-  (repo v10.3/v3.9 merged PR #256 — Production paste pending).
+  `recoikFrli3m0xDRa`), disposable fixture cleanup status. **065/066** Production paste
+  **live-tested 2026-08-24** (supersedes earlier "paste pending" note).
 - **Weekly-summary E2E closeout documentation (2026-08-24)** — Production chain
   **072 v4.7 → 074 v3.3 → 079 v2.5 → Communications Hub → Resend** live-tested on
   disposable WAS fixture (Test Mode, allowlisted recipient). Reports:
@@ -35,8 +41,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 #### Changed
 - **065 v10.3 / 066 v3.9 dynamic triggering recordId (2026-08-24)** — Scripts require
   `recordId` from `input.config()` only (no hardcoded record literals in executable
-  logic). Explicit missing/invalid input errors. Deploy:
-  `docs/deploy-checklists/065-066-v10.3-v3.9-dynamic-trigger-record.md`. Paste:
+  logic). **Production live-tested 2026-08-24.** Deploy:
+  `docs/deploy-checklists/065-066-v10.3-v3.9-dynamic-trigger-record.md`. Closeout:
+  `docs/deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md`. Paste:
   `065-v10.3-PASTE.txt`, `066-v3.9-PASTE.txt`.
 - **072 v4.7 / 074 v3.3 weekly email fixes (2026-08-24)** — Fix general shooting days
   writeback (`shootingDayKeys.size` bug caused `undefined` and email fallback to PW days);

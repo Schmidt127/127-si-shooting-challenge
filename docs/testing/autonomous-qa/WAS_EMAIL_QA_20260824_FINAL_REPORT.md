@@ -57,7 +57,7 @@ These records were created for controlled QA. They may be deleted when Mike no l
 | Week | `recT3EXo4Tz7BKFIb` | **Protected** — shared Perfect Testing Week |
 | Summary key | `ATH-recPg14iNRkxblMLs\|2026-2027\|2026-2027\|Perfect Testing Week` | — |
 
-XP settlement on the disposable fixture used **canonical manual settlement** where Production automations **065** and **066** could not trigger (hardcoded reference `recordId` in script inputs). See follow-up engineering item below.
+XP settlement on the disposable fixture used **canonical manual settlement** where Production automations **065** and **066** could not trigger during the **pre-paste** E2E window (hardcoded reference `recordId` in script inputs). **Resolved:** Production **065 v10.3** / **066 v3.9** with dynamic trigger mapping verified 2026-08-24.
 
 ---
 
@@ -76,8 +76,9 @@ The old pre-v4.7 email and queue conflict are **historical test artifacts**, not
 
 | Item | Status | Notes |
 |------|--------|-------|
-| **065 v10.3** Production paste | `needs live proof` | GitHub dynamic `recordId` merged PR #256; at E2E test time Production had hardcoded reference input — fixture homework XP required canonical manual settlement |
-| **066 v3.9** Production paste | `needs live proof` | Same as 065 for shot-milestone unlocks — fixture automation triggering **not fully solved** until Production paste verified |
+| **065 v10.3** / **066 v3.9** Production paste | `live-tested` | Dynamic `recordId` verified 2026-08-24 — pre-E2E manual settlement was historical only |
+| Historical audit artifacts | `complete` | [`2026-08-24-historical-audit-artifacts.md`](../../deploy-checklists/2026-08-24-historical-audit-artifacts.md) |
+| Flexible HW1/HW2 alternate slot | `optional/future` | [`FLEXIBLE-HW1-HW2-SLOT-FOLLOWUP.md`](../../next-wave/homework-pipeline/FLEXIBLE-HW1-HW2-SLOT-FOLLOWUP.md) |
 | Disposable fixture deletion | `needs manual cleanup` | Optional — `recdj8MD0szplMW5r`, `recxIzdVil9ewhBxN`, `recPg14iNRkxblMLs` |
 | Optional email-content refinements | `optional/future` | Template copy, formatting, mobile rendering — non-blocking |
 | **010 v10.12** paste lag | `optional/future` | Unrelated to weekly-email E2E success |

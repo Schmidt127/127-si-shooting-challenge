@@ -10,7 +10,7 @@ This is the **detailed completion matrix and historical traceability record** fo
 | Field | Value |
 |-------|--------|
 | **Purpose** | Completion matrix, package traceability, and preserved historical evidence |
-| **Last updated** | **2026-08-24** (master reconciliation — weekly-summary E2E + Perfect Week grace + automation versions) |
+| **Last updated** | **2026-08-24** (master closeout — weekly E2E + 065/066 dynamic triggers live + historical artifacts documented) |
 | **Production branch** | `master` |
 | **Vercel root** | `web/` |
 | **Production website** | https://www.fairfieldbasketballclub.com/shoot |
@@ -52,7 +52,7 @@ Reconciled against [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md), [`PROJECT_STATE.md`
 | **Video pipeline** | `live-tested` | 070b **v4.7** + Lambda + 070c; 022 **v2.1** writeback; full PKG-007 scope open |
 | **Zoom pipeline** | `live-tested` | **101 v6.7** live attendance XP; recording credit `Mike decision` |
 | **Streaks** | `needs live proof` | 053/054 contracts in repo; full natural-trigger proof open |
-| **Shot milestones** | `live-tested` | **066 v3.8**; Perfect Week Testing repair proved milestone XP path |
+| **Shot milestones** | `live-tested` | **066 v3.9** live with dynamic `recordId`; replay verified idempotent |
 | **Perfect Week** | `live-tested` | **48-hour grace period** + **057 v2.0** verified on disposable E2E fixture (4/7 PW qualifying days); ledger repair complete (39 events on `rec93mAfo5jKqP3g5`); full calendar award certification still `needs live proof` |
 | **Perfect Week 48-hour grace period** | `live-tested` | Airtable formulas + **057 v2.0**; disposable weekly email showed **4/7** PW qualifying days vs **7/7** general shooting days |
 | **Weekly Athlete Summary** | `live-tested` | WAS create/link path proven; disposable fixture E2E 2026-08-24; scheduler positive arm `needs live proof` |
@@ -81,7 +81,7 @@ All Shooting Challenge parent/athlete notification email goes through **Communic
 
 ## 0A. Current Automation Versions — 2026-08-24
 
-Authoritative GitHub SCRIPT headers + [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) overlays. Production paste may lag GitHub for **010 v10.12**, **065 v10.3**, and **066 v3.9** — verify in Automations UI before claiming live.
+Authoritative GitHub SCRIPT headers + [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) overlays. Production paste may lag GitHub for **010 v10.12** only — verify in Automations UI before claiming live. **065 v10.3** and **066 v3.9** are **live-tested** (2026-08-24).
 
 | # | Current (GitHub / production-aligned) | Status | Notes |
 |---|--------------------------------------|--------|-------|
@@ -96,8 +96,8 @@ Authoritative GitHub SCRIPT headers + [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) o
 | **058** | v1.3 | live-tested | Perfect Week unlock |
 | **059** | v3.6 | live-tested | Achievement XP from unlock |
 | **064** | v12.2 (repo) | live-tested | Homework XP prepare — production-verified current live |
-| **065** | **v10.3** (repo) | `repository-ready` | Homework XP create/reconcile — GitHub dynamic `recordId`; awaiting Mike Production install (v10.2 had hardcoded reference input at E2E test time) |
-| **066** | **v3.9** (repo) | `repository-ready` | Shot milestones — GitHub dynamic `recordId`; awaiting Mike Production install (v3.8 had hardcoded reference input at E2E test time) |
+| **065** | **v10.3** | `live-tested` | Homework XP create/reconcile — dynamic `recordId` from trigger; Production paste verified 2026-08-24 |
+| **066** | **v3.9** | `live-tested` | Shot milestones — dynamic `recordId` from trigger; replay verified idempotent 2026-08-24 |
 | **070a** | v4.7 | retired / off | Homework upload Make — **off by design** except controlled windows |
 | **070b** | v4.7 | live-tested | Video upload → Make → Lambda |
 | **070c** | v1.1 | live-tested | Async writeback verify |
@@ -148,7 +148,7 @@ Authoritative GitHub SCRIPT headers + [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) o
 | Component | Owner | Current state | Evidence | Completed work | Remaining work | Dependency | Priority | Last reconciled |
 |-----------|-------|---------------|----------|----------------|----------------|------------|----------|-----------------|
 | Airtable Production Base | Mike | live-tested | `appn84sqPw03zEbTT` | Production-only governance (PKG-042) | Schema refresh; live UI attestation | — | P0 | 2026-08-23 |
-| Automations | Mike; Cursor | live-tested | SCRIPT headers; CURRENT-TRUTH §8 | Version reconciliation; contract tests | Paste **065 v10.3** / **066 v3.9**; verify **010 v10.12** if lagging | — | P0 | 2026-08-24 |
+| Automations | Mike; Cursor | live-tested | SCRIPT headers; CURRENT-TRUTH §8 | **065 v10.3 / 066 v3.9** live; contract tests PASS | Verify **010 v10.12** paste if UI lags GitHub | — | P0 | 2026-08-24 |
 | Enrollment / Athlete Identity | Mike | live-tested | 2026-08-16 path packet | 001/023 proofs | Natural Fillout intake (PKG-006) | Fillout decision | P0 | 2026-08-23 |
 | Fillout Intake | Mike | retired | Contest closed | Historical intake proofs | 2027 reopen decision | PKG-009 | P1 | 2026-08-23 |
 | Submissions | Mike | live-tested | Schmidt controlled paths | 005/009/010 chain | Natural-trigger proof | PKG-006 | P0 | 2026-08-23 |
@@ -163,7 +163,7 @@ Authoritative GitHub SCRIPT headers + [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) o
 | Zoom Approval Email | Mike | live-tested | 117 v2.1 Hub handoff | Queue create only | Template live proof | Hub | P1 | 2026-08-23 |
 | Zoom Recording XP | Mike | Mike decision | C-025 design alts | Email path live | Credit writer decision (PKG-010) | Product decision | P2 | 2026-08-23 |
 | Streaks | Mike | needs live proof | Repo contracts | 053/054 sources | Natural-trigger proof | — | P1 | 2026-08-23 |
-| Shot Milestones | Mike | live-tested | 066 v3.8; PW repair | Milestone XP on test enrollment | Broader season proof | — | P1 | 2026-08-23 |
+| Shot Milestones | Mike | live-tested | **066 v3.9** dynamic trigger + replay | Milestone XP on test enrollment | Broader season proof | — | P1 | 2026-08-24 |
 | Perfect Week | Mike | `live-tested` | 48-hour grace + **057 v2.0**; disposable E2E 4/7 PW days | 39-event ledger repair; grace formulas | Full calendar award (Days Logged=7) | Calendar | P1 | 2026-08-24 |
 | Weekly Athlete Summary | Mike | live-tested | WAS proofs; disposable E2E fixture | 031/032/030 paths | 118 positive build arm | Eligible week | P0 | 2026-08-24 |
 | Weekly Summary Email | Mike | `live-tested` | **072 v4.7 → 074 v3.3 → 079 v2.5** E2E 2026-08-24 | Payload + delivery verified | Optional template copy refinements | — | P0 | 2026-08-24 |
@@ -229,7 +229,9 @@ Authoritative GitHub SCRIPT headers + [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) o
 | Duplicate / conflict protection | `live-tested` | No duplicate email; `recoikFrli3m0xDRa` preserved unchanged |
 | Old pre-v4.7 weekly email (`reczxTIpVI8ZJLex0`) | `historical only` | Sent before v4.7 corrections — preserved evidence, not a defect |
 | Corrected disposable email | `live-tested` | Received and content-verified 2026-08-24 |
-| **065 / 066** fixture triggering | `repository-ready` | GitHub **v10.3 / v3.9** dynamic `recordId` merged PR #256; awaiting Mike Production install — fixture settlement at test time required canonical manual writes |
+| **065 / 066** dynamic triggering | `live-tested` | Production **v10.3 / v3.9** with trigger `recordId`; pre-paste manual settlement was historical workaround only — see [`deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md`](./deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md) |
+| Historical audit artifacts | `complete` | Protected WAS/queue + three orphan references documented — [`deploy-checklists/2026-08-24-historical-audit-artifacts.md`](./deploy-checklists/2026-08-24-historical-audit-artifacts.md) |
+| Flexible HW1/HW2 alternate slot | `optional/future` | **005 v5.5** normalizes Submission fields; **020/065** strict slot check remains — follow-up [`next-wave/homework-pipeline/FLEXIBLE-HW1-HW2-SLOT-FOLLOWUP.md`](./next-wave/homework-pipeline/FLEXIBLE-HW1-HW2-SLOT-FOLLOWUP.md) |
 
 Report: [`WAS_EMAIL_QA_20260824_FINAL_REPORT.md`](./testing/autonomous-qa/WAS_EMAIL_QA_20260824_FINAL_REPORT.md)
 
@@ -244,7 +246,7 @@ Report: [`WAS_EMAIL_QA_20260824_FINAL_REPORT.md`](./testing/autonomous-qa/WAS_EM
 | Perfect Week full calendar award (057→058→059 after Eligible?=true, Days Logged=7) | Mike | `needs live proof` |
 | Natural Fillout-shaped intake proof (PKG-006) | Mike | `needs live proof` |
 | 118/119 positive build/send arm on eligible completed Week | Mike | `needs live proof` |
-| Critical automation paste attestation (**065 v10.3**, **066 v3.9**, **010 v10.12** if UI lags GitHub) | Mike | `needs live proof` |
+| Critical automation paste attestation (**010 v10.12** if UI lags GitHub) | Mike | `needs live proof` |
 | Production XP reconciliation on operator enrollments (missing-submission warnings) | Mike; Cursor | `needs live proof` |
 | 2027 Weeks / season activation package (PKG-009) | Mike | `Mike decision` |
 
@@ -273,7 +275,37 @@ Report: [`WAS_EMAIL_QA_20260824_FINAL_REPORT.md`](./testing/autonomous-qa/WAS_EM
 | Multi-year Program Instance architecture (V2-013) | Mike | `deferred` |
 | Optional weekly email template / copy refinements | Cursor | `optional/future` |
 | Disposable fixture Airtable cleanup (`recdj8MD0szplMW5r`, `recxIzdVil9ewhBxN`, `recPg14iNRkxblMLs`) | Mike | `needs manual cleanup` |
-| **065 / 066** Production paste after hardcoded-input fix (PR #256) | Mike | `needs live proof` |
+| Flexible Homework 1/Homework 2 alternate-slot (020/065 path) | Mike; Cursor | `optional/future` — see follow-up plan |
+
+---
+
+## 0E. Master component list (2026-08-24)
+
+Status labels: `complete` · `live-tested` · `repository-ready` · `optional/future` · `needs live proof` · `Mike decision` · `deferred` · `historical only`.
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| **Repository and CI** | `live-tested` | GitHub `master`; `.github/workflows/web.yml`; Agent 4 suite **31/31 PASS** (2026-08-24 closeout) |
+| **Airtable source of truth** | `live-tested` | Production base `appn84sqPw03zEbTT` only; DEV retired 2026-08-19 |
+| **Intake (001/023/005)** | `live-tested` | Schmidt controlled paths; natural Fillout reopen `needs live proof` |
+| **Submission XP (010)** | `live-tested` | GitHub **v10.12**; Production Code may lag (**010 v10.10**) |
+| **Homework XP (064/065)** | `live-tested` | **065 v10.3** dynamic trigger live 2026-08-24 |
+| **Video XP (113/114)** | `live-tested` | PKG-007 proof PASS 2026-08-23 |
+| **Zoom XP (101)** | `live-tested` | **v6.7** live attendance |
+| **Streak XP (053/054)** | `needs live proof` | Repo contracts; natural-trigger proof open |
+| **Shot milestones (066)** | `live-tested` | **v3.9** dynamic trigger + replay verified |
+| **Perfect Week (057→058→059)** | `live-tested` | **48-hour grace** + **057 v2.0**; full calendar award `needs live proof` |
+| **Weekly email (072/074/079)** | `live-tested` | E2E disposable send 2026-08-24; content verified |
+| **Parent feedback email (071/078)** | `live-tested` | Hub → Resend path; homework + video branches |
+| **Communications Hub / Resend** | `live-tested` | Current email plane; Make email retired |
+| **Vercel / web (`/shoot`)** | `live-tested` | Deployed; health API token-valid; athlete XP activity page `repository-ready` (WIP not in this closeout) |
+| **Fillout intake** | `Mike decision` | Contest closed; 2027 reopen pending |
+| **Lambda uploads (070b/070c)** | `live-tested` | C-013 historical E2E; season code deployed |
+| **Tremendous awards** | `blocked` | Sandbox only; production API pending |
+| **SEO / public indexing** | `deferred` | Sitewide `noindex` until cutover |
+| **Level gates (041/042)** | `live-tested` | Partial Schmidt proof; full matrix `needs live proof` |
+| **Athlete XP activity page** | `repository-ready` | Web WIP excluded from this commit — not production-certified |
+| **Cleanup and historical records** | `complete` | Protected + orphan artifacts documented — [`deploy-checklists/2026-08-24-historical-audit-artifacts.md`](./deploy-checklists/2026-08-24-historical-audit-artifacts.md) |
 
 ---
 

@@ -43,11 +43,10 @@ Mike may delete when evidence is no longer needed:
 
 | Item | Status | Notes |
 |------|--------|-------|
-| **065 v10.3** Production paste | `needs live proof` | GitHub dynamic `recordId` merged PR #256; at E2E test time Production v10.2 had hardcoded reference input — fixture settlement required canonical manual writes |
-| **066 v3.9** Production paste | `needs live proof` | Same as 065 — fixture automation triggering **not fully solved** until paste + input mapping verified |
+| **065 v10.3** Production paste | `live-tested` | Dynamic `recordId` verified 2026-08-24 — [`2026-08-24-065-066-dynamic-trigger-closeout.md`](./2026-08-24-065-066-dynamic-trigger-closeout.md) |
+| **066 v3.9** Production paste | `live-tested` | Replay idempotent — same closeout doc |
+| Historical audit artifacts | `complete` | [`2026-08-24-historical-audit-artifacts.md`](./2026-08-24-historical-audit-artifacts.md) |
 | **010 v10.12** paste | `optional/future` | Unrelated to weekly-email E2E success |
-
-Deploy: [`065-066-v10.3-v3.9-dynamic-trigger-record.md`](./065-066-v10.3-v3.9-dynamic-trigger-record.md)
 
 ---
 
@@ -66,7 +65,7 @@ Non-blocking improvements for a later pass:
 
 | Suite | Result |
 |-------|--------|
-| Agent 4 (`run-agent4-suite.js`) | **29/29 PASS** |
+| Agent 4 (`run-agent4-suite.js`) | **31/31 PASS** |
 | Source-of-truth audit | **PASS** |
 | WAS email contracts | **PASS** |
 | 072 XP reconciliation offline test | **PASS** |

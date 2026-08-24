@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-24 (master reconciliation — weekly-summary E2E live-tested; Perfect Week 48-hour grace; 057 v2.0)  
+**Last verification (repo):** 2026-08-24 (master closeout — 065/066 dynamic triggers live; weekly E2E complete; historical artifacts documented)  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -167,8 +167,8 @@ Do **not** treat older Automations-table Code-column snapshots as stronger than 
 | **058** | **v1.3** | 1.3 | Live | Unlock only after Eligible + Ready |
 | **059** | **v3.6** | v3.6 | Live | |
 | **064** | **Production-verified current live** | v12.2 in repo | Live | Do not invent a new version string |
-| **065** | **v10.2** (prod at E2E test) | **v10.3** | Live / **paste needed** | GitHub dynamic `recordId` (PR #256); disposable fixture required canonical manual settlement at test time |
-| **066** | **v3.8** (prod at E2E test) | **v3.9** | Live / **paste needed** | GitHub dynamic `recordId` (PR #256); disposable fixture required canonical manual settlement at test time |
+| **065** | **v10.3** (prod) | **v10.3** | **Live / live-tested** | Dynamic `recordId` from Homework Completion trigger; Production paste verified 2026-08-24 |
+| **066** | **v3.9** (prod) | **v3.9** | **Live / live-tested** | Dynamic `recordId` from Enrollment trigger; replay verified idempotent 2026-08-24 |
 | **072** | **v4.7** (prod) | **v4.7** | **Live / live-tested** | v4.7 shooting days 7/7, goal 150%+, video list, XP 1280; E2E disposable send 2026-08-24 |
 | **074** | **v3.3** (prod) | **v3.3** | **Live / live-tested** | Weekly summary Hub handoff; E2E with 072 v4.7 2026-08-24 |
 | **070a** | **v4.7** | v4.7 | **Off** by design | Homework upload Make path |
@@ -177,7 +177,7 @@ Do **not** treat older Automations-table Code-column snapshots as stronger than 
 | **101** | **v6.7** | v6.7 | Live | Live script body `Version: v6.7` / `version: "v6.7"`; meeting `recxtpMu4ONbdDD45` safely skipped (reconciliation not needed) |
 | **117** | **v2.1** | v2.1 | **Live** | Dynamic inputs: `recordId`, `enrollmentRid`, `zoomMeetingRid` |
 
-**Record-ID classification (Mike final):** Dynamic for all record-based automations; optional on **041** only; intentionally blank on **056 / 078 / 118 / 119**. **At weekly-email E2E test time (2026-08-24):** Production **065** and **066** still had hardcoded reference `recordId` in automation script inputs — fixture settlement required canonical manual writes. GitHub **065 v10.3** / **066 v3.9** (PR #256) resolves this in repo; **awaiting Mike Production install**. Fixture automation triggering is **not fully solved** until install + input mapping verified.
+**Record-ID classification (Mike final):** Dynamic for all record-based automations; optional on **041** only; intentionally blank on **056 / 078 / 118 / 119**. **065 v10.3** and **066 v3.9** use triggering-record `recordId` in Production (verified 2026-08-24). Pre-paste hardcoded reference inputs and disposable-fixture manual settlement were **historical workarounds only**. Closeout: [`deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md`](./deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md).
 
 **Historical snapshot (midday 2026-08-21):** An earlier Automations Code-column read briefly showed **010 v10.10** and **101 v6.6**. That snapshot is **superseded** by Mike’s live script / run-history verification above. See [`deploy-checklists/2026-08-21-perfect-week-test-prep-report.md`](./deploy-checklists/2026-08-21-perfect-week-test-prep-report.md).
 
@@ -206,9 +206,9 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Domain | Owner (repo contract) | Live proof |
 |--------|----------------------|------------|
 | Submission XP | **010** — Source Key `SUBMISSION_XP\|{submissionId}` | GitHub **v10.12**; prior Production run history v10.11 |
-| Homework XP | **064** prepares (`HOMEWORK_COMPLETION` rule); **065** creates/reconciles `HOMEWORK_XP\|{hcId}` (**020** HC create; **078** marks Parent Feedback Ready?) | **065 Production v10.2**; **064** Production-verified current live; [homework-assets/HOMEWORK-ASSET-COMPLETION-RUNBOOK.md](./online-agents/homework-assets/HOMEWORK-ASSET-COMPLETION-RUNBOOK.md) |
+| Homework XP | **064** prepares (`HOMEWORK_COMPLETION` rule); **065** creates/reconciles `HOMEWORK_XP\|{hcId}` (**020** HC create; **078** marks Parent Feedback Ready?) | **065 Production v10.3** live-tested 2026-08-24; **064** Production-verified current live |
 | Video XP | **113 / 114** (+ **013** VF create) | **Live v6.4 / v6.1**; **PKG-007 lifecycle proof PASS 2026-08-23** (`AUTONOMOUS_VIDEO_QA_20260823_164549`, Testing3). Native trigger + 073 OFF UI attestation open |
-| Shot milestones | **066** | Production **v3.8** |
+| Shot milestones | **066** | Production **v3.9** live-tested 2026-08-24 |
 | Levels | **041 / 042** | **041 Production v5.1**; broader progression proof still open |
 | Perfect Week | **057 → 058 → 059** | **48-hour grace period `live-tested`** (057 v2.0 + formulas; 4/7 PW days in disposable E2E). XP ledger **live-tested 2026-08-23** (39 active events on `rec93mAfo5jKqP3g5`). Full calendar award still **PENDING** until Days Logged=7 and Eligible?=true. |
 | Zoom live attendance XP | **101** | Production **v6.7** (live script body). Meeting `recxtpMu4ONbdDD45` safe skip when reconciliation not needed. |
@@ -220,7 +220,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 
 | Path | State |
 |------|--------|
-| Homework assets → HC → XP → parent | **009** → **020 v3.7** → **070a v4.7 Live** (controlled window) → **064** prepare / **065 v10.2** → **078** Ready → **071** Hub |
+| Homework assets → HC → XP → parent | **009** → **020 v3.7** → **070a v4.7 Live** (controlled window) → **064** prepare / **065 v10.3** → **078** Ready → **071** Hub |
 | Homework completion (**020**) | Production **v3.7**. **012** / **063** deleted — do not restore |
 | Homework upload Make (**070a**) | Production **v4.7 Live** during Perfect Week controlled window (historically intentional OFF). Formula Ready alone does not send; **Send to Make Trigger** required |
 | Video upload (**070b** + Lambda + **070c**) | Production **070b v4.7** → Make → Lambda → **070c current live (repo v1.1)** verify. Optional retry proof + secret rotation **PENDING** |
@@ -271,12 +271,11 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - Repository integrity + PII redaction pass (this audit)
 - **2026-08-23 post-XP-deletion autonomous QA:** Four temporary repair XP Events deleted by Mike; disposable live-create **PASS** (010 → SUBMISSION_XP, idempotent); Perfect Week **PASS** (39 active); Xavier/Testing3/Curtis **FINDING** (4 missing repair rows not recreated); stale-field check **PASS** (no phantom links); **010/057/072 paste BLOCKED** pending Mike
 - **2026-08-24 weekly-summary E2E:** **072 v4.7 → 074 v3.3 → 079 v2.5 → Hub → Resend** live-tested on disposable WAS `recdj8MD0szplMW5r`. Content verified: 7/7, 4/7 PW, 48,066 shots, 1,280 XP, 40 events, 150%+, 8 videos. No duplicate send. Report: [`testing/autonomous-qa/WAS_EMAIL_QA_20260824_FINAL_REPORT.md`](./testing/autonomous-qa/WAS_EMAIL_QA_20260824_FINAL_REPORT.md)
-- **2026-08-24 master reconciliation:** Perfect Week grace + **057 v2.0** live-tested; **065/066** repo fix merged (PR #256) — awaiting Mike Production install
+- **2026-08-24 master closeout:** **065 v10.3** / **066 v3.9** Production dynamic `recordId` verified; historical audit artifacts documented ([`deploy-checklists/2026-08-24-historical-audit-artifacts.md`](./deploy-checklists/2026-08-24-historical-audit-artifacts.md))
 
 ### Pending / needs live proof
 
 - **010 v10.12** — Mike paste from GitHub if Automations Code column still lags (v10.10 as of 2026-08-23 API read)
-- **065 v10.3 / 066 v3.9** — Paste from GitHub after PR #256 dynamic `recordId` fix; disposable fixture settlement at E2E test time required canonical manual writes — **fixture automation triggering not fully solved until Production paste verified**
 - Optional disposable fixture cleanup: `recdj8MD0szplMW5r`, `recxIzdVil9ewhBxN`, `recPg14iNRkxblMLs`
 - Optional weekly email template / copy refinements
 - Broader progression / standings certification packages

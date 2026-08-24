@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-08-24** (master reconciliation — weekly-summary E2E + Perfect Week grace + automation versions)
+Last updated: **2026-08-24** (master closeout — 065/066 live; weekly E2E + historical artifacts)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
@@ -41,11 +41,9 @@ Last updated: **2026-08-24** (master reconciliation — weekly-summary E2E + Per
 
 **057 overlay (2026-08-24):** Production **057 v2.0** — Perfect Week eligibility with **48-hour submission grace period**. Live-tested on disposable weekly-email E2E fixture (4/7 PW qualifying days). Deploy: [`deploy-checklists/057-v2.0-perfect-week-grace-period.md`](./deploy-checklists/057-v2.0-perfect-week-grace-period.md).
 
-**065/066 overlay (2026-08-24):** GitHub **065 v10.3** / **066 v3.9** (PR #256) require dynamic `recordId` from `input.config()`. At weekly-email E2E test time, Production still had hardcoded reference inputs — disposable fixture XP required canonical manual settlement. **Awaiting Mike Production install** from deploy checklist — fixture automation triggering not fully solved until verified. Deploy: [`deploy-checklists/065-066-v10.3-v3.9-dynamic-trigger-record.md`](./deploy-checklists/065-066-v10.3-v3.9-dynamic-trigger-record.md).
+**065/066 overlay (2026-08-24):** Production **065 v10.3** and **066 v3.9** — dynamic `recordId` from trigger verified live; **066** replay idempotent. Closeout: [`deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md`](./deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md). Pre-paste disposable-fixture manual settlement was historical only.
 
-**072 overlay (2026-08-24):** Production **072 v4.7**, **074 v3.3**, **079 v2.5** — weekly-summary E2E **live-tested** on disposable WAS `recdj8MD0szplMW5r` (Test Mode → Hub → Resend). Verified: 7/7 shooting days, 4/7 PW days, 48,066 shots, 1,280 XP, 40 events, 150%+, 8 videos, Attended, Homework Complete. Old pre-v4.7 email on `reczxTIpVI8ZJLex0` is **historical evidence**. Queue proof `recoikFrli3m0xDRa` **must remain unchanged**. Closeout: [`deploy-checklists/2026-08-24-weekly-email-e2e-closeout.md`](./deploy-checklists/2026-08-24-weekly-email-e2e-closeout.md).
-
-**065/066 overlay (2026-08-24):** Production automations **065** and **066** have **hardcoded reference `recordId`** in script inputs — disposable fixture XP settlement required canonical manual writes. **Not solved** for fixture automation triggering; follow-up engineering item (`optional/future`).
+**072 overlay (2026-08-24):** Production **072 v4.7**, **074 v3.3**, **079 v2.5** — weekly-summary E2E **live-tested** on disposable WAS `recdj8MD0szplMW5r` (Test Mode → Hub → Resend). Verified: 7/7 shooting days, 4/7 PW days, 48,066 shots, 1,280 XP, 40 events, 150%+, 8 videos, Attended, Homework Complete. Old pre-v4.7 email on `reczxTIpVI8ZJLex0` is **historical evidence**. Queue proof `recoikFrli3m0xDRa` **must remain unchanged**. Historical orphans: [`deploy-checklists/2026-08-24-historical-audit-artifacts.md`](./deploy-checklists/2026-08-24-historical-audit-artifacts.md). Closeout: [`deploy-checklists/2026-08-24-weekly-email-e2e-closeout.md`](./deploy-checklists/2026-08-24-weekly-email-e2e-closeout.md).
 
 **Submission XP repair (2026-08-23):** Authorized idempotent repair created then **deleted** `SUBMISSION_XP` for submissions `rece0krfrEqiUEBVu`, `rec3zlR7xneAOatKh`, `recNqAXXzXAnac1GE`, `recLD7Fb6ph0yovyq` (XP Events `recWV95wEywdDJRO2`, `rec4M2QFrJFhSnvSG`, `recwWLcTOnTBQAwHo`, `recObGIdFNx7bfTMp`). Post-deletion reconciliation: Perfect Week **PASS**; Xavier/Testing3/Curtis show expected missing-XP **FINDING** (not recreated). Disposable live-create **PASS** on Testing3.
 
