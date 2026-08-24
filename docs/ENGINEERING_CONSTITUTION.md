@@ -14,7 +14,7 @@
 | 1 | **This document** | Engineering law |
 | 2 | [PROJECT_STATE.md](./PROJECT_STATE.md) | Live bases, blockers, deploy paths |
 | 3 | [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) | Mike / ChatGPT / Cursor / OMNI workflow |
-| 4 | [v2-change-backlog.md](./v2-change-backlog.md) | Approved change IDs |
+| 4 | [127-SI-MASTER-FUTURE-WORK-LIST.md](./127-SI-MASTER-FUTURE-WORK-LIST.md) | Canonical future-work IDs (FUT-, C-, V2-, SC-) |
 
 ---
 
@@ -70,7 +70,7 @@ Authority: [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.
 | Type | Where | When to update |
 |------|-------|----------------|
 | Live snapshot | `PROJECT_STATE.md` | Major deploy, audit pass, architecture change |
-| Change requests | `v2-change-backlog.md` | Every new C-/V2-/H- ID |
+| Change requests | `127-SI-MASTER-FUTURE-WORK-LIST.md` | Every new FUT-/C-/V2-/SC- ID |
 | Automation index | `automation-index.md` | Trigger or name change |
 | Promotion | `docs/deploy-checklists/` | Before prod paste |
 | Schema | `airtable/schema/snapshots/` | After structural base change |

@@ -73,7 +73,7 @@ Permanent operating procedure: **[04-ai-development-standards.md](./04-ai-develo
 
 **OMNI first:** For in-Airtable work (views, formulas, data, interfaces), Mike uses **OMNI** in the base before Cursor — Airtable credits are priority.
 
-**Live backlog:** [127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md)
+**Canonical future-work list:** [127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md)
 
 1. **ChatGPT** — Phases 1, 2, 4 (plan, document, review). Import [chatgpt-sources/](../chatgpt-sources/).
 2. **Cursor** — Phases 3, 5 (implement, commit). Run sync script after doc commits.

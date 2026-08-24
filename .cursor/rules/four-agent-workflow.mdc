@@ -33,6 +33,10 @@ When operating in the four-agent model (Lead, Implementation, Testing, Research)
 2. Read the role doc under `docs/agent-runs/`.
 3. Confirm branch and SHA before writing.
 
+## High-autonomy disposable-data mode
+
+When Mike or an approved Master Future Work List task activates **high-autonomy disposable-data mode**, task-scoped deletion of transactional test records is authorized. **Weeks are excluded** (challenge calendar/configuration). Tables, schemas, automations, scripts, ops config, protected evidence, payment records, secrets, and AWS/S3 objects remain excluded.
+
 ## Related
 
 - Role docs: `01-LEAD.md`, `02-IMPLEMENTATION.md`, `03-TESTING.md`, `04-RESEARCH.md`

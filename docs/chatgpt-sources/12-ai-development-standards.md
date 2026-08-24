@@ -2,7 +2,7 @@
 
 **Status:** **Active** — permanent operating procedure for this project.
 
-**Last updated:** 2026-07-05 (official promotion documentation — Production changes not official until documented)
+**Last updated:** 2026-08-24 (canonical future-work list; historical backlog retirement)
 
 ---
 
@@ -17,8 +17,10 @@ Define how **Mike**, **ChatGPT**, and **Cursor** work together to develop the 12
 | [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md) | **Engineering law** — how we build and ship |
 | [01-constitution.md](./01-constitution.md) | What must never change (Engine layer) |
 | [03-business-rules.md](./03-business-rules.md) | Platform behavior contract |
-| [../v2-change-backlog.md](../v2-change-backlog.md) | **Live backlog** — add and update change IDs here |
-| [../CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md) | Aggregated planning view for ChatGPT |
+| [../127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md) | **Canonical future-work list** — add and update work IDs here |
+| [../v2-change-backlog.md](../v2-change-backlog.md) | **Historical** — retired 2026-08-24; see git `2f243d8` |
+| [../CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md) | **Historical** — retired 2026-08-24; see git `a081b76` |
+| [../CHATGPT-PROJECT-OPERATING-MODE.md](../CHATGPT-PROJECT-OPERATING-MODE.md) | Operating mode — high autonomy with safety boundaries |
 | [../../AGENTS.md](../../AGENTS.md) | Cursor agent startup and hard constraints |
 
 ---
@@ -124,13 +126,13 @@ flowchart LR
 
 ---
 
-## production-only delivery pipeline (permanent — V2-015)
+## Production-only delivery pipeline
 
-**Permanent rule:** Nothing new ships to **Production** until it has been tested successfully in **Production**.
+**Permanent rule:** The live Production base is the only Airtable environment. Validate repository changes offline first; use read-only live checks by default; require Mike's explicit approval for every Production mutation.
 
 This applies to **all** platform changes:
 
-| Artifact | production-only validation? | GitHub / docs |
+| Artifact | Required validation | GitHub / docs |
 |----------|------------|---------------|
 | Airtable automations | **Yes** | Script in repo before paste |
 | Formulas | **Yes** | Document in schema notes or field-map when non-trivial |
@@ -138,9 +140,9 @@ This applies to **all** platform changes:
 | Views | **Yes** | [web/docs/airtable-views.md](../../web/docs/airtable-views.md) when web-facing |
 | Make scenarios | **Yes** | Blueprint export in `make/blueprints/` |
 | Extension scripts | **Yes** | `airtable/extension-scripts/` |
-| Schema changes (fields, tables) | **Yes** | Promotion doc + schema snapshot after intentional production divergence |
+| Schema changes (fields, tables) | **Offline contract + approved controlled live action** | Promotion doc + Production schema snapshot |
 
-**Production base** (`appn84sqPw03zEbTT`) is the live season system of record. **Production base** (`appn84sqPw03zEbTT`) is the mandatory test environment. See [production-base-setup.md](../production-base-setup.md).
+**Production base** (`appn84sqPw03zEbTT`) is the live season system of record and the only Airtable base used by this project.
 
 ### Canonical delivery diagram
 
@@ -156,46 +158,44 @@ flowchart TB
         GitHub[GitHub]
     end
     subgraph validate [Validate]
-        Production[PROD_Base]
-        Testing[Testing]
+        Testing[Offline_Tests]
+        ReadOnly[Read_Only_Check]
     end
-    subgraph ship [Ship]
+    subgraph ship [Controlled Live Action]
         Approval[Mike_Approval]
         Prod[Production_Base]
     end
 
     ChatGPT --> Cursor
     Cursor --> GitHub
-    GitHub --> Production
-    Production --> Testing
-    Testing --> Approval
+    GitHub --> Testing
+    Testing --> ReadOnly
+    ReadOnly --> Approval
     Approval --> Prod
 ```
 
-**In words:** ChatGPT designs → Cursor writes → GitHub stores → Production validates → Mike approves → Production receives.
+**In words:** ChatGPT designs → Cursor writes → GitHub stores → offline tests and read-only checks validate → Mike approves → a controlled Production action is performed and verified.
 
 ### Official promotion documentation (required)
 
-**Rule:** Changes in Production are **experiments** until **Cursor documents the promotion steps** in GitHub. Undocumented Production work is not backlog-official and must not be treated as the plan for Production.
-
-This keeps Production useful as a lab without becoming a confusing second system of record.
+**Rule:** Production is never a laboratory. Changes must be documented, approved, narrowly scoped, and verified.
 
 | State | Meaning |
 |-------|---------|
-| **Production experiment** | Someone changed Production (Mike, OMNI, or Cursor); no promotion doc yet |
+| **Proposed Production action** | Documented but not yet approved or executed |
 | **Promotion documented** | Cursor committed numbered prod steps; ready for Mike review |
 | **Promoted** | Mike approved; steps executed in Production |
 
 #### When Cursor must write promotion steps
 
-Create or update a promotion document when Production receives an **intentional** change that may ship to Production:
+Create or update a deployment document before an intentional Production change:
 
 | Change type | Promotion doc location |
 |-------------|------------------------|
-| **Automations** | `docs/deploy-checklists/{backlog-id}-{name}-production-deploy.md` (Production + prod sections) |
+| **Automations** | `docs/deploy-checklists/{backlog-id}-{name}-production-deploy.md` |
 | **Schema** (fields, tables, formulas, views) | `docs/deploy-checklists/{backlog-id}-{name}-schema-promotion.md` |
 | **Extension scripts** (audits / backfills) | Same deploy checklist or note in extension README |
-| **Make scenarios** | `make/documentation/` + blueprint header (prod vs production mapping) |
+| **Make scenarios** | `make/documentation/` + Production blueprint header |
 | **Web** (routes, env, Airtable views) | `docs/deployment-notes.md` or deploy checklist |
 
 **Template:** [deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md](../deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md)
@@ -204,19 +204,19 @@ Create or update a promotion document when Production receives an **intentional*
 
 Every promotion document must include:
 
-1. **Backlog ID** and what changed in Production
-2. **Production test evidence** — audit dry-run, sandbox record, automation run (what passed)
+1. **Backlog ID** and the proposed Production change
+2. **Offline/read-only evidence** — tests, audit dry-run, or safe probe results
 3. **Numbered Production steps** — exact field names, types, formula text, paste line ranges, Make/Fillout/web changes
 4. **Smoke test** — how to verify prod after promote (Schmidt / dry-run audit)
 5. **Risk / rollback notes** — what breaks if wrong; undo path if any
-6. **Schema snapshots** (when schema changed) — production export path; prod pre-promote export for diff
+6. **Schema snapshots** (when schema changed) — Production before/after exports for comparison
 
 #### Cursor obligation (end of session)
 
 If Production was intentionally changed during the session, Cursor must **before stopping**:
 
 - **(a)** Write or update the promotion document and link it from the backlog item, **or**
-- **(b)** Mark the change as **throwaway** in the backlog item notes (`Production experiment only — do not promote`)
+- **(b)** Record the unresolved state and stop; Production changes are never treated as throwaway experiments
 
 #### Mike rule
 
@@ -271,7 +271,7 @@ Every improvement also follows the five phases below (planning through close).
 **Output:**
 
 - Decision (proceed / defer / reject)
-- Backlog item (new or existing ID) in [v2-change-backlog.md](../v2-change-backlog.md)
+- Backlog item (new or existing ID) in [127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md)
 - High-level implementation plan
 
 **No code changes.**
@@ -305,8 +305,8 @@ Every improvement also follows the five phases below (planning through close).
 **Cursor reads before editing:**
 
 1. [../PROJECT_STATE.md](../PROJECT_STATE.md)
-2. Relevant backlog item in [v2-change-backlog.md](../v2-change-backlog.md)
-3. Relevant architecture docs (see [CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md) cross-reference index)
+2. Relevant backlog item in [127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md)
+3. Relevant architecture docs (see [127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md) and historical [CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md))
 4. [03-business-rules.md](./03-business-rules.md) if behavior changes
 5. [01-constitution.md](./01-constitution.md) if layer boundaries are touched
 
@@ -315,7 +315,7 @@ Every improvement also follows the five phases below (planning through close).
 - Changes code, schema notes, automations, Make docs, web, tools
 - Runs audits (dry-run first)
 - Updates `CHANGELOG.md` if production-impacting
-- Updates backlog item **status** in `v2-change-backlog.md` (does not rewrite scope without Mike)
+- Updates backlog item **status** in `127-SI-MASTER-FUTURE-WORK-LIST.md` (does not rewrite scope without Mike)
 
 **Cursor does not commit** until Mike requests it (see Phase 5).
 
@@ -349,7 +349,7 @@ Every improvement also follows the five phases below (planning through close).
 ```
 
 3. Re-import changed files into ChatGPT Project Sources
-4. Mark backlog item `done` (or `monitoring`) in [v2-change-backlog.md](../v2-change-backlog.md)
+4. Mark backlog item `done` (or `monitoring`) in [127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md)
 5. Move on
 
 ---
@@ -466,7 +466,7 @@ What to open / paste:
 | Edit automations, run audits, commit code | **ChatGPT** | "This is Phase 3 — use **Cursor**, not ChatGPT." | Cursor + backlog ID + approved plan |
 | Build a view, fix a formula, explore base data | **Cursor** or **ChatGPT** | "Try **OMNI in Airtable first** — Mike priority for in-base credits." | Open base → OMNI |
 | Review completed work against acceptance criteria | **Cursor** | "This is Phase 4 — use **ChatGPT** for review." | ChatGPT + implementation summary |
-| Add a new backlog item by editing only the Master Plan Brief | **Either** | "Edit **v2-change-backlog.md** first; the brief is read-only aggregate." | `docs/v2-change-backlog.md` |
+| Add a new work item by editing only a historical planning doc | **Either** | "Edit **127-SI-MASTER-FUTURE-WORK-LIST.md** first; historical docs are evidence only." | `docs/127-SI-MASTER-FUTURE-WORK-LIST.md` |
 
 ### Wrong phase — redirect immediately
 
@@ -493,7 +493,7 @@ What to open / paste:
 
 | Task | Correct path | Wrong path (do not use) |
 |------|--------------|-------------------------|
-| Live backlog edits | `docs/v2-change-backlog.md` | `CHATGPT-MASTER-PLAN-BRIEF.md` (aggregate only) |
+| Future-work list edits | `docs/127-SI-MASTER-FUTURE-WORK-LIST.md` | Historical `v2-change-backlog.md` / `CHATGPT-MASTER-PLAN-BRIEF.md` (evidence only) |
 | Production automation source | `airtable/automations/shooting-challenge/` | Pasting only in Airtable without GitHub |
 | Web app | `web/` (Vercel Root Directory = `web`) | Editing deployed Softr (legacy — Phase 6 cutover) |
 | Season publicity assets | `media/{season}/` | `tools/airtable/_preview/` (legacy preview) |
@@ -529,7 +529,7 @@ Use ChatGPT for:
 
 - Phase 1 (Idea) and Phase 2 (Planning)
 - Phase 4 (Review)
-- Master plan and wave sequencing ([CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md))
+- Master plan and wave sequencing ([127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md))
 - Drafting or expanding `docs/v2/` numbered docs
 - Game manual, parent copy, editor emails, radio/newspaper prose
 - Business rules and architecture discussion
@@ -578,7 +578,7 @@ Use Cursor for:
 **Cursor startup (every session):**
 
 1. [../PROJECT_STATE.md](../PROJECT_STATE.md)
-2. [../v2-change-backlog.md](../v2-change-backlog.md) — find active ID
+2. [../127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md) — find active ID
 3. [../../AGENTS.md](../../AGENTS.md)
 4. This document ([04-ai-development-standards.md](./04-ai-development-standards.md))
 5. Relevant deep-dive doc for the active backlog item
@@ -616,14 +616,14 @@ Use Cursor for:
 
 | Rule | Detail |
 |------|--------|
-| **Live backlog** | [v2-change-backlog.md](../v2-change-backlog.md) only — one row per request |
-| **Planning aggregate** | [CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md) — refresh when backlog changes materially |
+| **Canonical future-work list** | [127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md) only — one row per request |
+| **Historical planning** | [v2-change-backlog.md](../v2-change-backlog.md), [CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md) — evidence only; do not add new work |
 | **V2 pack** | Numbered docs in `docs/v2/` — ChatGPT drafts, Cursor commits |
 | **Long-form docs** | `docs/*.md` remain until fully absorbed into v2 pack |
 | **Production history** | [CHANGELOG.md](../../CHANGELOG.md) — Cursor updates on production-impacting ship |
 | **ChatGPT sync** | Run `tools/docs/sync-chatgpt-sources.ps1` after doc commits |
 
-**Docblock rule:** Airtable automation changes → GitHub first → paste into **production** → audit → paste into **prod** → `CHANGELOG.md`. See [production-base-setup.md](../production-base-setup.md).
+**Docblock rule:** Airtable automation changes → GitHub first → offline validation → Mike approval → controlled Production paste → verification → `CHANGELOG.md`.
 
 ---
 
@@ -634,7 +634,7 @@ All automation work follows [../../airtable/automations/AUTOMATION_SCRIPT_STANDA
 | Rule | Requirement |
 |------|-------------|
 | Source of truth | GitHub `airtable/automations/shooting-challenge/{nnn}-{kebab}.js` |
-| Deploy | GitHub first → paste **production** → audit → Mike approves → paste **prod** → `CHANGELOG.md` (see [production-base-setup.md](../production-base-setup.md)) |
+| Deploy | GitHub first → offline validation → Mike approves → controlled Production paste → verification → `CHANGELOG.md` |
 | Structure | `async function main()`, CONFIG block, SECTION blocks, required outputs |
 | Idempotency | Source Key patterns; one source → one XP Event; skip vs error |
 | Schema | Validate fields early; never write formula/rollup/lookup fields |
@@ -680,7 +680,7 @@ On every new task: output Task Classification first (include Phase, Correct tool
 For in-Airtable work (views, formulas, data, interfaces): recommend OMNI first — Mike priority for Airtable credits.
 If Mike asks for code, audits, commits, or repo edits → Workspace Check → send to Cursor with backlog ID.
 If Mike is planning before Phase 2 approval → no implementation advice that skips Mike's sign-off.
-Live backlog: docs/v2-change-backlog.md only (not CHATGPT-MASTER-PLAN-BRIEF.md).
+Live future-work list: docs/127-SI-MASTER-FUTURE-WORK-LIST.md only (historical v2-change-backlog.md is evidence).
 Wrong repos: hoopchallenges-landing, 127-si-jr-ref — redirect if mentioned.
 You do not edit GitHub, run audits, or paste into Airtable.
 ```
@@ -724,7 +724,7 @@ When Mike asks for in-Airtable work that OMNI can handle (views, formulas, data 
 Use in Phase 4 (ChatGPT + Mike):
 
 - [ ] Acceptance criteria from Phase 2 met
-- [ ] Backlog status accurate in `v2-change-backlog.md`
+- [ ] Future-work status accurate in `127-SI-MASTER-FUTURE-WORK-LIST.md`
 - [ ] `CHANGELOG.md` updated if production-impacting
 - [ ] `docs/PROJECT_STATE.md` updated if ops snapshot changed
 - [ ] Business rules unchanged OR [03-business-rules.md](./03-business-rules.md) updated with Mike approval
@@ -745,7 +745,7 @@ These apply to ChatGPT, Cursor, and Mike's production actions:
 - **Audits/backfills** — dry-run first; explicit `CONFIRM_WRITE` / `CONFIRM_DELETE` for writes
 - **Web** — Airtable reads server-side only; never expose `AIRTABLE_API_TOKEN` to the browser
 - **XP idempotency** — one source record → one XP Event
-- **Wave approval** — nothing ships to production until Mike approves the wave ([v2-change-backlog.md](../v2-change-backlog.md))
+- **Wave approval** — nothing ships to production until Mike approves the wave ([127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md))
 
 ---
 

@@ -33,6 +33,8 @@ $maps = @(
     @{ Src = "docs\platform-config-improvements.md"; Dst = "21-platform-config-improvements.md" },
     @{ Src = "docs\v2-change-backlog.md"; Dst = "22-v2-change-backlog.md" },
     @{ Src = "docs\CHATGPT-MASTER-PLAN-BRIEF.md"; Dst = "23-master-plan-brief.md" },
+    @{ Src = "docs\CHATGPT-PROJECT-OPERATING-MODE.md"; Dst = "26-chatgpt-project-operating-mode.md" },
+    @{ Src = "docs\127-SI-MASTER-FUTURE-WORK-LIST.md"; Dst = "27-master-future-work-list.md" },
     @{ Src = "docs\ENGINEERING_CONSTITUTION.md"; Dst = "24-engineering-constitution.md" },
     @{ Src = "docs\phase-2b-engineering-review-2026-07-06.md"; Dst = "25-phase-2b-engineering-review.md" }
 )

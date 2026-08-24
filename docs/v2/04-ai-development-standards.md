@@ -2,7 +2,7 @@
 
 **Status:** **Active** — permanent operating procedure for this project.
 
-**Last updated:** 2026-07-05 (official promotion documentation — Production changes not official until documented)
+**Last updated:** 2026-08-24 (canonical future-work list; historical backlog retirement)
 
 ---
 
@@ -17,8 +17,10 @@ Define how **Mike**, **ChatGPT**, and **Cursor** work together to develop the 12
 | [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md) | **Engineering law** — how we build and ship |
 | [01-constitution.md](./01-constitution.md) | What must never change (Engine layer) |
 | [03-business-rules.md](./03-business-rules.md) | Platform behavior contract |
-| [../v2-change-backlog.md](../v2-change-backlog.md) | **Live backlog** — add and update change IDs here |
-| [../CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md) | Aggregated planning view for ChatGPT |
+| [../127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md) | **Canonical future-work list** — add and update work IDs here |
+| [../v2-change-backlog.md](../v2-change-backlog.md) | **Historical** — retired 2026-08-24; see git `2f243d8` |
+| [../CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md) | **Historical** — retired 2026-08-24; see git `a081b76` |
+| [../CHATGPT-PROJECT-OPERATING-MODE.md](../CHATGPT-PROJECT-OPERATING-MODE.md) | Operating mode — high autonomy with safety boundaries |
 | [../../AGENTS.md](../../AGENTS.md) | Cursor agent startup and hard constraints |
 
 ---
@@ -269,7 +271,7 @@ Every improvement also follows the five phases below (planning through close).
 **Output:**
 
 - Decision (proceed / defer / reject)
-- Backlog item (new or existing ID) in [v2-change-backlog.md](../v2-change-backlog.md)
+- Backlog item (new or existing ID) in [127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md)
 - High-level implementation plan
 
 **No code changes.**
@@ -303,8 +305,8 @@ Every improvement also follows the five phases below (planning through close).
 **Cursor reads before editing:**
 
 1. [../PROJECT_STATE.md](../PROJECT_STATE.md)
-2. Relevant backlog item in [v2-change-backlog.md](../v2-change-backlog.md)
-3. Relevant architecture docs (see [CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md) cross-reference index)
+2. Relevant backlog item in [127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md)
+3. Relevant architecture docs (see [127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md) and historical [CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md))
 4. [03-business-rules.md](./03-business-rules.md) if behavior changes
 5. [01-constitution.md](./01-constitution.md) if layer boundaries are touched
 
@@ -313,7 +315,7 @@ Every improvement also follows the five phases below (planning through close).
 - Changes code, schema notes, automations, Make docs, web, tools
 - Runs audits (dry-run first)
 - Updates `CHANGELOG.md` if production-impacting
-- Updates backlog item **status** in `v2-change-backlog.md` (does not rewrite scope without Mike)
+- Updates backlog item **status** in `127-SI-MASTER-FUTURE-WORK-LIST.md` (does not rewrite scope without Mike)
 
 **Cursor does not commit** until Mike requests it (see Phase 5).
 
@@ -347,7 +349,7 @@ Every improvement also follows the five phases below (planning through close).
 ```
 
 3. Re-import changed files into ChatGPT Project Sources
-4. Mark backlog item `done` (or `monitoring`) in [v2-change-backlog.md](../v2-change-backlog.md)
+4. Mark backlog item `done` (or `monitoring`) in [127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md)
 5. Move on
 
 ---
@@ -464,7 +466,7 @@ What to open / paste:
 | Edit automations, run audits, commit code | **ChatGPT** | "This is Phase 3 — use **Cursor**, not ChatGPT." | Cursor + backlog ID + approved plan |
 | Build a view, fix a formula, explore base data | **Cursor** or **ChatGPT** | "Try **OMNI in Airtable first** — Mike priority for in-base credits." | Open base → OMNI |
 | Review completed work against acceptance criteria | **Cursor** | "This is Phase 4 — use **ChatGPT** for review." | ChatGPT + implementation summary |
-| Add a new backlog item by editing only the Master Plan Brief | **Either** | "Edit **v2-change-backlog.md** first; the brief is read-only aggregate." | `docs/v2-change-backlog.md` |
+| Add a new work item by editing only a historical planning doc | **Either** | "Edit **127-SI-MASTER-FUTURE-WORK-LIST.md** first; historical docs are evidence only." | `docs/127-SI-MASTER-FUTURE-WORK-LIST.md` |
 
 ### Wrong phase — redirect immediately
 
@@ -491,7 +493,7 @@ What to open / paste:
 
 | Task | Correct path | Wrong path (do not use) |
 |------|--------------|-------------------------|
-| Live backlog edits | `docs/v2-change-backlog.md` | `CHATGPT-MASTER-PLAN-BRIEF.md` (aggregate only) |
+| Future-work list edits | `docs/127-SI-MASTER-FUTURE-WORK-LIST.md` | Historical `v2-change-backlog.md` / `CHATGPT-MASTER-PLAN-BRIEF.md` (evidence only) |
 | Production automation source | `airtable/automations/shooting-challenge/` | Pasting only in Airtable without GitHub |
 | Web app | `web/` (Vercel Root Directory = `web`) | Editing deployed Softr (legacy — Phase 6 cutover) |
 | Season publicity assets | `media/{season}/` | `tools/airtable/_preview/` (legacy preview) |
@@ -527,7 +529,7 @@ Use ChatGPT for:
 
 - Phase 1 (Idea) and Phase 2 (Planning)
 - Phase 4 (Review)
-- Master plan and wave sequencing ([CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md))
+- Master plan and wave sequencing ([127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md))
 - Drafting or expanding `docs/v2/` numbered docs
 - Game manual, parent copy, editor emails, radio/newspaper prose
 - Business rules and architecture discussion
@@ -576,7 +578,7 @@ Use Cursor for:
 **Cursor startup (every session):**
 
 1. [../PROJECT_STATE.md](../PROJECT_STATE.md)
-2. [../v2-change-backlog.md](../v2-change-backlog.md) — find active ID
+2. [../127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md) — find active ID
 3. [../../AGENTS.md](../../AGENTS.md)
 4. This document ([04-ai-development-standards.md](./04-ai-development-standards.md))
 5. Relevant deep-dive doc for the active backlog item
@@ -614,8 +616,8 @@ Use Cursor for:
 
 | Rule | Detail |
 |------|--------|
-| **Live backlog** | [v2-change-backlog.md](../v2-change-backlog.md) only — one row per request |
-| **Planning aggregate** | [CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md) — refresh when backlog changes materially |
+| **Canonical future-work list** | [127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md) only — one row per request |
+| **Historical planning** | [v2-change-backlog.md](../v2-change-backlog.md), [CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md) — evidence only; do not add new work |
 | **V2 pack** | Numbered docs in `docs/v2/` — ChatGPT drafts, Cursor commits |
 | **Long-form docs** | `docs/*.md` remain until fully absorbed into v2 pack |
 | **Production history** | [CHANGELOG.md](../../CHANGELOG.md) — Cursor updates on production-impacting ship |
@@ -678,7 +680,7 @@ On every new task: output Task Classification first (include Phase, Correct tool
 For in-Airtable work (views, formulas, data, interfaces): recommend OMNI first — Mike priority for Airtable credits.
 If Mike asks for code, audits, commits, or repo edits → Workspace Check → send to Cursor with backlog ID.
 If Mike is planning before Phase 2 approval → no implementation advice that skips Mike's sign-off.
-Live backlog: docs/v2-change-backlog.md only (not CHATGPT-MASTER-PLAN-BRIEF.md).
+Live future-work list: docs/127-SI-MASTER-FUTURE-WORK-LIST.md only (historical v2-change-backlog.md is evidence).
 Wrong repos: hoopchallenges-landing, 127-si-jr-ref — redirect if mentioned.
 You do not edit GitHub, run audits, or paste into Airtable.
 ```
@@ -722,7 +724,7 @@ When Mike asks for in-Airtable work that OMNI can handle (views, formulas, data 
 Use in Phase 4 (ChatGPT + Mike):
 
 - [ ] Acceptance criteria from Phase 2 met
-- [ ] Backlog status accurate in `v2-change-backlog.md`
+- [ ] Future-work status accurate in `127-SI-MASTER-FUTURE-WORK-LIST.md`
 - [ ] `CHANGELOG.md` updated if production-impacting
 - [ ] `docs/PROJECT_STATE.md` updated if ops snapshot changed
 - [ ] Business rules unchanged OR [03-business-rules.md](./03-business-rules.md) updated with Mike approval
@@ -743,7 +745,7 @@ These apply to ChatGPT, Cursor, and Mike's production actions:
 - **Audits/backfills** — dry-run first; explicit `CONFIRM_WRITE` / `CONFIRM_DELETE` for writes
 - **Web** — Airtable reads server-side only; never expose `AIRTABLE_API_TOKEN` to the browser
 - **XP idempotency** — one source record → one XP Event
-- **Wave approval** — nothing ships to production until Mike approves the wave ([v2-change-backlog.md](../v2-change-backlog.md))
+- **Wave approval** — nothing ships to production until Mike approves the wave ([127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md))
 
 ---
 

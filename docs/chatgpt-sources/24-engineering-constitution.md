@@ -1,7 +1,7 @@
 # Engineering Constitution — 127 SI Shooting Challenge
 
 **Status:** **Active** — highest-level engineering authority for this repository.
-**Last updated:** 2026-07-06 (Phase 2B)
+**Last updated:** 2026-08-19
 **Scope:** How we build, test, document, and ship — not game rules (see [v2/01-constitution.md](./v2/01-constitution.md)).
 
 ---
@@ -14,7 +14,7 @@
 | 1 | **This document** | Engineering law |
 | 2 | [PROJECT_STATE.md](./PROJECT_STATE.md) | Live bases, blockers, deploy paths |
 | 3 | [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) | Mike / ChatGPT / Cursor / OMNI workflow |
-| 4 | [v2-change-backlog.md](./v2-change-backlog.md) | Approved change IDs |
+| 4 | [127-SI-MASTER-FUTURE-WORK-LIST.md](./127-SI-MASTER-FUTURE-WORK-LIST.md) | Canonical future-work IDs (FUT-, C-, V2-, SC-) |
 
 ---
 
@@ -22,7 +22,7 @@
 
 | Layer | Source of truth | Deployed copy |
 |-------|-----------------|---------------|
-| Automations `001`–`114` | `airtable/automations/shooting-challenge/` | Airtable (Production then Production) |
+| Automations | `airtable/automations/shooting-challenge/` | Airtable Production |
 | Audit / backfill extensions | `airtable/extension-scripts/` | Airtable Scripting extension (paste) |
 | Schema documentation | `airtable/schema/snapshots/` + `airtable/schema/current/` | Airtable (live schema) |
 | Web app | `web/` | Vercel (`/shoot`) |
@@ -38,23 +38,11 @@
 
 ---
 
-## 2. production-only validation
+## 2. Production-only operation
 
-**Permanent model:** one repo · one **Production** base · one **Development** base.
+The repository uses one Airtable environment: Production `appn84sqPw03zEbTT`, the live system of record.
 
-| Base | ID | Role |
-|------|-----|------|
-| **Production** | `appn84sqPw03zEbTT` | Live season — system of record |
-| **Development** | `appn84sqPw03zEbTT` | Paste test, schema experiments, audits, C-020 |
-
-**Rule:** Nothing ships to **Production** until it passes in **Production** (or documented exception with Mike approval).
-
-Structural changes promote incrementally — **production-only validation. Production soon after approval. Not Production last.**
-
-Full architecture: [v2-015-production-base-architecture.md](./v2-015-production-base-architecture.md)
-Ops runbook: [production-base-setup.md](./production-base-setup.md)
-
-**After Production clone:** verify intake automations are **ON** before pipeline tests (see [066 production checklist](./deploy-checklists/066-v3.1-production-deploy.md) § Discovery).
+Repository and fixture tests must run offline before any live action. Live Airtable checks are read-only by default. Every Production mutation requires Mike's explicit authorization, a narrowly defined target, a rollback plan, and post-change verification.
 
 ---
 
@@ -64,14 +52,13 @@ Official promotion is **not complete** until documented in GitHub.
 
 | Step | Owner | Artifact |
 |------|-------|----------|
-| 1. Implement in GitHub | Cursor | Commit on `master` |
-| 2. Paste / apply in **Production** | Mike / Cursor | Production base |
-| 3. Audit + sandbox test | Mike / Cursor | Dry-run extension; test enrollment |
-| 4. **Promotion doc** | Cursor | `docs/deploy-checklists/` or wave doc |
-| 5. Mike approves | Mike | — |
-| 6. Paste / apply in **Production** | Mike | Same script as Production |
-| 7. Post-deploy audit | Mike / Cursor | Dry-run on prod |
-| 8. `CHANGELOG.md` | Cursor | `### Airtable` / `### Web` / `### Make` |
+| 1. Implement in GitHub | Cursor | Feature branch / pull request |
+| 2. Run offline validation | Cursor | Tests, lint, dry-run fixtures |
+| 3. Document live action and rollback | Cursor | `docs/deploy-checklists/` or wave doc |
+| 4. Mike approves | Mike | Explicit Production authorization |
+| 5. Apply the controlled Production change | Mike / authorized operator | Production base |
+| 6. Post-change verification | Mike / Cursor | Read-only audit and expected-record proof |
+| 7. `CHANGELOG.md` | Cursor | `### Airtable` / `### Web` / `### Make` |
 
 Template: [deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md](./deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md)
 Authority: [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) § Official promotion documentation
@@ -83,7 +70,7 @@ Authority: [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.
 | Type | Where | When to update |
 |------|-------|----------------|
 | Live snapshot | `PROJECT_STATE.md` | Major deploy, audit pass, architecture change |
-| Change requests | `v2-change-backlog.md` | Every new C-/V2-/H- ID |
+| Change requests | `127-SI-MASTER-FUTURE-WORK-LIST.md` | Every new FUT-/C-/V2-/SC- ID |
 | Automation index | `automation-index.md` | Trigger or name change |
 | Promotion | `docs/deploy-checklists/` | Before prod paste |
 | Schema | `airtable/schema/snapshots/` | After structural base change |
@@ -106,7 +93,7 @@ Index: [README.md](./README.md)
 | V2 rewrite structure | [v2/06-automation-standards.md](./v2/06-automation-standards.md) |
 | **Permanent SCRIPT + CONFIG header** | [v2/06-automation-standards.md](./v2/06-automation-standards.md) § Permanent automation header |
 | Full script contract | [airtable/automations/AUTOMATION_SCRIPT_STANDARD.md](../airtable/automations/AUTOMATION_SCRIPT_STANDARD.md) |
-| Reference implementation | **066 v3.1** — [066 script](../airtable/automations/shooting-challenge/066-achievements-and-milestones-create-shot-milestone-unlocks.js) |
+| Reference implementation | **066 v3.2** — [066 script](../airtable/automations/shooting-challenge/066-achievements-and-milestones-create-shot-milestone-unlocks.js) |
 | Modernization inventory | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) |
 | Cursor rule | `.cursor/rules/airtable-automation-scripts.mdc` |
 
@@ -174,7 +161,7 @@ Phase 2 goal: **reduce platform complexity first**; automation capacity recovery
 
 **Do not merge** solely to save slots if readability suffers.
 **Do not rewrite** outside an approved wave.
-**One reference template:** **066 v3.1** — all Category B rewrites converge on this structure.
+**One reference template:** **066 v3.2** — all Category B rewrites converge on this structure.
 
 Roadmap: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md)
 Phase 2B review: [phase-2b-engineering-review-2026-07-06.md](./phase-2b-engineering-review-2026-07-06.md)
@@ -206,7 +193,7 @@ Semantic intent:
 
 ### Schema snapshots
 
-- Folder: `prod-YYYYMMDD` / `prod-YYYYMMDD`
+- Folder: `prod-YYYYMMDD`
 - Commit manifests with snapshot
 
 ---

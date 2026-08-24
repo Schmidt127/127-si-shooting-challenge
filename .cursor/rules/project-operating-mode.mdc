@@ -1,0 +1,58 @@
+---
+description: High-autonomy operating mode with defined safety boundaries — drive the Future Work List forward
+alwaysApply: true
+---
+
+# Project operating mode — high autonomy with safety boundaries
+
+Authority: [AGENTS.md](../../AGENTS.md) · [docs/CHATGPT-PROJECT-OPERATING-MODE.md](../docs/CHATGPT-PROJECT-OPERATING-MODE.md) · [docs/127-SI-MASTER-FUTURE-WORK-LIST.md](../docs/127-SI-MASTER-FUTURE-WORK-LIST.md)
+
+**Applies to:** Cursor (and aligns with ChatGPT / OMNI policy in the ChatGPT doc).
+
+## Drive the Future Work List
+
+Actively move [docs/127-SI-MASTER-FUTURE-WORK-LIST.md](../docs/127-SI-MASTER-FUTURE-WORK-LIST.md) forward: investigate, plan, implement, test, document, and prepare **reviewable** changes.
+
+When blocked, document the blocker and continue with safe, non-blocked work elsewhere on the list.
+
+## Master Future Work List (canonical)
+
+The Master Future Work List is the **canonical source for future implementation work**. Items already listed there may proceed **without a separate backlog-ID approval**. New work must be added to the list and assigned an identifier **before** implementation.
+
+## High-autonomy disposable-data mode
+
+**Activation:** Active when Mike or an approved Master Future Work List task identifies it.
+
+During **high-autonomy disposable-data mode**, Mike has authorized task-scoped changes and deletion of transactional test records. This authorization **does not** include deleting tables, schemas, automations, scripts, operational configuration, protected evidence, payment records, secrets, or AWS/S3 objects.
+
+**In scope:** Enrollments, Submissions, Submission Assets, Video Feedback, Homework Completions, XP Events, Athlete Achievement Unlocks, Weekly Athlete Summaries, Zoom attendance records, and other athlete/challenge participation records.
+
+**Excluded:** **Weeks** (challenge calendar/configuration), Airtable tables, fields, schemas, automations, scripts, operational configuration, protected evidence, payment records, secrets, and AWS/S3 objects.
+
+## Quality, design, and tool usage
+
+Agents should use every relevant tool, skill, library, and integration necessary to produce the best result. This includes Impeccable for website design and UI refinement, React Email for email templates, React-based document or interface components where appropriate, browser verification, automated testing, accessibility checks, and production-build validation.
+
+Tools should be selected according to the task. Agents should not avoid a relevant tool merely because the work can be completed with a simpler implementation.
+
+Websites, emails, documents, and user-facing interfaces must be reviewed for professional design, clarity, consistency, responsiveness, accessibility, and real-world usability.
+
+Anti-AI design and writing principles must always be applied. Avoid generic layouts, repetitive card grids, excessive gradients, vague labels, unnecessary icons, awkward wording, artificial enthusiasm, filler content, and other recognizable low-quality AI patterns. User-facing work should feel intentional, specific to 127 Sports Intensity, and created for actual parents, athletes, coaches, and administrators.
+
+User-facing changes must be visually verified in a browser or rendered preview, tested at appropriate screen sizes, and checked for accessibility before production deployment.
+
+Do not force a tool into a task where it is not applicable. Use the best relevant tool for the work.
+
+## Autonomous work (no extra approval)
+
+Routine implementation, in-scope disposable test-data changes, automation testing, and email testing may proceed without waiting on Mike for each step.
+
+The current Airtable base contains only Mike's email addresses — **send email** whenever needed for development, testing, verification, and working workflows.
+
+## Still requires human approval
+
+Genuinely irreversible or high-risk actions need Mike's approval, including deleting Airtable tables, changing schemas without a dependency review, deleting operational configuration, disabling automations, deleting scripts, deleting protected evidence or payment records, exposing secrets, deleting AWS/S3 objects, or externally public release when scope is ambiguous.
+
+## Existing rules still apply
+
+This mode **does not weaken** tests, reviewable PRs, protected branches, production deployment boundaries, DEV-before-Production, promotion docs, merge approval, or four-agent hard stops when using the controlled four-agent workflow.

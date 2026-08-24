@@ -23,10 +23,10 @@ Guidance for AI assistants (Cursor, etc.) working in **`127-si-shooting-challeng
 3. [docs/agent-runs/CONTROL.json](./docs/agent-runs/CONTROL.json)  -  **four-agent resume source of truth** (read before multi-agent work; verify git SHA)
 4. [docs/SESSION_HANDOFF-2026-07-06.md](./docs/SESSION_HANDOFF-2026-07-06.md)  -  **latest session handoff** (bases, blockers, schema snapshots)
 5. [docs/v2/04-ai-development-standards.md](./docs/v2/04-ai-development-standards.md)  -  **permanent workflow** (Mike / ChatGPT / Cursor / **OMNI-first** for in-Airtable work)
-6. [docs/v2/README.md](./docs/v2/README.md)  -  **V2 numbered doc pack** (`01`-`09`)
-7. [docs/PROJECT_STATE.md](./docs/PROJECT_STATE.md)  -  live ops snapshot (must agree with CURRENT-TRUTH)
-8. [docs/127-SI-MASTER-FUTURE-WORK-LIST.md](./docs/127-SI-MASTER-FUTURE-WORK-LIST.md)  -  master future-work list (add new items here)
-9. [docs/127-SI-MASTER-FUTURE-WORK-LIST.md](./docs/127-SI-MASTER-FUTURE-WORK-LIST.md)  -  consolidated planning view
+6. [docs/CHATGPT-PROJECT-OPERATING-MODE.md](./docs/CHATGPT-PROJECT-OPERATING-MODE.md)  -  **operating mode** (high autonomy + safety boundaries)
+7. [docs/127-SI-MASTER-FUTURE-WORK-LIST.md](./docs/127-SI-MASTER-FUTURE-WORK-LIST.md)  -  **canonical future implementation work**
+8. [docs/v2/README.md](./docs/v2/README.md)  -  **V2 numbered doc pack** (`01`-`09`)
+9. [docs/PROJECT_STATE.md](./docs/PROJECT_STATE.md)  -  live ops snapshot (must agree with CURRENT-TRUTH)
 10. [APP_CONTEXT.md](./APP_CONTEXT.md)  -  route, theme, product boundaries
 11. [BRAND_STANDARDS.md](./BRAND_STANDARDS.md)  -  shared 127 SI brand foundation
 12. [docs/REPOSITORY-INTEGRITY-AUDIT.md](./docs/REPOSITORY-INTEGRITY-AUDIT.md) · [docs/SECURITY-AND-SENSITIVE-FILES.md](./docs/SECURITY-AND-SENSITIVE-FILES.md) · [docs/ARCHIVED-AND-SUPERSEDED-FILES.md](./docs/ARCHIVED-AND-SUPERSEDED-FILES.md)
@@ -57,6 +57,8 @@ If the versions differ:
 |------|-----------------|
 | **Four-agent workflow** | [docs/agent-runs/00-START-HERE.md](./docs/agent-runs/00-START-HERE.md) · `.cursor/rules/four-agent-workflow.mdc` |
 | **AI workflow (Mike / ChatGPT / Cursor)** | [docs/v2/04-ai-development-standards.md](./docs/v2/04-ai-development-standards.md) |
+| **Project operating mode** | [docs/CHATGPT-PROJECT-OPERATING-MODE.md](./docs/CHATGPT-PROJECT-OPERATING-MODE.md) · `.cursor/rules/project-operating-mode.mdc` |
+| Master Future Work List | [docs/127-SI-MASTER-FUTURE-WORK-LIST.md](./docs/127-SI-MASTER-FUTURE-WORK-LIST.md) |
 | Workspace guardrails (Cursor) | `.cursor/rules/workflow-guardrails.mdc` |
 | Airtable automations | `.cursor/rules/airtable-automation-scripts.mdc` |
 | Web UI | `.cursor/rules/web-ui-brand.mdc` |
@@ -87,6 +89,32 @@ Use this model for controlled multi-agent packages. Role docs live under `docs/a
 - No live Airtable access unless Mike authorizes a named DEV check
 
 Launch prompts: [docs/agent-runs/05-LAUNCH-PROMPTS.md](./docs/agent-runs/05-LAUNCH-PROMPTS.md).
+
+## Project operating mode
+
+ChatGPT, Cursor, and OMNI actively move the [Master Future Work List](./docs/127-SI-MASTER-FUTURE-WORK-LIST.md) forward. Full policy: [docs/CHATGPT-PROJECT-OPERATING-MODE.md](./docs/CHATGPT-PROJECT-OPERATING-MODE.md).
+
+The Master Future Work List is the **canonical source for future implementation work**. Items already listed there may proceed **without a separate backlog-ID approval**. New work must be added to the list and assigned an identifier **before** implementation.
+
+### High-autonomy disposable-data mode
+
+**Activation:** Active when Mike or an approved Master Future Work List task identifies it.
+
+During this mode, Mike has authorized task-scoped changes and deletion of **transactional test records** only. **Weeks are excluded** (challenge-calendar/configuration). Excluded: tables, schemas, automations, scripts, operational configuration, protected evidence, payment records, secrets, AWS/S3 objects.
+
+### Quality, Design, and Tool Usage
+
+Agents should use every relevant tool, skill, library, and integration necessary to produce the best result. This includes Impeccable for website design and UI refinement, React Email for email templates, React-based document or interface components where appropriate, browser verification, automated testing, accessibility checks, and production-build validation.
+
+Tools should be selected according to the task. Agents should not avoid a relevant tool merely because the work can be completed with a simpler implementation.
+
+Websites, emails, documents, and user-facing interfaces must be reviewed for professional design, clarity, consistency, responsiveness, accessibility, and real-world usability.
+
+Anti-AI design and writing principles must always be applied. Avoid generic layouts, repetitive card grids, excessive gradients, vague labels, unnecessary icons, awkward wording, artificial enthusiasm, filler content, and other recognizable low-quality AI patterns. User-facing work should feel intentional, specific to 127 Sports Intensity, and created for actual parents, athletes, coaches, and administrators.
+
+User-facing changes must be visually verified in a browser or rendered preview, tested at appropriate screen sizes, and checked for accessibility before production deployment.
+
+Do not force a tool into a task where it is not applicable. Use the best relevant tool for the work.
 
 ## Git / branches / deployment
 
@@ -159,8 +187,8 @@ Then proceed only within Cursor's scope (Phase 3 Implementation / Phase 5 Close)
 | Planning, requirements, parent/editor copy, Phase 4 review | Output **Workspace Check** â†' send to **ChatGPT** |
 | In-Airtable work (views, formulas, data, interfaces, one-off fixes) | Output **Workspace Check** â†' **OMNI first** (Mike's Airtable credit priority) unless GitHub required |
 | Production automations, audits, web, tools, commits | Proceed (after Task Classification) |
-| Implementation with no backlog ID or unapproved plan | Stop  -  request backlog ID + Phase 2 approval |
-| Backlog change | Edit `docs/v2-change-backlog.md`  -  not `CHATGPT-MASTER-PLAN-BRIEF.md` |
+| Implementation not on the Master Future Work List | Stop — add to [127-SI-MASTER-FUTURE-WORK-LIST.md](./docs/127-SI-MASTER-FUTURE-WORK-LIST.md) with an ID first |
+| Future work list change | Edit [docs/127-SI-MASTER-FUTURE-WORK-LIST.md](./docs/127-SI-MASTER-FUTURE-WORK-LIST.md) only |
 | Hoop landing / JR Ref / other apps | Redirect to correct repo  -  not this one |
 
 When redirecting, use the **Workspace Check** block from doc 04 (Current request, Correct phase/tool/repo, What Mike should do instead).

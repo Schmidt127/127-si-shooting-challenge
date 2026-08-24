@@ -37,8 +37,10 @@
 | 19 | `19-asset-storage-migration.md` | AWS S3 + canonical URL architecture (C-013) |
 | 20 | `20-testing-and-intake-architecture.md` | Fillout validation, Weeks, test sandbox, Test Intake (C-017–C-020) |
 | 21 | `21-platform-config-improvements.md` | Grade bands + public display (C-021, C-022) |
-| 22 | `22-v2-change-backlog.md` | **Owner change list** — all fixes/components, waves, dependencies (C-001–C-027) |
-| **23** | **`23-master-plan-brief.md`** | **Consolidated planning brief** — all IDs, sub-system roadmaps, ChatGPT prompt |
+| 22 | `22-v2-change-backlog.md` | **Historical** — retired change list (evidence only) |
+| **23** | **`23-master-plan-brief.md`** | **Historical** — retired planning brief (evidence only) |
+| **26** | **`26-chatgpt-project-operating-mode.md`** | **Operating mode** — high autonomy with safety boundaries |
+| **27** | **`27-master-future-work-list.md`** | **Canonical future-work list** — FUT- queue + legacy inventory |
 | **24** | **`24-engineering-constitution.md`** | **Highest-level engineering law** — how we build and ship |
 | **25** | **`25-phase-2b-engineering-review.md`** | V2-014 review, C-020 gaps, risks (2026-07-06) |
 
@@ -80,4 +82,4 @@ From repo root (PowerShell):
 
 ---
 
-*Last synced: 2026-07-06 16:24 (local)*
+*Last synced: 2026-08-24 15:21 (local)*
