@@ -44,9 +44,14 @@
   "follow_up_engineering": [
     {
       "id": "V2-065-066-SCRIPT-INPUT-001",
-      "item": "065/066 hardcoded script input recordId",
+      "item": "065 v10.3 / 066 v3.9 Production paste",
+      "status": "needs live proof",
+      "notes": "GitHub fix merged PR #256; at E2E test time Production had hardcoded inputs — fixture settlement required canonical manual writes; not fully solved until paste verified"
+    },
+    {
+      "item": "Optional email-content refinements",
       "status": "optional/future",
-      "notes": "Fixture settlement required canonical manual writes; automation triggering not fully solved"
+      "notes": "Template copy, formatting, mobile rendering"
     }
   ],
   "summary": {
