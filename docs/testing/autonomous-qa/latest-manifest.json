@@ -9,6 +9,9 @@
     "072": "v4.7",
     "074": "v3.3",
     "079": "v2.5",
+    "065": "v10.3",
+    "066": "v3.9",
+    "057": "v2.0",
     "hub_resend": "verified"
   },
   "send": {
@@ -21,6 +24,13 @@
     "old_was": "reczxTIpVI8ZJLex0",
     "old_queue_proof": "recoikFrli3m0xDRa",
     "preservation": "unchanged — historical evidence only"
+  },
+  "historical_orphan_references": {
+    "queue": "recYIn2CHdvIaiYg6",
+    "xp_homework": "rec1QYofvoDBHIsSS",
+    "xp_video": "recgP3pc7mXUccsdC",
+    "preservation": "retained audit artifacts — do not delete",
+    "doc": "docs/deploy-checklists/2026-08-24-historical-audit-artifacts.md"
   },
   "disposable_fixture": {
     "was": "recdj8MD0szplMW5r",
@@ -44,9 +54,15 @@
   "follow_up_engineering": [
     {
       "id": "V2-065-066-SCRIPT-INPUT-001",
-      "item": "065 v10.3 / 066 v3.9 Production paste",
-      "status": "needs live proof",
-      "notes": "GitHub fix merged PR #256; at E2E test time Production had hardcoded inputs — fixture settlement required canonical manual writes; not fully solved until paste verified"
+      "item": "065 v10.3 / 066 v3.9 Production dynamic recordId",
+      "status": "live-tested",
+      "notes": "Verified 2026-08-24; pre-paste manual settlement on disposable fixture was historical workaround only",
+      "closeout": "docs/deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md"
+    },
+    {
+      "item": "Flexible HW1/HW2 alternate slot (020/065 path)",
+      "status": "optional/future",
+      "notes": "005 v5.5 normalizes Submission fields; follow-up plan in docs/next-wave/homework-pipeline/FLEXIBLE-HW1-HW2-SLOT-FOLLOWUP.md"
     },
     {
       "item": "Optional email-content refinements",
@@ -56,6 +72,7 @@
   ],
   "summary": {
     "weekly_email_e2e": "live-tested",
+    "065_066_dynamic_trigger": "live-tested",
     "pass": 1,
     "fail": 0,
     "blocked": 0

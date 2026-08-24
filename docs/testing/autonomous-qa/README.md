@@ -27,5 +27,7 @@ node tools/testing/autonomous-qa-run.mjs --cleanup
 
 - Final report: [AUTONOMOUS_QA_20260823_FINAL_REPORT.md](./AUTONOMOUS_QA_20260823_FINAL_REPORT.md)
 - **Weekly email E2E (2026-08-24):** [WAS_EMAIL_QA_20260824_FINAL_REPORT.md](./WAS_EMAIL_QA_20260824_FINAL_REPORT.md)
+- **065/066 closeout (2026-08-24):** [2026-08-24-065-066-dynamic-trigger-closeout.md](../../deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md)
+- **Historical audit artifacts:** [2026-08-24-historical-audit-artifacts.md](../../deploy-checklists/2026-08-24-historical-audit-artifacts.md)
 - E2E matrix: `tools/testing/run_e2e_matrix.mjs`
 - XP reconciliation: `web/scripts/full-xp-reconciliation.mjs`
