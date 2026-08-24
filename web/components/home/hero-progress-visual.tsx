@@ -1,6 +1,8 @@
+import { BasketballGraphic } from "@/components/brand/basketball-graphic";
+
 /**
  * CSS interface graphic for the landing hero — court + XP progress card.
- * No stock photography; uses brand colors only.
+ * Photorealistic basketball on the half-court; no stock photography elsewhere.
  */
 export function HeroProgressVisual() {
   return (
@@ -31,8 +33,11 @@ export function HeroProgressVisual() {
             <path d="M8 75h184" stroke="currentColor" strokeWidth="1.5" />
             <circle cx="100" cy="75" r="22" fill="none" stroke="currentColor" strokeWidth="1.5" />
             <path d="M70 8v28a30 30 0 0 0 60 0V8" fill="none" stroke="currentColor" strokeWidth="1.5" />
-            <circle cx="100" cy="28" r="5" fill="currentColor" className="text-brand-orange" />
           </svg>
+
+          <div className="absolute left-1/2 top-[34%] size-[min(42%,148px)] -translate-x-1/2 -translate-y-1/2 sm:size-[min(44%,168px)]">
+            <BasketballGraphic size="lg" priority className="h-full w-full drop-shadow-[0_12px_24px_rgba(0,0,0,0.35)]" />
+          </div>
 
           {/* Shot markers */}
           <span className="absolute left-[22%] top-[30%] size-2.5 rounded-full bg-brand-orange shadow-[0_0_0_3px_rgba(255,139,0,0.25)]" />

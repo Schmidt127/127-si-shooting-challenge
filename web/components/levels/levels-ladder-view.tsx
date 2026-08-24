@@ -158,7 +158,11 @@ export function LevelsLadderView({ data }: LevelsLadderViewProps) {
       }
     >
       <div className="space-y-8">
-        <ProgramFeatureBanner title="Levels" caption="See the progression path from first shots to the highest tier." mark="LV" />
+        <ProgramFeatureBanner
+          title="Levels"
+          caption="See the progression path from first shots to the highest tier."
+          visual="basketball"
+        />
         <LevelsOrientation />
         <div className="mx-auto max-w-4xl">
           <AccentRail tone="gold" className="space-y-5">
@@ -197,7 +201,11 @@ export function LevelsEmptyState() {
       ambientVariant="levels"
     >
       <div className="space-y-8">
-        <ProgramFeatureBanner title="Levels" caption="See the progression path from first shots to the highest tier." mark="LV" />
+        <ProgramFeatureBanner
+          title="Levels"
+          caption="See the progression path from first shots to the highest tier."
+          visual="basketball"
+        />
         <EmptyState
           title={EMPTY_STATE_COPY.levels.title}
           description={EMPTY_STATE_COPY.levels.description}
@@ -227,7 +235,11 @@ export function LevelsErrorState({ message }: { message: string }) {
       ambientVariant="levels"
     >
       <div className="space-y-8">
-        <ProgramFeatureBanner title="Levels" caption="See the progression path from first shots to the highest tier." mark="LV" />
+        <ProgramFeatureBanner
+          title="Levels"
+          caption="See the progression path from first shots to the highest tier."
+          visual="basketball"
+        />
         <ErrorState
           title="Could not load levels"
           message={message}

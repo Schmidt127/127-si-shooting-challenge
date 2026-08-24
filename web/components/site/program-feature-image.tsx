@@ -1,9 +1,12 @@
+import { BasketballGraphic } from "@/components/brand/basketball-graphic";
 import { cn } from "@/lib/utils";
 
 type ProgramFeatureBannerProps = {
   title: string;
   caption: string;
   mark?: string;
+  /** When set, shows the photorealistic basketball instead of the typography mark. */
+  visual?: "typography" | "basketball";
   className?: string;
 };
 
@@ -15,6 +18,7 @@ export function ProgramFeatureBanner({
   title,
   caption,
   mark = "SC",
+  visual = "typography",
   className,
 }: ProgramFeatureBannerProps) {
   return (
@@ -37,9 +41,15 @@ export function ProgramFeatureBanner({
           className="pointer-events-none absolute -right-10 -top-12 size-40 rounded-full border border-white/15 sm:size-56"
           aria-hidden
         />
-        <p className="relative font-display text-6xl font-black tracking-tight text-white/20 sm:text-7xl">
-          {mark}
-        </p>
+        {visual === "basketball" ? (
+          <div className="relative mb-2 h-24 w-24 opacity-95 sm:h-28 sm:w-28">
+            <BasketballGraphic size="md" className="h-full w-full" />
+          </div>
+        ) : (
+          <p className="relative font-display text-6xl font-black tracking-tight text-white/20 sm:text-7xl">
+            {mark}
+          </p>
+        )}
         <h2 className="relative mt-2 max-w-2xl font-display text-2xl font-extrabold leading-tight text-brand-white sm:text-3xl">
           {title}
         </h2>
