@@ -2,11 +2,24 @@
  * 072 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Build Weekly Summary Email Package
  *
- * Version: v4.3
+ * Version: v4.7
  * Date Written: 2026-06-20
- * Last Updated: 2026-08-23
+ * Last Updated: 2026-08-24
  *
  * VERSION HISTORY
+ * - v4.7 (2026-08-24): Fix general shooting days writeback (days.size bug); weekly video
+ *   list with date/name/secure URL; parent-friendly goal completion display (150%+ cap);
+ *   Video Feedback week match via Submission fallback when Week lookup is blank.
+ * - v4.6 (2026-08-23): Email separates General Shooting Days Logged from Perfect Week
+ *   Qualifying Days; Perfect Week timing uses 48-hour grace contract (Airtable formula
+ *   authority via Perfect Week Countable Submission?).
+ * - v4.5 (2026-08-23): Perfect Week criteria from Achievements + XP Reward Rules + WAS
+ *   fields (057 writeback); days logged uses Perfect Week Countable + Activity Date
+ *   against authoritative required-day threshold (not Days Logged rollup).
+ * - v4.4 (2026-08-23): Denver date-key day count (fixes rollup 8 vs canonical 7);
+ *   weekly scoped shots/makes; goal completion % from weekly shots/goal ratio;
+ *   shooting percentage; Video Feedback week list; Perfect Week Zoom summary;
+ *   canonical metrics in Weekly Email Payload JSON for 074 Hub handoff.
  * - v4.3 (2026-08-23): Weekly XP validation compares WAS rollup to WAS-linked
  *   active XP only; fails with explicit unlinked canonical XP when enrollment+week
  *   events exist but are not on the summary (fixes false disagreement when rollup
@@ -86,7 +99,7 @@
 
 const SCRIPT = {
   scriptName: "072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package",
-  version: "v4.3",
+  version: "v4.7",
   versionDate: "2026-08-23",
   originalWrittenDate: "2026-06-20",
   lastUpdated: "2026-08-23",
@@ -101,6 +114,10 @@ const SCRIPT = {
 const CONFIG = {
   timeZone: "America/Denver",
   schmidtEnrollmentId: "recCyFEPeATOVNlr9",
+  values: {
+    perfectWeekRuleKey: "PERFECT_WEEK",
+    perfectWeekAchievementName: "Perfect Week",
+  },
   tables: {
     weeklySummary: "Weekly Athlete Summary",
     enrollments: "Enrollments",
@@ -110,6 +127,9 @@ const CONFIG = {
     xpEvents: "XP Events",
     pha: "Program Homework Assignments",
     homeworkLibrary: "Homework Library",
+    videoFeedback: "Video Feedback",
+    achievements: "Achievements",
+    xpRewardRules: "XP Reward Rules",
   },
   was: {
     enrollment: "Enrollment",
@@ -120,8 +140,19 @@ const CONFIG = {
     weeklyXp: "XP Earned This Week",
     daysLogged: "Days Logged This Week",
     shots: "Total Shots This Week",
+    makes: "Total Makes This Week",
     goal: "Weekly Goal Shots Target",
     goalPct: "Goal Completion %",
+    zoomMeetingCount: "Perfect Week Zoom Meeting Count",
+    zoomAttendanceCount: "Perfect Week Zoom Attendance Count",
+    zoomRequirementMet: "Perfect Week Zoom Requirement Met?",
+    zoomRequirementStatus: "Perfect Week Zoom Requirement Status",
+    pwDailyDetail: "Perfect Week Daily Check Detail",
+    pwVideoCount: "Perfect Week Video Count",
+    pwVideoRequirementMet: "Perfect Week Video Requirement Met?",
+    pwHomeworkRequirementStatus: "Perfect Week Homework Requirement Status",
+    pwHomeworkRequirementMet: "Perfect Week Homework Requirement Met?",
+    pwEligible: "Perfect Week Eligible?",
     weekDisplay: "Week - Display",
     homeworkAssigned: "Homework Assigned Count",
     homeworkSat: "Homework Satisfactory Count",
@@ -165,7 +196,35 @@ const CONFIG = {
     week: "Week",
     countThis: "Count This Submission?",
     shots: "Total Shots Counted",
+    makes: "Total Makes Counted",
     activityDate: "Activity Date",
+    perfectWeekCountable: "Perfect Week Countable Submission?",
+  },
+  achievements: {
+    active: "Active?",
+    rewardRuleKey: "Reward Rule Key",
+    triggerThreshold: "Trigger Threshold",
+    name: "Achievement Name",
+  },
+  xpRewardRules: {
+    active: "Active?",
+    ruleKey: "Rule Key",
+    xpAmount: "XP Amount",
+    gradeBand: "Grade Band",
+  },
+  videoFeedback: {
+    enrollment: "Enrollment",
+    week: "Week",
+    submission: "Submission",
+    active: "Active?",
+    posted: "Feedback Posted?",
+    sent: "Parent Feedback Sent?",
+    name: "Video Feedback Name",
+    originalFileName: "Video Asset File Name",
+    videoUrl: "Video URL or Drive Link",
+    reviewedAt: "Reviewed At",
+    uploadStatus: "Upload Status",
+    coach: "Coach Feedback",
   },
   homeworkCompletions: {
     enrollment: "Enrollment",
@@ -344,6 +403,220 @@ function formatDate(value) {
   }).format(date);
 }
 
+function toDateKey(value) {
+  if (!value) return "";
+  if (typeof value === "string") {
+    const trimmed = String(value).trim();
+    const isoMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (isoMatch) return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
+    const localMatch = trimmed.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    if (localMatch) {
+      return `${localMatch[3]}-${localMatch[1].padStart(2, "0")}-${localMatch[2].padStart(2, "0")}`;
+    }
+  }
+  const dateValue = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(dateValue.getTime())) return "";
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: CONFIG.timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(dateValue);
+  const year = parts.find((p) => p.type === "year")?.value || "";
+  const month = parts.find((p) => p.type === "month")?.value || "";
+  const day = parts.find((p) => p.type === "day")?.value || "";
+  if (!year || !month || !day) return "";
+  return `${year}-${month}-${day}`;
+}
+
+function toSafeDateKey(rawValue, textValue) {
+  const fromRaw = toDateKey(rawValue);
+  if (fromRaw) return fromRaw;
+  return toDateKey(textValue);
+}
+
+function isDateKeyInWeekRange(dateKey, startKey, endKey) {
+  if (!dateKey || !startKey || !endKey) return true;
+  return dateKey >= startKey && dateKey <= endKey;
+}
+
+function goalCompletionPercentFromRatio(ratio) {
+  const raw = Number(ratio);
+  if (!Number.isFinite(raw)) return null;
+  return Math.round(raw * 100);
+}
+
+function goalCompletionRatioFromShotsAndGoal(shots, goal, ratioFromWas) {
+  const weeklyShots = Number(shots || 0);
+  const weeklyGoal = Number(goal || 0);
+  if (weeklyGoal > 0) return weeklyShots / weeklyGoal;
+  const raw = Number(ratioFromWas);
+  if (!Number.isFinite(raw)) return null;
+  return raw;
+}
+
+function goalCompletionPercentFromShotsAndGoal(shots, goal, ratioFromWas) {
+  const ratio = goalCompletionRatioFromShotsAndGoal(shots, goal, ratioFromWas);
+  return ratio == null ? null : goalCompletionPercentFromRatio(ratio);
+}
+
+function formatGoalCompletionDisplayForEmail(ratio) {
+  const raw = Number(ratio);
+  if (!Number.isFinite(raw)) return "—";
+  if (raw + 1e-9 >= 1.5) return "150%+";
+  if (raw + 1e-9 >= 1.25) return "125%";
+  if (raw + 1e-9 >= 1.0) return "100%";
+  return `${Math.round(raw * 100)}%`;
+}
+
+function isSafeHttpUrl(url) {
+  try {
+    const parsed = new URL(String(url || "").trim());
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+function linkedIdsInclude(record, table, name, targetId) {
+  return linkedIds(record, table, name).includes(targetId);
+}
+
+function videoFeedbackMatchesWeek(vf, vfTable, weekId, weekSubmissionIdSet) {
+  if (linkedIdsInclude(vf, vfTable, CONFIG.videoFeedback.week, weekId)) return true;
+  const subIds = linkedIds(vf, vfTable, CONFIG.videoFeedback.submission);
+  return subIds.some((sid) => weekSubmissionIdSet.has(sid));
+}
+
+function formatShootingPercentage(makes, shots) {
+  const m = Number(makes || 0);
+  const s = Number(shots || 0);
+  if (s <= 0) return 0;
+  return Math.round((m / s) * 100);
+}
+
+function buildVideoSubmissionLines(entries) {
+  if (!entries.length) return ["No video submissions recorded for this week."];
+  return entries.map((entry) => {
+    const label = String(entry.label || entry.originalFileName || "Video submission").trim();
+    const reviewedAt = String(entry.reviewedAt || "").trim();
+    const secureUrl = isSafeHttpUrl(entry.secureUrl) ? String(entry.secureUrl).trim() : "";
+    const datePart = reviewedAt ? ` (${reviewedAt})` : "";
+    const urlPart = secureUrl ? ` — ${secureUrl}` : "";
+    return `${label}${datePart}${urlPart}`;
+  });
+}
+
+function buildZoomAttendanceSummary(zoom) {
+  const status = String(zoom.status || "").trim();
+  if (status) return status;
+  const meetings = Number(zoom.meetingCount || 0);
+  if (meetings === 0) return "No Zoom This Week";
+  if (zoom.requirementMet === true) return "Attended";
+  if (Number(zoom.attendanceCount || 0) >= 1) return "Attended";
+  return "Missed";
+}
+
+function inclusiveWeekDayCount(weekStartKey, weekEndKey) {
+  if (!weekStartKey || !weekEndKey || weekEndKey < weekStartKey) return null;
+  const [sy, sm, sd] = weekStartKey.split("-").map(Number);
+  const [ey, em, ed] = weekEndKey.split("-").map(Number);
+  const start = Date.UTC(sy, sm - 1, sd);
+  const end = Date.UTC(ey, em - 1, ed);
+  return Math.round((end - start) / 86400000) + 1;
+}
+
+function parsePerfectWeekDailyDetail(detail) {
+  const text = String(detail || "");
+  const result = { dailyMinimum: null, passingOfficialDays: null, requiredDays: null };
+  const weekMatch = text.match(/Official week:\s*(\d{4}-\d{2}-\d{2})\s+through\s+(\d{4}-\d{2}-\d{2})/i);
+  if (weekMatch) result.requiredDays = inclusiveWeekDayCount(weekMatch[1], weekMatch[2]);
+  const dailyMinMatch = text.match(/Daily minimum:\s*(\d+)/i);
+  if (dailyMinMatch) result.dailyMinimum = Number(dailyMinMatch[1]);
+  const passingMatch = text.match(/Passing official days:\s*(\d+)\/(\d+)/i);
+  if (passingMatch) {
+    result.passingOfficialDays = Number(passingMatch[1]);
+    result.requiredDays = Number(passingMatch[2]);
+  }
+  return result;
+}
+
+function formatDaysLoggedAgainstCriteria(logged, required) {
+  const count = Number(logged || 0);
+  if (required == null || !Number.isFinite(Number(required)) || Number(required) <= 0) return String(count);
+  return `${count}/${Number(required)}`;
+}
+
+function formatVideoProgress(count, required, requirementMet) {
+  const n = Number(count || 0);
+  if (required != null && Number.isFinite(Number(required)) && Number(required) > 0) return `${n}/${Number(required)}`;
+  if (requirementMet === true) return `${n} (requirement met)`;
+  if (requirementMet === false) return `${n} (requirement not met)`;
+  return String(n);
+}
+
+function buildPerfectWeekEmailCriteria(input) {
+  const parsed = parsePerfectWeekDailyDetail(input.dailyDetail);
+  const requiredShootingDays =
+    input.achievementRequiredDays ??
+    parsed.requiredDays ??
+    (input.weekStartKey && input.weekEndKey
+      ? inclusiveWeekDayCount(input.weekStartKey, input.weekEndKey)
+      : null);
+  const weeklyGoal = Number(input.weeklyGoalShots || 0);
+  const dailyShootingMinimum =
+    parsed.dailyMinimum ??
+    (weeklyGoal > 0 && requiredShootingDays
+      ? Math.ceil(weeklyGoal / requiredShootingDays)
+      : null);
+  const daysLogged = Number(input.daysLogged ?? parsed.passingOfficialDays ?? 0);
+  const shootingDaysLogged =
+    input.shootingDaysLogged != null ? Number(input.shootingDaysLogged) : null;
+  const videoCount = Number(input.videoCount || 0);
+  const videoRequirementMet =
+    input.videoRequirementMet === true ||
+    input.videoRequirementMet === 1 ||
+    input.videoRequirementMet === "1";
+  const zoomRequirementStatus = String(input.zoomRequirementStatus || "").trim();
+  return {
+    requiredShootingDays,
+    dailyShootingMinimum,
+    shootingDaysLogged,
+    shootingDaysDisplay:
+      shootingDaysLogged != null
+        ? formatDaysLoggedAgainstCriteria(shootingDaysLogged, requiredShootingDays)
+        : null,
+    daysLogged,
+    daysLoggedDisplay: formatDaysLoggedAgainstCriteria(daysLogged, requiredShootingDays),
+    perfectWeekQualifyingDaysDisplay: formatDaysLoggedAgainstCriteria(daysLogged, requiredShootingDays),
+    videoCount,
+    videoRequired: input.videoRequired ?? null,
+    videoRequirementMet,
+    videoProgressDisplay: formatVideoProgress(
+      videoCount,
+      input.videoRequired ?? null,
+      videoRequirementMet
+    ),
+    zoomMeetingCount: Number(input.zoomMeetingCount || 0),
+    zoomAttendanceCount: Number(input.zoomAttendanceCount || 0),
+    zoomRequirementStatus,
+    zoomRequirementMet:
+      input.zoomRequirementMet === true ||
+      input.zoomRequirementMet === 1 ||
+      input.zoomRequirementMet === "1" ||
+      zoomRequirementStatus === "Attended" ||
+      zoomRequirementStatus === "No Zoom This Week",
+    homeworkRequirementStatus: String(input.homeworkRequirementStatus || "").trim(),
+    homeworkRequirementMet:
+      input.homeworkRequirementMet === true ||
+      input.homeworkRequirementMet === 1 ||
+      input.homeworkRequirementMet === "1",
+    eligible: input.eligible === true || input.eligible === 1 || input.eligible === "1",
+    perfectWeekXpAmount:
+      input.achievementXpAmount == null ? null : Number(input.achievementXpAmount),
+  };
+}
+
 function formatNumber(value) {
   const n = Number(value || 0);
   return Number.isFinite(n) ? Math.round(n).toLocaleString("en-US") : "0";
@@ -383,7 +656,22 @@ function listHtml(items) {
 }
 
 function fullHtml(data) {
-  return `<!doctype html><html><body style="margin:0;background:#F2F2F2;font-family:Arial,sans-serif;color:#262626"><div style="max-width:700px;margin:auto;background:#fff"><div style="background:#0034B7;color:#fff;padding:22px;border-bottom:6px solid #FF8B00"><h2 style="margin:0">Weekly Shooting Challenge Summary</h2><p style="margin:6px 0 0">${escapeHtml(data.weekLabel)}</p></div><div style="padding:22px"><p>Hi ${escapeHtml(data.firstName || data.athleteName)}, here is your weekly progress.</p><h3>Shooting</h3><p>Days Logged: <strong>${formatNumber(data.days)}</strong><br>Shots: <strong>${formatNumber(data.shots)}</strong><br>Weekly Goal: <strong>${data.goal ? formatNumber(data.goal) : "—"}</strong><br>Goal Completion: <strong>${data.goal ? Math.round((data.shots / data.goal) * 100) + "%" : "—"}</strong></p><h3>Homework Assigned</h3>${listHtml(data.assignments)}<h3>Homework Progress</h3>${listHtml(data.homework)}<h3>XP Earned</h3><p><strong>${formatNumber(data.weekXp)} XP</strong></p>${listHtml(data.xpLines)}<h3>Progression</h3><p>Current Level: <strong>${escapeHtml(data.level || "Not yet assigned")}</strong><br>Current Streak: <strong>${formatNumber(data.streak)} days</strong>${data.streakStatus ? `<br>Streak Status: <strong>${escapeHtml(data.streakStatus)}</strong>` : ""}</p></div></div></body></html>`;
+  const goalCompletion =
+    data.goalCompletionDisplay ||
+    (data.goalCompletionPercent != null ? `${formatNumber(data.goalCompletionPercent)}%` : "—");
+  const shootingPct =
+    data.shootingPercentage != null ? `${formatNumber(data.shootingPercentage)}%` : "—";
+  const shootingDaysLine = escapeHtml(
+    data.shootingDaysDisplay ||
+      (data.shootingDaysLogged != null ? formatNumber(data.shootingDaysLogged) : "—")
+  );
+  const perfectWeekDaysLine = escapeHtml(
+    data.perfectWeekDaysDisplay ||
+      data.perfectWeekQualifyingDaysDisplay ||
+      data.daysLoggedDisplay ||
+      formatNumber(data.perfectWeekDaysLogged || data.days)
+  );
+  return `<!doctype html><html><body style="margin:0;background:#F2F2F2;font-family:Arial,sans-serif;color:#262626"><div style="max-width:700px;margin:auto;background:#fff"><div style="background:#0034B7;color:#fff;padding:22px;border-bottom:6px solid #FF8B00"><h2 style="margin:0">Weekly Shooting Challenge Summary</h2><p style="margin:6px 0 0">${escapeHtml(data.weekLabel)}</p></div><div style="padding:22px"><p>Hi ${escapeHtml(data.firstName || data.athleteName)}, here is your weekly progress.</p><h3>Shooting</h3><p>Shooting Days Logged: <strong>${shootingDaysLine}</strong><br>Shots: <strong>${formatNumber(data.shots)}</strong><br>Makes: <strong>${formatNumber(data.makes)}</strong><br>Shooting %: <strong>${shootingPct}</strong><br>Weekly Goal: <strong>${data.goal ? formatNumber(data.goal) : "—"}</strong><br>Goal Completion: <strong>${goalCompletion}</strong></p><h3>Perfect Week Progress</h3><p>Perfect Week Qualifying Days: <strong>${perfectWeekDaysLine}</strong><br>Daily minimum: <strong>${data.perfectWeekDailyMinimum != null ? formatNumber(data.perfectWeekDailyMinimum) : "—"}</strong><br>Videos: <strong>${escapeHtml(data.perfectWeekVideoProgress || "—")}</strong><br>Zoom: <strong>${escapeHtml(data.zoomSummary)}</strong><br>Homework: <strong>${escapeHtml(data.perfectWeekHomeworkStatus || "—")}</strong><br>Eligible: <strong>${data.perfectWeekEligible ? "Yes" : "No"}</strong>${data.perfectWeekXpAmount != null ? `<br>Perfect Week XP: <strong>${formatNumber(data.perfectWeekXpAmount)}</strong>` : ""}</p><h3>Video Submissions</h3>${listHtml(data.videoLines)}<h3>Homework Assigned</h3>${listHtml(data.assignments)}<h3>Homework Progress</h3>${listHtml(data.homework)}<h3>XP Earned</h3><p><strong>${formatNumber(data.weekXp)} XP</strong></p>${listHtml(data.xpLines)}<h3>Progression</h3><p>Current Level: <strong>${escapeHtml(data.level || "Not yet assigned")}</strong><br>Current Streak: <strong>${formatNumber(data.streak)} days</strong>${data.streakStatus ? `<br>Streak Status: <strong>${escapeHtml(data.streakStatus)}</strong>` : ""}</p></div></div></body></html>`;
 }
 
 function shortHtml(data) {
@@ -394,7 +682,7 @@ function plainText(data, short) {
   if (short) {
     return `Shooting Challenge Weekly Reminder\n${data.weekLabel}\n\nNo countable shooting activity was recorded this week.`;
   }
-  return `Weekly Shooting Challenge Summary\n${data.weekLabel}\nAthlete: ${data.athleteName}\nDays Logged: ${data.days}\nShots: ${data.shots}\nWeekly Goal: ${data.goal}\nWeekly XP: ${data.weekXp}\nHomework: ${data.homework.join(" | ")}\nXP: ${data.xpLines.join(" | ")}`;
+  return `Weekly Shooting Challenge Summary\n${data.weekLabel}\nAthlete: ${data.athleteName}\nShooting Days Logged: ${data.shootingDaysDisplay || (data.shootingDaysLogged != null ? data.shootingDaysLogged : "—")}\nPerfect Week Qualifying Days: ${data.perfectWeekDaysDisplay || data.perfectWeekQualifyingDaysDisplay || data.daysLoggedDisplay || data.perfectWeekDaysLogged || data.days}\nShots: ${data.shots}\nMakes: ${data.makes}\nShooting %: ${data.shootingPercentage}\nWeekly Goal: ${data.goal}\nGoal Completion: ${data.goalCompletionDisplay || data.goalCompletionPercent}\nPerfect Week Videos: ${data.perfectWeekVideoProgress}\nPerfect Week Zoom: ${data.zoomSummary}\nPerfect Week Homework: ${data.perfectWeekHomeworkStatus}\nVideo: ${data.videoLines.join(" | ")}\nWeekly XP: ${data.weekXp}\nHomework: ${data.homework.join(" | ")}\nXP: ${data.xpLines.join(" | ")}`;
 }
 
 async function skipBuild(recordId, action, message) {
@@ -476,12 +764,22 @@ async function main() {
   );
 
   step("4 - Canonical countable submissions / shots");
+  const weekStartKey = toSafeDateKey(
+    getRaw(week, weeksTable, CONFIG.weeks.start),
+    getText(week, weeksTable, CONFIG.weeks.start)
+  );
+  const weekEndKey = toSafeDateKey(
+    getRaw(week, weeksTable, CONFIG.weeks.end),
+    getText(week, weeksTable, CONFIG.weeks.end)
+  );
   const submissionQuery = await loadQuery(submissionsTable, [
     CONFIG.submissions.enrollment,
     CONFIG.submissions.week,
     CONFIG.submissions.countThis,
     CONFIG.submissions.shots,
+    CONFIG.submissions.makes,
     CONFIG.submissions.activityDate,
+    CONFIG.submissions.perfectWeekCountable,
   ]);
   const linkedSubmissionIds = linkedIds(summary, weeklySummaryTable, CONFIG.was.submissions);
   const countableSubs = [];
@@ -494,20 +792,64 @@ async function main() {
     ) {
       throw new Error(`WAS Submission ${sid} owned by another Enrollment/Week.`);
     }
-    if (booleanish(submission, submissionsTable, CONFIG.submissions.countThis)) countableSubs.push(submission);
+    if (!booleanish(submission, submissionsTable, CONFIG.submissions.countThis)) continue;
+    const activityDateKey = toSafeDateKey(
+      getRaw(submission, submissionsTable, CONFIG.submissions.activityDate),
+      getText(submission, submissionsTable, CONFIG.submissions.activityDate)
+    );
+    if (!activityDateKey) {
+      throw new Error(`Countable submission ${sid} is missing a valid Activity Date.`);
+    }
+    if (!isDateKeyInWeekRange(activityDateKey, weekStartKey, weekEndKey)) continue;
+    countableSubs.push(submission);
   }
-  const days = new Set(
-    countableSubs.map((s) => formatDate(getRaw(s, submissionsTable, CONFIG.submissions.activityDate))).filter(Boolean)
-  ).size;
+  const shootingDayKeys = new Set(
+    countableSubs.map((s) =>
+      toSafeDateKey(
+        getRaw(s, submissionsTable, CONFIG.submissions.activityDate),
+        getText(s, submissionsTable, CONFIG.submissions.activityDate)
+      )
+    )
+  );
+  const perfectWeekDayKeys = new Set();
+  for (const sid of linkedSubmissionIds) {
+    const submission = submissionQuery.getRecord(sid);
+    if (!submission) continue;
+    if (
+      !sameIds(linkedIds(submission, submissionsTable, CONFIG.submissions.enrollment), [enrollmentId]) ||
+      !sameIds(linkedIds(submission, submissionsTable, CONFIG.submissions.week), [weekId])
+    ) {
+      continue;
+    }
+    if (!booleanish(submission, submissionsTable, CONFIG.submissions.perfectWeekCountable)) continue;
+    const activityDateKey = toSafeDateKey(
+      getRaw(submission, submissionsTable, CONFIG.submissions.activityDate),
+      getText(submission, submissionsTable, CONFIG.submissions.activityDate)
+    );
+    if (!activityDateKey || !isDateKeyInWeekRange(activityDateKey, weekStartKey, weekEndKey)) continue;
+    perfectWeekDayKeys.add(activityDateKey);
+  }
+  const shootingDaysLogged = shootingDayKeys.size;
+  const perfectWeekDaysLogged = perfectWeekDayKeys.size;
   const scannedShots = countableSubs.reduce(
     (sum, s) => sum + getNumber(s, submissionsTable, CONFIG.submissions.shots),
     0
   );
+  const scannedMakes = countableSubs.reduce(
+    (sum, s) => sum + getNumber(s, submissionsTable, CONFIG.submissions.makes),
+    0
+  );
   const summaryShots = nullableNumber(summary, weeklySummaryTable, CONFIG.was.shots);
+  const summaryMakes = nullableNumber(summary, weeklySummaryTable, CONFIG.was.makes);
+  const summaryDays = nullableNumber(summary, weeklySummaryTable, CONFIG.was.daysLogged);
   if (summaryShots !== null && Math.abs(summaryShots - scannedShots) > 0.001) {
     throw new Error(`Weekly shots disagreement: summary=${summaryShots}, canonical submissions=${scannedShots}.`);
   }
+  if (summaryMakes !== null && Math.abs(summaryMakes - scannedMakes) > 0.001) {
+    throw new Error(`Weekly makes disagreement: summary=${summaryMakes}, canonical submissions=${scannedMakes}.`);
+  }
   const shots = scannedShots;
+  const makes = scannedMakes;
 
   step("5 - Active XP Events only");
   const xpQuery = await loadQuery(xpEventsTable, [
@@ -694,6 +1036,133 @@ async function main() {
   }
   if (!homework.length) homework.push("No homework completion has been recorded for this week.");
 
+  step("7b - Video feedback rows for week");
+  const weekSubmissionIdSet = new Set(linkedSubmissionIds);
+  const videoFeedbackTable = base.getTable(CONFIG.tables.videoFeedback);
+  const vfQuery = await loadQuery(videoFeedbackTable, [
+    CONFIG.videoFeedback.enrollment,
+    CONFIG.videoFeedback.week,
+    CONFIG.videoFeedback.submission,
+    CONFIG.videoFeedback.active,
+    CONFIG.videoFeedback.posted,
+    CONFIG.videoFeedback.sent,
+    CONFIG.videoFeedback.name,
+    CONFIG.videoFeedback.originalFileName,
+    CONFIG.videoFeedback.videoUrl,
+    CONFIG.videoFeedback.reviewedAt,
+    CONFIG.videoFeedback.uploadStatus,
+    CONFIG.videoFeedback.coach,
+  ]);
+  const videoSubmissions = vfQuery.records
+    .filter(
+      (vf) =>
+        booleanish(vf, videoFeedbackTable, CONFIG.videoFeedback.active) &&
+        linkedIdsInclude(vf, videoFeedbackTable, CONFIG.videoFeedback.enrollment, enrollmentId) &&
+        videoFeedbackMatchesWeek(vf, videoFeedbackTable, weekId, weekSubmissionIdSet)
+    )
+    .map((vf) => {
+      const secureUrlRaw = getText(vf, videoFeedbackTable, CONFIG.videoFeedback.videoUrl);
+      const secureUrl = isSafeHttpUrl(secureUrlRaw) ? secureUrlRaw : "";
+      return {
+        label: firstNonEmpty(
+          getText(vf, videoFeedbackTable, CONFIG.videoFeedback.name),
+          getText(vf, videoFeedbackTable, CONFIG.videoFeedback.originalFileName),
+          "Video submission"
+        ),
+        originalFileName: getText(vf, videoFeedbackTable, CONFIG.videoFeedback.originalFileName),
+        reviewedAt: formatDate(getRaw(vf, videoFeedbackTable, CONFIG.videoFeedback.reviewedAt)),
+        secureUrl,
+      };
+    });
+  const videoLines = buildVideoSubmissionLines(videoSubmissions);
+
+  step("7c - Perfect Week criteria from Achievements, XP Reward Rules, and WAS");
+  let achievementRequiredDays = null;
+  let achievementXpAmount = null;
+  try {
+    const achievementsTable = base.getTable(CONFIG.tables.achievements);
+    const achievementQuery = await loadQuery(achievementsTable, [
+      CONFIG.achievements.active,
+      CONFIG.achievements.rewardRuleKey,
+      CONFIG.achievements.triggerThreshold,
+      CONFIG.achievements.name,
+    ]);
+    const pwAchievements = achievementQuery.records.filter(
+      (row) =>
+        booleanish(row, achievementsTable, CONFIG.achievements.active) &&
+        getText(row, achievementsTable, CONFIG.achievements.rewardRuleKey) === CONFIG.values.perfectWeekRuleKey
+    );
+    if (pwAchievements.length === 1) {
+      achievementRequiredDays = nullableNumber(
+        pwAchievements[0],
+        achievementsTable,
+        CONFIG.achievements.triggerThreshold
+      );
+    }
+  } catch {
+    // Achievements table is optional for package build; WAS fields remain authoritative.
+  }
+  try {
+    const xpRulesTable = base.getTable(CONFIG.tables.xpRewardRules);
+    const xpRuleQuery = await loadQuery(xpRulesTable, [
+      CONFIG.xpRewardRules.active,
+      CONFIG.xpRewardRules.ruleKey,
+      CONFIG.xpRewardRules.xpAmount,
+      CONFIG.xpRewardRules.gradeBand,
+    ]);
+    const matchingRules = xpRuleQuery.records.filter((row) => {
+      if (!booleanish(row, xpRulesTable, CONFIG.xpRewardRules.active)) return false;
+      if (getText(row, xpRulesTable, CONFIG.xpRewardRules.ruleKey) !== CONFIG.values.perfectWeekRuleKey) {
+        return false;
+      }
+      const bands = linkedIds(row, xpRulesTable, CONFIG.xpRewardRules.gradeBand);
+      return bands.length === 0 || bands.includes(gradeId);
+    });
+    if (matchingRules.length === 1) {
+      achievementXpAmount = nullableNumber(matchingRules[0], xpRulesTable, CONFIG.xpRewardRules.xpAmount);
+    }
+  } catch {
+    // XP Reward Rules lookup is optional; eligibility still comes from WAS.
+  }
+
+  const pwDailyDetail = getText(summary, weeklySummaryTable, CONFIG.was.pwDailyDetail);
+  const weeklyGoalShots = getNumber(summary, weeklySummaryTable, CONFIG.was.goal);
+  const pwVideoCount = getNumber(summary, weeklySummaryTable, CONFIG.was.pwVideoCount);
+  const pwVideoRequirementMet = fieldExists(weeklySummaryTable, CONFIG.was.pwVideoRequirementMet)
+    ? getNumber(summary, weeklySummaryTable, CONFIG.was.pwVideoRequirementMet)
+    : null;
+  const perfectWeekCriteria = buildPerfectWeekEmailCriteria({
+    weekStartKey,
+    weekEndKey,
+    weeklyGoalShots,
+    dailyDetail: pwDailyDetail,
+    daysLogged: perfectWeekDaysLogged,
+    shootingDaysLogged,
+    achievementRequiredDays,
+    achievementXpAmount,
+    videoCount: pwVideoCount,
+    videoRequirementMet: pwVideoRequirementMet,
+    zoomMeetingCount: nullableNumber(summary, weeklySummaryTable, CONFIG.was.zoomMeetingCount),
+    zoomAttendanceCount: nullableNumber(summary, weeklySummaryTable, CONFIG.was.zoomAttendanceCount),
+    zoomRequirementStatus: getText(summary, weeklySummaryTable, CONFIG.was.zoomRequirementStatus),
+    zoomRequirementMet: fieldExists(weeklySummaryTable, CONFIG.was.zoomRequirementMet)
+      ? booleanish(summary, weeklySummaryTable, CONFIG.was.zoomRequirementMet)
+      : null,
+    homeworkRequirementStatus: getText(summary, weeklySummaryTable, CONFIG.was.pwHomeworkRequirementStatus),
+    homeworkRequirementMet: fieldExists(weeklySummaryTable, CONFIG.was.pwHomeworkRequirementMet)
+      ? getNumber(summary, weeklySummaryTable, CONFIG.was.pwHomeworkRequirementMet)
+      : null,
+    eligible: fieldExists(weeklySummaryTable, CONFIG.was.pwEligible)
+      ? getNumber(summary, weeklySummaryTable, CONFIG.was.pwEligible)
+      : null,
+  });
+  const zoomSummary = buildZoomAttendanceSummary({
+    status: perfectWeekCriteria.zoomRequirementStatus,
+    meetingCount: perfectWeekCriteria.zoomMeetingCount,
+    attendanceCount: perfectWeekCriteria.zoomAttendanceCount,
+    requirementMet: perfectWeekCriteria.zoomRequirementMet,
+  });
+
   step("8 - Build package and writeback");
   const athleteName = firstNonEmpty(getText(enrollment, enrollmentsTable, CONFIG.enrollments.name), "Athlete");
   const firstName = firstNonEmpty(
@@ -720,6 +1189,12 @@ async function main() {
     `${formatDate(getRaw(week, weeksTable, CONFIG.weeks.start))} - ${formatDate(getRaw(week, weeksTable, CONFIG.weeks.end))}`
   );
   const goal = getNumber(summary, weeklySummaryTable, CONFIG.was.goal);
+  const goalCompletionRatioRaw = nullableNumber(summary, weeklySummaryTable, CONFIG.was.goalPct);
+  const goalCompletionRatio = goalCompletionRatioFromShotsAndGoal(shots, goal, goalCompletionRatioRaw);
+  const goalCompletionPercent =
+    goalCompletionRatio == null ? null : goalCompletionPercentFromRatio(goalCompletionRatio);
+  const goalCompletionDisplay = formatGoalCompletionDisplayForEmail(goalCompletionRatio);
+  const shootingPercentage = formatShootingPercentage(makes, shots);
   const sendMode = firstNonEmpty(inputMode, normalizeMode(getText(summary, weeklySummaryTable, CONFIG.was.sendMode)), "test");
   const isEmpty = countableSubs.length === 0;
 
@@ -736,13 +1211,30 @@ async function main() {
     athleteName,
     firstName,
     weekLabel,
-    days,
+    shootingDaysLogged,
+    shootingDaysDisplay: perfectWeekCriteria.shootingDaysDisplay,
+    perfectWeekDaysLogged,
+    perfectWeekDaysDisplay: perfectWeekCriteria.perfectWeekQualifyingDaysDisplay,
+    days: perfectWeekCriteria.daysLogged,
+    daysLoggedDisplay: perfectWeekCriteria.daysLoggedDisplay,
     shots,
+    makes,
+    shootingPercentage,
     goal,
+    goalCompletionRatio,
+    goalCompletionPercent,
+    goalCompletionDisplay,
     weekXp,
     assignments,
     homework,
     xpLines,
+    videoLines,
+    zoomSummary,
+    perfectWeekDailyMinimum: perfectWeekCriteria.dailyShootingMinimum,
+    perfectWeekVideoProgress: perfectWeekCriteria.videoProgressDisplay,
+    perfectWeekHomeworkStatus: perfectWeekCriteria.homeworkRequirementStatus,
+    perfectWeekEligible: perfectWeekCriteria.eligible,
+    perfectWeekXpAmount: perfectWeekCriteria.perfectWeekXpAmount,
     level: getText(enrollment, enrollmentsTable, CONFIG.enrollments.level),
     streak: getNumber(enrollment, enrollmentsTable, CONFIG.enrollments.streak),
     streakStatus: getText(enrollment, enrollmentsTable, CONFIG.enrollments.streakStatus),
@@ -761,6 +1253,27 @@ async function main() {
     activeXpCount: activeXp.length,
     canonicalWeekXp: weekXp,
     canonicalShots: shots,
+    canonicalMakes: makes,
+    canonicalDaysLogged: perfectWeekCriteria.daysLogged,
+    canonicalShootingDaysLogged: shootingDaysLogged,
+    daysLoggedDisplay: perfectWeekCriteria.daysLoggedDisplay,
+    shootingDaysDisplay: perfectWeekCriteria.shootingDaysDisplay,
+    requiredShootingDays: perfectWeekCriteria.requiredShootingDays,
+    dailyShootingMinimum: perfectWeekCriteria.dailyShootingMinimum,
+    perfectWeekCriteria,
+    summaryDaysObserved: summaryDays,
+    perfectWeekDaysLogged,
+    canonicalGoalCompletionPercent: goalCompletionPercent,
+    goalCompletionRatio,
+    goalCompletionDisplay,
+    shootingPercentage,
+    summaryMakesObserved: summaryMakes,
+    weekStartKey,
+    weekEndKey,
+    videoSubmissionCount: videoSubmissions.length,
+    videoSubmissions,
+    zoomAttendanceStatus: getText(summary, weeklySummaryTable, CONFIG.was.zoomRequirementStatus),
+    zoomSummary,
     summaryXpObserved: summaryXp,
     summaryShotsObserved: summaryShots,
     emptyWeekPolicy,

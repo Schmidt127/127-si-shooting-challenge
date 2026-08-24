@@ -1,28 +1,3 @@
-/*
-Automation: 066 - Achievements and Milestones - Create Shot Milestone Unlocks
-System: 127 SI Shooting Challenge
-Source: Airtable Automation
-Status: GitHub Source of Truth
-Last Synced From Airtable: 2026-06-20
-Last GitHub Update: 2026-08-24 (v3.9 dynamic triggering recordId)
-
-Purpose:
-Creates Athlete Achievement Unlock rows when an Enrollment crosses configured Shot Milestone thresholds.
-
-Trigger:
-Enrollments when Run Shot Milestone Check? is checked (confirm conditions in Airtable UI).
-
-Important Tables:
-Enrollments, Submissions, Shot Milestones, Achievements, Athlete Achievement Unlocks, Weeks
-
-Important Fields:
-Run Shot Milestone Check?, Grade Band, Milestone Source Key, Milestone Activity Date, Week
-
-Notes:
-GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
-First automation upgraded to V2 Automation Standard (2026-07-05).
-*/
-
 /************************************************************
  * 066 - ACHIEVEMENTS AND MILESTONES
  * Create Shot Milestone Unlocks

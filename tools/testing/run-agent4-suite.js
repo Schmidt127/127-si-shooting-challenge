@@ -84,6 +84,15 @@ const COMMANDS = [
     args: ["tools/testing/check-completion-master-integrity.js"],
   },
   {
+    name: "065-066-trigger-record-contract",
+    args: ["tests/automation-contracts/065-066-trigger-record.test.js"],
+  },
+  {
+    name: "065-066-trigger-record-offline",
+    cmd: process.execPath,
+    args: ["--test", "tools/testing/tests/test_065_066_trigger_record.mjs"],
+  },
+  {
     name: "066-milestone-crossing",
     args: ["airtable/automations/shooting-challenge/lib/066-milestone-crossing-harness.test.js"],
   },
