@@ -17,7 +17,7 @@ ownership and evidence boundaries are in [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md
 
 **Status key:** `queued` · `planned` · `in-progress` · `done` · `deferred` · `wont-fix`
 
-Last updated: **2026-08-19** (C-028 Tremendous sandbox send validated; production API pending; Make scenario OFF)
+Last updated: **2026-08-24** (weekly-summary E2E live-tested; V2-065-066-SCRIPT-INPUT-001 queued)
 
 ---
 
@@ -92,6 +92,7 @@ flowchart TD
 
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
+| **V2-065-066-SCRIPT-INPUT-001** | Fix Production **065** / **066** hardcoded `recordId` script inputs | Disposable WAS email QA required canonical manual XP settlement because automations 065 (`recQSVjvYB8Sv14u0`) and 066 (`rec93mAfo5jKqP3g5`) process reference records instead of trigger `recordId`. Weekly email E2E is **not blocked**; fixture automation triggering is **not fully solved**. | OMNI / Airtable automation UI | `queued` |
 | **SCV2-SEASON-LAUNCH-CONSOLIDATION-001** | Repository source-of-truth reconciliation | Consolidate release authority, preserve historical evidence, reconcile 2027 season policy and PHA-first evidence, and add deterministic stale-reference auditing. No live-system or web implementation changes. | Merged PRs #137–#139; Mike Phase 2 approval 2026-08-10 | **done** |
 
 ## Full backlog (all owner requests)

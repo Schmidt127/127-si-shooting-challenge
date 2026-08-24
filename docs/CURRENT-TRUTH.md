@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-23 (post-XP-deletion autonomous QA — live-create PASS, 3 expected FINDINGs, 4 BLOCKED pastes)  
+**Last verification (repo):** 2026-08-24 (weekly-summary E2E live-tested — 072 v4.7 / 074 v3.3 / 079 v2.5; disposable WAS email QA complete)  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -169,8 +169,8 @@ Do **not** treat older Automations-table Code-column snapshots as stronger than 
 | **064** | **Production-verified current live** | v12.2 in repo | Live | Do not invent a new version string |
 | **065** | **v10.2** | v10.2 | Live | |
 | **066** | **v3.8** | v3.8 | Live | |
-| **072** | **v4.2** (prod) | **v4.3** | Live / **paste needed** | v4.3 fixes WAS weekly XP false disagreement (`reczxTIpVI8ZJLex0`); see [`deploy-checklists/072-v4.3-was-linked-xp-reconciliation.md`](./deploy-checklists/072-v4.3-was-linked-xp-reconciliation.md) |
-| **074** | **v3.1** (GitHub) | v3.1 | Live / paste verify | Weekly summary Hub handoff |
+| **072** | **v4.7** (prod) | **v4.7** | **Live / live-tested** | v4.7 shooting days 7/7, goal 150%+, video list, XP 1280; E2E disposable send 2026-08-24 |
+| **074** | **v3.3** (prod) | **v3.3** | **Live / live-tested** | Weekly summary Hub handoff; E2E with 072 v4.7 2026-08-24 |
 | **070a** | **v4.7** | v4.7 | **Off** by design | Homework upload Make path |
 | **070b** | **v4.7** | v4.7 | Live | |
 | **070c** | **current live (repo v1.1)** | v1.1 | Live/enabled | Do not invent a new version |
@@ -191,7 +191,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | 070c | v1.1 | **Enabled in PROD** — async video writeback verify after **070b**; do not invent a new version |
 | 076 | v8.7 (GitHub) | Daily Hub queue create (not Make send) |
 | 077 | v5.0 archive | **Deleted from Production** (2026-08-13 docs) — not live Make send |
-| 079 | v2.5 (GitHub) | Ready queue → Hub → Resend |
+| 079 | v2.5 (GitHub + prod) | Ready queue → Hub → Resend; E2E weekly send 2026-08-24 |
 | 112 | legacy | Expected **OFF** |
 | 115 | v2.1 ETF | **Production-only ETF** — never paste as normal season automation |
 | 005 | v5.5 (GitHub) | PHA slot normalize (see CHANGELOG) |
@@ -240,7 +240,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Controlled path through WAS / homework | Path evidence 2026-08-16 |
 | Full Perfect Week award proof | **PENDING / calendar-blocked** — not ready, not awarded. XP ledger repair complete 2026-08-23. See [2026-08-21-perfect-week-test-prep-report.md](./deploy-checklists/2026-08-21-perfect-week-test-prep-report.md) and [2026-08-23-production-readiness-inventory.md](./audits/2026-08-23-production-readiness-inventory.md) |
 | Required order | **057 → 058 → 059** only after Eligible?=1 and Days Logged=7 |
-| Weekly XP disagreement (`reczxTIpVI8ZJLex0`) | **Root cause identified 2026-08-23:** shot milestone XP (+235) was active on Enrollment+Week but not yet linked on WAS when 072 v4.2 ran; rollup=1025 matched linked XP, not all canonical XP (1260). WAS now settled (1260/40 events). **072 v4.3** in GitHub compares rollup to WAS-linked XP and surfaces unlinked canonical XP explicitly. Email should send after Mike pastes v4.3 and re-arms build. |
+| Weekly XP disagreement (`reczxTIpVI8ZJLex0`) | **Historical artifact (2026-08-23):** root cause was unlinked milestone XP when 072 v4.2 ran. Resolved by v4.3+ reconciliation and **072 v4.7** production install. **Weekly-summary E2E live-tested 2026-08-24** on disposable WAS (`recdj8MD0szplMW5r`). Old WAS `reczxTIpVI8ZJLex0` and queue proof `recoikFrli3m0xDRa` remain preserved — not current defects. |
 | Authority | Completion Master + Perfect Week prep report + Perfect Week testing docs under `docs/testing/perfect-week/` |
 
 ---
@@ -269,12 +269,12 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - Lambda season CodeOnly deploy (optional follow-ups open)
 - Repository integrity + PII redaction pass (this audit)
 - **2026-08-23 post-XP-deletion autonomous QA:** Four temporary repair XP Events deleted by Mike; disposable live-create **PASS** (010 → SUBMISSION_XP, idempotent); Perfect Week **PASS** (39 active); Xavier/Testing3/Curtis **FINDING** (4 missing repair rows not recreated); stale-field check **PASS** (no phantom links); **010/057/072 paste BLOCKED** pending Mike
-- **2026-08-23 autonomous QA continuation:** SUBMISSION_XP repairs (4 submissions, later deleted); 072 v4.3 root-cause fix for WAS `reczxTIpVI8ZJLex0`; autonomous QA harness
+- **2026-08-24 weekly-summary E2E:** **072 v4.7 → 074 v3.3 → 079 v2.5 → Hub → Resend** live-tested on disposable WAS `recdj8MD0szplMW5r` (Test Mode, allowlisted recipient). Content verified: 7/7 shooting days, 4/7 PW days, 48,066 shots, 1,280 XP, 40 events, 150%+, 8 videos, Attended, Homework Complete. No duplicate send. Report: [`testing/autonomous-qa/WAS_EMAIL_QA_20260824_FINAL_REPORT.md`](./testing/autonomous-qa/WAS_EMAIL_QA_20260824_FINAL_REPORT.md)
 
 ### Pending / needs live proof
 
-- **072 v4.3**, **010 v10.12**, **057 v1.9** — Mike paste from GitHub (Automations Code column lags: 072 v4.2, 010 v10.10, 057 v1.8 as of 2026-08-23 API read)
-- Weekly email positive send after 072 paste (`reczxTIpVI8ZJLex0` has `Build Weekly Email Now?=true`; WAS settled at 1260 XP)
+- **010 v10.12**, **057 v1.9** — Mike paste from GitHub if Automations Code column still lags (010 v10.10, 057 v1.8 as of 2026-08-23 API read)
+- **065 / 066** — Production script inputs use hardcoded reference `recordId` values; disposable fixture XP settlement required canonical manual writes (follow-up engineering — not blocking weekly email)
 - Broader progression / standings certification packages
 - Automation version inventory rows still UNKNOWN in Airtable UI
 - Optional 066 OMNI sandbox confirm (K-H1)

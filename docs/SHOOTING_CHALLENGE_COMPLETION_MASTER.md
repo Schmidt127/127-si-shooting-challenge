@@ -10,7 +10,7 @@ This is the **detailed completion matrix and historical traceability record** fo
 | Field | Value |
 |-------|--------|
 | **Purpose** | Completion matrix, package traceability, and preserved historical evidence |
-| **Last updated** | **2026-08-23** (Completion Master reconciliation) |
+| **Last updated** | **2026-08-24** (weekly-summary E2E live-tested — 072 v4.7 / 074 v3.3 / 079 v2.5) |
 | **Production branch** | `master` |
 | **Vercel root** | `web/` |
 | **Production website** | https://www.fairfieldbasketballclub.com/shoot |
@@ -37,7 +37,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 
 ---
 
-## 0. Current Status Dashboard — 2026-08-23
+## 0. Current Status Dashboard — 2026-08-24
 
 Reconciled against [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md), [`PROJECT_STATE.md`](./PROJECT_STATE.md), and production-aligned repository sources. Status labels: `complete` · `repository-ready` · `live-tested` · `needs live proof` · `Mike decision` · `blocked` · `deferred` · `historical only` · `retired`.
 
@@ -55,7 +55,7 @@ Reconciled against [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md), [`PROJECT_STATE.md`
 | **Shot milestones** | `live-tested` | **066 v3.8**; Perfect Week Testing repair proved milestone XP path |
 | **Perfect Week** | `needs live proof` | Ledger repair complete (39 events on `rec93mAfo5jKqP3g5`); **award certification pending** |
 | **Weekly Athlete Summary** | `live-tested` | WAS create/link path partially proven; scheduler positive arm `needs live proof` |
-| **Weekly email** | `needs live proof` | Hub path **072 v4.3 → 074 v3.1 → 079 v2.5 → Resend**; WAS `reczxTIpVI8ZJLex0` settled at 1260 XP; positive send blocked until 072 v4.3 paste |
+| **Weekly email** | `live-tested` | **072 v4.7 → 074 v3.3 → 079 v2.5 → Hub → Resend** E2E disposable send 2026-08-24; content verified (7/7, 4/7 PW, 48,066 shots, 1,280 XP, 150%+, 8 videos). Historical `reczxTIpVI8ZJLex0` / `recoikFrli3m0xDRa` preserved — not current defects |
 | **Levels and gates** | `live-tested` | 041 **v5.1** / 042 progression partially proven; broader gate-clear `needs live proof` |
 | **Leaderboard / standings** | `repository-ready` | Adapter hardening merged; Production verification `needs live proof` |
 | **Public athlete profile** | `repository-ready` | XP ledger merged/deployed; live profile proof partial |
@@ -74,7 +74,7 @@ All Shooting Challenge parent/athlete notification email goes through **Communic
 
 ---
 
-## 0A. Current Automation Versions — 2026-08-23
+## 0A. Current Automation Versions — 2026-08-24
 
 Authoritative GitHub SCRIPT headers + [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) overlays. Production paste may lag GitHub for **010 v10.12** and **057 v1.9** — verify in Automations UI before claiming live.
 
@@ -96,8 +96,8 @@ Authoritative GitHub SCRIPT headers + [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) o
 | **070a** | v4.7 | retired / off | Homework upload Make — **off by design** except controlled windows |
 | **070b** | v4.7 | live-tested | Video upload → Make → Lambda |
 | **070c** | v1.1 | live-tested | Async writeback verify |
-| **072** | **v4.3** | repository-ready | Weekly summary email package; WAS-linked XP reconciliation |
-| **074** | **v3.1** | live-tested | Weekly summary Hub handoff |
+| **072** | **v4.7** | `live-tested` | Weekly summary email package; E2E disposable send 2026-08-24 |
+| **074** | **v3.3** | `live-tested` | Weekly summary Hub handoff |
 | **076** | v8.11 | live-tested | Daily submission Hub queue create |
 | **077** | v5.0 (archive) | **retired** | Deleted from Production; GitHub archive only |
 | **079** | v2.5 | live-tested | Ready queue → Hub → Resend |
