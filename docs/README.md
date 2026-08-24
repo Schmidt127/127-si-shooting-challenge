@@ -18,7 +18,7 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 
 **Four-agent run?** Start at [agent-runs/00-START-HERE.md](./agent-runs/00-START-HERE.md) and [agent-runs/CONTROL.json](./agent-runs/CONTROL.json).
 
-**Shooting Challenge V2?** Start at [v2/README.md](./v2/README.md), then [CHATGPT-MASTER-PLAN-BRIEF.md](./CHATGPT-MASTER-PLAN-BRIEF.md) for consolidated planning, or import [chatgpt-sources/](./chatgpt-sources/) into ChatGPT Project Sources.
+**Shooting Challenge V2?** Start at [v2/README.md](./v2/README.md), then [127-SI-MASTER-FUTURE-WORK-LIST.md](./127-SI-MASTER-FUTURE-WORK-LIST.md) for consolidated planning, or import [chatgpt-sources/](./chatgpt-sources/) into ChatGPT Project Sources.
 
 ---
 
@@ -36,7 +36,7 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 **[chatgpt-sources/](./chatgpt-sources/)** — **import this entire folder** into ChatGPT Project Sources (23 synced files + `00-START-HERE.md`).
 
 | — | [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) | **Active** — permanent workflow (Mike / ChatGPT / Cursor) |
-| — | [CHATGPT-MASTER-PLAN-BRIEF.md](./CHATGPT-MASTER-PLAN-BRIEF.md) | **Consolidated backlog** — all C-/V2-/H- IDs, sub-system roadmaps, ChatGPT prompt |
+| — | [127-SI-MASTER-FUTURE-WORK-LIST.md](./127-SI-MASTER-FUTURE-WORK-LIST.md) | **Consolidated backlog** — all C-/V2-/H- IDs, sub-system roadmaps, ChatGPT prompt |
 
 | # | File | Status |
 |---|------|--------|
@@ -67,11 +67,11 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 | [asset-storage-migration.md](./asset-storage-migration.md) | **AWS S3 + canonical URLs** — retire Drive/Airtable attachments (C-013) |
 | [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) | Fillout validation, flexible Weeks, test sandbox, Engineering Test Framework (C-017–C-020) |
 | [platform-config-improvements.md](./platform-config-improvements.md) | Grade bands + public display fields (C-021, C-022) |
-| [v2-change-backlog.md](./v2-change-backlog.md) | **Owner change list** — all requests, dependency waves, **V2-013 Program Instance** |
+| [127-SI-MASTER-FUTURE-WORK-LIST.md](./127-SI-MASTER-FUTURE-WORK-LIST.md) | **Owner change list** — all requests, dependency waves, **V2-013 Program Instance** |
 | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) | **Phase 2 master doc** — automation inventory, disposition, capacity plan |
 | [production-base-setup.md](./production-base-setup.md) | **V2-015 ops runbook** — clone, PAT, webhook isolation, production-only deploy |
 | [v2-015-production-base-architecture.md](./v2-015-production-base-architecture.md) | **Approved** — production Airtable base + one prod + one repo |
-| [CHATGPT-MASTER-PLAN-BRIEF.md](./CHATGPT-MASTER-PLAN-BRIEF.md) | **Planning aggregate** — Wave 0 closed; H-001/H-002; session progress |
+| [127-SI-MASTER-FUTURE-WORK-LIST.md](./127-SI-MASTER-FUTURE-WORK-LIST.md) | **Planning aggregate** — Wave 0 closed; H-001/H-002; session progress |
 | [v2/06-automation-standards.md](./v2/06-automation-standards.md) | **V2 automation rewrite pattern** — 066 reference (live **v3.8**) |
 | [v2/08-testing-standards.md](./v2/08-testing-standards.md) | **Audit-first testing** — fix the audit, not the data |
 
