@@ -2,13 +2,12 @@ import Link from "next/link";
 
 import { catalogCardClass } from "@/components/catalog/catalog-surface";
 import { IconLevel } from "@/components/icons/shoot-icons";
-import { LevelCoverImage } from "@/components/levels/level-cover-image";
+import { SafeExternalImage } from "@/components/media/safe-external-image";
 import { AccentRail, CtaLink, ProgramPage } from "@/components/site";
 import { ProgramFeatureBanner } from "@/components/site/program-feature-image";
 import { EmptyState, ErrorState } from "@/components/ui";
 import { formatXp } from "@/lib/formatters";
 import { getLevelStyle } from "@/lib/leaderboard/level-styles";
-import { getLevelCoverAssetPath } from "@/lib/levels/level-cover-assets";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import type { LevelDefinition, LevelLadderData } from "@/types/levels";
 
@@ -54,7 +53,6 @@ function LevelLadderCard({
 }) {
   const style = getLevelStyle(level.displayName);
   const tierLabel = level.rank > 0 ? `Tier ${level.rank}` : `Step ${index + 1}`;
-  const coverAssetPath = getLevelCoverAssetPath(level.name, level.sortOrder);
 
   return (
     <Link href={`/levels/${level.id}`} className="group relative block">
@@ -85,13 +83,16 @@ function LevelLadderCard({
             <XpMeter xp={level.xpRequired} maxXp={maxXp} className="mt-1" />
           </div>
 
-          {coverAssetPath ? (
+          {level.coverImage ? (
             <div className="flex shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-brand-light-gray p-1.5">
-              <LevelCoverImage
-                levelName={level.name}
-                displayName={level.displayName}
-                sortOrder={level.sortOrder}
-                size="card"
+              <SafeExternalImage
+                src={level.coverImage.url}
+                alt={
+                  level.displayName || level.name
+                    ? `${level.displayName || level.name} cover`
+                    : "Level cover"
+                }
+                className="max-h-24 max-w-32 object-contain sm:max-h-28 sm:max-w-36"
               />
             </div>
           ) : null}
