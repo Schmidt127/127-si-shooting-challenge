@@ -5,11 +5,12 @@ import {
 } from "@/components/catalog/catalog-surface";
 import { DetailTitle, SectionHeading } from "@/components/catalog/display-heading";
 import { RichContent } from "@/components/catalog/rich-content";
-import { SafeExternalImage } from "@/components/media/safe-external-image";
+import { LevelCoverImage } from "@/components/levels/level-cover-image";
 import { CtaLink, DetailPageShell } from "@/components/site";
 import { EmptyState } from "@/components/ui";
 import { formatXp } from "@/lib/formatters";
 import { getLevelStyle } from "@/lib/leaderboard/level-styles";
+import { getLevelCoverAssetPath } from "@/lib/levels/level-cover-assets";
 import { cn } from "@/lib/utils";
 import type { LevelDefinition } from "@/types/levels";
 
@@ -30,6 +31,7 @@ function StatPill({ label, value }: { label: string; value: string }) {
 
 export function LevelDetailView({ level }: LevelDetailViewProps) {
   const style = getLevelStyle(level.displayName);
+  const coverAssetPath = getLevelCoverAssetPath(level.name, level.sortOrder);
 
   return (
     <DetailPageShell
@@ -38,17 +40,14 @@ export function LevelDetailView({ level }: LevelDetailViewProps) {
       ambientVariant="levels"
     >
       <div className={cn(catalogHeroClass(), "relative")}>
-        {level.coverImage ? (
+        {coverAssetPath ? (
           <div className="flex w-full items-center justify-center bg-brand-light-gray px-4 py-6 sm:px-8 sm:py-8">
-            <SafeExternalImage
-              src={level.coverImage.url}
-              alt={
-                level.displayName || level.name
-                  ? `${level.displayName || level.name} cover`
-                  : "Level cover"
-              }
-              className="max-h-72 w-auto max-w-full object-contain sm:max-h-96"
-              fallback={<div className={`h-24 w-full bg-gradient-to-br ${style.gradient}`} />}
+            <LevelCoverImage
+              levelName={level.name}
+              displayName={level.displayName}
+              sortOrder={level.sortOrder}
+              size="hero"
+              priority
             />
           </div>
         ) : (
