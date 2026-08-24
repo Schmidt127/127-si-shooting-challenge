@@ -33,7 +33,7 @@
 | [../../CHANGELOG.md](../../CHANGELOG.md) | Production release history |
 | [../../AGENTS.md](../../AGENTS.md) | AI assistant instructions |
 | [../README.md](../README.md) | Full documentation index |
-| [../CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md) | Consolidated backlog for ChatGPT master planning |
+| [../127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md) | Consolidated backlog for ChatGPT master planning |
 | [../phase-2b-engineering-review-2026-07-06.md](../phase-2b-engineering-review-2026-07-06.md) | Phase 2B — V2-014 review, C-020 gaps |
 | [../production-base-setup.md](../production-base-setup.md) | **V2-015 ops runbook** — clone prod, isolate webhooks, production-only deploy |
 | [../V2_RELEASE_CHECKLIST.md](../V2_RELEASE_CHECKLIST.md) | **Release checklist** — promote, smoke, rollback, sign-off |
@@ -73,7 +73,7 @@ Permanent operating procedure: **[04-ai-development-standards.md](./04-ai-develo
 
 **OMNI first:** For in-Airtable work (views, formulas, data, interfaces), Mike uses **OMNI** in the base before Cursor — Airtable credits are priority.
 
-**Live backlog:** [v2-change-backlog.md](../v2-change-backlog.md) · **Planning aggregate:** [CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md)
+**Live backlog:** [127-SI-MASTER-FUTURE-WORK-LIST.md](../127-SI-MASTER-FUTURE-WORK-LIST.md)
 
 1. **ChatGPT** — Phases 1, 2, 4 (plan, document, review). Import [chatgpt-sources/](../chatgpt-sources/).
 2. **Cursor** — Phases 3, 5 (implement, commit). Run sync script after doc commits.
