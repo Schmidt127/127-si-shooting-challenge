@@ -25,8 +25,8 @@ Guidance for AI assistants (Cursor, etc.) working in **`127-si-shooting-challeng
 5. [docs/v2/04-ai-development-standards.md](./docs/v2/04-ai-development-standards.md)  -  **permanent workflow** (Mike / ChatGPT / Cursor / **OMNI-first** for in-Airtable work)
 6. [docs/v2/README.md](./docs/v2/README.md)  -  **V2 numbered doc pack** (`01`-`09`)
 7. [docs/PROJECT_STATE.md](./docs/PROJECT_STATE.md)  -  live ops snapshot (must agree with CURRENT-TRUTH)
-8. [docs/v2-change-backlog.md](./docs/v2-change-backlog.md)  -  live backlog (add new items here)
-9. [docs/CHATGPT-MASTER-PLAN-BRIEF.md](./docs/CHATGPT-MASTER-PLAN-BRIEF.md)  -  aggregated planning view for ChatGPT
+8. [docs/127-SI-MASTER-FUTURE-WORK-LIST.md](./docs/127-SI-MASTER-FUTURE-WORK-LIST.md)  -  master future-work list (add new items here)
+9. [docs/127-SI-MASTER-FUTURE-WORK-LIST.md](./docs/127-SI-MASTER-FUTURE-WORK-LIST.md)  -  consolidated planning view
 10. [APP_CONTEXT.md](./APP_CONTEXT.md)  -  route, theme, product boundaries
 11. [BRAND_STANDARDS.md](./BRAND_STANDARDS.md)  -  shared 127 SI brand foundation
 12. [docs/REPOSITORY-INTEGRITY-AUDIT.md](./docs/REPOSITORY-INTEGRITY-AUDIT.md) · [docs/SECURITY-AND-SENSITIVE-FILES.md](./docs/SECURITY-AND-SENSITIVE-FILES.md) · [docs/ARCHIVED-AND-SUPERSEDED-FILES.md](./docs/ARCHIVED-AND-SUPERSEDED-FILES.md)
