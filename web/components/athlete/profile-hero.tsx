@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { AthleteAvatar } from "@/components/leaderboard/athlete-avatar";
-import { LevelBadge } from "@/components/leaderboard/level-badge";
+import { AthleteLevelDisplay } from "@/components/levels/level-graphic";
 import { formatGrade } from "@/lib/formatters";
 import type { PublicAthleteIdentity } from "@/types/public-athlete-profile";
 
@@ -47,7 +47,14 @@ export function ProfileHero({ identity }: ProfileHeroProps) {
                 .join(" · ")}
             </p>
             <div className="mt-4 flex flex-wrap items-center gap-2">
-              {identity.level ? <LevelBadge level={identity.level} size="md" /> : null}
+              {identity.level ? (
+                <AthleteLevelDisplay
+                  level={identity.level}
+                  coverImageUrl={identity.levelCoverImageUrl}
+                  badgeSize="md"
+                  graphicSize="md"
+                />
+              ) : null}
               {identity.rank != null ? (
                 <span className="rounded-md bg-white/10 px-2.5 py-1 font-mono text-xs font-bold tracking-wide ring-1 ring-white/20">
                   Rank #{identity.rank}

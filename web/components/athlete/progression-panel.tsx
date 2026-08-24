@@ -1,3 +1,4 @@
+import { LevelGraphic } from "@/components/levels/level-graphic";
 import { ProgressMeter } from "@/components/ui/progress-meter";
 import { formatShots, formatXp } from "@/lib/formatters";
 import type { PublicProgression } from "@/types/public-athlete-profile";
@@ -36,9 +37,18 @@ export function ProgressionPanel({ progression }: ProgressionPanelProps) {
         <div>
           <p className="text-sm text-muted">
             Current{" "}
-            <span className="font-semibold text-foreground">
-              {progression.currentLevel ?? "Unassigned"}
-            </span>
+            {progression.currentLevel ? (
+              <span className="inline-flex items-center gap-2 align-middle">
+                <LevelGraphic
+                  level={progression.currentLevel}
+                  coverImageUrl={progression.currentLevelCoverImageUrl}
+                  size="sm"
+                />
+                <span className="font-semibold text-foreground">{progression.currentLevel}</span>
+              </span>
+            ) : (
+              <span className="font-semibold text-foreground">Unassigned</span>
+            )}
             {progression.nextLevel ? (
               <>
                 {" "}

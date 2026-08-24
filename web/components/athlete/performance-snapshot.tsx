@@ -1,3 +1,4 @@
+import { LevelGraphic } from "@/components/levels/level-graphic";
 import { formatShots, formatXp } from "@/lib/formatters";
 import type { PublicPerformanceSummary } from "@/types/public-athlete-profile";
 
@@ -39,7 +40,20 @@ export function PerformanceSnapshot({ performance }: PerformanceSnapshotProps) {
           </p>
           <p className="mt-4 max-w-md text-sm text-muted">
             Lifetime XP {formatXp(performance.lifetimeXp)}
-            {performance.currentLevel ? ` · ${performance.currentLevel}` : ""}
+            {performance.currentLevel ? (
+              <>
+                {" "}
+                ·{" "}
+                <span className="inline-flex items-center gap-1.5 align-middle">
+                  <LevelGraphic
+                    level={performance.currentLevel}
+                    coverImageUrl={performance.currentLevelCoverImageUrl}
+                    size="sm"
+                  />
+                  <span>{performance.currentLevel}</span>
+                </span>
+              </>
+            ) : null}
             {performance.lastSubmissionDate
               ? ` · Last session ${performance.lastSubmissionDate}`
               : ""}

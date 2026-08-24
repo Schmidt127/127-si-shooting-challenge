@@ -113,6 +113,27 @@ describe("public profile mapping helpers", () => {
     expect(profile.shooting.hasDetailedSplits).toBe(false);
     expect(profile.shooting.overallFg.percent).toBeNull();
     expect(profile.shooting.overallFg.available).toBe(false);
+    expect(profile.identity.levelCoverImageUrl).toBeNull();
+    expect(profile.progression.currentLevelCoverImageUrl).toBeNull();
+  });
+
+  it("buildPublicAthleteProfile carries current level cover URLs", () => {
+    const profile = buildPublicAthleteProfile({
+      slug: "with-cover",
+      fields: {
+        "Full Athlete Name": "Cover Athlete",
+        "Current Level - Public Facing Display": "Beginner",
+      },
+      rank: null,
+      nextLevelName: null,
+      currentLevelCoverImageUrl: "https://example.com/beginner.webp",
+      recentActivity: [],
+      weekly: [],
+      achievements: [],
+    });
+    expect(profile.identity.levelCoverImageUrl).toBe("https://example.com/beginner.webp");
+    expect(profile.performance.currentLevelCoverImageUrl).toBe("https://example.com/beginner.webp");
+    expect(profile.progression.currentLevelCoverImageUrl).toBe("https://example.com/beginner.webp");
   });
 });
 

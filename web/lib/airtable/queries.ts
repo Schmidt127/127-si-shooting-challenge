@@ -50,7 +50,9 @@ import {
   type PublicUnlockFields,
   type PublicWasFields,
 } from "@/lib/data/public-athlete-profile";
+import { mapAttachments } from "@/lib/data/homework";
 import { loadXpActivityForEnrollment } from "@/lib/data/xp-activity-loader";
+import { resolveLevelCoverImageUrl } from "@/lib/levels/level-graphic";
 import { asBoolean, asText, linkedRecordIds, requireExactlyOneLookupNumber } from "@/lib/data/airtable-values";
 import type { PublicAthleteProfile } from "@/types/public-athlete-profile";
 import type { AchievementCatalogData } from "@/types/achievements";
@@ -318,7 +320,7 @@ async function getStandingsScope(): Promise<{
 }
 
 /**
- * Public season leaderboard — active enrollments ranked level → XP → shots.
+ * Public season leaderboard â active enrollments ranked level â XP â shots.
  * The required `Web - Leaderboard` view is an audited public boundary. A missing
  * or renamed view fails closed; table-wide fallback could leak another season.
  */
@@ -453,7 +455,7 @@ async function listActiveLevelRecords(): Promise<Array<{ id: string; fields: Lev
   }
 }
 
-/** Active level ladder — highest tier first. */
+/** Active level ladder â highest tier first. */
 export async function fetchLevelLadder(): Promise<LevelLadderData> {
   const records = await listActiveLevelRecords();
   return buildLevelLadder(records);
@@ -672,7 +674,7 @@ async function listVisibleAchievementRecords(): Promise<
   }
 }
 
-/** Public achievement definitions — milestones, streaks, and unlocks. */
+/** Public achievement definitions â milestones, streaks, and unlocks. */
 export async function fetchAchievementCatalog(): Promise<AchievementCatalogData> {
   const records = await listVisibleAchievementRecords();
   return buildAchievementCatalog(records);
@@ -721,7 +723,7 @@ async function listActiveXpRuleRecords(): Promise<
 
 /**
  * Live XP Reward Rules configuration for the game manual.
- * The Airtable table is the runtime authority — the site never hardcodes amounts.
+ * The Airtable table is the runtime authority â the site never hardcodes amounts.
  */
 export async function fetchXpRuleCatalog(): Promise<XpRuleCatalogData> {
   const records = await listActiveXpRuleRecords();
@@ -738,6 +740,7 @@ export const PUBLIC_PROFILE_ENROLLMENT_FIELDS = [
   "Public Profile Enabled",
   "Public Profile Slug",
   "Active?",
+  "Current Level",
   "Current Level - Public Facing Display",
   "Level Sort Order - For Softr",
   "Lifetime XP Total",
@@ -847,7 +850,7 @@ export async function fetchPublicAthleteProfileBySlug(
     console.error(
       `[public-athlete-profile] Duplicate enabled Public Profile Slug "${slug}" (${enrollmentResponse.records.length} enrollments` +
         `${schoolYearClause ? ` after School Year filter` : ""}). ` +
-        `Do not select Enrollment by Athlete alone — ensure one Active enrollment per Program Instance/slug. Failing closed.`
+        `Do not select Enrollment by Athlete alone â ensure one Active enrollment per Program Instance/slug. Failing closed.`
     );
     return null;
   }
@@ -857,6 +860,9 @@ export async function fetchPublicAthleteProfileBySlug(
 
   const nextLevelIds = linkedRecordIds(fields["Next Level"]);
   const nextLevelId = nextLevelIds[0] ?? null;
+  const currentLevelIds = linkedRecordIds(fields["Current Level"]);
+  const currentLevelId = currentLevelIds[0] ?? null;
+  const linkedLevelIds = [...new Set([currentLevelId, nextLevelId].filter(Boolean) as string[])];
   const wasIds = linkedRecordIds(fields["Weekly Athlete Summary"]).slice(0, 20);
   const unlockIds = linkedRecordIds(fields["Athlete Achievement Unlocks"]).slice(0, 50);
 
@@ -869,7 +875,7 @@ export async function fetchPublicAthleteProfileBySlug(
   const wasFilter = recordIdOrFilter(wasIds);
   const unlockFilter = recordIdOrFilter(unlockIds);
 
-  const [wasResponse, unlockResponse, xpActivity, leaderboard, nextLevelResponse] =
+  const [wasResponse, unlockResponse, xpActivity, leaderboard, linkedLevelsResponse, levelLadder] =
     await Promise.all([
     wasFilter
       ? listAirtableRecords<PublicWasFields>({
@@ -895,15 +901,19 @@ export async function fetchPublicAthleteProfileBySlug(
       revalidateSeconds: PUBLIC_PROFILE_REVALIDATE_SECONDS,
     }),
     fetchLeaderboard().catch(() => null),
-    nextLevelId
+    linkedLevelIds.length
       ? listAirtableRecords<PublicLevelFields>({
           tableName: AIRTABLE_TABLES.levels,
-          maxRecords: 1,
-          fields: ["Level Name", "Level Name with Color"],
-          filterByFormula: `RECORD_ID()="${nextLevelId}"`,
+          maxRecords: linkedLevelIds.length,
+          fields: ["Level Name", "Level Name with Color", "Cover Image"],
+          filterByFormula:
+            linkedLevelIds.length === 1
+              ? `RECORD_ID()="${linkedLevelIds[0]}"`
+              : `OR(${linkedLevelIds.map((id) => `RECORD_ID()="${id}"`).join(",")})`,
           revalidateSeconds: PUBLIC_PROFILE_REVALIDATE_SECONDS,
         })
       : Promise.resolve({ records: [] as Array<{ id: string; fields: PublicLevelFields }> }),
+    fetchLevelLadder().catch(() => null),
   ]);
 
   const visibleUnlocks = unlockResponse.records.filter(
@@ -973,11 +983,31 @@ export async function fetchPublicAthleteProfileBySlug(
 
   const weekMetaById = buildPublicWeekMetaIndex(weekRecords.records);
 
-  const nextLevelFields = nextLevelResponse.records[0]?.fields;
+  const linkedLevelsById = new Map(
+    linkedLevelsResponse.records.map((record) => [record.id, record.fields] as const),
+  );
+
+  const nextLevelFields = nextLevelId ? linkedLevelsById.get(nextLevelId) : undefined;
   const nextLevelName =
     asText(nextLevelFields?.["Level Name with Color"], "") ||
     asText(nextLevelFields?.["Level Name"], "") ||
     null;
+
+  const currentLevelFields = currentLevelId ? linkedLevelsById.get(currentLevelId) : undefined;
+  const linkedCurrentCoverUrl = mapAttachments(currentLevelFields?.["Cover Image"])[0]?.url ?? null;
+  const currentLevelDisplay =
+    asText(fields["Current Level - Public Facing Display"], "") || null;
+  const ladderCandidates =
+    levelLadder?.levels.map((level) => ({
+      displayName: level.displayName,
+      name: level.name,
+      coverImageUrl: level.coverImage?.url ?? null,
+    })) ?? [];
+  const currentLevelCoverImageUrl = resolveLevelCoverImageUrl(
+    linkedCurrentCoverUrl,
+    currentLevelDisplay,
+    ladderCandidates,
+  );
 
   const displayName = asText(fields["Full Athlete Name"], "");
   const rank =
@@ -997,7 +1027,7 @@ export async function fetchPublicAthleteProfileBySlug(
   }
   if (xpActivity.totalAvailableRows > xpActivity.rows.length) {
     activityLedgerNoticeParts.push(
-      `Complete XP ledger: ${xpActivity.totalAvailableRows} events loaded. Use Load more below — not limited to 12 items.`,
+      `Complete XP ledger: ${xpActivity.totalAvailableRows} events loaded. Use Load more below â not limited to 12 items.`,
     );
   }
 
@@ -1005,7 +1035,8 @@ export async function fetchPublicAthleteProfileBySlug(
     slug,
     fields,
     rank,
-    nextLevelName: nextLevelName === "—" ? null : nextLevelName,
+    nextLevelName: nextLevelName === "\u2014" ? null : nextLevelName,
+    currentLevelCoverImageUrl,
     recentActivity,
     activityLedgerTotal: xpActivity.totalAvailableRows,
     activityLedgerNotice:

@@ -16,6 +16,8 @@ test.describe("public athlete profiles", () => {
     expect(response?.status()).toBe(200);
     await expect(page.getByRole("heading", { level: 1 })).toContainText(/schmidt/i);
     await expect(page.getByTestId("athlete-profile-hero")).toBeVisible();
+    await expect(page.getByTestId("athlete-level-display")).toBeVisible();
+    await expect(page.getByTestId("level-graphic").first()).toBeVisible();
     await expect(page.getByTestId("performance-snapshot")).toBeVisible();
     await expect(page.getByTestId("shooting-stat-line")).toBeVisible();
     await expect(page.getByTestId("progression-panel")).toBeVisible();
@@ -93,6 +95,8 @@ test.describe("public athlete profiles", () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("athletes/testing-schmidt", { waitUntil: "domcontentloaded" });
     await expect(page.getByTestId("athlete-profile-hero")).toBeVisible();
+    await expect(page.getByTestId("athlete-level-display")).toBeVisible();
+    await expect(page.getByTestId("level-graphic").first()).toBeVisible();
     await expect(page.getByTestId("performance-snapshot")).toBeVisible();
   });
 

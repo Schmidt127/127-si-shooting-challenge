@@ -6,6 +6,15 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Web
+
+#### Added
+- **Athlete profile level graphics (2026-08-24)** — Public athlete profiles show the
+  Airtable Levels cover image beside the current level in the hero, performance snapshot,
+  and progression panel, with brand-gradient placeholder fallback. Tests:
+  `web/lib/levels/level-graphic.test.ts`, `web/lib/data/athlete-profile.test.ts`,
+  `web/tests/athlete-profile.spec.ts`.
+
 ### Airtable
 
 #### Fixed

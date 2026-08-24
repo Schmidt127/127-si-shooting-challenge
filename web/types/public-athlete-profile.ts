@@ -8,6 +8,8 @@ export type PublicAthleteIdentity = {
   seasonLabel: string;
   programLabel: string | null;
   level: string | null;
+  /** Airtable Levels cover image URL for the athlete's current tier (may expire). */
+  levelCoverImageUrl: string | null;
   rank: number | null;
   headshotUrl: string | null;
   progressionStatus: string | null;
@@ -17,6 +19,7 @@ export type PublicPerformanceSummary = {
   totalShots: number;
   lifetimeXp: number;
   currentLevel: string | null;
+  currentLevelCoverImageUrl: string | null;
   xpNeededForNextLevel: number | null;
   currentStreak: number;
   longestStreak: number;
@@ -44,6 +47,7 @@ export type PublicShootingStats = {
 
 export type PublicProgression = {
   currentLevel: string | null;
+  currentLevelCoverImageUrl: string | null;
   nextLevel: string | null;
   lifetimeXp: number;
   xpIntoLevel: number | null;

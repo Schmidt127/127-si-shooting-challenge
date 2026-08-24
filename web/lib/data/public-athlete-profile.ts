@@ -36,6 +36,7 @@ export type PublicEnrollmentFields = {
   "Public Profile Enabled"?: unknown;
   "Public Profile Slug"?: unknown;
   "Active?"?: unknown;
+  "Current Level"?: unknown;
   "Current Level - Public Facing Display"?: unknown;
   "Level Sort Order - For Softr"?: unknown;
   "Lifetime XP Total"?: unknown;
@@ -136,6 +137,7 @@ export type PublicAchievementDefFields = {
 export type PublicLevelFields = {
   "Level Name"?: unknown;
   "Level Name with Color"?: unknown;
+  "Cover Image"?: unknown;
 };
 
 export function normalizeProfileSlug(slug: string): string {
@@ -218,6 +220,7 @@ function collectMissing(fields: PublicEnrollmentFields): string[] {
 function mapProgression(
   fields: PublicEnrollmentFields,
   nextLevelName: string | null,
+  currentLevelCoverImageUrl: string | null,
 ): PublicProgression {
   const totalShots = asOptionalNumber(fields["Total Shots Counted"]) ?? 0;
   const target = asOptionalNumber(fields["Target Goal Shots"]);
@@ -228,6 +231,7 @@ function mapProgression(
 
   return {
     currentLevel: asText(fields["Current Level - Public Facing Display"], "") || null,
+    currentLevelCoverImageUrl,
     nextLevel: nextLevelName,
     lifetimeXp: asOptionalNumber(fields["Lifetime XP Total"]) ?? 0,
     xpIntoLevel: asOptionalNumber(fields["XP Progress in Current Level"]),
@@ -501,6 +505,7 @@ export type BuildPublicProfileInput = {
   fields: PublicEnrollmentFields;
   rank: number | null;
   nextLevelName: string | null;
+  currentLevelCoverImageUrl?: string | null;
   recentActivity: PublicActivityItem[];
   activityLedgerTotal?: number;
   activityLedgerNotice?: string | null;
@@ -514,7 +519,8 @@ export function buildPublicAthleteProfile(input: BuildPublicProfileInput): Publi
   const seasonLabel = schoolYear && schoolYear !== "—" ? `${schoolYear} Season` : "Current Season";
   const headshot = mapAttachments(fields["Athlete Headshot"])[0];
   const shooting = mapShooting(fields);
-  const progression = mapProgression(fields, input.nextLevelName);
+  const currentLevelCoverImageUrl = input.currentLevelCoverImageUrl?.trim() || null;
+  const progression = mapProgression(fields, input.nextLevelName, currentLevelCoverImageUrl);
   const lastSubmissionDate =
     input.recentActivity.find(
       (item) =>
@@ -535,6 +541,7 @@ export function buildPublicAthleteProfile(input: BuildPublicProfileInput): Publi
       seasonLabel,
       programLabel: asText(fields["Program Instance Name Only"], "") || null,
       level: asText(fields["Current Level - Public Facing Display"], "") || null,
+      levelCoverImageUrl: currentLevelCoverImageUrl,
       rank: input.rank,
       headshotUrl: headshot?.url ?? null,
       progressionStatus: asText(fields["Public Progression Status"], "") || null,
@@ -543,6 +550,7 @@ export function buildPublicAthleteProfile(input: BuildPublicProfileInput): Publi
       totalShots: asOptionalNumber(fields["Total Shots Counted"]) ?? 0,
       lifetimeXp: asOptionalNumber(fields["Lifetime XP Total"]) ?? 0,
       currentLevel: asText(fields["Current Level - Public Facing Display"], "") || null,
+      currentLevelCoverImageUrl,
       xpNeededForNextLevel: asOptionalNumber(fields["XP Needed for Next Level"]),
       currentStreak,
       longestStreak,
