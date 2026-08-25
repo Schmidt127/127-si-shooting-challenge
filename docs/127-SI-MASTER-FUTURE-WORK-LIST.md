@@ -183,7 +183,7 @@ Each page is a separate future item so it can receive its own focused Cursor pro
 ### FUT-011 — Athlete page: level graphic and hero-label polish
 
 **Priority:** P1  
-**Status:** Complete — 2026-08-25 · commit pending push  
+**Status:** Complete — 2026-08-25 · `901812e`  
 **Systems:** Website athlete profile, Airtable level data, design system
 
 **Summary:** Public profile hero uses `AthleteLevelDisplay` with large level graphic and high-contrast hero badge; at-a-glance panel surfaces level for parents.
@@ -197,7 +197,7 @@ On the athlete page, place the appropriate level graphic beside or near the athl
 ### FUT-012 — Athlete page: professional Game Log presentation
 
 **Priority:** P1  
-**Status:** Complete — 2026-08-25 · commit pending push  
+**Status:** Complete — 2026-08-25 · `901812e`  
 **Systems:** Website XP activity table, XP Events, Airtable presentation fields
 
 **Summary:** Game Log short labels and contextual details; server-side pagination via `GET /api/athletes/[slug]/game-log` with cursor (`activityDate` + XP Event record id), opaque row keys, Load more with loading/retry, enrollment-scoped isolation.
@@ -223,7 +223,7 @@ Use the most maintainable professional design. Prefer configurable presentation 
 ### FUT-013 — Athlete page: Perfect Week activity panel
 
 **Priority:** P1  
-**Status:** Complete — 2026-08-25 · commit pending push  
+**Status:** Complete — 2026-08-25 · `901812e`  
 **Systems:** Website, Weekly Athlete Summary, Perfect Week fields
 
 **Summary:** `PerfectWeekPanel` shows week-by-week requirements and status labels; weekly performance stats moved below with clarifying copy.
