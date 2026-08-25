@@ -238,13 +238,13 @@ Use the most maintainable professional design. Prefer configurable presentation 
 
 | Item | Status |
 |------|--------|
-| Vercel Production deploy | **Success** — latest web verification commit on `www.fairfieldbasketballclub.com/shoot` (see git log) |
+| Vercel Production deploy | **Success** — `17052c6` on `www.fairfieldbasketballclub.com/shoot` |
 | Production smoke slug | `perfect-week-testing` (also `charlie-schmidt`, `curtis-schmidt`; `testing-schmidt` is DEV-only) |
 | Game Log pagination | API-backed; Load more verified 12→24 |
 | Freshness notice | **Fixed** — hidden on clean prod loads; only when homework source fails (`mayBeStale`); “Last checked” renders client-side to avoid hydration mismatch on prod smoke |
 | Homework image | `withBasePath` fix deployed `a71cbef`; static asset HTTP 200 |
 | Mobile nav smoke | **Fixed** — `cross-env` for Windows; `openMobileNavPanel()` retries until post-hydration menu opens |
-| `npm run test:smoke:prod` | Cross-platform via `cross-env` (Windows/macOS/Linux) |
+| `npm run test:smoke:prod` | Cross-platform via `cross-env`; serial `--workers=1` against live prod |
 | SEO production | `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true` on Vercel; `search-indexing.spec.ts` pass on prod |
 | Local PAT 403 | Documented — read on Program Instance - Sync, Program Homework Assignments, Homework Library, Weeks, Homework Completions |
 | `GAME_LOG_MAX_FETCH=2000` | **Deferred** — safe at current scale; no athlete near cap |

@@ -13,7 +13,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:smoke": "playwright test tests/production-smoke.spec.ts tests/search-indexing.spec.ts",
-    "test:smoke:prod": "cross-env PLAYWRIGHT_BASE_URL=https://www.fairfieldbasketballclub.com/shoot/ playwright test tests/production-smoke.spec.ts tests/search-indexing.spec.ts",
+    "test:smoke:prod": "cross-env PLAYWRIGHT_BASE_URL=https://www.fairfieldbasketballclub.com/shoot/ playwright test tests/production-smoke.spec.ts tests/search-indexing.spec.ts --workers=1",
     "test:smoke:http": "node scripts/http-smoke.mjs",
     "test:smoke:http:prod": "cross-env SMOKE_BASE_URL=https://www.fairfieldbasketballclub.com/shoot SMOKE_REQUIRE_AIRTABLE_CONFIG=true node scripts/http-smoke.mjs"
   },
