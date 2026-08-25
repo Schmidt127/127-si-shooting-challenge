@@ -131,6 +131,78 @@ describe("PHA-backed public homework scheduling", () => {
     )).toBe(true);
   });
 
+  it("requests PHA Due Date from Program Homework Assignments", async () => {
+    installBaseMocks([pha("rec00000000000001")]);
+    await fetchScheduledHomeworkCatalog();
+    const phaCall = listAirtableRecordsMock.mock.calls.find(
+      ([params]) => params.tableName === "Program Homework Assignments",
+    )?.[0];
+    expect(phaCall?.fields).toContain("Due Date");
+  });
+
+  it("maps PHA Due Date into catalog assignment dueDate when present", async () => {
+    installBaseMocks([{
+      id: "rec00000000000001",
+      fields: {
+        ...pha("rec00000000000001").fields,
+        "Due Date": "2027-06-29",
+      },
+    }]);
+    const catalog = await fetchScheduledHomeworkCatalog();
+    expect(catalog.weekGroups[0].assignments[0].dueDate).toBe("2027-06-29");
+  });
+
+  it("falls back to Week End Date when PHA Due Date is blank", async () => {
+    listAirtableRecordsMock.mockImplementation(async (params) => {
+      if (params.tableName === "Program Instance - Sync") {
+        return { records: [registeringProgramInstance()] } as never;
+      }
+      if (params.tableName === "Program Homework Assignments") {
+        return { records: [pha("rec00000000000001")] } as never;
+      }
+      if (params.tableName === "Homework Library") {
+        return {
+          records: [{
+            id: HOMEWORK_ID,
+            fields: {
+              "Assignment Full Name": "SA - Personal Game Plan - Shot Tracker Usage",
+              "Assignment Full Name - Display": "Shot Tracker Usage",
+              "Assignment Title": "Shot Tracker Usage",
+              "Homework Number": "HW1",
+              "Assignment Number": 1,
+              Order: 1,
+              "Published?": true,
+            },
+          }],
+        } as never;
+      }
+      if (params.tableName === "Weeks") {
+        return {
+          records: [{
+            id: WEEK_ID,
+            fields: {
+              "Week Name": "Early Bird - Testing",
+              "Start Date": "2026-08-02T06:00:00.000Z",
+              "End Date": "2026-06-07",
+            },
+          }],
+        } as never;
+      }
+      if (params.tableName === "Grade Bands") {
+        return {
+          records: Object.entries(GRADE_BAND_NAMES).map(([id, name]) => ({
+            id,
+            fields: { "Grade Band Name": name },
+          })),
+        } as never;
+      }
+      throw new Error(`Unexpected table ${params.tableName}`);
+    });
+
+    const catalog = await fetchScheduledHomeworkCatalog();
+    expect(catalog.weekGroups[0].assignments[0].dueDate).toBe("2026-06-07");
+  });
+
   it("allows multiple retained Config years because Config is not consulted for public homework", async () => {
     installBaseMocks([pha("rec00000000000001")]);
     listAirtableRecordsMock.mockImplementation(async (params) => {

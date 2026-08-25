@@ -29,6 +29,7 @@ Living pointer for the **127 SI Shooting Challenge** Airtable base.
 - **`Email Handoff Queue`** present for email/Make handoff.
 - **`Testing Scenarios`** (C-020) now in PROD.
 - **`Lesson Key`** on Homework Library — **deleted in PROD** (Mike 2026-08-19). Use `Record Id` for content identity; PHA.`Schedule Key` for schedule dedupe.
+- **`Due Date`** on **Program Homework Assignments** — **added in PROD** (Mike 2026-08-25). Field ID `fldBuww8YJPGWLZFG` (date). Optional explicit assignment deadline; public web prefers PHA `Due Date` and falls back to linked **Week End Date** when blank.
 - **`Week Lkp`** on Submissions — **deleted in PROD** (Mike 2026-08-19). Use **`Submissions.Week`** (005) for submission week.
 - Hand-maintained `table-map.md` / `field-map.md` in this folder remain **stale** until Agent A refresh.
 

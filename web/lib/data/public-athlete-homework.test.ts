@@ -284,6 +284,30 @@ describe("resolveAssignmentDueDateKey", () => {
       ),
     ).toBe("2026-08-31");
   });
+
+  it("falls back when Due Date is missing or blank", () => {
+    expect(
+      resolveAssignmentDueDateKey(
+        {},
+        { name: "Week 1", startDate: "2026-06-01", endDate: "2026-06-07", weekNumber: 1 },
+      ),
+    ).toBe("2026-06-07");
+    expect(
+      resolveAssignmentDueDateKey(
+        { "Due Date": "" },
+        { name: "Week 1", startDate: "2026-06-01", endDate: "2026-06-07", weekNumber: 1 },
+      ),
+    ).toBe("2026-06-07");
+  });
+
+  it("does not throw on invalid Due Date values", () => {
+    expect(
+      resolveAssignmentDueDateKey(
+        { "Due Date": "garbage-date" },
+        { name: "Week 1", startDate: "2026-06-01", endDate: "2026-06-07", weekNumber: 1 },
+      ),
+    ).toBe("garbage-date");
+  });
 });
 
 describe("resolveHomeworkCreditEligibility", () => {

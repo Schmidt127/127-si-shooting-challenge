@@ -7,6 +7,7 @@ import {
   mapCurriculumToAssignment,
   parseActivePhaScheduleRows,
   parseWeekNumber,
+  resolveAssignmentDueDateKey,
   resolveInstructionsPreview,
   resolveSubmissionRequirement,
   type ScheduledPhaRow,
@@ -62,6 +63,68 @@ describe("PHA schedule parsing", () => {
     );
     expect(duplicateSlotKeys).toHaveLength(1);
     expect(duplicateSlotKeys[0]).toBe(`${CURRENT_PI}|${WEEK_ID}|HW1`);
+  });
+
+  it("parses PHA Due Date from active rows", () => {
+    const { rows } = parseActivePhaScheduleRows(
+      [{
+        id: "recPHA0000000004",
+        fields: {
+          "Homework Assignment": [{ id: HOMEWORK_ID }],
+          "Program Instance": [{ id: CURRENT_PI }],
+          Week: [{ id: WEEK_ID }],
+          "Homework Slot": { name: "HW1" },
+          "Active?": true,
+          "Due Date": "2027-06-29",
+        },
+      }],
+      CURRENT_PI,
+    );
+    expect(rows).toHaveLength(1);
+    expect(rows[0].dueDate).toBe("2027-06-29");
+  });
+
+  it("leaves PHA dueDate null when Due Date is absent", () => {
+    const { rows } = parseActivePhaScheduleRows(
+      [{
+        id: "recPHA0000000005",
+        fields: {
+          "Homework Assignment": [{ id: HOMEWORK_ID }],
+          "Program Instance": [{ id: CURRENT_PI }],
+          Week: [{ id: WEEK_ID }],
+          "Homework Slot": { name: "HW1" },
+          "Active?": true,
+        },
+      }],
+      CURRENT_PI,
+    );
+    expect(rows[0].dueDate).toBeNull();
+  });
+});
+
+describe("resolveAssignmentDueDateKey", () => {
+  const weekMeta = {
+    name: "Week 1",
+    startDate: "2026-06-01",
+    endDate: "2026-06-07",
+    weekNumber: 1,
+  };
+
+  it("prefers PHA Due Date when present", () => {
+    expect(resolveAssignmentDueDateKey("2027-06-29", weekMeta)).toBe("2027-06-29");
+  });
+
+  it("falls back to Week End Date when PHA Due Date is blank", () => {
+    expect(resolveAssignmentDueDateKey(null, weekMeta)).toBe("2026-06-07");
+    expect(resolveAssignmentDueDateKey("", weekMeta)).toBe("2026-06-07");
+  });
+
+  it("returns null when both PHA Due Date and week end are missing", () => {
+    expect(resolveAssignmentDueDateKey(null, undefined)).toBeNull();
+  });
+
+  it("does not throw on invalid Due Date strings", () => {
+    expect(resolveAssignmentDueDateKey("not-a-valid-date", weekMeta)).toBe("not-a-valid-date");
   });
 });
 
