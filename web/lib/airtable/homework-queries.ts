@@ -20,6 +20,8 @@ import {
 
 import {
 
+  applyGradeBandLabelsToPhaRows,
+
   buildHomeworkCatalog,
 
   buildWeekMetaIndex,
@@ -51,6 +53,8 @@ const TABLES = {
   homeworkLibrary: PUBLIC_AIRTABLE_TABLES.homeworkLibrary.name,
 
   weeks: PUBLIC_AIRTABLE_TABLES.weeks.name,
+
+  gradeBands: PUBLIC_AIRTABLE_TABLES.gradeBands.name,
 
 } as const;
 
@@ -130,6 +134,8 @@ const PHA_FIELDS = [
 
   "Active?",
 
+  "Due Date",
+
   "Operator Notes",
 
   "Schedule Key",
@@ -139,6 +145,12 @@ const PHA_FIELDS = [
 
 
 const WEEK_FIELDS = ["Week Name", "Start Date", "End Date"] as const;
+
+const GRADE_BAND_FIELDS = ["Grade Band Name"] as const;
+
+type GradeBandFields = {
+  "Grade Band Name"?: unknown;
+};
 
 
 
@@ -254,6 +266,22 @@ async function listCurriculumByIds(
 
 
 
+async function listGradeBandsByIds(
+  ids: string[],
+): Promise<Array<{ id: string; fields: GradeBandFields }>> {
+  if (ids.length === 0) return [];
+  const response = await listAirtableRecords<GradeBandFields>({
+    tableName: TABLES.gradeBands,
+    maxRecords: ids.length,
+    fields: [...GRADE_BAND_FIELDS],
+    filterByFormula: recordIdFormula(ids),
+    revalidateSeconds: REVALIDATE_SECONDS,
+  });
+  return response.records;
+}
+
+
+
 export async function fetchScheduledHomeworkCatalog(): Promise<HomeworkCatalogData> {
 
   const programInstance = await resolveRegisteringShootingChallengeProgramInstance(REVALIDATE_SECONDS);
@@ -290,9 +318,23 @@ export async function fetchScheduledHomeworkCatalog(): Promise<HomeworkCatalogDa
 
 
 
-  const homeworkIds = [...new Set(phaRows.map((row) => row.homeworkId))];
+  const gradeBandIds = [...new Set(phaRows.flatMap((row) => row.gradeBandIds))];
 
-  const weekIds = [...new Set(phaRows.map((row) => row.weekId))];
+  const gradeBandRecords = await listGradeBandsByIds(gradeBandIds);
+
+  const gradeBandNamesById = new Map(
+
+    gradeBandRecords.map((record) => [record.id, asText(record.fields["Grade Band Name"], "")]),
+
+  );
+
+  const labeledPhaRows = applyGradeBandLabelsToPhaRows(phaRows, gradeBandNamesById);
+
+
+
+  const homeworkIds = [...new Set(labeledPhaRows.map((row) => row.homeworkId))];
+
+  const weekIds = [...new Set(labeledPhaRows.map((row) => row.weekId))];
 
   const [curriculumRecords, weekRecords] = await Promise.all([
 
@@ -320,7 +362,7 @@ export async function fetchScheduledHomeworkCatalog(): Promise<HomeworkCatalogDa
 
 
 
-  return buildHomeworkCatalog(curriculumRecords, weekRecords, phaRows);
+  return buildHomeworkCatalog(curriculumRecords, weekRecords, labeledPhaRows);
 
 }
 
@@ -380,6 +422,16 @@ export async function fetchScheduledHomeworkAssignment(recordId: string): Promis
 
   const phaRow = matchingRows[0];
 
+  const gradeBandRecords = await listGradeBandsByIds(phaRow.gradeBandIds);
+
+  const labeledPhaRow = applyGradeBandLabelsToPhaRows(
+
+    [phaRow],
+
+    new Map(gradeBandRecords.map((record) => [record.id, asText(record.fields["Grade Band Name"], "")])),
+
+  )[0];
+
   const [curriculumRecords, weekRecords] = await Promise.all([
 
     listCurriculumByIds([recordId], true),
@@ -396,7 +448,7 @@ export async function fetchScheduledHomeworkAssignment(recordId: string): Promis
 
   const weekIndex = buildWeekMetaIndex(weekRecords);
 
-  return mapCurriculumToAssignment(curriculum, weekIndex, phaRow);
+  return mapCurriculumToAssignment(curriculum, weekIndex, labeledPhaRow);
 
 }
 

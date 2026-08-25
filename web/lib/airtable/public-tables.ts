@@ -18,6 +18,7 @@ export const PUBLIC_AIRTABLE_TABLES = {
   /** Live public homework content table name (formerly FBC Curriculum - SYNC). */
   homeworkLibrary: { name: "Homework Library", id: "tblUuxwYlX4EQ9MKE" },
   programHomeworkAssignments: { name: "Program Homework Assignments", id: "tblhA3maf7xOa8EUS" },
+  gradeBands: { name: "Grade Bands", id: "tblOhHrIqpjcsk2WG" },
   /** Canonical public media table (deleted `Tutorials` / `tbldfoVGdhqATi4MS` must not be used). */
   tutorials: { name: "Tutorials & Assets", id: "tblDOTgsWfqPm18bw" },
   zoomMeetings: { name: "Zoom Meetings", id: "tblWcSHEm8vNNIxyB" },

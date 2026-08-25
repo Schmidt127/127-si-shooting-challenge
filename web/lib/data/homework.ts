@@ -59,7 +59,9 @@ export type ScheduledPhaRow = {
   weekId: string;
   programInstanceId: string;
   homeworkSlot: string;
+  /** Display labels resolved from Grade Bands (e.g. K-2, 3-4). */
   gradeBands: string[];
+  gradeBandIds: string[];
   dueDate: string | null;
   operatorNotes: string | null;
 };
@@ -175,13 +177,26 @@ export function parseActivePhaScheduleRows(
       weekId: weekIds[0],
       programInstanceId: programInstanceIds[0],
       homeworkSlot: slot,
-      gradeBands: selectNames(pha.fields["Grade Band"]),
+      gradeBandIds: linkedRecordIds(pha.fields["Grade Band"]),
+      gradeBands: [],
       dueDate: asOptionalDateKey(pha.fields["Due Date"]),
       operatorNotes: asText(pha.fields["Operator Notes"], "").trim() || null,
     });
   }
 
   return { rows, skippedIncomplete, duplicateSlotKeys };
+}
+
+export function applyGradeBandLabelsToPhaRows(
+  rows: ScheduledPhaRow[],
+  namesById: Map<string, string>,
+): ScheduledPhaRow[] {
+  return rows.map((row) => ({
+    ...row,
+    gradeBands: row.gradeBandIds
+      .map((id) => namesById.get(id))
+      .filter((name): name is string => Boolean(name)),
+  }));
 }
 
 export function mapAttachments(value: unknown): HomeworkAttachment[] {

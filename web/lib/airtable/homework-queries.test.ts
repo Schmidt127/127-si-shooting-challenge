@@ -33,6 +33,14 @@ function registeringProgramInstance(overrides: Record<string, unknown> = {}) {
   };
 }
 
+const GRADE_BAND_NAMES: Record<string, string> = {
+  recK7BDVSpHy2ipCS: "K-2",
+  reclWDQZzKbVBtdhG: "3-4",
+  recv9aWnHanY2sRgk: "5-6",
+  rec2VQFfGJa1ofA06: "7-8",
+  rec75ruo3XT5nSvaK: "9-12",
+};
+
 function installBaseMocks(phaRecords: Array<{ id: string; fields: Record<string, unknown> }>) {
   listAirtableRecordsMock.mockImplementation(async (params) => {
     if (params.tableName === "Program Instance - Sync") {
@@ -64,6 +72,14 @@ function installBaseMocks(phaRecords: Array<{ id: string; fields: Record<string,
             "Start Date": "2026-08-02T06:00:00.000Z",
           },
         }],
+      } as never;
+    }
+    if (params.tableName === "Grade Bands") {
+      return {
+        records: Object.entries(GRADE_BAND_NAMES).map(([id, name]) => ({
+          id,
+          fields: { "Grade Band Name": name },
+        })),
       } as never;
     }
     throw new Error(`Unexpected table ${params.tableName}`);
@@ -159,6 +175,14 @@ describe("PHA-backed public homework scheduling", () => {
               "Start Date": "2026-08-02T06:00:00.000Z",
             },
           }],
+        } as never;
+      }
+      if (params.tableName === "Grade Bands") {
+        return {
+          records: Object.entries(GRADE_BAND_NAMES).map(([id, name]) => ({
+            id,
+            fields: { "Grade Band Name": name },
+          })),
         } as never;
       }
       throw new Error(`Unexpected table ${params.tableName}`);
@@ -306,6 +330,14 @@ describe("PHA-backed public homework scheduling", () => {
               "Start Date": "2026-08-02T06:00:00.000Z",
             },
           }],
+        } as never;
+      }
+      if (params.tableName === "Grade Bands") {
+        return {
+          records: Object.entries(GRADE_BAND_NAMES).map(([id, name]) => ({
+            id,
+            fields: { "Grade Band Name": name },
+          })),
         } as never;
       }
       throw new Error(`Unexpected table ${params.tableName}`);
