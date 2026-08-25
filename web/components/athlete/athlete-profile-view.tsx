@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { AchievementCollection } from "@/components/athlete/achievement-collection";
 import { HomeworkAssignments } from "@/components/athlete/homework-assignments";
+import { PerfectWeekPanel } from "@/components/athlete/perfect-week-panel";
 import { PerformanceSnapshot } from "@/components/athlete/performance-snapshot";
 import { ProfileHero } from "@/components/athlete/profile-hero";
 import { ProgressionPanel } from "@/components/athlete/progression-panel";
@@ -36,8 +37,9 @@ export function AthleteProfileView({ data }: AthleteProfileViewProps) {
             totalCount={data.activityLedgerTotal}
             notice={data.activityLedgerNotice}
           />
-          <WeeklyPerformance weeks={data.weekly} />
+          <PerfectWeekPanel weeks={data.weekly} />
         </div>
+        <WeeklyPerformance weeks={data.weekly} />
         <AchievementCollection achievements={data.achievements} />
         <p className="text-center text-xs text-muted">
           Public profile · personal contact details are never shown

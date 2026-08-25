@@ -26,7 +26,7 @@ import type {
   PublicWeeklySummary,
 } from "@/types/public-athlete-profile";
 import type { XpEventSummary } from "@/types/xp";
-import { formatXpSourceLabel } from "@/lib/formatters";
+import { formatGameLogPresentation } from "@/lib/data/game-log-presentation";
 
 export type PublicEnrollmentFields = {
   "Full Athlete Name"?: unknown;
@@ -102,6 +102,9 @@ export type PublicWasFields = {
   "Homework Completed?"?: unknown;
   "Perfect Week Eligible?"?: unknown;
   "Perfect Week Unlock"?: unknown;
+  "Perfect Week Video Count"?: unknown;
+  "Perfect Week Homework Requirement Status"?: unknown;
+  "Perfect Week Zoom Requirement Status"?: unknown;
   Week?: unknown;
 };
 
@@ -329,21 +332,14 @@ export function mapRecentSubmissions(
 
 export function mapXpSummariesToPublicActivity(rows: XpEventSummary[]): PublicActivityItem[] {
   return rows.map((row, index) => {
-    const reason = asText(row.reasonPublic, "");
-    const source = asText(row.sourceLabel, "");
-    const title =
-      reason && reason !== "—"
-        ? reason
-        : source
-          ? formatXpSourceLabel(source)
-          : "XP earned";
+    const presentation = formatGameLogPresentation(row);
     const xp = row.points;
     return {
-      key: `xp-${row.activityDate ?? "undated"}-${source || "xp"}-${index}`,
+      key: `xp-${row.activityDate ?? "undated"}-${row.sourceLabel || "xp"}-${index}`,
       kind: "xp" as const,
       date: row.activityDate ?? null,
-      title,
-      detail: xp != null ? `+${xp} XP` : null,
+      title: presentation.title,
+      detail: presentation.detail,
       shots: null,
       makes: null,
       xp,
@@ -426,6 +422,34 @@ export function isWeekCurrentOrPast(
   return startKey <= todayKey;
 }
 
+export type PerfectWeekStatusLabel = "Perfect Week" | "Not Perfect" | "In Progress";
+
+export function derivePerfectWeekStatusLabel(
+  perfectWeek: boolean,
+  weekMeta: PublicWeekMeta | undefined,
+  todayKey: string,
+): PerfectWeekStatusLabel {
+  if (perfectWeek) return "Perfect Week";
+  const endKey = weekMeta?.endDate ? toAirtableDateKey(weekMeta.endDate) : null;
+  if (endKey && endKey >= todayKey) return "In Progress";
+  return "Not Perfect";
+}
+
+function formatWeekDateRange(startDate: string | null, endDate: string | null): string | null {
+  const startKey = startDate ? toAirtableDateKey(startDate) : null;
+  const endKey = endDate ? toAirtableDateKey(endDate) : null;
+  if (!startKey && !endKey) return null;
+
+  const format = (key: string) => {
+    const parsed = Date.parse(`${key}T12:00:00`);
+    if (Number.isNaN(parsed)) return key;
+    return new Date(parsed).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  };
+
+  if (startKey && endKey) return `${format(startKey)} – ${format(endKey)}`;
+  return format(startKey ?? endKey!);
+}
+
 function mapSingleWeeklySummary(
   record: { fields: PublicWasFields },
   index: number,
@@ -446,12 +470,16 @@ function mapSingleWeeklySummary(
 
   const perfectEligible = asOptionalNumber(fields["Perfect Week Eligible?"]) === 1;
   const perfectUnlock = linkedRecordIds(fields["Perfect Week Unlock"]).length > 0;
+  const perfectWeek = perfectEligible || perfectUnlock;
+  const weekStartDate = weekMeta?.startDate ? toAirtableDateKey(weekMeta.startDate) : null;
+  const weekEndDate = weekMeta?.endDate ? toAirtableDateKey(weekMeta.endDate) : null;
 
   return {
     weekMeta,
     summary: {
       key: normalizeProfileSlug(`${weekLabel}-${index}`) || `week-${index}`,
       weekLabel,
+      weekDateRange: formatWeekDateRange(weekStartDate, weekEndDate),
       totalShots: asOptionalNumber(fields["Total Shots This Week"]) ?? 0,
       daysLogged: asOptionalNumber(fields["Days Logged This Week"]),
       weeklyXp: asOptionalNumber(fields["XP Earned This Week"]),
@@ -461,7 +489,15 @@ function mapSingleWeeklySummary(
       })(),
       momentumStatus: asText(fields["Momentum Status"], "") || null,
       homeworkCompleted,
-      perfectWeek: perfectEligible || perfectUnlock,
+      perfectWeek,
+      videoCount: asOptionalNumber(fields["Perfect Week Video Count"]),
+      homeworkStatus: asText(fields["Perfect Week Homework Requirement Status"], "") || null,
+      zoomStatus: asText(fields["Perfect Week Zoom Requirement Status"], "") || null,
+      perfectWeekStatusLabel: derivePerfectWeekStatusLabel(
+        perfectWeek,
+        weekMeta,
+        challengeTodayDateKey(),
+      ),
     },
   };
 }
@@ -500,7 +536,14 @@ export function mapWeeklySummaries(
     .filter(({ weekMeta }) => isWeekCurrentOrPast(weekMeta, todayKey))
     .sort(compareWeeklySummariesByRecency)
     .slice(0, limit)
-    .map(({ summary }) => summary);
+    .map(({ summary, weekMeta }) => ({
+      ...summary,
+      perfectWeekStatusLabel: derivePerfectWeekStatusLabel(
+        summary.perfectWeek,
+        weekMeta,
+        todayKey,
+      ),
+    }));
 }
 
 export type BuildPublicProfileInput = {

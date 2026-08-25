@@ -3,6 +3,7 @@ import { getLevelStyle } from "@/lib/leaderboard/level-styles";
 type LevelBadgeProps = {
   level: string;
   size?: "sm" | "md" | "lg";
+  variant?: "default" | "hero";
 };
 
 const sizeClasses = {
@@ -11,8 +12,19 @@ const sizeClasses = {
   lg: "px-3 py-1.5 text-sm",
 };
 
-export function LevelBadge({ level, size = "md" }: LevelBadgeProps) {
+export function LevelBadge({ level, size = "md", variant = "default" }: LevelBadgeProps) {
   const style = getLevelStyle(level);
+
+  if (variant === "hero") {
+    return (
+      <span
+        className={`inline-flex items-center rounded-md bg-white/12 font-semibold uppercase tracking-wide text-white ring-1 ring-white/30 backdrop-blur-sm ${sizeClasses[size]}`}
+        data-testid="level-badge-hero"
+      >
+        {style.label}
+      </span>
+    );
+  }
 
   return (
     <span

@@ -52,7 +52,8 @@ export function ProfileHero({ identity }: ProfileHeroProps) {
                   level={identity.level}
                   coverImageUrl={identity.levelCoverImageUrl}
                   badgeSize="md"
-                  graphicSize="md"
+                  graphicSize="lg"
+                  badgeVariant="hero"
                 />
               ) : null}
               {identity.rank != null ? (

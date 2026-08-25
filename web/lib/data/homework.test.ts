@@ -3,8 +3,13 @@ import { describe, expect, it } from "vitest";
 import {
   buildHomeworkCatalog,
   groupAssignmentsByWeek,
+  homeworkSlotOrder,
   mapCurriculumToAssignment,
+  parseActivePhaScheduleRows,
   parseWeekNumber,
+  resolveInstructionsPreview,
+  resolveSubmissionRequirement,
+  type ScheduledPhaRow,
 } from "@/lib/data/homework";
 
 describe("parseWeekNumber", () => {
@@ -15,25 +20,110 @@ describe("parseWeekNumber", () => {
   });
 });
 
+describe("PHA schedule parsing", () => {
+  const CURRENT_PI = "rec5mEM0YPqPqq0hZ";
+  const HOMEWORK_ID = "rechVLOeyEVIqmy2v";
+  const WEEK_ID = "recWeVrSabnsYaHc2";
+
+  it("skips incomplete active PHA rows instead of failing the whole catalog", () => {
+    const { rows, skippedIncomplete } = parseActivePhaScheduleRows(
+      [{
+        id: "recPHA0000000001",
+        fields: {
+          "Homework Assignment": [{ id: HOMEWORK_ID }],
+          "Program Instance": [{ id: CURRENT_PI }],
+          Week: [],
+          "Homework Slot": { name: "HW1" },
+          "Active?": true,
+        },
+      }],
+      CURRENT_PI,
+    );
+    expect(rows).toHaveLength(0);
+    expect(skippedIncomplete).toBe(1);
+  });
+
+  it("detects duplicate active PI+Week+slot collisions", () => {
+    const pha = (id: string, gradeBandId: string) => ({
+      id,
+      fields: {
+        "Homework Assignment": [{ id: HOMEWORK_ID }],
+        "Program Instance": [{ id: CURRENT_PI }],
+        Week: [{ id: WEEK_ID }],
+        "Grade Band": [{ id: gradeBandId, name: gradeBandId }],
+        "Homework Slot": { name: "HW1" },
+        "Active?": true,
+      },
+    });
+
+    const { duplicateSlotKeys } = parseActivePhaScheduleRows(
+      [pha("recPHA0000000002", "recGB1"), pha("recPHA0000000003", "recGB2")],
+      CURRENT_PI,
+    );
+    expect(duplicateSlotKeys).toHaveLength(1);
+    expect(duplicateSlotKeys[0]).toBe(`${CURRENT_PI}|${WEEK_ID}|HW1`);
+  });
+});
+
+describe("homework presentation helpers", () => {
+  it("uses fallback instructions when brief description is blank", () => {
+    expect(resolveInstructionsPreview("")).toBe("Instructions coming soon.");
+    expect(resolveSubmissionRequirement("HW2", "")).toContain("Homework 2");
+    expect(homeworkSlotOrder("HW2")).toBeGreaterThan(homeworkSlotOrder("HW1"));
+  });
+});
+
 describe("homework catalog grouping", () => {
   const weekIndex = new Map([
-    ["recWEEK10", { name: "Week 10", startDate: "2026-06-01T00:00:00.000Z" }],
-    ["recWEEK1", { name: "Week 1", startDate: "2026-03-01T00:00:00.000Z" }],
+    ["recWEEK10", { name: "Week 10", startDate: "2026-06-01T00:00:00.000Z", endDate: "2026-06-07", weekNumber: 10 }],
+    ["recWEEK1", { name: "Week 1", startDate: "2026-03-01T00:00:00.000Z", endDate: "2026-03-07", weekNumber: 1 }],
   ]);
 
-  it("sorts week groups newest first and assignments within week", () => {
+  it("sorts week groups newest first and assignments within week by descending Order", () => {
     const assignments = [
       mapCurriculumToAssignment(
         {
-          id: "recHW1",
+          id: "recHWLow",
           fields: {
-            "Assignment Full Name - Display": "Week 1 HW",
-            Week: ["recWEEK1"],
-            Order: 1,
+            "Assignment Full Name - Display": "Lower order",
+            Week: ["recWEEK10"],
+            Order: 2,
+            "Assignment Number": 2,
+          },
+        },
+        weekIndex,
+        {
+          phaId: "recPHA1",
+          homeworkId: "recHWLow",
+          weekId: "recWEEK10",
+          programInstanceId: "recPI",
+          homeworkSlot: "HW1",
+          gradeBands: [],
+          dueDate: null,
+          operatorNotes: null,
+        },
+      ),
+      mapCurriculumToAssignment(
+        {
+          id: "recHWHIGH",
+          fields: {
+            "Assignment Full Name - Display": "Higher order",
+            Week: ["recWEEK10"],
+            Order: 16,
             "Assignment Number": 1,
           },
         },
         weekIndex,
+        {
+          phaId: "recPHA2",
+          homeworkId: "recHWHIGH",
+          weekId: "recWEEK10",
+          programInstanceId: "recPI",
+          homeworkSlot: "HW2",
+          gradeBands: ["7-8"],
+          dueDate: null,
+          operatorNotes: null,
+        },
       ),
       mapCurriculumToAssignment(
         {
@@ -47,11 +137,25 @@ describe("homework catalog grouping", () => {
         },
         weekIndex,
       ),
+      mapCurriculumToAssignment(
+        {
+          id: "recHW1",
+          fields: {
+            "Assignment Full Name - Display": "Week 1 HW",
+            Week: ["recWEEK1"],
+            Order: 1,
+            "Assignment Number": 1,
+          },
+        },
+        weekIndex,
+      ),
     ];
 
     const groups = groupAssignmentsByWeek(assignments);
     expect(groups).toHaveLength(2);
     expect(groups[0].weekName).toBe("Week 10");
+    expect(groups[0].assignments[0].displayName).toBe("Higher order");
+    expect(groups[0].assignments[1].displayName).toBe("Lower order");
     expect(groups[1].weekName).toBe("Week 1");
   });
 
@@ -74,27 +178,37 @@ describe("homework catalog grouping", () => {
     );
 
     expect(assignment.briefDescription).toBe("Watch the game film and take notes.");
+    expect(assignment.instructionsPreview).toBe("Watch the game film and take notes.");
     expect(assignment.url).toBe("https://example.com/homework/week-10");
   });
 
-  it("builds catalog metadata", () => {
+  it("builds PHA-backed catalog without hardcoded assignment limits", () => {
+    const phaRows: ScheduledPhaRow[] = Array.from({ length: 12 }, (_, index) => ({
+      phaId: `recPHA${String(index).padStart(11, "0")}`,
+      homeworkId: `recHW${String(index).padStart(11, "0")}`,
+      weekId: "recWEEK10",
+      programInstanceId: "recPI",
+      homeworkSlot: index % 2 === 0 ? "HW1" : "HW2",
+      gradeBands: ["K-2"],
+      dueDate: null,
+      operatorNotes: null,
+    }));
+
+    const curriculumRecords = phaRows.map((row, index) => ({
+      id: row.homeworkId,
+      fields: {
+        "Assignment Full Name - Display": `Assignment ${index + 1}`,
+        Order: index + 1,
+      },
+    }));
+
     const catalog = buildHomeworkCatalog(
-      [
-        {
-          id: "recHW10",
-          fields: {
-            "Assignment Full Name - Display": "Film Study",
-            Week: ["recWEEK10"],
-            "Published?": true,
-          },
-        },
-      ],
-      [
-        { id: "recWEEK10", fields: { "Week Name": "Week 10", "Start Date": "2026-06-01" } },
-      ],
+      curriculumRecords,
+      [{ id: "recWEEK10", fields: { "Week Name": "Week 10", "Start Date": "2026-06-01" } }],
+      phaRows,
     );
 
-    expect(catalog.totalAssignments).toBe(1);
-    expect(catalog.weekGroups[0].assignments[0].displayName).toBe("Film Study");
+    expect(catalog.totalAssignments).toBe(12);
+    expect(catalog.weekGroups[0].assignments).toHaveLength(12);
   });
 });

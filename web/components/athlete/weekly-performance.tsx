@@ -26,15 +26,7 @@ export function WeeklyPerformance({ weeks }: WeeklyPerformanceProps) {
             >
               <div>
                 <p className="font-semibold text-foreground">{week.weekLabel}</p>
-                <p className="mt-1 text-xs text-muted">
-                  {week.momentumStatus ?? "—"}
-                  {week.perfectWeek ? " · Perfect Week" : ""}
-                  {week.homeworkCompleted === true
-                    ? " · Homework complete"
-                    : week.homeworkCompleted === false
-                      ? " · Homework open"
-                      : ""}
-                </p>
+                <p className="mt-1 text-xs text-muted">{week.momentumStatus ?? "—"}</p>
               </div>
               <p className="text-sm">
                 <span className="block text-[10px] uppercase tracking-wider text-muted">Shots</span>

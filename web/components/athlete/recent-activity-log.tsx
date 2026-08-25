@@ -59,7 +59,12 @@ export function RecentActivityLog({ items, totalCount, notice }: RecentActivityL
                   <p className="text-sm font-semibold text-foreground">{item.title}</p>
                   <p className="mt-0.5 text-xs text-muted">
                     {item.date ?? "Date TBD"}
-                    {item.detail ? ` · ${item.detail}` : ""}
+                    {item.detail ? (
+                      <>
+                        <span aria-hidden> · </span>
+                        <span className="text-foreground/80">{item.detail}</span>
+                      </>
+                    ) : null}
                   </p>
                 </div>
                 <div className="font-mono text-sm font-bold text-accent-soft">

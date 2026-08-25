@@ -85,6 +85,7 @@ export type PublicActivityItem = {
 export type PublicWeeklySummary = {
   key: string;
   weekLabel: string;
+  weekDateRange: string | null;
   totalShots: number;
   daysLogged: number | null;
   weeklyXp: number | null;
@@ -92,6 +93,10 @@ export type PublicWeeklySummary = {
   momentumStatus: string | null;
   homeworkCompleted: boolean | null;
   perfectWeek: boolean;
+  videoCount: number | null;
+  homeworkStatus: string | null;
+  zoomStatus: string | null;
+  perfectWeekStatusLabel: "Perfect Week" | "Not Perfect" | "In Progress";
 };
 
 export type PublicHomeworkCompletionStatus =
@@ -108,6 +113,8 @@ export type PublicHomeworkAssignment = {
   key: string;
   /** Primary label — assignment name, not HW slot number. */
   assignmentName: string;
+  /** Short instructions from Homework Library when available. */
+  description: string | null;
   weekLabel: string;
   /** ISO date key (YYYY-MM-DD) from Week End Date until PHA Due Date exists. */
   dueDate: string | null;

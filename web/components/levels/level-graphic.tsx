@@ -115,6 +115,7 @@ type AthleteLevelDisplayProps = {
   coverImageUrl?: string | null;
   badgeSize?: "sm" | "md" | "lg";
   graphicSize?: LevelGraphicSize;
+  badgeVariant?: "default" | "hero";
   className?: string;
 };
 
@@ -126,14 +127,20 @@ export function AthleteLevelDisplay({
   coverImageUrl,
   badgeSize = "md",
   graphicSize = "md",
+  badgeVariant = "default",
   className,
 }: AthleteLevelDisplayProps) {
   if (!level?.trim()) return null;
 
   return (
-    <div className={cn("flex items-center gap-2", className)} data-testid="athlete-level-display">
-      <LevelGraphic level={level} coverImageUrl={coverImageUrl} size={graphicSize} />
-      <LevelBadge level={level} size={badgeSize} />
+    <div className={cn("flex items-center gap-2.5", className)} data-testid="athlete-level-display">
+      <LevelGraphic
+        level={level}
+        coverImageUrl={coverImageUrl}
+        size={graphicSize}
+        className={badgeVariant === "hero" ? "border-white/25 bg-white/10" : undefined}
+      />
+      <LevelBadge level={level} size={badgeSize} variant={badgeVariant} />
     </div>
   );
 }

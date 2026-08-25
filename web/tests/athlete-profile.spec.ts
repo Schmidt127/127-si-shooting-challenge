@@ -21,8 +21,10 @@ test.describe("public athlete profiles", () => {
     await expect(page.getByTestId("performance-snapshot")).toBeVisible();
     await expect(page.getByTestId("shooting-stat-line")).toBeVisible();
     await expect(page.getByTestId("progression-panel")).toBeVisible();
+    await expect(page.getByTestId("homework-assignments")).toBeVisible();
     await expect(page.getByTestId("streak-section")).toBeVisible();
     await expect(page.getByTestId("recent-activity")).toBeVisible();
+    await expect(page.getByTestId("perfect-week-panel")).toBeVisible();
     await expect(page.getByTestId("weekly-performance")).toBeVisible();
     await expect(page.getByTestId("achievement-collection")).toBeVisible();
   });
@@ -79,6 +81,16 @@ test.describe("public athlete profiles", () => {
     expect(page.url()).not.toMatch(RECORD_ID_PATTERN);
     expect(bodyText.toLowerCase()).not.toContain("parent email");
     expect(bodyText.toLowerCase()).not.toContain("stripe");
+  });
+
+  test("homework assignments remain visible on mobile without overflow", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("athletes/testing-schmidt", { waitUntil: "domcontentloaded" });
+    await expect(page.getByTestId("homework-assignments")).toBeVisible();
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow).toBeLessThanOrEqual(20);
   });
 
   test("mobile profile has no horizontal overflow", async ({ page }) => {

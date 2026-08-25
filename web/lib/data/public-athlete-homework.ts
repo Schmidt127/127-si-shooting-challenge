@@ -31,6 +31,7 @@ export type PublicHomeworkLibraryFields = {
   "Assignment Full Name"?: unknown;
   "Assignment Full Name - Display"?: unknown;
   "Assignment Title"?: unknown;
+  "Brief Description - Display"?: unknown;
   "Homework Number"?: unknown;
   "Assignment Number"?: unknown;
   Order?: unknown;
@@ -71,6 +72,11 @@ export function resolveAssignmentDisplayName(fields: PublicHomeworkLibraryFields
     fields["Assignment Full Name - Display"],
     asText(fields["Assignment Full Name"], asText(fields["Assignment Title"], "Homework Assignment")),
   );
+}
+
+export function resolveAssignmentDescription(fields: PublicHomeworkLibraryFields): string | null {
+  const description = asText(fields["Brief Description - Display"], "").trim();
+  return description || null;
 }
 
 export function phaMatchesEnrollmentGradeBand(
@@ -193,7 +199,7 @@ export function buildPublicHomeworkAssignments(input: {
 }): PublicHomeworkAssignment[] {
   const rows: SortableHomeworkRow[] = [];
 
-  for (const [index, pha] of input.phaRecords.entries()) {
+  for (const pha of input.phaRecords) {
     if (pha.fields["Active?"] !== true) continue;
 
     const gradeBandIds = linkedRecordIds(pha.fields["Grade Band"]);
@@ -233,8 +239,9 @@ export function buildPublicHomeworkAssignments(input: {
     const slot = selectName(pha.fields["Homework Slot"], "");
 
     rows.push({
-      key: `hw-${index + 1}`,
+      key: `pha-${pha.id}`,
       assignmentName: resolveAssignmentDisplayName(libraryFields),
+      description: resolveAssignmentDescription(libraryFields),
       weekLabel: weekMeta?.name ?? "Week",
       dueDate,
       completionStatus,

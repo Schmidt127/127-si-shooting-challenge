@@ -7,6 +7,7 @@ import {
   indexCompletionsByPhaId,
   mapCompletionStatus,
   phaMatchesEnrollmentGradeBand,
+  resolveAssignmentDescription,
   resolveAssignmentDisplayName,
   resolveAssignmentDueDateKey,
   resolveHomeworkCreditEligibility,
@@ -97,6 +98,39 @@ describe("buildPublicHomeworkAssignments", () => {
     });
 
     expect(rows).toHaveLength(1);
+  });
+
+  it("includes assignment description when library provides Brief Description", () => {
+    const rows = buildPublicHomeworkAssignments({
+      phaRecords: [pha("recPha0000000001", WEEK_1, [GRADE_3_4])],
+      libraryById: new Map([
+        [
+          HOMEWORK_ID,
+          {
+            ...library("Form Shooting Basics"),
+            "Brief Description - Display": "Film 50 form shots and submit your clip.",
+          },
+        ],
+      ]),
+      weekById,
+      completionsByPhaId: new Map(),
+      enrollmentGradeBandId: GRADE_3_4,
+    });
+
+    expect(rows[0]?.assignmentName).toBe("Form Shooting Basics");
+    expect(rows[0]?.description).toBe("Film 50 form shots and submit your clip.");
+  });
+
+  it("keeps description null when library instructions are blank", () => {
+    const rows = buildPublicHomeworkAssignments({
+      phaRecords: [pha("recPha0000000001", WEEK_1, [GRADE_3_4])],
+      libraryById: new Map([[HOMEWORK_ID, library("No Description Assignment")]]),
+      weekById,
+      completionsByPhaId: new Map(),
+      enrollmentGradeBandId: GRADE_3_4,
+    });
+
+    expect(rows[0]?.description).toBeNull();
   });
 
   it("uses assignment display name as the primary label, not Homework Number", () => {
@@ -281,6 +315,15 @@ describe("resolveHomeworkCreditEligibility", () => {
 });
 
 describe("helpers", () => {
+  it("resolveAssignmentDescription returns trimmed brief description or null", () => {
+    expect(
+      resolveAssignmentDescription({
+        "Brief Description - Display": "  Complete the notebook page.  ",
+      }),
+    ).toBe("Complete the notebook page.");
+    expect(resolveAssignmentDescription({})).toBeNull();
+  });
+
   it("resolveAssignmentDisplayName prefers display name field", () => {
     expect(
       resolveAssignmentDisplayName({

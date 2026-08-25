@@ -244,16 +244,7 @@ describe("PHA-backed public homework scheduling", () => {
     await expect(fetchScheduledHomeworkCatalog()).rejects.toThrow(/Multiple active PHA rows/);
   });
 
-  it("fails closed when one homework is scheduled to multiple distinct Weeks on the public detail page", async () => {
-    const otherWeekId = "rec2Rewxt21z7dI9f";
-    installBaseMocks([
-      pha("rec00000000000004", WEEK_ID),
-      pha("rec00000000000005", otherWeekId),
-    ]);
-    await expect(fetchScheduledHomeworkAssignment(HOMEWORK_ID)).rejects.toThrow(/scheduled to 2 distinct Weeks/);
-  });
-
-  it("fails closed on an incomplete active PHA instead of falling back to Homework Library scheduling fields", async () => {
+  it("skips incomplete active PHA rows and returns an empty catalog when none are schedulable", async () => {
     installBaseMocks([{
       id: "rec00000000000006",
       fields: {
@@ -266,6 +257,62 @@ describe("PHA-backed public homework scheduling", () => {
         "Active?": true,
       },
     }]);
-    await expect(fetchScheduledHomeworkCatalog()).rejects.toThrow(/incomplete/);
+    const catalog = await fetchScheduledHomeworkCatalog();
+    expect(catalog.totalAssignments).toBe(0);
+    expect(catalog.weekGroups).toEqual([]);
+  });
+
+  it("fails closed when one homework is scheduled to multiple distinct Weeks on the public detail page", async () => {
+    const otherWeekId = "rec2Rewxt21z7dI9f";
+    installBaseMocks([
+      pha("rec00000000000004", WEEK_ID),
+      pha("rec00000000000005", otherWeekId),
+    ]);
+    await expect(fetchScheduledHomeworkAssignment(HOMEWORK_ID)).rejects.toThrow(/scheduled to 2 distinct Weeks/);
+  });
+
+  it("shows PHA-scheduled library rows even when Homework Library Published? is unchecked", async () => {
+    installBaseMocks([pha("rec00000000000007")]);
+    listAirtableRecordsMock.mockImplementation(async (params) => {
+      if (params.tableName === "Program Instance - Sync") {
+        return { records: [registeringProgramInstance()] } as never;
+      }
+      if (params.tableName === "Program Homework Assignments") {
+        return { records: [pha("rec00000000000007")] } as never;
+      }
+      if (params.tableName === "Homework Library") {
+        expect(params.filterByFormula).not.toContain("Published?");
+        return {
+          records: [{
+            id: HOMEWORK_ID,
+            fields: {
+              "Assignment Full Name": "SA - Personal Game Plan - Shot Tracker Usage",
+              "Assignment Full Name - Display": "Shot Tracker Usage",
+              "Assignment Title": "Shot Tracker Usage",
+              "Homework Number": "HW1",
+              "Assignment Number": 1,
+              Order: 1,
+              "Published?": false,
+            },
+          }],
+        } as never;
+      }
+      if (params.tableName === "Weeks") {
+        return {
+          records: [{
+            id: WEEK_ID,
+            fields: {
+              "Week Name": "Early Bird - Testing",
+              "Start Date": "2026-08-02T06:00:00.000Z",
+            },
+          }],
+        } as never;
+      }
+      throw new Error(`Unexpected table ${params.tableName}`);
+    });
+
+    const catalog = await fetchScheduledHomeworkCatalog();
+    expect(catalog.totalAssignments).toBe(1);
+    expect(catalog.weekGroups[0].assignments[0].displayName).toBe("Shot Tracker Usage");
   });
 });

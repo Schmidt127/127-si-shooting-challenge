@@ -131,6 +131,7 @@ describe("mapWeeklySummaries", () => {
       momentumStatus: "On Track",
       totalShots: 100,
       daysLogged: 5,
+      perfectWeekStatusLabel: "Perfect Week",
     });
   });
 

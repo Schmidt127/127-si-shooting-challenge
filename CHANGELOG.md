@@ -8,6 +8,15 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Web
 
+#### Fixed
+- **Public homework catalog — PHA data source (2026-08-25)** — `/shoot/homework` reads active
+  Program Homework Assignments for the Registering Shooting Challenge Program Instance and
+  joins Homework Library content without a `Published?` gate (PHA is the schedule authority).
+  Cards show week, due date, grade bands, submission guidance, and operator notes; assignments
+  sort by Homework Library `Order` descending within each week. Tests:
+  `web/lib/airtable/homework-queries.test.ts`, `web/lib/data/homework.test.ts`,
+  `web/tests/public-experience.spec.ts`.
+
 #### Added
 - **Athlete profile homework assignments (2026-08-24)** — Public athlete profiles list every
   active Program Homework Assignment for the Registering 2026–2027 scope and athlete grade band,

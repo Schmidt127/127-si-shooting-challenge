@@ -1,7 +1,7 @@
 import { listAirtableRecords } from "@/lib/airtable/client";
 import { listCurrentPhaRecords } from "@/lib/airtable/homework-queries";
 import { PUBLIC_AIRTABLE_TABLES } from "@/lib/airtable/public-tables";
-import { firstLinkedRecordId, linkedRecordIds } from "@/lib/data/airtable-values";
+import { firstLinkedRecordId } from "@/lib/data/airtable-values";
 import {
   buildPublicHomeworkAssignments,
   buildWeekMetaIndex,
@@ -18,6 +18,7 @@ const LIBRARY_FIELDS = [
   "Assignment Full Name",
   "Assignment Full Name - Display",
   "Assignment Title",
+  "Brief Description - Display",
   "Homework Number",
   "Assignment Number",
   "Order",
@@ -120,15 +121,3 @@ export async function fetchPublicAthleteHomeworkAssignments(input: {
   });
 }
 
-/** @internal exported for tests */
-export function filterActivePhaForGradeBand(
-  phaRecords: Array<{ id: string; fields: { "Grade Band"?: unknown; "Active?"?: unknown } }>,
-  enrollmentGradeBandId: string | null,
-): typeof phaRecords {
-  return phaRecords.filter((pha) => {
-    if (pha.fields["Active?"] !== true) return false;
-    const gradeBandIds = linkedRecordIds(pha.fields["Grade Band"]);
-    if (!enrollmentGradeBandId) return true;
-    return gradeBandIds.includes(enrollmentGradeBandId);
-  });
-}
