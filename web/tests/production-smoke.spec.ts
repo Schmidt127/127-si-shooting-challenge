@@ -15,7 +15,7 @@ import { expect, test } from "@playwright/test";
 import {
   FILL_OUT,
   OFFICIAL_LANDING_URL,
-  PUBLIC_SMOKE_ROUTES,
+  getPublicSmokeRoutes,
   REQUIRED_ASSETS,
   VIEWPORTS,
   captureMaterialConsoleErrors,
@@ -23,12 +23,13 @@ import {
   expectSingleHeading,
   findDuplicatedBasePaths,
   findUnsafeBlankTargets,
+  openMobileNavPanel,
 } from "./helpers/smoke";
 
 test.describe("production smoke — desktop routes", () => {
   test.use({ viewport: VIEWPORTS.desktop });
 
-  for (const route of PUBLIC_SMOKE_ROUTES) {
+  for (const route of getPublicSmokeRoutes()) {
     test(`${route.name} loads with heading and no material console errors`, async ({
       page,
     }) => {
@@ -54,7 +55,7 @@ test.describe("production smoke — desktop routes", () => {
 test.describe("production smoke — mobile routes", () => {
   test.use({ viewport: VIEWPORTS.mobile });
 
-  for (const route of PUBLIC_SMOKE_ROUTES) {
+  for (const route of getPublicSmokeRoutes()) {
     test(`${route.name} mobile chrome + no large overflow`, async ({ page }) => {
       const response = await page.goto(route.path, {
         waitUntil: "domcontentloaded",
@@ -143,20 +144,15 @@ test.describe("production smoke — mobile menu + More nav", () => {
     page,
   }) => {
     await page.goto(".", { waitUntil: "domcontentloaded" });
-    const toggle = page.getByTestId("mobile-nav-toggle");
     // Pre-deploy PROD may still use the older nav; skip until SC-148 is live.
-    if ((await toggle.count()) === 0) {
+    if ((await page.getByTestId("mobile-nav-toggle").count()) === 0) {
       test.skip(
         true,
         "mobile-nav-toggle not present on this deployment (SC-148 not installed yet)",
       );
       return;
     }
-    await expect(toggle).toBeVisible();
-    await toggle.click();
-
-    const panel = page.getByTestId("mobile-nav-panel");
-    await expect(panel).toBeVisible();
+    const { toggle, panel } = await openMobileNavPanel(page);
 
     await expect(
       panel.getByRole("link", { name: /Register for the Challenge/i }),
@@ -164,10 +160,15 @@ test.describe("production smoke — mobile menu + More nav", () => {
     await expect(
       panel.getByRole("link", { name: /Submit Today's Activity/i }),
     ).toBeVisible();
+    await expect(
+      panel.getByRole("link", { name: /Achievements/i }),
+    ).toBeVisible();
 
     await page.keyboard.press("Escape");
     await expect(panel).toHaveCount(0);
-    await expect(toggle).toBeFocused();
+    await expect(async () => {
+      await expect(toggle).toBeFocused();
+    }).toPass({ timeout: 5_000 });
   });
 });
 

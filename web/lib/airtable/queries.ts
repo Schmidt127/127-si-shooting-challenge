@@ -75,6 +75,7 @@ import {
   type XpRewardRuleFields,
   type XpRuleCatalogData,
 } from "@/lib/data/xp-rules";
+import { resolvePublicActivityLedgerNotice } from "@/lib/formatters/profile-freshness";
 
 /** Airtable table names used by public queries + reserved for future dashboard/admin. */
 export const AIRTABLE_TABLES = {
@@ -964,13 +965,24 @@ export async function fetchPublicAthleteProfileBySlug(
     pageSize: GAME_LOG_PAGE_SIZE,
   });
   const recentActivity = mapXpSummariesToPublicActivity(gameLogPage.pageRows);
-  const activityLedgerNoticeParts: string[] = [];
-  if (xpActivity.warning) activityLedgerNoticeParts.push(xpActivity.warning);
-  if (xpActivity.missingXpSubmissionIds.length > 0) {
-    activityLedgerNoticeParts.push(
-      `${xpActivity.missingXpSubmissionIds.length} counted submission(s) are missing XP awards. Ops is reconciling.`,
+
+  if (xpActivity.warning) {
+    console.warn(
+      "[public-athlete-profile] XP activity loader warning (internal only):",
+      xpActivity.warning,
     );
   }
+  if (xpActivity.missingXpSubmissionIds.length > 0) {
+    console.warn(
+      "[public-athlete-profile] Missing XP awards for counted submissions (internal only):",
+      xpActivity.missingXpSubmissionIds.length,
+    );
+  }
+
+  const activityLedgerNotice = resolvePublicActivityLedgerNotice({
+    loaderWarning: xpActivity.warning,
+    missingXpSubmissionCount: xpActivity.missingXpSubmissionIds.length,
+  });
 
   return buildPublicAthleteProfile({
     slug,
@@ -980,8 +992,7 @@ export async function fetchPublicAthleteProfileBySlug(
     currentLevelCoverImageUrl,
     recentActivity,
     activityLedgerTotal: xpActivity.totalAvailableRows,
-    activityLedgerNotice:
-      activityLedgerNoticeParts.length > 0 ? activityLedgerNoticeParts.join(" ") : null,
+    activityLedgerNotice,
     activityLedgerHasMore: gameLogPage.hasMore,
     activityLedgerNextCursor: gameLogPage.nextCursor,
     homeworkLoadFailed,

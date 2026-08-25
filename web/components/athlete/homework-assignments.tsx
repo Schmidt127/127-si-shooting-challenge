@@ -5,6 +5,7 @@ import Link from "next/link";
 import { StatusBadge, type StatusBadgeTone } from "@/components/ui/status-badge";
 import { withBasePath } from "@/lib/app-config";
 import { formatXp } from "@/lib/formatters";
+import { PROFILE_HOMEWORK_UNAVAILABLE_MESSAGE } from "@/lib/formatters/profile-freshness";
 import type {
   PublicHomeworkAssignment,
   PublicHomeworkCompletionStatus,
@@ -12,6 +13,7 @@ import type {
 
 type HomeworkAssignmentsProps = {
   assignments: PublicHomeworkAssignment[];
+  loadUnavailable?: boolean;
 };
 
 export function formatHomeworkDueDate(dateKey: string | null): string {
@@ -60,7 +62,10 @@ function creditLabel(assignment: PublicHomeworkAssignment): string | null {
   return null;
 }
 
-export function HomeworkAssignments({ assignments }: HomeworkAssignmentsProps) {
+export function HomeworkAssignments({
+  assignments,
+  loadUnavailable = false,
+}: HomeworkAssignmentsProps) {
   return (
     <section aria-labelledby="homework-assignments-heading" data-testid="homework-assignments">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -88,7 +93,15 @@ export function HomeworkAssignments({ assignments }: HomeworkAssignmentsProps) {
         </div>
       </div>
 
-      {assignments.length === 0 ? (
+      {loadUnavailable ? (
+        <p
+          className="mt-4 rounded-md border border-amber-200 bg-amber-50 px-4 py-5 text-sm text-amber-950"
+          role="status"
+          data-testid="homework-assignments-unavailable"
+        >
+          {PROFILE_HOMEWORK_UNAVAILABLE_MESSAGE}
+        </p>
+      ) : assignments.length === 0 ? (
         <p
           className="mt-4 border border-dashed border-border bg-brand-light-gray/50 px-4 py-5 text-sm text-muted"
           data-testid="homework-assignments-empty"

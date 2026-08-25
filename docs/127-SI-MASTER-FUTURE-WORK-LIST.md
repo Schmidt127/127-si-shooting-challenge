@@ -238,13 +238,16 @@ Use the most maintainable professional design. Prefer configurable presentation 
 
 | Item | Status |
 |------|--------|
-| Vercel Production deploy | **Success** — commit `900e61c`, domain `www.fairfieldbasketballclub.com/shoot` |
-| Production smoke slug | `perfect-week-testing` (also `charlie-schmidt`, `curtis-schmidt` on leaderboard) |
-| Game Log pagination | API-backed; Load more verified |
-| Freshness notice | Visible when ledger/homework degraded; hidden state not observed on sampled prod athletes (reconciliation notices present) |
-| Homework image | Fixed `withBasePath` for local dev (`web` closeout commit) |
-| Local PAT 403 | Documented — needs Program Instance - Sync + Program Homework Assignments read |
-| `GAME_LOG_MAX_FETCH=2000` | **Deferred** — safe at current scale (~8 athletes, highest XP ~1,280); no athlete near 2,000 events; true server pagination within cap |
+| Vercel Production deploy | **Success** — `a71cbef` (homework image `withBasePath`) on `www.fairfieldbasketballclub.com/shoot` |
+| Production smoke slug | `perfect-week-testing` (also `charlie-schmidt`, `curtis-schmidt`; `testing-schmidt` is DEV-only) |
+| Game Log pagination | API-backed; Load more verified 12→24 |
+| Freshness notice | **Fixed** — hidden on clean prod loads; only when homework source fails (`mayBeStale`); internal XP reconciliation logged server-side only |
+| Homework image | `withBasePath` fix deployed `a71cbef`; static asset HTTP 200 |
+| Mobile nav smoke | **Fixed** — root cause was Windows `test:smoke:prod` env syntax; `cross-env` + focus retry |
+| `npm run test:smoke:prod` | Cross-platform via `cross-env` (Windows/macOS/Linux) |
+| SEO production | `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true` on Vercel; `search-indexing.spec.ts` pass on prod |
+| Local PAT 403 | Documented — read on Program Instance - Sync, Program Homework Assignments, Homework Library, Weeks, Homework Completions |
+| `GAME_LOG_MAX_FETCH=2000` | **Deferred** — safe at current scale; no athlete near cap |
 
 ### FUT-014 — Homework page redesign and live Homework Library connection
 
@@ -577,8 +580,8 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-111** | Website | Athlete profiles (real data, not mocks) | P2 | Live Tested in PROD | SC-103 | Optional: recreate `Web - Leaderboard` view (fallback OK) |
 | **SC-112** | Website | Athlete auth + dashboard | P2 | Decision Needed | ΓÇö | Mike pick approach; then schema + session implementation |
 | **SC-113** | Website | Loading, empty, and error states | P2 | Live Tested in PROD | ΓÇö | Keep states aligned when SC-112 lands |
-| **SC-115** | Website | noindex removal / search indexing | P2 | **Complete** (2026-08-25, `647d465`) | SC-114 | **Done in repo** — `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true` enables index on public program pages; athlete profiles stay noindex; dynamic sitemap for published catalogs; `/public-display` excluded. **Prod:** set Vercel env + redeploy; verify via `docs/deploy-checklists/2026-08-25-web-search-indexing-cutover.md`. |
-| **SC-118** | Website | Production readiness smoke package for public `/shoot` | P2 | Built in Repository ΓÇö smoke suite successfully executed against current PROD | SC-102 | Optional CI wire for `test:smoke`; axe-core later; Mike final prod check after integration deploy |
+| **SC-115** | Website | noindex removal / search indexing | P2 | **Complete** (2026-08-25, `647d465`; prod verified) | SC-114 | **Prod cutover verified** — Vercel Production `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`; public pages indexable; athlete profiles + private routes `noindex`; sitemap excludes athletes/public-display; `npm run test:smoke:prod` 50/50 after cross-env fix. Checklist: `docs/deploy-checklists/2026-08-25-web-search-indexing-cutover.md`. |
+| **SC-118** | Website | Production readiness smoke package for public `/shoot` | P2 | **Complete** (2026-08-25) | SC-102 | `npm run test:smoke:prod` cross-platform (`cross-env`); prod athlete slug `perfect-week-testing`; mobile nav + SEO smoke pass on prod. |
 | **SC-133** | Platform | Pre-season parent comms from rules | P2 | Tracked under V2-010 | SC-109 | Write/send after SC-109 |
 | **SC-138** | Platform | Close stale overnight GitHub issues/PRs for 070a | P2 | Planned | SC-095 | Close or update with current truth |
 | **SC-144** | Website | Rename Softr-named publish flag | P2 | Planned | SC-054 | Rename in schema wave; update web queries |

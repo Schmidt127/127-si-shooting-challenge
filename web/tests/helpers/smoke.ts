@@ -1,7 +1,22 @@
-import { expect, type Page, type Response } from "@playwright/test";
+import { expect, type Locator, type Page, type Response } from "@playwright/test";
 
 /** Official public host for Shooting Challenge production smoke. */
 export const OFFICIAL_PUBLIC_HOST = "https://www.fairfieldbasketballclub.com";
+
+const PRODUCTION_SMOKE_ATHLETE_SLUG = "perfect-week-testing";
+const LOCAL_SMOKE_ATHLETE_SLUG = "testing-schmidt";
+
+function isProductionSmokeTarget(): boolean {
+  const base = process.env.PLAYWRIGHT_BASE_URL?.trim() ?? "";
+  return base.includes("fairfieldbasketballclub.com");
+}
+
+function resolveSmokeAthleteProfilePath(): string {
+  const slug = isProductionSmokeTarget()
+    ? PRODUCTION_SMOKE_ATHLETE_SLUG
+    : LOCAL_SMOKE_ATHLETE_SLUG;
+  return `athletes/${slug}`;
+}
 
 /** Canonical branded Fillout URLs (must match `lib/registration.ts`). */
 export const FILL_OUT = {
@@ -41,6 +56,14 @@ export const PUBLIC_SMOKE_ROUTES = [
   { name: "athlete-profile", path: "athletes/testing-schmidt", heading: /.+/ },
   { name: "admin", path: "admin", heading: /admin/i },
 ] as const;
+
+/** Smoke routes with environment-aware athlete profile slug. */
+export function getPublicSmokeRoutes() {
+  const athletePath = resolveSmokeAthleteProfilePath();
+  return PUBLIC_SMOKE_ROUTES.map((route) =>
+    route.name === "athlete-profile" ? { ...route, path: athletePath } : route,
+  );
+}
 
 /** Required static assets under `/shoot` (path after basePath). */
 export const REQUIRED_ASSETS = [
@@ -108,6 +131,34 @@ export async function expectSingleHeading(page: Page, label: string) {
     timeout: 30_000,
   });
   await expect(h1, `${label} must have exactly one h1`).toHaveCount(1);
+}
+
+/**
+ * Open the client-rendered mobile nav panel.
+ *
+ * ProductNav is a `"use client"` control. On production, `domcontentloaded`
+ * can finish before React hydration attaches click handlers, so a single click
+ * may no-op. Retry until `aria-expanded` flips and the dialog mounts.
+ */
+export async function openMobileNavPanel(page: Page): Promise<{
+  toggle: Locator;
+  panel: Locator;
+}> {
+  const toggle = page.getByTestId("mobile-nav-toggle");
+  const panel = page.getByTestId("mobile-nav-panel");
+
+  await expect(toggle).toBeVisible();
+
+  await expect(async () => {
+    const expanded = await toggle.getAttribute("aria-expanded");
+    if (expanded !== "true") {
+      await toggle.click();
+    }
+    await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  }).toPass({ timeout: 15_000 });
+
+  await expect(panel).toBeVisible();
+  return { toggle, panel };
 }
 
 /** Collect same-origin hrefs that incorrectly duplicate `/shoot/shoot`. */

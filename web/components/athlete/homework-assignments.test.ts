@@ -81,6 +81,15 @@ describe("HomeworkAssignments UI", () => {
     expect(html).not.toContain('data-testid="homework-assignment-row"');
   });
 
+  it("renders an unavailable state when homework could not be loaded", () => {
+    const html = renderToStaticMarkup(
+      createElement(HomeworkAssignments, { assignments: [], loadUnavailable: true }),
+    );
+    expect(html).toContain('data-testid="homework-assignments-unavailable"');
+    expect(html).toContain("temporarily unavailable");
+    expect(html).not.toContain('data-testid="homework-assignments-empty"');
+  });
+
   it("handles missing due dates and pending XP safely", () => {
     const html = render([
       assignment({

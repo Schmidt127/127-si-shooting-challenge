@@ -1,4 +1,4 @@
-import { formatProfileFetchedAt } from "@/lib/formatters/profile-freshness";
+import { formatProfileFetchedAt, PROFILE_FRESHNESS_DEGRADED_MESSAGE } from "@/lib/formatters/profile-freshness";
 
 type ProfileFreshnessNoticeProps = {
   mayBeStale: boolean;
@@ -16,7 +16,7 @@ export function ProfileFreshnessNotice({ mayBeStale, fetchedAt }: ProfileFreshne
       role="status"
       data-testid="profile-freshness-notice"
     >
-      <p>Some information may be updating. Please check again shortly.</p>
+      <p>{PROFILE_FRESHNESS_DEGRADED_MESSAGE}</p>
       {updatedLabel ? (
         <p className="mt-1 text-xs text-amber-900/90">Last checked {updatedLabel}.</p>
       ) : null}

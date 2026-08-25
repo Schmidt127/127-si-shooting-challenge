@@ -28,6 +28,7 @@ import type {
 import type { XpEventSummary } from "@/types/xp";
 import { formatGameLogPresentation } from "@/lib/data/game-log-presentation";
 import { opaqueGameLogRowKey } from "@/lib/data/game-log-pagination";
+import { resolvePublicProfileMayBeStale } from "@/lib/formatters/profile-freshness";
 
 export type PublicEnrollmentFields = {
   "Full Athlete Name"?: unknown;
@@ -625,11 +626,9 @@ export function buildPublicAthleteProfile(input: BuildPublicProfileInput): Publi
     homeworkAssignments: input.homeworkAssignments ?? [],
     achievements: input.achievements,
     fetchedAt: new Date().toISOString(),
-    mayBeStale: Boolean(
-      input.homeworkLoadFailed ||
-        (input.activityLedgerNotice?.includes("reconciling") ?? false) ||
-        (input.activityLedgerNotice?.includes("Enrollment Record ID is unavailable") ?? false),
-    ),
+    mayBeStale: resolvePublicProfileMayBeStale({
+      homeworkLoadFailed: input.homeworkLoadFailed,
+    }),
   };
 }
 

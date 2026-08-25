@@ -1,12 +1,12 @@
 import { expect, test } from "@playwright/test";
 
-const PRODUCTION_BASE = "https://www.fairfieldbasketballclub.com/shoot";
 const LOCAL_BASE = "http://127.0.0.1:3001/shoot";
 const configuredBase = process.env.PLAYWRIGHT_BASE_URL?.trim().replace(/\/$/, "");
 const SITE_BASE = configuredBase || LOCAL_BASE;
 const INDEXING_ENABLED = process.env.NEXT_PUBLIC_ALLOW_SEARCH_INDEXING?.trim().toLowerCase();
 
 function indexingEnabled(): boolean {
+  if (isProductionTarget()) return true;
   return INDEXING_ENABLED === "true" || INDEXING_ENABLED === "1";
 }
 
