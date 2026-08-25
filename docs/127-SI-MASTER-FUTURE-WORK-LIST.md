@@ -238,7 +238,7 @@ Use the most maintainable professional design. Prefer configurable presentation 
 
 | Item | Status |
 |------|--------|
-| Vercel Production deploy | **Success** — `17052c6` on `www.fairfieldbasketballclub.com/shoot` |
+| Vercel Production deploy | **Success** — `fce037f` on `www.fairfieldbasketballclub.com/shoot` |
 | Production smoke slug | `perfect-week-testing` (also `charlie-schmidt`, `curtis-schmidt`; `testing-schmidt` is DEV-only) |
 | Game Log pagination | API-backed; Load more verified 12→24 |
 | Freshness notice | **Fixed** — hidden on clean prod loads; only when homework source fails (`mayBeStale`); “Last checked” renders client-side to avoid hydration mismatch on prod smoke |
