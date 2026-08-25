@@ -9,6 +9,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Fixed
+- **Production smoke verification (2026-08-25)** — Cross-platform `test:smoke:prod` via
+  `cross-env`; hydration-safe `openMobileNavPanel()` helper; client-only freshness
+  “Last checked” line to prevent React #418 on athlete profiles during prod smoke.
 - **Public homework catalog — PHA data source (2026-08-25)** — `/shoot/homework` reads active
   Program Homework Assignments for the Registering Shooting Challenge Program Instance and
   joins Homework Library content without a `Published?` gate (PHA is the schedule authority).

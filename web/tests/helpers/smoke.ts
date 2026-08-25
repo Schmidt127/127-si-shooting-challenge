@@ -53,7 +53,7 @@ export const PUBLIC_SMOKE_ROUTES = [
   { name: "game-manual", path: "game-manual", heading: /game manual|manual/i },
   { name: "public-display", path: "public-display", heading: /season|display|leaderboard|standings/i },
   { name: "dashboard", path: "dashboard", heading: /.+/ },
-  { name: "athlete-profile", path: "athletes/testing-schmidt", heading: /.+/ },
+  { name: "athlete-profile", path: `athletes/${LOCAL_SMOKE_ATHLETE_SLUG}`, heading: /.+/ },
   { name: "admin", path: "admin", heading: /admin/i },
 ] as const;
 
