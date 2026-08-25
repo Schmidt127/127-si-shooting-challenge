@@ -1,30 +1,7 @@
 import type { MetadataRoute } from "next";
 
-import { SITE_URL } from "@/lib/app-config";
+import { buildFullSitemap } from "@/lib/seo/sitemap-entries";
 
-const PUBLIC_ROUTES = [
-  "",
-  "/dashboard",
-  "/leaderboard",
-  "/homework",
-  "/levels",
-  "/achievements",
-  "/tutorials",
-  "/shoutouts",
-  "/articles",
-  "/zoom-meetings",
-  "/game-manual",
-  "/public-display",
-] as const;
-
-export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
-
-  return PUBLIC_ROUTES.map((path, index) => ({
-    url: `${SITE_URL}${path}`,
-    lastModified: now,
-    changeFrequency:
-      index === 0 || path === "/leaderboard" || path === "/dashboard" ? "daily" : "weekly",
-    priority: index === 0 ? 1 : path === "/leaderboard" ? 0.9 : 0.7,
-  }));
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  return buildFullSitemap();
 }

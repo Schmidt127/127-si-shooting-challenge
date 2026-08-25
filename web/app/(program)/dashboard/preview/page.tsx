@@ -7,12 +7,14 @@ import {
   loadXpActivityForEnrollment,
   XpActivityLoadError,
 } from "@/lib/data/xp-activity-loader";
+import { buildPageMetadata, PRIVATE_ROBOTS_NOINDEX } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "XP Activity Preview",
   description: "Live Airtable XP activity preview for one enrollment record.",
-  robots: { index: false, follow: false },
-};
+  path: "/dashboard/preview",
+  robots: PRIVATE_ROBOTS_NOINDEX,
+});
 
 export const revalidate = 0;
 

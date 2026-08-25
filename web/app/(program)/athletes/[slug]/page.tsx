@@ -5,9 +5,8 @@ import {
   AthleteProfileErrorState,
   AthleteProfileView,
 } from "@/components/athlete/athlete-profile-view";
-import { PUBLIC_SITE_ORIGIN } from "@/lib/app-config";
 import { loadAthleteProfileResult } from "@/lib/data/athlete-profile";
-import { formatGrade } from "@/lib/formatters";
+import { buildPageMetadata, PRIVATE_ROBOTS_NOINDEX } from "@/lib/seo/metadata";
 
 type AthleteProfilePageProps = {
   params: Promise<{ slug: string }>;
@@ -18,31 +17,29 @@ export async function generateMetadata({ params }: AthleteProfilePageProps): Pro
   const result = await loadAthleteProfileResult(slug);
 
   if (result.status !== "ok") {
-    return {
-      title: "Athlete profile | 127 SI Shooting Challenge",
-      robots: { index: false, follow: false },
-    };
+    return buildPageMetadata({
+      title: "Athlete profile",
+      description: "Athlete profile on the 127 SI Shooting Challenge.",
+      path: `/athletes/${slug}`,
+      robots: PRIVATE_ROBOTS_NOINDEX,
+    });
   }
 
-  const { identity, performance } = result.data;
-  const schoolBit = identity.school ? ` · ${identity.school}` : "";
-  const gradeBit = identity.grade ? ` · ${formatGrade(identity.grade)}` : "";
-  const description = `${identity.displayName}${schoolBit}${gradeBit} — ${performance.totalShots} shots, ${performance.lifetimeXp} XP in the 127 SI Shooting Challenge.`;
+  const { identity } = result.data;
+  const description = `${identity.displayName} on the 127 SI Shooting Challenge leaderboard.`;
 
-  return {
+  return buildPageMetadata({
     title: `${identity.displayName} | 127 SI Shooting Challenge`,
+    titleAbsolute: true,
     description,
-    alternates: {
-      canonical: `${PUBLIC_SITE_ORIGIN}/athletes/${identity.slug}`,
-    },
+    path: `/athletes/${identity.slug}`,
+    robots: PRIVATE_ROBOTS_NOINDEX,
     openGraph: {
+      type: "profile",
       title: `${identity.displayName} | Shooting Challenge`,
       description,
-      url: `${PUBLIC_SITE_ORIGIN}/athletes/${identity.slug}`,
-      type: "profile",
     },
-    robots: { index: false, follow: false },
-  };
+  });
 }
 
 export default async function AthleteProfilePage({ params }: AthleteProfilePageProps) {

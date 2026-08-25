@@ -9,6 +9,7 @@ import {
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchShoutoutItem } from "@/lib/airtable/queries";
 import { SHOUTOUTS_SECTION } from "@/lib/tutorial-media/config";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
 type ShoutoutDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -23,10 +24,11 @@ export async function generateMetadata({ params }: ShoutoutDetailPageProps): Pro
     const item = await fetchShoutoutItem(id);
     if (!item) return { title: "Shoutout not found" };
 
-    return {
+    return buildPageMetadata({
       title: item.name,
       description: item.briefDescription || "Shooting Challenge athlete shoutout.",
-    };
+      path: `/shoutouts/${id}`,
+    });
   } catch {
     return { title: "Shoutout" };
   }

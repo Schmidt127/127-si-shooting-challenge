@@ -8,11 +8,13 @@ import {
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchShoutoutCatalog } from "@/lib/airtable/queries";
 import { SHOUTOUTS_SECTION } from "@/lib/tutorial-media/config";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Shoutouts",
   description: "Athlete shoutouts and highlights from the Shooting Challenge.",
-};
+  path: "/shoutouts",
+});
 
 export const revalidate = 300;
 

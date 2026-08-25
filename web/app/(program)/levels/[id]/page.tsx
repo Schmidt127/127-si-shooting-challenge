@@ -5,6 +5,7 @@ import { LevelDetailView, LevelNotFoundState } from "@/components/levels/level-d
 import { LevelsErrorState } from "@/components/levels/levels-ladder-view";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchLevelDefinition } from "@/lib/airtable/queries";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
 type LevelDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -19,10 +20,11 @@ export async function generateMetadata({ params }: LevelDetailPageProps): Promis
     const level = await fetchLevelDefinition(id);
     if (!level) return { title: "Level not found" };
 
-    return {
+    return buildPageMetadata({
       title: level.displayName,
       description: `Reach ${level.displayName} at ${level.xpRequired} lifetime XP.`,
-    };
+      path: `/levels/${id}`,
+    });
   } catch {
     return { title: "Level" };
   }

@@ -2,7 +2,12 @@ import type { Metadata } from "next";
 import { Geist_Mono, Maven_Pro } from "next/font/google";
 
 import "./globals.css";
-import { APP_BASE_PATH, SITE_URL } from "@/lib/app-config";
+import { APP_BASE_PATH, SHOOTING_CHALLENGE, SITE_URL } from "@/lib/app-config";
+import {
+  defaultOpenGraphImage,
+  resolvePublicRobots,
+} from "@/lib/seo/metadata";
+import { BRAND_ORG_NAME } from "@/lib/brand";
 import { cn } from "@/lib/utils";
 
 const mavenPro = Maven_Pro({
@@ -23,14 +28,15 @@ const geistMono = Geist_Mono({
 const iconPng = `${APP_BASE_PATH}/favicon.png`;
 const iconIco = `${APP_BASE_PATH}/favicon.ico`;
 
+const defaultOgImage = defaultOpenGraphImage();
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default: "Shooting Challenge | 127 Sports Intensity",
     template: "%s | Shooting Challenge",
   },
-  description:
-    "127 Sports Intensity Shooting Challenge — leaderboard, homework, tutorials, levels, and more.",
+  description: SHOOTING_CHALLENGE.description,
   alternates: {
     canonical: SITE_URL,
   },
@@ -41,13 +47,21 @@ export const metadata: Metadata = {
     ],
     apple: [{ url: iconPng, type: "image/png" }],
   },
-  robots: {
-    index: false,
-    follow: false,
-    googleBot: {
-      index: false,
-      follow: false,
-    },
+  robots: resolvePublicRobots(),
+  openGraph: {
+    title: "Shooting Challenge | 127 Sports Intensity",
+    description: SHOOTING_CHALLENGE.description,
+    url: SITE_URL,
+    siteName: BRAND_ORG_NAME,
+    locale: "en_US",
+    type: "website",
+    images: [defaultOgImage],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Shooting Challenge | 127 Sports Intensity",
+    description: SHOOTING_CHALLENGE.description,
+    images: [defaultOgImage.url],
   },
 };
 

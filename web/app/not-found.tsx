@@ -1,4 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+import { buildPageMetadata, PRIVATE_ROBOTS_NOINDEX } from "@/lib/seo/metadata";
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "Page not found",
+  description: "This Shooting Challenge page does not exist or has moved.",
+  includeCanonical: false,
+  robots: PRIVATE_ROBOTS_NOINDEX,
+});
 
 export default function NotFoundPage() {
   return (

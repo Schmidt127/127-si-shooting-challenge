@@ -84,13 +84,22 @@ test.describe("navigation and accessibility basics", () => {
     await expectPageChrome(page, "levels via nav");
   });
 
-  test("root layout keeps the approved pre-launch noindex policy", async ({ page }) => {
+  test("root layout robots follow NEXT_PUBLIC_ALLOW_SEARCH_INDEXING", async ({ page }) => {
     await page.goto(".", { waitUntil: "domcontentloaded" });
     const robots = page.locator('meta[name="robots"]');
     await expect(robots).toHaveCount(1);
     const content = (await robots.getAttribute("content")) ?? "";
-    expect(content).toContain("noindex");
-    expect(content).toContain("nofollow");
+    const indexingEnabled =
+      process.env.NEXT_PUBLIC_ALLOW_SEARCH_INDEXING?.trim().toLowerCase() === "true" ||
+      process.env.NEXT_PUBLIC_ALLOW_SEARCH_INDEXING?.trim() === "1";
+
+    if (indexingEnabled) {
+      expect(content).not.toContain("noindex");
+      expect(content).not.toContain("nofollow");
+    } else {
+      expect(content).toContain("noindex");
+      expect(content).toContain("nofollow");
+    }
   });
 
   test("html lang attribute is set", async ({ page }) => {

@@ -5,11 +5,13 @@ import { fetchLevelLadder, fetchXpRuleCatalog } from "@/lib/airtable/queries";
 import { getGameManualUrl } from "@/lib/game-manual/config";
 import type { XpRuleCatalogData } from "@/lib/data/xp-rules";
 import type { LevelLadderData } from "@/types/levels";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Game Manual",
   description: "Official rules, scoring, XP, and program reference for the Shooting Challenge.",
-};
+  path: "/game-manual",
+});
 
 /** ISR: refresh configuration sections every 5 minutes. */
 export const revalidate = 300;

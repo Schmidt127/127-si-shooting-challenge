@@ -9,6 +9,7 @@ import {
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchArticleItem } from "@/lib/airtable/queries";
 import { ARTICLES_SECTION } from "@/lib/tutorial-media/config";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
 type ArticleDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -23,10 +24,11 @@ export async function generateMetadata({ params }: ArticleDetailPageProps): Prom
     const item = await fetchArticleItem(id);
     if (!item) return { title: "Article not found" };
 
-    return {
+    return buildPageMetadata({
       title: item.name,
       description: item.briefDescription || "Shooting Challenge article book reading.",
-    };
+      path: `/articles/${id}`,
+    });
   } catch {
     return { title: "Article" };
   }

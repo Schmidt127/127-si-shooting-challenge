@@ -8,6 +8,7 @@ import {
 import { HomeworkErrorState } from "@/components/homework/homework-catalog-view";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchScheduledHomeworkAssignment } from "@/lib/airtable/homework-queries";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
 type HomeworkDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -24,10 +25,11 @@ export async function generateMetadata({ params }: HomeworkDetailPageProps): Pro
       return { title: "Homework not found" };
     }
 
-    return {
+    return buildPageMetadata({
       title: assignment.displayName,
       description: assignment.briefDescription || `${assignment.weekName} homework assignment.`,
-    };
+      path: `/homework/${id}`,
+    });
   } catch {
     return { title: "Homework" };
   }

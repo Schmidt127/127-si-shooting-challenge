@@ -7,11 +7,13 @@ import {
 } from "@/components/zoom-meetings/zoom-meetings-views";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchZoomMeetingCatalog } from "@/lib/airtable/queries";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Zoom Meetings",
   description: "Shooting Challenge zoom sessions — schedules, agendas, and recordings.",
-};
+  path: "/zoom-meetings",
+});
 
 export const revalidate = 300;
 

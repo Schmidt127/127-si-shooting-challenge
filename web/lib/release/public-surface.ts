@@ -3,6 +3,8 @@
  * Keep in sync with web/docs/site-hierarchy.md — does not change runtime routing.
  */
 
+import { isSearchIndexingEnabled } from "@/lib/seo/metadata";
+
 export const PUBLIC_APP_ROUTES = [
   "/",
   "/dashboard",
@@ -28,7 +30,7 @@ export const NON_CUTOVER_READY_ROUTES = ["/dashboard", "/athletes/[slug]", "/adm
 export const SOFTR_CUTOVER_INDICATORS = {
   publishField: "OK to Publish on Softr",
   levelSortField: "Level Sort Order - For Softr",
-  sitewideNoindexUntilCutover: true,
+  sitewideNoindexUntilCutover: !isSearchIndexingEnabled(),
 } as const;
 
 /** Product names that must never appear in Shooting Challenge nav or public copy modules. */

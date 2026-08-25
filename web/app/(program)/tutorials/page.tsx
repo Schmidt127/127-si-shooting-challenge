@@ -7,12 +7,14 @@ import {
 } from "@/components/tutorials/tutorials-grid-view";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchTutorialCatalog } from "@/lib/airtable/queries";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Skills and Technique Tutorials",
   description:
     "Skills and Technique Tutorials for the Shooting Challenge — technique clips, film study, and form breakdowns.",
-};
+  path: "/tutorials",
+});
 
 export const revalidate = 300;
 

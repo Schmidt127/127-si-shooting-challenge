@@ -7,12 +7,14 @@ import {
 } from "@/components/leaderboard/leaderboard-view";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchLeaderboard } from "@/lib/airtable/queries";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Leaderboard",
   description:
     "Live season rankings for the 127 Sports Intensity Shooting Challenge — XP, levels, and total shots.",
-};
+  path: "/leaderboard",
+});
 
 /** Airtable's 120-second data cache is the sole standings cache layer. */
 export const revalidate = 0;

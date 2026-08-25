@@ -3,11 +3,14 @@ import type { Metadata } from "next";
 import { catalogPanelClass } from "@/components/catalog/catalog-surface";
 import { CtaLink, ProgramPage, SectionMarker } from "@/components/site";
 import { ADMIN_PLACEHOLDER } from "@/lib/release/public-surface";
+import { buildPageMetadata, PRIVATE_ROBOTS_NOINDEX } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Admin",
-  robots: { index: false, follow: false },
-};
+  description: ADMIN_PLACEHOLDER.description,
+  path: "/admin",
+  robots: PRIVATE_ROBOTS_NOINDEX,
+});
 
 /**
  * Admin area — roadmap only until staff auth exists.

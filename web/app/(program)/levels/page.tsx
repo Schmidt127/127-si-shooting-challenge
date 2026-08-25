@@ -3,11 +3,13 @@ import type { Metadata } from "next";
 import { LevelsEmptyState, LevelsErrorState, LevelsLadderView } from "@/components/levels/levels-ladder-view";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchLevelLadder } from "@/lib/airtable/queries";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Levels",
   description: "Shooting Challenge progression ladder — XP tiers from Beginner to G.O.A.T.",
-};
+  path: "/levels",
+});
 
 export const revalidate = 300;
 

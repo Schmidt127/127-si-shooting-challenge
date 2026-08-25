@@ -8,6 +8,7 @@ import {
 } from "@/components/zoom-meetings/zoom-meetings-views";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchZoomMeeting } from "@/lib/airtable/queries";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
 type ZoomMeetingDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -22,10 +23,11 @@ export async function generateMetadata({ params }: ZoomMeetingDetailPageProps): 
     const meeting = await fetchZoomMeeting(id);
     if (!meeting) return { title: "Meeting not found" };
 
-    return {
+    return buildPageMetadata({
       title: meeting.name,
       description: meeting.briefDescription || "Shooting Challenge zoom meeting.",
-    };
+      path: `/zoom-meetings/${id}`,
+    });
   } catch {
     return { title: "Zoom Meeting" };
   }

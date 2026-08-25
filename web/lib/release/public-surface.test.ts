@@ -184,8 +184,8 @@ describe("placeholder admin safety", () => {
 });
 
 describe("Softr cutover indicators", () => {
-  it("records that sitewide noindex remains until cutover approval", () => {
-    expect(SOFTR_CUTOVER_INDICATORS.sitewideNoindexUntilCutover).toBe(true);
+  it("tracks whether sitewide noindex is still active via the indexing flag", () => {
+    expect(typeof SOFTR_CUTOVER_INDICATORS.sitewideNoindexUntilCutover).toBe("boolean");
   });
 });
 

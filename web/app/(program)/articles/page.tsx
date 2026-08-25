@@ -8,11 +8,13 @@ import {
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchArticleCatalog } from "@/lib/airtable/queries";
 import { ARTICLES_SECTION } from "@/lib/tutorial-media/config";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Articles",
   description: "FBC article book readings and reflections for the Shooting Challenge.",
-};
+  path: "/articles",
+});
 
 export const revalidate = 300;
 

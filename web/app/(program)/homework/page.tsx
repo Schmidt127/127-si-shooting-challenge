@@ -7,12 +7,14 @@ import {
 } from "@/components/homework/homework-catalog-view";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchScheduledHomeworkCatalog } from "@/lib/airtable/homework-queries";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Homework",
   description:
     "Current Shooting Challenge homework assignments — scheduled from the active program and published curriculum.",
-};
+  path: "/homework",
+});
 
 /** ISR: refresh homework assignments every 5 minutes. */
 export const revalidate = 300;

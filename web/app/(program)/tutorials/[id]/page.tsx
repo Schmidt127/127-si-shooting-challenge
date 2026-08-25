@@ -5,6 +5,7 @@ import { TutorialDetailView, TutorialNotFoundState } from "@/components/tutorial
 import { TutorialsErrorState } from "@/components/tutorials/tutorials-grid-view";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchTutorialItem } from "@/lib/airtable/queries";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
 type TutorialDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -19,10 +20,11 @@ export async function generateMetadata({ params }: TutorialDetailPageProps): Pro
     const tutorial = await fetchTutorialItem(id);
     if (!tutorial) return { title: "Tutorial not found" };
 
-    return {
+    return buildPageMetadata({
       title: tutorial.name,
       description: tutorial.briefDescription || "Shooting Challenge tutorial.",
-    };
+      path: `/tutorials/${id}`,
+    });
   } catch {
     return { title: "Tutorial" };
   }
