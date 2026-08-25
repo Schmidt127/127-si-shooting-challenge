@@ -47,13 +47,20 @@ export function StreakSection({ streaks, streakAchievements }: StreakSectionProp
           {streakAchievements.length === 0 ? (
             <p className="mt-3 text-sm text-muted">Keep logging — streak badges unlock here.</p>
           ) : (
-            <ul className="mt-3 space-y-2">
-              {streakAchievements.slice(0, 4).map((item) => (
-                <li key={item.key} className="text-sm font-semibold text-foreground">
-                  {item.name}
-                </li>
-              ))}
-            </ul>
+            <>
+              <ul className="mt-3 space-y-2">
+                {streakAchievements.slice(0, 4).map((item) => (
+                  <li key={item.key} className="text-sm font-semibold text-foreground">
+                    {item.name}
+                  </li>
+                ))}
+              </ul>
+              {streakAchievements.length > 4 ? (
+                <p className="mt-2 text-xs text-muted">
+                  +{streakAchievements.length - 4} more in Achievements & milestones below
+                </p>
+              ) : null}
+            </>
           )}
         </div>
       </div>

@@ -162,6 +162,10 @@ export type PublicAthleteProfile = {
   activityLedgerTotal: number;
   /** Optional integrity or pagination notice — never includes raw Airtable record IDs. */
   activityLedgerNotice: string | null;
+  /** Whether additional Game Log rows are available via the pagination API. */
+  activityLedgerHasMore: boolean;
+  /** Opaque cursor for the next Game Log page (null when no more rows). */
+  activityLedgerNextCursor: string | null;
   weekly: PublicWeeklySummary[];
   homeworkAssignments: PublicHomeworkAssignment[];
   achievements: PublicAchievement[];

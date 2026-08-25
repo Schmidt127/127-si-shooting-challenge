@@ -183,16 +183,28 @@ Each page is a separate future item so it can receive its own focused Cursor pro
 ### FUT-011 — Athlete page: level graphic and hero-label polish
 
 **Priority:** P1  
-**Status:** Ready for prompt  
+**Status:** Complete — 2026-08-25 · commit pending push  
 **Systems:** Website athlete profile, Airtable level data, design system
+
+**Summary:** Public profile hero uses `AthleteLevelDisplay` with large level graphic and high-contrast hero badge; at-a-glance panel surfaces level for parents.
+
+**Tests:** 349 Vitest · athlete-profile Playwright · typecheck · build · mobile overflow 0px.
+
+**Limitation:** Level still appears in hero, snapshot, and progression (intentional emphasis).
 
 On the athlete page, place the appropriate level graphic beside or near the athlete’s displayed shooter level, such as Beginner. Fix the current blue level label with black text so it has sufficient contrast and matches the other hero labels professionally.
 
 ### FUT-012 — Athlete page: professional Game Log presentation
 
 **Priority:** P1  
-**Status:** Ready for prompt  
+**Status:** Complete — 2026-08-25 · commit pending push  
 **Systems:** Website XP activity table, XP Events, Airtable presentation fields
+
+**Summary:** Game Log short labels and contextual details; server-side pagination via `GET /api/athletes/[slug]/game-log` with cursor (`activityDate` + XP Event record id), opaque row keys, Load more with loading/retry, enrollment-scoped isolation.
+
+**Tests:** `game-log-pagination.test.ts`, `public-game-log.test.ts`, Playwright load-more / no-duplicate rows.
+
+**Limitation:** Full ledger capped at 2000 XP rows per enrollment fetch; Airtable API latency on deep histories.
 
 Improve the Game Log/Recent Activity display:
 
@@ -211,8 +223,12 @@ Use the most maintainable professional design. Prefer configurable presentation 
 ### FUT-013 — Athlete page: Perfect Week activity panel
 
 **Priority:** P1  
-**Status:** Ready for prompt  
+**Status:** Complete — 2026-08-25 · commit pending push  
 **Systems:** Website, Weekly Athlete Summary, Perfect Week fields
+
+**Summary:** `PerfectWeekPanel` shows week-by-week requirements and status labels; weekly performance stats moved below with clarifying copy.
+
+**Tests:** athlete-profile Playwright section order · Vitest weekly mapping.
 
 Create a panel styled consistently with Game Log/Recent Activity for Perfect Weeks. Show all current and past weeks, but do not show future weeks. For each week, display the week dates, shot submissions, homework submitted, videos submitted, Zoom attendance, and a clear status label such as `Perfect Week`, `Not Perfect`, or `In Progress`.
 

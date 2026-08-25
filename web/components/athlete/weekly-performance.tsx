@@ -12,6 +12,10 @@ export function WeeklyPerformance({ weeks }: WeeklyPerformanceProps) {
       <h2 id="weekly-heading" className="mt-1 text-xl font-bold text-foreground sm:text-2xl">
         Weekly performance
       </h2>
+      <p className="mt-2 max-w-2xl text-sm text-muted">
+        Shot totals, XP earned, and goal completion by week. For Perfect Week requirements (homework,
+        Zoom, videos), see the panel above.
+      </p>
 
       {weeks.length === 0 ? (
         <p className="mt-4 border border-dashed border-border bg-brand-light-gray/50 px-4 py-5 text-sm text-muted">

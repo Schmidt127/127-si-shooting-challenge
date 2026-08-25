@@ -52,6 +52,7 @@ const ENROLLMENT_LINK_FIELDS = ["XP Events", "Submissions"] as const;
 
 const LINKED_ID_CHUNK_SIZE = 15;
 const DEFAULT_MAX_ROWS = 100;
+const DEFAULT_MAX_FETCH = 300;
 const REVALIDATE_SECONDS = 60;
 const LINKED_IDS_CACHE_TTL_MS = 60_000;
 const LINKED_IDS_CACHE_MAX = 50;
@@ -537,7 +538,10 @@ export function buildXpActivityReconciliation(
 export async function loadXpActivityForEnrollment(
   enrollmentId: string,
   options?: {
-    maxRows?: number;
+    /** Slice sorted rows after load. `null` returns the full sorted set (up to maxFetch). */
+    maxRows?: number | null;
+    /** Cap on Airtable rows fetched before sort/dedupe. */
+    maxFetch?: number;
     includeInactive?: boolean;
     revalidateSeconds?: number;
   },
@@ -549,7 +553,11 @@ export async function loadXpActivityForEnrollment(
   const maxRows = options?.maxRows ?? DEFAULT_MAX_ROWS;
   const includeInactive = options?.includeInactive ?? false;
   const revalidateSeconds = options?.revalidateSeconds ?? REVALIDATE_SECONDS;
-  const fetchLimit = Math.min(maxRows * 3, 300);
+  const maxFetch = options?.maxFetch ?? DEFAULT_MAX_FETCH;
+  const fetchLimit =
+    maxRows === null
+      ? maxFetch
+      : Math.min(Math.max(maxRows * 3, maxRows), maxFetch);
 
   let strategy: XpActivityLoadStrategy = "enrollment_record_id";
   let warning: string | undefined;
@@ -622,7 +630,7 @@ export async function loadXpActivityForEnrollment(
 
   const totalAvailableRows = displayCandidates.length;
 
-  const rows = sortXpEventsNewestFirst(
+  const sortedRows = sortXpEventsNewestFirst(
     displayCandidates.map((record) => {
       const submissionIds = linkedRecordIds(record.fields.Submission);
       const submission = submissionIds[0] ? submissionById.get(submissionIds[0]) : undefined;
@@ -631,7 +639,9 @@ export async function loadXpActivityForEnrollment(
         submission?.fields["Activity Date"],
       );
     }),
-  ).slice(0, maxRows);
+  );
+  const rows =
+    maxRows === null ? sortedRows : sortedRows.slice(0, maxRows);
 
   const reconciliation = buildXpActivityReconciliation(
     submissions,

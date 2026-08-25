@@ -1,10 +1,18 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+import { FlatCompat } from "@eslint/eslintrc";
 import { defineConfig, globalIgnores } from "eslint/config";
-import nextVitals from "eslint-config-next/core-web-vitals";
-import nextTypescript from "eslint-config-next/typescript";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+});
 
 export default defineConfig([
-  ...nextVitals,
-  ...nextTypescript,
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     // Server pages intentionally convert Airtable fetch failures into branded
     // fallback states. Moving all of those routes to error boundaries is a

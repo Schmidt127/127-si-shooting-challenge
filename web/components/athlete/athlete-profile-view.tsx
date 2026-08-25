@@ -4,6 +4,8 @@ import { AchievementCollection } from "@/components/athlete/achievement-collecti
 import { HomeworkAssignments } from "@/components/athlete/homework-assignments";
 import { PerfectWeekPanel } from "@/components/athlete/perfect-week-panel";
 import { PerformanceSnapshot } from "@/components/athlete/performance-snapshot";
+import { ProfileAtAGlance } from "@/components/athlete/profile-at-a-glance";
+import { ProfileFreshnessNotice } from "@/components/athlete/profile-freshness-notice";
 import { ProfileHero } from "@/components/athlete/profile-hero";
 import { ProgressionPanel } from "@/components/athlete/progression-panel";
 import { RecentActivityLog } from "@/components/athlete/recent-activity-log";
@@ -26,6 +28,8 @@ export function AthleteProfileView({ data }: AthleteProfileViewProps) {
     <AmbientPage variant="leaderboard">
       <ProfileHero identity={data.identity} />
       <SiteContainer className="space-y-12 py-8 sm:space-y-14 sm:py-12">
+        <ProfileFreshnessNotice mayBeStale={data.mayBeStale} fetchedAt={data.fetchedAt} />
+        <ProfileAtAGlance data={data} />
         <PerformanceSnapshot performance={data.performance} />
         <ShootingStatLine shooting={data.shooting} />
         <ProgressionPanel progression={data.progression} />
@@ -33,8 +37,11 @@ export function AthleteProfileView({ data }: AthleteProfileViewProps) {
         <StreakSection streaks={data.streaks} streakAchievements={streakAchievements} />
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-10">
           <RecentActivityLog
+            slug={data.identity.slug}
             items={data.recentActivity}
             totalCount={data.activityLedgerTotal}
+            hasMore={data.activityLedgerHasMore}
+            nextCursor={data.activityLedgerNextCursor}
             notice={data.activityLedgerNotice}
           />
           <PerfectWeekPanel weeks={data.weekly} />
@@ -71,13 +78,32 @@ export function AthleteProfileEmptyState({ slug }: { slug: string }) {
   );
 }
 
-export function AthleteProfileErrorState({ message }: { message?: string }) {
+export function AthleteProfileErrorState({
+  message,
+  onRetry,
+}: {
+  message?: string;
+  onRetry?: () => void;
+}) {
   return (
     <AmbientPage variant="default">
       <SiteContainer className="py-16">
         <ErrorState
           title="Profile unavailable"
           message={message ?? "Something went wrong loading this profile. Try again shortly."}
+          action={
+            onRetry
+              ? (
+                  <button
+                    type="button"
+                    onClick={onRetry}
+                    className="inline-flex min-h-11 items-center justify-center rounded-md bg-brand-blue px-4 text-sm font-bold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+                  >
+                    Try again
+                  </button>
+                )
+              : undefined
+          }
         />
       </SiteContainer>
     </AmbientPage>

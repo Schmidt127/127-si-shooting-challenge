@@ -27,6 +27,7 @@ import type {
 } from "@/types/public-athlete-profile";
 import type { XpEventSummary } from "@/types/xp";
 import { formatGameLogPresentation } from "@/lib/data/game-log-presentation";
+import { opaqueGameLogRowKey } from "@/lib/data/game-log-pagination";
 
 export type PublicEnrollmentFields = {
   "Full Athlete Name"?: unknown;
@@ -331,11 +332,11 @@ export function mapRecentSubmissions(
 }
 
 export function mapXpSummariesToPublicActivity(rows: XpEventSummary[]): PublicActivityItem[] {
-  return rows.map((row, index) => {
+  return rows.map((row) => {
     const presentation = formatGameLogPresentation(row);
     const xp = row.points;
     return {
-      key: `xp-${row.activityDate ?? "undated"}-${row.sourceLabel || "xp"}-${index}`,
+      key: opaqueGameLogRowKey(row.id),
       kind: "xp" as const,
       date: row.activityDate ?? null,
       title: presentation.title,
@@ -555,6 +556,9 @@ export type BuildPublicProfileInput = {
   recentActivity: PublicActivityItem[];
   activityLedgerTotal?: number;
   activityLedgerNotice?: string | null;
+  activityLedgerHasMore?: boolean;
+  activityLedgerNextCursor?: string | null;
+  homeworkLoadFailed?: boolean;
   weekly: PublicWeeklySummary[];
   homeworkAssignments?: PublicHomeworkAssignment[];
   achievements: PublicAchievement[];
@@ -615,11 +619,17 @@ export function buildPublicAthleteProfile(input: BuildPublicProfileInput): Publi
     recentActivity: input.recentActivity,
     activityLedgerTotal: input.activityLedgerTotal ?? input.recentActivity.length,
     activityLedgerNotice: input.activityLedgerNotice ?? null,
+    activityLedgerHasMore: input.activityLedgerHasMore ?? false,
+    activityLedgerNextCursor: input.activityLedgerNextCursor ?? null,
     weekly: input.weekly,
     homeworkAssignments: input.homeworkAssignments ?? [],
     achievements: input.achievements,
     fetchedAt: new Date().toISOString(),
-    mayBeStale: true,
+    mayBeStale: Boolean(
+      input.homeworkLoadFailed ||
+        (input.activityLedgerNotice?.includes("reconciling") ?? false) ||
+        (input.activityLedgerNotice?.includes("Enrollment Record ID is unavailable") ?? false),
+    ),
   };
 }
 

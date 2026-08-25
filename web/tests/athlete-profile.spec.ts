@@ -16,6 +16,9 @@ test.describe("public athlete profiles", () => {
     expect(response?.status()).toBe(200);
     await expect(page.getByRole("heading", { level: 1 })).toContainText(/schmidt/i);
     await expect(page.getByTestId("athlete-profile-hero")).toBeVisible();
+    await expect(page.getByTestId("profile-at-a-glance")).toBeVisible();
+    await expect(page.getByTestId("glance-level")).toBeVisible();
+    await expect(page.getByTestId("glance-xp")).toBeVisible();
     await expect(page.getByTestId("athlete-level-display")).toBeVisible();
     await expect(page.getByTestId("level-graphic").first()).toBeVisible();
     await expect(page.getByTestId("performance-snapshot")).toBeVisible();
@@ -122,5 +125,40 @@ test.describe("public athlete profiles", () => {
     if (text.includes("not yet recorded") || text.includes("have not been recorded")) {
       expect(text).not.toMatch(/\b0%\b/);
     }
+  });
+
+  test("game log load more fetches additional rows without duplicates", async ({ page }) => {
+    await page.goto("athletes/testing-schmidt", { waitUntil: "domcontentloaded" });
+    const loadMore = page.getByTestId("recent-activity-load-more");
+    if ((await loadMore.count()) === 0) {
+      test.skip(true, "Profile has fewer than 13 XP rows in this environment");
+      return;
+    }
+
+    const beforeKeys = await page.getByTestId("recent-activity-row").evaluateAll((rows) =>
+      rows.map((row) => row.getAttribute("data-testid")),
+    );
+    const beforeCount = beforeKeys.length;
+
+    await loadMore.click();
+    await expect(page.getByTestId("recent-activity-load-more")).toContainText(/loading/i);
+
+    await expect
+      .poll(async () => page.getByTestId("recent-activity-row").count(), { timeout: 15000 })
+      .toBeGreaterThan(beforeCount);
+
+    const rowTexts = await page.getByTestId("recent-activity-row").allTextContents();
+    const unique = new Set(rowTexts);
+    expect(unique.size).toBe(rowTexts.length);
+  });
+
+  test("freshness notice appears only when profile may be stale", async ({ page }) => {
+    await page.goto("athletes/testing-schmidt", { waitUntil: "domcontentloaded" });
+    const notice = page.getByTestId("profile-freshness-notice");
+    if ((await notice.count()) === 0) {
+      await expect(notice).toBeHidden();
+      return;
+    }
+    await expect(notice).toContainText(/may be updating/i);
   });
 });

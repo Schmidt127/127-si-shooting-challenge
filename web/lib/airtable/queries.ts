@@ -51,6 +51,11 @@ import {
   type PublicWasFields,
 } from "@/lib/data/public-athlete-profile";
 import { fetchPublicAthleteHomeworkAssignments } from "@/lib/airtable/public-athlete-homework-queries";
+import {
+  GAME_LOG_MAX_FETCH,
+  GAME_LOG_PAGE_SIZE,
+  paginateSortedXpSummaries,
+} from "@/lib/data/game-log-pagination";
 import { mapAttachments } from "@/lib/data/homework";
 import { loadXpActivityForEnrollment } from "@/lib/data/xp-activity-loader";
 import { resolveLevelCoverImageUrl } from "@/lib/levels/level-graphic";
@@ -666,7 +671,6 @@ export const PUBLIC_PROFILE_ENROLLMENT_FIELDS = [
 ] as const;
 
 const PUBLIC_PROFILE_REVALIDATE_SECONDS = 120;
-const PUBLIC_PROFILE_XP_ACTIVITY_MAX = 200;
 const PUBLIC_PROFILE_WEEKLY_LIMIT = 8;
 
 const PUBLIC_WAS_FIELDS = [
@@ -697,6 +701,47 @@ const PUBLIC_UNLOCK_FIELDS = [
   "Trigger Value",
   "Shot Milestone",
 ] as const;
+
+/**
+ * Resolve enrollment id for an enabled public profile slug.
+ * Returns null for missing, disabled, inactive, invalid, or duplicate slugs.
+ */
+export async function resolvePublicEnrollmentIdBySlug(rawSlug: string): Promise<string | null> {
+  const slug = normalizeProfileSlug(rawSlug);
+  if (!isValidPublicSlug(slug)) return null;
+
+  const escaped = escapeAirtableString(slug);
+  const schoolYearClause = activeSchoolYearFilterClause();
+  const filterByFormula = andFormula(
+    "{Public Profile Enabled}=1",
+    "{Active?}",
+    `LOWER({Public Profile Slug})=LOWER("${escaped}")`,
+    schoolYearClause,
+  );
+
+  const enrollmentResponse = await listAirtableRecords<PublicEnrollmentFields>({
+    tableName: AIRTABLE_TABLES.enrollments,
+    maxRecords: 5,
+    fields: ["Public Profile Slug"],
+    filterByFormula,
+    revalidateSeconds: PUBLIC_PROFILE_REVALIDATE_SECONDS,
+  });
+
+  if (enrollmentResponse.records.length === 0) {
+    return null;
+  }
+
+  if (enrollmentResponse.records.length > 1) {
+    console.error(
+      `[public-athlete-profile] Duplicate enabled Public Profile Slug "${slug}" (${enrollmentResponse.records.length} enrollments` +
+        `${schoolYearClause ? ` after School Year filter` : ""}). ` +
+        `Do not select Enrollment by Athlete alone — ensure one Active enrollment per Program Instance/slug. Failing closed.`,
+    );
+    return null;
+  }
+
+  return enrollmentResponse.records[0].id;
+}
 
 /**
  * Load one enabled public athlete profile by slug.
@@ -761,7 +806,7 @@ export async function fetchPublicAthleteProfileBySlug(
   const wasFilter = recordIdOrFilter(wasIds);
   const unlockFilter = recordIdOrFilter(unlockIds);
 
-  const [wasResponse, unlockResponse, xpActivity, leaderboard, linkedLevelsResponse, levelLadder, homeworkAssignments] =
+  const [wasResponse, unlockResponse, xpActivity, leaderboard, linkedLevelsResponse, levelLadder, homeworkAssignmentsResult] =
     await Promise.all([
     wasFilter
       ? listAirtableRecords<PublicWasFields>({
@@ -783,7 +828,8 @@ export async function fetchPublicAthleteProfileBySlug(
         })
       : Promise.resolve({ records: [] as Array<{ id: string; fields: PublicUnlockFields }> }),
     loadXpActivityForEnrollment(enrollment.id, {
-      maxRows: PUBLIC_PROFILE_XP_ACTIVITY_MAX,
+      maxRows: null,
+      maxFetch: GAME_LOG_MAX_FETCH,
       revalidateSeconds: PUBLIC_PROFILE_REVALIDATE_SECONDS,
     }),
     fetchLeaderboard().catch(() => null),
@@ -803,11 +849,14 @@ export async function fetchPublicAthleteProfileBySlug(
     fetchPublicAthleteHomeworkAssignments({
       enrollmentGradeBandId,
       homeworkCompletionIds,
-    }).catch((error) => {
+    }).then((rows) => ({ rows, failed: false as const })).catch((error) => {
       console.error("[public-athlete-profile] Homework assignments load failed:", error);
-      return [] as PublicHomeworkAssignment[];
+      return { rows: [] as PublicHomeworkAssignment[], failed: true as const };
     }),
   ]);
+
+  const homeworkAssignments = homeworkAssignmentsResult.rows;
+  const homeworkLoadFailed = homeworkAssignmentsResult.failed;
 
   const visibleUnlocks = unlockResponse.records.filter(
     (record) => asBoolean(record.fields["Active?"]) && asBoolean(record.fields["Visible?"]),
@@ -910,17 +959,16 @@ export async function fetchPublicAthleteProfileBySlug(
         (displayName && entry.displayName === displayName),
     )?.rank ?? null;
 
-  const recentActivity = mapXpSummariesToPublicActivity(xpActivity.rows);
+  const gameLogPage = paginateSortedXpSummaries(xpActivity.rows, {
+    cursor: null,
+    pageSize: GAME_LOG_PAGE_SIZE,
+  });
+  const recentActivity = mapXpSummariesToPublicActivity(gameLogPage.pageRows);
   const activityLedgerNoticeParts: string[] = [];
   if (xpActivity.warning) activityLedgerNoticeParts.push(xpActivity.warning);
   if (xpActivity.missingXpSubmissionIds.length > 0) {
     activityLedgerNoticeParts.push(
       `${xpActivity.missingXpSubmissionIds.length} counted submission(s) are missing XP awards. Ops is reconciling.`,
-    );
-  }
-  if (xpActivity.totalAvailableRows > xpActivity.rows.length) {
-    activityLedgerNoticeParts.push(
-      `Complete XP ledger: ${xpActivity.totalAvailableRows} events loaded. Use Load more below Ã¢ÂÂ not limited to 12 items.`,
     );
   }
 
@@ -934,6 +982,9 @@ export async function fetchPublicAthleteProfileBySlug(
     activityLedgerTotal: xpActivity.totalAvailableRows,
     activityLedgerNotice:
       activityLedgerNoticeParts.length > 0 ? activityLedgerNoticeParts.join(" ") : null,
+    activityLedgerHasMore: gameLogPage.hasMore,
+    activityLedgerNextCursor: gameLogPage.nextCursor,
+    homeworkLoadFailed,
     weekly: mapWeeklySummaries(wasResponse.records, weekMetaById, {
       limit: PUBLIC_PROFILE_WEEKLY_LIMIT,
     }),
