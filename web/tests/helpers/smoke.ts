@@ -133,6 +133,48 @@ export async function expectSingleHeading(page: Page, label: string) {
   await expect(h1, `${label} must have exactly one h1`).toHaveCount(1);
 }
 
+type SmokeRoute = {
+  name: string;
+  path: string;
+  heading: RegExp;
+};
+
+/**
+ * Load a smoke route and require zero material console errors.
+ * Production athlete profiles on the canonical Fairfield host can briefly
+ * serve mixed edge HTML/JS; retry until a clean load succeeds.
+ */
+export async function expectRouteLoadsWithCleanConsole(
+  page: Page,
+  route: SmokeRoute,
+) {
+  const waitUntil = route.name === "athlete-profile" ? "load" : "domcontentloaded";
+  const retry =
+    route.name === "athlete-profile" && isProductionSmokeTarget();
+
+  const assertOnce = async () => {
+    const consoleCapture = captureMaterialConsoleErrors(page);
+    try {
+      const response = await page.goto(route.path, { waitUntil });
+      await expectHealthyResponse(response, route.name);
+      await expectSingleHeading(page, route.name);
+      await expect(page.locator("h1").first()).toContainText(route.heading);
+      expect(
+        consoleCapture.errors,
+        `${route.name} console errors: ${consoleCapture.errors.join(" | ")}`,
+      ).toEqual([]);
+    } finally {
+      consoleCapture.dispose();
+    }
+  };
+
+  if (retry) {
+    await expect(assertOnce).toPass({ timeout: 45_000 });
+  } else {
+    await assertOnce();
+  }
+}
+
 /**
  * Open the client-rendered mobile nav panel.
  *

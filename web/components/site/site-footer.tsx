@@ -71,7 +71,7 @@ export function SiteFooter({
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-foreground">
-            © {new Date().getFullYear()} {BRAND_ORG_NAME}. All rights reserved.
+            © <span suppressHydrationWarning>{new Date().getFullYear()}</span> {BRAND_ORG_NAME}. All rights reserved.
           </p>
           <a
             href={LANDING_URL}

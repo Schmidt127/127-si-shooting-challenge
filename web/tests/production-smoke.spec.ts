@@ -18,7 +18,7 @@ import {
   getPublicSmokeRoutes,
   REQUIRED_ASSETS,
   VIEWPORTS,
-  captureMaterialConsoleErrors,
+  expectRouteLoadsWithCleanConsole,
   expectHealthyResponse,
   expectSingleHeading,
   findDuplicatedBasePaths,
@@ -33,21 +33,7 @@ test.describe("production smoke — desktop routes", () => {
     test(`${route.name} loads with heading and no material console errors`, async ({
       page,
     }) => {
-      const consoleCapture = captureMaterialConsoleErrors(page);
-      try {
-        const response = await page.goto(route.path, {
-          waitUntil: "domcontentloaded",
-        });
-        await expectHealthyResponse(response, route.name);
-        await expectSingleHeading(page, route.name);
-        await expect(page.locator("h1").first()).toContainText(route.heading);
-        expect(
-          consoleCapture.errors,
-          `${route.name} console errors: ${consoleCapture.errors.join(" | ")}`,
-        ).toEqual([]);
-      } finally {
-        consoleCapture.dispose();
-      }
+      await expectRouteLoadsWithCleanConsole(page, route);
     });
   }
 });
