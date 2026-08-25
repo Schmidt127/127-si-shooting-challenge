@@ -10,7 +10,7 @@ This is the **detailed completion matrix and historical traceability record** fo
 | Field | Value |
 |-------|--------|
 | **Purpose** | Completion matrix, package traceability, and preserved historical evidence |
-| **Last updated** | **2026-08-24** (master closeout — weekly E2E + 065/066 dynamic triggers live + historical artifacts documented) |
+| **Last updated** | **2026-08-25** (public `/shoot` re-verify; next paste packets 022/072/073/010 — **no** Complete promotions; Jul 30 057/035/067 order superseded) |
 | **Production branch** | `master` |
 | **Vercel root** | `web/` |
 | **Production website** | https://www.fairfieldbasketballclub.com/shoot |

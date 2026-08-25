@@ -6,6 +6,14 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Docs
+
+#### Added
+- **2026-08-25 next paste packages** — Reconciled Jul 30 057 v1.4 / 035 v1.1 / 067 Option B
+  sequence as superseded; re-verified Production `/shoot` on fairfield host; operator packets
+  for **022 v2.2 / 072 v4.8 / 073 v4.4** and **010 v10.12** under
+  `docs/prod-completion/2026-08-25/`.
+
 ### Web
 
 #### Added

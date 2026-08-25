@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-08-24** (master closeout — 065/066 live; weekly E2E + historical artifacts)
+Last updated: **2026-08-25** (public `/shoot` re-verify PASS tip `f334c7a`; next paste packets for 022/072/073/010 in `docs/prod-completion/2026-08-25/`; Jul 30 057 v1.4 / 035 v1.1 / 067 Option B sequence superseded)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)

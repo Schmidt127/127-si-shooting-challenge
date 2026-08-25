@@ -1,0 +1,106 @@
+{
+  "checked_at": "2026-08-25T00:10:22.675983Z",
+  "public_base": "https://www.fairfieldbasketballclub.com",
+  "routes": [
+    {
+      "route": "/shoot",
+      "status": 200,
+      "bytes": 169961,
+      "x_vercel_id": "iad1:iad1:iad1::iad1::jcj5c-1787616622712-bed80cf7b6cc",
+      "x_vercel_cache": "MISS",
+      "has_hooop_typo": false,
+      "has_legacy_hoopchallenges_host": false,
+      "landing_hrefs": [
+        "https://forms.fairfieldbasketballclub.com/shoot-dailysubmissions",
+        "https://forms.fairfieldbasketballclub.com/shoot-playerregistration",
+        "https://www.fairfieldbasketballclub.com",
+        "https://www.fairfieldbasketballclub.com/shoot"
+      ],
+      "title": "Shooting Challenge | 127 Sports Intensity"
+    },
+    {
+      "route": "/shoot/api/airtable",
+      "status": 200,
+      "bytes": 253,
+      "x_vercel_id": "iad1:iad1:iad1::iad1::p6q9c-1787616622906-868eb938c792",
+      "x_vercel_cache": "MISS",
+      "json": {
+        "ok": true,
+        "service": "127-si-shooting-challenge-web",
+        "phase": "leaderboard-live",
+        "airtable": {
+          "configured": true,
+          "hasToken": true,
+          "hasBaseId": true,
+          "baseIdPreview": "appn84\u2026",
+          "tokenValid": true,
+          "tokenError": null
+        },
+        "message": "Airtable configuration is valid."
+      }
+    },
+    {
+      "route": "/shoot/leaderboard",
+      "status": 200,
+      "bytes": 94872,
+      "x_vercel_id": "iad1:iad1:iad1::iad1::684kp-1787616623313-83021e7f52fb",
+      "x_vercel_cache": "MISS"
+    },
+    {
+      "route": "/shoot/homework",
+      "status": 200,
+      "bytes": 41675,
+      "x_vercel_id": "iad1:iad1:iad1::pwx9q-1787616624178-abbf305c36ab",
+      "x_vercel_cache": "PRERENDER"
+    },
+    {
+      "route": "/shoot/levels",
+      "status": 200,
+      "bytes": 119712,
+      "x_vercel_id": "iad1:iad1:iad1::qw9v2-1787616624466-109d509ae647",
+      "x_vercel_cache": "PRERENDER"
+    },
+    {
+      "route": "/shoot/achievements",
+      "status": 200,
+      "bytes": 78398,
+      "x_vercel_id": "iad1:iad1:iad1::fpfcq-1787616624679-a744cd362508",
+      "x_vercel_cache": "PRERENDER"
+    },
+    {
+      "route": "/shoot/zoom-meetings",
+      "status": 200,
+      "bytes": 57248,
+      "x_vercel_id": "iad1:iad1:iad1::jx8xx-1787616624916-03c9267085af",
+      "x_vercel_cache": "PRERENDER"
+    },
+    {
+      "route": "/shoot/tutorials",
+      "status": 200,
+      "bytes": 69525,
+      "x_vercel_id": "iad1:iad1:iad1::92f5v-1787616625056-ce7559d6eda8",
+      "x_vercel_cache": "PRERENDER"
+    },
+    {
+      "route": "/shoot/game-manual",
+      "status": 200,
+      "bytes": 73903,
+      "x_vercel_id": "iad1:iad1:iad1::m7l44-1787616625227-2661cad9eab7",
+      "x_vercel_cache": "PRERENDER"
+    },
+    {
+      "route": "/shoot/public-display",
+      "status": 200,
+      "bytes": 86890,
+      "x_vercel_id": "iad1:iad1:iad1::iad1::xq2cp-1787616625380-6510dbc8acd9",
+      "x_vercel_cache": "MISS"
+    },
+    {
+      "route": "/shoot/dashboard",
+      "status": 200,
+      "bytes": 78522,
+      "x_vercel_id": "iad1:iad1:iad1::iad1::wxrrm-1787616625542-6eaae4729a94",
+      "x_vercel_cache": "MISS"
+    }
+  ]
+}

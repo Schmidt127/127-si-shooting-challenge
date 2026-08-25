@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-24 (master closeout — 065/066 dynamic triggers live; weekly E2E complete; historical artifacts documented)  
+**Last verification (repo):** 2026-08-25 (public `/shoot` re-verify PASS on fairfield host tip `f334c7a`; Jul 30 057/035/067 paste order superseded — see `docs/prod-completion/2026-08-25/START-HERE-NEXT-PACKAGES.md`; next Mike pastes: 022 v2.2 / 072 v4.8 / 073 v4.4 / 010 v10.12)  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -279,7 +279,8 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 
 ### Pending / needs live proof
 
-- **010 v10.12** — Mike paste from GitHub if Automations Code column still lags (v10.10 as of 2026-08-23 API read)
+- **022 v2.2 + 072 v4.8 + 073 v4.4** — secure Lambda-only parent video URLs — paste packet [`prod-completion/2026-08-25/022-SECURE-VIDEO-PASTE.md`](./prod-completion/2026-08-25/022-SECURE-VIDEO-PASTE.md) (canonical deploy checklist unchanged)
+- **010 v10.12** — Mike paste from GitHub if Automations Code column still lags (v10.10 as of 2026-08-23 API read) — packet [`prod-completion/2026-08-25/010-V10.12-PASTE.md`](./prod-completion/2026-08-25/010-V10.12-PASTE.md)
 - Optional disposable fixture cleanup: `recdj8MD0szplMW5r`, `recxIzdVil9ewhBxN`, `recPg14iNRkxblMLs`
 - Optional weekly email template / copy refinements
 - Broader progression / standings certification packages
@@ -288,6 +289,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - Lambda Storage Key retry proof + secret rotation
 - RCC Airtable Interface install
 - Open PRs #218, #217 and drafts #214, #213, #186, #162
+- **035 season enable** — Live Tested while **OFF**; Mike ON decision only (do not re-paste v1.1)
 
 ### Blocked
 
