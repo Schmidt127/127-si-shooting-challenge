@@ -1,0 +1,2510 @@
+/************************************************************
+ * 115 - ENGINEERING TEST FRAMEWORK
+ * Run Testing Scenario — Daily Submission + Homework + Video
+ *
+ * Version: v2.2
+ * Date Written: 2026-07-06
+ * Last Updated: 2026-08-25
+ *
+ * VERSION HISTORY
+ * - v1.0 (2026-07-06): MVP — Schmidt-only allowlist; Daily Submission; dry-run preview.
+ * - v1.1 (2026-07-06): Homework dry-run/live-write support validated by Tests A/B.
+ * - v1.2 (2026-07-07): Added Video branch but failed Test C due to attachment field detection.
+ * - v1.3 (2026-07-07): Video attachment read from Testing Scenarios **Intake Attachments** → Submissions **Video Upload**.
+ * - v1.4 (2026-07-18): C-025 Stage 17 downstream — Scenario Type Other/Perfect Week when
+ *   Test Intake Name or Scenario Requirements contains C025_STAGE17_DOWNSTREAM.
+ * - v1.5 (2026-07-18): C025 query-budget fix — exact-record polls only (max 5×057 + 5×042),
+ *   MAX_QUERY_BUDGET=22, resume-safe (skip completed phases), timeout → Blocked + clear Run Test?,
+ *   no full-table selects. Daily/Homework/Video unchanged.
+ * - v1.6 (2026-07-18): C025 Phase B forces Automation 042 view re-entry on Enrollment
+ *   `recgP9qZYjAhE7NXm`: Level Recalc Needed? checked→unchecked→checked (or unchecked→checked).
+ *   Writing checked again alone does not re-enter view `042`.
+ * - v1.7 (2026-07-18): C025 Phase A forces Automation 057 condition re-match on WAS
+ *   `recvtukGFL7u74Tme`: Perfect Week Automation Status Skipped→Pending (or non-queue→Pending).
+ *   Ready→Pending keeps formula Queue?=1 and never re-fires "Queue? = 1".
+ * - v1.8 (2026-07-18): Phase A completion waits for WAS Perfect Week Automation Status=Ready
+ *   (057’s real done write). v1.7 incorrectly polled Zoom Attendance Perfect Week Credit Applied?
+ *   which can stay false even after a successful 057 run.
+ * - v1.9 (2026-07-23): Message/comment corrections only (no logic change): skip message no longer
+ *   says "v1.4"; stale Production-only header notes replaced with PROD install status (SC-001).
+ *   Airtable may keep running v1.8 — repaste optional.
+ * - v2.0 (2026-08-10): Homework scenarios require Testing Scenarios.Homework Assignment to link
+ *   an active Program Homework Assignment (PHA) record ID. Submissions.Homework Name 1 receives
+ *   the PHA RID (not Homework Library RID). Fail closed when only a Library RID is supplied.
+ * - v2.1 (2026-08-10): Add current controlled Schmidt enrollment to the explicit allowlist;
+ *   retain the existing permitted enrollment and fail closed for all others.
+ * - v2.2 (2026-08-25): Daily Submission no longer presets Duplicate Review Status = Count It.
+ *   Leave status blank so Automation 007 can review all eligible Submissions (Duplicate Key
+ *   now includes Activity Date - Time). Do not write Activity Date - Time from 115 unless a
+ *   future scenario field supplies it; Activity Date remains date-only for downstream.
+ *
+ * PURPOSE
+ * - Runs from one Testing Scenarios record when Run Test? is checked.
+ * - Scenario Types: Daily Submission, Homework, Video (+ C025_STAGE17_DOWNSTREAM via Other/Perfect Week).
+ * - Intake scenarios: create one production-shaped Submission (Enrollment + Athlete pre-linked).
+ * - C025 scenario: prepare fixtures, trigger 057/042 via normal conditions, verify, write JSON results.
+ * - Links Submission back to Testing Scenarios (intake only); writes run metadata on Testing Scenarios only.
+ * - Never writes test flags or framework fields to pipeline tables.
+ *
+ * IMPORTANT DESIGN RULES
+ * - Controlled allowlist: Related Enrollment must be one of the two approved Schmidt test
+ *   enrollments (recgP9qZYjAhE7NXm or recCyFEPeATOVNlr9).
+ * - Pre-link Enrollment on Submission (023 skipped for inactive Schmidt enrollment).
+ * - Daily: writable fields — Enrollment, Athlete, Activity Date, Shot Total.
+ *   Do **not** write Duplicate Review Status (007 owns Count It / Needs Review).
+ * - Homework: writable fields — Enrollment, Athlete, Activity Date, Homework Name 1 (PHA RID), HW Sub 1.
+ *   Testing Scenarios.Homework Assignment must link an active PHA row (not Homework Library).
+ *   Omit Shot Total and Duplicate Review Status (homework-only; no shot-count XP path).
+ * - Homework: max 3 Intake Attachments; do not write Homework Name 2 / HW Sub 2.
+ * - Video: read **Intake Attachments** on Testing Scenarios; copy to Submissions **Video Upload**.
+ *   (Testing Scenarios has no Video Upload field — confirmed Production schema + reck9d758vX5yLneq.)
+ * - Do NOT write Week, Submission Assets, Homework Completions, Video Feedback, XP Events, or computed fields.
+ * - Dry Run? = preview/log only; no Submission create.
+ * - Clear Run Test? on success, dry-run, skip, and blocked paths; intake leave checked on error for triage.
+ * - C025 always clears Run Test? (Pass, Fail, timeout/awaiting, query-budget, exception).
+ *
+ * THIS IS NOT
+ * - Fillout intake replacement in Production.
+ * - A pipeline-table test flag or Is Test Record? writer.
+ * - Milestone / combined Homework + Video scenario runner (future versions).
+ * - A writer of Zoom Meetings.Attendees (forbidden — Automation 101 double-credit risk).
+ *
+ * FOLDER
+ * - 12 - Engineering Test Framework
+ *
+ * AUTOMATION NAME
+ * - 115 - Engineering Test Framework - Run Testing Scenario Daily Submission
+ *
+ * TRIGGER TABLE
+ * - Testing Scenarios
+ *
+ * RECOMMENDED TRIGGER CONDITIONS
+ * - Run Test? is checked
+ *
+ * REQUIRED INPUT VARIABLES
+ * - recordId = Airtable record ID from the triggering Testing Scenarios record
+ *
+ * OUTPUTS (automation script action outputs)
+ * - statusOut = success | skipped | error
+ * - actionOut = created | dry_run | blocked_* | skipped_* | c025_pass | c025_fail | error
+ * - errorOut = message or empty
+ * - debugStep = last step reached
+ * - testingScenarioIdOut
+ * - createdSubmissionIdOut
+ * - scenarioTypeOut
+ * - createdRecordSummaryOut
+ *
+ * PRIMARY TABLES USED
+ * - Testing Scenarios, Enrollments, Submissions
+ * - C025 also: Weekly Athlete Summary, Zoom Attendance, Zoom Meetings, Target Goal Shots (optional)
+ *
+ * OUTPUT / WRITEBACK FIELDS
+ * - Testing Scenarios → Linked Submission (intake only), Last Run Status, Last Run At, Actual Result, Pass/Fail Notes, Run Test? (cleared)
+ * - Submissions → production-shaped intake fields only (no test metadata)
+ * - C025 may clear Applied? on the named Zoom Attendance fixture and toggle WAS/Enrollment trigger fields only
+ *
+ * Production DEPENDENCY
+ * - Testing Scenarios table (PROD table created 2026-07-23: tblagI7Q5wXQm2XGS).
+ * - Testing Scenarios.Shot Total (number) — Daily Submission only.
+ * - Testing Scenarios.Homework Assignment, Intake Attachments — Homework only.
+ * - Testing Scenarios.Intake Attachments — Video file source (same field as Homework).
+ * - Submissions.Video Upload — Video file destination for 009.
+ * - C025: Automations 057 + 042 must be ON during the run; 117 OFF; no new Airtable fields.
+ ************************************************************/
+
+// @ts-nocheck
+
+/* =========================================================
+   SECTION 1 — SCRIPT METADATA
+========================================================= */
+
+const SCRIPT = {
+  scriptName: "115 - Engineering Test Framework - Run Testing Scenario Daily Submission",
+  version: "v2.2",
+  versionDate: "2026-08-25",
+  originalWrittenDate: "2026-07-06",
+  lastUpdated: "2026-08-25",
+  folder: "12 - Engineering Test Framework",
+  automationName: "115 - Engineering Test Framework - Run Testing Scenario Daily Submission",
+};
+
+/* =========================================================
+   SECTION 2 — CONFIGURATION
+========================================================= */
+
+const CONFIG = {
+  timeZone: "America/Denver",
+  maxHomeworkFiles: 3,
+  maxVideoFiles: 3,
+
+  tables: {
+    testingScenarios: "Testing Scenarios",
+    enrollments: "Enrollments",
+    submissions: "Submissions",
+    programHomeworkAssignments: "Program Homework Assignments",
+    homeworkLibrary: "Homework Library",
+    weeklyAthleteSummary: "Weekly Athlete Summary",
+    zoomAttendance: "Zoom Attendance",
+    zoomMeetings: "Zoom Meetings",
+    targetGoalShots: "Target Goal Shots",
+  },
+
+  /** Mike-approved controlled Schmidt allowlist; all other enrollments fail closed. */
+  allowedEnrollmentIds: ["recgP9qZYjAhE7NXm", "recCyFEPeATOVNlr9"],
+
+  scenarioTypes: {
+    dailySubmission: "Daily Submission",
+    homework: "Homework",
+    video: "Video",
+    threeVideoUpload: "Three Video Upload",
+    other: "Other",
+    perfectWeek: "Perfect Week",
+  },
+
+  /** C-025 Stage 17 downstream fixture defaults (Production). Override via Scenario Requirements JSON. */
+  c025Stage17Downstream: {
+    scenarioKey: "C025_STAGE17_DOWNSTREAM",
+    enrollmentId: "recgP9qZYjAhE7NXm",
+    weekId: "rec7fCckt1zj9CbmP",
+    zoomAttendanceId: "reciRsLuiJGYcea3U",
+    zoomMeetingId: "recwnEKJAW8hxPSNL",
+    wasId: "recvtukGFL7u74Tme",
+    pollAttempts: 5,
+    pollDelayMs: 2500,
+    maxQueryBudget: 22,
+  },
+
+  /** Testing Scenarios video file source — canonical Production field (no Video Upload on this table). */
+  testingScenarioVideoAttachmentFields: ["Intake Attachments"],
+
+  testingScenarioFields: {
+    testIntakeName: "Test Intake Name",
+    scenarioType: "Scenario Type",
+    relatedEnrollment: "Related Enrollment",
+    submissionDate: "Submission Date",
+    shotTotal: "Shot Total",
+    homeworkAssignment: "Homework Assignment",
+    intakeAttachments: "Intake Attachments",
+    videoFeedbackFocus: "Video Feedback Focus",
+    videoFeedbackQuestion: "Video Feedback Question",
+    scenarioRequirements: "Scenario Requirements",
+    runTest: "Run Test?",
+    dryRun: "Dry Run?",
+    linkedSubmission: "Linked Submission",
+    lastRunStatus: "Last Run Status",
+    lastRunAt: "Last Run At",
+    actualResult: "Actual Result",
+    passFailNotes: "Pass/Fail Notes",
+  },
+
+  enrollmentFields: {
+    athlete: "Athlete",
+    levelRecalcNeeded: "Level Recalc Needed?",
+    currentLevel: "Current Level",
+    nextLevel: "Next Level",
+    levelStatus: "Level Status",
+    levelGateRule: "Level Gate Rule",
+    totalZoomAttendances: "Total Zoom Attendances",
+  },
+
+  wasFields: {
+    enrollment: "Enrollment",
+    week: "Week",
+    goalRecord: "Goal Record",
+    automationStatus: "Perfect Week Automation Status",
+    automationError: "Perfect Week Automation Error",
+    dailyMet: "Perfect Week Daily Requirement Met?",
+    videoCount: "Perfect Week Video Count",
+    zoomMeetingCount: "Perfect Week Zoom Meeting Count",
+    zoomAttendanceCount: "Perfect Week Zoom Attendance Count",
+    zoomRequirementMet: "Perfect Week Zoom Requirement Met?",
+    zoomRequirementStatus: "Perfect Week Zoom Requirement Status",
+    eligible: "Perfect Week Eligible?",
+  },
+
+  zoomAttendanceFields: {
+    pwApplied: "Perfect Week Credit Applied?",
+    gateApplied: "Gate Credit Applied?",
+    approved: "Zoom Credit Approved?",
+    conflict: "Zoom Credit Conflict?",
+    pwFlag: "Effective Recording Counts for Perfect Week?",
+    gateEarned: "Zoom Gate Credit Earned?",
+    reviewStatus: "Recording Quiz Review Status",
+    enrollment: "Enrollment",
+    zoomMeeting: "Zoom Meeting",
+    attendanceMethod: "Attendance Method",
+  },
+
+  zoomMeetingFields: {
+    attendees: "Attendees",
+    week: "Week",
+  },
+
+  submissionFields: {
+    enrollment: "Enrollment",
+    athlete: "Athlete",
+    activityDate: "Activity Date",
+    shotTotal: "Shot Total",
+    homeworkName1: "Homework Name 1", // PHA record ID
+    hwSub1: "HW Sub 1",
+    videoFeedbackFocus: "Video Feedback Focus",
+    videoFeedbackNote: "Video Feedback Note",
+    videoUpload: "Video Upload",
+  },
+
+  pha: {
+    homeworkAssignment: "Homework Assignment",
+    programInstance: "Program Instance",
+    week: "Week",
+    slot: "Homework Slot",
+    active: "Active?",
+  },
+
+  homeworkLibrary: {
+    homeworkNumber: "Homework Number",
+    active: "Active?",
+  },
+
+  lastRunStatuses: {
+    pass: "Pass",
+    fail: "Fail",
+    blocked: "Blocked",
+    error: "Error",
+    notRun: "Not Run",
+  },
+
+  statuses: {
+    success: "success",
+    skipped: "skipped",
+    error: "error",
+  },
+
+  actions: {
+    created: "created",
+    dryRun: "dry_run",
+    skippedInvalidEnrollment: "skipped_invalid_enrollment",
+    skippedWrongScenario: "skipped_wrong_scenario",
+    skippedMissingInput: "skipped_missing_input",
+    skippedRunNotRequested: "skipped_run_not_requested",
+    blockedNoFiles: "blocked_no_files",
+    blockedTooManyFiles: "blocked_too_many_files",
+    blockedHomeworkLibraryRid: "blocked_homework_library_rid",
+    c025Pass: "c025_pass",
+    c025Fail: "c025_fail",
+    c025Awaiting057: "c025_awaiting_057",
+    c025Awaiting042: "c025_awaiting_042",
+    c025QueryBudget: "c025_query_budget",
+    error: "error",
+  },
+};
+
+const SUPPORTED_SCENARIO_TYPES = new Set([
+  CONFIG.scenarioTypes.dailySubmission,
+  CONFIG.scenarioTypes.homework,
+  CONFIG.scenarioTypes.video,
+  CONFIG.scenarioTypes.threeVideoUpload,
+]);
+
+function isVideoScenarioType(scenarioType) {
+  return (
+    scenarioType === CONFIG.scenarioTypes.video ||
+    scenarioType === CONFIG.scenarioTypes.threeVideoUpload
+  );
+}
+
+function normalizeScenarioTypeForOutput(scenarioType) {
+  return isVideoScenarioType(scenarioType) ? CONFIG.scenarioTypes.video : scenarioType;
+}
+
+const fieldCache = new Map();
+
+/* =========================================================
+   SECTION 3 — OUTPUT HELPERS
+========================================================= */
+
+function setOutputSafe(key, value) {
+  try {
+    output.set(key, value);
+  } catch {
+    // Ignore output mapping errors.
+  }
+}
+
+/* =========================================================
+   SECTION 4 — FIELD / SCHEMA HELPERS
+========================================================= */
+
+function getFieldSafe(table, fieldName) {
+  if (!table || !fieldName) return null;
+  const cacheKey = `${table.name}:${fieldName}`;
+  if (fieldCache.has(cacheKey)) return fieldCache.get(cacheKey);
+  try {
+    const field = table.getField(fieldName);
+    fieldCache.set(cacheKey, field);
+    return field;
+  } catch {
+    fieldCache.set(cacheKey, null);
+    return null;
+  }
+}
+
+function fieldExists(table, fieldName) {
+  return !!getFieldSafe(table, fieldName);
+}
+
+function requireField(table, fieldName) {
+  if (!fieldExists(table, fieldName)) {
+    throw new Error(`Missing required field on ${table.name}: ${fieldName}`);
+  }
+}
+
+function isWritableField(table, fieldName) {
+  const field = getFieldSafe(table, fieldName);
+  if (!field) return false;
+  if (field.isComputed === true) return false;
+  const nonWritableTypes = new Set([
+    "formula",
+    "rollup",
+    "count",
+    "lookup",
+    "multipleLookupValues",
+    "createdTime",
+    "lastModifiedTime",
+    "createdBy",
+    "lastModifiedBy",
+    "autoNumber",
+    "button",
+    "aiText",
+    "externalSyncSource",
+  ]);
+  return !nonWritableTypes.has(field.type);
+}
+
+function addIfWritable(table, payload, fieldName, value) {
+  if (!fieldName || !fieldExists(table, fieldName)) return;
+  if (!isWritableField(table, fieldName)) {
+    console.log(`Skipped non-writable field: ${table.name} -> ${fieldName}`);
+    return;
+  }
+  if (value === undefined) return;
+  payload[fieldName] = value;
+}
+
+function buildSafeUpdatePayload(table, fields) {
+  const safeFields = {};
+  for (const [fieldName, value] of Object.entries(fields || {})) {
+    addIfWritable(table, safeFields, fieldName, value);
+  }
+  return safeFields;
+}
+
+function getText(record, fieldName) {
+  if (!fieldName) return "";
+  return String(record.getCellValueAsString(fieldName) || "").trim();
+}
+
+function getNumber(record, fieldName) {
+  if (!fieldName) return 0;
+  const value = record.getCellValue(fieldName);
+  if (typeof value === "number") return value;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function getBooleanish(record, fieldName, fallback = false) {
+  if (!fieldName) return fallback;
+  const value = record.getCellValue(fieldName);
+  if (value === true) return true;
+  if (value === false) return false;
+  if (value === 1) return true;
+  if (value === 0) return false;
+  const text = String(value ?? "").trim().toLowerCase();
+  return ["1", "true", "yes", "checked"].includes(text);
+}
+
+function getLinkedIds(record, fieldName) {
+  if (!fieldName) return [];
+  const value = record.getCellValue(fieldName);
+  if (!Array.isArray(value)) return [];
+  return value.map((item) => item.id).filter(Boolean);
+}
+
+function getDateValue(record, fieldName) {
+  if (!fieldName) return null;
+  const value = record.getCellValue(fieldName);
+  if (!value) return null;
+  if (value instanceof Date && !isNaN(value)) return value;
+  if (typeof value === "string") {
+    const parsed = new Date(value);
+    return isNaN(parsed) ? null : parsed;
+  }
+  return null;
+}
+
+function getAttachments(record, fieldName) {
+  if (!fieldName || !record) return [];
+  try {
+    const value = record.getCellValue(fieldName);
+    return Array.isArray(value) ? value : [];
+  } catch {
+    return [];
+  }
+}
+
+function attachmentFilename(file) {
+  return String(file?.filename || file?.name || "").trim();
+}
+
+function listAttachmentFilenames(files) {
+  return (files || []).map(attachmentFilename).filter(Boolean);
+}
+
+function getTestingScenarioVideoAttachmentFieldNames(table) {
+  return CONFIG.testingScenarioVideoAttachmentFields.filter((fieldName) =>
+    fieldExists(table, fieldName)
+  );
+}
+
+function getVideoAttachmentsFromScenario(record, table) {
+  const candidateFields = getTestingScenarioVideoAttachmentFieldNames(table);
+  let best = { files: [], sourceField: "", candidateFields };
+
+  for (const fieldName of candidateFields) {
+    const files = getAttachments(record, fieldName);
+    if (files.length > best.files.length) {
+      best = { files, sourceField: fieldName, candidateFields };
+    }
+  }
+
+  return best;
+}
+
+function buildAttachmentWritePayload(files) {
+  return (files || [])
+    .filter((file) => file && file.url)
+    .map((file) => ({
+      url: file.url,
+      filename: file.filename || "uploaded_file",
+    }));
+}
+
+function singleSelectValue(table, fieldName, choiceName) {
+  const field = getFieldSafe(table, fieldName);
+  if (!field) return undefined;
+  if (field.type === "singleSelect") {
+    const choices = field.options?.choices || [];
+    if (!choices.some((choice) => choice.name === choiceName)) {
+      throw new Error(
+        `Missing single-select option "${choiceName}" on ${table.name} -> ${fieldName}.`
+      );
+    }
+    return { name: choiceName };
+  }
+  return choiceName;
+}
+
+function validateCommonSchema(tables) {
+  requireField(tables.testingScenarios, CONFIG.testingScenarioFields.scenarioType);
+  requireField(tables.testingScenarios, CONFIG.testingScenarioFields.relatedEnrollment);
+  requireField(tables.testingScenarios, CONFIG.testingScenarioFields.submissionDate);
+  requireField(tables.testingScenarios, CONFIG.testingScenarioFields.runTest);
+  requireField(tables.testingScenarios, CONFIG.testingScenarioFields.dryRun);
+  requireField(tables.testingScenarios, CONFIG.testingScenarioFields.linkedSubmission);
+  requireField(tables.enrollments, CONFIG.enrollmentFields.athlete);
+  requireField(tables.submissions, CONFIG.submissionFields.enrollment);
+  requireField(tables.submissions, CONFIG.submissionFields.athlete);
+  requireField(tables.submissions, CONFIG.submissionFields.activityDate);
+}
+
+function validateDailySubmissionSchema(tables) {
+  requireField(tables.testingScenarios, CONFIG.testingScenarioFields.shotTotal);
+  requireField(tables.submissions, CONFIG.submissionFields.shotTotal);
+}
+
+function validateHomeworkSchema(tables) {
+  requireField(tables.testingScenarios, CONFIG.testingScenarioFields.homeworkAssignment);
+  requireField(tables.testingScenarios, CONFIG.testingScenarioFields.intakeAttachments);
+  requireField(tables.submissions, CONFIG.submissionFields.homeworkName1);
+  requireField(tables.submissions, CONFIG.submissionFields.hwSub1);
+}
+
+function validateVideoSchema(tables) {
+  requireField(tables.testingScenarios, CONFIG.testingScenarioFields.videoFeedbackFocus);
+  requireField(tables.testingScenarios, CONFIG.testingScenarioFields.videoFeedbackQuestion);
+  requireField(tables.testingScenarios, CONFIG.testingScenarioFields.intakeAttachments);
+  requireField(tables.submissions, CONFIG.submissionFields.videoFeedbackFocus);
+  requireField(tables.submissions, CONFIG.submissionFields.videoFeedbackNote);
+  requireField(tables.submissions, CONFIG.submissionFields.videoUpload);
+}
+
+function isAllowedEnrollmentId(enrollmentId) {
+  return CONFIG.allowedEnrollmentIds.includes(enrollmentId);
+}
+
+function buildDailyDryRunPreview({ scenarioRecord, enrollmentId, athleteId, activityDate, shotTotal }) {
+  return {
+    mode: "dry_run",
+    scenarioType: CONFIG.scenarioTypes.dailySubmission,
+    enrollmentId,
+    athleteId,
+    activityDate: activityDate ? activityDate.toISOString() : "",
+    shotTotal,
+    submissionPayload: {
+      [CONFIG.submissionFields.enrollment]: [{ id: enrollmentId }],
+      [CONFIG.submissionFields.athlete]: [{ id: athleteId }],
+      [CONFIG.submissionFields.activityDate]: activityDate,
+      [CONFIG.submissionFields.shotTotal]: shotTotal,
+    },
+    omittedFields: ["Duplicate Review Status"],
+    note: "No Submission created. Uncheck Dry Run? and re-trigger to create. Duplicate Review Status left blank for Automation 007.",
+  };
+}
+
+function buildHomeworkDryRunPreview({
+  enrollmentId,
+  athleteId,
+  activityDate,
+  phaId,
+  libraryId,
+  intakeFiles,
+}) {
+  const attachmentPayload = buildAttachmentWritePayload(intakeFiles);
+  return {
+    mode: "dry_run",
+    scenarioType: CONFIG.scenarioTypes.homework,
+    enrollmentId,
+    athleteId,
+    activityDate: activityDate ? activityDate.toISOString() : "",
+    phaId,
+    homeworkLibraryId: libraryId,
+    fileCount: attachmentPayload.length,
+    submissionPayload: {
+      [CONFIG.submissionFields.enrollment]: [{ id: enrollmentId }],
+      [CONFIG.submissionFields.athlete]: [{ id: athleteId }],
+      [CONFIG.submissionFields.activityDate]: activityDate,
+      [CONFIG.submissionFields.homeworkName1]: [{ id: phaId }],
+      [CONFIG.submissionFields.hwSub1]: attachmentPayload,
+    },
+    omittedFields: ["Shot Total", "Duplicate Review Status", "Homework Name 2", "HW Sub 2"],
+    note: "No Submission created. Homework Name 1 receives PHA RID; library content is derived by 005/020.",
+  };
+}
+
+async function resolveHomeworkScenarioPha({ phaTable, homeworkLibraryTable, linkedId }) {
+  if (!linkedId) return null;
+  const phaFieldNames = [
+    CONFIG.pha.homeworkAssignment,
+    CONFIG.pha.active,
+    CONFIG.pha.slot,
+    CONFIG.pha.programInstance,
+    CONFIG.pha.week,
+  ].filter((name) => fieldExists(phaTable, name));
+  const pha = await phaTable.selectRecordAsync(linkedId, { fields: phaFieldNames });
+  if (pha) {
+    if (fieldExists(phaTable, CONFIG.pha.active) && !getBooleanish(pha, CONFIG.pha.active)) {
+      throw new Error(`Program Homework Assignment ${linkedId} is inactive. Grade Band is not part of scheduling.`);
+    }
+    const libraryIds = getLinkedIds(pha, CONFIG.pha.homeworkAssignment);
+    if (libraryIds.length !== 1) {
+      throw new Error(
+        `Program Homework Assignment ${linkedId} must link exactly one Homework Assignment; found ${libraryIds.length}.`
+      );
+    }
+    return { phaId: linkedId, libraryId: libraryIds[0] };
+  }
+  const library = await homeworkLibraryTable.selectRecordAsync(linkedId);
+  if (library) {
+    return { rejectLibraryOnly: true, libraryId: linkedId };
+  }
+  throw new Error(`Homework Assignment record not found: ${linkedId}`);
+}
+
+function buildVideoDryRunPreview({
+  enrollmentId,
+  athleteId,
+  activityDate,
+  videoFeedbackFocus,
+  videoFeedbackQuestion,
+  videoFiles,
+  sourceField,
+  candidateFields,
+}) {
+  const attachmentPayload = buildAttachmentWritePayload(videoFiles);
+  const filenames = listAttachmentFilenames(videoFiles);
+  return {
+    mode: "dry_run",
+    scenarioType: CONFIG.scenarioTypes.video,
+    enrollmentId,
+    athleteId,
+    activityDate: activityDate ? activityDate.toISOString() : "",
+    videoFeedbackFocus,
+    videoFeedbackQuestion,
+    sourceField,
+    candidateAttachmentFields: candidateFields,
+    fileCount: videoFiles.length,
+    filenames,
+    submissionPayload: {
+      [CONFIG.submissionFields.enrollment]: [{ id: enrollmentId }],
+      [CONFIG.submissionFields.athlete]: [{ id: athleteId }],
+      [CONFIG.submissionFields.activityDate]: activityDate,
+      [CONFIG.submissionFields.videoFeedbackFocus]: videoFeedbackFocus,
+      [CONFIG.submissionFields.videoFeedbackNote]: videoFeedbackQuestion,
+      [CONFIG.submissionFields.videoUpload]: attachmentPayload,
+    },
+    omittedFields: [
+      "Shot Total",
+      "Duplicate Review Status",
+      "Homework Name 1",
+      "HW Sub 1",
+      "Homework Name 2",
+      "HW Sub 2",
+    ],
+    downstreamExpectation:
+      "005 (Week) → 009 (N video assets) → 013 (N Video Feedback rows). 070b OFF on Production.",
+    note: "No Submission created. Uncheck Dry Run? and re-trigger to create.",
+  };
+}
+
+async function updateTestingScenario(testingScenariosTable, scenarioId, fields) {
+  const safeFields = buildSafeUpdatePayload(testingScenariosTable, fields);
+  if (Object.keys(safeFields).length > 0) {
+    await testingScenariosTable.updateRecordAsync(scenarioId, safeFields);
+  }
+}
+
+async function finishScenarioRun({
+  testingScenariosTable,
+  scenarioId,
+  scenarioType,
+  debugStep,
+  actionOut,
+  statusOut,
+  errorOut,
+  createdSubmissionId,
+  createdRecordSummary,
+  runMetadata,
+  clearRunTest,
+}) {
+  const updateFields = {
+    [CONFIG.testingScenarioFields.lastRunAt]: new Date(),
+    ...runMetadata,
+  };
+  if (clearRunTest) {
+    updateFields[CONFIG.testingScenarioFields.runTest] = false;
+  }
+  await updateTestingScenario(testingScenariosTable, scenarioId, updateFields);
+
+  setOutputSafe("statusOut", statusOut);
+  setOutputSafe("actionOut", actionOut);
+  setOutputSafe("errorOut", errorOut || "");
+  setOutputSafe("debugStep", debugStep);
+  setOutputSafe("testingScenarioIdOut", scenarioId);
+  setOutputSafe("createdSubmissionIdOut", createdSubmissionId || "");
+  setOutputSafe("scenarioTypeOut", scenarioType || "");
+  setOutputSafe("createdRecordSummaryOut", createdRecordSummary || "");
+}
+
+async function blockScenarioRun({
+  testingScenariosTable,
+  scenarioId,
+  scenarioType,
+  debugStep,
+  actionOut,
+  errorOut,
+  actualResult,
+  passFailNotes,
+  statusOut = CONFIG.statuses.skipped,
+  lastRunStatus = CONFIG.lastRunStatuses.blocked,
+}) {
+  await finishScenarioRun({
+    testingScenariosTable,
+    scenarioId,
+    scenarioType,
+    debugStep,
+    actionOut,
+    statusOut,
+    errorOut,
+    createdSubmissionId: "",
+    createdRecordSummary: "",
+    clearRunTest: true,
+    runMetadata: {
+      [CONFIG.testingScenarioFields.lastRunStatus]: singleSelectValue(
+        testingScenariosTable,
+        CONFIG.testingScenarioFields.lastRunStatus,
+        lastRunStatus
+      ),
+      [CONFIG.testingScenarioFields.actualResult]: actualResult,
+      [CONFIG.testingScenarioFields.passFailNotes]: passFailNotes || errorOut,
+    },
+  });
+}
+
+/* =========================================================
+   SECTION 5 — SCENARIO BRANCHES
+========================================================= */
+
+async function runDailySubmissionBranch({
+  testingScenariosTable,
+  submissionsTable,
+  scenarioRecord,
+  recordId,
+  enrollmentId,
+  athleteId,
+  activityDate,
+  isDryRun,
+  debugStep,
+}) {
+  validateDailySubmissionSchema({
+    testingScenarios: testingScenariosTable,
+    submissions: submissionsTable,
+  });
+
+  const shotTotal = getNumber(scenarioRecord, CONFIG.testingScenarioFields.shotTotal);
+  if (!shotTotal || shotTotal <= 0) {
+    await blockScenarioRun({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioType: CONFIG.scenarioTypes.dailySubmission,
+      debugStep,
+      actionOut: CONFIG.actions.skippedMissingInput,
+      errorOut: "Shot Total must be a positive number on Testing Scenarios.",
+      actualResult:
+        "Missing or invalid Shot Total. Add Testing Scenarios.Shot Total on Production.",
+    });
+    return;
+  }
+
+  if (isDryRun) {
+    const preview = buildDailyDryRunPreview({
+      scenarioRecord,
+      enrollmentId,
+      athleteId,
+      activityDate,
+      shotTotal,
+    });
+
+    await finishScenarioRun({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioType: CONFIG.scenarioTypes.dailySubmission,
+      debugStep: "5 - Daily dry run preview",
+      actionOut: CONFIG.actions.dryRun,
+      statusOut: CONFIG.statuses.success,
+      errorOut: "",
+      createdSubmissionId: "",
+      createdRecordSummary: `Dry run — Daily Submission; Shot Total ${shotTotal}.`,
+      clearRunTest: true,
+      runMetadata: {
+        [CONFIG.testingScenarioFields.lastRunStatus]: singleSelectValue(
+          testingScenariosTable,
+          CONFIG.testingScenarioFields.lastRunStatus,
+          CONFIG.lastRunStatuses.pass
+        ),
+        [CONFIG.testingScenarioFields.actualResult]: JSON.stringify(preview, null, 2),
+        [CONFIG.testingScenarioFields.passFailNotes]:
+          "Dry run — no Submission created. Pipeline automations not triggered.",
+      },
+    });
+
+    console.log(
+      JSON.stringify({
+        automation: SCRIPT.scriptName,
+        version: SCRIPT.version,
+        statusOut: CONFIG.statuses.success,
+        actionOut: CONFIG.actions.dryRun,
+        scenarioType: CONFIG.scenarioTypes.dailySubmission,
+        testingScenarioId: recordId,
+        preview,
+      })
+    );
+    return;
+  }
+
+  const submissionPayload = {};
+  addIfWritable(submissionsTable, submissionPayload, CONFIG.submissionFields.enrollment, [
+    { id: enrollmentId },
+  ]);
+  addIfWritable(submissionsTable, submissionPayload, CONFIG.submissionFields.athlete, [
+    { id: athleteId },
+  ]);
+  addIfWritable(
+    submissionsTable,
+    submissionPayload,
+    CONFIG.submissionFields.activityDate,
+    activityDate
+  );
+  addIfWritable(submissionsTable, submissionPayload, CONFIG.submissionFields.shotTotal, shotTotal);
+
+  if (Object.keys(submissionPayload).length === 0) {
+    throw new Error("No writable Submission fields available for Daily Submission create.");
+  }
+
+  const createdSubmissionId = await submissionsTable.createRecordAsync(submissionPayload);
+
+  const actualResultLines = [
+    `Created Submission ${createdSubmissionId}.`,
+    `Scenario Type: ${CONFIG.scenarioTypes.dailySubmission}.`,
+    `Enrollment: ${enrollmentId}.`,
+    `Athlete: ${athleteId}.`,
+    `Activity Date: ${activityDate.toISOString()}.`,
+    `Shot Total: ${shotTotal}.`,
+    "Duplicate Review Status: (blank — Automation 007 decides Count It / Needs Review).",
+    "Downstream automations (005, 007, 009, 010, …) should run from normal triggers.",
+  ];
+
+  const summary = `Daily Submission ${createdSubmissionId}; Shot Total ${shotTotal}.`;
+
+  await finishScenarioRun({
+    testingScenariosTable,
+    scenarioId: recordId,
+    scenarioType: CONFIG.scenarioTypes.dailySubmission,
+    debugStep: "8 - Finish daily",
+    actionOut: CONFIG.actions.created,
+    statusOut: CONFIG.statuses.success,
+    errorOut: "",
+    createdSubmissionId,
+    createdRecordSummary: summary,
+    clearRunTest: true,
+    runMetadata: {
+      [CONFIG.testingScenarioFields.linkedSubmission]: [{ id: createdSubmissionId }],
+      [CONFIG.testingScenarioFields.lastRunStatus]: singleSelectValue(
+        testingScenariosTable,
+        CONFIG.testingScenarioFields.lastRunStatus,
+        CONFIG.lastRunStatuses.pass
+      ),
+      [CONFIG.testingScenarioFields.actualResult]: actualResultLines.join("\n"),
+      [CONFIG.testingScenarioFields.passFailNotes]:
+        "Verify Testing views on Submissions / assets / XP for Schmidt enrollment.",
+    },
+  });
+
+  console.log(
+    JSON.stringify(
+      {
+        automation: SCRIPT.scriptName,
+        version: SCRIPT.version,
+        statusOut: CONFIG.statuses.success,
+        actionOut: CONFIG.actions.created,
+        scenarioType: CONFIG.scenarioTypes.dailySubmission,
+        testingScenarioId: recordId,
+        createdSubmissionId,
+        enrollmentId,
+        athleteId,
+        shotTotal,
+      },
+      null,
+      2
+    )
+  );
+}
+
+async function runHomeworkBranch({
+  testingScenariosTable,
+  submissionsTable,
+  scenarioRecord,
+  recordId,
+  enrollmentId,
+  athleteId,
+  activityDate,
+  isDryRun,
+  debugStep,
+}) {
+  validateHomeworkSchema({
+    testingScenarios: testingScenariosTable,
+    submissions: submissionsTable,
+  });
+
+  const phaTable = base.getTable(CONFIG.tables.programHomeworkAssignments);
+  const homeworkLibraryTable = base.getTable(CONFIG.tables.homeworkLibrary);
+
+  const homeworkAssignmentIds = getLinkedIds(
+    scenarioRecord,
+    CONFIG.testingScenarioFields.homeworkAssignment
+  );
+  const homeworkAssignmentId = homeworkAssignmentIds[0] || "";
+
+  if (!homeworkAssignmentId) {
+    await blockScenarioRun({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioType: CONFIG.scenarioTypes.homework,
+      debugStep,
+      actionOut: CONFIG.actions.skippedMissingInput,
+      errorOut: "Homework Assignment is required.",
+      actualResult: "Missing Homework Assignment link on Testing Scenarios.",
+      passFailNotes: "Link one active Program Homework Assignment (PHA) record to Homework Assignment.",
+    });
+    return;
+  }
+
+  let phaId = "";
+  let libraryId = "";
+  try {
+    const resolved = await resolveHomeworkScenarioPha({
+      phaTable,
+      homeworkLibraryTable,
+      linkedId: homeworkAssignmentId,
+    });
+    if (!resolved) {
+      throw new Error(`Homework Assignment record not found: ${homeworkAssignmentId}`);
+    }
+    if (resolved.rejectLibraryOnly) {
+      await blockScenarioRun({
+        testingScenariosTable,
+        scenarioId: recordId,
+        scenarioType: CONFIG.scenarioTypes.homework,
+        debugStep,
+        actionOut: CONFIG.actions.blockedHomeworkLibraryRid,
+        errorOut:
+          "Homework Assignment must be a Program Homework Assignment (PHA) record ID, not a Homework Library record ID.",
+        actualResult: `Blocked — linked Library RID ${resolved.libraryId} cannot be written to Homework Name 1.`,
+        passFailNotes:
+          "Link an active PHA row to Testing Scenarios.Homework Assignment. Library RIDs are content-only.",
+        lastRunStatus: CONFIG.lastRunStatuses.blocked,
+      });
+      return;
+    }
+    phaId = resolved.phaId;
+    libraryId = resolved.libraryId;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    await blockScenarioRun({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioType: CONFIG.scenarioTypes.homework,
+      debugStep,
+      actionOut: CONFIG.actions.error,
+      errorOut: message,
+      actualResult: `Blocked — invalid Homework Assignment: ${message}`,
+      passFailNotes: "Link one active PHA with exactly one Homework Assignment library link.",
+      lastRunStatus: CONFIG.lastRunStatuses.fail,
+    });
+    return;
+  }
+
+  const intakeFiles = getAttachments(
+    scenarioRecord,
+    CONFIG.testingScenarioFields.intakeAttachments
+  );
+  const fileCount = intakeFiles.length;
+
+  if (fileCount === 0) {
+    await blockScenarioRun({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioType: CONFIG.scenarioTypes.homework,
+      debugStep,
+      actionOut: CONFIG.actions.blockedNoFiles,
+      errorOut: "Intake Attachments must include at least one homework file.",
+      actualResult: "Blocked — no Intake Attachments on Testing Scenarios.",
+      passFailNotes: "Add 1–3 homework files to Intake Attachments.",
+      lastRunStatus: CONFIG.lastRunStatuses.fail,
+    });
+    return;
+  }
+
+  if (fileCount > CONFIG.maxHomeworkFiles) {
+    await blockScenarioRun({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioType: CONFIG.scenarioTypes.homework,
+      debugStep,
+      actionOut: CONFIG.actions.blockedTooManyFiles,
+      errorOut: `Intake Attachments count ${fileCount} exceeds max ${CONFIG.maxHomeworkFiles}.`,
+      actualResult: `Blocked — ${fileCount} files attached; maximum is ${CONFIG.maxHomeworkFiles}. No Submission created.`,
+      passFailNotes:
+        "Homework MVP allows 1–3 files for one assignment. Remove extra files and re-run.",
+      lastRunStatus: CONFIG.lastRunStatuses.blocked,
+    });
+    return;
+  }
+
+  const hwSub1Payload = buildAttachmentWritePayload(intakeFiles);
+  if (hwSub1Payload.length === 0) {
+    await blockScenarioRun({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioType: CONFIG.scenarioTypes.homework,
+      debugStep,
+      actionOut: CONFIG.actions.blockedNoFiles,
+      errorOut: "Intake Attachments have no usable file URLs.",
+      actualResult: "Blocked — attachment rows missing url.",
+      passFailNotes: "Re-attach homework files on Testing Scenarios.",
+      lastRunStatus: CONFIG.lastRunStatuses.fail,
+    });
+    return;
+  }
+
+  if (isDryRun) {
+    const preview = buildHomeworkDryRunPreview({
+      enrollmentId,
+      athleteId,
+      activityDate,
+      phaId,
+      libraryId,
+      intakeFiles,
+    });
+
+    await finishScenarioRun({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioType: CONFIG.scenarioTypes.homework,
+      debugStep: "5 - Homework dry run preview",
+      actionOut: CONFIG.actions.dryRun,
+      statusOut: CONFIG.statuses.success,
+      errorOut: "",
+      createdSubmissionId: "",
+      createdRecordSummary: `Dry run — Homework; ${hwSub1Payload.length} file(s); PHA ${phaId}; Library ${libraryId}.`,
+      clearRunTest: true,
+      runMetadata: {
+        [CONFIG.testingScenarioFields.lastRunStatus]: singleSelectValue(
+          testingScenariosTable,
+          CONFIG.testingScenarioFields.lastRunStatus,
+          CONFIG.lastRunStatuses.pass
+        ),
+        [CONFIG.testingScenarioFields.actualResult]: JSON.stringify(preview, null, 2),
+        [CONFIG.testingScenarioFields.passFailNotes]:
+          "Dry run — no Submission created. Expect 005 → 009 → 020 on live run.",
+      },
+    });
+
+    console.log(
+      JSON.stringify({
+        automation: SCRIPT.scriptName,
+        version: SCRIPT.version,
+        statusOut: CONFIG.statuses.success,
+        actionOut: CONFIG.actions.dryRun,
+        scenarioType: CONFIG.scenarioTypes.homework,
+        testingScenarioId: recordId,
+        preview,
+      })
+    );
+    return;
+  }
+
+  const submissionPayload = {};
+  addIfWritable(submissionsTable, submissionPayload, CONFIG.submissionFields.enrollment, [
+    { id: enrollmentId },
+  ]);
+  addIfWritable(submissionsTable, submissionPayload, CONFIG.submissionFields.athlete, [
+    { id: athleteId },
+  ]);
+  addIfWritable(
+    submissionsTable,
+    submissionPayload,
+    CONFIG.submissionFields.activityDate,
+    activityDate
+  );
+  addIfWritable(submissionsTable, submissionPayload, CONFIG.submissionFields.homeworkName1, [
+    { id: phaId },
+  ]);
+  addIfWritable(submissionsTable, submissionPayload, CONFIG.submissionFields.hwSub1, hwSub1Payload);
+
+  if (Object.keys(submissionPayload).length === 0) {
+    throw new Error("No writable Submission fields available for Homework create.");
+  }
+
+  const createdSubmissionId = await submissionsTable.createRecordAsync(submissionPayload);
+
+  const actualResultLines = [
+    `Created Submission ${createdSubmissionId}.`,
+    `Scenario Type: ${CONFIG.scenarioTypes.homework}.`,
+    `Enrollment: ${enrollmentId}.`,
+    `Athlete: ${athleteId}.`,
+    `Activity Date: ${activityDate.toISOString()}.`,
+    `Homework Name 1 (PHA): ${phaId}.`,
+    `Homework Library (derived): ${libraryId}.`,
+    `HW Sub 1 file count: ${hwSub1Payload.length}.`,
+    "Omitted: Shot Total, Duplicate Review Status, Homework Name 2, HW Sub 2, Video fields.",
+    "Downstream: 005 (Week) → 009 (assets) → 020 (one Homework Completion). 070a OFF on Production.",
+  ];
+
+  const summary = `Homework Submission ${createdSubmissionId}; ${hwSub1Payload.length} file(s); PHA ${phaId}; Library ${libraryId}.`;
+
+  await finishScenarioRun({
+    testingScenariosTable,
+    scenarioId: recordId,
+    scenarioType: CONFIG.scenarioTypes.homework,
+    debugStep: "8 - Finish homework",
+    actionOut: CONFIG.actions.created,
+    statusOut: CONFIG.statuses.success,
+    errorOut: "",
+    createdSubmissionId,
+    createdRecordSummary: summary,
+    clearRunTest: true,
+    runMetadata: {
+      [CONFIG.testingScenarioFields.linkedSubmission]: [{ id: createdSubmissionId }],
+      [CONFIG.testingScenarioFields.lastRunStatus]: singleSelectValue(
+        testingScenariosTable,
+        CONFIG.testingScenarioFields.lastRunStatus,
+        CONFIG.lastRunStatuses.pass
+      ),
+      [CONFIG.testingScenarioFields.actualResult]: actualResultLines.join("\n"),
+      [CONFIG.testingScenarioFields.passFailNotes]:
+        "Verify: N Submission Assets (HW1-1…), one Homework Completion, all assets linked.",
+    },
+  });
+
+  console.log(
+    JSON.stringify(
+      {
+        automation: SCRIPT.scriptName,
+        version: SCRIPT.version,
+        statusOut: CONFIG.statuses.success,
+        actionOut: CONFIG.actions.created,
+        scenarioType: CONFIG.scenarioTypes.homework,
+        testingScenarioId: recordId,
+        createdSubmissionId,
+        enrollmentId,
+        athleteId,
+        homeworkPhaId: phaId,
+        homeworkLibraryId: libraryId,
+        fileCount: hwSub1Payload.length,
+      },
+      null,
+      2
+    )
+  );
+}
+
+async function runVideoBranch({
+  testingScenariosTable,
+  submissionsTable,
+  scenarioRecord,
+  recordId,
+  enrollmentId,
+  athleteId,
+  activityDate,
+  isDryRun,
+  debugStep,
+}) {
+  validateVideoSchema({
+    testingScenarios: testingScenariosTable,
+    submissions: submissionsTable,
+  });
+
+  const videoFeedbackFocus = getText(
+    scenarioRecord,
+    CONFIG.testingScenarioFields.videoFeedbackFocus
+  );
+  if (!videoFeedbackFocus) {
+    await blockScenarioRun({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioType: CONFIG.scenarioTypes.video,
+      debugStep,
+      actionOut: CONFIG.actions.skippedMissingInput,
+      errorOut: "Video Feedback Focus is required.",
+      actualResult: "Missing Video Feedback Focus on Testing Scenarios.",
+      passFailNotes: "Select one Video Feedback Focus before running.",
+    });
+    return;
+  }
+
+  const videoFeedbackQuestion = getText(
+    scenarioRecord,
+    CONFIG.testingScenarioFields.videoFeedbackQuestion
+  );
+  if (!videoFeedbackQuestion) {
+    await blockScenarioRun({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioType: CONFIG.scenarioTypes.video,
+      debugStep,
+      actionOut: CONFIG.actions.skippedMissingInput,
+      errorOut: "Video Feedback Question is required.",
+      actualResult: "Missing Video Feedback Question on Testing Scenarios.",
+      passFailNotes: "Enter a Video Feedback Question before running.",
+    });
+    return;
+  }
+
+  const {
+    files: videoFiles,
+    sourceField: videoAttachmentSourceField,
+    candidateFields: videoAttachmentCandidateFields,
+  } = getVideoAttachmentsFromScenario(scenarioRecord, testingScenariosTable);
+  const fileCount = videoFiles.length;
+
+  if (fileCount === 0) {
+    await blockScenarioRun({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioType: CONFIG.scenarioTypes.video,
+      debugStep,
+      actionOut: CONFIG.actions.blockedNoFiles,
+      errorOut: "Video scenario must include at least one attachment on Testing Scenarios.",
+      actualResult: `Blocked — no video attachments found on Testing Scenarios (checked: ${videoAttachmentCandidateFields.join(", ") || "none"}).`,
+      passFailNotes:
+        "Add 1–3 video files to Intake Attachments on Testing Scenarios.",
+      lastRunStatus: CONFIG.lastRunStatuses.fail,
+    });
+    return;
+  }
+
+  if (fileCount > CONFIG.maxVideoFiles) {
+    await blockScenarioRun({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioType: CONFIG.scenarioTypes.video,
+      debugStep,
+      actionOut: CONFIG.actions.blockedTooManyFiles,
+      errorOut: `Video attachment count ${fileCount} exceeds max ${CONFIG.maxVideoFiles}.`,
+      actualResult: `Blocked — ${fileCount} videos attached on ${videoAttachmentSourceField}; maximum is ${CONFIG.maxVideoFiles}. No Submission created.`,
+      passFailNotes: "Video MVP allows 1–3 files per submission. Remove extra files and re-run.",
+      lastRunStatus: CONFIG.lastRunStatuses.blocked,
+    });
+    return;
+  }
+
+  const videoUploadPayload = buildAttachmentWritePayload(videoFiles);
+  const videoFilenames = listAttachmentFilenames(videoFiles);
+  if (videoUploadPayload.length === 0) {
+    await blockScenarioRun({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioType: CONFIG.scenarioTypes.video,
+      debugStep,
+      actionOut: CONFIG.actions.blockedNoFiles,
+      errorOut: "Video attachments have no usable file URLs.",
+      actualResult: `Blocked — attachment rows on ${videoAttachmentSourceField} missing url.`,
+      passFailNotes: "Re-attach video files on Testing Scenarios.",
+      lastRunStatus: CONFIG.lastRunStatuses.fail,
+    });
+    return;
+  }
+
+  if (isDryRun) {
+    const preview = buildVideoDryRunPreview({
+      enrollmentId,
+      athleteId,
+      activityDate,
+      videoFeedbackFocus,
+      videoFeedbackQuestion,
+      videoFiles,
+      sourceField: videoAttachmentSourceField,
+      candidateFields: videoAttachmentCandidateFields,
+    });
+
+    await finishScenarioRun({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioType: CONFIG.scenarioTypes.video,
+      debugStep: "5 - Video dry run preview",
+      actionOut: CONFIG.actions.dryRun,
+      statusOut: CONFIG.statuses.success,
+      errorOut: "",
+      createdSubmissionId: "",
+      createdRecordSummary: `Dry run — Video; ${videoUploadPayload.length} file(s) from ${videoAttachmentSourceField}; focus ${videoFeedbackFocus}.`,
+      clearRunTest: true,
+      runMetadata: {
+        [CONFIG.testingScenarioFields.lastRunStatus]: singleSelectValue(
+          testingScenariosTable,
+          CONFIG.testingScenarioFields.lastRunStatus,
+          CONFIG.lastRunStatuses.pass
+        ),
+        [CONFIG.testingScenarioFields.actualResult]: JSON.stringify(preview, null, 2),
+        [CONFIG.testingScenarioFields.passFailNotes]:
+          "Dry run — no Submission created. Expect 005 → 009 → 013 on live run. 070b OFF on Production.",
+      },
+    });
+
+    console.log(
+      JSON.stringify({
+        automation: SCRIPT.scriptName,
+        version: SCRIPT.version,
+        statusOut: CONFIG.statuses.success,
+        actionOut: CONFIG.actions.dryRun,
+        scenarioType: CONFIG.scenarioTypes.video,
+        testingScenarioId: recordId,
+        preview,
+      })
+    );
+    return;
+  }
+
+  const submissionPayload = {};
+  addIfWritable(submissionsTable, submissionPayload, CONFIG.submissionFields.enrollment, [
+    { id: enrollmentId },
+  ]);
+  addIfWritable(submissionsTable, submissionPayload, CONFIG.submissionFields.athlete, [
+    { id: athleteId },
+  ]);
+  addIfWritable(
+    submissionsTable,
+    submissionPayload,
+    CONFIG.submissionFields.activityDate,
+    activityDate
+  );
+  addIfWritable(
+    submissionsTable,
+    submissionPayload,
+    CONFIG.submissionFields.videoFeedbackFocus,
+    singleSelectValue(
+      submissionsTable,
+      CONFIG.submissionFields.videoFeedbackFocus,
+      videoFeedbackFocus
+    )
+  );
+  addIfWritable(
+    submissionsTable,
+    submissionPayload,
+    CONFIG.submissionFields.videoFeedbackNote,
+    videoFeedbackQuestion
+  );
+  addIfWritable(
+    submissionsTable,
+    submissionPayload,
+    CONFIG.submissionFields.videoUpload,
+    videoUploadPayload
+  );
+
+  if (Object.keys(submissionPayload).length === 0) {
+    throw new Error("No writable Submission fields available for Video create.");
+  }
+
+  const createdSubmissionId = await submissionsTable.createRecordAsync(submissionPayload);
+
+  const actualResultLines = [
+    `Created Submission ${createdSubmissionId}.`,
+    `Scenario Type: ${CONFIG.scenarioTypes.video}.`,
+    `Enrollment: ${enrollmentId}.`,
+    `Athlete: ${athleteId}.`,
+    `Activity Date: ${activityDate.toISOString()}.`,
+    `Video Feedback Focus: ${videoFeedbackFocus}.`,
+    `Video Feedback Note: ${videoFeedbackQuestion.slice(0, 120)}${videoFeedbackQuestion.length > 120 ? "…" : ""}.`,
+    `Video Upload file count: ${videoUploadPayload.length}.`,
+    `Video source field (Testing Scenarios): ${videoAttachmentSourceField}.`,
+    `Filenames: ${videoFilenames.join(", ")}.`,
+    "Omitted: Shot Total, Duplicate Review Status, Homework fields, Week.",
+    "Downstream: 005 (Week) → 009 (N video assets) → 013 (N Video Feedback rows). 070b OFF on Production.",
+  ];
+
+  const summary = `Video Submission ${createdSubmissionId}; ${videoUploadPayload.length} file(s); focus ${videoFeedbackFocus}.`;
+
+  await finishScenarioRun({
+    testingScenariosTable,
+    scenarioId: recordId,
+    scenarioType: CONFIG.scenarioTypes.video,
+    debugStep: "8 - Finish video",
+    actionOut: CONFIG.actions.created,
+    statusOut: CONFIG.statuses.success,
+    errorOut: "",
+    createdSubmissionId,
+    createdRecordSummary: summary,
+    clearRunTest: true,
+    runMetadata: {
+      [CONFIG.testingScenarioFields.linkedSubmission]: [{ id: createdSubmissionId }],
+      [CONFIG.testingScenarioFields.lastRunStatus]: singleSelectValue(
+        testingScenariosTable,
+        CONFIG.testingScenarioFields.lastRunStatus,
+        CONFIG.lastRunStatuses.pass
+      ),
+      [CONFIG.testingScenarioFields.actualResult]: actualResultLines.join("\n"),
+      [CONFIG.testingScenarioFields.passFailNotes]:
+        "Verify: N Submission Assets (VID-1…), N Video Feedback rows, same Focus + Question on all.",
+    },
+  });
+
+  console.log(
+    JSON.stringify(
+      {
+        automation: SCRIPT.scriptName,
+        version: SCRIPT.version,
+        statusOut: CONFIG.statuses.success,
+        actionOut: CONFIG.actions.created,
+        scenarioType: CONFIG.scenarioTypes.video,
+        testingScenarioId: recordId,
+        createdSubmissionId,
+        enrollmentId,
+        athleteId,
+        videoFeedbackFocus,
+        fileCount: videoUploadPayload.length,
+      },
+      null,
+      2
+    )
+  );
+}
+
+/* =========================================================
+   SECTION 5B — C-025 STAGE 17 DOWNSTREAM (057 + 042) — v1.8
+   Query-budgeted: exact-record reads only, capped polls (5×),
+   resume-safe, never writes Attendees. Daily/HW/Video unchanged.
+   057 trigger: Queue? re-entry via Automation Status
+   Skipped→Pending (Ready/Pending alone never leave Queue?=1).
+   057 wait: WAS Perfect Week Automation Status → Ready (not ZA Applied?).
+   042 trigger: view `042` re-entry via Level Recalc Needed?
+   (checked→unchecked→checked, or unchecked→checked).
+========================================================= */
+
+const C025_MAX_QUERY_BUDGET = 22;
+
+function createC025QueryBudget(max) {
+  const log = [];
+  let count = 0;
+  return {
+    max,
+    get count() {
+      return count;
+    },
+    get log() {
+      return log.slice();
+    },
+    consume(purpose) {
+      if (count + 1 > max) {
+        const err = new Error(
+          `C025 query budget exhausted (${count}/${max}) before: ${purpose}`
+        );
+        err.code = "C025_QUERY_BUDGET";
+        throw err;
+      }
+      count += 1;
+      log.push({ n: count, purpose });
+      console.log(JSON.stringify({ c025Query: count, max, purpose }));
+      return count;
+    },
+  };
+}
+
+function isC025Stage17DownstreamScenario(scenarioType, testIntakeName, scenarioRequirements) {
+  if (
+    scenarioType !== CONFIG.scenarioTypes.other &&
+    scenarioType !== CONFIG.scenarioTypes.perfectWeek
+  ) {
+    return false;
+  }
+  const blob = `${testIntakeName || ""}\n${scenarioRequirements || ""}`;
+  return blob.includes(CONFIG.c025Stage17Downstream.scenarioKey);
+}
+
+function parseC025FixtureOverrides(scenarioRequirementsText) {
+  const text = String(scenarioRequirementsText || "").trim();
+  if (!text) return {};
+  try {
+    const parsed = JSON.parse(text);
+    if (!parsed || typeof parsed !== "object") return {};
+    return {
+      enrollmentId: parsed.enrollmentId || parsed.enrollment || undefined,
+      weekId: parsed.weekId || parsed.week || undefined,
+      zoomAttendanceId: parsed.zoomAttendanceId || parsed.zaId || undefined,
+      zoomMeetingId: parsed.zoomMeetingId || parsed.meetingId || undefined,
+      wasId: parsed.wasId || parsed.was || undefined,
+      resetFixtures: parsed.resetFixtures === true,
+    };
+  } catch {
+    return {};
+  }
+}
+
+function resolveC025Fixtures(scenarioRequirementsText) {
+  return {
+    enrollmentId: CONFIG.c025Stage17Downstream.enrollmentId,
+    weekId: CONFIG.c025Stage17Downstream.weekId,
+    zoomAttendanceId: CONFIG.c025Stage17Downstream.zoomAttendanceId,
+    zoomMeetingId: CONFIG.c025Stage17Downstream.zoomMeetingId,
+    wasId: CONFIG.c025Stage17Downstream.wasId,
+    resetFixtures: false,
+    ...parseC025FixtureOverrides(scenarioRequirementsText),
+  };
+}
+
+function refuseAttendeesWrite(fields) {
+  if (!fields || typeof fields !== "object") return;
+  if (Object.prototype.hasOwnProperty.call(fields, CONFIG.zoomMeetingFields.attendees)) {
+    throw new Error("Refuse Attendees write — C025 must never modify Zoom Meetings.Attendees");
+  }
+}
+
+async function updateRecordNoAttendees(table, recordId, fields) {
+  refuseAttendeesWrite(fields);
+  const safe = buildSafeUpdatePayload(table, fields);
+  if (Object.keys(safe).length > 0) {
+    await table.updateRecordAsync(recordId, safe);
+  }
+}
+
+async function c025SelectRecord(budget, table, recordId, fields, purpose) {
+  budget.consume(purpose);
+  return table.selectRecordAsync(recordId, { fields });
+}
+
+async function finishC025Run({
+  testingScenariosTable,
+  scenarioId,
+  scenarioTypeLabel,
+  debugStep,
+  actionOut,
+  statusOut,
+  errorOut,
+  lastRunStatus,
+  actualPayload,
+  passFailNotes,
+}) {
+  await finishScenarioRun({
+    testingScenariosTable,
+    scenarioId,
+    scenarioType: scenarioTypeLabel,
+    debugStep,
+    actionOut,
+    statusOut,
+    errorOut: errorOut || "",
+    createdSubmissionId: "",
+    createdRecordSummary: actionOut,
+    clearRunTest: true,
+    runMetadata: {
+      [CONFIG.testingScenarioFields.lastRunStatus]: singleSelectValue(
+        testingScenariosTable,
+        CONFIG.testingScenarioFields.lastRunStatus,
+        lastRunStatus
+      ),
+      [CONFIG.testingScenarioFields.actualResult]: JSON.stringify(actualPayload, null, 2),
+      [CONFIG.testingScenarioFields.passFailNotes]: passFailNotes,
+    },
+  });
+}
+
+async function runC025Stage17DownstreamBranch({
+  testingScenariosTable,
+  enrollmentsTable,
+  recordId,
+  enrollmentId,
+  isDryRun,
+  debugStep,
+  scenarioRequirements,
+}) {
+  const scenarioTypeLabel = CONFIG.c025Stage17Downstream.scenarioKey;
+  const fixtures = resolveC025Fixtures(scenarioRequirements);
+  const budget = createC025QueryBudget(
+    CONFIG.c025Stage17Downstream.maxQueryBudget || C025_MAX_QUERY_BUDGET
+  );
+  const pollAttempts = CONFIG.c025Stage17Downstream.pollAttempts || 5;
+
+  let currentStep = "C025-0-start";
+  let attempts057 = 0;
+  let attempts042 = 0;
+  let resumedFrom = "fresh";
+
+  const finishAwaiting = async (phase, notes, extra) => {
+    await finishC025Run({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioTypeLabel,
+      debugStep: currentStep,
+      actionOut:
+        phase === "057" ? CONFIG.actions.c025Awaiting057 : CONFIG.actions.c025Awaiting042,
+      statusOut: CONFIG.statuses.skipped,
+      errorOut: notes,
+      lastRunStatus: CONFIG.lastRunStatuses.blocked,
+      actualPayload: {
+        scenario: scenarioTypeLabel,
+        status: phase === "057" ? "Timed Out Waiting for 057" : "Timed Out Waiting for 042",
+        queryCount: budget.count,
+        queryBudget: budget.max,
+        queryLog: budget.log,
+        currentStep,
+        attempts057,
+        attempts042,
+        fixtures,
+        resumedFrom,
+        ...extra,
+      },
+      passFailNotes: `${notes} Re-check Run Test? later to resume. Turn 057/042 OFF when idle.`,
+    });
+  };
+
+  try {
+    if (enrollmentId !== fixtures.enrollmentId) {
+      await blockScenarioRun({
+        testingScenariosTable,
+        scenarioId: recordId,
+        scenarioType: scenarioTypeLabel,
+        debugStep,
+        actionOut: CONFIG.actions.skippedInvalidEnrollment,
+        errorOut: `C025 requires Related Enrollment ${fixtures.enrollmentId}. Found ${enrollmentId}.`,
+        actualResult: "Enrollment mismatch for C025_STAGE17_DOWNSTREAM.",
+      });
+      return;
+    }
+
+    const wasTable = base.getTable(CONFIG.tables.weeklyAthleteSummary);
+    const zaTable = base.getTable(CONFIG.tables.zoomAttendance);
+    const zmTable = base.getTable(CONFIG.tables.zoomMeetings);
+
+    const zaFields = [
+      CONFIG.zoomAttendanceFields.pwApplied,
+      CONFIG.zoomAttendanceFields.gateApplied,
+      CONFIG.zoomAttendanceFields.approved,
+      CONFIG.zoomAttendanceFields.conflict,
+      CONFIG.zoomAttendanceFields.pwFlag,
+      CONFIG.zoomAttendanceFields.gateEarned,
+      CONFIG.zoomAttendanceFields.reviewStatus,
+      CONFIG.zoomAttendanceFields.enrollment,
+      CONFIG.zoomAttendanceFields.zoomMeeting,
+      CONFIG.zoomAttendanceFields.attendanceMethod,
+    ].filter((n) => fieldExists(zaTable, n));
+
+    const wasFields = [
+      CONFIG.wasFields.automationStatus,
+      CONFIG.wasFields.automationError,
+      CONFIG.wasFields.dailyMet,
+      CONFIG.wasFields.videoCount,
+      CONFIG.wasFields.zoomMeetingCount,
+      CONFIG.wasFields.zoomAttendanceCount,
+      CONFIG.wasFields.zoomRequirementMet,
+      CONFIG.wasFields.zoomRequirementStatus,
+      CONFIG.wasFields.goalRecord,
+    ].filter((n) => fieldExists(wasTable, n));
+
+    const enrFields = [
+      CONFIG.enrollmentFields.levelRecalcNeeded,
+      CONFIG.enrollmentFields.currentLevel,
+      CONFIG.enrollmentFields.nextLevel,
+      CONFIG.enrollmentFields.levelStatus,
+      CONFIG.enrollmentFields.levelGateRule,
+      CONFIG.enrollmentFields.totalZoomAttendances,
+    ].filter((n) => fieldExists(enrollmentsTable, n));
+
+    const zmFields = [CONFIG.zoomMeetingFields.attendees, CONFIG.zoomMeetingFields.week].filter(
+      (n) => fieldExists(zmTable, n)
+    );
+
+    currentStep = "C025-1-initial-snapshot";
+    setOutputSafe("debugStep", currentStep);
+
+    let zaRec = await c025SelectRecord(
+      budget,
+      zaTable,
+      fixtures.zoomAttendanceId,
+      zaFields,
+      "initial ZA"
+    );
+    let wasRec = await c025SelectRecord(budget, wasTable, fixtures.wasId, wasFields, "initial WAS");
+    let zmRec = await c025SelectRecord(
+      budget,
+      zmTable,
+      fixtures.zoomMeetingId,
+      zmFields,
+      "initial ZM"
+    );
+    let enrRec = await c025SelectRecord(
+      budget,
+      enrollmentsTable,
+      enrollmentId,
+      enrFields,
+      "initial Enrollment"
+    );
+
+    if (!zaRec || !wasRec || !zmRec || !enrRec) {
+      await blockScenarioRun({
+        testingScenariosTable,
+        scenarioId: recordId,
+        scenarioType: scenarioTypeLabel,
+        debugStep: currentStep,
+        actionOut: CONFIG.actions.skippedMissingInput,
+        errorOut: "One or more C025 fixture records were not found.",
+        actualResult: JSON.stringify({ fixtures, queryCount: budget.count }, null, 2),
+      });
+      return;
+    }
+
+    const attendeesBefore = getLinkedIds(zmRec, CONFIG.zoomMeetingFields.attendees);
+    let pwApplied = getBooleanish(zaRec, CONFIG.zoomAttendanceFields.pwApplied, false);
+    let gateApplied = getBooleanish(zaRec, CONFIG.zoomAttendanceFields.gateApplied, false);
+    const pwAppliedBefore = pwApplied;
+    const gateAppliedBefore = gateApplied;
+    const currentLevelBefore = getLinkedIds(enrRec, CONFIG.enrollmentFields.currentLevel)[0] || "";
+    const nextLevelBefore = getLinkedIds(enrRec, CONFIG.enrollmentFields.nextLevel)[0] || "";
+    const levelStatusBefore = getText(enrRec, CONFIG.enrollmentFields.levelStatus);
+    const dailyMetBefore = getBooleanish(wasRec, CONFIG.wasFields.dailyMet, false);
+    const videoCountBefore = getNumber(wasRec, CONFIG.wasFields.videoCount);
+
+    const qualifying =
+      getText(zaRec, CONFIG.zoomAttendanceFields.attendanceMethod) === "Recording Quiz" &&
+      getBooleanish(zaRec, CONFIG.zoomAttendanceFields.approved, false) &&
+      !getBooleanish(zaRec, CONFIG.zoomAttendanceFields.conflict, false) &&
+      getBooleanish(zaRec, CONFIG.zoomAttendanceFields.pwFlag, false) &&
+      getBooleanish(zaRec, CONFIG.zoomAttendanceFields.gateEarned, false) &&
+      getText(zaRec, CONFIG.zoomAttendanceFields.reviewStatus) !== "Needs Correction";
+
+    if (!qualifying) {
+      await blockScenarioRun({
+        testingScenariosTable,
+        scenarioId: recordId,
+        scenarioType: scenarioTypeLabel,
+        debugStep: currentStep,
+        actionOut: CONFIG.actions.skippedMissingInput,
+        errorOut: "Zoom Attendance fixture is not qualifying for recording PW + gate credit.",
+        actualResult: JSON.stringify({ fixtures, queryCount: budget.count }, null, 2),
+        lastRunStatus: CONFIG.lastRunStatuses.fail,
+        statusOut: CONFIG.statuses.error,
+      });
+      return;
+    }
+
+    if (fixtures.resetFixtures) {
+      resumedFrom = "explicit_reset";
+      await updateRecordNoAttendees(zaTable, fixtures.zoomAttendanceId, {
+        [CONFIG.zoomAttendanceFields.pwApplied]: false,
+        [CONFIG.zoomAttendanceFields.gateApplied]: false,
+      });
+      pwApplied = false;
+      gateApplied = false;
+    } else if (pwApplied && gateApplied) {
+      resumedFrom = "resume_both_done";
+    } else if (pwApplied) {
+      resumedFrom = "resume_after_057";
+    } else {
+      resumedFrom = "fresh";
+    }
+
+    if (isDryRun) {
+      await finishC025Run({
+        testingScenariosTable,
+        scenarioId: recordId,
+        scenarioTypeLabel,
+        debugStep: "C025-dry-run",
+        actionOut: CONFIG.actions.dryRun,
+        statusOut: CONFIG.statuses.success,
+        errorOut: "",
+        lastRunStatus: CONFIG.lastRunStatuses.pass,
+        actualPayload: {
+          scenario: scenarioTypeLabel,
+          dryRun: true,
+          fixtures,
+          queryCount: budget.count,
+          queryBudget: budget.max,
+          resumedFrom,
+          attendeesBefore,
+          trigger057:
+            "Queue? re-entry then wait WAS Status=Ready (not ZA Applied?); skipped if PW Applied already",
+          trigger042:
+            "View 042 re-entry: Level Recalc Needed? checked→unchecked→checked (or unchecked→checked); skipped if Gate Applied already",
+          neverWrite: ["Attendees"],
+          pollAttempts,
+        },
+        passFailNotes:
+          "Dry run only — no triggers. Uncheck Dry Run? for live run with 057/042 ON.",
+      });
+      return;
+    }
+
+    // ---------- Phase A: 057 ----------
+    let phaseA = {
+      skipped: false,
+      waitOk: false,
+      attempts: 0,
+      timedOut: false,
+      queueReentry057: null,
+    };
+
+    if (pwApplied) {
+      currentStep = "C025-2-skip-057-already-applied";
+      setOutputSafe("debugStep", currentStep);
+      phaseA.skipped = true;
+      phaseA.waitOk = true;
+      phaseA.pwAppliedBefore = pwAppliedBefore;
+      phaseA.pwAppliedAfter = true;
+      phaseA.queueReentry057 = {
+        skip: true,
+        transition: "skip_already_applied",
+        reason: "Perfect Week Credit Applied? already true — skip 057 retrigger",
+        triggerOnce: false,
+      };
+    } else {
+      currentStep = "C025-2-trigger-057-queue-reentry";
+      setOutputSafe("debugStep", currentStep);
+
+      const wasStatusBefore = getText(wasRec, CONFIG.wasFields.automationStatus);
+      const queueMatchStatuses = ["Pending", "Ready"];
+      const leaveStatus = "Skipped";
+      const armStatus = "Pending";
+      const previousIsQueueMatch = queueMatchStatuses.includes(String(wasStatusBefore || "").trim());
+
+      const queueReentry057 = {
+        triggerCondition: "Perfect Week Calculation Queue? = 1",
+        wasId: fixtures.wasId,
+        previousAutomationStatus: wasStatusBefore || null,
+        leaveValue: null,
+        armedValue: null,
+        transition: null,
+        triggerOnce: true,
+        confirmedLeftQueue: null,
+      };
+
+      // Formula Queue? = 1 for BOTH Pending and Ready (when Enrollment/Week/Goal linked).
+      // Ready→Pending never leaves the match set — 057 "When record matches" never re-fires.
+      if (previousIsQueueMatch) {
+        queueReentry057.transition = `${wasStatusBefore} → Skipped → Pending`;
+        queueReentry057.leaveValue = leaveStatus;
+        await updateRecordNoAttendees(wasTable, fixtures.wasId, {
+          [CONFIG.wasFields.automationStatus]: singleSelectValue(
+            wasTable,
+            CONFIG.wasFields.automationStatus,
+            leaveStatus
+          ),
+          [CONFIG.wasFields.automationError]: "",
+        });
+        wasRec = await c025SelectRecord(
+          budget,
+          wasTable,
+          fixtures.wasId,
+          [CONFIG.wasFields.automationStatus].filter((n) => fieldExists(wasTable, n)),
+          "confirm057 left Queue (Status Skipped)"
+        );
+        const statusAfterLeave = getText(wasRec, CONFIG.wasFields.automationStatus);
+        const leftQueue = !queueMatchStatuses.includes(String(statusAfterLeave || "").trim());
+        queueReentry057.confirmedLeftQueue = leftQueue;
+        if (!leftQueue) {
+          throw new Error(
+            `057 queue re-entry failed: Automation Status still queue-match after leave write (got "${statusAfterLeave}")`
+          );
+        }
+        await updateRecordNoAttendees(wasTable, fixtures.wasId, {
+          [CONFIG.wasFields.automationStatus]: singleSelectValue(
+            wasTable,
+            CONFIG.wasFields.automationStatus,
+            armStatus
+          ),
+          [CONFIG.wasFields.automationError]: "",
+        });
+        queueReentry057.armedValue = armStatus;
+      } else {
+        queueReentry057.transition = `${wasStatusBefore || "non-queue"} → Pending`;
+        await updateRecordNoAttendees(wasTable, fixtures.wasId, {
+          [CONFIG.wasFields.automationStatus]: singleSelectValue(
+            wasTable,
+            CONFIG.wasFields.automationStatus,
+            armStatus
+          ),
+          [CONFIG.wasFields.automationError]: "",
+        });
+        queueReentry057.armedValue = armStatus;
+      }
+      phaseA.queueReentry057 = queueReentry057;
+
+      phaseA.attempts = attempts057;
+      phaseA.wasAutomationStatus = getText(wasRec, CONFIG.wasFields.automationStatus);
+      phaseA.pwAppliedBefore = pwAppliedBefore;
+      await finishAwaiting("057", "057 trigger armed; awaiting the later natural 057 run", {
+        phaseA_057: phaseA,
+        attendeesBefore,
+      });
+      return;
+    }
+
+    // ---------- Phase B: 042 (view re-entry) ----------
+    let phaseB = {
+      skipped: false,
+      waitOk: false,
+      attempts: 0,
+      timedOut: false,
+      viewReentry042: null,
+    };
+
+    if (gateApplied) {
+      currentStep = "C025-3-skip-042-already-applied";
+      setOutputSafe("debugStep", currentStep);
+      phaseB.skipped = true;
+      phaseB.waitOk = true;
+      phaseB.gateAppliedBefore = gateAppliedBefore;
+      phaseB.gateAppliedAfter = true;
+      phaseB.viewReentry042 = {
+        skip: true,
+        transition: "skip_already_applied",
+        reason: "Gate Credit Applied? already true — skip 042 retrigger",
+        triggerOnce: false,
+      };
+    } else {
+      currentStep = "C025-3-trigger-042-view-reentry";
+      setOutputSafe("debugStep", currentStep);
+
+      const recalcReadFields = [CONFIG.enrollmentFields.levelRecalcNeeded].filter((n) =>
+        fieldExists(enrollmentsTable, n)
+      );
+      enrRec = await c025SelectRecord(
+        budget,
+        enrollmentsTable,
+        enrollmentId,
+        recalcReadFields,
+        "pre042 Level Recalc Needed?"
+      );
+      const levelRecalcPrevious = getBooleanish(
+        enrRec,
+        CONFIG.enrollmentFields.levelRecalcNeeded,
+        false
+      );
+
+      // Force leave/re-enter view `042` (When record enters view; condition: Level Recalc Needed? checked).
+      // Writing checked→checked alone does NOT re-enter the view.
+      const viewReentry = {
+        view: "042",
+        viewCondition: "Level Recalc Needed? is checked",
+        enrollmentId,
+        previousLevelRecalcNeeded: levelRecalcPrevious,
+        resetValue: null,
+        armedValue: null,
+        viewEntryTriggeredAt: null,
+        transition: null,
+        triggerOnce: true,
+        confirmedUnchecked: null,
+      };
+
+      if (levelRecalcPrevious) {
+        viewReentry.transition = "checked → unchecked → checked";
+        viewReentry.resetValue = false;
+        await updateRecordNoAttendees(enrollmentsTable, enrollmentId, {
+          [CONFIG.enrollmentFields.levelRecalcNeeded]: false,
+        });
+        enrRec = await c025SelectRecord(
+          budget,
+          enrollmentsTable,
+          enrollmentId,
+          recalcReadFields,
+          "confirm042 Level Recalc unchecked"
+        );
+        const confirmedUnchecked = !getBooleanish(
+          enrRec,
+          CONFIG.enrollmentFields.levelRecalcNeeded,
+          false
+        );
+        viewReentry.confirmedUnchecked = confirmedUnchecked;
+        if (!confirmedUnchecked) {
+          throw new Error(
+            "042 view re-entry failed: Level Recalc Needed? did not clear after uncheck write"
+          );
+        }
+        await updateRecordNoAttendees(enrollmentsTable, enrollmentId, {
+          [CONFIG.enrollmentFields.levelRecalcNeeded]: true,
+        });
+        viewReentry.armedValue = true;
+      } else {
+        viewReentry.transition = "unchecked → checked";
+        viewReentry.resetValue = null;
+        await updateRecordNoAttendees(enrollmentsTable, enrollmentId, {
+          [CONFIG.enrollmentFields.levelRecalcNeeded]: true,
+        });
+        viewReentry.armedValue = true;
+      }
+      viewReentry.viewEntryTriggeredAt = new Date().toISOString();
+      phaseB.viewReentry042 = viewReentry;
+      console.log(
+        JSON.stringify({
+          c025PhaseB042: "view_reentry_armed",
+          ...viewReentry,
+          queryCount: budget.count,
+        })
+      );
+
+      phaseB.attempts = attempts042;
+      phaseB.gateAppliedBefore = gateAppliedBefore;
+      phaseB.gateAppliedAfter = gateApplied;
+      await finishAwaiting("042", "042 trigger armed; awaiting the later natural 042 run", {
+        phaseA_057: phaseA,
+        phaseB_042: phaseB,
+        attendeesBefore,
+      });
+      return;
+    }
+
+    // ---------- Final verify + dedupe (no re-trigger; targeted reads only) ----------
+    currentStep = "C025-4-final-verify";
+    setOutputSafe("debugStep", currentStep);
+
+    wasRec = await c025SelectRecord(budget, wasTable, fixtures.wasId, wasFields, "final WAS");
+    zaRec = await c025SelectRecord(budget, zaTable, fixtures.zoomAttendanceId, zaFields, "final ZA");
+    zmRec = await c025SelectRecord(budget, zmTable, fixtures.zoomMeetingId, zmFields, "final ZM");
+    enrRec = await c025SelectRecord(
+      budget,
+      enrollmentsTable,
+      enrollmentId,
+      enrFields,
+      "final Enrollment"
+    );
+
+    const zoomAttendanceCount = getNumber(wasRec, CONFIG.wasFields.zoomAttendanceCount);
+    const zoomMeetingCount = getNumber(wasRec, CONFIG.wasFields.zoomMeetingCount);
+    const wasStatusFinal = getText(wasRec, CONFIG.wasFields.automationStatus);
+    const attendeesAfter = getLinkedIds(zmRec, CONFIG.zoomMeetingFields.attendees);
+    const pwFinal = getBooleanish(zaRec, CONFIG.zoomAttendanceFields.pwApplied, false);
+    const gateFinal = getBooleanish(zaRec, CONFIG.zoomAttendanceFields.gateApplied, false);
+    const recalcFinal = getBooleanish(enrRec, CONFIG.enrollmentFields.levelRecalcNeeded, false);
+    const currentLevelAfter = getLinkedIds(enrRec, CONFIG.enrollmentFields.currentLevel)[0] || "";
+    const nextLevelAfter = getLinkedIds(enrRec, CONFIG.enrollmentFields.nextLevel)[0] || "";
+    const levelStatusAfter = getText(enrRec, CONFIG.enrollmentFields.levelStatus);
+
+    const attendeesUnchanged =
+      JSON.stringify(attendeesBefore) === JSON.stringify(attendeesAfter) &&
+      attendeesAfter.length === 0;
+
+    // v1.8: Phase A pass on WAS Ready + Zoom counts (057 done signal). Applied? is logged only.
+    const passA =
+      Number(zoomAttendanceCount) === 1 &&
+      Number(zoomMeetingCount) >= 1 &&
+      wasStatusFinal === "Ready" &&
+      attendeesUnchanged;
+    // Prefer Gate Applied; when we triggered 042, also expect Level Recalc cleared by workflow.
+    // Resume-skip (already Applied) does not require recalc cleared.
+    const passB =
+      gateFinal === true &&
+      attendeesUnchanged &&
+      (phaseB.skipped === true || recalcFinal === false);
+    const passDedupe =
+      Number(zoomAttendanceCount) === 1 &&
+      wasStatusFinal === "Ready" &&
+      gateFinal &&
+      attendeesAfter.length === 0;
+    const overallPass = passA && passB && passDedupe && attendeesUnchanged;
+
+    if (recalcFinal) {
+      await updateRecordNoAttendees(enrollmentsTable, enrollmentId, {
+        [CONFIG.enrollmentFields.levelRecalcNeeded]: false,
+      });
+    }
+
+    const resultPayload = {
+      scenario: scenarioTypeLabel,
+      queryCount: budget.count,
+      queryBudget: budget.max,
+      queryLog: budget.log,
+      currentStep,
+      attempts057,
+      attempts042,
+      resumedFrom,
+      fixtures,
+      attendeesBefore,
+      attendeesAfter,
+      attendeesUnchanged,
+      phaseA_057: {
+        ...phaseA,
+        dailyMetBefore,
+        videoCountBefore,
+        zoomMeetingCount,
+        zoomAttendanceCount,
+        wasAutomationStatusFinal: wasStatusFinal,
+        pwAppliedFinal: pwFinal,
+      },
+      phaseB_042: {
+        ...phaseB,
+        currentLevelBefore,
+        nextLevelBefore,
+        levelStatusBefore,
+        currentLevelAfter,
+        nextLevelAfter,
+        levelStatusAfter,
+        levelRecalcNeededAfter: recalcFinal,
+        gateAppliedFinal: gateFinal,
+        diagnostics: {
+          previousLevelRecalcNeeded: phaseB.viewReentry042
+            ? phaseB.viewReentry042.previousLevelRecalcNeeded
+            : null,
+          resetValue: phaseB.viewReentry042 ? phaseB.viewReentry042.resetValue : null,
+          armedValue: phaseB.viewReentry042 ? phaseB.viewReentry042.armedValue : null,
+          viewEntryTriggeredAt: phaseB.viewReentry042
+            ? phaseB.viewReentry042.viewEntryTriggeredAt
+            : null,
+          attempts042,
+          queryCount: budget.count,
+          gateAppliedFinal: gateFinal,
+          currentLevelBefore,
+          currentLevelAfter,
+          nextLevelBefore,
+          nextLevelAfter,
+        },
+      },
+      dedupe: {
+        mode: "verify_without_retrigger",
+        zoomAttendanceCount,
+        pwApplied: pwFinal,
+        gateApplied: gateFinal,
+        attendees: attendeesAfter,
+        pass: passDedupe,
+      },
+      passA,
+      passB,
+      passDedupe,
+      overallPass,
+      safety: {
+        neverWroteAttendees: true,
+        noFullTableSelects: true,
+        automation117NotUsed: true,
+        automation042ViewReentry: true,
+      },
+    };
+
+    currentStep = "C025-5-write-results";
+    setOutputSafe("debugStep", currentStep);
+
+    await finishC025Run({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioTypeLabel,
+      debugStep: currentStep,
+      actionOut: overallPass ? CONFIG.actions.c025Pass : CONFIG.actions.c025Fail,
+      statusOut: overallPass ? CONFIG.statuses.success : CONFIG.statuses.error,
+      errorOut: overallPass
+        ? ""
+        : [
+            !passA ? "Phase A (057) verify failed" : null,
+            !passB ? "Phase B (042) verify failed" : null,
+            !passDedupe ? "Dedupe verify failed" : null,
+            !attendeesUnchanged ? "Attendees changed" : null,
+          ]
+            .filter(Boolean)
+            .join("; "),
+      lastRunStatus: overallPass ? CONFIG.lastRunStatuses.pass : CONFIG.lastRunStatuses.fail,
+      actualPayload: resultPayload,
+      passFailNotes: overallPass
+        ? `C025_STAGE17_DOWNSTREAM PASS (queries ${budget.count}/${budget.max}). Turn 057/042 OFF.`
+        : `C025_STAGE17_DOWNSTREAM FAIL (queries ${budget.count}/${budget.max}). See Actual Result.`,
+    });
+
+    console.log(
+      JSON.stringify({
+        automation: SCRIPT.scriptName,
+        version: SCRIPT.version,
+        scenario: scenarioTypeLabel,
+        overallPass,
+        queryCount: budget.count,
+        testingScenarioId: recordId,
+      })
+    );
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    const isBudget = error && error.code === "C025_QUERY_BUDGET";
+    await finishC025Run({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioTypeLabel,
+      debugStep: currentStep,
+      actionOut: isBudget ? CONFIG.actions.c025QueryBudget : CONFIG.actions.error,
+      statusOut: CONFIG.statuses.error,
+      errorOut: message,
+      lastRunStatus: CONFIG.lastRunStatuses.error,
+      actualPayload: {
+        scenario: scenarioTypeLabel,
+        status: isBudget ? "Query Budget Exhausted" : "Error",
+        queryCount: budget ? budget.count : null,
+        queryBudget: budget ? budget.max : C025_MAX_QUERY_BUDGET,
+        queryLog: budget ? budget.log : [],
+        currentStep,
+        attempts057,
+        attempts042,
+        resumedFrom,
+        fixtures,
+        error: message,
+      },
+      passFailNotes: `C025 error — Run Test? cleared. ${message}`,
+    });
+  }
+}
+
+
+/* =========================================================
+   SECTION 6 — MAIN
+========================================================= */
+
+async function main() {
+  let debugStep = "0 - Start";
+  setOutputSafe("debugStep", debugStep);
+
+  const inputConfig = input.config();
+  const recordId = String(inputConfig.recordId || "").trim();
+
+  debugStep = "1 - Validate recordId";
+  setOutputSafe("debugStep", debugStep);
+
+  if (!recordId) {
+    throw new Error("Missing input variable: recordId");
+  }
+  if (!recordId.startsWith("rec")) {
+    throw new Error(`Invalid Testing Scenarios recordId input: ${recordId}`);
+  }
+
+  const testingScenariosTable = base.getTable(CONFIG.tables.testingScenarios);
+  const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
+  const submissionsTable = base.getTable(CONFIG.tables.submissions);
+
+  debugStep = "2 - Validate common schema";
+  setOutputSafe("debugStep", debugStep);
+  validateCommonSchema({
+    testingScenarios: testingScenariosTable,
+    enrollments: enrollmentsTable,
+    submissions: submissionsTable,
+  });
+
+  debugStep = "3 - Load Testing Scenarios row";
+  setOutputSafe("debugStep", debugStep);
+
+  const scenarioFieldsToLoad = [
+    CONFIG.testingScenarioFields.testIntakeName,
+    CONFIG.testingScenarioFields.scenarioType,
+    CONFIG.testingScenarioFields.relatedEnrollment,
+    CONFIG.testingScenarioFields.submissionDate,
+    CONFIG.testingScenarioFields.shotTotal,
+    CONFIG.testingScenarioFields.homeworkAssignment,
+    CONFIG.testingScenarioFields.intakeAttachments,
+    CONFIG.testingScenarioFields.videoFeedbackFocus,
+    CONFIG.testingScenarioFields.videoFeedbackQuestion,
+    CONFIG.testingScenarioFields.scenarioRequirements,
+    CONFIG.testingScenarioFields.runTest,
+    CONFIG.testingScenarioFields.dryRun,
+    CONFIG.testingScenarioFields.linkedSubmission,
+    CONFIG.testingScenarioFields.actualResult,
+    CONFIG.testingScenarioFields.passFailNotes,
+  ]
+    .concat(getTestingScenarioVideoAttachmentFieldNames(testingScenariosTable))
+    .filter((fieldName, index, all) => fieldExists(testingScenariosTable, fieldName) && all.indexOf(fieldName) === index);
+
+  const scenarioRecord = await testingScenariosTable.selectRecordAsync(recordId, {
+    fields: scenarioFieldsToLoad,
+  });
+
+  if (!scenarioRecord) {
+    throw new Error(`Testing Scenarios record not found: ${recordId}`);
+  }
+
+  const scenarioType = getText(scenarioRecord, CONFIG.testingScenarioFields.scenarioType);
+  const testIntakeName = fieldExists(testingScenariosTable, CONFIG.testingScenarioFields.testIntakeName)
+    ? getText(scenarioRecord, CONFIG.testingScenarioFields.testIntakeName)
+    : "";
+  const scenarioRequirements = getText(
+    scenarioRecord,
+    CONFIG.testingScenarioFields.scenarioRequirements
+  );
+  setOutputSafe("scenarioTypeOut", normalizeScenarioTypeForOutput(scenarioType));
+
+  if (!getBooleanish(scenarioRecord, CONFIG.testingScenarioFields.runTest, false)) {
+    await finishScenarioRun({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioType,
+      debugStep,
+      actionOut: CONFIG.actions.skippedRunNotRequested,
+      statusOut: CONFIG.statuses.skipped,
+      errorOut: "Run Test? is not checked; no production-shaped action was performed.",
+      createdSubmissionId: "",
+      createdRecordSummary: "",
+      clearRunTest: false,
+      runMetadata: {
+        [CONFIG.testingScenarioFields.lastRunStatus]: singleSelectValue(
+          testingScenariosTable,
+          CONFIG.testingScenarioFields.lastRunStatus,
+          CONFIG.lastRunStatuses.blocked
+        ),
+        [CONFIG.testingScenarioFields.actualResult]:
+          "Skipped — Run Test? is not checked. No Submission created and no downstream action requested.",
+        [CONFIG.testingScenarioFields.passFailNotes]:
+          "Check Run Test? and re-trigger only for an intentional controlled test.",
+      },
+    });
+    return;
+  }
+
+  // C-025 Stage 17 downstream — routed before intake Scenario Type allowlist.
+  if (isC025Stage17DownstreamScenario(scenarioType, testIntakeName, scenarioRequirements)) {
+    const enrollmentIdsC025 = getLinkedIds(
+      scenarioRecord,
+      CONFIG.testingScenarioFields.relatedEnrollment
+    );
+    const enrollmentIdC025 = enrollmentIdsC025[0] || "";
+    if (!enrollmentIdC025) {
+      await blockScenarioRun({
+        testingScenariosTable,
+        scenarioId: recordId,
+        scenarioType: CONFIG.c025Stage17Downstream.scenarioKey,
+        debugStep,
+        actionOut: CONFIG.actions.skippedMissingInput,
+        errorOut: "Related Enrollment is required.",
+        actualResult: "Missing Related Enrollment.",
+      });
+      return;
+    }
+    if (!isAllowedEnrollmentId(enrollmentIdC025)) {
+      await blockScenarioRun({
+        testingScenariosTable,
+        scenarioId: recordId,
+        scenarioType: CONFIG.c025Stage17Downstream.scenarioKey,
+        debugStep,
+        actionOut: CONFIG.actions.skippedInvalidEnrollment,
+        errorOut: `Enrollment ${enrollmentIdC025} is not in the controlled allowlist.`,
+        actualResult: "Enrollment not allowed for controlled testing.",
+      });
+      return;
+    }
+    const isDryRunC025 = getBooleanish(scenarioRecord, CONFIG.testingScenarioFields.dryRun, false);
+    await runC025Stage17DownstreamBranch({
+      testingScenariosTable,
+      enrollmentsTable,
+      recordId,
+      enrollmentId: enrollmentIdC025,
+      isDryRun: isDryRunC025,
+      debugStep,
+      scenarioRequirements,
+    });
+    return;
+  }
+
+  if (!SUPPORTED_SCENARIO_TYPES.has(scenarioType)) {
+    await finishScenarioRun({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioType,
+      debugStep,
+      actionOut: CONFIG.actions.skippedWrongScenario,
+      statusOut: CONFIG.statuses.skipped,
+      errorOut: `Supported scenario types: Daily Submission, Homework, Video/Three Video Upload, and C025_STAGE17_DOWNSTREAM (Scenario Type Other or Perfect Week with that name/requirements marker). Found: "${scenarioType || "blank"}".`,
+      createdSubmissionId: "",
+      createdRecordSummary: "",
+      clearRunTest: true,
+      runMetadata: {
+        [CONFIG.testingScenarioFields.lastRunStatus]: singleSelectValue(
+          testingScenariosTable,
+          CONFIG.testingScenarioFields.lastRunStatus,
+          CONFIG.lastRunStatuses.blocked
+        ),
+        [CONFIG.testingScenarioFields.actualResult]: "Skipped — scenario type not supported by this script.",
+        [CONFIG.testingScenarioFields.passFailNotes]:
+          `Use Daily Submission, Homework, Video, or Other/Perfect Week named ${CONFIG.c025Stage17Downstream.scenarioKey}.`,
+      },
+    });
+    return;
+  }
+
+  const enrollmentIds = getLinkedIds(
+    scenarioRecord,
+    CONFIG.testingScenarioFields.relatedEnrollment
+  );
+  const enrollmentId = enrollmentIds[0] || "";
+
+  if (!enrollmentId) {
+    await blockScenarioRun({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioType,
+      debugStep,
+      actionOut: CONFIG.actions.skippedMissingInput,
+      errorOut: "Related Enrollment is required.",
+      actualResult: "Missing Related Enrollment.",
+    });
+    return;
+  }
+
+  if (!isAllowedEnrollmentId(enrollmentId)) {
+    await blockScenarioRun({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioType,
+      debugStep,
+      actionOut: CONFIG.actions.skippedInvalidEnrollment,
+      errorOut: `Enrollment ${enrollmentId} is not in the controlled allowlist. Approved Schmidt enrollments: ${CONFIG.allowedEnrollmentIds.join(", ")}.`,
+      actualResult: "Enrollment not allowed for MVP.",
+      passFailNotes:
+        `Use one approved Schmidt test enrollment: ${CONFIG.allowedEnrollmentIds.join(", ")}.`,
+    });
+    return;
+  }
+
+  const activityDate = getDateValue(scenarioRecord, CONFIG.testingScenarioFields.submissionDate);
+  if (!activityDate) {
+    await blockScenarioRun({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioType,
+      debugStep,
+      actionOut: CONFIG.actions.skippedMissingInput,
+      errorOut: "Submission Date is required.",
+      actualResult: "Missing Submission Date.",
+    });
+    return;
+  }
+
+  debugStep = "4 - Load Enrollment and resolve Athlete";
+  setOutputSafe("debugStep", debugStep);
+
+  const enrollmentRecord = await enrollmentsTable.selectRecordAsync(enrollmentId, {
+    fields: [CONFIG.enrollmentFields.athlete],
+  });
+
+  if (!enrollmentRecord) {
+    throw new Error(`Enrollment record not found: ${enrollmentId}`);
+  }
+
+  const athleteId = getLinkedIds(enrollmentRecord, CONFIG.enrollmentFields.athlete)[0] || "";
+  if (!athleteId) {
+    throw new Error(`Enrollment ${enrollmentId} is missing linked Athlete.`);
+  }
+
+  const isDryRun = getBooleanish(scenarioRecord, CONFIG.testingScenarioFields.dryRun, false);
+
+  if (scenarioType === CONFIG.scenarioTypes.dailySubmission) {
+    await runDailySubmissionBranch({
+      testingScenariosTable,
+      submissionsTable,
+      scenarioRecord,
+      recordId,
+      enrollmentId,
+      athleteId,
+      activityDate,
+      isDryRun,
+      debugStep,
+    });
+    return;
+  }
+
+  if (scenarioType === CONFIG.scenarioTypes.homework) {
+    await runHomeworkBranch({
+      testingScenariosTable,
+      submissionsTable,
+      scenarioRecord,
+      recordId,
+      enrollmentId,
+      athleteId,
+      activityDate,
+      isDryRun,
+      debugStep,
+    });
+    return;
+  }
+
+  if (isVideoScenarioType(scenarioType)) {
+    await runVideoBranch({
+      testingScenariosTable,
+      submissionsTable,
+      scenarioRecord,
+      recordId,
+      enrollmentId,
+      athleteId,
+      activityDate,
+      isDryRun,
+      debugStep,
+    });
+    return;
+  }
+}
+
+/* =========================================================
+   SECTION 7 — RUN
+========================================================= */
+
+try {
+  await main();
+} catch (error) {
+  const message = error instanceof Error ? error.message : String(error);
+  setOutputSafe("statusOut", CONFIG.statuses.error);
+  setOutputSafe("actionOut", CONFIG.actions.error);
+  setOutputSafe("errorOut", message);
+  console.log(
+    JSON.stringify(
+      {
+        automation: SCRIPT.scriptName,
+        version: SCRIPT.version,
+        statusOut: CONFIG.statuses.error,
+        errorOut: message,
+      },
+      null,
+      2
+    )
+  );
+  throw error;
+}

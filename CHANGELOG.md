@@ -21,6 +21,16 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Airtable
 
+#### Changed
+- **Duplicate detection — Activity Date - Time (2026-08-25)** — `Submissions.Duplicate Key`
+  formula now includes hourly `Activity Date - Time` after the date segment (`NO_TIME` when
+  blank). Activity Date stays date-only for XP/weeks/streaks/summaries/Perfect Week/homework/
+  video/email/website. **115 v2.2** no longer presets `Duplicate Review Status = Count It`
+  so **007** can review all eligible Submissions (007 script remains key-driven; no structural
+  change). Offline mirror: `buildSubmissionDuplicateKey`. Deploy:
+  [`docs/deploy-checklists/2026-08-25-duplicate-key-activity-date-time.md`](./docs/deploy-checklists/2026-08-25-duplicate-key-activity-date-time.md).
+  Paste-ready: [`docs/deploy-checklists/115-v2.2-PASTE.txt`](./docs/deploy-checklists/115-v2.2-PASTE.txt).
+
 #### Fixed
 - **Secure video URL pipeline (2026-08-24)** — **022 v2.2** stops falling back to private
   `Canonical File URL` for Video Feedback parent links; **072 v4.8** and **073 v4.4** accept
