@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { StatusBadge, type StatusBadgeTone } from "@/components/ui/status-badge";
+import { withBasePath } from "@/lib/app-config";
 import { formatXp } from "@/lib/formatters";
 import type {
   PublicHomeworkAssignment,
@@ -78,7 +79,7 @@ export function HomeworkAssignments({ assignments }: HomeworkAssignmentsProps) {
         </div>
         <div className="relative mx-auto h-20 w-20 shrink-0 sm:mx-0 sm:h-24 sm:w-24" aria-hidden="true">
           <Image
-            src="/images/shooting-challenge-homework.webp"
+            src={withBasePath("/images/shooting-challenge-homework.webp")}
             alt=""
             fill
             className="object-contain"

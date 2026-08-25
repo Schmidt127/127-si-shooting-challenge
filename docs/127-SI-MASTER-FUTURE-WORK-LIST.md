@@ -183,12 +183,14 @@ Each page is a separate future item so it can receive its own focused Cursor pro
 ### FUT-011 — Athlete page: level graphic and hero-label polish
 
 **Priority:** P1  
-**Status:** Complete — 2026-08-25 · `901812e`  
+**Status:** Complete — 2026-08-25 · implementation `901812e` · production verified `900e61c`  
 **Systems:** Website athlete profile, Airtable level data, design system
 
 **Summary:** Public profile hero uses `AthleteLevelDisplay` with large level graphic and high-contrast hero badge; at-a-glance panel surfaces level for parents.
 
-**Tests:** 349 Vitest · athlete-profile Playwright · typecheck · build · mobile overflow 0px.
+**Tests:** 349 Vitest · typecheck · lint · build pass.
+
+**Production verification (2026-08-25):** Vercel Production deploy `900e61c` success · slug `perfect-week-testing` · hero + glance + Game Log pass · mobile overflow 0px.
 
 **Limitation:** Level still appears in hero, snapshot, and progression (intentional emphasis).
 
@@ -197,14 +199,16 @@ On the athlete page, place the appropriate level graphic beside or near the athl
 ### FUT-012 — Athlete page: professional Game Log presentation
 
 **Priority:** P1  
-**Status:** Complete — 2026-08-25 · `901812e`  
+**Status:** Complete — 2026-08-25 · implementation `901812e` · production verified `900e61c`  
 **Systems:** Website XP activity table, XP Events, Airtable presentation fields
 
 **Summary:** Game Log short labels and contextual details; server-side pagination via `GET /api/athletes/[slug]/game-log` with cursor (`activityDate` + XP Event record id), opaque row keys, Load more with loading/retry, enrollment-scoped isolation.
 
-**Tests:** `game-log-pagination.test.ts`, `public-game-log.test.ts`, Playwright load-more / no-duplicate rows.
+**Tests:** `game-log-pagination.test.ts`, `public-game-log.test.ts`, 349 Vitest total.
 
-**Limitation:** Full ledger capped at 2000 XP rows per enrollment fetch; Airtable API latency on deep histories.
+**Production verification (2026-08-25):** API page 1/2 return 12 rows, no key overlap; Load more 12→24 on `perfect-week-testing`; invalid slug API 404.
+
+**Limitation:** Full ledger capped at `GAME_LOG_MAX_FETCH=2000` per enrollment (deferred — see closeout note below).
 
 Improve the Game Log/Recent Activity display:
 
@@ -223,16 +227,24 @@ Use the most maintainable professional design. Prefer configurable presentation 
 ### FUT-013 — Athlete page: Perfect Week activity panel
 
 **Priority:** P1  
-**Status:** Complete — 2026-08-25 · `901812e`  
+**Status:** Complete — 2026-08-25 · implementation `901812e` · production verified `900e61c`  
 **Systems:** Website, Weekly Athlete Summary, Perfect Week fields
 
 **Summary:** `PerfectWeekPanel` shows week-by-week requirements and status labels; weekly performance stats moved below with clarifying copy.
 
-**Tests:** athlete-profile Playwright section order · Vitest weekly mapping.
+**Tests:** Production profile section order verified on `charlie-schmidt` and `perfect-week-testing`.
 
-Create a panel styled consistently with Game Log/Recent Activity for Perfect Weeks. Show all current and past weeks, but do not show future weeks. For each week, display the week dates, shot submissions, homework submitted, videos submitted, Zoom attendance, and a clear status label such as `Perfect Week`, `Not Perfect`, or `In Progress`.
+**Production closeout — athlete profile reliability (2026-08-25)**
 
-Place this panel where Weekly Performance currently appears and move the existing weekly-performance box below it. The design should motivate athletes to improve in the next week when they miss Perfect Week credit.
+| Item | Status |
+|------|--------|
+| Vercel Production deploy | **Success** — commit `900e61c`, domain `www.fairfieldbasketballclub.com/shoot` |
+| Production smoke slug | `perfect-week-testing` (also `charlie-schmidt`, `curtis-schmidt` on leaderboard) |
+| Game Log pagination | API-backed; Load more verified |
+| Freshness notice | Visible when ledger/homework degraded; hidden state not observed on sampled prod athletes (reconciliation notices present) |
+| Homework image | Fixed `withBasePath` for local dev (`web` closeout commit) |
+| Local PAT 403 | Documented — needs Program Instance - Sync + Program Homework Assignments read |
+| `GAME_LOG_MAX_FETCH=2000` | **Deferred** — safe at current scale (~8 athletes, highest XP ~1,280); no athlete near 2,000 events; true server pagination within cap |
 
 ### FUT-014 — Homework page redesign and live Homework Library connection
 
