@@ -13,6 +13,7 @@
 | Layer | Entry | Checks |
 |-------|-------|--------|
 | Playwright smoke | `web/tests/production-smoke.spec.ts` | Routes, headings, registration CTAs, landing/logo URLs, nav destinations, assets, `/shoot/shoot` guard, external `rel`, console errors, mobile/desktop, 404/missing detail, dashboard demo sections |
+| Playwright homework due dates | `web/tests/homework-due-date.spec.ts` | PHA Due Date display on homework catalog + athlete profile; mobile overflow guard |
 | HTTP smoke | `web/scripts/http-smoke.mjs` | Status codes, assets, Fillout + landing URL presence in home HTML, Airtable health JSON |
 | Unit guards | `web/lib/registration.test.ts`, `web/lib/app-config.test.ts` | Exact Fillout URLs; safe landing URL fallbacks |
 | Broader E2E | `web/tests/public-experience.spec.ts`, `public-hardening.spec.ts`, `registration-gateway.spec.ts` | Full public chrome / a11y / privacy suite |
@@ -94,10 +95,24 @@ Playwright config starts `npx next start -p 3001` automatically when `PLAYWRIGHT
 
 ## How to run against a Vercel preview
 
+**Windows (recommended):** set env in PowerShell, then run npm scripts:
+
+```powershell
+cd web
+$env:PLAYWRIGHT_BASE_URL = "https://<preview-host>/shoot/"
+npm run test:smoke
+```
+
+**POSIX bash:**
+
 ```bash
 cd web
 PLAYWRIGHT_BASE_URL="https://<preview-host>/shoot/" npm run test:smoke
-# or HTTP-only:
+```
+
+HTTP-only preview:
+
+```bash
 SMOKE_BASE_URL="https://<preview-host>/shoot" npm run test:smoke:http
 ```
 
@@ -111,7 +126,7 @@ Notes:
 
 ## How to run against production
 
-Official host:
+Official host (uses `cross-env` — works on Windows and POSIX):
 
 ```bash
 cd web
@@ -119,7 +134,15 @@ npm run test:smoke:prod
 npm run test:smoke:http:prod
 ```
 
-Equivalent explicit forms:
+PHA Due Date prod check (not in default smoke bundle):
+
+```powershell
+cd web
+$env:PLAYWRIGHT_BASE_URL = "https://www.fairfieldbasketballclub.com/shoot/"
+npx playwright test tests/homework-due-date.spec.ts --workers=1
+```
+
+Equivalent explicit forms (POSIX bash):
 
 ```bash
 PLAYWRIGHT_BASE_URL=https://www.fairfieldbasketballclub.com/shoot/ \

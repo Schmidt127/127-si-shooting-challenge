@@ -238,13 +238,17 @@ Use the most maintainable professional design. Prefer configurable presentation 
 
 | Item | Status |
 |------|--------|
-| Vercel Production deploy | **Success** — `fce037f` on `www.fairfieldbasketballclub.com/shoot` |
+| Vercel Production deploy | **Success** — `207a2c1` on `www.fairfieldbasketballclub.com/shoot` (2026-08-25) |
+| Smoke stabilization commits | `0adcb8d` (Fairfield retry, image/footer hydration) · `fce037f` (profile freshness) on ancestry |
 | Production smoke slug | `perfect-week-testing` (also `charlie-schmidt`, `curtis-schmidt`; `testing-schmidt` is DEV-only) |
+| PHA Due Date | **Verified** — catalog + athlete homework assignments show readable due dates; commit `207a2c1` adds prod Playwright + Vitest coverage |
 | Game Log pagination | API-backed; Load more verified 12→24 |
 | Freshness notice | **Fixed** — hidden on clean prod loads; only when homework source fails (`mayBeStale`); “Last checked” renders client-side to avoid hydration mismatch on prod smoke |
 | Homework image | `withBasePath` fix deployed `a71cbef`; static asset HTTP 200 |
 | Mobile nav smoke | **Fixed** — `cross-env` for Windows; `openMobileNavPanel()` retries until post-hydration menu opens |
-| `npm run test:smoke:prod` | Cross-platform via `cross-env`; serial `--workers=1` against live prod |
+| `npm run test:smoke:prod` | **50/50** pass (2026-08-25); cross-platform via `cross-env`; serial `--workers=1` against live prod |
+| Vitest | **369** pass (2026-08-25) |
+| `homework-due-date.spec.ts` | **3/3** pass on prod (2026-08-25) |
 | SEO production | `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true` on Vercel; `search-indexing.spec.ts` pass on prod |
 | Local PAT 403 | Documented — read on Program Instance - Sync, Program Homework Assignments, Homework Library, Weeks, Homework Completions |
 | `GAME_LOG_MAX_FETCH=2000` | **Deferred** — safe at current scale; no athlete near cap |
@@ -581,7 +585,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-112** | Website | Athlete auth + dashboard | P2 | Decision Needed | ΓÇö | Mike pick approach; then schema + session implementation |
 | **SC-113** | Website | Loading, empty, and error states | P2 | Live Tested in PROD | ΓÇö | Keep states aligned when SC-112 lands |
 | **SC-115** | Website | noindex removal / search indexing | P2 | **Complete** (2026-08-25, `647d465`; prod verified) | SC-114 | **Prod cutover verified** — Vercel Production `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`; public pages indexable; athlete profiles + private routes `noindex`; sitemap excludes athletes/public-display; `npm run test:smoke:prod` 50/50 after cross-env fix. Checklist: `docs/deploy-checklists/2026-08-25-web-search-indexing-cutover.md`. |
-| **SC-118** | Website | Production readiness smoke package for public `/shoot` | P2 | **Complete** (2026-08-25) | SC-102 | `npm run test:smoke:prod` cross-platform (`cross-env`); prod athlete slug `perfect-week-testing`; mobile nav + SEO smoke pass on prod. |
+| **SC-118** | Website | Production readiness smoke package for public `/shoot` | P2 | **Complete** (2026-08-25, deploy `207a2c1`) | SC-102 | `npm run test:smoke:prod` **50/50**; cross-platform (`cross-env`); prod athlete slug `perfect-week-testing`; mobile nav + SEO smoke pass; Vitest **369**; `homework-due-date.spec.ts` **3/3** on prod. |
 | **SC-133** | Platform | Pre-season parent comms from rules | P2 | Tracked under V2-010 | SC-109 | Write/send after SC-109 |
 | **SC-138** | Platform | Close stale overnight GitHub issues/PRs for 070a | P2 | Planned | SC-095 | Close or update with current truth |
 | **SC-144** | Website | Rename Softr-named publish flag | P2 | Planned | SC-054 | Rename in schema wave; update web queries |

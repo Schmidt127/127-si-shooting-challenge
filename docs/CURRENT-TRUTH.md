@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-24 (master closeout — 065/066 dynamic triggers live; weekly E2E complete; historical artifacts documented)  
+**Last verification (repo):** 2026-08-25 (master `207a2c1` — PHA Due Date tests, production smoke 50/50, SEO cutover live, Vercel Production deploy verified)  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -57,10 +57,10 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | Re-verify tip with `git rev-parse HEAD` after each push |
-| `origin/master` | Must match tip after push (re-verify) |
-| Ahead / behind | **0 / 0** (target after production-readiness merge) |
-| Working tree at audit start | Clean (no uncommitted tracked files) |
+| HEAD SHA | `207a2c1` (2026-08-25 — PHA Due Date test integration; re-verify with `git rev-parse HEAD` after each push) |
+| `origin/master` | **Matches** `207a2c1` (verified 2026-08-25) |
+| Ahead / behind | **0 / 0** |
+| Working tree at audit start | **Uncommitted unrelated work present** — Airtable automations, `tools/testing/`, `docs/chatgpt-sources/`; not part of web production closeout |
 | Prior integrity ship | `0b1d634…` (2026-08-20); XP activity ledger merge follows |
 | True merge markers (`<<<<<<<`) | None found |
 | Nested clone (ignored) | Local folder `127-si-shooting-challenge/` — gitignored; **do not treat as source of truth** |
@@ -96,8 +96,12 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | Local | http://localhost:3001/shoot |
 | Health | `GET /shoot/api/airtable` → token validity check |
 | Softr | **Obsolete / Not Used** — historical reference only |
-| SEO | Sitewide `noindex` until cutover approval |
-| Live Vercel settings | `REQUIRES LIVE CONFIRMATION` in Vercel dashboard / CLI |
+| SEO | **Public program pages indexable** — `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true` on Vercel Production (SC-115 cutover 2026-08-25). Athlete profiles + private routes remain `noindex`. Checklist: [`deploy-checklists/2026-08-25-web-search-indexing-cutover.md`](./deploy-checklists/2026-08-25-web-search-indexing-cutover.md). |
+| Production deploy | **Ready** — GitHub/Vercel Production `207a2c1` (2026-08-25); prior smoke stabilization `0adcb8d` / `fce037f` on ancestry |
+| Vitest / smoke | **369** Vitest pass · `npm run test:smoke:prod` **50/50** · `homework-due-date.spec.ts` **3/3** on prod (2026-08-25) |
+| Production smoke athlete slug | `perfect-week-testing` (`testing-schmidt` is DEV-only) |
+| PHA Due Date | Public homework catalog + athlete homework assignments display PHA Due Date (fallback Week End Date); verified prod 2026-08-25 |
+| Live Vercel settings | Production env names verified via CLI 2026-08-25 (`NEXT_PUBLIC_ALLOW_SEARCH_INDEXING`, `NEXT_PUBLIC_SITE_URL`); do not log values |
 
 Evidence pointer: [`PROJECT_STATE.md`](./PROJECT_STATE.md) § Vercel / web app.
 
@@ -304,10 +308,11 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 ### Unverified / requires live confirmation
 
 - Exact ON/OFF and pasted versions for automations without 2026-08-19 Mike overlay
-- Live Vercel env var values
 - Live Make scenario schedules beyond documented OFF/ON claims
 - Live Tremendous production access (explicitly pending)
 - That every Hub template ID in docs matches Hub UI today
+
+**Partially verified (2026-08-25):** Vercel Production has `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING` and `NEXT_PUBLIC_SITE_URL` configured (names confirmed via CLI; values not logged). Public indexing behavior verified via `npm run test:smoke:prod` and live URL checks.
 
 ---
 

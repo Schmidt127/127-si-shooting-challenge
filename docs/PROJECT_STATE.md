@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-08-24** (master closeout — 065/066 live; weekly E2E + historical artifacts)
+Last updated: **2026-08-25** (current-state audit — `207a2c1` on Vercel Production; PHA Due Date + smoke 50/50 verified)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
@@ -208,7 +208,8 @@ Deploy details: [deployment-notes.md](./deployment-notes.md), [web/docs/deployme
 | `/tutorials`, `/shoutouts`, `/articles` (+ detail) | Live — **Tutorials & Assets** (`tblDOTgsWfqPm18bw`); publish gate `OK to Publish on Softr` = `checked` |
 | `/zoom-meetings`, `/levels`, `/achievements`, `/game-manual`, `/public-display` | Live |
 | `/dashboard` | Live demo — **mock adapter** (no auth) |
-| `/athletes/[slug]` | Demo/mock — slug resolution incomplete |
+| `/athletes/[slug]` | **Live** — real enrollment-backed public profiles (SC-111); `noindex`; smoke slug `perfect-week-testing` on prod |
+| `/api/athletes/[slug]/game-log` | Live — server-side pagination (FUT-012) |
 | `/admin` | Placeholder — roadmap only; **no write controls**; no sensitive diagnostics without auth |
 | `/api/airtable` | Health check only |
 
@@ -227,10 +228,8 @@ Admin roadmap: [web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md)
 |--------|------------|
 | **Softr.io** | **Obsolete / Not Used** — Historical Reference Only — not a season-launch gate |
 | **This Next.js app** | Replacement in progress at `/shoot` |
-| **SEO** | Sitewide `robots: noindex` until cutover approval |
+| **SEO** | **Cutover complete (2026-08-25)** — `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true` on Vercel Production; public program pages `index, follow`; athlete profiles + private routes `noindex`; robots.txt + sitemap verified via `npm run test:smoke:prod`. Checklist: [2026-08-25-web-search-indexing-cutover.md](./deploy-checklists/2026-08-25-web-search-indexing-cutover.md). Historical pre-cutover gate: [SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md) (obsolete for SEO — retained as reference). |
 | **Publish flag** | Field may still be named `OK to Publish on Softr` (SC-144 rename) — not an active Softr dependency |
-
-**Do not remove `noindex` or perform cutover** without explicit Mike approval. Checklist: [SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md)
 
 ---
 
