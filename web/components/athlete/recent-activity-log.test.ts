@@ -97,18 +97,21 @@ describe("XP Event Log sorting", () => {
         sourceLabel: "Submission Base",
         reasonPublic: "Shooting submission completed with 1,250 shots.",
         points: 20,
+        sortTimestamp: "2026-08-22T23:59:00.000Z",
       }),
       xpRow({
         id: "recMilestone125",
         sourceLabel: "Shot Milestone",
         reasonPublic: "Shot milestone reached: 125% milestone.",
         points: 40,
+        sortTimestamp: "2026-08-22T06:00:00.000Z",
       }),
       xpRow({
         id: "recMilestone200",
         sourceLabel: "Shot Milestone",
         reasonPublic: "Shot milestone reached: 200% milestone.",
         points: 80,
+        sortTimestamp: "2026-08-22T07:00:00.000Z",
       }),
       xpRow({
         id: "recWeekly100",

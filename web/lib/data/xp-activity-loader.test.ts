@@ -300,11 +300,56 @@ describe("Schmidt preview regression fixtures", () => {
         points: 20,
         sourceLabel: "Submission Base",
         activityDate: "2026-08-22",
+        sortTimestamp: "2026-08-22T23:59:00.000Z",
       },
     ]);
 
     expect(sorted[0].id).toBe("recMilestone");
     expect(sorted[1].id).toBe("recSubmission");
+  });
+
+  it("orders same-date milestones by percentage even when Created timestamps differ", () => {
+    const sorted = sortXpEventsNewestFirst([
+      {
+        id: "recMilestone175",
+        points: 65,
+        sourceLabel: "Shot Milestone",
+        reasonPublic: "Shot milestone reached: 175% milestone.",
+        activityDate: "2026-08-22",
+        sortTimestamp: "2026-08-22T23:00:00.000Z",
+      },
+      {
+        id: "recMilestone200",
+        points: 80,
+        sourceLabel: "Shot Milestone",
+        reasonPublic: "Shot milestone reached: 200% milestone.",
+        activityDate: "2026-08-22",
+        sortTimestamp: "2026-08-22T08:00:00.000Z",
+      },
+    ]);
+
+    expect(sorted.map((row) => row.id)).toEqual(["recMilestone200", "recMilestone175"]);
+  });
+
+  it("orders same-date weekly targets by percentage even when Created timestamps differ", () => {
+    const sorted = sortXpEventsNewestFirst([
+      {
+        id: "recWeekly125",
+        sourceLabel: "Weekly Threshold 125",
+        reasonPublic: "Reached 125% of weekly shot goal.",
+        activityDate: "2026-08-22",
+        sortTimestamp: "2026-08-22T22:00:00.000Z",
+      },
+      {
+        id: "recWeekly150",
+        sourceLabel: "Weekly Threshold 150",
+        reasonPublic: "Reached 150% of weekly shot goal.",
+        activityDate: "2026-08-22",
+        sortTimestamp: "2026-08-22T09:00:00.000Z",
+      },
+    ]);
+
+    expect(sorted.map((row) => row.id)).toEqual(["recWeekly150", "recWeekly125"]);
   });
 
   it("handles backdated submission activity dates", () => {

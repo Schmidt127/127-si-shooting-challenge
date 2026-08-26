@@ -347,13 +347,6 @@ export function sortXpEventsNewestFirst(events: XpEventSummary[]): XpEventSummar
     const dateCmp = dateB.localeCompare(dateA);
     if (dateCmp !== 0) return dateCmp;
 
-    const tsA = a.sortTimestamp ?? "";
-    const tsB = b.sortTimestamp ?? "";
-    if (tsA && tsB) {
-      const tsCmp = tsB.localeCompare(tsA);
-      if (tsCmp !== 0) return tsCmp;
-    }
-
     const rankCmp =
       xpSourceSortRank(a.sourceLabel, a.reasonPublic) -
       xpSourceSortRank(b.sourceLabel, b.reasonPublic);
@@ -366,6 +359,17 @@ export function sortXpEventsNewestFirst(events: XpEventSummary[]): XpEventSummar
     }
     if (pctA != null && pctB == null) return -1;
     if (pctA == null && pctB != null) return 1;
+
+    const tsA = a.sortTimestamp ?? "";
+    const tsB = b.sortTimestamp ?? "";
+    if (tsA && tsB) {
+      const tsCmp = tsB.localeCompare(tsA);
+      if (tsCmp !== 0) return tsCmp;
+    } else if (tsA && !tsB) {
+      return -1;
+    } else if (!tsA && tsB) {
+      return 1;
+    }
 
     return b.id.localeCompare(a.id);
   });
