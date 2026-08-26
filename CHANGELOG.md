@@ -10,11 +10,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 #### Changed
 - **XP Event Log display (2026-08-26)** — Athlete Game Log and dashboard XP ledger use a
-  two-row layout: activity headline and XP on row 1, date-only on row 2; middle column
-  reserved empty. Headlines use em-dash detail (`Shot Submission — 1,250 shots`,
-  `Homework Completed — Mikan Drill`, `Weekly Shot Target — 150%`, `Milestone Achieved —
-  125%`). Same-date rows sort reverse accomplishment order (newest accomplishments first).
-  Tests: `game-log-presentation.test.ts`, `recent-activity-log.test.ts`,
+  two-row layout: activity headline and XP on row 1, ISO date (`YYYY-MM-DD`) on row 2;
+  middle column reserved empty. Headlines use linked data where available: Submission
+  `Total Shots Counted`, Homework PHA `Assignment Title`, Video Feedback
+  `Custom Video File Name`. Same-date rows sort reverse accomplishment order (milestones
+  highest % first). Tests: `game-log-presentation.test.ts`, `recent-activity-log.test.ts`,
   `xp-activity-table.test.ts`, `xp-activity-loader.test.ts`.
 
 #### Fixed

@@ -6,26 +6,86 @@ import {
 } from "@/lib/data/game-log-presentation";
 
 describe("formatGameLogPresentation", () => {
-  it("formats shot submissions with total shots in the headline", () => {
+  it("formats shot submissions with linked total shots in the headline", () => {
     const result = formatGameLogPresentation({
       id: "rec1",
       points: 20,
       sourceLabel: "Submission Base",
-      reasonPublic: "Shooting submission completed with 1,250 shots.",
+      reasonPublic: "Shooting submission completed.",
       activityDate: "2026-08-22",
+      submissionTotalShots: 1250,
     });
     expect(result.headline).toBe("Shot Submission — 1,250 shots");
   });
 
-  it("formats homework with assignment name and Completed label", () => {
+  it("falls back to reason shot count when linked total shots are missing", () => {
+    const result = formatGameLogPresentation({
+      id: "rec1b",
+      points: 20,
+      sourceLabel: "Submission Base",
+      reasonPublic: "Shooting submission completed with 900 shots.",
+      activityDate: "2026-08-22",
+    });
+    expect(result.headline).toBe("Shot Submission — 900 shots");
+  });
+
+  it("formats homework with assignment title from linked PHA data", () => {
     const result = formatGameLogPresentation({
       id: "rec5",
       points: 35,
       sourceLabel: "Homework Completion",
       reasonPublic: "Homework completed: Mikan Drill",
       activityDate: "2022-03-23",
+      homeworkAssignmentTitle: "Mikan Drill",
     });
     expect(result.headline).toBe("Homework Completed — Mikan Drill");
+  });
+
+  it("does not repeat Homework Completed in the headline detail", () => {
+    const result = formatGameLogPresentation({
+      id: "recHwDup",
+      points: 35,
+      sourceLabel: "Homework Completion",
+      reasonPublic: "Homework Completed",
+      activityDate: "2026-08-21",
+      homeworkAssignmentTitle: "Mikan Drill",
+    });
+    expect(result.headline).toBe("Homework Completed — Mikan Drill");
+    expect(result.headline.match(/Homework Completed/g)?.length).toBe(1);
+  });
+
+  it("falls back to reason homework title when assignment title is missing", () => {
+    const result = formatGameLogPresentation({
+      id: "recHwFallback",
+      points: 35,
+      sourceLabel: "Homework Completion",
+      reasonPublic: "Homework completed: Shot Tracker Usage",
+      activityDate: "2026-08-21",
+    });
+    expect(result.headline).toBe("Homework Completed — Shot Tracker Usage");
+  });
+
+  it("formats video submissions with custom video file name", () => {
+    const result = formatGameLogPresentation({
+      id: "recVideo",
+      points: 15,
+      sourceLabel: "Video Submission",
+      reasonPublic: "Video submission awarded.",
+      activityDate: "2026-08-22",
+      videoCustomFileName: "OffTheDribble.mov",
+    });
+    expect(result.headline).toBe("Video Submission — OffTheDribble.mov");
+  });
+
+  it("falls back safely when video filename is missing", () => {
+    const result = formatGameLogPresentation({
+      id: "recVideoFallback",
+      points: 15,
+      sourceLabel: "Video Submission",
+      reasonPublic: "Coach reviewed shooting form clip",
+      activityDate: "2026-08-22",
+    });
+    expect(result.headline).toBe("Video Submission — Coach reviewed shooting form clip");
   });
 
   it("formats weekly shot targets with percentage", () => {
@@ -91,6 +151,7 @@ describe("formatGameLogPresentation", () => {
       sourceLabel: "Submission Base",
       reasonPublic: "Shooting submission completed with 45 shots.",
       activityDate: "2026-08-22",
+      submissionTotalShots: 45,
     });
     expect(result.headline).not.toMatch(/\+?\d+\s*XP/i);
   });
@@ -100,6 +161,6 @@ describe("formatGameLogDisplayDate", () => {
   it("does not prefix dates with Date:", () => {
     const formatted = formatGameLogDisplayDate("2026-08-22");
     expect(formatted).not.toMatch(/^Date:/i);
-    expect(formatted).toBe("08/22/2026");
+    expect(formatted).toBe("2026-08-22");
   });
 });

@@ -7,6 +7,7 @@ import {
   buildEnrollmentRecordIdFilter,
   buildRecordIdOrFilter,
   buildXpActivityReconciliation,
+  buildXpEventPresentationContext,
   chunkRecordIds,
   clearLinkedXpIdsCache,
   dedupeXpEventRecords,
@@ -162,9 +163,11 @@ describe("xp-activity-loader mapping", () => {
         "XP Activity Date": "2026-08-23T05:59:00.000Z",
       }),
       "2026-08-22T00:00:00.000Z",
+      { submissionTotalShots: 250 },
     );
 
     expect(summary.activityDate).toBe("2026-08-22");
+    expect(summary.submissionTotalShots).toBe(250);
   });
 
   it("prefers XP Activity Date over Created for non-submission sources", () => {
@@ -314,6 +317,83 @@ describe("Schmidt preview regression fixtures", () => {
     );
 
     expect(summary.activityDate).toBe("2026-08-17");
+  });
+});
+
+describe("buildXpEventPresentationContext", () => {
+  beforeEach(() => {
+    listAirtableRecordsMock.mockReset();
+  });
+
+  it("resolves submission shots, homework assignment title, and video filename", async () => {
+    listAirtableRecordsMock.mockImplementation(async (params: { tableName: string }) => {
+      if (params.tableName === "Homework Completions") {
+        return {
+          records: [
+            {
+              id: "recHc1",
+              fields: { "Program Homework Assignment": ["recPha1"] },
+            },
+          ],
+        };
+      }
+      if (params.tableName === "Program Homework Assignments") {
+        return {
+          records: [
+            {
+              id: "recPha1",
+              fields: {
+                "Homework Assignment": ["recLib1"],
+                "Assignment Title": ["Mikan Drill"],
+              },
+            },
+          ],
+        };
+      }
+      if (params.tableName === "Homework Library") {
+        return {
+          records: [{ id: "recLib1", fields: { "Assignment Title": "Mikan Drill" } }],
+        };
+      }
+      if (params.tableName === "Video Feedback") {
+        return {
+          records: [
+            {
+              id: "recVf1",
+              fields: { "Custom Video File Name": "FreeThrows.mov" },
+            },
+          ],
+        };
+      }
+      return { records: [] };
+    });
+
+    const submissionById = new Map<string, { id: string; fields: SubmissionRecordFields }>([
+      [
+        "recSub1",
+        {
+          id: "recSub1",
+          fields: { "Total Shots Counted": 1250 },
+        },
+      ],
+    ]);
+
+    const context = await buildXpEventPresentationContext(
+      [
+        xpRecord("recXpRich", {
+          Submission: ["recSub1"],
+          "Homework Completion": ["recHc1"],
+          "Video Feedback": ["recVf1"],
+        }),
+      ],
+      submissionById,
+    );
+
+    expect(context.get("recXpRich")).toEqual({
+      submissionTotalShots: 1250,
+      homeworkAssignmentTitle: "Mikan Drill",
+      videoCustomFileName: "FreeThrows.mov",
+    });
   });
 });
 

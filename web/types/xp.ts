@@ -40,6 +40,12 @@ export type XpEventSummary = {
   reasonPublic?: string;
   /** ISO timestamp for same-day ordering when available (XP Events → Created). */
   sortTimestamp?: string;
+  /** Linked Submission → Total Shots Counted (display only). */
+  submissionTotalShots?: number | null;
+  /** Homework Completion → PHA → Assignment Title (display only). */
+  homeworkAssignmentTitle?: string | null;
+  /** Video Feedback → Custom Video File Name (display only). */
+  videoCustomFileName?: string | null;
 };
 
 export type LevelDefinition = {

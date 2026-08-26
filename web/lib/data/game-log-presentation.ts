@@ -79,15 +79,14 @@ function manualBonusDetail(reason: string): string | null {
   return cleaned;
 }
 
-/** Display date for row 2 — never prefixed with "Date:". */
+/** Display date for row 2 — ISO YYYY-MM-DD, never prefixed with "Date:". */
 export function formatGameLogDisplayDate(dateKey: string | null | undefined): string {
   if (!dateKey || !String(dateKey).trim()) return "Date TBD";
-  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateKey).trim());
-  if (match) {
-    const [, year, month, day] = match;
-    return `${month}/${day}/${year}`;
-  }
-  return String(dateKey).trim();
+  const trimmed = String(dateKey).trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) return trimmed;
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(trimmed);
+  if (match) return `${match[1]}-${match[2]}-${match[3]}`;
+  return trimmed;
 }
 
 /** Map XP event source + reason into short Game Log headlines (FUT-012). */
@@ -95,12 +94,25 @@ export function formatGameLogPresentation(row: XpEventSummary): GameLogPresentat
   const source = asText(row.sourceLabel, "").toLowerCase();
   const reason = cleanReason(asText(row.reasonPublic, ""));
 
+  if (source.includes("video")) {
+    const fileName = row.videoCustomFileName?.trim() || null;
+    const fallbackDetail =
+      reason && !/^video submission/i.test(reason) && reason.length < 120 ? reason : null;
+    return {
+      headline: joinHeadline("Video Submission", fileName || fallbackDetail),
+    };
+  }
+
   if (source.includes("submission") || source.includes("shooting base") || /shooting submission/i.test(reason)) {
-    const shots = extractShotCount(reason);
+    const linkedShots = row.submissionTotalShots;
+    const shots =
+      linkedShots != null && linkedShots > 0
+        ? linkedShots
+        : extractShotCount(reason);
     return {
       headline: joinHeadline(
         "Shot Submission",
-        shots != null ? `${formatShots(shots)} shots` : null,
+        shots != null && shots > 0 ? `${formatShots(shots)} shots` : null,
       ),
     };
   }
@@ -142,20 +154,17 @@ export function formatGameLogPresentation(row: XpEventSummary): GameLogPresentat
   }
 
   if (source.includes("homework")) {
+    const assignmentTitle =
+      row.homeworkAssignmentTitle?.trim() ||
+      extractHomeworkAssignmentName(reason);
     return {
-      headline: joinHeadline("Homework Completed", extractHomeworkAssignmentName(reason)),
+      headline: joinHeadline("Homework Completed", assignmentTitle),
     };
   }
 
   if (source.includes("perfect week")) {
     return {
       headline: joinHeadline("Perfect Week", reason || "Week requirements met"),
-    };
-  }
-
-  if (source.includes("video")) {
-    return {
-      headline: joinHeadline("Video Feedback", reason || null),
     };
   }
 

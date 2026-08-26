@@ -37,6 +37,8 @@ const XP_EVENT_FIELDS = [
   "Source Key",
   "Duplicate Status",
   "Submission",
+  "Homework Completion",
+  "Video Feedback",
   XP_EVENTS_ENROLLMENT_RECORD_ID_FIELD,
 ] as const;
 
@@ -98,6 +100,8 @@ export type XpEventRecordFields = {
   "Source Key"?: unknown;
   "Duplicate Status"?: unknown;
   Submission?: unknown;
+  "Homework Completion"?: unknown;
+  "Video Feedback"?: unknown;
   "Enrollment Record ID"?: unknown;
 };
 
@@ -107,6 +111,30 @@ export type SubmissionRecordFields = {
   "Count This Submission?"?: unknown;
   "Total Shots Counted"?: unknown;
   "XP Events"?: unknown;
+};
+
+type HomeworkCompletionRecordFields = {
+  "Program Homework Assignment"?: unknown;
+};
+
+type ProgramHomeworkAssignmentFields = {
+  "Homework Assignment"?: unknown;
+  "Assignment Title"?: unknown;
+};
+
+type HomeworkLibraryTitleFields = {
+  "Assignment Title"?: unknown;
+};
+
+type VideoFeedbackRecordFields = {
+  "Custom Video File Name"?: unknown;
+  "Video Asset File Name"?: unknown;
+};
+
+export type XpEventPresentationContext = {
+  submissionTotalShots?: number | null;
+  homeworkAssignmentTitle?: string | null;
+  videoCustomFileName?: string | null;
 };
 
 export type XpActivityExclusionReason =
@@ -236,6 +264,7 @@ export function resolveXpEventDisplayDate(
 export function mapXpEventRecordToSummary(
   record: { id: string; fields: XpEventRecordFields },
   submissionActivityDate?: unknown,
+  presentation?: XpEventPresentationContext,
 ): XpEventSummary {
   const fields = record.fields;
   const active = asBoolean(fields["Active?"]);
@@ -253,6 +282,9 @@ export function mapXpEventRecordToSummary(
     reasonPublic: asText(fields["XP Reason Public"], "") || undefined,
     activityDate: displayedDate,
     sortTimestamp: createdRaw || undefined,
+    submissionTotalShots: presentation?.submissionTotalShots ?? undefined,
+    homeworkAssignmentTitle: presentation?.homeworkAssignmentTitle ?? undefined,
+    videoCustomFileName: presentation?.videoCustomFileName ?? undefined,
   };
 }
 
@@ -610,6 +642,135 @@ export function buildXpActivityReconciliation(
   return rows;
 }
 
+function resolveVideoDisplayFileName(fields: VideoFeedbackRecordFields): string | null {
+  const custom = asText(fields["Custom Video File Name"], "").trim();
+  if (custom && custom !== "—") return custom;
+  const asset = asText(fields["Video Asset File Name"], "").trim();
+  if (asset && asset !== "—") return asset;
+  return null;
+}
+
+function resolveHomeworkAssignmentTitle(
+  phaFields: ProgramHomeworkAssignmentFields,
+  libraryById: Map<string, { fields: HomeworkLibraryTitleFields }>,
+): string | null {
+  const fromPha = asText(phaFields["Assignment Title"], "").trim();
+  if (fromPha && fromPha !== "—") return fromPha;
+  const libraryId = linkedRecordIds(phaFields["Homework Assignment"])[0];
+  if (!libraryId) return null;
+  const library = libraryById.get(libraryId);
+  if (!library) return null;
+  const fromLibrary = asText(library.fields["Assignment Title"], "").trim();
+  return fromLibrary && fromLibrary !== "—" ? fromLibrary : null;
+}
+
+export async function buildXpEventPresentationContext(
+  xpRecords: Array<{ id: string; fields: XpEventRecordFields }>,
+  submissionById: Map<string, { id: string; fields: SubmissionRecordFields }>,
+): Promise<Map<string, XpEventPresentationContext>> {
+  const contextByXpId = new Map<string, XpEventPresentationContext>();
+
+  const homeworkCompletionIds = new Set<string>();
+  const videoFeedbackIds = new Set<string>();
+
+  for (const record of xpRecords) {
+    for (const id of linkedRecordIds(record.fields["Homework Completion"])) {
+      homeworkCompletionIds.add(id);
+    }
+    for (const id of linkedRecordIds(record.fields["Video Feedback"])) {
+      videoFeedbackIds.add(id);
+    }
+  }
+
+  const homeworkCompletions = await fetchRecordsByIds<HomeworkCompletionRecordFields>(
+    PUBLIC_AIRTABLE_TABLES.homeworkCompletions.name,
+    [...homeworkCompletionIds],
+    ["Program Homework Assignment"],
+    300,
+  );
+
+  const phaIds = [
+    ...new Set(
+      homeworkCompletions.flatMap((record) =>
+        linkedRecordIds(record.fields["Program Homework Assignment"]),
+      ),
+    ),
+  ];
+  const phaRecords = await fetchRecordsByIds<ProgramHomeworkAssignmentFields>(
+    PUBLIC_AIRTABLE_TABLES.programHomeworkAssignments.name,
+    phaIds,
+    ["Homework Assignment", "Assignment Title"],
+    300,
+  );
+  const phaById = new Map(phaRecords.map((record) => [record.id, record]));
+
+  const libraryIds = [
+    ...new Set(
+      phaRecords.flatMap((record) => linkedRecordIds(record.fields["Homework Assignment"])),
+    ),
+  ];
+  const libraryRecords = await fetchRecordsByIds<HomeworkLibraryTitleFields>(
+    PUBLIC_AIRTABLE_TABLES.homeworkLibrary.name,
+    libraryIds,
+    ["Assignment Title"],
+    300,
+  );
+  const libraryById = new Map(libraryRecords.map((record) => [record.id, record]));
+
+  const homeworkTitleByHcId = new Map<string, string>();
+  for (const hc of homeworkCompletions) {
+    const phaId = linkedRecordIds(hc.fields["Program Homework Assignment"])[0];
+    const pha = phaId ? phaById.get(phaId) : undefined;
+    const title = pha ? resolveHomeworkAssignmentTitle(pha.fields, libraryById) : null;
+    if (title) homeworkTitleByHcId.set(hc.id, title);
+  }
+
+  const videoRecords = await fetchRecordsByIds<VideoFeedbackRecordFields>(
+    PUBLIC_AIRTABLE_TABLES.videoFeedback.name,
+    [...videoFeedbackIds],
+    ["Custom Video File Name", "Video Asset File Name"],
+    300,
+  );
+  const videoFileNameById = new Map<string, string>();
+  for (const vf of videoRecords) {
+    const fileName = resolveVideoDisplayFileName(vf.fields);
+    if (fileName) videoFileNameById.set(vf.id, fileName);
+  }
+
+  for (const record of xpRecords) {
+    const submissionIds = linkedRecordIds(record.fields.Submission);
+    const submission = submissionIds[0] ? submissionById.get(submissionIds[0]) : undefined;
+    const submissionTotalShots = submission
+      ? asOptionalNumber(submission.fields["Total Shots Counted"])
+      : null;
+
+    const hcId = linkedRecordIds(record.fields["Homework Completion"])[0];
+    const vfId = linkedRecordIds(record.fields["Video Feedback"])[0];
+
+    contextByXpId.set(record.id, {
+      submissionTotalShots,
+      homeworkAssignmentTitle: hcId ? (homeworkTitleByHcId.get(hcId) ?? null) : null,
+      videoCustomFileName: vfId ? (videoFileNameById.get(vfId) ?? null) : null,
+    });
+  }
+
+  return contextByXpId;
+}
+
+function resolveXpEventPresentation(
+  record: { id: string; fields: XpEventRecordFields },
+  submissionById: Map<string, { id: string; fields: SubmissionRecordFields }>,
+  presentationByXpId: Map<string, XpEventPresentationContext>,
+): XpEventSummary {
+  const submissionIds = linkedRecordIds(record.fields.Submission);
+  const submission = submissionIds[0] ? submissionById.get(submissionIds[0]) : undefined;
+  return mapXpEventRecordToSummary(
+    record,
+    submission?.fields["Activity Date"],
+    presentationByXpId.get(record.id),
+  );
+}
+
 /**
  * Load XP activity rows for one enrollment.
  * Returns an empty array when the athlete truly has no XP Events.
@@ -710,15 +871,12 @@ export async function loadXpActivityForEnrollment(
 
   const totalAvailableRows = displayCandidates.length;
 
+  const presentationByXpId = await buildXpEventPresentationContext(kept, submissionById);
+
   const sortedRows = sortXpEventsNewestFirst(
-    displayCandidates.map((record) => {
-      const submissionIds = linkedRecordIds(record.fields.Submission);
-      const submission = submissionIds[0] ? submissionById.get(submissionIds[0]) : undefined;
-      return mapXpEventRecordToSummary(
-        record,
-        submission?.fields["Activity Date"],
-      );
-    }),
+    displayCandidates.map((record) =>
+      resolveXpEventPresentation(record, submissionById, presentationByXpId),
+    ),
   );
   const rows =
     maxRows === null ? sortedRows : sortedRows.slice(0, maxRows);

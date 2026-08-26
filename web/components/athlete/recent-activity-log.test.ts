@@ -38,7 +38,7 @@ describe("XP Event Log presentation", () => {
     ]);
     const html = renderLog(items);
     expect(html).not.toMatch(/Date:/);
-    expect(html).toContain("08/22/2026");
+    expect(html).toContain("2026-08-22");
   });
 
   it("shows XP only in the right column and leaves the middle column empty", () => {

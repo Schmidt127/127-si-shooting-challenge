@@ -24,7 +24,7 @@ describe("XpActivityTable", () => {
 
     expect(html).toContain("Shot Submission — 500 shots");
     expect(html).toContain("+20 XP");
-    expect(html).toContain("08/22/2026");
+    expect(html).toContain("2026-08-22");
     expect(html).not.toMatch(/Date:/);
     expect(html).toContain('data-testid="xp-activity-middle"');
     expect(html.match(/\+20 XP/g)?.length).toBe(1);
