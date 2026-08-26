@@ -40,16 +40,28 @@ No Airtable, Make, Fillout, Stripe, or schema changes.
 
 ## Validation checklist
 
-- [ ] `npm run lint`
-- [ ] `npm run typecheck`
-- [ ] `npm run test`
-- [ ] `npm run build`
-- [ ] `npm run test:smoke:prod`
-- [ ] Live homework catalog loads active PHA-scheduled assignments only
-- [ ] Newest assigned week first
-- [ ] Brief Description from `Brief Description - Display`
-- [ ] Resource links render when URL/Docs present
-- [ ] Homework detail routes unchanged
+- [x] `npm run lint`
+- [x] `npm run typecheck`
+- [x] `npm run test` (406/406)
+- [x] `npm run build`
+- [x] `npm run test:smoke:prod` (50/50)
+- [x] `homework-due-date.spec.ts` (3/3)
+- [x] Live homework catalog loads active PHA-scheduled assignments only
+- [x] Newest assigned week first (`Early Bird` before `Perfect Testing Week`)
+- [x] Brief Description from `Brief Description - Display` (spot-check `rechVLOeyEVIqmy2v`)
+- [x] Resource links render when URL/Docs present
+- [x] Homework detail routes unchanged
+
+## Production verification (2026-08-26)
+
+| Check | Result |
+|-------|--------|
+| Commit | `cdd2b97` on `master` |
+| Push | `3306379..cdd2b97` → `origin/master` |
+| Live URL | https://www.fairfieldbasketballclub.com/shoot/homework |
+| Desktop | Loads 4 active cards; newest week first; brief + resource links |
+| Mobile (390px) | No material horizontal overflow |
+| Airtable spot-check | `rechVLOeyEVIqmy2v` card text matches Homework Library **`Brief Description - Display`** (not Full Assignment Description) |
 
 ## Remaining limitations
 

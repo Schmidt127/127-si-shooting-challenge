@@ -289,7 +289,7 @@ Redesigned `/shoot/homework` with PHA-backed live catalog cards (no hardcoded as
 
 **Deploy checklist:** [docs/deploy-checklists/FUT-014-homework-page-redesign.md](../deploy-checklists/FUT-014-homework-page-redesign.md)
 
-**Validation (2026-08-26):** lint ✓ · typecheck ✓ · vitest ✓ · build ✓ · prod smoke (pending post-push)
+**Validation (2026-08-26):** lint ✓ · typecheck ✓ · vitest 406/406 ✓ · build ✓ · prod smoke 50/50 ✓ · homework-due-date 3/3 ✓ · live Airtable spot-check ✓ (Shot Tracker Usage ↔ `Brief Description - Display`)
 
 ### FUT-015 — Levels page redesign
 
