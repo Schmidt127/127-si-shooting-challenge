@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-08-25** (current-state audit — `207a2c1` on Vercel Production; PHA Due Date + smoke 50/50 verified)
+Last updated: **2026-08-26** (website closeouts — FUT-014 homework catalog, FUT-012 XP Event Log presentation, FUT-003 paid Make validation documented; vitest **406/406** · prod smoke **50/50**)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
@@ -204,7 +204,7 @@ Deploy details: [deployment-notes.md](./deployment-notes.md), [web/docs/deployme
 
 | Route | Status |
 |-------|--------|
-| `/`, `/leaderboard`, `/homework`, `/homework/[id]` | Live (Airtable) |
+| `/`, `/leaderboard`, `/homework`, `/homework/[id]` | Live — PHA-backed homework catalog (FUT-014 complete 2026-08-26) |
 | `/tutorials`, `/shoutouts`, `/articles` (+ detail) | Live — **Tutorials & Assets** (`tblDOTgsWfqPm18bw`); publish gate `OK to Publish on Softr` = `checked` |
 | `/zoom-meetings`, `/levels`, `/achievements`, `/game-manual`, `/public-display` | Live |
 | `/dashboard` | Live demo — **mock adapter** (no auth) |
@@ -215,6 +215,15 @@ Deploy details: [deployment-notes.md](./deployment-notes.md), [web/docs/deployme
 
 Canonical map: [web/docs/site-hierarchy.md](../web/docs/site-hierarchy.md)
 Admin roadmap: [web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md)
+
+### Website closeouts (2026-08-26)
+
+| Item | Status | Evidence |
+|------|--------|----------|
+| **FUT-014** — `/shoot/homework` live catalog | **Complete** | PHA + Homework Library; Brief Description = `Homework Library.Brief Description - Display` (`fldAnHr3uTuDN5bs9`); commits `cdd2b97`, `4a26aa4`; [FUT-014 checklist](./deploy-checklists/FUT-014-homework-page-redesign.md) |
+| **FUT-012** — XP Event Log presentation | **Complete** | Two-row layout, ISO dates, linked headlines (shots, homework title, video file name, Zoom meeting name), deterministic same-date sort; commits `6625559`, `f225f04`, `68c3a45`, `3306379`; display-only |
+| **FUT-003** — Fillout Stripe paid writeback (Make) | **Validated — ready for activation** | Scenario **inactive** at Maia report 2026-08-26; `$2.00` paid test; free-payment architecture **deferred Nov/Dec 2026**; [FUT-003 checklist](./deploy-checklists/FUT-003-fillout-stripe-payment-writeback.md) |
+| Production URL | https://www.fairfieldbasketballclub.com/shoot/homework | Vitest **406/406** · smoke **50/50** · homework-due-date **3/3** · build pass |
 
 ### Admin page status
 
@@ -243,6 +252,7 @@ Admin roadmap: [web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md)
 | Daily / homework / video parent emails | **Current:** Hub → Resend. Make webhooks are not the email sender. |
 | **Welcome email** | **Communications Hub → Resend** via Automation **079** (Make welcome scenario not used for email) — participant activation still pending |
 | **C-028 Tremendous awards** | Sandbox send **validated** (Mike 2026-08-19). Production API **pending**. Make scenario **OFF**. v2 is an implementation snapshot, not production-live. Make HTTP is not a parent-email path. [current state](./integrations/tremendous-award-fulfillment.md) |
+| **FUT-003 Fillout Stripe payment writeback** | **Validated — ready for activation** (2026-08-26, Maia report). Scenario **inactive** in Production. Paid PaymentIntent path only; free/zero-dollar routes **deferred Nov/Dec 2026**. Blueprint: [make/blueprints/fut-003-fillout-stripe-payment-writeback.json](../make/blueprints/fut-003-fillout-stripe-payment-writeback.json) |
 
 ---
 

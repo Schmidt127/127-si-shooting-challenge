@@ -46,7 +46,7 @@ Priority: **P0** launch/security blocker · **P1** important parent/athlete expe
 ### FUT-001 — Match homework by assignment identity, not HW1/HW2 slot
 
 **Priority:** P1  
-**Status:** Ready for prompt  
+**Status:** Complete (GitHub + tests — Production paste pending Mike approval)  
 **Systems:** Airtable, homework intake, Homework Completions, XP, parent submission flow
 
 Allow a parent or athlete to submit an assignment in either visible homework slot. The system must identify the assignment by its assignment/lesson identity and match it to the correct scheduled assignment. The HW number is not authoritative because slot numbering may change from year to year.
@@ -56,6 +56,8 @@ Parents may submit the assignment at any time before the assignment’s explicit
 The system must preserve checks for assignment identity, enrollment, challenge/season, and duplicate credit. Multiple uploads or repeat submissions are allowed, but only one Homework Completion and one XP award may be credited for the same athlete, assignment identity, and enrollment context.
 
 **Acceptance criteria:** correct assignment matching across either slot; deadline enforced; late submission clearly marked ineligible; repeat uploads reviewable; XP deduplicated; no dependence on HW1/HW2 names.
+
+**Implementation (2026-08-25):** GitHub **020 v3.8** + **065 v10.4**; contracts in `lib/homework-contracts/assignment-identity.js`. Promotion doc: [FUT-001-homework-assignment-identity-deadline.md](./deploy-checklists/FUT-001-homework-assignment-identity-deadline.md).
 
 ### FUT-002 — Audit and remove unused Airtable fields
 
@@ -74,14 +76,55 @@ After confirming no active dependency remains, delete the obsolete fields and up
 ### FUT-003 — Stripe payment writeback to Airtable
 
 **Priority:** P1  
-**Status:** Ready for prompt  
-**Systems:** Stripe, webhook/API integration, Airtable Enrollments or payment records
+**Status:** **Paid route validated — ready for activation** (2026-08-26, Maia final report); Make scenario **inactive** (not activated in Production)  
+**Systems:** Fillout webhook, Make.com, Stripe API, Airtable `Payment Transactions` + `Enrollments`  
+**Make scenario:** `FUT-003 - Fillout Stripe Payment to Airtable Payment Transactions` — **inactive** at validation time; ready for Mike activation when approved
 
-After Stripe accepts a registration payment, write the payment result back to Airtable. At minimum, capture the amount paid and whether a coupon or promotion code was used. The implementation prompt should determine the final field location and exact Stripe event contract.
+After Stripe accepts a registration payment, write the payment result back to Airtable. At minimum, capture the amount paid and whether a coupon or promotion code was used.
 
-The design should use verified webhook events as the payment source of truth, support idempotent retries, and distinguish successful, failed, pending, refunded, and unmatched payments.
+**Verified paid-only workflow (2026-08-26 — controlled Production Make test, scenario inactive):**
 
-**Acceptance criteria:** full-price and discounted test payments; amount paid; coupon/promotion evidence; duplicate webhook protection; enrollment linkage; clear failure state; no payment status based only on a browser return page.
+| Step | Result |
+|------|--------|
+| Fillout webhook receives submission | Pass |
+| Payload normalized (Module 4) | Pass |
+| One **10-second delay** before Enrollment lookup | Present by design |
+| Enrollment found via `{Fillout Submission Id} = "{{4.filloutSubmissionId}}"` (Module 16) | Pass |
+| Stripe **PaymentIntent** retrieved (Module 6) | Pass |
+| Payment amount calculated correctly (cents → dollars) | Pass — **$2.00** test |
+| Payment Transactions duplicate search runs once (Module 7) | Pass |
+| One **Payment Transactions** record created (Module 8) | Pass |
+| Enrollment linked once (Module 12) | Pass |
+| Duplicate protection | Pass — no duplicate transaction on replay |
+| **Payment Status** = `Paid` | Pass |
+| **Stripe Payment ID** stored | Pass |
+| **Actual Amount Paid** stored | Pass — `$2.00` |
+| **Fillout Submission ID** stored | Pass |
+| **Payment Date** stored | Pass |
+| **Make Processed At** stored | Pass |
+
+**Final tested transaction (Maia report):** Actual Amount Paid `$2.00` · Payment Status `Paid` · one Payment Transactions row · one Enrollment link update · no duplicate row.
+
+**Scope note:** This validation covers the **paid PaymentIntent path only**. It does **not** change Airtable XP logic, XP calculations, or XP award amounts.
+
+**Deferred until November/December 2026 (do not mark complete):**
+
+| Item | Status |
+|------|--------|
+| 100% coupon / $0 payment route | **Deferred** |
+| `No Payment Required` payment status | **Deferred** |
+| Stripe Checkout Session webhook route | **Deferred** |
+| Stripe metadata correlation | **Deferred** |
+| Custom Checkout Session creation | **Deferred** |
+| Coupon / promotion-code capture | **Deferred** (Fillout webhook gap) |
+| Enterprise webhook architecture | **Deferred** |
+| Advanced Stripe reconciliation | **Deferred** |
+
+Do **not** add a blank **Stripe Payment ID** route to the current paid-only workflow.
+
+**Acceptance criteria (paid path):** paid test payment with amount + duplicate protection + enrollment linkage + field writeback — **verified**; coupon/promotion evidence — **deferred**; discounted/zero-dollar test — **deferred** (free route not built).
+
+**Promotion doc:** [FUT-003-fillout-stripe-payment-writeback.md](./deploy-checklists/FUT-003-fillout-stripe-payment-writeback.md)
 
 ### FUT-004 — Automated award emailer to replace Tremendous
 
@@ -183,50 +226,112 @@ Each page is a separate future item so it can receive its own focused Cursor pro
 ### FUT-011 — Athlete page: level graphic and hero-label polish
 
 **Priority:** P1  
-**Status:** Ready for prompt  
+**Status:** Complete — 2026-08-25 · implementation `901812e` · production verified `900e61c`  
 **Systems:** Website athlete profile, Airtable level data, design system
+
+**Summary:** Public profile hero uses `AthleteLevelDisplay` with large level graphic and high-contrast hero badge; at-a-glance panel surfaces level for parents.
+
+**Tests:** 349 Vitest · typecheck · lint · build pass.
+
+**Production verification (2026-08-25):** Vercel Production deploy `900e61c` success · slug `perfect-week-testing` · hero + glance + Game Log pass · mobile overflow 0px.
+
+**Limitation:** Level still appears in hero, snapshot, and progression (intentional emphasis).
 
 On the athlete page, place the appropriate level graphic beside or near the athlete’s displayed shooter level, such as Beginner. Fix the current blue level label with black text so it has sufficient contrast and matches the other hero labels professionally.
 
 ### FUT-012 — Athlete page: professional Game Log presentation
 
 **Priority:** P1  
-**Status:** Ready for prompt  
+**Status:** Complete — 2026-08-25 · implementation `901812e` · production verified `900e61c` · **XP Event Log presentation finalized 2026-08-26**  
 **Systems:** Website XP activity table, XP Events, Airtable presentation fields
 
-Improve the Game Log/Recent Activity display:
+**Summary:** Game Log short labels and contextual details; server-side pagination via `GET /api/athletes/[slug]/game-log` with cursor (`activityDate` + XP Event record id), opaque row keys, Load more with loading/retry, enrollment-scoped isolation.
 
-- Shorten activity labels; for example, use `Shot Submission` instead of `Shooting Submission Completed`.
-- Remove the redundant small `+20 XP` beside the date.
-- Use that space for the reason or result:
-  - Shot submission: shots taken that day
-  - Threshold/milestone: `75% of Target Goal`
-  - Streak: `3 Day Shooting Streak`
-  - Zoom: `Attended in Person` or `Attended via Recording`
-  - Homework: assignment name, such as `Shot Challenge Tracker`
-- Keep the larger XP award on the far right.
+**XP Event Log — completed website presentation (2026-08-26, display-only — no XP calculation or Airtable XP logic changes):**
 
-Use the most maintainable professional design. Prefer configurable presentation labels when that improves long-term editing, while retaining safe automatic defaults.
+| Feature | Status |
+|---------|--------|
+| Two-row event layout preserved | Complete |
+| `Date:` label removed; ISO dates (`YYYY-MM-DD`) on row 2 | Complete |
+| XP amount alone on the right; middle column empty | Complete |
+| Shot Submissions → total shots | Complete |
+| Homework → assignment title | Complete |
+| Video Submissions → `Custom Video File Name` | Complete |
+| Zoom Attendance → linked meeting name | Complete (`3306379`) |
+| Same-date events sort deterministically | Complete |
+| Weekly targets sort by percentage descending | Complete (`68c3a45`) |
+| Milestones sort by percentage descending | Complete (`68c3a45`) |
+| Shot Submissions below later same-date accomplishments | Complete |
+| No duplicate XP rows | Complete |
+| Mobile layout | Verified |
+
+**Commits:** `6625559` (details + ordering) · `f225f04` (Airtable field fallbacks) · `68c3a45` (same-date % sort) · `3306379` (Zoom attendance detail)
+
+**Tests:** `game-log-presentation.test.ts`, `recent-activity-log.test.ts`, `xp-activity-table.test.ts`, `xp-activity-loader.test.ts` · unit baseline **393/393** before final sorting adjustment · build pass · prod smoke **50/50** pass after final sorting update.
+
+**Production verification (2026-08-25):** API page 1/2 return 12 rows, no key overlap; Load more 12→24 on `perfect-week-testing`; invalid slug API 404.
+
+**Limitation:** Full ledger capped at `GAME_LOG_MAX_FETCH=2000` per enrollment (deferred — safe at current scale).
 
 ### FUT-013 — Athlete page: Perfect Week activity panel
 
 **Priority:** P1  
-**Status:** Ready for prompt  
+**Status:** Complete — 2026-08-25 · implementation `901812e` · production verified `900e61c`  
 **Systems:** Website, Weekly Athlete Summary, Perfect Week fields
 
-Create a panel styled consistently with Game Log/Recent Activity for Perfect Weeks. Show all current and past weeks, but do not show future weeks. For each week, display the week dates, shot submissions, homework submitted, videos submitted, Zoom attendance, and a clear status label such as `Perfect Week`, `Not Perfect`, or `In Progress`.
+**Summary:** `PerfectWeekPanel` shows week-by-week requirements and status labels; weekly performance stats moved below with clarifying copy.
 
-Place this panel where Weekly Performance currently appears and move the existing weekly-performance box below it. The design should motivate athletes to improve in the next week when they miss Perfect Week credit.
+**Tests:** Production profile section order verified on `charlie-schmidt` and `perfect-week-testing`.
+
+**Production closeout — athlete profile reliability (2026-08-25)**
+
+| Item | Status |
+|------|--------|
+| Vercel Production deploy | **Success** — `207a2c1` on `www.fairfieldbasketballclub.com/shoot` (2026-08-25) |
+| Smoke stabilization commits | `0adcb8d` (Fairfield retry, image/footer hydration) · `fce037f` (profile freshness) on ancestry |
+| Production smoke slug | `perfect-week-testing` (also `charlie-schmidt`, `curtis-schmidt`; `testing-schmidt` is DEV-only) |
+| PHA Due Date | **Verified** — catalog + athlete homework assignments show readable due dates; commit `207a2c1` adds prod Playwright + Vitest coverage |
+| Game Log pagination | API-backed; Load more verified 12→24 |
+| Freshness notice | **Fixed** — hidden on clean prod loads; only when homework source fails (`mayBeStale`); “Last checked” renders client-side to avoid hydration mismatch on prod smoke |
+| Homework image | `withBasePath` fix deployed `a71cbef`; static asset HTTP 200 |
+| Mobile nav smoke | **Fixed** — `cross-env` for Windows; `openMobileNavPanel()` retries until post-hydration menu opens |
+| `npm run test:smoke:prod` | **50/50** pass (2026-08-25); cross-platform via `cross-env`; serial `--workers=1` against live prod |
+| Vitest | **369** pass (2026-08-25) |
+| `homework-due-date.spec.ts` | **3/3** pass on prod (2026-08-25) |
+| SEO production | `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true` on Vercel; `search-indexing.spec.ts` pass on prod |
+| Local PAT 403 | Documented — read on Program Instance - Sync, Program Homework Assignments, Homework Library, Weeks, Homework Completions |
+| `GAME_LOG_MAX_FETCH=2000` | **Deferred** — safe at current scale; no athlete near cap |
 
 ### FUT-014 — Homework page redesign and live Homework Library connection
 
 **Priority:** P1  
-**Status:** Ready for prompt  
-**Systems:** Website Homework page, Airtable Homework Library/assignment table
+**Status:** **Complete** (2026-08-26)  
+**Systems:** Website Homework page, Airtable Homework Library / Program Homework Assignments  
+**Production route:** https://www.fairfieldbasketballclub.com/shoot/homework
 
-Redesign the Homework page with a polished modern card/scrolling experience while preserving usability and accessibility. Display the active assignments present in the Homework assignment table—not a hardcoded count. Mike may add assignments before the challenge or during Week 1, and the page must update accordingly.
+**Brief Description mapping (verified — previous mapping was correct):**
 
-Sort newest week first. Each assignment should display its name, assigned week, brief explanation, and links to required documents/resources.
+| Layer | Value |
+|-------|--------|
+| Airtable table | **Homework Library** |
+| Airtable field | **`Brief Description - Display`** |
+| Field ID | `fldAnHr3uTuDN5bs9` |
+| Field type | `aiText` |
+| Website property | `briefDescription` |
+| Normalized path | `fetchScheduledHomeworkCatalog()` → `mapCurriculumToAssignment()` → `HomeworkAssignment.briefDescription` → `resolveInstructionsPreview()` → `instructionsPreview` |
+| Card property | `assignment.instructionsPreview` |
+| Test selector | `data-testid="homework-catalog-brief"` |
+| Blank fallback | `Instructions coming soon.` |
+
+**Does not use on catalog cards:** `Full Assignment Description` · `Description` · `Assignment Title` (card headline uses `title` with `displayName` fallback; brief text comes only from **`Brief Description - Display`**).
+
+**Completed features:** live PHA + Homework Library data · dynamic assignment count · active/published schedule display · newest week first · assignment title · assigned week · brief description · due date · `URL` · `URL Additional` · `Docs` links · keyboard-accessible links · detail-page links preserved · Operator Notes removed from public cards · mobile layout verified · **four published cards** verified in production.
+
+**Commits:** `cdd2b97` (redesign + mapping verification) · `4a26aa4` (verification documentation)
+
+**Deploy checklist:** [docs/deploy-checklists/FUT-014-homework-page-redesign.md](../deploy-checklists/FUT-014-homework-page-redesign.md)
+
+**Validation (2026-08-26):** lint ✓ (4 pre-existing unrelated warnings) · typecheck ✓ · vitest **406/406** ✓ · build ✓ · prod smoke **50/50** ✓ · homework-due-date **3/3** ✓ · desktop ✓ · mobile 390px ✓ · homework detail route ✓ · live Airtable spot-check ✓ (`rechVLOeyEVIqmy2v` ↔ `Brief Description - Display`)
 
 ### FUT-015 — Levels page redesign
 
@@ -539,7 +644,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-085** | Zoom | Live bonuses (if configured) work | P2 | Installed in PROD | SC-022 | Confirm which bonuses still desired; test |
 | **SC-093** | Zoom | Public website Zoom pages accurate | P2 | Installed in PROD | SC-146 | Confirm Airtable publish filters after wipe |
 | **SC-103** | Website | Leaderboard | P2 | Live Tested in PROD | SC-068 | Fix Schmidt Grade/School Year (EXT-QA-005); season content hygiene |
-| **SC-104** | Website | Homework catalog | P2 | Installed in PROD | SC-054 | Unpublish stale Week 10 prior-season rows (EXT-QA-006); Presentation fields later |
+| **SC-104** | Website | Homework catalog | P2 | **Complete** (FUT-014, 2026-08-26) | SC-054 | PHA-backed live catalog at `/shoot/homework`; Brief Description = `Homework Library.Brief Description - Display`; commits `cdd2b97` / `4a26aa4`; optional: unpublish stale Week 10 prior-season rows (EXT-QA-006) |
 | **SC-105** | Website | Tutorials | P2 | Tracked under C-026 | SC-052 | Complete table merge SC-052; audit Article ΓÇ£DribbleΓÇ¥ category (EXT-QA-003) |
 | **SC-106** | Website | Levels pages | P2 | Live Tested in PROD | SC-024 | Gate copy polish; cover 410 graceful fallback in web |
 | **SC-107** | Website | Achievements pages | P2 | Installed in PROD | SC-026 | Re-seed / Active?+Visible? for Shot Milestones + Perfect Week (EXT-QA-002) |
@@ -549,8 +654,8 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-111** | Website | Athlete profiles (real data, not mocks) | P2 | Live Tested in PROD | SC-103 | Optional: recreate `Web - Leaderboard` view (fallback OK) |
 | **SC-112** | Website | Athlete auth + dashboard | P2 | Decision Needed | ΓÇö | Mike pick approach; then schema + session implementation |
 | **SC-113** | Website | Loading, empty, and error states | P2 | Live Tested in PROD | ΓÇö | Keep states aligned when SC-112 lands |
-| **SC-115** | Website | noindex removal / search indexing | P2 | Decision Needed | SC-114 | Flip robots only after content + soft cutover + Mike written approval |
-| **SC-118** | Website | Production readiness smoke package for public `/shoot` | P2 | Built in Repository ΓÇö smoke suite successfully executed against current PROD | SC-102 | Optional CI wire for `test:smoke`; axe-core later; Mike final prod check after integration deploy |
+| **SC-115** | Website | noindex removal / search indexing | P2 | **Complete** (2026-08-25, `647d465`; prod verified) | SC-114 | **Prod cutover verified** — Vercel Production `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`; public pages indexable; athlete profiles + private routes `noindex`; sitemap excludes athletes/public-display; `npm run test:smoke:prod` 50/50 after cross-env fix. Checklist: `docs/deploy-checklists/2026-08-25-web-search-indexing-cutover.md`. |
+| **SC-118** | Website | Production readiness smoke package for public `/shoot` | P2 | **Complete** (2026-08-25, deploy `207a2c1`) | SC-102 | `npm run test:smoke:prod` **50/50**; cross-platform (`cross-env`); prod athlete slug `perfect-week-testing`; mobile nav + SEO smoke pass; Vitest **369**; `homework-due-date.spec.ts` **3/3** on prod. |
 | **SC-133** | Platform | Pre-season parent comms from rules | P2 | Tracked under V2-010 | SC-109 | Write/send after SC-109 |
 | **SC-138** | Platform | Close stale overnight GitHub issues/PRs for 070a | P2 | Planned | SC-095 | Close or update with current truth |
 | **SC-144** | Website | Rename Softr-named publish flag | P2 | Planned | SC-054 | Rename in schema wave; update web queries |

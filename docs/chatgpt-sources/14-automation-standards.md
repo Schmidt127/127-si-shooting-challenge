@@ -1,6 +1,6 @@
 # 06 — Automation Standards
 
-**Status:** **Active** — V2 rewrite pattern defined; **066 v3.1** is the reference implementation.
+**Status:** **Active** — V2 rewrite pattern defined; **066 v3.2** is the current reference implementation (evolved from the original **v3.1** V2 rewrite).
 
 **Last updated:** 2026-07-06 (permanent SCRIPT + CONFIG header standard — Phase 2B)
 
@@ -50,7 +50,7 @@ Count each factor once per script (not per occurrence). Line count from GitHub f
 | **Complex** | 15–22 | Plan V2 rewrite carefully; audit before deploy |
 | **Critical** | 23+ | Modernize only in approved wave; full audit + sandbox test required |
 
-**066 v3.1** scores **Critical** by line count alone — that is expected for domain-heavy scripts. Complexity score drives **priority and test rigor**, not “must merge to save slots.”
+**066 v3.2** scores **Critical** by line count alone — that is expected for domain-heavy scripts. Complexity score drives **priority and test rigor**, not “must merge to save slots.”
 
 ### How to use the score
 
@@ -64,7 +64,7 @@ Slot recovery is a **secondary benefit** of reducing complexity — never merge 
 
 ## Reference implementation
 
-**Automation 066 v3.1** (`066-achievements-and-milestones-create-shot-milestone-unlocks.js`) is the **canonical template** for future V2 automation rewrites.
+**Automation 066 v3.2** (`066-achievements-and-milestones-create-shot-milestone-unlocks.js`) is the **canonical template** for future V2 automation rewrites.
 
 Path: [../../airtable/automations/shooting-challenge/066-achievements-and-milestones-create-shot-milestone-unlocks.js](../../airtable/automations/shooting-challenge/066-achievements-and-milestones-create-shot-milestone-unlocks.js)
 
@@ -74,7 +74,7 @@ Full standard: [../../airtable/automations/AUTOMATION_SCRIPT_STANDARD.md](../../
 
 ## Permanent automation header (SCRIPT + CONFIG)
 
-**Status:** **Proposed standard** — mandatory for all **new** Category B rewrites and substantive edits. **066 v3.1** is the reference. **No mass migration of legacy scripts until their wave is approved.**
+**Status:** **Proposed standard** — mandatory for all **new** Category B rewrites and substantive edits. **066 v3.2** is the reference. **No mass migration of legacy scripts until their wave is approved.**
 
 This is the **one permanent header** for V2 automations. Identity lives in **`SCRIPT`**; everything configurable lives in **`CONFIG`**.
 
@@ -97,7 +97,7 @@ This is the **one permanent header** for V2 automations. Identity lives in **`SC
 |-----|----------|---------------|-------|
 | `scriptName` | Yes | `"066 - Achievements and Milestones - Create Shot Milestone Unlocks"` | Human-readable; matches Airtable automation title |
 | `automationNumber` | Yes | `"066"` | Three-digit string; matches filename prefix |
-| `version` | Yes | `"v3.1"` | Must match docblock `Version:` |
+| `version` | Yes | `"v3.2"` | Must match docblock `Version:` |
 | `versionDate` | Yes | `"2026-07-05"` | Date this version was cut |
 | `originalWrittenDate` | Yes | `"2026-06-17"` | Earliest write date — **preserve** |
 | `lastUpdated` | Yes | `"2026-07-05"` | Today on logic edits |
@@ -261,6 +261,6 @@ Do not deliver partial line-change patches for planned V2 upgrades.
 | Submission XP | 010 |
 | Levels / gates | 041, 042 |
 | Streaks | 053, 054 |
-| Achievements | 059, **066 (v3.1 — V2 reference)** |
+| Achievements | 059, **066 (v3.2 — V2 reference)** |
 | Weekly email | 072, 074 |
 | Homework XP | 064, 065 |

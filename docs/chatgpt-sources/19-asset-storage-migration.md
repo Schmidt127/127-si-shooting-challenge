@@ -1,8 +1,10 @@
 # Asset storage migration — AWS + canonical URLs
 
-**Status:** V2 architecture decision (planning). **Blocks:** reliable 2026–27 season without personal Google Drive dependency.  
-**Tracked as:** [close-out-considerations.md](./close-out-considerations.md) **C-013** (updated)  
-**Last updated:** 2026-07-03
+**Status:** V2 architecture decision — **Wave 7 in progress** (planning + Production inventory 2026-07-07). **Blocks:** reliable 2026–27 season without personal Google Drive dependency.
+**Tracked as:** [close-out-considerations.md](./close-out-considerations.md) **C-013** (updated)
+**Execution checklist:** [deploy-checklists/C-013-wave7-asset-storage-checklist.md](./deploy-checklists/C-013-wave7-asset-storage-checklist.md)
+**Production probe:** `tools/airtable/_probe_c013_asset_storage_fields.py`
+**Last updated:** 2026-07-07
 
 ---
 
@@ -113,7 +115,22 @@ Fillout → transient intake only (optional one-hop)
 | **Audits** | May assume attachment present | Assert URL + Uploaded status |
 | **C-009 HW17** | Quiz path skips file pipeline | PDF → same S3 pipeline as other homework |
 
-Detail: [make/documentation/upload-asset-engine.md](../make/documentation/upload-asset-engine.md) · [homework-flow.md](./data-flow/homework-flow.md)
+Detail: [make/documentation/upload-asset-engine.md](../make/documentation/upload-asset-engine.md) · [homework-flow.md](./data-flow/homework-flow.md) · [upload-workflow-homework-video.md](./upload-workflow-homework-video.md)
+
+---
+
+## Pre-upload naming (video — accepted 2026-07-06)
+
+Before **070b** sends to Make, each video **Submission Asset** must have a **Formatted Upload Name** (today: **Create Google Drive File Name** formula) built from:
+
+- Athlete name
+- Activity date
+- Submission-level **Video Feedback Focus**
+- **Asset Sequence** (1–3)
+
+**Upload Naming Status** (formula on asset) gates **Ready to Send to Make?** for video — coach does **not** need to watch first to name. **Coach Video Title** on **Video Feedback** is optional post-review display (C-022).
+
+Homework naming continues to use assignment + slot + sequence in the existing formula path.
 
 ---
 

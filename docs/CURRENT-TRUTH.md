@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-26 (master `4a26aa4` — FUT-014 homework docs, XP Event Log presentation, FUT-003 paid-route validation docs; re-verify with `git rev-parse HEAD` after each push)  
+**Last verification (repo):** 2026-08-26 (master — FUT-014 complete, XP Event Log complete, FUT-003 paid route validated, chatgpt-sources mirror synced; re-verify with `git rev-parse HEAD`)  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -57,8 +57,8 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | `4a26aa4` (2026-08-26 — docs sync for FUT-014, XP Event Log, FUT-003; re-verify with `git rev-parse HEAD` after each push) |
-| `origin/master` | **Matches** `4a26aa4` (verified 2026-08-26) |
+| HEAD SHA | Re-verify: `git rev-parse HEAD` (2026-08-26 docs sync — FUT-014, XP Event Log, FUT-003, chatgpt-sources mirror) |
+| `origin/master` | Re-verify after push: `git rev-parse origin/master` |
 | Ahead / behind | **0 / 0** |
 | Working tree at audit start | **Uncommitted unrelated work present** — Airtable automations, `tools/testing/`, `docs/chatgpt-sources/`; not part of web production closeout |
 | Prior integrity ship | `0b1d634…` (2026-08-20); XP activity ledger merge follows |

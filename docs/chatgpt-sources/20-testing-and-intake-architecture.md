@@ -113,7 +113,7 @@ One permanent **Schmidt** Athlete + Enrollment exercises the **entire base** lik
 | **Test flags on rows** | **None** — base treats all rows the same |
 | **Automations** | **Run identically** — 009, 013, 020, 070, 022, 010, 065, etc. |
 | **Athlete record** | **Never shared** with a live production enrollment |
-| **Testing views** | `Enrollment = Schmidt test enrollment` on pipeline tables |
+| **Testing views** | `Enrollment = Schmidt test enrollment` on pipeline tables — [verification checklist](./deploy-checklists/C-019-testing-views-verification-checklist.md) |
 
 ### Distinction from C-010
 
@@ -133,6 +133,8 @@ Automations **056**, **066**, **101** skip inactive enrollments today. Upload/vi
 **Build order:** Step **4** in [Phase 2 next sequence](./v2-015-production-base-architecture.md#phase-2-next-sequence-postwave-2a) — **after** pipeline-ready submission path exists for **066** Production test (C-020 scenario or verified existing Production row) and approved **112**/**043** maintenance (unless Mike reprioritizes).
 **Environment:** **production-only validation** (`appn84sqPw03zEbTT`).
 
+**Status (2026-08-10):** **Repository contract and controlled PROD Homework proof complete** — Automation **115** v2.1 uses the authorized enrollment allowlist and PHA-first Homework identity. The controlled PROD Homework proof created one Submission per explicit `Run Test?` request; two explicit requests intentionally produced two Submissions. This is not an idempotent Submission processor. **Not in scope:** Homework XP after review; **070a/070b** Make/S3; combined Homework + Video; public season launch.
+
 ### What this is (and is not)
 
 | Is | Is not |
@@ -141,9 +143,9 @@ Automations **056**, **066**, **101** skip inactive enrollments today. Upload/vi
 | **Testing Scenarios** operator table on Production | Test flags on Submissions or downstream pipeline tables |
 | Production-shaped Submissions + normal automations | A second production base or test metadata on pipeline rows |
 
-### Script development — **paused**
+### Script development
 
-**Do not start Cursor/GitHub script work** until a pipeline-ready Production submission path is defined for **066** testing (see [066 production checklist](./deploy-checklists/066-v3.1-production-deploy.md) — blocked on Fillout-shaped submission, not manual rows).
+**115 v1.3** — Production functional complete 2026-07-07 (`9107280` docs). Daily Submission (v1.0), Homework (v1.1), Video (v1.3); Tests A–D + functional live E/F/G. See [upload-workflow-homework-video.md](./upload-workflow-homework-video.md) and [C-020 checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
 
 Field list recorded in [C-020 script checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
 
@@ -183,7 +185,8 @@ Create a **Testing Scenarios** table (Production) and a future **automation + ex
 | **Framework fields on Testing Scenarios only** | **Scenario Type**, **Test Status**, **Expected Result**, **Actual Result**, **Pass/Fail Notes**, **Last Run Status**, **Last Run At**, **Related Enrollment**, link to created Submission |
 | **Related Enrollment** | Schmidt/testing or any retained Production test enrollment |
 | **Fillout-shaped Submissions** | When scenario requires intake — match field shapes **005**, **009**, **023** expect; Enrollment pre-linked |
-| **Multi-file video** | Support when scenario requires (N attachments → N assets) |
+| **Multi-file video** | Up to 3 files → N assets + N Video Feedback rows; **one** Focus + **one** Question per submission ([upload workflow](./upload-workflow-homework-video.md)) |
+| **Multi-file homework** | Up to 3 files → N assets → **one** Homework Completion per selected assignment |
 | **Testing Scenario Library** | **Future option** — separate template/library table; **do not build now** |
 | **Promotion doc** | Required before prod ([doc 04 § Official promotion documentation](./v2/04-ai-development-standards.md#official-promotion-documentation-required)) |
 
@@ -206,9 +209,9 @@ Create a **Testing Scenarios** table (Production) and a future **automation + ex
 | **Created Submission** (or equivalent) | Back-link to pipeline row created by scenario |
 | *Scenario inputs* | Activity date, shots, attachments — per OMNI final list |
 
-**Trigger field:** TBD from OMNI final list (e.g. run checkbox or Test Status transition).
+**Trigger field:** **`Run Test?`** on **Testing Scenarios** (Automation **115**).
 
-### Future script behavior (checklist — not implemented yet)
+### Automation 115 behavior (implemented — v2.1, PROD-controlled 2026-08-10)
 
 See [deploy-checklists/C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md):
 
@@ -219,6 +222,8 @@ See [deploy-checklists/C-020-testing-scenarios-script-checklist.md](./deploy-che
 5. Let normal pipeline automations run
 6. Write **Last Run Status**, **Last Run At**, **Actual Result**, **Pass/Fail Notes** to **Testing Scenarios** only
 7. Never write test metadata to pipeline tables
+
+An unchecked `Run Test?` is a no-op guard. Re-checking it is an explicit new request, so 115 creates a new production-shaped Submission; do not describe repeated explicit requests as idempotent. Idempotency belongs to downstream identity contracts such as 020's Homework Completion reuse and the XP writers, not to 115's Submission creation.
 
 ### Downstream automations expected to fire
 
@@ -304,6 +309,8 @@ Verify:
 
 Tables (minimum): Submissions, Submission Assets, Homework Completions, Video Feedback, XP Events, Weekly Athlete Summary, Streak Occurrences, Athlete Achievement Unlocks.
 
+**Manual verification:** OMNI and GitHub cannot read Airtable view filter definitions. Use [C-019 Testing views verification checklist](./deploy-checklists/C-019-testing-views-verification-checklist.md) in the Airtable UI (Schmidt enrollment `recgP9qZYjAhE7NXm` — filter by link, not test flags).
+
 ### Workflow
 
 ```
@@ -321,7 +328,7 @@ Tables (minimum): Submissions, Submission Assets, Homework Completions, Video Fe
 | 1 | **066 v3.1** Production audit + sandbox test | **Next** |
 | 2 | Optional **066** prod promote | After Production pass — Mike decides |
 | 3 | Delete **112**, retire **043** | Approved maintenance window |
-| 4 | **C-020** — OMNI finishes **Testing Scenarios** table; then Cursor script | **Script paused** until OMNI field list final |
+| 4 | **C-020** — **115 v1.3** on Production | **Production functional complete** (Tests A–D + E/F/G); [upload workflow](./upload-workflow-homework-video.md) |
 
 ---
 
@@ -330,11 +337,11 @@ Tables (minimum): Submissions, Submission Assets, Homework Completions, Video Fe
 | Order | Item | Why |
 |-------|------|-----|
 | 1 | **066 Production test** (H-002) | Blocks V2-015 done; milestone unlock reference |
-| 2 | **C-020** | Engineering Test Framework — **Testing Scenarios** on Production; script after OMNI |
-| 3 | **C-019** | Document Schmidt + Production test enrollment IDs; Testing views |
-| 4 | **C-018** | Intake-open vs challenge-run dates before launch |
-| 5 | **C-017** | Fillout validation before enrollment wave |
-
+| 2 | **C-020** | **Production functional complete** — **115** v1.3; Production paste + optional combined scenario deferred |
+| 3 | **C-013 / C-023** | **Wave 7 in progress** — S3 canonical URL + hash dedup; [checklist](./deploy-checklists/C-013-wave7-asset-storage-checklist.md) |
+| 4 | **C-019** | Document Schmidt + Production test enrollment IDs; Testing views (partial/manual) |
+| 5 | **C-018** | Intake-open vs challenge-run dates before launch |
+| 6 | **C-017** | Fillout validation before enrollment wave |
 ---
 
 ## Related documents

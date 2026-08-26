@@ -50,6 +50,14 @@
 | [../post-close-hygiene-2025-26.md](../post-close-hygiene-2025-26.md) | 2025–26 hygiene backlog |
 | [../../tools/airtable/README.md](../../tools/airtable/README.md) | Python schema export and close-out tools |
 | [../../.github/workflows/web.yml](../../.github/workflows/web.yml) | Web CI (lint, typecheck, test) |
+| [../V2_RELEASE_CHECKLIST.md](../V2_RELEASE_CHECKLIST.md) | V2 release / promote checklist |
+| [../V2_END_TO_END_TEST_MATRIX.md](../V2_END_TO_END_TEST_MATRIX.md) | Athlete-scenario launch matrix |
+| [../testing/agent4-qc/README.md](../testing/agent4-qc/README.md) | Agent 4 QC: inventory, coverage matrix, Live/Test email regression, release/rollback |
+| [./V2_PROD_EXECUTION_RUNBOOK.md](./V2_PROD_EXECUTION_RUNBOOK.md) | Executable Production runbook — mode taxonomy, fixtures, setup/cleanup |
+| [./V2_LAUNCH_SMOKE_TESTS.md](./V2_LAUNCH_SMOKE_TESTS.md) | Launch smoke subset before PROD promotion |
+| [../../tools/airtable/v2_prod_runbook/](../../tools/airtable/v2_prod_runbook/) | Offline fixtures + classification + **safe operator CLI** |
+| [../../airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js](../../airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js) | Repo-level XP/gate/streak/date contract tests (no live Airtable) |
+| [../../tools/validate-v2-release-readiness.js](../../tools/validate-v2-release-readiness.js) | Safe docs/automation consistency validator |
 
 ---
 
