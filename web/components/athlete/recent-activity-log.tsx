@@ -124,12 +124,34 @@ export function RecentActivityLog({
                   <p className="col-start-3 row-start-1 whitespace-nowrap text-right font-mono text-sm font-bold text-accent-soft">
                     {item.xp != null ? `+${formatXp(item.xp)} XP` : "—"}
                   </p>
-                  <p
-                    className="col-start-1 row-start-2 min-w-0 break-words text-xs text-muted"
-                    data-testid="recent-activity-date"
-                  >
-                    {formatGameLogDisplayDate(item.date)}
-                  </p>
+                  {item.dateOnSecondRowRight ? (
+                    <>
+                      <p
+                        className="col-start-1 row-start-2 min-w-0 break-words text-xs text-muted"
+                        data-testid="recent-activity-subline"
+                      >
+                        {item.subline}
+                      </p>
+                      <span
+                        aria-hidden="true"
+                        className="col-start-2 row-start-2"
+                        data-testid="recent-activity-middle-row-2"
+                      />
+                      <p
+                        className="col-start-3 row-start-2 whitespace-nowrap text-right text-xs text-muted"
+                        data-testid="recent-activity-date"
+                      >
+                        {formatGameLogDisplayDate(item.date)}
+                      </p>
+                    </>
+                  ) : (
+                    <p
+                      className="col-start-1 row-start-2 min-w-0 break-words text-xs text-muted"
+                      data-testid="recent-activity-date"
+                    >
+                      {formatGameLogDisplayDate(item.date)}
+                    </p>
+                  )}
                 </div>
               </li>
             ))}

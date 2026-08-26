@@ -44,6 +44,7 @@ const XP_EVENT_FIELDS = [
   ...XP_EVENT_FIELDS_CORE,
   "Homework Completion",
   "Video Feedback",
+  "Zoom Meeting",
 ] as const;
 
 const SUBMISSION_FIELDS = [
@@ -106,6 +107,7 @@ export type XpEventRecordFields = {
   Submission?: unknown;
   "Homework Completion"?: unknown;
   "Video Feedback"?: unknown;
+  "Zoom Meeting"?: unknown;
   "Enrollment Record ID"?: unknown;
 };
 
@@ -135,10 +137,16 @@ type VideoFeedbackRecordFields = {
   "Video Asset File Name"?: unknown;
 };
 
+type ZoomMeetingRecordFields = {
+  "Meeting Display Name"?: unknown;
+  "Meeting Name"?: unknown;
+};
+
 export type XpEventPresentationContext = {
   submissionTotalShots?: number | null;
   homeworkAssignmentTitle?: string | null;
   videoCustomFileName?: string | null;
+  zoomMeetingDisplayName?: string | null;
 };
 
 export type XpActivityExclusionReason =
@@ -289,6 +297,7 @@ export function mapXpEventRecordToSummary(
     submissionTotalShots: presentation?.submissionTotalShots ?? undefined,
     homeworkAssignmentTitle: presentation?.homeworkAssignmentTitle ?? undefined,
     videoCustomFileName: presentation?.videoCustomFileName ?? undefined,
+    zoomMeetingDisplayName: presentation?.zoomMeetingDisplayName ?? undefined,
   };
 }
 
@@ -684,6 +693,13 @@ function resolveVideoDisplayFileName(fields: VideoFeedbackRecordFields): string 
   return null;
 }
 
+function resolveZoomMeetingDisplayName(fields: ZoomMeetingRecordFields): string | null {
+  const display = asText(fields["Meeting Display Name"], "").trim();
+  if (display && display !== "—") return display;
+  const name = asText(fields["Meeting Name"], "").trim();
+  return name && name !== "—" ? name : null;
+}
+
 function resolveHomeworkAssignmentTitle(
   phaFields: ProgramHomeworkAssignmentFields,
   libraryById: Map<string, { fields: HomeworkLibraryTitleFields }>,
@@ -706,6 +722,7 @@ export async function buildXpEventPresentationContext(
 
   const homeworkCompletionIds = new Set<string>();
   const videoFeedbackIds = new Set<string>();
+  const zoomMeetingIds = new Set<string>();
 
   for (const record of xpRecords) {
     for (const id of linkedRecordIds(record.fields["Homework Completion"])) {
@@ -713,6 +730,9 @@ export async function buildXpEventPresentationContext(
     }
     for (const id of linkedRecordIds(record.fields["Video Feedback"])) {
       videoFeedbackIds.add(id);
+    }
+    for (const id of linkedRecordIds(record.fields["Zoom Meeting"])) {
+      zoomMeetingIds.add(id);
     }
   }
 
@@ -774,6 +794,18 @@ export async function buildXpEventPresentationContext(
     if (fileName) videoFileNameById.set(vf.id, fileName);
   }
 
+  const zoomRecords = await fetchRecordsByIdsWithFieldFallback<ZoomMeetingRecordFields>(
+    PUBLIC_AIRTABLE_TABLES.zoomMeetings.name,
+    [...zoomMeetingIds],
+    [["Meeting Display Name", "Meeting Name"], ["Meeting Name"]],
+    300,
+  );
+  const zoomDisplayNameById = new Map<string, string>();
+  for (const meeting of zoomRecords) {
+    const displayName = resolveZoomMeetingDisplayName(meeting.fields);
+    if (displayName) zoomDisplayNameById.set(meeting.id, displayName);
+  }
+
   for (const record of xpRecords) {
     const submissionIds = linkedRecordIds(record.fields.Submission);
     const submission = submissionIds[0] ? submissionById.get(submissionIds[0]) : undefined;
@@ -783,11 +815,13 @@ export async function buildXpEventPresentationContext(
 
     const hcId = linkedRecordIds(record.fields["Homework Completion"])[0];
     const vfId = linkedRecordIds(record.fields["Video Feedback"])[0];
+    const zoomId = linkedRecordIds(record.fields["Zoom Meeting"])[0];
 
     contextByXpId.set(record.id, {
       submissionTotalShots,
       homeworkAssignmentTitle: hcId ? (homeworkTitleByHcId.get(hcId) ?? null) : null,
       videoCustomFileName: vfId ? (videoFileNameById.get(vfId) ?? null) : null,
+      zoomMeetingDisplayName: zoomId ? (zoomDisplayNameById.get(zoomId) ?? null) : null,
     });
   }
 

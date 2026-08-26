@@ -80,6 +80,10 @@ export type PublicActivityItem = {
   makes: number | null;
   xp: number | null;
   hasDetailedStats: boolean;
+  /** Second-row detail (left), e.g. Zoom meeting name. */
+  subline?: string | null;
+  /** When true, date renders on row 2 right instead of row 2 left. */
+  dateOnSecondRowRight?: boolean;
 };
 
 export type PublicWeeklySummary = {

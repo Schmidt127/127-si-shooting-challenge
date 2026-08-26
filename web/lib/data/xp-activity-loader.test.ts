@@ -410,6 +410,16 @@ describe("buildXpEventPresentationContext", () => {
           ],
         };
       }
+      if (params.tableName === "Zoom Meetings") {
+        return {
+          records: [
+            {
+              id: "recZoom1",
+              fields: { "Meeting Display Name": "Player Development Zoom" },
+            },
+          ],
+        };
+      }
       return { records: [] };
     });
 
@@ -429,6 +439,7 @@ describe("buildXpEventPresentationContext", () => {
           Submission: ["recSub1"],
           "Homework Completion": ["recHc1"],
           "Video Feedback": ["recVf1"],
+          "Zoom Meeting": ["recZoom1"],
         }),
       ],
       submissionById,
@@ -438,6 +449,7 @@ describe("buildXpEventPresentationContext", () => {
       submissionTotalShots: 1250,
       homeworkAssignmentTitle: "Mikan Drill",
       videoCustomFileName: "FreeThrows.mov",
+      zoomMeetingDisplayName: "Player Development Zoom",
     });
   });
 });

@@ -346,6 +346,8 @@ export function mapXpSummariesToPublicActivity(rows: XpEventSummary[]): PublicAc
       makes: null,
       xp,
       hasDetailedStats: false,
+      subline: presentation.subline ?? null,
+      dateOnSecondRowRight: presentation.dateOnSecondRowRight ?? false,
     };
   });
 }

@@ -79,6 +79,43 @@ describe("XP Event Log presentation", () => {
     expect(html.match(/Shot Submission — 900 shots/g)?.length).toBe(1);
     expect(html.match(/\+20 XP/g)?.length).toBe(1);
   });
+
+  it("formats zoom attendance with meeting name subline and date on the right", () => {
+    const items = mapXpSummariesToPublicActivity([
+      xpRow({
+        id: "recZoom1",
+        points: 25,
+        sourceLabel: "Zoom Attendance: Base",
+        reasonPublic: "Attended live Zoom meeting.",
+        zoomMeetingDisplayName: "Player Development Zoom",
+      }),
+    ]);
+    const html = renderLog(items);
+
+    expect(html).toContain("Zoom Meeting Attendance");
+    expect(html).toContain("Player Development Zoom");
+    expect(html).toContain("2026-08-22");
+    expect(html).not.toMatch(/Zoom Attendance|Attended/i);
+    expect(html).toContain('data-testid="recent-activity-subline"');
+    expect(html.match(/\+25 XP/g)?.length).toBe(1);
+    expect(html).toContain('data-testid="recent-activity-middle"');
+  });
+
+  it("uses a safe fallback when zoom meeting display name is missing", () => {
+    const items = mapXpSummariesToPublicActivity([
+      xpRow({
+        id: "recZoom2",
+        points: 10,
+        sourceLabel: "Zoom Recording",
+        reasonPublic: "Watched the Zoom recording.",
+      }),
+    ]);
+    const html = renderLog(items);
+
+    expect(html).toContain("Zoom Meeting Attendance");
+    expect(html).toContain("Zoom meeting");
+    expect(html).not.toContain("Attended via Recording");
+  });
 });
 
 describe("XP Event Log sorting", () => {

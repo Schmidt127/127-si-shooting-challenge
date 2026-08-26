@@ -5,6 +5,10 @@ import type { XpEventSummary } from "@/types/xp";
 export type GameLogPresentation = {
   /** Single-line activity label for row 1 (e.g. "Shot Submission — 1,250 shots"). */
   headline: string;
+  /** Row 2 left detail (Zoom meeting name). */
+  subline?: string | null;
+  /** When true, ISO date renders in row 2 column 3 instead of row 2 column 1. */
+  dateOnSecondRowRight?: boolean;
 };
 
 const HEADLINE_SEPARATOR = " — ";
@@ -67,10 +71,27 @@ function extractHomeworkAssignmentName(reason: string): string | null {
   return null;
 }
 
-function zoomAttendanceDetail(reason: string): string | null {
-  if (/recording|replay|watched/i.test(reason)) return "Attended via Recording";
-  if (/in person|live|attended/i.test(reason)) return "Attended in Person";
-  return cleanReason(reason) || null;
+function resolveZoomMeetingDisplayFallback(reason: string): string {
+  const cleaned = cleanReason(reason);
+  if (!cleaned) return "Zoom meeting";
+  if (
+    /^(zoom attendance|zoom meeting attendance|attended(?:\s+via|\s+in|\s+the)?|watched|recording|replay|in person|live)\b/i.test(
+      cleaned,
+    )
+  ) {
+    return "Zoom meeting";
+  }
+  if (/\battended via\b|\bzoom recording\b|\bmeeting attendance\b/i.test(cleaned)) {
+    return "Zoom meeting";
+  }
+  if (cleaned.length > 120) return "Zoom meeting";
+  return cleaned;
+}
+
+function resolveZoomMeetingSubline(row: XpEventSummary): string {
+  const linked = row.zoomMeetingDisplayName?.trim();
+  if (linked) return linked;
+  return resolveZoomMeetingDisplayFallback(asText(row.reasonPublic, ""));
 }
 
 function manualBonusDetail(reason: string): string | null {
@@ -149,7 +170,9 @@ export function formatGameLogPresentation(row: XpEventSummary): GameLogPresentat
 
   if (source.includes("zoom")) {
     return {
-      headline: joinHeadline("Zoom Attendance", zoomAttendanceDetail(reason)),
+      headline: "Zoom Meeting Attendance",
+      subline: resolveZoomMeetingSubline(row),
+      dateOnSecondRowRight: true,
     };
   }
 

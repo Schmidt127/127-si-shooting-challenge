@@ -29,4 +29,26 @@ describe("XpActivityTable", () => {
     expect(html).toContain('data-testid="xp-activity-middle"');
     expect(html.match(/\+20 XP/g)?.length).toBe(1);
   });
+
+  it("formats zoom attendance with meeting subline and date on the right", () => {
+    const html = renderToStaticMarkup(
+      createElement(XpActivityTable, {
+        rows: [
+          row({
+            sourceLabel: "Zoom Attendance: Base",
+            reasonPublic: "Attended live Zoom meeting.",
+            points: 25,
+            zoomMeetingDisplayName: "Player Development Zoom",
+          }),
+        ],
+      }),
+    );
+
+    expect(html).toContain("Zoom Meeting Attendance");
+    expect(html).toContain("Player Development Zoom");
+    expect(html).toContain("2026-08-22");
+    expect(html).not.toMatch(/Zoom Attendance|Attended/i);
+    expect(html).toContain('data-testid="xp-activity-subline"');
+    expect(html.match(/\+25 XP/g)?.length).toBe(1);
+  });
 });

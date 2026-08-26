@@ -47,7 +47,8 @@ export function XpActivityTable({
       ) : (
         <ol className="mt-5 divide-y divide-border border border-border bg-card">
           {rows.map((row) => {
-            const headline = formatGameLogPresentation(row).headline;
+            const presentation = formatGameLogPresentation(row);
+            const displayDate = formatGameLogDisplayDate(row.activityDate);
             return (
               <li
                 key={row.id}
@@ -59,7 +60,7 @@ export function XpActivityTable({
                   data-testid="xp-activity-event-grid"
                 >
                   <p className="col-start-1 row-start-1 min-w-0 break-words text-sm font-semibold text-foreground">
-                    {headline}
+                    {presentation.headline}
                   </p>
                   <span
                     aria-hidden="true"
@@ -69,12 +70,34 @@ export function XpActivityTable({
                   <p className="col-start-3 row-start-1 whitespace-nowrap text-right font-mono text-sm font-bold text-brand-blue">
                     +{formatXp(row.points)} XP
                   </p>
-                  <p
-                    className="col-start-1 row-start-2 min-w-0 break-words text-xs text-muted"
-                    data-testid="xp-activity-date"
-                  >
-                    {formatGameLogDisplayDate(row.activityDate)}
-                  </p>
+                  {presentation.dateOnSecondRowRight ? (
+                    <>
+                      <p
+                        className="col-start-1 row-start-2 min-w-0 break-words text-xs text-muted"
+                        data-testid="xp-activity-subline"
+                      >
+                        {presentation.subline}
+                      </p>
+                      <span
+                        aria-hidden="true"
+                        className="col-start-2 row-start-2"
+                        data-testid="xp-activity-middle-row-2"
+                      />
+                      <p
+                        className="col-start-3 row-start-2 whitespace-nowrap text-right text-xs text-muted"
+                        data-testid="xp-activity-date"
+                      >
+                        {displayDate}
+                      </p>
+                    </>
+                  ) : (
+                    <p
+                      className="col-start-1 row-start-2 min-w-0 break-words text-xs text-muted"
+                      data-testid="xp-activity-date"
+                    >
+                      {displayDate}
+                    </p>
+                  )}
                 </div>
               </li>
             );

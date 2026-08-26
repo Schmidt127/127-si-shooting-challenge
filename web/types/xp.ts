@@ -46,6 +46,8 @@ export type XpEventSummary = {
   homeworkAssignmentTitle?: string | null;
   /** Video Feedback → Custom Video File Name (display only). */
   videoCustomFileName?: string | null;
+  /** Zoom Meeting → Meeting Display Name (display only). */
+  zoomMeetingDisplayName?: string | null;
 };
 
 export type LevelDefinition = {

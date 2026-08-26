@@ -132,16 +132,34 @@ describe("formatGameLogPresentation", () => {
     expect(result.headline).toBe("Manual Bonus — Coach award");
   });
 
-  it("maps zoom attendance modes", () => {
-    expect(
-      formatGameLogPresentation({
-        id: "rec4",
-        points: 10,
-        sourceLabel: "Zoom Recording",
-        reasonPublic: "Watched the Zoom recording.",
-        activityDate: "2026-08-19",
-      }).headline,
-    ).toBe("Zoom Attendance — Attended via Recording");
+  it("formats zoom attendance with meeting display name on the subline", () => {
+    const result = formatGameLogPresentation({
+      id: "recZoom",
+      points: 25,
+      sourceLabel: "Zoom Attendance: Base",
+      reasonPublic: "Attended live Zoom meeting.",
+      activityDate: "2026-08-22",
+      zoomMeetingDisplayName: "Player Development Zoom",
+    });
+
+    expect(result.headline).toBe("Zoom Meeting Attendance");
+    expect(result.subline).toBe("Player Development Zoom");
+    expect(result.dateOnSecondRowRight).toBe(true);
+    expect(result.headline).not.toMatch(/Zoom Attendance|Attended/i);
+  });
+
+  it("falls back safely when meeting display name is missing", () => {
+    const result = formatGameLogPresentation({
+      id: "recZoomFallback",
+      points: 10,
+      sourceLabel: "Zoom Recording",
+      reasonPublic: "Watched the Zoom recording.",
+      activityDate: "2026-08-19",
+    });
+
+    expect(result.headline).toBe("Zoom Meeting Attendance");
+    expect(result.subline).toBe("Zoom meeting");
+    expect(result.headline).not.toContain("Attended via Recording");
   });
 
   it("does not embed XP amounts in the headline", () => {
