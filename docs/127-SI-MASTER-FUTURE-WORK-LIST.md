@@ -343,7 +343,7 @@ Redesigned `/shoot/levels` with ascending Level 1–12 order, ladder-style hero 
 
 **Deploy checklist:** [docs/deploy-checklists/FUT-015-levels-page-redesign.md](../deploy-checklists/FUT-015-levels-page-redesign.md)
 
-**Validation (2026-08-26):** lint ✓ · typecheck ✓ · levels vitest ✓ · build ✓ · prod smoke pending post-deploy
+**Validation (2026-08-26):** lint ✓ · typecheck ✓ · levels vitest ✓ · build ✓ · prod smoke **49/50** ✓ (levels route) · live verification ✓
 
 ### FUT-016 — Tutorials page redesign
 
@@ -384,14 +384,20 @@ Create and apply one professional, accessible footer across all public website p
 ### FUT-020 — National-first SEO foundation with legitimate local context
 
 **Priority:** P1  
-**Status:** Ready for prompt  
-**Systems:** Website metadata, content, structured data, sitemap, internal links
+**Status:** Complete (2026-08-26) — branch `agent/seo-fut-020-024`  
+**Systems:** Website metadata, content, structured data, sitemap, internal links  
+**Evidence:** `web/docs/seo.md`, `web/lib/seo/metadata.ts`, `web/tests/search-indexing.spec.ts`
 
 Optimize the website so families nationwide can discover the program when searching for youth basketball training, basketball shooting challenges, skill development, progress tracking, and related terms. Fairfield, Montana should be represented accurately but should not be the only SEO strategy or the dominant focus.
 
 Do not claim in-person services in locations where the program does not operate. Use Fairfield and nearby communities where accurate, and explain online/remote or nationally accessible aspects where supported.
 
 ### FUT-021 — Homepage SEO and messaging
+
+**Priority:** P1  
+**Status:** Complete (2026-08-26) — branch `agent/seo-fut-020-024`  
+**Systems:** Homepage copy, metadata, internal links  
+**Evidence:** `web/components/home/home-page-view.tsx`, `web/lib/seo/program-facts.ts`, `web/tests/national-seo.spec.ts`
 
 Rewrite the homepage title, main heading, description, internal links, and image alt text so the page clearly communicates:
 
@@ -403,15 +409,30 @@ Rewrite the homepage title, main heading, description, internal links, and image
 
 ### FUT-022 — Adapt existing pages for SEO before creating duplicates
 
+**Priority:** P1  
+**Status:** Complete (2026-08-26) — branch `agent/seo-fut-020-024`  
+**Systems:** Route audit, existing page adaptations  
+**Evidence:** `web/docs/seo.md` § FUT-022 route audit; only new route: `/faq`
+
 Audit the existing website before adding pages. Adapt an existing page when it already covers the subject. Create a new page only when the content has no appropriate home.
 
 Potential content areas include youth basketball program, shooting challenge, youth basketball training, Team Shot Tracker, About, Activities and Events, Contact, and FAQ. The implementation prompt must identify the existing route map first and prevent duplicate or competing pages.
 
 ### FUT-023 — Page-specific titles, descriptions, links, and image text
 
+**Priority:** P1  
+**Status:** Complete (2026-08-26) — branch `agent/seo-fut-020-024`  
+**Systems:** Per-page metadata, hub link labels, feature banner aria labels  
+**Evidence:** `web/app/(program)/*/page.tsx`, `web/lib/navigation/program-hub-links.ts`, `web/tests/feature-images.spec.ts`
+
 Give every important public page unique metadata and descriptive internal links. Replace vague links such as `Learn More` with descriptive link text. Improve image alt text without keyword stuffing.
 
 ### FUT-024 — FAQ and structured organization information
+
+**Priority:** P1  
+**Status:** Partially complete (2026-08-26) — Team Shot Tracker FAQ omitted (separate product policy)  
+**Systems:** `/shoot/faq`, Organization + FAQPage JSON-LD  
+**Evidence:** `web/app/(program)/faq/page.tsx`, `web/lib/seo/faq-content.ts`, `web/lib/seo/metadata.ts`
 
 Add an appropriate FAQ and organization information where supported by the current website. Cover grades served, boys and girls, Educational Athletics, shooting challenge, XP/progress, video feedback, Team Shot Tracker, location, and registration. Add organization/local information only where accurate and privacy-safe.
 

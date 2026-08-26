@@ -73,15 +73,20 @@
 | Vitest (Levels suite) | Pass — `levels.test.ts`, `levels-ladder-view.test.ts`, `levels-orientation.test.ts`, `ladder-hero-decoration.test.ts`, `level-graphic.test.ts` |
 | Vitest (full) | **421/422** — 1 pre-existing failure in `public-surface.test.ts` (Team Shot Tracker reference in `faq-content.ts`, unrelated) |
 | Build | Pass |
+| Production smoke | **49/50** — levels route ✓ (desktop + mobile); 1 pre-existing sitemap `/faq` expectation failure (SEO branch, unrelated) |
 
 ## Production verification
 
 | Check | Result |
 |-------|--------|
 | Live URL | https://www.fairfieldbasketballclub.com/shoot/levels |
-| Levels ascending | Verify post-deploy |
-| Ladder hero visible | Verify post-deploy |
-| LV ambiguity gone | Verify post-deploy |
+| Deployment | Live after `master` push (`be69364`) |
+| Levels ascending | ✓ Level 1 (Beginner) first |
+| Ladder hero visible | ✓ CSS ladder rails in hero |
+| LV ambiguity gone | ✓ Badge labeled **Level** with number |
+| Gate preview | ✓ From `Public Gate Criteria` |
+| Next level | ✓ Named on card (e.g. “Next level: Rookie Shooter”) |
+| Mobile smoke | ✓ No material overflow (production-smoke mobile levels test) |
 
 ## Remaining limitations
 
