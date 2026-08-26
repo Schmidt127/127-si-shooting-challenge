@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { LadderHeroDecoration } from "@/components/site/ladder-hero-decoration";
 import { SiteContainer } from "@/components/site/site-container";
 import { cn } from "@/lib/utils";
 
@@ -11,6 +12,8 @@ type PageHeroProps = {
   aside?: ReactNode;
   /** `contrast` = blue performance band; `light` = white/light surface. */
   variant?: "contrast" | "light";
+  /** Optional decorative background for catalog heroes. */
+  decoration?: "ladder";
   className?: string;
 };
 
@@ -25,6 +28,7 @@ export function PageHero({
   actions,
   aside,
   variant = "contrast",
+  decoration,
   className,
 }: PageHeroProps) {
   const contrast = variant === "contrast";
@@ -64,6 +68,7 @@ export function PageHero({
             <div className="absolute -right-10 bottom-0 h-48 w-48 rounded-full bg-brand-orange/10 blur-3xl" />
           </>
         )}
+        {decoration === "ladder" ? <LadderHeroDecoration /> : null}
       </div>
 
       <SiteContainer className="relative py-9 sm:py-12 lg:py-14">

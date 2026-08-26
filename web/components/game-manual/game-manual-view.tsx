@@ -72,8 +72,8 @@ function XpRulesSection({ xpCatalog }: { xpCatalog: XpRuleCatalogData | null }) 
 }
 
 function LevelLadderSection({ levels }: { levels: LevelLadderData | null }) {
-  /** Ladder arrives highest-first; the manual reads better lowest-first. */
-  const ascending = levels ? [...levels.levels].reverse() : [];
+  /** Ladder arrives ascending — Level 1 first. */
+  const ascending = levels?.levels ?? [];
 
   return (
     <div className="mt-12">

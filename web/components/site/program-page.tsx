@@ -18,6 +18,8 @@ type ProgramPageProps = {
   ambientVariant?: AmbientPageProps["variant"];
   /** Optional meta line under the hero (counts, updated timestamps). */
   meta?: ReactNode;
+  /** Optional decorative hero background (e.g. ladder rails on Levels). */
+  heroDecoration?: "ladder";
   /** When false, children render full-bleed (caller supplies SiteSection/containers). */
   contain?: boolean;
   className?: string;
@@ -37,6 +39,7 @@ export function ProgramPage({
   heroVariant = "contrast",
   ambientVariant = "default",
   meta,
+  heroDecoration,
   contain = true,
   className,
   children,
@@ -50,6 +53,7 @@ export function ProgramPage({
         actions={actions}
         aside={aside}
         variant={heroVariant}
+        decoration={heroDecoration}
       />
       {meta ? (
         <div className="border-b border-border bg-card/70">

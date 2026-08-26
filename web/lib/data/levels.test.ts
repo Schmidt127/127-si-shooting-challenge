@@ -1,23 +1,55 @@
 import { describe, expect, it } from "vitest";
 
-import { buildLevelLadder, mapLevelRecord } from "@/lib/data/levels";
+import {
+  buildLevelLadder,
+  getLevelDisplayNumber,
+  mapLevelRecord,
+  summarizeGateCriteria,
+} from "@/lib/data/levels";
 import { buildTutorialCatalog, isShootingChallengeTutorial, mapTutorialRecord } from "@/lib/data/tutorials";
 
 describe("level ladder", () => {
-  it("orders levels highest sort order first", () => {
+  it("orders levels ascending by sort order (Level 1 first)", () => {
     const ladder = buildLevelLadder([
-      {
-        id: "recL1",
-        fields: { "Level Name": "Beginner", "Sort Order": 1, "XP Required (Cumulative)": 0 },
-      },
       {
         id: "recL10",
         fields: { "Level Name": "Legend", "Sort Order": 10, "XP Required (Cumulative)": 5000 },
       },
+      {
+        id: "recL1",
+        fields: { "Level Name": "Beginner", "Sort Order": 1, "XP Required (Cumulative)": 0 },
+      },
     ]);
 
-    expect(ladder.levels[0].name).toBe("Legend");
+    expect(ladder.levels[0].name).toBe("Beginner");
+    expect(ladder.levels[1].name).toBe("Legend");
     expect(ladder.maxXp).toBe(5000);
+  });
+
+  it("sorts numerically, not lexicographically", () => {
+    const ladder = buildLevelLadder([
+      { id: "recL11", fields: { "Level Name": "L11", "Sort Order": 11 } },
+      { id: "recL2", fields: { "Level Name": "L2", "Sort Order": 2 } },
+      { id: "recL10", fields: { "Level Name": "L10", "Sort Order": 10 } },
+    ]);
+
+    expect(ladder.levels.map((level) => level.sortOrder)).toEqual([2, 10, 11]);
+  });
+
+  it("exposes display numbers from sort order", () => {
+    const level = mapLevelRecord({
+      id: "recL3",
+      fields: { "Level Name": "Hot Hand", "Sort Order": 3 },
+    });
+
+    expect(getLevelDisplayNumber(level)).toBe(3);
+  });
+
+  it("summarizes long gate criteria for cards", () => {
+    const long = "A".repeat(140);
+    expect(summarizeGateCriteria(long)).toHaveLength(120);
+    expect(summarizeGateCriteria("")).toBe("");
+    expect(summarizeGateCriteria("Zoom attendance required")).toBe("Zoom attendance required");
   });
 
   it("uses color display name when present", () => {

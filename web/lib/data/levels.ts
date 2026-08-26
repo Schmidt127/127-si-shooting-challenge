@@ -38,10 +38,26 @@ export function mapLevelRecord(record: { id: string; fields: LevelFields }): Lev
   };
 }
 
-function compareLevels(a: LevelDefinition, b: LevelDefinition): number {
-  if (a.sortOrder !== b.sortOrder) return b.sortOrder - a.sortOrder;
-  if (a.rank !== b.rank) return b.rank - a.rank;
-  return b.xpRequired - a.xpRequired;
+/** Ascending ladder order — Level 1 first, pinnacle last. */
+export function compareLevels(a: LevelDefinition, b: LevelDefinition): number {
+  if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
+  if (a.rank !== b.rank) return a.rank - b.rank;
+  return a.xpRequired - b.xpRequired;
+}
+
+/** Display number for ladder cards — prefers configured Sort Order. */
+export function getLevelDisplayNumber(level: LevelDefinition): number | null {
+  if (level.sortOrder > 0) return level.sortOrder;
+  if (level.rank > 0) return level.rank;
+  return null;
+}
+
+/** Short gate preview for catalog cards; full text stays on the detail page. */
+export function summarizeGateCriteria(gateCriteria: string, maxLength = 120): string {
+  const normalized = gateCriteria.replace(/\s+/g, " ").trim();
+  if (!normalized) return "";
+  if (normalized.length <= maxLength) return normalized;
+  return `${normalized.slice(0, maxLength - 1).trimEnd()}…`;
 }
 
 export function buildLevelLadder(

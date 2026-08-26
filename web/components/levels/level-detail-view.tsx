@@ -8,6 +8,7 @@ import { RichContent } from "@/components/catalog/rich-content";
 import { SafeExternalImage } from "@/components/media/safe-external-image";
 import { CtaLink, DetailPageShell } from "@/components/site";
 import { EmptyState } from "@/components/ui";
+import { getLevelDisplayNumber } from "@/lib/data/levels";
 import { formatXp } from "@/lib/formatters";
 import { getLevelStyle } from "@/lib/leaderboard/level-styles";
 import { cn } from "@/lib/utils";
@@ -58,10 +59,20 @@ export function LevelDetailView({ level }: LevelDetailViewProps) {
         <div className="relative p-6 sm:p-10">
           <div className="flex flex-wrap items-start justify-between gap-6">
             <div className="flex items-start gap-5">
-              <div
-                className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br font-mono text-2xl font-black ${style.gradient} ${style.text} ring-1 ${style.ring}`}
-              >
-                {level.sortOrder || level.rank || "★"}
+              <div className="flex shrink-0 flex-col items-center gap-1">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">
+                  Level
+                </span>
+                <div
+                  className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br font-mono text-2xl font-black ${style.gradient} ${style.text} ring-1 ${style.ring}`}
+                  aria-label={
+                    getLevelDisplayNumber(level)
+                      ? `Level ${getLevelDisplayNumber(level)}`
+                      : "Level number unavailable"
+                  }
+                >
+                  {getLevelDisplayNumber(level) ?? "—"}
+                </div>
               </div>
               <DetailTitle
                 overline={level.rank > 0 ? `Tier ${level.rank}` : "Challenge level"}
@@ -78,7 +89,12 @@ export function LevelDetailView({ level }: LevelDetailViewProps) {
               label="XP to unlock"
               value={level.xpFromPrevious > 0 ? formatXp(level.xpFromPrevious) : "Starting tier"}
             />
-            <StatPill label="Ladder step" value={String(level.sortOrder || "—")} />
+            <StatPill
+              label="Ladder step"
+              value={
+                getLevelDisplayNumber(level) ? `Level ${getLevelDisplayNumber(level)}` : "—"
+              }
+            />
           </div>
         </div>
       </div>

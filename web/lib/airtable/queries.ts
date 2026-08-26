@@ -340,7 +340,7 @@ async function listActiveLevelRecords(): Promise<Array<{ id: string; fields: Lev
   }
 }
 
-/** Active level ladder Ã¢ÂÂ highest tier first. */
+/** Active level ladder — ascending Level 1 through pinnacle. */
 export async function fetchLevelLadder(): Promise<LevelLadderData> {
   const records = await listActiveLevelRecords();
   return buildLevelLadder(records);

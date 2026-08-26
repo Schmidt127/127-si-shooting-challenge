@@ -50,5 +50,12 @@ describe("level graphic helpers", () => {
     expect(getLevelGraphicPlaceholderLabel("Beginner")).toBe("BE");
     expect(getLevelGraphicPlaceholderLabel("Rookie Shooter")).toBe("RO");
     expect(getLevelGraphicPlaceholderLabel("G.O.A.T.")).toBe("G.");
+    expect(getLevelGraphicPlaceholderLabel("")).toBe("—");
+    expect(getLevelGraphicPlaceholderLabel("Unknown", 7)).toBe("7");
+  });
+
+  it("never emits the ambiguous LV abbreviation", () => {
+    expect(getLevelGraphicPlaceholderLabel("")).not.toBe("LV");
+    expect(getLevelGraphicPlaceholderLabel("Unranked")).not.toBe("LV");
   });
 });

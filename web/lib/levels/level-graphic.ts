@@ -40,11 +40,17 @@ export function resolveLevelCoverImageUrl(
 
 /**
  * Placeholder label when no cover image is available — uses the controlled badge ramp.
+ * Never emits the ambiguous "LV" abbreviation; falls back to a neutral dash.
  */
-export function getLevelGraphicPlaceholderLabel(levelName: string): string {
+export function getLevelGraphicPlaceholderLabel(
+  levelName: string,
+  levelNumber?: number | null,
+): string {
+  if (levelNumber && levelNumber > 0) return String(levelNumber);
+
   const style = getLevelStyle(levelName);
   const label = style.label.trim();
-  if (!label) return "LV";
+  if (!label || label === "Unranked") return "—";
   if (label.length <= 3) return label.toUpperCase();
   return label.slice(0, 2).toUpperCase();
 }
