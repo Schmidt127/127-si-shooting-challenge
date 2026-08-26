@@ -8,6 +8,12 @@ import {
   withBasePath,
 } from "@/lib/app-config";
 import { BRAND_LOGOS, BRAND_ORG_NAME } from "@/lib/brand";
+import type { FaqItem } from "@/lib/seo/faq-content";
+import {
+  HOME_PAGE_TITLE,
+  PROGRAM_HOME_LOCATION,
+  SITE_DESCRIPTION,
+} from "@/lib/seo/program-facts";
 
 /**
  * Program listing routes eligible for sitemap.xml.
@@ -15,6 +21,7 @@ import { BRAND_LOGOS, BRAND_ORG_NAME } from "@/lib/brand";
  */
 export const SITEMAP_PUBLIC_ROUTES = [
   "",
+  "/faq",
   "/leaderboard",
   "/homework",
   "/levels",
@@ -176,27 +183,91 @@ export function buildPageMetadata(input: BuildPageMetadataInput): Metadata {
   return metadata;
 }
 
+/** Safe Organization JSON-LD — privacy-safe, no athlete or parent contact data. */
+export function buildOrganizationJsonLd(): Record<string, unknown> {
+  return {
+    "@type": "Organization",
+    "@id": `${PUBLIC_LANDING_ORIGIN}/#organization`,
+    name: BRAND_ORG_NAME,
+    url: PUBLIC_LANDING_ORIGIN,
+    logo: absolutePublicAssetUrl(BRAND_LOGOS.horizontal),
+    description: SITE_DESCRIPTION,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Fairfield",
+      addressRegion: "MT",
+      addressCountry: "US",
+    },
+    areaServed: {
+      "@type": "Country",
+      name: "United States",
+    },
+  };
+}
+
+/** SportsOrganization node for the Shooting Challenge program. */
+export function buildSportsProgramJsonLd(): Record<string, unknown> {
+  return {
+    "@type": "SportsOrganization",
+    "@id": `${SITE_URL}/#sports-program`,
+    name: `${SHOOTING_CHALLENGE.name} — ${BRAND_ORG_NAME}`,
+    url: SITE_URL,
+    description: SITE_DESCRIPTION,
+    sport: "Basketball",
+    parentOrganization: { "@id": `${PUBLIC_LANDING_ORIGIN}/#organization` },
+    location: {
+      "@type": "Place",
+      name: PROGRAM_HOME_LOCATION,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Fairfield",
+        addressRegion: "MT",
+        addressCountry: "US",
+      },
+    },
+  };
+}
+
+/** FAQPage JSON-LD from published FAQ items only. */
+export function buildFaqPageJsonLd(items: FaqItem[]): Record<string, unknown> {
+  return {
+    "@type": "FAQPage",
+    "@id": `${SITE_URL}/faq#faq`,
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+}
+
 /** Safe WebSite + Organization JSON-LD for the program home page only. */
 export function buildProgramHomeJsonLd(): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
     "@graph": [
-      {
-        "@type": "Organization",
-        "@id": `${PUBLIC_LANDING_ORIGIN}/#organization`,
-        name: BRAND_ORG_NAME,
-        url: PUBLIC_LANDING_ORIGIN,
-        logo: absolutePublicAssetUrl(BRAND_LOGOS.horizontal),
-      },
+      buildOrganizationJsonLd(),
+      buildSportsProgramJsonLd(),
       {
         "@type": "WebSite",
         "@id": `${SITE_URL}/#website`,
         url: SITE_URL,
-        name: SHOOTING_CHALLENGE.name,
-        description: SHOOTING_CHALLENGE.description,
+        name: HOME_PAGE_TITLE,
+        description: SITE_DESCRIPTION,
         publisher: { "@id": `${PUBLIC_LANDING_ORIGIN}/#organization` },
         inLanguage: "en-US",
       },
     ],
+  };
+}
+
+/** Organization + FAQ JSON-LD for the /faq route. */
+export function buildFaqRouteJsonLd(items: FaqItem[]): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [buildOrganizationJsonLd(), buildFaqPageJsonLd(items)],
   };
 }

@@ -10,9 +10,9 @@ import { fetchTutorialCatalog } from "@/lib/airtable/queries";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Skills and Technique Tutorials",
+  title: "Shooting Tutorials — Skills and Technique",
   description:
-    "Skills and Technique Tutorials for the Shooting Challenge — technique clips, film study, and form breakdowns.",
+    "Youth basketball shooting tutorials and technique videos for the Shooting Challenge — form breakdowns, film study, and skill development.",
   path: "/tutorials",
 });
 

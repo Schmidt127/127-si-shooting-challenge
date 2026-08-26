@@ -16,5 +16,6 @@ export const SHOOTING_CHALLENGE_NAV: ProductNavItem[] = [
   { label: "Game Manual", href: "/game-manual" },
   { label: "Levels", href: "/levels" },
   { label: "Achievements", href: "/achievements" },
+  { label: "FAQ", href: "/faq" },
   { label: "Display", href: "/public-display" },
 ];

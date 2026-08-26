@@ -17,6 +17,7 @@ const FOOTER_QUICK_LINKS: ProductNavItem[] = [
   { label: "Homework", href: "/homework" },
   { label: "Levels", href: "/levels" },
   { label: "Tutorials", href: "/tutorials" },
+  { label: "FAQ", href: "/faq" },
   { label: "Zoom Meetings", href: "/zoom-meetings" },
   { label: "Game Manual", href: "/game-manual" },
 ];
@@ -34,14 +35,19 @@ export function SiteFooter({
       <SiteContainer className="py-10 sm:py-12">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-start lg:gap-16">
           <div className="flex items-start gap-4">
-            <BrandLogo variant="circle" className="h-12 w-12 object-contain" />
+            <BrandLogo
+              variant="circle"
+              className="h-12 w-12 object-contain"
+              alt={`${BRAND_ORG_NAME} logo — Fairfield Basketball Club`}
+            />
             <div className="space-y-2">
               <p className="text-base font-bold text-foreground">{BRAND_ORG_NAME}</p>
               <p className="text-sm font-medium text-foreground">{productName}</p>
               <p className="max-w-md text-sm leading-relaxed text-foreground">
-                A public training hub for shooting reps, weekly homework, levels, and live
-                competition. {BRAND_ORG_NAME} is the legally recognized nonprofit; Fairfield
-                Basketball Club is the program identity for this challenge and related activities.
+                Youth basketball training and shooting challenge for boys and girls in grades 1–8.
+                {BRAND_ORG_NAME} is the legally recognized nonprofit based in Fairfield, Montana;
+                Fairfield Basketball Club is the program identity for this challenge. Daily
+                submissions, homework, Zoom coaching, and progress tracking are available online.
               </p>
             </div>
           </div>

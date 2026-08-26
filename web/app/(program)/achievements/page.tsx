@@ -10,8 +10,9 @@ import { fetchAchievementCatalog } from "@/lib/airtable/queries";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Achievements",
-  description: "Milestones, streaks, and unlock badges for the 127 SI Shooting Challenge.",
+  title: "Achievements — Milestones and Streaks",
+  description:
+    "Shooting Challenge achievements, streaks, and milestone badges earned through daily practice, homework, and season goals.",
   path: "/achievements",
 });
 

@@ -8,8 +8,9 @@ import type { LevelLadderData } from "@/types/levels";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Game Manual",
-  description: "Official rules, scoring, XP, and program reference for the Shooting Challenge.",
+  title: "Game Manual — Rules, Scoring, and XP",
+  description:
+    "Official Shooting Challenge game manual — scoring rules, XP reward rules, level gates, and program reference for families.",
   path: "/game-manual",
 });
 

@@ -10,8 +10,9 @@ import { fetchZoomMeetingCatalog } from "@/lib/airtable/queries";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Zoom Meetings",
-  description: "Shooting Challenge zoom sessions — schedules, agendas, and recordings.",
+  title: "Zoom Meetings — Remote Coaching Sessions",
+  description:
+    "Shooting Challenge Zoom schedules, agendas, and recordings for live and remote youth basketball coaching check-ins.",
   path: "/zoom-meetings",
 });
 

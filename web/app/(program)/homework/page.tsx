@@ -10,9 +10,9 @@ import { fetchScheduledHomeworkCatalog } from "@/lib/airtable/homework-queries";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Homework",
+  title: "Weekly Homework — Youth Basketball Training",
   description:
-    "Current Shooting Challenge homework assignments — scheduled from the active program and published curriculum.",
+    "Published Shooting Challenge homework assignments for youth basketball skill development — weekly curriculum, due dates, and training expectations.",
   path: "/homework",
 });
 

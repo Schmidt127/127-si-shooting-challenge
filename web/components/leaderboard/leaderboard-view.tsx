@@ -7,6 +7,7 @@ import {
 } from "@/components/icons/shoot-icons";
 import { CtaLink, ProgramPage } from "@/components/site";
 import { ProgramFeatureBanner } from "@/components/site/program-feature-image";
+import { FEATURE_BANNER_ARIA } from "@/lib/seo/program-facts";
 import { EmptyState, ErrorState, StatTile } from "@/components/ui";
 import { formatRelativeUpdate, formatXp } from "@/lib/formatters";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
@@ -63,7 +64,12 @@ export function LeaderboardView({ data }: LeaderboardViewProps) {
       }
     >
       <div className="space-y-6">
-        <ProgramFeatureBanner title="Leaderboard" caption="Track the season standings and celebrate every shot logged." mark="LB" />
+        <ProgramFeatureBanner
+          title="Leaderboard"
+          caption="Track the season standings and celebrate every shot logged."
+          mark="LB"
+          ariaLabel={FEATURE_BANNER_ARIA.leaderboard}
+        />
         <LeaderboardStats data={data} />
         <LeaderboardTiebreakerLegend />
         <LeaderboardBoard entries={data.entries} />
@@ -82,7 +88,12 @@ export function LeaderboardEmptyState() {
       ambientVariant="leaderboard"
     >
       <div className="space-y-8">
-        <ProgramFeatureBanner title="Leaderboard" caption="Track the season standings and celebrate every shot logged." mark="LB" />
+        <ProgramFeatureBanner
+          title="Leaderboard"
+          caption="Track the season standings and celebrate every shot logged."
+          mark="LB"
+          ariaLabel={FEATURE_BANNER_ARIA.leaderboard}
+        />
         <EmptyState
           title={EMPTY_STATE_COPY.leaderboard.title}
           description={EMPTY_STATE_COPY.leaderboard.description}
@@ -108,7 +119,12 @@ export function LeaderboardErrorState({ message }: { message: string }) {
       ambientVariant="leaderboard"
     >
       <div className="space-y-8">
-        <ProgramFeatureBanner title="Leaderboard" caption="Track the season standings and celebrate every shot logged." mark="LB" />
+        <ProgramFeatureBanner
+          title="Leaderboard"
+          caption="Track the season standings and celebrate every shot logged."
+          mark="LB"
+          ariaLabel={FEATURE_BANNER_ARIA.leaderboard}
+        />
         <ErrorState
           title="Could not load leaderboard"
           message={message}

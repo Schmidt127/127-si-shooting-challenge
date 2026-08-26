@@ -2,6 +2,7 @@ import { catalogCardClass } from "@/components/catalog/catalog-surface";
 import { IconMedal } from "@/components/icons/shoot-icons";
 import { CtaLink, ProgramPage, SectionMarker } from "@/components/site";
 import { ProgramFeatureBanner } from "@/components/site/program-feature-image";
+import { FEATURE_BANNER_ARIA } from "@/lib/seo/program-facts";
 import { EmptyState, ErrorState } from "@/components/ui";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import type { AchievementCatalogData, AchievementDefinition } from "@/types/achievements";
@@ -120,7 +121,12 @@ export function AchievementsGridView({ data }: AchievementsGridViewProps) {
       }
     >
       <div className="space-y-8">
-        <ProgramFeatureBanner title="Achievements" caption="Celebrate milestones, streaks, and the progress behind every achievement." mark="AC" />
+        <ProgramFeatureBanner
+          title="Achievements"
+          caption="Celebrate milestones, streaks, and the progress behind every achievement."
+          mark="AC"
+          ariaLabel={FEATURE_BANNER_ARIA.achievements}
+        />
         <div className="space-y-12">
           {groups.map(([groupName, items]) => (
             <section key={groupName}>
@@ -152,7 +158,12 @@ export function AchievementsEmptyState() {
       ambientVariant="achievements"
     >
       <div className="space-y-8">
-        <ProgramFeatureBanner title="Achievements" caption="Celebrate milestones, streaks, and the progress behind every achievement." mark="AC" />
+        <ProgramFeatureBanner
+          title="Achievements"
+          caption="Celebrate milestones, streaks, and the progress behind every achievement."
+          mark="AC"
+          ariaLabel={FEATURE_BANNER_ARIA.achievements}
+        />
         <EmptyState
           title={EMPTY_STATE_COPY.achievements.title}
           description={EMPTY_STATE_COPY.achievements.description}
@@ -178,7 +189,12 @@ export function AchievementsErrorState({ message }: { message: string }) {
       ambientVariant="achievements"
     >
       <div className="space-y-8">
-        <ProgramFeatureBanner title="Achievements" caption="Celebrate milestones, streaks, and the progress behind every achievement." mark="AC" />
+        <ProgramFeatureBanner
+          title="Achievements"
+          caption="Celebrate milestones, streaks, and the progress behind every achievement."
+          mark="AC"
+          ariaLabel={FEATURE_BANNER_ARIA.achievements}
+        />
         <ErrorState
           title="Could not load achievements"
           message={message}

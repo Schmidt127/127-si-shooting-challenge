@@ -1,10 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { PUBLIC_SITE_ORIGIN, SHOOTING_CHALLENGE } from "@/lib/app-config";
+import { PUBLIC_SITE_ORIGIN } from "@/lib/app-config";
 
 import {
+  buildFaqPageJsonLd,
   buildPageMetadata,
   buildProgramHomeJsonLd,
+  buildSportsProgramJsonLd,
   canonicalUrl,
   DEFAULT_ROBOTS_INDEX,
   DEFAULT_ROBOTS_NOINDEX,
@@ -14,6 +16,8 @@ import {
   robotsDisallowPaths,
   SITEMAP_PUBLIC_ROUTES,
 } from "./metadata";
+import { PROGRAM_FAQ_ITEMS } from "./faq-content";
+import { HOME_PAGE_TITLE, SITE_DESCRIPTION } from "./program-facts";
 
 describe("isSearchIndexingEnabled", () => {
   afterEach(() => {
@@ -85,6 +89,7 @@ describe("SITEMAP_PUBLIC_ROUTES", () => {
     expect(SITEMAP_PUBLIC_ROUTES).not.toContain("/public-display");
     expect(SITEMAP_PUBLIC_ROUTES).toContain("/leaderboard");
     expect(SITEMAP_PUBLIC_ROUTES).toContain("/homework");
+    expect(SITEMAP_PUBLIC_ROUTES).toContain("/faq");
   });
 });
 
@@ -133,16 +138,16 @@ describe("buildPageMetadata", () => {
 
   it("supports absolute home titles", () => {
     const metadata = buildPageMetadata({
-      title: "Shooting Challenge | 127 Sports Intensity",
+      title: HOME_PAGE_TITLE,
       titleAbsolute: true,
-      description: SHOOTING_CHALLENGE.description,
+      description: SITE_DESCRIPTION,
       path: "",
     });
 
     expect(metadata.title).toEqual({
-      absolute: "Shooting Challenge | 127 Sports Intensity",
+      absolute: HOME_PAGE_TITLE,
     });
-    expect(metadata.openGraph?.title).toBe("Shooting Challenge | 127 Sports Intensity");
+    expect(metadata.openGraph?.title).toBe(HOME_PAGE_TITLE);
   });
 
   it("omits canonical when includeCanonical is false", () => {
@@ -165,10 +170,31 @@ describe("buildProgramHomeJsonLd", () => {
     expect(jsonLd["@context"]).toBe("https://schema.org");
     expect(graph.some((node) => node["@type"] === "WebSite")).toBe(true);
     expect(graph.some((node) => node["@type"] === "Organization")).toBe(true);
+    expect(graph.some((node) => node["@type"] === "SportsOrganization")).toBe(true);
 
     const serialized = JSON.stringify(jsonLd);
     expect(serialized).toContain(PUBLIC_SITE_ORIGIN);
+    expect(serialized).toMatch(/Fairfield/i);
     expect(serialized).not.toMatch(/hoopchallenges/i);
     expect(serialized).not.toMatch(/rec[a-zA-Z0-9]{14}/);
+  });
+});
+
+describe("buildFaqPageJsonLd", () => {
+  it("emits FAQPage questions without private data", () => {
+    const jsonLd = buildFaqPageJsonLd(PROGRAM_FAQ_ITEMS);
+    expect(jsonLd["@type"]).toBe("FAQPage");
+    const entities = jsonLd.mainEntity as Array<Record<string, unknown>>;
+    expect(entities.length).toBe(PROGRAM_FAQ_ITEMS.length);
+    expect(JSON.stringify(jsonLd)).not.toMatch(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i);
+    expect(JSON.stringify(jsonLd)).not.toMatch(/rec[a-zA-Z0-9]{14}/);
+  });
+});
+
+describe("buildSportsProgramJsonLd", () => {
+  it("includes basketball sport and Fairfield location", () => {
+    const node = buildSportsProgramJsonLd();
+    expect(node.sport).toBe("Basketball");
+    expect(JSON.stringify(node)).toMatch(/Fairfield/i);
   });
 });

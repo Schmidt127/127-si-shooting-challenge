@@ -182,6 +182,21 @@ export function IconScroll(props: IconProps) {
   );
 }
 
+export function IconHelp(props: IconProps) {
+  return (
+    <svg {...base(props)} aria-hidden>
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
+      <path
+        d="M9.5 9.25a2.75 2.75 0 0 1 5 1.5c0 1.75-2.75 1.75-2.75 3.75"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <circle cx="12" cy="17" r="0.75" fill="currentColor" />
+    </svg>
+  );
+}
+
 export function IconMonitor(props: IconProps) {
   return (
     <svg {...base(props)} aria-hidden>

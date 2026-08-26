@@ -22,6 +22,7 @@ Nav `href` values are **relative to basePath** (e.g. `/leaderboard` → public `
 | Public URL | App path | Page | Airtable data | Status |
 |------------|----------|------|---------------|--------|
 | `/shoot` | `/` | Overview | — | Live |
+| `/shoot/faq` | `/faq` | Program FAQ — grades, registration, Educational Athletics, remote access | — | Live |
 | `/shoot/dashboard` | `/dashboard` | Athlete dashboard (mock until auth) — weekly summary, streak, Perfect Week, XP sources, homework, video feedback preview | Mock adapter | Demo — not cutover-ready |
 | `/shoot/leaderboard` | `/leaderboard` | Season leaderboard | Enrollments (`Web - Leaderboard`) | Live |
 | `/shoot/homework` | `/homework` | Homework catalog | Program Homework Assignments + Homework Library + Weeks | Live |
@@ -62,7 +63,8 @@ Order from `SHOOTING_CHALLENGE_NAV`:
 9. Game Manual → `/game-manual`
 10. Levels → `/levels`
 11. Achievements → `/achievements`
-12. Display → `/public-display`
+12. FAQ → `/faq`
+13. Display → `/public-display`
 
 ---
 
@@ -87,4 +89,5 @@ All public pages live under `web/app/(program)/`. Root `web/app/` contains only 
 - [page-plan.md](./page-plan.md) — build phases and component ownership
 - [airtable-views.md](./airtable-views.md) — views and publish filters
 - [deployment-notes.md](./deployment-notes.md) — Vercel and env vars
+- [seo.md](./seo.md) — national SEO foundation (FUT-020–024)
 - [../../docs/PROJECT_STATE.md](../../docs/PROJECT_STATE.md) — live ops snapshot

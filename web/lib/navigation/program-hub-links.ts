@@ -3,6 +3,7 @@ import type { ComponentType } from "react";
 import {
   IconBook,
   IconBolt,
+  IconHelp,
   IconLevel,
   IconMedal,
   IconMegaphone,
@@ -20,6 +21,8 @@ export type ProgramHubLink = {
   title: string;
   description: string;
   eyebrow: string;
+  /** Descriptive link text for hub cards (FUT-023). */
+  linkLabel: string;
   icon: ComponentType<{ size?: number; className?: string }>;
   featured?: boolean;
 };
@@ -32,6 +35,7 @@ export const PROGRAM_HUB_LINKS: ProgramHubLink[] = [
     title: "Athlete Dashboard",
     description: "Level, XP, weekly shots, streak, Perfect Week, homework, and your next action.",
     eyebrow: "Program home",
+    linkLabel: "Open athlete dashboard",
     icon: IconBolt,
     featured: true,
   },
@@ -41,6 +45,7 @@ export const PROGRAM_HUB_LINKS: ProgramHubLink[] = [
     title: "Leaderboard",
     description: "Live season rankings — level, XP, and total shots decide who leads.",
     eyebrow: "Compete",
+    linkLabel: "View season leaderboard",
     icon: IconTrophy,
     featured: true,
   },
@@ -50,6 +55,7 @@ export const PROGRAM_HUB_LINKS: ProgramHubLink[] = [
     title: "Homework",
     description: "Weekly assignments from the challenge curriculum.",
     eyebrow: "Study",
+    linkLabel: "Browse weekly homework",
     icon: IconBook,
   },
   {
@@ -58,6 +64,7 @@ export const PROGRAM_HUB_LINKS: ProgramHubLink[] = [
     title: "Skills and Technique Tutorials",
     description: "Technique videos and shooting breakdowns.",
     eyebrow: "Watch",
+    linkLabel: "Watch shooting tutorials",
     icon: IconPlay,
   },
   {
@@ -66,6 +73,7 @@ export const PROGRAM_HUB_LINKS: ProgramHubLink[] = [
     title: "Shoutouts",
     description: "Celebrate athletes with features and highlights.",
     eyebrow: "Celebrate",
+    linkLabel: "Read athlete shoutouts",
     icon: IconMegaphone,
   },
   {
@@ -74,6 +82,7 @@ export const PROGRAM_HUB_LINKS: ProgramHubLink[] = [
     title: "Articles",
     description: "FBC book chapters and shooting concepts to study off the court.",
     eyebrow: "Learn",
+    linkLabel: "Read FBC articles",
     icon: IconNews,
   },
   {
@@ -82,6 +91,7 @@ export const PROGRAM_HUB_LINKS: ProgramHubLink[] = [
     title: "Zoom Meetings",
     description: "Clinic calls, recordings, recording-credit makeup info, and weekly check-ins.",
     eyebrow: "Connect",
+    linkLabel: "View Zoom meetings",
     icon: IconVideoCall,
   },
   {
@@ -90,6 +100,7 @@ export const PROGRAM_HUB_LINKS: ProgramHubLink[] = [
     title: "Levels",
     description: "Climb from Beginner to G.O.A.T. — XP thresholds for every tier.",
     eyebrow: "Level up",
+    linkLabel: "Explore XP levels",
     icon: IconLevel,
   },
   {
@@ -98,6 +109,7 @@ export const PROGRAM_HUB_LINKS: ProgramHubLink[] = [
     title: "Achievements",
     description: "Milestones, streaks, and secret unlocks you can earn this season.",
     eyebrow: "Earn",
+    linkLabel: "View achievements",
     icon: IconMedal,
   },
   {
@@ -106,7 +118,17 @@ export const PROGRAM_HUB_LINKS: ProgramHubLink[] = [
     title: "Game Manual",
     description: "Official scoring, XP rules, and program reference.",
     eyebrow: "Reference",
+    linkLabel: "Open game manual",
     icon: IconScroll,
+  },
+  {
+    href: "/faq",
+    label: "Answers",
+    title: "Program FAQ",
+    description: "Grades served, registration, daily submissions, and Fairfield Montana context.",
+    eyebrow: "Help",
+    linkLabel: "Read program FAQ",
+    icon: IconHelp,
   },
   {
     href: "/public-display",
@@ -114,6 +136,7 @@ export const PROGRAM_HUB_LINKS: ProgramHubLink[] = [
     title: "Public Display",
     description: "Full-screen leaderboard for gyms, lobbies, and event screens.",
     eyebrow: "Display",
+    linkLabel: "Open gym display mode",
     icon: IconMonitor,
   },
 ];

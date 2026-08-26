@@ -5,6 +5,8 @@ type ProgramFeatureBannerProps = {
   title: string;
   caption: string;
   mark?: string;
+  /** Accessible name for the feature banner (FUT-023). */
+  ariaLabel?: string;
   /** When set, shows the photorealistic basketball instead of the typography mark. */
   visual?: "typography" | "basketball";
   className?: string;
@@ -18,11 +20,13 @@ export function ProgramFeatureBanner({
   title,
   caption,
   mark = "SC",
+  ariaLabel,
   visual = "typography",
   className,
 }: ProgramFeatureBannerProps) {
   return (
     <figure
+      aria-label={ariaLabel ?? `${title} — ${caption}`}
       className={cn(
         "mx-auto w-full max-w-5xl overflow-hidden rounded-2xl border border-border bg-brand-blue text-brand-white shadow-site-sm",
         className,

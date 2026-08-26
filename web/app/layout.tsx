@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import { Geist_Mono, Maven_Pro } from "next/font/google";
 
 import "./globals.css";
-import { APP_BASE_PATH, SHOOTING_CHALLENGE, SITE_URL } from "@/lib/app-config";
+import { APP_BASE_PATH, SITE_URL } from "@/lib/app-config";
 import {
   defaultOpenGraphImage,
   resolvePublicRobots,
 } from "@/lib/seo/metadata";
+import { HOME_PAGE_TITLE, SITE_DESCRIPTION } from "@/lib/seo/program-facts";
 import { BRAND_ORG_NAME } from "@/lib/brand";
 import { cn } from "@/lib/utils";
 
@@ -33,10 +34,10 @@ const defaultOgImage = defaultOpenGraphImage();
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Shooting Challenge | 127 Sports Intensity",
+    default: HOME_PAGE_TITLE,
     template: "%s | Shooting Challenge",
   },
-  description: SHOOTING_CHALLENGE.description,
+  description: SITE_DESCRIPTION,
   alternates: {
     canonical: SITE_URL,
   },
@@ -49,8 +50,8 @@ export const metadata: Metadata = {
   },
   robots: resolvePublicRobots(),
   openGraph: {
-    title: "Shooting Challenge | 127 Sports Intensity",
-    description: SHOOTING_CHALLENGE.description,
+    title: HOME_PAGE_TITLE,
+    description: SITE_DESCRIPTION,
     url: SITE_URL,
     siteName: BRAND_ORG_NAME,
     locale: "en_US",
@@ -59,8 +60,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Shooting Challenge | 127 Sports Intensity",
-    description: SHOOTING_CHALLENGE.description,
+    title: HOME_PAGE_TITLE,
+    description: SITE_DESCRIPTION,
     images: [defaultOgImage.url],
   },
 };

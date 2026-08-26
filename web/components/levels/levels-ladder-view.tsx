@@ -5,6 +5,7 @@ import { IconLevel } from "@/components/icons/shoot-icons";
 import { SafeExternalImage } from "@/components/media/safe-external-image";
 import { AccentRail, CtaLink, ProgramPage } from "@/components/site";
 import { ProgramFeatureBanner } from "@/components/site/program-feature-image";
+import { FEATURE_BANNER_ARIA } from "@/lib/seo/program-facts";
 import { EmptyState, ErrorState } from "@/components/ui";
 import { getLevelDisplayNumber, summarizeGateCriteria, compareLevels } from "@/lib/data/levels";
 import { formatXp } from "@/lib/formatters";
@@ -243,6 +244,7 @@ export function LevelsLadderView({ data }: LevelsLadderViewProps) {
           title="Levels"
           caption="See the progression path from first shots to the highest tier."
           visual="basketball"
+          ariaLabel={FEATURE_BANNER_ARIA.levels}
         />
         <LevelsTerminology />
         <LevelsOrientation />
@@ -298,6 +300,7 @@ export function LevelsEmptyState() {
           title="Levels"
           caption="See the progression path from first shots to the highest tier."
           visual="basketball"
+          ariaLabel={FEATURE_BANNER_ARIA.levels}
         />
         <EmptyState
           title={EMPTY_STATE_COPY.levels.title}
@@ -333,6 +336,7 @@ export function LevelsErrorState({ message }: { message: string }) {
           title="Levels"
           caption="See the progression path from first shots to the highest tier."
           visual="basketball"
+          ariaLabel={FEATURE_BANNER_ARIA.levels}
         />
         <ErrorState
           title="Could not load levels"

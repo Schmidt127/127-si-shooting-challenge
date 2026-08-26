@@ -1,10 +1,11 @@
 /** Shooting Challenge app metadata — this repo is Shooting Challenge only. */
 
+import { SITE_DESCRIPTION } from "@/lib/seo/program-facts";
+
 export const SHOOTING_CHALLENGE = {
   id: "shoot",
   name: "Shooting Challenge",
-  description:
-    "Track makes and attempts, climb levels, and compete on the live leaderboard — built for serious shooting reps.",
+  description: SITE_DESCRIPTION,
   publicPath: "/shoot",
 } as const;
 

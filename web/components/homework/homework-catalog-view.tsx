@@ -11,6 +11,7 @@ import {
   SectionMarker,
 } from "@/components/site";
 import { ProgramFeatureBanner } from "@/components/site/program-feature-image";
+import { FEATURE_BANNER_ARIA } from "@/lib/seo/program-facts";
 import { EmptyState, ErrorState } from "@/components/ui";
 import { formatRelativeUpdate } from "@/lib/formatters";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
@@ -234,7 +235,12 @@ export function HomeworkCatalogView({ data }: HomeworkCatalogViewProps) {
       }
     >
       <div className="space-y-8">
-        <ProgramFeatureBanner title="Homework" caption="Find the current curriculum and keep every assignment moving forward." mark="HW" />
+        <ProgramFeatureBanner
+          title="Homework"
+          caption="Find the current curriculum and keep every assignment moving forward."
+          mark="HW"
+          ariaLabel={FEATURE_BANNER_ARIA.homework}
+        />
         <div className="mx-auto max-w-4xl min-w-0 space-y-14" data-testid="homework-catalog-list">
           {data.weekGroups.map((group, groupIndex) => (
             <WeekSection
@@ -260,7 +266,12 @@ export function HomeworkEmptyState() {
       ambientVariant="homework"
     >
       <div className="space-y-8">
-        <ProgramFeatureBanner title="Homework" caption="Find the current curriculum and keep every assignment moving forward." mark="HW" />
+        <ProgramFeatureBanner
+          title="Homework"
+          caption="Find the current curriculum and keep every assignment moving forward."
+          mark="HW"
+          ariaLabel={FEATURE_BANNER_ARIA.homework}
+        />
         <div data-testid="homework-catalog-empty">
           <EmptyState
             title={EMPTY_STATE_COPY.homework.title}
@@ -288,7 +299,12 @@ export function HomeworkErrorState({ message }: { message: string }) {
       ambientVariant="homework"
     >
       <div className="space-y-8">
-        <ProgramFeatureBanner title="Homework" caption="Find the current curriculum and keep every assignment moving forward." mark="HW" />
+        <ProgramFeatureBanner
+          title="Homework"
+          caption="Find the current curriculum and keep every assignment moving forward."
+          mark="HW"
+          ariaLabel={FEATURE_BANNER_ARIA.homework}
+        />
         <div data-testid="homework-catalog-error">
           <ErrorState
             title="Could not load homework"

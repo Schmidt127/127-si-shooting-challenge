@@ -7,6 +7,7 @@ import { isSearchIndexingEnabled } from "@/lib/seo/metadata";
 
 export const PUBLIC_APP_ROUTES = [
   "/",
+  "/faq",
   "/dashboard",
   "/leaderboard",
   "/homework",

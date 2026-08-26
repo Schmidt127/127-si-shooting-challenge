@@ -11,8 +11,9 @@ import { ARTICLES_SECTION } from "@/lib/tutorial-media/config";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Articles",
-  description: "FBC article book readings and reflections for the Shooting Challenge.",
+  title: "FBC Articles — Basketball Education",
+  description:
+    "Fairfield Basketball Club article readings and basketball education content for Shooting Challenge athletes and families.",
   path: "/articles",
 });
 

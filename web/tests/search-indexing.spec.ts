@@ -116,6 +116,10 @@ test.describe("robots.txt and sitemap.xml", () => {
     expect(response.status()).toBe(200);
     const body = await response.text();
     expect(body).toMatch(/<loc>[^<]+\/shoot<\/loc>/);
+    const faqLive = (await request.get(`${SITE_BASE}/faq`)).status() === 200;
+    if (faqLive) {
+      expect(body).toMatch(/<loc>[^<]+\/shoot\/faq<\/loc>/);
+    }
     expect(body).toMatch(/<loc>[^<]+\/shoot\/leaderboard<\/loc>/);
     expect(body).toMatch(/<loc>[^<]+\/shoot\/homework<\/loc>/);
     expect(body).not.toMatch(/\/shoot\/dashboard/);

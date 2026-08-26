@@ -8,6 +8,15 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Web
 
+#### Added
+- **National SEO foundation (FUT-020–024, 2026-08-26)** — National-first metadata, homepage
+  messaging (youth basketball, grades 1–8, Educational Athletics, Fairfield MT context),
+  `/shoot/faq` with FAQPage + Organization JSON-LD, unique per-page titles/descriptions,
+  descriptive hub link labels, and feature-banner accessible names. Docs:
+  [`web/docs/seo.md`](./web/docs/seo.md). Tests: `web/lib/seo/*.test.ts`,
+  `web/tests/national-seo.spec.ts`, updated `search-indexing` and `feature-images` specs.
+  **Partial:** Team Shot Tracker FAQ omitted (separate product policy in `public-surface.ts`).
+
 #### Changed
 - **Levels page redesign (FUT-015, 2026-08-26)** — `/shoot/levels` displays Levels 1–12 in
   numeric ascending order, adds a faint ladder-style hero background, clarifies the blue

@@ -10,9 +10,9 @@ import { fetchLeaderboard } from "@/lib/airtable/queries";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Leaderboard",
+  title: "Season Leaderboard — Youth Basketball Rankings",
   description:
-    "Live season rankings for the 127 Sports Intensity Shooting Challenge — XP, levels, and total shots.",
+    "Live youth basketball shooting challenge rankings with XP, levels, and total shots. Track season progress for boys and girls in the 127 SI program.",
   path: "/leaderboard",
 });
 

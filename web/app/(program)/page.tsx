@@ -3,15 +3,15 @@ import type { Metadata } from "next";
 import { HomePageView } from "@/components/home/home-page-view";
 import { JsonLd } from "@/components/seo/json-ld";
 import { fetchLeaderboard } from "@/lib/airtable/queries";
-import { SHOOTING_CHALLENGE } from "@/lib/app-config";
 import { fetchRegisteringProgramPricing } from "@/lib/data/program-pricing";
 import { PLAYER_REGISTRATION } from "@/lib/registration";
 import { buildPageMetadata, buildProgramHomeJsonLd } from "@/lib/seo/metadata";
+import { HOME_PAGE_TITLE, SITE_DESCRIPTION } from "@/lib/seo/program-facts";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Shooting Challenge | 127 Sports Intensity",
+  title: HOME_PAGE_TITLE,
   titleAbsolute: true,
-  description: SHOOTING_CHALLENGE.description,
+  description: SITE_DESCRIPTION,
   path: "",
 });
 

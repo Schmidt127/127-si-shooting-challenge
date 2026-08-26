@@ -6,8 +6,9 @@ import { fetchLevelLadder } from "@/lib/airtable/queries";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Levels",
-  description: "Shooting Challenge progression ladder — XP tiers from Beginner to G.O.A.T.",
+  title: "XP Levels — Basketball Progress Tracking",
+  description:
+    "Shooting Challenge level ladder from Beginner to G.O.A.T. See XP thresholds and youth basketball progress goals for every tier.",
   path: "/levels",
 });
 

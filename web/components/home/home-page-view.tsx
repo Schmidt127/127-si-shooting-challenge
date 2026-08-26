@@ -24,37 +24,38 @@ import {
   SiteSection,
 } from "@/components/site";
 import { Card, CardContent } from "@/components/ui/card";
-import { SHOOTING_CHALLENGE } from "@/lib/app-config";
 import type { ProgramPricing } from "@/lib/data/program-pricing";
 import { formatXp } from "@/lib/formatters";
 import { PROGRAM_HUB_LINKS } from "@/lib/navigation/program-hub-links";
+import { HOME_HERO } from "@/lib/seo/program-facts";
 import type { LeaderboardEntry } from "@/types/leaderboard";
 
 const HERO_CTAS = [
-  { href: "/leaderboard", label: "View leaderboard", variant: "cta" as const, size: "lg" as const },
-  { href: "/homework", label: "Homework", variant: "contrast" as const, size: "default" as const },
-  { href: "/levels", label: "Levels", variant: "contrast" as const, size: "default" as const },
-  { href: "/tutorials", label: "Tutorials", variant: "contrast" as const, size: "default" as const },
-  { href: "/zoom-meetings", label: "Zoom meetings", variant: "contrast" as const, size: "default" as const },
-  { href: "/game-manual", label: "Game manual", variant: "contrast" as const, size: "default" as const },
+  { href: "/leaderboard", label: "View season leaderboard", variant: "cta" as const, size: "lg" as const },
+  { href: "/homework", label: "Browse weekly homework", variant: "contrast" as const, size: "default" as const },
+  { href: "/levels", label: "Explore XP levels", variant: "contrast" as const, size: "default" as const },
+  { href: "/tutorials", label: "Watch shooting tutorials", variant: "contrast" as const, size: "default" as const },
+  { href: "/faq", label: "Read program FAQ", variant: "contrast" as const, size: "default" as const },
+  { href: "/zoom-meetings", label: "View Zoom meetings", variant: "contrast" as const, size: "default" as const },
+  { href: "/game-manual", label: "Open game manual", variant: "contrast" as const, size: "default" as const },
 ];
 
 const FEATURES = [
   {
     title: "XP for real work",
-    description: "Earn points for homework, shot volume, and consistency.",
+    description: "Earn points for homework, daily shot volume, and weekly consistency.",
     eyebrow: "Progress",
     icon: Sparkles,
   },
   {
     title: "Clear level path",
-    description: "Climb from Beginner to G.O.A.T. with defined XP thresholds.",
+    description: "Climb from Beginner to G.O.A.T. with defined XP goals at every tier.",
     eyebrow: "Levels",
     icon: Layers,
   },
   {
     title: "Training streaks",
-    description: "Stay accountable with weekly streaks that reward showing up.",
+    description: "Stay accountable with streaks that reward daily shooting practice.",
     eyebrow: "Consistency",
     icon: Flame,
   },
@@ -66,25 +67,25 @@ const FEATURES = [
   },
   {
     title: "Shot milestones",
-    description: "Track makes and attempts as you pass major volume marks.",
+    description: "Track makes and attempts as athletes pass major volume marks.",
     eyebrow: "Milestones",
     icon: Target,
   },
   {
     title: "Weekly homework",
-    description: "Focused assignments with clear expectations for athletes and parents.",
+    description: "Focused youth basketball assignments with clear expectations for families.",
     eyebrow: "Curriculum",
     icon: BookOpen,
   },
   {
     title: "Video tutorials",
-    description: "Study technique clips between sessions to tighten form.",
+    description: "Study shooting technique clips between sessions to tighten form.",
     eyebrow: "Film room",
     icon: Video,
   },
   {
     title: "Zoom coaching",
-    description: "Join live check-ins and review recordings with coaches.",
+    description: "Join live check-ins, review recordings, and get remote coach feedback.",
     eyebrow: "Coaching",
     icon: Trophy,
   },
@@ -93,18 +94,18 @@ const FEATURES = [
 const HOW_IT_WORKS = [
   {
     step: "01",
-    title: "Train and submit",
-    description: "Complete weekly homework and log your shooting work.",
+    title: "Train and submit daily",
+    description: "Complete weekly homework and log daily shooting practice through the submission form.",
   },
   {
     step: "02",
     title: "Earn XP and levels",
-    description: "Unlock levels, streaks, Perfect Weeks, and milestones.",
+    description: "Unlock levels, streaks, Perfect Weeks, and milestones as coaches verify progress.",
   },
   {
     step: "03",
     title: "Compete and improve",
-    description: "Check the leaderboard, study tutorials, and join Zoom sessions.",
+    description: "Check the leaderboard, study tutorials, join Zoom sessions, and read coach feedback.",
   },
 ];
 
@@ -190,19 +191,14 @@ export function HomePageView({ topEntries, pricing = null }: HomePageViewProps) 
   return (
     <div>
       <PageHero
-        eyebrow={SHOOTING_CHALLENGE.name}
+        eyebrow={HOME_HERO.eyebrow}
         title={
           <>
-            Build real shooting skill.{" "}
-            <span className="text-brand-orange">Compete with purpose.</span>
+            {HOME_HERO.titleLead}{" "}
+            <span className="text-brand-orange">{HOME_HERO.titleAccent}</span>
           </>
         }
-        description={
-          <p>
-            Earn XP, climb levels, keep streaks, hit shot milestones, and compete on a live
-            public leaderboard — with homework, tutorials, and Zoom coaching.
-          </p>
-        }
+        description={<p>{HOME_HERO.description}</p>}
         actions={HERO_CTAS.map((cta) => (
           <CtaLink key={cta.href} href={cta.href} variant={cta.variant} size={cta.size}>
             {cta.label}
@@ -217,9 +213,9 @@ export function HomePageView({ topEntries, pricing = null }: HomePageViewProps) 
 
       <SiteSection
         eyebrow="Why it works"
-        title="Built for serious shooting progress"
+        title="Built for youth basketball shooting development"
         titleId="features-heading"
-        description="Competitive systems that stay clear for athletes and parents."
+        description="Educational Athletics systems that stay clear for athletes and parents — from daily practice to season goals."
         aria-labelledby="features-heading"
         className="bg-background"
       >
@@ -305,7 +301,7 @@ export function HomePageView({ topEntries, pricing = null }: HomePageViewProps) 
                   {link.description}
                 </p>
                 <span className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-brand-orange transition group-hover:gap-1.5 sm:mt-3 sm:text-sm">
-                  Open <IconChevronRight size={14} aria-hidden />
+                  {link.linkLabel} <IconChevronRight size={14} aria-hidden />
                 </span>
               </Link>
             );

@@ -11,8 +11,9 @@ import { SHOUTOUTS_SECTION } from "@/lib/tutorial-media/config";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Shoutouts",
-  description: "Athlete shoutouts and highlights from the Shooting Challenge.",
+  title: "Athlete Shoutouts — Highlights and Recognition",
+  description:
+    "Athlete shoutouts and highlights from the youth basketball Shooting Challenge — celebrate progress and standout performances.",
   path: "/shoutouts",
 });
 
