@@ -86,6 +86,12 @@ const CURRICULUM_CATALOG_FIELDS = [
 
   "Cover Images",
 
+  "Docs",
+
+  "URL",
+
+  "URL Additional",
+
   "Published?",
 
   "Submissions",

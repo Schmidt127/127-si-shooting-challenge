@@ -1,5 +1,4 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
 
 import { formatHomeworkDueDate } from "@/components/athlete/homework-assignments";
 import { catalogCardClass } from "@/components/catalog/catalog-surface";
@@ -21,27 +20,36 @@ type HomeworkCatalogViewProps = {
   data: HomeworkCatalogData;
 };
 
-function HomeworkCardLink({
-  assignment,
-  children,
-}: {
-  assignment: HomeworkAssignment;
-  children: ReactNode;
-}) {
-  const externalUrl = assignment.url.trim();
+function HomeworkResourceLinks({ assignment }: { assignment: HomeworkAssignment }) {
+  const links: Array<{ href: string; label: string }> = [];
 
-  if (externalUrl) {
-    return (
-      <a href={externalUrl} target="_blank" rel="noopener noreferrer" className="group relative block">
-        {children}
-      </a>
-    );
+  if (assignment.url.trim()) {
+    links.push({ href: assignment.url.trim(), label: "Open assignment" });
+  }
+  if (assignment.urlAdditional.trim()) {
+    links.push({ href: assignment.urlAdditional.trim(), label: "Additional resource" });
+  }
+  for (const doc of assignment.docs) {
+    links.push({ href: doc.url, label: doc.filename });
   }
 
+  if (links.length === 0) return null;
+
   return (
-    <Link href={`/homework/${assignment.id}`} className="group relative block">
-      {children}
-    </Link>
+    <div className="mt-4 flex flex-wrap gap-2" data-testid="homework-catalog-resources">
+      {links.map((link) => (
+        <a
+          key={`${link.href}-${link.label}`}
+          href={link.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex min-h-[2.25rem] items-center gap-1 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold text-accent-soft transition hover:border-brand-orange/35 hover:bg-brand-light-gray/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/40"
+        >
+          {link.label}
+          <span aria-hidden>↗</span>
+        </a>
+      ))}
+    </div>
   );
 }
 
@@ -58,7 +66,6 @@ function HomeworkCard({
     assignment.homeworkSlot ||
     assignment.homeworkNumber ||
     (assignment.assignmentNumber ? `Assignment ${assignment.assignmentNumber}` : `Assignment ${index + 1}`);
-  const hasExternalUrl = Boolean(assignment.url.trim());
   const dueLabel = assignment.dueDate
     ? formatHomeworkDueDate(assignment.dueDate)
     : "No due date provided";
@@ -68,7 +75,6 @@ function HomeworkCard({
       : assignment.gradeBandLabel.trim() || null;
 
   return (
-    <HomeworkCardLink assignment={assignment}>
       <article
         data-testid="homework-catalog-card"
         className={catalogCardClass(
@@ -113,11 +119,19 @@ function HomeworkCard({
               ) : null}
             </div>
 
-            <h3 className="mt-3 text-lg font-bold leading-snug text-foreground transition group-hover:text-accent-soft sm:text-xl">
-              {assignment.displayName}
+            <h3 className="mt-3 text-lg font-bold leading-snug text-foreground sm:text-xl">
+              <Link
+                href={`/homework/${assignment.id}`}
+                className="transition hover:text-accent-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/40"
+              >
+                {assignment.title || assignment.displayName}
+              </Link>
             </h3>
 
-            <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-foreground">
+            <p
+              className="mt-2 line-clamp-3 text-sm leading-relaxed text-foreground"
+              data-testid="homework-catalog-brief"
+            >
               {assignment.instructionsPreview}
             </p>
 
@@ -146,13 +160,6 @@ function HomeworkCard({
               ) : null}
             </dl>
 
-            {assignment.operatorNotes ? (
-              <p className="mt-3 min-w-0 break-words rounded-md border border-border-subtle bg-brand-light-gray/60 px-3 py-2 text-xs leading-relaxed text-foreground">
-                <span className="font-semibold text-muted-foreground">Coach note: </span>
-                {assignment.operatorNotes}
-              </p>
-            ) : null}
-
             {assignment.topics.length > 0 ? (
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {assignment.topics.slice(0, 4).map((topic) => (
@@ -166,14 +173,18 @@ function HomeworkCard({
               </div>
             ) : null}
 
-            <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-accent-soft opacity-80 transition group-hover:translate-x-0.5 group-hover:opacity-100">
-              {hasExternalUrl ? "Open assignment" : "View details"}
-              <span aria-hidden>{hasExternalUrl ? "↗" : "→"}</span>
-            </span>
+            <HomeworkResourceLinks assignment={assignment} />
+
+            <Link
+              href={`/homework/${assignment.id}`}
+              className="mt-4 inline-flex min-h-[2.25rem] items-center gap-1 text-sm font-semibold text-accent-soft transition hover:translate-x-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/40"
+            >
+              View details
+              <span aria-hidden>→</span>
+            </Link>
           </div>
         </div>
       </article>
-    </HomeworkCardLink>
   );
 }
 

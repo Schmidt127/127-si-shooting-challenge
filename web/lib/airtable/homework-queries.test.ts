@@ -367,6 +367,85 @@ describe("PHA-backed public homework scheduling", () => {
     await expect(fetchScheduledHomeworkAssignment(HOMEWORK_ID)).rejects.toThrow(/scheduled to 2 distinct Weeks/);
   });
 
+  it("requests Brief Description - Display and resource fields from Homework Library", async () => {
+    installBaseMocks([pha("rec00000000000001")]);
+    await fetchScheduledHomeworkCatalog();
+    const libraryCall = listAirtableRecordsMock.mock.calls.find(
+      ([params]) => params.tableName === "Homework Library",
+    )?.[0];
+    expect(libraryCall?.fields).toEqual(
+      expect.arrayContaining([
+        "Brief Description - Display",
+        "URL",
+        "URL Additional",
+        "Docs",
+      ]),
+    );
+  });
+
+  it("maps Brief Description - Display into catalog briefDescription and instructionsPreview", async () => {
+    installBaseMocks([pha("rec00000000000001")]);
+    listAirtableRecordsMock.mockImplementation(async (params) => {
+      if (params.tableName === "Program Instance - Sync") {
+        return { records: [registeringProgramInstance()] } as never;
+      }
+      if (params.tableName === "Program Homework Assignments") {
+        return { records: [pha("rec00000000000001")] } as never;
+      }
+      if (params.tableName === "Homework Library") {
+        return {
+          records: [{
+            id: HOMEWORK_ID,
+            fields: {
+              "Assignment Full Name - Display": "Shot Tracker Usage",
+              "Assignment Title": "Shot Tracker Usage",
+              "Brief Description - Display": "Log every make in your shot tracker.",
+              Order: 1,
+            },
+          }],
+        } as never;
+      }
+      if (params.tableName === "Weeks") {
+        return {
+          records: [{
+            id: WEEK_ID,
+            fields: {
+              "Week Name": "Early Bird - Testing",
+              "Start Date": "2026-08-02T06:00:00.000Z",
+            },
+          }],
+        } as never;
+      }
+      if (params.tableName === "Grade Bands") {
+        return {
+          records: Object.entries(GRADE_BAND_NAMES).map(([id, name]) => ({
+            id,
+            fields: { "Grade Band Name": name },
+          })),
+        } as never;
+      }
+      throw new Error(`Unexpected table ${params.tableName}`);
+    });
+
+    const catalog = await fetchScheduledHomeworkCatalog();
+    const mapped = catalog.weekGroups[0].assignments[0];
+    expect(mapped.briefDescription).toBe("Log every make in your shot tracker.");
+    expect(mapped.instructionsPreview).toBe("Log every make in your shot tracker.");
+    expect(mapped.instructionsPreview).not.toContain("Full Assignment Description");
+  });
+
+  it("excludes inactive PHA rows from the scheduled catalog", async () => {
+    installBaseMocks([{
+      id: "rec00000000000008",
+      fields: {
+        ...pha("rec00000000000008").fields,
+        "Active?": false,
+      },
+    }]);
+    const catalog = await fetchScheduledHomeworkCatalog();
+    expect(catalog.totalAssignments).toBe(0);
+  });
+
   it("shows PHA-scheduled library rows even when Homework Library Published? is unchecked", async () => {
     installBaseMocks([pha("rec00000000000007")]);
     listAirtableRecordsMock.mockImplementation(async (params) => {

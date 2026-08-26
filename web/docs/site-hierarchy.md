@@ -24,8 +24,8 @@ Nav `href` values are **relative to basePath** (e.g. `/leaderboard` → public `
 | `/shoot` | `/` | Overview | — | Live |
 | `/shoot/dashboard` | `/dashboard` | Athlete dashboard (mock until auth) — weekly summary, streak, Perfect Week, XP sources, homework, video feedback preview | Mock adapter | Demo — not cutover-ready |
 | `/shoot/leaderboard` | `/leaderboard` | Season leaderboard | Enrollments (`Web - Leaderboard`) | Live |
-| `/shoot/homework` | `/homework` | Homework catalog | FBC Curriculum (`Web - Homework Catalog`) | Live |
-| `/shoot/homework/[id]` | `/homework/[id]` | Homework detail | FBC Curriculum + Weeks | Live |
+| `/shoot/homework` | `/homework` | Homework catalog | Program Homework Assignments + Homework Library + Weeks | Live |
+| `/shoot/homework/[id]` | `/homework/[id]` | Homework detail | Program Homework Assignments + Homework Library + Weeks | Live |
 | `/shoot/tutorials` | `/tutorials` | Skills and Technique Tutorials | Tutorials & Assets (`Web - Tutorials Catalog`) | Live |
 | `/shoot/tutorials/[id]` | `/tutorials/[id]` | Tutorial detail | Tutorials & Assets | Live |
 | `/shoot/shoutouts` | `/shoutouts` | Shout-outs | Tutorials & Assets (shoutout type) | Live |

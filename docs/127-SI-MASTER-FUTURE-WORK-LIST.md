@@ -46,7 +46,7 @@ Priority: **P0** launch/security blocker · **P1** important parent/athlete expe
 ### FUT-001 — Match homework by assignment identity, not HW1/HW2 slot
 
 **Priority:** P1  
-**Status:** Ready for prompt  
+**Status:** Complete (GitHub + tests — Production paste pending Mike approval)  
 **Systems:** Airtable, homework intake, Homework Completions, XP, parent submission flow
 
 Allow a parent or athlete to submit an assignment in either visible homework slot. The system must identify the assignment by its assignment/lesson identity and match it to the correct scheduled assignment. The HW number is not authoritative because slot numbering may change from year to year.
@@ -56,6 +56,8 @@ Parents may submit the assignment at any time before the assignment’s explicit
 The system must preserve checks for assignment identity, enrollment, challenge/season, and duplicate credit. Multiple uploads or repeat submissions are allowed, but only one Homework Completion and one XP award may be credited for the same athlete, assignment identity, and enrollment context.
 
 **Acceptance criteria:** correct assignment matching across either slot; deadline enforced; late submission clearly marked ineligible; repeat uploads reviewable; XP deduplicated; no dependence on HW1/HW2 names.
+
+**Implementation (2026-08-25):** GitHub **020 v3.8** + **065 v10.4**; contracts in `lib/homework-contracts/assignment-identity.js`. Promotion doc: [FUT-001-homework-assignment-identity-deadline.md](./deploy-checklists/FUT-001-homework-assignment-identity-deadline.md).
 
 ### FUT-002 — Audit and remove unused Airtable fields
 
@@ -74,14 +76,38 @@ After confirming no active dependency remains, delete the obsolete fields and up
 ### FUT-003 — Stripe payment writeback to Airtable
 
 **Priority:** P1  
-**Status:** Ready for prompt  
-**Systems:** Stripe, webhook/API integration, Airtable Enrollments or payment records
+**Status:** In progress — **paid path verified** (2026-08-26); **free path and retry cleanup remaining**  
+**Systems:** Fillout webhook, Make.com, Stripe API, Airtable `Payment Transactions` + `Enrollments`  
+**Make scenario:** `FUT-003 - Fillout Stripe Payment to Airtable Payment Transactions` — **inactive** (no production activation)
 
-After Stripe accepts a registration payment, write the payment result back to Airtable. At minimum, capture the amount paid and whether a coupon or promotion code was used. The implementation prompt should determine the final field location and exact Stripe event contract.
+After Stripe accepts a registration payment, write the payment result back to Airtable. At minimum, capture the amount paid and whether a coupon or promotion code was used.
 
-The design should use verified webhook events as the payment source of truth, support idempotent retries, and distinguish successful, failed, pending, refunded, and unmatched payments.
+**Verified (2026-08-26 — controlled Production Make test, scenario inactive):**
 
-**Acceptance criteria:** full-price and discounted test payments; amount paid; coupon/promotion evidence; duplicate webhook protection; enrollment linkage; clear failure state; no payment status based only on a browser return page.
+| Check | Result |
+|-------|--------|
+| Fillout webhook → Submission ID + real Stripe Payment ID (`pi_…`) | Pass |
+| Module 4 — normalize webhook values | Pass |
+| Module 16 — find Enrollment by Fillout Submission ID | Pass |
+| Module 6 — retrieve Stripe PaymentIntent | Pass |
+| Stripe cents → dollars conversion | Pass ($2.00 test) |
+| Payment Transactions create | Pass |
+| Payment Status = Paid | Pass |
+| Duplicate protection (same Stripe Payment ID) | Pass — no duplicate rows |
+| Confirmed downstream modules | Modules 4, 6, 7, 8, 12, 16 |
+
+**Remaining limitations (not complete):**
+
+| Limitation | Status |
+|------------|--------|
+| Make repeater runs paid route multiple times per webhook | **Open** — retries must apply to Enrollment lookup only; paid route must execute once per Fillout Submission ID |
+| 100%-coupon / zero-dollar route | **Not implemented** — requires Stripe Checkout Session completion signal (`status=complete`, `payment_status=no_payment_required`, `amount_total=0`) and reliable Enrollment correlation |
+| Coupon Code capture | **Known limitation** — current Fillout webhook does not supply coupon code; field remains blank |
+| Stripe Checkout Session correlation for free registrations | **Unresolved** — Fillout webhook does not provide Checkout Session ID |
+
+**Acceptance criteria (partial):** paid test payment with amount + duplicate protection + enrollment linkage — **verified**; coupon/promotion evidence — **not met** (webhook gap); discounted/zero-dollar test — **not met** (free route not built); idempotent retries without redundant downstream work — **not met** (repeater cleanup open).
+
+**Promotion doc:** [FUT-003-fillout-stripe-payment-writeback.md](./deploy-checklists/FUT-003-fillout-stripe-payment-writeback.md)
 
 ### FUT-004 — Automated award emailer to replace Tremendous
 
@@ -256,12 +282,14 @@ Use the most maintainable professional design. Prefer configurable presentation 
 ### FUT-014 — Homework page redesign and live Homework Library connection
 
 **Priority:** P1  
-**Status:** Ready for prompt  
-**Systems:** Website Homework page, Airtable Homework Library/assignment table
+**Status:** Completed (2026-08-26)  
+**Systems:** Website Homework page, Airtable Homework Library / Program Homework Assignments
 
-Redesign the Homework page with a polished modern card/scrolling experience while preserving usability and accessibility. Display the active assignments present in the Homework assignment table—not a hardcoded count. Mike may add assignments before the challenge or during Week 1, and the page must update accordingly.
+Redesigned `/shoot/homework` with PHA-backed live catalog cards (no hardcoded assignment count). Sort newest assigned week first. Brief Description verified from Homework Library field **`Brief Description - Display`** → `HomeworkAssignment.briefDescription` / card `instructionsPreview` (fallback: `Instructions coming soon.`). Catalog cards show title, week, due date, brief preview, and resource links (`URL`, `URL Additional`, `Docs`) when present. Detail route unchanged.
 
-Sort newest week first. Each assignment should display its name, assigned week, brief explanation, and links to required documents/resources.
+**Deploy checklist:** [docs/deploy-checklists/FUT-014-homework-page-redesign.md](../deploy-checklists/FUT-014-homework-page-redesign.md)
+
+**Validation (2026-08-26):** lint ✓ · typecheck ✓ · vitest ✓ · build ✓ · prod smoke (pending post-push)
 
 ### FUT-015 — Levels page redesign
 

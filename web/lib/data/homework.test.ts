@@ -224,6 +224,24 @@ describe("homework catalog grouping", () => {
     expect(groups[1].weekName).toBe("Week 1");
   });
 
+  it("does not use Full Assignment Description for instructionsPreview", () => {
+    const assignment = mapCurriculumToAssignment(
+      {
+        id: "recHW10",
+        fields: {
+          "Assignment Full Name - Display": "Film Study",
+          "Brief Description - Display": "",
+          "Full Assignment Description": "Long instructions body.",
+          Week: ["recWEEK10"],
+        },
+      },
+      weekIndex,
+    );
+
+    expect(assignment.instructionsPreview).toBe("Instructions coming soon.");
+    expect(assignment.fullDescription).toBe("Long instructions body.");
+  });
+
   it("maps aiText brief descriptions and assignment URLs", () => {
     const assignment = mapCurriculumToAssignment(
       {
