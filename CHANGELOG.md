@@ -9,6 +9,12 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **Levels page redesign (FUT-015, 2026-08-26)** — `/shoot/levels` displays Levels 1–12 in
+  numeric ascending order, adds a faint ladder-style hero background, clarifies the blue
+  level badge as **Level** + Sort Order (replacing ambiguous `LV` placeholder), summarizes
+  gate requirements from **`Public Gate Criteria`**, and adds terminology for current level,
+  next level, and gates. Data via `fetchLevelLadder()` — no XP or gate-rule logic changes.
+  Checklist: [`docs/deploy-checklists/FUT-015-levels-page-redesign.md`](./docs/deploy-checklists/FUT-015-levels-page-redesign.md).
 - **Homework catalog redesign (FUT-014, 2026-08-26)** — `/shoot/homework` uses PHA-backed live
   Homework Library data with dynamic assignment count, newest week first, verified Brief
   Description from **`Homework Library.Brief Description - Display`** (`fldAnHr3uTuDN5bs9`),

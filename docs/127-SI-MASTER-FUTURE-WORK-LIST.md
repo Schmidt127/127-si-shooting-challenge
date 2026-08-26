@@ -336,10 +336,14 @@ On the athlete page, place the appropriate level graphic beside or near the athl
 ### FUT-015 — Levels page redesign
 
 **Priority:** P2  
-**Status:** Planned  
+**Status:** **Complete** (2026-08-26)  
 **Systems:** Website Levels page, Airtable Levels and Gate Rules
 
-Redesign the Levels page with a modern visual system, including a faint ladder-style background behind the hero section. Sort levels from 1 through 12 in ascending order. Replace or clarify the current confusing blue `LV` element so its meaning is immediately understandable.
+Redesigned `/shoot/levels` with ascending Level 1–12 order, ladder-style hero background, clarified **Level** badge (replacing ambiguous `LV`), gate previews from `Public Gate Criteria`, and terminology for current/next level and gates. Data via `fetchLevelLadder()` — no XP or gate-rule logic changes.
+
+**Deploy checklist:** [docs/deploy-checklists/FUT-015-levels-page-redesign.md](../deploy-checklists/FUT-015-levels-page-redesign.md)
+
+**Validation (2026-08-26):** lint ✓ · typecheck ✓ · levels vitest ✓ · build ✓ · prod smoke pending post-deploy
 
 ### FUT-016 — Tutorials page redesign
 
