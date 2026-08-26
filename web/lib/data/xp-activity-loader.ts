@@ -26,7 +26,7 @@ export const XP_EVENTS_ENROLLMENT_RECORD_ID_FIELD = "Enrollment Record ID";
 export const XP_EVENTS_TABLE = PUBLIC_AIRTABLE_TABLES.xpEvents.name;
 export const SUBMISSIONS_TABLE = PUBLIC_AIRTABLE_TABLES.submissions.name;
 
-const XP_EVENT_FIELDS = [
+const XP_EVENT_FIELDS_CORE = [
   "Active?",
   "Active XP Points",
   "XP Points",
@@ -37,9 +37,13 @@ const XP_EVENT_FIELDS = [
   "Source Key",
   "Duplicate Status",
   "Submission",
+  XP_EVENTS_ENROLLMENT_RECORD_ID_FIELD,
+] as const;
+
+const XP_EVENT_FIELDS = [
+  ...XP_EVENT_FIELDS_CORE,
   "Homework Completion",
   "Video Feedback",
-  XP_EVENTS_ENROLLMENT_RECORD_ID_FIELD,
 ] as const;
 
 const SUBMISSION_FIELDS = [
@@ -511,11 +515,37 @@ async function fetchRecordsByIds<TFields extends Record<string, unknown>>(
   return [...collected.values()];
 }
 
-function isEnrollmentRecordIdFieldError(error: unknown): boolean {
+function isUnknownFieldError(error: unknown): boolean {
   return (
     error instanceof AirtableApiError &&
     /UNKNOWN_FIELD_NAME|Unknown field names|Invalid formula/i.test(error.body)
   );
+}
+
+async function fetchRecordsByIdsWithFieldFallback<TFields extends Record<string, unknown>>(
+  tableName: string,
+  ids: string[],
+  fieldSets: readonly (readonly string[])[],
+  maxRecords: number,
+): Promise<Array<{ id: string; fields: TFields }>> {
+  if (ids.length === 0) return [];
+
+  let lastError: unknown;
+  for (const fields of fieldSets) {
+    try {
+      return await fetchRecordsByIds<TFields>(tableName, ids, fields, maxRecords);
+    } catch (error) {
+      lastError = error;
+      if (!isUnknownFieldError(error)) throw error;
+    }
+  }
+
+  if (lastError) throw lastError;
+  return [];
+}
+
+function isEnrollmentRecordIdFieldError(error: unknown): boolean {
+  return isUnknownFieldError(error);
 }
 
 function enrollmentMatches(
@@ -696,10 +726,10 @@ export async function buildXpEventPresentationContext(
       ),
     ),
   ];
-  const phaRecords = await fetchRecordsByIds<ProgramHomeworkAssignmentFields>(
+  const phaRecords = await fetchRecordsByIdsWithFieldFallback<ProgramHomeworkAssignmentFields>(
     PUBLIC_AIRTABLE_TABLES.programHomeworkAssignments.name,
     phaIds,
-    ["Homework Assignment", "Assignment Title"],
+    [["Homework Assignment", "Assignment Title"], ["Homework Assignment"]],
     300,
   );
   const phaById = new Map(phaRecords.map((record) => [record.id, record]));
@@ -725,10 +755,13 @@ export async function buildXpEventPresentationContext(
     if (title) homeworkTitleByHcId.set(hc.id, title);
   }
 
-  const videoRecords = await fetchRecordsByIds<VideoFeedbackRecordFields>(
+  const videoRecords = await fetchRecordsByIdsWithFieldFallback<VideoFeedbackRecordFields>(
     PUBLIC_AIRTABLE_TABLES.videoFeedback.name,
     [...videoFeedbackIds],
-    ["Custom Video File Name", "Video Asset File Name"],
+    [
+      ["Custom Video File Name", "Video Asset File Name"],
+      ["Video Asset File Name"],
+    ],
     300,
   );
   const videoFileNameById = new Map<string, string>();
@@ -821,15 +854,41 @@ export async function loadXpActivityForEnrollment(
     });
     records = response.records;
   } catch (error) {
-    if (!isEnrollmentRecordIdFieldError(error)) {
+    if (isUnknownFieldError(error)) {
+      try {
+        const response = await listAirtableRecords<XpEventRecordFields>({
+          tableName: XP_EVENTS_TABLE,
+          fields: [...XP_EVENT_FIELDS_CORE],
+          filterByFormula: buildEnrollmentRecordIdFilter(enrollmentId),
+          sort: [
+            { field: "XP Activity Date", direction: "desc" },
+            { field: "Created", direction: "desc" },
+          ],
+          maxRecords: fetchLimit,
+          revalidateSeconds,
+        });
+        records = response.records;
+      } catch (retryError) {
+        if (!isEnrollmentRecordIdFieldError(retryError)) {
+          throw new XpActivityLoadError(
+            `Failed to query XP Events for enrollment ${enrollmentId}`,
+            { cause: retryError },
+          );
+        }
+        strategy = "linked_ids_fallback";
+        warning =
+          "XP Events → Enrollment Record ID is unavailable in this base; using Enrollment-linked XP Event IDs.";
+      }
+    } else if (!isEnrollmentRecordIdFieldError(error)) {
       throw new XpActivityLoadError(
         `Failed to query XP Events for enrollment ${enrollmentId}`,
         { cause: error },
       );
+    } else {
+      strategy = "linked_ids_fallback";
+      warning =
+        "XP Events → Enrollment Record ID is unavailable in this base; using Enrollment-linked XP Event IDs.";
     }
-    strategy = "linked_ids_fallback";
-    warning =
-      "XP Events → Enrollment Record ID is unavailable in this base; using Enrollment-linked XP Event IDs.";
   }
 
   if (records.length === 0 && linkedXpIds.length > 0) {
@@ -838,10 +897,10 @@ export async function loadXpActivityForEnrollment(
       warning =
         "Enrollment-scoped filter returned no XP rows while Enrollment has linked XP Events; loaded via linked-record fallback.";
     }
-    records = await fetchRecordsByIds<XpEventRecordFields>(
+    records = await fetchRecordsByIdsWithFieldFallback<XpEventRecordFields>(
       XP_EVENTS_TABLE,
       linkedXpIds,
-      XP_EVENT_FIELDS,
+      [XP_EVENT_FIELDS, XP_EVENT_FIELDS_CORE],
       fetchLimit,
     );
   }
@@ -871,7 +930,16 @@ export async function loadXpActivityForEnrollment(
 
   const totalAvailableRows = displayCandidates.length;
 
-  const presentationByXpId = await buildXpEventPresentationContext(kept, submissionById);
+  let presentationByXpId = new Map<string, XpEventPresentationContext>();
+  try {
+    presentationByXpId = await buildXpEventPresentationContext(displayCandidates, submissionById);
+  } catch (error) {
+    const note = "XP presentation enrichment unavailable; using reason-based headlines.";
+    warning = warning ? `${warning} ${note}` : note;
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(note, error);
+    }
+  }
 
   const sortedRows = sortXpEventsNewestFirst(
     displayCandidates.map((record) =>
