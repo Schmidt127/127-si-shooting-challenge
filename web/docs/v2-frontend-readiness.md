@@ -11,9 +11,9 @@
 |---------|------------|--------|
 | Dashboard | **Partial (mock)** | Demo adapter until athlete auth; shows weekly summary, streak, Perfect Week, homework, video feedback preview, recent XP source labels |
 | Daily submission | **External / out of scope** | No in-app write form (Fillout / Airtable intake). Dashboard CTA no longer pretends homework is shot logging |
-| Homework | **Live catalog** | `/homework` + detail from `FBC Curriculum - SYNC` |
+| Homework | **Live catalog** | `/homework` + detail from Program Homework Assignments + Homework Library (FUT-014 complete 2026-08-26); Brief Description = `Brief Description - Display` |
 | Weekly summary | **Partial (mock)** | Dashboard “Weekly summary” panel; no live Weekly Athlete Summary fetch |
-| XP | **Partial** | Lifetime XP on leaderboard/levels; recent XP source labels on mock dashboard/profile; no XP Events query yet |
+| XP | **Partial (live Game Log)** | Athlete profile Game Log + dashboard XP ledger read live XP Events (presentation complete 2026-08-26); leaderboard lifetime XP; mock dashboard tiles remain |
 | Levels | **Live** | Ladder + detail |
 | Level gates | **Live (catalog text)** | `Public Gate Criteria` with empty-state copy when unpublished; no athlete gate progress UI |
 | Streaks | **Partial (mock)** | Dashboard/profile tiles only |
@@ -26,7 +26,7 @@
 | Empty / error states | **Mostly live** | Per-catalog empty/error; root + athletes error boundaries |
 | Mobile navigation | **Improved** | Primary links + More dropdown (master); horizontal scroll retained |
 | Achievements | **Live definitions** | Catalog from Airtable; unlock state still mock on dashboard/profile |
-| Athlete profile | **Partial (mock)** | Demo/partial/missing-link statuses; recent XP source labels on mock |
+| Athlete profile | **Partial (live Game Log + homework)** | Public profiles: live Game Log pagination, homework assignments, level graphics; other tiles may remain mock/demo |
 | Admin | **Stub** | Placeholder / health only |
 
 ## Safe fixes in this port

@@ -76,36 +76,53 @@ After confirming no active dependency remains, delete the obsolete fields and up
 ### FUT-003 — Stripe payment writeback to Airtable
 
 **Priority:** P1  
-**Status:** In progress — **paid path verified** (2026-08-26); **free path and retry cleanup remaining**  
+**Status:** **Paid route validated — ready for activation** (2026-08-26, Maia final report); Make scenario **inactive** (not activated in Production)  
 **Systems:** Fillout webhook, Make.com, Stripe API, Airtable `Payment Transactions` + `Enrollments`  
-**Make scenario:** `FUT-003 - Fillout Stripe Payment to Airtable Payment Transactions` — **inactive** (no production activation)
+**Make scenario:** `FUT-003 - Fillout Stripe Payment to Airtable Payment Transactions` — **inactive** at validation time; ready for Mike activation when approved
 
 After Stripe accepts a registration payment, write the payment result back to Airtable. At minimum, capture the amount paid and whether a coupon or promotion code was used.
 
-**Verified (2026-08-26 — controlled Production Make test, scenario inactive):**
+**Verified paid-only workflow (2026-08-26 — controlled Production Make test, scenario inactive):**
 
-| Check | Result |
-|-------|--------|
-| Fillout webhook → Submission ID + real Stripe Payment ID (`pi_…`) | Pass |
-| Module 4 — normalize webhook values | Pass |
-| Module 16 — find Enrollment by Fillout Submission ID | Pass |
-| Module 6 — retrieve Stripe PaymentIntent | Pass |
-| Stripe cents → dollars conversion | Pass ($2.00 test) |
-| Payment Transactions create | Pass |
-| Payment Status = Paid | Pass |
-| Duplicate protection (same Stripe Payment ID) | Pass — no duplicate rows |
-| Confirmed downstream modules | Modules 4, 6, 7, 8, 12, 16 |
+| Step | Result |
+|------|--------|
+| Fillout webhook receives submission | Pass |
+| Payload normalized (Module 4) | Pass |
+| One **10-second delay** before Enrollment lookup | Present by design |
+| Enrollment found via `{Fillout Submission Id} = "{{4.filloutSubmissionId}}"` (Module 16) | Pass |
+| Stripe **PaymentIntent** retrieved (Module 6) | Pass |
+| Payment amount calculated correctly (cents → dollars) | Pass — **$2.00** test |
+| Payment Transactions duplicate search runs once (Module 7) | Pass |
+| One **Payment Transactions** record created (Module 8) | Pass |
+| Enrollment linked once (Module 12) | Pass |
+| Duplicate protection | Pass — no duplicate transaction on replay |
+| **Payment Status** = `Paid` | Pass |
+| **Stripe Payment ID** stored | Pass |
+| **Actual Amount Paid** stored | Pass — `$2.00` |
+| **Fillout Submission ID** stored | Pass |
+| **Payment Date** stored | Pass |
+| **Make Processed At** stored | Pass |
 
-**Remaining limitations (not complete):**
+**Final tested transaction (Maia report):** Actual Amount Paid `$2.00` · Payment Status `Paid` · one Payment Transactions row · one Enrollment link update · no duplicate row.
 
-| Limitation | Status |
-|------------|--------|
-| Make repeater runs paid route multiple times per webhook | **Open** — retries must apply to Enrollment lookup only; paid route must execute once per Fillout Submission ID |
-| 100%-coupon / zero-dollar route | **Not implemented** — requires Stripe Checkout Session completion signal (`status=complete`, `payment_status=no_payment_required`, `amount_total=0`) and reliable Enrollment correlation |
-| Coupon Code capture | **Known limitation** — current Fillout webhook does not supply coupon code; field remains blank |
-| Stripe Checkout Session correlation for free registrations | **Unresolved** — Fillout webhook does not provide Checkout Session ID |
+**Scope note:** This validation covers the **paid PaymentIntent path only**. It does **not** change Airtable XP logic, XP calculations, or XP award amounts.
 
-**Acceptance criteria (partial):** paid test payment with amount + duplicate protection + enrollment linkage — **verified**; coupon/promotion evidence — **not met** (webhook gap); discounted/zero-dollar test — **not met** (free route not built); idempotent retries without redundant downstream work — **not met** (repeater cleanup open).
+**Deferred until November/December 2026 (do not mark complete):**
+
+| Item | Status |
+|------|--------|
+| 100% coupon / $0 payment route | **Deferred** |
+| `No Payment Required` payment status | **Deferred** |
+| Stripe Checkout Session webhook route | **Deferred** |
+| Stripe metadata correlation | **Deferred** |
+| Custom Checkout Session creation | **Deferred** |
+| Coupon / promotion-code capture | **Deferred** (Fillout webhook gap) |
+| Enterprise webhook architecture | **Deferred** |
+| Advanced Stripe reconciliation | **Deferred** |
+
+Do **not** add a blank **Stripe Payment ID** route to the current paid-only workflow.
+
+**Acceptance criteria (paid path):** paid test payment with amount + duplicate protection + enrollment linkage + field writeback — **verified**; coupon/promotion evidence — **deferred**; discounted/zero-dollar test — **deferred** (free route not built).
 
 **Promotion doc:** [FUT-003-fillout-stripe-payment-writeback.md](./deploy-checklists/FUT-003-fillout-stripe-payment-writeback.md)
 
@@ -225,30 +242,36 @@ On the athlete page, place the appropriate level graphic beside or near the athl
 ### FUT-012 — Athlete page: professional Game Log presentation
 
 **Priority:** P1  
-**Status:** Complete — 2026-08-25 · implementation `901812e` · production verified `900e61c`  
+**Status:** Complete — 2026-08-25 · implementation `901812e` · production verified `900e61c` · **XP Event Log presentation finalized 2026-08-26**  
 **Systems:** Website XP activity table, XP Events, Airtable presentation fields
 
 **Summary:** Game Log short labels and contextual details; server-side pagination via `GET /api/athletes/[slug]/game-log` with cursor (`activityDate` + XP Event record id), opaque row keys, Load more with loading/retry, enrollment-scoped isolation.
 
-**Tests:** `game-log-pagination.test.ts`, `public-game-log.test.ts`, 349 Vitest total.
+**XP Event Log — completed website presentation (2026-08-26, display-only — no XP calculation or Airtable XP logic changes):**
+
+| Feature | Status |
+|---------|--------|
+| Two-row event layout preserved | Complete |
+| `Date:` label removed; ISO dates (`YYYY-MM-DD`) on row 2 | Complete |
+| XP amount alone on the right; middle column empty | Complete |
+| Shot Submissions → total shots | Complete |
+| Homework → assignment title | Complete |
+| Video Submissions → `Custom Video File Name` | Complete |
+| Zoom Attendance → linked meeting name | Complete (`3306379`) |
+| Same-date events sort deterministically | Complete |
+| Weekly targets sort by percentage descending | Complete (`68c3a45`) |
+| Milestones sort by percentage descending | Complete (`68c3a45`) |
+| Shot Submissions below later same-date accomplishments | Complete |
+| No duplicate XP rows | Complete |
+| Mobile layout | Verified |
+
+**Commits:** `6625559` (details + ordering) · `f225f04` (Airtable field fallbacks) · `68c3a45` (same-date % sort) · `3306379` (Zoom attendance detail)
+
+**Tests:** `game-log-presentation.test.ts`, `recent-activity-log.test.ts`, `xp-activity-table.test.ts`, `xp-activity-loader.test.ts` · unit baseline **393/393** before final sorting adjustment · build pass · prod smoke **50/50** pass after final sorting update.
 
 **Production verification (2026-08-25):** API page 1/2 return 12 rows, no key overlap; Load more 12→24 on `perfect-week-testing`; invalid slug API 404.
 
-**Limitation:** Full ledger capped at `GAME_LOG_MAX_FETCH=2000` per enrollment (deferred — see closeout note below).
-
-Improve the Game Log/Recent Activity display:
-
-- Shorten activity labels; for example, use `Shot Submission` instead of `Shooting Submission Completed`.
-- Remove the redundant small `+20 XP` beside the date.
-- Use that space for the reason or result:
-  - Shot submission: shots taken that day
-  - Threshold/milestone: `75% of Target Goal`
-  - Streak: `3 Day Shooting Streak`
-  - Zoom: `Attended in Person` or `Attended via Recording`
-  - Homework: assignment name, such as `Shot Challenge Tracker`
-- Keep the larger XP award on the far right.
-
-Use the most maintainable professional design. Prefer configurable presentation labels when that improves long-term editing, while retaining safe automatic defaults.
+**Limitation:** Full ledger capped at `GAME_LOG_MAX_FETCH=2000` per enrollment (deferred — safe at current scale).
 
 ### FUT-013 — Athlete page: Perfect Week activity panel
 
@@ -282,14 +305,33 @@ Use the most maintainable professional design. Prefer configurable presentation 
 ### FUT-014 — Homework page redesign and live Homework Library connection
 
 **Priority:** P1  
-**Status:** Completed (2026-08-26)  
-**Systems:** Website Homework page, Airtable Homework Library / Program Homework Assignments
+**Status:** **Complete** (2026-08-26)  
+**Systems:** Website Homework page, Airtable Homework Library / Program Homework Assignments  
+**Production route:** https://www.fairfieldbasketballclub.com/shoot/homework
 
-Redesigned `/shoot/homework` with PHA-backed live catalog cards (no hardcoded assignment count). Sort newest assigned week first. Brief Description verified from Homework Library field **`Brief Description - Display`** → `HomeworkAssignment.briefDescription` / card `instructionsPreview` (fallback: `Instructions coming soon.`). Catalog cards show title, week, due date, brief preview, and resource links (`URL`, `URL Additional`, `Docs`) when present. Detail route unchanged.
+**Brief Description mapping (verified — previous mapping was correct):**
+
+| Layer | Value |
+|-------|--------|
+| Airtable table | **Homework Library** |
+| Airtable field | **`Brief Description - Display`** |
+| Field ID | `fldAnHr3uTuDN5bs9` |
+| Field type | `aiText` |
+| Website property | `briefDescription` |
+| Normalized path | `fetchScheduledHomeworkCatalog()` → `mapCurriculumToAssignment()` → `HomeworkAssignment.briefDescription` → `resolveInstructionsPreview()` → `instructionsPreview` |
+| Card property | `assignment.instructionsPreview` |
+| Test selector | `data-testid="homework-catalog-brief"` |
+| Blank fallback | `Instructions coming soon.` |
+
+**Does not use on catalog cards:** `Full Assignment Description` · `Description` · `Assignment Title` (card headline uses `title` with `displayName` fallback; brief text comes only from **`Brief Description - Display`**).
+
+**Completed features:** live PHA + Homework Library data · dynamic assignment count · active/published schedule display · newest week first · assignment title · assigned week · brief description · due date · `URL` · `URL Additional` · `Docs` links · keyboard-accessible links · detail-page links preserved · Operator Notes removed from public cards · mobile layout verified · **four published cards** verified in production.
+
+**Commits:** `cdd2b97` (redesign + mapping verification) · `4a26aa4` (verification documentation)
 
 **Deploy checklist:** [docs/deploy-checklists/FUT-014-homework-page-redesign.md](../deploy-checklists/FUT-014-homework-page-redesign.md)
 
-**Validation (2026-08-26):** lint ✓ · typecheck ✓ · vitest 406/406 ✓ · build ✓ · prod smoke 50/50 ✓ · homework-due-date 3/3 ✓ · live Airtable spot-check ✓ (Shot Tracker Usage ↔ `Brief Description - Display`)
+**Validation (2026-08-26):** lint ✓ (4 pre-existing unrelated warnings) · typecheck ✓ · vitest **406/406** ✓ · build ✓ · prod smoke **50/50** ✓ · homework-due-date **3/3** ✓ · desktop ✓ · mobile 390px ✓ · homework detail route ✓ · live Airtable spot-check ✓ (`rechVLOeyEVIqmy2v` ↔ `Brief Description - Display`)
 
 ### FUT-015 — Levels page redesign
 
@@ -602,7 +644,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-085** | Zoom | Live bonuses (if configured) work | P2 | Installed in PROD | SC-022 | Confirm which bonuses still desired; test |
 | **SC-093** | Zoom | Public website Zoom pages accurate | P2 | Installed in PROD | SC-146 | Confirm Airtable publish filters after wipe |
 | **SC-103** | Website | Leaderboard | P2 | Live Tested in PROD | SC-068 | Fix Schmidt Grade/School Year (EXT-QA-005); season content hygiene |
-| **SC-104** | Website | Homework catalog | P2 | Installed in PROD | SC-054 | Unpublish stale Week 10 prior-season rows (EXT-QA-006); Presentation fields later |
+| **SC-104** | Website | Homework catalog | P2 | **Complete** (FUT-014, 2026-08-26) | SC-054 | PHA-backed live catalog at `/shoot/homework`; Brief Description = `Homework Library.Brief Description - Display`; commits `cdd2b97` / `4a26aa4`; optional: unpublish stale Week 10 prior-season rows (EXT-QA-006) |
 | **SC-105** | Website | Tutorials | P2 | Tracked under C-026 | SC-052 | Complete table merge SC-052; audit Article ΓÇ£DribbleΓÇ¥ category (EXT-QA-003) |
 | **SC-106** | Website | Levels pages | P2 | Live Tested in PROD | SC-024 | Gate copy polish; cover 410 graceful fallback in web |
 | **SC-107** | Website | Achievements pages | P2 | Installed in PROD | SC-026 | Re-seed / Active?+Visible? for Shot Milestones + Perfect Week (EXT-QA-002) |

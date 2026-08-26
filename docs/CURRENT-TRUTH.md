@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-25 (master `207a2c1` — PHA Due Date tests, production smoke 50/50, SEO cutover live, Vercel Production deploy verified)  
+**Last verification (repo):** 2026-08-26 (master `4a26aa4` — FUT-014 homework docs, XP Event Log presentation, FUT-003 paid-route validation docs; re-verify with `git rev-parse HEAD` after each push)  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -57,8 +57,8 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | `207a2c1` (2026-08-25 — PHA Due Date test integration; re-verify with `git rev-parse HEAD` after each push) |
-| `origin/master` | **Matches** `207a2c1` (verified 2026-08-25) |
+| HEAD SHA | `4a26aa4` (2026-08-26 — docs sync for FUT-014, XP Event Log, FUT-003; re-verify with `git rev-parse HEAD` after each push) |
+| `origin/master` | **Matches** `4a26aa4` (verified 2026-08-26) |
 | Ahead / behind | **0 / 0** |
 | Working tree at audit start | **Uncommitted unrelated work present** — Airtable automations, `tools/testing/`, `docs/chatgpt-sources/`; not part of web production closeout |
 | Prior integrity ship | `0b1d634…` (2026-08-20); XP activity ledger merge follows |
@@ -97,10 +97,13 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | Health | `GET /shoot/api/airtable` → token validity check |
 | Softr | **Obsolete / Not Used** — historical reference only |
 | SEO | **Public program pages indexable** — `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true` on Vercel Production (SC-115 cutover 2026-08-25). Athlete profiles + private routes remain `noindex`. Checklist: [`deploy-checklists/2026-08-25-web-search-indexing-cutover.md`](./deploy-checklists/2026-08-25-web-search-indexing-cutover.md). |
-| Production deploy | **Ready** — GitHub/Vercel Production `207a2c1` (2026-08-25); prior smoke stabilization `0adcb8d` / `fce037f` on ancestry |
-| Vitest / smoke | **369** Vitest pass · `npm run test:smoke:prod` **50/50** · `homework-due-date.spec.ts` **3/3** on prod (2026-08-25) |
+| Production deploy | **Live** — website verified via live routes + smoke tests (2026-08-26); latest web commits `cdd2b97` (FUT-014), `3306379`/`68c3a45`/`f225f04`/`6625559` (XP Event Log). Formal Vercel API deployment status not read for this doc sync. |
+| Vitest / smoke | **406** Vitest pass · `npm run test:smoke:prod` **50/50** · `homework-due-date.spec.ts` **3/3** on prod (2026-08-26) |
 | Production smoke athlete slug | `perfect-week-testing` (`testing-schmidt` is DEV-only) |
 | PHA Due Date | Public homework catalog + athlete homework assignments display PHA Due Date (fallback Week End Date); verified prod 2026-08-25 |
+| Homework catalog (FUT-014) | **Complete** — `/shoot/homework` PHA + Homework Library live catalog; Brief Description = **`Homework Library.Brief Description - Display`** (`fldAnHr3uTuDN5bs9`); 4 published cards verified prod 2026-08-26 |
+| XP Event Log (website) | **Complete** — two-row layout, ISO dates, linked headline details, same-date % sort; display-only (no XP calculation changes). Commits `6625559`, `f225f04`, `68c3a45`, `3306379` |
+| FUT-003 paid Make route | **Validated — ready for activation** (scenario **inactive** at Maia report 2026-08-26); free-payment architecture **deferred Nov/Dec 2026** |
 | Live Vercel settings | Production env names verified via CLI 2026-08-25 (`NEXT_PUBLIC_ALLOW_SEARCH_INDEXING`, `NEXT_PUBLIC_SITE_URL`); do not log values |
 
 Evidence pointer: [`PROJECT_STATE.md`](./PROJECT_STATE.md) § Vercel / web app.

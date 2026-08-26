@@ -9,12 +9,21 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **Homework catalog redesign (FUT-014, 2026-08-26)** — `/shoot/homework` uses PHA-backed live
+  Homework Library data with dynamic assignment count, newest week first, verified Brief
+  Description from **`Homework Library.Brief Description - Display`** (`fldAnHr3uTuDN5bs9`),
+  resource links (`URL`, `URL Additional`, `Docs`), keyboard-accessible card links, and
+  Operator Notes removed from public cards. Commits `cdd2b97`, `4a26aa4`. Checklist:
+  [`docs/deploy-checklists/FUT-014-homework-page-redesign.md`](./docs/deploy-checklists/FUT-014-homework-page-redesign.md).
 - **XP Event Log display (2026-08-26)** — Athlete Game Log and dashboard XP ledger use a
   two-row layout: activity headline and XP on row 1, ISO date (`YYYY-MM-DD`) on row 2;
   middle column reserved empty. Headlines use linked data where available: Submission
   `Total Shots Counted`, Homework PHA `Assignment Title`, Video Feedback
-  `Custom Video File Name`. Same-date rows sort reverse accomplishment order (milestones
-  highest % first). Tests: `game-log-presentation.test.ts`, `recent-activity-log.test.ts`,
+  `Custom Video File Name`, Zoom Attendance linked meeting name. Same-date rows sort
+  deterministically: milestones and weekly targets by percentage descending; Shot
+  Submissions below later same-date accomplishments. **Display-only** — no XP
+  calculations or Airtable XP logic changed. Commits `6625559`, `f225f04`, `68c3a45`,
+  `3306379`. Tests: `game-log-presentation.test.ts`, `recent-activity-log.test.ts`,
   `xp-activity-table.test.ts`, `xp-activity-loader.test.ts`.
 
 #### Fixed
@@ -24,7 +33,8 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 - **Public homework catalog — PHA data source (2026-08-25)** — `/shoot/homework` reads active
   Program Homework Assignments for the Registering Shooting Challenge Program Instance and
   joins Homework Library content without a `Published?` gate (PHA is the schedule authority).
-  Cards show week, due date, grade bands, submission guidance, and operator notes; assignments
+  Cards show week, due date, grade bands, and submission guidance. **FUT-014 (2026-08-26)**
+  removed Operator Notes from public catalog cards and added resource links. Assignments
   sort by Homework Library `Order` descending within each week. Tests:
   `web/lib/airtable/homework-queries.test.ts`, `web/lib/data/homework.test.ts`,
   `web/tests/public-experience.spec.ts`.
@@ -39,6 +49,16 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   and progression panel, with brand-gradient placeholder fallback. Tests:
   `web/lib/levels/level-graphic.test.ts`, `web/lib/data/athlete-profile.test.ts`,
   `web/tests/athlete-profile.spec.ts`.
+
+### Make
+
+#### Changed
+- **FUT-003 paid payment writeback (2026-08-26)** — Maia final report: paid-only Fillout →
+  Make workflow validated in controlled Production test (`$2.00`, Payment Status `Paid`, one
+  Payment Transactions row, one Enrollment link, duplicate protection pass). Scenario
+  **inactive** at validation — ready for Mike activation. Free/zero-dollar architecture
+  **deferred until November/December 2026**. Does not change Airtable XP logic. Checklist:
+  [`docs/deploy-checklists/FUT-003-fillout-stripe-payment-writeback.md`](./docs/deploy-checklists/FUT-003-fillout-stripe-payment-writeback.md).
 
 ### Airtable
 
