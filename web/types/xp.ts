@@ -38,6 +38,8 @@ export type XpEventSummary = {
   activityDate?: string;
   /** Prefer XP Reason Public when present. */
   reasonPublic?: string;
+  /** ISO timestamp for same-day ordering when available (XP Events → Created). */
+  sortTimestamp?: string;
 };
 
 export type LevelDefinition = {

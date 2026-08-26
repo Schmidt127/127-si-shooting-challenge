@@ -1,14 +1,21 @@
 import { asText } from "@/lib/data/airtable-values";
-import { formatXpSourceLabel } from "@/lib/formatters";
+import { formatShots, formatXpSourceLabel } from "@/lib/formatters";
 import type { XpEventSummary } from "@/types/xp";
 
 export type GameLogPresentation = {
-  title: string;
-  detail: string | null;
+  /** Single-line activity label for row 1 (e.g. "Shot Submission — 1,250 shots"). */
+  headline: string;
 };
+
+const HEADLINE_SEPARATOR = " — ";
 
 function cleanReason(reason: string): string {
   return reason.replace(/\.\s*$/, "").trim();
+}
+
+function joinHeadline(label: string, detail: string | null | undefined): string {
+  const trimmed = detail?.trim();
+  return trimmed ? `${label}${HEADLINE_SEPARATOR}${trimmed}` : label;
 }
 
 function extractShotCount(reason: string): number | null {
@@ -18,22 +25,35 @@ function extractShotCount(reason: string): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-function extractPercentGoal(reason: string): string | null {
-  const match = reason.match(/(\d+(?:\.\d+)?)\s*%\s*(?:of\s+)?(?:target\s+)?goal/i);
-  if (match) return `${match[1]}% of Target Goal`;
-  const generic = reason.match(/(\d+(?:\.\d+)?)\s*%/);
-  if (generic) return `${generic[1]}% of Target Goal`;
+function extractPercentFromText(text: string): string | null {
+  const match = text.match(/(\d+(?:\.\d+)?)\s*%/);
+  return match ? `${match[1]}%` : null;
+}
+
+function extractMilestonePercent(source: string, reason: string): string | null {
+  const fromReason =
+    reason.match(/(\d+(?:\.\d+)?)\s*%\s*(?:\w+\s+)?milestone/i)?.[1] ??
+    reason.match(/(\d+(?:\.\d+)?)\s*%\s*(?:of\s+)?(?:target\s+)?goal/i)?.[1];
+  if (fromReason) return `${fromReason}%`;
+  return extractPercentFromText(`${source} ${reason}`);
+}
+
+function extractWeeklyTargetPercent(source: string, reason: string): string | null {
+  const fromSource = source.match(/weekly threshold\s*(\d+)/i)?.[1];
+  if (fromSource) return `${fromSource}%`;
+  const fromReason = reason.match(/reached\s+(\d+(?:\.\d+)?)\s*%\s*of\s+weekly/i)?.[1];
+  if (fromReason) return `${fromReason}%`;
+  return extractPercentFromText(reason);
+}
+
+function extractStreakDescription(reason: string): string | null {
+  const match = reason.match(/(\d+)[-\s]day(?:s)?\s+(?:shooting\s+)?streak/i);
+  if (match) return `${match[1]} Day Shooting Streak`;
+  if (/streak/i.test(reason) && reason.length < 80) return cleanReason(reason);
   return null;
 }
 
-function extractStreakDays(reason: string): number | null {
-  const match = reason.match(/(\d+)[-\s]day(?:s)?\s+(?:shooting\s+)?streak/i);
-  if (!match) return null;
-  const parsed = Number(match[1]);
-  return Number.isFinite(parsed) ? parsed : null;
-}
-
-function extractHomeworkName(reason: string): string | null {
+function extractHomeworkAssignmentName(reason: string): string | null {
   const patterns = [
     /homework(?:\s+completed)?:\s*(.+)$/i,
     /assignment:\s*(.+)$/i,
@@ -53,66 +73,95 @@ function zoomAttendanceDetail(reason: string): string | null {
   return cleanReason(reason) || null;
 }
 
-/** Map XP event source + reason into short Game Log labels (FUT-012). */
+function manualBonusDetail(reason: string): string | null {
+  const cleaned = cleanReason(reason);
+  if (!cleaned || /^manual bonus$/i.test(cleaned)) return null;
+  return cleaned;
+}
+
+/** Display date for row 2 — never prefixed with "Date:". */
+export function formatGameLogDisplayDate(dateKey: string | null | undefined): string {
+  if (!dateKey || !String(dateKey).trim()) return "Date TBD";
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateKey).trim());
+  if (match) {
+    const [, year, month, day] = match;
+    return `${month}/${day}/${year}`;
+  }
+  return String(dateKey).trim();
+}
+
+/** Map XP event source + reason into short Game Log headlines (FUT-012). */
 export function formatGameLogPresentation(row: XpEventSummary): GameLogPresentation {
   const source = asText(row.sourceLabel, "").toLowerCase();
   const reason = cleanReason(asText(row.reasonPublic, ""));
 
-  if (source.includes("submission") || /shooting submission/i.test(reason)) {
+  if (source.includes("submission") || source.includes("shooting base") || /shooting submission/i.test(reason)) {
     const shots = extractShotCount(reason);
     return {
-      title: "Shot Submission",
-      detail: shots != null ? `${shots} shots` : null,
+      headline: joinHeadline(
+        "Shot Submission",
+        shots != null ? `${formatShots(shots)} shots` : null,
+      ),
+    };
+  }
+
+  if (source.includes("weekly threshold") || /weekly shot goal/i.test(reason)) {
+    return {
+      headline: joinHeadline(
+        "Weekly Shot Target",
+        extractWeeklyTargetPercent(asText(row.sourceLabel, ""), reason),
+      ),
     };
   }
 
   if (source.includes("milestone") || /milestone|threshold/i.test(reason)) {
     return {
-      title: "Shot Milestone",
-      detail: extractPercentGoal(reason) ?? (reason || null),
+      headline: joinHeadline(
+        "Milestone Achieved",
+        extractMilestonePercent(asText(row.sourceLabel, ""), reason),
+      ),
+    };
+  }
+
+  if (source.includes("manual bonus") || /manual bonus/i.test(reason)) {
+    return {
+      headline: joinHeadline("Manual Bonus", manualBonusDetail(reason)),
     };
   }
 
   if (source.includes("streak") || /streak/i.test(reason)) {
-    const days = extractStreakDays(reason);
     return {
-      title: "Streak",
-      detail: days != null ? `${days} Day Shooting Streak` : reason || null,
+      headline: joinHeadline("Streak", extractStreakDescription(reason) ?? (reason || null)),
     };
   }
 
   if (source.includes("zoom")) {
     return {
-      title: "Zoom",
-      detail: zoomAttendanceDetail(reason),
+      headline: joinHeadline("Zoom Attendance", zoomAttendanceDetail(reason)),
     };
   }
 
   if (source.includes("homework")) {
     return {
-      title: "Homework",
-      detail: extractHomeworkName(reason),
+      headline: joinHeadline("Homework Completed", extractHomeworkAssignmentName(reason)),
     };
   }
 
   if (source.includes("perfect week")) {
     return {
-      title: "Perfect Week",
-      detail: reason || "Week requirements met",
+      headline: joinHeadline("Perfect Week", reason || "Week requirements met"),
     };
   }
 
   if (source.includes("video")) {
     return {
-      title: "Video Submission",
-      detail: reason || null,
+      headline: joinHeadline("Video Feedback", reason || null),
     };
   }
 
   if (source.includes("achievement")) {
     return {
-      title: "Achievement",
-      detail: reason || null,
+      headline: joinHeadline("Achievement", reason || null),
     };
   }
 
@@ -124,7 +173,6 @@ export function formatGameLogPresentation(row: XpEventSummary): GameLogPresentat
         : "XP earned";
 
   return {
-    title: fallbackTitle,
-    detail: null,
+    headline: fallbackTitle,
   };
 }

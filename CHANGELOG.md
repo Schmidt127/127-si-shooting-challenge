@@ -8,6 +8,15 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Web
 
+#### Changed
+- **XP Event Log display (2026-08-26)** — Athlete Game Log and dashboard XP ledger use a
+  two-row layout: activity headline and XP on row 1, date-only on row 2; middle column
+  reserved empty. Headlines use em-dash detail (`Shot Submission — 1,250 shots`,
+  `Homework Completed — Mikan Drill`, `Weekly Shot Target — 150%`, `Milestone Achieved —
+  125%`). Same-date rows sort reverse accomplishment order (newest accomplishments first).
+  Tests: `game-log-presentation.test.ts`, `recent-activity-log.test.ts`,
+  `xp-activity-table.test.ts`, `xp-activity-loader.test.ts`.
+
 #### Fixed
 - **Production smoke verification (2026-08-25)** — Cross-platform `test:smoke:prod` via
   `cross-env`; hydration-safe `openMobileNavPanel()` helper; client-only freshness

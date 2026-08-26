@@ -12,7 +12,7 @@ describe("public athlete activity mapping", () => {
         id: "recXp1",
         points: 20,
         sourceLabel: "Submission Base",
-        reasonPublic: "Shooting submission completed.",
+        reasonPublic: "Shooting submission completed with 20 shots.",
         activityDate: "2026-08-22",
       },
       {
@@ -27,9 +27,9 @@ describe("public athlete activity mapping", () => {
     expect(items).toHaveLength(2);
     expect(items[0].date).toBe("2026-08-22");
     expect(items[0].xp).toBe(20);
-    expect(items[0].title).toBe("Shot Submission");
+    expect(items[0].title).toBe("Shot Submission — 20 shots");
     expect(items[0].detail).toBeNull();
-    expect(items[1].title).toBe("Shot Milestone");
+    expect(items[1].title).toBe("Milestone Achieved — 100%");
     expect(items.every((item) => item.kind === "xp")).toBe(true);
     expect(items.every((item) => !String(item.detail ?? "").includes("XP"))).toBe(true);
   });

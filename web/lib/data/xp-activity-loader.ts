@@ -61,14 +61,30 @@ const DUPLICATE_REMOVE_STATUS = "Duplicate - Remove";
 const SUBMISSION_BASE_SOURCE = "Submission Base";
 const SUBMISSION_XP_SOURCE_KEY_PREFIX = "SUBMISSION_XP|";
 
-/** Same-date row ordering: parent submission XP before dependent milestones. */
-const XP_SOURCE_SORT_RANK: Record<string, number> = {
-  [SUBMISSION_BASE_SOURCE]: 0,
-  "Shot Milestone": 1,
-  "Perfect Week": 2,
-  "7-Day Streak": 3,
-  "Homework Completion": 4,
-  "Video Submission": 5,
+/**
+ * Same-date accomplishment order (lower rank = displayed first).
+ * Reverse chronological within a day: latest accomplishments above initiating submission.
+ */
+const XP_ACCOMPLISHMENT_SORT_RANK: Record<string, number> = {
+  "Manual Bonus": 0,
+  "Zoom Attendance: Base": 1,
+  "Zoom Attendance: Bonus 2": 1,
+  "Zoom Attendance: Bonus 3": 1,
+  "Zoom Attendance": 1,
+  "Zoom Recording": 1,
+  "Video Submission": 2,
+  "Video Feedback": 2,
+  "Homework Completion": 3,
+  "7-Day Streak": 4,
+  "5-Day Streak": 4,
+  Streak: 4,
+  "Weekly Threshold 150": 5,
+  "Weekly Threshold 125": 5,
+  "Weekly Threshold 100": 5,
+  "Perfect Week": 5,
+  "Shot Milestone": 6,
+  [SUBMISSION_BASE_SOURCE]: 7,
+  "Shooting Base": 7,
 };
 
 export type XpEventRecordFields = {
@@ -228,18 +244,64 @@ export function mapXpEventRecordToSummary(
   const points = active ? (activePoints ?? rawPoints ?? 0) : (rawPoints ?? 0);
   const { displayedDate } = resolveXpEventDisplayDate(fields, submissionActivityDate);
 
+  const createdRaw = asText(fields.Created, "").trim();
+
   return {
     id: record.id,
     points,
     sourceLabel: asText(fields["XP Source"], "") || undefined,
     reasonPublic: asText(fields["XP Reason Public"], "") || undefined,
     activityDate: displayedDate,
+    sortTimestamp: createdRaw || undefined,
   };
 }
 
-export function xpSourceSortRank(sourceLabel: string | undefined): number {
-  if (!sourceLabel) return 99;
-  return XP_SOURCE_SORT_RANK[sourceLabel] ?? 50;
+/** Extract milestone / weekly-target percentage for same-day sub-sorting (higher first). */
+export function extractXpEventPercent(row: XpEventSummary): number | null {
+  const source = asText(row.sourceLabel, "");
+  const reason = asText(row.reasonPublic, "");
+  const hay = `${source} ${reason}`.toLowerCase();
+
+  const weeklyFromSource = source.match(/weekly threshold\s*(\d+)/i)?.[1];
+  if (weeklyFromSource) return Number(weeklyFromSource);
+
+  const weeklyFromReason = reason.match(/reached\s+(\d+(?:\.\d+)?)\s*%\s*of\s+weekly/i)?.[1];
+  if (weeklyFromReason) return Number(weeklyFromReason);
+
+  const milestoneMatch =
+    reason.match(/(\d+(?:\.\d+)?)\s*%\s*(?:\w+\s+)?milestone/i)?.[1] ??
+    reason.match(/(\d+(?:\.\d+)?)\s*%\s*(?:of\s+)?(?:target\s+)?goal/i)?.[1];
+  if (milestoneMatch) return Number(milestoneMatch);
+
+  if (hay.includes("milestone") || hay.includes("weekly threshold") || hay.includes("weekly shot goal")) {
+    const generic = hay.match(/(\d+(?:\.\d+)?)\s*%/);
+    if (generic) return Number(generic[1]);
+  }
+
+  return null;
+}
+
+export function xpSourceSortRank(
+  sourceLabel: string | undefined,
+  reasonPublic?: string | undefined,
+): number {
+  const source = asText(sourceLabel, "");
+  if (source && XP_ACCOMPLISHMENT_SORT_RANK[source] != null) {
+    return XP_ACCOMPLISHMENT_SORT_RANK[source];
+  }
+
+  const hay = `${source} ${asText(reasonPublic, "")}`.toLowerCase();
+  if (hay.includes("manual bonus")) return 0;
+  if (hay.includes("zoom")) return 1;
+  if (hay.includes("video")) return 2;
+  if (hay.includes("homework")) return 3;
+  if (hay.includes("streak")) return 4;
+  if (hay.includes("weekly threshold") || hay.includes("weekly shot goal")) return 5;
+  if (hay.includes("perfect week")) return 5;
+  if (hay.includes("milestone")) return 6;
+  if (hay.includes("submission") || hay.includes("shooting base")) return 7;
+
+  return 50;
 }
 
 export function sortXpEventsNewestFirst(events: XpEventSummary[]): XpEventSummary[] {
@@ -248,9 +310,27 @@ export function sortXpEventsNewestFirst(events: XpEventSummary[]): XpEventSummar
     const dateB = b.activityDate ?? "";
     const dateCmp = dateB.localeCompare(dateA);
     if (dateCmp !== 0) return dateCmp;
+
+    const tsA = a.sortTimestamp ?? "";
+    const tsB = b.sortTimestamp ?? "";
+    if (tsA && tsB) {
+      const tsCmp = tsB.localeCompare(tsA);
+      if (tsCmp !== 0) return tsCmp;
+    }
+
     const rankCmp =
-      xpSourceSortRank(a.sourceLabel) - xpSourceSortRank(b.sourceLabel);
+      xpSourceSortRank(a.sourceLabel, a.reasonPublic) -
+      xpSourceSortRank(b.sourceLabel, b.reasonPublic);
     if (rankCmp !== 0) return rankCmp;
+
+    const pctA = extractXpEventPercent(a);
+    const pctB = extractXpEventPercent(b);
+    if (pctA != null && pctB != null && pctA !== pctB) {
+      return pctB - pctA;
+    }
+    if (pctA != null && pctB == null) return -1;
+    if (pctA == null && pctB != null) return 1;
+
     return b.id.localeCompare(a.id);
   });
 }

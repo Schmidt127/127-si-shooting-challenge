@@ -1,4 +1,8 @@
-import { formatXp, formatXpSourceLabel } from "@/lib/formatters";
+import {
+  formatGameLogDisplayDate,
+  formatGameLogPresentation,
+} from "@/lib/data/game-log-presentation";
+import { formatXp } from "@/lib/formatters";
 import type { XpEventSummary } from "@/types/xp";
 
 type XpActivityTableProps = {
@@ -41,40 +45,41 @@ export function XpActivityTable({
           {emptyMessage}
         </p>
       ) : (
-        <div className="mt-5 overflow-x-auto border border-border bg-card">
-          <table className="min-w-full text-left text-sm">
-            <thead className="border-b border-border bg-brand-light-gray/60 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
-              <tr>
-                <th scope="col" className="px-4 py-3">
-                  Date
-                </th>
-                <th scope="col" className="px-4 py-3">
-                  Source
-                </th>
-                <th scope="col" className="px-4 py-3">
-                  Reason
-                </th>
-                <th scope="col" className="px-4 py-3 text-right">
-                  XP
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row) => (
-                <tr key={row.id} className="border-b border-border last:border-b-0" data-testid="xp-activity-row">
-                  <td className="whitespace-nowrap px-4 py-3 text-muted">{row.activityDate ?? "—"}</td>
-                  <td className="px-4 py-3 font-semibold text-foreground">
-                    {formatXpSourceLabel(row.sourceLabel)}
-                  </td>
-                  <td className="px-4 py-3 text-muted">{row.reasonPublic || "XP awarded"}</td>
-                  <td className="whitespace-nowrap px-4 py-3 text-right font-mono font-bold text-brand-blue">
-                    +{formatXp(row.points)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <ol className="mt-5 divide-y divide-border border border-border bg-card">
+          {rows.map((row) => {
+            const headline = formatGameLogPresentation(row).headline;
+            return (
+              <li
+                key={row.id}
+                className="px-4 py-3 sm:px-5"
+                data-testid="xp-activity-row"
+              >
+                <div
+                  className="grid min-w-0 grid-cols-[minmax(0,1fr)_2.5rem_minmax(4.5rem,auto)] items-baseline gap-x-3 gap-y-0.5"
+                  data-testid="xp-activity-event-grid"
+                >
+                  <p className="col-start-1 row-start-1 min-w-0 break-words text-sm font-semibold text-foreground">
+                    {headline}
+                  </p>
+                  <span
+                    aria-hidden="true"
+                    className="col-start-2 row-start-1"
+                    data-testid="xp-activity-middle"
+                  />
+                  <p className="col-start-3 row-start-1 whitespace-nowrap text-right font-mono text-sm font-bold text-brand-blue">
+                    +{formatXp(row.points)} XP
+                  </p>
+                  <p
+                    className="col-start-1 row-start-2 min-w-0 break-words text-xs text-muted"
+                    data-testid="xp-activity-date"
+                  >
+                    {formatGameLogDisplayDate(row.activityDate)}
+                  </p>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
       )}
     </section>
   );

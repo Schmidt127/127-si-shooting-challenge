@@ -1,32 +1,56 @@
 import { describe, expect, it } from "vitest";
 
-import { formatGameLogPresentation } from "@/lib/data/game-log-presentation";
+import {
+  formatGameLogDisplayDate,
+  formatGameLogPresentation,
+} from "@/lib/data/game-log-presentation";
 
 describe("formatGameLogPresentation", () => {
-  it("maps shot submissions to short titles with shot counts", () => {
+  it("formats shot submissions with total shots in the headline", () => {
     const result = formatGameLogPresentation({
       id: "rec1",
       points: 20,
       sourceLabel: "Submission Base",
-      reasonPublic: "Shooting submission completed with 45 shots.",
+      reasonPublic: "Shooting submission completed with 1,250 shots.",
       activityDate: "2026-08-22",
     });
-    expect(result).toEqual({ title: "Shot Submission", detail: "45 shots" });
+    expect(result.headline).toBe("Shot Submission — 1,250 shots");
   });
 
-  it("maps milestones to percent goal copy", () => {
+  it("formats homework with assignment name and Completed label", () => {
+    const result = formatGameLogPresentation({
+      id: "rec5",
+      points: 35,
+      sourceLabel: "Homework Completion",
+      reasonPublic: "Homework completed: Mikan Drill",
+      activityDate: "2022-03-23",
+    });
+    expect(result.headline).toBe("Homework Completed — Mikan Drill");
+  });
+
+  it("formats weekly shot targets with percentage", () => {
+    const result = formatGameLogPresentation({
+      id: "recWeekly",
+      points: 30,
+      sourceLabel: "Weekly Threshold 150",
+      reasonPublic: "Reached 150% of weekly shot goal.",
+      activityDate: "2026-03-22",
+    });
+    expect(result.headline).toBe("Weekly Shot Target — 150%");
+  });
+
+  it("formats milestones with percentage", () => {
     const result = formatGameLogPresentation({
       id: "rec2",
-      points: 30,
+      points: 40,
       sourceLabel: "Shot Milestone",
-      reasonPublic: "Shot milestone reached: 75% of target goal.",
-      activityDate: "2026-08-21",
+      reasonPublic: "Shot milestone reached: 125% milestone.",
+      activityDate: "2026-03-22",
     });
-    expect(result.title).toBe("Shot Milestone");
-    expect(result.detail).toContain("75%");
+    expect(result.headline).toBe("Milestone Achieved — 125%");
   });
 
-  it("maps streaks without duplicating XP in detail", () => {
+  it("formats streaks with streak description", () => {
     const result = formatGameLogPresentation({
       id: "rec3",
       points: 25,
@@ -34,8 +58,18 @@ describe("formatGameLogPresentation", () => {
       reasonPublic: "3-day shooting streak completed.",
       activityDate: "2026-08-20",
     });
-    expect(result.title).toBe("Streak");
-    expect(result.detail).toContain("3 Day Shooting Streak");
+    expect(result.headline).toBe("Streak — 3 Day Shooting Streak");
+  });
+
+  it("formats manual bonus with reason detail", () => {
+    const result = formatGameLogPresentation({
+      id: "recBonus",
+      points: 25,
+      sourceLabel: "Manual Bonus",
+      reasonPublic: "Coach award",
+      activityDate: "2026-08-22",
+    });
+    expect(result.headline).toBe("Manual Bonus — Coach award");
   });
 
   it("maps zoom attendance modes", () => {
@@ -46,19 +80,26 @@ describe("formatGameLogPresentation", () => {
         sourceLabel: "Zoom Recording",
         reasonPublic: "Watched the Zoom recording.",
         activityDate: "2026-08-19",
-      }).detail,
-    ).toBe("Attended via Recording");
+      }).headline,
+    ).toBe("Zoom Attendance — Attended via Recording");
   });
 
-  it("maps homework to assignment-style detail", () => {
+  it("does not embed XP amounts in the headline", () => {
     const result = formatGameLogPresentation({
-      id: "rec5",
-      points: 15,
-      sourceLabel: "Homework Completion",
-      reasonPublic: "Homework completed: Shot Challenge Tracker",
-      activityDate: "2026-08-18",
+      id: "recXp",
+      points: 20,
+      sourceLabel: "Submission Base",
+      reasonPublic: "Shooting submission completed with 45 shots.",
+      activityDate: "2026-08-22",
     });
-    expect(result.title).toBe("Homework");
-    expect(result.detail).toContain("Shot Challenge Tracker");
+    expect(result.headline).not.toMatch(/\+?\d+\s*XP/i);
+  });
+});
+
+describe("formatGameLogDisplayDate", () => {
+  it("does not prefix dates with Date:", () => {
+    const formatted = formatGameLogDisplayDate("2026-08-22");
+    expect(formatted).not.toMatch(/^Date:/i);
+    expect(formatted).toBe("08/22/2026");
   });
 });

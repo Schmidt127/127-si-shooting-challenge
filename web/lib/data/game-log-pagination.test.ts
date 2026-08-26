@@ -55,8 +55,8 @@ describe("paginateSortedXpSummaries", () => {
     });
     expect(page.pageRows).toHaveLength(GAME_LOG_PAGE_SIZE);
     expect(page.hasMore).toBe(true);
-    expect(page.pageRows[0].id).toBe("recPage0000000001");
-    expect(page.pageRows[1].id).toBe("recPage0000000002");
+    expect(page.pageRows[0].id).toBe("recPage0000000002");
+    expect(page.pageRows[1].id).toBe("recPage0000000001");
   });
 
   it("returns the second page without duplicates", () => {
@@ -77,14 +77,14 @@ describe("paginateSortedXpSummaries", () => {
     expect(second.hasMore).toBe(false);
   });
 
-  it("keeps submission before milestone on the same day", () => {
+  it("orders later accomplishments before submission on the same day", () => {
     const sameDay = sortXpEventsNewestFirst([
       row("recMilestone00001", "2026-08-20", "Shot Milestone"),
       row("recSubmission0001", "2026-08-20", "Submission Base"),
     ]);
     const page = paginateSortedXpSummaries(sameDay, { cursor: null, pageSize: 2 });
-    expect(page.pageRows[0].id).toBe("recSubmission0001");
-    expect(page.pageRows[1].id).toBe("recMilestone00001");
+    expect(page.pageRows[0].id).toBe("recMilestone00001");
+    expect(page.pageRows[1].id).toBe("recSubmission0001");
   });
 
   it("handles empty ledger", () => {

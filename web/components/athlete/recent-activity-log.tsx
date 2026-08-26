@@ -3,7 +3,8 @@
 import { useCallback, useRef, useState } from "react";
 
 import { withBasePath } from "@/lib/app-config";
-import { formatShots, formatXp } from "@/lib/formatters";
+import { formatGameLogDisplayDate } from "@/lib/data/game-log-presentation";
+import { formatXp } from "@/lib/formatters";
 import type { PublicActivityItem } from "@/types/public-athlete-profile";
 
 type GameLogApiResponse = {
@@ -107,29 +108,28 @@ export function RecentActivityLog({
         <>
           <ol className="mt-5 divide-y divide-border border border-border bg-card">
             {items.map((item) => (
-              <li
-                key={item.key}
-                className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:flex-wrap sm:items-baseline sm:justify-between sm:gap-2 sm:px-5"
-                data-testid="recent-activity-row"
-              >
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-semibold text-foreground">{item.title}</p>
-                  <p className="mt-0.5 text-xs text-muted">
-                    {item.date ?? "Date TBD"}
-                    {item.detail ? (
-                      <>
-                        <span aria-hidden> · </span>
-                        <span className="text-foreground/80">{item.detail}</span>
-                      </>
-                    ) : null}
+              <li key={item.key} className="px-4 py-3 sm:px-5" data-testid="recent-activity-row">
+                <div
+                  className="grid min-w-0 grid-cols-[minmax(0,1fr)_2.5rem_minmax(4.5rem,auto)] items-baseline gap-x-3 gap-y-0.5"
+                  data-testid="recent-activity-event-grid"
+                >
+                  <p className="col-start-1 row-start-1 min-w-0 break-words text-sm font-semibold text-foreground">
+                    {item.title}
                   </p>
-                </div>
-                <div className="font-mono text-sm font-bold text-accent-soft sm:shrink-0 sm:text-right">
-                  {item.xp != null
-                    ? `+${formatXp(item.xp)} XP`
-                    : item.shots != null
-                      ? `${formatShots(item.shots)} shots`
-                      : "—"}
+                  <span
+                    aria-hidden="true"
+                    className="col-start-2 row-start-1"
+                    data-testid="recent-activity-middle"
+                  />
+                  <p className="col-start-3 row-start-1 whitespace-nowrap text-right font-mono text-sm font-bold text-accent-soft">
+                    {item.xp != null ? `+${formatXp(item.xp)} XP` : "—"}
+                  </p>
+                  <p
+                    className="col-start-1 row-start-2 min-w-0 break-words text-xs text-muted"
+                    data-testid="recent-activity-date"
+                  >
+                    {formatGameLogDisplayDate(item.date)}
+                  </p>
                 </div>
               </li>
             ))}

@@ -132,7 +132,7 @@ describe("xp-activity-loader mapping", () => {
       },
     ]);
 
-    expect(sorted.map((row) => row.id)).toEqual(["recSub", "recMilestone", "recOld"]);
+    expect(sorted.map((row) => row.id)).toEqual(["recMilestone", "recSub", "recOld"]);
   });
 
   it("dedupes duplicate source keys preferring active and newest created", () => {
@@ -284,7 +284,7 @@ describe("Schmidt preview regression fixtures", () => {
     expect(new Set(summaries.map((row) => row.activityDate))).toEqual(new Set(["2026-08-22"]));
   });
 
-  it("orders parent submission before shot milestone on the same date", () => {
+  it("orders later accomplishments before submission on the same date", () => {
     const sorted = sortXpEventsNewestFirst([
       {
         id: "recMilestone",
@@ -300,8 +300,8 @@ describe("Schmidt preview regression fixtures", () => {
       },
     ]);
 
-    expect(sorted[0].id).toBe("recSubmission");
-    expect(sorted[1].id).toBe("recMilestone");
+    expect(sorted[0].id).toBe("recMilestone");
+    expect(sorted[1].id).toBe("recSubmission");
   });
 
   it("handles backdated submission activity dates", () => {
