@@ -40,12 +40,12 @@ Repository and Production closeout for the bounded SC-034 / V2-002 pass:
 | Item | Status | Evidence |
 |---|---|---|
 | **V2-002 / SC-034** repository implementation | **COMPLETE** | `audits/2026-08-27-SC-034-config-hardcode-audit.md`; `lib/config-selection/`; 57-script scan; contract tests |
-| **Automation 057 v2.2** | **Repaste required** | Config field renamed; prod script still typo `MInimum` — [`057-v2.1-perfect-week-config-video-minimum.md`](./deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md) |
+| **Automation 057 v2.2** | **COMPLETE** | Config field + script synced to **`Perfect Week Video Minimum`** — [`057-v2.1-perfect-week-config-video-minimum.md`](./deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md) |
 | **Config-driven Perfect Week video minimum** | **COMPLETE** | Config field **`Perfect Week Video Minimum`** = 3; `lib/config-selection/perfect-week-video-minimum.js` |
 | **WAS Config lookup + formula** | **COMPLETE** | Lookup **`Config: Perfect Week Video Minimum`**; formula **`Perfect Week Video Requirement Met?`** live PROD |
 | **Automation 059 trigger correction** | **COMPLETE** | Mike removed `Shot Milestone is not empty` filter; Pending-only created trigger — [`059-perfect-week-trigger-coverage.md`](./deploy-checklists/059-perfect-week-trigger-coverage.md) |
 | **058/059 script changes** | **Not required** | `docs/testing/perfect-week/PERFECT-WEEK-DEPENDENCY-AUDIT.md` — eligibility from 057 + WAS formulas |
-| **Disposable Perfect Week end-to-end test** | **READY** (pending) | **SC-PW-E2E** — full 7/7-day 057→058→059 award on throwaway WAS; grace 4/7 proven 2026-08-24 |
+| **Disposable Perfect Week end-to-end test** | **READY** (Mike PROD run) | **SC-PW-E2E** — `tools/testing/sc-pw-e2e.mjs --case qualifying --apply`; harness + offline tests complete 2026-08-27 |
 | **General schema field typo renames** | **DEFERRED** | `Perfect Week Video Minimum` typo fixed; gate summary / Softr flag / HC RID typos — SAFE-MIGRATION-PLAN P3; **SC-144** |
 
 ## How to use this document
@@ -686,7 +686,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-026** | Config | Achievements catalog + unlock rules | P1 | Installed in PROD | SC-066 | Re-seed; re-test unlocks; dedupe keys |
 | **SC-028** | Config | Perfect Week rules configurable | P1 | **IN PROGRESS** — 057 v2.2 + WAS + 059 trigger complete 2026-08-27 | SC-116, **SC-PW-E2E** | Disposable 7/7 E2E (057→058→059) pending; Batch A/B fixtures optional |
 | **SC-030** | Config | Zoom percentage / credit settings in config | P1 | Installed in PROD | SC-116 | Re-verify config rows after wipe; document operator knobs |
-| **SC-034** | Config | Remove remaining hardcoded values from automations | P1 | **COMPLETE** (repo 2026-08-27); **057 repaste pending** | SC-021, **V2-002** | Bounded pass complete: Config-only video minimum, audit JSON, contract tests. Repaste 057 after field rename. |
+| **SC-034** | Config | Remove remaining hardcoded values from automations | P1 | **COMPLETE** (2026-08-27) | SC-021, **V2-002** | Bounded pass complete: Config-only video minimum, audit JSON, contract tests, 057 v2.2 live |
 | **SC-037** | Weekly Summary | Previous-week helpers reliable | P1 | Installed in PROD | SC-084 | Re-verify after Weeks rebuild |
 | **SC-056** | Data Integrity | Script input/output variables standardized | P1 | **Built in Repository — standard + tests 2026-08-27** | SC-057 | 058 legacy output migration on next touch |
 | **SC-057** | Data Integrity | Automation trigger review (no duplicate triggers) | P1 | **Partial — repo inventory 2026-08-27** | SC-058 | UI attest triggers; confirm 112/043/063/068 disposition |
@@ -774,13 +774,13 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | Item | Status | Evidence |
 |---|---|---|
 | **V2-002** | COMPLETE | SC-034 repo pass 2026-08-27; `audits/2026-08-27-SC-034-config-hardcode-audit.md`; 57 scripts; `lib/config-selection/` |
-| **SC-034** | COMPLETE (repo) | V2-002 repo pass 2026-08-27; hardcode audit JSON; contract tests pass; **057 repaste pending** |
+| **SC-034** | COMPLETE | V2-002 repo + prod pass 2026-08-27; hardcode audit JSON; contract tests pass; 057 v2.2 live |
 | **SC-034-PW-MIN** | COMPLETE | `lib/config-selection/perfect-week-video-minimum.js`; Config **Perfect Week Video Minimum** = 3 |
 | **SC-034-WAS** | COMPLETE | WAS lookup + formula live PROD 2026-08-27; `airtable/formulas/README.md` |
-| **SC-034-057** | **Repaste required** | Config field renamed; prod 057 script still typo — `deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md` |
+| **SC-034-057** | COMPLETE | 057 v2.2 live PROD 2026-08-27; `deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md` |
 | **SC-034-059-TRIG** | COMPLETE | Mike 2026-08-27; Pending-only created trigger; `deploy-checklists/059-perfect-week-trigger-coverage.md` |
 | **SC-034-058-059** | COMPLETE | Not required — `docs/testing/perfect-week/PERFECT-WEEK-DEPENDENCY-AUDIT.md` |
-| **SC-PW-E2E** | READY | Disposable 057→058→059 on throwaway WAS; 7/7 days + Eligible?=1; grace 4/7 proven 2026-08-24 |
+| **SC-PW-E2E** | READY | Harness `tools/testing/sc-pw-e2e.mjs`; Mike runs `--case qualifying --apply` on PROD; docs/testing/perfect-week/SC-PW-E2E.md |
 | **SC-144** | DEFERRED | General schema typo renames — SAFE-MIGRATION-PLAN P3 |
 | **Field typo rename (general schema)** | DEFERRED | **Perfect Week Video Minimum** typo fixed 2026-08-27; gate summary / Softr flag / HC RID typos deferred |
 

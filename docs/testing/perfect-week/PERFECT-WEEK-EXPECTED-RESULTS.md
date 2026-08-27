@@ -2,6 +2,7 @@
 
 Fixture batch: `PWTEST|2026-08-05`  
 Method: **`LIVE_SAME_DAY_CALENDAR`** — [`PERFECT-WEEK-FIXTURE-METHOD.md`](./PERFECT-WEEK-FIXTURE-METHOD.md)  
+Disposable E2E harness (057→058→059): [`SC-PW-E2E.md`](./SC-PW-E2E.md)  
 Authority: [`PERFECT-WEEK-FIXTURE-SPEC.md`](./PERFECT-WEEK-FIXTURE-SPEC.md)
 
 Statuses for verifier: **PASS** | **FAIL** | **BLOCKED**

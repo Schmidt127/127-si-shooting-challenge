@@ -7,6 +7,7 @@
 | Alternate (true calendar creates) | `LIVE_SAME_DAY_CALENDAR` |
 | Automation 057 | v1.5 — **no logic change in this package** |
 | Nature | **Tightly gated fixture mechanism — not athlete-facing production behavior** |
+| Disposable E2E harness | [`SC-PW-E2E.md`](./SC-PW-E2E.md) — `tools/testing/sc-pw-e2e.mjs` (057→058→059, dry-run default) |
 
 ## Controlling rule
 
