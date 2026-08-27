@@ -22,7 +22,7 @@ No email. No writes to formula outputs, `Perfect Week Eligible?`, unlocks (excep
 |------|-------------|
 | Dry-run default | No Airtable writes without `--apply` |
 | PWTEST prefix | Every created Week name starts with `PWTEST\|` |
-| Gated enrollment only | `recCyFEPeATOVNlr9` (Schmidt Testing 2026–2027) |
+| Gated enrollment only | `rec93mAfo5jKqP3g5` (Perfect Week Testing) · PI `rec5mEM0YPqPqq0hZ` |
 | Cleanup guard | `--cleanup` deletes only manifest records; Week name must still start with `PWTEST\|` |
 | Stop on failure | Exits immediately with diagnostic JSON |
 

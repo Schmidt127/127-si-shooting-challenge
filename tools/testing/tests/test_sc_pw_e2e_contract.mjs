@@ -59,8 +59,9 @@ test("dry-run plan does not imply apply", () => {
 });
 
 test("source key matches 058/059 contract", () => {
-  const enr = "recCyFEPeATOVNlr9";
+  const enr = GATED_ENROLLMENT_ID;
   const week = "recWeekPwE2e001";
+  assert.equal(enr, "rec93mAfo5jKqP3g5");
   assert.equal(buildPerfectWeekSourceKey(enr, week), `PERFECT_WEEK|${enr}|${week}`);
 });
 

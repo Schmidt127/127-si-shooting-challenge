@@ -166,7 +166,7 @@ async function loadCaseActual(baseId, token, caseId, spec) {
     was,
     xpEvents,
     submissions,
-    allowedGatedEnrollmentId: "recCyFEPeATOVNlr9",
+    allowedGatedEnrollmentId: "rec93mAfo5jKqP3g5",
     wasSubmissionIds: was ? linkIds(field(was, "Submissions")) : [],
     loadError: null,
   };
@@ -237,7 +237,7 @@ async function main() {
       "Normal athletes use Submitted At (CREATED_TIME) vs Activity Date.",
       "Perfect Week Test Override? must not be used.",
       "Automation 057 has no test-mode path.",
-      "Verifier FAILs if gated test fields appear without Enrollment recCyFEPeATOVNlr9.",
+      "Verifier FAILs if gated test fields appear without Enrollment rec93mAfo5jKqP3g5.",
     ],
     counts: {
       PASS: results.filter((r) => r.status === "PASS").length,

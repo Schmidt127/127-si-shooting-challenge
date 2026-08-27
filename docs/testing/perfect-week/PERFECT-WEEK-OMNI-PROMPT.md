@@ -20,7 +20,7 @@ This is a **tightly gated fixture mechanism**, not athlete-facing production beh
 Create controlled Perfect Week fixtures in **PROD** for Automation **057 v1.5**.
 
 Batch key prefix: `PWTEST|2026-08-05`  
-**Only** Enrollment `recCyFEPeATOVNlr9` (`Schmidt, Testing - 2026-2027`). Do **not** email real parents.
+**Only** Enrollment `rec93mAfo5jKqP3g5` (`Perfect Week Testing`). Do **not** email real parents.
 
 ---
 
@@ -29,7 +29,7 @@ Batch key prefix: `PWTEST|2026-08-05`
 1. Work in **PROD** for controlled Schmidt fixtures only.
 2. Inspect current PROD schema before any create. Stop and report mismatches — do not guess.
 3. **Gated path (CASE-01 historical week):** For each fixture Submission, set **all** of:
-   - Enrollment = `recCyFEPeATOVNlr9`
+   - Enrollment = `rec93mAfo5jKqP3g5`
    - `Perfect Week Test Record?` = checked
    - `Perfect Week Test Submitted At` = Denver date/time matching that day’s `Activity Date`
 4. If any gate condition is missing, Same Day falls back to real `Submitted At` (`CREATED_TIME()`).
@@ -63,7 +63,7 @@ Order:
 4. No Zoom Meeting  
 5. Confirm Same Day=1 and Countable=1 on all seven  
 6. Rearm / Run Automation **057** on the WAS (`Perfect Week Automation Status` → Pending after Error/Skipped if needed)  
-7. Confirm Ready + Eligible=1 → Unlock **058** → XP **059** (`PERFECT_WEEK|recCyFEPeATOVNlr9|{weekId}`)
+7. Confirm Ready + Eligible=1 → Unlock **058** → XP **059** (`PERFECT_WEEK|rec93mAfo5jKqP3g5|{weekId}`)
 
 Preserve evidence (do not alter):
 

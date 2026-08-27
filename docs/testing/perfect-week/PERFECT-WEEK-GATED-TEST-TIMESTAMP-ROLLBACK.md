@@ -53,7 +53,7 @@ IF(
   AND(
     {Perfect Week Test Record?},
     {Perfect Week Test Submitted At},
-    FIND("recCyFEPeATOVNlr9", ARRAYJOIN({Enrollment Record ID Lookup})) > 0
+    FIND("rec93mAfo5jKqP3g5", ARRAYJOIN({Enrollment Record ID Lookup})) > 0
   ),
   IF(
     AND(

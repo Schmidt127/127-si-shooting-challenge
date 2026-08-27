@@ -73,7 +73,7 @@
 
 | Consumer | Dependency |
 |----------|------------|
-| Same Day formula | Gate: checkbox + Test Submitted At + `FIND("recCyFEPeATOVNlr9", ARRAYJOIN({Enrollment Record ID Lookup}))` |
+| Same Day formula | Gate: checkbox + Test Submitted At + `FIND("rec93mAfo5jKqP3g5", ARRAYJOIN({Enrollment Record ID Lookup}))` |
 | 057 | Does **not** read these fields |
 | Verifier | FAIL if non-Schmidt enrollment uses them; FAIL if CASE-02/07 have them; FAIL if CASE-01 fixtures missing them under gated method |
 | Public surfaces | Must remain absent from Fillout / Softr / parent UI |
@@ -86,7 +86,7 @@ Safest dependency-preserving approach used in PROD:
 
 1. Enrollments already expose `Record Id` = `RECORD_ID()`.
 2. Added Submissions lookup **`Enrollment Record ID Lookup`** → that field.
-3. Gate uses `FIND("recCyFEPeATOVNlr9", ARRAYJOIN({Enrollment Record ID Lookup})) > 0`.
+3. Gate uses `FIND("rec93mAfo5jKqP3g5", ARRAYJOIN({Enrollment Record ID Lookup})) > 0`.
 
 Do **not** gate on displayed Enrollment name.
 

@@ -13,9 +13,9 @@
 
 Normal athlete records **always** compare real `Submitted At` (`CREATED_TIME()`) to `Activity Date`.
 
-Only controlled Perfect Week fixtures for Enrollment **`recCyFEPeATOVNlr9`** (`Schmidt, Testing - 2026-2027`) may use `Perfect Week Test Submitted At` instead of Created/Submitted At — and **only** when **all** of these are true:
+Only controlled Perfect Week fixtures for Enrollment **`rec93mAfo5jKqP3g5`** (`Perfect Week Testing`) may use `Perfect Week Test Submitted At` instead of Created/Submitted At — and **only** when **all** of these are true:
 
-1. Enrollment record ID is exactly `recCyFEPeATOVNlr9` (via `Enrollment Record ID Lookup`, not display name)
+1. Enrollment record ID is exactly `rec93mAfo5jKqP3g5` (via `Enrollment Record ID Lookup`, not display name)
 2. `Perfect Week Test Record?` is checked
 3. `Perfect Week Test Submitted At` is populated
 
@@ -54,7 +54,7 @@ Dependency audit: [`PERFECT-WEEK-DEPENDENCY-AUDIT.md`](./PERFECT-WEEK-DEPENDENCY
 
 ## CASE-01 create order (`GATED_TEST_TIMESTAMP`)
 
-Enrollment: `recCyFEPeATOVNlr9` · Program Instance: `rec5mEM0YPqPqq0hZ`
+Enrollment: `rec93mAfo5jKqP3g5` (`Perfect Week Testing`) · Program Instance: `rec5mEM0YPqPqq0hZ`
 
 ### Program Instance isolation note (2026-08-06)
 

@@ -394,14 +394,14 @@ test("control case with gated test fields FAIL", () => {
       expectAward: false,
       batch: "A",
       forbidGatedTestFields: true,
-      enrollmentId: "recCyFEPeATOVNlr9",
+      enrollmentId: "rec93mAfo5jKqP3g5",
       weekId: WEEK,
       wasId: "recWas",
     },
     {
       was: {
         fields: {
-          Enrollment: [{ id: "recCyFEPeATOVNlr9" }],
+          Enrollment: [{ id: "rec93mAfo5jKqP3g5" }],
           Week: [{ id: WEEK }],
           "Perfect Week Automation Status": "Ready",
           "Perfect Week Daily Requirement Met?": false,
@@ -416,7 +416,7 @@ test("control case with gated test fields FAIL", () => {
         {
           id: "recControl",
           fields: {
-            Enrollment: [{ id: "recCyFEPeATOVNlr9" }],
+            Enrollment: [{ id: "rec93mAfo5jKqP3g5" }],
             "Perfect Week Test Record?": true,
             "Perfect Week Test Submitted At": "2026-08-05T18:00:00.000Z",
           },

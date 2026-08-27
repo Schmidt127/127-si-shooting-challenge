@@ -159,7 +159,7 @@ function makeResult(caseId, status, reason, details = {}) {
   return { caseId, status, reason, ...details };
 }
 
-const GATED_ENROLLMENT_ID = "recCyFEPeATOVNlr9";
+const GATED_ENROLLMENT_ID = "rec93mAfo5jKqP3g5";
 
 function submissionUsesGatedTestFields(sub) {
   const checked = truthy(field(sub, "Perfect Week Test Record?"));
@@ -191,7 +191,7 @@ function evaluateGatedTestFieldSecurity(caseId, caseSpec, actual, enrollmentId) 
       return makeResult(
         caseId,
         STATUSES.FAIL,
-        "gated_test_fields_require_schmidt_enrollment — Perfect Week Test fields used without Enrollment recCyFEPeATOVNlr9",
+        `gated_test_fields_require_schmidt_enrollment — Perfect Week Test fields used without Enrollment ${GATED_ENROLLMENT_ID}`,
         { submissionId: sub.id, enrollmentId: subEnroll }
       );
     }
@@ -226,7 +226,7 @@ function evaluateGatedTestFieldSecurity(caseId, caseSpec, actual, enrollmentId) 
         return makeResult(
           caseId,
           STATUSES.FAIL,
-          "gated_fixture_wrong_enrollment — gated CASE-01 must use Enrollment recCyFEPeATOVNlr9",
+          `gated_fixture_wrong_enrollment — gated CASE-01 must use Enrollment ${GATED_ENROLLMENT_ID}`,
           { enrollmentId }
         );
       }

@@ -82,7 +82,7 @@ Flags:
 Safety:
   - Dry-run by default
   - PWTEST| prefix on created Week names
-  - Gated enrollment ${"recCyFEPeATOVNlr9"} only
+  - Gated enrollment ${"rec93mAfo5jKqP3g5"} only (Perfect Week Testing)
   - Never writes formula fields, Eligible?, unlocks (except trigger-only), XP Events, or Lifetime XP
   - No email arms
 `);
