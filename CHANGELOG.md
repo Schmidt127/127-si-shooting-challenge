@@ -16,6 +16,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   [`web/docs/seo.md`](./web/docs/seo.md). Tests: `web/lib/seo/*.test.ts`,
   `web/tests/national-seo.spec.ts`, updated `search-indexing` and `feature-images` specs.
   **Partial:** Team Shot Tracker FAQ omitted (separate product policy in `public-surface.ts`).
+  Merged to `master` 2026-08-27 (`94c018e`, `ee5d3fd`); production verified same day.
 
 #### Changed
 - **Levels page redesign (FUT-015, 2026-08-26)** — `/shoot/levels` displays Levels 1–12 in

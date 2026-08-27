@@ -41,7 +41,7 @@ export const VIEWPORTS = {
  */
 export const PUBLIC_SMOKE_ROUTES = [
   // Home hero h1 is brand marketing copy (product name lives in chrome / title).
-  { name: "home", path: ".", heading: /build real shooting skill|shooting challenge/i },
+  { name: "home", path: ".", heading: /youth basketball training|daily shooting practice/i },
   { name: "leaderboard", path: "leaderboard", heading: /leaderboard/i },
   { name: "homework", path: "homework", heading: /homework/i },
   { name: "tutorials", path: "tutorials", heading: /skills|tutorial/i },

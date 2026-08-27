@@ -400,7 +400,7 @@ Create and apply one professional, accessible footer across all public website p
 ### FUT-020 — National-first SEO foundation with legitimate local context
 
 **Priority:** P1  
-**Status:** Complete (2026-08-26) — branch `agent/seo-fut-020-024`  
+**Status:** Complete (2026-08-26) — merged to `master` 2026-08-27 (`94c018e`, `ee5d3fd`)  
 **Systems:** Website metadata, content, structured data, sitemap, internal links  
 **Evidence:** `web/docs/seo.md`, `web/lib/seo/metadata.ts`, `web/tests/search-indexing.spec.ts`
 
@@ -411,7 +411,7 @@ Do not claim in-person services in locations where the program does not operate.
 ### FUT-021 — Homepage SEO and messaging
 
 **Priority:** P1  
-**Status:** Complete (2026-08-26) — branch `agent/seo-fut-020-024`  
+**Status:** Complete (2026-08-26) — merged to `master` 2026-08-27 (`94c018e`, `ee5d3fd`)  
 **Systems:** Homepage copy, metadata, internal links  
 **Evidence:** `web/components/home/home-page-view.tsx`, `web/lib/seo/program-facts.ts`, `web/tests/national-seo.spec.ts`
 
@@ -426,7 +426,7 @@ Rewrite the homepage title, main heading, description, internal links, and image
 ### FUT-022 — Adapt existing pages for SEO before creating duplicates
 
 **Priority:** P1  
-**Status:** Complete (2026-08-26) — branch `agent/seo-fut-020-024`  
+**Status:** Complete (2026-08-26) — merged to `master` 2026-08-27 (`94c018e`, `ee5d3fd`)  
 **Systems:** Route audit, existing page adaptations  
 **Evidence:** `web/docs/seo.md` § FUT-022 route audit; only new route: `/faq`
 
@@ -437,7 +437,7 @@ Potential content areas include youth basketball program, shooting challenge, yo
 ### FUT-023 — Page-specific titles, descriptions, links, and image text
 
 **Priority:** P1  
-**Status:** Complete (2026-08-26) — branch `agent/seo-fut-020-024`  
+**Status:** Complete (2026-08-26) — merged to `master` 2026-08-27 (`94c018e`, `ee5d3fd`)  
 **Systems:** Per-page metadata, hub link labels, feature banner aria labels  
 **Evidence:** `web/app/(program)/*/page.tsx`, `web/lib/navigation/program-hub-links.ts`, `web/tests/feature-images.spec.ts`
 
@@ -446,7 +446,7 @@ Give every important public page unique metadata and descriptive internal links.
 ### FUT-024 — FAQ and structured organization information
 
 **Priority:** P1  
-**Status:** Partially complete (2026-08-26) — Team Shot Tracker FAQ omitted (separate product policy)  
+**Status:** Partially complete (2026-08-26) — merged to `master` 2026-08-27. Team Shot Tracker FAQ omitted (separate product policy)  
 **Systems:** `/shoot/faq`, Organization + FAQPage JSON-LD  
 **Evidence:** `web/app/(program)/faq/page.tsx`, `web/lib/seo/faq-content.ts`, `web/lib/seo/metadata.ts`
 

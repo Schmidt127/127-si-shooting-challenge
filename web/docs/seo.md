@@ -83,7 +83,10 @@ npm run typecheck
 npm run test
 npm run build
 npm run test:smoke:prod
+npx playwright test tests/national-seo.spec.ts
 ```
+
+**Production (2026-08-27):** Merged `master` @ `ee5d3fd`. `/shoot/faq` live; sitemap includes `/shoot/faq`; `national-seo.spec.ts` 7/7 on production.
 
 ## Related docs
 

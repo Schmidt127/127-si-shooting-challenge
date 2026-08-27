@@ -61,6 +61,20 @@ git push origin master
 
 Unrelated working-tree changes (Airtable automations, homework contracts) were never part of this branch.
 
-## Post-deploy verification
+## Post-deploy verification (2026-08-27)
 
-*(Updated after production deploy — see final agent report.)*
+| Check | Result |
+|-------|--------|
+| Vercel deploy | Ready — `master` @ `ee5d3fd` |
+| `/shoot/faq` | HTTP 200 |
+| Sitemap `/shoot/faq` | Present — `<loc>https://www.fairfieldbasketballclub.com/shoot/faq</loc>` |
+| `npm run test:smoke:prod` | 50/50 pass (after smoke helper h1 update) |
+| `national-seo.spec.ts` (prod) | 7/7 pass |
+| `public-surface.test.ts` | 18/18 pass — Team Shot Tracker checks are **policy protection tests** |
+| Rollback tag | `rollback/pre-seo-merge-2026-08-27` → `e312422` |
+
+**Production URLs verified:**
+- https://www.fairfieldbasketballclub.com/shoot
+- https://www.fairfieldbasketballclub.com/shoot/faq
+- https://www.fairfieldbasketballclub.com/shoot/sitemap.xml
+- https://www.fairfieldbasketballclub.com/shoot/robots.txt
