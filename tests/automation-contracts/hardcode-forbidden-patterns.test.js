@@ -36,6 +36,16 @@ const FORBIDDEN = [
     name: "calendar-year season inference via getFullYear on new Date()",
     re: /new Date\(\)\.getFullYear\(\)/,
   },
+  {
+    name: "057 legacy Perfect Week video minimum fallback property",
+    re: /legacyRequiredVideoCount\s*:/,
+    files: (f) => f.startsWith("057-"),
+  },
+  {
+    name: "057 hardcoded requiredVideoCount: 3",
+    re: /requiredVideoCount:\s*3\b/,
+    files: (f) => f.startsWith("057-"),
+  },
 ];
 
 test("active automations exclude forbidden config-selection patterns", () => {
@@ -43,6 +53,7 @@ test("active automations exclude forbidden config-selection patterns", () => {
   for (const file of listActiveScripts()) {
     const body = fs.readFileSync(path.join(AUTOMATIONS, file), "utf8");
     for (const rule of FORBIDDEN) {
+      if (rule.files && !rule.files(file)) continue;
       if (rule.re.test(body)) {
         violations.push(`${file}: ${rule.name}`);
       }
@@ -69,11 +80,11 @@ test("config-selection module rejects first-record fallback flag", () => {
   assert.equal(result.debug.firstRecordFallbackUsed, false);
 });
 
-test("057 documents Perfect Week video minimum with legacy fallback aligned with WAS formula", () => {
+test("057 documents Config-driven Perfect Week video minimum without legacy fallback", () => {
   const file = listActiveScripts().find((f) => f.startsWith("057-"));
   const body = fs.readFileSync(path.join(AUTOMATIONS, file), "utf8");
-  assert.match(body, /legacyRequiredVideoCount:\s*3/);
-  assert.match(body, /Perfect Week Video Minimum/);
+  assert.match(body, /Perfect Week Video MInimum/);
+  assert.doesNotMatch(body, /legacyRequiredVideoCount\s*:/);
   assert.match(body, /requiredDailyCount:\s*7/);
 });
 

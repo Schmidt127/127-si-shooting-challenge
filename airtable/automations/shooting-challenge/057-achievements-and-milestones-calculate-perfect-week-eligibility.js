@@ -24,17 +24,21 @@ Airtable is the deployed/running copy.
 
 /***************************************************************************************************
  * 057 - Achievements and Milestones - Calculate Perfect Week Eligibility
- * Version: 2.1
+ * Version: 2.2
  * Date written: 2026-05-30
  * Last updated: 2026-08-27
  *
  * Purpose:
  * Calculates Perfect Week helper fields on one Weekly Athlete Summary record.
  *
+ * Version 2.2 updates (SC-034 config-only video minimum):
+ * - Requires Config field `Perfect Week Video MInimum` (live Airtable name; rename typo recommended).
+ *   Year-aware Config selection; fail-closed when table/field missing or value blank/invalid/ambiguous.
+ * - Removed legacy video-minimum hardcode (was literal 3 in CONFIG).
+ *
  * Version 2.1 updates (SC-034 config-driven video minimum + date-key hardening):
- * - Resolves year-aware Config when `Perfect Week Video Minimum` exists; fail-closed on
- *   missing/invalid Config selection or threshold. Until the field exists in Airtable,
- *   uses legacyRequiredVideoCount (3) aligned with WAS formula `>= 3`.
+ * - Resolves year-aware Config when `Perfect Week Video MInimum` exists; fail-closed on
+ *   missing/invalid Config selection or threshold.
  * - addDaysToDateKey uses explicit UTC calendar formatting (no toISOString slice).
  *
  * Version 2.0 updates (backdated-submission grace period):
@@ -97,7 +101,8 @@ Airtable is the deployed/running copy.
  *    Count This Submission? = true, Activity Date inside the official week, not
  *    future-dated, and uploaded within the configured grace period (or manual exception).
  * 2. Each official day must meet at least 1/7 of the weekly shot goal.
- * 3. Athlete must have at least 3 qualifying Video Feedback records for the week.
+ * 3. Athlete must have at least the Config `Perfect Week Video MInimum` qualifying Video Feedback
+ *    records for the week.
  * 4. Athlete must attend Zoom if a Zoom meeting exists for the linked Week
  *    (live Attendees OR Stage 17 approved recording credit that counts for Perfect Week).
  * 5. Athlete must satisfactorily complete 100% of homework assignments assigned for the week.
@@ -133,7 +138,8 @@ const CONFIG = {
 
   configFields: {
     activeSchoolYear: "Active School Year",
-    perfectWeekVideoMinimum: "Perfect Week Video Minimum",
+    /** Live Airtable name (typo: capital I in MInimum — rename recommended) */
+    perfectWeekVideoMinimum: "Perfect Week Video MInimum",
   },
 
   weeklyFields: {
@@ -234,8 +240,6 @@ const CONFIG = {
   recordingMethod: "Recording Quiz",
   reviewNeedsCorrection: "Needs Correction",
 
-  /** Until Config.Perfect Week Video Minimum exists — mirrors WAS formula >= 3. */
-  legacyRequiredVideoCount: 3,
   requiredDailyCount: 7,
 };
 
@@ -600,10 +604,10 @@ function parsePerfectWeekVideoMinimum(value) {
     raw = raw[0];
   }
   const parsed = typeof raw === "number" ? raw : Number(raw);
-  if (!Number.isFinite(parsed) || !Number.isInteger(parsed) || parsed < 0) {
+  if (!Number.isFinite(parsed) || !Number.isInteger(parsed) || parsed <= 0) {
     return {
       ok: false,
-      message: `Perfect Week Video Minimum must be a non-negative integer; got "${String(raw)}".`,
+      message: `Perfect Week Video Minimum must be a positive integer; got "${String(raw)}".`,
     };
   }
   return { ok: true, value: parsed };
@@ -614,16 +618,15 @@ async function resolveRequiredVideoCount({
   enrollmentRecord,
   programInstanceRecord,
 }) {
-  const configFieldName = CONFIG.configFields.perfectWeekVideoMinimum;
-  const configFieldPresent = configTable && fieldExists(configTable, configFieldName);
+  if (!configTable) {
+    return { ok: false, message: "Config table is unavailable." };
+  }
 
-  if (!configFieldPresent) {
+  const configFieldName = CONFIG.configFields.perfectWeekVideoMinimum;
+  if (!fieldExists(configTable, configFieldName)) {
     return {
-      ok: true,
-      requiredVideoCount: CONFIG.legacyRequiredVideoCount,
-      source: "legacy_was_formula_alignment",
-      configRecordId: null,
-      schoolYearKey: null,
+      ok: false,
+      message: `Config field "${configFieldName}" is missing.`,
     };
   }
 
@@ -898,7 +901,7 @@ try {
     console.log(
       JSON.stringify({
         automation: "057",
-        version: "2.1",
+        version: "2.2",
         recordId,
         action: "skipped_unsettled_goal",
         configuredGoal,
@@ -923,7 +926,7 @@ try {
     console.log(
       JSON.stringify({
         automation: "057",
-        version: "2.1",
+        version: "2.2",
         recordId,
         action: "skipped_unsettled_weekly_goal",
         configuredGoal,
@@ -1354,7 +1357,7 @@ try {
   console.log(
     JSON.stringify({
       automation: "057",
-      version: "2.1",
+      version: "2.2",
       recordId,
       action: "ready",
       configuredGoal,

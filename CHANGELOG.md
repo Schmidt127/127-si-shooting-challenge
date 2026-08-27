@@ -9,10 +9,13 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
-- **057 v2.1 (SC-034, 2026-08-27)** — Perfect Week video minimum is Config-ready: year-aware
-  Config lookup when field **`Perfect Week Video Minimum`** exists (fail-closed); legacy
-  threshold **3** until schema field is added. Date-key helper `addDaysToDateKey` avoids UTC
-  ISO slice. Deploy: [`057-v2.1-perfect-week-config-video-minimum.md`](./docs/deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md).
+- **057 v2.2 (SC-034, 2026-08-27)** — Perfect Week video minimum is Config-only (fail-closed):
+  year-aware lookup of Config field **`Perfect Week Video MInimum`** (`fldqRxjWGXcbUZUg3`,
+  number, value 3); removed `legacyRequiredVideoCount: 3`. WAS formula target uses lookup
+  **`Config: Perfect Week Video MInimum`**. Deploy:
+  [`057-v2.1-perfect-week-config-video-minimum.md`](./docs/deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md).
+- **057 v2.1 (SC-034, 2026-08-27)** — Perfect Week video minimum Config path + date-key
+  hardening (`addDaysToDateKey` avoids UTC ISO slice). Superseded by v2.2 config-only pass.
 
 ### Docs
 

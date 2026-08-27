@@ -38,17 +38,32 @@ Config `Perfect Week Submission Grace Hours`. Repository mirror:
 
 **Table:** Weekly Athlete Summary  
 **Field:** Perfect Week Video Requirement Met?  
-**Updated:** 2026-08-27 (SC-034 — pending Config field + lookup)
+**Updated:** 2026-08-27 (SC-034 — Config field verified in Production)
 
-**Current production formula (hardcoded threshold):**
+**Config source (verified Production `appn84sqPw03zEbTT`):**
+
+| Item | Value |
+|------|-------|
+| Config table field | **`Perfect Week Video MInimum`** (note capital **I** — rename typo recommended) |
+| Field id | `fldqRxjWGXcbUZUg3` |
+| Type | number (precision 0) |
+| Active rows | value **3** on each school-year Config row (2026-08-27) |
+
+**Prerequisite:** Add WAS lookup **`Config: Perfect Week Video MInimum`** from Enrollment → `Config - Lnk` → `Perfect Week Video MInimum` (year-scoped link must resolve to one row).
+
+**Previous production formula (hardcoded — retire after lookup exists):**
 
 ```
 IF({Perfect Week Video Count} >= 3, 1, 0)
 ```
 
-**Target (after Config field `Perfect Week Video Minimum` exists and is lookup-linked on WAS):**
-replace `3` with the Config-derived numeric threshold so 057 v2.1 and WAS share one value.
-Contract mirror: `lib/config-selection/perfect-week-video-minimum.js`.
+**Target formula (Config lookup — paste after lookup field exists):**
+
+```
+IF({Perfect Week Video Count} >= {Config: Perfect Week Video MInimum}, 1, 0)
+```
+
+Contract mirror: `lib/config-selection/perfect-week-video-minimum.js`.  
 Deploy: `docs/deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md`.
 
 ## Submissions — Duplicate Key (date + hour for 007)
@@ -137,7 +152,7 @@ IF({Attempts}, {Makes} / {Attempts}, BLANK())
 |------|-------|-------|-------|
 | 2026-08-25 | Submissions | Duplicate Key | Include `Activity Date - Time` after date; blank → `NO_TIME`; 007 unchanged |
 | 2026-08-16 | Submissions | Activity Date Key | UTC calendar date so midnight-UTC date-only values keep the entered day (not prior Denver day) |
-| 2026-08-27 | Weekly Athlete Summary | Perfect Week Video Requirement Met? | Hardcoded `>= 3`; pending Config lookup — see 057 v2.1 deploy checklist |
+| 2026-08-27 | Weekly Athlete Summary | Perfect Week Video Requirement Met? | Config lookup target — field `Perfect Week Video MInimum` on Config; WAS lookup pending paste |
 | 2026-08-16 | Submissions | Submitted Same Day? | Activity Date side uses UTC to match Activity Date Key |
 
 ## Review Process

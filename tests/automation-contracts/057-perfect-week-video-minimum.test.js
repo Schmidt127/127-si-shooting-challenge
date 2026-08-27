@@ -2,7 +2,7 @@
 "use strict";
 
 /**
- * SC-034 — Automation 057 and WAS Perfect Week video minimum must share one threshold contract.
+ * SC-034 — Automation 057 and WAS Perfect Week video minimum share one Config threshold contract.
  */
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
@@ -10,7 +10,7 @@ const path = require("node:path");
 const { resolveConfig } = require("../../lib/config-selection");
 const {
   PERFECT_WEEK_VIDEO_MINIMUM_FIELD,
-  LEGACY_REQUIRED_VIDEO_COUNT,
+  WAS_CONFIG_VIDEO_MINIMUM_LOOKUP_FIELD,
   resolvePerfectWeekVideoMinimum,
   evaluateWasVideoRequirementMet,
   buildWasVideoRequirementFormula,
@@ -46,27 +46,19 @@ const CONFIG_ROWS = [
   },
 ];
 
-test("057 declares Config field name and legacy fallback without inventing field ids", () => {
-  assert.match(SCRIPT, /Perfect Week Video Minimum/);
-  assert.match(SCRIPT, /legacyRequiredVideoCount:\s*3/);
+test("057 uses live Config field name and has no legacy video minimum hardcode", () => {
+  assert.match(SCRIPT, /Perfect Week Video MInimum/);
+  assert.doesNotMatch(SCRIPT, /legacyRequiredVideoCount\s*:/);
+  assert.doesNotMatch(SCRIPT, /requiredVideoCount:\s*3\b/);
   assert.doesNotMatch(SCRIPT, /fld[A-Za-z0-9]{10,}/);
 });
 
-test("legacy path preserves effective threshold 3 aligned with current WAS formula", () => {
-  const resolved = resolvePerfectWeekVideoMinimum({ configFieldExists: false });
-  assert.equal(resolved.ok, true);
-  assert.equal(resolved.requiredVideoCount, LEGACY_REQUIRED_VIDEO_COUNT);
-  assert.equal(resolved.source, "legacy_was_formula_alignment");
-
-  const wasMet = evaluateWasVideoRequirementMet(3, resolved.requiredVideoCount);
-  assert.equal(wasMet, 1);
-  assert.equal(
-    buildWasVideoRequirementFormula(resolved.requiredVideoCount),
-    "IF({Perfect Week Video Count} >= 3, 1, 0)"
-  );
+test("057 resolveRequiredVideoCount fails closed when Config table or field is missing", () => {
+  assert.match(SCRIPT, /Config table is unavailable/);
+  assert.match(SCRIPT, /Config field "\$\{configFieldName\}" is missing/);
 });
 
-test("config field present: year-aware row supplies threshold used by both 057 contract and WAS mirror", () => {
+test("year-aware Config row supplies threshold for 057 contract and WAS mirror", () => {
   const configPick = resolveConfig({
     configRows: CONFIG_ROWS,
     enrollmentSchoolYear: "2026-2027",
@@ -74,7 +66,6 @@ test("config field present: year-aware row supplies threshold used by both 057 c
   assert.equal(configPick.ok, true);
 
   const minimum = resolvePerfectWeekVideoMinimum({
-    configFieldExists: true,
     configRowFields: configPick.config.fields,
   });
   assert.equal(minimum.ok, true);
@@ -84,22 +75,42 @@ test("config field present: year-aware row supplies threshold used by both 057 c
   assert.equal(evaluateWasVideoRequirementMet(2, minimum.requiredVideoCount), 0);
   assert.equal(evaluateWasVideoRequirementMet(3, minimum.requiredVideoCount), 1);
   assert.equal(
-    buildWasVideoRequirementFormula(minimum.requiredVideoCount),
-    buildWasVideoRequirementFormula(minimum.requiredVideoCount)
+    buildWasVideoRequirementFormula(),
+    `IF({Perfect Week Video Count} >= {${WAS_CONFIG_VIDEO_MINIMUM_LOOKUP_FIELD}}, 1, 0)`
   );
 });
 
-test("config field present: blank or invalid values fail closed", () => {
-  for (const badValue of [null, "", "abc", 2.5, -1]) {
+test("blank, invalid, or ambiguous Config values fail closed", () => {
+  for (const badValue of [null, "", "abc", 2.5, 0, -1, [3, 4]]) {
     const result = resolvePerfectWeekVideoMinimum({
-      configFieldExists: true,
       configRowFields: { [PERFECT_WEEK_VIDEO_MINIMUM_FIELD]: badValue },
     });
     assert.equal(result.ok, false, `expected fail-closed for ${String(badValue)}`);
   }
 });
 
-test("057 date helper addDaysToDateKey avoids UTC ISO slice", () => {
+test("ambiguous Config rows for one school year fail closed", () => {
+  const result = resolveConfig({
+    configRows: [
+      { id: "recA", activeSchoolYear: "2026-2027", fields: {} },
+      { id: "recB", activeSchoolYear: "2026-2027", fields: {} },
+    ],
+    enrollmentSchoolYear: "2026-2027",
+  });
+  assert.equal(result.ok, false);
+  assert.match(result.error.message, /Duplicate Config rows/);
+});
+
+test("missing Config row for enrollment school year fails closed", () => {
+  const result = resolveConfig({
+    configRows: [{ id: "recA", activeSchoolYear: "2025-2026", fields: {} }],
+    enrollmentSchoolYear: "2026-2027",
+  });
+  assert.equal(result.ok, false);
+  assert.match(result.error.message, /No Config row/);
+});
+
+test("057 addDaysToDateKey avoids UTC ISO slice", () => {
   const fnMatch = SCRIPT.match(/function addDaysToDateKey\(dateKey, daysToAdd\) \{[\s\S]*?\n\}/);
   assert.ok(fnMatch, "addDaysToDateKey not found in 057");
   assert.doesNotMatch(fnMatch[0], /toISOString\(\)\.slice\(0,\s*10\)/);

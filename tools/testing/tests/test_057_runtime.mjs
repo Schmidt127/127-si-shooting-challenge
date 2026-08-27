@@ -85,7 +85,7 @@ function buildBase({
   enrollmentActive = true,
   enrollmentSchoolYear = "2026-2027",
   programInstanceSchoolYear = "2026-2027",
-  includeConfigTable = false,
+  includeConfigTable = true,
   configVideoMinimumValue = 3,
   omitConfigVideoField = false,
   linkedSubmissionIds = [],
@@ -186,8 +186,8 @@ function buildBase({
     ];
     const configCells = { "Active School Year": "2026-2027" };
     if (!omitConfigVideoField) {
-      configFields.push({ name: "Perfect Week Video Minimum", type: "number" });
-      configCells["Perfect Week Video Minimum"] = configVideoMinimumValue;
+      configFields.push({ name: "Perfect Week Video MInimum", type: "number" });
+      configCells["Perfect Week Video MInimum"] = configVideoMinimumValue;
     }
     tables.push(new MockTable("Config", configFields, [
       new MockRecord(IDS.config2026, configCells),
@@ -221,7 +221,7 @@ function lastWeeklyUpdate(base) {
 
 test("executes the committed Automation 057 source", () => {
   assert.match(SOURCE, /057 - Achievements and Milestones - Calculate Perfect Week Eligibility/);
-  assert.match(SOURCE, /Version: 2\.1/);
+  assert.match(SOURCE, /Version: 2\.2/);
   console.log(`SOURCE_EXECUTED ${SCRIPT_PATH} sha256=${SOURCE_SHA256}`);
 });
 
@@ -244,7 +244,7 @@ test("settled season lookup with fractional weekly goal reaches Ready", async ()
   assert.equal(weeklyCells(base)["Perfect Week Automation Status"], "Ready");
   assert.equal(weeklyCells(base)["Perfect Week Daily Check Status"], "Fail");
   assert.ok(
-    captured.lines.some((line) => /"version":"2\.1"/.test(line) && /"action":"ready"/.test(line)),
+    captured.lines.some((line) => /"version":"2\.2"/.test(line) && /"action":"ready"/.test(line)),
     "success path must emit versioned console JSON"
   );
 });
@@ -415,14 +415,26 @@ function qualifyingSubmission(id, activityDate, shots = 100, submittedAt = activ
   });
 }
 
-test("legacy path documents required qualifying videos in daily detail", async () => {
+test("config threshold 3 appears in daily detail by default", async () => {
   const base = buildBase({ target: 700 });
   const { error } = await run057(base);
   assert.equal(error, null);
   assert.match(
     weeklyCells(base)["Perfect Week Daily Check Detail"],
-    /Required qualifying videos: 3 \(legacy_was_formula_alignment\)/
+    /Required qualifying videos: 3 \(config_perfect_week_video_minimum\)/
   );
+});
+
+test("missing Config table fails closed", async () => {
+  const base = buildBase({ includeConfigTable: false });
+  const { error } = await run057(base);
+  assert.match(error?.message ?? "", /Config table is unavailable/);
+});
+
+test("missing Config video minimum field fails closed", async () => {
+  const base = buildBase({ omitConfigVideoField: true });
+  const { error } = await run057(base);
+  assert.match(error?.message ?? "", /Config field "Perfect Week Video MInimum" is missing/);
 });
 
 test("config field present: invalid video minimum fails closed", async () => {
@@ -432,6 +444,15 @@ test("config field present: invalid video minimum fails closed", async () => {
   });
   const { error } = await run057(base);
   assert.match(error?.message ?? "", /Perfect Week Video Minimum is blank/);
+});
+
+test("config field present: zero video minimum fails closed", async () => {
+  const base = buildBase({
+    includeConfigTable: true,
+    configVideoMinimumValue: 0,
+  });
+  const { error } = await run057(base);
+  assert.match(error?.message ?? "", /must be a positive integer/);
 });
 
 test("config field present: valid Config threshold appears in daily detail", async () => {
