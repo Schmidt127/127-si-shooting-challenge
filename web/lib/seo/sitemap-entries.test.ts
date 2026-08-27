@@ -43,6 +43,7 @@ describe("buildStaticSitemapEntries", () => {
     const urls = entries.map((entry) => entry.url);
 
     expect(urls).toContain(PUBLIC_SITE_ORIGIN);
+    expect(urls).toContain(`${PUBLIC_SITE_ORIGIN}/faq`);
     expect(urls).toContain(`${PUBLIC_SITE_ORIGIN}/leaderboard`);
     expect(urls).toContain(`${PUBLIC_SITE_ORIGIN}/homework`);
     expect(urls).not.toContain(`${PUBLIC_SITE_ORIGIN}/dashboard`);
@@ -308,6 +309,7 @@ describe("buildFullSitemap", () => {
     const entries = await buildFullSitemap();
     const urls = entries.map((entry) => entry.url);
 
+    expect(urls).toContain(`${PUBLIC_SITE_ORIGIN}/faq`);
     expect(urls).toContain(`${PUBLIC_SITE_ORIGIN}/leaderboard`);
     expect(urls).not.toContain(`${PUBLIC_SITE_ORIGIN}/public-display`);
     expect(urls).not.toContain(ATHLETE_PATH);
