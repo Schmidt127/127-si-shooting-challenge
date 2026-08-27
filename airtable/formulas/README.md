@@ -34,6 +34,86 @@ Config `Perfect Week Submission Grace Hours`. Repository mirror:
 `lib/was-email-contracts/perfect-week-submission-timing.js`. Deploy plan:
 `docs/deploy-checklists/perfect-week-grace-period-2026-08-23.md`.
 
+## Weekly Athlete Summary — Perfect Week Video Requirement Met?
+
+**Table:** Weekly Athlete Summary  
+**Field:** Perfect Week Video Requirement Met?  
+**Updated:** 2026-08-27 (SC-034 — Config field verified in Production)
+
+**Config source (verified Production `appn84sqPw03zEbTT`):**
+
+| Item | Value |
+|------|-------|
+| Config table field | **`Perfect Week Video Minimum`** |
+| Field id | `fldqRxjWGXcbUZUg3` |
+| Type | number (precision 0) |
+| Active rows | value **3** on each school-year Config row |
+
+**WAS lookup (Production):** **`Config: Perfect Week Video Minimum`** from Enrollment → `Config - Lnk` → `Perfect Week Video Minimum`.
+
+**Previous production formula (hardcoded — retired):**
+
+```
+IF({Perfect Week Video Count} >= 3, 1, 0)
+```
+
+**Current production formula (Config lookup — live 2026-08-27):**
+
+```
+IF({Perfect Week Video Count} >= {Config: Perfect Week Video Minimum}, 1, 0)
+```
+
+Contract mirror: `lib/config-selection/perfect-week-video-minimum.js`.  
+Deploy: `docs/deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md`.
+
+## Submissions — Duplicate Key (date + hour for 007)
+
+**Table:** Submissions  
+**Field:** Duplicate Key  
+**Updated:** 2026-08-25 (repo); paste Production per
+[`docs/deploy-checklists/2026-08-25-duplicate-key-activity-date-time.md`](../../docs/deploy-checklists/2026-08-25-duplicate-key-activity-date-time.md)
+
+**Policy:** `Activity Date` stays **date-only**. `Activity Date - Time` (hourly single-select) is
+used **only** for duplicate detection. Automation **007** remains key-driven (reads this formula;
+does not hard-code field lists). Downstream XP / weeks / streaks / summaries / Perfect Week /
+homework / video / email / website continue to use `Activity Date` as a calendar day.
+
+**Key shape:**
+
+```text
+Enrollment|YYYY-MM-DD|Activity Date - Time|Submission Stat Mode|stats
+```
+
+Blank or legacy time → stable fallback `NO_TIME` so older rows still participate.
+
+```
+IF(
+  AND(
+    {Enrollment} & "",
+    {Activity Date},
+    {Submission Stat Mode} & ""
+  ),
+  {Enrollment} & "|" &
+  DATETIME_FORMAT({Activity Date}, "YYYY-MM-DD") & "|" &
+  IF({Activity Date - Time} & "", {Activity Date - Time}, "NO_TIME") & "|" &
+  {Submission Stat Mode} & "|" &
+  IF(
+    {Submission Stat Mode} = "Detailed Shooting",
+    {2PT Attempted} & "|" &
+    {2PT Made} & "|" &
+    {3PT Attempted} & "|" &
+    {3PT Made} & "|" &
+    {FT Attempted} & "|" &
+    {FT Made},
+    {Shot Total} & ""
+  ),
+  BLANK()
+)
+```
+
+Offline mirror: `buildSubmissionDuplicateKey` in
+`airtable/automations/shooting-challenge/lib/v2-engine-contracts.js`.
+
 ## Streak (Example Template)
 
 ```
@@ -70,8 +150,9 @@ IF({Attempts}, {Makes} / {Attempts}, BLANK())
 
 | Date | Table | Field | Notes |
 |------|-------|-------|-------|
+| 2026-08-25 | Submissions | Duplicate Key | Include `Activity Date - Time` after date; blank → `NO_TIME`; 007 unchanged |
 | 2026-08-16 | Submissions | Activity Date Key | UTC calendar date so midnight-UTC date-only values keep the entered day (not prior Denver day) |
-| 2026-08-23 | Submissions | Perfect Week timing | 48-hour grace after Activity Date (Denver); see deploy checklist |
+| 2026-08-27 | Weekly Athlete Summary | Perfect Week Video Requirement Met? | Config lookup live — `Config: Perfect Week Video Minimum`; field renamed from typo; **057 repaste pending** |
 | 2026-08-16 | Submissions | Submitted Same Day? | Activity Date side uses UTC to match Activity Date Key |
 
 ## Review Process

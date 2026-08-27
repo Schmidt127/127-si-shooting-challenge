@@ -83,8 +83,8 @@ test("057 Perfect Week date keys use America/Denver (not UTC ISO slice)", () => 
   );
   assert.ok(/timezone:\s*"America\/Denver"/.test(s057));
   assert.ok(
-    /Version:\s*v?2\.0/.test(s057) || /version:\s*"v?2\.0"/.test(s057),
-    "057 header must declare current repository version 2.0"
+    /Version:\s*v?2\.2/.test(s057) || /version:\s*"v?2\.2"/.test(s057),
+    "057 header must declare current repository version 2.2"
   );
   assert.ok(
     /gracePeriodHours|Submission Grace Period Hours|grace period/i.test(s057),
@@ -108,6 +108,45 @@ test("057 Perfect Week date keys use America/Denver (not UTC ISO slice)", () => 
     !/toISOString\(\)\.slice\(0,\s*10\)/.test(body),
     "057 getDateKeyFromDateOnly must not use UTC ISO slice"
   );
+});
+
+test("057 addDaysToDateKey avoids UTC ISO slice for week boundaries", () => {
+  const s057 = fs.readFileSync(
+    path.join(root, "057-achievements-and-milestones-calculate-perfect-week-eligibility.js"),
+    "utf8",
+  );
+  const fnMatch = s057.match(/function addDaysToDateKey\(dateKey, daysToAdd\) \{[\s\S]*?\n\}/);
+  assert.ok(fnMatch, "addDaysToDateKey function not found");
+  assert.ok(
+    !/toISOString\(\)\.slice\(0,\s*10\)/.test(fnMatch[0]),
+    "057 addDaysToDateKey must not use UTC ISO slice"
+  );
+});
+
+/** Mirror of 057 addDaysToDateKey for week-boundary proofs. */
+function addDaysToDateKey057(dateKey, daysToAdd) {
+  const [year, month, day] = String(dateKey).split("-").map(Number);
+  if (!year || !month || !day) return "";
+  const date = new Date(Date.UTC(year, month - 1, day));
+  date.setUTCDate(date.getUTCDate() + daysToAdd);
+  const y = date.getUTCFullYear();
+  const m = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const d = String(date.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+test("057 mirror: Sun–Sat week boundaries from Sunday start", () => {
+  const week = [];
+  for (let i = 0; i < 7; i += 1) week.push(addDaysToDateKey057("2026-08-02", i));
+  assert.deepStrictEqual(week, [
+    "2026-08-02",
+    "2026-08-03",
+    "2026-08-04",
+    "2026-08-05",
+    "2026-08-06",
+    "2026-08-07",
+    "2026-08-08",
+  ]);
 });
 
 /** Mirror of 057 getDateKeyFromDateOnly (America/Denver) for boundary proofs. */

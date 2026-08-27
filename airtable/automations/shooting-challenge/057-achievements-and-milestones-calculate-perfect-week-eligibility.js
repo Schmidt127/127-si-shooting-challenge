@@ -24,12 +24,22 @@ Airtable is the deployed/running copy.
 
 /***************************************************************************************************
  * 057 - Achievements and Milestones - Calculate Perfect Week Eligibility
- * Version: 2.0
+ * Version: 2.2
  * Date written: 2026-05-30
- * Last updated: 2026-08-23
+ * Last updated: 2026-08-27
  *
  * Purpose:
  * Calculates Perfect Week helper fields on one Weekly Athlete Summary record.
+ *
+ * Version 2.2 updates (SC-034 config-only video minimum):
+ * - Requires Config field `Perfect Week Video Minimum` (year-aware selection; fail-closed when
+ *   table/field missing or value blank/invalid/ambiguous). Field renamed from typo 2026-08-27.
+ * - Removed legacy video-minimum hardcode (was literal 3 in CONFIG).
+ *
+ * Version 2.1 updates (SC-034 config-driven video minimum + date-key hardening):
+ * - Resolves year-aware Config when `Perfect Week Video Minimum` exists; fail-closed on
+ *   missing/invalid Config selection or threshold.
+ * - addDaysToDateKey uses explicit UTC calendar formatting (no toISOString slice).
  *
  * Version 2.0 updates (backdated-submission grace period):
  * - Perfect Week daily shooting accepts uploads within a configurable grace window
@@ -91,7 +101,8 @@ Airtable is the deployed/running copy.
  *    Count This Submission? = true, Activity Date inside the official week, not
  *    future-dated, and uploaded within the configured grace period (or manual exception).
  * 2. Each official day must meet at least 1/7 of the weekly shot goal.
- * 3. Athlete must have at least 3 qualifying Video Feedback records for the week.
+ * 3. Athlete must have at least the Config `Perfect Week Video Minimum` qualifying Video Feedback
+ *    records for the week.
  * 4. Athlete must attend Zoom if a Zoom meeting exists for the linked Week
  *    (live Attendees OR Stage 17 approved recording credit that counts for Perfect Week).
  * 5. Athlete must satisfactorily complete 100% of homework assignments assigned for the week.
@@ -119,8 +130,15 @@ const CONFIG = {
     zoomAttendance: "Zoom Attendance",
     weeks: "Weeks",
     enrollments: "Enrollments",
+    programInstance: "Program Instance - Sync",
     targetGoalShots: "Target Goal Shots",
     achievements: "Achievements",
+    config: "Config",
+  },
+
+  configFields: {
+    activeSchoolYear: "Active School Year",
+    perfectWeekVideoMinimum: "Perfect Week Video Minimum",
   },
 
   weeklyFields: {
@@ -155,7 +173,11 @@ const CONFIG = {
   },
   enrollmentFields: {
     programInstance: "Program Instance",
+    schoolYear: "School Year",
     active: "Active?",
+  },
+  programInstanceFields: {
+    schoolYearLinked: "School Year - Linked",
   },
   targetGoalFields: {
     programInstance: "Program Instance",
@@ -217,7 +239,6 @@ const CONFIG = {
   recordingMethod: "Recording Quiz",
   reviewNeedsCorrection: "Needs Correction",
 
-  requiredVideoCount: 3,
   requiredDailyCount: 7,
 };
 
@@ -365,10 +386,14 @@ function getDateKeyFromDateOnly(value) {
 }
 
 function addDaysToDateKey(dateKey, daysToAdd) {
-  const [year, month, day] = dateKey.split("-").map(Number);
+  const [year, month, day] = String(dateKey).split("-").map(Number);
+  if (!year || !month || !day) return "";
   const date = new Date(Date.UTC(year, month - 1, day));
   date.setUTCDate(date.getUTCDate() + daysToAdd);
-  return date.toISOString().slice(0, 10);
+  const y = date.getUTCFullYear();
+  const m = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const d = String(date.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
 }
 
 function buildRequiredWeekDates(startDateKey) {
@@ -403,9 +428,8 @@ function denverDayStartMs(dateKey) {
 }
 
 function endOfDenverActivityDayMs(dateKey) {
-  const [year, month, day] = String(dateKey).split("-").map(Number);
-  const nextDay = new Date(Date.UTC(year, month - 1, day + 1, 12, 0, 0));
-  const nextKey = `${nextDay.getUTCFullYear()}-${String(nextDay.getUTCMonth() + 1).padStart(2, "0")}-${String(nextDay.getUTCDate()).padStart(2, "0")}`;
+  const nextKey = addDaysToDateKey(dateKey, 1);
+  if (!nextKey) return NaN;
   return denverDayStartMs(nextKey);
 }
 
@@ -492,6 +516,158 @@ async function updateWeekly(fields) {
   await weeklyTable.updateRecordAsync(weeklyRecord.id, fields);
 }
 
+const SCHOOL_YEAR_RE = /^(\d{4})-(\d{4})$/;
+
+function normalizeSchoolYear(raw) {
+  if (raw == null) return { ok: false, message: "School year is blank or null." };
+  const trimmed = String(raw).trim();
+  if (!trimmed) return { ok: false, message: "School year is blank after trim." };
+  const dashed = trimmed
+    .replace(/[\u2013\u2014\u2212\uFE58\uFE63\uFF0D]/g, "-")
+    .replace(/\s*-\s*/g, "-");
+  const match = SCHOOL_YEAR_RE.exec(dashed);
+  if (!match) return { ok: false, message: `School year is malformed: "${trimmed}".` };
+  const start = Number(match[1]);
+  const end = Number(match[2]);
+  if (!Number.isInteger(start) || !Number.isInteger(end) || end !== start + 1) {
+    return { ok: false, message: `School year years must be consecutive: got ${start}-${end}.` };
+  }
+  return { ok: true, key: `${start}-${end}` };
+}
+
+function indexConfigRowsByYear(configRows) {
+  const byYear = new Map();
+  for (let i = 0; i < configRows.length; i += 1) {
+    const row = configRows[i];
+    const yearRaw = getText(row, CONFIG.configFields.activeSchoolYear);
+    const norm = normalizeSchoolYear(yearRaw);
+    if (!norm.ok) {
+      return { ok: false, message: `Config row[${i}] (${row.id || "no-id"}): ${norm.message}` };
+    }
+    if (byYear.has(norm.key)) {
+      return {
+        ok: false,
+        message: `Duplicate Config rows for school year ${norm.key}.`,
+      };
+    }
+    byYear.set(norm.key, row);
+  }
+  return { ok: true, byYear };
+}
+
+function resolveConfigRowForSchoolYear(configRows, programInstanceSchoolYear, enrollmentSchoolYear) {
+  const indexed = indexConfigRowsByYear(configRows);
+  if (!indexed.ok) return { ok: false, message: indexed.message };
+
+  const piNorm = programInstanceSchoolYear
+    ? normalizeSchoolYear(programInstanceSchoolYear)
+    : { ok: false };
+  const enrNorm = enrollmentSchoolYear
+    ? normalizeSchoolYear(enrollmentSchoolYear)
+    : { ok: false };
+
+  if (piNorm.ok && enrNorm.ok && piNorm.key !== enrNorm.key) {
+    return {
+      ok: false,
+      message: `Enrollment school year (${enrNorm.key}) does not match Program Instance school year (${piNorm.key}).`,
+    };
+  }
+
+  let schoolYearKey = null;
+  if (piNorm.ok) schoolYearKey = piNorm.key;
+  else if (enrNorm.ok) schoolYearKey = enrNorm.key;
+  else {
+    return {
+      ok: false,
+      message: "No school year available from Program Instance or Enrollment for Config selection.",
+    };
+  }
+
+  const match = indexed.byYear.get(schoolYearKey);
+  if (!match) {
+    return { ok: false, message: `No Config row for school year ${schoolYearKey}.` };
+  }
+
+  return { ok: true, configRow: match, schoolYearKey };
+}
+
+function parsePerfectWeekVideoMinimum(value) {
+  if (value === null || value === undefined || value === "") {
+    return { ok: false, message: "Perfect Week Video Minimum is blank." };
+  }
+  let raw = value;
+  if (Array.isArray(raw)) {
+    if (raw.length !== 1) {
+      return { ok: false, message: "Perfect Week Video Minimum must be a single numeric value." };
+    }
+    raw = raw[0];
+  }
+  const parsed = typeof raw === "number" ? raw : Number(raw);
+  if (!Number.isFinite(parsed) || !Number.isInteger(parsed) || parsed <= 0) {
+    return {
+      ok: false,
+      message: `Perfect Week Video Minimum must be a positive integer; got "${String(raw)}".`,
+    };
+  }
+  return { ok: true, value: parsed };
+}
+
+async function resolveRequiredVideoCount({
+  configTable,
+  enrollmentRecord,
+  programInstanceRecord,
+}) {
+  if (!configTable) {
+    return { ok: false, message: "Config table is unavailable." };
+  }
+
+  const configFieldName = CONFIG.configFields.perfectWeekVideoMinimum;
+  if (!fieldExists(configTable, configFieldName)) {
+    return {
+      ok: false,
+      message: `Config field "${configFieldName}" is missing.`,
+    };
+  }
+
+  const configFields = [
+    CONFIG.configFields.activeSchoolYear,
+    configFieldName,
+  ].filter((name) => fieldExists(configTable, name));
+
+  const configQuery = await configTable.selectRecordsAsync({ fields: configFields });
+  try {
+    const programInstanceSchoolYear = programInstanceRecord
+      ? getText(programInstanceRecord, CONFIG.programInstanceFields.schoolYearLinked)
+      : "";
+    const enrollmentSchoolYear = getText(enrollmentRecord, CONFIG.enrollmentFields.schoolYear);
+    const resolved = resolveConfigRowForSchoolYear(
+      configQuery.records,
+      programInstanceSchoolYear,
+      enrollmentSchoolYear
+    );
+    if (!resolved.ok) {
+      return { ok: false, message: resolved.message };
+    }
+
+    const parsed = parsePerfectWeekVideoMinimum(
+      resolved.configRow.getCellValue(configFieldName)
+    );
+    if (!parsed.ok) {
+      return { ok: false, message: parsed.message };
+    }
+
+    return {
+      ok: true,
+      requiredVideoCount: parsed.value,
+      source: "config_perfect_week_video_minimum",
+      configRecordId: resolved.configRow.id,
+      schoolYearKey: resolved.schoolYearKey,
+    };
+  } finally {
+    unloadQuerySafe(configQuery);
+  }
+}
+
 /***************************************************************************************************
  * 3. Load Tables and Trigger Record
  ***************************************************************************************************/
@@ -512,6 +688,18 @@ const zoomAttendanceTable = base.getTable(CONFIG.tables.zoomAttendance);
 const weeksTable = base.getTable(CONFIG.tables.weeks);
 const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
 const targetGoalShotsTable = base.getTable(CONFIG.tables.targetGoalShots);
+let programInstancesTable = null;
+let configTable = null;
+try {
+  programInstancesTable = base.getTable(CONFIG.tables.programInstance);
+} catch (e) {
+  programInstancesTable = null;
+}
+try {
+  configTable = base.getTable(CONFIG.tables.config);
+} catch (e) {
+  configTable = null;
+}
 let achievementsTable = null;
 try {
   achievementsTable = base.getTable(CONFIG.tables.achievements);
@@ -712,7 +900,7 @@ try {
     console.log(
       JSON.stringify({
         automation: "057",
-        version: "2.0",
+        version: "2.2",
         recordId,
         action: "skipped_unsettled_goal",
         configuredGoal,
@@ -737,7 +925,7 @@ try {
     console.log(
       JSON.stringify({
         automation: "057",
-        version: "2.0",
+        version: "2.2",
         recordId,
         action: "skipped_unsettled_weekly_goal",
         configuredGoal,
@@ -788,6 +976,32 @@ try {
       }
     }
   }
+
+  let programInstanceRecord = null;
+  if (programInstancesTable && enrollmentProgramInstanceIds.length === 1) {
+    const piFields = [CONFIG.programInstanceFields.schoolYearLinked].filter((name) =>
+      fieldExists(programInstancesTable, name)
+    );
+    if (piFields.length > 0) {
+      programInstanceRecord = await programInstancesTable.selectRecordAsync(
+        enrollmentProgramInstanceIds[0],
+        { fields: piFields }
+      );
+    }
+  }
+
+  const videoMinimumResult = await resolveRequiredVideoCount({
+    configTable,
+    enrollmentRecord,
+    programInstanceRecord,
+  });
+  if (!videoMinimumResult.ok) {
+    throw new Error(videoMinimumResult.message);
+  }
+  const requiredVideoCount = videoMinimumResult.requiredVideoCount;
+  const videoMinimumSource = videoMinimumResult.source;
+  const configRecordId = videoMinimumResult.configRecordId;
+  const configSchoolYearKey = videoMinimumResult.schoolYearKey;
 
   /*************************************************************************************************
    * 4A. Daily Shooting Requirement
@@ -881,6 +1095,7 @@ try {
   dailyDetailLines.push(`Official week: ${requiredDateKeys[0]} through ${requiredDateKeys[6]}`);
   dailyDetailLines.push(`Weekly goal: ${roundedWeeklyGoal}`);
   dailyDetailLines.push(`Daily minimum: ${dailyMinimum}`);
+  dailyDetailLines.push(`Required qualifying videos: ${requiredVideoCount} (${videoMinimumSource})`);
   dailyDetailLines.push(`Submission grace period (hours): ${gracePeriodHours}`);
   dailyDetailLines.push(`Passing official days: ${passingDays.length}/7`);
   dailyDetailLines.push(
@@ -1141,7 +1356,7 @@ try {
   console.log(
     JSON.stringify({
       automation: "057",
-      version: "2.0",
+      version: "2.2",
       recordId,
       action: "ready",
       configuredGoal,
@@ -1150,6 +1365,10 @@ try {
       dailyMet,
       dailyStatusName,
       videoCount,
+      requiredVideoCount,
+      videoMinimumSource,
+      configRecordId,
+      configSchoolYearKey,
       zoomMeetingCount,
       zoomAttendanceCount,
       homeworkMet,

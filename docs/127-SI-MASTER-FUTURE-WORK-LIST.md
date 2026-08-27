@@ -33,6 +33,21 @@ Recorded Zoom meetings do not count toward Perfect Week requirements. They do co
 
 Use an early-bird registration period for the 2026–2027 challenge. Dates, pricing, eligibility, cutoff behavior, and payment/writeback handling must be defined and tested before activation. This decision does not activate registration or change the current paid-only FUT-003 Make scenario by itself.
 
+### SC-034 / Perfect Week config closeout (2026-08-27)
+
+Repository and Production closeout for the bounded SC-034 / V2-002 pass:
+
+| Item | Status | Evidence |
+|---|---|---|
+| **V2-002 / SC-034** repository implementation | **COMPLETE** | `audits/2026-08-27-SC-034-config-hardcode-audit.md`; `lib/config-selection/`; 57-script scan; contract tests |
+| **Automation 057 v2.2** | **Repaste required** | Config field renamed; prod script still typo `MInimum` — [`057-v2.1-perfect-week-config-video-minimum.md`](./deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md) |
+| **Config-driven Perfect Week video minimum** | **COMPLETE** | Config field **`Perfect Week Video Minimum`** = 3; `lib/config-selection/perfect-week-video-minimum.js` |
+| **WAS Config lookup + formula** | **COMPLETE** | Lookup **`Config: Perfect Week Video Minimum`**; formula **`Perfect Week Video Requirement Met?`** live PROD |
+| **Automation 059 trigger correction** | **COMPLETE** | Mike removed `Shot Milestone is not empty` filter; Pending-only created trigger — [`059-perfect-week-trigger-coverage.md`](./deploy-checklists/059-perfect-week-trigger-coverage.md) |
+| **058/059 script changes** | **Not required** | `docs/testing/perfect-week/PERFECT-WEEK-DEPENDENCY-AUDIT.md` — eligibility from 057 + WAS formulas |
+| **Disposable Perfect Week end-to-end test** | **READY** (pending) | **SC-PW-E2E** — full 7/7-day 057→058→059 award on throwaway WAS; grace 4/7 proven 2026-08-24 |
+| **General schema field typo renames** | **DEFERRED** | `Perfect Week Video Minimum` typo fixed; gate summary / Softr flag / HC RID typos — SAFE-MIGRATION-PLAN P3; **SC-144** |
+
 ## How to use this document
 
 - This is the single planning list for future work.
@@ -43,7 +58,19 @@ Use an early-bird registration period for the 2026–2027 challenge. Dates, pric
 
 ## Status and priority vocabulary
 
-| Status | Meaning |
+**Operator snapshot (Section G):** **COMPLETE** · **IN PROGRESS** · **BLOCKED** · **READY** · **DEFERRED**
+
+| Snapshot status | Meaning |
+|---|---|
+| **COMPLETE** | Implemented and verified (repo and/or Production as cited in evidence). |
+| **IN PROGRESS** | Active work, partial proof, or Production paste/attestation still open. |
+| **BLOCKED** | Waiting on an explicit owner decision or external dependency. |
+| **READY** | Requirements clear; not started or queued for next prompt. |
+| **DEFERRED** | Intentionally postponed or rejected direction. |
+
+**Legacy narrative sections (A–F)** may still use older labels (`Planned`, `Live Tested in PROD`, `Built in Repository`, etc.). Treat **Section G** as the current operator queue.
+
+| Legacy status | Meaning |
 |---|---|
 | Brainstormed | Idea captured; requirements still need refinement. |
 | Planned | Product direction is clear enough to write an implementation prompt. |
@@ -454,6 +481,10 @@ Add an appropriate FAQ and organization information where supported by the curre
 
 ### FUT-025 — Sitemap, indexing, and public athlete profiles
 
+**Priority:** P1  
+**Status:** IN PROGRESS (SC-115 indexing cutover complete; athlete profile consent/metadata verification open)  
+**Systems:** Sitemap, robots, athlete profile metadata, consent assumptions
+
 Create or verify a sitemap and indexability rules for public pages. Public athlete profiles may be indexable using the athlete’s full name because registration consent covers name, image, and likeness promotion. The public profile may display:
 
 - Full athlete name
@@ -571,7 +602,7 @@ Removed corrupted migration row **SC-079**.
 | **C-026** | Merge **Tutorials** vs **Tutorials & Assets** ΓÇö keep one, delete duplicate | in progress | C-012 | Canonical for Tutorials table merge; merged SC-105 (web cutover proof, Dribble category audit EXT-QA-003). |
 | **C-024** | Rock-solid dedupe keys + safe backfill reruns | queued | C-012 | Migrated from v2-change-backlog |
 | **C-021** | Grade bands propagate automatically | queued | C-012 (field map) | Migrated from v2-change-backlog |
-| **V2-002** | Config-over-scripts audit | queued | C-021 | Canonical for config-over-scripts audit; merged SC-034 implementation pass. |
+| **V2-002** | Config-over-scripts audit | **COMPLETE** (2026-08-27 repo pass) | C-021 | Canonical for config-over-scripts audit; merged SC-034. Evidence: `audits/2026-08-27-SC-034-config-hardcode-audit.md`. |
 | **C-022** | Public display fields ΓÇö not primary/formula | queued | C-012 | Canonical for Presentation-field policy; SC-117 web wiring tracked here; email slices V2-003/V2-004. |
 | **V2-003** | Homework email column fix (**071**) | queued | C-022 | Migrated from v2-change-backlog |
 | **V2-004** | Weekly email homework table (**072**) | queued | C-022 | Migrated from v2-change-backlog |
@@ -653,18 +684,18 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-020** | Homework | Activities that count as homework vs stand-alone | P1 | Planned | SC-018, SC-019 | Implement flag + automation filters + coach views |
 | **SC-024** | Config | Levels table reliable for progression | P1 | Installed in PROD | SC-022 | Re-seed after wipe if needed; tune thresholds (SC-027) |
 | **SC-026** | Config | Achievements catalog + unlock rules | P1 | Installed in PROD | SC-066 | Re-seed; re-test unlocks; dedupe keys |
-| **SC-028** | Config | Perfect Week rules configurable | P1 | Live Tested in PROD | SC-116 | Mike 059 UI trigger fix; Batch A/B fixtures |
+| **SC-028** | Config | Perfect Week rules configurable | P1 | **IN PROGRESS** — 057 v2.2 + WAS + 059 trigger complete 2026-08-27 | SC-116, **SC-PW-E2E** | Disposable 7/7 E2E (057→058→059) pending; Batch A/B fixtures optional |
 | **SC-030** | Config | Zoom percentage / credit settings in config | P1 | Installed in PROD | SC-116 | Re-verify config rows after wipe; document operator knobs |
-| **SC-034** | Config | Remove remaining hardcoded values from automations | P1 | Tracked under V2-002 | SC-021 | Finish V2-002 pass across 001ΓÇô119; paste any remaining pending scripts |
+| **SC-034** | Config | Remove remaining hardcoded values from automations | P1 | **COMPLETE** (repo 2026-08-27); **057 repaste pending** | SC-021, **V2-002** | Bounded pass complete: Config-only video minimum, audit JSON, contract tests. Repaste 057 after field rename. |
 | **SC-037** | Weekly Summary | Previous-week helpers reliable | P1 | Installed in PROD | SC-084 | Re-verify after Weeks rebuild |
-| **SC-056** | Data Integrity | Script input/output variables standardized | P1 | Built in Repository | SC-057 | Inventory Airtable automation I/O vs GitHub; fix drift |
-| **SC-057** | Data Integrity | Automation trigger review (no duplicate triggers) | P1 | Planned | SC-058 | UI attest triggers; delete duplicates |
+| **SC-056** | Data Integrity | Script input/output variables standardized | P1 | **Built in Repository — standard + tests 2026-08-27** | SC-057 | 058 legacy output migration on next touch |
+| **SC-057** | Data Integrity | Automation trigger review (no duplicate triggers) | P1 | **Partial — repo inventory 2026-08-27** | SC-058 | UI attest triggers; confirm 112/043/063/068 disposition |
 | **SC-060** | Enrollment | Fillout enrollment validation is trustworthy | P1 | Live Tested in PROD | SC-081 | Related to C-017; keep open for intake-reopen validation work. Live Fillout tighten when intake reopens; retain broader intake proof boundaries |
 | **SC-061** | Enrollment | New vs returning athletes handled correctly | P1 | Monitoring | SC-060 | Additional non-Schmidt returning case optional |
 | **SC-063** | Enrollment | Email validation (parent/athlete) | P1 | Built in Repository | SC-060 | Fillout email rules ON; bounce SOP still open |
 | **SC-064** | Enrollment | Intake-open dates separate from challenge run dates | P1 | Tracked under C-018 | SC-032 | Wire intake-open into Fillout/web gate; Weeks flags if authorized |
 | **SC-075** | XP | Streak XP | P1 | Live Tested in PROD | SC-029, SC-068 | Optional break/rebuild supervised test; SC-081 decision |
-| **SC-077** | XP | Perfect Week XP | P1 | Live Tested in PROD | SC-028, SC-074 | Mike removes Shot Milestone filter on 059; optional Test button soak |
+| **SC-077** | XP | Perfect Week XP | P1 | **IN PROGRESS** — 059 trigger corrected 2026-08-27 | SC-028, SC-074, **SC-PW-E2E** | 058/059 scripts unchanged; disposable E2E award pending; optional 059 Test soak |
 | **SC-083** | XP | Achievement unlock deduplication | P1 | Monitoring | SC-026 | Monitor recurrence; do not reintroduce stale orphan-XP bulk counts from #100 |
 | **SC-088** | Zoom | Recording approval email to parent | P1 | Tracked under C-025-EMAIL | SC-086 | Mike: create Recording Quiz Satisfactory fixture ΓåÆ Test 117 ΓåÆ expect sent/already_sent; no XP |
 | **SC-089** | Zoom | Total Zoom counts correct | P1 | Installed in PROD | SC-048 | Re-verify formulas after schema export |
@@ -674,7 +705,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-102** | Website | Airtable-backed public pages work | P1 | Live Tested in PROD | SC-055 | Keep catalog content current; Presentation fields later (SC-054) |
 | **SC-117** | Website | Public Presentation fields consumed by web | P1 | Tracked under C-022 | SC-054 | Wire queries to Presentation fields only |
 | **SC-134** | Platform | Full pre-season audit pack green | P1 | Tracked under V2-011 | SC-046ΓÇôSC-058 | Extend audits; run on rebuilt PROD |
-| **SC-139** | Platform | Refresh stale status docs (KNOWN_ISSUES, inventory, E2E Zoom rows, brief) | P1 | Built in Repository | ΓÇö | Continue sweeping KNOWN_ISSUES / Zoom E2E stale rows / brief after each SC |
+| **SC-139** | Platform | Refresh stale status docs (KNOWN_ISSUES, inventory, E2E Zoom rows, brief) | P1 | **Partial — CURRENT-TRUTH + audits 2026-08-27** | ΓÇö | Continue sweeping KNOWN_ISSUES / Zoom E2E stale rows / brief after each SC |
 | **SC-148** | Website | Mobile usability + accessibility for public `/shoot` | P1 | Built in Repository | SC-102, SC-113, SC-118 | Merge integration PR; Vercel deploy; Mike production check; optional axe-core pass |
 | **SC-006** | Testing | Automatic Expected-versus-Actual results on scenarios | P2 | Monitoring | SC-001, SC-002 | Keep read-only unless Mike designates one Pass/Fail writer; optional wire CLI report into scenario UI manually |
 | **SC-029** | Config | Streak values in config (not buried in code) | P2 | Live Tested in PROD | SC-022 | Mike decide repeat-after-break (SC-081); optional supervised break/rebuild test |
@@ -699,7 +730,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-118** | Website | Production readiness smoke package for public `/shoot` | P2 | **Complete** (2026-08-25, deploy `207a2c1`) | SC-102 | `npm run test:smoke:prod` **50/50**; cross-platform (`cross-env`); prod athlete slug `perfect-week-testing`; mobile nav + SEO smoke pass; Vitest **369**; `homework-due-date.spec.ts` **3/3** on prod. |
 | **SC-133** | Platform | Pre-season parent comms from rules | P2 | Tracked under V2-010 | SC-109 | Write/send after SC-109 |
 | **SC-138** | Platform | Close stale overnight GitHub issues/PRs for 070a | P2 | Planned | SC-095 | Close or update with current truth |
-| **SC-144** | Website | Rename Softr-named publish flag | P2 | Planned | SC-054 | Rename in schema wave; update web queries |
+| **SC-144** | Website | Rename Softr-named publish flag | P2 | **DEFERRED** (general schema typo wave) | SC-054 | Gate summary / Softr flag / HC RID typos — SAFE-MIGRATION-PLAN P3; **Perfect Week Video Minimum** typo fixed 2026-08-27 |
 | **SC-145** | Platform | Repo health / security audit follow-ups | P2 | Planned | ΓÇö | Triage findings into SC items as needed |
 | **SC-146** | Enrollment | Re-open Fillout daily intake when season ready | P2 | Deferred | SC-060, SC-135 | Turn on only after SC-135 dry-run |
 | **SC-066** | Enrollment | Early-bird periods supported for 2026–2027 | P3 | Decision resolved — use early-bird registration | SC-065 | Decide if 2026ΓÇô27 uses early-bird; config if yes |
@@ -712,4 +743,53 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-131** | Media | Generate Media Kits as platform feature | P3 | Deferred | SC-094, SC-054 | Config tables + generator + UI later |
 | **SC-132** | Media | Facebook kits | P3 | Deferred | SC-131 | Not started |
 | **SC-143** | Platform | Educational Athletics multi-challenge platform (Dribble, etc.) | P3 | Deferred | ΓÇö | Separate repos/bases recommended |
+
+---
+
+## G. Current work list snapshot (2026-08-27)
+
+Unified status vocabulary for this snapshot: **COMPLETE** · **IN PROGRESS** · **BLOCKED** · **READY** · **DEFERRED**.
+
+Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain for narrative evidence; this table is the operator queue.
+
+**Regenerate full queue table:** `node tools/docs/generate-work-list-section-g.mjs` → `docs/_generated-work-list-section-g.md`
+
+### Summary
+
+| Metric | Count |
+|---|---|
+| Total items | 173 |
+| COMPLETE | 46 |
+| IN PROGRESS | 68 |
+| BLOCKED | 1 |
+| READY | 46 |
+| DEFERRED | 12 |
+| Production actions remaining | 18 |
+| Items requiring Mike | 16 |
+| Items requiring Cursor | 13 |
+| Items requiring OMNI/Airtable | 6 |
+
+### 2026-08-27 SC-034 / Perfect Week closeout
+
+| Item | Status | Evidence |
+|---|---|---|
+| **V2-002** | COMPLETE | SC-034 repo pass 2026-08-27; `audits/2026-08-27-SC-034-config-hardcode-audit.md`; 57 scripts; `lib/config-selection/` |
+| **SC-034** | COMPLETE (repo) | V2-002 repo pass 2026-08-27; hardcode audit JSON; contract tests pass; **057 repaste pending** |
+| **SC-034-PW-MIN** | COMPLETE | `lib/config-selection/perfect-week-video-minimum.js`; Config **Perfect Week Video Minimum** = 3 |
+| **SC-034-WAS** | COMPLETE | WAS lookup + formula live PROD 2026-08-27; `airtable/formulas/README.md` |
+| **SC-034-057** | **Repaste required** | Config field renamed; prod 057 script still typo — `deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md` |
+| **SC-034-059-TRIG** | COMPLETE | Mike 2026-08-27; Pending-only created trigger; `deploy-checklists/059-perfect-week-trigger-coverage.md` |
+| **SC-034-058-059** | COMPLETE | Not required — `docs/testing/perfect-week/PERFECT-WEEK-DEPENDENCY-AUDIT.md` |
+| **SC-PW-E2E** | READY | Disposable 057→058→059 on throwaway WAS; 7/7 days + Eligible?=1; grace 4/7 proven 2026-08-24 |
+| **SC-144** | DEFERRED | General schema typo renames — SAFE-MIGRATION-PLAN P3 |
+| **Field typo rename (general schema)** | DEFERRED | **Perfect Week Video Minimum** typo fixed 2026-08-27; gate summary / Softr flag / HC RID typos deferred |
+
+### Uncommitted WIP (separate — not complete)
+
+| ID | Title | Status | Evidence |
+|---|---|---|---|
+| **WIP-XP-ACT** | Athlete XP Activity ledger (web + API) | IN PROGRESS | Uncommitted `web/lib/data/xp-activity*` + components; not prod deployed |
+| **WIP-HW-CONTRACTS** | Homework assignment-identity contract tests | IN PROGRESS | Uncommitted `lib/homework-contracts` + 007/020/115 edits; FUT-001 scope |
+| **WIP-057-TESTS** | 057 runtime + hardcode contract tests | IN PROGRESS | Uncommitted `test_057_runtime.mjs` + `tests/automation-contracts/` |
+
 ---

@@ -36,6 +36,7 @@ const IDS = {
   was: "recWas05700000001",
   enrollment: "recEnrollment05701",
   programInstance: "recProgram05700001",
+  config2026: "recConfig0572026",
   otherProgramInstance: "recOtherProg057001",
   gradeBand: "recGradeBand057001",
   otherGradeBand: "recOtherBand057001",
@@ -82,7 +83,14 @@ function buildBase({
   weeklyGoal = target / 9,
   fallbackGoal = target,
   enrollmentActive = true,
+  enrollmentSchoolYear = "2026-2027",
+  programInstanceSchoolYear = "2026-2027",
+  includeConfigTable = true,
+  configVideoMinimumValue = 3,
+  omitConfigVideoField = false,
+  linkedSubmissionIds = [],
   extraGoals = [],
+  submissionRecords = [],
   zoomRecords = [],
   zoomAttendanceRecords = [],
 } = {}) {
@@ -94,16 +102,20 @@ function buildBase({
       "Goal Record": linked(IDS.goal),
       "Weekly Goal Shots Target": weeklyGoal,
       "Goal Shots Target": fallbackGoal,
-      Submissions: [],
+      Submissions: linkedSubmissionIds.map((id) => ({ id, name: id })),
       Homework: [],
       "Homework Completions Link": [],
     }),
   ]);
   const submissions = new MockTable("Submissions", [
     { name: "Activity Date", type: "date" },
+    { name: "Submitted At", type: "dateTime" },
     { name: "Total Shots Counted", type: "number" },
+    { name: "Count This Submission?", type: "checkbox" },
     { name: "Perfect Week Countable Submission?", type: "checkbox" },
-  ]);
+    { name: "Perfect Week Grace Eligible?", type: "checkbox" },
+    { name: "Perfect Week Manual Exception?", type: "checkbox" },
+  ], submissionRecords);
   const homeworkCompletions = new MockTable("Homework Completions", [
     { name: "Homework", type: "multipleRecordLinks" },
     { name: "Satisfactory?", type: "checkbox" },
@@ -132,10 +144,12 @@ function buildBase({
   ]);
   const enrollments = new MockTable("Enrollments", [
     { name: "Program Instance", type: "multipleRecordLinks" },
+    { name: "School Year", type: "singleLineText" },
     { name: "Active?", type: "checkbox" },
   ], [
     new MockRecord(IDS.enrollment, {
       "Program Instance": linked(IDS.programInstance),
+      "School Year": enrollmentSchoolYear,
       "Active?": enrollmentActive,
     }),
   ]);
@@ -154,9 +168,33 @@ function buildBase({
     ...extraGoals,
   ]);
 
-  return new MockBase([
+  const tables = [
     weekly, submissions, homeworkCompletions, video, zoom, zoomAttendance, weeks, enrollments, goals,
-  ]);
+  ];
+
+  tables.push(new MockTable("Program Instance - Sync", [
+    { name: "School Year - Linked", type: "singleLineText" },
+  ], [
+    new MockRecord(IDS.programInstance, {
+      "School Year - Linked": programInstanceSchoolYear,
+    }),
+  ]));
+
+  if (includeConfigTable) {
+    const configFields = [
+      { name: "Active School Year", type: "singleLineText" },
+    ];
+    const configCells = { "Active School Year": "2026-2027" };
+    if (!omitConfigVideoField) {
+      configFields.push({ name: "Perfect Week Video Minimum", type: "number" });
+      configCells["Perfect Week Video Minimum"] = configVideoMinimumValue;
+    }
+    tables.push(new MockTable("Config", configFields, [
+      new MockRecord(IDS.config2026, configCells),
+    ]));
+  }
+
+  return new MockBase(tables);
 }
 
 async function run057(base) {
@@ -183,7 +221,7 @@ function lastWeeklyUpdate(base) {
 
 test("executes the committed Automation 057 source", () => {
   assert.match(SOURCE, /057 - Achievements and Milestones - Calculate Perfect Week Eligibility/);
-  assert.match(SOURCE, /Version: 1\.9/);
+  assert.match(SOURCE, /Version: 2\.2/);
   console.log(`SOURCE_EXECUTED ${SCRIPT_PATH} sha256=${SOURCE_SHA256}`);
 });
 
@@ -206,7 +244,7 @@ test("settled season lookup with fractional weekly goal reaches Ready", async ()
   assert.equal(weeklyCells(base)["Perfect Week Automation Status"], "Ready");
   assert.equal(weeklyCells(base)["Perfect Week Daily Check Status"], "Fail");
   assert.ok(
-    captured.lines.some((line) => /"version":"1\.9"/.test(line) && /"action":"ready"/.test(line)),
+    captured.lines.some((line) => /"version":"2\.2"/.test(line) && /"action":"ready"/.test(line)),
     "success path must emit versioned console JSON"
   );
 });
@@ -365,4 +403,144 @@ test("recording-credit replay does not reapply an already applied attendance row
   assert.equal(weeklyCells(base)["Perfect Week Automation Status"], "Ready");
   assert.equal(weeklyCells(base)["Perfect Week Zoom Attendance Count"], 1);
   assert.equal(base.getTable("Zoom Attendance").updates.length, 0);
+});
+
+function qualifyingSubmission(id, activityDate, shots = 100, submittedAt = activityDate) {
+  return new MockRecord(id, {
+    "Activity Date": activityDate,
+    "Submitted At": submittedAt,
+    "Total Shots Counted": shots,
+    "Count This Submission?": true,
+    "Perfect Week Grace Eligible?": true,
+  });
+}
+
+test("config threshold 3 appears in daily detail by default", async () => {
+  const base = buildBase({ target: 700 });
+  const { error } = await run057(base);
+  assert.equal(error, null);
+  assert.match(
+    weeklyCells(base)["Perfect Week Daily Check Detail"],
+    /Required qualifying videos: 3 \(config_perfect_week_video_minimum\)/
+  );
+});
+
+test("missing Config table fails closed", async () => {
+  const base = buildBase({ includeConfigTable: false });
+  const { error } = await run057(base);
+  assert.match(error?.message ?? "", /Config table is unavailable/);
+});
+
+test("missing Config video minimum field fails closed", async () => {
+  const base = buildBase({ omitConfigVideoField: true });
+  const { error } = await run057(base);
+  assert.match(error?.message ?? "", /Config field "Perfect Week Video Minimum" is missing/);
+});
+
+test("config field present: invalid video minimum fails closed", async () => {
+  const base = buildBase({
+    includeConfigTable: true,
+    configVideoMinimumValue: "",
+  });
+  const { error } = await run057(base);
+  assert.match(error?.message ?? "", /Perfect Week Video Minimum is blank/);
+});
+
+test("config field present: zero video minimum fails closed", async () => {
+  const base = buildBase({
+    includeConfigTable: true,
+    configVideoMinimumValue: 0,
+  });
+  const { error } = await run057(base);
+  assert.match(error?.message ?? "", /must be a positive integer/);
+});
+
+test("config field present: valid Config threshold appears in daily detail", async () => {
+  const base = buildBase({
+    includeConfigTable: true,
+    configVideoMinimumValue: 4,
+  });
+  const { error, console: captured } = await run057(base);
+  assert.equal(error, null);
+  assert.match(
+    weeklyCells(base)["Perfect Week Daily Check Detail"],
+    /Required qualifying videos: 4 \(config_perfect_week_video_minimum\)/
+  );
+  assert.ok(
+    captured.lines.some((line) =>
+      /"requiredVideoCount":4/.test(line) && /"videoMinimumSource":"config_perfect_week_video_minimum"/.test(line)
+    )
+  );
+});
+
+test("Fillout evening UTC timestamp maps to Denver activity date for week counting", async () => {
+  const subId = "recSub057Evening1";
+  const base = buildBase({
+    target: 700,
+    linkedSubmissionIds: [subId],
+    submissionRecords: [
+      qualifyingSubmission(subId, "2026-08-02", 100, "2026-08-03T01:30:00.000Z"),
+    ],
+  });
+  const { error } = await run057(base);
+  assert.equal(error, null);
+  const detail = weeklyCells(base)["Perfect Week Daily Check Detail"];
+  assert.match(detail, /Passing days: 2026-08-02:/);
+  assert.doesNotMatch(detail, /2026-08-03:/);
+});
+
+test("seven distinct official week dates pass dailyMet; duplicate same-day does not", async () => {
+  const weekDates = [
+    "2026-08-02",
+    "2026-08-03",
+    "2026-08-04",
+    "2026-08-05",
+    "2026-08-06",
+    "2026-08-07",
+    "2026-08-08",
+  ];
+  const distinctIds = weekDates.map((_, i) => `recSub057Day${i}`);
+  const duplicateIds = ["recSub057Dup0", "recSub057Dup1"];
+  const baseDistinct = buildBase({
+    target: 700,
+    linkedSubmissionIds: distinctIds,
+    submissionRecords: distinctIds.map((id, i) => qualifyingSubmission(id, weekDates[i])),
+  });
+  const distinctRun = await run057(baseDistinct);
+  assert.equal(distinctRun.error, null);
+  assert.equal(weeklyCells(baseDistinct)["Perfect Week Daily Check Status"], "Pass");
+
+  const baseDup = buildBase({
+    target: 700,
+    linkedSubmissionIds: duplicateIds,
+    submissionRecords: [
+      qualifyingSubmission(duplicateIds[0], "2026-08-02"),
+      qualifyingSubmission(duplicateIds[1], "2026-08-02"),
+    ],
+  });
+  const dupRun = await run057(baseDup);
+  assert.equal(dupRun.error, null);
+  assert.equal(weeklyCells(baseDup)["Perfect Week Daily Check Status"], "Fail");
+  assert.match(weeklyCells(baseDup)["Perfect Week Daily Check Detail"], /Missing official week days/);
+});
+
+test("missing activity date is ignored for daily counting", async () => {
+  const subId = "recSub057MissingDate";
+  const base = buildBase({
+    target: 700,
+    linkedSubmissionIds: [subId],
+    submissionRecords: [
+      new MockRecord(subId, {
+        "Activity Date": "",
+        "Submitted At": "2026-08-02T12:00:00.000Z",
+        "Total Shots Counted": 100,
+        "Count This Submission?": true,
+        "Perfect Week Grace Eligible?": true,
+      }),
+    ],
+  });
+  const { error } = await run057(base);
+  assert.equal(error, null);
+  assert.equal(weeklyCells(base)["Perfect Week Daily Check Status"], "Fail");
+  assert.match(weeklyCells(base)["Perfect Week Daily Check Detail"], /Missing official week days/);
 });
