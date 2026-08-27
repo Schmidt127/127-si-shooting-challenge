@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-08-27** (SC-034 automation reliability audit — 57 scripts scanned; see `docs/audits/2026-08-27-SC-034-config-hardcode-audit.md`)
+Last updated: **2026-08-27** (SC-034 — 057 v2.1 Config video minimum path; see `docs/deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md`)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)

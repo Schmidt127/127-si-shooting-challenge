@@ -655,7 +655,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-026** | Config | Achievements catalog + unlock rules | P1 | Installed in PROD | SC-066 | Re-seed; re-test unlocks; dedupe keys |
 | **SC-028** | Config | Perfect Week rules configurable | P1 | Live Tested in PROD | SC-116 | Mike 059 UI trigger fix; Batch A/B fixtures |
 | **SC-030** | Config | Zoom percentage / credit settings in config | P1 | Installed in PROD | SC-116 | Re-verify config rows after wipe; document operator knobs |
-| **SC-034** | Config | Remove remaining hardcoded values from automations | P1 | **Partial — repo audit complete 2026-08-27** | SC-021 | 057 video minimum pending Config field; paste 054/066 fixes if not live |
+| **SC-034** | Config | Remove remaining hardcoded values from automations | P1 | **Partial — 057 v2.1 repo complete 2026-08-27** | SC-021 | Add Config `Perfect Week Video Minimum` + WAS formula; paste 057 v2.1 |
 | **SC-037** | Weekly Summary | Previous-week helpers reliable | P1 | Installed in PROD | SC-084 | Re-verify after Weeks rebuild |
 | **SC-056** | Data Integrity | Script input/output variables standardized | P1 | **Built in Repository — standard + tests 2026-08-27** | SC-057 | 058 legacy output migration on next touch |
 | **SC-057** | Data Integrity | Automation trigger review (no duplicate triggers) | P1 | **Partial — repo inventory 2026-08-27** | SC-058 | UI attest triggers; confirm 112/043/063/068 disposition |
