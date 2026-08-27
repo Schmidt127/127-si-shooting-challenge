@@ -30,4 +30,5 @@ node tools/testing/autonomous-qa-run.mjs --cleanup
 - **065/066 closeout (2026-08-24):** [2026-08-24-065-066-dynamic-trigger-closeout.md](../../deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md)
 - **Historical audit artifacts:** [2026-08-24-historical-audit-artifacts.md](../../deploy-checklists/2026-08-24-historical-audit-artifacts.md)
 - E2E matrix: `tools/testing/run_e2e_matrix.mjs`
+- **Perfect Week disposable E2E (SC-PW-E2E):** [`docs/testing/perfect-week/SC-PW-E2E.md`](../perfect-week/SC-PW-E2E.md) — `node tools/testing/sc-pw-e2e.mjs --case qualifying --apply`
 - XP reconciliation: `web/scripts/full-xp-reconciliation.mjs`

@@ -13,7 +13,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   year-aware lookup of Config field **`Perfect Week Video Minimum`** (`fldqRxjWGXcbUZUg3`,
   number, value 3); removed `legacyRequiredVideoCount: 3`. WAS formula uses lookup
   **`Config: Perfect Week Video Minimum`**. **Production** (Mike 2026-08-27): Config field renamed from typo;
-  WAS lookup + formula updated. **Repaste 057 v2.2** — prod script still references typo field name. Deploy:
+  WAS lookup + formula updated; **057 v2.2** pasted to Production. Deploy:
   [`057-v2.1-perfect-week-config-video-minimum.md`](./docs/deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md).
 - **057 v2.1 (SC-034, 2026-08-27)** — Perfect Week video minimum Config path + date-key
   hardening (`addDaysToDateKey` avoids UTC ISO slice). Superseded by v2.2 config-only pass.
@@ -21,6 +21,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Docs
 
 #### Added
+- **SC-PW-E2E disposable Perfect Week harness (2026-08-27)** — `tools/testing/sc-pw-e2e.mjs`
+  with library, contract tests, and operator doc
+  [`docs/testing/perfect-week/SC-PW-E2E.md`](./docs/testing/perfect-week/SC-PW-E2E.md).
+  Dry-run default; `--apply` / `--cleanup` gated. Covers qualifying, nonqualifying-video,
+  and trigger-only cases (057→058→059).
 - **Automation reliability audit pack (SC-034/056/057/058/139, 2026-08-27)** — Offline hardcode
   classifier (`tools/docs/audit-automation-hardcodes.mjs`), trigger inventory extract,
   I/O standard doc, forbidden-pattern contract tests. Artifacts under `docs/audits/`.
