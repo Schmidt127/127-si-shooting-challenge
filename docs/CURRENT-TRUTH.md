@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-26 (master — FUT-014 complete, XP Event Log complete, FUT-003 paid route validated, chatgpt-sources mirror synced; re-verify with `git rev-parse HEAD`)  
+**Last verification (repo):** 2026-08-27 (branch `agent/config-automation-reliability` — SC-034/056/057/058/139 automation reliability pass; re-verify with `git rev-parse HEAD`)  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -185,6 +185,8 @@ Do **not** treat older Automations-table Code-column snapshots as stronger than 
 | **117** | **v2.1** | v2.1 | **Live** | Dynamic inputs: `recordId`, `enrollmentRid`, `zoomMeetingRid` |
 
 **Record-ID classification (Mike final):** Dynamic for all record-based automations; optional on **041** only; intentionally blank on **056 / 078 / 118 / 119**. **065 v10.3** and **066 v3.9** use triggering-record `recordId` in Production (verified 2026-08-24). Pre-paste hardcoded reference inputs and disposable-fixture manual settlement were **historical workarounds only**. Closeout: [`deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md`](./deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md).
+
+**Config-over-code audit (SC-034 / V2-002, 2026-08-27):** Offline scan of **57** active automation scripts — **no** active script uses `configQuery.records[0]`. Year-aware Config selection is centralized in `lib/config-selection/index.js` (fail-closed). Remaining business-rule hardcode: **057 `requiredVideoCount: 3`** (mirrors WAS formula; no Config field in schema yet). Audit artifacts: [`audits/2026-08-27-SC-034-config-hardcode-audit.md`](./audits/2026-08-27-SC-034-config-hardcode-audit.md), [`audits/sc-034-hardcode-audit.json`](./audits/sc-034-hardcode-audit.json). I/O standard: [`audits/SC-056-automation-io-standard.md`](./audits/SC-056-automation-io-standard.md). Trigger conflicts: [`audits/SC-057-trigger-conflict-inventory.md`](./audits/SC-057-trigger-conflict-inventory.md).
 
 **Historical snapshot (midday 2026-08-21):** An earlier Automations Code-column read briefly showed **010 v10.10** and **101 v6.6**. That snapshot is **superseded** by Mike’s live script / run-history verification above. See [`deploy-checklists/2026-08-21-perfect-week-test-prep-report.md`](./deploy-checklists/2026-08-21-perfect-week-test-prep-report.md).
 

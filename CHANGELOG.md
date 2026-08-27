@@ -6,6 +6,13 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Docs
+
+#### Added
+- **Automation reliability audit pack (SC-034/056/057/058/139, 2026-08-27)** — Offline hardcode
+  classifier (`tools/docs/audit-automation-hardcodes.mjs`), trigger inventory extract,
+  I/O standard doc, forbidden-pattern contract tests. Artifacts under `docs/audits/`.
+
 ### Web
 
 #### Added

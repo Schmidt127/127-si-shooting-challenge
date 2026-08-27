@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-08-26** (website closeouts — FUT-014 homework catalog, FUT-012 XP Event Log presentation, FUT-003 paid Make validation documented; vitest **406/406** · prod smoke **50/50**)
+Last updated: **2026-08-27** (SC-034 automation reliability audit — 57 scripts scanned; see `docs/audits/2026-08-27-SC-034-config-hardcode-audit.md`)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)

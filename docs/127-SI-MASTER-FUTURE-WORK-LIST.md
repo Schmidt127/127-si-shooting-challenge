@@ -655,10 +655,10 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-026** | Config | Achievements catalog + unlock rules | P1 | Installed in PROD | SC-066 | Re-seed; re-test unlocks; dedupe keys |
 | **SC-028** | Config | Perfect Week rules configurable | P1 | Live Tested in PROD | SC-116 | Mike 059 UI trigger fix; Batch A/B fixtures |
 | **SC-030** | Config | Zoom percentage / credit settings in config | P1 | Installed in PROD | SC-116 | Re-verify config rows after wipe; document operator knobs |
-| **SC-034** | Config | Remove remaining hardcoded values from automations | P1 | Tracked under V2-002 | SC-021 | Finish V2-002 pass across 001ΓÇô119; paste any remaining pending scripts |
+| **SC-034** | Config | Remove remaining hardcoded values from automations | P1 | **Partial — repo audit complete 2026-08-27** | SC-021 | 057 video minimum pending Config field; paste 054/066 fixes if not live |
 | **SC-037** | Weekly Summary | Previous-week helpers reliable | P1 | Installed in PROD | SC-084 | Re-verify after Weeks rebuild |
-| **SC-056** | Data Integrity | Script input/output variables standardized | P1 | Built in Repository | SC-057 | Inventory Airtable automation I/O vs GitHub; fix drift |
-| **SC-057** | Data Integrity | Automation trigger review (no duplicate triggers) | P1 | Planned | SC-058 | UI attest triggers; delete duplicates |
+| **SC-056** | Data Integrity | Script input/output variables standardized | P1 | **Built in Repository — standard + tests 2026-08-27** | SC-057 | 058 legacy output migration on next touch |
+| **SC-057** | Data Integrity | Automation trigger review (no duplicate triggers) | P1 | **Partial — repo inventory 2026-08-27** | SC-058 | UI attest triggers; confirm 112/043/063/068 disposition |
 | **SC-060** | Enrollment | Fillout enrollment validation is trustworthy | P1 | Live Tested in PROD | SC-081 | Related to C-017; keep open for intake-reopen validation work. Live Fillout tighten when intake reopens; retain broader intake proof boundaries |
 | **SC-061** | Enrollment | New vs returning athletes handled correctly | P1 | Monitoring | SC-060 | Additional non-Schmidt returning case optional |
 | **SC-063** | Enrollment | Email validation (parent/athlete) | P1 | Built in Repository | SC-060 | Fillout email rules ON; bounce SOP still open |
@@ -674,7 +674,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-102** | Website | Airtable-backed public pages work | P1 | Live Tested in PROD | SC-055 | Keep catalog content current; Presentation fields later (SC-054) |
 | **SC-117** | Website | Public Presentation fields consumed by web | P1 | Tracked under C-022 | SC-054 | Wire queries to Presentation fields only |
 | **SC-134** | Platform | Full pre-season audit pack green | P1 | Tracked under V2-011 | SC-046ΓÇôSC-058 | Extend audits; run on rebuilt PROD |
-| **SC-139** | Platform | Refresh stale status docs (KNOWN_ISSUES, inventory, E2E Zoom rows, brief) | P1 | Built in Repository | ΓÇö | Continue sweeping KNOWN_ISSUES / Zoom E2E stale rows / brief after each SC |
+| **SC-139** | Platform | Refresh stale status docs (KNOWN_ISSUES, inventory, E2E Zoom rows, brief) | P1 | **Partial — CURRENT-TRUTH + audits 2026-08-27** | ΓÇö | Continue sweeping KNOWN_ISSUES / Zoom E2E stale rows / brief after each SC |
 | **SC-148** | Website | Mobile usability + accessibility for public `/shoot` | P1 | Built in Repository | SC-102, SC-113, SC-118 | Merge integration PR; Vercel deploy; Mike production check; optional axe-core pass |
 | **SC-006** | Testing | Automatic Expected-versus-Actual results on scenarios | P2 | Monitoring | SC-001, SC-002 | Keep read-only unless Mike designates one Pass/Fail writer; optional wire CLI report into scenario UI manually |
 | **SC-029** | Config | Streak values in config (not buried in code) | P2 | Live Tested in PROD | SC-022 | Mike decide repeat-after-break (SC-081); optional supervised break/rebuild test |

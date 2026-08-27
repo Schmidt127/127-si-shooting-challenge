@@ -5,7 +5,7 @@
 > **⛔ Authority (2026-08-20):** Never use the obsolete Production **`Automations` data table** for DEV/PROD status, versions, triggers, or retirement. This inventory uses **GitHub SCRIPT headers** + Mike-dated overlays + docs references only. Live ON/OFF still requires Automations **UI** confirmation unless a Mike overlay says otherwise. See [CURRENT-TRUTH.md](./CURRENT-TRUTH.md).
 
 **Status:** Living inventory (GitHub headers + existing evidence)  
-**Last updated:** 2026-08-24 (master closeout — 065/066 live; weekly E2E; historical artifacts)  
+**Last updated:** 2026-08-27 (SC-058 repo supplement — 57 active scripts verified; see [`audits/SC-058-automation-inventory-supplement.md`](./audits/SC-058-automation-inventory-supplement.md))  
 **Source scripts:** `airtable/automations/shooting-challenge/*.js`  
 **Companion:** [automation-index.md](./automation-index.md) · [V2_RELEASE_CHECKLIST.md](./V2_RELEASE_CHECKLIST.md) · [deploy-checklists/DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md)
 

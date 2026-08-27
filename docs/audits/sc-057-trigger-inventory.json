@@ -1,0 +1,789 @@
+{
+  "generated_at": "2026-08-27",
+  "entry_count": 57,
+  "entries": [
+    {
+      "number": "001",
+      "file": "airtable/automations/shooting-challenge/001-enrollment-intake-and-setup-find-or-create-athlete-and-link-enrollment.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": null,
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "002",
+      "file": "airtable/automations/shooting-challenge/002-enrollment-intake-and-setup-assign-grade-band-initial.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": null,
+      "recommendedConditions": [
+        "Grade is not empty.",
+        "Athlete is not empty.",
+        "Grade Band is empty.",
+        "Ready for Grade Band Assignment? = 1, if using that helper field."
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "003",
+      "file": "airtable/automations/shooting-challenge/003-enrollment-intake-and-setup-assign-grade-band-if-grade-changes.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": null,
+      "recommendedConditions": [
+        "Grade is not empty.",
+        "Athlete is not empty.",
+        "Grade Band is not empty.",
+        "Grade Band Refresh Needed = 1."
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "005",
+      "file": "airtable/automations/shooting-challenge/005-submission-intake-and-asset-creation-assign-week-to-submission-homework-first.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": null,
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "006",
+      "file": "airtable/automations/shooting-challenge/006-submission-intake-and-asset-creation-set-video-count.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": null,
+      "recommendedConditions": [
+        "Video Upload is not empty.",
+        "OR Video Count does not equal the current number of attached video files."
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "007",
+      "file": "airtable/automations/shooting-challenge/007-submission-intake-and-asset-creation-duplicate-checker-for-submissions.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": null,
+      "recommendedConditions": [
+        "Duplicate Key is not empty.",
+        "Duplicate Review Status is empty OR needs recalculation."
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "009",
+      "file": "airtable/automations/shooting-challenge/009-submission-intake-create-submission-assets.js",
+      "automationName": "009 - Submission Intake - Create Submission Assets",
+      "triggerTable": "Submissions",
+      "triggerType": null,
+      "recommendedConditions": [
+        "When a record matches conditions indicating new/changed attachments",
+        "Input variable recordId = triggering Submission record ID"
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "010",
+      "file": "airtable/automations/shooting-challenge/010-submission-intake-create-xp-event.js",
+      "automationName": "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
+      "triggerTable": "Submissions",
+      "triggerType": null,
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "013",
+      "file": "airtable/automations/shooting-challenge/013-submission-intake-create-or-link-video-feedback.js",
+      "automationName": "013 - Submission Intake - Create or Link Video Feedback",
+      "triggerTable": "Submission Assets",
+      "triggerType": null,
+      "recommendedConditions": [
+        "Asset Slot = VIDEO",
+        "Video asset ready for Video Feedback prep (confirm exact UI conditions)",
+        "Input variable recordId = triggering Submission Asset record ID"
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "020",
+      "file": "airtable/automations/shooting-challenge/020-homework-link-or-create-homework-completion.js",
+      "automationName": "020 - Homework - Link or Create Homework Completion",
+      "triggerTable": "Submission Assets",
+      "triggerType": null,
+      "recommendedConditions": [
+        "Upload Destination = Homework Completions",
+        "Asset Purpose = Homework 1 or Homework 2",
+        "Homework asset ready for Homework Completion prep (confirm exact UI conditions)",
+        "Input variable recordId = triggering Submission Asset record ID"
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "021",
+      "file": "airtable/automations/shooting-challenge/021-submission-intake-and-asset-creation-set-attachment-upload-status.js",
+      "automationName": "021 - Submission Intake and Asset Creation - Set Attachment Upload Status",
+      "triggerTable": "Submissions",
+      "triggerType": "When record matches conditions",
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "022",
+      "file": "airtable/automations/shooting-challenge/022-submission-intake-sync-child-upload-writeback-from-submission-asset.js",
+      "automationName": "022 - Submission Intake - Sync Child Upload Writeback from Submission Asset",
+      "triggerTable": "Submission Assets",
+      "triggerType": null,
+      "recommendedConditions": [
+        "Upload Status is Uploaded or Processing or Error",
+        "Upload Destination is Homework Completions or Video Feedback",
+        "Homework Completions is not empty OR Video Feedback is not empty"
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "023",
+      "file": "airtable/automations/shooting-challenge/023-submission-intake-and-asset-creation-assign-enrollment-to-submission.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": null,
+      "recommendedConditions": [
+        "Athlete is not empty.",
+        "Enrollment is empty OR Needs Enrollment Assignment."
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "030",
+      "file": "airtable/automations/shooting-challenge/030-weekly-summary-and-goal-logic-copy-enrollment-grade-band-to-weekly-summary.js",
+      "automationName": "030 - Weekly Summary and Goal Logic - Copy Enrollment Grade Band to Weekly Summary",
+      "triggerTable": "Weekly Athlete Summary",
+      "triggerType": "When record enters view",
+      "recommendedConditions": [
+        "Enrollment is not empty",
+        "Week is not empty",
+        "Grade Band is empty"
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "031",
+      "file": "airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js",
+      "automationName": "031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission",
+      "triggerTable": "Submissions",
+      "triggerType": "When record enters view",
+      "recommendedConditions": [
+        "Activity Date is not empty",
+        "Week is not empty",
+        "Enrollment is not empty",
+        "Count This Submission? = 1",
+        "Weekly Athlete Summary is empty OR the automation is run in a controlled repair flow"
+      ],
+      "hasRecordIdInput": false,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "032",
+      "file": "airtable/automations/shooting-challenge/032-weekly-summary-and-goal-logic-link-challenge-goal-record-to-weekly-athlete-summary.js",
+      "automationName": "032 - Weekly Summary and Goal Logic - Link Challenge Goal Record to Weekly Athlete Summary",
+      "triggerTable": "Weekly Athlete Summary",
+      "triggerType": "When record enters view",
+      "recommendedConditions": [
+        "Enrollment and Grade Band are not empty",
+        "Goal Record is empty",
+        "Week is not empty"
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "033",
+      "file": "airtable/automations/shooting-challenge/033-weekly-summary-and-goal-logic-assign-homework-to-weekly-athlete-summary.js",
+      "automationName": "033 - Weekly Summary and Goal Logic - Assign Homework to Weekly Athlete Summary",
+      "triggerTable": "Weekly Athlete Summary",
+      "triggerType": null,
+      "recommendedConditions": [
+        "Weekly Athlete Summary has Enrollment and Week linked",
+        "Input variable recordId = triggering Weekly Athlete Summary record ID"
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "034",
+      "file": "airtable/automations/shooting-challenge/034-weekly-summary-and-goal-logic-set-previous-week-helper-values.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": null,
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "035",
+      "file": "airtable/automations/shooting-challenge/035-weekly-summary-and-goal-logic-create-weekly-threshold-xp-events.js",
+      "automationName": "035 - Weekly Summary and Goal Logic - Create Weekly Threshold XP Events",
+      "triggerTable": "Weekly Athlete Summary",
+      "triggerType": null,
+      "recommendedConditions": [
+        "Threshold XP Ready? = 1"
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "041",
+      "file": "airtable/automations/shooting-challenge/041-levels-and-progression-mark-enrollment-for-level-recalculation.js",
+      "automationName": "041 - Levels and Progression - Mark Enrollment for Level Recalculation",
+      "triggerTable": "Enrollments (scheduled scan) — or controlled single Enrollment via recordId",
+      "triggerType": null,
+      "recommendedConditions": [
+        "Scheduled reconciliation (Production: every 15 minutes)",
+        "Optional input variable recordId for a controlled single-record proof"
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "042",
+      "file": "airtable/automations/shooting-challenge/042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": null,
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "043",
+      "file": "airtable/automations/shooting-challenge/043-levels-and-progression-set-level-gate-rule-from-next-level.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": null,
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "053",
+      "file": "airtable/automations/shooting-challenge/053-achievements-and-milestones-streak-occurrences-rebuild-and-upsert-from-submissions.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": null,
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "054",
+      "file": "airtable/automations/shooting-challenge/054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js",
+      "automationName": "054 - Achievements and Milestones - Streak Occurrences - Create or Repair Streak XP Event",
+      "triggerTable": "Streak Occurrences",
+      "triggerType": "When record updated",
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "055",
+      "file": "airtable/automations/shooting-challenge/055-achievements-and-milestones-recalculate-current-shooting-streak-from-submission.js",
+      "automationName": "055 - Achievements and Milestones - Recalculate Current Shooting Streak from Submission",
+      "triggerTable": "Submissions",
+      "triggerType": "When record matches conditions",
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "056",
+      "file": "airtable/automations/shooting-challenge/056-achievements-and-milestones-refresh-current-shooting-streaks-daily.js",
+      "automationName": "056 - Achievements and Milestones - Refresh Current Shooting Streaks Daily",
+      "triggerTable": null,
+      "triggerType": "Scheduled time",
+      "recommendedConditions": [],
+      "hasRecordIdInput": false,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "057",
+      "file": "airtable/automations/shooting-challenge/057-achievements-and-milestones-calculate-perfect-week-eligibility.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": null,
+      "recommendedConditions": [],
+      "hasRecordIdInput": false,
+      "hasStatusOut": false,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "058",
+      "file": "airtable/automations/shooting-challenge/058-achievements-and-milestones-create-perfect-week-unlock.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": null,
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": false,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "059",
+      "file": "airtable/automations/shooting-challenge/059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js",
+      "automationName": "059 - Achievements and Milestones - Create XP Event from Achievement Unlock",
+      "triggerTable": "Athlete Achievement Unlocks",
+      "triggerType": "When record updated (or an equivalent native configuration that re-enters",
+      "recommendedConditions": [
+        "Prefer When a record is created or updated on Athlete Achievement Unlocks",
+        "Pending + XP Events linked + Ready for 059 XP? = 0 → run extension script"
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "063",
+      "file": "airtable/automations/shooting-challenge/063-homework-review-and-xp-copy-enrollment-grade-band-to-homework-completion.js",
+      "automationName": "063 - Homework Review and XP - Copy Enrollment Grade Band to Homework Completion",
+      "triggerTable": "Homework Completions",
+      "triggerType": "When record matches conditions",
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "064",
+      "file": "airtable/automations/shooting-challenge/064-homework-review-and-xp-prepare-homework-xp-award.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": null,
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": false,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "065",
+      "file": "airtable/automations/shooting-challenge/065-homework-review-and-xp-create-homework-xp-event.js",
+      "automationName": "065 - Homework Review and XP - Create or Reconcile Homework XP Event",
+      "triggerTable": "Homework Completions",
+      "triggerType": null,
+      "recommendedConditions": [
+        "Homework XP Reconciliation Needed? = 1",
+        "Input variable recordId = triggering Homework Completion record ID"
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "066",
+      "file": "airtable/automations/shooting-challenge/066-achievements-and-milestones-create-shot-milestone-unlocks.js",
+      "automationName": "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
+      "triggerTable": "Enrollments",
+      "triggerType": null,
+      "recommendedConditions": [
+        "Run Shot Milestone Check? is checked"
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "067",
+      "file": "airtable/automations/shooting-challenge/067-homework-link-or-create-completion-from-reflection-quiz.js",
+      "automationName": "067 - Homework - Link or Create Completion from Reflection Quiz",
+      "triggerTable": "Final Reflection Quiz Submissions",
+      "triggerType": null,
+      "recommendedConditions": [
+        "Quiz submission ready for Homework Completion prep (confirm exact UI conditions)",
+        "Input variable recordId = triggering Final Reflection Quiz Submission record ID"
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "068",
+      "file": "airtable/automations/shooting-challenge/068-homework-reconcile-deferred-weekly-summary-links.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": null,
+      "recommendedConditions": [],
+      "hasRecordIdInput": false,
+      "hasStatusOut": false,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "070a",
+      "file": "airtable/automations/shooting-challenge/070a-email-notifications-and-external-handoffs-send-homework-asset-payload-to-make.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": null,
+      "recommendedConditions": [],
+      "hasRecordIdInput": false,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "070b",
+      "file": "airtable/automations/shooting-challenge/070b-email-notifications-and-external-handoffs-send-video-asset-payload-to-make.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": null,
+      "recommendedConditions": [],
+      "hasRecordIdInput": false,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "070c",
+      "file": "airtable/automations/shooting-challenge/070c-email-notifications-and-external-handoffs-verify-async-video-asset-upload.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": null,
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "071",
+      "file": "airtable/automations/shooting-challenge/071-email-notifications-and-external-handoffs-send-homework-feedback-email-webhook.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": null,
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "072",
+      "file": "airtable/automations/shooting-challenge/072-email-notifications-and-external-handoffs-build-weekly-summary-email-package.js",
+      "automationName": "072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package",
+      "triggerTable": "Weekly Athlete Summary",
+      "triggerType": null,
+      "recommendedConditions": [
+        "Build Weekly Email Now? is checked",
+        "Input variable recordId = triggering Weekly Athlete Summary record ID"
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "073",
+      "file": "airtable/automations/shooting-challenge/073-email-notifications-and-external-handoffs-send-video-feedback-parent-email-webhook.js",
+      "automationName": "073 - Email, Notifications, and External Handoffs - Create Video Feedback Communications Hub Handoff",
+      "triggerTable": "Video Feedback",
+      "triggerType": null,
+      "recommendedConditions": [
+        "Parent Feedback Ready? checked",
+        "Parent Feedback Sent? unchecked",
+        "Feedback Posted? checked",
+        "Coach Feedback not empty",
+        "Enrollment not empty",
+        "Submission not empty",
+        "Total Video XP Awarded > 0",
+        "Base XP Awarded > 0"
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "074",
+      "file": "airtable/automations/shooting-challenge/074-email-notifications-and-external-handoffs-send-weekly-summary-email-package-to-make.js",
+      "automationName": "074 - Email, Notifications, and External Handoffs - Create Weekly Athlete Summary Communications Hub Handoff",
+      "triggerTable": "Weekly Athlete Summary",
+      "triggerType": null,
+      "recommendedConditions": [
+        "Weekly Email Ready? checked",
+        "Weekly Email Sent? unchecked",
+        "Send to Make? checked"
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "075",
+      "file": "airtable/automations/shooting-challenge/075-email-notifications-and-external-handoffs-build-challenge-welcome-email.js",
+      "automationName": "075 - Email, Notifications, and External Handoffs - Build Challenge Welcome Email",
+      "triggerTable": "Enrollments",
+      "triggerType": "When record matches conditions",
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "076",
+      "file": "airtable/automations/shooting-challenge/076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js",
+      "automationName": "076 - Daily Submission Communications Hub Handoff",
+      "triggerTable": "Submissions",
+      "triggerType": null,
+      "recommendedConditions": [
+        "Automation 031 is the sole upstream owner that checks",
+        "`Count This Submission?` and `Submission Stat Mode` remain supporting",
+        "Clear `Build Daily Email Now?` after an existing or newly created"
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "077",
+      "file": "airtable/automations/shooting-challenge/077-email-notifications-and-external-handoffs-send-daily-submission-email-package-to-make.js",
+      "automationName": "077 - Email, Notifications, and External Handoffs - Send Daily Submission Email Package to Make",
+      "triggerTable": "Submissions",
+      "triggerType": "When record matches conditions",
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "078A",
+      "file": "airtable/automations/shooting-challenge/078A-email-notifications-and-external-handoffs-enrollment-create-welcome-email-handoff.js",
+      "automationName": "078A - Enrollment -> Create WELCOME Email Handoff",
+      "triggerTable": "Enrollments",
+      "triggerType": null,
+      "recommendedConditions": [
+        "Athlete is not empty.",
+        "Parent Email - Cleaned is not empty.",
+        "Program Instance is not empty.",
+        "Run after Automation 001 has completed its link/writeback."
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "079",
+      "file": "airtable/automations/shooting-challenge/079-email-notifications-and-external-handoffs-send-queue-handoff-to-communications-hub.js",
+      "automationName": "079 – Send to Communications Hub - NEW",
+      "triggerTable": "Email Handoff Queue",
+      "triggerType": null,
+      "recommendedConditions": [
+        "Status is Ready"
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "101",
+      "file": "airtable/automations/shooting-challenge/101-zoom-attendance-xp-award-meeting-xp.js",
+      "automationName": "101 - Zoom Attendance XP - Award Meeting XP",
+      "triggerTable": "Zoom Meetings",
+      "triggerType": "When record matches conditions",
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "111",
+      "file": "airtable/automations/shooting-challenge/111-video-review-and-xp-copy-enrollment-grade-band-to-video-feedback.js",
+      "automationName": "111 - Video Review and XP - Copy Enrollment Grade Band to Video Feedback",
+      "triggerTable": "Video Feedback",
+      "triggerType": "When record matches conditions",
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "112",
+      "file": "airtable/automations/shooting-challenge/112-video-review-and-xp-create-video-feedback-from-submission-asset.js",
+      "automationName": "112 - Video Review and XP - Create Video Feedback from Submission Asset",
+      "triggerTable": "Submission Assets",
+      "triggerType": "When record matches conditions",
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "113",
+      "file": "airtable/automations/shooting-challenge/113-video-review-and-xp-assign-base-video-xp.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": null,
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "114",
+      "file": "airtable/automations/shooting-challenge/114-video-review-and-xp-create-or-update-video-xp-event.js",
+      "automationName": "114 - Video Review and XP - Create or Update Video XP Event",
+      "triggerTable": "Video Feedback",
+      "triggerType": null,
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "115",
+      "file": "airtable/automations/shooting-challenge/115-engineering-test-framework-run-testing-scenario-daily-submission.js",
+      "automationName": "115 - Engineering Test Framework - Run Testing Scenario Daily Submission",
+      "triggerTable": "Testing Scenarios",
+      "triggerType": null,
+      "recommendedConditions": [
+        "Run Test? is checked"
+      ],
+      "hasRecordIdInput": false,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "116",
+      "file": "airtable/automations/shooting-challenge/116-submission-assets-apply-asset-reuse-decision-consequences.js",
+      "automationName": "116 - Submission Assets - Apply Asset Reuse Decision Consequences",
+      "triggerTable": "Submission Assets",
+      "triggerType": null,
+      "recommendedConditions": [
+        "Asset Reuse Decision is not empty"
+      ],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "117",
+      "file": "airtable/automations/shooting-challenge/117-zoom-send-recording-approval-email-to-make.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": null,
+      "recommendedConditions": [],
+      "hasRecordIdInput": true,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "118",
+      "file": "airtable/automations/shooting-challenge/118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": "At a scheduled time (Weekly Sunday 05:00 America/Denver)",
+      "recommendedConditions": [],
+      "hasRecordIdInput": false,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    },
+    {
+      "number": "119",
+      "file": "airtable/automations/shooting-challenge/119-email-notifications-and-external-handoffs-schedule-weekly-summary-email-send.js",
+      "automationName": null,
+      "triggerTable": null,
+      "triggerType": "At a scheduled time (Weekly Sunday 10:00 America/Denver)",
+      "recommendedConditions": [],
+      "hasRecordIdInput": false,
+      "hasStatusOut": true,
+      "evidence": "verified_from_repository",
+      "liveUiConfirmation": "requires_airtable_ui_confirmation"
+    }
+  ]
+}
