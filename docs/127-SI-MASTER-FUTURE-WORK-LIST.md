@@ -17,6 +17,22 @@
 
 ---
 
+## Mike-approved decisions — 2026-08-27
+
+These decisions are authoritative for future implementation prompts and production configuration.
+
+### Streak rewards
+
+After an athlete's shooting streak ends, a new streak begins automatically. Streak achievements and their rewards may be earned again on later qualifying streaks. Deterministic instance keys and deduplication must still prevent duplicate credit for the same streak instance.
+
+### Recorded Zoom meetings
+
+Recorded Zoom meetings do not count toward Perfect Week requirements. They do count toward level-gate advancement and earn **one-half of the normal live-attendance XP**. Live attendance and recorded-meeting credit must remain distinct and must not create duplicate credit for the same meeting.
+
+### 2026–2027 early-bird registration
+
+Use an early-bird registration period for the 2026–2027 challenge. Dates, pricing, eligibility, cutoff behavior, and payment/writeback handling must be defined and tested before activation. This decision does not activate registration or change the current paid-only FUT-003 Make scenario by itself.
+
 ## How to use this document
 
 - This is the single planning list for future work.
@@ -664,9 +680,9 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-029** | Config | Streak values in config (not buried in code) | P2 | Live Tested in PROD | SC-022 | Mike decide repeat-after-break (SC-081); optional supervised break/rebuild test |
 | **SC-033** | Config | Enable/disable switches for major features | P2 | Planned | SC-066 | Inventory switches; document operator map |
 | **SC-062** | Enrollment | Sibling handling works | P2 | Built in Repository | SC-045 | Live sibling parent-email routing test |
-| **SC-081** | XP | Streak economics review | P2 | Decision Needed | SC-029 | Decide whether to change repeat-after-break rules |
+| **SC-081** | XP | Streak economics review | P2 | Decision resolved — repeat rewards automatically | SC-029 | Decide whether to change repeat-after-break rules |
 | **SC-082** | XP | Early level-gate tuning for next season | P2 | Planned | SC-025 | Load numbers when season config ready |
-| **SC-085** | Zoom | Live bonuses (if configured) work | P2 | Installed in PROD | SC-022 | Confirm which bonuses still desired; test |
+| **SC-085** | Zoom | Live bonuses (if configured) work | P2 | Decision resolved — recorded meetings count for level gates and half XP | SC-022 | Confirm which bonuses still desired; test |
 | **SC-093** | Zoom | Public website Zoom pages accurate | P2 | Installed in PROD | SC-146 | Confirm Airtable publish filters after wipe |
 | **SC-103** | Website | Leaderboard | P2 | Live Tested in PROD | SC-068 | Fix Schmidt Grade/School Year (EXT-QA-005); season content hygiene |
 | **SC-104** | Website | Homework catalog | P2 | **Complete** (FUT-014, 2026-08-26) | SC-054 | PHA-backed live catalog at `/shoot/homework`; Brief Description = `Homework Library.Brief Description - Display`; commits `cdd2b97` / `4a26aa4`; optional: unpublish stale Week 10 prior-season rows (EXT-QA-006) |
@@ -686,7 +702,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-144** | Website | Rename Softr-named publish flag | P2 | Planned | SC-054 | Rename in schema wave; update web queries |
 | **SC-145** | Platform | Repo health / security audit follow-ups | P2 | Planned | ΓÇö | Triage findings into SC items as needed |
 | **SC-146** | Enrollment | Re-open Fillout daily intake when season ready | P2 | Deferred | SC-060, SC-135 | Turn on only after SC-135 dry-run |
-| **SC-066** | Enrollment | Early-bird periods supported if desired | P3 | Decision Needed | SC-065 | Decide if 2026ΓÇô27 uses early-bird; config if yes |
+| **SC-066** | Enrollment | Early-bird periods supported for 2026–2027 | P3 | Decision resolved — use early-bird registration | SC-065 | Decide if 2026ΓÇô27 uses early-bird; config if yes |
 | **SC-067** | Enrollment | Program Instance multi-year design | P3 | Tracked under V2-013 | SC-032, SC-046 | Dedicated architecture wave later ΓÇö do not block season launch on PI redesign |
 | **SC-100** | Assets | Attachment / Drive retirement strategy | P3 | Deferred | SC-095 | Plan retirement after S3 paths stable for HW+video |
 | **SC-116** | Website | Admin roadmap (gated read-only first) | P3 | Built in Repository | SC-112 | Staff auth then read-only aggregates; no writes in first slice |
