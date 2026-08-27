@@ -20,7 +20,7 @@
 
 1. **No active production script** uses `configQuery.records[0]` (only `_superseded/` 117a/117b).
 2. **Config selection** is centralized in `lib/config-selection/index.js` with fail-closed hierarchy.
-3. **057 Perfect Week video minimum** — Repo **v2.2** is Config-only (fail-closed): year-aware lookup of Config field **`Perfect Week Video MInimum`** (live Airtable spelling; typo — rename recommended). Field verified Production `appn84sqPw03zEbTT` (`fldqRxjWGXcbUZUg3`, value **3** on all school-year rows). **No** `legacyRequiredVideoCount: 3`. WAS formula still requires manual lookup + formula update. Deploy: [`deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md`](./deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md). **Production 057 has not been pasted** unless Mike confirms.
+3. **057 Perfect Week video minimum** — Repo **v2.2** Config-only, year-aware lookup of **`Perfect Week Video Minimum`** (`fldqRxjWGXcbUZUg3`, value **3**). Config field renamed in Production (2026-08-27). WAS lookup + formula updated. **057 repaste required** — prod script still references typo `MInimum`. Deploy: [`deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md`](./deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md).
 4. **XP amounts** are read from XP Reward Rules in 010/054/059/065/101 — not hardcoded in award paths.
 5. **Operator emails** in 075/077 are operational defaults, not business rules.
 
@@ -69,7 +69,4 @@ _… and 60 more rows in JSON._
 ## Mike actions
 
 - UI paste repo fixes already landed (054 v5.6 duplicate-rule guard, 066 v3.3 link-ID grade band).
-- Confirm Config field name matches repo (`Perfect Week Video MInimum`) — typo rename is a **separate controlled schema task**.
-- Add WAS lookup **`Config: Perfect Week Video MInimum`** from Enrollment → `Config - Lnk` → `Perfect Week Video MInimum`.
-- Update WAS formula **`Perfect Week Video Requirement Met?`** (see deploy checklist).
-- Paste **057 v2.2** from repo after review — **not pasted to Production unless Mike confirms**.
+- **057 v2.2** — Config field renamed to **`Perfect Week Video Minimum`**; WAS lookup + formula live; **repaste 057** so script matches renamed field (Mike 2026-08-27).

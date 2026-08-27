@@ -83,7 +83,8 @@ test("config-selection module rejects first-record fallback flag", () => {
 test("057 documents Config-driven Perfect Week video minimum without legacy fallback", () => {
   const file = listActiveScripts().find((f) => f.startsWith("057-"));
   const body = fs.readFileSync(path.join(AUTOMATIONS, file), "utf8");
-  assert.match(body, /Perfect Week Video MInimum/);
+  assert.match(body, /Perfect Week Video Minimum/);
+  assert.doesNotMatch(body, /Perfect Week Video MInimum/);
   assert.doesNotMatch(body, /legacyRequiredVideoCount\s*:/);
   assert.match(body, /requiredDailyCount:\s*7/);
 });

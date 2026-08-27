@@ -32,12 +32,12 @@ Airtable is the deployed/running copy.
  * Calculates Perfect Week helper fields on one Weekly Athlete Summary record.
  *
  * Version 2.2 updates (SC-034 config-only video minimum):
- * - Requires Config field `Perfect Week Video MInimum` (live Airtable name; rename typo recommended).
- *   Year-aware Config selection; fail-closed when table/field missing or value blank/invalid/ambiguous.
+ * - Requires Config field `Perfect Week Video Minimum` (year-aware selection; fail-closed when
+ *   table/field missing or value blank/invalid/ambiguous). Field renamed from typo 2026-08-27.
  * - Removed legacy video-minimum hardcode (was literal 3 in CONFIG).
  *
  * Version 2.1 updates (SC-034 config-driven video minimum + date-key hardening):
- * - Resolves year-aware Config when `Perfect Week Video MInimum` exists; fail-closed on
+ * - Resolves year-aware Config when `Perfect Week Video Minimum` exists; fail-closed on
  *   missing/invalid Config selection or threshold.
  * - addDaysToDateKey uses explicit UTC calendar formatting (no toISOString slice).
  *
@@ -101,7 +101,7 @@ Airtable is the deployed/running copy.
  *    Count This Submission? = true, Activity Date inside the official week, not
  *    future-dated, and uploaded within the configured grace period (or manual exception).
  * 2. Each official day must meet at least 1/7 of the weekly shot goal.
- * 3. Athlete must have at least the Config `Perfect Week Video MInimum` qualifying Video Feedback
+ * 3. Athlete must have at least the Config `Perfect Week Video Minimum` qualifying Video Feedback
  *    records for the week.
  * 4. Athlete must attend Zoom if a Zoom meeting exists for the linked Week
  *    (live Attendees OR Stage 17 approved recording credit that counts for Perfect Week).
@@ -138,8 +138,7 @@ const CONFIG = {
 
   configFields: {
     activeSchoolYear: "Active School Year",
-    /** Live Airtable name (typo: capital I in MInimum — rename recommended) */
-    perfectWeekVideoMinimum: "Perfect Week Video MInimum",
+    perfectWeekVideoMinimum: "Perfect Week Video Minimum",
   },
 
   weeklyFields: {

@@ -47,7 +47,8 @@ const CONFIG_ROWS = [
 ];
 
 test("057 uses live Config field name and has no legacy video minimum hardcode", () => {
-  assert.match(SCRIPT, /Perfect Week Video MInimum/);
+  assert.match(SCRIPT, /Perfect Week Video Minimum/);
+  assert.doesNotMatch(SCRIPT, /Perfect Week Video MInimum/);
   assert.doesNotMatch(SCRIPT, /legacyRequiredVideoCount\s*:/);
   assert.doesNotMatch(SCRIPT, /requiredVideoCount:\s*3\b/);
   assert.doesNotMatch(SCRIPT, /fld[A-Za-z0-9]{10,}/);

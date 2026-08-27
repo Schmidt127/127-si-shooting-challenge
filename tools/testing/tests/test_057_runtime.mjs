@@ -186,8 +186,8 @@ function buildBase({
     ];
     const configCells = { "Active School Year": "2026-2027" };
     if (!omitConfigVideoField) {
-      configFields.push({ name: "Perfect Week Video MInimum", type: "number" });
-      configCells["Perfect Week Video MInimum"] = configVideoMinimumValue;
+      configFields.push({ name: "Perfect Week Video Minimum", type: "number" });
+      configCells["Perfect Week Video Minimum"] = configVideoMinimumValue;
     }
     tables.push(new MockTable("Config", configFields, [
       new MockRecord(IDS.config2026, configCells),
@@ -434,7 +434,7 @@ test("missing Config table fails closed", async () => {
 test("missing Config video minimum field fails closed", async () => {
   const base = buildBase({ omitConfigVideoField: true });
   const { error } = await run057(base);
-  assert.match(error?.message ?? "", /Config field "Perfect Week Video MInimum" is missing/);
+  assert.match(error?.message ?? "", /Config field "Perfect Week Video Minimum" is missing/);
 });
 
 test("config field present: invalid video minimum fails closed", async () => {

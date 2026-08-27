@@ -10,9 +10,10 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 #### Changed
 - **057 v2.2 (SC-034, 2026-08-27)** — Perfect Week video minimum is Config-only (fail-closed):
-  year-aware lookup of Config field **`Perfect Week Video MInimum`** (`fldqRxjWGXcbUZUg3`,
-  number, value 3); removed `legacyRequiredVideoCount: 3`. WAS formula target uses lookup
-  **`Config: Perfect Week Video MInimum`**. Deploy:
+  year-aware lookup of Config field **`Perfect Week Video Minimum`** (`fldqRxjWGXcbUZUg3`,
+  number, value 3); removed `legacyRequiredVideoCount: 3`. WAS formula uses lookup
+  **`Config: Perfect Week Video Minimum`**. **Production** (Mike 2026-08-27): Config field renamed from typo;
+  WAS lookup + formula updated. **Repaste 057 v2.2** — prod script still references typo field name. Deploy:
   [`057-v2.1-perfect-week-config-video-minimum.md`](./docs/deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md).
 - **057 v2.1 (SC-034, 2026-08-27)** — Perfect Week video minimum Config path + date-key
   hardening (`addDaysToDateKey` avoids UTC ISO slice). Superseded by v2.2 config-only pass.

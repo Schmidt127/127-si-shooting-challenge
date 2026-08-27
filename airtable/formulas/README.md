@@ -44,23 +44,23 @@ Config `Perfect Week Submission Grace Hours`. Repository mirror:
 
 | Item | Value |
 |------|-------|
-| Config table field | **`Perfect Week Video MInimum`** (note capital **I** — rename typo recommended) |
+| Config table field | **`Perfect Week Video Minimum`** |
 | Field id | `fldqRxjWGXcbUZUg3` |
 | Type | number (precision 0) |
-| Active rows | value **3** on each school-year Config row (2026-08-27) |
+| Active rows | value **3** on each school-year Config row |
 
-**Prerequisite:** Add WAS lookup **`Config: Perfect Week Video MInimum`** from Enrollment → `Config - Lnk` → `Perfect Week Video MInimum` (year-scoped link must resolve to one row).
+**WAS lookup (Production):** **`Config: Perfect Week Video Minimum`** from Enrollment → `Config - Lnk` → `Perfect Week Video Minimum`.
 
-**Previous production formula (hardcoded — retire after lookup exists):**
+**Previous production formula (hardcoded — retired):**
 
 ```
 IF({Perfect Week Video Count} >= 3, 1, 0)
 ```
 
-**Target formula (Config lookup — paste after lookup field exists):**
+**Current production formula (Config lookup — live 2026-08-27):**
 
 ```
-IF({Perfect Week Video Count} >= {Config: Perfect Week Video MInimum}, 1, 0)
+IF({Perfect Week Video Count} >= {Config: Perfect Week Video Minimum}, 1, 0)
 ```
 
 Contract mirror: `lib/config-selection/perfect-week-video-minimum.js`.  
@@ -152,7 +152,7 @@ IF({Attempts}, {Makes} / {Attempts}, BLANK())
 |------|-------|-------|-------|
 | 2026-08-25 | Submissions | Duplicate Key | Include `Activity Date - Time` after date; blank → `NO_TIME`; 007 unchanged |
 | 2026-08-16 | Submissions | Activity Date Key | UTC calendar date so midnight-UTC date-only values keep the entered day (not prior Denver day) |
-| 2026-08-27 | Weekly Athlete Summary | Perfect Week Video Requirement Met? | Config lookup target — field `Perfect Week Video MInimum` on Config; WAS lookup pending paste |
+| 2026-08-27 | Weekly Athlete Summary | Perfect Week Video Requirement Met? | Config lookup live — `Config: Perfect Week Video Minimum`; field renamed from typo; **057 repaste pending** |
 | 2026-08-16 | Submissions | Submitted Same Day? | Activity Date side uses UTC to match Activity Date Key |
 
 ## Review Process

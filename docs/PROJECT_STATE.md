@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-08-27** (SC-034 — 057 v2.2 Config-only Perfect Week video minimum; see `docs/deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md`)
+Last updated: **2026-08-27** (SC-034 — Config field `Perfect Week Video Minimum` renamed in prod; **057 v2.2 repaste required**)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
