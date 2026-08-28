@@ -6,7 +6,7 @@ import {
 } from "../lib/registration";
 
 /**
- * Homepage registration gateway — branded Fillout form CTAs below the hero.
+ * Homepage registration gateway — branded Fillout form CTAs at page end.
  */
 
 test.describe("homepage registration gateway", () => {
@@ -20,7 +20,7 @@ test.describe("homepage registration gateway", () => {
     const section = page.locator("#registration-gateway");
     await expect(section).toBeVisible({ timeout: 30_000 });
     await expect(
-      section.getByRole("heading", { name: "Ready to Join the Shooting Challenge?" }),
+      section.getByRole("heading", { name: /Ready to join the 2026–2027 Shooting Challenge/i }),
     ).toBeVisible();
 
     const register = section.getByRole("link", {
@@ -50,7 +50,7 @@ test.describe("homepage registration gateway", () => {
     );
   });
 
-  test("places registration gateway between hero and Why it works", async ({
+  test("places registration gateway after main content sections", async ({
     page,
   }) => {
     await page.goto(".", { waitUntil: "domcontentloaded" });
@@ -58,22 +58,19 @@ test.describe("homepage registration gateway", () => {
     const order = await page.evaluate(() => {
       const hero = document.querySelector("h1");
       const registration = document.querySelector("#registration-gateway");
-      const why = Array.from(document.querySelectorAll("p, span")).find((el) =>
-        /Why it works/i.test(el.textContent || ""),
+      const explore = Array.from(document.querySelectorAll("h2")).find((el) =>
+        /Jump into any part of the program/i.test(el.textContent || ""),
       );
-      if (!hero || !registration || !why) {
+      if (!hero || !registration || !explore) {
         return {
           ok: false,
-          reason: `missing ${!hero ? "hero" : ""} ${!registration ? "registration" : ""} ${!why ? "why" : ""}`.trim(),
+          reason: `missing ${!hero ? "hero" : ""} ${!registration ? "registration" : ""} ${!explore ? "explore" : ""}`.trim(),
         };
       }
-      const position = hero.compareDocumentPosition(registration);
-      const afterHero = (position & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
-      const beforeWhy =
-        (registration.compareDocumentPosition(why) &
-          Node.DOCUMENT_POSITION_FOLLOWING) !==
-        0;
-      return { ok: afterHero && beforeWhy, afterHero, beforeWhy };
+      const afterHero = (hero.compareDocumentPosition(registration) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+      const afterExplore =
+        (explore.compareDocumentPosition(registration) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+      return { ok: afterHero && afterExplore, afterHero, afterExplore };
     });
 
     expect(order.ok, JSON.stringify(order)).toBeTruthy();

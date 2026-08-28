@@ -7,10 +7,16 @@ import { BRAND_ORG_NAME } from "@/lib/brand";
 import { PLAYER_REGISTRATION } from "@/lib/registration";
 
 /** Primary youth audience served by the Shooting Challenge (per program direction). */
-export const PROGRAM_GRADES_SERVED = "grades 1–8";
+export const PROGRAM_GRADES_SERVED = "grades 1–12";
 
 /** Fairfield, Montana — nonprofit home base; not a claim of nationwide in-person coaching. */
 export const PROGRAM_HOME_LOCATION = "Fairfield, Montana";
+
+/** Current published challenge season label. */
+export const CHALLENGE_SEASON_LABEL = "2026–2027 Shooting Challenge";
+
+/** Annual challenge window (Mountain Time program calendar). */
+export const CHALLENGE_DATES = "May 1–June 30";
 
 export const PROGRAM_IDENTITY = {
   orgName: BRAND_ORG_NAME,
@@ -20,20 +26,43 @@ export const PROGRAM_IDENTITY = {
   philosophyTagline: "Basketball is the vehicle. Education is the destination.",
 } as const;
 
+/** Twelve public-facing achievement levels, Beginner through G.O.A.T. */
+export const PROGRAM_LEVEL_LADDER = [
+  "Beginner",
+  "Rookie Shooter",
+  "Developing Shooter",
+  "Consistent Shooter",
+  "Dangerous Shooter",
+  "Hot Hand",
+  "Deadeye",
+  "Sharpshooter",
+  "Pro",
+  "All-Star",
+  "Legend",
+  "G.O.A.T.",
+] as const;
+
 /** National-first site description — used in layout defaults and JSON-LD. */
 export const SITE_DESCRIPTION =
-  "Youth basketball training and shooting challenge for boys and girls in grades 1–8. Daily shooting practice, XP progress tracking, homework, video feedback, and Zoom coaching through Educational Athletics. Based in Fairfield, Montana — train and submit from anywhere.";
+  "Annual online Educational Athletics shooting challenge for boys and girls in grades 1–12. May 1–June 30. Earn XP, climb 12 levels from Beginner to G.O.A.T., complete homework, submit videos for coaching feedback, and train from anywhere in the world.";
 
 /** Homepage absolute document title. */
 export const HOME_PAGE_TITLE =
-  "Youth Basketball Shooting Challenge | Fairfield Basketball Club";
+  "Shooting Challenge | Online Youth Basketball — Earn XP, Climb 12 Levels";
 
 export const HOME_HERO = {
-  eyebrow: "Educational Athletics · 127 Sports Intensity",
-  titleLead: "Youth basketball training with daily shooting practice.",
-  titleAccent: "Track progress. Compete with purpose.",
+  eyebrow: "127 Sports Intensity · Educational Athletics · 100% Online",
+  titleLead: "Earn XP. Climb 12 Levels.",
+  titleAccent: "Become a better basketball player.",
   description:
-    "The Shooting Challenge helps boys and girls in grades 1–8 build real shooting skill through daily submissions, weekly homework, XP and level goals, coach video feedback, and live Zoom check-ins. Based in Fairfield, Montana — families can train and participate from anywhere they can submit.",
+    "The 127 Sports Intensity Shooting Challenge is an annual, two-month online program for boys and girls in grades 1–12. Athletes train at home, submit activity, complete assignments, receive coaching feedback, and progress from Beginner to G.O.A.T. — from anywhere in the world.",
+  factChips: [
+    "Grades 1–12",
+    "Boys & girls",
+    CHALLENGE_DATES,
+    "100% online",
+    "Worldwide",
+  ],
 } as const;
 
 /** Feature banner accessible names for catalog pages (FUT-023). */
@@ -55,12 +84,14 @@ export const REGISTRATION_FACTS = {
 
 /** Remote/nationally accessible elements — only where supported by the product. */
 export const REMOTE_PROGRAM_ELEMENTS = [
-  "Daily shooting and training submissions through the public form",
-  "Weekly homework assignments and skills tutorials on this site",
-  "Live and recorded Zoom coaching sessions",
-  "XP, levels, achievements, and public leaderboard progress tracking",
+  "Annual online challenge participation from anywhere with a basketball, a place to shoot, and internet access",
+  "Shooting activity submissions and progress tracking through the public forms",
+  "Weekly homework assignments, tutorials, and educational-athletics activities on this site",
+  "Video submissions with coaching feedback",
+  "Live and recorded Zoom sessions when scheduled",
+  "XP, levels, achievements, and public leaderboard progress",
 ] as const;
 
 /** In-person scope — do not expand beyond documented Fairfield-area operations. */
 export const IN_PERSON_SCOPE =
-  "In-person Fairfield Basketball Club activities, when offered, are based in Fairfield, Montana and nearby communities. The Shooting Challenge web program and submission forms are accessible online.";
+  "In-person Fairfield Basketball Club activities, when offered, are based in Fairfield, Montana and nearby communities. The Shooting Challenge itself runs 100% online and does not require athletes to live near Fairfield.";
