@@ -28,9 +28,11 @@ No email. No writes to formula outputs, `Perfect Week Eligible?`, unlocks (excep
 
 ## Prerequisites
 
-- `AIRTABLE_API_TOKEN` in `web/.env.local`, `.env.local`, or `.env` — **must include Enrollments read/write** (agent/Cursor PATs are often table-scoped and will fail preflight)
+- `AIRTABLE_API_TOKEN` in `web/.env.local`, `.env.local`, or `.env` — **must include schema.bases:read** and write access to Weeks, WAS, Submissions, Video Feedback, Enrollments, Unlocks, XP Events
 - Production automations **057**, **058**, **059** enabled (059 trigger: Pending unlock, no Shot Milestone filter)
 - Gated test timestamp fields per [`PERFECT-WEEK-FIXTURE-METHOD.md`](./PERFECT-WEEK-FIXTURE-METHOD.md)
+
+`--apply` runs a **preflight** that fails fast when the PAT cannot read schema metadata, the gated enrollment is invisible, or required fields are missing (including unlock `Source Key` vs `Milestone Source Key` for trigger-only).
 
 ## Usage
 

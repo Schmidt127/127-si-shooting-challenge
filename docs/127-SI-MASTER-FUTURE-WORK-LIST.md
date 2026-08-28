@@ -102,6 +102,8 @@ The system must preserve checks for assignment identity, enrollment, challenge/s
 
 **Implementation (2026-08-25):** GitHub **020 v3.8** + **065 v10.4**; contracts in `lib/homework-contracts/assignment-identity.js`. Promotion doc: [FUT-001-homework-assignment-identity-deadline.md](./deploy-checklists/FUT-001-homework-assignment-identity-deadline.md).
 
+**PR #264 (2026-08-28):** Branch `fix/fut-001-homework-assignment-identity` — commit `91c65b36` + CI fix `3d497f4a` (065 offline Weeks mock). **Merge-ready** after green `automation-contracts` re-run. Production paste still pending Mike approval.
+
 ### FUT-002 — Audit and remove unused Airtable fields
 
 **Priority:** P2  
@@ -733,6 +735,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-144** | Website | Rename Softr-named publish flag | P2 | **DEFERRED** (general schema typo wave) | SC-054 | Gate summary / Softr flag / HC RID typos — SAFE-MIGRATION-PLAN P3; **Perfect Week Video Minimum** typo fixed 2026-08-27 |
 | **SC-145** | Platform | Repo health / security audit follow-ups | P2 | Planned | ΓÇö | Triage findings into SC items as needed |
 | **SC-146** | Enrollment | Re-open Fillout daily intake when season ready | P2 | Deferred | SC-060, SC-135 | Turn on only after SC-135 dry-run |
+| **SC-147** | Zoom | Recorded meeting half-XP writer (distinct from live 101) | P1 | **PROPOSED** — design brief only | SC-022, SC-087 | Approve brief; add XP Reward Rule; choose automation slot — **do not** overload 117 email |
 | **SC-066** | Enrollment | Early-bird periods supported for 2026–2027 | P3 | Decision resolved — use early-bird registration | SC-065 | Decide if 2026ΓÇô27 uses early-bird; config if yes |
 | **SC-067** | Enrollment | Program Instance multi-year design | P3 | Tracked under V2-013 | SC-032, SC-046 | Dedicated architecture wave later ΓÇö do not block season launch on PI redesign |
 | **SC-100** | Assets | Attachment / Drive retirement strategy | P3 | Deferred | SC-095 | Plan retirement after S3 paths stable for HW+video |
@@ -780,16 +783,25 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **SC-034-057** | COMPLETE | 057 v2.2 live PROD 2026-08-27; `deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md` |
 | **SC-034-059-TRIG** | COMPLETE | Mike 2026-08-27; Pending-only created trigger; `deploy-checklists/059-perfect-week-trigger-coverage.md` |
 | **SC-034-058-059** | COMPLETE | Not required — `docs/testing/perfect-week/PERFECT-WEEK-DEPENDENCY-AUDIT.md` |
-| **SC-PW-E2E** | READY | Harness `tools/testing/sc-pw-e2e.mjs`; Mike runs `--case qualifying --apply` on PROD; docs/testing/perfect-week/SC-PW-E2E.md |
+| **SC-PW-E2E** | READY | Harness `tools/testing/sc-pw-e2e.mjs` + schema preflight (2026-08-28); Mike runs `--case qualifying --apply` on PROD; `docs/testing/perfect-week/SC-PW-E2E.md` |
 | **SC-144** | DEFERRED | General schema typo renames — SAFE-MIGRATION-PLAN P3 |
 | **Field typo rename (general schema)** | DEFERRED | **Perfect Week Video Minimum** typo fixed 2026-08-27; gate summary / Softr flag / HC RID typos deferred |
+
+### 2026-08-28 launch-readiness backend pass
+
+| Item | Status | Evidence |
+|---|---|---|
+| **Weekly email audit** | READY (Mike attestation) | `audits/2026-08-28-weekly-email-pipeline-audit.md` — 118→072→119→074→079 Hub chain |
+| **SC-PW-E2E preflight** | COMPLETE (repo) | `preflightApplyAccess`; unlock field resolver (`Source Key` / `Milestone Source Key`) |
+| **SC-147** | PROPOSED | Recorded Zoom half-XP writer — `docs/challenge-year/RECORDED-ZOOM-HALF-XP-DESIGN-BRIEF.md` |
+| **FUT-001 / PR #264** | MERGE-READY (repo) | CI fix `3d497f4a`; Production paste pending |
 
 ### Uncommitted WIP (separate — not complete)
 
 | ID | Title | Status | Evidence |
 |---|---|---|---|
 | **WIP-XP-ACT** | Athlete XP Activity ledger (web + API) | IN PROGRESS | Uncommitted `web/lib/data/xp-activity*` + components; not prod deployed |
-| **WIP-HW-CONTRACTS** | Homework assignment-identity contract tests | IN PROGRESS | Uncommitted `lib/homework-contracts` + 007/020/115 edits; FUT-001 scope |
+| **WIP-HW-CONTRACTS** | Homework assignment-identity (FUT-001) | IN PROGRESS | PR **#264** open — do not duplicate `91c65b36`; merge then paste 020/065 |
 | **WIP-057-TESTS** | 057 runtime + hardcode contract tests | IN PROGRESS | Uncommitted `test_057_runtime.mjs` + `tests/automation-contracts/` |
 
 ---

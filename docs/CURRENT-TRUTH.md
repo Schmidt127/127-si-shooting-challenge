@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-27 (branch `agent/config-automation-reliability` — SC-034/056/057/058/139 automation reliability pass; re-verify with `git rev-parse HEAD`)  
+**Last verification (repo):** 2026-08-28 (branch `cursor/launch-readiness-backend-4904` — SC-PW-E2E preflight, weekly email audit, PR #264 CI fix; re-verify with `git rev-parse HEAD`)  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -176,7 +176,7 @@ Do **not** treat older Automations-table Code-column snapshots as stronger than 
 | **064** | **Production-verified current live** | v12.2 in repo | Live | Do not invent a new version string |
 | **065** | **v10.3** (prod) | **v10.3** | **Live / live-tested** | Dynamic `recordId` from Homework Completion trigger; Production paste verified 2026-08-24 |
 | **066** | **v3.9** (prod) | **v3.9** | **Live / live-tested** | Dynamic `recordId` from Enrollment trigger; replay verified idempotent 2026-08-24 |
-| **072** | **v4.7** (prod) | **v4.7** | **Live / live-tested** | v4.7 shooting days 7/7, goal 150%+, video list, XP 1280; E2E disposable send 2026-08-24 |
+| **072** | **v4.7** (prod attested) | **v4.8** | **Live / paste pending for secure video** | GitHub v4.8 adds Lambda-only parent video URLs; prod may still be v4.7 until Mike paste — [`deploy-checklists/022-v2.2-secure-video-url-pipeline.md`](./deploy-checklists/022-v2.2-secure-video-url-pipeline.md) |
 | **074** | **v3.3** (prod) | **v3.3** | **Live / live-tested** | Weekly summary Hub handoff; E2E with 072 v4.7 2026-08-24 |
 | **070a** | **v4.7** | v4.7 | **Off** by design | Homework upload Make path |
 | **070b** | **v4.7** | v4.7 | Live | |

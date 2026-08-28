@@ -33,6 +33,7 @@ import {
   cleanupPwtestRecords,
   resolveXpRewardAmount,
   buildFailureReport,
+  preflightApplyAccess,
   MANIFEST_PATH,
   EXPECTED_XP_AMOUNT,
   requireToken,
@@ -230,7 +231,7 @@ async function runNonqualifyingVideo(token, baseId, ctx, report, apply) {
   return report;
 }
 
-async function runTriggerOnly(token, baseId, ctx, report, apply) {
+async function runTriggerOnly(token, baseId, ctx, report, apply, preflight = null) {
   if (!apply) {
     report.plan = {
       ...buildDryRunPlan(ctx, { videoCount: 0 }),
@@ -246,7 +247,7 @@ async function runTriggerOnly(token, baseId, ctx, report, apply) {
     return report;
   }
 
-  report.created = await createTriggerOnlyUnlock(token, baseId, ctx);
+  report.created = await createTriggerOnlyUnlock(token, baseId, ctx, preflight || {});
   ctx.unlockId = report.created.unlockId;
 
   report.stage059 = await pollTriggerOnly059(token, baseId, ctx, report.created.unlockId);
@@ -285,12 +286,18 @@ async function runCase(args) {
   }
 
   const { token, baseId } = requireToken();
+  const preflight = await preflightApplyAccess(token, baseId, args.caseName);
+  report.preflight = {
+    passed: true,
+    unlockSourceField: preflight.unlockSourceField,
+    unlockNotesField: preflight.unlockNotesField,
+  };
   try {
     if (args.caseName === "qualifying") await runQualifying(token, baseId, ctx, report, true);
     else if (args.caseName === "nonqualifying-video") {
       await runNonqualifyingVideo(token, baseId, ctx, report, true);
     } else {
-      await runTriggerOnly(token, baseId, ctx, report, true);
+      await runTriggerOnly(token, baseId, ctx, report, true, preflight);
     }
   } catch (error) {
     const failed = buildFailureReport(error, report);
