@@ -13,6 +13,7 @@ import {
   createRecords,
   updateRecords,
   deleteRecords,
+  listTableNames,
   ROOT,
 } from "./airtable-client.mjs";
 
@@ -71,6 +72,119 @@ export const MANIFEST_PATH = resolve(
   ROOT,
   "docs/testing/perfect-week/fixtures/_sc-pw-e2e-last.json"
 );
+
+/** @type {Map<string, { id: string, fields: Set<string> }> | null} */
+let schemaIndexCache = null;
+
+export async function loadSchemaIndex(token, baseId) {
+  if (schemaIndexCache) return schemaIndexCache;
+  const tables = await listTableNames(token, baseId);
+  const index = new Map();
+  for (const table of tables) {
+    index.set(table.name, {
+      id: table.id,
+      fields: new Set((table.fields || []).map((field) => field.name)),
+    });
+  }
+  schemaIndexCache = index;
+  return index;
+}
+
+export function resetSchemaIndexCache() {
+  schemaIndexCache = null;
+}
+
+export function resolveUnlockSourceKeyField(schema) {
+  const unlockFields = schema.get(TABLES.unlocks)?.fields;
+  if (!unlockFields) return null;
+  if (unlockFields.has("Source Key")) return "Source Key";
+  if (unlockFields.has("Milestone Source Key")) return "Milestone Source Key";
+  return null;
+}
+
+export function resolveUnlockNotesField(schema) {
+  const unlockFields = schema.get(TABLES.unlocks)?.fields;
+  if (!unlockFields) return null;
+  if (unlockFields.has("Notes")) return "Notes";
+  if (unlockFields.has("Coach Note")) return "Coach Note";
+  return null;
+}
+
+function formatAirtableError(err) {
+  const body = err.data?.error;
+  if (body?.type === "UNKNOWN_FIELD_NAME") {
+    return `Unknown field "${body.message?.match(/"([^"]+)"/)?.[1] || "?"}" — schema drift or PAT field scope too narrow`;
+  }
+  if (err.status === 403) {
+    return "PAT forbidden — token may lack table read/write or schema.bases:read";
+  }
+  return err.message || String(err);
+}
+
+/**
+ * Fail fast before --apply when PAT permissions or production schema are insufficient.
+ */
+export async function preflightApplyAccess(token, baseId, caseName) {
+  const failures = [];
+  let schema;
+
+  try {
+    schema = await loadSchemaIndex(token, baseId);
+  } catch (err) {
+    const hint = formatAirtableError(err);
+    const blocked = new Error(
+      `SC-PW-E2E preflight: cannot read base schema. ${hint}. ` +
+        "Use Mike's production PAT with schema.bases:read and write access to disposable tables."
+    );
+    blocked.stage = "preflight";
+    throw blocked;
+  }
+
+  for (const tableName of Object.values(TABLES)) {
+    if (!schema.has(tableName)) failures.push(`Missing table: ${tableName}`);
+  }
+
+  const submissionFields = schema.get(TABLES.submissions)?.fields || new Set();
+  for (const fieldName of [
+    "Perfect Week Test Record?",
+    "Perfect Week Test Submitted At",
+    "Enrollment",
+    "Week",
+    "Activity Date",
+    "Shot Total",
+    "Weekly Athlete Summary",
+  ]) {
+    if (!submissionFields.has(fieldName)) {
+      failures.push(`Submissions missing field: ${fieldName}`);
+    }
+  }
+
+  const unlockSourceField = resolveUnlockSourceKeyField(schema);
+  if (caseName === "trigger-only" && !unlockSourceField) {
+    failures.push(
+      "Athlete Achievement Unlocks missing Source Key or Milestone Source Key (trigger-only case)"
+    );
+  }
+
+  try {
+    await verifyGatedEnrollmentActive(token, baseId, GATED_ENROLLMENT_ID);
+  } catch (err) {
+    failures.push(err.message);
+  }
+
+  if (failures.length) {
+    const err = new Error(`SC-PW-E2E preflight failed:\n- ${failures.join("\n- ")}`);
+    err.stage = "preflight";
+    err.diagnostic = { failures, caseName, unlockSourceField };
+    throw err;
+  }
+
+  return {
+    schema,
+    unlockSourceField: unlockSourceField || "Source Key",
+    unlockNotesField: resolveUnlockNotesField(schema),
+  };
+}
 
 const CASE_WEEK_ANCHORS = Object.freeze({
   qualifying: "2027-06-06",
@@ -307,9 +421,13 @@ export async function createDisposableFixture(token, baseId, ctx, { videoCount =
   return created;
 }
 
-export async function createTriggerOnlyUnlock(token, baseId, ctx) {
+export async function createTriggerOnlyUnlock(token, baseId, ctx, schemaHints = {}) {
   assertPwtestLabel(ctx.weekName, "Week Name");
   await verifyGatedEnrollmentActive(token, baseId, ctx.enrollmentId);
+
+  const unlockSourceField =
+    schemaHints.unlockSourceField || resolveUnlockSourceKeyField(schemaHints.schema || new Map()) || "Source Key";
+  const unlockNotesField = schemaHints.unlockNotesField ?? resolveUnlockNotesField(schemaHints.schema || new Map());
 
   const created = {
     enrollmentId: ctx.enrollmentId,
@@ -339,19 +457,19 @@ export async function createTriggerOnlyUnlock(token, baseId, ctx) {
   const achievementId = await fetchAchievementId(token, baseId);
   const sourceKey = ctx.sourceKey;
 
-  const unlockRes = await createRecords(token, baseId, TABLES.unlocks, [
-    {
-      fields: {
-        Enrollment: [ctx.enrollmentId],
-        Week: [created.weekId],
-        Achievement: [achievementId],
-        "Active?": true,
-        "XP Award Status": "Pending",
-        "Source Key": sourceKey,
-        Notes: `${ctx.notesLabel}|trigger-only`,
-      },
-    },
-  ]);
+  const unlockFields = {
+    Enrollment: [ctx.enrollmentId],
+    Week: [created.weekId],
+    Achievement: [achievementId],
+    "Active?": true,
+    "XP Award Status": "Pending",
+    [unlockSourceField]: sourceKey,
+  };
+  if (unlockNotesField) {
+    unlockFields[unlockNotesField] = `${ctx.notesLabel}|trigger-only`;
+  }
+
+  const unlockRes = await createRecords(token, baseId, TABLES.unlocks, [{ fields: unlockFields }]);
   created.unlockId = unlockRes.records[0].id;
   console.log(`created Athlete Achievement Unlock ${created.unlockId}`);
   return created;
@@ -728,7 +846,7 @@ export async function cleanupPwtestRecords(token, baseId, manifest) {
     ? await listUnlocksForWeek(token, baseId, manifest.created.enrollmentId, manifest.created.weekId)
     : [];
   for (const row of unlocks) {
-    const notes = String(row.fields?.Notes || "");
+    const notes = String(row.fields?.Notes || row.fields?.["Coach Note"] || "");
     const weekLinked = (row.fields?.Week || [])[0]?.id === manifest.created.weekId;
     if (!weekLinked && !notes.startsWith(PWTEST_PREFIX)) continue;
     await deleteRecords(token, baseId, TABLES.unlocks, [row.id]);

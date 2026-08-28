@@ -16,6 +16,9 @@ import {
   GATED_ENROLLMENT_ID,
   evaluateWasVideoRequirementMet,
   EXPECTED_XP_AMOUNT,
+  resolveUnlockSourceKeyField,
+  resolveUnlockNotesField,
+  TABLES,
 } from "../lib/sc-pw-e2e-lib.mjs";
 
 function test(name, fn) {
@@ -101,6 +104,25 @@ test("evaluateWasExpectations — nonqualifying video (2 videos)", () => {
 
 test("expected XP amount constant is 100", () => {
   assert.equal(EXPECTED_XP_AMOUNT, 100);
+});
+
+test("resolveUnlockSourceKeyField prefers Source Key then Milestone Source Key", () => {
+  const withSourceKey = new Map([
+    [TABLES.unlocks, { fields: new Set(["Source Key", "Milestone Source Key"]) }],
+  ]);
+  const milestoneOnly = new Map([
+    [TABLES.unlocks, { fields: new Set(["Milestone Source Key"]) }],
+  ]);
+  assert.equal(resolveUnlockSourceKeyField(withSourceKey), "Source Key");
+  assert.equal(resolveUnlockSourceKeyField(milestoneOnly), "Milestone Source Key");
+  assert.equal(resolveUnlockSourceKeyField(new Map()), null);
+});
+
+test("resolveUnlockNotesField prefers Notes then Coach Note", () => {
+  const withNotes = new Map([[TABLES.unlocks, { fields: new Set(["Notes", "Coach Note"]) }]]);
+  const coachOnly = new Map([[TABLES.unlocks, { fields: new Set(["Coach Note"]) }]]);
+  assert.equal(resolveUnlockNotesField(withNotes), "Notes");
+  assert.equal(resolveUnlockNotesField(coachOnly), "Coach Note");
 });
 
 console.log("\nSC-PW-E2E contract tests passed.");
