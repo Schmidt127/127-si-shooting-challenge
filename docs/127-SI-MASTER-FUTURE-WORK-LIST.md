@@ -262,6 +262,46 @@ When Mike corrects a video and supplies a Custom Video File Name, provide a safe
 
 Keep the S3 bucket private and preserve the Lambda viewer architecture.
 
+### FUT-010 — Delete Airtable intake attachments after verified S3 upload
+
+**Priority:** P1  
+**Status:** Ready for prompt  
+**Systems:** Airtable, Submission Assets, Homework Completions, AWS S3, Lambda viewer pipeline
+
+Reduce Airtable storage usage by deleting the original Airtable attachment after the uploaded file has been successfully written to AWS S3 and the durable file path is confirmed.
+
+**Requirements:**
+
+- Apply to both homework and video uploads.
+- Confirm `Upload Status = Uploaded`.
+- Confirm the S3 object exists and is accessible through the expected AWS storage path.
+- Confirm the stored S3 key is present.
+- Confirm the Lambda viewer URL or other approved parent-facing URL is valid where applicable.
+- Delete only the Airtable attachment contents.
+- Never delete the Airtable record.
+- Never delete the S3 object.
+- Never delete an attachment when the upload is pending, failed, incomplete, or uncertain.
+- Preserve all Airtable record links, S3 storage keys, upload status, review status, XP links, and audit metadata.
+- Make the deletion idempotent and safe to retry.
+- Include a reconciliation process for records where the Airtable attachment remains after a successful upload.
+- Prevent reprocessing from creating duplicate S3 objects, duplicate Video Feedback records, duplicate Homework Completions, or duplicate XP.
+- Add a dry-run mode before any destructive attachment cleanup.
+- Require logging of record ID, asset purpose, S3 key, verification result, deletion result, and failure reason.
+- Do not delete Airtable attachments until the AWS verification step has passed.
+
+**Related items:** FUT-007 (future AWS media naming), FUT-009 (AWS storage structure and corrected-video workflow), SC-094 (video storage on program-owned S3), SC-095 (homework storage on S3 via 070a), SC-096 (canonical HTTPS URLs on assets), SC-099 (writeback verification via 070c), SC-100 (attachment / Drive retirement strategy — broader planning; remains deferred).
+
+**Acceptance criteria:**
+
+1. A successfully uploaded homework attachment is verified in S3 and then removed from Airtable.
+2. A successfully uploaded video attachment is verified in S3 and then removed from Airtable.
+3. Failed or uncertain uploads retain their Airtable attachment.
+4. Re-running the cleanup does not create duplicate files or fail incorrectly.
+5. S3/Lambda links continue to work after the Airtable attachment is removed.
+6. The Airtable record and all application metadata remain intact.
+7. A dry-run report identifies eligible, skipped, and failed records without deleting anything.
+8. Automated tests cover successful cleanup, failed upload, missing S3 object, invalid URL, retry, and duplicate-processing cases.
+
 ---
 
 ## C. Website and athlete experience
