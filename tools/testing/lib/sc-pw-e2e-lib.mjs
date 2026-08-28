@@ -33,7 +33,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 
 export const PWTEST_PREFIX = "PWTEST|";
 export const PROGRAM_INSTANCE_ID = "rec5mEM0YPqPqq0hZ";
-export const GOAL_5000_ID = "recQJRxpaBgwN42Un";
+export const GOAL_5000_ID = "recHE7FhreD1jqfXm";
 export const PERFECT_WEEK_RULE_KEY = "PERFECT_WEEK";
 export const EXPECTED_XP_AMOUNT = 100;
 export const SHOTS_PER_DAY = 715;
