@@ -204,7 +204,7 @@ export async function preflightApplyAccess(token, baseId, caseName) {
 // Past Denver week anchors only — future Activity Dates keep Count This Submission? = 0.
 // Use July 2026 windows to avoid overlap with prior PWTEST runs on 2026-08-02 week.
 const CASE_WEEK_ANCHORS = Object.freeze({
-  qualifying: "2026-07-06",
+  qualifying: "2026-07-27",
   "nonqualifying-video": "2026-07-13",
   "trigger-only": "2026-07-20",
 });
