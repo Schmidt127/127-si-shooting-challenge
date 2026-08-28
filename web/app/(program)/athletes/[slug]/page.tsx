@@ -6,7 +6,7 @@ import {
   AthleteProfileView,
 } from "@/components/athlete/athlete-profile-view";
 import { loadAthleteProfileResult } from "@/lib/data/athlete-profile";
-import { buildPageMetadata, PRIVATE_ROBOTS_NOINDEX } from "@/lib/seo/metadata";
+import { buildAthleteProfilePageMetadata } from "@/lib/seo/athlete-profile-metadata";
 
 type AthleteProfilePageProps = {
   params: Promise<{ slug: string }>;
@@ -17,28 +17,19 @@ export async function generateMetadata({ params }: AthleteProfilePageProps): Pro
   const result = await loadAthleteProfileResult(slug);
 
   if (result.status !== "ok") {
-    return buildPageMetadata({
-      title: "Athlete profile",
-      description: "Athlete profile on the 127 SI Shooting Challenge.",
-      path: `/athletes/${slug}`,
-      robots: PRIVATE_ROBOTS_NOINDEX,
+    return buildAthleteProfilePageMetadata({
+      slug,
+      displayName: null,
+      found: false,
     });
   }
 
   const { identity } = result.data;
-  const description = `${identity.displayName} on the 127 SI Shooting Challenge leaderboard.`;
 
-  return buildPageMetadata({
-    title: `${identity.displayName} | 127 SI Shooting Challenge`,
-    titleAbsolute: true,
-    description,
-    path: `/athletes/${identity.slug}`,
-    robots: PRIVATE_ROBOTS_NOINDEX,
-    openGraph: {
-      type: "profile",
-      title: `${identity.displayName} | Shooting Challenge`,
-      description,
-    },
+  return buildAthleteProfilePageMetadata({
+    slug: identity.slug,
+    displayName: identity.displayName,
+    found: true,
   });
 }
 

@@ -6,24 +6,20 @@ import { SiteContainer } from "@/components/site/site-container";
 import { Separator } from "@/components/ui/separator";
 import { LANDING_URL } from "@/lib/app-config";
 import { BRAND_ORG_NAME } from "@/lib/brand";
+import {
+  FOOTER_CONSENT_COPY,
+  FOOTER_FAQ_HINT,
+  FOOTER_QUICK_LINKS,
+  FOOTER_REGISTRATION_LINKS,
+} from "@/lib/site-chrome/footer-config";
 
 type SiteFooterProps = {
   productName: string;
   navItems?: ProductNavItem[];
 };
 
-const FOOTER_QUICK_LINKS: ProductNavItem[] = [
-  { label: "Leaderboard", href: "/leaderboard" },
-  { label: "Homework", href: "/homework" },
-  { label: "Levels", href: "/levels" },
-  { label: "Tutorials", href: "/tutorials" },
-  { label: "FAQ", href: "/faq" },
-  { label: "Zoom Meetings", href: "/zoom-meetings" },
-  { label: "Game Manual", href: "/game-manual" },
-];
-
 /**
- * Shared program footer — brand stamp, quick links, return to club landing.
+ * Shared program footer — brand stamp, quick links, registration, consent copy.
  */
 export function SiteFooter({
   productName,
@@ -33,7 +29,7 @@ export function SiteFooter({
     <footer className="mt-auto border-t border-border bg-card">
       <div className="h-1 w-full bg-gradient-to-r from-brand-blue via-brand-blue to-brand-orange" aria-hidden />
       <SiteContainer className="py-10 sm:py-12">
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-start lg:gap-16">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)_minmax(0,0.95fr)] lg:items-start lg:gap-12">
           <div className="flex items-start gap-4">
             <BrandLogo
               variant="circle"
@@ -71,20 +67,63 @@ export function SiteFooter({
               ))}
             </nav>
           </div>
+
+          <div className="space-y-4">
+            <div className="space-y-3">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-accent-soft">
+                Join the program
+              </p>
+              <nav aria-label={`${productName} registration links`} className="space-y-3">
+                {FOOTER_REGISTRATION_LINKS.map((item) => (
+                  <div key={item.href}>
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="sc-text-link inline-flex min-h-11 items-center text-sm font-semibold"
+                      aria-label={`${item.label} (opens in a new tab)`}
+                    >
+                      {item.label}
+                      <span aria-hidden className="ml-1 text-xs opacity-80">
+                        ↗
+                      </span>
+                    </a>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                      {item.description}
+                    </p>
+                  </div>
+                ))}
+              </nav>
+            </div>
+
+            <p className="text-xs leading-relaxed text-muted-foreground">
+              {FOOTER_FAQ_HINT}{" "}
+              <Link href="/faq" className="sc-text-link font-semibold">
+                Program FAQ
+              </Link>
+              .
+            </p>
+          </div>
         </div>
 
         <Separator className="my-8" />
 
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-foreground">
-            © <span suppressHydrationWarning>{new Date().getFullYear()}</span> {BRAND_ORG_NAME}. All rights reserved.
+        <div className="space-y-4">
+          <p className="max-w-4xl text-xs leading-relaxed text-muted-foreground">
+            {FOOTER_CONSENT_COPY}
           </p>
-          <a
-            href={LANDING_URL}
-            className="sc-text-link inline-flex min-h-11 items-center text-sm"
-          >
-            Fairfield Basketball Club home
-          </a>
+
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm text-foreground">
+              © <span suppressHydrationWarning>{new Date().getFullYear()}</span> {BRAND_ORG_NAME}. All rights reserved.
+            </p>
+            <a
+              href={LANDING_URL}
+              className="sc-text-link inline-flex min-h-11 items-center text-sm"
+            >
+              Fairfield Basketball Club home
+            </a>
+          </div>
         </div>
       </SiteContainer>
     </footer>

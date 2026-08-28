@@ -45,6 +45,14 @@ describe("site chrome landing links", () => {
     expect(footer).not.toMatch(/hoopchallenges\.com/i);
   });
 
+  it("footer exposes registration links and consent copy", () => {
+    const footer = readSource("components/site/site-footer.tsx");
+    expect(footer).toContain("FOOTER_REGISTRATION_LINKS");
+    expect(footer).toContain("FOOTER_CONSENT_COPY");
+    expect(footer).toContain('rel="noopener noreferrer"');
+    expect(footer).toContain('href="/faq"');
+  });
+
   it("BackToHubLink Home control uses LANDING_URL", () => {
     const hub = readSource("components/layout/back-to-hub-link.tsx");
     expect(hub).toContain('href={LANDING_URL}');
