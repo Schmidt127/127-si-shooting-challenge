@@ -265,7 +265,7 @@ Keep the S3 bucket private and preserve the Lambda viewer architecture.
 ### FUT-010 — Delete Airtable intake attachments after verified S3 upload
 
 **Priority:** P1  
-**Status:** Ready for prompt  
+**Status:** Built in repository — Production apply pending Mike approval (2026-08-28)  
 **Systems:** Airtable, Submission Assets, Homework Completions, AWS S3, Lambda viewer pipeline
 
 Reduce Airtable storage usage by deleting the original Airtable attachment after the uploaded file has been successfully written to AWS S3 and the durable file path is confirmed.
@@ -301,6 +301,8 @@ Reduce Airtable storage usage by deleting the original Airtable attachment after
 6. The Airtable record and all application metadata remain intact.
 7. A dry-run report identifies eligible, skipped, and failed records without deleting anything.
 8. Automated tests cover successful cleanup, failed upload, missing S3 object, invalid URL, retry, and duplicate-processing cases.
+
+**Implementation (2026-08-28):** Shared helpers `lib/intake-attachment-cleanup/`; CLI `tools/airtable/fut_010_intake_attachment_cleanup.py` (dry-run default, reconcile, apply with `--confirm-delete`); extension `airtable/extension-scripts/safe-backfills/fut-010-clear-intake-attachments.js`. Promotion doc: [FUT-010-intake-attachment-cleanup.md](./deploy-checklists/FUT-010-intake-attachment-cleanup.md). Production attachment delete **not** executed — Mike dry-run approval required.
 
 ---
 
