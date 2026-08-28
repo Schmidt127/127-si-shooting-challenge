@@ -40,8 +40,8 @@ test("buildRunContext uses gated enrollment and seven Sunday-start dates", () =>
   const ctx = buildRunContext("qualifying");
   assert.equal(ctx.enrollmentId, GATED_ENROLLMENT_ID);
   assert.equal(ctx.weekDates.length, 7);
-  assert.equal(ctx.weekDates[0], "2026-07-06");
-  assert.equal(ctx.weekDates[6], "2026-07-12");
+  assert.equal(ctx.weekDates[0], "2026-07-27");
+  assert.equal(ctx.weekDates[6], "2026-08-02");
   assert.match(ctx.weekName, /^PWTEST\|/);
   assert.match(ctx.batchKey, /SC-PW-E2E\|qualifying$/);
 });
