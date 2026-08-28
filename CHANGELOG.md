@@ -6,6 +6,21 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Web
+
+#### Changed
+- **Public athlete profile privacy audit (FUT-025, 2026-08-28)** — Centralized
+  `buildAthleteProfilePageMetadata`; profiles remain `noindex` per SC-115 while in-page
+  display follows registration consent. Added allowlist/privacy vitest coverage and Playwright
+  metadata guards.
+- **Unified program footer (FUT-019, 2026-08-28)** — `SiteFooter` now includes registration
+  CTAs, FAQ pointer, and public consent copy on every `ProductShell` page; footer config
+  tests + cross-page Playwright coverage.
+- **Homepage parent clarity (FUT-018, 2026-08-28)** — Trimmed hero CTAs to registration,
+  leaderboard, homework, and FAQ; added “For parents and families” guidance section.
+- **Tutorials & Zoom presentation (FUT-016/017 partial, 2026-08-28)** — Parent-facing catalog
+  copy clarifying in-page vs external media and live/recording availability.
+
 ### Airtable
 
 #### Changed

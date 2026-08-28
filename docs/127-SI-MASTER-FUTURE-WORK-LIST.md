@@ -391,34 +391,42 @@ Redesigned `/shoot/levels` with ascending Level 1–12 order, ladder-style hero 
 ### FUT-016 — Tutorials page redesign
 
 **Priority:** P2  
-**Status:** Planned  
+**Status:** **IN PROGRESS** (presentation polish shipped 2026-08-28; full portfolio redesign deferred)  
 **Systems:** Website Tutorials page, canonical Tutorials & Assets data
 
 Create a new portfolio-style Tutorials page using the approved design tools while preserving the existing links and content relationships. Do not reintroduce the retired duplicate Tutorials table.
 
+**Shipped (2026-08-28):** Parent-facing catalog subtitle clarifying in-page vs external media; metadata description polish; existing `TutorialMediaGridView` contract unchanged.
+
 ### FUT-017 — Zoom Meeting page redesign
 
 **Priority:** P2  
-**Status:** Planned  
+**Status:** **IN PROGRESS** (presentation polish shipped 2026-08-28; full portfolio redesign deferred)  
 **Systems:** Website Zoom page, Airtable Zoom Meetings
 
 Create a new portfolio-style Zoom Meeting page using the approved design tools while preserving current links and meeting information.
 
+**Shipped (2026-08-28):** Catalog copy for live links vs recordings; metadata description polish; existing week-grouped catalog unchanged.
+
 ### FUT-018 — Landing Page and Shooting Challenge page improvements
 
 **Priority:** P1  
-**Status:** Planned  
+**Status:** **Complete** (2026-08-28)  
 **Systems:** Website public pages, SEO metadata, existing content/data contracts
 
 Review and improve the Landing Page and Shooting Challenge page without duplicating existing pages. Adapt existing pages when they already serve the required purpose. Separate prompts should be used for each page.
 
+**Validation (2026-08-28):** Hero CTA hierarchy (registration anchor + core paths); “For parents and families” section; vitest 446 pass · build ✓ · Playwright public-experience/mobile-a11y/footer ✓
+
 ### FUT-019 — Website footer consistency
 
 **Priority:** P2  
-**Status:** Brainstormed  
+**Status:** **Complete** (2026-08-28)  
 **Systems:** Website layout and all public pages
 
 Create and apply one professional, accessible footer across all public website pages. Preserve required navigation, contact, program, and legal/consent information.
+
+**Validation (2026-08-28):** `lib/site-chrome/footer-config.ts` + enhanced `SiteFooter` (quick links, Fillout registration CTAs, FAQ pointer, consent copy); Playwright footer consistency on 6 public routes; vitest footer-config ✓
 
 ---
 
@@ -482,7 +490,7 @@ Add an appropriate FAQ and organization information where supported by the curre
 ### FUT-025 — Sitemap, indexing, and public athlete profiles
 
 **Priority:** P1  
-**Status:** IN PROGRESS (SC-115 indexing cutover complete; athlete profile consent/metadata verification open)  
+**Status:** **Complete** (2026-08-28) — SC-115 cutover verified; athlete profile privacy/metadata audit closed  
 **Systems:** Sitemap, robots, athlete profile metadata, consent assumptions
 
 Create or verify a sitemap and indexability rules for public pages. Public athlete profiles may be indexable using the athlete’s full name because registration consent covers name, image, and likeness promotion. The public profile may display:
@@ -493,6 +501,10 @@ Create or verify a sitemap and indexability rules for public pages. Public athle
 - Approved progress information
 
 Do not expose parent contact information, email addresses, private submission metadata, or sensitive information. The prompt must verify consent assumptions, route stability, metadata uniqueness, and search-engine behavior.
+
+**Policy (verified 2026-08-28):** Program listing pages indexable when `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`; athlete profiles remain **`noindex`** until a separate Mike-approved athlete-indexing cutover. In-page profile HTML uses registration-consent allowlist only (`lib/data/public-athlete-profile.ts`, `PUBLIC_PROFILE_ENROLLMENT_FIELDS`). Metadata excludes grade/school via `buildAthleteProfilePageMetadata`.
+
+**Validation (2026-08-28):** `public-athlete-profile-privacy.test.ts` · `athlete-profile-metadata.test.ts` · existing `search-indexing.spec.ts` · Playwright privacy canaries · vitest 446 pass · build ✓
 
 ### FUT-026 — Final Player Manual before challenge launch
 
