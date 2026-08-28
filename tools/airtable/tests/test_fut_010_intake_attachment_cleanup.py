@@ -8,6 +8,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import MagicMock
 
+from botocore.exceptions import ClientError
+
 HERE = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HERE))
 
@@ -19,7 +21,10 @@ from fut_010_intake_attachment_cleanup import (  # noqa: E402
     process_record,
     reconciliation_formula,
     resolve_category,
+    resolve_list_formula,
+    validate_apply_command,
     verify_record_fields,
+    verify_s3_object,
     writeback_complete,
 )
 
@@ -123,6 +128,53 @@ class TestVerification(unittest.TestCase):
         )
         self.assertFalse(result.verified)
         self.assertEqual(result.reviewer_url_classification, "invalid_host")
+
+
+    def test_canonical_probe_false_blocks(self) -> None:
+        result = verify_record_fields(
+            uploaded_homework_fields(),
+            s3_client=MagicMock(),
+            head_object=lambda _key: True,
+            canonical_probe=lambda _url: False,
+        )
+        self.assertFalse(result.verified)
+        self.assertIn("Canonical File URL probe failed", result.reason)
+
+    def test_aws_head_object_error_fails_closed(self) -> None:
+        s3 = MagicMock()
+        s3.head_object.side_effect = ClientError(
+            {"Error": {"Code": "AccessDenied", "Message": "denied"}},
+            "HeadObject",
+        )
+        head = verify_s3_object(s3, STORAGE_KEY)
+        self.assertFalse(head.exists)
+        self.assertTrue(head.aws_error)
+
+        row = process_record(
+            {"id": "recAWSERR01", "fields": uploaded_homework_fields()},
+            s3_client=s3,
+            dry_run=False,
+            canonical_probe=lambda _url: True,
+        )
+        self.assertEqual(row.action, "skipped_verification_aws_error")
+        self.assertIn("AWS HeadObject error", row.failure_reason)
+
+
+class TestCliSafety(unittest.TestCase):
+    def test_apply_requires_confirm_delete(self) -> None:
+        with self.assertRaises(SystemExit):
+            validate_apply_command("apply", False)
+
+    def test_apply_uses_reconcile_filter_without_record_id(self) -> None:
+        formula = resolve_list_formula("apply", None)
+        self.assertIsNotNone(formula)
+        self.assertIn("Uploaded", formula or "")
+
+    def test_apply_bypasses_reconcile_filter_with_record_id(self) -> None:
+        self.assertIsNone(resolve_list_formula("apply", "recTEST00000001"))
+
+    def test_dry_run_without_record_id_has_no_filter(self) -> None:
+        self.assertIsNone(resolve_list_formula("dry-run", None))
 
 
 class TestProcessRecord(unittest.TestCase):

@@ -9,7 +9,11 @@
 
 ## Summary
 
-After a homework or video intake file is durably stored in S3 and writeback fields verify, remove **only** `Submission Assets.Airtable Attachment` contents. The Airtable record, Storage Key, Canonical File URL, Reviewer fields, child links, XP, and the S3 object remain intact.
+After a homework-route or video-route intake file is durably stored in S3 and writeback fields verify, remove **only** `Submission Assets.Airtable Attachment` contents. The Airtable record, Storage Key, Canonical File URL, Reviewer fields, child links, XP, and the S3 object remain intact.
+
+**In scope:** `Submission Assets.Airtable Attachment` for rows with `Upload Destination = Homework Completions` (homework-route) or `Video Feedback` (video-route).
+
+**Out of scope:** legacy `Homework Completions.Airtable Attachment` (direct HC-level attachment from v3.6 backfill era). HC rows read durable files via linked Submission Asset lookups after upload. A separate future item is required for HC-level attachment retirement.
 
 This is **not** Google Drive cleanup. The intake attachment is transient; S3/Lambda is durable application storage.
 
@@ -71,7 +75,7 @@ Post-upload cleanup runs **after** successful upload verification. It cannot int
 | Path | Purpose |
 |------|---------|
 | `lib/intake-attachment-cleanup/intake-attachment-cleanup.js` | Shared pure verification + decision helpers |
-| `lib/intake-attachment-cleanup/intake-attachment-cleanup.test.js` | 11 offline contract tests |
+| `lib/intake-attachment-cleanup/intake-attachment-cleanup.test.js` | 15 offline contract tests |
 | `tools/airtable/fut_010_intake_attachment_cleanup.py` | CLI: preflight, dry-run, reconcile, apply |
 | `tools/airtable/tests/test_fut_010_intake_attachment_cleanup.py` | Python unit tests (no live AWS/Airtable) |
 | `airtable/extension-scripts/safe-backfills/fut-010-clear-intake-attachments.js` | In-base extension batch (DRY_RUN default) |
@@ -82,9 +86,10 @@ Post-upload cleanup runs **after** successful upload verification. It cannot int
 
 Destructive cleanup is **blocked by default** at three layers:
 
-1. **CLI:** `apply` refuses without `--confirm-delete`
-2. **Extension:** `DRY_RUN=true`, `CONFIRM_DELETE=false`, `VERIFY_S3_OBJECT_EXISTS=false` by default
-3. **Human gate:** Mike must approve dry-run report before any apply
+1. **CLI:** `apply` refuses without `--confirm-delete`; `apply` uses reconcile filter unless `--record-id` is supplied; non-404 AWS HeadObject errors skip per record
+2. **Extension:** `DRY_RUN=true`, `CONFIRM_DELETE=false`, `VERIFY_S3_OBJECT_EXISTS=false` by default — `VERIFY_S3_OBJECT_EXISTS=false` cannot delete
+3. **Shared contract:** `s3ObjectExists === true` and `canonicalUrlReachable === true` required (undefined fails closed)
+4. **Human gate:** Mike must approve dry-run report and sign formula attestation before any apply
 
 **No agent may run `apply` or set `CONFIRM_DELETE=true` on Production without Mike's explicit approval for that run.**
 
@@ -95,8 +100,8 @@ Destructive cleanup is **blocked by default** at three layers:
 ### Phase 0 — Prerequisites (before any delete)
 
 - [ ] C-013 upload path live for homework (**070a**) and video (**070b** + **070c**)
-- [ ] Confirm `Writeback Complete?` formula does **not** require `Airtable Attachment` (Wave 7 formula review)
-- [ ] Confirm `Ready to Send to Make?` / `Upload Ready?` tolerate post-upload attachment clear (or patch formulas first — see `tools/airtable/fix_homework_upload_ready_formula.py` pattern)
+- [ ] Run `python fut_010_intake_attachment_cleanup.py preflight` and review `formulaPipelineSafety` output
+- [ ] **Mike attestation (required):** sign off that Production formulas/views/interfaces do not require `Submission Assets.Airtable Attachment` on `Uploaded` rows — or formulas are patched first
 - [ ] AWS credentials available for `s3:HeadObject` on `shooting-challenge-assets` (read-only)
 
 ### Phase 1 — Dry-run (required first)
@@ -163,6 +168,35 @@ node lib/intake-attachment-cleanup/intake-attachment-cleanup.test.js
 cd tools/airtable && python -m unittest tests.test_fut_010_intake_attachment_cleanup
 node airtable/automations/shooting-challenge/lib/upload-make-lambda-response.test.js
 ```
+
+---
+
+## Formula and pipeline safety (offline analysis + Mike attestation)
+
+`preflight` emits `formulaPipelineSafety` documenting expected post-clear behavior. This cannot be fully proven offline against live Production formulas.
+
+| Field | Depends on attachment? | Expected after clear | Re-upload / duplicate risk |
+|-------|------------------------|--------------------|---------------------------|
+| **Upload Ready?** | Yes | `0` | **Low** — 070a/b use `alreadyUploadedCanonical` (Canonical URL or Uploaded+Storage Key), not Upload Ready? |
+| **Ready to Send to Make?** | Yes | `"Missing: Airtable Attachment"` | **Low** — FUT-010 requires trigger unchecked; 070a/b duplicate guard blocks re-upload |
+| **Why Not Ready for Make?** | Yes | missing-attachment message if trigger rechecked | **Low** — informational only |
+| **Workflow Next Step** | Yes | `"Missing Airtable Attachment"` | **Low** — informational formula |
+| **Upload Status** | No | unchanged | **None** |
+| **Writeback Complete?** | No | unchanged when S3 fields populated | **None** |
+| **Canonical File URL** | No | unchanged | **None** |
+| **Storage Key** | No | unchanged | **None** |
+| **Reviewer File URL** | No | unchanged (token formula) | **None** |
+
+**Reprocessing guards (confirmed in repo):**
+
+- **070a/070b:** `alreadyUploadedCanonical` → `skipped_already_uploaded` when Canonical URL or Uploaded+Storage Key present
+- **070c:** writeback verification only; no upload or delete
+- **022:** triggers on Upload Status change, not attachment presence
+- **020/013:** child creation is pre-link; FUT-010 runs only on Uploaded + writeback complete rows
+
+**Mike attestation (copy into promotion record):**
+
+> I confirm Production formulas/views/interfaces do not require Submission Assets.Airtable Attachment on Uploaded rows for operational workflows, or I have patched those formulas first.
 
 ---
 

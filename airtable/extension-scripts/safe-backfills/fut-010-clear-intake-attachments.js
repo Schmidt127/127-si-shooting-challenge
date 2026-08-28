@@ -10,8 +10,8 @@ Safety:
   - DRY_RUN defaults to true (report only)
   - Set CONFIRM_DELETE = true to apply attachment clears
   - BATCH_LIMIT caps writes per run (default 25)
-  - Requires field eligibility + external verification flags passed in via
-    VERIFY_S3_OBJECT_EXISTS (set true only after operator HeadObject check)
+  - Requires field eligibility + operator attestation via
+    VERIFY_S3_OBJECT_EXISTS (must be true; false fails closed — mirrors passesOperatorS3Gate)
   - Video assets require valid Reviewer File URL (Lambda viewer)
   - Idempotent: already-empty attachments are skipped
   - Never clears attachments when Send to Make Trigger is still checked

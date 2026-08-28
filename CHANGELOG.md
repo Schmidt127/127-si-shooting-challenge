@@ -14,8 +14,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   Shared helpers `lib/intake-attachment-cleanup/`; CLI `tools/airtable/fut_010_intake_attachment_cleanup.py`
   (dry-run default, reconcile, apply with `--confirm-delete`); extension
   `airtable/extension-scripts/safe-backfills/fut-010-clear-intake-attachments.js`.
-  Production apply **not** executed — Mike dry-run approval required. Deploy:
+  Production apply **not** executed — Mike dry-run + formula attestation required. Deploy:
   [`FUT-010-intake-attachment-cleanup.md`](./docs/deploy-checklists/FUT-010-intake-attachment-cleanup.md).
+  **Scope:** Submission Assets intake attachments only; legacy Homework Completions attachments out of scope.
 
 #### Changed
 - **057 v2.2 (SC-034, 2026-08-27)** — Perfect Week video minimum is Config-only (fail-closed):

@@ -180,25 +180,37 @@ def classify_reviewer_url(url: str) -> str:
 
 
 @dataclass
+class S3HeadResult:
+    exists: bool
+    error: str | None = None
+    aws_error: bool = False
+
+
+@dataclass
 class VerificationResult:
     s3_object_exists: bool
     canonical_url_reachable: bool
     reviewer_url_classification: str | None
     verified: bool
     reason: str
+    aws_error: bool = False
 
 
-def verify_s3_object(s3_client: Any, storage_key: str) -> bool:
+def verify_s3_object(s3_client: Any, storage_key: str) -> S3HeadResult:
     if not storage_key:
-        return False
+        return S3HeadResult(exists=False, error="Storage Key missing")
     try:
         s3_client.head_object(Bucket=S3_BUCKET, Key=storage_key)
-        return True
+        return S3HeadResult(exists=True)
     except ClientError as exc:
         code = exc.response.get("Error", {}).get("Code", "")
         if code in ("404", "NoSuchKey", "NotFound"):
-            return False
-        raise
+            return S3HeadResult(exists=False, error="S3 object not found at Storage Key")
+        return S3HeadResult(
+            exists=False,
+            error=f"AWS HeadObject error ({code or 'unknown'})",
+            aws_error=True,
+        )
 
 
 def probe_canonical_url(url: str, timeout: int = 15) -> bool:
@@ -229,9 +241,28 @@ def verify_record_fields(
     if not canonical.startswith("https://"):
         return VerificationResult(False, False, None, False, "Canonical File URL missing or not HTTPS")
 
-    head = head_object or (lambda key: verify_s3_object(s3_client, key))
+    if head_object is not None:
+        s3_ok = head_object(storage_key)
+        aws_error = False
+        s3_reason = "S3 object not found at Storage Key" if not s3_ok else ""
+    else:
+        head_result = verify_s3_object(s3_client, storage_key)
+        s3_ok = head_result.exists
+        aws_error = head_result.aws_error
+        s3_reason = head_result.error or "S3 object not found at Storage Key"
+
     probe = canonical_probe or probe_canonical_url
-    s3_ok = head(storage_key)
+
+    if aws_error:
+        return VerificationResult(
+            False,
+            False,
+            None,
+            False,
+            s3_reason,
+            aws_error=True,
+        )
+
     canonical_ok = probe(canonical) if s3_ok else False
 
     reviewer_class: str | None = None
@@ -248,9 +279,9 @@ def verify_record_fields(
 
     verified = s3_ok and canonical_ok
     reason = "AWS verification passed" if verified else (
-        "S3 object not found at Storage Key" if not s3_ok else "Canonical File URL probe failed"
+        s3_reason if not s3_ok else "Canonical File URL probe failed"
     )
-    return VerificationResult(s3_ok, canonical_ok, reviewer_class, verified, reason)
+    return VerificationResult(s3_ok, canonical_ok, reviewer_class, verified, reason, aws_error=False)
 
 
 def field_eligible(fields: dict[str, Any]) -> tuple[bool, str]:
@@ -388,13 +419,18 @@ def process_record(
         canonical_probe=canonical_probe,
     )
     if not verification.verified:
+        action = (
+            "skipped_verification_aws_error"
+            if verification.aws_error
+            else "skipped_verification_failed"
+        )
         return CleanupRow(
             record_id,
             asset_purpose,
             category,
             storage_key,
             count,
-            "skipped_verification_failed",
+            action,
             "failed",
             "not_attempted",
             verification.reason,
@@ -453,6 +489,15 @@ def reconciliation_formula() -> str:
     )
 
 
+def resolve_list_formula(mode: str, record_id: str | None) -> str | None:
+    """Apply uses reconcile filter unless a single --record-id is supplied."""
+    if record_id:
+        return None
+    if mode in ("reconcile", "apply"):
+        return reconciliation_formula()
+    return None
+
+
 def run_batch(
     *,
     mode: str,
@@ -464,7 +509,7 @@ def run_batch(
 ) -> dict[str, Any]:
     dry_run = not confirm_delete
     token = load_token()
-    formula = reconciliation_formula() if mode == "reconcile" else None
+    formula = resolve_list_formula(mode, record_id)
     records = list_records(token, base_id, record_id=record_id, formula=formula, limit=limit)
 
     s3_client = boto3.client("s3", region_name=S3_REGION)
@@ -485,6 +530,7 @@ def run_batch(
         "baseId": base_id,
         "dryRun": dry_run,
         "confirmDelete": confirm_delete,
+        "recordFilter": "record-id" if record_id else ("reconcile" if formula else "none"),
         "recordCount": len(rows),
         "counts": {},
         "rows": [asdict(r) for r in rows],
@@ -492,6 +538,77 @@ def run_batch(
     for row in rows:
         summary["counts"][row.action] = summary["counts"].get(row.action, 0) + 1
     return summary
+
+
+FORMULA_PIPELINE_SAFETY = {
+    "submissionAssets": {
+        "uploadReady": {
+            "dependsOnAttachment": True,
+            "expectedAfterClear": "0",
+            "reprocessingRisk": "low",
+            "notes": "Flips to 0 after clear. Post-upload rows are already Uploaded; 070a/b duplicate guard uses Canonical File URL + Storage Key, not Upload Ready?.",
+        },
+        "readyToSendToMake": {
+            "dependsOnAttachment": True,
+            "expectedAfterClear": "Missing: Airtable Attachment",
+            "reprocessingRisk": "low",
+            "notes": "Shows missing attachment if Send to Make Trigger is rechecked. FUT-010 requires trigger unchecked; 070a/b alreadyUploadedCanonical blocks duplicate S3 upload.",
+        },
+        "whyNotReadyForMake": {
+            "dependsOnAttachment": True,
+            "expectedAfterClear": "Missing Airtable attachment when trigger checked",
+            "reprocessingRisk": "low",
+            "notes": "Informational only when operator rechecks trigger.",
+        },
+        "workflowNextStep": {
+            "dependsOnAttachment": True,
+            "expectedAfterClear": "Missing Airtable Attachment",
+            "reprocessingRisk": "low",
+            "notes": "Informational formula; does not write or re-trigger automations.",
+        },
+        "writebackComplete": {
+            "dependsOnAttachment": False,
+            "expectedAfterClear": "unchanged when Uploaded + S3 fields populated",
+            "reprocessingRisk": "none",
+        },
+        "uploadStatus": {
+            "dependsOnAttachment": False,
+            "expectedAfterClear": "unchanged (single-select field)",
+            "reprocessingRisk": "none",
+        },
+        "canonicalFileUrl": {
+            "dependsOnAttachment": False,
+            "expectedAfterClear": "unchanged",
+            "reprocessingRisk": "none",
+        },
+        "storageKey": {
+            "dependsOnAttachment": False,
+            "expectedAfterClear": "unchanged",
+            "reprocessingRisk": "none",
+        },
+        "reviewerFileUrl": {
+            "dependsOnAttachment": False,
+            "expectedAfterClear": "unchanged (formula from Reviewer Access Token)",
+            "reprocessingRisk": "none",
+        },
+    },
+    "reprocessingGuards": [
+        "070a/070b alreadyUploadedCanonical blocks duplicate S3 when Canonical URL or Uploaded+Storage Key present",
+        "FUT-010 requires Send to Make Trigger unchecked before delete",
+        "022 triggers on Upload Status change, not attachment presence",
+        "070c verifies writeback fields only; does not re-upload",
+    ],
+    "outOfScope": [
+        "Homework Completions.Airtable Attachment (legacy direct HC attachment)",
+        "Submissions intake fields (HW Sub 1, HW Sub 2, Video Upload)",
+    ],
+    "mikeAttestationRequired": True,
+    "mikeAttestationPrompt": (
+        "I confirm Production formulas/views/interfaces do not require "
+        "Submission Assets.Airtable Attachment on Uploaded rows for operational workflows, "
+        "or I have patched those formulas first."
+    ),
+}
 
 
 def cmd_preflight(base_id: str) -> None:
@@ -515,10 +632,20 @@ def cmd_preflight(base_id: str) -> None:
                 "fieldsPresent": len(READ_FIELDS) - len(missing),
                 "fieldsMissing": missing,
                 "ready": len(missing) == 0,
+                "scope": {
+                    "inScope": "Submission Assets.Airtable Attachment (homework-route and video-route)",
+                    "outOfScope": FORMULA_PIPELINE_SAFETY["outOfScope"],
+                },
+                "formulaPipelineSafety": FORMULA_PIPELINE_SAFETY,
             },
             indent=2,
         )
     )
+
+
+def validate_apply_command(command: str, confirm_delete: bool) -> None:
+    if command == "apply" and not confirm_delete:
+        raise SystemExit("Refusing apply without --confirm-delete")
 
 
 def main() -> None:
@@ -540,7 +667,7 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.command == "apply" and not args.confirm_delete:
-        raise SystemExit("Refusing apply without --confirm-delete")
+        validate_apply_command(args.command, args.confirm_delete)
 
     if args.command == "preflight":
         cmd_preflight(args.base_id)
