@@ -18,6 +18,9 @@ import {
   EXPECTED_XP_AMOUNT,
   resolveUnlockSourceKeyField,
   resolveUnlockNotesField,
+  classify058Outcome,
+  classify059Outcome,
+  inferFailurePoint,
   TABLES,
 } from "../lib/sc-pw-e2e-lib.mjs";
 
@@ -123,6 +126,102 @@ test("resolveUnlockNotesField prefers Notes then Coach Note", () => {
   const coachOnly = new Map([[TABLES.unlocks, { fields: new Set(["Coach Note"]) }]]);
   assert.equal(resolveUnlockNotesField(withNotes), "Notes");
   assert.equal(resolveUnlockNotesField(coachOnly), "Coach Note");
+});
+
+test("classify058Outcome — never ran vs ran failed vs skipped vs unlock created", () => {
+  const sourceKey = "PERFECT_WEEK|recEnroll|recWeek";
+  const wasEligible = {
+    eligible: 1,
+    automationStatus: "Ready",
+    automationError: "",
+    unlockIds: [],
+  };
+  assert.equal(
+    classify058Outcome(wasEligible, [], { expectUnlock: true }).outcome,
+    "058_never_ran"
+  );
+
+  assert.equal(
+    classify058Outcome(
+      { ...wasEligible, automationError: "058 error: missing Source Key field." },
+      []
+    ).outcome,
+    "058_ran_failed"
+  );
+
+  assert.equal(
+    classify058Outcome(
+      { ...wasEligible, automationError: "058 skipped: Enrollment is inactive." },
+      []
+    ).outcome,
+    "058_ran_skipped"
+  );
+
+  const unlocks = [
+    {
+      id: "recUnlock001",
+      fields: {
+        "Active?": true,
+        "Milestone Source Key": sourceKey,
+        "XP Award Status": "Pending",
+      },
+    },
+  ];
+  const linked = classify058Outcome(
+    { ...wasEligible, unlockIds: ["recUnlock001"] },
+    unlocks,
+    { unlockSourceField: "Milestone Source Key", sourceKey }
+  );
+  assert.equal(linked.outcome, "058_created_unlock");
+  assert.equal(linked.sourceKeyMatch, true);
+
+  const unlinked = classify058Outcome(wasEligible, unlocks, {
+    unlockSourceField: "Milestone Source Key",
+    sourceKey,
+  });
+  assert.equal(unlinked.outcome, "058_created_unlock_unlinked");
+});
+
+test("classify059Outcome — never ran vs zero xp vs created", () => {
+  const sourceKey = "PERFECT_WEEK|recEnroll|recWeek";
+  const pendingUnlock = {
+    id: "recUnlock001",
+    fields: { "XP Award Status": "Pending", "Shot Milestone": [] },
+  };
+  assert.equal(
+    classify059Outcome(pendingUnlock, [], { expectXp: true }).outcome,
+    "059_never_ran"
+  );
+
+  assert.equal(
+    classify059Outcome(
+      { id: "recUnlock001", fields: { "XP Award Status": "Awarded", "Shot Milestone": [] } },
+      [],
+      { expectXp: true }
+    ).outcome,
+    "059_ran_zero_xp"
+  );
+
+  const xpRows = [
+    {
+      id: "recXp001",
+      fields: { "Source Key": sourceKey, "XP Points": 100 },
+    },
+  ];
+  const created = classify059Outcome(
+    { id: "recUnlock001", fields: { "XP Award Status": "Awarded", "Shot Milestone": [] } },
+    xpRows,
+    { sourceKey }
+  );
+  assert.equal(created.outcome, "059_created_xp");
+  assert.equal(created.sourceKeyMatch, true);
+});
+
+test("inferFailurePoint uses timeout stage not preflight", () => {
+  const err = new Error("Timeout at stage 058-unlock after 600000ms");
+  err.stage = "058-unlock";
+  err.diagnostic = { outcome: "058_never_ran" };
+  assert.equal(inferFailurePoint(err, { preflight: { passed: true } }), "058-unlock");
 });
 
 console.log("\nSC-PW-E2E contract tests passed.");

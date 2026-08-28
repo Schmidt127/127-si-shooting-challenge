@@ -138,7 +138,10 @@ async function runQualifying(token, baseId, ctx, report, apply) {
     eligible: 1,
   });
 
-  report.stage058 = await poll058Unlock(token, baseId, ctx, { expectUnlock: true });
+  report.stage058 = await poll058Unlock(token, baseId, ctx, {
+    expectUnlock: true,
+    unlockSourceField: report.preflight?.unlockSourceField,
+  });
   if (!report.stage058.pendingBefore059 && !report.stage058.sawPending) {
     const err = new Error("Unlock XP Award Status was not Pending before 059");
     err.stage = "058-unlock";
@@ -146,7 +149,11 @@ async function runQualifying(token, baseId, ctx, report, apply) {
     throw err;
   }
 
-  report.stage059 = await poll059Xp(token, baseId, ctx, { expectXp: true, xpAmount });
+  report.stage059 = await poll059Xp(token, baseId, ctx, {
+    expectXp: true,
+    xpAmount,
+    unlockId: report.stage058.unlockId,
+  });
   const wasFinal = await readWasSnapshot(token, baseId, ctx.wasId);
   report.wasFinal = wasFinal;
 
@@ -206,7 +213,10 @@ async function runNonqualifyingVideo(token, baseId, ctx, report, apply) {
     videoMet: 0,
     eligible: 0,
   });
-  report.stage058 = await poll058Unlock(token, baseId, ctx, { expectUnlock: false });
+  report.stage058 = await poll058Unlock(token, baseId, ctx, {
+    expectUnlock: false,
+    unlockSourceField: report.preflight?.unlockSourceField,
+  });
   report.stage059 = await poll059Xp(token, baseId, ctx, { expectXp: false });
 
   const lifetimeAfter = await verifyLifetimeXpUnchanged(

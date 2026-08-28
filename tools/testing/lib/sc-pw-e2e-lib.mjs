@@ -608,14 +608,175 @@ export async function pollUntil(token, baseId, stage, predicate, { timeoutMs = P
     if (last.pass) return { ...last, waitedMs: Date.now() - start };
     if (last.fatal) {
       const err = new Error(`Fatal at stage ${stage}: ${last.reason || "unknown"}`);
+      err.stage = stage;
       err.diagnostic = last;
       throw err;
     }
     await sleep(POLL_INTERVAL_MS);
   }
   const err = new Error(`Timeout at stage ${stage} after ${timeoutMs}ms`);
+  err.stage = stage;
   err.diagnostic = last;
   throw err;
+}
+
+function normalizeAutomationError(value) {
+  return String(value || "").trim();
+}
+
+function unlockSourceKeyValue(unlock, unlockSourceField) {
+  if (!unlock?.fields || !unlockSourceField) return "";
+  return String(unlock.fields[unlockSourceField] || "").trim();
+}
+
+/**
+ * Classify Automation 058 stage outcome from WAS + unlock rows (read-only).
+ * Outcomes help operators distinguish trigger gaps from script failures.
+ */
+export function classify058Outcome(was, unlocks, { expectUnlock = true, unlockSourceField, sourceKey } = {}) {
+  const automationError = normalizeAutomationError(was?.automationError);
+  const activeUnlocks = (unlocks || []).filter((u) => u.fields?.["Active?"] === true);
+  const unlockCount = activeUnlocks.length;
+  const linked = was?.unlockIds?.length || 0;
+  const eligible = truthy(was?.eligible);
+  const statusReady = was?.automationStatus === "Ready";
+
+  const base = {
+    automationError,
+    unlockCount,
+    linked,
+    eligible,
+    automationStatus: was?.automationStatus,
+    sourceKeyMatch: null,
+  };
+
+  if (automationError.startsWith("058 error:")) {
+    return { ...base, outcome: "058_ran_failed", summary: automationError };
+  }
+  if (automationError.startsWith("058 skipped:")) {
+    return { ...base, outcome: "058_ran_skipped", summary: automationError };
+  }
+
+  if (unlockCount > 1) {
+    return {
+      ...base,
+      outcome: "058_ambiguous_multiple_unlocks",
+      summary: `Found ${unlockCount} active unlocks for enrollment+week`,
+    };
+  }
+
+  if (unlockCount === 1 && linked === 0) {
+    const sourceValue = unlockSourceKeyValue(activeUnlocks[0], unlockSourceField);
+    const sourceKeyMatch = sourceKey ? sourceValue === sourceKey : null;
+    return {
+      ...base,
+      outcome: "058_created_unlock_unlinked",
+      summary: "Unlock exists but WAS Perfect Week Unlock is empty",
+      unlockId: activeUnlocks[0]?.id,
+      unlockSourceKey: sourceValue,
+      sourceKeyMatch,
+    };
+  }
+
+  if (unlockCount === 1 && linked === 1) {
+    const sourceValue = unlockSourceKeyValue(activeUnlocks[0], unlockSourceField);
+    const sourceKeyMatch = sourceKey ? sourceValue === sourceKey : null;
+    return {
+      ...base,
+      outcome: "058_created_unlock",
+      summary: "One active unlock linked to WAS",
+      unlockId: activeUnlocks[0]?.id,
+      unlockSourceKey: sourceValue,
+      sourceKeyMatch,
+    };
+  }
+
+  if (!expectUnlock && unlockCount === 0 && linked === 0) {
+    return { ...base, outcome: "058_no_unlock_expected", summary: "No unlock (expected)" };
+  }
+
+  if (eligible && statusReady && !automationError) {
+    return {
+      ...base,
+      outcome: "058_never_ran",
+      summary:
+        "WAS eligible and Ready but Perfect Week Automation Error is empty and no unlock appeared — " +
+        "058 trigger likely did not fire or automation is OFF",
+    };
+  }
+
+  return {
+    ...base,
+    outcome: "058_waiting",
+    summary: `Waiting (eligible=${eligible}, status=${was?.automationStatus || "?"}, unlockCount=${unlockCount})`,
+  };
+}
+
+/**
+ * Classify Automation 059 stage outcome from unlock row + XP Events (read-only).
+ */
+export function classify059Outcome(unlockRow, xpRows, { expectXp = true, sourceKey } = {}) {
+  const xpCount = (xpRows || []).length;
+  const fields = unlockRow?.fields || {};
+  const status = fields["XP Award Status"];
+  const pending = isPendingAwardStatus(status);
+  const awarded = status === "Awarded" || (typeof status === "object" && status?.name === "Awarded");
+  const milestone = fields["Shot Milestone"];
+  const milestoneBlank = !milestone || (Array.isArray(milestone) && milestone.length === 0);
+
+  const base = {
+    xpCount,
+    xpAwardStatus: status,
+    milestoneBlank,
+    unlockId: unlockRow?.id || null,
+  };
+
+  if (xpCount === 1) {
+    const xpSourceKey = String(xpRows[0]?.fields?.["Source Key"] || "").trim();
+    const sourceKeyMatch = sourceKey ? xpSourceKey === sourceKey : null;
+    return {
+      ...base,
+      outcome: awarded ? "059_created_xp" : "059_created_xp_status_pending",
+      summary: awarded ? "One XP Event linked; unlock Awarded" : "XP Event exists but unlock not Awarded yet",
+      xpId: xpRows[0]?.id,
+      xpSourceKey,
+      sourceKeyMatch,
+    };
+  }
+
+  if (xpCount > 1) {
+    return {
+      ...base,
+      outcome: "059_ambiguous_multiple_xp",
+      summary: `Found ${xpCount} XP Events for source key`,
+    };
+  }
+
+  if (pending && milestoneBlank) {
+    return {
+      ...base,
+      outcome: "059_never_ran",
+      summary: "Unlock still Pending with no XP Event — 059 trigger likely did not fire",
+    };
+  }
+
+  if (awarded && xpCount === 0) {
+    return {
+      ...base,
+      outcome: "059_ran_zero_xp",
+      summary: "Unlock marked Awarded but no XP Event for source key",
+    };
+  }
+
+  if (!expectXp && xpCount === 0) {
+    return { ...base, outcome: "059_no_xp_expected", summary: "No XP (expected)" };
+  }
+
+  return {
+    ...base,
+    outcome: "059_waiting",
+    summary: `Waiting (xpCount=${xpCount}, status=${typeof status === "object" ? status?.name : status})`,
+  };
 }
 
 export async function pollSubmissionFormulas(token, baseId, submissionIds) {
@@ -710,14 +871,26 @@ function isPendingAwardStatus(status) {
   return status === "Pending" || (typeof status === "object" && status?.name === "Pending");
 }
 
-export async function poll058Unlock(token, baseId, ctx, { expectUnlock }) {
+export async function poll058Unlock(token, baseId, ctx, { expectUnlock, unlockSourceField } = {}) {
   let sawPending = false;
+  const schemaHints = unlockSourceField ? { unlockSourceField } : {};
   return pollUntil(token, baseId, "058-unlock", async () => {
     const was = await readWasSnapshot(token, baseId, ctx.wasId);
-    const unlocks = await listUnlocksForWeek(token, baseId, ctx.enrollmentId, ctx.weekId);
+    const unlocks = await listUnlocksForWeek(
+      token,
+      baseId,
+      ctx.enrollmentId,
+      ctx.weekId,
+      schemaHints
+    );
     const activeUnlocks = unlocks.filter((u) => u.fields?.["Active?"] === true);
     const unlockCount = activeUnlocks.length;
     const linked = was.unlockIds.length;
+    const classification = classify058Outcome(was, unlocks, {
+      expectUnlock,
+      unlockSourceField,
+      sourceKey: ctx.sourceKey,
+    });
 
     if (expectUnlock) {
       const unlock = activeUnlocks[0];
@@ -733,7 +906,12 @@ export async function poll058Unlock(token, baseId, ctx, { expectUnlock }) {
         xpAwardStatus: status,
         pendingBefore059: sawPending || isPendingAwardStatus(status),
         sawPending,
-        reason: pass ? "one active unlock" : `unlockCount=${unlockCount}, linked=${linked}`,
+        automationError: was.automationError,
+        outcome: classification.outcome,
+        outcomeSummary: classification.summary,
+        unlockSourceKey: classification.unlockSourceKey,
+        sourceKeyMatch: classification.sourceKeyMatch,
+        reason: pass ? "one active unlock" : classification.summary || `unlockCount=${unlockCount}, linked=${linked}`,
       };
     }
 
@@ -743,15 +921,31 @@ export async function poll058Unlock(token, baseId, ctx, { expectUnlock }) {
       was,
       unlockCount,
       linked,
-      reason: pass ? "no unlock" : `unexpected unlockCount=${unlockCount}`,
+      automationError: was.automationError,
+      outcome: classification.outcome,
+      outcomeSummary: classification.summary,
+      reason: pass ? "no unlock" : classification.summary || `unexpected unlockCount=${unlockCount}`,
     };
   });
 }
 
-export async function poll059Xp(token, baseId, ctx, { expectXp, xpAmount = EXPECTED_XP_AMOUNT }) {
+export async function poll059Xp(token, baseId, ctx, { expectXp, xpAmount = EXPECTED_XP_AMOUNT, unlockId } = {}) {
   return pollUntil(token, baseId, "059-xp", async () => {
     const xpRows = await listXpBySourceKey(token, baseId, ctx.sourceKey);
     const count = xpRows.length;
+    let unlockRow = null;
+    if (unlockId) {
+      try {
+        unlockRow = await getRecord(token, baseId, TABLES.unlocks, unlockId);
+      } catch {
+        unlockRow = null;
+      }
+    }
+    const classification = classify059Outcome(unlockRow, xpRows, {
+      expectXp,
+      sourceKey: ctx.sourceKey,
+    });
+
     if (expectXp) {
       const pass = count === 1 && Number(xpRows[0].fields?.["XP Points"]) === xpAmount;
       return {
@@ -762,11 +956,20 @@ export async function poll059Xp(token, baseId, ctx, { expectXp, xpAmount = EXPEC
         xpActivityDate: xpRows[0]?.fields?.["XP Activity Date"],
         xpActivityDateSource: xpRows[0]?.fields?.["XP Activity Date Source"],
         unlockId: (xpRows[0]?.fields?.["Achievement Unlock"] || [])[0]?.id,
-        reason: pass ? "one XP event" : `xpCount=${count}`,
+        outcome: classification.outcome,
+        outcomeSummary: classification.summary,
+        xpAwardStatus: classification.xpAwardStatus,
+        reason: pass ? "one XP event" : classification.summary || `xpCount=${count}`,
       };
     }
     const pass = count === 0;
-    return { pass, xpCount: count, reason: pass ? "no XP" : `xpCount=${count}` };
+    return {
+      pass,
+      xpCount: count,
+      outcome: classification.outcome,
+      outcomeSummary: classification.summary,
+      reason: pass ? "no XP" : classification.summary || `xpCount=${count}`,
+    };
   });
 }
 
@@ -838,13 +1041,28 @@ export async function verifyLifetimeXpUnchanged(token, baseId, enrollmentId, bas
   };
 }
 
+export function inferFailurePoint(error, report = {}) {
+  if (error.stage) return error.stage;
+  const fromMessage = error.message?.match(/(?:Timeout|Fatal) at stage ([\w-]+)/)?.[1];
+  if (fromMessage) return fromMessage;
+  if (error.diagnostic?.outcome?.startsWith("058_")) return "058-unlock";
+  if (error.diagnostic?.outcome?.startsWith("059_")) return "059-xp";
+  if (report.stage058 && !report.stage059) return "058-unlock";
+  if (report.stage059) return "059-xp";
+  if (error.stage === "preflight" || error.diagnostic?.stage === "preflight") return "preflight";
+  return report.failurePoint || "unknown";
+}
+
 export function buildFailureReport(error, report) {
+  const failurePoint = inferFailurePoint(error, report);
   return {
     ...report,
     failed: true,
-    failurePoint: error.stage || error.diagnostic?.stage || report.stage || "preflight",
+    failurePoint,
     message: error.message,
     diagnostic: error.diagnostic || null,
+    stageOutcome: error.diagnostic?.outcome || null,
+    stageOutcomeSummary: error.diagnostic?.outcomeSummary || null,
   };
 }
 
