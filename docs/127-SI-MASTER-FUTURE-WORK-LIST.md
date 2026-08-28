@@ -45,7 +45,7 @@ Repository and Production closeout for the bounded SC-034 / V2-002 pass:
 | **WAS Config lookup + formula** | **COMPLETE** | Lookup **`Config: Perfect Week Video Minimum`**; formula **`Perfect Week Video Requirement Met?`** live PROD |
 | **Automation 059 trigger correction** | **COMPLETE** | Mike removed `Shot Milestone is not empty` filter; Pending-only created trigger — [`059-perfect-week-trigger-coverage.md`](./deploy-checklists/059-perfect-week-trigger-coverage.md) |
 | **058/059 script changes** | **Not required** | `docs/testing/perfect-week/PERFECT-WEEK-DEPENDENCY-AUDIT.md` — eligibility from 057 + WAS formulas |
-| **Disposable Perfect Week end-to-end test** | **READY** (Mike PROD run) | **SC-PW-E2E** — `tools/testing/sc-pw-e2e.mjs --case qualifying --apply`; harness + offline tests complete 2026-08-27 |
+| **Disposable Perfect Week end-to-end test** | **BLOCKED at 058** (Mike PROD) | **SC-PW-E2E** — preflight + 057 PASS 2026-08-28; automation **058** did not create unlock; evidence `docs/testing/evidence/sc-pw-e2e/` |
 | **General schema field typo renames** | **DEFERRED** | `Perfect Week Video Minimum` typo fixed; gate summary / Softr flag / HC RID typos — SAFE-MIGRATION-PLAN P3; **SC-144** |
 
 ## How to use this document
@@ -783,7 +783,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **SC-034-057** | COMPLETE | 057 v2.2 live PROD 2026-08-27; `deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md` |
 | **SC-034-059-TRIG** | COMPLETE | Mike 2026-08-27; Pending-only created trigger; `deploy-checklists/059-perfect-week-trigger-coverage.md` |
 | **SC-034-058-059** | COMPLETE | Not required — `docs/testing/perfect-week/PERFECT-WEEK-DEPENDENCY-AUDIT.md` |
-| **SC-PW-E2E** | READY | Harness `tools/testing/sc-pw-e2e.mjs` + schema preflight (2026-08-28); Mike runs `--case qualifying --apply` on PROD; `docs/testing/perfect-week/SC-PW-E2E.md` |
+| **SC-PW-E2E** | **BLOCKED at 058** | Harness + preflight complete; PROD qualifying run 2026-08-28: 057 Ready / Eligible=1, **058 unlock missing** — verify automation 058 Live + lifecycle trigger; evidence `docs/testing/evidence/sc-pw-e2e/qualifying-2026-08-28T2252.json` |
 | **SC-144** | DEFERRED | General schema typo renames — SAFE-MIGRATION-PLAN P3 |
 | **Field typo rename (general schema)** | DEFERRED | **Perfect Week Video Minimum** typo fixed 2026-08-27; gate summary / Softr flag / HC RID typos deferred |
 

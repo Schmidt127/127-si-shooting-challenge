@@ -1,0 +1,242 @@
+{
+  "harness": "SC-PW-E2E",
+  "case": "qualifying",
+  "mode": "apply",
+  "startedAt": "2026-08-28T22:52:26.262Z",
+  "created": {
+    "enrollmentId": "rec93mAfo5jKqP3g5",
+    "weekId": "recNzl4dNOtDmJqnV",
+    "wasId": "recl3DmBh22ADPWWe",
+    "submissionIds": [
+      "rec4NgPdA9ZsO7ewa",
+      "recKG1TrHVX96c4c7",
+      "recZpKLUWkph3MtEf",
+      "recX2l6khJ6IWCU3Z",
+      "recMHspHpRE0FCTZ9",
+      "recr9V91TRDVhKnwE",
+      "rechS0HQJ5kpNxhLo"
+    ],
+    "videoIds": [
+      "rechGggViOSvClFeC",
+      "recaObnnT4jh4Tm4s",
+      "recQiy21ptMnxHUYL"
+    ],
+    "unlockId": null,
+    "xpEventIds": []
+  },
+  "stage057": {
+    "pass": true,
+    "was": {
+      "id": "recl3DmBh22ADPWWe",
+      "automationStatus": "Ready",
+      "dailyMet": true,
+      "videoCount": 3,
+      "videoMet": 1,
+      "zoomMeetings": 0,
+      "zoomAttendance": 0,
+      "zoomMet": 1,
+      "homeworkMet": 1,
+      "homeworkAssigned": 0,
+      "eligible": 1,
+      "unlockIds": [],
+      "daysLogged": 7,
+      "lifetimeXpAfterWeek": 300,
+      "xpEarnedThisWeek": 100,
+      "xpEventIds": [
+        "rectleVYF7ATxwdao",
+        "rec6rYCDq4Cnay4HZ",
+        "recVHOniig4P0Wlar",
+        "recPSBOrOcimiQJhE",
+        "rect8zPFcjpqpGcxU"
+      ]
+    },
+    "reason": "057 Ready",
+    "waitedMs": 8243
+  },
+  "wasFormulas": {
+    "pass": true,
+    "was": {
+      "id": "recl3DmBh22ADPWWe",
+      "automationStatus": "Ready",
+      "dailyMet": true,
+      "videoCount": 3,
+      "videoMet": 1,
+      "zoomMeetings": 0,
+      "zoomAttendance": 0,
+      "zoomMet": 1,
+      "homeworkMet": 1,
+      "homeworkAssigned": 0,
+      "eligible": 1,
+      "unlockIds": [],
+      "daysLogged": 7,
+      "lifetimeXpAfterWeek": 300,
+      "xpEarnedThisWeek": 100,
+      "xpEventIds": [
+        "rectleVYF7ATxwdao",
+        "rec6rYCDq4Cnay4HZ",
+        "recVHOniig4P0Wlar",
+        "recPSBOrOcimiQJhE",
+        "rect8zPFcjpqpGcxU"
+      ]
+    },
+    "checks": [
+      {
+        "name": "distinctDates",
+        "pass": true,
+        "expected": 7,
+        "actual": 7
+      },
+      {
+        "name": "dailyMet",
+        "pass": true,
+        "expected": true,
+        "actual": true
+      },
+      {
+        "name": "videoCount",
+        "pass": true,
+        "expected": 3,
+        "actual": 3
+      },
+      {
+        "name": "videoMet",
+        "pass": true,
+        "expected": 1,
+        "actual": 1
+      },
+      {
+        "name": "homeworkMet",
+        "pass": true,
+        "expected": 1,
+        "actual": 1
+      },
+      {
+        "name": "zoomMet",
+        "pass": true,
+        "expected": 1,
+        "actual": 1
+      },
+      {
+        "name": "eligible",
+        "pass": true,
+        "expected": 1,
+        "actual": 1
+      }
+    ],
+    "reason": "WAS formulas match",
+    "waitedMs": 77
+  },
+  "stage058": null,
+  "stage059": null,
+  "xp": null,
+  "duplicateCheck": null,
+  "lifetimeXp": null,
+  "cleanup": null,
+  "failurePoint": "preflight",
+  "passed": false,
+  "preflight": {
+    "passed": true,
+    "unlockSourceField": "Milestone Source Key",
+    "unlockNotesField": "Coach Note"
+  },
+  "expectedXpAmount": 100,
+  "submissionFormulas": {
+    "pass": true,
+    "subs": [
+      {
+        "id": "rec4NgPdA9ZsO7ewa",
+        "activityDate": "2026-07-27",
+        "submittedSameDay": 1,
+        "countable": 1,
+        "shotTotal": 715
+      },
+      {
+        "id": "recKG1TrHVX96c4c7",
+        "activityDate": "2026-07-28",
+        "submittedSameDay": 1,
+        "countable": 1,
+        "shotTotal": 715
+      },
+      {
+        "id": "recZpKLUWkph3MtEf",
+        "activityDate": "2026-07-29",
+        "submittedSameDay": 1,
+        "countable": 1,
+        "shotTotal": 715
+      },
+      {
+        "id": "recX2l6khJ6IWCU3Z",
+        "activityDate": "2026-07-30",
+        "submittedSameDay": 1,
+        "countable": 1,
+        "shotTotal": 715
+      },
+      {
+        "id": "recMHspHpRE0FCTZ9",
+        "activityDate": "2026-07-31",
+        "submittedSameDay": 1,
+        "countable": 1,
+        "shotTotal": 715
+      },
+      {
+        "id": "recr9V91TRDVhKnwE",
+        "activityDate": "2026-08-01",
+        "submittedSameDay": 1,
+        "countable": 1,
+        "shotTotal": 715
+      },
+      {
+        "id": "rechS0HQJ5kpNxhLo",
+        "activityDate": "2026-08-02",
+        "submittedSameDay": 1,
+        "countable": 1,
+        "shotTotal": 715
+      }
+    ],
+    "distinctDates": 7,
+    "allSameDay": true,
+    "allCountable": true,
+    "reason": "seven distinct qualifying submissions",
+    "waitedMs": 1711
+  },
+  "failed": true,
+  "message": "Timeout at stage 058-unlock after 600000ms",
+  "diagnostic": {
+    "pass": false,
+    "was": {
+      "id": "recl3DmBh22ADPWWe",
+      "automationStatus": "Ready",
+      "dailyMet": true,
+      "videoCount": 3,
+      "videoMet": 1,
+      "zoomMeetings": 0,
+      "zoomAttendance": 0,
+      "zoomMet": 1,
+      "homeworkMet": 1,
+      "homeworkAssigned": 0,
+      "eligible": 1,
+      "unlockIds": [],
+      "daysLogged": 6,
+      "lifetimeXpAfterWeek": 380,
+      "xpEarnedThisWeek": 180,
+      "xpEventIds": [
+        "rectleVYF7ATxwdao",
+        "rec6rYCDq4Cnay4HZ",
+        "recVHOniig4P0Wlar",
+        "recPSBOrOcimiQJhE",
+        "rect8zPFcjpqpGcxU",
+        "recVnpZbtlyA5MVMT",
+        "recWHNInIjsInC4xh",
+        "recAhxKrDShpcaUYW",
+        "recq5jiONWkpOpa2h"
+      ]
+    },
+    "unlockCount": 0,
+    "linked": 0,
+    "pendingBefore059": false,
+    "sawPending": false,
+    "reason": "unlockCount=0, linked=0"
+  },
+  "finishedAt": "2026-08-28T23:02:49.031Z",
+  "sourceKey": "PERFECT_WEEK|rec93mAfo5jKqP3g5|recNzl4dNOtDmJqnV"
+}
