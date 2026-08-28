@@ -43,6 +43,12 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   Merged to `master` 2026-08-27 (`94c018e`, `ee5d3fd`); production verified same day.
 
 #### Changed
+- **Homepage content hierarchy redesign (2026-08-28)** — `/shoot` homepage rewritten for
+  clearer annual-program messaging: Earn XP / 12-level progression anchor, grades 1–12,
+  May 1–June 30 challenge dates, 100% online worldwide participation, six-step how-it-works,
+  XP earning categories, 12-level journey section, Educational Athletics philosophy, and
+  registration CTA moved to page end. `program-facts.ts` grades updated to 1–12. No Airtable
+  schema or XP logic changes.
 - **Levels page redesign (FUT-015, 2026-08-26)** — `/shoot/levels` displays Levels 1–12 in
   numeric ascending order, adds a faint ladder-style hero background, clarifies the blue
   level badge as **Level** + Sort Order (replacing ambiguous `LV` placeholder), summarizes

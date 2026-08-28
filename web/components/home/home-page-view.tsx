@@ -1,16 +1,20 @@
 import Link from "next/link";
 import {
   BookOpen,
+  Calendar,
+  CheckCircle2,
   Flame,
-  Layers,
+  Globe,
+  GraduationCap,
   Medal,
   Sparkles,
   Target,
-  Trophy,
+  Users,
   Video,
 } from "lucide-react";
 
 import { HeroProgressVisual } from "@/components/home/hero-progress-visual";
+import { LevelJourneySection } from "@/components/home/level-journey-section";
 import { ProgramPricingSection } from "@/components/home/program-pricing-section";
 import { RegistrationGateway } from "@/components/home/registration-gateway";
 import { AthleteProfileLink } from "@/components/athlete/athlete-profile-link";
@@ -27,87 +31,185 @@ import { Card, CardContent } from "@/components/ui/card";
 import type { ProgramPricing } from "@/lib/data/program-pricing";
 import { formatXp } from "@/lib/formatters";
 import { PROGRAM_HUB_LINKS } from "@/lib/navigation/program-hub-links";
-import { HOME_HERO } from "@/lib/seo/program-facts";
+import { PLAYER_REGISTRATION } from "@/lib/registration";
+import {
+  CHALLENGE_DATES,
+  CHALLENGE_SEASON_LABEL,
+  HOME_HERO,
+  PROGRAM_GRADES_SERVED,
+  PROGRAM_IDENTITY,
+} from "@/lib/seo/program-facts";
 import type { LeaderboardEntry } from "@/types/leaderboard";
 
 const HERO_CTAS = [
-  { href: "/leaderboard", label: "View season leaderboard", variant: "cta" as const, size: "lg" as const },
-  { href: "/homework", label: "Browse weekly homework", variant: "contrast" as const, size: "default" as const },
-  { href: "/levels", label: "Explore XP levels", variant: "contrast" as const, size: "default" as const },
-  { href: "/tutorials", label: "Watch shooting tutorials", variant: "contrast" as const, size: "default" as const },
+  {
+    href: PLAYER_REGISTRATION.url,
+    label: "Register for the Challenge",
+    variant: "cta" as const,
+    size: "lg" as const,
+    external: true,
+  },
+  { href: "/levels", label: "Explore the 12 levels", variant: "contrast" as const, size: "default" as const },
   { href: "/faq", label: "Read program FAQ", variant: "contrast" as const, size: "default" as const },
-  { href: "/zoom-meetings", label: "View Zoom meetings", variant: "contrast" as const, size: "default" as const },
-  { href: "/game-manual", label: "Open game manual", variant: "contrast" as const, size: "default" as const },
 ];
 
-const FEATURES = [
+const XP_CATEGORIES = [
   {
-    title: "XP for real work",
-    description: "Earn points for homework, daily shot volume, and weekly consistency.",
-    eyebrow: "Progress",
-    icon: Sparkles,
-  },
-  {
-    title: "Clear level path",
-    description: "Climb from Beginner to G.O.A.T. with defined XP goals at every tier.",
-    eyebrow: "Levels",
-    icon: Layers,
-  },
-  {
-    title: "Training streaks",
-    description: "Stay accountable with streaks that reward daily shooting practice.",
-    eyebrow: "Consistency",
-    icon: Flame,
-  },
-  {
-    title: "Perfect Week",
-    description: "Hit the weekly standard and earn recognition families can celebrate.",
-    eyebrow: "Weekly win",
-    icon: Medal,
-  },
-  {
-    title: "Shot milestones",
-    description: "Track makes and attempts as athletes pass major volume marks.",
-    eyebrow: "Milestones",
+    title: "Shooting & activity submissions",
+    description: "Log basketball shooting work and verified training activity throughout the challenge.",
+    eyebrow: "Activity",
     icon: Target,
   },
   {
-    title: "Weekly homework",
-    description: "Focused youth basketball assignments with clear expectations for families.",
-    eyebrow: "Curriculum",
+    title: "Homework completion",
+    description: "Finish weekly assignments that reinforce skill, knowledge, and accountability.",
+    eyebrow: "Learning",
     icon: BookOpen,
   },
   {
-    title: "Video tutorials",
-    description: "Study shooting technique clips between sessions to tighten form.",
-    eyebrow: "Film room",
+    title: "Video feedback participation",
+    description: "Submit videos regularly and engage with coaching feedback on your shooting.",
+    eyebrow: "Coaching",
     icon: Video,
   },
   {
-    title: "Zoom coaching",
-    description: "Join live check-ins, review recordings, and get remote coach feedback.",
-    eyebrow: "Coaching",
-    icon: Trophy,
+    title: "Consistency & streaks",
+    description: "Stay on track with daily participation and build momentum over the two-month window.",
+    eyebrow: "Habits",
+    icon: Flame,
+  },
+  {
+    title: "Weekly accomplishments",
+    description: "Meet weekly standards and earn recognition for steady, complete participation.",
+    eyebrow: "Weekly",
+    icon: Medal,
+  },
+  {
+    title: "Perfect-week achievements",
+    description: "Hit the full weekly bar when every required element is completed.",
+    eyebrow: "Excellence",
+    icon: CheckCircle2,
+  },
+  {
+    title: "Zoom & educational sessions",
+    description: "Join live or recorded sessions when offered as part of the challenge calendar.",
+    eyebrow: "Sessions",
+    icon: GraduationCap,
+  },
+  {
+    title: "Milestones & special achievements",
+    description: "Unlock bonuses for shooting milestones and other program accomplishments.",
+    eyebrow: "Bonuses",
+    icon: Sparkles,
   },
 ];
 
 const HOW_IT_WORKS = [
   {
     step: "01",
-    title: "Train and submit daily",
-    description: "Complete weekly homework and log daily shooting practice through the submission form.",
+    title: "Register for the annual challenge",
+    description: `Enroll in the ${CHALLENGE_SEASON_LABEL} through the official player registration form.`,
   },
   {
     step: "02",
-    title: "Earn XP and levels",
-    description: "Unlock levels, streaks, Perfect Weeks, and milestones as coaches verify progress.",
+    title: "Shoot and submit activity",
+    description: "Log basketball shooting work and training through the daily submission form.",
   },
   {
     step: "03",
-    title: "Compete and improve",
-    description: "Check the leaderboard, study tutorials, join Zoom sessions, and read coach feedback.",
+    title: "Complete assignments & activities",
+    description: "Work through homework and other Educational Athletics activities built into the challenge.",
+  },
+  {
+    step: "04",
+    title: "Submit videos for feedback",
+    description: "Share shooting videos and receive coaching feedback to improve form and habits.",
+  },
+  {
+    step: "05",
+    title: "Earn XP",
+    description: "Qualifying participation across shooting, learning, consistency, and milestones adds XP.",
+  },
+  {
+    step: "06",
+    title: "Unlock levels & achievements",
+    description: "Progress from Beginner toward G.O.A.T. and celebrate milestones along the way.",
   },
 ];
+
+const EDUCATIONAL_ATHLETICS_TRAITS = [
+  {
+    trait: "Skill",
+    detail: "Improve shooting technique through practice, homework, and coach feedback.",
+  },
+  {
+    trait: "Consistency",
+    detail: "Build daily habits with submissions, streaks, and weekly standards.",
+  },
+  {
+    trait: "Accountability",
+    detail: "Track progress publicly and follow through on assignments and submissions.",
+  },
+  {
+    trait: "Knowledge",
+    detail: "Learn basketball concepts through homework, tutorials, and educational sessions.",
+  },
+  {
+    trait: "Coachability",
+    detail: "Apply video feedback and show up ready to improve.",
+  },
+  {
+    trait: "Goal-setting",
+    detail: "Work toward individual shooting goals and level advancement throughout the challenge.",
+  },
+  {
+    trait: "Self-discipline",
+    detail: "Stay committed across the full May–June challenge window — at home, on your schedule.",
+  },
+];
+
+const PARTICIPATION_FACTS = [
+  {
+    icon: Users,
+    label: "Who",
+    value: "Boys and girls",
+  },
+  {
+    icon: GraduationCap,
+    label: "Grades",
+    value: PROGRAM_GRADES_SERVED,
+  },
+  {
+    icon: Globe,
+    label: "Where",
+    value: "Anywhere in the world",
+  },
+  {
+    icon: Video,
+    label: "Format",
+    value: "100% online",
+  },
+  {
+    icon: Target,
+    label: "You need",
+    value: "Basketball, a place to shoot, and internet access",
+  },
+];
+
+function HeroFactChips() {
+  return (
+    <ul className="motion-rise motion-delay-1 mt-5 flex flex-wrap gap-2" aria-label="Program facts">
+      {HOME_HERO.factChips.map((chip) => (
+        <li
+          key={chip}
+          className="rounded-md bg-white/10 px-2.5 py-1 text-xs font-semibold text-brand-white ring-1 ring-white/20 sm:text-sm"
+        >
+          {chip}
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 function TopThreePreview({ entries }: { entries: LeaderboardEntry[] }) {
   if (entries.length === 0) {
@@ -119,10 +221,10 @@ function TopThreePreview({ entries }: { entries: LeaderboardEntry[] }) {
               <IconTrophy size={26} aria-hidden />
             </span>
             <div>
-              <p className="font-display text-xl text-foreground">Rankings are warming up</p>
+              <p className="font-display text-xl text-foreground">Challenge standings</p>
               <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                The live season board will show top athletes here as soon as rankings are
-                available. Browse the full leaderboard anytime.
+                Top athletes appear here once the challenge season is underway. Browse the full
+                leaderboard anytime.
               </p>
             </div>
           </div>
@@ -198,58 +300,96 @@ export function HomePageView({ topEntries, pricing = null }: HomePageViewProps) 
             <span className="text-brand-orange">{HOME_HERO.titleAccent}</span>
           </>
         }
-        description={<p>{HOME_HERO.description}</p>}
-        actions={HERO_CTAS.map((cta) => (
-          <CtaLink key={cta.href} href={cta.href} variant={cta.variant} size={cta.size}>
-            {cta.label}
-          </CtaLink>
-        ))}
+        description={
+          <>
+            <p>{HOME_HERO.description}</p>
+            <HeroFactChips />
+          </>
+        }
+        actions={HERO_CTAS.map((cta) =>
+          cta.external ? (
+            <a
+              key={cta.href}
+              href={cta.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${cta.label} (opens in a new tab)`}
+              className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-brand-orange px-5 text-sm font-bold text-brand-charcoal shadow-site-sm transition hover:bg-brand-orange/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:w-auto sm:px-6 sm:text-base"
+            >
+              {cta.label}
+              <span aria-hidden className="ml-0.5 text-xs font-bold opacity-80">
+                ↗
+              </span>
+            </a>
+          ) : (
+            <CtaLink key={cta.href} href={cta.href} variant={cta.variant} size={cta.size}>
+              {cta.label}
+            </CtaLink>
+          ),
+        )}
         aside={<HeroProgressVisual />}
       />
 
-      <RegistrationGateway />
-
-      <ProgramPricingSection pricing={pricing} />
-
       <SiteSection
-        eyebrow="Why it works"
-        title="Built for youth basketball shooting development"
-        titleId="features-heading"
-        description="Educational Athletics systems that stay clear for athletes and parents — from daily practice to season goals."
-        aria-labelledby="features-heading"
-        className="bg-background"
+        eyebrow="What is the Shooting Challenge?"
+        title="A two-month online Educational Athletics challenge"
+        titleId="what-is-heading"
+        description="More than a shooting contest — a structured program that combines basketball training, accountability, learning, and coaching feedback."
+        aria-labelledby="what-is-heading"
       >
-        <div className="grid grid-cols-2 gap-2 sm:gap-3 xl:grid-cols-4">
-          {FEATURES.map((feature) => (
-            <FeatureCard
-              key={feature.title}
-              tone="benefit"
-              title={feature.title}
-              description={feature.description}
-              eyebrow={feature.eyebrow}
-              icon={feature.icon}
-              className="[&_[data-slot=card-description]]:text-[0.8125rem] sm:[&_[data-slot=card-description]]:text-sm"
-            />
-          ))}
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+          <Card className="rounded-lg shadow-site-sm">
+            <CardContent className="space-y-4 pt-(--card-spacing) text-sm leading-relaxed text-foreground sm:text-base">
+              <p>
+                The <strong>127 Sports Intensity Shooting Challenge</strong> runs once per year as a
+                focused, two-month program. Athletes log shooting activity, work toward individual
+                goals, complete homework, submit videos for coaching feedback, and participate in
+                other Educational Athletics activities — all online.
+              </p>
+              <p>
+                Success is not about racking up the most shots. It requires well-rounded
+                participation: consistent training, completed assignments, coachable video work, and
+                steady XP growth across the full challenge.
+              </p>
+              <p className="text-muted-foreground">
+                {PROGRAM_IDENTITY.philosophy}: {PROGRAM_IDENTITY.philosophyTagline}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-lg bg-gradient-to-br from-brand-blue/[0.06] via-card to-brand-orange/[0.08] shadow-site-sm ring-brand-blue/20">
+            <CardContent className="space-y-3 pt-(--card-spacing)">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-accent-soft">
+                Annual program · One session scheduled
+              </p>
+              <p className="font-display text-2xl text-foreground">{CHALLENGE_SEASON_LABEL}</p>
+              <div className="flex items-center gap-2 text-foreground">
+                <Calendar size={18} className="shrink-0 text-brand-orange" aria-hidden />
+                <p className="text-base font-semibold">{CHALLENGE_DATES}</p>
+              </div>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                Only one upcoming challenge is currently scheduled. Athletes participate from home —
+                no travel to Fairfield, Montana required.
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </SiteSection>
 
       <SiteSection
         tone="muted"
         eyebrow="How it works"
-        title="Three steps. Clear progress."
+        title="Six steps from registration to level-up"
         titleId="how-heading"
-        description="Simple enough for families. Structured enough for a full season."
+        description="Simple enough for families. Structured enough for real development across the full challenge."
         aria-labelledby="how-heading"
       >
-        <div className="grid gap-3 md:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {HOW_IT_WORKS.map((item) => (
             <Card key={item.step} className="rounded-lg shadow-site-sm">
               <CardContent className="pt-(--card-spacing)">
-                <p className="font-mono text-sm font-bold text-brand-orange">
-                  {item.step}
-                </p>
-                <h3 className="font-display mt-2 text-xl text-foreground">
+                <p className="font-mono text-sm font-bold text-brand-orange">{item.step}</p>
+                <h3 className="font-display mt-2 text-lg text-foreground sm:text-xl">
                   {item.title}
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
@@ -262,11 +402,124 @@ export function HomePageView({ topEntries, pricing = null }: HomePageViewProps) 
       </SiteSection>
 
       <SiteSection
+        eyebrow="Earn XP"
+        title="Ways athletes earn XP during the challenge"
+        titleId="xp-heading"
+        description="XP rewards complete participation — not just shot volume. Exact scoring stays in the program; these are the major categories families should know."
+        aria-labelledby="xp-heading"
+        actions={
+          <CtaLink href="/achievements" variant="default" size="default">
+            View achievements
+          </CtaLink>
+        }
+      >
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 xl:grid-cols-4">
+          {XP_CATEGORIES.map((category) => (
+            <FeatureCard
+              key={category.title}
+              tone="benefit"
+              title={category.title}
+              description={category.description}
+              eyebrow={category.eyebrow}
+              icon={category.icon}
+              className="[&_[data-slot=card-description]]:text-[0.8125rem] sm:[&_[data-slot=card-description]]:text-sm"
+            />
+          ))}
+        </div>
+      </SiteSection>
+
+      <LevelJourneySection />
+
+      <SiteSection
+        eyebrow="More than shooting"
+        title="Educational Athletics builds complete athletes"
+        titleId="philosophy-heading"
+        description="The challenge develops habits and skills that carry beyond the court — tied directly to what athletes do each week."
+        aria-labelledby="philosophy-heading"
+      >
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {EDUCATIONAL_ATHLETICS_TRAITS.map((item) => (
+            <Card key={item.trait} className="rounded-lg shadow-site-sm">
+              <CardContent className="pt-(--card-spacing)">
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-orange">
+                  {item.trait}
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-foreground">{item.detail}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </SiteSection>
+
+      <SiteSection
+        tone="muted"
+        eyebrow="Who can participate?"
+        title="Open to athletes worldwide"
+        titleId="participation-heading"
+        description="No local residency requirement. If you can shoot, submit activity, and connect online, you can join the challenge."
+        aria-labelledby="participation-heading"
+      >
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {PARTICIPATION_FACTS.map((fact) => {
+            const Icon = fact.icon;
+            return (
+              <Card key={fact.label} className="rounded-lg shadow-site-sm">
+                <CardContent className="flex items-start gap-3 pt-(--card-spacing)">
+                  <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-md bg-brand-blue/10 text-brand-blue ring-1 ring-brand-blue/20">
+                    <Icon size={18} aria-hidden />
+                  </span>
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                      {fact.label}
+                    </p>
+                    <p className="mt-1 text-sm font-semibold leading-snug text-foreground sm:text-base">
+                      {fact.value}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </SiteSection>
+
+      <SiteSection
+        id="challenge-dates"
+        eyebrow="Challenge dates"
+        title={CHALLENGE_SEASON_LABEL}
+        titleId="dates-heading"
+        description="The Shooting Challenge occurs once per year. The next session runs May 1 through June 30."
+        aria-labelledby="dates-heading"
+      >
+        <Card className="max-w-2xl rounded-lg shadow-site-sm ring-brand-orange/30">
+          <CardContent className="flex flex-col gap-4 pt-(--card-spacing) sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="font-display text-2xl text-foreground sm:text-3xl">{CHALLENGE_DATES}</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Two months of structured online participation. Registration opens through the
+                official player registration form when enrollment is available.
+              </p>
+            </div>
+            <CtaLink href="#registration-gateway" variant="cta" size="default" className="shrink-0">
+              Register now
+            </CtaLink>
+          </CardContent>
+        </Card>
+      </SiteSection>
+
+      <ProgramPricingSection pricing={pricing} />
+
+      <SiteSection
         eyebrow="Live leaders"
-        title="Top of the board"
+        title="Challenge leaderboard"
         titleId="top-board-heading"
-        description="Season rankings from the same Airtable-powered leaderboard used all season."
+        description="See who is leading the current challenge season by XP and level."
         aria-labelledby="top-board-heading"
+        actions={
+          <CtaLink href="/leaderboard" variant="default" size="default">
+            View full leaderboard
+          </CtaLink>
+        }
       >
         <TopThreePreview entries={topEntries} />
       </SiteSection>
@@ -276,7 +529,7 @@ export function HomePageView({ topEntries, pricing = null }: HomePageViewProps) 
         eyebrow="Explore the challenge"
         title="Jump into any part of the program"
         titleId="explore-heading"
-        description="Open any public section — rankings, homework, levels, tutorials, and more."
+        description="Rankings, homework, levels, tutorials, achievements, and more — all public on this site."
         aria-labelledby="explore-heading"
       >
         <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-4">
@@ -308,6 +561,8 @@ export function HomePageView({ topEntries, pricing = null }: HomePageViewProps) 
           })}
         </div>
       </SiteSection>
+
+      <RegistrationGateway />
     </div>
   );
 }

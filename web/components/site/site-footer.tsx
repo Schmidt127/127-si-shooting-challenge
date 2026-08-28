@@ -44,10 +44,10 @@ export function SiteFooter({
               <p className="text-base font-bold text-foreground">{BRAND_ORG_NAME}</p>
               <p className="text-sm font-medium text-foreground">{productName}</p>
               <p className="max-w-md text-sm leading-relaxed text-foreground">
-                Youth basketball training and shooting challenge for boys and girls in grades 1–8.
-                {BRAND_ORG_NAME} is the legally recognized nonprofit based in Fairfield, Montana;
-                Fairfield Basketball Club is the program identity for this challenge. Daily
-                submissions, homework, Zoom coaching, and progress tracking are available online.
+                Annual online Educational Athletics shooting challenge for boys and girls in grades
+                1–12. {BRAND_ORG_NAME} is the legally recognized nonprofit based in Fairfield,
+                Montana; Fairfield Basketball Club is the program identity for this challenge.
+                Athletes participate 100% online from anywhere in the world.
               </p>
             </div>
           </div>

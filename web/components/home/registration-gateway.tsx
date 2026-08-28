@@ -113,17 +113,17 @@ export function RegistrationGateway() {
     <SiteSection
       id="registration-gateway"
       data-testid="registration-gateway"
-      tone="muted"
-      title="Ready to Join the Shooting Challenge?"
+      tone="orange"
+      title="Ready to join the 2026–2027 Shooting Challenge?"
       titleId="registration-heading"
-      description="Register an athlete for the program or submit today's completed shooting and training activity."
+      description="Register for the annual challenge or log today's shooting and training activity if you are already enrolled."
       aria-labelledby="registration-heading"
     >
       <div className="grid gap-3 md:grid-cols-2 md:gap-4">
         <GatewayCard
           eyebrow="JOIN THE CHALLENGE"
           title={PLAYER_REGISTRATION.label}
-          description="For athletes and families enrolling in the Shooting Challenge program."
+          description="Enroll an athlete for the May 1–June 30 online challenge. Open to boys and girls in grades 1–12 worldwide."
           cta={PLAYER_REGISTRATION.cta}
           href={PLAYER_REGISTRATION.url}
           icon={UserPlus}

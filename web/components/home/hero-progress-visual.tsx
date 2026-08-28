@@ -1,4 +1,5 @@
 import { BasketballGraphic } from "@/components/brand/basketball-graphic";
+import { LevelBadge } from "@/components/leaderboard/level-badge";
 
 /**
  * CSS interface graphic for the landing hero — court + XP progress card.
@@ -17,17 +18,14 @@ export function HeroProgressVisual() {
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-orange">
-              Season progress
+              Earn XP · Climb levels
             </p>
-            <p className="mt-1 font-display text-lg text-brand-white">Shot tracker</p>
+            <p className="mt-1 font-display text-lg text-brand-white">Challenge progress</p>
           </div>
-          <span className="rounded-md bg-brand-orange px-2.5 py-1 font-mono text-xs font-bold text-brand-charcoal">
-            LIVE
-          </span>
+          <LevelBadge level="Hot Hand" size="sm" variant="hero" />
         </div>
 
         <div className="relative mt-4 aspect-[4/3] overflow-hidden rounded-md bg-brand-blue/40 ring-1 ring-white/15">
-          {/* Half-court outline */}
           <svg viewBox="0 0 200 150" className="absolute inset-0 h-full w-full text-white/35">
             <rect x="8" y="8" width="184" height="134" rx="4" fill="none" stroke="currentColor" strokeWidth="2" />
             <path d="M8 75h184" stroke="currentColor" strokeWidth="1.5" />
@@ -39,7 +37,6 @@ export function HeroProgressVisual() {
             <BasketballGraphic size="lg" priority className="h-full w-full drop-shadow-[0_12px_24px_rgba(0,0,0,0.35)]" />
           </div>
 
-          {/* Shot markers */}
           <span className="absolute left-[22%] top-[30%] size-2.5 rounded-full bg-brand-orange shadow-[0_0_0_3px_rgba(255,139,0,0.25)]" />
           <span className="absolute left-[48%] top-[42%] size-2 rounded-full bg-brand-white" />
           <span className="absolute left-[63%] top-[28%] size-2.5 rounded-full bg-brand-orange shadow-[0_0_0_3px_rgba(255,139,0,0.25)]" />
@@ -51,15 +48,15 @@ export function HeroProgressVisual() {
         <div className="mt-4 grid grid-cols-3 gap-2">
           <div className="rounded-md bg-white/10 px-2.5 py-2 ring-1 ring-white/15">
             <p className="text-[10px] font-bold uppercase tracking-wider text-contrast-muted">XP</p>
-            <p className="mt-0.5 font-mono text-base font-bold text-brand-white">12,480</p>
+            <p className="mt-0.5 font-mono text-base font-bold text-brand-white">4,280</p>
           </div>
           <div className="rounded-md bg-white/10 px-2.5 py-2 ring-1 ring-white/15">
             <p className="text-[10px] font-bold uppercase tracking-wider text-contrast-muted">Level</p>
-            <p className="mt-0.5 font-mono text-base font-bold text-brand-orange">7</p>
+            <p className="mt-0.5 font-mono text-base font-bold text-brand-orange">6</p>
           </div>
           <div className="rounded-md bg-white/10 px-2.5 py-2 ring-1 ring-white/15">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-contrast-muted">Streak</p>
-            <p className="mt-0.5 font-mono text-base font-bold text-brand-white">4</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-contrast-muted">Next</p>
+            <p className="mt-0.5 font-mono text-xs font-bold text-brand-white">Deadeye</p>
           </div>
         </div>
       </div>

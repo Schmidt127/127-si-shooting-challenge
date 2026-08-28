@@ -22,7 +22,7 @@ export const PROGRAM_FAQ_ITEMS: FaqItem[] = [
   {
     id: "what-is-shooting-challenge",
     question: "What is the 127 SI Shooting Challenge?",
-    answer: `${PROGRAM_IDENTITY.programName} is the flagship ${PROGRAM_IDENTITY.philosophy} program from ${PROGRAM_IDENTITY.orgName}. Athletes build shooting skill through daily practice submissions, weekly homework, XP and level goals, coach feedback, and season leaderboard competition.`,
+    answer: `${PROGRAM_IDENTITY.programName} is the flagship ${PROGRAM_IDENTITY.philosophy} program from ${PROGRAM_IDENTITY.orgName}. Once per year, athletes build complete basketball habits through online shooting submissions, weekly homework, video coaching feedback, XP and level goals, and challenge activities — not just shot volume.`,
   },
   {
     id: "grades-served",

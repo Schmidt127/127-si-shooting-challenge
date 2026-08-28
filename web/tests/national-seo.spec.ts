@@ -5,30 +5,32 @@ const configuredBase = process.env.PLAYWRIGHT_BASE_URL?.trim().replace(/\/$/, ""
 const SITE_BASE = configuredBase || LOCAL_BASE;
 
 test.describe("national SEO messaging", () => {
-  test("homepage communicates youth basketball, grades, and Fairfield context", async ({ page }) => {
+  test("homepage communicates challenge facts, grades, and online scope", async ({ page }) => {
     await page.goto(".", { waitUntil: "domcontentloaded" });
 
-    await expect(page.locator("h1")).toContainText(/youth basketball training/i);
-    await expect(page.getByText(/grades 1–8/i).first()).toBeVisible();
+    await expect(page.locator("h1")).toContainText(/Earn XP/i);
+    await expect(page.getByText(/grades 1–12/i).first()).toBeVisible();
     await expect(page.getByText(/Educational Athletics/i).first()).toBeVisible();
-    await expect(page.getByText(/Fairfield, Montana/i).first()).toBeVisible();
+    await expect(page.getByText(/100% online/i).first()).toBeVisible();
+    await expect(page.getByText(/May 1–June 30/i).first()).toBeVisible();
   });
 
   test("homepage metadata is national-first", async ({ page }) => {
     await page.goto(".", { waitUntil: "domcontentloaded" });
 
     const title = await page.title();
-    expect(title).toMatch(/Youth Basketball/i);
+    expect(title).toMatch(/Shooting Challenge/i);
 
     const description = page.locator('meta[name="description"]');
-    await expect(description).toHaveAttribute("content", /daily shooting practice/i);
-    await expect(description).toHaveAttribute("content", /Fairfield, Montana/i);
+    await expect(description).toHaveAttribute("content", /Earn XP/i);
+    await expect(description).toHaveAttribute("content", /grades 1–12/i);
+    await expect(description).toHaveAttribute("content", /May 1–June 30/i);
   });
 
   test("homepage uses descriptive internal links", async ({ page }) => {
     await page.goto(".", { waitUntil: "domcontentloaded" });
 
-    await expect(page.getByRole("link", { name: /View season leaderboard/i }).first()).toBeVisible();
+    await expect(page.getByRole("link", { name: /Explore the 12 levels/i }).first()).toBeVisible();
     await expect(page.getByRole("link", { name: /Read program FAQ/i }).first()).toBeVisible();
     await expect(page.getByText(/^Open$/)).toHaveCount(0);
   });
