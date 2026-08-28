@@ -85,6 +85,8 @@ function homeworkCompletionFields() {
     { name: "Review Status", type: "singleSelect", options: { choices: [{ name: "Ready for Review" }] } },
     { name: "Writeback Complete?", type: "checkbox" },
     { name: "Satisfactory?", type: "checkbox" },
+    { name: "Notes", type: "multilineText" },
+    { name: "Submission Date", type: "date" },
   ];
 }
 
