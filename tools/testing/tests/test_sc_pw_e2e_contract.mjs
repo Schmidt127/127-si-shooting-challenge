@@ -40,15 +40,15 @@ test("buildRunContext uses gated enrollment and seven Sunday-start dates", () =>
   const ctx = buildRunContext("qualifying");
   assert.equal(ctx.enrollmentId, GATED_ENROLLMENT_ID);
   assert.equal(ctx.weekDates.length, 7);
-  assert.equal(ctx.weekDates[0], "2027-06-06");
-  assert.equal(ctx.weekDates[6], "2027-06-12");
+  assert.equal(ctx.weekDates[0], "2026-08-02");
+  assert.equal(ctx.weekDates[6], "2026-08-08");
   assert.match(ctx.weekName, /^PWTEST\|/);
   assert.match(ctx.batchKey, /SC-PW-E2E\|qualifying$/);
 });
 
 test("nonqualifying-video uses distinct week anchor", () => {
   const ctx = buildRunContext("nonqualifying-video");
-  assert.equal(ctx.weekDates[0], "2027-06-13");
+  assert.equal(ctx.weekDates[0], "2026-08-09");
 });
 
 test("dry-run plan does not imply apply", () => {
@@ -69,7 +69,7 @@ test("source key matches 058/059 contract", () => {
 });
 
 test("denverNoon uses America/Denver offset for August dates", () => {
-  assert.equal(denverNoon("2027-06-06"), "2027-06-06T12:00:00.000-06:00");
+  assert.equal(denverNoon("2026-08-02"), "2026-08-02T12:00:00.000-06:00");
 });
 
 test("evaluateWasExpectations — qualifying path", () => {

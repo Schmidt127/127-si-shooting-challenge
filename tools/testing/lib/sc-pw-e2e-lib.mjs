@@ -21,6 +21,7 @@ const require = createRequire(import.meta.url);
 const {
   buildPerfectWeekSourceKey,
   buildRequiredWeekDates,
+  getDateKeyAmericaDenver,
   GATED_ENROLLMENT_ID,
   truthy,
 } = require("./perfect_week_fixtures.js");
@@ -172,6 +173,19 @@ export async function preflightApplyAccess(token, baseId, caseName) {
     failures.push(err.message);
   }
 
+  const anchor = CASE_WEEK_ANCHORS[caseName];
+  if (anchor) {
+    const weekDates = buildRequiredWeekDates(anchor, 7);
+    const todayKey = getDateKeyAmericaDenver(new Date());
+    const futureDates = weekDates.filter((dateKey) => dateKey > todayKey);
+    if (futureDates.length) {
+      failures.push(
+        `Case week anchor ${anchor} includes future Activity Dates (${futureDates.join(", ")}). ` +
+          "Production formulas set Count This Submission? = 0 for future dates; update CASE_WEEK_ANCHORS to a fully past week."
+      );
+    }
+  }
+
   if (failures.length) {
     const err = new Error(`SC-PW-E2E preflight failed:\n- ${failures.join("\n- ")}`);
     err.stage = "preflight";
@@ -186,10 +200,12 @@ export async function preflightApplyAccess(token, baseId, caseName) {
   };
 }
 
+// Past Denver week anchors only — future Activity Dates keep Count This Submission? = 0.
+// Matches proven CASE-01 window (2026-08-02 Sun) in PERFECT-WEEK-FIXTURE-METHOD.md.
 const CASE_WEEK_ANCHORS = Object.freeze({
-  qualifying: "2027-06-06",
-  "nonqualifying-video": "2027-06-13",
-  "trigger-only": "2027-06-20",
+  qualifying: "2026-08-02",
+  "nonqualifying-video": "2026-08-09",
+  "trigger-only": "2026-08-16",
 });
 
 export function sleep(ms) {
@@ -533,21 +549,28 @@ export async function listXpBySourceKey(token, baseId, sourceKey) {
   });
 }
 
-export async function listUnlocksForWeek(token, baseId, enrollmentId, weekId) {
+export async function listUnlocksForWeek(
+  token,
+  baseId,
+  enrollmentId,
+  weekId,
+  { unlockSourceField, unlockNotesField } = {}
+) {
+  const fields = [
+    "Enrollment",
+    "Week",
+    "Achievement",
+    "Active?",
+    "XP Award Status",
+    "Shot Milestone",
+    "XP Events",
+  ];
+  if (unlockNotesField) fields.push(unlockNotesField);
+  if (unlockSourceField) fields.push(unlockSourceField);
   return listRecords(token, baseId, TABLES.unlocks, {
     filterByFormula: `AND(FIND('${enrollmentId}', ARRAYJOIN({Enrollment})), FIND('${weekId}', ARRAYJOIN({Week})))`,
     maxRecords: 20,
-    fields: [
-      "Enrollment",
-      "Week",
-      "Achievement",
-      "Active?",
-      "XP Award Status",
-      "Shot Milestone",
-      "Source Key",
-      "XP Events",
-      "Notes",
-    ],
+    fields,
   });
 }
 
@@ -842,11 +865,26 @@ export async function cleanupPwtestRecords(token, baseId, manifest) {
     console.log(`deleted XP Event ${row.id}`);
   }
 
+  const schema = await loadSchemaIndex(token, baseId);
+  const unlockSourceField = resolveUnlockSourceKeyField(schema);
+  const unlockNotesField = resolveUnlockNotesField(schema);
+
   const unlocks = manifest.created.weekId
-    ? await listUnlocksForWeek(token, baseId, manifest.created.enrollmentId, manifest.created.weekId)
+    ? await listUnlocksForWeek(
+        token,
+        baseId,
+        manifest.created.enrollmentId,
+        manifest.created.weekId,
+        { unlockSourceField, unlockNotesField }
+      )
     : [];
   for (const row of unlocks) {
-    const notes = String(row.fields?.Notes || row.fields?.["Coach Note"] || "");
+    const notes = String(
+      (unlockNotesField && row.fields?.[unlockNotesField]) ||
+        row.fields?.Notes ||
+        row.fields?.["Coach Note"] ||
+        ""
+    );
     const weekLinked = (row.fields?.Week || [])[0]?.id === manifest.created.weekId;
     if (!weekLinked && !notes.startsWith(PWTEST_PREFIX)) continue;
     await deleteRecords(token, baseId, TABLES.unlocks, [row.id]);
