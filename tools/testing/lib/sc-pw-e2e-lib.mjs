@@ -149,6 +149,7 @@ export async function preflightApplyAccess(token, baseId, caseName) {
   for (const fieldName of [
     "Perfect Week Test Record?",
     "Perfect Week Test Submitted At",
+    "Perfect Week Manual Exception?",
     "Enrollment",
     "Week",
     "Activity Date",
@@ -365,6 +366,7 @@ export async function createDisposableFixture(token, baseId, ctx, { videoCount =
         "Start Date": `${ctx.weekStart}T00:00:00.000-06:00`,
         "End Date": `${ctx.weekEnd}T23:59:00.000-06:00`,
         "Program Instance": [ctx.programInstanceId],
+        "Counts Toward Challenge?": true,
       },
     },
   ]);
@@ -396,6 +398,7 @@ export async function createDisposableFixture(token, baseId, ctx, { videoCount =
           "Shot Total": SHOTS_PER_DAY,
           "Perfect Week Test Record?": true,
           "Perfect Week Test Submitted At": denverNoon(dateKey),
+          "Perfect Week Manual Exception?": true,
           "Weekly Athlete Summary": [created.wasId],
         },
       },
@@ -462,6 +465,7 @@ export async function createTriggerOnlyUnlock(token, baseId, ctx, schemaHints = 
         "Start Date": `${ctx.weekStart}T00:00:00.000-06:00`,
         "End Date": `${ctx.weekEnd}T23:59:00.000-06:00`,
         "Program Instance": [ctx.programInstanceId],
+        "Counts Toward Challenge?": true,
       },
     },
   ]);
