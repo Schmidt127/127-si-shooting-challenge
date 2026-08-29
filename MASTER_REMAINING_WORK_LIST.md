@@ -155,9 +155,9 @@
 | **Short title** | Merge homework assignment identity |
 | **Description** | PR #264: 020 v3.8 + 065 v10.4 + `lib/homework-contracts/assignment-identity.js`; CI green. |
 | **Why it matters** | Authorized FUT-001 repo closeout. |
-| **Current status** | IN PROGRESS |
-| **Source document(s)** | Future Work FUT-001; deploy checklist on PR branch |
-| **Repository location(s)** | See PR #264 file list |
+| **Current status** | COMPLETE (repo merged via PR #271) |
+| **Source document(s)** | Future Work FUT-001; `docs/deploy-checklists/FUT-001-homework-assignment-identity-deadline.md` |
+| **Repository location(s)** | See PR #264 / #271 file list |
 | **Dependencies** | None for merge |
 | **Exact files or production systems affected** | GitHub master only until paste (MRW-A03) |
 | **Autonomous?** | Yes (merge after checks; paste separate) |
@@ -174,8 +174,7 @@
 | **Short title** | Merge Perfect Week harness fixes |
 | **Description** | Past completed Sun–Sat week anchors, unlock field schema alignment, evidence JSON. |
 | **Why it matters** | Mike’s live run depends on a schema-correct harness. |
-| **Current status** | IN PROGRESS |
-| **Source document(s)** | SC-PW-E2E.md; PR #269 |
+| **Current status** | COMPLETE (repo merged via PR #271) |
 | **Repository location(s)** | `tools/testing/lib/sc-pw-e2e-lib.mjs`, contract tests, evidence |
 | **Dependencies** | None |
 | **Exact files or production systems affected** | Repo testing tools only |
@@ -193,8 +192,7 @@
 | **Short title** | Land FUT-010 fail-closed cleanup code |
 | **Description** | Draft PR #268: shared helpers + CLI + extension; deletes Airtable attachment only after S3 verified. Dry-run default. |
 | **Why it matters** | Authorized storage reduction; must not delete before durable S3 proof. |
-| **Current status** | READY TO IMPLEMENT |
-| **Source document(s)** | Future Work FUT-010; `docs/deploy-checklists/FUT-010-intake-attachment-cleanup.md` (on PR) |
+| **Current status** | COMPLETE (repo merged via PR #271; live clear still Mike) |
 | **Repository location(s)** | `lib/intake-attachment-cleanup/`, `tools/airtable/fut_010_*`, extension backfill |
 | **Dependencies** | Mike approval before any live `--apply` / CONFIRM_WRITE |
 | **Exact files or production systems affected** | Submission Assets attachments (after merge + Mike run) |
