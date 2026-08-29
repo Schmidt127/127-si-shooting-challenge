@@ -840,6 +840,14 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **SC-147** | PROPOSED | Recorded Zoom half-XP writer — `docs/challenge-year/RECORDED-ZOOM-HALF-XP-DESIGN-BRIEF.md` |
 | **FUT-001 / PR #264** | MERGE-READY (repo) | CI fix `3d497f4a`; Production paste pending |
 
+### 2026-08-29 legacy welcome-email field retirement
+
+| Item | Status | Evidence |
+|---|---|---|
+| **FUT-WELCOME-LEGACY** repo cleanup | **COMPLETE** (PR pending) | Branch `chore/retire-legacy-welcome-email-fields`; 075 LEGACY/RETIRED; probes/indexes updated; contract tests |
+| **FUT-WELCOME-LEGACY** Airtable field delete | **READY** (Mike / OMNI manual) | Six Enrollments fields still live; MCP cannot delete — [`deploy-checklists/RETIRE-LEGACY-WELCOME-EMAIL-FIELDS.md`](./deploy-checklists/RETIRE-LEGACY-WELCOME-EMAIL-FIELDS.md) |
+| Live welcome path | Unchanged | **078A → Email Handoff Queue → 079 → Hub → Resend**; 075 absent; **101** untouched |
+
 ### Uncommitted WIP (separate — not complete)
 
 | ID | Title | Status | Evidence |

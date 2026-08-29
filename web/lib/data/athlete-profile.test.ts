@@ -117,6 +117,30 @@ describe("public profile mapping helpers", () => {
     expect(profile.progression.currentLevelCoverImageUrl).toBeNull();
   });
 
+  it("buildPublicAthleteProfile maps Public Missing Homework/Zoom/Streak into missingRequirements", () => {
+    const profile = buildPublicAthleteProfile({
+      slug: "missing-gates",
+      fields: {
+        "Full Athlete Name": "Gate Athlete",
+        "Public Missing Homework": "2 homework completions",
+        "Public Missing Zoom": "1 zoom attendance",
+        "Public Missing Streak": "3 more streak days",
+        "Public Missing Submissions": "",
+        "Public Missing Videos": "—",
+      },
+      rank: null,
+      nextLevelName: null,
+      recentActivity: [],
+      weekly: [],
+      achievements: [],
+    });
+    expect(profile.progression.missingRequirements).toEqual([
+      "2 homework completions",
+      "1 zoom attendance",
+      "3 more streak days",
+    ]);
+  });
+
   it("buildPublicAthleteProfile carries current level cover URLs", () => {
     const profile = buildPublicAthleteProfile({
       slug: "with-cover",
