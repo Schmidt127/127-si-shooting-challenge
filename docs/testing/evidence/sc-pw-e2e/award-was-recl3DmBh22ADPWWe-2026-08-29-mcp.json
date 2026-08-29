@@ -1,0 +1,54 @@
+{
+  "harness": "SC-PW-E2E",
+  "case": "qualifying-award-verify",
+  "mode": "mcp-live-read",
+  "verifiedAt": "2026-08-29T22:55:00.000Z",
+  "passed": true,
+  "baseId": "appn84sqPw03zEbTT",
+  "notes": [
+    "Harness evidence qualifying-2026-08-28T2252.json captured Eligible?=1 with unlockCount=0 (poll timeout).",
+    "Live Production later created unlock + XP for the same WAS. Do not re-run qualifying --apply for this fixture.",
+    "Do not create another test week for this requirement."
+  ],
+  "was": {
+    "id": "recl3DmBh22ADPWWe",
+    "enrollmentId": "rec93mAfo5jKqP3g5",
+    "weekId": "recNzl4dNOtDmJqnV",
+    "dailyCheckStatus": "Pass",
+    "dailyCheckDetailPrefix": "PASS: All seven official Sunday-Saturday dates met the grace-period daily shooting requirement."
+  },
+  "sourceKey": "PERFECT_WEEK|rec93mAfo5jKqP3g5|recNzl4dNOtDmJqnV",
+  "stage058": {
+    "pass": true,
+    "unlockId": "recJ5umer4J4FHTOz",
+    "createdTime": "2026-08-28T23:06:37.000Z",
+    "milestoneSourceKey": "PERFECT_WEEK|rec93mAfo5jKqP3g5|recNzl4dNOtDmJqnV",
+    "xpAwardStatus": "Awarded",
+    "xpAwarded": 100,
+    "linkedWasId": "recl3DmBh22ADPWWe",
+    "linkedEnrollmentId": "rec93mAfo5jKqP3g5",
+    "linkedWeekId": "recNzl4dNOtDmJqnV",
+    "achievement": "Perfect Week",
+    "duplicateUnlockCountForSourceKey": 1
+  },
+  "stage059": {
+    "pass": true,
+    "xpEventId": "reczehlzkA8fjiQh0",
+    "createdTime": "2026-08-28T23:06:41.000Z",
+    "sourceKey": "PERFECT_WEEK|rec93mAfo5jKqP3g5|recNzl4dNOtDmJqnV",
+    "xpPoints": 100,
+    "xpSource": "Perfect Week",
+    "linkedUnlockId": "recJ5umer4J4FHTOz",
+    "linkedWasId": "recl3DmBh22ADPWWe",
+    "duplicateXpCountForSourceKey": 1
+  },
+  "verificationChecks": {
+    "058_created_unlock": true,
+    "milestone_source_key_matches": true,
+    "059_created_xp_event": true,
+    "xp_award_status_awarded": true,
+    "xp_points_100": true,
+    "no_duplicate_unlock": true,
+    "corresponds_to_was_recl3DmBh22ADPWWe": true
+  }
+}

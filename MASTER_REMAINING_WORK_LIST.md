@@ -4,7 +4,8 @@
 **Repository:** `Schmidt127/127-si-shooting-challenge`  
 **Created:** 2026-08-29  
 **Audit SHA (start):** `5ae358d5` (`origin/master` at audit)  
-**Authority when docs conflict:** Newest Master Update / Completion Master overlays + [`docs/CURRENT-TRUTH.md`](docs/CURRENT-TRUTH.md) + Section G of [`docs/127-SI-MASTER-FUTURE-WORK-LIST.md`](docs/127-SI-MASTER-FUTURE-WORK-LIST.md). Conflicts are recorded below, not silently dropped.
+**Reconcile SHA:** `907c29a9` + live Automations MCP 2026-08-29  
+**Authority when docs conflict:** Newest Master Update / Completion Master overlays + [`docs/CURRENT-TRUTH.md`](docs/CURRENT-TRUTH.md) + Section G of [`docs/127-SI-MASTER-FUTURE-WORK-LIST.md`](docs/127-SI-MASTER-FUTURE-WORK-LIST.md) + this list’s dated reconcile notes. Conflicts are recorded below, not silently dropped.
 
 **Status vocabulary (this document only):** `COMPLETE` · `IN PROGRESS` · `READY TO IMPLEMENT` · `READY FOR PRODUCTION APPLY` · `NEEDS VERIFICATION` · `BLOCKED` · `FUTURE`
 
@@ -18,11 +19,12 @@
 |-------|------------------------|------------------------------|--------------------------|
 | Automation **057** | CURRENT-TRUTH / Future Work (2026-08-27): **v2.2** live + Config video minimum | Completion Master §0 (2026-08-24): **v2.0** | Treat **v2.2** as current; Master dashboard needs refresh |
 | SEO / SC-115 | CURRENT-TRUTH / PROJECT_STATE: indexing cutover **complete** | Completion Master §0: SEO `deferred` / noindex | Indexing **COMPLETE**; athlete consent/indexability still open (FUT-025) |
-| Perfect Week full award | Evidence 2026-08-28 + Unlocks schema: **058 blocked** (wrong field names `Source Key`/`Notes` vs prod `Milestone Source Key`/`Coach Note`); WAS `recl3DmBh22ADPWWe` Eligible=1, unlockCount=0 | Completion Master / older “harness READY” wording | **BLOCKED / NEEDS PRODUCTION VERIFICATION** (MRW-A01) — not COMPLETE until evidence JSON proves 058+059+100 XP+dedupe |
-| PROJECT_STATE “Final reconciliation 2026-08-21” versions | CURRENT-TRUTH §8 overlays (010 paste, 057 v2.2, 065/066 closeout) | Same file older block (010 v10.11, 057 v1.7, …) | Prefer CURRENT-TRUTH §8 + dated overlays |
-| FUT-001 narrative vs Section G | Narrative: “Complete (GitHub)”; G: IN PROGRESS | Paste pending | Repo = mergeable; Production paste separate |
-| SC-PW-E2E evidence pointer | `tools/testing/sc-pw-e2e.mjs` + SC-PW-E2E.md | Some generated rows still cite grace-only / older verifier | Prefer SC-PW-E2E harness docs |
-| Open PR inventory in CURRENT-TRUTH §13 | Live GitHub 2026-08-29: #264, #268, #269, #266, #262, #244, #240, #238, #237, #234 | CURRENT-TRUTH still lists older #218/#217/#214… | Use live `gh pr list`; refresh CURRENT-TRUTH |
+| Perfect Week full award | MCP 2026-08-29: WAS `recl3DmBh22ADPWWe` unlock Awarded + 100 XP | Older timeout JSON / inaccurate second-run IDs | **COMPLETE** — evidence `award-was-recl3DmBh22ADPWWe-2026-08-29-mcp.json` |
+| Paste queue 010/022/072/073/FUT-001/058 | Automations Code Live = GitHub targets | Older READY FOR PRODUCTION APPLY rows | Pastes **COMPLETE** — see operator queue |
+| PROJECT_STATE “Final reconciliation 2026-08-21” versions | CURRENT-TRUTH §8 + 2026-08-29 Automations MCP | Same file older block | Prefer CURRENT-TRUTH + MCP |
+| FUT-001 | 020 v3.8 / 065 v10.4 **Live** | Older “paste pending” | Paste COMPLETE; optional SC-016 re-submit only |
+| SC-PW-E2E evidence pointer | MCP award JSON for WAS `recl3DmBh22ADPWWe` | `qualifying-2026-08-28T2252.json` timeout; untracked `…T223555.json` IDs not live | Prefer MCP award JSON |
+| Open PR inventory | Drafts #266/#262/#244/#240/#238/#237/#234; #264–#274 merged | Stale open-PR lists | Use live `gh pr list` |
 
 ---
 
@@ -33,35 +35,24 @@
 | Field | Value |
 |-------|--------|
 | **ID** | MRW-A01 |
-| **Short title** | SC-PW-E2E qualifying live award — BLOCKED / NEEDS PRODUCTION VERIFICATION |
-| **Description** | Prove 057→Eligible→058 unlock→059 XP on disposable PWTEST data. **Authoritative investigation (2026-08-28 evidence + Unlocks schema):** Production Unlocks identity field is **`Milestone Source Key`** (`fldHwWWMESmhYX2Da`); notes field is **`Coach Note`** (`fld8r3TVAnHcFsEPE`). Repo 058 previously expected non-existent **`Source Key`** / **`Notes`**, so create failed closed and the harness timed out with **zero unlocks**. Qualifying apply already proved **057 Ready**, **Days Logged=7**, **Eligible?=1** on WAS `recl3DmBh22ADPWWe` (enrollment `rec93mAfo5jKqP3g5`, week `recNzl4dNOtDmJqnV`, expected key `PERFECT_WEEK\|rec93mAfo5jKqP3g5\|recNzl4dNOtDmJqnV`). |
-| **Why it matters** | Perfect Week award path is incomplete until 058 creates the unlock and 059 awards 100 XP with no duplicates. |
-| **Current status** | **BLOCKED** / **NEEDS PRODUCTION VERIFICATION** — not COMPLETE |
-| **Source document(s)** | `docs/testing/perfect-week/SC-PW-E2E.md`; Future Work Section G; evidence `docs/testing/evidence/sc-pw-e2e/qualifying-2026-08-28T2252.json` (preflight: `unlockSourceField=Milestone Source Key`, `unlockNotesField=Coach Note`; `stage058` timeout) |
-| **Repository location(s)** | `058-…create-perfect-week-unlock.js` (v1.5+); `tools/testing/sc-pw-e2e.mjs`; `tools/testing/tests/test_058_perfect_week_lifecycle_runtime.mjs` |
-| **Dependencies** | Paste corrected **058** to Production; Live 058 + lifecycle trigger; then 059 Pending path; Enrollments R/W token for later E2E only |
-| **Exact files or production systems affected** | Production Airtable Automations **058** (paste) and **059** (verify); WAS `recl3DmBh22ADPWWe`; disposable PWTEST records |
-| **Autonomous?** | No |
-| **Required manual action** | See **Manual Airtable steps (MRW-A01)** below. **Do not** run qualifying `--apply` until those steps pass. **Do not** create another test week. |
-| **Verification required** | Evidence JSON with: 058 created unlock; 059 created XP; XP Award Status = Awarded; XP event = 100; no duplicate unlock or XP event |
-| **Recommended priority** | P0 |
-| **Definition of done** | Evidence JSON pass + CURRENT-TRUTH §11 + Future Work SC-PW-E2E COMPLETE — **do not mark complete without that JSON** |
-| **Notes** | Eligible?=1 alone is not award proof. Repo field-name fix must be pasted before re-testing. |
+| **Short title** | SC-PW-E2E qualifying live award — COMPLETE |
+| **Description** | Prove 057→Eligible→058 unlock→059 XP. **Authoritative proof (WAS `recl3DmBh22ADPWWe`):** unlock `recJ5umer4J4FHTOz`, Milestone Source Key `PERFECT_WEEK\|rec93mAfo5jKqP3g5\|recNzl4dNOtDmJqnV`, XP Event `reczehlzkA8fjiQh0`, XP Award Status **Awarded**, XP Points **100**, exactly one unlock for that key. |
+| **Why it matters** | Confirms Perfect Week award path end-to-end. |
+| **Current status** | **COMPLETE** |
+| **Source document(s)** | [`docs/testing/evidence/sc-pw-e2e/award-was-recl3DmBh22ADPWWe-2026-08-29-mcp.json`](docs/testing/evidence/sc-pw-e2e/award-was-recl3DmBh22ADPWWe-2026-08-29-mcp.json); operator queue |
+| **Repository location(s)** | Production 058 **1.5** + 059 **v3.7** Live |
+| **Dependencies** | Met |
+| **Exact files or production systems affected** | Unlock / XP / WAS above (retain as evidence; do not re-`--apply`) |
+| **Autonomous?** | Docs/verify only |
+| **Required manual action** | **None** — do **not** create another test week; do **not** re-`--apply` for this WAS |
+| **Verification required** | Met via MCP live read |
+| **Recommended priority** | — |
+| **Definition of done** | Met 2026-08-29 |
+| **Notes** | `qualifying-2026-08-28T2252.json` is historical pre-award timeout. A later PWTEST unlock for week `recWQrHifFTbbRWDP` may remain Pending without XP — **optional** cleanup only; not required for DoD. Local `sc-pw-e2e-lib.mjs` WIP is unrelated — leave untouched. |
 
-#### Manual Airtable steps (MRW-A01) — required before any new E2E `--apply`
+#### Manual Airtable steps (MRW-A01) — HISTORICAL (requirement already met)
 
-1. Verify Automation **058** is **Live**.
-2. Verify its trigger watches **created/updated Weekly Athlete Summary** records.
-3. Verify `recordId` is **dynamically mapped** to the triggering WAS record.
-4. Remove **positive-only** or **empty-unlock** filters that block lifecycle updates (withdrawal / restore).
-5. Paste GitHub **058 v1.5+** (writes `Milestone Source Key`, optional `Coach Note`) — skip GitHub header.
-6. Manually run **058** on WAS **`recl3DmBh22ADPWWe`**.
-7. Confirm unlock created with **Milestone Source Key** = `PERFECT_WEEK|rec93mAfo5jKqP3g5|recNzl4dNOtDmJqnV`.
-8. Confirm Automation **059** creates the **100 XP** event; XP Award Status = **Awarded**.
-9. Re-run **058** to prove **deduplication** (no second unlock).
-10. Only after steps 6–9 pass: run **one** qualifying E2E `--apply` and cleanup.
-
-**Hard stops:** Do not run qualifying harness with `--apply` yet. Do not create another test week. Do not mark Perfect Week / SC-PW-E2E complete without the evidence JSON above.
+Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfied by live unlock/XP above.
 
 ### MRW-A02 — Production paste: secure video URL pipeline (022 / 072 / 073)
 
@@ -69,18 +60,12 @@
 |-------|--------|
 | **ID** | MRW-A02 |
 | **Short title** | Paste 022 v2.2 + 072 v4.8 + 073 v4.4 |
-| **Description** | Production still on 022 v2.1 / 072 v4.7 / 073 v4.3 while GitHub has Lambda-only parent URL gate. |
-| **Why it matters** | Direct S3 links fail for parents; emails must use Lambda reviewer URLs only. |
-| **Current status** | READY FOR PRODUCTION APPLY |
-| **Source document(s)** | `docs/deploy-checklists/022-v2.2-secure-video-url-pipeline.md`; CURRENT-TRUTH §8/§10 |
-| **Repository location(s)** | `airtable/automations/shooting-challenge/022-*.js`, `072-*.js`, `073-*.js` |
-| **Dependencies** | None beyond Mike paste window |
-| **Exact files or production systems affected** | Production Airtable Automations 022, 072, 073 |
-| **Autonomous?** | No |
-| **Required manual action** | Mike paste from GitHub (skip GitHub header); confirm Automations Code column |
-| **Verification required** | Disposable video feedback email shows Lambda URL only; no AccessDenied S3 parent link |
-| **Recommended priority** | P0 |
-| **Definition of done** | CURRENT-TRUTH §8 versions match GitHub; CHANGELOG entry |
+| **Description** | Lambda-only parent URL gate (022/072/073). |
+| **Why it matters** | Direct S3 links fail for parents. |
+| **Current status** | **COMPLETE** (Automations Live: 022 v2.2, 072 v4.8, 073 v4.4 — MCP 2026-08-29) |
+| **Source document(s)** | `022-v2.2-secure-video-url-pipeline.md`; `2026-08-29-PRODUCTION-OPERATOR-QUEUE.md` |
+| **Required manual action** | **None** — do not re-paste |
+| **Definition of done** | Met |
 
 ### MRW-A03 — Production paste: FUT-001 homework identity (020 v3.8 + 065 v10.4)
 
@@ -88,18 +73,13 @@
 |-------|--------|
 | **ID** | MRW-A03 |
 | **Short title** | Paste FUT-001 automations |
-| **Description** | After PR #264 merges to master, paste 020 v3.8 and 065 v10.4 so assignment identity + due-date enforcement are live. |
-| **Why it matters** | HW1/HW2 slot matching will break year-to-year; late credit must be blocked. |
-| **Current status** | READY FOR PRODUCTION APPLY (repo merge may still be pending at list write) |
-| **Source document(s)** | `docs/deploy-checklists/FUT-001-homework-assignment-identity-deadline.md`; Future Work FUT-001 |
-| **Repository location(s)** | `020-*.js`, `065-*.js`, `lib/homework-contracts/` |
-| **Dependencies** | MRW-B01 (merge FUT-001 to master) |
-| **Exact files or production systems affected** | Production Automations 020, 065 |
-| **Autonomous?** | No (paste) |
-| **Required manual action** | Mike paste + Schmidt re-submit proof (SC-016) |
-| **Verification required** | Alternate slot match; late ineligible; no duplicate HC/XP |
-| **Recommended priority** | P0 |
-| **Definition of done** | Live versions = GitHub; SC-016 live re-submit evidence |
+| **Description** | Assignment identity + due-date enforcement. |
+| **Why it matters** | HW1/HW2 slot matching breaks year-to-year; late credit must be blocked. |
+| **Current status** | **COMPLETE** (Automations Live: 020 v3.8, 065 v10.4) |
+| **Source document(s)** | `FUT-001-homework-assignment-identity-deadline.md`; operator queue |
+| **Dependencies** | MRW-B01 met |
+| **Required manual action** | Optional SC-016 live re-submit (MRW-F02) — not a paste blocker |
+| **Definition of done** | Paste met |
 
 ### MRW-A04 — Production paste: Automation 010 v10.12 settlement grace
 
@@ -107,18 +87,11 @@
 |-------|--------|
 | **ID** | MRW-A04 |
 | **Short title** | Paste 010 v10.12 |
-| **Description** | Production Automations Code still showed v10.10 (2026-08-23); GitHub has v10.12 formula settlement grace. |
+| **Description** | Formula settlement grace. |
 | **Why it matters** | Avoids false error emails / premature settlement failures. |
-| **Current status** | READY FOR PRODUCTION APPLY |
-| **Source document(s)** | `docs/deploy-checklists/010-v10.12-formula-settlement-grace.md`; CURRENT-TRUTH §8 |
-| **Repository location(s)** | `airtable/automations/shooting-challenge/010-*.js` |
-| **Dependencies** | None |
-| **Exact files or production systems affected** | Production Automation 010 |
-| **Autonomous?** | No |
-| **Required manual action** | Mike paste; confirm Code column |
-| **Verification required** | Controlled submission XP path still awards; no false error on formula lag |
-| **Recommended priority** | P0 |
-| **Definition of done** | Prod Code = v10.12; CURRENT-TRUTH updated |
+| **Current status** | **COMPLETE** (Automations Live: 010 v10.12) |
+| **Required manual action** | **None** — do not re-paste |
+| **Definition of done** | Met |
 
 ### MRW-A05 — Season Weeks / challenge calendar ready (SC-032 / SC-065)
 
@@ -225,7 +198,7 @@
 | **Short title** | Refresh Completion Master dashboard vs CURRENT-TRUTH |
 | **Description** | Update Completion Master §0 for 057 v2.2, SEO cutover, SC-034 closeout, open PR list; align PROJECT_STATE stale version block. |
 | **Why it matters** | Agents and Mike are misled by 2026-08-24 dashboard. |
-| **Current status** | READY TO IMPLEMENT |
+| **Current status** | **COMPLETE** (this reconcile) |
 | **Source document(s)** | AUTHORITY-MAP; CURRENT-TRUTH; this list |
 | **Repository location(s)** | `docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`, `docs/PROJECT_STATE.md`, `docs/CURRENT-TRUTH.md` |
 | **Dependencies** | None |
@@ -300,17 +273,19 @@
 
 | ID | Title | Status | Script / checklist | Manual action | Priority |
 |----|-------|--------|-------------------|---------------|----------|
-| MRW-C01 | Paste 010 v10.12 | READY FOR PRODUCTION APPLY | `010-v10.12-formula-settlement-grace.md` | Paste script | P0 |
-| MRW-C02 | Paste 022 v2.2 | READY FOR PRODUCTION APPLY | `022-v2.2-secure-video-url-pipeline.md` | Paste script | P0 |
-| MRW-C03 | Paste 072 v4.8 | READY FOR PRODUCTION APPLY | same | Paste after/with 022 | P0 |
-| MRW-C04 | Paste 073 v4.4 | READY FOR PRODUCTION APPLY | same | Paste | P0 |
-| MRW-C05 | Paste 020 v3.8 + 065 v10.4 | READY FOR PRODUCTION APPLY | `FUT-001-*.md` | After MRW-B01 | P0 |
-| MRW-C06 | SC-151 Submitted Same Day? formula | READY TO IMPLEMENT | Future Work SC-151 | **After** MRW-A01; OMNI formula change | P2 |
+| MRW-C01 | Paste 010 v10.12 | **COMPLETE** | `010-v10.12-*.md` | Do not re-paste | — |
+| MRW-C02 | Paste 022 v2.2 | **COMPLETE** | `022-v2.2-*.md` | Do not re-paste | — |
+| MRW-C03 | Paste 072 v4.8 | **COMPLETE** | same | Do not re-paste | — |
+| MRW-C04 | Paste 073 v4.4 | **COMPLETE** | same | Do not re-paste | — |
+| MRW-C05 | Paste 020 v3.8 + 065 v10.4 | **COMPLETE** | `FUT-001-*.md` | Optional SC-016 only | — |
+| MRW-C05b | Paste 058 1.5 + 059 v3.7 | **COMPLETE** | `058-v1.5-*.md` | Do not re-paste | — |
+| MRW-C06 | SC-151 Submitted Same Day? formula | READY TO IMPLEMENT | Future Work SC-151 | OMNI formula change | P2 |
 | MRW-C07 | RCC views / Interface install | READY FOR PRODUCTION APPLY | `RELIABILITY-COMMAND-CENTER-PRODUCTION-INSTALL.md` | OMNI views | P1 |
-| MRW-C08 | Automation UI version inventory (SC-058) | NEEDS VERIFICATION | AUTOMATION_VERSION_INVENTORY | Mike UI attestation | P1 |
+| MRW-C08 | Automation UI version inventory (SC-058) | NEEDS VERIFICATION | AUTOMATION_VERSION_INVENTORY | Mike UI attestation vs MCP | P1 |
 | MRW-C09 | Retire/disposition Automation 043 (SC-059) | IN PROGRESS | Future Work SC-059 | Confirm 043 not deployed | P1 |
+| MRW-C10 | FUT-010 live attachment clear | READY FOR PRODUCTION APPLY | `FUT-010-*.md` + operator queue | Dry-run then supervised apply | P1 |
 
-**Already applied (do not re-queue):** 057 v2.2; 059 Pending-only trigger; 065 v10.3 / 066 v3.9 dynamic `recordId`; 072 v4.7 weekly E2E; SEO indexing env.
+**Already applied (do not re-queue):** 057 v2.2; 059 Pending-only trigger; 010 v10.12; 020 v3.8; 022 v2.2; 058 1.5; 059 v3.7; 065 v10.4; 066 v3.9; 072 v4.8; 073 v4.4; SEO indexing env; FUT-WELCOME-LEGACY field delete.
 
 **For each C-item DoD:** Automations Code column matches GitHub version + CURRENT-TRUTH §8 updated + dated evidence.
 
@@ -343,7 +318,7 @@
 
 | ID | Title | Status | Notes |
 |----|-------|--------|-------|
-| MRW-F01 | SC-PW-E2E live apply | NEEDS VERIFICATION | Same as MRW-A01 |
+| MRW-F01 | SC-PW-E2E live apply | **COMPLETE** | WAS `recl3DmBh22ADPWWe` MCP award evidence |
 | MRW-F02 | SC-016 live re-submit after FUT-001 paste | NEEDS VERIFICATION | |
 | MRW-F03 | Broader SC-005 season matrix | IN PROGRESS | Many paths green; PW + email inject open |
 | MRW-F04 | SC-010/011/012/015 homework path re-tests | IN PROGRESS | Installed; re-prove |
@@ -358,7 +333,7 @@
 
 | ID | Title | Status | Notes |
 |----|-------|--------|-------|
-| MRW-G01 | Doc reconciliation (Completion Master lag) | READY TO IMPLEMENT | Same as MRW-B04 |
+| MRW-G01 | Doc reconciliation (Completion Master lag) | **COMPLETE** | Same as MRW-B04 (this reconcile) |
 | MRW-G02 | FUT-018 landing / SC page improvements | READY TO IMPLEMENT | Partial via #266/#270 |
 | MRW-G03 | FUT-019 footer consistency | READY TO IMPLEMENT | |
 | MRW-G04 | FUT-016 Tutorials redesign | FUTURE | Tied to C-026 |
@@ -399,7 +374,7 @@
 | MRW-I07 | Weeks 2026–27 import (MRW-A05) | BLOCKED | Calendar + import approval |
 | MRW-I08 | Learning Activities schema (SC-018) | BLOCKED | Schema authorization |
 | MRW-I09 | Fillout daily intake reopen (SC-146) | BLOCKED | After dry-run SC-135 |
-| MRW-I10 | Production paste windows (C01–C05) | BLOCKED | Mike paste time |
+| MRW-I10 | ~~Production paste windows (C01–C05)~~ | **COMPLETE** | Pastes applied — do not re-queue |
 | MRW-I11 | Branch protection / merge approval if CI requires human | BLOCKED | Approve merges if required |
 | MRW-I12 | Vercel deploy credentials if auto-deploy fails | BLOCKED | Dashboard access |
 
@@ -407,9 +382,10 @@
 
 ## Recommended next task for Mike
 
-1. **Merge-ready GitHub:** Approve merge of FUT-001 (#264) and SC-PW-E2E harness (#269) if not already merged by Lead this session.  
-2. **Highest-value live action:** Run **SC-PW-E2E** qualifying `--apply` with an Enrollments-capable PAT, then paste **022/072/073** and **010 v10.12**.  
-3. **Do not** activate FUT-003 or clear attachments until registration / storage windows are intentional.
+1. **Do not** re-paste 010/020/022/058/059/065/072/073 and **do not** re-run Perfect Week `--apply` for WAS `recl3DmBh22ADPWWe`.  
+2. **Highest-value remaining live action:** FUT-010 dry-run then supervised attachment clear per [`docs/deploy-checklists/FUT-010-intake-attachment-cleanup.md`](docs/deploy-checklists/FUT-010-intake-attachment-cleanup.md) + [`2026-08-29-PRODUCTION-OPERATOR-QUEUE.md`](docs/deploy-checklists/2026-08-29-PRODUCTION-OPERATOR-QUEUE.md).  
+3. **Calendar:** Weeks 2026–27 import (MRW-A05) when ready — Weeks are protected.  
+4. **Do not** activate FUT-003 until registration intentionally opens.
 
 ---
 
@@ -418,6 +394,9 @@
 - SC-034 / V2-002 / PW config items → **COMPLETE**; not listed as open work.  
 - FUT-011–015, FUT-020–023, FUT-006, FUT-008 → **COMPLETE**; omitted from open sections.  
 - **FUT-WELCOME-LEGACY** (MRW-B07) → **COMPLETE** 2026-08-29 — six Enrollment fields deleted; 075 absent; do not restore.  
+- **SC-PW-E2E / MRW-A01** → **COMPLETE** — MCP award evidence for WAS `recl3DmBh22ADPWWe`.  
+- **Paste debt C01–C05 + 058/059** → **COMPLETE** (Automations Code Live 2026-08-29).  
 - SC-027/066 shot milestones live-tested → monitoring only.  
 - Historical overnight MIKE-ACTIONS rows superseded by CURRENT-TRUTH / Section G where dated later.  
-- Legacy C-/SC- inventory in Future Work Sections A–F remains evidence; **this file + Future Work Section G** are the operator queues.
+- Legacy C-/SC- inventory in Future Work Sections A–F remains evidence; **this file + operator queue + Future Work Section G** are the operator queues.  
+- Local uncommitted `tools/testing/lib/sc-pw-e2e-lib.mjs` → unrelated WIP; do not modify/commit in this closeout.

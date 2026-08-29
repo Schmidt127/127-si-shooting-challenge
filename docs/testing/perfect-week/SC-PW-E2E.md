@@ -3,10 +3,11 @@
 | Field | Value |
 |-------|--------|
 | Backlog | **SC-PW-E2E** |
-| Status | **BLOCKED at 058** (2026-08-28 PROD partial run) |
+| Status | **COMPLETE** (MCP-verified award on WAS `recl3DmBh22ADPWWe`) |
 | Harness | `tools/testing/sc-pw-e2e.mjs` |
 | Library | `tools/testing/lib/sc-pw-e2e-lib.mjs` |
 | Contract tests | `tools/testing/tests/test_sc_pw_e2e_contract.mjs` |
+| Evidence | `docs/testing/evidence/sc-pw-e2e/award-was-recl3DmBh22ADPWWe-2026-08-29-mcp.json` |
 
 ## Purpose
 
@@ -14,7 +15,7 @@ Verify the production Perfect Week pipeline on **throwaway data only**:
 
 **057** → WAS formulas → **Perfect Week Eligible?** → **058** unlock → **059** XP Event
 
-**2026-08-28 PROD partial run:** preflight + submission formulas + **057 Ready** + **Eligible?=1** on WAS `recl3DmBh22ADPWWe` — **058 did not fire** within 600s (`unlockCount=0`, empty `Perfect Week Automation Error`). Evidence: `docs/testing/evidence/sc-pw-e2e/qualifying-2026-08-28T2252.json`. Do **not** re-run `--apply` until Mike confirms **058** creates the unlock.
+**Authoritative award proof (do not re-`--apply`):** WAS `recl3DmBh22ADPWWe` → unlock `recJ5umer4J4FHTOz` (Awarded, `Milestone Source Key` = `PERFECT_WEEK|rec93mAfo5jKqP3g5|recNzl4dNOtDmJqnV`) → XP `reczehlzkA8fjiQh0` (100 pts). Evidence: `docs/testing/evidence/sc-pw-e2e/award-was-recl3DmBh22ADPWWe-2026-08-29-mcp.json`. Harness timeout JSON `qualifying-2026-08-28T2252.json` is historical pre-award. Local `sc-pw-e2e-lib.mjs` WIP must stay uncommitted until intentional.
 
 No email. No writes to formula outputs, `Perfect Week Eligible?`, unlocks (except `trigger-only`), XP Events, or Lifetime XP.
 
@@ -150,6 +151,13 @@ node tests/automation-contracts/057-perfect-week-video-minimum.test.js
 node tests/automation-contracts/automation-io-conventions.test.js
 ```
 
+## Fixture create notes (2026-08-29)
+
+- Set **`Duplicate Review Status = Count It`** (and Simple Total) on create — otherwise duplicate review can force `Needs Review` → `Count This Submission? = 0` → not countable.
+- Arm WAS as **Error** until submissions/videos exist, then a **single Pending** write (Calculation Queue). Do not re-write Pending after 057 may have set Ready.
+- Unlock lookup uses **`Milestone Source Key`** + WAS-linked unlock IDs — never `FIND(rec…, ARRAYJOIN({Enrollment}))` (ARRAYJOIN returns names).
+- `rearm057` must cycle **Error → Pending** (Queue is 1 for both Pending and Ready).
+
 ## Operator note
 
-Mark **SC-PW-E2E** complete in the Master Future Work List only after Mike runs `--case qualifying --apply` on production and evidence is archived.
+**SC-PW-E2E** marked complete after MCP-verified award on WAS `recl3DmBh22ADPWWe`. Do **not** create another test week for this requirement. Optional: `--case nonqualifying-video` for the fail path.

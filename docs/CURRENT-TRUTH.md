@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-28 (`master` @ PR #265 merge + `cursor/sc-pw-e2e-past-dates-dd95` harness fixes; SC-PW-E2E PROD run **partial** — preflight + 057 PASS, **058 automation did not fire**)  
+**Last verification (repo):** 2026-08-29 release-completion reconcile — Perfect Week award COMPLETE (WAS `recl3DmBh22ADPWWe`); Automations paste queue Live-aligned; FUT-WELCOME-LEGACY COMPLETE; `/shoot` 200 + health ok  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -219,7 +219,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Video XP | **113 / 114** (+ **013** VF create) | **Live v6.4 / v6.1**; **PKG-007 lifecycle proof PASS 2026-08-23** (`AUTONOMOUS_VIDEO_QA_20260823_164549`, Testing3). Native trigger + 073 OFF UI attestation open |
 | Shot milestones | **066** | Production **v3.9** live-tested 2026-08-24 |
 | Levels | **041 / 042** | **041 Production v5.1**; broader progression proof still open |
-| Perfect Week | **057 → 058 → 059** | **SC-PW-E2E PROD partial 2026-08-28:** disposable qualifying run reached **Eligible?=1**, **057 Ready**, 7/7 grace-aware qualifying days on `rec93mAfo5jKqP3g5` / WAS `recl3DmBh22ADPWWe` / week `recNzl4dNOtDmJqnV`. **058 did not create unlock** (10 min poll, `unlockCount=0`). Evidence: `docs/testing/evidence/sc-pw-e2e/qualifying-2026-08-28T2252.json`. Full 057→058→059 award **still PENDING** until 058 fires. |
+| Perfect Week | **057 → 058 → 059** | **COMPLETE** for WAS `recl3DmBh22ADPWWe`: unlock `recJ5umer4J4FHTOz`, key `PERFECT_WEEK\|rec93mAfo5jKqP3g5\|recNzl4dNOtDmJqnV`, XP `reczehlzkA8fjiQh0`, Awarded, 100 XP, no duplicate unlock. Evidence: `docs/testing/evidence/sc-pw-e2e/award-was-recl3DmBh22ADPWWe-2026-08-29-mcp.json`. Do **not** re-`--apply` for this fixture. |
 | Zoom live attendance XP | **101** | Production **v6.7** (live script body). Meeting `recxtpMu4ONbdDD45` safe skip when reconciliation not needed. |
 | Zoom recording XP under slot 117 | Not live | Slot **117** is email Hub handoff (**v2.1 Live**) |
 
@@ -229,13 +229,13 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 
 | Path | State |
 |------|--------|
-| Homework assets → HC → XP → parent | **009** → **020 v3.7** → **070a v4.7 Live** (controlled window) → **064** prepare / **065 v10.3** → **078** Ready → **071** Hub |
-| Homework completion (**020**) | Production **v3.7**. **012** / **063** deleted — do not restore |
+| Homework assets → HC → XP → parent | **009** → **020 v3.8** → **070a v4.7 Live** (controlled window) → **064** prepare / **065 v10.4** → **078** Ready → **071** Hub |
+| Homework completion (**020**) | Production **v3.8** (FUT-001). **012** / **063** deleted — do not restore |
 | Homework upload Make (**070a**) | Production **v4.7 Live** during Perfect Week controlled window (historically intentional OFF). Formula Ready alone does not send; **Send to Make Trigger** required |
 | Video upload (**070b** + Lambda + **070c**) | Production **070b v4.7** → Make → Lambda → **070c current live (repo v1.1)** verify. Optional retry proof + secret rotation **PENDING** |
-| Child upload writeback (**022**) | GitHub **v2.2** (paste pending) — Lambda viewer URL only; no Canonical S3 fallback |
+| Child upload writeback (**022**) | Production **v2.2** Live — Lambda viewer URL only; no Canonical S3 fallback |
 | Homework parent email | **078** Ready → **071** → **079** → Hub → Resend |
-| Video parent email | Video `Parent Feedback Ready?` **manual** → **073 v4.4** (GitHub) / **v4.3** (prod until paste) → Hub → Resend — parent URL must be Lambda viewer only |
+| Video parent email | Video `Parent Feedback Ready?` **manual** → **073 v4.4** Live → Hub → Resend — parent URL must be Lambda viewer only |
 | Zoom live attendance | **101 v6.7** |
 | Zoom recording approval email | **117 v2.1 Live** → Hub → Resend |
 | Fillout daily submission | **OFF** (contest intake closed) |
@@ -248,7 +248,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 |------|--------|
 | Controlled path through WAS / homework | Path evidence 2026-08-16 |
 | Perfect Week 48-hour grace period | **Live-tested** — **057 v2.0** + Airtable formulas; disposable weekly email showed **4/7** PW qualifying days vs **7/7** general shooting days |
-| Full Perfect Week award proof | **PENDING / calendar-blocked** — not ready, not awarded. Grace period and ledger repair complete. See deploy checklists under `docs/deploy-checklists/057-v2.0-perfect-week-grace-period.md` |
+| Full Perfect Week award proof | **COMPLETE** — WAS `recl3DmBh22ADPWWe`; unlock Awarded + 100 XP; see MCP evidence JSON. Do not create another test week for this requirement. |
 | Required order | **057 → 058 → 059** only after Eligible?=1 and Days Logged=7 |
 | Weekly XP disagreement (`reczxTIpVI8ZJLex0`) | **Historical artifact:** old weekly email sent **before v4.7 corrections** — preserved evidence only. Resolved by **072 v4.7** + disposable E2E **2026-08-24** on `recdj8MD0szplMW5r`. Queue proof `recoikFrli3m0xDRa` **must remain unchanged** — not reused |
 | Authority | Completion Master + Perfect Week prep report + Perfect Week testing docs under `docs/testing/perfect-week/` |
