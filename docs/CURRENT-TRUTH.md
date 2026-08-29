@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-28 (branch `cursor/launch-readiness-backend-4904` — SC-PW-E2E preflight, weekly email audit, PR #264 CI fix; re-verify with `git rev-parse HEAD`)  
+**Last verification (repo):** 2026-08-28 (`master` @ PR #265 merge + `cursor/sc-pw-e2e-past-dates-dd95` harness fixes; SC-PW-E2E PROD run **partial** — preflight + 057 PASS, **058 automation did not fire**)  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -219,7 +219,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Video XP | **113 / 114** (+ **013** VF create) | **Live v6.4 / v6.1**; **PKG-007 lifecycle proof PASS 2026-08-23** (`AUTONOMOUS_VIDEO_QA_20260823_164549`, Testing3). Native trigger + 073 OFF UI attestation open |
 | Shot milestones | **066** | Production **v3.9** live-tested 2026-08-24 |
 | Levels | **041 / 042** | **041 Production v5.1**; broader progression proof still open |
-| Perfect Week | **057 → 058 → 059** | **48-hour grace period `live-tested`** (057 v2.0 + formulas; 4/7 PW days in disposable E2E). XP ledger **live-tested 2026-08-23** (39 active events on `rec93mAfo5jKqP3g5`). Full calendar award still **PENDING** until Days Logged=7 and Eligible?=true. |
+| Perfect Week | **057 → 058 → 059** | **SC-PW-E2E PROD partial 2026-08-28:** disposable qualifying run reached **Eligible?=1**, **057 Ready**, 7/7 grace-aware qualifying days on `rec93mAfo5jKqP3g5` / WAS `recl3DmBh22ADPWWe` / week `recNzl4dNOtDmJqnV`. **058 did not create unlock** (10 min poll, `unlockCount=0`). Evidence: `docs/testing/evidence/sc-pw-e2e/qualifying-2026-08-28T2252.json`. Full 057→058→059 award **still PENDING** until 058 fires. |
 | Zoom live attendance XP | **101** | Production **v6.7** (live script body). Meeting `recxtpMu4ONbdDD45` safe skip when reconciliation not needed. |
 | Zoom recording XP under slot 117 | Not live | Slot **117** is email Hub handoff (**v2.1 Live**) |
 

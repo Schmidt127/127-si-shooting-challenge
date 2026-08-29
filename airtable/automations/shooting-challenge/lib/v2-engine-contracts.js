@@ -20,7 +20,7 @@
  * - 114 — VIDEO_SUBMISSION|{videoFeedbackId}
  * - 117a — ZOOM_RECORDING|{meetingId}|{enrollmentId} (repo-ready; live Production install open)
  * - 009 — Asset Slot HW1 / HW2 / VIDEO mapping + source-attachment dedupe
- * - 020 — infer HW1/HW2 from Asset Slot / Purpose / Label
+ * - 020 — infer HW1/HW2 from Asset Slot / Purpose / Label; FUT-001 assignment identity + deadline
  * - 067 — HW17 quiz Enrollment+Week+Homework dedupe; assets HW1-only
  *   (Purpose=Homework 1, Slot=HW1, Send to Make Trigger=false; Source Attachment ID)
  * - 072 / 074 / 118 / 119 — weekly email build/send + priorSaturdayKeyDenver
@@ -1903,6 +1903,108 @@ function planHomeworkMultiAssetCompletion({
   };
 }
 
+/**
+ * FUT-001 — resolve selected PHA from Homework Name 1/2 regardless of upload slot when unambiguous.
+ */
+function resolveHomeworkAssignmentIdentity({ hw1PhaId = "", hw2PhaId = "", assetUploadSlot = "" } = {}) {
+  const hw1 = isValidRecordId(hw1PhaId) ? String(hw1PhaId).trim() : "";
+  const hw2 = isValidRecordId(hw2PhaId) ? String(hw2PhaId).trim() : "";
+  const slot = String(assetUploadSlot || "").trim().toUpperCase();
+  const unique = [...new Set([hw1, hw2].filter(Boolean))];
+
+  if (unique.length === 0) {
+    return { ok: false, reason: "missing_pha_selection", phaId: "", method: "" };
+  }
+  if (unique.length === 1) {
+    return {
+      ok: true,
+      reason: "single_assignment_identity",
+      phaId: unique[0],
+      method: unique[0] === hw1 ? "homework_name_1" : "homework_name_2",
+      alternateUploadSlot:
+        slot === "HW1" || slot === "HW2"
+          ? (unique[0] === hw1 ? slot === "HW2" : slot === "HW1")
+          : false,
+    };
+  }
+
+  const slotFieldPha = slot === "HW1" ? hw1 : slot === "HW2" ? hw2 : "";
+  if (slotFieldPha && unique.includes(slotFieldPha)) {
+    return {
+      ok: true,
+      reason: "dual_assignment_slot_field_match",
+      phaId: slotFieldPha,
+      method: slot === "HW1" ? "homework_name_1" : "homework_name_2",
+      alternateUploadSlot: false,
+    };
+  }
+
+  return {
+    ok: false,
+    reason: "ambiguous_dual_assignment",
+    phaId: "",
+    method: "",
+    candidatePhaIds: unique,
+  };
+}
+
+function buildHomeworkCompletionIdentityKeyByPha({ enrollmentId = "", phaId = "" } = {}) {
+  const enrollment = assertValidRecordId(enrollmentId, "enrollmentId");
+  const pha = assertValidRecordId(phaId, "phaId");
+  return `HC|enrollment|${enrollment}|pha|${pha}`;
+}
+
+function resolveHomeworkAssignmentDueDateKey(phaDueDate, weekEndDate) {
+  const fromPha = toDateKeyFromText(phaDueDate);
+  if (fromPha) return fromPha;
+  return toDateKeyFromText(weekEndDate) || "";
+}
+
+function evaluateHomeworkSubmissionDeadline({
+  submissionDateKey = "",
+  phaDueDate = "",
+  weekEndDate = "",
+} = {}) {
+  const submitKey = toDateKeyFromText(submissionDateKey);
+  const dueKey = resolveHomeworkAssignmentDueDateKey(phaDueDate, weekEndDate);
+
+  if (!submitKey) {
+    return {
+      creditEligible: true,
+      timingStatus: "unknown_submission_date",
+      dueDateKey: dueKey,
+      reason: "Submission date missing; deadline not enforced.",
+    };
+  }
+  if (!dueKey) {
+    return {
+      creditEligible: true,
+      timingStatus: "no_due_date",
+      dueDateKey: "",
+      reason: "No PHA Due Date or Week End Date; deadline not enforced.",
+    };
+  }
+  if (submitKey > dueKey) {
+    return {
+      creditEligible: false,
+      timingStatus: "late_ineligible",
+      dueDateKey: dueKey,
+      reason: `Submission date ${submitKey} is after assignment due date ${dueKey}.`,
+    };
+  }
+  return {
+    creditEligible: true,
+    timingStatus: "on_time",
+    dueDateKey: dueKey,
+    reason: "",
+  };
+}
+
+function buildHomeworkLateSubmissionNote({ timingStatus = "", dueDateKey = "", submissionDateKey = "" } = {}) {
+  if (timingStatus !== "late_ineligible") return "";
+  return `Late submission: activity date ${submissionDateKey} is after due date ${dueDateKey}. Not eligible for homework credit or XP unless an approved exception is recorded.`;
+}
+
 module.exports = {
   DEFAULT_TIME_ZONE,
   SOURCE_KEY_PREFIXES,
@@ -1981,4 +2083,9 @@ module.exports = {
   mapAttachmentsToAssetSlotPlans,
   inferHomeworkAssetSlot,
   decideHw17QuizIntakeAction,
+  resolveHomeworkAssignmentIdentity,
+  buildHomeworkCompletionIdentityKeyByPha,
+  resolveHomeworkAssignmentDueDateKey,
+  evaluateHomeworkSubmissionDeadline,
+  buildHomeworkLateSubmissionNote,
 };

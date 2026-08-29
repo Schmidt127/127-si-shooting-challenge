@@ -58,6 +58,10 @@ const {
   inferHomeworkAssetSlot,
   decideHw17QuizIntakeAction,
   ASSET_SLOT_SOURCES,
+  resolveHomeworkAssignmentIdentity,
+  buildHomeworkCompletionIdentityKeyByPha,
+  evaluateHomeworkSubmissionDeadline,
+  resolveHomeworkAssignmentDueDateKey,
 } = require("./v2-engine-contracts");
 
 function test(name, fn) {
@@ -782,6 +786,43 @@ test("HW17 quiz intake: Enrollment+Week+Homework dedupe; C-009 no-asset gap", ()
     alreadyLinkedCompletionId: HW,
   });
   assert.strictEqual(already.action, "skipped_already_linked");
+});
+
+test("FUT-001 resolveHomeworkAssignmentIdentity accepts alternate upload slot", () => {
+  const result = resolveHomeworkAssignmentIdentity({
+    hw1PhaId: "recPhaAssign00001",
+    hw2PhaId: "",
+    assetUploadSlot: "HW2",
+  });
+  assert.strictEqual(result.ok, true);
+  assert.strictEqual(result.phaId, "recPhaAssign00001");
+  assert.strictEqual(result.alternateUploadSlot, true);
+});
+
+test("FUT-001 buildHomeworkCompletionIdentityKeyByPha", () => {
+  assert.strictEqual(
+    buildHomeworkCompletionIdentityKeyByPha({ enrollmentId: ENR, phaId: "recPhaAssign00001" }),
+    `HC|enrollment|${ENR}|pha|recPhaAssign00001`
+  );
+});
+
+test("FUT-001 evaluateHomeworkSubmissionDeadline PHA Due Date overrides week end", () => {
+  assert.strictEqual(
+    resolveHomeworkAssignmentDueDateKey("2026-08-31", "2026-08-24"),
+    "2026-08-31"
+  );
+  const late = evaluateHomeworkSubmissionDeadline({
+    submissionDateKey: "2026-09-01",
+    phaDueDate: "2026-08-31",
+    weekEndDate: "2026-08-24",
+  });
+  assert.strictEqual(late.creditEligible, false);
+  assert.strictEqual(late.timingStatus, "late_ineligible");
+});
+
+test("FUT-001 homework XP source key remains one key per Homework Completion", () => {
+  assert.strictEqual(buildHomeworkXpSourceKey(HW), `HOMEWORK_XP|${HW}`);
+  assert.strictEqual(SOURCE_KEY_PREFIXES.homeworkXp, "HOMEWORK_XP|");
 });
 
 console.log("\nAll v2-engine-contracts tests passed.");

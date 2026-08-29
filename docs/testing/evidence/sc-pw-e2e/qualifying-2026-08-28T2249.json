@@ -1,0 +1,135 @@
+{
+  "harness": "SC-PW-E2E",
+  "case": "qualifying",
+  "mode": "apply",
+  "startedAt": "2026-08-28T22:49:56.339Z",
+  "created": {
+    "enrollmentId": "rec93mAfo5jKqP3g5",
+    "weekId": "recKbFNgjmQgd3gmy",
+    "wasId": "recCugffBx463Fj2X",
+    "submissionIds": [
+      "reczt0nVGDOm0rJde",
+      "reclxCAbhuWEDz2A2",
+      "rech7V7oYkk9QUy64",
+      "recW1MiKF3PEitrPc",
+      "recfzIbf0axbqiWXS",
+      "recJumm5MTz2fEKnw",
+      "reccs3vz1Ik8jZgNB"
+    ],
+    "videoIds": [
+      "rechlD2mi6kvNaDK4",
+      "recfqkTTkX240haEL",
+      "recQcn8nDtGSzOgVF"
+    ],
+    "unlockId": null,
+    "xpEventIds": []
+  },
+  "stage057": null,
+  "wasFormulas": null,
+  "stage058": null,
+  "stage059": null,
+  "xp": null,
+  "duplicateCheck": null,
+  "lifetimeXp": null,
+  "cleanup": null,
+  "failurePoint": "preflight",
+  "passed": false,
+  "preflight": {
+    "passed": true,
+    "unlockSourceField": "Milestone Source Key",
+    "unlockNotesField": "Coach Note"
+  },
+  "expectedXpAmount": 100,
+  "submissionFormulas": {
+    "pass": true,
+    "subs": [
+      {
+        "id": "reczt0nVGDOm0rJde",
+        "activityDate": "2026-07-06",
+        "submittedSameDay": 1,
+        "countable": 1,
+        "shotTotal": 715
+      },
+      {
+        "id": "reclxCAbhuWEDz2A2",
+        "activityDate": "2026-07-07",
+        "submittedSameDay": 1,
+        "countable": 1,
+        "shotTotal": 715
+      },
+      {
+        "id": "rech7V7oYkk9QUy64",
+        "activityDate": "2026-07-08",
+        "submittedSameDay": 1,
+        "countable": 1,
+        "shotTotal": 715
+      },
+      {
+        "id": "recW1MiKF3PEitrPc",
+        "activityDate": "2026-07-09",
+        "submittedSameDay": 1,
+        "countable": 1,
+        "shotTotal": 715
+      },
+      {
+        "id": "recfzIbf0axbqiWXS",
+        "activityDate": "2026-07-10",
+        "submittedSameDay": 1,
+        "countable": 1,
+        "shotTotal": 715
+      },
+      {
+        "id": "recJumm5MTz2fEKnw",
+        "activityDate": "2026-07-11",
+        "submittedSameDay": 1,
+        "countable": 1,
+        "shotTotal": 715
+      },
+      {
+        "id": "reccs3vz1Ik8jZgNB",
+        "activityDate": "2026-07-12",
+        "submittedSameDay": 1,
+        "countable": 1,
+        "shotTotal": 715
+      }
+    ],
+    "distinctDates": 7,
+    "allSameDay": true,
+    "allCountable": true,
+    "reason": "seven distinct qualifying submissions",
+    "waitedMs": 1705
+  },
+  "failed": true,
+  "message": "Fatal at stage 057-ready: Goal Record recQJRxpaBgwN42Un is not one exact active numeric configuration for Enrollment Program Instance + Grade Band.",
+  "diagnostic": {
+    "pass": false,
+    "fatal": true,
+    "reason": "Goal Record recQJRxpaBgwN42Un is not one exact active numeric configuration for Enrollment Program Instance + Grade Band.",
+    "was": {
+      "id": "recCugffBx463Fj2X",
+      "automationStatus": "Error",
+      "automationError": "Goal Record recQJRxpaBgwN42Un is not one exact active numeric configuration for Enrollment Program Instance + Grade Band.",
+      "videoCount": 0,
+      "videoMet": 0,
+      "zoomMeetings": 0,
+      "zoomAttendance": 0,
+      "zoomMet": 0,
+      "homeworkAssigned": 0,
+      "eligible": 0,
+      "unlockIds": [],
+      "daysLogged": 7,
+      "lifetimeXpAfterWeek": 120,
+      "xpEarnedThisWeek": 120,
+      "xpEventIds": [
+        "reczuoqXLZfAx7BML",
+        "recATkhFBVJeKBMKh",
+        "recXDxTANZCwK9SKX",
+        "recjJ10pWUwHSddvb",
+        "recmbXJtstsObu5ZR",
+        "recNR2wtZZEpmZWHV"
+      ]
+    }
+  },
+  "finishedAt": "2026-08-28T22:50:21.719Z",
+  "sourceKey": "PERFECT_WEEK|rec93mAfo5jKqP3g5|recKbFNgjmQgd3gmy"
+}

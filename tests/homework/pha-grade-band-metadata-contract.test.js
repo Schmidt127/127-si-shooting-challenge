@@ -62,8 +62,8 @@ t("020/033/065/071 syntax", () => {
   }
 });
 
-t("020 v3.7 treats Grade Band as metadata only", () => {
-  assert.match(s020, /version:\s*"v3\.7"/);
+t("020 v3.8 treats Grade Band as metadata only", () => {
+  assert.match(s020, /version:\s*"v3\.8"/);
   assert.match(s020, /Grade Band is eligibility\/descriptive metadata only/i);
   assert.match(s020, /Multi-band Grade Band never rejects/);
   assert.match(s020, /gradeBandSchedulingUsed:\s*false/);
@@ -79,17 +79,19 @@ t("033 does not select PHA by Grade Band", () => {
   assert.match(s033, /weekIds\[0\] !== weekId/);
 });
 
-t("065 PHA validation ignores Grade Band", () => {
+t("065 PHA validation ignores Grade Band and upload-slot mismatch", () => {
+  assert.match(s065, /version:\s*"v10\.4"/);
   assert.match(s065, /PHA Program Instance does not match Enrollment/);
   assert.match(s065, /PHA Week ownership mismatch/);
-  assert.match(s065, /PHA Homework Slot ownership mismatch/);
   assert.match(s065, /PHA Homework ownership mismatch/);
+  assert.match(s065, /evaluateHomeworkSubmissionDeadline/);
+  assert.doesNotMatch(s065, /PHA Homework Slot ownership mismatch/);
   assert.doesNotMatch(s065, /PHA Grade Band mismatch|Grade Band ownership/);
 });
 
-t("071 v4.1 Hub handoff ignores PHA Grade Band", () => {
-  assert.match(s071, /Version: v4\.1/);
-  assert.match(s071, /version: "v4\.1"/);
+t("071 Hub handoff ignores PHA Grade Band", () => {
+  assert.match(s071, /Version: v4\.2/);
+  assert.match(s071, /version: "v4\.2"/);
   assert.match(s071, /HOMEWORK_FEEDBACK\|HOMEWORK_COMPLETIONS\|/);
   assert.match(s071, /PHA operational identity is Program Instance \+ Week \+ Homework Assignment \+ Homework Slot/);
   assert.match(s071, /PHA Program Instance mismatch/);

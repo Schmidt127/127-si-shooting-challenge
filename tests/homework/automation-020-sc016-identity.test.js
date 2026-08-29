@@ -1,62 +1,19 @@
 /**
- * Offline unit tests for 020 v3.2 enrollment-scoped HC identity (SC-016).
+ * Offline unit tests for 020 v3.8 enrollment + PHA identity (FUT-001).
  */
 const assert = require("assert");
+const {
+  findHomeworkCompletionByAssignmentIdentity,
+  buildHomeworkCompletionIdentityKeyByPha,
+  evaluateHomeworkSubmissionDeadline,
+  resolveHomeworkAssignmentIdentity,
+} = require("../../lib/homework-contracts/assignment-identity");
 
-function firstLinkedId(record, field) {
-  const v = record.fields?.[field];
-  if (Array.isArray(v)) return v[0] || "";
-  return "";
-}
-
-function getHomeworkSlot(record) {
-  return record.fields["Asset Slot"] || record.fields["Item Slot"] || "";
-}
-
-function pickPreferred(candidates) {
-  return [...candidates].sort((a, b) => {
-    const aSat = a.fields["Satisfactory?"] ? 1 : 0;
-    const bSat = b.fields["Satisfactory?"] ? 1 : 0;
-    if (bSat !== aSat) return bSat - aSat;
-    return a.id.localeCompare(b.id);
-  })[0];
-}
-
-function findHomeworkCompletionMatch(records, { submissionId, enrollmentId, weekId, homeworkId, slot }) {
-  if (enrollmentId && weekId && homeworkId && slot) {
-    const enrollmentCandidates = records.filter((hw) => {
-      return (
-        firstLinkedId(hw, "Enrollment") === enrollmentId &&
-        firstLinkedId(hw, "Week") === weekId &&
-        firstLinkedId(hw, "Homework") === homeworkId &&
-        getHomeworkSlot(hw) === slot
-      );
-    });
-    if (enrollmentCandidates.length > 0) {
-      return {
-        homeworkCompletion: pickPreferred(enrollmentCandidates),
-        matchType: "enrollment_week_homework_slot",
-        candidateCount: enrollmentCandidates.length,
-      };
-    }
-  }
-
-  const exact = records.filter(
-    (hw) =>
-      firstLinkedId(hw, "Submissions - Linked") === submissionId &&
-      firstLinkedId(hw, "Homework") === homeworkId &&
-      getHomeworkSlot(hw) === slot
-  );
-  if (exact.length) {
-    return { homeworkCompletion: exact[0], matchType: "exact", candidateCount: exact.length };
-  }
-  return { homeworkCompletion: null, matchType: "", candidateCount: 0 };
-}
-
-const enr = "recENR";
-const week = "recWEEK";
-const hw = "recHW";
-const slot = "HW1";
+const enr = "recEn000000000001";
+const enrOther = "recEn000000000002";
+const week = "recWeek0000000001";
+const hw = "recHw000000000001";
+const pha = "recPa000000000001";
 
 const existing = {
   id: "recKEEP",
@@ -64,41 +21,68 @@ const existing = {
     Enrollment: [enr],
     Week: [week],
     Homework: [hw],
-    "Item Slot": slot,
+    "Program Homework Assignment": [pha],
+    "Item Slot": "HW1",
     "Submissions - Linked": ["recSUB1"],
     "Satisfactory?": true,
   },
 };
 
-const newerSubmissionAssetContext = {
-  submissionId: "recSUB2",
+const match = findHomeworkCompletionByAssignmentIdentity([existing], {
   enrollmentId: enr,
+  phaId: pha,
   weekId: week,
-  homeworkId: hw,
-  slot,
-};
-
-const match = findHomeworkCompletionMatch([existing], newerSubmissionAssetContext);
-assert.strictEqual(match.matchType, "enrollment_week_homework_slot");
+  homeworkLibraryId: hw,
+});
+assert.strictEqual(match.matchType, "enrollment_pha_identity");
 assert.strictEqual(match.homeworkCompletion.id, "recKEEP");
-assert.strictEqual(match.candidateCount, 1);
 
-const noEnrMatch = findHomeworkCompletionMatch(
-  [
-    {
-      id: "recOTHER",
-      fields: {
-        Enrollment: ["recOTHERENR"],
-        Week: [week],
-        Homework: [hw],
-        "Item Slot": slot,
-        "Submissions - Linked": ["recSUB2"],
-      },
-    },
-  ],
-  newerSubmissionAssetContext
+const alternateSlotContext = {
+  enrollmentId: enr,
+  phaId: pha,
+};
+const altMatch = findHomeworkCompletionByAssignmentIdentity([existing], alternateSlotContext);
+assert.strictEqual(altMatch.homeworkCompletion.id, "recKEEP");
+
+const wrongPha = findHomeworkCompletionByAssignmentIdentity([existing], {
+  enrollmentId: enr,
+  phaId: "recPa000000000002",
+});
+assert.strictEqual(wrongPha.homeworkCompletion, null);
+
+const crossEnrollment = findHomeworkCompletionByAssignmentIdentity([existing], {
+  enrollmentId: enrOther,
+  phaId: pha,
+});
+assert.strictEqual(crossEnrollment.homeworkCompletion, null);
+
+const alternateUpload = resolveHomeworkAssignmentIdentity({
+  hw1PhaId: pha,
+  hw2PhaId: "",
+  assetUploadSlot: "HW2",
+});
+assert.strictEqual(alternateUpload.ok, true);
+assert.strictEqual(alternateUpload.alternateUploadSlot, true);
+
+const onTime = evaluateHomeworkSubmissionDeadline({
+  submissionDateKey: "2026-08-20",
+  phaDueDate: "2026-08-31",
+  weekEndDate: "2026-08-24",
+});
+assert.strictEqual(onTime.creditEligible, true);
+assert.strictEqual(onTime.timingStatus, "on_time");
+
+const late = evaluateHomeworkSubmissionDeadline({
+  submissionDateKey: "2026-09-01",
+  phaDueDate: "2026-08-31",
+  weekEndDate: "2026-08-24",
+});
+assert.strictEqual(late.creditEligible, false);
+assert.strictEqual(late.timingStatus, "late_ineligible");
+
+assert.strictEqual(
+  buildHomeworkCompletionIdentityKeyByPha({ enrollmentId: enr, phaId: pha }),
+  `HC|enrollment|${enr}|pha|${pha}`
 );
-assert.strictEqual(noEnrMatch.matchType, "exact");
-assert.strictEqual(noEnrMatch.homeworkCompletion.id, "recOTHER");
 
 console.log("PASS automation-020-sc016-identity");

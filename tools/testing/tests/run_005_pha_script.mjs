@@ -51,6 +51,7 @@ function phaFields() {
     { name: "Homework Slot", type: "singleSelect", options: { choices: [{ name: "HW1" }, { name: "HW2" }] } },
     { name: "Active?", type: "checkbox" },
     { name: "Grade Band", type: "multipleRecordLinks" },
+    { name: "Due Date", type: "date" },
   ];
 }
 
