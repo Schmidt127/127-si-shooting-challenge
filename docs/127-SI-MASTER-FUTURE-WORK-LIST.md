@@ -845,7 +845,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | Item | Status | Evidence |
 |---|---|---|
 | **FUT-WELCOME-LEGACY** repo cleanup | **COMPLETE** | PR **#274** merged `1b15d37f`; 075 LEGACY/RETIRED; probes/indexes/contracts; Vercel Production deploy OK |
-| **FUT-WELCOME-LEGACY** Airtable field delete | **PARTIAL** | 5/6 deleted (Ready?, Subject, Status, Sent At, Error). **Remaining:** Parent Email HTML `fldt3egwi2fqgpDY8` — Mike UI delete. Packet: [`deploy-checklists/RETIRE-LEGACY-WELCOME-EMAIL-FIELDS.md`](./deploy-checklists/RETIRE-LEGACY-WELCOME-EMAIL-FIELDS.md) |
+| **FUT-WELCOME-LEGACY** Airtable field delete | **COMPLETE** | All six Enrollment fields deleted (final MCP verify 2026-08-29 incl. Parent Email HTML). Packet: [`deploy-checklists/RETIRE-LEGACY-WELCOME-EMAIL-FIELDS.md`](./deploy-checklists/RETIRE-LEGACY-WELCOME-EMAIL-FIELDS.md) |
 | Live welcome path | Unchanged | **078A → Email Handoff Queue → 079 → Hub → Resend**; 075 absent; **101** untouched; **066** still triggers on `Run Shot Milestone Check?` |
 
 ### Uncommitted WIP (separate — not complete)

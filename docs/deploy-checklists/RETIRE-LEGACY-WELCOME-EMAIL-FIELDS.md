@@ -15,7 +15,7 @@
 | Automation **101** | Present / deployed — `101 - Zoom / Attendance XP - Award Meeting XP` |
 | Automation **066** trigger | **`fldwsuKGoypFBn2w4` (`Run Shot Milestone Check?`) = true** — unchanged |
 | Protected fields still on Enrollments | **Yes** — Run Shot Milestone Check? + Public Missing Homework/Zoom/Streak (formulas `isValid: true`) |
-| Field deletion (post-Mike UI) | **5/6 deleted** — see agent completion status below |
+| Field deletion (post-Mike UI) | **6/6 deleted** — all retirement targets absent from live Enrollments |
 
 ## Authority
 
@@ -104,6 +104,6 @@ Also leave Public Missing Submissions, Public Missing Videos, and Public Gate Mi
 |-------|--------|
 | Repository references / probes / indexes | **MERGED** — PR **#274** → `master` @ `1b15d37f` (2026-08-29) |
 | Vercel Production deploy | **SUCCESS** — deployment `6160903963` for `1b15d37f`; `/shoot` 200; `/shoot/api/airtable` `ok:true` `tokenValid:true` |
-| Airtable field deletion | **PARTIAL** — deleted: Welcome Email Ready?, Parent Email Subject, Welcome Email Status, Welcome Email Sent At, Welcome Email Error. **Still present:** Parent Email HTML (`fldt3egwi2fqgpDY8`) — Mike delete remaining field in UI |
+| Airtable field deletion | **COMPLETE** — all six IDs absent (`fldoXWryfQ32rsx3x`, `fldWYUYAOudslfXa0`, `fldt3egwi2fqgpDY8`, `fld8q4102HlqFssGt`, `fldOtPlE3QeBTkua0`, `fldlTvIjixfP4bfvL`). Protected: Run Shot Milestone Check? + Public Missing Homework/Zoom/Streak (`isValid: true`). Welcome Email To retained. |
 | Automation **075** | Remains **absent** — do not restore |
-| App runtime | Live welcome path does not need deleted fields; remaining Parent Email HTML is inert |
+| App runtime | Live welcome path **078A → Queue → 079**; no dependency on deleted fields |

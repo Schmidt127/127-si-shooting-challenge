@@ -15,7 +15,7 @@
 |------|--------|----------|
 | Audit start branch | `lead/release-baseline-2026-08-29` | `git checkout -B … origin/master` |
 | Audit start SHA | `5ae358d5ec7423c9baffb7f245053f85b3bf7481` | `origin/master` before PKG-044 |
-| Production branch HEAD | `17e0f8115dae6ce34c0dcfd3c4a6b5da0b1f2676` | Docs closeout after PR **#274** merge (`1b15d37f`) |
+| Production branch HEAD | Re-verify after this docs commit — feature merge `1b15d37f`; prior docs tip `486ee5e1` | FUT-WELCOME-LEGACY **COMPLETE** (6/6 fields) |
 | Working tree (post-merge local) | Clean on `master` tracking `origin/master` after docs closeout | Stash `lead-audit-wip-2026-08-29` may still hold unrelated WIP |
 
 Re-verify:
@@ -32,7 +32,7 @@ git status -sb
 
 | PR | Title | State | Mergeable | Notes |
 |----|-------|-------|-----------|-------|
-| **#274** | Retire legacy Enrollment welcome-email fields | **MERGED** | — | Repo + contracts; Airtable 5/6 fields deleted (Parent Email HTML remains) |
+| **#274** | Retire legacy Enrollment welcome-email fields | **MERGED** | — | Repo + contracts; Airtable **6/6** fields deleted (final verify 2026-08-29) |
 | **#264** | FUT-001 homework assignment identity | **MERGED** (via #271) | — | Content in PKG-044 |
 | **#269** | SC-PW-E2E production harness | **MERGED** (via #271) | — | Content in PKG-044 |
 | **#268** | FUT-010 attachment cleanup | **MERGED** (via #271) | — | Dry-run default; live clear still Mike |
@@ -96,7 +96,7 @@ git status -sb
 | 072 v4.7 weekly email E2E | 2026-08-24 |
 | Public search indexing cutover | 2026-08-25 |
 | Homepage content redesign | PR #270 merged `5ae358d5` |
-| Legacy welcome Enrollment fields (5/6) | Mike UI 2026-08-29 — Ready?/Subject/Status/Sent At/Error deleted; **Parent Email HTML** still live |
+| Legacy welcome Enrollment fields (**6/6**) | Mike UI 2026-08-29 — Ready?, Subject, HTML, Status, Sent At, Error all deleted; 075 remains absent |
 
 ---
 
@@ -111,7 +111,8 @@ See [`MASTER_REMAINING_WORK_LIST.md`](./MASTER_REMAINING_WORK_LIST.md) §C–D:
 5. **SC-PW-E2E** — paste **058 v1.5** (+ **059 v3.7**); manual proof on WAS `recl3DmBh22ADPWWe` before any new `--apply` (MRW-A01)  
 6. **FUT-010** live attachment clear (after supervised dry-run)  
 7. RCC views install  
-8. **FUT-WELCOME-LEGACY** — delete remaining Enrollments **Parent Email HTML** (`fldt3egwi2fqgpDY8`)
+
+~~8. FUT-WELCOME-LEGACY Parent Email HTML~~ — **COMPLETE** (all six fields deleted 2026-08-29)
 
 ---
 
@@ -144,3 +145,4 @@ See [`MASTER_REMAINING_WORK_LIST.md`](./MASTER_REMAINING_WORK_LIST.md) §C–D:
 | 2026-08-29 (Phase 4) | PR **#271** merged → `69ff04d6`; Vercel Production deployment **success**; `/shoot` 200; `/shoot/api/airtable` ok |
 | 2026-08-29 (058 fix) | Authoritative PW investigation → MRW-A01 **BLOCKED / NEEDS PRODUCTION VERIFICATION**; repo **058 v1.5** / **059 v3.7** (`Milestone Source Key` + `Coach Note`); PR **#273** merged `601db77a`; CI green; Vercel auto-deploys web only — **Airtable paste of 058/059 still required**; no `--apply`; WAS `recl3DmBh22ADPWWe` manual proof still open |
 | 2026-08-29 (#274 closeout) | PR **#274** merged `1b15d37f`; Vercel Production `6160903963` success; health 200; 066 still on `Run Shot Milestone Check?`; 075 absent; Airtable **5/6** legacy welcome fields deleted — **Parent Email HTML** remains |
+| 2026-08-29 (welcome fields final) | Mike deleted **Parent Email HTML** (`fldt3egwi2fqgpDY8`); MCP confirms **6/6** legacy IDs absent; Public Missing\* valid; 066/075 unchanged; contracts + `/shoot` health PASS; **FUT-WELCOME-LEGACY COMPLETE** |

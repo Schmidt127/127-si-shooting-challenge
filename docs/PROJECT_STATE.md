@@ -250,7 +250,7 @@ Admin roadmap: [web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md)
 | Homework upload (070a) | **Live v4.7** during Perfect Week controlled window (historically intentional OFF) |
 | Weekly summary email | **Current:** Hub → Resend. **Historical:** 2026-07-24 Make Bulk Email May 18 / Gmail path. Make is not the current email sender. [email send plane](./integrations/email-send-plane.md) |
 | Daily / homework / video parent emails | **Current:** Hub → Resend. Make webhooks are not the email sender. |
-| **Welcome email** | **Communications Hub → Resend** via **078A → Queue → 079** (Make welcome not used). Automation **075** retired/absent. PR **#274** merged 2026-08-29; 5/6 legacy Enrollment fields deleted — finish Parent Email HTML delete. Participant activation still pending |
+| **Welcome email** | **Communications Hub → Resend** via **078A → Queue → 079** (Make welcome not used). Automation **075** retired/absent. PR **#274** + **6/6** legacy Enrollment fields deleted 2026-08-29. Participant activation still pending |
 | **C-028 Tremendous awards** | Sandbox send **validated** (Mike 2026-08-19). Production API **pending**. Make scenario **OFF**. v2 is an implementation snapshot, not production-live. Make HTTP is not a parent-email path. [current state](./integrations/tremendous-award-fulfillment.md) |
 | **FUT-003 Fillout Stripe payment writeback** | **Validated — ready for activation** (2026-08-26, Maia report). Scenario **inactive** in Production. Paid PaymentIntent path only; free/zero-dollar routes **deferred Nov/Dec 2026**. Blueprint: [make/blueprints/fut-003-fillout-stripe-payment-writeback.json](../make/blueprints/fut-003-fillout-stripe-payment-writeback.json) |
 
