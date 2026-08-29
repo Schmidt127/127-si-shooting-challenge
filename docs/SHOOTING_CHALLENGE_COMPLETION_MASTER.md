@@ -10,7 +10,7 @@ This is the **detailed completion matrix and historical traceability record** fo
 | Field | Value |
 |-------|--------|
 | **Purpose** | Completion matrix, package traceability, and preserved historical evidence |
-| **Last updated** | **2026-08-24** (master closeout — weekly E2E + 065/066 dynamic triggers live + historical artifacts documented) |
+| **Last updated** | **2026-08-29** (PKG-044 release baseline — FUT-001/FUT-010/SC-PW-E2E harness in repo; operator lists at repo root; live PW award still blocked at 058) |
 | **Production branch** | `master` |
 | **Vercel root** | `web/` |
 | **Production website** | https://www.fairfieldbasketballclub.com/shoot |
@@ -54,8 +54,8 @@ Reconciled against [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md), [`PROJECT_STATE.md`
 | **Zoom pipeline** | `live-tested` | **101 v6.7** live attendance XP; recording credit `Mike decision` |
 | **Streaks** | `needs live proof` | 053/054 contracts in repo; full natural-trigger proof open |
 | **Shot milestones** | `live-tested` | **066 v3.9** live with dynamic `recordId`; replay verified idempotent |
-| **Perfect Week** | `live-tested` | **48-hour grace period** + **057 v2.0** verified on disposable E2E fixture (4/7 PW qualifying days); ledger repair complete (39 events on `rec93mAfo5jKqP3g5`); full calendar award certification still `needs live proof` |
-| **Perfect Week 48-hour grace period** | `live-tested` | Airtable formulas + **057 v2.0**; disposable weekly email showed **4/7** PW qualifying days vs **7/7** general shooting days |
+| **Perfect Week** | `needs live proof` | **057 v2.2** + Config video minimum live (2026-08-27). SC-PW-E2E 2026-08-28: Days Logged=7 + Eligible?=1, then **058 unlock timeout**. Full award still blocked on Automation 058. |
+| **Perfect Week 48-hour grace period** | `live-tested` | Airtable formulas + **057**; disposable weekly email showed **4/7** PW qualifying days vs **7/7** general shooting days |
 | **Weekly Athlete Summary** | `live-tested` | WAS create/link path proven; disposable fixture E2E 2026-08-24; scheduler positive arm `needs live proof` |
 | **Weekly email payload generation** | `live-tested` | **072 v4.7** — verified 7/7, 4/7 PW, 48,066 shots, 1,280 XP, 40 events, 150%+, 8 videos, Attended, Homework Complete |
 | **Weekly email end-to-end delivery** | `live-tested` | **072 v4.7 → 074 v3.3 → 079 v2.5 → Hub → Resend**; Test Mode; no duplicate send |
@@ -70,7 +70,7 @@ Reconciled against [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md), [`PROJECT_STATE.md`
 | **Communications Hub / Resend** | `live-tested` | Current parent-email plane; Make/Gmail **retired** for SC email |
 | **Tremendous awards** | `blocked` | Sandbox validated; production API `Mike decision` |
 | **Lambda / private asset links** | `live-tested` | C-013 historical E2E; season code deployed 2026-08-19 |
-| **SEO and public launch** | `deferred` | Sitewide `noindex` until cutover approval |
+| **SEO and public launch** | `live-tested` | SC-115 indexing cutover 2026-08-25 (`NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`); athlete profiles remain `noindex` |
 | **Fillout intake reopening** | `Mike decision` | Closed for contest; 2027 reopen `needs live proof` |
 | **Learning Activities / schema** | `Mike decision` | PKG-005 blocked on schema authority |
 
@@ -586,6 +586,8 @@ Execution matrix IDs advanced: PKG-041 — 2026-08-23 Completion Master reconcil
 Execution matrix IDs advanced: PKG-041 — 2026-08-23 production-readiness cleanup: merged XP activity ledger (enrollment-scoped loader, pagination, date normalization), Perfect Week Testing XP repair tooling, restored offline DEV runbook fixtures with historical banners, reconciled CURRENT-TRUTH/PROJECT_STATE for production-only operation, and validated 29/29 agent4 suites + web build. No live Airtable writes; no automation logic changed for test convenience. Inventory: [`audits/2026-08-23-production-readiness-inventory.md`](./audits/2026-08-23-production-readiness-inventory.md).
 
 Execution matrix IDs advanced: PKG-043 — 2026-08-24 secure video URL pipeline: **022 v2.2** (Lambda viewer only, no Canonical S3 fallback), **072 v4.8**, **073 v4.4**, shared `lib/secure-video-url.js`, repair tools, tests, and deploy bundles. Repository evidence only; Production Airtable paste and controlled email verification remain Mike-owned. Checklist: [`deploy-checklists/022-v2.2-secure-video-url-pipeline.md`](./deploy-checklists/022-v2.2-secure-video-url-pipeline.md).
+
+Execution matrix IDs advanced: PKG-044 — 2026-08-29 release baseline: land FUT-001 (020 v3.8 / 065 v10.4 assignment identity), FUT-010 fail-closed intake attachment cleanup (dry-run default), SC-PW-E2E harness hardening; add root `MASTER_REMAINING_WORK_LIST.md` + `RELEASE_BASELINE.md`. Offline suites pass; no Production paste, attachment delete, or Perfect Week award claim. SC-PW-E2E Production apply 2026-08-28 remains blocked at Automation 058 (Eligible=1, unlock missing).
 
 ### PKG-006R / PKG-036 Production baseline — 2026-08-13
 
