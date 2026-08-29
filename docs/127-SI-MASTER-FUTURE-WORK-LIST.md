@@ -45,7 +45,7 @@ Repository and Production closeout for the bounded SC-034 / V2-002 pass:
 | **WAS Config lookup + formula** | **COMPLETE** | Lookup **`Config: Perfect Week Video Minimum`**; formula **`Perfect Week Video Requirement Met?`** live PROD |
 | **Automation 059 trigger correction** | **COMPLETE** | Mike removed `Shot Milestone is not empty` filter; Pending-only created trigger — [`059-perfect-week-trigger-coverage.md`](./deploy-checklists/059-perfect-week-trigger-coverage.md) |
 | **058/059 script changes** | **Not required** | `docs/testing/perfect-week/PERFECT-WEEK-DEPENDENCY-AUDIT.md` — eligibility from 057 + WAS formulas |
-| **Disposable Perfect Week end-to-end test** | **BLOCKED / NEEDS PRODUCTION VERIFICATION** | **SC-PW-E2E** — root cause: 058 wrote non-existent Unlocks `Source Key`/`Notes`; prod fields are **`Milestone Source Key`** / **`Coach Note`**. Repo 058 **v1.5** + 059 **v3.7** fix pending Production paste + manual run on WAS `recl3DmBh22ADPWWe`. Evidence `docs/testing/evidence/sc-pw-e2e/qualifying-2026-08-28T2252.json`. **Do not** re-`--apply` until MRW-A01 manual steps pass. |
+| **Disposable Perfect Week end-to-end test** | **COMPLETE** | **SC-PW-E2E** — WAS `recl3DmBh22ADPWWe` unlock Awarded + 100 XP. Evidence `docs/testing/evidence/sc-pw-e2e/award-was-recl3DmBh22ADPWWe-2026-08-29-mcp.json`. Do not re-`--apply`. |
 | **General schema field typo renames** | **DEFERRED** | `Perfect Week Video Minimum` typo fixed; gate summary / Softr flag / HC RID typos — SAFE-MIGRATION-PLAN P3; **SC-144** |
 
 ## How to use this document
@@ -730,7 +730,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-020** | Homework | Activities that count as homework vs stand-alone | P1 | Planned | SC-018, SC-019 | Implement flag + automation filters + coach views |
 | **SC-024** | Config | Levels table reliable for progression | P1 | Installed in PROD | SC-022 | Re-seed after wipe if needed; tune thresholds (SC-027) |
 | **SC-026** | Config | Achievements catalog + unlock rules | P1 | Installed in PROD | SC-066 | Re-seed; re-test unlocks; dedupe keys |
-| **SC-028** | Config | Perfect Week rules configurable | P1 | **IN PROGRESS** — 057 v2.2 + WAS + 059 trigger complete 2026-08-27 | SC-116, **SC-PW-E2E** | Disposable 7/7 E2E (057→058→059) pending; Batch A/B fixtures optional |
+| **SC-028** | Config | Perfect Week rules configurable | P1 | **COMPLETE** (E2E) — 057 v2.2 + WAS + 059 + award on `recl3DmBh22ADPWWe` | SC-116, **SC-PW-E2E** | MCP award evidence JSON |
 | **SC-030** | Config | Zoom percentage / credit settings in config | P1 | Installed in PROD | SC-116 | Re-verify config rows after wipe; document operator knobs |
 | **SC-034** | Config | Remove remaining hardcoded values from automations | P1 | **COMPLETE** (2026-08-27) | SC-021, **V2-002** | Bounded pass complete: Config-only video minimum, audit JSON, contract tests, 057 v2.2 live |
 | **SC-037** | Weekly Summary | Previous-week helpers reliable | P1 | Installed in PROD | SC-084 | Re-verify after Weeks rebuild |
@@ -741,7 +741,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-063** | Enrollment | Email validation (parent/athlete) | P1 | Built in Repository | SC-060 | Fillout email rules ON; bounce SOP still open |
 | **SC-064** | Enrollment | Intake-open dates separate from challenge run dates | P1 | Tracked under C-018 | SC-032 | Wire intake-open into Fillout/web gate; Weeks flags if authorized |
 | **SC-075** | XP | Streak XP | P1 | Live Tested in PROD | SC-029, SC-068 | Optional break/rebuild supervised test; SC-081 decision |
-| **SC-077** | XP | Perfect Week XP | P1 | **IN PROGRESS** — 059 trigger corrected 2026-08-27 | SC-028, SC-074, **SC-PW-E2E** | 058/059 scripts unchanged; disposable E2E award pending; optional 059 Test soak |
+| **SC-077** | XP | Perfect Week XP | P1 | **COMPLETE** — 059 awarded 100 XP on unlock `recJ5umer4J4FHTOz` | SC-028, SC-074, **SC-PW-E2E** | MCP evidence JSON |
 | **SC-083** | XP | Achievement unlock deduplication | P1 | Monitoring | SC-026 | Monitor recurrence; do not reintroduce stale orphan-XP bulk counts from #100 |
 | **SC-088** | Zoom | Recording approval email to parent | P1 | Tracked under C-025-EMAIL | SC-086 | Mike: create Recording Quiz Satisfactory fixture ΓåÆ Test 117 ΓåÆ expect sent/already_sent; no XP |
 | **SC-089** | Zoom | Total Zoom counts correct | P1 | Installed in PROD | SC-048 | Re-verify formulas after schema export |
@@ -827,7 +827,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **SC-034-057** | COMPLETE | 057 v2.2 live PROD 2026-08-27; `deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md` |
 | **SC-034-059-TRIG** | COMPLETE | Mike 2026-08-27; Pending-only created trigger; `deploy-checklists/059-perfect-week-trigger-coverage.md` |
 | **SC-034-058-059** | COMPLETE | Not required — `docs/testing/perfect-week/PERFECT-WEEK-DEPENDENCY-AUDIT.md` |
-| **SC-PW-E2E** | **BLOCKED / NEEDS PRODUCTION VERIFICATION** | Latent 058 field mismatch (`Source Key`→`Milestone Source Key`, `Notes`→`Coach Note`); WAS `recl3DmBh22ADPWWe` Eligible=1 unlockCount=0. Paste 058 v1.5; manual 058→059 on that WAS before any new `--apply`. Evidence `docs/testing/evidence/sc-pw-e2e/qualifying-2026-08-28T2252.json` |
+| **SC-PW-E2E** | **COMPLETE** | MCP award for WAS `recl3DmBh22ADPWWe`: unlock `recJ5umer4J4FHTOz` Awarded + XP `reczehlzkA8fjiQh0` 100 pts. Evidence `docs/testing/evidence/sc-pw-e2e/award-was-recl3DmBh22ADPWWe-2026-08-29-mcp.json`. Do not re-`--apply`. |
 | **SC-144** | DEFERRED | General schema typo renames — SAFE-MIGRATION-PLAN P3 |
 | **Field typo rename (general schema)** | DEFERRED | **Perfect Week Video Minimum** typo fixed 2026-08-27; gate summary / Softr flag / HC RID typos deferred |
 
@@ -838,7 +838,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **Weekly email audit** | READY (Mike attestation) | `audits/2026-08-28-weekly-email-pipeline-audit.md` — 118→072→119→074→079 Hub chain |
 | **SC-PW-E2E preflight** | COMPLETE (repo) | `preflightApplyAccess`; unlock field resolver (`Source Key` / `Milestone Source Key`) |
 | **SC-147** | PROPOSED | Recorded Zoom half-XP writer — `docs/challenge-year/RECORDED-ZOOM-HALF-XP-DESIGN-BRIEF.md` |
-| **FUT-001 / PR #264** | MERGE-READY (repo) | CI fix `3d497f4a`; Production paste pending |
+| **FUT-001 / PR #264** | **COMPLETE** (repo + Production paste) | 020 v3.8 + 065 v10.4 Live; optional SC-016 re-submit only |
 
 ### 2026-08-29 legacy welcome-email field retirement
 
@@ -853,7 +853,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | ID | Title | Status | Evidence |
 |---|---|---|---|
 | **WIP-XP-ACT** | Athlete XP Activity ledger (web + API) | IN PROGRESS | Uncommitted `web/lib/data/xp-activity*` + components; not prod deployed |
-| **WIP-HW-CONTRACTS** | Homework assignment-identity (FUT-001) | IN PROGRESS | PR **#264** open — do not duplicate `91c65b36`; merge then paste 020/065 |
+| **WIP-HW-CONTRACTS** | Homework assignment-identity (FUT-001) | **COMPLETE** | Merged + Production 020/065 Live |
 | **WIP-057-TESTS** | 057 runtime + hardcode contract tests | IN PROGRESS | Uncommitted `test_057_runtime.mjs` + `tests/automation-contracts/` |
 
 ---
