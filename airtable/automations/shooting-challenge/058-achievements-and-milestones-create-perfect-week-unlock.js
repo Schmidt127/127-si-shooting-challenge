@@ -24,13 +24,17 @@ Airtable is the deployed/running copy.
 
 /***************************************************************************************************
  * 058 - Achievements and Milestones - Create Perfect Week Unlock
- * Version: 1.4
+ * Version: 1.5
  * Date written: 2026-05-30
- * Last updated: 2026-08-22
+ * Last updated: 2026-08-29
  *
  * Purpose:
  * Creates one Athlete Achievement Unlock when a Weekly Athlete Summary record qualifies
  * for Perfect Week.
+ *
+ * v1.5 (2026-08-29): Production Unlocks field alignment — write Milestone Source Key
+ * (not Source Key) and Coach Note when present. Idempotency key remains
+ * PERFECT_WEEK|{enrollmentRecordId}|{weekRecordId}. Does not create a Source Key field.
  *
  * v1.4 (2026-08-22): Goal settlement aligned with 057 v1.9 — compare WAS Goal Shots
  * Target (season lookup) to Goal Record Total Shot Target; require Weekly Goal Shots
@@ -115,8 +119,11 @@ const CONFIG = {
     active: "Active?",
     sourceStatus: "Source Status",
     xpAwardStatus: "XP Award Status",
-    sourceKey: "Source Key",
-    notes: "Notes",
+    // Production Athlete Achievement Unlocks identity field (fldHwWWMESmhYX2Da).
+    // Do not use "Source Key" here — that name belongs to XP Events, not Unlocks.
+    sourceKey: "Milestone Source Key",
+    // Production notes field (fld8r3TVAnHcFsEPE). Optional write when present.
+    notes: "Coach Note",
   },
 };
 
@@ -342,7 +349,9 @@ try {
    *************************************************************************************************/
 
   if (!fieldExists(unlocksTable, CONFIG.unlockFields.sourceKey)) {
-    throw new Error("Athlete Achievement Unlocks table is missing required Source Key field.");
+    throw new Error(
+      `Athlete Achievement Unlocks table is missing required ${CONFIG.unlockFields.sourceKey} field.`
+    );
   }
   if (!fieldExists(unlocksTable, CONFIG.unlockFields.active)) {
     throw new Error("Athlete Achievement Unlocks table is missing required Active? field.");

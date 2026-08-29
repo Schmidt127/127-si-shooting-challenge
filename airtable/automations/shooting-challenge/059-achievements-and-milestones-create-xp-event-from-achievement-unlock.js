@@ -26,9 +26,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 /***************************************************************************************************
  * 059 - Achievements and Milestones - Create XP Event from Achievement Unlock
  *
- * Version: v3.6
+ * Version: v3.7
  * Date Written: 2026-06-05
- * Last Updated: 2026-08-13
+ * Last Updated: 2026-08-29
  *
  * PURPOSE
  * - Creates one XP Event from one Athlete Achievement Unlock.
@@ -36,6 +36,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Supports Perfect Week and Shot Milestone achievement types.
  *
  * CHANGELOG
+ * - 2026-08-29: Perfect Week XP Source Key prefers Unlocks Milestone Source Key; unlock notes field = Coach Note.
  * - 2026-08-05: Recommended trigger lock — Pending only (no Shot Milestone filter) so Perfect Week unlocks from 058 fire 059.
  *
  * IMPORTANT DESIGN RULES
@@ -103,7 +104,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
     scriptName: "059 - Achievements and Milestones - Create XP Event from Achievement Unlock",
-    version: "v3.6",
+    version: "v3.7",
 
     tables: {
         unlocks: "Athlete Achievement Unlocks",
@@ -155,9 +156,11 @@ const CONFIG = {
         milestoneSourceKey: "Milestone Source Key",
         milestoneActivityDate: "Milestone Activity Date",
 
+        // Unlocks has no "Source Key" field (that name is on XP Events). Prefer Milestone Source Key.
         sourceKey: "Source Key",
         unlockKey: "Unlock Key",
-        notes: "Notes",
+        // Production Unlocks notes field (not "Notes").
+        notes: "Coach Note",
 
         unlockedDate: "Unlocked Date",
         fallbackUnlockedDate: "Date Unlocked",
@@ -1175,9 +1178,11 @@ async function main() {
             xpSourceValue = CONFIG.xpSources.perfectWeek;
             xpBucketValue = CONFIG.xpBuckets.perfectWeek;
 
+            // Prefer Milestone Source Key (058 v1.5+ / production Unlocks). Do not use
+            // Unlock Key formula text as the XP Source Key — it is not PERFECT_WEEK|… shape.
             const fallbackKey =
-                getText(unlockRecord, unlock.sourceKey) ||
-                getText(unlockRecord, unlock.unlockKey);
+                getText(unlockRecord, unlock.milestoneSourceKey) ||
+                getText(unlockRecord, unlock.sourceKey);
 
             sourceKey = buildPerfectWeekSourceKey(enrollmentId, weekId, fallbackKey);
 
