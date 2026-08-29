@@ -265,14 +265,16 @@ Keep the S3 bucket private and preserve the Lambda viewer architecture.
 ### FUT-010 — Delete Airtable intake attachments after verified S3 upload
 
 **Priority:** P1  
-**Status:** Ready for prompt  
+**Status:** Built in repository — Production apply pending Mike approval (2026-08-28)  
 **Systems:** Airtable, Submission Assets, Homework Completions, AWS S3, Lambda viewer pipeline
 
-Reduce Airtable storage usage by deleting the original Airtable attachment after the uploaded file has been successfully written to AWS S3 and the durable file path is confirmed.
+Reduce Airtable storage usage by deleting the original **Submission Assets** intake attachment after the uploaded file has been successfully written to AWS S3 and the durable file path is confirmed.
+
+**Scope note:** Homework coverage means **homework-route Submission Assets** (`Upload Destination = Homework Completions`). Legacy **`Homework Completions.Airtable Attachment`** is **out of scope** — separate future work (see SC-100 / FUT-002).
 
 **Requirements:**
 
-- Apply to both homework and video uploads.
+- Apply to homework-route and video-route **Submission Assets** intake attachments.
 - Confirm `Upload Status = Uploaded`.
 - Confirm the S3 object exists and is accessible through the expected AWS storage path.
 - Confirm the stored S3 key is present.
@@ -293,14 +295,16 @@ Reduce Airtable storage usage by deleting the original Airtable attachment after
 
 **Acceptance criteria:**
 
-1. A successfully uploaded homework attachment is verified in S3 and then removed from Airtable.
-2. A successfully uploaded video attachment is verified in S3 and then removed from Airtable.
+1. A successfully uploaded **homework-route Submission Asset** attachment is verified in S3 and then removed from Airtable.
+2. A successfully uploaded **video-route Submission Asset** attachment is verified in S3 and then removed from Airtable.
 3. Failed or uncertain uploads retain their Airtable attachment.
 4. Re-running the cleanup does not create duplicate files or fail incorrectly.
 5. S3/Lambda links continue to work after the Airtable attachment is removed.
 6. The Airtable record and all application metadata remain intact.
 7. A dry-run report identifies eligible, skipped, and failed records without deleting anything.
 8. Automated tests cover successful cleanup, failed upload, missing S3 object, invalid URL, retry, and duplicate-processing cases.
+
+**Implementation (2026-08-28, revised):** Shared helpers `lib/intake-attachment-cleanup/` (fail-closed verification contract); CLI `tools/airtable/fut_010_intake_attachment_cleanup.py` (dry-run default, reconcile filter on apply, per-record AWS error skip, `--confirm-delete` required); extension `airtable/extension-scripts/safe-backfills/fut-010-clear-intake-attachments.js`. **Out of scope:** `Homework Completions.Airtable Attachment`. Promotion doc: [FUT-010-intake-attachment-cleanup.md](./deploy-checklists/FUT-010-intake-attachment-cleanup.md). Production attachment delete **not** executed — Mike dry-run + formula attestation required.
 
 ---
 
