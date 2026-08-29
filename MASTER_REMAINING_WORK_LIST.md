@@ -18,7 +18,7 @@
 |-------|------------------------|------------------------------|--------------------------|
 | Automation **057** | CURRENT-TRUTH / Future Work (2026-08-27): **v2.2** live + Config video minimum | Completion Master §0 (2026-08-24): **v2.0** | Treat **v2.2** as current; Master dashboard needs refresh |
 | SEO / SC-115 | CURRENT-TRUTH / PROJECT_STATE: indexing cutover **complete** | Completion Master §0: SEO `deferred` / noindex | Indexing **COMPLETE**; athlete consent/indexability still open (FUT-025) |
-| Perfect Week full award | Future Work: harness **READY**; scripts/trigger **COMPLETE** | Completion Master / CURRENT-TRUTH §11: full calendar award still **PENDING** | Repo harness ready; live award = **NEEDS VERIFICATION** (SC-PW-E2E) |
+| Perfect Week full award | Evidence 2026-08-28 + Unlocks schema: **058 blocked** (wrong field names `Source Key`/`Notes` vs prod `Milestone Source Key`/`Coach Note`); WAS `recl3DmBh22ADPWWe` Eligible=1, unlockCount=0 | Completion Master / older “harness READY” wording | **BLOCKED / NEEDS PRODUCTION VERIFICATION** (MRW-A01) — not COMPLETE until evidence JSON proves 058+059+100 XP+dedupe |
 | PROJECT_STATE “Final reconciliation 2026-08-21” versions | CURRENT-TRUTH §8 overlays (010 paste, 057 v2.2, 065/066 closeout) | Same file older block (010 v10.11, 057 v1.7, …) | Prefer CURRENT-TRUTH §8 + dated overlays |
 | FUT-001 narrative vs Section G | Narrative: “Complete (GitHub)”; G: IN PROGRESS | Paste pending | Repo = mergeable; Production paste separate |
 | SC-PW-E2E evidence pointer | `tools/testing/sc-pw-e2e.mjs` + SC-PW-E2E.md | Some generated rows still cite grace-only / older verifier | Prefer SC-PW-E2E harness docs |
@@ -33,20 +33,35 @@
 | Field | Value |
 |-------|--------|
 | **ID** | MRW-A01 |
-| **Short title** | SC-PW-E2E qualifying live award — blocked at 058 |
-| **Description** | Prove 057→Eligible→058 unlock→059 XP on disposable PWTEST data. Harness + offline tests are ready; a 2026-08-28 Production apply already proved **057 Ready**, **Days Logged=7**, **Eligible?=1**, then **timed out waiting for Automation 058** (no unlock). |
-| **Why it matters** | Perfect Week award path is incomplete until 058 creates the unlock and 059 awards XP. |
-| **Current status** | BLOCKED |
-| **Source document(s)** | `docs/testing/perfect-week/SC-PW-E2E.md`; Future Work Section G; evidence `docs/testing/evidence/sc-pw-e2e/qualifying-2026-08-28T2252.json` |
-| **Repository location(s)** | `tools/testing/sc-pw-e2e.mjs`, `tools/testing/lib/sc-pw-e2e-lib.mjs`, `tools/testing/tests/test_sc_pw_e2e_contract.mjs` |
-| **Dependencies** | Automation **058** Live + correct lifecycle trigger (Eligible/Ready); Enrollments R/W token; gated enrollment `rec93mAfo5jKqP3g5` |
-| **Exact files or production systems affected** | Production Airtable Automations **058** (and then 059); disposable PWTEST records |
+| **Short title** | SC-PW-E2E qualifying live award — BLOCKED / NEEDS PRODUCTION VERIFICATION |
+| **Description** | Prove 057→Eligible→058 unlock→059 XP on disposable PWTEST data. **Authoritative investigation (2026-08-28 evidence + Unlocks schema):** Production Unlocks identity field is **`Milestone Source Key`** (`fldHwWWMESmhYX2Da`); notes field is **`Coach Note`** (`fld8r3TVAnHcFsEPE`). Repo 058 previously expected non-existent **`Source Key`** / **`Notes`**, so create failed closed and the harness timed out with **zero unlocks**. Qualifying apply already proved **057 Ready**, **Days Logged=7**, **Eligible?=1** on WAS `recl3DmBh22ADPWWe` (enrollment `rec93mAfo5jKqP3g5`, week `recNzl4dNOtDmJqnV`, expected key `PERFECT_WEEK\|rec93mAfo5jKqP3g5\|recNzl4dNOtDmJqnV`). |
+| **Why it matters** | Perfect Week award path is incomplete until 058 creates the unlock and 059 awards 100 XP with no duplicates. |
+| **Current status** | **BLOCKED** / **NEEDS PRODUCTION VERIFICATION** — not COMPLETE |
+| **Source document(s)** | `docs/testing/perfect-week/SC-PW-E2E.md`; Future Work Section G; evidence `docs/testing/evidence/sc-pw-e2e/qualifying-2026-08-28T2252.json` (preflight: `unlockSourceField=Milestone Source Key`, `unlockNotesField=Coach Note`; `stage058` timeout) |
+| **Repository location(s)** | `058-…create-perfect-week-unlock.js` (v1.5+); `tools/testing/sc-pw-e2e.mjs`; `tools/testing/tests/test_058_perfect_week_lifecycle_runtime.mjs` |
+| **Dependencies** | Paste corrected **058** to Production; Live 058 + lifecycle trigger; then 059 Pending path; Enrollments R/W token for later E2E only |
+| **Exact files or production systems affected** | Production Airtable Automations **058** (paste) and **059** (verify); WAS `recl3DmBh22ADPWWe`; disposable PWTEST records |
 | **Autonomous?** | No |
-| **Required manual action** | Mike: verify 058 is Live and triggers on Perfect Week Eligible Pending unlock path; re-run `--case qualifying --apply`; then `--cleanup` |
-| **Verification required** | Unlock created; XP Event; evidence JSON `passed: true` |
+| **Required manual action** | See **Manual Airtable steps (MRW-A01)** below. **Do not** run qualifying `--apply` until those steps pass. **Do not** create another test week. |
+| **Verification required** | Evidence JSON with: 058 created unlock; 059 created XP; XP Award Status = Awarded; XP event = 100; no duplicate unlock or XP event |
 | **Recommended priority** | P0 |
-| **Definition of done** | Evidence JSON pass + CURRENT-TRUTH §11 + Future Work SC-PW-E2E COMPLETE |
-| **Notes** | Do not treat Eligible?=1 alone as award proof. Repo harness fixes (PR #269) address schema field names; root cause of missing unlock is Production 058 behavior. |
+| **Definition of done** | Evidence JSON pass + CURRENT-TRUTH §11 + Future Work SC-PW-E2E COMPLETE — **do not mark complete without that JSON** |
+| **Notes** | Eligible?=1 alone is not award proof. Repo field-name fix must be pasted before re-testing. |
+
+#### Manual Airtable steps (MRW-A01) — required before any new E2E `--apply`
+
+1. Verify Automation **058** is **Live**.
+2. Verify its trigger watches **created/updated Weekly Athlete Summary** records.
+3. Verify `recordId` is **dynamically mapped** to the triggering WAS record.
+4. Remove **positive-only** or **empty-unlock** filters that block lifecycle updates (withdrawal / restore).
+5. Paste GitHub **058 v1.5+** (writes `Milestone Source Key`, optional `Coach Note`) — skip GitHub header.
+6. Manually run **058** on WAS **`recl3DmBh22ADPWWe`**.
+7. Confirm unlock created with **Milestone Source Key** = `PERFECT_WEEK|rec93mAfo5jKqP3g5|recNzl4dNOtDmJqnV`.
+8. Confirm Automation **059** creates the **100 XP** event; XP Award Status = **Awarded**.
+9. Re-run **058** to prove **deduplication** (no second unlock).
+10. Only after steps 6–9 pass: run **one** qualifying E2E `--apply` and cleanup.
+
+**Hard stops:** Do not run qualifying harness with `--apply` yet. Do not create another test week. Do not mark Perfect Week / SC-PW-E2E complete without the evidence JSON above.
 
 ### MRW-A02 — Production paste: secure video URL pipeline (022 / 072 / 073)
 

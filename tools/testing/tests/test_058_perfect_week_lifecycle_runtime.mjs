@@ -31,12 +31,29 @@ const IDS = {
   wrongUnlock: "recUnlock058Wrong",
 };
 
-test("loads committed Automation 058 v1.4 source", () => {
+/** Production Unlocks identity + notes field names (schema prod-20260819). */
+const UNLOCK_SOURCE_KEY_FIELD = "Milestone Source Key";
+const UNLOCK_NOTES_FIELD = "Coach Note";
+
+test("loads committed Automation 058 v1.5 with production Unlocks field names", () => {
   const source = readFileSync(SCRIPT, "utf8");
-  assert.match(source, /Version:\s*1\.4/);
+  assert.match(source, /Version:\s*1\.5/);
+  assert.match(source, /sourceKey:\s*"Milestone Source Key"/);
+  assert.match(source, /notes:\s*"Coach Note"/);
+  assert.doesNotMatch(source, /sourceKey:\s*"Source Key"/);
+  assert.doesNotMatch(source, /notes:\s*"Notes"/);
+  assert.match(
+    source,
+    /Athlete Achievement Unlocks table is missing required \$\{CONFIG\.unlockFields\.sourceKey\} field/
+  );
 });
 
 const sourceKey = `PERFECT_WEEK|${IDS.enrollment}|${IDS.week}`;
+
+test("expected Perfect Week unlock identity is PERFECT_WEEK|{enrollmentRecordId}|{weekRecordId}", () => {
+  assert.equal(sourceKey, `PERFECT_WEEK|${IDS.enrollment}|${IDS.week}`);
+  assert.match(sourceKey, /^PERFECT_WEEK\|rec[A-Za-z0-9]+\|rec[A-Za-z0-9]+$/);
+});
 
 function unlockRecord(id, overrides = {}) {
   return new MockRecord(id, {
@@ -44,7 +61,7 @@ function unlockRecord(id, overrides = {}) {
     Week: [{ id: IDS.week }],
     Achievement: [{ id: IDS.achievement }],
     "Active?": true,
-    "Source Key": sourceKey,
+    [UNLOCK_SOURCE_KEY_FIELD]: sourceKey,
     "XP Award Status": { name: "Pending" },
     ...overrides,
   });
@@ -58,7 +75,30 @@ function buildBase({
   weeklyOverrides = {},
   enrollmentOverrides = {},
   goalOverrides = {},
+  unlockSchema = "production",
 } = {}) {
+  const unlockFields =
+    unlockSchema === "production"
+      ? [
+          { name: "Enrollment", type: "multipleRecordLinks" },
+          { name: "Week", type: "multipleRecordLinks" },
+          { name: "Achievement", type: "multipleRecordLinks" },
+          { name: "Active?", type: "checkbox" },
+          { name: "Source Status", type: "singleSelect" },
+          { name: "XP Award Status", type: "singleSelect" },
+          { name: UNLOCK_SOURCE_KEY_FIELD, type: "singleLineText" },
+          { name: UNLOCK_NOTES_FIELD, type: "multilineText" },
+        ]
+      : [
+          { name: "Enrollment", type: "multipleRecordLinks" },
+          { name: "Week", type: "multipleRecordLinks" },
+          { name: "Achievement", type: "multipleRecordLinks" },
+          { name: "Active?", type: "checkbox" },
+          { name: "Source Status", type: "singleSelect" },
+          { name: "XP Award Status", type: "singleSelect" },
+          // Deliberately omit Milestone Source Key — fail-closed contract.
+        ];
+
   const weekly = new MockTable("Weekly Athlete Summary", [
     { name: "Enrollment", type: "multipleRecordLinks" },
     { name: "Week", type: "multipleRecordLinks" },
@@ -116,16 +156,7 @@ function buildBase({
     "Active?": true,
   })]);
 
-  const unlockTable = new MockTable("Athlete Achievement Unlocks", [
-    { name: "Enrollment", type: "multipleRecordLinks" },
-    { name: "Week", type: "multipleRecordLinks" },
-    { name: "Achievement", type: "multipleRecordLinks" },
-    { name: "Active?", type: "checkbox" },
-    { name: "Source Status", type: "singleSelect" },
-    { name: "XP Award Status", type: "singleSelect" },
-    { name: "Source Key", type: "singleLineText" },
-    { name: "Notes", type: "multilineText" },
-  ], unlocks);
+  const unlockTable = new MockTable("Athlete Achievement Unlocks", unlockFields, unlocks);
 
   return new MockBase([weekly, enrollments, goals, achievements, unlockTable]);
 }
@@ -148,7 +179,7 @@ async function run058(base) {
   return { error, output };
 }
 
-test("058 creates one exact Perfect Week identity and backlink", async () => {
+test("058 creates one exact Perfect Week identity on Milestone Source Key and backlink", async () => {
   const base = buildBase();
   const { error } = await run058(base);
   assert.equal(error, null);
@@ -156,7 +187,13 @@ test("058 creates one exact Perfect Week identity and backlink", async () => {
   const unlocks = base.getTable("Athlete Achievement Unlocks");
   assert.equal(unlocks.createdPayloads.length, 1);
   const [{ id, payload }] = unlocks.createdPayloads;
-  assert.equal(payload["Source Key"], sourceKey);
+  assert.equal(payload[UNLOCK_SOURCE_KEY_FIELD], sourceKey);
+  assert.equal(payload[UNLOCK_SOURCE_KEY_FIELD], `PERFECT_WEEK|${IDS.enrollment}|${IDS.week}`);
+  assert.equal(payload["Source Key"], undefined);
+  assert.equal(
+    payload[UNLOCK_NOTES_FIELD],
+    "Created by 058 after Weekly Athlete Summary qualified for Perfect Week."
+  );
   assert.deepEqual(payload.Enrollment, [{ id: IDS.enrollment }]);
   assert.deepEqual(payload.Week, [{ id: IDS.week }]);
   assert.deepEqual(payload.Achievement, [{ id: IDS.achievement }]);
@@ -165,6 +202,15 @@ test("058 creates one exact Perfect Week identity and backlink", async () => {
     base.getTable("Weekly Athlete Summary").records.get(IDS.summary).getCellValue("Perfect Week Unlock"),
     [{ id }]
   );
+});
+
+test("058 fail-closed error names Milestone Source Key when the field is missing", async () => {
+  const base = buildBase({ unlockSchema: "missing-key" });
+  const { error } = await run058(base);
+  assert.ok(error);
+  assert.match(error.message, /Milestone Source Key/);
+  assert.doesNotMatch(error.message, /required Source Key field/);
+  assert.equal(base.getTable("Athlete Achievement Unlocks").createdPayloads.length, 0);
 });
 
 test("058 repairs only a missing backlink to an exact-owned unlock", async () => {
@@ -201,7 +247,9 @@ test("058 fails closed with exact candidate IDs for duplicate or wrong-owner unl
     weeklyUnlock: [{ id: IDS.wrongUnlock }],
     unlocks: [
       unlockRecord(IDS.unlock),
-      unlockRecord(IDS.wrongUnlock, { "Source Key": "PERFECT_WEEK|recOther|recWeekOther" }),
+      unlockRecord(IDS.wrongUnlock, {
+        [UNLOCK_SOURCE_KEY_FIELD]: "PERFECT_WEEK|recOther|recWeekOther",
+      }),
     ],
   });
   const wrongBacklink = await run058(wrongBacklinkBase);
@@ -341,7 +389,7 @@ test("058 deactivates the exact owned unlock for every invalid goal state", asyn
     const unlock = base.getTable("Athlete Achievement Unlocks").records.get(IDS.unlock);
     const weekly = base.getTable("Weekly Athlete Summary").records.get(IDS.summary);
     assert.equal(unlock.getCellValue("Active?"), false, scenario.name);
-    assert.ok(unlock.getCellValue("Notes").includes(scenario.reason), scenario.name);
+    assert.ok(unlock.getCellValue(UNLOCK_NOTES_FIELD).includes(scenario.reason), scenario.name);
     assert.ok(weekly.getCellValue("Perfect Week Automation Error").includes(scenario.reason), scenario.name);
     assert.equal(base.getTable("Athlete Achievement Unlocks").createdPayloads.length, 0, scenario.name);
   }

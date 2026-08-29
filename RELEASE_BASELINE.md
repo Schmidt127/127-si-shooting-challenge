@@ -58,7 +58,7 @@ git status -sb
 | Source-of-truth audit | **PASS** | After PKG-044 Completion Master entry |
 | Repository QA on PR #271 | **PASS** | automation-contracts + python-contracts |
 | `npm run test:smoke:prod` | **NOT re-run** this session | Last documented 50/50 on 2026-08-26 |
-| SC-PW-E2E live `--apply` | **FAILED at 058** (2026-08-28) | Evidence JSON; Mike must fix 058 |
+| SC-PW-E2E live `--apply` | **FAILED at 058** (2026-08-28) | Evidence JSON; root cause: 058 field mismatch (`Source Key`/`Notes` vs prod `Milestone Source Key`/`Coach Note`); repo **058 v1.5** / **059 v3.7** — paste + manual WAS proof required (**BLOCKED / NEEDS PRODUCTION VERIFICATION**) |
 
 ---
 
@@ -105,7 +105,7 @@ See [`MASTER_REMAINING_WORK_LIST.md`](./MASTER_REMAINING_WORK_LIST.md) §C–D:
 2. **022 v2.2 / 072 v4.8 / 073 v4.4** paste  
 3. **020 v3.8 / 065 v10.4** paste (after FUT-001 merge)  
 4. **FUT-003** Make scenario activation (when Mike chooses)  
-5. **SC-PW-E2E** live apply (verification, not paste)  
+5. **SC-PW-E2E** — paste **058 v1.5** (+ **059 v3.7**); manual proof on WAS `recl3DmBh22ADPWWe` before any new `--apply` (MRW-A01)  
 6. **FUT-010** live attachment clear (after supervised dry-run)  
 7. RCC views install  
 
@@ -114,8 +114,8 @@ See [`MASTER_REMAINING_WORK_LIST.md`](./MASTER_REMAINING_WORK_LIST.md) §C–D:
 ## Known risks
 
 1. **Doc lag:** Completion Master §0 (2026-08-24) contradicts CURRENT-TRUTH on 057/SEO.  
-2. **Paste debt:** GitHub ahead of Production on 010/022/072/073/FUT-001.  
-3. **Perfect Week award unproven** at 7/7 despite config closeout.  
+2. **Paste debt:** GitHub ahead of Production on 010/022/072/073/FUT-001/**058 v1.5**.  
+3. **Perfect Week award unproven** — **BLOCKED / NEEDS PRODUCTION VERIFICATION** (058 field mismatch; Eligible=1 ≠ award).  
 4. **Token scope:** Agent PATs often cannot write Enrollments → SC-PW-E2E preflight 403.  
 5. **Draft PR sprawl:** Many drafts may be superseded; merge carefully.  
 6. **Stash `lead-audit-wip-2026-08-29`:** Uncommitted PW/automation/web WIP — review before drop.  
@@ -125,9 +125,9 @@ See [`MASTER_REMAINING_WORK_LIST.md`](./MASTER_REMAINING_WORK_LIST.md) §C–D:
 
 ## Exact recommended next task
 
-**Mike (P0):** In Production Airtable, verify Automation **058** is Live and its trigger matches Perfect Week Eligible → Pending unlock creation. Re-run `node tools/testing/sc-pw-e2e.mjs --case qualifying --apply` with an Enrollments-capable PAT. Then paste **022 v2.2 / 072 v4.8 / 073 v4.4** and **010 v10.12**.
+**Mike (P0):** Paste **058 v1.5** (and **059 v3.7**) per [`docs/deploy-checklists/058-v1.5-milestone-source-key.md`](./docs/deploy-checklists/058-v1.5-milestone-source-key.md). Verify 058 Live + lifecycle trigger + dynamic `recordId`. Manually run 058 on WAS **`recl3DmBh22ADPWWe`**; confirm unlock `Milestone Source Key`, 059 **100 XP**, dedupe re-run. **Do not** run qualifying `--apply` and **do not** mark Perfect Week complete until evidence JSON shows unlock + XP + Awarded + 100 + no duplicates. Then paste **022 / 072 / 073** and **010 v10.12**.
 
-**Cursor/Lead:** Push `lead/release-baseline-2026-08-29`, open PR, merge after CI green, confirm Vercel deploy.
+**Cursor/Lead:** Ship 058/059 field-alignment PR; merge after CI; no Airtable paste from agents; no SC-PW-E2E `--apply`.
 
 ---
 
@@ -138,3 +138,4 @@ See [`MASTER_REMAINING_WORK_LIST.md`](./MASTER_REMAINING_WORK_LIST.md) §C–D:
 | 2026-08-29 (start) | Audit; created MASTER_REMAINING_WORK_LIST + this baseline at `5ae358d5` |
 | 2026-08-29 (Phase 3) | Merged FUT-001 (#264), SC-PW-E2E (#269), FUT-010 (#268) onto lead branch; tests green; SC-PW-E2E live award **BLOCKED at 058** |
 | 2026-08-29 (Phase 4) | PR **#271** merged → `69ff04d6`; Vercel Production deployment **success**; `/shoot` 200; `/shoot/api/airtable` ok |
+| 2026-08-29 (058 fix) | Authoritative PW investigation → MRW-A01 **BLOCKED / NEEDS PRODUCTION VERIFICATION**; repo **058 v1.5** / **059 v3.7** (`Milestone Source Key` + `Coach Note`); no `--apply`; paste + WAS `recl3DmBh22ADPWWe` still required |

@@ -19,6 +19,14 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   **Scope:** Submission Assets intake attachments only; legacy Homework Completions attachments out of scope.
 
 #### Changed
+- **058 v1.5 + 059 v3.7 — Perfect Week Unlocks field alignment (2026-08-29)** — Production
+  Athlete Achievement Unlocks uses **`Milestone Source Key`** and **`Coach Note`** (not
+  `Source Key` / `Notes`). 058 now writes those fields; fail-closed errors name
+  `Milestone Source Key`; identity remains `PERFECT_WEEK|{enrollmentId}|{weekId}`.
+  059 Perfect Week path prefers Milestone Source Key for XP Source Key. **SC-PW-E2E remains
+  BLOCKED / NEEDS PRODUCTION VERIFICATION** until Mike pastes 058, runs WAS
+  `recl3DmBh22ADPWWe`, and captures evidence JSON (058 unlock + 059 100 XP + dedupe).
+  Do **not** run qualifying `--apply` until manual Airtable steps in MRW-A01 pass.
 - **057 v2.2 (SC-034, 2026-08-27)** — Perfect Week video minimum is Config-only (fail-closed):
   year-aware lookup of Config field **`Perfect Week Video Minimum`** (`fldqRxjWGXcbUZUg3`,
   number, value 3); removed `legacyRequiredVideoCount: 3`. WAS formula uses lookup

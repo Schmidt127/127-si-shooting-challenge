@@ -85,7 +85,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 ## Achievements and streaks (053–059, 066)
 
 > **PKG-038 status:** **COMPLETE** (Production proof passed 2026-08-16). 053 v5.5,
-> 054 v5.8, **066 v3.9** (dynamic trigger live-tested 2026-08-24), and 059 v3.6 are installed and ON. Charlie Schmidt Early
+> 054 v5.8, **066 v3.9** (dynamic trigger live-tested 2026-08-24), and 059 v3.7 (repo; paste with 058 v1.5) are the GitHub source. Charlie Schmidt Early
 > Bird path proven; audit v2.1 issueTotal = 0. **Do not retest** unless source,
 > trigger, or schema changes. Resume after first regular Week closes (~May 8, 2027).
 
@@ -96,8 +96,8 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 055 | Achievements — Recalculate Current Shooting Streak from Submission | *confirm in Airtable* | `055-achievements-and-milestones-recalculate-current-shooting-streak-from-submission.js` |
 | 056 | Achievements — Refresh Current Shooting Streaks Daily | *confirm in Airtable (scheduled)* | `056-achievements-and-milestones-refresh-current-shooting-streaks-daily.js` |
 | **057** | Achievements — Calculate Perfect Week Eligibility | WAS Perfect Week recalc | `057-achievements-and-milestones-calculate-perfect-week-eligibility.js` (**v1.7** — inactive enrollment and unsettled/multiple/wrong-scope goals fail closed; requires lookup parity with the linked active goal) |
-| 058 | Achievements — Create Perfect Week Unlock | Lifecycle-capable WAS trigger; dynamic `recordId` | `058-achievements-and-milestones-create-perfect-week-unlock.js` (**v1.3** — exact source-key lifecycle owner; inactive or unsettled/wrong-scope goal state withdraws the same unlock rather than creating a replacement) |
-| **059** | Achievements — Create/Reconcile XP Event from Achievement Unlock | Athlete Achievement Unlock lifecycle; **Do NOT filter on Ready for 059 XP**; prefer When a record is **created** or updated | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.6** — corrected-history milestone lifecycle; Perfect Week preserved; **ON in PROD**) |
+| 058 | Achievements — Create Perfect Week Unlock | Lifecycle-capable WAS trigger; dynamic `recordId` | `058-achievements-and-milestones-create-perfect-week-unlock.js` (**v1.5** — writes Unlocks **Milestone Source Key** + **Coach Note**; identity `PERFECT_WEEK|{enr}|{week}`; paste pending — SC-PW-E2E BLOCKED) |
+| **059** | Achievements — Create/Reconcile XP Event from Achievement Unlock | Athlete Achievement Unlock lifecycle; **Do NOT filter on Ready for 059 XP**; prefer When a record is **created** or updated | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.7** — Perfect Week XP Source Key prefers Milestone Source Key; Coach Note; paste with 058) |
 | 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.9** — dynamic `recordId` from trigger; **live-tested 2026-08-24**) |
 
 ## Email handoffs (070b/070c upload are not parent email)
