@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-14
-Last GitHub Update: 2026-08-24 (v10.3 dynamic triggering recordId)
+Last GitHub Update: 2026-08-28 (v10.4 FUT-001 deadline + slot-agnostic PHA)
 
 Purpose:
 Create, replay, repair, deactivate, or reactivate the exact canonical
@@ -32,11 +32,14 @@ v10.1 installed in Production per Mike evidence; v10.2 is structure-only.
  * 065 - HOMEWORK REVIEW AND XP
  * Create or Reconcile Homework XP Event
  *
- * Version: v10.3
+ * Version: v10.4
  * Date Written: 2026-06-06
- * Last Updated: 2026-08-24
+ * Last Updated: 2026-08-28
  *
  * VERSION HISTORY
+ * - v10.4 (2026-08-28): FUT-001 — PHA eligibility no longer requires HC Item Slot to
+ *   match PHA Homework Slot; block positive XP when submission is after PHA Due Date
+ *   (Week End Date fallback).
  * - v10.3 (2026-08-24): Require triggering Homework Completion recordId from
  *   input.config() only — no hardcoded record literals in executable logic;
  *   explicit missing/invalid input errors for safe manual runs.
@@ -126,10 +129,10 @@ const SOURCE_KEY_CONTRACT = {
 
 const SCRIPT = {
   scriptName: "065 - Homework Review and XP - Create or Reconcile Homework XP Event",
-  version: "v10.3",
-  versionDate: "2026-08-24",
+  version: "v10.4",
+  versionDate: "2026-08-28",
   originalWrittenDate: "2026-06-06",
-  lastUpdated: "2026-08-24",
+  lastUpdated: "2026-08-28",
   folder: "02 - Homework Review and XP",
   automationName: "065 - Homework Review and XP - Create or Reconcile Homework XP Event",
 };
@@ -145,11 +148,13 @@ const CONFIG = {
     weeklySummary: "Weekly Athlete Summary",
     pha: "Program Homework Assignments",
     enrollments: "Enrollments",
+    weeks: "Weeks",
   },
   homework: {
     enrollment: "Enrollment",
     homework: "Homework",
     week: "Week",
+    submissionDate: "Submission Date",
     weeklySummary: "Weekly Athlete Summary Link",
     submissions: "Submissions - Linked",
     pha: "Program Homework Assignment",
@@ -172,6 +177,10 @@ const CONFIG = {
     week: "Week",
     programInstance: "Program Instance",
     slot: "Homework Slot",
+    dueDate: "Due Date",
+  },
+  weeks: {
+    endDate: "End Date",
   },
   enrollments: {
     programInstance: "Program Instance",
@@ -226,6 +235,7 @@ let xpEventsTable;
 let weeklySummaryTable;
 let phaTable;
 let enrollmentsTable;
+let weeksTable;
 const fieldCache = new Map();
 
 function setOutputSafe(key, value) {
@@ -331,6 +341,56 @@ function selectChoice(table, name, value) {
 
 function sourceKeyFor(homeworkCompletionId) {
   return `${CONFIG.values.prefix}${homeworkCompletionId}`;
+}
+
+function toDateKeyFromText(textValue) {
+  const text = String(textValue || "").trim();
+  if (!text) return "";
+  const isoMatch = text.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (isoMatch) return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
+  const localMatch = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (localMatch) {
+    const month = localMatch[1].padStart(2, "0");
+    const day = localMatch[2].padStart(2, "0");
+    return `${localMatch[3]}-${month}-${day}`;
+  }
+  return "";
+}
+
+function resolveAssignmentDueDateKey(phaDueDate, weekEndDate) {
+  const fromPha = toDateKeyFromText(phaDueDate);
+  if (fromPha) return fromPha;
+  return toDateKeyFromText(weekEndDate) || "";
+}
+
+function evaluateHomeworkSubmissionDeadline({ submissionDateKey = "", phaDueDate = "", weekEndDate = "" } = {}) {
+  const submitKey = toDateKeyFromText(submissionDateKey);
+  const dueKey = resolveAssignmentDueDateKey(phaDueDate, weekEndDate);
+  if (!submitKey) {
+    return {
+      creditEligible: true,
+      timingStatus: "unknown_submission_date",
+      dueDateKey: dueKey,
+      reason: "Submission date missing; deadline not enforced.",
+    };
+  }
+  if (!dueKey) {
+    return {
+      creditEligible: true,
+      timingStatus: "no_due_date",
+      dueDateKey: "",
+      reason: "No PHA Due Date or Week End Date; deadline not enforced.",
+    };
+  }
+  if (submitKey > dueKey) {
+    return {
+      creditEligible: false,
+      timingStatus: "late_ineligible",
+      dueDateKey: dueKey,
+      reason: `Submission date ${submitKey} is after assignment due date ${dueKey}.`,
+    };
+  }
+  return { creditEligible: true, timingStatus: "on_time", dueDateKey: dueKey, reason: "" };
 }
 
 async function updateRecordSafe(table, id, fields) {
@@ -478,7 +538,16 @@ async function validatePha(homeworkCompletion, enrollmentId, weekId) {
       reason: `Program Homework Assignment must contain exactly one link; found ${phaIds.length}.`,
     };
   }
-  const pha = await phaTable.selectRecordAsync(phaIds[0]);
+  const phaFieldNames = [
+    CONFIG.pha.active,
+    CONFIG.pha.homeworkAssignment,
+    CONFIG.pha.week,
+    CONFIG.pha.programInstance,
+  ];
+  if (getField(phaTable, CONFIG.pha.dueDate)) phaFieldNames.push(CONFIG.pha.dueDate);
+  const pha = await phaTable.selectRecordAsync(phaIds[0], {
+    fields: phaFieldNames.filter((name) => getField(phaTable, name)),
+  });
   if (!pha || !booleanish(pha, phaTable, CONFIG.pha.active)) {
     return {
       eligible: false,
@@ -497,12 +566,6 @@ async function validatePha(homeworkCompletion, enrollmentId, weekId) {
     return { eligible: false, reason: `PHA Week ownership mismatch.` };
   }
   if (
-    getText(pha, phaTable, CONFIG.pha.slot) !==
-    getText(homeworkCompletion, homeworkTable, CONFIG.homework.slot)
-  ) {
-    return { eligible: false, reason: `PHA Homework Slot ownership mismatch.` };
-  }
-  if (
     !sameIds(
       linkedIds(pha, phaTable, CONFIG.pha.programInstance),
       linkedIds(enrollment, enrollmentsTable, CONFIG.enrollments.programInstance)
@@ -513,6 +576,29 @@ async function validatePha(homeworkCompletion, enrollmentId, weekId) {
       reason: `PHA Program Instance does not match Enrollment.`,
     };
   }
+
+  const submissionDateKey = toDateKeyFromText(
+    getText(homeworkCompletion, homeworkTable, CONFIG.homework.submissionDate)
+  );
+  let weekEndDate = "";
+  if (weeksTable && getField(weeksTable, CONFIG.weeks.endDate)) {
+    const weekRecord = await weeksTable.selectRecordAsync(weekId, {
+      fields: [CONFIG.weeks.endDate],
+    });
+    if (weekRecord) weekEndDate = getText(weekRecord, weeksTable, CONFIG.weeks.endDate);
+  }
+  const phaDueDate = getField(phaTable, CONFIG.pha.dueDate)
+    ? getText(pha, phaTable, CONFIG.pha.dueDate)
+    : "";
+  const deadline = evaluateHomeworkSubmissionDeadline({
+    submissionDateKey,
+    phaDueDate,
+    weekEndDate,
+  });
+  if (!deadline.creditEligible && deadline.timingStatus === "late_ineligible") {
+    return { eligible: false, reason: deadline.reason || "Submission after assignment due date." };
+  }
+
   return { eligible: true, reason: "" };
 }
 
@@ -543,6 +629,7 @@ async function main() {
   weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
   phaTable = base.getTable(CONFIG.tables.pha);
   enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
+  weeksTable = base.getTable(CONFIG.tables.weeks);
 
   [
     CONFIG.homework.enrollment,

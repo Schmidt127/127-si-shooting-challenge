@@ -42,14 +42,15 @@ test("005 v5.5 source contract — PHA direct load, slot-authoritative normalize
   assert.doesNotMatch(source, /phaTable\.selectRecordsAsync/);
 });
 
-test("020 v3.7 source contract — PHA direct validate, library dereference", () => {
+test("020 v3.8 source contract — PHA identity validate, alternate slot tolerant", () => {
   const source = read(
     "airtable/automations/shooting-challenge/020-homework-link-or-create-homework-completion.js"
   );
-  assert.match(source, /version:\s*"v3\.7"/);
-  assert.match(source, /validateSelectedPha/);
-  assert.match(source, /libraryId/);
-  assert.match(source, /Multi-band Grade Band never rejects/);
+  assert.match(source, /version:\s*"v3\.8"/);
+  assert.match(source, /resolveHomeworkAssignmentIdentity/);
+  assert.match(source, /enrollment_pha_identity/);
+  assert.match(source, /evaluateHomeworkSubmissionDeadline/);
+  assert.doesNotMatch(source, /slot mismatch: expected/);
   assert.doesNotMatch(source, /resolveProgramHomeworkAssignmentId/);
   assert.doesNotMatch(source, /phaTable\.selectRecordsAsync/);
   assert.doesNotMatch(source, /PHA Grade Band mismatch/);
@@ -289,7 +290,7 @@ test("005 — replay after normalization is idempotent (no homework field rewrit
 });
 
 test("020 — multi-band PHA (K-2…9-12) creates completion for K-2 enrollment", async () => {
-  const multiBandPhaId = "recPhaMultiBand0001";
+  const multiBandPhaId = "recMb000000000001";
   const base = build020PhaBase({
     phaRecords: [
       new MockRecord(multiBandPhaId, {
@@ -362,4 +363,209 @@ test("020 — replay returns same completion without duplicate", async () => {
   assert.equal(second.error, null, second.error && second.error.message);
   assert.equal(second.output.values.homeworkCompletionId, EXISTING_HC_ID);
   assert.equal(homework.createdPayloads.length, 0);
+});
+
+test("020 — HW1 assignment uploaded through HW2 slot links same PHA identity", async () => {
+  const base = build020PhaBase({
+    submissionCells: {
+      "Homework Name 1": [{ id: PHA_IDS.PHA_HW1 }],
+      "Homework Name 2": null,
+      "Activity Date": "2026-08-07",
+    },
+    assetCells: {
+      "Asset Purpose": { name: "Homework 2" },
+      "Asset Slot": { name: "HW2" },
+      "Asset Label": "HW2 alternate slot",
+    },
+  });
+  const { output, error } = await run020({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.statusOut, "success");
+  assert.equal(output.values.phaId, PHA_IDS.PHA_HW1);
+  assert.equal(output.values.officialSlot, "HW1");
+  assert.equal(output.values.uploadSlot, "HW2");
+  assert.equal(output.values.alternateUploadSlot, true);
+});
+
+test("020 — repeat alternate-slot upload reuses one Homework Completion", async () => {
+  const existing = new MockRecord(EXISTING_HC_ID, {
+    Homework: [{ id: PHA_IDS.LIBRARY_HW1 }],
+    "Program Homework Assignment": [{ id: PHA_IDS.PHA_HW1 }],
+    Enrollment: [{ id: CHAIN_IDS.ENROLLMENT_CURRENT }],
+    Week: [{ id: PHA_IDS.WEEK }],
+    "Item Slot": { name: "HW1" },
+    "Asset Slot": { name: "HW1" },
+    "Submissions - Linked": [{ id: CHAIN_IDS.SUBMISSION }],
+    "Submission Assets": [],
+  });
+  const base = build020PhaBase({
+    existingHomeworkCompletions: [existing],
+    submissionCells: {
+      "Homework Name 1": [{ id: PHA_IDS.PHA_HW1 }],
+      "Homework Name 2": null,
+    },
+    assetCells: {
+      "Asset Purpose": { name: "Homework 2" },
+      "Asset Slot": { name: "HW2" },
+    },
+  });
+  const homework = base.tables.get("Homework Completions");
+  const { output, error } = await run020({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.homeworkCompletionId, EXISTING_HC_ID);
+  assert.equal(output.values.actionOut, "linked_existing_enrollment_identity");
+  assert.equal(homework.createdPayloads.length, 0);
+});
+
+test("020 — late submission stays reviewable but marks ineligible", async () => {
+  const base = build020PhaBase({
+    submissionCells: {
+      "Homework Name 1": [{ id: PHA_IDS.PHA_HW1 }],
+      "Activity Date": "2026-09-02",
+    },
+    phaRecords: [
+      new MockRecord(PHA_IDS.PHA_HW1, {
+        "Homework Assignment": [{ id: PHA_IDS.LIBRARY_HW1 }],
+        "Program Instance": [{ id: PHA_IDS.PI }],
+        Week: [{ id: PHA_IDS.WEEK }],
+        "Homework Slot": { name: "HW1" },
+        "Active?": true,
+        "Due Date": "2026-08-31",
+      }),
+    ],
+  });
+  const homework = base.tables.get("Homework Completions");
+  const { output, error } = await run020({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.creditEligible, false);
+  assert.equal(output.values.timingStatus, "late_ineligible");
+  assert.equal(homework.createdPayloads.length, 1);
+  assert.match(String(homework.createdPayloads[0].payload.Notes || ""), /Late submission:/);
+});
+
+test("020 — on-time submission is credit eligible", async () => {
+  const base = build020PhaBase({
+    submissionCells: {
+      "Homework Name 1": [{ id: PHA_IDS.PHA_HW1 }],
+      "Activity Date": "2026-08-20",
+    },
+    phaRecords: [
+      new MockRecord(PHA_IDS.PHA_HW1, {
+        "Homework Assignment": [{ id: PHA_IDS.LIBRARY_HW1 }],
+        "Program Instance": [{ id: PHA_IDS.PI }],
+        Week: [{ id: PHA_IDS.WEEK }],
+        "Homework Slot": { name: "HW1" },
+        "Active?": true,
+        "Due Date": "2026-08-31",
+      }),
+    ],
+  });
+  const homework = base.tables.get("Homework Completions");
+  const { output, error } = await run020({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.creditEligible, true);
+  assert.equal(output.values.timingStatus, "on_time");
+  assert.equal(output.values.dueDateKey, "2026-08-31");
+  assert.equal(homework.createdPayloads.length, 1);
+  assert.equal(homework.createdPayloads[0].payload.Notes, undefined);
+});
+
+test("020 — multiple assets for one assignment attach to one Homework Completion", async () => {
+  const existing = new MockRecord(EXISTING_HC_ID, {
+    Homework: [{ id: PHA_IDS.LIBRARY_HW1 }],
+    "Program Homework Assignment": [{ id: PHA_IDS.PHA_HW1 }],
+    Enrollment: [{ id: CHAIN_IDS.ENROLLMENT_CURRENT }],
+    Week: [{ id: PHA_IDS.WEEK }],
+    "Item Slot": { name: "HW1" },
+    "Asset Slot": { name: "HW1" },
+    "Submissions - Linked": [{ id: CHAIN_IDS.SUBMISSION }],
+    "Submission Assets": [{ id: "recAssetAlready01" }],
+  });
+  const secondAssetId = "recAssetHw200002";
+  const base = build020PhaBase({
+    existingHomeworkCompletions: [existing],
+    submissionCells: {
+      "Homework Name 1": [{ id: PHA_IDS.PHA_HW1 }],
+      "Homework Name 2": null,
+    },
+    assetCells: {
+      "Asset Purpose": { name: "Homework 2" },
+      "Asset Slot": { name: "HW2" },
+      "Asset Label": "second upload",
+    },
+  });
+  const assets = base.tables.get("Submission Assets");
+  assets.records.set(
+    secondAssetId,
+    new MockRecord(secondAssetId, {
+      ...assets.records.get(ASSET_ID).cells,
+      "Asset Label": "second upload",
+      "Asset Purpose": { name: "Homework 2" },
+      "Asset Slot": { name: "HW2" },
+      "Homework Completions": [],
+    })
+  );
+  const homework = base.tables.get("Homework Completions");
+  const { output, error } = await run020({ base, recordId: secondAssetId });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.homeworkCompletionId, EXISTING_HC_ID);
+  assert.equal(output.values.actionOut, "linked_existing_enrollment_identity");
+  assert.equal(homework.createdPayloads.length, 0);
+  const update = homework.updates.find((row) => row.recordId === EXISTING_HC_ID);
+  assert.ok(update);
+  const linkedAssets = update.fields["Submission Assets"] || [];
+  assert.equal(linkedAssets.length, 2);
+  assert.ok(linkedAssets.some((row) => row.id === "recAssetAlready01"));
+  assert.ok(linkedAssets.some((row) => row.id === secondAssetId));
+});
+
+test("020 — cross-enrollment isolation does not reuse another enrollment HC", async () => {
+  const otherEnrollmentHc = new MockRecord("recOtherEnrollHc01", {
+    Homework: [{ id: PHA_IDS.LIBRARY_HW1 }],
+    "Program Homework Assignment": [{ id: PHA_IDS.PHA_HW1 }],
+    Enrollment: [{ id: CHAIN_IDS.ENROLLMENT_HISTORICAL }],
+    Week: [{ id: PHA_IDS.WEEK }],
+    "Item Slot": { name: "HW1" },
+    "Asset Slot": { name: "HW1" },
+    "Submissions - Linked": [],
+    "Submission Assets": [],
+  });
+  const base = build020PhaBase({
+    existingHomeworkCompletions: [otherEnrollmentHc],
+  });
+  const homework = base.tables.get("Homework Completions");
+  const { output, error } = await run020({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.statusOut, "success");
+  assert.equal(output.values.actionOut, "created_new");
+  assert.notEqual(output.values.homeworkCompletionId, "recOtherEnrollHc01");
+  assert.equal(homework.createdPayloads.length, 1);
+  assert.deepEqual(homework.createdPayloads[0].payload.Enrollment, [
+    { id: CHAIN_IDS.ENROLLMENT_CURRENT },
+  ]);
+});
+
+test("020 — blank PHA Due Date uses Week End Date for deadline", async () => {
+  const base = build020PhaBase({
+    submissionCells: {
+      "Homework Name 1": [{ id: PHA_IDS.PHA_HW1 }],
+      "Activity Date": "2026-09-01",
+    },
+  });
+  const { output, error } = await run020({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.timingStatus, "late_ineligible");
+  assert.equal(output.values.dueDateKey, "2026-08-31");
+});
+
+test("065 v10.4 source contract — deadline gate + slot-agnostic PHA + XP key", () => {
+  const source = read(
+    "airtable/automations/shooting-challenge/065-homework-review-and-xp-create-homework-xp-event.js"
+  );
+  assert.match(source, /version:\s*"v10\.4"/);
+  assert.match(source, /evaluateHomeworkSubmissionDeadline/);
+  assert.match(source, /HOMEWORK_XP\|/);
+  assert.match(source, /sourceKeyPrefix:\s*"HOMEWORK_XP\|"/);
+  assert.doesNotMatch(source, /PHA Homework Slot ownership mismatch/);
+  assert.match(source, /Submission after assignment due date/);
 });

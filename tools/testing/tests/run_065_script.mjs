@@ -165,12 +165,19 @@ export function build065Base({ homeworkIds = [REFERENCE_HC, DISPOSABLE_HC], xpEv
     syncHomeworkFormulaState(record.id, homeworkTable, xpTable);
   }
 
+  const weeksTable = new MockTable("Weeks", [{ name: "End Date", type: "date" }], [
+    new MockRecord(SHARED.WEEK, {
+      "End Date": "2026-08-15",
+    }),
+  ]);
+
   const phaTable = new MockTable("Program Homework Assignments", [
     { name: "Active?", type: "checkbox" },
     { name: "Homework Assignment", type: "multipleRecordLinks" },
     { name: "Week", type: "multipleRecordLinks" },
     { name: "Program Instance", type: "multipleRecordLinks" },
     { name: "Homework Slot", type: "singleLineText" },
+    { name: "Due Date", type: "date" },
   ], [
     new MockRecord(SHARED.PHA, {
       "Active?": true,
@@ -178,6 +185,7 @@ export function build065Base({ homeworkIds = [REFERENCE_HC, DISPOSABLE_HC], xpEv
       Week: [{ id: SHARED.WEEK }],
       "Program Instance": [{ id: SHARED.PI }],
       "Homework Slot": "HW1",
+      "Due Date": "2026-08-20",
     }),
   ]);
 
@@ -201,7 +209,14 @@ export function build065Base({ homeworkIds = [REFERENCE_HC, DISPOSABLE_HC], xpEv
     }),
   ]);
 
-  return new MockBase([homeworkTable, xpTable, weeklySummaryTable, phaTable, enrollmentsTable]);
+  return new MockBase([
+    homeworkTable,
+    xpTable,
+    weeklySummaryTable,
+    weeksTable,
+    phaTable,
+    enrollmentsTable,
+  ]);
 }
 
 export async function run065({ base, recordId = REFERENCE_HC, inputConfig = null }) {
