@@ -15,7 +15,7 @@
 |------|--------|----------|
 | Audit start branch | `lead/release-baseline-2026-08-29` | `git checkout -B … origin/master` |
 | Audit start SHA | `5ae358d5ec7423c9baffb7f245053f85b3bf7481` | `origin/master` before PKG-044 |
-| Production branch HEAD | `601db77a9bb19ee818f1b8a3dfb729664c3b22d7` | Merge PR **#273** 2026-08-29T22:14:56Z (058 v1.5 / 059 v3.7) |
+| Production branch HEAD | `2e3bba3c1cd4fadf4f09bbe11c06e6ac5d10991c` | Docs follow-up after PR **#273** merge (`601db77a` = 058/059 fix) |
 | Working tree (post-merge local) | Clean on `master` tracking `origin/master` | Stash `lead-audit-wip-2026-08-29` still holds unrelated WIP |
 
 Re-verify:
