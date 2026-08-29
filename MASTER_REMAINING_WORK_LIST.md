@@ -256,11 +256,11 @@
 | **Definition of done** | Either merged with tests or explicitly abandoned with note |
 | **Notes** | Do not invent new XP rules. |
 
-### MRW-B06 — FUT-WELCOME-LEGACY field retirement (PR #274)
+### MRW-B07 — FUT-WELCOME-LEGACY field retirement (PR #274)
 
 | Field | Value |
 |-------|--------|
-| **ID** | MRW-B06 |
+| **ID** | MRW-B07 |
 | **Short title** | Retire legacy Enrollment welcome-email fields |
 | **Description** | Repo labeled 075 LEGACY/RETIRED; probes/contracts updated; live path **078A → Queue → 079**. Mike deleted all six Enrollments fields. |
 | **Why it matters** | Removes inert 075 writers; protects Public Missing\* and **066** `Run Shot Milestone Check?`. |
@@ -417,7 +417,7 @@
 
 - SC-034 / V2-002 / PW config items → **COMPLETE**; not listed as open work.  
 - FUT-011–015, FUT-020–023, FUT-006, FUT-008 → **COMPLETE**; omitted from open sections.  
-- **FUT-WELCOME-LEGACY** (MRW-B06) → **COMPLETE** 2026-08-29 — six Enrollment fields deleted; 075 absent; do not restore.  
+- **FUT-WELCOME-LEGACY** (MRW-B07) → **COMPLETE** 2026-08-29 — six Enrollment fields deleted; 075 absent; do not restore.  
 - SC-027/066 shot milestones live-tested → monitoring only.  
 - Historical overnight MIKE-ACTIONS rows superseded by CURRENT-TRUTH / Section G where dated later.  
 - Legacy C-/SC- inventory in Future Work Sections A–F remains evidence; **this file + Future Work Section G** are the operator queues.
