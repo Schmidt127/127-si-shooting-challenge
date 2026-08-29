@@ -15,8 +15,8 @@
 |------|--------|----------|
 | Audit start branch | `lead/release-baseline-2026-08-29` | `git checkout -B … origin/master` |
 | Audit start SHA | `5ae358d5ec7423c9baffb7f245053f85b3bf7481` | `origin/master` before PKG-044 |
-| Production branch HEAD | `2e3bba3c1cd4fadf4f09bbe11c06e6ac5d10991c` | Docs follow-up after PR **#273** merge (`601db77a` = 058/059 fix) |
-| Working tree (post-merge local) | Clean on `master` tracking `origin/master` | Stash `lead-audit-wip-2026-08-29` still holds unrelated WIP |
+| Production branch HEAD | `1b15d37f8efbaaa29987a7db914df45968f2534e` | PR **#274** merge (legacy welcome-email field retirement) |
+| Working tree (post-merge local) | Clean on `master` tracking `origin/master` after docs closeout | Stash `lead-audit-wip-2026-08-29` may still hold unrelated WIP |
 
 Re-verify:
 
@@ -32,6 +32,7 @@ git status -sb
 
 | PR | Title | State | Mergeable | Notes |
 |----|-------|-------|-----------|-------|
+| **#274** | Retire legacy Enrollment welcome-email fields | **MERGED** | — | Repo + contracts; Airtable 5/6 fields deleted (Parent Email HTML remains) |
 | **#264** | FUT-001 homework assignment identity | **MERGED** (via #271) | — | Content in PKG-044 |
 | **#269** | SC-PW-E2E production harness | **MERGED** (via #271) | — | Content in PKG-044 |
 | **#268** | FUT-010 attachment cleanup | **MERGED** (via #271) | — | Dry-run default; live clear still Mike |
@@ -50,14 +51,15 @@ git status -sb
 
 | Suite | Result | Evidence |
 |-------|--------|----------|
-| Agent4 suite | **31/31 PASS** | Local `node tools/testing/run-agent4-suite.js` |
+| Legacy welcome retirement contracts | **PASS** | `legacy-welcome-email-retirement`, `known-reference-numbers`, `065-066-trigger-record`, airtable-runtime |
+| Agent4 suite | **31/31 PASS** | Local `node tools/testing/run-agent4-suite.js` (earlier baseline) |
 | Homework + FUT-010 + SC-PW-E2E contracts | **PASS** | Local Node test runners |
 | Python Airtable + Lambda | **166 + 139 PASS** | Local unittest |
-| Web Vitest | **434/434 PASS** | `cd web && npm test` |
-| Web typecheck / build | **PASS** | After clearing stale `.next` |
+| Web Vitest | **437/437 PASS** | `cd web && npm test` (PR #274 closeout) |
+| Web typecheck / lint / build | **PASS** | Lint 0 errors (4 pre-existing warnings); `next build` OK |
 | Source-of-truth audit | **PASS** | After PKG-044 Completion Master entry |
-| Repository QA on PR #271 | **PASS** | automation-contracts + python-contracts |
-| `npm run test:smoke:prod` | **NOT re-run** this session | Last documented 50/50 on 2026-08-26 |
+| Repository QA on PR #274 | **PASS** | automation-contracts + python-contracts + Web CI |
+| `npm run test:smoke:prod` | **NOT re-run** this session | Last documented 50/50 on 2026-08-26; health API re-verified below |
 | SC-PW-E2E live `--apply` | **FAILED at 058** (2026-08-28) | Evidence JSON; root cause: 058 field mismatch (`Source Key`/`Notes` vs prod `Milestone Source Key`/`Coach Note`); repo **058 v1.5** / **059 v3.7** — paste + manual WAS proof required (**BLOCKED / NEEDS PRODUCTION VERIFICATION**) |
 
 ---
@@ -66,8 +68,8 @@ git status -sb
 
 | Target | Result |
 |--------|--------|
-| `web` Next.js production build | **PASS** locally this session |
-| Vercel Production deploy for `69ff04d6` | **SUCCESS** — GitHub deployment `6160301376` (2026-08-29T21:27:08Z) |
+| `web` Next.js production build | **PASS** locally (PR #274 closeout) |
+| Vercel Production deploy for `1b15d37f` | **SUCCESS** — GitHub deployment `6160903963` (2026-08-29T22:39:50Z) |
 | Public site | https://www.fairfieldbasketballclub.com/shoot → **HTTP 200** |
 | Health | `GET /shoot/api/airtable` → **200** `ok:true` `tokenValid:true` |
 
@@ -78,8 +80,8 @@ git status -sb
 | Item | Result |
 |------|--------|
 | Production site | **Live** https://www.fairfieldbasketballclub.com/shoot |
-| This-session deploy | **SUCCESS** — SHA `69ff04d6` (PR #271) |
-| Health endpoint | **200** `tokenValid:true` (verified 2026-08-29) |
+| This-session deploy | **SUCCESS** — SHA `1b15d37f` (PR #274) |
+| Health endpoint | **200** `tokenValid:true` (verified 2026-08-29 post-#274) |
 | Last known SEO cutover | 2026-08-25 `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true` |
 
 ---
@@ -94,6 +96,7 @@ git status -sb
 | 072 v4.7 weekly email E2E | 2026-08-24 |
 | Public search indexing cutover | 2026-08-25 |
 | Homepage content redesign | PR #270 merged `5ae358d5` |
+| Legacy welcome Enrollment fields (5/6) | Mike UI 2026-08-29 — Ready?/Subject/Status/Sent At/Error deleted; **Parent Email HTML** still live |
 
 ---
 
@@ -108,6 +111,7 @@ See [`MASTER_REMAINING_WORK_LIST.md`](./MASTER_REMAINING_WORK_LIST.md) §C–D:
 5. **SC-PW-E2E** — paste **058 v1.5** (+ **059 v3.7**); manual proof on WAS `recl3DmBh22ADPWWe` before any new `--apply` (MRW-A01)  
 6. **FUT-010** live attachment clear (after supervised dry-run)  
 7. RCC views install  
+8. **FUT-WELCOME-LEGACY** — delete remaining Enrollments **Parent Email HTML** (`fldt3egwi2fqgpDY8`)
 
 ---
 
@@ -139,3 +143,4 @@ See [`MASTER_REMAINING_WORK_LIST.md`](./MASTER_REMAINING_WORK_LIST.md) §C–D:
 | 2026-08-29 (Phase 3) | Merged FUT-001 (#264), SC-PW-E2E (#269), FUT-010 (#268) onto lead branch; tests green; SC-PW-E2E live award **BLOCKED at 058** |
 | 2026-08-29 (Phase 4) | PR **#271** merged → `69ff04d6`; Vercel Production deployment **success**; `/shoot` 200; `/shoot/api/airtable` ok |
 | 2026-08-29 (058 fix) | Authoritative PW investigation → MRW-A01 **BLOCKED / NEEDS PRODUCTION VERIFICATION**; repo **058 v1.5** / **059 v3.7** (`Milestone Source Key` + `Coach Note`); PR **#273** merged `601db77a`; CI green; Vercel auto-deploys web only — **Airtable paste of 058/059 still required**; no `--apply`; WAS `recl3DmBh22ADPWWe` manual proof still open |
+| 2026-08-29 (#274 closeout) | PR **#274** merged `1b15d37f`; Vercel Production `6160903963` success; health 200; 066 still on `Run Shot Milestone Check?`; 075 absent; Airtable **5/6** legacy welcome fields deleted — **Parent Email HTML** remains |

@@ -13,7 +13,8 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   Live welcome path is **078A → Email Handoff Queue → 079 → Hub → Resend**. Automation **075**
   is labeled **LEGACY / RETIRED** in GitHub (absent from live Automations; do not restore; not Zoom XP — that is **101**).
   Ops probe no longer arms `Welcome Email Ready?` / Enrollment Parent Email Subject/HTML.
-  Airtable field deletion is **manual** — packet:
+  PR **#274** merged `1b15d37f` and Vercel Production deployed. Airtable: **5/6** fields deleted;
+  **Parent Email HTML** (`fldt3egwi2fqgpDY8`) still present — finish per
   [`docs/deploy-checklists/RETIRE-LEGACY-WELCOME-EMAIL-FIELDS.md`](./docs/deploy-checklists/RETIRE-LEGACY-WELCOME-EMAIL-FIELDS.md).
   Protects `Run Shot Milestone Check?` and Public Missing Homework/Zoom/Streak.
 - **058 v1.5 + 059 v3.7 — Perfect Week Unlocks field alignment (2026-08-29)** — Production

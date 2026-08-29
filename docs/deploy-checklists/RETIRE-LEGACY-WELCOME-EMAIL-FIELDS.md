@@ -9,12 +9,13 @@
 
 | Check | Result |
 |-------|--------|
-| Automation **075** in live Automations list (49 rows) | **Absent** — do not restore |
+| Automation **075** in live Automations list | **Absent** — do not restore (Automations data table: 0 rows matching `075`) |
 | Automation **078A** | Present / deployed — `078A — Enrollment → Create WELCOME Email Handoff` |
 | Automation **079** | Present / deployed — `079 – Send to Communications Hub - NEW` |
 | Automation **101** | Present / deployed — `101 - Zoom / Attendance XP - Award Meeting XP` |
-| Six retirement target fields still on Enrollments | **Yes** — field IDs below match live schema |
-| Protected fields still on Enrollments | **Yes** — Run Shot Milestone Check? + Public Missing Homework/Zoom/Streak |
+| Automation **066** trigger | **`fldwsuKGoypFBn2w4` (`Run Shot Milestone Check?`) = true** — unchanged |
+| Protected fields still on Enrollments | **Yes** — Run Shot Milestone Check? + Public Missing Homework/Zoom/Streak (formulas `isValid: true`) |
+| Field deletion (post-Mike UI) | **5/6 deleted** — see agent completion status below |
 
 ## Authority
 
@@ -101,6 +102,8 @@ Also leave Public Missing Submissions, Public Missing Videos, and Public Gate Mi
 
 | Layer | Status |
 |-------|--------|
-| Repository references / probes / indexes | Updated on branch `chore/retire-legacy-welcome-email-fields` |
-| Airtable field deletion | **NOT COMPLETE** — requires Mike manual UI delete (MCP cannot delete fields) |
-| App runtime after repo merge alone | Continues working — live path does not need these fields; fields remain inert until deleted |
+| Repository references / probes / indexes | **MERGED** — PR **#274** → `master` @ `1b15d37f` (2026-08-29) |
+| Vercel Production deploy | **SUCCESS** — deployment `6160903963` for `1b15d37f`; `/shoot` 200; `/shoot/api/airtable` `ok:true` `tokenValid:true` |
+| Airtable field deletion | **PARTIAL** — deleted: Welcome Email Ready?, Parent Email Subject, Welcome Email Status, Welcome Email Sent At, Welcome Email Error. **Still present:** Parent Email HTML (`fldt3egwi2fqgpDY8`) — Mike delete remaining field in UI |
+| Automation **075** | Remains **absent** — do not restore |
+| App runtime | Live welcome path does not need deleted fields; remaining Parent Email HTML is inert |

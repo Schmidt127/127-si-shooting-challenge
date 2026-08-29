@@ -57,7 +57,7 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | Re-verify: `git rev-parse HEAD` (2026-08-26 docs sync — FUT-014, XP Event Log, FUT-003, chatgpt-sources mirror) |
+| HEAD SHA | `1b15d37f` — PR **#274** FUT-WELCOME-LEGACY merge (2026-08-29). Re-verify: `git rev-parse HEAD` |
 | `origin/master` | Re-verify after push: `git rev-parse origin/master` |
 | Ahead / behind | **0 / 0** |
 | Working tree at audit start | **Uncommitted unrelated work present** — Airtable automations, `tools/testing/`, `docs/chatgpt-sources/`; not part of web production closeout |
