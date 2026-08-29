@@ -2,34 +2,41 @@
 Automation: 075 - Email, Notifications, and External Handoffs - Build Challenge Welcome Email
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: Production Copy
+Status: LEGACY / RETIRED — DO NOT PASTE, ENABLE, OR RESTORE
 Last Synced From Airtable: 2026-06-20
+Retired: 2026-08-29
 
 Purpose:
-To be confirmed from production script.
+HISTORICAL ONLY. Formerly built Parent Email Subject / Parent Email HTML on
+Enrollments and set Welcome Email Status = Ready. Does not send email.
 
-Trigger:
-To be confirmed from Airtable automation.
+Current welcome path (do not use this script):
+078A → Email Handoff Queue → 079 → Communications Hub → Resend
 
-Important Tables:
-To be confirmed from production script.
+Zoom / Attendance XP is Automation 101 — never confuse with 075.
 
-Important Fields:
-To be confirmed from production script.
+Important Fields (legacy Enrollments writers — retiring from base):
+Parent Email Subject, Parent Email HTML, Welcome Email Status,
+Welcome Email Sent At, Welcome Email Error, Welcome Email Ready?
 
 Notes:
-GitHub is the source-of-truth copy.
-Airtable is the deployed/running copy.
+Retained in GitHub for audit history only. Not in the live Automations table.
+Do not arm triggers against Welcome Email Ready? or restore this workflow.
 */
 
 /************************************************************
  * 075 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Build Challenge Welcome Email
  *
+ * *** LEGACY / RETIRED — DO NOT DEPLOY ***
+ * Live welcome path: 078A → Email Handoff Queue → 079 → Hub → Resend
+ * Zoom/Attendance XP owner: Automation 101 (untouched by this retirement)
+ *
  * Version: v3.0
  * Date Written: 2026-05-29
+ * Last Updated: 2026-08-29 (repo header — retired; no logic restore)
  *
- * PURPOSE
+ * PURPOSE (historical)
  * - Runs from one Enrollments record.
  * - Reads the linked Program Instance - Synced record.
  * - Builds a branded parent welcome email for the challenge/program.
@@ -41,7 +48,8 @@ Airtable is the deployed/running copy.
  * IMPORTANT DESIGN RULE
  * - This automation BUILDS the welcome email package.
  * - It does not mark the welcome email as Sent.
- * - A separate Make/Gmail workflow should handle actual sending and final sent writeback.
+ * - RETIRED: do not use Make/Gmail or this builder for welcome send.
+ * - Current send owner: Communications Hub via 078A / 079.
  *
  * FOLDER
  * - 07 - Email, Notifications, and External Handoffs

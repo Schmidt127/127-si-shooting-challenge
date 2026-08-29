@@ -8,17 +8,14 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Airtable
 
-#### Added
-- **FUT-010 intake attachment cleanup (2026-08-28)** — Post-upload worker to clear
-  `Submission Assets.Airtable Attachment` after verified S3 writeback (homework + video).
-  Shared helpers `lib/intake-attachment-cleanup/`; CLI `tools/airtable/fut_010_intake_attachment_cleanup.py`
-  (dry-run default, reconcile, apply with `--confirm-delete`); extension
-  `airtable/extension-scripts/safe-backfills/fut-010-clear-intake-attachments.js`.
-  Production apply **not** executed — Mike dry-run + formula attestation required. Deploy:
-  [`FUT-010-intake-attachment-cleanup.md`](./docs/deploy-checklists/FUT-010-intake-attachment-cleanup.md).
-  **Scope:** Submission Assets intake attachments only; legacy Homework Completions attachments out of scope.
-
 #### Changed
+- **Retire legacy Enrollment welcome-email fields (repo + manual Airtable packet, 2026-08-29)** —
+  Live welcome path is **078A → Email Handoff Queue → 079 → Hub → Resend**. Automation **075**
+  is labeled **LEGACY / RETIRED** in GitHub (absent from live Automations; do not restore; not Zoom XP — that is **101**).
+  Ops probe no longer arms `Welcome Email Ready?` / Enrollment Parent Email Subject/HTML.
+  Airtable field deletion is **manual** — packet:
+  [`docs/deploy-checklists/RETIRE-LEGACY-WELCOME-EMAIL-FIELDS.md`](./docs/deploy-checklists/RETIRE-LEGACY-WELCOME-EMAIL-FIELDS.md).
+  Protects `Run Shot Milestone Check?` and Public Missing Homework/Zoom/Streak.
 - **058 v1.5 + 059 v3.7 — Perfect Week Unlocks field alignment (2026-08-29)** — Production
   Athlete Achievement Unlocks uses **`Milestone Source Key`** and **`Coach Note`** (not
   `Source Key` / `Notes`). 058 now writes those fields; fail-closed errors name
@@ -35,6 +32,16 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   [`057-v2.1-perfect-week-config-video-minimum.md`](./docs/deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md).
 - **057 v2.1 (SC-034, 2026-08-27)** — Perfect Week video minimum Config path + date-key
   hardening (`addDaysToDateKey` avoids UTC ISO slice). Superseded by v2.2 config-only pass.
+
+#### Added
+- **FUT-010 intake attachment cleanup (2026-08-28)** — Post-upload worker to clear
+  `Submission Assets.Airtable Attachment` after verified S3 writeback (homework + video).
+  Shared helpers `lib/intake-attachment-cleanup/`; CLI `tools/airtable/fut_010_intake_attachment_cleanup.py`
+  (dry-run default, reconcile, apply with `--confirm-delete`); extension
+  `airtable/extension-scripts/safe-backfills/fut-010-clear-intake-attachments.js`.
+  Production apply **not** executed — Mike dry-run + formula attestation required. Deploy:
+  [`FUT-010-intake-attachment-cleanup.md`](./docs/deploy-checklists/FUT-010-intake-attachment-cleanup.md).
+  **Scope:** Submission Assets intake attachments only; legacy Homework Completions attachments out of scope.
 
 ### Docs
 

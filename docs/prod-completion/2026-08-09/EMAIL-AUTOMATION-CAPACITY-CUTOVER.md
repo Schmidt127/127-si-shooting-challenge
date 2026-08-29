@@ -7,16 +7,14 @@ Status: **Implementation started**
 ### 068 — RETIRED / NO AIRTABLE SLOT
 Automation 033 v4.2 absorbs deferred Homework Completion -> Weekly Athlete Summary reconciliation. Do not create 068 in PROD.
 
-### 075 — RETIRE FROM PROD
-Automation 075 builds legacy welcome subject/HTML on Enrollments and optionally posts to the old Make path. It is not consumed by the current Communications Hub welcome send path.
+### 075 — RETIRED FROM PROD (confirmed 2026-08-29)
+Automation 075 is **absent from the live Automations table**. Do not restore it.
 
 Current welcome send path:
 
-`Email Handoff Queue -> 079 -> Communications Hub -> WELCOME template -> Resend -> Delivery audit`
+`078A -> Email Handoff Queue -> 079 -> Communications Hub -> WELCOME template -> Resend -> Delivery audit`
 
-The Communications Hub owns subject, HTML, and plain-text rendering. 079 forwards template data only. Therefore 075 is a legacy builder and may be deleted from Airtable PROD after confirming the organization no longer needs its Enrollment preview fields for manual reference.
-
-Deleting 075 frees **1 Airtable automation slot** without changing the Hub delivery contract.
+The Communications Hub owns subject, HTML, and plain-text rendering. 079 forwards template data only. Remaining cleanup is **Enrollment field deletion** (not re-creating 075) — see [`../deploy-checklists/RETIRE-LEGACY-WELCOME-EMAIL-FIELDS.md`](../deploy-checklists/RETIRE-LEGACY-WELCOME-EMAIL-FIELDS.md).
 
 ## Do not retire yet
 

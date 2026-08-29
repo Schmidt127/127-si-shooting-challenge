@@ -1,8 +1,9 @@
 # WELCOME email — Communications Hub integration (Shooting Challenge)
 
-**Last updated:** 2026-08-08  
+**Last updated:** 2026-08-29  
 **PROD base:** `appn84sqPw03zEbTT`  
-**Controlling doc:** [`docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](../SHOOTING_CHALLENGE_COMPLETION_MASTER.md) §9M
+**Controlling doc:** [`docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](../SHOOTING_CHALLENGE_COMPLETION_MASTER.md) §9M  
+**Field retirement:** [`../deploy-checklists/RETIRE-LEGACY-WELCOME-EMAIL-FIELDS.md`](../deploy-checklists/RETIRE-LEGACY-WELCOME-EMAIL-FIELDS.md)
 
 ---
 
@@ -10,12 +11,13 @@
 
 | Layer | Status |
 |-------|--------|
+| **Automation 078A → Email Handoff Queue** | **Live** — creates `WELCOME` queue rows (does not write Enrollment subject/HTML) |
 | **Automation 079 → Communications Hub handoff** | **Live Tested in PROD** (controlled test only) |
 | **Hub → Resend → Delivery audit** | **Live Tested in PROD** (controlled test only) |
 | **Participant-wide welcome sends** | **Not authorized** — **Test Mode?** + allowlist only |
 | **Approved Shooting Challenge welcome design in Hub** | **Pending** — Hub **WELCOME** template renders subject/HTML; payload supplies template data only |
 | **Make.com welcome send** | **OFF / not current path** — legacy assumption only |
-| **Automation 079 script in GitHub** | **Gap** — live PROD script not yet exported to `airtable/automations/shooting-challenge/` |
+| **Automation 075** | **LEGACY RETIRED** — absent from live Automations; do not restore |
 
 **Critical distinction:** Queue or Hub Event **Accepted** proves **intake only** — not delivery. Success requires exactly **one** Hub **Delivery** in terminal **`Sent`** state, a Resend/provider ID, **one** send attempt, and no stale delivery error/retry fields.
 
@@ -24,17 +26,18 @@
 ## Architecture
 
 ```text
-[Optional legacy build]
-  Enrollments ──► Automation 075 (build subject/HTML on Enrollment; does not send)
+[Current welcome path]
+  Enrollments ──► Automation 078A (create Email Handoff Queue WELCOME row)
+    ──► Email Handoff Queue (Status Ready; Test Mode? for controlled sends)
+          ──► Automation 079 (POST handoff to Communications Hub)
+                ──► Communications Hub (Hub Event; templateKey WELCOME)
+                      ──► Hub renders subject + HTML/plain-text
+                            ──► Resend
+                                  ──► Delivery audit record (Sent)
+          ◄── writeback: Accepted | Error (+ message) on queue row
 
-[Current send path — controlled test only]
-  Email Handoff Queue row (armed; Test Mode? checked)
-    ──► Automation 079 (POST handoff to Communications Hub)
-          ──► Communications Hub (Hub Event; templateKey WELCOME)
-                ──► Hub renders subject + HTML/plain-text
-                      ──► Resend
-                            ──► Delivery audit record (Sent)
-    ◄── writeback: Accepted | Error (+ message) on queue row
+[LEGACY RETIRED — do not restore]
+  Automation 075 Enrollment Parent Email Subject / Parent Email HTML builders
 ```
 
 **Make.com is not in this path** and must remain off for welcome delivery.
@@ -59,8 +62,7 @@ Verified end-to-end on the controlled-test path:
 
 - Any send with **Test Mode?** checked and Hub allowlist restricting recipients to Mike / Schmidt test addresses.
 - Hub **WELCOME** template content may still need final approved Shooting Challenge copy/branding — payload supplies `athleteName`, `programName`, `message` only.
-- **Automation 075** may still build legacy packages on Enrollments; that path does **not** authorize live parent welcome sends via Make.
-- Enrollment-triggered automatic welcome on new participant intake is **not** enabled.
+- Enrollment-triggered automatic welcome on new participant intake is **not** enabled for participant-wide traffic until activation checklist gates pass.
 
 ---
 
@@ -79,8 +81,8 @@ See [WELCOME-EMAIL-ACTIVATION-CHECKLIST.md](../deploy-checklists/WELCOME-EMAIL-A
 
 ## Automation 079 — contract audit (Shooting Challenge side)
 
-**Audit date:** 2026-08-08  
-**Method:** Operator-verified live behavior. **No 079 script in repository** — field names below match live PROD unless marked *confirm in Airtable UI*.
+**Audit date:** 2026-08-08 (path still current 2026-08-29)  
+**Method:** Operator-verified live behavior. Field names below match live PROD unless marked *confirm in Airtable UI*.
 
 ### Trigger
 
@@ -98,96 +100,28 @@ These are what the operator sets on the **Email Handoff Queue** row. **079** rea
 | Field | Required value |
 |-------|----------------|
 | **Event Type** | `WELCOME` |
-| **Template Key** | `WELCOME` |
-| **Handoff Key** | Unique per intended send; idempotency key |
-| **Source Table** | Shooting Challenge source table (e.g. `Enrollments`) |
-| **Source Record ID** | Source row `rec…` |
-| **Recipients JSON** | Structured recipients for Hub; Hub dedupes to one Delivery when addresses match |
-| **Payload JSON** | Template data — see below |
-| **Test Mode?** | **Checked** for controlled tests; Hub honors allowlist |
+| **Template Key** | `WELCOME` (Hub template) |
+| **Handoff Key** | Stable dedupe key (`WELCOME\|ENROLLMENTS\|{Enrollment Id}` from **078A**) |
+| **Source Table / Source Record ID** | Enrollment identity |
+| **Recipients JSON** | Parent (and athlete when distinct) |
+| **Payload JSON** | Template data only (`athleteName`, `programName`, `message`, …) |
+| **Test Mode?** | Checked for controlled tests |
 
-**Not operator-supplied (not part of 079 contract):**
+### Does not require (retired Enrollment fields)
 
-| Excluded | Reason |
-|----------|--------|
-| Subject | Hub renders from `templateKey: WELCOME` |
-| HTML / plain-text body | Hub renders from `templateKey: WELCOME` |
-| `sendMode` | Not a Shooting Challenge handoff field; use **Test Mode?** on queue row |
-
-### Payload JSON (template data only)
-
-Minimum proven keys inside **Payload JSON**:
-
-| Key | Purpose |
-|-----|---------|
-| `athleteName` | Athlete display name for template |
-| `programName` | Program / season label for template |
-| `message` | Short contextual message merged into Hub WELCOME template |
-
-Example:
-
-```json
-{
-  "athleteName": "Testing Schmidt",
-  "programName": "127 SI Shooting Challenge 2026-2027",
-  "message": "Controlled test handoff"
-}
-```
-
-The Communications Hub uses **`templateKey: WELCOME`** to produce Hub-owned **subject**, **HTML**, and **plain-text** content. **079** forwards this payload; it does not build or send email bodies.
-
-### Handoff key shape
-
-- Must be **unique** per intended send for controlled tests (append `TEST-{date}-{seq}` suffix).
-- For production enrollment welcome, use a deterministic business key (e.g. enrollment-scoped) so accidental replays are safe.
-- **Proven:** same key replay after initial **Sent** Delivery → no second Delivery / Resend send.
-
-### Writeback on Email Handoff Queue
-
-| Outcome | Expected Shooting Challenge writeback |
-|---------|--------------------------------------|
-| Hub accepts handoff | Status → **Accepted**; clear or set handoff timestamp; clear arm/trigger if applicable |
-| Hub rejects / HTTP error | Status → **Error**; **Error message** populated; retry only with **new** Handoff Key |
-| Successful Resend delivery | **Not** written by 079 — Hub **Delivery** in **`Sent`** is proof |
-
-### Test-mode behavior
-
-- **Test Mode?** checked on the queue row → Hub sends only to **allowlisted** addresses.
-- **Allowlist** must remain enabled until Mike explicitly authorizes participant sends.
-- Do not infer delivery from queue or Hub Event **Accepted** alone.
-
-### Delivery success criteria
-
-| Check | Pass |
-|-------|------|
-| Delivery count per Handoff Key | Exactly **1** |
-| Delivery status | Terminal **`Sent`** |
-| Provider / Resend ID | Present |
-| Send attempts | **One** |
-| Error / retry fields on Delivery | Blank (no stale error or retry flags) |
-
-### Source-table issue (earlier Hub Event)
-
-An earlier Hub Event showed a missing or blank **source table** on the Hub side. **Conclusion:** Hub-side **mapping omission** — **not** a Shooting Challenge 079 defect. **No 079 change required.**
-
-### Automation 079 change recommendation
-
-| Question | Answer |
-|----------|--------|
-| Does 079 need a change for the source-table issue? | **No** — Hub-side fix |
-| Does 079 need a change for proven controlled test? | **No** — contract performed as designed |
-| Repo follow-up | **Export live 079 script to GitHub** when Mike approves paste-back |
+`Parent Email Subject`, `Parent Email HTML`, `Welcome Email Status`, `Welcome Email Sent At`, `Welcome Email Error`, `Welcome Email Ready?`
 
 ---
 
-## Legacy path (do not use for welcome send)
+## Legacy path (do not use)
 
-| Component | Role today |
-|-----------|------------|
-| **075** — Build Challenge Welcome Email | Builds `Parent Email Subject` / `Parent Email HTML` on **Enrollments**; sets `Welcome Email Status = Ready`; optional legacy Make webhook input — **does not mark Sent** |
-| **Make.com welcome scenario** | **Not active** for welcome delivery; historical docs may still mention Make/Gmail — superseded by Communications Hub path for welcome **send** |
+| Component | Status |
+|-----------|--------|
+| **075** — Build Challenge Welcome Email | **LEGACY RETIRED** — absent from live Automations; GitHub archive only. Formerly wrote Enrollment subject/HTML. |
+| **Make.com welcome scenario** | **Not active** for welcome delivery |
+| Enrollment welcome builder fields | Retiring — see field cleanup packet |
 
-**075** is **not** the current send owner. Queue rows for **079** use **Payload JSON** template data, not 075 HTML fields.
+Do **not** re-arm Automation **075**. Do **not** confuse **075** with Zoom/Attendance XP (**101**).
 
 ---
 
@@ -219,7 +153,6 @@ Store under `docs/testing/evidence/YYYY-MM-DD-welcome-hub/`:
 | # | Decision |
 |---|----------|
 | 1 | Approve final welcome email copy/design in Hub **WELCOME** template |
-| 2 | Whether **075** remains in use or queue rows are populated without it |
-| 3 | Export **079** from PROD to GitHub (recommended before next code change) |
-| 4 | Explicit authorization date for non-test participant welcome sends |
-| 5 | Opt-out / suppression source of truth (Hub vs Shooting Challenge base) |
+| 2 | Complete Airtable deletion of six legacy Enrollment welcome fields (manual packet) |
+| 3 | Explicit authorization date for non-test participant welcome sends |
+|

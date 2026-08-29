@@ -31,18 +31,18 @@ Define the machine-readable field contract between the Enrollment Fillout form a
 
 | External label | Airtable field | Type | Required | Validation | Normalization | Allowed values | Failure (Fillout / 001) | Downstream | Privacy |
 |----------------|----------------|------|----------|------------|---------------|----------------|-------------------------|------------|---------|
-| Athlete First Name | Athlete First Name | singleLineText | yes | non-empty; not email/digits-only | trim; collapse spaces | — | block / skip | 001 identity, 075 display | PII |
+| Athlete First Name | Athlete First Name | singleLineText | yes | non-empty; not email/digits-only | trim; collapse spaces | — | block / skip | 001 identity, 078A payload | PII |
 | Athlete Last Name | Athlete Last Name | singleLineText | yes | non-empty | trim; collapse spaces | — | block / skip | 001 identity | PII |
-| Parent / Guardian First Name | Parent First Name | singleLineText | yes* | non-empty (or full name) | trim | — | block / n_a | 075 | PII |
-| Parent / Guardian Last Name | Parent Last Name | singleLineText | yes* | non-empty (or full name) | trim | — | block / n_a | 075 | PII |
-| Parent Email | Parent Email | email | yes | RFC-like email | lowercase; strip whitespace/angles | — | block / skip | 001 key, 075/072/076 Make | sensitive_contact |
+| Parent / Guardian First Name | Parent First Name | singleLineText | yes* | non-empty (or full name) | trim | — | block / n_a | 078A / Hub welcome | PII |
+| Parent / Guardian Last Name | Parent Last Name | singleLineText | yes* | non-empty (or full name) | trim | — | block / n_a | 078A / Hub welcome | PII |
+| Parent Email | Parent Email | email | yes | RFC-like email | lowercase; strip whitespace/angles | — | block / skip | 001 key, 078A recipients | sensitive_contact |
 | Athlete Email | Athlete Email | email | no | if present, valid email | lowercase | — | warn / ignore | future athlete comms | sensitive_contact |
 | Grade | Grade | singleSelect | yes | must map to Grade Band range | map Pre-K→Pre K | Pre K,K,1–12 (confirm live options) | block / 002 skip | 002/003 Grade Band | public_safe |
 | School | School | multipleRecordLinks / text bridge | season-dependent | prefer linked School record | trim | Schools table | warn / n_a | standings display | public_safe |
 | Parent Cell | Parent Cell Number | phoneNumber | no | basic phone pattern | strip formatting optionally | — | warn / n_a | SMS future (SC-044) | sensitive_contact |
 | Athlete Cell | Athlete Cell Number | phoneNumber | no | basic phone pattern | — | — | warn / n_a | future | sensitive_contact |
 | School Year / Season | School Year | singleSelect | yes | must be current season option | — | live single-select | block / n_a | season scoping | internal_ops |
-| Program / Challenge | Program Instance | multipleRecordLinks | yes for welcome | must link active instance | — | Program Instance records | block / 075 error | 075, 023 | internal_ops |
+| Program / Challenge | Program Instance | multipleRecordLinks | yes for welcome | must link active instance | — | Program Instance records | block / 078A skip | 078A, 023 | internal_ops |
 | Gender | Gender | singleSelect | no | option exists | — | live options | allow / n_a | welcome copy | PII |
 | Consent / Terms | *(confirm Fillout-only or Airtable field)* | checkbox | yes | must be true | — | true | block / n_a | compliance | internal_ops |
 | Mailing Address | Mailing Address Submitted | multilineText | no | — | trim | — | allow / n_a | ops | PII |
@@ -52,7 +52,9 @@ Define the machine-readable field contract between the Enrollment Fillout form a
 
 ### Computed Airtable fields (never map Fillout writes)
 
-`Parent Email - Cleaned`, `Athlete Email - Cleaned`, `Athlete Match Key Lookup`, `Enrollment Key`, `Full Athlete Name*`, `Welcome Email Ready?`, rollups/counts.
+`Parent Email - Cleaned`, `Athlete Email - Cleaned`, `Athlete Match Key Lookup`, `Enrollment Key`, `Full Athlete Name*`, rollups/counts.
+
+**Retired — do not map or require:** `Parent Email Subject`, `Parent Email HTML`, `Welcome Email Status`, `Welcome Email Sent At`, `Welcome Email Error`, `Welcome Email Ready?` (legacy 075 path). Live welcome is **078A → Email Handoff Queue → 079 → Hub → Resend**.
 
 ---
 

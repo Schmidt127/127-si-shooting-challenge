@@ -118,13 +118,14 @@ Do **not** treat Make/Gmail as the homework parent-email sender.
 | **042** | Enrollments | When record enters view `042 - Needs Level Assignment` (`viwm9OgwkPKI2bii3`); filters `Level Recalc Needed?` checked + `Active?` checked; dynamic `recordId` from triggering Enrollment | `042-...-assign-current-and-next-level-with-gate-blocking.js` **installed and verified** | Current/Next Level, Gate Rule, Status, reconciled signature |
 | 043 | Levels | **Retired — do not enable or recreate** | `043-...-set-level-gate-rule-from-next-level.js` (historical source only) | No downstream writer; `042` owns `Level Gate Rule` |
 
-### Email packages (072, 074–079, 075, 118–119)
+### Email packages (072, 074, 076, 078A, 079, 118–119)
 
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
 | **072** | Weekly Athlete Summary | `Build Weekly Email Now?` | `072-...-build-weekly-summary-email-package.js` | Email package fields |
-| 074 | Weekly Athlete Summary | *confirm* | `074-...-send-weekly-summary-email-package-to-make.js` | **Make** weekly email |
-| 075 | Enrollments | *confirm* | `075-...-build-challenge-welcome-email.js` | Welcome email package |
+| 074 | Weekly Athlete Summary | *confirm* | `074-...-send-weekly-summary-email-package-to-make.js` | Hub queue (filename historical “Make”) |
+| **078A** | Enrollments | Athlete + Parent Email - Cleaned + Program Instance | `078A-...-enrollment-create-welcome-email-handoff.js` | Email Handoff Queue `WELCOME` row |
+| 075 | Enrollments | **LEGACY RETIRED — do not enable** | `075-...-build-challenge-welcome-email.js` (archive only) | Formerly Enrollment subject/HTML; superseded by **078A → 079 → Hub** |
 | 076 | Submissions / Enrollments | *confirm* | `076-...-build-daily-submission-email-package.js` (**v8.7**) | Daily email package |
 | **079** | Email Handoff Queue | Status = Ready — *confirm in Airtable* | `079-...-send-queue-handoff-to-communications-hub.js` (**v2.5**) | Communications Hub WELCOME / DAILY_SUBMISSION handoff |
 | **118** | Weeks / Enrollments | Scheduled Sunday 05:00 America/Denver | `118-...-schedule-weekly-summary-email-build.js` (**v2.0**) | Arms Weekly Athlete Summary email build |

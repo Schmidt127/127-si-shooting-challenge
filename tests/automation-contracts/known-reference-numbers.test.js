@@ -28,18 +28,26 @@ test("retired/wrong prompt numbers are not present as live script files", () => 
 test("current critical automations exist in repo", () => {
   for (const n of [
     "010", "020", "041", "042", "043", "053", "054", "059", "064", "065",
-    "066", "072", "074", "075", "101", "111", "118", "119",
+    "066", "072", "074", "075", "078A", "079", "101", "111", "118", "119",
   ]) {
     assert.ok(hasPrefix(n), `expected script for ${n}`);
   }
 });
 
-test("075 is welcome email, not Zoom XP; live Zoom XP is 101; PROD 117 is approval email", () => {
+test("075 is LEGACY RETIRED welcome builder (not Zoom XP); live welcome is 078A; Zoom XP is 101; PROD 117 is approval email", () => {
   const welcome = files.find((f) => f.startsWith("075-"));
   assert.ok(welcome);
   const body = fs.readFileSync(path.join(root, welcome), "utf8");
   assert.ok(/Welcome/i.test(welcome) || /Welcome/i.test(body));
+  assert.ok(/LEGACY\s*\/\s*RETIRED/i.test(body), "075 must be labeled LEGACY/RETIRED");
+  assert.ok(files.some((f) => f.startsWith("078A-")), "live welcome producer 078A required");
   assert.ok(files.some((f) => f.startsWith("101-")));
+  const zoom101 = fs.readFileSync(
+    path.join(root, files.find((f) => f.startsWith("101-"))),
+    "utf8"
+  );
+  assert.ok(/XP/i.test(zoom101));
+  assert.ok(!/Parent Email Subject/.test(zoom101));
   const email117 = files.find((f) => f === "117-zoom-send-recording-approval-email-to-make.js");
   assert.ok(email117, "canonical Automation 117 email script required");
   assert.ok(!files.some((f) => f.startsWith("117c-")), "117c must not live in active automations folder");

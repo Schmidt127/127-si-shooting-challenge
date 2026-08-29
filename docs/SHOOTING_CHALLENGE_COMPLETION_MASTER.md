@@ -1565,7 +1565,7 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 | **079 contract** | Queue supplies Event Type, Template Key, Handoff Key, Source Table/ID, Recipients JSON, Payload JSON, **Test Mode?** — **not** subject, HTML, plain-text, or `sendMode`; v2.0 accepts WELCOME plus exact `DAILY_SUBMISSION|SUBMISSIONS|{Submission Record ID}` keys |
 | **Accepted vs delivery** | Queue/Hub Event **Accepted** = intake only; success = one Hub **Delivery** in **`Sent`**, provider id, one attempt, no stale error/retry fields |
 | **Source-table issue** | Earlier Hub Event missing source table = **Hub-side mapping omission** — **not** a 079 defect; no 079 change required |
-| **Legacy build** | Automation **075** still builds welcome package on Enrollments — **does not send**; optional input to queue payload |
+| **Legacy build** | Automation **075** is **LEGACY RETIRED** (absent from live Automations; do not restore). Live welcome producer is **078A** → Email Handoff Queue → **079**. Enrollment `Parent Email Subject` / `Parent Email HTML` / Welcome Email Status/Sent At/Error / `Welcome Email Ready?` are retiring — see [`deploy-checklists/RETIRE-LEGACY-WELCOME-EMAIL-FIELDS.md`](./deploy-checklists/RETIRE-LEGACY-WELCOME-EMAIL-FIELDS.md). |
 | **Repo source** | Automation **079 v2.0** is now authoritative in GitHub as the shared WELCOME/DAILY_SUBMISSION dispatcher; Production replacement remains pending |
 | **SC-079 naming** | Completion item SC-079 (*gate blocking*) uses Automation **042** — unrelated to Automation slot **079** |
 | **Docs** | `docs/communications-hub/WELCOME-EMAIL-INTEGRATION.md` · `docs/deploy-checklists/WELCOME-EMAIL-ACTIVATION-CHECKLIST.md` · `docs/deploy-checklists/WELCOME-EMAIL-CONTROLLED-TEST-RUNBOOK.md` |

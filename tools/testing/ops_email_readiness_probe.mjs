@@ -6,7 +6,8 @@
  * - weekly summary package completeness (072 fields)
  * - homework parent feedback send state (071)
  * - video feedback parent email state (073)
- * - welcome email arming fields (075)
+ * - welcome handoff via Email Handoff Queue (078A → 079 → Hub)
+ *   (legacy Enrollment welcome fields / Automation 075 are retired — do not arm)
  * - Zoom recording attendance eligible for 117
  *
  * Does NOT post webhooks or send email.
@@ -116,16 +117,24 @@ async function main() {
       "Active?",
       "Parent Email",
       "Athlete Email",
-      "Welcome Email Status",
-      "Welcome Email Ready?",
-      "Welcome Email Sent At",
       "Welcome Email To",
-      "Welcome Email Error",
-      "Parent Email Subject",
-      "Parent Email HTML",
       "Program Instance",
     ])
   )[0];
+
+  const welcomeQueueRows = await listByFormula(
+    "Email Handoff Queue",
+    `AND({Enrollment Record ID}='${SCHMIDT_ENROLLMENT}', {Event Type}='WELCOME')`,
+    [
+      "Handoff Key",
+      "Status",
+      "Event Type",
+      "Enrollment Record ID",
+      "Test Mode?",
+      "Error Message",
+    ],
+    20
+  );
 
   const wasRows = await listByFormula(
     "Weekly Athlete Summary",
@@ -286,18 +295,21 @@ async function main() {
           active: truthy(enrollment.fields["Active?"]),
           hasParentEmail: !!String(enrollment.fields["Parent Email"] || "").trim(),
           parentEmailRedacted: redactEmail(enrollment.fields["Parent Email"]),
-          welcomeStatus: enrollment.fields["Welcome Email Status"] || null,
-          welcomeReady: truthy(enrollment.fields["Welcome Email Ready?"]),
-          welcomeSentAt: enrollment.fields["Welcome Email Sent At"] || null,
           welcomeToRedacted: redactEmail(enrollment.fields["Welcome Email To"]),
-          welcomeError: String(enrollment.fields["Welcome Email Error"] || "").slice(0, 160),
-          welcomePackage: packageHealth(
-            enrollment.fields,
-            "Parent Email Subject",
-            "Welcome Email To",
-            "Parent Email HTML"
-          ),
           hasProgramInstance: !!(enrollment.fields["Program Instance"] || []).length,
+          // Legacy Enrollment welcome builders (Automation 075) are retired.
+          // Live path: 078A → Email Handoff Queue → 079 → Hub → Resend.
+          welcomeHandoffs: welcomeQueueRows.map((row) => ({
+            id: row.id,
+            handoffKey: row.fields["Handoff Key"] || null,
+            status: row.fields["Status"] || null,
+            testMode: truthy(row.fields["Test Mode?"]),
+            error: String(row.fields["Error Message"] || "").slice(0, 160),
+          })),
+          welcomeHandoffCount: welcomeQueueRows.length,
+          welcomeAcceptedOrSent: welcomeQueueRows.some((row) =>
+            /accepted|sent|delivered/i.test(String(row.fields["Status"] || "")),
+          ),
         }
       : null,
     weekly: {
@@ -378,11 +390,12 @@ async function main() {
       action: `Test automation 117 on ${report.zoomRecordingApproval.eligibleIds[0].id} (expect makeStatus=sent then already_sent); confirm no XP writes`,
     });
   }
-  if (!report.enrollment?.welcomeSentAt) {
+  if (!report.enrollment?.welcomeAcceptedOrSent) {
     report.nextActions.push({
       owner: "Mike",
       mikeRequired: true,
-      action: "Arm Welcome Email Ready? / run 075 on Schmidt enrollment with controlled Parent Email, then confirm Welcome Email Sent At",
+      action:
+        "Confirm 078A created a WELCOME Email Handoff Queue row for Schmidt (Test Mode? on), then confirm 079 → Hub → Resend Delivery Sent — do not restore Automation 075 or retired Enrollment welcome-builder fields",
     });
   }
 

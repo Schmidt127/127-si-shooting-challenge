@@ -21,7 +21,7 @@ Exact Airtable script versions are still unconfirmed. This table is the Hub even
 
 | Source automation | Event / template | Dedupe key | GitHub contract | Live delivery |
 |-------------------|------------------|------------|-----------------|---------------|
-| **075 / queue** | `WELCOME` | `WELCOME\|…` | Hub queue | Resend (Hub) |
+| **078A** (not 075) | `WELCOME` | `WELCOME\|ENROLLMENTS\|{Enrollment Id}` | Email Handoff Queue → **079** → Hub | Resend (Hub). Legacy 075 Enrollment builders are retired. |
 | **076** | `DAILY_SUBMISSION` | `DAILY_SUBMISSION\|SUBMISSIONS\|{Submission}` | Hub queue create | Resend (Hub) |
 | **073** | `VIDEO_FEEDBACK` | `VIDEO_FEEDBACK\|VIDEO_FEEDBACK\|{VF}` | Hub queue create in GitHub | Resend (Hub) + **Hub→VF source writeback** |
 | **071** | `HOMEWORK_FEEDBACK` | `HOMEWORK_FEEDBACK\|HOMEWORK_COMPLETIONS\|{HC}` | Hub queue create in GitHub | Resend (Hub) |

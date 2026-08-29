@@ -3,7 +3,7 @@
 **Owner package:** Online Agent 7 — Enrollment, Identity, and Season Readiness  
 **Base (active construction):** PROD `appn84sqPw03zEbTT`  
 **Evidence date:** 2026-07-23  
-**Primary scripts:** `001`, `002`, `003`, `075` (welcome email build)  
+**Primary scripts:** `001`, `002`, `003`, **`078A`** (welcome handoff; **075 retired**)  
 **Schema evidence:** `airtable/schema/snapshots/prod-foundation-reset-20260723/`
 
 This document traces the repository-evidenced enrollment path. It does **not** change live Fillout or Airtable configuration.
@@ -18,10 +18,13 @@ Fillout Enrollment form
   → Automation 001: find/create Athlete + link + Active?=true
   → Automation 002: assign Grade Band (initial, when blank)
   → Automation 003: re-assign Grade Band if Grade changes
-  → Automation 075: build welcome email package on Enrollment (subject/HTML; does not send)
-  → Email Handoff Queue + Automation 079 → Communications Hub → Resend (WELCOME send — controlled test proven; see docs/communications-hub/)
-  → (Legacy / not active) Make/Gmail welcome scenario — superseded by Communications Hub path
+  → Automation 078A: create WELCOME Email Handoff Queue row
+  → Automation 079 → Communications Hub → Resend (WELCOME send — controlled test proven; see docs/communications-hub/)
   → Downstream eligibility: Active? / PPE / Program Instance / Weeks
+
+LEGACY RETIRED (do not restore): Automation 075 Enrollment Parent Email Subject/HTML builders;
+Welcome Email Ready? / Welcome Email Status / Sent At / Error.
+See docs/deploy-checklists/RETIRE-LEGACY-WELCOME-EMAIL-FIELDS.md.
 ```
 
 ---
@@ -41,9 +44,10 @@ Fillout Enrollment form
 |-------|--------|
 | **Required for 001** | Athlete First Name, Athlete Last Name, Parent Email (Cleaned preferred) |
 | **Required for 002** | Grade (+ Athlete linked) |
-| **Required for 075** | Parent Email, Program Instance |
+| **Required for 078A welcome handoff** | Athlete linked, Parent Email - Cleaned, Program Instance |
 | **Optional / hygiene** | Athlete Email, phones, school, gender, addresses, referrer |
-| **Computed (do not write)** | Parent/Athlete Email - Cleaned, Athlete Match Key Lookup, Enrollment Key, Full Athlete Name*, Welcome Email Ready? |
+| **Computed (do not write)** | Parent/Athlete Email - Cleaned, Athlete Match Key Lookup, Enrollment Key, Full Athlete Name* |
+| **Retired — do not depend on** | Parent Email Subject, Parent Email HTML, Welcome Email Status, Welcome Email Sent At, Welcome Email Error, Welcome Email Ready? |
 
 \*Primary-name formulas exist; Presentation-field work is owned elsewhere (SC-054).
 
@@ -115,7 +119,7 @@ Fillout Enrollment form
 |---------|----------|
 | Parent email source for identity | 001: Cleaned → Parent Email → Submitted |
 | Athlete email | Stored on Enrollment; **not** used by 001 matching |
-| Welcome email build | 075 builds subject/HTML on Enrollment; does not mark Sent |
+| Welcome email handoff | **078A** creates Email Handoff Queue WELCOME row; **079** → Hub → Resend. **075 retired.** |
 | Welcome email send | **Email Handoff Queue + Automation 079 → Communications Hub** (Make.com welcome **OFF**; controlled test only until activation checklist) |
 | Daily / weekly emails | 076/072+ — Active?/Schmidt rules (see ACTIVE-PROCESSING-AUDIT.md) |
 
@@ -126,7 +130,7 @@ Fillout Enrollment form
 | Field | Role |
 |-------|------|
 | School Year | Season label on Enrollment (single-select) |
-| Program Instance | Season/program scoping; required for 075; used by 023 when present |
+| Program Instance | Season/program scoping; required for 078A welcome handoff; used by 023 when present |
 | Weeks.Program Instance | Optional link on Weeks rows |
 | Program Instance multi-year redesign | SC-067 **Deferred** — out of scope for automation rewrite here |
 

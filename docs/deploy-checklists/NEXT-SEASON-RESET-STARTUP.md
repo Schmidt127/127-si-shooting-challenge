@@ -69,7 +69,7 @@ Minimum email proofs for SC-045 closeout:
 |-------|------------|-------------------|------------------|
 | Homework parent | 071 | **Live proven** | None |
 | Weekly summary | 118→072→119→074 | Historically Live E2E; re-arm on new Weeks | Build/send one Schmidt WAS in Test/Live as authorized |
-| Welcome | 075 | Package exists; Sent At present but **2025-2026** subject | Rebuild welcome for new year on Schmidt |
+| Welcome | **078A → 079 → Hub** (075 retired) | Controlled Hub path | Confirm 078A queue row + 079 → Hub Delivery Sent on Schmidt (Test Mode?); do not restore 075 |
 | Video parent | 073 | **Not re-proven** after wipe | Create VF Ready / not Sent → Test 073 |
 | Zoom recording approval | 117→Make 117f | Offline handoff **PASS**; live send pending | See [`117-ZOOM-APPROVAL-GO-LIVE.md`](./117-ZOOM-APPROVAL-GO-LIVE.md) |
 
