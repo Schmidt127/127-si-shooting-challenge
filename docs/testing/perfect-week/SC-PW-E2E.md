@@ -3,7 +3,7 @@
 | Field | Value |
 |-------|--------|
 | Backlog | **SC-PW-E2E** |
-| Status | **READY** (pending Mike production run) |
+| Status | **BLOCKED at 058** (2026-08-28 PROD partial run) |
 | Harness | `tools/testing/sc-pw-e2e.mjs` |
 | Library | `tools/testing/lib/sc-pw-e2e-lib.mjs` |
 | Contract tests | `tools/testing/tests/test_sc_pw_e2e_contract.mjs` |
@@ -13,6 +13,8 @@
 Verify the production Perfect Week pipeline on **throwaway data only**:
 
 **057** → WAS formulas → **Perfect Week Eligible?** → **058** unlock → **059** XP Event
+
+**2026-08-28 PROD partial run:** preflight + submission formulas + **057 Ready** + **Eligible?=1** on WAS `recl3DmBh22ADPWWe` — **058 did not fire** within 600s (`unlockCount=0`, empty `Perfect Week Automation Error`). Evidence: `docs/testing/evidence/sc-pw-e2e/qualifying-2026-08-28T2252.json`. Do **not** re-run `--apply` until Mike confirms **058** creates the unlock.
 
 No email. No writes to formula outputs, `Perfect Week Eligible?`, unlocks (except `trigger-only`), XP Events, or Lifetime XP.
 
@@ -30,6 +32,8 @@ No email. No writes to formula outputs, `Perfect Week Eligible?`, unlocks (excep
 
 - `AIRTABLE_API_TOKEN` in `web/.env.local`, `.env.local`, or `.env` — **must include schema.bases:read** and write access to Weeks, WAS, Submissions, Video Feedback, Enrollments, Unlocks, XP Events
 - Production automations **057**, **058**, **059** enabled (059 trigger: Pending unlock, no Shot Milestone filter)
+- **058** must be **Live** with a lifecycle trigger on Weekly Athlete Summary updates (Eligible?, Automation Status, Perfect Week Unlock). Historical CASE-01 (2026-08-05) auto-fired 058; SC-PW-E2E 2026-08-28 did not — verify trigger in Airtable UI before relying on harness auto-poll.
+- Production unlock schema uses **`Milestone Source Key`** and **`Coach Note`** (not `Source Key` / `Notes`). Repo **058 v1.4** still requires `Source Key` in script — live prod **v1.3** may differ; manual run may write `058 error:` if pasted v1.4 without field alias.
 - Gated test timestamp fields per [`PERFECT-WEEK-FIXTURE-METHOD.md`](./PERFECT-WEEK-FIXTURE-METHOD.md)
 
 `--apply` runs a **preflight** that fails fast when the PAT cannot read schema metadata, the gated enrollment is invisible, or required fields are missing (including unlock `Source Key` vs `Milestone Source Key` for trigger-only).
@@ -105,6 +109,26 @@ Uses project convention from WAS email fixtures:
 - Interval: **8s**
 - Timeout: **600s** per stage
 - Status + record IDs logged each cycle
+- Each 058/059 poll cycle includes **`outcome`** classification (see below)
+
+### Stage outcome classification (diagnostics)
+
+| Outcome | Meaning |
+|---------|---------|
+| `058_never_ran` | Eligible + Ready, empty Automation Error, no unlock — trigger gap or automation OFF |
+| `058_ran_failed` | `Perfect Week Automation Error` starts with `058 error:` |
+| `058_ran_skipped` | `Perfect Week Automation Error` starts with `058 skipped:` |
+| `058_created_unlock_unlinked` | Unlock row exists but WAS link empty |
+| `058_created_unlock` | One active unlock linked to WAS |
+| `059_never_ran` | Unlock Pending, no XP Event |
+| `059_ran_zero_xp` | Unlock Awarded but no XP for source key |
+| `059_created_xp` | One XP Event; unlock Awarded |
+
+Timeout failures set `failurePoint` to the stage name (e.g. `058-unlock`), not `preflight`.
+
+## Operator — manual 058 on blocked WAS
+
+When harness stops at 058 with `058_never_ran`, run **058 - Create Perfect Week Unlock** manually in Airtable (see Saturday runbook). Use WAS `recordId` (not unlock id). For the 2026-08-28 fixture: `recl3DmBh22ADPWWe`.
 
 ## Related tools
 
