@@ -15,7 +15,7 @@
 |------|--------|----------|
 | Audit start branch | `lead/release-baseline-2026-08-29` | `git checkout -B … origin/master` |
 | Audit start SHA | `5ae358d5ec7423c9baffb7f245053f85b3bf7481` | `origin/master` before PKG-044 |
-| Production branch HEAD | `1b15d37f8efbaaa29987a7db914df45968f2534e` | PR **#274** merge (legacy welcome-email field retirement) |
+| Production branch HEAD | `17e0f8115dae6ce34c0dcfd3c4a6b5da0b1f2676` | Docs closeout after PR **#274** merge (`1b15d37f`) |
 | Working tree (post-merge local) | Clean on `master` tracking `origin/master` after docs closeout | Stash `lead-audit-wip-2026-08-29` may still hold unrelated WIP |
 
 Re-verify:
