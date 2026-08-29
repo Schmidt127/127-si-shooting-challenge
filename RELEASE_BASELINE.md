@@ -15,7 +15,7 @@
 |------|--------|----------|
 | Audit start branch | `lead/release-baseline-2026-08-29` | `git checkout -B … origin/master` |
 | Audit start SHA | `5ae358d5ec7423c9baffb7f245053f85b3bf7481` | `origin/master` before PKG-044 |
-| Production branch HEAD | `69ff04d69d37804c58591b3fb04ec144b4bfd924` | Merge PR **#271** 2026-08-29T21:26:34Z |
+| Production branch HEAD | `601db77a9bb19ee818f1b8a3dfb729664c3b22d7` | Merge PR **#273** 2026-08-29T22:14:56Z (058 v1.5 / 059 v3.7) |
 | Working tree (post-merge local) | Clean on `master` tracking `origin/master` | Stash `lead-audit-wip-2026-08-29` still holds unrelated WIP |
 
 Re-verify:
@@ -35,7 +35,7 @@ git status -sb
 | **#264** | FUT-001 homework assignment identity | **MERGED** (via #271) | — | Content in PKG-044 |
 | **#269** | SC-PW-E2E production harness | **MERGED** (via #271) | — | Content in PKG-044 |
 | **#268** | FUT-010 attachment cleanup | **MERGED** (via #271) | — | Dry-run default; live clear still Mike |
-| **#271** | PKG-044 release baseline | **MERGED** | — | `69ff04d6` |
+| **#273** | 058/059 Perfect Week Milestone Source Key | **MERGED** | — | Repo fix; Airtable paste still required |
 | **#266** | FUT-018/019/025 web public experience | DRAFT | **CONFLICTING** | Rebase after #270/#271 |
 | **#262** | Next paste packages docs | DRAFT | — | Docs |
 | **#244** | WAS XP reconciliation tooling | DRAFT | — | |
@@ -138,4 +138,4 @@ See [`MASTER_REMAINING_WORK_LIST.md`](./MASTER_REMAINING_WORK_LIST.md) §C–D:
 | 2026-08-29 (start) | Audit; created MASTER_REMAINING_WORK_LIST + this baseline at `5ae358d5` |
 | 2026-08-29 (Phase 3) | Merged FUT-001 (#264), SC-PW-E2E (#269), FUT-010 (#268) onto lead branch; tests green; SC-PW-E2E live award **BLOCKED at 058** |
 | 2026-08-29 (Phase 4) | PR **#271** merged → `69ff04d6`; Vercel Production deployment **success**; `/shoot` 200; `/shoot/api/airtable` ok |
-| 2026-08-29 (058 fix) | Authoritative PW investigation → MRW-A01 **BLOCKED / NEEDS PRODUCTION VERIFICATION**; repo **058 v1.5** / **059 v3.7** (`Milestone Source Key` + `Coach Note`); no `--apply`; paste + WAS `recl3DmBh22ADPWWe` still required |
+| 2026-08-29 (058 fix) | Authoritative PW investigation → MRW-A01 **BLOCKED / NEEDS PRODUCTION VERIFICATION**; repo **058 v1.5** / **059 v3.7** (`Milestone Source Key` + `Coach Note`); PR **#273** merged `601db77a`; CI green; Vercel auto-deploys web only — **Airtable paste of 058/059 still required**; no `--apply`; WAS `recl3DmBh22ADPWWe` manual proof still open |
