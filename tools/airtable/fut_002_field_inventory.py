@@ -388,7 +388,7 @@ def blocked_delete(records: list[FieldRecord]) -> list[dict[str, Any]]:
                 {
                     "table": rec.table,
                     "field": rec.name,
-                    "reason": "formula references Google Drive File ID — retarget before delete",
+                    "reason": "identity formula — keep; live formula uses RECORD_ID() after Drive File ID removal (2026-08-30)",
                 }
             )
         elif rec.classification in {"legacy", "duplicate"} and rec.depended_by:

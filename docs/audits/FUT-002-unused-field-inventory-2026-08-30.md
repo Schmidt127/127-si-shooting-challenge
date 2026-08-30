@@ -2,12 +2,12 @@
 
 **Date:** 2026-08-30  
 **Backlog:** FUT-002 / MRW-H01  
-**Base:** Production `appn84sqPw03zEbTT` (schema snapshot only)  
-**Status:** Audit complete — **no fields deleted** (Mike-only for deletions)  
+**Base:** Production `appn84sqPw03zEbTT`  
+**Status:** Audit complete + **cleanup in progress** — see [`FUT-002-cleanup-session-2026-08-30.md`](./FUT-002-cleanup-session-2026-08-30.md) and [`field-inventory/`](./field-inventory/)  
 
 ## Hard stop
 
-This document is **read-only prep**. Agents and automations must **not** delete Airtable fields, change schema, or write Production data based on this audit alone.
+Original audit was read-only prep. **Cleanup phase (same day)** quarantined obsolete fields and retargeted Asset Key. Physical field DELETE still requires Mike UI (Meta API DELETE → 404).
 
 ## Executive summary
 

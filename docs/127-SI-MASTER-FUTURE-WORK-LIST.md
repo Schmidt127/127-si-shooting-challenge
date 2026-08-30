@@ -107,7 +107,7 @@ The system must preserve checks for assignment identity, enrollment, challenge/s
 ### FUT-002 — Audit and remove unused Airtable fields
 
 **Priority:** P2  
-**Status:** **Audit complete (2026-08-30)** — field inventory + dependency report ready; **deletions Mike-only**  
+**Status:** **Cleanup in progress (2026-08-30)** — live inventory refreshed; invalid Review Summary quarantined; Asset Key retargeted; 5 fields awaiting Mike UI delete (Meta API cannot DELETE fields)  
 **Systems:** Airtable schema, automations, email payloads, website/data contracts
 
 Inventory every Airtable table and identify fields that are unused, obsolete, duplicated, or no longer part of the current app. This includes legacy Google Drive URL, Google Drive ID, Google Drive folder ID, and similarly named fields. Check formulas, automations, scripts, emails, views, interfaces, website/data contracts, and documentation before deleting anything.
@@ -118,7 +118,9 @@ After confirming no active dependency remains, delete the obsolete fields and up
 
 **Acceptance criteria:** complete field/dependency inventory; unused and obsolete fields classified; fields removed only after audit; tests and documentation updated; no active S3/Lambda or future-approved fields removed accidentally.
 
-**Audit deliverables (2026-08-30):** [`docs/audits/FUT-002-unused-field-inventory-2026-08-30.md`](./audits/FUT-002-unused-field-inventory-2026-08-30.md) · [`docs/audits/fut-002-unused-field-inventory.json`](./audits/fut-002-unused-field-inventory.json) · tool `tools/airtable/fut_002_field_inventory.py`. Snapshot: **1347 fields** — **1043 active**, **15 legacy**, **8 duplicate**, **281 unknown**; **21** safe-to-delete-later (mostly Google Drive); **19** blocked/protected. Deletion phase not started.
+**Audit deliverables (2026-08-30):** [`docs/audits/FUT-002-unused-field-inventory-2026-08-30.md`](./audits/FUT-002-unused-field-inventory-2026-08-30.md) · [`docs/audits/fut-002-unused-field-inventory.json`](./audits/fut-002-unused-field-inventory.json) · tool `tools/airtable/fut_002_field_inventory.py`. Offline snapshot: **1347 fields**.
+
+**Live cleanup (2026-08-30):** [`docs/audits/field-inventory/`](./audits/field-inventory/) · [`docs/audits/FUT-002-cleanup-session-2026-08-30.md`](./audits/FUT-002-cleanup-session-2026-08-30.md) · tool `tools/airtable/_fut002_live_pass.py`. Live: **1355 fields / 33 tables**. HC Drive batch (`fldFZLzDjiEbENCGl`, `fld71v6s6wYaJ2Umk`, `fldgGoh56Ck4fTQIE`) confirmed absent. `fldHchlovIaPlGKLk` quarantined (`BLANK()`). Submission Assets Asset Key retargeted to `RECORD_ID()` (valid). **Mike UI:** delete all `ZZZ DELETE — *` fields (5).
 
 ### FUT-003 — Stripe payment writeback to Airtable
 
