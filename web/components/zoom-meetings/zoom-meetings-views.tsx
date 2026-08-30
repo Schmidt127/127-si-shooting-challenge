@@ -390,7 +390,7 @@ function zoomCatalogShell(children: ReactNode) {
           Zoom <span className="text-accent-soft">meetings</span>
         </>
       }
-      description="Challenge check-ins, film sessions, and coach Q&A — grouped by week with clear live join links and published recordings."
+      description="Online challenge check-ins, film sessions, and coach Q&A — grouped by week with live join links and published recordings."
       heroVariant="light"
       ambientVariant="zoom"
     >
@@ -416,7 +416,7 @@ export function ZoomMeetingsCatalogView({ data }: { data: ZoomMeetingCatalogData
           Zoom <span className="text-accent-soft">meetings</span>
         </>
       }
-      description="Challenge check-ins, film sessions, and coach Q&A — grouped by week with clear live join links and published recordings."
+      description="Online challenge check-ins, film sessions, and coach Q&A — grouped by week with live join links and published recordings."
       heroVariant="light"
       ambientVariant="zoom"
       meta={
@@ -552,20 +552,20 @@ export function ZoomMeetingDetailView({ meeting }: { meeting: ZoomMeeting }) {
         <section className={cn(catalogPanelClass({ tint: "accent" }), "mt-8")}>
           <SectionHeading
             label="Recording credit"
-            title="Makeup XP from the recording quiz"
+            title="Earn makeup XP with the recording quiz"
             description="Missed the live call? Watching alone does not award XP — complete the Zoom Recording Quiz after the recording is available."
           />
           <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-relaxed text-foreground">
             <li>
-              Recording credit uses the{" "}
-              <span className="font-semibold text-foreground">Zoom Recording</span> XP source and
-              is a configured percent of live attendance XP.
+              Completing the recording quiz can earn makeup XP. The amount is a portion of the XP
+              awarded for live attendance.
             </li>
             <li>
-              Live attendance and recording credit cannot both apply for the same meeting.
+              You cannot earn both live attendance XP and recording makeup XP for the same meeting.
             </li>
             <li>
-              Coach approval may be required before recording XP and Zoom level-gate credit post.
+              A coach may need to approve the quiz before makeup XP and related level progress are
+              posted.
             </li>
           </ul>
           <div className="mt-5 flex flex-wrap gap-3">

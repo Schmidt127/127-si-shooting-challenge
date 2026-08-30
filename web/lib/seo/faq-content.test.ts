@@ -9,11 +9,26 @@ describe("PROGRAM_FAQ_ITEMS", () => {
     expect(serialized).toMatch(/boys and girls/);
     expect(serialized).toMatch(/educational athletics/);
     expect(serialized).toMatch(/daily/);
+    expect(serialized).toMatch(/homework/);
     expect(serialized).toMatch(/xp/);
     expect(serialized).toMatch(/video feedback/);
     expect(serialized).toMatch(/zoom/);
     expect(serialized).toMatch(/fairfield/);
     expect(serialized).toMatch(/register/);
+  });
+
+  it("explains online participation without internal jargon", () => {
+    const remote = PROGRAM_FAQ_ITEMS.find((item) => item.id === "remote-access");
+    expect(remote?.answer).toMatch(/100% online/i);
+    expect(remote?.answer).not.toMatch(/Airtable/i);
+    expect(remote?.answer).not.toMatch(/Make\.com/i);
+    expect(remote?.answer).not.toMatch(/;/);
+  });
+
+  it("sets appropriate coach feedback expectations", () => {
+    const video = PROGRAM_FAQ_ITEMS.find((item) => item.id === "video-feedback");
+    expect(video?.answer).toMatch(/coaches review/i);
+    expect(video?.answer).toMatch(/not an on-demand private lesson/i);
   });
 
   it("does not mention Team Shot Tracker (separate product)", () => {

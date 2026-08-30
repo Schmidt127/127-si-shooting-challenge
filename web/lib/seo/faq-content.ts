@@ -8,7 +8,6 @@ import {
   PROGRAM_HOME_LOCATION,
   PROGRAM_IDENTITY,
   REGISTRATION_FACTS,
-  REMOTE_PROGRAM_ELEMENTS,
 } from "@/lib/seo/program-facts";
 import { DAILY_SUBMISSIONS } from "@/lib/registration";
 
@@ -50,14 +49,22 @@ export const PROGRAM_FAQ_ITEMS: FaqItem[] = [
     answer: "Athletes earn XP for verified homework, shot volume, consistency, Perfect Weeks, and other program milestones. XP unlocks levels from Beginner through G.O.A.T. Progress is visible on the public leaderboard and in the athlete dashboard.",
   },
   {
+    id: "weekly-homework",
+    question: "What is weekly homework?",
+    answer:
+      "Each challenge week includes homework assignments that reinforce skill, knowledge, and accountability. Families find published assignments on the Homework page. Completing homework on time earns XP and supports Perfect Week progress.",
+  },
+  {
     id: "video-feedback",
     question: "Is video feedback available?",
-    answer: "Yes. Coaches review athlete submissions and provide video feedback as part of the program workflow. Feedback supports skill development and accountability — it is not a substitute for in-person instruction outside your training location.",
+    answer:
+      "Yes. Athletes submit shooting videos during the challenge, and coaches review them to provide feedback on form and habits. Feedback is part of the program — not an on-demand private lesson service — and it is not a substitute for in-person coaching outside your own training location.",
   },
   {
     id: "zoom",
     question: "Are Zoom sessions part of the program?",
-    answer: "Yes. The Shooting Challenge publishes Zoom meeting schedules, agendas, and recordings on this site. Live check-ins and film review are part of the remote coaching experience families can join from home.",
+    answer:
+      "Yes. The Shooting Challenge publishes Zoom meeting schedules, agendas, and recordings on this site when sessions are scheduled. Families can join live check-ins or use recordings for makeup credit when offered.",
   },
   {
     id: "location",
@@ -67,7 +74,7 @@ export const PROGRAM_FAQ_ITEMS: FaqItem[] = [
   {
     id: "remote-access",
     question: "Can families participate from outside Fairfield, Montana?",
-    answer: `Yes, for supported online program elements: ${REMOTE_PROGRAM_ELEMENTS.join("; ")}. We do not claim in-person coaching or facilities outside the Fairfield, Montana area.`,
+    answer: `Yes. The Shooting Challenge runs 100% online, so families can participate from anywhere with a basketball, a place to shoot, and internet access. That includes daily submissions, weekly homework, tutorials, video feedback, Zoom sessions when scheduled, and XP, levels, achievements, and leaderboard progress. We do not claim in-person coaching or facilities outside the Fairfield, Montana area.`,
   },
   {
     id: "registration",

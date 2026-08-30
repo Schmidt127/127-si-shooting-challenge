@@ -31,4 +31,4 @@ export const FOOTER_CONSENT_COPY =
   "Public standings and athlete profiles show approved game-related progress only. Registration covers name, image, and likeness for program promotion. Parent contact details, payment data, and private submission metadata are never published on this site.";
 
 export const FOOTER_FAQ_HINT =
-  "Questions about registration, daily submissions, grades served, or Fairfield program context? See the program FAQ.";
+  "Questions about registration, daily submissions, weekly homework, grades served, or Fairfield program context? See the program FAQ.";

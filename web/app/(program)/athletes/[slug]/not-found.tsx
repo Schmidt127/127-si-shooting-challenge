@@ -10,7 +10,7 @@ export default function AthleteProfileNotFound() {
       <SiteContainer className="py-16">
         <EmptyState
           title="Athlete profile not found"
-          description="This public profile is unavailable. It may be disabled, or the link may be incorrect."
+          description="This public profile is unavailable. It may be private, or the link may be incorrect."
           titleAs="h1"
           action={
             <Link

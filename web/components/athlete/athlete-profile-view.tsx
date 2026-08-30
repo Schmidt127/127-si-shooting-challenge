@@ -65,7 +65,7 @@ export function AthleteProfileEmptyState({ slug }: { slug: string }) {
       <SiteContainer className="py-16">
         <EmptyState
           title="Athlete profile not found"
-          description={`No public profile is available for “${slug}”. Profiles appear only when an athlete has an enabled public slug.`}
+          description={`No public profile is available for “${slug}”. Public profiles appear only when a family has chosen to share an athlete page.`}
           titleAs="h1"
           action={
             <Link

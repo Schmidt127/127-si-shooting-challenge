@@ -73,8 +73,8 @@ export function ProgramPricingSection({ pricing }: { pricing: ProgramPricing | n
           <CardHeader>
             <CardTitle className="font-display text-xl font-bold">Price tiers</CardTitle>
             <CardDescription>
-              Amounts come from the live Program Instance record. Register through the official
-              player registration form to pay.
+              Published registration pricing for this challenge season. Register through the
+              official player registration form to pay.
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
