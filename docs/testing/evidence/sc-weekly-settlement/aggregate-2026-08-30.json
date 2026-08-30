@@ -1,0 +1,89 @@
+{
+  "harness": "SC-WEEKLY-SETTLEMENT-E2E",
+  "mode": "aggregate-live",
+  "finishedAt": "2026-08-30T00:30:00.000Z",
+  "passed": true,
+  "noEmail": true,
+  "cases": [
+    {
+      "id": "WS-01",
+      "case": "fully-successful",
+      "wasId": "receZH9vivRtg8bhv",
+      "passed": true,
+      "awardCiteWas": "recl3DmBh22ADPWWe"
+    },
+    {
+      "id": "WS-02",
+      "case": "missing-shooting-day",
+      "wasId": "recjzOo3n2dna3AP8",
+      "passed": true
+    },
+    {
+      "id": "WS-03",
+      "case": "insufficient-shots",
+      "wasId": "recsibGa3DZpKoCBL",
+      "passed": true
+    },
+    {
+      "id": "WS-04",
+      "case": "no-videos",
+      "wasId": "rec7AQb2Bzw2ADR4l",
+      "passed": true
+    },
+    {
+      "id": "WS-05",
+      "case": "fewer-than-three-videos",
+      "wasId": "recS8CFTAlcSl3RGk",
+      "passed": true
+    },
+    {
+      "id": "WS-06",
+      "case": "zoom-required-completed",
+      "wasId": "recDdwVugk8RSWd3K",
+      "passed": true
+    },
+    {
+      "id": "WS-07",
+      "case": "zoom-required-not-completed",
+      "wasId": "recKDn061tiQOCEZq",
+      "passed": true
+    },
+    {
+      "id": "WS-08",
+      "case": "no-zoom-meeting",
+      "wasId": "rec8zw140MWHNqjNF",
+      "passed": true
+    },
+    {
+      "id": "WS-09",
+      "case": "inactive-enrollment",
+      "wasId": "reczXYrpUaSLcpGVh",
+      "passed": true
+    },
+    {
+      "id": "WS-10",
+      "case": "backdated-submissions",
+      "wasId": "rec1E2iBweHlUX3pP",
+      "passed": true
+    }
+  ],
+  "perfectWeekAwardCite": {
+    "wasId": "recl3DmBh22ADPWWe",
+    "unlockId": "recJ5umer4J4FHTOz",
+    "xpEventId": "reczehlzkA8fjiQh0",
+    "milestoneSourceKey": "PERFECT_WEEK|rec93mAfo5jKqP3g5|recNzl4dNOtDmJqnV",
+    "xpPoints": 100,
+    "status": "Awarded"
+  },
+  "documentedGaps": [
+    "GAP-COACH-SUMMARY-QUEUE",
+    "GAP-GRADE-SUBMITTED",
+    "GAP-FREQUENCY-SEND-DAY"
+  ],
+  "externalLimitations": [
+    "Weeks DELETE often 403 — archive instead",
+    "No Coach Summary Queue table",
+    "No Grade Submitted field",
+    "Do not re-apply SC-PW-E2E for closed award WAS"
+  ]
+}

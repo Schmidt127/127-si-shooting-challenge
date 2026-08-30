@@ -1,0 +1,675 @@
+{
+  "harness": "SC-WEEKLY-SETTLEMENT-E2E",
+  "mode": "apply",
+  "startedAt": "2026-08-30T00:15:31.859Z",
+  "finishedAt": "2026-08-30T00:15:36.982Z",
+  "preflight": {
+    "unlockSourceField": "Milestone Source Key",
+    "hasCoachSummaryQueue": false,
+    "hasGradeSubmitted": false
+  },
+  "offline": {
+    "offlineCases": [
+      {
+        "case": "fully-successful",
+        "caseId": "WS-01",
+        "label": "Fully successful week",
+        "checks": [
+          {
+            "name": "WAS create expected",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Perfect Week eligible",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Fail-closed (no unlock) when ineligible",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Zoom met when no meeting required",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Milestone Source Key pattern",
+            "expected": "PERFECT_WEEK|recEnrollmentX|recWeekY",
+            "actual": "PERFECT_WEEK|recEnrollmentX|recWeekY",
+            "pass": true
+          }
+        ],
+        "passed": true
+      },
+      {
+        "case": "missing-shooting-day",
+        "caseId": "WS-02",
+        "label": "One missing shooting day",
+        "checks": [
+          {
+            "name": "WAS create expected",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Perfect Week eligible",
+            "expected": false,
+            "actual": false,
+            "pass": true
+          },
+          {
+            "name": "Fail-closed (no unlock) when ineligible",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Milestone Source Key pattern",
+            "expected": "PERFECT_WEEK|recEnrollmentX|recWeekY",
+            "actual": "PERFECT_WEEK|recEnrollmentX|recWeekY",
+            "pass": true
+          }
+        ],
+        "passed": true
+      },
+      {
+        "case": "insufficient-shots",
+        "caseId": "WS-03",
+        "label": "Insufficient shots",
+        "checks": [
+          {
+            "name": "WAS create expected",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Perfect Week eligible",
+            "expected": false,
+            "actual": false,
+            "pass": true
+          },
+          {
+            "name": "Fail-closed (no unlock) when ineligible",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Milestone Source Key pattern",
+            "expected": "PERFECT_WEEK|recEnrollmentX|recWeekY",
+            "actual": "PERFECT_WEEK|recEnrollmentX|recWeekY",
+            "pass": true
+          }
+        ],
+        "passed": true
+      },
+      {
+        "case": "no-videos",
+        "caseId": "WS-04",
+        "label": "No videos",
+        "checks": [
+          {
+            "name": "WAS create expected",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Perfect Week eligible",
+            "expected": false,
+            "actual": false,
+            "pass": true
+          },
+          {
+            "name": "Fail-closed (no unlock) when ineligible",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Video requirement not met",
+            "expected": false,
+            "actual": false,
+            "pass": true
+          },
+          {
+            "name": "Milestone Source Key pattern",
+            "expected": "PERFECT_WEEK|recEnrollmentX|recWeekY",
+            "actual": "PERFECT_WEEK|recEnrollmentX|recWeekY",
+            "pass": true
+          }
+        ],
+        "passed": true
+      },
+      {
+        "case": "fewer-than-three-videos",
+        "caseId": "WS-05",
+        "label": "Fewer than three videos",
+        "checks": [
+          {
+            "name": "WAS create expected",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Perfect Week eligible",
+            "expected": false,
+            "actual": false,
+            "pass": true
+          },
+          {
+            "name": "Fail-closed (no unlock) when ineligible",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Video requirement not met",
+            "expected": false,
+            "actual": false,
+            "pass": true
+          },
+          {
+            "name": "Milestone Source Key pattern",
+            "expected": "PERFECT_WEEK|recEnrollmentX|recWeekY",
+            "actual": "PERFECT_WEEK|recEnrollmentX|recWeekY",
+            "pass": true
+          }
+        ],
+        "passed": true
+      },
+      {
+        "case": "zoom-required-completed",
+        "caseId": "WS-06",
+        "label": "Zoom required and completed",
+        "checks": [
+          {
+            "name": "WAS create expected",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Perfect Week eligible",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Fail-closed (no unlock) when ineligible",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Milestone Source Key pattern",
+            "expected": "PERFECT_WEEK|recEnrollmentX|recWeekY",
+            "actual": "PERFECT_WEEK|recEnrollmentX|recWeekY",
+            "pass": true
+          }
+        ],
+        "passed": true
+      },
+      {
+        "case": "zoom-required-not-completed",
+        "caseId": "WS-07",
+        "label": "Zoom required and not completed",
+        "checks": [
+          {
+            "name": "WAS create expected",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Perfect Week eligible",
+            "expected": false,
+            "actual": false,
+            "pass": true
+          },
+          {
+            "name": "Fail-closed (no unlock) when ineligible",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Zoom requirement not met when meeting exists",
+            "expected": false,
+            "actual": false,
+            "pass": true
+          },
+          {
+            "name": "Milestone Source Key pattern",
+            "expected": "PERFECT_WEEK|recEnrollmentX|recWeekY",
+            "actual": "PERFECT_WEEK|recEnrollmentX|recWeekY",
+            "pass": true
+          }
+        ],
+        "passed": true
+      },
+      {
+        "case": "no-zoom-meeting",
+        "caseId": "WS-08",
+        "label": "No Zoom meeting",
+        "checks": [
+          {
+            "name": "WAS create expected",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Perfect Week eligible",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Fail-closed (no unlock) when ineligible",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Zoom met when no meeting required",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Milestone Source Key pattern",
+            "expected": "PERFECT_WEEK|recEnrollmentX|recWeekY",
+            "actual": "PERFECT_WEEK|recEnrollmentX|recWeekY",
+            "pass": true
+          }
+        ],
+        "passed": true
+      },
+      {
+        "case": "inactive-enrollment",
+        "caseId": "WS-09",
+        "label": "Inactive enrollment",
+        "checks": [
+          {
+            "name": "WAS create expected",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Perfect Week eligible",
+            "expected": false,
+            "actual": false,
+            "pass": true
+          },
+          {
+            "name": "Fail-closed (no unlock) when ineligible",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Inactive enrollment skipped for email",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Milestone Source Key pattern",
+            "expected": "PERFECT_WEEK|recEnrollmentX|recWeekY",
+            "actual": "PERFECT_WEEK|recEnrollmentX|recWeekY",
+            "pass": true
+          }
+        ],
+        "passed": true
+      },
+      {
+        "case": "backdated-submissions",
+        "caseId": "WS-10",
+        "label": "Week containing backdated submissions",
+        "checks": [
+          {
+            "name": "WAS create expected",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Perfect Week eligible",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Fail-closed (no unlock) when ineligible",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Zoom met when no meeting required",
+            "expected": true,
+            "actual": true,
+            "pass": true
+          },
+          {
+            "name": "Milestone Source Key pattern",
+            "expected": "PERFECT_WEEK|recEnrollmentX|recWeekY",
+            "actual": "PERFECT_WEEK|recEnrollmentX|recWeekY",
+            "pass": true
+          }
+        ],
+        "passed": true
+      }
+    ],
+    "handoff": {
+      "stage": "E-communications-prep",
+      "noSend": true,
+      "requiredWasPackageFields": [
+        "Weekly Email Subject",
+        "Weekly Email HTML",
+        "Weekly Email Text",
+        "Weekly Email Payload JSON",
+        "Weekly Email Ready?",
+        "Weekly Email Sent?",
+        "Send to Make?",
+        "Build Weekly Email Now?",
+        "Summary Key"
+      ],
+      "requiredQueueFields": [
+        "Handoff Key",
+        "Event Type",
+        "Status",
+        "Payload JSON",
+        "Recipients JSON",
+        "Template Key"
+      ],
+      "templateKeys": {
+        "weekly": "WEEKLY_ATHLETE_SUMMARY",
+        "video": "VIDEO_FEEDBACK_PARENT",
+        "welcome": "WELCOME"
+      },
+      "handoffKeyPatterns": {
+        "weekly": "WEEKLY_ATHLETE_SUMMARY|WEEKLY_ATHLETE_SUMMARY|{wasId}",
+        "daily": "DAILY_SUBMISSION|SUBMISSIONS|{submissionId}",
+        "welcome": "WELCOME|ENROLLMENTS|{enrollmentId}"
+      },
+      "documentedGaps": [
+        {
+          "id": "GAP-COACH-SUMMARY-QUEUE",
+          "classification": "Documentation drift",
+          "claim": "Coach Summary Queue records",
+          "actual": "No Airtable table named Coach Summary Queue. Weekly prep uses Weekly Athlete Summary package fields + Email Handoff Queue (074→079→Hub)."
+        },
+        {
+          "id": "GAP-GRADE-SUBMITTED",
+          "classification": "Documentation drift",
+          "claim": "Grade Submitted is present",
+          "actual": "No field named Grade Submitted on WAS or Email Handoff Queue. Closest: homework Satisfactory? / coach feedback readiness on Homework Completions and Video Feedback."
+        },
+        {
+          "id": "GAP-FREQUENCY-SEND-DAY",
+          "classification": "Documentation drift",
+          "claim": "Frequency and Send Day logic on a coach summary queue",
+          "actual": "Weekly cadence is Automation 118 (Sun 5:00 AM Denver build) + 119 send schedule — not Frequency/Send Day fields on a coach queue table."
+        }
+      ],
+      "pass": true,
+      "notes": [
+        "072 builds package only; does not send.",
+        "074 creates Email Handoff Queue row; 079 posts to Communications Hub.",
+        "073 is video feedback Hub handoff — not weekly summary.",
+        "Harness must never check Send to Make? or arm 119 Live send."
+      ]
+    },
+    "levels": {
+      "stage": "D-level-gates-achievements",
+      "contracts": [
+        {
+          "name": "Weekly threshold Source Key",
+          "pattern": "WEEKLY_THRESHOLD|{enrollmentId}|{weekId}|{100|125|150}",
+          "automation": "035"
+        },
+        {
+          "name": "Perfect Week Milestone Source Key",
+          "pattern": "PERFECT_WEEK|{enrollmentId}|{weekId}",
+          "automation": "058/059",
+          "unlockField": "Milestone Source Key",
+          "xpField": "Source Key",
+          "xpAmount": 100
+        },
+        {
+          "name": "Shot milestone",
+          "automation": "066",
+          "note": "One Source Key per milestone crossing; 041/042 level recalculation"
+        },
+        {
+          "name": "Streak achievements",
+          "automation": "053/054",
+          "note": "Idempotent unlocks; no duplicate XP Events"
+        },
+        {
+          "name": "Multi-threshold same week",
+          "expected": "One XP Event per met tier Source Key; requeue creates no duplicates"
+        }
+      ],
+      "pass": true
+    },
+    "perfectWeekAwardCite": {
+      "harness": "SC-PW-E2E",
+      "mode": "cited-prior-evidence",
+      "wasId": "recl3DmBh22ADPWWe",
+      "unlockId": "recJ5umer4J4FHTOz",
+      "xpEventId": "reczehlzkA8fjiQh0",
+      "milestoneSourceKey": "PERFECT_WEEK|rec93mAfo5jKqP3g5|recNzl4dNOtDmJqnV",
+      "xpPoints": 100,
+      "xpAwardStatus": "Awarded",
+      "duplicateUnlockCount": 1,
+      "duplicateXpCount": 1,
+      "evidencePath": "docs/testing/evidence/sc-pw-e2e/award-was-recl3DmBh22ADPWWe-2026-08-29-mcp.json",
+      "note": "Authoritative Perfect Week award proof — do not re-apply for this WAS.",
+      "passed": true
+    },
+    "documentedGaps": [
+      {
+        "id": "GAP-COACH-SUMMARY-QUEUE",
+        "classification": "Documentation drift",
+        "claim": "Coach Summary Queue records",
+        "actual": "No Airtable table named Coach Summary Queue. Weekly prep uses Weekly Athlete Summary package fields + Email Handoff Queue (074→079→Hub)."
+      },
+      {
+        "id": "GAP-GRADE-SUBMITTED",
+        "classification": "Documentation drift",
+        "claim": "Grade Submitted is present",
+        "actual": "No field named Grade Submitted on WAS or Email Handoff Queue. Closest: homework Satisfactory? / coach feedback readiness on Homework Completions and Video Feedback."
+      },
+      {
+        "id": "GAP-FREQUENCY-SEND-DAY",
+        "classification": "Documentation drift",
+        "claim": "Frequency and Send Day logic on a coach summary queue",
+        "actual": "Weekly cadence is Automation 118 (Sun 5:00 AM Denver build) + 119 send schedule — not Frequency/Send Day fields on a coach queue table."
+      }
+    ],
+    "passed": true
+  },
+  "perfectWeekAwardCite": {
+    "harness": "SC-PW-E2E",
+    "mode": "cited-prior-evidence",
+    "wasId": "recl3DmBh22ADPWWe",
+    "unlockId": "recJ5umer4J4FHTOz",
+    "xpEventId": "reczehlzkA8fjiQh0",
+    "milestoneSourceKey": "PERFECT_WEEK|rec93mAfo5jKqP3g5|recNzl4dNOtDmJqnV",
+    "xpPoints": 100,
+    "xpAwardStatus": "Awarded",
+    "duplicateUnlockCount": 1,
+    "duplicateXpCount": 1,
+    "evidencePath": "docs/testing/evidence/sc-pw-e2e/award-was-recl3DmBh22ADPWWe-2026-08-29-mcp.json",
+    "note": "Authoritative Perfect Week award proof — do not re-apply for this WAS.",
+    "passed": true
+  },
+  "cases": [
+    {
+      "case": "inactive-enrollment",
+      "caseId": "WS-09",
+      "label": "Inactive enrollment",
+      "fixtureIds": {
+        "enrollmentId": "recMDvJL1ZNyD5FQS",
+        "weekId": "recdKiELL6o5omxgI",
+        "wasId": "reczXYrpUaSLcpGVh",
+        "submissionIds": [
+          "recxS3yvvENv6IuBy",
+          "recej1uWVVoewV48l",
+          "recvFEi20BiNJBGN5"
+        ],
+        "videoIds": [],
+        "zoomMeetingId": null,
+        "zoomAttendanceId": null,
+        "unlockIds": [],
+        "xpEventIds": []
+      },
+      "inputs": {
+        "weekAnchor": "2026-04-06",
+        "activityDates": [
+          "2026-04-06",
+          "2026-04-07",
+          "2026-04-08"
+        ],
+        "days": 3,
+        "shotsPerDay": 715,
+        "videos": 0,
+        "zoom": "none",
+        "enrollmentMode": "disposable-inactive"
+      },
+      "expected": {
+        "wasCreate": true,
+        "daysLoggedMin": 0,
+        "pwEligible": false,
+        "pwUnlock": false,
+        "failClosed": true,
+        "inactive": true,
+        "emailSkippedInactive": true
+      },
+      "actual": {
+        "snapshot": {
+          "id": "reczXYrpUaSLcpGVh",
+          "enrollmentId": "recMDvJL1ZNyD5FQS",
+          "weekId": "recdKiELL6o5omxgI",
+          "summaryKey": "ATH-recX9d5CYD6fAT7Cz|2026-2027||WSTEST|2026-08-30|SC-WEEKLY-SETTLEMENT-E2E|inactive-enrollment|WEEK|001531",
+          "daysLogged": 3,
+          "totalShots": 2145,
+          "summaryCalcStatus": "",
+          "automationStatus": "Error",
+          "automationError": "",
+          "videoCount": 0,
+          "videoMet": 0,
+          "zoomMeetings": 0,
+          "zoomAttendance": 0,
+          "zoomMet": 0,
+          "eligible": 0,
+          "unlockIds": [],
+          "xpEarned": 0,
+          "emailSubject": "",
+          "hasPayload": false
+        },
+        "unlockCount": 0,
+        "xpCount": 0,
+        "pollTimedOut": false
+      },
+      "checks": [
+        {
+          "name": "enrollment linkage",
+          "expected": "recMDvJL1ZNyD5FQS",
+          "actual": "recMDvJL1ZNyD5FQS",
+          "pass": true
+        },
+        {
+          "name": "week linkage",
+          "expected": true,
+          "actual": "recdKiELL6o5omxgI",
+          "pass": true
+        },
+        {
+          "name": "Sunday–Saturday window",
+          "expected": "2026-04-06→2026-04-12",
+          "actual": "2026-04-06→2026-04-12",
+          "pass": true
+        },
+        {
+          "name": "no unlock",
+          "expected": 0,
+          "actual": 0,
+          "pass": true
+        },
+        {
+          "name": "no pw xp",
+          "expected": 0,
+          "actual": 0,
+          "pass": true
+        },
+        {
+          "name": "no email sent",
+          "expected": false,
+          "pass": true
+        },
+        {
+          "name": "send to make unset",
+          "expected": false,
+          "pass": true
+        }
+      ],
+      "passed": true,
+      "created": {
+        "caseName": "inactive-enrollment",
+        "caseId": "WS-09",
+        "enrollmentId": "recMDvJL1ZNyD5FQS",
+        "weekId": "recdKiELL6o5omxgI",
+        "wasId": "reczXYrpUaSLcpGVh",
+        "submissionIds": [
+          "recxS3yvvENv6IuBy",
+          "recej1uWVVoewV48l",
+          "recvFEi20BiNJBGN5"
+        ],
+        "videoIds": [],
+        "zoomMeetingId": null,
+        "zoomAttendanceId": null,
+        "unlockIds": [],
+        "xpEventIds": []
+      },
+      "externalLimitations": []
+    }
+  ],
+  "documentedGaps": [
+    {
+      "id": "GAP-COACH-SUMMARY-QUEUE",
+      "classification": "Documentation drift",
+      "claim": "Coach Summary Queue records",
+      "actual": "No Airtable table named Coach Summary Queue. Weekly prep uses Weekly Athlete Summary package fields + Email Handoff Queue (074→079→Hub)."
+    },
+    {
+      "id": "GAP-GRADE-SUBMITTED",
+      "classification": "Documentation drift",
+      "claim": "Grade Submitted is present",
+      "actual": "No field named Grade Submitted on WAS or Email Handoff Queue. Closest: homework Satisfactory? / coach feedback readiness on Homework Completions and Video Feedback."
+    },
+    {
+      "id": "GAP-FREQUENCY-SEND-DAY",
+      "classification": "Documentation drift",
+      "claim": "Frequency and Send Day logic on a coach summary queue",
+      "actual": "Weekly cadence is Automation 118 (Sun 5:00 AM Denver build) + 119 send schedule — not Frequency/Send Day fields on a coach queue table."
+    }
+  ],
+  "manifestPath": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\docs\\testing\\weekly-settlement\\fixtures\\_sc-weekly-settlement-last.json",
+  "passed": true,
+  "cleanup": "Run --cleanup after review to delete WSTEST| fixtures"
+}

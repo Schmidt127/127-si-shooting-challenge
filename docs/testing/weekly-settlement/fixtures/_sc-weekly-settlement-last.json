@@ -1,0 +1,35 @@
+{
+  "harness": "SC-WEEKLY-SETTLEMENT-E2E",
+  "createdAt": "2026-08-30T00:26:55.423Z",
+  "disposableEnrollmentId": null,
+  "cases": [
+    {
+      "case": "zoom-required-completed",
+      "created": {
+        "caseName": "zoom-required-completed",
+        "caseId": "WS-06",
+        "enrollmentId": "rec93mAfo5jKqP3g5",
+        "weekId": "rec1nJmWCdnaVYFLw",
+        "wasId": "recDdwVugk8RSWd3K",
+        "submissionIds": [
+          "recDIfDfjbdaZc4ft",
+          "recQlzMck4FZuGNiy",
+          "recqLqbTeNuaUj8bn",
+          "recWBInE8dZfO6lUQ",
+          "recWrqJzjgtqq3tfw",
+          "rec57obm9fpQlx73e",
+          "recmEyhhFDxVEVyJ5"
+        ],
+        "videoIds": [
+          "recQReibkXkhyvVEH",
+          "rec27g5QX6m2s3pta",
+          "recBexgx2Ov2eGQnk"
+        ],
+        "zoomMeetingId": "recOxv9vIxybGag9J",
+        "zoomAttendanceId": null,
+        "unlockIds": [],
+        "xpEventIds": []
+      }
+    }
+  ]
+}
