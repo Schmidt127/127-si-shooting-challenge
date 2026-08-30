@@ -340,7 +340,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-G05 | FUT-017 Zoom page redesign | **COMPLETE** | PR **#285** portfolio catalog (2026-08-30) |
 | MRW-G06 | FUT-024 FAQ TST omission note | IN PROGRESS | `/faq` live; TST FAQ omitted by policy |
 | MRW-G07 | FUT-025 athlete profile indexability/consent verify | **COMPLETE** | Env-gated `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING`; deploy checklist 2026-08-30 |
-| MRW-G08 | Refresh CURRENT-TRUTH open PR list | **COMPLETE** | Reconciled 2026-08-30 — SHA `8cce1dea`, PRs #276 open + drafts #262/#244/#238/#237/#234 |
+| MRW-G08 | Refresh CURRENT-TRUTH open PR list | **COMPLETE** | Reconciled 2026-08-30 — SHA `9f4a64b6`, PRs #279–#293 merged; open #276 + drafts #262/#244/#238/#237/#234 |
 
 ---
 
