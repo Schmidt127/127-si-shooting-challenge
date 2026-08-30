@@ -9,6 +9,19 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **Athlete profile SEO cutover path (FUT-025, 2026-08-30)** — Replaced hardcoded
+  athlete indexing flag with fail-closed env gate `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING`
+  (requires `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING`). Profiles stay `noindex` in production
+  defaults; robots.txt `/athletes/` disallow lifts only after Mike cutover. Sitemap still
+  excludes athlete slugs by design. Deploy checklist:
+  [`docs/deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md`](./docs/deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md).
+- **SC-149 / MRW-E02 — Fairfield branding URL audit closeout (2026-08-30)** — Confirmed
+  `resolveLandingUrl` / `resolveSiteUrl`, header/footer/hub `LANDING_URL`, and metadata
+  `SITE_URL` default to Fairfield Basketball Club; legacy `hoopchallenges.com` and
+  `hooopchallenges.com` hosts rewrite at import time. Strengthened Vitest module-env
+  coverage, HTTP smoke legacy-host guard, and deploy checklist
+  [`docs/deploy-checklists/SC-149-fairfield-branding-url-verification.md`](./docs/deploy-checklists/SC-149-fairfield-branding-url-verification.md)
+  for Mike Vercel Production attestation.
 - **Public athlete profile privacy audit (FUT-025, 2026-08-28)** — Centralized
   `buildAthleteProfilePageMetadata`; profiles remain `noindex` per SC-115 while in-page
   display follows registration consent. Added allowlist/privacy vitest coverage and Playwright

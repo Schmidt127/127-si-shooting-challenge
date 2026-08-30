@@ -536,7 +536,7 @@ Add an appropriate FAQ and organization information where supported by the curre
 ### FUT-025 — Sitemap, indexing, and public athlete profiles
 
 **Priority:** P1  
-**Status:** **Complete** (2026-08-28) — SC-115 cutover verified; athlete profile privacy/metadata audit closed  
+**Status:** **Complete** (2026-08-30) — env-gated athlete indexing cutover path verified; privacy/metadata audit closed; production defaults remain noindex  
 **Systems:** Sitemap, robots, athlete profile metadata, consent assumptions
 
 Create or verify a sitemap and indexability rules for public pages. Public athlete profiles may be indexable using the athlete’s full name because registration consent covers name, image, and likeness promotion. The public profile may display:
@@ -548,9 +548,9 @@ Create or verify a sitemap and indexability rules for public pages. Public athle
 
 Do not expose parent contact information, email addresses, private submission metadata, or sensitive information. The prompt must verify consent assumptions, route stability, metadata uniqueness, and search-engine behavior.
 
-**Policy (verified 2026-08-28):** Program listing pages indexable when `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`; athlete profiles remain **`noindex`** until a separate Mike-approved athlete-indexing cutover. In-page profile HTML uses registration-consent allowlist only (`lib/data/public-athlete-profile.ts`, `PUBLIC_PROFILE_ENROLLMENT_FIELDS`). Metadata excludes grade/school via `buildAthleteProfilePageMetadata`.
+**Policy (verified 2026-08-30):** Program listing pages indexable when `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`. Athlete profiles remain **`noindex`** until Mike sets **`NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING=true`** (fail-closed: requires program flag too). In-page profile HTML uses registration-consent allowlist only (`lib/data/public-athlete-profile.ts`, `PUBLIC_PROFILE_ENROLLMENT_FIELDS`). Metadata excludes grade/school via `buildAthleteProfilePageMetadata`. Sitemap intentionally excludes athlete slugs even after cutover (discovery via leaderboard links).
 
-**Validation (2026-08-28):** `public-athlete-profile-privacy.test.ts` · `athlete-profile-metadata.test.ts` · existing `search-indexing.spec.ts` · Playwright privacy canaries · vitest 446 pass · build ✓
+**Validation (2026-08-30):** `public-athlete-profile-privacy.test.ts` · `athlete-profile-metadata.test.ts` · `metadata.test.ts` · `sitemap-entries.test.ts` · `search-indexing.spec.ts` · deploy checklist [`docs/deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md`](../docs/deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md)
 
 ### FUT-026 — Final Player Manual before challenge launch
 
@@ -732,7 +732,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-099** | Assets | Writeback verification (070c) | P0 | Installed in PROD | SC-094 | Re-test AcceptedΓåÆverify |
 | **SC-135** | Platform | Dry-run full season on Schmidt before public intake | P0 | Tracked under V2-012 | SC-005 | Execute after phases 1ΓÇô13 |
 | **SC-147** | Data Integrity | Reliability Command Center ΓÇö workflow health visibility before prod failures | P0 | Built in Repository | SC-040, SC-046 | Mike/OMNI create views 1ΓÇô4; review first Sunday health; **no auto repairs** |
-| **SC-149** | Website | Official landing + branding links use Fairfield Basketball Club (not Hoop Challenges) | P0 | Built in Repository | SC-102 | Set Vercel `NEXT_PUBLIC_LANDING_URL` / `NEXT_PUBLIC_SITE_URL` to Fairfield if still legacy; deploy; live smoke logo/footer; do not treat his |
+| **SC-149** | Website | Official landing + branding links use Fairfield Basketball Club (not Hoop Challenges) | P0 | Ready for Vercel attestation | SC-102 | Mike: set Vercel `NEXT_PUBLIC_LANDING_URL` / `NEXT_PUBLIC_SITE_URL` to Fairfield; redeploy; run prod smoke — see [`SC-149-fairfield-branding-url-verification.md`](deploy-checklists/SC-149-fairfield-branding-url-verification.md) |
 | **SC-002** | Testing | Test scenario library / templates for repeatable suites | P1 | Installed in PROD | SC-001 | Install/execute SCN-021ΓÇô043 on Schmidt; expand matrix; optional Airtable fields/UI only if approved |
 | **SC-008** | Testing | Email, Make, upload, and failure-path testing | P1 | Monitoring | SC-131+, SC-051+, SC-150 | Optional Mike-authorized live 074 invalid-webhook inject (SCN-029) ΓÇö offline+SOP already cover keep-Send-to-Make? |
 | **SC-012** | Homework | Written / reflection responses work | P1 | Installed in PROD | SC-019 | Re-test written-only HC; coach review + 071 |

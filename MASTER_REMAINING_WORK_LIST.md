@@ -308,7 +308,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | ID | Title | Status | Notes |
 |----|-------|--------|-------|
 | MRW-E01 | Confirm Vercel Production tracks master after merges | NEEDS VERIFICATION | Auto-deploy on master; verify `/shoot` + `/shoot/api/airtable` |
-| MRW-E02 | SC-149 branding URL env + smoke | IN PROGRESS | Vercel env attestation |
+| MRW-E02 | SC-149 branding URL env + smoke | READY FOR MIKE | Deploy checklist [`SC-149-fairfield-branding-url-verification.md`](docs/deploy-checklists/SC-149-fairfield-branding-url-verification.md); Vercel env attestation + prod smoke |
 | MRW-E03 | SC-148 mobile/a11y polish deploy | IN PROGRESS | Repo built; merge + smoke |
 | MRW-E04 | Production smoke suite after web merges | NEEDS VERIFICATION | `npm run test:smoke:prod` (50/50 last known 2026-08-26) |
 
@@ -339,7 +339,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-G04 | FUT-016 Tutorials redesign | FUTURE | Tied to C-026 |
 | MRW-G05 | FUT-017 Zoom page redesign | FUTURE | |
 | MRW-G06 | FUT-024 FAQ TST omission note | IN PROGRESS | `/faq` live; TST FAQ omitted by policy |
-| MRW-G07 | FUT-025 athlete profile indexability/consent verify | IN PROGRESS | SC-115 public pages done |
+| MRW-G07 | FUT-025 athlete profile indexability/consent verify | **COMPLETE** | Env-gated `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING`; deploy checklist 2026-08-30 |
 | MRW-G08 | Refresh CURRENT-TRUTH open PR list | READY TO IMPLEMENT | |
 
 ---
