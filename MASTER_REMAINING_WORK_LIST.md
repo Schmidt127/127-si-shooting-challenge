@@ -217,9 +217,9 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | **Short title** | Finish or discard uncommitted XP Activity ledger |
 | **Description** | Stashed/uncommitted `web/lib/data/xp-activity*` + API route; overlaps FUT-012 (already COMPLETE on master) and draft PR #240 performance work. |
 | **Why it matters** | Avoid half-landed duplicate Game Log stacks. |
-| **Current status** | IN PROGRESS |
+| **Current status** | RESOLVED — ABANDON PR #240 (2026-08-30); see `docs/decisions/MRW-B05-xp-activity-wip-resolution.md` |
 | **Source document(s)** | Future Work WIP-XP-ACT; FUT-012 COMPLETE |
-| **Repository location(s)** | Stash `lead-audit-wip-2026-08-29`; PR #240 |
+| **Repository location(s)** | Stash `lead-audit-wip-2026-08-29` (not present in repo env); PR #240 |
 | **Dependencies** | Decide: merge performance PR vs abandon duplicate |
 | **Exact files or production systems affected** | `web/` athlete profile |
 | **Autonomous?** | Partial — need conflict review vs master Game Log |
