@@ -24,7 +24,7 @@ from season_simulation.recipient_safety import (  # noqa: E402
     evaluate_recipient,
     resolve_simulation_recipient,
 )
-from season_simulation.reference_data import pick_highest_goal  # noqa: E402
+from season_simulation.offline_helpers import pick_highest_goal  # noqa: E402
 from season_simulation.run_registry import (  # noqa: E402
     RunRegistry,
     filter_records_for_run,

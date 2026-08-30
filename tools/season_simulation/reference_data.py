@@ -485,17 +485,3 @@ def load_reference_snapshot(client: AirtableClient) -> ReferenceSnapshot:
         errors=errors,
     )
 
-
-# Offline helpers used by tests (no Airtable).
-
-def pick_highest_goal(goals: list[dict[str, Any]]) -> dict[str, Any] | None:
-    """Deterministic highest Total Shot Target among active-like dicts."""
-    pool = [
-        g
-        for g in goals
-        if g.get("total_shot_target") is not None
-        and g.get("active", True)
-    ]
-    if not pool:
-        return None
-    return max(pool, key=lambda g: int(g["total_shot_target"]))

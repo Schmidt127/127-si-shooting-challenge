@@ -9,7 +9,12 @@ from typing import Any
 from urllib.parse import quote
 
 import requests
-from dotenv import load_dotenv
+
+try:
+    from dotenv import load_dotenv
+except ImportError:  # offline CI / minimal env — .env loading optional
+    def load_dotenv(*_args, **_kwargs):  # type: ignore[misc]
+        return False
 
 from .constants import DEFAULT_BASE_ID
 
