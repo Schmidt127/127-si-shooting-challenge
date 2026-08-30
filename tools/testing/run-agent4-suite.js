@@ -108,7 +108,7 @@ const COMMANDS = [
   },
   {
     name: "season-simulation-offline",
-    cmd: "python",
+    cmd: process.platform === "win32" ? "python" : "python3",
     args: ["-m", "unittest", "season_simulation.tests.test_offline"],
     env: { PYTHONPATH: path.join(root, "tools") },
   },
