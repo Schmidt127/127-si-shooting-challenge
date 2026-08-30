@@ -4,7 +4,7 @@
 **Repository:** `Schmidt127/127-si-shooting-challenge`  
 **Created:** 2026-08-29  
 **Audit SHA (start):** `5ae358d5` (`origin/master` at audit)  
-**Reconcile SHA:** `b312af92` + Automations Code MCP re-read **2026-08-30** (outstanding paste audit)  
+**Reconcile SHA:** `082edc7d` (PR **#298** public copy) + live automation MCP **2026-08-30** (057 runtime vs Automations Code tracker)  
 **Authority when docs conflict:** Newest Master Update / Completion Master overlays + [`docs/CURRENT-TRUTH.md`](docs/CURRENT-TRUTH.md) + Section G of [`docs/127-SI-MASTER-FUTURE-WORK-LIST.md`](docs/127-SI-MASTER-FUTURE-WORK-LIST.md) + this list’s dated reconcile notes. Conflicts are recorded below, not silently dropped.
 
 **Status vocabulary (this document only):** `COMPLETE` · `IN PROGRESS` · `READY TO IMPLEMENT` · `READY FOR PRODUCTION APPLY` · `NEEDS VERIFICATION` · `BLOCKED` · `FUTURE`
@@ -17,10 +17,10 @@
 
 | Topic | Newer / winning source | Lagging / conflicting source | Resolution for this list |
 |-------|------------------------|------------------------------|--------------------------|
-| Automation **057** | Automations Code MCP 2026-08-30: v2.2 **still** has CONFIG typo `MInimum` | Older “057 already applied” / Completion Master lag | **Repaste required** — [`057-v2.2-perfect-week-video-minimum-paste.md`](docs/deploy-checklists/057-v2.2-perfect-week-video-minimum-paste.md) |
+| Automation **057** | Live Airtable automation script MCP 2026-08-30: v2.2 CONFIG **`Perfect Week Video Minimum`** (correct) — **do not repaste** | Automations **Code tracker column** still embeds stale typo `MInimum` | **Paste COMPLETE**; Mike may refresh Automations Code text only (docs hygiene) |
 | SEO / SC-115 | CURRENT-TRUTH / PROJECT_STATE: indexing cutover **complete** | Completion Master §0: SEO `deferred` / noindex | Indexing **COMPLETE**; athlete consent/indexability still open (FUT-025) |
 | Perfect Week full award | MCP 2026-08-29: WAS `recl3DmBh22ADPWWe` unlock Awarded + 100 XP | Older timeout JSON / inaccurate second-run IDs | **COMPLETE** — evidence `award-was-recl3DmBh22ADPWWe-2026-08-29-mcp.json` |
-| Paste queue 010/022/072/073/FUT-001/058 | Automations Code Live = GitHub targets | Older READY FOR PRODUCTION APPLY / CURRENT-TRUTH §8 lag | Pastes **COMPLETE** except **057 typo-field** — [`2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md`](docs/deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md) |
+| Paste queue 010/022/072/073/FUT-001/058/057 | Live scripts aligned (057 via `get_automation`) | Older paste-audit / Automations Code tracker lag on 057 | All listed pastes **COMPLETE** — do not re-paste |
 | PROJECT_STATE “Final reconciliation 2026-08-21” versions | CURRENT-TRUTH §8 + 2026-08-29 Automations MCP | Same file older block | Prefer CURRENT-TRUTH + MCP |
 | FUT-001 | 020 v3.8 / 065 v10.4 **Live** | Older “paste pending” | Paste COMPLETE; optional SC-016 re-submit only |
 | SC-PW-E2E evidence pointer | MCP award JSON for WAS `recl3DmBh22ADPWWe` | `qualifying-2026-08-28T2252.json` timeout; untracked `…T223555.json` IDs not live | Prefer MCP award JSON |
@@ -346,6 +346,8 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-G06 | FUT-024 FAQ TST omission note | IN PROGRESS | `/faq` live; TST FAQ omitted by policy |
 | MRW-G07 | FUT-025 athlete profile indexability/consent verify | **COMPLETE** | Env-gated `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING`; deploy checklist 2026-08-30 |
 | MRW-G08 | Refresh CURRENT-TRUTH open PR list | **COMPLETE** | Reconciled 2026-08-30 — SHA `9f4a64b6`, PRs #279–#293 merged; open #276 + drafts #262/#244/#238/#237/#234 |
+| MRW-G09 | Phase 4 safe public copy (CR-01–CR-11) | **COMPLETE** | PR **#298** merge `082edc7d`; Production `dpl_2uQ1wPJferY189xkCFkg4D67JcFR`; [copy review](docs/copy-reviews/2026-08-30-phase4-public-pages.md) |
+| MRW-G10 | Phase 4 copy items needing Mike approval | **BLOCKED** | CR-12 Dashboard relabel/hide; CR-13 homepage “For parents” block; CR-17 grades-band FAQ nuance; CR-18 coach turnaround SLA; further FUT-016/017 redesign beyond shipped catalogs |
 
 ---
 
@@ -401,7 +403,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-I09 | Fillout daily intake reopen (SC-146) | BLOCKED | After dry-run SC-135 |
 | MRW-I10 | Production paste windows (C01–C05) | **COMPLETE except MRW-C05c (057)** | Do not re-queue 010/020/022/065/072/073; **do** paste 057 |
 | MRW-I11 | Branch protection / merge approval if CI requires human | BLOCKED | Approve merges if required |
-| MRW-I12 | Vercel deploy credentials if auto-deploy fails | BLOCKED | Dashboard access |
+| MRW-I12 | Vercel deploy credentials if auto-deploy fails | **COMPLETE** (2026-08-30) | CLI linked; Production public URL envs restored; redeploy Ready — keep dashboard access for future ops |
 | MRW-I13 | SC-005 B3 same-day counted shooting XP policy | BLOCKED | Product decision: at most one SUBMISSION_XP per Denver day vs per Count It submission (ATHWF dual 20 XP) |
 
 ---

@@ -3,11 +3,12 @@
 **Date:** 2026-08-30  
 **Scope:** `/shoot`, `/shoot/tutorials`, `/shoot/zoom-meetings`, parent-facing FAQ/home sections, footer & navigation, athlete privacy/profile path  
 **Authority:** FUT-016, FUT-017, FUT-018, FUT-019, SC-149, `docs/CURRENT-TRUTH.md`, `web/lib/seo/program-facts.ts`  
-**Branch:** `copy/phase4-public-pages`
+**Branch:** `copy/phase4-public-pages`  
+**Release:** PR **#298** merged `082edc7d` · Vercel Production Ready · live copy verified on `/shoot` + `/shoot/faq`
 
 ## Verdict
 
-Public program messaging is largely aligned: grades **1–12**, **100% online / worldwide**, annual **May 1–June 30** window, Educational Athletics voice, Fairfield Basketball Club identity (SC-149), and strong registration CTAs. Gaps are mostly jargon leaks, missing weekly-homework FAQ detail (now fixed), Dashboard demo exposure in nav, and larger redesigns still owned by FUT-016–019.
+Public program messaging is largely aligned: grades **1–12**, **100% online / worldwide**, annual **May 1–June 30** window, Educational Athletics voice, Fairfield Basketball Club identity (SC-149), and strong registration CTAs. Safe jargon removals + FAQ homework/feedback prose **shipped**. Gaps still pending Mike approval: Dashboard demo exposure in nav, optional homepage “For parents” block, coach SLA wording, adjacent-school FAQ nuance; redesigns owned by FUT-016–019 remain separate.
 
 ## Review matrix
 
@@ -33,7 +34,7 @@ Public program messaging is largely aligned: grades **1–12**, **100% online / 
 | CR-18 | Video feedback timing | No turnaround promise (good) | Parents may still assume same-day feedback | Optional: “Coaches review on a challenge schedule — not instant replies” | Expectations | P2 | **Yes** | Pending Mike |
 | CR-19 | Home XP section | “Exact scoring stays in the program” | Slightly vague but safe | Keep; point to Game Manual for details | Avoid over-claiming | — | N/A | Keep |
 | CR-20 | Profile privacy line | “personal contact details are never shown” | Clear and correct | Keep; optional expand: no emails/phones | Privacy | P3 | No if expanding | Keep / optional |
-| CR-21 | SC-149 branding | Footer + logo → Fairfield Basketball Club | Legacy Hoop Challenges guarded in `app-config` | Confirm live Vercel `NEXT_PUBLIC_LANDING_URL` / `SITE_URL` still Fairfield | Branding | P0 ops | Env change = **Yes** | Smoke only — no env edit |
+| CR-21 | SC-149 branding | Footer + logo → Fairfield Basketball Club | Legacy Hoop Challenges guarded in `app-config` | Confirm live Vercel `NEXT_PUBLIC_LANDING_URL` / `SITE_URL` still Fairfield | Branding | P0 ops | Env change = **Yes** | **Verified live** — Production public URL envs restored to documented Fairfield values before ship (see Ship log) |
 | CR-22 | Dates / season | 2026–2027 · May 1–June 30 consistent | Do not invent intake-open dates | Keep; intake timing stays separate (SC-064) | No contradictory dates | — | **Yes** to change dates | No date changes |
 
 ## Surface notes
@@ -71,20 +72,35 @@ Public program messaging is largely aligned: grades **1–12**, **100% online / 
 - Empty/not-found copy no longer mentions “slug” or “disabled.”
 - Profiles remain `noindex` per CURRENT-TRUTH / SEO policy.
 
-## Explicitly not changed (need Mike approval)
+## Explicitly not changed (still need Mike approval)
 
 - Pricing amounts, registration URLs, eligibility, challenge dates, season label
-- Removing or relabeling Dashboard in primary nav
-- New homepage “For parents” section layout
-- Tutorials / Zoom visual redesigns (FUT-016 / FUT-017)
-- Coach feedback SLA / turnaround claims
-- Production env vars or deploy
+- Removing or relabeling Dashboard in primary nav (**CR-12**)
+- New homepage “For parents” section layout (**CR-13**)
+- Further Tutorials / Zoom visual redesign work beyond already-shipped catalogs (**CR-14 / CR-15**; FUT-016/017 portfolio work already on master via #284/#285)
+- Coach feedback SLA / turnaround claims (**CR-18**)
+- Grades “adjacent school levels” FAQ nuance (**CR-17**)
+
+## Ship log (2026-08-30)
+
+| Item | Value |
+|------|--------|
+| PR | [#298](https://github.com/Schmidt127/127-si-shooting-challenge/pull/298) |
+| Merge SHA | `082edc7d173ff3f7ded3df4a2e513532229690b3` |
+| Diff safety | Copy/docs/tests only — no business-rule, date, pricing-amount, eligibility, or automation changes |
+| Local validation | Vitest **483/483**, typecheck, lint (0 errors), build — PASS |
+| CI | Web CI + Cursor Approval Agent — PASS |
+| Vercel Production | `dpl_2uQ1wPJferY189xkCFkg4D67JcFR` — **Ready** (redeploy of merge commit after env restore) |
+| Health | `/shoot` 200 · landing 200 · `/shoot/api/airtable` `ok:true` `tokenValid:true` · FAQ/Zoom copy spot-checks PASS · `npm run test:smoke:http:prod` PASS |
+
+**Ops note (not part of the copy PR diff):** First post-merge Production builds failed because Production `NEXT_PUBLIC_BASE_PATH` had been set to a full site URL (must be `/shoot`). Restored documented Production values: `NEXT_PUBLIC_BASE_PATH=/shoot`, `NEXT_PUBLIC_SITE_URL=https://www.fairfieldbasketballclub.com/shoot`, `NEXT_PUBLIC_LANDING_URL=https://www.fairfieldbasketballclub.com` (non-sensitive), then redeployed.
 
 ## Validation
 
-Run from `web/` on branch `copy/phase4-public-pages`:
+Completed on branch `copy/phase4-public-pages` and again after Production ship:
 
-- `npm test` (Vitest)
-- `npm run typecheck`
-- `npm run lint`
-- `npm run build`
+- `npm test` (Vitest) — PASS
+- `npm run typecheck` — PASS
+- `npm run lint` — PASS (pre-existing unused-arg warnings only)
+- `npm run build` — PASS
+- `npm run test:smoke:http:prod` — PASS after Production Ready
