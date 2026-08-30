@@ -9,6 +9,10 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **MRW-E02 SC-149 production attestation (2026-08-30)** — Added read-only
+  `tools/testing/sc-149-fairfield-attestation.mjs`; live production PASS with evidence
+  [`docs/testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-08-30.json`](./docs/testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-08-30.json).
+  Mike Vercel dashboard env confirmation still required per deploy checklist.
 - **MRW-G08 CURRENT-TRUTH refresh (2026-08-30)** — Updated git SHA, merged PR ledger (#279–#285), vitest/smoke counts, FUT-016/017/025 and SC-149 status, open PR list, and pending Mike-only follow-ups.
 - **SC-109 Game Manual URL cutover path (2026-08-30)** — Added Mike deploy checklist
   [`docs/deploy-checklists/SC-109-game-manual-url-verification.md`](./docs/deploy-checklists/SC-109-game-manual-url-verification.md)
