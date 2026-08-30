@@ -256,7 +256,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | **Short title** | Resolve conflicts and land public UX PR |
 | **Description** | Draft PR #266 CONFLICTING with master after homepage redesign #270. |
 | **Why it matters** | Authorized website improvements; homepage may already supersede parts. |
-| **Current status** | IN PROGRESS |
+| **Current status** | READY FOR REVIEW (rebased 2026-08-30) |
 | **Source document(s)** | Future Work FUT-018/019/025; PR #266 |
 | **Repository location(s)** | `web/` public pages, footer, athlete privacy |
 | **Dependencies** | Rebase onto post-#270 master; dedupe homepage |

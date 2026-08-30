@@ -12,7 +12,7 @@ import { buildPageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = buildPageMetadata({
   title: "Zoom Meetings — Remote Coaching Sessions",
   description:
-    "Shooting Challenge Zoom schedules, agendas, and recordings for live and remote youth basketball coaching check-ins.",
+    "Shooting Challenge Zoom schedules, agendas, and recordings for live and remote youth basketball coaching check-ins. Families can join live sessions or review recordings when links are available.",
   path: "/zoom-meetings",
 });
 
