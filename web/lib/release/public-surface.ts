@@ -27,6 +27,12 @@ export const PUBLIC_APP_ROUTES = [
 /** Routes that must remain demo/mock or gated until auth + cutover work. */
 export const NON_CUTOVER_READY_ROUTES = ["/dashboard", "/athletes/[slug]", "/admin"] as const;
 
+/**
+ * Reachable by URL but excluded from ProductShell nav + homepage hub cards.
+ * Dashboard: demo until SC-112. Public display: gym/kiosk standings, not family chrome.
+ */
+export const PUBLIC_CHROME_EXCLUDED_ROUTES = ["/dashboard", "/public-display"] as const;
+
 /** Softr dual-run indicators still present in the web app by design. */
 export const SOFTR_CUTOVER_INDICATORS = {
   publishField: "OK to Publish on Softr",

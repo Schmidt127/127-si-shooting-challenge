@@ -8,13 +8,22 @@ describe("PROGRAM_FAQ_ITEMS", () => {
     expect(serialized).toMatch(/grades/);
     expect(serialized).toMatch(/boys and girls/);
     expect(serialized).toMatch(/educational athletics/);
+    expect(serialized).toMatch(/early bird/);
+    expect(serialized).toMatch(/may 1/);
     expect(serialized).toMatch(/daily/);
     expect(serialized).toMatch(/homework/);
     expect(serialized).toMatch(/xp/);
     expect(serialized).toMatch(/video feedback/);
     expect(serialized).toMatch(/zoom/);
+    expect(serialized).toMatch(/privacy|publicly/);
     expect(serialized).toMatch(/fairfield/);
     expect(serialized).toMatch(/register/);
+  });
+
+  it("points XP progress to public leaderboard, not the demo dashboard", () => {
+    const xp = PROGRAM_FAQ_ITEMS.find((item) => item.id === "xp-progress");
+    expect(xp?.answer).toMatch(/leaderboard/i);
+    expect(xp?.answer.toLowerCase()).not.toContain("dashboard");
   });
 
   it("explains online participation without internal jargon", () => {

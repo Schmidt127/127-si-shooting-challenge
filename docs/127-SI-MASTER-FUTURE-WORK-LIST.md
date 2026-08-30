@@ -40,7 +40,7 @@ Repository and Production closeout for the bounded SC-034 / V2-002 pass:
 | Item | Status | Evidence |
 |---|---|---|
 | **V2-002 / SC-034** repository implementation | **COMPLETE** | `audits/2026-08-27-SC-034-config-hardcode-audit.md`; `lib/config-selection/`; 57-script scan; contract tests |
-| **Automation 057 v2.2** | **IN PROGRESS — repaste** | Config schema renamed; Automations Code still has typo `MInimum` — [`057-v2.2-perfect-week-video-minimum-paste.md`](./deploy-checklists/057-v2.2-perfect-week-video-minimum-paste.md) |
+| **Automation 057 v2.2** | **COMPLETE (live script)** | Config schema renamed; live script uses `Perfect Week Video Minimum`; Automations Code tracker may lag — do not repaste |
 | **Config-driven Perfect Week video minimum** | **COMPLETE** | Config field **`Perfect Week Video Minimum`** = 3; `lib/config-selection/perfect-week-video-minimum.js` |
 | **WAS Config lookup + formula** | **COMPLETE** | Lookup **`Config: Perfect Week Video Minimum`**; formula **`Perfect Week Video Requirement Met?`** live PROD |
 | **Automation 059 trigger correction** | **COMPLETE** | Mike removed `Shot Milestone is not empty` filter; Pending-only created trigger — [`059-perfect-week-trigger-coverage.md`](./deploy-checklists/059-perfect-week-trigger-coverage.md) |
@@ -107,7 +107,7 @@ The system must preserve checks for assignment identity, enrollment, challenge/s
 ### FUT-002 — Audit and remove unused Airtable fields
 
 **Priority:** P2  
-**Status:** **Audit complete (2026-08-30)** — field inventory + dependency report ready; **deletions Mike-only**  
+**Status:** **Cleanup in progress (2026-08-30)** — live inventory refreshed; invalid Review Summary quarantined; Asset Key retargeted; 5 fields awaiting Mike UI delete (Meta API cannot DELETE fields)  
 **Systems:** Airtable schema, automations, email payloads, website/data contracts
 
 Inventory every Airtable table and identify fields that are unused, obsolete, duplicated, or no longer part of the current app. This includes legacy Google Drive URL, Google Drive ID, Google Drive folder ID, and similarly named fields. Check formulas, automations, scripts, emails, views, interfaces, website/data contracts, and documentation before deleting anything.
@@ -118,7 +118,9 @@ After confirming no active dependency remains, delete the obsolete fields and up
 
 **Acceptance criteria:** complete field/dependency inventory; unused and obsolete fields classified; fields removed only after audit; tests and documentation updated; no active S3/Lambda or future-approved fields removed accidentally.
 
-**Audit deliverables (2026-08-30):** [`docs/audits/FUT-002-unused-field-inventory-2026-08-30.md`](./audits/FUT-002-unused-field-inventory-2026-08-30.md) · [`docs/audits/fut-002-unused-field-inventory.json`](./audits/fut-002-unused-field-inventory.json) · tool `tools/airtable/fut_002_field_inventory.py`. Snapshot: **1347 fields** — **1043 active**, **15 legacy**, **8 duplicate**, **281 unknown**; **21** safe-to-delete-later (mostly Google Drive); **19** blocked/protected. Deletion phase not started.
+**Audit deliverables (2026-08-30):** [`docs/audits/FUT-002-unused-field-inventory-2026-08-30.md`](./audits/FUT-002-unused-field-inventory-2026-08-30.md) · [`docs/audits/fut-002-unused-field-inventory.json`](./audits/fut-002-unused-field-inventory.json) · tool `tools/airtable/fut_002_field_inventory.py`. Offline snapshot: **1347 fields**.
+
+**Live cleanup (2026-08-30):** [`docs/audits/field-inventory/`](./audits/field-inventory/) · [`docs/audits/FUT-002-cleanup-session-2026-08-30.md`](./audits/FUT-002-cleanup-session-2026-08-30.md) · tool `tools/airtable/_fut002_live_pass.py`. Live: **1355 fields / 33 tables**. HC Drive batch (`fldFZLzDjiEbENCGl`, `fld71v6s6wYaJ2Umk`, `fldgGoh56Ck4fTQIE`) confirmed absent. `fldHchlovIaPlGKLk` quarantined (`BLANK()`). Submission Assets Asset Key retargeted to `RECORD_ID()` (valid). **Mike UI:** delete all `ZZZ DELETE — *` fields (5).
 
 ### FUT-003 — Stripe payment writeback to Airtable
 
@@ -306,7 +308,7 @@ Reduce Airtable storage usage by deleting the original **Submission Assets** int
 7. A dry-run report identifies eligible, skipped, and failed records without deleting anything.
 8. Automated tests cover successful cleanup, failed upload, missing S3 object, invalid URL, retry, and duplicate-processing cases.
 
-**Implementation (2026-08-28, revised):** Shared helpers `lib/intake-attachment-cleanup/` (fail-closed verification contract); CLI `tools/airtable/fut_010_intake_attachment_cleanup.py` (dry-run default, reconcile filter on apply, per-record AWS error skip, `--confirm-delete` required); extension `airtable/extension-scripts/safe-backfills/fut-010-clear-intake-attachments.js`. **Out of scope:** `Homework Completions.Airtable Attachment`. Promotion doc: [FUT-010-intake-attachment-cleanup.md](./deploy-checklists/FUT-010-intake-attachment-cleanup.md). **Dry-run evidence (2026-08-30):** [`testing/evidence/FUT-010-DRY-RUN-2026-08-30.md`](./testing/evidence/FUT-010-DRY-RUN-2026-08-30.md) — 0 eligible; Production attachment delete **not** executed.
+**Implementation (2026-08-28, revised):** Shared helpers `lib/intake-attachment-cleanup/` (fail-closed verification contract); CLI `tools/airtable/fut_010_intake_attachment_cleanup.py` (dry-run default, reconcile filter on apply, per-record AWS error skip, `--confirm-delete` required); extension `airtable/extension-scripts/safe-backfills/fut-010-clear-intake-attachments.js`. **Out of scope:** `Homework Completions.Airtable Attachment`. Promotion doc: [FUT-010-intake-attachment-cleanup.md](./deploy-checklists/FUT-010-intake-attachment-cleanup.md). **Dry-run evidence (2026-08-30 R3):** [`testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md`](./testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md) — **0 eligible** (homework scope 0); **no deletion request**; Production attachment delete **not** executed.
 
 ---
 
@@ -811,7 +813,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-036** | Weekly Summary | Weekly summary calculations correct | P0 | Installed in PROD | SC-054 | Re-test calc fields on Schmidt; Presentation columns (SC-054) |
 | **SC-058** | Data Integrity | Automation version inventory filled from live UI | P0 | Built in Repository | SC-059 | Mike paste complete PROD UI list where gaps remain |
 | **SC-059** | Data Integrity | Retire legacy automations 112 and 043 | P0 | Installed in PROD / 043 not deployed | SC-001, SC-058 | Confirm 112 OFF and retain the no-recreate-043 disposition; do not restore 043 or the stale orphan-XP bulk count from #100 |
-| **SC-065** | Enrollment | Challenge dates / Weeks configuration rebuilt | P0 | Built in Repository | SC-032 | Manually import generated Weeks in PROD; verify SundayΓÇôSaturday + Week 0 + Post-Challenge; link Program Instance (may need record IDs) |
+| **SC-065** | Enrollment | Challenge dates / Weeks configuration rebuilt | P0 | **COMPLETE (calendar + 18 PHA)** | SC-032 | Early Bird Apr 25–May 1 countable finalized; 18 active PHA + June 29 due; Week 9/Post-Challenge no HW; archive WSTEST/PWTEST before season sim — [`WEEKS-2026-27-AUDIT-2026-08-30.md`](./testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md) · [`HOMEWORK-PHA-18-AUDIT-2026-08-30.md`](./testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md) |
 | **SC-068** | Enrollment | Inactive / processing controls (`Active?` hardened) | P0 | Tracked under C-010 | SC-004 | PPE create/backfill; paste guards; resolve 072/118/119 Schmidt hard-exclude conflict vs ΓÇ£Schmidt visibleΓÇ¥ web direction |
 | **SC-069** | Enrollment | Testing enrollment behavior documented and proven | P0 | Live Tested in PROD | SC-004, SC-068 | Email-path live proof still needed; standings web spot-check |
 | **SC-070** | XP | Daily submission XP awards correctly | P0 | Live Tested in PROD | SC-049 | Rerun pack on additional submissions; keep Schmidt-only |
@@ -937,7 +939,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **SC-034** | COMPLETE | V2-002 repo + prod pass 2026-08-27; hardcode audit JSON; contract tests pass; 057 v2.2 live |
 | **SC-034-PW-MIN** | COMPLETE | `lib/config-selection/perfect-week-video-minimum.js`; Config **Perfect Week Video Minimum** = 3 |
 | **SC-034-WAS** | COMPLETE | WAS lookup + formula live PROD 2026-08-27; `airtable/formulas/README.md` |
-| **SC-034-057** | **IN PROGRESS** | Repo + Config schema COMPLETE; Automations Code CONFIG typo remaining — [`057-v2.2-perfect-week-video-minimum-paste.md`](./deploy-checklists/057-v2.2-perfect-week-video-minimum-paste.md) |
+| **SC-034-057** | **COMPLETE** | Live script CONFIG `Perfect Week Video Minimum` (MCP get_automation 2026-08-30); optional Automations Code tracker refresh only — do not repaste |
 | **SC-034-059-TRIG** | COMPLETE | Mike 2026-08-27; Pending-only created trigger; `deploy-checklists/059-perfect-week-trigger-coverage.md` |
 | **SC-034-058-059** | COMPLETE | Not required — `docs/testing/perfect-week/PERFECT-WEEK-DEPENDENCY-AUDIT.md` |
 | **SC-PW-E2E** | **COMPLETE** | MCP award for WAS `recl3DmBh22ADPWWe`: unlock `recJ5umer4J4FHTOz` Awarded + XP `reczehlzkA8fjiQh0` 100 pts. Evidence `docs/testing/evidence/sc-pw-e2e/award-was-recl3DmBh22ADPWWe-2026-08-29-mcp.json`. Do not re-`--apply`. |
@@ -965,9 +967,9 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 
 | ID | Title | Status | Evidence |
 |---|---|---|---|
-| **WIP-XP-ACT** | Athlete XP Activity ledger (web + API) | IN PROGRESS | Uncommitted `web/lib/data/xp-activity*` + components; not prod deployed |
+| **WIP-XP-ACT** | Athlete XP Activity ledger (web + API) | **RESOLVED — abandoned** | PR #240 abandoned; FUT-012 COMPLETE on master |
 | **WIP-HW-CONTRACTS** | Homework assignment-identity (FUT-001) | **COMPLETE** | Merged + Production 020/065 Live |
-| **WIP-057-TESTS** | 057 runtime + hardcode contract tests | IN PROGRESS | Uncommitted `test_057_runtime.mjs` + `tests/automation-contracts/` |
+| **WIP-057-TESTS** | 057 runtime + hardcode + live-schema field assert | **COMPLETE** | `test_057_runtime.mjs` + `057-perfect-week-video-minimum` + `057-live-schema-field-assert` in Agent 4 suite |
 
 ### 2026-08-29 future testing (not active)
 
@@ -976,6 +978,6 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **SC-ATHLETE-WF-001** | **COMPLETE (harness)** | Individual athlete workflow QA (pre–season-sim). Plan `docs/testing/athlete-workflow/SC-ATHLETE-WF.md`; harness `tools/testing/sc-athlete-wf.mjs`; evidence `docs/testing/evidence/sc-athlete-wf/apply-session-final-2026-08-30.json`. MRW-F09. Open product: SC-005 B3 (MRW-I13). |
 | **SC-WEEKLY-SETTLEMENT-E2E** | **COMPLETE** | Weekly settlement matrix (WAS / calc / PW fail-closed / handoff prep). Docs `docs/testing/weekly-settlement/`; harness `tools/testing/sc-weekly-settlement.mjs`; RESULTS + DEFECT-REPORT 2026-08-30. MRW-F10. |
 | **SC-SEASON-SIM-001** | **Planned / Future** | 60-day five-enrollment season simulation — narrative entry above § D / FUT-026; MRW-H11. Do **not** implement yet. FUT-010 unchanged. Reuse SC-PW-E2E later where appropriate. |
-| **SC-SEASON-SIM-002** | **Infrastructure ready** | Athlete 1 May–June 2027 (61-day) package — `tools/season_simulation/`. Offline tests + read-only preflight/dry-run OK; execute/cleanup not run. Distinct from SC-SEASON-SIM-001. Do **not** expand until product B3 dispositioned if season path depends on counted-day XP rules. |
+| **SC-SEASON-SIM-002** | **Infrastructure ready (repo)** | Athlete 1 May–June 2027 package landed under `tools/season_simulation/` (2026-08-30). Offline unittest green; read-only preflight/dry-run OK; execute/cleanup gated — **not run**. Distinct from SC-SEASON-SIM-001. |
 
 ---

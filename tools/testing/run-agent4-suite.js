@@ -98,7 +98,19 @@ const COMMANDS = [
       "tests/automation-contracts/known-reference-numbers.test.js",
       "tests/automation-contracts/legacy-welcome-email-retirement.test.js",
       "tests/automation-contracts/057-perfect-week-video-minimum.test.js",
+      "tests/automation-contracts/057-live-schema-field-assert.test.js",
     ],
+  },
+  {
+    name: "057-runtime-offline",
+    cmd: process.execPath,
+    args: ["--test", "tools/testing/tests/test_057_runtime.mjs"],
+  },
+  {
+    name: "season-simulation-offline",
+    cmd: process.platform === "win32" ? "python" : "python3",
+    args: ["-m", "unittest", "season_simulation.tests.test_offline"],
+    env: { PYTHONPATH: path.join(root, "tools") },
   },
   {
     name: "065-066-trigger-record-offline",
@@ -165,7 +177,7 @@ for (const entry of COMMANDS) {
   const run = spawnSync(cmd, args, {
     cwd: root,
     encoding: "utf8",
-    env: process.env,
+    env: { ...process.env, ...(entry.env || {}) },
   });
   const ok = run.status === 0;
   if (!ok) failed += 1;
