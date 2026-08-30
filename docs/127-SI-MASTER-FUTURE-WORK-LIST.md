@@ -575,9 +575,9 @@ Do not finalize or publish the manual while material app rules or page behavior 
 ### SC-ATHLETE-WF-001 — Individual athlete workflow QA (pre–season simulation)
 
 **Priority:** P0  
-**Status:** COMPLETE (harness) — open product defect SC-005 B3 / MRW-I13; 065 Satisfactory-alone is expected skip  
+**Status:** COMPLETE (harness) — **MRW-I13 closed** (Submission XP once per Count It submission); 065 Satisfactory-alone is expected skip  
 **Systems:** Testing harness, Enrollments (Testing3), Submissions, WAS, Homework Completions, Video Feedback, XP Events, streaks/levels contracts  
-**Related (distinct):** SC-005 matrix · **SC-PW-E2E** (COMPLETE — do not re-`--apply`) · **SC-SEASON-SIM-001/002** (future — do not expand until this path’s defects are dispositioned) · MRW-F09
+**Related (distinct):** SC-005 matrix · **SC-PW-E2E** (COMPLETE — do not re-`--apply`) · **SC-SEASON-SIM-001/002** · **SC-CORE-WF / MRW-F11** (COMPLETE) · MRW-F09
 
 Prove the **single disposable athlete** path end-to-end before any multi-enrollment season simulation: enrollment → submissions (same-day / backdate / multi / Count It / Simple Total via Shot Total) → XP dedupe → homework/video → streaks/levels expectations → WAS rollups → negatives → replay.
 
@@ -585,7 +585,7 @@ Prove the **single disposable athlete** path end-to-end before any multi-enrollm
 
 **Plan / harness / evidence:** [`docs/testing/athlete-workflow/SC-ATHLETE-WF.md`](./testing/athlete-workflow/SC-ATHLETE-WF.md) · `tools/testing/sc-athlete-wf.mjs` · [`docs/testing/evidence/sc-athlete-wf/apply-session-final-2026-08-30.json`](./testing/evidence/sc-athlete-wf/apply-session-final-2026-08-30.json)
 
-**Open defects from 2026-08-30 apply:** SC-005 B3 same-day dual SUBMISSION_XP (product-decision) · Satisfactory HC without PHA does not fire 065 · agent PAT cannot DELETE XP Events · sc-pw-e2e-lib still writes formula `Submission Stat Mode` (leave that WIP uncommitted).
+**Disposition (2026-08-30):** SC-005 B3 same-day multi SUBMISSION_XP is **expected** (once per Count It). Satisfactory HC without PHA does not fire 065 (expected skip). Agent PAT DELETE XP Events remains best-effort/MCP. Leave uncommitted `sc-pw-e2e-lib` formula-field WIP untouched.
 
 ### SC-SEASON-SIM-001 — 60-Day Five-Enrollment Season Simulation
 
@@ -975,7 +975,8 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 
 | Item | Status | Evidence |
 |---|---|---|
-| **SC-ATHLETE-WF-001** | **COMPLETE (harness)** | Individual athlete workflow QA (pre–season-sim). Plan `docs/testing/athlete-workflow/SC-ATHLETE-WF.md`; harness `tools/testing/sc-athlete-wf.mjs`; evidence `docs/testing/evidence/sc-athlete-wf/apply-session-final-2026-08-30.json`. MRW-F09. Open product: SC-005 B3 (MRW-I13). |
+| **SC-ATHLETE-WF-001** | **COMPLETE (harness)** | Individual athlete workflow QA (pre–season-sim). Plan `docs/testing/athlete-workflow/SC-ATHLETE-WF.md`; harness `tools/testing/sc-athlete-wf.mjs`; evidence `docs/testing/evidence/sc-athlete-wf/apply-session-final-2026-08-30.json`. MRW-F09. **MRW-I13 CLOSED** (once per Count It). |
+| **SC-CORE-WF / MRW-F11** | **COMPLETE** | Core workflow reliability — `lib/workflow-contracts/`, `tools/testing/sc-core-workflow.mjs`, `docs/testing/core-workflow/`. Live Weeks/PHA audit + disposable apply 2026-08-30. |
 | **SC-WEEKLY-SETTLEMENT-E2E** | **COMPLETE** | Weekly settlement matrix (WAS / calc / PW fail-closed / handoff prep). Docs `docs/testing/weekly-settlement/`; harness `tools/testing/sc-weekly-settlement.mjs`; RESULTS + DEFECT-REPORT 2026-08-30. MRW-F10. |
 | **SC-SEASON-SIM-001** | **Planned / Future** | 60-day five-enrollment season simulation — narrative entry above § D / FUT-026; MRW-H11. Do **not** implement yet. FUT-010 unchanged. Reuse SC-PW-E2E later where appropriate. |
 | **SC-SEASON-SIM-002** | **Infrastructure ready (repo)** | Athlete 1 May–June 2027 package landed under `tools/season_simulation/` (2026-08-30). Offline unittest green; read-only preflight/dry-run OK; execute/cleanup gated — **not run**. Distinct from SC-SEASON-SIM-001. |

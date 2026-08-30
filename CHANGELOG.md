@@ -16,6 +16,13 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   Week 1 starts 2027-05-02, Week 9 no homework, 18 active PHA due 2027-06-29, Submission XP
   once per Count It submission (**MRW-I13 closed**). Deleted inactive orphan PHA
   `recpHX3stQ8YBVtLi`. No automation paste; 075 remains retired.
+- **SC-SEASON-SIM-002 preflight package (2026-08-30, PR #302)** — `tools/season_simulation/`
+  with offline unittest (21), gated execute/cleanup, Agent 4 suite wiring. **No full season
+  simulation run.** Live 057 verified correct — do not repaste.
+- **FUT-002 live cleanup (2026-08-30, PR #303)** — Live inventory 1355 fields; quarantined 5
+  obsolete fields (`ZZZ DELETE`); retargeted Submission Assets Asset Key; Mike UI delete remains.
+  Evidence: `docs/audits/field-inventory/`, `docs/audits/FUT-002-cleanup-session-2026-08-30.md`.
+
 - **SC-147 Recorded Zoom half-XP repo prep (2026-08-30, MRW-H10)** — Offline conflict
   matrix + pure helpers (`lib/sc-147-zoom-recording-credit.js`), contract tests, and
   automation **DRAFT** `drafts/sc-147-zoom-recording-half-xp.js` (slot TBD — not Live).
@@ -43,6 +50,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **Public chrome cleanup (2026-08-30, PR #301 / #304)** — Hide demo Dashboard and gym Display
+  from public `/shoot` nav/hub; FAQ Early Bird + privacy; CR-12 closed. Vitest 487/487; prod
+  smoke 50/50.
 - **Phase 4 safe public copy (2026-08-30, PR #298 / MRW-G09)** — Parent-facing FAQ,
   Zoom, levels, pricing, profile, tutorials, and footer wording clarified (CR-01–CR-11).
   No dates, pricing amounts, eligibility, Dashboard nav, homepage layout, coach SLA, or
