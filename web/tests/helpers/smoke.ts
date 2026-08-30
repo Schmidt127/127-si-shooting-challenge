@@ -43,6 +43,7 @@ export const PUBLIC_SMOKE_ROUTES = [
   // Home hero h1 matches HOME_HERO in lib/seo/program-facts.ts (FUT-018).
   { name: "home", path: ".", heading: /Earn XP|Climb 12 Levels|better basketball player/i },
   { name: "leaderboard", path: "leaderboard", heading: /leaderboard/i },
+  { name: "faq", path: "faq", heading: /questions|answers|faq/i },
   { name: "homework", path: "homework", heading: /homework/i },
   { name: "tutorials", path: "tutorials", heading: /skills|tutorial/i },
   { name: "shoutouts", path: "shoutouts", heading: /shout/i },

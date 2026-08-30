@@ -20,6 +20,7 @@ const requireAirtableConfig = process.env.SMOKE_REQUIRE_AIRTABLE_CONFIG === "tru
 
 const ROUTES = [
   "",
+  "/faq",
   "/leaderboard",
   "/homework",
   "/tutorials",

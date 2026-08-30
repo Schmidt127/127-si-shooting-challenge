@@ -48,6 +48,8 @@ Views and filters: [airtable-views.md](./airtable-views.md)
 
 Route audit (Dashboard / Display decisions): [public-route-audit-2026-08-30.md](./public-route-audit-2026-08-30.md)
 
+Smoke coverage: family-facing paths in `web/lib/release/public-surface.ts` (`FAMILY_FACING_SMOKE_PATHS`); operator routes (`/dashboard`, `/public-display`) smoke-tested by direct URL only.
+
 ---
 
 ## Navigation (ProductShell)

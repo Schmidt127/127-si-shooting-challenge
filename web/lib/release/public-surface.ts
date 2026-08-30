@@ -105,8 +105,27 @@ export const LOADING_LABELS = {
   levels: "Loading levels…",
   achievements: "Loading achievements…",
   zoom: "Loading Zoom meetings…",
+  publicDisplay: "Loading public display…",
   default: "Loading…",
 } as const;
+
+/**
+ * Family-facing catalog paths that must stay in Playwright + HTTP smoke suites.
+ * Operator-only routes (`dashboard`, `public-display`) are tested separately.
+ */
+export const FAMILY_FACING_SMOKE_PATHS = [
+  ".",
+  "faq",
+  "leaderboard",
+  "homework",
+  "tutorials",
+  "shoutouts",
+  "articles",
+  "levels",
+  "achievements",
+  "zoom-meetings",
+  "game-manual",
+] as const;
 
 export const ACCESSIBILITY_LABELS = {
   productNav: "Shooting Challenge",
