@@ -32,6 +32,7 @@ import type { ProgramPricing } from "@/lib/data/program-pricing";
 import { formatXp } from "@/lib/formatters";
 import { PROGRAM_HUB_LINKS } from "@/lib/navigation/program-hub-links";
 import { PLAYER_REGISTRATION } from "@/lib/registration";
+import { ABOUT_THE_COACH } from "@/lib/seo/public-program-content";
 import {
   CHALLENGE_DATES,
   CHALLENGE_SEASON_LABEL,
@@ -465,6 +466,24 @@ export function HomePageView({ topEntries, pricing = null }: HomePageViewProps) 
                 <p className="mt-2 text-sm leading-relaxed text-foreground">{item.detail}</p>
               </CardContent>
             </Card>
+          ))}
+        </div>
+      </SiteSection>
+
+      <SiteSection
+        id="about-the-coach"
+        data-testid="about-the-coach"
+        eyebrow="Program leadership"
+        title={ABOUT_THE_COACH.title}
+        titleId="coach-heading"
+        description="Meet the educator and coach behind the Shooting Challenge."
+        aria-labelledby="coach-heading"
+      >
+        <div className="mx-auto max-w-3xl space-y-4">
+          {ABOUT_THE_COACH.paragraphs.map((paragraph) => (
+            <p key={paragraph.slice(0, 40)} className="text-sm leading-relaxed text-muted-foreground sm:text-base">
+              {paragraph}
+            </p>
           ))}
         </div>
       </SiteSection>

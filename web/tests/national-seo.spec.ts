@@ -70,6 +70,27 @@ test.describe("national SEO messaging", () => {
     const body = (await page.locator("main").textContent()) ?? "";
     expect(body).toMatch(/do not claim in-person coaching/i);
   });
+
+  test("homepage includes About the Coach section", async ({ page }) => {
+    await page.goto(".", { waitUntil: "domcontentloaded" });
+
+    await expect(page.getByRole("heading", { name: "About the Coach" })).toBeVisible();
+    await expect(page.getByText(/Montana educator, athletic director, and coach/i).first()).toBeVisible();
+    await expect(page.getByText(/127 Sports Intensity and the Shooting Challenge/i).first()).toBeVisible();
+  });
+
+  test("faq includes gift card award commitment", async ({ page }) => {
+    await page.goto("faq", { waitUntil: "domcontentloaded" });
+
+    await expect(
+      page.getByRole("heading", { name: /gift card award commitment/i }),
+    ).toBeVisible();
+    const body = (await page.locator("main").textContent()) ?? "";
+    expect(body).toMatch(/100% of registration fees collected/i);
+    expect(body).toMatch(/program director's discretion/i);
+    expect(body).toMatch(/not a guarantee that every individual athlete/i);
+    expect(body.toLowerCase()).not.toMatch(/refund/);
+  });
 });
 
 test.describe("faq route indexing", () => {

@@ -572,6 +572,24 @@ Keep the Player Manual on the future-work list, but complete it last—immediate
 
 Do not finalize or publish the manual while material app rules or page behavior are still changing.
 
+### FUT-027 — Program-wide gift card award commitment (parent FAQ)
+
+**Priority:** P1  
+**Status:** **Complete** (2026-08-30) — Mike-approved copy shipped on `/shoot/faq`  
+**Systems:** FAQ content, parent registration expectations  
+**Evidence:** `web/lib/seo/public-program-content.ts`, `web/lib/seo/faq-content.ts` (`gift-card-commitment`), `web/lib/seo/faq-content.test.ts`, `web/tests/national-seo.spec.ts`
+
+Publish parent-facing wording that at least 100% of registration fees collected across the challenge will be distributed through gift cards, with recipients and amounts at the program director's discretion — without implying refunds, guaranteed individual awards, or a fixed schedule.
+
+### FUT-028 — About the Coach (homepage)
+
+**Priority:** P1  
+**Status:** **Complete** (2026-08-30) — Mike-approved copy shipped on `/shoot#about-the-coach`  
+**Systems:** Homepage parent trust section  
+**Evidence:** `web/lib/seo/public-program-content.ts`, `web/components/home/home-page-view.tsx`, `web/lib/seo/public-program-content.test.ts`, `web/tests/national-seo.spec.ts`
+
+Add a parent-facing About the Coach section identifying Mike Schmidt's education and coaching credentials without inventing accomplishments or exposing private athlete information.
+
 ### SC-ATHLETE-WF-001 — Individual athlete workflow QA (pre–season simulation)
 
 **Priority:** P0  

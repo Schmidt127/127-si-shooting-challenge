@@ -18,6 +18,15 @@ describe("PROGRAM_FAQ_ITEMS", () => {
     expect(serialized).toMatch(/privacy|publicly/);
     expect(serialized).toMatch(/fairfield/);
     expect(serialized).toMatch(/register/);
+    expect(serialized).toMatch(/gift card/);
+    expect(serialized).toMatch(/program director/);
+  });
+
+  it("explains gift card commitment as program-wide and discretionary", () => {
+    const giftCard = PROGRAM_FAQ_ITEMS.find((item) => item.id === "gift-card-commitment");
+    expect(giftCard?.answer).toMatch(/100%/);
+    expect(giftCard?.answer).toMatch(/not a guarantee that every individual athlete/i);
+    expect(giftCard?.answer.toLowerCase()).not.toMatch(/refund/);
   });
 
   it("points XP progress to public leaderboard, not the demo dashboard", () => {

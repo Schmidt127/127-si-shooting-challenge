@@ -351,6 +351,8 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-G10 | Phase 4 copy items needing Mike approval | **PARTIAL** | **CR-12 COMPLETE** via PR **#301**. Still deferred: CR-13 extra parents block; CR-17 grades-band nuance; CR-18 coach SLA |
 | MRW-G11 | Public website chrome cleanup (Dashboard/Display) | **COMPLETE** | PR **#301** merge `f3be964f`; Vitest **487/487**; prod smoke **50/50** + HTTP smoke PASS; audit [`web/docs/public-route-audit-2026-08-30.md`](web/docs/public-route-audit-2026-08-30.md) |
 | MRW-G12 | Final public-app readiness pass (routes, smoke, tests) | **COMPLETE** | PR **#308** merge `7332d2f3`; Vercel prod Ready; Vitest **493/493**; prod smoke **52/52** + HTTP smoke PASS (`/faq` 200); indexing policy verified (public `index, follow`; athlete/dashboard/display `noindex`) |
+| MRW-G13 | Gift card award commitment (parent FAQ) | **COMPLETE** | Mike-approved 2026-08-30; FAQ item `gift-card-commitment` on `/shoot/faq`; no refund/individual guarantee language |
+| MRW-G14 | About the Coach homepage section | **COMPLETE** | Mike-approved 2026-08-30; section on `/shoot#about-the-coach`; identifies Mike; no internal jargon |
 
 ---
 
