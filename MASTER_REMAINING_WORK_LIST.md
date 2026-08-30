@@ -4,7 +4,7 @@
 **Repository:** `Schmidt127/127-si-shooting-challenge`  
 **Created:** 2026-08-29  
 **Audit SHA (start):** `5ae358d5` (`origin/master` at audit)  
-**Reconcile SHA:** `907c29a9` + live Automations MCP 2026-08-29  
+**Reconcile SHA:** `b312af92` + Automations Code MCP re-read **2026-08-30** (outstanding paste audit)  
 **Authority when docs conflict:** Newest Master Update / Completion Master overlays + [`docs/CURRENT-TRUTH.md`](docs/CURRENT-TRUTH.md) + Section G of [`docs/127-SI-MASTER-FUTURE-WORK-LIST.md`](docs/127-SI-MASTER-FUTURE-WORK-LIST.md) + this list’s dated reconcile notes. Conflicts are recorded below, not silently dropped.
 
 **Status vocabulary (this document only):** `COMPLETE` · `IN PROGRESS` · `READY TO IMPLEMENT` · `READY FOR PRODUCTION APPLY` · `NEEDS VERIFICATION` · `BLOCKED` · `FUTURE`
@@ -17,10 +17,10 @@
 
 | Topic | Newer / winning source | Lagging / conflicting source | Resolution for this list |
 |-------|------------------------|------------------------------|--------------------------|
-| Automation **057** | CURRENT-TRUTH / Future Work (2026-08-27): **v2.2** live + Config video minimum | Completion Master §0 (2026-08-24): **v2.0** | Treat **v2.2** as current; Master dashboard needs refresh |
+| Automation **057** | Automations Code MCP 2026-08-30: v2.2 **still** has CONFIG typo `MInimum` | Older “057 already applied” / Completion Master lag | **Repaste required** — [`057-v2.2-perfect-week-video-minimum-paste.md`](docs/deploy-checklists/057-v2.2-perfect-week-video-minimum-paste.md) |
 | SEO / SC-115 | CURRENT-TRUTH / PROJECT_STATE: indexing cutover **complete** | Completion Master §0: SEO `deferred` / noindex | Indexing **COMPLETE**; athlete consent/indexability still open (FUT-025) |
 | Perfect Week full award | MCP 2026-08-29: WAS `recl3DmBh22ADPWWe` unlock Awarded + 100 XP | Older timeout JSON / inaccurate second-run IDs | **COMPLETE** — evidence `award-was-recl3DmBh22ADPWWe-2026-08-29-mcp.json` |
-| Paste queue 010/022/072/073/FUT-001/058 | Automations Code Live = GitHub targets | Older READY FOR PRODUCTION APPLY rows | Pastes **COMPLETE** — see operator queue |
+| Paste queue 010/022/072/073/FUT-001/058 | Automations Code Live = GitHub targets | Older READY FOR PRODUCTION APPLY / CURRENT-TRUTH §8 lag | Pastes **COMPLETE** except **057 typo-field** — [`2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md`](docs/deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md) |
 | PROJECT_STATE “Final reconciliation 2026-08-21” versions | CURRENT-TRUTH §8 + 2026-08-29 Automations MCP | Same file older block | Prefer CURRENT-TRUTH + MCP |
 | FUT-001 | 020 v3.8 / 065 v10.4 **Live** | Older “paste pending” | Paste COMPLETE; optional SC-016 re-submit only |
 | SC-PW-E2E evidence pointer | MCP award JSON for WAS `recl3DmBh22ADPWWe` | `qualifying-2026-08-28T2252.json` timeout; untracked `…T223555.json` IDs not live | Prefer MCP award JSON |
@@ -279,13 +279,15 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-C04 | Paste 073 v4.4 | **COMPLETE** | same | Do not re-paste | — |
 | MRW-C05 | Paste 020 v3.8 + 065 v10.4 | **COMPLETE** | `FUT-001-*.md` | Optional SC-016 only | — |
 | MRW-C05b | Paste 058 1.5 + 059 v3.7 | **COMPLETE** | `058-v1.5-*.md` | Do not re-paste | — |
+| MRW-C05c | Repaste 057 v2.2 (Config field name) | **READY FOR PRODUCTION APPLY** | [`057-v2.2-perfect-week-video-minimum-paste.md`](docs/deploy-checklists/057-v2.2-perfect-week-video-minimum-paste.md) | Mike paste + Automations Code refresh | P0 |
 | MRW-C06 | SC-151 Submitted Same Day? formula | READY TO IMPLEMENT | Future Work SC-151 | OMNI formula change | P2 |
 | MRW-C07 | RCC views / Interface install | READY FOR PRODUCTION APPLY | `RELIABILITY-COMMAND-CENTER-PRODUCTION-INSTALL.md` | OMNI views | P1 |
 | MRW-C08 | Automation UI version inventory (SC-058) | NEEDS VERIFICATION | AUTOMATION_VERSION_INVENTORY | Mike UI attestation vs MCP | P1 |
 | MRW-C09 | Retire/disposition Automation 043 (SC-059) | IN PROGRESS | Future Work SC-059 | Confirm 043 not deployed | P1 |
 | MRW-C10 | FUT-010 live attachment clear | **DRY-RUN COMPLETE (2026-08-30)** — 0 eligible; Mike attestation + AWS creds before pilot | [`FUT-010-DRY-RUN-2026-08-30.md`](docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30.md) | Mike sign-off then supervised apply | P1 |
 
-**Already applied (do not re-queue):** 057 v2.2; 059 Pending-only trigger; 010 v10.12; 020 v3.8; 022 v2.2; 058 1.5; 059 v3.7; 065 v10.4; 066 v3.9; 072 v4.8; 073 v4.4; SEO indexing env; FUT-WELCOME-LEGACY field delete.
+**Already applied (do not re-queue):** 059 Pending-only trigger; 010 v10.12; 020 v3.8; 022 v2.2; 058 1.5; 059 v3.7; 065 v10.4; 066 v3.9; 072 v4.8; 073 v4.4; SEO indexing env; FUT-WELCOME-LEGACY field delete.  
+**Still open paste:** **057** CONFIG typo → correct `Perfect Week Video Minimum` (MRW-C05c).
 
 **For each C-item DoD:** Automations Code column matches GitHub version + CURRENT-TRUTH §8 updated + dated evidence.
 
@@ -396,7 +398,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-I07 | Weeks 2026–27 import (MRW-A05) | BLOCKED | Calendar + import approval |
 | MRW-I08 | Learning Activities schema (SC-018) | BLOCKED | Schema authorization |
 | MRW-I09 | Fillout daily intake reopen (SC-146) | BLOCKED | After dry-run SC-135 |
-| MRW-I10 | ~~Production paste windows (C01–C05)~~ | **COMPLETE** | Pastes applied — do not re-queue |
+| MRW-I10 | Production paste windows (C01–C05) | **COMPLETE except MRW-C05c (057)** | Do not re-queue 010/020/022/065/072/073; **do** paste 057 |
 | MRW-I11 | Branch protection / merge approval if CI requires human | BLOCKED | Approve merges if required |
 | MRW-I12 | Vercel deploy credentials if auto-deploy fails | BLOCKED | Dashboard access |
 
@@ -404,21 +406,19 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 
 ## Recommended next task for Mike
 
-1. **Do not** re-paste 010/020/022/058/059/065/072/073 and **do not** re-run Perfect Week `--apply` for WAS `recl3DmBh22ADPWWe`.  
-2. **Highest-value remaining live action:** FUT-010 dry-run then supervised attachment clear per [`docs/deploy-checklists/FUT-010-intake-attachment-cleanup.md`](docs/deploy-checklists/FUT-010-intake-attachment-cleanup.md) + [`2026-08-29-PRODUCTION-OPERATOR-QUEUE.md`](docs/deploy-checklists/2026-08-29-PRODUCTION-OPERATOR-QUEUE.md).  
-3. **Calendar:** Weeks 2026–27 import (MRW-A05) when ready — Weeks are protected.  
-4. **Do not** activate FUT-003 until registration intentionally opens.  
-5. **Do not** start SC-SEASON-SIM-001 yet — weekly settlement QA (MRW-F10) is complete; next best engineering task is FUT-010 then Weeks import.
+1. **Paste Automation 057** per [`docs/deploy-checklists/057-v2.2-perfect-week-video-minimum-paste.md`](docs/deploy-checklists/057-v2.2-perfect-week-video-minimum-paste.md) (Mike approval; only outstanding priority paste).  
+2. **Do not** re-paste 010/020/022/058/059/065/072/073 and **do not** re-run Perfect Week `--apply` for WAS `recl3DmBh22ADPWWe`.  
+3. **Then:** FUT-010 supervised attachment clear (dry-run already complete) per operator queue.  
+4. **Calendar:** Weeks 2026–27 import (MRW-A05) when ready — Weeks are protected.  
+5. **Do not** activate FUT-003 until registration intentionally opens.  
+6. **Do not** start SC-SEASON-SIM-001 yet — weekly settlement QA (MRW-F10) is complete; next best engineering task after 057 is FUT-010 then Weeks import.
 
 ---
 
 ## Deduplication notes
 
-- SC-034 / V2-002 / PW config items → **COMPLETE**; not listed as open work.  
-- FUT-011–015, FUT-020–023, FUT-006, FUT-008 → **COMPLETE**; omitted from open sections.  
-- **FUT-WELCOME-LEGACY** (MRW-B07) → **COMPLETE** 2026-08-29 — six Enrollment fields deleted; 075 absent; do not restore.  
-- **SC-PW-E2E / MRW-A01** → **COMPLETE** — MCP award evidence for WAS `recl3DmBh22ADPWWe`.  
-- **Paste debt C01–C05 + 058/059** → **COMPLETE** (Automations Code Live 2026-08-29).  
+- **Paste debt C01–C05 + 058/059** → **COMPLETE** except **MRW-C05c (057 typo-field repaste)** — Automations Code MCP 2026-08-30.  
+- **SC-034 / V2-002 / PW config items** → schema + formulas COMPLETE; **057 script CONFIG string still open** (MRW-C05c).  
 - **SC-SEASON-SIM-001 / MRW-H11** → **FUTURE / Planned only** (2026-08-29) — not active; not SC-005; not SC-PW-E2E reopen; **FUT-010 unchanged**.  
 - **SC-WEEKLY-SETTLEMENT-E2E / MRW-F10** → **COMPLETE** (2026-08-30) — harness + live WS-01…WS-10 evidence; defect report filed.  
 - SC-027/066 shot milestones live-tested → monitoring only.  

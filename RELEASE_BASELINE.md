@@ -3,7 +3,7 @@
 **Product:** 127 Sports Intensity Shooting Challenge  
 **Public URL:** https://www.fairfieldbasketballclub.com/shoot  
 **Authority companion:** [`MASTER_REMAINING_WORK_LIST.md`](./MASTER_REMAINING_WORK_LIST.md)  
-**Operator queue:** [`docs/deploy-checklists/2026-08-29-PRODUCTION-OPERATOR-QUEUE.md`](./docs/deploy-checklists/2026-08-29-PRODUCTION-OPERATOR-QUEUE.md)  
+**Operator queue:** [`docs/deploy-checklists/2026-08-29-PRODUCTION-OPERATOR-QUEUE.md`](./docs/deploy-checklists/2026-08-29-PRODUCTION-OPERATOR-QUEUE.md) · paste audit [`docs/deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md`](./docs/deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md)  
 **Baseline date:** 2026-08-30  
 
 > Claims below are backed by command output or platform evidence from this Lead session unless marked `PENDING`.
@@ -14,9 +14,9 @@
 
 | Item | Value | Evidence |
 |------|--------|----------|
-| Prior tip | `17323fe2` | Merge PR #275 docs reconcile |
-| This package | `cursor/weekly-settlement-qa-2026-08-29` | SC-WEEKLY-SETTLEMENT-E2E |
-| Working tree note | Unrelated WIP left untouched: `tools/testing/lib/sc-pw-e2e-lib.mjs`, `tools/season_simulation/` | `git status` |
+| Prior tip | `b312af92` | `origin/master` at paste-audit branch start |
+| This package | `docs/outstanding-production-paste-audit` | Operator packets + truth reconcile |
+| Working tree note | Unrelated WIP left untouched in other worktrees | `git status` |
 
 Re-verify:
 
@@ -67,7 +67,8 @@ Re-check with `gh pr list`. Prior drafts (#266 etc.) remain product WIP — do n
 | 020 v3.8 / 065 v10.4 (FUT-001) | Automations Code Live |
 | 022 v2.2 / 072 v4.8 / 073 v4.4 | Automations Code Live |
 | 058 1.5 / 059 v3.7 | Automations Code Live + Perfect Week award |
-| 057 v2.2 + PW video minimum Config | 2026-08-27 |
+| 057 v2.2 + PW video minimum **Config schema** | 2026-08-27 (field rename + WAS formula) |
+| 057 Automations Code CONFIG string | **NOT YET** — still typo `MInimum`; paste pending MRW-C05c |
 | Legacy welcome Enrollment fields 6/6 | 2026-08-29 |
 | Perfect Week award WAS `recl3DmBh22ADPWWe` | Unlock `recJ5umer4J4FHTOz`; XP `reczehlzkA8fjiQh0`; Awarded; 100 XP |
 | SEO indexing cutover | 2026-08-25 |
@@ -77,11 +78,12 @@ Re-check with `gh pr list`. Prior drafts (#266 etc.) remain product WIP — do n
 
 ## Production changes still awaiting Mike
 
-1. **FUT-010** live attachment clear (dry-run first)  
-2. **Weeks 2026–27** import (protected)  
-3. **RCC** views / Interface install  
-4. **FUT-003** Make ON when registration opens  
-5. Optional WSTEST Week archive cleanup after settlement QA  
+1. **057 v2.2 typo-field repaste** (P0) — [`057-v2.2-perfect-week-video-minimum-paste.md`](docs/deploy-checklists/057-v2.2-perfect-week-video-minimum-paste.md)  
+2. **FUT-010** live attachment clear (dry-run complete; attestation + AWS creds)  
+3. **Weeks 2026–27** import (protected)  
+4. **RCC** views / Interface install  
+5. **FUT-003** Make ON when registration opens  
+6. Optional WSTEST Week archive cleanup after settlement QA  
 
 ---
 
@@ -92,14 +94,23 @@ Re-check with `gh pr list`. Prior drafts (#266 etc.) remain product WIP — do n
 3. Local `sc-pw-e2e-lib.mjs` / `tools/season_simulation/` WIP must stay uncommitted until intentional.  
 4. Weeks table protected — PAT often cannot DELETE Weeks (archive instead).  
 5. Coach Summary Queue / Grade Submitted wording is documentation drift (DEF-WS-001…003).  
-6. App not “fully complete” while Weeks / FUT-010 / product decisions remain.
+6. App not “fully complete” while Weeks / FUT-010 / 057 paste / product decisions remain.
+7. **057** Automations Code still references renamed Config field typo — fail-closed risk on video minimum until paste.
 
 ---
 
 ## Exact recommended next task
 
-**Mike (P0 remaining):** FUT-010 supervised dry-run → apply per operator queue. Then Weeks import when calendar ready.
+**Mike (P0):** Paste **057** from [`docs/deploy-checklists/057-v2.2-PASTE.txt`](docs/deploy-checklists/057-v2.2-PASTE.txt) per operator packet. Then FUT-010 supervised apply. Then Weeks import when calendar ready.
 
 **Do not:** re-paste 010/020/022/058/059/065/072/073; re-`--apply` Perfect Week for WAS `recl3DmBh22ADPWWe`; restore 075; start SC-SEASON-SIM-001 yet.
 
-**Engineering:** Weekly settlement QA (MRW-F10) is complete. Best next pre-season-sim task is FUT-010 + Weeks readiness — not season simulation execute.
+**Engineering:** Docs-only paste audit complete; no Airtable paste from agents.
+
+---
+
+## Session update log
+
+| When | Change |
+|------|--------|
+| 2026-08-30 (paste audit) | Outstanding Production paste audit; operator packets; **057** only remaining priority paste; CURRENT-TRUTH §8 corrected |
