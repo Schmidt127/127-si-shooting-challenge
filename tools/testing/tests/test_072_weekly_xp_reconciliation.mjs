@@ -72,7 +72,7 @@ const settled = simulateXpCheck({
 assert.equal(settled.v42Error, null);
 assert.equal(settled.v43Error, null);
 
-assert.match(s072, /Version: v4\.7/);
+assert.match(s072, /Version: v4\.8/);
 assert.match(s072, /orphanXp/);
 assert.match(s072, /shootingDayKeys\.size/);
 

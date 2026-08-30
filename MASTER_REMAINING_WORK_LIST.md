@@ -358,6 +358,28 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-H08 | C-027 major-event notifications | FUTURE | |
 | MRW-H09 | Early-bird registration config (SC-066) | FUTURE | Decision: use early-bird; dates TBD |
 | MRW-H10 | Recorded Zoom half-XP writer (SC-147) | FUTURE | Design brief only; do not overload 117 |
+| MRW-H11 | SC-SEASON-SIM-001 60-day five-enrollment season simulation | **FUTURE** | Planned only — do not implement yet. Extend SC-PW-E2E later; FUT-010 unchanged. |
+
+---
+
+## F+. Weekly settlement QA (pre–season simulation)
+
+### MRW-F10 — Weekly settlement matrix harness (SC-WEEKLY-SETTLEMENT-E2E)
+
+| Field | Value |
+|-------|--------|
+| **ID** | MRW-F10 |
+| **Short title** | Weekly settlement workflow QA harness |
+| **Description** | Repeatable disposable matrix for WAS create/link, weekly calculations, Perfect Week fail-closed + cite award, level/threshold Source Key contracts, and 072/074/079 prep-only handoff compatibility. Ten weekly conditions (WS-01…WS-10). |
+| **Current status** | **COMPLETE** (harness + live evidence 2026-08-30) |
+| **Source document(s)** | [`docs/testing/weekly-settlement/SC-WEEKLY-SETTLEMENT-E2E.md`](docs/testing/weekly-settlement/SC-WEEKLY-SETTLEMENT-E2E.md); [`DEFECT-REPORT.md`](docs/testing/weekly-settlement/DEFECT-REPORT.md); [`RESULTS.md`](docs/testing/weekly-settlement/RESULTS.md) |
+| **Repository location(s)** | `tools/testing/sc-weekly-settlement.mjs`; `tools/testing/lib/sc-weekly-settlement-lib.mjs`; contract tests |
+| **Autonomous?** | Yes for dry-run/contracts; live `--apply` uses disposable data only; no email |
+| **Required manual action** | Optional cleanup of archived WSTEST Weeks; disposition DEF-WS-001…003 wording in future operator docs |
+| **Verification required** | Met — see RESULTS.md |
+| **Recommended priority** | — |
+| **Definition of done** | Met 2026-08-30 |
+| **Notes** | Do not re-apply SC-PW-E2E for WAS `recl3DmBh22ADPWWe`. Season simulation still FUTURE (MRW-H11). |
 
 ---
 
@@ -385,7 +407,8 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 1. **Do not** re-paste 010/020/022/058/059/065/072/073 and **do not** re-run Perfect Week `--apply` for WAS `recl3DmBh22ADPWWe`.  
 2. **Highest-value remaining live action:** FUT-010 dry-run then supervised attachment clear per [`docs/deploy-checklists/FUT-010-intake-attachment-cleanup.md`](docs/deploy-checklists/FUT-010-intake-attachment-cleanup.md) + [`2026-08-29-PRODUCTION-OPERATOR-QUEUE.md`](docs/deploy-checklists/2026-08-29-PRODUCTION-OPERATOR-QUEUE.md).  
 3. **Calendar:** Weeks 2026–27 import (MRW-A05) when ready — Weeks are protected.  
-4. **Do not** activate FUT-003 until registration intentionally opens.
+4. **Do not** activate FUT-003 until registration intentionally opens.  
+5. **Do not** start SC-SEASON-SIM-001 yet — weekly settlement QA (MRW-F10) is complete; next best engineering task is FUT-010 then Weeks import.
 
 ---
 
@@ -396,7 +419,9 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 - **FUT-WELCOME-LEGACY** (MRW-B07) → **COMPLETE** 2026-08-29 — six Enrollment fields deleted; 075 absent; do not restore.  
 - **SC-PW-E2E / MRW-A01** → **COMPLETE** — MCP award evidence for WAS `recl3DmBh22ADPWWe`.  
 - **Paste debt C01–C05 + 058/059** → **COMPLETE** (Automations Code Live 2026-08-29).  
+- **SC-SEASON-SIM-001 / MRW-H11** → **FUTURE / Planned only** (2026-08-29) — not active; not SC-005; not SC-PW-E2E reopen; **FUT-010 unchanged**.  
+- **SC-WEEKLY-SETTLEMENT-E2E / MRW-F10** → **COMPLETE** (2026-08-30) — harness + live WS-01…WS-10 evidence; defect report filed.  
 - SC-027/066 shot milestones live-tested → monitoring only.  
 - Historical overnight MIKE-ACTIONS rows superseded by CURRENT-TRUTH / Section G where dated later.  
 - Legacy C-/SC- inventory in Future Work Sections A–F remains evidence; **this file + operator queue + Future Work Section G** are the operator queues.  
-- Local uncommitted `tools/testing/lib/sc-pw-e2e-lib.mjs` → unrelated WIP; do not modify/commit in this closeout.
+- Local uncommitted `tools/testing/lib/sc-pw-e2e-lib.mjs` and `tools/season_simulation/` → unrelated WIP; do not modify/commit in this closeout.
