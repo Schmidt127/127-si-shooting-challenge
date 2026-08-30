@@ -310,7 +310,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-E01 | Confirm Vercel Production tracks master after merges | NEEDS VERIFICATION | Auto-deploy on master; verify `/shoot` + `/shoot/api/airtable` |
 | MRW-E02 | SC-149 branding URL env + smoke | READY FOR MIKE | Deploy checklist [`SC-149-fairfield-branding-url-verification.md`](docs/deploy-checklists/SC-149-fairfield-branding-url-verification.md); Vercel env attestation + prod smoke |
 | MRW-E03 | SC-148 mobile/a11y polish deploy | IN PROGRESS | Repo built; merge + smoke |
-| MRW-E04 | Production smoke suite after web merges | NEEDS VERIFICATION | `npm run test:smoke:prod` (50/50 last known 2026-08-26) |
+| MRW-E04 | Production smoke suite after web merges | **COMPLETE** | Home hero assertion aligned to FUT-018 `HOME_HERO` copy; `npm run test:smoke:prod` **50/50** (2026-08-30) |
 
 ---
 
