@@ -3,7 +3,7 @@
 | Field | Value |
 |-------|--------|
 | Date | 2026-08-30 |
-| Status | **Ready for Mike review** — repo audit complete; Vercel Production env attestation required |
+| Status | **Repo attestation complete (2026-08-30)** — production render + smoke PASS; Mike Vercel env dashboard checkboxes still required |
 | Backlog | **SC-149**, **MRW-E02** |
 | Related | EXT-QA-011 (live `hooopchallenges.com` typo in Vercel env, 2026-07-25) |
 | Public route | `https://www.fairfieldbasketballclub.com/shoot` (`basePath` `/shoot`) |
@@ -18,6 +18,15 @@ Repo defaults and runtime normalization already target **Fairfield Basketball Cl
 - Vitest + Playwright + HTTP smoke guard against legacy/typo hosts in rendered HTML.
 
 **This checklist closes the ops gap:** confirm Vercel Production env values are correct so builds do not depend on runtime self-heal alone.
+
+**Repo-side attestation (2026-08-30):** Automated read-only proof against live production:
+
+```bash
+node tools/testing/sc-149-fairfield-attestation.mjs --write-evidence
+cd web && npm run test:smoke:prod && npm run test:smoke:http:prod
+```
+
+Evidence: [`docs/testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-08-30.json`](../testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-08-30.json) — Fairfield landing hrefs on home/leaderboard/homework/game-manual; zero `hoopchallenges` host strings; HTTP smoke **PASS**.
 
 ---
 

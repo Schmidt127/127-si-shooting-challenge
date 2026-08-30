@@ -1,0 +1,77 @@
+{
+  "harness": "MRW-E02",
+  "backlog": [
+    "SC-149",
+    "MRW-E02"
+  ],
+  "startedAt": "2026-08-30T15:00:20.889Z",
+  "finishedAt": "2026-08-30T15:00:26.063Z",
+  "productionBase": "https://www.fairfieldbasketballclub.com/shoot",
+  "landingUrl": "https://www.fairfieldbasketballclub.com",
+  "pass": true,
+  "failureCount": 0,
+  "failures": [],
+  "checks": [
+    {
+      "route": "/",
+      "url": "https://www.fairfieldbasketballclub.com/shoot",
+      "status": 200,
+      "ok": true,
+      "landingLinkCount": 4,
+      "landingRootPresent": true,
+      "legacyHoopHost": false,
+      "duplicatedBasePath": false
+    },
+    {
+      "route": "/leaderboard",
+      "url": "https://www.fairfieldbasketballclub.com/shoot/leaderboard",
+      "status": 200,
+      "ok": true,
+      "landingLinkCount": 4,
+      "landingRootPresent": true,
+      "legacyHoopHost": false,
+      "duplicatedBasePath": false
+    },
+    {
+      "route": "/homework",
+      "url": "https://www.fairfieldbasketballclub.com/shoot/homework",
+      "status": 200,
+      "ok": true,
+      "landingLinkCount": 4,
+      "landingRootPresent": true,
+      "legacyHoopHost": false,
+      "duplicatedBasePath": false
+    },
+    {
+      "route": "/game-manual",
+      "url": "https://www.fairfieldbasketballclub.com/shoot/game-manual",
+      "status": 200,
+      "ok": true,
+      "landingLinkCount": 4,
+      "landingRootPresent": true,
+      "legacyHoopHost": false,
+      "duplicatedBasePath": false
+    },
+    {
+      "name": "fillout-url",
+      "url": "https://forms.fairfieldbasketballclub.com/shoot-playerregistration",
+      "present": true
+    },
+    {
+      "name": "fillout-url",
+      "url": "https://forms.fairfieldbasketballclub.com/shoot-dailysubmissions",
+      "present": true
+    }
+  ],
+  "httpSmoke": {
+    "exitCode": 0,
+    "ok": true,
+    "failureCount": 0
+  },
+  "mikeStillRequired": [
+    "Vercel Production NEXT_PUBLIC_LANDING_URL explicit attestation",
+    "Vercel Production NEXT_PUBLIC_SITE_URL explicit attestation",
+    "Vercel Production NEXT_PUBLIC_BASE_PATH attestation"
+  ],
+  "checklist": "docs/deploy-checklists/SC-149-fairfield-branding-url-verification.md"
+}
