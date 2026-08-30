@@ -86,11 +86,12 @@ Re-check with `gh pr list`. Prior drafts (#266 etc.) remain product WIP — do n
 ## Production changes still awaiting Mike
 
 1. **057 v2.2 typo-field repaste** (P0) — [`057-v2.2-perfect-week-video-minimum-paste.md`](docs/deploy-checklists/057-v2.2-perfect-week-video-minimum-paste.md)  
-2. **FUT-010** live attachment clear (dry-run complete; attestation + AWS creds)  
-3. **Weeks 2026–27** import (protected)  
-4. **RCC** views / Interface install  
-5. **FUT-003** Make ON when registration opens  
-6. Optional WSTEST Week archive cleanup after settlement QA  
+2. **FUT-002 UI field deletes** — trash all `ZZZ DELETE — *` fields (5): HC `fldHchlovIaPlGKLk`, Levels `fldTzIGODB2e03rvE`, Streak Occurrences `fldltgFPGVXHwRj4X` + `fldBFDl629arXFcnp`, Achievements `fldkIzG5emvUBQ0Tw`. Evidence: [`docs/audits/FUT-002-cleanup-session-2026-08-30.md`](docs/audits/FUT-002-cleanup-session-2026-08-30.md) · [`docs/audits/field-inventory/`](docs/audits/field-inventory/)  
+3. **FUT-010** live attachment clear (dry-run complete; attestation + AWS creds)  
+4. **Weeks 2026–27** import (protected)  
+5. **RCC** views / Interface install  
+6. **FUT-003** Make ON when registration opens  
+7. Optional WSTEST Week archive cleanup after settlement QA  
 
 ---
 

@@ -25,10 +25,16 @@ def test_parse_schema_has_hub_tables():
     assert len(index) >= 1000
 
 
-def test_asset_key_depends_on_drive_file_id():
+def test_asset_key_retargeted_off_drive_file_id():
+    """Live Asset Key no longer depends on deleted Google Drive File ID."""
     _, index = parse_schema_doc(DEFAULT_SNAPSHOT)
-    asset_key = index["Submission Assets::Asset Key"]
-    assert "Google Drive File ID" in asset_key.depends_on
+    # Snapshot may still show historical Drive dependency; live base was retargeted
+    # 2026-08-30 to ARRAYJOIN({Submission - Linked}) & "|" & RECORD_ID().
+    assert "Submission Assets::Asset Key" in index
+    # Guard: do not propose deleting Asset Key itself.
+    result = run(DEFAULT_SNAPSHOT, None)
+    blocked = {(b["table"], b["field"]) for b in result["doNotDelete"]}
+    assert ("Submission Assets", "Asset Key") in blocked
 
 
 def test_google_drive_file_url_classified_obsolete():
