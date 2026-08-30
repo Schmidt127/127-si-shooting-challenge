@@ -15,8 +15,9 @@
 | Item | Value | Evidence |
 |------|--------|----------|
 | Production tip (deployed) | `082edc7d` | Merge PR **#298** public copy |
-| `origin/master` tip | Re-verify `git rev-parse origin/master` | Docs may be ahead on release-QA branch |
-| Working tree note | Unrelated WIP left untouched (`tools/season_simulation/`, `sc-pw-e2e-lib.mjs`, qualifying JSON) | `git status` |
+| `origin/master` tip | Re-verify `git rev-parse origin/master` | Includes release-QA merge when #299 lands |
+| This package (Agent 4) | SC-SEASON-SIM-002 sources + contract/docs drift closeout | Branch `docs/agent4-release-readiness-2026-08-30` |
+| Working tree note | Parallel agent WIP left untracked (`docs/testing/core-workflow/`, field-inventory PR #300) | `git status` |
 
 Re-verify:
 
@@ -53,6 +54,9 @@ git status -sb
 | Homework contracts (assignment-identity + 005/020/065) | **PASS** |
 | Weekly settlement contracts | **PASS** |
 | FUT-010 offline (node + python) | **PASS** 15 + 19 |
+| SC-SEASON-SIM-002 offline unittest | **PASS** (21) |
+| 057 live-schema field assert | **PASS** (repo); optional Meta when `ASSERT_057_LIVE=1` |
+| 057 runtime offline | **PASS** (included in Agent 4 suite) |
 | `/` + `/shoot` + `/shoot/faq` | **HTTP 200** |
 | `/shoot/api/airtable` | **200** `ok:true` `tokenValid:true` |
 
@@ -130,3 +134,22 @@ Submission XP: **one XP per Count It submission** (finalized). Perfect Week 057â
 4. Draft PR sprawl / local WIP must stay uncommitted until intentional.  
 5. Weeks table protected.  
 6. Season simulation still FUTURE until WSTEST cleanup recommended.
+
+---
+
+## Exact recommended next task
+
+**Mike (before season sim):** Archive overlapping WSTEST/PWTEST Weeks (OMNI). Optional inactive PHA archive.
+
+**Do not:** re-paste 010/020/022/057/058/059/065/072/073; restore 075; re-`--apply` Perfect Week for WAS `recl3DmBh22ADPWWe`; run full season-simulation execute yet.
+
+**Engineering:** SC-SEASON-SIM-002 is in `tools/season_simulation/` â€” read-only `preflight` / default `dry-run` only until WSTEST cleanup.
+
+---
+
+## Session update log
+
+| When | Change |
+|------|--------|
+| 2026-08-30 (Agent 4) | Landed SC-SEASON-SIM-002 sources; 057 live-schema + runtime contracts; paste audit superseded; automation-index drift; 043 absent; MASTER/RELEASE/CURRENT-TRUTH reconciled |
+| 2026-08-30 (release QA) | Weeks + 18-PHA + FUT-010 R3; 057 live-script verified |

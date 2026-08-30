@@ -40,7 +40,7 @@ Repository and Production closeout for the bounded SC-034 / V2-002 pass:
 | Item | Status | Evidence |
 |---|---|---|
 | **V2-002 / SC-034** repository implementation | **COMPLETE** | `audits/2026-08-27-SC-034-config-hardcode-audit.md`; `lib/config-selection/`; 57-script scan; contract tests |
-| **Automation 057 v2.2** | **IN PROGRESS — repaste** | Config schema renamed; Automations Code still has typo `MInimum` — [`057-v2.2-perfect-week-video-minimum-paste.md`](./deploy-checklists/057-v2.2-perfect-week-video-minimum-paste.md) |
+| **Automation 057 v2.2** | **COMPLETE (live script)** | Config schema renamed; live script uses `Perfect Week Video Minimum`; Automations Code tracker may lag — do not repaste |
 | **Config-driven Perfect Week video minimum** | **COMPLETE** | Config field **`Perfect Week Video Minimum`** = 3; `lib/config-selection/perfect-week-video-minimum.js` |
 | **WAS Config lookup + formula** | **COMPLETE** | Lookup **`Config: Perfect Week Video Minimum`**; formula **`Perfect Week Video Requirement Met?`** live PROD |
 | **Automation 059 trigger correction** | **COMPLETE** | Mike removed `Shot Milestone is not empty` filter; Pending-only created trigger — [`059-perfect-week-trigger-coverage.md`](./deploy-checklists/059-perfect-week-trigger-coverage.md) |
@@ -937,7 +937,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **SC-034** | COMPLETE | V2-002 repo + prod pass 2026-08-27; hardcode audit JSON; contract tests pass; 057 v2.2 live |
 | **SC-034-PW-MIN** | COMPLETE | `lib/config-selection/perfect-week-video-minimum.js`; Config **Perfect Week Video Minimum** = 3 |
 | **SC-034-WAS** | COMPLETE | WAS lookup + formula live PROD 2026-08-27; `airtable/formulas/README.md` |
-| **SC-034-057** | **IN PROGRESS** | Repo + Config schema COMPLETE; Automations Code CONFIG typo remaining — [`057-v2.2-perfect-week-video-minimum-paste.md`](./deploy-checklists/057-v2.2-perfect-week-video-minimum-paste.md) |
+| **SC-034-057** | **COMPLETE** | Live script CONFIG `Perfect Week Video Minimum` (MCP get_automation 2026-08-30); optional Automations Code tracker refresh only — do not repaste |
 | **SC-034-059-TRIG** | COMPLETE | Mike 2026-08-27; Pending-only created trigger; `deploy-checklists/059-perfect-week-trigger-coverage.md` |
 | **SC-034-058-059** | COMPLETE | Not required — `docs/testing/perfect-week/PERFECT-WEEK-DEPENDENCY-AUDIT.md` |
 | **SC-PW-E2E** | **COMPLETE** | MCP award for WAS `recl3DmBh22ADPWWe`: unlock `recJ5umer4J4FHTOz` Awarded + XP `reczehlzkA8fjiQh0` 100 pts. Evidence `docs/testing/evidence/sc-pw-e2e/award-was-recl3DmBh22ADPWWe-2026-08-29-mcp.json`. Do not re-`--apply`. |
@@ -965,9 +965,9 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 
 | ID | Title | Status | Evidence |
 |---|---|---|---|
-| **WIP-XP-ACT** | Athlete XP Activity ledger (web + API) | IN PROGRESS | Uncommitted `web/lib/data/xp-activity*` + components; not prod deployed |
+| **WIP-XP-ACT** | Athlete XP Activity ledger (web + API) | **RESOLVED — abandoned** | PR #240 abandoned; FUT-012 COMPLETE on master |
 | **WIP-HW-CONTRACTS** | Homework assignment-identity (FUT-001) | **COMPLETE** | Merged + Production 020/065 Live |
-| **WIP-057-TESTS** | 057 runtime + hardcode contract tests | IN PROGRESS | Uncommitted `test_057_runtime.mjs` + `tests/automation-contracts/` |
+| **WIP-057-TESTS** | 057 runtime + hardcode + live-schema field assert | **COMPLETE** | `test_057_runtime.mjs` + `057-perfect-week-video-minimum` + `057-live-schema-field-assert` in Agent 4 suite |
 
 ### 2026-08-29 future testing (not active)
 
@@ -976,6 +976,6 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **SC-ATHLETE-WF-001** | **COMPLETE (harness)** | Individual athlete workflow QA (pre–season-sim). Plan `docs/testing/athlete-workflow/SC-ATHLETE-WF.md`; harness `tools/testing/sc-athlete-wf.mjs`; evidence `docs/testing/evidence/sc-athlete-wf/apply-session-final-2026-08-30.json`. MRW-F09. Open product: SC-005 B3 (MRW-I13). |
 | **SC-WEEKLY-SETTLEMENT-E2E** | **COMPLETE** | Weekly settlement matrix (WAS / calc / PW fail-closed / handoff prep). Docs `docs/testing/weekly-settlement/`; harness `tools/testing/sc-weekly-settlement.mjs`; RESULTS + DEFECT-REPORT 2026-08-30. MRW-F10. |
 | **SC-SEASON-SIM-001** | **Planned / Future** | 60-day five-enrollment season simulation — narrative entry above § D / FUT-026; MRW-H11. Do **not** implement yet. FUT-010 unchanged. Reuse SC-PW-E2E later where appropriate. |
-| **SC-SEASON-SIM-002** | **Infrastructure ready** | Athlete 1 May–June 2027 (61-day) package — `tools/season_simulation/`. Offline tests + read-only preflight/dry-run OK; execute/cleanup not run. Distinct from SC-SEASON-SIM-001. Do **not** expand until product B3 dispositioned if season path depends on counted-day XP rules. |
+| **SC-SEASON-SIM-002** | **Infrastructure ready (repo)** | Athlete 1 May–June 2027 package landed under `tools/season_simulation/` (2026-08-30). Offline unittest green; read-only preflight/dry-run OK; execute/cleanup gated — **not run**. Distinct from SC-SEASON-SIM-001. |
 
 ---

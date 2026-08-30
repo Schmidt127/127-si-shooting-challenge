@@ -283,7 +283,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-C06 | SC-151 Submitted Same Day? formula | READY TO IMPLEMENT | Future Work SC-151 | OMNI formula change | P2 |
 | MRW-C07 | RCC views / Interface install | READY FOR PRODUCTION APPLY | `RELIABILITY-COMMAND-CENTER-PRODUCTION-INSTALL.md` | OMNI views | P1 |
 | MRW-C08 | Automation UI version inventory (SC-058) | NEEDS VERIFICATION | AUTOMATION_VERSION_INVENTORY | Mike UI attestation vs MCP | P1 |
-| MRW-C09 | Retire/disposition Automation 043 (SC-059) | IN PROGRESS | Future Work SC-059 | Confirm 043 not deployed | P1 |
+| MRW-C09 | Retire/disposition Automation 043 (SC-059) | **COMPLETE** | Live automations list MCP 2026-08-30: **043 absent** | None — do not restore | — |
 | MRW-C10 | FUT-010 live attachment clear | **DRY-RUN COMPLETE (R3 2026-08-30)** — **0 eligible** (homework scope 0); **no deletion request** | [`FUT-010-DRY-RUN-2026-08-30-R3.md`](docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md) | Optional Mike sign-off + AWS creds when eligible rows appear | P2 |
 
 **Already applied (do not re-queue):** 059 Pending-only trigger; 010 v10.12; 020 v3.8; 022 v2.2; **057 v2.2 correct field (live)**; 058 1.5; 059 v3.7; 065 v10.4; 066 v3.9; 072 v4.8; 073 v4.4; SEO indexing env; FUT-WELCOME-LEGACY field delete; PR **#298** public copy.  
@@ -323,7 +323,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-F01 | SC-PW-E2E live apply | **COMPLETE** | WAS `recl3DmBh22ADPWWe` MCP award evidence |
 | MRW-F02 | SC-016 live re-submit after FUT-001 paste | NEEDS VERIFICATION | |
 | MRW-F03 | Broader SC-005 season matrix | IN PROGRESS | Many paths green; PW + email inject open |
-| MRW-F09 | SC-ATHLETE-WF-001 individual athlete workflow QA | **COMPLETE (harness)** | Harness + offline contracts + dry-run + disposable apply evidence 2026-08-30. Submission XP + WAS verified. Open product: SC-005 B3 (MRW-I13). 065 Satisfactory-alone = expected skip. PAT XP DELETE best-effort/MCP. Plan: docs/testing/athlete-workflow/SC-ATHLETE-WF.md. |
+| MRW-F09 | SC-ATHLETE-WF-001 individual athlete workflow QA | **COMPLETE (harness)** | Harness + offline contracts + dry-run + disposable apply evidence 2026-08-30. Submission XP + WAS verified. SC-005 B3 **DECIDED** (MRW-I13: one XP per Count It). 065 Satisfactory-alone = expected skip. Plan: docs/testing/athlete-workflow/SC-ATHLETE-WF.md. |
 | MRW-F04 | SC-010/011/012/015 homework path re-tests | IN PROGRESS | Installed; re-prove |
 | MRW-F05 | Video XP native trigger + 073 OFF attestation (SC-072) | NEEDS VERIFICATION | PKG-007 PASS; UI attest open |
 | MRW-F06 | Zoom live attendance re-test (SC-073/084) | NEEDS VERIFICATION | 101 v6.7 |
@@ -365,7 +365,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-H08 | C-027 major-event notifications | FUTURE | |
 | MRW-H09 | Early-bird registration config (SC-066) | FUTURE | Decision: use early-bird; dates TBD |
 | MRW-H10 | Recorded Zoom half-XP writer (SC-147) | **Repo prep shipped** | Draft + offline conflict matrix; Mike: slot + `ZOOM_RECORDING` rule row; do not overload 117 |
-| MRW-H11 | SC-SEASON-SIM-001 60-day five-enrollment season simulation | **FUTURE** | Planned only — no implementation yet. Program instance “Season Simulation Testing”; allowlist; no live email; stop on material failure; harness + automation modes; extend SC-PW-E2E. **FUT-010 separate/unchanged.** Deps: isolation, field/automation inventory, cleanup/archive decision, polling/timeout design. Canonical: Future Work List `SC-SEASON-SIM-001`. |
+| MRW-H11 | SC-SEASON-SIM-001 60-day five-enrollment season simulation | **FUTURE** | Planned only — no full simulation run. **SC-SEASON-SIM-002** preflight package now in repo (`tools/season_simulation/`). Archive WSTEST/PWTEST before any execute. |
 
 ## F+. Weekly settlement QA (pre–season simulation)
 
@@ -430,7 +430,9 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 - **SC-SEASON-SIM-001 / MRW-H11** → **FUTURE / Planned only** — not active; **FUT-010 unchanged**.  
 - **SC-WEEKLY-SETTLEMENT-E2E / MRW-F10** → **COMPLETE** (2026-08-30).  
 - **SC-ATHLETE-WF-001 / MRW-F09** → **COMPLETE (harness)**; B3 XP policy **DECIDED** (one XP per Count It).  
-- Local uncommitted `tools/testing/lib/sc-pw-e2e-lib.mjs` and `tools/season_simulation/` → unrelated WIP; do not modify/commit in this closeout.
+- **SC-SEASON-SIM-002** → **Infrastructure landed in repo** (`tools/season_simulation/`); offline tests green; execute/cleanup gated — do not run full season simulation yet.  
+- **Automation 043** → **absent** from live automations list (MRW-C09 COMPLETE).  
+- Local `tools/testing/lib/sc-pw-e2e-lib.mjs` WIP remains untouched.  
 - SC-027/066 shot milestones live-tested → monitoring only.  
 - Historical overnight MIKE-ACTIONS rows superseded by CURRENT-TRUTH / Section G where dated later.  
 - Legacy C-/SC- inventory in Future Work Sections A–F remains evidence; **this file + operator queue + Future Work Section G** are the operator queues.

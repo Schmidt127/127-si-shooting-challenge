@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-30 release QA — Weeks + 18-PHA homework + FUT-010 R3 dry-run (0 eligible); paste queue clear except optional 057 Automations Code tracker hygiene ([`RELEASE_BASELINE.md`](../RELEASE_BASELINE.md))  
+**Last verification (repo):** 2026-08-30 Agent 4 — SC-SEASON-SIM-002 sources landed; live 057 Meta field assert PASS (`fldqRxjWGXcbUZUg3`); paste queue clear; Automation **043** absent ([`RELEASE_BASELINE.md`](../RELEASE_BASELINE.md))  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -297,7 +297,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 
 ### Pending / needs live proof
 
-- **057 v2.2 typo-field repaste** — only remaining priority paste ([`057-v2.2-perfect-week-video-minimum-paste.md`](./deploy-checklists/057-v2.2-perfect-week-video-minimum-paste.md))
+- Optional Automations Code **tracker** text refresh for 057 (live script already correct — do not repaste)
 - Optional disposable fixture cleanup: `recdj8MD0szplMW5r`, `recxIzdVil9ewhBxN`, `recPg14iNRkxblMLs`
 - Optional weekly email template / copy refinements
 - Broader progression / standings certification packages
@@ -305,13 +305,14 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - Optional 066 OMNI sandbox confirm (K-H1)
 - Lambda Storage Key retry proof + secret rotation
 - RCC Airtable Interface install
-- Open PR **#276** (SC-ATHLETE-WF-001 QA harness, CI green). Draft PRs: **#262**, **#244**, **#238**, **#237**, **#234** — review before merge; superseded work may close without merge.
+- Open PRs: release-QA **#299**, field inventory **#300**, drafts **#262**/#244/#238/#237/#234 — review before merge; superseded work may close without merge
 - SC-109 Game Manual Adobe URL (EXT-QA-001) — Mike sets `NEXT_PUBLIC_GAME_MANUAL_URL` + redeploy
 - SC-149 / MRW-E02 Vercel Fairfield env dashboard attestation (repo attestation PASS; Mike checkbox confirmation pending)
 - FUT-025 athlete profile indexing cutover (Mike approval)
-- FUT-010 supervised attachment apply (dry-run complete; Mike attestation + AWS creds)
+- FUT-010 supervised attachment apply only if eligible rows appear (R3 dry-run **0 eligible**)
 - SC-147 Recorded Zoom half-XP — Mike: automation slot + `ZOOM_RECORDING` rule row before DEV paste
 - MRW-F07 live `--apply` on Mike disposable WAS (harness shipped; operator-only)
+- Archive WSTEST/PWTEST Weeks before season simulation execute
 
 ### Blocked
 
