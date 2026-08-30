@@ -347,8 +347,8 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-G07 | FUT-025 athlete profile indexability/consent verify | **COMPLETE** | Env-gated `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING`; deploy checklist 2026-08-30 |
 | MRW-G08 | Refresh CURRENT-TRUTH open PR list | **COMPLETE** | Reconciled 2026-08-30 — SHA `9f4a64b6`, PRs #279–#293 merged; open #276 + drafts #262/#244/#238/#237/#234 |
 | MRW-G09 | Phase 4 safe public copy (CR-01–CR-11) | **COMPLETE** | PR **#298** merge `082edc7d`; Production `dpl_2uQ1wPJferY189xkCFkg4D67JcFR`; [copy review](docs/copy-reviews/2026-08-30-phase4-public-pages.md) |
-| MRW-G10 | Phase 4 copy items needing Mike approval | **PARTIAL** | **CR-12 COMPLETE** (authorized default — Dashboard/Display removed from public chrome, routes kept). Still deferred: CR-13 extra parents block; CR-17 grades-band nuance; CR-18 coach SLA |
-| MRW-G11 | Public website chrome cleanup (Dashboard/Display) | **IN PROGRESS** | Branch `web/public-ux-cleanup-2026-08-30` commit `792eae68`; audit [`web/docs/public-route-audit-2026-08-30.md`](web/docs/public-route-audit-2026-08-30.md); FAQ Early Bird + privacy; FAQ primary nav |
+| MRW-G10 | Phase 4 copy items needing Mike approval | **PARTIAL** | **CR-12 COMPLETE** via PR **#301**. Still deferred: CR-13 extra parents block; CR-17 grades-band nuance; CR-18 coach SLA |
+| MRW-G11 | Public website chrome cleanup (Dashboard/Display) | **COMPLETE** | PR **#301** merge `f3be964f`; Vitest **487/487**; prod smoke **50/50** + HTTP smoke PASS; audit [`web/docs/public-route-audit-2026-08-30.md`](web/docs/public-route-audit-2026-08-30.md) |
 
 ---
 

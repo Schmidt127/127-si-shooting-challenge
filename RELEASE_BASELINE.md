@@ -14,10 +14,10 @@
 
 | Item | Value | Evidence |
 |------|--------|----------|
-| Prior tip | `69d77134` | `origin/master` before Phase 4 copy PR #298 |
-| This package | Phase 4 safe public copy + ship closeout | PR **#298** → merge `082edc7d` |
-| Production tip | `082edc7d173ff3f7ded3df4a2e513532229690b3` | Merged + Vercel Production Ready |
-| Working tree note | Unrelated WIP left untouched (`tools/season_simulation/`, local PW evidence) | `git status` |
+| Prior tip | `40175d76` | `origin/master` before public UX chrome cleanup |
+| This package | Hide demo Dashboard + gym Display from public chrome | PR **#301** → merge `f3be964f` |
+| Production tip | `f3be964fce62ad554c4e188b3d4772177b5d9cfb` | Merged + Vercel Production Ready |
+| Working tree note | Unrelated WIP may remain in other worktrees/agents | `git status` |
 
 Re-verify:
 
@@ -51,14 +51,16 @@ Re-check with `gh pr list`. Prior drafts (#266 etc.) remain product WIP — do n
 | Suite | Result |
 |-------|--------|
 | Legacy welcome + automation contracts | **PASS** (PR #274 closeout) |
-| Web Vitest | **483/483 PASS** (PR #298 branch + master) |
-| Web typecheck / lint / build | **PASS** (PR #298) |
-| Vercel Production for `082edc7d` | **Ready** — deployment `dpl_2uQ1wPJferY189xkCFkg4D67JcFR` |
+| Web Vitest | **487/487 PASS** (PR #301) |
+| Web typecheck / lint / build | **PASS** (PR #301) |
+| Vercel Production for `f3be964f` | **Ready** — deployment `DvGMmEx3FM2hmamguaRDYimhAyfy` |
 | `/shoot` | **HTTP 200** |
 | Landing `fairfieldbasketballclub.com` | **HTTP 200** |
 | `/shoot/api/airtable` | **200** `ok:true` `tokenValid:true` |
 | HTTP prod smoke | **PASS** `npm run test:smoke:http:prod` |
+| Playwright prod smoke | **50/50 PASS** `npm run test:smoke:prod` |
 | Phase 4 safe copy (CR-01–CR-11) | **SHIPPED** — [copy review](docs/copy-reviews/2026-08-30-phase4-public-pages.md) |
+| Public chrome cleanup (CR-12) | **SHIPPED** — Dashboard/Display hidden from nav/hub; FAQ Early Bird + privacy; [route audit](web/docs/public-route-audit-2026-08-30.md) |
 | SC-PW-E2E award (WAS `recl3DmBh22ADPWWe`) | **PASS** — MCP evidence JSON |
 | SC-ATHLETE-WF-001 offline contracts | **PASS** (2026-08-30) |
 | SC-ATHLETE-WF-001 dry-run + readonly | **PASS** |
@@ -124,5 +126,6 @@ Re-check with `gh pr list`. Prior drafts (#266 etc.) remain product WIP — do n
 
 | When | Change |
 |------|--------|
-| 2026-08-30 (Phase 4 copy) | PR **#298** merge `082edc7d`; Production Ready `dpl_2uQ1wPJferY189xkCFkg4D67JcFR`; restored documented public URL envs after bad `BASE_PATH`; deferred CR-12/13/17/18 + further FUT-016/017 redesign |
+| 2026-08-30 (Phase 4 copy) | PR **#298** merge `082edc7d`; Production Ready `dpl_2uQ1wPJferY189xkCFkg4D67JcFR`; restored documented public URL envs after bad `BASE_PATH`; deferred CR-13/17/18 |
+| 2026-08-30 (public UX chrome) | PR **#301** merge `f3be964f`; hide Dashboard/Display from public chrome; FAQ timing/privacy; prod smoke **50/50**; CR-12 closed |
 | 2026-08-30 (paste audit) | Outstanding Production paste audit; operator packets; **057** only remaining priority paste; CURRENT-TRUTH §8 corrected |
