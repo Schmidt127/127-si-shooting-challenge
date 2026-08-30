@@ -123,7 +123,7 @@ export function ZoomMeetingsCatalogView({ data }: { data: ZoomMeetingCatalogData
           Zoom <span className="text-accent-soft">meetings</span>
         </>
       }
-      description="Challenge check-ins, film sessions, and coach Q&A — schedules and recordings from the season."
+      description="Challenge check-ins, film sessions, and coach Q&A — schedules and recordings from the season. Live links open when meetings are scheduled; recordings stay available when published."
       heroVariant="light"
       ambientVariant="zoom"
       meta={
@@ -319,7 +319,7 @@ export function ZoomMeetingsEmptyState() {
           Zoom <span className="text-accent-soft">meetings</span>
         </>
       }
-      description="Challenge check-ins, film sessions, and coach Q&A — schedules and recordings from the season."
+      description="Challenge check-ins, film sessions, and coach Q&A — schedules and recordings from the season. Live links open when meetings are scheduled; recordings stay available when published."
       heroVariant="light"
       ambientVariant="zoom"
     >
@@ -346,7 +346,7 @@ export function ZoomMeetingsErrorState({ message }: { message: string }) {
           Zoom <span className="text-accent-soft">meetings</span>
         </>
       }
-      description="Challenge check-ins, film sessions, and coach Q&A — schedules and recordings from the season."
+      description="Challenge check-ins, film sessions, and coach Q&A — schedules and recordings from the season. Live links open when meetings are scheduled; recordings stay available when published."
       heroVariant="light"
       ambientVariant="zoom"
     >

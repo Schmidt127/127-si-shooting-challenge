@@ -72,6 +72,8 @@ describe("privacy-safe fields", () => {
     /parent/i,
     /birth/i,
     /guardian/i,
+    /stripe/i,
+    /payment/i,
   ];
 
   it("leaderboard requests only presentation-safe fields", () => {

@@ -185,3 +185,30 @@ test.describe("privacy", () => {
     await expect(page.getByText(/writes enabled: no/i)).toBeVisible();
   });
 });
+
+test.describe("footer consistency", () => {
+  test.use({ viewport: VIEWPORTS.desktop });
+
+  const FOOTER_SAMPLE_PAGES = [
+    "leaderboard",
+    "homework",
+    "tutorials",
+    "zoom-meetings",
+    "levels",
+    "faq",
+  ] as const;
+
+  for (const route of FOOTER_SAMPLE_PAGES) {
+    test(`${route} renders shared footer registration and consent copy`, async ({ page }) => {
+      await page.goto(route, { waitUntil: "domcontentloaded" });
+      await expect(page.getByRole("contentinfo")).toBeVisible();
+      await expect(
+        page.getByRole("navigation", { name: /Shooting Challenge registration links/i }),
+      ).toBeVisible();
+      await expect(page.getByText(/never published on this site/i)).toBeVisible();
+      await expect(
+        page.getByRole("link", { name: "Fairfield Basketball Club home", exact: true }),
+      ).toHaveAttribute("href", "https://www.fairfieldbasketballclub.com");
+    });
+  }
+});
