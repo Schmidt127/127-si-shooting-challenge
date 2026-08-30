@@ -10,7 +10,7 @@ This is the **detailed completion matrix and historical traceability record** fo
 | Field | Value |
 |-------|--------|
 | **Purpose** | Completion matrix, package traceability, and preserved historical evidence |
-| **Last updated** | **2026-08-30** (release closeout: #301–#305; SC-SEASON-SIM-002; FUT-002 quarantine; MRW-F11/I13; 057 no-repaste) |
+| **Last updated** | **2026-08-30** (baseline closeout: #301–#306; multi-asset 020 PASS; FUT-002 quarantine deletes; 065 dynamic remap; MRW-F11/I13) |
 | **Production branch** | `master` |
 | **Vercel root** | `web/` |
 | **Production website** | https://www.fairfieldbasketballclub.com/shoot |

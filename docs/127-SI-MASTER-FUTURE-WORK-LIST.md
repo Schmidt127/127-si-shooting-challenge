@@ -107,7 +107,7 @@ The system must preserve checks for assignment identity, enrollment, challenge/s
 ### FUT-002 — Audit and remove unused Airtable fields
 
 **Priority:** P2  
-**Status:** **Cleanup in progress (2026-08-30)** — live inventory refreshed; invalid Review Summary quarantined; Asset Key retargeted; 5 fields awaiting Mike UI delete (Meta API cannot DELETE fields)  
+**Status:** **Cleanup in progress (2026-08-30)** — live inventory refreshed; invalid Review Summary quarantined; Asset Key retargeted; **5 `ZZZ DELETE — *` fields deleted in Airtable UI**; broader purge continues  
 **Systems:** Airtable schema, automations, email payloads, website/data contracts
 
 Inventory every Airtable table and identify fields that are unused, obsolete, duplicated, or no longer part of the current app. This includes legacy Google Drive URL, Google Drive ID, Google Drive folder ID, and similarly named fields. Check formulas, automations, scripts, emails, views, interfaces, website/data contracts, and documentation before deleting anything.
@@ -120,7 +120,7 @@ After confirming no active dependency remains, delete the obsolete fields and up
 
 **Audit deliverables (2026-08-30):** [`docs/audits/FUT-002-unused-field-inventory-2026-08-30.md`](./audits/FUT-002-unused-field-inventory-2026-08-30.md) · [`docs/audits/fut-002-unused-field-inventory.json`](./audits/fut-002-unused-field-inventory.json) · tool `tools/airtable/fut_002_field_inventory.py`. Offline snapshot: **1347 fields**.
 
-**Live cleanup (2026-08-30):** [`docs/audits/field-inventory/`](./audits/field-inventory/) · [`docs/audits/FUT-002-cleanup-session-2026-08-30.md`](./audits/FUT-002-cleanup-session-2026-08-30.md) · tool `tools/airtable/_fut002_live_pass.py`. Live: **1355 fields / 33 tables**. HC Drive batch (`fldFZLzDjiEbENCGl`, `fld71v6s6wYaJ2Umk`, `fldgGoh56Ck4fTQIE`) confirmed absent. `fldHchlovIaPlGKLk` quarantined (`BLANK()`). Submission Assets Asset Key retargeted to `RECORD_ID()` (valid). **Mike UI:** delete all `ZZZ DELETE — *` fields (5).
+**Live cleanup (2026-08-30):** [`docs/audits/field-inventory/`](./audits/field-inventory/) · [`docs/audits/FUT-002-cleanup-session-2026-08-30.md`](./audits/FUT-002-cleanup-session-2026-08-30.md) · tool `tools/airtable/_fut002_live_pass.py`. Live: **~1350 fields / 33 tables** (post quarantine delete). HC Drive batch (`fldFZLzDjiEbENCGl`, `fld71v6s6wYaJ2Umk`, `fldgGoh56Ck4fTQIE`) confirmed absent. `fldHchlovIaPlGKLk` quarantined then deleted. Submission Assets Asset Key retargeted to `RECORD_ID()` (valid). **PR #300** field inventory audit superseded by **#303** — read-only evidence preserved on branch `audit/live-field-inventory-2026-08-30`.
 
 ### FUT-003 — Stripe payment writeback to Airtable
 
@@ -802,7 +802,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-011** | Homework | Video submissions as homework/learning assets | P0 | Installed in PROD | SC-133 | Re-test video as homework vs daily video rules; confirm purpose routing |
 | **SC-013** | Homework | Online quizzes create a reviewable completion | P0 | Live Tested in PROD | SC-014 | Optional: expand to non-Schmidt enrollment; keep 071 path smoke if needed |
 | **SC-014** | Homework | Final Reflection quiz completion path (PDF vs attachment-less) | P0 | Monitoring | SC-013 | No further path decision; do not reopen Option A / Quiz Result PDF |
-| **SC-016** | Homework | Exactly one Homework Completion per assignment per enrollment | P0 | **Live 020 PASS** (2026-08-30) | SC-066, SC-014 | Multi-asset + re-submit merge via 020; XP remap packet pending — do **not** re-paste 020/065 scripts |
+| **SC-016** | Homework | Exactly one Homework Completion per assignment per enrollment | P0 | **Live 020 PASS** (2026-08-30) | SC-066, SC-014 | Multi-asset + re-submit merge via 020; 065 XP desktop `--apply` **PENDING** — do **not** re-paste 020/065 scripts |
 | **SC-021** | Config | Config-over-code audit (no hardcoded season numbers in scripts) | P0 | Installed in PROD | SC-022 | Run 057 on CASE-01 WAS; CASE-01ΓÇª16 + verifier; migrate remaining hardcode consumers |
 | **SC-022** | Config | XP Reward Rules audit and cleanup | P0 | Installed in PROD | SC-021, SC-023 | Resolve Video XP 1-vs-25; decide Zoom Recording / Manual Bonus rule records; supervised streak proof still open |
 | **SC-023** | Config | Grade Bands as linked source of truth | P0 | Monitoring | SC-021 | Archive inactive legacy bands when ready; keep Min/Max match (no hard-coded band ID) |
@@ -839,7 +839,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-002** | Testing | Test scenario library / templates for repeatable suites | P1 | Installed in PROD | SC-001 | Install/execute SCN-021ΓÇô043 on Schmidt; expand matrix; optional Airtable fields/UI only if approved |
 | **SC-008** | Testing | Email, Make, upload, and failure-path testing | P1 | Monitoring | SC-131+, SC-051+, SC-150 | Optional Mike-authorized live 074 invalid-webhook inject (SCN-029) ΓÇö offline+SOP already cover keep-Send-to-Make? |
 | **SC-012** | Homework | Written / reflection responses work | P1 | Installed in PROD | SC-019 | Re-test written-only HC; coach review + 071 |
-| **SC-015** | Homework | Multiple files per homework response | P1 | **Live 020 PASS** (2026-08-30) | SC-019 | N assets → one HC proven on Testing3; XP blocked until 065 recordId remap |
+| **SC-015** | Homework | Multiple files per homework response | P1 | **Live 020 PASS** (2026-08-30) | SC-019 | N assets → one HC proven on Testing3; 065 XP desktop `--apply` **PENDING** (dynamic `recordId` remapped) |
 | **SC-018** | Homework | Learning Activities table (catalog of activities) | P1 | Built in Repository | SC-020 | Mike-authorized Airtable schema; seed catalog; keep FBC Curriculum SYNC unless decided otherwise |
 | **SC-019** | Homework | Learning Activity Responses table + ResponseΓåÆasset routing | P1 | Built in Repository | SC-018 | Schema; automations; Fillout/web intake; route to Submission Assets / optional HC |
 | **SC-020** | Homework | Activities that count as homework vs stand-alone | P1 | Planned | SC-018, SC-019 | Implement flag + automation filters + coach views |
@@ -953,7 +953,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **Weekly email audit** | Harness shipped (2026-08-30) | `audits/2026-08-28-weekly-email-pipeline-audit.md` + [`testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md`](testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md) — live `--apply` Mike disposable WAS |
 | **SC-PW-E2E preflight** | COMPLETE (repo) | `preflightApplyAccess`; unlock field resolver (`Source Key` / `Milestone Source Key`) |
 | **SC-147** | Repo prep shipped | Recorded Zoom half-XP — draft `drafts/sc-147-zoom-recording-half-xp.js` + `lib/sc-147-zoom-recording-credit.test.js`; Mike slot + rule row pending |
-| **FUT-001 / PR #264** | **COMPLETE** (repo + Production paste) | 020 v3.8 + 065 v10.4 Live; **2026-08-30:** live multi-asset 020 **PASS**; 065 input mapping **regressed to hardcoded** `reccYReUfSId2MH1S` — remap only [`deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](./deploy-checklists/065-recordId-dynamic-remap-operator-packet.md) |
+| **FUT-001 / PR #264** | **COMPLETE** (repo + Production paste) | 020 v3.8 + 065 v10.4 Live; **2026-08-30:** live multi-asset 020 **PASS**; 065 dynamic `recordId` **remapped**; desktop `--apply` XP proof **PENDING** |
 
 ### 2026-08-29 legacy welcome-email field retirement
 

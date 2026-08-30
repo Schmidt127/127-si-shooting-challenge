@@ -4,7 +4,7 @@
 **Public URL:** https://www.fairfieldbasketballclub.com/shoot  
 **Authority companion:** [`MASTER_REMAINING_WORK_LIST.md`](./MASTER_REMAINING_WORK_LIST.md)  
 **Operator queue:** [`docs/deploy-checklists/2026-08-29-PRODUCTION-OPERATOR-QUEUE.md`](./docs/deploy-checklists/2026-08-29-PRODUCTION-OPERATOR-QUEUE.md) · paste audit historical [`docs/deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md`](./docs/deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md)  
-**Baseline date:** 2026-08-30 (release closeout — Agents 1–4)
+**Baseline date:** 2026-08-30 (final repository baseline — PRs **#301–#306** merged)
 
 > Claims below are backed by command output or platform evidence from this session unless marked `PENDING`.
 
@@ -16,10 +16,11 @@
 |------|--------|----------|
 | Production tip (web) | `f3be964f` | PR **#301** public UX chrome + Vercel Production Ready |
 | Docs closeout | PR **#304** MERGED | MRW-G11 / CR-12 shipped |
-| FUT-002 cleanup | PR **#303** MERGED `dc0751ec` | Quarantine + inventory; Mike UI deletes remain |
+| FUT-002 cleanup | PR **#303** MERGED `dc0751ec` | Quarantine + inventory; 5 `ZZZ DELETE` fields **deleted in Airtable UI** |
 | Season-sim preflight | PR **#302** MERGED `eca40509` | SC-SEASON-SIM-002 + 057 no-repaste |
-| This package | Core workflow reliability (MRW-F11 / MRW-I13) | PR **#305** |
-| Working tree note | Parallel agent WIP may remain in other worktrees | `git status` |
+| Core workflow reliability | PR **#305** MERGED `42a4993c` | MRW-F11 / MRW-I13 |
+| Multi-asset homework | PR **#306** MERGED `2e0759d2` | Live 020 **PASS**; 065 XP desktop proof **PENDING** |
+| Repository tip | `2e0759d2` | This baseline reconciliation |
 
 Re-verify:
 
@@ -51,7 +52,7 @@ git status -sb
 | Live Weeks + PHA audit | **PASS** — Early Bird countable; 18 active PHA; Due Date 2027-06-29; Week 9 no homework |
 | Live disposable apply | **PASS** — [`docs/testing/core-workflow/RESULTS.md`](docs/testing/core-workflow/RESULTS.md) |
 | Multi-asset → one HC (live 020) | **PASS** — [`docs/testing/core-workflow/MULTI-ASSET-HW-RESULTS.md`](docs/testing/core-workflow/MULTI-ASSET-HW-RESULTS.md) |
-| Live 065 Homework XP (multi-asset close) | **BLOCKED** — 065 input `recordId` hardcoded to deleted `reccYReUfSId2MH1S`; remap [`docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md) (**no script paste**) |
+| Live 065 Homework XP (multi-asset close) | **PENDING** — 065 dynamic `recordId` **remapped** (2026-08-30); Mike desktop `--apply` not yet re-run — [`docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md) (**no script paste**) |
 | Orphan inactive PHA | Deleted `recpHX3stQ8YBVtLi` |
 | Email send | **Not invoked** |
 | Automation paste | **None** |
@@ -111,18 +112,18 @@ git status -sb
 |------|--------|
 | Weeks 2026–27 | Early Bird Apr 25–May 1; Week 1 May 2; **no import needed** |
 | Active PHA | **18**; due **2027-06-29**; Week 9 / Post-Challenge no HW |
-| FUT-002 | 1355 fields; 5 `ZZZ DELETE` awaiting Mike UI |
+| FUT-002 | 1350 fields (post-delete); 5 `ZZZ DELETE` **deleted in Airtable UI** |
 | FUT-010 R3 | **0 eligible** |
 
 ---
 
 ## Production changes still awaiting Mike
 
-1. **FUT-002 UI field deletes** — trash all `ZZZ DELETE — *` fields (5)  
-2. **Before season simulation:** archive overlapping WSTEST/PWTEST Weeks (OMNI)  
-3. Optional Automations Code refresh for 057 tracker text (docs hygiene only)  
-4. Optional FUT-010 sign-off when eligible rows exist (currently zero)  
-5. **RCC** views / Interface install  
+1. **SC-MULTI-ASSET-HW live 065 XP proof** — desktop: `node tools/testing/sc-multi-asset-homework.mjs --apply` (065 dynamic `recordId` already remapped; do not repaste scripts)
+2. **Before season simulation:** archive overlapping WSTEST/PWTEST Weeks (OMNI)
+3. Optional Automations Code refresh for 057 tracker text (docs hygiene only)
+4. Optional FUT-010 sign-off when eligible rows exist (currently zero)
+5. **RCC** views / Interface install
 6. **FUT-003** Make ON when registration opens  
 
 ---
@@ -132,13 +133,13 @@ git status -sb
 1. Automations Code tracker lag for 057 (live script already correct).  
 2. Disposable WSTEST/PWTEST Weeks can collide with 005 date matching.  
 3. Season simulation execute still FUTURE until WSTEST cleanup.  
-4. Airtable Meta API cannot DELETE fields — Mike UI required for FUT-002.
+4. Airtable Meta API cannot DELETE fields — Mike UI required for FUT-002 quarantine fields (**5 deleted 2026-08-30**).
 
 ---
 
 ## Exact recommended next task
 
-**Mike:** Delete 5 `ZZZ DELETE — *` fields (FUT-002). Before season sim: archive overlapping WSTEST/PWTEST Weeks (OMNI).
+**Mike:** Re-run multi-asset homework live proof from desktop (`sc-multi-asset-homework.mjs --apply`). Before season sim: archive overlapping WSTEST/PWTEST Weeks (OMNI).
 
 **Do not:** re-paste 010/020/022/057/058/059/065/072/073; restore 075; re-`--apply` Perfect Week for WAS `recl3DmBh22ADPWWe`; run full season-simulation execute yet.
 
@@ -155,4 +156,5 @@ git status -sb
 | 2026-08-30 (FUT-002) | PR **#303** |
 | 2026-08-30 (Agent 4) | PR **#302**; SC-SEASON-SIM-002; 057 no-repaste |
 | 2026-08-30 (core workflow) | PR **#305**; MRW-F11 / MRW-I13 complete |
-| 2026-08-30 (release closeout) | Merged Agent packages; reconciled baseline |
+| 2026-08-30 (multi-asset HW) | PR **#306**; live 020 PASS; 065 XP desktop proof pending |
+| 2026-08-30 (baseline closeout) | FUT-002 quarantine deletes; 065 dynamic remap confirmed; docs reconciled to `2e0759d2` |

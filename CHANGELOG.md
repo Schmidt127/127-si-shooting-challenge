@@ -16,19 +16,24 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   Week 1 starts 2027-05-02, Week 9 no homework, 18 active PHA due 2027-06-29, Submission XP
   once per Count It submission (**MRW-I13 closed**). Deleted inactive orphan PHA
   `recpHX3stQ8YBVtLi`. No automation paste; 075 remains retired.
-- **SC-MULTI-ASSET-HW live validation (2026-08-30)** — Disposable Testing3 Early Bird:
+- **SC-MULTI-ASSET-HW live validation (2026-08-30, PR #306)** — Disposable Testing3 Early Bird:
   two Submission Assets same HW1 slot → one HC via live **020** (identity + isolation +
-  missing-PHA fail-safe PASS). **064** armed XP amounts; live **065** blocked by hardcoded
-  script input `recordId=reccYReUfSId2MH1S` (compare dynamic 020). Operator packet only —
-  **do not repaste 065**: [`docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](./docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md).
+  missing-PHA fail-safe PASS). **064** armed XP amounts; live **065** was blocked during apply by
+  hardcoded script input `recordId=reccYReUfSId2MH1S` (since **remapped** to dynamic trigger).
+  Desktop `--apply` XP re-proof **PENDING** Mike — **do not repaste 065**:
+  [`docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](./docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md).
   Harness: `tools/testing/sc-multi-asset-homework.mjs`. Evidence:
   `docs/testing/core-workflow/MULTI-ASSET-HW-RESULTS.md`.
+- **Repository baseline reconciliation (2026-08-30)** — CURRENT-TRUTH, RELEASE_BASELINE, work lists
+  reconciled to `2e0759d2`; FUT-002 quarantine deletes recorded; PR **#300** closed as superseded
+  by **#303** (audit evidence preserved on branch).
 - **SC-SEASON-SIM-002 preflight package (2026-08-30, PR #302)** — `tools/season_simulation/`
   with offline unittest (21), gated execute/cleanup, Agent 4 suite wiring. **No full season
   simulation run.** Live 057 verified correct — do not repaste.
 - **FUT-002 live cleanup (2026-08-30, PR #303)** — Live inventory 1355 fields; quarantined 5
-  obsolete fields (`ZZZ DELETE`); retargeted Submission Assets Asset Key; Mike UI delete remains.
-  Evidence: `docs/audits/field-inventory/`, `docs/audits/FUT-002-cleanup-session-2026-08-30.md`.
+  obsolete fields (`ZZZ DELETE`); retargeted Submission Assets Asset Key; **5 quarantine fields
+  deleted in Airtable UI** (2026-08-30). Evidence: `docs/audits/field-inventory/`,
+  `docs/audits/FUT-002-cleanup-session-2026-08-30.md`.
 
 - **SC-147 Recorded Zoom half-XP repo prep (2026-08-30, MRW-H10)** — Offline conflict
   matrix + pure helpers (`lib/sc-147-zoom-recording-credit.js`), contract tests, and

@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-30 Agent 4 — SC-SEASON-SIM-002 sources landed; live 057 Meta field assert PASS (`fldqRxjWGXcbUZUg3`); paste queue clear; Automation **043** absent ([`RELEASE_BASELINE.md`](../RELEASE_BASELINE.md))  
+**Last verification (repo):** 2026-08-30 baseline closeout — `master` **`2e0759d2`** (PRs **#301–#306**); SC-MULTI-ASSET-HW harness + live 020 **PASS**; FUT-002 quarantine deletes **COMPLETE**; Automation **065** dynamic `recordId` confirmed; live 065 XP re-proof **PENDING** Mike desktop ([`RELEASE_BASELINE.md`](../RELEASE_BASELINE.md))  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -57,10 +57,10 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | **`082edc7d`** — merge PR **#298** Phase 4 public copy (prior tip `69d77134` = #276). Re-verify: `git rev-parse HEAD` |
+| HEAD SHA | **`2e0759d2`** — merge PR **#306** multi-asset homework harness (prior tip `42a4993c` = #305). Re-verify: `git rev-parse HEAD` |
 | `origin/master` | Should match HEAD after fetch — re-verify: `git rev-parse origin/master` |
 | Ahead / behind | **0 / 0** (re-verify after fetch) |
-| Recent merges (2026-08-30) | **#298** public copy · **#276** ATHWF · **#297** paste audit · **#295** docs closeout · **#279–#293** earlier closeout suite |
+| Recent merges (2026-08-30) | **#306** multi-asset HW · **#305** core workflow · **#304** public UX docs · **#303** FUT-002 cleanup · **#302** season-sim · **#301** public UX chrome · **#298** public copy · **#279–#293** earlier closeout suite |
 | Prior integrity ship | `0b1d634…` (2026-08-20); XP activity ledger merge follows |
 | True merge markers (`<<<<<<<`) | None found |
 | Nested clone (ignored) | Local folder `127-si-shooting-challenge/` — gitignored; **do not treat as source of truth** |
@@ -97,14 +97,15 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | Health | `GET /shoot/api/airtable` → token validity check |
 | Softr | **Obsolete / Not Used** — historical reference only |
 | SEO | **Public program pages indexable** — `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true` on Vercel Production (SC-115 cutover 2026-08-25). Athlete profiles + private routes remain `noindex`. Checklist: [`deploy-checklists/2026-08-25-web-search-indexing-cutover.md`](./deploy-checklists/2026-08-25-web-search-indexing-cutover.md). |
-| Production deploy | **Live** — Vercel Production SHA **`082edc7d`** (PR #298, 2026-08-30T17:04:57Z) · `GET /shoot` **200** · `GET /shoot/api/airtable` **200** (`tokenValid: true`) |
-| Vitest / smoke | **483/483** Vitest pass (2026-08-30 release QA) · typecheck/lint/build PASS · prior smoke **50/50** (MRW-E04) |
+| Production deploy | **Live** — Vercel Production SHA **`f3be964f`** (PR #301 public UX chrome, 2026-08-30) · `GET /shoot` **200** · `GET /shoot/api/airtable` **200** (`tokenValid: true`) |
+| Vitest / smoke | **487/487** Vitest pass (2026-08-30 release QA) · typecheck/lint/build PASS · smoke **50/50** (MRW-E04) |
 | FUT-016 Tutorials | **Complete** — portfolio catalog at `/shoot/tutorials` (PR **#284**, 2026-08-30) |
 | FUT-017 Zoom Meetings | **Complete** — portfolio catalog at `/shoot/zoom-meetings` (PR **#285**, 2026-08-30) |
 | FUT-025 athlete profiles | **Repo complete** — env-gated `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING`; Mike cutover pending ([`deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md`](./deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md)) |
 | SC-149 branding URLs | **Repo attestation complete (2026-08-30)** — prod render + smoke PASS; Mike Vercel env dashboard checkboxes pending ([`deploy-checklists/SC-149-fairfield-branding-url-verification.md`](./deploy-checklists/SC-149-fairfield-branding-url-verification.md)) |
 | SC-109 Game Manual PDF | **Partial** — deploy checklist + smoke assertions shipped (PR **#287**); `/shoot/game-manual` live-config sections render; `NEXT_PUBLIC_GAME_MANUAL_URL` still unset in Production (EXT-QA-001) — checklist: [`deploy-checklists/SC-109-game-manual-url-verification.md`](./deploy-checklists/SC-109-game-manual-url-verification.md) |
-| FUT-002 field inventory | **Audit complete (2026-08-30, PR #292)** — 1347 fields classified; **no deletions**; Mike-only deletion phase pending |
+| FUT-002 field inventory | **Quarantine cleanup complete (2026-08-30, PR #303)** — live inventory 1355 fields; 5 `ZZZ DELETE — *` fields **deleted in Airtable UI**; Asset Key retargeted; broader purge continues per [`docs/audits/field-inventory/`](./audits/field-inventory/) |
+| SC-MULTI-ASSET-HW (SC-015/016) | **Live 020 PASS** (PR **#306**) — N assets same slot → one HC; **065 Homework XP live proof PENDING** Mike desktop `--apply` after dynamic `recordId` remap (2026-08-30) — [`docs/testing/core-workflow/MULTI-ASSET-HW-RESULTS.md`](./testing/core-workflow/MULTI-ASSET-HW-RESULTS.md) |
 | FUT-010 intake attachment cleanup | **Dry-run complete (R3 2026-08-30)** — **0 eligible**; no deletion request — [`testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md`](./testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md) |
 | Weeks 2026–27 | **Finalized** — Early Bird **Apr 25–May 1, 2027** countable; May 1 ∈ Early Bird; Week 1 starts May 2 — [`testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md`](./testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md) |
 | Homework PHA 2026–27 | **18 active** (EB + Weeks 1–8 × HW1/HW2); Week 9 / Post-Challenge none; due **2027-06-29** — [`testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md`](./testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md) |
@@ -187,7 +188,7 @@ Do **not** treat other Automations-table columns (trigger/conditions) as authori
 | **058** | **1.5** | 1.5 | Live | Unlock only after Eligible + Ready |
 | **059** | **v3.7** | v3.7 | Live | |
 | **064** | **Production-verified current live** | v12.2 in repo | Live | Do not invent a new version string |
-| **065** | **v10.4** | v10.4 | Live / **aligned** | FUT-001 + dynamic `recordId` — [`065-v10.4-fut-001-operator-packet.md`](./deploy-checklists/065-v10.4-fut-001-operator-packet.md) |
+| **065** | **v10.4** | v10.4 | Live / **aligned** | FUT-001 + dynamic `recordId` from trigger (remapped 2026-08-30; prior hardcoded `reccYReUfSId2MH1S` was config-only defect) — [`065-v10.4-fut-001-operator-packet.md`](./deploy-checklists/065-v10.4-fut-001-operator-packet.md) |
 | **066** | **v3.9** | v3.9 | Live / live-tested | Dynamic `recordId`; replay verified 2026-08-24 |
 | **072** | **v4.8** | v4.8 | Live / **aligned** | [`072-v4.8-operator-packet.md`](./deploy-checklists/072-v4.8-operator-packet.md) |
 | **073** | **v4.4** | v4.4 | Live / **aligned** | [`073-v4.4-operator-packet.md`](./deploy-checklists/073-v4.4-operator-packet.md) |
@@ -294,9 +295,11 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - Repository integrity + PII redaction pass
 - Secure video URL pipeline **Live** (022/072/073) — Lambda viewer only; direct S3 AccessDenied expected
 - **2026-08-24:** **066 v3.9** dynamic `recordId` verified; historical audit artifacts documented
+- **2026-08-30:** PRs **#301–#306** — public UX chrome, FUT-002 quarantine deletes, core workflow, multi-asset homework harness; Automation **065** `recordId` dynamic remap confirmed
 
 ### Pending / needs live proof
 
+- **SC-MULTI-ASSET-HW live 065 XP proof** — Mike desktop: `node tools/testing/sc-multi-asset-homework.mjs --apply` after 065 dynamic remap (020 path already **PASS**; do not repaste scripts)
 - Optional Automations Code **tracker** text refresh for 057 (live script already correct — do not repaste)
 - Optional disposable fixture cleanup: `recdj8MD0szplMW5r`, `recxIzdVil9ewhBxN`, `recPg14iNRkxblMLs`
 - Optional weekly email template / copy refinements
@@ -305,7 +308,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - Optional 066 OMNI sandbox confirm (K-H1)
 - Lambda Storage Key retry proof + secret rotation
 - RCC Airtable Interface install
-- Open PRs: release-QA **#299**, field inventory **#300**, drafts **#262**/#244/#238/#237/#234 — review before merge; superseded work may close without merge
+- Open PRs: drafts **#262**/#244/#238/#237/#234 — review before merge; **#300** field inventory closed as superseded by **#303** (audit evidence preserved on branch `audit/live-field-inventory-2026-08-30`)
 - SC-109 Game Manual Adobe URL (EXT-QA-001) — Mike sets `NEXT_PUBLIC_GAME_MANUAL_URL` + redeploy
 - SC-149 / MRW-E02 Vercel Fairfield env dashboard attestation (repo attestation PASS; Mike checkbox confirmation pending)
 - FUT-025 athlete profile indexing cutover (Mike approval)
