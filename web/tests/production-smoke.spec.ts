@@ -282,6 +282,26 @@ test.describe("production smoke — athlete surfaces (read-only demo)", () => {
     });
     await expectHealthyResponse(response, "game-manual");
     await expectSingleHeading(page, "game-manual");
+
+    const openManual = page.getByRole("link", { name: /open game manual/i });
+    const comingSoon = page.getByRole("heading", {
+      name: /official manual link coming soon/i,
+    });
+    const hasOpenLink = await openManual.isVisible().catch(() => false);
+    const hasComingSoon = await comingSoon.isVisible().catch(() => false);
+    expect(hasOpenLink || hasComingSoon).toBe(true);
+
+    if (hasOpenLink) {
+      await expect(openManual).toHaveAttribute("href", /^https?:\/\//i);
+      await expect(openManual).toHaveAttribute("target", "_blank");
+    }
+
+    await expect(page.locator("main")).not.toContainText(
+      /NEXT_PUBLIC_GAME_MANUAL_URL/i,
+    );
+    await expect(
+      page.getByRole("heading", { name: /how you earn xp|level ladder/i }).first(),
+    ).toBeVisible();
   });
 });
 

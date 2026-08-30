@@ -785,7 +785,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-106** | Website | Levels pages | P2 | Live Tested in PROD | SC-024 | Gate copy polish; cover 410 graceful fallback in web |
 | **SC-107** | Website | Achievements pages | P2 | Installed in PROD | SC-026 | Re-seed / Active?+Visible? for Shot Milestones + Perfect Week (EXT-QA-002) |
 | **SC-108** | Website | Zoom public pages | P2 | Live Tested in PROD | SC-093 | Refresh expired Cover Media URLs (EXT-QA-004); web now hides 410 images |
-| **SC-109** | Website | Game Manual from config | P2 | Installed in PROD | SC-032, SC-082 | Set `NEXT_PUBLIC_GAME_MANUAL_URL` (EXT-QA-001); editorial copy; Shot Milestones surface later |
+| **SC-109** | Website | Game Manual from config | P2 | Installed in PROD (PDF env pending) | SC-032, SC-082 | Set `NEXT_PUBLIC_GAME_MANUAL_URL` (EXT-QA-001) — deploy checklist [`SC-109-game-manual-url-verification.md`](deploy-checklists/SC-109-game-manual-url-verification.md); editorial copy; Shot Milestones surface later |
 | **SC-110** | Website | Public display page | P2 | Installed in PROD | SC-054 | Wire Presentation fields; real season year after School Year fix |
 | **SC-111** | Website | Athlete profiles (real data, not mocks) | P2 | Live Tested in PROD | SC-103 | Optional: recreate `Web - Leaderboard` view (fallback OK) |
 | **SC-112** | Website | Athlete auth + dashboard | P2 | Decision Needed | ΓÇö | Mike pick approach; then schema + session implementation |
