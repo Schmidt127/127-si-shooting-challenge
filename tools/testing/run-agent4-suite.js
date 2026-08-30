@@ -126,6 +126,10 @@ const COMMANDS = [
     args: ["airtable/automations/shooting-challenge/lib/c025-zoom-recording-credit.test.js"],
   },
   {
+    name: "sc-147-zoom-recording-credit",
+    args: ["airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.test.js"],
+  },
+  {
     name: "tools/testing node --test (115/117/verifier)",
     cmd: process.execPath,
     args: [
