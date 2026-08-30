@@ -74,6 +74,12 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Docs
 
+#### Changed
+- **MRW-F08 offline contract suite (2026-08-30)** — Reconciled `docs-canonical-header`
+  drift for automations 057/058/041/042/076/101/118 in `docs/automation-index.md` and
+  `airtable/schema/current/automation-trigger-map.md`; expanded `run-agent4-suite.js` with
+  remaining `tests/automation-contracts/` coverage. No automation logic changes.
+
 #### Added
 - **SC-PW-E2E disposable Perfect Week harness (2026-08-27)** — `tools/testing/sc-pw-e2e.mjs`
   with library, contract tests, and operator doc
