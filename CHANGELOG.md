@@ -8,6 +8,86 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Airtable
 
+#### Added
+- **SC-147 Recorded Zoom half-XP repo prep (2026-08-30, MRW-H10)** — Offline conflict
+  matrix + pure helpers (`lib/sc-147-zoom-recording-credit.js`), contract tests, and
+  automation **DRAFT** `drafts/sc-147-zoom-recording-half-xp.js` (slot TBD — not Live).
+  Covers `ZOOM_RECORDING_CREDIT|{enrollmentId}|{zoomMeetingId}` idempotency, live **101**
+  exclusivity, `ZOOM_RECORDING` XP Reward Rules contract, **117** email-only scope boundary,
+  and Perfect Week recording-only exclusion. Design brief updated; wired into
+  `run-agent4-suite.js`. No Production paste.
+- **FUT-010 Production dry-run evidence (2026-08-30, MRW-C10)** — Read-only preflight,
+  dry-run (`--limit 50`), and reconcile (`--limit 100`) against Production Submission Assets.
+  Zero eligible rows; fail-closed verification blocked all candidates (legacy Storage Key format,
+  missing Canonical URL). No `--confirm-delete` or attachment writes. Evidence:
+  [`docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30.md`](./docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30.md);
+  JSON previews under `tools/airtable/_preview/fut-010-*-2026-08-30.json`.
+- **FUT-002 unused field inventory audit (2026-08-30, MRW-H01)** — Read-only scan of prod
+  `prod-20260819` schema snapshot (1347 fields) + repo grep (automations, web, tools). Deliverables:
+  [`docs/audits/FUT-002-unused-field-inventory-2026-08-30.md`](./docs/audits/FUT-002-unused-field-inventory-2026-08-30.md),
+  [`docs/audits/fut-002-unused-field-inventory.json`](./docs/audits/fut-002-unused-field-inventory.json),
+  `tools/airtable/fut_002_field_inventory.py`. **No field deletions.** Mike-only deletion phase pending formula retargets (see prior Google Drive prep audit).
+- **MRW-F07 weekly email positive-arm harness (2026-08-30)** — Disposable E2E tooling for
+  `118→072→119→074→079` chain verification: CLI
+  `tools/testing/mrw-f07-weekly-email-positive-arm.mjs`, library, offline contracts, and operator doc
+  [`docs/testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md`](./docs/testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md).
+  Wired into `run-agent4-suite.js`.
+
+### Web
+
+#### Changed
+- **MRW-E02 SC-149 production attestation (2026-08-30)** — Added read-only
+  `tools/testing/sc-149-fairfield-attestation.mjs`; live production PASS with evidence
+  [`docs/testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-08-30.json`](./docs/testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-08-30.json).
+  Mike Vercel dashboard env confirmation still required per deploy checklist.
+- **MRW-G08 CURRENT-TRUTH refresh (2026-08-30)** — Updated git SHA, merged PR ledger (#279–#293), vitest/smoke counts, FUT-016/017/025 and SC-149 status, open PR list, and pending Mike-only follow-ups.
+- **SC-109 Game Manual URL cutover path (2026-08-30)** — Added Mike deploy checklist
+  [`docs/deploy-checklists/SC-109-game-manual-url-verification.md`](./docs/deploy-checklists/SC-109-game-manual-url-verification.md)
+  for `NEXT_PUBLIC_GAME_MANUAL_URL`. Production smoke now asserts configured vs
+  coming-soon manual link state, blocks env-var leakage, and verifies live XP/level sections.
+- **FUT-017 Zoom Meetings portfolio redesign (2026-08-30)** — Full catalog redesign at
+  `/shoot/zoom-meetings`: feature banner, live vs recording orientation, week-grouped
+  `AccentRail` cards with access badges and external join/recording links, graceful 410 cover
+  fallback, and matching detail-page cover fallback. Data via `fetchZoomMeetingCatalog` unchanged.
+- **MRW-E04 production smoke fix (2026-08-30)** — Updated home route heading assertion in
+  `tests/helpers/smoke.ts` to match FUT-018 `HOME_HERO` copy (`Earn XP. Climb 12 Levels.`);
+  `npm run test:smoke:prod` **50/50** against production.
+- **Athlete profile SEO cutover path (FUT-025, 2026-08-30)** — Replaced hardcoded
+  athlete indexing flag with fail-closed env gate `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING`
+  (requires `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING`). Profiles stay `noindex` in production
+  defaults; robots.txt `/athletes/` disallow lifts only after Mike cutover. Sitemap still
+  excludes athlete slugs by design. Deploy checklist:
+  [`docs/deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md`](./docs/deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md).
+- **SC-149 / MRW-E02 — Fairfield branding URL audit closeout (2026-08-30)** — Confirmed
+  `resolveLandingUrl` / `resolveSiteUrl`, header/footer/hub `LANDING_URL`, and metadata
+  `SITE_URL` default to Fairfield Basketball Club; legacy `hoopchallenges.com` and
+  `hooopchallenges.com` hosts rewrite at import time. Strengthened Vitest module-env
+  coverage, HTTP smoke legacy-host guard, and deploy checklist
+  [`docs/deploy-checklists/SC-149-fairfield-branding-url-verification.md`](./docs/deploy-checklists/SC-149-fairfield-branding-url-verification.md)
+  for Mike Vercel Production attestation.
+- **Public athlete profile privacy audit (FUT-025, 2026-08-28)** — Centralized
+  `buildAthleteProfilePageMetadata`; profiles remain `noindex` per SC-115 while in-page
+  display follows registration consent. Added allowlist/privacy vitest coverage and Playwright
+  metadata guards.
+- **Unified program footer (FUT-019, 2026-08-28)** — `SiteFooter` now includes registration
+  CTAs, FAQ pointer, and public consent copy on every `ProductShell` page; footer config
+  tests + cross-page Playwright coverage.
+- **Homepage parent clarity (FUT-018, 2026-08-30)** — Rebased onto homepage redesign (#270);
+  added “For parents and families” guidance section with FAQ/homework links (kept #270 hero CTAs).
+- **Tutorials portfolio catalog (FUT-016, 2026-08-30)** — `/shoot/tutorials` redesign matching
+  homework/levels quality: feature banner, media-delivery orientation, AccentRail cards,
+  in-page vs external badges, keyboard focus rings; display-layer EXT-QA-003 cross-program
+  de-emphasis; Vitest for `tutorial-presentation` helpers.
+- **Tutorials & Zoom presentation (FUT-016/017 partial, 2026-08-28)** — Parent-facing catalog
+  copy clarifying in-page vs external media and live/recording availability.
+
+### Docs
+
+#### Changed
+- **Docs closeout reconcile (2026-08-30)** — `CURRENT-TRUTH.md` refreshed to `9f4a64b6` (PRs **#279–#293**); updated `MASTER_REMAINING_WORK_LIST.md` MRW-G08 SHA; FUT-010 dry-run status in Master Future Work List; Vercel Production deploy verified for `9f4a64b6`.
+
+### Airtable
+
 #### Changed
 - **Retire legacy Enrollment welcome-email fields (repo + manual Airtable packet, 2026-08-29)** —
   Live welcome path is **078A → Email Handoff Queue → 079 → Hub → Resend**. Automation **075**
@@ -45,6 +125,12 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   **Scope:** Submission Assets intake attachments only; legacy Homework Completions attachments out of scope.
 
 ### Docs
+
+#### Changed
+- **MRW-F08 offline contract suite (2026-08-30)** — Reconciled `docs-canonical-header`
+  drift for automations 057/058/041/042/076/101/118 in `docs/automation-index.md` and
+  `airtable/schema/current/automation-trigger-map.md`; expanded `run-agent4-suite.js` with
+  remaining `tests/automation-contracts/` coverage. No automation logic changes.
 
 #### Added
 - **SC-PW-E2E disposable Perfect Week harness (2026-08-27)** — `tools/testing/sc-pw-e2e.mjs`

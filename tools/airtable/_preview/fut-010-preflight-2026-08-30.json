@@ -1,0 +1,81 @@
+{
+  "baseId": "appn84sqPw03zEbTT",
+  "table": "Submission Assets",
+  "s3Bucket": "shooting-challenge-assets",
+  "s3Region": "us-east-2",
+  "fieldsPresent": 13,
+  "fieldsMissing": [],
+  "ready": true,
+  "scope": {
+    "inScope": "Submission Assets.Airtable Attachment (homework-route and video-route)",
+    "outOfScope": [
+      "Homework Completions.Airtable Attachment (legacy direct HC attachment)",
+      "Submissions intake fields (HW Sub 1, HW Sub 2, Video Upload)"
+    ]
+  },
+  "formulaPipelineSafety": {
+    "submissionAssets": {
+      "uploadReady": {
+        "dependsOnAttachment": true,
+        "expectedAfterClear": "0",
+        "reprocessingRisk": "low",
+        "notes": "Flips to 0 after clear. Post-upload rows are already Uploaded; 070a/b duplicate guard uses Canonical File URL + Storage Key, not Upload Ready?."
+      },
+      "readyToSendToMake": {
+        "dependsOnAttachment": true,
+        "expectedAfterClear": "Missing: Airtable Attachment",
+        "reprocessingRisk": "low",
+        "notes": "Shows missing attachment if Send to Make Trigger is rechecked. FUT-010 requires trigger unchecked; 070a/b alreadyUploadedCanonical blocks duplicate S3 upload."
+      },
+      "whyNotReadyForMake": {
+        "dependsOnAttachment": true,
+        "expectedAfterClear": "Missing Airtable attachment when trigger checked",
+        "reprocessingRisk": "low",
+        "notes": "Informational only when operator rechecks trigger."
+      },
+      "workflowNextStep": {
+        "dependsOnAttachment": true,
+        "expectedAfterClear": "Missing Airtable Attachment",
+        "reprocessingRisk": "low",
+        "notes": "Informational formula; does not write or re-trigger automations."
+      },
+      "writebackComplete": {
+        "dependsOnAttachment": false,
+        "expectedAfterClear": "unchanged when Uploaded + S3 fields populated",
+        "reprocessingRisk": "none"
+      },
+      "uploadStatus": {
+        "dependsOnAttachment": false,
+        "expectedAfterClear": "unchanged (single-select field)",
+        "reprocessingRisk": "none"
+      },
+      "canonicalFileUrl": {
+        "dependsOnAttachment": false,
+        "expectedAfterClear": "unchanged",
+        "reprocessingRisk": "none"
+      },
+      "storageKey": {
+        "dependsOnAttachment": false,
+        "expectedAfterClear": "unchanged",
+        "reprocessingRisk": "none"
+      },
+      "reviewerFileUrl": {
+        "dependsOnAttachment": false,
+        "expectedAfterClear": "unchanged (formula from Reviewer Access Token)",
+        "reprocessingRisk": "none"
+      }
+    },
+    "reprocessingGuards": [
+      "070a/070b alreadyUploadedCanonical blocks duplicate S3 when Canonical URL or Uploaded+Storage Key present",
+      "FUT-010 requires Send to Make Trigger unchecked before delete",
+      "022 triggers on Upload Status change, not attachment presence",
+      "070c verifies writeback fields only; does not re-upload"
+    ],
+    "outOfScope": [
+      "Homework Completions.Airtable Attachment (legacy direct HC attachment)",
+      "Submissions intake fields (HW Sub 1, HW Sub 2, Video Upload)"
+    ],
+    "mikeAttestationRequired": true,
+    "mikeAttestationPrompt": "I confirm Production formulas/views/interfaces do not require Submission Assets.Airtable Attachment on Uploaded rows for operational workflows, or I have patched those formulas first."
+  }
+}

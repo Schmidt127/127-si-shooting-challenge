@@ -17,6 +17,8 @@ import {
   evaluateCountedDayXpPolicy,
   evaluateXpEventShape,
   evaluateWasSnapshot,
+  evaluateHomework065Eligibility,
+  stagesForCase,
   submissionXpKey,
   homeworkXpKey,
   videoXpKey,
@@ -144,6 +146,36 @@ test("WAS snapshot evaluator", () => {
     { daysLogged: 5, minShots: 300 }
   );
   assert.ok(checks.every((c) => c.pass));
+});
+
+test("065 Satisfactory-alone is expected skip", () => {
+  const skip = evaluateHomework065Eligibility({
+    satisfactory: true,
+    reviewComplete: true,
+    reconcileNeeded: false,
+    totalHomeworkXpAwarded: 0,
+    phaLinked: false,
+    hasSubmissionLink: false,
+  });
+  assert.equal(skip.expectXp, false);
+  assert.ok(skip.blockers.some((b) => /Reconciliation/i.test(b)));
+
+  const ready = evaluateHomework065Eligibility({
+    satisfactory: true,
+    reviewComplete: true,
+    reconcileNeeded: true,
+    totalHomeworkXpAwarded: 25,
+    phaLinked: true,
+    hasSubmissionLink: true,
+  });
+  assert.equal(ready.expectXp, true);
+});
+
+test("stagesForCase scopes apply coverage", () => {
+  assert.deepEqual(stagesForCase("negatives"), [17]);
+  assert.ok(stagesForCase("submissions").includes(5));
+  assert.ok(!stagesForCase("submissions").includes(9));
+  assert.equal(stagesForCase("full").length, 17);
 });
 
 test("negative matrix covers required stage-17 cases", () => {

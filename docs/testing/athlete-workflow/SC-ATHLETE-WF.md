@@ -3,7 +3,7 @@
 | Field | Value |
 |-------|--------|
 | Backlog | **SC-ATHLETE-WF-001** · **MRW-F09** |
-| Status | **IN PROGRESS** (harness + dry-run + offline contracts) |
+| Status | **COMPLETE (harness)** — open product defect SC-005 B3 (MRW-I13) |
 | Purpose | Expose workflow defects on the **single-athlete** path **before** season simulation (`SC-SEASON-SIM-001` / `SC-SEASON-SIM-002`) |
 | Harness | `tools/testing/sc-athlete-wf.mjs` |
 | Library | `tools/testing/lib/sc-athlete-wf-lib.mjs` |

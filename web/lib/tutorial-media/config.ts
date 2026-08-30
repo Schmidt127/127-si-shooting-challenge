@@ -44,7 +44,8 @@ export const TUTORIALS_SECTION: TutorialMediaSectionConfig = {
     eyebrow: "Film room",
     title: "Skills and Technique Tutorials",
     titleAccent: "",
-    subtitle: "Shooting technique tutorials and film breakdowns — curated for the challenge.",
+    subtitle:
+      "Shooting technique tutorials and film breakdowns curated for the challenge. Cards show whether a clip plays in-page or opens on an external site — open any tutorial for the full breakdown.",
     itemCountLabel: "clips",
     cardCta: "Watch & read",
     cardCtaUnavailable: "View tutorial",

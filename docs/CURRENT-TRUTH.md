@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-29 release-completion reconcile — Perfect Week award COMPLETE (WAS `recl3DmBh22ADPWWe`); Automations paste queue Live-aligned; FUT-WELCOME-LEGACY COMPLETE; `/shoot` 200 + health ok  
+**Last verification (repo):** 2026-08-30 docs closeout merged — `master` at **`57e72348`** (PR **#295** closeout; code tip **`9f4a64b6`** through PRs **#279–#293**)  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -57,10 +57,10 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | `17e0f811` — docs closeout after PR **#274** (`1b15d37f` merge). Re-verify: `git rev-parse HEAD` |
-| `origin/master` | Re-verify after push: `git rev-parse origin/master` |
-| Ahead / behind | **0 / 0** |
-| Working tree at audit start | **Uncommitted unrelated work present** — Airtable automations, `tools/testing/`, `docs/chatgpt-sources/`; not part of web production closeout |
+| HEAD SHA | **`57e72348`** — merge PR **#295** docs closeout (code tip **`9f4a64b6`** = PR **#292** FUT-002; `#293` CHANGELOG fix; `#291` SC-147; `#290` FUT-010; `#289` MRW-F07; `#288` MRW-E02; `#287` SC-109; `#285` FUT-017; `#284` FUT-016; `#282`–`#283` smoke/contracts; `#281` FUT-025; `#280` SC-149; `#279` MRW-B06). Re-verify: `git rev-parse HEAD` |
+| `origin/master` | Should match HEAD after fetch — re-verify: `git rev-parse origin/master` |
+| Ahead / behind | **0 / 0** (re-verify after fetch) |
+| Recent merges (2026-08-30) | **#279** MRW-B06 public UX · **#280** SC-149 branding checklist · **#281** FUT-025 athlete indexing gate · **#282** MRW-E04 prod smoke 50/50 · **#283** MRW-F08 contract suite · **#284** FUT-016 Tutorials · **#285** FUT-017 Zoom · **#287** SC-109 Game Manual checklist · **#288** MRW-E02 Fairfield attestation · **#289** MRW-F07 weekly email harness · **#290** FUT-010 dry-run evidence · **#291** SC-147 Zoom half-XP prep · **#292** FUT-002 field inventory · **#293** CHANGELOG conflict-marker fix · **#295** docs closeout reconcile |
 | Prior integrity ship | `0b1d634…` (2026-08-20); XP activity ledger merge follows |
 | True merge markers (`<<<<<<<`) | None found |
 | Nested clone (ignored) | Local folder `127-si-shooting-challenge/` — gitignored; **do not treat as source of truth** |
@@ -97,8 +97,17 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | Health | `GET /shoot/api/airtable` → token validity check |
 | Softr | **Obsolete / Not Used** — historical reference only |
 | SEO | **Public program pages indexable** — `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true` on Vercel Production (SC-115 cutover 2026-08-25). Athlete profiles + private routes remain `noindex`. Checklist: [`deploy-checklists/2026-08-25-web-search-indexing-cutover.md`](./deploy-checklists/2026-08-25-web-search-indexing-cutover.md). |
-| Production deploy | **Live** — website verified via live routes + smoke tests (2026-08-26); latest web commits `cdd2b97` (FUT-014), `3306379`/`68c3a45`/`f225f04`/`6625559` (XP Event Log). Formal Vercel API deployment status not read for this doc sync. |
-| Vitest / smoke | **406** Vitest pass · `npm run test:smoke:prod` **50/50** · `homework-due-date.spec.ts` **3/3** on prod (2026-08-26) |
+| Production deploy | **Live** — Vercel Production deploy from `master` **`57e72348`** verified 2026-08-30 via GitHub deployments API (`2026-08-30T15:23:40Z`) + `GET /shoot/api/airtable` **200** (`tokenValid: true`). Prior code deploy **`9f4a64b6`** (`2026-08-30T15:15:29Z`). |
+| Vitest / smoke | **481/481** Vitest pass (2026-08-30 closeout) · `npm run test:smoke:prod` **50/50** (MRW-E04 home hero aligned to FUT-018) · repository-qa contract suite green (MRW-F08) · SC-149 attestation script PASS |
+| FUT-016 Tutorials | **Complete** — portfolio catalog at `/shoot/tutorials` (PR **#284**, 2026-08-30) |
+| FUT-017 Zoom Meetings | **Complete** — portfolio catalog at `/shoot/zoom-meetings` (PR **#285**, 2026-08-30) |
+| FUT-025 athlete profiles | **Repo complete** — env-gated `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING`; Mike cutover pending ([`deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md`](./deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md)) |
+| SC-149 branding URLs | **Repo attestation complete (2026-08-30)** — prod render + smoke PASS; Mike Vercel env dashboard checkboxes pending ([`deploy-checklists/SC-149-fairfield-branding-url-verification.md`](./deploy-checklists/SC-149-fairfield-branding-url-verification.md)) |
+| SC-109 Game Manual PDF | **Partial** — deploy checklist + smoke assertions shipped (PR **#287**); `/shoot/game-manual` live-config sections render; `NEXT_PUBLIC_GAME_MANUAL_URL` still unset in Production (EXT-QA-001) — checklist: [`deploy-checklists/SC-109-game-manual-url-verification.md`](./deploy-checklists/SC-109-game-manual-url-verification.md) |
+| FUT-002 field inventory | **Audit complete (2026-08-30, PR #292)** — 1347 fields classified; **no deletions**; Mike-only deletion phase pending |
+| FUT-010 intake attachment cleanup | **Dry-run complete (2026-08-30, PR #290)** — 0 eligible rows; Mike attestation + AWS creds before supervised apply — [`testing/evidence/FUT-010-DRY-RUN-2026-08-30.md`](./testing/evidence/FUT-010-DRY-RUN-2026-08-30.md) |
+| SC-147 Recorded Zoom half-XP | **Repo prep shipped (PR #291)** — draft automation + offline conflict matrix; Mike: automation slot + `ZOOM_RECORDING` rule row; **do not** overload **117** email |
+| MRW-F07 weekly email harness | **Complete (PR #289)** — disposable E2E tooling for `118→072→119→074→079`; live `--apply` on Mike disposable WAS still operator-only |
 | Production smoke athlete slug | `perfect-week-testing` (`testing-schmidt` is DEV-only) |
 | PHA Due Date | Public homework catalog + athlete homework assignments display PHA Due Date (fallback Week End Date); verified prod 2026-08-25 |
 | Homework catalog (FUT-014) | **Complete** — `/shoot/homework` PHA + Homework Library live catalog; Brief Description = **`Homework Library.Brief Description - Display`** (`fldAnHr3uTuDN5bs9`); 4 published cards verified prod 2026-08-26 |
@@ -296,7 +305,13 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - Optional 066 OMNI sandbox confirm (K-H1)
 - Lambda Storage Key retry proof + secret rotation
 - RCC Airtable Interface install
-- Open PRs #218, #217 and drafts #214, #213, #186, #162
+- Open PR **#276** (SC-ATHLETE-WF-001 QA harness, CI green). Draft PRs: **#262**, **#244**, **#238**, **#237**, **#234** — review before merge; superseded work may close without merge.
+- SC-109 Game Manual Adobe URL (EXT-QA-001) — Mike sets `NEXT_PUBLIC_GAME_MANUAL_URL` + redeploy
+- SC-149 / MRW-E02 Vercel Fairfield env dashboard attestation (repo attestation PASS; Mike checkbox confirmation pending)
+- FUT-025 athlete profile indexing cutover (Mike approval)
+- FUT-010 supervised attachment apply (dry-run complete; Mike attestation + AWS creds)
+- SC-147 Recorded Zoom half-XP — Mike: automation slot + `ZOOM_RECORDING` rule row before DEV paste
+- MRW-F07 live `--apply` on Mike disposable WAS (harness shipped; operator-only)
 
 ### Blocked
 

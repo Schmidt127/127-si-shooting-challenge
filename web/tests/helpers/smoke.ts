@@ -40,8 +40,8 @@ export const VIEWPORTS = {
  * Paths are app-relative; Playwright resolves them under `/shoot`.
  */
 export const PUBLIC_SMOKE_ROUTES = [
-  // Home hero h1 is brand marketing copy (product name lives in chrome / title).
-  { name: "home", path: ".", heading: /youth basketball training|daily shooting practice/i },
+  // Home hero h1 matches HOME_HERO in lib/seo/program-facts.ts (FUT-018).
+  { name: "home", path: ".", heading: /Earn XP|Climb 12 Levels|better basketball player/i },
   { name: "leaderboard", path: "leaderboard", heading: /leaderboard/i },
   { name: "homework", path: "homework", heading: /homework/i },
   { name: "tutorials", path: "tutorials", heading: /skills|tutorial/i },

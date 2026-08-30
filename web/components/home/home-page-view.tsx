@@ -168,6 +168,24 @@ const EDUCATIONAL_ATHLETICS_TRAITS = [
   },
 ];
 
+const PARENT_GUIDANCE = [
+  {
+    title: "Clear weekly expectations",
+    description:
+      "Homework assignments, due dates, and tutorial links live on this site so families know what to complete between practices.",
+  },
+  {
+    title: "Transparent progress",
+    description:
+      "XP, levels, streaks, and leaderboard standings update from verified submissions — not guesswork.",
+  },
+  {
+    title: "Remote-friendly participation",
+    description:
+      "Train from home, submit daily activity online, and join Zoom check-ins when schedules allow. Based in Fairfield, Montana with nationwide online access.",
+  },
+];
+
 const PARTICIPATION_FACTS = [
   {
     icon: Users,
@@ -480,6 +498,35 @@ export function HomePageView({ topEntries, pricing = null }: HomePageViewProps) 
               </Card>
             );
           })}
+        </div>
+      </SiteSection>
+
+      <SiteSection
+        eyebrow="For parents and families"
+        title="What you can expect each week"
+        titleId="parents-heading"
+        description="The Shooting Challenge is built for busy families who want structure without confusion."
+        aria-labelledby="parents-heading"
+      >
+        <div className="grid gap-3 md:grid-cols-3">
+          {PARENT_GUIDANCE.map((item) => (
+            <Card key={item.title} className="rounded-lg shadow-site-sm">
+              <CardContent className="pt-(--card-spacing)">
+                <h3 className="font-display text-xl text-foreground">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {item.description}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <CtaLink href="/faq" variant="default" size="default">
+            Read parent FAQ
+          </CtaLink>
+          <CtaLink href="/homework" variant="contrast" size="default">
+            See current homework
+          </CtaLink>
         </div>
       </SiteSection>
 

@@ -25,6 +25,7 @@ import {
   verifyNoDuplicateSourceKeys,
   evaluateCountedDayXpPolicy,
   evaluateWasSnapshot,
+  evaluateHomework065Eligibility,
   computeStreakFromDates,
   cleanupAthwfRecords,
   readonlyProbe,
@@ -35,6 +36,7 @@ import {
   submissionXpKey,
   homeworkXpKey,
   videoXpKey,
+  fetchXpBySourceKey,
   requireToken,
   GATED_ENROLLMENT_ID,
 } from "./lib/sc-athlete-wf-lib.mjs";
@@ -222,37 +224,64 @@ async function runApply(token, baseId, ctx, report) {
     );
   }
 
+  report.homeworkEligibility =
+    report.created.homeworkEligibility ||
+    evaluateHomework065Eligibility({
+      satisfactory: true,
+      reviewComplete: true,
+      reconcileNeeded: false,
+      totalHomeworkXpAwarded: 0,
+      phaLinked: false,
+      hasSubmissionLink: false,
+    });
   report.homeworkXp = await pollHomeworkXp(token, baseId, report.created.homeworkId, {
-    expectXp: true,
+    expectXp: report.homeworkEligibility.expectXp,
+    timeoutMs: report.homeworkEligibility.expectXp ? undefined : 25000,
   });
-  const hwPass = report.homeworkXp.count === 1;
+  const expectedHwCount = report.homeworkEligibility.expectXp ? 1 : 0;
+  const hwPass = report.homeworkXp.count === expectedHwCount;
   report.checks.push({
-    id: "homework_xp.satisfactory",
+    id: "homework_xp.satisfactory_path",
     stage: 9,
     status: hwPass ? "PASS" : "FAIL",
     pass: hwPass,
-    expected: 1,
+    expected: expectedHwCount,
     actual: report.homeworkXp.count,
     sourceKey: homeworkXpKey(report.created.homeworkId),
+    notes: report.homeworkEligibility.note,
   });
   if (!hwPass) {
     report.defects.push(
       buildDefect({
         severity: "P1",
         stage: 9,
-        title: "Satisfactory homework XP not exactly once",
+        title: report.homeworkEligibility.expectXp
+          ? "Satisfactory homework XP not exactly once"
+          : "065 skip probe unexpectedly awarded HOMEWORK_XP",
         steps: [
-          "Create Homework Completion Satisfactory?=true",
-          "Await 065",
-          `Expect ${homeworkXpKey(report.created.homeworkId)} once`,
+          "Create Homework Completion without PHA / reconcile trigger (default ATHWF)",
+          "Or full 064/065 path when eligibility.expectXp",
+          `Expect count=${expectedHwCount} for ${homeworkXpKey(report.created.homeworkId)}`,
         ],
-        expected: "One HOMEWORK_XP event",
+        expected: report.homeworkEligibility.note,
         actual: `count=${report.homeworkXp.count}`,
-        likelyCause: "065 not triggered (Homework XP Reconciliation Needed?) or HC missing PHA/links",
-        recommendedFix: "Ensure HC meets 065 trigger fields; do not invent Satisfactory-only award if rules require more",
-        fixOwner: "airtable",
+        likelyCause: report.homeworkEligibility.expectXp
+          ? "065 not triggered or HC missing PHA/Total XP"
+          : "065 awarded without Reconciliation Needed / PHA / Total XP",
+        recommendedFix:
+          "Keep skip probe as PASS when eligibility.expectXp=false; use PHA+064 path for positive arm",
+        fixOwner: report.homeworkEligibility.expectXp ? "airtable" : "code",
       })
     );
+  } else if (!report.homeworkEligibility.expectXp) {
+    report.checks.push({
+      id: "homework_xp.065_satisfactory_alone_is_skip",
+      stage: 9,
+      status: "PASS",
+      pass: true,
+      expected: "no HOMEWORK_XP without reconcile/PHA/Total XP",
+      actual: report.homeworkEligibility.note,
+    });
   }
 
   report.incompleteHomeworkXp = await pollHomeworkXp(
@@ -281,6 +310,39 @@ async function runApply(token, baseId, ctx, report) {
         actual: `count=${report.incompleteHomeworkXp.count}`,
         likelyCause: "065 award without Satisfactory gate",
         recommendedFix: "Confirm 065 Satisfactory? guard",
+        fixOwner: "code",
+      })
+    );
+  }
+
+  const videoRows = await fetchXpBySourceKey(
+    token,
+    baseId,
+    videoXpKey(report.created.videoId)
+  );
+  report.videoXp = { count: videoRows.length, ids: videoRows.map((r) => r.id) };
+  // Pending Award Status VF: expect zero VIDEO_SUBMISSION XP until review/114 path.
+  const videoOk = report.videoXp.count === 0;
+  report.checks.push({
+    id: "video_xp.pending_none",
+    stage: 10,
+    status: videoOk ? "PASS" : "FAIL",
+    pass: videoOk,
+    expected: 0,
+    actual: report.videoXp.count,
+    notes: "Pending VF must not mint VIDEO_SUBMISSION XP",
+  });
+  if (!videoOk) {
+    report.defects.push(
+      buildDefect({
+        severity: "P1",
+        stage: 10,
+        title: "Pending Video Feedback unexpectedly awarded XP",
+        steps: ["Create VF Award Status=Pending", "Poll VIDEO_SUBMISSION|{vfId}"],
+        expected: "Zero XP until review awards",
+        actual: `count=${report.videoXp.count}`,
+        likelyCause: "114 fired without award gate",
+        recommendedFix: "Confirm 114 award-status guard",
         fixOwner: "code",
       })
     );

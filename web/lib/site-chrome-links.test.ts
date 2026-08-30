@@ -8,7 +8,12 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { LANDING_URL, PUBLIC_LANDING_ORIGIN, PUBLIC_SITE_ORIGIN } from "./app-config";
+import {
+  LANDING_URL,
+  PUBLIC_LANDING_ORIGIN,
+  PUBLIC_SITE_ORIGIN,
+  SITE_URL,
+} from "./app-config";
 
 const webRoot = join(__dirname, "..");
 
@@ -45,11 +50,24 @@ describe("site chrome landing links", () => {
     expect(footer).not.toMatch(/hoopchallenges\.com/i);
   });
 
+  it("footer exposes registration links and consent copy", () => {
+    const footer = readSource("components/site/site-footer.tsx");
+    expect(footer).toContain("FOOTER_REGISTRATION_LINKS");
+    expect(footer).toContain("FOOTER_CONSENT_COPY");
+    expect(footer).toContain('rel="noopener noreferrer"');
+    expect(footer).toContain('href="/faq"');
+  });
+
   it("BackToHubLink Home control uses LANDING_URL", () => {
     const hub = readSource("components/layout/back-to-hub-link.tsx");
     expect(hub).toContain('href={LANDING_URL}');
     expect(hub).toMatch(/>\s*Home\s*</);
     expect(hub).not.toMatch(/hoopchallenges\.com/i);
+  });
+
+  it("exports SITE_URL for metadataBase on Fairfield /shoot", () => {
+    expect(SITE_URL).toBe(PUBLIC_SITE_ORIGIN);
+    expect(SITE_URL).not.toMatch(/hoopchallenges/i);
   });
 
   it("metadata site URL defaults do not reference Hoop Challenges", () => {

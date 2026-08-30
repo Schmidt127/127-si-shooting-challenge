@@ -12,7 +12,7 @@ import { buildPageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = buildPageMetadata({
   title: "Shooting Tutorials — Skills and Technique",
   description:
-    "Youth basketball shooting tutorials and technique videos for the Shooting Challenge — form breakdowns, film study, and skill development.",
+    "Youth basketball shooting tutorials and technique videos for the Shooting Challenge — form breakdowns, film study, and skill development families can review between practices.",
   path: "/tutorials",
 });
 

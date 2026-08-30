@@ -112,6 +112,19 @@ node tools/testing/cleanup_orphan_legacy_rows.mjs
 node tools/testing/cleanup_orphan_legacy_rows.mjs --confirm-delete
 ```
 
+## SC-PW-E2E / weekly settlement
+
+```bash
+node tools/testing/tests/test_sc_pw_e2e_contract.mjs
+node tools/testing/sc-pw-e2e.mjs --case qualifying
+
+node tools/testing/tests/test_sc_weekly_settlement_contract.mjs
+node tools/testing/sc-weekly-settlement.mjs --matrix
+node tools/testing/sc-weekly-settlement.mjs --case missing-shooting-day --apply
+```
+
+Docs: `docs/testing/perfect-week/SC-PW-E2E.md`, `docs/testing/weekly-settlement/SC-WEEKLY-SETTLEMENT-E2E.md`.
+
 ## Scenario catalog
 
 `docs/testing/scenarios/` — machine-readable fixtures + README.

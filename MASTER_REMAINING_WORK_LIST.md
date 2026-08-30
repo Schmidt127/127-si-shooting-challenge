@@ -180,7 +180,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | **Short title** | Land FUT-010 fail-closed cleanup code |
 | **Description** | Draft PR #268: shared helpers + CLI + extension; deletes Airtable attachment only after S3 verified. Dry-run default. |
 | **Why it matters** | Authorized storage reduction; must not delete before durable S3 proof. |
-| **Current status** | COMPLETE (repo merged via PR #271; live clear still Mike) |
+| **Current status** | COMPLETE (repo merged via PR #271; Production dry-run evidence 2026-08-30 — live clear still Mike) |
 | **Repository location(s)** | `lib/intake-attachment-cleanup/`, `tools/airtable/fut_010_*`, extension backfill |
 | **Dependencies** | Mike approval before any live `--apply` / CONFIRM_WRITE |
 | **Exact files or production systems affected** | Submission Assets attachments (after merge + Mike run) |
@@ -217,9 +217,9 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | **Short title** | Finish or discard uncommitted XP Activity ledger |
 | **Description** | Stashed/uncommitted `web/lib/data/xp-activity*` + API route; overlaps FUT-012 (already COMPLETE on master) and draft PR #240 performance work. |
 | **Why it matters** | Avoid half-landed duplicate Game Log stacks. |
-| **Current status** | IN PROGRESS |
+| **Current status** | RESOLVED — ABANDON PR #240 (2026-08-30); see `docs/decisions/MRW-B05-xp-activity-wip-resolution.md` |
 | **Source document(s)** | Future Work WIP-XP-ACT; FUT-012 COMPLETE |
-| **Repository location(s)** | Stash `lead-audit-wip-2026-08-29`; PR #240 |
+| **Repository location(s)** | Stash `lead-audit-wip-2026-08-29` (not present in repo env); PR #240 |
 | **Dependencies** | Decide: merge performance PR vs abandon duplicate |
 | **Exact files or production systems affected** | `web/` athlete profile |
 | **Autonomous?** | Partial — need conflict review vs master Game Log |
@@ -256,7 +256,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | **Short title** | Resolve conflicts and land public UX PR |
 | **Description** | Draft PR #266 CONFLICTING with master after homepage redesign #270. |
 | **Why it matters** | Authorized website improvements; homepage may already supersede parts. |
-| **Current status** | IN PROGRESS |
+| **Current status** | **COMPLETE** (merged PR **#279**, 2026-08-30) |
 | **Source document(s)** | Future Work FUT-018/019/025; PR #266 |
 | **Repository location(s)** | `web/` public pages, footer, athlete privacy |
 | **Dependencies** | Rebase onto post-#270 master; dedupe homepage |
@@ -283,7 +283,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-C07 | RCC views / Interface install | READY FOR PRODUCTION APPLY | `RELIABILITY-COMMAND-CENTER-PRODUCTION-INSTALL.md` | OMNI views | P1 |
 | MRW-C08 | Automation UI version inventory (SC-058) | NEEDS VERIFICATION | AUTOMATION_VERSION_INVENTORY | Mike UI attestation vs MCP | P1 |
 | MRW-C09 | Retire/disposition Automation 043 (SC-059) | IN PROGRESS | Future Work SC-059 | Confirm 043 not deployed | P1 |
-| MRW-C10 | FUT-010 live attachment clear | READY FOR PRODUCTION APPLY | `FUT-010-*.md` + operator queue | Dry-run then supervised apply | P1 |
+| MRW-C10 | FUT-010 live attachment clear | **DRY-RUN COMPLETE (2026-08-30)** — 0 eligible; Mike attestation + AWS creds before pilot | [`FUT-010-DRY-RUN-2026-08-30.md`](docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30.md) | Mike sign-off then supervised apply | P1 |
 
 **Already applied (do not re-queue):** 057 v2.2; 059 Pending-only trigger; 010 v10.12; 020 v3.8; 022 v2.2; 058 1.5; 059 v3.7; 065 v10.4; 066 v3.9; 072 v4.8; 073 v4.4; SEO indexing env; FUT-WELCOME-LEGACY field delete.
 
@@ -308,9 +308,9 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | ID | Title | Status | Notes |
 |----|-------|--------|-------|
 | MRW-E01 | Confirm Vercel Production tracks master after merges | NEEDS VERIFICATION | Auto-deploy on master; verify `/shoot` + `/shoot/api/airtable` |
-| MRW-E02 | SC-149 branding URL env + smoke | IN PROGRESS | Vercel env attestation |
+| MRW-E02 | SC-149 branding URL env + smoke | **REPO COMPLETE** — prod attestation PASS 2026-08-30; Mike Vercel env dashboard checkboxes pending ([`SC-149-fairfield-branding-url-verification.md`](docs/deploy-checklists/SC-149-fairfield-branding-url-verification.md)) |
 | MRW-E03 | SC-148 mobile/a11y polish deploy | IN PROGRESS | Repo built; merge + smoke |
-| MRW-E04 | Production smoke suite after web merges | NEEDS VERIFICATION | `npm run test:smoke:prod` (50/50 last known 2026-08-26) |
+| MRW-E04 | Production smoke suite after web merges | **COMPLETE** | Home hero assertion aligned to FUT-018 `HOME_HERO` copy; `npm run test:smoke:prod` **50/50** (2026-08-30) |
 
 ---
 
@@ -321,12 +321,12 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-F01 | SC-PW-E2E live apply | **COMPLETE** | WAS `recl3DmBh22ADPWWe` MCP award evidence |
 | MRW-F02 | SC-016 live re-submit after FUT-001 paste | NEEDS VERIFICATION | |
 | MRW-F03 | Broader SC-005 season matrix | IN PROGRESS | Many paths green; PW + email inject open |
-| MRW-F09 | SC-ATHLETE-WF-001 individual athlete workflow QA | **IN PROGRESS** | Harness + dry-run + offline contracts + live disposable apply evidence 2026-08-30. Defects: SC-005 B3 same-day XP; HC Satisfactory-only no 065 XP; PAT cannot DELETE XP Events; sc-pw-e2e-lib formula write (leave WIP). Plan: `docs/testing/athlete-workflow/SC-ATHLETE-WF.md`. Evidence: `docs/testing/evidence/sc-athlete-wf/apply-session-final-2026-08-30.json`. Pre–season-sim; do not start SC-SEASON-SIM from this. |
+| MRW-F09 | SC-ATHLETE-WF-001 individual athlete workflow QA | **COMPLETE (harness)** | Harness + offline contracts + dry-run + disposable apply evidence 2026-08-30. Submission XP + WAS verified. Open product: SC-005 B3 (MRW-I13). 065 Satisfactory-alone = expected skip. PAT XP DELETE best-effort/MCP. Plan: docs/testing/athlete-workflow/SC-ATHLETE-WF.md. |
 | MRW-F04 | SC-010/011/012/015 homework path re-tests | IN PROGRESS | Installed; re-prove |
 | MRW-F05 | Video XP native trigger + 073 OFF attestation (SC-072) | NEEDS VERIFICATION | PKG-007 PASS; UI attest open |
 | MRW-F06 | Zoom live attendance re-test (SC-073/084) | NEEDS VERIFICATION | 101 v6.7 |
-| MRW-F07 | 118/119 weekly scheduler positive arm (SC-031/035) | IN PROGRESS | |
-| MRW-F08 | Offline contract suite green on master after merges | IN PROGRESS | repository-qa workflow |
+| MRW-F07 | 118/119 weekly scheduler positive arm (SC-031/035) | **COMPLETE** (harness 2026-08-30) | `docs/testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md`; live `--apply` Mike disposable WAS |
+| MRW-F08 | Offline contract suite green on master after merges | **COMPLETE** | repository-qa workflow; docs-canonical-header drift fixed 2026-08-30 |
 
 > **Future (not active):** **SC-SEASON-SIM-001** / **MRW-H11** — 60-day five-enrollment season simulation. Tracked under Section H as **FUTURE**. Distinct from SC-005 matrix and from completed SC-PW-E2E. Do not start implementation from this note.
 
@@ -337,13 +337,13 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | ID | Title | Status | Notes |
 |----|-------|--------|-------|
 | MRW-G01 | Doc reconciliation (Completion Master lag) | **COMPLETE** | Same as MRW-B04 (this reconcile) |
-| MRW-G02 | FUT-018 landing / SC page improvements | READY TO IMPLEMENT | Partial via #266/#270 |
-| MRW-G03 | FUT-019 footer consistency | READY TO IMPLEMENT | |
-| MRW-G04 | FUT-016 Tutorials redesign | FUTURE | Tied to C-026 |
-| MRW-G05 | FUT-017 Zoom page redesign | FUTURE | |
+| MRW-G02 | FUT-018 landing / SC page improvements | **COMPLETE** | Shipped via #279 / prior homepage work |
+| MRW-G03 | FUT-019 footer consistency | **COMPLETE** | Shipped via #279 |
+| MRW-G04 | FUT-016 Tutorials redesign | **COMPLETE** | PR **#284** portfolio catalog (2026-08-30) |
+| MRW-G05 | FUT-017 Zoom page redesign | **COMPLETE** | PR **#285** portfolio catalog (2026-08-30) |
 | MRW-G06 | FUT-024 FAQ TST omission note | IN PROGRESS | `/faq` live; TST FAQ omitted by policy |
-| MRW-G07 | FUT-025 athlete profile indexability/consent verify | IN PROGRESS | SC-115 public pages done |
-| MRW-G08 | Refresh CURRENT-TRUTH open PR list | READY TO IMPLEMENT | |
+| MRW-G07 | FUT-025 athlete profile indexability/consent verify | **COMPLETE** | Env-gated `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING`; deploy checklist 2026-08-30 |
+| MRW-G08 | Refresh CURRENT-TRUTH open PR list | **COMPLETE** | Reconciled 2026-08-30 — SHA `9f4a64b6`, PRs #279–#293 merged; open #276 + drafts #262/#244/#238/#237/#234 |
 
 ---
 
@@ -351,7 +351,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 
 | ID | Title | Status | Notes |
 |----|-------|--------|-------|
-| MRW-H01 | FUT-002 unused Airtable field purge | FUTURE | Audit first; deletes Mike-only |
+| MRW-H01 | FUT-002 unused Airtable field purge | **AUDIT COMPLETE** | Inventory 2026-08-30; deletes Mike-only |
 | MRW-H02 | FUT-004 award emailer (replace Tremendous) | FUTURE | Deferred |
 | MRW-H03 | FUT-005 accomplishment emails | FUTURE | Deferred |
 | MRW-H04 | FUT-007/009 AWS naming + corrected-video workflow | FUTURE | |
@@ -360,8 +360,27 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-H07 | Learning Activities schema SC-018–020 | FUTURE | Needs Mike schema auth |
 | MRW-H08 | C-027 major-event notifications | FUTURE | |
 | MRW-H09 | Early-bird registration config (SC-066) | FUTURE | Decision: use early-bird; dates TBD |
-| MRW-H10 | Recorded Zoom half-XP writer (SC-147) | FUTURE | Design brief only; do not overload 117 |
+| MRW-H10 | Recorded Zoom half-XP writer (SC-147) | **Repo prep shipped** | Draft + offline conflict matrix; Mike: slot + `ZOOM_RECORDING` rule row; do not overload 117 |
 | MRW-H11 | SC-SEASON-SIM-001 60-day five-enrollment season simulation | **FUTURE** | Planned only — no implementation yet. Program instance “Season Simulation Testing”; allowlist; no live email; stop on material failure; harness + automation modes; extend SC-PW-E2E. **FUT-010 separate/unchanged.** Deps: isolation, field/automation inventory, cleanup/archive decision, polling/timeout design. Canonical: Future Work List `SC-SEASON-SIM-001`. |
+
+## F+. Weekly settlement QA (pre–season simulation)
+
+### MRW-F10 — Weekly settlement matrix harness (SC-WEEKLY-SETTLEMENT-E2E)
+
+| Field | Value |
+|-------|--------|
+| **ID** | MRW-F10 |
+| **Short title** | Weekly settlement workflow QA harness |
+| **Description** | Repeatable disposable matrix for WAS create/link, weekly calculations, Perfect Week fail-closed + cite award, level/threshold Source Key contracts, and 072/074/079 prep-only handoff compatibility. Ten weekly conditions (WS-01…WS-10). |
+| **Current status** | **COMPLETE** (harness + live evidence 2026-08-30) |
+| **Source document(s)** | [`docs/testing/weekly-settlement/SC-WEEKLY-SETTLEMENT-E2E.md`](docs/testing/weekly-settlement/SC-WEEKLY-SETTLEMENT-E2E.md); [`DEFECT-REPORT.md`](docs/testing/weekly-settlement/DEFECT-REPORT.md); [`RESULTS.md`](docs/testing/weekly-settlement/RESULTS.md) |
+| **Repository location(s)** | `tools/testing/sc-weekly-settlement.mjs`; `tools/testing/lib/sc-weekly-settlement-lib.mjs`; contract tests |
+| **Autonomous?** | Yes for dry-run/contracts; live `--apply` uses disposable data only; no email |
+| **Required manual action** | Optional cleanup of archived WSTEST Weeks; disposition DEF-WS-001…003 wording in future operator docs |
+| **Verification required** | Met — see RESULTS.md |
+| **Recommended priority** | — |
+| **Definition of done** | Met 2026-08-30 |
+| **Notes** | Do not re-apply SC-PW-E2E for WAS `recl3DmBh22ADPWWe`. Season simulation still FUTURE (MRW-H11). |
 
 ---
 
@@ -381,6 +400,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-I10 | ~~Production paste windows (C01–C05)~~ | **COMPLETE** | Pastes applied — do not re-queue |
 | MRW-I11 | Branch protection / merge approval if CI requires human | BLOCKED | Approve merges if required |
 | MRW-I12 | Vercel deploy credentials if auto-deploy fails | BLOCKED | Dashboard access |
+| MRW-I13 | SC-005 B3 same-day counted shooting XP policy | BLOCKED | Product decision: at most one SUBMISSION_XP per Denver day vs per Count It submission (ATHWF dual 20 XP) |
 
 ---
 
@@ -390,7 +410,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 2. **Highest-value remaining live action:** FUT-010 dry-run then supervised attachment clear per [`docs/deploy-checklists/FUT-010-intake-attachment-cleanup.md`](docs/deploy-checklists/FUT-010-intake-attachment-cleanup.md) + [`2026-08-29-PRODUCTION-OPERATOR-QUEUE.md`](docs/deploy-checklists/2026-08-29-PRODUCTION-OPERATOR-QUEUE.md).  
 3. **Calendar:** Weeks 2026–27 import (MRW-A05) when ready — Weeks are protected.  
 4. **Do not** activate FUT-003 until registration intentionally opens.  
-5. **QA:** Disposition SC-ATHLETE-WF-001 defects (MRW-F09) — especially SC-005 B3 same-day XP product decision — before expanding season simulation.
+5. **Do not** start SC-SEASON-SIM-001 yet — ATHWF harness (MRW-F09) + weekly settlement (MRW-F10) are done; disposition SC-005 B3 (MRW-I13) when ready; next best engineering task is FUT-010 then Weeks import.
 
 ---
 
@@ -402,7 +422,9 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 - **SC-PW-E2E / MRW-A01** → **COMPLETE** — MCP award evidence for WAS `recl3DmBh22ADPWWe`.  
 - **Paste debt C01–C05 + 058/059** → **COMPLETE** (Automations Code Live 2026-08-29).  
 - **SC-SEASON-SIM-001 / MRW-H11** → **FUTURE / Planned only** (2026-08-29) — not active; not SC-005; not SC-PW-E2E reopen; **FUT-010 unchanged**.  
+- **SC-WEEKLY-SETTLEMENT-E2E / MRW-F10** → **COMPLETE** (2026-08-30) — harness + live WS-01…WS-10 evidence; defect report filed.  
+- **SC-ATHLETE-WF-001 / MRW-F09** → **COMPLETE (harness)** (2026-08-30) — open product B3 tracked as MRW-I13.
 - SC-027/066 shot milestones live-tested → monitoring only.  
 - Historical overnight MIKE-ACTIONS rows superseded by CURRENT-TRUTH / Section G where dated later.  
 - Legacy C-/SC- inventory in Future Work Sections A–F remains evidence; **this file + operator queue + Future Work Section G** are the operator queues.  
-- Local uncommitted `tools/testing/lib/sc-pw-e2e-lib.mjs` → unrelated WIP; do not modify/commit in this closeout.
+- Local uncommitted `tools/testing/lib/sc-pw-e2e-lib.mjs` and `tools/season_simulation/` → unrelated WIP; do not modify/commit in this closeout.

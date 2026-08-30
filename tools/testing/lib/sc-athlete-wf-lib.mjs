@@ -143,6 +143,57 @@ export function evaluateCountedDayXpPolicy(xpEventsForEnrollmentDay) {
 }
 
 /**
+ * Automation 065 does NOT fire on Satisfactory? alone.
+ * Positive award needs Reconciliation Needed?=1 (formula), review eligibility,
+ * Total Homework XP Awarded > 0 (064), and PHA identity when PHA is linked.
+ * ATHWF default HC create is a negative/skip probe unless phaLinked + awardReady.
+ */
+export function evaluateHomework065Eligibility({
+  satisfactory = false,
+  reviewComplete = false,
+  reconcileNeeded = false,
+  totalHomeworkXpAwarded = 0,
+  phaLinked = false,
+  hasSubmissionLink = false,
+} = {}) {
+  const blockers = [];
+  if (!satisfactory) blockers.push("Satisfactory?=false");
+  if (!reviewComplete) blockers.push("Review Complete missing");
+  if (!reconcileNeeded) blockers.push("Homework XP Reconciliation Needed? != 1");
+  if (!(Number(totalHomeworkXpAwarded) > 0)) blockers.push("Total Homework XP Awarded <= 0");
+  if (!phaLinked) blockers.push("Program Homework Assignment not linked (PHA-first path)");
+  if (!hasSubmissionLink) blockers.push("Submission link missing for new XP create");
+  return {
+    expectXp: blockers.length === 0,
+    blockers,
+    note:
+      blockers.length === 0
+        ? "065 positive path preconditions met"
+        : `065 expected skip/no award: ${blockers.join("; ")}`,
+  };
+}
+
+/** Stages included for each --case (apply create/verify scope). */
+export function stagesForCase(caseName) {
+  const all = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
+  switch (caseName) {
+    case "submissions":
+      return [1, 2, 3, 4, 5, 15, 16];
+    case "homework-video":
+      return [1, 2, 6, 7, 8, 9, 10, 15, 16, 17];
+    case "streaks-levels":
+      return [1, 2, 3, 4, 11, 12, 13, 15];
+    case "was":
+      return [1, 2, 3, 4, 14, 15];
+    case "negatives":
+      return [17];
+    case "full":
+    default:
+      return all;
+  }
+}
+
+/**
  * Streak calendar: consecutive Denver dates with ≥1 counted submission.
  * Multi same-day counts as one streak day. Gap of one missed date breaks streak.
  */
@@ -624,10 +675,20 @@ export async function createDisposableFixture(token, baseId, ctx) {
           Enrollment: [ctx.enrollmentId],
           Week: [created.weekId],
           "Satisfactory?": true,
+          "Review Complete": true,
+          "Coach Feedback": `${ctx.batchKey}|HC-satisfactory-skip-probe`,
         },
       },
     ]);
     created.homeworkId = hcRes.records[0].id;
+    created.homeworkEligibility = evaluateHomework065Eligibility({
+      satisfactory: true,
+      reviewComplete: true,
+      reconcileNeeded: false,
+      totalHomeworkXpAwarded: 0,
+      phaLinked: false,
+      hasSubmissionLink: false,
+    });
 
     const incompleteHcRes = await createRecords(token, baseId, TABLES.homeworkCompletions, [
       {
@@ -635,6 +696,7 @@ export async function createDisposableFixture(token, baseId, ctx) {
           Enrollment: [ctx.enrollmentId],
           Week: [created.weekId],
           "Satisfactory?": false,
+          "Review Complete": false,
         },
       },
     ]);
@@ -777,7 +839,17 @@ export async function cleanupAthwfRecords(token, baseId, manifest) {
   await deleteSafe(TABLES.was, [manifest.wasId]);
   await deleteSafe(TABLES.weeks, [manifest.weekId]);
 
-  return { actions, cleanedAt: new Date().toISOString() };
+  const failed = actions.filter((a) => a.status === "failed");
+  return {
+    actions,
+    cleanedAt: new Date().toISOString(),
+    complete: failed.length === 0,
+    refusedOrPartial: failed.length > 0,
+    note:
+      failed.length === 0
+        ? "All manifest deletes succeeded"
+        : "Partial cleanup — use MCP or broader PAT for failed tables (often XP Events DELETE 403)",
+  };
 }
 
 export async function readonlyProbe(token, baseId, ctx) {

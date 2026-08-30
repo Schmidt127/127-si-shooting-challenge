@@ -107,7 +107,7 @@ The system must preserve checks for assignment identity, enrollment, challenge/s
 ### FUT-002 — Audit and remove unused Airtable fields
 
 **Priority:** P2  
-**Status:** Ready for prompt  
+**Status:** **Audit complete (2026-08-30)** — field inventory + dependency report ready; **deletions Mike-only**  
 **Systems:** Airtable schema, automations, email payloads, website/data contracts
 
 Inventory every Airtable table and identify fields that are unused, obsolete, duplicated, or no longer part of the current app. This includes legacy Google Drive URL, Google Drive ID, Google Drive folder ID, and similarly named fields. Check formulas, automations, scripts, emails, views, interfaces, website/data contracts, and documentation before deleting anything.
@@ -117,6 +117,8 @@ Because all current records are test data that will be deleted before the next c
 After confirming no active dependency remains, delete the obsolete fields and update documentation, schema snapshots, field maps, tests, and any remaining references.
 
 **Acceptance criteria:** complete field/dependency inventory; unused and obsolete fields classified; fields removed only after audit; tests and documentation updated; no active S3/Lambda or future-approved fields removed accidentally.
+
+**Audit deliverables (2026-08-30):** [`docs/audits/FUT-002-unused-field-inventory-2026-08-30.md`](./audits/FUT-002-unused-field-inventory-2026-08-30.md) · [`docs/audits/fut-002-unused-field-inventory.json`](./audits/fut-002-unused-field-inventory.json) · tool `tools/airtable/fut_002_field_inventory.py`. Snapshot: **1347 fields** — **1043 active**, **15 legacy**, **8 duplicate**, **281 unknown**; **21** safe-to-delete-later (mostly Google Drive); **19** blocked/protected. Deletion phase not started.
 
 ### FUT-003 — Stripe payment writeback to Airtable
 
@@ -265,7 +267,7 @@ Keep the S3 bucket private and preserve the Lambda viewer architecture.
 ### FUT-010 — Delete Airtable intake attachments after verified S3 upload
 
 **Priority:** P1  
-**Status:** Built in repository — Production apply pending Mike approval (2026-08-28)  
+**Status:** **Dry-run complete (2026-08-30)** — 0 eligible rows in Production preflight/reconcile; supervised apply pending Mike attestation + AWS creds  
 **Systems:** Airtable, Submission Assets, Homework Completions, AWS S3, Lambda viewer pipeline
 
 Reduce Airtable storage usage by deleting the original **Submission Assets** intake attachment after the uploaded file has been successfully written to AWS S3 and the durable file path is confirmed.
@@ -304,7 +306,7 @@ Reduce Airtable storage usage by deleting the original **Submission Assets** int
 7. A dry-run report identifies eligible, skipped, and failed records without deleting anything.
 8. Automated tests cover successful cleanup, failed upload, missing S3 object, invalid URL, retry, and duplicate-processing cases.
 
-**Implementation (2026-08-28, revised):** Shared helpers `lib/intake-attachment-cleanup/` (fail-closed verification contract); CLI `tools/airtable/fut_010_intake_attachment_cleanup.py` (dry-run default, reconcile filter on apply, per-record AWS error skip, `--confirm-delete` required); extension `airtable/extension-scripts/safe-backfills/fut-010-clear-intake-attachments.js`. **Out of scope:** `Homework Completions.Airtable Attachment`. Promotion doc: [FUT-010-intake-attachment-cleanup.md](./deploy-checklists/FUT-010-intake-attachment-cleanup.md). Production attachment delete **not** executed — Mike dry-run + formula attestation required.
+**Implementation (2026-08-28, revised):** Shared helpers `lib/intake-attachment-cleanup/` (fail-closed verification contract); CLI `tools/airtable/fut_010_intake_attachment_cleanup.py` (dry-run default, reconcile filter on apply, per-record AWS error skip, `--confirm-delete` required); extension `airtable/extension-scripts/safe-backfills/fut-010-clear-intake-attachments.js`. **Out of scope:** `Homework Completions.Airtable Attachment`. Promotion doc: [FUT-010-intake-attachment-cleanup.md](./deploy-checklists/FUT-010-intake-attachment-cleanup.md). **Dry-run evidence (2026-08-30):** [`testing/evidence/FUT-010-DRY-RUN-2026-08-30.md`](./testing/evidence/FUT-010-DRY-RUN-2026-08-30.md) — 0 eligible; Production attachment delete **not** executed.
 
 ---
 
@@ -437,34 +439,48 @@ Redesigned `/shoot/levels` with ascending Level 1–12 order, ladder-style hero 
 ### FUT-016 — Tutorials page redesign
 
 **Priority:** P2  
-**Status:** Planned  
+**Status:** **Complete** (portfolio catalog shipped 2026-08-30 — FUT-014/FUT-015 parity)  
 **Systems:** Website Tutorials page, canonical Tutorials & Assets data
 
 Create a new portfolio-style Tutorials page using the approved design tools while preserving the existing links and content relationships. Do not reintroduce the retired duplicate Tutorials table.
 
+**Shipped (2026-08-30):** Portfolio catalog with feature banner, media-delivery orientation, AccentRail cards, in-page vs external badges, keyboard focus rings, display-layer EXT-QA-003 cross-program de-emphasis; Vitest for `tutorial-presentation` helpers.
+
+**Shipped (2026-08-28):** Parent-facing catalog subtitle clarifying in-page vs external media; metadata description polish; existing `TutorialMediaGridView` contract unchanged.
+
 ### FUT-017 — Zoom Meeting page redesign
 
 **Priority:** P2  
-**Status:** Planned  
+**Status:** **Complete** (2026-08-30)  
 **Systems:** Website Zoom page, Airtable Zoom Meetings
 
 Create a new portfolio-style Zoom Meeting page using the approved design tools while preserving current links and meeting information.
 
+**Shipped (2026-08-28):** Catalog copy for live links vs recordings; metadata description polish; existing week-grouped catalog unchanged.
+
+**Shipped (2026-08-30):** Full portfolio redesign — `ProgramFeatureBanner`, live vs recording terminology/orientation, `AccentRail` week groups, access badges, catalog resource links, graceful cover fallback (`W{n}` monogram + session type), detail cover fallback; vitest + smoke headings unchanged.
+
+**Validation (2026-08-30):** lint ✓ · typecheck ✓ · vitest ✓ · build ✓ · browser desktop + mobile ✓
+
 ### FUT-018 — Landing Page and Shooting Challenge page improvements
 
 **Priority:** P1  
-**Status:** Planned  
+**Status:** **Complete** (2026-08-28)  
 **Systems:** Website public pages, SEO metadata, existing content/data contracts
 
 Review and improve the Landing Page and Shooting Challenge page without duplicating existing pages. Adapt existing pages when they already serve the required purpose. Separate prompts should be used for each page.
 
+**Validation (2026-08-30):** Rebased onto homepage redesign (#270); kept #270 hero CTAs and content hierarchy; added “For parents and families” section with FAQ/homework links from #266.
+
 ### FUT-019 — Website footer consistency
 
 **Priority:** P2  
-**Status:** Brainstormed  
+**Status:** **Complete** (2026-08-28)  
 **Systems:** Website layout and all public pages
 
 Create and apply one professional, accessible footer across all public website pages. Preserve required navigation, contact, program, and legal/consent information.
+
+**Validation (2026-08-28):** `lib/site-chrome/footer-config.ts` + enhanced `SiteFooter` (quick links, Fillout registration CTAs, FAQ pointer, consent copy); Playwright footer consistency on 6 public routes; vitest footer-config ✓
 
 ---
 
@@ -528,7 +544,7 @@ Add an appropriate FAQ and organization information where supported by the curre
 ### FUT-025 — Sitemap, indexing, and public athlete profiles
 
 **Priority:** P1  
-**Status:** IN PROGRESS (SC-115 indexing cutover complete; athlete profile consent/metadata verification open)  
+**Status:** **Complete** (2026-08-30) — env-gated athlete indexing cutover path verified; privacy/metadata audit closed; production defaults remain noindex  
 **Systems:** Sitemap, robots, athlete profile metadata, consent assumptions
 
 Create or verify a sitemap and indexability rules for public pages. Public athlete profiles may be indexable using the athlete’s full name because registration consent covers name, image, and likeness promotion. The public profile may display:
@@ -539,6 +555,10 @@ Create or verify a sitemap and indexability rules for public pages. Public athle
 - Approved progress information
 
 Do not expose parent contact information, email addresses, private submission metadata, or sensitive information. The prompt must verify consent assumptions, route stability, metadata uniqueness, and search-engine behavior.
+
+**Policy (verified 2026-08-30):** Program listing pages indexable when `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`. Athlete profiles remain **`noindex`** until Mike sets **`NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING=true`** (fail-closed: requires program flag too). In-page profile HTML uses registration-consent allowlist only (`lib/data/public-athlete-profile.ts`, `PUBLIC_PROFILE_ENROLLMENT_FIELDS`). Metadata excludes grade/school via `buildAthleteProfilePageMetadata`. Sitemap intentionally excludes athlete slugs even after cutover (discovery via leaderboard links).
+
+**Validation (2026-08-30):** `public-athlete-profile-privacy.test.ts` · `athlete-profile-metadata.test.ts` · `metadata.test.ts` · `sitemap-entries.test.ts` · `search-indexing.spec.ts` · deploy checklist [`docs/deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md`](../docs/deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md)
 
 ### FUT-026 — Final Player Manual before challenge launch
 
@@ -553,7 +573,7 @@ Do not finalize or publish the manual while material app rules or page behavior 
 ### SC-ATHLETE-WF-001 — Individual athlete workflow QA (pre–season simulation)
 
 **Priority:** P0  
-**Status:** In progress (harness + dry-run + offline contracts + disposable live apply evidence 2026-08-30)  
+**Status:** COMPLETE (harness) — open product defect SC-005 B3 / MRW-I13; 065 Satisfactory-alone is expected skip  
 **Systems:** Testing harness, Enrollments (Testing3), Submissions, WAS, Homework Completions, Video Feedback, XP Events, streaks/levels contracts  
 **Related (distinct):** SC-005 matrix · **SC-PW-E2E** (COMPLETE — do not re-`--apply`) · **SC-SEASON-SIM-001/002** (future — do not expand until this path’s defects are dispositioned) · MRW-F09
 
@@ -813,7 +833,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-099** | Assets | Writeback verification (070c) | P0 | Installed in PROD | SC-094 | Re-test AcceptedΓåÆverify |
 | **SC-135** | Platform | Dry-run full season on Schmidt before public intake | P0 | Tracked under V2-012 | SC-005 | Execute after phases 1ΓÇô13 |
 | **SC-147** | Data Integrity | Reliability Command Center ΓÇö workflow health visibility before prod failures | P0 | Built in Repository | SC-040, SC-046 | Mike/OMNI create views 1ΓÇô4; review first Sunday health; **no auto repairs** |
-| **SC-149** | Website | Official landing + branding links use Fairfield Basketball Club (not Hoop Challenges) | P0 | Built in Repository | SC-102 | Set Vercel `NEXT_PUBLIC_LANDING_URL` / `NEXT_PUBLIC_SITE_URL` to Fairfield if still legacy; deploy; live smoke logo/footer; do not treat his |
+| **SC-149** | Website | Official landing + branding links use Fairfield Basketball Club (not Hoop Challenges) | P0 | **Repo attestation complete** (2026-08-30 prod smoke) | SC-102 | Mike: confirm Vercel `NEXT_PUBLIC_LANDING_URL` / `NEXT_PUBLIC_SITE_URL` in dashboard; evidence [`SC-149-FAIRFIELD-ATTESTATION-2026-08-30.json`](testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-08-30.json) |
 | **SC-002** | Testing | Test scenario library / templates for repeatable suites | P1 | Installed in PROD | SC-001 | Install/execute SCN-021ΓÇô043 on Schmidt; expand matrix; optional Airtable fields/UI only if approved |
 | **SC-008** | Testing | Email, Make, upload, and failure-path testing | P1 | Monitoring | SC-131+, SC-051+, SC-150 | Optional Mike-authorized live 074 invalid-webhook inject (SCN-029) ΓÇö offline+SOP already cover keep-Send-to-Make? |
 | **SC-012** | Homework | Written / reflection responses work | P1 | Installed in PROD | SC-019 | Re-test written-only HC; coach review + 071 |
@@ -860,7 +880,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-106** | Website | Levels pages | P2 | Live Tested in PROD | SC-024 | Gate copy polish; cover 410 graceful fallback in web |
 | **SC-107** | Website | Achievements pages | P2 | Installed in PROD | SC-026 | Re-seed / Active?+Visible? for Shot Milestones + Perfect Week (EXT-QA-002) |
 | **SC-108** | Website | Zoom public pages | P2 | Live Tested in PROD | SC-093 | Refresh expired Cover Media URLs (EXT-QA-004); web now hides 410 images |
-| **SC-109** | Website | Game Manual from config | P2 | Installed in PROD | SC-032, SC-082 | Set `NEXT_PUBLIC_GAME_MANUAL_URL` (EXT-QA-001); editorial copy; Shot Milestones surface later |
+| **SC-109** | Website | Game Manual from config | P2 | Installed in PROD (PDF env pending) | SC-032, SC-082 | Set `NEXT_PUBLIC_GAME_MANUAL_URL` (EXT-QA-001) — deploy checklist [`SC-109-game-manual-url-verification.md`](deploy-checklists/SC-109-game-manual-url-verification.md); editorial copy; Shot Milestones surface later |
 | **SC-110** | Website | Public display page | P2 | Installed in PROD | SC-054 | Wire Presentation fields; real season year after School Year fix |
 | **SC-111** | Website | Athlete profiles (real data, not mocks) | P2 | Live Tested in PROD | SC-103 | Optional: recreate `Web - Leaderboard` view (fallback OK) |
 | **SC-112** | Website | Athlete auth + dashboard | P2 | Decision Needed | ΓÇö | Mike pick approach; then schema + session implementation |
@@ -872,7 +892,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-144** | Website | Rename Softr-named publish flag | P2 | **DEFERRED** (general schema typo wave) | SC-054 | Gate summary / Softr flag / HC RID typos — SAFE-MIGRATION-PLAN P3; **Perfect Week Video Minimum** typo fixed 2026-08-27 |
 | **SC-145** | Platform | Repo health / security audit follow-ups | P2 | Planned | ΓÇö | Triage findings into SC items as needed |
 | **SC-146** | Enrollment | Re-open Fillout daily intake when season ready | P2 | Deferred | SC-060, SC-135 | Turn on only after SC-135 dry-run |
-| **SC-147** | Zoom | Recorded meeting half-XP writer (distinct from live 101) | P1 | **PROPOSED** — design brief only | SC-022, SC-087 | Approve brief; add XP Reward Rule; choose automation slot — **do not** overload 117 email |
+| **SC-147** | Zoom | Recorded meeting half-XP writer (distinct from live 101) | P1 | **Repo prep shipped** — draft + offline tests; not Live | SC-022, SC-087 | Mike: pick automation slot; confirm `ZOOM_RECORDING` rule row; DEV install — **do not** overload 117 email |
 | **SC-066** | Enrollment | Early-bird periods supported for 2026–2027 | P3 | Decision resolved — use early-bird registration | SC-065 | Decide if 2026ΓÇô27 uses early-bird; config if yes |
 | **SC-067** | Enrollment | Program Instance multi-year design | P3 | Tracked under V2-013 | SC-032, SC-046 | Dedicated architecture wave later ΓÇö do not block season launch on PI redesign |
 | **SC-100** | Assets | Attachment / Drive retirement strategy | P3 | Deferred | SC-095 | Plan retirement after S3 paths stable for HW+video |
@@ -928,9 +948,9 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 
 | Item | Status | Evidence |
 |---|---|---|
-| **Weekly email audit** | READY (Mike attestation) | `audits/2026-08-28-weekly-email-pipeline-audit.md` — 118→072→119→074→079 Hub chain |
+| **Weekly email audit** | Harness shipped (2026-08-30) | `audits/2026-08-28-weekly-email-pipeline-audit.md` + [`testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md`](testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md) — live `--apply` Mike disposable WAS |
 | **SC-PW-E2E preflight** | COMPLETE (repo) | `preflightApplyAccess`; unlock field resolver (`Source Key` / `Milestone Source Key`) |
-| **SC-147** | PROPOSED | Recorded Zoom half-XP writer — `docs/challenge-year/RECORDED-ZOOM-HALF-XP-DESIGN-BRIEF.md` |
+| **SC-147** | Repo prep shipped | Recorded Zoom half-XP — draft `drafts/sc-147-zoom-recording-half-xp.js` + `lib/sc-147-zoom-recording-credit.test.js`; Mike slot + rule row pending |
 | **FUT-001 / PR #264** | **COMPLETE** (repo + Production paste) | 020 v3.8 + 065 v10.4 Live; optional SC-016 re-submit only |
 
 ### 2026-08-29 legacy welcome-email field retirement
@@ -953,8 +973,9 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 
 | Item | Status | Evidence |
 |---|---|---|
-| **SC-ATHLETE-WF-001** | **IN PROGRESS** | Individual athlete workflow QA (pre–season-sim). Plan `docs/testing/athlete-workflow/SC-ATHLETE-WF.md`; harness `tools/testing/sc-athlete-wf.mjs`; evidence `docs/testing/evidence/sc-athlete-wf/apply-session-final-2026-08-30.json`. MRW-F09. |
+| **SC-ATHLETE-WF-001** | **COMPLETE (harness)** | Individual athlete workflow QA (pre–season-sim). Plan `docs/testing/athlete-workflow/SC-ATHLETE-WF.md`; harness `tools/testing/sc-athlete-wf.mjs`; evidence `docs/testing/evidence/sc-athlete-wf/apply-session-final-2026-08-30.json`. MRW-F09. Open product: SC-005 B3 (MRW-I13). |
+| **SC-WEEKLY-SETTLEMENT-E2E** | **COMPLETE** | Weekly settlement matrix (WAS / calc / PW fail-closed / handoff prep). Docs `docs/testing/weekly-settlement/`; harness `tools/testing/sc-weekly-settlement.mjs`; RESULTS + DEFECT-REPORT 2026-08-30. MRW-F10. |
 | **SC-SEASON-SIM-001** | **Planned / Future** | 60-day five-enrollment season simulation — narrative entry above § D / FUT-026; MRW-H11. Do **not** implement yet. FUT-010 unchanged. Reuse SC-PW-E2E later where appropriate. |
-| **SC-SEASON-SIM-002** | **Infrastructure ready** | Athlete 1 May–June 2027 (61-day) package — `tools/season_simulation/`. Offline tests + read-only preflight/dry-run OK; execute/cleanup not run. Distinct from SC-SEASON-SIM-001. Do **not** expand until SC-ATHLETE-WF-001 defects are dispositioned. |
+| **SC-SEASON-SIM-002** | **Infrastructure ready** | Athlete 1 May–June 2027 (61-day) package — `tools/season_simulation/`. Offline tests + read-only preflight/dry-run OK; execute/cleanup not run. Distinct from SC-SEASON-SIM-001. Do **not** expand until product B3 dispositioned if season path depends on counted-day XP rules. |
 
 ---

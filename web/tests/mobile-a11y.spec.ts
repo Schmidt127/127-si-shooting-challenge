@@ -198,4 +198,29 @@ test.describe("desktop accessibility basics", () => {
     const className = (await link.getAttribute("class")) || "";
     expect(className.includes("sc-text-link") || decoration.includes("underline")).toBeTruthy();
   });
+
+  test("footer registration links use Fillout URLs with noopener", async ({ page }) => {
+    await page.goto("leaderboard", { waitUntil: "domcontentloaded" });
+    const registrationNav = page.getByRole("navigation", {
+      name: /Shooting Challenge registration links/i,
+    });
+    await expect(registrationNav).toBeVisible();
+
+    const register = registrationNav.getByRole("link", {
+      name: /Register for the Challenge/i,
+    });
+    await expect(register).toHaveAttribute(
+      "href",
+      "https://forms.fairfieldbasketballclub.com/shoot-playerregistration",
+    );
+    await expect(register).toHaveAttribute("rel", /noopener/);
+
+    const submit = registrationNav.getByRole("link", {
+      name: /Submit Today's Activity/i,
+    });
+    await expect(submit).toHaveAttribute(
+      "href",
+      "https://forms.fairfieldbasketballclub.com/shoot-dailysubmissions",
+    );
+  });
 });

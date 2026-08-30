@@ -88,6 +88,19 @@ const COMMANDS = [
     args: ["tests/automation-contracts/065-066-trigger-record.test.js"],
   },
   {
+    name: "automation-contracts (docs/hardcode/io/057/legacy)",
+    cmd: process.execPath,
+    args: [
+      "--test",
+      "tests/automation-contracts/docs-canonical-header.test.js",
+      "tests/automation-contracts/hardcode-forbidden-patterns.test.js",
+      "tests/automation-contracts/automation-io-conventions.test.js",
+      "tests/automation-contracts/known-reference-numbers.test.js",
+      "tests/automation-contracts/legacy-welcome-email-retirement.test.js",
+      "tests/automation-contracts/057-perfect-week-video-minimum.test.js",
+    ],
+  },
+  {
     name: "065-066-trigger-record-offline",
     cmd: process.execPath,
     args: ["--test", "tools/testing/tests/test_065_066_trigger_record.mjs"],
@@ -113,6 +126,10 @@ const COMMANDS = [
     args: ["airtable/automations/shooting-challenge/lib/c025-zoom-recording-credit.test.js"],
   },
   {
+    name: "sc-147-zoom-recording-credit",
+    args: ["airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.test.js"],
+  },
+  {
     name: "tools/testing node --test (115/117/verifier)",
     cmd: process.execPath,
     args: [
@@ -121,6 +138,11 @@ const COMMANDS = [
       "tools/testing/tests/test_117_offline.mjs",
       "tools/testing/tests/test_expected_actual.mjs",
     ],
+  },
+  {
+    name: "mrw-f07-weekly-email-contract",
+    cmd: process.execPath,
+    args: ["tools/testing/tests/test_mrw_f07_weekly_email_contract.mjs"],
   },
   { name: "validate-v2-release-readiness", args: ["tools/validate-v2-release-readiness.js"] },
   {

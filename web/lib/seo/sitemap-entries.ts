@@ -13,6 +13,12 @@ import type { ZoomMeetingCatalogData } from "@/types/zoom-meetings";
 
 import { canonicalUrl, SITEMAP_PUBLIC_ROUTES } from "./metadata";
 
+/**
+ * Athlete profile slugs are intentionally excluded from sitemap.xml (FUT-025).
+ * Profiles remain discoverable via internal links (leaderboard) when Mike enables
+ * `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING=true`; sitemap omission is by design.
+ */
+
 const AIRTABLE_RECORD_ID = /^rec[a-zA-Z0-9]{14}$/;
 
 function isPublicAirtableRecordId(id: string): boolean {
