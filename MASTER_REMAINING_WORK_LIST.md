@@ -98,19 +98,19 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | Field | Value |
 |-------|--------|
 | **ID** | MRW-A05 |
-| **Short title** | 2026–27 Weeks production import |
-| **Description** | Generated Weeks exist in repo tooling; Production Weeks import + Mike attestation still open. Weeks are protected configuration (not disposable-test deletes). |
-| **Why it matters** | Challenge cannot run without correct week calendar. |
-| **Current status** | BLOCKED |
-| **Source document(s)** | Future Work SC-032/SC-065; Completion Master PKG-009 |
+| **Short title** | 2026–27 Weeks production calendar |
+| **Description** | Official Config `2026-2027` Weeks **already present** in Production (Early Bird + Weeks 1–9 + Post-Challenge). Audit 2026-08-30: Early Bird **Apr 25–May 1, 2027** (May 1 inclusive); Week 1 starts May 2; Early Bird `Counts Toward Challenge?` = true; Post-Challenge unchecked. Claimed Aug 23 Early Bird is **not** live. |
+| **Why it matters** | Challenge cannot run without correct week calendar; Early Bird must remain countable. |
+| **Current status** | **NEEDS VERIFICATION** — official rows exist; Mike must confirm Early Bird window (keep Apr 25 vs authorize Aug 23 date change) |
+| **Source document(s)** | [`docs/testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md`](docs/testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md); Future Work SC-032/SC-065 |
 | **Repository location(s)** | `docs/challenge-year/`, weeks generators under tools |
-| **Dependencies** | Mike calendar decisions; early-bird dates if used (SC-066 decided in principle) |
-| **Exact files or production systems affected** | Production `Weeks` table |
-| **Autonomous?** | No |
-| **Required manual action** | Mike/OMNI import + attestation |
-| **Verification required** | Week Start/End America/Denver; enrollment linkage; WAS create coverage |
+| **Dependencies** | Mike calendar decision if expanding Early Bird |
+| **Exact files or production systems affected** | Production `Weeks` table (protected) |
+| **Autonomous?** | Audit only — no Weeks writes |
+| **Required manual action** | Confirm Early Bird dates; optional archive WSTEST/PWTEST; keep Post-Challenge non-countable |
+| **Verification required** | Met for Apr 25 structure; Aug 23 structure not imported |
 | **Recommended priority** | P0 |
-| **Definition of done** | CURRENT-TRUTH Weeks section + SC-065 COMPLETE |
+| **Definition of done** | Mike attests live calendar; CURRENT-TRUTH Weeks section updated |
 
 ### MRW-A06 — Player Manual finalization (FUT-026)
 
@@ -279,15 +279,15 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-C04 | Paste 073 v4.4 | **COMPLETE** | same | Do not re-paste | — |
 | MRW-C05 | Paste 020 v3.8 + 065 v10.4 | **COMPLETE** | `FUT-001-*.md` | Optional SC-016 only | — |
 | MRW-C05b | Paste 058 1.5 + 059 v3.7 | **COMPLETE** | `058-v1.5-*.md` | Do not re-paste | — |
-| MRW-C05c | Repaste 057 v2.2 (Config field name) | **READY FOR PRODUCTION APPLY** | [`057-v2.2-perfect-week-video-minimum-paste.md`](docs/deploy-checklists/057-v2.2-perfect-week-video-minimum-paste.md) | Mike paste + Automations Code refresh | P0 |
+| MRW-C05c | 057 v2.2 Perfect Week Video Minimum | **COMPLETE (live script)** | Live automation MCP 2026-08-30; tracker Code column still stale | Optional Automations Code refresh only — **do not repaste** | — |
 | MRW-C06 | SC-151 Submitted Same Day? formula | READY TO IMPLEMENT | Future Work SC-151 | OMNI formula change | P2 |
 | MRW-C07 | RCC views / Interface install | READY FOR PRODUCTION APPLY | `RELIABILITY-COMMAND-CENTER-PRODUCTION-INSTALL.md` | OMNI views | P1 |
 | MRW-C08 | Automation UI version inventory (SC-058) | NEEDS VERIFICATION | AUTOMATION_VERSION_INVENTORY | Mike UI attestation vs MCP | P1 |
 | MRW-C09 | Retire/disposition Automation 043 (SC-059) | IN PROGRESS | Future Work SC-059 | Confirm 043 not deployed | P1 |
-| MRW-C10 | FUT-010 live attachment clear | **DRY-RUN COMPLETE (2026-08-30)** — 0 eligible; Mike attestation + AWS creds before pilot | [`FUT-010-DRY-RUN-2026-08-30.md`](docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30.md) | Mike sign-off then supervised apply | P1 |
+| MRW-C10 | FUT-010 live attachment clear | **DRY-RUN COMPLETE (re-run 2026-08-30)** — **0 eligible** (homework scope 0); **no deletion request** | [`FUT-010-DRY-RUN-2026-08-30-R2.md`](docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30-R2.md) | Optional Mike sign-off + AWS creds when eligible rows appear | P2 |
 
-**Already applied (do not re-queue):** 059 Pending-only trigger; 010 v10.12; 020 v3.8; 022 v2.2; 058 1.5; 059 v3.7; 065 v10.4; 066 v3.9; 072 v4.8; 073 v4.4; SEO indexing env; FUT-WELCOME-LEGACY field delete.  
-**Still open paste:** **057** CONFIG typo → correct `Perfect Week Video Minimum` (MRW-C05c).
+**Already applied (do not re-queue):** 059 Pending-only trigger; 010 v10.12; 020 v3.8; 022 v2.2; **057 v2.2 correct field (live)**; 058 1.5; 059 v3.7; 065 v10.4; 066 v3.9; 072 v4.8; 073 v4.4; SEO indexing env; FUT-WELCOME-LEGACY field delete; PR **#298** public copy.  
+**Still open paste:** **None** for the verified baseline set.
 
 **For each C-item DoD:** Automations Code column matches GitHub version + CURRENT-TRUTH §8 updated + dated evidence.
 
@@ -309,7 +309,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 
 | ID | Title | Status | Notes |
 |----|-------|--------|-------|
-| MRW-E01 | Confirm Vercel Production tracks master after merges | NEEDS VERIFICATION | Auto-deploy on master; verify `/shoot` + `/shoot/api/airtable` |
+| MRW-E01 | Confirm Vercel Production tracks master after merges | **COMPLETE (2026-08-30)** | Production deploy SHA `082edc7d` (PR #298); `/` + `/shoot` + `/shoot/api/airtable` HTTP 200 `tokenValid:true` |
 | MRW-E02 | SC-149 branding URL env + smoke | **REPO COMPLETE** — prod attestation PASS 2026-08-30; Mike Vercel env dashboard checkboxes pending ([`SC-149-fairfield-branding-url-verification.md`](docs/deploy-checklists/SC-149-fairfield-branding-url-verification.md)) |
 | MRW-E03 | SC-148 mobile/a11y polish deploy | IN PROGRESS | Repo built; merge + smoke |
 | MRW-E04 | Production smoke suite after web merges | **COMPLETE** | Home hero assertion aligned to FUT-018 `HOME_HERO` copy; `npm run test:smoke:prod` **50/50** (2026-08-30) |
@@ -398,35 +398,38 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-I04 | SC-PW-E2E Enrollments-capable PAT | BLOCKED | Token with Enrollments R/W (agent PATs often 403) |
 | MRW-I05 | FUT-003 Make activation timing | BLOCKED | When to turn scenario ON |
 | MRW-I06 | C-028 Tremendous Production API | BLOCKED | Tremendous approval + keys in Make only |
-| MRW-I07 | Weeks 2026–27 import (MRW-A05) | BLOCKED | Calendar + import approval |
+| MRW-I07 | Weeks 2026–27 Early Bird window (MRW-A05) | BLOCKED | Confirm Apr 25–May 1 live vs authorize Aug 23–May 1 date change (protected Weeks) |
 | MRW-I08 | Learning Activities schema (SC-018) | BLOCKED | Schema authorization |
 | MRW-I09 | Fillout daily intake reopen (SC-146) | BLOCKED | After dry-run SC-135 |
-| MRW-I10 | Production paste windows (C01–C05) | **COMPLETE except MRW-C05c (057)** | Do not re-queue 010/020/022/065/072/073; **do** paste 057 |
+| MRW-I10 | Production paste windows (C01–C05c) | **COMPLETE** | Do not re-paste 010/020/022/057/065/072/073; optional Automations Code refresh for 057 tracker only |
 | MRW-I11 | Branch protection / merge approval if CI requires human | BLOCKED | Approve merges if required |
 | MRW-I12 | Vercel deploy credentials if auto-deploy fails | **COMPLETE** (2026-08-30) | CLI linked; Production public URL envs restored; redeploy Ready — keep dashboard access for future ops |
-| MRW-I13 | SC-005 B3 same-day counted shooting XP policy | BLOCKED | Product decision: at most one SUBMISSION_XP per Denver day vs per Count It submission (ATHWF dual 20 XP) |
+| MRW-I13 | SC-005 B3 same-day counted shooting XP policy | **DECIDED** | Award XP **once per Count It submission** — do not change |
 
 ---
 
 ## Recommended next task for Mike
 
-1. **Paste Automation 057** per [docs/deploy-checklists/057-v2.2-perfect-week-video-minimum-paste.md](docs/deploy-checklists/057-v2.2-perfect-week-video-minimum-paste.md) (Mike approval; only outstanding priority paste).  
-2. **Do not** re-paste 010/020/022/058/059/065/072/073 and **do not** re-run Perfect Week --apply for WAS 
-ecl3DmBh22ADPWWe.  
-3. **Then:** FUT-010 supervised attachment clear (dry-run already complete) per operator queue.  
-4. **Calendar:** Weeks 2026–27 import (MRW-A05) when ready — Weeks are protected.  
+1. **Confirm Early Bird calendar** — live Production is **Apr 25–May 1, 2027** (May 1 in Early Bird; Week 1 starts May 2). If the intended window is Aug 23, 2026–May 1, 2027, authorize a protected Weeks date change (not a greenfield import). Evidence: [`docs/testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md`](docs/testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md).  
+2. **Do not** re-paste 010/020/022/057/058/059/065/072/073 and **do not** re-run Perfect Week `--apply` for WAS `recl3DmBh22ADPWWe`.  
+3. **FUT-010:** dry-run still **0 eligible** — no deletion request; optional sign-off only.  
+4. Optional: refresh Automations **Code** text for 057 (tracker lag) — live script already correct.  
 5. **Do not** activate FUT-003 until registration intentionally opens.  
-6. **Do not** start SC-SEASON-SIM-001 yet — ATHWF harness (MRW-F09) + weekly settlement (MRW-F10) are done; disposition SC-005 B3 (MRW-I13) when ready; next engineering after 057 is FUT-010 then Weeks import.
+6. **Do not** start SC-SEASON-SIM-001 until Early Bird window is attested.
 
 ---
 
 ## Deduplication notes
 
-- **Paste debt C01–C05 + 058/059** → **COMPLETE** except **MRW-C05c (057 typo-field repaste)** — Automations Code MCP 2026-08-30.  
-- **SC-034 / V2-002 / PW config items** → schema + formulas COMPLETE; **057 script CONFIG string still open** (MRW-C05c).  
-- **SC-SEASON-SIM-001 / MRW-H11** → **FUTURE / Planned only** (2026-08-29) — not active; not SC-005; not SC-PW-E2E reopen; **FUT-010 unchanged**.  
-- **SC-WEEKLY-SETTLEMENT-E2E / MRW-F10** → **COMPLETE** (2026-08-30) — harness + live WS-01…WS-10 evidence; defect report filed.  
-- **SC-ATHLETE-WF-001 / MRW-F09** → **COMPLETE (harness)** (2026-08-30) — open product B3 tracked as MRW-I13.
+- **Paste debt C01–C05c + 058/059** → **COMPLETE** (live 057 correct; Automations Code tracker may lag).  
+- **SC-034 / V2-002 / PW config items** → schema + live 057 CONFIG **COMPLETE**.  
+- **Public copy Phase 4 safe set** → PR **#298** merged + Production deploy `082edc7d`.  
+- **FUT-010** → dry-run **0 eligible** (R2); no delete request.  
+- **Weeks 2026–27** → official rows present; Early Bird Apr 25–May 1 live; Aug 23 claim not applied.  
+- **SC-SEASON-SIM-001 / MRW-H11** → **FUTURE / Planned only** — not active; **FUT-010 unchanged**.  
+- **SC-WEEKLY-SETTLEMENT-E2E / MRW-F10** → **COMPLETE** (2026-08-30).  
+- **SC-ATHLETE-WF-001 / MRW-F09** → **COMPLETE (harness)**; B3 XP policy **DECIDED** (one XP per Count It).  
+- Local uncommitted `tools/testing/lib/sc-pw-e2e-lib.mjs` and `tools/season_simulation/` → unrelated WIP; do not modify/commit in this closeout.
 - SC-027/066 shot milestones live-tested → monitoring only.  
 - Historical overnight MIKE-ACTIONS rows superseded by CURRENT-TRUTH / Section G where dated later.  
 - Legacy C-/SC- inventory in Future Work Sections A–F remains evidence; **this file + operator queue + Future Work Section G** are the operator queues.  

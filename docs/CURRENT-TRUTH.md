@@ -57,10 +57,10 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | **`57e72348`** — merge PR **#295** docs closeout (code tip **`9f4a64b6`** = PR **#292** FUT-002; `#293` CHANGELOG fix; `#291` SC-147; `#290` FUT-010; `#289` MRW-F07; `#288` MRW-E02; `#287` SC-109; `#285` FUT-017; `#284` FUT-016; `#282`–`#283` smoke/contracts; `#281` FUT-025; `#280` SC-149; `#279` MRW-B06). Re-verify: `git rev-parse HEAD` |
+| HEAD SHA | **`082edc7d`** — merge PR **#298** Phase 4 public copy (prior tip `69d77134` = #276). Re-verify: `git rev-parse HEAD` |
 | `origin/master` | Should match HEAD after fetch — re-verify: `git rev-parse origin/master` |
 | Ahead / behind | **0 / 0** (re-verify after fetch) |
-| Recent merges (2026-08-30) | **#279** MRW-B06 public UX · **#280** SC-149 branding checklist · **#281** FUT-025 athlete indexing gate · **#282** MRW-E04 prod smoke 50/50 · **#283** MRW-F08 contract suite · **#284** FUT-016 Tutorials · **#285** FUT-017 Zoom · **#287** SC-109 Game Manual checklist · **#288** MRW-E02 Fairfield attestation · **#289** MRW-F07 weekly email harness · **#290** FUT-010 dry-run evidence · **#291** SC-147 Zoom half-XP prep · **#292** FUT-002 field inventory · **#293** CHANGELOG conflict-marker fix · **#295** docs closeout reconcile |
+| Recent merges (2026-08-30) | **#298** public copy · **#276** ATHWF · **#297** paste audit · **#295** docs closeout · **#279–#293** earlier closeout suite |
 | Prior integrity ship | `0b1d634…` (2026-08-20); XP activity ledger merge follows |
 | True merge markers (`<<<<<<<`) | None found |
 | Nested clone (ignored) | Local folder `127-si-shooting-challenge/` — gitignored; **do not treat as source of truth** |
@@ -97,15 +97,17 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | Health | `GET /shoot/api/airtable` → token validity check |
 | Softr | **Obsolete / Not Used** — historical reference only |
 | SEO | **Public program pages indexable** — `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true` on Vercel Production (SC-115 cutover 2026-08-25). Athlete profiles + private routes remain `noindex`. Checklist: [`deploy-checklists/2026-08-25-web-search-indexing-cutover.md`](./deploy-checklists/2026-08-25-web-search-indexing-cutover.md). |
-| Production deploy | **Live** — Vercel Production deploy from `master` **`57e72348`** verified 2026-08-30 via GitHub deployments API (`2026-08-30T15:23:40Z`) + `GET /shoot/api/airtable` **200** (`tokenValid: true`). Prior code deploy **`9f4a64b6`** (`2026-08-30T15:15:29Z`). |
-| Vitest / smoke | **481/481** Vitest pass (2026-08-30 closeout) · `npm run test:smoke:prod` **50/50** (MRW-E04 home hero aligned to FUT-018) · repository-qa contract suite green (MRW-F08) · SC-149 attestation script PASS |
+| Production deploy | **Live** — Vercel Production SHA **`082edc7d`** (PR #298, 2026-08-30T17:04:57Z) · `GET /shoot` **200** · `GET /shoot/api/airtable` **200** (`tokenValid: true`) |
+| Vitest / smoke | **483/483** Vitest pass (2026-08-30 release QA) · typecheck/lint/build PASS · prior smoke **50/50** (MRW-E04) |
 | FUT-016 Tutorials | **Complete** — portfolio catalog at `/shoot/tutorials` (PR **#284**, 2026-08-30) |
 | FUT-017 Zoom Meetings | **Complete** — portfolio catalog at `/shoot/zoom-meetings` (PR **#285**, 2026-08-30) |
 | FUT-025 athlete profiles | **Repo complete** — env-gated `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING`; Mike cutover pending ([`deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md`](./deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md)) |
 | SC-149 branding URLs | **Repo attestation complete (2026-08-30)** — prod render + smoke PASS; Mike Vercel env dashboard checkboxes pending ([`deploy-checklists/SC-149-fairfield-branding-url-verification.md`](./deploy-checklists/SC-149-fairfield-branding-url-verification.md)) |
 | SC-109 Game Manual PDF | **Partial** — deploy checklist + smoke assertions shipped (PR **#287**); `/shoot/game-manual` live-config sections render; `NEXT_PUBLIC_GAME_MANUAL_URL` still unset in Production (EXT-QA-001) — checklist: [`deploy-checklists/SC-109-game-manual-url-verification.md`](./deploy-checklists/SC-109-game-manual-url-verification.md) |
 | FUT-002 field inventory | **Audit complete (2026-08-30, PR #292)** — 1347 fields classified; **no deletions**; Mike-only deletion phase pending |
-| FUT-010 intake attachment cleanup | **Dry-run complete (2026-08-30, PR #290)** — 0 eligible rows; Mike attestation + AWS creds before supervised apply — [`testing/evidence/FUT-010-DRY-RUN-2026-08-30.md`](./testing/evidence/FUT-010-DRY-RUN-2026-08-30.md) |
+| FUT-010 intake attachment cleanup | **Dry-run complete (R2 2026-08-30)** — **0 eligible**; no deletion request — [`testing/evidence/FUT-010-DRY-RUN-2026-08-30-R2.md`](./testing/evidence/FUT-010-DRY-RUN-2026-08-30-R2.md) |
+| Weeks 2026–27 | Official calendar present; Early Bird **Apr 25–May 1, 2027** countable; May 1 ∈ Early Bird; Week 1 starts May 2; Aug 23 Early Bird **not** live — [`testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md`](./testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md) |
+| Phase 4 public copy | **Shipped** PR **#298** — pending Mike-only items remain Dashboard relabel / For-parents / SLA / adjacent-school FAQ |
 | SC-147 Recorded Zoom half-XP | **Repo prep shipped (PR #291)** — draft automation + offline conflict matrix; Mike: automation slot + `ZOOM_RECORDING` rule row; **do not** overload **117** email |
 | MRW-F07 weekly email harness | **Complete (PR #289)** — disposable E2E tooling for `118→072→119→074→079`; live `--apply` on Mike disposable WAS still operator-only |
 | Production smoke athlete slug | `perfect-week-testing` (`testing-schmidt` is DEV-only) |
@@ -180,7 +182,7 @@ Do **not** treat other Automations-table columns (trigger/conditions) as authori
 | **022** | **v2.2** | v2.2 | Live / **aligned** | Lambda-only parent URL — [`022-v2.2-operator-packet.md`](./deploy-checklists/022-v2.2-operator-packet.md) |
 | **033** | **v4.4** | v4.4 | Live | |
 | **041** | **v5.1** | v5.1 | Live | Optional inputs only |
-| **057** | **v2.2** + typo CONFIG `Perfect Week Video MInimum` | **v2.2** correct name | Live / **repaste required** | Schema field is **`Perfect Week Video Minimum`** (`fldqRxjWGXcbUZUg3`) — [`057-v2.2-perfect-week-video-minimum-paste.md`](./deploy-checklists/057-v2.2-perfect-week-video-minimum-paste.md) |
+| **057** | **v2.2** live script CONFIG `Perfect Week Video Minimum` | **v2.2** correct name | Live / **aligned** | Do **not** repaste. Automations **Code tracker** may still show stale typo — refresh Code text only if desired |
 | **058** | **1.5** | 1.5 | Live | Unlock only after Eligible + Ready |
 | **059** | **v3.7** | v3.7 | Live | |
 | **064** | **Production-verified current live** | v12.2 in repo | Live | Do not invent a new version string |
@@ -197,7 +199,7 @@ Do **not** treat other Automations-table columns (trigger/conditions) as authori
 
 **Record-ID classification (Mike final):** Dynamic for all record-based automations; optional on **041** only; intentionally blank on **056 / 078 / 118 / 119**. **065** and **066** use triggering-record `recordId` in Production. Closeout: [`deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md`](./deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md).
 
-**Config-over-code audit (SC-034 / V2-002):** Repo **057 v2.2** is Config-only on **`Perfect Week Video Minimum`**. Production schema renamed; **Automations Code for 057 still embeds typo `MInimum`** — **repaste required** (operator packet above). WAS lookup + formula live. **No** `legacyRequiredVideoCount: 3`. Audit: [`audits/2026-08-27-SC-034-config-hardcode-audit.md`](./audits/2026-08-27-SC-034-config-hardcode-audit.md). Full paste audit: [`deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md`](./deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md).
+**Config-over-code audit (SC-034 / V2-002):** Repo + **live** automation **057 v2.2** use Config field **`Perfect Week Video Minimum`**. Schema field renamed. Automations Code **tracker** may lag with typo — not a paste blocker. WAS lookup + formula live. **No** `legacyRequiredVideoCount: 3`. Audit: [`audits/2026-08-27-SC-034-config-hardcode-audit.md`](./audits/2026-08-27-SC-034-config-hardcode-audit.md).
 
 **Historical:** Midday 2026-08-21 Code snapshots (010 v10.10 / 101 v6.6) and “010/022/072 paste pending” rows are **superseded**.
 
