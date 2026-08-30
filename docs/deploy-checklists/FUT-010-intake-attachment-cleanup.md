@@ -206,6 +206,21 @@ Several Submission Assets formulas still reference `Airtable Attachment` (e.g. `
 
 ---
 
+## Dry-run executed 2026-08-30
+
+**Agent run (MRW-C10):** Production read-only preflight + dry-run + reconcile. **No apply, no `--confirm-delete`.**
+
+| Artifact | Path |
+|----------|------|
+| Evidence report | [`docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30.md`](../testing/evidence/FUT-010-DRY-RUN-2026-08-30.md) |
+| Preflight JSON | [`tools/airtable/_preview/fut-010-preflight-2026-08-30.json`](../../tools/airtable/_preview/fut-010-preflight-2026-08-30.json) |
+| Dry-run JSON (limit 50) | [`tools/airtable/_preview/fut-010-dry-run-2026-08-30.json`](../../tools/airtable/_preview/fut-010-dry-run-2026-08-30.json) |
+| Reconcile JSON (limit 100) | [`tools/airtable/_preview/fut-010-reconcile-2026-08-30.json`](../../tools/airtable/_preview/fut-010-reconcile-2026-08-30.json) |
+
+**Results summary:** 0 eligible rows; 27 verification failures + 23 ineligible (dry-run); 24 reconcile candidates all failed Storage Key format check. AWS credentials were not present in the agent environment — S3 HeadObject was not reached. Mike attestation and AWS creds required before pilot apply.
+
+---
+
 ## DEV / agent restrictions
 
 - **Do not** run `apply --confirm-delete` against Production from agent work
