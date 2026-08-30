@@ -350,7 +350,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-G09 | Phase 4 safe public copy (CR-01–CR-11) | **COMPLETE** | PR **#298** merge `082edc7d`; Production `dpl_2uQ1wPJferY189xkCFkg4D67JcFR`; [copy review](docs/copy-reviews/2026-08-30-phase4-public-pages.md) |
 | MRW-G10 | Phase 4 copy items needing Mike approval | **PARTIAL** | **CR-12 COMPLETE** via PR **#301**. Still deferred: CR-13 extra parents block; CR-17 grades-band nuance; CR-18 coach SLA |
 | MRW-G11 | Public website chrome cleanup (Dashboard/Display) | **COMPLETE** | PR **#301** merge `f3be964f`; Vitest **487/487**; prod smoke **50/50** + HTTP smoke PASS; audit [`web/docs/public-route-audit-2026-08-30.md`](web/docs/public-route-audit-2026-08-30.md) |
-| MRW-G12 | Final public-app readiness pass (routes, smoke, tests) | **COMPLETE** | FAQ in Playwright + HTTP smoke; public-route-readiness Vitest; public-display loading label; footer/nav/hub exclusion contracts; Vitest **493+**; deploy via Vercel after merge |
+| MRW-G12 | Final public-app readiness pass (routes, smoke, tests) | **COMPLETE** | PR **#308** merge `7332d2f3`; Vercel prod Ready; Vitest **493/493**; prod smoke **52/52** + HTTP smoke PASS (`/faq` 200); indexing policy verified (public `index, follow`; athlete/dashboard/display `noindex`) |
 
 ---
 
