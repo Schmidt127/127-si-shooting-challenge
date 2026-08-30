@@ -10,6 +10,10 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 #### Changed
 - **MRW-G08 CURRENT-TRUTH refresh (2026-08-30)** — Updated git SHA, merged PR ledger (#279–#285), vitest/smoke counts, FUT-016/017/025 and SC-149 status, open PR list, and pending Mike-only follow-ups.
+- **SC-109 Game Manual URL cutover path (2026-08-30)** — Added Mike deploy checklist
+  [`docs/deploy-checklists/SC-109-game-manual-url-verification.md`](./docs/deploy-checklists/SC-109-game-manual-url-verification.md)
+  for `NEXT_PUBLIC_GAME_MANUAL_URL`. Production smoke now asserts configured vs
+  coming-soon manual link state, blocks env-var leakage, and verifies live XP/level sections.
 - **FUT-017 Zoom Meetings portfolio redesign (2026-08-30)** — Full catalog redesign at
   `/shoot/zoom-meetings`: feature banner, live vs recording orientation, week-grouped
   `AccentRail` cards with access badges and external join/recording links, graceful 410 cover
