@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-30 docs closeout — `master` at **`9f4a64b6`** (PRs **#279–#293**); FUT-002 audit + SC-147 prep + FUT-010 dry-run + MRW-F07 harness + MRW-E02 attestation + SC-109 checklist merged; prod smoke **50/50**; Vitest **481/481**; offline contract suite green (MRW-F08)  
+**Last verification (repo):** 2026-08-30 docs closeout merged — `master` at **`57e72348`** (PR **#295** closeout; code tip **`9f4a64b6`** through PRs **#279–#293**)  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -57,10 +57,10 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | **`9f4a64b6`** — merge PR **#292** FUT-002 field inventory (`e9a12b28` #293 CHANGELOG fix; `#291` SC-147 Zoom half-XP prep; `#290` FUT-010 dry-run; `#289` MRW-F07 harness; `#288` MRW-E02 attestation; `#287` SC-109 checklist; `#285` FUT-017 Zoom; `#284` FUT-016 Tutorials; `#282` MRW-E04 smoke; `#283` MRW-F08 contracts; `#281` FUT-025 athlete SEO; `#280` SC-149 branding; `#279` MRW-B06 public UX). Re-verify: `git rev-parse HEAD` |
+| HEAD SHA | **`57e72348`** — merge PR **#295** docs closeout (code tip **`9f4a64b6`** = PR **#292** FUT-002; `#293` CHANGELOG fix; `#291` SC-147; `#290` FUT-010; `#289` MRW-F07; `#288` MRW-E02; `#287` SC-109; `#285` FUT-017; `#284` FUT-016; `#282`–`#283` smoke/contracts; `#281` FUT-025; `#280` SC-149; `#279` MRW-B06). Re-verify: `git rev-parse HEAD` |
 | `origin/master` | Should match HEAD after fetch — re-verify: `git rev-parse origin/master` |
 | Ahead / behind | **0 / 0** (re-verify after fetch) |
-| Recent merges (2026-08-30) | **#279** MRW-B06 public UX · **#280** SC-149 branding checklist · **#281** FUT-025 athlete indexing gate · **#282** MRW-E04 prod smoke 50/50 · **#283** MRW-F08 contract suite · **#284** FUT-016 Tutorials · **#285** FUT-017 Zoom · **#287** SC-109 Game Manual checklist · **#288** MRW-E02 Fairfield attestation · **#289** MRW-F07 weekly email harness · **#290** FUT-010 dry-run evidence · **#291** SC-147 Zoom half-XP prep · **#292** FUT-002 field inventory · **#293** CHANGELOG conflict-marker fix |
+| Recent merges (2026-08-30) | **#279** MRW-B06 public UX · **#280** SC-149 branding checklist · **#281** FUT-025 athlete indexing gate · **#282** MRW-E04 prod smoke 50/50 · **#283** MRW-F08 contract suite · **#284** FUT-016 Tutorials · **#285** FUT-017 Zoom · **#287** SC-109 Game Manual checklist · **#288** MRW-E02 Fairfield attestation · **#289** MRW-F07 weekly email harness · **#290** FUT-010 dry-run evidence · **#291** SC-147 Zoom half-XP prep · **#292** FUT-002 field inventory · **#293** CHANGELOG conflict-marker fix · **#295** docs closeout reconcile |
 | Prior integrity ship | `0b1d634…` (2026-08-20); XP activity ledger merge follows |
 | True merge markers (`<<<<<<<`) | None found |
 | Nested clone (ignored) | Local folder `127-si-shooting-challenge/` — gitignored; **do not treat as source of truth** |
@@ -97,7 +97,7 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | Health | `GET /shoot/api/airtable` → token validity check |
 | Softr | **Obsolete / Not Used** — historical reference only |
 | SEO | **Public program pages indexable** — `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true` on Vercel Production (SC-115 cutover 2026-08-25). Athlete profiles + private routes remain `noindex`. Checklist: [`deploy-checklists/2026-08-25-web-search-indexing-cutover.md`](./deploy-checklists/2026-08-25-web-search-indexing-cutover.md). |
-| Production deploy | **Live** — Vercel Production deploy from `master` **`9f4a64b6`** verified 2026-08-30 via GitHub deployments API (`2026-08-30T15:15:29Z`) + `GET /shoot/api/airtable` **200** (`tokenValid: true`). Repository QA green on merge commits #287–#292. |
+| Production deploy | **Live** — Vercel Production deploy from `master` **`57e72348`** verified 2026-08-30 via GitHub deployments API (`2026-08-30T15:23:40Z`) + `GET /shoot/api/airtable` **200** (`tokenValid: true`). Prior code deploy **`9f4a64b6`** (`2026-08-30T15:15:29Z`). |
 | Vitest / smoke | **481/481** Vitest pass (2026-08-30 closeout) · `npm run test:smoke:prod` **50/50** (MRW-E04 home hero aligned to FUT-018) · repository-qa contract suite green (MRW-F08) · SC-149 attestation script PASS |
 | FUT-016 Tutorials | **Complete** — portfolio catalog at `/shoot/tutorials` (PR **#284**, 2026-08-30) |
 | FUT-017 Zoom Meetings | **Complete** — portfolio catalog at `/shoot/zoom-meetings` (PR **#285**, 2026-08-30) |
