@@ -118,7 +118,7 @@ After confirming no active dependency remains, delete the obsolete fields and up
 
 **Acceptance criteria:** complete field/dependency inventory; unused and obsolete fields classified; fields removed only after audit; tests and documentation updated; no active S3/Lambda or future-approved fields removed accidentally.
 
-**Audit deliverables (2026-08-30):** [`docs/audits/FUT-002-unused-field-inventory-2026-08-30.md`](./audits/FUT-002-unused-field-inventory-2026-08-30.md) · [`docs/audits/fut-002-unused-field-inventory.json`](./audits/fut-002-unused-field-inventory.json) · tool `tools/airtable/fut_002_field_inventory.py`. Snapshot: **1347 fields** — **968 active**, **15 legacy**, **8 duplicate**, **356 unknown**; **21** safe-to-delete-later (mostly Google Drive); **19** blocked/protected. Deletion phase not started.
+**Audit deliverables (2026-08-30):** [`docs/audits/FUT-002-unused-field-inventory-2026-08-30.md`](./audits/FUT-002-unused-field-inventory-2026-08-30.md) · [`docs/audits/fut-002-unused-field-inventory.json`](./audits/fut-002-unused-field-inventory.json) · tool `tools/airtable/fut_002_field_inventory.py`. Snapshot: **1347 fields** — **1043 active**, **15 legacy**, **8 duplicate**, **281 unknown**; **21** safe-to-delete-later (mostly Google Drive); **19** blocked/protected. Deletion phase not started.
 
 ### FUT-003 — Stripe payment writeback to Airtable
 
