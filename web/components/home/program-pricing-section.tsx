@@ -79,7 +79,7 @@ export function ProgramPricingSection({ pricing }: { pricing: ProgramPricing | n
           </CardHeader>
           <CardContent className="pt-0">
             <PriceRow
-              label="Early bird"
+              label="Early Bird"
               amount={pricing.priceEarlyBird}
               deadline={pricing.deadlineEarlyBird}
             />

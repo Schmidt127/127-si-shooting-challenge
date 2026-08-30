@@ -8,16 +8,15 @@ export const PRIMARY_NAV_HREFS = [
   "/levels",
   "/tutorials",
   "/zoom-meetings",
+  "/faq",
   "/game-manual",
 ] as const;
 
-/** Nested under the responsive “More” menu. All routes remain available. */
+/** Nested under the responsive “More” menu. All listed routes remain available. */
 export const MORE_NAV_HREFS = [
-  "/dashboard",
   "/shoutouts",
   "/articles",
   "/achievements",
-  "/public-display",
 ] as const;
 
 const PRIMARY_SET = new Set<string>(PRIMARY_NAV_HREFS);

@@ -21,9 +21,9 @@ Nav `href` values are **relative to basePath** (e.g. `/leaderboard` → public `
 
 | Public URL | App path | Page | Airtable data | Status |
 |------------|----------|------|---------------|--------|
-| `/shoot` | `/` | Overview | — | Live |
-| `/shoot/faq` | `/faq` | Program FAQ — grades, registration, Educational Athletics, remote access | — | Live |
-| `/shoot/dashboard` | `/dashboard` | Athlete dashboard (mock until auth) — weekly summary, streak, Perfect Week, XP sources, homework, video feedback preview | Mock adapter | Demo — not cutover-ready |
+| `/shoot` | `/` | Overview | Leaderboard (top 3) + Program Instance pricing | Live |
+| `/shoot/faq` | `/faq` | Program FAQ — grades, registration, Educational Athletics, Early Bird timing, privacy, remote access | — | Live |
+| `/shoot/dashboard` | `/dashboard` | Athlete dashboard preview — weekly summary, streak, Perfect Week, XP, homework, video feedback | Mock adapter (optional enrollmentId/slug) | Demo — **hidden from public nav/hub** until SC-112 auth |
 | `/shoot/leaderboard` | `/leaderboard` | Season leaderboard | Enrollments (`Web - Leaderboard`) | Live |
 | `/shoot/homework` | `/homework` | Homework catalog | Program Homework Assignments + Homework Library + Weeks | Live |
 | `/shoot/homework/[id]` | `/homework/[id]` | Homework detail | Program Homework Assignments + Homework Library + Weeks | Live |
@@ -39,32 +39,41 @@ Nav `href` values are **relative to basePath** (e.g. `/leaderboard` → public `
 | `/shoot/levels/[id]` | `/levels/[id]` | Level detail | Levels | Live |
 | `/shoot/achievements` | `/achievements` | Achievements | Achievements (`Web - Achievements` or active+visible filter) | Live |
 | `/shoot/game-manual` | `/game-manual` | Game manual | Static / CMS TBD | Live |
-| `/shoot/public-display` | `/public-display` | TV / kiosk display | Leaderboard subset | Live |
-| `/shoot/athletes/[slug]` | `/athletes/[slug]` | Athlete profile | Mock adapter (auth TBD) | Demo — not cutover-ready |
+| `/shoot/public-display` | `/public-display` | TV / kiosk full-screen leaderboard | Leaderboard subset | Live gym/ops URL — **hidden from public nav/hub** |
+| `/shoot/athletes/[slug]` | `/athletes/[slug]` | Athlete profile (public progress) | Enrollments + XP presentation | Live when family shares a public slug; `noindex` by default |
 | `/shoot/admin` | `/admin` | Staff tools | Health/roadmap only | Placeholder — see [admin-roadmap.md](./admin-roadmap.md) |
 | `/shoot/api/airtable` | `/api/airtable` | Health check | — | Live |
 
 Views and filters: [airtable-views.md](./airtable-views.md)
 
+Route audit (Dashboard / Display decisions): [public-route-audit-2026-08-30.md](./public-route-audit-2026-08-30.md)
+
 ---
 
 ## Navigation (ProductShell)
 
-Order from `SHOOTING_CHALLENGE_NAV`:
+Order from `SHOOTING_CHALLENGE_NAV` + `nav-priority.ts`:
+
+**Primary**
 
 1. Overview → `/`
-2. Dashboard → `/dashboard`
-3. Leaderboard → `/leaderboard`
-4. Tutorials → `/tutorials`
-5. Homework → `/homework`
-6. Shoutouts → `/shoutouts`
-7. Articles → `/articles`
-8. Zoom Meetings → `/zoom-meetings`
-9. Game Manual → `/game-manual`
-10. Levels → `/levels`
+2. Leaderboard → `/leaderboard`
+3. Homework → `/homework`
+4. Levels → `/levels`
+5. Tutorials → `/tutorials`
+6. Zoom Meetings → `/zoom-meetings`
+7. FAQ → `/faq`
+8. Game Manual → `/game-manual`
+
+**More**
+
+9. Shoutouts → `/shoutouts`
+10. Articles → `/articles`
 11. Achievements → `/achievements`
-12. FAQ → `/faq`
-13. Display → `/public-display`
+
+**Not in public chrome** (direct URL only): `/dashboard`, `/public-display`, `/admin`, `/athletes/[slug]`
+
+Footer quick links: `web/lib/site-chrome/footer-config.ts` (no Dashboard / Display).
 
 ---
 
@@ -80,7 +89,7 @@ Order from `SHOOTING_CHALLENGE_NAV`:
 
 All public pages live under `web/app/(program)/`. Root `web/app/` contains only layout, error handling, and the API health route.
 
-**No redirects** in `next.config.ts`. Old bookmarked URLs from the pre-rebuild hub (`/shooting-challenge/*`) will not resolve unless the landing site adds rewrites.
+**No redirects** in `next.config.ts` for Dashboard/Display — routes stay live for bookmarks and gym displays; they are simply omitted from nav/hub.
 
 ---
 

@@ -168,12 +168,13 @@ test.describe("production smoke — navigation, assets, basePath", () => {
     });
     await expect(nav).toBeVisible();
 
-    // Primary strip only — Dashboard / Achievements / Display live under More.
+    // Primary strip — Dashboard + Display are chrome-excluded (direct URL only).
     const primaryLabels = [
       "Leaderboard",
       "Homework",
       "Levels",
       "Zoom Meetings",
+      "FAQ",
       "Game Manual",
     ];
 
@@ -194,12 +195,14 @@ test.describe("production smoke — navigation, assets, basePath", () => {
     }
 
     await nav.getByRole("button", { name: /More/i }).click();
-    for (const moreLabel of ["Dashboard", "Achievements", "Display"]) {
+    for (const moreLabel of ["Achievements", "Shoutouts", "Articles"]) {
       await expect(
         page.getByRole("menuitem", { name: moreLabel }),
         `More menu item ${moreLabel}`,
       ).toBeVisible();
     }
+    await expect(page.getByRole("menuitem", { name: "Dashboard" })).toHaveCount(0);
+    await expect(page.getByRole("menuitem", { name: "Display" })).toHaveCount(0);
     await page.getByRole("menuitem", { name: "Achievements" }).click();
     await expect(page).toHaveURL(/\/achievements/);
     await expectSingleHeading(page, "nav→Achievements via More");
@@ -254,8 +257,8 @@ test.describe("production smoke — athlete surfaces (read-only demo)", () => {
     await expect(page.getByText(/Weekly summary/i).first()).toBeVisible();
     await expect(page.getByText(/Video feedback/i).first()).toBeVisible();
     await expect(page.getByText(/Homework/i).first()).toBeVisible();
-    // Dashboard remains demo until SC-112 auth — smoke accepts demo labels.
-    await expect(page.getByText(/Demo|demo/i).first()).toBeVisible();
+    // Dashboard remains sample preview until SC-112 auth — smoke accepts preview labels.
+    await expect(page.getByText(/Sample preview|sample preview/i).first()).toBeVisible();
   });
 
   test("levels and achievements catalogs render", async ({ page }) => {

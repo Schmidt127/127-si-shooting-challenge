@@ -1,0 +1,43 @@
+# Nearly empty fields (<5% populated)
+
+**Snapshot:** 2026-08-30T18:38:17.934095+00:00
+
+Count: **35**
+
+| Table | Field | Field ID | Type | Records | Populated | Pct | Class | Evidence |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Automations | Related external systems | fld34GFcqWe2Exhtg | multilineText | 49 | 1 | 2.04 | REPO REFERENCED | repo hits: tools/airtable/export_airtable_schema.py, tools/airtable/_foundation_build_docs.py, tools/airtable/_preview/c013_prod_070b_verify_probe.py |
+| Enrollments | Public Missing Homework | fldozKoW3osO7eORu | formula | 28 | 1 | 3.57 | HAS DEPENDENTS | referenced by 1 field(s) |
+| Enrollments | Public Missing Streak | fld4N3ueITBuxqkNA | formula | 28 | 1 | 3.57 | HAS DEPENDENTS | referenced by 1 field(s) |
+| Submissions | Counted Activity Date Key | fld93oigqY19Z6zqN | formula | 209 | 4 | 1.91 | HAS DEPENDENTS | referenced by 1 field(s) |
+| Submissions | HW Sub 1 | fldtJS9LW3PAyCaNC | multipleAttachments | 209 | 9 | 4.31 | HAS DEPENDENTS | referenced by 8 field(s) |
+| Submissions | HW Sub 2 | fldUvfAHi3e15Oxb7 | multipleAttachments | 209 | 7 | 3.35 | HAS DEPENDENTS | referenced by 8 field(s) |
+| Submissions | HW1 Coach Feedback | fld1uL11xDEJDnsti | multipleLookupValues | 209 | 7 | 3.35 | REPO REFERENCED | repo hits: tools/airtable/_preview/c025_stage17_prod_schema_manifest_source.json |
+| Submissions | Homework Completions | fldBRAvpbYfBSPyZH | multipleRecordLinks | 209 | 10 | 4.78 | HAS DEPENDENTS | referenced by 1 field(s) |
+| Submissions | Build Daily Email Now? | flddsovM5dq6naBQ2 | checkbox | 209 | 6 | 2.87 | REPO REFERENCED | repo hits: airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js, airtable/automations/shooting-challenge/076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js, tools/testing/tests/run_031_script.mjs |
+| Submission Assets | Potential Asset Reuse? | fld2zhQb5iVz96UuK | checkbox | 65 | 1 | 1.54 | REPO REFERENCED | repo hits: tools/airtable/_preview/c013-dev-4c-after-recXUc3010h16Usmo.json, tools/airtable/_preview/c013-dev-4c-before-recXUc3010h16Usmo.json, tools/airtable/_preview/c013-dev-4c-upload-recXUc3010h16Usmo.json |
+| Submission Assets | Same Enrollment Match Found? | fldabGRmQrBtDLYgw | checkbox | 65 | 1 | 1.54 | REPO REFERENCED | repo hits: tools/airtable/_preview/c013-dev-4c-after-recXUc3010h16Usmo.json, tools/airtable/_preview/c013-dev-4c-before-recXUc3010h16Usmo.json, tools/airtable/_preview/c013-dev-4c-upload-recXUc3010h16Usmo.json |
+| Submission Assets | Asset Reuse Review Primary Reason | fldKtBYKQd8LZqhfh | singleSelect | 65 | 1 | 1.54 | REPO REFERENCED | repo hits: tools/airtable/_preview/c013-dev-4c-after-recXUc3010h16Usmo.json, tools/airtable/_preview/c013-dev-4c-before-recXUc3010h16Usmo.json, tools/airtable/_preview/c013-dev-4c-upload-recXUc3010h16Usmo.json |
+| Submission Assets | Asset Reuse Review Reasons | fldMRa3nppGxTGaPP | multipleSelects | 65 | 1 | 1.54 | REPO REFERENCED | repo hits: tools/airtable/_preview/c013-dev-4c-after-recXUc3010h16Usmo.json, tools/airtable/_preview/c013-dev-4c-before-recXUc3010h16Usmo.json, tools/airtable/_preview/c013-dev-4c-upload-recXUc3010h16Usmo.json |
+| Submission Assets | Duplicate Match Records (All) | fldoLkhHvFUlLIKGw | multipleRecordLinks | 65 | 1 | 1.54 | REPO REFERENCED | repo hits: tools/airtable/_preview/c013-dev-4c-after-recXUc3010h16Usmo.json, tools/airtable/_preview/c013-dev-4c-before-recXUc3010h16Usmo.json, tools/airtable/_preview/c013-dev-4c-upload-recXUc3010h16Usmo.json |
+| Submission Assets | From field: Duplicate Match Records (All) | fldNeyuvotRnbcR9a | multipleRecordLinks | 65 | 1 | 1.54 | REPO REFERENCED | repo hits: tools/airtable/_preview/c023-dev-stage5-S5A-recF86pJTIMFoEypJ.json, tools/airtable/_preview/c023-dev-stage5-S5B-recF86pJTIMFoEypJ.json, tools/airtable/_preview/c023-dev-stage5-S5C-recF86pJTIMFoEypJ.json |
+| XP Events | Week | fldND2zY07dQHygJL | multipleRecordLinks | 282 | 12 | 4.26 | HAS DEPENDENTS | referenced by 5 field(s) |
+| XP Events | Homework Completion | fldPl5VKHznvYwJtg | multipleRecordLinks | 282 | 6 | 2.13 | HAS DEPENDENTS | referenced by 2 field(s) |
+| XP Events | Week Record ID | fldSGoN2adV8JXVYe | multipleLookupValues | 282 | 12 | 4.26 | HAS DEPENDENTS | referenced by 1 field(s) |
+| XP Events | Streak Occurrence | fld2CP0yc4yZvxCWF | multipleRecordLinks | 282 | 8 | 2.84 | HAS DEPENDENTS | referenced by 2 field(s) |
+| XP Events | Streak Occurrence Key | fldYtFEPeNN77BbsP | multipleLookupValues | 282 | 8 | 2.84 | HAS DEPENDENTS | referenced by 1 field(s) |
+| XP Events | Date - Homework Submission Activity | fldl6CyUiKYtqvHfz | multipleLookupValues | 282 | 6 | 2.13 | HAS DEPENDENTS | referenced by 1 field(s) |
+| XP Events | Date - Streak End | fldHvhlnWHKlvNQDW | multipleLookupValues | 282 | 8 | 2.84 | HAS DEPENDENTS | referenced by 1 field(s) |
+| XP Events | Date - Weekly Summary End | fldbyfXAlNtDtEc6q | multipleLookupValues | 282 | 12 | 4.26 | HAS DEPENDENTS | referenced by 1 field(s) |
+| XP Events | XP Award Status | fldi8PBuKxSjEeX6Q | singleLineText | 282 | 8 | 2.84 | REPO REFERENCED | repo hits: airtable/automations/shooting-challenge/010-submission-intake-create-xp-event.js, airtable/automations/shooting-challenge/054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js, airtable/automations/shooting-challenge/058-achievements-and-milestones-create-perfect-week-unlock.js |
+| School - Synced | Website | fldeaUIkJcKP0qn0t | url | 1241 | 16 | 1.29 | NEARLY EMPTY — REVIEW | 1.29% populated; no formula deps |
+| School - Synced | Team | fldSWZ4VcsECnuPuY | singleLineText | 1241 | 1 | 0.08 | NEARLY EMPTY — REVIEW | 0.08% populated; no formula deps |
+| School - Synced | JH League | fldTZURXr9gS3HcnL | singleSelect | 1241 | 9 | 0.73 | NEARLY EMPTY — REVIEW | 0.73% populated; no formula deps |
+| School - Synced | Enrollments | fld0FxgUyjzdIcxYx | multipleRecordLinks | 1241 | 11 | 0.89 | REPO REFERENCED | repo hits: airtable/automations/shooting-challenge/001-enrollment-intake-and-setup-find-or-create-athlete-and-link-enrollment.js, airtable/automations/shooting-challenge/002-enrollment-intake-and-setup-assign-grade-band-initial.js, airtable/automations/shooting-challenge/003-enrollment-intake-and-setup-assign-grade-band-if-grade-changes.js |
+| Homework Library | Homework Completions | fld4swY3XDC0Bn4Er | multipleRecordLinks | 76 | 2 | 2.63 | REPO REFERENCED | repo hits: airtable/automations/shooting-challenge/020-homework-link-or-create-homework-completion.js, airtable/automations/shooting-challenge/022-submission-intake-sync-child-upload-writeback-from-submission-asset.js, airtable/automations/shooting-challenge/033-weekly-summary-and-goal-logic-assign-homework-to-weekly-athlete-summary.js |
+| Homework Library | Submissions copy | fldtclW1JHRfNfAVw | singleLineText | 76 | 1 | 1.32 | REPO REFERENCED | repo hits: tools/airtable/_preview/c025_stage17_prod_schema_manifest_source.json |
+| Homework Library | Testing Scenarios | fldU4VrmFR1D7jjvV | singleLineText | 76 | 1 | 1.32 | REPO REFERENCED | repo hits: airtable/automations/shooting-challenge/115-engineering-test-framework-run-testing-scenario-daily-submission.js, tools/airtable/overnight_config_xp_prod_probe.py, tools/airtable/_c025_stage17_create_etf_scenario.py |
+| Video Feedback | Ready for XP Automation? | fldOAZdjTivt8Z5pe | checkbox | 111 | 3 | 2.7 | REPO REFERENCED | repo hits: airtable/automations/shooting-challenge/113-video-review-and-xp-assign-base-video-xp.js, airtable/automations/shooting-challenge/114-video-review-and-xp-create-or-update-video-xp-event.js, tools/airtable/run_final_090_audits.py |
+| Video Feedback | Linked Asset Duplicate Match Record | fldRvQRxMX5l4uPID | multipleLookupValues | 111 | 4 | 3.6 | REPO REFERENCED | repo hits: tools/airtable/_preview/c023-dev-stage5-S5A-recF86pJTIMFoEypJ.json, tools/airtable/_preview/c023-dev-stage5-S5B-recF86pJTIMFoEypJ.json, tools/airtable/_preview/c023-dev-stage5-S5C-recF86pJTIMFoEypJ.json |
+| Video Feedback | Asset Type | fldCAnBNrOkgup7nz | singleSelect | 111 | 1 | 0.9 | REPO REFERENCED | repo hits: airtable/automations/shooting-challenge/009-submission-intake-create-submission-assets.js, airtable/automations/shooting-challenge/013-submission-intake-create-or-link-video-feedback.js, airtable/automations/shooting-challenge/020-homework-link-or-create-homework-completion.js |
+| Tutorials & Assets | Athlete Headshot | fldc5w0swm9QM0nHI | multipleAttachments | 32 | 1 | 3.12 | REPO REFERENCED | repo hits: web/lib/airtable/queries.ts, web/lib/data/leaderboard.test.ts, web/lib/data/leaderboard.ts |

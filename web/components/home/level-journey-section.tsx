@@ -69,7 +69,8 @@ export function LevelJourneySection() {
         <Link href="/levels" className="sc-text-link font-semibold text-foreground">
           levels page
         </Link>
-        . Athletes track current level and XP on their dashboard throughout the challenge.
+        . Families can follow current level and XP on the public leaderboard and on public
+        athlete profiles throughout the challenge.
       </p>
     </SiteSection>
   );

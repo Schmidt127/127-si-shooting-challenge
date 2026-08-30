@@ -4,7 +4,7 @@
 **Public URL:** https://www.fairfieldbasketballclub.com/shoot  
 **Authority companion:** [`MASTER_REMAINING_WORK_LIST.md`](./MASTER_REMAINING_WORK_LIST.md)  
 **Operator queue:** [`docs/deploy-checklists/2026-08-29-PRODUCTION-OPERATOR-QUEUE.md`](./docs/deploy-checklists/2026-08-29-PRODUCTION-OPERATOR-QUEUE.md) · paste audit historical [`docs/deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md`](./docs/deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md)  
-**Baseline date:** 2026-08-30 (release/QA — Weeks + 18-PHA + FUT-010 R3 before season simulation)
+**Baseline date:** 2026-08-30 (release closeout — Agents 1–4)
 
 > Claims below are backed by command output or platform evidence from this session unless marked `PENDING`.
 
@@ -14,10 +14,11 @@
 
 | Item | Value | Evidence |
 |------|--------|----------|
-| Production tip (deployed) | `082edc7d` | Merge PR **#298** public copy |
-| `origin/master` tip | Re-verify `git rev-parse origin/master` | Includes release-QA merge when #299 lands |
-| This package (Agent 4) | SC-SEASON-SIM-002 sources + contract/docs drift closeout | Branch `docs/agent4-release-readiness-2026-08-30` |
-| Working tree note | Parallel agent WIP left untracked (`docs/testing/core-workflow/`, field-inventory PR #300) | `git status` |
+| Production tip (web) | `f3be964f` | PR **#301** public UX chrome + Vercel Production Ready |
+| Docs closeout | PR **#304** MERGED | MRW-G11 / CR-12 shipped |
+| FUT-002 cleanup | PR **#303** MERGED `dc0751ec` | Quarantine + inventory; Mike UI deletes remain |
+| This package (Agent 4) | SC-SEASON-SIM-002 + release-readiness | PR **#302** |
+| Working tree note | Parallel agent WIP may remain in other worktrees | `git status` |
 
 Re-verify:
 
@@ -29,36 +30,37 @@ git status -sb
 
 ---
 
-## Public copy release (Phase 4 safe set)
+## Public copy + chrome
 
 | Item | Result |
 |------|--------|
-| PR | **#298** MERGED |
-| Merge SHA | `082edc7d` |
-| CI | Web CI SUCCESS |
-| Vercel Production | Ready — GitHub deployments API SHA `082edc7d` |
-| Live copy | `/shoot` shows “Published registration pricing…”; FAQ homework + coach feedback prose live |
+| Phase 4 safe copy (CR-01–CR-11) | **SHIPPED** — PR **#298** merge `082edc7d` |
+| Public chrome cleanup (CR-12) | **SHIPPED** — PR **#301** / **#304**; Dashboard/Display hidden from nav/hub |
+| Live copy | `/shoot` registration pricing + FAQ homework/coach feedback live |
 | Env | `NEXT_PUBLIC_LANDING_URL` / `NEXT_PUBLIC_SITE_URL` = fairfieldbasketballclub.com; `NEXT_PUBLIC_BASE_PATH=/shoot`; `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true` |
 | Explicitly not shipped | Dashboard relabel; homepage “For parents”; FUT-016/017 redesigns; coach SLA; adjacent-school FAQ |
 
 ---
 
-## Validation (this package)
+## Validation
 
 | Suite | Result |
 |-------|--------|
-| Web Vitest | **483/483 PASS** |
-| Web typecheck | **PASS** |
-| Web lint | **PASS** (4 pre-existing unused-var warnings) |
-| Web build | **PASS** |
-| Homework contracts (assignment-identity + 005/020/065) | **PASS** |
-| Weekly settlement contracts | **PASS** |
+| Web Vitest | **487/487 PASS** (PR #301) |
+| Web typecheck / lint / build | **PASS** (PR #301) |
+| Vercel Production for `f3be964f` | **Ready** — deployment `DvGMmEx3FM2hmamguaRDYimhAyfy` |
+| HTTP prod smoke | **PASS** |
+| Playwright prod smoke | **50/50 PASS** |
+| `/shoot` + landing | **HTTP 200** |
+| `/shoot/api/airtable` | **200** `ok:true` `tokenValid:true` |
+| Homework + weekly settlement contracts | **PASS** |
 | FUT-010 offline (node + python) | **PASS** 15 + 19 |
 | SC-SEASON-SIM-002 offline unittest | **PASS** (21) |
 | 057 live-schema field assert | **PASS** (repo); optional Meta when `ASSERT_057_LIVE=1` |
-| 057 runtime offline | **PASS** (included in Agent 4 suite) |
-| `/` + `/shoot` + `/shoot/faq` | **HTTP 200** |
-| `/shoot/api/airtable` | **200** `ok:true` `tokenValid:true` |
+| 057 runtime offline | **PASS** (Agent 4 suite) |
+| SC-PW-E2E award (WAS `recl3DmBh22ADPWWe`) | **PASS** |
+| SC-ATHLETE-WF-001 offline / dry-run / readonly | **PASS** |
+| FUT-002 inventory pytest | **PASS** (6) |
 
 ---
 
@@ -105,41 +107,43 @@ Submission XP: **one XP per Count It submission** (finalized). Perfect Week 057�
 
 ---
 
-## FUT-010
+## FUT-002 / FUT-010
 
 | Item | Result |
 |------|--------|
-| Dry-run R3 | **0 eligible** (homework scope 0) |
-| Deletion proposed? | **No** |
-| Evidence | [`docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md`](./docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md) |
+| FUT-002 live inventory | **1355 fields / 33 tables** — [`docs/audits/field-inventory/`](./docs/audits/field-inventory/) |
+| FUT-002 quarantine | **5** `ZZZ DELETE — *` fields awaiting Mike UI trash |
+| FUT-010 dry-run R3 | **0 eligible** — [`docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md`](./docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md) |
 
 ---
 
 ## Production changes still awaiting Mike
 
-1. **Before season simulation:** archive overlapping WSTEST/PWTEST Weeks (OMNI)  
-2. Optional: archive inactive PHA `recpHX3stQ8YBVtLi`  
-3. Optional Automations Code refresh for 057 tracker text  
-4. Optional FUT-010 sign-off when eligible rows exist (currently zero)  
-5. **RCC** views / Interface install  
-6. **FUT-003** Make ON when registration opens  
+1. **FUT-002 UI field deletes** — trash all `ZZZ DELETE — *` fields (5): HC `fldHchlovIaPlGKLk`, Levels `fldTzIGODB2e03rvE`, Streak Occurrences `fldltgFPGVXHwRj4X` + `fldBFDl629arXFcnp`, Achievements `fldkIzG5emvUBQ0Tw`  
+2. **Before season simulation:** archive overlapping WSTEST/PWTEST Weeks (OMNI)  
+3. Optional: archive inactive PHA `recpHX3stQ8YBVtLi`  
+4. Optional Automations Code refresh for 057 tracker text (docs hygiene only — **do not repaste live script**)  
+5. Optional FUT-010 sign-off when eligible rows exist (currently zero)  
+6. **RCC** views / Interface install  
+7. **FUT-003** Make ON when registration opens  
 
 ---
 
 ## Known risks
 
-1. Automations Code tracker lag for 057.  
+1. Automations Code tracker lag for 057 (live script already correct).  
 2. Post-Challenge `Counts Toward Challenge?` unchecked, but week-assignment automations do not yet read that flag.  
 3. Disposable WSTEST/PWTEST Weeks in same PI can collide with 005 date matching.  
 4. Draft PR sprawl / local WIP must stay uncommitted until intentional.  
 5. Weeks table protected.  
-6. Season simulation still FUTURE until WSTEST cleanup recommended.
+6. Season simulation execute still FUTURE until WSTEST cleanup.  
+7. Airtable Meta API cannot DELETE fields — Mike UI required for FUT-002 quarantine trash.
 
 ---
 
 ## Exact recommended next task
 
-**Mike (before season sim):** Archive overlapping WSTEST/PWTEST Weeks (OMNI). Optional inactive PHA archive.
+**Mike:** Delete 5 `ZZZ DELETE — *` fields (FUT-002). Before season sim: archive overlapping WSTEST/PWTEST Weeks (OMNI).
 
 **Do not:** re-paste 010/020/022/057/058/059/065/072/073; restore 075; re-`--apply` Perfect Week for WAS `recl3DmBh22ADPWWe`; run full season-simulation execute yet.
 
@@ -151,5 +155,8 @@ Submission XP: **one XP per Count It submission** (finalized). Perfect Week 057�
 
 | When | Change |
 |------|--------|
-| 2026-08-30 (Agent 4) | Landed SC-SEASON-SIM-002 sources; 057 live-schema + runtime contracts; paste audit superseded; automation-index drift; 043 absent; MASTER/RELEASE/CURRENT-TRUTH reconciled |
-| 2026-08-30 (release QA) | Weeks + 18-PHA + FUT-010 R3; 057 live-script verified |
+| 2026-08-30 (Phase 4 copy) | PR **#298** merge `082edc7d`; Production Ready |
+| 2026-08-30 (public UX chrome) | PR **#301** / **#304**; hide Dashboard/Display; prod smoke **50/50**; CR-12 closed |
+| 2026-08-30 (FUT-002) | PR **#303**; live inventory + quarantine; Asset Key fixed |
+| 2026-08-30 (Agent 4) | PR **#302**; SC-SEASON-SIM-002; 057 no-repaste; Weeks + 18-PHA + FUT-010 R3 |
+| 2026-08-30 (release closeout) | Merged Agent packages; reconciled baseline |

@@ -347,7 +347,8 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-G07 | FUT-025 athlete profile indexability/consent verify | **COMPLETE** | Env-gated `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING`; deploy checklist 2026-08-30 |
 | MRW-G08 | Refresh CURRENT-TRUTH open PR list | **COMPLETE** | Reconciled 2026-08-30 — SHA `9f4a64b6`, PRs #279–#293 merged; open #276 + drafts #262/#244/#238/#237/#234 |
 | MRW-G09 | Phase 4 safe public copy (CR-01–CR-11) | **COMPLETE** | PR **#298** merge `082edc7d`; Production `dpl_2uQ1wPJferY189xkCFkg4D67JcFR`; [copy review](docs/copy-reviews/2026-08-30-phase4-public-pages.md) |
-| MRW-G10 | Phase 4 copy items needing Mike approval | **BLOCKED** | CR-12 Dashboard relabel/hide; CR-13 homepage “For parents” block; CR-17 grades-band FAQ nuance; CR-18 coach turnaround SLA; further FUT-016/017 redesign beyond shipped catalogs |
+| MRW-G10 | Phase 4 copy items needing Mike approval | **PARTIAL** | **CR-12 COMPLETE** via PR **#301**. Still deferred: CR-13 extra parents block; CR-17 grades-band nuance; CR-18 coach SLA |
+| MRW-G11 | Public website chrome cleanup (Dashboard/Display) | **COMPLETE** | PR **#301** merge `f3be964f`; Vitest **487/487**; prod smoke **50/50** + HTTP smoke PASS; audit [`web/docs/public-route-audit-2026-08-30.md`](web/docs/public-route-audit-2026-08-30.md) |
 
 ---
 
@@ -355,7 +356,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 
 | ID | Title | Status | Notes |
 |----|-------|--------|-------|
-| MRW-H01 | FUT-002 unused Airtable field purge | **AUDIT COMPLETE** | Inventory 2026-08-30; deletes Mike-only |
+| MRW-H01 | FUT-002 unused Airtable field purge | **CLEANUP IN PROGRESS** | Live inventory 1355 fields; Review Summary + 4 empties quarantined (`ZZZ DELETE`); Asset Key fixed; Mike UI delete 5 fields (API cannot DELETE) |
 | MRW-H02 | FUT-004 award emailer (replace Tremendous) | FUTURE | Deferred |
 | MRW-H03 | FUT-005 accomplishment emails | FUTURE | Deferred |
 | MRW-H04 | FUT-007/009 AWS naming + corrected-video workflow | FUTURE | |

@@ -55,10 +55,12 @@ export function AthleteDashboardView({ data }: AthleteDashboardViewProps) {
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
           <span>
             Lifetime XP {formatXp(data.xp.total)}
-            {data.source === "mock" ? ` · Demo preview /${data.athlete.slug}` : null}
+            {data.source === "mock" ? " · Sample preview" : null}
           </span>
           {data.source === "mock" ? (
-            <StatusBadge tone="warn">Demo data — Airtable adapter pending</StatusBadge>
+            <StatusBadge tone="warn">
+              Sample preview — athlete sign-in is not available yet
+            </StatusBadge>
           ) : null}
         </div>
       }
