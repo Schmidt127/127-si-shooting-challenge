@@ -9,6 +9,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Added
+<<<<<<< HEAD
 - **SC-147 Recorded Zoom half-XP repo prep (2026-08-30, MRW-H10)** — Offline conflict
   matrix + pure helpers (`lib/sc-147-zoom-recording-credit.js`), contract tests, and
   automation **DRAFT** `drafts/sc-147-zoom-recording-half-xp.js` (slot TBD — not Live).
@@ -22,6 +23,13 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   missing Canonical URL). No `--confirm-delete` or attachment writes. Evidence:
   [`docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30.md`](./docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30.md);
   JSON previews under `tools/airtable/_preview/fut-010-*-2026-08-30.json`.
+=======
+- **FUT-002 unused field inventory audit (2026-08-30, MRW-H01)** — Read-only scan of prod
+  `prod-20260819` schema snapshot (1347 fields) + repo grep (automations, web, tools). Deliverables:
+  [`docs/audits/FUT-002-unused-field-inventory-2026-08-30.md`](./docs/audits/FUT-002-unused-field-inventory-2026-08-30.md),
+  [`docs/audits/fut-002-unused-field-inventory.json`](./docs/audits/fut-002-unused-field-inventory.json),
+  `tools/airtable/fut_002_field_inventory.py`. **No field deletions.** Mike-only deletion phase pending formula retargets (see prior Google Drive prep audit).
+>>>>>>> 14df8a61 (FUT-002: read-only unused Airtable field inventory audit (MRW-H01))
 - **MRW-F07 weekly email positive-arm harness (2026-08-30)** — Disposable E2E tooling for
   `118→072→119→074→079` chain verification: CLI
   `tools/testing/mrw-f07-weekly-email-positive-arm.mjs`, library, offline contracts, and operator doc
