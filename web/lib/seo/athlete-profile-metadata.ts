@@ -1,15 +1,20 @@
 import type { Metadata } from "next";
 
-import { buildPageMetadata, PRIVATE_ROBOTS_NOINDEX } from "@/lib/seo/metadata";
+import {
+  buildPageMetadata,
+  isAthleteProfileIndexingEnabled,
+  resolveAthleteProfileRobots,
+} from "@/lib/seo/metadata";
 
 /**
  * Athlete profile SEO policy (FUT-025 / SC-115):
  * - Public HTML may show approved game-related fields (name, school, grade, progress).
  * - Metadata stays privacy-safe: no grade/school in meta description.
- * - Profiles remain noindex until Mike explicitly enables athlete indexing.
- *   Registration consent covers in-page display; search indexing is a separate cutover.
+ * - Profiles remain noindex until Mike sets `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING=true`
+ *   AND program indexing is already enabled. Registration consent covers in-page display;
+ *   search indexing is a separate cutover.
  */
-export const ATHLETE_PROFILE_INDEXING_ENABLED = false;
+export { isAthleteProfileIndexingEnabled };
 
 export type AthleteProfileMetadataInput = {
   slug: string;
@@ -29,12 +34,14 @@ export function buildAthleteProfilePageMetadata(
 ): Metadata {
   const path = `/athletes/${input.slug}`;
 
+  const robots = resolveAthleteProfileRobots();
+
   if (!input.found || !input.displayName?.trim()) {
     return buildPageMetadata({
       title: "Athlete profile",
       description: "Athlete profile on the 127 SI Shooting Challenge.",
       path,
-      robots: PRIVATE_ROBOTS_NOINDEX,
+      robots,
     });
   }
 
@@ -46,7 +53,7 @@ export function buildAthleteProfilePageMetadata(
     titleAbsolute: true,
     description,
     path,
-    robots: PRIVATE_ROBOTS_NOINDEX,
+    robots,
     openGraph: {
       type: "profile",
       title: `${displayName} | Shooting Challenge`,

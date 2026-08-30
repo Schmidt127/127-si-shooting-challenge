@@ -48,6 +48,24 @@ export function isSearchIndexingEnabled(): boolean {
   return raw === "true" || raw === "1";
 }
 
+/**
+ * Separate Mike-approved cutover for public athlete profile indexing.
+ * Must be set at build time (`NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING=true`).
+ * Fail-closed: also requires `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`.
+ */
+export function isAthleteProfileIndexingEnabled(): boolean {
+  const raw = process.env.NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING?.trim().toLowerCase();
+  return raw === "true" || raw === "1";
+}
+
+/** Athlete profiles index only when both program and athlete cutover flags are true. */
+export function resolveAthleteProfileRobots(): Metadata["robots"] {
+  if (isSearchIndexingEnabled() && isAthleteProfileIndexingEnabled()) {
+    return DEFAULT_ROBOTS_INDEX;
+  }
+  return PRIVATE_ROBOTS_NOINDEX;
+}
+
 export const DEFAULT_ROBOTS_NOINDEX: Metadata["robots"] = {
   index: false,
   follow: false,
@@ -73,9 +91,17 @@ export function resolvePublicRobots(): Metadata["robots"] {
   return isSearchIndexingEnabled() ? DEFAULT_ROBOTS_INDEX : DEFAULT_ROBOTS_NOINDEX;
 }
 
+/** Private route segments for robots.txt — `/athletes/` omitted when athlete indexing is enabled. */
+export function resolveRobotsDisallowSegments(): readonly string[] {
+  if (isSearchIndexingEnabled() && isAthleteProfileIndexingEnabled()) {
+    return ROBOTS_DISALLOW_PATHS.filter((segment) => segment !== "/athletes/");
+  }
+  return ROBOTS_DISALLOW_PATHS;
+}
+
 /** Build absolute disallow paths for robots.txt (includes basePath). */
 export function robotsDisallowPaths(basePath: string = APP_BASE_PATH): string[] {
-  return ROBOTS_DISALLOW_PATHS.map((segment) => `${basePath}${segment}`);
+  return resolveRobotsDisallowSegments().map((segment) => `${basePath}${segment}`);
 }
 
 /** Canonical public URL for a program route (`path` without basePath prefix). */
