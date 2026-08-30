@@ -1,0 +1,295 @@
+{
+  "harness": "SC-CORE-WF",
+  "mode": "apply",
+  "startedAt": "2026-08-30T18:40:04.411Z",
+  "policy": {
+    "challengeYear": "2026-2027",
+    "earlyBirdStart": "2027-04-25",
+    "earlyBirdEnd": "2027-05-01",
+    "week1Start": "2027-05-02",
+    "programEnd": "2027-06-30",
+    "commonHomeworkDueDate": "2027-06-29",
+    "earlyBirdCountable": true,
+    "regularHomeworkWeeks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "week9HasHomework": false,
+    "expectedActiveHomeworkAssignmentCount": 18,
+    "homeworkSlotsPerHomeworkWeek": 2
+  },
+  "checks": [
+    {
+      "id": "live.weeks_calendar",
+      "pass": true,
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "id": "live.pha_schedule",
+      "pass": true,
+      "status": "PASS",
+      "activeCount": 18,
+      "byWeek": {
+        "Week 2": 2,
+        "Week 8": 2,
+        "Week 5": 2,
+        "Week 6": 2,
+        "Week 7": 2,
+        "Early Bird": 2,
+        "Week 4": 2,
+        "Week 1": 2,
+        "Week 3": 2
+      },
+      "findings": []
+    },
+    {
+      "id": "submission_xp.eb-a",
+      "pass": false,
+      "status": "FAIL",
+      "expected": 1,
+      "actual": 0,
+      "sourceKey": "SUBMISSION_XP|recYdw9aqKXFmmd6x",
+      "activityDate": "2027-04-26"
+    },
+    {
+      "id": "submission_xp.eb-b-same-day",
+      "pass": false,
+      "status": "FAIL",
+      "expected": 1,
+      "actual": 0,
+      "sourceKey": "SUBMISSION_XP|recNxMP8N05bbVqZd",
+      "activityDate": "2027-04-26"
+    },
+    {
+      "id": "submission_xp.eb-backdate",
+      "pass": false,
+      "status": "FAIL",
+      "expected": 1,
+      "actual": 0,
+      "sourceKey": "SUBMISSION_XP|recHXqOYUdy4XoLoL",
+      "activityDate": "2027-04-25"
+    },
+    {
+      "id": "submission_xp.week-mismatch",
+      "pass": false,
+      "status": "FAIL",
+      "expected": 1,
+      "actual": 0,
+      "sourceKey": "SUBMISSION_XP|recbWroAlBErALEWl",
+      "activityDate": "2027-05-03"
+    },
+    {
+      "id": "submission_xp.policy",
+      "pass": true,
+      "status": "PASS",
+      "actual": "Submission XP inventory OK."
+    },
+    {
+      "id": "homework_xp.pha_linked_path",
+      "pass": true,
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "notes": "065 expected skip/no award: Homework XP Reconciliation Needed? != 1; Total Homework XP Awarded <= 0; Submission link missing for new XP create"
+    },
+    {
+      "id": "coach_queue.prep_without_email",
+      "pass": true,
+      "status": "PASS",
+      "expected": "No weekly email send triggers",
+      "actual": "{}"
+    },
+    {
+      "id": "deadline.after_week_before_june29",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "creditEligible": true,
+        "timingStatus": "on_time",
+        "dueDateKey": "2027-06-29",
+        "reason": "",
+        "afterLinkedWeekEnd": true,
+        "expectedCreditWhenBeforeCommonDue": true
+      }
+    },
+    {
+      "id": "homework.duplicate_identity_created",
+      "pass": true,
+      "status": "PASS",
+      "notes": "Two HC rows share Enrollment+PHA — ops/020 should collapse; inventory recorded"
+    }
+  ],
+  "defects": [],
+  "passed": false,
+  "audit": {
+    "weekAudit": {
+      "ok": true,
+      "findings": [],
+      "policy": {
+        "challengeYear": "2026-2027",
+        "earlyBirdStart": "2027-04-25",
+        "earlyBirdEnd": "2027-05-01",
+        "week1Start": "2027-05-02",
+        "programEnd": "2027-06-30",
+        "commonHomeworkDueDate": "2027-06-29",
+        "earlyBirdCountable": true,
+        "regularHomeworkWeeks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "week9HasHomework": false,
+        "expectedActiveHomeworkAssignmentCount": 18,
+        "homeworkSlotsPerHomeworkWeek": 2
+      }
+    },
+    "phaAudit": {
+      "ok": true,
+      "activeCount": 18,
+      "expectedActiveCount": 18,
+      "byWeek": {
+        "Week 2": 2,
+        "Week 8": 2,
+        "Week 5": 2,
+        "Week 6": 2,
+        "Week 7": 2,
+        "Early Bird": 2,
+        "Week 4": 2,
+        "Week 1": 2,
+        "Week 3": 2
+      },
+      "findings": [],
+      "policy": {
+        "challengeYear": "2026-2027",
+        "earlyBirdStart": "2027-04-25",
+        "earlyBirdEnd": "2027-05-01",
+        "week1Start": "2027-05-02",
+        "programEnd": "2027-06-30",
+        "commonHomeworkDueDate": "2027-06-29",
+        "earlyBirdCountable": true,
+        "regularHomeworkWeeks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "week9HasHomework": false,
+        "expectedActiveHomeworkAssignmentCount": 18,
+        "homeworkSlotsPerHomeworkWeek": 2
+      }
+    },
+    "weekCount": 12,
+    "phaActiveCount": 18,
+    "phaInactiveCount": 0,
+    "earlyBirdEval": {
+      "activityDateKey": "2027-04-28",
+      "inEarlyBirdWindow": true,
+      "countable": true,
+      "note": "Activity Date falls in Early Bird window (countable)."
+    },
+    "lateWeekEval": {
+      "creditEligible": true,
+      "timingStatus": "on_time",
+      "dueDateKey": "2027-06-29",
+      "reason": "",
+      "afterLinkedWeekEnd": true,
+      "expectedCreditWhenBeforeCommonDue": true
+    }
+  },
+  "lateWeekOnTimeContract": {
+    "creditEligible": true,
+    "timingStatus": "on_time",
+    "dueDateKey": "2027-06-29",
+    "reason": "",
+    "afterLinkedWeekEnd": true,
+    "expectedCreditWhenBeforeCommonDue": true
+  },
+  "created": {
+    "batchKey": "COREWF|2026-08-30|core",
+    "submissionIds": [
+      {
+        "id": "recYdw9aqKXFmmd6x",
+        "tag": "eb-a",
+        "date": "2027-04-26",
+        "shots": 40
+      },
+      {
+        "id": "recNxMP8N05bbVqZd",
+        "tag": "eb-b-same-day",
+        "date": "2027-04-26",
+        "shots": 25
+      },
+      {
+        "id": "recHXqOYUdy4XoLoL",
+        "tag": "eb-backdate",
+        "date": "2027-04-25",
+        "shots": 30
+      },
+      {
+        "id": "recbWroAlBErALEWl",
+        "tag": "week-mismatch",
+        "date": "2027-05-03",
+        "shots": 35
+      }
+    ],
+    "homeworkIds": [
+      {
+        "id": "rechNqh90CZTXGwJo",
+        "kind": "pha-linked-eb"
+      },
+      {
+        "id": "reczBM3nN7j0UkLQY",
+        "kind": "duplicate-pha-identity"
+      },
+      {
+        "id": "recOcnFgu9jFGTXC6",
+        "kind": "missing-pha"
+      },
+      {
+        "id": "recoEOe318KIFqQ56",
+        "kind": "after-week-before-due"
+      }
+    ],
+    "wasId": "reczAeh62SBUQnyT4",
+    "inactiveEnrollmentId": null,
+    "xpEventIds": [],
+    "wasReused": false,
+    "inactiveEnrollmentError": "POST Enrollments 422: {\"error\":{\"type\":\"UNKNOWN_FIELD_NAME\",\"message\":\"Unknown field name: \\\"Enrollment Notes\\\"\"}}"
+  },
+  "submissionXpPolicy": {
+    "ok": true,
+    "mode": "once_per_count_it_submission",
+    "uniqueSubmissionXpCount": 0,
+    "duplicateSubmissionKeys": [],
+    "sameDayMultiXpDays": [],
+    "sameDayMultipleAllowed": true,
+    "note": "Submission XP inventory OK.",
+    "decisionId": "MRW-I13-CLOSED-2026-08-30"
+  },
+  "homework065Eligibility": {
+    "expectXp": false,
+    "blockers": [
+      "Homework XP Reconciliation Needed? != 1",
+      "Total Homework XP Awarded <= 0",
+      "Submission link missing for new XP create"
+    ],
+    "note": "065 expected skip/no award: Homework XP Reconciliation Needed? != 1; Total Homework XP Awarded <= 0; Submission link missing for new XP create"
+  },
+  "finishedAt": "2026-08-30T18:51:06.679Z"
+}

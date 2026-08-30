@@ -1,0 +1,59 @@
+{
+  "harness": "SC-CORE-WF",
+  "createdAt": "2026-08-30T18:56:27.588Z",
+  "batchKey": "COREWF|2026-08-30|core",
+  "weekName": "COREWF|2026-08-30|core|WEEK",
+  "weekId": "recyh2t4pzlpuYWJl",
+  "submissionIds": [
+    {
+      "id": "recBgfS7XAGoCd4c5",
+      "tag": "countable-a",
+      "date": "2026-06-08",
+      "shots": 40
+    },
+    {
+      "id": "recUiZ0bySsOVwRTN",
+      "tag": "same-day-b",
+      "date": "2026-06-08",
+      "shots": 25
+    },
+    {
+      "id": "rec1XWI0sLRLB5n5b",
+      "tag": "backdated",
+      "date": "2026-06-07",
+      "shots": 30
+    },
+    {
+      "id": "recl4seMYXhzNm3qN",
+      "tag": "week-mismatch",
+      "date": "2026-06-20",
+      "shots": 35
+    }
+  ],
+  "homeworkIds": [
+    {
+      "id": "rec1kDQjmbf72C7dh",
+      "kind": "pha-linked-eb"
+    },
+    {
+      "id": "recgUJJFa3bgbxMTH",
+      "kind": "duplicate-pha-identity"
+    },
+    {
+      "id": "recx76M7GSLzoo8eP",
+      "kind": "missing-pha"
+    },
+    {
+      "id": "recDIN1G119mbqW8G",
+      "kind": "after-week-before-due"
+    }
+  ],
+  "wasId": "recTyldZRoxhijO0T",
+  "inactiveEnrollmentId": "recCCMAK0cJvsoua1",
+  "xpEventIds": [
+    "recE8GOt9FhpY8eeX",
+    "recNSj6Am6g8HleGQ",
+    "recWMtnu2oGADEtm3"
+  ],
+  "wasReused": false
+}

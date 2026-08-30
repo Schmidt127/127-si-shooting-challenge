@@ -124,9 +124,9 @@ export function streakXpKey(enrollmentId, achievementId, streakEndDate) {
 }
 
 /**
- * Engine rule: at most one counted shooting XP day per enrollment per Denver date.
- * Multiple submissions same day may each get SUBMISSION_XP|{id} if Count It —
- * that is a known SC-005 B3 policy open item, not inventing product behavior.
+ * Submission XP is once per Count It submission (Source Key SUBMISSION_XP|{id}).
+ * Same-day dual Count It submissions → two XP events is EXPECTED
+ * (MRW-I13 closed 2026-08-30; not one XP per Denver day).
  */
 export function evaluateCountedDayXpPolicy(xpEventsForEnrollmentDay) {
   const active = (xpEventsForEnrollmentDay || []).filter(
@@ -136,9 +136,10 @@ export function evaluateCountedDayXpPolicy(xpEventsForEnrollmentDay) {
     submissionXpCount: active.length,
     note:
       active.length > 1
-        ? "Multiple SUBMISSION_XP on same Denver day — SC-005 B3 policy open (product-decision)"
-        : "At most one SUBMISSION_XP for this day inventory slice",
-    policyOpen: active.length > 1,
+        ? "Multiple SUBMISSION_XP on same Denver day — EXPECTED (once per Count It submission; MRW-I13 closed)"
+        : "Submission XP inventory for this day slice",
+    policyOpen: false,
+    sameDayMultipleExpected: active.length > 1,
   };
 }
 

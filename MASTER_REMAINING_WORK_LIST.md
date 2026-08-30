@@ -323,7 +323,8 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-F01 | SC-PW-E2E live apply | **COMPLETE** | WAS `recl3DmBh22ADPWWe` MCP award evidence |
 | MRW-F02 | SC-016 live re-submit after FUT-001 paste | NEEDS VERIFICATION | |
 | MRW-F03 | Broader SC-005 season matrix | IN PROGRESS | Many paths green; PW + email inject open |
-| MRW-F09 | SC-ATHLETE-WF-001 individual athlete workflow QA | **COMPLETE (harness)** | Harness + offline contracts + dry-run + disposable apply evidence 2026-08-30. Submission XP + WAS verified. SC-005 B3 **DECIDED** (MRW-I13: one XP per Count It). 065 Satisfactory-alone = expected skip. Plan: docs/testing/athlete-workflow/SC-ATHLETE-WF.md. |
+| MRW-F09 | SC-ATHLETE-WF-001 individual athlete workflow QA | **COMPLETE (harness)** | Harness + offline contracts + dry-run + disposable apply evidence 2026-08-30. Submission XP + WAS verified. **MRW-I13 closed** (once per Count It submission). 065 Satisfactory-alone = expected skip. Plan: docs/testing/athlete-workflow/SC-ATHLETE-WF.md. |
+| MRW-F11 | Core workflow reliability (calendar + XP + PHA + handoff) | **COMPLETE** (2026-08-30) | Contracts `lib/workflow-contracts/`; harness `tools/testing/sc-core-workflow.mjs`; live audit PASS; disposable apply PASS; orphan inactive PHA deleted. Docs: `docs/testing/core-workflow/`. |
 | MRW-F04 | SC-010/011/012/015 homework path re-tests | IN PROGRESS | Installed; re-prove |
 | MRW-F05 | Video XP native trigger + 073 OFF attestation (SC-072) | NEEDS VERIFICATION | PKG-007 PASS; UI attest open |
 | MRW-F06 | Zoom live attendance re-test (SC-073/084) | NEEDS VERIFICATION | 101 v6.7 |
@@ -405,19 +406,19 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-I10 | Production paste windows (C01–C05c) | **COMPLETE** | Do not re-paste 010/020/022/057/065/072/073; optional Automations Code refresh for 057 tracker only |
 | MRW-I11 | Branch protection / merge approval if CI requires human | BLOCKED | Approve merges if required |
 | MRW-I12 | Vercel deploy credentials if auto-deploy fails | **COMPLETE** (2026-08-30) | CLI linked; Production public URL envs restored; redeploy Ready — keep dashboard access for future ops |
-| MRW-I13 | SC-005 B3 same-day counted shooting XP policy | **DECIDED** | Award XP **once per Count It submission** — do not change |
+| MRW-I13 | SC-005 B3 same-day counted shooting XP policy | **COMPLETE** | **Decided 2026-08-30:** Submission XP once per Count It submission (`SUBMISSION_XP\|{id}`); same-day multi is expected. Codified in `lib/workflow-contracts` + ATHWF. |
 
 ---
 
 ## Recommended next task for Mike
 
-1. **Archive overlapping WSTEST/PWTEST Weeks** in Program Instance `Shooting Challenge | 2026-2027` (OMNI) before season simulation — reduces Automation 005 multi-match risk.  
-2. Optional: archive inactive PHA `recpHX3stQ8YBVtLi` (Week 1 HW1 Final Reflection Quiz).  
+1. **FUT-002:** Delete 5 `ZZZ DELETE — *` fields in Airtable UI (API cannot DELETE).  
+2. **Archive overlapping WSTEST/PWTEST Weeks** in Program Instance `Shooting Challenge | 2026-2027` (OMNI) before season simulation.  
 3. **Do not** re-paste 010/020/022/057/058/059/065/072/073 and **do not** re-run Perfect Week `--apply`.  
 4. **FUT-010:** dry-run R3 still **0 eligible** — no deletion request.  
 5. Optional: refresh Automations **Code** text for 057 (tracker lag) — live script already correct.  
 6. **Do not** activate FUT-003 until registration intentionally opens.  
-7. After WSTEST cleanup: proceed to **SC-SEASON-SIM-001** prep (still FUTURE until harness brief is activated).
+7. ATHWF (MRW-F09) + weekly settlement (MRW-F10) + core workflow (MRW-F11) + **MRW-I13** are done. After WSTEST cleanup: **SC-SEASON-SIM-001** prep (still FUTURE).
 
 ---
 
@@ -425,15 +426,17 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 
 - **Paste debt C01–C05c + 058/059** → **COMPLETE** (live 057 correct; Automations Code tracker may lag).  
 - **SC-034 / V2-002 / PW config items** → schema + live 057 CONFIG **COMPLETE**.  
-- **Public copy Phase 4 safe set** → PR **#298** merged + Production deploy `082edc7d`.  
+- **Public copy Phase 4 + chrome** → PR **#298** / **#301** / **#304**.  
+- **FUT-002** → cleanup in progress; 5 quarantined fields await Mike UI delete.  
 - **FUT-010** → dry-run **0 eligible** (R3); no delete request.  
 - **Weeks 2026–27 + 18 PHA** → **COMPLETE** (Early Bird Apr 25–May 1; due June 29; Week 9/Post-Challenge no HW).  
-- **SC-SEASON-SIM-001 / MRW-H11** → **FUTURE / Planned only** — not active; **FUT-010 unchanged**.  
+- **SC-SEASON-SIM-001 / MRW-H11** → **FUTURE / Planned only** — not active.  
 - **SC-WEEKLY-SETTLEMENT-E2E / MRW-F10** → **COMPLETE** (2026-08-30).  
-- **SC-ATHLETE-WF-001 / MRW-F09** → **COMPLETE (harness)**; B3 XP policy **DECIDED** (one XP per Count It).  
-- **SC-SEASON-SIM-002** → **Infrastructure landed in repo** (`tools/season_simulation/`); offline tests green; execute/cleanup gated — do not run full season simulation yet.  
+- **SC-ATHLETE-WF-001 / MRW-F09** → **COMPLETE (harness)**; **MRW-I13 CLOSED** (once per Count It).  
+- **SC-CORE-WF / MRW-F11** → **COMPLETE** (2026-08-30) — live Weeks/PHA audit + disposable apply; orphan inactive PHA deleted.  
+- **SC-SEASON-SIM-002** → **Infrastructure landed** (`tools/season_simulation/`); offline tests green; do not run full season simulation yet.  
 - **Automation 043** → **absent** from live automations list (MRW-C09 COMPLETE).  
-- Local `tools/testing/lib/sc-pw-e2e-lib.mjs` WIP remains untouched.  
+
 - SC-027/066 shot milestones live-tested → monitoring only.  
 - Historical overnight MIKE-ACTIONS rows superseded by CURRENT-TRUTH / Section G where dated later.  
 - Legacy C-/SC- inventory in Future Work Sections A–F remains evidence; **this file + operator queue + Future Work Section G** are the operator queues.

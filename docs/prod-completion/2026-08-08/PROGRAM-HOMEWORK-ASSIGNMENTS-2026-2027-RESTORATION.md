@@ -1,5 +1,7 @@
 # Program Homework Assignments — 2026–2027 PROD Restoration
 
+> **SUPERSEDED schedule note (2026-08-30):** Confirmed product rules are **Early Bird + Weeks 1–8 = 18 active PHA**, **Week 9 has no homework**, common **Due Date 2027-06-29**. Live Production matches that inventory (MRW-F11). The Week 9 HW17/HW18 / 90-row grade-band matrix below is **historical** from the 2026-08-08 restoration and must not be re-applied.
+
 Date: 2026-08-08  
 Environment: PROD Airtable `appn84sqPw03zEbTT`  
 Program Instance: `rec5mEM0YPqPqq0hZ` — `Shooting Challenge | 2026-2027`
