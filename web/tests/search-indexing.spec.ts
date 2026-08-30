@@ -65,7 +65,7 @@ test.describe("search indexing policy", () => {
     );
   });
 
-  test("athlete profiles remain noindex even when indexing is enabled", async ({ page }) => {
+  test("athlete profiles remain noindex until athlete indexing cutover", async ({ page }) => {
     await page.goto("athletes/demo-athlete", { waitUntil: "domcontentloaded" });
 
     const robotsTags = page.locator('meta[name="robots"]');
@@ -80,6 +80,14 @@ test.describe("search indexing policy", () => {
     const description = page.locator('meta[name="description"]');
     if ((await description.count()) > 0) {
       const content = (await description.first().getAttribute("content")) ?? "";
+      expect(content.toLowerCase()).not.toMatch(/\bgrade\b/);
+      expect(content.toLowerCase()).not.toMatch(/\bschool\b/);
+      expect(content).not.toMatch(/@/);
+    }
+
+    const ogDescription = page.locator('meta[property="og:description"]');
+    if ((await ogDescription.count()) > 0) {
+      const content = (await ogDescription.first().getAttribute("content")) ?? "";
       expect(content.toLowerCase()).not.toMatch(/\bgrade\b/);
       expect(content.toLowerCase()).not.toMatch(/\bschool\b/);
     }

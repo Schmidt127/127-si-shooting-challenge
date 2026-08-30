@@ -26,4 +26,6 @@ Set at **build time** (redeploy required after change):
 
 **Indexable when flag is true:** program home, leaderboard, homework, levels, tutorials, shoutouts, articles, zoom-meetings, game-manual, achievements, and published detail pages for those catalogs.
 
-**Always noindex:** athlete profiles, dashboard, dashboard/preview, admin, public-display, API routes, 404.
+**Always noindex:** dashboard, dashboard/preview, admin, public-display, API routes, 404.
+
+**Athlete profiles:** remain `noindex` until Mike sets `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING=true` on Vercel (requires `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true` already). See [2026-08-30-athlete-profile-indexing-cutover.md](./2026-08-30-athlete-profile-indexing-cutover.md) for consent assumptions and verification steps.

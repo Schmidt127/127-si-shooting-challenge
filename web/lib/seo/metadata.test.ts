@@ -10,9 +10,12 @@ import {
   canonicalUrl,
   DEFAULT_ROBOTS_INDEX,
   DEFAULT_ROBOTS_NOINDEX,
+  isAthleteProfileIndexingEnabled,
   isSearchIndexingEnabled,
   PRIVATE_ROBOTS_NOINDEX,
+  resolveAthleteProfileRobots,
   resolvePublicRobots,
+  resolveRobotsDisallowSegments,
   robotsDisallowPaths,
   SITEMAP_PUBLIC_ROUTES,
 } from "./metadata";
@@ -68,6 +71,61 @@ describe("canonicalUrl", () => {
   it("builds canonical paths under /shoot", () => {
     expect(canonicalUrl("/leaderboard")).toBe(`${PUBLIC_SITE_ORIGIN}/leaderboard`);
     expect(canonicalUrl("homework")).toBe(`${PUBLIC_SITE_ORIGIN}/homework`);
+  });
+});
+
+describe("isAthleteProfileIndexingEnabled", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("defaults to false when unset", () => {
+    vi.stubEnv("NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING", "");
+    expect(isAthleteProfileIndexingEnabled()).toBe(false);
+  });
+
+  it("enables athlete indexing for true or 1", () => {
+    vi.stubEnv("NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING", "true");
+    expect(isAthleteProfileIndexingEnabled()).toBe(true);
+  });
+});
+
+describe("resolveAthleteProfileRobots", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("requires both program and athlete flags before indexable robots", () => {
+    vi.stubEnv("NEXT_PUBLIC_ALLOW_SEARCH_INDEXING", "true");
+    vi.stubEnv("NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING", "");
+    expect(resolveAthleteProfileRobots()).toEqual(PRIVATE_ROBOTS_NOINDEX);
+
+    vi.stubEnv("NEXT_PUBLIC_ALLOW_SEARCH_INDEXING", "");
+    vi.stubEnv("NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING", "true");
+    expect(resolveAthleteProfileRobots()).toEqual(PRIVATE_ROBOTS_NOINDEX);
+
+    vi.stubEnv("NEXT_PUBLIC_ALLOW_SEARCH_INDEXING", "true");
+    vi.stubEnv("NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING", "true");
+    expect(resolveAthleteProfileRobots()).toEqual(DEFAULT_ROBOTS_INDEX);
+  });
+});
+
+describe("resolveRobotsDisallowSegments", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("always disallows /athletes/ when athlete indexing is off", () => {
+    vi.stubEnv("NEXT_PUBLIC_ALLOW_SEARCH_INDEXING", "true");
+    vi.stubEnv("NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING", "");
+    expect(resolveRobotsDisallowSegments()).toContain("/athletes/");
+  });
+
+  it("removes /athletes/ disallow only when both cutover flags are true", () => {
+    vi.stubEnv("NEXT_PUBLIC_ALLOW_SEARCH_INDEXING", "true");
+    vi.stubEnv("NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING", "true");
+    expect(resolveRobotsDisallowSegments()).not.toContain("/athletes/");
+    expect(resolveRobotsDisallowSegments()).toContain("/dashboard");
   });
 });
 
