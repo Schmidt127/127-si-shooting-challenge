@@ -4,7 +4,7 @@
 **Public URL:** https://www.fairfieldbasketballclub.com/shoot  
 **Authority companion:** [`MASTER_REMAINING_WORK_LIST.md`](./MASTER_REMAINING_WORK_LIST.md)  
 **Operator queue:** [`docs/deploy-checklists/2026-08-29-PRODUCTION-OPERATOR-QUEUE.md`](./docs/deploy-checklists/2026-08-29-PRODUCTION-OPERATOR-QUEUE.md) · paste audit historical [`docs/deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md`](./docs/deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md)  
-**Baseline date:** 2026-08-30 (PR **#308** public-app readiness deploy verified)
+**Baseline date:** 2026-08-30 (PR **#311** gift-card FAQ + About the Coach deploy verified)
 
 > Claims below are backed by command output or platform evidence from this session unless marked `PENDING`.
 
@@ -14,7 +14,8 @@
 
 | Item | Value | Evidence |
 |------|--------|----------|
-| Production tip (web) | `7332d2f3` | PR **#308** final public-app readiness; Vercel Production Ready |
+| Production tip (web) | `bd7856ea` | PR **#311** gift-card FAQ + About the Coach; Vercel Production Ready |
+| Prior public-app readiness | `7332d2f3` | PR **#308** final public-app readiness |
 | Public UX chrome | PR **#301** / **#304** MERGED `f3be964f` | MRW-G11 / CR-12 shipped |
 | FUT-002 cleanup | PR **#303** MERGED `dc0751ec` | Quarantine + inventory; Mike UI deletes remain |
 | Season-sim preflight | PR **#302** MERGED `eca40509` | SC-SEASON-SIM-002 + 057 no-repaste |
@@ -36,8 +37,9 @@ git status -sb
 | Item | Result |
 |------|--------|
 | Phase 4 safe copy (CR-01–CR-11) | **SHIPPED** — PR **#298** merge `082edc7d` |
+| Gift card + About the Coach (CR-23/CR-24) | **SHIPPED** — PR **#311** merge `bd7856ea` |
 | Public chrome cleanup (CR-12) | **SHIPPED** — PR **#301** / **#304**; Dashboard/Display hidden from nav/hub |
-| Live copy | `/shoot` registration pricing + FAQ homework/coach feedback live |
+| Live copy | `/shoot` About the Coach + `/shoot/faq` gift-card commitment live |
 | Env | `NEXT_PUBLIC_LANDING_URL` / `NEXT_PUBLIC_SITE_URL` = fairfieldbasketballclub.com; `NEXT_PUBLIC_BASE_PATH=/shoot`; `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true` (unchanged — intentional) |
 | Final readiness pass | PR **#308** MERGED | FAQ in Playwright + HTTP smoke; `public-route-readiness` Vitest contracts; Dashboard/Display remain out of family chrome |
 | Indexing policy (verified prod) | Public program pages `index, follow`; athlete profiles + dashboard + public-display `noindex` | `search-indexing.spec.ts` **8/8** on prod; live curl checks 2026-08-30 |
@@ -77,10 +79,10 @@ git status -sb
 
 | Suite | Result |
 |-------|--------|
-| Web Vitest | **493/493 PASS** (PR #308) |
-| Web typecheck / lint / build | **PASS** (PR #308 CI) |
-| Vercel Production for `7332d2f3` | **Ready** — [deploy](https://vercel.com/127-sports-intensity/127-si-shooting-challenge/Aj3HoeWWX1r58KUPtT1yqqEBV8Vm) |
-| HTTP + Playwright prod smoke | **PASS** / **52/52** (includes `/faq`; dashboard + public-display + athlete profile SEO) |
+| Web Vitest | **496/496 PASS** (PR #311) |
+| Web typecheck / lint / build | **PASS** (PR #311 CI) |
+| Vercel Production for `bd7856ea` | **Ready** — [deploy](https://vercel.com/127-sports-intensity/127-si-shooting-challenge/G2sqf2amnmxhsNXphfxsnb2UNN5g) (`G2sqf2amnmxhsNXphfxsnb2UNN5g`) |
+| HTTP + Playwright prod smoke | **PASS** / **52/52** (gift-card FAQ + About the Coach on prod) |
 | `/shoot` + `/shoot/api/airtable` | **200** / `tokenValid:true` |
 | Homework + weekly settlement contracts | **PASS** |
 | FUT-010 offline | **PASS** |

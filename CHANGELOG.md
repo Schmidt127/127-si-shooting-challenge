@@ -61,6 +61,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   wording: FAQ gift-card award commitment (`/shoot/faq`); homepage About the Coach section
   (`/shoot#about-the-coach`). Copy module `web/lib/seo/public-program-content.ts`; Vitest +
   Playwright coverage. No pricing, eligibility, nav, env, or backend changes.
+  **Prod verified (2026-08-30):** merge `bd7856ea`; smoke **52/52**; copy live on production.
 - **Final public-app readiness (2026-08-30)** — FAQ added to Playwright + HTTP smoke routes;
   public-route-readiness Vitest contracts; public-display loading label; footer exclusion tests
   for Dashboard/Display. Operator routes preserved; no env or business-rule changes.
