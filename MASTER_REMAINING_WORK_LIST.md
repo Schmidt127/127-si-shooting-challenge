@@ -321,11 +321,14 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-F01 | SC-PW-E2E live apply | **COMPLETE** | WAS `recl3DmBh22ADPWWe` MCP award evidence |
 | MRW-F02 | SC-016 live re-submit after FUT-001 paste | NEEDS VERIFICATION | |
 | MRW-F03 | Broader SC-005 season matrix | IN PROGRESS | Many paths green; PW + email inject open |
+| MRW-F09 | SC-ATHLETE-WF-001 individual athlete workflow QA | **IN PROGRESS** | Harness + dry-run + offline contracts + live disposable apply evidence 2026-08-30. Defects: SC-005 B3 same-day XP; HC Satisfactory-only no 065 XP; PAT cannot DELETE XP Events; sc-pw-e2e-lib formula write (leave WIP). Plan: `docs/testing/athlete-workflow/SC-ATHLETE-WF.md`. Evidence: `docs/testing/evidence/sc-athlete-wf/apply-session-final-2026-08-30.json`. Pre–season-sim; do not start SC-SEASON-SIM from this. |
 | MRW-F04 | SC-010/011/012/015 homework path re-tests | IN PROGRESS | Installed; re-prove |
 | MRW-F05 | Video XP native trigger + 073 OFF attestation (SC-072) | NEEDS VERIFICATION | PKG-007 PASS; UI attest open |
 | MRW-F06 | Zoom live attendance re-test (SC-073/084) | NEEDS VERIFICATION | 101 v6.7 |
 | MRW-F07 | 118/119 weekly scheduler positive arm (SC-031/035) | IN PROGRESS | |
 | MRW-F08 | Offline contract suite green on master after merges | IN PROGRESS | repository-qa workflow |
+
+> **Future (not active):** **SC-SEASON-SIM-001** / **MRW-H11** — 60-day five-enrollment season simulation. Tracked under Section H as **FUTURE**. Distinct from SC-005 matrix and from completed SC-PW-E2E. Do not start implementation from this note.
 
 ---
 
@@ -358,6 +361,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-H08 | C-027 major-event notifications | FUTURE | |
 | MRW-H09 | Early-bird registration config (SC-066) | FUTURE | Decision: use early-bird; dates TBD |
 | MRW-H10 | Recorded Zoom half-XP writer (SC-147) | FUTURE | Design brief only; do not overload 117 |
+| MRW-H11 | SC-SEASON-SIM-001 60-day five-enrollment season simulation | **FUTURE** | Planned only — no implementation yet. Program instance “Season Simulation Testing”; allowlist; no live email; stop on material failure; harness + automation modes; extend SC-PW-E2E. **FUT-010 separate/unchanged.** Deps: isolation, field/automation inventory, cleanup/archive decision, polling/timeout design. Canonical: Future Work List `SC-SEASON-SIM-001`. |
 
 ---
 
@@ -385,7 +389,8 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 1. **Do not** re-paste 010/020/022/058/059/065/072/073 and **do not** re-run Perfect Week `--apply` for WAS `recl3DmBh22ADPWWe`.  
 2. **Highest-value remaining live action:** FUT-010 dry-run then supervised attachment clear per [`docs/deploy-checklists/FUT-010-intake-attachment-cleanup.md`](docs/deploy-checklists/FUT-010-intake-attachment-cleanup.md) + [`2026-08-29-PRODUCTION-OPERATOR-QUEUE.md`](docs/deploy-checklists/2026-08-29-PRODUCTION-OPERATOR-QUEUE.md).  
 3. **Calendar:** Weeks 2026–27 import (MRW-A05) when ready — Weeks are protected.  
-4. **Do not** activate FUT-003 until registration intentionally opens.
+4. **Do not** activate FUT-003 until registration intentionally opens.  
+5. **QA:** Disposition SC-ATHLETE-WF-001 defects (MRW-F09) — especially SC-005 B3 same-day XP product decision — before expanding season simulation.
 
 ---
 
@@ -396,6 +401,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 - **FUT-WELCOME-LEGACY** (MRW-B07) → **COMPLETE** 2026-08-29 — six Enrollment fields deleted; 075 absent; do not restore.  
 - **SC-PW-E2E / MRW-A01** → **COMPLETE** — MCP award evidence for WAS `recl3DmBh22ADPWWe`.  
 - **Paste debt C01–C05 + 058/059** → **COMPLETE** (Automations Code Live 2026-08-29).  
+- **SC-SEASON-SIM-001 / MRW-H11** → **FUTURE / Planned only** (2026-08-29) — not active; not SC-005; not SC-PW-E2E reopen; **FUT-010 unchanged**.  
 - SC-027/066 shot milestones live-tested → monitoring only.  
 - Historical overnight MIKE-ACTIONS rows superseded by CURRENT-TRUTH / Section G where dated later.  
 - Legacy C-/SC- inventory in Future Work Sections A–F remains evidence; **this file + operator queue + Future Work Section G** are the operator queues.  

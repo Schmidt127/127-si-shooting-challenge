@@ -60,6 +60,23 @@ node tools/testing/run_e2e_matrix.mjs
 
 Records preconditions / action / expected / actual / record IDs / pass-fail / cleanup for each safe row. Policy and email failure injects remain BLOCKED (SC-007/SC-008).
 
+## SC-ATHLETE-WF-001 individual athlete workflow
+
+Pre–season-simulation disposable path (Testing3 Schmidt). Dry-run default; no email.
+
+Plan: `docs/testing/athlete-workflow/SC-ATHLETE-WF.md`
+
+```bash
+node tools/testing/tests/test_sc_athlete_wf_contract.mjs
+node tools/testing/sc-athlete-wf.mjs --case full
+node tools/testing/sc-athlete-wf.mjs --case full --readonly
+# gated live create (ATHWF| prefix only):
+node tools/testing/sc-athlete-wf.mjs --case full --apply
+node tools/testing/sc-athlete-wf.mjs --cleanup
+```
+
+Distinct from **SC-PW-E2E** and from **SC-SEASON-SIM-*** (do not run season simulation from this harness).
+
 ## Expected-versus-actual verifier (SC-006)
 
 Library: `lib/expected_actual.js`  

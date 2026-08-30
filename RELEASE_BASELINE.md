@@ -53,6 +53,9 @@ git status -sb
 | `/shoot` | **HTTP 200** |
 | `/shoot/api/airtable` | **200** `ok:true` `tokenValid:true` |
 | SC-PW-E2E award (WAS `recl3DmBh22ADPWWe`) | **PASS** — MCP evidence JSON |
+| SC-ATHLETE-WF-001 offline contracts | **PASS** (2026-08-30) |
+| SC-ATHLETE-WF-001 dry-run + readonly | **PASS** |
+| SC-ATHLETE-WF-001 disposable apply | **PARTIAL PASS** — submission XP + WAS verified; homework 065 not fired without PHA; cleanup via MCP |
 
 ---
 
@@ -94,9 +97,11 @@ git status -sb
 
 ## Exact recommended next task
 
+**Cursor / Lead:** Close **SC-ATHLETE-WF-001** open defects (PHA-linked homework XP path; disposition SC-005 B3) before expanding season simulation.
+
 **Mike (P0 remaining):** FUT-010 supervised dry-run → apply per operator queue. Then Weeks import when calendar ready.
 
-**Do not:** re-paste 010/020/022/058/059/065/072/073; re-`--apply` Perfect Week for WAS `recl3DmBh22ADPWWe`; restore 075.
+**Do not:** re-paste 010/020/022/058/059/065/072/073; re-`--apply` Perfect Week for WAS `recl3DmBh22ADPWWe`; restore 075; start multi-enrollment season sim until ATHWF defects dispositioned.
 
 ---
 

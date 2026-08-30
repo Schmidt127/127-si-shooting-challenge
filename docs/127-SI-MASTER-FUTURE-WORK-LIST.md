@@ -550,6 +550,98 @@ Keep the Player Manual on the future-work list, but complete it last—immediate
 
 Do not finalize or publish the manual while material app rules or page behavior are still changing.
 
+### SC-ATHLETE-WF-001 — Individual athlete workflow QA (pre–season simulation)
+
+**Priority:** P0  
+**Status:** In progress (harness + dry-run + offline contracts + disposable live apply evidence 2026-08-30)  
+**Systems:** Testing harness, Enrollments (Testing3), Submissions, WAS, Homework Completions, Video Feedback, XP Events, streaks/levels contracts  
+**Related (distinct):** SC-005 matrix · **SC-PW-E2E** (COMPLETE — do not re-`--apply`) · **SC-SEASON-SIM-001/002** (future — do not expand until this path’s defects are dispositioned) · MRW-F09
+
+Prove the **single disposable athlete** path end-to-end before any multi-enrollment season simulation: enrollment → submissions (same-day / backdate / multi / Count It / Simple Total via Shot Total) → XP dedupe → homework/video → streaks/levels expectations → WAS rollups → negatives → replay.
+
+**Safety:** `ATHWF|` Week labels · Testing3 `recNu6fcBpF1GG3u5` only · dry-run default · no email / Resend / Make · cleanup only manifest records.
+
+**Plan / harness / evidence:** [`docs/testing/athlete-workflow/SC-ATHLETE-WF.md`](./testing/athlete-workflow/SC-ATHLETE-WF.md) · `tools/testing/sc-athlete-wf.mjs` · [`docs/testing/evidence/sc-athlete-wf/apply-session-final-2026-08-30.json`](./testing/evidence/sc-athlete-wf/apply-session-final-2026-08-30.json)
+
+**Open defects from 2026-08-30 apply:** SC-005 B3 same-day dual SUBMISSION_XP (product-decision) · Satisfactory HC without PHA does not fire 065 · agent PAT cannot DELETE XP Events · sc-pw-e2e-lib still writes formula `Submission Stat Mode` (leave that WIP uncommitted).
+
+### SC-SEASON-SIM-001 — 60-Day Five-Enrollment Season Simulation
+
+**Priority:** P2  
+**Status:** Planned / Future — **not active**; do **not** begin implementation until Phase 2 brief and dependencies below are satisfied  
+**Systems:** Testing harness, Program Instances, Enrollments, Submissions, Homework Completions, Video Feedback, Zoom attendance, Weekly Athlete Summaries, XP Events, achievements/milestones, email handoff (test mode), SC-PW-E2E infrastructure  
+**Related (distinct):** SC-001 / SC-002 / SC-005 (scenario matrix), **SC-PW-E2E** (Perfect Week disposable proof — COMPLETE; do not re-`--apply` for closed fixtures), **FUT-010** (intake attachment cleanup — **separate and unchanged**)
+
+Create a reusable, unattended end-to-end simulation of a complete **60-day** Shooting Challenge season using **five disposable test enrollments**. Reuse and extend existing **SC-PW-E2E** infrastructure where appropriate. Support both **controlled harness mode** and **production-like Airtable automation mode**.
+
+**Purpose (eventual coverage):**
+
+- Daily submissions  
+- Missed days and broken streaks  
+- Homework completion and incomplete homework  
+- Video submissions and feedback  
+- Zoom attendance  
+- Weekly summaries and XP  
+- Levels and gates  
+- Streak achievements  
+- Shot milestones  
+- Perfect Week success and failure  
+- Backdated activity  
+- Email handoffs in **test mode only** (no live delivery)  
+- Correction, replay, deduplication, and failure handling  
+
+**Proposed test profiles:**
+
+1. Complete season  
+2. Missed days and broken streaks  
+3. Strong shooting with incomplete homework/videos  
+4. Backdated activity and correction/replay  
+5. Perfect Week, milestones, levels, and edge cases  
+
+**Hard requirements (when implemented):**
+
+- Separate test program instance: **“Season Simulation Testing”**  
+- Test-only enrollment allowlist  
+- No real participant records  
+- No live email delivery  
+- Stop on first material failure  
+- Detailed evidence and failure report  
+- Automatic cleanup **or** clearly marked archive  
+- Controlled harness mode **and** production-like Airtable automation mode  
+- Reuse/extend SC-PW-E2E where appropriate  
+
+**Dependencies (must be resolved before implementation):**
+
+1. **FUT-010** remains separate and unchanged (this item does not own attachment cleanup).  
+2. Confirmed **test-environment isolation** (program instance + allowlist + no real participants).  
+3. Final **field and automation inventory** for the season path under test.  
+4. Decision on **cleanup vs archive** strategy for disposable simulation records.  
+5. Design of **automation polling and timeout handling** for unattended runs.
+
+**Acceptance criteria (future):** Phase 2 implementation brief exists; five profiles run unattended against the Season Simulation Testing instance; material failures stop the run with evidence; cleanup/archive policy executed; no live email; no real participant mutation; harness and automation modes both documented.
+
+**Do not implement from this entry alone.** Convert to a Phase 2 brief first. Do not modify Airtable or FUT-010 under this ID until that brief is approved.
+
+### SC-SEASON-SIM-002 — Athlete 1 Season Simulation Infrastructure (May–June 2027)
+
+**Priority:** P2  
+**Status:** Infrastructure ready (preflight / dry-run / gated execute+cleanup; no live run yet)  
+**Systems:** `tools/season_simulation/`, Airtable reference reads, dry-run/preflight/cleanup scaffolding  
+**Related (distinct):** **SC-SEASON-SIM-001** (five-enrollment unattended package — still Planned / Future; not started)
+
+Build reusable Python infrastructure for a future **Athlete 1** full-season simulation against the production base (system not live yet):
+
+- Window: **2027-05-01 through 2027-06-30 inclusive** (61 calendar days)
+- Athlete: **Athlete 1**, Grade **12**, highest configured Grade 12 / 9–12 shot goal (resolved at runtime — do not hardcode 12,000)
+- Modes: read-only **preflight**, default **dry-run**, gated **execute** (`--execute --confirm SEASON-SIMULATION-2027`), gated **cleanup**
+- Dynamic resolution only for homework (PHA), Zoom Meetings, XP rules, levels, gates, achievements, weeks, goals
+- Simulation clock design documented (Activity Date writable; `Activity Date Is Future?` uses `NOW()` — temporary override required before early execution)
+- Emails: live-looking to `schmidt@fairfieldbasketballclub.com` only when authorized; default dry-run never sends
+
+**Hard constraints for this ID:** Do not run execute/cleanup; do not write/delete Airtable records; do not send email during infrastructure build. SC-SEASON-SIM-001 remains blocked pending its Phase 2 brief.
+
+**Acceptance (infrastructure):** Package under `tools/season_simulation/` with README, offline tests green, preflight dry-run commands documented, schema/simulation-clock gaps listed.
+
 ---
 
 ## E. Items intentionally excluded or preserved elsewhere
@@ -682,6 +774,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-001** | Testing | Universal Testing Scenarios framework so Mike can run Fillout-shaped tests without Fillout | P0 | Live Tested in PROD | SC-004, SC-059 | Broader season matrix, Homework XP after review, Make/S3, and email remain separate release work |
 | **SC-004** | Testing | Permanent Schmidt testing enrollment for live PROD tests | P0 | Monitoring | ΓÇö | Keep emails Schmidt-only; **Schmidt remains visible on public standings**; optional refresh when foundation WAS IDs change |
 | **SC-005** | Testing | Full end-to-end live PROD matrix (all major paths) | P0 | Live Tested in PROD | SC-001ΓÇôSC-004, core pipelines | Unblock B3 policy / B5 backdate week; streak+milestone when unlocks exist; email/failure inject ΓåÆ SC-008 |
+| **SC-SEASON-SIM-001** | Testing | 60-day five-enrollment season simulation (reusable, unattended) | P2 | Planned / Future | Test isolation; field/automation inventory; cleanup/archive decision; polling/timeout design; SC-PW-E2E reuse; **FUT-010 separate** | Not active — do not implement yet; five disposable profiles; harness + automation modes; stop on first material failure; evidence + cleanup/archive |
 | **SC-007** | Testing | Duplicate and rerun testing (idempotency proof) | P0 | Live Tested in PROD | SC-066, SC-096+ | Optional: 010 UI re-trigger attest; milestone/PW/Zoom-attend live fixtures when present |
 | **SC-010** | Homework | PDF / document homework submissions work end-to-end | P0 | Installed in PROD | SC-019 | Re-test PDF path; quiz uses Option B (no PDF asset ΓÇö SC-014) |
 | **SC-011** | Homework | Video submissions as homework/learning assets | P0 | Installed in PROD | SC-133 | Re-test video as homework vs daily video rules; confirm purpose routing |
@@ -855,5 +948,13 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **WIP-XP-ACT** | Athlete XP Activity ledger (web + API) | IN PROGRESS | Uncommitted `web/lib/data/xp-activity*` + components; not prod deployed |
 | **WIP-HW-CONTRACTS** | Homework assignment-identity (FUT-001) | **COMPLETE** | Merged + Production 020/065 Live |
 | **WIP-057-TESTS** | 057 runtime + hardcode contract tests | IN PROGRESS | Uncommitted `test_057_runtime.mjs` + `tests/automation-contracts/` |
+
+### 2026-08-29 future testing (not active)
+
+| Item | Status | Evidence |
+|---|---|---|
+| **SC-ATHLETE-WF-001** | **IN PROGRESS** | Individual athlete workflow QA (pre–season-sim). Plan `docs/testing/athlete-workflow/SC-ATHLETE-WF.md`; harness `tools/testing/sc-athlete-wf.mjs`; evidence `docs/testing/evidence/sc-athlete-wf/apply-session-final-2026-08-30.json`. MRW-F09. |
+| **SC-SEASON-SIM-001** | **Planned / Future** | 60-day five-enrollment season simulation — narrative entry above § D / FUT-026; MRW-H11. Do **not** implement yet. FUT-010 unchanged. Reuse SC-PW-E2E later where appropriate. |
+| **SC-SEASON-SIM-002** | **Infrastructure ready** | Athlete 1 May–June 2027 (61-day) package — `tools/season_simulation/`. Offline tests + read-only preflight/dry-run OK; execute/cleanup not run. Distinct from SC-SEASON-SIM-001. Do **not** expand until SC-ATHLETE-WF-001 defects are dispositioned. |
 
 ---

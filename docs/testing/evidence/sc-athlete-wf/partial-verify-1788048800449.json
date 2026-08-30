@@ -1,0 +1,240 @@
+{
+  "harness": "SC-ATHLETE-WF-001",
+  "mode": "partial-verify",
+  "startedAt": "2026-08-30T00:13:16.899Z",
+  "submissions": {
+    "recLz8Ayr4AfCPEh8": {
+      "activityDate": "2026-06-01",
+      "shotTotal": 50,
+      "statMode": "Simple Total",
+      "countThis": 1,
+      "week": [
+        "rec52TqawQDk7rhdP"
+      ],
+      "enrollment": [
+        "recNu6fcBpF1GG3u5"
+      ],
+      "was": [
+        "recEYFUsKBJcb94hs"
+      ],
+      "xpCount": 1,
+      "xpIds": [
+        "recrRDS8jlUxUaoDh"
+      ],
+      "xpKeys": [
+        "SUBMISSION_XP|recLz8Ayr4AfCPEh8"
+      ],
+      "xpPoints": [
+        20
+      ],
+      "xpActive": [
+        true
+      ],
+      "xpActivityDate": [
+        "2026-06-01T06:00:00.000Z"
+      ]
+    },
+    "rec4kYxpLMIXDoXRo": {
+      "activityDate": "2026-06-01",
+      "shotTotal": 25,
+      "statMode": "Simple Total",
+      "countThis": 1,
+      "week": [
+        "rec52TqawQDk7rhdP"
+      ],
+      "enrollment": [
+        "recNu6fcBpF1GG3u5"
+      ],
+      "was": [
+        "recEYFUsKBJcb94hs"
+      ],
+      "xpCount": 1,
+      "xpIds": [
+        "rec9uy7zJjVZLs5zw"
+      ],
+      "xpKeys": [
+        "SUBMISSION_XP|rec4kYxpLMIXDoXRo"
+      ],
+      "xpPoints": [
+        20
+      ],
+      "xpActive": [
+        true
+      ],
+      "xpActivityDate": [
+        "2026-06-01T06:00:00.000Z"
+      ]
+    },
+    "recJrqP3pgsaYlLD7": {
+      "activityDate": "2026-06-02",
+      "shotTotal": 100,
+      "statMode": "Simple Total",
+      "countThis": 1,
+      "week": [
+        "rec52TqawQDk7rhdP"
+      ],
+      "enrollment": [
+        "recNu6fcBpF1GG3u5"
+      ],
+      "was": [
+        "recEYFUsKBJcb94hs"
+      ],
+      "xpCount": 1,
+      "xpIds": [
+        "recBmv5vvXGCl59Oy"
+      ],
+      "xpKeys": [
+        "SUBMISSION_XP|recJrqP3pgsaYlLD7"
+      ],
+      "xpPoints": [
+        20
+      ],
+      "xpActive": [
+        true
+      ],
+      "xpActivityDate": [
+        "2026-06-02T06:00:00.000Z"
+      ]
+    },
+    "recw4LftfPAp0rTZc": {
+      "activityDate": "2026-06-03",
+      "shotTotal": 75,
+      "statMode": "Simple Total",
+      "countThis": 1,
+      "week": [
+        "rec52TqawQDk7rhdP"
+      ],
+      "enrollment": [
+        "recNu6fcBpF1GG3u5"
+      ],
+      "was": [
+        "recEYFUsKBJcb94hs"
+      ],
+      "xpCount": 1,
+      "xpIds": [
+        "recjDV5vMVkvfHcAq"
+      ],
+      "xpKeys": [
+        "SUBMISSION_XP|recw4LftfPAp0rTZc"
+      ],
+      "xpPoints": [
+        20
+      ],
+      "xpActive": [
+        true
+      ],
+      "xpActivityDate": [
+        "2026-06-03T06:00:00.000Z"
+      ]
+    },
+    "reczUmJZPkDasSrwy": {
+      "activityDate": "2026-06-05",
+      "shotTotal": 40,
+      "statMode": "Simple Total",
+      "countThis": 1,
+      "week": [
+        "rec52TqawQDk7rhdP"
+      ],
+      "enrollment": [
+        "recNu6fcBpF1GG3u5"
+      ],
+      "was": [
+        "recEYFUsKBJcb94hs"
+      ],
+      "xpCount": 1,
+      "xpIds": [
+        "recy2XOboCByIsb4b"
+      ],
+      "xpKeys": [
+        "SUBMISSION_XP|reczUmJZPkDasSrwy"
+      ],
+      "xpPoints": [
+        20
+      ],
+      "xpActive": [
+        true
+      ],
+      "xpActivityDate": [
+        "2026-06-05T06:00:00.000Z"
+      ]
+    },
+    "recCRxoC6gKnXNUIA": {
+      "activityDate": "2026-06-04",
+      "shotTotal": 60,
+      "statMode": "Simple Total",
+      "countThis": 1,
+      "week": [
+        "rec52TqawQDk7rhdP"
+      ],
+      "enrollment": [
+        "recNu6fcBpF1GG3u5"
+      ],
+      "was": [
+        "recEYFUsKBJcb94hs"
+      ],
+      "xpCount": 1,
+      "xpIds": [
+        "recK2DdnVjGE1PAmj"
+      ],
+      "xpKeys": [
+        "SUBMISSION_XP|recCRxoC6gKnXNUIA"
+      ],
+      "xpPoints": [
+        20
+      ],
+      "xpActive": [
+        true
+      ],
+      "xpActivityDate": [
+        "2026-06-04T06:00:00.000Z"
+      ]
+    },
+    "recLQzo2B6AlkG7jM": {
+      "activityDate": "2026-06-06",
+      "shotTotal": 80,
+      "statMode": "Simple Total",
+      "countThis": 1,
+      "week": [
+        "rec52TqawQDk7rhdP"
+      ],
+      "enrollment": [
+        "recNu6fcBpF1GG3u5"
+      ],
+      "was": [
+        "recEYFUsKBJcb94hs"
+      ],
+      "xpCount": 1,
+      "xpIds": [
+        "rectDIduBf1onvrBT"
+      ],
+      "xpKeys": [
+        "SUBMISSION_XP|recLQzo2B6AlkG7jM"
+      ],
+      "xpPoints": [
+        20
+      ],
+      "xpActive": [
+        true
+      ],
+      "xpActivityDate": [
+        "2026-06-06T06:00:00.000Z"
+      ]
+    }
+  },
+  "defects": [],
+  "was": {
+    "id": "recEYFUsKBJcb94hs",
+    "daysLogged": 6,
+    "shots": 430,
+    "eligible": 0,
+    "automationStatus": "Ready"
+  },
+  "video": {
+    "id": "recTQccyPrhTAGxYg",
+    "enrollment": [
+      "recNu6fcBpF1GG3u5"
+    ],
+    "awardStatus": "Pending",
+    "key": "ATHWF|2026-08-30|SC-ATHLETE-WF|full|VF1"
+  }
+}
