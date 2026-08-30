@@ -61,12 +61,13 @@ Home JSON-LD: `buildProgramHomeJsonLd()` on `/shoot`
 | Game manual / rules | **Existing** `/game-manual` |
 | Levels / achievements / leaderboard | **Existing** routes — metadata improved |
 
-## FAQ and structured data (FUT-024)
+## Structured data (FUT-024)
 
 - Page: `web/app/(program)/faq/page.tsx`
 - Content: `web/lib/seo/faq-content.ts`
-- JSON-LD: `buildFaqRouteJsonLd()` — Organization + FAQPage
-- Privacy: no parent emails, athlete private fields, or Airtable record IDs
+- JSON-LD: `buildFaqRouteJsonLd()` — Organization + FAQPage + BreadcrumbList
+- Catalog/detail JSON-LD: `web/lib/seo/structured-data.ts` — CollectionPage, WebPage, BreadcrumbList
+- Audit: [seo-audit-report-2026-08-30.md](./seo-audit-report-2026-08-30.md)
 
 **Blocked (documented):** Team Shot Tracker FAQ topic — excluded to preserve `FORBIDDEN_CROSSOVER_PRODUCTS` in `web/lib/release/public-surface.ts`.
 

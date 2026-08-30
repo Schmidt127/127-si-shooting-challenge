@@ -5,6 +5,7 @@ import {
   ZoomMeetingsEmptyState,
   ZoomMeetingsErrorState,
 } from "@/components/zoom-meetings/zoom-meetings-views";
+import { CatalogStructuredData } from "@/components/seo/catalog-structured-data";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchZoomMeetingCatalog } from "@/lib/airtable/queries";
 import { buildPageMetadata } from "@/lib/seo/metadata";
@@ -19,16 +20,33 @@ export const metadata: Metadata = buildPageMetadata({
 export const revalidate = 300;
 
 export default async function ZoomMeetingsPage() {
+  const structuredData = <CatalogStructuredData section="zoomMeetings" />;
+
   try {
     const data = await fetchZoomMeetingCatalog();
 
     if (data.totalMeetings === 0) {
-      return <ZoomMeetingsEmptyState />;
+      return (
+        <>
+          {structuredData}
+          <ZoomMeetingsEmptyState />
+        </>
+      );
     }
 
-    return <ZoomMeetingsCatalogView data={data} />;
+    return (
+      <>
+        {structuredData}
+        <ZoomMeetingsCatalogView data={data} />
+      </>
+    );
   } catch (error) {
     const message = publicErrorMessage(error);
-    return <ZoomMeetingsErrorState message={message} />;
+    return (
+      <>
+        {structuredData}
+        <ZoomMeetingsErrorState message={message} />
+      </>
+    );
   }
 }

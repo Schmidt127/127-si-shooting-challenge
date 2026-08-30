@@ -5,6 +5,7 @@ import {
   TutorialMediaErrorState,
   TutorialMediaGridView,
 } from "@/components/tutorial-media/tutorial-media-views";
+import { CatalogStructuredData } from "@/components/seo/catalog-structured-data";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchArticleCatalog } from "@/lib/airtable/queries";
 import { ARTICLES_SECTION } from "@/lib/tutorial-media/config";
@@ -20,16 +21,33 @@ export const metadata: Metadata = buildPageMetadata({
 export const revalidate = 300;
 
 export default async function ArticlesPage() {
+  const structuredData = <CatalogStructuredData section="articles" />;
+
   try {
     const data = await fetchArticleCatalog();
 
     if (data.totalTutorials === 0) {
-      return <TutorialMediaEmptyState config={ARTICLES_SECTION} />;
+      return (
+        <>
+          {structuredData}
+          <TutorialMediaEmptyState config={ARTICLES_SECTION} />
+        </>
+      );
     }
 
-    return <TutorialMediaGridView data={data} config={ARTICLES_SECTION} />;
+    return (
+      <>
+        {structuredData}
+        <TutorialMediaGridView data={data} config={ARTICLES_SECTION} />
+      </>
+    );
   } catch (error) {
     const message = publicErrorMessage(error);
-    return <TutorialMediaErrorState config={ARTICLES_SECTION} message={message} />;
+    return (
+      <>
+        {structuredData}
+        <TutorialMediaErrorState config={ARTICLES_SECTION} message={message} />
+      </>
+    );
   }
 }

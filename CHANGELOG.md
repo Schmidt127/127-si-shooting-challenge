@@ -56,6 +56,14 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Web
 
+#### Added
+- **SEO discoverability audit (2026-08-30)** — BreadcrumbList + CollectionPage/WebPage JSON-LD on
+  public catalog and detail routes; FAQ breadcrumb in JSON-LD graph; mobile `themeColor` +
+  `applicationName`; footer links for Shoutouts and Articles. Audit report:
+  [`web/docs/seo-audit-report-2026-08-30.md`](./web/docs/seo-audit-report-2026-08-30.md).
+  Preserves athlete `noindex` and sitemap exclusion. Tests: `structured-data.test.ts`,
+  `national-seo.spec.ts`.
+
 #### Changed
 - **Final public-app readiness (2026-08-30)** — FAQ added to Playwright + HTTP smoke routes;
   public-route-readiness Vitest contracts; public-display loading label; footer exclusion tests

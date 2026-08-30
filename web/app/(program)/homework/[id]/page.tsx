@@ -6,6 +6,7 @@ import {
   HomeworkNotFoundState,
 } from "@/components/homework/homework-detail-view";
 import { HomeworkErrorState } from "@/components/homework/homework-catalog-view";
+import { DetailStructuredData } from "@/components/seo/detail-structured-data";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchScheduledHomeworkAssignment } from "@/lib/airtable/homework-queries";
 import { buildPageMetadata } from "@/lib/seo/metadata";
@@ -49,7 +50,19 @@ export default async function HomeworkDetailPage({ params }: HomeworkDetailPageP
       return <HomeworkNotFoundState />;
     }
 
-    return <HomeworkDetailView assignment={assignment} />;
+    return (
+      <>
+        <DetailStructuredData
+          section="homework"
+          itemName={assignment.displayName}
+          itemDescription={
+            assignment.briefDescription || `${assignment.weekName} homework assignment.`
+          }
+          itemPath={`/homework/${id}`}
+        />
+        <HomeworkDetailView assignment={assignment} />
+      </>
+    );
   } catch (error) {
     const message = publicErrorMessage(error);
     return <HomeworkErrorState message={message} />;

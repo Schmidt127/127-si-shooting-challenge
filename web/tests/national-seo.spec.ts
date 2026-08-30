@@ -61,8 +61,20 @@ test.describe("national SEO messaging", () => {
     await expect(jsonLd).toHaveCount(1);
     const raw = (await jsonLd.textContent()) ?? "";
     expect(raw).toMatch(/FAQPage/);
+    expect(raw).toMatch(/BreadcrumbList/);
     expect(raw).toMatch(/grades/i);
     expect(raw).not.toMatch(/rec[a-zA-Z0-9]{14}/);
+  });
+
+  test("homework catalog exposes breadcrumb structured data", async ({ page }) => {
+    await page.goto("homework", { waitUntil: "domcontentloaded" });
+
+    const jsonLd = page.locator('script[type="application/ld+json"]');
+    await expect(jsonLd).toHaveCount(1);
+    const raw = (await jsonLd.textContent()) ?? "";
+    expect(raw).toMatch(/BreadcrumbList/);
+    expect(raw).toMatch(/CollectionPage/);
+    expect(raw).toMatch(/homework/i);
   });
 
   test("copy does not claim unsupported nationwide in-person services", async ({ page }) => {

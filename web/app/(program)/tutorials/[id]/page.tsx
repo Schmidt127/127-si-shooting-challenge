@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { TutorialDetailView, TutorialNotFoundState } from "@/components/tutorials/tutorial-detail-view";
 import { TutorialsErrorState } from "@/components/tutorials/tutorials-grid-view";
+import { DetailStructuredData } from "@/components/seo/detail-structured-data";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchTutorialItem } from "@/lib/airtable/queries";
 import { buildPageMetadata } from "@/lib/seo/metadata";
@@ -40,7 +41,17 @@ export default async function TutorialDetailPage({ params }: TutorialDetailPageP
   try {
     const tutorial = await fetchTutorialItem(id);
     if (!tutorial) return <TutorialNotFoundState />;
-    return <TutorialDetailView tutorial={tutorial} />;
+    return (
+      <>
+        <DetailStructuredData
+          section="tutorials"
+          itemName={tutorial.name}
+          itemDescription={tutorial.briefDescription || "Shooting Challenge tutorial."}
+          itemPath={`/tutorials/${id}`}
+        />
+        <TutorialDetailView tutorial={tutorial} />
+      </>
+    );
   } catch (error) {
     const message = publicErrorMessage(error);
     return <TutorialsErrorState message={message} />;

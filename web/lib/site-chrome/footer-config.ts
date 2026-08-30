@@ -8,6 +8,8 @@ export const FOOTER_QUICK_LINKS: ProductNavItem[] = [
   { label: "Levels", href: "/levels" },
   { label: "Achievements", href: "/achievements" },
   { label: "Tutorials", href: "/tutorials" },
+  { label: "Shoutouts", href: "/shoutouts" },
+  { label: "Articles", href: "/articles" },
   { label: "Zoom Meetings", href: "/zoom-meetings" },
   { label: "FAQ", href: "/faq" },
   { label: "Game Manual", href: "/game-manual" },

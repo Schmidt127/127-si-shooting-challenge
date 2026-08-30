@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { GameManualView } from "@/components/game-manual/game-manual-view";
+import { CatalogStructuredData } from "@/components/seo/catalog-structured-data";
 import { fetchLevelLadder, fetchXpRuleCatalog } from "@/lib/airtable/queries";
 import { getGameManualUrl } from "@/lib/game-manual/config";
 import type { XpRuleCatalogData } from "@/lib/data/xp-rules";
@@ -29,10 +30,13 @@ export default async function GameManualPage() {
   ]);
 
   return (
-    <GameManualView
-      manualUrl={getGameManualUrl()}
-      xpCatalog={xpCatalog}
-      levels={levels}
-    />
+    <>
+      <CatalogStructuredData section="gameManual" />
+      <GameManualView
+        manualUrl={getGameManualUrl()}
+        xpCatalog={xpCatalog}
+        levels={levels}
+      />
+    </>
   );
 }

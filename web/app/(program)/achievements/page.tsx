@@ -5,6 +5,7 @@ import {
   AchievementsErrorState,
   AchievementsGridView,
 } from "@/components/achievements/achievements-grid-view";
+import { CatalogStructuredData } from "@/components/seo/catalog-structured-data";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchAchievementCatalog } from "@/lib/airtable/queries";
 import { buildPageMetadata } from "@/lib/seo/metadata";
@@ -19,16 +20,33 @@ export const metadata: Metadata = buildPageMetadata({
 export const revalidate = 300;
 
 export default async function AchievementsPage() {
+  const structuredData = <CatalogStructuredData section="achievements" />;
+
   try {
     const data = await fetchAchievementCatalog();
 
     if (data.totalAchievements === 0) {
-      return <AchievementsEmptyState />;
+      return (
+        <>
+          {structuredData}
+          <AchievementsEmptyState />
+        </>
+      );
     }
 
-    return <AchievementsGridView data={data} />;
+    return (
+      <>
+        {structuredData}
+        <AchievementsGridView data={data} />
+      </>
+    );
   } catch (error) {
     const message = publicErrorMessage(error);
-    return <AchievementsErrorState message={message} />;
+    return (
+      <>
+        {structuredData}
+        <AchievementsErrorState message={message} />
+      </>
+    );
   }
 }
