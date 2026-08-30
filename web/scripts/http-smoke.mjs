@@ -132,8 +132,8 @@ async function main() {
     results.checks.push({ name: "landing-url", url: LANDING, present: landingPresent });
     assert(landingPresent, `home missing landing href ${LANDING}`, failures);
     assert(
-      !home.text.includes("hooopchallenges"),
-      "home still references typo host hooopchallenges",
+      !/hoopchallenges/i.test(home.text),
+      "home still references legacy or typo Hoop Challenges host",
       failures,
     );
   } catch (err) {

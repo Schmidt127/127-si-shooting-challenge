@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   PUBLIC_LANDING_ORIGIN,
@@ -7,6 +7,10 @@ import {
   resolveSiteUrl,
   withBasePath,
 } from "./app-config";
+
+afterEach(() => {
+  vi.unstubAllEnvs();
+});
 
 describe("public origins", () => {
   it("defaults to Fairfield Basketball Club, not Hoop Challenges", () => {
@@ -102,5 +106,20 @@ describe("withBasePath", () => {
     expect(withBasePath("/favicon.png")).toBe("/shoot/favicon.png");
     expect(withBasePath("/shoot/favicon.png")).toBe("/shoot/favicon.png");
     expect(withBasePath("/leaderboard")).toBe("/shoot/leaderboard");
+  });
+});
+
+describe("module exports with legacy Vercel env values", () => {
+  it("LANDING_URL and SITE_URL self-heal hooopchallenges.com at import time", async () => {
+    vi.stubEnv("NEXT_PUBLIC_LANDING_URL", "https://hooopchallenges.com");
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://www.hooopchallenges.com/shoot");
+    vi.resetModules();
+
+    const config = await import("./app-config");
+
+    expect(config.LANDING_URL).toBe(PUBLIC_LANDING_ORIGIN);
+    expect(config.SITE_URL).toBe(PUBLIC_SITE_ORIGIN);
+    expect(config.LANDING_URL).not.toMatch(/hoopchallenges/i);
+    expect(config.SITE_URL).not.toMatch(/hoopchallenges/i);
   });
 });
