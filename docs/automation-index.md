@@ -38,10 +38,10 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 006 | Submission Intake — Set Video Count | *confirm in Airtable* | `006-submission-intake-and-asset-creation-set-video-count.js` |
 | 007 | Submission Intake — Duplicate Checker for Submissions | *confirm in Airtable* | `007-submission-intake-and-asset-creation-duplicate-checker-for-submissions.js` |
 | 009 | Submission Intake — Create Submission Assets | **Live v1.2** (Automations Code 2026-08-21) | `009-submission-intake-create-submission-assets.js` (**GitHub v1.2** — one asset per attachment; Source Attachment ID idempotent; see [HOMEWORK-ASSET-COMPLETION-RUNBOOK.md](./online-agents/homework-assets/HOMEWORK-ASSET-COMPLETION-RUNBOOK.md)) |
-| **010** | Submission Intake — Create/Reconcile XP Event from Submission | Submissions when `Reconciliation Needed? = 1`, dynamic `recordId` | `010-submission-intake-create-xp-event.js` (**Production v10.11** — run history 2026-08-21; PKG-006R v10.9 + historical v10.10 notes remain historical) |
+| **010** | Submission Intake — Create/Reconcile XP Event from Submission | Submissions when `Reconciliation Needed? = 1`, dynamic `recordId` | `010-submission-intake-create-xp-event.js` (**Production v10.12 Live** — Automations Code MCP 2026-08-29/30; do not re-paste) |
 | **013** | Submission Intake — Create or Link Video Feedback | Submission Assets when video asset ready for Video Feedback prep | `013-submission-intake-create-or-link-video-feedback.js` |
 | 021 | Submission Intake — Set Attachment Upload Status | *confirm in Airtable* | `021-submission-intake-and-asset-creation-set-attachment-upload-status.js` |
-| **022** | Submission Intake — Sync Child Upload Writeback | Submission Assets when Upload Status is Uploaded/Processing/Error and child linked | `022-submission-intake-sync-child-upload-writeback-from-submission-asset.js` (**v2.2** GitHub — **v2.1 ON in Production Airtable per Mike 2026-08-19**; Video URL uses Reviewer/Lambda URL only — **never Canonical S3**; paste pending). |
+| **022** | Submission Intake — Sync Child Upload Writeback | Submission Assets when Upload Status is Uploaded/Processing/Error and child linked | `022-submission-intake-sync-child-upload-writeback-from-submission-asset.js` (**v2.2 Live** — Automations Code MCP 2026-08-29/30; Lambda-only parent URL; do not re-paste). |
 | 023 | Submission Intake — Assign Enrollment to Submission | *confirm in Airtable* | `023-submission-intake-and-asset-creation-assign-enrollment-to-submission.js` |
 
 ## Homework (020, 064–065, 067–068, 070a, 071) — 063 retired
@@ -50,11 +50,11 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| **020** | Homework — Link or Create Homework Completion | Submission Assets when homework asset ready — **Live v3.7** (Automations Code 2026-08-21) | `020-homework-link-or-create-homework-completion.js` (**GitHub v3.7**; uniqueness Enrollment+Week+Homework+Slot). Upstream assets: **009**. |
+| **020** | Homework — Link or Create Homework Completion | Submission Assets when homework asset ready — **Live v3.8** (FUT-001; Automations Code MCP 2026-08-29/30) | `020-homework-link-or-create-homework-completion.js` (**v3.8**; assignment identity; do not re-paste). Upstream assets: **009**. |
 | 012 | ~~Legacy HC create~~ | **DELETED** — do not restore | — |
 | 063 | ~~Homework Review — Copy Enrollment Grade Band~~ | **DELETED / RETIRED in PROD** — do not restore; repo runtime stop | `063-…js` *(historical only)* |
 | 064 | Homework Review — Prepare Homework XP Award | **Production-verified current live** — prepares XP from rule `HOMEWORK_COMPLETION`; **does not create XP Event** (repo header v12.2) | `064-homework-review-and-xp-prepare-homework-xp-award.js` |
-| **065** | Homework Review — Create/Reconcile Homework XP Event | `Homework XP Reconciliation Needed? = 1` — **Production v10.3 live-tested** (2026-08-24); Source Key `HOMEWORK_XP\|{HC ID}`; input `recordId` = **triggering HC** (dynamic) | `065-homework-review-and-xp-create-homework-xp-event.js` |
+| **065** | Homework Review — Create/Reconcile Homework XP Event | `Homework XP Reconciliation Needed? = 1` — **Production v10.4 Live** (FUT-001; Automations Code MCP 2026-08-29/30); Source Key `HOMEWORK_XP\|{HC ID}`; input `recordId` = **triggering HC** (dynamic); do not re-paste | `065-homework-review-and-xp-create-homework-xp-event.js` |
 | **067** | Homework — Link or Create Completion from Reflection Quiz | Final Reflection Quiz Submissions when ready — **repo v3.4** | `067-homework-link-or-create-completion-from-reflection-quiz.js` |
 | **068** | Homework — Reconcile Deferred Weekly Summary Links | **RETIRED / keep OFF**; 033 owns deferred WAS reconciliation | `068-homework-reconcile-deferred-weekly-summary-links.js` |
 | **070a** | Send Homework Asset Payload to Make | Send to Make Trigger checked **and** homework ready — **Live v4.7** (Perfect Week test window 2026-08-21; historically intentional OFF) | `070a-…js` (**v4.7** `fetch`) |

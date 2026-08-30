@@ -10,7 +10,7 @@ This is the **detailed completion matrix and historical traceability record** fo
 | Field | Value |
 |-------|--------|
 | **Purpose** | Completion matrix, package traceability, and preserved historical evidence |
-| **Last updated** | **2026-08-30** (MRW-F08 offline contract suite green; docs-canonical-header drift reconciled) |
+| **Last updated** | **2026-08-30** (Agent 4: SC-SEASON-SIM-002 landed; paste audit superseded; automation-index drift cleared; 043 absent) |
 | **Production branch** | `master` |
 | **Vercel root** | `web/` |
 | **Production website** | https://www.fairfieldbasketballclub.com/shoot |
@@ -81,6 +81,8 @@ All Shooting Challenge parent/athlete notification email goes through **Communic
 ---
 
 ## 0A. Current Automation Versions — 2026-08-24
+
+> **Overlay 2026-08-30 (Agent 4):** Treat the table below as **historical**. Authoritative versions: [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) §8 + [`MASTER_REMAINING_WORK_LIST.md`](../MASTER_REMAINING_WORK_LIST.md). Live: **010 v10.12**, **020 v3.8**, **022 v2.2**, **057 v2.2** (`Perfect Week Video Minimum`), **058 1.5**, **059 v3.7**, **065 v10.4**, **072 v4.8**, **073 v4.4**. **Do not** use the 2026-08-24 minors (020 v3.7 / 057 v2.0 / 065 v10.3 / 072 v4.7) as paste instructions.
 
 Authoritative GitHub SCRIPT headers + [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) overlays. Production paste may lag GitHub for **010 v10.12** only — verify in Automations UI before claiming live. **065 v10.3** and **066 v3.9** are **live-tested** (2026-08-24).
 
