@@ -72,8 +72,12 @@ export const FEATURE_BANNER_ARIA = {
   levels: "Shooting Challenge levels progression showing XP tiers and advancement",
   homework:
     "Shooting Challenge homework page showing published assignments and curriculum",
+  tutorials:
+    "Shooting Challenge tutorials catalog showing technique clips and film breakdowns",
   achievements:
     "Shooting Challenge achievements showing milestones, streaks, and earned progress",
+  zoom:
+    "Shooting Challenge Zoom meetings catalog showing live sessions and recordings by week",
 } as const;
 
 export const REGISTRATION_FACTS = {

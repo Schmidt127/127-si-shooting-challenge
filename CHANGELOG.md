@@ -9,6 +9,10 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **FUT-017 Zoom Meetings portfolio redesign (2026-08-30)** — Full catalog redesign at
+  `/shoot/zoom-meetings`: feature banner, live vs recording orientation, week-grouped
+  `AccentRail` cards with access badges and external join/recording links, graceful 410 cover
+  fallback, and matching detail-page cover fallback. Data via `fetchZoomMeetingCatalog` unchanged.
 - **MRW-E04 production smoke fix (2026-08-30)** — Updated home route heading assertion in
   `tests/helpers/smoke.ts` to match FUT-018 `HOME_HERO` copy (`Earn XP. Climb 12 Levels.`);
   `npm run test:smoke:prod` **50/50** against production.
@@ -34,6 +38,10 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   tests + cross-page Playwright coverage.
 - **Homepage parent clarity (FUT-018, 2026-08-30)** — Rebased onto homepage redesign (#270);
   added “For parents and families” guidance section with FAQ/homework links (kept #270 hero CTAs).
+- **Tutorials portfolio catalog (FUT-016, 2026-08-30)** — `/shoot/tutorials` redesign matching
+  homework/levels quality: feature banner, media-delivery orientation, AccentRail cards,
+  in-page vs external badges, keyboard focus rings; display-layer EXT-QA-003 cross-program
+  de-emphasis; Vitest for `tutorial-presentation` helpers.
 - **Tutorials & Zoom presentation (FUT-016/017 partial, 2026-08-28)** — Parent-facing catalog
   copy clarifying in-page vs external media and live/recording availability.
 

@@ -45,7 +45,7 @@ export const TUTORIALS_SECTION: TutorialMediaSectionConfig = {
     title: "Skills and Technique Tutorials",
     titleAccent: "",
     subtitle:
-      "Shooting technique tutorials and film breakdowns curated for the challenge. Open a clip to watch in-page when available, or follow the external link when a tutorial is hosted elsewhere.",
+      "Shooting technique tutorials and film breakdowns curated for the challenge. Cards show whether a clip plays in-page or opens on an external site — open any tutorial for the full breakdown.",
     itemCountLabel: "clips",
     cardCta: "Watch & read",
     cardCtaUnavailable: "View tutorial",
