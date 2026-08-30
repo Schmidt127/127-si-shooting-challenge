@@ -447,12 +447,16 @@ Create a new portfolio-style Tutorials page using the approved design tools whil
 ### FUT-017 — Zoom Meeting page redesign
 
 **Priority:** P2  
-**Status:** **IN PROGRESS** (presentation polish shipped 2026-08-28; full portfolio redesign deferred)  
+**Status:** **Complete** (2026-08-30)  
 **Systems:** Website Zoom page, Airtable Zoom Meetings
 
 Create a new portfolio-style Zoom Meeting page using the approved design tools while preserving current links and meeting information.
 
 **Shipped (2026-08-28):** Catalog copy for live links vs recordings; metadata description polish; existing week-grouped catalog unchanged.
+
+**Shipped (2026-08-30):** Full portfolio redesign — `ProgramFeatureBanner`, live vs recording terminology/orientation, `AccentRail` week groups, access badges, catalog resource links, graceful cover fallback (`W{n}` monogram + session type), detail cover fallback; vitest + smoke headings unchanged.
+
+**Validation (2026-08-30):** lint ✓ · typecheck ✓ · vitest ✓ · build ✓ · browser desktop + mobile ✓
 
 ### FUT-018 — Landing Page and Shooting Challenge page improvements
 

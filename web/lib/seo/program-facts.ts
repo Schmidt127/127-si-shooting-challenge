@@ -74,6 +74,8 @@ export const FEATURE_BANNER_ARIA = {
     "Shooting Challenge homework page showing published assignments and curriculum",
   achievements:
     "Shooting Challenge achievements showing milestones, streaks, and earned progress",
+  zoom:
+    "Shooting Challenge Zoom meetings catalog showing live sessions and recordings by week",
 } as const;
 
 export const REGISTRATION_FACTS = {
