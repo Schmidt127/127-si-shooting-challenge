@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-30 docs closeout merged — `master` at **`57e72348`** (PR **#295** closeout; code tip **`9f4a64b6`** through PRs **#279–#293**)  
+**Last verification (repo):** 2026-08-30 outstanding Production paste audit — Automations Code MCP re-read; **only 057 typo-field repaste remains** among priority pastes ([`deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md`](./deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md))  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -163,7 +163,7 @@ Authority: [`integrations/tremendous-award-fulfillment.md`](./integrations/treme
 
 ## 8. Airtable automation versions (repo source + Mike overlays)
 
-### Confirmed Production versions (Mike final verification 2026-08-21)
+### Confirmed Production versions (Automations Code MCP 2026-08-29 + reconfirm 2026-08-30)
 
 Authority precedence for this reconciliation:
 
@@ -171,33 +171,35 @@ Authority precedence for this reconciliation:
 2. Production `Automations` columns **Name / Status / Automation Code** (post-2026-08-20 refresh only)
 3. Repository SCRIPT headers
 
-Do **not** treat older Automations-table Code-column snapshots as stronger than live script/run history when they disagree.
+Do **not** treat other Automations-table columns (trigger/conditions) as authority — they are often stale.
 
-| # | Production (final verified) | GitHub | Status | Notes |
-|---|-----------------------------|--------|--------|-------|
-| **010** | **v10.10** (Automations Code 2026-08-23) | v10.12 | Live / **paste needed** | GitHub v10.12 settlement grace; prod Code column still v10.10 |
-| **020** | **v3.7** | v3.7 | Live | |
+| # | Production (Automations Code) | GitHub | Status | Notes |
+|---|-------------------------------|--------|--------|-------|
+| **010** | **v10.12** | v10.12 | Live / **aligned** | Do not re-paste — [`010-v10.12-operator-packet.md`](./deploy-checklists/010-v10.12-operator-packet.md) |
+| **020** | **v3.8** | v3.8 | Live / **aligned** | FUT-001 — [`020-v3.8-fut-001-operator-packet.md`](./deploy-checklists/020-v3.8-fut-001-operator-packet.md) |
+| **022** | **v2.2** | v2.2 | Live / **aligned** | Lambda-only parent URL — [`022-v2.2-operator-packet.md`](./deploy-checklists/022-v2.2-operator-packet.md) |
 | **033** | **v4.4** | v4.4 | Live | |
 | **041** | **v5.1** | v5.1 | Live | Optional inputs only |
-| **057** | **v2.2** (script still has typo field name) | **v2.2** | **Repaste required** | SC-034 Config field **`Perfect Week Video Minimum`** renamed in prod; repaste 057 so script matches |
-| **058** | **v1.3** | 1.3 | Live | Unlock only after Eligible + Ready |
-| **059** | **v3.6** | v3.6 | Live | |
+| **057** | **v2.2** + typo CONFIG `Perfect Week Video MInimum` | **v2.2** correct name | Live / **repaste required** | Schema field is **`Perfect Week Video Minimum`** (`fldqRxjWGXcbUZUg3`) — [`057-v2.2-perfect-week-video-minimum-paste.md`](./deploy-checklists/057-v2.2-perfect-week-video-minimum-paste.md) |
+| **058** | **1.5** | 1.5 | Live | Unlock only after Eligible + Ready |
+| **059** | **v3.7** | v3.7 | Live | |
 | **064** | **Production-verified current live** | v12.2 in repo | Live | Do not invent a new version string |
-| **065** | **v10.3** (prod) | **v10.3** | **Live / live-tested** | Dynamic `recordId` from Homework Completion trigger; Production paste verified 2026-08-24 |
-| **066** | **v3.9** (prod) | **v3.9** | **Live / live-tested** | Dynamic `recordId` from Enrollment trigger; replay verified idempotent 2026-08-24 |
-| **072** | **v4.7** (prod attested) | **v4.8** | **Live / paste pending for secure video** | GitHub v4.8 adds Lambda-only parent video URLs; prod may still be v4.7 until Mike paste — [`deploy-checklists/022-v2.2-secure-video-url-pipeline.md`](./deploy-checklists/022-v2.2-secure-video-url-pipeline.md) |
-| **074** | **v3.3** (prod) | **v3.3** | **Live / live-tested** | Weekly summary Hub handoff; E2E with 072 v4.7 2026-08-24 |
+| **065** | **v10.4** | v10.4 | Live / **aligned** | FUT-001 + dynamic `recordId` — [`065-v10.4-fut-001-operator-packet.md`](./deploy-checklists/065-v10.4-fut-001-operator-packet.md) |
+| **066** | **v3.9** | v3.9 | Live / live-tested | Dynamic `recordId`; replay verified 2026-08-24 |
+| **072** | **v4.8** | v4.8 | Live / **aligned** | [`072-v4.8-operator-packet.md`](./deploy-checklists/072-v4.8-operator-packet.md) |
+| **073** | **v4.4** | v4.4 | Live / **aligned** | [`073-v4.4-operator-packet.md`](./deploy-checklists/073-v4.4-operator-packet.md) |
+| **074** | **v3.3** | v3.3 | Live / live-tested | Weekly summary Hub handoff |
 | **070a** | **v4.7** | v4.7 | **Off** by design | Homework upload Make path |
 | **070b** | **v4.7** | v4.7 | Live | |
 | **070c** | **current live (repo v1.1)** | v1.1 | Live/enabled | Do not invent a new version |
-| **101** | **v6.7** | v6.7 | Live | Live script body `Version: v6.7` / `version: "v6.7"`; meeting `recxtpMu4ONbdDD45` safely skipped (reconciliation not needed) |
+| **101** | **v6.7** | v6.7 | Live | meeting `recxtpMu4ONbdDD45` safely skipped when reconciliation not needed |
 | **117** | **v2.1** | v2.1 | **Live** | Dynamic inputs: `recordId`, `enrollmentRid`, `zoomMeetingRid` |
 
-**Record-ID classification (Mike final):** Dynamic for all record-based automations; optional on **041** only; intentionally blank on **056 / 078 / 118 / 119**. **065 v10.3** and **066 v3.9** use triggering-record `recordId` in Production (verified 2026-08-24). Pre-paste hardcoded reference inputs and disposable-fixture manual settlement were **historical workarounds only**. Closeout: [`deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md`](./deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md).
+**Record-ID classification (Mike final):** Dynamic for all record-based automations; optional on **041** only; intentionally blank on **056 / 078 / 118 / 119**. **065** and **066** use triggering-record `recordId` in Production. Closeout: [`deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md`](./deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md).
 
-**Config-over-code audit (SC-034 / V2-002, 2026-08-27):** Offline scan of **57** active automation scripts — **no** active script uses `configQuery.records[0]`. Year-aware Config selection is centralized in `lib/config-selection/index.js` (fail-closed). **057 v2.2** (repo) is Config-only: field **`Perfect Week Video Minimum`** (value **3** on all school-year Config rows). Config field renamed in Production; **057 repaste required** so live script matches renamed field. WAS lookup + formula live (Mike 2026-08-27). **No** `legacyRequiredVideoCount: 3`. Audit artifacts: [`audits/2026-08-27-SC-034-config-hardcode-audit.md`](./audits/2026-08-27-SC-034-config-hardcode-audit.md), [`audits/sc-034-hardcode-audit.json`](./audits/sc-034-hardcode-audit.json). I/O standard: [`audits/SC-056-automation-io-standard.md`](./audits/SC-056-automation-io-standard.md). Trigger conflicts: [`audits/SC-057-trigger-conflict-inventory.md`](./audits/SC-057-trigger-conflict-inventory.md).
+**Config-over-code audit (SC-034 / V2-002):** Repo **057 v2.2** is Config-only on **`Perfect Week Video Minimum`**. Production schema renamed; **Automations Code for 057 still embeds typo `MInimum`** — **repaste required** (operator packet above). WAS lookup + formula live. **No** `legacyRequiredVideoCount: 3`. Audit: [`audits/2026-08-27-SC-034-config-hardcode-audit.md`](./audits/2026-08-27-SC-034-config-hardcode-audit.md). Full paste audit: [`deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md`](./deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md).
 
-**Historical snapshot (midday 2026-08-21):** An earlier Automations Code-column read briefly showed **010 v10.10** and **101 v6.6**. That snapshot is **superseded** by Mike’s live script / run-history verification above. See [`deploy-checklists/2026-08-21-perfect-week-test-prep-report.md`](./deploy-checklists/2026-08-21-perfect-week-test-prep-report.md).
+**Historical:** Midday 2026-08-21 Code snapshots (010 v10.10 / 101 v6.6) and “010/022/072 paste pending” rows are **superseded**.
 
 ### Repository source (GitHub) — other notable scripts
 
@@ -224,7 +226,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Domain | Owner (repo contract) | Live proof |
 |--------|----------------------|------------|
 | Submission XP | **010** — Source Key `SUBMISSION_XP\|{submissionId}` | GitHub **v10.12**; prior Production run history v10.11 |
-| Homework XP | **064** prepares (`HOMEWORK_COMPLETION` rule); **065** creates/reconciles `HOMEWORK_XP\|{hcId}` (**020** HC create; **078** marks Parent Feedback Ready?) | **065 Production v10.3** live-tested 2026-08-24; **064** Production-verified current live |
+| Homework XP | **064** prepares (`HOMEWORK_COMPLETION` rule); **065** creates/reconciles `HOMEWORK_XP\|{hcId}` (**020** HC create; **078** marks Parent Feedback Ready?) | **065 Production v10.4** (FUT-001); **064** Production-verified current live |
 | Video XP | **113 / 114** (+ **013** VF create) | **Live v6.4 / v6.1**; **PKG-007 lifecycle proof PASS 2026-08-23** (`AUTONOMOUS_VIDEO_QA_20260823_164549`, Testing3). Native trigger + 073 OFF UI attestation open |
 | Shot milestones | **066** | Production **v3.9** live-tested 2026-08-24 |
 | Levels | **041 / 042** | **041 Production v5.1**; broader progression proof still open |
@@ -283,21 +285,16 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 
 - Wave 0 2025–26 close-out; H-001; many PKG merges on `master`
 - Email plane migrated to Hub → Resend (Mike 2026-08-19)
-- Confirmed Production pastes: 010/020/022/066/070b/117 as above
+- Confirmed Production pastes aligned: **010 v10.12**, **020 v3.8**, **022 v2.2**, **065 v10.4**, **072 v4.8**, **073 v4.4**, **066**, **070b**, **117**
 - Tremendous sandbox validation
 - Lambda season CodeOnly deploy (optional follow-ups open)
-- Repository integrity + PII redaction pass (this audit)
-- **2026-08-23 post-XP-deletion autonomous QA:** Four temporary repair XP Events deleted by Mike; disposable live-create **PASS** (010 → SUBMISSION_XP, idempotent); Perfect Week **PASS** (39 active); Xavier/Testing3/Curtis **FINDING** (4 missing repair rows not recreated); stale-field check **PASS** (no phantom links); **010/057/072 paste BLOCKED** pending Mike
-- **Secure video URL pipeline (2026-08-24):** GitHub **022 v2.2**, **072 v4.8**, **073 v4.4** —
-  parent-facing video links must be Lambda viewer URLs only; direct S3 AccessDenied is expected;
-  missing `Reviewer File URL` requires token repair (not public S3). Deploy checklist:
-  [`deploy-checklists/022-v2.2-secure-video-url-pipeline.md`](./deploy-checklists/022-v2.2-secure-video-url-pipeline.md).
-  **Production Airtable not updated until Mike pastes 022.**
-- **2026-08-24 master closeout:** **065 v10.3** / **066 v3.9** Production dynamic `recordId` verified; historical audit artifacts documented ([`deploy-checklists/2026-08-24-historical-audit-artifacts.md`](./deploy-checklists/2026-08-24-historical-audit-artifacts.md))
+- Repository integrity + PII redaction pass
+- Secure video URL pipeline **Live** (022/072/073) — Lambda viewer only; direct S3 AccessDenied expected
+- **2026-08-24:** **066 v3.9** dynamic `recordId` verified; historical audit artifacts documented
 
 ### Pending / needs live proof
 
-- **010 v10.12** — Mike paste from GitHub if Automations Code column still lags (v10.10 as of 2026-08-23 API read)
+- **057 v2.2 typo-field repaste** — only remaining priority paste ([`057-v2.2-perfect-week-video-minimum-paste.md`](./deploy-checklists/057-v2.2-perfect-week-video-minimum-paste.md))
 - Optional disposable fixture cleanup: `recdj8MD0szplMW5r`, `recxIzdVil9ewhBxN`, `recPg14iNRkxblMLs`
 - Optional weekly email template / copy refinements
 - Broader progression / standings certification packages
