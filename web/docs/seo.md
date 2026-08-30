@@ -30,7 +30,7 @@ Implementation: `web/lib/seo/metadata.ts`, `web/app/robots.ts`, `web/app/sitemap
 
 Single source for public copy: `web/lib/seo/program-facts.ts`
 
-- Boys and girls in **grades 1–8**
+- Boys and girls in **grades 1–12**
 - **Educational Athletics** (127 Sports Intensity)
 - Based in **Fairfield, Montana** — online submissions, homework, Zoom, and progress tracking are nationally accessible where supported
 - **No** unsupported in-person service claims outside Fairfield area

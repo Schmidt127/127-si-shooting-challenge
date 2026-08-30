@@ -89,7 +89,7 @@ export const PROGRAM_HUB_LINKS: ProgramHubLink[] = [
     href: "/zoom-meetings",
     label: "Live",
     title: "Zoom Meetings",
-    description: "Clinic calls, recordings, recording-credit makeup info, and weekly check-ins.",
+    description: "Clinic calls, recordings, makeup-credit info, and weekly check-ins.",
     eyebrow: "Connect",
     linkLabel: "View Zoom meetings",
     icon: IconVideoCall,

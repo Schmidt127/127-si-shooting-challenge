@@ -101,16 +101,17 @@ export function LevelDetailView({ level }: LevelDetailViewProps) {
 
       <section className={cn(catalogPanelClass({ tint: "blue" }), "mt-10")}>
         <SectionHeading
-          label="Gate checklist"
+          label="Advance checklist"
           title="What it takes to advance"
-          description="Requirements pulled live from your level gate rules."
+          description="Requirements for moving up from this level."
         />
         {level.gateCriteria ? (
           <RichContent text={level.gateCriteria} className="text-foreground/90" />
         ) : (
           <p className="mt-4 text-sm text-muted" role="status">
-            Public gate criteria are not published for this level yet. XP thresholds above still
-            apply; Zoom and Perfect Week gates appear when configured in Airtable.
+            Detailed advance requirements are not published for this level yet. The XP thresholds
+            above still apply. Zoom and Perfect Week requirements appear here when published for
+            the season.
           </p>
         )}
       </section>
