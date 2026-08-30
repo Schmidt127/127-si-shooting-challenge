@@ -256,7 +256,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | **Short title** | Resolve conflicts and land public UX PR |
 | **Description** | Draft PR #266 CONFLICTING with master after homepage redesign #270. |
 | **Why it matters** | Authorized website improvements; homepage may already supersede parts. |
-| **Current status** | READY FOR REVIEW (rebased 2026-08-30) |
+| **Current status** | **COMPLETE** (merged PR **#279**, 2026-08-30) |
 | **Source document(s)** | Future Work FUT-018/019/025; PR #266 |
 | **Repository location(s)** | `web/` public pages, footer, athlete privacy |
 | **Dependencies** | Rebase onto post-#270 master; dedupe homepage |
@@ -334,13 +334,13 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | ID | Title | Status | Notes |
 |----|-------|--------|-------|
 | MRW-G01 | Doc reconciliation (Completion Master lag) | **COMPLETE** | Same as MRW-B04 (this reconcile) |
-| MRW-G02 | FUT-018 landing / SC page improvements | READY TO IMPLEMENT | Partial via #266/#270 |
-| MRW-G03 | FUT-019 footer consistency | READY TO IMPLEMENT | |
-| MRW-G04 | FUT-016 Tutorials redesign | FUTURE | Tied to C-026 |
-| MRW-G05 | FUT-017 Zoom page redesign | FUTURE | |
+| MRW-G02 | FUT-018 landing / SC page improvements | **COMPLETE** | Shipped via #279 / prior homepage work |
+| MRW-G03 | FUT-019 footer consistency | **COMPLETE** | Shipped via #279 |
+| MRW-G04 | FUT-016 Tutorials redesign | **COMPLETE** | PR **#284** portfolio catalog (2026-08-30) |
+| MRW-G05 | FUT-017 Zoom page redesign | **COMPLETE** | PR **#285** portfolio catalog (2026-08-30) |
 | MRW-G06 | FUT-024 FAQ TST omission note | IN PROGRESS | `/faq` live; TST FAQ omitted by policy |
 | MRW-G07 | FUT-025 athlete profile indexability/consent verify | **COMPLETE** | Env-gated `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING`; deploy checklist 2026-08-30 |
-| MRW-G08 | Refresh CURRENT-TRUTH open PR list | READY TO IMPLEMENT | |
+| MRW-G08 | Refresh CURRENT-TRUTH open PR list | **COMPLETE** | Reconciled 2026-08-30 — SHA `8cce1dea`, PRs #276 open + drafts #262/#244/#238/#237/#234 |
 
 ---
 

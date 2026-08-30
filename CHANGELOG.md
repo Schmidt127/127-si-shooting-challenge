@@ -9,6 +9,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **MRW-G08 CURRENT-TRUTH refresh (2026-08-30)** — Updated git SHA, merged PR ledger (#279–#285), vitest/smoke counts, FUT-016/017/025 and SC-149 status, open PR list, and pending Mike-only follow-ups.
 - **FUT-017 Zoom Meetings portfolio redesign (2026-08-30)** — Full catalog redesign at
   `/shoot/zoom-meetings`: feature banner, live vs recording orientation, week-grouped
   `AccentRail` cards with access badges and external join/recording links, graceful 410 cover
