@@ -206,7 +206,9 @@ test.describe("footer consistency", () => {
       await expect(
         page.getByRole("navigation", { name: /Shooting Challenge registration links/i }),
       ).toBeVisible();
-      await expect(page.getByText(/never published on this site/i)).toBeVisible();
+      await expect(
+        page.getByRole("contentinfo").getByText(/never published on this site/i),
+      ).toBeVisible();
       await expect(
         page.getByRole("link", { name: "Fairfield Basketball Club home", exact: true }),
       ).toHaveAttribute("href", "https://www.fairfieldbasketballclub.com");

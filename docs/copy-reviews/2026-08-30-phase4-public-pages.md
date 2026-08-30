@@ -36,6 +36,8 @@ Public program messaging is largely aligned: grades **1–12**, **100% online / 
 | CR-20 | Profile privacy line | “personal contact details are never shown” | Clear and correct | Keep; optional expand: no emails/phones | Privacy | P3 | No if expanding | Keep / optional |
 | CR-21 | SC-149 branding | Footer + logo → Fairfield Basketball Club | Legacy Hoop Challenges guarded in `app-config` | Confirm live Vercel `NEXT_PUBLIC_LANDING_URL` / `SITE_URL` still Fairfield | Branding | P0 ops | Env change = **Yes** | **Verified live** — Production public URL envs restored to documented Fairfield values before ship (see Ship log) |
 | CR-22 | Dates / season | 2026–2027 · May 1–June 30 consistent | Do not invent intake-open dates | Keep; intake timing stays separate (SC-064) | No contradictory dates | — | **Yes** to change dates | No date changes |
+| CR-23 | FAQ gift card commitment | Not published | Parents lack program-wide payout context | Mike-approved FAQ: 100%+ fees distributed via gift cards; discretionary recipients; not individual guarantee/refund | Registration transparency | P1 | **Yes** | **Implemented** — `/shoot/faq` `gift-card-commitment` |
+| CR-24 | Homepage About the Coach | Not published | No coach/program-director trust block | Mike-approved section: Montana educator/coach credentials; 127 SI mission | Parent trust | P1 | **Yes** | **Implemented** — `/shoot#about-the-coach` |
 
 ## Surface notes
 
@@ -43,7 +45,8 @@ Public program messaging is largely aligned: grades **1–12**, **100% online / 
 
 - Hero, chips, participation facts, level journey, registration gateway, and pricing CTAs are parent-ready.
 - Six-step “How it works” covers daily work, homework, video, XP, levels.
-- Safe jargon removals applied in pricing; larger “for parents” section needs Mike approval (CR-13).
+- **About the Coach** section (CR-24) follows Educational Athletics; gift-card commitment lives on FAQ only (CR-23).
+- Safe jargon removals applied in pricing; optional larger “For parents” block still pending (CR-13).
 
 ### `/shoot/tutorials`
 
@@ -59,6 +62,7 @@ Public program messaging is largely aligned: grades **1–12**, **100% online / 
 ### Parent-facing section (FAQ + home)
 
 - FAQ is the primary parent explainer; homework + feedback + remote prose improved.
+- Gift card award commitment FAQ explains program-wide distribution without refund or individual guarantee language (CR-23).
 - FAQ hero still uses “fact-based” (slightly editorial); optional soft reword later with Mike approval.
 
 ### Footer & navigation

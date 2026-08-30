@@ -12,6 +12,7 @@ import {
   REGISTRATION_FACTS,
 } from "@/lib/seo/program-facts";
 import { DAILY_SUBMISSIONS } from "@/lib/registration";
+import { GIFT_CARD_AWARD_COMMITMENT } from "@/lib/seo/public-program-content";
 
 export type FaqItem = {
   id: string;
@@ -95,5 +96,10 @@ export const PROGRAM_FAQ_ITEMS: FaqItem[] = [
     id: "registration",
     question: "How do I register?",
     answer: `Families enroll through the ${REGISTRATION_FACTS.label} form at ${REGISTRATION_FACTS.url}. After registration, use the daily submission form to log shooting and training activity.`,
+  },
+  {
+    id: "gift-card-commitment",
+    question: "What is the program's gift card award commitment?",
+    answer: GIFT_CARD_AWARD_COMMITMENT.paragraphs.join(" "),
   },
 ];

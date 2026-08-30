@@ -21,8 +21,8 @@ Nav `href` values are **relative to basePath** (e.g. `/leaderboard` → public `
 
 | Public URL | App path | Page | Airtable data | Status |
 |------------|----------|------|---------------|--------|
-| `/shoot` | `/` | Overview | Leaderboard (top 3) + Program Instance pricing | Live |
-| `/shoot/faq` | `/faq` | Program FAQ — grades, registration, Educational Athletics, Early Bird timing, privacy, remote access | — | Live |
+| `/shoot` | `/` | Overview — registration, pricing, How it works, **About the Coach** | Leaderboard (top 3) + Program Instance pricing | Live |
+| `/shoot/faq` | `/faq` | Program FAQ — grades, registration, Educational Athletics, Early Bird timing, privacy, remote access, **gift card award commitment** | — | Live |
 | `/shoot/dashboard` | `/dashboard` | Athlete dashboard preview — weekly summary, streak, Perfect Week, XP, homework, video feedback | Mock adapter (optional enrollmentId/slug) | Demo — **hidden from public nav/hub** until SC-112 auth |
 | `/shoot/leaderboard` | `/leaderboard` | Season leaderboard | Enrollments (`Web - Leaderboard`) | Live |
 | `/shoot/homework` | `/homework` | Homework catalog | Program Homework Assignments + Homework Library + Weeks | Live |
