@@ -9,6 +9,12 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Added
+- **FUT-010 Production dry-run evidence (2026-08-30, MRW-C10)** — Read-only preflight,
+  dry-run (`--limit 50`), and reconcile (`--limit 100`) against Production Submission Assets.
+  Zero eligible rows; fail-closed verification blocked all candidates (legacy Storage Key format,
+  missing Canonical URL). No `--confirm-delete` or attachment writes. Evidence:
+  [`docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30.md`](./docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30.md);
+  JSON previews under `tools/airtable/_preview/fut-010-*-2026-08-30.json`.
 - **MRW-F07 weekly email positive-arm harness (2026-08-30)** — Disposable E2E tooling for
   `118→072→119→074→079` chain verification: CLI
   `tools/testing/mrw-f07-weekly-email-positive-arm.mjs`, library, offline contracts, and operator doc

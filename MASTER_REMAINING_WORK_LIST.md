@@ -180,7 +180,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | **Short title** | Land FUT-010 fail-closed cleanup code |
 | **Description** | Draft PR #268: shared helpers + CLI + extension; deletes Airtable attachment only after S3 verified. Dry-run default. |
 | **Why it matters** | Authorized storage reduction; must not delete before durable S3 proof. |
-| **Current status** | COMPLETE (repo merged via PR #271; live clear still Mike) |
+| **Current status** | COMPLETE (repo merged via PR #271; Production dry-run evidence 2026-08-30 — live clear still Mike) |
 | **Repository location(s)** | `lib/intake-attachment-cleanup/`, `tools/airtable/fut_010_*`, extension backfill |
 | **Dependencies** | Mike approval before any live `--apply` / CONFIRM_WRITE |
 | **Exact files or production systems affected** | Submission Assets attachments (after merge + Mike run) |
@@ -283,7 +283,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-C07 | RCC views / Interface install | READY FOR PRODUCTION APPLY | `RELIABILITY-COMMAND-CENTER-PRODUCTION-INSTALL.md` | OMNI views | P1 |
 | MRW-C08 | Automation UI version inventory (SC-058) | NEEDS VERIFICATION | AUTOMATION_VERSION_INVENTORY | Mike UI attestation vs MCP | P1 |
 | MRW-C09 | Retire/disposition Automation 043 (SC-059) | IN PROGRESS | Future Work SC-059 | Confirm 043 not deployed | P1 |
-| MRW-C10 | FUT-010 live attachment clear | READY FOR PRODUCTION APPLY | `FUT-010-*.md` + operator queue | Dry-run then supervised apply | P1 |
+| MRW-C10 | FUT-010 live attachment clear | **DRY-RUN COMPLETE (2026-08-30)** — 0 eligible; Mike attestation + AWS creds before pilot | [`FUT-010-DRY-RUN-2026-08-30.md`](docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30.md) | Mike sign-off then supervised apply | P1 |
 
 **Already applied (do not re-queue):** 057 v2.2; 059 Pending-only trigger; 010 v10.12; 020 v3.8; 022 v2.2; 058 1.5; 059 v3.7; 065 v10.4; 066 v3.9; 072 v4.8; 073 v4.4; SEO indexing env; FUT-WELCOME-LEGACY field delete.
 

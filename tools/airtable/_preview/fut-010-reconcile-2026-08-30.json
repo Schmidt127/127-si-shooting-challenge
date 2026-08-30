@@ -1,0 +1,278 @@
+{
+  "generatedAt": "2026-08-30T15:06:59.243903+00:00",
+  "mode": "reconcile",
+  "baseId": "appn84sqPw03zEbTT",
+  "dryRun": true,
+  "confirmDelete": false,
+  "recordFilter": "reconcile",
+  "recordCount": 24,
+  "counts": {
+    "skipped_verification_failed": 24
+  },
+  "rows": [
+    {
+      "record_id": "rec2iGqWHCKy4ZRMJ",
+      "asset_purpose": "Video For Feedback",
+      "asset_category": "video",
+      "storage_key": "Schmidt_Barbie/Shooting_Challenge_2026-2027/2026-08-22/20260822T221651Z_VIDEO_rec2iGqWHCKy4ZRMJ_Anderson-Ollinger_Addison_5.jpg",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "rec5Pl8GAQduPGSAu",
+      "asset_purpose": "Video For Feedback",
+      "asset_category": "video",
+      "storage_key": "Testing_Perfect_Week/Shooting_Challenge_2026-2027/2026-08-21/20260821T142205Z_VIDEO_rec5Pl8GAQduPGSAu_Carter_Lilly_37.jpg",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "rec7ExrPzFcQMzjPj",
+      "asset_purpose": "Video For Feedback",
+      "asset_category": "video",
+      "storage_key": "Testing_Perfect_Week/Shooting_Challenge_2026-2027/2026-08-21/20260821T142205Z_VIDEO_rec7ExrPzFcQMzjPj_Carter_Logan_38.jpg",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "rec7S89Gsyvq4iJE4",
+      "asset_purpose": "Video For Feedback",
+      "asset_category": "video",
+      "storage_key": "Testing_Perfect_Week/Shooting_Challenge_2026-2027/2026-08-22/20260822T120131Z_VIDEO_rec7S89Gsyvq4iJE4_127_Sports_Intensity_USLI_Quote.pdf",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "rec8vBFUaOf6rIcdJ",
+      "asset_purpose": "Video For Feedback",
+      "asset_category": "video",
+      "storage_key": "Schmidt_Ricky/Shooting_Challenge_2026-2027/2026-08-24/20260824T173633Z_VIDEO_rec8vBFUaOf6rIcdJ_Boltz_Drew_21.jpg",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "rec94yqw5w7tqtJgc",
+      "asset_purpose": "Homework 1",
+      "asset_category": "homework",
+      "storage_key": "Testing_Perfect_Week/Shooting_Challenge_2026-2027/2026-08-21/20260821T142205Z_HW1_rec94yqw5w7tqtJgc_Dailey_Katie_58.jpg",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "recAqoUbBKfDNtTLt",
+      "asset_purpose": "Homework 1",
+      "asset_category": "homework",
+      "storage_key": "Schmidt_Xavier/Shooting_Challenge_2026-2027/2026-08-17/20260817T150032Z_HW1_recAqoUbBKfDNtTLt_Straughn_Stetson_316.jpg",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "recCbmVP4NrcALEwZ",
+      "asset_purpose": "Video For Feedback",
+      "asset_category": "video",
+      "storage_key": "Testing_Perfect_Week/Shooting_Challenge_2026-2027/2026-08-20/20260820T230618Z_VIDEO_recCbmVP4NrcALEwZ_IRS_Final_Determination_Letter_2023.pdf",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "recDM9sAvqiFAhWy3",
+      "asset_purpose": "Homework 1",
+      "asset_category": "homework",
+      "storage_key": "Schmidt_Barbie/Shooting_Challenge_2026-2027/2026-08-22/20260822T213337Z_HW1_recDM9sAvqiFAhWy3_Allen_Saber_1.jpg",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "recHEJqk4q5CNRmp2",
+      "asset_purpose": "Video For Feedback",
+      "asset_category": "video",
+      "storage_key": "Schmidt_Curtis/Shooting_Challenge_2026-2027/2026-08-20/20260820T170715Z_VIDEO_recHEJqk4q5CNRmp2_eagle.png",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "recHT5EjlioZsheE5",
+      "asset_purpose": "Video For Feedback",
+      "asset_category": "video",
+      "storage_key": "Testing_Perfect_Week/Shooting_Challenge_2026-2027/2026-08-22/20260822T120131Z_VIDEO_recHT5EjlioZsheE5_127SI_-_JR_REF_CLINIC_-_KID_REGISTRATION_WELCOME_EMAIL.blueprint.json",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "recLKNctGYBNGFeOP",
+      "asset_purpose": "Homework 1",
+      "asset_category": "homework",
+      "storage_key": "Schmidt_Xavier/Shooting_Challenge_2026-2027/2026-08-21/20260821T135732Z_HW1_recLKNctGYBNGFeOP_Cooley_Kyla_52.jpg",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "recMJ4jMDzHI6ikwt",
+      "asset_purpose": "Video For Feedback",
+      "asset_category": "video",
+      "storage_key": "Schmidt_Mike333/Shooting_Challenge_2026-2027/2026-08-28/20260828T160743Z_VIDEO_recMJ4jMDzHI6ikwt_Arps_Terria_6.jpg",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "recRZDgHDP5k5zOEI",
+      "asset_purpose": "Video For Feedback",
+      "asset_category": "video",
+      "storage_key": "Schmidt_Barbie/Shooting_Challenge_2026-2027/2026-08-22/20260822T221651Z_VIDEO_recRZDgHDP5k5zOEI_Atakenu_Tayo_7.jpg",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "recYVZDPIuC9noc3T",
+      "asset_purpose": "Homework 2",
+      "asset_category": "homework",
+      "storage_key": "Testing_Perfect_Week/Shooting_Challenge_2026-2027/2026-08-21/20260821T142205Z_HW2_recYVZDPIuC9noc3T_Bolles_Hudson_20.jpg",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "recZMGTerzOTIRaRk",
+      "asset_purpose": "Video For Feedback",
+      "asset_category": "video",
+      "storage_key": "Schmidt_Ricky/Shooting_Challenge_2026-2027/2026-08-24/20260824T160924Z_VIDEO_recZMGTerzOTIRaRk_Chippewa_Jacob_43.jpg",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "recbrZvpU8C8C9lvZ",
+      "asset_purpose": "Video For Feedback",
+      "asset_category": "video",
+      "storage_key": "Schmidt_Ricky/Shooting_Challenge_2026-2027/2026-08-24/20260824T160924Z_VIDEO_recbrZvpU8C8C9lvZ_Chippewa_Dustin_42.jpg",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "rece1y8EYwmSgFCA8",
+      "asset_purpose": "Video For Feedback",
+      "asset_category": "video",
+      "storage_key": "Schmidt_Ricky/Shooting_Challenge_2026-2027/2026-08-24/20260824T160924Z_VIDEO_rece1y8EYwmSgFCA8_Cherry_Keaton_41.jpg",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "recgA5aR2PhLoNrZm",
+      "asset_purpose": "Video For Feedback",
+      "asset_category": "video",
+      "storage_key": "Schmidt_Xavier/Shooting_Challenge_2026-2027/2026-08-20/20260820T161209Z_VIDEO_recgA5aR2PhLoNrZm_Blue_Orange_Circle_Logo.png",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "recgSMPAuOC8y574r",
+      "asset_purpose": "Video For Feedback",
+      "asset_category": "video",
+      "storage_key": "Testing_Perfect_Week/Shooting_Challenge_2026-2027/2026-08-22/20260822T120131Z_VIDEO_recgSMPAuOC8y574r_IRS_Final_Determination_Letter_2023.pdf",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "recpZcHFdyJrET2qZ",
+      "asset_purpose": "Homework 2",
+      "asset_category": "homework",
+      "storage_key": "Schmidt_Barbie/Shooting_Challenge_2026-2027/2026-08-22/20260822T213337Z_HW2_recpZcHFdyJrET2qZ_Carter_Cash_36.jpg",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "recqBejr7gJHp78o1",
+      "asset_purpose": "Video For Feedback",
+      "asset_category": "video",
+      "storage_key": "Testing_Perfect_Week/Shooting_Challenge_2026-2027/2026-08-21/20260821T133838Z_VIDEO_recqBejr7gJHp78o1_Cut_Bank_Bus_bill.pdf",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "recriYmWoNokI6C1w",
+      "asset_purpose": "Video For Feedback",
+      "asset_category": "video",
+      "storage_key": "Schmidt_Barbie/Shooting_Challenge_2026-2027/2026-08-22/20260822T221651Z_VIDEO_recriYmWoNokI6C1w_Arps_Terria_6.jpg",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    },
+    {
+      "record_id": "rectoB0Zy6PcgOTM1",
+      "asset_purpose": "Video For Feedback",
+      "asset_category": "video",
+      "storage_key": "Testing_Perfect_Week/Shooting_Challenge_2026-2027/2026-08-21/20260821T142205Z_VIDEO_rectoB0Zy6PcgOTM1_Chase_Brier_39.jpg",
+      "attachment_count": 1,
+      "action": "skipped_verification_failed",
+      "verification_result": "failed",
+      "deletion_result": "not_attempted",
+      "failure_reason": "Storage Key format invalid"
+    }
+  ]
+}
