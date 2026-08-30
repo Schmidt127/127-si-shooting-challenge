@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-30 outstanding Production paste audit — Automations Code MCP re-read; **only 057 typo-field repaste remains** among priority pastes ([`deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md`](./deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md))  
+**Last verification (repo):** 2026-08-30 release QA — Weeks + 18-PHA homework + FUT-010 R3 dry-run (0 eligible); paste queue clear except optional 057 Automations Code tracker hygiene ([`RELEASE_BASELINE.md`](../RELEASE_BASELINE.md))  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -105,8 +105,9 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | SC-149 branding URLs | **Repo attestation complete (2026-08-30)** — prod render + smoke PASS; Mike Vercel env dashboard checkboxes pending ([`deploy-checklists/SC-149-fairfield-branding-url-verification.md`](./deploy-checklists/SC-149-fairfield-branding-url-verification.md)) |
 | SC-109 Game Manual PDF | **Partial** — deploy checklist + smoke assertions shipped (PR **#287**); `/shoot/game-manual` live-config sections render; `NEXT_PUBLIC_GAME_MANUAL_URL` still unset in Production (EXT-QA-001) — checklist: [`deploy-checklists/SC-109-game-manual-url-verification.md`](./deploy-checklists/SC-109-game-manual-url-verification.md) |
 | FUT-002 field inventory | **Audit complete (2026-08-30, PR #292)** — 1347 fields classified; **no deletions**; Mike-only deletion phase pending |
-| FUT-010 intake attachment cleanup | **Dry-run complete (R2 2026-08-30)** — **0 eligible**; no deletion request — [`testing/evidence/FUT-010-DRY-RUN-2026-08-30-R2.md`](./testing/evidence/FUT-010-DRY-RUN-2026-08-30-R2.md) |
-| Weeks 2026–27 | Official calendar present; Early Bird **Apr 25–May 1, 2027** countable; May 1 ∈ Early Bird; Week 1 starts May 2; Aug 23 Early Bird **not** live — [`testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md`](./testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md) |
+| FUT-010 intake attachment cleanup | **Dry-run complete (R3 2026-08-30)** — **0 eligible**; no deletion request — [`testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md`](./testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md) |
+| Weeks 2026–27 | **Finalized** — Early Bird **Apr 25–May 1, 2027** countable; May 1 ∈ Early Bird; Week 1 starts May 2 — [`testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md`](./testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md) |
+| Homework PHA 2026–27 | **18 active** (EB + Weeks 1–8 × HW1/HW2); Week 9 / Post-Challenge none; due **2027-06-29** — [`testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md`](./testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md) |
 | Phase 4 public copy | **Shipped** PR **#298** — pending Mike-only items remain Dashboard relabel / For-parents / SLA / adjacent-school FAQ |
 | SC-147 Recorded Zoom half-XP | **Repo prep shipped (PR #291)** — draft automation + offline conflict matrix; Mike: automation slot + `ZOOM_RECORDING` rule row; **do not** overload **117** email |
 | MRW-F07 weekly email harness | **Complete (PR #289)** — disposable E2E tooling for `118→072→119→074→079`; live `--apply` on Mike disposable WAS still operator-only |

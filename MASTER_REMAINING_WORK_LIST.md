@@ -4,7 +4,7 @@
 **Repository:** `Schmidt127/127-si-shooting-challenge`  
 **Created:** 2026-08-29  
 **Audit SHA (start):** `5ae358d5` (`origin/master` at audit)  
-**Reconcile SHA:** `082edc7d` (PR **#298** public copy) + live automation MCP **2026-08-30** (057 runtime vs Automations Code tracker)  
+**Reconcile SHA:** `082edc7d` (PR **#298** public copy) + live Weeks/PHA/FUT-010 MCP **2026-08-30** (18-assignment + R3 dry-run)  
 **Authority when docs conflict:** Newest Master Update / Completion Master overlays + [`docs/CURRENT-TRUTH.md`](docs/CURRENT-TRUTH.md) + Section G of [`docs/127-SI-MASTER-FUTURE-WORK-LIST.md`](docs/127-SI-MASTER-FUTURE-WORK-LIST.md) + this list’s dated reconcile notes. Conflicts are recorded below, not silently dropped.
 
 **Status vocabulary (this document only):** `COMPLETE` · `IN PROGRESS` · `READY TO IMPLEMENT` · `READY FOR PRODUCTION APPLY` · `NEEDS VERIFICATION` · `BLOCKED` · `FUTURE`
@@ -99,18 +99,18 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 |-------|--------|
 | **ID** | MRW-A05 |
 | **Short title** | 2026–27 Weeks production calendar |
-| **Description** | Official Config `2026-2027` Weeks **already present** in Production (Early Bird + Weeks 1–9 + Post-Challenge). Audit 2026-08-30: Early Bird **Apr 25–May 1, 2027** (May 1 inclusive); Week 1 starts May 2; Early Bird `Counts Toward Challenge?` = true; Post-Challenge unchecked. Claimed Aug 23 Early Bird is **not** live. |
+| **Description** | Official Config `2026-2027` Weeks present (Early Bird + Weeks 1–9 + Post-Challenge). Early Bird **Apr 25–May 1, 2027** countable (May 1 inclusive); Week 1 starts May 2; all official rows have Config + PI. Homework: **18** active PHA (EB + Weeks 1–8 × HW1/HW2); Week 9 / Post-Challenge none; common due **2027-06-29**. |
 | **Why it matters** | Challenge cannot run without correct week calendar; Early Bird must remain countable. |
-| **Current status** | **NEEDS VERIFICATION** — official rows exist; Mike must confirm Early Bird window (keep Apr 25 vs authorize Aug 23 date change) |
-| **Source document(s)** | [`docs/testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md`](docs/testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md); Future Work SC-032/SC-065 |
+| **Current status** | **COMPLETE** (calendar + 18-PHA verified 2026-08-30) |
+| **Source document(s)** | [`WEEKS-2026-27-AUDIT-2026-08-30.md`](docs/testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md); [`HOMEWORK-PHA-18-AUDIT-2026-08-30.md`](docs/testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md) |
 | **Repository location(s)** | `docs/challenge-year/`, weeks generators under tools |
-| **Dependencies** | Mike calendar decision if expanding Early Bird |
-| **Exact files or production systems affected** | Production `Weeks` table (protected) |
+| **Dependencies** | Met |
+| **Exact files or production systems affected** | Production `Weeks` / PHA (protected — no Cursor writes) |
 | **Autonomous?** | Audit only — no Weeks writes |
-| **Required manual action** | Confirm Early Bird dates; optional archive WSTEST/PWTEST; keep Post-Challenge non-countable |
-| **Verification required** | Met for Apr 25 structure; Aug 23 structure not imported |
-| **Recommended priority** | P0 |
-| **Definition of done** | Mike attests live calendar; CURRENT-TRUTH Weeks section updated |
+| **Required manual action** | Before season sim: archive WSTEST/PWTEST Weeks (OMNI); optional archive inactive PHA `recpHX3stQ8YBVtLi` |
+| **Verification required** | Met |
+| **Recommended priority** | — |
+| **Definition of done** | Met 2026-08-30 |
 
 ### MRW-A06 — Player Manual finalization (FUT-026)
 
@@ -284,7 +284,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-C07 | RCC views / Interface install | READY FOR PRODUCTION APPLY | `RELIABILITY-COMMAND-CENTER-PRODUCTION-INSTALL.md` | OMNI views | P1 |
 | MRW-C08 | Automation UI version inventory (SC-058) | NEEDS VERIFICATION | AUTOMATION_VERSION_INVENTORY | Mike UI attestation vs MCP | P1 |
 | MRW-C09 | Retire/disposition Automation 043 (SC-059) | IN PROGRESS | Future Work SC-059 | Confirm 043 not deployed | P1 |
-| MRW-C10 | FUT-010 live attachment clear | **DRY-RUN COMPLETE (re-run 2026-08-30)** — **0 eligible** (homework scope 0); **no deletion request** | [`FUT-010-DRY-RUN-2026-08-30-R2.md`](docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30-R2.md) | Optional Mike sign-off + AWS creds when eligible rows appear | P2 |
+| MRW-C10 | FUT-010 live attachment clear | **DRY-RUN COMPLETE (R3 2026-08-30)** — **0 eligible** (homework scope 0); **no deletion request** | [`FUT-010-DRY-RUN-2026-08-30-R3.md`](docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md) | Optional Mike sign-off + AWS creds when eligible rows appear | P2 |
 
 **Already applied (do not re-queue):** 059 Pending-only trigger; 010 v10.12; 020 v3.8; 022 v2.2; **057 v2.2 correct field (live)**; 058 1.5; 059 v3.7; 065 v10.4; 066 v3.9; 072 v4.8; 073 v4.4; SEO indexing env; FUT-WELCOME-LEGACY field delete; PR **#298** public copy.  
 **Still open paste:** **None** for the verified baseline set.
@@ -398,7 +398,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-I04 | SC-PW-E2E Enrollments-capable PAT | BLOCKED | Token with Enrollments R/W (agent PATs often 403) |
 | MRW-I05 | FUT-003 Make activation timing | BLOCKED | When to turn scenario ON |
 | MRW-I06 | C-028 Tremendous Production API | BLOCKED | Tremendous approval + keys in Make only |
-| MRW-I07 | Weeks 2026–27 Early Bird window (MRW-A05) | BLOCKED | Confirm Apr 25–May 1 live vs authorize Aug 23–May 1 date change (protected Weeks) |
+| MRW-I07 | Weeks 2026–27 Early Bird window (MRW-A05) | **COMPLETE** | Apr 25–May 1, 2027 countable finalized; archive WSTEST/PWTEST before season sim |
 | MRW-I08 | Learning Activities schema (SC-018) | BLOCKED | Schema authorization |
 | MRW-I09 | Fillout daily intake reopen (SC-146) | BLOCKED | After dry-run SC-135 |
 | MRW-I10 | Production paste windows (C01–C05c) | **COMPLETE** | Do not re-paste 010/020/022/057/065/072/073; optional Automations Code refresh for 057 tracker only |
@@ -410,12 +410,13 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 
 ## Recommended next task for Mike
 
-1. **Confirm Early Bird calendar** — live Production is **Apr 25–May 1, 2027** (May 1 in Early Bird; Week 1 starts May 2). If the intended window is Aug 23, 2026–May 1, 2027, authorize a protected Weeks date change (not a greenfield import). Evidence: [`docs/testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md`](docs/testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md).  
-2. **Do not** re-paste 010/020/022/057/058/059/065/072/073 and **do not** re-run Perfect Week `--apply` for WAS `recl3DmBh22ADPWWe`.  
-3. **FUT-010:** dry-run still **0 eligible** — no deletion request; optional sign-off only.  
-4. Optional: refresh Automations **Code** text for 057 (tracker lag) — live script already correct.  
-5. **Do not** activate FUT-003 until registration intentionally opens.  
-6. **Do not** start SC-SEASON-SIM-001 until Early Bird window is attested.
+1. **Archive overlapping WSTEST/PWTEST Weeks** in Program Instance `Shooting Challenge | 2026-2027` (OMNI) before season simulation — reduces Automation 005 multi-match risk.  
+2. Optional: archive inactive PHA `recpHX3stQ8YBVtLi` (Week 1 HW1 Final Reflection Quiz).  
+3. **Do not** re-paste 010/020/022/057/058/059/065/072/073 and **do not** re-run Perfect Week `--apply`.  
+4. **FUT-010:** dry-run R3 still **0 eligible** — no deletion request.  
+5. Optional: refresh Automations **Code** text for 057 (tracker lag) — live script already correct.  
+6. **Do not** activate FUT-003 until registration intentionally opens.  
+7. After WSTEST cleanup: proceed to **SC-SEASON-SIM-001** prep (still FUTURE until harness brief is activated).
 
 ---
 
@@ -424,13 +425,12 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 - **Paste debt C01–C05c + 058/059** → **COMPLETE** (live 057 correct; Automations Code tracker may lag).  
 - **SC-034 / V2-002 / PW config items** → schema + live 057 CONFIG **COMPLETE**.  
 - **Public copy Phase 4 safe set** → PR **#298** merged + Production deploy `082edc7d`.  
-- **FUT-010** → dry-run **0 eligible** (R2); no delete request.  
-- **Weeks 2026–27** → official rows present; Early Bird Apr 25–May 1 live; Aug 23 claim not applied.  
+- **FUT-010** → dry-run **0 eligible** (R3); no delete request.  
+- **Weeks 2026–27 + 18 PHA** → **COMPLETE** (Early Bird Apr 25–May 1; due June 29; Week 9/Post-Challenge no HW).  
 - **SC-SEASON-SIM-001 / MRW-H11** → **FUTURE / Planned only** — not active; **FUT-010 unchanged**.  
 - **SC-WEEKLY-SETTLEMENT-E2E / MRW-F10** → **COMPLETE** (2026-08-30).  
 - **SC-ATHLETE-WF-001 / MRW-F09** → **COMPLETE (harness)**; B3 XP policy **DECIDED** (one XP per Count It).  
 - Local uncommitted `tools/testing/lib/sc-pw-e2e-lib.mjs` and `tools/season_simulation/` → unrelated WIP; do not modify/commit in this closeout.
 - SC-027/066 shot milestones live-tested → monitoring only.  
 - Historical overnight MIKE-ACTIONS rows superseded by CURRENT-TRUTH / Section G where dated later.  
-- Legacy C-/SC- inventory in Future Work Sections A–F remains evidence; **this file + operator queue + Future Work Section G** are the operator queues.  
-- Local uncommitted `tools/testing/lib/sc-pw-e2e-lib.mjs` and `tools/season_simulation/` → unrelated WIP; do not modify/commit in this closeout.
+- Legacy C-/SC- inventory in Future Work Sections A–F remains evidence; **this file + operator queue + Future Work Section G** are the operator queues.

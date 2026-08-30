@@ -10,7 +10,7 @@ This is the **detailed completion matrix and historical traceability record** fo
 | Field | Value |
 |-------|--------|
 | **Purpose** | Completion matrix, package traceability, and preserved historical evidence |
-| **Last updated** | **2026-08-30** (release QA: PR #298 copy live; 057 live aligned; FUT-010 dry-run 0 eligible; Weeks Early Bird audit) |
+| **Last updated** | **2026-08-30** (release QA: PR #298 live; Weeks+18-PHA finalized; FUT-010 R3 dry-run 0 eligible; no paste) |
 | **Production branch** | `master` |
 | **Vercel root** | `web/` |
 | **Production website** | https://www.fairfieldbasketballclub.com/shoot |
