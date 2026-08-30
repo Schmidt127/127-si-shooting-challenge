@@ -50,6 +50,8 @@ git status -sb
 | ATHWF contracts (MRW-I13 closed) | **PASS** |
 | Live Weeks + PHA audit | **PASS** — Early Bird countable; 18 active PHA; Due Date 2027-06-29; Week 9 no homework |
 | Live disposable apply | **PASS** — [`docs/testing/core-workflow/RESULTS.md`](docs/testing/core-workflow/RESULTS.md) |
+| Multi-asset → one HC (live 020) | **PASS** — [`docs/testing/core-workflow/MULTI-ASSET-HW-RESULTS.md`](docs/testing/core-workflow/MULTI-ASSET-HW-RESULTS.md) |
+| Live 065 Homework XP (multi-asset close) | **BLOCKED** — 065 input `recordId` hardcoded to deleted `reccYReUfSId2MH1S`; remap [`docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md) (**no script paste**) |
 | Orphan inactive PHA | Deleted `recpHX3stQ8YBVtLi` |
 | Email send | **Not invoked** |
 | Automation paste | **None** |

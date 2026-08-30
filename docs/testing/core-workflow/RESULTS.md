@@ -24,4 +24,5 @@
 | PAT cannot DELETE XP Events / HC / Submissions (403) — MCP cleanup works | airtable |
 | Inactive enrollment create works; Enrollment Notes field does not exist | documentation |
 | Full season simulation | FUTURE (do not run) |
-| Multi-asset → one HC via live 020 asset path | deferred (direct HC used) |
+| Multi-asset → one HC via live 020 asset path | **PASS** 2026-08-30 — see [`MULTI-ASSET-HW-RESULTS.md`](./MULTI-ASSET-HW-RESULTS.md) |
+| Live 065 Homework XP after multi-asset | **BLOCKED** — 065 `recordId` hardcoded; operator packet [`065-recordId-dynamic-remap-operator-packet.md`](../../deploy-checklists/065-recordId-dynamic-remap-operator-packet.md) |
