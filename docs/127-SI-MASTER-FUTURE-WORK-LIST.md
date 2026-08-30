@@ -853,7 +853,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 
 | Item | Status | Evidence |
 |---|---|---|
-| **Weekly email audit** | READY (Mike attestation) | `audits/2026-08-28-weekly-email-pipeline-audit.md` — 118→072→119→074→079 Hub chain |
+| **Weekly email audit** | Harness shipped (2026-08-30) | `audits/2026-08-28-weekly-email-pipeline-audit.md` + [`testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md`](testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md) — live `--apply` Mike disposable WAS |
 | **SC-PW-E2E preflight** | COMPLETE (repo) | `preflightApplyAccess`; unlock field resolver (`Source Key` / `Milestone Source Key`) |
 | **SC-147** | PROPOSED | Recorded Zoom half-XP writer — `docs/challenge-year/RECORDED-ZOOM-HALF-XP-DESIGN-BRIEF.md` |
 | **FUT-001 / PR #264** | **COMPLETE** (repo + Production paste) | 020 v3.8 + 065 v10.4 Live; optional SC-016 re-submit only |
