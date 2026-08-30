@@ -3,7 +3,8 @@
 **Backlog:** FUT-001 / SC-016  
 **GitHub automations:** **020 v3.8**, **065 v10.4**  
 **Branch:** `fix/fut-001-homework-assignment-identity`  
-**Status:** Repository complete + offline tests green — **Mike Production paste required** (no Airtable changes in this PR)
+**Status:** Repository complete + Production **020 v3.8 / 065 v10.4 Live** (Automations Code MCP 2026-08-29/30) — **paste complete**; optional SC-016 re-submit only  
+**Operator packets:** [`020-v3.8-fut-001-operator-packet.md`](./020-v3.8-fut-001-operator-packet.md) · [`065-v10.4-fut-001-operator-packet.md`](./065-v10.4-fut-001-operator-packet.md)
 
 ## What changed
 

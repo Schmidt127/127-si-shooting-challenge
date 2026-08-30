@@ -40,7 +40,7 @@ Repository and Production closeout for the bounded SC-034 / V2-002 pass:
 | Item | Status | Evidence |
 |---|---|---|
 | **V2-002 / SC-034** repository implementation | **COMPLETE** | `audits/2026-08-27-SC-034-config-hardcode-audit.md`; `lib/config-selection/`; 57-script scan; contract tests |
-| **Automation 057 v2.2** | **COMPLETE** | Config field + script synced to **`Perfect Week Video Minimum`** — [`057-v2.1-perfect-week-config-video-minimum.md`](./deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md) |
+| **Automation 057 v2.2** | **IN PROGRESS — repaste** | Config schema renamed; Automations Code still has typo `MInimum` — [`057-v2.2-perfect-week-video-minimum-paste.md`](./deploy-checklists/057-v2.2-perfect-week-video-minimum-paste.md) |
 | **Config-driven Perfect Week video minimum** | **COMPLETE** | Config field **`Perfect Week Video Minimum`** = 3; `lib/config-selection/perfect-week-video-minimum.js` |
 | **WAS Config lookup + formula** | **COMPLETE** | Lookup **`Config: Perfect Week Video Minimum`**; formula **`Perfect Week Video Requirement Met?`** live PROD |
 | **Automation 059 trigger correction** | **COMPLETE** | Mike removed `Shot Milestone is not empty` filter; Pending-only created trigger — [`059-perfect-week-trigger-coverage.md`](./deploy-checklists/059-perfect-week-trigger-coverage.md) |
@@ -89,7 +89,7 @@ Priority: **P0** launch/security blocker · **P1** important parent/athlete expe
 ### FUT-001 — Match homework by assignment identity, not HW1/HW2 slot
 
 **Priority:** P1  
-**Status:** Complete (GitHub + tests — Production paste pending Mike approval)  
+**Status:** Complete (GitHub + Production paste — Automations Code 020 v3.8 / 065 v10.4 Live)  
 **Systems:** Airtable, homework intake, Homework Completions, XP, parent submission flow
 
 Allow a parent or athlete to submit an assignment in either visible homework slot. The system must identify the assignment by its assignment/lesson identity and match it to the correct scheduled assignment. The HW number is not authoritative because slot numbering may change from year to year.
@@ -102,7 +102,7 @@ The system must preserve checks for assignment identity, enrollment, challenge/s
 
 **Implementation (2026-08-25):** GitHub **020 v3.8** + **065 v10.4**; contracts in `lib/homework-contracts/assignment-identity.js`. Promotion doc: [FUT-001-homework-assignment-identity-deadline.md](./deploy-checklists/FUT-001-homework-assignment-identity-deadline.md).
 
-**PR #264 (2026-08-28):** Branch `fix/fut-001-homework-assignment-identity` — commit `91c65b36` + CI fix `3d497f4a` (065 offline Weeks mock). **Merge-ready** after green `automation-contracts` re-run. Production paste still pending Mike approval.
+**PR #264 (2026-08-28):** Branch `fix/fut-001-homework-assignment-identity` — commit `91c65b36` + CI fix `3d497f4a` (065 offline Weeks mock). **Merged.** Production Automations Code **020 v3.8 / 065 v10.4 Live** (MCP 2026-08-29/30) — do not re-paste.
 
 ### FUT-002 — Audit and remove unused Airtable fields
 
@@ -937,7 +937,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **SC-034** | COMPLETE | V2-002 repo + prod pass 2026-08-27; hardcode audit JSON; contract tests pass; 057 v2.2 live |
 | **SC-034-PW-MIN** | COMPLETE | `lib/config-selection/perfect-week-video-minimum.js`; Config **Perfect Week Video Minimum** = 3 |
 | **SC-034-WAS** | COMPLETE | WAS lookup + formula live PROD 2026-08-27; `airtable/formulas/README.md` |
-| **SC-034-057** | COMPLETE | 057 v2.2 live PROD 2026-08-27; `deploy-checklists/057-v2.1-perfect-week-config-video-minimum.md` |
+| **SC-034-057** | **IN PROGRESS** | Repo + Config schema COMPLETE; Automations Code CONFIG typo remaining — [`057-v2.2-perfect-week-video-minimum-paste.md`](./deploy-checklists/057-v2.2-perfect-week-video-minimum-paste.md) |
 | **SC-034-059-TRIG** | COMPLETE | Mike 2026-08-27; Pending-only created trigger; `deploy-checklists/059-perfect-week-trigger-coverage.md` |
 | **SC-034-058-059** | COMPLETE | Not required — `docs/testing/perfect-week/PERFECT-WEEK-DEPENDENCY-AUDIT.md` |
 | **SC-PW-E2E** | **COMPLETE** | MCP award for WAS `recl3DmBh22ADPWWe`: unlock `recJ5umer4J4FHTOz` Awarded + XP `reczehlzkA8fjiQh0` 100 pts. Evidence `docs/testing/evidence/sc-pw-e2e/award-was-recl3DmBh22ADPWWe-2026-08-29-mcp.json`. Do not re-`--apply`. |

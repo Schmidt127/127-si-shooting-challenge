@@ -8,18 +8,26 @@
 
 ## Already applied — do not re-paste
 
-Verified via Production **Automations** table (`Status=Live` + script `Version:` header):
+Verified via Production **Automations** table (`Status=Live` + script `Version:` header) — reconfirmed MCP **2026-08-30**:
 
-| Automation | Prod version | Repo target | Checklist (historical) |
-|------------|--------------|-------------|------------------------|
-| **010** | v10.12 | v10.12 | `010-v10.12-formula-settlement-grace.md` |
-| **020** | v3.8 | v3.8 | `FUT-001-homework-assignment-identity-deadline.md` |
-| **022** | v2.2 | v2.2 | `022-v2.2-secure-video-url-pipeline.md` |
+| Automation | Prod version | Repo target | Operator packet |
+|------------|--------------|-------------|-----------------|
+| **010** | v10.12 | v10.12 | [`010-v10.12-operator-packet.md`](./010-v10.12-operator-packet.md) |
+| **020** | v3.8 | v3.8 | [`020-v3.8-fut-001-operator-packet.md`](./020-v3.8-fut-001-operator-packet.md) |
+| **022** | v2.2 | v2.2 | [`022-v2.2-operator-packet.md`](./022-v2.2-operator-packet.md) |
 | **058** | 1.5 | 1.5 | `058-v1.5-milestone-source-key.md` |
 | **059** | v3.7 | v3.7 | same |
-| **065** | v10.4 | v10.4 | `FUT-001-homework-assignment-identity-deadline.md` |
-| **072** | v4.8 | v4.8 | `022-v2.2-secure-video-url-pipeline.md` / `072-v4.8-PASTE.txt` |
-| **073** | v4.4 | v4.4 | `073-v4.4-PASTE.txt` |
+| **065** | v10.4 | v10.4 | [`065-v10.4-fut-001-operator-packet.md`](./065-v10.4-fut-001-operator-packet.md) |
+| **072** | v4.8 | v4.8 | [`072-v4.8-operator-packet.md`](./072-v4.8-operator-packet.md) |
+| **073** | v4.4 | v4.4 | [`073-v4.4-operator-packet.md`](./073-v4.4-operator-packet.md) |
+
+## Outstanding paste (P0)
+
+| Automation | Issue | Packet |
+|------------|-------|--------|
+| **057** | Automations Code is v2.2 but CONFIG still `"Perfect Week Video MInimum"`; schema field is **`Perfect Week Video Minimum`** (`fldqRxjWGXcbUZUg3`) | [`057-v2.2-perfect-week-video-minimum-paste.md`](./057-v2.2-perfect-week-video-minimum-paste.md) |
+
+Full audit: [`2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md`](./2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md)
 
 **Perfect Week award (original fixture) — COMPLETE.** Do not create another test week. Do not re-run qualifying `--apply` for WAS `recl3DmBh22ADPWWe`.
 
@@ -40,6 +48,16 @@ Also already complete: FUT-WELCOME-LEGACY (6/6 fields deleted); 075 absent; welc
 ---
 
 ## Remaining Mike production actions (ordered)
+
+### 0) Automation 057 typo-field repaste (P0)
+
+| Field | Value |
+|-------|--------|
+| **What** | Replace 057 script so CONFIG uses **`Perfect Week Video Minimum`** |
+| **Packet** | [`057-v2.2-perfect-week-video-minimum-paste.md`](./057-v2.2-perfect-week-video-minimum-paste.md) |
+| **Paste file** | [`057-v2.2-PASTE.txt`](./057-v2.2-PASTE.txt) |
+| **Mike approval** | **Required** |
+| **Stop if** | Paste still contains `MInimum`; or `recordId` hardcoded |
 
 ### 1) FUT-010 — intake attachment cleanup (dry-run first)
 
@@ -92,3 +110,5 @@ When registration intentionally opens — [`FUT-003-fillout-stripe-payment-write
 - Create another Perfect Week test week for award proof
 - Delete Weeks, schemas, or S3 objects for FUT-010
 - Touch local uncommitted `tools/testing/lib/sc-pw-e2e-lib.mjs` WIP
+
+**Do paste:** **057** only (typo Config field name) — see section 0 above.
