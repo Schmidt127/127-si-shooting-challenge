@@ -1,0 +1,129 @@
+{
+  "harness": "SC-ATHLETE-WF-001",
+  "mode": "apply-session-final",
+  "case": "full",
+  "startedAt": "2026-08-30T00:12:38.000Z",
+  "finishedAt": "2026-08-30T00:20:00.000Z",
+  "passed": true,
+  "summary": "Disposable Testing3 path exercised. Submission XP + WAS rollups verified. Homework Satisfactory-only HC did not award XP (065 trigger gap). Same-day dual SUBMISSION_XP confirms SC-005 B3. Cleanup completed via MCP after PAT blocked XP Event DELETE.",
+  "gatedEnrollment": "recNu6fcBpF1GG3u5",
+  "created": {
+    "weekId": "rec52TqawQDk7rhdP",
+    "wasId": "recEYFUsKBJcb94hs",
+    "submissionIds": [
+      "recLz8Ayr4AfCPEh8",
+      "rec4kYxpLMIXDoXRo",
+      "recJrqP3pgsaYlLD7",
+      "recw4LftfPAp0rTZc",
+      "reczUmJZPkDasSrwy",
+      "recCRxoC6gKnXNUIA",
+      "recLQzo2B6AlkG7jM"
+    ],
+    "videoId": "recTQccyPrhTAGxYg",
+    "homeworkId": "recQIfB0Cfv1DjdUj",
+    "incompleteHomeworkId": "recmVV97e3TDMfhya",
+    "weekName": "ATHWF|2026-08-30|full|WEEK",
+    "batchKey": "ATHWF|2026-08-30|SC-ATHLETE-WF|full"
+  },
+  "submissionXp": {
+    "allSevenExactlyOnce": true,
+    "pointsEach": 20,
+    "statModeFormula": "Simple Total (from Shot Total)",
+    "countThisSubmission": 1,
+    "sameDayDualXp": true
+  },
+  "was": {
+    "daysLogged": 6,
+    "shots": 430,
+    "perfectWeekEligible": 0,
+    "automationStatus": "Ready"
+  },
+  "homeworkXp": {
+    "satisfactoryCount": 0,
+    "incompleteCount": 0,
+    "notes": "Satisfactory?=true alone did not fire 065 within ~96s — likely missing PHA / Homework XP Reconciliation Needed?"
+  },
+  "videoXp": {
+    "count": 0,
+    "awardStatusAtCreate": "Pending",
+    "notes": "Expected until review path / 114"
+  },
+  "cleanup": {
+    "method": "MCP delete after PAT 403 on XP Events DELETE",
+    "actions": [
+      { "table": "XP Events", "deleted": ["recrRDS8jlUxUaoDh", "rec9uy7zJjVZLs5zw", "recBmv5vvXGCl59Oy", "recjDV5vMVkvfHcAq", "recy2XOboCByIsb4b", "recK2DdnVjGE1PAmj", "rectDIduBf1onvrBT"], "status": "deleted" },
+      { "table": "Homework Completions", "deleted": ["recQIfB0Cfv1DjdUj", "recmVV97e3TDMfhya"], "status": "deleted" },
+      { "table": "Video Feedback", "deleted": ["recTQccyPrhTAGxYg"], "status": "deleted" },
+      { "table": "Submissions", "deleted": ["recLz8Ayr4AfCPEh8", "rec4kYxpLMIXDoXRo", "recJrqP3pgsaYlLD7", "recw4LftfPAp0rTZc", "reczUmJZPkDasSrwy", "recCRxoC6gKnXNUIA", "recLQzo2B6AlkG7jM"], "status": "deleted" },
+      { "table": "Weekly Athlete Summary", "deleted": ["recEYFUsKBJcb94hs"], "status": "deleted" },
+      { "table": "Weeks", "deleted": ["rec52TqawQDk7rhdP"], "status": "deleted" }
+    ]
+  },
+  "defects": [
+    {
+      "severity": "P2",
+      "workflowStage": 5,
+      "title": "Multiple SUBMISSION_XP on same Denver day (SC-005 B3)",
+      "reproductionSteps": [
+        "Create two Count It submissions with Activity Date 2026-06-01 on Testing3",
+        "Poll Source Key SUBMISSION_XP|{each submission id}"
+      ],
+      "expectedResult": "Product decision: at most one counted shooting XP day (engine) OR explicit per-submission XP",
+      "actualResult": "Both same-day submissions earned exactly one 20 XP event each",
+      "likelyCause": "010 awards per submission Source Key; Count It path does not day-dedupe",
+      "recommendedFix": "Product decision, then align 010 / intake Count It preset",
+      "fixOwner": "product-decision"
+    },
+    {
+      "severity": "P1",
+      "workflowStage": 9,
+      "title": "Satisfactory Homework Completion alone does not award HOMEWORK_XP",
+      "reproductionSteps": [
+        "Create Homework Completions with Enrollment + Week + Satisfactory?=true (no PHA)",
+        "Wait for automation 065"
+      ],
+      "expectedResult": "One HOMEWORK_XP|{hcId} when review path is complete — or documented skip if PHA required",
+      "actualResult": "Zero HOMEWORK_XP after ~96s",
+      "likelyCause": "065 requires Homework XP Reconciliation Needed? and/or Program Homework Assignment identity",
+      "recommendedFix": "ATHWF apply should create PHA-linked HC or set reconciliation trigger; document skip vs fail",
+      "fixOwner": "airtable"
+    },
+    {
+      "severity": "P2",
+      "workflowStage": 3,
+      "title": "SC-PW-E2E lib POSTs formula field Submission Stat Mode",
+      "reproductionSteps": [
+        "POST Submissions with Submission Stat Mode=Simple Total"
+      ],
+      "expectedResult": "Omit computed field; Shot Total implies Simple Total via formula",
+      "actualResult": "API 422 UNKNOWN/INVALID for computed field; ATHWF fixed; sc-pw-e2e-lib WIP still writes it",
+      "likelyCause": "Schema drift",
+      "recommendedFix": "When committing sc-pw-e2e-lib WIP, remove Submission Stat Mode write (do not touch in this PR)",
+      "fixOwner": "code"
+    },
+    {
+      "severity": "P2",
+      "workflowStage": 16,
+      "title": "Agent PAT cannot DELETE XP Events via REST",
+      "reproductionSteps": [
+        "createDisposableFixture + cleanupAthwfRecords with web/.env.local AIRTABLE_API_TOKEN"
+      ],
+      "expectedResult": "Cleanup deletes XP Events created by the run",
+      "actualResult": "403 INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND on XP Events DELETE; MCP delete succeeded",
+      "likelyCause": "Token scope lacks XP Events delete",
+      "recommendedFix": "Use MCP or broader PAT for cleanup; harness now best-effort continues",
+      "fixOwner": "airtable"
+    }
+  ],
+  "relatedEvidence": [
+    "docs/testing/evidence/sc-athlete-wf/partial-verify-1788048800449.json",
+    "docs/testing/evidence/sc-athlete-wf/apply-full-2026-08-30T001244298.json"
+  ],
+  "notRunOrBlocked": [
+    "Full asset→020/112 routing (direct HC/VF used)",
+    "Streak unlock live poll (053/054) — offline streak math covered",
+    "Level recalc live poll (041/042)",
+    "Season simulation — explicitly out of scope",
+    "SC-PW-E2E --apply — not run"
+  ]
+}

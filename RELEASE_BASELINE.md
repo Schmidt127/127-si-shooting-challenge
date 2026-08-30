@@ -56,6 +56,9 @@ Re-check with `gh pr list`. Prior drafts (#266 etc.) remain product WIP — do n
 | `/shoot` | **HTTP 200** |
 | `/shoot/api/airtable` | **200** `ok:true` `tokenValid:true` |
 | SC-PW-E2E award (WAS `recl3DmBh22ADPWWe`) | **PASS** — MCP evidence JSON |
+| SC-ATHLETE-WF-001 offline contracts | **PASS** (2026-08-30) |
+| SC-ATHLETE-WF-001 dry-run + readonly | **PASS** |
+| SC-ATHLETE-WF-001 disposable apply | **PARTIAL PASS** — submission XP + WAS verified; homework 065 not fired without PHA; cleanup via MCP |
 
 ---
 
@@ -101,7 +104,11 @@ Re-check with `gh pr list`. Prior drafts (#266 etc.) remain product WIP — do n
 
 ## Exact recommended next task
 
-**Mike (P0):** Paste **057** from [`docs/deploy-checklists/057-v2.2-PASTE.txt`](docs/deploy-checklists/057-v2.2-PASTE.txt) per operator packet. Then FUT-010 supervised apply. Then Weeks import when calendar ready.
+**Cursor / Lead:** SC-ATHLETE-WF-001 harness complete (MRW-F09). Remaining product decision: SC-005 B3 (MRW-I13).
+
+**Mike (P0):** Paste **057** from [docs/deploy-checklists/057-v2.2-PASTE.txt](docs/deploy-checklists/057-v2.2-PASTE.txt) per operator packet. Then FUT-010 supervised apply. Then Weeks import when calendar ready.
+
+**Product (when ready):** Disposition SC-005 B3 same-day XP (MRW-I13).
 
 **Do not:** re-paste 010/020/022/058/059/065/072/073; re-`--apply` Perfect Week for WAS `recl3DmBh22ADPWWe`; restore 075; start SC-SEASON-SIM-001 yet.
 

@@ -31,6 +31,7 @@ node tools/testing/autonomous-qa-run.mjs --cleanup
 - **Historical audit artifacts:** [2026-08-24-historical-audit-artifacts.md](../../deploy-checklists/2026-08-24-historical-audit-artifacts.md)
 - E2E matrix: `tools/testing/run_e2e_matrix.mjs`
 - **Perfect Week disposable E2E (SC-PW-E2E):** [`docs/testing/perfect-week/SC-PW-E2E.md`](../perfect-week/SC-PW-E2E.md) — `node tools/testing/sc-pw-e2e.mjs --case qualifying --apply`
+- **Individual athlete workflow (SC-ATHLETE-WF-001):** [`docs/testing/athlete-workflow/SC-ATHLETE-WF.md`](../athlete-workflow/SC-ATHLETE-WF.md) — dry-run default; Testing3 gated; no email; pre–season-sim
 - **Weekly settlement matrix (SC-WEEKLY-SETTLEMENT-E2E):** [`docs/testing/weekly-settlement/SC-WEEKLY-SETTLEMENT-E2E.md`](../weekly-settlement/SC-WEEKLY-SETTLEMENT-E2E.md) — `node tools/testing/sc-weekly-settlement.mjs --matrix` (live: `--apply`; no email)
 - **Future / Planned (not active):** **SC-SEASON-SIM-001** — 60-day five-enrollment season simulation. Canonical entry: [`docs/127-SI-MASTER-FUTURE-WORK-LIST.md`](../../127-SI-MASTER-FUTURE-WORK-LIST.md) · remaining-work: `MRW-H11` in [`MASTER_REMAINING_WORK_LIST.md`](../../../MASTER_REMAINING_WORK_LIST.md). Do **not** implement yet; intended later reuse/extension of SC-PW-E2E. **FUT-010** remains separate.
 - XP reconciliation: `web/scripts/full-xp-reconciliation.mjs`

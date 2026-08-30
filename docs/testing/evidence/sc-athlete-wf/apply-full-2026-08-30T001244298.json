@@ -1,0 +1,168 @@
+{
+  "harness": "SC-ATHLETE-WF-001",
+  "case": "full",
+  "mode": "apply",
+  "startedAt": "2026-08-30T00:12:38.501Z",
+  "created": {
+    "weekId": "rec52TqawQDk7rhdP",
+    "wasId": "recEYFUsKBJcb94hs",
+    "submissionIds": [
+      "recLz8Ayr4AfCPEh8",
+      "rec4kYxpLMIXDoXRo",
+      "recJrqP3pgsaYlLD7",
+      "recw4LftfPAp0rTZc",
+      "reczUmJZPkDasSrwy",
+      "recCRxoC6gKnXNUIA",
+      "recLQzo2B6AlkG7jM"
+    ],
+    "submissionMeta": [
+      {
+        "id": "recLz8Ayr4AfCPEh8",
+        "tag": "same-day-a",
+        "date": "2026-06-01",
+        "shots": 50,
+        "mode": "Simple Total",
+        "review": "Count It",
+        "modeImplied": "Simple Total (formula from Shot Total)"
+      },
+      {
+        "id": "rec4kYxpLMIXDoXRo",
+        "tag": "same-day-b",
+        "date": "2026-06-01",
+        "shots": 25,
+        "mode": "Simple Total",
+        "review": "Count It",
+        "modeImplied": "Simple Total (formula from Shot Total)"
+      },
+      {
+        "id": "recJrqP3pgsaYlLD7",
+        "tag": "day-2",
+        "date": "2026-06-02",
+        "shots": 100,
+        "mode": "Simple Total",
+        "review": "Count It",
+        "modeImplied": "Simple Total (formula from Shot Total)"
+      },
+      {
+        "id": "recw4LftfPAp0rTZc",
+        "tag": "day-3",
+        "date": "2026-06-03",
+        "shots": 75,
+        "mode": "Simple Total",
+        "review": "Count It",
+        "modeImplied": "Simple Total (formula from Shot Total)"
+      },
+      {
+        "id": "reczUmJZPkDasSrwy",
+        "tag": "miss-gap",
+        "date": "2026-06-05",
+        "shots": 40,
+        "mode": "Simple Total",
+        "review": "Count It",
+        "modeImplied": "Simple Total (formula from Shot Total)"
+      },
+      {
+        "id": "recCRxoC6gKnXNUIA",
+        "tag": "backdated",
+        "date": "2026-06-04",
+        "shots": 60,
+        "mode": "Simple Total",
+        "review": "Count It",
+        "modeImplied": "Simple Total (formula from Shot Total)"
+      },
+      {
+        "id": "recLQzo2B6AlkG7jM",
+        "tag": "day-6",
+        "date": "2026-06-06",
+        "shots": 80,
+        "mode": "Simple Total",
+        "review": "Count It",
+        "modeImplied": "Simple Total (formula from Shot Total)"
+      }
+    ],
+    "videoId": "recTQccyPrhTAGxYg",
+    "homeworkId": null,
+    "incompleteHomeworkId": null,
+    "batchKey": "ATHWF|2026-08-30|SC-ATHLETE-WF|full",
+    "weekName": "ATHWF|2026-08-30|full|WEEK",
+    "enrollmentId": "recNu6fcBpF1GG3u5"
+  },
+  "checks": [],
+  "defects": [],
+  "negatives": [
+    {
+      "id": "NEG-01",
+      "name": "missing-enrollment",
+      "stage": 17,
+      "expected": "010/005 skip or error; no orphan XP",
+      "harnessAction": "plan-only",
+      "severityIfBroken": "P0"
+    },
+    {
+      "id": "NEG-02",
+      "name": "missing-week",
+      "stage": 17,
+      "expected": "031/005 fail closed or skip without inventing Week",
+      "harnessAction": "plan-only",
+      "severityIfBroken": "P0"
+    },
+    {
+      "id": "NEG-03",
+      "name": "invalid-asset-destination",
+      "stage": 17,
+      "expected": "020/112 skip or error; no HC/VF create",
+      "harnessAction": "plan-only",
+      "severityIfBroken": "P1"
+    },
+    {
+      "id": "NEG-04",
+      "name": "duplicate-submission-replay",
+      "stage": 17,
+      "expected": "010 skip/repair; same Source Key; no second XP",
+      "harnessAction": "apply-poll",
+      "severityIfBroken": "P0"
+    },
+    {
+      "id": "NEG-05",
+      "name": "incomplete-homework",
+      "stage": 17,
+      "expected": "065 does not award HOMEWORK_XP when not satisfactory",
+      "harnessAction": "apply-poll",
+      "severityIfBroken": "P1"
+    },
+    {
+      "id": "NEG-06",
+      "name": "ineligible-perfect-week",
+      "stage": 17,
+      "expected": "057 does not set Eligible; no 058/059 award",
+      "harnessAction": "plan-only (SC-PW-E2E owns live PW)",
+      "severityIfBroken": "P1"
+    },
+    {
+      "id": "NEG-07",
+      "name": "inactive-enrollment",
+      "stage": 17,
+      "expected": "writers skip; no XP against inactive enrollment",
+      "harnessAction": "plan-only (do not deactivate gated enrollment)",
+      "severityIfBroken": "P0"
+    },
+    {
+      "id": "NEG-08",
+      "name": "outside-season-window",
+      "stage": 17,
+      "expected": "future Activity Date → Count This Submission? = 0; no counted XP",
+      "harnessAction": "offline-eval",
+      "severityIfBroken": "P1"
+    }
+  ],
+  "cleanup": null,
+  "passed": false,
+  "blockers": [
+    "POST Homework Completions 422: {\"error\":{\"type\":\"UNKNOWN_FIELD_NAME\",\"message\":\"Unknown field name: \\\"Active?\\\"\"}}"
+  ],
+  "failure": {
+    "message": "POST Homework Completions 422: {\"error\":{\"type\":\"UNKNOWN_FIELD_NAME\",\"message\":\"Unknown field name: \\\"Active?\\\"\"}}",
+    "stage": "unknown"
+  },
+  "finishedAt": "2026-08-30T00:12:44.297Z"
+}
