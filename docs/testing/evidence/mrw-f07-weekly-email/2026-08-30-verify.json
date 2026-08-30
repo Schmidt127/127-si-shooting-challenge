@@ -1,0 +1,43 @@
+{
+  "harness": "MRW-F07",
+  "mode": "verify",
+  "startedAt": "2026-08-30T14:59:42.540Z",
+  "finishedAt": "2026-08-30T14:59:42.759Z",
+  "wasId": "rec1E2iBweHlUX3pP",
+  "snapshot": {
+    "wasId": "rec1E2iBweHlUX3pP",
+    "handoffKey": "WEEKLY_ATHLETE_SUMMARY|WEEKLY_ATHLETE_SUMMARY|rec1E2iBweHlUX3pP",
+    "weeklyEmailSent": false,
+    "summaryKey": "ATH-recX9d5CYD6fAT7Cz|2026-2027||WSTEST|2026-08-30|SC-WEEKLY-SETTLEMENT-E2E|backdated-submissions|WEEK|001628",
+    "stages": [
+      {
+        "id": "WE-01",
+        "pass": false,
+        "detail": "not armed"
+      },
+      {
+        "id": "WE-02",
+        "pass": false,
+        "detail": "package incomplete"
+      },
+      {
+        "id": "WE-03",
+        "pass": false,
+        "detail": "send not armed"
+      },
+      {
+        "id": "WE-04",
+        "pass": false,
+        "detail": "no queue row"
+      },
+      {
+        "id": "WE-05",
+        "pass": false,
+        "detail": "no dispatch state"
+      }
+    ],
+    "passed": false,
+    "furthestStage": 0
+  },
+  "pass": false
+}

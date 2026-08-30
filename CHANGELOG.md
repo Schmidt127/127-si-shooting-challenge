@@ -6,6 +6,15 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Airtable
+
+#### Added
+- **MRW-F07 weekly email positive-arm harness (2026-08-30)** — Disposable E2E tooling for
+  `118→072→119→074→079` chain verification: CLI
+  `tools/testing/mrw-f07-weekly-email-positive-arm.mjs`, library, offline contracts, and operator doc
+  [`docs/testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md`](./docs/testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md).
+  Wired into `run-agent4-suite.js`.
+
 ### Web
 
 #### Changed

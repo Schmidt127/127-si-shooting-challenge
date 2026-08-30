@@ -135,6 +135,11 @@ const COMMANDS = [
       "tools/testing/tests/test_expected_actual.mjs",
     ],
   },
+  {
+    name: "mrw-f07-weekly-email-contract",
+    cmd: process.execPath,
+    args: ["tools/testing/tests/test_mrw_f07_weekly_email_contract.mjs"],
+  },
   { name: "validate-v2-release-readiness", args: ["tools/validate-v2-release-readiness.js"] },
   {
     name: "challenge-year-engine",
