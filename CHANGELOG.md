@@ -23,6 +23,10 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   **do not repaste 065**: [`docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](./docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md).
   Harness: `tools/testing/sc-multi-asset-homework.mjs`. Evidence:
   `docs/testing/core-workflow/MULTI-ASSET-HW-RESULTS.md`.
+- **SC-MULTI-ASSET-HW closeout (2026-08-30)** — Operator runbook
+  [`docs/testing/core-workflow/MULTI-ASSET-HW-OPERATOR-RUNBOOK.md`](./docs/testing/core-workflow/MULTI-ASSET-HW-OPERATOR-RUNBOOK.md),
+  offline harness test, expanded XP/HC detection checks, evidence template. **065 `recordId`
+  remapped in Airtable UI; final `--apply` XP proof pending for Mike desktop.**
 - **SC-SEASON-SIM-002 preflight package (2026-08-30, PR #302)** — `tools/season_simulation/`
   with offline unittest (21), gated execute/cleanup, Agent 4 suite wiring. **No full season
   simulation run.** Live 057 verified correct — do not repaste.

@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-30  
 **Backlog:** SC-015 / SC-016 / MRW-F02 / MRW-F04 / SC-MULTI-ASSET-HW  
-**Severity:** Blocks all new Homework XP awards via live **065**  
+**Status (2026-08-30):** Mike corrected **065** `recordId` to dynamic trigger Record ID in Airtable UI. **Final XP proof pending** — run harness per [`MULTI-ASSET-HW-OPERATOR-RUNBOOK.md`](../testing/core-workflow/MULTI-ASSET-HW-OPERATOR-RUNBOOK.md).  
 **Do NOT:** Repaste Automation 065 script body (v10.4 code is already Live)
 
 ---
@@ -47,25 +47,30 @@ Prior closeout [`2026-08-24-065-066-dynamic-trigger-closeout.md`](./2026-08-24-0
 
 ## Safe verification after remap (disposable Testing3 only)
 
-Use enrollment **Testing3** `recNu6fcBpF1GG3u5` — not real athletes.
-
-1. On HC `recAhHF7j6OyznARO` (if still present) **or** a fresh disposable HC from harness:
-   - Ensure `Homework XP Reconciliation Needed?` can leave and re-enter `1` (clear Last Signature or toggle Satisfactory off→on after mapping fix).
-2. Expect exactly one XP Event:
-   - Source Key = `HOMEWORK_XP|{HomeworkCompletionID}`
-   - XP Bucket / Source = Homework Completion
-   - Points = Total Homework XP Awarded (35 for Early Bird HW1 rule)
-3. Replay review fields → still **one** XP Event.
-4. Confirm **no** Email Handoff Queue row and **Parent Feedback Ready?** remains unchecked unless intentionally set later.
-
-Harness (after remap):
+**065 remap is complete.** Run the final proof:
 
 ```bash
-node tools/testing/sc-multi-asset-homework.mjs --cleanup   # if prior fixture remains
 node tools/testing/sc-multi-asset-homework.mjs --apply
 ```
 
-Or re-arm only the existing multi-asset HC and poll Source Key.
+Full operator steps: [`docs/testing/core-workflow/MULTI-ASSET-HW-OPERATOR-RUNBOOK.md`](../testing/core-workflow/MULTI-ASSET-HW-OPERATOR-RUNBOOK.md)
+
+Use enrollment **Testing3** `recNu6fcBpF1GG3u5` — not real athletes.
+
+1. Optional prior fixture cleanup: `node tools/testing/sc-multi-asset-homework.mjs --cleanup`
+2. Run `--apply` (creates disposable multi-asset HC, grades, polls XP)
+3. Expect exactly one XP Event:
+   - Source Key = `HOMEWORK_XP|{HomeworkCompletionID}`
+   - XP Bucket / Source = Homework Completion
+   - Points = Total Homework XP Awarded (35 for Early Bird HW1 rule)
+4. Replay review fields → still **one** XP Event.
+5. Confirm **no** Email Handoff Queue row and **Parent Feedback Ready?** remains unchecked unless intentionally set later.
+
+Harness (exact command):
+
+```bash
+node tools/testing/sc-multi-asset-homework.mjs --apply
+```
 
 ---
 

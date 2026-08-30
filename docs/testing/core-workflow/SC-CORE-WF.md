@@ -45,6 +45,8 @@ node tools/testing/sc-core-workflow.mjs --cleanup
 # Deferred multi-asset → one HC via live Automation 020 (no email)
 node tools/testing/sc-multi-asset-homework.mjs --apply
 node tools/testing/sc-multi-asset-homework.mjs --cleanup
+
+# Operator runbook (final 065 XP proof): docs/testing/core-workflow/MULTI-ASSET-HW-OPERATOR-RUNBOOK.md
 ```
 
 ## Apply coverage
