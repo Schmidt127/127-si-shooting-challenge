@@ -9,10 +9,6 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Added
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
 - **SC-147 Recorded Zoom half-XP repo prep (2026-08-30, MRW-H10)** — Offline conflict
   matrix + pure helpers (`lib/sc-147-zoom-recording-credit.js`), contract tests, and
   automation **DRAFT** `drafts/sc-147-zoom-recording-half-xp.js` (slot TBD — not Live).
@@ -20,17 +16,12 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   exclusivity, `ZOOM_RECORDING` XP Reward Rules contract, **117** email-only scope boundary,
   and Perfect Week recording-only exclusion. Design brief updated; wired into
   `run-agent4-suite.js`. No Production paste.
->>>>>>> aa3247e9 (SC-147 prep: Recorded Zoom half-XP draft + offline conflict matrix)
 - **FUT-010 Production dry-run evidence (2026-08-30, MRW-C10)** — Read-only preflight,
   dry-run (`--limit 50`), and reconcile (`--limit 100`) against Production Submission Assets.
   Zero eligible rows; fail-closed verification blocked all candidates (legacy Storage Key format,
   missing Canonical URL). No `--confirm-delete` or attachment writes. Evidence:
   [`docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30.md`](./docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30.md);
   JSON previews under `tools/airtable/_preview/fut-010-*-2026-08-30.json`.
-<<<<<<< HEAD
-=======
->>>>>>> 91b6b3ab (SC-147 prep: Recorded Zoom half-XP draft + offline conflict matrix)
->>>>>>> aa3247e9 (SC-147 prep: Recorded Zoom half-XP draft + offline conflict matrix)
 - **MRW-F07 weekly email positive-arm harness (2026-08-30)** — Disposable E2E tooling for
   `118→072→119→074→079` chain verification: CLI
   `tools/testing/mrw-f07-weekly-email-positive-arm.mjs`, library, offline contracts, and operator doc
