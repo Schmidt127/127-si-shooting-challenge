@@ -2,12 +2,10 @@ import type { ComponentType } from "react";
 
 import {
   IconBook,
-  IconBolt,
   IconHelp,
   IconLevel,
   IconMedal,
   IconMegaphone,
-  IconMonitor,
   IconNews,
   IconPlay,
   IconScroll,
@@ -27,18 +25,11 @@ export type ProgramHubLink = {
   featured?: boolean;
 };
 
-/** Overview hub cards — mirrors ProductShell nav (see site-hierarchy.md). */
+/**
+ * Overview hub cards — mirrors ProductShell public nav (see site-hierarchy.md).
+ * Dashboard (demo) and Public Display (gym/kiosk) are omitted from family-facing hubs.
+ */
 export const PROGRAM_HUB_LINKS: ProgramHubLink[] = [
-  {
-    href: "/dashboard",
-    label: "Home",
-    title: "Athlete Dashboard",
-    description: "Level, XP, weekly shots, streak, Perfect Week, homework, and your next action.",
-    eyebrow: "Program home",
-    linkLabel: "Open athlete dashboard",
-    icon: IconBolt,
-    featured: true,
-  },
   {
     href: "/leaderboard",
     label: "Primary",
@@ -47,6 +38,16 @@ export const PROGRAM_HUB_LINKS: ProgramHubLink[] = [
     eyebrow: "Compete",
     linkLabel: "View season leaderboard",
     icon: IconTrophy,
+    featured: true,
+  },
+  {
+    href: "/faq",
+    label: "Answers",
+    title: "Program FAQ",
+    description: "Grades served, registration, daily submissions, homework, and privacy.",
+    eyebrow: "Help",
+    linkLabel: "Read program FAQ",
+    icon: IconHelp,
     featured: true,
   },
   {
@@ -120,23 +121,5 @@ export const PROGRAM_HUB_LINKS: ProgramHubLink[] = [
     eyebrow: "Reference",
     linkLabel: "Open game manual",
     icon: IconScroll,
-  },
-  {
-    href: "/faq",
-    label: "Answers",
-    title: "Program FAQ",
-    description: "Grades served, registration, daily submissions, and Fairfield Montana context.",
-    eyebrow: "Help",
-    linkLabel: "Read program FAQ",
-    icon: IconHelp,
-  },
-  {
-    href: "/public-display",
-    label: "Gym mode",
-    title: "Public Display",
-    description: "Full-screen leaderboard for gyms, lobbies, and event screens.",
-    eyebrow: "Display",
-    linkLabel: "Open gym display mode",
-    icon: IconMonitor,
   },
 ];

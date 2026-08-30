@@ -1,7 +1,6 @@
 import {
   IconBasketball,
   IconBolt,
-  IconRank,
   IconTarget,
   IconTrophy,
 } from "@/components/icons/shoot-icons";
@@ -49,8 +48,8 @@ export function LeaderboardView({ data }: LeaderboardViewProps) {
       heroVariant="contrast"
       ambientVariant="leaderboard"
       actions={
-        <CtaLink href="/public-display" variant="cta" iconStart={<IconRank size={16} />}>
-          Display mode
+        <CtaLink href="/faq" variant="contrast">
+          Program FAQ
         </CtaLink>
       }
       meta={

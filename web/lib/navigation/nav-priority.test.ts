@@ -20,6 +20,17 @@ describe("nav priority split", () => {
     }
   });
 
+  it("excludes demo dashboard and gym display from the product nav list", () => {
+    expect(SHOOTING_CHALLENGE_NAV.some((item) => item.href === "/dashboard")).toBe(false);
+    expect(SHOOTING_CHALLENGE_NAV.some((item) => item.href === "/public-display")).toBe(false);
+  });
+
+  it("promotes FAQ into the primary strip", () => {
+    expect(PRIMARY_NAV_HREFS).toContain("/faq");
+    const { primary } = splitNavItems(SHOOTING_CHALLENGE_NAV);
+    expect(primary.some((item) => item.href === "/faq")).toBe(true);
+  });
+
   it("preserves every nav href across primary + more", () => {
     const { primary, more } = splitNavItems(SHOOTING_CHALLENGE_NAV);
     const combined = new Set([...primary, ...more].map((item) => item.href));

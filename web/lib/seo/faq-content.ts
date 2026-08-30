@@ -3,6 +3,8 @@
  */
 
 import {
+  CHALLENGE_DATES,
+  CHALLENGE_SEASON_LABEL,
   IN_PERSON_SCOPE,
   PROGRAM_GRADES_SERVED,
   PROGRAM_HOME_LOCATION,
@@ -31,12 +33,18 @@ export const PROGRAM_FAQ_ITEMS: FaqItem[] = [
   {
     id: "boys-and-girls",
     question: "Is the program open to boys and girls?",
-    answer: "Yes. The Shooting Challenge welcomes boys and girls who want structured youth basketball shooting development with clear weekly expectations and progress tracking.",
+    answer:
+      "Yes. The Shooting Challenge welcomes boys and girls who want structured youth basketball shooting development with clear weekly expectations and progress tracking.",
   },
   {
     id: "educational-athletics",
     question: "What is Educational Athletics?",
     answer: `${PROGRAM_IDENTITY.philosophy} is the ${PROGRAM_IDENTITY.orgName} approach: ${PROGRAM_IDENTITY.philosophyTagline} Programs teach consistency, responsibility, communication, and growth mindset through basketball training systems families can follow at home.`,
+  },
+  {
+    id: "challenge-timing",
+    question: "When does the challenge run, and what is Early Bird?",
+    answer: `The official ${CHALLENGE_SEASON_LABEL} runs ${CHALLENGE_DATES}. Registration may open earlier with published Early Bird pricing when Early Bird rates and deadlines appear on this site. Early Bird is a registration pricing window — the official challenge season itself remains ${CHALLENGE_DATES}.`,
   },
   {
     id: "daily-submissions",
@@ -46,7 +54,8 @@ export const PROGRAM_FAQ_ITEMS: FaqItem[] = [
   {
     id: "xp-progress",
     question: "How does XP and progress tracking work?",
-    answer: "Athletes earn XP for verified homework, shot volume, consistency, Perfect Weeks, and other program milestones. XP unlocks levels from Beginner through G.O.A.T. Progress is visible on the public leaderboard and in the athlete dashboard.",
+    answer:
+      "Athletes earn XP for verified homework, shot volume, consistency, Perfect Weeks, and other program milestones. XP unlocks levels from Beginner through G.O.A.T. Families can follow progress on the public leaderboard and on public athlete profiles when a family chooses to share one.",
   },
   {
     id: "weekly-homework",
@@ -65,6 +74,12 @@ export const PROGRAM_FAQ_ITEMS: FaqItem[] = [
     question: "Are Zoom sessions part of the program?",
     answer:
       "Yes. The Shooting Challenge publishes Zoom meeting schedules, agendas, and recordings on this site when sessions are scheduled. Families can join live check-ins or use recordings for makeup credit when offered.",
+  },
+  {
+    id: "privacy",
+    question: "What information is shown publicly?",
+    answer:
+      "Public standings and athlete profiles show approved game-related progress only — such as name, level, XP, and shots when a family shares a public profile. Parent contact details, payment information, and private submission metadata are never published on this site. Registration consent covers name, image, and likeness for program promotion.",
   },
   {
     id: "location",
