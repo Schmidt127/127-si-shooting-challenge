@@ -36,6 +36,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **Phase 4 safe public copy (2026-08-30, PR #298 / MRW-G09)** — Parent-facing FAQ,
+  Zoom, levels, pricing, profile, tutorials, and footer wording clarified (CR-01–CR-11).
+  No dates, pricing amounts, eligibility, Dashboard nav, homepage layout, coach SLA, or
+  grades-band FAQ nuance. Merge `082edc7d`; Production Ready `dpl_2uQ1wPJferY189xkCFkg4D67JcFR`.
+  Review: [`docs/copy-reviews/2026-08-30-phase4-public-pages.md`](./docs/copy-reviews/2026-08-30-phase4-public-pages.md).
 - **MRW-E02 SC-149 production attestation (2026-08-30)** — Added read-only
   `tools/testing/sc-149-fairfield-attestation.mjs`; live production PASS with evidence
   [`docs/testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-08-30.json`](./docs/testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-08-30.json).
