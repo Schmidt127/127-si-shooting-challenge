@@ -107,7 +107,7 @@ The system must preserve checks for assignment identity, enrollment, challenge/s
 ### FUT-002 — Audit and remove unused Airtable fields
 
 **Priority:** P2  
-**Status:** Ready for prompt  
+**Status:** **Audit complete (2026-08-30)** — field inventory + dependency report ready; **deletions Mike-only**  
 **Systems:** Airtable schema, automations, email payloads, website/data contracts
 
 Inventory every Airtable table and identify fields that are unused, obsolete, duplicated, or no longer part of the current app. This includes legacy Google Drive URL, Google Drive ID, Google Drive folder ID, and similarly named fields. Check formulas, automations, scripts, emails, views, interfaces, website/data contracts, and documentation before deleting anything.
@@ -117,6 +117,8 @@ Because all current records are test data that will be deleted before the next c
 After confirming no active dependency remains, delete the obsolete fields and update documentation, schema snapshots, field maps, tests, and any remaining references.
 
 **Acceptance criteria:** complete field/dependency inventory; unused and obsolete fields classified; fields removed only after audit; tests and documentation updated; no active S3/Lambda or future-approved fields removed accidentally.
+
+**Audit deliverables (2026-08-30):** [`docs/audits/FUT-002-unused-field-inventory-2026-08-30.md`](./audits/FUT-002-unused-field-inventory-2026-08-30.md) · [`docs/audits/fut-002-unused-field-inventory.json`](./audits/fut-002-unused-field-inventory.json) · tool `tools/airtable/fut_002_field_inventory.py`. Snapshot: **1347 fields** — **1043 active**, **15 legacy**, **8 duplicate**, **281 unknown**; **21** safe-to-delete-later (mostly Google Drive); **19** blocked/protected. Deletion phase not started.
 
 ### FUT-003 — Stripe payment writeback to Airtable
 
