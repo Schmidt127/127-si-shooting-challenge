@@ -9,6 +9,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **MRW-E04 production smoke fix (2026-08-30)** — Updated home route heading assertion in
+  `tests/helpers/smoke.ts` to match FUT-018 `HOME_HERO` copy (`Earn XP. Climb 12 Levels.`);
+  `npm run test:smoke:prod` **50/50** against production.
 - **Athlete profile SEO cutover path (FUT-025, 2026-08-30)** — Replaced hardcoded
   athlete indexing flag with fail-closed env gate `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING`
   (requires `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING`). Profiles stay `noindex` in production
