@@ -10,7 +10,7 @@ This is the **detailed completion matrix and historical traceability record** fo
 | Field | Value |
 |-------|--------|
 | **Purpose** | Completion matrix, package traceability, and preserved historical evidence |
-| **Last updated** | **2026-08-29** (release-completion reconcile: Perfect Week award COMPLETE; paste queue 010/020/022/058/059/065/072/073 Live; FUT-WELCOME-LEGACY COMPLETE; FUT-010 live clear + Weeks still open) |
+| **Last updated** | **2026-08-30** (MRW-F08 offline contract suite green; docs-canonical-header drift reconciled) |
 | **Production branch** | `master` |
 | **Vercel root** | `web/` |
 | **Production website** | https://www.fairfieldbasketballclub.com/shoot |
@@ -518,6 +518,12 @@ Execution matrix IDs advanced: PKG-007 — repository-only Video Feedback 073 v4
 writeback contract test alignment (`tests/video-feedback/video-feedback-writeback-complete-contract.test.js`);
 stale v4.2 version-header expectation updated to production-aligned v4.3 branded-payload
 regression; no automation script, Airtable data, email send, or Video XP logic changes.
+
+Execution matrix IDs advanced: PKG-041 — MRW-F08 offline contract suite (2026-08-30):
+reconciled `docs-canonical-header` drift in `docs/automation-index.md` and
+`airtable/schema/current/automation-trigger-map.md` (057 v2.2, 058 v1.5, 041 v5.1,
+042 v4.1.2, 076 v8.11, 101 v6.6, 118 v2.0); expanded `run-agent4-suite.js` with
+remaining `tests/automation-contracts/` coverage. No automation logic changes.
 
 ### Recommended sequence
 

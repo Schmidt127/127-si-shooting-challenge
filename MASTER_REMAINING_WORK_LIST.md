@@ -325,7 +325,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-F05 | Video XP native trigger + 073 OFF attestation (SC-072) | NEEDS VERIFICATION | PKG-007 PASS; UI attest open |
 | MRW-F06 | Zoom live attendance re-test (SC-073/084) | NEEDS VERIFICATION | 101 v6.7 |
 | MRW-F07 | 118/119 weekly scheduler positive arm (SC-031/035) | IN PROGRESS | |
-| MRW-F08 | Offline contract suite green on master after merges | IN PROGRESS | repository-qa workflow |
+| MRW-F08 | Offline contract suite green on master after merges | **COMPLETE** | repository-qa workflow; docs-canonical-header drift fixed 2026-08-30 |
 
 ---
 
