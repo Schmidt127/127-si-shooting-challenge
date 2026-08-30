@@ -267,7 +267,7 @@ Keep the S3 bucket private and preserve the Lambda viewer architecture.
 ### FUT-010 — Delete Airtable intake attachments after verified S3 upload
 
 **Priority:** P1  
-**Status:** Built in repository — Production apply pending Mike approval (2026-08-28)  
+**Status:** **Dry-run complete (2026-08-30)** — 0 eligible rows in Production preflight/reconcile; supervised apply pending Mike attestation + AWS creds  
 **Systems:** Airtable, Submission Assets, Homework Completions, AWS S3, Lambda viewer pipeline
 
 Reduce Airtable storage usage by deleting the original **Submission Assets** intake attachment after the uploaded file has been successfully written to AWS S3 and the durable file path is confirmed.
@@ -306,7 +306,7 @@ Reduce Airtable storage usage by deleting the original **Submission Assets** int
 7. A dry-run report identifies eligible, skipped, and failed records without deleting anything.
 8. Automated tests cover successful cleanup, failed upload, missing S3 object, invalid URL, retry, and duplicate-processing cases.
 
-**Implementation (2026-08-28, revised):** Shared helpers `lib/intake-attachment-cleanup/` (fail-closed verification contract); CLI `tools/airtable/fut_010_intake_attachment_cleanup.py` (dry-run default, reconcile filter on apply, per-record AWS error skip, `--confirm-delete` required); extension `airtable/extension-scripts/safe-backfills/fut-010-clear-intake-attachments.js`. **Out of scope:** `Homework Completions.Airtable Attachment`. Promotion doc: [FUT-010-intake-attachment-cleanup.md](./deploy-checklists/FUT-010-intake-attachment-cleanup.md). Production attachment delete **not** executed — Mike dry-run + formula attestation required.
+**Implementation (2026-08-28, revised):** Shared helpers `lib/intake-attachment-cleanup/` (fail-closed verification contract); CLI `tools/airtable/fut_010_intake_attachment_cleanup.py` (dry-run default, reconcile filter on apply, per-record AWS error skip, `--confirm-delete` required); extension `airtable/extension-scripts/safe-backfills/fut-010-clear-intake-attachments.js`. **Out of scope:** `Homework Completions.Airtable Attachment`. Promotion doc: [FUT-010-intake-attachment-cleanup.md](./deploy-checklists/FUT-010-intake-attachment-cleanup.md). **Dry-run evidence (2026-08-30):** [`testing/evidence/FUT-010-DRY-RUN-2026-08-30.md`](./testing/evidence/FUT-010-DRY-RUN-2026-08-30.md) — 0 eligible; Production attachment delete **not** executed.
 
 ---
 

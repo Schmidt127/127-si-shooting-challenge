@@ -9,7 +9,6 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Added
-<<<<<<< HEAD
 - **SC-147 Recorded Zoom half-XP repo prep (2026-08-30, MRW-H10)** — Offline conflict
   matrix + pure helpers (`lib/sc-147-zoom-recording-credit.js`), contract tests, and
   automation **DRAFT** `drafts/sc-147-zoom-recording-half-xp.js` (slot TBD — not Live).
@@ -23,13 +22,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   missing Canonical URL). No `--confirm-delete` or attachment writes. Evidence:
   [`docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30.md`](./docs/testing/evidence/FUT-010-DRY-RUN-2026-08-30.md);
   JSON previews under `tools/airtable/_preview/fut-010-*-2026-08-30.json`.
-=======
 - **FUT-002 unused field inventory audit (2026-08-30, MRW-H01)** — Read-only scan of prod
   `prod-20260819` schema snapshot (1347 fields) + repo grep (automations, web, tools). Deliverables:
   [`docs/audits/FUT-002-unused-field-inventory-2026-08-30.md`](./docs/audits/FUT-002-unused-field-inventory-2026-08-30.md),
   [`docs/audits/fut-002-unused-field-inventory.json`](./docs/audits/fut-002-unused-field-inventory.json),
   `tools/airtable/fut_002_field_inventory.py`. **No field deletions.** Mike-only deletion phase pending formula retargets (see prior Google Drive prep audit).
->>>>>>> 14df8a61 (FUT-002: read-only unused Airtable field inventory audit (MRW-H01))
 - **MRW-F07 weekly email positive-arm harness (2026-08-30)** — Disposable E2E tooling for
   `118→072→119→074→079` chain verification: CLI
   `tools/testing/mrw-f07-weekly-email-positive-arm.mjs`, library, offline contracts, and operator doc
@@ -43,7 +40,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   `tools/testing/sc-149-fairfield-attestation.mjs`; live production PASS with evidence
   [`docs/testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-08-30.json`](./docs/testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-08-30.json).
   Mike Vercel dashboard env confirmation still required per deploy checklist.
-- **MRW-G08 CURRENT-TRUTH refresh (2026-08-30)** — Updated git SHA, merged PR ledger (#279–#285), vitest/smoke counts, FUT-016/017/025 and SC-149 status, open PR list, and pending Mike-only follow-ups.
+- **MRW-G08 CURRENT-TRUTH refresh (2026-08-30)** — Updated git SHA, merged PR ledger (#279–#293), vitest/smoke counts, FUT-016/017/025 and SC-149 status, open PR list, and pending Mike-only follow-ups.
 - **SC-109 Game Manual URL cutover path (2026-08-30)** — Added Mike deploy checklist
   [`docs/deploy-checklists/SC-109-game-manual-url-verification.md`](./docs/deploy-checklists/SC-109-game-manual-url-verification.md)
   for `NEXT_PUBLIC_GAME_MANUAL_URL`. Production smoke now asserts configured vs
@@ -83,6 +80,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   de-emphasis; Vitest for `tutorial-presentation` helpers.
 - **Tutorials & Zoom presentation (FUT-016/017 partial, 2026-08-28)** — Parent-facing catalog
   copy clarifying in-page vs external media and live/recording availability.
+
+### Docs
+
+#### Changed
+- **Docs closeout reconcile (2026-08-30)** — `CURRENT-TRUTH.md` refreshed to `9f4a64b6` (PRs **#279–#293**); updated `MASTER_REMAINING_WORK_LIST.md` MRW-G08 SHA; FUT-010 dry-run status in Master Future Work List; Vercel Production deploy verified for `9f4a64b6`.
 
 ### Airtable
 

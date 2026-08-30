@@ -16,6 +16,8 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 
 **New session?** Read [CURRENT-TRUTH.md](./CURRENT-TRUTH.md), [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md), and [PROJECT_STATE.md](./PROJECT_STATE.md), then [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) for the permanent AI workflow.
 
+**ChatGPT handoff (latest session):** [handoffs/CHATGPT-SESSION-HANDOFF-2026-08-30.md](./handoffs/CHATGPT-SESSION-HANDOFF-2026-08-30.md) — paste into ChatGPT for Phase 4 review after 2026-08-30 Cursor merges (#279–#293).
+
 **Four-agent run?** Start at [agent-runs/00-START-HERE.md](./agent-runs/00-START-HERE.md) and [agent-runs/CONTROL.json](./agent-runs/CONTROL.json).
 
 **Shooting Challenge V2?** Start at [v2/README.md](./v2/README.md), then [127-SI-MASTER-FUTURE-WORK-LIST.md](./127-SI-MASTER-FUTURE-WORK-LIST.md) for consolidated planning, or import [chatgpt-sources/](./chatgpt-sources/) into ChatGPT Project Sources.

@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-08-27** (SC-034 — Config field `Perfect Week Video Minimum` renamed in prod; **057 v2.2 repaste required**)
+Last updated: **2026-08-30** (docs closeout — `master` `9f4a64b6`; Vitest **481/481**; prod smoke **50/50**)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
@@ -223,7 +223,7 @@ Admin roadmap: [web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md)
 | **FUT-014** — `/shoot/homework` live catalog | **Complete** | PHA + Homework Library; Brief Description = `Homework Library.Brief Description - Display` (`fldAnHr3uTuDN5bs9`); commits `cdd2b97`, `4a26aa4`; [FUT-014 checklist](./deploy-checklists/FUT-014-homework-page-redesign.md) |
 | **FUT-012** — XP Event Log presentation | **Complete** | Two-row layout, ISO dates, linked headlines (shots, homework title, video file name, Zoom meeting name), deterministic same-date sort; commits `6625559`, `f225f04`, `68c3a45`, `3306379`; display-only |
 | **FUT-003** — Fillout Stripe paid writeback (Make) | **Validated — ready for activation** | Scenario **inactive** at Maia report 2026-08-26; `$2.00` paid test; free-payment architecture **deferred Nov/Dec 2026**; [FUT-003 checklist](./deploy-checklists/FUT-003-fillout-stripe-payment-writeback.md) |
-| Production URL | https://www.fairfieldbasketballclub.com/shoot/homework | Vitest **406/406** · smoke **50/50** · homework-due-date **3/3** · build pass |
+| Production URL | https://www.fairfieldbasketballclub.com/shoot/homework | Vitest **481/481** · smoke **50/50** · homework-due-date **3/3** · build pass |
 
 ### Admin page status
 
