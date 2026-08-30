@@ -49,6 +49,14 @@ describe("public routes inventory", () => {
     expect(SHOOTING_CHALLENGE_NAV.some((item) => item.href === "/admin")).toBe(false);
   });
 
+  it("keeps demo dashboard and gym display out of public chrome", async () => {
+    const { PUBLIC_CHROME_EXCLUDED_ROUTES } = await import("@/lib/release/public-surface");
+    for (const href of PUBLIC_CHROME_EXCLUDED_ROUTES) {
+      expect(SHOOTING_CHALLENGE_NAV.some((item) => item.href === href)).toBe(false);
+      expect(PUBLIC_APP_ROUTES).toContain(href);
+    }
+  });
+
   it("flags demo routes as not cutover-ready", () => {
     for (const route of NON_CUTOVER_READY_ROUTES) {
       expect(PUBLIC_APP_ROUTES).toContain(route);

@@ -2,12 +2,12 @@ export const LEVELS_TERMINOLOGY = [
   {
     term: "Level",
     definition:
-      "Your place on the ladder (Levels 1–12). The number on each card is the configured Sort Order — the same step shown on your athlete dashboard.",
+      "Your place on the ladder (Levels 1–12). The number on each card is the configured Sort Order — the same step shown on the public leaderboard and athlete profiles.",
   },
   {
     term: "Current level",
     definition:
-      "The highest level you have officially reached. Check your athlete dashboard, then find that level number in this list.",
+      "The highest level you have officially reached. Check the public leaderboard or your athlete’s public profile, then find that level number in this list.",
   },
   {
     term: "Next level",
@@ -25,7 +25,7 @@ export const LEVELS_ORIENTATION_STEPS = [
   {
     title: "Find your current level",
     description:
-      "Use your athlete dashboard to see the level you have reached, then find that level number in this ladder for its configured XP threshold and gate details.",
+      "Use the public leaderboard or a public athlete profile to see the level reached, then find that level number in this ladder for its configured XP threshold and gate details.",
   },
   {
     title: "Look ahead to the next level",
