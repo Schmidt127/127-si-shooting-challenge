@@ -437,22 +437,28 @@ Redesigned `/shoot/levels` with ascending Level 1–12 order, ladder-style hero 
 ### FUT-016 — Tutorials page redesign
 
 **Priority:** P2  
-**Status:** **IN PROGRESS** (presentation polish shipped 2026-08-28; full portfolio redesign deferred)  
+**Status:** **Complete** (portfolio catalog shipped 2026-08-30 — FUT-014/FUT-015 parity)  
 **Systems:** Website Tutorials page, canonical Tutorials & Assets data
 
 Create a new portfolio-style Tutorials page using the approved design tools while preserving the existing links and content relationships. Do not reintroduce the retired duplicate Tutorials table.
+
+**Shipped (2026-08-30):** Portfolio catalog with feature banner, media-delivery orientation, AccentRail cards, in-page vs external badges, keyboard focus rings, display-layer EXT-QA-003 cross-program de-emphasis; Vitest for `tutorial-presentation` helpers.
 
 **Shipped (2026-08-28):** Parent-facing catalog subtitle clarifying in-page vs external media; metadata description polish; existing `TutorialMediaGridView` contract unchanged.
 
 ### FUT-017 — Zoom Meeting page redesign
 
 **Priority:** P2  
-**Status:** **IN PROGRESS** (presentation polish shipped 2026-08-28; full portfolio redesign deferred)  
+**Status:** **Complete** (2026-08-30)  
 **Systems:** Website Zoom page, Airtable Zoom Meetings
 
 Create a new portfolio-style Zoom Meeting page using the approved design tools while preserving current links and meeting information.
 
 **Shipped (2026-08-28):** Catalog copy for live links vs recordings; metadata description polish; existing week-grouped catalog unchanged.
+
+**Shipped (2026-08-30):** Full portfolio redesign — `ProgramFeatureBanner`, live vs recording terminology/orientation, `AccentRail` week groups, access badges, catalog resource links, graceful cover fallback (`W{n}` monogram + session type), detail cover fallback; vitest + smoke headings unchanged.
+
+**Validation (2026-08-30):** lint ✓ · typecheck ✓ · vitest ✓ · build ✓ · browser desktop + mobile ✓
 
 ### FUT-018 — Landing Page and Shooting Challenge page improvements
 
