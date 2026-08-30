@@ -357,7 +357,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-H07 | Learning Activities schema SC-018–020 | FUTURE | Needs Mike schema auth |
 | MRW-H08 | C-027 major-event notifications | FUTURE | |
 | MRW-H09 | Early-bird registration config (SC-066) | FUTURE | Decision: use early-bird; dates TBD |
-| MRW-H10 | Recorded Zoom half-XP writer (SC-147) | FUTURE | Design brief only; do not overload 117 |
+| MRW-H10 | Recorded Zoom half-XP writer (SC-147) | **Repo prep shipped** | Draft + offline conflict matrix; Mike: slot + `ZOOM_RECORDING` rule row; do not overload 117 |
 | MRW-H11 | SC-SEASON-SIM-001 60-day five-enrollment season simulation | **FUTURE** | Planned only — do not implement yet. Extend SC-PW-E2E later; FUT-010 unchanged. |
 
 ---
