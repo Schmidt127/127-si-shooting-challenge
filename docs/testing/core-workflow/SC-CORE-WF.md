@@ -41,6 +41,10 @@ node tools/testing/sc-core-workflow.mjs --apply
 
 # Cleanup manifest records
 node tools/testing/sc-core-workflow.mjs --cleanup
+
+# Deferred multi-asset → one HC via live Automation 020 (no email)
+node tools/testing/sc-multi-asset-homework.mjs --apply
+node tools/testing/sc-multi-asset-homework.mjs --cleanup
 ```
 
 ## Apply coverage

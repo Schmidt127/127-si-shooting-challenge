@@ -1,0 +1,25 @@
+{
+  "harness": "SC-MULTI-ASSET-HW",
+  "mode": "cleanup",
+  "finishedAt": "2026-08-30T19:25:00.000Z",
+  "method": "Airtable MCP delete_records_for_table",
+  "deleted": {
+    "Homework Completions": ["recAhHF7j6OyznARO", "rechHkKPyhjHQDfSG"],
+    "Submission Assets": ["recVh23DoljsSnhlZ", "recQkaa9hqy3tmY6U", "recNgjbzD8loU4Cej", "recgw4Hp0jAiC4ItD"],
+    "Submissions": ["rec4UoXtqRNdAvWgB", "recusQJaPiwy1D3e8", "recK7TeGOLK92oxul"],
+    "Weekly Athlete Summary": ["recb1hq4wJKfBcy6z"]
+  },
+  "kept": {
+    "Enrollment": "recNu6fcBpF1GG3u5",
+    "Week Early Bird": "recBrZ1sV8byWEHZU",
+    "WAS": "recIwx50zhNsUqV1L",
+    "PHA HW1/HW2": ["recgj8dPk4ouTwCOj", "recXXZErbjxxGxWw2"]
+  },
+  "limitations": [
+    "PAT REST DELETE returned 403 for WAS during apply; MCP succeeded",
+    "No XP Events were created (065 hardcoded recordId blocker)",
+    "Challenge calendar Week Early Bird not deleted"
+  ],
+  "emailSend": false,
+  "automationPaste": false
+}
