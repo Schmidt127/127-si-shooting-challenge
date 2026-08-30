@@ -81,6 +81,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 - **Tutorials & Zoom presentation (FUT-016/017 partial, 2026-08-28)** — Parent-facing catalog
   copy clarifying in-page vs external media and live/recording availability.
 
+### Docs
+
+#### Changed
+- **Docs closeout reconcile (2026-08-30)** — `CURRENT-TRUTH.md` refreshed to `9f4a64b6` (PRs **#279–#293**); updated `MASTER_REMAINING_WORK_LIST.md` MRW-G08 SHA; FUT-010 dry-run status in Master Future Work List; Vercel Production deploy verified for `9f4a64b6`.
+
 ### Airtable
 
 #### Changed
