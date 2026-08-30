@@ -18,6 +18,7 @@ const VIEWPORTS = {
 const PUBLIC_PAGES = [
   { name: "home", path: "." },
   { name: "leaderboard", path: "leaderboard" },
+  { name: "faq", path: "faq" },
   { name: "homework", path: "homework" },
   { name: "tutorials", path: "tutorials" },
   { name: "shoutouts", path: "shoutouts" },

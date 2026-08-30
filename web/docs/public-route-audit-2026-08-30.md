@@ -6,6 +6,8 @@
 
 ## Verdict
 
+**Final public-app readiness pass (2026-08-30):** Routes reviewed; Dashboard and Display remain hidden from family chrome; FAQ added to Playwright + HTTP smoke suites; Vitest public-route-readiness contract added. No redirects required — operator URLs preserved.
+
 | Route | Purpose | Classification | Public nav/hub | Keep route? |
 |-------|---------|----------------|----------------|-------------|
 | `/shoot/dashboard` | Athlete home preview (level, XP, weekly shots, streak, Perfect Week, homework, feedback) | **Demo** until SC-112 auth — mock adapter by default | **Hidden** | Yes (direct URL + smoke) |

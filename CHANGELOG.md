@@ -50,6 +50,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **Final public-app readiness (2026-08-30)** — FAQ added to Playwright + HTTP smoke routes;
+  public-route-readiness Vitest contracts; public-display loading label; footer exclusion tests
+  for Dashboard/Display. Operator routes preserved; no env or business-rule changes.
 - **Public chrome cleanup (2026-08-30, PR #301 / #304)** — Hide demo Dashboard and gym Display
   from public `/shoot` nav/hub; FAQ Early Bird + privacy; CR-12 closed. Vitest 487/487; prod
   smoke 50/50.

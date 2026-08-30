@@ -9,6 +9,7 @@ import { AirtableApiError, isMissingAirtableViewError } from "@/lib/airtable/err
 import {
   ADMIN_PLACEHOLDER,
   EMPTY_STATE_COPY,
+  FAMILY_FACING_SMOKE_PATHS,
   FORBIDDEN_CROSSOVER_PRODUCTS,
   LOADING_LABELS,
   NON_CUTOVER_READY_ROUTES,
@@ -86,7 +87,14 @@ describe("empty and loading state copy", () => {
   it("defines loading labels for Airtable-heavy routes", () => {
     expect(LOADING_LABELS.leaderboard).toMatch(/leaderboard/i);
     expect(LOADING_LABELS.homework).toMatch(/homework/i);
+    expect(LOADING_LABELS.publicDisplay).toMatch(/public display/i);
     expect(LOADING_LABELS.default).toBe("Loading…");
+  });
+
+  it("lists family-facing smoke paths including FAQ", () => {
+    expect(FAMILY_FACING_SMOKE_PATHS).toContain("faq");
+    expect(FAMILY_FACING_SMOKE_PATHS).not.toContain("dashboard");
+    expect(FAMILY_FACING_SMOKE_PATHS).not.toContain("public-display");
   });
 });
 
