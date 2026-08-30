@@ -105,8 +105,8 @@ Do **not** treat Make/Gmail as the homework parent-email sender.
 | **054** | Streak Occurrences | Record updated; must watch `Active?`, Source Status, Enrollment, Achievement, Week, Streak End Date, and XP Events | `054-...-create-or-repair-streak-xp-event.js` (**v5.8**) | **XP Events** (streak); exact-owned inactive event deactivates/reactivates |
 | 055 | Submissions | *confirm* | `055-...-recalculate-current-shooting-streak-from-submission.js` | Streak rollups |
 | 056 | Enrollments | *scheduled* | `056-...-refresh-current-shooting-streaks-daily.js` | Streak refresh |
-| 057 | Weekly Athlete Summary | *confirm* | `057-...-calculate-perfect-week-eligibility.js` (**v1.7**) | Perfect week flags |
-| 058 | Weekly Athlete Summary | *confirm* | `058-...-create-perfect-week-unlock.js` (**v1.3**) | Achievement Unlocks |
+| 057 | Weekly Athlete Summary | *confirm* | `057-...-calculate-perfect-week-eligibility.js` (**v2.2**) | Perfect week flags |
+| 058 | Weekly Athlete Summary | *confirm* | `058-...-create-perfect-week-unlock.js` (**v1.5**) | Achievement Unlocks |
 | **059** | Athlete Achievement Unlocks | Lifecycle-reachable record update/create; watch Active?, XP Award Status, XP Events, Enrollment, Shot Milestone, Week, and Milestone Source Key; never filter Ready for 059 XP? or Shot Milestone presence | `059-...-create-xp-event-from-achievement-unlock.js` (**v3.6**) | **XP Events** (achievement); corrected-history milestone lifecycle |
 | 066 | Enrollments | `Run Shot Milestone Check?` checked; the upstream reconciliation must re-arm it after counted-total changes | `066-...-create-shot-milestone-unlocks.js` (**v3.8**) | Canonical shot-milestone unlocks; corrected-history lifecycle |
 
@@ -114,8 +114,8 @@ Do **not** treat Make/Gmail as the homework parent-email sender.
 
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
-| **041** | Enrollments / Levels / Level Gate Rules | Scheduled every **15 minutes**; optional `recordId` only for a controlled single-Enrollment proof; scheduled mapping blank | `041-...-mark-enrollment-for-level-recalculation.js` **v5.0 target**; installed and verified in Production 2026-08-16 | Queue only: `Level Recalc Needed?`, `Progression Last Queued Signature` |
-| **042** | Enrollments | When record enters view `042 - Needs Level Assignment` (`viwm9OgwkPKI2bii3`); filters `Level Recalc Needed?` checked + `Active?` checked; dynamic `recordId` from triggering Enrollment | `042-...-assign-current-and-next-level-with-gate-blocking.js` **installed and verified** | Current/Next Level, Gate Rule, Status, reconciled signature |
+| **041** | Enrollments / Levels / Level Gate Rules | Scheduled every **15 minutes**; optional `recordId` only for a controlled single-Enrollment proof; scheduled mapping blank | `041-...-mark-enrollment-for-level-recalculation.js` (**v5.1** — installed and verified in Production 2026-08-16) | Queue only: `Level Recalc Needed?`, `Progression Last Queued Signature` |
+| **042** | Enrollments | When record enters view `042 - Needs Level Assignment` (`viwm9OgwkPKI2bii3`); filters `Level Recalc Needed?` checked + `Active?` checked; dynamic `recordId` from triggering Enrollment | `042-...-assign-current-and-next-level-with-gate-blocking.js` (**v4.1.2** — installed and verified) | Current/Next Level, Gate Rule, Status, reconciled signature |
 | 043 | Levels | **Retired — do not enable or recreate** | `043-...-set-level-gate-rule-from-next-level.js` (historical source only) | No downstream writer; `042` owns `Level Gate Rule` |
 
 ### Email packages (072, 074, 076, 078A, 079, 118–119)
@@ -126,7 +126,7 @@ Do **not** treat Make/Gmail as the homework parent-email sender.
 | 074 | Weekly Athlete Summary | *confirm* | `074-...-send-weekly-summary-email-package-to-make.js` | Hub queue (filename historical “Make”) |
 | **078A** | Enrollments | Athlete + Parent Email - Cleaned + Program Instance | `078A-...-enrollment-create-welcome-email-handoff.js` | Email Handoff Queue `WELCOME` row |
 | 075 | Enrollments | **LEGACY RETIRED — do not enable** | `075-...-build-challenge-welcome-email.js` (archive only) | Formerly Enrollment subject/HTML; superseded by **078A → 079 → Hub** |
-| 076 | Submissions / Enrollments | *confirm* | `076-...-build-daily-submission-email-package.js` (**v8.7**) | Daily email package |
+| 076 | Submissions / Enrollments | *confirm* | `076-...-build-daily-submission-email-package.js` (**v8.11**) | Daily email package |
 | **079** | Email Handoff Queue | Status = Ready — *confirm in Airtable* | `079-...-send-queue-handoff-to-communications-hub.js` (**v2.5**) | Communications Hub WELCOME / DAILY_SUBMISSION handoff |
 | **118** | Weeks / Enrollments | Scheduled Sunday 05:00 America/Denver | `118-...-schedule-weekly-summary-email-build.js` (**v2.0**) | Arms Weekly Athlete Summary email build |
 | 077 | — | **Retired / deleted from Airtable — do not recreate** | `077-...-send-daily-submission-email-package-to-make.js` (GitHub historical source only) | No active native automation; daily-email Hub boundary is 076 → 079 |

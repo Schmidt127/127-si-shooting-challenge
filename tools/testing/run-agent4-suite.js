@@ -88,6 +88,19 @@ const COMMANDS = [
     args: ["tests/automation-contracts/065-066-trigger-record.test.js"],
   },
   {
+    name: "automation-contracts (docs/hardcode/io/057/legacy)",
+    cmd: process.execPath,
+    args: [
+      "--test",
+      "tests/automation-contracts/docs-canonical-header.test.js",
+      "tests/automation-contracts/hardcode-forbidden-patterns.test.js",
+      "tests/automation-contracts/automation-io-conventions.test.js",
+      "tests/automation-contracts/known-reference-numbers.test.js",
+      "tests/automation-contracts/legacy-welcome-email-retirement.test.js",
+      "tests/automation-contracts/057-perfect-week-video-minimum.test.js",
+    ],
+  },
+  {
     name: "065-066-trigger-record-offline",
     cmd: process.execPath,
     args: ["--test", "tools/testing/tests/test_065_066_trigger_record.mjs"],
