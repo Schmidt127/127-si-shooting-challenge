@@ -208,18 +208,27 @@ async function runApply(token, baseId, ctx, report) {
     active: (report.submissionXp[s.id]?.count || 0) > 0,
   }));
   report.sameDayPolicy = evaluateCountedDayXpPolicy(day0Xp);
-  if (report.sameDayPolicy.policyOpen) {
+  const eachSameDayOnce = day0.every((s) => (report.submissionXp[s.id]?.count || 0) === 1);
+  report.checks.push({
+    id: "submission_xp.same_day_per_count_it",
+    stage: 5,
+    status: eachSameDayOnce ? "PASS" : "FAIL",
+    pass: eachSameDayOnce,
+    expected: "One SUBMISSION_XP per Count It submission (same-day multi allowed)",
+    actual: report.sameDayPolicy.note,
+  });
+  if (!eachSameDayOnce) {
     report.defects.push(
       buildDefect({
-        severity: "P2",
+        severity: "P1",
         stage: 5,
-        title: "Multiple SUBMISSION_XP on same Denver day (SC-005 B3)",
+        title: "Same-day Count It submission XP policy mismatch",
         steps: ["Create two Count It submissions same Activity Date", "Poll SUBMISSION_XP|*"],
-        expected: "Product decision: at most one counted shooting XP day (engine doc) OR allow per-submission XP",
+        expected: "Exactly one SUBMISSION_XP per submission id (same-day multi OK)",
         actual: report.sameDayPolicy.note,
-        likelyCause: "115/010 Count It path awards per submission; engine rule says per day",
-        recommendedFix: "Product decision then align 010 / intake Count It preset",
-        fixOwner: "product-decision",
+        likelyCause: "010 idempotency or Count It award path drift",
+        recommendedFix: "Inspect 010 Source Key uniqueness for each submission",
+        fixOwner: "airtable",
       })
     );
   }

@@ -110,12 +110,13 @@ test("streak computation: consecutive, break on miss, multi-day unique", () => {
   assert.deepEqual(multiSameDay.dates, ["2026-06-01", "2026-06-02"]);
 });
 
-test("same-day multi SUBMISSION_XP flags SC-005 B3 policy open", () => {
+test("same-day multi SUBMISSION_XP is expected (once per Count It submission)", () => {
   const result = evaluateCountedDayXpPolicy([
     { sourceKey: "SUBMISSION_XP|a", active: true },
     { sourceKey: "SUBMISSION_XP|b", active: true },
   ]);
-  assert.equal(result.policyOpen, true);
+  assert.equal(result.policyOpen, false);
+  assert.equal(result.sameDayMultipleExpected, true);
   assert.equal(result.submissionXpCount, 2);
 });
 

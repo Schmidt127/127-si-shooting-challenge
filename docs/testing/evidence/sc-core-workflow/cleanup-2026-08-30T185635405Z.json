@@ -1,0 +1,70 @@
+{
+  "harness": "SC-CORE-WF",
+  "mode": "cleanup",
+  "startedAt": "2026-08-30T18:56:33.777Z",
+  "policy": {
+    "challengeYear": "2026-2027",
+    "earlyBirdStart": "2027-04-25",
+    "earlyBirdEnd": "2027-05-01",
+    "week1Start": "2027-05-02",
+    "programEnd": "2027-06-30",
+    "commonHomeworkDueDate": "2027-06-29",
+    "earlyBirdCountable": true,
+    "regularHomeworkWeeks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "week9HasHomework": false,
+    "expectedActiveHomeworkAssignmentCount": 18,
+    "homeworkSlotsPerHomeworkWeek": 2
+  },
+  "checks": [],
+  "defects": [],
+  "passed": true,
+  "cleanup": {
+    "ok": true,
+    "actions": [
+      {
+        "table": "XP Events",
+        "ids": [
+          "recE8GOt9FhpY8eeX",
+          "recNSj6Am6g8HleGQ",
+          "recWMtnu2oGADEtm3"
+        ],
+        "status": "error",
+        "error": "DELETE XP%20Events?records[]=recE8GOt9FhpY8eeX&records[]=recNSj6Am6g8HleGQ&records[]=recWMtnu2oGADEtm3 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Inv"
+      },
+      {
+        "table": "Homework Completions",
+        "status": "error",
+        "error": "DELETE Homework%20Completions?records[]=rec1kDQjmbf72C7dh&records[]=recgUJJFa3bgbxMTH&records[]=recx76M7GSLzoo8eP&records[]=recDIN1G119mbqW8G 403: {\"error\":{\"type\":\"INVALID_PERMISS"
+      },
+      {
+        "table": "Submissions",
+        "status": "error",
+        "error": "DELETE Submissions?records[]=recBgfS7XAGoCd4c5&records[]=recUiZ0bySsOVwRTN&records[]=rec1XWI0sLRLB5n5b&records[]=recl4seMYXhzNm3qN 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MOD"
+      },
+      {
+        "table": "Enrollments",
+        "status": "error",
+        "error": "DELETE Enrollments?records[]=recCCMAK0cJvsoua1 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. "
+      },
+      {
+        "table": "Weekly Athlete Summary",
+        "status": "error",
+        "error": "DELETE Weekly%20Athlete%20Summary?records[]=recTyldZRoxhijO0T 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model "
+      },
+      {
+        "table": "Weeks",
+        "id": "recyh2t4pzlpuYWJl",
+        "status": "archived"
+      }
+    ]
+  }
+}

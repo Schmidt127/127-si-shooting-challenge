@@ -323,7 +323,8 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-F01 | SC-PW-E2E live apply | **COMPLETE** | WAS `recl3DmBh22ADPWWe` MCP award evidence |
 | MRW-F02 | SC-016 live re-submit after FUT-001 paste | NEEDS VERIFICATION | |
 | MRW-F03 | Broader SC-005 season matrix | IN PROGRESS | Many paths green; PW + email inject open |
-| MRW-F09 | SC-ATHLETE-WF-001 individual athlete workflow QA | **COMPLETE (harness)** | Harness + offline contracts + dry-run + disposable apply evidence 2026-08-30. Submission XP + WAS verified. Open product: SC-005 B3 (MRW-I13). 065 Satisfactory-alone = expected skip. PAT XP DELETE best-effort/MCP. Plan: docs/testing/athlete-workflow/SC-ATHLETE-WF.md. |
+| MRW-F09 | SC-ATHLETE-WF-001 individual athlete workflow QA | **COMPLETE (harness)** | Harness + offline contracts + dry-run + disposable apply evidence 2026-08-30. Submission XP + WAS verified. **MRW-I13 closed** (once per Count It submission). 065 Satisfactory-alone = expected skip. PAT XP DELETE best-effort/MCP. Plan: docs/testing/athlete-workflow/SC-ATHLETE-WF.md. |
+| MRW-F11 | Core workflow reliability (calendar + XP + PHA + handoff) | **COMPLETE** (2026-08-30) | Contracts `lib/workflow-contracts/`; harness `tools/testing/sc-core-workflow.mjs`; live audit PASS; disposable apply PASS; orphan inactive PHA deleted. Docs: `docs/testing/core-workflow/`. |
 | MRW-F04 | SC-010/011/012/015 homework path re-tests | IN PROGRESS | Installed; re-prove |
 | MRW-F05 | Video XP native trigger + 073 OFF attestation (SC-072) | NEEDS VERIFICATION | PKG-007 PASS; UI attest open |
 | MRW-F06 | Zoom live attendance re-test (SC-073/084) | NEEDS VERIFICATION | 101 v6.7 |
@@ -404,7 +405,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-I10 | Production paste windows (C01–C05) | **COMPLETE except MRW-C05c (057)** | Do not re-queue 010/020/022/065/072/073; **do** paste 057 |
 | MRW-I11 | Branch protection / merge approval if CI requires human | BLOCKED | Approve merges if required |
 | MRW-I12 | Vercel deploy credentials if auto-deploy fails | **COMPLETE** (2026-08-30) | CLI linked; Production public URL envs restored; redeploy Ready — keep dashboard access for future ops |
-| MRW-I13 | SC-005 B3 same-day counted shooting XP policy | BLOCKED | Product decision: at most one SUBMISSION_XP per Denver day vs per Count It submission (ATHWF dual 20 XP) |
+| MRW-I13 | SC-005 B3 same-day counted shooting XP policy | **COMPLETE** | **Decided 2026-08-30:** Submission XP once per Count It submission (`SUBMISSION_XP\|{id}`); same-day multi is expected. Codified in `lib/workflow-contracts` + ATHWF. |
 
 ---
 
@@ -416,7 +417,7 @@ ecl3DmBh22ADPWWe.
 3. **Then:** FUT-010 supervised attachment clear (dry-run already complete) per operator queue.  
 4. **Calendar:** Weeks 2026–27 import (MRW-A05) when ready — Weeks are protected.  
 5. **Do not** activate FUT-003 until registration intentionally opens.  
-6. **Do not** start SC-SEASON-SIM-001 yet — ATHWF harness (MRW-F09) + weekly settlement (MRW-F10) are done; disposition SC-005 B3 (MRW-I13) when ready; next engineering after 057 is FUT-010 then Weeks import.
+6. **Do not** start SC-SEASON-SIM-001 yet — ATHWF (MRW-F09) + weekly settlement (MRW-F10) + core workflow (MRW-F11) are done; **MRW-I13 closed** (per Count It submission). Next engineering after optional 057 Code-text hygiene: FUT-010 then Weeks import attestation.
 
 ---
 
@@ -426,7 +427,8 @@ ecl3DmBh22ADPWWe.
 - **SC-034 / V2-002 / PW config items** → schema + formulas COMPLETE; **057 script CONFIG string still open** (MRW-C05c).  
 - **SC-SEASON-SIM-001 / MRW-H11** → **FUTURE / Planned only** (2026-08-29) — not active; not SC-005; not SC-PW-E2E reopen; **FUT-010 unchanged**.  
 - **SC-WEEKLY-SETTLEMENT-E2E / MRW-F10** → **COMPLETE** (2026-08-30) — harness + live WS-01…WS-10 evidence; defect report filed.  
-- **SC-ATHLETE-WF-001 / MRW-F09** → **COMPLETE (harness)** (2026-08-30) — open product B3 tracked as MRW-I13.
+- **SC-ATHLETE-WF-001 / MRW-F09** → **COMPLETE (harness)** (2026-08-30) — **MRW-I13 CLOSED** (once per Count It submission).
+- **SC-CORE-WF / MRW-F11** → **COMPLETE** (2026-08-30) — live Weeks/PHA audit + disposable apply; orphan inactive Week-1 Final Reflection PHA deleted.
 - SC-027/066 shot milestones live-tested → monitoring only.  
 - Historical overnight MIKE-ACTIONS rows superseded by CURRENT-TRUTH / Section G where dated later.  
 - Legacy C-/SC- inventory in Future Work Sections A–F remains evidence; **this file + operator queue + Future Work Section G** are the operator queues.  

@@ -9,6 +9,13 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Added
+- **MRW-F11 core workflow reliability (2026-08-30)** — Season calendar + homework/XP
+  contracts (`lib/workflow-contracts/`), live Weeks/PHA audit harness
+  (`tools/testing/sc-core-workflow.mjs`), offline tests, evidence under
+  `docs/testing/core-workflow/`. Confirmed rules: Early Bird 2027-04-25…05-01 countable,
+  Week 1 starts 2027-05-02, Week 9 no homework, 18 active PHA due 2027-06-29, Submission XP
+  once per Count It submission (**MRW-I13 closed**). Deleted inactive orphan PHA
+  `recpHX3stQ8YBVtLi`. No automation paste; 075 remains retired.
 - **SC-147 Recorded Zoom half-XP repo prep (2026-08-30, MRW-H10)** — Offline conflict
   matrix + pure helpers (`lib/sc-147-zoom-recording-credit.js`), contract tests, and
   automation **DRAFT** `drafts/sc-147-zoom-recording-half-xp.js` (slot TBD — not Live).

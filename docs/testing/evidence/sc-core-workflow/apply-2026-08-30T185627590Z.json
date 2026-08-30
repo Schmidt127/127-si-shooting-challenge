@@ -1,0 +1,201 @@
+{
+  "harness": "SC-CORE-WF",
+  "mode": "apply",
+  "startedAt": "2026-08-30T18:55:13.829Z",
+  "policy": {
+    "challengeYear": "2026-2027",
+    "earlyBirdStart": "2027-04-25",
+    "earlyBirdEnd": "2027-05-01",
+    "week1Start": "2027-05-02",
+    "programEnd": "2027-06-30",
+    "commonHomeworkDueDate": "2027-06-29",
+    "earlyBirdCountable": true,
+    "regularHomeworkWeeks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "week9HasHomework": false,
+    "expectedActiveHomeworkAssignmentCount": 18,
+    "homeworkSlotsPerHomeworkWeek": 2
+  },
+  "checks": [
+    {
+      "id": "submission_xp.countable-a",
+      "pass": true,
+      "status": "PASS",
+      "expected": 1,
+      "actual": 1,
+      "sourceKey": "SUBMISSION_XP|recBgfS7XAGoCd4c5",
+      "activityDate": "2026-06-08"
+    },
+    {
+      "id": "submission_xp.same-day-b",
+      "pass": true,
+      "status": "PASS",
+      "expected": 1,
+      "actual": 1,
+      "sourceKey": "SUBMISSION_XP|recUiZ0bySsOVwRTN",
+      "activityDate": "2026-06-08"
+    },
+    {
+      "id": "submission_xp.backdated",
+      "pass": true,
+      "status": "PASS",
+      "expected": 1,
+      "actual": 1,
+      "sourceKey": "SUBMISSION_XP|rec1XWI0sLRLB5n5b",
+      "activityDate": "2026-06-07"
+    },
+    {
+      "id": "submission_xp.week-mismatch",
+      "pass": true,
+      "status": "PASS",
+      "expected": "skip-or-zero OK for mismatch",
+      "actual": 0,
+      "sourceKey": "SUBMISSION_XP|recl4seMYXhzNm3qN",
+      "activityDate": "2026-06-20"
+    },
+    {
+      "id": "submission_xp.policy",
+      "pass": true,
+      "status": "PASS",
+      "actual": "Multiple SUBMISSION_XP on same Denver day — EXPECTED (once per Count It submission)."
+    },
+    {
+      "id": "homework_xp.pha_linked_path",
+      "pass": true,
+      "status": "PASS",
+      "expected": 0,
+      "actual": 0,
+      "notes": "065 expected skip/no award: Homework XP Reconciliation Needed? != 1; Total Homework XP Awarded <= 0; Submission link missing for new XP create"
+    },
+    {
+      "id": "coach_queue.prep_without_email",
+      "pass": true,
+      "status": "PASS",
+      "expected": "No weekly email send triggers",
+      "actual": "{}"
+    },
+    {
+      "id": "deadline.after_week_before_june29",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "creditEligible": true,
+        "timingStatus": "on_time",
+        "dueDateKey": "2027-06-29",
+        "reason": "",
+        "afterLinkedWeekEnd": true,
+        "expectedCreditWhenBeforeCommonDue": true
+      }
+    },
+    {
+      "id": "homework.duplicate_identity_created",
+      "pass": true,
+      "status": "PASS",
+      "notes": "Two HC rows share Enrollment+PHA — inventory recorded"
+    }
+  ],
+  "defects": [],
+  "passed": true,
+  "notes": [
+    "Operational Early Bird 2027 calendar audited separately (live.weeks_calendar).",
+    "Submission XP apply uses disposable past countable week — future Early Bird Activity Dates yield Count This Submission?=0 until season."
+  ],
+  "lateWeekOnTimeContract": {
+    "creditEligible": true,
+    "timingStatus": "on_time",
+    "dueDateKey": "2027-06-29",
+    "reason": "",
+    "afterLinkedWeekEnd": true,
+    "expectedCreditWhenBeforeCommonDue": true
+  },
+  "created": {
+    "batchKey": "COREWF|2026-08-30|core",
+    "weekName": "COREWF|2026-08-30|core|WEEK",
+    "weekId": "recyh2t4pzlpuYWJl",
+    "submissionIds": [
+      {
+        "id": "recBgfS7XAGoCd4c5",
+        "tag": "countable-a",
+        "date": "2026-06-08",
+        "shots": 40
+      },
+      {
+        "id": "recUiZ0bySsOVwRTN",
+        "tag": "same-day-b",
+        "date": "2026-06-08",
+        "shots": 25
+      },
+      {
+        "id": "rec1XWI0sLRLB5n5b",
+        "tag": "backdated",
+        "date": "2026-06-07",
+        "shots": 30
+      },
+      {
+        "id": "recl4seMYXhzNm3qN",
+        "tag": "week-mismatch",
+        "date": "2026-06-20",
+        "shots": 35
+      }
+    ],
+    "homeworkIds": [
+      {
+        "id": "rec1kDQjmbf72C7dh",
+        "kind": "pha-linked-eb"
+      },
+      {
+        "id": "recgUJJFa3bgbxMTH",
+        "kind": "duplicate-pha-identity"
+      },
+      {
+        "id": "recx76M7GSLzoo8eP",
+        "kind": "missing-pha"
+      },
+      {
+        "id": "recDIN1G119mbqW8G",
+        "kind": "after-week-before-due"
+      }
+    ],
+    "wasId": "recTyldZRoxhijO0T",
+    "inactiveEnrollmentId": "recCCMAK0cJvsoua1",
+    "xpEventIds": [
+      "recE8GOt9FhpY8eeX",
+      "recNSj6Am6g8HleGQ",
+      "recWMtnu2oGADEtm3"
+    ],
+    "wasReused": false
+  },
+  "submissionXpPolicy": {
+    "ok": true,
+    "mode": "once_per_count_it_submission",
+    "uniqueSubmissionXpCount": 3,
+    "duplicateSubmissionKeys": [],
+    "sameDayMultiXpDays": [
+      {
+        "day": "2026-06-08",
+        "count": 2
+      }
+    ],
+    "sameDayMultipleAllowed": true,
+    "note": "Multiple SUBMISSION_XP on same Denver day — EXPECTED (once per Count It submission).",
+    "decisionId": "MRW-I13-CLOSED-2026-08-30"
+  },
+  "homework065Eligibility": {
+    "expectXp": false,
+    "blockers": [
+      "Homework XP Reconciliation Needed? != 1",
+      "Total Homework XP Awarded <= 0",
+      "Submission link missing for new XP create"
+    ],
+    "note": "065 expected skip/no award: Homework XP Reconciliation Needed? != 1; Total Homework XP Awarded <= 0; Submission link missing for new XP create"
+  },
+  "finishedAt": "2026-08-30T18:56:27.590Z"
+}

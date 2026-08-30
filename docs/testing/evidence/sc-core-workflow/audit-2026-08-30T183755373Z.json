@@ -1,0 +1,359 @@
+{
+  "harness": "SC-CORE-WF",
+  "mode": "audit",
+  "startedAt": "2026-08-30T18:37:54.879Z",
+  "policy": {
+    "challengeYear": "2026-2027",
+    "earlyBirdStart": "2027-04-25",
+    "earlyBirdEnd": "2027-05-01",
+    "week1Start": "2027-05-02",
+    "programEnd": "2027-06-30",
+    "commonHomeworkDueDate": "2027-06-29",
+    "earlyBirdCountable": true,
+    "regularHomeworkWeeks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "week9HasHomework": false,
+    "expectedActiveHomeworkAssignmentCount": 18,
+    "homeworkSlotsPerHomeworkWeek": 2
+  },
+  "checks": [
+    {
+      "id": "live.weeks_calendar",
+      "pass": false,
+      "status": "FAIL",
+      "findings": [
+        {
+          "severity": "P0",
+          "code": "missing_early_bird",
+          "message": "Early Bird week missing",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P0",
+          "code": "missing_week_1",
+          "message": "Week 1 missing",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "missing_week_9",
+          "message": "Week 9 missing (shooting week without homework)",
+          "fixOwner": "airtable"
+        }
+      ]
+    },
+    {
+      "id": "live.pha_schedule",
+      "pass": false,
+      "status": "FAIL",
+      "activeCount": 0,
+      "byWeek": {},
+      "findings": [
+        {
+          "severity": "P0",
+          "code": "active_pha_count",
+          "message": "Active PHA count 0 != expected 18",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Early Bird expected 2 active PHA, got 0.",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Week 1 expected 2 active PHA, got 0.",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Week 2 expected 2 active PHA, got 0.",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Week 3 expected 2 active PHA, got 0.",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Week 4 expected 2 active PHA, got 0.",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Week 5 expected 2 active PHA, got 0.",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Week 6 expected 2 active PHA, got 0.",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Week 7 expected 2 active PHA, got 0.",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Week 8 expected 2 active PHA, got 0.",
+          "fixOwner": "airtable"
+        }
+      ]
+    }
+  ],
+  "defects": [
+    {
+      "severity": "P0",
+      "code": "missing_early_bird",
+      "message": "Early Bird week missing",
+      "fixOwner": "airtable"
+    },
+    {
+      "severity": "P0",
+      "code": "missing_week_1",
+      "message": "Week 1 missing",
+      "fixOwner": "airtable"
+    },
+    {
+      "severity": "P1",
+      "code": "missing_week_9",
+      "message": "Week 9 missing (shooting week without homework)",
+      "fixOwner": "airtable"
+    },
+    {
+      "severity": "P0",
+      "code": "active_pha_count",
+      "message": "Active PHA count 0 != expected 18",
+      "fixOwner": "airtable"
+    },
+    {
+      "severity": "P1",
+      "code": "homework_week_slot_count",
+      "message": "Early Bird expected 2 active PHA, got 0.",
+      "fixOwner": "airtable"
+    },
+    {
+      "severity": "P1",
+      "code": "homework_week_slot_count",
+      "message": "Week 1 expected 2 active PHA, got 0.",
+      "fixOwner": "airtable"
+    },
+    {
+      "severity": "P1",
+      "code": "homework_week_slot_count",
+      "message": "Week 2 expected 2 active PHA, got 0.",
+      "fixOwner": "airtable"
+    },
+    {
+      "severity": "P1",
+      "code": "homework_week_slot_count",
+      "message": "Week 3 expected 2 active PHA, got 0.",
+      "fixOwner": "airtable"
+    },
+    {
+      "severity": "P1",
+      "code": "homework_week_slot_count",
+      "message": "Week 4 expected 2 active PHA, got 0.",
+      "fixOwner": "airtable"
+    },
+    {
+      "severity": "P1",
+      "code": "homework_week_slot_count",
+      "message": "Week 5 expected 2 active PHA, got 0.",
+      "fixOwner": "airtable"
+    },
+    {
+      "severity": "P1",
+      "code": "homework_week_slot_count",
+      "message": "Week 6 expected 2 active PHA, got 0.",
+      "fixOwner": "airtable"
+    },
+    {
+      "severity": "P1",
+      "code": "homework_week_slot_count",
+      "message": "Week 7 expected 2 active PHA, got 0.",
+      "fixOwner": "airtable"
+    },
+    {
+      "severity": "P1",
+      "code": "homework_week_slot_count",
+      "message": "Week 8 expected 2 active PHA, got 0.",
+      "fixOwner": "airtable"
+    }
+  ],
+  "passed": false,
+  "audit": {
+    "weekAudit": {
+      "ok": false,
+      "findings": [
+        {
+          "severity": "P0",
+          "code": "missing_early_bird",
+          "message": "Early Bird week missing",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P0",
+          "code": "missing_week_1",
+          "message": "Week 1 missing",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "missing_week_9",
+          "message": "Week 9 missing (shooting week without homework)",
+          "fixOwner": "airtable"
+        }
+      ],
+      "policy": {
+        "challengeYear": "2026-2027",
+        "earlyBirdStart": "2027-04-25",
+        "earlyBirdEnd": "2027-05-01",
+        "week1Start": "2027-05-02",
+        "programEnd": "2027-06-30",
+        "commonHomeworkDueDate": "2027-06-29",
+        "earlyBirdCountable": true,
+        "regularHomeworkWeeks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "week9HasHomework": false,
+        "expectedActiveHomeworkAssignmentCount": 18,
+        "homeworkSlotsPerHomeworkWeek": 2
+      }
+    },
+    "phaAudit": {
+      "ok": false,
+      "activeCount": 0,
+      "expectedActiveCount": 18,
+      "byWeek": {},
+      "findings": [
+        {
+          "severity": "P0",
+          "code": "active_pha_count",
+          "message": "Active PHA count 0 != expected 18",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Early Bird expected 2 active PHA, got 0.",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Week 1 expected 2 active PHA, got 0.",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Week 2 expected 2 active PHA, got 0.",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Week 3 expected 2 active PHA, got 0.",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Week 4 expected 2 active PHA, got 0.",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Week 5 expected 2 active PHA, got 0.",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Week 6 expected 2 active PHA, got 0.",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Week 7 expected 2 active PHA, got 0.",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Week 8 expected 2 active PHA, got 0.",
+          "fixOwner": "airtable"
+        }
+      ],
+      "policy": {
+        "challengeYear": "2026-2027",
+        "earlyBirdStart": "2027-04-25",
+        "earlyBirdEnd": "2027-05-01",
+        "week1Start": "2027-05-02",
+        "programEnd": "2027-06-30",
+        "commonHomeworkDueDate": "2027-06-29",
+        "earlyBirdCountable": true,
+        "regularHomeworkWeeks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "week9HasHomework": false,
+        "expectedActiveHomeworkAssignmentCount": 18,
+        "homeworkSlotsPerHomeworkWeek": 2
+      }
+    },
+    "weekCount": 0,
+    "phaActiveCount": 0,
+    "phaInactiveCount": 0,
+    "earlyBirdEval": {
+      "activityDateKey": "2027-04-28",
+      "inEarlyBirdWindow": true,
+      "countable": true,
+      "note": "Activity Date falls in Early Bird window (countable)."
+    },
+    "lateWeekEval": {
+      "creditEligible": true,
+      "timingStatus": "on_time",
+      "dueDateKey": "2027-06-29",
+      "reason": "",
+      "afterLinkedWeekEnd": true,
+      "expectedCreditWhenBeforeCommonDue": true
+    }
+  },
+  "finishedAt": "2026-08-30T18:37:55.372Z"
+}
