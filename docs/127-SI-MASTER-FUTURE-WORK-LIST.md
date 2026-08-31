@@ -107,7 +107,7 @@ The system must preserve checks for assignment identity, enrollment, challenge/s
 ### FUT-002 — Audit and remove unused Airtable fields
 
 **Priority:** P2  
-**Status:** **Cleanup in progress (2026-08-30)** — live inventory refreshed; invalid Review Summary quarantined; Asset Key retargeted; 5 fields awaiting Mike UI delete (Meta API cannot DELETE fields)  
+**Status:** **Quarantine phase COMPLETE (2026-08-31 live)** — five `ZZZ DELETE` fields removed from Production; **1367** fields remain; broader unused-field purge is optional future work  
 **Systems:** Airtable schema, automations, email payloads, website/data contracts
 
 Inventory every Airtable table and identify fields that are unused, obsolete, duplicated, or no longer part of the current app. This includes legacy Google Drive URL, Google Drive ID, Google Drive folder ID, and similarly named fields. Check formulas, automations, scripts, emails, views, interfaces, website/data contracts, and documentation before deleting anything.
@@ -120,7 +120,9 @@ After confirming no active dependency remains, delete the obsolete fields and up
 
 **Audit deliverables (2026-08-30):** [`docs/audits/FUT-002-unused-field-inventory-2026-08-30.md`](./audits/FUT-002-unused-field-inventory-2026-08-30.md) · [`docs/audits/fut-002-unused-field-inventory.json`](./audits/fut-002-unused-field-inventory.json) · tool `tools/airtable/fut_002_field_inventory.py`. Offline snapshot: **1347 fields**.
 
-**Live cleanup (2026-08-30):** [`docs/audits/field-inventory/`](./audits/field-inventory/) · [`docs/audits/FUT-002-cleanup-session-2026-08-30.md`](./audits/FUT-002-cleanup-session-2026-08-30.md) · tool `tools/airtable/_fut002_live_pass.py`. Live: **1355 fields / 33 tables**. HC Drive batch (`fldFZLzDjiEbENCGl`, `fld71v6s6wYaJ2Umk`, `fldgGoh56Ck4fTQIE`) confirmed absent. `fldHchlovIaPlGKLk` quarantined (`BLANK()`). Submission Assets Asset Key retargeted to `RECORD_ID()` (valid). **Mike UI:** delete all `ZZZ DELETE — *` fields (5).
+**Live cleanup (2026-08-30):** [`docs/audits/field-inventory/`](./audits/field-inventory/) · [`docs/audits/FUT-002-cleanup-session-2026-08-30.md`](./audits/FUT-002-cleanup-session-2026-08-30.md) · tool `tools/airtable/_fut002_live_pass.py`. Live: **1355 fields / 33 tables**. HC Drive batch (`fldFZLzDjiEbENCGl`, `fld71v6s6wYaJ2Umk`, `fldgGoh56Ck4fTQIE`) confirmed absent. `fldHchlovIaPlGKLk` quarantined (`BLANK()`). Submission Assets Asset Key retargeted to `RECORD_ID()` (valid).
+
+**Live verification (2026-08-31):** [`docs/audits/live-reconcile-2026-08-31/LIVE-STATE-RECONCILE.md`](./audits/live-reconcile-2026-08-31/LIVE-STATE-RECONCILE.md) — **1367** fields; **0** `ZZZ DELETE — *` fields; all five quarantine field IDs **absent**. Mike UI delete phase **COMPLETE**. No pending field deletes for FUT-002 quarantine.
 
 ### FUT-003 — Stripe payment writeback to Airtable
 
@@ -1000,7 +1002,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **Weekly email audit** | Harness shipped (2026-08-30) | `audits/2026-08-28-weekly-email-pipeline-audit.md` + [`testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md`](testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md) — live `--apply` Mike disposable WAS |
 | **SC-PW-E2E preflight** | COMPLETE (repo) | `preflightApplyAccess`; unlock field resolver (`Source Key` / `Milestone Source Key`) |
 | **SC-147** | Repo prep shipped | Recorded Zoom half-XP — draft `drafts/sc-147-zoom-recording-half-xp.js` + `lib/sc-147-zoom-recording-credit.test.js`; Mike slot + rule row pending |
-| **FUT-001 / PR #264** | **COMPLETE** (repo + Production paste + multi-asset XP) | 020 v3.8 + 065 v10.4 Live; multi-asset 020 **PASS**; 065 dynamic `recordId` remapped; **trigger re-entry after remap** required; exactly one `HOMEWORK_XP\|rec8E94Jg7mpmuMW9` (`recwpzl8pkXecUqRK`, no duplicate) — PR **#312** MERGED `f8a7365f` — [`testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json`](./testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json) · [`deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](./deploy-checklists/065-recordId-dynamic-remap-operator-packet.md) |
+| **FUT-001 / PR #264** | **COMPLETE** (repo + Production paste + multi-asset XP) | 020 v3.8 + **065 v10.5** Live; multi-asset 020 **PASS**; 065 dynamic `recordId` remapped; **trigger re-entry after remap** required; exactly one `HOMEWORK_XP\|rec8E94Jg7mpmuMW9` (`recwpzl8pkXecUqRK`, no duplicate) — PR **#312** MERGED `f8a7365f` — [`testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json`](./testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json) · GitHub 065 header sync to v10.5 optional |
 | **SC-015 / SC-016 / MRW-F02** | **COMPLETE** (2026-08-31) | Multi-asset → one HC + one Homework XP; **do not** re-paste 020/065; **do not** re-`--apply` |
 | **FUT-029 / MRW-H12** | **FUTURE** (design only) | Hybrid Fillout Homework — [`next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](./next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md); requested as FUT-018 (ID already used) |
 

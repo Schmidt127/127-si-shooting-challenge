@@ -57,9 +57,9 @@
 
 ## Mike UI actions remaining
 
-1. Delete all fields whose names start with `ZZZ DELETE —` (5 fields listed above).
-2. Prefer starting with Homework Completions `fldHchlovIaPlGKLk`.
-3. After deletes, re-run: `python tools/airtable/_fut002_live_pass.py`
+1. ~~Delete all fields whose names start with `ZZZ DELETE —` (5 fields listed above).~~ **COMPLETE 2026-08-31** — live verify **0** remain. See [`live-reconcile-2026-08-31/LIVE-STATE-RECONCILE.md`](./live-reconcile-2026-08-31/LIVE-STATE-RECONCILE.md).
+2. ~~Prefer starting with Homework Completions `fldHchlovIaPlGKLk`.~~ Done.
+3. ~~After deletes, re-run: `python tools/airtable/_fut002_live_pass.py`~~ Verified via live reconcile 2026-08-31.
 
 ## Genuine blocker
 

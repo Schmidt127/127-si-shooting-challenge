@@ -3,7 +3,7 @@
 **Date:** 2026-08-30  
 **Backlog:** FUT-002 / MRW-H01  
 **Base:** Production `appn84sqPw03zEbTT`  
-**Status:** Audit complete + **cleanup in progress** — see [`FUT-002-cleanup-session-2026-08-30.md`](./FUT-002-cleanup-session-2026-08-30.md) and [`field-inventory/`](./field-inventory/)  
+**Status:** Audit complete + **quarantine UI delete COMPLETE (2026-08-31 live)** — see [`FUT-002-cleanup-session-2026-08-30.md`](./FUT-002-cleanup-session-2026-08-30.md), [`field-inventory/`](./field-inventory/), and [`live-reconcile-2026-08-31/LIVE-STATE-RECONCILE.md`](./live-reconcile-2026-08-31/LIVE-STATE-RECONCILE.md)  
 
 ## Hard stop
 

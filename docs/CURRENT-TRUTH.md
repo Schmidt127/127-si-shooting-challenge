@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-31 — PR **#312** MERGED (`f8a7365f`): SC-MULTI-ASSET-HW / SC-015 / SC-016 / MRW-F02 **COMPLETE** (065 dynamic remap + trigger re-entry; exactly one XP, no duplicate; **no 065 repaste**). Paste queue empty for 010/020/022/057/065/072/073; **075** remains retired. FUT-029 Hybrid Fillout homework = FUTURE design only. Prior: 2026-08-30 Agent 4 SC-SEASON-SIM-002 ([`RELEASE_BASELINE.md`](../RELEASE_BASELINE.md))  
+**Last verification (repo):** 2026-08-31 — live Airtable reconcile ([`audits/live-reconcile-2026-08-31/LIVE-STATE-RECONCILE.md`](./audits/live-reconcile-2026-08-31/LIVE-STATE-RECONCILE.md)): schema **1367** fields; **0** `ZZZ DELETE` fields; **11** Weeks / **18** active PHA; **0** WSTEST/PWTEST weeks; paste queue **empty**. **065 v10.5** Live (GitHub header still v10.4 — sync on next edit, **do not repaste**). PR **#312** SC-MULTI-ASSET-HW **COMPLETE**. FUT-029 = FUTURE design only.  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -105,7 +105,7 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | FUT-025 athlete profiles | **Repo complete** — env-gated `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING`; Mike cutover pending ([`deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md`](./deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md)) |
 | SC-149 branding URLs | **Repo attestation complete (2026-08-30)** — prod render + smoke PASS; Mike Vercel env dashboard checkboxes pending ([`deploy-checklists/SC-149-fairfield-branding-url-verification.md`](./deploy-checklists/SC-149-fairfield-branding-url-verification.md)) |
 | SC-109 Game Manual PDF | **Partial** — deploy checklist + smoke assertions shipped (PR **#287**); `/shoot/game-manual` live-config sections render; `NEXT_PUBLIC_GAME_MANUAL_URL` still unset in Production (EXT-QA-001) — checklist: [`deploy-checklists/SC-109-game-manual-url-verification.md`](./deploy-checklists/SC-109-game-manual-url-verification.md) |
-| FUT-002 field inventory | **Audit complete (2026-08-30, PR #292)** — 1347 fields classified; **no deletions**; Mike-only deletion phase pending |
+| FUT-002 field inventory | **Quarantine phase COMPLETE (2026-08-31 live)** — **1367** fields; **0** `ZZZ DELETE` fields; five quarantine IDs absent; broader purge remains optional future work |
 | FUT-010 intake attachment cleanup | **Dry-run complete (R3 2026-08-30)** — **0 eligible**; no deletion request — [`testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md`](./testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md) |
 | Weeks 2026–27 | **Finalized** — Early Bird **Apr 25–May 1, 2027** countable; May 1 ∈ Early Bird; Week 1 starts May 2 — [`testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md`](./testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md) |
 | Homework PHA 2026–27 | **18 active** (EB + Weeks 1–8 × HW1/HW2); Week 9 / Post-Challenge none; due **2027-06-29** — [`testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md`](./testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md) |
@@ -188,7 +188,7 @@ Do **not** treat other Automations-table columns (trigger/conditions) as authori
 | **058** | **1.5** | 1.5 | Live | Unlock only after Eligible + Ready |
 | **059** | **v3.7** | v3.7 | Live | |
 | **064** | **Production-verified current live** | v12.2 in repo | Live | Do not invent a new version string |
-| **065** | **v10.4** | v10.4 | Live / **aligned** | FUT-001 + dynamic `recordId` — [`065-v10.4-fut-001-operator-packet.md`](./deploy-checklists/065-v10.4-fut-001-operator-packet.md) |
+| **065** | **v10.5** | v10.4 | Live / **prod ahead** | FUT-001 + dynamic `recordId`; multi-asset closeout 2026-08-31 — **sync GitHub header to v10.5** on next edit; **do not repaste** |
 | **066** | **v3.9** | v3.9 | Live / live-tested | Dynamic `recordId`; replay verified 2026-08-24 |
 | **072** | **v4.8** | v4.8 | Live / **aligned** | [`072-v4.8-operator-packet.md`](./deploy-checklists/072-v4.8-operator-packet.md) |
 | **073** | **v4.4** | v4.4 | Live / **aligned** | [`073-v4.4-operator-packet.md`](./deploy-checklists/073-v4.4-operator-packet.md) |
@@ -196,7 +196,7 @@ Do **not** treat other Automations-table columns (trigger/conditions) as authori
 | **070a** | **v4.7** | v4.7 | **Off** by design | Homework upload Make path |
 | **070b** | **v4.7** | v4.7 | Live | |
 | **070c** | **current live (repo v1.1)** | v1.1 | Live/enabled | Do not invent a new version |
-| **101** | **v6.7** | v6.7 | Live | meeting `recxtpMu4ONbdDD45` safely skipped when reconciliation not needed |
+| **101** | **v6.6** | v6.6 | Live / **aligned** | meeting `recxtpMu4ONbdDD45` safely skipped when reconciliation not needed |
 | **117** | **v2.1** | v2.1 | **Live** | Dynamic inputs: `recordId`, `enrollmentRid`, `zoomMeetingRid` |
 
 **Record-ID classification (Mike final):** Dynamic for all record-based automations; optional on **041** only; intentionally blank on **056 / 078 / 118 / 119**. **065** and **066** use triggering-record `recordId` in Production. Closeout: [`deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md`](./deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md).
@@ -230,12 +230,12 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Domain | Owner (repo contract) | Live proof |
 |--------|----------------------|------------|
 | Submission XP | **010** — Source Key `SUBMISSION_XP\|{submissionId}` | GitHub **v10.12**; prior Production run history v10.11 |
-| Homework XP | **064** prepares (`HOMEWORK_COMPLETION` rule); **065** creates/reconciles `HOMEWORK_XP\|{hcId}` (**020** HC create; **078** marks Parent Feedback Ready?) | **065 Production v10.4** (FUT-001); dynamic `recordId` remapped; multi-asset closeout **COMPLETE** 2026-08-31 (`HOMEWORK_XP\|rec8E94Jg7mpmuMW9` = `recwpzl8pkXecUqRK`, no duplicate) — trigger re-entry required after remap |
+| Homework XP | **064** prepares (`HOMEWORK_COMPLETION` rule); **065** creates/reconciles `HOMEWORK_XP\|{hcId}` (**020** HC create; **078** marks Parent Feedback Ready?) | **065 Production v10.5** (FUT-001); dynamic `recordId` remapped; multi-asset closeout **COMPLETE** 2026-08-31 (`HOMEWORK_XP\|rec8E94Jg7mpmuMW9` = `recwpzl8pkXecUqRK`, no duplicate) — trigger re-entry required after remap |
 | Video XP | **113 / 114** (+ **013** VF create) | **Live v6.4 / v6.1**; **PKG-007 lifecycle proof PASS 2026-08-23** (`AUTONOMOUS_VIDEO_QA_20260823_164549`, Testing3). Native trigger + 073 OFF UI attestation open |
 | Shot milestones | **066** | Production **v3.9** live-tested 2026-08-24 |
 | Levels | **041 / 042** | **041 Production v5.1**; broader progression proof still open |
 | Perfect Week | **057 → 058 → 059** | **COMPLETE** for WAS `recl3DmBh22ADPWWe`: unlock `recJ5umer4J4FHTOz`, key `PERFECT_WEEK\|rec93mAfo5jKqP3g5\|recNzl4dNOtDmJqnV`, XP `reczehlzkA8fjiQh0`, Awarded, 100 XP, no duplicate unlock. Evidence: `docs/testing/evidence/sc-pw-e2e/award-was-recl3DmBh22ADPWWe-2026-08-29-mcp.json`. Do **not** re-`--apply` for this fixture. |
-| Zoom live attendance XP | **101** | Production **v6.7** (live script body). Meeting `recxtpMu4ONbdDD45` safe skip when reconciliation not needed. |
+| Zoom live attendance XP | **101** | Production **v6.6** (live Automations Code). Meeting `recxtpMu4ONbdDD45` safe skip when reconciliation not needed. |
 | Zoom recording XP under slot 117 | Not live | Slot **117** is email Hub handoff (**v2.1 Live**) |
 
 ---
@@ -251,7 +251,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Child upload writeback (**022**) | Production **v2.2** Live — Lambda viewer URL only; no Canonical S3 fallback |
 | Homework parent email | **078** Ready → **071** → **079** → Hub → Resend |
 | Video parent email | Video `Parent Feedback Ready?` **manual** → **073 v4.4** Live → Hub → Resend — parent URL must be Lambda viewer only |
-| Zoom live attendance | **101 v6.7** |
+| Zoom live attendance | **101 v6.6** |
 | Zoom recording approval email | **117 v2.1 Live** → Hub → Resend |
 | Fillout daily submission | **OFF** (contest intake closed) |
 
@@ -298,7 +298,8 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 
 ### Pending / needs live proof
 
-- Optional Automations Code **tracker** text refresh for 057 (live script already correct — do not repaste)
+- Optional Automations Code **tracker comment** refresh for **057** (Code text still says `MInimum` — hygiene only; do not repaste)
+- Sync GitHub **065** SCRIPT header **v10.4 → v10.5** to match Production (repo-only; do not repaste)
 - Optional disposable fixture cleanup: `recdj8MD0szplMW5r`, `recxIzdVil9ewhBxN`, `recPg14iNRkxblMLs`
 - Optional weekly email template / copy refinements
 - Broader progression / standings certification packages
@@ -313,7 +314,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - FUT-010 supervised attachment apply only if eligible rows appear (R3 dry-run **0 eligible**)
 - SC-147 Recorded Zoom half-XP — Mike: automation slot + `ZOOM_RECORDING` rule row before DEV paste
 - MRW-F07 live `--apply` on Mike disposable WAS (harness shipped; operator-only)
-- Archive WSTEST/PWTEST Weeks before season simulation execute
+- ~~Archive WSTEST/PWTEST Weeks~~ — **COMPLETE** (live: **0** test week rows, 2026-08-31)
 
 ### Blocked
 

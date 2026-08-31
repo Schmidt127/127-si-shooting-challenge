@@ -1,0 +1,51 @@
+| # | Status | Prod version | GitHub version | Code body | Notes |
+|---|---|---|---|---|---|
+| **001** | Live | v5.4 | v5.4 | DIFF | **body differs from GitHub** |
+| **002** | Live | v8.2 | v8.2 | DIFF | **body differs from GitHub** |
+| **003** | Live | v2.0 | v2.0 | DIFF | **body differs from GitHub** |
+| **005** | Live | v5.5 | v5.5 | DIFF | **body differs from GitHub** |
+| **007** | Live | v2.0 | v2.0 | DIFF | **body differs from GitHub** |
+| **009** | Live | v1.2 | v1.2 | DIFF | **body differs from GitHub** |
+| **010** | Live | v10.12 | v10.12 | DIFF | **body differs from GitHub** |
+| **013** | Live | v3.2.0 | v3.2.0 | DIFF | **body differs from GitHub** |
+| **020** | Live | v3.8 | v3.8 | DIFF | **body differs from GitHub** |
+| **021** | Live | v2.0 | v2.0 | DIFF | **body differs from GitHub** |
+| **022** | Live | v2.2 | v2.2 | DIFF | **body differs from GitHub** |
+| **023** | Live | v3.1 | v3.1 | DIFF | **body differs from GitHub** |
+| **030** | Live | v3.0 | v3.0 | DIFF | **body differs from GitHub** |
+| **031** | Live | v4.1 | v4.1 | DIFF | **body differs from GitHub** |
+| **032** | Live | v3.4 | v3.4 | DIFF | **body differs from GitHub** |
+| **033** | Live | v4.4 | v4.4 | DIFF | **body differs from GitHub** |
+| **034** | Live | v3.4 | v3.4 | DIFF | **body differs from GitHub** |
+| **035** | Live | v1.3 | v1.3 | DIFF | **body differs from GitHub** |
+| **041** | Live | v5.1 | v5.1 | DIFF | **body differs from GitHub** |
+| **042** | Live | 4.1.2 | 4.1.2 | DIFF | **body differs from GitHub** |
+| **053** | Live | 5.5 | 5.5 | DIFF | **body differs from GitHub** |
+| **054** | Live | v5.8 | v5.8 | DIFF | **body differs from GitHub** |
+| **055** | Live | v3.2 | v3.2 | DIFF | **body differs from GitHub** |
+| **056** | Live | v1.2 | v1.2 | DIFF | **body differs from GitHub** |
+| **057** | Live | 2.2 | 2.2 | DIFF | Code tracker typo `MInimum` — optional UI refresh; **body differs from GitHub** |
+| **058** | Live | 1.5 | 1.5 | DIFF | **body differs from GitHub** |
+| **059** | Live | v3.7 | v3.7 | DIFF | **body differs from GitHub** |
+| **064** | Live | 2026-08-12 v12.2 | 2026-08-12 v12.2 | DIFF | **body differs from GitHub** |
+| **065** | Live | v10.5 | v10.4 | DIFF | **body differs from GitHub**; Prod ahead of GitHub v10.4 — sync header |
+| **066** | Live | v3.9 | v3.9 | DIFF | **body differs from GitHub** |
+| **067** | Live | v3.5 | v3.5 | DIFF | **body differs from GitHub** |
+| **070** | Live | v4.7 | v1.1 | DIFF | **body differs from GitHub** |
+| **070** | Live | v1.1 | v1.1 | DIFF | **body differs from GitHub** |
+| **070** | Live | v4.7 | v1.1 | DIFF | **body differs from GitHub** |
+| **071** | Live | v4.2 | v4.2 | DIFF | **body differs from GitHub** |
+| **072** | Live | v4.8 | v4.8 | DIFF | **body differs from GitHub** |
+| **073** | Live | v4.4 | v4.4 | DIFF | **body differs from GitHub** |
+| **074** | Live | v3.3 | v3.3 | DIFF | **body differs from GitHub** |
+| **076** | Live | v8.11 | v8.11 | DIFF | **body differs from GitHub** |
+| **078** | Live | v1.3 | v1.4 | DIFF | **body differs from GitHub** |
+| **078** | Live | — | v1.4 | DIFF | **body differs from GitHub** |
+| **079** | Live | v2.5 | v2.5 | DIFF | **body differs from GitHub** |
+| **101** | Live | v6.6 | v6.6 | DIFF | **body differs from GitHub** |
+| **113** | Live | v6.4 | v6.4 | DIFF | **body differs from GitHub** |
+| **114** | Live | v6.1 | v6.1 | DIFF | **body differs from GitHub** |
+| **116** | Live | v1.0.1 | v1.0.1 | DIFF | **body differs from GitHub** |
+| **117** | Live | v2.1 | v2.1 | DIFF | **body differs from GitHub** |
+| **118** | Live | v2.0 | v2.0 | DIFF | **body differs from GitHub** |
+| **119** | Live | v1.7 | v1.7 | DIFF | **body differs from GitHub** |

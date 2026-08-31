@@ -4,7 +4,7 @@
 **Repository:** `Schmidt127/127-si-shooting-challenge`  
 **Created:** 2026-08-29  
 **Audit SHA (start):** `5ae358d5` (`origin/master` at audit)  
-**Reconcile SHA:** `082edc7d` (PR **#298** public copy) + live Weeks/PHA/FUT-010 MCP **2026-08-30** (18-assignment + R3 dry-run)  
+**Reconcile SHA:** Live Airtable API **2026-08-31** ([`docs/audits/live-reconcile-2026-08-31/LIVE-STATE-RECONCILE.md`](docs/audits/live-reconcile-2026-08-31/LIVE-STATE-RECONCILE.md)) + PR **#312** multi-asset HW closeout  
 **Authority when docs conflict:** Newest Master Update / Completion Master overlays + [`docs/CURRENT-TRUTH.md`](docs/CURRENT-TRUTH.md) + Section G of [`docs/127-SI-MASTER-FUTURE-WORK-LIST.md`](docs/127-SI-MASTER-FUTURE-WORK-LIST.md) + this list’s dated reconcile notes. Conflicts are recorded below, not silently dropped.
 
 **Status vocabulary (this document only):** `COMPLETE` · `IN PROGRESS` · `READY TO IMPLEMENT` · `READY FOR PRODUCTION APPLY` · `NEEDS VERIFICATION` · `BLOCKED` · `FUTURE`
@@ -22,7 +22,9 @@
 | Perfect Week full award | MCP 2026-08-29: WAS `recl3DmBh22ADPWWe` unlock Awarded + 100 XP | Older timeout JSON / inaccurate second-run IDs | **COMPLETE** — evidence `award-was-recl3DmBh22ADPWWe-2026-08-29-mcp.json` |
 | Paste queue 010/022/072/073/FUT-001/058/057 | Live scripts aligned (057 via `get_automation`) | Older paste-audit / Automations Code tracker lag on 057 | All listed pastes **COMPLETE** — do not re-paste |
 | PROJECT_STATE “Final reconciliation 2026-08-21” versions | CURRENT-TRUTH §8 + 2026-08-29 Automations MCP | Same file older block | Prefer CURRENT-TRUTH + MCP |
-| FUT-001 | 020 v3.8 / 065 v10.4 **Live** | Older “paste pending” | Paste COMPLETE; optional SC-016 re-submit only |
+| FUT-001 | 020 v3.8 / **065 v10.5** **Live** | Older “paste pending” / GitHub v10.4 header | Paste COMPLETE; GitHub 065 header sync optional |
+| FUT-002 ZZZ quarantine | Live API 2026-08-31: **0** `ZZZ DELETE` fields | MRW / operator queue “delete 5 fields” | **COMPLETE** — quarantine UI delete done |
+| WSTEST/PWTEST Weeks | Live: **0** test week rows | “Archive before season sim” | **COMPLETE** — nothing to archive |
 | SC-PW-E2E evidence pointer | MCP award JSON for WAS `recl3DmBh22ADPWWe` | `qualifying-2026-08-28T2252.json` timeout; untracked `…T223555.json` IDs not live | Prefer MCP award JSON |
 | Open PR inventory | Drafts #266/#262/#244/#240/#238/#237/#234; #264–#274 merged | Stale open-PR lists | Use live `gh pr list` |
 
@@ -107,7 +109,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | **Dependencies** | Met |
 | **Exact files or production systems affected** | Production `Weeks` / PHA (protected — no Cursor writes) |
 | **Autonomous?** | Audit only — no Weeks writes |
-| **Required manual action** | Before season sim: archive WSTEST/PWTEST Weeks (OMNI); optional archive inactive PHA `recpHX3stQ8YBVtLi` |
+| **Required manual action** | Before season sim: none — WSTEST/PWTEST already absent (live 2026-08-31) |
 | **Verification required** | Met |
 | **Recommended priority** | — |
 | **Definition of done** | Met 2026-08-30 |
@@ -277,7 +279,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-C02 | Paste 022 v2.2 | **COMPLETE** | `022-v2.2-*.md` | Do not re-paste | — |
 | MRW-C03 | Paste 072 v4.8 | **COMPLETE** | same | Do not re-paste | — |
 | MRW-C04 | Paste 073 v4.4 | **COMPLETE** | same | Do not re-paste | — |
-| MRW-C05 | Paste 020 v3.8 + 065 v10.4 | **COMPLETE** | `FUT-001-*.md` | Optional SC-016 only | — |
+| MRW-C05 | Paste 020 v3.8 + 065 v10.5 | **COMPLETE** | `FUT-001-*.md` | Do not re-paste |
 | MRW-C05b | Paste 058 1.5 + 059 v3.7 | **COMPLETE** | `058-v1.5-*.md` | Do not re-paste | — |
 | MRW-C05c | 057 v2.2 Perfect Week Video Minimum | **COMPLETE (live script)** | Live automation MCP 2026-08-30; tracker Code column still stale | Optional Automations Code refresh only — **do not repaste** | — |
 | MRW-C06 | SC-151 Submitted Same Day? formula | READY TO IMPLEMENT | Future Work SC-151 | OMNI formula change | P2 |
@@ -327,7 +329,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-F11 | Core workflow reliability (calendar + XP + PHA + handoff) | **COMPLETE** (2026-08-30) | Contracts `lib/workflow-contracts/`; harness `tools/testing/sc-core-workflow.mjs`; live audit PASS; disposable apply PASS; orphan inactive PHA deleted. Multi-asset 020 path PASS — see `docs/testing/core-workflow/MULTI-ASSET-HW-RESULTS.md`. |
 | MRW-F04 | SC-010/011/012/015 homework path re-tests | **COMPLETE** (SC-015) | Multi-asset → one HC + one Homework XP **PASS** 2026-08-31; SC-010/011/012 remain optional broader re-tests |
 | MRW-F05 | Video XP native trigger + 073 OFF attestation (SC-072) | NEEDS VERIFICATION | PKG-007 PASS; UI attest open |
-| MRW-F06 | Zoom live attendance re-test (SC-073/084) | NEEDS VERIFICATION | 101 v6.7 |
+| MRW-F06 | Zoom live attendance re-test (SC-073/084) | NEEDS VERIFICATION | 101 **v6.6** Live |
 | MRW-F07 | 118/119 weekly scheduler positive arm (SC-031/035) | **COMPLETE** (harness 2026-08-30) | `docs/testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md`; live `--apply` Mike disposable WAS |
 | MRW-F08 | Offline contract suite green on master after merges | **COMPLETE** | repository-qa workflow; docs-canonical-header drift fixed 2026-08-30 |
 
@@ -360,7 +362,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 
 | ID | Title | Status | Notes |
 |----|-------|--------|-------|
-| MRW-H01 | FUT-002 unused Airtable field purge | **CLEANUP IN PROGRESS** | Live inventory 1355 fields; Review Summary + 4 empties quarantined (`ZZZ DELETE`); Asset Key fixed; Mike UI delete 5 fields (API cannot DELETE) |
+| MRW-H01 | FUT-002 unused Airtable field purge | **QUARANTINE COMPLETE** | Live **1367** fields; **0** `ZZZ DELETE`; broader optional purge remains future P2 |
 | MRW-H02 | FUT-004 award emailer (replace Tremendous) | FUTURE | Deferred |
 | MRW-H03 | FUT-005 accomplishment emails | FUTURE | Deferred |
 | MRW-H04 | FUT-007/009 AWS naming + corrected-video workflow | FUTURE | |
@@ -416,14 +418,12 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 
 ## Recommended next task for Mike
 
-1. **FUT-002:** Delete 5 `ZZZ DELETE — *` fields in Airtable UI (API cannot DELETE).  
-2. **Archive overlapping WSTEST/PWTEST Weeks** in Program Instance `Shooting Challenge | 2026-2027` (OMNI) before season simulation.  
-3. **Do not** re-paste 010/020/022/057/058/059/065/072/073; **do not** restore 075; **do not** re-`--apply` Perfect Week or multi-asset homework.  
-4. **FUT-010:** dry-run R3 still **0 eligible** — no deletion request.  
-5. Optional: refresh Automations **Code** text for 057 (tracker lag) — live script already correct.  
-6. **Do not** activate FUT-003 until registration intentionally opens.  
-7. **Do not** implement **FUT-029** (Hybrid Fillout Homework) yet — design brief only (**MRW-H12**).  
-8. Multi-asset HW / SC-015 / SC-016 / MRW-F02 are **COMPLETE** (PR **#312**). ATHWF + weekly settlement + core workflow + **MRW-I13** are done. After WSTEST cleanup: **SC-SEASON-SIM-001** prep remains FUTURE (do not begin simulation now).
+1. **Optional:** Refresh Automations **Code** comment text for **057** (typo `MInimum` in tracker — not a functional paste).
+2. **Do not** re-paste 010/020/022/057/058/059/065/072/073; **do not** restore 075; **do not** re-`--apply` Perfect Week or multi-asset homework.
+3. **FUT-010:** dry-run R3 still **0 eligible** — no deletion request.
+4. **Do not** activate FUT-003 until registration intentionally opens.
+5. **Do not** implement **FUT-029** (Hybrid Fillout Homework) yet — design brief only (**MRW-H12**).
+6. Multi-asset HW / SC-015 / SC-016 / MRW-F02 are **COMPLETE** (PR **#312**). FUT-002 quarantine deletes and WSTEST/PWTEST archive are **COMPLETE** (live 2026-08-31). **SC-SEASON-SIM-001** prep remains FUTURE.
 
 ---
 
@@ -432,7 +432,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 - **Paste debt C01–C05c + 058/059** → **COMPLETE** (live 057 correct; Automations Code tracker may lag).  
 - **SC-034 / V2-002 / PW config items** → schema + live 057 CONFIG **COMPLETE**.  
 - **Public copy Phase 4 + chrome** → PR **#298** / **#301** / **#304**.  
-- **FUT-002** → cleanup in progress; 5 quarantined fields await Mike UI delete.  
+- **FUT-002** → quarantine UI delete **COMPLETE** (0 `ZZZ DELETE` live); broader purge optional.  
 - **FUT-010** → dry-run **0 eligible** (R3); no delete request.  
 - **Weeks 2026–27 + 18 PHA** → **COMPLETE** (Early Bird Apr 25–May 1; due June 29; Week 9/Post-Challenge no HW).  
 - **SC-SEASON-SIM-001 / MRW-H11** → **FUTURE / Planned only** — not active.  

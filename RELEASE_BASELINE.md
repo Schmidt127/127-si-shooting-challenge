@@ -18,7 +18,7 @@
 | Production tip (web) | `bd7856ea` | PR **#311** gift-card FAQ + About the Coach; Vercel Production Ready |
 | Prior public-app readiness | `7332d2f3` | PR **#308** final public-app readiness |
 | Public UX chrome | PR **#301** / **#304** MERGED `f3be964f` | MRW-G11 / CR-12 shipped |
-| FUT-002 cleanup | PR **#303** MERGED `dc0751ec` | Quarantine + inventory; Mike UI deletes remain |
+| FUT-002 cleanup | PR **#303** MERGED `dc0751ec` | Quarantine + inventory; Mike UI deletes **COMPLETE** 2026-08-31 |
 | Season-sim preflight | PR **#302** MERGED `eca40509` | SC-SEASON-SIM-002 + 057 no-repaste |
 | This package | Core workflow reliability (MRW-F11 / MRW-I13) | PR **#305** |
 | Working tree note | Parallel agent WIP may remain in other worktrees | `git status` |
@@ -116,38 +116,37 @@ git status -sb
 |------|--------|
 | Weeks 2026–27 | Early Bird Apr 25–May 1; Week 1 May 2; **no import needed** |
 | Active PHA | **18**; due **2027-06-29**; Week 9 / Post-Challenge no HW |
-| FUT-002 | 1355 fields; 5 `ZZZ DELETE` awaiting Mike UI |
+| FUT-002 | **1367** fields; **0** `ZZZ DELETE` (quarantine UI delete **COMPLETE** 2026-08-31) |
+| Weeks test labels | **0** WSTEST/PWTEST (archive **COMPLETE**) |
 | FUT-010 R3 | **0 eligible** |
 
 ---
 
 ## Production changes still awaiting Mike
 
-1. **FUT-002 UI field deletes** — trash all `ZZZ DELETE — *` fields (5)  
-2. **Before season simulation:** archive overlapping WSTEST/PWTEST Weeks (OMNI)  
-3. Optional Automations Code refresh for 057 tracker text (docs hygiene only)  
-4. Optional FUT-010 sign-off when eligible rows exist (currently zero)  
-5. **RCC** views / Interface install  
-6. **FUT-003** Make ON when registration opens  
+1. Optional Automations Code **comment** refresh for **057** (typo in tracker text — not a paste)
+2. Optional GitHub **065** header sync to **v10.5** (prod ahead of repo v10.4 — do not repaste)
+3. Optional FUT-010 sign-off when eligible rows exist (currently **0**)
+4. **RCC** views / Interface install
+5. **FUT-003** Make ON when registration opens
 
 ---
 
 ## Known risks
 
-1. Automations Code tracker lag for 057 (live script already correct).  
-2. Disposable WSTEST/PWTEST Weeks can collide with 005 date matching.  
-3. Season simulation execute still FUTURE until WSTEST cleanup.  
-4. Airtable Meta API cannot DELETE fields — Mike UI required for FUT-002.
+1. Automations Code tracker comment for **057** still says `MInimum` (hygiene only).
+2. GitHub **065** header lags Production **v10.5**.
+3. Season simulation execute still **FUTURE** (SC-SEASON-SIM-001).
 
 ---
 
 ## Exact recommended next task
 
-**Mike:** Delete 5 `ZZZ DELETE — *` fields (FUT-002). Before season sim: archive overlapping WSTEST/PWTEST Weeks (OMNI).
+**Mike:** Optional 057 Code comment refresh; activate FUT-003 when registration opens; RCC when scheduled.
 
 **Do not:** re-paste 010/020/022/057/058/059/065/072/073; restore 075; re-`--apply` Perfect Week for WAS `recl3DmBh22ADPWWe`; re-`--apply` multi-asset homework; run full season-simulation execute yet; implement FUT-029.
 
-**Engineering:** SC-SEASON-SIM-002 in `tools/season_simulation/` — read-only `preflight` / default `dry-run` only until WSTEST cleanup.
+**Engineering:** Sync **065** GitHub SCRIPT header to v10.5; SC-SEASON-SIM-002 in `tools/season_simulation/` — read-only `preflight` / default `dry-run` only.
 
 ---
 

@@ -9,6 +9,12 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Added
+- **Live Production reconcile (2026-08-31)** — Read-only Airtable API audit:
+  [`docs/audits/live-reconcile-2026-08-31/LIVE-STATE-RECONCILE.md`](./docs/audits/live-reconcile-2026-08-31/LIVE-STATE-RECONCILE.md).
+  Schema **1367** fields; **0** `ZZZ DELETE` (FUT-002 quarantine **COMPLETE**); **11** Weeks /
+  **18** active PHA; **0** WSTEST/PWTEST weeks; **065 v10.5** Live (GitHub header still v10.4);
+  **101 v6.6** Live. Updated CURRENT-TRUTH, MRW, Future Work List, operator queue, field-inventory
+  docs. Fresh schema snapshot under `airtable/schema/snapshots/prod-20260831/`.
 - **PR #312 multi-asset homework closeout (2026-08-31)** — Merged to `master` (`f8a7365f`). Marks **SC-015** / **SC-016** / **MRW-F02** COMPLETE: live 020 multi-asset → one HC; 065 dynamic `recordId` + trigger re-entry; exactly one `HOMEWORK_XP|rec8E94Jg7mpmuMW9` (35 XP, no duplicate). **Do not repaste 065.** Paste queue empty for 010/020/022/057/065/072/073; **075** remains retired. No live Airtable writes during docs closeout.
 - **FUT-029 Hybrid Fillout Homework (design only, 2026-08-31)** — Long-term enhancement **MRW-H12**: Library 70→100+, optional Fillout answers + paper/photo/video, same HC/XP spine, preserve 18 PHA and 020/033/064/065/071. Requested as FUT-018 (ID already used for landing pages). Brief: [`docs/next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](./docs/next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md). **No forms, schema, or automation changes.**
 - **MRW-F11 core workflow reliability (2026-08-30)** — Season calendar + homework/XP

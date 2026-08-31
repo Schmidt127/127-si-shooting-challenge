@@ -29,17 +29,9 @@
 | Quarantined | Achievements / `ZZZ DELETE — Uses Grade Band Scaling? (unused empty)` | `fldkIzG5emvUBQ0Tw` | Empty unused checkbox |
 | Prior Mike UI deletes | HC Submitted File Review Summary + Submitted Asset File Links/IDs | `fldFZLzDjiEbENCGl`, `fld71v6s6wYaJ2Umk`, `fldgGoh56Ck4fTQIE` | Confirmed absent |
 
-## Mike UI delete now (exact)
+## Mike UI delete now (exact) — COMPLETE 2026-08-31
 
-Delete every field whose name starts with `ZZZ DELETE —` (5 total):
-
-1. Homework Completions → `fldHchlovIaPlGKLk`
-2. Levels → `fldTzIGODB2e03rvE`
-3. Streak Occurrences → `fldltgFPGVXHwRj4X`
-4. Streak Occurrences → `fldBFDl629arXFcnp`
-5. Achievements → `fldkIzG5emvUBQ0Tw`
-
-Then re-run `python tools/airtable/_fut002_live_pass.py`.
+All five quarantine fields were deleted from Production. Live verify: **0** `ZZZ DELETE` fields. See [`../live-reconcile-2026-08-31/LIVE-STATE-RECONCILE.md`](../live-reconcile-2026-08-31/LIVE-STATE-RECONCILE.md).
 
 ## Left alone (intentional)
 
