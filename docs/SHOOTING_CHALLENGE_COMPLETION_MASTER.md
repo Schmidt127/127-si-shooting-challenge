@@ -51,7 +51,7 @@ Reconciled against [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md), [`PROJECT_STATE.md`
 | **Homework pipeline** | `live-tested` | 009→020→070a assets; 020 **v3.8** Live (FUT-001); broader multi-path proof optional |
 | **Video pipeline** | `live-tested` | 070b **v4.7** + Lambda + 070c; Production **022 v2.2** Live |
 | **Secure parent video URLs** | `live-tested` | **022 v2.2 / 072 v4.8 / 073 v4.4** Live — Lambda-only parent URLs |
-| **Zoom pipeline** | `live-tested` | **101 v6.7** live attendance XP; recording credit `Mike decision` |
+| **Zoom pipeline** | `live-tested` | **101 v6.6** live attendance XP; recording credit `Mike decision` |
 | **Streaks** | `needs live proof` | 053/054 contracts in repo; full natural-trigger proof open |
 | **Shot milestones** | `live-tested` | **066 v3.9** live with dynamic `recordId`; replay verified idempotent |
 | **Perfect Week** | `live-tested` | **057 v2.2** live. SC-PW-E2E award **COMPLETE** for WAS `recl3DmBh22ADPWWe` (unlock Awarded + 100 XP). See MCP evidence JSON. |

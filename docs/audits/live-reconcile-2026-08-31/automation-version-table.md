@@ -24,7 +24,7 @@
 | **054** | Live | v5.8 | v5.8 | DIFF | **body differs from GitHub** |
 | **055** | Live | v3.2 | v3.2 | DIFF | **body differs from GitHub** |
 | **056** | Live | v1.2 | v1.2 | DIFF | **body differs from GitHub** |
-| **057** | Live | 2.2 | 2.2 | DIFF | Code tracker typo `MInimum` — optional UI refresh; **body differs from GitHub** |
+| **057** | Live | 2.2 | 2.2 | MATCH | Automations Code refreshed 2026-08-31; verify UI |
 | **058** | Live | 1.5 | 1.5 | DIFF | **body differs from GitHub** |
 | **059** | Live | v3.7 | v3.7 | DIFF | **body differs from GitHub** |
 | **064** | Live | 2026-08-12 v12.2 | 2026-08-12 v12.2 | DIFF | **body differs from GitHub** |

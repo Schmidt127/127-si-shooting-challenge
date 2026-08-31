@@ -188,7 +188,7 @@ Do **not** treat other Automations-table columns (trigger/conditions) as authori
 | **058** | **1.5** | 1.5 | Live | Unlock only after Eligible + Ready |
 | **059** | **v3.7** | v3.7 | Live | |
 | **064** | **Production-verified current live** | v12.2 in repo | Live | Do not invent a new version string |
-| **065** | **v10.5** | v10.4 | Live / **prod ahead** | FUT-001 + dynamic `recordId`; multi-asset closeout 2026-08-31 — **sync GitHub header to v10.5** on next edit; **do not repaste** |
+| **065** | **v10.5** | v10.5 | Live / **aligned** | Multi-asset closeout 2026-08-31 — do not repaste |
 | **066** | **v3.9** | v3.9 | Live / live-tested | Dynamic `recordId`; replay verified 2026-08-24 |
 | **072** | **v4.8** | v4.8 | Live / **aligned** | [`072-v4.8-operator-packet.md`](./deploy-checklists/072-v4.8-operator-packet.md) |
 | **073** | **v4.4** | v4.4 | Live / **aligned** | [`073-v4.4-operator-packet.md`](./deploy-checklists/073-v4.4-operator-packet.md) |

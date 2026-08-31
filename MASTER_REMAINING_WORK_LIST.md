@@ -17,7 +17,7 @@
 
 | Topic | Newer / winning source | Lagging / conflicting source | Resolution for this list |
 |-------|------------------------|------------------------------|--------------------------|
-| Automation **057** | Live Airtable automation script MCP 2026-08-30: v2.2 CONFIG **`Perfect Week Video Minimum`** (correct) — **do not repaste** | Automations **Code tracker column** still embeds stale typo `MInimum` | **Paste COMPLETE**; Mike may refresh Automations Code text only (docs hygiene) |
+| Automation **057** | Live Automations Code CONFIG **`Perfect Week Video Minimum`** (tracker refreshed 2026-08-31) | Prior tracker typo `MInimum` | **COMPLETE** — verify Automation **UI** script matches GitHub if UI was pasted separately |
 | SEO / SC-115 | CURRENT-TRUTH / PROJECT_STATE: indexing cutover **complete** | Completion Master §0: SEO `deferred` / noindex | Indexing **COMPLETE**; athlete consent/indexability still open (FUT-025) |
 | Perfect Week full award | MCP 2026-08-29: WAS `recl3DmBh22ADPWWe` unlock Awarded + 100 XP | Older timeout JSON / inaccurate second-run IDs | **COMPLETE** — evidence `award-was-recl3DmBh22ADPWWe-2026-08-29-mcp.json` |
 | Paste queue 010/022/072/073/FUT-001/058/057 | Live scripts aligned (057 via `get_automation`) | Older paste-audit / Automations Code tracker lag on 057 | All listed pastes **COMPLETE** — do not re-paste |
@@ -77,7 +77,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | **Short title** | Paste FUT-001 automations |
 | **Description** | Assignment identity + due-date enforcement. |
 | **Why it matters** | HW1/HW2 slot matching breaks year-to-year; late credit must be blocked. |
-| **Current status** | **COMPLETE** (Automations Live: 020 v3.8, 065 v10.4) |
+| **Current status** | **COMPLETE** (Automations Live: 020 v3.8, **065 v10.5**) |
 | **Source document(s)** | `FUT-001-homework-assignment-identity-deadline.md`; operator queue |
 | **Dependencies** | MRW-B01 met |
 | **Required manual action** | Optional SC-016 live re-submit (MRW-F02) — not a paste blocker |
@@ -418,7 +418,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 
 ## Recommended next task for Mike
 
-1. **Optional:** Refresh Automations **Code** comment text for **057** (typo `MInimum` in tracker — not a functional paste).
+1. **Verify Automation 057 UI script** matches GitHub (Automations table Code refreshed 2026-08-31; paste from repo if UI still shows `MInimum`).
 2. **Do not** re-paste 010/020/022/057/058/059/065/072/073; **do not** restore 075; **do not** re-`--apply` Perfect Week or multi-asset homework.
 3. **FUT-010:** dry-run R3 still **0 eligible** — no deletion request.
 4. **Do not** activate FUT-003 until registration intentionally opens.

@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-14
-Last GitHub Update: 2026-08-28 (v10.4 FUT-001 deadline + slot-agnostic PHA)
+Last GitHub Update: 2026-08-31 (v10.5 reconcile XP points without ownership fail)
 
 Purpose:
 Create, replay, repair, deactivate, or reactivate the exact canonical
@@ -32,11 +32,14 @@ v10.1 installed in Production per Mike evidence; v10.2 is structure-only.
  * 065 - HOMEWORK REVIEW AND XP
  * Create or Reconcile Homework XP Event
  *
- * Version: v10.4
+ * Version: v10.5
  * Date Written: 2026-06-06
- * Last Updated: 2026-08-28
+ * Last Updated: 2026-08-31
  *
  * VERSION HISTORY
+ * - v10.5 (2026-08-31): Ownership assert no longer requires XP Points to already equal
+ *   Total Homework XP Awarded. Point changes (e.g. Extra Credit then Base XP) reconcile
+ *   by updating the existing HOMEWORK_XP event instead of failing closed on mismatch.
  * - v10.4 (2026-08-28): FUT-001 — PHA eligibility no longer requires HC Item Slot to
  *   match PHA Homework Slot; block positive XP when submission is after PHA Due Date
  *   (Week End Date fallback).
@@ -129,10 +132,10 @@ const SOURCE_KEY_CONTRACT = {
 
 const SCRIPT = {
   scriptName: "065 - Homework Review and XP - Create or Reconcile Homework XP Event",
-  version: "v10.4",
-  versionDate: "2026-08-28",
+  version: "v10.5",
+  versionDate: "2026-08-31",
   originalWrittenDate: "2026-06-06",
-  lastUpdated: "2026-08-28",
+  lastUpdated: "2026-08-31",
   folder: "02 - Homework Review and XP",
   automationName: "065 - Homework Review and XP - Create or Reconcile Homework XP Event",
 };
@@ -444,6 +447,11 @@ function matchXpEvents(records, homeworkCompletionId, key) {
   );
 }
 
+/**
+ * Ownership only — Enrollment / Week / HC / Submission / Source Key.
+ * Do NOT require XP Points === Total Homework XP Awarded here: step 7 updates points
+ * when Extra Credit or Base XP changes after an earlier partial award.
+ */
 function assertOwned(xpEvent, ctx) {
   if (getText(xpEvent, xpEventsTable, CONFIG.xpEvents.sourceKey) !== ctx.key) {
     throw new Error(`XP Event ${xpEvent.id} Source Key mismatch.`);
@@ -460,9 +468,6 @@ function assertOwned(xpEvent, ctx) {
   const submissionIds = linkedIds(xpEvent, xpEventsTable, CONFIG.xpEvents.submission);
   if (submissionIds.length !== 1 || !ctx.subs.includes(submissionIds[0])) {
     throw new Error(`XP Event ${xpEvent.id} Submission ownership mismatch.`);
-  }
-  if (getNumber(xpEvent, xpEventsTable, CONFIG.xpEvents.points) !== ctx.total) {
-    throw new Error(`XP Event ${xpEvent.id} points mismatch.`);
   }
 }
 

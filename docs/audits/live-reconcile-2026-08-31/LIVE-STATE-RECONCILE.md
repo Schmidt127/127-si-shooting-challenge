@@ -43,10 +43,10 @@
 | **010** | v10.12 | v10.12 | Do not re-paste |
 | **020** | v3.8 | v3.8 | FUT-001 |
 | **022** | v2.2 | v2.2 | Lambda-only parent URLs |
-| **057** | 2.2 | 2.2 | Automations **Code text** still contains typo `Perfect Week Video MInimum` in comment — **optional tracker refresh only**; do **not** repaste for typo |
+| **057** | 2.2 | 2.2 | Automations Code tracker refreshed **2026-08-31** (`Perfect Week Video Minimum`); **verify Automation UI** matches GitHub |
 | **058** | 1.5 | 1.5 | |
 | **059** | v3.7 | v3.7 | |
-| **065** | **v10.5** | v10.4 | **Production ahead of GitHub** — sync GitHub header on next 065 edit; do **not** re-paste |
+| **065** | **v10.5** | **v10.5** | GitHub + Automations Code synced **2026-08-31**; do not re-paste |
 | **066** | v3.9 | v3.9 | |
 | **072** | v4.8 | v4.8 | |
 | **073** | v4.4 | v4.4 | |
@@ -73,16 +73,20 @@ Full table: [`automation-version-table.md`](./automation-version-table.md)
 
 ## Mike actions remaining (ordered)
 
-1. **Optional:** Refresh Automations **Code** column text for **057** (comment typo only — not a functional paste).
-2. **Optional:** Sync GitHub **065** SCRIPT header to **v10.5** to match Production (Cursor — not a paste).
-3. **FUT-003:** Activate Make Stripe writeback when registration opens (scenario **inactive**).
-4. **FUT-010:** No action — last dry-run **0 eligible**.
-5. **FUT-026:** Player Manual — publish last before launch.
-6. **SC-147:** Recorded Zoom half-XP — automation slot + rule row when ready.
-7. **SC-SEASON-SIM-001:** **FUTURE** — do not start full simulation yet.
+1. **Verify Automation 057 UI script** matches GitHub (Automations table Code refreshed 2026-08-31).
+2. **FUT-003:** Activate Make Stripe writeback when registration opens (scenario **inactive**).
+3. **FUT-026:** Player Manual — publish last before launch.
+4. **SC-147:** Recorded Zoom half-XP — automation slot + rule row when ready.
+5. **SC-SEASON-SIM-001:** **FUTURE** — do not start full simulation yet.
+
+**Completed this session (2026-08-31):**
+
+- GitHub **065 v10.5** synced (`assertOwned` no longer fails on points mismatch during reconcile)
+- Automations table **Code** refreshed for **057** and **065** — evidence: [`automations-code-patch-results.json`](./automations-code-patch-results.json)
 
 **Removed from queue (were stale in docs):**
 
 - ~~Delete 5 `ZZZ DELETE` fields~~ — **done**
 - ~~Archive WSTEST/PWTEST Weeks~~ — **0 test weeks in base**
-- ~~Repaste 057 for CONFIG field name~~ — not required; optional Code comment refresh only
+- ~~Repaste / tracker refresh 057 CONFIG typo~~ — Automations Code **done**; UI verify only
+- ~~Sync GitHub 065 to v10.5~~ — **done**
