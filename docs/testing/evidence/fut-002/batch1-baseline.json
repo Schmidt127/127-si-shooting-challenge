@@ -1,0 +1,57 @@
+{
+  "generatedAt": "2026-08-30T19:09:26Z",
+  "baseId": "appn84sqPw03zEbTT",
+  "counts": {
+    "Submission Assets": 67,
+    "Homework Completions": 16,
+    "Weeks": 13,
+    "Achievements": 15,
+    "Levels": 12,
+    "Streak Occurrences": 8,
+    "XP Events": 282,
+    "Enrollments": 28,
+    "Program Homework Assignments": 18
+  },
+  "targetsPresent": [
+    {
+      "table": "Homework Completions",
+      "tableId": "tblv58ppTFDBXb3nv",
+      "fieldId": "fldHchlovIaPlGKLk",
+      "quarantineNamePrefix": "ZZZ DELETE \u2014 Submission Asset Review Summary",
+      "liveName": "ZZZ DELETE \u2014 Submission Asset Review Summary (invalid legacy)",
+      "present": true
+    },
+    {
+      "table": "Levels",
+      "tableId": "tblU6EWmc1jCpgRHe",
+      "fieldId": "fldTzIGODB2e03rvE",
+      "quarantineNamePrefix": "ZZZ DELETE \u2014 Enrollments 3",
+      "liveName": "ZZZ DELETE \u2014 Enrollments 3 (accidental empty)",
+      "present": true
+    },
+    {
+      "table": "Streak Occurrences",
+      "tableId": "tbl9VxLdBiNcev4He",
+      "fieldId": "fldltgFPGVXHwRj4X",
+      "quarantineNamePrefix": "ZZZ DELETE \u2014 Challenge / Season",
+      "liveName": "ZZZ DELETE \u2014 Challenge / Season (empty backfill)",
+      "present": true
+    },
+    {
+      "table": "Streak Occurrences",
+      "tableId": "tbl9VxLdBiNcev4He",
+      "fieldId": "fldBFDl629arXFcnp",
+      "quarantineNamePrefix": "ZZZ DELETE \u2014 Backfill Run Label",
+      "liveName": "ZZZ DELETE \u2014 Backfill Run Label (empty backfill)",
+      "present": true
+    },
+    {
+      "table": "Achievements",
+      "tableId": "tblrADEQbvH9kBfMZ",
+      "fieldId": "fldkIzG5emvUBQ0Tw",
+      "quarantineNamePrefix": "ZZZ DELETE \u2014 Uses Grade Band Scaling",
+      "liveName": "ZZZ DELETE \u2014 Uses Grade Band Scaling? (unused empty)",
+      "present": true
+    }
+  ]
+}

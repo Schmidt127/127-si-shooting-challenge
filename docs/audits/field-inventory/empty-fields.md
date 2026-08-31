@@ -1,8 +1,10 @@
 # Empty fields (populated=0, table has records)
 
-**Snapshot:** 2026-08-30T18:38:17.934095+00:00
+**Snapshot:** 2026-08-30T18:38:17.934095+00:00 (pre–batch-1 quarantine day — historical)  
+**Note:** Rows classified `QUARANTINED FOR DELETE` / named `ZZZ DELETE —` in this file were **UI-deleted 2026-08-31** and are absent from live schema.  
+**Also deleted 2026-08-31 (Submission Assets text stubs):** `XP Events` (`fldwOklyDaW3nN2Kz`) and `XP Events copy` (`fld5Emwipb3UjAMz9`) — see [`sa-xp-text-stubs-deleted-2026-08-31.json`](../../testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json). Prefer live Meta / that evidence for current truth.
 
-Count: **261**
+Count: **261** (historical snapshot count; not live)
 
 | Table | Field | Field ID | Type | Records | Populated | Pct | Class | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -50,10 +52,10 @@ Count: **261**
 | Submissions | Program Instance - Synced | fldm47Ar3rKitJ1KE | multipleRecordLinks | 209 | 0 | 0.0 | REPO REFERENCED | repo hits: airtable/automations/shooting-challenge/023-submission-intake-and-asset-creation-assign-enrollment-to-submission.js, airtable/automations/shooting-challenge/075-email-notifications-and-external-handoffs-build-challenge-welcome-email.js, tools/airtable/_foundation_prod_probe.py |
 | Submission Assets | Homework Name 1 | fldnzHLHvSwyUsnQj | multipleLookupValues | 65 | 0 | 0.0 | HAS DEPENDENTS | referenced by 1 field(s) |
 | Submission Assets | Homework Name 2 | fldc4VJaLJhaNFKOU | multipleLookupValues | 65 | 0 | 0.0 | HAS DEPENDENTS | referenced by 1 field(s) |
-| Submission Assets | XP Events | fldwOklyDaW3nN2Kz | singleLineText | 65 | 0 | 0.0 | REPO REFERENCED | repo hits: airtable/automations/shooting-challenge/010-submission-intake-create-xp-event.js, airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js, airtable/automations/shooting-challenge/035-weekly-summary-and-goal-logic-create-weekly-threshold-xp-events.js |
+| Submission Assets | XP Events | fldwOklyDaW3nN2Kz | singleLineText | 65 | 0 | 0.0 | **DELETED 2026-08-31** | Unused text stub (not XP link). Evidence: docs/testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json |
 | Submission Assets | Review Complete? | fldpCKmuKiloOSsvd | checkbox | 65 | 0 | 0.0 | REPO REFERENCED | repo hits: make/blueprints/upload-asset-engine-fresh-airtable-v2-base.json, make/blueprints/upload-asset-engine-v1.json, make/blueprints/upload-asset-engine-v2-with-file-hash-duplicate-check.json |
 | Submission Assets | Upload Error | fldAkpl3cuzgz1jLP | multilineText | 65 | 0 | 0.0 | HAS DEPENDENTS | referenced by 1 field(s) |
-| Submission Assets | XP Events copy | fld5Emwipb3UjAMz9 | singleLineText | 65 | 0 | 0.0 | REPO REFERENCED | repo hits: tools/airtable/_preview/c025_config_linkage_inspect.json, tools/airtable/_preview/c025_related_fields.json, tools/airtable/_preview/c025_stage17_prod_schema_manifest_source.json |
+| Submission Assets | XP Events copy | fld5Emwipb3UjAMz9 | singleLineText | 65 | 0 | 0.0 | **DELETED 2026-08-31** | Unused text stub (not XP link). Evidence: docs/testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json |
 | Submission Assets | Homework Name - Slot Correct | fldiqTrLE7N8gjsxL | formula | 65 | 0 | 0.0 | REPO REFERENCED | repo hits: tools/airtable/_preview/c023-dev-stage5-S5I-rec1PzA7th0qJbsN4.json, make/blueprints/upload-asset-engine-fresh-airtable-v2-base.json, make/blueprints/upload-asset-engine-v1.json |
 | Submission Assets | Send to Make Trigger | fld8C43NVQQ1NeQ7Z | checkbox | 65 | 0 | 0.0 | HAS DEPENDENTS | referenced by 1 field(s) |
 | Submission Assets | File is Duplicate? | fldtE66EBZwDHewbl | checkbox | 65 | 0 | 0.0 | HAS DEPENDENTS | referenced by 2 field(s) |

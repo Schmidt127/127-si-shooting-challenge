@@ -84,6 +84,8 @@ export type PublicActivityItem = {
   subline?: string | null;
   /** When true, date renders on row 2 right instead of row 2 left. */
   dateOnSecondRowRight?: boolean;
+  /** Optional note after the date on row 2 (e.g. Extra credit +125 XP). */
+  dateTagline?: string | null;
 };
 
 export type PublicWeeklySummary = {

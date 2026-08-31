@@ -42,13 +42,14 @@
 
 ## M-03 — Retire Weeks text stubs (candidate — verify first)
 
-| Current fields | Homework 2, Video Feedback (text), Submission Assets (text), XP Events copy |
+| Current fields | Homework 2, Video Feedback (text), Submission Assets (text), XP Events copy on **Weeks** |
 | Proposed | Hide now; retire only after Interface/view/Make scan shows zero readers |
 | Reason | Fake relationships |
 | Writers/readers | Unknown — OMNI scan required |
 | Order | Inventory → Hide → 90-day watch → retire ticket |
 | Rollback | Unhide |
 | Verify | `field_index` + Interface export + Make blueprint search |
+| Note | **Submission Assets** table text stubs `XP Events` / `XP Events copy` already **DELETED 2026-08-31** — do not confuse with Weeks stubs |
 
 ---
 

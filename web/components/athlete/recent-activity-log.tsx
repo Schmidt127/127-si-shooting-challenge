@@ -3,7 +3,10 @@
 import { useCallback, useRef, useState } from "react";
 
 import { withBasePath } from "@/lib/app-config";
-import { formatGameLogDisplayDate } from "@/lib/data/game-log-presentation";
+import {
+  formatGameLogDateLine,
+  formatGameLogDisplayDate,
+} from "@/lib/data/game-log-presentation";
 import { formatXp } from "@/lib/formatters";
 import type { PublicActivityItem } from "@/types/public-athlete-profile";
 
@@ -149,7 +152,7 @@ export function RecentActivityLog({
                       className="col-start-1 row-start-2 min-w-0 break-words text-xs text-muted"
                       data-testid="recent-activity-date"
                     >
-                      {formatGameLogDisplayDate(item.date)}
+                      {formatGameLogDateLine(item.date, item.dateTagline)}
                     </p>
                   )}
                 </div>

@@ -161,7 +161,7 @@ Do **not** claim 064 creates XP Events or that 065 sets Parent Feedback Ready?.
 | Field family | Owner |
 |--------------|-------|
 | Video Feedback `Parent Feedback Sent?` / `Sent On` / Delivery Status / Delivery Error / Hub Event ID / Resend Message ID | **Communications Hub** after Resend success/failure (not 073/079) |
-| Homework Completions `Parent Feedback Sent?` / `Sent On` | Still Hub source PATCH TBD; **071** does not write them |
+| Homework Completions `Parent Feedback Sent?` / `Sent On` / Delivery Status / Delivery Error / Hub Event ID / Resend Message ID | **Communications Hub** after Resend success/failure (not 071/079) — **FUT-032**; contract in Hub `docs/contracts/HOMEWORK_FEEDBACK_SOURCE_WRITEBACK_v1.md`; SC checklist [`deploy-checklists/FUT-032-homework-hub-resend-writeback.md`](../../deploy-checklists/FUT-032-homework-hub-resend-writeback.md) |
 
 ---
 

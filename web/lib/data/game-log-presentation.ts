@@ -1,5 +1,5 @@
 import { asText } from "@/lib/data/airtable-values";
-import { formatShots, formatXpSourceLabel } from "@/lib/formatters";
+import { formatShots, formatXp, formatXpSourceLabel } from "@/lib/formatters";
 import type { XpEventSummary } from "@/types/xp";
 
 export type GameLogPresentation = {
@@ -9,6 +9,8 @@ export type GameLogPresentation = {
   subline?: string | null;
   /** When true, ISO date renders in row 2 column 3 instead of row 2 column 1. */
   dateOnSecondRowRight?: boolean;
+  /** Optional note after the date on row 2 (e.g. Extra credit +125 XP). */
+  dateTagline?: string | null;
 };
 
 const HEADLINE_SEPARATOR = " — ";
@@ -110,6 +112,26 @@ export function formatGameLogDisplayDate(dateKey: string | null | undefined): st
   return trimmed;
 }
 
+/** Parent-facing Extra Credit note for the Game Log date row. */
+export function formatGameLogExtraCreditTagline(
+  extraCreditXp: number | null | undefined,
+): string | null {
+  if (extraCreditXp == null || !Number.isFinite(extraCreditXp) || extraCreditXp <= 0) {
+    return null;
+  }
+  return `Extra credit +${formatXp(extraCreditXp)} XP`;
+}
+
+/** Combine ISO date and optional tagline for row 2 left (non-Zoom layout). */
+export function formatGameLogDateLine(
+  dateKey: string | null | undefined,
+  dateTagline?: string | null,
+): string {
+  const date = formatGameLogDisplayDate(dateKey);
+  const tag = dateTagline?.trim();
+  return tag ? `${date} · ${tag}` : date;
+}
+
 /** Map XP event source + reason into short Game Log headlines (FUT-012). */
 export function formatGameLogPresentation(row: XpEventSummary): GameLogPresentation {
   const source = asText(row.sourceLabel, "").toLowerCase();
@@ -182,6 +204,7 @@ export function formatGameLogPresentation(row: XpEventSummary): GameLogPresentat
       extractHomeworkAssignmentName(reason);
     return {
       headline: joinHeadline("Homework Completed", assignmentTitle),
+      dateTagline: formatGameLogExtraCreditTagline(row.homeworkExtraCreditXp),
     };
   }
 

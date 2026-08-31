@@ -7269,8 +7269,8 @@
       "populated": 0,
       "pct": 0.0,
       "isValid": null,
-      "classification": "REPO REFERENCED",
-      "evidence": "repo hits: airtable/automations/shooting-challenge/010-submission-intake-create-xp-event.js, airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js, airtable/automations/shooting-challenge/035-weekly-summary-and-goal-logic-create-weekly-threshold-xp-events.js",
+      "classification": "DELETED 2026-08-31",
+      "evidence": "DELETED 2026-08-31 \u2014 unused singleLineText stub; see docs/testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json",
       "formulaDeps": [],
       "repoHits": [
         "airtable/automations/shooting-challenge/010-submission-intake-create-xp-event.js",
@@ -7383,8 +7383,8 @@
       "populated": 0,
       "pct": 0.0,
       "isValid": null,
-      "classification": "REPO REFERENCED",
-      "evidence": "repo hits: tools/airtable/_preview/c025_config_linkage_inspect.json, tools/airtable/_preview/c025_related_fields.json, tools/airtable/_preview/c025_stage17_prod_schema_manifest_source.json",
+      "classification": "DELETED 2026-08-31",
+      "evidence": "DELETED 2026-08-31 \u2014 unused singleLineText stub; see docs/testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json",
       "formulaDeps": [],
       "repoHits": [
         "tools/airtable/_preview/c025_config_linkage_inspect.json",

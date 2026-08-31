@@ -1,0 +1,168 @@
+{
+  "verify": [
+    {
+      "table": "Homework Completions",
+      "tableId": "tblv58ppTFDBXb3nv",
+      "fieldId": "fldHchlovIaPlGKLk",
+      "expectedHint": "Submission Asset Review Summary",
+      "status": "QUARANTINED_OK",
+      "liveName": "ZZZ DELETE \u2014 Submission Asset Review Summary (invalid legacy)",
+      "type": "formula",
+      "description": "FUT-002 / 2026-08-30: Broken legacy display formula. Referenced deleted Drive lookup (column_value_fld6NBbAwicqJ1nhf). Empty on all records. No dependents in formulas, automations, web, Make, Fillout, Softr, views, or interfaces. API cannot DELETE fields (404) \u2014 Mike: delete this field in Airtable UI (Homework Completions \u2192 customize fields \u2192 trash). Do not restore."
+    },
+    {
+      "table": "Levels",
+      "tableId": "tblU6EWmc1jCpgRHe",
+      "fieldId": "fldTzIGODB2e03rvE",
+      "expectedHint": "Enrollments 3",
+      "status": "QUARANTINED_OK",
+      "liveName": "ZZZ DELETE \u2014 Enrollments 3 (accidental empty)",
+      "type": "singleLineText",
+      "description": "FUT-002: Empty singleLineText with no formula deps. Only historical schema-preview JSON reference. Delete in Airtable UI."
+    },
+    {
+      "table": "Streak Occurrences",
+      "tableId": "tbl9VxLdBiNcev4He",
+      "fieldId": "fldltgFPGVXHwRj4X",
+      "expectedHint": "Challenge / Season",
+      "status": "QUARANTINED_OK",
+      "liveName": "ZZZ DELETE \u2014 Challenge / Season (empty backfill)",
+      "type": "singleLineText",
+      "description": "FUT-002: Empty backfill helper. No formula/repo automation deps. Delete in Airtable UI."
+    },
+    {
+      "table": "Streak Occurrences",
+      "tableId": "tbl9VxLdBiNcev4He",
+      "fieldId": "fldBFDl629arXFcnp",
+      "expectedHint": "Backfill Run Label",
+      "status": "QUARANTINED_OK",
+      "liveName": "ZZZ DELETE \u2014 Backfill Run Label (empty backfill)",
+      "type": "singleLineText",
+      "description": "FUT-002: Empty backfill helper. No formula/repo automation deps. Delete in Airtable UI."
+    },
+    {
+      "table": "Achievements",
+      "tableId": "tblrADEQbvH9kBfMZ",
+      "fieldId": "fldkIzG5emvUBQ0Tw",
+      "expectedHint": "Uses Grade Band Scaling",
+      "status": "QUARANTINED_OK",
+      "liveName": "ZZZ DELETE \u2014 Uses Grade Band Scaling? (unused empty)",
+      "type": "checkbox",
+      "description": "FUT-002: Empty checkbox, no formula deps, unused. Delete in Airtable UI."
+    }
+  ],
+  "delete": [
+    {
+      "table": "Homework Completions",
+      "tableId": "tblv58ppTFDBXb3nv",
+      "fieldId": "fldHchlovIaPlGKLk",
+      "expectedHint": "Submission Asset Review Summary",
+      "status": "QUARANTINED_OK",
+      "liveName": "ZZZ DELETE \u2014 Submission Asset Review Summary (invalid legacy)",
+      "type": "formula",
+      "description": "FUT-002 / 2026-08-30: Broken legacy display formula. Referenced deleted Drive lookup (column_value_fld6NBbAwicqJ1nhf). Empty on all records. No dependents in formulas, automations, web, Make, Fillout, Softr, views, or interfaces. API cannot DELETE fields (404) \u2014 Mike: delete this field in Airtable UI (Homework Completions \u2192 customize fields \u2192 trash). Do not restore.",
+      "http": 404,
+      "body": "{\"error\":\"NOT_FOUND\"}"
+    },
+    {
+      "table": "Levels",
+      "tableId": "tblU6EWmc1jCpgRHe",
+      "fieldId": "fldTzIGODB2e03rvE",
+      "expectedHint": "Enrollments 3",
+      "status": "QUARANTINED_OK",
+      "liveName": "ZZZ DELETE \u2014 Enrollments 3 (accidental empty)",
+      "type": "singleLineText",
+      "description": "FUT-002: Empty singleLineText with no formula deps. Only historical schema-preview JSON reference. Delete in Airtable UI.",
+      "http": 404,
+      "body": "{\"error\":\"NOT_FOUND\"}"
+    },
+    {
+      "table": "Streak Occurrences",
+      "tableId": "tbl9VxLdBiNcev4He",
+      "fieldId": "fldltgFPGVXHwRj4X",
+      "expectedHint": "Challenge / Season",
+      "status": "QUARANTINED_OK",
+      "liveName": "ZZZ DELETE \u2014 Challenge / Season (empty backfill)",
+      "type": "singleLineText",
+      "description": "FUT-002: Empty backfill helper. No formula/repo automation deps. Delete in Airtable UI.",
+      "http": 404,
+      "body": "{\"error\":\"NOT_FOUND\"}"
+    },
+    {
+      "table": "Streak Occurrences",
+      "tableId": "tbl9VxLdBiNcev4He",
+      "fieldId": "fldBFDl629arXFcnp",
+      "expectedHint": "Backfill Run Label",
+      "status": "QUARANTINED_OK",
+      "liveName": "ZZZ DELETE \u2014 Backfill Run Label (empty backfill)",
+      "type": "singleLineText",
+      "description": "FUT-002: Empty backfill helper. No formula/repo automation deps. Delete in Airtable UI.",
+      "http": 404,
+      "body": "{\"error\":\"NOT_FOUND\"}"
+    },
+    {
+      "table": "Achievements",
+      "tableId": "tblrADEQbvH9kBfMZ",
+      "fieldId": "fldkIzG5emvUBQ0Tw",
+      "expectedHint": "Uses Grade Band Scaling",
+      "status": "QUARANTINED_OK",
+      "liveName": "ZZZ DELETE \u2014 Uses Grade Band Scaling? (unused empty)",
+      "type": "checkbox",
+      "description": "FUT-002: Empty checkbox, no formula deps, unused. Delete in Airtable UI.",
+      "http": 404,
+      "body": "{\"error\":\"NOT_FOUND\"}"
+    }
+  ],
+  "after": [
+    {
+      "table": "Homework Completions",
+      "tableId": "tblv58ppTFDBXb3nv",
+      "fieldId": "fldHchlovIaPlGKLk",
+      "expectedHint": "Submission Asset Review Summary",
+      "status": "QUARANTINED_OK",
+      "liveName": "ZZZ DELETE \u2014 Submission Asset Review Summary (invalid legacy)",
+      "type": "formula",
+      "description": "FUT-002 / 2026-08-30: Broken legacy display formula. Referenced deleted Drive lookup (column_value_fld6NBbAwicqJ1nhf). Empty on all records. No dependents in formulas, automations, web, Make, Fillout, Softr, views, or interfaces. API cannot DELETE fields (404) \u2014 Mike: delete this field in Airtable UI (Homework Completions \u2192 customize fields \u2192 trash). Do not restore."
+    },
+    {
+      "table": "Levels",
+      "tableId": "tblU6EWmc1jCpgRHe",
+      "fieldId": "fldTzIGODB2e03rvE",
+      "expectedHint": "Enrollments 3",
+      "status": "QUARANTINED_OK",
+      "liveName": "ZZZ DELETE \u2014 Enrollments 3 (accidental empty)",
+      "type": "singleLineText",
+      "description": "FUT-002: Empty singleLineText with no formula deps. Only historical schema-preview JSON reference. Delete in Airtable UI."
+    },
+    {
+      "table": "Streak Occurrences",
+      "tableId": "tbl9VxLdBiNcev4He",
+      "fieldId": "fldltgFPGVXHwRj4X",
+      "expectedHint": "Challenge / Season",
+      "status": "QUARANTINED_OK",
+      "liveName": "ZZZ DELETE \u2014 Challenge / Season (empty backfill)",
+      "type": "singleLineText",
+      "description": "FUT-002: Empty backfill helper. No formula/repo automation deps. Delete in Airtable UI."
+    },
+    {
+      "table": "Streak Occurrences",
+      "tableId": "tbl9VxLdBiNcev4He",
+      "fieldId": "fldBFDl629arXFcnp",
+      "expectedHint": "Backfill Run Label",
+      "status": "QUARANTINED_OK",
+      "liveName": "ZZZ DELETE \u2014 Backfill Run Label (empty backfill)",
+      "type": "singleLineText",
+      "description": "FUT-002: Empty backfill helper. No formula/repo automation deps. Delete in Airtable UI."
+    },
+    {
+      "table": "Achievements",
+      "tableId": "tblrADEQbvH9kBfMZ",
+      "fieldId": "fldkIzG5emvUBQ0Tw",
+      "expectedHint": "Uses Grade Band Scaling",
+      "status": "QUARANTINED_OK",
+      "liveName": "ZZZ DELETE \u2014 Uses Grade Band Scaling? (unused empty)",
+      "type": "checkbox",
+      "description": "FUT-002: Empty checkbox, no formula deps, unused. Delete in Airtable UI."
+    }
+  ]
+}

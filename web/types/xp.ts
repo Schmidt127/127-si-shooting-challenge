@@ -44,6 +44,8 @@ export type XpEventSummary = {
   submissionTotalShots?: number | null;
   /** Homework Completion → PHA → Assignment Title (display only). */
   homeworkAssignmentTitle?: string | null;
+  /** Homework Completion → Extra Credit XP Awarded (display only; included in points total). */
+  homeworkExtraCreditXp?: number | null;
   /** Video Feedback → Custom Video File Name (display only). */
   videoCustomFileName?: string | null;
   /** Zoom Meeting → Meeting Display Name (display only). */

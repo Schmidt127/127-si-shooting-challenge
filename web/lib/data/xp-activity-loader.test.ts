@@ -377,7 +377,10 @@ describe("buildXpEventPresentationContext", () => {
           records: [
             {
               id: "recHc1",
-              fields: { "Program Homework Assignment": ["recPha1"] },
+              fields: {
+                "Program Homework Assignment": ["recPha1"],
+                "Extra Credit XP Awarded": 125,
+              },
             },
           ],
         };
@@ -448,6 +451,7 @@ describe("buildXpEventPresentationContext", () => {
     expect(context.get("recXpRich")).toEqual({
       submissionTotalShots: 1250,
       homeworkAssignmentTitle: "Mikan Drill",
+      homeworkExtraCreditXp: 125,
       videoCustomFileName: "FreeThrows.mov",
       zoomMeetingDisplayName: "Player Development Zoom",
     });

@@ -101,6 +101,24 @@ describe("XP Event Log presentation", () => {
     expect(html).toContain('data-testid="recent-activity-middle"');
   });
 
+  it("shows Extra credit after the date on homework rows", () => {
+    const items = mapXpSummariesToPublicActivity([
+      xpRow({
+        id: "recHwEc",
+        points: 160,
+        sourceLabel: "Homework Completion",
+        reasonPublic: "Homework completed.",
+        homeworkAssignmentTitle: "Shot Tracker Usage",
+        homeworkExtraCreditXp: 125,
+      }),
+    ]);
+    const html = renderLog(items);
+
+    expect(html).toContain("Homework Completed — Shot Tracker Usage");
+    expect(html).toContain("+160 XP");
+    expect(html).toContain("2026-08-22 · Extra credit +125 XP");
+  });
+
   it("uses a safe fallback when zoom meeting display name is missing", () => {
     const items = mapXpSummariesToPublicActivity([
       xpRow({

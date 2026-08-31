@@ -3,10 +3,15 @@
   "mode": "closeout",
   "verifiedAt": "2026-08-31T12:37:00.000Z",
   "workflow": "COMPLETE",
-  "pr": 306,
+  "pr": 312,
   "enrollmentId": "recNu6fcBpF1GG3u5",
   "homeworkCompletionId": "rec8E94Jg7mpmuMW9",
   "sourceKey": "HOMEWORK_XP|rec8E94Jg7mpmuMW9",
+  "reconfirmedAt": "2026-08-31T13:02:00.000Z",
+  "reconfirmNotes": [
+    "Live search_records: exactly one XP Event recwpzl8pkXecUqRK with Source Key HOMEWORK_XP|rec8E94Jg7mpmuMW9, XP Points 35, Active true.",
+    "No second --apply during docs closeout."
+  ],
   "xpEvents": [
     {
       "id": "recwpzl8pkXecUqRK",

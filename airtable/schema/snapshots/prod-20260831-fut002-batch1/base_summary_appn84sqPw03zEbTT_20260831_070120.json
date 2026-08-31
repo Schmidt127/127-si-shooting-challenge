@@ -1,0 +1,130 @@
+{
+  "baseId": "appn84sqPw03zEbTT",
+  "baseName": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026",
+  "generatedAt": "2026-08-31T07:01:21",
+  "tableCount": 33,
+  "viewCountBasic": 0,
+  "viewCountDetailed": 0,
+  "linkCount": 170,
+  "dependencyCount": 486,
+  "tables": [
+    "Automations",
+    "Enrollments",
+    "Athletes",
+    "Submissions",
+    "Submission Assets",
+    "XP Events",
+    "Athlete Achievement Unlocks",
+    "Streak Occurrences",
+    "Weekly Athlete Summary",
+    "Target Goal Shots",
+    "Grade Bands",
+    "Achievements",
+    "Homework Completions",
+    "Weeks",
+    "Program Instance - Sync",
+    "School - Synced",
+    "Level Gate Rules",
+    "Levels",
+    "Shot Milestones",
+    "Homework Library",
+    "Program Homework Assignments",
+    "Video Feedback",
+    "Tutorials & Assets",
+    "XP Reward Rules",
+    "Config",
+    "Email Handoff Queue",
+    "Awards",
+    "Award Recipients",
+    "Final Reflection Quiz Submissions",
+    "Zoom Meetings",
+    "Zoom Attendance",
+    "Testing Scenarios",
+    "Payment Transactions"
+  ],
+  "topHubTables": [
+    {
+      "table": "Enrollments",
+      "degree": 42
+    },
+    {
+      "table": "Submissions",
+      "degree": 24
+    },
+    {
+      "table": "Weeks",
+      "degree": 24
+    },
+    {
+      "table": "Homework Completions",
+      "degree": 22
+    },
+    {
+      "table": "XP Events",
+      "degree": 20
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "degree": 18
+    },
+    {
+      "table": "Program Homework Assignments",
+      "degree": 16
+    },
+    {
+      "table": "Submission Assets",
+      "degree": 16
+    },
+    {
+      "table": "Grade Bands",
+      "degree": 14
+    },
+    {
+      "table": "Athlete Achievement Unlocks",
+      "degree": 12
+    }
+  ],
+  "mostComputedTables": [
+    {
+      "table": "Enrollments",
+      "computedFieldCount": 79
+    },
+    {
+      "table": "Submissions",
+      "computedFieldCount": 64
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "computedFieldCount": 49
+    },
+    {
+      "table": "Zoom Meetings",
+      "computedFieldCount": 42
+    },
+    {
+      "table": "Submission Assets",
+      "computedFieldCount": 35
+    },
+    {
+      "table": "Homework Completions",
+      "computedFieldCount": 34
+    },
+    {
+      "table": "Final Reflection Quiz Submissions",
+      "computedFieldCount": 26
+    },
+    {
+      "table": "XP Events",
+      "computedFieldCount": 26
+    },
+    {
+      "table": "Zoom Attendance",
+      "computedFieldCount": 25
+    },
+    {
+      "table": "Award Recipients",
+      "computedFieldCount": 20
+    }
+  ],
+  "viewsPerTable": {}
+}
