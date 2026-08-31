@@ -222,7 +222,7 @@ The current parent-facing email workflows are functional and can be used for the
 
 Optional future work may improve visual presentation or wording, but email functionality is not a blocker for the upcoming challenge.
 
-**Remaining writeback gap:** Weekly Athlete Summary Sent? after Hub → Resend (still TBD). Homework Completions Sent?/Sent On — **FUT-032 COMPLETE** (2026-08-31 Mike verify).
+**Remaining writeback gap:** Weekly Athlete Summary Sent? after Hub → Resend (still TBD). Homework Completions Sent?/Sent On — **FUT-032 COMPLETE** (2026-08-31 Mike verify). Hub PR [#42](https://github.com/Schmidt127/communications/pull/42) **MERGED**.
 
 ---
 
@@ -656,7 +656,7 @@ Mike-authorized **record deletion only** (not schema). Deleted **959** transacti
 ### FUT-032 — Homework Completions Hub → Resend source writeback (Parent Feedback Sent?)
 
 **Priority:** P1  
-**Status:** **COMPLETE** (2026-08-31) — Hub writeback live; Mike verified Parent Feedback Sent? + Sent On on Schmidt HC after 065/071 path  
+**Status:** **COMPLETE** (2026-08-31) — Hub writeback live ([communications#42](https://github.com/Schmidt127/communications/pull/42) **MERGED**); Mike verified Parent Feedback Sent? + Sent On on Schmidt HC after 065/071 path  
 **Systems:** Communications Hub, Resend webhooks, Homework Completions, Automation **071** / **079** (read-only for Sent?), Email Handoff Queue  
 **Related:** FUT-006 · Video Feedback Hub writeback ([`deploy-checklists/VIDEO-FEEDBACK-HUB-RESEND-WRITEBACK.md`](./deploy-checklists/VIDEO-FEEDBACK-HUB-RESEND-WRITEBACK.md)) · [`online-agents/homework-assets/HOMEWORK-ASSET-COMPLETION-RUNBOOK.md`](./online-agents/homework-assets/HOMEWORK-ASSET-COMPLETION-RUNBOOK.md) §7  
 **Promotion:** [`deploy-checklists/FUT-032-homework-hub-resend-writeback.md`](./deploy-checklists/FUT-032-homework-hub-resend-writeback.md) · Hub contract `communications/docs/contracts/HOMEWORK_FEEDBACK_SOURCE_WRITEBACK_v1.md`
@@ -668,7 +668,7 @@ Mike-authorized **record deletion only** (not schema). Deleted **959** transacti
 **Done (2026-08-31):**
 
 1. Production HC fields created (Video parity): Delivery Status, Delivery Error, Hub Event ID, Resend Message ID.
-2. Hub: `source-writeback-homework-feedback.js`; wired in `welcome-processor.js` + `resend-webhook.js`; tests `homework-feedback-writeback.test.mjs`.
+2. Hub: `source-writeback-homework-feedback.js`; wired in `welcome-processor.js` + `resend-webhook.js`; tests `homework-feedback-writeback.test.mjs`; **PR #42 merged** to `communications` `main`.
 3. SC docs/checklist updated.
 4. Mike verified live: **Parent Feedback Sent?** checked and **Parent Feedback Sent On** correct after homework feedback send (Athlete1 / Meditation Workout path). Related: Production **065 v10.5** paste (points reconcile) same day.
 
@@ -1379,7 +1379,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **FUT-002 SA XP text stubs** | **COMPLETE** (2026-08-31) | Submission Assets unused text `XP Events` + `XP Events copy` UI-deleted; live **1363** fields / **35** tables — [`deploy-checklists/FUT-002-sa-xp-text-stubs-delete.md`](./deploy-checklists/FUT-002-sa-xp-text-stubs-delete.md) · [`testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json`](./testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json) |
 | **FUT-029 / MRW-H12** | **FUTURE** (design only) | Hybrid Fillout Homework — [`next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](./next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md); requested as FUT-018 (ID already used) |
 | **FUT-030** | **COMPLETE** (2026-08-31) | Full transactional record reset — **959** deleted; Weeks/Config/Library/rules/automations preserved; **18 PHA restored** same day (new RIDs); **075** absent; no external sends — [`testing/evidence/transactional-reset-2026-08-31/`](./testing/evidence/transactional-reset-2026-08-31/) |
-| **FUT-032** | **COMPLETE** (2026-08-31) | Homework Hub → Resend source writeback — Sent? + Sent On verified live after homework feedback — [`deploy-checklists/FUT-032-homework-hub-resend-writeback.md`](./deploy-checklists/FUT-032-homework-hub-resend-writeback.md) |
+| **FUT-032** | **COMPLETE** (2026-08-31) | Homework Hub → Resend source writeback — Hub PR [#42](https://github.com/Schmidt127/communications/pull/42) MERGED; Sent? + Sent On verified live after homework feedback — [`deploy-checklists/FUT-032-homework-hub-resend-writeback.md`](./deploy-checklists/FUT-032-homework-hub-resend-writeback.md) |
 | **065 v10.5** | **COMPLETE** (2026-08-31) | Points-reconcile fix pasted Live; Awarded + 071/Hub path verified — [`deploy-checklists/065-v10.5-points-reconcile-operator-packet.md`](./deploy-checklists/065-v10.5-points-reconcile-operator-packet.md) |
 
 ### 2026-08-31 approved brainstorming intake (documentation only)
