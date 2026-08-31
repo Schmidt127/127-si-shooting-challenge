@@ -16,13 +16,17 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   Week 1 starts 2027-05-02, Week 9 no homework, 18 active PHA due 2027-06-29, Submission XP
   once per Count It submission (**MRW-I13 closed**). Deleted inactive orphan PHA
   `recpHX3stQ8YBVtLi`. No automation paste; 075 remains retired.
-- **SC-MULTI-ASSET-HW live validation (2026-08-30)** — Disposable Testing3 Early Bird:
+- **SC-MULTI-ASSET-HW live validation (2026-08-30 → closeout 2026-08-31)** — Disposable Testing3 Early Bird:
   two Submission Assets same HW1 slot → one HC via live **020** (identity + isolation +
-  missing-PHA fail-safe PASS). **064** armed XP amounts; live **065** blocked by hardcoded
-  script input `recordId=reccYReUfSId2MH1S` (compare dynamic 020). Operator packet only —
-  **do not repaste 065**: [`docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](./docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md).
-  Harness: `tools/testing/sc-multi-asset-homework.mjs`. Evidence:
-  `docs/testing/core-workflow/MULTI-ASSET-HW-RESULTS.md`.
+  missing-PHA fail-safe PASS). **064** armed XP amounts. Live **065** required (1) dynamic
+  `recordId` remap from hardcoded `reccYReUfSId2MH1S` and (2) **trigger re-entry** after remap
+  for HC stuck at Reconcile=1. Exactly one `HOMEWORK_XP|rec8E94Jg7mpmuMW9` =
+  `recwpzl8pkXecUqRK` (35 XP, Awarded, **no duplicate**). **Do not repaste 065.**
+  Packet: [`docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](./docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md).
+  Evidence: [`docs/testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json`](./docs/testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json);
+  results: `docs/testing/core-workflow/MULTI-ASSET-HW-RESULTS.md`. Runbook:
+  [`docs/testing/core-workflow/MULTI-ASSET-HW-OPERATOR-RUNBOOK.md`](./docs/testing/core-workflow/MULTI-ASSET-HW-OPERATOR-RUNBOOK.md).
+  Harness: `tools/testing/sc-multi-asset-homework.mjs`.
 - **SC-SEASON-SIM-002 preflight package (2026-08-30, PR #302)** — `tools/season_simulation/`
   with offline unittest (21), gated execute/cleanup, Agent 4 suite wiring. **No full season
   simulation run.** Live 057 verified correct — do not repaste.

@@ -1,5 +1,65 @@
 {
   "harness": "SC-MULTI-ASSET-HW",
-  "createdAt": null,
-  "note": "Cleared after MCP cleanup 2026-08-30"
+  "createdAt": "2026-08-31T12:21:46.447Z",
+  "batchKey": "COREWF|MULTI|2026-08-31|mth7eho5",
+  "enrollmentId": "recNu6fcBpF1GG3u5",
+  "athleteId": "rec82GY2ECcbWaDpf",
+  "weekId": "recBrZ1sV8byWEHZU",
+  "wasId": "recIwx50zhNsUqV1L",
+  "deletedDuplicateWasId": null,
+  "submissionIds": [
+    {
+      "id": "rec5vGBuaT4CdwVe8",
+      "tag": "same-slot-hw1"
+    },
+    {
+      "id": "recQHhzBLSUCZnvEX",
+      "tag": "other-slot-hw2"
+    },
+    {
+      "id": "receHLEP11fFp1BED",
+      "tag": "missing-pha"
+    }
+  ],
+  "assetIds": [
+    {
+      "id": "recReiXXBRtaW3lns",
+      "tag": "hw1-a1",
+      "slot": "HW1"
+    },
+    {
+      "id": "recwYDQKOytkzGzku",
+      "tag": "hw1-a2",
+      "slot": "HW1"
+    },
+    {
+      "id": "recim3y0ss3iSaxRG",
+      "tag": "hw2-b1",
+      "slot": "HW2"
+    },
+    {
+      "id": "rec15lKi4symhfSKK",
+      "tag": "missing-pha",
+      "slot": "HW1"
+    }
+  ],
+  "homeworkIds": [
+    {
+      "id": "rec8E94Jg7mpmuMW9",
+      "kind": "hw1-multi-asset"
+    },
+    {
+      "id": "recplrIQdSVNLcQ2l",
+      "kind": "hw2-isolation"
+    }
+  ],
+  "xpEventIds": ["recwpzl8pkXecUqRK"],
+  "closeout": {
+    "status": "COMPLETE",
+    "sourceKey": "HOMEWORK_XP|rec8E94Jg7mpmuMW9",
+    "xpEventId": "recwpzl8pkXecUqRK",
+    "xpPoints": 35,
+    "duplicateXp": false,
+    "notes": "065 dynamic recordId remapped; manual trigger re-entry required after remap"
+  }
 }
