@@ -114,4 +114,8 @@ During pass 1, automations briefly recreated 4 orphan rows (HOMEWORK_FEEDBACK ha
 
 ## Ready for clean workflow testing
 
-Yes — transactional athlete/enrollment/submission/XP/payment/comms history is empty. Configuration, Weeks, Homework Library, rules, and automations remain. **Program Homework Assignments are empty** (by design); recreate PHA before season homework testing.
+Yes — transactional athlete/enrollment/submission/XP/payment/comms history is empty. Configuration, Weeks, Homework Library, rules, and automations remain.
+
+### PHA restore (same day)
+
+**18 active Program Homework Assignments restored** 2026-08-31 (new record IDs). Due Date **2027-06-29**. Evidence: `11-pha-restore-created-20260831_133022.json`. Early Bird HW1 = `recrpWRmt0MntieCL`.

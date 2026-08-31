@@ -628,7 +628,7 @@ Expand Homework Library from ~70 to **100+** assignments and add **online Fillou
 **Evidence:** [`testing/evidence/transactional-reset-2026-08-31/`](./testing/evidence/transactional-reset-2026-08-31/)  
 **Tool:** `tools/airtable/transactional_record_reset.py`
 
-Mike-authorized **record deletion only** (not schema). Deleted **959** transactional records across all program years and test fixtures. No external sends. Base is ready for clean workflow rebuild. **Next:** recreate 18 PHA rows before homework season tests.
+Mike-authorized **record deletion only** (not schema). Deleted **959** transactional records across all program years and test fixtures. No external sends. **18 seasonal PHA restored same day** (new RIDs; Due Date 2027-06-29) — see `11-pha-restore-created-20260831_133022.json`. Base is ready for clean workflow rebuild.
 
 ### SC-ATHLETE-WF-001 — Individual athlete workflow QA (pre–season simulation)
 
@@ -1015,7 +1015,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **SC-015 / SC-016 / MRW-F02** | **COMPLETE** (2026-08-31) | Multi-asset → one HC + one Homework XP; 065 remap + re-entry **COMPLETE**; **do not** re-paste 020/065; **do not** re-`--apply` |
 | **FUT-002 batch 1** | **COMPLETE** (2026-08-31) | Five `ZZZ DELETE —` fields UI-deleted; live **1350** fields / **0** ZZZ; [`testing/evidence/fut-002/batch1-live-verify.json`](./testing/evidence/fut-002/batch1-live-verify.json) · schema `airtable/schema/snapshots/prod-20260831-fut002-batch1/` |
 | **FUT-029 / MRW-H12** | **FUTURE** (design only) | Hybrid Fillout Homework — [`next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](./next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md); requested as FUT-018 (ID already used) |
-| **FUT-030** | **COMPLETE** (2026-08-31) | Full transactional record reset — **959** deleted; Weeks/Config/Library/rules/automations preserved; PHA emptied intentionally; **075** absent; no external sends — [`testing/evidence/transactional-reset-2026-08-31/`](./testing/evidence/transactional-reset-2026-08-31/) |
+| **FUT-030** | **COMPLETE** (2026-08-31) | Full transactional record reset — **959** deleted; Weeks/Config/Library/rules/automations preserved; **18 PHA restored** same day (new RIDs); **075** absent; no external sends — [`testing/evidence/transactional-reset-2026-08-31/`](./testing/evidence/transactional-reset-2026-08-31/) |
 
 ### 2026-08-29 legacy welcome-email field retirement
 

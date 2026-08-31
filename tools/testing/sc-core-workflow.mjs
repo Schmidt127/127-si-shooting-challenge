@@ -53,9 +53,10 @@ const LIVE_IDS = Object.freeze({
   earlyBirdWeek: "recBrZ1sV8byWEHZU",
   week1: "rec2Rewxt21z7dI9f",
   week9: "rech8lgJkNMStWh9A",
-  earlyBirdHw1: "recgj8dPk4ouTwCOj",
-  earlyBirdHw2: "recXXZErbjxxGxWw2",
-  week1Hw1: "reciIDlAOMCuc9nYi",
+  // Restored after FUT-030 (2026-08-31) — old IDs wiped
+  earlyBirdHw1: "recrpWRmt0MntieCL",
+  earlyBirdHw2: "recfcXqQsk3W4o6IT",
+  week1Hw1: "rechCXdubiA1RPFEj",
 });
 
 function parseArgs(argv) {

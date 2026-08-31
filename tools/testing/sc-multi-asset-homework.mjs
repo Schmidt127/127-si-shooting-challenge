@@ -60,8 +60,9 @@ const MANIFEST_PATH = resolve(ROOT, "docs/testing/core-workflow/fixtures/_sc-mul
 
 const LIVE = Object.freeze({
   earlyBirdWeek: "recBrZ1sV8byWEHZU",
-  earlyBirdHw1: "recgj8dPk4ouTwCOj",
-  earlyBirdHw2: "recXXZErbjxxGxWw2",
+  // Restored after FUT-030 (2026-08-31) — old IDs wiped
+  earlyBirdHw1: "recrpWRmt0MntieCL",
+  earlyBirdHw2: "recfcXqQsk3W4o6IT",
   libraryHw1: "rechVLOeyEVIqmy2v",
   libraryHw2: "rec6WmXjpLtIWDERo",
   keepWasId: "recIwx50zhNsUqV1L",

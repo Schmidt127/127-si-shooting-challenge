@@ -1,0 +1,978 @@
+{
+  "created_at": "20260831_133022",
+  "count": 18,
+  "records": [
+    {
+      "id": "recrpWRmt0MntieCL",
+      "primary": "Shooting Challenge | 2026-2027 | Early Bird | K-2, 3-4, 5-6, 7-8, 9-12 | HW1 | SA - Personal Game Plan - Shot Tracker Usage",
+      "fields": {
+        "Homework Assignment RID": [
+          "rechVLOeyEVIqmy2v"
+        ],
+        "Homework Assignment": [
+          "rechVLOeyEVIqmy2v"
+        ],
+        "Program Instance RID": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recBrZ1sV8byWEHZU"
+        ],
+        "Homework XP PHA Signature": "recrpWRmt0MntieCL|ACTIVE|HW=SA - Personal Game Plan - Shot Tracker Usage|PI=Shooting Challenge | 2026-2027|WEEK=Early Bird|SLOT=HW1",
+        "Grade Band RID": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Due Date": "2027-06-29",
+        "Record Id - PHA": "recrpWRmt0MntieCL",
+        "Week RID": [
+          "recBrZ1sV8byWEHZU"
+        ],
+        "School Year - Linked (from Program Instance)": [
+          "2026-2027"
+        ],
+        "Program Homework Assignment": "Shooting Challenge | 2026-2027 | Early Bird | K-2, 3-4, 5-6, 7-8, 9-12 | HW1 | SA - Personal Game Plan - Shot Tracker Usage",
+        "Operator Status": "Active \u2014 will assign via 033 / resolve via 020",
+        "Schedule Key": "rec5mEM0YPqPqq0hZ|recBrZ1sV8byWEHZU|HW1|rechVLOeyEVIqmy2v",
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Assignment Title - Lkp": [
+          "Shot Tracker Usage"
+        ],
+        "Completions Count": 0,
+        "Program Homework Assignment Display": "SA - Personal Game Plan - Shot Tracker Usage | Shooting Challenge | 2026-2027 | Early Bird | K-2, 3-4, 5-6, 7-8, 9-12 | HW1",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Homework Slot": "HW1",
+        "Active?": true
+      }
+    },
+    {
+      "id": "recfcXqQsk3W4o6IT",
+      "primary": "Shooting Challenge | 2026-2027 | Early Bird | K-2, 3-4, 5-6, 7-8, 9-12 | HW2 | SA - Personal Game Plan - Website Exploration",
+      "fields": {
+        "Homework Assignment RID": [
+          "rec6WmXjpLtIWDERo"
+        ],
+        "Homework Assignment": [
+          "rec6WmXjpLtIWDERo"
+        ],
+        "Program Instance RID": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recBrZ1sV8byWEHZU"
+        ],
+        "Homework XP PHA Signature": "recfcXqQsk3W4o6IT|ACTIVE|HW=SA - Personal Game Plan - Website Exploration|PI=Shooting Challenge | 2026-2027|WEEK=Early Bird|SLOT=HW2",
+        "Grade Band RID": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Due Date": "2027-06-29",
+        "Record Id - PHA": "recfcXqQsk3W4o6IT",
+        "Week RID": [
+          "recBrZ1sV8byWEHZU"
+        ],
+        "School Year - Linked (from Program Instance)": [
+          "2026-2027"
+        ],
+        "Program Homework Assignment": "Shooting Challenge | 2026-2027 | Early Bird | K-2, 3-4, 5-6, 7-8, 9-12 | HW2 | SA - Personal Game Plan - Website Exploration",
+        "Operator Status": "Active \u2014 will assign via 033 / resolve via 020",
+        "Schedule Key": "rec5mEM0YPqPqq0hZ|recBrZ1sV8byWEHZU|HW2|rec6WmXjpLtIWDERo",
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Assignment Title - Lkp": [
+          "Website Exploration"
+        ],
+        "Completions Count": 0,
+        "Program Homework Assignment Display": "SA - Personal Game Plan - Website Exploration | Shooting Challenge | 2026-2027 | Early Bird | K-2, 3-4, 5-6, 7-8, 9-12 | HW2",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Homework Slot": "HW2",
+        "Active?": true
+      }
+    },
+    {
+      "id": "rechCXdubiA1RPFEj",
+      "primary": "Shooting Challenge | 2026-2027 | Week 1 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1 | MTFYA - Self Awareness - The Meditation Workout",
+      "fields": {
+        "Homework Assignment RID": [
+          "recRZhsAtY9A6rDIu"
+        ],
+        "Homework Assignment": [
+          "recRZhsAtY9A6rDIu"
+        ],
+        "Program Instance RID": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "rec2Rewxt21z7dI9f"
+        ],
+        "Homework XP PHA Signature": "rechCXdubiA1RPFEj|ACTIVE|HW=MTFYA - Self Awareness - The Meditation Workout|PI=Shooting Challenge | 2026-2027|WEEK=Week 1|SLOT=HW1",
+        "Grade Band RID": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Due Date": "2027-06-29",
+        "Record Id - PHA": "rechCXdubiA1RPFEj",
+        "Week RID": [
+          "rec2Rewxt21z7dI9f"
+        ],
+        "School Year - Linked (from Program Instance)": [
+          "2026-2027"
+        ],
+        "Program Homework Assignment": "Shooting Challenge | 2026-2027 | Week 1 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1 | MTFYA - Self Awareness - The Meditation Workout",
+        "Operator Status": "Active \u2014 will assign via 033 / resolve via 020",
+        "Schedule Key": "rec5mEM0YPqPqq0hZ|rec2Rewxt21z7dI9f|HW1|recRZhsAtY9A6rDIu",
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Assignment Title - Lkp": [
+          "The Meditation Workout"
+        ],
+        "Completions Count": 0,
+        "Program Homework Assignment Display": "MTFYA - Self Awareness - The Meditation Workout | Shooting Challenge | 2026-2027 | Week 1 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Homework Slot": "HW1",
+        "Active?": true
+      }
+    },
+    {
+      "id": "rec4iQ2WS04Arq3tB",
+      "primary": "Shooting Challenge | 2026-2027 | Week 1 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2 | MTFYA - Resilience Technique - Train Rough",
+      "fields": {
+        "Homework Assignment RID": [
+          "recgQCc0Xvr6wQ0Ar"
+        ],
+        "Homework Assignment": [
+          "recgQCc0Xvr6wQ0Ar"
+        ],
+        "Program Instance RID": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "rec2Rewxt21z7dI9f"
+        ],
+        "Homework XP PHA Signature": "rec4iQ2WS04Arq3tB|ACTIVE|HW=MTFYA - Resilience Technique - Train Rough|PI=Shooting Challenge | 2026-2027|WEEK=Week 1|SLOT=HW2",
+        "Grade Band RID": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Due Date": "2027-06-29",
+        "Record Id - PHA": "rec4iQ2WS04Arq3tB",
+        "Week RID": [
+          "rec2Rewxt21z7dI9f"
+        ],
+        "School Year - Linked (from Program Instance)": [
+          "2026-2027"
+        ],
+        "Program Homework Assignment": "Shooting Challenge | 2026-2027 | Week 1 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2 | MTFYA - Resilience Technique - Train Rough",
+        "Operator Status": "Active \u2014 will assign via 033 / resolve via 020",
+        "Schedule Key": "rec5mEM0YPqPqq0hZ|rec2Rewxt21z7dI9f|HW2|recgQCc0Xvr6wQ0Ar",
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Assignment Title - Lkp": [
+          "Train Rough"
+        ],
+        "Completions Count": 0,
+        "Program Homework Assignment Display": "MTFYA - Resilience Technique - Train Rough | Shooting Challenge | 2026-2027 | Week 1 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Homework Slot": "HW2",
+        "Active?": true
+      }
+    },
+    {
+      "id": "recWflbiYskBrZdr8",
+      "primary": "Shooting Challenge | 2026-2027 | Week 2 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1 | MTFYA - Relationships - Your Ride or Die and You - Family Culture",
+      "fields": {
+        "Homework Assignment RID": [
+          "rec5ST6oTi4hMU8os"
+        ],
+        "Homework Assignment": [
+          "rec5ST6oTi4hMU8os"
+        ],
+        "Program Instance RID": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "rec7RpUMVLbcrmn4h"
+        ],
+        "Homework XP PHA Signature": "recWflbiYskBrZdr8|ACTIVE|HW=MTFYA - Relationships - Your Ride or Die and You - Family Culture|PI=Shooting Challenge | 2026-2027|WEEK=Week 2|SLOT=HW1",
+        "Grade Band RID": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Due Date": "2027-06-29",
+        "Record Id - PHA": "recWflbiYskBrZdr8",
+        "Week RID": [
+          "rec7RpUMVLbcrmn4h"
+        ],
+        "School Year - Linked (from Program Instance)": [
+          "2026-2027"
+        ],
+        "Program Homework Assignment": "Shooting Challenge | 2026-2027 | Week 2 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1 | MTFYA - Relationships - Your Ride or Die and You - Family Culture",
+        "Operator Status": "Active \u2014 will assign via 033 / resolve via 020",
+        "Schedule Key": "rec5mEM0YPqPqq0hZ|rec7RpUMVLbcrmn4h|HW1|rec5ST6oTi4hMU8os",
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Assignment Title - Lkp": [
+          "Your Ride or Die and You - Family Culture"
+        ],
+        "Completions Count": 0,
+        "Program Homework Assignment Display": "MTFYA - Relationships - Your Ride or Die and You - Family Culture | Shooting Challenge | 2026-2027 | Week 2 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Homework Slot": "HW1",
+        "Active?": true
+      }
+    },
+    {
+      "id": "recmVgMrGNOQOphTe",
+      "primary": "Shooting Challenge | 2026-2027 | Week 2 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2 | MTFYA - Personal Game Plan - Learn to Play Small",
+      "fields": {
+        "Homework Assignment RID": [
+          "recffLcS6rQkzzFYr"
+        ],
+        "Homework Assignment": [
+          "recffLcS6rQkzzFYr"
+        ],
+        "Program Instance RID": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "rec7RpUMVLbcrmn4h"
+        ],
+        "Homework XP PHA Signature": "recmVgMrGNOQOphTe|ACTIVE|HW=MTFYA - Personal Game Plan - Learn to Play Small|PI=Shooting Challenge | 2026-2027|WEEK=Week 2|SLOT=HW2",
+        "Grade Band RID": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Due Date": "2027-06-29",
+        "Record Id - PHA": "recmVgMrGNOQOphTe",
+        "Week RID": [
+          "rec7RpUMVLbcrmn4h"
+        ],
+        "School Year - Linked (from Program Instance)": [
+          "2026-2027"
+        ],
+        "Program Homework Assignment": "Shooting Challenge | 2026-2027 | Week 2 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2 | MTFYA - Personal Game Plan - Learn to Play Small",
+        "Operator Status": "Active \u2014 will assign via 033 / resolve via 020",
+        "Schedule Key": "rec5mEM0YPqPqq0hZ|rec7RpUMVLbcrmn4h|HW2|recffLcS6rQkzzFYr",
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Assignment Title - Lkp": [
+          "Learn to Play Small"
+        ],
+        "Completions Count": 0,
+        "Program Homework Assignment Display": "MTFYA - Personal Game Plan - Learn to Play Small | Shooting Challenge | 2026-2027 | Week 2 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Homework Slot": "HW2",
+        "Active?": true
+      }
+    },
+    {
+      "id": "rec61sBU4DLFopm74",
+      "primary": "Shooting Challenge | 2026-2027 | Week 3 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1 | MTFYA - Mastery - Writing Down Your Goals",
+      "fields": {
+        "Homework Assignment RID": [
+          "rec7B9dYKzkOqVbEF"
+        ],
+        "Homework Assignment": [
+          "rec7B9dYKzkOqVbEF"
+        ],
+        "Program Instance RID": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recCCpyqPKA580sdk"
+        ],
+        "Homework XP PHA Signature": "rec61sBU4DLFopm74|ACTIVE|HW=MTFYA - Mastery - Writing Down Your Goals|PI=Shooting Challenge | 2026-2027|WEEK=Week 3|SLOT=HW1",
+        "Grade Band RID": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Due Date": "2027-06-29",
+        "Record Id - PHA": "rec61sBU4DLFopm74",
+        "Week RID": [
+          "recCCpyqPKA580sdk"
+        ],
+        "School Year - Linked (from Program Instance)": [
+          "2026-2027"
+        ],
+        "Program Homework Assignment": "Shooting Challenge | 2026-2027 | Week 3 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1 | MTFYA - Mastery - Writing Down Your Goals",
+        "Operator Status": "Active \u2014 will assign via 033 / resolve via 020",
+        "Schedule Key": "rec5mEM0YPqPqq0hZ|recCCpyqPKA580sdk|HW1|rec7B9dYKzkOqVbEF",
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Assignment Title - Lkp": [
+          "Writing Down Your Goals"
+        ],
+        "Completions Count": 0,
+        "Program Homework Assignment Display": "MTFYA - Mastery - Writing Down Your Goals | Shooting Challenge | 2026-2027 | Week 3 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Homework Slot": "HW1",
+        "Active?": true
+      }
+    },
+    {
+      "id": "recBtXM5c29b83gOJ",
+      "primary": "Shooting Challenge | 2026-2027 | Week 3 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2 | MTFYA - Mastery - The Visualization Workout",
+      "fields": {
+        "Homework Assignment RID": [
+          "recK1bbYy8P4riusW"
+        ],
+        "Homework Assignment": [
+          "recK1bbYy8P4riusW"
+        ],
+        "Program Instance RID": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recCCpyqPKA580sdk"
+        ],
+        "Homework XP PHA Signature": "recBtXM5c29b83gOJ|ACTIVE|HW=MTFYA - Mastery - The Visualization Workout|PI=Shooting Challenge | 2026-2027|WEEK=Week 3|SLOT=HW2",
+        "Grade Band RID": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Due Date": "2027-06-29",
+        "Record Id - PHA": "recBtXM5c29b83gOJ",
+        "Week RID": [
+          "recCCpyqPKA580sdk"
+        ],
+        "School Year - Linked (from Program Instance)": [
+          "2026-2027"
+        ],
+        "Program Homework Assignment": "Shooting Challenge | 2026-2027 | Week 3 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2 | MTFYA - Mastery - The Visualization Workout",
+        "Operator Status": "Active \u2014 will assign via 033 / resolve via 020",
+        "Schedule Key": "rec5mEM0YPqPqq0hZ|recCCpyqPKA580sdk|HW2|recK1bbYy8P4riusW",
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Assignment Title - Lkp": [
+          "The Visualization Workout"
+        ],
+        "Completions Count": 0,
+        "Program Homework Assignment Display": "MTFYA - Mastery - The Visualization Workout | Shooting Challenge | 2026-2027 | Week 3 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Homework Slot": "HW2",
+        "Active?": true
+      }
+    },
+    {
+      "id": "recIaBVgLwlchUOH1",
+      "primary": "Shooting Challenge | 2026-2027 | Week 4 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1 | MTFYA - Growth Mindset - Watch the Pros! Not the Joes",
+      "fields": {
+        "Homework Assignment RID": [
+          "rectwJ9VZekA8kx73"
+        ],
+        "Homework Assignment": [
+          "rectwJ9VZekA8kx73"
+        ],
+        "Program Instance RID": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recEapVpi6u0oxuPy"
+        ],
+        "Homework XP PHA Signature": "recIaBVgLwlchUOH1|ACTIVE|HW=MTFYA - Growth Mindset - Watch the Pros! Not the Joes|PI=Shooting Challenge | 2026-2027|WEEK=Week 4|SLOT=HW1",
+        "Grade Band RID": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Due Date": "2027-06-29",
+        "Record Id - PHA": "recIaBVgLwlchUOH1",
+        "Week RID": [
+          "recEapVpi6u0oxuPy"
+        ],
+        "School Year - Linked (from Program Instance)": [
+          "2026-2027"
+        ],
+        "Program Homework Assignment": "Shooting Challenge | 2026-2027 | Week 4 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1 | MTFYA - Growth Mindset - Watch the Pros! Not the Joes",
+        "Operator Status": "Active \u2014 will assign via 033 / resolve via 020",
+        "Schedule Key": "rec5mEM0YPqPqq0hZ|recEapVpi6u0oxuPy|HW1|rectwJ9VZekA8kx73",
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Assignment Title - Lkp": [
+          "Watch the Pros! Not the Joes"
+        ],
+        "Completions Count": 0,
+        "Program Homework Assignment Display": "MTFYA - Growth Mindset - Watch the Pros! Not the Joes | Shooting Challenge | 2026-2027 | Week 4 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Homework Slot": "HW1",
+        "Active?": true
+      }
+    },
+    {
+      "id": "reczT4W04grfbDgOF",
+      "primary": "Shooting Challenge | 2026-2027 | Week 4 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2 | MTFYA - Growth Mindset - The Cooldown",
+      "fields": {
+        "Homework Assignment RID": [
+          "reca3nYGaM3rykAA2"
+        ],
+        "Homework Assignment": [
+          "reca3nYGaM3rykAA2"
+        ],
+        "Program Instance RID": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recEapVpi6u0oxuPy"
+        ],
+        "Homework XP PHA Signature": "reczT4W04grfbDgOF|ACTIVE|HW=MTFYA - Growth Mindset - The Cooldown|PI=Shooting Challenge | 2026-2027|WEEK=Week 4|SLOT=HW2",
+        "Grade Band RID": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Due Date": "2027-06-29",
+        "Record Id - PHA": "reczT4W04grfbDgOF",
+        "Week RID": [
+          "recEapVpi6u0oxuPy"
+        ],
+        "School Year - Linked (from Program Instance)": [
+          "2026-2027"
+        ],
+        "Program Homework Assignment": "Shooting Challenge | 2026-2027 | Week 4 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2 | MTFYA - Growth Mindset - The Cooldown",
+        "Operator Status": "Active \u2014 will assign via 033 / resolve via 020",
+        "Schedule Key": "rec5mEM0YPqPqq0hZ|recEapVpi6u0oxuPy|HW2|reca3nYGaM3rykAA2",
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Assignment Title - Lkp": [
+          "The Cooldown"
+        ],
+        "Completions Count": 0,
+        "Program Homework Assignment Display": "MTFYA - Growth Mindset - The Cooldown | Shooting Challenge | 2026-2027 | Week 4 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Homework Slot": "HW2",
+        "Active?": true
+      }
+    },
+    {
+      "id": "recFntj0WVUKFAPwB",
+      "primary": "Shooting Challenge | 2026-2027 | Week 5 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1 | MTFYA - Growth Mindset - Practice Slower",
+      "fields": {
+        "Homework Assignment RID": [
+          "recuHpXzB3305azaH"
+        ],
+        "Homework Assignment": [
+          "recuHpXzB3305azaH"
+        ],
+        "Program Instance RID": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recKJMGYbEzGHyXfd"
+        ],
+        "Homework XP PHA Signature": "recFntj0WVUKFAPwB|ACTIVE|HW=MTFYA - Growth Mindset - Practice Slower|PI=Shooting Challenge | 2026-2027|WEEK=Week 5|SLOT=HW1",
+        "Grade Band RID": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Due Date": "2027-06-29",
+        "Record Id - PHA": "recFntj0WVUKFAPwB",
+        "Week RID": [
+          "recKJMGYbEzGHyXfd"
+        ],
+        "School Year - Linked (from Program Instance)": [
+          "2026-2027"
+        ],
+        "Program Homework Assignment": "Shooting Challenge | 2026-2027 | Week 5 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1 | MTFYA - Growth Mindset - Practice Slower",
+        "Operator Status": "Active \u2014 will assign via 033 / resolve via 020",
+        "Schedule Key": "rec5mEM0YPqPqq0hZ|recKJMGYbEzGHyXfd|HW1|recuHpXzB3305azaH",
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Assignment Title - Lkp": [
+          "Practice Slower"
+        ],
+        "Completions Count": 0,
+        "Program Homework Assignment Display": "MTFYA - Growth Mindset - Practice Slower | Shooting Challenge | 2026-2027 | Week 5 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Homework Slot": "HW1",
+        "Active?": true
+      }
+    },
+    {
+      "id": "rec2gN9Foyz2aUyto",
+      "primary": "Shooting Challenge | 2026-2027 | Week 5 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2 | MTFYA - Growth Mindset - How to Strengthen Your Subconscious Mind",
+      "fields": {
+        "Homework Assignment RID": [
+          "recfrN19SgIbSCL3n"
+        ],
+        "Homework Assignment": [
+          "recfrN19SgIbSCL3n"
+        ],
+        "Program Instance RID": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recKJMGYbEzGHyXfd"
+        ],
+        "Homework XP PHA Signature": "rec2gN9Foyz2aUyto|ACTIVE|HW=MTFYA - Growth Mindset - How to Strengthen Your Subconscious Mind|PI=Shooting Challenge | 2026-2027|WEEK=Week 5|SLOT=HW2",
+        "Grade Band RID": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Due Date": "2027-06-29",
+        "Record Id - PHA": "rec2gN9Foyz2aUyto",
+        "Week RID": [
+          "recKJMGYbEzGHyXfd"
+        ],
+        "School Year - Linked (from Program Instance)": [
+          "2026-2027"
+        ],
+        "Program Homework Assignment": "Shooting Challenge | 2026-2027 | Week 5 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2 | MTFYA - Growth Mindset - How to Strengthen Your Subconscious Mind",
+        "Operator Status": "Active \u2014 will assign via 033 / resolve via 020",
+        "Schedule Key": "rec5mEM0YPqPqq0hZ|recKJMGYbEzGHyXfd|HW2|recfrN19SgIbSCL3n",
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Assignment Title - Lkp": [
+          "How to Strengthen Your Subconscious Mind"
+        ],
+        "Completions Count": 0,
+        "Program Homework Assignment Display": "MTFYA - Growth Mindset - How to Strengthen Your Subconscious Mind | Shooting Challenge | 2026-2027 | Week 5 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Homework Slot": "HW2",
+        "Active?": true
+      }
+    },
+    {
+      "id": "recdyoq0zOHIRwzWQ",
+      "primary": "Shooting Challenge | 2026-2027 | Week 6 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1 | \"P.I.B. - Self Awareness - Identity, Job, Approach\"",
+      "fields": {
+        "Homework Assignment RID": [
+          "recImBddU4lucwXn5"
+        ],
+        "Homework Assignment": [
+          "recImBddU4lucwXn5"
+        ],
+        "Program Instance RID": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recRp4y42EpLvtwk5"
+        ],
+        "Homework XP PHA Signature": "recdyoq0zOHIRwzWQ|ACTIVE|HW=\"P.I.B. - Self Awareness - Identity, Job, Approach\"|PI=Shooting Challenge | 2026-2027|WEEK=Week 6|SLOT=HW1",
+        "Grade Band RID": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Due Date": "2027-06-29",
+        "Record Id - PHA": "recdyoq0zOHIRwzWQ",
+        "Week RID": [
+          "recRp4y42EpLvtwk5"
+        ],
+        "School Year - Linked (from Program Instance)": [
+          "2026-2027"
+        ],
+        "Program Homework Assignment": "Shooting Challenge | 2026-2027 | Week 6 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1 | \"P.I.B. - Self Awareness - Identity, Job, Approach\"",
+        "Operator Status": "Active \u2014 will assign via 033 / resolve via 020",
+        "Schedule Key": "rec5mEM0YPqPqq0hZ|recRp4y42EpLvtwk5|HW1|recImBddU4lucwXn5",
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Assignment Title - Lkp": [
+          "Identity, Job, Approach"
+        ],
+        "Completions Count": 0,
+        "Program Homework Assignment Display": "\"P.I.B. - Self Awareness - Identity, Job, Approach\" | Shooting Challenge | 2026-2027 | Week 6 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Homework Slot": "HW1",
+        "Active?": true
+      }
+    },
+    {
+      "id": "rec9i9QHUDokBqea4",
+      "primary": "Shooting Challenge | 2026-2027 | Week 6 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2 | P.I.B. - Resilience Technique - Get Your Head (Back) in the Game",
+      "fields": {
+        "Homework Assignment RID": [
+          "recmepb4mfkqYJks5"
+        ],
+        "Homework Assignment": [
+          "recmepb4mfkqYJks5"
+        ],
+        "Program Instance RID": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recRp4y42EpLvtwk5"
+        ],
+        "Homework XP PHA Signature": "rec9i9QHUDokBqea4|ACTIVE|HW=P.I.B. - Resilience Technique - Get Your Head (Back) in the Game|PI=Shooting Challenge | 2026-2027|WEEK=Week 6|SLOT=HW2",
+        "Grade Band RID": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Due Date": "2027-06-29",
+        "Record Id - PHA": "rec9i9QHUDokBqea4",
+        "Week RID": [
+          "recRp4y42EpLvtwk5"
+        ],
+        "School Year - Linked (from Program Instance)": [
+          "2026-2027"
+        ],
+        "Program Homework Assignment": "Shooting Challenge | 2026-2027 | Week 6 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2 | P.I.B. - Resilience Technique - Get Your Head (Back) in the Game",
+        "Operator Status": "Active \u2014 will assign via 033 / resolve via 020",
+        "Schedule Key": "rec5mEM0YPqPqq0hZ|recRp4y42EpLvtwk5|HW2|recmepb4mfkqYJks5",
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Assignment Title - Lkp": [
+          "Get Your Head (Back) in the Game"
+        ],
+        "Completions Count": 0,
+        "Program Homework Assignment Display": "P.I.B. - Resilience Technique - Get Your Head (Back) in the Game | Shooting Challenge | 2026-2027 | Week 6 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Homework Slot": "HW2",
+        "Active?": true
+      }
+    },
+    {
+      "id": "recSlkwdNXPP89bVJ",
+      "primary": "Shooting Challenge | 2026-2027 | Week 7 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1 | P.I.B. - Personal Game Plan - Don't Beat Yourself",
+      "fields": {
+        "Homework Assignment RID": [
+          "rec9DAphSer1Jo9a5"
+        ],
+        "Homework Assignment": [
+          "rec9DAphSer1Jo9a5"
+        ],
+        "Program Instance RID": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recW3irij491AIPrl"
+        ],
+        "Homework XP PHA Signature": "recSlkwdNXPP89bVJ|ACTIVE|HW=P.I.B. - Personal Game Plan - Don't Beat Yourself|PI=Shooting Challenge | 2026-2027|WEEK=Week 7|SLOT=HW1",
+        "Grade Band RID": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Due Date": "2027-06-29",
+        "Record Id - PHA": "recSlkwdNXPP89bVJ",
+        "Week RID": [
+          "recW3irij491AIPrl"
+        ],
+        "School Year - Linked (from Program Instance)": [
+          "2026-2027"
+        ],
+        "Program Homework Assignment": "Shooting Challenge | 2026-2027 | Week 7 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1 | P.I.B. - Personal Game Plan - Don't Beat Yourself",
+        "Operator Status": "Active \u2014 will assign via 033 / resolve via 020",
+        "Schedule Key": "rec5mEM0YPqPqq0hZ|recW3irij491AIPrl|HW1|rec9DAphSer1Jo9a5",
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Assignment Title - Lkp": [
+          "Don't Beat Yourself"
+        ],
+        "Completions Count": 0,
+        "Program Homework Assignment Display": "P.I.B. - Personal Game Plan - Don't Beat Yourself | Shooting Challenge | 2026-2027 | Week 7 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Homework Slot": "HW1",
+        "Active?": true
+      }
+    },
+    {
+      "id": "recOsUr93hGddMCsJ",
+      "primary": "Shooting Challenge | 2026-2027 | Week 7 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2 | P.I.B. - Play Grounded - What's Your Sports Credo?",
+      "fields": {
+        "Homework Assignment RID": [
+          "rec8mXePZPGugYgVC"
+        ],
+        "Homework Assignment": [
+          "rec8mXePZPGugYgVC"
+        ],
+        "Program Instance RID": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recW3irij491AIPrl"
+        ],
+        "Homework XP PHA Signature": "recOsUr93hGddMCsJ|ACTIVE|HW=P.I.B. - Play Grounded - What's Your Sports Credo?|PI=Shooting Challenge | 2026-2027|WEEK=Week 7|SLOT=HW2",
+        "Grade Band RID": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Due Date": "2027-06-29",
+        "Record Id - PHA": "recOsUr93hGddMCsJ",
+        "Week RID": [
+          "recW3irij491AIPrl"
+        ],
+        "School Year - Linked (from Program Instance)": [
+          "2026-2027"
+        ],
+        "Program Homework Assignment": "Shooting Challenge | 2026-2027 | Week 7 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2 | P.I.B. - Play Grounded - What's Your Sports Credo?",
+        "Operator Status": "Active \u2014 will assign via 033 / resolve via 020",
+        "Schedule Key": "rec5mEM0YPqPqq0hZ|recW3irij491AIPrl|HW2|rec8mXePZPGugYgVC",
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Assignment Title - Lkp": [
+          "What's Your Sports Credo?"
+        ],
+        "Completions Count": 0,
+        "Program Homework Assignment Display": "P.I.B. - Play Grounded - What's Your Sports Credo? | Shooting Challenge | 2026-2027 | Week 7 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Homework Slot": "HW2",
+        "Active?": true
+      }
+    },
+    {
+      "id": "rec42dczQZ1T0Uoc7",
+      "primary": "Shooting Challenge | 2026-2027 | Week 8 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1 | P.I.B. - Confidence Equation - Act Like a Champion",
+      "fields": {
+        "Homework Assignment RID": [
+          "recSKX3bgedTYQXNE"
+        ],
+        "Homework Assignment": [
+          "recSKX3bgedTYQXNE"
+        ],
+        "Program Instance RID": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recfu3dpVJAnVBvCB"
+        ],
+        "Homework XP PHA Signature": "rec42dczQZ1T0Uoc7|ACTIVE|HW=P.I.B. - Confidence Equation - Act Like a Champion|PI=Shooting Challenge | 2026-2027|WEEK=Week 8|SLOT=HW1",
+        "Grade Band RID": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Due Date": "2027-06-29",
+        "Record Id - PHA": "rec42dczQZ1T0Uoc7",
+        "Week RID": [
+          "recfu3dpVJAnVBvCB"
+        ],
+        "School Year - Linked (from Program Instance)": [
+          "2026-2027"
+        ],
+        "Program Homework Assignment": "Shooting Challenge | 2026-2027 | Week 8 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1 | P.I.B. - Confidence Equation - Act Like a Champion",
+        "Operator Status": "Active \u2014 will assign via 033 / resolve via 020",
+        "Schedule Key": "rec5mEM0YPqPqq0hZ|recfu3dpVJAnVBvCB|HW1|recSKX3bgedTYQXNE",
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Assignment Title - Lkp": [
+          "Act Like a Champion"
+        ],
+        "Completions Count": 0,
+        "Program Homework Assignment Display": "P.I.B. - Confidence Equation - Act Like a Champion | Shooting Challenge | 2026-2027 | Week 8 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Homework Slot": "HW1",
+        "Active?": true
+      }
+    },
+    {
+      "id": "recikGtvbcUSNVLAN",
+      "primary": "Shooting Challenge | 2026-2027 | Week 8 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2 | \"P.I.B. - \"\"Say It, Believe It, Be It!\"\" - Performance Affirmations\"",
+      "fields": {
+        "Homework Assignment RID": [
+          "rechmw5PrODrxrmQH"
+        ],
+        "Homework Assignment": [
+          "rechmw5PrODrxrmQH"
+        ],
+        "Program Instance RID": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recfu3dpVJAnVBvCB"
+        ],
+        "Homework XP PHA Signature": "recikGtvbcUSNVLAN|ACTIVE|HW=\"P.I.B. - \"\"Say It, Believe It, Be It!\"\" - Performance Affirmations\"|PI=Shooting Challenge | 2026-2027|WEEK=Week 8|SLOT=HW2",
+        "Grade Band RID": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Due Date": "2027-06-29",
+        "Record Id - PHA": "recikGtvbcUSNVLAN",
+        "Week RID": [
+          "recfu3dpVJAnVBvCB"
+        ],
+        "School Year - Linked (from Program Instance)": [
+          "2026-2027"
+        ],
+        "Program Homework Assignment": "Shooting Challenge | 2026-2027 | Week 8 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2 | \"P.I.B. - \"\"Say It, Believe It, Be It!\"\" - Performance Affirmations\"",
+        "Operator Status": "Active \u2014 will assign via 033 / resolve via 020",
+        "Schedule Key": "rec5mEM0YPqPqq0hZ|recfu3dpVJAnVBvCB|HW2|rechmw5PrODrxrmQH",
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Assignment Title - Lkp": [
+          "Performance Affirmations"
+        ],
+        "Completions Count": 0,
+        "Program Homework Assignment Display": "\"P.I.B. - \"\"Say It, Believe It, Be It!\"\" - Performance Affirmations\" | Shooting Challenge | 2026-2027 | Week 8 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Homework Slot": "HW2",
+        "Active?": true
+      }
+    }
+  ]
+}

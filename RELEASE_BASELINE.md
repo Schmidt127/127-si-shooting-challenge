@@ -118,7 +118,7 @@ git status -sb
 | Item | Result |
 |------|--------|
 | Weeks 2026–27 | Early Bird Apr 25–May 1; Week 1 May 2; **13 Weeks preserved** after FUT-030 (incl. 2 archived test Weeks) |
-| Active PHA | **0** after FUT-030 (intentional) — Homework Library **76** preserved; recreate 18 PHA before homework tests |
+| Active PHA | **18 active restored** 2026-08-31 (new RIDs after FUT-030); due **2027-06-29**; Week 9 / Post-Challenge no HW; Homework Library **76** |
 | FUT-002 | **Batch 1 COMPLETE** — 5 fields deleted; live **1350** fields; **0** `ZZZ DELETE —` remaining; schema `airtable/schema/snapshots/prod-20260831-fut002-batch1/` |
 | FUT-010 R3 | **0 eligible** |
 | FUT-030 | **COMPLETE** — transactional wipe **959** records; clean rebuild base |
