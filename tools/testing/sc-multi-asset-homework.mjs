@@ -23,8 +23,34 @@ import {
   GATED_ATHLETE_ID,
   denverNoon,
   homeworkXpKey,
+  evaluateXpEventShape,
   sleep,
 } from "./lib/sc-athlete-wf-lib.mjs";
+
+/** Every check id emitted by --apply (offline contract test mirrors this list). */
+export const APPLY_CHECK_IDS = Object.freeze([
+  "020.first_asset_creates_or_links_hc",
+  "020.second_asset_links_same_hc",
+  "hc.no_duplicate_for_enrollment_pha",
+  "hc.both_assets_linked",
+  "hc.assignment_identity",
+  "065.xp_event_count",
+  "065.xp_source_key_exact",
+  "065.xp_wrong_homework_completion",
+  "065.xp_source_key",
+  "065.xp_enrollment",
+  "065.xp_bucket_or_source",
+  "065.xp_active",
+  "065.xp_enrollment_and_week",
+  "065.exactly_one_homework_xp",
+  "065.idempotent_rerun",
+  "020.other_slot_separate_hc",
+  "065.hw2_slot_no_premature_xp",
+  "020.missing_assignment_fails_safe",
+  "email.no_handoff_queue",
+  "email.parent_feedback_not_armed",
+  "make.send_trigger_cleared",
+]);
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const HARNESS = "SC-MULTI-ASSET-HW";
@@ -308,15 +334,39 @@ async function runApply(token, baseId) {
     actual: waitA2,
   });
 
-  // Prefer asset→HC identity over fragile ARRAYJOIN FIND filters.
-  const assetHcSet = new Set([...(waitA1.hcIds || []), ...(waitA2.hcIds || [])]);
+  // Prefer asset→HC identity; also count live HC rows for Enrollment+PHA (duplicate guard).
+  const assetHcSet = new Set([hcHw1, ...(waitA1.hcIds || []), ...(waitA2.hcIds || [])].filter(Boolean));
+  let enrollmentPhaHcIds = [];
+  try {
+    const hcRows = await listRecords(token, baseId, "Homework Completions", {
+      filterByFormula: `AND(FIND("${GATED_ENROLLMENT_ID}", ARRAYJOIN({Enrollment})), FIND("${LIVE.earlyBirdHw1}", ARRAYJOIN({Program Homework Assignment})))`,
+      fields: ["Enrollment", "Program Homework Assignment", "Item Slot"],
+      maxRecords: 10,
+    });
+    enrollmentPhaHcIds = (Array.isArray(hcRows) ? hcRows : hcRows?.records || []).map((r) => r.id);
+  } catch (err) {
+    report.notes.push(`HC duplicate query skipped: ${String(err.message || err).slice(0, 120)}`);
+  }
+  const noDuplicateHc =
+    assetHcSet.size === 1 &&
+    assetHcSet.has(hcHw1) &&
+    (enrollmentPhaHcIds.length === 0 || enrollmentPhaHcIds.length === 1);
   report.checks.push({
     id: "hc.no_duplicate_for_enrollment_pha",
-    pass: assetHcSet.size === 1 && assetHcSet.has(hcHw1),
-    status: assetHcSet.size === 1 && assetHcSet.has(hcHw1) ? "PASS" : "FAIL",
+    pass: noDuplicateHc,
+    status: noDuplicateHc ? "PASS" : "FAIL",
     expected: 1,
-    actual: [...assetHcSet],
+    actual: {
+      assetLinkedHcIds: [...assetHcSet],
+      enrollmentPhaQueryCount: enrollmentPhaHcIds.length,
+      enrollmentPhaHcIds,
+    },
   });
+  if (enrollmentPhaHcIds.length > 1) {
+    report.defects.push(
+      `Duplicate Homework Completions for Enrollment+PHA HW1: ${enrollmentPhaHcIds.join(", ")}`
+    );
+  }
 
   const hcSnap = await getRecord(token, baseId, "Homework Completions", hcHw1);
   const linkedAssets = linkIds(hcSnap.fields?.["Submission Assets"]);
@@ -373,21 +423,105 @@ async function runApply(token, baseId) {
     },
     { timeoutMs: 180000, label: "homework-xp" }
   );
-  const xpCount = xpPoll.rows?.length || 0;
+  const xpRows = xpPoll.rows || [];
+  const xpCount = xpRows.length;
+  const expectedSourceKey = homeworkXpKey(hcHw1);
+
   report.checks.push({
-    id: "065.exactly_one_homework_xp",
+    id: "065.xp_event_count",
     pass: xpCount === 1,
-    status: xpCount === 1 ? "PASS" : "FAIL",
-    expected: `HOMEWORK_XP|${hcHw1}`,
+    status: xpCount === 1 ? "PASS" : xpCount === 0 ? "FAIL" : "FAIL",
+    expected: "exactly 1",
     actual: {
       count: xpCount,
-      ids: (xpPoll.rows || []).map((r) => r.id),
-      points: (xpPoll.rows || []).map((r) => r.fields?.["XP Points"]),
-      bucket: (xpPoll.rows || []).map((r) => r.fields?.["XP Bucket"]?.name || r.fields?.["XP Bucket"]),
+      zeroEvents: xpCount === 0,
+      multipleEvents: xpCount > 1,
+      ids: xpRows.map((r) => r.id),
       poll: xpPoll.timeout ? xpPoll.last : undefined,
     },
   });
-  for (const r of xpPoll.rows || []) created.xpEventIds.push(r.id);
+  if (xpCount === 0) {
+    report.defects.push(`Zero XP events for Source Key ${expectedSourceKey} (065 did not award)`);
+  }
+  if (xpCount > 1) {
+    report.defects.push(
+      `More than one XP event for ${expectedSourceKey}: ${xpRows.map((r) => r.id).join(", ")}`
+    );
+  }
+
+  const xpSourceKeys = xpRows.map((r) => String(r.fields?.["Source Key"] || ""));
+  const wrongHcKeys = xpSourceKeys.filter(
+    (k) => k.startsWith("HOMEWORK_XP|") && k !== expectedSourceKey
+  );
+  report.checks.push({
+    id: "065.xp_source_key_exact",
+    pass: xpCount === 1 && xpSourceKeys[0] === expectedSourceKey,
+    status: xpCount === 1 && xpSourceKeys[0] === expectedSourceKey ? "PASS" : "FAIL",
+    expected: expectedSourceKey,
+    actual: { sourceKeys: xpSourceKeys, wrongKeys: wrongHcKeys },
+  });
+  if (wrongHcKeys.length) {
+    report.defects.push(`Wrong Source Key (not ${expectedSourceKey}): ${wrongHcKeys.join(", ")}`);
+  }
+
+  report.checks.push({
+    id: "065.xp_wrong_homework_completion",
+    pass: wrongHcKeys.length === 0,
+    status: wrongHcKeys.length === 0 ? "PASS" : "FAIL",
+    expected: `only ${expectedSourceKey}`,
+    actual: xpSourceKeys,
+  });
+
+  if (xpCount === 1) {
+    const shapeChecks = evaluateXpEventShape(xpRows[0], {
+      sourceKey: expectedSourceKey,
+      enrollmentId: GATED_ENROLLMENT_ID,
+      bucketContains: "Homework",
+    });
+    for (const c of shapeChecks) {
+      report.checks.push({ ...c, id: `065.xp_${c.id.replace(/^xp\./, "")}` });
+    }
+    const xpWeek = firstLinkId(xpRows[0].fields?.Week);
+    const weekOk = xpWeek === LIVE.earlyBirdWeek || xpWeek === "";
+    report.checks.push({
+      id: "065.xp_enrollment_and_week",
+      pass: weekOk && shapeChecks.every((c) => c.pass),
+      status: weekOk && shapeChecks.every((c) => c.pass) ? "PASS" : "FAIL",
+      expected: { enrollment: GATED_ENROLLMENT_ID, week: LIVE.earlyBirdWeek },
+      actual: {
+        enrollment: firstLinkId(xpRows[0].fields?.Enrollment),
+        week: xpWeek,
+        points: xpRows[0].fields?.["XP Points"],
+      },
+    });
+    if (Number(xpRows[0].fields?.["XP Points"]) !== 35) {
+      report.defects.push(
+        `XP Points expected 35 (Early Bird HW1 rule), got ${xpRows[0].fields?.["XP Points"]}`
+      );
+    }
+  } else {
+    report.checks.push({
+      id: "065.xp_enrollment_and_week",
+      pass: false,
+      status: "FAIL",
+      expected: { enrollment: GATED_ENROLLMENT_ID, week: LIVE.earlyBirdWeek },
+      actual: "no XP row to inspect",
+    });
+  }
+
+  report.checks.push({
+    id: "065.exactly_one_homework_xp",
+    pass: xpCount === 1 && xpSourceKeys[0] === expectedSourceKey,
+    status: xpCount === 1 && xpSourceKeys[0] === expectedSourceKey ? "PASS" : "FAIL",
+    expected: expectedSourceKey,
+    actual: {
+      count: xpCount,
+      ids: xpRows.map((r) => r.id),
+      points: xpRows.map((r) => r.fields?.["XP Points"]),
+      bucket: xpRows.map((r) => r.fields?.["XP Bucket"]?.name || r.fields?.["XP Bucket"]),
+    },
+  });
+  for (const r of xpRows) created.xpEventIds.push(r.id);
 
   // Idempotency: re-arm review slightly and confirm still one XP
   await updateRecords(token, baseId, "Homework Completions", [
@@ -447,6 +581,22 @@ async function runApply(token, baseId) {
     expected: "different HC from HW1",
     actual: { hcHw1, hcHw2, waitB1 },
   });
+
+  // HW2 must not receive HW1's XP source key
+  if (hcHw2) {
+    const hw2XpRows = await listXpBySourceKey(token, baseId, homeworkXpKey(hcHw2));
+    const hw1XpOnHw2 = xpRows.some((r) => String(r.fields?.["Source Key"] || "") === homeworkXpKey(hcHw2));
+    report.checks.push({
+      id: "065.hw2_slot_no_premature_xp",
+      pass: hw2XpRows.length === 0,
+      status: hw2XpRows.length === 0 ? "PASS" : "FAIL",
+      expected: "no HOMEWORK_XP for ungraded HW2 HC",
+      actual: { hcHw2, hw2XpCount: hw2XpRows.length },
+    });
+    if (hw1XpOnHw2 && hcHw2 !== hcHw1) {
+      report.defects.push(`XP awarded to wrong HC: ${homeworkXpKey(hcHw2)} exists before HW2 grading`);
+    }
+  }
 
   // --- Scenario C: missing assignment identity fails safely ---
   const subC = await createRecords(token, baseId, "Submissions", [
@@ -604,10 +754,12 @@ async function cleanup(token, baseId) {
 async function main() {
   const args = parseArgs(process.argv);
   if (args.help) {
-    console.log(`SC-MULTI-ASSET-HW
+    console.log(`SC-MULTI-ASSET-HW — disposable Testing3 multi-asset homework proof
 
   node tools/testing/sc-multi-asset-homework.mjs --apply
   node tools/testing/sc-multi-asset-homework.mjs --cleanup
+
+Operator runbook: docs/testing/core-workflow/MULTI-ASSET-HW-OPERATOR-RUNBOOK.md
 `);
     return;
   }
@@ -627,7 +779,9 @@ async function main() {
   if (args.apply && !report.passed) process.exitCode = 1;
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exitCode = 1;
-});
+if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
+  main().catch((err) => {
+    console.error(err);
+    process.exitCode = 1;
+  });
+}

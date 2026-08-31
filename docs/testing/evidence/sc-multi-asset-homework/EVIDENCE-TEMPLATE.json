@@ -1,0 +1,40 @@
+{
+  "_instructions": "Copy from apply-*.json after Mike runs --apply. Fill placeholders; attach path in MULTI-ASSET-HW-RESULTS.md.",
+  "harness": "SC-MULTI-ASSET-HW",
+  "mode": "apply",
+  "runBy": "Mike",
+  "runAt": "YYYY-MM-DDTHH:mm:ss.sssZ",
+  "065RecordIdRemapVerified": true,
+  "passed": null,
+  "exitCode": null,
+  "evidenceFile": "docs/testing/evidence/sc-multi-asset-homework/apply-REPLACE.json",
+  "homeworkCompletionId": "recXXXXXXXXXXXXXX",
+  "expectedSourceKey": "HOMEWORK_XP|recXXXXXXXXXXXXXX",
+  "xpEvent": {
+    "id": "recXXXXXXXXXXXXXX",
+    "sourceKey": "HOMEWORK_XP|recXXXXXXXXXXXXXX",
+    "xpPoints": 35,
+    "active": true,
+    "enrollmentId": "recNu6fcBpF1GG3u5",
+    "weekId": "recBrZ1sV8byWEHZU"
+  },
+  "scenarioResults": {
+    "multiAssetTwoAssetsOneHc": "PASS|FAIL",
+    "assignmentIdentity": "PASS|FAIL",
+    "hw2SlotIsolation": "PASS|FAIL",
+    "missingPhaFailSafe": "PASS|FAIL",
+    "xpExactlyOne": "PASS|FAIL",
+    "xpIdempotentRerun": "PASS|FAIL",
+    "noEmailHandoff": "PASS|FAIL",
+    "makeTriggerCleared": "PASS|FAIL"
+  },
+  "failedChecks": [],
+  "cleanup": {
+    "command": "node tools/testing/sc-multi-asset-homework.mjs --cleanup",
+    "completedAt": null,
+    "patDelete403": false,
+    "mcpFallbackUsed": false
+  },
+  "verdict": "PASS|FAIL|BLOCKED",
+  "notes": ""
+}

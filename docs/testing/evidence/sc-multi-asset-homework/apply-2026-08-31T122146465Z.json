@@ -1,0 +1,210 @@
+{
+  "harness": "SC-MULTI-ASSET-HW",
+  "mode": "apply",
+  "startedAt": "2026-08-31T12:17:36.245Z",
+  "checks": [
+    {
+      "id": "020.first_asset_creates_or_links_hc",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "done": true,
+        "hcIds": [
+          "rec8E94Jg7mpmuMW9"
+        ],
+        "uploadStatus": "Pending Link",
+        "uploadError": "",
+        "sendMake": true,
+        "uploadDestination": "Homework Completions"
+      }
+    },
+    {
+      "id": "020.second_asset_links_same_hc",
+      "pass": true,
+      "status": "PASS",
+      "expected": "rec8E94Jg7mpmuMW9",
+      "actual": {
+        "done": true,
+        "hcIds": [
+          "rec8E94Jg7mpmuMW9"
+        ],
+        "uploadStatus": "Pending Link",
+        "uploadError": "",
+        "sendMake": true,
+        "uploadDestination": "Homework Completions"
+      }
+    },
+    {
+      "id": "hc.no_duplicate_for_enrollment_pha",
+      "pass": true,
+      "status": "PASS",
+      "expected": 1,
+      "actual": [
+        "rec8E94Jg7mpmuMW9"
+      ]
+    },
+    {
+      "id": "hc.both_assets_linked",
+      "pass": true,
+      "status": "PASS",
+      "actual": [
+        "recReiXXBRtaW3lns",
+        "recwYDQKOytkzGzku"
+      ]
+    },
+    {
+      "id": "hc.assignment_identity",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "enrollment": "recNu6fcBpF1GG3u5",
+        "pha": "recgj8dPk4ouTwCOj",
+        "week": "recBrZ1sV8byWEHZU",
+        "homework": "rechVLOeyEVIqmy2v",
+        "itemSlot": "HW1"
+      }
+    },
+    {
+      "id": "065.exactly_one_homework_xp",
+      "pass": false,
+      "status": "FAIL",
+      "expected": "HOMEWORK_XP|rec8E94Jg7mpmuMW9",
+      "actual": {
+        "count": 0,
+        "ids": [],
+        "points": [],
+        "bucket": [],
+        "poll": {
+          "done": false,
+          "reconcile": 1,
+          "totalXp": 35,
+          "awardStatus": "Pending"
+        }
+      }
+    },
+    {
+      "id": "065.idempotent_rerun",
+      "pass": false,
+      "status": "FAIL",
+      "actual": []
+    },
+    {
+      "id": "020.other_slot_separate_hc",
+      "pass": true,
+      "status": "PASS",
+      "expected": "different HC from HW1",
+      "actual": {
+        "hcHw1": "rec8E94Jg7mpmuMW9",
+        "hcHw2": "recplrIQdSVNLcQ2l",
+        "waitB1": {
+          "done": true,
+          "hcIds": [
+            "recplrIQdSVNLcQ2l"
+          ],
+          "uploadStatus": "Processing",
+          "uploadError": "",
+          "sendMake": true,
+          "uploadDestination": "Homework Completions"
+        }
+      }
+    },
+    {
+      "id": "020.missing_assignment_fails_safe",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "uploadStatus": "Error",
+        "uploadError": "Submission must link exactly one Program Homework Assignment for homework.",
+        "hcIds": [],
+        "waitC1": {
+          "done": true,
+          "error": true,
+          "hcIds": [],
+          "uploadStatus": "Error",
+          "uploadError": "Submission must link exactly one Program Homework Assignment for homework.",
+          "sendMake": false
+        },
+        "failSafe": true
+      }
+    },
+    {
+      "id": "email.no_handoff_queue",
+      "pass": true,
+      "status": "PASS",
+      "actual": []
+    },
+    {
+      "id": "email.parent_feedback_not_armed",
+      "pass": true,
+      "status": "PASS",
+      "note": false
+    },
+    {
+      "id": "make.send_trigger_cleared",
+      "pass": true,
+      "status": "PASS",
+      "actual": []
+    }
+  ],
+  "defects": [],
+  "notes": [
+    "Could not delete duplicate WAS: DELETE Weekly%20Athlete%20Summary?records[]=recb1hq4wJKfBcy6z 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model "
+  ],
+  "created": {
+    "batchKey": "COREWF|MULTI|2026-08-31|mth7eho5",
+    "enrollmentId": "recNu6fcBpF1GG3u5",
+    "athleteId": "rec82GY2ECcbWaDpf",
+    "weekId": "recBrZ1sV8byWEHZU",
+    "wasId": "recIwx50zhNsUqV1L",
+    "deletedDuplicateWasId": null,
+    "submissionIds": [
+      {
+        "id": "rec5vGBuaT4CdwVe8",
+        "tag": "same-slot-hw1"
+      },
+      {
+        "id": "recQHhzBLSUCZnvEX",
+        "tag": "other-slot-hw2"
+      },
+      {
+        "id": "receHLEP11fFp1BED",
+        "tag": "missing-pha"
+      }
+    ],
+    "assetIds": [
+      {
+        "id": "recReiXXBRtaW3lns",
+        "tag": "hw1-a1",
+        "slot": "HW1"
+      },
+      {
+        "id": "recwYDQKOytkzGzku",
+        "tag": "hw1-a2",
+        "slot": "HW1"
+      },
+      {
+        "id": "recim3y0ss3iSaxRG",
+        "tag": "hw2-b1",
+        "slot": "HW2"
+      },
+      {
+        "id": "rec15lKi4symhfSKK",
+        "tag": "missing-pha",
+        "slot": "HW1"
+      }
+    ],
+    "homeworkIds": [
+      {
+        "id": "rec8E94Jg7mpmuMW9",
+        "kind": "hw1-multi-asset"
+      },
+      {
+        "id": "recplrIQdSVNLcQ2l",
+        "kind": "hw2-isolation"
+      }
+    ],
+    "xpEventIds": []
+  },
+  "passed": false,
+  "finishedAt": "2026-08-31T12:21:46.464Z"
+}

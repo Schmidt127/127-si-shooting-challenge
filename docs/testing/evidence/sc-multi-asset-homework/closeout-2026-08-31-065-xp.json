@@ -1,0 +1,47 @@
+{
+  "harness": "SC-MULTI-ASSET-HW",
+  "mode": "closeout",
+  "verifiedAt": "2026-08-31T12:37:00.000Z",
+  "workflow": "COMPLETE",
+  "pr": 306,
+  "enrollmentId": "recNu6fcBpF1GG3u5",
+  "homeworkCompletionId": "rec8E94Jg7mpmuMW9",
+  "sourceKey": "HOMEWORK_XP|rec8E94Jg7mpmuMW9",
+  "xpEvents": [
+    {
+      "id": "recwpzl8pkXecUqRK",
+      "createdTime": "2026-08-31T12:35:11.000Z",
+      "xpPoints": 35,
+      "xpBucket": "Homework Completion",
+      "xpSource": "Homework Completion",
+      "active": true
+    }
+  ],
+  "xpCount": 1,
+  "duplicateXp": false,
+  "homeworkCompletion": {
+    "awardStatus": "Awarded",
+    "reconcileNeeded": 0,
+    "baseXpAwarded": 35,
+    "totalHomeworkXpAwarded": 35,
+    "xpEventsLinked": ["recwpzl8pkXecUqRK"],
+    "lastSignature": "set",
+    "automationError": ""
+  },
+  "automation065": {
+    "id": "wfllkhzl3R6OlClzy",
+    "version": "v10.4",
+    "recordIdInput": { "$ref": "trigger", "path": ["id"] },
+    "trigger": "Homework XP Reconciliation Needed? = 1",
+    "notes": [
+      "Dynamic recordId remap completed before 2026-08-31 apply.",
+      "Apply 2026-08-31T122146465Z still failed 065 because HC stayed at Reconcile=1 with empty Last Signature (recordMatchesConditions did not re-enter).",
+      "Manual trigger re-entry (Last Signature set then cleared / Reconcile 1→0→1) required after remap; then 065 created exactly one HOMEWORK_XP event."
+    ]
+  },
+  "relatedEvidence": [
+    "docs/testing/evidence/sc-multi-asset-homework/apply-2026-08-30T191216579Z.json",
+    "docs/testing/evidence/sc-multi-asset-homework/apply-2026-08-31T122146465Z.json",
+    "docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md"
+  ]
+}
