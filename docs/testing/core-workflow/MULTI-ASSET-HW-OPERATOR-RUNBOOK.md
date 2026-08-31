@@ -1,10 +1,13 @@
-# SC-MULTI-ASSET-HW — Desktop operator runbook (final XP proof)
+# SC-MULTI-ASSET-HW — Desktop operator runbook
 
-**Purpose:** One disposable live run on Testing3 to prove Automation **065** awards exactly one `HOMEWORK_XP|{HomeworkCompletionID}` after the **065 `recordId` dynamic remap** (Mike completed in Airtable UI 2026-08-30).
+**Status:** **COMPLETE** 2026-08-31 — exactly one `HOMEWORK_XP|rec8E94Jg7mpmuMW9` (`recwpzl8pkXecUqRK`, 35 XP, no duplicate).  
+**Lesson:** After 065 dynamic `recordId` remap, stuck HCs at Reconcile=1 with empty Last Signature needed **manual trigger re-entry** before 065 fired.
 
-**Time:** ~15–20 minutes active + up to ~3 minutes automation polling per stage.
+**Purpose (historical):** Disposable live run on Testing3 to prove Automation **065** awards exactly one `HOMEWORK_XP|{HomeworkCompletionID}` after the **065 `recordId` dynamic remap**.
 
 **Do not:** Run `--apply` twice without cleanup · repaste automations · send email · run season simulation · change the 18-assignment design.
+
+Evidence: [`../evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json`](../evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json) · [`MULTI-ASSET-HW-RESULTS.md`](./MULTI-ASSET-HW-RESULTS.md)
 
 ---
 

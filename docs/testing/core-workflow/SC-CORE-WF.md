@@ -42,13 +42,14 @@ node tools/testing/sc-core-workflow.mjs --apply
 # Cleanup manifest records
 node tools/testing/sc-core-workflow.mjs --cleanup
 
-# Deferred multi-asset → one HC via live Automation 020 (no email)
+# Multi-asset → one HC + Homework XP via live 020/064/065 (COMPLETE 2026-08-31; no email)
 node tools/testing/sc-multi-asset-homework.mjs --apply
 node tools/testing/sc-multi-asset-homework.mjs --cleanup
 
 # Operator runbook (final 065 XP proof): docs/testing/core-workflow/MULTI-ASSET-HW-OPERATOR-RUNBOOK.md
 ```
 
+See [`MULTI-ASSET-HW-RESULTS.md`](./MULTI-ASSET-HW-RESULTS.md) — 065 required dynamic `recordId` remap **and** trigger re-entry after remap; exactly one XP, no duplicate.
 ## Apply coverage
 
 - Live audit: Early Bird / Week 1 dates, countable flag, 18 PHA, June 29 due dates, no Week 9 homework

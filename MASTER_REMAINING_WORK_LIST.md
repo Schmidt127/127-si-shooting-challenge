@@ -321,11 +321,11 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | ID | Title | Status | Notes |
 |----|-------|--------|-------|
 | MRW-F01 | SC-PW-E2E live apply | **COMPLETE** | WAS `recl3DmBh22ADPWWe` MCP award evidence |
-| MRW-F02 | SC-016 live re-submit after FUT-001 paste | **PARTIAL** | Live 020 multi-asset → one HC **PASS** (Testing3); XP blocked by 065 hardcoded `recordId` — [`docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md) |
+| MRW-F02 | SC-016 live re-submit after FUT-001 paste | **COMPLETE** | Live 020 multi-asset → one HC **PASS**; 065 dynamic `recordId` remapped; **trigger re-entry after remap**; exactly one `HOMEWORK_XP\|rec8E94Jg7mpmuMW9` (`recwpzl8pkXecUqRK`, no duplicate) — [`docs/testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json`](docs/testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json) |
 | MRW-F03 | Broader SC-005 season matrix | IN PROGRESS | Many paths green; PW + email inject open |
 | MRW-F09 | SC-ATHLETE-WF-001 individual athlete workflow QA | **COMPLETE (harness)** | Harness + offline contracts + dry-run + disposable apply evidence 2026-08-30. Submission XP + WAS verified. **MRW-I13 closed** (once per Count It submission). 065 Satisfactory-alone = expected skip. Plan: docs/testing/athlete-workflow/SC-ATHLETE-WF.md. |
 | MRW-F11 | Core workflow reliability (calendar + XP + PHA + handoff) | **COMPLETE** (2026-08-30) | Contracts `lib/workflow-contracts/`; harness `tools/testing/sc-core-workflow.mjs`; live audit PASS; disposable apply PASS; orphan inactive PHA deleted. Multi-asset 020 path PASS — see `docs/testing/core-workflow/MULTI-ASSET-HW-RESULTS.md`. |
-| MRW-F04 | SC-010/011/012/015 homework path re-tests | **PARTIAL** | SC-015 multi-asset live 020 **PASS**; 065 XP remap pending (config only) |
+| MRW-F04 | SC-010/011/012/015 homework path re-tests | **COMPLETE** (SC-015) | Multi-asset → one HC + one Homework XP **PASS** 2026-08-31; SC-010/011/012 remain optional broader re-tests |
 | MRW-F05 | Video XP native trigger + 073 OFF attestation (SC-072) | NEEDS VERIFICATION | PKG-007 PASS; UI attest open |
 | MRW-F06 | Zoom live attendance re-test (SC-073/084) | NEEDS VERIFICATION | 101 v6.7 |
 | MRW-F07 | 118/119 weekly scheduler positive arm (SC-031/035) | **COMPLETE** (harness 2026-08-30) | `docs/testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md`; live `--apply` Mike disposable WAS |

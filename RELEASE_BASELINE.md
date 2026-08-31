@@ -4,7 +4,7 @@
 **Public URL:** https://www.fairfieldbasketballclub.com/shoot  
 **Authority companion:** [`MASTER_REMAINING_WORK_LIST.md`](./MASTER_REMAINING_WORK_LIST.md)  
 **Operator queue:** [`docs/deploy-checklists/2026-08-29-PRODUCTION-OPERATOR-QUEUE.md`](./docs/deploy-checklists/2026-08-29-PRODUCTION-OPERATOR-QUEUE.md) · paste audit historical [`docs/deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md`](./docs/deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md)  
-**Baseline date:** 2026-08-30 (release closeout — Agents 1–4)
+**Baseline date:** 2026-08-31 (SC-MULTI-ASSET-HW / 065 XP closeout on Agents 1–4 baseline)
 
 > Claims below are backed by command output or platform evidence from this session unless marked `PENDING`.
 
@@ -51,7 +51,7 @@ git status -sb
 | Live Weeks + PHA audit | **PASS** — Early Bird countable; 18 active PHA; Due Date 2027-06-29; Week 9 no homework |
 | Live disposable apply | **PASS** — [`docs/testing/core-workflow/RESULTS.md`](docs/testing/core-workflow/RESULTS.md) |
 | Multi-asset → one HC (live 020) | **PASS** — [`docs/testing/core-workflow/MULTI-ASSET-HW-RESULTS.md`](docs/testing/core-workflow/MULTI-ASSET-HW-RESULTS.md) |
-| Live 065 Homework XP (multi-asset close) | **BLOCKED** — 065 input `recordId` hardcoded to deleted `reccYReUfSId2MH1S`; remap [`docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md) (**no script paste**) |
+| Live 065 Homework XP (multi-asset close) | **COMPLETE** 2026-08-31 — dynamic `recordId` remapped; **trigger re-entry required** after remap; exactly one `HOMEWORK_XP\|rec8E94Jg7mpmuMW9` = `recwpzl8pkXecUqRK` (35 XP, Awarded, Reconcile=0, **no duplicate**) — [`docs/testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json`](docs/testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json) · packet [`docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](docs/deploy-checklists/065-recordId-dynamic-remap-operator-packet.md) (**no script paste**) |
 | Orphan inactive PHA | Deleted `recpHX3stQ8YBVtLi` |
 | Email send | **Not invoked** |
 | Automation paste | **None** |
@@ -98,7 +98,7 @@ git status -sb
 | **010** | v10.12 | Automations Code aligned | Do not re-paste |
 | **020** | v3.8 | Automations Code aligned | Do not re-paste |
 | **022** | v2.2 | Automations Code aligned | Do not re-paste |
-| **065** | v10.4 | Automations Code aligned | Do not re-paste |
+| **065** | v10.4 | Automations Code aligned; dynamic `recordId`; multi-asset XP **COMPLETE** 2026-08-31 (remap + trigger re-entry; no duplicate) | Do not re-paste |
 | **072** | v4.8 | Automations Code aligned | Do not re-paste |
 | **073** | v4.4 | Automations Code aligned | Do not re-paste |
 | **075** | Retired / absent | Not in live automations list | Do not restore |
