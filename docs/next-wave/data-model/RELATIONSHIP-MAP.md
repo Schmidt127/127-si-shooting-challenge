@@ -61,7 +61,7 @@ flowchart LR
 | REL-01 | High | WAS with empty Enrollment (legacy pollution ~392 historically) | overnight CORE-UNIQUENESS / WAS-GUARANTEE |
 | REL-02 | High | Concurrent WAS create race: **031 + 101 + 118** | Agent 9 WAS contract |
 | REL-03 | Critical | Recording path must never write Zoom Meetings.`Attendees` | foundation matrix; 101 double-credit |
-| REL-04 | High | Text stubs on Weeks (`Video Feedback`, `Submission Assets`, `Homework 2`, `XP Events copy`) look like links but are singleLineText | `schema-snapshot` |
+| REL-04 | High | Text stubs on Weeks (`Video Feedback`, `Submission Assets`, `Homework 2`, `XP Events copy`) look like links but are singleLineText. **Note:** Submission Assets table text stubs `XP Events` / `XP Events copy` were **deleted 2026-08-31** (separate from Weeks stubs). | `schema-snapshot` + FUT-002 SA stubs evidence |
 | REL-05 | Medium | HC `Weekly Athlete Summary` text (`fldhpGNYnu2l3bpUP`) vs Link (`fldkoEbVnCugcMCCi`) — text is unused/legacy; Link is canonical (020/065/057 via inverse). Do not treat empty text as missing WAS. Cleanup later. | `schema-snapshot` + 2026-08-05 evidence |
 | REL-06 | High | Enrollment↔Config is **not** a direct link; year mismatches possible if School Year text drifts from Config / Program Instance | `schema-snapshot` + config-selection tests |
 | REL-07 | Medium | Submissions may link Athlete and Enrollment; Athlete-only paths are ambiguous for multi-year athletes | `schema-snapshot` |

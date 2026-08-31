@@ -1,0 +1,32 @@
+{
+  "check": "fut-002-sa-xp-text-stubs-delete",
+  "checked_at_utc": "2026-08-31T20:55:00Z",
+  "base_id": "appn84sqPw03zEbTT",
+  "table": "Submission Assets",
+  "table_id": "tblhMLKxQK77agtME",
+  "deleted_fields": [
+    {
+      "name": "XP Events",
+      "field_id": "fldwOklyDaW3nN2Kz",
+      "former_type": "singleLineText",
+      "status": "ABSENT"
+    },
+    {
+      "name": "XP Events copy",
+      "field_id": "fld5Emwipb3UjAMz9",
+      "former_type": "singleLineText",
+      "status": "ABSENT"
+    }
+  ],
+  "live_counts": {
+    "submission_assets_fields": 90,
+    "base_fields": 1363,
+    "tables": 35
+  },
+  "notes": [
+    "Unused text stubs only — not real XP Events link fields.",
+    "Homework XP remains Homework Completions <-> XP Events (Automation 065).",
+    "Website Game Log reads XP Events by Enrollment; no Submission Assets XP writeback required.",
+    "Historical schema snapshots and Make blueprints may still list these names; treat as historical."
+  ]
+}

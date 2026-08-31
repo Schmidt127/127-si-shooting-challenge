@@ -54,7 +54,7 @@ Classes: **Keep** · **Rename later** · **Hide** · **Legacy** · **Candidate f
 | Homework 2 | Candidate for retirement | Text stub; real link is Homework Completions |
 | Video Feedback (text) | Candidate for retirement | Not a link |
 | Submission Assets (text) | Candidate for retirement | Not a link |
-| XP Events copy | Candidate for retirement / Legacy | Copy artifact naming |
+| XP Events copy | Candidate for retirement / Legacy | Copy artifact naming — **Submission Assets** copy **DELETED 2026-08-31** (`fld5Emwipb3UjAMz9`); other tables may still have same-named stubs |
 
 ---
 

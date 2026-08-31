@@ -14,6 +14,7 @@ import {
   REFERENCE_HC,
   DISPOSABLE_HC,
 } from "./run_065_script.mjs";
+import { MockRecord } from "./airtable_mock.mjs";
 import {
   build066Base,
   run066,
@@ -131,6 +132,57 @@ test("065 replay does not create a duplicate HOMEWORK_XP event", async () => {
   assert.equal(replay.error, null, replay.error?.message);
   assert.equal(homeworkXpEvents(base).length, 1);
   assert.match(replay.output.values.actionOut, /reused_after_recheck|created_or_reactivated/);
+});
+
+test("065 reconciles XP points when Total Homework XP changes after partial award", async () => {
+  const existingXpId = "recXPPartial00001";
+  const SHARED = {
+    ENR: "recENR0650000001",
+    WEEK: "recWEEK065000001",
+    SUB: "recSUB0650000001",
+    WAS: "recWAS0650000001",
+  };
+  const base = build065Base({
+    homeworkIds: [REFERENCE_HC],
+    xpEvents: [
+      new MockRecord(existingXpId, {
+        Enrollment: [{ id: SHARED.ENR }],
+        Week: [{ id: SHARED.WEEK }],
+        "Weekly Athlete Summary": [{ id: SHARED.WAS }],
+        Submission: [{ id: SHARED.SUB }],
+        "Homework Completion": [{ id: REFERENCE_HC }],
+        "XP Bucket": { id: "selHomework Completion", name: "Homework Completion" },
+        "XP Source": { id: "selHomework Completion", name: "Homework Completion" },
+        "XP Points": 4,
+        "Source Key": `HOMEWORK_XP|${REFERENCE_HC}`,
+        "Active?": true,
+        Processed: true,
+        "XP Reason Public": "Homework completed.",
+        "XP Reason Debug": "partial",
+      }),
+    ],
+  });
+  const hc = base.getTable("Homework Completions").records.get(REFERENCE_HC);
+  hc.cells["XP Events"] = [{ id: existingXpId }];
+  hc.cells["Total Homework XP Awarded"] = 39;
+  hc.cells["Award Status"] = "Pending";
+  hc.cells["Homework XP Current Signature"] = `HC|EVENT=${existingXpId}|ACTIVE|KEY=HOMEWORK_XP|${REFERENCE_HC}`;
+  hc.cells["Last Homework XP Reconciled Signature"] = "";
+  hc.cells["Homework XP Reconciliation Needed?"] = 1;
+
+  const result = await run065({ base, recordId: REFERENCE_HC });
+  assert.equal(result.error, null, result.error?.message);
+  assert.equal(result.output.values.statusOut, "success");
+  const events = homeworkXpEvents(base);
+  assert.equal(events.length, 1);
+  assert.equal(events[0].id, existingXpId);
+  assert.equal(events[0].getCellValue("XP Points"), 39);
+  const awardUpdates = base
+    .getTable("Homework Completions")
+    .updates.filter((u) => u.recordId === REFERENCE_HC && u.fields["Award Status"]);
+  assert.ok(awardUpdates.length >= 1, "expected Award Status writeback");
+  const awardVal = awardUpdates[awardUpdates.length - 1].fields["Award Status"];
+  assert.equal(typeof awardVal === "object" && awardVal ? awardVal.id || awardVal.name : awardVal, "selAwarded");
 });
 
 test("066 reference Enrollment creates only valid milestone unlocks", async () => {

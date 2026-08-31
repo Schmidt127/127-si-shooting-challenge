@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  formatGameLogDateLine,
   formatGameLogDisplayDate,
   formatGameLogPresentation,
 } from "@/lib/data/game-log-presentation";
@@ -39,6 +40,41 @@ describe("formatGameLogPresentation", () => {
       homeworkAssignmentTitle: "Mikan Drill",
     });
     expect(result.headline).toBe("Homework Completed — Mikan Drill");
+    expect(result.dateTagline).toBeNull();
+  });
+
+  it("adds an Extra credit date tagline when homework Extra Credit XP is present", () => {
+    const result = formatGameLogPresentation({
+      id: "recHwEc",
+      points: 160,
+      sourceLabel: "Homework Completion",
+      reasonPublic: "Homework completed.",
+      activityDate: "2026-08-31",
+      homeworkAssignmentTitle: "Shot Tracker Usage",
+      homeworkExtraCreditXp: 125,
+    });
+    expect(result.headline).toBe("Homework Completed — Shot Tracker Usage");
+    expect(result.dateTagline).toBe("Extra credit +125 XP");
+  });
+
+  it("does not show an Extra credit tagline when Extra Credit XP is zero or missing", () => {
+    const zero = formatGameLogPresentation({
+      id: "recHwZero",
+      points: 35,
+      sourceLabel: "Homework Completion",
+      reasonPublic: "Homework completed.",
+      homeworkAssignmentTitle: "Mikan Drill",
+      homeworkExtraCreditXp: 0,
+    });
+    const missing = formatGameLogPresentation({
+      id: "recHwMissing",
+      points: 35,
+      sourceLabel: "Homework Completion",
+      reasonPublic: "Homework completed.",
+      homeworkAssignmentTitle: "Mikan Drill",
+    });
+    expect(zero.dateTagline).toBeNull();
+    expect(missing.dateTagline).toBeNull();
   });
 
   it("does not repeat Homework Completed in the headline detail", () => {
@@ -180,5 +216,18 @@ describe("formatGameLogDisplayDate", () => {
     const formatted = formatGameLogDisplayDate("2026-08-22");
     expect(formatted).not.toMatch(/^Date:/i);
     expect(formatted).toBe("2026-08-22");
+  });
+});
+
+describe("formatGameLogDateLine", () => {
+  it("appends the Extra credit tagline after the date", () => {
+    expect(formatGameLogDateLine("2026-08-31", "Extra credit +125 XP")).toBe(
+      "2026-08-31 · Extra credit +125 XP",
+    );
+  });
+
+  it("returns the date alone when no tagline is present", () => {
+    expect(formatGameLogDateLine("2026-08-31", null)).toBe("2026-08-31");
+    expect(formatGameLogDateLine("2026-08-31")).toBe("2026-08-31");
   });
 });

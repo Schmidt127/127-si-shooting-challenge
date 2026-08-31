@@ -70,7 +70,7 @@
 | Primary | `Week Name` (**singleLineText**, not formula) |
 | Key fields | `Week Key` = `RECORD_ID()`; `Week Code` = annual ops formula (attest); `Week Name` = display — three distinct concepts |
 | Linked | Program Instance, Submissions, WAS, XP Events, HC, Zoom Meetings, Unlocks, Streak Occurrences, FBC Curriculum, Awards |
-| Text-only stubs | `Homework 2`, `Video Feedback`, `Submission Assets`, `XP Events copy` (not links) |
+| Text-only stubs | `Homework 2`, `Video Feedback`, `Submission Assets` (not links). **Deleted 2026-08-31 from Submission Assets table (not Weeks):** unused text fields `XP Events` / `XP Events copy` on SA — see FUT-002 SA stubs packet. Weeks may still have its own `XP Events copy` text stub. |
 | Automation | **005** assigns Week to Submission from Activity Date |
 | Season display pattern | Ops/seed often use Week Name values like `Week 0`…`Week 9`, `Post-Challenge`; year comes from Config / Program Instance / Enrollment School Year — see [ANNUAL-CONFIG-WEEK-AUDIT.md](./ANNUAL-CONFIG-WEEK-AUDIT.md) |
 

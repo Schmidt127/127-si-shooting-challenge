@@ -121,6 +121,7 @@ export type SubmissionRecordFields = {
 
 type HomeworkCompletionRecordFields = {
   "Program Homework Assignment"?: unknown;
+  "Extra Credit XP Awarded"?: unknown;
 };
 
 type ProgramHomeworkAssignmentFields = {
@@ -145,6 +146,7 @@ type ZoomMeetingRecordFields = {
 export type XpEventPresentationContext = {
   submissionTotalShots?: number | null;
   homeworkAssignmentTitle?: string | null;
+  homeworkExtraCreditXp?: number | null;
   videoCustomFileName?: string | null;
   zoomMeetingDisplayName?: string | null;
 };
@@ -296,6 +298,7 @@ export function mapXpEventRecordToSummary(
     sortTimestamp: createdRaw || undefined,
     submissionTotalShots: presentation?.submissionTotalShots ?? undefined,
     homeworkAssignmentTitle: presentation?.homeworkAssignmentTitle ?? undefined,
+    homeworkExtraCreditXp: presentation?.homeworkExtraCreditXp ?? undefined,
     videoCustomFileName: presentation?.videoCustomFileName ?? undefined,
     zoomMeetingDisplayName: presentation?.zoomMeetingDisplayName ?? undefined,
   };
@@ -739,7 +742,7 @@ export async function buildXpEventPresentationContext(
   const homeworkCompletions = await fetchRecordsByIds<HomeworkCompletionRecordFields>(
     PUBLIC_AIRTABLE_TABLES.homeworkCompletions.name,
     [...homeworkCompletionIds],
-    ["Program Homework Assignment"],
+    ["Program Homework Assignment", "Extra Credit XP Awarded"],
     300,
   );
 
@@ -772,11 +775,16 @@ export async function buildXpEventPresentationContext(
   const libraryById = new Map(libraryRecords.map((record) => [record.id, record]));
 
   const homeworkTitleByHcId = new Map<string, string>();
+  const homeworkExtraCreditByHcId = new Map<string, number>();
   for (const hc of homeworkCompletions) {
     const phaId = linkedRecordIds(hc.fields["Program Homework Assignment"])[0];
     const pha = phaId ? phaById.get(phaId) : undefined;
     const title = pha ? resolveHomeworkAssignmentTitle(pha.fields, libraryById) : null;
     if (title) homeworkTitleByHcId.set(hc.id, title);
+    const extraCredit = asOptionalNumber(hc.fields["Extra Credit XP Awarded"]);
+    if (extraCredit != null && extraCredit > 0) {
+      homeworkExtraCreditByHcId.set(hc.id, extraCredit);
+    }
   }
 
   const videoRecords = await fetchRecordsByIdsWithFieldFallback<VideoFeedbackRecordFields>(
@@ -820,6 +828,7 @@ export async function buildXpEventPresentationContext(
     contextByXpId.set(record.id, {
       submissionTotalShots,
       homeworkAssignmentTitle: hcId ? (homeworkTitleByHcId.get(hcId) ?? null) : null,
+      homeworkExtraCreditXp: hcId ? (homeworkExtraCreditByHcId.get(hcId) ?? null) : null,
       videoCustomFileName: vfId ? (videoFileNameById.get(vfId) ?? null) : null,
       zoomMeetingDisplayName: zoomId ? (zoomDisplayNameById.get(zoomId) ?? null) : null,
     });

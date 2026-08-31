@@ -51,4 +51,24 @@ describe("XpActivityTable", () => {
     expect(html).toContain('data-testid="xp-activity-subline"');
     expect(html.match(/\+25 XP/g)?.length).toBe(1);
   });
+
+  it("shows Extra credit after the date on homework rows", () => {
+    const html = renderToStaticMarkup(
+      createElement(XpActivityTable, {
+        rows: [
+          row({
+            sourceLabel: "Homework Completion",
+            reasonPublic: "Homework completed.",
+            points: 160,
+            homeworkAssignmentTitle: "Shot Tracker Usage",
+            homeworkExtraCreditXp: 125,
+          }),
+        ],
+      }),
+    );
+
+    expect(html).toContain("Homework Completed — Shot Tracker Usage");
+    expect(html).toContain("+160 XP");
+    expect(html).toContain("2026-08-22 · Extra credit +125 XP");
+  });
 });

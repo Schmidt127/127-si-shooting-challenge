@@ -1,0 +1,509 @@
+{
+  "plan": [
+    {
+      "week": "recBrZ1sV8byWEHZU",
+      "slot": "HW1",
+      "needle": "SA - Personal Game Plan - Shot Tracker Usage",
+      "library_id": "rechVLOeyEVIqmy2v",
+      "library_title": "SA - Personal Game Plan - Shot Tracker Usage",
+      "fields": {
+        "Homework Assignment": [
+          "rechVLOeyEVIqmy2v"
+        ],
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recBrZ1sV8byWEHZU"
+        ],
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Homework Slot": "HW1",
+        "Active?": true,
+        "Due Date": "2027-06-29"
+      }
+    },
+    {
+      "week": "recBrZ1sV8byWEHZU",
+      "slot": "HW2",
+      "needle": "SA - Personal Game Plan - Website Exploration",
+      "library_id": "rec6WmXjpLtIWDERo",
+      "library_title": "SA - Personal Game Plan - Website Exploration",
+      "fields": {
+        "Homework Assignment": [
+          "rec6WmXjpLtIWDERo"
+        ],
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recBrZ1sV8byWEHZU"
+        ],
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Homework Slot": "HW2",
+        "Active?": true,
+        "Due Date": "2027-06-29"
+      }
+    },
+    {
+      "week": "rec2Rewxt21z7dI9f",
+      "slot": "HW1",
+      "needle": "MTFYA - Self Awareness - The Meditation Workout",
+      "library_id": "recRZhsAtY9A6rDIu",
+      "library_title": "MTFYA - Self Awareness - The Meditation Workout",
+      "fields": {
+        "Homework Assignment": [
+          "recRZhsAtY9A6rDIu"
+        ],
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "rec2Rewxt21z7dI9f"
+        ],
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Homework Slot": "HW1",
+        "Active?": true,
+        "Due Date": "2027-06-29"
+      }
+    },
+    {
+      "week": "rec2Rewxt21z7dI9f",
+      "slot": "HW2",
+      "needle": "MTFYA - Resilience Technique - Train Rough",
+      "library_id": "recgQCc0Xvr6wQ0Ar",
+      "library_title": "MTFYA - Resilience Technique - Train Rough",
+      "fields": {
+        "Homework Assignment": [
+          "recgQCc0Xvr6wQ0Ar"
+        ],
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "rec2Rewxt21z7dI9f"
+        ],
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Homework Slot": "HW2",
+        "Active?": true,
+        "Due Date": "2027-06-29"
+      }
+    },
+    {
+      "week": "rec7RpUMVLbcrmn4h",
+      "slot": "HW1",
+      "needle": "MTFYA - Relationships - Your Ride or Die and You - Family Culture",
+      "library_id": "rec5ST6oTi4hMU8os",
+      "library_title": "MTFYA - Relationships - Your Ride or Die and You - Family Culture",
+      "fields": {
+        "Homework Assignment": [
+          "rec5ST6oTi4hMU8os"
+        ],
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "rec7RpUMVLbcrmn4h"
+        ],
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Homework Slot": "HW1",
+        "Active?": true,
+        "Due Date": "2027-06-29"
+      }
+    },
+    {
+      "week": "rec7RpUMVLbcrmn4h",
+      "slot": "HW2",
+      "needle": "MTFYA - Personal Game Plan - Learn to Play Small",
+      "library_id": "recffLcS6rQkzzFYr",
+      "library_title": "MTFYA - Personal Game Plan - Learn to Play Small",
+      "fields": {
+        "Homework Assignment": [
+          "recffLcS6rQkzzFYr"
+        ],
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "rec7RpUMVLbcrmn4h"
+        ],
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Homework Slot": "HW2",
+        "Active?": true,
+        "Due Date": "2027-06-29"
+      }
+    },
+    {
+      "week": "recCCpyqPKA580sdk",
+      "slot": "HW1",
+      "needle": "MTFYA - Mastery - Writing Down Your Goals",
+      "library_id": "rec7B9dYKzkOqVbEF",
+      "library_title": "MTFYA - Mastery - Writing Down Your Goals",
+      "fields": {
+        "Homework Assignment": [
+          "rec7B9dYKzkOqVbEF"
+        ],
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recCCpyqPKA580sdk"
+        ],
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Homework Slot": "HW1",
+        "Active?": true,
+        "Due Date": "2027-06-29"
+      }
+    },
+    {
+      "week": "recCCpyqPKA580sdk",
+      "slot": "HW2",
+      "needle": "MTFYA - Mastery - The Visualization Workout",
+      "library_id": "recK1bbYy8P4riusW",
+      "library_title": "MTFYA - Mastery - The Visualization Workout",
+      "fields": {
+        "Homework Assignment": [
+          "recK1bbYy8P4riusW"
+        ],
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recCCpyqPKA580sdk"
+        ],
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Homework Slot": "HW2",
+        "Active?": true,
+        "Due Date": "2027-06-29"
+      }
+    },
+    {
+      "week": "recEapVpi6u0oxuPy",
+      "slot": "HW1",
+      "needle": "MTFYA - Growth Mindset - Watch the Pros! Not the Joes",
+      "library_id": "rectwJ9VZekA8kx73",
+      "library_title": "MTFYA - Growth Mindset - Watch the Pros! Not the Joes",
+      "fields": {
+        "Homework Assignment": [
+          "rectwJ9VZekA8kx73"
+        ],
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recEapVpi6u0oxuPy"
+        ],
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Homework Slot": "HW1",
+        "Active?": true,
+        "Due Date": "2027-06-29"
+      }
+    },
+    {
+      "week": "recEapVpi6u0oxuPy",
+      "slot": "HW2",
+      "needle": "MTFYA - Growth Mindset - The Cooldown",
+      "library_id": "reca3nYGaM3rykAA2",
+      "library_title": "MTFYA - Growth Mindset - The Cooldown",
+      "fields": {
+        "Homework Assignment": [
+          "reca3nYGaM3rykAA2"
+        ],
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recEapVpi6u0oxuPy"
+        ],
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Homework Slot": "HW2",
+        "Active?": true,
+        "Due Date": "2027-06-29"
+      }
+    },
+    {
+      "week": "recKJMGYbEzGHyXfd",
+      "slot": "HW1",
+      "needle": "MTFYA - Growth Mindset - Practice Slower",
+      "library_id": "recuHpXzB3305azaH",
+      "library_title": "MTFYA - Growth Mindset - Practice Slower",
+      "fields": {
+        "Homework Assignment": [
+          "recuHpXzB3305azaH"
+        ],
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recKJMGYbEzGHyXfd"
+        ],
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Homework Slot": "HW1",
+        "Active?": true,
+        "Due Date": "2027-06-29"
+      }
+    },
+    {
+      "week": "recKJMGYbEzGHyXfd",
+      "slot": "HW2",
+      "needle": "MTFYA - Growth Mindset - How to Strengthen Your Subconscious Mind",
+      "library_id": "recfrN19SgIbSCL3n",
+      "library_title": "MTFYA - Growth Mindset - How to Strengthen Your Subconscious Mind",
+      "fields": {
+        "Homework Assignment": [
+          "recfrN19SgIbSCL3n"
+        ],
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recKJMGYbEzGHyXfd"
+        ],
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Homework Slot": "HW2",
+        "Active?": true,
+        "Due Date": "2027-06-29"
+      }
+    },
+    {
+      "week": "recRp4y42EpLvtwk5",
+      "slot": "HW1",
+      "needle": "P.I.B. - Self Awareness - Identity, Job, Approach",
+      "library_id": "recImBddU4lucwXn5",
+      "library_title": "P.I.B. - Self Awareness - Identity, Job, Approach",
+      "fields": {
+        "Homework Assignment": [
+          "recImBddU4lucwXn5"
+        ],
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recRp4y42EpLvtwk5"
+        ],
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Homework Slot": "HW1",
+        "Active?": true,
+        "Due Date": "2027-06-29"
+      }
+    },
+    {
+      "week": "recRp4y42EpLvtwk5",
+      "slot": "HW2",
+      "needle": "P.I.B. - Resilience Technique - Get Your Head (Back) in the Game",
+      "library_id": "recmepb4mfkqYJks5",
+      "library_title": "P.I.B. - Resilience Technique - Get Your Head (Back) in the Game",
+      "fields": {
+        "Homework Assignment": [
+          "recmepb4mfkqYJks5"
+        ],
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recRp4y42EpLvtwk5"
+        ],
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Homework Slot": "HW2",
+        "Active?": true,
+        "Due Date": "2027-06-29"
+      }
+    },
+    {
+      "week": "recW3irij491AIPrl",
+      "slot": "HW1",
+      "needle": "P.I.B. - Personal Game Plan - Don't Beat Yourself",
+      "library_id": "rec9DAphSer1Jo9a5",
+      "library_title": "P.I.B. - Personal Game Plan - Don't Beat Yourself",
+      "fields": {
+        "Homework Assignment": [
+          "rec9DAphSer1Jo9a5"
+        ],
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recW3irij491AIPrl"
+        ],
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Homework Slot": "HW1",
+        "Active?": true,
+        "Due Date": "2027-06-29"
+      }
+    },
+    {
+      "week": "recW3irij491AIPrl",
+      "slot": "HW2",
+      "needle": "P.I.B. - Play Grounded - What's Your Sports Credo?",
+      "library_id": "rec8mXePZPGugYgVC",
+      "library_title": "P.I.B. - Play Grounded - What's Your Sports Credo?",
+      "fields": {
+        "Homework Assignment": [
+          "rec8mXePZPGugYgVC"
+        ],
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recW3irij491AIPrl"
+        ],
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Homework Slot": "HW2",
+        "Active?": true,
+        "Due Date": "2027-06-29"
+      }
+    },
+    {
+      "week": "recfu3dpVJAnVBvCB",
+      "slot": "HW1",
+      "needle": "P.I.B. - Confidence Equation - Act Like a Champion",
+      "library_id": "recSKX3bgedTYQXNE",
+      "library_title": "P.I.B. - Confidence Equation - Act Like a Champion",
+      "fields": {
+        "Homework Assignment": [
+          "recSKX3bgedTYQXNE"
+        ],
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recfu3dpVJAnVBvCB"
+        ],
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Homework Slot": "HW1",
+        "Active?": true,
+        "Due Date": "2027-06-29"
+      }
+    },
+    {
+      "week": "recfu3dpVJAnVBvCB",
+      "slot": "HW2",
+      "needle": "P.I.B. - \"Say It, Believe It, Be It!\" - Performance Affirmations",
+      "library_id": "rechmw5PrODrxrmQH",
+      "library_title": "P.I.B. - \"Say It, Believe It, Be It!\" - Performance Affirmations",
+      "fields": {
+        "Homework Assignment": [
+          "rechmw5PrODrxrmQH"
+        ],
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Week": [
+          "recfu3dpVJAnVBvCB"
+        ],
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS",
+          "reclWDQZzKbVBtdhG",
+          "recv9aWnHanY2sRgk",
+          "rec2VQFfGJa1ofA06",
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Homework Slot": "HW2",
+        "Active?": true,
+        "Due Date": "2027-06-29"
+      }
+    }
+  ],
+  "count": 18
+}

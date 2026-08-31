@@ -1,0 +1,93 @@
+{
+  "mode": "CONFIRM_DELETE",
+  "started_at": "20260831_131845",
+  "base_id": "appn84sqPw03zEbTT",
+  "tables": {
+    "Email Handoff Queue": {
+      "planned": 105,
+      "deleted": 105,
+      "failed_batches": []
+    },
+    "Award Recipients": {
+      "planned": 9,
+      "deleted": 9,
+      "failed_batches": []
+    },
+    "Payment Transactions": {
+      "planned": 4,
+      "deleted": 4,
+      "failed_batches": []
+    },
+    "XP Events": {
+      "planned": 283,
+      "deleted": 283,
+      "failed_batches": []
+    },
+    "Athlete Achievement Unlocks": {
+      "planned": 38,
+      "deleted": 38,
+      "failed_batches": []
+    },
+    "Streak Occurrences": {
+      "planned": 8,
+      "deleted": 8,
+      "failed_batches": []
+    },
+    "Video Feedback": {
+      "planned": 111,
+      "deleted": 111,
+      "failed_batches": []
+    },
+    "Zoom Attendance": {
+      "planned": 2,
+      "deleted": 2,
+      "failed_batches": []
+    },
+    "Homework Completions": {
+      "planned": 17,
+      "deleted": 17,
+      "failed_batches": []
+    },
+    "Final Reflection Quiz Submissions": {
+      "planned": 0,
+      "deleted": 0,
+      "failed_batches": []
+    },
+    "Submission Assets": {
+      "planned": 69,
+      "deleted": 69,
+      "failed_batches": []
+    },
+    "Submissions": {
+      "planned": 208,
+      "deleted": 208,
+      "failed_batches": []
+    },
+    "Program Homework Assignments": {
+      "planned": 18,
+      "deleted": 18,
+      "failed_batches": []
+    },
+    "Weekly Athlete Summary": {
+      "planned": 31,
+      "deleted": 31,
+      "failed_batches": []
+    },
+    "Enrollments": {
+      "planned": 28,
+      "deleted": 28,
+      "failed_batches": []
+    },
+    "Athletes": {
+      "planned": 24,
+      "deleted": 24,
+      "failed_batches": []
+    }
+  },
+  "totals": {
+    "deleted": 955,
+    "failed": 0
+  },
+  "failures": [],
+  "finished_at": "20260831_132018"
+}

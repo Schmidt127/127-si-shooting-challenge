@@ -1,26 +1,26 @@
 # FUT-002 — Unused Airtable field inventory (audit)
 
-**Date:** 2026-08-30  
+**Date:** 2026-08-30 (audit) · **Batch-1 closeout:** 2026-08-31 · **SA XP text stubs deleted:** 2026-08-31  
 **Backlog:** FUT-002 / MRW-H01  
 **Base:** Production `appn84sqPw03zEbTT`  
-**Status:** Audit complete + **cleanup in progress** — see [`FUT-002-cleanup-session-2026-08-30.md`](./FUT-002-cleanup-session-2026-08-30.md) and [`field-inventory/`](./field-inventory/)  
+**Status:** **Batch 1 COMPLETE** + **Submission Assets `XP Events` / `XP Events copy` text stubs DELETED (2026-08-31)**. Batch-1 day live count was **1350 fields**; after SA stubs + later schema drift Meta shows **1363 fields / 35 tables**. Later Drive/unknown batches remain FUTURE. See [`FUT-002-cleanup-session-2026-08-30.md`](./FUT-002-cleanup-session-2026-08-30.md) · [`FUT-002-cleanup-queue.md`](./FUT-002-cleanup-queue.md) · [`deploy-checklists/FUT-002-sa-xp-text-stubs-delete.md`](../deploy-checklists/FUT-002-sa-xp-text-stubs-delete.md).
 
 ## Hard stop
 
-Original audit was read-only prep. **Cleanup phase (same day)** quarantined obsolete fields and retargeted Asset Key. Physical field DELETE still requires Mike UI (Meta API DELETE → 404).
+Original audit was read-only prep. Cleanup quarantined obsolete fields and retargeted Asset Key. Physical field DELETE required Mike UI (Meta API DELETE → 404) — **batch 1 UI deletes completed 2026-08-31**. SA unused text stubs deleted same calendar day after homework QA.
 
 ## Executive summary
 
 | Metric | Count |
 |--------|------:|
-| Tables scanned | 32 |
-| Fields scanned | 1347 |
-| **Active** (repo and/or live schema dependency) | 1043 |
-| **Legacy** (obsolete storage / Drive retirement) | 15 |
-| **Duplicate** (superseded by canonical field) | 8 |
-| **Unknown** (no active repo ref — needs Mike/interface review) | 281 |
-| Safe to delete later (no schema blockers) | 18 |
-| Blocked / do-not-delete | 22 |
+| Tables scanned (post–batch-1 live) | 33 |
+| Fields scanned (post–batch-1 live) | **1350** |
+| Pre-delete quarantine-day live count | 1355 |
+| Batch-1 fields deleted | **5** |
+| SA XP text stubs deleted (2026-08-31) | **2** (`fldwOklyDaW3nN2Kz`, `fld5Emwipb3UjAMz9`) |
+| Live Meta after SA stubs (2026-08-31) | **1363** fields / **35** tables |
+| Remaining `ZZZ DELETE —` fields | **0** |
+| Offline audit snapshot (prod-20260819, historical) | 1347 |
 
 Prior focused audit: [`google-drive-field-removal-prep-2026-08-17.md`](./google-drive-field-removal-prep-2026-08-17.md). This inventory confirms those findings against the **prod-20260819** snapshot and full repo grep.
 
@@ -454,7 +454,8 @@ Active fields (majority) are omitted from detail rows below. See JSON for full e
 | Review Complete? | unknown | docs(2), make_legacy(3) | historical refs only: make_legacy, docs |
 | DELETE POSSIBLY - Homework Completion Record ID | unknown | docs(2), make_legacy(3) | historical refs only: make_legacy, docs |
 | Coach Feedback (from Video Feedback) | unknown | docs(3), make_legacy(3) | historical refs only: make_legacy, docs |
-| XP Events copy | unknown | docs(7), make_legacy(3) | historical refs only: make_legacy, docs |
+| XP Events (text stub) | unknown | — | **DELETED 2026-08-31** (`fldwOklyDaW3nN2Kz`) — unused singleLineText; not XP link |
+| XP Events copy | unknown | docs(7), make_legacy(3) | **DELETED 2026-08-31** (`fld5Emwipb3UjAMz9`) — unused text stub; not XP link |
 | Ready for Homework Completion Script? | unknown | docs(2), make_legacy(3) | historical refs only: make_legacy, docs |
 | Coach Feedback - LKP | unknown | docs(1), make_legacy(3) | historical refs only: make_legacy, docs |
 | Workflow Next Step | unknown | docs(3), make_legacy(3) | historical refs only: make_legacy, docs |

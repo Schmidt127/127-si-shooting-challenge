@@ -1,0 +1,51 @@
+{
+  "mode": "CONFIRM_DELETE",
+  "safe_to_delete": true,
+  "abort_reasons": [],
+  "delete_counts": {
+    "Email Handoff Queue": 105,
+    "Award Recipients": 9,
+    "Payment Transactions": 4,
+    "XP Events": 283,
+    "Athlete Achievement Unlocks": 38,
+    "Streak Occurrences": 8,
+    "Video Feedback": 111,
+    "Zoom Attendance": 2,
+    "Homework Completions": 17,
+    "Final Reflection Quiz Submissions": 0,
+    "Submission Assets": 69,
+    "Submissions": 208,
+    "Program Homework Assignments": 18,
+    "Weekly Athlete Summary": 31,
+    "Enrollments": 28,
+    "Athletes": 24
+  },
+  "preserve_counts": {
+    "Achievements": 15,
+    "Automations": 49,
+    "Awards": 31,
+    "Config": 4,
+    "Grade Bands": 7,
+    "Homework Library": 76,
+    "Level Gate Rules": 12,
+    "Levels": 12,
+    "Program Instance - Sync": 3,
+    "School - Synced": 1241,
+    "Shot Milestones": 61,
+    "Target Goal Shots": 7,
+    "Testing Scenarios": 1,
+    "Tutorials & Assets": 32,
+    "Weeks": 13,
+    "XP Reward Rules": 31,
+    "Zoom Meetings": 2
+  },
+  "protected_tables_in_plan": [],
+  "notes": [
+    "Coach Summary Queue not present in base (no-op).",
+    "Communications Hub is external (not an Airtable table); Email Handoff Queue is the transactional queue.",
+    "Ambiguous tables classified PRESERVE: (none)",
+    "Program Homework Assignments included in DELETE per Mike authorization (Homework Library preserved).",
+    "Payment Transactions included in DELETE per Mike explicit authorization for this reset.",
+    "No external sends; API record delete only."
+  ]
+}

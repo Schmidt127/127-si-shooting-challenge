@@ -1,4 +1,5 @@
 import {
+  formatGameLogDateLine,
   formatGameLogDisplayDate,
   formatGameLogPresentation,
 } from "@/lib/data/game-log-presentation";
@@ -95,7 +96,7 @@ export function XpActivityTable({
                       className="col-start-1 row-start-2 min-w-0 break-words text-xs text-muted"
                       data-testid="xp-activity-date"
                     >
-                      {displayDate}
+                      {formatGameLogDateLine(row.activityDate, presentation.dateTagline)}
                     </p>
                   )}
                 </div>

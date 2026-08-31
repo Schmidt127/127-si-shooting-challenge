@@ -33,6 +33,12 @@ Recorded Zoom meetings do not count toward Perfect Week requirements. They do co
 
 Use an early-bird registration period for the 2026–2027 challenge. Dates, pricing, eligibility, cutoff behavior, and payment/writeback handling must be defined and tested before activation. This decision does not activate registration or change the current paid-only FUT-003 Make scenario by itself.
 
+### Program naming and public taxonomy (2026-08-31)
+
+**Preferred program name:** Jr. Referee Clinic. **Acceptable short form** where space is limited: Jr. Ref Clinic. **Never use:** Jr. Ref.
+
+**Public taxonomy:** Use **Youth Programs** (not “Youth opportunities”) for Shooting Challenge, Dribbling Challenge, and Jr. Referee Clinic. Use **Coach Tools** for Brackets, Team Shot Tracker, and State Standings.
+
 ### SC-034 / Perfect Week config closeout (2026-08-27)
 
 Repository and Production closeout for the bounded SC-034 / V2-002 pass:
@@ -107,7 +113,7 @@ The system must preserve checks for assignment identity, enrollment, challenge/s
 ### FUT-002 — Audit and remove unused Airtable fields
 
 **Priority:** P2  
-**Status:** **Cleanup in progress (2026-08-30)** — live inventory refreshed; invalid Review Summary quarantined; Asset Key retargeted; 5 fields awaiting Mike UI delete (Meta API cannot DELETE fields)  
+**Status:** **Batch 1 COMPLETE (2026-08-31)** + **SA XP text stubs deleted (2026-08-31)** — five `ZZZ DELETE —` fields + Submission Assets unused text fields `XP Events` / `XP Events copy` removed. Live after SA stubs: **1363 fields / 35 tables**. Later inventory batches (Drive legacy / unknown / other-table text stubs) remain FUTURE  
 **Systems:** Airtable schema, automations, email payloads, website/data contracts
 
 Inventory every Airtable table and identify fields that are unused, obsolete, duplicated, or no longer part of the current app. This includes legacy Google Drive URL, Google Drive ID, Google Drive folder ID, and similarly named fields. Check formulas, automations, scripts, emails, views, interfaces, website/data contracts, and documentation before deleting anything.
@@ -118,9 +124,11 @@ After confirming no active dependency remains, delete the obsolete fields and up
 
 **Acceptance criteria:** complete field/dependency inventory; unused and obsolete fields classified; fields removed only after audit; tests and documentation updated; no active S3/Lambda or future-approved fields removed accidentally.
 
-**Audit deliverables (2026-08-30):** [`docs/audits/FUT-002-unused-field-inventory-2026-08-30.md`](./audits/FUT-002-unused-field-inventory-2026-08-30.md) · [`docs/audits/fut-002-unused-field-inventory.json`](./audits/fut-002-unused-field-inventory.json) · tool `tools/airtable/fut_002_field_inventory.py`. Offline snapshot: **1347 fields**.
+**Audit deliverables (2026-08-30):** [`docs/audits/FUT-002-unused-field-inventory-2026-08-30.md`](./audits/FUT-002-unused-field-inventory-2026-08-30.md) · [`docs/audits/fut-002-unused-field-inventory.json`](./audits/fut-002-unused-field-inventory.json) · tool `tools/airtable/fut_002_field_inventory.py`. Offline snapshot (pre-cleanup): **1347 fields**.
 
-**Live cleanup (2026-08-30):** [`docs/audits/field-inventory/`](./audits/field-inventory/) · [`docs/audits/FUT-002-cleanup-session-2026-08-30.md`](./audits/FUT-002-cleanup-session-2026-08-30.md) · tool `tools/airtable/_fut002_live_pass.py`. Live: **1355 fields / 33 tables**. HC Drive batch (`fldFZLzDjiEbENCGl`, `fld71v6s6wYaJ2Umk`, `fldgGoh56Ck4fTQIE`) confirmed absent. `fldHchlovIaPlGKLk` quarantined (`BLANK()`). Submission Assets Asset Key retargeted to `RECORD_ID()` (valid). **Mike UI:** delete all `ZZZ DELETE — *` fields (5).
+**Live cleanup (2026-08-30 → batch-1 close 2026-08-31):** [`docs/audits/field-inventory/`](./audits/field-inventory/) · [`docs/audits/FUT-002-cleanup-session-2026-08-30.md`](./audits/FUT-002-cleanup-session-2026-08-30.md) · [`docs/audits/FUT-002-cleanup-queue.md`](./audits/FUT-002-cleanup-queue.md) · packet [`docs/deploy-checklists/FUT-002-batch1-quarantined-field-delete.md`](./deploy-checklists/FUT-002-batch1-quarantined-field-delete.md). Quarantine day: **1355 fields / 33 tables**; Asset Key retargeted; five fields quarantined then **Mike UI-deleted**. Post-delete verify: [`testing/evidence/fut-002/batch1-live-verify.json`](./testing/evidence/fut-002/batch1-live-verify.json) · schema `airtable/schema/snapshots/prod-20260831-fut002-batch1/` (**1350** fields). Meta API still cannot DELETE fields (404) — UI required for any future batch.
+
+**Submission Assets XP text stubs (2026-08-31):** Mike UI-deleted unused `XP Events` (`fldwOklyDaW3nN2Kz`) and `XP Events copy` (`fld5Emwipb3UjAMz9`) — single-line text only; not XP link fields. Packet: [`deploy-checklists/FUT-002-sa-xp-text-stubs-delete.md`](./deploy-checklists/FUT-002-sa-xp-text-stubs-delete.md). Evidence: [`testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json`](./testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json).
 
 ### FUT-003 — Stripe payment writeback to Airtable
 
@@ -214,7 +222,7 @@ The current parent-facing email workflows are functional and can be used for the
 
 Optional future work may improve visual presentation or wording, but email functionality is not a blocker for the upcoming challenge.
 
-**Remaining writeback gap:** Weekly Athlete Summary Sent? after Hub → Resend (still TBD). Homework Completions Sent?/Sent On — **FUT-032** (Hub code + HC fields 2026-08-31; deploy + proof remaining). Hub PR [#42](https://github.com/Schmidt127/communications/pull/42) **MERGED**.
+**Remaining writeback gap:** Weekly Athlete Summary Sent? after Hub → Resend (still TBD). Homework Completions Sent?/Sent On — **FUT-032 COMPLETE** (2026-08-31 Mike verify). Hub PR [#42](https://github.com/Schmidt127/communications/pull/42) **MERGED**.
 
 ---
 
@@ -297,7 +305,7 @@ Reduce Airtable storage usage by deleting the original **Submission Assets** int
 - Require logging of record ID, asset purpose, S3 key, verification result, deletion result, and failure reason.
 - Do not delete Airtable attachments until the AWS verification step has passed.
 
-**Related items:** FUT-007 (future AWS media naming), FUT-009 (AWS storage structure and corrected-video workflow), SC-094 (video storage on program-owned S3), SC-095 (homework storage on S3 via 070a), SC-096 (canonical HTTPS URLs on assets), SC-099 (writeback verification via 070c), SC-100 (attachment / Drive retirement strategy — broader planning; remains deferred).
+**Related items:** FUT-007 (future AWS media naming), FUT-009 (AWS storage structure and corrected-video workflow), **FUT-040** (automatic migration orchestration + headshots — extends this item; do not duplicate), SC-094 (video storage on program-owned S3), SC-095 (homework storage on S3 via 070a), SC-096 (canonical HTTPS URLs on assets), SC-099 (writeback verification via 070c), SC-100 (attachment / Drive retirement strategy — broader planning; remains deferred).
 
 **Acceptance criteria:**
 
@@ -476,6 +484,8 @@ Review and improve the Landing Page and Shooting Challenge page without duplicat
 
 **Validation (2026-08-30):** Rebased onto homepage redesign (#270); kept #270 hero CTAs and content hierarchy; added “For parents and families” section with FAQ/homework links from #266.
 
+**Follow-on (do not reopen this ID):** Club landing “More than a Scoreboard,” navy→royal, Upcoming Programs redesign, and program images are **FUT-033–FUT-037** (`hoopchallenges-landing`).
+
 ### FUT-019 — Website footer consistency
 
 **Priority:** P2  
@@ -621,10 +631,32 @@ Expand Homework Library from ~70 to **100+** assignments and add **online Fillou
 
 **Related (coordinate, do not silently merge):** SC-018 / SC-019 / SC-020 Learning Activities; existing HW17 Fillout quiz path; FUT-001 / SC-015 / SC-016 HC identity.
 
+### FUT-030 — Full transactional record reset (clean rebuild base)
+
+**Priority:** P0  
+**Status:** **COMPLETE** (2026-08-31)  
+**Systems:** Athletes, Enrollments, Submissions, Submission Assets, Homework Completions, Program Homework Assignments, XP Events, Athlete Achievement Unlocks, Streak Occurrences, Weekly Athlete Summary, Video Feedback, Zoom Attendance, Award Recipients, Payment Transactions, Email Handoff Queue, Final Reflection Quiz Submissions  
+**Preserved:** Weeks, Config, Program Instance, Homework Library, XP Reward Rules, Achievements, Target Goal Shots, Grade Bands, Tutorials & Assets, Awards catalog, Levels/gates/milestones, Zoom Meetings, School - Synced, Testing Scenarios, Automations (**075** remains retired)  
+**Evidence:** [`testing/evidence/transactional-reset-2026-08-31/`](./testing/evidence/transactional-reset-2026-08-31/)  
+**Tool:** `tools/airtable/transactional_record_reset.py`
+
+Mike-authorized **record deletion only** (not schema). Deleted **959** transactional records across all program years and test fixtures. No external sends. **18 seasonal PHA restored same day** (new RIDs; Due Date 2027-06-29) — see `11-pha-restore-created-20260831_133022.json`. Base is ready for clean workflow rebuild.
+
+### FUT-031 — Game Log: Extra Credit tagline after date
+
+**Priority:** P2  
+**Status:** Implemented in repo (2026-08-31) — pending Mike merge/deploy  
+**Systems:** Website Game Log / XP activity table, Homework Completions (`Extra Credit XP Awarded`), XP Events  
+**Related:** FUT-012 (Game Log presentation)
+
+**Summary:** Keep one Homework XP Event (base + extra credit total). When `Extra Credit XP Awarded` > 0, show a parent-visible tagline on the Game Log date row, e.g. `2026-08-31 · Extra credit +125 XP`. Display-only — no XP calculation or Airtable award-logic changes.
+
+**Tests:** `game-log-presentation.test.ts`, `recent-activity-log.test.ts`, `xp-activity-table.test.ts`, `xp-activity-loader.test.ts`
+
 ### FUT-032 — Homework Completions Hub → Resend source writeback (Parent Feedback Sent?)
 
 **Priority:** P1  
-**Status:** **IN PROGRESS** — Hub code merged ([communications#42](https://github.com/Schmidt127/communications/pull/42)); HC parity fields live; awaiting Hub Production deploy + controlled Schmidt proof  
+**Status:** **COMPLETE** (2026-08-31) — Hub writeback live ([communications#42](https://github.com/Schmidt127/communications/pull/42) **MERGED**); Mike verified Parent Feedback Sent? + Sent On on Schmidt HC after 065/071 path  
 **Systems:** Communications Hub, Resend webhooks, Homework Completions, Automation **071** / **079** (read-only for Sent?), Email Handoff Queue  
 **Related:** FUT-006 · Video Feedback Hub writeback ([`deploy-checklists/VIDEO-FEEDBACK-HUB-RESEND-WRITEBACK.md`](./deploy-checklists/VIDEO-FEEDBACK-HUB-RESEND-WRITEBACK.md)) · [`online-agents/homework-assets/HOMEWORK-ASSET-COMPLETION-RUNBOOK.md`](./online-agents/homework-assets/HOMEWORK-ASSET-COMPLETION-RUNBOOK.md) §7  
 **Promotion:** [`deploy-checklists/FUT-032-homework-hub-resend-writeback.md`](./deploy-checklists/FUT-032-homework-hub-resend-writeback.md) · Hub contract `communications/docs/contracts/HOMEWORK_FEEDBACK_SOURCE_WRITEBACK_v1.md`
@@ -636,16 +668,329 @@ Expand Homework Library from ~70 to **100+** assignments and add **online Fillou
 **Done (2026-08-31):**
 
 1. Production HC fields created (Video parity): Delivery Status, Delivery Error, Hub Event ID, Resend Message ID.
-2. Hub: `source-writeback-homework-feedback.js`; wired in `welcome-processor.js` + `resend-webhook.js`; tests pass; **PR #42 merged** to `communications` `main`.
+2. Hub: `source-writeback-homework-feedback.js`; wired in `welcome-processor.js` + `resend-webhook.js`; tests `homework-feedback-writeback.test.mjs`; **PR #42 merged** to `communications` `main`.
 3. SC docs/checklist updated.
-
-**Still required for COMPLETE:**
-
-1. Deploy Hub Production (Vercel) with homework writeback.
-2. Controlled Schmidt `HOMEWORK_FEEDBACK` proof: Pending → Sent? + Sent On after Resend.
-3. Confirm replay does not duplicate send / does not clear sticky Delivered.
+4. Mike verified live: **Parent Feedback Sent?** checked and **Parent Feedback Sent On** correct after homework feedback send (Athlete1 / Meditation Workout path). Related: Production **065 v10.5** paste (points reconcile) same day.
 
 **Out of scope:** `Completion Status` / `Satisfactory?` / XP / S3 upload writeback; historical backfill of pre-writeback sends.
+
+---
+
+## H. Approved brainstorming intake — 2026-08-31
+
+Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT-047**. Documentation-only intake; **do not implement from this section alone** — convert each item to a Phase 2 brief before code, schema, Fillout, or Production changes. Do not reopen completed **FUT-018** / **FUT-019** / **FUT-010** as duplicates; new IDs own the new scope and cross-reference related work.
+
+**Repo routing:** Club marketing root / “More than a Scoreboard” / Upcoming Programs (**FUT-033–FUT-037**) → implement in **`hoopchallenges-landing`** (Fairfield Basketball Club landing). Shooting Challenge app, Airtable, Hub email, Fillout SC forms, and S3 pipeline items (**FUT-038–FUT-047**) → this repo and linked systems unless noted.
+
+### FUT-033 — Correct “More than a Scoreboard” Youth Programs vs Coach Tools copy
+
+**Priority:** P1  
+**Status:** Ready for prompt  
+**Systems:** Club landing / public website copy  
+**Correct repo:** `hoopchallenges-landing` (not `/shoot` in this repo)  
+**Related:** FUT-034 · FUT-036 · SC-149 · [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) § Website · Mike-approved naming taxonomy above
+
+**Problem:** The “More than a Scoreboard” Q&A does not clearly distinguish Youth Programs from Coach Tools, and must not use “Youth opportunities.”
+
+**Approved requirements:**
+
+- **Youth Programs:** Shooting Challenge, Dribbling Challenge, Jr. Referee Clinic  
+- **Coach Tools:** Brackets, Team Shot Tracker, State Standings  
+- Proposed copy: “Youth programs include Shooting Challenge, Dribbling Challenge, and Jr. Referee Clinic. Coach tools are also available, including Brackets, Team Shot Tracker, and State Standings.”  
+- Use **“Youth Programs”** consistently; do not use “Youth opportunities.”
+
+**Dependencies / risks:** Copy must stay consistent with FUT-034 naming and FUT-036 program cards. Landing repo ownership — do not edit this repo’s `web/` for this item unless Mike confirms the content also lives under `/shoot`.
+
+**Decisions still open:** Exact heading/Q wording beyond the approved distinction sentence; whether `/shoot` FAQ or homepage needs a parallel correction.
+
+### FUT-034 — Standardize “Jr. Referee Clinic” naming everywhere
+
+**Priority:** P1  
+**Status:** Ready for prompt  
+**Systems:** Public website, emails, Fillout forms, documentation, user-facing copy (cross-repo)  
+**Correct repos:** `hoopchallenges-landing` + this repo (`web/`, Hub templates, docs) + Fillout + Jr. Referee Clinic product surfaces where the public name must match  
+**Related:** FUT-033 · FUT-036 · Mike-approved naming taxonomy above · SC-143 (multi-challenge — do not merge)
+
+**Problem:** Short or incorrect names (especially **Jr. Ref**) weaken brand consistency across public surfaces.
+
+**Approved requirements:**
+
+- Preferred: **Jr. Referee Clinic**  
+- Acceptable when space is limited: **Jr. Ref Clinic**  
+- Never: **Jr. Ref**  
+- Search and correct incorrect uses across public website, emails, forms, documentation, and other user-facing copy.
+
+**Dependencies / risks:** Broader than landing-only; coordinate with the Jr. Referee Clinic product repo (`127-si-jr-ref`) only where that product’s public name must match — do not pull JR Ref implementation into this repo.
+
+**Decisions still open:** Inventory of live Fillout form titles and email subjects that still use the banned short form **Jr. Ref**; whether internal/admin-only labels may keep a shorter form.
+
+### FUT-035 — Replace navy-blue landing treatments with royal blue / orange brand system
+
+**Priority:** P2  
+**Status:** Ready for prompt  
+**Systems:** Club landing visual design (header, “More than a Scoreboard,” related image/content section, footer)  
+**Correct repo:** `hoopchallenges-landing`  
+**Related:** FUT-019 (SC site footer — **COMPLETE**, separate app) · SC-149 · `BRAND_STANDARDS.md` (sync check vs landing canonical brand doc)
+
+**Problem:** Navy-blue treatment in the landing header, “More than a Scoreboard” section, related image/content section, and footer does not match the royal blue / orange brand system.
+
+**Approved requirements:**
+
+- Replace navy with a professional treatment based on existing **royal blue and orange** branding.  
+- Prefer a royal-blue-based color or gradient matching the header.  
+- Footer must use the same blue/header color system rather than navy.
+
+**Dependencies / risks:** Brand doc version mismatch between landing and this repo — synchronize through approved cross-repo documentation update; do not invent a third palette.
+
+**Decisions still open:** Exact hex/CSS tokens; whether SC `/shoot` chrome needs any parallel navy cleanup (out of scope unless found during audit).
+
+### FUT-036 — Redesign Upcoming Programs section (six differentiated program cards)
+
+**Priority:** P1  
+**Status:** Ready for prompt  
+**Systems:** Club landing Upcoming Programs UI  
+**Correct repo:** `hoopchallenges-landing`  
+**Related:** FUT-033 · FUT-034 · FUT-037 · SC-143
+
+**Problem:** Current three identical white boxes are visually weak and do not present all six offerings or Youth Programs vs Coach Tools.
+
+**Approved requirements:**
+
+- Completely redesign Upcoming Programs with attractive, clearly differentiated program cards.  
+- Each card supports: program image, program name, short description, category label, availability/status, clear CTA, consistent but engaging design.  
+- Include all six: Shooting Challenge, Dribbling Challenge, Jr. Referee Clinic, Brackets, Team Shot Tracker, State Standings.  
+- Clearly distinguish **Youth Programs** from **Coach Tools**.
+
+**Dependencies / risks:** FUT-037 images; FUT-034 naming; CTA destinations and availability status per program (**decision needed** per offering).
+
+**Decisions still open:** Per-program CTA URLs/status copy; card layout breakpoints; whether Coach Tools share the same card component with different category chrome only.
+
+### FUT-037 — Youth Programs / program cards: replace solid panels with images
+
+**Priority:** P1  
+**Status:** Ready for prompt — **blocked on Mike-supplied images** until assets exist  
+**Systems:** Club landing program imagery  
+**Correct repo:** `hoopchallenges-landing`  
+**Asset directory (landing):** `/public/images/programs/`  
+**Related:** FUT-036
+
+**Problem:** Solid-color panels in the Youth Programs (and related program) section should be real imagery.
+
+**Approved requirements:**
+
+- Replace solid-color panels with images supplied by Mike.  
+- Recommended filenames: `shooting-challenge.jpg`, `dribbling-challenge.jpg`, `jr-referee-clinic.jpg`, `brackets.jpg`, `team-shot-tracker.jpg`, `state-standings.jpg`.  
+- Consistent dimensions, cropping, overlays, accessibility text, and responsive behavior.
+
+**Dependencies / risks:** Image supply and licensing; FUT-036 card redesign should define slots before final crop specs.
+
+**Decisions still open:** Final image dimensions/aspect ratio; overlay treatment; alt-text source of truth.
+
+### FUT-038 — Global configurable program-category on/off system
+
+**Priority:** P1  
+**Status:** Planned — architecture brief required before schema/automation work  
+**Systems:** Airtable Config / Program Instance (or equivalent), XP, levels/gates, GOAT, achievements, milestones, weekly summaries, parent/athlete emails, website progress displays, related automations  
+**Correct repo:** this repo (+ Production Airtable after approved design)  
+**Related:** SC-034 / config-over-code · C-014 / SC-082 gate tuning · FUT-026 Player Manual · [v2/03-business-rules.md](./v2/03-business-rules.md) · [next-wave/config-selection/CONFIG-CONSUMER-INVENTORY.md](./next-wave/config-selection/CONFIG-CONSUMER-INVENTORY.md) · [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) § XP / levels
+
+**Problem:** Coaches need to disable whole participation categories for a program instance/season without breaking XP, levels, GOAT, achievements, or communications.
+
+**Initial categories (extensible):** Submissions, Homework, Video Feedback, Zoom, Streaks, Achievements, Milestones, and any other existing XP/progression category that should be configurable.
+
+**Approved requirements:**
+
+- Global category on/off per program instance or season.  
+- When a category is disabled (example: Homework off), participants must still: earn XP appropriately; move through all levels; meet **adjusted** gates; earn achievements where applicable; reach **GOAT**; receive accurate progress displays and communications.  
+- **Disabled categories must not block GOAT progression** or accidentally block level advancement.  
+- Auto-adjust: XP calculations, level gates, GOAT requirements, achievement requirements, progress/status displays, weekly summaries, parent emails, athlete emails, related automations / success calculations.  
+- Extensible configuration so new categories can be added later without redesigning the architecture.  
+- Safe defaults; administrative visibility; clear documentation.  
+- Testing with Homework **enabled** and **disabled**.  
+- Protection against disabled categories accidentally blocking progression.
+
+**Dependencies / risks:** Large cross-cutting change — schema ownership gate (PKG-004), automation inventory, email templates, web loaders. High regression risk if gates remain hard-required for disabled categories.
+
+**Decisions still open (do not invent):** Which Airtable table owns the flags (Config vs Program Instance vs new table); default on/off per category for 2026–27; how Perfect Week / recorded Zoom interact when Zoom or Homework is off; whether website hides disabled category UI entirely or shows “not part of this season.”
+
+### FUT-039 — Fillout.com branding and CSS consistency (planning only)
+
+**Priority:** P2  
+**Status:** Planned — **do not implement yet**  
+**Systems:** Fillout forms (registration, homework, and related SC forms)  
+**Correct repo / surface:** Fillout.com + docs in this repo; coordinate with FUT-003 / FUT-029  
+**Related:** FUT-003 · FUT-029 · FUT-034 · SC-060 / SC-146
+
+**Problem:** Related Fillout forms lack a consistent 127 SI / Fairfield branding treatment.
+
+**Approved requirements (planning item):**
+
+- Standardize header treatment, royal-blue/orange palette, typography, buttons, fields, spacing, logo/program identification, confirmation screens.  
+- Produce an implementation brief and form inventory before any live Fillout CSS/theme changes.
+
+**Dependencies / risks:** Fillout theming capabilities and form ownership; must not break FUT-003 payment writeback or intake validation (SC-060).
+
+**Decisions still open:** Which forms are in scope for v1; shared CSS host vs per-form theme; owner of logo assets.
+
+### FUT-040 — Automatic S3 migration for homework, video-feedback, and headshot attachments
+
+**Priority:** P1  
+**Status:** Planned — extends / does not replace **FUT-010**  
+**Systems:** Airtable attachments, AWS S3, Lambda viewer (where applicable), Submission Assets / registration headshots, audit/status fields  
+**Correct repo:** this repo + AWS  
+**Related:** **FUT-010** (intake SA cleanup after verified upload — dry-run complete; supervised apply pending) · FUT-007 (HEADSHOT naming) · FUT-009 · SC-094 · SC-095 · SC-096 · SC-099 · SC-100 · [deploy-checklists/FUT-010-intake-attachment-cleanup.md](./deploy-checklists/FUT-010-intake-attachment-cleanup.md) · [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) FUT-010 row
+
+**Problem:** Need an automatic migration path that copies approved attachment categories to S3, verifies access, preserves the S3 URL, then deletes the Airtable attachment — including headshots collected at registration — without expanding to unapproved attachment types.
+
+**Scope (only these categories unless separately approved):**
+
+1. Homework files  
+2. Video files for feedback  
+3. Headshots collected during registration  
+
+**Required order:**
+
+1. Copy the file to AWS S3.  
+2. Confirm that the S3 object exists.  
+3. Confirm that the stored link works and is accessible to the authorized user.  
+4. Preserve the verified S3 URL.  
+5. Automatically delete the original Airtable attachment.  
+
+**Hard rule:** S3 / Airtable attachment deletion occurs **only after successful verification** (steps 1–4). Never delete the S3 object as part of this cleanup. Never delete the Airtable record.
+
+**Before automatic deletion is enabled, require:** migration status, verification status, error handling, audit trail, retry or exception handling, and a test using non-production records or an approved test process.
+
+**Dependencies / risks:** FUT-010 already covers verified cleanup for homework-route and video-route **Submission Assets**; this item adds **automatic migration orchestration**, **headshots**, and explicit status/audit fields. Do not run destructive apply until verification gates pass. Public S3 bucket remains **rejected** (Section E).
+
+**Decisions still open:** Headshot source field/table on Athletes/Enrollments; whether FUT-010 CLI becomes a worker inside this pipeline or remains a separate supervised tool; Lambda viewer applicability for headshots vs homework/video.
+
+### FUT-041 — Daily Submission Acknowledgement email: XP in horizontal columns
+
+**Priority:** P2  
+**Status:** Ready for prompt  
+**Systems:** Daily Submission Acknowledgement email (Hub / Resend; automation **076** path)  
+**Correct repo:** this repo + Communications Hub templates  
+**Related:** FUT-006 · FUT-031 · [integrations/email-send-plane.md](./integrations/email-send-plane.md) · [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) § Email path · `docs/communications-hub/`
+
+**Problem:** XP presentation in the Daily Submission Acknowledgement email should show earned XP and extra credit in clear horizontal columns.
+
+**Approved requirements:**
+
+- Display XP in horizontal columns with headings **XP Earned** and **Extra Credit**.  
+- **Always** display the Extra Credit column.  
+- Display **0** when no extra credit is awarded.  
+- Example: XP Earned `10` · Extra Credit `0`.
+
+**Follow-up question (do not invent):** Must the underlying Airtable / XP Event structure keep base XP and Extra Credit as separate stored values for this email, or is display-time split from existing fields sufficient? Document the answer in the Phase 2 brief. Coordinate with FUT-031 (Game Log Extra Credit tagline — display-only; one Homework XP Event total).
+
+**Dependencies / risks:** Hub template ownership; do not change XP award logic without an explicit decision.
+
+### FUT-042 — Style Coach Feedback as a quotation (emails + website cards)
+
+**Priority:** P2  
+**Status:** Ready for prompt  
+**Systems:** Parent-facing emails; website/dashboard homework (and related) cards  
+**Correct repo:** this repo (`web/` + Hub email HTML)  
+**Related:** FUT-043 · FUT-032 · Automation **071** / homework feedback templates · `web/lib/data/public-athlete-homework.ts` (`Coach Feedback`)
+
+**Problem:** Coach Feedback reads as plain body text rather than a clear quotation.
+
+**Approved requirements:**
+
+- Indented block; smaller font; italic text; orange left border; light blue-gray background; consistent padding; accessible color contrast.  
+- Apply in both parent-facing emails and website/dashboard cards.
+
+**Dependencies / risks:** Shared design tokens with FUT-043; contrast check against brand orange/blue.
+
+**Decisions still open:** Exact token values; whether empty Coach Feedback hides the quotation block entirely (recommended, confirm in brief).
+
+### FUT-043 — Consistent card design system (website + emails)
+
+**Priority:** P2  
+**Status:** Ready for prompt  
+**Systems:** Relevant website components and email cards  
+**Correct repo:** this repo  
+**Related:** FUT-042 · FUT-044 · FUT-011–FUT-017 design patterns · Impeccable / `BRAND_STANDARDS.md` · `APP_CONTEXT.md`
+
+**Problem:** Cards across website and email surfaces are visually inconsistent.
+
+**Approved requirements:** Standardize card heading size, font/weight, spacing, border/outline, corner radius, background colors, accent colors, internal padding, and responsive behavior across relevant website components and emails.
+
+**Dependencies / risks:** Avoid generic AI card grids; preserve existing SC light theme. Scope which surfaces are “relevant” in Phase 2 (athlete homework, dashboard, Game Log, Hub emails).
+
+**Decisions still open:** Token source of truth (CSS variables vs Hub partials); whether email HTML can share the same radius/border language as the web app.
+
+### FUT-044 — Remove redundant Submitted Work card; keep View Submitted Homework CTA
+
+**Priority:** P2  
+**Status:** Ready for prompt  
+**Systems:** Website athlete/parent homework UI  
+**Correct repo:** this repo (`web/`)  
+**Related:** FUT-043 · FUT-014 · athlete homework presentation components
+
+**Problem:** A Submitted Work card is redundant when the View Submitted Homework action already covers the need.
+
+**Approved requirements:** Remove the redundant Submitted Work card; keep the **View Submitted Homework** button.
+
+**Dependencies / risks:** Confirm which route/component owns the card before deletion; preserve accessibility of the remaining CTA.
+
+**Decisions still open:** Exact component/route list after UI inventory (do not invent file paths in this entry).
+
+### FUT-045 — Use “Assignment Name” (not “Full Assignment Name”) in public-facing UI
+
+**Priority:** P1  
+**Status:** Ready for prompt  
+**Systems:** Website cards, emails, assignment details, parent-facing displays  
+**Correct repo:** this repo (+ Hub email payloads)  
+**Related:** FUT-001 · FUT-014 · chatgpt-sources platform-config notes on public assignment naming · Homework Library / PHA field map
+
+**Problem:** Public surfaces expose “Full Assignment Name” (or equivalent long/internal labels) instead of parent-friendly **Assignment Name**.
+
+**Approved requirements:** Use **Assignment Name** instead of **Full Assignment Name** in all public-facing components: website cards, emails, assignment details, parent-facing displays.
+
+**Dependencies / risks:** Confirm Airtable field that is the canonical public Assignment Name vs formula/primary full name; do not break FUT-001 identity matching (internal identity may still use stable IDs / library keys).
+
+**Decisions still open:** Exact Airtable field IDs for public Assignment Name on Homework Library vs PHA vs Homework Completions lookups; whether any admin-only views keep Full Assignment Name.
+
+### FUT-046 — Homework feedback email subject: name + Assignment Name
+
+**Priority:** P2  
+**Status:** Ready for prompt  
+**Systems:** Homework feedback email subject (Hub / **071** payload or Hub template)  
+**Correct repo:** this repo + Communications Hub  
+**Related:** FUT-032 · FUT-045 · FUT-047 · `docs/communications-hub/README.md`
+
+**Problem:** Homework feedback subject line should identify athlete and assignment clearly.
+
+**Approved requirements:** Subject format:
+
+`Homework Feedback – First Name Last Name – Assignment Name`
+
+**Dependencies / risks:** FUT-045 for Assignment Name source; Hub vs automation ownership of subject string.
+
+**Decisions still open:** Whether test-mode subjects keep a `[TEST]` prefix; name source field (Enrollment Full Athlete Name vs separate first/last).
+
+### FUT-047 — Homework feedback contact: monitored Fairfield address (not unmonitored reply)
+
+**Priority:** P1  
+**Status:** Ready for prompt  
+**Systems:** Homework feedback (and any related) parent email copy  
+**Correct repo:** this repo + Communications Hub templates  
+**Related:** FUT-046 · FUT-006 · email send plane docs
+
+**Problem:** Current instruction tells recipients to reply to an unmonitored notification address.
+
+**Approved requirements:**
+
+- Use monitored contact: **schmidt@fairfieldbasketballclub.com**  
+- Recommended wording: “Questions about this feedback? Please contact us at schmidt@fairfieldbasketballclub.com.”  
+- Do not instruct parents to reply to the unmonitored notification address for feedback questions.
+
+**Dependencies / risks:** Reply-To / From headers may remain notification addresses for deliverability — copy change is separate from SMTP headers (**confirm in brief**). Apply consistently wherever the old unmonitored-reply instruction appears.
+
+**Decisions still open:** Whether the same wording is required on video feedback and weekly summary emails in the same pass, or homework-only for v1.
+
+---
 
 ### SC-ATHLETE-WF-001 — Individual athlete workflow QA (pre–season simulation)
 
@@ -1029,9 +1374,33 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **SC-PW-E2E preflight** | COMPLETE (repo) | `preflightApplyAccess`; unlock field resolver (`Source Key` / `Milestone Source Key`) |
 | **SC-147** | Repo prep shipped | Recorded Zoom half-XP — draft `drafts/sc-147-zoom-recording-half-xp.js` + `lib/sc-147-zoom-recording-credit.test.js`; Mike slot + rule row pending |
 | **FUT-001 / PR #264** | **COMPLETE** (repo + Production paste + multi-asset XP) | 020 v3.8 + 065 v10.4 Live; multi-asset 020 **PASS**; 065 dynamic `recordId` remapped; **trigger re-entry after remap** required; exactly one `HOMEWORK_XP\|rec8E94Jg7mpmuMW9` (`recwpzl8pkXecUqRK`, no duplicate) — PR **#312** MERGED `f8a7365f` — [`testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json`](./testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json) · [`deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](./deploy-checklists/065-recordId-dynamic-remap-operator-packet.md) |
-| **SC-015 / SC-016 / MRW-F02** | **COMPLETE** (2026-08-31) | Multi-asset → one HC + one Homework XP; **do not** re-paste 020/065; **do not** re-`--apply` |
+| **SC-015 / SC-016 / MRW-F02** | **COMPLETE** (2026-08-31) | Multi-asset → one HC + one Homework XP; 065 remap + re-entry **COMPLETE**; **do not** re-paste 020/065; **do not** re-`--apply` |
+| **FUT-002 batch 1** | **COMPLETE** (2026-08-31) | Five `ZZZ DELETE —` fields UI-deleted; then **1350** fields / **0** ZZZ; [`testing/evidence/fut-002/batch1-live-verify.json`](./testing/evidence/fut-002/batch1-live-verify.json) · schema `airtable/schema/snapshots/prod-20260831-fut002-batch1/` |
+| **FUT-002 SA XP text stubs** | **COMPLETE** (2026-08-31) | Submission Assets unused text `XP Events` + `XP Events copy` UI-deleted; live **1363** fields / **35** tables — [`deploy-checklists/FUT-002-sa-xp-text-stubs-delete.md`](./deploy-checklists/FUT-002-sa-xp-text-stubs-delete.md) · [`testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json`](./testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json) |
 | **FUT-029 / MRW-H12** | **FUTURE** (design only) | Hybrid Fillout Homework — [`next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](./next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md); requested as FUT-018 (ID already used) |
-| **FUT-032** | **IN PROGRESS** (2026-08-31) | Homework Hub → Resend source writeback — HC parity fields created; Hub PR [#42](https://github.com/Schmidt127/communications/pull/42) **MERGED**; deploy + Schmidt proof remaining — [`deploy-checklists/FUT-032-homework-hub-resend-writeback.md`](./deploy-checklists/FUT-032-homework-hub-resend-writeback.md) |
+| **FUT-030** | **COMPLETE** (2026-08-31) | Full transactional record reset — **959** deleted; Weeks/Config/Library/rules/automations preserved; **18 PHA restored** same day (new RIDs); **075** absent; no external sends — [`testing/evidence/transactional-reset-2026-08-31/`](./testing/evidence/transactional-reset-2026-08-31/) |
+| **FUT-032** | **COMPLETE** (2026-08-31) | Homework Hub → Resend source writeback — Hub PR [#42](https://github.com/Schmidt127/communications/pull/42) MERGED; Sent? + Sent On verified live after homework feedback — [`deploy-checklists/FUT-032-homework-hub-resend-writeback.md`](./deploy-checklists/FUT-032-homework-hub-resend-writeback.md) |
+| **065 v10.5** | **COMPLETE** (2026-08-31) | Points-reconcile fix pasted Live; Awarded + 071/Hub path verified — [`deploy-checklists/065-v10.5-points-reconcile-operator-packet.md`](./deploy-checklists/065-v10.5-points-reconcile-operator-packet.md) |
+
+### 2026-08-31 approved brainstorming intake (documentation only)
+
+| Item | Status | Notes |
+|---|---|---|
+| **FUT-033** | READY | Landing “More than a Scoreboard” Youth Programs vs Coach Tools copy — `hoopchallenges-landing` |
+| **FUT-034** | READY | Standardize **Jr. Referee Clinic** (never **Jr. Ref**) — cross-repo user-facing copy |
+| **FUT-035** | READY | Replace navy with royal blue/orange on landing header / Scoreboard section / footer — landing repo |
+| **FUT-036** | READY | Redesign Upcoming Programs — six differentiated cards; Youth Programs vs Coach Tools |
+| **FUT-037** | READY (blocked on images) | Program images under `/public/images/programs/` — Mike supplies assets |
+| **FUT-038** | READY (brief first) | Global category on/off; disabled categories must not block GOAT / levels — Airtable + automations + web + email |
+| **FUT-039** | DEFERRED implement / Planned | Fillout branding CSS — planning only; do not implement yet |
+| **FUT-040** | READY (brief first) | Automatic S3 migration for HW / video / headshots; delete Airtable attachment **only after** verification — extends **FUT-010** |
+| **FUT-041** | READY | Daily Submission Acknowledgement: XP Earned \| Extra Credit columns; Extra Credit always shown (0 if none) |
+| **FUT-042** | READY | Coach Feedback quotation styling — emails + website cards |
+| **FUT-043** | READY | Consistent card design system — website + emails |
+| **FUT-044** | READY | Remove redundant Submitted Work card; keep View Submitted Homework |
+| **FUT-045** | READY | Public-facing **Assignment Name** (not Full Assignment Name) |
+| **FUT-046** | READY | Homework feedback subject: `Homework Feedback – First Name Last Name – Assignment Name` |
+| **FUT-047** | READY | Monitored contact `schmidt@fairfieldbasketballclub.com` instead of unmonitored-reply instruction |
 
 ### 2026-08-29 legacy welcome-email field retirement
 

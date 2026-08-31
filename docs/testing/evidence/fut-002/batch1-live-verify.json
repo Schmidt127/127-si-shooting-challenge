@@ -1,0 +1,299 @@
+{
+  "ok": true,
+  "fieldDeletesOk": true,
+  "countBaselineStrictOk": false,
+  "generatedAt": "2026-08-31T13:00:58Z",
+  "interpretedAt": "2026-08-31T13:05:00Z",
+  "baseId": "appn84sqPw03zEbTT",
+  "status": "BATCH_1_COMPLETE",
+  "notes": [
+    "All five batch-1 quarantine field IDs are ABSENT (Mike UI delete confirmed).",
+    "Zero live fields remain with name prefix 'ZZZ DELETE'.",
+    "Live schema after delete: 33 tables / 1350 fields (was 1355 pre-delete).",
+    "Record-count deltas vs 2026-08-30 baseline are EXPECTED from the completed multi-asset homework disposable test (+2 Submission Assets, +1 Homework Completion, +1 XP Event) — not field-delete regressions.",
+    "Protected tables/fields and automations 020/033/065/071 remain; 075 remains absent.",
+    "This closeout did not run another --apply and did not create new test records."
+  ],
+  "checks": [
+    {
+      "table": "Homework Completions",
+      "tableId": "tblv58ppTFDBXb3nv",
+      "fieldId": "fldHchlovIaPlGKLk",
+      "quarantineNamePrefix": "ZZZ DELETE \u2014 Submission Asset Review Summary",
+      "check": "delete_target",
+      "result": "PASS",
+      "detail": "absent"
+    },
+    {
+      "table": "Levels",
+      "tableId": "tblU6EWmc1jCpgRHe",
+      "fieldId": "fldTzIGODB2e03rvE",
+      "quarantineNamePrefix": "ZZZ DELETE \u2014 Enrollments 3",
+      "check": "delete_target",
+      "result": "PASS",
+      "detail": "absent"
+    },
+    {
+      "table": "Streak Occurrences",
+      "tableId": "tbl9VxLdBiNcev4He",
+      "fieldId": "fldltgFPGVXHwRj4X",
+      "quarantineNamePrefix": "ZZZ DELETE \u2014 Challenge / Season",
+      "check": "delete_target",
+      "result": "PASS",
+      "detail": "absent"
+    },
+    {
+      "table": "Streak Occurrences",
+      "tableId": "tbl9VxLdBiNcev4He",
+      "fieldId": "fldBFDl629arXFcnp",
+      "quarantineNamePrefix": "ZZZ DELETE \u2014 Backfill Run Label",
+      "check": "delete_target",
+      "result": "PASS",
+      "detail": "absent"
+    },
+    {
+      "table": "Achievements",
+      "tableId": "tblrADEQbvH9kBfMZ",
+      "fieldId": "fldkIzG5emvUBQ0Tw",
+      "quarantineNamePrefix": "ZZZ DELETE \u2014 Uses Grade Band Scaling",
+      "check": "delete_target",
+      "result": "PASS",
+      "detail": "absent"
+    },
+    {
+      "check": "protected_table",
+      "table": "Submission Assets",
+      "result": "PASS"
+    },
+    {
+      "check": "protected_table",
+      "table": "Homework Completions",
+      "result": "PASS"
+    },
+    {
+      "check": "protected_table",
+      "table": "Weeks",
+      "result": "PASS"
+    },
+    {
+      "check": "protected_table",
+      "table": "Achievements",
+      "result": "PASS"
+    },
+    {
+      "check": "protected_table",
+      "table": "Levels",
+      "result": "PASS"
+    },
+    {
+      "check": "protected_table",
+      "table": "Streak Occurrences",
+      "result": "PASS"
+    },
+    {
+      "check": "protected_table",
+      "table": "XP Events",
+      "result": "PASS"
+    },
+    {
+      "check": "protected_table",
+      "table": "Automations",
+      "result": "PASS"
+    },
+    {
+      "check": "protected_field",
+      "table": "Submission Assets",
+      "field": "Reviewer File URL",
+      "fieldId": "fld3O3MhDPbgyVw4f",
+      "result": "PASS"
+    },
+    {
+      "check": "protected_field",
+      "table": "Homework Completions",
+      "field": "Homework Completion Full Name",
+      "fieldId": "fld2ngOdaAmhpieZk",
+      "result": "PASS"
+    },
+    {
+      "check": "protected_field",
+      "table": "Homework Completions",
+      "field": "Submission Asset: Reviewer File URL (lookup)",
+      "fieldId": "fldmPeEfBGiTKjbJq",
+      "result": "PASS"
+    },
+    {
+      "check": "protected_field",
+      "table": "Enrollments",
+      "field": "Public Missing Homework",
+      "fieldId": "fldozKoW3osO7eORu",
+      "result": "PASS"
+    },
+    {
+      "check": "protected_field",
+      "table": "Enrollments",
+      "field": "Public Missing Zoom",
+      "fieldId": "fldcMl1TtIyCo0Vtn",
+      "result": "PASS"
+    },
+    {
+      "check": "protected_field",
+      "table": "Enrollments",
+      "field": "Public Missing Streak",
+      "fieldId": "fld4N3ueITBuxqkNA",
+      "result": "PASS"
+    },
+    {
+      "check": "protected_field",
+      "table": "Enrollments",
+      "field": "Public Missing Submissions",
+      "fieldId": "fldid87attaGLbc92",
+      "result": "PASS"
+    },
+    {
+      "check": "protected_field",
+      "table": "Enrollments",
+      "field": "Public Missing Videos",
+      "fieldId": "fld5C8QbW0QYGU2m9",
+      "result": "PASS"
+    },
+    {
+      "check": "xp_pw",
+      "table": "XP Events",
+      "field": "XP Points",
+      "result": "PASS"
+    },
+    {
+      "check": "xp_pw",
+      "table": "XP Events",
+      "field": "Source Key",
+      "result": "PASS"
+    },
+    {
+      "check": "xp_pw",
+      "table": "Weekly Athlete Summary",
+      "field": "Perfect Week Daily Check Status",
+      "result": "PASS"
+    },
+    {
+      "check": "weeks_table",
+      "result": "PASS",
+      "tableId": "tblcsKugv1cla36A6"
+    },
+    {
+      "check": "pha_table",
+      "result": "PASS",
+      "tableId": "tblhA3maf7xOa8EUS"
+    },
+    {
+      "check": "automation",
+      "code": "020",
+      "result": "PASS",
+      "name": "020 - Submission Intake and Asset Creation - Link or Create Homework Completion from Submission Asset"
+    },
+    {
+      "check": "automation",
+      "code": "033",
+      "result": "PASS",
+      "name": "033 - Weekly Summary and Goal Logic - Assign Homework to Weekly Athlete Summary"
+    },
+    {
+      "check": "automation",
+      "code": "065",
+      "result": "PASS",
+      "name": "065 - Homework Review and XP - Create or Update Homework XP Event"
+    },
+    {
+      "check": "automation",
+      "code": "071",
+      "result": "PASS",
+      "name": "071 - Email, Notifications, and External Handoffs - Create Homework Feedback Communications Hub Handoff"
+    },
+    {
+      "check": "automation",
+      "code": "075",
+      "result": "PASS",
+      "detail": "absent (retired)"
+    },
+    {
+      "check": "lingering_ids",
+      "result": "PASS"
+    },
+    {
+      "check": "zzz_prefix_remaining",
+      "result": "PASS",
+      "detail": "0 fields named ZZZ DELETE"
+    }
+  ],
+  "counts": {
+    "Submission Assets": 69,
+    "Homework Completions": 17,
+    "Weeks": 13,
+    "Achievements": 15,
+    "Levels": 12,
+    "Streak Occurrences": 8,
+    "XP Events": 283,
+    "Enrollments": 28,
+    "Program Homework Assignments": 18
+  },
+  "countCompare": {
+    "Submission Assets": {
+      "before": 67,
+      "after": 69,
+      "result": "EXPECTED_DELTA",
+      "delta": 2,
+      "reason": "multi-asset homework disposable assets retained as proof"
+    },
+    "Homework Completions": {
+      "before": 16,
+      "after": 17,
+      "result": "EXPECTED_DELTA",
+      "delta": 1,
+      "reason": "HC rec8E94Jg7mpmuMW9 from multi-asset apply"
+    },
+    "Weeks": {
+      "before": 13,
+      "after": 13,
+      "result": "PASS"
+    },
+    "Achievements": {
+      "before": 15,
+      "after": 15,
+      "result": "PASS"
+    },
+    "Levels": {
+      "before": 12,
+      "after": 12,
+      "result": "PASS"
+    },
+    "Streak Occurrences": {
+      "before": 8,
+      "after": 8,
+      "result": "PASS"
+    },
+    "XP Events": {
+      "before": 282,
+      "after": 283,
+      "result": "EXPECTED_DELTA",
+      "delta": 1,
+      "reason": "HOMEWORK_XP|rec8E94Jg7mpmuMW9 = recwpzl8pkXecUqRK"
+    },
+    "Enrollments": {
+      "before": 28,
+      "after": 28,
+      "result": "PASS"
+    },
+    "Program Homework Assignments": {
+      "before": 18,
+      "after": 18,
+      "result": "PASS"
+    }
+  },
+  "automationRowCount": 49,
+  "relatedEvidence": [
+    "docs/testing/evidence/fut-002/batch1-baseline.json",
+    "docs/testing/evidence/fut-002/batch1-verify-pre.json",
+    "docs/testing/evidence/fut-002/batch1-delete-attempt.json",
+    "airtable/schema/snapshots/prod-20260831-fut002-batch1/",
+    "docs/testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json"
+  ]
+}

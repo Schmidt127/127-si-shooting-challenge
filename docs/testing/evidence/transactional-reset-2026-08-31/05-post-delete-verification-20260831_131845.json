@@ -1,0 +1,329 @@
+{
+  "captured_at": "20260831_132018",
+  "delete_remaining": {
+    "Email Handoff Queue": 1,
+    "Award Recipients": 0,
+    "Payment Transactions": 0,
+    "XP Events": 1,
+    "Athlete Achievement Unlocks": 0,
+    "Streak Occurrences": 0,
+    "Video Feedback": 0,
+    "Zoom Attendance": 0,
+    "Homework Completions": 0,
+    "Final Reflection Quiz Submissions": 0,
+    "Submission Assets": 2,
+    "Submissions": 0,
+    "Program Homework Assignments": 0,
+    "Weekly Athlete Summary": 0,
+    "Enrollments": 0,
+    "Athletes": 0
+  },
+  "preserve_counts_after": {
+    "Achievements": 15,
+    "Automations": 49,
+    "Awards": 31,
+    "Config": 4,
+    "Grade Bands": 7,
+    "Homework Library": 76,
+    "Level Gate Rules": 12,
+    "Levels": 12,
+    "Program Instance - Sync": 3,
+    "School - Synced": 1241,
+    "Shot Milestones": 61,
+    "Target Goal Shots": 7,
+    "Testing Scenarios": 1,
+    "Tutorials & Assets": 32,
+    "Weeks": 13,
+    "XP Reward Rules": 31,
+    "Zoom Meetings": 2
+  },
+  "weeks_sample": [
+    {
+      "id": "rec2Rewxt21z7dI9f",
+      "fields_keys": [
+        "Config - Lnk",
+        "Counts Toward Challenge?",
+        "End Date",
+        "Program Instance",
+        "Reconciliation Source Signature",
+        "Record ID",
+        "Start Date",
+        "Week Key",
+        "Week Name",
+        "Zoom Meetings",
+        "Zoom XP Week Signature"
+      ],
+      "name": "Week 1",
+      "Config - Lnk": [
+        "rechc1f9f4kVM1tHP"
+      ],
+      "Program Instance": [
+        "rec5mEM0YPqPqq0hZ"
+      ]
+    },
+    {
+      "id": "rec7RpUMVLbcrmn4h",
+      "fields_keys": [
+        "Config - Lnk",
+        "Counts Toward Challenge?",
+        "End Date",
+        "Program Instance",
+        "Reconciliation Source Signature",
+        "Record ID",
+        "Start Date",
+        "Week Key",
+        "Week Name",
+        "Zoom XP Week Signature"
+      ],
+      "name": "Week 2",
+      "Config - Lnk": [
+        "rechc1f9f4kVM1tHP"
+      ],
+      "Program Instance": [
+        "rec5mEM0YPqPqq0hZ"
+      ]
+    },
+    {
+      "id": "recBrZ1sV8byWEHZU",
+      "fields_keys": [
+        "Config - Lnk",
+        "Counts Toward Challenge?",
+        "End Date",
+        "Program Instance",
+        "Reconciliation Source Signature",
+        "Record ID",
+        "Start Date",
+        "Week Key",
+        "Week Name",
+        "XP Events",
+        "Zoom XP Week Signature"
+      ],
+      "name": "Early Bird",
+      "Config - Lnk": [
+        "rechc1f9f4kVM1tHP"
+      ],
+      "Program Instance": [
+        "rec5mEM0YPqPqq0hZ"
+      ]
+    },
+    {
+      "id": "recCCpyqPKA580sdk",
+      "fields_keys": [
+        "Config - Lnk",
+        "Counts Toward Challenge?",
+        "End Date",
+        "Program Instance",
+        "Reconciliation Source Signature",
+        "Record ID",
+        "Start Date",
+        "Week Key",
+        "Week Name",
+        "Zoom XP Week Signature"
+      ],
+      "name": "Week 3",
+      "Config - Lnk": [
+        "rechc1f9f4kVM1tHP"
+      ],
+      "Program Instance": [
+        "rec5mEM0YPqPqq0hZ"
+      ]
+    },
+    {
+      "id": "recEapVpi6u0oxuPy",
+      "fields_keys": [
+        "Config - Lnk",
+        "Counts Toward Challenge?",
+        "End Date",
+        "Program Instance",
+        "Reconciliation Source Signature",
+        "Record ID",
+        "Start Date",
+        "Week Key",
+        "Week Name",
+        "Zoom XP Week Signature"
+      ],
+      "name": "Week 4",
+      "Config - Lnk": [
+        "rechc1f9f4kVM1tHP"
+      ],
+      "Program Instance": [
+        "rec5mEM0YPqPqq0hZ"
+      ]
+    },
+    {
+      "id": "recKJMGYbEzGHyXfd",
+      "fields_keys": [
+        "Config - Lnk",
+        "Counts Toward Challenge?",
+        "End Date",
+        "Program Instance",
+        "Reconciliation Source Signature",
+        "Record ID",
+        "Start Date",
+        "Week Key",
+        "Week Name",
+        "Zoom XP Week Signature"
+      ],
+      "name": "Week 5",
+      "Config - Lnk": [
+        "rechc1f9f4kVM1tHP"
+      ],
+      "Program Instance": [
+        "rec5mEM0YPqPqq0hZ"
+      ]
+    },
+    {
+      "id": "recRp4y42EpLvtwk5",
+      "fields_keys": [
+        "Config - Lnk",
+        "Counts Toward Challenge?",
+        "End Date",
+        "Program Instance",
+        "Reconciliation Source Signature",
+        "Record ID",
+        "Start Date",
+        "Week Key",
+        "Week Name",
+        "Zoom XP Week Signature"
+      ],
+      "name": "Week 6",
+      "Config - Lnk": [
+        "rechc1f9f4kVM1tHP"
+      ],
+      "Program Instance": [
+        "rec5mEM0YPqPqq0hZ"
+      ]
+    },
+    {
+      "id": "recW3irij491AIPrl",
+      "fields_keys": [
+        "Config - Lnk",
+        "Counts Toward Challenge?",
+        "End Date",
+        "Program Instance",
+        "Reconciliation Source Signature",
+        "Record ID",
+        "Start Date",
+        "Week Key",
+        "Week Name",
+        "Zoom Meetings",
+        "Zoom XP Week Signature"
+      ],
+      "name": "Week 7",
+      "Config - Lnk": [
+        "rechc1f9f4kVM1tHP"
+      ],
+      "Program Instance": [
+        "rec5mEM0YPqPqq0hZ"
+      ]
+    },
+    {
+      "id": "recfcJM0LyJBfNZJq",
+      "fields_keys": [
+        "End Date",
+        "Program Instance",
+        "Reconciliation Source Signature",
+        "Record ID",
+        "Start Date",
+        "Week Key",
+        "Week Name",
+        "Zoom XP Week Signature"
+      ],
+      "name": "PWTEST|2026-08-28|SC-PW-E2E|qualifying|WEEK|224129",
+      "Config - Lnk": null,
+      "Program Instance": [
+        "rec5mEM0YPqPqq0hZ"
+      ]
+    },
+    {
+      "id": "recfu3dpVJAnVBvCB",
+      "fields_keys": [
+        "Config - Lnk",
+        "Counts Toward Challenge?",
+        "End Date",
+        "Program Instance",
+        "Reconciliation Source Signature",
+        "Record ID",
+        "Start Date",
+        "Week Key",
+        "Week Name",
+        "Zoom XP Week Signature"
+      ],
+      "name": "Week 8",
+      "Config - Lnk": [
+        "rechc1f9f4kVM1tHP"
+      ],
+      "Program Instance": [
+        "rec5mEM0YPqPqq0hZ"
+      ]
+    },
+    {
+      "id": "rech8lgJkNMStWh9A",
+      "fields_keys": [
+        "Config - Lnk",
+        "Counts Toward Challenge?",
+        "End Date",
+        "Program Instance",
+        "Reconciliation Source Signature",
+        "Record ID",
+        "Start Date",
+        "Week Key",
+        "Week Name",
+        "Zoom XP Week Signature"
+      ],
+      "name": "Week 9",
+      "Config - Lnk": [
+        "rechc1f9f4kVM1tHP"
+      ],
+      "Program Instance": [
+        "rec5mEM0YPqPqq0hZ"
+      ]
+    },
+    {
+      "id": "recsWuPMbRH0W5aRU",
+      "fields_keys": [
+        "Config - Lnk",
+        "End Date",
+        "Program Instance",
+        "Reconciliation Source Signature",
+        "Record ID",
+        "Start Date",
+        "Week Key",
+        "Week Name",
+        "Zoom XP Week Signature"
+      ],
+      "name": "Post-Challenge",
+      "Config - Lnk": [
+        "rechc1f9f4kVM1tHP"
+      ],
+      "Program Instance": [
+        "rec5mEM0YPqPqq0hZ"
+      ]
+    },
+    {
+      "id": "recyh2t4pzlpuYWJl",
+      "fields_keys": [
+        "End Date",
+        "Program Instance",
+        "Reconciliation Source Signature",
+        "Record ID",
+        "Start Date",
+        "Week Key",
+        "Week Name",
+        "Zoom XP Week Signature"
+      ],
+      "name": "COREWF|ARCHIVED|COREWF|2026-08-30|core|WEEK",
+      "Config - Lnk": null,
+      "Program Instance": [
+        "rec5mEM0YPqPqq0hZ"
+      ]
+    }
+  ],
+  "automation_075_check": {
+    "automation_rows": 49,
+    "matches_075": [],
+    "075_absent_or_retired": true
+  },
+  "field_id_unchanged": true,
+  "schema_table_count": 33
+}

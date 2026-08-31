@@ -6,6 +6,7 @@
 | Operator runbook | [`MULTI-ASSET-HW-OPERATOR-RUNBOOK.md`](./MULTI-ASSET-HW-OPERATOR-RUNBOOK.md) |
 | Enrollment | Testing3 `recNu6fcBpF1GG3u5` (disposable) |
 | Week / PHA | Early Bird `recBrZ1sV8byWEHZU` · HW1 `recgj8dPk4ouTwCOj` · HW2 `recXXZErbjxxGxWw2` |
+| Live `--apply` | **DONE** (Mike) — do **not** re-`--apply` |
 | Live 020 multi-asset → one HC | **PASS** |
 | Correct assignment identity | **PASS** (Enrollment + PHA + Week + library + official HW1 slot) |
 | Both assets linked | **PASS** |
@@ -13,8 +14,9 @@
 | Different slot isolation (HW2) | **PASS** (separate HC) |
 | Missing PHA fail-safe | **PASS** (`Upload Status=Error`) |
 | Satisfactory grading arms 064 | **PASS** (`Total Homework XP Awarded=35`, then Awarded) |
-| **065 `recordId` dynamic remap** | **DONE** (UI; no script paste) |
-| Exactly one `HOMEWORK_XP\|{hcId}` via live 065 | **PASS** |
+| **065 `recordId` dynamic remap** | **COMPLETE** (UI; no script paste) |
+| **065 trigger re-entry after remap** | **COMPLETE** (required for stuck Reconcile=1) |
+| Exactly one `HOMEWORK_XP\|{hcId}` via live 065 | **PASS** / **COMPLETE** |
 | Duplicate Homework XP | **None** (`xpCount=1`) |
 | Email / Make / Resend | **Not invoked** on harness apply path (Make trigger cleared) |
 | Automation paste | **None** (remap + trigger re-entry only) |
@@ -23,11 +25,11 @@
 ## Closeout path (065)
 
 1. **2026-08-30:** Live 020 PASS; 065 blocked by hardcoded `recordId=reccYReUfSId2MH1S`.
-2. **Remap:** Live 065 `recordId` → `{ "$ref": "trigger", "path": ["id"] }` (no script paste).
+2. **Remap:** Live 065 `recordId` → `{ "$ref": "trigger", "path": ["id"] }` (no script paste) — **COMPLETE**.
 3. **2026-08-31 apply:** 020 PASS; 065 still did not fire — HC `rec8E94Jg7mpmuMW9` stayed at `Reconcile Needed=1` with empty `Last Homework XP Reconciled Signature` (`recordMatchesConditions` never re-entered).
-4. **Manual trigger re-entry** after remap → 065 created exactly one XP Event.
+4. **Manual trigger re-entry** after remap → 065 created exactly one XP Event — **COMPLETE**.
 
-### Proven XP
+### Proven XP (reconfirmed live 2026-08-31 closeout)
 
 | Field | Value |
 |-------|--------|
@@ -48,7 +50,7 @@
 | Closeout (exactly one XP) | [`closeout-2026-08-31-065-xp.json`](../evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json) |
 | Operator packet | [`../../deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](../../deploy-checklists/065-recordId-dynamic-remap-operator-packet.md) |
 | Cleanup (partial) | [`cleanup-2026-08-30-mcp.json`](../evidence/sc-multi-asset-homework/cleanup-2026-08-30-mcp.json) |
-| PR | [#306](https://github.com/Schmidt127/127-si-shooting-challenge/pull/306) |
+| PR | [#312](https://github.com/Schmidt127/127-si-shooting-challenge/pull/312) |
 
 ## Cleanup limitations
 
@@ -58,3 +60,4 @@
 | Shared Early Bird Week | Not deleted (calendar config) |
 | Shared Testing3 WAS | Kept (`recIwx50zhNsUqV1L`) |
 | Disposable HC / XP | Retained as closeout proof unless Mike cleans later |
+| Re-`--apply` | **Forbidden** — workflow COMPLETE |
