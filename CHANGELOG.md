@@ -9,7 +9,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Added
-- **PR #312 multi-asset homework closeout (2026-08-31)** — Merged to `master` (`f8a7365f`). Marks **SC-015** / **SC-016** / **MRW-F02** COMPLETE: live 020 multi-asset → one HC; 065 dynamic `recordId` + trigger re-entry; exactly one `HOMEWORK_XP|rec8E94Jg7mpmuMW9` (35 XP, no duplicate). **Do not repaste 065.** Paste queue empty for 010/020/022/057/065/072/073; **075** remains retired. No live Airtable writes during docs closeout.
+- **FUT-030 transactional record reset COMPLETE (2026-08-31)** — Mike-authorized full wipe of athlete/enrollment/submission/XP/award-recipient/payment/comms transaction records (**959** deleted across 16 tables). **Record reset only** — 33 tables / field IDs unchanged. Preserved: Weeks (13, Early Bird + 1–9 + Post-Challenge), Config (4), Program Instance (3), Homework Library (76), XP Reward Rules (31), Achievements (15), Automations (49; **075** absent), curriculum catalogs. PHA intentionally emptied (recreate before homework season tests). No external sends. Evidence: [`docs/testing/evidence/transactional-reset-2026-08-31/`](./docs/testing/evidence/transactional-reset-2026-08-31/). Tool: `tools/airtable/transactional_record_reset.py`.
+- **FUT-002 batch-1 field deletes COMPLETE (2026-08-31)** — Mike UI-deleted all five `ZZZ DELETE —` fields. Live verify: IDs absent, **0** ZZZ remaining, **1350** fields / 33 tables. Schema: `airtable/schema/snapshots/prod-20260831-fut002-batch1/`. Evidence: [`docs/testing/evidence/fut-002/batch1-live-verify.json`](./docs/testing/evidence/fut-002/batch1-live-verify.json). Docs closeout only after deletes — **no new `--apply`**, no new test records, no other field/automation changes. Later FUT-002 batches remain FUTURE.
+- **PR #312 multi-asset homework closeout (2026-08-31)** — Merged to `master` (`f8a7365f`). Marks **SC-015** / **SC-016** / **MRW-F02** COMPLETE: live 020 multi-asset `--apply` → one HC; 065 dynamic `recordId` + trigger re-entry; exactly one `HOMEWORK_XP|rec8E94Jg7mpmuMW9` (35 XP, Awarded, Reconcile=0, no duplicate). **Do not repaste 065.** Paste queue empty for 010/020/022/057/065/072/073; **075** remains retired. Distinguish: live Airtable activity (field deletes + disposable multi-asset test) occurred earlier in the workstream; this docs package refreshes evidence only.
 - **FUT-029 Hybrid Fillout Homework (design only, 2026-08-31)** — Long-term enhancement **MRW-H12**: Library 70→100+, optional Fillout answers + paper/photo/video, same HC/XP spine, preserve 18 PHA and 020/033/064/065/071. Requested as FUT-018 (ID already used for landing pages). Brief: [`docs/next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](./docs/next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md). **No forms, schema, or automation changes.**
 - **MRW-F11 core workflow reliability (2026-08-30)** — Season calendar + homework/XP
   contracts (`lib/workflow-contracts/`), live Weeks/PHA audit harness
@@ -33,7 +35,8 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   with offline unittest (21), gated execute/cleanup, Agent 4 suite wiring. **No full season
   simulation run.** Live 057 verified correct — do not repaste.
 - **FUT-002 live cleanup (2026-08-30, PR #303)** — Live inventory 1355 fields; quarantined 5
-  obsolete fields (`ZZZ DELETE`); retargeted Submission Assets Asset Key; Mike UI delete remains.
+  obsolete fields (`ZZZ DELETE`); retargeted Submission Assets Asset Key. Physical deletes
+  completed 2026-08-31 (see batch-1 COMPLETE entry above).
   Evidence: `docs/audits/field-inventory/`, `docs/audits/FUT-002-cleanup-session-2026-08-30.md`.
 
 - **SC-147 Recorded Zoom half-XP repo prep (2026-08-30, MRW-H10)** — Offline conflict
@@ -53,7 +56,8 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   `prod-20260819` schema snapshot (1347 fields) + repo grep (automations, web, tools). Deliverables:
   [`docs/audits/FUT-002-unused-field-inventory-2026-08-30.md`](./docs/audits/FUT-002-unused-field-inventory-2026-08-30.md),
   [`docs/audits/fut-002-unused-field-inventory.json`](./docs/audits/fut-002-unused-field-inventory.json),
-  `tools/airtable/fut_002_field_inventory.py`. **No field deletions.** Mike-only deletion phase pending formula retargets (see prior Google Drive prep audit).
+  `tools/airtable/fut_002_field_inventory.py`. Initial audit had **no field deletions**; batch-1
+  UI deletes completed 2026-08-31 (see COMPLETE entry above).
 - **MRW-F07 weekly email positive-arm harness (2026-08-30)** — Disposable E2E tooling for
   `118→072→119→074→079` chain verification: CLI
   `tools/testing/mrw-f07-weekly-email-positive-arm.mjs`, library, offline contracts, and operator doc

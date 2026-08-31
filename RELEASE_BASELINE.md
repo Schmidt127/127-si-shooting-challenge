@@ -4,7 +4,7 @@
 **Public URL:** https://www.fairfieldbasketballclub.com/shoot  
 **Authority companion:** [`MASTER_REMAINING_WORK_LIST.md`](./MASTER_REMAINING_WORK_LIST.md)  
 **Operator queue:** [`docs/deploy-checklists/2026-08-29-PRODUCTION-OPERATOR-QUEUE.md`](./docs/deploy-checklists/2026-08-29-PRODUCTION-OPERATOR-QUEUE.md) · paste audit historical [`docs/deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md`](./docs/deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md)  
-**Baseline date:** 2026-08-31 (PR **#312** SC-MULTI-ASSET-HW / 065 XP closeout; prior PR **#311** gift-card FAQ + About the Coach)
+**Baseline date:** 2026-08-31 (**FUT-030** transactional record reset COMPLETE — clean base for workflow rebuild; prior FUT-002 batch-1 + SC-MULTI-ASSET-HW / 065 XP closeout; PR **#312** / **#311**)
 
 > Claims below are backed by command output or platform evidence from this session unless marked `PENDING`.
 
@@ -18,7 +18,7 @@
 | Production tip (web) | `bd7856ea` | PR **#311** gift-card FAQ + About the Coach; Vercel Production Ready |
 | Prior public-app readiness | `7332d2f3` | PR **#308** final public-app readiness |
 | Public UX chrome | PR **#301** / **#304** MERGED `f3be964f` | MRW-G11 / CR-12 shipped |
-| FUT-002 cleanup | PR **#303** MERGED `dc0751ec` | Quarantine + inventory; Mike UI deletes remain |
+| FUT-002 cleanup | **Batch 1 COMPLETE** 2026-08-31 | Mike UI-deleted 5 `ZZZ DELETE —` fields; live **1350** fields / **0** ZZZ remaining; [`docs/testing/evidence/fut-002/batch1-live-verify.json`](docs/testing/evidence/fut-002/batch1-live-verify.json) |
 | Season-sim preflight | PR **#302** MERGED `eca40509` | SC-SEASON-SIM-002 + 057 no-repaste |
 | This package | Core workflow reliability (MRW-F11 / MRW-I13) | PR **#305** |
 | Working tree note | Parallel agent WIP may remain in other worktrees | `git status` |
@@ -80,18 +80,21 @@ git status -sb
 
 | Suite | Result |
 |-------|--------|
-| Web Vitest | **496/496 PASS** (PR #311) |
+| FUT-030 transactional reset | **COMPLETE** — 959 deleted; delete tables at 0; Weeks/Config/Library/rules preserved; **075** absent — [`docs/testing/evidence/transactional-reset-2026-08-31/`](docs/testing/evidence/transactional-reset-2026-08-31/) |
+| Web Vitest | **496/496 PASS** (post-reset 2026-08-31) |
+| Airtable contract pytest | **172/172 PASS** (post-reset) |
+| `/shoot` + `/shoot/api/airtable` | **200** / `tokenValid:true` (post-reset) |
+| HTTP smoke (prod) | **PASS** (post-reset) |
 | Web typecheck / lint / build | **PASS** (PR #311 CI) |
 | Vercel Production for `bd7856ea` | **Ready** — [deploy](https://vercel.com/127-sports-intensity/127-si-shooting-challenge/G2sqf2amnmxhsNXphfxsnb2UNN5g) (`G2sqf2amnmxhsNXphfxsnb2UNN5g`) |
-| HTTP + Playwright prod smoke | **PASS** / **52/52** (gift-card FAQ + About the Coach on prod) |
-| `/shoot` + `/shoot/api/airtable` | **200** / `tokenValid:true` |
-| Homework + weekly settlement contracts | **PASS** |
+| Playwright prod smoke | **52/52** (prior gift-card FAQ + About the Coach on prod) |
+| Homework + weekly settlement contracts | **PASS** (offline; live fixtures wiped by FUT-030) |
 | FUT-010 offline | **PASS** |
 | SC-SEASON-SIM-002 offline unittest | **PASS** (21) |
 | Agent 4 suite | **PASS** (36) |
 | FUT-002 inventory pytest | **PASS** (6) |
-| SC-CORE-WF contracts + live audit/apply | **PASS** |
-| SC-PW-E2E award (WAS `recl3DmBh22ADPWWe`) | **PASS** |
+| SC-CORE-WF contracts | **PASS** offline; live apply evidence historical post-FUT-030 |
+| SC-PW-E2E award (WAS `recl3DmBh22ADPWWe`) | Historical evidence only — rows wiped by FUT-030 |
 
 ---
 
@@ -114,21 +117,21 @@ git status -sb
 
 | Item | Result |
 |------|--------|
-| Weeks 2026–27 | Early Bird Apr 25–May 1; Week 1 May 2; **no import needed** |
-| Active PHA | **18**; due **2027-06-29**; Week 9 / Post-Challenge no HW |
-| FUT-002 | 1355 fields; 5 `ZZZ DELETE` awaiting Mike UI |
+| Weeks 2026–27 | Early Bird Apr 25–May 1; Week 1 May 2; **13 Weeks preserved** after FUT-030 (incl. 2 archived test Weeks) |
+| Active PHA | **0** after FUT-030 (intentional) — Homework Library **76** preserved; recreate 18 PHA before homework tests |
+| FUT-002 | **Batch 1 COMPLETE** — 5 fields deleted; live **1350** fields; **0** `ZZZ DELETE —` remaining; schema `airtable/schema/snapshots/prod-20260831-fut002-batch1/` |
 | FUT-010 R3 | **0 eligible** |
+| FUT-030 | **COMPLETE** — transactional wipe **959** records; clean rebuild base |
 
 ---
 
 ## Production changes still awaiting Mike
 
-1. **FUT-002 UI field deletes** — trash all `ZZZ DELETE — *` fields (5)  
-2. **Before season simulation:** archive overlapping WSTEST/PWTEST Weeks (OMNI)  
-3. Optional Automations Code refresh for 057 tracker text (docs hygiene only)  
-4. Optional FUT-010 sign-off when eligible rows exist (currently zero)  
-5. **RCC** views / Interface install  
-6. **FUT-003** Make ON when registration opens  
+1. **Before season simulation:** archive overlapping WSTEST/PWTEST Weeks (OMNI)  
+2. Optional Automations Code refresh for 057 tracker text (docs hygiene only)  
+3. Optional FUT-010 sign-off when eligible rows exist (currently zero)  
+4. **RCC** views / Interface install  
+5. **FUT-003** Make ON when registration opens  
 
 ---
 
@@ -137,15 +140,17 @@ git status -sb
 1. Automations Code tracker lag for 057 (live script already correct).  
 2. Disposable WSTEST/PWTEST Weeks can collide with 005 date matching.  
 3. Season simulation execute still FUTURE until WSTEST cleanup.  
-4. Airtable Meta API cannot DELETE fields — Mike UI required for FUT-002.
+4. Airtable Meta API cannot DELETE fields — UI required for any **future** FUT-002 batch.
 
 ---
 
 ## Exact recommended next task
 
-**Mike:** Delete 5 `ZZZ DELETE — *` fields (FUT-002). Before season sim: archive overlapping WSTEST/PWTEST Weeks (OMNI).
+**Mike / Cursor:** Recreate **18 Program Homework Assignments** for 2026–27 (EB + Weeks 1–8 × HW1/HW2; due 2027-06-29) before homework workflow testing. Then create disposable Schmidt enrollment(s) for clean rebuild tests. Archive overlapping WSTEST/PWTEST Weeks (OMNI) before season sim.
 
 **Do not:** re-paste 010/020/022/057/058/059/065/072/073; restore 075; re-`--apply` Perfect Week for WAS `recl3DmBh22ADPWWe`; re-`--apply` multi-asset homework; run full season-simulation execute yet; implement FUT-029.
+
+**Already COMPLETE (do not reopen):** FUT-002 batch-1 field deletes; SC-MULTI-ASSET-HW / SC-015 / SC-016 / MRW-F02; 065 dynamic `recordId` remap + trigger re-entry proof (`HOMEWORK_XP|rec8E94Jg7mpmuMW9`).
 
 **Engineering:** SC-SEASON-SIM-002 in `tools/season_simulation/` — read-only `preflight` / default `dry-run` only until WSTEST cleanup.
 
@@ -163,4 +168,5 @@ git status -sb
 | 2026-08-30 (release closeout) | Merged Agent packages; reconciled baseline |
 | 2026-08-30 (public-app readiness) | PR **#308** merge `7332d2f3`; prod smoke **52/52**; HTTP smoke PASS (`/faq` 200); indexing policy verified |
 | 2026-08-31 (multi-asset HW XP) | PR **#312** MERGED `f8a7365f` — SC-015 / SC-016 / MRW-F02 COMPLETE; 065 dynamic `recordId` + trigger re-entry; exactly one Homework XP; no repaste |
+| 2026-08-31 (FUT-002 batch 1) | Mike UI-deleted 5 `ZZZ DELETE —` fields; live verify PASS; schema refresh **1350** fields; docs closeout (no new `--apply`) |
 | 2026-08-31 (FUT-029 design) | Hybrid Fillout Homework Submission System captured as **FUT-029** / **MRW-H12** (requested FUT-018 already used); concept only — no schema/forms/automation changes |

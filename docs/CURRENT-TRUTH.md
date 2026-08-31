@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-31 — PR **#312** MERGED (`f8a7365f`): SC-MULTI-ASSET-HW / SC-015 / SC-016 / MRW-F02 **COMPLETE** (065 dynamic remap + trigger re-entry; exactly one XP, no duplicate; **no 065 repaste**). Paste queue empty for 010/020/022/057/065/072/073; **075** remains retired. FUT-029 Hybrid Fillout homework = FUTURE design only. Prior: 2026-08-30 Agent 4 SC-SEASON-SIM-002 ([`RELEASE_BASELINE.md`](../RELEASE_BASELINE.md))  
+**Last verification (repo):** 2026-08-31 — **FUT-030 transactional record reset COMPLETE** — **959** athlete/transaction records deleted; Weeks/Config/Program Instance/Homework Library/rules/automations preserved; **PHA = 0** (recreate before homework tests); **075** remains retired; no external sends. Evidence: [`testing/evidence/transactional-reset-2026-08-31/`](./testing/evidence/transactional-reset-2026-08-31/). Prior same day: **FUT-002 batch 1 COMPLETE** (1350 fields / 0 ZZZ); **SC-MULTI-ASSET-HW / SC-015 / SC-016 / MRW-F02 COMPLETE** (evidence historical — source rows wiped by FUT-030). Paste queue empty for 010/020/022/057/065/072/073. FUT-029 = FUTURE design only. Prior: PR **#312** merge `f8a7365f` ([`RELEASE_BASELINE.md`](../RELEASE_BASELINE.md))  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -85,7 +85,7 @@ git status -sb
 | **Production** | `127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026` | `appn84sqPw03zEbTT` | **Only active** system of record |
 | ~~Development~~ | ~~`127SI - SHOOTING CHALLENGE - DEV`~~ | ~~`appTetnuCZlCZdTCT`~~ | **Retired 2026-08-19** — historical snapshots only |
 
-Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260706/` are dated exports in-repo (DEV snapshot is historical). `airtable/schema/current/` remains **stale** until refreshed — do not treat as live schema.
+Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260706/` are dated exports in-repo (DEV snapshot is historical). **Post–FUT-002 batch-1 live export:** `airtable/schema/snapshots/prod-20260831-fut002-batch1/` (33 tables / **1350** fields, 2026-08-31). `airtable/schema/current/` remains **stale** — prefer the dated snapshot above for live field truth.
 
 ---
 
@@ -105,10 +105,11 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | FUT-025 athlete profiles | **Repo complete** — env-gated `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING`; Mike cutover pending ([`deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md`](./deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md)) |
 | SC-149 branding URLs | **Repo attestation complete (2026-08-30)** — prod render + smoke PASS; Mike Vercel env dashboard checkboxes pending ([`deploy-checklists/SC-149-fairfield-branding-url-verification.md`](./deploy-checklists/SC-149-fairfield-branding-url-verification.md)) |
 | SC-109 Game Manual PDF | **Partial** — deploy checklist + smoke assertions shipped (PR **#287**); `/shoot/game-manual` live-config sections render; `NEXT_PUBLIC_GAME_MANUAL_URL` still unset in Production (EXT-QA-001) — checklist: [`deploy-checklists/SC-109-game-manual-url-verification.md`](./deploy-checklists/SC-109-game-manual-url-verification.md) |
-| FUT-002 field inventory | **Audit complete (2026-08-30, PR #292)** — 1347 fields classified; **no deletions**; Mike-only deletion phase pending |
+| FUT-002 field inventory | **Batch 1 COMPLETE (2026-08-31)** — Mike UI-deleted 5 quarantined fields; live **1350** fields / **0** `ZZZ DELETE —` remaining; schema `airtable/schema/snapshots/prod-20260831-fut002-batch1/`; evidence [`testing/evidence/fut-002/batch1-live-verify.json`](./testing/evidence/fut-002/batch1-live-verify.json). Later inventory batches remain FUTURE |
 | FUT-010 intake attachment cleanup | **Dry-run complete (R3 2026-08-30)** — **0 eligible**; no deletion request — [`testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md`](./testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md) |
 | Weeks 2026–27 | **Finalized** — Early Bird **Apr 25–May 1, 2027** countable; May 1 ∈ Early Bird; Week 1 starts May 2 — [`testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md`](./testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md) |
-| Homework PHA 2026–27 | **18 active** (EB + Weeks 1–8 × HW1/HW2); Week 9 / Post-Challenge none; due **2027-06-29** — [`testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md`](./testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md) |
+| Homework PHA 2026–27 | **0 records** after **FUT-030** transactional reset (2026-08-31) — intentional wipe; Homework Library **76** preserved. Recreate 18 active PHA (EB + Weeks 1–8 × HW1/HW2; due **2027-06-29**) before homework season tests. Prior audit: [`testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md`](./testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md) |
+| Transactional data | **Empty** after FUT-030 — Athletes/Enrollments/Submissions/Assets/HC/XP/WAS/VF/Unlocks/Streaks/Zoom Attendance/Award Recipients/Payments/Email Handoff Queue = **0**. Base ready for clean workflow rebuild. |
 | Phase 4 public copy | **Shipped** PR **#298** — pending Mike-only items remain Dashboard relabel / For-parents / SLA / adjacent-school FAQ |
 | SC-147 Recorded Zoom half-XP | **Repo prep shipped (PR #291)** — draft automation + offline conflict matrix; Mike: automation slot + `ZOOM_RECORDING` rule row; **do not** overload **117** email |
 | MRW-F07 weekly email harness | **Complete (PR #289)** — disposable E2E tooling for `118→072→119→074→079`; live `--apply` on Mike disposable WAS still operator-only |

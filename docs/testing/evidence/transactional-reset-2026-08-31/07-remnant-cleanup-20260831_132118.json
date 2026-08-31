@@ -1,0 +1,26 @@
+{
+  "deleted": {
+    "Email Handoff Queue": 1,
+    "XP Events": 1,
+    "Submission Assets": 2
+  },
+  "failures": [],
+  "remaining": {
+    "Email Handoff Queue": 0,
+    "XP Events": 0,
+    "Submission Assets": 0,
+    "Submissions": 0,
+    "Enrollments": 0,
+    "Athletes": 0,
+    "Homework Completions": 0,
+    "Weekly Athlete Summary": 0,
+    "Video Feedback": 0,
+    "Award Recipients": 0,
+    "Payment Transactions": 0,
+    "Athlete Achievement Unlocks": 0,
+    "Streak Occurrences": 0,
+    "Zoom Attendance": 0,
+    "Program Homework Assignments": 0,
+    "Final Reflection Quiz Submissions": 0
+  }
+}

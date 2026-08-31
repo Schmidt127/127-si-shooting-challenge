@@ -1,0 +1,29 @@
+{
+  "id": "FUT-030",
+  "title": "Full transactional record reset",
+  "completed_at": "2026-08-31",
+  "base_id": "appn84sqPw03zEbTT",
+  "type": "record_reset_not_schema_reset",
+  "total_deleted": 959,
+  "pass1_deleted": 955,
+  "remnant_pass_deleted": 4,
+  "failures": 0,
+  "external_sends": 0,
+  "automation_075": "absent_retired",
+  "delete_tables_remaining": 0,
+  "preserved": {
+    "Weeks": 13,
+    "Config": 4,
+    "Program Instance - Sync": 3,
+    "Homework Library": 76,
+    "XP Reward Rules": 31,
+    "Achievements": 15,
+    "Automations": 49,
+    "Target Goal Shots": 7,
+    "Grade Bands": 7,
+    "Tutorials & Assets": 32
+  },
+  "pha_after": 0,
+  "ready_for_clean_workflow_testing": true,
+  "evidence_dir": "docs/testing/evidence/transactional-reset-2026-08-31/"
+}

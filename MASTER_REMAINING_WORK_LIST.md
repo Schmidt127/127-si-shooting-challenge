@@ -360,7 +360,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 
 | ID | Title | Status | Notes |
 |----|-------|--------|-------|
-| MRW-H01 | FUT-002 unused Airtable field purge | **CLEANUP IN PROGRESS** | Live inventory 1355 fields; Review Summary + 4 empties quarantined (`ZZZ DELETE`); Asset Key fixed; Mike UI delete 5 fields (API cannot DELETE) |
+| MRW-H01 | FUT-002 unused Airtable field purge | **BATCH 1 COMPLETE** | Mike UI-deleted 5 quarantined fields (2026-08-31); live **1350** fields / **0** `ZZZ DELETE —`; evidence [`docs/testing/evidence/fut-002/batch1-live-verify.json`](docs/testing/evidence/fut-002/batch1-live-verify.json). Later Drive/unknown batches remain FUTURE |
 | MRW-H02 | FUT-004 award emailer (replace Tremendous) | FUTURE | Deferred |
 | MRW-H03 | FUT-005 accomplishment emails | FUTURE | Deferred |
 | MRW-H04 | FUT-007/009 AWS naming + corrected-video workflow | FUTURE | |
@@ -416,14 +416,13 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 
 ## Recommended next task for Mike
 
-1. **FUT-002:** Delete 5 `ZZZ DELETE — *` fields in Airtable UI (API cannot DELETE).  
-2. **Archive overlapping WSTEST/PWTEST Weeks** in Program Instance `Shooting Challenge | 2026-2027` (OMNI) before season simulation.  
-3. **Do not** re-paste 010/020/022/057/058/059/065/072/073; **do not** restore 075; **do not** re-`--apply` Perfect Week or multi-asset homework.  
-4. **FUT-010:** dry-run R3 still **0 eligible** — no deletion request.  
-5. Optional: refresh Automations **Code** text for 057 (tracker lag) — live script already correct.  
-6. **Do not** activate FUT-003 until registration intentionally opens.  
-7. **Do not** implement **FUT-029** (Hybrid Fillout Homework) yet — design brief only (**MRW-H12**).  
-8. Multi-asset HW / SC-015 / SC-016 / MRW-F02 are **COMPLETE** (PR **#312**). ATHWF + weekly settlement + core workflow + **MRW-I13** are done. After WSTEST cleanup: **SC-SEASON-SIM-001** prep remains FUTURE (do not begin simulation now).
+1. **Archive overlapping WSTEST/PWTEST Weeks** in Program Instance `Shooting Challenge | 2026-2027` (OMNI) before season simulation.  
+2. **Do not** re-paste 010/020/022/057/058/059/065/072/073; **do not** restore 075; live fixture `--apply` evidence is historical after **FUT-030** wipe.  
+3. **FUT-010:** dry-run R3 still **0 eligible** — no deletion request.  
+4. Optional: refresh Automations **Code** text for 057 (tracker lag) — live script already correct.  
+5. **Do not** activate FUT-003 until registration intentionally opens.  
+6. **Do not** implement **FUT-029** (Hybrid Fillout Homework) yet — design brief only (**MRW-H12**).  
+7. **FUT-030 COMPLETE** — transactional tables empty; recreate **18 PHA** then disposable enrollments for clean rebuild tests. FUT-002 batch 1 COMPLETE. After PHA recreate + WSTEST cleanup: **SC-SEASON-SIM-001** remains FUTURE.
 
 ---
 
@@ -432,19 +431,19 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 - **Paste debt C01–C05c + 058/059** → **COMPLETE** (live 057 correct; Automations Code tracker may lag).  
 - **SC-034 / V2-002 / PW config items** → schema + live 057 CONFIG **COMPLETE**.  
 - **Public copy Phase 4 + chrome** → PR **#298** / **#301** / **#304**.  
-- **FUT-002** → cleanup in progress; 5 quarantined fields await Mike UI delete.  
+- **FUT-002 batch 1** → **COMPLETE** (2026-08-31) — 5 `ZZZ DELETE —` fields deleted; live 1350 fields; later batches FUTURE.  
 - **FUT-010** → dry-run **0 eligible** (R3); no delete request.  
 - **Weeks 2026–27 + 18 PHA** → **COMPLETE** (Early Bird Apr 25–May 1; due June 29; Week 9/Post-Challenge no HW).  
 - **SC-SEASON-SIM-001 / MRW-H11** → **FUTURE / Planned only** — not active.  
 - **SC-WEEKLY-SETTLEMENT-E2E / MRW-F10** → **COMPLETE** (2026-08-30).  
 - **SC-ATHLETE-WF-001 / MRW-F09** → **COMPLETE (harness)**; **MRW-I13 CLOSED** (once per Count It).  
 - **SC-CORE-WF / MRW-F11** → **COMPLETE** (2026-08-30) — live Weeks/PHA audit + disposable apply; orphan inactive PHA deleted.  
-- **SC-015 / SC-016 / MRW-F02** → **COMPLETE** (2026-08-31, PR **#312**) — multi-asset → one HC + one Homework XP; 065 remap + trigger re-entry; **do not** re-paste 020/065.  
+- **SC-015 / SC-016 / MRW-F02 / 065 remap** → **COMPLETE** (2026-08-31) — multi-asset `--apply` → one HC + one Homework XP; 065 dynamic `recordId` + trigger re-entry proven; **do not** re-paste 020/065; **do not** re-`--apply`.  
 - **FUT-029 / MRW-H12** → **FUTURE** — Hybrid Fillout Homework concept only (requested FUT-018 already used).  
+- **FUT-030** → **COMPLETE** (2026-08-31) — full transactional record reset (959 deleted); PHA emptied; Weeks/Library/config preserved; base ready for clean rebuild.  
 - **SC-SEASON-SIM-002** → **Infrastructure landed** (`tools/season_simulation/`); offline tests green; do not run full season simulation yet.  
 - **Automation 043** → **absent** from live automations list (MRW-C09 COMPLETE).  
 - **Automation 075** → **retired / absent** — do not restore.  
-
-- SC-027/066 shot milestones live-tested → monitoring only.  
+- **Weeks 2026–27** → calendar rows **preserved**; **18 PHA** must be recreated after FUT-030 before homework tests.  
 - Historical overnight MIKE-ACTIONS rows superseded by CURRENT-TRUTH / Section G where dated later.  
 - Legacy C-/SC- inventory in Future Work Sections A–F remains evidence; **this file + operator queue + Future Work Section G** are the operator queues.

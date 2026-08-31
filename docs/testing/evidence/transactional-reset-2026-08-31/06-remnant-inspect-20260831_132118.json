@@ -1,0 +1,190 @@
+{
+  "mode": "CONFIRM_DELETE",
+  "tables": {
+    "Email Handoff Queue": {
+      "count": 1,
+      "records": [
+        {
+          "id": "recrlUcKazKXovS9w",
+          "fields": {
+            "Enrollment Record ID": "recNu6fcBpF1GG3u5",
+            "Payload JSON": "{\"athleteName\":\"Testing3 Schmidt\",\"parentFirstName\":\"Mike\",\"homeworkTitle\":\"SA - Personal Game Plan - Shot Tracker Usage\",\"homeworkLabel\":\"SA - Personal Game Plan - Shot Tracker Usage\",\"coachFeedback\":\"COREWF|MULTI|2026-08-31|mth7eho5|satisfactory multi-asset rerun\",\"totalHomeworkXpAwarded\":35,\"quizSummary\":\"\",\"submittedFiles\":[{\"id\":\"recReiXXBRtaW3lns\",\"url\":\"https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/recReiXXBRtaW3lns?token=kOZMezEcjTb7NhdRMTDLknjGltCbesXZvmCeFXJWmG4\",\"label\":\"COREWF|MULTI|2026-08-31|mth7eho5-a1.jpg\"},{\"id\":\"recwYDQKOytkzGzku\",\"url\":\"https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/recwYDQKOytkzGzku?token=8k6eIU9dDodxR2V-R2zg6tRJhKLh7TkUt-lMs6PkjAg\",\"label\":\"COREWF|MULTI|2026-08-31|mth7eho5-a2.jpg\"}],\"homeworkSlot\":\"HW1\",\"programName\":\"Shooting Challenge | 2026-2027\",\"weekName\":\"Early Bird\",\"reviewStatus\":\"Satisfactory\",\"landingPageUrl\":\"https://www.fairfieldbasketballclub.com\",\"shootPageUrl\":\"https://www.fairfieldbasketballclub.com/shoot\",\"homeworkPageUrl\":\"https://www.fairfieldbasketballclub.com/shoot/homework\",\"canonicalProgramHomeworkAssignmentId\":\"recgj8dPk4ouTwCOj\",\"canonicalProgramInstanceId\":\"rec5mEM0YPqPqq0hZ\",\"canonicalWeekId\":\"recBrZ1sV8byWEHZU\",\"canonicalGradeBandId\":\"recv9aWnHanY2sRgk\"}",
+            "Test Mode?": true,
+            "Hub Event ID": "recgQJUOyhUx8PJI1",
+            "Status": "Accepted",
+            "Event Type": "HOMEWORK_FEEDBACK",
+            "Program Instance Record ID": "rec5mEM0YPqPqq0hZ",
+            "Source Record ID": "rec8E94Jg7mpmuMW9",
+            "Source Table": "Homework Completions",
+            "Handoff Key": "HOMEWORK_FEEDBACK|HOMEWORK_COMPLETIONS|rec8E94Jg7mpmuMW9",
+            "Created": "2026-08-31T13:19:48.000Z",
+            "Recipients JSON": "[{\"email\":\"mschmidt@fairfield.k12.mt.us\",\"role\":\"guardian\"}]",
+            "Send to Hub?": 0,
+            "Hub Response JSON": "{\"accepted\":true,\"duplicate\":true,\"eventId\":\"recgQJUOyhUx8PJI1\",\"externalEventId\":\"SHOOTING_CHALLENGE|HOMEWORK_FEEDBACK|HOMEWORK_FEEDBACK|HOMEWORK_COMPLETIONS|rec8E94Jg7mpmuMW9\",\"messageId\":\"rechQ45DPyOxYGdfT\",\"deliveryIds\":[\"rec4MLCAJC3JB0wkY\"],\"statuses\":[{\"deliveryId\":\"rec4MLCAJC3JB0wkY\",\"status\":\"sent\",\"provider\":\"RESEND\",\"providerMessageId\":\"4688f410-cfa3-4746-8cab-57aaa243b3c8\",\"attemptCount\":1,\"sentAt\":\"2026-08-31T12:35:38.682Z\",\"replay\":false}]}",
+            "Template Key": "HOMEWORK_FEEDBACK",
+            "Accepted At": "2026-08-31T13:20:09.719Z",
+            "Last Attempt At": "2026-08-31T13:20:03.674Z",
+            "Attempt Count": 1
+          }
+        }
+      ]
+    },
+    "XP Events": {
+      "count": 1,
+      "records": [
+        {
+          "id": "recZLhHI2laxbKAoZ",
+          "fields": {
+            "Homework XP Event Signature": "recZLhHI2laxbKAoZ|ACTIVE|KEY=HOMEWORK_XP|rec8E94Jg7mpmuMW9|HC=|ENR=|SUB=|WEEK=Early Bird|WAS=|SOURCE=Homework Completion|BUCKET=Homework Completion|POINTS=35",
+            "XP Reason Debug": "Canonical Homework XP HOMEWORK_XP|rec8E94Jg7mpmuMW9",
+            "Source Key": "HOMEWORK_XP|rec8E94Jg7mpmuMW9",
+            "Active XP Points": 35,
+            "Active?": true,
+            "Record Id": "recZLhHI2laxbKAoZ",
+            "Week": [
+              "recBrZ1sV8byWEHZU"
+            ],
+            "XP Events RID": "recZLhHI2laxbKAoZ",
+            "XP Bucket": "Homework Completion",
+            "Reconciliation Source Signature": "recZLhHI2laxbKAoZ|ACTIVE=1|KEY=HOMEWORK_XP|rec8E94Jg7mpmuMW9|SUB=|ENR=|WEEK=Early Bird|WAS=|SOURCE=Homework Completion|BUCKET=Homework Completion|POINTS=35",
+            "Week Record ID": [
+              "recBrZ1sV8byWEHZU"
+            ],
+            "Created": "2026-08-31T13:19:40.000Z",
+            "Event Identity ID": "homework_xp|rec8e94jg7mpmumw9",
+            "XP Event Display": " - Homework Completion - 35",
+            "XP Source": "Homework Completion",
+            "Weekly Summary Key": "|Early Bird",
+            "XP Points": 35,
+            "Processed": true,
+            "XP Event RID": "recZLhHI2laxbKAoZ",
+            "Zoom XP Event Signature": "recZLhHI2laxbKAoZ|ACTIVE=1|KEY=HOMEWORK_XP|rec8E94Jg7mpmuMW9|ENR=|WEEK=Early Bird|WAS=|MEETING=|SOURCE=Homework Completion|BUCKET=Homework Completion|POINTS=35",
+            "XP Date Resolved": "2026-08-31T13:19:40.000Z",
+            "XP Reason Public": "Homework completed."
+          }
+        }
+      ]
+    },
+    "Submission Assets": {
+      "count": 2,
+      "records": [
+        {
+          "id": "recaEXaMBpo13Om7I",
+          "fields": {
+            "Ready for Video Feedback Script?": 0,
+            "Submission Assets Full Name": " - Video Feedback - Video For Feedback",
+            "Asset Label": "VID-1",
+            "Source Attachment ID": "att9C9zfga7f6637V",
+            "Asset Slot Base": "VID",
+            "Asset Purpose": "Video For Feedback",
+            "Asset Type": "Video Feedback",
+            "Why Not Ready for Make?": "Send trigger is off",
+            "Ready to Send to Make?": "Missing: Video Feedback Link",
+            "Record Id - Submission Assets": "recaEXaMBpo13Om7I",
+            "Created": "2026-08-31T13:20:01.000Z",
+            "Asset Slot": "VIDEO",
+            "Upload Status": "Pending Link",
+            "Workflow Next Step": "Missing Submission link",
+            "Original File Name": "Arps_Terria_6.jpg",
+            "RecordId": "recaEXaMBpo13Om7I",
+            "Ready for Homework Completion Script?": 0,
+            "Upload Ready?": 0,
+            "Created Time": "2026-08-31T13:20:01.000Z",
+            "Upload Destination": "Video Feedback",
+            "Airtable Attachment": [
+              {
+                "id": "attIGOCL2Q2nywaX2",
+                "width": 1280,
+                "height": 1600,
+                "url": "https://v5.airtableusercontent.com/v3/u/56/56/1788192000000/H7VfHK7o831Wx4x6iW6J0A/4DFxdbpu7aWMf6-W5NESy3WrQvnKtPvX1V-UsRt6w5JLsy2GDhoAXEOjgYx0AUQeSPCRl0lb-yJsT93r0XuPNxEhoQfnwS8ALQ17fOh1QfpwHZu1H6Lrt-f7Sey_9ARK5AtUkS5qCzuVfozenJ0AndSBReIWOKfZjetiUKhZ-R0/K6yQrSFNiQXMnL6w3VB_WCv2gwl7FqLr-nHvcgEDaco",
+                "filename": "Arps_Terria_6.jpg",
+                "size": 286836,
+                "type": "image/jpeg",
+                "thumbnails": {
+                  "small": {
+                    "url": "https://v5.airtableusercontent.com/v3/u/56/56/1788192000000/4Y4S81ZVTo6gArKIPgSfgQ/nOH66TNd4Ajo2Ku06bCgVEXBFPgO5hTc_DpZeCsMYiHPtRLH5XGXBXRxp36wLfIELe88UpJouNy1ifBsMcKLIMA_AWFkCImmYla4sm70n2gVjYrDlOuyum6Kd8dC61DWRs0oz_v3ASMvQrpNannp1g/gVwG3vb6sVV1R8SLrysEKH0HJaMOh2_z7bxPjGCPJ_8",
+                    "width": 29,
+                    "height": 36
+                  },
+                  "large": {
+                    "url": "https://v5.airtableusercontent.com/v3/u/56/56/1788192000000/upDKDPPBl5Tqjk-zNTnzGw/_jvKau1aUkzjICqeZpU93NcNVLvLQBiZCIrKD8bOB127_nTjUU-u6slArO9Q7-Y6H9dRmHt40bHoRkeIWcw-v8DqkRSGVwgPWeh7nLUQYB4sm2zoWix4SjYYS8_JGboMC7UkRwv3dQckVZ6u0Susyg/IoAfCzaBJAZX5jqjy4KodN8fIq12ifJHdU3Mv9OfTsE",
+                    "width": 512,
+                    "height": 640
+                  },
+                  "full": {
+                    "url": "https://v5.airtableusercontent.com/v3/u/56/56/1788192000000/z9BHrWLXmvFHpSg7yH4Bcg/12qN2xgFEkGYK6CJpMTQFnGWLMdw5BtHz-bnFtMl7lqa8quWAXmf3qZuoZQL1xRdnhTVOSf4HmFsiwOKSUgyVR-SNeD2TqFJ7JeYXyeFFniszW29KM22LrKPX-QiH6cuLX-SagDLUVHFoxTk4wpg6Q/PsHrQtk7cVwUAhvfvTaKyUKaJLEJiN-hWJu3ih3UVp8",
+                    "width": 1280,
+                    "height": 1600
+                  }
+                }
+              }
+            ],
+            "Is True Video Feedback Asset?": 1,
+            "Writeback Complete?": 0,
+            "Asset Key": "|recaEXaMBpo13Om7I",
+            "Is Homework Upload Asset?": 0,
+            "Asset Type - Convert for File Name": "VideoFeedback"
+          }
+        },
+        {
+          "id": "rechmomN5woqfI4cg",
+          "fields": {
+            "Ready for Video Feedback Script?": 0,
+            "Submission Assets Full Name": " - Video Feedback - Video For Feedback",
+            "Asset Label": "VID-1",
+            "Source Attachment ID": "attNfgBnYIbJNaMsG",
+            "Asset Slot Base": "VID",
+            "Asset Purpose": "Video For Feedback",
+            "Asset Type": "Video Feedback",
+            "Why Not Ready for Make?": "Send trigger is off",
+            "Ready to Send to Make?": "Missing: Video Feedback Link",
+            "Record Id - Submission Assets": "rechmomN5woqfI4cg",
+            "Created": "2026-08-31T13:19:57.000Z",
+            "Asset Slot": "VIDEO",
+            "Upload Status": "Pending Link",
+            "Workflow Next Step": "Missing Submission link",
+            "Original File Name": "Boltz_Drew_21.jpg",
+            "RecordId": "rechmomN5woqfI4cg",
+            "Ready for Homework Completion Script?": 0,
+            "Upload Ready?": 0,
+            "Created Time": "2026-08-31T13:19:57.000Z",
+            "Upload Destination": "Video Feedback",
+            "Airtable Attachment": [
+              {
+                "id": "att5euU8rsKxVtZCw",
+                "width": 1280,
+                "height": 1600,
+                "url": "https://v5.airtableusercontent.com/v3/u/56/56/1788192000000/kKSTf_SZfB5a2qy7eOt9mQ/0kR4GDEgSs54vrLR92dUqEuJuCKTHOx1CtSRFSDyhmPMqVozQj-4-DpuBpBpaV1aRNofGFYy0VNPX9eNAqOO8Hm4a8vG_rZHXYkx-USeeuwYZGsW_WJ1FFcjhjiO0MjFQekQbMYMabCvpAohp_sb-sPzfXFHeGtX1t7oCBFZRqg/gvBvn0AvdD1-LCaserUjtoTGDww0o2Ef3AjwoGgNYk0",
+                "filename": "Boltz_Drew_21.jpg",
+                "size": 251587,
+                "type": "image/jpeg",
+                "thumbnails": {
+                  "small": {
+                    "url": "https://v5.airtableusercontent.com/v3/u/56/56/1788192000000/hiSsmhcvS0k6C1ScIB2sbw/t3lX6F-PHfpXau7DYIZVXbhDy6OCpmZ_PhDWw17BCzM1VUJRnO8iEET0s2Rh_Aw9lCHtsd9L2PgClodWLxs_DUP1UfboGieiJrJKsXjTo-uCRxMjx1PWYADEtzr7d20LlP2l0TK4U6OTEBQkrOILOg/aHzmkDYWcfx-HYSz91V2fJL7h2paN8DpTz8vY2YnKUY",
+                    "width": 29,
+                    "height": 36
+                  },
+                  "large": {
+                    "url": "https://v5.airtableusercontent.com/v3/u/56/56/1788192000000/pcvC93Nb32iKjI7RSuSZMw/ciro1Eg2NacybDnBr9X87MOpA93W82lBMLa0LbkvH44_H_nNGVPSCahVxnoFo10LeSye5Raw2J-FVeAuYRsg_dEezoVC5wtnruHzWtmQ6-4AdJlbrBnV-LYXyZS3ORaFeqsMBEicVxb5rP76kN3-9A/6yDTPbIQLUB238_o5qT5MG9E-h6qQK0QYY3SAHsJJOQ",
+                    "width": 512,
+                    "height": 640
+                  },
+                  "full": {
+                    "url": "https://v5.airtableusercontent.com/v3/u/56/56/1788192000000/GNzND0HvFaQMwAMQDM6x_g/JrQbtA2IEkW90og_xMkmrk8rWq-SuGSNttn02QdEYBqzAwZV2ZUHXQTBfQh9yP-04dRQEnE-k_usLZG0lGLoJPQPK-kFX88tdSz5psSC9VnwqWc0RtTSBikbtiClUb-sBt1uprrSoOW8iZtbKMDQeg/4GAznnVsjoPq6EkNiZ8XFMPHpuATpiObxxmwVXTBCRk",
+                    "width": 1280,
+                    "height": 1600
+                  }
+                }
+              }
+            ],
+            "Is True Video Feedback Asset?": 1,
+            "Writeback Complete?": 0,
+            "Asset Key": "|rechmomN5woqfI4cg",
+            "Is Homework Upload Asset?": 0,
+            "Asset Type - Convert for File Name": "VideoFeedback"
+          }
+        }
+      ]
+    }
+  }
+}
