@@ -590,6 +590,35 @@ Publish parent-facing wording that at least 100% of registration fees collected 
 
 Add a parent-facing About the Coach section identifying Mike Schmidt's education and coaching credentials without inventing accomplishments or exposing private athlete information.
 
+### FUT-029 — Hybrid Fillout Homework Submission System
+
+**Priority:** P2 (long-term)  
+**Status:** **FUTURE** — concept/design only; **do not implement** until separately authorized  
+**Systems:** Homework Library, Program Homework Assignments, Fillout, Homework Completions, Submissions / Submission Assets, Automations **020 / 033 / 064 / 065 / 071** (preserve)  
+**Master Remaining Work:** **MRW-H12**  
+**ID note:** Intake requested label **FUT-018**; that ID is already **COMPLETE** (Landing Page / Shooting Challenge page improvements). FUT-027/028 also assigned. Canonical ID is **FUT-029**.  
+**Brief:** [`next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](./next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md)
+
+Expand Homework Library from ~70 to **100+** assignments and add **online Fillout answer forms** as an additional homework submission method.
+
+**Confirmed requirements (2026-08-31):**
+
+- Fillout begins **optional**; may later become **primary** for assignments that work well online.
+- **Paper** remains for handwriting, drawing, physical work, and similar.
+- **Photo / video** uploads remain when required.
+- Use **separate grade-band versions** when content differs substantially.
+- Combine **automatic grading** and **coach-reviewed** responses.
+- Keep **Homework Library** separate from seasonal **Program Homework Assignments**.
+- Preserve the current **18-assignment** seasonal design.
+- Each seasonal assignment links to a reusable Library assignment and the appropriate grade-band version.
+- Fillout and traditional asset submissions connect to the **same Homework Completion** workflow.
+- Prevent **duplicate Homework Completions** and **duplicate Homework XP**.
+- Preserve automations **020, 033, 064, 065, 071** and related homework workflows.
+
+**Out of scope until authorized:** Fillout form creation, Airtable schema changes, live automation edits, changing the 18 PHA rows, homework XP/grading rule changes.
+
+**Related (coordinate, do not silently merge):** SC-018 / SC-019 / SC-020 Learning Activities; existing HW17 Fillout quiz path; FUT-001 / SC-015 / SC-016 HC identity.
+
 ### SC-ATHLETE-WF-001 — Individual athlete workflow QA (pre–season simulation)
 
 **Priority:** P0  
@@ -971,7 +1000,9 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **Weekly email audit** | Harness shipped (2026-08-30) | `audits/2026-08-28-weekly-email-pipeline-audit.md` + [`testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md`](testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md) — live `--apply` Mike disposable WAS |
 | **SC-PW-E2E preflight** | COMPLETE (repo) | `preflightApplyAccess`; unlock field resolver (`Source Key` / `Milestone Source Key`) |
 | **SC-147** | Repo prep shipped | Recorded Zoom half-XP — draft `drafts/sc-147-zoom-recording-half-xp.js` + `lib/sc-147-zoom-recording-credit.test.js`; Mike slot + rule row pending |
-| **FUT-001 / PR #264** | **COMPLETE** (repo + Production paste + multi-asset XP) | 020 v3.8 + 065 v10.4 Live; multi-asset 020 **PASS**; 065 dynamic `recordId` remapped; **trigger re-entry after remap** required; exactly one `HOMEWORK_XP\|rec8E94Jg7mpmuMW9` (`recwpzl8pkXecUqRK`, no duplicate) — [`testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json`](./testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json) · [`deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](./deploy-checklists/065-recordId-dynamic-remap-operator-packet.md) |
+| **FUT-001 / PR #264** | **COMPLETE** (repo + Production paste + multi-asset XP) | 020 v3.8 + 065 v10.4 Live; multi-asset 020 **PASS**; 065 dynamic `recordId` remapped; **trigger re-entry after remap** required; exactly one `HOMEWORK_XP\|rec8E94Jg7mpmuMW9` (`recwpzl8pkXecUqRK`, no duplicate) — PR **#312** MERGED `f8a7365f` — [`testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json`](./testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json) · [`deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](./deploy-checklists/065-recordId-dynamic-remap-operator-packet.md) |
+| **SC-015 / SC-016 / MRW-F02** | **COMPLETE** (2026-08-31) | Multi-asset → one HC + one Homework XP; **do not** re-paste 020/065; **do not** re-`--apply` |
+| **FUT-029 / MRW-H12** | **FUTURE** (design only) | Hybrid Fillout Homework — [`next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](./next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md); requested as FUT-018 (ID already used) |
 
 ### 2026-08-29 legacy welcome-email field retirement
 
