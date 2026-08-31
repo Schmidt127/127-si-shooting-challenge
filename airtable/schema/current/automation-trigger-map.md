@@ -93,7 +93,7 @@ Do **not** treat Make/Gmail as the homework parent-email sender.
 | Coach Feedback not empty | Required by script |
 | Delivery | Hub renders + Resend sends; Make/Gmail do **not** send parent feedback email |
 
-**Writeback owner (resolved 2026-08-20):** Communications Hub PATCHes Video Feedback after Resend success/failure (`Parent Feedback Sent?`, `Sent On`, `Delivery Status`, `Delivery Error`, `Hub Event ID`, `Resend Message ID`). **079** only marks Email Handoff Queue Accepted. See Hub `docs/contracts/VIDEO_FEEDBACK_SOURCE_WRITEBACK_v1.md`.
+**Writeback owner (resolved 2026-08-20 VF; 2026-08-31 HC FUT-032):** Communications Hub PATCHes Video Feedback **and** Homework Completions after Resend success/failure (`Parent Feedback Sent?`, `Sent On`, `Delivery Status`, `Delivery Error`, `Hub Event ID`, `Resend Message ID`). **079** only marks Email Handoff Queue Accepted. See Hub `docs/contracts/VIDEO_FEEDBACK_SOURCE_WRITEBACK_v1.md` and `HOMEWORK_FEEDBACK_SOURCE_WRITEBACK_v1.md`.
 
 ### Achievements and streaks (053–059, 066)
 

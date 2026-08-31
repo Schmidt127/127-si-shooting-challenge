@@ -30,7 +30,7 @@ Make may still run **non-email** work (upload engine, Tremendous HTTP). That is 
 | This file, `PROJECT_STATE.md` overlay, `communications-hub/README.md` | Current send plane |
 | 2026-07-24 weekly email E2E (`118→072→119→074→Make→Gmail`) | **Historical evidence** that Make/Gmail once sent weekly mail |
 | Make 117f Zoom approval Gmail packets | **Historical** Make email path |
-| GitHub Hub queue scripts (`071` / `073` / `074` / `076` / `079`) | Repository contract for Hub handoff. **073 Live v4.2 MATCH** (2026-08-20 Automations Code). Video Ready? is **manual**. **VF Sent?/Sent On owner:** Communications Hub source writeback after Resend success (not 073/079). |
+| GitHub Hub queue scripts (`071` / `073` / `074` / `076` / `079`) | Repository contract for Hub handoff. **073 Live v4.2 MATCH** (2026-08-20 Automations Code). Video Ready? is **manual**. **VF + HC Sent?/Sent On owner:** Communications Hub source writeback after Resend success (not 071/073/079). Homework: FUT-032 / Hub `HOMEWORK_FEEDBACK_SOURCE_WRITEBACK_v1.md`. |
 | Automation **117** | **Confirmed v2.1** (Mike paste 2026-08-19): creates Email Handoff Queue only; **079** sends → Hub → Resend |
 
 ---
