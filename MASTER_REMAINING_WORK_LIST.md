@@ -422,7 +422,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 4. Optional: refresh Automations **Code** text for 057 (tracker lag) — live script already correct.  
 5. **Do not** activate FUT-003 until registration intentionally opens.  
 6. **Do not** implement **FUT-029** (Hybrid Fillout Homework) yet — design brief only (**MRW-H12**).  
-7. **FUT-030 COMPLETE** — transactional tables empty; recreate **18 PHA** then disposable enrollments for clean rebuild tests. FUT-002 batch 1 COMPLETE. After PHA recreate + WSTEST cleanup: **SC-SEASON-SIM-001** remains FUTURE.
+7. **FUT-030 COMPLETE** — transactional tables empty; **18 PHA restored** same day. FUT-002 batch 1 COMPLETE. After WSTEST cleanup: **SC-SEASON-SIM-001** remains FUTURE.
 
 ---
 
