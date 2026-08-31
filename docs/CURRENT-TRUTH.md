@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-31 — SC-MULTI-ASSET-HW / 065 Homework XP **COMPLETE** (dynamic remap + trigger re-entry; exactly one XP, no duplicate). Prior: 2026-08-30 Agent 4 SC-SEASON-SIM-002; paste queue clear ([`RELEASE_BASELINE.md`](../RELEASE_BASELINE.md))  
+**Last verification (repo):** 2026-08-31 — PR **#312** MERGED (`f8a7365f`): SC-MULTI-ASSET-HW / SC-015 / SC-016 / MRW-F02 **COMPLETE** (065 dynamic remap + trigger re-entry; exactly one XP, no duplicate; **no 065 repaste**). Paste queue empty for 010/020/022/057/065/072/073; **075** remains retired. FUT-029 Hybrid Fillout homework = FUTURE design only. Prior: 2026-08-30 Agent 4 SC-SEASON-SIM-002 ([`RELEASE_BASELINE.md`](../RELEASE_BASELINE.md))  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -57,10 +57,11 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | **`082edc7d`** — merge PR **#298** Phase 4 public copy (prior tip `69d77134` = #276). Re-verify: `git rev-parse HEAD` |
+| HEAD SHA | **`f8a7365f`** — merge PR **#312** multi-asset homework XP closeout (prior web tip `bd7856ea` = #311). Re-verify: `git rev-parse HEAD` |
 | `origin/master` | Should match HEAD after fetch — re-verify: `git rev-parse origin/master` |
 | Ahead / behind | **0 / 0** (re-verify after fetch) |
-| Recent merges (2026-08-30) | **#298** public copy · **#276** ATHWF · **#297** paste audit · **#295** docs closeout · **#279–#293** earlier closeout suite |
+| Recent merges (2026-08-31) | **#312** multi-asset HW / 065 XP closeout |
+| Recent merges (2026-08-30) | **#311** gift-card/coach · **#308** public-app readiness · **#298** public copy · **#276** ATHWF · **#297** paste audit |
 | Prior integrity ship | `0b1d634…` (2026-08-20); XP activity ledger merge follows |
 | True merge markers (`<<<<<<<`) | None found |
 | Nested clone (ignored) | Local folder `127-si-shooting-challenge/` — gitignored; **do not treat as source of truth** |

@@ -21,7 +21,7 @@
 | Evidence | [`../testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json`](../testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json) |
 | Results | [`../testing/core-workflow/MULTI-ASSET-HW-RESULTS.md`](../testing/core-workflow/MULTI-ASSET-HW-RESULTS.md) |
 | Runbook | [`../testing/core-workflow/MULTI-ASSET-HW-OPERATOR-RUNBOOK.md`](../testing/core-workflow/MULTI-ASSET-HW-OPERATOR-RUNBOOK.md) |
-| PR | [#306](https://github.com/Schmidt127/127-si-shooting-challenge/pull/306) |
+| PR | [#312](https://github.com/Schmidt127/127-si-shooting-challenge/pull/312) MERGED `f8a7365f` (follow-up to [#306](https://github.com/Schmidt127/127-si-shooting-challenge/pull/306)) |
 
 **Operator lesson:** After remapping a stuck automation input, force Reconcile `1 → 0 → 1` (set Last Signature = Current, wait for 0, clear Last / change signature inputs) so `recordMatchesConditions` re-enters. Remap alone does not wake records already matching.
 

@@ -10,7 +10,7 @@ This is the **detailed completion matrix and historical traceability record** fo
 | Field | Value |
 |-------|--------|
 | **Purpose** | Completion matrix, package traceability, and preserved historical evidence |
-| **Last updated** | **2026-08-30** (release closeout: #301–#305; SC-SEASON-SIM-002; FUT-002 quarantine; MRW-F11/I13; 057 no-repaste) |
+| **Last updated** | **2026-08-31** (PR **#312** multi-asset HW / SC-015 / SC-016 / MRW-F02 COMPLETE; FUT-029 design-only; prior 2026-08-30 release closeout #301–#305) |
 | **Production branch** | `master` |
 | **Vercel root** | `web/` |
 | **Production website** | https://www.fairfieldbasketballclub.com/shoot |
@@ -83,6 +83,8 @@ All Shooting Challenge parent/athlete notification email goes through **Communic
 ## 0A. Current Automation Versions — 2026-08-24
 
 > **Overlay 2026-08-30 (Agent 4):** Treat the table below as **historical**. Authoritative versions: [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) §8 + [`MASTER_REMAINING_WORK_LIST.md`](../MASTER_REMAINING_WORK_LIST.md). Live: **010 v10.12**, **020 v3.8**, **022 v2.2**, **057 v2.2** (`Perfect Week Video Minimum`), **058 1.5**, **059 v3.7**, **065 v10.4**, **072 v4.8**, **073 v4.4**. **Do not** use the 2026-08-24 minors (020 v3.7 / 057 v2.0 / 065 v10.3 / 072 v4.7) as paste instructions.
+
+> **Overlay 2026-08-31 (PR #312):** **SC-015** / **SC-016** / **MRW-F02** COMPLETE — multi-asset → one HC + one `HOMEWORK_XP|rec8E94Jg7mpmuMW9` (35 XP, no duplicate). Automation **065** required dynamic `recordId` remap **and** manual trigger re-entry for stuck Reconcile=1 / empty Last Signature. **Do not** re-paste 020/065. Paste queue remains empty for 010/020/022/057/065/072/073. Automation **075** remains retired. Evidence: [`testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json`](./testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json).
 
 Authoritative GitHub SCRIPT headers + [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) overlays. Production paste may lag GitHub for **010 v10.12** only — verify in Automations UI before claiming live. **065 v10.3** and **066 v3.9** are **live-tested** (2026-08-24).
 

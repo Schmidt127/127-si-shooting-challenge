@@ -371,6 +371,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-H09 | Early-bird registration config (SC-066) | FUTURE | Decision: use early-bird; dates TBD |
 | MRW-H10 | Recorded Zoom half-XP writer (SC-147) | **Repo prep shipped** | Draft + offline conflict matrix; Mike: slot + `ZOOM_RECORDING` rule row; do not overload 117 |
 | MRW-H11 | SC-SEASON-SIM-001 60-day five-enrollment season simulation | **FUTURE** | Planned only — no full simulation run. **SC-SEASON-SIM-002** preflight package now in repo (`tools/season_simulation/`). Archive WSTEST/PWTEST before any execute. |
+| MRW-H12 | FUT-029 Hybrid Fillout Homework Submission System | **FUTURE** | Expand Library 70→100+; optional→primary Fillout answers; paper/photo/video preserved; same HC/XP spine; keep 18 PHA. **Do not implement** until authorized. Brief: [`docs/next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](docs/next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md). *(Requested as FUT-018; that ID already used for landing-page work.)* |
 
 ## F+. Weekly settlement QA (pre–season simulation)
 
@@ -417,11 +418,12 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 
 1. **FUT-002:** Delete 5 `ZZZ DELETE — *` fields in Airtable UI (API cannot DELETE).  
 2. **Archive overlapping WSTEST/PWTEST Weeks** in Program Instance `Shooting Challenge | 2026-2027` (OMNI) before season simulation.  
-3. **Do not** re-paste 010/020/022/057/058/059/065/072/073 and **do not** re-run Perfect Week `--apply`.  
+3. **Do not** re-paste 010/020/022/057/058/059/065/072/073; **do not** restore 075; **do not** re-`--apply` Perfect Week or multi-asset homework.  
 4. **FUT-010:** dry-run R3 still **0 eligible** — no deletion request.  
 5. Optional: refresh Automations **Code** text for 057 (tracker lag) — live script already correct.  
 6. **Do not** activate FUT-003 until registration intentionally opens.  
-7. ATHWF (MRW-F09) + weekly settlement (MRW-F10) + core workflow (MRW-F11) + **MRW-I13** are done. After WSTEST cleanup: **SC-SEASON-SIM-001** prep (still FUTURE).
+7. **Do not** implement **FUT-029** (Hybrid Fillout Homework) yet — design brief only (**MRW-H12**).  
+8. Multi-asset HW / SC-015 / SC-016 / MRW-F02 are **COMPLETE** (PR **#312**). ATHWF + weekly settlement + core workflow + **MRW-I13** are done. After WSTEST cleanup: **SC-SEASON-SIM-001** prep remains FUTURE (do not begin simulation now).
 
 ---
 
@@ -437,8 +439,11 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 - **SC-WEEKLY-SETTLEMENT-E2E / MRW-F10** → **COMPLETE** (2026-08-30).  
 - **SC-ATHLETE-WF-001 / MRW-F09** → **COMPLETE (harness)**; **MRW-I13 CLOSED** (once per Count It).  
 - **SC-CORE-WF / MRW-F11** → **COMPLETE** (2026-08-30) — live Weeks/PHA audit + disposable apply; orphan inactive PHA deleted.  
+- **SC-015 / SC-016 / MRW-F02** → **COMPLETE** (2026-08-31, PR **#312**) — multi-asset → one HC + one Homework XP; 065 remap + trigger re-entry; **do not** re-paste 020/065.  
+- **FUT-029 / MRW-H12** → **FUTURE** — Hybrid Fillout Homework concept only (requested FUT-018 already used).  
 - **SC-SEASON-SIM-002** → **Infrastructure landed** (`tools/season_simulation/`); offline tests green; do not run full season simulation yet.  
 - **Automation 043** → **absent** from live automations list (MRW-C09 COMPLETE).  
+- **Automation 075** → **retired / absent** — do not restore.  
 
 - SC-027/066 shot milestones live-tested → monitoring only.  
 - Historical overnight MIKE-ACTIONS rows superseded by CURRENT-TRUTH / Section G where dated later.  

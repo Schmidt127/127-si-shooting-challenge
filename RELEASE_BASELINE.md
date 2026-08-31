@@ -14,7 +14,7 @@
 
 | Item | Value | Evidence |
 |------|--------|----------|
-| Docs tip (multi-asset HW) | PR **#312** | SC-015 / SC-016 / MRW-F02 COMPLETE; 065 remap + trigger re-entry; no script paste |
+| Docs tip (multi-asset HW) | PR **#312** MERGED `f8a7365f` | SC-015 / SC-016 / MRW-F02 COMPLETE; 065 remap + trigger re-entry; no script paste |
 | Production tip (web) | `bd7856ea` | PR **#311** gift-card FAQ + About the Coach; Vercel Production Ready |
 | Prior public-app readiness | `7332d2f3` | PR **#308** final public-app readiness |
 | Public UX chrome | PR **#301** / **#304** MERGED `f3be964f` | MRW-G11 / CR-12 shipped |
@@ -145,7 +145,7 @@ git status -sb
 
 **Mike:** Delete 5 `ZZZ DELETE — *` fields (FUT-002). Before season sim: archive overlapping WSTEST/PWTEST Weeks (OMNI).
 
-**Do not:** re-paste 010/020/022/057/058/059/065/072/073; restore 075; re-`--apply` Perfect Week for WAS `recl3DmBh22ADPWWe`; run full season-simulation execute yet.
+**Do not:** re-paste 010/020/022/057/058/059/065/072/073; restore 075; re-`--apply` Perfect Week for WAS `recl3DmBh22ADPWWe`; re-`--apply` multi-asset homework; run full season-simulation execute yet; implement FUT-029.
 
 **Engineering:** SC-SEASON-SIM-002 in `tools/season_simulation/` — read-only `preflight` / default `dry-run` only until WSTEST cleanup.
 
@@ -162,4 +162,5 @@ git status -sb
 | 2026-08-30 (core workflow) | PR **#305**; MRW-F11 / MRW-I13 complete |
 | 2026-08-30 (release closeout) | Merged Agent packages; reconciled baseline |
 | 2026-08-30 (public-app readiness) | PR **#308** merge `7332d2f3`; prod smoke **52/52**; HTTP smoke PASS (`/faq` 200); indexing policy verified |
-| 2026-08-31 (multi-asset HW XP) | PR **#312** — SC-015 / SC-016 / MRW-F02 COMPLETE; 065 dynamic `recordId` + trigger re-entry; exactly one Homework XP; no repaste |
+| 2026-08-31 (multi-asset HW XP) | PR **#312** MERGED `f8a7365f` — SC-015 / SC-016 / MRW-F02 COMPLETE; 065 dynamic `recordId` + trigger re-entry; exactly one Homework XP; no repaste |
+| 2026-08-31 (FUT-029 design) | Hybrid Fillout Homework Submission System captured as **FUT-029** / **MRW-H12** (requested FUT-018 already used); concept only — no schema/forms/automation changes |
