@@ -24,7 +24,7 @@ export function SiteHeader({
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-card/95 shadow-site-sm backdrop-blur-md">
       <div className="pointer-events-none absolute inset-0 court-lines opacity-30" aria-hidden />
-      <SiteContainer className="relative flex flex-col gap-2.5 py-3 sm:gap-3 sm:py-3.5">
+      <SiteContainer className="relative flex min-w-0 flex-col gap-2.5 py-3 sm:gap-3 sm:py-3.5">
         <div className="flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
             <a

@@ -12,7 +12,7 @@ describe("levels orientation", () => {
 
     expect(copy).toContain("current level");
     expect(copy).toContain("next level");
-    expect(copy).toContain("requirements");
+    expect(copy).toContain("advance requirements");
     expect(copy).toContain("XP");
   });
 
@@ -25,6 +25,6 @@ describe("levels orientation", () => {
     const terms = LEVELS_TERMINOLOGY.map((item) => item.term);
     expect(terms).toEqual(["Level", "Current level", "Next level", "Gate"]);
     expect(LEVELS_TERMINOLOGY[0].definition).toContain("Sort Order");
-    expect(LEVELS_TERMINOLOGY[3].definition).toContain("program configuration");
+    expect(LEVELS_TERMINOLOGY[3].definition).toContain("lifetime XP");
   });
 });

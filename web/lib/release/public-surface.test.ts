@@ -214,5 +214,19 @@ describe("accessibility label contracts", () => {
     expect(ACCESSIBILITY_LABELS.mobileMenuClose.toLowerCase()).toContain("close");
     expect(ACCESSIBILITY_LABELS.mobileMenuDialog.toLowerCase()).toContain("navigation");
     expect(ACCESSIBILITY_LABELS.moreNav.toLowerCase()).toContain("more");
+    expect(ACCESSIBILITY_LABELS.homeworkCatalog.toLowerCase()).toContain("homework");
+    expect(ACCESSIBILITY_LABELS.achievementsCatalog.toLowerCase()).toContain("achievement");
+    expect(ACCESSIBILITY_LABELS.zoomCatalog.toLowerCase()).toContain("zoom");
+    expect(ACCESSIBILITY_LABELS.gameManualConfig.toLowerCase()).toContain("game manual");
+  });
+});
+
+describe("level gate copy contracts", () => {
+  it("explains XP-only tiers and unavailable levels consistently", async () => {
+    const { LEVEL_GATE_COPY } = await import("@/lib/release/public-surface");
+    expect(LEVEL_GATE_COPY.cardFallback.toLowerCase()).toContain("xp");
+    expect(LEVEL_GATE_COPY.detailEmpty.toLowerCase()).toContain("xp");
+    expect(LEVEL_GATE_COPY.notFoundTitle.length).toBeGreaterThan(0);
+    expect(LEVEL_GATE_COPY.notFoundDescription.toLowerCase()).toContain("ladder");
   });
 });
