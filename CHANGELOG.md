@@ -83,6 +83,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **FUT-043 consistent card design system (2026-09-01)** — Shared `--sc-card-*` tokens in `globals.css`, `components/ui/sc-card.tsx` helpers, and catalog panel alignment. Applied to athlete homework rows, dashboard XP activity, Game Log list shells, and dashboard achievement insets. Token doc: [`web/docs/sc-card-design-tokens.md`](./web/docs/sc-card-design-tokens.md). Hub mirror: `communications/emails/lib/card-tokens.js` (separate repo deploy). Checklist: [`docs/deploy-checklists/FUT-043-card-design-system.md`](./docs/deploy-checklists/FUT-043-card-design-system.md).
 - **FUT-042 Coach feedback quotation styling (2026-09-01)** — Shared `CoachFeedbackQuote` on athlete
   profile homework cards (orange left border, light blue-gray background, italic smaller text; hidden
   when empty). Hub homework + video feedback emails use matching inner quotation block inside the
