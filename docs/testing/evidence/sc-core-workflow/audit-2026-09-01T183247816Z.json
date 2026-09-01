@@ -1,0 +1,197 @@
+{
+  "harness": "SC-CORE-WF",
+  "mode": "audit",
+  "startedAt": "2026-09-01T18:32:46.854Z",
+  "policy": {
+    "challengeYear": "2026-2027",
+    "earlyBirdStart": "2027-04-25",
+    "earlyBirdEnd": "2027-05-01",
+    "week1Start": "2027-05-02",
+    "programEnd": "2027-06-30",
+    "commonHomeworkDueDate": "2027-06-29",
+    "earlyBirdCountable": true,
+    "regularHomeworkWeeks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "week9HasHomework": false,
+    "expectedActiveHomeworkAssignmentCount": 18,
+    "homeworkSlotsPerHomeworkWeek": 2
+  },
+  "checks": [
+    {
+      "id": "live.weeks_calendar",
+      "pass": false,
+      "status": "FAIL",
+      "findings": [
+        {
+          "severity": "P0",
+          "code": "early_bird_dates",
+          "message": "Early Bird 2026-08-30..2027-05-01 != 2027-04-25..2027-05-01",
+          "fixOwner": "airtable"
+        }
+      ]
+    },
+    {
+      "id": "live.pha_schedule",
+      "pass": false,
+      "status": "FAIL",
+      "activeCount": 18,
+      "byWeek": {
+        "Week 5": 2,
+        "Week 8": 2,
+        "Early Bird": 4,
+        "Week 3": 2,
+        "Week 6": 2,
+        "Week 4": 2,
+        "Week 7": 2,
+        "Week 2": 2
+      },
+      "findings": [
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Early Bird expected 2 active PHA, got 4.",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Week 1 expected 2 active PHA, got 0.",
+          "fixOwner": "airtable"
+        }
+      ]
+    }
+  ],
+  "defects": [
+    {
+      "severity": "P0",
+      "code": "early_bird_dates",
+      "message": "Early Bird 2026-08-30..2027-05-01 != 2027-04-25..2027-05-01",
+      "fixOwner": "airtable"
+    },
+    {
+      "severity": "P1",
+      "code": "homework_week_slot_count",
+      "message": "Early Bird expected 2 active PHA, got 4.",
+      "fixOwner": "airtable"
+    },
+    {
+      "severity": "P1",
+      "code": "homework_week_slot_count",
+      "message": "Week 1 expected 2 active PHA, got 0.",
+      "fixOwner": "airtable"
+    }
+  ],
+  "passed": false,
+  "audit": {
+    "weekAudit": {
+      "ok": false,
+      "findings": [
+        {
+          "severity": "P0",
+          "code": "early_bird_dates",
+          "message": "Early Bird 2026-08-30..2027-05-01 != 2027-04-25..2027-05-01",
+          "fixOwner": "airtable"
+        }
+      ],
+      "policy": {
+        "challengeYear": "2026-2027",
+        "earlyBirdStart": "2027-04-25",
+        "earlyBirdEnd": "2027-05-01",
+        "week1Start": "2027-05-02",
+        "programEnd": "2027-06-30",
+        "commonHomeworkDueDate": "2027-06-29",
+        "earlyBirdCountable": true,
+        "regularHomeworkWeeks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "week9HasHomework": false,
+        "expectedActiveHomeworkAssignmentCount": 18,
+        "homeworkSlotsPerHomeworkWeek": 2
+      }
+    },
+    "phaAudit": {
+      "ok": false,
+      "activeCount": 18,
+      "expectedActiveCount": 18,
+      "byWeek": {
+        "Week 5": 2,
+        "Week 8": 2,
+        "Early Bird": 4,
+        "Week 3": 2,
+        "Week 6": 2,
+        "Week 4": 2,
+        "Week 7": 2,
+        "Week 2": 2
+      },
+      "findings": [
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Early Bird expected 2 active PHA, got 4.",
+          "fixOwner": "airtable"
+        },
+        {
+          "severity": "P1",
+          "code": "homework_week_slot_count",
+          "message": "Week 1 expected 2 active PHA, got 0.",
+          "fixOwner": "airtable"
+        }
+      ],
+      "policy": {
+        "challengeYear": "2026-2027",
+        "earlyBirdStart": "2027-04-25",
+        "earlyBirdEnd": "2027-05-01",
+        "week1Start": "2027-05-02",
+        "programEnd": "2027-06-30",
+        "commonHomeworkDueDate": "2027-06-29",
+        "earlyBirdCountable": true,
+        "regularHomeworkWeeks": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "week9HasHomework": false,
+        "expectedActiveHomeworkAssignmentCount": 18,
+        "homeworkSlotsPerHomeworkWeek": 2
+      }
+    },
+    "weekCount": 11,
+    "phaActiveCount": 18,
+    "phaInactiveCount": 0,
+    "earlyBirdEval": {
+      "activityDateKey": "2027-04-28",
+      "inEarlyBirdWindow": true,
+      "countable": true,
+      "note": "Activity Date falls in Early Bird window (countable)."
+    },
+    "lateWeekEval": {
+      "creditEligible": true,
+      "timingStatus": "on_time",
+      "dueDateKey": "2027-06-29",
+      "reason": "",
+      "afterLinkedWeekEnd": true,
+      "expectedCreditWhenBeforeCommonDue": true
+    }
+  },
+  "finishedAt": "2026-09-01T18:32:47.816Z"
+}

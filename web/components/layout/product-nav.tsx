@@ -39,7 +39,7 @@ function pathMatches(pathname: string, href: string): boolean {
 
 function navLinkClass(active: boolean) {
   return cn(
-    "inline-flex min-h-11 shrink-0 items-center rounded-md px-3.5 py-2.5 text-[0.9375rem] font-semibold transition",
+    "inline-flex min-h-11 shrink-0 items-center rounded-md px-3.5 py-2.5 text-[0.9375rem] font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/40",
     active
       ? "bg-brand-blue text-brand-white shadow-site-sm ring-1 ring-brand-orange/45"
       : "text-foreground hover:bg-brand-light-gray hover:text-foreground",
@@ -131,10 +131,11 @@ export function ProductNav({ productName, items }: ProductNavProps) {
   return (
     <>
       {/* Desktop / tablet navigation */}
-      <nav
-        className="hidden items-center gap-2 md:flex md:flex-wrap"
-        aria-label={landmark}
-      >
+      <div className="hidden min-w-0 md:block">
+        <nav
+          className="flex min-w-0 items-center gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] md:flex-nowrap [&::-webkit-scrollbar]:hidden"
+          aria-label={landmark}
+        >
         <p className="sr-only">
           Primary links stay visible. Resources and additional sections are in dropdown menus.
         </p>
@@ -211,7 +212,8 @@ export function ProductNav({ productName, items }: ProductNavProps) {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : null}
-      </nav>
+        </nav>
+      </div>
 
       {/* Mobile menu control */}
       <div className="md:hidden">

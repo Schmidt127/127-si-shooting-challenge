@@ -7,10 +7,11 @@ import { AccentRail, CtaLink, ProgramPage } from "@/components/site";
 import { ProgramFeatureBanner } from "@/components/site/program-feature-image";
 import { FEATURE_BANNER_ARIA } from "@/lib/seo/program-facts";
 import { EmptyState, ErrorState } from "@/components/ui";
+import { scCardPanel } from "@/components/ui/sc-card";
 import { getLevelDisplayNumber, summarizeGateCriteria, compareLevels } from "@/lib/data/levels";
 import { formatXp } from "@/lib/formatters";
 import { getLevelStyle } from "@/lib/leaderboard/level-styles";
-import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
+import { EMPTY_STATE_COPY, LEVEL_GATE_COPY } from "@/lib/release/public-surface";
 import type { LevelDefinition, LevelLadderData } from "@/types/levels";
 
 import { LevelBadge } from "../leaderboard/level-badge";
@@ -114,10 +115,10 @@ function LevelLadderCard({
             <XpMeter xp={level.xpRequired} maxXp={maxXp} className="mt-0.5" />
             <div className="mt-1.5" data-testid="levels-gate-preview">
               <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
-                Gate requirements
+                {LEVEL_GATE_COPY.cardLabel}
               </p>
               <p className="mt-0.5 text-xs leading-relaxed text-foreground sm:text-sm">
-                {gatePreview || "XP threshold only — open this level for any configured gates."}
+                {gatePreview || LEVEL_GATE_COPY.cardFallback}
               </p>
             </div>
             {nextLevelName ? (
@@ -167,10 +168,7 @@ function LevelsTerminology() {
       </div>
       <dl className="grid gap-3 sm:grid-cols-2">
         {LEVELS_TERMINOLOGY.map((item) => (
-          <div
-            key={item.term}
-            className="rounded-lg border border-border bg-card p-4 shadow-site-sm"
-          >
+          <div key={item.term} className={scCardPanel()}>
             <dt className="text-sm font-semibold text-foreground">{item.term}</dt>
             <dd className="mt-1.5 text-sm leading-relaxed text-foreground">{item.definition}</dd>
           </div>
@@ -198,10 +196,7 @@ function LevelsOrientation() {
       </div>
       <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {LEVELS_ORIENTATION_STEPS.map((step, index) => (
-          <li
-            key={step.title}
-            className="rounded-lg border border-border bg-card p-4 shadow-site-sm"
-          >
+          <li key={step.title} className={scCardPanel()}>
             <p className="font-mono text-xs font-semibold text-brand-blue">0{index + 1}</p>
             <h3 className="mt-3 text-base font-semibold text-foreground">{step.title}</h3>
             <p className="mt-2 text-sm leading-relaxed text-foreground">{step.description}</p>

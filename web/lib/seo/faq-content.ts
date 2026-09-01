@@ -29,7 +29,7 @@ export const PROGRAM_FAQ_ITEMS: FaqItem[] = [
   {
     id: "grades-served",
     question: "What grades does the program serve?",
-    answer: `The Shooting Challenge is designed for boys and girls in ${PROGRAM_GRADES_SERVED}. Leaderboard grade bands may also display enrolled athletes in adjacent school levels when they are active in the program.`,
+    answer: `The Shooting Challenge is designed for boys and girls in ${PROGRAM_GRADES_SERVED}. Eligibility is based on grade level — not where you live. Leaderboard grade bands group athletes for standings display only; they may include enrolled athletes in adjacent school levels when those athletes are active in the program. Adjacent levels on the leaderboard do not expand who may register.`,
   },
   {
     id: "boys-and-girls",
@@ -68,7 +68,7 @@ export const PROGRAM_FAQ_ITEMS: FaqItem[] = [
     id: "video-feedback",
     question: "Is video feedback available?",
     answer:
-      "Yes. Athletes submit shooting videos during the challenge, and coaches review them to provide feedback on form and habits. Feedback is part of the program — not an on-demand private lesson service — and it is not a substitute for in-person coaching outside your own training location.",
+      "Yes. Athletes submit shooting videos during the challenge, and coaches review them on a challenge schedule — not as instant replies. Feedback is part of the program — not an on-demand private lesson service — and it is not a substitute for in-person coaching outside your own training location.",
   },
   {
     id: "zoom",

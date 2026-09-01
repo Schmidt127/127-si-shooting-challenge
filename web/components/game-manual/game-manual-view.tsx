@@ -5,8 +5,10 @@ import { MediaPanel } from "@/components/catalog/media-panel";
 import { IconBook } from "@/components/icons/shoot-icons";
 import { CtaLink, ProgramPage, SectionMarker } from "@/components/site";
 import { EmptyState } from "@/components/ui";
+import { scCardPanel } from "@/components/ui/sc-card";
 import type { XpRuleCatalogData } from "@/lib/data/xp-rules";
 import type { LevelLadderData } from "@/types/levels";
+import { ACCESSIBILITY_LABELS } from "@/lib/release/public-surface";
 import {
   GAME_MANUAL_QUICK_START,
   GAME_MANUAL_QUICK_START_TITLE,
@@ -154,17 +156,17 @@ export function GameManualView({ manualUrl, xpCatalog, levels }: GameManualViewP
       heroVariant="light"
       ambientVariant="default"
     >
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-6xl" aria-label={ACCESSIBILITY_LABELS.gameManualConfig}>
         {manualUrl ? (
           <MediaPanel
             url={manualUrl}
             title="Shooting Challenge Game Manual"
             openLabel="Open game manual"
-            externalHint="The manual is hosted on Adobe. Open it in a new tab — Adobe blocks embedding on other sites, which causes the Bad Gateway error in iframes."
+            externalHint="The manual is hosted on Adobe Publish Online. Open it in a new tab — Adobe blocks embedding on other sites."
           />
         ) : (
           <section
-            className="rounded-lg border border-border bg-card p-5 sm:p-6"
+            className={scCardPanel()}
             aria-labelledby="game-manual-link-status"
           >
             <div className="flex items-start gap-4">

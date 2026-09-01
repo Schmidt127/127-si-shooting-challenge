@@ -18,6 +18,14 @@ describe("isAdobeDocumentUrl", () => {
     ).toBe(true);
   });
 
+  it("detects Adobe Publish Online (indd) links", () => {
+    expect(
+      isAdobeDocumentUrl(
+        "https://indd.adobe.com/view/f3dcc153-0837-461b-9e81-e3fa11558e84",
+      ),
+    ).toBe(true);
+  });
+
   it("ignores youtube links", () => {
     expect(isAdobeDocumentUrl("https://www.youtube.com/watch?v=abc")).toBe(false);
   });

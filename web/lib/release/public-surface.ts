@@ -134,4 +134,20 @@ export const ACCESSIBILITY_LABELS = {
   mobileMenuOpen: "Open navigation menu",
   mobileMenuClose: "Close navigation menu",
   mobileMenuDialog: "Shooting Challenge mobile navigation",
+  homeworkCatalog: "Published homework assignments by week",
+  achievementsCatalog: "Achievement definitions by category",
+  zoomCatalog: "Zoom meetings by week",
+  gameManualConfig: "Live game manual configuration sections",
+} as const;
+
+/** User-facing gate copy shared across levels catalog and detail pages (SC-106). */
+export const LEVEL_GATE_COPY = {
+  cardLabel: "Advance requirements",
+  cardFallback:
+    "No extra gates for this tier — reach the lifetime XP threshold shown above to advance.",
+  detailEmpty:
+    "No published advance requirements beyond XP for this tier. Lifetime XP thresholds still apply; Zoom, Perfect Week, or other gates appear here when configured for the season.",
+  notFoundTitle: "Level unavailable",
+  notFoundDescription:
+    "This tier is not published, may have been retired, or the link is outdated. Browse the level ladder for active tiers.",
 } as const;

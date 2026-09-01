@@ -23,4 +23,12 @@ describe("Shooting Challenge home page layout", () => {
     expect(HOME_SOURCE).not.toContain('eyebrow="Live leaders"');
     expect(HOME_SOURCE).not.toContain('eyebrow="Explore the challenge"');
   });
+
+  it("includes a parent section with homework, FAQ, and video feedback links", () => {
+    expect(HOME_SOURCE).toContain('eyebrow="For parents and families"');
+    expect(HOME_SOURCE).toContain('data-testid="what-parents-should-know"');
+    expect(HOME_SOURCE).toContain("Video feedback expectations");
+    expect(HOME_SOURCE).toContain('href="/faq#video-feedback"');
+    expect(HOME_SOURCE).toContain("challenge schedule");
+  });
 });

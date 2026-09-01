@@ -11,6 +11,7 @@ import { EmptyState } from "@/components/ui";
 import { getLevelDisplayNumber } from "@/lib/data/levels";
 import { formatXp } from "@/lib/formatters";
 import { getLevelStyle } from "@/lib/leaderboard/level-styles";
+import { LEVEL_GATE_COPY } from "@/lib/release/public-surface";
 import { cn } from "@/lib/utils";
 import type { LevelDefinition } from "@/types/levels";
 
@@ -109,9 +110,7 @@ export function LevelDetailView({ level }: LevelDetailViewProps) {
           <RichContent text={level.gateCriteria} className="text-foreground/90" />
         ) : (
           <p className="mt-4 text-sm text-muted" role="status">
-            Detailed advance requirements are not published for this level yet. The XP thresholds
-            above still apply. Zoom and Perfect Week requirements appear here when published for
-            the season.
+            {LEVEL_GATE_COPY.detailEmpty}
           </p>
         )}
       </section>
@@ -140,8 +139,8 @@ export function LevelNotFoundState() {
       ambientVariant="levels"
     >
       <EmptyState
-        title="Level not found"
-        description="This tier may be inactive or the link is incorrect."
+        title={LEVEL_GATE_COPY.notFoundTitle}
+        description={LEVEL_GATE_COPY.notFoundDescription}
         titleAs="h1"
         action={
           <CtaLink href="/levels" variant="secondary">

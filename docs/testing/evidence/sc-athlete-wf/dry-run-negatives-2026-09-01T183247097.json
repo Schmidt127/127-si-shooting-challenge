@@ -1,0 +1,266 @@
+{
+  "harness": "SC-ATHLETE-WF-001",
+  "case": "negatives",
+  "mode": "dry-run",
+  "startedAt": "2026-09-01T18:32:47.095Z",
+  "created": {},
+  "checks": [
+    {
+      "id": "dry-run.plan",
+      "status": "PASS",
+      "pass": true,
+      "expected": "plan emitted",
+      "actual": "submissions=7"
+    }
+  ],
+  "defects": [],
+  "negatives": [
+    {
+      "id": "NEG-01",
+      "name": "missing-enrollment",
+      "stage": 17,
+      "expected": "010/005 skip or error; no orphan XP",
+      "harnessAction": "plan-only",
+      "severityIfBroken": "P0"
+    },
+    {
+      "id": "NEG-02",
+      "name": "missing-week",
+      "stage": 17,
+      "expected": "031/005 fail closed or skip without inventing Week",
+      "harnessAction": "plan-only",
+      "severityIfBroken": "P0"
+    },
+    {
+      "id": "NEG-03",
+      "name": "invalid-asset-destination",
+      "stage": 17,
+      "expected": "020/112 skip or error; no HC/VF create",
+      "harnessAction": "plan-only",
+      "severityIfBroken": "P1"
+    },
+    {
+      "id": "NEG-04",
+      "name": "duplicate-submission-replay",
+      "stage": 17,
+      "expected": "010 skip/repair; same Source Key; no second XP",
+      "harnessAction": "apply-poll",
+      "severityIfBroken": "P0"
+    },
+    {
+      "id": "NEG-05",
+      "name": "incomplete-homework",
+      "stage": 17,
+      "expected": "065 does not award HOMEWORK_XP when not satisfactory",
+      "harnessAction": "apply-poll",
+      "severityIfBroken": "P1"
+    },
+    {
+      "id": "NEG-06",
+      "name": "ineligible-perfect-week",
+      "stage": 17,
+      "expected": "057 does not set Eligible; no 058/059 award",
+      "harnessAction": "plan-only (SC-PW-E2E owns live PW)",
+      "severityIfBroken": "P1"
+    },
+    {
+      "id": "NEG-07",
+      "name": "inactive-enrollment",
+      "stage": 17,
+      "expected": "writers skip; no XP against inactive enrollment",
+      "harnessAction": "plan-only (do not deactivate gated enrollment)",
+      "severityIfBroken": "P0"
+    },
+    {
+      "id": "NEG-08",
+      "name": "outside-season-window",
+      "stage": 17,
+      "expected": "future Activity Date → Count This Submission? = 0; no counted XP",
+      "harnessAction": "offline-eval",
+      "severityIfBroken": "P1"
+    }
+  ],
+  "cleanup": null,
+  "passed": true,
+  "blockers": [],
+  "plan": {
+    "mode": "dry-run",
+    "harness": "SC-ATHLETE-WF-001",
+    "case": "negatives",
+    "enrollmentId": "recNu6fcBpF1GG3u5",
+    "weekName": "ATHWF|2026-09-01|negatives|WEEK",
+    "weekDates": [
+      "2026-06-01",
+      "2026-06-02",
+      "2026-06-03",
+      "2026-06-04",
+      "2026-06-05",
+      "2026-06-06",
+      "2026-06-07"
+    ],
+    "submissionCount": 7,
+    "uniqueActivityDates": 6,
+    "streakExpectation": {
+      "current": 6,
+      "longest": 6,
+      "segments": [
+        [
+          "2026-06-01",
+          "2026-06-02",
+          "2026-06-03",
+          "2026-06-04",
+          "2026-06-05",
+          "2026-06-06"
+        ]
+      ],
+      "dates": [
+        "2026-06-01",
+        "2026-06-02",
+        "2026-06-03",
+        "2026-06-04",
+        "2026-06-05",
+        "2026-06-06"
+      ]
+    },
+    "creates": [
+      "Weeks (ATHWF| labeled)",
+      "Weekly Athlete Summary",
+      "7 Submissions",
+      "Video Feedback (disposable)",
+      "Homework Completions (disposable satisfactory)"
+    ],
+    "neverCreates": [
+      "Email Handoff Queue",
+      "Communications Hub send",
+      "Resend / Make / Gmail",
+      "Real athlete enrollments",
+      "Operational Weeks (non-ATHWF)"
+    ],
+    "stages": [
+      {
+        "id": 1,
+        "name": "enrollment",
+        "planned": true
+      },
+      {
+        "id": 2,
+        "name": "week-was",
+        "planned": true
+      },
+      {
+        "id": 3,
+        "name": "submissions",
+        "planned": true
+      },
+      {
+        "id": 4,
+        "name": "submission-variants",
+        "planned": true
+      },
+      {
+        "id": 5,
+        "name": "submission-xp-verify",
+        "planned": true
+      },
+      {
+        "id": 6,
+        "name": "assets",
+        "planned": false
+      },
+      {
+        "id": 7,
+        "name": "asset-routing",
+        "planned": false
+      },
+      {
+        "id": 8,
+        "name": "homework-dedupe",
+        "planned": false
+      },
+      {
+        "id": 9,
+        "name": "homework-xp",
+        "planned": false
+      },
+      {
+        "id": 10,
+        "name": "video-xp",
+        "planned": false
+      },
+      {
+        "id": 11,
+        "name": "streaks",
+        "planned": false
+      },
+      {
+        "id": 12,
+        "name": "streak-xp",
+        "planned": false
+      },
+      {
+        "id": 13,
+        "name": "levels",
+        "planned": false
+      },
+      {
+        "id": 14,
+        "name": "was-values",
+        "planned": false
+      },
+      {
+        "id": 15,
+        "name": "xp-event-fields",
+        "planned": true
+      },
+      {
+        "id": 16,
+        "name": "replay-dedupe",
+        "planned": true
+      },
+      {
+        "id": 17,
+        "name": "negatives",
+        "planned": true
+      }
+    ],
+    "safety": {
+      "prefix": "ATHWF|",
+      "gatedEnrollmentOnly": "recNu6fcBpF1GG3u5",
+      "noEmail": true,
+      "noFormulaWrites": true,
+      "noSeasonSimulation": true,
+      "noScPwE2eApply": true
+    }
+  },
+  "streakOffline": {
+    "current": 6,
+    "longest": 6,
+    "segments": [
+      [
+        "2026-06-01",
+        "2026-06-02",
+        "2026-06-03",
+        "2026-06-04",
+        "2026-06-05",
+        "2026-06-06"
+      ]
+    ],
+    "dates": [
+      "2026-06-01",
+      "2026-06-02",
+      "2026-06-03",
+      "2026-06-04",
+      "2026-06-05",
+      "2026-06-06"
+    ]
+  },
+  "policyNotes": [
+    {
+      "submissionXpCount": 2,
+      "note": "Multiple SUBMISSION_XP on same Denver day — EXPECTED (once per Count It submission; MRW-I13 closed)",
+      "policyOpen": false,
+      "sameDayMultipleExpected": true
+    }
+  ],
+  "finishedAt": "2026-09-01T18:32:47.096Z"
+}
