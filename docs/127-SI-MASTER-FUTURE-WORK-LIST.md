@@ -37,7 +37,7 @@ Use an early-bird registration period for the 2026–2027 challenge. Dates, pric
 
 **Preferred program name:** Jr. Referee Clinic. **Acceptable short form** where space is limited: Jr. Ref Clinic. **Never use:** Jr. Ref.
 
-**Public taxonomy:** Use **Youth Programs** (not “Youth opportunities”) for Shooting Challenge, Dribbling Challenge, and Jr. Referee Clinic. Use **Coach Tools** for Brackets, Team Shot Tracker, and State Standings.
+**Public taxonomy:** Use **Youth Programs** (not “Youth opportunities”) for Shooting Challenge, Dribbling Challenge, and Jr. Referee Clinic. Use **Coach Tools** for Brackets, Team Shot Tracker, and **State Rankings** (not “State Standings”).
 
 ### SC-034 / Perfect Week config closeout (2026-08-27)
 
@@ -695,8 +695,8 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 **Approved requirements:**
 
 - **Youth Programs:** Shooting Challenge, Dribbling Challenge, Jr. Referee Clinic  
-- **Coach Tools:** Brackets, Team Shot Tracker, State Standings  
-- Proposed copy: “Youth programs include Shooting Challenge, Dribbling Challenge, and Jr. Referee Clinic. Coach tools are also available, including Brackets, Team Shot Tracker, and State Standings.”  
+- **Coach Tools:** Brackets, Team Shot Tracker, State Rankings  
+- Proposed copy: “Youth programs include Shooting Challenge, Dribbling Challenge, and Jr. Referee Clinic. Coach tools are also available, including Brackets, Team Shot Tracker, and State Rankings.”  
 - Use **“Youth Programs”** consistently; do not use “Youth opportunities.”
 
 **Dependencies / risks:** Copy must stay consistent with FUT-034 naming and FUT-036 program cards. Landing repo ownership — do not edit this repo’s `web/` for this item unless Mike confirms the content also lives under `/shoot`.
@@ -758,7 +758,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 
 - Completely redesign Upcoming Programs with attractive, clearly differentiated program cards.  
 - Each card supports: program image, program name, short description, category label, availability/status, clear CTA, consistent but engaging design.  
-- Include all six: Shooting Challenge, Dribbling Challenge, Jr. Referee Clinic, Brackets, Team Shot Tracker, State Standings.  
+- Include all six: Shooting Challenge, Dribbling Challenge, Jr. Referee Clinic, Brackets, Team Shot Tracker, State Rankings.  
 - Clearly distinguish **Youth Programs** from **Coach Tools**.
 
 **Dependencies / risks:** FUT-037 images; FUT-034 naming; CTA destinations and availability status per program (**decision needed** per offering).
