@@ -1,6 +1,6 @@
 # Recorded Zoom half-XP — design brief (proposed)
 
-**Status:** Decision recorded (Mike 2026-08-27) — **repo prep shipped (2026-08-30)** — automation slot + XP Reward Rule row still Mike decisions  
+**Status:** Decision recorded (Mike 2026-08-27) — **production-ready script shipped (2026-09-01)** — automation slot + XP Reward Rule row + DEV paste still Mike decisions  
 **Backlog ID:** **SC-147** (Recorded Zoom half-XP writer) · **MRW-H10**  
 **Do not paste live automation until Mike picks slot, confirms `ZOOM_RECORDING` rule row, and approves DEV install.
 
@@ -54,13 +54,15 @@ From [`127-SI-MASTER-FUTURE-WORK-LIST.md`](../127-SI-MASTER-FUTURE-WORK-LIST.md)
 2. Confirm XP Reward Rules row for recorded credit (amount + Rule Key).
 3. Choose automation slot (new number vs resurrect Stage 17 writer) — **do not** overload 117 email.
 
-## Repo artifacts shipped (2026-08-30)
+## Repo artifacts shipped
 
 | Artifact | Path |
 |----------|------|
 | Pure helpers + conflict matrix | `airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.js` |
 | Offline contract tests | `airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.test.js` |
-| Automation script **DRAFT** (slot TBD) | `airtable/automations/shooting-challenge/drafts/sc-147-zoom-recording-half-xp.js` |
+| **Production-ready automation script (v1.0, slot TBD → placeholder 147)** | `airtable/automations/shooting-challenge/147-zoom-recording-credit-award-half-xp.js` |
+| Promotion checklist | `docs/deploy-checklists/SC-147-zoom-recording-half-xp.md` |
+| Superseded draft (historical) | `airtable/automations/shooting-challenge/drafts/sc-147-zoom-recording-half-xp.js` |
 | Agent 4 suite wiring | `tools/testing/run-agent4-suite.js` → `sc-147-zoom-recording-credit` |
 
 **Test coverage (offline):**
