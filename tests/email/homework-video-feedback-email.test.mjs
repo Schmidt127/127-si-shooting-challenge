@@ -87,7 +87,7 @@ test("homework and video templates share approved header and footer", async () =
   const video = await renderTemplateCandidate("VIDEO_FEEDBACK", videoSample);
   for (const rendered of [homework, video]) {
     assert.match(rendered.html, /127 Sports Intensity/);
-    assert.match(rendered.html, /Education/);
+    assert.match(rendered.html, /Fairfield Basketball Club/);
     assert.match(rendered.html, /fairfieldbasketballclub\.com\/shoot/);
     assert.match(rendered.html, /Shooting Challenge Page/);
     assert.match(rendered.html, /Daily Submission Form/);
