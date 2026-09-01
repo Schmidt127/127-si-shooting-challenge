@@ -55,8 +55,47 @@ Live after delete: **1363** fields / **35** tables · SA **90** fields
 | Public Missing* on Enrollments | Keep |
 | Automation 075 | Remains retired/absent |
 
-## Later batches (not this closeout)
+## Batch 2 — AUDIT READY (2026-09-01)
 
-- Remaining Google Drive legacy fields after formula retargets (see inventory).
-- Other `unknown` / duplicate classifications from the post-batch-1 inventory.
-- Other-table text stubs named `XP Events copy` (e.g. Athlete Achievement Unlocks, Weeks) — **not** the SA stubs deleted above.
+Candidate queue complete; Mike UI delete **pending**. No field deletes performed in this audit pass.
+
+**SNAPSHOT DATE:** 2026-08-31 (`docs/audits/fut-002-unused-field-inventory.json` + `airtable/schema/snapshots/prod-20260831-fut002-batch1/`). Live after SA stubs: **1363** fields / **35** tables.
+
+| Metric | Count |
+|--------|------:|
+| Batch 2 candidates reviewed | **303** |
+| Quarantine-ready (Phase A text stubs) | **5** |
+| Deferred (`unknown` / interface review) | **279** |
+| Config Drive roots (hard stop) | **2** |
+
+### Quarantine-ready — Phase A (text stubs)
+
+| Table | Field | Field ID |
+|-------|-------|----------|
+| Athlete Achievement Unlocks | XP Events copy | `fldWnU9gJCsTmTLpK` |
+| Shot Milestones | XP Events copy | `fldVcHPjvuabirn6E` |
+| Video Feedback | DELETE MAYBE - XP Events copy | `fldTJd1LkzRRmBiAZ` |
+| Weeks | Video Feedback (text stub) | `fld8tdkjgyYmrs4Eq` |
+| Weeks | Submission Assets (text stub) | `fldo906P9t7nj9xmn` |
+
+**Not in snapshot:** Weeks `XP Events copy` text stub (absent post-batch-1; real `XP Events` **link** on Weeks is **keep**).
+
+### Deferred
+
+- **Config** `Root Google Drive Folder ID` / `Root Google Drive Folder Link` — only remaining Google Drive legacy in post-batch-1 snapshot; hard stop until storage cutover closed.
+- **279 unknown** fields — OMNI interface/view review before quarantine (see [`FUT-002-batch2-candidate-queue.md`](./FUT-002-batch2-candidate-queue.md)).
+- Most SA/HC/VF Google Drive fields were **already removed** during 2026-08-30 cleanup (Asset Key retargeted).
+
+### Artifacts
+
+| Artifact | Path |
+|----------|------|
+| Candidate queue | [`docs/audits/FUT-002-batch2-candidate-queue.md`](./FUT-002-batch2-candidate-queue.md) |
+| Quarantine JSON | [`docs/audits/fut-002-batch2-candidates.json`](./fut-002-batch2-candidates.json) |
+| Operator packet | [`docs/deploy-checklists/FUT-002-batch2-quarantined-field-delete.md`](../deploy-checklists/FUT-002-batch2-quarantined-field-delete.md) |
+| Tool | `tools/airtable/fut_002_batch2_candidates.py` |
+
+## Later batches (after batch 2 Phase A delete)
+
+- OMNI review of `unknown` clusters (Zoom Meetings, Final Reflection Quiz, Weekly Athlete Summary, etc.).
+- Config Drive root retirement after storage cutover sign-off.
