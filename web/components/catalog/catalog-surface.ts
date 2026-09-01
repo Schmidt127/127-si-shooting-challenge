@@ -13,7 +13,7 @@ type CatalogCardOptions = {
 /** Clickable catalog list cards (homework, levels, tutorials). */
 export function catalogCardClass(options?: CatalogCardOptions): string {
   const base = cn(
-    "overflow-hidden rounded-lg border border-border bg-card text-card-foreground shadow-site-sm transition duration-200",
+    "overflow-hidden rounded-[var(--sc-card-radius)] border border-border bg-card text-card-foreground shadow-site-sm transition duration-200",
     "hover:-translate-y-0.5 hover:border-brand-blue/35 hover:shadow-site-md",
     "focus-within:ring-2 focus-within:ring-brand-orange/70",
   );
@@ -44,12 +44,12 @@ export function catalogCardClass(options?: CatalogCardOptions): string {
 export function catalogHeroClass(options?: { contrast?: boolean }): string {
   if (options?.contrast) {
     return cn(
-      "overflow-hidden rounded-lg sc-contrast border shadow-site-md",
+      "overflow-hidden rounded-[var(--sc-card-radius)] sc-contrast border shadow-site-md",
     );
   }
 
   return cn(
-    "overflow-hidden rounded-lg border border-border bg-card shadow-site-sm",
+    "overflow-hidden rounded-[var(--sc-card-radius)] border border-border bg-card shadow-site-sm",
   );
 }
 
@@ -63,40 +63,40 @@ export function catalogPanelClass(options?: CatalogPanelOptions): string {
 
   if (tint === "accent") {
     return cn(
-      "rounded-lg border border-brand-orange/30 bg-brand-orange/[0.07] p-5 shadow-site-sm sm:p-6",
+      "rounded-[var(--sc-card-radius)] border border-[var(--sc-card-accent-border)] bg-[var(--sc-card-accent-bg)] p-[var(--sc-card-panel-padding)] shadow-site-sm sm:p-[var(--sc-card-panel-padding-md)]",
     );
   }
 
   if (tint === "blue") {
     return cn(
-      "rounded-lg border border-brand-blue/25 bg-brand-blue/[0.05] p-5 shadow-site-sm sm:p-6",
+      "rounded-[var(--sc-card-radius)] border border-[var(--sc-card-blue-border)] bg-[var(--sc-card-blue-bg)] p-[var(--sc-card-panel-padding)] shadow-site-sm sm:p-[var(--sc-card-panel-padding-md)]",
     );
   }
 
   if (tint === "contrast") {
     return cn(
-      "rounded-lg border sc-contrast p-5 shadow-site-md sm:p-6",
+      "rounded-[var(--sc-card-radius)] border sc-contrast p-[var(--sc-card-panel-padding)] shadow-site-md sm:p-[var(--sc-card-panel-padding-md)]",
     );
   }
 
   return cn(
-    "rounded-lg border border-border bg-card p-5 shadow-site-sm sm:p-6",
+    "rounded-[var(--sc-card-radius)] border border-border bg-card p-[var(--sc-card-panel-padding)] shadow-site-sm sm:p-[var(--sc-card-panel-padding-md)]",
   );
 }
 
 /** Small inset tiles (stat blocks, download rows). */
 export function catalogInsetClass(options?: { contrast?: boolean }): string {
   if (options?.contrast) {
-    return cn("rounded-md border sc-contrast");
+    return cn("rounded-[var(--sc-card-radius-sm)] border sc-contrast");
   }
 
-  return cn("rounded-md border border-border-subtle bg-brand-light-gray");
+  return cn("rounded-[var(--sc-card-radius-sm)] border border-border-subtle bg-brand-light-gray");
 }
 
 /** Empty / error state panels. */
 export function catalogStatePanelClass(error = false): string {
   return cn(
-    "max-w-md rounded-lg border border-border bg-card p-8 text-center shadow-site-sm",
+    "max-w-md rounded-[var(--sc-card-radius)] border border-border bg-card p-8 text-center shadow-site-sm",
     error ? "border-red-400/50" : "",
   );
 }

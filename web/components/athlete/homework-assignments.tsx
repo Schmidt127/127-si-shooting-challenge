@@ -4,7 +4,14 @@ import Link from "next/link";
 
 import { CoachFeedbackQuote } from "@/components/coach-feedback-quote";
 import { StatusBadge, type StatusBadgeTone } from "@/components/ui/status-badge";
+import {
+  scCardEmpty,
+  scCardSectionEyebrow,
+  scCardSectionTitle,
+  scCardStandalone,
+} from "@/components/ui/sc-card";
 import { withBasePath } from "@/lib/app-config";
+import { cn } from "@/lib/utils";
 import { formatXp } from "@/lib/formatters";
 import { PROFILE_HOMEWORK_UNAVAILABLE_MESSAGE } from "@/lib/formatters/profile-freshness";
 import type {
@@ -71,10 +78,10 @@ export function HomeworkAssignments({
     <section aria-labelledby="homework-assignments-heading" data-testid="homework-assignments">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
-          <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-brand-blue">Homework</p>
+          <p className={scCardSectionEyebrow()}>Homework</p>
           <h2
             id="homework-assignments-heading"
-            className="mt-1 text-xl font-bold text-foreground sm:text-2xl"
+            className={scCardSectionTitle()}
           >
             Assignments
           </h2>
@@ -96,7 +103,7 @@ export function HomeworkAssignments({
 
       {loadUnavailable ? (
         <p
-          className="mt-4 rounded-md border border-amber-200 bg-amber-50 px-4 py-5 text-sm text-amber-950"
+          className="mt-4 rounded-[var(--sc-card-radius)] border border-amber-200 bg-amber-50 px-4 py-5 text-sm text-amber-950"
           role="status"
           data-testid="homework-assignments-unavailable"
         >
@@ -104,7 +111,7 @@ export function HomeworkAssignments({
         </p>
       ) : assignments.length === 0 ? (
         <p
-          className="mt-4 border border-dashed border-border bg-brand-light-gray/50 px-4 py-5 text-sm text-muted"
+          className={cn(scCardEmpty(), "mt-4")}
           data-testid="homework-assignments-empty"
         >
           No homework assignments are scheduled yet for this athlete&apos;s grade band.
@@ -129,7 +136,10 @@ export function HomeworkAssignments({
                 key={assignment.key}
                 data-testid="homework-assignment-row"
                 data-assignment-name={assignment.assignmentName}
-                className="grid gap-3 border border-border bg-card px-4 py-4 sm:grid-cols-[minmax(0,1.6fr)_repeat(4,minmax(0,1fr))] sm:items-start sm:px-5"
+                className={cn(
+                  scCardStandalone(),
+                  "grid gap-3 sm:grid-cols-[minmax(0,1.6fr)_repeat(4,minmax(0,1fr))] sm:items-start",
+                )}
               >
                 <div className="min-w-0">
                   {title}

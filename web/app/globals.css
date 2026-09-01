@@ -68,6 +68,32 @@
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
 
+  /*
+   * SC card design system (FUT-043) — web source of truth.
+   * Hub email mirror: communications/emails/lib/card-tokens.js
+   */
+  --sc-card-radius: var(--radius-lg);
+  --sc-card-radius-sm: var(--radius-md);
+  --sc-card-border-color: var(--border);
+  --sc-card-bg: var(--card);
+  --sc-card-shadow: var(--site-shadow-sm);
+  --sc-card-padding-x: 1rem;
+  --sc-card-padding-x-md: 1.25rem;
+  --sc-card-row-padding-y: 0.75rem;
+  --sc-card-panel-padding: 1.25rem;
+  --sc-card-panel-padding-md: 1.5rem;
+  --sc-card-heading-size: 1rem;
+  --sc-card-heading-weight: 600;
+  --sc-card-section-title-size: 1.25rem;
+  --sc-card-section-title-weight: 700;
+  --sc-card-eyebrow-size: 0.6875rem;
+  --sc-card-eyebrow-weight: 700;
+  --sc-card-eyebrow-tracking: 0.22em;
+  --sc-card-accent-bg: color-mix(in srgb, var(--brand-orange) 7%, var(--brand-white));
+  --sc-card-accent-border: color-mix(in srgb, var(--brand-orange) 30%, transparent);
+  --sc-card-blue-bg: color-mix(in srgb, var(--brand-blue) 5%, var(--brand-white));
+  --sc-card-blue-border: color-mix(in srgb, var(--brand-blue) 25%, transparent);
+
   /* Focus — visible keyboard indicator (not color-only) */
   --focus-ring: 0 0 0 2px var(--background), 0 0 0 4px var(--brand-orange);
 
