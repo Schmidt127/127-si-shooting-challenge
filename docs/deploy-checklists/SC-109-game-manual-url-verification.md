@@ -3,7 +3,7 @@
 | Field | Value |
 |-------|--------|
 | Date | 2026-08-30 |
-| Status | **Ready for Mike review** — repo page live; Production PDF env unset |
+| Status | **Approved URL in repo** — Mike provided Adobe Publish Online link (2026-09-01) |
 | Backlog | **SC-109**, **EXT-QA-001** |
 | Related | V2-008 game manual · SC-133 pre-season comms (blocked until SC-109 complete) |
 | Public route | `https://www.fairfieldbasketballclub.com/shoot/game-manual` |
@@ -18,7 +18,7 @@ The `/shoot/game-manual` route renders **live configuration** from Airtable (no 
 | How you earn XP | `XP Reward Rules` (Active Rules Only view) | Airtable reachable |
 | Level ladder | `Levels` table | Airtable reachable |
 | Quick start | Static editorial copy in repo | Always |
-| Adobe/PDF open link | `NEXT_PUBLIC_GAME_MANUAL_URL` | **Only when env is set** |
+| Adobe/PDF open link | `NEXT_PUBLIC_GAME_MANUAL_URL` or repo default | **Always** (approved Publish Online URL in `web/lib/game-manual/config.ts`) |
 
 When the env var is unset, the page shows a public-safe **“Official manual link coming soon”** state — not an error, and never the raw env var name.
 
@@ -33,7 +33,7 @@ Open the Vercel project that serves **`/shoot`**.
 
 | Variable | Required value | Notes |
 |----------|----------------|--------|
-| `NEXT_PUBLIC_GAME_MANUAL_URL` | Mike-approved **HTTPS** URL to the Adobe Document Cloud / PDF game manual | Must start with `http://` or `https://`. Blank = “coming soon” state (current prod). |
+| `NEXT_PUBLIC_GAME_MANUAL_URL` | Optional **HTTPS** override | Repo default: `https://indd.adobe.com/view/f3dcc153-0837-461b-9e81-e3fa11558e84` (Adobe Publish Online). Set in Vercel only when overriding the baked-in URL for a future season. |
 
 **Do not log or paste secret values.** This variable is non-secret but should still be the final public document URL only.
 
@@ -51,8 +51,8 @@ Execute **in order**. No Airtable schema changes in this package.
 
 | # | Action | Done |
 |---|--------|------|
-| 1 | Confirm the **2026–27 Game Manual** PDF is published at the approved Adobe (or equivalent HTTPS) URL | [ ] |
-| 2 | Vercel → set Production `NEXT_PUBLIC_GAME_MANUAL_URL` to that URL | [ ] |
+| 1 | Confirm the **2026–27 Game Manual** is published at the approved Adobe Publish Online URL | [x] `https://indd.adobe.com/view/f3dcc153-0837-461b-9e81-e3fa11558e84` |
+| 2 | (Optional) Vercel → set Production `NEXT_PUBLIC_GAME_MANUAL_URL` only if overriding repo default | [ ] |
 | 3 | (Optional) Set Preview env to the same URL for QA previews | [ ] |
 | 4 | Trigger or wait for Vercel Production deploy from `master` | [ ] |
 | 5 | Run production smoke (below) | [ ] |

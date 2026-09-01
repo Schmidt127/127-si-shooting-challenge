@@ -110,6 +110,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   stale Early Bird PHA rows `rechCXdubiA1RPFEj` and `rec4iQ2WS04Arq3tB` in Airtable when convenient.
 
 #### Changed
+- **SC-109 Game Manual Adobe Publish Online URL (2026-09-01)** — `/shoot/game-manual` now opens the approved
+  Adobe Publish Online manual (`https://indd.adobe.com/view/f3dcc153-0837-461b-9e81-e3fa11558e84`) by default;
+  `NEXT_PUBLIC_GAME_MANUAL_URL` remains an optional override. Config: `web/lib/game-manual/config.ts`.
 - **FUT-043 consistent card design system (2026-09-01)** — Shared `--sc-card-*` tokens in `globals.css`, `components/ui/sc-card.tsx` helpers, and catalog panel alignment. Applied to athlete homework rows, dashboard XP activity, Game Log list shells, and dashboard achievement insets. Token doc: [`web/docs/sc-card-design-tokens.md`](./web/docs/sc-card-design-tokens.md). Hub mirror: `communications/emails/lib/card-tokens.js` (separate repo deploy). Checklist: [`docs/deploy-checklists/FUT-043-card-design-system.md`](./docs/deploy-checklists/FUT-043-card-design-system.md).
 - **FUT-042 Coach feedback quotation styling (2026-09-01)** — Shared `CoachFeedbackQuote` on athlete
   profile homework cards (orange left border, light blue-gray background, italic smaller text; hidden

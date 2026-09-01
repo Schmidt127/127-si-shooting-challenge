@@ -160,7 +160,7 @@ export function GameManualView({ manualUrl, xpCatalog, levels }: GameManualViewP
             url={manualUrl}
             title="Shooting Challenge Game Manual"
             openLabel="Open game manual"
-            externalHint="The manual is hosted on Adobe. Open it in a new tab — Adobe blocks embedding on other sites, which causes the Bad Gateway error in iframes."
+            externalHint="The manual is hosted on Adobe Publish Online. Open it in a new tab — Adobe blocks embedding on other sites."
           />
         ) : (
           <section
