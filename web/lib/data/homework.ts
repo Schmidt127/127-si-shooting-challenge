@@ -16,10 +16,13 @@ import {
   selectNames,
 } from "./airtable-values";
 
-export type FbcCurriculumFields = {
-  "Assignment Full Name"?: unknown;
-  "Assignment Full Name - Display"?: unknown;
+export type PublicAssignmentNameFields = {
   "Assignment Title"?: unknown;
+  "Assignment Full Name - Display"?: unknown;
+  "Assignment Full Name"?: unknown;
+};
+
+export type FbcCurriculumFields = PublicAssignmentNameFields & {
   "Brief Description - Display"?: unknown;
   "Full Assignment Description"?: unknown;
   "Assignment Description"?: unknown;
@@ -121,6 +124,23 @@ export function resolveSubmissionRequirement(
 export function resolveInstructionsPreview(briefDescription: string): string {
   const trimmed = briefDescription.trim();
   return trimmed || "Instructions coming soon.";
+}
+
+/** Parent-facing assignment name — prefers Homework Library `Assignment Title`. */
+export function resolvePublicAssignmentName(
+  fields: PublicAssignmentNameFields,
+  fallback = "Homework Assignment",
+): string {
+  const title = asText(fields["Assignment Title"], "").trim();
+  if (title && title !== "—") return title;
+
+  const display = asText(fields["Assignment Full Name - Display"], "").trim();
+  if (display && display !== "—") return display;
+
+  const fullName = asText(fields["Assignment Full Name"], "").trim();
+  if (fullName && fullName !== "—") return fullName;
+
+  return fallback;
 }
 
 export function resolveAssignmentDueDateKey(
@@ -234,14 +254,13 @@ export function mapCurriculumToAssignment(
   const briefDescription = asText(fields["Brief Description - Display"], "");
   const submissionsHint = asText(fields.Submissions, "");
 
+  const publicName = resolvePublicAssignmentName(fields);
+
   return {
     id: record.id,
     phaId: phaRow?.phaId ?? "",
-    title: asText(fields["Assignment Title"], asText(fields["Assignment Full Name"], "Homework")),
-    displayName: asText(
-      fields["Assignment Full Name - Display"],
-      asText(fields["Assignment Full Name"], "Homework Assignment"),
-    ),
+    title: publicName === "Homework Assignment" ? "Homework" : publicName,
+    displayName: publicName,
     briefDescription,
     instructionsPreview: resolveInstructionsPreview(briefDescription),
     weekId,

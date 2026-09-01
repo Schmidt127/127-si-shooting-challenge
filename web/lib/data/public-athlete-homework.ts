@@ -7,12 +7,14 @@ import {
   asNumber,
   asOptionalDateKey,
   asText,
+  asUrl,
   firstLinkedRecordId,
   linkedRecordIds,
+  lookupItems,
   selectName,
 } from "@/lib/data/airtable-values";
 import { challengeTodayDateKey } from "@/lib/data/public-athlete-profile";
-import { parseWeekNumber } from "@/lib/data/homework";
+import { parseWeekNumber, resolvePublicAssignmentName } from "@/lib/data/homework";
 import type {
   PublicHomeworkAssignment,
   PublicHomeworkCompletionStatus,
@@ -51,7 +53,11 @@ export type PublicHomeworkCompletionFields = {
   "Extra Credit XP Awarded"?: unknown;
   "Coach Feedback"?: unknown;
   "Submission Date"?: unknown;
+  "Submission Asset: Reviewer File URL (lookup)"?: unknown;
 };
+
+const LAMBDA_REVIEWER_URL_RE =
+  /^https:\/\/[^/]+\.lambda-url\.us-east-2\.on\.aws\/file\/rec[a-zA-Z0-9]{14}(?:\?token=[^&]+)?$/;
 
 type WeekMeta = {
   name: string;
@@ -68,15 +74,21 @@ type SortableHomeworkRow = PublicHomeworkAssignment & {
 };
 
 export function resolveAssignmentDisplayName(fields: PublicHomeworkLibraryFields): string {
-  return asText(
-    fields["Assignment Full Name - Display"],
-    asText(fields["Assignment Full Name"], asText(fields["Assignment Title"], "Homework Assignment")),
-  );
+  return resolvePublicAssignmentName(fields);
 }
 
 export function resolveAssignmentDescription(fields: PublicHomeworkLibraryFields): string | null {
   const description = asText(fields["Brief Description - Display"], "").trim();
   return description || null;
+}
+
+/** First safe parent-facing reviewer URL from Homework Completion lookup values. */
+export function resolveViewSubmittedHomeworkHref(reviewerUrls: unknown): string | null {
+  for (const item of lookupItems(reviewerUrls)) {
+    const url = asUrl(item);
+    if (url && LAMBDA_REVIEWER_URL_RE.test(url)) return url;
+  }
+  return null;
 }
 
 export function phaMatchesEnrollmentGradeBand(
@@ -253,6 +265,9 @@ export function buildPublicHomeworkAssignments(input: {
       pastDue: credit.pastDue,
       lateSubmission: credit.lateSubmission,
       homeworkDetailHref: homeworkId ? `/homework/${homeworkId}` : null,
+      viewSubmittedHomeworkHref: resolveViewSubmittedHomeworkHref(
+        completion?.["Submission Asset: Reviewer File URL (lookup)"],
+      ),
       sortWeekStart: weekMeta?.startDate ?? null,
       sortSlot: homeworkSlotOrder(slot),
       sortOrder: Number.isFinite(order) ? order : 0,

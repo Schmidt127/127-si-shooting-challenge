@@ -144,6 +144,17 @@ export function HomeworkAssignments({
                       {assignment.coachFeedback}
                     </p>
                   ) : null}
+                  {assignment.viewSubmittedHomeworkHref ? (
+                    <a
+                      href={assignment.viewSubmittedHomeworkHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-3 inline-flex min-h-11 items-center text-sm font-semibold text-brand-blue underline-offset-2 hover:text-accent-soft hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+                      data-testid="view-submitted-homework-cta"
+                    >
+                      View Submitted Homework
+                    </a>
+                  ) : null}
                 </div>
                 <p className="text-sm">
                   <span className="block text-[10px] uppercase tracking-wider text-muted">Due</span>

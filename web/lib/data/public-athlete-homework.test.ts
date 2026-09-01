@@ -11,6 +11,7 @@ import {
   resolveAssignmentDisplayName,
   resolveAssignmentDueDateKey,
   resolveHomeworkCreditEligibility,
+  resolveViewSubmittedHomeworkHref,
 } from "@/lib/data/public-athlete-homework";
 
 const GRADE_3_4 = "reclWDQZzKbVBtdhG";
@@ -224,7 +225,36 @@ describe("buildPublicHomeworkAssignments", () => {
       coachFeedback: "Great work.",
       submissionDate: "2026-06-05",
       creditEligible: true,
+      viewSubmittedHomeworkHref: null,
     });
+  });
+
+  it("maps parent-facing reviewer URL for View Submitted Homework CTA", () => {
+    const phaId = "recPha0000000001";
+    const reviewerUrl =
+      "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/recReiXXBRtaW3lns?token=abc123";
+    const rows = buildPublicHomeworkAssignments({
+      phaRecords: [pha(phaId, WEEK_1, [GRADE_3_4])],
+      libraryById: new Map([[HOMEWORK_ID, library("Submitted Assignment")]]),
+      weekById,
+      completionsByPhaId: indexCompletionsByPhaId([
+        {
+          fields: {
+            "Program Homework Assignment": [phaId],
+            "Completion Status": { name: "Submitted" },
+            "Submission Date": "2026-06-10",
+            "Submission Asset: Reviewer File URL (lookup)": [
+              reviewerUrl,
+              "https://evil.example.com/not-allowed",
+            ],
+          },
+        },
+      ]),
+      enrollmentGradeBandId: GRADE_3_4,
+      todayKey: TODAY,
+    });
+
+    expect(rows[0]?.viewSubmittedHomeworkHref).toBe(reviewerUrl);
   });
 
   it("marks late submissions as visible but not credit-eligible when XP was not awarded", () => {
@@ -348,12 +378,21 @@ describe("helpers", () => {
     expect(resolveAssignmentDescription({})).toBeNull();
   });
 
-  it("resolveAssignmentDisplayName prefers display name field", () => {
+  it("resolveAssignmentDisplayName prefers Assignment Title over full-name fields", () => {
+    expect(
+      resolveAssignmentDisplayName({
+        "Assignment Title": "Mikan Drill",
+        "Assignment Full Name - Display": "Display Name",
+        "Assignment Full Name": "SA - Personal Game Plan - Mikan Drill",
+      }),
+    ).toBe("Mikan Drill");
+  });
+
+  it("resolveAssignmentDisplayName falls back to display name when title is blank", () => {
     expect(
       resolveAssignmentDisplayName({
         "Assignment Full Name - Display": "Display Name",
-        "Assignment Full Name": "Full Name",
-        "Homework Number": "HW1",
+        "Assignment Full Name": "SA - Display Name",
       }),
     ).toBe("Display Name");
   });
@@ -366,5 +405,18 @@ describe("helpers", () => {
   it("matches grade band eligibility", () => {
     expect(phaMatchesEnrollmentGradeBand([GRADE_3_4, GRADE_5_6], GRADE_3_4)).toBe(true);
     expect(phaMatchesEnrollmentGradeBand([GRADE_5_6], GRADE_3_4)).toBe(false);
+  });
+
+  it("resolveViewSubmittedHomeworkHref accepts only lambda reviewer URLs", () => {
+    const safe =
+      "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/recReiXXBRtaW3lns?token=abc123";
+    expect(resolveViewSubmittedHomeworkHref([safe])).toBe(safe);
+    expect(
+      resolveViewSubmittedHomeworkHref([
+        "https://shooting-challenge-assets.s3.amazonaws.com/private/file.jpg",
+        safe,
+      ]),
+    ).toBe(safe);
+    expect(resolveViewSubmittedHomeworkHref(["https://drive.google.com/file/d/abc/view"])).toBeNull();
   });
 });

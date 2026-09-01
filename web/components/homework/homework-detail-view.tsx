@@ -70,7 +70,7 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
           <DetailTitle
             className="mt-5"
             overline="Assignment brief"
-            title={assignment.displayName}
+            title={assignment.title || assignment.displayName}
             accent={assignment.briefDescription || undefined}
           />
 

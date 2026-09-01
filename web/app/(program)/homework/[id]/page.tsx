@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: HomeworkDetailPageProps): Pro
     }
 
     return buildPageMetadata({
-      title: assignment.displayName,
+      title: assignment.title || assignment.displayName,
       description: assignment.briefDescription || `${assignment.weekName} homework assignment.`,
       path: `/homework/${id}`,
     });

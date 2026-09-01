@@ -34,6 +34,7 @@ const COMPLETION_FIELDS = [
   "Extra Credit XP Awarded",
   "Coach Feedback",
   "Submission Date",
+  "Submission Asset: Reviewer File URL (lookup)",
 ] as const;
 
 function escapeAirtableString(value: string): string {
