@@ -4,6 +4,7 @@
 **Owner:** Mike (Fillout UI)  
 **Brief:** [FUT-039-FILLOUT-BRANDING-BRIEF.md](../next-wave/fillout/FUT-039-FILLOUT-BRANDING-BRIEF.md)  
 **CSS artifact:** [fillout-theme-sc-2026.css](../next-wave/fillout/fillout-theme-sc-2026.css)  
+**Official selectors:** [FILLOUT-OFFICIAL-CSS-SELECTORS.md](../next-wave/fillout/FILLOUT-OFFICIAL-CSS-SELECTORS.md) — **use documented classes only**  
 **Copy pack:** [FUT-039-FILLOUT-COPY-PACK.md](../next-wave/fillout/FUT-039-FILLOUT-COPY-PACK.md)  
 **Inventory:** [FILLOUT-FORM-INVENTORY.md](../next-wave/fillout/FILLOUT-FORM-INVENTORY.md)
 
@@ -43,11 +44,13 @@
 
 Apply in this order at desktop Fillout UI:
 
-1. **Theme editor** — create **127 SI — Shooting Challenge 2026**; colors, Maven Pro, logo, header title + subhead ([copy pack §1](../next-wave/fillout/FUT-039-FILLOUT-COPY-PACK.md#1-theme-header-strings-all-v1-forms)).
-2. **Custom CSS** — paste [fillout-theme-sc-2026.css](../next-wave/fillout/fillout-theme-sc-2026.css) into theme Advanced designer.
-3. **Confirmation copy** — paste ending title + body per form from [copy pack §2–§4](../next-wave/fillout/FUT-039-FILLOUT-COPY-PACK.md#2-player-registration--confirmation-ending); **redirect URL = none** on all v1 forms.
-4. **Assign theme per form** — registration, daily, edit (do **not** set org default).
-5. **F-ATT-05** — complete attestation table in copy pack §5 after Preview + Schmidt submits.
+1. **Theme editor** — create **127 SI — Shooting Challenge 2026**; page background `#F2F2F2`, primary `#0034B7`, accent `#FF8B00`, text `#262626`, font **Maven Pro**, logo, header title + subhead ([copy pack §1](../next-wave/fillout/FUT-039-FILLOUT-COPY-PACK.md#1-theme-header-strings-all-v1-forms)).
+2. **Advanced designer** (Starter+) — button shape, input style, padding, **back button position** (Fillout UI — not CSS).
+3. **Registration only** — Stripe payment field → **payment page** theme (image, checkout title, CTA; optional receipt on ending). No documented CSS class for payment blocks — see [FILLOUT-OFFICIAL-CSS-SELECTORS.md](../next-wave/fillout/FILLOUT-OFFICIAL-CSS-SELECTORS.md).
+4. **Custom CSS** — paste [fillout-theme-sc-2026.css](../next-wave/fillout/fillout-theme-sc-2026.css) (documented selectors only; `.fillout-live-mode` scoped).
+5. **Confirmation copy** — paste ending title + body per form from [copy pack §2–§4](../next-wave/fillout/FUT-039-FILLOUT-COPY-PACK.md#2-player-registration--confirmation-ending); **redirect URL = none** on all v1 forms.
+6. **Assign theme per form** — registration, daily, edit (do **not** set org default).
+7. **F-ATT-05** — complete attestation table in copy pack §5 after Preview + Schmidt submits.
 
 ---
 
