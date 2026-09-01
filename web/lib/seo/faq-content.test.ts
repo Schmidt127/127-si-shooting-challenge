@@ -46,7 +46,15 @@ describe("PROGRAM_FAQ_ITEMS", () => {
   it("sets appropriate coach feedback expectations", () => {
     const video = PROGRAM_FAQ_ITEMS.find((item) => item.id === "video-feedback");
     expect(video?.answer).toMatch(/coaches review/i);
+    expect(video?.answer).toMatch(/challenge schedule/i);
+    expect(video?.answer).toMatch(/instant replies/i);
     expect(video?.answer).toMatch(/not an on-demand private lesson/i);
+  });
+
+  it("clarifies grade eligibility vs leaderboard display bands", () => {
+    const grades = PROGRAM_FAQ_ITEMS.find((item) => item.id === "grades-served");
+    expect(grades?.answer).toMatch(/eligibility is based on grade level/i);
+    expect(grades?.answer).toMatch(/display only/i);
   });
 
   it("does not mention Team Shot Tracker (separate product)", () => {
