@@ -1,10 +1,10 @@
 # FUT-039 — Fillout.com Branding and CSS Consistency
 
-**Status:** Brief ready (Phase 2) — **do not implement** live Fillout theme/CSS changes, custom domain edits, or form field mapping from this document alone  
+**Status:** **Phase 3 ready** — Mike decisions captured **2026-09-01**; apply via [FUT-039-fillout-branding.md](../../deploy-checklists/FUT-039-fillout-branding.md) (Mike in Fillout UI)  
 **Canonical ID:** **FUT-039**  
 **Date:** 2026-09-01  
-**Base SHA:** `f8c74348` (`origin/master`)  
-**Branch:** `cursor/fut-039-fillout-branding-brief-e772`  
+**Decisions locked:** 2026-09-01 (Mike)  
+**Base SHA:** `e9e3bbd8` (`origin/master`)  
 **Related:** FUT-003 (Stripe payment writeback) · FUT-029 (hybrid homework Fillout) · FUT-034 (Jr. Referee Clinic naming — **COMPLETE** landing/docs; Fillout titles optional follow-up) · FUT-035 (landing royal blue — **COMPLETE**) · SC-060 (enrollment validation) · SC-146 (reopen daily intake) · [FILLOUT-FORM-INVENTORY.md](./FILLOUT-FORM-INVENTORY.md) · [BRAND_STANDARDS.md](../../../BRAND_STANDARDS.md) · [127-SI-MASTER-FUTURE-WORK-LIST.md](../../127-SI-MASTER-FUTURE-WORK-LIST.md) § FUT-039
 
 ---
@@ -223,14 +223,14 @@ Use Fillout theme editor for 90% (colors, logo, font); CSS only for header orang
 
 ## 7. Phase 3 implementation slices
 
-**Prerequisites:** Mike decisions §11; Fillout Pro plan confirmed for custom CSS (if using Option A/C CSS); F-ATT-01/05/07 attestations; before/after screenshot folder.
+**Prerequisites:** Mike decisions §8 (**locked 2026-09-01**); Fillout Pro plan confirmed for custom CSS; F-ATT-01/05/07 attestations; before/after screenshot folder.
 
 | Slice | Scope | Deliverables |
 |-------|-------|--------------|
 | **3a — Theme spec + CSS artifact** | Token doc + `fillout-theme-sc-2026.css` stub | Repo file; Fillout theme duplicate “SC-DEV” |
 | **3b — Registration form** | Apply theme to `shoot-playerregistration` | Screenshots; FUT-003 smoke note in checklist |
 | **3c — Daily submission form** | Apply theme to `shoot-dailysubmissions` | HW1/HW2 picker smoke; http-smoke still 200 |
-| **3d — Edit submission form** | Theme on `vNgeHardYcus`; optional custom URL | Update Submissions formula only if Mike approves new slug |
+| **3d — Edit submission form** | Theme on `vNgeHardYcus`; custom URL `shoot-editsubmission` | Update Submissions **Edit Submission - Parent** formula (Mike decision #6) |
 | **3e — Confirmation screens** | Custom endings aligned with email copy | F-ATT-05 answers documented |
 | **3f — Org default + docs** | Set org default theme; update inventory IDs | FILLOUT-FORM-INVENTORY.md refresh |
 | **3g — FUT-029 handoff** | Theme name + CSS path for future homework forms | Section in FUT-029 brief cross-link |
@@ -252,22 +252,26 @@ Mike decisions (§11) ──► 3a theme artifact
 
 ---
 
-## 8. Open decisions for Mike
+## 8. Mike decisions (locked 2026-09-01)
 
-1. **Theme strategy:** Option A shared org theme vs B per-form vs C minimal CSS (§4.3)?  
-2. **CSS hosting:** Single repo file pasted into Fillout vs Fillout-only with periodic repo sync?  
-3. **Logo asset source:** Upload from `web/public/brand/` vs Hub email CDN vs fresh export from brand kit?  
-4. **Form ownership:** Who applies theme in Fillout UI (Mike vs delegated operator)?  
-5. **v1 form list:** Confirm registration + daily + edit only — defer HW17 to v2?  
-6. **Edit submission URL:** Migrate `form.fillout.com/t/vNgeHardYcus` to `forms.fairfieldbasketballclub.com/...` or keep legacy?  
-7. **Org default theme:** Set SC theme as org-wide default or assign per form only (cross-program risk R5)?  
-8. **Header layout:** Logo + text only vs banner image (email uses Google Drive banner — avoid unapproved hotlink)?  
-9. **Magistral in Fillout:** Maven Pro only until web font license confirmed?  
-10. **Confirmation redirect:** Stay on Fillout ending vs redirect to `/shoot` vs `/shoot/homework`?  
-11. **Timing:** Apply branding before FUT-003 Make activation or in same release window?  
-12. **FUT-034 follow-up:** Run OMNI inventory of Fillout form **titles** for banned **Jr. Ref** short form?
+| # | Question | Decision |
+|---|----------|----------|
+| 1 | Theme strategy | **Option A** — one shared theme **“127 SI — Shooting Challenge 2026”** (§4.3) |
+| 2 | CSS hosting | **Single repo file** — [fillout-theme-sc-2026.css](./fillout-theme-sc-2026.css) pasted into Fillout theme |
+| 3 | Logo asset source | **`web/public/brand/`** — `logo-v1-blue-orange.png` (horizontal), `logo-circle-blue-orange.png` (compact) |
+| 4 | Form ownership | **Mike** applies theme in Fillout UI |
+| 5 | v1 form list | **Yes** — registration + daily + edit only; HW17 deferred v2 |
+| 6 | Edit submission URL | **Migrate** to custom domain — proposed slug `shoot-editsubmission` → `https://forms.fairfieldbasketballclub.com/shoot-editsubmission?id={rec…}`; update Submissions **Edit Submission - Parent** formula (see deploy checklist) |
+| 7 | Org default theme | **Per-form assignment only** — do **not** set org-wide default (R5 mitigation) |
+| 8 | Header layout | **Logo + text only** — no banner image |
+| 9 | Magistral in Fillout | **Maven Pro only** until web font license confirmed |
+| 10 | Confirmation redirect | **Fillout ending** with `/shoot` link in copy — **no auto-redirect** |
+| 11 | Timing | **Branding now** — before FUT-003 Make activation |
+| 12 | FUT-034 follow-up | **Yes** — OMNI inventory of Fillout form titles for banned **Jr. Ref** short form |
 
-**Count: 12 open decisions.**
+**Operator checklist:** [FUT-039-fillout-branding.md](../../deploy-checklists/FUT-039-fillout-branding.md)
+
+**Count: 12 decisions — all resolved.**
 
 ---
 
@@ -351,3 +355,4 @@ Plus one Schmidt Fillout submission per form + FUT-003 Make manual test when pay
 | Date | Change |
 |------|--------|
 | 2026-09-01 | Phase 2 brief + inventory (FUT-039) |
+| 2026-09-01 | Mike decisions locked; Phase 3 checklist + CSS artifact |

@@ -1,0 +1,55 @@
+/**
+ * FUT-039 — 127 SI Shooting Challenge Fillout theme custom CSS
+ * Canonical repo artifact — paste into Fillout theme "127 SI — Shooting Challenge 2026"
+ *
+ * Mike decisions (2026-09-01): Option A shared theme; per-form assignment (not org default);
+ * logo + text header only; Maven Pro only; visual-only (no field/payment changes).
+ *
+ * Tokens: web/lib/brand.ts · BRAND_STANDARDS.md
+ */
+
+:root {
+  --127si-blue: #0034B7;
+  --127si-orange: #FF8B00;
+  --127si-charcoal: #262626;
+  --127si-light-gray: #F2F2F2;
+  --127si-medium-gray: #C4C4C4;
+  --127si-white: #FFFFFF;
+}
+
+/* Page background */
+.fillout-form-container {
+  background-color: var(--127si-light-gray);
+}
+
+/* Header accent rule (email parity: 4–6px orange bottom border) */
+.fillout-header,
+.fillout-form-header {
+  border-bottom: 5px solid var(--127si-orange);
+}
+
+/* Primary actions — do not hide Stripe/payment fields */
+.fillout-button-primary,
+button[type="submit"].fillout-button-primary {
+  background-color: var(--127si-blue);
+  color: var(--127si-white);
+  border-radius: 10px;
+}
+
+.fillout-button-primary:hover {
+  filter: brightness(1.05);
+}
+
+/* Body text */
+.fillout-field-label,
+.fillout-field-content {
+  color: var(--127si-charcoal);
+}
+
+/* Focus ring */
+.fillout-field-content:focus-within {
+  outline-color: var(--127si-blue);
+}
+
+/* Optional: hide Fillout login profile on public forms */
+/* .fillout-login-profile { display: none; } */
