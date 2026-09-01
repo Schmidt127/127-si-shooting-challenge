@@ -235,8 +235,9 @@ Optional future work may improve visual presentation or wording, but email funct
 ### FUT-007 — Simplify future AWS media naming and support future media types
 
 **Priority:** P2  
-**Status:** Ready for prompt  
-**Systems:** Upload Lambda, S3, Airtable storage-key/writeback fields
+**Status:** **Spec ready** — Phase 3 Lambda implementation not started  
+**Systems:** Upload Lambda, S3, Airtable storage-key/writeback fields  
+**Spec:** [FUT-007-AWS-MEDIA-NAMING-SPEC.md](./next-wave/aws-media/FUT-007-AWS-MEDIA-NAMING-SPEC.md) · Promotion: [FUT-007-aws-media-naming.md](./deploy-checklists/FUT-007-aws-media-naming.md) · Prep helpers: [`lib/aws-media-naming/`](../lib/aws-media-naming/)
 
 Change the naming convention for future uploads only. Existing test uploads will be deleted before the next challenge, so no migration is required. Supported future upload categories should include:
 
@@ -257,6 +258,8 @@ Examples:
 Do not include the Airtable record ID in the filename. Use the **Custom Video File Name** in the final filename position. The Airtable record ID remains system metadata and is not part of the human-facing filename.
 
 The prompt must define sanitization, collision handling, missing-name behavior, and preservation of the Airtable record ID elsewhere as system metadata.
+
+**Delivered (2026-09-01):** Full spec + promotion checklist + `lib/aws-media-naming/` offline tests (21 vitest cases). Lambda / Production unchanged.
 
 ### FUT-008 — Custom Video File Name field and parent-facing usage
 
