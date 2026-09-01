@@ -30,6 +30,7 @@ python -m unittest discover -s tests -p "test_*.py" -v
 
 | Method | Path | Auth | Purpose |
 |--------|------|------|---------|
+| `POST` | `/fut009/rename` | `X-Upload-Secret` | FUT-009 post-feedback S3 video rename (Automation **120**) |
 | `POST` | `/` (Function URL root) | `X-Upload-Secret` | Upload engine |
 | `GET` | `/file/{rec…}?token=…` | Reviewer Access Token | Private file redirect |
 | `GET` | `/` | — | `405` |

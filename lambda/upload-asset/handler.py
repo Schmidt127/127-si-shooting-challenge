@@ -8,6 +8,7 @@ import os
 
 from upload_core.auth import verify_upload_secret
 from upload_core.config import UploadConfig
+from upload_core.fut009_service import Fut009RequestError, handle_fut009_rename_request, is_fut009_rename_path
 from upload_core.processor import parse_payload, process_with_error_writeback
 from upload_core.viewer import get_http_method, handle_viewer_request, is_viewer_path
 
@@ -44,6 +45,56 @@ def lambda_handler(event, context):
         if method and method != "GET":
             return _json_response(405, {"ok": False, "error": "Method not allowed"})
         return handle_viewer_request(event_dict, config)
+
+    # FUT-009 post-feedback S3 rename: POST /fut009/rename (X-Upload-Secret)
+    if is_fut009_rename_path(event_dict):
+        method = get_http_method(event_dict)
+        if method and method != "POST":
+            return _json_response(
+                405,
+                {
+                    "ok": False,
+                    "statusOut": "error",
+                    "actionOut": "error_method_not_allowed",
+                    "errorOut": "FUT-009 rename endpoint accepts POST only",
+                },
+            )
+        auth_failure = verify_upload_secret(event_dict, config)
+        if auth_failure is not None:
+            status_code, body = auth_failure
+            logger.warning(
+                json.dumps(
+                    {
+                        "route": "fut009_rename",
+                        "statusOut": body.get("statusOut"),
+                        "actionOut": body.get("actionOut"),
+                    }
+                )
+            )
+            return _json_response(status_code, body)
+        try:
+            status_code, body = handle_fut009_rename_request(config, event_dict)
+        except Fut009RequestError as exc:
+            return _json_response(
+                exc.status_code,
+                {
+                    "ok": False,
+                    "statusOut": "error",
+                    "actionOut": exc.action_out,
+                    "errorOut": exc.message,
+                },
+            )
+        logger.info(
+            json.dumps(
+                {
+                    "route": "fut009_rename",
+                    "submissionAssetRecordId": body.get("submissionAssetRecordId"),
+                    "statusOut": body.get("statusOut"),
+                    "actionOut": body.get("actionOut"),
+                }
+            )
+        )
+        return _json_response(status_code, body)
 
     method = get_http_method(event_dict)
     if method == "GET":

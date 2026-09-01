@@ -1,15 +1,15 @@
-# FUT-009 — Safe post-feedback S3 video rename
+# FUT-009 — Safe post-feedback S3 video rename (automatic)
 
-**Backlog:** FUT-009 (P2) · **FUT-007** (basename contract)  
-**Status:** **Built in repository — DEV proof and Production apply pending Mike approval**  
-**Systems:** Video Feedback, Submission Assets, AWS S3, Lambda viewer  
-**Related:** [FUT-007-S3-NAMING-CONTRACT-BRIEF.md](../next-wave/aws-media/FUT-007-S3-NAMING-CONTRACT-BRIEF.md) · [FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md](../next-wave/aws-media/FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md) · FUT-010 (dual-prefix verify alignment)
+**Backlog:** FUT-009 (P2) · **FUT-007** (basename contract) · **Automation 120**  
+**Status:** **Built in repository — Lambda deploy + Automation 120 paste pending Mike approval**  
+**Systems:** Video Feedback, Submission Assets, AWS S3, Lambda `127si-upload-asset`, Automation **120**  
+**Related:** [FUT-007-S3-NAMING-CONTRACT-BRIEF.md](../next-wave/aws-media/FUT-007-S3-NAMING-CONTRACT-BRIEF.md) · [FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md](../next-wave/aws-media/FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md) · [120-v1.0-fut009-s3-video-rename-paste-packet.md](./120-v1.0-fut009-s3-video-rename-paste-packet.md)
 
 ---
 
 ## Summary
 
-When a coach enters **Custom Video File Name** on Video Feedback and **confirms** the rename, the FUT-009 worker:
+When a coach enters **Custom Video File Name** on Video Feedback and checks **Confirm S3 Video Rename**, **Automation 120** automatically calls the FUT-009 Lambda worker. The worker:
 
 1. Validates eligibility (Uploaded video-route Submission Asset)
 2. Computes Option D destination key: `shooting-challenge/{Athlete}/{Program}/{ActivityDate}/{FUT-007 basename}`
@@ -20,7 +20,11 @@ When a coach enters **Custom Video File Name** on Video Feedback and **confirms*
 
 **Reviewer File URL** is unchanged (record ID + token formula). Lambda viewer reads updated Storage Key on next GET.
 
-**Out of scope v1:** Homework rename, headshot rename, mass legacy migration, Automation 147, Production schema paste without Mike approval.
+**Normal workflow is automatic.** The CLI (`tools/airtable/fut_009_video_rename.py`) remains for recovery, dry-run, backfill, and supervised emergency apply only.
+
+**There is no separate Airtable DEV environment.** Controlled Production tests use disposable records only.
+
+**Out of scope v1:** Homework rename, headshot rename, mass legacy migration, Automation 147.
 
 ---
 
@@ -32,28 +36,46 @@ When a coach enters **Custom Video File Name** on Video Feedback and **confirms*
 | Activity Date timezone | **America/Denver** |
 | Rename scope | **VIDEO only** |
 | Legacy Gen B keys | **Grandfathered** — rename copies to Option D; no forced migration |
-| Coach confirmation | **Required** — `Confirm S3 Video Rename` on VF and/or CLI `--confirm-rename` |
+| Coach confirmation | **Required** — `Confirm S3 Video Rename` checkbox triggers Automation 120 |
 | Old S3 object | **Retained** indefinitely |
-| Audit fields | **Previous Storage Key**, **Renamed At** — PKG-004; optional via `--include-audit-fields` |
+| Audit fields | **Previous Storage Key**, **Renamed At** — PKG-004 optional on Submission Assets |
 
 ---
 
-## Coach confirmation (required before activation)
+## Automatic trigger (Automation 120)
 
-### Proposed Airtable field (PKG-004 — Mike must create in DEV first)
+| Item | Value |
+|------|-------|
+| **Automation number** | **120** (new slot — first use in repo) |
+| **Table** | Video Feedback |
+| **Trigger** | When record updated |
+| **Conditions** | Confirm S3 Video Rename **checked** · Custom Video File Name **not empty** · Custom Video File Name **is not** — · Submission Asset **not empty** |
+| **Worker** | Lambda `POST /fut009/rename` with `X-Upload-Secret` |
+| **Post-success** | Clears Confirm S3 Video Rename (prevents duplicate automation runs) |
 
-| Table | Field | Type | Purpose |
-|-------|-------|------|---------|
-| **Video Feedback** | **Confirm S3 Video Rename** | Checkbox | Coach explicit intent after entering Custom Video File Name |
-
-**Workflow:**
+**Coach workflow:**
 
 1. Coach reviews video via Reviewer File URL
 2. Coach enters **Custom Video File Name**
 3. Coach checks **Confirm S3 Video Rename**
-4. Operator runs CLI `apply --confirm-rename` (or future Interface button calling Lambda worker)
+4. Automation 120 runs automatically → Lambda CopyObject + Airtable writeback
+5. Confirm checkbox clears on success or idempotent `skipped_already_named`
 
-**Do not** auto-rename on Custom Video File Name field change alone.
+**Why confirmation checkbox is required:** Custom Video File Name alone is display metadata used immediately by emails/website (FUT-008). The checkbox is explicit coach intent before irreversible S3 CopyObject.
+
+---
+
+## Required Airtable fields (PKG-004 — Mike must create before enabling Automation 120)
+
+| Table | Field | Type | Required | Purpose |
+|-------|-------|------|----------|---------|
+| **Video Feedback** | **Confirm S3 Video Rename** | Checkbox | **Yes** | Trigger + coach confirmation |
+| **Submission Assets** | **Previous Storage Key** | Single line text | Optional | Audit — source key before rename |
+| **Submission Assets** | **Renamed At** | Date/time | Optional | Audit — America/Denver timestamp |
+
+**Not required for v1:** S3 Rename Status / S3 Rename Error on Video Feedback — failures surface via automation run outputs and **Upload Error** on Submission Asset.
+
+**Existing fields used (no schema change):** Custom Video File Name, Submission Asset link, Storage Key, Canonical File URL, Formatted Upload Name, Original File Name, Reviewer File URL, Reviewer Access Token, Upload Error.
 
 ---
 
@@ -62,15 +84,32 @@ When a coach enters **Custom Video File Name** on Video Feedback and **confirms*
 | Path | Purpose |
 |------|---------|
 | `lambda/upload-asset/upload_core/fut009_rename.py` | Core rename sequence (validate → copy → verify → writeback) |
+| `lambda/upload-asset/upload_core/fut009_service.py` | Lambda HTTP handler for `/fut009/rename` |
 | `lambda/upload-asset/upload_core/s3_storage_key_format.py` | Dual-prefix Storage Key validation |
 | `lambda/upload-asset/upload_core/fut007_basename.py` | `build_fut009_destination_key()` |
 | `lib/fut009-video-rename/index.js` | Pure JS decision helpers + tests |
-| `lib/s3-storage/storage-key-format.js` | Dual-prefix regex (FUT-010 alignment) |
-| `lib/aws-media-naming/index.ts` + `index.js` | Shared FUT-007 + Option D destination builder |
-| `tools/airtable/fut_009_video_rename.py` | CLI: preflight, dry-run, apply |
-| `airtable/extension-scripts/safe-backfills/fut-009-video-rename.js` | Extension eligibility report (apply via CLI) |
-| `lambda/upload-asset/tests/test_fut009_rename.py` | Python unit tests |
-| `lib/fut009-video-rename/fut009-video-rename.test.js` | JS contract tests |
+| `tools/airtable/fut_009_video_rename.py` | CLI recovery/backfill (not normal workflow) |
+| `airtable/automations/shooting-challenge/120-…-apply-fut009-s3-video-rename.js` | **Automation 120** — automatic trigger |
+| `airtable/automations/shooting-challenge/lib/fut009-rename-handoff.js` | Trigger pre-check helpers + tests |
+| `airtable/extension-scripts/safe-backfills/fut-009-video-rename.js` | Extension eligibility report (no S3 apply) |
+
+---
+
+## Lambda endpoint
+
+```http
+POST https://{function-url}/fut009/rename
+X-Upload-Secret: {UPLOAD_WEBHOOK_SECRET}
+Content-Type: application/json
+
+{
+  "videoFeedbackRecordId": "rec…",
+  "coachConfirmed": true,
+  "includeAuditFields": true
+}
+```
+
+**Response `actionOut` values:** `renamed` · `airtable_only_recovery` · `skipped_already_named` · `skipped_*` · `error_*`
 
 ---
 
@@ -81,13 +120,13 @@ When a coach enters **Custom Video File Name** on Video Feedback and **confirms*
 | **Storage Key** | Updated → Option D + FUT-007 key |
 | **Canonical File URL** | Updated → HTTPS URL for new key |
 | **Formatted Upload Name** | Updated → FUT-007 basename |
-| **Upload Error** | Cleared on success |
+| **Upload Error** | Cleared on success; set on rename failure |
 | **Original File Name** | **Never overwritten** |
 | **Reviewer File URL** | **Unchanged** (formula) |
 | **Reviewer Access Token** | **Preserved** |
 | **File Content Hash** | **Unchanged** |
 
-Optional (PKG-004, `--include-audit-fields`):
+Optional (PKG-004, `includeAuditFields: true`):
 
 | Field | Value |
 |-------|-------|
@@ -96,25 +135,20 @@ Optional (PKG-004, `--include-audit-fields`):
 
 ---
 
-## CLI usage
+## CLI usage (recovery / backfill only)
 
 ```bash
 cd tools/airtable
 
-# Preflight (no credentials write)
+# Preflight
 python fut_009_video_rename.py preflight
 
-# Dry-run single record (no S3/Airtable writes)
+# Dry-run (no writes)
 python fut_009_video_rename.py dry-run --record-id recXXXXXXXXXXXXXX
 
-# Apply (requires AWS creds + --confirm-rename)
+# Recovery apply (requires AWS creds + --confirm-rename)
 python fut_009_video_rename.py apply --confirm-rename --record-id recXXXXXXXXXXXXXX
-
-# With audit fields when PKG-004 schema exists
-python fut_009_video_rename.py apply --confirm-rename --include-audit-fields --record-id rec…
 ```
-
-**Environment:** `AIRTABLE_API_TOKEN` in `tools/airtable/.env` or `web/.env.local`; AWS credentials for S3 CopyObject/HeadObject.
 
 ---
 
@@ -122,36 +156,57 @@ python fut_009_video_rename.py apply --confirm-rename --include-audit-fields --r
 
 | State | Recovery |
 |-------|----------|
-| CopyObject failed | Airtable unchanged; fix AWS error and retry |
-| Verify failed after copy | Airtable unchanged; investigate destination; manual reconcile |
-| Copy succeeded, Airtable patch failed | **Retry apply** — worker detects destination exists → `airtable_only_recovery` (no second copy) |
-| Idempotent re-run after success | `skipped_already_named` |
+| CopyObject failed | Airtable unchanged; fix AWS error; re-check Confirm and retry |
+| Verify failed after copy | Airtable unchanged; investigate destination |
+| Copy succeeded, Airtable patch failed | Re-check Confirm → Automation 120 or CLI `apply` → `airtable_only_recovery` |
+| Idempotent re-run after success | `skipped_already_named`; Confirm clears |
+| Automation fires twice | Idempotent — no second copy when destination exists or key already matches |
 
 ---
 
-## DEV proof checklist (Mike)
+## Production activation checklist (Mike)
 
-- [ ] Add **Confirm S3 Video Rename** checkbox on Video Feedback (DEV base)
-- [ ] Disposable video Submission Asset with Gen B Storage Key
-- [ ] Set Custom Video File Name + confirm checkbox
-- [ ] `dry-run` shows expected destination key
-- [ ] `apply --confirm-rename` on DEV — verify S3 object at new key
-- [ ] Verify old S3 object still exists
-- [ ] Verify Reviewer File URL unchanged; viewer GET serves new file
-- [ ] Re-run apply → `skipped_already_named`
+### Phase A — Schema (Production Airtable UI)
+
+- [ ] Add **Confirm S3 Video Rename** checkbox on **Video Feedback**
+- [ ] Optional: add **Previous Storage Key** + **Renamed At** on **Submission Assets**
+
+### Phase B — Lambda deploy
+
+- [ ] Merge PR to `master`
+- [ ] Deploy `127si-upload-asset` with `fut009_service.py` + handler route
+- [ ] Confirm Function URL serves `POST /fut009/rename` (same `UPLOAD_WEBHOOK_SECRET` as upload)
+
+### Phase C — Automation 120
+
+- [ ] Create automation **120 - Video Review and XP - Apply FUT-009 S3 Video Rename**
+- [ ] Trigger: Video Feedback · Confirm S3 Video Rename checked · Custom name valid · Submission Asset linked
+- [ ] Paste script from [`120-v1.0-fut009-s3-video-rename-paste-packet.md`](./120-v1.0-fut009-s3-video-rename-paste-packet.md)
+- [ ] Input variables: `recordId`, `lambdaRenameUrl`, `uploadWebhookSecret`, optional `includeAuditFields`
+- [ ] Leave automation **OFF** until disposable test passes
+
+### Phase D — Controlled Production test (disposable record)
+
+- [ ] Identify disposable video Submission Asset + linked Video Feedback (test enrollment only)
+- [ ] Set Custom Video File Name + check Confirm S3 Video Rename
+- [ ] Enable Automation 120; verify run → `actionOut=renamed`
+- [ ] S3: destination object exists at Option D key; **old object still exists**
+- [ ] Airtable: Storage Key + Canonical File URL updated; Original File Name unchanged
+- [ ] Reviewer File URL unchanged; viewer GET serves new file
+- [ ] Re-check Confirm → `skipped_already_named`; Confirm clears
 - [ ] Evidence in `docs/testing/evidence/fut-009/`
 
----
+### Phase E — Verification (display paths)
 
-## Production promotion (Mike approval required)
+- [ ] Website game log shows Custom Video File Name (display precedence — Agent 3 wiring)
+- [ ] Video Feedback email / Weekly summary use custom display name
+- [ ] Secure video viewer still works
 
-1. Merge PR to `master`
-2. PKG-004: add **Confirm S3 Video Rename** on Production Video Feedback (if not already)
-3. Optional: add **Previous Storage Key** + **Renamed At** on Submission Assets
-4. DEV proof complete with evidence
-5. Supervised single-record Production `apply --confirm-rename`
-6. Update `CHANGELOG.md`
-7. **Do not** enable field-change automation without explicit confirm gate
+### Rollback / recovery
+
+- [ ] Disable Automation 120
+- [ ] Old S3 object retained — manual revert: patch Storage Key back to **Previous Storage Key** if audit field populated
+- [ ] CLI `apply --confirm-rename` for single-record recovery
 
 ---
 
@@ -168,11 +223,10 @@ shooting-challenge/Boltz_Drew/Shooting_Challenge_2026-2027/2026-08-17/20260817_V
 ```bash
 node lib/s3-storage/storage-key-format.test.js
 node lib/fut009-video-rename/fut009-video-rename.test.js
-node lib/intake-attachment-cleanup/intake-attachment-cleanup.test.js
-cd lambda/upload-asset && python -m pytest tests/test_fut009_rename.py tests/test_fut007_basename.py tests/test_storage_key.py -q
-cd web && npm test -- ../lib/aws-media-naming/naming.test.ts
+node airtable/automations/shooting-challenge/lib/fut009-rename-handoff.test.js
+cd lambda/upload-asset && python -m pytest tests/test_fut009_rename.py tests/test_fut009_handler.py tests/test_fut007_basename.py -q
 ```
 
 ---
 
-*No Production S3, Airtable, or automation changes are performed by merging this documentation alone.*
+*No Production S3, Airtable, Lambda deploy, or automation enable is performed by merging this documentation alone.*

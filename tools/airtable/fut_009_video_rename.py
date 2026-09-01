@@ -143,7 +143,7 @@ def load_asset_context(token: str, base_id: str, record_id: str) -> RenameContex
         custom_name = field_text(vf_fields.get(FIELD_CUSTOM_VIDEO_FILE_NAME))
         coach_confirmed = vf_fields.get(FIELD_CONFIRM_S3_RENAME) is True
 
-    enrollment_id = first_link_id(fields.get("Enrollment"))
+    enrollment_id = first_link_id(fields.get("Enrollment - Linked")) or first_link_id(fields.get("Enrollment"))
     last_name = ""
     first_name = ""
     if enrollment_id:
