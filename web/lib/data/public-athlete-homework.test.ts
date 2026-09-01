@@ -348,12 +348,21 @@ describe("helpers", () => {
     expect(resolveAssignmentDescription({})).toBeNull();
   });
 
-  it("resolveAssignmentDisplayName prefers display name field", () => {
+  it("resolveAssignmentDisplayName prefers Assignment Title over full-name fields", () => {
+    expect(
+      resolveAssignmentDisplayName({
+        "Assignment Title": "Mikan Drill",
+        "Assignment Full Name - Display": "Display Name",
+        "Assignment Full Name": "SA - Personal Game Plan - Mikan Drill",
+      }),
+    ).toBe("Mikan Drill");
+  });
+
+  it("resolveAssignmentDisplayName falls back to display name when title is blank", () => {
     expect(
       resolveAssignmentDisplayName({
         "Assignment Full Name - Display": "Display Name",
-        "Assignment Full Name": "Full Name",
-        "Homework Number": "HW1",
+        "Assignment Full Name": "SA - Display Name",
       }),
     ).toBe("Display Name");
   });

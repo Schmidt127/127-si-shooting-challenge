@@ -12,7 +12,7 @@ import {
   selectName,
 } from "@/lib/data/airtable-values";
 import { challengeTodayDateKey } from "@/lib/data/public-athlete-profile";
-import { parseWeekNumber } from "@/lib/data/homework";
+import { parseWeekNumber, resolvePublicAssignmentName } from "@/lib/data/homework";
 import type {
   PublicHomeworkAssignment,
   PublicHomeworkCompletionStatus,
@@ -68,10 +68,7 @@ type SortableHomeworkRow = PublicHomeworkAssignment & {
 };
 
 export function resolveAssignmentDisplayName(fields: PublicHomeworkLibraryFields): string {
-  return asText(
-    fields["Assignment Full Name - Display"],
-    asText(fields["Assignment Full Name"], asText(fields["Assignment Title"], "Homework Assignment")),
-  );
+  return resolvePublicAssignmentName(fields);
 }
 
 export function resolveAssignmentDescription(fields: PublicHomeworkLibraryFields): string | null {

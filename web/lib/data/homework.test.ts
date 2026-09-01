@@ -9,6 +9,7 @@ import {
   parseWeekNumber,
   resolveAssignmentDueDateKey,
   resolveInstructionsPreview,
+  resolvePublicAssignmentName,
   resolveSubmissionRequirement,
   type ScheduledPhaRow,
 } from "@/lib/data/homework";
@@ -129,6 +130,16 @@ describe("resolveAssignmentDueDateKey", () => {
 });
 
 describe("homework presentation helpers", () => {
+  it("resolvePublicAssignmentName prefers Assignment Title over full-name fields", () => {
+    expect(
+      resolvePublicAssignmentName({
+        "Assignment Title": "Shot Tracker Usage",
+        "Assignment Full Name - Display": "Legacy Display",
+        "Assignment Full Name": "SA - Personal Game Plan - Shot Tracker Usage",
+      }),
+    ).toBe("Shot Tracker Usage");
+  });
+
   it("uses fallback instructions when brief description is blank", () => {
     expect(resolveInstructionsPreview("")).toBe("Instructions coming soon.");
     expect(resolveSubmissionRequirement("HW2", "")).toContain("Homework 2");
