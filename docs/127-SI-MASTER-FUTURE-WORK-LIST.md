@@ -685,7 +685,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-033 — Correct “More than a Scoreboard” Youth Programs vs Coach Tools copy
 
 **Priority:** P1  
-**Status:** Ready for prompt  
+**Status:** **COMPLETE** (2026-09-01) — `hoopchallenges-landing` PR **#16** merged (`a992fce`); live at www.fairfieldbasketballclub.com  
 **Systems:** Club landing / public website copy  
 **Correct repo:** `hoopchallenges-landing` (not `/shoot` in this repo)  
 **Related:** FUT-034 · FUT-036 · SC-149 · [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) § Website · Mike-approved naming taxonomy above
@@ -706,7 +706,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-034 — Standardize “Jr. Referee Clinic” naming everywhere
 
 **Priority:** P1  
-**Status:** Ready for prompt  
+**Status:** **COMPLETE (landing + SC docs, 2026-09-01)** — Landing PR **#16** (`a992fce`); SC brand guide PR **#317** (`9a8ae42b`). Fillout/email inventory remains optional follow-up.  
 **Systems:** Public website, emails, Fillout forms, documentation, user-facing copy (cross-repo)  
 **Correct repos:** `hoopchallenges-landing` + this repo (`web/`, Hub templates, docs) + Fillout + Jr. Referee Clinic product surfaces where the public name must match  
 **Related:** FUT-033 · FUT-036 · Mike-approved naming taxonomy above · SC-143 (multi-challenge — do not merge)
@@ -727,7 +727,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-035 — Replace navy-blue landing treatments with royal blue / orange brand system
 
 **Priority:** P2  
-**Status:** Ready for prompt  
+**Status:** **COMPLETE** (2026-09-01) — Landing PR **#16** (`a992fce`); header + club-mission on royal blue tokens; footer already brand-blue  
 **Systems:** Club landing visual design (header, “More than a Scoreboard,” related image/content section, footer)  
 **Correct repo:** `hoopchallenges-landing`  
 **Related:** FUT-019 (SC site footer — **COMPLETE**, separate app) · SC-149 · `BRAND_STANDARDS.md` (sync check vs landing canonical brand doc)
@@ -1386,9 +1386,9 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 
 | Item | Status | Notes |
 |---|---|---|
-| **FUT-033** | READY | Landing “More than a Scoreboard” Youth Programs vs Coach Tools copy — `hoopchallenges-landing` |
-| **FUT-034** | READY | Standardize **Jr. Referee Clinic** (never **Jr. Ref**) — cross-repo user-facing copy |
-| **FUT-035** | READY | Replace navy with royal blue/orange on landing header / Scoreboard section / footer — landing repo |
+| **FUT-033** | **COMPLETE** | Landing PR **#16** merged 2026-09-01 — Youth Programs vs Coach Tools copy live |
+| **FUT-034** | **COMPLETE** | Landing PR **#16** + SC PR **#317** merged 2026-09-01 — Jr. Referee Clinic naming |
+| **FUT-035** | **COMPLETE** | Landing PR **#16** merged 2026-09-01 — navy → royal blue header/club-mission |
 | **FUT-036** | READY | Redesign Upcoming Programs — six differentiated cards; Youth Programs vs Coach Tools |
 | **FUT-037** | READY (blocked on images) | Program images under `/public/images/programs/` — Mike supplies assets |
 | **FUT-038** | READY (brief first) | Global category on/off; disabled categories must not block GOAT / levels — Airtable + automations + web + email |

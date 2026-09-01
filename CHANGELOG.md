@@ -70,6 +70,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **FUT-034 Jr. Referee Clinic naming (2026-09-01)** — Public brand guide uses **Jr. Referee Clinic** (never bare **Jr. Ref**). Merged PR **#317** (`9a8ae42b`). Landing hub naming shipped in `hoopchallenges-landing` PR **#16** (`a992fce`).
 - **Gift card commitment + About the Coach public copy (2026-08-30)** — Mike-approved parent-facing
   wording: FAQ gift-card award commitment (`/shoot/faq`); homepage About the Coach section
   (`/shoot#about-the-coach`). Copy module `web/lib/seo/public-program-content.ts`; Vitest +
