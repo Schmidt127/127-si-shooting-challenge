@@ -45,6 +45,23 @@ export const WAS_FIELDS = Object.freeze({
   error: "Weekly Email Error",
 });
 
+/** Hub → Resend writeback fields (FUT-006 / WE-06). Hub owns writes — harness read-only. */
+export const WAS_WRITEBACK_FIELDS = Object.freeze({
+  hubEventId: "Hub Event ID",
+  sent: "Weekly Email Sent?",
+  sentAt: "Weekly Email Sent At",
+  summarySentAt: "Weekly Summary Sent At",
+  status: "Weekly Summary Email Status",
+  error: "Weekly Email Error",
+});
+
+export const WAS_STATUS = Object.freeze({
+  notReady: "Not Ready",
+  readyForSend: "Ready for Send",
+  sent: "Sent",
+  error: "Error",
+});
+
 export const QUEUE_FIELDS = Object.freeze({
   handoffKey: "Handoff Key",
   eventType: "Event Type",
@@ -58,6 +75,7 @@ export const CHAIN_STAGES = Object.freeze([
   { id: "WE-03", automation: "119", label: "Send arm", field: WAS_FIELDS.sendToMake },
   { id: "WE-04", automation: "074", label: "Queue row", table: TABLES.queue },
   { id: "WE-05", automation: "079", label: "Hub dispatch", table: TABLES.queue },
+  { id: "WE-06", automation: "Hub", label: "WAS writeback", table: TABLES.was, contract: "FUT-006" },
 ]);
 
 export const EVIDENCE_DIR = resolve(
@@ -86,15 +104,176 @@ export function buildWeeklyHandoffKey(wasId) {
   return `WEEKLY_ATHLETE_SUMMARY|WEEKLY_ATHLETE_SUMMARY|${wasId}`;
 }
 
+export function hasText(value) {
+  return Boolean(String(value ?? "").trim());
+}
+
+export function matchingQueueRows(queueRows, wasId) {
+  const handoffKey = buildWeeklyHandoffKey(wasId);
+  return queueRows.filter(
+    (row) => String(row.fields?.[QUEUE_FIELDS.handoffKey] || "") === handoffKey,
+  );
+}
+
+/** Fetch Hub → Resend writeback field subset for a WAS record (read-only). */
+export async function fetchWasWritebackFields(token, baseId, wasId) {
+  const was = await getRecord(token, baseId, TABLES.was, wasId);
+  return pickWritebackFields(was.fields || {});
+}
+
+/**
+ * Determine observable writeback phase from WAS + queue state.
+ * Returns none when chain has not reached Hub accept.
+ */
+export function determineWritebackPhase(fields, wasId, queueRows = []) {
+  const queue = matchingQueueRows(queueRows, wasId);
+  const queueStatuses = queue.map((row) => String(row.fields?.[QUEUE_FIELDS.status] || ""));
+  const hubEventId = String(fields[WAS_WRITEBACK_FIELDS.hubEventId] || "").trim();
+  const sent = truthy(fields[WAS_WRITEBACK_FIELDS.sent]);
+  const status = String(fields[WAS_WRITEBACK_FIELDS.status] || "").trim();
+
+  if (sent && status === WAS_STATUS.sent) {
+    return {
+      phase: "resend_success",
+      observable: true,
+      detail: "Weekly Email Sent? + Weekly Summary Email Status = Sent",
+    };
+  }
+
+  if (status === WAS_STATUS.error) {
+    return {
+      phase: "resend_failure",
+      observable: true,
+      detail: "Weekly Summary Email Status = Error",
+    };
+  }
+
+  if ((hubEventId || queueStatuses.includes("Accepted")) && !sent) {
+    return {
+      phase: "hub_accept",
+      observable: true,
+      detail: hubEventId
+        ? `Hub Event ID ${hubEventId}`
+        : `queue Status Accepted (${queueStatuses.join(", ")})`,
+    };
+  }
+
+  if (queueStatuses.includes("Sent") && !sent) {
+    return {
+      phase: "hub_accept",
+      observable: true,
+      detail: "queue Sent but WAS Sent? still false — awaiting Resend writeback",
+    };
+  }
+
+  return { phase: "none", observable: false, detail: "Hub accept not yet observable" };
+}
+
+/** Contract diff for one field expectation. */
+export function diffWritebackField(field, expected, actual, pass) {
+  return { field, expected, actual, pass };
+}
+
+/**
+ * Evaluate FUT-006 writeback contract for the current observable phase.
+ * Harness never writes these fields — Hub owns writeback.
+ */
+export function evaluateWritebackContract(fields, wasId, queueRows = []) {
+  const phaseInfo = determineWritebackPhase(fields, wasId, queueRows);
+  const checks = [];
+
+  if (!phaseInfo.observable) {
+    return {
+      id: "WE-06",
+      phase: phaseInfo.phase,
+      observable: false,
+      pass: false,
+      skipped: true,
+      detail: phaseInfo.detail,
+      checks: [],
+      writebackFields: pickWritebackFields(fields),
+    };
+  }
+
+  const hubEventId = String(fields[WAS_WRITEBACK_FIELDS.hubEventId] || "").trim();
+  const sent = truthy(fields[WAS_WRITEBACK_FIELDS.sent]);
+  const sentAt = fields[WAS_WRITEBACK_FIELDS.sentAt];
+  const summarySentAt = fields[WAS_WRITEBACK_FIELDS.summarySentAt];
+  const status = String(fields[WAS_WRITEBACK_FIELDS.status] || "").trim();
+  const error = String(fields[WAS_WRITEBACK_FIELDS.error] || "").trim();
+
+  if (phaseInfo.phase === "hub_accept") {
+    checks.push(
+      diffWritebackField(WAS_WRITEBACK_FIELDS.hubEventId, "non-empty", hubEventId || "(empty)", hasText(hubEventId)),
+      diffWritebackField(WAS_WRITEBACK_FIELDS.sent, false, sent, !sent),
+      diffWritebackField(WAS_WRITEBACK_FIELDS.sentAt, "(empty)", sentAt ?? "(empty)", !hasText(sentAt)),
+      diffWritebackField(
+        WAS_WRITEBACK_FIELDS.summarySentAt,
+        "(empty)",
+        summarySentAt ?? "(empty)",
+        !hasText(summarySentAt),
+      ),
+      diffWritebackField(
+        WAS_WRITEBACK_FIELDS.status,
+        "not Sent",
+        status || "(empty)",
+        status !== WAS_STATUS.sent,
+      ),
+    );
+  } else if (phaseInfo.phase === "resend_success") {
+    checks.push(
+      diffWritebackField(WAS_WRITEBACK_FIELDS.sent, true, sent, sent),
+      diffWritebackField(WAS_WRITEBACK_FIELDS.sentAt, "set", sentAt ?? "(empty)", hasText(sentAt)),
+      diffWritebackField(
+        WAS_WRITEBACK_FIELDS.summarySentAt,
+        "set",
+        summarySentAt ?? "(empty)",
+        hasText(summarySentAt),
+      ),
+      diffWritebackField(WAS_WRITEBACK_FIELDS.status, WAS_STATUS.sent, status || "(empty)", status === WAS_STATUS.sent),
+      diffWritebackField(WAS_WRITEBACK_FIELDS.error, "(cleared)", error || "(empty)", !error),
+    );
+  } else if (phaseInfo.phase === "resend_failure") {
+    checks.push(
+      diffWritebackField(WAS_WRITEBACK_FIELDS.sent, false, sent, !sent),
+      diffWritebackField(WAS_WRITEBACK_FIELDS.status, WAS_STATUS.error, status, status === WAS_STATUS.error),
+      diffWritebackField(WAS_WRITEBACK_FIELDS.error, "sanitized reason", error || "(empty)", hasText(error)),
+    );
+  }
+
+  const pass = checks.every((check) => check.pass);
+
+  return {
+    id: "WE-06",
+    phase: phaseInfo.phase,
+    observable: true,
+    pass,
+    skipped: false,
+    detail: phaseInfo.detail,
+    checks,
+    writebackFields: pickWritebackFields(fields),
+  };
+}
+
+export function pickWritebackFields(fields) {
+  const picked = {};
+  for (const name of Object.values(WAS_WRITEBACK_FIELDS)) {
+    if (Object.prototype.hasOwnProperty.call(fields || {}, name)) {
+      picked[name] = fields[name];
+    }
+  }
+  return picked;
+}
+
 export function evaluateChainSnapshot(fields, wasId, queueRows = []) {
   const handoffKey = buildWeeklyHandoffKey(wasId);
-  const matchingQueue = queueRows.filter(
-    (row) => String(row.fields?.[QUEUE_FIELDS.handoffKey] || "") === handoffKey
-  );
+  const matchingQueue = matchingQueueRows(queueRows, wasId);
   const packageBuilt =
     truthy(fields[WAS_FIELDS.ready]) &&
     Boolean(String(fields[WAS_FIELDS.subject] || "").trim()) &&
     Boolean(fields[WAS_FIELDS.payload] || fields[WAS_FIELDS.html]);
+
+  const writeback = evaluateWritebackContract(fields, wasId, queueRows);
 
   const stages = [
     {
@@ -129,15 +308,34 @@ export function evaluateChainSnapshot(fields, wasId, queueRows = []) {
         ? matchingQueue.map((row) => row.fields?.[QUEUE_FIELDS.status]).join(", ")
         : "no dispatch state",
     },
+    {
+      id: "WE-06",
+      pass: writeback.pass,
+      skipped: writeback.skipped,
+      phase: writeback.phase,
+      observable: writeback.observable,
+      detail: writeback.skipped
+        ? writeback.detail
+        : writeback.pass
+          ? `${writeback.phase} contract OK`
+          : `${writeback.phase} contract mismatch`,
+      checks: writeback.checks,
+    },
   ];
+
+  const chainPassed = stages.slice(0, 5).every((stage) => stage.pass);
+  const writebackPassed = writeback.skipped || writeback.pass;
 
   return {
     wasId,
     handoffKey,
     weeklyEmailSent: truthy(fields[WAS_FIELDS.sent]),
     summaryKey: String(fields[WAS_FIELDS.summaryKey] || ""),
+    writeback,
     stages,
-    passed: stages.every((stage) => stage.pass),
+    passed: chainPassed && writebackPassed,
+    chainPassed,
+    writebackPassed,
     furthestStage: stages.filter((s) => s.pass).length,
   };
 }
@@ -180,7 +378,6 @@ export function buildDryRunPlan({ wasId, armBuild = false, armSend = false }) {
 }
 
 export async function loadWasSnapshot(token, baseId, wasId) {
-  const fields = Object.values(WAS_FIELDS);
   const was = await getRecord(token, baseId, TABLES.was, wasId);
   const handoffKey = buildWeeklyHandoffKey(wasId);
   const queueRows = await listRecords(token, baseId, TABLES.queue, {
@@ -189,6 +386,31 @@ export async function loadWasSnapshot(token, baseId, wasId) {
     fields: [QUEUE_FIELDS.handoffKey, QUEUE_FIELDS.status, QUEUE_FIELDS.eventType],
   });
   return evaluateChainSnapshot(was.fields || {}, wasId, queueRows);
+}
+
+/** Read-only WE-06 writeback snapshot + contract diff (FUT-006). */
+export async function loadWasWritebackSnapshot(token, baseId, wasId) {
+  const was = await getRecord(token, baseId, TABLES.was, wasId);
+  const handoffKey = buildWeeklyHandoffKey(wasId);
+  const queueRows = await listRecords(token, baseId, TABLES.queue, {
+    filterByFormula: `{${QUEUE_FIELDS.handoffKey}} = "${handoffKey.replace(/"/g, '\\"')}"`,
+    maxRecords: 5,
+    fields: [QUEUE_FIELDS.handoffKey, QUEUE_FIELDS.status, QUEUE_FIELDS.eventType],
+  });
+  const fields = was.fields || {};
+  const writeback = evaluateWritebackContract(fields, wasId, queueRows);
+  const phaseInfo = determineWritebackPhase(fields, wasId, queueRows);
+  return {
+    wasId,
+    handoffKey,
+    mode: "verify-writeback",
+    writebackFields: writeback.writebackFields,
+    phase: phaseInfo,
+    contract: writeback,
+    queueStatuses: matchingQueueRows(queueRows, wasId).map((row) => row.fields?.[QUEUE_FIELDS.status]),
+    passed: writeback.skipped ? null : writeback.pass,
+    skipped: writeback.skipped,
+  };
 }
 
 export async function assertDisposableWas(token, baseId, wasId, { force = false } = {}) {
@@ -273,10 +495,17 @@ export async function applySendArm(token, baseId, wasId) {
 export function evaluateOfflineContract() {
   return {
     harness: HARNESS_ID,
-    chain: "118 → 072 → 119 → 074 → 079 → Communications Hub → Resend",
+    chain: "118 → 072 → 119 → 074 → 079 → Communications Hub → Resend → WAS writeback",
     handoffKeyPattern: "WEEKLY_ATHLETE_SUMMARY|WEEKLY_ATHLETE_SUMMARY|{wasId}",
     githubVersions: { "072": "v4.8", "119": "v1.7", "074": "v3.3", "079": "v2.5" },
     sentOwnership: "Hub/Resend writeback — 074/079 do not set Weekly Email Sent?",
+    writebackContract: "FUT-006 / WEEKLY_SUMMARY_SOURCE_WRITEBACK_v1",
+    writebackStages: {
+      "WE-06": {
+        hub_accept: ["Hub Event ID set", "Weekly Email Sent? false", "timestamps unset", "Status not Sent"],
+        resend_success: ["Sent? true", "Sent At + Summary Sent At set", "Status Sent", "Error cleared"],
+      },
+    },
     pass: true,
   };
 }

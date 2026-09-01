@@ -42,10 +42,11 @@ test("evaluateChainSnapshot — empty WAS", () => {
   const snap = evaluateChainSnapshot({}, "recWasTest0001", []);
   assert.equal(snap.furthestStage, 0);
   assert.equal(snap.passed, false);
-  assert.equal(snap.stages.length, 5);
+  assert.equal(snap.stages.length, 6);
+  assert.equal(snap.writeback.skipped, true);
 });
 
-test("evaluateChainSnapshot — full chain", () => {
+test("evaluateChainSnapshot — full chain through hub accept (WE-06)", () => {
   const wasId = "recWasTest0001";
   const fields = {
     "Build Weekly Email Now?": true,
@@ -53,6 +54,9 @@ test("evaluateChainSnapshot — full chain", () => {
     "Weekly Email Subject": "Weekly summary",
     "Weekly Email Payload JSON": "{}",
     "Send to Make?": true,
+    "Hub Event ID": "recHubEvent001",
+    "Weekly Email Sent?": false,
+    "Weekly Summary Email Status": "Ready for Send",
   };
   const queue = [
     {
@@ -63,8 +67,10 @@ test("evaluateChainSnapshot — full chain", () => {
     },
   ];
   const snap = evaluateChainSnapshot(fields, wasId, queue);
+  assert.equal(snap.chainPassed, true);
+  assert.equal(snap.writebackPassed, true);
   assert.equal(snap.passed, true);
-  assert.equal(snap.furthestStage, 5);
+  assert.equal(snap.furthestStage, 6);
 });
 
 test("buildDryRunPlan arms build then optional send", () => {
