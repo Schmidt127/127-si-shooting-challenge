@@ -107,8 +107,8 @@ t("073 does not write final Sent fields", () => {
   assert.doesNotMatch(s073, /\[["']Parent Feedback Sent On["']\]\s*:/);
   assert.doesNotMatch(s073, /\[["']Parent Feedback Sent\?["']\]\s*:/);
 });
-t("074 v3.3 creates Communications Hub queue handoff (not Make webhook)", () => {
-  assert.match(s074, /Version: v3\.3/);
+t("074 v3.5 creates Communications Hub queue handoff (not Make webhook)", () => {
+  assert.match(s074, /Version: v3\.5/);
   assert.match(s074, /Email Handoff Queue/);
   assert.match(s074, /WEEKLY_ATHLETE_SUMMARY\|WEEKLY_ATHLETE_SUMMARY\|/);
   assert.match(s074, /created_handoff/);
