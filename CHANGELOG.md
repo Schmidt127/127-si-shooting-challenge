@@ -8,6 +8,10 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Airtable
 
+#### Changed
+- **FUT-041 Daily Submission XP columns (2026-09-01)** — **076 v8.12** adds `xpEarned` (active `SUBMISSION_XP|` total) and `xpExtraCredit` (`0` until a stored daily extra-credit source exists); `submissionXp` mirrors `xpEarned`. Hub `DAILY_SUBMISSION` template renders horizontal **XP Earned** | **Extra Credit** columns (Extra Credit always shown). Display-time split only — no XP award logic change. Checklist: [`docs/deploy-checklists/FUT-041-daily-submission-xp-columns.md`](./docs/deploy-checklists/FUT-041-daily-submission-xp-columns.md).
+- **FUT-046 Homework feedback email subject (2026-09-01)** — **071 v4.3** sends public `assignmentTitle` (FUT-045 precedence from Homework Library), `athleteFirstName`, and `athleteLastName` in Hub payload. Subject rendering remains Hub-owned. Checklist: [`docs/deploy-checklists/FUT-046-homework-feedback-subject.md`](./docs/deploy-checklists/FUT-046-homework-feedback-subject.md).
+
 #### Added
 - **065 v10.5 XP points reconcile fix (2026-08-31)** — Ownership assert no longer requires existing `XP Points` to already equal `Total Homework XP Awarded`. Partial Extra Credit awards can reconcile when Base XP is written later (updates the same `HOMEWORK_XP|{hcId}` row + Awarded). **Mike Production paste + verify COMPLETE** — Parent Feedback Sent? checked and Sent On correct after run. Packet: [`docs/deploy-checklists/065-v10.5-points-reconcile-operator-packet.md`](./docs/deploy-checklists/065-v10.5-points-reconcile-operator-packet.md) · paste [`docs/deploy-checklists/065-v10.5-PASTE.txt`](./docs/deploy-checklists/065-v10.5-PASTE.txt).
 - **FUT-032 Homework Hub → Resend source writeback (2026-08-31)** — Production Homework Completions gained Video-parity fields: `Parent Feedback Delivery Status`, `Delivery Error`, `Hub Event ID`, `Resend Message ID`. Hub writes `Parent Feedback Sent?` / `Sent On` after Resend (071 still does not). Checklist: [`docs/deploy-checklists/FUT-032-homework-hub-resend-writeback.md`](./docs/deploy-checklists/FUT-032-homework-hub-resend-writeback.md). **COMPLETE** — Mike verified Sent? + Sent On live 2026-08-31 (same session as **065 v10.5**).
@@ -70,6 +74,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **FUT-046 Homework feedback email subject (2026-09-01)** — Communications Hub `HOMEWORK_FEEDBACK` subject:
+  `Homework Feedback – First Name Last Name – Assignment Name`; `[TEST]` prefix when `testMode: true`.
+  Pairs with **071 v4.3** payload fields. Hub repo: `communications` (`lib/template-candidate-renderer.js`, `lib/welcome-processor.js`).
 - **FUT-031 + FUT-044 + FUT-045 web bundle (2026-09-01)** — PR **#319** merged `de21fa36`;
   Vercel Production deploy verified same day.
   - **FUT-044** — Athlete profile homework rows keep a single **View Submitted Homework**

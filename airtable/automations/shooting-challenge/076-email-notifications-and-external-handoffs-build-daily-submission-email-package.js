@@ -33,11 +33,14 @@ Filename may still say email package; current path is Hub queue create only.
  * 076 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Daily Submission Communications Hub Handoff
  *
- * Version: v8.11
+ * Version: v8.12
  * Date Written: 2026-05-29
- * Last Updated: 2026-08-22
+ * Last Updated: 2026-09-01
  *
  * VERSION HISTORY
+ * - v8.12 (2026-09-01): FUT-041 — payload adds xpEarned (SUBMISSION_XP| active
+ *   points) and xpExtraCredit (0 until a stored daily extra-credit source exists).
+ *   submissionXp mirrors xpEarned for backward-compatible Hub contracts.
  * - v8.11 (2026-08-22): Daily Submission payload adds canonical homeworkPageUrl
  *   (`/shoot/homework`); homeworkItems omit per-assignment library URLs.
  * - v8.10 (2026-08-22): Daily Submission payload — submissionStatMode,
@@ -142,10 +145,10 @@ Filename may still say email package; current path is Hub queue create only.
 
 const SCRIPT = {
   scriptName: "076 - Daily Submission Communications Hub Handoff",
-  version: "v8.11",
-  versionDate: "2026-08-22",
+  version: "v8.12",
+  versionDate: "2026-09-01",
   originalWrittenDate: "2026-05-29",
-  lastUpdated: "2026-08-22",
+  lastUpdated: "2026-09-01",
   folder: "07 - Email, Notifications, and External Handoffs",
   automationName: "076 - Daily Submission Communications Hub Handoff",
 };
@@ -247,6 +250,7 @@ const CONFIG = {
     xp: {
       active: "Active?",
       points: "XP Points",
+      sourceKey: "Source Key",
       enrollment: "Enrollment",
       week: "Week",
       submission: "Submission",
@@ -299,6 +303,7 @@ const CONFIG = {
 };
 
 const TZ = "America/Denver";
+const SUBMISSION_XP_SOURCE_KEY_PREFIX = "SUBMISSION_XP|";
 
 /* =========================================================
    SECTION 3: OUTPUT AND FIELD HELPERS
@@ -736,9 +741,14 @@ async function main() {
       same(ids(row, xpT, CONFIG.fields.xp.week), [weekId])
   );
   const submissionXpRows = activeXp.filter((row) => ids(row, xpT, CONFIG.fields.xp.submission).includes(recordId));
-  const submissionXp = submissionXpRows.length
-    ? submissionXpRows.reduce((sum, row) => sum + num(row, xpT, CONFIG.fields.xp.points), 0)
+  const submissionBaseXpRows = submissionXpRows.filter((row) =>
+    text(row, xpT, CONFIG.fields.xp.sourceKey).startsWith(SUBMISSION_XP_SOURCE_KEY_PREFIX)
+  );
+  const xpEarned = submissionBaseXpRows.length
+    ? submissionBaseXpRows.reduce((sum, row) => sum + num(row, xpT, CONFIG.fields.xp.points), 0)
     : null;
+  const xpExtraCredit = 0;
+  const submissionXp = xpEarned;
   const weeklyXp = activeXp.reduce((sum, row) => sum + num(row, xpT, CONFIG.fields.xp.points), 0);
   const weeklyShots = num(was, wasT, CONFIG.fields.was.shots);
   const weeklyGoal = weeklyGoalTarget;
@@ -859,6 +869,8 @@ async function main() {
     ...(shootingDetails ? { shootingDetails } : {}),
     shootingPercentage: shots > 0 ? Math.round((makes / shots) * 100) : null,
     submissionXp,
+    xpEarned,
+    xpExtraCredit,
     ...(submissionXp === null ? { submissionXpStatus: "Pending / not yet awarded" } : {}),
     weeklyShots,
     weeklyGoal,
