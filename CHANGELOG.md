@@ -6,6 +6,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Lambda
+
+#### Added
+- **FUT-007 AWS media naming — Phase 3 prep (2026-09-01)** — `lambda/upload-asset/upload_core/fut007_basename.py` implements FUT-007 basename grammar (sanitize, category, custom segment, collision suffix) mirroring `lib/aws-media-naming/`. Integrated behind `USE_FUT007_BASENAME` env flag / `FUT007_BASENAME_ENABLED` constant (default **off**) in `storage_key.py`. Tests: `tests/test_fut007_basename.py` (28 pytest cases). **No Production deploy; flag not enabled.**
+
 ### Docs
 
 #### Added

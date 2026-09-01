@@ -49,6 +49,7 @@ python -m unittest discover -s tests -p "test_*.py" -v
 | `CHALLENGE_SLUG` | Unused in the current object-key shape; kept for env compatibility |
 | `UPLOAD_WEBHOOK_SECRET` | Upload POST secret |
 | `VIEWER_PRESIGN_TTL_SECONDS` | Optional; default `900` |
+| `USE_FUT007_BASENAME` | **Optional — default off.** Set to `1` in DEV only after Mike approves FUT-007 proof. When enabled, new uploads use the FUT-007 basename grammar (see below). Production must stay `0` until promotion checklist is complete. |
 
 Do not set `AWS_REGION` in Lambda env (reserved). Region = `us-east-2` on the function.
 
@@ -73,6 +74,22 @@ Schmidt_Xavier/Shooting_Challenge_2026-2027/2026-08-17/20260817T172732Z_HW1_recA
 - Date and UTC stamp come from the asset `Created Time` / `Created` fields.
 - Lambda writes `Storage Key` before S3. Retries reuse that exact key.
 - `ATHLETE_SLUG_OVERRIDE` and `CHALLENGE_SLUG` do not shape this path.
+
+### FUT-007 basename (opt-in — Phase 3 prep)
+
+**Default:** legacy builder above. **Not enabled in Production.**
+
+When `USE_FUT007_BASENAME=1` (or code constant `FUT007_BASENAME_ENABLED` in `upload_core/storage_key.py`), the filename segment becomes:
+
+```text
+{YYYYMMDD}_{HW|VIDEO|HEADSHOT}_{LastName}_{FirstName}_{CustomName}.{ext}
+
+Boltz_Drew/Shooting_Challenge_2026-2027/2026-08-17/20260817_VIDEO_Boltz_Drew_OffTheDribble.mp4
+```
+
+- Activity Date (America/Denver) drives `YYYYMMDD` and the date folder — not Created Time.
+- No `rec…` in the basename; retries reuse the persisted **Storage Key**.
+- Helpers: `upload_core/fut007_basename.py` · spec: [`docs/next-wave/aws-media/FUT-007-AWS-MEDIA-NAMING-SPEC.md`](../../docs/next-wave/aws-media/FUT-007-AWS-MEDIA-NAMING-SPEC.md) · promotion: [`docs/deploy-checklists/FUT-007-aws-media-naming.md`](../../docs/deploy-checklists/FUT-007-aws-media-naming.md)
 
 ## Deploy
 
