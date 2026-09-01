@@ -19,7 +19,7 @@ Optional note after a `#` if one item needs nuance, e.g. `8C # use B for video o
 
 ---
 
-## Decisions (10 items)
+## Decisions (12 items)
 
 | # | Question | Options | Brief recommendation | Impact if wrong |
 |---|----------|---------|----------------------|-----------------|
