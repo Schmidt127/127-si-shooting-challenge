@@ -226,7 +226,7 @@ The current parent-facing email workflows are functional and can be used for the
 
 Optional future work may improve visual presentation or wording, but email functionality is not a blocker for the upcoming challenge.
 
-**Remaining writeback gap:** Weekly Athlete Summary Sent? after Hub → Resend (still TBD). Homework Completions Sent?/Sent On — **FUT-032 COMPLETE** (2026-08-31 Mike verify). Hub PR [#42](https://github.com/Schmidt127/communications/pull/42) **MERGED**.
+**Remaining writeback gap:** ~~Weekly Athlete Summary Sent? after Hub → Resend (still TBD)~~ **CLOSED in repo** (2026-09-01) — Hub `source-writeback-weekly-summary.js` + contract `WEEKLY_SUMMARY_SOURCE_WRITEBACK_v1.md`; **paste/deploy pending** ([`deploy-checklists/FUT-006-weekly-was-hub-writeback.md`](./deploy-checklists/FUT-006-weekly-was-hub-writeback.md)). Homework Completions Sent?/Sent On — **FUT-032 COMPLETE** (2026-08-31 Mike verify). Hub PR [#42](https://github.com/Schmidt127/communications/pull/42) **MERGED**.
 
 ---
 
