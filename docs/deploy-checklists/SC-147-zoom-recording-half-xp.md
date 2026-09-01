@@ -34,6 +34,17 @@ A dedicated **recording-credit XP writer** distinct from:
 
 **Policy (Mike 2026-08-27):** Recording credit counts toward level gates at **half live XP**; does **not** count toward Perfect Week; no duplicate with live 101 for same meeting+enrollment.
 
+### Why slot 147 (not 117)
+
+| Slot | Role | Use for SC-147? |
+|------|------|-----------------|
+| **117 v2.1** | Recording approval **email** only | **No** — do not add XP logic |
+| **118 / 119** | Weekly summary schedulers | **No** |
+| **101** | Live attendance XP | **No** — separate writer |
+| **147** | New folder **17 - Zoom Recording Credit** | **Yes** — preferred |
+
+See [`automation-index.md`](../automation-index.md) Zoom section.
+
 ---
 
 ## Mike decisions still open
@@ -107,42 +118,23 @@ See **§ Disposable DEV proof** below. Minimum gates before turning automation O
 
 ---
 
-## Pre-install gates (DEV first)
+## DEV proof — offline (repo, no Airtable)
 
-- [ ] Offline tests pass: `node airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.test.js`
-- [ ] Confirm **117** remains email-only (no XP Event writes, no Attendees writes)
-- [ ] Confirm active **ZOOM_ATTEND_BASE** rule row exists (required for amount resolution)
-- [ ] Create or confirm **ZOOM_RECORDING** XP Reward Rules row (recommended; else floor(live/2))
-- [ ] **Do not** overload automation **117** with XP logic
-- [ ] **Do not** write `Zoom Meetings.Attendees` from this automation
+Run **before** any paste:
+
+```bash
+node airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.test.js
+```
+
+Optional Agent 4 suite:
+
+```bash
+node tools/testing/run-agent4-suite.js sc-147-zoom-recording-credit
+```
 
 ---
 
-## DEV install steps
-
-Execute **in order** on DEV base first.
-
-### 1. XP Reward Rules (if row missing)
-
-| # | Action | Rule Key | XP Amount | Active? | Done |
-|---|--------|----------|-----------|---------|------|
-| 1 | Create or verify row | `ZOOM_RECORDING` | Mike confirms (e.g. 30 if live base = 60) | Yes | [ ] |
-| 2 | Verify live base row | `ZOOM_ATTEND_BASE` | Existing live amount | Yes | [ ] |
-| 3 | Confirm no duplicate active rows for either key | | | | [ ] |
-
-### 2. Automation install
-
-| # | Action | Automation name (placeholder) | GitHub script | Paste lines | Done |
-|---|--------|------------------------------|---------------|-------------|------|
-| 1 | Create automation in folder **17 - Zoom Recording Credit** | `147 - Zoom Recording Credit - Award Half XP (SC-147)` | `147-zoom-recording-credit-award-half-xp.js` | docblock → end (skip GitHub header) | [ ] |
-| 2 | Trigger table | **Zoom Attendance** | | | [ ] |
-| 3 | Trigger type | When record matches conditions (or updated — Mike chooses) | | | [ ] |
-| 4 | Recommended conditions | Recording Quiz Satisfactory? checked; Zoom Credit Conflict? ≠ 1 | | | [ ] |
-| 5 | Input `recordId` | Dynamic triggering Zoom Attendance record ID | | | [ ] |
-| 6 | Map script outputs | `statusOut`, `actionOut`, `errorOut`, `debugStep`, `sourceKeyOut`, `xpEventIdOut`, `xpAmountOut` | | | [ ] |
-| 7 | Leave automation **OFF** until disposable proof plan ready | | | | [ ] |
-
-### 3. Disposable DEV proof
+## Disposable DEV proof (Airtable)
 
 Use a disposable enrollment (Schmidt / Testing path). Record evidence under `docs/testing/evidence/sc-147/`.
 
@@ -156,7 +148,7 @@ Use a disposable enrollment (Schmidt / Testing path). Record evidence under `doc
 | **117 boundary** | Satisfactory path still fires 117 email separately | Email Handoff created; **117 does not write XP** | [ ] |
 | **Perfect Week** | Recording-only week (no live Attendees) | WAS / PW formulas unchanged — recording-only does not increment PW Zoom count | [ ] |
 
-### 4. SC-087 re-proof (after writer exists)
+### SC-087 re-proof (after writer exists)
 
 SC-087 live-vs-recording exclusivity must be re-proven with the live writer:
 
