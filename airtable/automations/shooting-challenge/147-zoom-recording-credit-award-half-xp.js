@@ -132,6 +132,7 @@ const CONFIG = {
   enrollments: {
     active: "Active?",
     progressProcessingEnabled: "Progress Processing Enabled?",
+    schoolYear: "School Year",
   },
 
   xpRewardRules: {
@@ -158,6 +159,7 @@ const CONFIG = {
   },
 
   configFields: {
+    activeSchoolYear: "Active School Year",
     xpPercent: "Zoom Recording XP Percent of Live",
   },
 
@@ -451,6 +453,65 @@ function resolveSc147XpAmountFromRules(rules = [], config = {}) {
   return { ok: true, reason: "ok", selected, xpAmount };
 }
 
+const SCHOOL_YEAR_RE = /^(\d{4})-(\d{4})$/;
+
+function normalizeSchoolYear(raw) {
+  if (raw == null) return { ok: false, message: "School year is blank or null." };
+  const trimmed = String(raw).trim();
+  if (!trimmed) return { ok: false, message: "School year is blank after trim." };
+  const dashed = trimmed
+    .replace(/[\u2013\u2014\u2212\uFE58\uFE63\uFF0D]/g, "-")
+    .replace(/\s*-\s*/g, "-");
+  const match = SCHOOL_YEAR_RE.exec(dashed);
+  if (!match) return { ok: false, message: `School year is malformed: "${trimmed}".` };
+  const start = Number(match[1]);
+  const end = Number(match[2]);
+  if (!Number.isInteger(start) || !Number.isInteger(end) || end !== start + 1) {
+    return { ok: false, message: `School year years must be consecutive: got ${start}-${end}.` };
+  }
+  return { ok: true, key: `${start}-${end}` };
+}
+
+function indexConfigRowsByYear(configTable, configRows) {
+  const byYear = new Map();
+  for (let i = 0; i < configRows.length; i += 1) {
+    const row = configRows[i];
+    const yearRaw = getText(row, configTable, CONFIG.configFields.activeSchoolYear);
+    const norm = normalizeSchoolYear(yearRaw);
+    if (!norm.ok) {
+      return { ok: false, message: `Config row[${i}] (${row.id || "no-id"}): ${norm.message}` };
+    }
+    if (byYear.has(norm.key)) {
+      return { ok: false, message: `Duplicate Config rows for school year ${norm.key}.` };
+    }
+    byYear.set(norm.key, row);
+  }
+  return { ok: true, byYear };
+}
+
+function resolveConfigRowForSchoolYear(configTable, configRows, enrollmentSchoolYear) {
+  const indexed = indexConfigRowsByYear(configTable, configRows);
+  if (!indexed.ok) return { ok: false, message: indexed.message };
+
+  const enrNorm = enrollmentSchoolYear
+    ? normalizeSchoolYear(enrollmentSchoolYear)
+    : { ok: false };
+
+  if (!enrNorm.ok) {
+    return {
+      ok: false,
+      message: "No school year available from Enrollment for Config selection.",
+    };
+  }
+
+  const match = indexed.byYear.get(enrNorm.key);
+  if (!match) {
+    return { ok: false, message: `No Config row for school year ${enrNorm.key}.` };
+  }
+
+  return { ok: true, configRow: match, schoolYearKey: enrNorm.key };
+}
+
 function canAwardSc147RecordingCredit({
   enrollmentId,
   zoomMeetingId,
@@ -601,7 +662,11 @@ async function main() {
   setOutputSafe("debugStep", "06 - load_enrollment");
   let progressProcessingEnabled = true;
   const enrollment = await enrollmentsTable.selectRecordAsync(enrollmentId, {
-    fields: [CONFIG.enrollments.progressProcessingEnabled, CONFIG.enrollments.active],
+    fields: [
+      CONFIG.enrollments.progressProcessingEnabled,
+      CONFIG.enrollments.active,
+      CONFIG.enrollments.schoolYear,
+    ],
   });
   if (enrollment && fieldExists(enrollmentsTable, CONFIG.enrollments.progressProcessingEnabled)) {
     progressProcessingEnabled = getCheckbox(enrollment, enrollmentsTable, CONFIG.enrollments.progressProcessingEnabled);
@@ -677,14 +742,32 @@ async function main() {
   let configMap = {};
   try {
     const configTable = base.getTable(CONFIG.tables.config);
-    if (fieldExists(configTable, CONFIG.configFields.xpPercent)) {
+    const enrollmentSchoolYear =
+      enrollment && fieldExists(enrollmentsTable, CONFIG.enrollments.schoolYear)
+        ? getText(enrollment, enrollmentsTable, CONFIG.enrollments.schoolYear)
+        : "";
+    if (
+      fieldExists(configTable, CONFIG.configFields.xpPercent) &&
+      fieldExists(configTable, CONFIG.configFields.activeSchoolYear) &&
+      enrollmentSchoolYear
+    ) {
       const configQuery = await configTable.selectRecordsAsync({
-        fields: [CONFIG.configFields.xpPercent],
+        fields: [CONFIG.configFields.activeSchoolYear, CONFIG.configFields.xpPercent],
       });
       try {
-        const first = configQuery.records[0];
-        if (first) {
-          configMap = { [CONFIG.configFields.xpPercent]: getRaw(first, configTable, CONFIG.configFields.xpPercent) };
+        const resolvedConfig = resolveConfigRowForSchoolYear(
+          configTable,
+          configQuery.records,
+          enrollmentSchoolYear,
+        );
+        if (resolvedConfig.ok) {
+          configMap = {
+            [CONFIG.configFields.xpPercent]: getRaw(
+              resolvedConfig.configRow,
+              configTable,
+              CONFIG.configFields.xpPercent,
+            ),
+          };
         }
       } finally {
         unloadQuerySafe(configQuery);
