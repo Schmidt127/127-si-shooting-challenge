@@ -795,10 +795,11 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-038 — Global configurable program-category on/off system
 
 **Priority:** P1  
-**Status:** Planned — architecture brief required before schema/automation work  
+**Status:** **Brief ready** (2026-09-01) — Phase 2 architecture complete; **do not implement** schema/automation/web/email until Mike selects ownership option (§3) and PKG-004 approves fields  
+**Brief:** [next-wave/config-selection/FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md](./next-wave/config-selection/FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md)  
 **Systems:** Airtable Config / Program Instance (or equivalent), XP, levels/gates, GOAT, achievements, milestones, weekly summaries, parent/athlete emails, website progress displays, related automations  
 **Correct repo:** this repo (+ Production Airtable after approved design)  
-**Related:** SC-034 / config-over-code · C-014 / SC-082 gate tuning · FUT-026 Player Manual · [v2/03-business-rules.md](./v2/03-business-rules.md) · [next-wave/config-selection/CONFIG-CONSUMER-INVENTORY.md](./next-wave/config-selection/CONFIG-CONSUMER-INVENTORY.md) · [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) § XP / levels
+**Related:** SC-034 / config-over-code · C-014 / SC-082 gate tuning · FUT-026 Player Manual · PKG-004 · [v2/03-business-rules.md](./v2/03-business-rules.md) · [next-wave/config-selection/CONFIG-CONSUMER-INVENTORY.md](./next-wave/config-selection/CONFIG-CONSUMER-INVENTORY.md) · [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) § XP / levels
 
 **Problem:** Coaches need to disable whole participation categories for a program instance/season without breaking XP, levels, GOAT, achievements, or communications.
 
@@ -1392,7 +1393,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **FUT-035** | **COMPLETE** | Landing PR **#16** merged 2026-09-01 — navy → royal blue header/club-mission |
 | **FUT-036** | **COMPLETE** | Landing PR **#17** merged 2026-09-01 — six Upcoming Programs cards; Youth/Coach groupings live |
 | **FUT-037** | READY (blocked on images) | Program images under `/public/images/programs/` — Mike supplies assets |
-| **FUT-038** | READY (brief first) | Global category on/off; disabled categories must not block GOAT / levels — Airtable + automations + web + email |
+| **FUT-038** | **Brief ready** | Global category on/off — [FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md](./next-wave/config-selection/FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md); Phase 3 blocked on Mike ownership + PKG-004 |
 | **FUT-039** | DEFERRED implement / Planned | Fillout branding CSS — planning only; do not implement yet |
 | **FUT-040** | READY (brief first) | Automatic S3 migration for HW / video / headshots; delete Airtable attachment **only after** verification — extends **FUT-010** |
 | **FUT-041** | **COMPLETE** | Daily Submission XP columns — PR **#321** `66f8c40b` + Hub **#43** `504a3ed`; **076 v8.12** paste pending |
