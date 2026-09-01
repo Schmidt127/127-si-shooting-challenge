@@ -6,6 +6,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Docs
+
+#### Added
+- **FUT-038 global category on/off architecture brief (2026-09-01)** — Phase 2 only: config ownership options, consumer inventory, gate-adjustment algorithm, web UX choices, Homework on/off test matrix, Phase 3 slices, PKG-004 gate note. Brief: [`docs/next-wave/config-selection/FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md`](./docs/next-wave/config-selection/FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md). Updated [`CONFIG-CONSUMER-INVENTORY.md`](./docs/next-wave/config-selection/CONFIG-CONSUMER-INVENTORY.md) § G. **No schema, automation, web, or email implementation.**
+
 ### Airtable
 
 #### Changed
@@ -78,7 +83,6 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
-- **FUT-043 consistent card design system (2026-09-01)** — Shared `--sc-card-*` tokens in `globals.css`, `components/ui/sc-card.tsx` helpers, and catalog panel alignment. Applied to athlete homework rows, dashboard XP activity, Game Log list shells, and dashboard achievement insets. Token doc: [`web/docs/sc-card-design-tokens.md`](./web/docs/sc-card-design-tokens.md). Hub mirror: `communications/emails/lib/card-tokens.js` (separate repo deploy). Checklist: [`docs/deploy-checklists/FUT-043-card-design-system.md`](./docs/deploy-checklists/FUT-043-card-design-system.md).
 - **FUT-042 Coach feedback quotation styling (2026-09-01)** — Shared `CoachFeedbackQuote` on athlete
   profile homework cards (orange left border, light blue-gray background, italic smaller text; hidden
   when empty). Hub homework + video feedback emails use matching inner quotation block inside the

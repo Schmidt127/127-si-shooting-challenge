@@ -192,3 +192,26 @@ Status: superseded by Stage 17 path; still documents the anti-pattern.
 - XP Reward Rules lookup by Rule Key + Active? (010/054/059) — separate from Config table
 - Levels / Level Gate Rules table reads in 042
 - Pure helpers that require caller to pass an already-resolved `config` object
+
+---
+
+## G. FUT-038 — Global category on/off (planned consumers)
+
+**Status:** Phase 2 brief ready — **no schema or automation changes yet**.  
+**Brief:** [FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md](./FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md)
+
+When implemented, every row below must read **Effective category flags** (PI + Config resolver per brief §4). Today **none** of these scripts read category flags.
+
+| Priority | Consumer | Category keys | Brief § |
+|----------|----------|---------------|---------|
+| P0 | **042** gate assignment | submissions, homework, video_feedback, zoom, streaks | 5.1, 6.1 |
+| P0 | Enrollment gate / Public Missing formulas | same | 5.1, 6.4 |
+| P0 | **057 → 058 → 059** Perfect Week | submissions, homework, video_feedback, zoom, achievements | 5.3, 6.2 |
+| P1 | **010**, **064/065**, **101**, **113/114**, **054**, **066**, **059** XP writers | per automation | 5.2 |
+| P1 | **072**, **076**, **071/073** email packages + Hub | homework, video, zoom, submissions | 5.4 |
+| P1 | **031–034** WAS / **033** PHA homework link | homework, submissions | 5.4 |
+| P2 | **020**, **005–009**, **070a/b/c** intake | homework, video, submissions | 5.5 |
+| P2 | Web `/shoot` profile, homework, zoom, levels | all | 5.6 |
+| P2 | Config latent fields `HW Review Enabled?`, `Video Review Enabled?`, `Submission XP Active?` | homework, video_feedback, submissions | §3 Option A — **semantic reuse requires Mike + PKG-004** |
+
+**Regression note:** Latent Config review toggles are listed in § C but have **no automation consumer** today; FUT-038 must not silently repurpose them without PKG-004 ownership approval.
