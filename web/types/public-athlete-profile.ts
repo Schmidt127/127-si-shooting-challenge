@@ -135,6 +135,8 @@ export type PublicHomeworkAssignment = {
   pastDue: boolean;
   lateSubmission: boolean;
   homeworkDetailHref: string | null;
+  /** Parent-facing reviewer URL for submitted homework files — never direct S3/Drive. */
+  viewSubmittedHomeworkHref: string | null;
 };
 
 export type PublicAchievementGroup =

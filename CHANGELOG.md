@@ -70,6 +70,12 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **FUT-044 athlete homework submission CTA (2026-09-01)** — Public athlete profile
+  homework rows keep a single **View Submitted Homework** link (lambda reviewer URL) and
+  do not render a redundant Submitted Work preview card. Data from Homework Completions
+  `Submission Asset: Reviewer File URL (lookup)`.
+- **FUT-045 public assignment naming (2026-09-01)** — Parent-facing homework labels prefer
+  Homework Library `Assignment Title` over full-name fields (`resolvePublicAssignmentName`).
 - **FUT-031 Game Log Extra Credit tagline (2026-08-31)** — When Homework Completion
   `Extra Credit XP Awarded` > 0, athlete Game Log and dashboard XP ledger show a
   display-only date-row tagline (e.g. `2026-08-31 · Extra credit +125 XP`). One Homework

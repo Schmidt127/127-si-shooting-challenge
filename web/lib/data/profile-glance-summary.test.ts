@@ -27,6 +27,7 @@ const baseAssignment = (
   pastDue: false,
   lateSubmission: false,
   homeworkDetailHref: null,
+  viewSubmittedHomeworkHref: null,
   ...overrides,
 });
 

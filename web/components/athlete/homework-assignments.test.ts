@@ -27,6 +27,7 @@ function assignment(
     pastDue: false,
     lateSubmission: false,
     homeworkDetailHref: "/homework/rechVLOeyEVIqmy2v",
+    viewSubmittedHomeworkHref: null,
     ...overrides,
   };
 }
@@ -108,6 +109,37 @@ describe("HomeworkAssignments UI", () => {
     const html = render([assignment()]);
     expect(html).toContain("grid gap-3");
     expect(html).toContain("sm:grid-cols-[minmax(0,1.6fr)_repeat(4,minmax(0,1fr))]");
+  });
+
+  it("shows View Submitted Homework CTA without a redundant Submitted Work card", () => {
+    const reviewerUrl =
+      "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/recReiXXBRtaW3lns?token=abc123";
+    const html = render([
+      assignment({
+        completionStatus: "submitted",
+        completionStatusLabel: "Submitted",
+        viewSubmittedHomeworkHref: reviewerUrl,
+      }),
+    ]);
+
+    expect(html).toContain('data-testid="view-submitted-homework-cta"');
+    expect(html).toContain("View Submitted Homework");
+    expect(html).toContain(reviewerUrl);
+    expect(html).not.toContain('data-testid="submitted-work-card"');
+    expect(html).not.toMatch(/Submitted Work/i);
+  });
+
+  it("omits View Submitted Homework when no reviewer URL is available", () => {
+    const html = render([
+      assignment({
+        completionStatus: "submitted",
+        completionStatusLabel: "Submitted",
+        viewSubmittedHomeworkHref: null,
+      }),
+    ]);
+
+    expect(html).not.toContain('data-testid="view-submitted-homework-cta"');
+    expect(html).not.toContain("View Submitted Homework");
   });
 });
 

@@ -929,7 +929,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-044 — Remove redundant Submitted Work card; keep View Submitted Homework CTA
 
 **Priority:** P2  
-**Status:** Ready for prompt  
+**Status:** **COMPLETE** (2026-09-01)  
 **Systems:** Website athlete/parent homework UI  
 **Correct repo:** this repo (`web/`)  
 **Related:** FUT-043 · FUT-014 · athlete homework presentation components
@@ -938,9 +938,9 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 
 **Approved requirements:** Remove the redundant Submitted Work card; keep the **View Submitted Homework** button.
 
-**Dependencies / risks:** Confirm which route/component owns the card before deletion; preserve accessibility of the remaining CTA.
+**Shipped (2026-09-01):** Inventory found no prior Submitted Work card in `web/` (never implemented). Athlete profile homework rows (`HomeworkAssignments`) now expose only a **View Submitted Homework** external CTA when a safe lambda reviewer URL is present — no inline submitted-work preview card. Data: Homework Completions `Submission Asset: Reviewer File URL (lookup)`.
 
-**Decisions still open:** Exact component/route list after UI inventory (do not invent file paths in this entry).
+**Validation:** `web` lint ✓ · typecheck ✓ · vitest homework-assignment + public-athlete-homework tests ✓
 
 ### FUT-045 — Use “Assignment Name” (not “Full Assignment Name”) in public-facing UI
 
@@ -1404,7 +1404,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **FUT-041** | READY | Daily Submission Acknowledgement: XP Earned \| Extra Credit columns; Extra Credit always shown (0 if none) |
 | **FUT-042** | READY | Coach Feedback quotation styling — emails + website cards |
 | **FUT-043** | READY | Consistent card design system — website + emails |
-| **FUT-044** | READY | Remove redundant Submitted Work card; keep View Submitted Homework |
+| **FUT-044** | **COMPLETE** | Remove redundant Submitted Work card; keep View Submitted Homework — athlete profile homework rows |
 | **FUT-045** | READY | Public-facing **Assignment Name** (not Full Assignment Name) |
 | **FUT-046** | READY | Homework feedback subject: `Homework Feedback – First Name Last Name – Assignment Name` |
 | **FUT-047** | READY | Monitored contact `schmidt@fairfieldbasketballclub.com` instead of unmonitored-reply instruction |
