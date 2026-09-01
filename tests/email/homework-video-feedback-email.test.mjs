@@ -6,7 +6,13 @@ import test from "node:test";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "../..");
-const hubRoot = path.join(root, "communications-hub");
+const hubRoot = (() => {
+  for (const candidate of ["communications", "communications-hub"]) {
+    const resolved = path.join(root, candidate);
+    if (fs.existsSync(path.join(resolved, "lib/template-candidate-renderer.js"))) return resolved;
+  }
+  throw new Error("Communications Hub lib not found (expected communications/ or communications-hub/)");
+})();
 const p071 = path.join(
   root,
   "airtable/automations/shooting-challenge/071-email-notifications-and-external-handoffs-send-homework-feedback-email-webhook.js",
@@ -26,6 +32,9 @@ const { BRAND } = await import(pathToFileURL(path.join(hubRoot, "emails/lib/bran
 const homeworkSample = {
   parentFirstName: "Jordan",
   athleteName: "Taylor Smith",
+  athleteFirstName: "Taylor",
+  athleteLastName: "Smith",
+  assignmentTitle: "Form Shooting Reflection",
   homeworkTitle: "Form Shooting Reflection",
   weekName: "Week 4",
   programName: "127 SI Shooting Challenge 2026-2027",
@@ -53,8 +62,8 @@ const videoSample = {
   shootPageUrl: BRAND.shootUrl,
 };
 
-test("071 v4.2 enriches branded template payload without changing Hub routing", () => {
-  assert.match(s071, /Version: v4\.2/);
+test("071 v4.3 enriches branded template payload without changing Hub routing", () => {
+  assert.match(s071, /Version: v4\.3/);
   assert.match(s071, /reviewStatus: "Satisfactory"/);
   assert.match(s071, /landingPageUrl: CANONICAL_URLS\.landing/);
   assert.match(s071, /shootPageUrl: CANONICAL_URLS\.shoot/);
@@ -64,8 +73,8 @@ test("071 v4.2 enriches branded template payload without changing Hub routing", 
   assert.match(s071, /Parent Feedback Sent\? is already checked/);
 });
 
-test("073 v4.3 enriches branded template payload without changing Hub routing", () => {
-  assert.match(s073, /Version: v4\.3/);
+test("073 v4.4 enriches branded template payload without changing Hub routing", () => {
+  assert.match(s073, /Version: v4\.4/);
   assert.match(s073, /reviewStatus: "Review complete"/);
   assert.match(s073, /landingPageUrl: CANONICAL_URLS\.landing/);
   assert.match(s073, /shootPageUrl: CANONICAL_URLS\.shoot/);
@@ -87,7 +96,7 @@ test("homework and video templates share approved header and footer", async () =
 
 test("homework feedback renders personalization, links, and plain text", async () => {
   const rendered = await renderTemplateCandidate("HOMEWORK_FEEDBACK", homeworkSample);
-  assert.equal(rendered.subject, "Homework Feedback for Taylor Smith");
+  assert.equal(rendered.subject, "Homework Feedback – Taylor Smith – Form Shooting Reflection");
   assert.match(rendered.html, /Hi Jordan,/);
   assert.match(rendered.html, /Form Shooting Reflection/);
   assert.match(rendered.html, /Great footwork and follow-through/);
