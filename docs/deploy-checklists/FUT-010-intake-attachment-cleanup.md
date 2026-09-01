@@ -3,7 +3,7 @@
 **Backlog:** FUT-010 (P1)  
 **Status:** **Built in repository — Production apply pending Mike approval**  
 **Systems:** Submission Assets, Homework Completions, Video Feedback, AWS S3, Lambda viewer  
-**Related:** C-013 Wave 7 Slice 4 (H4 attachment clear), SC-095, SC-096, SC-099, SC-100 (deferred broader retirement)
+**Related:** C-013 Wave 7 Slice 4 (H4 attachment clear), SC-095, SC-096, SC-099, SC-100 (deferred broader retirement) · **FUT-040** (automatic migration orchestration + headshots — extends this worker; Phase 2 brief: [`docs/next-wave/s3-migration/FUT-040-AUTOMATIC-S3-MIGRATION-BRIEF.md`](../next-wave/s3-migration/FUT-040-AUTOMATIC-S3-MIGRATION-BRIEF.md))
 
 ---
 

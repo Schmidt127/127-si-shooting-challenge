@@ -842,7 +842,8 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-040 — Automatic S3 migration for homework, video-feedback, and headshot attachments
 
 **Priority:** P1  
-**Status:** Planned — extends / does not replace **FUT-010**  
+**Status:** **Brief ready (Phase 2)** — extends / does not replace **FUT-010**; Phase 3 blocked on Mike decisions + PKG-004  
+**Brief:** [FUT-040-AUTOMATIC-S3-MIGRATION-BRIEF.md](./next-wave/s3-migration/FUT-040-AUTOMATIC-S3-MIGRATION-BRIEF.md)  
 **Systems:** Airtable attachments, AWS S3, Lambda viewer (where applicable), Submission Assets / registration headshots, audit/status fields  
 **Correct repo:** this repo + AWS  
 **Related:** **FUT-010** (intake SA cleanup after verified upload — dry-run complete; supervised apply pending) · FUT-007 (HEADSHOT naming) · FUT-009 · SC-094 · SC-095 · SC-096 · SC-099 · SC-100 · [deploy-checklists/FUT-010-intake-attachment-cleanup.md](./deploy-checklists/FUT-010-intake-attachment-cleanup.md) · [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) FUT-010 row
@@ -1395,7 +1396,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **FUT-037** | READY (blocked on images) | Program images under `/public/images/programs/` — Mike supplies assets |
 | **FUT-038** | **Brief ready** | Global category on/off — [FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md](./next-wave/config-selection/FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md); Phase 3 blocked on Mike ownership + PKG-004 |
 | **FUT-039** | DEFERRED implement / Planned | Fillout branding CSS — planning only; do not implement yet |
-| **FUT-040** | READY (brief first) | Automatic S3 migration for HW / video / headshots; delete Airtable attachment **only after** verification — extends **FUT-010** |
+| **FUT-040** | **Brief ready** | Automatic S3 migration for HW / video / headshots — [FUT-040-AUTOMATIC-S3-MIGRATION-BRIEF.md](./next-wave/s3-migration/FUT-040-AUTOMATIC-S3-MIGRATION-BRIEF.md); Phase 3 blocked on Mike decisions + PKG-004 |
 | **FUT-041** | **COMPLETE** | Daily Submission XP columns — PR **#321** `66f8c40b` + Hub **#43** `504a3ed`; **076 v8.12** paste pending |
 | **FUT-042** | **COMPLETE** | Coach Feedback quotation — web + Hub homework/video emails |
 | **FUT-043** | **COMPLETE** | Card design tokens — web sc-card + Hub card-tokens.js |
