@@ -30,6 +30,18 @@
 5. After `email.delivered` (if received): Sent? remains checked; no downgrade.
 6. Replay webhook / re-run queue: no duplicate send; no downgrade from sent state; 074 blocked while Sent? checked.
 
+**Harness (read-only):** Run MRW-F07 **WE-06** after steps 3–4:
+
+```bash
+# After Hub accept (step 3)
+node tools/testing/mrw-f07-weekly-email-positive-arm.mjs --verify-writeback --was-id recXXXXXXXX
+
+# After Resend success (step 4) — re-run same command; phase should be resend_success
+node tools/testing/mrw-f07-weekly-email-positive-arm.mjs --verify-writeback --was-id recXXXXXXXX
+```
+
+Offline contract tests (no Airtable): `node tools/testing/tests/test_mrw_f07_was_writeback_contract.mjs`. Full harness doc: [`docs/testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md`](../testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md).
+
 ## Field-name assumptions (documented)
 
 | Assumption | Detail |
