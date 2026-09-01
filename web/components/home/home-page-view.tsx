@@ -114,7 +114,8 @@ const HOW_IT_WORKS = [
   {
     step: "04",
     title: "Submit videos for feedback",
-    description: "Share shooting videos and receive coaching feedback to improve form and habits.",
+    description:
+      "Share shooting videos and receive coaching feedback on the challenge schedule — not instant replies.",
   },
   {
     step: "05",
@@ -174,6 +175,11 @@ const PARENT_GUIDANCE = [
     title: "Remote-friendly participation",
     description:
       "Train from home, submit daily activity online, and join Zoom check-ins when schedules allow. Based in Fairfield, Montana with nationwide online access.",
+  },
+  {
+    title: "Video feedback expectations",
+    description:
+      "Coaches review submitted shooting videos on the challenge schedule — not as instant replies. Feedback supports form and habits; it is not a private lesson service.",
   },
 ];
 
@@ -443,6 +449,36 @@ export function HomePageView({ pricing = null }: HomePageViewProps) {
         description="The Shooting Challenge is built for busy families who want structure without confusion."
         aria-labelledby="parents-heading"
       >
+        <Card
+          id="what-parents-should-know"
+          data-testid="what-parents-should-know"
+          className="mb-6 rounded-lg shadow-site-sm ring-brand-blue/20"
+        >
+          <CardContent className="space-y-4 pt-(--card-spacing)">
+            <h3 className="font-display text-xl text-foreground sm:text-2xl">
+              What parents should know
+            </h3>
+            <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Weekly homework assignments, video feedback expectations, and daily submission habits
+              are spelled out on this site — not buried in email threads. Coaches review videos on
+              a challenge schedule, not as instant replies. Start with the program FAQ for
+              eligibility and participation basics, then check the homework page for what is due each
+              week.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <CtaLink href="/faq" variant="default" size="default">
+                Read program FAQ
+              </CtaLink>
+              <CtaLink href="/homework" variant="contrast" size="default">
+                See current homework
+              </CtaLink>
+              <CtaLink href="/faq#video-feedback" variant="contrast" size="default">
+                Video feedback expectations
+              </CtaLink>
+            </div>
+          </CardContent>
+        </Card>
+
         <div className="grid gap-3 md:grid-cols-3">
           {PARENT_GUIDANCE.map((item) => (
             <Card key={item.title} className="rounded-lg shadow-site-sm">
@@ -461,6 +497,9 @@ export function HomePageView({ pricing = null }: HomePageViewProps) {
           </CtaLink>
           <CtaLink href="/homework" variant="contrast" size="default">
             See current homework
+          </CtaLink>
+          <CtaLink href="/faq#video-feedback" variant="contrast" size="default">
+            Video feedback expectations
           </CtaLink>
         </div>
       </SiteSection>
