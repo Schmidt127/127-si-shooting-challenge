@@ -1,10 +1,22 @@
-# SC-147 — Recorded Zoom half-XP promotion checklist
+# Operator packet — Automation 147 v1.0 (Recorded Zoom half-XP)
 
-**Status:** Ready for Mike review — **NOT Live**  
+**Status:** **Paste pending** — GitHub source of truth; **NOT Live** until Mike approves slot + DEV proof  
+**Date:** 2026-09-01  
 **Backlog:** SC-147 / MRW-H10  
 **Production base:** `appn84sqPw03zEbTT` — **do not execute until Mike approves**  
-**GitHub script:** `airtable/automations/shooting-challenge/147-zoom-recording-credit-award-half-xp.js` (v1.0)  
-**Design brief:** [`docs/challenge-year/RECORDED-ZOOM-HALF-XP-DESIGN-BRIEF.md`](../challenge-year/RECORDED-ZOOM-HALF-XP-DESIGN-BRIEF.md)
+**Design brief:** [`docs/challenge-year/RECORDED-ZOOM-HALF-XP-DESIGN-BRIEF.md`](../challenge-year/RECORDED-ZOOM-HALF-XP-DESIGN-BRIEF.md)  
+**Queue index:** [`EMAIL-PASTE-QUEUE-2026-09.md`](./EMAIL-PASTE-QUEUE-2026-09.md) (priority **3** — independent of 071/076 email bundle)
+
+| Item | Value |
+|------|--------|
+| **Recommended slot** | **147** — GitHub filename, SCRIPT block, and folder **17 - Zoom Recording Credit** already use **147**; Mike confirms or renumbers before Production paste |
+| Automation | **147 - Zoom Recording Credit - Award Half XP (SC-147)** |
+| Folder | **17 - Zoom Recording Credit** |
+| Repo / intended | **v1.0** |
+| Script | `airtable/automations/shooting-challenge/147-zoom-recording-credit-award-half-xp.js` |
+| **Paste range** | Production docblock (`* 147 (slot TBD)…` / `Version: v1.0`) **through end of file** — **skip** GitHub-only header lines at top (`GitHub header`, `Automation:`, `System:`, `Source:`, `Status:`, `Purpose:` summary) |
+| Schema dependency | **XP Reward Rules** row **Rule Key = `ZOOM_RECORDING`** (recommended; see checklist below) |
+| Mike approval | Required before Production paste |
 
 **Rule:** Production changes are not official until Mike completes DEV proof and this checklist. See [v2/04 § Official promotion documentation](../v2/04-ai-development-standards.md#official-promotion-documentation-required).
 
@@ -18,7 +30,7 @@ A dedicated **recording-credit XP writer** distinct from:
 |------------|------|-------------------|
 | **101** | Live Zoom attendance XP (`ZOOM_ATTEND_*` / `ZOOM_LIVE`) | Yes — live keys only |
 | **117 v2.1** | Recording approval **email** (Email Handoff Queue) | Yes — **no XP writes** |
-| **147 (slot TBD)** | Recording half-XP (`ZOOM_RECORDING_CREDIT\|{enrollmentId}\|{zoomMeetingId}`) | New writer |
+| **147** (recommended slot) | Recording half-XP (`ZOOM_RECORDING_CREDIT\|{enrollmentId}\|{zoomMeetingId}`) | New writer |
 
 **Policy (Mike 2026-08-27):** Recording credit counts toward level gates at **half live XP**; does **not** count toward Perfect Week; no duplicate with live 101 for same meeting+enrollment.
 
@@ -26,12 +38,72 @@ A dedicated **recording-credit XP writer** distinct from:
 
 ## Mike decisions still open
 
-| # | Decision | Options / notes | Done |
-|---|----------|-----------------|------|
-| 1 | **Automation slot number** | Placeholder **147** in GitHub filename; confirm or renumber before Airtable paste | [ ] |
-| 2 | **XP Reward Rules row** | Rule Key `ZOOM_RECORDING` + half-XP amount (SC-022 alignment); fallback = `floor(ZOOM_ATTEND_BASE / 2)` | [ ] |
-| 3 | **Source Key registry** | Enrollment-first `ZOOM_RECORDING_CREDIT\|*` vs legacy S16 `ZOOM_RECORDING\|*` — Agent 9 registry after slot | [ ] |
-| 4 | **Config percent override** | Optional `Config.Zoom Recording XP Percent of Live` — confirm keep or ignore | [ ] |
+| # | Decision | Recommendation | Mike confirms | Done |
+|---|----------|----------------|---------------|------|
+| 1 | **Automation slot number** | **Use slot 147** — matches GitHub `147-*.js`, SCRIPT metadata, and queue index | Confirm or renumber before Production paste | [ ] |
+| 2 | **XP Reward Rules row** | Create active **`ZOOM_RECORDING`** row (see checklist below); fallback = `floor(ZOOM_ATTEND_BASE / 2)` if row missing | Confirm XP amount (e.g. **30** when live base = **60**) | [ ] |
+| 3 | **Source Key registry** | Enrollment-first `ZOOM_RECORDING_CREDIT\|*` (script v1.0) | Agent 9 registry after slot locked | [ ] |
+| 4 | **Config percent override** | Keep optional `Config.Zoom Recording XP Percent of Live` — script reads when present | Confirm keep or ignore | [ ] |
+
+---
+
+## ZOOM_RECORDING rule row checklist
+
+Complete **before** automation paste on DEV (repeat on Production before prod paste). Script resolves half-XP from the **`ZOOM_RECORDING`** row when present; otherwise `floor(ZOOM_ATTEND_BASE / 2)` with optional Config percent override.
+
+| # | Check | Expected | Done |
+|---|-------|----------|------|
+| 1 | Open **XP Reward Rules** table | Base accessible on target environment | [ ] |
+| 2 | Locate active row **Rule Key = `ZOOM_ATTEND_BASE`** | Exactly one active row; note **XP Amount** (live base) | [ ] |
+| 3 | Create or verify active row **Rule Key = `ZOOM_RECORDING`** | **Active?** checked; **XP Amount** = Mike-approved half value (typically `floor(live/2)`) | [ ] |
+| 4 | Confirm **no duplicate active rows** for either key | At most one active row per Rule Key | [ ] |
+| 5 | Sanity: `ZOOM_RECORDING` amount ≤ `ZOOM_ATTEND_BASE` | Half-XP policy (SC-022 / design brief) | [ ] |
+| 6 | Document chosen amount in DEV proof JSON | Evidence under `docs/testing/evidence/sc-147/` | [ ] |
+
+**Example (illustrative only):** live base **60** → `ZOOM_RECORDING` **30**. Mike sets the Production amount.
+
+**Do not** edit **101** live attendance rules or **117** email automations as part of this row setup.
+
+---
+
+## Paste packet (147 v1.0)
+
+### Pre-paste checklist
+
+- [ ] **Recommended slot 147** confirmed (or renumber GitHub + Airtable before paste).
+- [ ] **ZOOM_RECORDING rule row checklist** complete on target base (above).
+- [ ] Offline tests pass (repo — run before paste):
+
+```bash
+node airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.test.js
+```
+
+- [ ] Confirm **117** remains email-only (no XP Event writes, no Attendees writes).
+- [ ] Confirm active **ZOOM_ATTEND_BASE** rule row exists.
+- [ ] Open GitHub script; confirm docblock **Version: v1.0** and SCRIPT block `version: "v1.0"`.
+- [ ] **DEV first** — do not paste Production until DEV disposable proof passes.
+- [ ] Input **`recordId`** must remain **dynamic** (triggering Zoom Attendance ID) — never hardcode `rec…`.
+
+### Paste steps
+
+1. Open target base automation **147** (create in folder **17 - Zoom Recording Credit** if missing).
+2. Open the **Run script** action.
+3. Confirm input mapping: **`recordId`** = dynamic Zoom Attendance record ID from trigger.
+4. Replace script body: copy from repo starting at `/************************************************************` (147 ZOOM RECORDING block) through EOF; **omit** GitHub header lines 1–25.
+5. Save. Confirm SCRIPT metadata shows **v1.0** / **lastUpdated: 2026-09-01**.
+6. Map script outputs: `statusOut`, `actionOut`, `errorOut`, `debugStep`, `sourceKeyOut`, `xpEventIdOut`, `xpAmountOut`.
+7. Configure trigger on **Zoom Attendance** — recommended conditions: **Recording Quiz Satisfactory?** checked; **Zoom Credit Conflict?** ≠ 1.
+8. Leave automation **OFF** until disposable DEV proof plan is ready.
+9. Update Automations Code tracker (if used) to **147 v1.0**.
+
+### Post-paste smoke (DEV — disposable)
+
+See **§ Disposable DEV proof** below. Minimum gates before turning automation ON:
+
+- [ ] Happy path → one XP Event, Source Key `ZOOM_RECORDING_CREDIT\|{enrollment}\|{meeting}`, half amount from **`ZOOM_RECORDING`** row
+- [ ] Idempotent rerun → `skipped_already_awarded`
+- [ ] Live 101 already awarded → `skipped_live_101_exists`
+- [ ] **117** still sends email separately; **117 does not write XP**
 
 ---
 
