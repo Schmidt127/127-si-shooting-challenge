@@ -11,7 +11,10 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 #### Changed
 - **FUT-041 Daily Submission XP columns (2026-09-01)** — **076 v8.12** adds `xpEarned` (active `SUBMISSION_XP|` total) and `xpExtraCredit` (`0` until a stored daily extra-credit source exists); `submissionXp` mirrors `xpEarned`. Hub `DAILY_SUBMISSION` template renders horizontal **XP Earned** | **Extra Credit** columns (Extra Credit always shown). Display-time split only — no XP award logic change. Checklist: [`docs/deploy-checklists/FUT-041-daily-submission-xp-columns.md`](./docs/deploy-checklists/FUT-041-daily-submission-xp-columns.md).
 - **FUT-046 Homework feedback email subject (2026-09-01)** — **071 v4.3** sends public `assignmentTitle` (FUT-045 precedence from Homework Library), `athleteFirstName`, and `athleteLastName` in Hub payload. Subject rendering remains Hub-owned. Checklist: [`docs/deploy-checklists/FUT-046-homework-feedback-subject.md`](./docs/deploy-checklists/FUT-046-homework-feedback-subject.md).
+<<<<<<< HEAD
 - **FUT-047 Homework feedback monitored contact copy (2026-09-01)** — Hub `HOMEWORK_FEEDBACK` template replaces “Reply to this email…” with monitored Fairfield contact `schmidt@fairfieldbasketballclub.com`. Copy-only; Reply-To / From headers unchanged. Checklist: [`docs/deploy-checklists/FUT-047-homework-feedback-contact-copy.md`](./docs/deploy-checklists/FUT-047-homework-feedback-contact-copy.md).
+=======
+>>>>>>> origin/cursor/fut-041-daily-xp-columns-e772
 
 #### Added
 - **065 v10.5 XP points reconcile fix (2026-08-31)** — Ownership assert no longer requires existing `XP Points` to already equal `Total Homework XP Awarded`. Partial Extra Credit awards can reconcile when Base XP is written later (updates the same `HOMEWORK_XP|{hcId}` row + Awarded). **Mike Production paste + verify COMPLETE** — Parent Feedback Sent? checked and Sent On correct after run. Packet: [`docs/deploy-checklists/065-v10.5-points-reconcile-operator-packet.md`](./docs/deploy-checklists/065-v10.5-points-reconcile-operator-packet.md) · paste [`docs/deploy-checklists/065-v10.5-PASTE.txt`](./docs/deploy-checklists/065-v10.5-PASTE.txt).
