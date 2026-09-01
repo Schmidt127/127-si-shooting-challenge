@@ -5,7 +5,7 @@
 **Date:** 2026-09-01  
 **Base SHA:** `7aa44416` (`origin/master`)  
 **Branch:** `cursor/fut-007-aws-naming-spec-e772`  
-**Related:** FUT-008 (Custom Video File Name field) · FUT-009 (bucket structure + corrected-video rename workflow — **brief ready:** [FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md](./FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md)) · FUT-040 (automatic S3 migration + headshots) · C-013 / C-023 · [upload-workflow-homework-video.md](../../upload-workflow-homework-video.md) · [lambda/upload-asset/README.md](../../../lambda/upload-asset/README.md) · [127-SI-MASTER-FUTURE-WORK-LIST.md](../../127-SI-MASTER-FUTURE-WORK-LIST.md) § FUT-007
+**Related:** FUT-008 (Custom Video File Name field) · FUT-009 (bucket structure + corrected-video rename workflow) · FUT-040 (automatic S3 migration + headshots) · C-013 / C-023 · [upload-workflow-homework-video.md](../../upload-workflow-homework-video.md) · [lambda/upload-asset/README.md](../../../lambda/upload-asset/README.md) · [127-SI-MASTER-FUTURE-WORK-LIST.md](../../127-SI-MASTER-FUTURE-WORK-LIST.md) § FUT-007
 
 ---
 
@@ -357,13 +357,11 @@ Implementation tests: `lib/aws-media-naming/naming.test.ts` (vitest via `web/npm
 
 ## 13. Open decisions (for FUT-009 / Mike)
 
-**Resolved in FUT-009 brief (Phase 2):** post-review rename → **copy-on-write** (new key, preserve old object, Reviewer URL unchanged on same SA record). Remaining Mike decisions: [FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md](./FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md) §11 (12 items).
-
 | Topic | Default in this spec |
 |-------|------------------------|
-| Post-review rename to Custom Video File Name | **FUT-009 brief** — copy-on-write; see §5 |
+| Post-review rename to Custom Video File Name | FUT-009 — new object vs in-place key change |
 | HEADSHOT upload route table/field | FUT-040 |
-| Public headshot CDN path vs private homework/video | **FUT-009 brief** §4 / §6 — basename grammar shared |
+| Public headshot CDN path vs private homework/video | FUT-009 — basename grammar shared |
 
 ---
 
