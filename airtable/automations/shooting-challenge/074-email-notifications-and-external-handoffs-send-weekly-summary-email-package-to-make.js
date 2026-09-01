@@ -31,11 +31,13 @@ Filename may still say Make; current path is Hub queue create only.
  * 074 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Create Weekly Athlete Summary Communications Hub Handoff
  *
- * Version: v3.4
+ * Version: v3.5
  * Date Written: 2026-05-29
  * Last Updated: 2026-09-01
  *
  * VERSION HISTORY
+ * - v3.5 (2026-09-01): videoFeedbackStatus summary uses Custom Video File Name display
+ *   precedence (custom → Video Asset File Name → "Video submission").
  * - v3.4 (2026-09-01): Forward 072 v4.9 videosSubmittedThisWeek to Hub payload.
  * - v3.3 (2026-08-24): Forward 072 v4.7 shootingDaysDisplay, goalCompletionDisplay,
  *   and secure-url video submissions; prefer canonical shooting days over PW fields.
@@ -112,7 +114,7 @@ Filename may still say Make; current path is Hub queue create only.
 
 const SCRIPT = {
   scriptName: "074 - Email, Notifications, and External Handoffs - Create Weekly Athlete Summary Communications Hub Handoff",
-  version: "v3.4",
+  version: "v3.5",
   versionDate: "2026-09-01",
   originalWrittenDate: "2026-05-29",
   lastUpdated: "2026-09-01",
@@ -261,6 +263,26 @@ function oneLinkedId(values, label) {
 
 function firstNonEmpty(...values) {
   return values.map((value) => String(value ?? "").trim()).find(Boolean) || "";
+}
+
+function resolveVideoDisplayFileName(customVideoFileName, originalFileName) {
+  const custom = String(customVideoFileName ?? "").trim();
+  if (custom && custom !== "—") return custom;
+  const original = String(originalFileName ?? "").trim();
+  if (original && original !== "—") return original;
+  return "";
+}
+
+function resolveVideoDisplayFileNameWithFallback(customVideoFileName, originalFileName) {
+  return resolveVideoDisplayFileName(customVideoFileName, originalFileName) || "Video submission";
+}
+
+function resolveWeeklyVideoSubmissionLabel(entry = {}) {
+  const resolved = resolveVideoDisplayFileName(entry?.customVideoFileName, entry?.originalFileName);
+  if (resolved) return resolved;
+  const legacy = String(entry?.label ?? "").trim();
+  if (legacy && legacy !== "—") return legacy;
+  return "Video submission";
 }
 
 function firstFiniteNumber(...values) {
@@ -533,7 +555,7 @@ async function main() {
     videoSubmissions.length > 0
       ? videoSubmissions
           .map((row) => {
-            const label = row.label || row.originalFileName || "Video";
+            const label = resolveWeeklyVideoSubmissionLabel(row);
             const date = row.reviewedAt ? ` (${row.reviewedAt})` : "";
             const url = row.secureUrl ? ` — ${row.secureUrl}` : "";
             return `${label}${date}${url}`;

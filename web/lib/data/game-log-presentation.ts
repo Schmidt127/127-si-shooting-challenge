@@ -1,5 +1,8 @@
 import { asText } from "@/lib/data/airtable-values";
 import { formatShots, formatXp, formatXpSourceLabel } from "@/lib/formatters";
+import {
+  resolveVideoDisplayFileNameWithFallback,
+} from "@/lib/video-display-filename";
 import type { XpEventSummary } from "@/types/xp";
 
 export type GameLogPresentation = {
@@ -138,11 +141,11 @@ export function formatGameLogPresentation(row: XpEventSummary): GameLogPresentat
   const reason = cleanReason(asText(row.reasonPublic, ""));
 
   if (source.includes("video")) {
-    const fileName = row.videoCustomFileName?.trim() || null;
-    const fallbackDetail =
-      reason && !/^video submission/i.test(reason) && reason.length < 120 ? reason : null;
+    const fileName =
+      row.videoDisplayFileName?.trim() ||
+      resolveVideoDisplayFileNameWithFallback(row.videoCustomFileName, row.videoOriginalFileName);
     return {
-      headline: joinHeadline("Video Submission", fileName || fallbackDetail),
+      headline: joinHeadline("Video Submission", fileName),
     };
   }
 

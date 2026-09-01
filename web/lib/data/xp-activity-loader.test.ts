@@ -453,6 +453,8 @@ describe("buildXpEventPresentationContext", () => {
       homeworkAssignmentTitle: "Mikan Drill",
       homeworkExtraCreditXp: 125,
       videoCustomFileName: "FreeThrows.mov",
+      videoOriginalFileName: null,
+      videoDisplayFileName: "FreeThrows.mov",
       zoomMeetingDisplayName: "Player Development Zoom",
     });
   });

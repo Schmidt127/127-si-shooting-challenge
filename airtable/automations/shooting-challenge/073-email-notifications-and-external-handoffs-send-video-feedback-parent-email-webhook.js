@@ -31,11 +31,14 @@ Filename may still say webhook; current path is Hub queue create only.
  * 073 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Create Video Feedback Communications Hub Handoff
  *
- * Version: v4.4
+ * Version: v4.5
  * Date Written: 2026-06-17
- * Last Updated: 2026-08-24
+ * Last Updated: 2026-09-01
  *
  * VERSION HISTORY
+ * - v4.5 (2026-09-01): Hub payload includes Custom Video File Name for Communications
+ *   template display precedence (custom → Video Asset File Name → "Video submission");
+ *   preserves originalFileName for audit/backward compatibility.
  * - v4.4 (2026-08-24): Block parent handoff unless Video URL or Drive Link is a valid
  *   Lambda viewer URL; reject direct S3, presigned S3, and Google Drive links.
  * - v4.3 (2026-08-22): Branded Communications Hub template payload enrichment —
@@ -120,7 +123,7 @@ Filename may still say webhook; current path is Hub queue create only.
 
 const SCRIPT = {
   scriptName: "073 - Email, Notifications, and External Handoffs - Create Video Feedback Communications Hub Handoff",
-  version: "v4.4",
+  version: "v4.5",
   versionDate: "2026-08-24",
   originalWrittenDate: "2026-06-17",
   lastUpdated: "2026-08-24",
@@ -187,6 +190,7 @@ const CONFIG = {
       uploadStatus: "Upload Status",
       uploadedAt: "Video Asset Uploaded At",
       fileName: "Video Asset File Name",
+      customVideoFileName: "Custom Video File Name",
     },
     enr: {
       active: "Active?",
@@ -312,6 +316,18 @@ function sameIds(left, right) {
 
 function firstNonEmpty(...values) {
   return values.map((value) => String(value ?? "").trim()).find(Boolean) || "";
+}
+
+function resolveVideoDisplayFileName(customVideoFileName, originalFileName) {
+  const custom = String(customVideoFileName ?? "").trim();
+  if (custom && custom !== "—") return custom;
+  const original = String(originalFileName ?? "").trim();
+  if (original && original !== "—") return original;
+  return "";
+}
+
+function resolveVideoDisplayFileNameWithFallback(customVideoFileName, originalFileName) {
+  return resolveVideoDisplayFileName(customVideoFileName, originalFileName) || "Video submission";
 }
 
 function cleanEmail(value) {
@@ -593,11 +609,15 @@ async function main() {
     getText(vf, vfTable, CONFIG.fields.vf.name),
     "Athlete"
   );
+  const customVideoFileName = fieldExists(vfTable, CONFIG.fields.vf.customVideoFileName)
+    ? getText(vf, vfTable, CONFIG.fields.vf.customVideoFileName)
+    : "";
   const originalFileName = firstNonEmpty(
     getText(vf, vfTable, CONFIG.fields.vf.fileName),
     getText(asset, assetsTable, CONFIG.fields.asset.original),
-    "Video submission"
+    "",
   );
+  const displayFileName = resolveVideoDisplayFileNameWithFallback(customVideoFileName, originalFileName);
   const videoUrl = parentVideoUrl(vf, vfTable);
   let programName = "";
   try {
@@ -616,7 +636,9 @@ async function main() {
     coachFeedback,
     reviewedAt: dateText(getRaw(vf, vfTable, CONFIG.fields.vf.reviewedAt)),
     weekName: getText(vf, vfTable, CONFIG.fields.vf.week),
+    customVideoFileName,
     originalFileName,
+    displayFileName,
     videoUrl,
     videoSubmissionNote: getText(submission, submissionsTable, CONFIG.fields.sub.note),
     totalVideoXpAwarded: activeVideoXp,

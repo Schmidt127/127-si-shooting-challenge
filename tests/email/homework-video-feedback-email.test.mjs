@@ -76,11 +76,14 @@ test("071 v4.3 enriches branded template payload without changing Hub routing", 
   assert.match(s071, /Parent Feedback Sent\? is already checked/);
 });
 
-test("073 v4.4 enriches branded template payload without changing Hub routing", () => {
-  assert.match(s073, /Version: v4\.4/);
+test("073 v4.5 enriches branded template payload without changing Hub routing", () => {
+  assert.match(s073, /Version: v4\.5/);
   assert.match(s073, /reviewStatus: "Review complete"/);
   assert.match(s073, /landingPageUrl: CANONICAL_URLS\.landing/);
   assert.match(s073, /shootPageUrl: CANONICAL_URLS\.shoot/);
+  assert.match(s073, /customVideoFileName/);
+  assert.match(s073, /displayFileName/);
+  assert.match(s073, /resolveVideoDisplayFileNameWithFallback/);
   assert.match(s073, /VIDEO_FEEDBACK\|VIDEO_FEEDBACK\|/);
   assert.match(s073, /Parent Feedback Sent\? is already checked/);
 });
@@ -106,6 +109,16 @@ test("homework feedback renders personalization, links, and plain text", async (
   assert.match(rendered.html, /cdn\.example\.com\/homework\.pdf/);
   assert.match(rendered.text, /Taylor Smith/);
   assert.doesNotMatch(rendered.text, /<[^>]+>/);
+});
+
+test("video feedback renders custom filename over original upload name", async () => {
+  const rendered = await renderTemplateCandidate("VIDEO_FEEDBACK", {
+    ...videoSample,
+    customVideoFileName: "OffTheDribble-Week4.mp4",
+    originalFileName: "IMG_1234.mp4",
+  });
+  assert.match(rendered.html, /OffTheDribble-Week4\.mp4/);
+  assert.doesNotMatch(rendered.html, /IMG_1234\.mp4/);
 });
 
 test("video feedback renders personalization, watch link, and plain text", async () => {

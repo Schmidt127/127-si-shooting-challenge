@@ -20,6 +20,9 @@ import {
   toAirtableDateKey,
 } from "@/lib/data/airtable-values";
 import { escapeAirtableString } from "@/lib/data/public-athlete-profile";
+import {
+  resolveVideoDisplayFileNameWithFallback,
+} from "@/lib/video-display-filename";
 import type { XpEventSummary } from "@/types/xp";
 
 export const XP_EVENTS_ENROLLMENT_RECORD_ID_FIELD = "Enrollment Record ID";
@@ -147,7 +150,12 @@ export type XpEventPresentationContext = {
   submissionTotalShots?: number | null;
   homeworkAssignmentTitle?: string | null;
   homeworkExtraCreditXp?: number | null;
+  /** Raw Custom Video File Name (display audit). */
   videoCustomFileName?: string | null;
+  /** Raw Video Asset File Name / original upload (audit). */
+  videoOriginalFileName?: string | null;
+  /** Resolved parent-facing filename (custom → asset → "Video submission"). */
+  videoDisplayFileName?: string | null;
   zoomMeetingDisplayName?: string | null;
 };
 
@@ -300,6 +308,8 @@ export function mapXpEventRecordToSummary(
     homeworkAssignmentTitle: presentation?.homeworkAssignmentTitle ?? undefined,
     homeworkExtraCreditXp: presentation?.homeworkExtraCreditXp ?? undefined,
     videoCustomFileName: presentation?.videoCustomFileName ?? undefined,
+    videoOriginalFileName: presentation?.videoOriginalFileName ?? undefined,
+    videoDisplayFileName: presentation?.videoDisplayFileName ?? undefined,
     zoomMeetingDisplayName: presentation?.zoomMeetingDisplayName ?? undefined,
   };
 }
@@ -688,14 +698,6 @@ export function buildXpActivityReconciliation(
   return rows;
 }
 
-function resolveVideoDisplayFileName(fields: VideoFeedbackRecordFields): string | null {
-  const custom = asText(fields["Custom Video File Name"], "").trim();
-  if (custom && custom !== "—") return custom;
-  const asset = asText(fields["Video Asset File Name"], "").trim();
-  if (asset && asset !== "—") return asset;
-  return null;
-}
-
 function resolveZoomMeetingDisplayName(fields: ZoomMeetingRecordFields): string | null {
   const display = asText(fields["Meeting Display Name"], "").trim();
   if (display && display !== "—") return display;
@@ -796,10 +798,13 @@ export async function buildXpEventPresentationContext(
     ],
     300,
   );
-  const videoFileNameById = new Map<string, string>();
+  const videoCustomById = new Map<string, string>();
+  const videoOriginalById = new Map<string, string>();
   for (const vf of videoRecords) {
-    const fileName = resolveVideoDisplayFileName(vf.fields);
-    if (fileName) videoFileNameById.set(vf.id, fileName);
+    const custom = asText(vf.fields["Custom Video File Name"], "").trim();
+    const original = asText(vf.fields["Video Asset File Name"], "").trim();
+    if (custom && custom !== "—") videoCustomById.set(vf.id, custom);
+    if (original && original !== "—") videoOriginalById.set(vf.id, original);
   }
 
   const zoomRecords = await fetchRecordsByIdsWithFieldFallback<ZoomMeetingRecordFields>(
@@ -824,12 +829,18 @@ export async function buildXpEventPresentationContext(
     const hcId = linkedRecordIds(record.fields["Homework Completion"])[0];
     const vfId = linkedRecordIds(record.fields["Video Feedback"])[0];
     const zoomId = linkedRecordIds(record.fields["Zoom Meeting"])[0];
+    const videoCustom = vfId ? (videoCustomById.get(vfId) ?? null) : null;
+    const videoOriginal = vfId ? (videoOriginalById.get(vfId) ?? null) : null;
 
     contextByXpId.set(record.id, {
       submissionTotalShots,
       homeworkAssignmentTitle: hcId ? (homeworkTitleByHcId.get(hcId) ?? null) : null,
       homeworkExtraCreditXp: hcId ? (homeworkExtraCreditByHcId.get(hcId) ?? null) : null,
-      videoCustomFileName: vfId ? (videoFileNameById.get(vfId) ?? null) : null,
+      videoCustomFileName: videoCustom,
+      videoOriginalFileName: videoOriginal,
+      videoDisplayFileName: vfId
+        ? resolveVideoDisplayFileNameWithFallback(videoCustom, videoOriginal)
+        : null,
       zoomMeetingDisplayName: zoomId ? (zoomDisplayNameById.get(zoomId) ?? null) : null,
     });
   }

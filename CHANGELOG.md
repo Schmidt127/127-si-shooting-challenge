@@ -6,9 +6,15 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Web
+
+#### Changed
+- **FUT-008 video display filename (2026-09-01)** — Game Log and XP activity presentation use `web/lib/video-display-filename.ts` (mirror of `lib/video-display-filename/`). Exposes `videoDisplayFileName` plus raw `videoCustomFileName` / `videoOriginalFileName` on XP rows. No URL, S3, or playback changes.
+
 ### Airtable
 
 #### Added
+- **FUT-008 — Custom Video File Name display wiring (2026-09-01)** — Shared resolver at `lib/video-display-filename/` (custom → Video Asset File Name → "Video submission"; trims whitespace; treats em dash as blank). **072 v4.9.1** preserves `customVideoFileName` + `originalFileName` in weekly video payload and applies resolver to legacy video lines. **073 v4.5** adds `customVideoFileName`, `originalFileName`, and `displayFileName` to Video Feedback Hub payload. **074 v3.5** applies resolver to `videoFeedbackStatus` summary text. **No S3 key/URL, schema, XP, Perfect Week, or upload behavior changes.** Production paste pending for 072/073/074.
 - **072 v4.9 / 074 v3.4 — Weekly summary `videosSubmittedThisWeek` payload (2026-09-01)** — Active Video Feedback rows for the official WAS Week now populate Hub field `videosSubmittedThisWeek` with Denver `activityDate` (YYYY-MM-DD) and display filename (Custom Video File Name → Video Asset File Name). Deterministic oldest-first sort; dedupe by VF record id; empty list when none. **Production paste pending.**
 
 ### Lambda

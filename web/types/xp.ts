@@ -46,8 +46,12 @@ export type XpEventSummary = {
   homeworkAssignmentTitle?: string | null;
   /** Homework Completion → Extra Credit XP Awarded (display only; included in points total). */
   homeworkExtraCreditXp?: number | null;
-  /** Video Feedback → Custom Video File Name (display only). */
+  /** Video Feedback → Custom Video File Name (raw; display audit). */
   videoCustomFileName?: string | null;
+  /** Video Feedback → Video Asset File Name (raw original upload; audit). */
+  videoOriginalFileName?: string | null;
+  /** Resolved parent-facing video filename (custom → asset → "Video submission"). */
+  videoDisplayFileName?: string | null;
   /** Zoom Meeting → Meeting Display Name (display only). */
   zoomMeetingDisplayName?: string | null;
 };

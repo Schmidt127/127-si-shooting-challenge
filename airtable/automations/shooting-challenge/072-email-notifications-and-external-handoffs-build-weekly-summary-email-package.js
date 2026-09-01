@@ -32,11 +32,14 @@ Send plane: 118 → 072 → 119 → 074 → 079 → Communications Hub → Resen
  * 072 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Build Weekly Summary Email Package
  *
- * Version: v4.9
+ * Version: v4.9.1
  * Date Written: 2026-06-20
  * Last Updated: 2026-09-01
  *
  * VERSION HISTORY
+ * - v4.9.1 (2026-09-01): videoSubmissions payload and legacy lines use Custom Video File Name
+ *   display precedence (custom → Video Asset File Name → "Video submission"); preserve both
+ *   filename fields in payload for Hub/audit.
  * - v4.9 (2026-09-01): Hub payload adds videosSubmittedThisWeek (Activity Date + Custom Video
  *   File Name with original upload fallback); deterministic sort/dedupe; official week bounds.
  * - v4.8 (2026-08-24): Parent-facing video URLs must be Lambda viewer links only;
@@ -133,7 +136,7 @@ Send plane: 118 → 072 → 119 → 074 → 079 → Communications Hub → Resen
 
 const SCRIPT = {
   scriptName: "072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package",
-  version: "v4.9",
+  version: "v4.9.1",
   versionDate: "2026-09-01",
   originalWrittenDate: "2026-06-20",
   lastUpdated: "2026-09-01",
@@ -580,7 +583,7 @@ function formatShootingPercentage(makes, shots) {
 function buildVideoSubmissionLines(entries) {
   if (!entries.length) return ["No video submissions recorded for this week."];
   return entries.map((entry) => {
-    const label = String(entry.label || entry.originalFileName || "Video submission").trim();
+    const label = resolveWeeklyVideoSubmissionLabel(entry);
     const reviewedAt = String(entry.reviewedAt || "").trim();
     const secureUrl = isValidLambdaViewerUrl(entry.secureUrl) ? String(entry.secureUrl).trim() : "";
     const datePart = reviewedAt ? ` (${reviewedAt})` : "";
@@ -595,6 +598,18 @@ function resolveVideoDisplayFileName(customVideoFileName, originalFileName) {
   const original = String(originalFileName ?? "").trim();
   if (original && original !== "—") return original;
   return "";
+}
+
+function resolveVideoDisplayFileNameWithFallback(customVideoFileName, originalFileName) {
+  return resolveVideoDisplayFileName(customVideoFileName, originalFileName) || "Video submission";
+}
+
+function resolveWeeklyVideoSubmissionLabel(entry = {}) {
+  const resolved = resolveVideoDisplayFileName(entry?.customVideoFileName, entry?.originalFileName);
+  if (resolved) return resolved;
+  const legacy = String(entry?.label ?? "").trim();
+  if (legacy && legacy !== "—") return legacy;
+  return "Video submission";
 }
 
 function buildVideosSubmittedThisWeek(entries, bounds = {}) {
@@ -612,9 +627,10 @@ function buildVideosSubmittedThisWeek(entries, bounds = {}) {
     if (weekStartKey && weekEndKey && activityDateKey) {
       if (!isDateKeyInWeekRange(activityDateKey, weekStartKey, weekEndKey)) continue;
     }
-    const fileName =
-      resolveVideoDisplayFileName(entry?.customVideoFileName, entry?.originalFileName) ||
-      "Video submission";
+    const fileName = resolveVideoDisplayFileNameWithFallback(
+      entry?.customVideoFileName,
+      entry?.originalFileName,
+    );
     rows.push({ activityDate: activityDateKey || "—", fileName });
   }
   rows.sort((left, right) => {
@@ -1213,7 +1229,13 @@ async function main() {
     weekStartKey,
     weekEndKey,
   });
-  const videoSubmissions = videoSubmissionsRaw.map(({ hadUnsafeOrMissingUrl, recordId, activityDateKey, customVideoFileName, ...entry }) => entry);
+  const videoSubmissions = videoSubmissionsRaw.map(
+    ({ hadUnsafeOrMissingUrl, recordId, activityDateKey, customVideoFileName, originalFileName, ...entry }) => ({
+      ...entry,
+      customVideoFileName,
+      originalFileName,
+    }),
+  );
   const videoLines = buildVideoSubmissionLines(videoSubmissions);
 
   step("7c - Perfect Week criteria from Achievements, XP Reward Rules, and WAS");

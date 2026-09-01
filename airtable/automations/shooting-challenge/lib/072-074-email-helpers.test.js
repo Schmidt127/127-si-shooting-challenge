@@ -64,10 +64,11 @@ test("072 never performs external delivery", () => {
   assert.ok(!/makeWebhookUrl/.test(s072));
 });
 
-test("074 v3.4 forwards videosSubmittedThisWeek to Hub payload", () => {
-  assert.ok(/Version:\s*v3\.4/.test(s074));
+test("074 v3.5 forwards videosSubmittedThisWeek to Hub payload", () => {
+  assert.ok(/Version:\s*v3\.5/.test(s074));
   assert.ok(/videosSubmittedThisWeek/.test(s074));
   assert.ok(/weeklyVideoCount/.test(s074));
+  assert.ok(/resolveVideoDisplayFileNameWithFallback/.test(s074));
 });
 
 test("074 v3.3 creates one canonical Hub handoff", () => {
