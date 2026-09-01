@@ -945,7 +945,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-045 — Use “Assignment Name” (not “Full Assignment Name”) in public-facing UI
 
 **Priority:** P1  
-**Status:** Ready for prompt  
+**Status:** **COMPLETE** (2026-09-01) — PR **#319** merged `de21fa36`; prod verified on `/shoot/athletes/athlete1-schmidt`  
 **Systems:** Website cards, emails, assignment details, parent-facing displays  
 **Correct repo:** this repo (+ Hub email payloads)  
 **Related:** FUT-001 · FUT-014 · chatgpt-sources platform-config notes on public assignment naming · Homework Library / PHA field map
@@ -954,9 +954,9 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 
 **Approved requirements:** Use **Assignment Name** instead of **Full Assignment Name** in all public-facing components: website cards, emails, assignment details, parent-facing displays.
 
-**Dependencies / risks:** Confirm Airtable field that is the canonical public Assignment Name vs formula/primary full name; do not break FUT-001 identity matching (internal identity may still use stable IDs / library keys).
+**Shipped (2026-09-01):** `resolvePublicAssignmentName()` in `web/lib/data/homework.ts` — precedence **Assignment Title** → `Assignment Full Name - Display` → `Assignment Full Name`. Applied to homework catalog, athlete profile rows, homework detail view, and page SEO titles. FUT-001 identity matching unchanged (IDs only). Hub emails still pending FUT-046.
 
-**Decisions still open:** Exact Airtable field IDs for public Assignment Name on Homework Library vs PHA vs Homework Completions lookups; whether any admin-only views keep Full Assignment Name.
+**Dependencies / risks:** Confirm Airtable field that is the canonical public Assignment Name vs formula/primary full name; do not break FUT-001 identity matching (internal identity may still use stable IDs / library keys).
 
 ### FUT-046 — Homework feedback email subject: name + Assignment Name
 
@@ -1385,7 +1385,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **FUT-002 SA XP text stubs** | **COMPLETE** (2026-08-31) | Submission Assets unused text `XP Events` + `XP Events copy` UI-deleted; live **1363** fields / **35** tables — [`deploy-checklists/FUT-002-sa-xp-text-stubs-delete.md`](./deploy-checklists/FUT-002-sa-xp-text-stubs-delete.md) · [`testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json`](./testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json) |
 | **FUT-029 / MRW-H12** | **FUTURE** (design only) | Hybrid Fillout Homework — [`next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](./next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md); requested as FUT-018 (ID already used) |
 | **FUT-030** | **COMPLETE** (2026-08-31) | Full transactional record reset — **959** deleted; Weeks/Config/Library/rules/automations preserved; **18 PHA restored** same day (new RIDs); **075** absent; no external sends — [`testing/evidence/transactional-reset-2026-08-31/`](./testing/evidence/transactional-reset-2026-08-31/) |
-| **FUT-031** | **COMPLETE** (2026-08-31) | Game Log Extra Credit tagline — `2026-08-31 · Extra credit +125 XP` on homework rows when `Extra Credit XP Awarded` > 0; display-only; commit `b6f789e7` |
+| **FUT-031** | **COMPLETE** (2026-09-01) | Game Log Extra Credit tagline — PR **#319** `de21fa36`; prod verified on athlete profile Game Log |
 | **FUT-032** | **COMPLETE** (2026-08-31) | Homework Hub → Resend source writeback — Hub PR [#42](https://github.com/Schmidt127/communications/pull/42) MERGED; Sent? + Sent On verified live after homework feedback — [`deploy-checklists/FUT-032-homework-hub-resend-writeback.md`](./deploy-checklists/FUT-032-homework-hub-resend-writeback.md) |
 | **065 v10.5** | **COMPLETE** (2026-08-31) | Points-reconcile fix pasted Live; Awarded + 071/Hub path verified — [`deploy-checklists/065-v10.5-points-reconcile-operator-packet.md`](./deploy-checklists/065-v10.5-points-reconcile-operator-packet.md) |
 
@@ -1396,7 +1396,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **FUT-033** | **COMPLETE** | Landing PR **#16** merged 2026-09-01 — Youth Programs vs Coach Tools copy live |
 | **FUT-034** | **COMPLETE** | Landing PR **#16** + SC PR **#317** merged 2026-09-01 — Jr. Referee Clinic naming |
 | **FUT-035** | **COMPLETE** | Landing PR **#16** merged 2026-09-01 — navy → royal blue header/club-mission |
-| **FUT-036** | READY | Redesign Upcoming Programs — six differentiated cards; Youth Programs vs Coach Tools |
+| **FUT-036** | **COMPLETE** | Landing PR **#17** merged 2026-09-01 — six Upcoming Programs cards; Youth/Coach groupings live |
 | **FUT-037** | READY (blocked on images) | Program images under `/public/images/programs/` — Mike supplies assets |
 | **FUT-038** | READY (brief first) | Global category on/off; disabled categories must not block GOAT / levels — Airtable + automations + web + email |
 | **FUT-039** | DEFERRED implement / Planned | Fillout branding CSS — planning only; do not implement yet |
@@ -1404,8 +1404,8 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **FUT-041** | READY | Daily Submission Acknowledgement: XP Earned \| Extra Credit columns; Extra Credit always shown (0 if none) |
 | **FUT-042** | READY | Coach Feedback quotation styling — emails + website cards |
 | **FUT-043** | READY | Consistent card design system — website + emails |
-| **FUT-044** | **COMPLETE** | Remove redundant Submitted Work card; keep View Submitted Homework — athlete profile homework rows |
-| **FUT-045** | READY | Public-facing **Assignment Name** (not Full Assignment Name) |
+| **FUT-044** | **COMPLETE** | Remove redundant Submitted Work card; keep View Submitted Homework — PR **#319** `de21fa36`; prod verified |
+| **FUT-045** | **COMPLETE** | Public-facing **Assignment Name** — PR **#319** `de21fa36`; `resolvePublicAssignmentName`; prod verified |
 | **FUT-046** | READY | Homework feedback subject: `Homework Feedback – First Name Last Name – Assignment Name` |
 | **FUT-047** | READY | Monitored contact `schmidt@fairfieldbasketballclub.com` instead of unmonitored-reply instruction |
 
