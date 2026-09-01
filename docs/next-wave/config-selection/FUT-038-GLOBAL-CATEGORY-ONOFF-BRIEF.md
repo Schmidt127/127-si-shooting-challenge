@@ -411,16 +411,22 @@ From [SHOOTING_CHALLENGE_COMPLETION_MASTER.md](../../SHOOTING_CHALLENGE_COMPLETI
 
 ## 11. Open decisions for Mike
 
+**Async worksheet (reply `1D, 2A, …` from phone):** [FUT-038-MIKE-DECISION-WORKSHEET.md](./FUT-038-MIKE-DECISION-WORKSHEET.md) — **12 consolidated decisions** extracted from §3–§8. **Not locked** until Mike replies and this section is updated to a FUT-039 §8-style locked table.
+
+Summary checklist (detail + options in worksheet):
+
 1. **Config ownership:** Option A / B / C / D (§3)?  
 2. **Default on/off** for 2026–27 launch — all enabled unless explicitly turned off?  
-3. **Homework off:** skip **020** HC entirely vs allow completion without XP?  
-4. **Perfect Week:** separate category flag or derive from submissions + components?  
-5. **Mid-season category toggle:** allowed with recalc, or locked at PI launch?  
-6. **Web UX:** hide (A), disabled notice (B), or mixed (C) (§7)?  
-7. **Fillout / intake:** reject submissions vs accept without XP when category off?  
-8. **Repurpose** existing Config `HW Review Enabled?` / `Video Review Enabled?` vs new field names?  
-9. **Achievements vs milestones:** one flag or two when disabling “bonus” progression?  
-10. **Recorded Zoom** when zoom off but homework on — already N/A if zoom category off (confirm).  
+3. **Level gates when category OFF:** auto-pass (effective min = 0) vs other (§6.1)?  
+4. **Homework off:** skip **020** HC entirely vs allow completion without XP?  
+5. **Perfect Week:** separate category flag or derive from submissions + components?  
+6. **Submissions off:** disable Perfect Week entirely? (§6.2)  
+7. **Zoom off:** skip PW branch + Stage 17 credit? (§6.2)  
+8. **Web UX:** hide (A), disabled notice (B), or mixed (C) (§7)?  
+9. **Email:** omit sections / suppress daily when category off? (§5.4)  
+10. **Fillout / intake:** reject submissions vs accept without XP when category off?  
+11. **Mid-season category toggle:** allowed with recalc, or locked at PI launch?  
+12. **PKG-004 naming:** repurpose latent Config toggles vs new fields; achievements vs milestones keys?  
 
 ---
 
