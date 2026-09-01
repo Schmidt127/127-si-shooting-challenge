@@ -7,11 +7,14 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const hubRoot = (() => {
-  for (const candidate of ["communications", "communications-hub"]) {
-    const resolved = path.join(root, candidate);
-    if (fs.existsSync(path.join(resolved, "lib/template-candidate-renderer.js"))) return resolved;
+  for (const candidate of [
+    path.join(path.dirname(root), "communications"),
+    path.join(root, "communications"),
+    path.join(root, "communications-hub"),
+  ]) {
+    if (fs.existsSync(path.join(candidate, "lib/template-candidate-renderer.js"))) return candidate;
   }
-  throw new Error("Communications Hub lib not found (expected communications/ or communications-hub/)");
+  throw new Error("Communications Hub lib not found (expected ../communications/)");
 })();
 const p071 = path.join(
   root,
@@ -87,7 +90,7 @@ test("homework and video templates share approved header and footer", async () =
   const video = await renderTemplateCandidate("VIDEO_FEEDBACK", videoSample);
   for (const rendered of [homework, video]) {
     assert.match(rendered.html, /127 Sports Intensity/);
-    assert.match(rendered.html, /Education/);
+    assert.match(rendered.html, /Fairfield Basketball Club/);
     assert.match(rendered.html, /fairfieldbasketballclub\.com\/shoot/);
     assert.match(rendered.html, /Shooting Challenge Page/);
     assert.match(rendered.html, /Daily Submission Form/);

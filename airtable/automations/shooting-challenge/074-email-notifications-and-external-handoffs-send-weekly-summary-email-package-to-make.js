@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-17
-Last GitHub Update: 2026-08-24 (v3.3 072 v4.7 payload forwarding)
+Last GitHub Update: 2026-09-01 (v3.4 videosSubmittedThisWeek forwarding)
 
 Purpose:
 Validate one Weekly Athlete Summary ready for parent email and create exactly
@@ -31,11 +31,12 @@ Filename may still say Make; current path is Hub queue create only.
  * 074 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Create Weekly Athlete Summary Communications Hub Handoff
  *
- * Version: v3.3
+ * Version: v3.4
  * Date Written: 2026-05-29
- * Last Updated: 2026-08-24
+ * Last Updated: 2026-09-01
  *
  * VERSION HISTORY
+ * - v3.4 (2026-09-01): Forward 072 v4.9 videosSubmittedThisWeek to Hub payload.
  * - v3.3 (2026-08-24): Forward 072 v4.7 shootingDaysDisplay, goalCompletionDisplay,
  *   and secure-url video submissions; prefer canonical shooting days over PW fields.
  * - v3.2 (2026-08-23): Prefer canonical days/shots/makes/goal % from 072 payload JSON;
@@ -111,10 +112,10 @@ Filename may still say Make; current path is Hub queue create only.
 
 const SCRIPT = {
   scriptName: "074 - Email, Notifications, and External Handoffs - Create Weekly Athlete Summary Communications Hub Handoff",
-  version: "v3.3",
-  versionDate: "2026-08-24",
+  version: "v3.4",
+  versionDate: "2026-09-01",
   originalWrittenDate: "2026-05-29",
-  lastUpdated: "2026-08-24",
+  lastUpdated: "2026-09-01",
   folder: "07 - Email, Notifications, and External Handoffs",
   automationName: "074 - Email, Notifications, and External Handoffs - Create Weekly Athlete Summary Communications Hub Handoff",
 };
@@ -511,6 +512,17 @@ async function main() {
       ? `${prepared.weekStartKey} to ${prepared.weekEndKey}`
       : "";
   const videoSubmissions = Array.isArray(prepared?.videoSubmissions) ? prepared.videoSubmissions : [];
+  const videosSubmittedThisWeek = Array.isArray(prepared?.videosSubmittedThisWeek)
+    ? prepared.videosSubmittedThisWeek
+    : [];
+  const weeklyVideoCount = firstFiniteNumber(
+    prepared?.videoSubmissionCount,
+    videosSubmittedThisWeek.length,
+    videoSubmissions.length
+  );
+  const weeklyVideoTarget = nullableFiniteNumber(
+    prepared?.perfectWeekCriteria?.videoRequired ?? prepared?.perfectWeekCriteria?.requiredVideoCount
+  );
   const zoomAttendanceStatus = firstNonEmpty(
     prepared?.zoomAttendanceStatus,
     prepared?.perfectWeekCriteria?.zoomRequirementStatus,
@@ -559,10 +571,13 @@ async function main() {
     homeworkLines,
     packageKind,
     videoSubmissions,
+    videosSubmittedThisWeek,
+    weeklyVideoCount,
     videoFeedbackStatus,
     zoomAttendanceStatus,
     perfectWeekCriteria,
   };
+  if (weeklyVideoTarget != null) payload.weeklyVideoTarget = weeklyVideoTarget;
   if (nextLevel) payload.nextLevel = nextLevel;
   if (programName) payload.programName = programName;
 
