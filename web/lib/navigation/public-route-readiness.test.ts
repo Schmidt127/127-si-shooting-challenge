@@ -20,7 +20,7 @@ describe("public route readiness — family chrome", () => {
     });
   }
 
-  it("includes FAQ in primary nav, sitemap, and family smoke paths", () => {
+  it("includes FAQ in nav, sitemap, and family smoke paths", () => {
     expect(SHOOTING_CHALLENGE_NAV.some((item) => item.href === "/faq")).toBe(true);
     expect(SITEMAP_PUBLIC_ROUTES).toContain("/faq");
     expect(FAMILY_FACING_SMOKE_PATHS).toContain("faq");

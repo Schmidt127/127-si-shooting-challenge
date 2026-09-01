@@ -55,7 +55,7 @@ function navLandmarkLabel(productName: string) {
 export function ProductNav({ productName, items }: ProductNavProps) {
   const pathname = usePathname() || "/";
   const router = useRouter();
-  const { primary, more } = splitNavItems(items);
+  const { primary, resources, more } = splitNavItems(items);
   const [mobileOpen, setMobileOpen] = useState(false);
   const menuId = useId();
   const panelId = `${menuId}-panel`;
@@ -105,7 +105,8 @@ export function ProductNav({ productName, items }: ProductNavProps) {
   if (items.length === 0) return null;
 
   const moreActive = more.some((item) => pathMatches(pathname, item.href));
-  const allItems = [...primary, ...more];
+  const resourcesActive = resources.some((item) => pathMatches(pathname, item.href));
+  const allItems = [...primary, ...resources, ...more];
   const landmark = navLandmarkLabel(productName);
 
   const trapFocus = (event: ReactKeyboardEvent<HTMLDivElement>) => {
@@ -135,7 +136,7 @@ export function ProductNav({ productName, items }: ProductNavProps) {
         aria-label={landmark}
       >
         <p className="sr-only">
-          Primary links stay visible. Additional sections are under More.
+          Primary links stay visible. Resources and additional sections are in dropdown menus.
         </p>
         {primary.map((item) => {
           const active = pathMatches(pathname, item.href);
@@ -150,6 +151,36 @@ export function ProductNav({ productName, items }: ProductNavProps) {
             </Link>
           );
         })}
+
+        {resources.length > 0 ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              className={cn(navLinkClass(resourcesActive), "gap-1")}
+              data-active={resourcesActive || undefined}
+              aria-label="Resources navigation"
+            >
+              Resources
+              <ChevronDownIcon className="size-4 opacity-80" aria-hidden />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="min-w-48">
+              {resources.map((item) => {
+                const active = pathMatches(pathname, item.href);
+                return (
+                  <DropdownMenuItem
+                    key={item.href}
+                    className={cn(
+                      "min-h-11 cursor-pointer text-[0.9375rem] font-medium",
+                      active ? "bg-brand-blue/10 text-brand-blue" : null,
+                    )}
+                    onClick={() => router.push(item.href)}
+                  >
+                    {item.label}
+                  </DropdownMenuItem>
+                );
+              })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : null}
 
         {more.length > 0 ? (
           <DropdownMenu>

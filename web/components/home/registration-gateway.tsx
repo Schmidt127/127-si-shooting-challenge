@@ -22,7 +22,7 @@ type GatewayCardProps = {
   cta: string;
   href: string;
   icon: typeof UserPlus;
-  featured?: boolean;
+  variant?: "blue" | "orange";
 };
 
 function ExternalCta({
@@ -65,24 +65,26 @@ function GatewayCard({
   cta,
   href,
   icon: Icon,
-  featured = false,
+  variant = "blue",
 }: GatewayCardProps) {
+  const isOrange = variant === "orange";
+
   return (
     <Card
       className={cn(
-        "h-full rounded-lg shadow-site-sm",
-        featured
-          ? "bg-gradient-to-br from-brand-blue/[0.10] via-card to-brand-orange/[0.14] ring-brand-orange/40"
-          : "bg-card ring-border",
+        "h-full rounded-lg shadow-site-sm transition hover:shadow-site-md focus-within:ring-2 focus-within:ring-brand-blue/40",
+        isOrange
+          ? "bg-gradient-to-br from-brand-orange/[0.18] via-card to-brand-orange/[0.06] ring-brand-orange/45"
+          : "bg-gradient-to-br from-brand-blue/[0.22] via-brand-white to-brand-blue/[0.10] ring-brand-blue/40",
       )}
     >
       <CardHeader className="gap-2">
         <span
           className={cn(
             "inline-flex size-9 items-center justify-center rounded-md",
-            featured
+            isOrange
               ? "bg-brand-orange/15 text-brand-orange ring-1 ring-brand-orange/30"
-              : "bg-brand-blue/10 text-brand-blue ring-1 ring-brand-blue/20",
+              : "bg-brand-blue/15 text-brand-blue ring-1 ring-brand-blue/30",
           )}
         >
           <Icon size={18} aria-hidden />
@@ -98,7 +100,7 @@ function GatewayCard({
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0">
-        <ExternalCta href={href} cta={cta} featured={featured} />
+        <ExternalCta href={href} cta={cta} featured={isOrange} />
       </CardContent>
     </Card>
   );
@@ -127,15 +129,16 @@ export function RegistrationGateway() {
           cta={PLAYER_REGISTRATION.cta}
           href={PLAYER_REGISTRATION.url}
           icon={UserPlus}
+          variant="blue"
         />
         <GatewayCard
-          featured
           eyebrow="ALREADY REGISTERED?"
           title="Log Today's Shooting Activity"
           description="Use the daily submission form to record shots, homework, and completed training activity."
           cta={DAILY_SUBMISSIONS.cta}
           href={DAILY_SUBMISSIONS.url}
           icon={ClipboardList}
+          variant="orange"
         />
       </div>
     </SiteSection>

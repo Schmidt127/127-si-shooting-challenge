@@ -13,7 +13,7 @@ Sourced from **127_SI_Brand_Kit** (Patrick Liddell). Update this file when the k
 |-------|------|--------|
 | Hub / landing | **Fairfield Basketball Club** | `www.fairfieldbasketballclub.com` (official landing; legacy `hoopchallenges.com` retired as primary destination) |
 | Parent brand | **127 Sports Intensity** | Logo, footer, org line |
-| Products | Shooting Challenge, Dribbling Challenge, Jr. Referee Clinic | Own path + nav shell |
+| Products | Shooting Challenge, Dribbling Challenge, JR Referee Clinic | Own path + nav shell |
 
 ---
 

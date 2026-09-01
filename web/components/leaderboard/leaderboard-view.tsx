@@ -1,43 +1,17 @@
-import {
-  IconBasketball,
-  IconBolt,
-  IconTarget,
-  IconTrophy,
-} from "@/components/icons/shoot-icons";
 import { CtaLink, ProgramPage } from "@/components/site";
-import { ProgramFeatureBanner } from "@/components/site/program-feature-image";
-import { FEATURE_BANNER_ARIA } from "@/lib/seo/program-facts";
-import { EmptyState, ErrorState, StatTile } from "@/components/ui";
-import { formatRelativeUpdate, formatXp } from "@/lib/formatters";
+import { EmptyState, ErrorState } from "@/components/ui";
+import { formatRelativeUpdate } from "@/lib/formatters";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import type { LeaderboardData } from "@/types/leaderboard";
 
+import { IconTrophy } from "@/components/icons/shoot-icons";
+
 import { LeaderboardBoard } from "./leaderboard-board";
-import { LeaderboardTiebreakerLegend } from "./leaderboard-tiebreaker-legend";
+import { LeaderboardRankingExplanation } from "./leaderboard-ranking-explanation";
 
 type LeaderboardViewProps = {
   data: LeaderboardData;
 };
-
-function LeaderboardStats({ data }: LeaderboardViewProps) {
-  const totalXp = data.entries.reduce((sum, entry) => sum + entry.xp, 0);
-  const totalShots = data.entries.reduce((sum, entry) => sum + entry.totalShots, 0);
-  const topXp = data.entries[0]?.xp ?? 0;
-
-  return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-      <StatTile
-        label="Athletes"
-        value={String(data.entries.length)}
-        icon={IconBasketball}
-        tint="blue"
-      />
-      <StatTile label="Combined XP" value={formatXp(totalXp)} icon={IconBolt} tint="amber" />
-      <StatTile label="Shots Logged" value={formatXp(totalShots)} icon={IconTarget} tint="blue" />
-      <StatTile label="Leader XP" value={formatXp(topXp)} icon={IconTrophy} tint="orange" />
-    </div>
-  );
-}
 
 export function LeaderboardView({ data }: LeaderboardViewProps) {
   return (
@@ -63,14 +37,7 @@ export function LeaderboardView({ data }: LeaderboardViewProps) {
       }
     >
       <div className="space-y-6">
-        <ProgramFeatureBanner
-          title="Leaderboard"
-          caption="Track the season standings and celebrate every shot logged."
-          mark="LB"
-          ariaLabel={FEATURE_BANNER_ARIA.leaderboard}
-        />
-        <LeaderboardStats data={data} />
-        <LeaderboardTiebreakerLegend />
+        <LeaderboardRankingExplanation />
         <LeaderboardBoard entries={data.entries} />
       </div>
     </ProgramPage>
@@ -87,12 +54,7 @@ export function LeaderboardEmptyState() {
       ambientVariant="leaderboard"
     >
       <div className="space-y-8">
-        <ProgramFeatureBanner
-          title="Leaderboard"
-          caption="Track the season standings and celebrate every shot logged."
-          mark="LB"
-          ariaLabel={FEATURE_BANNER_ARIA.leaderboard}
-        />
+        <LeaderboardRankingExplanation />
         <EmptyState
           title={EMPTY_STATE_COPY.leaderboard.title}
           description={EMPTY_STATE_COPY.leaderboard.description}
@@ -118,12 +80,7 @@ export function LeaderboardErrorState({ message }: { message: string }) {
       ambientVariant="leaderboard"
     >
       <div className="space-y-8">
-        <ProgramFeatureBanner
-          title="Leaderboard"
-          caption="Track the season standings and celebrate every shot logged."
-          mark="LB"
-          ariaLabel={FEATURE_BANNER_ARIA.leaderboard}
-        />
+        <LeaderboardRankingExplanation />
         <ErrorState
           title="Could not load leaderboard"
           message={message}

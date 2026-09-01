@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
   BookOpen,
   Calendar,
@@ -14,13 +13,8 @@ import {
 } from "lucide-react";
 
 import { HeroProgressVisual } from "@/components/home/hero-progress-visual";
-import { LevelJourneySection } from "@/components/home/level-journey-section";
 import { ProgramPricingSection } from "@/components/home/program-pricing-section";
 import { RegistrationGateway } from "@/components/home/registration-gateway";
-import { AthleteProfileLink } from "@/components/athlete/athlete-profile-link";
-import { IconChevronRight, IconTrophy } from "@/components/icons/shoot-icons";
-import { AthleteAvatar } from "@/components/leaderboard/athlete-avatar";
-import { LevelBadge } from "@/components/leaderboard/level-badge";
 import {
   CtaLink,
   FeatureCard,
@@ -29,8 +23,6 @@ import {
 } from "@/components/site";
 import { Card, CardContent } from "@/components/ui/card";
 import type { ProgramPricing } from "@/lib/data/program-pricing";
-import { formatXp } from "@/lib/formatters";
-import { PROGRAM_HUB_LINKS } from "@/lib/navigation/program-hub-links";
 import { PLAYER_REGISTRATION } from "@/lib/registration";
 import { ABOUT_THE_COACH } from "@/lib/seo/public-program-content";
 import {
@@ -40,8 +32,6 @@ import {
   PROGRAM_GRADES_SERVED,
   PROGRAM_IDENTITY,
 } from "@/lib/seo/program-facts";
-import type { LeaderboardEntry } from "@/types/leaderboard";
-
 const HERO_CTAS = [
   {
     href: PLAYER_REGISTRATION.url,
@@ -230,85 +220,11 @@ function HeroFactChips() {
   );
 }
 
-function TopThreePreview({ entries }: { entries: LeaderboardEntry[] }) {
-  if (entries.length === 0) {
-    return (
-      <div className="rounded-lg border border-brand-blue/15 bg-gradient-to-br from-brand-blue/[0.06] via-card to-brand-orange/[0.08] px-5 py-6 shadow-site-sm sm:px-7 sm:py-7">
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-start gap-4">
-            <span className="inline-flex size-12 shrink-0 items-center justify-center rounded-md bg-brand-orange/15 text-brand-orange ring-1 ring-brand-orange/30">
-              <IconTrophy size={26} aria-hidden />
-            </span>
-            <div>
-              <p className="font-display text-xl text-foreground">Challenge standings</p>
-              <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                Top athletes appear here once the challenge season is underway. Browse the full
-                leaderboard anytime.
-              </p>
-            </div>
-          </div>
-          <CtaLink
-            href="/leaderboard"
-            variant="cta"
-            size="default"
-            className="w-full justify-center sm:w-auto sm:shrink-0"
-          >
-            View full leaderboard
-            <IconChevronRight size={16} />
-          </CtaLink>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="grid gap-3 sm:grid-cols-3">
-      {entries.map((entry) => (
-        <Card
-          key={entry.rank}
-          size="sm"
-          className={`rounded-lg shadow-site-sm ${
-            entry.rank === 1 ? "ring-brand-orange/45" : "ring-border"
-          }`}
-        >
-          <CardContent className="flex items-center gap-3 pt-(--card-spacing)">
-            <span
-              className="font-mono text-lg font-bold text-brand-blue"
-              aria-label={`Rank ${entry.rank}`}
-            >
-              #{entry.rank}
-            </span>
-            <AthleteAvatar
-              name={entry.displayName}
-              headshotUrl={entry.headshot?.url}
-              size="md"
-              rank={entry.rank === 1 ? 1 : undefined}
-            />
-            <div className="min-w-0 flex-1">
-              <p className="truncate font-semibold text-foreground">
-                <AthleteProfileLink
-                  name={entry.displayName}
-                  slug={entry.publicProfileSlug}
-                />
-              </p>
-              <LevelBadge level={entry.level} size="sm" />
-              <p className="mt-1 font-mono text-xs text-accent-soft">
-                {formatXp(entry.xp)} XP
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
-  );
-}
-
 type HomePageViewProps = {
-  topEntries: LeaderboardEntry[];
   pricing?: ProgramPricing | null;
 };
 
-export function HomePageView({ topEntries, pricing = null }: HomePageViewProps) {
+export function HomePageView({ pricing = null }: HomePageViewProps) {
   return (
     <div>
       <PageHero
@@ -348,6 +264,8 @@ export function HomePageView({ topEntries, pricing = null }: HomePageViewProps) 
         )}
         aside={<HeroProgressVisual />}
       />
+
+      <RegistrationGateway />
 
       <SiteSection
         eyebrow="What is the Shooting Challenge?"
@@ -446,8 +364,6 @@ export function HomePageView({ topEntries, pricing = null }: HomePageViewProps) 
           ))}
         </div>
       </SiteSection>
-
-      <LevelJourneySection />
 
       <SiteSection
         eyebrow="More than shooting"
@@ -574,67 +490,12 @@ export function HomePageView({ topEntries, pricing = null }: HomePageViewProps) 
       </SiteSection>
 
       <ProgramPricingSection pricing={pricing} />
-
-      <SiteSection
-        eyebrow="Live leaders"
-        title="Challenge leaderboard"
-        titleId="top-board-heading"
-        description="See who is leading the current challenge season by XP and level."
-        aria-labelledby="top-board-heading"
-        actions={
-          <CtaLink href="/leaderboard" variant="default" size="default">
-            View full leaderboard
-          </CtaLink>
-        }
-      >
-        <TopThreePreview entries={topEntries} />
-      </SiteSection>
-
-      <SiteSection
-        tone="blue"
-        eyebrow="Explore the challenge"
-        title="Jump into any part of the program"
-        titleId="explore-heading"
-        description="Rankings, homework, levels, tutorials, achievements, and more — all public on this site."
-        aria-labelledby="explore-heading"
-      >
-        <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-4">
-          {PROGRAM_HUB_LINKS.map((link) => {
-            const Icon = link.icon;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="group flex min-h-11 flex-col rounded-md bg-white/10 p-3 ring-1 ring-white/20 transition hover:bg-white/15 hover:ring-brand-orange/55 sm:p-4"
-              >
-                <span className="inline-flex size-8 items-center justify-center rounded-md bg-brand-orange/20 text-brand-orange sm:size-9">
-                  <Icon size={18} aria-hidden />
-                </span>
-                <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.16em] text-contrast-muted sm:mt-3">
-                  {link.eyebrow}
-                </p>
-                <p className="mt-1 text-sm font-bold leading-snug text-brand-white sm:text-base">
-                  {link.title}
-                </p>
-                <p className="mt-1 hidden text-sm leading-snug text-contrast-muted sm:block sm:line-clamp-2">
-                  {link.description}
-                </p>
-                <span className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-brand-orange transition group-hover:gap-1.5 sm:mt-3 sm:text-sm">
-                  {link.linkLabel} <IconChevronRight size={14} aria-hidden />
-                </span>
-              </Link>
-            );
-          })}
-        </div>
-      </SiteSection>
-
-      <RegistrationGateway />
     </div>
   );
 }
 
 export function HomePageFallback() {
-  return <HomePageView topEntries={[]} />;
+  return <HomePageView />;
 }
 
 /** Used only when the server-side standings contract fails closed. */

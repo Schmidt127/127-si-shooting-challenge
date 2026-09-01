@@ -6,29 +6,31 @@ export const PRIMARY_NAV_HREFS = [
   "/leaderboard",
   "/homework",
   "/levels",
-  "/tutorials",
   "/zoom-meetings",
-  "/faq",
-  "/game-manual",
 ] as const;
+
+/** Nested under the responsive “Resources” menu. */
+export const RESOURCES_NAV_HREFS = ["/tutorials", "/shoutouts", "/articles"] as const;
 
 /** Nested under the responsive “More” menu. All listed routes remain available. */
-export const MORE_NAV_HREFS = [
-  "/shoutouts",
-  "/articles",
-  "/achievements",
-] as const;
+export const MORE_NAV_HREFS = ["/game-manual", "/faq", "/achievements"] as const;
 
 const PRIMARY_SET = new Set<string>(PRIMARY_NAV_HREFS);
+const RESOURCES_SET = new Set<string>(RESOURCES_NAV_HREFS);
 const MORE_SET = new Set<string>(MORE_NAV_HREFS);
 
 export function splitNavItems(items: ProductNavItem[]): {
   primary: ProductNavItem[];
+  resources: ProductNavItem[];
   more: ProductNavItem[];
 } {
   const byHref = new Map(items.map((item) => [item.href, item]));
 
   const primary = PRIMARY_NAV_HREFS.map((href) => byHref.get(href)).filter(
+    (item): item is ProductNavItem => Boolean(item),
+  );
+
+  const resources = RESOURCES_NAV_HREFS.map((href) => byHref.get(href)).filter(
     (item): item is ProductNavItem => Boolean(item),
   );
 
@@ -38,9 +40,15 @@ export function splitNavItems(items: ProductNavItem[]): {
 
   // Preserve any unexpected future nav items rather than dropping routes.
   for (const item of items) {
-    if (PRIMARY_SET.has(item.href) || MORE_SET.has(item.href)) continue;
+    if (
+      PRIMARY_SET.has(item.href) ||
+      RESOURCES_SET.has(item.href) ||
+      MORE_SET.has(item.href)
+    ) {
+      continue;
+    }
     more.push(item);
   }
 
-  return { primary, more };
+  return { primary, resources, more };
 }
