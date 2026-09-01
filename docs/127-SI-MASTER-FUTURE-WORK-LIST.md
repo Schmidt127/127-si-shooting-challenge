@@ -226,7 +226,7 @@ The current parent-facing email workflows are functional and can be used for the
 
 Optional future work may improve visual presentation or wording, but email functionality is not a blocker for the upcoming challenge.
 
-**Remaining writeback gap:** Weekly Athlete Summary Sent? after Hub → Resend (still TBD). Homework Completions Sent?/Sent On — **FUT-032 COMPLETE** (2026-08-31 Mike verify). Hub PR [#42](https://github.com/Schmidt127/communications/pull/42) **MERGED**.
+**Remaining writeback gap:** ~~Weekly Athlete Summary Sent? after Hub → Resend (still TBD)~~ **CLOSED in repo** (2026-09-01) — Hub `source-writeback-weekly-summary.js` + contract `WEEKLY_SUMMARY_SOURCE_WRITEBACK_v1.md`; **paste/deploy pending** ([`deploy-checklists/FUT-006-weekly-was-hub-writeback.md`](./deploy-checklists/FUT-006-weekly-was-hub-writeback.md)). Homework Completions Sent?/Sent On — **FUT-032 COMPLETE** (2026-08-31 Mike verify). Hub PR [#42](https://github.com/Schmidt127/communications/pull/42) **MERGED**.
 
 ---
 
@@ -235,8 +235,9 @@ Optional future work may improve visual presentation or wording, but email funct
 ### FUT-007 — Simplify future AWS media naming and support future media types
 
 **Priority:** P2  
-**Status:** Ready for prompt  
-**Systems:** Upload Lambda, S3, Airtable storage-key/writeback fields
+**Status:** **Spec ready** — Phase 3 Lambda implementation not started  
+**Systems:** Upload Lambda, S3, Airtable storage-key/writeback fields  
+**Spec:** [FUT-007-AWS-MEDIA-NAMING-SPEC.md](./next-wave/aws-media/FUT-007-AWS-MEDIA-NAMING-SPEC.md) · Promotion: [FUT-007-aws-media-naming.md](./deploy-checklists/FUT-007-aws-media-naming.md) · Prep helpers: [`lib/aws-media-naming/`](../lib/aws-media-naming/)
 
 Change the naming convention for future uploads only. Existing test uploads will be deleted before the next challenge, so no migration is required. Supported future upload categories should include:
 
@@ -257,6 +258,8 @@ Examples:
 Do not include the Airtable record ID in the filename. Use the **Custom Video File Name** in the final filename position. The Airtable record ID remains system metadata and is not part of the human-facing filename.
 
 The prompt must define sanitization, collision handling, missing-name behavior, and preservation of the Airtable record ID elsewhere as system metadata.
+
+**Delivered (2026-09-01):** Full spec + promotion checklist + `lib/aws-media-naming/` offline tests (21 vitest cases). Lambda / Production unchanged.
 
 ### FUT-008 — Custom Video File Name field and parent-facing usage
 
@@ -842,7 +845,8 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-040 — Automatic S3 migration for homework, video-feedback, and headshot attachments
 
 **Priority:** P1  
-**Status:** Planned — extends / does not replace **FUT-010**  
+**Status:** **Brief ready (Phase 2)** — extends / does not replace **FUT-010**; Phase 3 blocked on Mike decisions + PKG-004  
+**Brief:** [FUT-040-AUTOMATIC-S3-MIGRATION-BRIEF.md](./next-wave/s3-migration/FUT-040-AUTOMATIC-S3-MIGRATION-BRIEF.md)  
 **Systems:** Airtable attachments, AWS S3, Lambda viewer (where applicable), Submission Assets / registration headshots, audit/status fields  
 **Correct repo:** this repo + AWS  
 **Related:** **FUT-010** (intake SA cleanup after verified upload — dry-run complete; supervised apply pending) · FUT-007 (HEADSHOT naming) · FUT-009 · SC-094 · SC-095 · SC-096 · SC-099 · SC-100 · [deploy-checklists/FUT-010-intake-attachment-cleanup.md](./deploy-checklists/FUT-010-intake-attachment-cleanup.md) · [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) FUT-010 row
@@ -1395,7 +1399,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **FUT-037** | READY (blocked on images) | Program images under `/public/images/programs/` — Mike supplies assets |
 | **FUT-038** | **Brief ready** | Global category on/off — [FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md](./next-wave/config-selection/FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md); Phase 3 blocked on Mike ownership + PKG-004 |
 | **FUT-039** | DEFERRED implement / Planned | Fillout branding CSS — planning only; do not implement yet |
-| **FUT-040** | READY (brief first) | Automatic S3 migration for HW / video / headshots; delete Airtable attachment **only after** verification — extends **FUT-010** |
+| **FUT-040** | **Brief ready** | Automatic S3 migration for HW / video / headshots — [FUT-040-AUTOMATIC-S3-MIGRATION-BRIEF.md](./next-wave/s3-migration/FUT-040-AUTOMATIC-S3-MIGRATION-BRIEF.md); Phase 3 blocked on Mike decisions + PKG-004 |
 | **FUT-041** | **COMPLETE** | Daily Submission XP columns — PR **#321** `66f8c40b` + Hub **#43** `504a3ed`; **076 v8.12** paste pending |
 | **FUT-042** | **COMPLETE** | Coach Feedback quotation — web + Hub homework/video emails |
 | **FUT-043** | **COMPLETE** | Card design tokens — web sc-card + Hub card-tokens.js |
