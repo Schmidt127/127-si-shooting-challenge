@@ -22,6 +22,8 @@ When a coach enters **Custom Video File Name** on Video Feedback and checks **Co
 
 **Normal workflow is automatic.** The CLI (`tools/airtable/fut_009_video_rename.py`) remains for recovery, dry-run, backfill, and supervised emergency apply only.
 
+**FUT-008 display wiring (PR #336) is independent:** emails and website resolve display filenames from **Custom Video File Name → Video Asset File Name → "Video submission"** immediately when the coach enters the custom name. Physical S3 rename (this workflow) may complete later; display must not wait for CopyObject.
+
 **There is no separate Airtable DEV environment.** Controlled Production tests use disposable records only.
 
 **Out of scope v1:** Homework rename, headshot rename, mass legacy migration, Automation 147.
@@ -198,9 +200,10 @@ python fut_009_video_rename.py apply --confirm-rename --record-id recXXXXXXXXXXX
 
 ### Phase E — Verification (display paths)
 
-- [ ] Website game log shows Custom Video File Name (display precedence — Agent 3 wiring)
-- [ ] Video Feedback email / Weekly summary use custom display name
-- [ ] Secure video viewer still works
+- [ ] **Before rename:** Custom Video File Name appears in website game log and email payloads (FUT-008 / 072 v4.9.1 / 073 v4.5 / 074 v3.5 + Communications Hub PR #47)
+- [ ] **After rename:** Display unchanged; Storage Key + Canonical File URL updated
+- [ ] Reviewer File URL unchanged; viewer GET serves renamed object
+- [ ] Re-check Confirm → `skipped_already_named`; Confirm clears
 
 ### Rollback / recovery
 
