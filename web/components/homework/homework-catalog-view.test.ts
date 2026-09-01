@@ -1,6 +1,10 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ refresh: vi.fn() }),
+}));
 
 import {
   HomeworkCatalogView,
@@ -197,11 +201,15 @@ describe("Homework catalog states", () => {
     expect(html).toContain("data-testid=\"homework-catalog-empty\"");
   });
 
-  it("renders error state markup", () => {
+  it("renders error state markup with retry affordance", () => {
     const html = renderToStaticMarkup(
-      createElement(HomeworkErrorState, { message: "Homework temporarily unavailable." }),
+      createElement(HomeworkErrorState, {
+        message: "Homework temporarily unavailable.",
+        retryable: true,
+      }),
     );
     expect(html).toContain("data-testid=\"homework-catalog-error\"");
     expect(html).toContain("Homework temporarily unavailable.");
+    expect(html).toContain("data-testid=\"homework-catalog-retry\"");
   });
 });

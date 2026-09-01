@@ -1,14 +1,19 @@
 import { listAirtableRecords } from "@/lib/airtable/client";
 import {
+  PROGRAM_INSTANCE_AIRTABLE_FIELDS as PI_FIELDS,
+} from "@/lib/airtable/pha-field-map";
+import {
   PUBLIC_AIRTABLE_TABLES,
   REGISTERING_SHOOTING_CHALLENGE_FILTER,
 } from "@/lib/airtable/public-tables";
-import { asText } from "@/lib/data/airtable-values";
+import { asText, linkedRecordIds } from "@/lib/data/airtable-values";
 
 export type RegisteringProgramInstance = {
   id: string;
   name: string;
   schoolYear: string;
+  /** Program Instance link order for PHA duplicate resolution. */
+  scheduledPhaIds: string[];
 };
 
 type ProgramInstanceScopeFields = {
@@ -17,14 +22,16 @@ type ProgramInstanceScopeFields = {
   "Program - Linked"?: unknown;
   Status?: unknown;
   "Record Id"?: unknown;
+  "Program Homework Assignments"?: unknown;
 };
 
 const SCOPE_FIELDS = [
-  "Name - Program Instance",
-  "School Year - Linked",
-  "Program - Linked",
-  "Status",
-  "Record Id",
+  PI_FIELDS.name,
+  PI_FIELDS.schoolYear,
+  PI_FIELDS.program,
+  PI_FIELDS.status,
+  PI_FIELDS.recordId,
+  PI_FIELDS.programHomeworkAssignments,
 ] as const;
 
 /**
@@ -65,5 +72,9 @@ export async function resolveRegisteringShootingChallengeProgramInstance(
     throw new Error("Current standings Program Instance is missing a valid record id.");
   }
 
-  return { id: programInstance.id, name, schoolYear };
+  const scheduledPhaIds = linkedRecordIds(
+    programInstance.fields[PI_FIELDS.programHomeworkAssignments],
+  );
+
+  return { id: programInstance.id, name, schoolYear, scheduledPhaIds };
 }

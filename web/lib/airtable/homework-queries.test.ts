@@ -28,6 +28,7 @@ function registeringProgramInstance(overrides: Record<string, unknown> = {}) {
       "Program - Linked": "Shooting Challenge",
       Status: { name: "Registering" },
       "Record Id": CURRENT_PI_ID,
+      "Program Homework Assignments": [{ id: "rec00000000000001" }],
       ...overrides,
     },
   };
@@ -268,9 +269,9 @@ describe("PHA-backed public homework scheduling", () => {
 
   it("fails closed when zero or multiple Registering Shooting Challenge Program Instances exist", async () => {
     listAirtableRecordsMock.mockResolvedValue({ records: [] } as never);
-    await expect(fetchScheduledHomeworkCatalog()).rejects.toThrow(
-      /exactly one Registering Shooting Challenge Program Instance; found 0/,
-    );
+    await expect(fetchScheduledHomeworkCatalog()).rejects.toMatchObject({
+      category: "program_scope",
+    });
 
     listAirtableRecordsMock.mockResolvedValue({
       records: [
@@ -286,9 +287,9 @@ describe("PHA-backed public homework scheduling", () => {
         },
       ],
     } as never);
-    await expect(fetchScheduledHomeworkCatalog()).rejects.toThrow(
-      /exactly one Registering Shooting Challenge Program Instance; found 2/,
-    );
+    await expect(fetchScheduledHomeworkCatalog()).rejects.toMatchObject({
+      category: "program_scope",
+    });
   });
 
   it("fails closed when School Year - Linked is missing or the Program Instance name is not canonical", async () => {
@@ -298,7 +299,9 @@ describe("PHA-backed public homework scheduling", () => {
       }
       throw new Error(`Unexpected table ${params.tableName}`);
     });
-    await expect(fetchScheduledHomeworkCatalog()).rejects.toThrow(/missing School Year - Linked/);
+    await expect(fetchScheduledHomeworkCatalog()).rejects.toMatchObject({
+      category: "program_scope",
+    });
 
     listAirtableRecordsMock.mockImplementation(async (params) => {
       if (params.tableName === "Program Instance - Sync") {
@@ -310,9 +313,9 @@ describe("PHA-backed public homework scheduling", () => {
       }
       throw new Error(`Unexpected table ${params.tableName}`);
     });
-    await expect(fetchScheduledHomeworkCatalog()).rejects.toThrow(
-      /name must be exactly "Shooting Challenge \| 2026-2027"/,
-    );
+    await expect(fetchScheduledHomeworkCatalog()).rejects.toMatchObject({
+      category: "program_scope",
+    });
   });
 
   it("shows no curriculum items when there is no active PHA", async () => {
@@ -332,12 +335,68 @@ describe("PHA-backed public homework scheduling", () => {
     expect(catalog.weekGroups[0].assignments[0].id).toBe(HOMEWORK_ID);
   });
 
-  it("fails closed when duplicate active PHA rows exist for the same PI + Week + slot even if eligibility metadata differs", async () => {
+  it("resolves duplicate active PHA rows for the same PI + Week + slot using Program Instance link order", async () => {
     installBaseMocks([
       pha("rec00000000000002", WEEK_ID, ["reclWDQZzKbVBtdhG"]),
       pha("rec00000000000003", WEEK_ID, ["recK7BDVSpHy2ipCS"]),
     ]);
-    await expect(fetchScheduledHomeworkCatalog()).rejects.toThrow(/Multiple active PHA rows/);
+    listAirtableRecordsMock.mockImplementation(async (params) => {
+      if (params.tableName === "Program Instance - Sync") {
+        return {
+          records: [registeringProgramInstance({
+            "Program Homework Assignments": [
+              { id: "rec00000000000003" },
+              { id: "rec00000000000002" },
+            ],
+          })],
+        } as never;
+      }
+      if (params.tableName === "Program Homework Assignments") {
+        return {
+          records: [
+            pha("rec00000000000002", WEEK_ID, ["reclWDQZzKbVBtdhG"]),
+            pha("rec00000000000003", WEEK_ID, ["recK7BDVSpHy2ipCS"]),
+          ],
+        } as never;
+      }
+      if (params.tableName === "Homework Library") {
+        return {
+          records: [{
+            id: HOMEWORK_ID,
+            fields: {
+              "Assignment Full Name - Display": "Shot Tracker Usage",
+              "Assignment Title": "Shot Tracker Usage",
+              Order: 1,
+              "Published?": true,
+            },
+          }],
+        } as never;
+      }
+      if (params.tableName === "Weeks") {
+        return {
+          records: [{
+            id: WEEK_ID,
+            fields: {
+              "Week Name": "Early Bird - Testing",
+              "Start Date": "2026-08-02T06:00:00.000Z",
+            },
+          }],
+        } as never;
+      }
+      if (params.tableName === "Grade Bands") {
+        return {
+          records: Object.entries(GRADE_BAND_NAMES).map(([id, name]) => ({
+            id,
+            fields: { "Grade Band Name": name },
+          })),
+        } as never;
+      }
+      throw new Error(`Unexpected table ${params.tableName}`);
+    });
+
+    const catalog = await fetchScheduledHomeworkCatalog();
+    expect(catalog.totalAssignments).toBe(1);
+    expect(catalog.weekGroups[0].assignments[0].phaId).toBe("rec00000000000003");
   });
 
   it("skips incomplete active PHA rows and returns an empty catalog when none are schedulable", async () => {

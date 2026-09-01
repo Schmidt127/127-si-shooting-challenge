@@ -26,6 +26,7 @@ describe("PHA schedule parsing", () => {
   const CURRENT_PI = "rec5mEM0YPqPqq0hZ";
   const HOMEWORK_ID = "rechVLOeyEVIqmy2v";
   const WEEK_ID = "recWeVrSabnsYaHc2";
+  const parseOptions = { programInstanceId: CURRENT_PI };
 
   it("skips incomplete active PHA rows instead of failing the whole catalog", () => {
     const { rows, skippedIncomplete } = parseActivePhaScheduleRows(
@@ -39,13 +40,13 @@ describe("PHA schedule parsing", () => {
           "Active?": true,
         },
       }],
-      CURRENT_PI,
+      parseOptions,
     );
     expect(rows).toHaveLength(0);
     expect(skippedIncomplete).toBe(1);
   });
 
-  it("detects duplicate active PI+Week+slot collisions", () => {
+  it("resolves duplicate active PI+Week+slot rows deterministically", () => {
     const pha = (id: string, gradeBandId: string) => ({
       id,
       fields: {
@@ -58,12 +59,18 @@ describe("PHA schedule parsing", () => {
       },
     });
 
-    const { duplicateSlotKeys } = parseActivePhaScheduleRows(
+    const priority = new Map([
+      ["recPHA0000000003", 0],
+      ["recPHA0000000002", 1],
+    ]);
+
+    const { rows, resolvedDuplicateSlotKeys } = parseActivePhaScheduleRows(
       [pha("recPHA0000000002", "recGB1"), pha("recPHA0000000003", "recGB2")],
-      CURRENT_PI,
+      { programInstanceId: CURRENT_PI, programInstancePhaPriority: priority },
     );
-    expect(duplicateSlotKeys).toHaveLength(1);
-    expect(duplicateSlotKeys[0]).toBe(`${CURRENT_PI}|${WEEK_ID}|HW1`);
+    expect(rows).toHaveLength(1);
+    expect(rows[0].phaId).toBe("recPHA0000000003");
+    expect(resolvedDuplicateSlotKeys).toHaveLength(1);
   });
 
   it("parses PHA Due Date from active rows", () => {
@@ -79,7 +86,7 @@ describe("PHA schedule parsing", () => {
           "Due Date": "2027-06-29",
         },
       }],
-      CURRENT_PI,
+      parseOptions,
     );
     expect(rows).toHaveLength(1);
     expect(rows[0].dueDate).toBe("2027-06-29");
@@ -97,7 +104,7 @@ describe("PHA schedule parsing", () => {
           "Active?": true,
         },
       }],
-      CURRENT_PI,
+      parseOptions,
     );
     expect(rows[0].dueDate).toBeNull();
   });
