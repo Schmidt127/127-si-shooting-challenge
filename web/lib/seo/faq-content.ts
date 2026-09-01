@@ -29,7 +29,7 @@ export const PROGRAM_FAQ_ITEMS: FaqItem[] = [
   {
     id: "grades-served",
     question: "What grades does the program serve?",
-    answer: `The Shooting Challenge is designed for boys and girls in ${PROGRAM_GRADES_SERVED}. Eligibility is based on grade level — not where you live. Leaderboard grade bands group athletes for standings display only; they may include enrolled athletes in adjacent school levels when those athletes are active in the program.`,
+    answer: `The Shooting Challenge is designed for boys and girls in ${PROGRAM_GRADES_SERVED}. Eligibility is based on grade level — not where you live. Leaderboard grade bands group athletes for standings display only; they may include enrolled athletes in adjacent school levels when those athletes are active in the program. Adjacent levels on the leaderboard do not expand who may register.`,
   },
   {
     id: "boys-and-girls",

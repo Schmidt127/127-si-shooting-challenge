@@ -491,17 +491,6 @@ export function HomePageView({ pricing = null }: HomePageViewProps) {
             </Card>
           ))}
         </div>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <CtaLink href="/faq" variant="default" size="default">
-            Read parent FAQ
-          </CtaLink>
-          <CtaLink href="/homework" variant="contrast" size="default">
-            See current homework
-          </CtaLink>
-          <CtaLink href="/faq#video-feedback" variant="contrast" size="default">
-            Video feedback expectations
-          </CtaLink>
-        </div>
       </SiteSection>
 
       <SiteSection

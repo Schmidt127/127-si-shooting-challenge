@@ -55,6 +55,7 @@ describe("PROGRAM_FAQ_ITEMS", () => {
     const grades = PROGRAM_FAQ_ITEMS.find((item) => item.id === "grades-served");
     expect(grades?.answer).toMatch(/eligibility is based on grade level/i);
     expect(grades?.answer).toMatch(/display only/i);
+    expect(grades?.answer).toMatch(/do not expand who may register/i);
   });
 
   it("does not mention Team Shot Tracker (separate product)", () => {
