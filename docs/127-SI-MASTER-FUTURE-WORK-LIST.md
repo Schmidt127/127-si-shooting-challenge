@@ -274,7 +274,7 @@ Use the Custom Video File Name everywhere a parent-facing or coach-facing descri
 ### FUT-009 — AWS storage structure and corrected-video naming workflow
 
 **Priority:** P2  
-**Status:** Planned  
+**Status:** **Brief ready (2026-09-01)** — Phase 2 architecture only; no bucket/Lambda/S3/schema implementation  
 **Systems:** Video Feedback correction interface, Lambda/S3, Airtable links
 
 Combine the AWS bucket-structure review and corrected-video naming workflow into one future project. Review the current bucket structure, folder/key organization, naming rules, retention expectations, and separation of homework, video, and future headshot assets.
@@ -282,6 +282,8 @@ Combine the AWS bucket-structure review and corrected-video naming workflow into
 When Mike corrects a video and supplies a Custom Video File Name, provide a safe workflow to apply that name to the stored object or create a clearly named replacement object. The secure Lambda Reviewer URL must remain valid or be regenerated safely. The workflow must not create duplicate XP, duplicate Video Feedback records, or broken parent links.
 
 Keep the S3 bucket private and preserve the Lambda viewer architecture.
+
+**Delivered (2026-09-01):** Phase 2 brief — current key inventory (Gen A/B/C), FUT-007 relationship, layout options (§4), copy-on-write rename workflow, headshot placeholder, retention, Phase 3 slices, test matrix, 12 open decisions, PKG-004 gate. Brief: [`docs/next-wave/aws-media/FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md`](./next-wave/aws-media/FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md). **No S3 changes, no Lambda deploy, no Airtable paste.**
 
 ### FUT-010 — Delete Airtable intake attachments after verified S3 upload
 
@@ -1319,7 +1321,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-144** | Website | Rename Softr-named publish flag | P2 | **DEFERRED** (general schema typo wave) | SC-054 | Gate summary / Softr flag / HC RID typos — SAFE-MIGRATION-PLAN P3; **Perfect Week Video Minimum** typo fixed 2026-08-27 |
 | **SC-145** | Platform | Repo health / security audit follow-ups | P2 | Planned | ΓÇö | Triage findings into SC items as needed |
 | **SC-146** | Enrollment | Re-open Fillout daily intake when season ready | P2 | Deferred | SC-060, SC-135 | Turn on only after SC-135 dry-run |
-| **SC-147** | Zoom | Recorded meeting half-XP writer (distinct from live 101) | P1 | **Repo prep shipped** — draft + offline tests; not Live | SC-022, SC-087 | Mike: pick automation slot; confirm `ZOOM_RECORDING` rule row; DEV install — **do not** overload 117 email |
+| **SC-147** | Zoom | Recorded meeting half-XP writer (distinct from live 101) | P1 | **Script ready (v1.0)** — paste pending Mike | SC-022, SC-087 | Mike: pick automation slot; confirm `ZOOM_RECORDING` rule row; DEV paste per [`SC-147-zoom-recording-half-xp.md`](./deploy-checklists/SC-147-zoom-recording-half-xp.md) — **do not** overload 117 email |
 | **SC-066** | Enrollment | Early-bird periods supported for 2026–2027 | P3 | Decision resolved — use early-bird registration | SC-065 | Decide if 2026ΓÇô27 uses early-bird; config if yes |
 | **SC-067** | Enrollment | Program Instance multi-year design | P3 | Tracked under V2-013 | SC-032, SC-046 | Dedicated architecture wave later ΓÇö do not block season launch on PI redesign |
 | **SC-100** | Assets | Attachment / Drive retirement strategy | P3 | Deferred | SC-095 | Plan retirement after S3 paths stable for HW+video |
@@ -1377,7 +1379,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 |---|---|---|
 | **Weekly email audit** | Harness shipped (2026-08-30) | `audits/2026-08-28-weekly-email-pipeline-audit.md` + [`testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md`](testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md) — live `--apply` Mike disposable WAS |
 | **SC-PW-E2E preflight** | COMPLETE (repo) | `preflightApplyAccess`; unlock field resolver (`Source Key` / `Milestone Source Key`) |
-| **SC-147** | Repo prep shipped | Recorded Zoom half-XP — draft `drafts/sc-147-zoom-recording-half-xp.js` + `lib/sc-147-zoom-recording-credit.test.js`; Mike slot + rule row pending |
+| **SC-147** | Script ready — paste pending Mike | Recorded Zoom half-XP — `147-zoom-recording-credit-award-half-xp.js` v1.0 + offline tests PASS; checklist [`SC-147-zoom-recording-half-xp.md`](./deploy-checklists/SC-147-zoom-recording-half-xp.md); Mike slot + `ZOOM_RECORDING` rule row + DEV proof |
 | **FUT-001 / PR #264** | **COMPLETE** (repo + Production paste + multi-asset XP) | 020 v3.8 + 065 v10.4 Live; multi-asset 020 **PASS**; 065 dynamic `recordId` remapped; **trigger re-entry after remap** required; exactly one `HOMEWORK_XP\|rec8E94Jg7mpmuMW9` (`recwpzl8pkXecUqRK`, no duplicate) — PR **#312** MERGED `f8a7365f` — [`testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json`](./testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json) · [`deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](./deploy-checklists/065-recordId-dynamic-remap-operator-packet.md) |
 | **SC-015 / SC-016 / MRW-F02** | **COMPLETE** (2026-08-31) | Multi-asset → one HC + one Homework XP; 065 remap + re-entry **COMPLETE**; **do not** re-paste 020/065; **do not** re-`--apply` |
 | **FUT-002 batch 1** | **COMPLETE** (2026-08-31) | Five `ZZZ DELETE —` fields UI-deleted; then **1350** fields / **0** ZZZ; [`testing/evidence/fut-002/batch1-live-verify.json`](./testing/evidence/fut-002/batch1-live-verify.json) · schema `airtable/schema/snapshots/prod-20260831-fut002-batch1/` |

@@ -1,8 +1,8 @@
 /*
-Automation: XXX (TBD) - Zoom Recording Credit - Award Half XP (SC-147 DRAFT)
+Automation: XXX (TBD) - Zoom Recording Credit - Award Half XP (SC-147 DRAFT — SUPERSEDED)
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: GitHub DRAFT — NOT Live — SLOT TBD (Mike picks automation number)
+Status: SUPERSEDED — use 147-zoom-recording-credit-award-half-xp.js (v1.0)
 
 Purpose:
 Award half Zoom XP for approved recording credit distinct from live 101 attendance.

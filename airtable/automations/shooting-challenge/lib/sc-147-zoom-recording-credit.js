@@ -249,7 +249,7 @@ function buildSc147RecordingXpEventFields({
   xpAmount,
   activityDateKey,
   zoomAttendanceId,
-  scriptVersion = "draft-sc-147",
+  scriptVersion = "v1.0",
 }) {
   const sourceKey = buildSc147RecordingCreditSourceKey(enrollmentId, zoomMeetingId);
   return {
