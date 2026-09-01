@@ -1,7 +1,8 @@
 # Homework Feedback email redesign — promotion checklist
 
-Status: **Communications Hub deployed / Airtable paste pending**
-Production change: **Hub live on Vercel; 071 paste required in Airtable (Mike)**
+> **Superseded for operator paste (2026-09-01):** Automation **071 v4.3** is **complete in Production** (Mike paste 2026-09-01). Do **not** re-paste unless regression is proven. Current authority: [`FUT-046-homework-feedback-subject.md`](./FUT-046-homework-feedback-subject.md), [`EMAIL-PASTE-QUEUE-2026-09.md`](./EMAIL-PASTE-QUEUE-2026-09.md), [`CURRENT-TRUTH.md`](../CURRENT-TRUTH.md).
+
+Status: **Complete — Hub deployed; 071 v4.3 Production-updated (2026-09-01)**
 
 ## Scope
 
@@ -20,7 +21,9 @@ Repo: `Schmidt127/communications` (`communications-two-blue.vercel.app`)
    assignment details, coach feedback card, XP metric, submitted-work links or quiz-only copy,
    CTA (`View Submitted Homework` or `Open Homework Page`), shared footer links.
 
-## Airtable — Automation 071 v4.2
+## Airtable — Automation 071 v4.2 *(historical promotion steps)*
+
+> **Historical:** Steps below describe the **2026-08-22 v4.2** promotion. Production now runs **071 v4.3** (FUT-046 subject). See [`071-v4.3-homework-feedback-paste-packet.md`](./071-v4.3-homework-feedback-paste-packet.md) for the final attestation record.
 
 Repo: `127-si-shooting-challenge`
 

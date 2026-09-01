@@ -3,7 +3,7 @@
 **Status:** Current (Mike evidence 2026-08-19)  
 **Scope:** Shooting Challenge parent / athlete notification emails
 
-This file owns the live **email delivery** question. Automation **117 v2.1** is confirmed as the Zoom recording approval **queue producer** (Mike paste 2026-08-19). Other Airtable email-automation versions remain unconfirmed until Mike reads them in the UI.
+This file owns the live **email delivery** question. Automation **117 v2.1** is confirmed as the Zoom recording approval **queue producer** (Mike paste 2026-08-19). Automation **071 v4.3** (homework feedback Hub handoff, FUT-046) and **076 v8.12** (daily submission package, FUT-041 XP columns) are **confirmed Production-updated** (Mike paste 2026-09-01). Other Airtable email-automation versions remain unconfirmed until Mike reads them in the UI.
 
 ---
 
@@ -14,8 +14,8 @@ This file owns the live **email delivery** question. Automation **117 v2.1** is 
 | Who sends Shooting Challenge emails | **Resend**, through the Communications Hub |
 | Make.com email | **None.** Make.com does not handle any Shooting Challenge emails. |
 | Gmail Make scenarios | **Not** the current email sender. Historical only. |
-| Daily submission | **076** creates Hub queue → **079** → Hub → Resend. Automation **077** (Make daily send) is **deleted from Production** (2026-08-13 docs). |
-| Covered mail | Weekly summary, homework feedback (**071**), video feedback (**073**), welcome (**078A → 079 → Hub**; Automation **075** retired), daily submission, Zoom recording approval, and any other SC parent/athlete notification email. Homework Ready? is **078** (native), not **065**. |
+| Daily submission | **076 v8.12** creates Hub queue → **079** → Hub → Resend (FUT-041 XP Earned \| Extra Credit). Automation **077** (Make daily send) is **deleted from Production** (2026-08-13 docs). |
+| Covered mail | Weekly summary, homework feedback (**071 v4.3**), video feedback (**073**), welcome (**078A → 079 → Hub**; Automation **075** retired), daily submission, Zoom recording approval, and any other SC parent/athlete notification email. Homework Ready? is **078** (native), not **065**. |
 | Not this file | File upload (070a/070b → Make/Lambda). Tremendous gift-card delivery (Tremendous sends that email after a Make HTTP API call). |
 | Production `Automations` table | **Authority for Name / Status / Automation Code only** (Mike refresh 2026-08-20). Ignore other columns. See [`CURRENT-TRUTH.md`](../CURRENT-TRUTH.md) and [`audits/2026-08-20-automation-49-code-audit.md`](../audits/2026-08-20-automation-49-code-audit.md). |
 

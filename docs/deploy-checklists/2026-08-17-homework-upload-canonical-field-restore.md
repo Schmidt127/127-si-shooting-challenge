@@ -68,7 +68,8 @@ HTTP module: POST Lambda URL, `X-Upload-Secret`, body = webhook JSON, preserve L
 ## Airtable paste
 
 - **070a / 070b / 070c:** no paste required for this fix.  
-- **071 v4.1:** only after upload success — paste/run per `docs/deploy-checklists/071-v4.1-pha-grade-band-metadata.md`. Do **not** send parent email unless intentionally promoting live send.
+- **071 v4.1:** only after upload success — paste/run per `docs/deploy-checklists/071-v4.1-pha-grade-band-metadata.md`. Do **not** send parent email unless intentionally promoting live send.  
+  > **Superseded (2026-09-01):** Production now runs **071 v4.3** (FUT-046). Do **not** paste v4.1.
 
 ## Safe retry (Mike — manual)
 

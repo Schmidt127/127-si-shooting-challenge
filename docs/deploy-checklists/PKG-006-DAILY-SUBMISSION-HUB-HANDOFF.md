@@ -1,8 +1,10 @@
 # PKG-006 — Daily Submission Communications Hub promotion
 
-Status: **Repository-ready / promotion pending**
+> **Superseded for operator paste (2026-09-01):** Automation **076 v8.12** is **complete in Production** (Mike paste 2026-09-01; FUT-041 XP Earned | Extra Credit columns). Do **not** re-paste unless regression is proven. Current authority: [`FUT-041-daily-submission-xp-columns.md`](./FUT-041-daily-submission-xp-columns.md), [`076-v8.12-daily-submission-paste-packet.md`](./076-v8.12-daily-submission-paste-packet.md), [`EMAIL-PASTE-QUEUE-2026-09.md`](./EMAIL-PASTE-QUEUE-2026-09.md).
+
+Status: **Complete — 076 v8.12 Production-updated (2026-09-01)**
 Backlog: `PKG-006` daily-submission communications; `PKG-028` Hub migration
-Production change: **Not applied by Cursor**
+Production change: **Applied by Mike (2026-09-01)**
 
 ## Automation 031 v4.0 creator-ownership restoration + Automation 076 v8.5
 
@@ -78,11 +80,13 @@ also filters on mode, configure an OR group for those two values.
    to the triggering Submission. Do not manually change formula results to
    exercise negative cases; those cases are covered offline.
 
-## Controlled Production promotion order
+## Controlled Production promotion order *(historical — v8.5)*
+
+> **Historical:** Steps below describe the **v8.5** promotion order. Production now runs **076 v8.12**. See [`076-v8.12-daily-submission-paste-packet.md`](./076-v8.12-daily-submission-paste-packet.md) for the final attestation record.
 
 Production Airtable is the only Airtable environment for this integration.
 
-1. Mike pastes the exact committed Automation 076 v8.5 source first into the
+1. ~~Mike pastes the exact committed Automation 076 v8.5 source first into the~~ *(superseded — v8.12 pasted 2026-09-01)*
    existing Production `Submissions` automation slot. Do not create a new
    numbered automation or schema field.
 2. Automation 031 is the sole owner that checks
