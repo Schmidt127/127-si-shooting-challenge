@@ -162,7 +162,7 @@ function makeTables(overrides = {}) {
     new MockTable("Program Instance - Sync", [field("Name - Program Instance")], [program]),
     new MockTable(
       "XP Events",
-      [field("Active?", "checkbox"), field("XP Points"), field("Enrollment"), field("Week"), field("Submission")],
+      [field("Active?", "checkbox"), field("XP Points"), field("Source Key"), field("Enrollment"), field("Week"), field("Submission")],
       overrides.xpEvents || []
     ),
     new MockTable(
@@ -342,6 +342,37 @@ for (const [name, overrides, expectedMessage] of invalidGoalCases) {
   await test(`invalid goal state: ${name} creates no queue and no delivery handoff`, () =>
     expectInvalidGoal(name, overrides, expectedMessage));
 }
+
+await test("submission base xp maps to xpEarned with zero extra credit", async () => {
+  const tables = makeTables({
+    xpEvents: [
+      new MockRecord("recXPBASE000001", {
+        "Active?": true,
+        "XP Points": 10,
+        "Source Key": `SUBMISSION_XP|${IDS.submission}`,
+        Enrollment: linked(IDS.enrollment),
+        Week: linked(IDS.week),
+        Submission: linked(IDS.submission),
+      }),
+      new MockRecord("recXPHW0000001", {
+        "Active?": true,
+        "XP Points": 25,
+        "Source Key": "HOMEWORK_XP|recHC0000000001",
+        Enrollment: linked(IDS.enrollment),
+        Week: linked(IDS.week),
+        Submission: linked(IDS.submission),
+      }),
+    ],
+  });
+  const result = await run076(tables);
+  const queue = table(tables, "Email Handoff Queue");
+  const payload = JSON.parse(queue.createdPayloads[0].payload["Payload JSON"]);
+
+  assert.equal(result.threw, null);
+  assert.equal(payload.xpEarned, 10);
+  assert.equal(payload.xpExtraCredit, 0);
+  assert.equal(payload.submissionXp, 10);
+});
 
 await test("idempotent replay reuses matching queue without another create", async () => {
   const tables = makeTables();
