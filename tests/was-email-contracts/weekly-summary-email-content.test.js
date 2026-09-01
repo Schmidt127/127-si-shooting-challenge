@@ -122,8 +122,29 @@ test("isDateKeyInWeekRange enforces official week window", () => {
 test("resolveVideoDisplayFileName prefers Custom Video File Name", () => {
   assert.equal(resolveVideoDisplayFileName("OffTheDribble", "upload.mov"), "OffTheDribble");
   assert.equal(resolveVideoDisplayFileName("  ", "upload.mov"), "upload.mov");
+  assert.equal(resolveVideoDisplayFileName("  FreeThrows  ", "upload.mov"), "FreeThrows");
   assert.equal(resolveVideoDisplayFileName("", "upload.mov"), "upload.mov");
   assert.equal(resolveVideoDisplayFileName("—", "upload.mov"), "upload.mov");
+});
+
+test("filterWeeklyVideoSubmissions resolves custom filename precedence", () => {
+  const { filterWeeklyVideoSubmissions } = require("../../lib/was-email-contracts/weekly-summary-email-content");
+  const { entries } = filterWeeklyVideoSubmissions([
+    {
+      customVideoFileName: "Catch-and-shoot",
+      originalFileName: "upload.mov",
+      reviewedAt: "Aug 20, 2026",
+      secureUrl: "",
+    },
+    {
+      customVideoFileName: "—",
+      originalFileName: "form-check.mp4",
+      reviewedAt: "",
+      secureUrl: "",
+    },
+  ]);
+  assert.equal(entries[0].label, "Catch-and-shoot");
+  assert.equal(entries[1].label, "form-check.mp4");
 });
 
 test("videosSubmittedThisWeek — empty week", () => {

@@ -108,12 +108,24 @@ describe("formatGameLogPresentation", () => {
       sourceLabel: "Video Submission",
       reasonPublic: "Video submission awarded.",
       activityDate: "2026-08-22",
-      videoCustomFileName: "OffTheDribble.mov",
+      videoDisplayFileName: "OffTheDribble.mov",
     });
     expect(result.headline).toBe("Video Submission — OffTheDribble.mov");
   });
 
-  it("falls back safely when video filename is missing", () => {
+  it("falls back to original upload name when custom name is blank", () => {
+    const result = formatGameLogPresentation({
+      id: "recVideoOrig",
+      points: 15,
+      sourceLabel: "Video Submission",
+      reasonPublic: "Video submission awarded.",
+      activityDate: "2026-08-22",
+      videoOriginalFileName: "upload.mov",
+    });
+    expect(result.headline).toBe("Video Submission — upload.mov");
+  });
+
+  it("uses Video submission when both filename sources are missing", () => {
     const result = formatGameLogPresentation({
       id: "recVideoFallback",
       points: 15,
@@ -121,7 +133,7 @@ describe("formatGameLogPresentation", () => {
       reasonPublic: "Coach reviewed shooting form clip",
       activityDate: "2026-08-22",
     });
-    expect(result.headline).toBe("Video Submission — Coach reviewed shooting form clip");
+    expect(result.headline).toBe("Video Submission — Video submission");
   });
 
   it("formats weekly shot targets with percentage", () => {

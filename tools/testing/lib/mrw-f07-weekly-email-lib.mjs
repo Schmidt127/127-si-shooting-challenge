@@ -497,7 +497,7 @@ export function evaluateOfflineContract() {
     harness: HARNESS_ID,
     chain: "118 → 072 → 119 → 074 → 079 → Communications Hub → Resend → WAS writeback",
     handoffKeyPattern: "WEEKLY_ATHLETE_SUMMARY|WEEKLY_ATHLETE_SUMMARY|{wasId}",
-    githubVersions: { "072": "v4.8", "119": "v1.7", "074": "v3.3", "079": "v2.5" },
+    githubVersions: { "072": "v4.9.1", "119": "v1.7", "074": "v3.5", "079": "v2.5" },
     sentOwnership: "Hub/Resend writeback — 074/079 do not set Weekly Email Sent?",
     writebackContract: "FUT-006 / WEEKLY_SUMMARY_SOURCE_WRITEBACK_v1",
     writebackStages: {

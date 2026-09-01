@@ -315,3 +315,55 @@ def build_fut007_storage_key(
         activity_date_folder=activity_date_folder,
         basename=basename,
     )
+
+
+# FUT-009 Option D layout prefix (Mike decision 2026-09-01).
+FUT009_LAYOUT_PREFIX = "shooting-challenge"
+
+
+def prepend_fut009_layout_prefix(relative_key: str) -> str:
+    """Prepend Option D layout prefix when absent."""
+    trimmed = str(relative_key or "").strip().lstrip("/")
+    if not trimmed:
+        return f"{FUT009_LAYOUT_PREFIX}/upload.bin"
+    prefix = f"{FUT009_LAYOUT_PREFIX}/"
+    if trimmed.startswith(prefix):
+        return trimmed
+    return f"{prefix}{trimmed}"
+
+
+@dataclass(frozen=True)
+class Fut009DestinationInput:
+    """Inputs for FUT-009 post-feedback rename destination key."""
+
+    athlete_folder: str
+    program_instance_folder: str
+    activity_date: str | date | datetime
+    last_name: object = None
+    first_name: object = None
+    custom_video_file_name: str = ""
+    extension: str = ".bin"
+    existing_basenames: tuple[str, ...] = ()
+
+
+def build_fut009_destination_key(input_data: Fut009DestinationInput) -> str:
+    """Build full Option D + FUT-007 destination Storage Key for FUT-009 rename."""
+    custom_segment = resolve_custom_name_segment(
+        category="VIDEO",
+        custom_video_file_name=input_data.custom_video_file_name,
+    )
+    naming = Fut007NamingInput(
+        activity_date=input_data.activity_date,
+        category="VIDEO",
+        last_name=input_data.last_name,
+        first_name=input_data.first_name,
+        custom_name=custom_segment,
+        extension=input_data.extension,
+        existing_basenames=input_data.existing_basenames,
+    )
+    relative = build_fut007_storage_key(
+        athlete_folder=input_data.athlete_folder,
+        program_instance_folder=input_data.program_instance_folder,
+        naming=naming,
+    )
+    return prepend_fut009_layout_prefix(relative)

@@ -46,6 +46,11 @@ from dotenv import load_dotenv
 
 REPO = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).parent
+LAMBDA_ROOT = REPO / "lambda" / "upload-asset"
+if str(LAMBDA_ROOT) not in sys.path:
+    sys.path.insert(0, str(LAMBDA_ROOT))
+
+from upload_core.s3_storage_key_format import is_valid_storage_key_format  # noqa: E402
 DEFAULT_BASE = "appn84sqPw03zEbTT"
 TABLE = "Submission Assets"
 S3_BUCKET = os.getenv("FUT010_S3_BUCKET", "shooting-challenge-assets")
@@ -236,7 +241,7 @@ def verify_record_fields(
     canonical = select_name(fields.get(FIELD_CANONICAL))
     reviewer = select_name(fields.get(FIELD_REVIEWER_URL))
 
-    if not storage_key.startswith("shooting-challenge/"):
+    if not is_valid_storage_key_format(storage_key):
         return VerificationResult(False, False, None, False, "Storage Key format invalid")
     if not canonical.startswith("https://"):
         return VerificationResult(False, False, None, False, "Canonical File URL missing or not HTTPS")

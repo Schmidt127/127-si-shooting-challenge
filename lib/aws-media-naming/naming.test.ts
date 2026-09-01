@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   applyCollisionSuffix,
+  buildFut009DestinationKey,
   buildMediaBasename,
   buildStorageKeyWithFut007Basename,
   extensionFromFilename,
@@ -162,6 +163,24 @@ describe("FUT-007 storage key helper", () => {
       }),
     ).toBe(
       "Boltz_Drew/Shooting_Challenge_2026-2027/2026-08-17/20260817_VIDEO_Boltz_Drew_OffTheDribble.mp4",
+    );
+  });
+});
+
+describe("FUT-009 Option D destination key", () => {
+  it("prepends shooting-challenge/ layout prefix", () => {
+    expect(
+      buildFut009DestinationKey({
+        athleteFolder: "Boltz_Drew",
+        programInstanceFolder: "Shooting_Challenge_2026-2027",
+        activityDate: "2026-08-17",
+        lastName: "Boltz",
+        firstName: "Drew",
+        customVideoFileName: "OffTheDribble",
+        extension: ".mp4",
+      }),
+    ).toBe(
+      "shooting-challenge/Boltz_Drew/Shooting_Challenge_2026-2027/2026-08-17/20260817_VIDEO_Boltz_Drew_OffTheDribble.mp4",
     );
   });
 });

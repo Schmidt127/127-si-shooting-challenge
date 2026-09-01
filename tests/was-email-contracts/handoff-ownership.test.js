@@ -39,8 +39,8 @@ const s118 = read(
   "118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js"
 );
 
-test("072 v4.8 enforces empty-week policies and does not call Make/fetch webhook", () => {
-  assert.ok(/Version:\s*v4\.8/.test(s072));
+test("072 v4.9.1 enforces empty-week policies and does not call Make/fetch webhook", () => {
+  assert.ok(/Version:\s*v4\.9\.1/.test(s072));
   assert.ok(/emptyWeekPolicy/.test(s072));
   assert.ok(/built_short_empty_week/.test(s072));
   assert.ok(/suppressed_empty_week/.test(s072));
@@ -71,7 +71,7 @@ test("118 v2.0 does not create WAS, build HTML, or post webhook; arms sendMode f
 });
 
 test("074 owns Hub queue handoff; does not mark Sent?; blocks duplicate Sent?", () => {
-  assert.ok(/Version:\s*v3\.3/.test(s074));
+  assert.ok(/Version:\s*v3\.5/.test(s074));
   assert.ok(/Email Handoff Queue/.test(s074));
   assert.ok(/WEEKLY_ATHLETE_SUMMARY\|WEEKLY_ATHLETE_SUMMARY\|/.test(s074));
   assert.ok(/created_handoff/.test(s074));
