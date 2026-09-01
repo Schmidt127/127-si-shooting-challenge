@@ -5,9 +5,9 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 
-Version: v4.2
+Version: v4.3
 Date Written: 2026-06-17
-Last Updated: 2026-08-22
+Last Updated: 2026-09-01
 
 PURPOSE
 - Validate one Homework Completion record that is ready for parent email.
@@ -59,10 +59,10 @@ AUTOMATION NAME
 
 const SCRIPT = {
   scriptName: "071 - Email, Notifications, and External Handoffs - Create Homework Feedback Communications Hub Handoff",
-  version: "v4.2",
-  versionDate: "2026-08-22",
+  version: "v4.3",
+  versionDate: "2026-09-01",
   originalWrittenDate: "2026-06-17",
-  lastUpdated: "2026-08-22",
+  lastUpdated: "2026-09-01",
   folder: "07 - Email, Notifications, and External Handoffs",
   automationName: "071 - Email, Notifications, and External Handoffs - Create Homework Feedback Communications Hub Handoff",
 };
@@ -79,6 +79,7 @@ const CONFIG = {
     hc: "Homework Completions",
     enr: "Enrollments",
     pha: "Program Homework Assignments",
+    hwLib: "Homework Library",
     assets: "Submission Assets",
     sub: "Submissions",
     quiz: "Final Reflection Quiz Submissions",
@@ -116,6 +117,8 @@ const CONFIG = {
       parentClean: "Parent Email - Cleaned",
       parentFirst: "Parent First Name",
       athlete: "Full Athlete Name",
+      athleteFirst: "Athlete First Name",
+      athleteLast: "Athlete Last Name",
     },
     pha: {
       homework: "Homework Assignment",
@@ -125,6 +128,11 @@ const CONFIG = {
       grade: "Grade Band",
       slot: "Homework Slot",
       active: "Active?",
+    },
+    hwLib: {
+      assignmentTitle: "Assignment Title",
+      assignmentDisplay: "Assignment Full Name - Display",
+      assignmentFullName: "Assignment Full Name",
     },
     asset: {
       sub: "Submission - Linked",
@@ -225,6 +233,19 @@ function first(...values) {
   return values.map((value) => String(value ?? "").trim()).find(Boolean) || "";
 }
 
+function resolvePublicAssignmentName(rec, recTable, fallback = "Homework Assignment") {
+  const title = text(rec, recTable, CONFIG.fields.hwLib.assignmentTitle);
+  if (title && title !== "—") return title;
+
+  const display = text(rec, recTable, CONFIG.fields.hwLib.assignmentDisplay);
+  if (display && display !== "—") return display;
+
+  const fullName = text(rec, recTable, CONFIG.fields.hwLib.assignmentFullName);
+  if (fullName && fullName !== "—") return fullName;
+
+  return fallback;
+}
+
 function cleanEmail(value) {
   return String(value || "").trim().toLowerCase();
 }
@@ -300,6 +321,7 @@ async function main() {
   const hcT = base.getTable(CONFIG.tables.hc);
   const enrT = base.getTable(CONFIG.tables.enr);
   const phaT = base.getTable(CONFIG.tables.pha);
+  const hwLibT = base.getTable(CONFIG.tables.hwLib);
   const assetT = base.getTable(CONFIG.tables.assets);
   const subT = base.getTable(CONFIG.tables.sub);
   const quizT = base.getTable(CONFIG.tables.quiz);
@@ -447,8 +469,16 @@ async function main() {
   debug("05 - Resolve recipients and Hub payload");
   const parent = recipientEmail(enr, enrT, CONFIG.fields.enr.parentClean);
   if (!parent) throw new Error("No usable cleaned parent recipient on Enrollment.");
-  const athleteName = first(text(enr, enrT, CONFIG.fields.enr.athlete), "Athlete");
-  const homeworkLabel = text(hc, hcT, CONFIG.fields.hc.homework);
+  const athleteFirstName = text(enr, enrT, CONFIG.fields.enr.athleteFirst);
+  const athleteLastName = text(enr, enrT, CONFIG.fields.enr.athleteLast);
+  const athleteName = first(
+    [athleteFirstName, athleteLastName].filter(Boolean).join(" "),
+    text(enr, enrT, CONFIG.fields.enr.athlete),
+    "Athlete"
+  );
+  const homeworkRec = await hwLibT.selectRecordAsync(homeworkId);
+  if (!homeworkRec) throw new Error(`Homework Library record not found: ${homeworkId}`);
+  const assignmentTitle = resolvePublicAssignmentName(homeworkRec, hwLibT);
   const totalHomeworkXpAwarded = number(hc, hcT, CONFIG.fields.hc.totalXp);
 
   let programName = "";
@@ -468,9 +498,12 @@ async function main() {
   const recipients = [{ email: parent, role: "guardian" }];
   const payload = {
     athleteName,
+    athleteFirstName: athleteFirstName || undefined,
+    athleteLastName: athleteLastName || undefined,
     parentFirstName: text(enr, enrT, CONFIG.fields.enr.parentFirst),
-    homeworkTitle: homeworkLabel,
-    homeworkLabel,
+    assignmentTitle,
+    homeworkTitle: assignmentTitle,
+    homeworkLabel: assignmentTitle,
     coachFeedback,
     totalHomeworkXpAwarded,
     quizSummary,
@@ -487,6 +520,8 @@ async function main() {
     canonicalWeekId: weekId,
     canonicalGradeBandId: gradeId || undefined,
   };
+  if (!payload.athleteFirstName) delete payload.athleteFirstName;
+  if (!payload.athleteLastName) delete payload.athleteLastName;
   if (!payload.programName) delete payload.programName;
   if (!payload.weekName) delete payload.weekName;
   if (!payload.canonicalGradeBandId) delete payload.canonicalGradeBandId;

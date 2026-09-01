@@ -23,18 +23,22 @@ t("073 syntax", () => checkSyntax(p073));
 t("074 syntax", () => checkSyntax(p074));
 t("079 syntax", () => checkSyntax(p079));
 t("117 syntax", () => checkSyntax(p117));
-t("071 v4.2 creates Communications Hub queue handoff (not Make webhook)", () => {
-  assert.match(s071, /Version: v4\.2/);
+t("071 v4.3 creates Communications Hub queue handoff (not Make webhook)", () => {
+  assert.match(s071, /Version: v4\.3/);
   assert.match(s071, /Email Handoff Queue/);
   assert.match(s071, /HOMEWORK_FEEDBACK\|HOMEWORK_COMPLETIONS\|/);
   assert.match(s071, /created_handoff/);
   assert.match(s071, /existing_handoff/);
   assert.doesNotMatch(s071, /makeWebhookUrl|hook\.us1\.make\.com|remoteFetchAsync|sendTag:"HOMEWORK_FEEDBACK_PARENT"|semanticFailure/);
 });
-t("071 v4.2 enriches branded template URLs and review status", () => {
+t("071 v4.3 enriches branded template URLs and review status", () => {
+  assert.match(s071, /Version: v4\.3/);
   assert.match(s071, /landingPageUrl: CANONICAL_URLS\.landing/);
   assert.match(s071, /homeworkPageUrl: CANONICAL_URLS\.homework/);
   assert.match(s071, /reviewStatus: "Satisfactory"/);
+  assert.match(s071, /assignmentTitle/);
+  assert.match(s071, /resolvePublicAssignmentName/);
+  assert.match(s071, /athleteFirstName/);
 });
 t("071 v4.1 requires linked PHA identity without Grade Band matching", () => {
   assert.match(s071, /Program Homework Assignment/);
