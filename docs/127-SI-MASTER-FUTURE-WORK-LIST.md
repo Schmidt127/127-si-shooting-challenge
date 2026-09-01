@@ -873,7 +873,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-041 — Daily Submission Acknowledgement email: XP in horizontal columns
 
 **Priority:** P2  
-**Status:** Ready for prompt  
+**Status:** **COMPLETE** (2026-09-01) — PR **#321** merged `66f8c40b`; Hub PR **#43** merged `504a3ed`; Hub deployed; **076 v8.12** paste pending Mike  
 **Systems:** Daily Submission Acknowledgement email (Hub / Resend; automation **076** path)  
 **Correct repo:** this repo + Communications Hub templates  
 **Related:** FUT-006 · FUT-031 · [integrations/email-send-plane.md](./integrations/email-send-plane.md) · [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) § Email path · `docs/communications-hub/`
@@ -887,9 +887,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 - Display **0** when no extra credit is awarded.  
 - Example: XP Earned `10` · Extra Credit `0`.
 
-**Follow-up question (do not invent):** Must the underlying Airtable / XP Event structure keep base XP and Extra Credit as separate stored values for this email, or is display-time split from existing fields sufficient? Document the answer in the Phase 2 brief. Coordinate with FUT-031 (Game Log Extra Credit tagline — display-only; one Homework XP Event total).
-
-**Dependencies / risks:** Hub template ownership; do not change XP award logic without an explicit decision.
+**Shipped (2026-09-01):** **076 v8.12** sends `xpEarned` (active `SUBMISSION_XP|` total) and `xpExtraCredit` (`0` until stored daily extra-credit source exists). Hub `DAILY_SUBMISSION` template renders horizontal columns. Display-time split only — no XP award logic change. Checklist: [`docs/deploy-checklists/FUT-041-daily-submission-xp-columns.md`](./deploy-checklists/FUT-041-daily-submission-xp-columns.md).
 
 ### FUT-042 — Style Coach Feedback as a quotation (emails + website cards)
 
@@ -961,7 +959,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-046 — Homework feedback email subject: name + Assignment Name
 
 **Priority:** P2  
-**Status:** Ready for prompt  
+**Status:** **COMPLETE** (2026-09-01) — PR **#321** merged `66f8c40b`; Hub PR **#43** merged `504a3ed`; Hub deployed; **071 v4.3** paste pending Mike  
 **Systems:** Homework feedback email subject (Hub / **071** payload or Hub template)  
 **Correct repo:** this repo + Communications Hub  
 **Related:** FUT-032 · FUT-045 · FUT-047 · `docs/communications-hub/README.md`
@@ -972,14 +970,12 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 
 `Homework Feedback – First Name Last Name – Assignment Name`
 
-**Dependencies / risks:** FUT-045 for Assignment Name source; Hub vs automation ownership of subject string.
-
-**Decisions still open:** Whether test-mode subjects keep a `[TEST]` prefix; name source field (Enrollment Full Athlete Name vs separate first/last).
+**Shipped (2026-09-01):** Hub builds subject in `template-candidate-renderer.js`; `[TEST]` prefix when `testMode: true`. **071 v4.3** sends `assignmentTitle`, `athleteFirstName`, `athleteLastName`. Checklist: [`docs/deploy-checklists/FUT-046-homework-feedback-subject.md`](./deploy-checklists/FUT-046-homework-feedback-subject.md).
 
 ### FUT-047 — Homework feedback contact: monitored Fairfield address (not unmonitored reply)
 
 **Priority:** P1  
-**Status:** Ready for prompt  
+**Status:** **COMPLETE** (2026-09-01) — Hub PR **#43** merged `504a3ed`; Hub deployed (copy-only; no 071 paste)  
 **Systems:** Homework feedback (and any related) parent email copy  
 **Correct repo:** this repo + Communications Hub templates  
 **Related:** FUT-046 · FUT-006 · email send plane docs
@@ -992,9 +988,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 - Recommended wording: “Questions about this feedback? Please contact us at schmidt@fairfieldbasketballclub.com.”  
 - Do not instruct parents to reply to the unmonitored notification address for feedback questions.
 
-**Dependencies / risks:** Reply-To / From headers may remain notification addresses for deliverability — copy change is separate from SMTP headers (**confirm in brief**). Apply consistently wherever the old unmonitored-reply instruction appears.
-
-**Decisions still open:** Whether the same wording is required on video feedback and weekly summary emails in the same pass, or homework-only for v1.
+**Shipped (2026-09-01):** Hub `HOMEWORK_FEEDBACK` template footer updated; `mailto:` link on address. Reply-To / From headers unchanged. Homework-only v1 (video/welcome copy unchanged). Checklist: [`docs/deploy-checklists/FUT-047-homework-feedback-contact-copy.md`](./deploy-checklists/FUT-047-homework-feedback-contact-copy.md).
 
 ---
 
@@ -1401,13 +1395,13 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **FUT-038** | READY (brief first) | Global category on/off; disabled categories must not block GOAT / levels — Airtable + automations + web + email |
 | **FUT-039** | DEFERRED implement / Planned | Fillout branding CSS — planning only; do not implement yet |
 | **FUT-040** | READY (brief first) | Automatic S3 migration for HW / video / headshots; delete Airtable attachment **only after** verification — extends **FUT-010** |
-| **FUT-041** | READY | Daily Submission Acknowledgement: XP Earned \| Extra Credit columns; Extra Credit always shown (0 if none) |
+| **FUT-041** | **COMPLETE** | Daily Submission XP columns — PR **#321** `66f8c40b` + Hub **#43** `504a3ed`; **076 v8.12** paste pending |
 | **FUT-042** | READY | Coach Feedback quotation styling — emails + website cards |
 | **FUT-043** | READY | Consistent card design system — website + emails |
 | **FUT-044** | **COMPLETE** | Remove redundant Submitted Work card; keep View Submitted Homework — PR **#319** `de21fa36`; prod verified |
 | **FUT-045** | **COMPLETE** | Public-facing **Assignment Name** — PR **#319** `de21fa36`; `resolvePublicAssignmentName`; prod verified |
-| **FUT-046** | READY | Homework feedback subject: `Homework Feedback – First Name Last Name – Assignment Name` |
-| **FUT-047** | READY | Monitored contact `schmidt@fairfieldbasketballclub.com` instead of unmonitored-reply instruction |
+| **FUT-046** | **COMPLETE** | Homework feedback subject — PR **#321** + Hub **#43**; **071 v4.3** paste pending |
+| **FUT-047** | **COMPLETE** | Monitored contact copy — Hub **#43** deployed (copy-only) |
 
 ### 2026-08-29 legacy welcome-email field retirement
 
