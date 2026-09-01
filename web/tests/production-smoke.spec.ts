@@ -174,8 +174,6 @@ test.describe("production smoke — navigation, assets, basePath", () => {
       "Homework",
       "Levels",
       "Zoom Meetings",
-      "FAQ",
-      "Game Manual",
     ];
 
     for (const label of primaryLabels) {
@@ -194,8 +192,16 @@ test.describe("production smoke — navigation, assets, basePath", () => {
       await page.goto(".", { waitUntil: "domcontentloaded" });
     }
 
+    await nav.getByRole("button", { name: /Resources/i }).click();
+    for (const resourceLabel of ["Tutorials", "Shoutouts", "Articles"]) {
+      await expect(
+        page.getByRole("menuitem", { name: resourceLabel }),
+        `Resources menu item ${resourceLabel}`,
+      ).toBeVisible();
+    }
+
     await nav.getByRole("button", { name: /More/i }).click();
-    for (const moreLabel of ["Achievements", "Shoutouts", "Articles"]) {
+    for (const moreLabel of ["Game Manual", "FAQ", "Achievements"]) {
       await expect(
         page.getByRole("menuitem", { name: moreLabel }),
         `More menu item ${moreLabel}`,

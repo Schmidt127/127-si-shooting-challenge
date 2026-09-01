@@ -48,7 +48,7 @@ export function LeaderboardTable({
           <p className="mt-1 text-sm text-muted">Sorted by level, then XP, then total shots</p>
         </div>
         <p className="hidden text-xs uppercase tracking-widest text-muted sm:block">
-          {rest.length} athletes
+          {rest.length} players
         </p>
       </div>
 
@@ -57,7 +57,7 @@ export function LeaderboardTable({
           <thead>
             <tr>
               <th>Rank</th>
-              <th>Athlete</th>
+              <th>Player</th>
               <th>School</th>
               <th>Grade</th>
               <th>Level</th>
@@ -68,7 +68,7 @@ export function LeaderboardTable({
               </th>
               <th data-align="right">
                 <span className="inline-flex items-center justify-end gap-1">
-                  <IconTarget size={14} aria-hidden /> Shots
+                  <IconTarget size={14} aria-hidden /> Total Shots
                 </span>
               </th>
             </tr>

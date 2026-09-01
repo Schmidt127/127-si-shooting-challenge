@@ -6,7 +6,7 @@ import {
 } from "../lib/registration";
 
 /**
- * Homepage registration gateway — branded Fillout form CTAs at page end.
+ * Homepage registration gateway — branded Fillout form CTAs near the top of the page.
  */
 
 test.describe("homepage registration gateway", () => {
@@ -50,27 +50,26 @@ test.describe("homepage registration gateway", () => {
     );
   });
 
-  test("places registration gateway after main content sections", async ({
-    page,
-  }) => {
+  test("places registration gateway near the top of the page", async ({ page }) => {
     await page.goto(".", { waitUntil: "domcontentloaded" });
 
     const order = await page.evaluate(() => {
       const hero = document.querySelector("h1");
       const registration = document.querySelector("#registration-gateway");
-      const explore = Array.from(document.querySelectorAll("h2")).find((el) =>
-        /Jump into any part of the program/i.test(el.textContent || ""),
+      const whatIs = Array.from(document.querySelectorAll("h2")).find((el) =>
+        /What is the Shooting Challenge/i.test(el.textContent || ""),
       );
-      if (!hero || !registration || !explore) {
+      if (!hero || !registration || !whatIs) {
         return {
           ok: false,
-          reason: `missing ${!hero ? "hero" : ""} ${!registration ? "registration" : ""} ${!explore ? "explore" : ""}`.trim(),
+          reason: `missing ${!hero ? "hero" : ""} ${!registration ? "registration" : ""} ${!whatIs ? "what-is" : ""}`.trim(),
         };
       }
-      const afterHero = (hero.compareDocumentPosition(registration) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
-      const afterExplore =
-        (explore.compareDocumentPosition(registration) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
-      return { ok: afterHero && afterExplore, afterHero, afterExplore };
+      const afterHero =
+        (hero.compareDocumentPosition(registration) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+      const beforeWhatIs =
+        (registration.compareDocumentPosition(whatIs) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+      return { ok: afterHero && beforeWhatIs, afterHero, beforeWhatIs };
     });
 
     expect(order.ok, JSON.stringify(order)).toBeTruthy();

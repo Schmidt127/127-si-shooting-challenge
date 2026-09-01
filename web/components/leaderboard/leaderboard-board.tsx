@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 
 import { GradeBandFilter } from "@/components/leaderboard/grade-band-filter";
-import { LeaderboardPodium } from "@/components/leaderboard/leaderboard-podium";
 import { LeaderboardTable } from "@/components/leaderboard/leaderboard-table";
 import {
   filterByGradeBand,
@@ -40,8 +39,6 @@ export function LeaderboardBoard({ entries }: LeaderboardBoardProps) {
     [entries, band],
   );
 
-  const showPodium = filtered.length >= 3;
-
   return (
     <div>
       <div className="mb-8 rounded-2xl border border-border bg-brand-light-gray p-4 backdrop-blur-sm sm:p-5">
@@ -66,23 +63,11 @@ export function LeaderboardBoard({ entries }: LeaderboardBoardProps) {
           No athletes in this grade band yet.
         </p>
       ) : (
-        <>
-          {showPodium ? <LeaderboardPodium entries={filtered} /> : null}
-
-          {showPodium && filtered.length > 3 ? (
-            <div className="mt-10">
-              <LeaderboardTable entries={filtered} skipFirst={3} />
-            </div>
-          ) : null}
-
-          {!showPodium ? (
-            <LeaderboardTable
-              entries={filtered}
-              skipFirst={0}
-              heading={band === "all" ? "Rankings" : "Band rankings"}
-            />
-          ) : null}
-        </>
+        <LeaderboardTable
+          entries={filtered}
+          skipFirst={0}
+          heading={band === "all" ? "Full rankings" : "Band rankings"}
+        />
       )}
     </div>
   );
