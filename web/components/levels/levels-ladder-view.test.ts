@@ -113,7 +113,7 @@ describe("LevelsLadderView", () => {
     );
 
     expect(withGate).toContain("Attend one Zoom session");
-    expect(withoutGate).toContain("XP threshold only");
+    expect(withoutGate).toContain("No extra gates");
   });
 
   it("names the next level on each card", () => {
