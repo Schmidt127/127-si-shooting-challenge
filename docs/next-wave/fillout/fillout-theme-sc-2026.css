@@ -6,6 +6,7 @@
  * logo + text header only; Maven Pro only; visual-only (no field/payment changes).
  *
  * Tokens: web/lib/brand.ts · BRAND_STANDARDS.md
+ * Documented classes: https://www.fillout.com/help/custom-css
  */
 
 :root {
@@ -22,33 +23,130 @@
   background-color: var(--127si-light-gray);
 }
 
+/* Form card — white inner surface on gray page */
+.fillout-field-container {
+  background-color: var(--127si-white);
+  border-radius: 12px;
+}
+
 /* Header accent rule (email parity: 4–6px orange bottom border) */
 .fillout-header,
 .fillout-form-header {
   border-bottom: 5px solid var(--127si-orange);
 }
 
-/* Primary actions — do not hide Stripe/payment fields */
+/* Body text */
+.fillout-field-label,
+.fillout-field-content,
+.fillout-caption {
+  color: var(--127si-charcoal);
+}
+
+/* Field inputs — white background, medium-gray border, mobile-friendly 16px */
+.fillout-field-short-answer input,
+.fillout-field-long-answer textarea,
+.fillout-field-dropdown select,
+.fillout-field-dropdown input,
+.fillout-field-email input,
+.fillout-field-phone input,
+.fillout-field-number input,
+.fillout-field-date input,
+.fillout-field-content input,
+.fillout-field-content textarea,
+.fillout-field-content select {
+  background-color: var(--127si-white);
+  border: 1px solid var(--127si-medium-gray);
+  border-radius: 8px;
+  color: var(--127si-charcoal);
+  font-size: 16px;
+  min-height: 44px;
+}
+
+.fillout-field-long-answer textarea {
+  min-height: 120px;
+}
+
+.fillout-field-content:focus-within,
+.fillout-field-short-answer input:focus,
+.fillout-field-long-answer textarea:focus,
+.fillout-field-dropdown select:focus,
+.fillout-field-email input:focus,
+.fillout-field-phone input:focus,
+.fillout-field-number input:focus,
+.fillout-field-date input:focus {
+  border-color: var(--127si-blue);
+  outline: 2px solid var(--127si-blue);
+  outline-offset: 1px;
+}
+
+/* Placeholder — readable but subdued */
+input[type="text"]::placeholder,
+textarea::placeholder {
+  color: var(--127si-medium-gray);
+  opacity: 1;
+}
+
+/* Primary submit / theme primary actions */
 .fillout-button-primary,
 button[type="submit"].fillout-button-primary {
   background-color: var(--127si-blue);
   color: var(--127si-white);
   border-radius: 10px;
+  font-size: 16px;
+  min-height: 44px;
 }
 
 .fillout-button-primary:hover {
   filter: brightness(1.05);
 }
 
-/* Body text */
-.fillout-field-label,
-.fillout-field-content {
-  color: var(--127si-charcoal);
+/* Secondary actions — documented Fillout classes */
+.fillout-back-button,
+.fillout-skip-button button {
+  background-color: var(--127si-white);
+  border: 2px solid var(--127si-blue);
+  border-radius: 10px;
+  color: var(--127si-blue);
+  font-size: 16px;
+  min-height: 44px;
 }
 
-/* Focus ring */
-.fillout-field-content:focus-within {
-  outline-color: var(--127si-blue);
+.fillout-back-button:hover,
+.fillout-skip-button button:hover {
+  background-color: var(--127si-light-gray);
+}
+
+/* "Next" on multi-page forms — align with primary when not explicit secondary */
+.fillout-field-button button {
+  background-color: var(--127si-blue);
+  border-radius: 10px;
+  color: var(--127si-white);
+  font-size: 16px;
+  min-height: 44px;
+}
+
+.fillout-field-button button:hover {
+  filter: brightness(1.05);
+}
+
+/* Stripe / payment page — visual only, never display:none on payment */
+.fillout-field-payment {
+  border: 1px solid var(--127si-medium-gray);
+  border-radius: 8px;
+  padding: 12px;
+  background-color: var(--127si-white);
+}
+
+/* Do NOT hide Stripe iframes or payment inputs — FUT-003 webhook depends on them */
+.fillout-field-payment input,
+.fillout-field-payment iframe {
+  font-size: 16px;
+}
+
+/* Validation errors — charcoal text, not color-only status */
+.fillout-error-validation-message {
+  color: var(--127si-charcoal);
+  font-size: 14px;
 }
 
 /* Optional: hide Fillout login profile on public forms */
