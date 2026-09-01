@@ -60,8 +60,8 @@ From [`127-SI-MASTER-FUTURE-WORK-LIST.md`](../127-SI-MASTER-FUTURE-WORK-LIST.md)
 |----------|------|
 | Pure helpers + conflict matrix | `airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.js` |
 | Offline contract tests | `airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.test.js` |
-| **Production-ready automation script (v1.0, slot TBD → placeholder 147)** | `airtable/automations/shooting-challenge/147-zoom-recording-credit-award-half-xp.js` |
-| Promotion checklist | `docs/deploy-checklists/SC-147-zoom-recording-half-xp.md` |
+| **Production-ready automation script (placeholder filename 147 — slot TBD)** | `airtable/automations/shooting-challenge/147-zoom-recording-credit-award-half-xp.js` |
+| Design checklist (not a paste packet) | `docs/deploy-checklists/SC-147-zoom-recording-half-xp.md` |
 | Superseded draft (historical) | `airtable/automations/shooting-challenge/drafts/sc-147-zoom-recording-half-xp.js` |
 | Agent 4 suite wiring | `tools/testing/run-agent4-suite.js` → `sc-147-zoom-recording-credit` |
 

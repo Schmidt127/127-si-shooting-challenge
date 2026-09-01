@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-08-31 evening — **Home-agent handoff:** Production **065 v10.5** pasted + verified; **FUT-032** Parent Feedback Sent?/Sent On live-verified; Master Future Work List **FUT-033–FUT-047** intake documented (§ H). Prefer this file + [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md) + `git rev-parse HEAD` on `master` after merge. Same day earlier: **FUT-002 SA XP text stubs deleted** (live Meta **1363** fields / **35** tables); **FUT-030 transactional record reset COMPLETE** — **959** deleted; **PHA restored (18)**; **075** remains retired. Evidence: [`testing/evidence/fut-002/`](./testing/evidence/fut-002/) · [`testing/evidence/transactional-reset-2026-08-31/`](./testing/evidence/transactional-reset-2026-08-31/). Paste queue: empty for 010/020/022/057/065/072/073 after **065 v10.5**. FUT-029 = FUTURE design only.  
+**Last verification (repo):** 2026-09-01 — **Production truth update:** Mike updated **071 v4.3** and **076 v8.12** in Production; Hub **FUT-041/046/047** deployed; landing **FUT-033–036** merged locally (push/deploy pending GitHub auth). Paste queue for **071/076: empty**. **SC-147** recorded Zoom half-XP remains **pending design/slot** — no Production automation. Prefer this file + [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md) + `git rev-parse HEAD` on `master` after merge.  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -120,7 +120,7 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | Homework PHA 2026–27 | **18 active restored** after FUT-030 (2026-08-31) — new RIDs; Due Date **2027-06-29**; Homework Library **76** unchanged. Evidence: [`testing/evidence/transactional-reset-2026-08-31/11-pha-restore-created-20260831_133022.json`](./testing/evidence/transactional-reset-2026-08-31/11-pha-restore-created-20260831_133022.json). Prior audit (old RIDs historical): [`testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md`](./testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md) |
 | Transactional data | **Empty** after FUT-030 (except restored PHA) — Athletes/Enrollments/Submissions/Assets/HC/XP/WAS/VF/Unlocks/Streaks/Zoom Attendance/Award Recipients/Payments/Email Handoff Queue = **0**. Base ready for clean workflow rebuild. |
 | Phase 4 public copy | **Shipped** PR **#298** — pending Mike-only items remain Dashboard relabel / For-parents / SLA / adjacent-school FAQ |
-| SC-147 Recorded Zoom half-XP | **Repo prep shipped (PR #291)** — draft automation + offline conflict matrix; Mike: automation slot + `ZOOM_RECORDING` rule row; **do not** overload **117** email |
+| SC-147 Recorded Zoom half-XP | **Pending confirmation/design** — repo prep + offline tests only; **automation slot not assigned**; **do not paste** — [`deploy-checklists/SC-147-zoom-recording-half-xp.md`](./deploy-checklists/SC-147-zoom-recording-half-xp.md) |
 | MRW-F07 weekly email harness | **Complete (PR #289)** — disposable E2E tooling for `118→072→119→074→079`; live `--apply` on Mike disposable WAS still operator-only |
 | Production smoke athlete slug | `perfect-week-testing` (`testing-schmidt` is DEV-only) |
 | PHA Due Date | Public homework catalog + athlete homework assignments display PHA Due Date (fallback Week End Date); verified prod 2026-08-25 |
@@ -140,7 +140,8 @@ Evidence pointer: [`PROJECT_STATE.md`](./PROJECT_STATE.md) § Vercel / web app.
 | Sender | **Resend** via Communications Hub |
 | Make.com email | **None** — Make does not send SC parent/athlete notification email |
 | Gmail Make scenarios | **Historical only** |
-| Daily submission path | **076** (Hub queue create) → **079** → Hub → Resend |
+| Daily submission path | **076 v8.12** (Hub queue create) → **079** → Hub → Resend — FUT-041 XP Earned \| Extra Credit columns |
+| Homework feedback path | **071 v4.3** → **079** → Hub → Resend — FUT-046 subject + FUT-047 contact copy |
 | Automation **077** | **Retired / deleted from Production** (Mike-dated docs: 2026-08-13). Do not restore Make daily email. GitHub source retained as archive only. **Do not** trust obsolete `Automations` table rows that once showed 077 as Live. |
 | Queue producers (repo) | Include Hub handoff scripts; **079** dispatches Ready queue → Hub → Resend |
 | Automation **117** | **v2.1** Hub queue create for Zoom recording approval. Automations **Name** = Hub handoff title; **Status = Live** (2026-08-21 evening re-read). Not XP; not Make 117f. |
@@ -202,6 +203,8 @@ Do **not** treat other Automations-table columns (trigger/conditions) as authori
 | **066** | **v3.9** | v3.9 | Live / live-tested | Dynamic `recordId`; replay verified 2026-08-24 |
 | **072** | **v4.8** | v4.8 | Live / **aligned** | [`072-v4.8-operator-packet.md`](./deploy-checklists/072-v4.8-operator-packet.md) |
 | **073** | **v4.4** | v4.4 | Live / **aligned** | [`073-v4.4-operator-packet.md`](./deploy-checklists/073-v4.4-operator-packet.md) |
+| **071** | **v4.3** | v4.3 | Live / **aligned** | Homework Feedback Hub handoff — FUT-046 payload (`assignmentTitle`, athlete first/last); **do not re-paste** — [`071-v4.3-homework-feedback-paste-packet.md`](./deploy-checklists/071-v4.3-homework-feedback-paste-packet.md) |
+| **076** | **v8.12** | v8.12 | Live / **aligned** | Daily Submission Hub handoff — FUT-041 `xpEarned` / `xpExtraCredit`; **do not re-paste** — [`076-v8.12-daily-submission-paste-packet.md`](./deploy-checklists/076-v8.12-daily-submission-paste-packet.md) |
 | **074** | **v3.3** | v3.3 | Live / live-tested | Weekly summary Hub handoff |
 | **070a** | **v4.7** | v4.7 | **Off** by design | Homework upload Make path |
 | **070b** | **v4.7** | v4.7 | Live | |
@@ -223,7 +226,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 |---|-------------------------|--------|
 | 070a | v4.7 | **Live** during Perfect Week controlled window (historically intentional OFF) |
 | 070c | v1.1 | **Enabled in PROD** — async video writeback verify after **070b**; do not invent a new version |
-| 076 | v8.7 (GitHub) | Daily Hub queue create (not Make send) |
+| 076 | **v8.12** (Production) | Daily Hub queue create — FUT-041 `xpEarned`/`xpExtraCredit` payload |
 | 077 | v5.0 archive | **Deleted from Production** (2026-08-13 docs) — not live Make send |
 | 079 | v2.5 (GitHub + prod) | Ready queue → Hub → Resend; E2E weekly send 2026-08-24 |
 | 112 | legacy | Expected **OFF** |
@@ -299,7 +302,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 
 - Wave 0 2025–26 close-out; H-001; many PKG merges on `master`
 - Email plane migrated to Hub → Resend (Mike 2026-08-19)
-- Confirmed Production pastes aligned: **010 v10.12**, **020 v3.8**, **022 v2.2**, **065 v10.4**, **072 v4.8**, **073 v4.4**, **066**, **070b**, **117**
+- Confirmed Production pastes aligned: **010 v10.12**, **020 v3.8**, **022 v2.2**, **065 v10.5**, **071 v4.3**, **076 v8.12**, **072 v4.8**, **073 v4.4**, **066**, **070b**, **117**
 - Tremendous sandbox validation
 - Lambda season CodeOnly deploy (optional follow-ups open)
 - Repository integrity + PII redaction pass
@@ -321,10 +324,8 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - SC-149 / MRW-E02 Vercel Fairfield env dashboard attestation (repo attestation PASS; Mike checkbox confirmation pending)
 - FUT-025 athlete profile indexing cutover (Mike approval)
 - FUT-010 supervised attachment apply only if eligible rows appear (R3 dry-run **0 eligible**)
-- SC-147 Recorded Zoom half-XP — Mike: automation slot + `ZOOM_RECORDING` rule row before DEV paste
-- MRW-F07 live `--apply` on Mike disposable WAS (harness shipped; operator-only)
-- Archive WSTEST/PWTEST Weeks before season simulation execute
-- **FUT-033–FUT-047** approved brainstorming intake documented 2026-08-31 (docs only; not started) — [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md) § H; landing items FUT-033–037 → `hoopchallenges-landing`; FUT-038 categories / FUT-040 S3 migration need Phase 2 briefs before schema or destructive work
+- SC-147 Recorded Zoom half-XP — **pending confirmation/design**; automation slot **not assigned**; repo prep only — **do not paste**
+- Landing FUT-033–036 + Hub FUT-041/042/046/047 — repo merged locally; **GitHub push + Vercel deploy** pending auth (2026-09-01)
 
 ### Blocked
 

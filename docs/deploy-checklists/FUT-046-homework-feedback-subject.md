@@ -25,31 +25,24 @@
 
 Hub owns subject per 071 docblock — do not duplicate subject logic in 071.
 
-## Pre-deploy
+## Pre-deploy (historical — completed 2026-09-01)
 
-1. Confirm GitHub **071 v4.3** and Hub template branch are paired in the integration PR.
-2. Paste **071** into DEV Airtable (docblock through end; skip GitHub header).
-3. Deploy Hub to DEV/staging Vercel project.
-4. Confirm Homework Library rows have **Assignment Title** populated for active assignments.
+1. [x] GitHub **071 v4.3** and Hub template paired and deployed.
+2. [x] **071 v4.3** in Production Airtable.
+3. [x] Hub production Vercel deployed.
+4. [x] Homework Library **Assignment Title** populated for active assignments.
 
-## Controlled proof (DEV)
+## Controlled proof (historical)
 
-1. Pick one allowlisted Homework Completion with `Parent Feedback Ready?` checked, `Parent Feedback Sent?` unchecked, XP awarded.
-2. Run **071** with `testMode: true`.
-3. Confirm Email Handoff Queue payload includes:
-   - `assignmentTitle` = public Assignment Name (not primary **Assignment Full Name** alone)
-   - `athleteFirstName` / `athleteLastName` when present on Enrollment
-4. Run **079** → Hub ingest.
-5. Confirm Hub Message subject = `[TEST] Homework Feedback – {First Last} – {Assignment Name}`.
-6. Confirm Resend send uses the same subject; parent email body unchanged (FUT-047 is separate).
+DEV/Production proof completed 2026-09-01. Hub subject: `[TEST] Homework Feedback – {First Last} – {Assignment Name}` when `testMode: true`.
 
-## Production promotion
+## Production promotion (complete — 2026-09-01)
 
-1. Mike approval on DEV proof.
-2. Paste **071 v4.3** into Production Airtable automation.
-3. Deploy Hub production Vercel.
-4. One controlled Production send with `testMode: true` before live cutover.
-5. Update `CHANGELOG.md` under **Airtable** and **Web** (Hub).
+1. [x] Mike updated Production **071 v4.3** (2026-09-01).
+2. [x] Hub production deployed.
+3. [x] `CHANGELOG.md` updated.
+
+**Do not re-paste 071** unless a regression is proven.
 
 ## Out of scope
 

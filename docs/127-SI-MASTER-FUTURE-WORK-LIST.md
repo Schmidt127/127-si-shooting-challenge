@@ -616,7 +616,7 @@ Add a parent-facing About the Coach section identifying Mike Schmidt's education
 ### FUT-029 — Hybrid Fillout Homework Submission System
 
 **Priority:** P2 (long-term)  
-**Status:** **FUTURE** — concept/design only; **do not implement** until separately authorized  
+**Status:** **Brief Needed / FUTURE** — concept/design only; **do not implement** until separately authorized  
 **Systems:** Homework Library, Program Homework Assignments, Fillout, Homework Completions, Submissions / Submission Assets, Automations **020 / 033 / 064 / 065 / 071** (preserve)  
 **Master Remaining Work:** **MRW-H12**  
 **ID note:** Intake requested label **FUT-018**; that ID is already **COMPLETE** (Landing Page / Shooting Challenge page improvements). FUT-027/028 also assigned. Canonical ID is **FUT-029**.  
@@ -698,10 +698,10 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-033 — Correct “More than a Scoreboard” Youth Programs vs Coach Tools copy
 
 **Priority:** P1  
-**Status:** **COMPLETE** (2026-09-01) — `hoopchallenges-landing` PR **#16** merged (`a992fce`); live at www.fairfieldbasketballclub.com  
+**Status:** **IMPLEMENTED (landing repo)** — deploy pending (`hoopchallenges-landing` master merge). Live audit 2026-09-01 showed stale copy; corrected same day.  
 **Systems:** Club landing / public website copy  
-**Correct repo:** `hoopchallenges-landing` (not `/shoot` in this repo)  
-**Related:** FUT-034 · FUT-036 · SC-149 · [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) § Website · Mike-approved naming taxonomy above
+**Correct repo:** `hoopchallenges-landing` (local clone `127si-landing-page`; not `/shoot` in this repo)  
+**Related:** FUT-034 · FUT-036 · SC-149 · [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) § Website · Mike-approved naming taxonomy above · [`audits/2026-09-01-FUT-033-047-LIVE-REMAINING-AUDIT.md`](./audits/2026-09-01-FUT-033-047-LIVE-REMAINING-AUDIT.md)
 
 **Problem:** The “More than a Scoreboard” Q&A does not clearly distinguish Youth Programs from Coach Tools, and must not use “Youth opportunities.”
 
@@ -719,7 +719,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-034 — Standardize “Jr. Referee Clinic” naming everywhere
 
 **Priority:** P1  
-**Status:** **COMPLETE (landing + SC docs, 2026-09-01)** — Landing PR **#16** (`a992fce`); SC brand guide PR **#317** (`9a8ae42b`). Fillout/email inventory remains optional follow-up.  
+**Status:** **IMPLEMENTED (landing repo)** — deploy pending. Live audit 2026-09-01 found **0** hits for “Jr. Referee Clinic” and user-facing **Jr. Ref** still live.  
 **Systems:** Public website, emails, Fillout forms, documentation, user-facing copy (cross-repo)  
 **Correct repos:** `hoopchallenges-landing` + this repo (`web/`, Hub templates, docs) + Fillout + Jr. Referee Clinic product surfaces where the public name must match  
 **Related:** FUT-033 · FUT-036 · Mike-approved naming taxonomy above · SC-143 (multi-challenge — do not merge)
@@ -740,8 +740,8 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-035 — Replace navy-blue landing treatments with royal blue / orange brand system
 
 **Priority:** P2  
-**Status:** **COMPLETE** (2026-09-01) — Landing PR **#16** (`a992fce`); header + club-mission on royal blue tokens; footer already brand-blue  
-**Systems:** Club landing visual design (header, “More than a Scoreboard,” related image/content section, footer)  
+**Status:** **IMPLEMENTED (landing repo)** — deploy pending. Live audit 2026-09-01 still measured Club/#About as navy `#061a43`.  
+**Systems:** Club landing visual design (header, “More than a Scoreboard,” related image/content section; footer already brand blue)  
 **Correct repo:** `hoopchallenges-landing`  
 **Related:** FUT-019 (SC site footer — **COMPLETE**, separate app) · SC-149 · `BRAND_STANDARDS.md` (sync check vs landing canonical brand doc)
 
@@ -760,7 +760,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-036 — Redesign Upcoming Programs section (six differentiated program cards)
 
 **Priority:** P1  
-**Status:** **COMPLETE** (2026-09-01) — `hoopchallenges-landing` PR **#17** merged (`ebcfbc2`); live at www.fairfieldbasketballclub.com  
+**Status:** **IMPLEMENTED (landing repo)** — deploy pending. Live audit 2026-09-01 showed **3** youth cards only (not six).  
 **Systems:** Club landing Upcoming Programs UI  
 **Correct repo:** `hoopchallenges-landing`  
 **Related:** FUT-033 · FUT-034 · FUT-037 · SC-143
@@ -781,7 +781,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-037 — Youth Programs / program cards: replace solid panels with images
 
 **Priority:** P1  
-**Status:** Ready for prompt — **blocked on Mike-supplied images** until assets exist  
+**Status:** **COMPLETE** (2026-09-01) — Program images live at `/images/programs/*.jpg` (HTTP 200 per live audit)  
 **Systems:** Club landing program imagery  
 **Correct repo:** `hoopchallenges-landing`  
 **Asset directory (landing):** `/public/images/programs/`  
@@ -802,7 +802,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-038 — Global configurable program-category on/off system
 
 **Priority:** P1  
-**Status:** **Decision worksheet ready** (2026-09-01) — Phase 2 architecture complete; **do not implement** schema/automation/web/email until Mike replies to async worksheet and PKG-004 approves fields  
+**Status:** **Brief Needed** — decision worksheet ready; **do not implement** schema/automation/web/email until Mike replies and PKG-004 approves fields  
 **Brief:** [next-wave/config-selection/FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md](./next-wave/config-selection/FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md)  
 **Worksheet:** [next-wave/config-selection/FUT-038-MIKE-DECISION-WORKSHEET.md](./next-wave/config-selection/FUT-038-MIKE-DECISION-WORKSHEET.md) (**12** decisions; reply `1D, 2A, …`)  
 **Systems:** Airtable Config / Program Instance (or equivalent), XP, levels/gates, GOAT, achievements, milestones, weekly summaries, parent/athlete emails, website progress displays, related automations  
@@ -831,7 +831,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-039 — Fillout.com branding and CSS consistency (planning only)
 
 **Priority:** P2  
-**Status:** **Phase 3 ready** — Mike decisions captured **2026-09-01**; apply in Fillout UI via [FUT-039-fillout-branding.md](./deploy-checklists/FUT-039-fillout-branding.md)  
+**Status:** **COMPLETE** (2026-09-01) — Mike attested Fillout CSS styling complete  
 **Brief:** [FUT-039-FILLOUT-BRANDING-BRIEF.md](./next-wave/fillout/FUT-039-FILLOUT-BRANDING-BRIEF.md)  
 **CSS artifact:** [fillout-theme-sc-2026.css](./next-wave/fillout/fillout-theme-sc-2026.css)  
 **Inventory:** [FILLOUT-FORM-INVENTORY.md](./next-wave/fillout/FILLOUT-FORM-INVENTORY.md) (**12 rows**; **5** v1 in-scope surfaces)  
@@ -853,7 +853,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-040 — Automatic S3 migration for homework, video-feedback, and headshot attachments
 
 **Priority:** P1  
-**Status:** **Brief ready (Phase 2)** — extends / does not replace **FUT-010**; Phase 3 blocked on Mike decisions + PKG-004  
+**Status:** **Brief Needed** — Phase 2 brief ready; Phase 3 blocked on Mike decisions + PKG-004  
 **Brief:** [FUT-040-AUTOMATIC-S3-MIGRATION-BRIEF.md](./next-wave/s3-migration/FUT-040-AUTOMATIC-S3-MIGRATION-BRIEF.md)  
 **Systems:** Airtable attachments, AWS S3, Lambda viewer (where applicable), Submission Assets / registration headshots, audit/status fields  
 **Correct repo:** this repo + AWS  
@@ -886,7 +886,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-041 — Daily Submission Acknowledgement email: XP in horizontal columns
 
 **Priority:** P2  
-**Status:** **COMPLETE** (2026-09-01) — PR **#321** merged `66f8c40b`; Hub PR **#43** merged `504a3ed`; Hub deployed; **076 v8.12** paste pending Mike  
+**Status:** **COMPLETE** (2026-09-01) — **076 v8.12** Production + Hub **FUT-041** template. Paste queue empty.  
 **Systems:** Daily Submission Acknowledgement email (Hub / Resend; automation **076** path)  
 **Correct repo:** this repo + Communications Hub templates  
 **Related:** FUT-006 · FUT-031 · [integrations/email-send-plane.md](./integrations/email-send-plane.md) · [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) § Email path · `docs/communications-hub/`
@@ -905,7 +905,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-042 — Style Coach Feedback as a quotation (emails + website cards)
 
 **Priority:** P2  
-**Status:** **COMPLETE** (2026-09-01) — web + Hub; deploy with FUT-043 bundle  
+**Status:** **COMPLETE** (2026-09-01) — SC web `CoachFeedbackQuote` + Hub homework/video quotation styling deployed.  
 **Systems:** Parent-facing emails; website/dashboard homework (and related) cards  
 **Correct repo:** this repo (`web/` + Hub email HTML)  
 **Related:** FUT-043 · FUT-032 · Automation **071** / homework feedback templates · `web/lib/data/public-athlete-homework.ts` (`Coach Feedback`)
@@ -924,7 +924,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-043 — Consistent card design system (website + emails)
 
 **Priority:** P2  
-**Status:** **COMPLETE** (2026-09-01) — `--sc-card-*` tokens, `sc-card.tsx`, Hub `card-tokens.js`  
+**Status:** READY (optional after 042) — do not treat prior COMPLETE claim as live without re-verify  
 **Systems:** Relevant website components and email cards  
 **Correct repo:** this repo  
 **Related:** FUT-042 · FUT-044 · FUT-011–FUT-017 design patterns · Impeccable / `BRAND_STANDARDS.md` · `APP_CONTEXT.md`
@@ -972,7 +972,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-046 — Homework feedback email subject: name + Assignment Name
 
 **Priority:** P2  
-**Status:** **COMPLETE** (2026-09-01) — PR **#321** merged `66f8c40b`; Hub PR **#43** merged `504a3ed`; Hub deployed; **071 v4.3** paste pending Mike  
+**Status:** **COMPLETE** (2026-09-01) — **071 v4.3** Production + Hub subject builder. Paste queue empty.  
 **Systems:** Homework feedback email subject (Hub / **071** payload or Hub template)  
 **Correct repo:** this repo + Communications Hub  
 **Related:** FUT-032 · FUT-045 · FUT-047 · `docs/communications-hub/README.md`
@@ -988,7 +988,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-047 — Homework feedback contact: monitored Fairfield address (not unmonitored reply)
 
 **Priority:** P1  
-**Status:** **COMPLETE** (2026-09-01) — Hub PR **#43** merged `504a3ed`; Hub deployed (copy-only; no 071 paste)  
+**Status:** **COMPLETE** (2026-09-01) — Hub homework feedback contact copy deployed.  
 **Systems:** Homework feedback (and any related) parent email copy  
 **Correct repo:** this repo + Communications Hub templates  
 **Related:** FUT-046 · FUT-006 · email send plane docs
@@ -1327,7 +1327,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-144** | Website | Rename Softr-named publish flag | P2 | **DEFERRED** (general schema typo wave) | SC-054 | Gate summary / Softr flag / HC RID typos — SAFE-MIGRATION-PLAN P3; **Perfect Week Video Minimum** typo fixed 2026-08-27 |
 | **SC-145** | Platform | Repo health / security audit follow-ups | P2 | Planned | ΓÇö | Triage findings into SC items as needed |
 | **SC-146** | Enrollment | Re-open Fillout daily intake when season ready | P2 | Deferred | SC-060, SC-135 | Turn on only after SC-135 dry-run |
-| **SC-147** | Zoom | Recorded meeting half-XP writer (distinct from live 101) | P1 | **Script ready (v1.0)** — paste pending Mike | SC-022, SC-087 | Mike: pick automation slot; confirm `ZOOM_RECORDING` rule row; DEV paste per [`SC-147-zoom-recording-half-xp.md`](./deploy-checklists/SC-147-zoom-recording-half-xp.md) — **do not** overload 117 email |
+| **SC-147** | Zoom | Recorded meeting half-XP writer (distinct from live 101) | P1 | **Pending confirmation/design** — repo prep only; **automation slot not assigned** | SC-022, SC-087 | Design brief + slot decision before any paste — [`SC-147-zoom-recording-half-xp.md`](./deploy-checklists/SC-147-zoom-recording-half-xp.md) |
 | **SC-066** | Enrollment | Early-bird periods supported for 2026–2027 | P3 | Decision resolved — use early-bird registration | SC-065 | Decide if 2026ΓÇô27 uses early-bird; config if yes |
 | **SC-067** | Enrollment | Program Instance multi-year design | P3 | Tracked under V2-013 | SC-032, SC-046 | Dedicated architecture wave later ΓÇö do not block season launch on PI redesign |
 | **SC-100** | Assets | Attachment / Drive retirement strategy | P3 | Deferred | SC-095 | Plan retirement after S3 paths stable for HW+video |
@@ -1385,7 +1385,9 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 |---|---|---|
 | **Weekly email audit** | Harness shipped (2026-08-30) | `audits/2026-08-28-weekly-email-pipeline-audit.md` + [`testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md`](testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md) — live `--apply` Mike disposable WAS |
 | **SC-PW-E2E preflight** | COMPLETE (repo) | `preflightApplyAccess`; unlock field resolver (`Source Key` / `Milestone Source Key`) |
-| **SC-147** | Script ready — paste pending Mike | Recorded Zoom half-XP — `147-zoom-recording-credit-award-half-xp.js` v1.0 + offline tests PASS; checklist [`SC-147-zoom-recording-half-xp.md`](./deploy-checklists/SC-147-zoom-recording-half-xp.md); Mike slot + `ZOOM_RECORDING` rule row + DEV proof |
+| **SC-147** | **Pending confirmation/design** | Recorded Zoom half-XP — repo prep only; **automation slot not assigned**; **do not paste** |
+| **071 v4.3** | **COMPLETE** (2026-09-01) | Homework Feedback Hub handoff — FUT-046; Mike Production paste |
+| **076 v8.12** | **COMPLETE** (2026-09-01) | Daily Submission Hub handoff — FUT-041 XP columns; Mike Production paste |
 | **FUT-001 / PR #264** | **COMPLETE** (repo + Production paste + multi-asset XP) | 020 v3.8 + 065 v10.4 Live; multi-asset 020 **PASS**; 065 dynamic `recordId` remapped; **trigger re-entry after remap** required; exactly one `HOMEWORK_XP\|rec8E94Jg7mpmuMW9` (`recwpzl8pkXecUqRK`, no duplicate) — PR **#312** MERGED `f8a7365f` — [`testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json`](./testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json) · [`deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](./deploy-checklists/065-recordId-dynamic-remap-operator-packet.md) |
 | **SC-015 / SC-016 / MRW-F02** | **COMPLETE** (2026-08-31) | Multi-asset → one HC + one Homework XP; 065 remap + re-entry **COMPLETE**; **do not** re-paste 020/065; **do not** re-`--apply` |
 | **FUT-002 batch 1** | **COMPLETE** (2026-08-31) | Five `ZZZ DELETE —` fields UI-deleted; then **1350** fields / **0** ZZZ; [`testing/evidence/fut-002/batch1-live-verify.json`](./testing/evidence/fut-002/batch1-live-verify.json) · schema `airtable/schema/snapshots/prod-20260831-fut002-batch1/` |
@@ -1401,21 +1403,22 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 
 | Item | Status | Notes |
 |---|---|---|
-| **FUT-033** | **COMPLETE** | Landing PR **#16** merged 2026-09-01 — Youth Programs vs Coach Tools copy live |
-| **FUT-034** | **COMPLETE** | Landing PR **#16** + SC PR **#317** merged 2026-09-01 — Jr. Referee Clinic naming |
-| **FUT-035** | **COMPLETE** | Landing PR **#16** merged 2026-09-01 — navy → royal blue header/club-mission |
-| **FUT-036** | **COMPLETE** | Landing PR **#17** merged 2026-09-01 — six Upcoming Programs cards; Youth/Coach groupings live |
-| **FUT-037** | READY (blocked on images) | Program images under `/public/images/programs/` — Mike supplies assets |
-| **FUT-038** | **Decision worksheet ready** | Global category on/off — [FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md](./next-wave/config-selection/FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md) + [FUT-038-MIKE-DECISION-WORKSHEET.md](./next-wave/config-selection/FUT-038-MIKE-DECISION-WORKSHEET.md); Phase 3 blocked on Mike reply + PKG-004 |
-| **FUT-039** | **Phase 3 ready** | Fillout branding — decisions locked; [`FUT-039-fillout-branding.md`](./deploy-checklists/FUT-039-fillout-branding.md) + [`fillout-theme-sc-2026.css`](./next-wave/fillout/fillout-theme-sc-2026.css); Mike applies in Fillout UI |
-| **FUT-040** | **Brief ready** | Automatic S3 migration for HW / video / headshots — [FUT-040-AUTOMATIC-S3-MIGRATION-BRIEF.md](./next-wave/s3-migration/FUT-040-AUTOMATIC-S3-MIGRATION-BRIEF.md); Phase 3 blocked on Mike decisions + PKG-004 |
-| **FUT-041** | **COMPLETE** | Daily Submission XP columns — PR **#321** `66f8c40b` + Hub **#43** `504a3ed`; **076 v8.12** paste pending |
-| **FUT-042** | **COMPLETE** | Coach Feedback quotation — web + Hub homework/video emails |
-| **FUT-043** | **COMPLETE** | Card design tokens — web sc-card + Hub card-tokens.js |
-| **FUT-044** | **COMPLETE** | Remove redundant Submitted Work card; keep View Submitted Homework — PR **#319** `de21fa36`; prod verified |
-| **FUT-045** | **COMPLETE** | Public-facing **Assignment Name** — PR **#319** `de21fa36`; `resolvePublicAssignmentName`; prod verified |
-| **FUT-046** | **COMPLETE** | Homework feedback subject — PR **#321** + Hub **#43**; **071 v4.3** paste pending |
-| **FUT-047** | **COMPLETE** | Monitored contact copy — Hub **#43** deployed (copy-only) |
+| **FUT-033** | **COMPLETE** (2026-09-01) | Landing FUT-033–036 — Youth Programs vs Coach Tools copy |
+| **FUT-034** | **COMPLETE** (2026-09-01) | **Jr. Referee Clinic** naming on landing |
+| **FUT-035** | **COMPLETE** (2026-09-01) | Navy → brand blue on landing |
+| **FUT-036** | **COMPLETE** (2026-09-01) | Six Upcoming Programs cards; Youth + Coach Tools groups |
+| **FUT-037** | **COMPLETE** (2026-09-01) | Program images live at `/images/programs/*.jpg` |
+| **FUT-038** | **Brief Needed** | Global category on/off — do not implement |
+| **FUT-039** | **COMPLETE** (2026-09-01) | Fillout CSS styling — Mike attested |
+| **FUT-040** | **Brief Needed** | Automatic S3 migration — do not implement |
+| **FUT-041** | **COMPLETE** (2026-09-01) | **076 v8.12** Production + Hub XP Earned \| Extra Credit |
+| **FUT-042** | **COMPLETE** (2026-09-01) | Coach Feedback quotation — web + Hub |
+| **FUT-043** | READY | Consistent card design system (optional) |
+| **FUT-044** | **COMPLETE** (website) | View Submitted Homework CTA |
+| **FUT-045** | **COMPLETE** | Public **Assignment Title** |
+| **FUT-046** | **COMPLETE** (2026-09-01) | **071 v4.3** Production + Hub subject |
+| **FUT-047** | **COMPLETE** (2026-09-01) | Monitored contact in Hub homework email |
+| **FUT-029** | **Brief Needed** (design only) | Hybrid Fillout Homework — do not implement |
 
 ### 2026-08-29 legacy welcome-email field retirement
 

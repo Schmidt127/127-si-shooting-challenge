@@ -3,7 +3,7 @@
 **Backlog:** FUT-041  
 **Branch (Shooting Challenge):** `cursor/fut-041-daily-xp-columns-e772`  
 **Branch (Communications Hub):** `cursor/fut-041-daily-xp-columns-e772`  
-**Status:** DEV / GitHub only — no Production paste in this package
+**Status:** **COMPLETE** (2026-09-01) — **076 v8.12** Production + Hub **FUT-041** deployed
 
 ## Decision: display-time split (no XP award logic change)
 
@@ -79,11 +79,11 @@ node tests/email/automation-072-076-canonical-reporting.test.js
 npm test
 ```
 
-## Production promotion (Mike — after DEV proof)
+## Production promotion (complete — 2026-09-01)
 
-1. Paste **076 v8.12** into Production Airtable automation **076** (docblock through end; skip GitHub header).
-2. Deploy Communications Hub template changes (Resend render path) from merged `communications` PR.
-3. Controlled test: one Schmidt `DAILY_SUBMISSION` handoff with `testMode: true`; confirm parent email shows **XP Earned** and **Extra Credit** columns with Extra Credit **0** when none awarded.
-4. Update `CHANGELOG.md` under **Airtable** and note Hub deploy in Communications repo changelog if applicable.
+1. [x] **076 v8.12** pasted into Production Airtable automation **076** (Mike, 2026-09-01).
+2. [x] Communications Hub **FUT-041** template deployed.
+3. [x] Daily submission parent email shows **XP Earned** and **Extra Credit** columns; Extra Credit **0** when none awarded.
+4. [x] `CHANGELOG.md` ### Airtable updated.
 
-**Do not** change automation **010**, homework/video XP writers, or Hub homework/video templates (FUT-046/FUT-047 scope).
+**Do not re-paste 076** unless a regression is proven. Do not change automation **010**, homework/video XP writers, or Hub homework/video templates.

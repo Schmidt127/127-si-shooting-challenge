@@ -23,7 +23,7 @@ Last updated: **2026-08-30** (docs closeout — `master` `9f4a64b6`; Vitest **48
 
 **C-028 overlay (Mike 2026-08-19):** Tremendous sandbox send validated; production API pending; Make scenario OFF. See [`integrations/tremendous-award-fulfillment.md`](./integrations/tremendous-award-fulfillment.md).
 
-**Email overlay (Mike 2026-08-19):** Make.com does not handle any Shooting Challenge emails. All of those emails go through Resend (Communications Hub). See [`integrations/email-send-plane.md`](./integrations/email-send-plane.md). Automation **077** (Make daily send) is **deleted from Production** (2026-08-13 docs); daily path is **076 → 079 → Hub → Resend**.
+**Email overlay (Mike 2026-08-19):** Make.com does not handle any Shooting Challenge emails. All of those emails go through Resend (Communications Hub). See [`integrations/email-send-plane.md`](./integrations/email-send-plane.md). Automation **077** (Make daily send) is **deleted from Production** (2026-08-13 docs); daily path is **076 v8.12 → 079 → Hub → Resend** (FUT-041 XP columns). Homework feedback: **071 v4.3 → 079 → Hub → Resend** (FUT-046 subject). **Paste queue for 071/076: empty** (Mike Production paste 2026-09-01).
 
 **022 overlay (Mike 2026-08-19):** Production Airtable Automation 022 is **v2.1**. The 2026-08-16 packet’s v2.0 claim is historical for that day’s controlled path.
 
