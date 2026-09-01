@@ -70,17 +70,17 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
-- **FUT-044 athlete homework submission CTA (2026-09-01)** — Public athlete profile
-  homework rows keep a single **View Submitted Homework** link (lambda reviewer URL) and
-  do not render a redundant Submitted Work preview card. Data from Homework Completions
-  `Submission Asset: Reviewer File URL (lookup)`.
-- **FUT-045 public assignment naming (2026-09-01)** — Parent-facing homework labels prefer
-  Homework Library `Assignment Title` over full-name fields (`resolvePublicAssignmentName`).
-- **FUT-031 Game Log Extra Credit tagline (2026-08-31)** — When Homework Completion
-  `Extra Credit XP Awarded` > 0, athlete Game Log and dashboard XP ledger show a
-  display-only date-row tagline (e.g. `2026-08-31 · Extra credit +125 XP`). One Homework
-  XP Event total unchanged. Commit `b6f789e7`. Tests: `game-log-presentation.test.ts`,
-  `recent-activity-log.test.ts`, `xp-activity-table.test.ts`, `xp-activity-loader.test.ts`.
+- **FUT-031 + FUT-044 + FUT-045 web bundle (2026-09-01)** — PR **#319** merged `de21fa36`;
+  Vercel Production deploy verified same day.
+  - **FUT-044** — Athlete profile homework rows keep a single **View Submitted Homework**
+    link (lambda reviewer URL); no redundant Submitted Work preview card.
+  - **FUT-045** — Parent-facing homework labels prefer Homework Library `Assignment Title`
+    over full-name fields (`resolvePublicAssignmentName`).
+  - **FUT-031** — When Homework Completion `Extra Credit XP Awarded` > 0, Game Log shows a
+    display-only date-row tagline (e.g. `2026-08-31 · Extra credit +125 XP`). One Homework
+    XP Event total unchanged.
+  **Prod verified (2026-09-01):** `/shoot/athletes/athlete1-schmidt` — extra credit taglines,
+  View Submitted Homework CTAs, short assignment names live.
 - **FUT-034 Jr. Referee Clinic naming (2026-09-01)** — Public brand guide uses **Jr. Referee Clinic** (never bare **Jr. Ref**). Merged PR **#317** (`9a8ae42b`). Landing hub naming shipped in `hoopchallenges-landing` PR **#16** (`a992fce`).
 - **Gift card commitment + About the Coach public copy (2026-08-30)** — Mike-approved parent-facing
   wording: FAQ gift-card award commitment (`/shoot/faq`); homepage About the Coach section
