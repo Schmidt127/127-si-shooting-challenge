@@ -4,7 +4,7 @@ import { CtaLink, ProgramPage, SectionMarker } from "@/components/site";
 import { ProgramFeatureBanner } from "@/components/site/program-feature-image";
 import { FEATURE_BANNER_ARIA } from "@/lib/seo/program-facts";
 import { EmptyState, ErrorState } from "@/components/ui";
-import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
+import { ACCESSIBILITY_LABELS, EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import type { AchievementCatalogData, AchievementDefinition } from "@/types/achievements";
 
 const RARITY_STYLES: Record<string, { ring: string; chip: string; label: string }> = {
@@ -127,7 +127,7 @@ export function AchievementsGridView({ data }: AchievementsGridViewProps) {
           mark="AC"
           ariaLabel={FEATURE_BANNER_ARIA.achievements}
         />
-        <div className="space-y-12">
+        <div className="space-y-12" aria-label={ACCESSIBILITY_LABELS.achievementsCatalog}>
           {groups.map(([groupName, items]) => (
             <section key={groupName}>
               <SectionMarker

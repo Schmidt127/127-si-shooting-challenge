@@ -8,7 +8,7 @@
 
 ## Verdict
 
-Public program messaging is largely aligned: grades **1–12**, **100% online / worldwide**, annual **May 1–June 30** window, Educational Athletics voice, Fairfield Basketball Club identity (SC-149), and strong registration CTAs. Safe jargon removals + FAQ homework/feedback prose **shipped**. Gaps still pending Mike approval: Dashboard demo exposure in nav, optional homepage “For parents” block, coach SLA wording, adjacent-school FAQ nuance; redesigns owned by FUT-016–019 remain separate.
+Public program messaging is largely aligned: grades **1–12**, **100% online / worldwide**, annual **May 1–June 30** window, Educational Athletics voice, Fairfield Basketball Club identity (SC-149), and strong registration CTAs. Safe jargon removals + FAQ homework/feedback prose **shipped**. CR-13/CR-17/CR-18 parent copy **implemented** (2026-09-01). Redesigns owned by FUT-016–019 remain separate.
 
 ## Review matrix
 
@@ -26,12 +26,12 @@ Public program messaging is largely aligned: grades **1–12**, **100% online / 
 | CR-10 | Zoom catalog hero | Season check-ins copy | Slightly local-challenge tone | Lead with “Online challenge check-ins…” | Online/global | P2 | No | **Implemented** |
 | CR-11 | `web/docs/seo.md` | Still said grades **1–8** | Contradicts live `program-facts` (1–12) and WEB-009 | Grades **1–12** | No contradictory claims | P0 docs | No | **Implemented** |
 | CR-12 | Nav | “Dashboard” primary item | Demo / not cutover-ready (`site-hierarchy.md`) can mislead families | Hide from public nav/hub until auth ships; keep direct URL | Parent expectations | P1 | Authorized default (2026-08-30 web UX) | **Implemented** — removed from nav/hub; Display also chrome-excluded; see `web/docs/public-route-audit-2026-08-30.md` |
-| CR-13 | Home / FAQ CTAs | Strong Register + FAQ | No dedicated “For parents” section on home | Optional short “What parents should know” block linking FAQ + homework + video expectations | Parent clarity | P2 | **Yes** (layout) | Pending — FUT-018 |
+| CR-13 | Home / FAQ CTAs | Strong Register + FAQ | No dedicated “For parents” section on home | Optional short “What parents should know” block linking FAQ + homework + video expectations | Parent clarity | P2 | **Yes** (layout) | **Implemented** — `/shoot` `#what-parents-should-know` card links FAQ, homework, and video feedback (2026-09-01) |
 | CR-14 | Tutorials page | Catalog grid + technique copy | FUT-016 portfolio redesign not done | Keep links; redesign separately | Design, not copy block | P2 | **Yes** (design) | Deferred FUT-016 |
 | CR-15 | Zoom page | Orientation + terminology already strong on master | FUT-017 portfolio redesign still open | Keep orientation; redesign layout separately | Design | P2 | **Yes** (design) | Deferred FUT-017 |
 | CR-16 | Footer consent | Consent + FBC home + grades 1–12 | FUT-019 still brainstormed for one footer across all surfaces | Preserve legal/consent; unify chrome when FUT-019 ships | Consistency | P2 | **Yes** | Deferred FUT-019 |
-| CR-17 | FAQ grades note | “adjacent school levels” on leaderboard | May confuse eligibility | Keep grades 1–12 as eligibility; clarify bands are display-only | Eligibility clarity | P2 | **Yes** | Pending Mike |
-| CR-18 | Video feedback timing | No turnaround promise (good) | Parents may still assume same-day feedback | Optional: “Coaches review on a challenge schedule — not instant replies” | Expectations | P2 | **Yes** | Pending Mike |
+| CR-17 | FAQ grades note | “adjacent school levels” on leaderboard | May confuse eligibility | Keep grades 1–12 as eligibility; clarify bands are display-only | Eligibility clarity | P2 | **Yes** | **Implemented** — `/shoot/faq` `grades-served` (2026-09-01) |
+| CR-18 | Video feedback timing | No turnaround promise (good) | Parents may still assume same-day feedback | Optional: “Coaches review on a challenge schedule — not instant replies” | Expectations | P2 | **Yes** | **Implemented** — `/shoot/faq` `video-feedback` (2026-09-01) |
 | CR-19 | Home XP section | “Exact scoring stays in the program” | Slightly vague but safe | Keep; point to Game Manual for details | Avoid over-claiming | — | N/A | Keep |
 | CR-20 | Profile privacy line | “personal contact details are never shown” | Clear and correct | Keep; optional expand: no emails/phones | Privacy | P3 | No if expanding | Keep / optional |
 | CR-21 | SC-149 branding | Footer + logo → Fairfield Basketball Club | Legacy Hoop Challenges guarded in `app-config` | Confirm live Vercel `NEXT_PUBLIC_LANDING_URL` / `SITE_URL` still Fairfield | Branding | P0 ops | Env change = **Yes** | **Verified live** — Production public URL envs restored to documented Fairfield values before ship (see Ship log) |
@@ -46,7 +46,7 @@ Public program messaging is largely aligned: grades **1–12**, **100% online / 
 - Hero, chips, participation facts, level journey, registration gateway, and pricing CTAs are parent-ready.
 - Six-step “How it works” covers daily work, homework, video, XP, levels.
 - **About the Coach** section (CR-24) follows Educational Athletics; gift-card commitment lives on FAQ only (CR-23).
-- Safe jargon removals applied in pricing; optional larger “For parents” block still pending (CR-13).
+- **What parents should know** card (CR-13) links FAQ, homework, and video feedback expectations.
 
 ### `/shoot/tutorials`
 
@@ -63,12 +63,13 @@ Public program messaging is largely aligned: grades **1–12**, **100% online / 
 
 - FAQ is the primary parent explainer; homework + feedback + remote prose improved.
 - Gift card award commitment FAQ explains program-wide distribution without refund or individual guarantee language (CR-23).
+- Grades eligibility vs display-only leaderboard bands clarified (CR-17); video feedback challenge-schedule expectation set (CR-18).
 - FAQ hero still uses “fact-based” (slightly editorial); optional soft reword later with Mike approval.
 
 ### Footer & navigation
 
 - Footer: 127 SI + FBC identity, grades 1–12, online worldwide, registration links, consent — aligned with SC-149 / FUT-019 direction.
-- Nav: FAQ present; Dashboard demo exposure is the main parent-risk item (CR-12).
+- Nav: FAQ present; Dashboard removed from public nav (CR-12 complete).
 
 ### Athlete privacy / profile
 
@@ -79,11 +80,8 @@ Public program messaging is largely aligned: grades **1–12**, **100% online / 
 ## Explicitly not changed (still need Mike approval)
 
 - Pricing amounts, registration URLs, eligibility, challenge dates, season label
-- Removing or relabeling Dashboard in primary nav (**CR-12**)
-- New homepage “For parents” section layout (**CR-13**)
 - Further Tutorials / Zoom visual redesign work beyond already-shipped catalogs (**CR-14 / CR-15**; FUT-016/017 portfolio work already on master via #284/#285)
-- Coach feedback SLA / turnaround claims (**CR-18**)
-- Grades “adjacent school levels” FAQ nuance (**CR-17**)
+- Footer consent unification when FUT-019 ships (**CR-16**)
 
 ## Ship log (2026-08-30)
 

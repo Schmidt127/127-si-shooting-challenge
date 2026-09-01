@@ -17,7 +17,7 @@ export const LEVELS_TERMINOLOGY = [
   {
     term: "Gate",
     definition:
-      "Requirements beyond XP that may be required to advance — for example Zoom attendance or Perfect Week completion. Gate text comes from the program configuration.",
+      "Extra requirements beyond lifetime XP that may be required to advance — for example Zoom attendance or Perfect Week completion. When no gate text is published, reaching the XP threshold is enough.",
   },
 ] as const;
 
@@ -33,9 +33,9 @@ export const LEVELS_ORIENTATION_STEPS = [
       "Each card names the next level in the ladder and shows the XP still ahead. Gates for that tier are summarized on the card and expanded on the detail page.",
   },
   {
-    title: "Read the gate requirements",
+    title: "Read the advance requirements",
     description:
-      "Gate criteria come from the program configuration and may include more than XP. Open a level card for the full gate checklist.",
+      "Each card summarizes gate criteria from the program configuration — XP plus any Zoom, Perfect Week, or other published requirements. Open a level for the full checklist.",
   },
   {
     title: "Advance one step at a time",

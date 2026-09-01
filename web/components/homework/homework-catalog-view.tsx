@@ -16,7 +16,7 @@ import { ProgramFeatureBanner } from "@/components/site/program-feature-image";
 import { FEATURE_BANNER_ARIA } from "@/lib/seo/program-facts";
 import { EmptyState, ErrorState } from "@/components/ui";
 import { formatRelativeUpdate } from "@/lib/formatters";
-import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
+import { ACCESSIBILITY_LABELS, EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import type { HomeworkAssignment, HomeworkCatalogData } from "@/types/homework";
 
 type HomeworkCatalogViewProps = {
@@ -46,7 +46,7 @@ function HomeworkResourceLinks({ assignment }: { assignment: HomeworkAssignment 
           href={link.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex min-h-[2.25rem] items-center gap-1 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold text-accent-soft transition hover:border-brand-orange/35 hover:bg-brand-light-gray/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/40"
+          className="inline-flex min-h-11 items-center gap-1 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold text-accent-soft transition hover:border-brand-orange/35 hover:bg-brand-light-gray/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/40"
         >
           {link.label}
           <span aria-hidden>↗</span>
@@ -180,7 +180,7 @@ function HomeworkCard({
 
             <Link
               href={`/homework/${assignment.id}`}
-              className="mt-4 inline-flex min-h-[2.25rem] items-center gap-1 text-sm font-semibold text-accent-soft transition hover:translate-x-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/40"
+              className="mt-4 inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-accent-soft transition hover:translate-x-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/40"
             >
               View details
               <span aria-hidden>→</span>
@@ -243,7 +243,7 @@ export function HomeworkCatalogView({ data }: HomeworkCatalogViewProps) {
           mark="HW"
           ariaLabel={FEATURE_BANNER_ARIA.homework}
         />
-        <div className="mx-auto max-w-4xl min-w-0 space-y-14" data-testid="homework-catalog-list">
+        <div className="mx-auto max-w-4xl min-w-0 space-y-14" data-testid="homework-catalog-list" aria-label={ACCESSIBILITY_LABELS.homeworkCatalog}>
           {data.weekGroups.map((group, groupIndex) => (
             <WeekSection
               key={group.weekId || group.weekName}

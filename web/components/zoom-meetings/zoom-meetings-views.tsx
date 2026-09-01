@@ -20,10 +20,11 @@ import {
 } from "@/components/site";
 import { ProgramFeatureBanner } from "@/components/site/program-feature-image";
 import { EmptyState, ErrorState, StatusBadge } from "@/components/ui";
+import { scCardPanel } from "@/components/ui/sc-card";
 import { buttonVariants } from "@/components/ui/button";
 import { formatMeetingDateTime, formatRelativeUpdate } from "@/lib/formatters";
 import { plainTextFromRichText } from "@/lib/formatters/rich-text";
-import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
+import { ACCESSIBILITY_LABELS, EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import { FEATURE_BANNER_ARIA } from "@/lib/seo/program-facts";
 import { cn } from "@/lib/utils";
 import type { ZoomMeeting, ZoomMeetingCatalogData } from "@/types/zoom-meetings";
@@ -181,7 +182,7 @@ function MeetingResourceLinks({ meeting }: { meeting: ZoomMeeting }) {
           href={link.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex min-h-[2.25rem] items-center gap-1 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold text-accent-soft transition hover:border-brand-orange/35 hover:bg-brand-light-gray/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/40"
+          className="inline-flex min-h-11 items-center gap-1 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold text-accent-soft transition hover:border-brand-orange/35 hover:bg-brand-light-gray/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/40"
         >
           {link.label}
           <span aria-hidden>↗</span>
@@ -278,7 +279,7 @@ function MeetingCard({
 
           <Link
             href={`/zoom-meetings/${meeting.id}`}
-            className="mt-4 inline-flex min-h-[2.25rem] items-center gap-1 text-sm font-semibold text-accent-soft transition hover:translate-x-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/40"
+            className="mt-4 inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-accent-soft transition hover:translate-x-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/40"
           >
             {access.kind === "live"
               ? "Meeting details & join info"
@@ -337,10 +338,7 @@ function ZoomTerminology() {
       </div>
       <dl className="grid gap-3 sm:grid-cols-2">
         {ZOOM_TERMINOLOGY.map((item) => (
-          <div
-            key={item.term}
-            className="rounded-lg border border-border bg-card p-4 shadow-site-sm"
-          >
+          <div key={item.term} className={scCardPanel()}>
             <dt className="text-sm font-semibold text-foreground">{item.term}</dt>
             <dd className="mt-1.5 text-sm leading-relaxed text-foreground">{item.definition}</dd>
           </div>
@@ -367,10 +365,7 @@ function ZoomOrientation() {
       </div>
       <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {ZOOM_ORIENTATION_STEPS.map((step, index) => (
-          <li
-            key={step.title}
-            className="rounded-lg border border-border bg-card p-4 shadow-site-sm"
-          >
+          <li key={step.title} className={scCardPanel()}>
             <p className="font-mono text-xs font-semibold text-brand-blue">0{index + 1}</p>
             <h3 className="mt-3 text-base font-semibold text-foreground">{step.title}</h3>
             <p className="mt-2 text-sm leading-relaxed text-foreground">{step.description}</p>
@@ -434,7 +429,7 @@ export function ZoomMeetingsCatalogView({ data }: { data: ZoomMeetingCatalogData
         />
         <ZoomTerminology />
         <ZoomOrientation />
-        <div className="mx-auto max-w-4xl min-w-0 space-y-14" data-testid="zoom-meeting-catalog-list">
+        <div className="mx-auto max-w-4xl min-w-0 space-y-14" data-testid="zoom-meeting-catalog-list" aria-label={ACCESSIBILITY_LABELS.zoomCatalog}>
           {data.weekGroups.map((group, groupIndex) => (
             <WeekSection
               key={group.weekId || group.weekName}
