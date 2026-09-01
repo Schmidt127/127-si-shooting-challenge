@@ -802,8 +802,9 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-038 — Global configurable program-category on/off system
 
 **Priority:** P1  
-**Status:** **Brief ready** (2026-09-01) — Phase 2 architecture complete; **do not implement** schema/automation/web/email until Mike selects ownership option (§3) and PKG-004 approves fields  
+**Status:** **Decision worksheet ready** (2026-09-01) — Phase 2 architecture complete; **do not implement** schema/automation/web/email until Mike replies to async worksheet and PKG-004 approves fields  
 **Brief:** [next-wave/config-selection/FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md](./next-wave/config-selection/FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md)  
+**Worksheet:** [next-wave/config-selection/FUT-038-MIKE-DECISION-WORKSHEET.md](./next-wave/config-selection/FUT-038-MIKE-DECISION-WORKSHEET.md) (**12** decisions; reply `1D, 2A, …`)  
 **Systems:** Airtable Config / Program Instance (or equivalent), XP, levels/gates, GOAT, achievements, milestones, weekly summaries, parent/athlete emails, website progress displays, related automations  
 **Correct repo:** this repo (+ Production Airtable after approved design)  
 **Related:** SC-034 / config-over-code · C-014 / SC-082 gate tuning · FUT-026 Player Manual · PKG-004 · [v2/03-business-rules.md](./v2/03-business-rules.md) · [next-wave/config-selection/CONFIG-CONSUMER-INVENTORY.md](./next-wave/config-selection/CONFIG-CONSUMER-INVENTORY.md) · [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) § XP / levels
@@ -1405,7 +1406,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **FUT-035** | **COMPLETE** | Landing PR **#16** merged 2026-09-01 — navy → royal blue header/club-mission |
 | **FUT-036** | **COMPLETE** | Landing PR **#17** merged 2026-09-01 — six Upcoming Programs cards; Youth/Coach groupings live |
 | **FUT-037** | READY (blocked on images) | Program images under `/public/images/programs/` — Mike supplies assets |
-| **FUT-038** | **Brief ready** | Global category on/off — [FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md](./next-wave/config-selection/FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md); Phase 3 blocked on Mike ownership + PKG-004 |
+| **FUT-038** | **Decision worksheet ready** | Global category on/off — [FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md](./next-wave/config-selection/FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md) + [FUT-038-MIKE-DECISION-WORKSHEET.md](./next-wave/config-selection/FUT-038-MIKE-DECISION-WORKSHEET.md); Phase 3 blocked on Mike reply + PKG-004 |
 | **FUT-039** | **Phase 3 ready** | Fillout branding — decisions locked; [`FUT-039-fillout-branding.md`](./deploy-checklists/FUT-039-fillout-branding.md) + [`fillout-theme-sc-2026.css`](./next-wave/fillout/fillout-theme-sc-2026.css); Mike applies in Fillout UI |
 | **FUT-040** | **Brief ready** | Automatic S3 migration for HW / video / headshots — [FUT-040-AUTOMATIC-S3-MIGRATION-BRIEF.md](./next-wave/s3-migration/FUT-040-AUTOMATIC-S3-MIGRATION-BRIEF.md); Phase 3 blocked on Mike decisions + PKG-004 |
 | **FUT-041** | **COMPLETE** | Daily Submission XP columns — PR **#321** `66f8c40b` + Hub **#43** `504a3ed`; **076 v8.12** paste pending |
