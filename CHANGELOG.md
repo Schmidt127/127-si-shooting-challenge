@@ -78,6 +78,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **FUT-042 Coach feedback quotation styling (2026-09-01)** — Shared `CoachFeedbackQuote` on athlete
+  profile homework cards (orange left border, light blue-gray background, italic smaller text; hidden
+  when empty). Hub homework + video feedback emails use matching inner quotation block inside the
+  existing Coach feedback InfoCard. Checklist:
+  [`docs/deploy-checklists/FUT-042-coach-feedback-quotation.md`](./docs/deploy-checklists/FUT-042-coach-feedback-quotation.md).
 - **FUT-046 Homework feedback email subject (2026-09-01)** — Communications Hub `HOMEWORK_FEEDBACK` subject:
   `Homework Feedback – First Name Last Name – Assignment Name`; `[TEST]` prefix when `testMode: true`.
   Pairs with **071 v4.3** payload fields. Hub repo: `communications` (`lib/template-candidate-renderer.js`, `lib/welcome-processor.js`).
