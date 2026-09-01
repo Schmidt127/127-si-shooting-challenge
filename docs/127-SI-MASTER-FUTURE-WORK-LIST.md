@@ -276,7 +276,7 @@ Use the Custom Video File Name everywhere a parent-facing or coach-facing descri
 ### FUT-009 — AWS storage structure and corrected-video naming workflow
 
 **Priority:** P2  
-**Status:** **Brief ready (2026-09-01)** — Phase 2 architecture only; no bucket/Lambda/S3/schema implementation  
+**Status:** **Repo implementation complete (2026-09-01)** — DEV proof and Production apply pending Mike approval  
 **Systems:** Video Feedback correction interface, Lambda/S3, Airtable links
 
 Combine the AWS bucket-structure review and corrected-video naming workflow into one future project. Review the current bucket structure, folder/key organization, naming rules, retention expectations, and separation of homework, video, and future headshot assets.
@@ -285,7 +285,7 @@ When Mike corrects a video and supplies a Custom Video File Name, provide a safe
 
 Keep the S3 bucket private and preserve the Lambda viewer architecture.
 
-**Delivered (2026-09-01):** Phase 2 brief — current key inventory (Gen A/B/C), FUT-007 relationship, layout options (§4), copy-on-write rename workflow, headshot placeholder, retention, Phase 3 slices, test matrix, 12 open decisions, PKG-004 gate. Brief: [`docs/next-wave/aws-media/FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md`](./next-wave/aws-media/FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md). **No S3 changes, no Lambda deploy, no Airtable paste.**
+**Delivered (2026-09-01):** Phase 2 brief — [`docs/next-wave/aws-media/FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md`](./next-wave/aws-media/FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md). **Implementation (2026-09-01):** FUT-009 rename worker (`lambda/upload-asset/upload_core/fut009_rename.py`), Option D destination builder, dual-prefix Storage Key validation (FUT-010 alignment), CLI `tools/airtable/fut_009_video_rename.py`, extension `fut-009-video-rename.js`, promotion doc [`docs/deploy-checklists/FUT-009-aws-storage-rename.md`](./deploy-checklists/FUT-009-aws-storage-rename.md). Coach confirmation via proposed **Confirm S3 Video Rename** (PKG-004) + CLI `--confirm-rename`. **No Production S3 writes, schema paste, or automation deploy.**
 
 ### FUT-010 — Delete Airtable intake attachments after verified S3 upload
 
