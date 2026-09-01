@@ -5,6 +5,7 @@
 | Doc | Purpose |
 |-----|---------|
 | [WELCOME-EMAIL-INTEGRATION.md](./WELCOME-EMAIL-INTEGRATION.md) | Welcome contract, proven vs pending |
+| [FUT-047-homework-feedback-contact-copy.md](./FUT-047-homework-feedback-contact-copy.md) | Homework feedback monitored contact copy (FUT-047) |
 | [../integrations/email-send-plane.md](../integrations/email-send-plane.md) | **Current** email delivery plane (Resend; Make is not the email sender) |
 | [TEMPLATES-REGISTRY-AUDIT-2026-08-17.md](./TEMPLATES-REGISTRY-AUDIT-2026-08-17.md) | Hub `Templates` catalog vs SC communication types (metadata only) |
 | [seeds/sc-missing-templates-seed.json](./seeds/sc-missing-templates-seed.json) | Safe seed for Homework / Video / Zoom catalog rows |
