@@ -101,6 +101,14 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Web
 
+#### Fixed
+- **Homework catalog PHA duplicate resolution (2026-09-01)** — `/shoot/homework` failed when Early Bird
+  retained four active Program Homework Assignment rows (duplicate HW1/HW2 slots after the 2026-08-31
+  PHA restore). Added centralized `pha-repository` + field map, deterministic duplicate resolution
+  (Program Instance PHA link order → completion count → record id), typed `loadHomeworkCatalog`
+  results, structured server logging, and visitor-safe retry UI. **Operator follow-up:** deactivate
+  stale Early Bird PHA rows `rechCXdubiA1RPFEj` and `rec4iQ2WS04Arq3tB` in Airtable when convenient.
+
 #### Changed
 - **FUT-043 consistent card design system (2026-09-01)** — Shared `--sc-card-*` tokens in `globals.css`, `components/ui/sc-card.tsx` helpers, and catalog panel alignment. Applied to athlete homework rows, dashboard XP activity, Game Log list shells, and dashboard achievement insets. Token doc: [`web/docs/sc-card-design-tokens.md`](./web/docs/sc-card-design-tokens.md). Hub mirror: `communications/emails/lib/card-tokens.js` (separate repo deploy). Checklist: [`docs/deploy-checklists/FUT-043-card-design-system.md`](./docs/deploy-checklists/FUT-043-card-design-system.md).
 - **FUT-042 Coach feedback quotation styling (2026-09-01)** — Shared `CoachFeedbackQuote` on athlete

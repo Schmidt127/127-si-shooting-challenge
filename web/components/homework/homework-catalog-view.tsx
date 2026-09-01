@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { HomeworkRetryActions } from "@/components/homework/homework-retry-actions";
+
 import { formatHomeworkDueDate } from "@/components/athlete/homework-assignments";
 import { catalogCardClass } from "@/components/catalog/catalog-surface";
 import { IconBook } from "@/components/icons/shoot-icons";
@@ -289,7 +291,13 @@ export function HomeworkEmptyState() {
   );
 }
 
-export function HomeworkErrorState({ message }: { message: string }) {
+export function HomeworkErrorState({
+  message,
+  retryable = true,
+}: {
+  message: string;
+  retryable?: boolean;
+}) {
   return (
     <ProgramPage
       eyebrow="Curriculum drop"
@@ -309,11 +317,7 @@ export function HomeworkErrorState({ message }: { message: string }) {
           <ErrorState
             title="Could not load homework"
             message={message}
-            action={
-              <CtaLink href="/" variant="secondary">
-                ← Shooting Challenge
-              </CtaLink>
-            }
+            action={<HomeworkRetryActions retryable={retryable} />}
           />
         </div>
       </div>

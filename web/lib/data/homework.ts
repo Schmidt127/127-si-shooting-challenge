@@ -54,6 +54,22 @@ export type ProgramHomeworkAssignmentScheduleFields = {
   "Active?"?: unknown;
   "Due Date"?: unknown;
   "Operator Notes"?: unknown;
+  "Completions Count"?: unknown;
+};
+
+export type ParsedPhaScheduleResult = {
+  rows: ScheduledPhaRow[];
+  skippedIncomplete: number;
+  /** Duplicate PI + Week + slot keys that could not be auto-resolved. */
+  duplicateSlotKeys: string[];
+  /** Duplicate slot keys resolved deterministically (logged server-side). */
+  resolvedDuplicateSlotKeys: string[];
+};
+
+export type ParseActivePhaScheduleOptions = {
+  programInstanceId: string;
+  /** Lower index = higher priority when resolving duplicate PI + Week + slot rows. */
+  programInstancePhaPriority?: ReadonlyMap<string, number>;
 };
 
 export type ScheduledPhaRow = {
@@ -150,17 +166,58 @@ export function resolveAssignmentDueDateKey(
   return asOptionalDateKey(phaDueDate) ?? weekMeta?.endDate ?? null;
 }
 
+type ParsedPhaCandidate = {
+  phaId: string;
+  homeworkId: string;
+  weekId: string;
+  programInstanceId: string;
+  homeworkSlot: string;
+  gradeBandIds: string[];
+  dueDate: string | null;
+  operatorNotes: string | null;
+  completionsCount: number;
+};
+
+function phaPriorityIndex(
+  phaId: string,
+  priority?: ReadonlyMap<string, number>,
+): number {
+  const index = priority?.get(phaId);
+  return index === undefined ? Number.MAX_SAFE_INTEGER : index;
+}
+
+function comparePhaCandidates(
+  a: ParsedPhaCandidate,
+  b: ParsedPhaCandidate,
+  priority?: ReadonlyMap<string, number>,
+): number {
+  const priorityDiff =
+    phaPriorityIndex(a.phaId, priority) - phaPriorityIndex(b.phaId, priority);
+  if (priorityDiff !== 0) return priorityDiff;
+
+  const completionDiff = b.completionsCount - a.completionsCount;
+  if (completionDiff !== 0) return completionDiff;
+
+  return a.phaId.localeCompare(b.phaId);
+}
+
+function pickPhaCandidate(
+  candidates: ParsedPhaCandidate[],
+  priority?: ReadonlyMap<string, number>,
+): ParsedPhaCandidate {
+  return [...candidates].sort((a, b) => comparePhaCandidates(a, b, priority))[0];
+}
+
 /**
- * Parse active PHA rows for the public catalog. Incomplete rows are skipped;
- * duplicate active PI+Week+slot collisions are returned for fail-closed handling.
+ * Parse active PHA rows for the public catalog. Incomplete rows are skipped.
+ * Duplicate active PI + Week + slot rows are resolved deterministically using
+ * Program Instance PHA link order, then completion count, then record id.
  */
 export function parseActivePhaScheduleRows(
   phaRecords: Array<{ id: string; fields: ProgramHomeworkAssignmentScheduleFields }>,
-  programInstanceId: string,
-): { rows: ScheduledPhaRow[]; skippedIncomplete: number; duplicateSlotKeys: string[] } {
-  const rows: ScheduledPhaRow[] = [];
-  const slots = new Map<string, string>();
-  const duplicateSlotKeys: string[] = [];
+  options: ParseActivePhaScheduleOptions,
+): ParsedPhaScheduleResult {
+  const candidatesBySlot = new Map<string, ParsedPhaCandidate[]>();
   let skippedIncomplete = 0;
 
   for (const pha of phaRecords) {
@@ -181,30 +238,73 @@ export function parseActivePhaScheduleRows(
       continue;
     }
 
-    if (programInstanceIds[0] !== programInstanceId) continue;
+    if (programInstanceIds[0] !== options.programInstanceId) continue;
 
     const slotKey = `${programInstanceIds[0]}|${weekIds[0]}|${slot}`;
-    const prior = slots.get(slotKey);
-    if (prior && prior !== pha.id) {
-      if (!duplicateSlotKeys.includes(slotKey)) duplicateSlotKeys.push(slotKey);
-      continue;
-    }
-    slots.set(slotKey, pha.id);
-
-    rows.push({
+    const candidate: ParsedPhaCandidate = {
       phaId: pha.id,
       homeworkId: homeworkIds[0],
       weekId: weekIds[0],
       programInstanceId: programInstanceIds[0],
       homeworkSlot: slot,
       gradeBandIds: linkedRecordIds(pha.fields["Grade Band"]),
-      gradeBands: [],
       dueDate: asOptionalDateKey(pha.fields["Due Date"]),
       operatorNotes: asText(pha.fields["Operator Notes"], "").trim() || null,
+      completionsCount: asNumber(pha.fields["Completions Count"]),
+    };
+
+    const bucket = candidatesBySlot.get(slotKey) ?? [];
+    bucket.push(candidate);
+    candidatesBySlot.set(slotKey, bucket);
+  }
+
+  const rows: ScheduledPhaRow[] = [];
+  const duplicateSlotKeys: string[] = [];
+  const resolvedDuplicateSlotKeys: string[] = [];
+
+  for (const [slotKey, candidates] of candidatesBySlot) {
+    if (candidates.length > 1) {
+      const winner = pickPhaCandidate(candidates, options.programInstancePhaPriority);
+      const losers = candidates.filter((candidate) => candidate.phaId !== winner.phaId);
+      if (
+        losers.some(
+          (loser) =>
+            comparePhaCandidates(loser, winner, options.programInstancePhaPriority) === 0,
+        )
+      ) {
+        duplicateSlotKeys.push(slotKey);
+        continue;
+      }
+      resolvedDuplicateSlotKeys.push(slotKey);
+      rows.push({
+        phaId: winner.phaId,
+        homeworkId: winner.homeworkId,
+        weekId: winner.weekId,
+        programInstanceId: winner.programInstanceId,
+        homeworkSlot: winner.homeworkSlot,
+        gradeBandIds: winner.gradeBandIds,
+        gradeBands: [],
+        dueDate: winner.dueDate,
+        operatorNotes: winner.operatorNotes,
+      });
+      continue;
+    }
+
+    const [only] = candidates;
+    rows.push({
+      phaId: only.phaId,
+      homeworkId: only.homeworkId,
+      weekId: only.weekId,
+      programInstanceId: only.programInstanceId,
+      homeworkSlot: only.homeworkSlot,
+      gradeBandIds: only.gradeBandIds,
+      gradeBands: [],
+      dueDate: only.dueDate,
+      operatorNotes: only.operatorNotes,
     });
   }
 
-  return { rows, skippedIncomplete, duplicateSlotKeys };
+  return { rows, skippedIncomplete, duplicateSlotKeys, resolvedDuplicateSlotKeys };
 }
 
 export function applyGradeBandLabelsToPhaRows(
