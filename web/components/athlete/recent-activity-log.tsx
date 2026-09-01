@@ -4,10 +4,17 @@ import { useCallback, useRef, useState } from "react";
 
 import { withBasePath } from "@/lib/app-config";
 import {
+  ScCardList,
+  ScCardRowItem,
+  ScCardSectionHeader,
+  scCardEmpty,
+} from "@/components/ui/sc-card";
+import {
   formatGameLogDateLine,
   formatGameLogDisplayDate,
 } from "@/lib/data/game-log-presentation";
 import { formatXp } from "@/lib/formatters";
+import { cn } from "@/lib/utils";
 import type { PublicActivityItem } from "@/types/public-athlete-profile";
 
 type GameLogApiResponse = {
@@ -80,14 +87,11 @@ export function RecentActivityLog({
 
   return (
     <section aria-labelledby="activity-heading" data-testid="recent-activity">
-      <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-brand-blue">Game log</p>
-      <h2 id="activity-heading" className="mt-1 text-xl font-bold text-foreground sm:text-2xl">
-        Recent activity
-      </h2>
+      <ScCardSectionHeader eyebrow="Game log" title="Recent activity" titleId="activity-heading" />
 
       {notice ? (
         <p
-          className="mt-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900"
+          className="mt-3 rounded-[var(--sc-card-radius)] border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900"
           data-testid="recent-activity-notice"
         >
           {notice}
@@ -102,16 +106,16 @@ export function RecentActivityLog({
 
       {items.length === 0 ? (
         <p
-          className="mt-4 border border-dashed border-border bg-brand-light-gray/50 px-4 py-5 text-sm text-muted"
+          className={cn(scCardEmpty(), "mt-4")}
           data-testid="recent-activity-empty"
         >
           No approved public activity yet. Counted submissions and XP awards will appear here.
         </p>
       ) : (
         <>
-          <ol className="mt-5 divide-y divide-border border border-border bg-card">
+          <ScCardList>
             {items.map((item) => (
-              <li key={item.key} className="px-4 py-3 sm:px-5" data-testid="recent-activity-row">
+              <ScCardRowItem key={item.key} testId="recent-activity-row">
                 <div
                   className="grid min-w-0 grid-cols-[minmax(0,1fr)_2.5rem_minmax(4.5rem,auto)] items-baseline gap-x-3 gap-y-0.5"
                   data-testid="recent-activity-event-grid"
@@ -156,9 +160,9 @@ export function RecentActivityLog({
                     </p>
                   )}
                 </div>
-              </li>
+              </ScCardRowItem>
             ))}
-          </ol>
+          </ScCardList>
 
           {error ? (
             <div
@@ -181,7 +185,7 @@ export function RecentActivityLog({
             <div className="mt-4 flex justify-center">
               <button
                 type="button"
-                className="rounded-md border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground hover:bg-brand-light-gray/80 disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-[var(--sc-card-radius)] border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground hover:bg-brand-light-gray/80 disabled:cursor-not-allowed disabled:opacity-60"
                 data-testid="recent-activity-load-more"
                 disabled={loading}
                 aria-busy={loading}

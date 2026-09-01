@@ -70,6 +70,10 @@ describe("HomeworkAssignments UI", () => {
     expect(html).toContain("Shot Tracker Usage");
     expect(html).toContain("Log every make in the tracker.");
     expect(html).toContain("Nice work.");
+    expect(html).toContain('data-testid="coach-feedback-quote"');
+    expect(html).toContain("border-brand-orange");
+    expect(html).toContain("italic");
+    expect(html).not.toContain("Coach feedback:");
     expect(html).toContain("Satisfactory");
     expect(html).toContain("Credit earned");
     expect(html).not.toContain("HW99");
@@ -103,6 +107,11 @@ describe("HomeworkAssignments UI", () => {
     expect(html).toContain("No due date");
     expect(html).toContain("Pending");
     expect(html).toContain("Not submitted");
+  });
+
+  it("omits coach feedback quotation when feedback is absent", () => {
+    const html = render([assignment({ coachFeedback: null })]);
+    expect(html).not.toContain('data-testid="coach-feedback-quote"');
   });
 
   it("uses responsive stacked-to-grid classes for mobile-safe rendering", () => {

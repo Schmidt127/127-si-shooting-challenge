@@ -2,8 +2,23 @@
   "detector": {
     "ignoreRules": [],
     "ignoreFiles": [
-      "airtable/automations/shooting-challenge/072-email-notifications-and-external-handoffs-build-weekly-summary-email-package.js"
+      "airtable/automations/shooting-challenge/072-email-notifications-and-external-handoffs-build-weekly-summary-email-package.js",
+      "web/components/coach-feedback-quote.tsx",
+      "communications/emails/components/coach-feedback-quote.js"
     ],
-    "ignoreValues": []
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": ["web/components/coach-feedback-quote.tsx"],
+        "reason": "FUT-042 approved: orange left border on coach feedback quotation block"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": ["communications/emails/components/coach-feedback-quote.js"],
+        "reason": "FUT-042 approved: orange left border on coach feedback quotation block"
+      }
+    ]
   }
 }

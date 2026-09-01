@@ -17,6 +17,7 @@ import {
   ProgressMeter,
   StatTile,
   StatusBadge,
+  scCardInset,
 } from "@/components/ui";
 import {
   homeworkStatusLabel,
@@ -25,6 +26,7 @@ import {
   type AthleteDashboardModel,
 } from "@/lib/data/athlete-dashboard";
 import { formatGrade, formatShots, formatXp, formatXpSourceLabel } from "@/lib/formatters";
+import { cn } from "@/lib/utils";
 
 type AthleteDashboardViewProps = {
   data: AthleteDashboardModel;
@@ -246,7 +248,7 @@ export function AthleteDashboardView({ data }: AthleteDashboardViewProps) {
               {data.achievements.slice(0, 3).map((item) => (
                 <li
                   key={item.id}
-                  className="flex items-center justify-between gap-2 rounded-md border border-border bg-card px-3 py-2"
+                  className={cn(scCardInset(), "flex items-center justify-between gap-2 px-3 py-2")}
                 >
                   <span className="text-sm text-foreground">{item.name}</span>
                   <StatusBadge tone={item.unlocked ? "success" : "neutral"}>

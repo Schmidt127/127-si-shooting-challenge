@@ -795,10 +795,11 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-038 — Global configurable program-category on/off system
 
 **Priority:** P1  
-**Status:** Planned — architecture brief required before schema/automation work  
+**Status:** **Brief ready** (2026-09-01) — Phase 2 architecture complete; **do not implement** schema/automation/web/email until Mike selects ownership option (§3) and PKG-004 approves fields  
+**Brief:** [next-wave/config-selection/FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md](./next-wave/config-selection/FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md)  
 **Systems:** Airtable Config / Program Instance (or equivalent), XP, levels/gates, GOAT, achievements, milestones, weekly summaries, parent/athlete emails, website progress displays, related automations  
 **Correct repo:** this repo (+ Production Airtable after approved design)  
-**Related:** SC-034 / config-over-code · C-014 / SC-082 gate tuning · FUT-026 Player Manual · [v2/03-business-rules.md](./v2/03-business-rules.md) · [next-wave/config-selection/CONFIG-CONSUMER-INVENTORY.md](./next-wave/config-selection/CONFIG-CONSUMER-INVENTORY.md) · [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) § XP / levels
+**Related:** SC-034 / config-over-code · C-014 / SC-082 gate tuning · FUT-026 Player Manual · PKG-004 · [v2/03-business-rules.md](./v2/03-business-rules.md) · [next-wave/config-selection/CONFIG-CONSUMER-INVENTORY.md](./next-wave/config-selection/CONFIG-CONSUMER-INVENTORY.md) · [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) § XP / levels
 
 **Problem:** Coaches need to disable whole participation categories for a program instance/season without breaking XP, levels, GOAT, achievements, or communications.
 
@@ -892,7 +893,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-042 — Style Coach Feedback as a quotation (emails + website cards)
 
 **Priority:** P2  
-**Status:** Ready for prompt  
+**Status:** **COMPLETE** (2026-09-01) — web + Hub; deploy with FUT-043 bundle  
 **Systems:** Parent-facing emails; website/dashboard homework (and related) cards  
 **Correct repo:** this repo (`web/` + Hub email HTML)  
 **Related:** FUT-043 · FUT-032 · Automation **071** / homework feedback templates · `web/lib/data/public-athlete-homework.ts` (`Coach Feedback`)
@@ -906,12 +907,12 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 
 **Dependencies / risks:** Shared design tokens with FUT-043; contrast check against brand orange/blue.
 
-**Decisions still open:** Exact token values; whether empty Coach Feedback hides the quotation block entirely (recommended, confirm in brief).
+**Shipped (2026-09-01):** `CoachFeedbackQuote` web component + Hub `coach-feedback-quote.js` in homework and video feedback emails. Orange left border, light blue-gray background, italic; hidden when empty.
 
 ### FUT-043 — Consistent card design system (website + emails)
 
 **Priority:** P2  
-**Status:** Ready for prompt  
+**Status:** **COMPLETE** (2026-09-01) — `--sc-card-*` tokens, `sc-card.tsx`, Hub `card-tokens.js`  
 **Systems:** Relevant website components and email cards  
 **Correct repo:** this repo  
 **Related:** FUT-042 · FUT-044 · FUT-011–FUT-017 design patterns · Impeccable / `BRAND_STANDARDS.md` · `APP_CONTEXT.md`
@@ -920,7 +921,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 
 **Approved requirements:** Standardize card heading size, font/weight, spacing, border/outline, corner radius, background colors, accent colors, internal padding, and responsive behavior across relevant website components and emails.
 
-**Dependencies / risks:** Avoid generic AI card grids; preserve existing SC light theme. Scope which surfaces are “relevant” in Phase 2 (athlete homework, dashboard, Game Log, Hub emails).
+**Shipped (2026-09-01):** Web tokens in `globals.css`, helpers in `components/ui/sc-card.tsx`, applied to homework rows, Game Log, XP activity, catalog panels. Hub mirror in `card-tokens.js`. Doc: [`web/docs/sc-card-design-tokens.md`](../web/docs/sc-card-design-tokens.md).
 
 **Decisions still open:** Token source of truth (CSS variables vs Hub partials); whether email HTML can share the same radius/border language as the web app.
 
@@ -1392,12 +1393,12 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **FUT-035** | **COMPLETE** | Landing PR **#16** merged 2026-09-01 — navy → royal blue header/club-mission |
 | **FUT-036** | **COMPLETE** | Landing PR **#17** merged 2026-09-01 — six Upcoming Programs cards; Youth/Coach groupings live |
 | **FUT-037** | READY (blocked on images) | Program images under `/public/images/programs/` — Mike supplies assets |
-| **FUT-038** | READY (brief first) | Global category on/off; disabled categories must not block GOAT / levels — Airtable + automations + web + email |
+| **FUT-038** | **Brief ready** | Global category on/off — [FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md](./next-wave/config-selection/FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md); Phase 3 blocked on Mike ownership + PKG-004 |
 | **FUT-039** | DEFERRED implement / Planned | Fillout branding CSS — planning only; do not implement yet |
 | **FUT-040** | READY (brief first) | Automatic S3 migration for HW / video / headshots; delete Airtable attachment **only after** verification — extends **FUT-010** |
 | **FUT-041** | **COMPLETE** | Daily Submission XP columns — PR **#321** `66f8c40b` + Hub **#43** `504a3ed`; **076 v8.12** paste pending |
-| **FUT-042** | READY | Coach Feedback quotation styling — emails + website cards |
-| **FUT-043** | READY | Consistent card design system — website + emails |
+| **FUT-042** | **COMPLETE** | Coach Feedback quotation — web + Hub homework/video emails |
+| **FUT-043** | **COMPLETE** | Card design tokens — web sc-card + Hub card-tokens.js |
 | **FUT-044** | **COMPLETE** | Remove redundant Submitted Work card; keep View Submitted Homework — PR **#319** `de21fa36`; prod verified |
 | **FUT-045** | **COMPLETE** | Public-facing **Assignment Name** — PR **#319** `de21fa36`; `resolvePublicAssignmentName`; prod verified |
 | **FUT-046** | **COMPLETE** | Homework feedback subject — PR **#321** + Hub **#43**; **071 v4.3** paste pending |
