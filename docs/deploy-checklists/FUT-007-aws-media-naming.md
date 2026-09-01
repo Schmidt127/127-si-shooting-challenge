@@ -1,7 +1,7 @@
 # FUT-007 — AWS media naming (Lambda implementation)
 
 **Backlog:** FUT-007 (P2)  
-**Status:** **Spec ready — Phase 3 implementation not started**  
+**Status:** **Phase 3 prep shipped** — Lambda code behind flag; **DEV deploy still gated**  
 **Authority:** [FUT-007-AWS-MEDIA-NAMING-SPEC.md](../next-wave/aws-media/FUT-007-AWS-MEDIA-NAMING-SPEC.md)  
 **Systems:** Upload Lambda (`lambda/upload-asset`), S3, Submission Assets, Video Feedback, Make 070a/070b  
 **Related:** FUT-008 · FUT-009 · FUT-040 · C-013 · C-023 · FUT-010 (Storage Key verification unchanged)
@@ -42,12 +42,14 @@ Folder prefix (`{Athlete}/{ProgramInstance}/{YYYY-MM-DD}/`) remains as today unl
 
 ## Repository changes (Phase 3)
 
-| Path | Change |
-|------|--------|
-| `lambda/upload-asset/upload_core/storage_key.py` | FUT-007 basename builder + flag |
-| `lambda/upload-asset/tests/test_storage_key.py` | New FUT-007 cases; preserve legacy reuse tests |
-| `lib/aws-media-naming/index.ts` | Keep in sync with Python (contract tests) |
-| `docs/next-wave/aws-media/FUT-007-AWS-MEDIA-NAMING-SPEC.md` | Update if implementation diverges (requires Mike) |
+| Path | Change | Done |
+|------|--------|------|
+| `lambda/upload-asset/upload_core/fut007_basename.py` | FUT-007 basename grammar (sanitize, category, custom, collision) | [x] |
+| `lambda/upload-asset/upload_core/storage_key.py` | FUT-007 builder + `USE_FUT007_BASENAME` flag (default off) | [x] |
+| `lambda/upload-asset/tests/test_fut007_basename.py` | Spec acceptance matrix (pytest) | [x] |
+| `lambda/upload-asset/tests/test_storage_key.py` | Legacy reuse tests preserved | [x] |
+| `lib/aws-media-naming/index.ts` | Keep in sync with Python (contract tests) | [x] |
+| `docs/next-wave/aws-media/FUT-007-AWS-MEDIA-NAMING-SPEC.md` | Update if implementation diverges (requires Mike) | [ ] |
 
 Optional Airtable (coordinate with OMNI / PKG-004):
 
@@ -62,7 +64,7 @@ Optional Airtable (coordinate with OMNI / PKG-004):
 
 ## DEV deployment steps
 
-1. Implement FUT-007 behind env flag (proposed: `FUT007_MEDIA_NAMING=1` in Lambda env — DEV only).
+1. Implement FUT-007 behind env flag (`USE_FUT007_BASENAME=1` in Lambda env — DEV only). **Repo prep shipped 2026-09-01; flag default off.**
 2. Deploy Lambda to DEV/staging alias (CodeOnly per [lambda/upload-asset/DEPLOY.md](../../lambda/upload-asset/DEPLOY.md)).
 3. Run Schmidt disposable tests:
    - HW route (`070a` / `homework_completion`) — one file
@@ -91,7 +93,7 @@ Optional Airtable (coordinate with OMNI / PKG-004):
 
 ## Rollback
 
-1. Set `FUT007_MEDIA_NAMING=0` (or remove) on Lambda env → redeploy config.
+1. Set `USE_FUT007_BASENAME=0` (or remove) on Lambda env → redeploy config.
 2. New uploads revert to legacy basename builder; existing FUT-007 keys remain valid.
 3. Do **not** delete S3 objects created during testing unless disposable-data mode authorized.
 
@@ -104,7 +106,7 @@ Optional Airtable (coordinate with OMNI / PKG-004):
 cd web && npm test -- ../lib/aws-media-naming/naming.test.ts
 
 # Lambda storage key suite
-cd lambda/upload-asset && python -m unittest discover -s tests -p "test_*.py" -v
+cd lambda/upload-asset && python3 -m pytest tests/test_fut007_basename.py tests/test_storage_key.py -q
 
 # FUT-010 contract (Storage Key shape — may need prefix update when FUT-009 lands)
 node lib/intake-attachment-cleanup/intake-attachment-cleanup.test.js
