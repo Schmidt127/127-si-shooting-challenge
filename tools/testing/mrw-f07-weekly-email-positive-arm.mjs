@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 /**
- * MRW-F07 — weekly email positive-arm harness (118→072→119→074→079).
+ * MRW-F07 — weekly email positive-arm harness (118→072→119→074→079→Hub writeback).
  *
  *   node tools/testing/mrw-f07-weekly-email-positive-arm.mjs --verify --was-id recXXX
+ *   node tools/testing/mrw-f07-weekly-email-positive-arm.mjs --verify-writeback --was-id recXXX
  *   node tools/testing/mrw-f07-weekly-email-positive-arm.mjs --plan --was-id recXXX [--arm-build] [--arm-send]
  *   node tools/testing/mrw-f07-weekly-email-positive-arm.mjs --apply --was-id recXXX [--arm-send]
  *
  * Safety: dry-run default; disposable WAS only; never sends email from this CLI.
+ * WE-06 writeback verification is read-only — Hub owns field writes (FUT-006).
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -16,6 +18,7 @@ import {
   MANIFEST_PATH,
   buildDryRunPlan,
   loadWasSnapshot,
+  loadWasWritebackSnapshot,
   assertDisposableWas,
   applyBuildArm,
   applySendArm,
@@ -26,6 +29,7 @@ import { requireToken } from "./lib/airtable-client.mjs";
 function parseArgs(argv) {
   const args = {
     verify: false,
+    verifyWriteback: false,
     plan: false,
     apply: false,
     wasId: null,
@@ -38,6 +42,7 @@ function parseArgs(argv) {
   for (let i = 2; i < argv.length; i += 1) {
     const flag = argv[i];
     if (flag === "--verify") args.verify = true;
+    else if (flag === "--verify-writeback") args.verifyWriteback = true;
     else if (flag === "--plan") args.plan = true;
     else if (flag === "--apply") args.apply = true;
     else if (flag === "--arm-build") args.armBuild = true;
@@ -56,11 +61,13 @@ function printHelp() {
 
 Usage:
   node tools/testing/mrw-f07-weekly-email-positive-arm.mjs --verify --was-id <rec...>
+  node tools/testing/mrw-f07-weekly-email-positive-arm.mjs --verify-writeback --was-id <rec...>
   node tools/testing/mrw-f07-weekly-email-positive-arm.mjs --plan --was-id <rec...> [--arm-build] [--arm-send]
   node tools/testing/mrw-f07-weekly-email-positive-arm.mjs --apply --was-id <rec...> [--arm-send]
 
-Offline contract:
+Offline contracts:
   node tools/testing/tests/test_mrw_f07_weekly_email_contract.mjs
+  node tools/testing/tests/test_mrw_f07_was_writeback_contract.mjs
 `);
 }
 
@@ -79,7 +86,7 @@ async function main() {
     return;
   }
 
-  if (!args.verify && !args.plan && !args.apply) {
+  if (!args.verify && !args.verifyWriteback && !args.plan && !args.apply) {
     console.log(JSON.stringify({ harness: HARNESS_ID, offline: evaluateOfflineContract() }, null, 2));
     return;
   }
@@ -90,6 +97,24 @@ async function main() {
 
   const { token, baseId } = requireToken();
   const startedAt = new Date().toISOString();
+
+  if (args.verifyWriteback) {
+    const writebackSnapshot = await loadWasWritebackSnapshot(token, baseId, args.wasId);
+    const payload = {
+      harness: HARNESS_ID,
+      mode: "verify-writeback",
+      startedAt,
+      finishedAt: new Date().toISOString(),
+      wasId: args.wasId,
+      ...writebackSnapshot,
+    };
+    console.log(JSON.stringify(payload, null, 2));
+    writeEvidence({ ...payload, snapshot: writebackSnapshot }, args.out);
+    if (!writebackSnapshot.skipped && writebackSnapshot.passed === false) {
+      process.exitCode = 1;
+    }
+    return;
+  }
 
   if (args.plan) {
     const plan = buildDryRunPlan({
