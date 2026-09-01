@@ -70,6 +70,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **FUT-031 Game Log Extra Credit tagline (2026-08-31)** — When Homework Completion
+  `Extra Credit XP Awarded` > 0, athlete Game Log and dashboard XP ledger show a
+  display-only date-row tagline (e.g. `2026-08-31 · Extra credit +125 XP`). One Homework
+  XP Event total unchanged. Commit `b6f789e7`. Tests: `game-log-presentation.test.ts`,
+  `recent-activity-log.test.ts`, `xp-activity-table.test.ts`, `xp-activity-loader.test.ts`.
 - **FUT-034 Jr. Referee Clinic naming (2026-09-01)** — Public brand guide uses **Jr. Referee Clinic** (never bare **Jr. Ref**). Merged PR **#317** (`9a8ae42b`). Landing hub naming shipped in `hoopchallenges-landing` PR **#16** (`a992fce`).
 - **Gift card commitment + About the Coach public copy (2026-08-30)** — Mike-approved parent-facing
   wording: FAQ gift-card award commitment (`/shoot/faq`); homepage About the Coach section
