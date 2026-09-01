@@ -39,6 +39,10 @@ Use an early-bird registration period for the 2026–2027 challenge. Dates, pric
 
 **Public taxonomy:** Use **Youth Programs** (not “Youth opportunities”) for Shooting Challenge, Dribbling Challenge, and Jr. Referee Clinic. Use **Coach Tools** for Brackets, Team Shot Tracker, and **State Rankings** (not “State Standings”).
 
+### Coach Tools product naming — State Rankings (2026-09-01)
+
+**Preferred public name:** **State Rankings** (matches `/rankings` app and `apps.ts`). **Do not use:** State Standings.
+
 ### SC-034 / Perfect Week config closeout (2026-08-27)
 
 Repository and Production closeout for the bounded SC-034 / V2-002 pass:
@@ -747,7 +751,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-036 — Redesign Upcoming Programs section (six differentiated program cards)
 
 **Priority:** P1  
-**Status:** Ready for prompt  
+**Status:** **COMPLETE** (2026-09-01) — `hoopchallenges-landing` PR **#17** merged (`ebcfbc2`); live at www.fairfieldbasketballclub.com  
 **Systems:** Club landing Upcoming Programs UI  
 **Correct repo:** `hoopchallenges-landing`  
 **Related:** FUT-033 · FUT-034 · FUT-037 · SC-143
