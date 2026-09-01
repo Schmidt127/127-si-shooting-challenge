@@ -830,8 +830,9 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 ### FUT-039 — Fillout.com branding and CSS consistency (planning only)
 
 **Priority:** P2  
-**Status:** **Brief ready (Phase 2)** — Phase 3 blocked on Mike decisions + Fillout UI apply; **do not change live forms from the brief alone**  
+**Status:** **Phase 3 ready** — Mike decisions captured **2026-09-01**; apply in Fillout UI via [FUT-039-fillout-branding.md](./deploy-checklists/FUT-039-fillout-branding.md)  
 **Brief:** [FUT-039-FILLOUT-BRANDING-BRIEF.md](./next-wave/fillout/FUT-039-FILLOUT-BRANDING-BRIEF.md)  
+**CSS artifact:** [fillout-theme-sc-2026.css](./next-wave/fillout/fillout-theme-sc-2026.css)  
 **Inventory:** [FILLOUT-FORM-INVENTORY.md](./next-wave/fillout/FILLOUT-FORM-INVENTORY.md) (**12 rows**; **5** v1 in-scope surfaces)  
 **Systems:** Fillout forms (registration, homework, and related SC forms)  
 **Correct repo / surface:** Fillout.com + docs in this repo; coordinate with FUT-003 / FUT-029  
@@ -844,11 +845,9 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT
 - Standardize header treatment, royal-blue/orange palette, typography, buttons, fields, spacing, logo/program identification, confirmation screens.  
 - Produce an implementation brief and form inventory before any live Fillout CSS/theme changes.
 
-**Brief deliverables (2026-09-01):** Form inventory; current vs target brand alignment (`BRAND_STANDARDS.md`, FUT-035 royal blue); Fillout theme/CSS capability research; v1 scope (registration + daily + edit submission); risk matrix (FUT-003, SC-060, FUT-029); Phase 3 slices; **12** open Mike decisions; PKG/promotion requirements.
+**Brief deliverables (2026-09-01):** Form inventory; current vs target brand alignment (`BRAND_STANDARDS.md`, FUT-035 royal blue); Fillout theme/CSS capability research; v1 scope (registration + daily + edit submission); risk matrix (FUT-003, SC-060, FUT-029); Phase 3 slices; **12** Mike decisions **locked**; PKG/promotion requirements; operator checklist + CSS artifact.
 
-**Dependencies / risks:** Fillout theming capabilities and form ownership; must not break FUT-003 payment writeback or intake validation (SC-060).
-
-**Decisions still open:** See brief §11 — shared org theme vs per-form; logo asset host; edit-submission custom domain migration; v1 timing vs FUT-003 activation; OMNI Fillout title audit for FUT-034 naming.
+**Mike decisions (2026-09-01):** Option A shared theme; repo CSS file; `web/public/brand/` logos; Mike applies in Fillout; v1 trio only; edit URL → `shoot-editsubmission` custom domain + formula update; per-form theme (not org default); logo+text header; Maven Pro only; Fillout ending (no redirect); branding before FUT-003; OMNI Jr. Ref title audit.
 
 ### FUT-040 — Automatic S3 migration for homework, video-feedback, and headshot attachments
 
@@ -1407,7 +1406,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **FUT-036** | **COMPLETE** | Landing PR **#17** merged 2026-09-01 — six Upcoming Programs cards; Youth/Coach groupings live |
 | **FUT-037** | READY (blocked on images) | Program images under `/public/images/programs/` — Mike supplies assets |
 | **FUT-038** | **Brief ready** | Global category on/off — [FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md](./next-wave/config-selection/FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md); Phase 3 blocked on Mike ownership + PKG-004 |
-| **FUT-039** | **Brief ready (Phase 2)** | Fillout branding CSS — [`next-wave/fillout/FUT-039-FILLOUT-BRANDING-BRIEF.md`](./next-wave/fillout/FUT-039-FILLOUT-BRANDING-BRIEF.md) + [`FILLOUT-FORM-INVENTORY.md`](./next-wave/fillout/FILLOUT-FORM-INVENTORY.md); Phase 3 Fillout UI blocked on Mike |
+| **FUT-039** | **Phase 3 ready** | Fillout branding — decisions locked; [`FUT-039-fillout-branding.md`](./deploy-checklists/FUT-039-fillout-branding.md) + [`fillout-theme-sc-2026.css`](./next-wave/fillout/fillout-theme-sc-2026.css); Mike applies in Fillout UI |
 | **FUT-040** | **Brief ready** | Automatic S3 migration for HW / video / headshots — [FUT-040-AUTOMATIC-S3-MIGRATION-BRIEF.md](./next-wave/s3-migration/FUT-040-AUTOMATIC-S3-MIGRATION-BRIEF.md); Phase 3 blocked on Mike decisions + PKG-004 |
 | **FUT-041** | **COMPLETE** | Daily Submission XP columns — PR **#321** `66f8c40b` + Hub **#43** `504a3ed`; **076 v8.12** paste pending |
 | **FUT-042** | **COMPLETE** | Coach Feedback quotation — web + Hub homework/video emails |
