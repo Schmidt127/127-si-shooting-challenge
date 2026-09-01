@@ -9,6 +9,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Docs
 
 #### Added
+- **FUT-040 automatic S3 migration architecture brief (2026-09-01)** — Phase 2 only: orchestrator vs FUT-010 worker, HW/video/headshot scope, pipeline stages, verification gates, status/audit field proposals, headshot source options, Lambda applicability, Phase 3 slices, test matrix, PKG-004 gate. Brief: [`docs/next-wave/s3-migration/FUT-040-AUTOMATIC-S3-MIGRATION-BRIEF.md`](./docs/next-wave/s3-migration/FUT-040-AUTOMATIC-S3-MIGRATION-BRIEF.md). Cross-link in [`FUT-010-intake-attachment-cleanup.md`](./docs/deploy-checklists/FUT-010-intake-attachment-cleanup.md). **No orchestration code, schema, AWS apply, or Airtable paste.**
 - **FUT-038 global category on/off architecture brief (2026-09-01)** — Phase 2 only: config ownership options, consumer inventory, gate-adjustment algorithm, web UX choices, Homework on/off test matrix, Phase 3 slices, PKG-004 gate note. Brief: [`docs/next-wave/config-selection/FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md`](./docs/next-wave/config-selection/FUT-038-GLOBAL-CATEGORY-ONOFF-BRIEF.md). Updated [`CONFIG-CONSUMER-INVENTORY.md`](./docs/next-wave/config-selection/CONFIG-CONSUMER-INVENTORY.md) § G. **No schema, automation, web, or email implementation.**
 
 ### Airtable
