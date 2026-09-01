@@ -5,7 +5,7 @@
 **Date:** 2026-09-01  
 **Base SHA:** `7aa44416` (`origin/master`)  
 **Branch:** `cursor/fut-040-s3-migration-brief-e772`  
-**Related:** **FUT-010** (intake SA attachment cleanup worker — built; dry-run 2026-08-30 **0 eligible**) · FUT-007 (HEADSHOT naming) · FUT-009 (bucket structure + corrected-video workflow) · SC-094 · SC-095 · SC-096 · SC-099 · SC-100 (deferred broader Drive/attachment retirement) · [FUT-010-intake-attachment-cleanup.md](../../deploy-checklists/FUT-010-intake-attachment-cleanup.md) · [127-SI-MASTER-FUTURE-WORK-LIST.md](../../127-SI-MASTER-FUTURE-WORK-LIST.md) § FUT-040 · [CURRENT-TRUTH.md](../../CURRENT-TRUTH.md)
+**Related:** **FUT-010** (intake SA attachment cleanup worker — built; dry-run 2026-08-30 **0 eligible**) · FUT-007 (HEADSHOT naming) · FUT-009 (bucket structure + corrected-video workflow — **brief ready:** [FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md](../aws-media/FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md)) · SC-094 · SC-095 · SC-096 · SC-099 · SC-100 (deferred broader Drive/attachment retirement) · [FUT-010-intake-attachment-cleanup.md](../../deploy-checklists/FUT-010-intake-attachment-cleanup.md) · [127-SI-MASTER-FUTURE-WORK-LIST.md](../../127-SI-MASTER-FUTURE-WORK-LIST.md) § FUT-040 · [CURRENT-TRUTH.md](../../CURRENT-TRUTH.md)
 
 ---
 
@@ -365,7 +365,7 @@ Registration intake creates SA with `Registration Headshot`; orchestrator promot
 
 **Constraint:** Public anonymous S3 remains **rejected**. Headshot migration **blocks on** display URL strategy — cannot clear Enrollment attachment until `/shoot` loaders can resolve headshot from S3-backed field.
 
-**Cross-reference:** FUT-007 `HEADSHOT` naming is forward-looking; FUT-009 bucket layout may define `shooting-challenge/headshots/` prefix.
+**Cross-reference:** FUT-007 `HEADSHOT` naming is forward-looking; FUT-009 bucket layout options (including `shooting-challenge/headshots/` prefix) are in [FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md](../aws-media/FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md) §4 / §6.
 
 ---
 
