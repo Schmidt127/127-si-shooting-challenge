@@ -29,8 +29,8 @@ function test(name, fn) {
   console.log(`PASS  ${name}`);
 }
 
-test("072 v4.8 owns escaped HTML and plain-text package rendering", () => {
-  assert.ok(/Version:\s*v4\.8/.test(s072));
+test("072 v4.9 owns escaped HTML and plain-text package rendering", () => {
+  assert.ok(/Version:\s*v4\.9/.test(s072));
   assert.ok(/Shooting Days Logged/.test(s072));
   assert.ok(/Perfect Week Qualifying Days/.test(s072));
   assert.ok(/function escapeHtml\(value\)/.test(s072));
@@ -64,8 +64,13 @@ test("072 never performs external delivery", () => {
   assert.ok(!/makeWebhookUrl/.test(s072));
 });
 
+test("074 v3.4 forwards videosSubmittedThisWeek to Hub payload", () => {
+  assert.ok(/Version:\s*v3\.4/.test(s074));
+  assert.ok(/videosSubmittedThisWeek/.test(s074));
+  assert.ok(/weeklyVideoCount/.test(s074));
+});
+
 test("074 v3.3 creates one canonical Hub handoff", () => {
-  assert.ok(/Version:\s*v3\.3/.test(s074));
   assert.ok(/Email Handoff Queue/.test(s074));
   assert.ok(/CONFIG\.values\.eventType\}\|\$\{CONFIG\.values\.sourceTableToken\}\|\$\{recordId\}/.test(s074));
   assert.ok(/existing_handoff/.test(s074));

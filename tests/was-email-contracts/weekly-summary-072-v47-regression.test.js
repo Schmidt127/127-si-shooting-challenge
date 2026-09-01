@@ -37,8 +37,16 @@ test("072 source fixes days.size bug — uses shootingDayKeys.size", () => {
   assert.doesNotMatch(s072, /const shootingDaysLogged = days\.size/);
 });
 
+test("072 v4.9 writes videosSubmittedThisWeek Hub payload fields", () => {
+  assert.match(s072, /Version:\s*v4\.9/);
+  assert.match(s072, /videosSubmittedThisWeek/);
+  assert.match(s072, /Custom Video File Name/);
+  assert.match(s072, /Activity Date - Lkp/);
+  assert.match(s072, /buildVideosSubmittedThisWeek/);
+  assert.match(s072, /resolveVideoDisplayFileName/);
+});
+
 test("072 v4.8 writes canonical shooting day payload fields", () => {
-  assert.match(s072, /Version:\s*v4\.8/);
   assert.match(s072, /canonicalShootingDaysLogged: shootingDaysLogged/);
   assert.match(s072, /goalCompletionDisplay/);
   assert.match(s072, /secureUrl/);

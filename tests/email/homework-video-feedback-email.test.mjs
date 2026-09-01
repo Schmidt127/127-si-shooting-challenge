@@ -7,11 +7,14 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const hubRoot = (() => {
-  for (const candidate of ["communications", "communications-hub"]) {
-    const resolved = path.join(root, candidate);
-    if (fs.existsSync(path.join(resolved, "lib/template-candidate-renderer.js"))) return resolved;
+  for (const candidate of [
+    path.join(path.dirname(root), "communications"),
+    path.join(root, "communications"),
+    path.join(root, "communications-hub"),
+  ]) {
+    if (fs.existsSync(path.join(candidate, "lib/template-candidate-renderer.js"))) return candidate;
   }
-  throw new Error("Communications Hub lib not found (expected communications/ or communications-hub/)");
+  throw new Error("Communications Hub lib not found (expected ../communications/)");
 })();
 const p071 = path.join(
   root,

@@ -21,6 +21,8 @@ const {
   filterCountableSubmissionsInWeek,
   buildVideoSubmissionPayload,
   buildZoomAttendanceStatus,
+  resolveVideoDisplayFileName,
+  buildVideosSubmittedThisWeek,
 } = require("../../lib/was-email-contracts/weekly-summary-email-content");
 
 function test(name, fn) {
@@ -115,6 +117,129 @@ test("toSafeDateKey prefers raw date object over display text", () => {
 test("isDateKeyInWeekRange enforces official week window", () => {
   assert.equal(isDateKeyInWeekRange("2026-08-18", "2026-08-17", "2026-08-23"), true);
   assert.equal(isDateKeyInWeekRange("2026-08-10", "2026-08-17", "2026-08-23"), false);
+});
+
+test("resolveVideoDisplayFileName prefers Custom Video File Name", () => {
+  assert.equal(resolveVideoDisplayFileName("OffTheDribble", "upload.mov"), "OffTheDribble");
+  assert.equal(resolveVideoDisplayFileName("  ", "upload.mov"), "upload.mov");
+  assert.equal(resolveVideoDisplayFileName("", "upload.mov"), "upload.mov");
+  assert.equal(resolveVideoDisplayFileName("—", "upload.mov"), "upload.mov");
+});
+
+test("videosSubmittedThisWeek — empty week", () => {
+  assert.deepEqual(
+    buildVideosSubmittedThisWeek([], { weekStartKey: "2026-08-17", weekEndKey: "2026-08-23" }),
+    []
+  );
+});
+
+test("videosSubmittedThisWeek — custom name only", () => {
+  const rows = buildVideosSubmittedThisWeek(
+    [
+      {
+        recordId: "recVF001",
+        activityDateKey: "2026-08-18",
+        customVideoFileName: "FreeThrows.mov",
+        originalFileName: "IMG_0001.MOV",
+      },
+    ],
+    { weekStartKey: "2026-08-17", weekEndKey: "2026-08-23" }
+  );
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].activityDate, "2026-08-18");
+  assert.equal(rows[0].fileName, "FreeThrows.mov");
+});
+
+test("videosSubmittedThisWeek — original filename fallback", () => {
+  const rows = buildVideosSubmittedThisWeek(
+    [
+      {
+        recordId: "recVF002",
+        activityDateKey: "2026-08-19",
+        customVideoFileName: "",
+        originalFileName: "athlete-week4.mp4",
+      },
+    ],
+    { weekStartKey: "2026-08-17", weekEndKey: "2026-08-23" }
+  );
+  assert.equal(rows[0].fileName, "athlete-week4.mp4");
+});
+
+test("videosSubmittedThisWeek — multiple videos sorted oldest first", () => {
+  const rows = buildVideosSubmittedThisWeek(
+    [
+      {
+        recordId: "recVF003",
+        activityDateKey: "2026-08-21",
+        customVideoFileName: "Late clip",
+        originalFileName: "late.mp4",
+      },
+      {
+        recordId: "recVF004",
+        activityDateKey: "2026-08-18",
+        customVideoFileName: "Early clip",
+        originalFileName: "early.mp4",
+      },
+    ],
+    { weekStartKey: "2026-08-17", weekEndKey: "2026-08-23" }
+  );
+  assert.equal(rows.length, 2);
+  assert.equal(rows[0].activityDate, "2026-08-18");
+  assert.equal(rows[1].activityDate, "2026-08-21");
+});
+
+test("videosSubmittedThisWeek — excludes activity outside official week", () => {
+  const rows = buildVideosSubmittedThisWeek(
+    [
+      {
+        recordId: "recVF005",
+        activityDateKey: "2026-08-10",
+        customVideoFileName: "Old week",
+        originalFileName: "old.mp4",
+      },
+      {
+        recordId: "recVF006",
+        activityDateKey: "2026-08-20",
+        customVideoFileName: "In week",
+        originalFileName: "in.mp4",
+      },
+    ],
+    { weekStartKey: "2026-08-17", weekEndKey: "2026-08-23" }
+  );
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].fileName, "In week");
+});
+
+test("videosSubmittedThisWeek — deduplicates repeated source records", () => {
+  const rows = buildVideosSubmittedThisWeek(
+    [
+      {
+        recordId: "recVF007",
+        activityDateKey: "2026-08-18",
+        customVideoFileName: "Same clip",
+        originalFileName: "same.mp4",
+      },
+      {
+        recordId: "recVF007",
+        activityDateKey: "2026-08-18",
+        customVideoFileName: "Duplicate",
+        originalFileName: "same.mp4",
+      },
+    ],
+    { weekStartKey: "2026-08-17", weekEndKey: "2026-08-23" }
+  );
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].fileName, "Same clip");
+});
+
+test("videosSubmittedThisWeek — missing optional filename data stays valid", () => {
+  const rows = buildVideosSubmittedThisWeek(
+    [{ recordId: "recVF008", activityDateKey: "2026-08-18", customVideoFileName: "", originalFileName: "" }],
+    { weekStartKey: "2026-08-17", weekEndKey: "2026-08-23" }
+  );
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].fileName, "Video submission");
+  assert.equal(rows[0].activityDate, "2026-08-18");
 });
 
 console.log("weekly-summary-email-content tests passed");

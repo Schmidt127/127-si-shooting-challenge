@@ -49,6 +49,8 @@ Template also accepts optional fields when added later:
 - `landingPageUrl`, `shootPageUrl`, `dailySubmissionFormUrl`, `homeworkPageUrl`
 - `currentLevelImageUrl`, `nextLevelImageUrl`
 
+- Optional `videosSubmittedThisWeek[]` with `{ activityDate, fileName }` — **072 v4.9 / 074 v3.4** (GitHub; Production paste pending)
+
 ## Notes
 
 - Schedule copy in the email says **Sunday morning** (not 7:00 AM).

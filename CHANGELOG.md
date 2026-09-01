@@ -6,6 +6,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Airtable
+
+#### Added
+- **072 v4.9 / 074 v3.4 — Weekly summary `videosSubmittedThisWeek` payload (2026-09-01)** — Active Video Feedback rows for the official WAS Week now populate Hub field `videosSubmittedThisWeek` with Denver `activityDate` (YYYY-MM-DD) and display filename (Custom Video File Name → Video Asset File Name). Deterministic oldest-first sort; dedupe by VF record id; empty list when none. **Production paste pending.**
+
 ### Lambda
 
 #### Added

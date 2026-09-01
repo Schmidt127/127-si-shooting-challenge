@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-09
-Last GitHub Update: 2026-08-24 (v4.8 secure video URL validation)
+Last GitHub Update: 2026-09-01 (v4.9 videosSubmittedThisWeek Hub payload)
 
 Purpose:
 Build the Weekly Athlete Summary email package (subject/HTML/text/payload)
@@ -32,11 +32,13 @@ Send plane: 118 → 072 → 119 → 074 → 079 → Communications Hub → Resen
  * 072 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Build Weekly Summary Email Package
  *
- * Version: v4.8
+ * Version: v4.9
  * Date Written: 2026-06-20
- * Last Updated: 2026-08-24
+ * Last Updated: 2026-09-01
  *
  * VERSION HISTORY
+ * - v4.9 (2026-09-01): Hub payload adds videosSubmittedThisWeek (Activity Date + Custom Video
+ *   File Name with original upload fallback); deterministic sort/dedupe; official week bounds.
  * - v4.8 (2026-08-24): Parent-facing video URLs must be Lambda viewer links only;
  *   direct S3 / presigned / Drive URLs omitted; missingSecureUrlCount in payload.
  * - v4.7 (2026-08-24): Fix general shooting days writeback (days.size bug); weekly video
@@ -131,11 +133,10 @@ Send plane: 118 → 072 → 119 → 074 → 079 → Communications Hub → Resen
 
 const SCRIPT = {
   scriptName: "072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package",
-  version: "v4.8",
-  versionDate: "2026-08-24",
-  versionDate: "2026-08-23",
+  version: "v4.9",
+  versionDate: "2026-09-01",
   originalWrittenDate: "2026-06-20",
-  lastUpdated: "2026-08-23",
+  lastUpdated: "2026-09-01",
   folder: "07 - Email, Notifications, and External Handoffs",
   automationName: "072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package",
 };
@@ -253,7 +254,9 @@ const CONFIG = {
     posted: "Feedback Posted?",
     sent: "Parent Feedback Sent?",
     name: "Video Feedback Name",
+    customVideoFileName: "Custom Video File Name",
     originalFileName: "Video Asset File Name",
+    activityDateLkp: "Activity Date - Lkp",
     videoUrl: "Video URL or Drive Link",
     reviewedAt: "Reviewed At",
     uploadStatus: "Upload Status",
@@ -584,6 +587,42 @@ function buildVideoSubmissionLines(entries) {
     const urlPart = secureUrl ? ` — ${secureUrl}` : "";
     return `${label}${datePart}${urlPart}`;
   });
+}
+
+function resolveVideoDisplayFileName(customVideoFileName, originalFileName) {
+  const custom = String(customVideoFileName ?? "").trim();
+  if (custom && custom !== "—") return custom;
+  const original = String(originalFileName ?? "").trim();
+  if (original && original !== "—") return original;
+  return "";
+}
+
+function buildVideosSubmittedThisWeek(entries, bounds = {}) {
+  const weekStartKey = String(bounds.weekStartKey || "").trim();
+  const weekEndKey = String(bounds.weekEndKey || "").trim();
+  const seen = new Set();
+  const rows = [];
+  for (const entry of entries || []) {
+    const recordId = String(entry?.recordId || "").trim();
+    if (recordId) {
+      if (seen.has(recordId)) continue;
+      seen.add(recordId);
+    }
+    const activityDateKey = String(entry?.activityDateKey || "").trim();
+    if (weekStartKey && weekEndKey && activityDateKey) {
+      if (!isDateKeyInWeekRange(activityDateKey, weekStartKey, weekEndKey)) continue;
+    }
+    const fileName =
+      resolveVideoDisplayFileName(entry?.customVideoFileName, entry?.originalFileName) ||
+      "Video submission";
+    rows.push({ activityDate: activityDateKey || "—", fileName });
+  }
+  rows.sort((left, right) => {
+    const dateCompare = String(left.activityDate).localeCompare(String(right.activityDate));
+    if (dateCompare !== 0) return dateCompare;
+    return String(left.fileName).localeCompare(String(right.fileName));
+  });
+  return rows;
 }
 
 function buildZoomAttendanceSummary(zoom) {
@@ -1126,7 +1165,9 @@ async function main() {
     CONFIG.videoFeedback.posted,
     CONFIG.videoFeedback.sent,
     CONFIG.videoFeedback.name,
+    CONFIG.videoFeedback.customVideoFileName,
     CONFIG.videoFeedback.originalFileName,
+    CONFIG.videoFeedback.activityDateLkp,
     CONFIG.videoFeedback.videoUrl,
     CONFIG.videoFeedback.reviewedAt,
     CONFIG.videoFeedback.uploadStatus,
@@ -1142,20 +1183,37 @@ async function main() {
     .map((vf) => {
       const secureUrlRaw = getText(vf, videoFeedbackTable, CONFIG.videoFeedback.videoUrl);
       const secureUrl = isValidLambdaViewerUrl(secureUrlRaw) ? secureUrlRaw : "";
+      const originalFileName = getText(vf, videoFeedbackTable, CONFIG.videoFeedback.originalFileName);
+      const customVideoFileName = fieldExists(videoFeedbackTable, CONFIG.videoFeedback.customVideoFileName)
+        ? getText(vf, videoFeedbackTable, CONFIG.videoFeedback.customVideoFileName)
+        : "";
+      const activityDateKey = fieldExists(videoFeedbackTable, CONFIG.videoFeedback.activityDateLkp)
+        ? toSafeDateKey(
+            getRaw(vf, videoFeedbackTable, CONFIG.videoFeedback.activityDateLkp),
+            getText(vf, videoFeedbackTable, CONFIG.videoFeedback.activityDateLkp)
+          )
+        : "";
       return {
+        recordId: vf.id,
+        activityDateKey,
+        customVideoFileName,
         label: firstNonEmpty(
           getText(vf, videoFeedbackTable, CONFIG.videoFeedback.name),
-          getText(vf, videoFeedbackTable, CONFIG.videoFeedback.originalFileName),
+          originalFileName,
           "Video submission"
         ),
-        originalFileName: getText(vf, videoFeedbackTable, CONFIG.videoFeedback.originalFileName),
+        originalFileName,
         reviewedAt: formatDate(getRaw(vf, videoFeedbackTable, CONFIG.videoFeedback.reviewedAt)),
         secureUrl,
         hadUnsafeOrMissingUrl: Boolean(secureUrlRaw) && !secureUrl,
       };
     });
   const missingSecureUrlCount = videoSubmissionsRaw.filter((row) => row.hadUnsafeOrMissingUrl).length;
-  const videoSubmissions = videoSubmissionsRaw.map(({ hadUnsafeOrMissingUrl, ...entry }) => entry);
+  const videosSubmittedThisWeek = buildVideosSubmittedThisWeek(videoSubmissionsRaw, {
+    weekStartKey,
+    weekEndKey,
+  });
+  const videoSubmissions = videoSubmissionsRaw.map(({ hadUnsafeOrMissingUrl, recordId, activityDateKey, customVideoFileName, ...entry }) => entry);
   const videoLines = buildVideoSubmissionLines(videoSubmissions);
 
   step("7c - Perfect Week criteria from Achievements, XP Reward Rules, and WAS");
@@ -1355,6 +1413,7 @@ async function main() {
     videoSubmissionCount: videoSubmissions.length,
     missingSecureUrlCount,
     videoSubmissions,
+    videosSubmittedThisWeek,
     zoomAttendanceStatus: getText(summary, weeklySummaryTable, CONFIG.was.zoomRequirementStatus),
     zoomSummary,
     summaryXpObserved: summaryXp,
