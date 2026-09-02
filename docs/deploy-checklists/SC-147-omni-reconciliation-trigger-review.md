@@ -4,7 +4,7 @@
 **Date:** 2026-09-02  
 **Environment:** Production only (`appn84sqPw03zEbTT`) — **no DEV base** (retired 2026-08-19)  
 **Automation:** 101 v6.7 (GitHub merged; Production paste pending Mike)  
-**Status:** **Unresolved — OMNI review required before recording-only half-XP can fire reliably**
+**Status:** **Resolved in repository (2026-09-02)** — exact formula fix documented; **NOT applied to Production**. See [`SC-147-reconciliation-trigger-formula-fix.md`](./SC-147-reconciliation-trigger-formula-fix.md).
 
 ---
 
@@ -88,6 +88,8 @@ The script is ready; the **trigger gap** is upstream in the reconciliation formu
 ---
 
 ## Smallest safe configuration change (proposal for OMNI — not implemented)
+
+**Superseded by:** [`SC-147-reconciliation-trigger-formula-fix.md`](./SC-147-reconciliation-trigger-formula-fix.md) (2026-09-02) — copy-ready Production formulas using real field names.
 
 **Goal:** Wake meeting reconciliation when pending approved recording credit exists, without Attendees writes and without a new automation.
 

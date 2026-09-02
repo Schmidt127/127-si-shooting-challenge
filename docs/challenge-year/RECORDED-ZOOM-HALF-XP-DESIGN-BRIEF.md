@@ -26,7 +26,7 @@ Mike 2026-08-27:
 
 ## Reconciliation trigger gap
 
-OMNI must confirm whether `Zoom XP Reconciliation Needed?` wakes on recording-only approval. See [`SC-147-omni-reconciliation-trigger-review.md`](../deploy-checklists/SC-147-omni-reconciliation-trigger-review.md).
+OMNI must apply reconciliation trigger formula fix before paste. See [`SC-147-reconciliation-trigger-formula-fix.md`](../deploy-checklists/SC-147-reconciliation-trigger-formula-fix.md).
 
 ## Repo artifacts
 
