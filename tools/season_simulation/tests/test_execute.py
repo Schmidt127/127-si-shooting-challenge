@@ -234,9 +234,11 @@ class TestExecuteOrchestration(unittest.TestCase):
         self.assertEqual(rec["fields"].get("Meeting Status"), "Completed")
         self.assertTrue(str(live["fields"].get("Start Time") or "").startswith("2027-"))
         self.assertTrue(str(rec["fields"].get("Start Time") or "").startswith("2027-"))
-        # Live gets Attendees; recording does not
+        # Live gets Attendees + Create XP Events; recording does not
         self.assertTrue(live["fields"].get("Attendees"))
+        self.assertTrue(live["fields"].get("Create XP Events"))
         self.assertFalse(rec["fields"].get("Attendees"))
+        self.assertFalse(rec["fields"].get("Create XP Events"))
         recorded_za = [
             a for a in attend if a["fields"].get("Attendance Method") == "Recording Quiz"
         ]
@@ -246,6 +248,9 @@ class TestExecuteOrchestration(unittest.TestCase):
             recorded_za[0]["fields"].get("Recording Quiz Review Status"), "Satisfactory"
         )
         self.assertEqual(recorded_za[0]["fields"].get("Zoom Meeting"), [rec["id"]])
+        live_za = [a for a in attend if a["fields"].get("Attendance Method") == "Live"]
+        self.assertEqual(len(live_za), 1)
+        self.assertTrue(live_za[0]["fields"].get("Live Attendance Confirmed?"))
 
     def test_homework_submission_date_and_was_grade_band(self):
         client = MemoryAirtableClient(allow_writes=True)
@@ -263,6 +268,7 @@ class TestExecuteOrchestration(unittest.TestCase):
         self.assertEqual(len(vf), len(VIDEO_FEEDBACK_DAYS))
         for row in vf:
             self.assertTrue(row["fields"].get("Feedback Posted?"))
+            self.assertTrue(row["fields"].get("Parent Feedback Ready?"))
             self.assertEqual(row["fields"].get("Grade Band"), ["recBAND912"])
             self.assertFalse(row["fields"].get("Ready for XP Automation?"))
 
@@ -360,19 +366,40 @@ class TestExecuteOrchestration(unittest.TestCase):
 
     def test_intended_writes_include_gates_and_zoom_modes(self):
         writes = build_intended_writes(self.scenario, self.clock, ctx=self.ctx)
-        subs = [w for w in writes if w.get("table") == "Submissions"]
+        subs = [
+            w
+            for w in writes
+            if w.get("table") == "Submissions" and w.get("op") == "create"
+        ]
         self.assertEqual(len(subs), 58)
         for w in subs:
             self.assertTrue(w.get("expected_countable"), w.get("day_number"))
             self.assertRegex(str(w["fields"]["Activity Date"]), r"^2027-\d{2}-\d{2}$")
+            self.assertEqual(w["fields"].get("Submission Stat Mode"), "Simple Total")
+        sub_post = [
+            w
+            for w in writes
+            if w.get("table") == "Submissions" and w.get("op") == "update"
+        ]
+        self.assertEqual(len(sub_post), 58)
+        self.assertTrue(
+            all((w.get("fields") or {}).get("Build Daily Email Now?") for w in sub_post)
+        )
         readiness = summarize_intended_write_readiness(writes)
         self.assertTrue(readiness["all_submissions_countable"])
         self.assertEqual(readiness["homework_completions"], 18)
         self.assertTrue(readiness["all_homework_dual_linked"])
         self.assertTrue(readiness["video_update_triggers_planned"])
+        self.assertTrue(readiness["live_xp_path_planned"])
+        self.assertTrue(readiness["recorded_xp_path_planned"])
         hw = [w for w in writes if w.get("table") == "Homework Completions"]
         self.assertTrue(all((w.get("fields") or {}).get("Submission Date") for w in hw))
-        was = [w for w in writes if w.get("table") == "Weekly Athlete Summary"]
+        self.assertTrue(all((w.get("fields") or {}).get("Item Slot") for w in hw))
+        was = [
+            w
+            for w in writes
+            if w.get("table") == "Weekly Athlete Summary" and w.get("op") == "create"
+        ]
         self.assertTrue(all((w.get("fields") or {}).get("Grade Band") for w in was))
         zm_creates = [
             w
@@ -388,6 +415,8 @@ class TestExecuteOrchestration(unittest.TestCase):
         self.assertEqual(
             recorded[0]["fields"].get("Recording Quiz Review Status"), "Satisfactory"
         )
+        live = [w for w in zoom if w.get("zoom_mode") == "live"]
+        self.assertTrue(live[0]["fields"].get("Live Attendance Confirmed?"))
         vf_arms = [
             w
             for w in writes
@@ -395,6 +424,9 @@ class TestExecuteOrchestration(unittest.TestCase):
         ]
         self.assertEqual(len(vf_arms), len(VIDEO_FEEDBACK_DAYS))
         self.assertTrue(all(w["fields"].get("Feedback Posted?") is True for w in vf_arms))
+        self.assertTrue(
+            all(w["fields"].get("Parent Feedback Ready?") is True for w in vf_arms)
+        )
         vf_creates = [
             w
             for w in writes

@@ -170,6 +170,7 @@ def cmd_dry_run(args: argparse.Namespace) -> int:
     if args.offline_fixture:
         scenario = _offline_scenario(run_id)
         ref_meta = {"mode": "offline_fixture", "warning": "synthetic IDs — not for execute"}
+        intended = build_intended_writes(scenario, clock)
     else:
         client = _client(args, allow_writes=False)
         snap = load_reference_snapshot(client)
@@ -200,7 +201,11 @@ def cmd_dry_run(args: argparse.Namespace) -> int:
             "warnings": snap.warnings,
             "ambiguous": snap.ambiguous,
         }
-        from .writer import assert_weeks_do_not_overlap, build_week_date_index
+        from .writer import (
+            assert_weeks_do_not_overlap,
+            build_execute_context_from_reference,
+            build_week_date_index,
+        )
 
         try:
             assert_weeks_do_not_overlap(snap.weeks_covering_window)
@@ -218,7 +223,13 @@ def cmd_dry_run(args: argparse.Namespace) -> int:
             for rid, meta in week_by_id.items()
         }
 
-    intended = build_intended_writes(scenario, clock)
+        execute_ctx = build_execute_context_from_reference(
+            scenario=scenario,
+            weeks=snap.weeks_covering_window,
+            school_year="2026-2027",
+        )
+        intended = build_intended_writes(scenario, clock, ctx=execute_ctx)
+
     write_readiness = summarize_intended_write_readiness(intended)
     payload = {
         **scenario.to_dict(),
@@ -250,7 +261,10 @@ def cmd_dry_run(args: argparse.Namespace) -> int:
         f"{write_readiness.get('submission_creates')}; "
         f"hw_dual={write_readiness.get('homework_with_pha_and_library')}/"
         f"{write_readiness.get('homework_completions')}; "
-        f"vf_arms={write_readiness.get('video_feedback_update_arms')}"
+        f"vf_arms={write_readiness.get('video_feedback_update_arms')}; "
+        f"sub_post={write_readiness.get('submission_post_create_arms')}; "
+        f"live_xp={write_readiness.get('live_create_xp_event_arms')}; "
+        f"weekly_arms={write_readiness.get('weekly_email_arms')}"
     )
     print(f"Wrote {paths['json']}")
     print(f"Wrote {paths['md']}")
