@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-22
-Last GitHub Update: 2026-08-15
+Last GitHub Update: 2026-09-02
 
 Purpose:
 Awards Zoom attendance XP to all linked attendees for one completed meeting.
@@ -24,9 +24,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 /************************************************************
  * 101 - Zoom Attendance XP - Award Meeting XP
- * Version: v6.6
+ * Version: v6.7
  * Date Written: 2026-05-28
- * Last Updated: 2026-08-15
+ * Last Updated: 2026-09-02
  *
  * PURPOSE
  * - Runs from one Zoom Meetings record.
@@ -94,6 +94,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Enrollment/roster withdrawal deactivates an exactly owned event
  * - Restoration reactivates that same event
  * - Recording watchers must never be added to live Attendees by this script
+ * - SC-147 (v6.7): approved recording half-XP runs in the same reconciliation pass
+ *   after live awards. Source Key ZOOM_RECORDING_CREDIT|{enrollmentId}|{zoomMeetingId}.
+ *   Never writes Attendees. Automation 117 remains email-only (no XP writes).
  * - Automation 031 is the sole create-capable Weekly Athlete Summary owner.
  *   This automation only resolves one existing canonical summary.
  ************************************************************/
@@ -107,7 +110,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "101 - Zoom Attendance XP - Award Meeting XP",
-  version: "v6.6",
+  version: "v6.7",
 
   timeZone: "America/Denver",
   formulaSettlementAttempts: 5,
@@ -115,12 +118,14 @@ const CONFIG = {
 
   tables: {
     zoomMeetings: "Zoom Meetings",
+    zoomAttendance: "Zoom Attendance",
     enrollments: "Enrollments",
     weeks: "Weeks",
     programInstances: "Program Instance - Sync",
     xpRewardRules: "XP Reward Rules",
     xpEvents: "XP Events",
     weeklySummary: "Weekly Athlete Summary",
+    config: "Config",
   },
 
   zoom: {
@@ -145,6 +150,21 @@ const CONFIG = {
     active: "Active?",
     fullName: "Full Athlete Name",
     programInstance: "Program Instance",
+    progressProcessingEnabled: "Progress Processing Enabled?",
+    schoolYear: "School Year",
+  },
+
+  zoomAttendance: {
+    enrollment: "Enrollment",
+    zoomMeeting: "Zoom Meeting",
+    satisfactory: "Recording Quiz Satisfactory?",
+    conflict: "Zoom Credit Conflict?",
+    week: "Week",
+  },
+
+  configFields: {
+    activeSchoolYear: "Active School Year",
+    xpPercent: "Zoom Recording XP Percent of Live",
   },
 
   weeks: {
@@ -182,12 +202,15 @@ const CONFIG = {
     base: "ZOOM_ATTEND_BASE",
     bonus2: "ZOOM_ATTEND_BONUS_2",
     bonus3: "ZOOM_ATTEND_BONUS_3",
+    recording: "ZOOM_RECORDING",
   },
 
   sourceKeys: {
     basePrefix: "ZOOM_ATTEND_BASE",
     bonus2Prefix: "ZOOM_ATTEND_BONUS_2",
     bonus3Prefix: "ZOOM_ATTEND_BONUS_3",
+    recordingPrefix: "ZOOM_RECORDING_CREDIT",
+    liveCanonicalPrefix: "ZOOM_LIVE",
   },
 
   xpLabels: {
@@ -195,6 +218,9 @@ const CONFIG = {
     baseSourceFallback: "Zoom Attendance: Base",
     bonus2SourceFallback: "Zoom Attendance: Bonus 2",
     bonus3SourceFallback: "Zoom Attendance: Bonus 3",
+    recordingBucket: "Zoom",
+    recordingSource: "Zoom Recording",
+    recordingReasonPublic: "Zoom recording credit (half XP)",
   },
 
   bonusMeetingCounts: {
@@ -250,12 +276,14 @@ const CONFIG = {
 
 
 let zoomTable = null;
+let zoomAttendanceTable = null;
 let enrollmentsTable = null;
 let weeksTable = null;
 let programInstancesTable = null;
 let rulesTable = null;
 let xpEventsTable = null;
 let weeklySummaryTable = null;
+let configTable = null;
 let weeklySummaryQueryCache = null;
 let zoomStartField = "";
 
@@ -844,6 +872,464 @@ async function readFormulaSettlement(
   );
 }
 
+/* =========================================================
+   SECTION 2b — SC-147 RECORDING HALF-XP (synced from lib/sc-147-zoom-recording-credit.js)
+========================================================= */
+
+function buildSc147RecordingCreditSourceKey(enrollmentId, zoomMeetingId) {
+  const e = String(enrollmentId || "").trim();
+  const m = String(zoomMeetingId || "").trim();
+  if (!e.startsWith("rec") || !m.startsWith("rec")) {
+    throw new Error("SC-147 Source Key requires valid enrollment and meeting record ids.");
+  }
+  return `${CONFIG.sourceKeys.recordingPrefix}|${e}|${m}`;
+}
+
+function isSc147RecordingCreditKey(sourceKey) {
+  return String(sourceKey || "").startsWith(`${CONFIG.sourceKeys.recordingPrefix}|`);
+}
+
+function is101LiveCreditKeyForSc147(sourceKey) {
+  const key = String(sourceKey || "");
+  return (
+    key.startsWith(`${CONFIG.sourceKeys.basePrefix}|`)
+    || key.startsWith(`${CONFIG.sourceKeys.liveCanonicalPrefix}|`)
+  );
+}
+
+function pairTokenFrom101KeyForSc147(sourceKey, meetingKeyToId = {}) {
+  const parts = String(sourceKey || "").split("|");
+  if (parts.length < 3) return null;
+  const [prefix, mid, enrollmentId] = parts;
+  if (prefix === CONFIG.sourceKeys.liveCanonicalPrefix) {
+    return `${mid}|${enrollmentId}`;
+  }
+  if (prefix === CONFIG.sourceKeys.basePrefix) {
+    const meetingId = meetingKeyToId[mid] || (String(mid).startsWith("rec") ? mid : null);
+    if (!meetingId) return null;
+    return `${meetingId}|${enrollmentId}`;
+  }
+  return null;
+}
+
+function mapXpRowsForSc147(records) {
+  return records.map((row) => ({
+    sourceKey: getText(row, xpEventsTable, CONFIG.xpEvents.sourceKey),
+    active: fieldExists(xpEventsTable, CONFIG.xpEvents.active)
+      ? getBooleanish(row, xpEventsTable, CONFIG.xpEvents.active)
+      : true,
+  }));
+}
+
+function activeLivePairsForSc147(xpRows = [], meetingKeyToId = {}) {
+  const live = new Set();
+  for (const row of xpRows) {
+    if (!row || row.active === false) continue;
+    const key = row.sourceKey || "";
+    if (!is101LiveCreditKeyForSc147(key)) continue;
+    const token = pairTokenFrom101KeyForSc147(key, meetingKeyToId);
+    if (token) live.add(token);
+  }
+  return live;
+}
+
+function activeRecordingCreditKeysForSc147(xpRows = []) {
+  const keys = new Set();
+  for (const row of xpRows) {
+    if (!row || row.active === false) continue;
+    if (isSc147RecordingCreditKey(row.sourceKey)) keys.add(row.sourceKey);
+  }
+  return keys;
+}
+
+function computeSc147HalfXpAmount({ liveRuleAmount, recordingRuleAmount, configMap = {} }) {
+  const live = Number(liveRuleAmount);
+  if (Number.isFinite(recordingRuleAmount) && recordingRuleAmount >= 0) {
+    return Math.floor(Number(recordingRuleAmount));
+  }
+  if (!Number.isFinite(live) || live < 0) {
+    throw new Error("liveRuleAmount must be >= 0 when recordingRuleAmount is absent");
+  }
+  const pct = configMap[CONFIG.configFields.xpPercent];
+  if (pct !== undefined && pct !== null && pct !== "") {
+    const n = Math.trunc(Number(pct));
+    if (n >= 0 && n <= 100) return Math.floor((live * n) / 100);
+  }
+  return Math.floor(live / 2);
+}
+
+function selectSc147XpRewardRulesFromRecords(ruleRecords) {
+  const rules = ruleRecords.map((ruleRecord) => ({
+    ruleKey: getText(ruleRecord, rulesTable, CONFIG.xpRewardRules.ruleKey),
+    xpAmount: getNumber(ruleRecord, rulesTable, CONFIG.xpRewardRules.xpAmount, NaN),
+    active: fieldExists(rulesTable, CONFIG.xpRewardRules.active)
+      ? getBooleanish(ruleRecord, rulesTable, CONFIG.xpRewardRules.active)
+      : true,
+  }));
+  const liveMatches = rules.filter(
+    (r) => r && r.active !== false && String(r.ruleKey) === CONFIG.ruleKeys.base,
+  );
+  const recordingMatches = rules.filter(
+    (r) => r && r.active !== false && String(r.ruleKey) === CONFIG.ruleKeys.recording,
+  );
+  return {
+    live: liveMatches.length === 1 ? liveMatches[0] : null,
+    recording: recordingMatches.length === 1 ? recordingMatches[0] : null,
+    liveStatus: liveMatches.length === 0 ? "missing" : liveMatches.length > 1 ? "duplicate" : "ok",
+    recordingStatus:
+      recordingMatches.length === 0 ? "missing" : recordingMatches.length > 1 ? "duplicate" : "ok",
+  };
+}
+
+function resolveSc147XpAmountFromRuleRecords(ruleRecords, configMap = {}) {
+  const selected = selectSc147XpRewardRulesFromRecords(ruleRecords);
+  if (selected.liveStatus !== "ok") {
+    return { ok: false, reason: `live_rule_${selected.liveStatus}`, xpAmount: null };
+  }
+  const liveAmount = Number(selected.live.xpAmount);
+  let recordingAmount = null;
+  if (selected.recordingStatus === "ok") {
+    recordingAmount = Number(selected.recording.xpAmount);
+  }
+  return {
+    ok: true,
+    reason: "ok",
+    xpAmount: computeSc147HalfXpAmount({
+      liveRuleAmount: liveAmount,
+      recordingRuleAmount: recordingAmount,
+      configMap,
+    }),
+  };
+}
+
+function canAwardSc147RecordingCredit({
+  enrollmentId,
+  zoomMeetingId,
+  xpRows = [],
+  meetingKeyToId = {},
+  conflictRollup = 0,
+  progressProcessingEnabled = true,
+  quizApproved = true,
+  onLiveAttendees = false,
+}) {
+  if (!String(enrollmentId || "").startsWith("rec") || !String(zoomMeetingId || "").startsWith("rec")) {
+    return { ok: false, reason: "error_malformed_record_id" };
+  }
+  if (!progressProcessingEnabled) return { ok: false, reason: "skipped_progress_disabled" };
+  if (!quizApproved) return { ok: false, reason: "skipped_not_approved" };
+  if (onLiveAttendees) return { ok: false, reason: "skipped_live_attendee_roster" };
+  if (Number(conflictRollup) === 1) return { ok: false, reason: "skipped_conflict_rollup" };
+
+  const sourceKey = buildSc147RecordingCreditSourceKey(enrollmentId, zoomMeetingId);
+  if (activeRecordingCreditKeysForSc147(xpRows).has(sourceKey)) {
+    return { ok: false, reason: "skipped_already_awarded", sourceKey };
+  }
+
+  const token = `${zoomMeetingId}|${enrollmentId}`;
+  if (activeLivePairsForSc147(xpRows, meetingKeyToId).has(token)) {
+    return { ok: false, reason: "skipped_live_101_exists", sourceKey };
+  }
+
+  return { ok: true, reason: "ok", sourceKey };
+}
+
+function buildSc147RecordingXpPayload({
+  enrollmentId,
+  weekId,
+  weeklySummaryId,
+  zoomMeetingId,
+  zoomAttendanceId,
+  xpAmount,
+  sourceKey,
+  activityDateKey,
+}) {
+  const reasonDebugField = "XP Reason Debug";
+  const payload = {
+    [CONFIG.xpEvents.enrollment]: linkedCell([enrollmentId]),
+    [CONFIG.xpEvents.week]: weekId ? linkedCell([weekId]) : undefined,
+    [CONFIG.xpEvents.weeklySummary]: weeklySummaryId ? linkedCell([weeklySummaryId]) : undefined,
+    [CONFIG.xpEvents.xpSource]: buildSingleSelectValueOptional(
+      xpEventsTable,
+      CONFIG.xpEvents.xpSource,
+      CONFIG.xpLabels.recordingSource,
+    ),
+    [CONFIG.xpEvents.xpBucketKey]: buildSingleSelectValueOptional(
+      xpEventsTable,
+      CONFIG.xpEvents.xpBucketKey,
+      CONFIG.xpLabels.recordingBucket,
+    ),
+    [CONFIG.xpEvents.xpPoints]: xpAmount,
+    [CONFIG.xpEvents.xpReason]: CONFIG.xpLabels.recordingReasonPublic,
+    [CONFIG.xpEvents.active]: true,
+    [CONFIG.xpEvents.sourceKey]: sourceKey,
+    [CONFIG.xpEvents.awardMode]: buildSingleSelectValueOptional(
+      xpEventsTable,
+      CONFIG.xpEvents.awardMode,
+      CONFIG.values.awardModeAutomatic,
+    ),
+    [CONFIG.xpEvents.awardedBy]: `${CONFIG.values.awardedBy} (SC-147)`,
+    [CONFIG.xpEvents.processed]: true,
+    [CONFIG.xpEvents.error]: "",
+    [CONFIG.xpEvents.zoomMeeting]: fieldExists(xpEventsTable, CONFIG.xpEvents.zoomMeeting)
+      ? linkedCell([zoomMeetingId])
+      : undefined,
+  };
+
+  if (fieldExists(xpEventsTable, reasonDebugField) && isWritableField(xpEventsTable, reasonDebugField)) {
+    payload[reasonDebugField] = `SC-147 ${CONFIG.version} ${sourceKey}`;
+  }
+  if (
+    fieldExists(xpEventsTable, "Zoom Attendance")
+    && isWritableField(xpEventsTable, "Zoom Attendance")
+    && zoomAttendanceId
+  ) {
+    payload["Zoom Attendance"] = linkedCell([zoomAttendanceId]);
+  }
+
+  if (activityDateKey && /^\d{4}-\d{2}-\d{2}$/.test(String(activityDateKey))) {
+    const [y, m, d] = String(activityDateKey).split("-").map(Number);
+    const noonUtc = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+    for (const fieldName of [
+      CONFIG.xpEvents.activityDate,
+      CONFIG.xpEvents.xpActivityDate,
+      CONFIG.xpEvents.xpSourceDate,
+    ]) {
+      if (fieldExists(xpEventsTable, fieldName)) {
+        payload[fieldName] = noonUtc;
+      }
+    }
+  }
+
+  return safeUpdatePayload(xpEventsTable, payload);
+}
+
+async function deactivateSc147RecordingCreditIfPresent({
+  enrollmentId,
+  zoomMeetingId,
+  xpRecords,
+}) {
+  const sourceKey = buildSc147RecordingCreditSourceKey(enrollmentId, zoomMeetingId);
+  const matches = findSourceKeyEvents(xpRecords, sourceKey);
+  if (matches.length !== 1) return false;
+  if (!getBooleanish(matches[0], xpEventsTable, CONFIG.xpEvents.active)) return false;
+  await updateRecordSafe(xpEventsTable, matches[0].id, {
+    [CONFIG.xpEvents.active]: false,
+    [CONFIG.xpEvents.error]: "",
+  });
+  return true;
+}
+
+async function runSc147RecordingHalfXpPhase({
+  zoomMeetingId,
+  meetingKey,
+  meetingDateKey,
+  weekId,
+  attendeeIds,
+  weekProgramIds,
+  weekSchoolYear,
+  enrollmentById,
+  wasRecords,
+  ruleRecords,
+  xpRecords,
+}) {
+  const result = {
+    created: 0,
+    skipped: 0,
+    warnings: [],
+    signatureChanged: false,
+  };
+
+  if (!zoomAttendanceTable || !fieldExists(zoomAttendanceTable, CONFIG.zoomAttendance.zoomMeeting)) {
+    return result;
+  }
+
+  const meetingKeyToId = { [meetingKey]: zoomMeetingId };
+  let xpRows = mapXpRowsForSc147(xpRecords);
+
+  const zaFields = buildFieldsToLoad(zoomAttendanceTable, [
+    CONFIG.zoomAttendance.enrollment,
+    CONFIG.zoomAttendance.zoomMeeting,
+    CONFIG.zoomAttendance.satisfactory,
+    CONFIG.zoomAttendance.conflict,
+    CONFIG.zoomAttendance.week,
+  ]);
+  const zaQuery = await zoomAttendanceTable.selectRecordsAsync({ fields: zaFields });
+  const zaForMeeting = zaQuery.records.filter((za) =>
+    getLinkedRecordIds(za, zoomAttendanceTable, CONFIG.zoomAttendance.zoomMeeting).includes(zoomMeetingId),
+  );
+
+  if (zaForMeeting.length === 0) {
+    unloadQuerySafe(zaQuery);
+    return result;
+  }
+
+  let configMap = {};
+  try {
+    if (
+      configTable
+      && fieldExists(configTable, CONFIG.configFields.xpPercent)
+      && fieldExists(configTable, CONFIG.configFields.activeSchoolYear)
+    ) {
+      const configQuery = await configTable.selectRecordsAsync({
+        fields: buildFieldsToLoad(configTable, [
+          CONFIG.configFields.activeSchoolYear,
+          CONFIG.configFields.xpPercent,
+        ]),
+      });
+      for (const row of configQuery.records) {
+        const yearKey = getText(row, configTable, CONFIG.configFields.activeSchoolYear);
+        if (yearKey && normalizeText(yearKey) === normalizeText(weekSchoolYear)) {
+          configMap = {
+            [CONFIG.configFields.xpPercent]: getRaw(row, configTable, CONFIG.configFields.xpPercent),
+          };
+          break;
+        }
+      }
+      unloadQuerySafe(configQuery);
+    }
+  } catch {
+    // Config optional — floor(live/2) fallback remains.
+  }
+
+  const amountResolved = resolveSc147XpAmountFromRuleRecords(ruleRecords, configMap);
+  if (!amountResolved.ok) {
+    unloadQuerySafe(zaQuery);
+    throw new Error(`SC-147 XP Reward Rules error: ${amountResolved.reason}`);
+  }
+  const xpAmount = amountResolved.xpAmount;
+
+  for (const za of zaForMeeting) {
+    const zaId = za.id;
+    const enrollmentId = getFirstLinkedRecordId(za, zoomAttendanceTable, CONFIG.zoomAttendance.enrollment);
+    if (!enrollmentId) {
+      result.skipped += 1;
+      continue;
+    }
+
+    const enrollment = enrollmentById.get(enrollmentId);
+    if (!enrollment) {
+      result.skipped += 1;
+      continue;
+    }
+
+    const enrollmentProgramIds = uniqueIds(
+      getLinkedRecordIds(enrollment, enrollmentsTable, CONFIG.enrollments.programInstance),
+    );
+    const enrollmentSchoolYear = getText(enrollment, enrollmentsTable, CONFIG.enrollments.schoolYear);
+    if (
+      enrollmentProgramIds.length !== 1
+      || enrollmentProgramIds[0] !== weekProgramIds[0]
+      || !getBooleanish(enrollment, enrollmentsTable, CONFIG.enrollments.active)
+      || !enrollmentSchoolYear
+      || enrollmentSchoolYear !== weekSchoolYear
+    ) {
+      result.skipped += 1;
+      continue;
+    }
+
+    let progressProcessingEnabled = true;
+    if (fieldExists(enrollmentsTable, CONFIG.enrollments.progressProcessingEnabled)) {
+      progressProcessingEnabled = getBooleanish(
+        enrollment,
+        enrollmentsTable,
+        CONFIG.enrollments.progressProcessingEnabled,
+      );
+    }
+
+    const quizApproved = fieldExists(zoomAttendanceTable, CONFIG.zoomAttendance.satisfactory)
+      ? getBooleanish(za, zoomAttendanceTable, CONFIG.zoomAttendance.satisfactory)
+      : false;
+    const conflictRollup = fieldExists(zoomAttendanceTable, CONFIG.zoomAttendance.conflict)
+      ? getNumericValue(za, zoomAttendanceTable, CONFIG.zoomAttendance.conflict) || 0
+      : 0;
+    const onLiveAttendees = attendeeIds.includes(enrollmentId);
+
+    const gate = canAwardSc147RecordingCredit({
+      enrollmentId,
+      zoomMeetingId,
+      xpRows,
+      meetingKeyToId,
+      conflictRollup,
+      progressProcessingEnabled,
+      quizApproved,
+      onLiveAttendees,
+    });
+
+    if (!gate.ok) {
+      result.skipped += 1;
+      continue;
+    }
+
+    const wasMatches = wasRecords.filter((record) =>
+      uniqueIds(getLinkedRecordIds(record, weeklySummaryTable, CONFIG.weeklySummary.enrollment)).length === 1
+      && uniqueIds(getLinkedRecordIds(record, weeklySummaryTable, CONFIG.weeklySummary.week)).length === 1
+      && getFirstLinkedRecordId(record, weeklySummaryTable, CONFIG.weeklySummary.enrollment) === enrollmentId
+      && getFirstLinkedRecordId(record, weeklySummaryTable, CONFIG.weeklySummary.week) === weekId,
+    );
+    if (wasMatches.length !== 1) {
+      throw new Error(
+        `SC-147: Expected exactly one Weekly Athlete Summary for Enrollment ${enrollmentId} + Week ${weekId}; found ${wasMatches.length}.`,
+      );
+    }
+
+    const recheckQuery = await xpEventsTable.selectRecordsAsync({
+      fields: buildFieldsToLoad(xpEventsTable, [CONFIG.xpEvents.sourceKey, CONFIG.xpEvents.active]),
+    });
+    xpRows = mapXpRowsForSc147(recheckQuery.records);
+    const recheckGate = canAwardSc147RecordingCredit({
+      enrollmentId,
+      zoomMeetingId,
+      xpRows,
+      meetingKeyToId,
+      conflictRollup,
+      progressProcessingEnabled,
+      quizApproved,
+      onLiveAttendees,
+    });
+    unloadQuerySafe(recheckQuery);
+
+    if (!recheckGate.ok) {
+      result.skipped += 1;
+      continue;
+    }
+
+    const sourceKey = recheckGate.sourceKey;
+    const payload = buildSc147RecordingXpPayload({
+      enrollmentId,
+      weekId,
+      weeklySummaryId: wasMatches[0].id,
+      zoomMeetingId,
+      zoomAttendanceId: zaId,
+      xpAmount,
+      sourceKey,
+      activityDateKey: meetingDateKey,
+    });
+
+    try {
+      const createdId = await xpEventsTable.createRecordAsync(payload);
+      await ensureXpEventWeeklySummaryLink(createdId, wasMatches[0].id);
+      result.created += 1;
+      result.signatureChanged = true;
+      xpRows.push({ sourceKey, active: true });
+    } catch (error) {
+      result.warnings.push(`SC-147 XP Event ${sourceKey} create failed: ${error.message || error}`);
+    }
+  }
+
+  unloadQuerySafe(zaQuery);
+  return result;
+}
+
+function unloadQuerySafe(queryResult) {
+  if (typeof queryResult?.unloadData === "function") {
+    try {
+      queryResult.unloadData();
+    } catch {
+      // non-fatal
+    }
+  }
+}
+
 async function runLiveLifecycleReconciliation(recordId) {
   const zoomRecord = await zoomTable.selectRecordAsync(recordId, {
     fields: buildFieldsToLoad(zoomTable, [
@@ -969,6 +1455,7 @@ async function runLiveLifecycleReconciliation(recordId) {
         CONFIG.enrollments.fullName,
         "Program Instance",
         "School Year",
+        CONFIG.enrollments.progressProcessingEnabled,
       ]),
     }),
     weeksTable.selectRecordsAsync({
@@ -1056,6 +1543,8 @@ async function runLiveLifecycleReconciliation(recordId) {
   let bonusEventsCreated = 0;
   let bonusEventsUpdated = 0;
   let bonusEventsDeactivated = 0;
+  let recordingEventsCreated = 0;
+  let recordingEventsSkipped = 0;
   /*
    * The event-signature formula only changes when the active XP Event set
    * changes (create / deactivate / reactivate / reuse). Repairing an
@@ -1272,6 +1761,16 @@ async function runLiveLifecycleReconciliation(recordId) {
         }
       }
       continue;
+    }
+
+    const deactivatedRecording = await deactivateSc147RecordingCreditIfPresent({
+      enrollmentId,
+      zoomMeetingId: recordId,
+      xpRecords: xpQuery.records,
+    });
+    if (deactivatedRecording) {
+      formulaSignatureMustChange = true;
+      lifecycleAction = "deactivated_recording_for_live";
     }
 
     const wasMatches = wasQuery.records.filter(record =>
@@ -1521,6 +2020,28 @@ async function runLiveLifecycleReconciliation(recordId) {
     attendeesProcessed += 1;
   }
 
+  const sc147Phase = await runSc147RecordingHalfXpPhase({
+    zoomMeetingId: recordId,
+    meetingKey,
+    meetingDateKey,
+    weekId: weekIds[0],
+    attendeeIds,
+    weekProgramIds,
+    weekSchoolYear,
+    enrollmentById,
+    wasRecords: wasQuery.records,
+    ruleRecords: ruleQuery.records,
+    xpRecords: xpQuery.records,
+  });
+  recordingEventsCreated += sc147Phase.created;
+  recordingEventsSkipped += sc147Phase.skipped;
+  if (sc147Phase.signatureChanged) {
+    formulaSignatureMustChange = true;
+  }
+  if (sc147Phase.warnings.length) {
+    eventWarnings.push(...sc147Phase.warnings);
+  }
+
   const { currentSignature: freshSignature } =
     await readFormulaSettlement(recordId, startingSignature, {
       requireChangedSignature: formulaSignatureMustChange,
@@ -1580,6 +2101,8 @@ async function runLiveLifecycleReconciliation(recordId) {
     baseEventsCreated,
     baseEventsUpdated,
     baseEventsSkippedExisting: 0,
+    recordingEventsCreated,
+    recordingEventsSkipped,
   });
 }
 
@@ -2063,12 +2586,22 @@ async function main() {
     setOutputSafe("debugStep", debugStep);
 
     zoomTable = base.getTable(CONFIG.tables.zoomMeetings);
+    try {
+      zoomAttendanceTable = base.getTable(CONFIG.tables.zoomAttendance);
+    } catch {
+      zoomAttendanceTable = null;
+    }
     enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
     weeksTable = base.getTable(CONFIG.tables.weeks);
     programInstancesTable = base.getTable(CONFIG.tables.programInstances);
     rulesTable = base.getTable(CONFIG.tables.xpRewardRules);
     xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
     weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
+    try {
+      configTable = base.getTable(CONFIG.tables.config);
+    } catch {
+      configTable = null;
+    }
     weeklySummaryQueryCache = null;
 
     debugStep = "4 - Validate Schema";

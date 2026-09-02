@@ -41,6 +41,7 @@ function test(name, fn) {
 const E = "recEnrollment0001";
 const M = "recZoomMeeting0001";
 const M2 = "recZoomMeeting0002";
+const MEET_KEY = "987654321";
 
 test("Source Key idempotency uses ZOOM_RECORDING_CREDIT|enrollment|meeting", () => {
   const key = buildSc147RecordingCreditSourceKey(E, M);
@@ -60,13 +61,25 @@ test("malformed record IDs fail clearly", () => {
   assert.strictEqual(gate.reason, "error_malformed_record_id");
 });
 
-test("live 101 credit blocks recording credit for same meeting", () => {
+test("live 101 credit blocks recording credit for same meeting (record id in key)", () => {
   const liveKey = `ZOOM_ATTEND_BASE|${M}|${E}`;
   assert.ok(is101LiveCreditKey(liveKey));
   const gate = canAwardSc147RecordingCredit({
     enrollmentId: E,
     zoomMeetingId: M,
     xpRows: [{ sourceKey: liveKey, active: true }],
+  });
+  assert.strictEqual(gate.ok, false);
+  assert.strictEqual(gate.reason, "skipped_live_101_exists");
+});
+
+test("live 101 credit with Zoom Meeting Key blocks recording via meetingKeyToId", () => {
+  const liveKey = `ZOOM_ATTEND_BASE|${MEET_KEY}|${E}`;
+  const gate = canAwardSc147RecordingCredit({
+    enrollmentId: E,
+    zoomMeetingId: M,
+    xpRows: [{ sourceKey: liveKey, active: true }],
+    meetingKeyToId: { [MEET_KEY]: M },
   });
   assert.strictEqual(gate.ok, false);
   assert.strictEqual(gate.reason, "skipped_live_101_exists");
@@ -81,6 +94,29 @@ test("live ZOOM_LIVE family also blocks recording for same meeting", () => {
   });
   assert.strictEqual(gate.ok, false);
   assert.strictEqual(gate.reason, "skipped_live_101_exists");
+});
+
+test("live attendance full XP path uses ZOOM_ATTEND_BASE not recording key", () => {
+  const liveKey = `ZOOM_ATTEND_BASE|${MEET_KEY}|${E}`;
+  assert.ok(is101LiveCreditKey(liveKey));
+  assert.ok(!isSc147RecordingCreditKey(liveKey));
+});
+
+test("recorded attendance half XP uses ZOOM_RECORDING_CREDIT key family", () => {
+  const recKey = buildSc147RecordingCreditSourceKey(E, M);
+  assert.ok(isSc147RecordingCreditKey(recKey));
+  assert.ok(!is101LiveCreditKey(recKey));
+});
+
+test("unapproved recording (quiz not satisfactory) blocks award", () => {
+  const gate = canAwardSc147RecordingCredit({
+    enrollmentId: E,
+    zoomMeetingId: M,
+    xpRows: [],
+    quizApproved: false,
+  });
+  assert.strictEqual(gate.ok, false);
+  assert.strictEqual(gate.reason, "skipped_not_approved");
 });
 
 test("Conflict rollup = 1 blocks award (SC-087 exclusivity)", () => {
@@ -114,7 +150,10 @@ test("rerun is idempotent — same Source Key skips", () => {
 test("half-XP amount = floor(live/2) when no ZOOM_RECORDING rule row", () => {
   assert.strictEqual(computeSc147HalfXpAmount({ liveRuleAmount: 60 }), 30);
   assert.strictEqual(computeSc147HalfXpAmount({ liveRuleAmount: 61 }), 30);
-  assert.strictEqual(computeSc147HalfXpAmount({ liveRuleAmount: 50, config: { "Zoom Recording XP Percent of Live": 50 } }), 25);
+  assert.strictEqual(
+    computeSc147HalfXpAmount({ liveRuleAmount: 50, config: { "Zoom Recording XP Percent of Live": 50 } }),
+    25,
+  );
 });
 
 test("ZOOM_RECORDING rule row amount wins when present", () => {
@@ -156,6 +195,18 @@ test("different meetings can each receive recording credit", () => {
     xpRows: [{ sourceKey: key1, active: true }],
   });
   assert.strictEqual(gate.ok, true);
+});
+
+test("live plus recorded for same meeting blocked when live exists", () => {
+  const liveKey = `ZOOM_ATTEND_BASE|${MEET_KEY}|${E}`;
+  const gate = canAwardSc147RecordingCredit({
+    enrollmentId: E,
+    zoomMeetingId: M,
+    xpRows: [{ sourceKey: liveKey, active: true }],
+    meetingKeyToId: { [MEET_KEY]: M },
+  });
+  assert.strictEqual(gate.ok, false);
+  assert.strictEqual(gate.reason, "skipped_live_101_exists");
 });
 
 test("create path when eligible", () => {
@@ -228,6 +279,18 @@ test("Perfect Week still counts live attendance when present", () => {
   assert.strictEqual(pw.countsForPerfectWeek, true);
 });
 
+test("level/gate inclusion: recording XP Event links enrollment and meeting", () => {
+  const fields = buildSc147RecordingXpEventFields({
+    enrollmentId: E,
+    zoomMeetingId: M,
+    weekId: "recWeek0000000001",
+    xpAmount: 30,
+  });
+  assert.strictEqual(fields.enrollmentId, E);
+  assert.strictEqual(fields.zoomMeetingId, M);
+  assert.strictEqual(fields.xpBucket, "Zoom");
+});
+
 test("117 email path does NOT write XP (scope boundary)", () => {
   assert.strictEqual(AUTOMATION_117_SCOPE.writesXpEvents, false);
   assert.strictEqual(AUTOMATION_117_SCOPE.writesAttendees, false);
@@ -245,20 +308,37 @@ test("117 email path does NOT write XP (scope boundary)", () => {
   assert.ok(!/Attendees.*updateRecordAsync/.test(text));
 });
 
-test("production SC-147 script uses slot 121 and does not claim Live", () => {
+test("Automation 101 v6.7 implements SC-147 recording phase (not slot 121)", () => {
   const scriptPath = path.join(
     __dirname,
     "..",
-    "121-zoom-recording-credit-award-half-xp.js",
+    "101-zoom-attendance-xp-award-meeting-xp.js",
   );
   const text = fs.readFileSync(scriptPath, "utf8");
-  assert.ok(/121 - Zoom Recording Credit/.test(text));
-  assert.ok(!/Status:\s*Live/.test(text));
+  assert.ok(/Version: v6\.7/.test(text));
+  assert.ok(/runSc147RecordingHalfXpPhase/.test(text));
   assert.ok(text.includes("ZOOM_RECORDING_CREDIT|"));
-  assert.ok(text.includes(RULE_KEY_RECORDING));
-  assert.ok(text.includes("v1.0"));
-  assert.ok(!/tables\.zoomMeetings.*Attendees/.test(text));
-  assert.ok(!/Attendees.*updateRecordAsync/.test(text));
+  assert.ok(text.includes("ZOOM_RECORDING"));
+  assert.ok(text.includes("skipped_not_approved"));
+  assert.ok(text.includes("skipped_live_attendee_roster"));
+  assert.ok(text.includes("deactivateSc147RecordingCreditIfPresent"));
+  assert.ok(!/Automation: 121/.test(text));
+});
+
+test("slot 121 design artifact is archived and not a Production automation", () => {
+  const artifactPath = path.join(
+    __dirname,
+    "..",
+    "drafts",
+    "sc-147-slot-121-design-artifact-not-production.js",
+  );
+  assert.ok(fs.existsSync(artifactPath));
+  const text = fs.readFileSync(artifactPath, "utf8");
+  assert.ok(/DESIGN ARTIFACT ONLY/.test(text));
+  assert.ok(/superseded by SC-147 extension in Automation 101/.test(text));
+  assert.ok(!/Status:\s*Live/.test(text));
+  const prod121Path = path.join(__dirname, "..", "121-zoom-recording-credit-award-half-xp.js");
+  assert.ok(!fs.existsSync(prod121Path));
 });
 
 console.log("\nAll sc-147-zoom-recording-credit tests passed.");

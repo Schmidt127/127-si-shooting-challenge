@@ -1,14 +1,14 @@
-# SC-147 — Recorded Zoom half-XP (design closeout)
+# SC-147 — Recorded Zoom half-XP (101 extension)
 
-**Status:** **Design confirmed — slot 121 assigned — DEV install ready — NOT Live in Production**  
+**Status:** **Design confirmed — implemented in Automation 101 v6.7 (GitHub) — NOT Live in Production**  
 **Date:** 2026-09-02  
 **Backlog:** SC-147 / MRW-H10  
-**Automation slot:** **121**  
-**Operator packet:** [`121-v1.0-sc-147-operator-packet.md`](./121-v1.0-sc-147-operator-packet.md)  
+**Production automation:** **101** (extended) — **no new slot**  
+**Operator packet:** [`101-v6.7-sc-147-operator-packet.md`](./101-v6.7-sc-147-operator-packet.md)  
 **Production base:** `appn84sqPw03zEbTT`  
 **Design brief:** [`docs/challenge-year/RECORDED-ZOOM-HALF-XP-DESIGN-BRIEF.md`](../challenge-year/RECORDED-ZOOM-HALF-XP-DESIGN-BRIEF.md)
 
-> **Do not paste to Production** until DEV disposable proof passes. Backlog ID remains **SC-147**; Production automation number is **121**.
+> **Do not paste to Production** until DEV disposable proof passes. Automation capacity is full — slot **121 is not used**.
 
 ---
 
@@ -17,33 +17,49 @@
 | Item | Status |
 |------|--------|
 | Product/design decision | **Confirmed** (Mike 2026-08-27) — half live XP; no Perfect Week; level gates yes |
-| Automation slot | **121** assigned 2026-09-02 |
+| Automation slot | **101 extended** (v6.7) — no slot 121 |
 | XP Reward Rules row | **`ZOOM_RECORDING`** — Mike adds in Airtable UI before DEV install (optional; fallback floor(live/2)) |
-| GitHub script | `airtable/automations/shooting-challenge/121-zoom-recording-credit-award-half-xp.js` v1.0 |
-| Offline tests | **17/17 pass** — `lib/sc-147-zoom-recording-credit.test.js` |
+| GitHub script | `airtable/automations/shooting-challenge/101-zoom-attendance-xp-award-meeting-xp.js` **v6.7** |
+| Offline tests | **24/24 pass** — `lib/sc-147-zoom-recording-credit.test.js` |
 | Production paste | **Do not paste** — use operator packet after DEV proof |
 
 ---
 
-## Architecture (unchanged)
+## Architecture
 
-| Automation | Role | Must stay separate |
-|------------|------|-------------------|
-| **101** | Live Zoom attendance XP (`ZOOM_ATTEND_*` / `ZOOM_LIVE`) | Yes |
-| **117 v2.1** | Recording approval **email** (Email Handoff Queue) | Yes — **no XP writes** |
-| **121 v1.0** | Recording half-XP (`ZOOM_RECORDING_CREDIT\|{enrollmentId}\|{zoomMeetingId}`) | Future writer — DEV install next |
+| Automation | Role | SC-147 |
+|------------|------|--------|
+| **101 v6.7** | Live Zoom XP + **recording half-XP phase** in same meeting reconciliation | **Canonical writer for both paths** |
+| **117 v2.1** | Recording approval **email** (Email Handoff Queue) | **Email only — no XP writes** |
+| **121** | ~~Standalone recording writer~~ | **Retired design artifact** — `drafts/sc-147-slot-121-design-artifact-not-production.js` |
 
 **Policy:** Recording credit counts toward level gates at **half live XP**; does **not** count toward Perfect Week; no duplicate with live 101 for same meeting+enrollment.
 
+**Source Key:** `ZOOM_RECORDING_CREDIT|{enrollmentId}|{zoomMeetingId}`
+
+**Half XP:** `ZOOM_RECORDING` rule row when present; else `floor(ZOOM_ATTEND_BASE / 2)`.
+
 ---
 
-## Decisions closed (2026-09-02)
+## Trigger support (live + recorded)
 
-1. Half-XP = `floor(ZOOM_ATTEND_BASE / 2)` — **30 XP** when live base = **60**
-2. Perfect Week exclusion confirmed — 057 reads live `Attendees` only
-3. Slot **121** assigned (next after **120** FUT-009 rename)
-4. `ZOOM_RECORDING` rule row — Mike UI before DEV install (recommended, not blocking fallback)
-5. DEV disposable proof required before Production enable — see operator packet
+| Path | How 101 runs |
+|------|----------------|
+| **Live** | Existing: `Zoom Meetings` when `Zoom XP Reconciliation Needed? = 1` |
+| **Recorded** | Same meeting reconciliation pass scans linked `Zoom Attendance` rows after live awards |
+
+**Mike / OMNI action:** Ensure `Zoom XP Reconciliation Needed?` flips to `1` when an approved recording credit is pending (e.g. formula includes recording-quiz-satisfied rows without live Attendees). Without this, recording awards wait until the next meeting-level reconciliation trigger.
+
+---
+
+## Exclusivity
+
+| Guard | Mechanism |
+|-------|-----------|
+| Duplicate recording | Source Key idempotency + recheck before create |
+| Live + recorded same meeting | Live Attendees roster skip; live XP blocks recording; live path deactivates prior recording credit |
+| Conflict rollup | `Zoom Credit Conflict? = 1` skips recording award |
+| Unapproved recording | `Recording Quiz Satisfactory?` must be checked |
 
 ---
 
@@ -51,11 +67,10 @@
 
 | Artifact | Path |
 |----------|------|
-| Production-ready script | `airtable/automations/shooting-challenge/121-zoom-recording-credit-award-half-xp.js` |
+| Production-ready script (101 extension) | `airtable/automations/shooting-challenge/101-zoom-attendance-xp-award-meeting-xp.js` v6.7 |
 | Pure helpers + conflict matrix | `airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.js` |
 | Offline contract tests | `airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.test.js` |
-| Post-FUT-030 live verify matrix | `tools/testing/post-fut030-verify-matrix.mjs` |
-| Superseded draft (historical) | `airtable/automations/shooting-challenge/drafts/sc-147-zoom-recording-half-xp.js` |
+| Superseded slot-121 design artifact | `airtable/automations/shooting-challenge/drafts/sc-147-slot-121-design-artifact-not-production.js` |
 
 Run offline tests:
 
@@ -66,6 +81,10 @@ node tools/testing/run-agent4-suite.js sc-147-zoom-recording-credit
 
 ---
 
-## Historical note
+## Mike actions before Production paste
 
-Earlier versions used placeholder filename **147**. As of **2026-09-02**, official automation slot is **121**. Prior "pending design" status is superseded — Production paste remains blocked until DEV proof.
+1. DEV disposable proof per [`101-v6.7-sc-147-operator-packet.md`](./101-v6.7-sc-147-operator-packet.md)
+2. Optional: add **`ZOOM_RECORDING`** XP Reward Rules row (recommended amount **30** when live base = **60**)
+3. Confirm / update `Zoom XP Reconciliation Needed?` formula to include pending recording credits
+4. Paste **101 v6.7** to DEV first, then Production after proof + approval
+5. **Do not** create Automation 121 — capacity is full
