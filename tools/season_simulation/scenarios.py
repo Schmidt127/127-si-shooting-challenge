@@ -26,6 +26,7 @@ from .simulation_clock import (
     assert_window_integrity,
     build_simulation_days,
     sunday_of,
+    week_boundaries_for_dates,
 )
 
 
@@ -53,6 +54,8 @@ class DayPlan:
     homework: list[dict[str, Any]] = field(default_factory=list)
     video_feedback: bool = False
     zoom_meeting_ids: list[str] = field(default_factory=list)
+    # Parallel to zoom_meeting_ids: "live" | "recording"
+    zoom_modes: list[str] = field(default_factory=list)
     email_events: list[dict[str, Any]] = field(default_factory=list)
     notes: str = ""
     dedupe_key: str = ""
@@ -143,7 +146,6 @@ def build_athlete1_scenario(
     hw_list = list(homework)
     zoom_list = list(zoom_meetings)[:2]  # use up to two existing meetings
 
-    # Map homework round-robin onto submit days (success / fail alternating).
     hw_outcomes = ["Satisfactory", "Needs Revision"]
     day_plans: list[DayPlan] = []
     intended_emails: list[dict[str, Any]] = []
@@ -152,7 +154,53 @@ def build_athlete1_scenario(
     active_day_numbers = [d.day_number for d in days_meta if d.day_number not in MISS_DAYS]
     active_count = len(active_day_numbers)
 
-    hw_cursor = 0
+    # Sunday–Saturday windows inside May–June 2027 (1-based week index in window).
+    window_weeks = week_boundaries_for_dates(d.activity_date for d in days_meta)
+    week9_bounds = window_weeks[8] if len(window_weeks) >= 9 else None
+    day_by_number = {d.day_number: d for d in days_meta}
+
+    def _in_week9(day_number: int) -> bool:
+        if week9_bounds is None:
+            return False
+        act = day_by_number[day_number].activity_date
+        return week9_bounds[0] <= act <= week9_bounds[1]
+
+    # Prefer one Homework Completion per PHA (covers all 18 when provided).
+    # Place HW only on Weeks 1–8 of the simulation window; Week 9 stays at zero.
+    submit_day_numbers = [
+        d.day_number
+        for d in days_meta
+        if d.day_number not in MISS_DAYS and not _in_week9(d.day_number)
+    ]
+    pha_by_day: dict[int, list[dict[str, Any]]] = {n: [] for n in submit_day_numbers}
+    for i, pha in enumerate(hw_list):
+        if i >= len(submit_day_numbers):
+            break
+        day_n = submit_day_numbers[i]
+        if day_n == GATE_BLOCK_PROBE_DAY:
+            gate_notes.append(
+                f"Day {day_n}: skip homework completion to create an unmet-gate / incomplete-hw signal "
+                "without blocking final advancement volume"
+            )
+            # Place this PHA on the next available day after the probe.
+            alt = next((x for x in submit_day_numbers if x > day_n), None)
+            if alt is None:
+                continue
+            day_n = alt
+        outcome = hw_outcomes[i % len(hw_outcomes)]
+        multi_asset = i % 4 == 0
+        pha_by_day.setdefault(day_n, []).append(
+            {
+                "pha_record_id": pha["record_id"],
+                "slot": pha.get("slot") or ("HW1" if i % 2 == 0 else "HW2"),
+                "week_id": pha.get("week_id") or "",
+                "library_id": pha.get("library_id") or "",
+                "outcome": outcome,
+                "asset_count": 2 if multi_asset else 1,
+                "dedupe_key": _dedupe_key(run_id, "HW", day_n, pha["record_id"]),
+            }
+        )
+
     for meta in days_meta:
         n = meta.day_number
         if n in MISS_DAYS:
@@ -182,38 +230,22 @@ def build_athlete1_scenario(
 
         shots = _shots_for_day(n, goal_total_shots, active_count)
 
-        hw_payload: list[dict[str, Any]] = []
-        if hw_list and n not in MISS_DAYS and n % 3 == 0:
-            # Attach one PHA every 3rd active-pattern day; skip on gate probe day once.
-            if n == GATE_BLOCK_PROBE_DAY:
-                gate_notes.append(
-                    f"Day {n}: skip homework completion to create an unmet-gate / incomplete-hw signal "
-                    "without blocking final advancement volume"
-                )
-            else:
-                pha = hw_list[hw_cursor % len(hw_list)]
-                outcome = hw_outcomes[hw_cursor % len(hw_outcomes)]
-                multi_asset = hw_cursor % 4 == 0  # every 4th hw uses two assets
-                hw_payload.append(
-                    {
-                        "pha_record_id": pha["record_id"],
-                        "slot": pha.get("slot") or "",
-                        "outcome": outcome,
-                        "asset_count": 2 if multi_asset else 1,
-                        "dedupe_key": _dedupe_key(run_id, "HW", n, pha["record_id"]),
-                    }
-                )
-                hw_cursor += 1
+        hw_payload: list[dict[str, Any]] = list(pha_by_day.get(n) or [])
 
         zoom_ids: list[str] = []
+        zoom_modes: list[str] = []
         # Place the two selected Zoom meetings on two fixed days if available.
+        # Day 12 = Live (Attendees path); Day 40 = Recording Quiz (never Attendees).
         if zoom_list:
             if n == 12 and len(zoom_list) >= 1:
                 zoom_ids = [zoom_list[0]["record_id"]]
+                zoom_modes = ["live"]
             if n == 40 and len(zoom_list) >= 2:
                 zoom_ids = [zoom_list[1]["record_id"]]
+                zoom_modes = ["recording"]
             elif n == 40 and len(zoom_list) == 1:
                 zoom_ids = [zoom_list[0]["record_id"]]
+                zoom_modes = ["recording"]
 
         video = n in VIDEO_FEEDBACK_DAYS
 
@@ -272,6 +304,7 @@ def build_athlete1_scenario(
                 homework=hw_payload,
                 video_feedback=video,
                 zoom_meeting_ids=zoom_ids,
+                zoom_modes=zoom_modes,
                 email_events=emails,
                 notes=run_marker(run_id),
                 dedupe_key=_dedupe_key(run_id, "SUB", n),
@@ -318,6 +351,7 @@ def build_athlete1_scenario(
         "Video Feedback",
         "Weekly Athlete Summary",
         "Zoom Attendance",
+        "Zoom Meetings",
         "Email Handoff Queue",
     ]
 
@@ -331,7 +365,7 @@ def build_athlete1_scenario(
         goal_total_shots=goal_total_shots,
         days=day_plans,
         zoom_selected=[{"record_id": z["record_id"], **{k: z.get(k) for k in ("display", "meeting_name", "start_time")}} for z in zoom_list],
-        homework_selected=[{"record_id": h["record_id"], **{k: h.get(k) for k in ("display", "slot", "week_id")}} for h in hw_list],
+        homework_selected=[{"record_id": h["record_id"], **{k: h.get(k) for k in ("display", "slot", "week_id", "library_id", "program_instance_id")}} for h in hw_list],
         intended_writes_summary=summary,
         intended_emails=intended_emails,
         cleanup_scope=cleanup_scope,
@@ -345,7 +379,29 @@ def build_athlete1_scenario(
             "backdate_activity_day": BACKDATE_ACTIVITY_DAY,
             "video_feedback_days": sorted(VIDEO_FEEDBACK_DAYS),
             "weeks_provided": len(weeks or []),
+            "weeks": [
+                {
+                    "record_id": getattr(w, "record_id", None) or (w.get("record_id") if isinstance(w, dict) else ""),
+                    "name": getattr(w, "name", None) or (w.get("name") if isinstance(w, dict) else ""),
+                }
+                for w in (weeks or [])
+            ],
             "goal_coverage_ratio": round(total_shots / goal_total_shots, 3),
+            "program_instance_hint": next(
+                (h.get("program_instance_id") for h in hw_list if h.get("program_instance_id")),
+                "",
+            ),
+            # Early Bird (Week 0) is before May 2027 — out of this simulation window.
+            "early_bird_handling": "out_of_window",
+            "early_bird_in_window": False,
+            "homework_weeks_policy": "weeks_1_through_8_of_sim_window; week_9_zero_homework",
+            "sim_window_week_count": len(window_weeks),
+            "week9_zero_homework": True,
+            "week9_bounds": (
+                [week9_bounds[0].isoformat(), week9_bounds[1].isoformat()]
+                if week9_bounds
+                else None
+            ),
         },
     )
 
@@ -370,6 +426,8 @@ def scenario_from_reference(
             "display": getattr(obj, "display", getattr(obj, "name", "")),
             "slot": getattr(obj, "slot", ""),
             "week_id": getattr(obj, "week_id", ""),
+            "library_id": getattr(obj, "library_id", ""),
+            "program_instance_id": getattr(obj, "program_instance_id", ""),
             "meeting_name": getattr(obj, "meeting_name", ""),
             "start_time": getattr(obj, "start_time", ""),
             "name": getattr(obj, "name", ""),

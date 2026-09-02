@@ -1,7 +1,10 @@
-"""Execute mode scaffolding — gated; not run during infrastructure build.
+"""Execute mode — full disposable season orchestration (SC-SEASON-SIM-002).
 
 Creates Athlete 1 transactional records when explicitly confirmed. Live
-automations are expected to process Activity Date, WAS, XP, email handoff, etc.
+automations are expected to process XP, streaks, achievements, and levels
+after Submissions / WAS / Zoom Attendance exist.
+
+Email delivery remains OFF by default and is never required to execute.
 """
 
 from __future__ import annotations
@@ -15,9 +18,16 @@ from .airtable_client import AirtableClient, WriteBlockedError
 from .confirmation import ConfirmationError, require_confirmation
 from .constants import SAFE_EMAIL_RECIPIENT
 from .recipient_safety import assert_safe_recipient
-from .run_registry import RunRegistry, run_marker, save_registry
+from .run_registry import RunRegistry, load_registry, run_marker, save_registry
 from .scenarios import Athlete1Scenario
 from .simulation_clock import SimulationClock
+from .writer import (
+    ExecuteContext,
+    SeasonSimOrchestrator,
+    SCHOOL_YEAR_2026_2027,
+    build_simulation_submission_fields_for_day,
+    resolve_execute_context,
+)
 
 
 class ExecuteAborted(RuntimeError):
@@ -54,11 +64,26 @@ def build_intended_writes(scenario: Athlete1Scenario, clock: SimulationClock) ->
                 "Parent Email": SAFE_EMAIL_RECIPIENT,
                 "Active?": True,
                 "Grade Band": [scenario.grade_band_id],
-                # School Year / Program Instance resolved at execute time from Config
+                "School Year": SCHOOL_YEAR_2026_2027,
             },
-            "notes": "Program Instance + School Year must be set from live Config before create",
+            "notes": "Program Instance + School Year resolved at execute from context",
         }
     )
+
+    for mode, label, day_n in (("live", "LIVE", 12), ("recording", "RECORDING", 40)):
+        writes.append(
+            {
+                "table": "Zoom Meetings",
+                "op": "create",
+                "dedupe_key": f"{marker}|ZOOM-MEETING|{label}",
+                "zoom_mode": mode,
+                "fields": {
+                    "Meeting Name": f"{marker}|{label}",
+                    "Meeting Status": "Completed",
+                    "Create XP Events": True,
+                },
+            }
+        )
 
     for day in scenario.days:
         if day.action != "submit":
@@ -81,14 +106,43 @@ def build_intended_writes(scenario: Athlete1Scenario, clock: SimulationClock) ->
                 "timing": day.timing,
                 "dedupe_key": day.dedupe_key,
                 "fields": {
-                    "Activity Date": clock.activity_datetime_iso(day.activity_date),
-                    "Shot Total": day.shot_total,
-                    "Video Upload Note": marker,
-                    # Enrollment link filled at execute time
+                    **build_simulation_submission_fields_for_day(
+                        run_id=scenario.run_id,
+                        clock=clock,
+                        day=day,
+                    ),
+                    "Duplicate Review Status": "Count It",
                 },
             }
         )
+        if day.video_feedback:
+            writes.append(
+                {
+                    "table": "Submission Assets",
+                    "op": "create",
+                    "day_number": day.day_number,
+                    "dedupe_key": f"{marker}|ASSET|VIDEO|D{day.day_number:02d}",
+                    "fields": {"Asset Purpose": "Video For Feedback", "Asset Slot": "VIDEO"},
+                }
+            )
+            writes.append(
+                {
+                    "table": "Video Feedback",
+                    "op": "create",
+                    "day_number": day.day_number,
+                    "dedupe_key": f"{marker}|VF|D{day.day_number:02d}",
+                }
+            )
         for hw in day.homework:
+            for i in range(int(hw.get("asset_count") or 1)):
+                writes.append(
+                    {
+                        "table": "Submission Assets",
+                        "op": "create",
+                        "day_number": day.day_number,
+                        "dedupe_key": f"{hw['dedupe_key']}|ASSET|{i+1}",
+                    }
+                )
             writes.append(
                 {
                     "table": "Homework Completions",
@@ -103,27 +157,18 @@ def build_intended_writes(scenario: Athlete1Scenario, clock: SimulationClock) ->
                     },
                 }
             )
-        for zid in day.zoom_meeting_ids:
+        for zid, mode in zip(day.zoom_meeting_ids or [], day.zoom_modes or []):
             writes.append(
                 {
                     "table": "Zoom Attendance",
                     "op": "create",
                     "day_number": day.day_number,
-                    "dedupe_key": f"{marker}|ZOOM|{zid}|D{day.day_number:02d}",
+                    "zoom_mode": mode,
+                    "dedupe_key": f"{marker}|ZOOM|{mode.upper()}|D{day.day_number:02d}|{zid}",
                     "fields": {
                         "Zoom Meeting": [zid],
-                        # Enrollment filled at execute
+                        "Attendance Method": "Live" if mode == "live" else "Recording Quiz",
                     },
-                }
-            )
-        if day.video_feedback:
-            writes.append(
-                {
-                    "table": "Video Feedback",
-                    "op": "create_or_trigger",
-                    "day_number": day.day_number,
-                    "dedupe_key": f"{marker}|VF|D{day.day_number:02d}",
-                    "notes": "Prefer live 013 path from Submission Assets when available",
                 }
             )
 
@@ -149,8 +194,9 @@ def run_execute(
     out_dir: Path,
     client: AirtableClient | None = None,
     enable_email_delivery: bool = False,
+    context: ExecuteContext | None = None,
 ) -> dict[str, Any]:
-    """Execute is blocked unless confirmation matches. Infrastructure build must not call with execute=True."""
+    """Run full orchestration when confirmed. Email delivery is optional and off by default."""
     intended = build_intended_writes(scenario, clock)
     payload: dict[str, Any] = {
         "mode": "execute" if execute else "dry-run-execute-path",
@@ -160,7 +206,15 @@ def run_execute(
         "intended_write_count": len(intended),
         "intended_writes": intended,
         "created_records": [],
+        "reused_records": [],
         "errors": [],
+        "warnings": [],
+        "orchestration": {},
+        "email_phase": {
+            "enabled": enable_email_delivery,
+            "required_for_execute": False,
+            "recipient_allowlist": SAFE_EMAIL_RECIPIENT,
+        },
     }
 
     if not execute:
@@ -176,19 +230,16 @@ def run_execute(
         payload["errors"].append(str(exc))
         return payload
 
-    assert_safe_recipient(scenario.athlete.get("parent_email"))
+    assert_safe_recipient(scenario.athlete.get("parent_email") or SAFE_EMAIL_RECIPIENT)
     if enable_email_delivery:
-        # Still only allowlisted address; live-looking subjects (no [TEST] labels).
         assert_safe_recipient(SAFE_EMAIL_RECIPIENT)
-    else:
-        payload["errors"].append(
-            "execute confirmed but enable_email_delivery=False — "
-            "refusing full run until email delivery flag is explicitly enabled for an authorized session"
+        payload["warnings"].append(
+            "Email delivery enabled (allowlist only). Send-arming remains a separate "
+            "optional phase — execute does not require email to complete the graph."
         )
-        # Still allow record writes without arming email if caller wants — for now abort.
-        raise ExecuteAborted(
-            "Refusing execute: pass enable_email_delivery only during an authorized live run; "
-            "infrastructure sessions must not execute."
+    else:
+        payload["warnings"].append(
+            "Email delivery OFF (default). Full graph execute proceeds without sending."
         )
 
     if client is None:
@@ -196,45 +247,69 @@ def run_execute(
     else:
         client.allow_writes = True
 
-    reg = RunRegistry(
-        run_id=scenario.run_id,
-        created_at=datetime.now(timezone.utc).isoformat(),
-        athlete_name=scenario.athlete["display_name"],
-        meta={"goal_record_id": scenario.goal_record_id},
-    )
-
-    # Minimal create path (athlete + enrollment). Full day loop is intentional
-    # follow-on once Weeks + simulation-clock override are ready.
     try:
-        athletes = client.create_records(
-            "Athletes",
-            [
-                {
-                    "First Name": scenario.athlete["first_name"],
-                    "Last Name": scenario.athlete["last_name"],
-                    "Parent Email": SAFE_EMAIL_RECIPIENT,
-                    "Active?": True,
-                }
-            ],
+        reg = load_registry(registry_dir, scenario.run_id)
+        payload["warnings"].append(f"Resuming from existing registry for {scenario.run_id}")
+    except FileNotFoundError:
+        reg = RunRegistry(
+            run_id=scenario.run_id,
+            created_at=datetime.now(timezone.utc).isoformat(),
+            athlete_name=scenario.athlete["display_name"],
+            meta={"goal_record_id": scenario.goal_record_id},
         )
-        athlete_id = athletes[0]["id"]
-        reg.athlete_id = athlete_id
-        reg.add("Athletes", athlete_id, dedupe_key=f"{run_marker(scenario.run_id)}|ATHLETE")
-        payload["created_records"].append({"table": "Athletes", "id": athlete_id})
-    except WriteBlockedError as exc:
-        payload["errors"].append(str(exc))
-        return payload
-    except Exception as exc:  # noqa: BLE001
-        payload["errors"].append(f"Athlete create failed: {exc}")
+
+    ctx = context or resolve_execute_context(
+        program_instance_id=(
+            next(
+                (
+                    str(h.get("program_instance_id"))
+                    for h in scenario.homework_selected
+                    if h.get("program_instance_id")
+                ),
+                "",
+            )
+            or None
+        ),
+        school_year=SCHOOL_YEAR_2026_2027,
+        week_ids=[
+            str(w.get("record_id"))
+            for w in (scenario.meta.get("weeks") or [])
+            if w.get("record_id")
+        ],
+        scenario=scenario,
+    )
+    if not ctx.program_instance_id:
+        payload["errors"].append(
+            "Execute requires program_instance_id (Shooting Challenge | 2026-2027)."
+        )
         save_registry(reg, registry_dir)
         return payload
 
-    save_registry(reg, registry_dir)
-    payload["registry_path"] = str(save_registry(reg, registry_dir))
-    payload["errors"].append(
-        "Execute scaffolding stopped after Athlete create stub — "
-        "full 61-day writer awaits simulation-clock override + Weeks coverage sign-off."
+    orchestrator = SeasonSimOrchestrator(
+        client=client,
+        scenario=scenario,
+        clock=clock,
+        registry=reg,
+        context=ctx,
+        enable_email_delivery=enable_email_delivery,
     )
+    try:
+        result = orchestrator.run()
+    except WriteBlockedError as exc:
+        payload["errors"].append(str(exc))
+        save_registry(reg, registry_dir)
+        return payload
+
+    payload["orchestration"] = result.to_dict()
+    payload["created_records"] = result.created
+    payload["reused_records"] = result.reused
+    payload["errors"].extend(result.errors)
+    payload["warnings"].extend(result.warnings)
+    payload["email_phase"] = result.email_phase
+    payload["paused"] = result.paused
+    payload["ok"] = result.ok and not result.paused
+    payload["registry_path"] = str(save_registry(reg, registry_dir))
+
     out_dir.mkdir(parents=True, exist_ok=True)
     path = out_dir / f"execute-{scenario.run_id}.json"
     path.write_text(json.dumps(payload, indent=2, default=str) + "\n", encoding="utf-8")

@@ -43,6 +43,7 @@ TRANSACTIONAL_TABLES = (
     "Video Feedback",
     "Weekly Athlete Summary",
     "Zoom Attendance",
+    "Zoom Meetings",  # only sim-created meetings registered under the run
     "Email Handoff Queue",
 )
 

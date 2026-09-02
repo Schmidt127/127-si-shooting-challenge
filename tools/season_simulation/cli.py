@@ -199,13 +199,55 @@ def cmd_execute(args: argparse.Namespace) -> int:
         )
         return 2
 
-    print(
-        "ERROR: Execute mode is intentionally not run during infrastructure sessions.\n"
-        "Re-run later only after Weeks coverage + simulation-clock override are approved.\n"
-        "This invocation is aborted before any Airtable writes.",
-        file=sys.stderr,
+    from .execute import run_execute
+    from .writer import SCHOOL_YEAR_2026_2027, resolve_execute_context
+
+    run_id = args.run_id or new_run_id()
+    clock = SimulationClock(enabled=True, current_date=SIM_START, run_id=run_id)
+    client = _client(args, allow_writes=True)
+    snap = load_reference_snapshot(client)
+    if snap.errors or not snap.grade_band or not snap.highest_goal:
+        print("FATAL: preflight-quality reference required before execute", file=sys.stderr)
+        for e in snap.errors:
+            print(f"  - {e}", file=sys.stderr)
+        return 2
+    scenario = scenario_from_reference(
+        run_id=run_id,
+        grade_band_id=snap.grade_band.record_id,
+        goal_record_id=snap.highest_goal.record_id,
+        goal_total_shots=int(snap.highest_goal.total_shot_target or 0),
+        homework_objs=snap.homework,
+        zoom_objs=snap.zoom_meetings,
+        week_objs=snap.weeks_covering_window,
     )
-    return 3
+    pi = (
+        (snap.highest_goal.program_instance_ids[0] if snap.highest_goal.program_instance_ids else "")
+        or next((h.program_instance_id for h in snap.homework if h.program_instance_id), "")
+    )
+    ctx = resolve_execute_context(
+        program_instance_id=pi or None,
+        school_year=SCHOOL_YEAR_2026_2027,
+        week_ids=[w.record_id for w in snap.weeks_covering_window],
+        scenario=scenario,
+    )
+    payload = run_execute(
+        scenario=scenario,
+        clock=clock,
+        execute=True,
+        confirm=args.confirm,
+        registry_dir=Path(args.registry_dir),
+        out_dir=Path(args.out_dir),
+        client=client,
+        enable_email_delivery=bool(args.enable_email_delivery),
+        context=ctx,
+    )
+    print(json.dumps({k: payload.get(k) for k in (
+        "ok", "paused", "run_id", "errors", "warnings", "registry_path", "report_path",
+        "enable_email_delivery",
+    )}, indent=2, default=str))
+    if payload.get("orchestration"):
+        print("counts:", json.dumps(payload["orchestration"].get("counts"), indent=2))
+    return 0 if payload.get("ok") else 2
 
 
 def cmd_cleanup(args: argparse.Namespace) -> int:

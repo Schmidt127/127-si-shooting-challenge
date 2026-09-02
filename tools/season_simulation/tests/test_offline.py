@@ -25,6 +25,7 @@ from season_simulation.recipient_safety import (  # noqa: E402
     resolve_simulation_recipient,
 )
 from season_simulation.offline_helpers import pick_highest_goal  # noqa: E402
+from season_simulation.reference_data import homework_covers_grade_band  # noqa: E402
 from season_simulation.run_registry import (  # noqa: E402
     RunRegistry,
     filter_records_for_run,
@@ -41,10 +42,15 @@ from season_simulation.scenarios import (  # noqa: E402
     build_athlete1_scenario,
 )
 from season_simulation.simulation_clock import (  # noqa: E402
+    FIELD_ID_ACTIVITY_DATE,
+    FIELD_ID_SEASON_SIM_CLOCK_NOW,
+    FIELD_ID_SEASON_SIM_TEST_RECORD,
+    FIELD_ID_VIDEO_UPLOAD_NOTE,
     SimulationClock,
     SubmissionTiming,
     assert_window_integrity,
     build_simulation_days,
+    inspect_activity_date_is_future_formula,
     saturday_of,
     sunday_of,
     week_boundaries_for_dates,
@@ -248,6 +254,102 @@ class TestHighestGoal(unittest.TestCase):
             {"record_id": "b", "total_shot_target": 12000, "active": True},
         ]
         self.assertEqual(pick_highest_goal(goals2)["record_id"], "c")
+
+
+class TestHomeworkGradeBandMatch(unittest.TestCase):
+    def test_multi_band_pha_includes_9_12_when_first_link_is_k2(self):
+        # Live Production shape: K-2, 3-4, 5-6, 7-8, 9-12 on one PHA row.
+        band_9_12 = "rec75ruo3XT5nSvaK"
+        links = [
+            "recK7BDVSpHy2ipCS",  # K-2 first
+            "reclWDQZzKbVBtdhG",
+            "recv9aWnHanY2sRgk",
+            "rec2VQFfGJa1ofA06",
+            band_9_12,
+        ]
+        self.assertTrue(
+            homework_covers_grade_band(links, required_grade_band_id=band_9_12)
+        )
+        self.assertFalse(
+            homework_covers_grade_band(
+                links[:1], required_grade_band_id=band_9_12
+            )
+        )
+        self.assertTrue(
+            homework_covers_grade_band(links, required_grade_band_id=None)
+        )
+
+
+class TestActivityDateFutureFormulaInspect(unittest.TestCase):
+    def _meta(self, formula: str, *, with_gate_fields: bool = True) -> list[dict]:
+        fields = [
+            {
+                "id": "fldyFAjhbfaC4LlPb",
+                "name": "Activity Date Is Future?",
+                "type": "formula",
+                "options": {"formula": formula},
+            },
+            {"id": FIELD_ID_ACTIVITY_DATE, "name": "Activity Date", "type": "date"},
+            {
+                "id": FIELD_ID_VIDEO_UPLOAD_NOTE,
+                "name": "Video Upload Note",
+                "type": "multilineText",
+            },
+        ]
+        if with_gate_fields:
+            fields.extend(
+                [
+                    {
+                        "id": FIELD_ID_SEASON_SIM_TEST_RECORD,
+                        "name": "Season Sim Test Record?",
+                        "type": "checkbox",
+                    },
+                    {
+                        "id": FIELD_ID_SEASON_SIM_CLOCK_NOW,
+                        "name": "Season Sim Clock Now",
+                        "type": "dateTime",
+                    },
+                    {
+                        "id": "fldD5fW93bsK42pPR",
+                        "name": "Season Sim Test Submitted At",
+                        "type": "dateTime",
+                    },
+                ]
+            )
+        return [{"name": "Submissions", "fields": fields}]
+
+    def test_now_only_is_blocker_not_gated(self):
+        formula = (
+            "IF({fldpkkSBsx8kQRZos}, IF({fldpkkSBsx8kQRZos} > NOW(), 1, 0), BLANK())"
+        )
+        status = inspect_activity_date_is_future_formula(self._meta(formula))
+        self.assertTrue(status.uses_now)
+        self.assertFalse(status.gated_season_sim_active)
+        self.assertTrue(
+            any("NOW() only" in b or "to NOW()" in b for b in status.blockers)
+        )
+
+    def test_gated_formula_detected_as_active(self):
+        formula = (
+            "IF(\n"
+            "  AND(\n"
+            f"    {{{FIELD_ID_SEASON_SIM_TEST_RECORD}}},\n"
+            f'    FIND("SEASON-SIM|", {{{FIELD_ID_VIDEO_UPLOAD_NOTE}}} & "") > 0\n'
+            "  ),\n"
+            "  IF(\n"
+            f"    {{{FIELD_ID_SEASON_SIM_CLOCK_NOW}}},\n"
+            f"    IF({{{FIELD_ID_ACTIVITY_DATE}}} > {{{FIELD_ID_SEASON_SIM_CLOCK_NOW}}}, 1, 0),\n"
+            "    0\n"
+            "  ),\n"
+            f"  IF({{{FIELD_ID_ACTIVITY_DATE}}}, IF({{{FIELD_ID_ACTIVITY_DATE}}} > NOW(), 1, 0), BLANK())\n"
+            ")"
+        )
+        status = inspect_activity_date_is_future_formula(self._meta(formula))
+        self.assertTrue(status.gated_season_sim_active)
+        self.assertTrue(status.uses_now)
+        self.assertTrue(status.safe_for_normal_athletes)
+        self.assertTrue(any("Season Sim gated" in n for n in status.notes))
+        self.assertFalse(any("NOW() only" in b for b in status.blockers))
 
 
 class TestConfirmationAndDryRunSafety(unittest.TestCase):
