@@ -251,6 +251,78 @@ class TestSameDayContracts(unittest.TestCase):
         self.assertTrue(readiness.same_day_logic_accurate_for_sim)
         self.assertTrue(readiness.sufficient_for_same_day_perfect_week)
 
+    def test_live_meta_field_id_formulas_detected_as_gated(self):
+        """Production Meta API stores {fld…} refs after paste — must still gate."""
+        same_day_ids = (
+            "IF(\n"
+            "  AND(\n"
+            f"    {{{FIELD_ID_SEASON_SIM_TEST_RECORD}}},\n"
+            f'    FIND("SEASON-SIM|", {{{FIELD_ID_VIDEO_UPLOAD_NOTE}}} & "") > 0,\n'
+            f"    {{{FIELD_ID_SEASON_SIM_TEST_SUBMITTED_AT}}},\n"
+            f"    {{{FIELD_ID_ACTIVITY_DATE}}}\n"
+            "  ),\n"
+            "  IF(\n"
+            f"    DATETIME_FORMAT(SET_TIMEZONE({{{FIELD_ID_SEASON_SIM_TEST_SUBMITTED_AT}}}, "
+            '"America/Denver"), "YYYY-MM-DD") =\n'
+            f"    DATETIME_FORMAT(SET_TIMEZONE({{{FIELD_ID_ACTIVITY_DATE}}}, \"UTC\"), "
+            '"YYYY-MM-DD"),\n'
+            "    1, 0\n"
+            "  ),\n"
+            "  IF(\n"
+            f"    AND({{{FIELD_ID_SUBMITTED_AT}}}, {{{FIELD_ID_ACTIVITY_DATE}}}),\n"
+            "    IF(\n"
+            f"      DATETIME_FORMAT(SET_TIMEZONE({{{FIELD_ID_SUBMITTED_AT}}}, "
+            '"America/Denver"), "YYYY-MM-DD") =\n'
+            f"      DATETIME_FORMAT(SET_TIMEZONE({{{FIELD_ID_ACTIVITY_DATE}}}, \"UTC\"), "
+            '"YYYY-MM-DD"),\n'
+            "      1, 0\n"
+            "    ),\n"
+            "    0\n"
+            "  )\n"
+            ")"
+        )
+        grace_ids = (
+            "IF(\n"
+            "  OR(\n"
+            "    {fldIb6nJu5TBkUUrD},\n"
+            "    AND(\n"
+            f"      {{{FIELD_ID_SEASON_SIM_TEST_RECORD}}},\n"
+            f'      FIND("SEASON-SIM|", {{{FIELD_ID_VIDEO_UPLOAD_NOTE}}} & "") > 0,\n'
+            "      {fld1gQ2c04pndnTKe} = 1,\n"
+            f"      {{{FIELD_ID_ACTIVITY_DATE}}},\n"
+            f"      {{{FIELD_ID_SEASON_SIM_TEST_SUBMITTED_AT}}},\n"
+            f"      {{{FIELD_ID_SEASON_SIM_CLOCK_NOW}}},\n"
+            f"      DATETIME_FORMAT(SET_TIMEZONE({{{FIELD_ID_ACTIVITY_DATE}}}, "
+            '"America/Denver"), "YYYY-MM-DD") <=\n'
+            f"      DATETIME_FORMAT(SET_TIMEZONE({{{FIELD_ID_SEASON_SIM_CLOCK_NOW}}}, "
+            '"America/Denver"), "YYYY-MM-DD"),\n'
+            "      1\n"
+            "    ),\n"
+            "    AND(\n"
+            "      {fld1gQ2c04pndnTKe} = 1,\n"
+            f"      {{{FIELD_ID_ACTIVITY_DATE}}},\n"
+            f"      {{{FIELD_ID_SUBMITTED_AT}}},\n"
+            f"      DATETIME_FORMAT(SET_TIMEZONE({{{FIELD_ID_ACTIVITY_DATE}}}, "
+            '"America/Denver"), "YYYY-MM-DD") <= DATETIME_FORMAT(TODAY(), "YYYY-MM-DD"),\n'
+            "      1\n"
+            "    )\n"
+            "  ),\n"
+            "  1,\n"
+            "  0\n"
+            ")"
+        )
+        self.assertNotIn("Season Sim Test Record", same_day_ids)
+        self.assertNotIn("Video Upload Note", same_day_ids)
+        meta = _meta(submitted_same_day=same_day_ids, grace=grace_ids)
+        same = inspect_submitted_same_day_formula(meta)
+        grace = inspect_perfect_week_grace_formula(meta)
+        self.assertTrue(same.gated_season_sim_active)
+        self.assertTrue(grace.gated_season_sim_active)
+        self.assertTrue(same.safe_for_normal_athletes)
+        self.assertTrue(grace.safe_for_normal_athletes)
+        readiness = assess_same_day_readiness(meta, activity_date_gate_active=True)
+        self.assertTrue(readiness.same_day_logic_accurate_for_sim)
+
     def test_normal_records_unchanged_without_sim_marker(self):
         self.assertIn("{Submitted At}", SUBMITTED_SAME_DAY_TEMPORARY)
         self.assertIn("TODAY()", PERFECT_WEEK_GRACE_TEMPORARY)
