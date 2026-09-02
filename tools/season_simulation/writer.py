@@ -384,9 +384,11 @@ class SeasonSimWriter:
             "Daily Email Subject": f"{self.marker}|D{day.day_number:02d}",
             **override,
         }
-        # Link first homework PHA on Homework Name 1 when present (Fillout-like shape).
+        # Link homework PHAs on Homework Name 1 / 2 when present (Fillout-like shape).
         if day.homework:
             sub_fields["Homework Name 1"] = [day.homework[0]["pha_record_id"]]
+            if len(day.homework) > 1:
+                sub_fields["Homework Name 2"] = [day.homework[1]["pha_record_id"]]
 
         was_id = self.reg.find_by_dedupe_key(f"{self.marker}|WAS|{week_id}")
         if was_id:
@@ -448,13 +450,14 @@ class SeasonSimWriter:
         asset_count = int(hw.get("asset_count") or 1)
         asset_ids: list[str] = []
         for i in range(asset_count):
+            pha_short = str(hw.get("pha_record_id") or "pha")[-8:]
             asset_fields = {
-                "Asset Label": f"{self.marker}|HW|D{day.day_number:02d}|{i+1}",
+                "Asset Label": f"{self.marker}|HW|D{day.day_number:02d}|{pha_short}|{i+1}",
                 "Asset Purpose": "Homework 1",
-                "Asset Slot": "HW1",
+                "Asset Slot": hw.get("slot") or "HW1",
                 "Asset Type": "Image",
-                "Original File Name": f"season-sim-hw-d{day.day_number:02d}-{i+1}.jpg",
-                "Source Attachment ID": f"{self.marker}|SA|HW|D{day.day_number:02d}|{i+1}",
+                "Original File Name": f"season-sim-hw-d{day.day_number:02d}-{pha_short}-{i+1}.jpg",
+                "Source Attachment ID": f"{self.marker}|SA|HW|D{day.day_number:02d}|{pha_short}|{i+1}",
                 "Submission - Linked": [submission_id],
                 "Enrollment - Linked": [enrollment_id],
                 "Send to Make Trigger": False,
@@ -463,7 +466,7 @@ class SeasonSimWriter:
                 table="Submission Assets",
                 dedupe_key=f"{hw['dedupe_key']}|ASSET|{i+1}",
                 fields=asset_fields,
-                step=f"submission_asset|hw|D{day.day_number:02d}|{i+1}",
+                step=f"submission_asset|hw|D{day.day_number:02d}|{pha_short}|{i+1}",
             )
             asset_ids.append(aid)
 
@@ -483,7 +486,7 @@ class SeasonSimWriter:
             table="Homework Completions",
             dedupe_key=hw["dedupe_key"],
             fields=hc_fields,
-            step=f"homework|D{day.day_number:02d}",
+            step=f"homework|D{day.day_number:02d}|{hw.get('pha_record_id')}",
         )
 
     def _create_video_bundle(
