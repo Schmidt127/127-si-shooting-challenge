@@ -103,14 +103,17 @@ class TestScenarioCoverage(unittest.TestCase):
         self.assertGreaterEqual(s.intended_writes_summary["total_planned_shots"], 12000)
         self.assertEqual(s.intended_writes_summary["miss_days"], len(MISS_DAYS))
         self.assertEqual(s.intended_writes_summary["video_feedback_days"], len(VIDEO_FEEDBACK_DAYS))
+        self.assertEqual(s.intended_writes_summary["homework_completions"], 18)
         probe = next(d for d in s.days if d.day_number == GATE_BLOCK_PROBE_DAY)
-        self.assertEqual(probe.homework, [])
+        # Gate pressure uses Needs Revision — PHA is still completed (18/18).
+        if probe.homework:
+            self.assertEqual(probe.homework[0]["outcome"], "Needs Revision")
         live = next(d for d in s.days if d.day_number == 12)
         rec = next(d for d in s.days if d.day_number == 40)
         self.assertEqual(live.zoom_modes, ["live"])
         self.assertEqual(rec.zoom_modes, ["recording"])
-        self.assertFalse(s.meta.get("early_bird_in_window"))
-        self.assertEqual(s.meta.get("early_bird_handling"), "out_of_window")
+        self.assertTrue(s.meta.get("early_bird_in_window"))
+        self.assertEqual(s.meta.get("early_bird_handling"), "last_early_bird_day_in_window")
         self.assertTrue(s.meta.get("week9_zero_homework"))
         bounds = s.meta.get("week9_bounds")
         self.assertIsNotNone(bounds)
@@ -118,7 +121,12 @@ class TestScenarioCoverage(unittest.TestCase):
         w9_end = date.fromisoformat(bounds[1])
         for d in s.days:
             if w9_start <= d.activity_date <= w9_end:
-                self.assertEqual(d.homework, [], f"week9 day {d.day_number} has homework")
+                for hw in d.homework:
+                    self.assertNotEqual(
+                        hw.get("week_label"),
+                        "Week 9",
+                        f"week9 day {d.day_number} has Week 9 PHA",
+                    )
 
 
 class TestExecuteOrchestration(unittest.TestCase):

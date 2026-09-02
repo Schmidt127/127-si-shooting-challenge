@@ -403,7 +403,9 @@ class TestScenario(unittest.TestCase):
         ]
         self.assertTrue(week9_days)
         for d in week9_days:
-            self.assertEqual(d.homework, [])
+            for hw in d.homework:
+                # Late Week 8 probe may land on calendar Week 9; never a Week 9 PHA.
+                self.assertNotEqual(hw.get("week_label"), "Week 9")
 
     def test_early_bird_day_one(self):
         s = self._scenario()
@@ -414,13 +416,60 @@ class TestScenario(unittest.TestCase):
         s = self._scenario()
         late_day = next(d for d in s.days if d.day_number == LATE_HOMEWORK_PROBE_DAY)
         self.assertEqual(late_day.activity_date, date(2027, 6, 30))
-        # May or may not attach HW depending on % 3; gate note should mention late if attached
-        if late_day.homework:
-            self.assertFalse(late_day.homework[0]["credit_eligible"])
+        self.assertTrue(late_day.homework)
+        self.assertFalse(late_day.homework[0]["credit_eligible"])
+        self.assertEqual(late_day.homework[0].get("week_label"), "Week 8")
 
     def test_eighteen_homework_selected(self):
         s = self._scenario(18)
         self.assertEqual(s.meta["homework_selected_count"], 18)
+
+    def test_eighteen_phas_each_exactly_once(self):
+        s = self._scenario(18)
+        pha_ids = [
+            hw["pha_record_id"] for d in s.days for hw in d.homework
+        ]
+        self.assertEqual(len(pha_ids), 18)
+        self.assertEqual(len(set(pha_ids)), 18)
+        selected = {h["record_id"] for h in s.homework_selected}
+        self.assertEqual(set(pha_ids), selected)
+        self.assertEqual(s.intended_writes_summary["homework_completions"], 18)
+
+    def test_early_bird_two_completions(self):
+        s = self._scenario(18)
+        early_days = [
+            d
+            for d in s.days
+            if week_label_for_activity_date(d.activity_date) == "Early Bird"
+        ]
+        self.assertEqual(len(early_days), 1)
+        self.assertEqual(early_days[0].activity_date, date(2027, 5, 1))
+        self.assertEqual(len(early_days[0].homework), 2)
+        self.assertEqual(
+            {hw.get("week_label") for hw in early_days[0].homework},
+            {"Early Bird"},
+        )
+
+    def test_week9_has_zero_week9_pha_completions(self):
+        s = self._scenario(18)
+        week9_days = [
+            d
+            for d in s.days
+            if week_label_for_activity_date(d.activity_date) == "Week 9"
+        ]
+        self.assertTrue(week9_days)
+        week9_owned = [
+            hw
+            for d in week9_days
+            for hw in d.homework
+            if hw.get("week_label") == "Week 9"
+        ]
+        self.assertEqual(week9_owned, [])
+        # Late Week 8 probe may land on day 61 (calendar Week 9) — still not a Week 9 PHA.
+        late = next(d for d in s.days if d.day_number == LATE_HOMEWORK_PROBE_DAY)
+        if late.homework:
+            self.assertEqual(late.homework[0].get("week_label"), "Week 8")
+            self.assertFalse(late.homework[0]["credit_eligible"])
 
     def test_dedupe_keys_unique_for_subs(self):
         s = self._scenario()

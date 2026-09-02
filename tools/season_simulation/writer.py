@@ -7,7 +7,7 @@ schema, or real-athlete rows. Dry-run / confirmation gates live in ``execute.py`
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Protocol
 
@@ -23,6 +23,7 @@ from .clock_override import (
 EXECUTE_SETS_SEASON_SIM_GATES = True
 SCHOOL_YEAR_2026_2027 = "2026-2027"
 from .constants import SAFE_EMAIL_RECIPIENT, SIM_START
+from .reference_data import parse_date_value
 from .run_registry import RunRegistry, load_registry, run_marker, save_registry
 from .scenarios import Athlete1Scenario
 from .season_policy import week_label_for_activity_date
@@ -63,8 +64,23 @@ class ExecuteContext:
         return self.week_id_by_date.get(activity_date.isoformat(), "")
 
 
+def _coerce_week_bound(value: Any) -> date | None:
+    """Normalize Week start/end to an America/Denver calendar date."""
+    if isinstance(value, datetime):
+        return parse_date_value(value)
+    if isinstance(value, date):
+        return value
+    if isinstance(value, str):
+        return parse_date_value(value)
+    return parse_date_value(value)
+
+
 def build_week_date_index(weeks: list[Any]) -> tuple[dict[str, str], dict[str, dict[str, Any]], list[str]]:
-    """Map each calendar date to a covering Week record id."""
+    """Map each Denver calendar date to a covering Week record id.
+
+    Start/End values may be ``date``, ISO date-only strings, or Airtable UTC
+    dateTime strings — all are normalized via ``parse_date_value``.
+    """
     by_date: dict[str, str] = {}
     by_id: dict[str, dict[str, Any]] = {}
     errors: list[str] = []
@@ -81,12 +97,10 @@ def build_week_date_index(weeks: list[Any]) -> tuple[dict[str, str], dict[str, d
             end = getattr(w, "end", None)
             name = getattr(w, "name", "")
             pi = getattr(w, "program_instance_id", "")
+        start = _coerce_week_bound(start)
+        end = _coerce_week_bound(end)
         if not rid or not start or not end:
             continue
-        if isinstance(start, str):
-            start = date.fromisoformat(start[:10])
-        if isinstance(end, str):
-            end = date.fromisoformat(end[:10])
         by_id[rid] = {
             "record_id": rid,
             "name": name,
@@ -95,8 +109,6 @@ def build_week_date_index(weeks: list[Any]) -> tuple[dict[str, str], dict[str, d
             "program_instance_id": pi,
         }
         cur = start
-        from datetime import timedelta
-
         while cur <= end:
             key = cur.isoformat()
             if key in by_date and by_date[key] != rid:
@@ -104,6 +116,13 @@ def build_week_date_index(weeks: list[Any]) -> tuple[dict[str, str], dict[str, d
             by_date[key] = rid
             cur = cur + timedelta(days=1)
     return by_date, by_id, errors
+
+
+def assert_weeks_do_not_overlap(weeks: list[Any]) -> None:
+    """Raise if Denver-normalized Week ranges claim the same calendar date."""
+    _by_date, _by_id, overlap_errors = build_week_date_index(weeks)
+    if overlap_errors:
+        raise AssertionError("; ".join(overlap_errors[:5]))
 
 
 def resolve_program_instance_id(
@@ -384,9 +403,11 @@ class SeasonSimWriter:
             "Daily Email Subject": f"{self.marker}|D{day.day_number:02d}",
             **override,
         }
-        # Link first homework PHA on Homework Name 1 when present (Fillout-like shape).
+        # Link homework PHAs on Homework Name 1 / 2 when present (Fillout-like shape).
         if day.homework:
             sub_fields["Homework Name 1"] = [day.homework[0]["pha_record_id"]]
+            if len(day.homework) > 1:
+                sub_fields["Homework Name 2"] = [day.homework[1]["pha_record_id"]]
 
         was_id = self.reg.find_by_dedupe_key(f"{self.marker}|WAS|{week_id}")
         if was_id:
@@ -448,13 +469,14 @@ class SeasonSimWriter:
         asset_count = int(hw.get("asset_count") or 1)
         asset_ids: list[str] = []
         for i in range(asset_count):
+            pha_short = str(hw.get("pha_record_id") or "pha")[-8:]
             asset_fields = {
-                "Asset Label": f"{self.marker}|HW|D{day.day_number:02d}|{i+1}",
+                "Asset Label": f"{self.marker}|HW|D{day.day_number:02d}|{pha_short}|{i+1}",
                 "Asset Purpose": "Homework 1",
-                "Asset Slot": "HW1",
+                "Asset Slot": hw.get("slot") or "HW1",
                 "Asset Type": "Image",
-                "Original File Name": f"season-sim-hw-d{day.day_number:02d}-{i+1}.jpg",
-                "Source Attachment ID": f"{self.marker}|SA|HW|D{day.day_number:02d}|{i+1}",
+                "Original File Name": f"season-sim-hw-d{day.day_number:02d}-{pha_short}-{i+1}.jpg",
+                "Source Attachment ID": f"{self.marker}|SA|HW|D{day.day_number:02d}|{pha_short}|{i+1}",
                 "Submission - Linked": [submission_id],
                 "Enrollment - Linked": [enrollment_id],
                 "Send to Make Trigger": False,
@@ -463,7 +485,7 @@ class SeasonSimWriter:
                 table="Submission Assets",
                 dedupe_key=f"{hw['dedupe_key']}|ASSET|{i+1}",
                 fields=asset_fields,
-                step=f"submission_asset|hw|D{day.day_number:02d}|{i+1}",
+                step=f"submission_asset|hw|D{day.day_number:02d}|{pha_short}|{i+1}",
             )
             asset_ids.append(aid)
 
@@ -483,7 +505,7 @@ class SeasonSimWriter:
             table="Homework Completions",
             dedupe_key=hw["dedupe_key"],
             fields=hc_fields,
-            step=f"homework|D{day.day_number:02d}",
+            step=f"homework|D{day.day_number:02d}|{hw.get('pha_record_id')}",
         )
 
     def _create_video_bundle(
@@ -687,6 +709,7 @@ def build_execute_context_from_reference(
     goal_program_instance_ids: list[str] | None = None,
     submission_field_names: set[str] | None = None,
 ) -> ExecuteContext:
+    assert_weeks_do_not_overlap(weeks)
     by_date, by_id, overlap_errors = build_week_date_index(weeks)
     if overlap_errors:
         raise ValueError("; ".join(overlap_errors[:5]))

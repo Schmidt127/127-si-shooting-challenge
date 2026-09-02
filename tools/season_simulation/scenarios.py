@@ -45,11 +45,15 @@ BACKDATE_WRITE_DAY = 22  # when clock is on day 22, write activity for day 20
 BACKDATE_ACTIVITY_DAY = 20
 INACTIVITY_GAP_START = 49  # miss 50; light activity after for alert windows
 VIDEO_FEEDBACK_DAYS = frozenset({5, 19, 33, 47})
-GATE_BLOCK_PROBE_DAY = 28  # intentionally skip one homework before a gate-heavy stretch
-# Day 60 = 2027-06-29 (common due); day 61 = 2027-06-30 → late homework probe
+# Gate-pressure signal: mark this day's homework Needs Revision (do NOT skip a PHA).
+GATE_BLOCK_PROBE_DAY = 28
+# Day 61 = 2027-06-30 (after common due 2027-06-29) → late homework probe for one Week 8 PHA
 LATE_HOMEWORK_PROBE_DAY = 61
 # Flag Perfect Week Manual Exception on a mid-season same-day week for PW timing
 PW_MANUAL_EXCEPTION_DAY = SAME_DAY_SUBMIT_DAY
+
+# Product homework weeks: Early Bird + Weeks 1–8 (2 slots each). Week 9 = 0.
+HOMEWORK_WEEK_ORDER = ("Early Bird",) + tuple(f"Week {i}" for i in range(1, 9))
 
 
 @dataclass(frozen=True)
@@ -129,6 +133,204 @@ def _dedupe_key(run_id: str, kind: str, day_number: int, extra: str = "") -> str
     return "|".join(parts)
 
 
+def _week_id_to_label(weeks: Sequence[dict[str, Any]]) -> dict[str, str]:
+    out: dict[str, str] = {}
+    for w in weeks:
+        rid = str(w.get("record_id") or "")
+        name = str(w.get("name") or w.get("display") or "").strip()
+        if rid and name:
+            out[rid] = name
+    return out
+
+
+def _infer_week_label_from_pha(pha: dict[str, Any]) -> str:
+    display = str(pha.get("display") or pha.get("schedule_key") or "")
+    if "Early Bird" in display:
+        return "Early Bird"
+    for i in range(1, 10):
+        token = f"Week {i}"
+        if token in display:
+            return token
+    return ""
+
+
+def group_phas_by_homework_week(
+    homework: Sequence[dict[str, Any]],
+    weeks: Sequence[dict[str, Any]] | None = None,
+) -> dict[str, list[dict[str, Any]]]:
+    """Group PHAs into Early Bird + Weeks 1–8 (2 slots each).
+
+    Prefer live ``week_id`` → Weeks.name. Offline fixtures without week_id are
+    chunked in ``HOMEWORK_WEEK_ORDER`` order (2 per week).
+    """
+    hw_list = list(homework)
+    id_to_label = _week_id_to_label(weeks or [])
+    by_label: dict[str, list[dict[str, Any]]] = {label: [] for label in HOMEWORK_WEEK_ORDER}
+
+    resolved_any = False
+    for pha in hw_list:
+        label = id_to_label.get(str(pha.get("week_id") or "")) or _infer_week_label_from_pha(pha)
+        if label in by_label:
+            by_label[label].append(pha)
+            resolved_any = True
+
+    if not resolved_any or any(
+        len(by_label[label]) == 0 for label in HOMEWORK_WEEK_ORDER
+    ):
+        # Synthetic / incomplete week linkage — deterministic 2-per-week chunking.
+        by_label = {label: [] for label in HOMEWORK_WEEK_ORDER}
+        for i, pha in enumerate(hw_list):
+            if i >= len(HOMEWORK_WEEK_ORDER) * 2:
+                break
+            label = HOMEWORK_WEEK_ORDER[i // 2]
+            by_label[label].append(pha)
+
+    for label in HOMEWORK_WEEK_ORDER:
+        by_label[label].sort(
+            key=lambda h: (str(h.get("slot") or ""), str(h.get("record_id") or ""))
+        )
+    return by_label
+
+
+def _schedule_homework_attachments(
+    *,
+    run_id: str,
+    days_meta: Sequence[Any],
+    hw_list: Sequence[dict[str, Any]],
+    weeks: Sequence[dict[str, Any]] | None,
+    gate_notes: list[str],
+) -> dict[int, list[dict[str, Any]]]:
+    """Return day_number → homework payloads. Each PHA exactly once; Week 9 empty."""
+    by_label = group_phas_by_homework_week(hw_list, weeks)
+    attachments: dict[int, list[dict[str, Any]]] = {}
+    assigned_pha_ids: list[str] = []
+    hw_index = 0
+
+    submit_days_by_label: dict[str, list[Any]] = {label: [] for label in HOMEWORK_WEEK_ORDER}
+    week9_days: list[Any] = []
+    for meta in days_meta:
+        if meta.day_number in MISS_DAYS:
+            continue
+        label = week_label_for_activity_date(meta.activity_date)
+        if label == "Week 9":
+            week9_days.append(meta)
+            continue
+        if label in submit_days_by_label:
+            submit_days_by_label[label].append(meta)
+
+    for label in HOMEWORK_WEEK_ORDER:
+        phas = by_label.get(label) or []
+        days = list(submit_days_by_label.get(label) or [])
+        if label == "Week 8" and days:
+            # Reserve last Week 8 PHA for late probe on day 61 when possible.
+            late_meta = next(
+                (m for m in days_meta if m.day_number == LATE_HOMEWORK_PROBE_DAY),
+                None,
+            )
+        else:
+            late_meta = None
+
+        slots = list(phas)
+        if not slots:
+            continue
+
+        # Prefer spreading across distinct submit days; stack on one day if needed
+        # (Early Bird has only SIM_START inside the sim window).
+        target_days: list[Any] = []
+        if late_meta is not None and len(slots) >= 2:
+            # First Week 8 PHA(s) stay in-week; last PHA completes late on day 61.
+            in_week_count = len(slots) - 1
+            if days:
+                if len(days) >= in_week_count:
+                    # Pick evenly spaced days for in-week slots.
+                    step = max(1, len(days) // in_week_count)
+                    for i in range(in_week_count):
+                        target_days.append(days[min(i * step, len(days) - 1)])
+                else:
+                    target_days = list(days)
+                    while len(target_days) < in_week_count:
+                        target_days.append(days[-1])
+            target_days.append(late_meta)
+            gate_notes.append(
+                f"Day {LATE_HOMEWORK_PROBE_DAY}: late homework probe — "
+                f"Week 8 PHA completed after due {COMMON_HOMEWORK_DUE_DATE} "
+                "(Week 9 has no Week-9 PHAs; this is a late Week 8 completion)."
+            )
+        else:
+            if not days:
+                gate_notes.append(
+                    f"{label}: no submit days available in sim window for {len(slots)} PHA(s)"
+                )
+                continue
+            if len(days) >= len(slots):
+                step = max(1, len(days) // len(slots))
+                for i in range(len(slots)):
+                    target_days.append(days[min(i * step, len(days) - 1)])
+            else:
+                target_days = list(days)
+                while len(target_days) < len(slots):
+                    target_days.append(days[-1])
+
+        # De-dupe day picks while preserving count via stacking.
+        if len(target_days) > len(slots):
+            target_days = target_days[: len(slots)]
+        while len(target_days) < len(slots):
+            target_days.append(target_days[-1] if target_days else days[0])
+
+        for pha, meta in zip(slots, target_days):
+            n = meta.day_number
+            late = evaluate_late_homework(
+                submission_date=meta.activity_date,
+                due_date=COMMON_HOMEWORK_DUE_DATE,
+            )
+            outcome = "Satisfactory" if hw_index % 2 == 0 else "Needs Revision"
+            if n == GATE_BLOCK_PROBE_DAY:
+                outcome = "Needs Revision"
+                gate_notes.append(
+                    f"Day {n}: gate-pressure homework marked Needs Revision "
+                    "(PHA still completed — 18/18 coverage preserved)"
+                )
+            if n == LATE_HOMEWORK_PROBE_DAY or not late.credit_eligible:
+                outcome = "Needs Revision"
+            multi_asset = hw_index % 4 == 0
+            payload = {
+                "pha_record_id": pha["record_id"],
+                "slot": pha.get("slot") or "",
+                "week_label": label,
+                "outcome": outcome,
+                "asset_count": 2 if multi_asset else 1,
+                "late_status": late.timing_status,
+                "credit_eligible": late.credit_eligible,
+                "dedupe_key": _dedupe_key(run_id, "HW", n, pha["record_id"]),
+            }
+            attachments.setdefault(n, []).append(payload)
+            assigned_pha_ids.append(str(pha["record_id"]))
+            hw_index += 1
+
+    if week9_days:
+        gate_notes.append(
+            f"Week 9 ({week9_days[0].activity_date}..{week9_days[-1].activity_date}): "
+            "no homework attached (policy)"
+        )
+
+    # Safety: every selected PHA must appear exactly once when count is 18.
+    if len(hw_list) == 18:
+        missing = [
+            str(h["record_id"])
+            for h in hw_list
+            if str(h["record_id"]) not in assigned_pha_ids
+        ]
+        if missing:
+            raise ValueError(
+                "Homework planner failed to assign all 18 PHAs; missing: "
+                + ", ".join(missing)
+            )
+        if len(assigned_pha_ids) != len(set(assigned_pha_ids)):
+            raise ValueError("Homework planner assigned duplicate PHA record IDs")
+
+    return attachments
+
+
 def build_athlete1_scenario(
     *,
     run_id: str,
@@ -154,8 +356,6 @@ def build_athlete1_scenario(
     hw_list = list(homework)
     zoom_list = list(zoom_meetings)[:2]  # use up to two existing meetings
 
-    # Map homework round-robin onto submit days (success / fail alternating).
-    hw_outcomes = ["Satisfactory", "Needs Revision"]
     day_plans: list[DayPlan] = []
     intended_emails: list[dict[str, Any]] = []
     gate_notes: list[str] = []
@@ -163,7 +363,14 @@ def build_athlete1_scenario(
     active_day_numbers = [d.day_number for d in days_meta if d.day_number not in MISS_DAYS]
     active_count = len(active_day_numbers)
 
-    hw_cursor = 0
+    hw_by_day = _schedule_homework_attachments(
+        run_id=run_id,
+        days_meta=days_meta,
+        hw_list=hw_list,
+        weeks=weeks,
+        gate_notes=gate_notes,
+    )
+
     for meta in days_meta:
         n = meta.day_number
         if n in MISS_DAYS:
@@ -194,46 +401,11 @@ def build_athlete1_scenario(
         shots = _shots_for_day(n, goal_total_shots, active_count)
 
         week_label = week_label_for_activity_date(meta.activity_date)
-        hw_payload: list[dict[str, Any]] = []
-        # Week 9 is a countable shooting week with no homework (product rule).
-        allow_homework = week_label != "Week 9"
-        if hw_list and allow_homework and n not in MISS_DAYS and n % 3 == 0:
-            # Attach one PHA every 3rd active-pattern day; skip on gate probe day once.
-            if n == GATE_BLOCK_PROBE_DAY:
-                gate_notes.append(
-                    f"Day {n}: skip homework completion to create an unmet-gate / incomplete-hw signal "
-                    "without blocking final advancement volume"
-                )
-            else:
-                pha = hw_list[hw_cursor % len(hw_list)]
-                outcome = hw_outcomes[hw_cursor % len(hw_outcomes)]
-                multi_asset = hw_cursor % 4 == 0  # every 4th hw uses two assets
-                late = evaluate_late_homework(
-                    submission_date=meta.activity_date,
-                    due_date=COMMON_HOMEWORK_DUE_DATE,
-                )
-                if n == LATE_HOMEWORK_PROBE_DAY or not late.credit_eligible:
-                    outcome = "Needs Revision"
-                    gate_notes.append(
-                        f"Day {n}: late homework probe ({late.timing_status}) — "
-                        f"not credit-eligible after {COMMON_HOMEWORK_DUE_DATE}"
-                    )
-                hw_payload.append(
-                    {
-                        "pha_record_id": pha["record_id"],
-                        "slot": pha.get("slot") or "",
-                        "outcome": outcome,
-                        "asset_count": 2 if multi_asset else 1,
-                        "late_status": late.timing_status,
-                        "credit_eligible": late.credit_eligible,
-                        "dedupe_key": _dedupe_key(run_id, "HW", n, pha["record_id"]),
-                    }
-                )
-                hw_cursor += 1
-        elif week_label == "Week 9" and n % 3 == 0:
-            gate_notes.append(
-                f"Day {n} ({meta.activity_date}): Week 9 — no homework attached (policy)"
-            )
+        hw_payload = list(hw_by_day.get(n) or [])
+        if week_label == "Week 9" and hw_payload:
+            # Hard guard — Week 9 must never carry Week-9 PHAs; late Week 8 probe is OK
+            # only when payloads are tagged week_label Week 8.
+            hw_payload = [h for h in hw_payload if h.get("week_label") != "Week 9"]
 
         zoom_ids: list[str] = []
         zoom_modes: list[str] = []
@@ -397,10 +569,13 @@ def build_athlete1_scenario(
                 (h.get("program_instance_id") for h in hw_list if h.get("program_instance_id")),
                 "",
             ),
-            # Early Bird (Week 0) for most of April ends at SIM_START; treat as out-of-window for HW policy notes.
-            "early_bird_handling": "out_of_window",
-            "early_bird_in_window": False,
-            "homework_weeks_policy": "weeks_1_through_8_of_sim_window; week_9_zero_homework",
+            # SIM_START (May 1) is the last Early Bird day — both Early Bird PHAs attach that day.
+            "early_bird_handling": "last_early_bird_day_in_window",
+            "early_bird_in_window": True,
+            "homework_weeks_policy": (
+                "early_bird_plus_weeks_1_through_8_two_slots_each; week_9_zero_homework; "
+                "each_pha_exactly_once"
+            ),
             "sim_window_week_count": len(window_weeks),
             "week9_zero_homework": True,
             "week9_bounds": (
