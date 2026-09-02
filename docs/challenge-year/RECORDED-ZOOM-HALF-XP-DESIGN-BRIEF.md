@@ -1,8 +1,8 @@
 # Recorded Zoom half-XP — design brief
 
-**Status:** Decision recorded (Mike 2026-08-27) — **implemented in Automation 101 v6.7 (GitHub)** — **NOT Live until disposable proof**  
+**Status:** Decision recorded (Mike 2026-08-27) — **implemented in Automation 101 v6.7 (GitHub)** — **NOT pasted to Production yet**  
 **Backlog ID:** **SC-147** (Recorded Zoom half-XP writer) · **MRW-H10**  
-**Do not paste to Production until DEV disposable proof passes.**
+**Environment:** **Production-only** — DEV base retired 2026-08-19; disposable Production proof before paste.
 
 ## Policy (authoritative)
 
@@ -40,7 +40,7 @@ From [`127-SI-MASTER-FUTURE-WORK-LIST.md`](../127-SI-MASTER-FUTURE-WORK-LIST.md)
 | Production-ready script (101 extension) | `airtable/automations/shooting-challenge/101-zoom-attendance-xp-award-meeting-xp.js` v6.7 |
 | Pure helpers + conflict matrix | `airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.js` |
 | Offline contract tests | `airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.test.js` |
-| DEV operator packet | `docs/deploy-checklists/101-v6.7-sc-147-operator-packet.md` |
+| Operator packet | `docs/deploy-checklists/101-v6.7-sc-147-operator-packet.md` |
 | Superseded slot-121 design artifact | `airtable/automations/shooting-challenge/drafts/sc-147-slot-121-design-artifact-not-production.js` |
 
 **Run tests:**
@@ -54,11 +54,11 @@ node airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.te
 1. **Automation slot** — extend **101** (no slot 121 — capacity full).
 2. **XP Reward Rules row** — recommend Rule Key `ZOOM_RECORDING` amount **30**; fallback `floor(ZOOM_ATTEND_BASE / 2)`.
 3. **Source Key** — enrollment-first `ZOOM_RECORDING_CREDIT|{enrollmentId}|{zoomMeetingId}`.
-4. **DEV install + disposable proof** — [`101-v6.7-sc-147-operator-packet.md`](../deploy-checklists/101-v6.7-sc-147-operator-packet.md); re-prove SC-087 after paste.
+4. **Production-only install + disposable proof** — [`101-v6.7-sc-147-operator-packet.md`](../deploy-checklists/101-v6.7-sc-147-operator-packet.md); re-prove SC-087 after paste.
 
 ## Mike actions before Production paste
 
-1. DEV disposable proof per operator packet
+1. Disposable **Production** proof per operator packet
 2. Optional **`ZOOM_RECORDING`** XP Reward Rules row
 3. Confirm `Zoom XP Reconciliation Needed?` includes pending recording credits (OMNI)
-4. Paste **101 v6.7** to DEV, then Production after approval
+4. Paste **101 v6.7** to **Production** Automation 101 after proof + approval

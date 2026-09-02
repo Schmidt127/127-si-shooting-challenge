@@ -1,6 +1,6 @@
 # SC-147 — Recorded Zoom half-XP (101 extension)
 
-**Status:** **Design confirmed — implemented in Automation 101 v6.7 (GitHub) — NOT Live in Production**  
+**Status:** **Design confirmed — implemented in Automation 101 v6.7 (GitHub) — NOT pasted to Production yet**  
 **Date:** 2026-09-02  
 **Backlog:** SC-147 / MRW-H10  
 **Production automation:** **101** (extended) — **no new slot**  
@@ -8,7 +8,7 @@
 **Production base:** `appn84sqPw03zEbTT`  
 **Design brief:** [`docs/challenge-year/RECORDED-ZOOM-HALF-XP-DESIGN-BRIEF.md`](../challenge-year/RECORDED-ZOOM-HALF-XP-DESIGN-BRIEF.md)
 
-> **Do not paste to Production** until DEV disposable proof passes. Automation capacity is full — slot **121 is not used**.
+> **No DEV base.** DEV base retired **2026-08-19** — all work is **Production-only** with disposable test data. **Do not paste** until disposable Production proof passes. Automation capacity is full — slot **121 is not used**.
 
 ---
 
@@ -18,10 +18,11 @@
 |------|--------|
 | Product/design decision | **Confirmed** (Mike 2026-08-27) — half live XP; no Perfect Week; level gates yes |
 | Automation slot | **101 extended** (v6.7) — no slot 121 |
-| XP Reward Rules row | **`ZOOM_RECORDING`** — Mike adds in Airtable UI before DEV install (optional; fallback floor(live/2)) |
+| XP Reward Rules row | **`ZOOM_RECORDING`** — Mike adds in Production Airtable UI before paste (optional; fallback floor(live/2)) |
 | GitHub script | `airtable/automations/shooting-challenge/101-zoom-attendance-xp-award-meeting-xp.js` **v6.7** |
 | Offline tests | **24/24 pass** — `lib/sc-147-zoom-recording-credit.test.js` |
-| Production paste | **Do not paste** — use operator packet after DEV proof |
+| Production paste | **Pending** — use operator packet after disposable Production proof |
+| PR | [#338](https://github.com/Schmidt127/127-si-shooting-challenge/pull/338) — CI green |
 
 ---
 
@@ -81,10 +82,10 @@ node tools/testing/run-agent4-suite.js sc-147-zoom-recording-credit
 
 ---
 
-## Mike actions before Production paste
+## Mike actions (Production-only)
 
-1. DEV disposable proof per [`101-v6.7-sc-147-operator-packet.md`](./101-v6.7-sc-147-operator-packet.md)
+1. Disposable **Production** proof per [`101-v6.7-sc-147-operator-packet.md`](./101-v6.7-sc-147-operator-packet.md)
 2. Optional: add **`ZOOM_RECORDING`** XP Reward Rules row (recommended amount **30** when live base = **60**)
-3. Confirm / update `Zoom XP Reconciliation Needed?` formula to include pending recording credits
-4. Paste **101 v6.7** to DEV first, then Production after proof + approval
+3. Confirm / update `Zoom XP Reconciliation Needed?` formula to include pending recording credits (OMNI)
+4. Paste **101 v6.7** to **Production** Automation 101 after proof + approval
 5. **Do not** create Automation 121 — capacity is full
