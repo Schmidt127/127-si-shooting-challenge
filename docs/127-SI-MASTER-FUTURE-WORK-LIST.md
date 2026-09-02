@@ -1079,30 +1079,26 @@ Create a reusable, unattended end-to-end simulation of a complete **60-day** Sho
 
 ### SC-SEASON-SIM-002 — Athlete 1 Season Simulation Infrastructure (May–June 2027)
 
-**Priority:** P2
-**Status:** Execute writer + same-day audit ready; Perfect Week / same-day E2E blocked until Mike pastes temporary Submitted Same Day? + Perfect Week Grace formulas (Activity Date gate already live) — **no live run yet**
-**Systems:** `tools/season_simulation/`, Airtable gated formulas (temporary), dry-run/preflight/cleanup
 **Priority:** P2  
-**Status:** Full execute writer ready (idempotent); early countable E2E blocked until Mike applies OMNI gated formula — no live run yet  
-**Systems:** `tools/season_simulation/`, Airtable gated formula (temporary), dry-run/preflight/cleanup  
+**Status:** Cascade-ready in GitHub — failed run `SEASON-SIM-2027-20260902T171918Z-athlete1` cleaned; writer + 010/114/073 Season Sim date gate + disposable Zoom + Hub allowlist row. **Paste 010 v10.13 / 114 v6.2 / 073 v4.6** before next execute. Temporary formulas remain; restore only after a successful run.  
+**Systems:** `tools/season_simulation/`, Airtable gated formulas (temporary), automations 010/114/073, Hub Test Allowlist  
 **Related (distinct):** **SC-SEASON-SIM-001** (five-enrollment unattended package — still Planned / Future; not started)
 
-Build reusable Python infrastructure for a future **Athlete 1** full-season simulation against the production base (system not live yet):
+Build reusable Python infrastructure for a full **Athlete 1** season simulation against Production (no DEV base; app not live to families):
 
 - Window: **2027-05-01 through 2027-06-30 inclusive** (61 calendar days)
-- Athlete: **Athlete 1**, Grade **12**, highest configured Grade 12 / 9–12 shot goal (resolved at runtime — do not hardcode 12,000)
-- Modes: read-only **preflight**, default **dry-run**, gated **execute** (`--execute --simulation-id … --confirm SEASON-SIMULATION-2027 --confirm-disposable CONFIRM-DISPOSABLE-SEASON-SIM`), gated **cleanup** (separate `--confirm-cleanup`)
-- Dynamic resolution only for homework (PHA), Zoom Meetings, XP rules, levels, gates, achievements, weeks, goals
-- **Clock / same-day:** `Submitted At` = `CREATED_TIME()` (not backdatable). Writer sets Season Sim gate fields. Temporary gated formulas documented in [`docs/deploy-checklists/SC-SEASON-SIM-002-operator-checklist.md`](./deploy-checklists/SC-SEASON-SIM-002-operator-checklist.md) + `tools/season_simulation/same_day_contracts.py`. Restore NOW()-only Activity Date formula after the run.
-- **No DEV base** — disposable Production VERIFY/Schmidt records only.
-- Emails: off by default; live-looking only to `schmidt@fairfieldbasketballclub.com` when `--enable-email-delivery`.
-- Success = records created **plus** live automations (010/031/065/114/101/057/…) processed, XP/achievements/levels/Perfect Week verified — not create-only.
+- Athlete: **Athlete 1**, Grade **12**, highest configured Grade 12 / 9–12 shot goal (runtime resolve)
+- Modes: **preflight**, default **dry-run**, gated **execute**, gated **cleanup**
+- Writer: HC `Submission Date`, WAS Grade Band at create, disposable 2027 Zoom Meetings, VF Feedback Posted? arm
+- Automations: dual-gated Season Sim path in **010 / 114 / 073** (`Season Sim Test Record?` + `Video Upload Note` contains `SEASON-SIM|` → compare to `Season Sim Clock Now`)
+- Emails: off by default; Hub Test Allowlist must include `schmidt@fairfieldbasketballclub.com` (row `recLxwQnjM6gpfVc9` added 2026-09-02)
+- Success = records **and** live automation cascade (XP / streaks / achievements / levels / WAS / Perfect Week / email handoffs)
 
-**Hard constraints for this ID:** Do not run execute/cleanup in infrastructure sessions unless Mike explicitly authorizes; do not send email during infrastructure build; do not modify SC-147 / 101 / 117 / create 121. SC-SEASON-SIM-001 remains blocked pending its Phase 2 brief.
+**Hard constraints:** Do not create 121; do not modify 101 / SC-147 / 117 unless a proven sim defect requires it; no family emails; temporary formulas stay until a successful run then restore.
 
-**Acceptance (infrastructure):** Package under `tools/season_simulation/` with README, operator checklist, offline tests green (clock + writer + same-day contracts), preflight/dry-run documented, gated overrides modeled without weakening Production for normal athletes, idempotent execute writer complete.
+**Acceptance (next execute):** Paste 010/114/073 → new run ID → poll cascade → verify → cleanup → restore formulas.
 
-**Remaining OMNI paste before Perfect Week–accurate run:** temporary `Submitted Same Day?` + `Perfect Week Grace Eligible?` (Activity Date Is Future? gate already active). Restore all three after the run.
+**Paste packets:** [`SC-SEASON-SIM-002-automation-paste-010-114.md`](./deploy-checklists/SC-SEASON-SIM-002-automation-paste-010-114.md) · operator checklist · `tools/season_simulation/FORMULAS-TO-PASTE.txt`
 ---
 
 ## E. Items intentionally excluded or preserved elsewhere
@@ -1450,6 +1446,6 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **SC-CORE-WF / MRW-F11** | **COMPLETE** | Core workflow reliability — `lib/workflow-contracts/`, `tools/testing/sc-core-workflow.mjs`, `docs/testing/core-workflow/`. Live Weeks/PHA audit + disposable apply 2026-08-30. |
 | **SC-WEEKLY-SETTLEMENT-E2E** | **COMPLETE** | Weekly settlement matrix (WAS / calc / PW fail-closed / handoff prep). Docs `docs/testing/weekly-settlement/`; harness `tools/testing/sc-weekly-settlement.mjs`; RESULTS + DEFECT-REPORT 2026-08-30. MRW-F10. |
 | **SC-SEASON-SIM-001** | **Planned / Future** | 60-day five-enrollment season simulation — narrative entry above § D / FUT-026; MRW-H11. Do **not** implement yet. FUT-010 unchanged. Reuse SC-PW-E2E later where appropriate. |
-| **SC-SEASON-SIM-002** | **Readiness + same-day audit** | Full idempotent writer; same-day/PW formula paste packet; offline tests; dry-run default; execute/cleanup gated — **not run**. Perfect Week accuracy needs OMNI paste of Submitted Same Day? + Grace gates. Distinct from SC-SEASON-SIM-001. |
+| **SC-SEASON-SIM-002** | **Cascade-ready (paste pending)** | Writer + 010/114/073 Season Sim date gate + disposable Zoom + Hub allowlist row for `schmidt@fairfieldbasketballclub.com`. Failed run `…T171918Z` cleaned. Temporary formulas remain; **paste 010 v10.13 / 114 v6.2 / 073 v4.6** before next execute. Distinct from SC-SEASON-SIM-001. |
 
 ---

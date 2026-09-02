@@ -461,9 +461,17 @@ def load_reference_snapshot(client: AirtableClient) -> ReferenceSnapshot:
         )
 
     zoom = resolve_zoom_meetings(client)
-    if len(zoom) < 2:
+    # Execute creates disposable Zoom Meetings aligned to 2027 Weeks — do not
+    # select VERIFY / misaligned Start Time meetings for the run.
+    if zoom:
         warnings.append(
-            f"Found {len(zoom)} Zoom Meetings (non-cancelled); final run expects two selected meetings"
+            f"Found {len(zoom)} existing Zoom Meetings (informational only); "
+            "execute creates two disposable meetings (live day 12 / recording day 40) "
+            "registered for cleanup — VERIFY meetings are never reused"
+        )
+    else:
+        warnings.append(
+            "No existing Zoom Meetings found (ok) — execute will create disposable meetings"
         )
 
     weeks = resolve_weeks_covering_window(client)

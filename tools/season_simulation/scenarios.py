@@ -293,8 +293,10 @@ def _schedule_homework_attachments(
             if n == LATE_HOMEWORK_PROBE_DAY or not late.credit_eligible:
                 outcome = "Needs Revision"
             multi_asset = hw_index % 4 == 0
+            library_id = str(pha.get("library_id") or "").strip()
             payload = {
                 "pha_record_id": pha["record_id"],
+                "library_id": library_id,
                 "slot": pha.get("slot") or "",
                 "week_label": label,
                 "outcome": outcome,
@@ -354,7 +356,22 @@ def build_athlete1_scenario(
 
     days_meta = assert_window_integrity(build_simulation_days(SIM_START, SIM_END))
     hw_list = list(homework)
-    zoom_list = list(zoom_meetings)[:2]  # use up to two existing meetings
+    zoom_list = list(zoom_meetings)[:2]  # optional plan hints; execute creates disposable meetings
+    # Prefer create-during-execute placeholders when no meetings supplied so dry-run
+    # planning still shows day 12 / day 40 Zoom events without VERIFY 2026 IDs.
+    if not zoom_list:
+        zoom_list = [
+            {
+                "record_id": "__SIM_ZOOM_LIVE__",
+                "display": "Sim create live (execute)",
+                "create_during_execute": True,
+            },
+            {
+                "record_id": "__SIM_ZOOM_REC__",
+                "display": "Sim create recorded (execute)",
+                "create_during_execute": True,
+            },
+        ]
 
     day_plans: list[DayPlan] = []
     intended_emails: list[dict[str, Any]] = []
@@ -533,6 +550,7 @@ def build_athlete1_scenario(
         "Video Feedback",
         "Weekly Athlete Summary",
         "Zoom Attendance",
+        "Zoom Meetings",  # sim-created disposable meetings only
         "Email Handoff Queue",
     ]
 
@@ -578,6 +596,7 @@ def build_athlete1_scenario(
             ),
             "sim_window_week_count": len(window_weeks),
             "week9_zero_homework": True,
+            "zoom_meetings_create_during_execute": True,
             "week9_bounds": (
                 [week9_bounds[0].isoformat(), week9_bounds[1].isoformat()]
                 if week9_bounds
@@ -607,6 +626,7 @@ def scenario_from_reference(
             "display": getattr(obj, "display", getattr(obj, "name", "")),
             "slot": getattr(obj, "slot", ""),
             "week_id": getattr(obj, "week_id", ""),
+            "library_id": getattr(obj, "library_id", ""),
             "meeting_name": getattr(obj, "meeting_name", ""),
             "start_time": getattr(obj, "start_time", ""),
             "name": getattr(obj, "name", ""),

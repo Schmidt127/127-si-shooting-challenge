@@ -189,8 +189,21 @@ class SimulationClock:
             "future activity dates are not modeled as submissions in this harness."
         )
 
+    def activity_date_only_iso(self, activity_date: date) -> str:
+        """Date-only ISO for Airtable ``date`` fields.
+
+        Evening Denver datetimes (e.g. 18:00-06:00) shift one UTC calendar day
+        when stored on an Airtable date field, which made Season Sim Clock Now
+        comparisons treat same-day submissions as future. Prefer YYYY-MM-DD.
+        """
+        return activity_date.isoformat()
+
     def activity_datetime_iso(self, activity_date: date, hour: int = 18, minute: int = 0) -> str:
-        """Denver-local ISO timestamp for Activity Date writes."""
+        """Denver-local ISO timestamp for datetime fields (not Activity Date).
+
+        Do **not** use this for Submissions.Activity Date (Airtable type=date).
+        Use ``activity_date_only_iso`` instead.
+        """
         dt = datetime(
             activity_date.year,
             activity_date.month,

@@ -49,7 +49,9 @@ TRANSACTIONAL_TABLES = (
     "Email Handoff Queue",
 )
 
-# Tables — reference / configuration (never delete via cleanup).
+# Tables — reference / configuration (never scan-delete wholesale).
+# Zoom Meetings stays here so cleanup never deletes *non-registry* meetings;
+# registry-scoped sim-created Zoom Meetings are still deleted (see cleanup.py).
 REFERENCE_TABLES = (
     "Grade Bands",
     "Target Goal Shots",
@@ -66,6 +68,10 @@ REFERENCE_TABLES = (
     "Program Instance - Sync",
     "School - Synced",
 )
+
+# Reference tables whose *registry-listed* record IDs may be deleted by cleanup.
+# Non-registry rows on these tables are never deleted.
+REGISTRY_DELETABLE_REFERENCE_TABLES = frozenset({"Zoom Meetings"})
 
 # Required tables for preflight connectivity / field presence checks.
 PREFLIGHT_REQUIRED_TABLES = TRANSACTIONAL_TABLES + REFERENCE_TABLES

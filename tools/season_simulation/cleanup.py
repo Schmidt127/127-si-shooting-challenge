@@ -10,7 +10,11 @@ from typing import Any
 
 from .airtable_client import AirtableClient, WriteBlockedError
 from .confirmation import ConfirmationError  # noqa: F401 — re-exported for callers
-from .constants import REFERENCE_TABLES, TRANSACTIONAL_TABLES
+from .constants import (
+    REFERENCE_TABLES,
+    REGISTRY_DELETABLE_REFERENCE_TABLES,
+    TRANSACTIONAL_TABLES,
+)
 from .run_registry import load_registry, run_marker
 
 # Delete order: dependents before parents.
@@ -87,12 +91,17 @@ def build_cleanup_plan(
         )
 
     for table, ids in reg.ids_by_table().items():
-        if table in REFERENCE_TABLES:
+        if table in REFERENCE_TABLES and table not in REGISTRY_DELETABLE_REFERENCE_TABLES:
             warnings.append(
                 f"Registry references {table!r} — skipping (never deleted by cleanup)"
             )
             continue
-        if table not in TRANSACTIONAL_TABLES:
+        if table in REGISTRY_DELETABLE_REFERENCE_TABLES:
+            warnings.append(
+                f"Registry lists {len(ids)} sim-created {table!r} "
+                "record(s) — cleanup will delete only those IDs"
+            )
+        elif table not in TRANSACTIONAL_TABLES:
             warnings.append(f"Unexpected transactional table in registry: {table}")
         targets.setdefault(table, [])
         for rid in ids:
@@ -111,12 +120,25 @@ def build_cleanup_plan(
         f"Primary targeting uses local registry; marker {marker!r} is secondary evidence"
     )
 
-    # Note attendees patches that cleanup should reverse (not delete meetings).
-    patches = list((reg.meta or {}).get("zoom_attendees_patches") or [])
+    # Attendees patches: reverse only when the meeting is *not* also deleted
+    # (sim-created meetings in registry are deleted wholesale).
+    patches_raw = list((reg.meta or {}).get("zoom_attendees_patches") or [])
+    sim_meeting_ids = set(targets.get("Zoom Meetings") or [])
+    patches = [
+        p
+        for p in patches_raw
+        if (p.get("meeting_id") or "") not in sim_meeting_ids
+    ]
     if patches:
         warnings.append(
-            f"{len(patches)} Zoom Meetings.Attendees patch(es) recorded — "
-            "cleanup will reverse enrollment from Attendees, not delete meetings"
+            f"{len(patches)} Zoom Meetings.Attendees patch(es) on non-sim meetings — "
+            "cleanup will reverse enrollment from Attendees"
+        )
+    skipped_sim_patches = len(patches_raw) - len(patches)
+    if skipped_sim_patches:
+        warnings.append(
+            f"{skipped_sim_patches} Attendees patch(es) skipped — "
+            "sim-created Zoom Meetings will be deleted instead"
         )
 
     # Optional live verification that registry IDs still exist (read-only).
@@ -248,7 +270,10 @@ def run_cleanup(
         ids = plan.targets.get(table) or []
         if not ids:
             continue
-        if table in REFERENCE_TABLES:
+        if (
+            table in REFERENCE_TABLES
+            and table not in REGISTRY_DELETABLE_REFERENCE_TABLES
+        ):
             errors.append(f"Refusing to delete reference table {table}")
             continue
         try:

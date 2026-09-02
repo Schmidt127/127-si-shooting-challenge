@@ -427,6 +427,41 @@ def assess_clock_override_readiness(
     )
 
 
+def activity_date_write_value(activity_date: date) -> str:
+    """Airtable date-field write value — calendar day only (no evening UTC shift)."""
+    return activity_date.isoformat()
+
+
+def season_sim_clock_now_write_value(simulated_now: date) -> str:
+    """Season Sim Clock Now as the same America/Denver calendar day string."""
+    return simulated_now.isoformat()
+
+
+def season_sim_test_submitted_at_write_value(submitted_day: date) -> str:
+    """Test Submitted At datetime that keeps the Denver calendar day stable.
+
+    Uses noon America/Denver so UTC conversion cannot roll the date.
+    """
+    return f"{submitted_day.isoformat()}T12:00:00-06:00"
+
+
+def sim_submission_counts_under_gate(
+    *,
+    activity_date: date,
+    season_sim_clock_now: date,
+    run_marker: str,
+) -> bool:
+    """True when gated Activity Date Is Future? is 0 for this sim write pair."""
+    decision = activity_date_is_future_gated(
+        activity_date,
+        wall_now=datetime.now(),
+        season_sim_test_record=True,
+        video_upload_note=run_marker,
+        season_sim_clock_now=season_sim_clock_now,
+    )
+    return bool(decision.counts_for_submission)
+
+
 def sim_submission_override_fields(
     *,
     run_marker: str,
@@ -440,7 +475,12 @@ def sim_submission_override_fields(
 
     Always stamps ``Video Upload Note`` (exists in Production). Season Sim
     fields are included only when present in ``available_fields`` (or when
-    availability is unknown / None ??? intended-write planning).
+    availability is unknown / None — intended-write planning).
+
+    ``Season Sim Clock Now`` is a date-only string matching ``simulated_now``
+    so the live gated formula ``Activity Date > Season Sim Clock Now`` stays
+    false for same-day and backdated sim rows when Activity Date is also
+    date-only.
     """
     submitted_day = test_submitted_at or activity_date
     fields: dict[str, Any] = {
@@ -448,8 +488,10 @@ def sim_submission_override_fields(
     }
     optional = {
         SEASON_SIM_TEST_RECORD_FIELD: True,
-        SEASON_SIM_CLOCK_NOW_FIELD: simulated_now.isoformat(),
-        SEASON_SIM_TEST_SUBMITTED_AT_FIELD: f"{submitted_day.isoformat()}T18:00:00.000Z",
+        SEASON_SIM_CLOCK_NOW_FIELD: season_sim_clock_now_write_value(simulated_now),
+        SEASON_SIM_TEST_SUBMITTED_AT_FIELD: season_sim_test_submitted_at_write_value(
+            submitted_day
+        ),
     }
     for name, value in optional.items():
         if available_fields is None or name in available_fields:

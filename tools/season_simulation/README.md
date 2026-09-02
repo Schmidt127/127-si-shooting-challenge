@@ -18,7 +18,7 @@ override is live and Mike authorizes.
 |---|---|
 | Offline tests / dry-run / preflight | Yes |
 | Full execute writer (idempotent) | **Yes in code** — creates Athlete, Enrollment (+ Program Instance), WAS, Submissions, Assets, HC, VF, Zoom Attendance, live `Attendees` patch |
-| Complete countable E2E on wall-clock 2026 | **No** until Mike applies gated Airtable formula (see operator checklist). Without it, `Activity Date Is Future?=1` → `Count This Submission?=0` |
+| Complete countable E2E on wall-clock 2026 | Formulas + writer ready; **paste 010 v10.13 / 114 v6.2 / 073 v4.6** before next execute (see operator checklist). Hub allowlist includes `schmidt@fairfieldbasketballclub.com`. |
 
 `CREATED_TIME()` / `Submitted At` **cannot** be API-backdated. Same-day / Perfect Week timing uses gated `Season Sim Test Submitted At` and/or `Perfect Week Manual Exception?` on disposable rows only.
 
@@ -70,13 +70,14 @@ Idempotent by `SEASON-SIM|<run_id>|…` dedupe keys in the local run registry:
 |---|---|
 | Athletes | Athlete 1 / allowlist Parent Email |
 | Enrollments | links Athlete, Grade Band, **Program Instance**, School Year |
-| Weekly Athlete Summary | one per covering Week + Goal Record |
+| Weekly Athlete Summary | Enrollment + Week + **Grade Band** + Goal Record (no 030 race) |
 | Submissions | Activity Date 2027, Count It, Week link, clock-override stamps |
 | Submission Assets | Homework 1 / Video For Feedback (metadata; no Make send) |
-| Homework Completions | PHA + Satisfactory?/Review Complete + Completion Status |
-| Video Feedback | Enrollment + Submission + Pending |
-| Zoom Attendance | **Live** vs **Recording Quiz** (+ Satisfactory for recorded) |
-| Zoom Meetings.Attendees | **live meeting only** (patch; never delete meeting) |
+| Homework Completions | PHA + Homework library + **`Submission Date`** + review fields |
+| Video Feedback | Enrollment + Submission + Grade Band + Feedback Posted? arm |
+| Zoom Meetings | **Disposable** Completed live (day 12) + recording (day 40); registry-cleaned |
+| Zoom Attendance | **Live** vs **Recording Quiz** (+ Satisfactory; never on recording Attendees) |
+| Zoom Meetings.Attendees | **live meeting only** (patch; reversed on cleanup) |
 
 Resume: re-run same `--simulation-id` reuses registry IDs (no duplicates). Failure sets registry `status=paused` and stops; next run continues.
 

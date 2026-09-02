@@ -1,5 +1,5 @@
 /**
- * Focused dateKey / todayKey coverage for Automation 010.
+ * Focused dateKey / todayKey / Season Sim gate coverage for Automation 010.
  * Run: node --test tools/testing/tests/test_010_date_key.mjs
  */
 import test from "node:test";
@@ -28,6 +28,10 @@ function loadDateHelpers() {
   assert.ok(fromDateMatch, "dateKeyFromDateObject");
   assert.ok(dateKeyMatch, "dateKey");
   assert.ok(todayKeyMatch, "todayKey");
+  assert.match(source, /function isSeasonSimRecord\(submission\)/);
+  assert.match(source, /function effectiveTodayKey\(submission\)/);
+  assert.match(source, /seasonSimTestRecord:\s*"Season Sim Test Record\?"/);
+  assert.match(source, /version:\s*"v10\.13"/);
 
   const factory = new Function(`
     ${configMatch[0]}
@@ -134,4 +138,58 @@ test("Airtable Date Activity Date creates XP Event successfully", async () => {
   assert.equal(output.values.actionOut, "created");
   assert.equal(base.getTable("XP Events").records.size, 1);
   assert.equal(output.values.submissionId, IDS.SUBMISSION);
+});
+
+test("Season Sim dual gate uses Season Sim Clock Now for Activity Date eligibility", async () => {
+  const activity = new Date("2027-05-15T18:00:00.000Z");
+  const clock = new Date("2027-05-15T18:00:00.000Z");
+  const weekStart = new Date("2027-05-10T18:00:00.000Z");
+  const weekEnd = new Date("2027-05-20T18:00:00.000Z");
+
+  const base = build010Base({
+    submissionCells: {
+      "Activity Date": activity,
+      "XP Events": [],
+      "Last Reconciled Signature": "",
+      "Season Sim Test Record?": true,
+      "Season Sim Clock Now": clock,
+      "Video Upload Note": "SEASON-SIM|SEASON-SIM-2027-test",
+    },
+    xpEvents: [],
+  });
+  base.getTable("Weeks").records.get(IDS.WEEK).cells["Start Date"] = weekStart;
+  base.getTable("Weeks").records.get(IDS.WEEK).cells["End Date"] = weekEnd;
+
+  const { output, error } = await run010({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.statusOut, "success");
+  assert.equal(output.values.actionOut, "created");
+  assert.equal(base.getTable("XP Events").records.size, 1);
+});
+
+test("Season Sim partial gate (checkbox only) still treats 2027 Activity Date as future", async () => {
+  const activity = new Date("2027-05-15T18:00:00.000Z");
+  const clock = new Date("2027-05-15T18:00:00.000Z");
+  const weekStart = new Date("2027-05-10T18:00:00.000Z");
+  const weekEnd = new Date("2027-05-20T18:00:00.000Z");
+
+  const base = build010Base({
+    submissionCells: {
+      "Activity Date": activity,
+      "XP Events": [],
+      "Last Reconciled Signature": "",
+      "Season Sim Test Record?": true,
+      "Season Sim Clock Now": clock,
+      "Video Upload Note": "missing marker",
+    },
+    xpEvents: [],
+  });
+  base.getTable("Weeks").records.get(IDS.WEEK).cells["Start Date"] = weekStart;
+  base.getTable("Weeks").records.get(IDS.WEEK).cells["End Date"] = weekEnd;
+
+  const { output, error } = await run010({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.statusOut, "skipped");
+  assert.equal(output.values.actionOut, "skipped_ineligible");
+  assert.equal(base.getTable("XP Events").records.size, 0);
 });
