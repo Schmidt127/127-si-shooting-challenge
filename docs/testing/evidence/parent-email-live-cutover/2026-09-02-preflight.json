@@ -1,0 +1,115 @@
+{
+  "at": "2026-09-02T23:23:17.957Z",
+  "hub": {
+    "ok": true,
+    "json": {
+      "service": "127si-communications-hub",
+      "status": "ready",
+      "scheduler": "off",
+      "provider": "RESEND",
+      "missing": []
+    }
+  },
+  "activeEnrollmentCount": 4,
+  "realFamilyCount": 0,
+  "recipientAudit": [
+    {
+      "id": "recFZko7NjNwANUko",
+      "name": "VERIFY -02T0039",
+      "parentCleaned": "[email]",
+      "disposable": true
+    },
+    {
+      "id": "recZEwkkXTJanDlG6",
+      "name": "Athlete1 Schmidt",
+      "parentCleaned": "[email]",
+      "disposable": true
+    },
+    {
+      "id": "reckamCR4ACOrDCe7",
+      "name": "VERIFY 91349526",
+      "parentCleaned": "[email]",
+      "disposable": true
+    },
+    {
+      "id": "recn1QUIGO1PjbnnY",
+      "name": "VERIFY -02T0040",
+      "parentCleaned": "[email]",
+      "disposable": true
+    }
+  ],
+  "automationVersions": [
+    {
+      "slot": "071",
+      "repoVersion": "v4.3",
+      "prodVersion": "v4.3",
+      "status": "Live",
+      "match": true
+    },
+    {
+      "slot": "072",
+      "repoVersion": "v4.9.1",
+      "prodVersion": "v4.9.1",
+      "status": "Live",
+      "match": true
+    },
+    {
+      "slot": "073",
+      "repoVersion": "v4.6",
+      "prodVersion": "v4.6",
+      "status": "Live",
+      "match": true
+    },
+    {
+      "slot": "074",
+      "repoVersion": "v3.5",
+      "prodVersion": "v3.5",
+      "status": "Live",
+      "match": true
+    },
+    {
+      "slot": "076",
+      "repoVersion": "v8.12",
+      "prodVersion": "v8.12",
+      "status": "Live",
+      "match": true
+    },
+    {
+      "slot": "078A",
+      "repoVersion": "v1.5",
+      "prodVersion": "v1.5",
+      "status": "Live",
+      "match": true
+    },
+    {
+      "slot": "079",
+      "repoVersion": "v2.5",
+      "prodVersion": "v2.5",
+      "status": "Live",
+      "match": true
+    },
+    {
+      "slot": "117",
+      "repoVersion": "v2.1",
+      "prodVersion": "v2.1",
+      "status": "Live",
+      "match": true
+    },
+    {
+      "slot": "118",
+      "repoVersion": "v2.0",
+      "prodVersion": "v2.0",
+      "status": "Live",
+      "match": true
+    },
+    {
+      "slot": "119",
+      "repoVersion": "v1.7",
+      "prodVersion": "v1.7",
+      "status": "Live",
+      "match": true
+    }
+  ],
+  "stopReasons": [],
+  "mismatches": []
+}

@@ -1,0 +1,63 @@
+{
+  "at": "2026-09-02T23:22:28.662Z",
+  "apply": true,
+  "recipientSync": {
+    "examined": 3,
+    "pendingOrUpdated": 3,
+    "ids": [
+      "recFZko7NjNwANUko",
+      "recZEwkkXTJanDlG6",
+      "recn1QUIGO1PjbnnY"
+    ]
+  },
+  "paths": {
+    "WELCOME": {
+      "path": "WELCOME",
+      "enrollmentId": "reckamCR4ACOrDCe7",
+      "first": {
+        "queueId": "recySzWhjc26N2Yhl",
+        "status": "Accepted",
+        "testMode": true,
+        "handoffKey": "WELCOME|ENROLLMENTS|reckamCR4ACOrDCe7",
+        "sourceRecordId": "reckamCR4ACOrDCe7",
+        "hubEventId": "recyUkl2tRDRVmMpy",
+        "recipients": [
+          "schmidt@fairfieldbasketballclub.com",
+          "schmidt@fairfieldbasketballclub.com"
+        ],
+        "recipientOk": true,
+        "accepted": true
+      }
+    },
+    "DAILY": {
+      "path": "DAILY",
+      "eventType": "DAILY_SUBMISSION",
+      "acceptedSafeCount": 0,
+      "latestAccepted": null
+    },
+    "WEEKLY": {
+      "path": "WEEKLY",
+      "eventType": "WEEKLY_ATHLETE_SUMMARY",
+      "acceptedSafeCount": 0,
+      "latestAccepted": null
+    },
+    "HOMEWORK": {
+      "path": "HOMEWORK",
+      "eventType": "HOMEWORK_FEEDBACK",
+      "acceptedSafeCount": 0,
+      "latestAccepted": null
+    },
+    "VIDEO": {
+      "path": "VIDEO",
+      "eventType": "VIDEO_FEEDBACK",
+      "acceptedSafeCount": 0,
+      "latestAccepted": null
+    },
+    "ZOOM_RECORDING_APPROVAL": {
+      "path": "ZOOM_RECORDING_APPROVAL",
+      "eventType": "ZOOM_RECORDING_APPROVAL",
+      "acceptedSafeCount": 0,
+      "latestAccepted": null
+    }
+  }
+}

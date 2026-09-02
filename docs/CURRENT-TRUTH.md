@@ -145,6 +145,7 @@ Evidence pointer: [`PROJECT_STATE.md`](./PROJECT_STATE.md) § Vercel / web app.
 | Automation **077** | **Retired / deleted from Production** (Mike-dated docs: 2026-08-13). Do not restore Make daily email. GitHub source retained as archive only. **Do not** trust obsolete `Automations` table rows that once showed 077 as Live. |
 | Queue producers (repo) | Include Hub handoff scripts; **079** dispatches Ready queue → Hub → Resend |
 | Automation **117** | **v2.1** Hub queue create for Zoom recording approval. Automations **Name** = Hub handoff title; **Status = Live** (2026-08-21 evening re-read). Not XP; not Make 117f. |
+| Parent-email Live cutover (2026-09-02) | **078A v1.5** in GitHub + Production `Automations` table (configurable `testMode`, default true). Disposable WELCOME proof **Accepted** → Hub for `schmidt@fairfieldbasketballclub.com` only. **Automation UI inputs** (`testMode=false` on 071/073/074/076/117/078A; `dryRun=false` + Live on 118/119) require Airtable Automations UI — see [`deploy-checklists/parent-email-live-cutover-2026-09-02.md`](./deploy-checklists/parent-email-live-cutover-2026-09-02.md). |
 
 Authority: [`integrations/email-send-plane.md`](./integrations/email-send-plane.md) · Completion Master · [`automation-index.md`](./automation-index.md). Live Automations UI attestation still preferred if Mike re-confirms.
 
