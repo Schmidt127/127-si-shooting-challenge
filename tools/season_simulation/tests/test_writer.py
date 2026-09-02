@@ -38,9 +38,14 @@ from season_simulation.run_registry import (  # noqa: E402
     run_marker,
     save_registry,
 )
-from season_simulation.scenarios import build_athlete1_scenario  # noqa: E402
+from season_simulation.scenarios import (  # noqa: E402
+    MISS_DAYS,
+    VIDEO_FEEDBACK_DAYS,
+    build_athlete1_scenario,
+)
 from season_simulation.simulation_clock import SimulationClock  # noqa: E402
 from season_simulation.writer import (  # noqa: E402
+    SIM_REVIEWER_FILE_URL,
     SeasonSimWriter,
     build_execute_context_from_reference,
     build_week_date_index,
@@ -129,6 +134,8 @@ class TestWriterFullCreate(unittest.TestCase):
                 "Video Feedback Key",
                 "Coach Feedback",
                 "Feedback Posted?",
+                "Parent Feedback Ready?",
+                "Parent Feedback Sent?",
                 "Ready for XP Automation?",
                 "Grade Band",
             },
@@ -139,11 +146,13 @@ class TestWriterFullCreate(unittest.TestCase):
                 "Meeting Status",
                 "Attendees",
                 "Program Instance",
+                "Create XP Events",
             },
             zoom_attendance_field_names={
                 "Enrollment",
                 "Zoom Meeting",
                 "Attendance Method",
+                "Live Attendance Confirmed?",
                 "Recording Quiz Satisfactory?",
                 "Recording Quiz Review Status",
             },
@@ -218,6 +227,11 @@ class TestWriterFullCreate(unittest.TestCase):
             self.assertTrue(fields.get("Enrollment"))
             self.assertTrue(fields.get("Week"))
             self.assertTrue(fields.get("Submissions - Linked"))
+            self.assertIn(fields.get("Item Slot"), ("HW1", "HW2"), row["id"])
+            self.assertTrue(fields.get("Submission Assets"), row["id"])
+            self.assertIs(fields.get("Parent Feedback Sent?"), False)
+            # Writer must not falsely mark Awarded.
+            self.assertNotEqual(fields.get("Award Status"), "Awarded", row["id"])
             pha_ids.update(fields["Program Homework Assignment"])
         self.assertEqual(len(pha_ids), 18)
 
@@ -225,6 +239,8 @@ class TestWriterFullCreate(unittest.TestCase):
         self.assertEqual(len(vf), 4)  # VIDEO_FEEDBACK_DAYS
         for row in vf:
             self.assertTrue(row["fields"].get("Feedback Posted?"), row["id"])
+            self.assertTrue(row["fields"].get("Parent Feedback Ready?"), row["id"])
+            self.assertIs(row["fields"].get("Parent Feedback Sent?"), False)
             self.assertTrue(row["fields"].get("Coach Feedback"))
             self.assertEqual(row["fields"].get("Grade Band"), ["recBAND12"])
             # Ready for XP is owned by Automation 113 after Base XP — not pre-set.
@@ -239,7 +255,12 @@ class TestWriterFullCreate(unittest.TestCase):
 
         assets = list(self.client.tables.get("Submission Assets", {}).values())
         self.assertTrue(any(a["fields"].get("Asset Purpose") == "Video For Feedback" for a in assets))
-        self.assertTrue(any(a["fields"].get("Asset Purpose") == "Homework 1" for a in assets))
+        hw_assets = [
+            a for a in assets if a["fields"].get("Asset Purpose") == "Homework 1"
+        ]
+        self.assertTrue(hw_assets)
+        for a in hw_assets:
+            self.assertEqual(a["fields"].get("Reviewer File URL"), SIM_REVIEWER_FILE_URL)
 
     def test_all_submissions_countable_under_gate(self):
         result = self._writer().run()
@@ -314,6 +335,7 @@ class TestWriterFullCreate(unittest.TestCase):
             result.registry.enrollment_id,
             lf.get("Attendees") or [],
         )
+        self.assertTrue(lf.get("Create XP Events"), "live Create XP Events must be armed for 101")
         # Recorded meeting must NOT gain Attendees via live path
         rec_meeting = self.client.get_record("Zoom Meetings", rec_id)
         rf = rec_meeting["fields"]
@@ -323,6 +345,18 @@ class TestWriterFullCreate(unittest.TestCase):
             result.registry.enrollment_id,
             rf.get("Attendees") or [],
         )
+        self.assertFalse(rf.get("Create XP Events"))
+        live_za = [
+            z for z in za if z["fields"].get("Attendance Method") == "Live"
+        ]
+        self.assertEqual(len(live_za), 1)
+        self.assertTrue(live_za[0]["fields"].get("Live Attendance Confirmed?"))
+        create_xp_arms = [
+            r
+            for r in result.created
+            if r.get("op") == "arm_create_xp_events"
+        ]
+        self.assertEqual(len(create_xp_arms), 1)
         # Registry-scoped for cleanup
         reg_zoom = result.registry.ids_by_table().get("Zoom Meetings") or []
         self.assertIn(live_id, reg_zoom)
@@ -479,6 +513,117 @@ class TestWriterFullCreate(unittest.TestCase):
         self.assertEqual(by_date["2027-05-01"], "recWEEKEarlyBird")
         self.assertEqual(by_date["2027-05-02"], "recWEEK1")
         self.assertIn("recWEEK9", by_id)
+
+    def test_streak_post_create_and_daily_email_arm(self):
+        result = self._writer().run()
+        self.assertEqual(result.status, "complete")
+        post_arms = [
+            r
+            for r in result.created
+            if r.get("op") == "submission_post_create_arm"
+        ]
+        self.assertEqual(len(post_arms), 58)
+        for sub in self.client.tables.get("Submissions", {}).values():
+            f = sub["fields"]
+            self.assertEqual(f.get("Submission Stat Mode"), "Simple Total")
+            self.assertTrue(f.get("Build Daily Email Now?"), sub["id"])
+            self.assertTrue(f.get("Enrollment"))
+            self.assertTrue(f.get("Activity Date"))
+            self.assertTrue(f.get("Week"))
+        # Idempotent: second run reuses post-create arms
+        reg = load_registry(self.registry_dir, self.run_id)
+        r2 = self._writer(reg=reg).run()
+        self.assertEqual(r2.status, "complete")
+        reused_post = [
+            r
+            for r in r2.reused
+            if "SUB_POST_CREATE" in str(r.get("dedupe_key") or "")
+        ]
+        self.assertEqual(len(reused_post), 58)
+
+    def test_weekly_email_arm_when_delivery_enabled(self):
+        result = self._writer(enable_email=True).run()
+        self.assertEqual(result.status, "complete")
+        armed = 0
+        for row in self.client.tables.get("Weekly Athlete Summary", {}).values():
+            f = row["fields"]
+            if f.get("Build Weekly Email Now?"):
+                armed += 1
+                self.assertIs(f.get("Weekly Email Sent?"), False)
+                self.assertIs(f.get("Send to Make?"), False)
+        self.assertGreaterEqual(armed, 1)
+        for ev in result.registry.email_events:
+            self.assertEqual(ev["recipient"], SAFE_EMAIL_RECIPIENT)
+
+    def test_homework_email_eligibility_and_needs_revision_pending(self):
+        result = self._writer().run()
+        self.assertEqual(result.status, "complete")
+        satisfactory = 0
+        needs_rev = 0
+        for row in self.client.tables.get("Homework Completions", {}).values():
+            f = row["fields"]
+            self.assertIn(f.get("Item Slot"), ("HW1", "HW2"))
+            self.assertTrue(f.get("Submission Assets"))
+            self.assertTrue(f.get("Review Complete"))
+            self.assertIs(f.get("Parent Feedback Sent?"), False)
+            self.assertNotEqual(f.get("Award Status"), "Awarded")
+            if f.get("Completion Status") == "Needs Revision":
+                needs_rev += 1
+                self.assertFalse(f.get("Satisfactory?"))
+            elif f.get("Satisfactory?"):
+                satisfactory += 1
+        self.assertGreater(satisfactory, 0)
+        self.assertGreater(needs_rev, 0)
+
+    def test_perfect_week_negative_scenario_preserved(self):
+        """Misses + sparse videos + Needs Revision HW → no forced Perfect Week."""
+        result = self._writer().run()
+        self.assertEqual(result.status, "complete")
+        # Missed days produce no submissions
+        activity_days = {
+            date.fromisoformat(str(s["fields"]["Activity Date"])[:10]).toordinal()
+            - date(2027, 5, 1).toordinal()
+            + 1
+            for s in self.client.tables.get("Submissions", {}).values()
+        }
+        for miss in MISS_DAYS:
+            self.assertNotIn(miss, activity_days)
+        # Fewer than 3 videos in any single week (one video day per spaced week)
+        self.assertEqual(len(VIDEO_FEEDBACK_DAYS), 4)
+        vf_weeks = set()
+        for n in VIDEO_FEEDBACK_DAYS:
+            ad = date(2027, 5, 1) + timedelta(days=n - 1)
+            vf_weeks.add(self.ctx.week_for(ad))
+        self.assertEqual(len(vf_weeks), len(VIDEO_FEEDBACK_DAYS))
+        # At least one Needs Revision homework remains incomplete for PW gate
+        needs = [
+            h
+            for h in self.client.tables.get("Homework Completions", {}).values()
+            if h["fields"].get("Completion Status") == "Needs Revision"
+        ]
+        self.assertGreater(len(needs), 0)
+        # Scenario meta documents negative Perfect Week expectation
+        notes = " ".join(str(d.notes or "") for d in self.scenario.days)
+        self.assertNotIn("FORCE_PERFECT_WEEK", notes)
+
+    def test_intended_writes_arms_and_paths(self):
+        writes = build_intended_writes(self.scenario, self.clock, ctx=self.ctx)
+        readiness = summarize_intended_write_readiness(writes)
+        self.assertTrue(readiness["streak_post_create_planned"])
+        self.assertTrue(readiness["daily_email_arm_planned"])
+        self.assertTrue(readiness["live_xp_path_planned"])
+        self.assertTrue(readiness["recorded_xp_path_planned"])
+        self.assertEqual(readiness["video_parent_feedback_ready_arms"], 4)
+        self.assertGreaterEqual(readiness["weekly_email_arms"], 1)
+        self.assertGreater(readiness["homework_needs_revision"], 0)
+        self.assertEqual(readiness["homework_071_structural"], 18)
+        live_confirmed = [
+            w
+            for w in writes
+            if w.get("zoom_mode") == "live"
+            and (w.get("fields") or {}).get("Live Attendance Confirmed?") is True
+        ]
+        self.assertEqual(len(live_confirmed), 1)
 
 
 class TestConfirmationTokens(unittest.TestCase):

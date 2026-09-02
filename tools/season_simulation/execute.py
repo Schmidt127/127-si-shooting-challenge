@@ -106,6 +106,8 @@ def build_intended_writes(
                     "Week": [wid],
                     "Goal Record": [scenario.goal_record_id],
                     "Grade Band": [scenario.grade_band_id],
+                    "Weekly Email Sent?": False,
+                    "Send to Make?": False,
                 },
             }
         )
@@ -129,8 +131,11 @@ def build_intended_writes(
                     "Start Time": f"{day12.activity_date.isoformat()}T12:00:00-06:00",
                     "Week": [week_live] if week_live else [],
                     "Attendees": [],
+                    "Create XP Events": False,
                 },
-                "notes": "Disposable sim meeting — registry cleanup deletes this ID",
+                "notes": (
+                    "Disposable sim meeting — Create XP Events armed after Attendees patch"
+                ),
             }
         )
     if day40 and ctx:
@@ -147,8 +152,9 @@ def build_intended_writes(
                     "Start Time": f"{day40.activity_date.isoformat()}T12:00:00-06:00",
                     "Week": [week_rec] if week_rec else [],
                     "Attendees": [],
+                    "Create XP Events": False,
                 },
-                "notes": "Disposable sim meeting — never patch Attendees with sim enrollment",
+                "notes": "Disposable sim meeting — never patch Attendees; Create XP stays off",
             }
         )
 
@@ -186,13 +192,14 @@ def build_intended_writes(
             available_fields=(ctx.submission_field_names if ctx else None),
         )
         fields: dict[str, Any] = {
-            # Date-only — evening Denver datetimes shift +1 UTC day on Airtable date fields.
-            "Activity Date": activity_date_write_value(day.activity_date),
-            "Shot Total": day.shot_total,
-            "Duplicate Review Status": "Count It",
-            "Daily Email Subject": f"{marker}|D{day.day_number:02d}",
-            **override,
-        }
+                # Date-only — evening Denver datetimes shift +1 UTC day on Airtable date fields.
+                "Activity Date": activity_date_write_value(day.activity_date),
+                "Shot Total": day.shot_total,
+                "Duplicate Review Status": "Count It",
+                "Submission Stat Mode": "Simple Total",
+                "Daily Email Subject": f"{marker}|D{day.day_number:02d}",
+                **override,
+            }
         counts = sim_submission_counts_under_gate(
             activity_date=day.activity_date,
             season_sim_clock_now=write_clock_date,
@@ -215,16 +222,35 @@ def build_intended_writes(
                 "expected_countable": counts,
             }
         )
+        writes.append(
+            {
+                "table": "Submissions",
+                "op": "update",
+                "day_number": day.day_number,
+                "dedupe_key": f"{marker}|SUB_POST_CREATE|D{day.day_number:02d}",
+                "fields": {
+                    "Activity Date": activity_date_write_value(day.activity_date),
+                    "Build Daily Email Now?": True,
+                },
+                "notes": (
+                    "Post-create arm for 053 recordUpdated + 076 Build Daily Email Now?"
+                ),
+            }
+        )
         for hw in day.homework:
             library_id = str(hw.get("library_id") or "").strip()
+            slot = str(hw.get("slot") or "HW1")
+            satisfactory = hw.get("outcome") == "Satisfactory"
             hc_fields: dict[str, Any] = {
                 "Program Homework Assignment": [hw["pha_record_id"]],
                 "Completion Status": hw["outcome"],
-                "Satisfactory?": hw.get("outcome") == "Satisfactory",
+                "Satisfactory?": satisfactory,
                 "Review Complete": True,
                 "Notes": marker,
                 "asset_count_intended": hw["asset_count"],
                 "Submission Date": activity_date_write_value(day.activity_date),
+                "Item Slot": slot,
+                "Parent Feedback Sent?": False,
             }
             if library_id:
                 hc_fields["Homework"] = [library_id]
@@ -235,6 +261,9 @@ def build_intended_writes(
                     "day_number": day.day_number,
                     "dedupe_key": hw["dedupe_key"],
                     "fields": hc_fields,
+                    "notes": (
+                        "071 structural fields; do not force Awarded — Needs Revision stays pending"
+                    ),
                 }
             )
             for i in range(int(hw.get("asset_count") or 1)):
@@ -245,7 +274,9 @@ def build_intended_writes(
                         "dedupe_key": f"{hw['dedupe_key']}|ASSET|{i+1}",
                         "fields": {
                             "Asset Purpose": "Homework 1",
+                            "Asset Slot": slot,
                             "Asset Label": f"{marker}|HW|D{day.day_number:02d}|{i+1}",
+                            "Reviewer File URL": "https://www.fairfieldbasketballclub.com/shoot",
                         },
                     }
                 )
@@ -263,6 +294,8 @@ def build_intended_writes(
             if mode == "recorded":
                 za_fields["Recording Quiz Satisfactory?"] = True
                 za_fields["Recording Quiz Review Status"] = "Satisfactory"
+            else:
+                za_fields["Live Attendance Confirmed?"] = True
             writes.append(
                 {
                     "table": "Zoom Attendance",
@@ -275,7 +308,7 @@ def build_intended_writes(
                         "Recording: never Attendees; source key "
                         "ZOOM_RECORDING_CREDIT|{Enrollment}|{Meeting}"
                         if mode == "recorded"
-                        else "Live: Attendees patched after create"
+                        else "Live: Attendees patched then Create XP Events armed"
                     ),
                 }
             )
@@ -290,6 +323,16 @@ def build_intended_writes(
                             "Add Enrollment to Attendees (live only); "
                             "sim meeting is registry-deleted on cleanup"
                         ),
+                    }
+                )
+                writes.append(
+                    {
+                        "table": "Zoom Meetings",
+                        "op": "update",
+                        "day_number": day.day_number,
+                        "dedupe_key": f"{marker}|ZOOM_CREATE_XP|{zid}",
+                        "fields": {"Create XP Events": True},
+                        "notes": "Arm 101 live XP after Attendees; recorded stays Create=false",
                     }
                 )
         if day.video_feedback:
@@ -325,13 +368,42 @@ def build_intended_writes(
                     "op": "update",
                     "day_number": day.day_number,
                     "dedupe_key": f"{marker}|VF_ARM_POSTED|D{day.day_number:02d}",
-                    "fields": {"Feedback Posted?": True},
+                    "fields": {
+                        "Feedback Posted?": True,
+                        "Parent Feedback Ready?": True,
+                        "Parent Feedback Sent?": False,
+                    },
                     "notes": (
-                        "Arms 113/114 recordUpdated path; does not create XP Events; "
+                        "Arms 113/114/073; does not create XP Events; "
                         "does not set Ready for XP Automation?"
                     ),
                 }
             )
+
+    for day in scenario.days:
+        if day.action != "submit" or day.activity_date.weekday() != 5:
+            continue
+        if not ctx:
+            continue
+        wid = ctx.week_for(day.activity_date)
+        if not wid:
+            continue
+        writes.append(
+            {
+                "table": "Weekly Athlete Summary",
+                "op": "update",
+                "day_number": day.day_number,
+                "dedupe_key": f"{marker}|WAS_EMAIL_ARM|{wid}",
+                "fields": {
+                    "Build Weekly Email Now?": True,
+                    "Weekly Email Sent?": False,
+                    "Send to Make?": False,
+                },
+                "notes": (
+                    "072 arm only — do not manually clear Build; 072 clears on success/skipBuild"
+                ),
+            }
+        )
 
     for ev in scenario.intended_emails:
         writes.append(
@@ -351,6 +423,13 @@ def summarize_intended_write_readiness(
 ) -> dict[str, Any]:
     """Offline readiness summary for dry-run / no-write validation."""
     submissions = [w for w in writes if w.get("table") == "Submissions" and w.get("op") == "create"]
+    sub_post = [
+        w
+        for w in writes
+        if w.get("table") == "Submissions"
+        and w.get("op") == "update"
+        and "SUB_POST_CREATE" in str(w.get("dedupe_key") or "")
+    ]
     homework = [
         w for w in writes if w.get("table") == "Homework Completions" and w.get("op") == "create"
     ]
@@ -360,6 +439,34 @@ def summarize_intended_write_readiness(
     vf_arms = [
         w for w in writes if w.get("table") == "Video Feedback" and w.get("op") == "update"
     ]
+    live_za = [
+        w
+        for w in writes
+        if w.get("table") == "Zoom Attendance"
+        and w.get("zoom_mode") == "live"
+        and w.get("op") == "create"
+    ]
+    rec_za = [
+        w
+        for w in writes
+        if w.get("table") == "Zoom Attendance"
+        and w.get("zoom_mode") == "recorded"
+        and w.get("op") == "create"
+    ]
+    create_xp_arms = [
+        w
+        for w in writes
+        if w.get("table") == "Zoom Meetings"
+        and w.get("op") == "update"
+        and (w.get("fields") or {}).get("Create XP Events") is True
+    ]
+    weekly_arms = [
+        w
+        for w in writes
+        if w.get("table") == "Weekly Athlete Summary"
+        and w.get("op") == "update"
+        and (w.get("fields") or {}).get("Build Weekly Email Now?") is True
+    ]
     countable = [w for w in submissions if w.get("expected_countable") is True]
     uncountable = [w for w in submissions if w.get("expected_countable") is not True]
     hw_with_both = [
@@ -368,21 +475,50 @@ def summarize_intended_write_readiness(
         if (w.get("fields") or {}).get("Program Homework Assignment")
         and (w.get("fields") or {}).get("Homework")
     ]
+    hw_with_071 = [
+        w
+        for w in homework
+        if (w.get("fields") or {}).get("Item Slot")
+        and (w.get("fields") or {}).get("Parent Feedback Sent?") is False
+    ]
+    hw_needs_revision = [
+        w
+        for w in homework
+        if (w.get("fields") or {}).get("Completion Status") == "Needs Revision"
+    ]
+    vf_parent_ready = [
+        w
+        for w in vf_arms
+        if (w.get("fields") or {}).get("Parent Feedback Ready?") is True
+        and (w.get("fields") or {}).get("Feedback Posted?") is True
+    ]
     return {
         "submission_creates": len(submissions),
+        "submission_post_create_arms": len(sub_post),
         "submission_countable": len(countable),
         "submission_uncountable": len(uncountable),
         "uncountable_day_numbers": [w.get("day_number") for w in uncountable],
         "homework_completions": len(homework),
         "homework_with_pha_and_library": len(hw_with_both),
+        "homework_071_structural": len(hw_with_071),
+        "homework_needs_revision": len(hw_needs_revision),
         "video_feedback_creates": len(vf_creates),
         "video_feedback_update_arms": len(vf_arms),
+        "video_parent_feedback_ready_arms": len(vf_parent_ready),
+        "live_zoom_attendance": len(live_za),
+        "recorded_zoom_attendance": len(rec_za),
+        "live_create_xp_event_arms": len(create_xp_arms),
+        "weekly_email_arms": len(weekly_arms),
         "all_submissions_countable": len(submissions) > 0
         and len(uncountable) == 0,
         "all_homework_dual_linked": len(homework) > 0
         and len(hw_with_both) == len(homework),
+        "streak_post_create_planned": len(sub_post) == len(submissions) and len(submissions) > 0,
+        "daily_email_arm_planned": len(sub_post) == len(submissions) and len(submissions) > 0,
         "video_update_triggers_planned": len(vf_arms) == len(vf_creates)
         and len(vf_creates) > 0,
+        "live_xp_path_planned": len(live_za) == 1 and len(create_xp_arms) == 1,
+        "recorded_xp_path_planned": len(rec_za) == 1,
     }
 
 

@@ -23,6 +23,8 @@ from .clock_override import (
 # Preflight / readiness: writer always stamps Season Sim gate fields on sim Submissions.
 EXECUTE_SETS_SEASON_SIM_GATES = True
 SCHOOL_YEAR_2026_2027 = "2026-2027"
+# Parent-facing asset URL for 071 Reviewer File URL gate (allowlisted site; not a real upload).
+SIM_REVIEWER_FILE_URL = "https://www.fairfieldbasketballclub.com/shoot"
 from .constants import SAFE_EMAIL_RECIPIENT, SIM_START
 from .reference_data import parse_date_value
 from .run_registry import RunRegistry, load_registry, run_marker, save_registry
@@ -273,6 +275,7 @@ class SeasonSimWriter:
             self._ensure_sim_zoom_meetings()
             self._create_day_loop(athlete_id, enrollment_id)
             self._apply_zoom_live_attendees(enrollment_id)
+            self._arm_live_zoom_create_xp_events()
             self._register_email_intents()
             if self.enable_email_delivery:
                 self._arm_was_email_flags(enrollment_id)
@@ -344,12 +347,15 @@ class SeasonSimWriter:
                 week_ids.add(wid)
         for wid in sorted(week_ids):
             step = f"was|{wid}"
-            fields = {
+            fields: dict[str, Any] = {
                 "Enrollment": [enrollment_id],
                 "Week": [wid],
                 "Goal Record": [self.ctx.goal_record_id],
                 # Do not rely on Automation 030 — set Grade Band at create time.
                 "Grade Band": [self.ctx.grade_band_id],
+                # Explicit unchecked so 072 "already sent" / blank-checkbox traps do not apply.
+                "Weekly Email Sent?": False,
+                "Send to Make?": False,
             }
             self._ensure(
                 table="Weekly Athlete Summary",
@@ -383,7 +389,13 @@ class SeasonSimWriter:
             self.client, "Zoom Meetings"
         )
 
-        def _meeting_fields(*, name: str, activity: date, week_id: str) -> dict[str, Any]:
+        def _meeting_fields(
+            *,
+            name: str,
+            activity: date,
+            week_id: str,
+            create_xp_events: bool | None = None,
+        ) -> dict[str, Any]:
             fields: dict[str, Any] = {
                 "Meeting Name": name,
                 "Week": [week_id],
@@ -391,6 +403,11 @@ class SeasonSimWriter:
                 "Meeting Status": "Completed",
                 "Attendees": [],
             }
+            # Live: Create XP Events armed AFTER Attendees patch (see
+            # _arm_live_zoom_create_xp_events). Recorded: leave unchecked —
+            # SC-147 recording credit does not require Create XP Events.
+            if create_xp_events is False and "Create XP Events" in zm_fields:
+                fields["Create XP Events"] = False
             # Optional Program Instance link when present on the table.
             if "Program Instance" in zm_fields and self.ctx.program_instance_id:
                 fields["Program Instance"] = [self.ctx.program_instance_id]
@@ -403,6 +420,7 @@ class SeasonSimWriter:
                 name=f"{self.marker}|LIVE|D12",
                 activity=day12.activity_date,
                 week_id=week_live,
+                create_xp_events=False,
             ),
             step="zoom_meeting|live",
         )
@@ -413,6 +431,7 @@ class SeasonSimWriter:
                 name=f"{self.marker}|REC|D40",
                 activity=day40.activity_date,
                 week_id=week_rec,
+                create_xp_events=False,
             ),
             step="zoom_meeting|recorded",
         )
@@ -480,6 +499,8 @@ class SeasonSimWriter:
             "Activity Date": activity_date_write_value(day.activity_date),
             "Shot Total": day.shot_total,
             "Duplicate Review Status": "Count It",
+            # Required for Count This Submission? formula + 076 readiness.
+            "Submission Stat Mode": "Simple Total",
             "Daily Email Subject": f"{self.marker}|D{day.day_number:02d}",
             **override,
         }
@@ -498,6 +519,14 @@ class SeasonSimWriter:
             dedupe_key=day.dedupe_key,
             fields=sub_fields,
             step=f"submission|D{day.day_number:02d}",
+        )
+        # 053 watches recordUpdated (Activity Date / Enrollment), not create.
+        # 076 needs Build Daily Email Now? armed (031 may skip when WAS is pre-created).
+        self._arm_submission_post_create(
+            submission_id,
+            enrollment_id=enrollment_id,
+            activity_date=day.activity_date,
+            day_number=day.day_number,
         )
 
         for hw in day.homework:
@@ -547,6 +576,8 @@ class SeasonSimWriter:
                 "Submission - Linked": [submission_id],
                 "Enrollment - Linked": [enrollment_id],
                 "Send to Make Trigger": False,
+                # 071 parent-facing URL gate (allowlisted site; not a real upload).
+                "Reviewer File URL": SIM_REVIEWER_FILE_URL,
             }
             aid = self._ensure(
                 table="Submission Assets",
@@ -563,6 +594,7 @@ class SeasonSimWriter:
                 f"Homework Completion for PHA {hw.get('pha_record_id')} missing "
                 "library_id (Homework Library link required for Automation 064)"
             )
+        slot = str(hw.get("slot") or "HW1").strip() or "HW1"
         hc_fields: dict[str, Any] = {
             "Enrollment": [enrollment_id],
             "Week": [week_id],
@@ -577,7 +609,14 @@ class SeasonSimWriter:
             "Submissions - Linked": [submission_id],
             # Date-only — same Activity Date as linked Submission (064 timing).
             "Submission Date": activity_date_write_value(day.activity_date),
+            # 071 structural gates (do NOT force Award Status=Awarded — 064 owns that).
+            "Item Slot": slot,
+            "Submission Assets": asset_ids,
+            "Parent Feedback Sent?": False,
         }
+        # Needs Revision stays pending / not Ready; 078 arms Ready when Satisfactory.
+        if not satisfactory:
+            hc_fields["Satisfactory?"] = False
         self._ensure(
             table="Homework Completions",
             dedupe_key=hw["dedupe_key"],
@@ -635,11 +674,12 @@ class SeasonSimWriter:
     def _arm_video_feedback_update_trigger(
         self, vf_id: str, *, day_number: int
     ) -> None:
-        """Post-create update so Automations 113/114 (recordUpdated) can run.
+        """Post-create update so Automations 113/114/073 (recordUpdated) can run.
 
         113 requires Feedback Posted?=true (and Coach Feedback, Active?, links).
         113 then sets Base XP + Ready for XP Automation? so 114 can create the
-        XP Event. This harness never creates XP Events itself.
+        XP Event. 073 requires Parent Feedback Ready?=true when coach feedback is
+        complete. This harness never creates XP Events itself.
         """
         dedupe = f"{self.marker}|VF_ARM_POSTED|D{day_number:02d}"
         done = set(self.reg.meta.get("completed_dedupe_keys") or [])
@@ -653,24 +693,23 @@ class SeasonSimWriter:
                 }
             )
             return
+        arm_fields: dict[str, Any] = {
+            "Feedback Posted?": True,
+            # Simulated coach feedback is complete — arm 073 handoff gate.
+            "Parent Feedback Ready?": True,
+            "Parent Feedback Sent?": False,
+            # Do not set Ready for XP Automation? — 113 owns that after Base XP.
+        }
         self.client.update_records(
             "Video Feedback",
-            [
-                {
-                    "id": vf_id,
-                    "fields": {
-                        "Feedback Posted?": True,
-                        # Do not set Ready for XP Automation? — 113 owns that after Base XP.
-                    },
-                }
-            ],
+            [{"id": vf_id, "fields": arm_fields}],
         )
         self.reg.add(
             "Video Feedback",
             vf_id,
             dedupe_key=dedupe,
-            notes="arm_feedback_posted_for_113_114",
-            fields_snapshot={"Feedback Posted?": True},
+            notes="arm_feedback_posted_and_parent_ready_for_113_114_073",
+            fields_snapshot=dict(arm_fields),
         )
         self.reg.meta.setdefault("completed_dedupe_keys", [])
         if dedupe not in self.reg.meta["completed_dedupe_keys"]:
@@ -700,12 +739,14 @@ class SeasonSimWriter:
         )
         if mode == "live":
             # Live credit path uses Zoom Meetings.Attendees (patched later).
-            # Still create a Live Zoom Attendance row for traceability.
+            # Still create a Live Zoom Attendance row for traceability + gate formulas.
             fields: dict[str, Any] = {
                 "Enrollment": [enrollment_id],
                 "Zoom Meeting": [zoom_meeting_id],
                 "Attendance Method": "Live",
             }
+            if "Live Attendance Confirmed?" in za_names:
+                fields["Live Attendance Confirmed?"] = True
         else:
             # Recording half-XP (101 SC-147): never add enrollment to Attendees.
             # Stamp writable review fields so formula Zoom Credit Approved? /
@@ -783,6 +824,113 @@ class SeasonSimWriter:
         self.reg.last_completed_step = step
         self._save()
 
+    def _arm_live_zoom_create_xp_events(self) -> None:
+        """After live Attendees patch: arm Create XP Events so 101 awards full live XP.
+
+        Recorded meetings stay Create XP Events=false (SC-147 recording path).
+        Never add recorded viewers to Attendees.
+        """
+        live_id = self.ctx.zoom_live_meeting_id
+        if not live_id:
+            return
+        zm_fields = self.ctx.zoom_meeting_field_names or field_names_for_table(
+            self.client, "Zoom Meetings"
+        )
+        if "Create XP Events" not in zm_fields:
+            return
+        step = f"zoom_create_xp|{live_id}"
+        dedupe = f"{self.marker}|ZOOM_CREATE_XP|{live_id}"
+        done = set(self.reg.meta.get("completed_dedupe_keys") or [])
+        if dedupe in done or self.reg.has_dedupe_key(dedupe):
+            self.reused.append(
+                {"table": "Zoom Meetings", "id": live_id, "dedupe_key": dedupe, "step": step}
+            )
+            return
+        self.client.update_records(
+            "Zoom Meetings",
+            [{"id": live_id, "fields": {"Create XP Events": True}}],
+        )
+        self.reg.add(
+            "Zoom Meetings",
+            live_id,
+            dedupe_key=dedupe,
+            notes="arm_create_xp_events_after_attendees_for_101",
+            fields_snapshot={"Create XP Events": True},
+        )
+        self.reg.meta.setdefault("completed_dedupe_keys", [])
+        if dedupe not in self.reg.meta["completed_dedupe_keys"]:
+            self.reg.meta["completed_dedupe_keys"].append(dedupe)
+        self.created.append(
+            {
+                "table": "Zoom Meetings",
+                "id": live_id,
+                "dedupe_key": dedupe,
+                "step": step,
+                "op": "arm_create_xp_events",
+            }
+        )
+        self.reg.last_completed_step = step
+        self._save()
+
+    def _arm_submission_post_create(
+        self,
+        submission_id: str,
+        *,
+        enrollment_id: str,
+        activity_date: date,
+        day_number: int,
+    ) -> None:
+        """Post-create update so 053 (recordUpdated) and 076 (Build Daily) can run.
+
+        053 watches Submission updates (Activity Date / Enrollment / count fields),
+        not create. Build Daily Email Now? is the durable field delta that also arms
+        076 when WAS was pre-created (031 may skip arming Build Daily).
+        """
+        dedupe = f"{self.marker}|SUB_POST_CREATE|D{day_number:02d}"
+        step = f"submission_post_create|D{day_number:02d}"
+        done = set(self.reg.meta.get("completed_dedupe_keys") or [])
+        if dedupe in done or self.reg.has_dedupe_key(dedupe):
+            self.reused.append(
+                {
+                    "table": "Submissions",
+                    "id": submission_id,
+                    "dedupe_key": dedupe,
+                    "step": step,
+                }
+            )
+            return
+        arm_fields: dict[str, Any] = {
+            "Activity Date": activity_date_write_value(activity_date),
+            "Enrollment": [enrollment_id],
+            # Real checkbox delta so recordUpdated fires; allowlisted parent only.
+            "Build Daily Email Now?": True,
+        }
+        self.client.update_records(
+            "Submissions",
+            [{"id": submission_id, "fields": arm_fields}],
+        )
+        self.reg.add(
+            "Submissions",
+            submission_id,
+            dedupe_key=dedupe,
+            notes="arm_053_record_updated_and_076_build_daily",
+            fields_snapshot=dict(arm_fields),
+        )
+        self.reg.meta.setdefault("completed_dedupe_keys", [])
+        if dedupe not in self.reg.meta["completed_dedupe_keys"]:
+            self.reg.meta["completed_dedupe_keys"].append(dedupe)
+        self.created.append(
+            {
+                "table": "Submissions",
+                "id": submission_id,
+                "dedupe_key": dedupe,
+                "step": step,
+                "op": "submission_post_create_arm",
+            }
+        )
+        self.reg.last_completed_step = step
+        self._save()
+
     def _register_email_intents(self) -> None:
         for ev in self.scenario.intended_emails:
             event = {
@@ -794,7 +942,14 @@ class SeasonSimWriter:
         self._save()
 
     def _arm_was_email_flags(self, enrollment_id: str) -> None:
-        """Authorized only: arm Build Weekly Email Now? on WAS rows for Saturday weeks."""
+        """Arm Build Weekly Email Now? on Saturday WAS rows (072 package path).
+
+        072 clears Build Weekly only on success or skipBuild paths. Throws
+        (unlinked XP, shots disagreement, missing recipient) leave Build true —
+        do not manually clear. Writer ensures Weekly Email Sent?=false,
+        Send to Make?=false, Enrollment/Week/Goal/Grade Band, and Submission→WAS
+        links so 072 can succeed after automation XP/rollup settlement.
+        """
         for day in self.scenario.days:
             if day.action != "submit":
                 continue
@@ -814,8 +969,9 @@ class SeasonSimWriter:
                         "id": was_id,
                         "fields": {
                             "Build Weekly Email Now?": True,
-                            # Do not set Send to Make? unless operator separately confirms;
-                            # Build alone prepares 072 package for review.
+                            "Weekly Email Sent?": False,
+                            "Send to Make?": False,
+                            # Do not clear Build Weekly if 072 throws — re-check after XP settle.
                         },
                     }
                 ],
@@ -824,7 +980,7 @@ class SeasonSimWriter:
                 "Weekly Athlete Summary",
                 was_id,
                 dedupe_key=dedupe,
-                notes="email_arm_build_only",
+                notes="email_arm_build_weekly_for_072",
             )
             self._save()
 
