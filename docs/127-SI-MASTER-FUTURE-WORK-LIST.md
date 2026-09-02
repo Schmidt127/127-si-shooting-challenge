@@ -1080,22 +1080,24 @@ Create a reusable, unattended end-to-end simulation of a complete **60-day** Sho
 ### SC-SEASON-SIM-002 — Athlete 1 Season Simulation Infrastructure (May–June 2027)
 
 **Priority:** P2  
-**Status:** Infrastructure ready (preflight / dry-run / gated execute+cleanup; no live run yet)  
-**Systems:** `tools/season_simulation/`, Airtable reference reads, dry-run/preflight/cleanup scaffolding  
+**Status:** Full execute writer ready (idempotent); early countable E2E blocked until Mike applies OMNI gated formula — no live run yet  
+**Systems:** `tools/season_simulation/`, Airtable gated formula (temporary), dry-run/preflight/cleanup  
 **Related (distinct):** **SC-SEASON-SIM-001** (five-enrollment unattended package — still Planned / Future; not started)
 
 Build reusable Python infrastructure for a future **Athlete 1** full-season simulation against the production base (system not live yet):
 
 - Window: **2027-05-01 through 2027-06-30 inclusive** (61 calendar days)
 - Athlete: **Athlete 1**, Grade **12**, highest configured Grade 12 / 9–12 shot goal (resolved at runtime — do not hardcode 12,000)
-- Modes: read-only **preflight**, default **dry-run**, gated **execute** (`--execute --confirm SEASON-SIMULATION-2027`), gated **cleanup**
+- Modes: read-only **preflight**, default **dry-run**, gated **execute** (`--execute --simulation-id … --confirm SEASON-SIMULATION-2027 --confirm-disposable CONFIRM-DISPOSABLE-SEASON-SIM`), gated **cleanup** (separate `--confirm-cleanup`)
 - Dynamic resolution only for homework (PHA), Zoom Meetings, XP rules, levels, gates, achievements, weeks, goals
-- Simulation clock design documented (Activity Date writable; `Activity Date Is Future?` uses `NOW()` — temporary override required before early execution)
+- **Clock:** Live `Activity Date Is Future?` uses `NOW()`; `Count This Submission?` fails closed when future. Gated temporary override (`Season Sim Test Record?` + `SEASON-SIM|` marker) documented in [`docs/deploy-checklists/SC-SEASON-SIM-002-operator-checklist.md`](./deploy-checklists/SC-SEASON-SIM-002-operator-checklist.md). `CREATED_TIME()` / `Submitted At` cannot be API-backdated.
 - Emails: live-looking to `schmidt@fairfieldbasketballclub.com` only when authorized; default dry-run never sends
 
-**Hard constraints for this ID:** Do not run execute/cleanup; do not write/delete Airtable records; do not send email during infrastructure build. SC-SEASON-SIM-001 remains blocked pending its Phase 2 brief.
+**Hard constraints for this ID:** Do not run execute/cleanup in infrastructure sessions unless Mike explicitly authorizes; do not send email during infrastructure build. SC-SEASON-SIM-001 remains blocked pending its Phase 2 brief.
 
-**Acceptance (infrastructure):** Package under `tools/season_simulation/` with README, offline tests green, preflight dry-run commands documented, schema/simulation-clock gaps listed.
+**Acceptance (infrastructure):** Package under `tools/season_simulation/` with README, operator checklist, offline tests green (clock + full writer), preflight/dry-run documented, gated clock override modeled without weakening Production NOW() for normal athletes, idempotent execute writer complete.
+
+**Remaining blocker for countable E2E today:** Mike must create Season Sim fields + paste gated `Activity Date Is Future?` formula (then restore). Writer itself is no longer a stub.
 
 ---
 
@@ -1444,6 +1446,6 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **SC-CORE-WF / MRW-F11** | **COMPLETE** | Core workflow reliability — `lib/workflow-contracts/`, `tools/testing/sc-core-workflow.mjs`, `docs/testing/core-workflow/`. Live Weeks/PHA audit + disposable apply 2026-08-30. |
 | **SC-WEEKLY-SETTLEMENT-E2E** | **COMPLETE** | Weekly settlement matrix (WAS / calc / PW fail-closed / handoff prep). Docs `docs/testing/weekly-settlement/`; harness `tools/testing/sc-weekly-settlement.mjs`; RESULTS + DEFECT-REPORT 2026-08-30. MRW-F10. |
 | **SC-SEASON-SIM-001** | **Planned / Future** | 60-day five-enrollment season simulation — narrative entry above § D / FUT-026; MRW-H11. Do **not** implement yet. FUT-010 unchanged. Reuse SC-PW-E2E later where appropriate. |
-| **SC-SEASON-SIM-002** | **Infrastructure ready (repo)** | Athlete 1 May–June 2027 package landed under `tools/season_simulation/` (2026-08-30). Offline unittest green; read-only preflight/dry-run OK; execute/cleanup gated — **not run**. Distinct from SC-SEASON-SIM-001. |
+| **SC-SEASON-SIM-002** | **Execute writer ready** | Full idempotent writer + gated NOW() override checklist. Offline tests; dry-run default; execute/cleanup multi-gated — **not run**. Early countable E2E needs Mike OMNI formula paste. Distinct from SC-SEASON-SIM-001. |
 
 ---

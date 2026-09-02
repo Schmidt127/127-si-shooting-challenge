@@ -4,11 +4,20 @@ from __future__ import annotations
 
 import json
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from .airtable_client import AirtableClient, WriteBlockedError
+from .clock_override import (
+    GATED_ACTIVITY_DATE_IS_FUTURE_FORMULA,
+    PRODUCTION_ACTIVITY_DATE_IS_FUTURE_FORMULA,
+    SEASON_SIM_CLOCK_NOW_FIELD,
+    SEASON_SIM_TEST_RECORD_FIELD,
+    SEASON_SIM_TEST_SUBMITTED_AT_FIELD,
+    assess_clock_override_readiness,
+    dependency_impact_matrix,
+)
 from .constants import (
     PREFLIGHT_REQUIRED_TABLES,
     REFERENCE_TABLES,
@@ -20,8 +29,8 @@ from .constants import (
 )
 from .recipient_safety import resolve_simulation_recipient
 from .reference_data import load_reference_snapshot
+from .season_policy import EXPECTED_ACTIVE_PHA_COUNT
 from .simulation_clock import assert_window_integrity, build_simulation_days
-
 
 @dataclass
 class PreflightReport:
@@ -35,6 +44,8 @@ class PreflightReport:
     email: dict[str, Any]
     simulation_clock_blockers: list[str]
     schema_requirements: list[str]
+    clock_override_readiness: dict[str, Any] = field(default_factory=dict)
+    dependency_impact: dict[str, str] = field(default_factory=dict)
     errors: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
     sufficient_for_final_run: bool = False
@@ -114,14 +125,30 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
     field_issues: list[str] = []
     by_name = {t.get("name"): t for t in meta_tables}
     sub = by_name.get("Submissions")
+    sub_fields: set[str] = set()
+    formula_future = ""
     if sub:
         sub_fields = {f.get("name") for f in sub.get("fields") or []}
         for required in ("Activity Date", "Enrollment", "Shot Total", "Activity Date Is Future?"):
             if required not in sub_fields:
                 field_issues.append(f"Submissions missing field {required}")
+        for f in sub.get("fields") or []:
+            if f.get("name") == "Activity Date Is Future?":
+                opts = f.get("options") or {}
+                formula_future = str(opts.get("formula") or "")
     if field_issues:
         errors.extend(field_issues)
     tables_info["field_issues"] = field_issues
+
+    readiness = assess_clock_override_readiness(
+        wall_date=date.today(),
+        submission_field_names=sub_fields or None,
+        formula_text_activity_date_is_future=formula_future or None,
+        formula_override_acknowledged=False,
+    )
+    warnings.extend(readiness.warnings)
+    # Clock blockers are informational for preflight (do not fail connectivity).
+    # Execute still hard-gates on readiness.
 
     reference_dict: dict[str, Any] = {}
     try:
@@ -198,24 +225,27 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
 
     connectivity["write_guard"] = write_guard
 
-    clock_blockers = [
-        "Submissions.`Activity Date Is Future?` compares Activity Date to NOW(); "
-        "May–June 2027 dates will not count until wall-clock passes them OR a temporary override is applied.",
+    clock_blockers = list(readiness.blockers) + [
         "Submissions.`Submitted At` is formula CREATED_TIME() — cannot be future-dated via API.",
         "Created Time on all tables reflects real write time, not simulation clock.",
+        "Perfect Week Grace Eligible? uses Activity Date <= TODAY() unless "
+        "`Perfect Week Manual Exception?` is checked on disposable sim rows.",
     ]
     schema_requirements = [
-        "OPTIONAL (authorized run only): temporary Config dateTime field e.g. "
-        "`Simulation Clock Now` + temporary formula change on "
-        "`Activity Date Is Future?` to compare against that field when set; "
-        "restore production formula immediately after the run.",
-        "ALTERNATE (authorized run only): temporarily set "
-        "`Activity Date Is Future?` to `0` for the run window; restore after.",
+        "REQUIRED for early (pre-2027-05-01) execute: create Submissions checkbox "
+        f"`{SEASON_SIM_TEST_RECORD_FIELD}` + dateTime `{SEASON_SIM_CLOCK_NOW_FIELD}` "
+        f"(recommended) + dateTime `{SEASON_SIM_TEST_SUBMITTED_AT_FIELD}` (for same-day).",
+        "REQUIRED for early execute: temporarily replace `Activity Date Is Future?` with "
+        "the gated formula in docs/deploy-checklists/SC-SEASON-SIM-002-operator-checklist.md; "
+        "restore Production NOW() formula immediately after the run.",
+        "Production formula (restore target):\n" + PRODUCTION_ACTIVITY_DATE_IS_FUTURE_FORMULA,
+        "Gated formula (temporary):\n" + GATED_ACTIVITY_DATE_IS_FUTURE_FORMULA,
         "REQUIRED: Weeks rows covering every date from 2027-05-01 through 2027-06-30.",
-        "REQUIRED before final run: finish editing Program Homework Assignments and Zoom Meetings; "
-        "preflight currently reports counts without enforcing 18 HW / 2 Zoom.",
+        f"REQUIRED before final run: {EXPECTED_ACTIVE_PHA_COUNT} active Program Homework "
+        "Assignments (Early Bird + Weeks 1–8 × 2 slots); Week 9 must have 0 PHA.",
         "REQUIRED: Resend domain/sender already used by live Hub pipeline must be verified before enabling delivery.",
-        "Do not permanently weaken production future-date protections.",
+        "Do not permanently weaken production future-date protections for normal athletes.",
+        "Do not modify SC-147, Automation 101, or Zoom credit logic for this simulation.",
     ]
 
     hw_count = int(reference_dict.get("homework_count") or 0)
@@ -225,21 +255,26 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
         not errors
         and reference_dict.get("highest_goal")
         and weeks_count > 0
-        # Soft readiness: report, but don't require 18/2 yet
     )
-    # Final-run readiness is stricter and still advisory during development:
     final_ready = bool(
         sufficient
-        and hw_count > 0
+        and hw_count >= EXPECTED_ACTIVE_PHA_COUNT
         and zoom_count >= 1
         and reference_dict.get("xp_reward_rules_count", 0) > 0
+        and readiness.ready_for_early_execute
     )
+
+    if hw_count and hw_count != EXPECTED_ACTIVE_PHA_COUNT:
+        warnings.append(
+            f"Active PHA count for Grade 12 band is {hw_count}; "
+            f"product expectation is {EXPECTED_ACTIVE_PHA_COUNT}."
+        )
 
     if not final_ready and not errors:
         warnings.append(
             "Configuration is readable but not marked sufficient_for_final_run "
-            "(need at least one active PHA for the Grade 12 band, Zoom meeting(s), "
-            "weeks coverage, XP rules, and no errors)."
+            "(need 18 active PHA for the Grade 12 band, Zoom meeting(s), weeks coverage, "
+            "XP rules, gated clock override readiness, and no errors)."
         )
 
     ok = len(errors) == 0
@@ -254,6 +289,8 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
         email=email_info,
         simulation_clock_blockers=clock_blockers,
         schema_requirements=schema_requirements,
+        clock_override_readiness=readiness.to_dict(),
+        dependency_impact=dependency_impact_matrix(),
         errors=errors,
         warnings=warnings,
         sufficient_for_final_run=final_ready,

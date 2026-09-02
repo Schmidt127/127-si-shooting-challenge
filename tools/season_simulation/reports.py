@@ -60,7 +60,14 @@ def dry_run_markdown(payload: dict[str, Any]) -> str:
         lines.append(f"- {t}")
     lines.extend(["", "## Safety", ""])
     lines.append("- Default mode performs **no writes** and **no sends**.")
-    lines.append("- Execute requires `--execute --confirm SEASON-SIMULATION-2027`.")
+    lines.append(
+        "- Execute requires `--execute --simulation-id … "
+        "--confirm SEASON-SIMULATION-2027 "
+        "--confirm-disposable CONFIRM-DISPOSABLE-SEASON-SIM`."
+    )
+    lines.append(
+        "- Cleanup deletes require a separate `--confirm-cleanup CONFIRM-CLEANUP-SEASON-SIM`."
+    )
     return "\n".join(lines) + "\n"
 
 

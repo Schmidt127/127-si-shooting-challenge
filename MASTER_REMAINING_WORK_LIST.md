@@ -370,7 +370,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-H08 | C-027 major-event notifications | FUTURE | |
 | MRW-H09 | Early-bird registration config (SC-066) | FUTURE | Decision: use early-bird; dates TBD |
 | MRW-H10 | Recorded Zoom half-XP writer (SC-147) | **Repo prep shipped** | Draft + offline conflict matrix; Mike: slot + `ZOOM_RECORDING` rule row; do not overload 117 |
-| MRW-H11 | SC-SEASON-SIM-001 60-day five-enrollment season simulation | **FUTURE** | Planned only — no full simulation run. **SC-SEASON-SIM-002** preflight package now in repo (`tools/season_simulation/`). Archive WSTEST/PWTEST before any execute. |
+| MRW-H11 | SC-SEASON-SIM-001 60-day five-enrollment season simulation | **FUTURE** | Planned only — no full simulation run. **SC-SEASON-SIM-002** full execute writer + clock-override package in repo (`tools/season_simulation/` + operator checklist); early countable E2E needs Mike OMNI gated formula paste — execute not run. |
 | MRW-H12 | FUT-029 Hybrid Fillout Homework Submission System | **FUTURE** | Expand Library 70→100+; optional→primary Fillout answers; paper/photo/video preserved; same HC/XP spine; keep 18 PHA. **Do not implement** until authorized. Brief: [`docs/next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](docs/next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md). *(Requested as FUT-018; that ID already used for landing-page work.)* |
 
 ## F+. Weekly settlement QA (pre–season simulation)
@@ -441,7 +441,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 - **SC-015 / SC-016 / MRW-F02 / 065 remap** → **COMPLETE** (2026-08-31) — multi-asset `--apply` → one HC + one Homework XP; 065 dynamic `recordId` + trigger re-entry proven; **do not** re-paste 020/065; **do not** re-`--apply`.  
 - **FUT-029 / MRW-H12** → **FUTURE** — Hybrid Fillout Homework concept only (requested FUT-018 already used).  
 - **FUT-030** → **COMPLETE** (2026-08-31) — full transactional record reset (959 deleted); PHA emptied; Weeks/Library/config preserved; base ready for clean rebuild.  
-- **SC-SEASON-SIM-002** → **Infrastructure landed** (`tools/season_simulation/`); offline tests green; do not run full season simulation yet.  
+- **SC-SEASON-SIM-002** → **Execute writer ready** (`tools/season_simulation/` + operator checklist); offline tests green; gated formula paste still required before countable E2E; do not run full season simulation until Mike authorizes.  
 - **Automation 043** → **absent** from live automations list (MRW-C09 COMPLETE).  
 - **Automation 075** → **retired / absent** — do not restore.  
 - **Weeks 2026–27** → calendar rows **preserved**; **18 PHA** must be recreated after FUT-030 before homework tests.  

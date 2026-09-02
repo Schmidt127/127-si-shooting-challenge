@@ -20,6 +20,11 @@ from .constants import (
     SIM_START,
 )
 from .run_registry import run_marker
+from .season_policy import (
+    COMMON_HOMEWORK_DUE_DATE,
+    evaluate_late_homework,
+    week_label_for_activity_date,
+)
 from .simulation_clock import (
     SimulationClock,
     SubmissionTiming,
@@ -40,6 +45,10 @@ BACKDATE_ACTIVITY_DAY = 20
 INACTIVITY_GAP_START = 49  # miss 50; light activity after for alert windows
 VIDEO_FEEDBACK_DAYS = frozenset({5, 19, 33, 47})
 GATE_BLOCK_PROBE_DAY = 28  # intentionally skip one homework before a gate-heavy stretch
+# Day 60 = 2027-06-29 (common due); day 61 = 2027-06-30 → late homework probe
+LATE_HOMEWORK_PROBE_DAY = 61
+# Flag Perfect Week Manual Exception on a mid-season same-day week for PW timing
+PW_MANUAL_EXCEPTION_DAY = SAME_DAY_SUBMIT_DAY
 
 
 @dataclass(frozen=True)
@@ -182,8 +191,11 @@ def build_athlete1_scenario(
 
         shots = _shots_for_day(n, goal_total_shots, active_count)
 
+        week_label = week_label_for_activity_date(meta.activity_date)
         hw_payload: list[dict[str, Any]] = []
-        if hw_list and n not in MISS_DAYS and n % 3 == 0:
+        # Week 9 is a countable shooting week with no homework (product rule).
+        allow_homework = week_label != "Week 9"
+        if hw_list and allow_homework and n not in MISS_DAYS and n % 3 == 0:
             # Attach one PHA every 3rd active-pattern day; skip on gate probe day once.
             if n == GATE_BLOCK_PROBE_DAY:
                 gate_notes.append(
@@ -194,16 +206,32 @@ def build_athlete1_scenario(
                 pha = hw_list[hw_cursor % len(hw_list)]
                 outcome = hw_outcomes[hw_cursor % len(hw_outcomes)]
                 multi_asset = hw_cursor % 4 == 0  # every 4th hw uses two assets
+                late = evaluate_late_homework(
+                    submission_date=meta.activity_date,
+                    due_date=COMMON_HOMEWORK_DUE_DATE,
+                )
+                if n == LATE_HOMEWORK_PROBE_DAY or not late.credit_eligible:
+                    outcome = "Needs Revision"
+                    gate_notes.append(
+                        f"Day {n}: late homework probe ({late.timing_status}) — "
+                        f"not credit-eligible after {COMMON_HOMEWORK_DUE_DATE}"
+                    )
                 hw_payload.append(
                     {
                         "pha_record_id": pha["record_id"],
                         "slot": pha.get("slot") or "",
                         "outcome": outcome,
                         "asset_count": 2 if multi_asset else 1,
+                        "late_status": late.timing_status,
+                        "credit_eligible": late.credit_eligible,
                         "dedupe_key": _dedupe_key(run_id, "HW", n, pha["record_id"]),
                     }
                 )
                 hw_cursor += 1
+        elif week_label == "Week 9" and n % 3 == 0:
+            gate_notes.append(
+                f"Day {n} ({meta.activity_date}): Week 9 — no homework attached (policy)"
+            )
 
         zoom_ids: list[str] = []
         # Place the two selected Zoom meetings on two fixed days if available.
@@ -261,6 +289,9 @@ def build_athlete1_scenario(
 
         intended_emails.extend(emails)
 
+        notes = run_marker(run_id)
+        if n == PW_MANUAL_EXCEPTION_DAY:
+            notes = f"{notes}|PW_MANUAL_EXCEPTION"
         day_plans.append(
             DayPlan(
                 day_number=n,
@@ -273,7 +304,7 @@ def build_athlete1_scenario(
                 video_feedback=video,
                 zoom_meeting_ids=zoom_ids,
                 email_events=emails,
-                notes=run_marker(run_id),
+                notes=notes,
                 dedupe_key=_dedupe_key(run_id, "SUB", n),
             )
         )
@@ -344,8 +375,12 @@ def build_athlete1_scenario(
             "backdate_write_day": BACKDATE_WRITE_DAY,
             "backdate_activity_day": BACKDATE_ACTIVITY_DAY,
             "video_feedback_days": sorted(VIDEO_FEEDBACK_DAYS),
+            "late_homework_probe_day": LATE_HOMEWORK_PROBE_DAY,
+            "common_homework_due_date": COMMON_HOMEWORK_DUE_DATE.isoformat(),
+            "early_bird_day_1": week_label_for_activity_date(SIM_START),
             "weeks_provided": len(weeks or []),
             "goal_coverage_ratio": round(total_shots / goal_total_shots, 3),
+            "homework_selected_count": len(hw_list),
         },
     )
 

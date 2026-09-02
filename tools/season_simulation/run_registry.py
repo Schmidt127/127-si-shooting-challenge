@@ -67,6 +67,9 @@ class RunRegistry:
     athlete_name: str = "Athlete 1"
     enrollment_id: str = ""
     athlete_id: str = ""
+    status: str = "planned"  # planned | running | paused | complete | failed
+    last_completed_step: str = ""
+    pause_reason: str = ""
     records: list[CreatedRecord] = field(default_factory=list)
     email_events: list[dict[str, Any]] = field(default_factory=list)
     meta: dict[str, Any] = field(default_factory=dict)
@@ -82,6 +85,16 @@ class RunRegistry:
     ) -> None:
         if not record_id.startswith("rec"):
             raise ValueError(f"Invalid Airtable record id: {record_id!r}")
+        existing = self.find_by_dedupe_key(dedupe_key) if dedupe_key else None
+        if existing:
+            # Idempotent: keep first registration; refresh snapshot if provided.
+            if fields_snapshot:
+                for row in self.records:
+                    if row.dedupe_key == dedupe_key:
+                        row.fields_snapshot = fields_snapshot
+                        row.record_id = record_id
+                        break
+            return
         self.records.append(
             CreatedRecord(
                 table=table,
@@ -91,6 +104,17 @@ class RunRegistry:
                 fields_snapshot=fields_snapshot or {},
             )
         )
+
+    def find_by_dedupe_key(self, dedupe_key: str) -> str | None:
+        if not dedupe_key:
+            return None
+        for row in self.records:
+            if row.dedupe_key == dedupe_key:
+                return row.record_id
+        return None
+
+    def has_dedupe_key(self, dedupe_key: str) -> bool:
+        return self.find_by_dedupe_key(dedupe_key) is not None
 
     def ids_by_table(self) -> dict[str, list[str]]:
         out: dict[str, list[str]] = {}
@@ -108,6 +132,9 @@ class RunRegistry:
             "athlete_name": self.athlete_name,
             "enrollment_id": self.enrollment_id,
             "athlete_id": self.athlete_id,
+            "status": self.status,
+            "last_completed_step": self.last_completed_step,
+            "pause_reason": self.pause_reason,
             "records": [asdict(r) for r in self.records],
             "email_events": list(self.email_events),
             "meta": dict(self.meta),
@@ -122,6 +149,9 @@ class RunRegistry:
             athlete_name=str(data.get("athlete_name") or "Athlete 1"),
             enrollment_id=str(data.get("enrollment_id") or ""),
             athlete_id=str(data.get("athlete_id") or ""),
+            status=str(data.get("status") or "planned"),
+            last_completed_step=str(data.get("last_completed_step") or ""),
+            pause_reason=str(data.get("pause_reason") or ""),
             email_events=list(data.get("email_events") or []),
             meta=dict(data.get("meta") or {}),
         )

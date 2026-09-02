@@ -1,233 +1,196 @@
 # Season simulation — Athlete 1 (SC-SEASON-SIM-002)
 
-Infrastructure for a future full-season simulation of the Shooting Challenge
-application. **Default mode is dry-run / read-only.** This package does not run
-the live simulation, delete Airtable data, or send email during development.
+Infrastructure for a full-season disposable simulation of the Shooting Challenge.
+**Default mode is dry-run / read-only.** Do not run execute until the gated clock
+override is live and Mike authorizes.
 
 | | |
 |---|---|
 | **Backlog ID** | SC-SEASON-SIM-002 |
-| **Athlete** | Athlete 1 · Grade 12 |
+| **Athlete** | Athlete 1 · Grade 12 (disposable VERIFY only) |
 | **Window** | 2027-05-01 → 2027-06-30 inclusive (**61** days) |
-| **Related** | SC-SEASON-SIM-001 (five-enrollment unattended package — still Planned / Future) |
+| **Operator checklist** | [`docs/deploy-checklists/SC-SEASON-SIM-002-operator-checklist.md`](../../docs/deploy-checklists/SC-SEASON-SIM-002-operator-checklist.md) |
+| **Related** | SC-SEASON-SIM-001 (five-enrollment unattended — still Planned / Future) |
+
+## Can it run today?
+
+| Mode | Ready? |
+|---|---|
+| Offline tests / dry-run / preflight | Yes |
+| Full execute writer (idempotent) | **Yes in code** — creates Athlete, Enrollment (+ Program Instance), WAS, Submissions, Assets, HC, VF, Zoom Attendance, live `Attendees` patch |
+| Complete countable E2E on wall-clock 2026 | **No** until Mike applies gated Airtable formula (see operator checklist). Without it, `Activity Date Is Future?=1` → `Count This Submission?=0` |
+
+`CREATED_TIME()` / `Submitted At` **cannot** be API-backdated. Same-day / Perfect Week timing uses gated `Season Sim Test Submitted At` and/or `Perfect Week Manual Exception?` on disposable rows only.
 
 ## Purpose
 
 Exercise as much of the live system as possible once authorized:
 
 - Daily submissions, missed days, streaks, weekly goals
-- Homework (incl. multi-asset) satisfactory / unsatisfactory paths
-- Video feedback, Zoom attendance
+- Homework (incl. multi-asset) satisfactory / unsatisfactory / late paths
+- Early Bird (2027-04-25…05-01; May 1 is last Early Bird day)
+- Week 9 shooting with **no** homework; **18** active PHA expected
+- Video feedback, Zoom attendance (do not change 101 / SC-147)
 - XP events, achievements, shot milestones
 - Weekly summaries, weekly emails, coach digest, inactivity alerts
 - Level advancement, level gates, gate-blocked probes
-- Same-day and backdated Activity Date behavior
-- Email handoff → Hub → Resend (and any Make handoff still in path)
+- Same-day and backdated Activity Date behavior (harness + gated fields)
+- Email handoff → Hub → Resend (allowlist only)
 
-Configuration (homework, Zoom, goals, XP rules, levels, gates, achievements,
-weeks) is **always read from Airtable at runtime** — never hardcoded.
+Configuration is **always read from Airtable at runtime** — never hardcoded.
 
 ## Architecture
 
 ```text
 tools/season_simulation/
   cli.py / __main__.py   CLI entry (`python -m season_simulation …`)
-  preflight.py           Read-only connectivity + config report
+  preflight.py           Read-only connectivity + clock readiness
   scenarios.py           Deterministic Athlete 1 61-day plan
   simulation_clock.py    Harness clock (Activity Date / day number)
+  clock_override.py      Gated Production vs sim future-date / same-day model
+  season_policy.py       Early Bird / Week 9 / 18 PHA / late homework
   reference_data.py      Dynamic Grade Band / goal / HW / Zoom / levels
-  execute.py             Gated write scaffolding (not run in infra sessions)
+  writer.py              Full idempotent execute writer (resume-safe)
+  memory_client.py       In-memory Airtable client for offline writer tests
+  execute.py             Gated execute orchestration + intended-write planner
   cleanup.py             Gated delete-by-run-id (dry-run default)
   recipient_safety.py    Allowlist: schmidt@fairfieldbasketballclub.com only
-  run_registry.py        Local JSON registry of created record IDs
+  run_registry.py        Local JSON registry of created record IDs + status
   airtable_client.py     REST client; writes blocked unless allow_writes
   reports/               JSON + Markdown outputs
   run_registries/        Local run registries (gitignored contents)
-  tests/test_offline.py  Offline unit tests
+  tests/                 Offline unit tests (clock + full writer)
 ```
 
-### Simulation clock
+### Execute writer (what gets created)
 
-Airtable **cannot** future-date `CREATED_TIME()` / formula `Submitted At`
-(= `CREATED_TIME()`). Business dating uses writable **`Activity Date`**.
+Idempotent by `SEASON-SIM|<run_id>|…` dedupe keys in the local run registry:
 
-Critical live formula on Submissions:
+| Record | Notes |
+|---|---|
+| Athletes | Athlete 1 / allowlist Parent Email |
+| Enrollments | links Athlete, Grade Band, **Program Instance**, School Year |
+| Weekly Athlete Summary | one per covering Week + Goal Record |
+| Submissions | Activity Date 2027, Count It, Week link, clock-override stamps |
+| Submission Assets | Homework 1 / Video For Feedback (metadata; no Make send) |
+| Homework Completions | PHA + Satisfactory?/Review Complete + Completion Status |
+| Video Feedback | Enrollment + Submission + Pending |
+| Zoom Attendance | **Live** vs **Recording Quiz** (+ Satisfactory for recorded) |
+| Zoom Meetings.Attendees | **live meeting only** (patch; never delete meeting) |
+
+Resume: re-run same `--simulation-id` reuses registry IDs (no duplicates). Failure sets registry `status=paused` and stops; next run continues.
+
+### Simulation clock (gated, reversible)
+
+Airtable **cannot** future-date `CREATED_TIME()` / formula `Submitted At`.
+
+Live formula:
 
 ```text
-Activity Date Is Future? = IF({Activity Date} > NOW(), 1, 0)
+Activity Date Is Future? = IF({Activity Date}, IF({Activity Date} > NOW(), 1, 0), BLANK())
+Count This Submission? = 0 when Activity Date Is Future? = 1
 ```
 
-`Count This Submission?` is **0** when that flag is 1. Therefore May–June 2027
-Activity Dates **will not count** if the run is executed before those calendar
-dates unless a **temporary** override is applied for an authorized window:
+**Preferred temporary approach (does not weaken normal users):**
 
-1. **Preferred temporary approach:** add Config `Simulation Clock Now` (dateTime);
-   change `Activity Date Is Future?` to compare against that field when set;
-   restore the production `NOW()` formula immediately after the run.
-2. **Alternate:** temporarily force `Activity Date Is Future?` → `0` for the run;
-   restore after.
-3. **No permanent weakening** of production future-date protections.
+1. Add `Season Sim Test Record?`, `Season Sim Clock Now`, `Season Sim Test Submitted At`
+2. Temporarily gate `Activity Date Is Future?` so override applies **only** when
+   checkbox is checked **and** `Video Upload Note` contains `SEASON-SIM|`
+3. Harness stamps those fields on every disposable Submission
+4. Restore Production `NOW()` formula immediately after the run
 
-Also required: **Weeks** rows covering every date 2027-05-01 … 2027-06-30.
-
-Harness `SimulationClock` tracks:
-
-- simulation mode enabled/disabled
-- current simulated date
-- run ID
-- day number 1–61
-- same-day vs backdated classification relative to the simulated “today”
-
-Code paths that differ only while simulation mode / temporary override is on
-are documented in preflight output (`simulation_clock_blockers`,
-`schema_requirements`) — not silently patched in production automations.
+Normal athletes never match the gate → unchanged Production behavior.
 
 ## Environment
-
-Reuse existing PAT loading (`tools/airtable/.env` or `web/.env.local`):
 
 ```text
 AIRTABLE_TOKEN=pat…          # or AIRTABLE_API_TOKEN
 BASE_ID=appn84sqPw03zEbTT    # or AIRTABLE_BASE_ID
 ```
 
-Python **3.11+** (repo uses 3.13). Dependencies: `requests`, `python-dotenv`
-(already in `tools/airtable/requirements.txt`).
-
 ```bash
 pip install -r tools/airtable/requirements.txt
 ```
 
-## Airtable tables
-
-**Reference (never deleted by cleanup):** Grade Bands, Target Goal Shots,
-Program Homework Assignments, Homework Library, Zoom Meetings, Weeks, Levels,
-Level Gate Rules, Achievements, Shot Milestones, XP Reward Rules, Config,
-Program Instance - Sync, School - Synced.
-
-**Transactional (cleanup-eligible when tagged by run registry):** Athletes,
-Enrollments, Submissions, Submission Assets, Homework Completions, XP Events,
-Athlete Achievement Unlocks, Streak Occurrences, Video Feedback, Weekly Athlete
-Summary, Zoom Attendance, Email Handoff Queue.
-
-Run marker stamped where writable: `SEASON-SIM|<run_id>` (e.g. Submission
-`Video Upload Note`, HC `Notes`, XP `XP Reason Debug`). Primary cleanup
-targeting uses the **local run registry**.
-
-## Dynamic reference resolution
-
-At runtime the package:
-
-1. Finds the active **Grade Band** covering grade **12** (typically `9-12`).
-2. Selects the **highest** `Total Shot Target` among that band’s Target Goal
-   Shots (does **not** assume 12,000).
-3. Lists **active** Program Homework Assignments for that band (IDs/dates/counts
-   not hardcoded).
-4. Lists non-cancelled **Zoom Meetings** and uses up to two in the scenario.
-5. Checks **Weeks** coverage for the simulation window.
-6. Counts Levels, Level Gate Rules, Achievements, Shot Milestones, XP Reward Rules.
-7. Reports ambiguity (duplicate bands/goals) without inventing config.
-
 ## Commands
 
-From repo root (PowerShell):
+From repo `tools/` (PowerShell):
 
-### Offline tests (safe)
-
-```powershell
-python -m unittest tools.season_simulation.tests.test_offline -v
-```
-
-Or:
+### Offline tests
 
 ```powershell
-cd tools
-python -m unittest season_simulation.tests.test_offline -v
+python -m unittest season_simulation.tests.test_offline season_simulation.tests.test_writer -v
 ```
 
 ### Preflight (read-only)
 
 ```powershell
-cd tools
 python -m season_simulation preflight
 ```
 
-### Dry-run (default planning; no writes / no email)
+### Dry-run (default; no writes / no email)
 
 ```powershell
-cd tools
 python -m season_simulation dry-run
-```
-
-Offline planner only (synthetic IDs — never execute):
-
-```powershell
-cd tools
 python -m season_simulation dry-run --offline-fixture
 ```
 
-### Execute (gated — do not run until authorized)
+### Evidence export
 
 ```powershell
-cd tools
-python -m season_simulation execute --execute --confirm "SEASON-SIMULATION-2027" --enable-email-delivery
+python -m season_simulation evidence --simulation-id "SEASON-SIM-2027-…"
 ```
 
-Infrastructure sessions **abort execute before any write**. Full writer waits on
-Weeks coverage + simulation-clock override sign-off.
+### Execute (multi-gate — authorized only)
 
-### Cleanup (dry-run default)
+Record creation does **not** require `--enable-email-delivery` (email stays off by default).
 
 ```powershell
-cd tools
+python -m season_simulation execute `
+  --execute `
+  --simulation-id "SEASON-SIM-2027-<utc>-athlete1" `
+  --confirm "SEASON-SIMULATION-2027" `
+  --confirm-disposable "CONFIRM-DISPOSABLE-SEASON-SIM" `
+  --acknowledge-clock-override
+```
+
+Optional email arm (allowlist only):
+
+```powershell
+# …same flags… --enable-email-delivery
+```
+
+### Cleanup
+
+```powershell
+# dry-run (default)
 python -m season_simulation cleanup --run-id "SEASON-SIM-2027-…"
+
+# delete (separate confirm)
+python -m season_simulation cleanup `
+  --run-id "SEASON-SIM-2027-…" `
+  --execute `
+  --confirm "SEASON-SIMULATION-2027" `
+  --confirm-cleanup "CONFIRM-CLEANUP-SEASON-SIM"
 ```
-
-Delete (authorized only; same confirm token):
-
-```powershell
-cd tools
-python -m season_simulation cleanup --run-id "SEASON-SIM-2027-…" --execute --confirm "SEASON-SIMULATION-2027"
-```
-
-Infrastructure sessions force cleanup to **dry-run plan only**.
-
-## Reports
-
-Written under `tools/season_simulation/reports/`:
-
-| Report | Contents |
-|---|---|
-| `preflight-*.json` / `.md` | Connectivity, tables, Grade 12 band, highest goal, HW/Zoom counts, clock blockers |
-| `dry-run-*.json` / `.md` | Full 61-day plan, intended writes, email events, cleanup scope |
-| `cleanup-*.json` | Targeted record IDs by table (dry-run or deleted) |
 
 ## Safety controls
 
-- Dry-run is default; `AirtableClient(allow_writes=False)` raises on create/update/delete.
-- Execute/cleanup require **both** `--execute` and `--confirm SEASON-SIMULATION-2027`.
-- Email recipient allowlist: **`schmidt@fairfieldbasketballclub.com` only**.
-- No `[TEST]` / `[SIMULATION]` labels on subjects/bodies for authorized live-looking mail.
-- Cleanup never targets reference/config tables; registry-only allowlist of `rec…` IDs.
-- Stop on integrity / unsafe-recipient / destructive-safety errors.
+- Dry-run is default; `AirtableClient(allow_writes=False)` raises on create/update/delete
+- Execute requires `--execute` + `--simulation-id` + `--confirm` + `--confirm-disposable`
+- Cleanup deletes require a **separate** `--confirm-cleanup`
+- Early execute also requires gated formula readiness (or `--acknowledge-clock-override` after OMNI paste)
+- Email recipient allowlist: **`schmidt@fairfieldbasketballclub.com` only**
+- Cleanup never targets Weeks / reference tables; registry-only `rec…` IDs
+- Every created Submission is stamped `SEASON-SIM|<run_id>` for cleanup targeting
 
 ## Before the final authorized run
 
-1. Finish editing **Program Homework Assignments** and **Zoom Meetings**.
-2. Ensure **Weeks** cover May 1 – June 30, 2027.
-3. Apply **temporary** simulation-clock formula/Config override; document restore steps.
-4. Verify Resend **sender domain/address** already used by the live Hub pipeline.
-5. Confirm enrollment Parent Email is the allowlist address.
-6. Run `preflight` until `sufficient_for_final_run` is true (or knowingly accept warnings).
-7. Run `dry-run` and review reports.
-8. Only then run execute with confirm token + `--enable-email-delivery`.
-
-## Email delivery enablement
-
-During development: **no sends**. Dry-run reports intended
-`DAILY_SUBMISSION` / `WEEKLY_ATHLETE_SUMMARY` / `COACH_DIGEST` /
-`INACTIVITY_ALERT` events with `send: false`.
-
-Authorized run: leave subjects/bodies unmodified (live-looking); force recipient
-to `schmidt@fairfieldbasketballclub.com`; prefer existing Email Handoff Queue →
-079 → Hub → Resend path. Do not invent a sender address.
+1. Finish **Program Homework Assignments** (18) and **Zoom Meetings**
+2. Ensure **Weeks** cover May 1 – June 30, 2027
+3. Apply gated clock override per operator checklist; keep restore formula ready
+4. Verify Resend sender already used by live Hub pipeline
+5. Confirm enrollment Parent Email is the allowlist address
+6. Run `preflight` until `sufficient_for_final_run` (or knowingly accept warnings)
+7. Run `dry-run` and review reports
+8. Only then run execute with all confirm tokens + `--enable-email-delivery`
