@@ -892,7 +892,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-144** | Website | Rename Softr-named publish flag | P2 | **DEFERRED** (general schema typo wave) | SC-054 | Gate summary / Softr flag / HC RID typos — SAFE-MIGRATION-PLAN P3; **Perfect Week Video Minimum** typo fixed 2026-08-27 |
 | **SC-145** | Platform | Repo health / security audit follow-ups | P2 | Planned | ΓÇö | Triage findings into SC items as needed |
 | **SC-146** | Enrollment | Re-open Fillout daily intake when season ready | P2 | Deferred | SC-060, SC-135 | Turn on only after SC-135 dry-run |
-| **SC-147** | Zoom | Recorded meeting half-XP writer (distinct from live 101) | P1 | **Repo prep shipped** — draft + offline tests; not Live | SC-022, SC-087 | Mike: pick automation slot; confirm `ZOOM_RECORDING` rule row; DEV install — **do not** overload 117 email |
+| **SC-147** | Zoom | Recorded meeting half-XP via Automation **101 v6.8** (no new slot / no 121) | P1 | **Production-complete** (101 v6.8 verified 2026-09-02 on disposable VERIFY; no DEV base) | SC-022, SC-087 | Optional: refresh Automations Code tracker to v6.8; sync GitHub script to master if needed; do not create 121 |
 | **SC-066** | Enrollment | Early-bird periods supported for 2026–2027 | P3 | Decision resolved — use early-bird registration | SC-065 | Decide if 2026ΓÇô27 uses early-bird; config if yes |
 | **SC-067** | Enrollment | Program Instance multi-year design | P3 | Tracked under V2-013 | SC-032, SC-046 | Dedicated architecture wave later ΓÇö do not block season launch on PI redesign |
 | **SC-100** | Assets | Attachment / Drive retirement strategy | P3 | Deferred | SC-095 | Plan retirement after S3 paths stable for HW+video |
@@ -950,7 +950,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 |---|---|---|
 | **Weekly email audit** | Harness shipped (2026-08-30) | `audits/2026-08-28-weekly-email-pipeline-audit.md` + [`testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md`](testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md) — live `--apply` Mike disposable WAS |
 | **SC-PW-E2E preflight** | COMPLETE (repo) | `preflightApplyAccess`; unlock field resolver (`Source Key` / `Milestone Source Key`) |
-| **SC-147** | Repo prep shipped | Recorded Zoom half-XP — draft `drafts/sc-147-zoom-recording-half-xp.js` + `lib/sc-147-zoom-recording-credit.test.js`; Mike slot + rule row pending |
+| **SC-147** | **Production-complete** | **101 v6.8** recording + live verified 2026-09-02; half live XP; not Perfect Week; mutually exclusive with live; **do not create 121** |
 | **FUT-001 / PR #264** | **COMPLETE** (repo + Production paste) | 020 v3.8 + 065 v10.4 Live; optional SC-016 re-submit only |
 
 ### 2026-08-29 legacy welcome-email field retirement

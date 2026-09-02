@@ -9,6 +9,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Added
+- **SC-147 / 101 v6.8 Production closeout (2026-09-02)** — Automation **101 v6.8** is Production Live and verified on disposable VERIFY records (no DEV base): recording XP `ZOOM_RECORDING_CREDIT|recZEwkkXTJanDlG6|recMFP2x5LDqea9ax` @ 30 XP; live disposable `ZOOM_ATTEND_BASE` @ 60 XP; no Attendees write; Perfect Week zoom counts stayed 0; replay idempotent; `REC_PENDING` cleared; Needed? returned to 0; `Activity Date Is Future?` restored to Production `NOW()`. **No Automation 121.** Evidence: [`docs/testing/evidence/sc-147-101-v68/VERIFY-2026-09-02-POST-PASTE.md`](./docs/testing/evidence/sc-147-101-v68/VERIFY-2026-09-02-POST-PASTE.md). Checklist: [`docs/deploy-checklists/SC-147-zoom-recording-half-xp.md`](./docs/deploy-checklists/SC-147-zoom-recording-half-xp.md).
 - **SC-147 Recorded Zoom half-XP repo prep (2026-08-30, MRW-H10)** — Offline conflict
   matrix + pure helpers (`lib/sc-147-zoom-recording-credit.js`), contract tests, and
   automation **DRAFT** `drafts/sc-147-zoom-recording-half-xp.js` (slot TBD — not Live).
