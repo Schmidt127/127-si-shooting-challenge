@@ -26,6 +26,7 @@ from .simulation_clock import SimulationClock
 from .writer import (
     ExecuteContext,
     SeasonSimWriter,
+    assert_weeks_do_not_overlap,
     build_execute_context_from_reference,
     build_week_date_index,
     load_or_new_registry,
@@ -436,4 +437,5 @@ __all__ = [
     "run_execute",
     "build_execute_context_from_reference",
     "build_week_date_index",
+    "assert_weeks_do_not_overlap",
 ]

@@ -159,6 +159,7 @@ def cmd_dry_run(args: argparse.Namespace) -> int:
     run_id = args.run_id or new_run_id()
     validate_run_id(run_id)
     clock = SimulationClock(enabled=True, current_date=SIM_START, run_id=run_id)
+    week_by_date: dict[str, str] = {}
 
     if args.offline_fixture:
         scenario = _offline_scenario(run_id)
@@ -193,6 +194,23 @@ def cmd_dry_run(args: argparse.Namespace) -> int:
             "warnings": snap.warnings,
             "ambiguous": snap.ambiguous,
         }
+        from .writer import assert_weeks_do_not_overlap, build_week_date_index
+
+        try:
+            assert_weeks_do_not_overlap(snap.weeks_covering_window)
+        except AssertionError as exc:
+            print(f"FATAL: Week index overlap after Denver normalization: {exc}", file=sys.stderr)
+            return 2
+        week_by_date, week_by_id, _ = build_week_date_index(snap.weeks_covering_window)
+        ref_meta["week_id_by_date_count"] = len(week_by_date)
+        ref_meta["weeks_by_id"] = {
+            rid: {
+                "name": meta.get("name"),
+                "start": meta["start"].isoformat() if meta.get("start") else None,
+                "end": meta["end"].isoformat() if meta.get("end") else None,
+            }
+            for rid, meta in week_by_id.items()
+        }
 
     intended = build_intended_writes(scenario, clock)
     payload = {
@@ -200,6 +218,7 @@ def cmd_dry_run(args: argparse.Namespace) -> int:
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "simulation_clock": clock.as_dict(),
         "reference_meta": ref_meta,
+        "week_id_by_date": week_by_date if not args.offline_fixture else {},
         "intended_writes": intended,
         "airtable_writes_performed": 0,
         "emails_sent": 0,
@@ -291,7 +310,7 @@ def cmd_execute(args: argparse.Namespace) -> int:
             goal_program_instance_ids=goal_pis,
             submission_field_names=sub_fields or None,
         )
-    except ValueError as exc:
+    except (ValueError, AssertionError) as exc:
         print(f"FATAL: {exc}", file=sys.stderr)
         return 2
 

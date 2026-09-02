@@ -6,7 +6,7 @@ Never invent homework, Zoom, goals, XP rules, levels, or gates — read live.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from typing import Any
 
 from .airtable_client import (
@@ -18,7 +18,7 @@ from .airtable_client import (
     linked_ids,
     txt,
 )
-from .constants import ATHLETE_GRADE, SIM_END, SIM_START
+from .constants import ATHLETE_GRADE, DENVER, SIM_END, SIM_START
 from .simulation_clock import saturday_of, sunday_of
 
 
@@ -133,15 +133,39 @@ class ReferenceSnapshot:
 
 
 def parse_date_value(value: Any) -> date | None:
-    if not value:
+    """Parse Airtable date / dateTime values as America/Denver calendar dates.
+
+    Weeks Start/End are dateTime fields stored as UTC instants that represent
+    Denver midnight / 23:59. Truncating the ISO string at ``[:10]`` uses the UTC
+    calendar day and falsely overlaps adjacent weeks (e.g. Early Bird end
+    ``2027-05-02T05:59:00Z`` is still May 1 in Denver).
+
+    Date-only values (``YYYY-MM-DD`` or ``datetime.date``) are preserved as-is.
+    """
+    if value is None or value == "":
         return None
     if isinstance(value, datetime):
-        return value.date()
+        dt = value
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(DENVER).date()
     if isinstance(value, date):
         return value
     s = str(value).strip()
+    if not s:
+        return None
+    # Pure date-only — do not reinterpret via UTC/Denver.
+    if len(s) >= 10 and s[4] == "-" and s[7] == "-" and "T" not in s[:11] and " " not in s[:11]:
+        try:
+            return date.fromisoformat(s[:10])
+        except ValueError:
+            return None
     try:
-        return date.fromisoformat(s[:10])
+        normalized = s.replace("Z", "+00:00") if s.endswith("Z") else s
+        dt = datetime.fromisoformat(normalized)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(DENVER).date()
     except ValueError:
         return None
 
