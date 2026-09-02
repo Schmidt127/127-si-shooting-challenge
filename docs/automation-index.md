@@ -148,6 +148,7 @@ Current parent/athlete **email delivery** is Communications Hub → **Resend**. 
 | 113 | Video Review — Assign Base Video XP | *confirm in Airtable* | `113-video-review-and-xp-assign-base-video-xp.js` (**v6.4** — exactly one canonical `VIDEO_SUBMISSION` rule; inactive exact-event re-arm only) |
 | **114** | Video Review — Create or Update Video XP Event | Video Feedback lifecycle reconciliation; *confirm trigger in Airtable* | `114-video-review-and-xp-create-or-update-video-xp-event.js` (**v6.1** — exact VF/source-key identity; deactivates/reactivates the same XP Event; selected-field runtime regression covered by `tests/video-feedback/video-feedback-xp-mocked-runtime.test.js`) |
 | **120** | Video Review — Apply FUT-009 S3 Video Rename | Video Feedback · **Confirm S3 Video Rename** checked · Custom Video File Name valid · Submission Asset linked — **paste v1.0 pending** | `120-video-review-and-xp-apply-fut009-s3-video-rename.js` (**v1.0** — automatic Lambda `POST /fut009/rename`; CopyObject + verified writeback; CLI recovery only; **OFF until Mike disposable Production test**) |
+| **121** | Zoom Recording Credit — Award Half XP (SC-147) | Zoom Attendance · recording quiz satisfactory · Conflict ≠ 1 — **NOT Live** | `121-zoom-recording-credit-award-half-xp.js` (**v1.0** — half live XP via `ZOOM_RECORDING_CREDIT|*`; **do not paste** until DEV disposable proof — [`121-v1.0-sc-147-operator-packet.md`](./deploy-checklists/121-v1.0-sc-147-operator-packet.md)) |
 
 ## Asset reuse review (116)
 

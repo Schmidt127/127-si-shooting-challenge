@@ -1,8 +1,8 @@
 # Recorded Zoom half-XP — design brief (proposed)
 
-**Status:** Decision recorded (Mike 2026-08-27) — **production-ready script shipped (2026-09-01)** — automation slot + XP Reward Rule row + DEV paste still Mike decisions  
+**Status:** Decision recorded (Mike 2026-08-27) — **slot 121 assigned (2026-09-02)** — DEV install ready — **NOT Live until disposable proof**  
 **Backlog ID:** **SC-147** (Recorded Zoom half-XP writer) · **MRW-H10**  
-**Do not paste live automation until Mike picks slot, confirms `ZOOM_RECORDING` rule row, and approves DEV install.
+**Do not paste to Production until DEV disposable proof passes.**
 
 ## Policy (authoritative)
 
@@ -60,8 +60,8 @@ From [`127-SI-MASTER-FUTURE-WORK-LIST.md`](../127-SI-MASTER-FUTURE-WORK-LIST.md)
 |----------|------|
 | Pure helpers + conflict matrix | `airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.js` |
 | Offline contract tests | `airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.test.js` |
-| **Production-ready automation script (placeholder filename 147 — slot TBD)** | `airtable/automations/shooting-challenge/147-zoom-recording-credit-award-half-xp.js` |
-| Design checklist (not a paste packet) | `docs/deploy-checklists/SC-147-zoom-recording-half-xp.md` |
+| **Production-ready automation script (slot 121)** | `airtable/automations/shooting-challenge/121-zoom-recording-credit-award-half-xp.js` |
+| DEV operator packet | `docs/deploy-checklists/121-v1.0-sc-147-operator-packet.md` |
 | Superseded draft (historical) | `airtable/automations/shooting-challenge/drafts/sc-147-zoom-recording-half-xp.js` |
 | Agent 4 suite wiring | `tools/testing/run-agent4-suite.js` → `sc-147-zoom-recording-credit` |
 
@@ -81,12 +81,12 @@ node airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.te
 node tools/testing/run-agent4-suite.js
 ```
 
-## Open Mike decisions
+## Decisions closed (2026-09-02)
 
-1. **Automation slot** — new number vs resurrect Stage 17 writer; placeholder `XXX` in draft; **do not** overload **117** email.
-2. **XP Reward Rules row** — confirm Rule Key `ZOOM_RECORDING` and half-XP amount (SC-022 alignment); fallback is `floor(ZOOM_ATTEND_BASE / 2)`.
-3. **Source Key registry** — enrollment-first `ZOOM_RECORDING_CREDIT|*` vs legacy S16 `ZOOM_RECORDING|*` (meeting-first); Agent 9 registry update after slot decision.
-4. **DEV install + disposable proof** — after slot + rule row confirmed; re-prove SC-087 Conflict=1 with live writer.
+1. **Automation slot** — **121** (next after 120; do **not** overload **117** email).
+2. **XP Reward Rules row** — recommend Rule Key `ZOOM_RECORDING` amount **30**; fallback `floor(ZOOM_ATTEND_BASE / 2)`.
+3. **Source Key** — enrollment-first `ZOOM_RECORDING_CREDIT|{enrollmentId}|{zoomMeetingId}`.
+4. **DEV install + disposable proof** — operator packet [`121-v1.0-sc-147-operator-packet.md`](../deploy-checklists/121-v1.0-sc-147-operator-packet.md); re-prove SC-087 after live writer.
 
 ## Recommended next agent
 

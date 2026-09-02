@@ -245,19 +245,18 @@ test("117 email path does NOT write XP (scope boundary)", () => {
   assert.ok(!/Attendees.*updateRecordAsync/.test(text));
 });
 
-test("production SC-147 script declares slot placeholder and does not claim Live", () => {
+test("production SC-147 script uses slot 121 and does not claim Live", () => {
   const scriptPath = path.join(
     __dirname,
     "..",
-    "147-zoom-recording-credit-award-half-xp.js",
+    "121-zoom-recording-credit-award-half-xp.js",
   );
   const text = fs.readFileSync(scriptPath, "utf8");
-  assert.ok(/slot TBD|SLOT TBD|147 \(slot TBD\)/i.test(text));
+  assert.ok(/121 - Zoom Recording Credit/.test(text));
   assert.ok(!/Status:\s*Live/.test(text));
   assert.ok(text.includes("ZOOM_RECORDING_CREDIT|"));
   assert.ok(text.includes(RULE_KEY_RECORDING));
   assert.ok(text.includes("v1.0"));
-  assert.ok(!/xpEvents\.createRecordAsync/.test(text) || text.includes("createRecordAsync"));
   assert.ok(!/tables\.zoomMeetings.*Attendees/.test(text));
   assert.ok(!/Attendees.*updateRecordAsync/.test(text));
 });
