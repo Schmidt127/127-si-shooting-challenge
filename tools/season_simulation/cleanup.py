@@ -9,10 +9,9 @@ from pathlib import Path
 from typing import Any
 
 from .airtable_client import AirtableClient, WriteBlockedError
-from .confirmation import ConfirmationError, require_confirmation
+from .confirmation import ConfirmationError  # noqa: F401 — re-exported for callers
 from .constants import REFERENCE_TABLES, TRANSACTIONAL_TABLES
 from .run_registry import load_registry, run_marker
-
 
 # Delete order: dependents before parents.
 DELETE_ORDER = [
@@ -37,6 +36,7 @@ class CleanupPlan:
     dry_run: bool
     targets: dict[str, list[str]]
     skipped_reference_tables: list[str]
+    attendees_patches: list[dict[str, Any]] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
 
@@ -87,8 +87,8 @@ def build_cleanup_plan(
 
     for table, ids in reg.ids_by_table().items():
         if table in REFERENCE_TABLES:
-            errors.append(
-                f"Registry contains reference table {table!r} — refusing cleanup plan"
+            warnings.append(
+                f"Registry references {table!r} — skipping (never deleted by cleanup)"
             )
             continue
         if table not in TRANSACTIONAL_TABLES:
@@ -110,6 +110,14 @@ def build_cleanup_plan(
         f"Primary targeting uses local registry; marker {marker!r} is secondary evidence"
     )
 
+    # Note attendees patches that cleanup should reverse (not delete meetings).
+    patches = list((reg.meta or {}).get("zoom_attendees_patches") or [])
+    if patches:
+        warnings.append(
+            f"{len(patches)} Zoom Meetings.Attendees patch(es) recorded — "
+            "cleanup will reverse enrollment from Attendees, not delete meetings"
+        )
+
     # Optional live verification that registry IDs still exist (read-only).
     if client is not None and not errors:
         for table, ids in list(targets.items()):
@@ -130,6 +138,7 @@ def build_cleanup_plan(
         dry_run=True,
         targets=targets,
         skipped_reference_tables=list(REFERENCE_TABLES),
+        attendees_patches=patches,
         errors=errors,
         warnings=warnings,
     )
@@ -141,10 +150,14 @@ def run_cleanup(
     registry_dir: Path,
     execute: bool = False,
     confirm: str | None = None,
+    confirm_cleanup: str | None = None,
+    simulation_id: str | None = None,
     client: AirtableClient | None = None,
     out_dir: Path | None = None,
 ) -> CleanupResult:
-    """Dry-run by default. Deletes only with --execute --confirm token."""
+    """Dry-run by default. Deletes only with full cleanup gates."""
+    from .confirmation import ConfirmationError, require_cleanup_gates
+
     plan = build_cleanup_plan(run_id=run_id, registry_dir=registry_dir, client=client)
     if plan.errors:
         result = CleanupResult(
@@ -169,7 +182,12 @@ def run_cleanup(
         return result
 
     try:
-        require_confirmation(execute=execute, confirm=confirm, action="cleanup")
+        require_cleanup_gates(
+            execute=execute,
+            confirm=confirm,
+            confirm_cleanup=confirm_cleanup,
+            simulation_id=simulation_id or run_id,
+        )
     except ConfirmationError as exc:
         result = CleanupResult(
             run_id=run_id,
@@ -181,6 +199,18 @@ def run_cleanup(
         _write_cleanup_report(result, out_dir)
         return result
 
+    # Extra safety: only delete IDs present in the local registry for this run.
+    if not plan.targets and not plan.attendees_patches:
+        result = CleanupResult(
+            run_id=run_id,
+            dry_run=True,
+            deleted={},
+            plan=plan.to_dict(),
+            errors=["Cleanup refused: registry has no deletable targets"],
+        )
+        _write_cleanup_report(result, out_dir)
+        return result
+
     if client is None:
         client = AirtableClient(allow_writes=True)
     else:
@@ -188,6 +218,31 @@ def run_cleanup(
 
     deleted: dict[str, list[str]] = {}
     errors: list[str] = []
+
+    # Reverse live Attendees patches before deleting enrollment.
+    for patch in plan.attendees_patches:
+        meeting_id = patch.get("meeting_id") or ""
+        enrollment_id = patch.get("enrollment_id") or ""
+        if not meeting_id or not enrollment_id:
+            continue
+        try:
+            rec = client.get_record("Zoom Meetings", meeting_id)
+            raw = (rec.get("fields") or {}).get("Attendees") or []
+            current: list[str] = []
+            if isinstance(raw, list):
+                for item in raw:
+                    if isinstance(item, str):
+                        current.append(item)
+                    elif isinstance(item, dict) and item.get("id"):
+                        current.append(str(item["id"]))
+            next_ids = [x for x in current if x != enrollment_id]
+            client.update_records(
+                "Zoom Meetings",
+                [{"id": meeting_id, "fields": {"Attendees": next_ids}}],
+            )
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"Failed to reverse Attendees on {meeting_id}: {exc}")
+
     for table in DELETE_ORDER:
         ids = plan.targets.get(table) or []
         if not ids:

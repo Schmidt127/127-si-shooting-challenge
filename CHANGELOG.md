@@ -6,6 +6,12 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Tools
+
+#### Changed
+- **SC-SEASON-SIM-002 full execute writer (2026-09-02)** — Replaced athlete-create stub with idempotent `writer.py`: Athlete, Enrollment (+ Program Instance / School Year), WAS, Submissions (2027 Activity Dates + Count It), Submission Assets, Homework Completions, Video Feedback, Zoom Attendance (Live vs Recording Quiz), live-only `Zoom Meetings.Attendees` patch. Resume via run registry dedupe keys; pause on failure; cleanup registry-scoped (+ reverse Attendees). Email off by default. Offline tests: `test_offline` + `test_writer` (55). **No Production write, paste, or live run.** Operator checklist unchanged for gated `Activity Date Is Future?` formula.
+- **SC-SEASON-SIM-002 clock override readiness (2026-09-02)** — Gated simulation clock package so May–June 2027 Activity Dates can count on disposable VERIFY rows without weakening Production `NOW()` for normal athletes. Adds `clock_override.py`, `season_policy.py`, multi-gate CLI (`--simulation-id`, `--confirm-disposable`, `--confirm-cleanup`, `--acknowledge-clock-override`), evidence export, expanded offline tests, operator checklist [`docs/deploy-checklists/SC-SEASON-SIM-002-operator-checklist.md`](./docs/deploy-checklists/SC-SEASON-SIM-002-operator-checklist.md). Root blocker: live `Activity Date Is Future?` uses `NOW()` → `Count This Submission?=0`. `CREATED_TIME()` cannot be backdated. **No live simulation run; no SC-147 / 101 changes.**
+
 ### Airtable
 
 #### Added

@@ -197,7 +197,12 @@ class SimulationClock:
                 "activity_date_writable": True,
                 "submitted_at_is_created_time_formula": True,
                 "activity_date_is_future_uses_now": True,
-                "temporary_override_required_before_early_run": True,
+                "temporary_gated_override_required_before_early_run": True,
+                "gate": (
+                    "Season Sim Test Record? + Video Upload Note contains SEASON-SIM| "
+                    "→ compare Activity Date to Season Sim Clock Now (or force not-future)"
+                ),
+                "normal_production_unaffected_when_gate_false": True,
             },
         }
 
