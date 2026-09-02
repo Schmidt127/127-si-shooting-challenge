@@ -6,6 +6,12 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Airtable
+
+#### Added
+- **121 v1.0 — Recorded Zoom half-XP (SC-147, 2026-09-02)** — Automation slot **121** assigned; script `121-zoom-recording-credit-award-half-xp.js`. **NOT Live** — DEV packet [`docs/deploy-checklists/121-v1.0-sc-147-operator-packet.md`](./docs/deploy-checklists/121-v1.0-sc-147-operator-packet.md).
+- **Post-FUT-030 live verify matrix (2026-09-02)** — `tools/testing/post-fut030-verify-matrix.mjs` for disposable MRW-F05/F06/F07 checks on empty base.
+
 ### Web
 
 #### Changed
