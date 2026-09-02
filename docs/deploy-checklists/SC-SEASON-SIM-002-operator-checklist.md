@@ -216,6 +216,10 @@ python -m season_simulation cleanup `
 4. Leave `Season Sim *` fields in place (unused when unchecked) **or** remove after confirming no leftover gated rows
 5. Confirm a normal Schmidt control submission still counts with Production NOW() path
 
+**Completed 2026-09-02:** Final run `SEASON-SIM-2027-20260902T213135Z-athlete1` — formulas restored; registry + XP/email extras cleaned; evidence at `tools/season_simulation/reports/evidence-final-SEASON-SIM-2027-20260902T213135Z-athlete1.json`.
+
+**Future-run code gate:** That successful execute used **local** writer fixes (053 streak arm after formula settle; 057 PW Skipped→Pending requeue with REST plain strings; weekly Build arm after day loop; never-write computed fields). Do **not** run another Production execute until those changes are merged to `master`. Do not force Perfect Week Eligible.
+
 ## Confirmation: normal Production unaffected
 
 When `Season Sim Test Record?` is unchecked **or** `Video Upload Note` lacks `SEASON-SIM|`, formulas evaluate exactly as today’s Production `NOW()` / `CREATED_TIME()` paths.

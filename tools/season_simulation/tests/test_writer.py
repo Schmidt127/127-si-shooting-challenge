@@ -45,10 +45,12 @@ from season_simulation.scenarios import (  # noqa: E402
 )
 from season_simulation.simulation_clock import SimulationClock  # noqa: E402
 from season_simulation.writer import (  # noqa: E402
-    SIM_REVIEWER_FILE_URL,
+    NEVER_WRITE_FIELDS,
+    SIM_REVIEWER_ACCESS_TOKEN,
     SeasonSimWriter,
     build_execute_context_from_reference,
     build_week_date_index,
+    filter_writable_fields,
     load_or_new_registry,
 )
 
@@ -260,7 +262,10 @@ class TestWriterFullCreate(unittest.TestCase):
         ]
         self.assertTrue(hw_assets)
         for a in hw_assets:
-            self.assertEqual(a["fields"].get("Reviewer File URL"), SIM_REVIEWER_FILE_URL)
+            self.assertEqual(
+                a["fields"].get("Reviewer Access Token"), SIM_REVIEWER_ACCESS_TOKEN
+            )
+            self.assertNotIn("Reviewer File URL", a["fields"])
 
     def test_all_submissions_countable_under_gate(self):
         result = self._writer().run()
@@ -522,15 +527,22 @@ class TestWriterFullCreate(unittest.TestCase):
             for r in result.created
             if r.get("op") == "submission_post_create_arm"
         ]
+        streak_arms = [
+            r for r in result.created if r.get("op") == "submission_streak_arm"
+        ]
         self.assertEqual(len(post_arms), 58)
+        self.assertEqual(len(streak_arms), 58)
         for sub in self.client.tables.get("Submissions", {}).values():
             f = sub["fields"]
-            self.assertEqual(f.get("Submission Stat Mode"), "Simple Total")
+            self.assertNotIn("Submission Stat Mode", f)
+            self.assertTrue(f.get("Shot Total"))
             self.assertTrue(f.get("Build Daily Email Now?"), sub["id"])
-            self.assertTrue(f.get("Enrollment"))
+            self.assertTrue(f.get("Enrollment"), sub["id"])
+            self.assertEqual(f.get("Count This Submission?"), 1, sub["id"])
+            self.assertTrue(f.get("Total Shots Counted"), sub["id"])
             self.assertTrue(f.get("Activity Date"))
             self.assertTrue(f.get("Week"))
-        # Idempotent: second run reuses post-create arms
+        # Idempotent: second run reuses post-create + streak arms
         reg = load_registry(self.registry_dir, self.run_id)
         r2 = self._writer(reg=reg).run()
         self.assertEqual(r2.status, "complete")
@@ -539,7 +551,165 @@ class TestWriterFullCreate(unittest.TestCase):
             for r in r2.reused
             if "SUB_POST_CREATE" in str(r.get("dedupe_key") or "")
         ]
+        reused_streak = [
+            r
+            for r in r2.reused
+            if "SUB_STREAK_ARM" in str(r.get("dedupe_key") or "")
+        ]
         self.assertEqual(len(reused_post), 58)
+        self.assertEqual(len(reused_streak), 58)
+
+    def test_streak_arm_waits_for_formulas_then_relinks_enrollment(self):
+        """053 requires a real Enrollment change after Count This / shots settle."""
+        result = self._writer().run()
+        self.assertEqual(result.status, "complete")
+        enroll_id = result.registry.enrollment_id
+        # Simulate what 053 would create once triggered: one occurrence → gate days.
+        achievement_id = "recACHStreak10"
+        self.client.seed(
+            "Streak Occurrences",
+            "recSTREAKOCC1",
+            {
+                "Active?": True,
+                "Enrollment": [enroll_id],
+                "Achievement": [achievement_id],
+                "Streak Days": 10,
+                "Source Status": "Ready for XP",
+                "Gate Eligible Streak Days": 10,
+            },
+        )
+        occ = self.client.get_record("Streak Occurrences", "recSTREAKOCC1")
+        self.assertEqual(occ["fields"]["Gate Eligible Streak Days"], 10)
+        self.assertEqual(occ["fields"]["Enrollment"], [enroll_id])
+        # Writer left every submission with Enrollment restored (not cleared).
+        for sub in self.client.tables.get("Submissions", {}).values():
+            self.assertEqual(sub["fields"].get("Enrollment"), [enroll_id])
+
+    def test_perfect_week_requeue_after_submissions(self):
+        result = self._writer().run()
+        self.assertEqual(result.status, "complete")
+        requeues = [r for r in result.created if r.get("op") == "was_pw_requeue"]
+        self.assertGreaterEqual(len(requeues), 10)
+        for was in self.client.tables.get("Weekly Athlete Summary", {}).values():
+            status = was["fields"].get("Perfect Week Automation Status")
+            # Airtable REST requires plain option names (not Scripting {name:…}).
+            self.assertIsInstance(status, str, was["id"])
+            self.assertEqual(status, "Pending")
+        for rec in result.registry.records:
+            if rec.dedupe_key and "WAS_PW_REQUEUE" in rec.dedupe_key:
+                snap = rec.fields_snapshot or {}
+                self.assertEqual(snap.get("Perfect Week Automation Status"), "Pending")
+                self.assertIsInstance(snap.get("Perfect Week Automation Status"), str)
+
+    def test_never_writes_computed_submission_stat_mode(self):
+        writes = build_intended_writes(self.scenario, self.clock, ctx=self.ctx)
+        for w in writes:
+            fields = w.get("fields") or {}
+            self.assertNotIn(
+                "Submission Stat Mode",
+                fields,
+                f"computed field in {w.get('table')} {w.get('op')} {w.get('dedupe_key')}",
+            )
+            self.assertNotIn("Reviewer File URL", fields)
+            for banned in NEVER_WRITE_FIELDS:
+                self.assertNotIn(banned, fields, banned)
+        result = self._writer().run()
+        self.assertEqual(result.status, "complete")
+        for sub in self.client.tables.get("Submissions", {}).values():
+            self.assertNotIn("Submission Stat Mode", sub["fields"])
+        for asset in self.client.tables.get("Submission Assets", {}).values():
+            self.assertNotIn("Reviewer File URL", asset["fields"])
+
+    def test_filter_writable_fields_strips_computed(self):
+        cleaned = filter_writable_fields(
+            {
+                "Shot Total": 100,
+                "Submission Stat Mode": "Simple Total",
+                "Reviewer File URL": "https://example.com",
+                "Build Daily Email Now?": True,
+            }
+        )
+        self.assertEqual(cleaned.get("Shot Total"), 100)
+        self.assertTrue(cleaned.get("Build Daily Email Now?"))
+        self.assertNotIn("Submission Stat Mode", cleaned)
+        self.assertNotIn("Reviewer File URL", cleaned)
+
+    def test_resume_after_zoom_meetings_before_submissions(self):
+        """Mirrors paused run …T202049Z: athlete/enrollment/WAS/zoom exist; day loop pending."""
+        class FailOnFirstSubmission(MemoryAirtableClient):
+            def __init__(self, *a, **k):
+                super().__init__(*a, **k)
+                self._failed = False
+
+            def create_records(self, table, records):
+                if table == "Submissions" and not self._failed:
+                    # Detect legacy computed-field write if present.
+                    for fields in records:
+                        if "Submission Stat Mode" in fields:
+                            self._failed = True
+                            raise RuntimeError(
+                                'Field "Submission Stat Mode" cannot accept a value '
+                                "because the field is computed"
+                            )
+                    # Also fail once to force a pause before any submission exists.
+                    self._failed = True
+                    raise RuntimeError("simulated pause before first submission")
+                return super().create_records(table, records)
+
+        flaky = FailOnFirstSubmission(allow_writes=True)
+        self.client = flaky
+        paused = self._writer().run()
+        self.assertEqual(paused.status, "paused")
+        reg = load_registry(self.registry_dir, self.run_id)
+        self.assertEqual(reg.status, "paused")
+        self.assertTrue(reg.athlete_id)
+        self.assertTrue(reg.enrollment_id)
+        self.assertTrue(reg.meta.get("zoom_live_meeting_id"))
+        self.assertTrue(reg.meta.get("zoom_recorded_meeting_id"))
+        self.assertEqual(len(self.client.tables.get("Submissions", {})), 0)
+        before = {
+            t: len(self.client.tables.get(t, {}))
+            for t in (
+                "Athletes",
+                "Enrollments",
+                "Weekly Athlete Summary",
+                "Zoom Meetings",
+            )
+        }
+        # Resume with a clean client wrapping the same in-memory tables.
+        healthy = MemoryAirtableClient(allow_writes=True)
+        healthy.tables = flaky.tables
+        self.client = healthy
+        resumed = self._writer(reg=reg).run()
+        self.assertEqual(resumed.status, "complete", resumed.errors)
+        self.assertEqual(len(self.client.tables.get("Submissions", {})), 58)
+        for t, n in before.items():
+            self.assertEqual(len(self.client.tables.get(t, {})), n, t)
+        # Recorded path present; Create XP only on live.
+        live_id = resumed.registry.meta["zoom_live_meeting_id"]
+        rec_id = resumed.registry.meta["zoom_recorded_meeting_id"]
+        self.assertTrue(
+            self.client.get_record("Zoom Meetings", live_id)["fields"].get(
+                "Create XP Events"
+            )
+        )
+        self.assertFalse(
+            self.client.get_record("Zoom Meetings", rec_id)["fields"].get(
+                "Create XP Events"
+            )
+        )
+        za = list(self.client.tables.get("Zoom Attendance", {}).values())
+        self.assertEqual(len(za), 2)
+        self.assertTrue(
+            any(z["fields"].get("Attendance Method") == "Recording Quiz" for z in za)
+        )
+        # Registry remains valid and second resume is no-op.
+        reg2 = load_registry(self.registry_dir, self.run_id)
+        self.assertEqual(reg2.status, "complete")
+        again = self._writer(reg=reg2).run()
+        self.assertEqual(again.status, "complete")
+        self.assertEqual(len(self.client.tables.get("Submissions", {})), 58)
+        self.assertGreater(len(again.reused), 0)
 
     def test_weekly_email_arm_when_delivery_enabled(self):
         result = self._writer(enable_email=True).run()
@@ -610,6 +780,10 @@ class TestWriterFullCreate(unittest.TestCase):
         writes = build_intended_writes(self.scenario, self.clock, ctx=self.ctx)
         readiness = summarize_intended_write_readiness(writes)
         self.assertTrue(readiness["streak_post_create_planned"])
+        self.assertTrue(readiness["streak_arm_planned"])
+        self.assertTrue(readiness["perfect_week_requeue_planned"])
+        self.assertEqual(readiness["submission_streak_arms"], readiness["submission_creates"])
+        self.assertGreaterEqual(readiness["perfect_week_requeues"], 10)
         self.assertTrue(readiness["daily_email_arm_planned"])
         self.assertTrue(readiness["live_xp_path_planned"])
         self.assertTrue(readiness["recorded_xp_path_planned"])

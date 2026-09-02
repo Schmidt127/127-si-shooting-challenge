@@ -1080,8 +1080,8 @@ Create a reusable, unattended end-to-end simulation of a complete **60-day** Sho
 ### SC-SEASON-SIM-002 — Athlete 1 Season Simulation Infrastructure (May–June 2027)
 
 **Priority:** P2  
-**Status:** Cascade-ready in GitHub — failed run `SEASON-SIM-2027-20260902T171918Z-athlete1` cleaned; writer + 010/114/073 Season Sim date gate + disposable Zoom + Hub allowlist row. **Paste 010 v10.13 / 114 v6.2 / 073 v4.6** before next execute. Temporary formulas remain; restore only after a successful run.  
-**Systems:** `tools/season_simulation/`, Airtable gated formulas (temporary), automations 010/114/073, Hub Test Allowlist  
+**Status:** **COMPLETE (2026-09-02)** — Final controlled run `SEASON-SIM-2027-20260902T213135Z-athlete1` writer complete; cascade verified (58 countable / 13,906 shots during gated formulas; Submission Base XP 58; 17 Streak Occurrences; Zoom live+recording XP; 6 WEEKLY Accepted/Hub sent allowlisted only; PW Eligible=0 expected). Production formulas restored; disposable run cleaned. Evidence (gitignored reports dir): `tools/season_simulation/reports/evidence-final-SEASON-SIM-2027-20260902T213135Z-athlete1.json`. **Note:** That execute used local writer streak/PW/weekly arms not yet on `origin/master` at run time — merge the closeout PR before any future season-sim execute.  
+**Systems:** `tools/season_simulation/`, Airtable gated formulas (temporary), automations 010/114/073/053/055/057/072, Hub Test Allowlist  
 **Related (distinct):** **SC-SEASON-SIM-001** (five-enrollment unattended package — still Planned / Future; not started)
 
 Build reusable Python infrastructure for a full **Athlete 1** season simulation against Production (no DEV base; app not live to families):
@@ -1446,6 +1446,6 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **SC-CORE-WF / MRW-F11** | **COMPLETE** | Core workflow reliability — `lib/workflow-contracts/`, `tools/testing/sc-core-workflow.mjs`, `docs/testing/core-workflow/`. Live Weeks/PHA audit + disposable apply 2026-08-30. |
 | **SC-WEEKLY-SETTLEMENT-E2E** | **COMPLETE** | Weekly settlement matrix (WAS / calc / PW fail-closed / handoff prep). Docs `docs/testing/weekly-settlement/`; harness `tools/testing/sc-weekly-settlement.mjs`; RESULTS + DEFECT-REPORT 2026-08-30. MRW-F10. |
 | **SC-SEASON-SIM-001** | **Planned / Future** | 60-day five-enrollment season simulation — narrative entry above § D / FUT-026; MRW-H11. Do **not** implement yet. FUT-010 unchanged. Reuse SC-PW-E2E later where appropriate. |
-| **SC-SEASON-SIM-002** | **Cascade-ready (paste pending)** | Writer + 010/114/073 Season Sim date gate + disposable Zoom + Hub allowlist row for `schmidt@fairfieldbasketballclub.com`. Failed run `…T171918Z` cleaned. Temporary formulas remain; **paste 010 v10.13 / 114 v6.2 / 073 v4.6** before next execute. Distinct from SC-SEASON-SIM-001. |
+| **SC-SEASON-SIM-002** | **COMPLETE — T213135Z** | Final execute + formula restore + cleanup 2026-09-02. Evidence `tools/season_simulation/reports/evidence-final-SEASON-SIM-2027-20260902T213135Z-athlete1.json`. Distinct from SC-SEASON-SIM-001. |
 
 ---

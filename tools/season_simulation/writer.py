@@ -6,6 +6,7 @@ schema, or real-athlete rows. Dry-run / confirmation gates live in ``execute.py`
 
 from __future__ import annotations
 
+import time
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -19,18 +20,55 @@ from .clock_override import (
     activity_date_write_value,
     sim_submission_override_fields,
 )
-
-# Preflight / readiness: writer always stamps Season Sim gate fields on sim Submissions.
-EXECUTE_SETS_SEASON_SIM_GATES = True
-SCHOOL_YEAR_2026_2027 = "2026-2027"
-# Parent-facing asset URL for 071 Reviewer File URL gate (allowlisted site; not a real upload).
-SIM_REVIEWER_FILE_URL = "https://www.fairfieldbasketballclub.com/shoot"
 from .constants import SAFE_EMAIL_RECIPIENT, SIM_START
 from .reference_data import parse_date_value
 from .run_registry import RunRegistry, load_registry, run_marker, save_registry
 from .scenarios import Athlete1Scenario
 from .season_policy import week_label_for_activity_date
 from .simulation_clock import SimulationClock, sunday_of
+
+# Preflight / readiness: writer always stamps Season Sim gate fields on sim Submissions.
+EXECUTE_SETS_SEASON_SIM_GATES = True
+SCHOOL_YEAR_2026_2027 = "2026-2027"
+# Writable input for Submission Assets.Reviewer File URL formula (token → Lambda URL).
+# Never write the formula field Reviewer File URL itself.
+SIM_REVIEWER_ACCESS_TOKEN = "season-sim-reviewer-token"
+# Live-schema computed / read-only fields — strip from every create/update payload.
+NEVER_WRITE_FIELDS = frozenset(
+    {
+        "Submission Stat Mode",  # formula from Shot Total / detailed stats
+        "Reviewer File URL",  # formula from Reviewer Access Token
+        "Count This Submission?",
+        "Total Shots Counted",
+        "Total Shots Canonical",
+        "Activity Date Is Future?",
+        "Submitted Same Day?",
+        "Perfect Week Grace Eligible?",
+        "Perfect Week Countable Submission?",
+        "Enrollment Record ID",
+        "Enrollment Record ID Lookup",
+        "Base XP Awarded",
+        "Total Homework XP Awarded",
+        "Total Video XP Awarded",
+        "Ready for XP Automation?",
+        "Zoom Credit Approved?",
+        "Zoom Credit Pre-Approved?",
+        "Created Time",
+        "Last Modified Time",
+        "Perfect Week Calculation Queue?",
+        "Longest Streak Days",
+        "Gate Eligible Streak Days",
+    }
+)
+
+# Production 053 watches recordUpdated on these Submissions fields (live field IDs):
+# Activity Date, Enrollment, Count This Submission? (formula), Total Shots Counted (formula).
+# Build Daily Email Now? is NOT watched — rewriting identical Activity Date/Enrollment alone
+# does not fire 053 after create. Wait for formulas, then Enrollment clear→restore.
+FORMULA_WAIT_TIMEOUT_S = 60.0
+FORMULA_WAIT_POLL_S = 1.0
+# 055 (recordMatchesConditions) updates Current Shooting Streak independently of 053.
+# Gate Longest Streak Days is a rollup of Streak Occurrences.Gate Eligible Streak Days.
 
 
 class WriterClient(Protocol):
@@ -198,6 +236,11 @@ class WriterResult:
         }
 
 
+def filter_writable_fields(fields: dict[str, Any]) -> dict[str, Any]:
+    """Drop known computed/read-only Airtable fields from write payloads."""
+    return {k: v for k, v in fields.items() if k not in NEVER_WRITE_FIELDS}
+
+
 class SeasonSimWriter:
     """Idempotent, resumable writer keyed by run registry dedupe keys."""
 
@@ -240,13 +283,27 @@ class SeasonSimWriter:
         if existing:
             self.reused.append({"table": table, "id": existing, "dedupe_key": dedupe_key, "step": step})
             return existing
-        rows = self.client.create_records(table, [fields])
+        writable = filter_writable_fields(fields)
+        rows = self.client.create_records(table, [writable])
         rid = rows[0]["id"]
-        self.reg.add(table, rid, dedupe_key=dedupe_key, fields_snapshot=fields)
+        self.reg.add(table, rid, dedupe_key=dedupe_key, fields_snapshot=writable)
         self.created.append({"table": table, "id": rid, "dedupe_key": dedupe_key, "step": step})
         self.reg.last_completed_step = step
         self._save()
         return rid
+
+    def _update_records(
+        self, table: str, updates: list[dict[str, Any]]
+    ) -> list[dict]:
+        cleaned: list[dict[str, Any]] = []
+        for u in updates:
+            cleaned.append(
+                {
+                    "id": u["id"],
+                    "fields": filter_writable_fields(u.get("fields") or {}),
+                }
+            )
+        return self.client.update_records(table, cleaned)
 
     def _pause(self, step: str, exc: Exception) -> WriterResult:
         self.reg.status = "paused"
@@ -274,6 +331,7 @@ class SeasonSimWriter:
             self._create_weekly_summaries(enrollment_id)
             self._ensure_sim_zoom_meetings()
             self._create_day_loop(athlete_id, enrollment_id)
+            self._requeue_perfect_week_calculations()
             self._apply_zoom_live_attendees(enrollment_id)
             self._arm_live_zoom_create_xp_events()
             self._register_email_intents()
@@ -499,8 +557,7 @@ class SeasonSimWriter:
             "Activity Date": activity_date_write_value(day.activity_date),
             "Shot Total": day.shot_total,
             "Duplicate Review Status": "Count It",
-            # Required for Count This Submission? formula + 076 readiness.
-            "Submission Stat Mode": "Simple Total",
+            # Submission Stat Mode is a formula (Simple Total when Shot Total is set).
             "Daily Email Subject": f"{self.marker}|D{day.day_number:02d}",
             **override,
         }
@@ -576,8 +633,8 @@ class SeasonSimWriter:
                 "Submission - Linked": [submission_id],
                 "Enrollment - Linked": [enrollment_id],
                 "Send to Make Trigger": False,
-                # 071 parent-facing URL gate (allowlisted site; not a real upload).
-                "Reviewer File URL": SIM_REVIEWER_FILE_URL,
+                # Writable input for formula Reviewer File URL (never write the formula).
+                "Reviewer Access Token": SIM_REVIEWER_ACCESS_TOKEN,
             }
             aid = self._ensure(
                 table="Submission Assets",
@@ -700,7 +757,7 @@ class SeasonSimWriter:
             "Parent Feedback Sent?": False,
             # Do not set Ready for XP Automation? — 113 owns that after Base XP.
         }
-        self.client.update_records(
+        self._update_records(
             "Video Feedback",
             [{"id": vf_id, "fields": arm_fields}],
         )
@@ -795,7 +852,7 @@ class SeasonSimWriter:
             current = []
         if enrollment_id not in current:
             current.append(enrollment_id)
-        self.client.update_records(
+        self._update_records(
             "Zoom Meetings",
             [{"id": live_id, "fields": {"Attendees": current}}],
         )
@@ -846,7 +903,7 @@ class SeasonSimWriter:
                 {"table": "Zoom Meetings", "id": live_id, "dedupe_key": dedupe, "step": step}
             )
             return
-        self.client.update_records(
+        self._update_records(
             "Zoom Meetings",
             [{"id": live_id, "fields": {"Create XP Events": True}}],
         )
@@ -872,6 +929,32 @@ class SeasonSimWriter:
         self.reg.last_completed_step = step
         self._save()
 
+    def _wait_submission_formulas_ready(self, submission_id: str) -> None:
+        """Block until Count This / Total Shots Counted are populated (053 prerequisites)."""
+        deadline = time.monotonic() + FORMULA_WAIT_TIMEOUT_S
+        last: dict[str, Any] = {}
+        while True:
+            rec = self.client.get_record("Submissions", submission_id)
+            fields = rec.get("fields") or {}
+            count_raw = fields.get("Count This Submission?")
+            shots_raw = fields.get("Total Shots Counted")
+            try:
+                count_ok = int(float(count_raw)) == 1 if count_raw not in (None, "") else False
+            except (TypeError, ValueError):
+                count_ok = count_raw is True
+            try:
+                shots_ok = float(shots_raw) > 0 if shots_raw not in (None, "") else False
+            except (TypeError, ValueError):
+                shots_ok = False
+            last = {"Count This Submission?": count_raw, "Total Shots Counted": shots_raw}
+            if count_ok and shots_ok:
+                return
+            if time.monotonic() >= deadline:
+                raise RuntimeError(
+                    f"Timed out waiting for countable formulas on {submission_id}: {last}"
+                )
+            time.sleep(FORMULA_WAIT_POLL_S)
+
     def _arm_submission_post_create(
         self,
         submission_id: str,
@@ -880,56 +963,180 @@ class SeasonSimWriter:
         activity_date: date,
         day_number: int,
     ) -> None:
-        """Post-create update so 053 (recordUpdated) and 076 (Build Daily) can run.
+        """Post-create: arm 076 (Build Daily), then force 053 after formulas settle.
 
-        053 watches Submission updates (Activity Date / Enrollment / count fields),
-        not create. Build Daily Email Now? is the durable field delta that also arms
-        076 when WAS was pre-created (031 may skip arming Build Daily).
+        Production 053 is recordUpdated watching Activity Date, Enrollment,
+        Count This Submission?, and Total Shots Counted. Create settles formulas
+        without a separate watched-field change; rewriting the same Activity Date /
+        Enrollment values does not fire. Build Daily Email Now? is not watched.
+
+        Sequence:
+        1) Build Daily Email Now?=true (076)
+        2) Wait until Count This=1 and Total Shots Counted>0
+        3) Clear Enrollment, then restore Enrollment + Activity Date (053 fire)
         """
-        dedupe = f"{self.marker}|SUB_POST_CREATE|D{day_number:02d}"
-        step = f"submission_post_create|D{day_number:02d}"
+        daily_dedupe = f"{self.marker}|SUB_POST_CREATE|D{day_number:02d}"
+        streak_dedupe = f"{self.marker}|SUB_STREAK_ARM|D{day_number:02d}"
+        daily_step = f"submission_post_create|D{day_number:02d}"
+        streak_step = f"submission_streak_arm|D{day_number:02d}"
         done = set(self.reg.meta.get("completed_dedupe_keys") or [])
-        if dedupe in done or self.reg.has_dedupe_key(dedupe):
+
+        if daily_dedupe not in done and not self.reg.has_dedupe_key(daily_dedupe):
+            daily_fields = {"Build Daily Email Now?": True}
+            self._update_records(
+                "Submissions",
+                [{"id": submission_id, "fields": daily_fields}],
+            )
+            self.reg.add(
+                "Submissions",
+                submission_id,
+                dedupe_key=daily_dedupe,
+                notes="arm_076_build_daily_email_now",
+                fields_snapshot=dict(daily_fields),
+            )
+            self.reg.meta.setdefault("completed_dedupe_keys", [])
+            self.reg.meta["completed_dedupe_keys"].append(daily_dedupe)
+            self.created.append(
+                {
+                    "table": "Submissions",
+                    "id": submission_id,
+                    "dedupe_key": daily_dedupe,
+                    "step": daily_step,
+                    "op": "submission_post_create_arm",
+                }
+            )
+            self.reg.last_completed_step = daily_step
+            self._save()
+        else:
             self.reused.append(
                 {
                     "table": "Submissions",
                     "id": submission_id,
-                    "dedupe_key": dedupe,
-                    "step": step,
+                    "dedupe_key": daily_dedupe,
+                    "step": daily_step,
+                }
+            )
+
+        if streak_dedupe in done or self.reg.has_dedupe_key(streak_dedupe):
+            self.reused.append(
+                {
+                    "table": "Submissions",
+                    "id": submission_id,
+                    "dedupe_key": streak_dedupe,
+                    "step": streak_step,
                 }
             )
             return
-        arm_fields: dict[str, Any] = {
-            "Activity Date": activity_date_write_value(activity_date),
-            "Enrollment": [enrollment_id],
-            # Real checkbox delta so recordUpdated fires; allowlisted parent only.
-            "Build Daily Email Now?": True,
-        }
-        self.client.update_records(
+
+        self._wait_submission_formulas_ready(submission_id)
+        # Watched-field delta that actually changes after create.
+        self._update_records(
             "Submissions",
-            [{"id": submission_id, "fields": arm_fields}],
+            [{"id": submission_id, "fields": {"Enrollment": []}}],
+        )
+        restore_fields = {
+            "Enrollment": [enrollment_id],
+            "Activity Date": activity_date_write_value(activity_date),
+        }
+        self._update_records(
+            "Submissions",
+            [{"id": submission_id, "fields": restore_fields}],
         )
         self.reg.add(
             "Submissions",
             submission_id,
-            dedupe_key=dedupe,
-            notes="arm_053_record_updated_and_076_build_daily",
-            fields_snapshot=dict(arm_fields),
+            dedupe_key=streak_dedupe,
+            notes="arm_053_enrollment_clear_restore_after_formulas",
+            fields_snapshot=dict(restore_fields),
         )
         self.reg.meta.setdefault("completed_dedupe_keys", [])
-        if dedupe not in self.reg.meta["completed_dedupe_keys"]:
-            self.reg.meta["completed_dedupe_keys"].append(dedupe)
+        if streak_dedupe not in self.reg.meta["completed_dedupe_keys"]:
+            self.reg.meta["completed_dedupe_keys"].append(streak_dedupe)
         self.created.append(
             {
                 "table": "Submissions",
                 "id": submission_id,
-                "dedupe_key": dedupe,
-                "step": step,
-                "op": "submission_post_create_arm",
+                "dedupe_key": streak_dedupe,
+                "step": streak_step,
+                "op": "submission_streak_arm",
             }
         )
-        self.reg.last_completed_step = step
+        self.reg.last_completed_step = streak_step
         self._save()
+
+    def _requeue_perfect_week_calculations(self) -> None:
+        """Re-enter 057 after submissions are linked (WAS was created empty first).
+
+        Perfect Week Calculation Queue? = 1 when Status is Pending or Ready.
+        Creating WAS early lets 057 run with zero linked submissions and stay Ready,
+        which does not re-fire when Submissions arrive. Toggle Ready/blank → Skipped
+        (queue 0) → Pending (queue 1) so 057 recalculates with live links.
+        Does not force Eligible?=1.
+        """
+        was_ids = sorted(
+            {
+                r.record_id
+                for r in self.reg.records
+                if r.table == "Weekly Athlete Summary"
+                and r.record_id
+                and r.dedupe_key.startswith(f"{self.marker}|WAS|")
+            }
+        )
+        for was_id in was_ids:
+            dedupe = f"{self.marker}|WAS_PW_REQUEUE|{was_id}"
+            step = f"was_pw_requeue|{was_id}"
+            if self.reg.has_dedupe_key(dedupe) or dedupe in set(
+                self.reg.meta.get("completed_dedupe_keys") or []
+            ):
+                self.reused.append(
+                    {
+                        "table": "Weekly Athlete Summary",
+                        "id": was_id,
+                        "dedupe_key": dedupe,
+                        "step": step,
+                    }
+                )
+                continue
+            # REST API expects select option names as strings (not Scripting {name:…}).
+            self._update_records(
+                "Weekly Athlete Summary",
+                [
+                    {
+                        "id": was_id,
+                        "fields": {"Perfect Week Automation Status": "Skipped"},
+                    }
+                ],
+            )
+            self._update_records(
+                "Weekly Athlete Summary",
+                [
+                    {
+                        "id": was_id,
+                        "fields": {"Perfect Week Automation Status": "Pending"},
+                    }
+                ],
+            )
+            self.reg.add(
+                "Weekly Athlete Summary",
+                was_id,
+                dedupe_key=dedupe,
+                notes="requeue_057_after_submissions_linked",
+                fields_snapshot={"Perfect Week Automation Status": "Pending"},
+            )
+            self.reg.meta.setdefault("completed_dedupe_keys", [])
+            if dedupe not in self.reg.meta["completed_dedupe_keys"]:
+                self.reg.meta["completed_dedupe_keys"].append(dedupe)
+            self.created.append(
+                {
+                    "table": "Weekly Athlete Summary",
+                    "id": was_id,
+                    "dedupe_key": dedupe,
+                    "step": step,
+                    "op": "was_pw_requeue",
+                }
+            )
+            self.reg.last_completed_step = step
+            self._save()
 
     def _register_email_intents(self) -> None:
         for ev in self.scenario.intended_emails:
@@ -944,12 +1151,15 @@ class SeasonSimWriter:
     def _arm_was_email_flags(self, enrollment_id: str) -> None:
         """Arm Build Weekly Email Now? on Saturday WAS rows (072 package path).
 
-        072 clears Build Weekly only on success or skipBuild paths. Throws
-        (unlinked XP, shots disagreement, missing recipient) leave Build true —
-        do not manually clear. Writer ensures Weekly Email Sent?=false,
-        Send to Make?=false, Enrollment/Week/Goal/Grade Band, and Submission→WAS
-        links so 072 can succeed after automation XP/rollup settlement.
+        Runs after the full day loop so Submission→WAS links and XP settlement
+        have a chance to land. 072 clears Build Weekly only on success or
+        skipBuild; throws leave Build true — do not manually clear.
+
+        Production prerequisite (OMNI, not writer): 072 ``recordId`` input must be
+        the trigger WAS id (``$ref: trigger → id``), not a hardcoded test record.
+        A static recordId leaves Build=true with no package/handoff.
         """
+        _ = enrollment_id  # reserved for future recipient checks
         for day in self.scenario.days:
             if day.action != "submit":
                 continue
@@ -962,7 +1172,21 @@ class SeasonSimWriter:
             dedupe = f"{self.marker}|WAS_EMAIL_ARM|{was_id}"
             if self.reg.has_dedupe_key(dedupe):
                 continue
-            self.client.update_records(
+            # false→true so recordMatchesConditions re-enters if already checked.
+            self._update_records(
+                "Weekly Athlete Summary",
+                [
+                    {
+                        "id": was_id,
+                        "fields": {
+                            "Build Weekly Email Now?": False,
+                            "Weekly Email Sent?": False,
+                            "Send to Make?": False,
+                        },
+                    }
+                ],
+            )
+            self._update_records(
                 "Weekly Athlete Summary",
                 [
                     {
@@ -971,7 +1195,6 @@ class SeasonSimWriter:
                             "Build Weekly Email Now?": True,
                             "Weekly Email Sent?": False,
                             "Send to Make?": False,
-                            # Do not clear Build Weekly if 072 throws — re-check after XP settle.
                         },
                     }
                 ],
@@ -980,7 +1203,7 @@ class SeasonSimWriter:
                 "Weekly Athlete Summary",
                 was_id,
                 dedupe_key=dedupe,
-                notes="email_arm_build_weekly_for_072",
+                notes="email_arm_build_weekly_for_072_false_then_true",
             )
             self._save()
 
