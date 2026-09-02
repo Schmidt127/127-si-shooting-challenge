@@ -31,6 +31,7 @@ from .simulation_clock import (
     assert_window_integrity,
     build_simulation_days,
     sunday_of,
+    week_boundaries_for_dates,
 )
 
 
@@ -62,6 +63,7 @@ class DayPlan:
     homework: list[dict[str, Any]] = field(default_factory=list)
     video_feedback: bool = False
     zoom_meeting_ids: list[str] = field(default_factory=list)
+    zoom_modes: list[str] = field(default_factory=list)
     email_events: list[dict[str, Any]] = field(default_factory=list)
     notes: str = ""
     dedupe_key: str = ""
@@ -234,14 +236,19 @@ def build_athlete1_scenario(
             )
 
         zoom_ids: list[str] = []
+        zoom_modes: list[str] = []
         # Place the two selected Zoom meetings on two fixed days if available.
+        # Day 12 = Live (Attendees path); Day 40 = Recording Quiz (never Attendees).
         if zoom_list:
             if n == 12 and len(zoom_list) >= 1:
                 zoom_ids = [zoom_list[0]["record_id"]]
+                zoom_modes = ["live"]
             if n == 40 and len(zoom_list) >= 2:
                 zoom_ids = [zoom_list[1]["record_id"]]
+                zoom_modes = ["recording"]
             elif n == 40 and len(zoom_list) == 1:
                 zoom_ids = [zoom_list[0]["record_id"]]
+                zoom_modes = ["recording"]
 
         video = n in VIDEO_FEEDBACK_DAYS
 
@@ -303,11 +310,16 @@ def build_athlete1_scenario(
                 homework=hw_payload,
                 video_feedback=video,
                 zoom_meeting_ids=zoom_ids,
+                zoom_modes=zoom_modes,
                 email_events=emails,
                 notes=notes,
                 dedupe_key=_dedupe_key(run_id, "SUB", n),
             )
         )
+
+    window_weeks = week_boundaries_for_dates(d.activity_date for d in day_plans)
+    week9_days = [d.activity_date for d in day_plans if week_label_for_activity_date(d.activity_date) == "Week 9"]
+    week9_bounds = (min(week9_days), max(week9_days)) if week9_days else None
 
     total_shots = sum(d.shot_total for d in day_plans)
     submit_days = sum(1 for d in day_plans if d.action == "submit")
@@ -381,6 +393,21 @@ def build_athlete1_scenario(
             "weeks_provided": len(weeks or []),
             "goal_coverage_ratio": round(total_shots / goal_total_shots, 3),
             "homework_selected_count": len(hw_list),
+            "program_instance_hint": next(
+                (h.get("program_instance_id") for h in hw_list if h.get("program_instance_id")),
+                "",
+            ),
+            # Early Bird (Week 0) for most of April ends at SIM_START; treat as out-of-window for HW policy notes.
+            "early_bird_handling": "out_of_window",
+            "early_bird_in_window": False,
+            "homework_weeks_policy": "weeks_1_through_8_of_sim_window; week_9_zero_homework",
+            "sim_window_week_count": len(window_weeks),
+            "week9_zero_homework": True,
+            "week9_bounds": (
+                [week9_bounds[0].isoformat(), week9_bounds[1].isoformat()]
+                if week9_bounds
+                else None
+            ),
         },
     )
 

@@ -1,4 +1,4 @@
-"""Gated simulation clock override — models Production vs season-sim behavior.
+"""Gated simulation clock override ??? models Production vs season-sim behavior.
 
 Live Production (verified 2026-09-02):
   Activity Date Is Future? =
@@ -9,15 +9,15 @@ Live Production (verified 2026-09-02):
     Perfect Week Manual Exception? is checked
 
 This module does **not** mutate Airtable. It documents and evaluates the
-smallest reversible gated override so May–June 2027 Activity Dates can count
+smallest reversible gated override so May???June 2027 Activity Dates can count
 on disposable simulation records without weakening NOW()/TODAY() for normal
 athletes.
 
 Gate (both required for override path):
   1. Submissions.`Season Sim Test Record?` = checked
-  2. Submissions.`Video Upload Note` contains run marker ``SEASON-SIM|…``
+  2. Submissions.`Video Upload Note` contains run marker ``SEASON-SIM|???``
 
-When the gate fails → Production formulas unchanged (NOW() / CREATED_TIME()).
+When the gate fails ??? Production formulas unchanged (NOW() / CREATED_TIME()).
 """
 
 from __future__ import annotations
@@ -125,7 +125,11 @@ class ClockOverrideReadiness:
     dependency_impact: dict[str, str] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        data = asdict(self)
+        wd = data.get("wall_date")
+        if hasattr(wd, "isoformat"):
+            data["wall_date"] = wd.isoformat()
+        return data
 
 
 def activity_date_is_future_production(
@@ -140,7 +144,7 @@ def activity_date_is_future_production(
             mode="missing_activity_date",
             compared_against="NOW()",
             counts_for_submission=False,
-            reason="No Activity Date — formula returns BLANK(); Count This Submission? fails closed.",
+            reason="No Activity Date ??? formula returns BLANK(); Count This Submission? fails closed.",
         )
     # Airtable compares date/datetime to NOW(); treat date as start-of-day UTC-naive
     # for offline modeling (Denver wall date is what operators reason about).
@@ -188,10 +192,10 @@ def activity_date_is_future_gated(
         return FutureDateDecision(
             is_future=False,
             mode="simulation_gated",
-            compared_against="(empty Season Sim Clock Now → force not-future)",
+            compared_against="(empty Season Sim Clock Now ??? force not-future)",
             counts_for_submission=True,
             reason=(
-                "Gated Season Sim record with empty Season Sim Clock Now — "
+                "Gated Season Sim record with empty Season Sim Clock Now ??? "
                 "Activity Date Is Future? forced to 0 (sim-only)."
             ),
         )
@@ -231,7 +235,7 @@ def submitted_same_day_production(
         mode="production_created_time",
         reason=(
             f"CREATED_TIME day {submitted_at_date} vs Activity Date {activity_date} "
-            f"→ same_day={same}. CREATED_TIME cannot be API-backdated."
+            f"??? same_day={same}. CREATED_TIME cannot be API-backdated."
         ),
     )
 
@@ -254,7 +258,7 @@ def submitted_same_day_gated(
             mode="simulation_test_submitted_at",
             reason=(
                 f"Gated sim Test Submitted At {season_sim_test_submitted_at} vs "
-                f"Activity Date {activity_date} → same_day={same}."
+                f"Activity Date {activity_date} ??? same_day={same}."
             ),
         )
     return submitted_same_day_production(
@@ -266,39 +270,39 @@ def dependency_impact_matrix() -> dict[str, str]:
     """What breaks before wall-clock reaches May 2027 without a gated override."""
     return {
         "daily_submission_counting": (
-            "BLOCKED — Count This Submission? = 0 when Activity Date Is Future? = 1"
+            "BLOCKED ??? Count This Submission? = 0 when Activity Date Is Future? = 1"
         ),
         "weekly_summaries": (
-            "BLOCKED — Total Shots Counted / WAS rollups depend on countable submissions"
+            "BLOCKED ??? Total Shots Counted / WAS rollups depend on countable submissions"
         ),
-        "streaks": "BLOCKED — streak engines consume countable Activity Dates",
+        "streaks": "BLOCKED ??? streak engines consume countable Activity Dates",
         "perfect_week": (
-            "BLOCKED — needs Count This Submission?=1; Grace Eligible also uses "
+            "BLOCKED ??? needs Count This Submission?=1; Grace Eligible also uses "
             "Activity Date <= TODAY() unless Perfect Week Manual Exception? is checked "
             "on disposable sim rows"
         ),
         "xp_dates": (
-            "PARTIAL — XP Activity Date is writable; Submission Base XP still requires "
+            "PARTIAL ??? XP Activity Date is writable; Submission Base XP still requires "
             "Count This Submission?=1"
         ),
-        "level_gates": "BLOCKED — gates/levels that read counted shots/XP stall",
+        "level_gates": "BLOCKED ??? gates/levels that read counted shots/XP stall",
         "homework": (
-            "MOSTLY OK — HC uses PHA / Activity Date; late allowance uses due date "
+            "MOSTLY OK ??? HC uses PHA / Activity Date; late allowance uses due date "
             "(common due 2027-06-29), not NOW(). Still needs Weeks coverage."
         ),
         "video_counts": (
-            "PARTIAL — VF rows can be created; VF XP paths that require countable "
+            "PARTIAL ??? VF rows can be created; VF XP paths that require countable "
             "submission status may skip"
         ),
         "zoom_credit": (
-            "MOSTLY OK — Zoom Attendance / 101 use meeting dates; avoid changing 101/SC-147"
+            "MOSTLY OK ??? Zoom Attendance / 101 use meeting dates; avoid changing 101/SC-147"
         ),
         "email_preparation": (
-            "PARTIAL — handoff packages can build; counts/XP sections may be empty "
+            "PARTIAL ??? handoff packages can build; counts/XP sections may be empty "
             "while submissions are uncountable; recipient allowlist still enforced"
         ),
         "submitted_at": (
-            "ALWAYS REAL TIME — formula CREATED_TIME(); never pretend API can backdate"
+            "ALWAYS REAL TIME ??? formula CREATED_TIME(); never pretend API can backdate"
         ),
         "submitted_same_day": (
             "BLOCKED for 2027 Activity Dates created in 2026 unless gated "
@@ -314,7 +318,7 @@ def assess_clock_override_readiness(
     formula_text_activity_date_is_future: str | None = None,
     formula_override_acknowledged: bool = False,
 ) -> ClockOverrideReadiness:
-    """Decide whether an early execute can safely count May–June 2027 dates."""
+    """Decide whether an early execute can safely count May???June 2027 dates."""
     fields = submission_field_names or set()
     required = {
         SEASON_SIM_TEST_RECORD_FIELD: SEASON_SIM_TEST_RECORD_FIELD in fields,
@@ -342,7 +346,7 @@ def assess_clock_override_readiness(
         if not formula_has_gate and not formula_override_acknowledged:
             blockers.append(
                 f"Wall date {wall_date} is before simulation start {SIM_START}. "
-                "Without a gated Activity Date Is Future? override, every May–June 2027 "
+                "Without a gated Activity Date Is Future? override, every May???June 2027 "
                 "Activity Date will set Activity Date Is Future?=1 and "
                 "Count This Submission?=0."
             )
@@ -358,7 +362,7 @@ def assess_clock_override_readiness(
             )
         if fields and not required[SEASON_SIM_TEST_SUBMITTED_AT_FIELD]:
             warnings.append(
-                f"Missing `{SEASON_SIM_TEST_SUBMITTED_AT_FIELD}` — same-day / "
+                f"Missing `{SEASON_SIM_TEST_SUBMITTED_AT_FIELD}` ??? same-day / "
                 "Perfect Week timing will not match 2027 Activity Dates via CREATED_TIME; "
                 f"use `{PERFECT_WEEK_MANUAL_EXCEPTION_FIELD}` on Perfect Week sim rows "
                 "or add the gated same-day field."
@@ -366,11 +370,11 @@ def assess_clock_override_readiness(
         if formula_override_acknowledged and not formula_has_gate:
             warnings.append(
                 "Operator acknowledged formula override, but live formula text was not "
-                "detected as gated — verify OMNI paste before execute."
+                "detected as gated ??? verify OMNI paste before execute."
             )
     else:
         warnings.append(
-            f"Wall date {wall_date} is on/after {SIM_START} — Production NOW() path "
+            f"Wall date {wall_date} is on/after {SIM_START} ??? Production NOW() path "
             "can count simulation Activity Dates without a temporary override."
         )
 
@@ -396,6 +400,7 @@ def sim_submission_override_fields(
     run_marker: str,
     simulated_now: date,
     activity_date: date,
+    test_submitted_at: date | None = None,
     perfect_week_manual_exception: bool = False,
     available_fields: set[str] | None = None,
 ) -> dict[str, Any]:
@@ -403,15 +408,16 @@ def sim_submission_override_fields(
 
     Always stamps ``Video Upload Note`` (exists in Production). Season Sim
     fields are included only when present in ``available_fields`` (or when
-    availability is unknown / None — intended-write planning).
+    availability is unknown / None ??? intended-write planning).
     """
+    submitted_day = test_submitted_at or activity_date
     fields: dict[str, Any] = {
         VIDEO_UPLOAD_NOTE_FIELD: run_marker,
     }
     optional = {
         SEASON_SIM_TEST_RECORD_FIELD: True,
         SEASON_SIM_CLOCK_NOW_FIELD: simulated_now.isoformat(),
-        SEASON_SIM_TEST_SUBMITTED_AT_FIELD: f"{activity_date.isoformat()}T18:00:00.000Z",
+        SEASON_SIM_TEST_SUBMITTED_AT_FIELD: f"{submitted_day.isoformat()}T18:00:00.000Z",
     }
     for name, value in optional.items():
         if available_fields is None or name in available_fields:

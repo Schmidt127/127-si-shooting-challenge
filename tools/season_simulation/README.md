@@ -101,6 +101,38 @@ Count This Submission? = 0 when Activity Date Is Future? = 1
 
 Normal athletes never match the gate → unchanged Production behavior.
 
+## Simulation clock and same-day truth
+
+Airtable **cannot** backdate `CREATED_TIME()` / formula `Submitted At`.
+
+| Concern | Production behavior | Season Sim requirement |
+|---|---|---|
+| Future Activity Dates | `Activity Date Is Future?` vs `NOW()` → Count=0 | Temporary gate using Season Sim Clock Now |
+| Same-day | `Submitted Same Day?` vs `Submitted At` | Temporary gate using Season Sim Test Submitted At |
+| Perfect Week | `Perfect Week Grace Eligible?` vs `Submitted At` + `TODAY()` | Temporary gate using sim submitted-at + Clock Now |
+
+Gate conditions (all required for sim branch):
+
+1. `Season Sim Test Record?` checked  
+2. `Video Upload Note` contains `SEASON-SIM|`  
+3. Sim dateTime fields populated by the writer  
+
+Ordinary athletes stay on NOW() / CREATED_TIME / TODAY() branches.
+
+**Rollback** for `Activity Date Is Future?` after the run:
+
+```text
+IF(
+  {Activity Date},
+  IF({Activity Date} > NOW(), 1, 0),
+  BLANK()
+)
+```
+
+Exact temporary + rollback formulas for Submitted Same Day? and Perfect Week
+Grace Eligible? live in `same_day_contracts.py` and the operator checklist.
+**Do not paste from agents unless Mike authorizes OMNI.**
+
 ## Environment
 
 ```text

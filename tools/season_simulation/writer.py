@@ -11,7 +11,17 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any, Protocol
 
-from .clock_override import sim_submission_override_fields
+from .clock_override import (
+    SEASON_SIM_CLOCK_NOW_FIELD as FIELD_SEASON_SIM_CLOCK_NOW,
+    SEASON_SIM_TEST_RECORD_FIELD as FIELD_SEASON_SIM_TEST_RECORD,
+    SEASON_SIM_TEST_SUBMITTED_AT_FIELD as FIELD_SEASON_SIM_TEST_SUBMITTED_AT,
+    VIDEO_UPLOAD_NOTE_FIELD as FIELD_VIDEO_UPLOAD_NOTE,
+    sim_submission_override_fields,
+)
+
+# Preflight / readiness: writer always stamps Season Sim gate fields on sim Submissions.
+EXECUTE_SETS_SEASON_SIM_GATES = True
+SCHOOL_YEAR_2026_2027 = "2026-2027"
 from .constants import SAFE_EMAIL_RECIPIENT, SIM_START
 from .run_registry import RunRegistry, load_registry, run_marker, save_registry
 from .scenarios import Athlete1Scenario
@@ -351,10 +361,16 @@ class SeasonSimWriter:
                 f"(day {day.day_number})"
             )
 
+        submitted_surrogate = (
+            day.activity_date
+            if getattr(day, "timing", "") != "backdated"
+            else write_clock_date
+        )
         override = sim_submission_override_fields(
             run_marker=self.marker,
             simulated_now=write_clock_date,
             activity_date=day.activity_date,
+            test_submitted_at=submitted_surrogate,
             perfect_week_manual_exception="PW_MANUAL_EXCEPTION" in (day.notes or ""),
             available_fields=self.ctx.submission_field_names or None,
         )

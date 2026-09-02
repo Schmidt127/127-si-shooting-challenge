@@ -23,6 +23,7 @@ DELETE_ORDER = [
     "Homework Completions",
     "Submission Assets",
     "Zoom Attendance",
+    "Zoom Meetings",  # disposable sim-created meetings only (registry-scoped)
     "Weekly Athlete Summary",
     "Submissions",
     "Enrollments",

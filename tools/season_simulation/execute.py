@@ -121,10 +121,18 @@ def build_intended_writes(
         )
         week_label = week_label_for_activity_date(day.activity_date)
         perfect_week_exception = "PW_MANUAL_EXCEPTION" in (day.notes or "")
+        # Same-day: submitted-at surrogate matches Activity Date.
+        # Backdated: surrogate is the write-day clock so same-day formulas return 0.
+        submitted_surrogate = (
+            day.activity_date
+            if getattr(day, "timing", "") != "backdated"
+            else write_clock_date
+        )
         override = sim_submission_override_fields(
             run_marker=marker,
             simulated_now=write_clock_date,
             activity_date=day.activity_date,
+            test_submitted_at=submitted_surrogate,
             perfect_week_manual_exception=perfect_week_exception,
             available_fields=(ctx.submission_field_names if ctx else None),
         )

@@ -29,6 +29,7 @@ from .constants import (
 )
 from .recipient_safety import resolve_simulation_recipient
 from .reference_data import load_reference_snapshot
+from .same_day_contracts import assess_same_day_readiness
 from .season_policy import EXPECTED_ACTIVE_PHA_COUNT
 from .simulation_clock import assert_window_integrity, build_simulation_days
 
@@ -45,10 +46,13 @@ class PreflightReport:
     simulation_clock_blockers: list[str]
     schema_requirements: list[str]
     clock_override_readiness: dict[str, Any] = field(default_factory=dict)
+    same_day_readiness: dict[str, Any] = field(default_factory=dict)
     dependency_impact: dict[str, str] = field(default_factory=dict)
     errors: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
     sufficient_for_final_run: bool = False
+    sufficient_for_same_day_perfect_week: bool = False
+    no_dev_base: bool = True
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -64,7 +68,9 @@ class PreflightReport:
             f"Homework (active for band): {self.reference.get('homework_count')}",
             f"Zoom meetings (non-cancelled): {self.reference.get('zoom_meetings_count')}",
             f"Weeks covering window: {self.reference.get('weeks_count')}",
-            f"Sufficient for final run: {self.sufficient_for_final_run}",
+            f"Sufficient for final run (graph + Activity Date gate): {self.sufficient_for_final_run}",
+            f"Sufficient for same-day / Perfect Week: {self.sufficient_for_same_day_perfect_week}",
+            f"Same-day logic accurate for sim: {(self.same_day_readiness or {}).get('same_day_logic_accurate_for_sim')}",
             "",
             "Errors:",
         ]
@@ -150,6 +156,17 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
     # Clock blockers are informational for preflight (do not fail connectivity).
     # Execute still hard-gates on readiness.
 
+    formula_gate_active = bool(
+        getattr(readiness, 'ready_for_early_execute', False)
+        or ('Season Sim' in (formula_future or '') and 'SEASON-SIM|' in (formula_future or ''))
+    )
+    same_day = assess_same_day_readiness(
+        meta_tables,
+        activity_date_gate_active=formula_gate_active,
+    )
+    same_day_dict = same_day.to_dict()
+    same_day_dict['paste_required_keys'] = sorted((same_day.paste_required or {}).keys())
+
     reference_dict: dict[str, Any] = {}
     try:
         snap = load_reference_snapshot(client)
@@ -225,7 +242,7 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
 
     connectivity["write_guard"] = write_guard
 
-    clock_blockers = list(readiness.blockers) + [
+    clock_blockers = list(readiness.blockers) + list(same_day.blockers) + [
         "Submissions.`Submitted At` is formula CREATED_TIME() — cannot be future-dated via API.",
         "Created Time on all tables reflects real write time, not simulation clock.",
         "Perfect Week Grace Eligible? uses Activity Date <= TODAY() unless "
@@ -246,7 +263,23 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
         "REQUIRED: Resend domain/sender already used by live Hub pipeline must be verified before enabling delivery.",
         "Do not permanently weaken production future-date protections for normal athletes.",
         "Do not modify SC-147, Automation 101, or Zoom credit logic for this simulation.",
+        "REQUIRED before Perfect Week / same-day accuracy: temporary gated formulas on "
+        "Submitted Same Day? and Perfect Week Grace Eligible? (see operator checklist); "
+        "restore rollbacks after the run with Activity Date Is Future? NOW()-only.",
+        "No DEV Airtable base — disposable Production VERIFY/Schmidt records only; "
+        "email allowlist schmidt@fairfieldbasketballclub.com when email phase enabled.",
     ]
+
+    if not same_day.same_day_logic_accurate_for_sim:
+        warnings.append(
+            "Same-day / Perfect Week NOT accurate for sim yet: paste temporary "
+            "Submitted Same Day? + Perfect Week Grace Eligible? Season Sim gates "
+            "(operator checklist). Do not claim Perfect Week success from record create alone."
+        )
+    else:
+        warnings.append(
+            "Same-day / Perfect Week Season Sim gates ACTIVE — restore rollbacks after the run."
+        )
 
     hw_count = int(reference_dict.get("homework_count") or 0)
     zoom_count = int(reference_dict.get("zoom_meetings_count") or 0)
@@ -290,10 +323,15 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
         simulation_clock_blockers=clock_blockers,
         schema_requirements=schema_requirements,
         clock_override_readiness=readiness.to_dict(),
+        same_day_readiness=same_day_dict,
         dependency_impact=dependency_impact_matrix(),
         errors=errors,
         warnings=warnings,
         sufficient_for_final_run=final_ready,
+        sufficient_for_same_day_perfect_week=bool(
+            final_ready and same_day.sufficient_for_same_day_perfect_week
+        ),
+        no_dev_base=True,
     )
 
 

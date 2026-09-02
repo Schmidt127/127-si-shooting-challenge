@@ -53,6 +53,8 @@ class HomeworkAssignmentInfo:
     active: bool
     program_instance_id: str
     schedule_key: str = ""
+    # PHA Grade Band is multi-link (often K-2…9-12 on one row). Match any link.
+    grade_band_ids: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -244,6 +246,22 @@ def resolve_highest_goal_for_band(
     return highest, goals, warnings
 
 
+def homework_covers_grade_band(
+    grade_band_ids: list[str],
+    *,
+    required_grade_band_id: str | None,
+) -> bool:
+    """True when PHA should be counted for the resolved Athlete grade band.
+
+    Production PHA rows commonly link *all* bands (K-2 … 9-12) on one record.
+    Matching only the first link incorrectly drops every row when the first
+    link is K-2 and the athlete band is 9-12.
+    """
+    if not required_grade_band_id:
+        return True
+    return required_grade_band_id in grade_band_ids
+
+
 def resolve_homework(
     client: AirtableClient,
     *,
@@ -267,19 +285,25 @@ def resolve_homework(
     out: list[HomeworkAssignmentInfo] = []
     for rec in rows:
         f = fields_of(rec)
-        gb = first_link(f.get("Grade Band"))
-        if grade_band_id and gb and gb != grade_band_id:
+        gb_ids = linked_ids(f.get("Grade Band"))
+        if not homework_covers_grade_band(gb_ids, required_grade_band_id=grade_band_id):
             continue
         active = is_truthy(f.get("Active?"))
         if active_only and not active:
             continue
+        matched_band = (
+            grade_band_id
+            if grade_band_id and grade_band_id in gb_ids
+            else (gb_ids[0] if gb_ids else "")
+        )
         out.append(
             HomeworkAssignmentInfo(
                 record_id=rec["id"],
                 display=txt(f.get("Program Homework Assignment Display"))
                 or txt(f.get("Program Homework Assignment")),
                 week_id=first_link(f.get("Week")),
-                grade_band_id=gb,
+                grade_band_id=matched_band,
+                grade_band_ids=list(gb_ids),
                 slot=txt(f.get("Homework Slot")),
                 library_id=first_link(f.get("Homework Assignment")),
                 active=active,
