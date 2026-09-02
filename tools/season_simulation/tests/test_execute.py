@@ -375,15 +375,29 @@ class TestExecuteOrchestration(unittest.TestCase):
         for w in subs:
             self.assertTrue(w.get("expected_countable"), w.get("day_number"))
             self.assertRegex(str(w["fields"]["Activity Date"]), r"^2027-\d{2}-\d{2}$")
-            self.assertEqual(w["fields"].get("Submission Stat Mode"), "Simple Total")
+            self.assertNotIn("Submission Stat Mode", w["fields"])
+            self.assertTrue(w["fields"].get("Shot Total"))
         sub_post = [
             w
             for w in writes
-            if w.get("table") == "Submissions" and w.get("op") == "update"
+            if w.get("table") == "Submissions"
+            and w.get("op") == "update"
+            and "SUB_POST_CREATE" in str(w.get("dedupe_key") or "")
+        ]
+        sub_streak = [
+            w
+            for w in writes
+            if w.get("table") == "Submissions"
+            and w.get("op") == "update"
+            and "SUB_STREAK_ARM" in str(w.get("dedupe_key") or "")
         ]
         self.assertEqual(len(sub_post), 58)
+        self.assertEqual(len(sub_streak), 58)
         self.assertTrue(
             all((w.get("fields") or {}).get("Build Daily Email Now?") for w in sub_post)
+        )
+        self.assertTrue(
+            all((w.get("fields") or {}).get("Enrollment") for w in sub_streak)
         )
         readiness = summarize_intended_write_readiness(writes)
         self.assertTrue(readiness["all_submissions_countable"])

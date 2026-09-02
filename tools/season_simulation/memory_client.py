@@ -56,7 +56,6 @@ class MemoryAirtableClient:
                 "Activity Date",
                 "Shot Total",
                 "Duplicate Review Status",
-                "Submission Stat Mode",
                 "Video Upload Note",
                 "Daily Email Subject",
                 "Season Sim Test Record?",
@@ -78,7 +77,7 @@ class MemoryAirtableClient:
                 "Submission - Linked",
                 "Enrollment - Linked",
                 "Send to Make Trigger",
-                "Reviewer File URL",
+                "Reviewer Access Token",
             },
             "Homework Completions": {
                 "Enrollment",
@@ -138,6 +137,17 @@ class MemoryAirtableClient:
                 "Build Weekly Email Now?",
                 "Send to Make?",
                 "Weekly Email Sent?",
+                "Perfect Week Automation Status",
+            },
+            "Streak Occurrences": {
+                "Active?",
+                "Enrollment",
+                "Achievement",
+                "Streak Days",
+                "Streak Start Date",
+                "Streak End Date",
+                "Source Status",
+                "Gate Eligible Streak Days",
             },
             "Weeks": {"Week Name", "Start Date", "End Date", "Program Instance"},
         }
@@ -175,7 +185,9 @@ class MemoryAirtableClient:
         out: list[dict] = []
         for fields in records:
             rid = _new_rec_id()
-            rec = {"id": rid, "fields": dict(fields)}
+            merged = dict(fields)
+            self._apply_submission_formula_sim(table, merged)
+            rec = {"id": rid, "fields": merged}
             self.tables[table][rid] = rec
             out.append(rec)
         return out
@@ -189,8 +201,27 @@ class MemoryAirtableClient:
             if rid not in self.tables[table]:
                 self.tables[table][rid] = {"id": rid, "fields": {}}
             self.tables[table][rid]["fields"].update(u["fields"])
+            self._apply_submission_formula_sim(
+                table, self.tables[table][rid]["fields"]
+            )
             out.append(self.tables[table][rid])
         return out
+
+    def _apply_submission_formula_sim(self, table: str, fields: dict[str, Any]) -> None:
+        """Offline stand-in for Count This / Total Shots Counted after create."""
+        if table != "Submissions":
+            return
+        enrollment = fields.get("Enrollment") or []
+        activity = fields.get("Activity Date")
+        shot_total = fields.get("Shot Total")
+        dup = fields.get("Duplicate Review Status")
+        if enrollment and activity and shot_total and dup == "Count It":
+            fields["Count This Submission?"] = 1
+            fields["Total Shots Counted"] = shot_total
+        elif not enrollment:
+            # Cleared Enrollment during 053 re-arm — formulas fail closed.
+            fields["Count This Submission?"] = 0
+            fields["Total Shots Counted"] = 0
 
     def delete_records(self, table: str, record_ids: list[str]) -> list[dict]:
         self._require_writes(table)

@@ -196,7 +196,7 @@ def build_intended_writes(
                 "Activity Date": activity_date_write_value(day.activity_date),
                 "Shot Total": day.shot_total,
                 "Duplicate Review Status": "Count It",
-                "Submission Stat Mode": "Simple Total",
+                # Submission Stat Mode is computed from Shot Total — never write it.
                 "Daily Email Subject": f"{marker}|D{day.day_number:02d}",
                 **override,
             }
@@ -228,12 +228,24 @@ def build_intended_writes(
                 "op": "update",
                 "day_number": day.day_number,
                 "dedupe_key": f"{marker}|SUB_POST_CREATE|D{day.day_number:02d}",
+                "fields": {"Build Daily Email Now?": True},
+                "notes": "076 arm — Build Daily Email Now? (not watched by 053)",
+            }
+        )
+        writes.append(
+            {
+                "table": "Submissions",
+                "op": "update",
+                "day_number": day.day_number,
+                "dedupe_key": f"{marker}|SUB_STREAK_ARM|D{day.day_number:02d}",
                 "fields": {
+                    "Enrollment": ["<enrollment_id>"],
                     "Activity Date": activity_date_write_value(day.activity_date),
-                    "Build Daily Email Now?": True,
                 },
                 "notes": (
-                    "Post-create arm for 053 recordUpdated + 076 Build Daily Email Now?"
+                    "053 arm after Count This=1 and Total Shots Counted>0: "
+                    "clear Enrollment then restore Enrollment+Activity Date "
+                    "(053 watches those; identical rewrite after create does not fire)"
                 ),
             }
         )
@@ -276,7 +288,7 @@ def build_intended_writes(
                             "Asset Purpose": "Homework 1",
                             "Asset Slot": slot,
                             "Asset Label": f"{marker}|HW|D{day.day_number:02d}|{i+1}",
-                            "Reviewer File URL": "https://www.fairfieldbasketballclub.com/shoot",
+                            "Reviewer Access Token": "season-sim-reviewer-token",
                         },
                     }
                 )
@@ -380,6 +392,31 @@ def build_intended_writes(
                 }
             )
 
+    # Perfect Week requeue for every WAS week (submissions linked after empty create).
+    if ctx:
+        was_weeks: set[str] = set()
+        for day in scenario.days:
+            if day.action != "submit":
+                continue
+            wid = ctx.week_for(day.activity_date)
+            if wid:
+                was_weeks.add(wid)
+        for wid in sorted(was_weeks):
+            writes.append(
+                {
+                    "table": "Weekly Athlete Summary",
+                    "op": "update",
+                    "dedupe_key": f"{marker}|WAS_PW_REQUEUE|{wid}",
+                    "fields": {
+                        "Perfect Week Automation Status": "Pending",
+                    },
+                    "notes": (
+                        "After submissions linked: Skipped→Pending so 057 re-runs "
+                        "(empty early Ready calc otherwise sticks)"
+                    ),
+                }
+            )
+
     for day in scenario.days:
         if day.action != "submit" or day.activity_date.weekday() != 5:
             continue
@@ -400,7 +437,8 @@ def build_intended_writes(
                     "Send to Make?": False,
                 },
                 "notes": (
-                    "072 arm only — do not manually clear Build; 072 clears on success/skipBuild"
+                    "072 arm false→true after day loop; Production 072 recordId "
+                    "must be trigger WAS ($ref), not a hardcoded test id"
                 ),
             }
         )
@@ -429,6 +467,20 @@ def summarize_intended_write_readiness(
         if w.get("table") == "Submissions"
         and w.get("op") == "update"
         and "SUB_POST_CREATE" in str(w.get("dedupe_key") or "")
+    ]
+    sub_streak = [
+        w
+        for w in writes
+        if w.get("table") == "Submissions"
+        and w.get("op") == "update"
+        and "SUB_STREAK_ARM" in str(w.get("dedupe_key") or "")
+    ]
+    pw_requeues = [
+        w
+        for w in writes
+        if w.get("table") == "Weekly Athlete Summary"
+        and w.get("op") == "update"
+        and "WAS_PW_REQUEUE" in str(w.get("dedupe_key") or "")
     ]
     homework = [
         w for w in writes if w.get("table") == "Homework Completions" and w.get("op") == "create"
@@ -495,6 +547,7 @@ def summarize_intended_write_readiness(
     return {
         "submission_creates": len(submissions),
         "submission_post_create_arms": len(sub_post),
+        "submission_streak_arms": len(sub_streak),
         "submission_countable": len(countable),
         "submission_uncountable": len(uncountable),
         "uncountable_day_numbers": [w.get("day_number") for w in uncountable],
@@ -509,12 +562,16 @@ def summarize_intended_write_readiness(
         "recorded_zoom_attendance": len(rec_za),
         "live_create_xp_event_arms": len(create_xp_arms),
         "weekly_email_arms": len(weekly_arms),
+        "perfect_week_requeues": len(pw_requeues),
         "all_submissions_countable": len(submissions) > 0
         and len(uncountable) == 0,
         "all_homework_dual_linked": len(homework) > 0
         and len(hw_with_both) == len(homework),
-        "streak_post_create_planned": len(sub_post) == len(submissions) and len(submissions) > 0,
+        "streak_post_create_planned": len(sub_post) == len(submissions)
+        and len(submissions) > 0,
+        "streak_arm_planned": len(sub_streak) == len(submissions) and len(submissions) > 0,
         "daily_email_arm_planned": len(sub_post) == len(submissions) and len(submissions) > 0,
+        "perfect_week_requeue_planned": len(pw_requeues) > 0,
         "video_update_triggers_planned": len(vf_arms) == len(vf_creates)
         and len(vf_creates) > 0,
         "live_xp_path_planned": len(live_za) == 1 and len(create_xp_arms) == 1,
