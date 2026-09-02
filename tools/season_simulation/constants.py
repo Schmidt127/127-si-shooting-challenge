@@ -12,8 +12,10 @@ SIM_START = date(2027, 5, 1)
 SIM_END = date(2027, 6, 30)
 SIMULATION_DAY_COUNT = 61  # (SIM_END - SIM_START).days + 1
 
-# Explicit gate for execute / cleanup writes.
+# Explicit gates for execute / cleanup writes (all required for live writes).
 CONFIRM_TOKEN = "SEASON-SIMULATION-2027"
+CONFIRM_DISPOSABLE_TOKEN = "CONFIRM-DISPOSABLE-SEASON-SIM"
+CONFIRM_CLEANUP_TOKEN = "CONFIRM-CLEANUP-SEASON-SIM"
 
 # Only allowed email recipient for authorized live-looking delivery.
 SAFE_EMAIL_RECIPIENT = "schmidt@fairfieldbasketballclub.com"

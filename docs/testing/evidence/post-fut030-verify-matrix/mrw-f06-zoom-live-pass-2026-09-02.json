@@ -1,0 +1,26 @@
+{
+  "harness": "post-fut030-verify-matrix",
+  "at": "2026-09-02T00:52:41.148Z",
+  "note": "First successful run — MRW-F06 zoom live 101 proof before weekly WAS field fix",
+  "manifest": {
+    "enrollmentId": "recn1QUIGO1PjbnnY",
+    "prefix": "VERIFY|2026-09-02T0040"
+  },
+  "results": [
+    {
+      "id": "MRW-F06-zoom-live-101",
+      "pass": true,
+      "automation101": {
+        "found": true,
+        "live": true,
+        "version": "v6.6",
+        "name": "101 - Zoom / Attendance XP - Award Meeting XP"
+      },
+      "meetingId": "recqLd4T7Wh6aOUj1",
+      "sourceKey": "ZOOM_ATTEND_BASE|recqLd4T7Wh6aOUj1|recn1QUIGO1PjbnnY",
+      "xpEventId": "rechxS6vbzphpkWxD",
+      "xpPoints": 60,
+      "detail": "101 Live + reconciliation awarded ZOOM_ATTEND_BASE XP"
+    }
+  ]
+}

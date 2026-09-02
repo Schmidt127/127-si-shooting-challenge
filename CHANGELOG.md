@@ -16,6 +16,12 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 - **SC-SEASON-SIM-002 full execute writer (2026-09-02)** — Replaced athlete-create stub with idempotent `writer.py`: Athlete, Enrollment (+ Program Instance / School Year), WAS, Submissions (2027 Activity Dates + Count It), Submission Assets, Homework Completions, Video Feedback, Zoom Attendance (Live vs Recording Quiz), live-only `Zoom Meetings.Attendees` patch. Resume via run registry dedupe keys; pause on failure; cleanup registry-scoped (+ reverse Attendees). Email off by default. Offline tests: `test_offline` + `test_writer` (55). **No Production write, paste, or live run.** Operator checklist unchanged for gated `Activity Date Is Future?` formula.
 - **SC-SEASON-SIM-002 clock override readiness (2026-09-02)** — Gated simulation clock package so May–June 2027 Activity Dates can count on disposable VERIFY rows without weakening Production `NOW()` for normal athletes. Adds `clock_override.py`, `season_policy.py`, multi-gate CLI (`--simulation-id`, `--confirm-disposable`, `--confirm-cleanup`, `--acknowledge-clock-override`), evidence export, expanded offline tests, operator checklist [`docs/deploy-checklists/SC-SEASON-SIM-002-operator-checklist.md`](./docs/deploy-checklists/SC-SEASON-SIM-002-operator-checklist.md). Root blocker: live `Activity Date Is Future?` uses `NOW()` → `Count This Submission?=0`. `CREATED_TIME()` cannot be backdated. **No live simulation run; no SC-147 / 101 changes.**
 
+### Airtable
+
+#### Added
+- **101 v6.7 — SC-147 Recorded Zoom half-XP extension (2026-09-02)** — Recording half-XP merged into `101-zoom-attendance-xp-award-meeting-xp.js` (no slot 121 — automation capacity full). Source Key `ZOOM_RECORDING_CREDIT|{enrollmentId}|{zoomMeetingId}`. **NOT Live** — Production paste packet [`docs/deploy-checklists/101-v6.7-sc-147-operator-packet.md`](./docs/deploy-checklists/101-v6.7-sc-147-operator-packet.md); OMNI reconciliation trigger review [`SC-147-omni-reconciliation-trigger-review.md`](./docs/deploy-checklists/SC-147-omni-reconciliation-trigger-review.md). PR **#338** merged `49098217`. Supersedes prior slot-121 plan; design artifact: `drafts/sc-147-slot-121-design-artifact-not-production.js`. **117 unchanged (email-only).** No DEV base — disposable Production verification only.
+- **Post-FUT-030 live verify matrix (2026-09-02)** — `tools/testing/post-fut030-verify-matrix.mjs` for disposable MRW-F05/F06/F07 checks on empty base.
+
 ### Web
 
 #### Changed

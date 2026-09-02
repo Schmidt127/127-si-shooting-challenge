@@ -1082,13 +1082,16 @@ Create a reusable, unattended end-to-end simulation of a complete **60-day** Sho
 **Priority:** P2
 **Status:** Execute writer + same-day audit ready; Perfect Week / same-day E2E blocked until Mike pastes temporary Submitted Same Day? + Perfect Week Grace formulas (Activity Date gate already live) — **no live run yet**
 **Systems:** `tools/season_simulation/`, Airtable gated formulas (temporary), dry-run/preflight/cleanup
+**Priority:** P2  
+**Status:** Full execute writer ready (idempotent); early countable E2E blocked until Mike applies OMNI gated formula — no live run yet  
+**Systems:** `tools/season_simulation/`, Airtable gated formula (temporary), dry-run/preflight/cleanup  
 **Related (distinct):** **SC-SEASON-SIM-001** (five-enrollment unattended package — still Planned / Future; not started)
 
 Build reusable Python infrastructure for a future **Athlete 1** full-season simulation against the production base (system not live yet):
 
 - Window: **2027-05-01 through 2027-06-30 inclusive** (61 calendar days)
 - Athlete: **Athlete 1**, Grade **12**, highest configured Grade 12 / 9–12 shot goal (resolved at runtime — do not hardcode 12,000)
-- Modes: read-only **preflight**, default **dry-run**, gated **execute** (`--execute --confirm SEASON-SIMULATION-2027`), gated **cleanup**
+- Modes: read-only **preflight**, default **dry-run**, gated **execute** (`--execute --simulation-id … --confirm SEASON-SIMULATION-2027 --confirm-disposable CONFIRM-DISPOSABLE-SEASON-SIM`), gated **cleanup** (separate `--confirm-cleanup`)
 - Dynamic resolution only for homework (PHA), Zoom Meetings, XP rules, levels, gates, achievements, weeks, goals
 - **Clock / same-day:** `Submitted At` = `CREATED_TIME()` (not backdatable). Writer sets Season Sim gate fields. Temporary gated formulas documented in [`docs/deploy-checklists/SC-SEASON-SIM-002-operator-checklist.md`](./deploy-checklists/SC-SEASON-SIM-002-operator-checklist.md) + `tools/season_simulation/same_day_contracts.py`. Restore NOW()-only Activity Date formula after the run.
 - **No DEV base** — disposable Production VERIFY/Schmidt records only.
@@ -1330,7 +1333,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-144** | Website | Rename Softr-named publish flag | P2 | **DEFERRED** (general schema typo wave) | SC-054 | Gate summary / Softr flag / HC RID typos — SAFE-MIGRATION-PLAN P3; **Perfect Week Video Minimum** typo fixed 2026-08-27 |
 | **SC-145** | Platform | Repo health / security audit follow-ups | P2 | Planned | ΓÇö | Triage findings into SC items as needed |
 | **SC-146** | Enrollment | Re-open Fillout daily intake when season ready | P2 | Deferred | SC-060, SC-135 | Turn on only after SC-135 dry-run |
-| **SC-147** | Zoom | Recorded meeting half-XP writer (distinct from live 101) | P1 | **Pending confirmation/design** — repo prep only; **automation slot not assigned** | SC-022, SC-087 | Design brief + slot decision before any paste — [SC-147-zoom-recording-half-xp.md](./deploy-checklists/SC-147-zoom-recording-half-xp.md) |
+| **SC-147** | Zoom | Recorded meeting half-XP (merged into **101 v6.7** — no slot 121) | P1 | **Built in Repository / Paste Pending** — PR **#338** merged `49098217`; Production paste + disposable proof pending Mike | SC-022, SC-087 | OMNI reconciliation trigger review first — [`101-v6.7-sc-147-operator-packet.md`](./deploy-checklists/101-v6.7-sc-147-operator-packet.md) · [`SC-147-omni-reconciliation-trigger-review.md`](./deploy-checklists/SC-147-omni-reconciliation-trigger-review.md) |
 | **SC-066** | Enrollment | Early-bird periods supported for 2026–2027 | P3 | Decision resolved — use early-bird registration | SC-065 | Decide if 2026ΓÇô27 uses early-bird; config if yes |
 | **SC-067** | Enrollment | Program Instance multi-year design | P3 | Tracked under V2-013 | SC-032, SC-046 | Dedicated architecture wave later ΓÇö do not block season launch on PI redesign |
 | **SC-100** | Assets | Attachment / Drive retirement strategy | P3 | Deferred | SC-095 | Plan retirement after S3 paths stable for HW+video |
@@ -1388,7 +1391,7 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 |---|---|---|
 | **Weekly email audit** | Harness shipped (2026-08-30) | `audits/2026-08-28-weekly-email-pipeline-audit.md` + [`testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md`](testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md) — live `--apply` Mike disposable WAS |
 | **SC-PW-E2E preflight** | COMPLETE (repo) | `preflightApplyAccess`; unlock field resolver (`Source Key` / `Milestone Source Key`) |
-| **SC-147** | **Pending confirmation/design** | Recorded Zoom half-XP — repo prep only; **automation slot not assigned**; **do not paste** |
+| **SC-147** (Zoom half-XP) | **Built in Repository / Paste Pending** | **101 v6.7** merged PR **#338**; OMNI reconciliation trigger review; Mike Production paste + disposable proof — **121 not created** |
 | **071 v4.3** | **COMPLETE** (2026-09-01) | Homework Feedback Hub handoff — FUT-046; Mike Production paste |
 | **076 v8.12** | **COMPLETE** (2026-09-01) | Daily Submission Hub handoff — FUT-041 XP columns; Mike Production paste |
 | **FUT-001 / PR #264** | **COMPLETE** (repo + Production paste + multi-asset XP) | 020 v3.8 + 065 v10.4 Live; multi-asset 020 **PASS**; 065 dynamic `recordId` remapped; **trigger re-entry after remap** required; exactly one `HOMEWORK_XP\|rec8E94Jg7mpmuMW9` (`recwpzl8pkXecUqRK`, no duplicate) — PR **#312** MERGED `f8a7365f` — [`testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json`](./testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json) · [`deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](./deploy-checklists/065-recordId-dynamic-remap-operator-packet.md) |

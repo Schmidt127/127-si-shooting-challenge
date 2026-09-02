@@ -4,11 +4,20 @@ from __future__ import annotations
 
 import json
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from .airtable_client import AirtableClient, WriteBlockedError
+from .clock_override import (
+    GATED_ACTIVITY_DATE_IS_FUTURE_FORMULA,
+    PRODUCTION_ACTIVITY_DATE_IS_FUTURE_FORMULA,
+    SEASON_SIM_CLOCK_NOW_FIELD,
+    SEASON_SIM_TEST_RECORD_FIELD,
+    SEASON_SIM_TEST_SUBMITTED_AT_FIELD,
+    assess_clock_override_readiness,
+    dependency_impact_matrix,
+)
 from .constants import (
     PREFLIGHT_REQUIRED_TABLES,
     REFERENCE_TABLES,
@@ -21,13 +30,8 @@ from .constants import (
 from .recipient_safety import resolve_simulation_recipient
 from .reference_data import load_reference_snapshot
 from .same_day_contracts import assess_same_day_readiness
-from .simulation_clock import (
-    assert_window_integrity,
-    build_simulation_days,
-    inspect_activity_date_is_future_formula,
-)
-from .writer import EXECUTE_SETS_SEASON_SIM_GATES
-
+from .season_policy import EXPECTED_ACTIVE_PHA_COUNT
+from .simulation_clock import assert_window_integrity, build_simulation_days
 
 @dataclass
 class PreflightReport:
@@ -41,8 +45,9 @@ class PreflightReport:
     email: dict[str, Any]
     simulation_clock_blockers: list[str]
     schema_requirements: list[str]
-    activity_date_future_formula: dict[str, Any] = field(default_factory=dict)
+    clock_override_readiness: dict[str, Any] = field(default_factory=dict)
     same_day_readiness: dict[str, Any] = field(default_factory=dict)
+    dependency_impact: dict[str, str] = field(default_factory=dict)
     errors: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
     sufficient_for_final_run: bool = False
@@ -55,7 +60,7 @@ class PreflightReport:
     def summary_text(self) -> str:
         lines = [
             f"Season simulation preflight — {'PASS' if self.ok else 'FAIL'}",
-            f"Base: {self.base_id} (Production only — no DEV Airtable base)",
+            f"Base: {self.base_id}",
             f"Window: {SIM_START} .. {SIM_END} ({SIMULATION_DAY_COUNT} days)",
             f"Connectivity: {self.connectivity.get('status')}",
             f"Grade band: {self.reference.get('grade_band')}",
@@ -78,18 +83,6 @@ class PreflightReport:
             lines.extend(f"  - {w}" for w in self.warnings)
         else:
             lines.append("  (none)")
-        formula_status = self.activity_date_future_formula or {}
-        lines.append(
-            "Activity Date Is Future? gate: "
-            + (
-                "ACTIVE (Season Sim)"
-                if formula_status.get("gated_season_sim_active")
-                else "NOW()-only / not gated"
-            )
-        )
-        if formula_status.get("notes"):
-            lines.append("Clock formula notes:")
-            lines.extend(f"  - {n}" for n in formula_status["notes"])
         lines.append("Simulation-clock blockers:")
         lines.extend(f"  - {b}" for b in self.simulation_clock_blockers)
         lines.append("Schema / temporary config requirements:")
@@ -138,29 +131,41 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
     field_issues: list[str] = []
     by_name = {t.get("name"): t for t in meta_tables}
     sub = by_name.get("Submissions")
+    sub_fields: set[str] = set()
+    formula_future = ""
     if sub:
         sub_fields = {f.get("name") for f in sub.get("fields") or []}
-        for required in (
-            "Activity Date",
-            "Enrollment",
-            "Shot Total",
-            "Activity Date Is Future?",
-            "Video Upload Note",
-            "Season Sim Test Record?",
-            "Season Sim Clock Now",
-            "Season Sim Test Submitted At",
-        ):
+        for required in ("Activity Date", "Enrollment", "Shot Total", "Activity Date Is Future?"):
             if required not in sub_fields:
                 field_issues.append(f"Submissions missing field {required}")
+        for f in sub.get("fields") or []:
+            if f.get("name") == "Activity Date Is Future?":
+                opts = f.get("options") or {}
+                formula_future = str(opts.get("formula") or "")
     if field_issues:
-        # Season Sim fields are required for gated early runs; keep as warnings
-        # when only those are missing so connectivity still reports.
-        sim_only = all("Season Sim" in issue for issue in field_issues)
-        if sim_only:
-            warnings.extend(field_issues)
-        else:
-            errors.extend(field_issues)
+        errors.extend(field_issues)
     tables_info["field_issues"] = field_issues
+
+    readiness = assess_clock_override_readiness(
+        wall_date=date.today(),
+        submission_field_names=sub_fields or None,
+        formula_text_activity_date_is_future=formula_future or None,
+        formula_override_acknowledged=False,
+    )
+    warnings.extend(readiness.warnings)
+    # Clock blockers are informational for preflight (do not fail connectivity).
+    # Execute still hard-gates on readiness.
+
+    formula_gate_active = bool(
+        getattr(readiness, 'ready_for_early_execute', False)
+        or ('Season Sim' in (formula_future or '') and 'SEASON-SIM|' in (formula_future or ''))
+    )
+    same_day = assess_same_day_readiness(
+        meta_tables,
+        activity_date_gate_active=formula_gate_active,
+    )
+    same_day_dict = same_day.to_dict()
+    same_day_dict['paste_required_keys'] = sorted((same_day.paste_required or {}).keys())
 
     reference_dict: dict[str, Any] = {}
     try:
@@ -237,72 +242,33 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
 
     connectivity["write_guard"] = write_guard
 
-    formula_status = inspect_activity_date_is_future_formula(meta_tables)
-    formula_dict = formula_status.to_dict()
-    same_day = assess_same_day_readiness(
-        meta_tables,
-        activity_date_gate_active=formula_status.gated_season_sim_active,
-    )
-    same_day_dict = same_day.to_dict()
-    # Drop bulky paste formulas from JSON blockers path — keep keys, truncate in report file.
-    same_day_dict["paste_required"] = {
-        k: "(see docs/deploy-checklists/SC-SEASON-SIM-002-operator-checklist.md)"
-        for k in (same_day.paste_required or {})
-    }
-    # Drop bulky formula from summary blockers path; keep full text in JSON.
-    clock_blockers = list(formula_status.blockers)
-    clock_blockers.extend(same_day.blockers)
-    if formula_status.gated_season_sim_active:
-        if EXECUTE_SETS_SEASON_SIM_GATES:
-            warnings.append(
-                "Season Sim gated Activity Date Is Future? is ACTIVE and the writer "
-                "sets Season Sim Test Record?, Season Sim Clock Now, Video Upload Note "
-                "SEASON-SIM| marker, and Season Sim Test Submitted At on sim Submissions. "
-                "Restore NOW()-only formula after the authorized run."
-            )
-        else:
-            warnings.append(
-                "Season Sim gated Activity Date Is Future? is ACTIVE. "
-                "Execute writer must set Season Sim Test Record?=true, "
-                "Season Sim Clock Now, Video Upload Note containing SEASON-SIM|, "
-                "and Season Sim Test Submitted At on sim rows; restore NOW()-only "
-                "formula after the authorized run."
-            )
-    elif formula_status.uses_now:
-        warnings.append(
-            "Activity Date Is Future? is NOW()-only — May–June 2027 Activity Dates "
-            "will not count until the temporary Season Sim gate is applied."
-        )
-
-    schema_requirements: list[str] = []
-    if formula_status.gated_season_sim_active:
-        schema_requirements.append(
-            "ACTIVE: temporary Season Sim gate on `Activity Date Is Future?` "
-            "(Test Record? + SEASON-SIM| marker + Season Sim Clock Now). "
-            "Restore production NOW() formula immediately after the run."
-        )
-    else:
-        schema_requirements.append(
-            "REQUIRED before early countable run: paste temporary gated "
-            "`Activity Date Is Future?` (Season Sim Test Record? + SEASON-SIM| "
-            "in Video Upload Note + Season Sim Clock Now); restore NOW() after."
-        )
-    schema_requirements.extend(
-        [
-            "REQUIRED: Weeks rows covering every date from 2027-05-01 through 2027-06-30.",
-            "REQUIRED before final run: finish editing Program Homework Assignments and Zoom Meetings; "
-            "preflight reports live PHA counts (multi-band Grade Band links supported).",
-            "REQUIRED: Resend domain/sender already used by live Hub pipeline must be verified before enabling delivery.",
-            "Do not permanently weaken production future-date protections for normal athletes.",
-            "Execute payloads must set: Season Sim Test Record?, Season Sim Clock Now, "
-            "Video Upload Note with SEASON-SIM|, Season Sim Test Submitted At.",
-            "REQUIRED before Perfect Week / same-day accuracy: temporary gated formulas on "
-            "`Submitted Same Day?` and `Perfect Week Grace Eligible?` (see operator checklist); "
-            "restore rollbacks after the run with Activity Date Is Future? NOW()-only.",
-            "No DEV Airtable base — disposable Production VERIFY/Schmidt records only; "
-            "email allowlist schmidt@fairfieldbasketballclub.com when email phase enabled.",
-        ]
-    )
+    clock_blockers = list(readiness.blockers) + list(same_day.blockers) + [
+        "Submissions.`Submitted At` is formula CREATED_TIME() — cannot be future-dated via API.",
+        "Created Time on all tables reflects real write time, not simulation clock.",
+        "Perfect Week Grace Eligible? uses Activity Date <= TODAY() unless "
+        "`Perfect Week Manual Exception?` is checked on disposable sim rows.",
+    ]
+    schema_requirements = [
+        "REQUIRED for early (pre-2027-05-01) execute: create Submissions checkbox "
+        f"`{SEASON_SIM_TEST_RECORD_FIELD}` + dateTime `{SEASON_SIM_CLOCK_NOW_FIELD}` "
+        f"(recommended) + dateTime `{SEASON_SIM_TEST_SUBMITTED_AT_FIELD}` (for same-day).",
+        "REQUIRED for early execute: temporarily replace `Activity Date Is Future?` with "
+        "the gated formula in docs/deploy-checklists/SC-SEASON-SIM-002-operator-checklist.md; "
+        "restore Production NOW() formula immediately after the run.",
+        "Production formula (restore target):\n" + PRODUCTION_ACTIVITY_DATE_IS_FUTURE_FORMULA,
+        "Gated formula (temporary):\n" + GATED_ACTIVITY_DATE_IS_FUTURE_FORMULA,
+        "REQUIRED: Weeks rows covering every date from 2027-05-01 through 2027-06-30.",
+        f"REQUIRED before final run: {EXPECTED_ACTIVE_PHA_COUNT} active Program Homework "
+        "Assignments (Early Bird + Weeks 1–8 × 2 slots); Week 9 must have 0 PHA.",
+        "REQUIRED: Resend domain/sender already used by live Hub pipeline must be verified before enabling delivery.",
+        "Do not permanently weaken production future-date protections for normal athletes.",
+        "Do not modify SC-147, Automation 101, or Zoom credit logic for this simulation.",
+        "REQUIRED before Perfect Week / same-day accuracy: temporary gated formulas on "
+        "Submitted Same Day? and Perfect Week Grace Eligible? (see operator checklist); "
+        "restore rollbacks after the run with Activity Date Is Future? NOW()-only.",
+        "No DEV Airtable base — disposable Production VERIFY/Schmidt records only; "
+        "email allowlist schmidt@fairfieldbasketballclub.com when email phase enabled.",
+    ]
 
     if not same_day.same_day_logic_accurate_for_sim:
         warnings.append(
@@ -322,33 +288,26 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
         not errors
         and reference_dict.get("highest_goal")
         and weeks_count > 0
-        # Soft readiness: report, but don't require 18/2 yet
     )
-    # Final-run readiness is stricter and still advisory during development:
     final_ready = bool(
         sufficient
-        and hw_count > 0
+        and hw_count >= EXPECTED_ACTIVE_PHA_COUNT
         and zoom_count >= 1
         and reference_dict.get("xp_reward_rules_count", 0) > 0
-        and formula_status.gated_season_sim_active
-        and formula_status.safe_for_normal_athletes
-        and not formula_status.gate_fields_missing
-        and EXECUTE_SETS_SEASON_SIM_GATES
+        and readiness.ready_for_early_execute
     )
 
-    if formula_status.gated_season_sim_active and not EXECUTE_SETS_SEASON_SIM_GATES:
+    if hw_count and hw_count != EXPECTED_ACTIVE_PHA_COUNT:
         warnings.append(
-            "NO-GO for execute: gated formula is live, but execute writer does not yet "
-            "set Season Sim Test Record?, Season Sim Clock Now, or Season Sim Test "
-            "Submitted At (only Video Upload Note marker today)."
+            f"Active PHA count for Grade 12 band is {hw_count}; "
+            f"product expectation is {EXPECTED_ACTIVE_PHA_COUNT}."
         )
 
     if not final_ready and not errors:
         warnings.append(
             "Configuration is readable but not marked sufficient_for_final_run "
-            "(need at least one active PHA covering the Grade 12 band, Zoom meeting(s), "
-            "weeks coverage, XP rules, active Season Sim clock gate, execute writer "
-            "gate fields, and no errors)."
+            "(need 18 active PHA for the Grade 12 band, Zoom meeting(s), weeks coverage, "
+            "XP rules, gated clock override readiness, and no errors)."
         )
 
     ok = len(errors) == 0
@@ -363,8 +322,9 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
         email=email_info,
         simulation_clock_blockers=clock_blockers,
         schema_requirements=schema_requirements,
-        activity_date_future_formula=formula_dict,
+        clock_override_readiness=readiness.to_dict(),
         same_day_readiness=same_day_dict,
+        dependency_impact=dependency_impact_matrix(),
         errors=errors,
         warnings=warnings,
         sufficient_for_final_run=final_ready,

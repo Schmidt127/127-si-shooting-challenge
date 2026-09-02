@@ -1,12 +1,16 @@
-# SC-147 — Recorded Zoom half-XP (design / repo prep)
+# SC-147 — Recorded Zoom half-XP (101 extension)
 
-**Status:** **Pending confirmation/design** — **NOT Live in Production**  
-**Date:** 2026-09-01  
+**Status:** **GitHub complete (PR #338 merged) — Production paste pending Mike — NOT Production-complete**  
+**Date:** 2026-09-02  
 **Backlog:** SC-147 / MRW-H10  
+**Merge commit:** `49098217` on `master`  
+**Production automation:** **101** (extended v6.7) — **no new slot**  
+**Operator packet:** [`101-v6.7-sc-147-operator-packet.md`](./101-v6.7-sc-147-operator-packet.md)  
+**OMNI review:** [`SC-147-omni-reconciliation-trigger-review.md`](./SC-147-omni-reconciliation-trigger-review.md)  
 **Production base:** `appn84sqPw03zEbTT`  
 **Design brief:** [`docs/challenge-year/RECORDED-ZOOM-HALF-XP-DESIGN-BRIEF.md`](../challenge-year/RECORDED-ZOOM-HALF-XP-DESIGN-BRIEF.md)
 
-> **Important:** There is **no Production automation** for recorded Zoom half-XP today. The GitHub file `147-zoom-recording-credit-award-half-xp.js` uses **147** as a **placeholder filename only** — the correct Airtable automation number has **not** been established. **Do not paste, create, or enable an automation from this packet until Mike completes product/design sign-off and assigns a slot.**
+> **No DEV base.** DEV base retired **2026-08-19**. All install and proof is **Production-only** with disposable VERIFY/Schmidt records. Slot **121 is not used**.
 
 ---
 
@@ -14,81 +18,42 @@
 
 | Item | Status |
 |------|--------|
-| Product/design decision | **Pending** — half-XP amounts, exclusivity vs live **101**, Perfect Week interaction |
-| Automation slot | **Not assigned** — placeholder repo path uses **147**; Mike must confirm or renumber before any paste |
-| XP Reward Rules row | **`ZOOM_RECORDING`** rule row — confirm before implementation |
-| GitHub script | Repo prep only — `airtable/automations/shooting-challenge/147-zoom-recording-credit-award-half-xp.js` (placeholder) |
-| Offline tests | `lib/sc-147-zoom-recording-credit.test.js` — contract/helpers only |
-| Production paste | **Do not paste** — no operator steps until slot + design approved |
+| Product/design decision | **Confirmed** (Mike 2026-08-27) |
+| Automation slot | **101 extended** (v6.7) — no slot 121 |
+| GitHub / PR #338 | **Merged** to `master` @ `49098217` |
+| XP Reward Rules row | **`ZOOM_RECORDING`** optional (fallback `floor(live/2)`) |
+| Offline tests | **24/24 pass** |
+| Reconciliation trigger | **Unresolved** — OMNI review required |
+| Production paste | **Pending Mike** |
+| Production-complete | **No** — until paste + controlled proof |
 
 ---
 
-## What SC-147 will add (when approved)
+## Architecture
 
-A dedicated **recording-credit XP writer** distinct from:
+| Automation | Role |
+|------------|------|
+| **101 v6.7** | Live Zoom XP + recording half-XP (same reconciliation pass) |
+| **117 v2.1** | Recording approval **email** only |
+| **121** | Retired design artifact only |
 
-| Automation | Role | Must stay separate |
-|------------|------|-------------------|
-| **101** | Live Zoom attendance XP (`ZOOM_ATTEND_*` / `ZOOM_LIVE`) | Yes — live keys only |
-| **117 v2.1** | Recording approval **email** (Email Handoff Queue) | Yes — **no XP writes** |
-| **TBD slot** | Recording half-XP (`ZOOM_RECORDING_CREDIT\|{enrollmentId}\|{zoomMeetingId}`) | Future writer — slot not assigned |
-
-**Policy (Mike 2026-08-27):** Recording credit counts toward level gates at **half live XP**; does **not** count toward Perfect Week; no duplicate with live 101 for same meeting+enrollment.
-
-### Why not slot 117
-
-| Slot | Role | Use for SC-147? |
-|------|------|-----------------|
-| **117 v2.1** | Recording approval **email** only | **No** — do not add XP logic |
-| **118 / 119** | Weekly summary schedulers | **No** |
-| **101** | Live attendance XP | **No** — separate writer |
-| **TBD** | New recording-credit writer | **Future** — assign at implementation time |
-
-See [`automation-index.md`](../automation-index.md) Zoom section.
+**Source Key:** `ZOOM_RECORDING_CREDIT|{enrollmentId}|{zoomMeetingId}`
 
 ---
 
-## Mike decisions still open
+## Reconciliation trigger (critical)
 
-1. Confirm half-XP amounts and gate behavior vs live **101**.
-2. Confirm Perfect Week / recorded-only exclusion rules.
-3. **Assign automation slot** (placeholder **147** in repo is not Production authority).
-4. Add or confirm **XP Reward Rules** row **`Rule Key = ZOOM_RECORDING`**.
-5. DEV disposable proof on Schmidt enrollment before Production enable.
-
-**Do not** create or paste an automation until decisions 1–5 are recorded in an approved Phase 2 brief update.
+Recording-only approval on Zoom Attendance **likely does not** flip `Zoom XP Reconciliation Needed?` under current PKG-034 signature (no Zoom Attendance terms in `Zoom XP Current Signature`). See [`SC-147-omni-reconciliation-trigger-review.md`](./SC-147-omni-reconciliation-trigger-review.md).
 
 ---
 
-## Repo artifacts (reference only — not Production)
+## Mike actions (Production-only)
 
-| Artifact | Path |
-|----------|------|
-| Placeholder script (slot TBD) | `airtable/automations/shooting-challenge/147-zoom-recording-credit-award-half-xp.js` |
-| Pure helpers + conflict matrix | `airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.js` |
-| Offline contract tests | `airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.test.js` |
-| Superseded draft (historical) | `airtable/automations/shooting-challenge/drafts/sc-147-zoom-recording-half-xp.js` |
-| Design brief | [`docs/challenge-year/RECORDED-ZOOM-HALF-XP-DESIGN-BRIEF.md`](../challenge-year/RECORDED-ZOOM-HALF-XP-DESIGN-BRIEF.md) |
+1. **OMNI:** Complete reconciliation trigger review
+2. Disposable **Production** proof per operator packet
+3. Optional: add **`ZOOM_RECORDING`** XP Reward Rules row
+4. Paste **101 v6.7** to Production Automation 101
+5. Re-prove SC-087 + live Zoom XP unchanged
+6. **Do not** create Automation 121
 
-Run offline tests only:
-
-```bash
-node airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.test.js
-node tools/testing/run-agent4-suite.js sc-147-zoom-recording-credit
-```
-
----
-
-## Historical note
-
-Earlier versions of this packet described **Automation 147 v1.0** as paste-ready. That was **repo prep only**. As of **2026-09-01**, Mike has **not** assigned a Production automation slot and **has not** pasted a recorded Zoom half-XP writer. Treat prior "paste 147" instructions as **superseded**.
-
----
-
-## Related (complete — do not confuse with SC-147)
-
-| Item | Status |
-|------|--------|
-| **071 v4.3** Homework Feedback Hub handoff | **Production complete** (2026-09-01) — [`071-v4.3-homework-feedback-paste-packet.md`](./071-v4.3-homework-feedback-paste-packet.md) |
-| **076 v8.12** Daily Submission Hub handoff | **Production complete** (2026-09-01) — [`076-v8.12-daily-submission-paste-packet.md`](./076-v8.12-daily-submission-paste-packet.md) |
-| Paste queue index | [`EMAIL-PASTE-QUEUE-2026-09.md`](./EMAIL-PASTE-QUEUE-2026-09.md) — **071/076 empty** |
+**SC-147 is not Production-complete until steps 2–5 pass.**

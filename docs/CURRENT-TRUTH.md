@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-09-01 — **Production truth update:** Mike updated **071 v4.3** and **076 v8.12** in Production; Hub **FUT-041/046/047** deployed; landing **FUT-033–036** merged locally (push/deploy pending GitHub auth). Paste queue for **071/076: empty**. **SC-147** recorded Zoom half-XP remains **pending design/slot** — no Production automation. Prefer this file + [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md) + `git rev-parse HEAD` on `master` after merge.  
+**Last verification (repo):** 2026-09-02 — **SC-147** recorded Zoom half-XP **implemented in GitHub** as **101 v6.7** (PR **#338** merged `49098217`); **Production paste pending Mike**; **not Production-complete** until controlled disposable proof passes. **117** remains email-only; **121 not created**. OMNI reconciliation trigger review required before recording-only half-XP can fire reliably — [`deploy-checklists/SC-147-omni-reconciliation-trigger-review.md`](./deploy-checklists/SC-147-omni-reconciliation-trigger-review.md). No DEV base (retired 2026-08-19). Prefer this file + [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md) + `git rev-parse HEAD` on `master`.  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -120,7 +120,7 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | Homework PHA 2026–27 | **18 active restored** after FUT-030 (2026-08-31) — new RIDs; Due Date **2027-06-29**; Homework Library **76** unchanged. Evidence: [`testing/evidence/transactional-reset-2026-08-31/11-pha-restore-created-20260831_133022.json`](./testing/evidence/transactional-reset-2026-08-31/11-pha-restore-created-20260831_133022.json). Prior audit (old RIDs historical): [`testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md`](./testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md) |
 | Transactional data | **Empty** after FUT-030 (except restored PHA) — Athletes/Enrollments/Submissions/Assets/HC/XP/WAS/VF/Unlocks/Streaks/Zoom Attendance/Award Recipients/Payments/Email Handoff Queue = **0**. Base ready for clean workflow rebuild. |
 | Phase 4 public copy | **Shipped** PR **#298** — CR-13/CR-17/CR-18 parent copy implemented 2026-09-01; optional Dashboard relabel complete (CR-12) |
-| SC-147 Recorded Zoom half-XP | **Pending confirmation/design** — repo prep + offline tests only; **automation slot not assigned**; **do not paste** — [`deploy-checklists/SC-147-zoom-recording-half-xp.md`](./deploy-checklists/SC-147-zoom-recording-half-xp.md) |
+| SC-147 Recorded Zoom half-XP | **Built in Repository / Paste Pending** — **101 v6.7** merged PR **#338** (`49098217`); recording half-XP in same 101 pass; Source Key `ZOOM_RECORDING_CREDIT\|{Enrollment}\|{Meeting}`; **121 retired** (design artifact only); **117 email-only**; OMNI reconciliation trigger review **unresolved** — [`deploy-checklists/101-v6.7-sc-147-operator-packet.md`](./deploy-checklists/101-v6.7-sc-147-operator-packet.md) · [`SC-147-omni-reconciliation-trigger-review.md`](./deploy-checklists/SC-147-omni-reconciliation-trigger-review.md) |
 | MRW-F07 weekly email harness | **Complete (PR #289)** — disposable E2E tooling for `118→072→119→074→079`; live `--apply` on Mike disposable WAS still operator-only |
 | Production smoke athlete slug | `perfect-week-testing` (`testing-schmidt` is DEV-only) |
 | PHA Due Date | Public homework catalog + athlete homework assignments display PHA Due Date (fallback Week End Date); verified prod 2026-08-25 |
@@ -324,7 +324,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - SC-149 / MRW-E02 Vercel Fairfield env dashboard attestation (repo attestation PASS; Mike checkbox confirmation pending)
 - FUT-025 athlete profile indexing cutover (Mike approval)
 - FUT-010 supervised attachment apply only if eligible rows appear (R3 dry-run **0 eligible**)
-- SC-147 Recorded Zoom half-XP — **pending confirmation/design**; automation slot **not assigned**; repo prep only — **do not paste**
+- SC-147 Recorded Zoom half-XP — **101 v6.7 GitHub merged**; OMNI reconciliation trigger review; Mike Production paste + disposable proof — **not Production-complete until proof passes**
 - Landing FUT-033–036 + Hub FUT-041/042/046/047 — repo merged locally; **GitHub push + Vercel deploy** pending auth (2026-09-01)
 
 ### Blocked

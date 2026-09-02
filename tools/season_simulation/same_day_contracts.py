@@ -3,29 +3,31 @@
 Production truth (inspected 2026-09-02, base appn84sqPw03zEbTT):
 
 - ``Submitted At`` = ``CREATED_TIME()`` — cannot be API-backdated.
-- ``Submitted Same Day?`` compares ``Submitted At`` (or Perfect Week Test
-  Submitted At for one enrollment) to ``Activity Date`` — does **not** read
-  ``Season Sim Test Submitted At``.
-- ``Perfect Week Grace Eligible?`` uses ``Submitted At`` + ``TODAY()`` vs
-  Activity Date — fails for May–June 2027 Activity Dates when the wall clock
-  is still 2026 unless Manual Exception is set.
-- ``Perfect Week Countable Submission?`` requires ``Count This Submission?=1``
-  **and** ``Perfect Week Grace Eligible?=1`` (not Submitted Same Day directly).
+- Live ``Submitted Same Day?`` still has a Perfect Week *test* enrollment
+  exception (hard-coded ``rec…``). That exception is **not** part of the
+  approved Season Sim paste packet — temporary + rollback formulas use only
+  general athlete behavior (``Submitted At`` vs ``Activity Date``).
+- ``Perfect Week Grace Eligible?`` uses ``Submitted At`` + ``TODAY()`` (plus
+  Manual Exception) for ordinary rows.
+- ``Perfect Week Countable Submission?`` needs ``Perfect Week Grace Eligible?=1``.
 
-Season Sim writer already sets Season Sim gate fields. Without temporary gated
-formulas on Submitted Same Day? and Perfect Week Grace Eligible?, same-day /
-Perfect Week evaluation for the simulation is **incorrect**.
+Approved Season Sim gate fields only:
+
+- Season Sim Test Record?
+- Season Sim Clock Now
+- Season Sim Test Submitted At
+- Video Upload Note containing ``SEASON-SIM|``
 
 This module documents paste formulas for Mike/OMNI. It does **not** apply them.
 """
 
 from __future__ import annotations
 
+import re
 from dataclasses import asdict, dataclass
 from typing import Any, Sequence
 
 from .simulation_clock import (
-    FIELD_ID_ACTIVITY_DATE,
     FIELD_ID_SEASON_SIM_CLOCK_NOW,
     FIELD_ID_SEASON_SIM_TEST_RECORD,
     FIELD_ID_SEASON_SIM_TEST_SUBMITTED_AT,
@@ -38,18 +40,35 @@ FIELD_ID_PERFECT_WEEK_GRACE = "fldLo2GO5aac6tPX1"
 FIELD_ID_PERFECT_WEEK_COUNTABLE = "fldYDitgQr6jgoDMk"
 FIELD_ID_PERFECT_WEEK_MANUAL_EXCEPTION = "fldIb6nJu5TBkUUrD"
 FIELD_ID_COUNT_THIS_SUBMISSION = "fld1gQ2c04pndnTKe"
-FIELD_ID_PERFECT_WEEK_TEST_RECORD = "fld0xNqO0ryOe7uEY"
-FIELD_ID_PERFECT_WEEK_TEST_SUBMITTED_AT = "fldr2msxUo1kPjROD"
-FIELD_ID_ENROLLMENT_RECORD_ID_LOOKUP = "fldHH6GDDG9DixHBT"
-
-# Existing Perfect Week harness enrollment (leave intact).
-PERFECT_WEEK_TEST_ENROLLMENT_ID = "rec93mAfo5jKqP3g5"
 
 SEASON_SIM_MARKER = "SEASON-SIM|"
+
+# Fields allowed inside temporary / rollback paste formulas (by name).
+APPROVED_PASTE_FIELD_NAMES = frozenset(
+    {
+        "Season Sim Test Record?",
+        "Season Sim Clock Now",
+        "Season Sim Test Submitted At",
+        "Video Upload Note",
+        "Activity Date",
+        "Submitted At",
+        "Count This Submission?",
+        "Perfect Week Manual Exception?",
+    }
+)
+
+FORBIDDEN_PASTE_SUBSTRINGS = (
+    "Perfect Week Test Record?",
+    "Perfect Week Test Submitted At",
+    "Enrollment Record ID Lookup",
+    "ARRAYJOIN",
+    "IFERROR(",
+)
 
 
 # ---------------------------------------------------------------------------
 # Paste packets (field names — OMNI / Airtable formula editor)
+# ASCII double quotes only. No hard-coded record IDs. No Perfect Week Test path.
 # ---------------------------------------------------------------------------
 
 ACTIVITY_DATE_IS_FUTURE_ROLLBACK = """IF(
@@ -58,6 +77,8 @@ ACTIVITY_DATE_IS_FUTURE_ROLLBACK = """IF(
   BLANK()
 )"""
 
+# Temporary: Season Sim gate → Season Sim Test Submitted At vs Activity Date.
+# Else: ordinary path → Submitted At vs Activity Date (all athletes).
 SUBMITTED_SAME_DAY_TEMPORARY = """IF(
   AND(
     {Season Sim Test Record?},
@@ -76,81 +97,6 @@ SUBMITTED_SAME_DAY_TEMPORARY = """IF(
       "YYYY-MM-DD"
     ),
     1,
-    0
-  ),
-  IF(
-    AND(
-      {Perfect Week Test Record?},
-      {Perfect Week Test Submitted At},
-      FIND("rec93mAfo5jKqP3g5", ARRAYJOIN({Enrollment Record ID Lookup})) > 0
-    ),
-    IF(
-      AND(
-        {Perfect Week Test Submitted At},
-        {Activity Date}
-      ),
-      IF(
-        DATETIME_FORMAT(
-          SET_TIMEZONE({Perfect Week Test Submitted At}, "America/Denver"),
-          "YYYY-MM-DD"
-        )
-        =
-        DATETIME_FORMAT(
-          SET_TIMEZONE({Activity Date}, "UTC"),
-          "YYYY-MM-DD"
-        ),
-        1,
-        0
-      ),
-      0
-    ),
-    IF(
-      AND(
-        {Submitted At},
-        {Activity Date}
-      ),
-      IF(
-        DATETIME_FORMAT(
-          SET_TIMEZONE({Submitted At}, "America/Denver"),
-          "YYYY-MM-DD"
-        )
-        =
-        DATETIME_FORMAT(
-          SET_TIMEZONE({Activity Date}, "UTC"),
-          "YYYY-MM-DD"
-        ),
-        1,
-        0
-      ),
-      0
-    )
-  )
-)"""
-
-SUBMITTED_SAME_DAY_ROLLBACK = """IF(
-  AND(
-    {Perfect Week Test Record?},
-    {Perfect Week Test Submitted At},
-    FIND("rec93mAfo5jKqP3g5", ARRAYJOIN({Enrollment Record ID Lookup})) > 0
-  ),
-  IF(
-    AND(
-      {Perfect Week Test Submitted At},
-      {Activity Date}
-    ),
-    IF(
-      DATETIME_FORMAT(
-        SET_TIMEZONE({Perfect Week Test Submitted At}, "America/Denver"),
-        "YYYY-MM-DD"
-      )
-      =
-      DATETIME_FORMAT(
-        SET_TIMEZONE({Activity Date}, "UTC"),
-        "YYYY-MM-DD"
-      ),
-      1,
-      0
-    ),
     0
   ),
   IF(
@@ -175,6 +121,28 @@ SUBMITTED_SAME_DAY_ROLLBACK = """IF(
   )
 )"""
 
+# Rollback: ordinary Production behavior for all athletes (Submitted At path).
+SUBMITTED_SAME_DAY_ROLLBACK = """IF(
+  AND(
+    {Submitted At},
+    {Activity Date}
+  ),
+  IF(
+    DATETIME_FORMAT(
+      SET_TIMEZONE({Submitted At}, "America/Denver"),
+      "YYYY-MM-DD"
+    )
+    =
+    DATETIME_FORMAT(
+      SET_TIMEZONE({Activity Date}, "UTC"),
+      "YYYY-MM-DD"
+    ),
+    1,
+    0
+  ),
+  0
+)"""
+
 PERFECT_WEEK_GRACE_TEMPORARY = """IF(
   OR(
     {Perfect Week Manual Exception?},
@@ -186,11 +154,11 @@ PERFECT_WEEK_GRACE_TEMPORARY = """IF(
       {Season Sim Test Submitted At},
       {Season Sim Clock Now},
       DATETIME_FORMAT(
-        SET_TIMEZONE({Activity Date}, 'America/Denver'),
-        'YYYY-MM-DD'
+        SET_TIMEZONE({Activity Date}, "America/Denver"),
+        "YYYY-MM-DD"
       ) <= DATETIME_FORMAT(
-        SET_TIMEZONE({Season Sim Clock Now}, 'America/Denver'),
-        'YYYY-MM-DD'
+        SET_TIMEZONE({Season Sim Clock Now}, "America/Denver"),
+        "YYYY-MM-DD"
       ),
       DATETIME_DIFF(
         {Season Sim Test Submitted At},
@@ -199,19 +167,19 @@ PERFECT_WEEK_GRACE_TEMPORARY = """IF(
             DATEADD(
               DATETIME_PARSE(
                 DATETIME_FORMAT(
-                  SET_TIMEZONE({Activity Date}, 'America/Denver'),
-                  'YYYY-MM-DD'
+                  SET_TIMEZONE({Activity Date}, "America/Denver"),
+                  "YYYY-MM-DD"
                 ),
-                'YYYY-MM-DD'
+                "YYYY-MM-DD"
               ),
               1,
-              'days'
+              "days"
             ),
-            'YYYY-MM-DD'
-          ) & ' 00:00',
-          'YYYY-MM-DD HH\\:mm'
+            "YYYY-MM-DD"
+          ) & " 00:00",
+          "YYYY-MM-DD HH\\:mm"
         ),
-        'hours'
+        "hours"
       ) <= 48
     ),
     AND(
@@ -219,9 +187,9 @@ PERFECT_WEEK_GRACE_TEMPORARY = """IF(
       {Activity Date},
       {Submitted At},
       DATETIME_FORMAT(
-        SET_TIMEZONE({Activity Date}, 'America/Denver'),
-        'YYYY-MM-DD'
-      ) <= DATETIME_FORMAT(TODAY(), 'YYYY-MM-DD'),
+        SET_TIMEZONE({Activity Date}, "America/Denver"),
+        "YYYY-MM-DD"
+      ) <= DATETIME_FORMAT(TODAY(), "YYYY-MM-DD"),
       DATETIME_DIFF(
         {Submitted At},
         DATETIME_PARSE(
@@ -229,19 +197,19 @@ PERFECT_WEEK_GRACE_TEMPORARY = """IF(
             DATEADD(
               DATETIME_PARSE(
                 DATETIME_FORMAT(
-                  SET_TIMEZONE({Activity Date}, 'America/Denver'),
-                  'YYYY-MM-DD'
+                  SET_TIMEZONE({Activity Date}, "America/Denver"),
+                  "YYYY-MM-DD"
                 ),
-                'YYYY-MM-DD'
+                "YYYY-MM-DD"
               ),
               1,
-              'days'
+              "days"
             ),
-            'YYYY-MM-DD'
-          ) & ' 00:00',
-          'YYYY-MM-DD HH\\:mm'
+            "YYYY-MM-DD"
+          ) & " 00:00",
+          "YYYY-MM-DD HH\\:mm"
         ),
-        'hours'
+        "hours"
       ) <= 48
     )
   ),
@@ -257,9 +225,9 @@ PERFECT_WEEK_GRACE_ROLLBACK = """IF(
       {Activity Date},
       {Submitted At},
       DATETIME_FORMAT(
-        SET_TIMEZONE({Activity Date}, 'America/Denver'),
-        'YYYY-MM-DD'
-      ) <= DATETIME_FORMAT(TODAY(), 'YYYY-MM-DD'),
+        SET_TIMEZONE({Activity Date}, "America/Denver"),
+        "YYYY-MM-DD"
+      ) <= DATETIME_FORMAT(TODAY(), "YYYY-MM-DD"),
       DATETIME_DIFF(
         {Submitted At},
         DATETIME_PARSE(
@@ -267,25 +235,51 @@ PERFECT_WEEK_GRACE_ROLLBACK = """IF(
             DATEADD(
               DATETIME_PARSE(
                 DATETIME_FORMAT(
-                  SET_TIMEZONE({Activity Date}, 'America/Denver'),
-                  'YYYY-MM-DD'
+                  SET_TIMEZONE({Activity Date}, "America/Denver"),
+                  "YYYY-MM-DD"
                 ),
-                'YYYY-MM-DD'
+                "YYYY-MM-DD"
               ),
               1,
-              'days'
+              "days"
             ),
-            'YYYY-MM-DD'
-          ) & ' 00:00',
-          'YYYY-MM-DD HH\\:mm'
+            "YYYY-MM-DD"
+          ) & " 00:00",
+          "YYYY-MM-DD HH\\:mm"
         ),
-        'hours'
+        "hours"
       ) <= 48
     )
   ),
   1,
   0
 )"""
+
+
+def extract_field_references(formula: str) -> set[str]:
+    return set(re.findall(r"\{([^}]+)\}", formula))
+
+
+def assert_paste_formula_safe(formula: str, *, label: str) -> None:
+    """Raise ValueError if a paste formula is unsafe for general Production."""
+    if re.search(r"\brec[A-Za-z0-9]{14}\b", formula):
+        raise ValueError(f"{label}: hard-coded Airtable record id is forbidden")
+    for bad in FORBIDDEN_PASTE_SUBSTRINGS:
+        if bad in formula:
+            raise ValueError(f"{label}: forbidden substring {bad!r}")
+    if re.search(r"'[^'\\]*'", formula):
+        raise ValueError(f"{label}: single-quoted string literals are forbidden")
+    refs = extract_field_references(formula)
+    unknown = refs - APPROVED_PASTE_FIELD_NAMES
+    if unknown:
+        raise ValueError(f"{label}: unapproved field references: {sorted(unknown)}")
+
+
+def validate_all_paste_formulas() -> None:
+    assert_paste_formula_safe(SUBMITTED_SAME_DAY_TEMPORARY, label="Submitted Same Day? temporary")
+    assert_paste_formula_safe(SUBMITTED_SAME_DAY_ROLLBACK, label="Submitted Same Day? rollback")
+    assert_paste_formula_safe(PERFECT_WEEK_GRACE_TEMPORARY, label="Perfect Week Grace temporary")
+    assert_paste_formula_safe(PERFECT_WEEK_GRACE_ROLLBACK, label="Perfect Week Grace rollback")
 
 
 @dataclass(frozen=True)
@@ -353,6 +347,9 @@ def _refs_season_sim(formula: str) -> dict[str, bool]:
             or "{Season Sim Clock Now}" in formula
         ),
         "marker": SEASON_SIM_MARKER in formula,
+        "video_note": (
+            FIELD_ID_VIDEO_UPLOAD_NOTE in formula or "{Video Upload Note}" in formula
+        ),
     }
 
 
@@ -364,7 +361,11 @@ def inspect_submitted_same_day_formula(
     formula = _formula_text(field)
     refs = _refs_season_sim(formula)
     gated = bool(
-        formula and refs["test_record"] and refs["marker"] and refs["submitted_at"]
+        formula
+        and refs["test_record"]
+        and refs["marker"]
+        and refs["submitted_at"]
+        and refs["video_note"]
     )
     blockers: list[str] = []
     notes: list[str] = []
@@ -375,8 +376,7 @@ def inspect_submitted_same_day_formula(
     elif gated:
         notes.append(
             "Submitted Same Day? is Season Sim gated: sim rows use "
-            "Season Sim Test Submitted At; other rows keep CREATED_TIME / "
-            "Perfect Week test path."
+            "Season Sim Test Submitted At; other rows use Submitted At."
         )
     else:
         blockers.append(
@@ -384,7 +384,6 @@ def inspect_submitted_same_day_formula(
             "May–June 2027 Activity Dates compared to CREATED_TIME() (wall clock) "
             "will yield Submitted Same Day?=0 for sim rows."
         )
-    # Normal path must still mention Submitted At or Perfect Week test fields.
     safe_normal = bool(
         (not formula)
         or (
@@ -420,6 +419,7 @@ def inspect_perfect_week_grace_formula(
         and refs["marker"]
         and refs["submitted_at"]
         and refs["clock_now"]
+        and refs["video_note"]
     )
     blockers: list[str] = []
     notes: list[str] = []
@@ -512,7 +512,7 @@ def assess_same_day_readiness(
     if accurate:
         notes.append(
             "Same-day / Perfect Week Season Sim gates are active; ordinary "
-            "athletes remain on CREATED_TIME / TODAY() paths."
+            "athletes remain on Submitted At / TODAY() paths."
         )
 
     return SameDayReadiness(
@@ -536,6 +536,55 @@ def assess_same_day_readiness(
     )
 
 
+def season_sim_gate_open(
+    *,
+    season_sim_test_record: bool,
+    video_upload_note: str,
+) -> bool:
+    return bool(
+        season_sim_test_record and SEASON_SIM_MARKER in (video_upload_note or "")
+    )
+
+
+def ordinary_same_day_result(
+    *,
+    submitted_at_date: str,
+    activity_date: str,
+) -> int:
+    """Mirror of the ordinary (non-sim) Submitted Same Day? branch."""
+    if not submitted_at_date or not activity_date:
+        return 0
+    return 1 if submitted_at_date == activity_date else 0
+
+
+def submitted_same_day_branch_result(
+    *,
+    season_sim_test_record: bool,
+    video_upload_note: str,
+    season_sim_test_submitted_at_date: str,
+    submitted_at_date: str,
+    activity_date: str,
+) -> tuple[str, int]:
+    """Return (branch_name, 0|1) matching temporary Submitted Same Day?."""
+    if (
+        season_sim_gate_open(
+            season_sim_test_record=season_sim_test_record,
+            video_upload_note=video_upload_note,
+        )
+        and season_sim_test_submitted_at_date
+        and activity_date
+    ):
+        value = 1 if season_sim_test_submitted_at_date == activity_date else 0
+        return ("season_sim", value)
+    return (
+        "ordinary",
+        ordinary_same_day_result(
+            submitted_at_date=submitted_at_date,
+            activity_date=activity_date,
+        ),
+    )
+
+
 def simulated_same_day_result(
     *,
     season_sim_test_record: bool,
@@ -543,12 +592,56 @@ def simulated_same_day_result(
     season_sim_test_submitted_at_date: str,
     activity_date: str,
 ) -> int:
-    """Pure harness mirror of the Season Sim branch of Submitted Same Day?."""
-    if not (
-        season_sim_test_record
-        and SEASON_SIM_MARKER in (video_upload_note or "")
-        and season_sim_test_submitted_at_date
+    """Pure harness mirror of the Season Sim branch only (0 if gate closed)."""
+    branch, value = submitted_same_day_branch_result(
+        season_sim_test_record=season_sim_test_record,
+        video_upload_note=video_upload_note,
+        season_sim_test_submitted_at_date=season_sim_test_submitted_at_date,
+        submitted_at_date="",
+        activity_date=activity_date,
+    )
+    return value if branch == "season_sim" else 0
+
+
+def perfect_week_grace_branch_result(
+    *,
+    season_sim_test_record: bool,
+    video_upload_note: str,
+    manual_exception: bool,
+    count_this_submission: bool,
+    activity_date: str,
+    season_sim_test_submitted_at_date: str,
+    season_sim_clock_now_date: str,
+    submitted_at_date: str,
+    today_date: str,
+    within_48h: bool,
+) -> tuple[str, int]:
+    """Simplified branch mirror for Perfect Week Grace Eligible? temporary."""
+    if manual_exception:
+        return ("manual_exception", 1)
+    if (
+        season_sim_gate_open(
+            season_sim_test_record=season_sim_test_record,
+            video_upload_note=video_upload_note,
+        )
+        and count_this_submission
         and activity_date
+        and season_sim_test_submitted_at_date
+        and season_sim_clock_now_date
+        and activity_date <= season_sim_clock_now_date
+        and within_48h
     ):
-        return 0
-    return 1 if season_sim_test_submitted_at_date == activity_date else 0
+        return ("season_sim", 1)
+    if (
+        count_this_submission
+        and activity_date
+        and submitted_at_date
+        and activity_date <= today_date
+        and within_48h
+    ):
+        return ("ordinary", 1)
+    return ("none", 0)
+
+
+# Validate paste packets at import time so unsafe formulas cannot ship silently.
+validate_all_paste_formulas()
