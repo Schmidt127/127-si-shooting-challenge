@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-21
-Last GitHub Update: 2026-08-13
+Last GitHub Update: 2026-09-02
 
 Purpose:
 Creates or updates Video Submission XP Events from Video Feedback records.
@@ -27,11 +27,12 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 114 - VIDEO REVIEW AND XP
  * Create or Update Video XP Event
  *
- * Version: v6.1
+ * Version: v6.2
  * Date Written: 2026-05-23
- * Last Updated: 2026-08-13
- * Updated Reason: Reconcile the exact XP Event lifecycle. Eligibility loss
- * deactivates the canonical event; restoration reactivates that same record.
+ * Last Updated: 2026-09-02
+ * Updated Reason: SC-SEASON-SIM-002 dual-gated Season Sim Clock Now for future
+ * Activity Date checks on disposable sim Submissions only. Ordinary rows keep
+ * wall-clock America/Denver today.
  *
  * PURPOSE
  * - Runs from one Video Feedback record.
@@ -49,11 +50,17 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Marks the Video Feedback record as Awarded after XP Event creation/update.
  * - Fails closed when the Video Feedback and Submission identity chain is
  *   incomplete, mismatched, or future-dated.
+ * - Season Simulation (SC-SEASON-SIM-002): when linked Submission has Season Sim
+ *   Test Record? checked AND Video Upload Note contains SEASON-SIM|, compare
+ *   Activity Date to Season Sim Clock Now instead of wall-clock today.
  *
  * IMPORTANT DESIGN RULE
  * - One Video Feedback record = one XP Event.
  * - Do NOT dedupe video feedback by Enrollment or Enrollment + XP Source only.
  * - Source Key must remain: VIDEO_SUBMISSION|recordId
+ * - Future Activity Date skip uses wall-clock Denver unless the dual Season Sim
+ *   gate is open; then Season Sim Clock Now is "today". Missing clock falls back
+ *   to wall-clock (fail closed). Non-sim future-date protection is unchanged.
  * - This is not an email automation and does not create Email Handoff Queue
  *   records, invoke Make, or dispatch parent email.
  *
@@ -114,7 +121,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "114 - Video Review and XP - Create or Update Video XP Event",
-  version: "v6.1",
+  version: "v6.2",
+  versionDate: "2026-09-02",
+  lastUpdated: "2026-09-02",
 
   tables: {
     videoFeedback: "Video Feedback",
@@ -142,6 +151,10 @@ const CONFIG = {
     week: "Week",
     activityDate: "Activity Date",
     weeklySummary: "Weekly Athlete Summary",
+    // SC-SEASON-SIM-002 dual gate (optional; missing fields = non-sim path).
+    seasonSimTestRecord: "Season Sim Test Record?",
+    seasonSimClockNow: "Season Sim Clock Now",
+    videoUploadNote: "Video Upload Note",
   },
 
   enrollments: {
@@ -474,6 +487,30 @@ function denverDateKey(value) {
     month: "2-digit",
     day: "2-digit",
   }).format(date);
+}
+
+/**
+ * SC-SEASON-SIM-002 dual gate on the linked Submission.
+ * Both required: Season Sim Test Record? AND Video Upload Note contains SEASON-SIM|.
+ */
+function isSeasonSimRecord(submission) {
+  if (!getCheckbox(submission, submissionsTable, CONFIG.submissions.seasonSimTestRecord)) {
+    return false;
+  }
+  const note = getText(submission, submissionsTable, CONFIG.submissions.videoUploadNote);
+  return note.includes("SEASON-SIM|");
+}
+
+/**
+ * "Today" for Activity Date future checks. Ordinary: wall-clock Denver.
+ * Dual-gated sim: Season Sim Clock Now (fallback wall-clock if blank).
+ */
+function effectiveTodayDenverKey(submission) {
+  if (!isSeasonSimRecord(submission)) return denverDateKey(new Date());
+  const clockKey = denverDateKey(
+    getRaw(submission, submissionsTable, CONFIG.submissions.seasonSimClockNow)
+  );
+  return clockKey || denverDateKey(new Date());
 }
 
 async function loadWeeklySummaryQuery() {
@@ -1588,7 +1625,7 @@ async function main() {
   );
 
   const sourceDateKey = denverDateKey(xpSourceDate);
-  const todayDenverKey = denverDateKey(new Date());
+  const todayDenverKey = effectiveTodayDenverKey(submissionRecord);
 
   if (!sourceDateKey) {
     setSkippedOutputs("skipped_submission_activity_date_missing", "Linked Submission Activity Date is blank or invalid.", {

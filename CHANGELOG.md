@@ -6,9 +6,15 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Airtable
+
+#### Changed
+- **SC-SEASON-SIM-002 Season Sim date gate (2026-09-02)** — **010 v10.13**, **114 v6.2**, **073 v4.6**: dual gate (`Season Sim Test Record?` + `Video Upload Note` contains `SEASON-SIM|`) uses `Season Sim Clock Now` as “today” for Activity Date eligibility; ordinary rows keep wall-clock Denver. Paste packet [`docs/deploy-checklists/SC-SEASON-SIM-002-automation-paste-010-114.md`](./docs/deploy-checklists/SC-SEASON-SIM-002-automation-paste-010-114.md). **Production paste pending.** No 101 / SC-147 / 117 / 121 changes.
+
 ### Tools
 
 #### Changed
+- **SC-SEASON-SIM-002 full cascade fix (2026-09-02)** — Cleaned failed run `SEASON-SIM-2027-20260902T171918Z-athlete1` (121 registry + 11 XP + 2 handoffs; Attendees reverse). Writer: HC `Submission Date`, WAS Grade Band at create, disposable 2027 Zoom Meetings (registry-deletable), VF Grade Band + Feedback Posted? arm. Hub Test Allowlist row for `schmidt@fairfieldbasketballclub.com`. Offline tests 114 green; preflight/dry-run OK. **No new Production execute; no emails sent during fix.** Temporary formulas remain.
 - **SC-SEASON-SIM-002 final readiness / same-day audit (2026-09-02)** — Audited live `Submitted At` (`CREATED_TIME()`), `Submitted Same Day?`, and `Perfect Week Grace Eligible?`: without temporary Season Sim gates, May–June 2027 sim rows fail same-day / Perfect Week when run before 2027. Added `same_day_contracts.py` paste/rollback packets, operator checklist, preflight `sufficient_for_same_day_perfect_week`, Week 9 zero-HW + Early Bird out-of-window scenario meta, expanded tests. **No live execute / no Production formula paste / no SC-147/101/117 changes.**
 - **SC-SEASON-SIM-002 finish execute orchestration (2026-09-02)** — `run_execute` no longer aborts after Athlete create. Full idempotent orchestrator creates Athlete, Enrollment (PI + 2026-2027 SY + 9-12), WAS per window week, Submissions with Season Sim gates, Submission Assets, Homework Completions (18 PHAs), Video Feedback, disposable Live+Recording Zoom Meetings, Zoom Attendance (live Attendees vs recording quiz never Attendees). Email OFF by default (optional allowlist phase). Resume via run registry; pause on failure. Offline tests: 44. **No live execute / no Production writes / no formula changes.**
 - **SC-SEASON-SIM-002 writer Season Sim gate fields (2026-09-02)** — Simulation Submissions from `build_intended_writes` now set `Season Sim Test Record?=true`, `Season Sim Clock Now` (write-day simulated now), `Season Sim Test Submitted At` (same-day vs backdated), and retain `Video Upload Note` `SEASON-SIM|<run_id>`. New `writer.py` + `test_writer.py`; preflight `EXECUTE_SETS_SEASON_SIM_GATES` flips so `sufficient_for_final_run` can pass when the live gate is active. **No execute / no Production writes / no formula changes.**

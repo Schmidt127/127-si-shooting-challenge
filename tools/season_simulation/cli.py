@@ -27,7 +27,12 @@ from .constants import (
     SAFE_EMAIL_RECIPIENT,
     SIM_START,
 )
-from .execute import ExecuteAborted, build_intended_writes, run_execute
+from .execute import (
+    ExecuteAborted,
+    build_intended_writes,
+    run_execute,
+    summarize_intended_write_readiness,
+)
 from .preflight import run_preflight, write_preflight_reports
 from .reference_data import load_reference_snapshot
 from .reports import write_dry_run_report
@@ -143,6 +148,7 @@ def _offline_scenario(run_id: str):
             {
                 "record_id": f"recOFFLINEHW{i:02d}",
                 "slot": "HW1" if i % 2 else "HW2",
+                "library_id": f"recOFFLINELIB{i:02d}",
                 "display": f"HW{i}",
             }
             for i in range(1, 19)
@@ -213,6 +219,7 @@ def cmd_dry_run(args: argparse.Namespace) -> int:
         }
 
     intended = build_intended_writes(scenario, clock)
+    write_readiness = summarize_intended_write_readiness(intended)
     payload = {
         **scenario.to_dict(),
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -220,6 +227,7 @@ def cmd_dry_run(args: argparse.Namespace) -> int:
         "reference_meta": ref_meta,
         "week_id_by_date": week_by_date if not args.offline_fixture else {},
         "intended_writes": intended,
+        "write_readiness": write_readiness,
         "airtable_writes_performed": 0,
         "emails_sent": 0,
         "safety": {
@@ -236,6 +244,14 @@ def cmd_dry_run(args: argparse.Namespace) -> int:
     print(f"Total planned shots: {scenario.intended_writes_summary.get('total_planned_shots')}")
     print(f"Goal (Airtable): {scenario.goal_total_shots}")
     print(f"Email events (not sent): {len(scenario.intended_emails)}")
+    print(
+        "Write readiness: "
+        f"countable={write_readiness.get('submission_countable')}/"
+        f"{write_readiness.get('submission_creates')}; "
+        f"hw_dual={write_readiness.get('homework_with_pha_and_library')}/"
+        f"{write_readiness.get('homework_completions')}; "
+        f"vf_arms={write_readiness.get('video_feedback_update_arms')}"
+    )
     print(f"Wrote {paths['json']}")
     print(f"Wrote {paths['md']}")
     return 0
@@ -294,9 +310,9 @@ def cmd_execute(args: argparse.Namespace) -> int:
     except Exception as exc:  # noqa: BLE001
         print(f"Warning: could not load Submissions schema: {exc}", file=sys.stderr)
 
+    # Season sim targets Program Instance / School Year 2026-2027 only.
+    # Do not inherit Config "Active School Year" (may be 2028-2029).
     school_year = "2026-2027"
-    if snap.config_rows:
-        school_year = snap.config_rows[0].get("active_school_year") or school_year
 
     goal_pis = list(snap.highest_goal.program_instance_ids or [])
 

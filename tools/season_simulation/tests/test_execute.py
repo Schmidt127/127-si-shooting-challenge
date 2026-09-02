@@ -20,7 +20,11 @@ from season_simulation.constants import (  # noqa: E402
     SAFE_EMAIL_RECIPIENT,
     SIM_START,
 )
-from season_simulation.execute import build_intended_writes, run_execute  # noqa: E402
+from season_simulation.execute import (  # noqa: E402
+    build_intended_writes,
+    run_execute,
+    summarize_intended_write_readiness,
+)
 from season_simulation.memory_client import MemoryAirtableClient  # noqa: E402
 from season_simulation.recipient_safety import assert_safe_recipient  # noqa: E402
 from season_simulation.run_registry import load_registry, run_marker  # noqa: E402
@@ -148,8 +152,8 @@ class TestExecuteOrchestration(unittest.TestCase):
         )
 
     def _seed_zoom(self, client: MemoryAirtableClient) -> None:
-        client.seed("Zoom Meetings", "recZTEMPLATE1", {"Meeting Name": "T1", "Attendees": []})
-        client.seed("Zoom Meetings", "recZTEMPLATE2", {"Meeting Name": "T2", "Attendees": []})
+        # Writer creates disposable Zoom Meetings — no VERIFY seed required.
+        return
 
     def _run(self, client, registry_dir, *, enable_email=False, confirm=CONFIRM_TOKEN):
         return run_execute(
@@ -216,22 +220,51 @@ class TestExecuteOrchestration(unittest.TestCase):
         client = MemoryAirtableClient(allow_writes=True)
         self._seed_zoom(client)
         with tempfile.TemporaryDirectory() as tmp:
-            self._run(client, Path(tmp))
+            payload = self._run(client, Path(tmp))
+        self.assertEqual(payload.get("writer_status"), "complete", payload.get("errors"))
         attend = client.list_records("Zoom Attendance")
         methods = {a["fields"].get("Attendance Method") for a in attend}
         self.assertIn("Live", methods)
         self.assertIn("Recording Quiz", methods)
-        live_meeting = client.get_record("Zoom Meetings", "recZTEMPLATE1")
-        rec_meeting = client.get_record("Zoom Meetings", "recZTEMPLATE2")
-        # One of the seeded meetings should receive Attendees for live path
-        attendee_sets = [
-            live_meeting["fields"].get("Attendees") or [],
-            rec_meeting["fields"].get("Attendees") or [],
+        meetings = client.list_records("Zoom Meetings")
+        self.assertEqual(len(meetings), 2)
+        live = next(m for m in meetings if "|LIVE|" in (m["fields"].get("Meeting Name") or ""))
+        rec = next(m for m in meetings if "|REC|" in (m["fields"].get("Meeting Name") or ""))
+        self.assertEqual(live["fields"].get("Meeting Status"), "Completed")
+        self.assertEqual(rec["fields"].get("Meeting Status"), "Completed")
+        self.assertTrue(str(live["fields"].get("Start Time") or "").startswith("2027-"))
+        self.assertTrue(str(rec["fields"].get("Start Time") or "").startswith("2027-"))
+        # Live gets Attendees; recording does not
+        self.assertTrue(live["fields"].get("Attendees"))
+        self.assertFalse(rec["fields"].get("Attendees"))
+        recorded_za = [
+            a for a in attend if a["fields"].get("Attendance Method") == "Recording Quiz"
         ]
-        self.assertTrue(any(attendee_sets))
-        # Recording quiz rows must not be the only path that patches Attendees incorrectly:
-        # at least one meeting remains without Attendees (recorded path).
-        self.assertTrue(any(not a for a in attendee_sets))
+        self.assertEqual(len(recorded_za), 1)
+        self.assertTrue(recorded_za[0]["fields"].get("Recording Quiz Satisfactory?"))
+        self.assertEqual(
+            recorded_za[0]["fields"].get("Recording Quiz Review Status"), "Satisfactory"
+        )
+        self.assertEqual(recorded_za[0]["fields"].get("Zoom Meeting"), [rec["id"]])
+
+    def test_homework_submission_date_and_was_grade_band(self):
+        client = MemoryAirtableClient(allow_writes=True)
+        with tempfile.TemporaryDirectory() as tmp:
+            self._run(client, Path(tmp))
+        hc = client.list_records("Homework Completions")
+        self.assertEqual(len(hc), 18)
+        for row in hc:
+            self.assertRegex(str(row["fields"].get("Submission Date") or ""), r"^2027-\d{2}-\d{2}$")
+            self.assertEqual(len(row["fields"].get("Homework") or []), 1)
+        was = client.list_records("Weekly Athlete Summary")
+        for row in was:
+            self.assertEqual(row["fields"].get("Grade Band"), ["recBAND912"])
+        vf = client.list_records("Video Feedback")
+        self.assertEqual(len(vf), len(VIDEO_FEEDBACK_DAYS))
+        for row in vf:
+            self.assertTrue(row["fields"].get("Feedback Posted?"))
+            self.assertEqual(row["fields"].get("Grade Band"), ["recBAND912"])
+            self.assertFalse(row["fields"].get("Ready for XP Automation?"))
 
     def test_same_day_and_backdated_submission_timestamps(self):
         from season_simulation.scenarios import BACKDATE_ACTIVITY_DAY, SAME_DAY_SUBMIT_DAY
@@ -323,15 +356,51 @@ class TestExecuteOrchestration(unittest.TestCase):
             plan = build_cleanup_plan(run_id=RUN_ID, registry_dir=base, client=None)
             self.assertGreater(plan.total_records(), 20)
             self.assertEqual(len(plan.targets["Athletes"]), 1)
+            self.assertEqual(len(plan.targets.get("Zoom Meetings") or []), 2)
 
     def test_intended_writes_include_gates_and_zoom_modes(self):
         writes = build_intended_writes(self.scenario, self.clock, ctx=self.ctx)
         subs = [w for w in writes if w.get("table") == "Submissions"]
-        self.assertGreaterEqual(len(subs), 50)
+        self.assertEqual(len(subs), 58)
+        for w in subs:
+            self.assertTrue(w.get("expected_countable"), w.get("day_number"))
+            self.assertRegex(str(w["fields"]["Activity Date"]), r"^2027-\d{2}-\d{2}$")
+        readiness = summarize_intended_write_readiness(writes)
+        self.assertTrue(readiness["all_submissions_countable"])
+        self.assertEqual(readiness["homework_completions"], 18)
+        self.assertTrue(readiness["all_homework_dual_linked"])
+        self.assertTrue(readiness["video_update_triggers_planned"])
+        hw = [w for w in writes if w.get("table") == "Homework Completions"]
+        self.assertTrue(all((w.get("fields") or {}).get("Submission Date") for w in hw))
+        was = [w for w in writes if w.get("table") == "Weekly Athlete Summary"]
+        self.assertTrue(all((w.get("fields") or {}).get("Grade Band") for w in was))
+        zm_creates = [
+            w
+            for w in writes
+            if w.get("table") == "Zoom Meetings" and w.get("op") == "create"
+        ]
+        self.assertEqual(len(zm_creates), 2)
         zoom = [w for w in writes if w.get("table") == "Zoom Attendance"]
         self.assertEqual(len(zoom), 2)
         modes = {w.get("zoom_mode") for w in zoom}
         self.assertTrue(modes & {"live", "recording", "recorded"})
+        recorded = [w for w in zoom if w.get("zoom_mode") == "recorded"]
+        self.assertEqual(
+            recorded[0]["fields"].get("Recording Quiz Review Status"), "Satisfactory"
+        )
+        vf_arms = [
+            w
+            for w in writes
+            if w.get("table") == "Video Feedback" and w.get("op") == "update"
+        ]
+        self.assertEqual(len(vf_arms), len(VIDEO_FEEDBACK_DAYS))
+        self.assertTrue(all(w["fields"].get("Feedback Posted?") is True for w in vf_arms))
+        vf_creates = [
+            w
+            for w in writes
+            if w.get("table") == "Video Feedback" and w.get("op") == "create"
+        ]
+        self.assertTrue(all((w.get("fields") or {}).get("Grade Band") for w in vf_creates))
 
     def test_streak_achievement_level_plan_signals(self):
         s = self.scenario

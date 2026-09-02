@@ -16,6 +16,7 @@ from .clock_override import (
     SEASON_SIM_TEST_RECORD_FIELD as FIELD_SEASON_SIM_TEST_RECORD,
     SEASON_SIM_TEST_SUBMITTED_AT_FIELD as FIELD_SEASON_SIM_TEST_SUBMITTED_AT,
     VIDEO_UPLOAD_NOTE_FIELD as FIELD_VIDEO_UPLOAD_NOTE,
+    activity_date_write_value,
     sim_submission_override_fields,
 )
 
@@ -57,6 +58,9 @@ class ExecuteContext:
     # activity_date iso -> week record id
     week_id_by_date: dict[str, str] = field(default_factory=dict)
     submission_field_names: set[str] = field(default_factory=set)
+    video_feedback_field_names: set[str] = field(default_factory=set)
+    zoom_meeting_field_names: set[str] = field(default_factory=set)
+    zoom_attendance_field_names: set[str] = field(default_factory=set)
     zoom_live_meeting_id: str = ""
     zoom_recorded_meeting_id: str = ""
 
@@ -266,6 +270,7 @@ class SeasonSimWriter:
             athlete_id = self._create_athlete()
             enrollment_id = self._create_enrollment(athlete_id)
             self._create_weekly_summaries(enrollment_id)
+            self._ensure_sim_zoom_meetings()
             self._create_day_loop(athlete_id, enrollment_id)
             self._apply_zoom_live_attendees(enrollment_id)
             self._register_email_intents()
@@ -343,6 +348,8 @@ class SeasonSimWriter:
                 "Enrollment": [enrollment_id],
                 "Week": [wid],
                 "Goal Record": [self.ctx.goal_record_id],
+                # Do not rely on Automation 030 — set Grade Band at create time.
+                "Grade Band": [self.ctx.grade_band_id],
             }
             self._ensure(
                 table="Weekly Athlete Summary",
@@ -350,6 +357,78 @@ class SeasonSimWriter:
                 fields=fields,
                 step=step,
             )
+
+    def _denver_midday_iso(self, activity_date: date) -> str:
+        """Stable America/Denver midday for Zoom Start Time (no UTC date roll)."""
+        return f"{activity_date.isoformat()}T12:00:00-06:00"
+
+    def _ensure_sim_zoom_meetings(self) -> None:
+        """Create disposable Zoom Meetings aligned to sim weeks (not VERIFY 2026 rows).
+
+        Live → day 12 week; Recording → day 40 week. Both registered for cleanup.
+        """
+        day12 = next((d for d in self.scenario.days if d.day_number == 12), None)
+        day40 = next((d for d in self.scenario.days if d.day_number == 40), None)
+        if not day12 or not day40:
+            raise RuntimeError("Scenario missing day 12 / day 40 for Zoom meeting create")
+        week_live = self.ctx.week_for(day12.activity_date)
+        week_rec = self.ctx.week_for(day40.activity_date)
+        if not week_live or not week_rec:
+            raise RuntimeError(
+                f"No Week covering Zoom days "
+                f"(live={day12.activity_date}, rec={day40.activity_date})"
+            )
+
+        zm_fields = self.ctx.zoom_meeting_field_names or field_names_for_table(
+            self.client, "Zoom Meetings"
+        )
+
+        def _meeting_fields(*, name: str, activity: date, week_id: str) -> dict[str, Any]:
+            fields: dict[str, Any] = {
+                "Meeting Name": name,
+                "Week": [week_id],
+                "Start Time": self._denver_midday_iso(activity),
+                "Meeting Status": "Completed",
+                "Attendees": [],
+            }
+            # Optional Program Instance link when present on the table.
+            if "Program Instance" in zm_fields and self.ctx.program_instance_id:
+                fields["Program Instance"] = [self.ctx.program_instance_id]
+            return fields
+
+        live_id = self._ensure(
+            table="Zoom Meetings",
+            dedupe_key=f"{self.marker}|ZOOM_MEETING|LIVE",
+            fields=_meeting_fields(
+                name=f"{self.marker}|LIVE|D12",
+                activity=day12.activity_date,
+                week_id=week_live,
+            ),
+            step="zoom_meeting|live",
+        )
+        rec_id = self._ensure(
+            table="Zoom Meetings",
+            dedupe_key=f"{self.marker}|ZOOM_MEETING|REC",
+            fields=_meeting_fields(
+                name=f"{self.marker}|REC|D40",
+                activity=day40.activity_date,
+                week_id=week_rec,
+            ),
+            step="zoom_meeting|recorded",
+        )
+        self.ctx.zoom_live_meeting_id = live_id
+        self.ctx.zoom_recorded_meeting_id = rec_id
+        self.reg.meta["zoom_live_meeting_id"] = live_id
+        self.reg.meta["zoom_recorded_meeting_id"] = rec_id
+        self._save()
+
+    def _zoom_ids_for_day(self, day: Any) -> list[tuple[str, str]]:
+        """Return (meeting_id, mode) pairs for this sim day — always uses created meetings."""
+        if day.day_number == 12 and self.ctx.zoom_live_meeting_id:
+            return [(self.ctx.zoom_live_meeting_id, "live")]
+        if day.day_number == 40 and self.ctx.zoom_recorded_meeting_id:
+            return [(self.ctx.zoom_recorded_meeting_id, "recorded")]
+        return []
 
     def _create_day_loop(self, athlete_id: str, enrollment_id: str) -> None:
         for day in self.scenario.days:
@@ -397,7 +476,8 @@ class SeasonSimWriter:
             "Enrollment": [enrollment_id],
             "Athlete": [athlete_id],
             "Week": [week_id],
-            "Activity Date": self.clock.activity_datetime_iso(day.activity_date),
+            # Date-only — evening Denver datetimes shift +1 UTC day on Airtable date fields.
+            "Activity Date": activity_date_write_value(day.activity_date),
             "Shot Total": day.shot_total,
             "Duplicate Review Status": "Count It",
             "Daily Email Subject": f"{self.marker}|D{day.day_number:02d}",
@@ -436,26 +516,13 @@ class SeasonSimWriter:
                 day=day,
             )
 
-        for zid in day.zoom_meeting_ids:
-            mode = (day.meta.get("zoom_mode") if hasattr(day, "meta") else None) or ""
-            # DayPlan has no meta — encode mode via scenario zoom placement rules.
-            mode = self._zoom_mode_for_day(day.day_number, zid)
+        for zid, mode in self._zoom_ids_for_day(day):
             self._create_zoom_attendance(
                 enrollment_id=enrollment_id,
                 zoom_meeting_id=zid,
                 day_number=day.day_number,
                 mode=mode,
             )
-
-    def _zoom_mode_for_day(self, day_number: int, zoom_meeting_id: str) -> str:
-        if day_number == 12 or zoom_meeting_id == self.ctx.zoom_live_meeting_id:
-            return "live"
-        if day_number == 40 or zoom_meeting_id == self.ctx.zoom_recorded_meeting_id:
-            return "recorded"
-        # Default: first selected meeting live, second recorded.
-        if zoom_meeting_id == self.ctx.zoom_live_meeting_id:
-            return "live"
-        return "recorded"
 
     def _create_homework_bundle(
         self,
@@ -490,16 +557,26 @@ class SeasonSimWriter:
             asset_ids.append(aid)
 
         satisfactory = hw.get("outcome") == "Satisfactory" and hw.get("credit_eligible", True)
+        library_id = str(hw.get("library_id") or "").strip()
+        if not library_id:
+            raise RuntimeError(
+                f"Homework Completion for PHA {hw.get('pha_record_id')} missing "
+                "library_id (Homework Library link required for Automation 064)"
+            )
         hc_fields: dict[str, Any] = {
             "Enrollment": [enrollment_id],
             "Week": [week_id],
             "Program Homework Assignment": [hw["pha_record_id"]],
+            # Automation 064 requires Homework (library) + PHA; PHA alone is insufficient.
+            "Homework": [library_id],
             "Completion Status": hw.get("outcome") or "Submitted",
             "Satisfactory?": bool(satisfactory),
             "Review Complete": True,
             "Notes": self.marker,
             "Coach Feedback": f"{self.marker}|HW review",
             "Submissions - Linked": [submission_id],
+            # Date-only — same Activity Date as linked Submission (064 timing).
+            "Submission Date": activity_date_write_value(day.activity_date),
         }
         self._ensure(
             table="Homework Completions",
@@ -532,20 +609,83 @@ class SeasonSimWriter:
             fields=asset_fields,
             step=f"submission_asset|video|D{day.day_number:02d}",
         )
-        vf_fields = {
+        vf_fields: dict[str, Any] = {
             "Enrollment": [enrollment_id],
             "Submission": [submission_id],
             "Active?": True,
             "Award Status": "Pending",
             "Video Feedback Key": f"{self.marker}|VF|D{day.day_number:02d}|{asset_id}",
             "Coach Feedback": f"{self.marker}|video review",
+            # Feedback Posted? is armed in a separate update so 113/114
+            # recordUpdated triggers fire (create-only does not).
         }
-        self._ensure(
+        vf_names = self.ctx.video_feedback_field_names or field_names_for_table(
+            self.client, "Video Feedback"
+        )
+        if "Grade Band" in vf_names and self.ctx.grade_band_id:
+            vf_fields["Grade Band"] = [self.ctx.grade_band_id]
+        vf_id = self._ensure(
             table="Video Feedback",
             dedupe_key=f"{self.marker}|VF|D{day.day_number:02d}",
             fields=vf_fields,
             step=f"video_feedback|D{day.day_number:02d}",
         )
+        self._arm_video_feedback_update_trigger(vf_id, day_number=day.day_number)
+
+    def _arm_video_feedback_update_trigger(
+        self, vf_id: str, *, day_number: int
+    ) -> None:
+        """Post-create update so Automations 113/114 (recordUpdated) can run.
+
+        113 requires Feedback Posted?=true (and Coach Feedback, Active?, links).
+        113 then sets Base XP + Ready for XP Automation? so 114 can create the
+        XP Event. This harness never creates XP Events itself.
+        """
+        dedupe = f"{self.marker}|VF_ARM_POSTED|D{day_number:02d}"
+        done = set(self.reg.meta.get("completed_dedupe_keys") or [])
+        if dedupe in done or self.reg.has_dedupe_key(dedupe):
+            self.reused.append(
+                {
+                    "table": "Video Feedback",
+                    "id": vf_id,
+                    "dedupe_key": dedupe,
+                    "step": f"video_feedback_arm|D{day_number:02d}",
+                }
+            )
+            return
+        self.client.update_records(
+            "Video Feedback",
+            [
+                {
+                    "id": vf_id,
+                    "fields": {
+                        "Feedback Posted?": True,
+                        # Do not set Ready for XP Automation? — 113 owns that after Base XP.
+                    },
+                }
+            ],
+        )
+        self.reg.add(
+            "Video Feedback",
+            vf_id,
+            dedupe_key=dedupe,
+            notes="arm_feedback_posted_for_113_114",
+            fields_snapshot={"Feedback Posted?": True},
+        )
+        self.reg.meta.setdefault("completed_dedupe_keys", [])
+        if dedupe not in self.reg.meta["completed_dedupe_keys"]:
+            self.reg.meta["completed_dedupe_keys"].append(dedupe)
+        self.created.append(
+            {
+                "table": "Video Feedback",
+                "id": vf_id,
+                "dedupe_key": dedupe,
+                "step": f"video_feedback_arm|D{day_number:02d}",
+                "op": "update_feedback_posted",
+            }
+        )
+        self.reg.last_completed_step = f"video_feedback_arm|D{day_number:02d}"
+        self._save()
 
     def _create_zoom_attendance(
         self,
@@ -555,21 +695,30 @@ class SeasonSimWriter:
         day_number: int,
         mode: str,
     ) -> None:
+        za_names = self.ctx.zoom_attendance_field_names or field_names_for_table(
+            self.client, "Zoom Attendance"
+        )
         if mode == "live":
             # Live credit path uses Zoom Meetings.Attendees (patched later).
             # Still create a Live Zoom Attendance row for traceability.
-            fields = {
+            fields: dict[str, Any] = {
                 "Enrollment": [enrollment_id],
                 "Zoom Meeting": [zoom_meeting_id],
                 "Attendance Method": "Live",
             }
         else:
+            # Recording half-XP (101 SC-147): never add enrollment to Attendees.
+            # Stamp writable review fields so formula Zoom Credit Approved? /
+            # Pre-Approved evaluate true when EffectiveCoachApproval is required.
+            # (Approved / Pre-Approved themselves are formulas — never write them.)
             fields = {
                 "Enrollment": [enrollment_id],
                 "Zoom Meeting": [zoom_meeting_id],
                 "Attendance Method": "Recording Quiz",
                 "Recording Quiz Satisfactory?": True,
             }
+            if "Recording Quiz Review Status" in za_names:
+                fields["Recording Quiz Review Status"] = "Satisfactory"
         self._ensure(
             table="Zoom Attendance",
             dedupe_key=f"{self.marker}|ZOOM|{mode}|{zoom_meeting_id}|D{day_number:02d}",
@@ -609,13 +758,14 @@ class SeasonSimWriter:
             "Zoom Meetings",
             [{"id": live_id, "fields": {"Attendees": current}}],
         )
-        # Do not register Zoom Meetings for cleanup — reference/config table.
+        # Meeting itself is already registry-scoped via _ensure_sim_zoom_meetings.
         self.reg.meta.setdefault("zoom_attendees_patches", []).append(
             {
                 "meeting_id": live_id,
                 "enrollment_id": enrollment_id,
                 "attendees": current,
                 "dedupe_key": dedupe,
+                "sim_created": True,
             }
         )
         self.reg.meta.setdefault("completed_dedupe_keys", [])
@@ -708,6 +858,9 @@ def build_execute_context_from_reference(
     program_instance_id: str | None = None,
     goal_program_instance_ids: list[str] | None = None,
     submission_field_names: set[str] | None = None,
+    video_feedback_field_names: set[str] | None = None,
+    zoom_meeting_field_names: set[str] | None = None,
+    zoom_attendance_field_names: set[str] | None = None,
 ) -> ExecuteContext:
     assert_weeks_do_not_overlap(weeks)
     by_date, by_id, overlap_errors = build_week_date_index(weeks)
@@ -717,14 +870,8 @@ def build_execute_context_from_reference(
         weeks=weeks,
         goal_program_instance_ids=goal_program_instance_ids,
     )
-    zoom_live = ""
-    zoom_rec = ""
-    if scenario.zoom_selected:
-        zoom_live = scenario.zoom_selected[0]["record_id"]
-        if len(scenario.zoom_selected) > 1:
-            zoom_rec = scenario.zoom_selected[1]["record_id"]
-        else:
-            zoom_rec = zoom_live
+    # Zoom meeting IDs are filled by SeasonSimWriter._ensure_sim_zoom_meetings
+    # (disposable creates). Do not reuse misaligned VERIFY / reference meetings.
     return ExecuteContext(
         program_instance_id=pi,
         school_year=school_year or "2026-2027",
@@ -733,6 +880,9 @@ def build_execute_context_from_reference(
         weeks_by_id=by_id,
         week_id_by_date=by_date,
         submission_field_names=submission_field_names or set(),
-        zoom_live_meeting_id=zoom_live,
-        zoom_recorded_meeting_id=zoom_rec,
+        video_feedback_field_names=video_feedback_field_names or set(),
+        zoom_meeting_field_names=zoom_meeting_field_names or set(),
+        zoom_attendance_field_names=zoom_attendance_field_names or set(),
+        zoom_live_meeting_id="",
+        zoom_recorded_meeting_id="",
     )

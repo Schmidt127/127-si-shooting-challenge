@@ -1,6 +1,6 @@
 /**
  * Loads and executes the REAL Automation 010 script inside the mock environment.
- * Updated for v10.12 formula/link settlement grace.
+ * Updated for v10.13 Season Sim dual-gated clock (SC-SEASON-SIM-002).
  */
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -53,6 +53,9 @@ function submissionsFields() {
     { name: "Current Reconciliation Signature", type: "formula", isComputed: true },
     { name: "Last Reconciled Signature", type: "singleLineText" },
     { name: "Reconciliation Needed?", type: "formula", isComputed: true },
+    { name: "Season Sim Test Record?", type: "checkbox" },
+    { name: "Season Sim Clock Now", type: "dateTime" },
+    { name: "Video Upload Note", type: "multilineText" },
   ];
 }
 

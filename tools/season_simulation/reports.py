@@ -26,6 +26,7 @@ def write_markdown(path: Path, text: str) -> Path:
 
 def dry_run_markdown(payload: dict[str, Any]) -> str:
     summary = payload.get("intended_writes_summary") or {}
+    readiness = payload.get("write_readiness") or {}
     lines = [
         "# Season simulation dry-run",
         "",
@@ -41,6 +42,9 @@ def dry_run_markdown(payload: dict[str, Any]) -> str:
     ]
     for k, v in summary.items():
         lines.append(f"- {k}: {v}")
+    lines.extend(["", "## Write readiness (post date/HW/VF fixes)", ""])
+    for k, v in readiness.items():
+        lines.append(f"- {k}: `{v}`")
     lines.extend(["", "## Simulation clock", ""])
     clock = payload.get("simulation_clock") or {}
     for k, v in clock.items():

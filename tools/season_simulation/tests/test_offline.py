@@ -316,6 +316,46 @@ class TestClockOverride(unittest.TestCase):
         self.assertTrue(fields["Season Sim Test Record?"])
         self.assertIn("SEASON-SIM|", fields["Video Upload Note"])
         self.assertTrue(fields["Perfect Week Manual Exception?"])
+        self.assertEqual(fields["Season Sim Clock Now"], "2027-05-08")
+        self.assertEqual(
+            fields["Season Sim Test Submitted At"],
+            "2027-05-08T12:00:00-06:00",
+        )
+
+    def test_same_day_activity_not_future_under_gate(self):
+        from season_simulation.clock_override import (
+            activity_date_is_future_gated,
+            activity_date_write_value,
+            sim_submission_counts_under_gate,
+        )
+
+        self.assertEqual(activity_date_write_value(date(2027, 5, 1)), "2027-05-01")
+        d = activity_date_is_future_gated(
+            date(2027, 5, 1),
+            wall_now=datetime(2026, 9, 2, 12, 0, 0),
+            season_sim_test_record=True,
+            video_upload_note="SEASON-SIM|SEASON-SIM-2027-x",
+            season_sim_clock_now=date(2027, 5, 1),
+        )
+        self.assertFalse(d.is_future)
+        self.assertTrue(d.counts_for_submission)
+        self.assertTrue(
+            sim_submission_counts_under_gate(
+                activity_date=date(2027, 5, 1),
+                season_sim_clock_now=date(2027, 5, 1),
+                run_marker="SEASON-SIM|SEASON-SIM-2027-x",
+            )
+        )
+        # Ordinary (non-gated) records still use NOW() — May 2027 is future in 2026.
+        ordinary = activity_date_is_future_gated(
+            date(2027, 5, 1),
+            wall_now=datetime(2026, 9, 2, 12, 0, 0),
+            season_sim_test_record=False,
+            video_upload_note="",
+            season_sim_clock_now=date(2027, 5, 1),
+        )
+        self.assertTrue(ordinary.is_future)
+        self.assertFalse(ordinary.counts_for_submission)
 
 
 class TestSeasonPolicy(unittest.TestCase):

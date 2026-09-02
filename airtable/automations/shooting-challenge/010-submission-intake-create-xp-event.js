@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-21
-Last GitHub Update: 2026-08-22
+Last GitHub Update: 2026-09-02
 
 Purpose:
 Reconcile one Submission's canonical Submission Base XP Event.
@@ -31,9 +31,15 @@ ownership cannot be proven.
  * 010 - SUBMISSION INTAKE AND ASSET CREATION
  * Create/Reconcile Submission Base XP Event
  *
- * Version: v10.12
+ * Version: v10.13
  * Date Written: 2026-06-06
- * Last Updated: 2026-08-22
+ * Last Updated: 2026-09-02
+ *
+ * Version v10.13 updates (SC-SEASON-SIM-002 gated sim clock):
+ * - Dual-gated Season Simulation path: when Season Sim Test Record? is checked
+ *   AND Video Upload Note contains SEASON-SIM|, Activity Date eligibility uses
+ *   Season Sim Clock Now as "today" instead of wall-clock America/Denver today.
+ * - Ordinary (non-sim) Submissions keep exact prior wall-clock future-date rules.
  *
  * Version v10.12 updates (formula/link settlement grace):
  * - Temporary not-ready states (unsettled Enrollment, Week, WAS, Count This
@@ -48,6 +54,8 @@ ownership cannot be proven.
  * - Deactivate or reactivate only the exact owned Submission XP Event.
  * - Ignore unrelated XP families (for example HOMEWORK_XP) that may also link
  *   to the same source Submission.
+ * - Support disposable Season Simulation rows (SC-SEASON-SIM-002) via a dual gate
+ *   that never weakens future-date protection for ordinary athletes.
  *
  * IMPORTANT DESIGN RULES
  * - Source Key is exactly SUBMISSION_XP|{Submission Record ID}.
@@ -56,6 +64,10 @@ ownership cannot be proven.
  * - Zero/multiple Submission Base candidates, duplicate canonical keys, conflicting
  *   canonical/legacy Submission Base pairs, wrong ownership, future dates,
  *   formula lag, and partial writes fail closed.
+ * - Future Activity Date uses wall-clock todayKey() unless BOTH Season Sim Test
+ *   Record? = true AND Video Upload Note contains SEASON-SIM|; then compare
+ *   against Season Sim Clock Now (date key). Missing clock on a gated row falls
+ *   back to wall-clock today (fail closed for unset clocks).
  * - Airtable has no atomic uniqueness; the final recheck is mandatory.
  * - Last Reconciled Signature is written only after the expected Active? state
  *   is visible and Reconciliation Needed? rereads as 0.
@@ -120,10 +132,10 @@ ownership cannot be proven.
 
 const SCRIPT = {
   scriptName: "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
-  version: "v10.12",
-  versionDate: "2026-08-22",
+  version: "v10.13",
+  versionDate: "2026-09-02",
   originalWrittenDate: "2026-06-06",
-  lastUpdated: "2026-08-22",
+  lastUpdated: "2026-09-02",
   folder: "01 - Submission Intake and Asset Creation",
   automationName: "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
 };
@@ -156,6 +168,10 @@ const CONFIG = {
     currentSignature: "Current Reconciliation Signature",
     lastSignature: "Last Reconciled Signature",
     needed: "Reconciliation Needed?",
+    // SC-SEASON-SIM-002 dual gate (optional fields; missing = non-sim path).
+    seasonSimTestRecord: "Season Sim Test Record?",
+    seasonSimClockNow: "Season Sim Clock Now",
+    videoUploadNote: "Video Upload Note",
   },
   enrollments: {
     active: "Active?",
@@ -393,6 +409,29 @@ function dateKey(value) {
 
 function todayKey() {
   return dateKeyFromDateObject(new Date(), CONFIG.timeZone);
+}
+
+/**
+ * SC-SEASON-SIM-002 dual gate. Both must be true for the sim clock path:
+ * 1) Season Sim Test Record? checked
+ * 2) Video Upload Note contains SEASON-SIM|
+ */
+function isSeasonSimRecord(submission) {
+  if (!booleanish(submission, submissionsTable, CONFIG.submissions.seasonSimTestRecord)) {
+    return false;
+  }
+  const note = text(submission, submissionsTable, CONFIG.submissions.videoUploadNote);
+  return note.includes("SEASON-SIM|");
+}
+
+/**
+ * "Today" for Activity Date eligibility. Ordinary rows: wall-clock Denver.
+ * Dual-gated sim rows: Season Sim Clock Now date key (fallback wall-clock if blank).
+ */
+function effectiveTodayKey(submission) {
+  if (!isSeasonSimRecord(submission)) return todayKey();
+  const clockKey = dateKey(raw(submission, submissionsTable, CONFIG.submissions.seasonSimClockNow));
+  return clockKey || todayKey();
 }
 
 function collectEligibilityFailures({
@@ -876,7 +915,8 @@ async function main() {
     const activityDate = dateKey(raw(submission, submissionsTable, CONFIG.submissions.activityDate));
     const weekStartKey = week ? dateKey(raw(week, weeksTable, CONFIG.weeks.startDate)) : "";
     const weekEndKey = week ? dateKey(raw(week, weeksTable, CONFIG.weeks.endDate)) : "";
-    const today = todayKey();
+    // Dual-gated sim rows compare Activity Date to Season Sim Clock Now; else wall-clock.
+    const today = effectiveTodayKey(submission);
     const eligible = Boolean(
       enrollment && week && enrollmentIds.length === 1 && weekIds.length === 1
       && wasCandidates.length === 1 && wasIds.length <= 1 && wasId

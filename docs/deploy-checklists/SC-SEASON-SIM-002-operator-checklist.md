@@ -331,9 +331,40 @@ Re-run the same `execute` command with the **same** `--run-id` (registry dedupe 
 
 Disposable graph tagged `SEASON-SIM|<run_id>`:
 
-Athlete → Enrollment (Program Instance + **2026–2027** School Year + Grade 12 / 9–12) → WAS per window week → **58** Submissions (gates + Count It) → Assets / Homework Completions (**18** existing PHAs) / Video Feedback → disposable Live + Recording Zoom Meetings → Zoom Attendance (live Attendees only; recording never on Meeting.Attendees).
+Athlete → Enrollment (Program Instance + **2026–2027** School Year + Grade 12 / 9–12) → WAS per window week (**Enrollment + Week + Grade Band + Goal Record** at create) → **58** Submissions (gates + Count It) → Assets / Homework Completions (**18** PHAs + **`Submission Date`**) / Video Feedback (Feedback Posted? arm) → **disposable** Live + Recording Zoom Meetings (2027-aligned; registry-cleaned) → Zoom Attendance (live Attendees only; recording Satisfactory + never on Meeting.Attendees).
 
 Harness does **not** create XP Events, Unlocks, Streaks, or Levels — those come from live automations.
+
+### First-run failure (`…T171918Z`) — why / fixed
+
+| Failure | Cause | Fix |
+|---------|--------|-----|
+| Submission / Video XP | 010/114 wall-clock `today` rejected 2027 Activity Dates; 010 latched reconcile without XP | Paste **010 v10.13** / **114 v6.2** Season Sim dual gate |
+| Homework XP | Writer omitted `Submission Date` | Writer sets date-only from Activity Date |
+| Perfect Week Grade Band=0 | WAS created without Grade Band; 030 raced 057 | Writer sets Grade Band at create |
+| Zoom XP stuck | Reused VERIFY 2026 meetings | Writer creates disposable 2027 meetings |
+| Hub email 422 | `schmidt@fairfieldbasketballclub.com` not on Hub Test Allowlist | Allowlist row added (`recLxwQnjM6gpfVc9`); do not send until next authorized execute |
+
+Cleanup: [`SC-SEASON-SIM-002-failed-run-cleanup-20260902T171918Z.md`](./SC-SEASON-SIM-002-failed-run-cleanup-20260902T171918Z.md) **COMPLETE**.
+
+### Required Airtable paste before next execute
+
+1. Keep temporary Season Sim **formulas** active (Activity Date Is Future? / Submitted Same Day? / Perfect Week Grace as already pasted).
+2. Paste automations per [`SC-SEASON-SIM-002-automation-paste-010-114.md`](./SC-SEASON-SIM-002-automation-paste-010-114.md): **010 v10.13**, **114 v6.2**, **073 v4.6** (docblock through EOF; skip GitHub header).
+3. Confirm Hub Test Allowlist active for `schmidt@fairfieldbasketballclub.com`.
+4. New `--simulation-id` only (do not reuse cleaned run IDs).
+
+### Cascade checkpoints (distinguish statuses)
+
+| Status | Meaning |
+|--------|---------|
+| Record creation complete | Execute writer `complete`; registry counts match |
+| Automation processing complete | Triggers fired; no stuck Pending where Ready=1 for >15–30 min |
+| XP processing complete | Submission Base / Homework / Video / Zoom Source Keys present |
+| Email processing complete | Handoff → Hub Accepted/Sent (allowlist only) if `--enable-email-delivery` |
+| Final validation complete | Streaks/unlocks/levels/WAS/Perfect Week reviewed |
+
+Poll **010 / 064→065 / 113→114 / 101 / 053→054 / 057 / 076→079**. Optional: pause Automation **056** during the run window (wall-clock yesterday refresh can zero 2027 streaks).
 
 ---
 

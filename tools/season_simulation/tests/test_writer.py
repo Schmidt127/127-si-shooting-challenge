@@ -6,7 +6,7 @@ from __future__ import annotations
 import sys
 import tempfile
 import unittest
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 PACKAGE_PARENT = Path(__file__).resolve().parents[2]
@@ -21,7 +21,15 @@ from season_simulation.constants import (  # noqa: E402
 )
 from season_simulation.cleanup import build_cleanup_plan, run_cleanup  # noqa: E402
 from season_simulation.cli import cmd_evidence  # noqa: E402
-from season_simulation.execute import build_intended_writes, run_execute  # noqa: E402
+from season_simulation.execute import (  # noqa: E402
+    build_intended_writes,
+    run_execute,
+    summarize_intended_write_readiness,
+)
+from season_simulation.clock_override import (  # noqa: E402
+    activity_date_is_future_gated,
+    activity_date_write_value,
+)
 from season_simulation.memory_client import MemoryAirtableClient  # noqa: E402
 from season_simulation.recipient_safety import assert_safe_recipient  # noqa: E402
 from season_simulation.run_registry import (  # noqa: E402
@@ -77,7 +85,11 @@ def _scenario(run_id: str):
         goal_record_id="recGOAL12000",
         goal_total_shots=12000,
         homework=[
-            {"record_id": f"recHW{i:02d}", "slot": "HW1" if i % 2 else "HW2"}
+            {
+                "record_id": f"recHW{i:02d}",
+                "slot": "HW1" if i % 2 else "HW2",
+                "library_id": f"recLIB{i:02d}",
+            }
             for i in range(1, 19)
         ],
         zoom_meetings=[
@@ -98,16 +110,6 @@ class TestWriterFullCreate(unittest.TestCase):
             enabled=True, current_date=SIM_START, run_id=self.run_id
         )
         self.client = MemoryAirtableClient(allow_writes=True)
-        self.client.seed(
-            "Zoom Meetings",
-            "recZOOMLive",
-            {"Meeting Name": "Live", "Attendees": []},
-        )
-        self.client.seed(
-            "Zoom Meetings",
-            "recZOOMRec",
-            {"Meeting Name": "Recorded", "Attendees": []},
-        )
         self.ctx = build_execute_context_from_reference(
             scenario=self.scenario,
             weeks=_weeks_covering_window(),
@@ -118,6 +120,32 @@ class TestWriterFullCreate(unittest.TestCase):
                 "Season Sim Test Submitted At",
                 "Video Upload Note",
                 "Perfect Week Manual Exception?",
+            },
+            video_feedback_field_names={
+                "Enrollment",
+                "Submission",
+                "Active?",
+                "Award Status",
+                "Video Feedback Key",
+                "Coach Feedback",
+                "Feedback Posted?",
+                "Ready for XP Automation?",
+                "Grade Band",
+            },
+            zoom_meeting_field_names={
+                "Meeting Name",
+                "Week",
+                "Start Time",
+                "Meeting Status",
+                "Attendees",
+                "Program Instance",
+            },
+            zoom_attendance_field_names={
+                "Enrollment",
+                "Zoom Meeting",
+                "Attendance Method",
+                "Recording Quiz Satisfactory?",
+                "Recording Quiz Review Status",
             },
         )
 
@@ -154,33 +182,112 @@ class TestWriterFullCreate(unittest.TestCase):
         self.assertEqual(ef["Parent Email"], SAFE_EMAIL_RECIPIENT)
 
         subs = list(self.client.tables.get("Submissions", {}).values())
-        self.assertGreaterEqual(len(subs), 50)  # 61 - 3 misses
+        self.assertEqual(len(subs), 58)  # 61 - 3 misses
         sample = subs[0]["fields"]
         self.assertEqual(sample["Duplicate Review Status"], "Count It")
-        self.assertIn("2027-", sample["Activity Date"])
+        # Date-only write — no evening timezone that shifts UTC calendar day.
+        self.assertRegex(str(sample["Activity Date"]), r"^2027-\d{2}-\d{2}$")
+        self.assertNotIn("T", str(sample["Activity Date"]))
         self.assertTrue(sample.get("Season Sim Test Record?"))
         self.assertIn("SEASON-SIM|", sample.get("Video Upload Note", ""))
         self.assertEqual(sample["Enrollment"], [result.registry.enrollment_id])
         self.assertTrue(sample.get("Week"))
+        clock_now = str(sample.get("Season Sim Clock Now") or "")
+        self.assertRegex(clock_now, r"^2027-\d{2}-\d{2}$")
 
         was = list(self.client.tables.get("Weekly Athlete Summary", {}).values())
         self.assertGreaterEqual(len(was), 8)
         self.assertEqual(was[0]["fields"]["Goal Record"], ["recGOAL12000"])
+        for row in was:
+            self.assertEqual(
+                row["fields"].get("Grade Band"),
+                ["recBAND12"],
+                row["id"],
+            )
 
         hc = list(self.client.tables.get("Homework Completions", {}).values())
-        self.assertTrue(hc)
-        self.assertIn("Program Homework Assignment", hc[0]["fields"])
+        self.assertEqual(len(hc), 18)
+        pha_ids = set()
+        for row in hc:
+            fields = row["fields"]
+            self.assertTrue(fields.get("Program Homework Assignment"), row["id"])
+            self.assertTrue(fields.get("Homework"), row["id"])
+            self.assertEqual(len(fields["Homework"]), 1)
+            self.assertRegex(str(fields.get("Submission Date") or ""), r"^2027-\d{2}-\d{2}$")
+            self.assertNotIn("T", str(fields.get("Submission Date") or ""))
+            self.assertTrue(fields.get("Enrollment"))
+            self.assertTrue(fields.get("Week"))
+            self.assertTrue(fields.get("Submissions - Linked"))
+            pha_ids.update(fields["Program Homework Assignment"])
+        self.assertEqual(len(pha_ids), 18)
 
         vf = list(self.client.tables.get("Video Feedback", {}).values())
         self.assertEqual(len(vf), 4)  # VIDEO_FEEDBACK_DAYS
+        for row in vf:
+            self.assertTrue(row["fields"].get("Feedback Posted?"), row["id"])
+            self.assertTrue(row["fields"].get("Coach Feedback"))
+            self.assertEqual(row["fields"].get("Grade Band"), ["recBAND12"])
+            # Ready for XP is owned by Automation 113 after Base XP — not pre-set.
+            self.assertFalse(row["fields"].get("Ready for XP Automation?"))
+        # Four create + four Feedback Posted? arm updates tracked in registry.
+        vf_arms = [
+            r
+            for r in result.created
+            if r.get("table") == "Video Feedback" and r.get("op") == "update_feedback_posted"
+        ]
+        self.assertEqual(len(vf_arms), 4)
 
         assets = list(self.client.tables.get("Submission Assets", {}).values())
         self.assertTrue(any(a["fields"].get("Asset Purpose") == "Video For Feedback" for a in assets))
         self.assertTrue(any(a["fields"].get("Asset Purpose") == "Homework 1" for a in assets))
 
+    def test_all_submissions_countable_under_gate(self):
+        result = self._writer().run()
+        self.assertEqual(result.status, "complete")
+        for sub in self.client.tables.get("Submissions", {}).values():
+            f = sub["fields"]
+            activity = date.fromisoformat(str(f["Activity Date"])[:10])
+            clock_now = date.fromisoformat(str(f["Season Sim Clock Now"])[:10])
+            decision = activity_date_is_future_gated(
+                activity,
+                wall_now=datetime(2026, 9, 2, 12, 0, 0),
+                season_sim_test_record=True,
+                video_upload_note=f.get("Video Upload Note"),
+                season_sim_clock_now=clock_now,
+            )
+            self.assertTrue(
+                decision.counts_for_submission,
+                f"{sub['id']} activity={activity} clock={clock_now} future={decision.is_future}",
+            )
+            self.assertFalse(decision.is_future)
+
+    def test_intended_writes_readiness(self):
+        writes = build_intended_writes(self.scenario, self.clock, ctx=self.ctx)
+        readiness = summarize_intended_write_readiness(writes)
+        self.assertEqual(readiness["submission_creates"], 58)
+        self.assertTrue(readiness["all_submissions_countable"])
+        self.assertEqual(readiness["homework_completions"], 18)
+        self.assertTrue(readiness["all_homework_dual_linked"])
+        self.assertTrue(readiness["video_update_triggers_planned"])
+        self.assertEqual(readiness["video_feedback_creates"], 4)
+        for w in writes:
+            if w.get("table") == "Submissions" and w.get("op") == "create":
+                self.assertEqual(
+                    w["fields"]["Activity Date"],
+                    activity_date_write_value(
+                        date.fromisoformat(w["fields"]["Activity Date"])
+                    ),
+                )
+
     def test_live_versus_recorded_zoom(self):
         result = self._writer().run()
         self.assertEqual(result.status, "complete")
+        live_id = result.registry.meta.get("zoom_live_meeting_id")
+        rec_id = result.registry.meta.get("zoom_recorded_meeting_id")
+        self.assertTrue(live_id and live_id.startswith("rec"))
+        self.assertTrue(rec_id and rec_id.startswith("rec"))
+        self.assertNotEqual(live_id, rec_id)
+
         za = list(self.client.tables.get("Zoom Attendance", {}).values())
         methods = {z["fields"].get("Attendance Method") for z in za}
         self.assertIn("Live", methods)
@@ -188,19 +295,38 @@ class TestWriterFullCreate(unittest.TestCase):
         recorded = [
             z for z in za if z["fields"].get("Attendance Method") == "Recording Quiz"
         ]
-        self.assertTrue(all(z["fields"].get("Recording Quiz Satisfactory?") for z in recorded))
+        self.assertEqual(len(recorded), 1)
+        self.assertTrue(recorded[0]["fields"].get("Recording Quiz Satisfactory?"))
+        self.assertEqual(
+            recorded[0]["fields"].get("Recording Quiz Review Status"), "Satisfactory"
+        )
+        self.assertEqual(recorded[0]["fields"].get("Zoom Meeting"), [rec_id])
+        # Expected 101 SC-147 source key pattern (automation creates XP; harness does not).
+        expected_key = f"ZOOM_RECORDING_CREDIT|{result.registry.enrollment_id}|{rec_id}"
+        self.assertRegex(expected_key, r"^ZOOM_RECORDING_CREDIT\|rec.+\|rec.+$")
 
-        live_meeting = self.client.get_record("Zoom Meetings", "recZOOMLive")
+        live_meeting = self.client.get_record("Zoom Meetings", live_id)
+        lf = live_meeting["fields"]
+        self.assertEqual(lf.get("Meeting Status"), "Completed")
+        self.assertTrue(str(lf.get("Start Time") or "").startswith("2027-"))
+        self.assertTrue(lf.get("Week"))
         self.assertIn(
             result.registry.enrollment_id,
-            live_meeting["fields"].get("Attendees") or [],
+            lf.get("Attendees") or [],
         )
         # Recorded meeting must NOT gain Attendees via live path
-        rec_meeting = self.client.get_record("Zoom Meetings", "recZOOMRec")
+        rec_meeting = self.client.get_record("Zoom Meetings", rec_id)
+        rf = rec_meeting["fields"]
+        self.assertEqual(rf.get("Meeting Status"), "Completed")
+        self.assertTrue(str(rf.get("Start Time") or "").startswith("2027-"))
         self.assertNotIn(
             result.registry.enrollment_id,
-            rec_meeting["fields"].get("Attendees") or [],
+            rf.get("Attendees") or [],
         )
+        # Registry-scoped for cleanup
+        reg_zoom = result.registry.ids_by_table().get("Zoom Meetings") or []
+        self.assertIn(live_id, reg_zoom)
+        self.assertIn(rec_id, reg_zoom)
 
     def test_idempotent_retry_does_not_duplicate(self):
         w1 = self._writer()
@@ -215,6 +341,8 @@ class TestWriterFullCreate(unittest.TestCase):
                 "Homework Completions",
                 "Video Feedback",
                 "Zoom Attendance",
+                "Zoom Meetings",
+                "Weekly Athlete Summary",
             )
         }
         reg = load_registry(self.registry_dir, self.run_id)
@@ -239,8 +367,6 @@ class TestWriterFullCreate(unittest.TestCase):
                 return super().create_records(table, records)
 
         flaky = Flaky(allow_writes=True)
-        flaky.seed("Zoom Meetings", "recZOOMLive", {"Attendees": []})
-        flaky.seed("Zoom Meetings", "recZOOMRec", {"Attendees": []})
         self.client = flaky
         paused = self._writer().run()
         self.assertEqual(paused.status, "paused")
@@ -269,13 +395,24 @@ class TestWriterFullCreate(unittest.TestCase):
 
     def test_cleanup_scoping_registry_only(self):
         result = self._writer().run()
-        # Seed an unrelated athlete that must not be cleaned
+        live_id = result.registry.meta.get("zoom_live_meeting_id")
+        rec_id = result.registry.meta.get("zoom_recorded_meeting_id")
+        # Seed an unrelated athlete + VERIFY-style meeting that must not be cleaned
         self.client.seed("Athletes", "recREALATHLETE", {"First Name": "Real"})
+        self.client.seed(
+            "Zoom Meetings",
+            "recVERIFYZOOM",
+            {"Meeting Name": "VERIFY 2026", "Attendees": [result.registry.enrollment_id]},
+        )
         plan = build_cleanup_plan(run_id=self.run_id, registry_dir=self.registry_dir)
         all_ids = {rid for ids in plan.targets.values() for rid in ids}
         self.assertIn(result.registry.athlete_id, all_ids)
         self.assertNotIn("recREALATHLETE", all_ids)
-        self.assertTrue(plan.attendees_patches)
+        self.assertIn(live_id, plan.targets.get("Zoom Meetings") or [])
+        self.assertIn(rec_id, plan.targets.get("Zoom Meetings") or [])
+        self.assertNotIn("recVERIFYZOOM", plan.targets.get("Zoom Meetings") or [])
+        # Sim-created meetings: Attendees reverse skipped (delete instead)
+        self.assertFalse(plan.attendees_patches)
 
         cleanup = run_cleanup(
             run_id=self.run_id,
@@ -289,14 +426,14 @@ class TestWriterFullCreate(unittest.TestCase):
         )
         self.assertFalse(cleanup.errors)
         self.assertIn("Athletes", cleanup.deleted)
-        # Real athlete remains
+        self.assertIn("Zoom Meetings", cleanup.deleted)
+        self.assertIn(live_id, cleanup.deleted["Zoom Meetings"])
+        self.assertIn(rec_id, cleanup.deleted["Zoom Meetings"])
+        # Real athlete + VERIFY meeting remain
         self.assertIn("recREALATHLETE", self.client.tables["Athletes"])
-        # Live attendees reversed
-        live = self.client.get_record("Zoom Meetings", "recZOOMLive")
-        self.assertNotIn(
-            result.registry.enrollment_id,
-            live["fields"].get("Attendees") or [],
-        )
+        self.assertIn("recVERIFYZOOM", self.client.tables["Zoom Meetings"])
+        self.assertNotIn(live_id, self.client.tables.get("Zoom Meetings") or {})
+        self.assertNotIn(rec_id, self.client.tables.get("Zoom Meetings") or {})
 
     def test_evidence_export(self):
         out = Path(self.tmp.name) / "reports"

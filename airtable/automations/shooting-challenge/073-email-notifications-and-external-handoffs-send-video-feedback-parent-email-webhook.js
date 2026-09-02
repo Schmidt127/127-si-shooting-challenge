@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-17
-Last GitHub Update: 2026-08-20 (v4.2 V2 standard structure)
+Last GitHub Update: 2026-09-02 (v4.6 Season Sim Activity Date gate)
 
 Purpose:
 Validate one Video Feedback record ready for parent email and create exactly
@@ -31,11 +31,16 @@ Filename may still say webhook; current path is Hub queue create only.
  * 073 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Create Video Feedback Communications Hub Handoff
  *
- * Version: v4.5
+ * Version: v4.6
  * Date Written: 2026-06-17
- * Last Updated: 2026-09-01
+ * Last Updated: 2026-09-02
  *
  * VERSION HISTORY
+ * - v4.6 (2026-09-02): SC-SEASON-SIM-002 dual gate — when linked Submission is a
+ *   Season Sim test record (checkbox + SEASON-SIM| in Video Upload Note), compare
+ *   Activity Date to Season Sim Clock Now instead of wall-clock today so future
+ *   sim dates do not block Hub handoff creation. Does not send email; ordinary
+ *   non-sim future-date rejection unchanged.
  * - v4.5 (2026-09-01): Hub payload includes Custom Video File Name for Communications
  *   template display precedence (custom → Video Asset File Name → "Video submission");
  *   preserves originalFileName for audit/backward compatibility.
@@ -65,6 +70,8 @@ Filename may still say webhook; current path is Hub queue create only.
  * - Do not read Reviewer File URL, Canonical File URL, or any Google Drive File/Folder ID/URL/Name.
  * - Missing/invalid/unsafe VF video URL → error (no asset-field fallback; Lambda only).
  * - Enrollment Parent Email - Cleaned is the authoritative recipient (076 Hub pattern).
+ * - Future Activity Date blocks handoff unless dual Season Sim gate is open; then
+ *   Season Sim Clock Now is "today". Missing clock falls back to wall-clock.
  *
  * THIS IS NOT
  * - Video Feedback create/link (013).
@@ -123,10 +130,10 @@ Filename may still say webhook; current path is Hub queue create only.
 
 const SCRIPT = {
   scriptName: "073 - Email, Notifications, and External Handoffs - Create Video Feedback Communications Hub Handoff",
-  version: "v4.5",
-  versionDate: "2026-08-24",
+  version: "v4.6",
+  versionDate: "2026-09-02",
   originalWrittenDate: "2026-06-17",
-  lastUpdated: "2026-08-24",
+  lastUpdated: "2026-09-02",
   folder: "07 - Email, Notifications, and External Handoffs",
   automationName: "073 - Email, Notifications, and External Handoffs - Create Video Feedback Communications Hub Handoff",
 };
@@ -206,6 +213,9 @@ const CONFIG = {
       countable: "Count This Submission?",
       videoUpload: "Video Upload",
       note: "Video Upload Note",
+      // SC-SEASON-SIM-002 dual gate (optional; missing = non-sim path).
+      seasonSimTestRecord: "Season Sim Test Record?",
+      seasonSimClockNow: "Season Sim Clock Now",
     },
     asset: {
       submission: "Submission - Linked",
@@ -363,6 +373,30 @@ function denverDateKey(value) {
 
 function todayDenverKey() {
   return denverDateKey(new Date());
+}
+
+/**
+ * SC-SEASON-SIM-002 dual gate on the linked Submission.
+ * Both required: Season Sim Test Record? AND Video Upload Note contains SEASON-SIM|.
+ */
+function isSeasonSimRecord(submission, table) {
+  if (!checked(submission, table, CONFIG.fields.sub.seasonSimTestRecord)) {
+    return false;
+  }
+  const note = getText(submission, table, CONFIG.fields.sub.note);
+  return note.includes("SEASON-SIM|");
+}
+
+/**
+ * "Today" for Activity Date future checks. Ordinary: wall-clock Denver.
+ * Dual-gated sim: Season Sim Clock Now (fallback wall-clock if blank).
+ */
+function effectiveTodayDenverKey(submission, table) {
+  if (!isSeasonSimRecord(submission, table)) return todayDenverKey();
+  const clockKey = denverDateKey(
+    getRaw(submission, table, CONFIG.fields.sub.seasonSimClockNow)
+  );
+  return clockKey || todayDenverKey();
 }
 
 function dateText(value) {
@@ -577,7 +611,7 @@ async function main() {
   }
   const activityDate = getRaw(submission, submissionsTable, CONFIG.fields.sub.activityDate);
   if (!parseDate(activityDate)) throw new Error("Submission Activity Date is missing/invalid.");
-  if (denverDateKey(activityDate) > todayDenverKey()) {
+  if (denverDateKey(activityDate) > effectiveTodayDenverKey(submission, submissionsTable)) {
     throw new Error("Submission Activity Date is in the future. Handoff blocked.");
   }
 

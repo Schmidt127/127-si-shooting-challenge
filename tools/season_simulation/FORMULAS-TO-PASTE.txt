@@ -1,0 +1,201 @@
+1. Submitted Same Day? — TEMPORARY
+
+IF(
+  AND(
+    {Season Sim Test Record?},
+    FIND("SEASON-SIM|", {Video Upload Note} & "") > 0,
+    {Season Sim Test Submitted At},
+    {Activity Date}
+  ),
+  IF(
+    DATETIME_FORMAT(
+      SET_TIMEZONE({Season Sim Test Submitted At}, "America/Denver"),
+      "YYYY-MM-DD"
+    )
+    =
+    DATETIME_FORMAT(
+      SET_TIMEZONE({Activity Date}, "UTC"),
+      "YYYY-MM-DD"
+    ),
+    1,
+    0
+  ),
+  IF(
+    AND(
+      {Submitted At},
+      {Activity Date}
+    ),
+    IF(
+      DATETIME_FORMAT(
+        SET_TIMEZONE({Submitted At}, "America/Denver"),
+        "YYYY-MM-DD"
+      )
+      =
+      DATETIME_FORMAT(
+        SET_TIMEZONE({Activity Date}, "UTC"),
+        "YYYY-MM-DD"
+      ),
+      1,
+      0
+    ),
+    0
+  )
+)
+
+2. Perfect Week Grace Eligible? — TEMPORARY
+
+IF(
+  OR(
+    {Perfect Week Manual Exception?},
+    AND(
+      {Season Sim Test Record?},
+      FIND("SEASON-SIM|", {Video Upload Note} & "") > 0,
+      {Count This Submission?} = 1,
+      {Activity Date},
+      {Season Sim Test Submitted At},
+      {Season Sim Clock Now},
+      DATETIME_FORMAT(
+        SET_TIMEZONE({Activity Date}, "America/Denver"),
+        "YYYY-MM-DD"
+      ) <= DATETIME_FORMAT(
+        SET_TIMEZONE({Season Sim Clock Now}, "America/Denver"),
+        "YYYY-MM-DD"
+      ),
+      DATETIME_DIFF(
+        {Season Sim Test Submitted At},
+        DATETIME_PARSE(
+          DATETIME_FORMAT(
+            DATEADD(
+              DATETIME_PARSE(
+                DATETIME_FORMAT(
+                  SET_TIMEZONE({Activity Date}, "America/Denver"),
+                  "YYYY-MM-DD"
+                ),
+                "YYYY-MM-DD"
+              ),
+              1,
+              "days"
+            ),
+            "YYYY-MM-DD"
+          ) & " 00:00",
+          "YYYY-MM-DD HH\:mm"
+        ),
+        "hours"
+      ) <= 48
+    ),
+    AND(
+      {Count This Submission?} = 1,
+      {Activity Date},
+      {Submitted At},
+      DATETIME_FORMAT(
+        SET_TIMEZONE({Activity Date}, "America/Denver"),
+        "YYYY-MM-DD"
+      ) <= DATETIME_FORMAT(TODAY(), "YYYY-MM-DD"),
+      DATETIME_DIFF(
+        {Submitted At},
+        DATETIME_PARSE(
+          DATETIME_FORMAT(
+            DATEADD(
+              DATETIME_PARSE(
+                DATETIME_FORMAT(
+                  SET_TIMEZONE({Activity Date}, "America/Denver"),
+                  "YYYY-MM-DD"
+                ),
+                "YYYY-MM-DD"
+              ),
+              1,
+              "days"
+            ),
+            "YYYY-MM-DD"
+          ) & " 00:00",
+          "YYYY-MM-DD HH\:mm"
+        ),
+        "hours"
+      ) <= 48
+    )
+  ),
+  1,
+  0
+)
+
+3. Submitted Same Day? — ROLLBACK
+
+IF(
+  AND(
+    {Submitted At},
+    {Activity Date}
+  ),
+  IF(
+    DATETIME_FORMAT(
+      SET_TIMEZONE({Submitted At}, "America/Denver"),
+      "YYYY-MM-DD"
+    )
+    =
+    DATETIME_FORMAT(
+      SET_TIMEZONE({Activity Date}, "UTC"),
+      "YYYY-MM-DD"
+    ),
+    1,
+    0
+  ),
+  0
+)
+
+4. Perfect Week Grace Eligible? — ROLLBACK
+
+IF(
+  OR(
+    {Perfect Week Manual Exception?},
+    AND(
+      {Count This Submission?} = 1,
+      {Activity Date},
+      {Submitted At},
+      DATETIME_FORMAT(
+        SET_TIMEZONE({Activity Date}, "America/Denver"),
+        "YYYY-MM-DD"
+      ) <= DATETIME_FORMAT(TODAY(), "YYYY-MM-DD"),
+      DATETIME_DIFF(
+        {Submitted At},
+        DATETIME_PARSE(
+          DATETIME_FORMAT(
+            DATEADD(
+              DATETIME_PARSE(
+                DATETIME_FORMAT(
+                  SET_TIMEZONE({Activity Date}, "America/Denver"),
+                  "YYYY-MM-DD"
+                ),
+                "YYYY-MM-DD"
+              ),
+              1,
+              "days"
+            ),
+            "YYYY-MM-DD"
+          ) & " 00:00",
+          "YYYY-MM-DD HH\:mm"
+        ),
+        "hours"
+      ) <= 48
+    )
+  ),
+  1,
+  0
+)
+
+------------------------------------------------------------------------------
+5. Automation paste (010 / 114 / 073) — SC-SEASON-SIM-002 date gate
+
+Airtable scripts cannot import shared modules. Gate is inlined in each script.
+Full paste steps: docs/deploy-checklists/SC-SEASON-SIM-002-automation-paste-010-114.md
+
+Contract (both required for sim clock path):
+  - Season Sim Test Record? = checked
+  - Video Upload Note contains SEASON-SIM|
+  - Then "today" = Season Sim Clock Now (else wall-clock America/Denver)
+
+Versions:
+  - 010 → v10.13
+  - 114 → v6.2
+  - 073 → v4.6 (Hub handoff create only; does not send email)
+
+Offline tests (from tools/):
+  python -m unittest season_simulation.tests.test_season_sim_date_gate

@@ -15,7 +15,12 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from .clock_override import assess_clock_override_readiness, sim_submission_override_fields
+from .clock_override import (
+    activity_date_write_value,
+    assess_clock_override_readiness,
+    sim_submission_counts_under_gate,
+    sim_submission_override_fields,
+)
 from .confirmation import ConfirmationError, require_execute_gates
 from .constants import SAFE_EMAIL_RECIPIENT, SIM_START
 from .recipient_safety import assert_safe_recipient
@@ -100,7 +105,50 @@ def build_intended_writes(
                 "fields": {
                     "Week": [wid],
                     "Goal Record": [scenario.goal_record_id],
+                    "Grade Band": [scenario.grade_band_id],
                 },
+            }
+        )
+
+    # Disposable Zoom Meetings created by the writer (aligned Start Time + Week).
+    day12 = next((d for d in scenario.days if d.day_number == 12), None)
+    day40 = next((d for d in scenario.days if d.day_number == 40), None)
+    planned_live_id = "__SIM_ZOOM_LIVE__"
+    planned_rec_id = "__SIM_ZOOM_REC__"
+    if day12 and ctx:
+        week_live = ctx.week_for(day12.activity_date)
+        writes.append(
+            {
+                "table": "Zoom Meetings",
+                "op": "create",
+                "dedupe_key": f"{marker}|ZOOM_MEETING|LIVE",
+                "zoom_mode": "live",
+                "fields": {
+                    "Meeting Name": f"{marker}|LIVE|D12",
+                    "Meeting Status": "Completed",
+                    "Start Time": f"{day12.activity_date.isoformat()}T12:00:00-06:00",
+                    "Week": [week_live] if week_live else [],
+                    "Attendees": [],
+                },
+                "notes": "Disposable sim meeting — registry cleanup deletes this ID",
+            }
+        )
+    if day40 and ctx:
+        week_rec = ctx.week_for(day40.activity_date)
+        writes.append(
+            {
+                "table": "Zoom Meetings",
+                "op": "create",
+                "dedupe_key": f"{marker}|ZOOM_MEETING|REC",
+                "zoom_mode": "recorded",
+                "fields": {
+                    "Meeting Name": f"{marker}|REC|D40",
+                    "Meeting Status": "Completed",
+                    "Start Time": f"{day40.activity_date.isoformat()}T12:00:00-06:00",
+                    "Week": [week_rec] if week_rec else [],
+                    "Attendees": [],
+                },
+                "notes": "Disposable sim meeting — never patch Attendees with sim enrollment",
             }
         )
 
@@ -138,12 +186,18 @@ def build_intended_writes(
             available_fields=(ctx.submission_field_names if ctx else None),
         )
         fields: dict[str, Any] = {
-            "Activity Date": clock.activity_datetime_iso(day.activity_date),
+            # Date-only — evening Denver datetimes shift +1 UTC day on Airtable date fields.
+            "Activity Date": activity_date_write_value(day.activity_date),
             "Shot Total": day.shot_total,
             "Duplicate Review Status": "Count It",
             "Daily Email Subject": f"{marker}|D{day.day_number:02d}",
             **override,
         }
+        counts = sim_submission_counts_under_gate(
+            activity_date=day.activity_date,
+            season_sim_clock_now=write_clock_date,
+            run_marker=marker,
+        )
         if ctx:
             wid = ctx.week_for(day.activity_date)
             if wid:
@@ -158,23 +212,29 @@ def build_intended_writes(
                 "week_label_planned": week_label,
                 "dedupe_key": day.dedupe_key,
                 "fields": fields,
+                "expected_countable": counts,
             }
         )
         for hw in day.homework:
+            library_id = str(hw.get("library_id") or "").strip()
+            hc_fields: dict[str, Any] = {
+                "Program Homework Assignment": [hw["pha_record_id"]],
+                "Completion Status": hw["outcome"],
+                "Satisfactory?": hw.get("outcome") == "Satisfactory",
+                "Review Complete": True,
+                "Notes": marker,
+                "asset_count_intended": hw["asset_count"],
+                "Submission Date": activity_date_write_value(day.activity_date),
+            }
+            if library_id:
+                hc_fields["Homework"] = [library_id]
             writes.append(
                 {
                     "table": "Homework Completions",
                     "op": "create",
                     "day_number": day.day_number,
                     "dedupe_key": hw["dedupe_key"],
-                    "fields": {
-                        "Program Homework Assignment": [hw["pha_record_id"]],
-                        "Completion Status": hw["outcome"],
-                        "Satisfactory?": hw.get("outcome") == "Satisfactory",
-                        "Review Complete": True,
-                        "Notes": marker,
-                        "asset_count_intended": hw["asset_count"],
-                    },
+                    "fields": hc_fields,
                 }
             )
             for i in range(int(hw.get("asset_count") or 1)):
@@ -189,15 +249,20 @@ def build_intended_writes(
                         },
                     }
                 )
-        for idx, zid in enumerate(day.zoom_meeting_ids):
-            if day.day_number == 12 or (
-                ctx and zid == ctx.zoom_live_meeting_id and day.day_number != 40
-            ):
-                mode = "live"
-            elif day.day_number == 40 or (ctx and zid == ctx.zoom_recorded_meeting_id):
-                mode = "recorded"
-            else:
-                mode = "live" if idx == 0 else "recorded"
+        # Zoom attendance uses writer-created meetings (day 12 live / day 40 recorded).
+        zoom_plan: list[tuple[str, str]] = []
+        if day.day_number == 12:
+            zoom_plan.append((planned_live_id, "live"))
+        elif day.day_number == 40:
+            zoom_plan.append((planned_rec_id, "recorded"))
+        for zid, mode in zoom_plan:
+            za_fields: dict[str, Any] = {
+                "Zoom Meeting": [zid],
+                "Attendance Method": "Live" if mode == "live" else "Recording Quiz",
+            }
+            if mode == "recorded":
+                za_fields["Recording Quiz Satisfactory?"] = True
+                za_fields["Recording Quiz Review Status"] = "Satisfactory"
             writes.append(
                 {
                     "table": "Zoom Attendance",
@@ -205,15 +270,13 @@ def build_intended_writes(
                     "day_number": day.day_number,
                     "zoom_mode": mode,
                     "dedupe_key": f"{marker}|ZOOM|{mode}|{zid}|D{day.day_number:02d}",
-                    "fields": {
-                        "Zoom Meeting": [zid],
-                        "Attendance Method": "Live" if mode == "live" else "Recording Quiz",
-                        **(
-                            {"Recording Quiz Satisfactory?": True}
-                            if mode == "recorded"
-                            else {}
-                        ),
-                    },
+                    "fields": za_fields,
+                    "notes": (
+                        "Recording: never Attendees; source key "
+                        "ZOOM_RECORDING_CREDIT|{Enrollment}|{Meeting}"
+                        if mode == "recorded"
+                        else "Live: Attendees patched after create"
+                    ),
                 }
             )
             if mode == "live":
@@ -223,7 +286,10 @@ def build_intended_writes(
                         "op": "attendees_patch",
                         "day_number": day.day_number,
                         "dedupe_key": f"{marker}|ZOOM_ATTENDEES|{zid}",
-                        "notes": "Add Enrollment to Attendees (live only); never delete meeting",
+                        "notes": (
+                            "Add Enrollment to Attendees (live only); "
+                            "sim meeting is registry-deleted on cleanup"
+                        ),
                     }
                 )
         if day.video_feedback:
@@ -236,17 +302,34 @@ def build_intended_writes(
                     "fields": {"Asset Purpose": "Video"},
                 }
             )
+            vf_create_fields: dict[str, Any] = {
+                "Active?": True,
+                "Award Status": "Pending",
+                "Video Feedback Key": f"{marker}|VF|D{day.day_number:02d}",
+                "Coach Feedback": f"{marker}|video review",
+            }
+            if scenario.grade_band_id:
+                vf_create_fields["Grade Band"] = [scenario.grade_band_id]
             writes.append(
                 {
                     "table": "Video Feedback",
                     "op": "create",
                     "day_number": day.day_number,
                     "dedupe_key": f"{marker}|VF|D{day.day_number:02d}",
-                    "fields": {
-                        "Active?": True,
-                        "Award Status": "Pending",
-                        "Video Feedback Key": f"{marker}|VF|D{day.day_number:02d}",
-                    },
+                    "fields": vf_create_fields,
+                }
+            )
+            writes.append(
+                {
+                    "table": "Video Feedback",
+                    "op": "update",
+                    "day_number": day.day_number,
+                    "dedupe_key": f"{marker}|VF_ARM_POSTED|D{day.day_number:02d}",
+                    "fields": {"Feedback Posted?": True},
+                    "notes": (
+                        "Arms 113/114 recordUpdated path; does not create XP Events; "
+                        "does not set Ready for XP Automation?"
+                    ),
                 }
             )
 
@@ -261,6 +344,46 @@ def build_intended_writes(
             }
         )
     return writes
+
+
+def summarize_intended_write_readiness(
+    writes: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Offline readiness summary for dry-run / no-write validation."""
+    submissions = [w for w in writes if w.get("table") == "Submissions" and w.get("op") == "create"]
+    homework = [
+        w for w in writes if w.get("table") == "Homework Completions" and w.get("op") == "create"
+    ]
+    vf_creates = [
+        w for w in writes if w.get("table") == "Video Feedback" and w.get("op") == "create"
+    ]
+    vf_arms = [
+        w for w in writes if w.get("table") == "Video Feedback" and w.get("op") == "update"
+    ]
+    countable = [w for w in submissions if w.get("expected_countable") is True]
+    uncountable = [w for w in submissions if w.get("expected_countable") is not True]
+    hw_with_both = [
+        w
+        for w in homework
+        if (w.get("fields") or {}).get("Program Homework Assignment")
+        and (w.get("fields") or {}).get("Homework")
+    ]
+    return {
+        "submission_creates": len(submissions),
+        "submission_countable": len(countable),
+        "submission_uncountable": len(uncountable),
+        "uncountable_day_numbers": [w.get("day_number") for w in uncountable],
+        "homework_completions": len(homework),
+        "homework_with_pha_and_library": len(hw_with_both),
+        "video_feedback_creates": len(vf_creates),
+        "video_feedback_update_arms": len(vf_arms),
+        "all_submissions_countable": len(submissions) > 0
+        and len(uncountable) == 0,
+        "all_homework_dual_linked": len(homework) > 0
+        and len(hw_with_both) == len(homework),
+        "video_update_triggers_planned": len(vf_arms) == len(vf_creates)
+        and len(vf_creates) > 0,
+    }
 
 
 def assert_execute_clock_ready(
@@ -316,6 +439,7 @@ def run_execute(
         )
 
     intended = build_intended_writes(scenario, clock, ctx=ctx)
+    readiness = summarize_intended_write_readiness(intended)
     payload: dict[str, Any] = {
         "mode": "execute" if execute else "dry-run-execute-path",
         "run_id": scenario.run_id,
@@ -324,6 +448,7 @@ def run_execute(
         "enable_email_delivery": enable_email_delivery,
         "intended_write_count": len(intended),
         "intended_writes": intended,
+        "write_readiness": readiness,
         "created_records": [],
         "reused_records": [],
         "errors": [],
@@ -433,6 +558,7 @@ def run_execute(
 __all__ = [
     "ExecuteAborted",
     "build_intended_writes",
+    "summarize_intended_write_readiness",
     "assert_execute_clock_ready",
     "run_execute",
     "build_execute_context_from_reference",
