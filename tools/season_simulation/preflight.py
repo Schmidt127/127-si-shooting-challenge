@@ -17,6 +17,7 @@ from .clock_override import (
     SEASON_SIM_TEST_SUBMITTED_AT_FIELD,
     assess_clock_override_readiness,
     dependency_impact_matrix,
+    formula_text_has_season_sim_gate,
 )
 from .constants import (
     PREFLIGHT_REQUIRED_TABLES,
@@ -31,7 +32,11 @@ from .recipient_safety import resolve_simulation_recipient
 from .reference_data import load_reference_snapshot
 from .same_day_contracts import assess_same_day_readiness
 from .season_policy import EXPECTED_ACTIVE_PHA_COUNT
-from .simulation_clock import assert_window_integrity, build_simulation_days
+from .simulation_clock import (
+    assert_window_integrity,
+    build_simulation_days,
+    inspect_activity_date_is_future_formula,
+)
 
 @dataclass
 class PreflightReport:
@@ -146,6 +151,10 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
         errors.extend(field_issues)
     tables_info["field_issues"] = field_issues
 
+    future_status = inspect_activity_date_is_future_formula(meta_tables)
+    if future_status.formula:
+        formula_future = future_status.formula
+
     readiness = assess_clock_override_readiness(
         wall_date=date.today(),
         submission_field_names=sub_fields or None,
@@ -156,9 +165,11 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
     # Clock blockers are informational for preflight (do not fail connectivity).
     # Execute still hard-gates on readiness.
 
+    # Prefer live inspect (field-id aware) over name-only string heuristics.
     formula_gate_active = bool(
-        getattr(readiness, 'ready_for_early_execute', False)
-        or ('Season Sim' in (formula_future or '') and 'SEASON-SIM|' in (formula_future or ''))
+        future_status.gated_season_sim_active
+        or readiness.formula_override_detected
+        or formula_text_has_season_sim_gate(formula_future)
     )
     same_day = assess_same_day_readiness(
         meta_tables,
@@ -166,6 +177,7 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
     )
     same_day_dict = same_day.to_dict()
     same_day_dict['paste_required_keys'] = sorted((same_day.paste_required or {}).keys())
+    same_day_dict['activity_date_is_future_inspect'] = future_status.to_dict()
 
     reference_dict: dict[str, Any] = {}
     try:

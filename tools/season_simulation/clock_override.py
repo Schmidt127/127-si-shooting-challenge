@@ -27,6 +27,11 @@ from datetime import date, datetime
 from typing import Any
 
 from .constants import RUN_MARKER_PREFIX, SIM_END, SIM_START
+from .simulation_clock import (
+    FIELD_ID_SEASON_SIM_CLOCK_NOW,
+    FIELD_ID_SEASON_SIM_TEST_RECORD,
+    FIELD_ID_VIDEO_UPLOAD_NOTE,
+)
 
 
 # Field names Mike must create (or confirm) before an early calendar execute.
@@ -41,6 +46,38 @@ ACTIVITY_DATE_IS_FUTURE_FIELD = "Activity Date Is Future?"
 COUNT_THIS_SUBMISSION_FIELD = "Count This Submission?"
 SUBMITTED_AT_FIELD = "Submitted At"
 SUBMITTED_SAME_DAY_FIELD = "Submitted Same Day?"
+
+
+def formula_text_has_season_sim_gate(formula_text: str | None) -> bool:
+    """Detect temporary Season Sim gate in live Meta formula text.
+
+    Airtable Meta API returns field **ids** inside braces (``{fld…}``), not
+    display names. Match either form so preflight/execute do not false-negative
+    after a correct OMNI paste.
+    """
+    if not formula_text:
+        return False
+    text = formula_text
+    refs_test = (
+        FIELD_ID_SEASON_SIM_TEST_RECORD in text
+        or SEASON_SIM_TEST_RECORD_FIELD in text
+        or "Season Sim Test Record" in text
+    )
+    refs_marker = "SEASON-SIM|" in text
+    refs_clock = (
+        FIELD_ID_SEASON_SIM_CLOCK_NOW in text
+        or SEASON_SIM_CLOCK_NOW_FIELD in text
+    )
+    refs_video = (
+        FIELD_ID_VIDEO_UPLOAD_NOTE in text
+        or VIDEO_UPLOAD_NOTE_FIELD in text
+    )
+    # Full gate (matches inspect_activity_date_is_future_formula).
+    if refs_test and refs_marker and refs_clock:
+        return True
+    # Accept test + marker + Video Upload Note when clock field is absent from
+    # an older paste variant (still safer than NOW()-only).
+    return bool(refs_test and refs_marker and refs_video)
 
 PRODUCTION_ACTIVITY_DATE_IS_FUTURE_FORMULA = """\
 IF(
@@ -333,14 +370,9 @@ def assess_clock_override_readiness(
     warnings: list[str] = []
 
     window_in_future = wall_date < SIM_START
-    formula_has_gate = False
-    if formula_text_activity_date_is_future:
-        text = formula_text_activity_date_is_future
-        formula_has_gate = (
-            SEASON_SIM_TEST_RECORD_FIELD in text
-            or "Season Sim Test Record" in text
-            or ("SEASON-SIM|" in text and "Video Upload Note" in text)
-        )
+    formula_has_gate = formula_text_has_season_sim_gate(
+        formula_text_activity_date_is_future
+    )
 
     if window_in_future:
         if not formula_has_gate and not formula_override_acknowledged:

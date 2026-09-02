@@ -262,6 +262,50 @@ class TestClockOverride(unittest.TestCase):
         self.assertTrue(r.ready_for_early_execute)
         self.assertTrue(r.formula_override_detected)
 
+    def test_readiness_detects_live_meta_field_id_formula(self):
+        """Airtable Meta returns {fld…} ids — must not require display names."""
+        from season_simulation.clock_override import formula_text_has_season_sim_gate
+        from season_simulation.simulation_clock import (
+            FIELD_ID_ACTIVITY_DATE,
+            FIELD_ID_SEASON_SIM_CLOCK_NOW,
+            FIELD_ID_SEASON_SIM_TEST_RECORD,
+            FIELD_ID_VIDEO_UPLOAD_NOTE,
+        )
+
+        live_style = (
+            "IF(\n"
+            "  AND(\n"
+            f"    {{{FIELD_ID_SEASON_SIM_TEST_RECORD}}},\n"
+            f'    FIND("SEASON-SIM|", {{{FIELD_ID_VIDEO_UPLOAD_NOTE}}} & "") > 0\n'
+            "  ),\n"
+            "  IF(\n"
+            f"    {{{FIELD_ID_SEASON_SIM_CLOCK_NOW}}},\n"
+            f"    IF({{{FIELD_ID_ACTIVITY_DATE}}} > {{{FIELD_ID_SEASON_SIM_CLOCK_NOW}}}, 1, 0),\n"
+            "    0\n"
+            "  ),\n"
+            f"  IF({{{FIELD_ID_ACTIVITY_DATE}}}, IF({{{FIELD_ID_ACTIVITY_DATE}}} > NOW(), 1, 0), BLANK())\n"
+            ")"
+        )
+        self.assertTrue(formula_text_has_season_sim_gate(live_style))
+        self.assertNotIn("Season Sim Test Record", live_style)
+        self.assertNotIn("Video Upload Note", live_style)
+        fields = {
+            "Season Sim Test Record?",
+            "Season Sim Clock Now",
+            "Season Sim Test Submitted At",
+            "Activity Date Is Future?",
+            "Video Upload Note",
+        }
+        r = assess_clock_override_readiness(
+            wall_date=date(2026, 9, 2),
+            submission_field_names=fields,
+            formula_text_activity_date_is_future=live_style,
+            formula_override_acknowledged=False,
+        )
+        self.assertTrue(r.formula_override_detected)
+        self.assertTrue(r.ready_for_early_execute)
+        self.assertFalse(r.blockers)
+
     def test_override_fields_stamp_marker(self):
         fields = sim_submission_override_fields(
             run_marker="SEASON-SIM|SEASON-SIM-2027-x",
