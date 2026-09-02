@@ -641,7 +641,10 @@ export async function preflightApply(token, baseId) {
       failures.push(`Gated enrollment ${GATED_ENROLLMENT_ID} not Active?`);
     }
   } catch (err) {
-    failures.push(`Cannot read gated enrollment: ${err.message}`);
+    // Post-FUT-030: legacy Schmidt enrollments may be absent; disposable WSTEST| path still valid.
+    if (err.status !== 404 && err.status !== 403) {
+      failures.push(`Cannot read gated enrollment: ${err.message}`);
+    }
   }
 
   // Ensure week anchors are fully past (Count This Submission? = 0 for future dates).

@@ -1,36 +1,27 @@
 /*
-GitHub header
-Automation: 147 (slot TBD) - Zoom Recording Credit - Award Half XP
+GitHub header — DESIGN ARTIFACT ONLY (NOT A PRODUCTION AUTOMATION)
+Automation: ~~121~~ — superseded by SC-147 extension in Automation 101 v6.7
 System: 127 SI Shooting Challenge
-Source: Airtable Automation
-Status: GitHub Source of Truth — NOT Live until Mike approves slot + DEV proof
+Source: Repository design alternative
+Status: ARCHIVED — do not install, paste, or enable in Airtable
 
 Purpose:
-Award half Zoom XP for approved recording credit distinct from live 101 attendance.
-
-Trigger:
-Zoom Attendance when recording approval satisfied and exclusivity guards pass.
-
-Important Tables:
-Zoom Attendance, Zoom Meetings, Enrollments, XP Reward Rules, XP Events, Config
-
-Important Fields:
-Recording Quiz Satisfactory?, Zoom Credit Conflict?, Enrollment, Zoom Meeting, Source Key
+Historical standalone design for recorded Zoom half-XP before automation capacity
+constraint. SC-147 recording credit is implemented in 101-zoom-attendance-xp-award-meeting-xp.js v6.7.
 
 Notes:
-GitHub is the source-of-truth copy. Placeholder slot 147 until Mike assigns official number.
-Does NOT replace or extend automation 117 (email handoff only).
-Never writes Zoom Meetings.Attendees.
-Authority: docs/challenge-year/RECORDED-ZOOM-HALF-XP-DESIGN-BRIEF.md (SC-147 / MRW-H10)
+Automation slot 121 is NOT available (capacity full). This file is retained for audit
+and diff reference only. Production path: extend Automation 101 — see
+docs/deploy-checklists/SC-147-zoom-recording-half-xp.md
 */
 
 /************************************************************
- * 147 (slot TBD) - ZOOM RECORDING CREDIT - AWARD HALF XP
+ * 121 - ZOOM RECORDING CREDIT - AWARD HALF XP
  * Award Half XP from Approved Recording Credit (SC-147)
  *
  * Version: v1.0
  * Date Written: 2026-08-30
- * Last Updated: 2026-09-01
+ * Last Updated: 2026-09-02
  *
  * PURPOSE
  * - Runs from one Zoom Attendance record on the recording-credit path.
@@ -60,8 +51,8 @@ Authority: docs/challenge-year/RECORDED-ZOOM-HALF-XP-DESIGN-BRIEF.md (SC-147 / M
  * FOLDER
  * - 17 - Zoom Recording Credit
  *
- * AUTOMATION NAME (placeholder until Mike assigns slot)
- * - 147 - Zoom Recording Credit - Award Half XP (SC-147)
+ * AUTOMATION NAME
+ * - 121 - Zoom Recording Credit - Award Half XP (SC-147)
  *
  * TRIGGER TABLE
  * - Zoom Attendance
@@ -93,13 +84,13 @@ Authority: docs/challenge-year/RECORDED-ZOOM-HALF-XP-DESIGN-BRIEF.md (SC-147 / M
 // @ts-nocheck
 
 const SCRIPT = {
-  scriptName: "147 - Zoom Recording Credit - Award Half XP (SC-147)",
+  scriptName: "121 - Zoom Recording Credit - Award Half XP (SC-147)",
   version: "v1.0",
-  versionDate: "2026-09-01",
+  versionDate: "2026-09-02",
   originalWrittenDate: "2026-08-30",
-  lastUpdated: "2026-09-01",
+  lastUpdated: "2026-09-02",
   folder: "17 - Zoom Recording Credit",
-  automationName: "147 - Zoom Recording Credit - Award Half XP (SC-147)",
+  automationName: "121 - Zoom Recording Credit - Award Half XP (SC-147)",
 };
 
 const CONFIG = {

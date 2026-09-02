@@ -1,0 +1,9 @@
+{
+  "harness": "MRW-F07-weekly-was-prep",
+  "at": "2026-09-02T00:59:18.000Z",
+  "pass": true,
+  "wasId": "recQKEihlyzoOpdZb",
+  "enrollmentId": "recn1QUIGO1PjbnnY",
+  "offlineContractPass": true,
+  "detail": "Disposable WAS created post-FUT-030; MRW-F07 offline contract PASS; dry-run plan ready (no email send from harness)"
+}

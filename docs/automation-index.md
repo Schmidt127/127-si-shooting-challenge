@@ -149,6 +149,24 @@ Current parent/athlete **email delivery** is Communications Hub → **Resend**. 
 | **114** | Video Review — Create or Update Video XP Event | Video Feedback lifecycle reconciliation; *confirm trigger in Airtable* | `114-video-review-and-xp-create-or-update-video-xp-event.js` (**v6.1** — exact VF/source-key identity; deactivates/reactivates the same XP Event; selected-field runtime regression covered by `tests/video-feedback/video-feedback-xp-mocked-runtime.test.js`) |
 | **120** | Video Review — Apply FUT-009 S3 Video Rename | Video Feedback · **Confirm S3 Video Rename** checked · Custom Video File Name valid · Submission Asset linked — **paste v1.0 pending** | `120-video-review-and-xp-apply-fut009-s3-video-rename.js` (**v1.0** — automatic Lambda `POST /fut009/rename`; CopyObject + verified writeback; CLI recovery only; **OFF until Mike disposable Production test**) |
 
+## Zoom (101, 117)
+
+| # | Airtable automation name | Trigger | File |
+|---|--------------------------|---------|------|
+| **101** | Zoom Attendance XP — Award Meeting XP | Zoom Meetings when `Zoom XP Reconciliation Needed? = 1`; dynamic `recordId`; no Create XP Events, Attendees, or Completed as primary condition | `101-zoom-attendance-xp-award-meeting-xp.js` (**v6.7** — GitHub canonical; live Source Key `ZOOM_ATTEND_BASE\|{Zoom Meeting Key}\|{Enrollment RID}`; **SC-147** recording half-XP phase `ZOOM_RECORDING_CREDIT\|{Enrollment}\|{Meeting}` in same reconciliation pass — [`101-v6.7-sc-147-operator-packet.md`](./deploy-checklists/101-v6.7-sc-147-operator-packet.md); **NOT Live until DEV proof**) |
+| **117** | Zoom — Create Zoom Recording Approval Communications Hub Handoff (**v2.1**). Automations **Name** matches Hub handoff; **Status = Live** (2026-08-21 evening Automations Code re-read). | Zoom Attendance · Satisfactory recording path | `117-zoom-send-recording-approval-email-to-make.js` — creates Email Handoff Queue only (Event Type `ZOOM_RECORDING_APPROVAL`, Template Key `ZOOM_RECORDING_APPROVED`). Does **not** write XP or call Make/Gmail/Resend. **079** → Hub → Resend. Not the Stage 17 orchestrator. Historical Make 117f: [C-025-117f-prod-zoom-recording-approval-email.md](./deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md) |
+| **117f** | Historical Make workflow identifier (not an Airtable slot) | Retired for email | Do not re-enable Make Gmail for Zoom. Current send plane: [email-send-plane.md](./integrations/email-send-plane.md) |
+| **Stage 17 modular / orchestrator** | Repository design alternatives — **not** PROD Airtable automations | Prefer consolidated paths; do **not** create 117a–e slots (automation-count limit) | `_design-alternatives/stage17-modular-reference/` · [numbering note](./deploy-checklists/C-025-117-numbering.md) |
+| **121 (design artifact)** | ~~Zoom Recording Credit — Award Half XP~~ — **superseded by 101 v6.7** | Not installable — automation capacity full | `drafts/sc-147-slot-121-design-artifact-not-production.js` (audit only) |
+
+**Airtable automation-count constraint:** Use consolidated automations where practical. Repository-only modular alternatives must not be represented as active PROD automations. The active canonical automation directory must distinguish deployed scripts from archived/design alternatives.
+
+Live attendance XP remains **101**. **SC-147** recording half-XP is implemented in **101 v6.7** (GitHub) — no slot **121**. Recording approval email remains **117** (email only). Do **not** paste 101 v6.7 to Production until DEV disposable proof ([`SC-147-zoom-recording-half-xp.md`](./deploy-checklists/SC-147-zoom-recording-half-xp.md)).
+
+C-025 historical Stage 17 packets: [deploy-checklists/C-025-stage17-zoom-recording-production-installation-packet.md](./deploy-checklists/C-025-stage17-zoom-recording-production-installation-packet.md). Architecture history: [v2/C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md). Historical Make approval-email path (not current): [C-025-117f-prod-zoom-recording-approval-email.md](./deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md). Current email delivery: [integrations/email-send-plane.md](./integrations/email-send-plane.md).
+
+---
+
 ## Asset reuse review (116)
 
 | # | Airtable automation name | Trigger | File |
@@ -156,31 +174,6 @@ Current parent/athlete **email delivery** is Communications Hub → **Resend**. 
 | **116** | Submission Assets — Apply Asset Reuse Decision Consequences | Submission Assets · **When record updated** · watched field **`Asset Reuse Decision`** · input `recordId` | `116-submission-assets-apply-asset-reuse-decision-consequences.js` |
 
 **Production (2026-07-10):** **Deployed and validated** on `appn84sqPw03zEbTT` · script `992677d` · v1.0.1 · matrix **S5A–S5L 12/12 PASS** · live **Confirmed Duplicate PASS** + **Approved Reuse reversal PASS** on asset `recF86pJTIMFoEypJ` → VF `rec20xfx0hKCCwPw2` → XP `recx2MvUh2WP0tbjO` (Source Key `VIDEO_SUBMISSION|rec20xfx0hKCCwPw2`; same row deactivated then reactivated; no duplicate XP Event). Replaced retired **008** (slot-neutral; count unchanged). [Stage 5 report](./deploy-checklists/C-023-production-stage5-duplicate-consequences.md).
-
-## Zoom (101, 117)
-
-| # | Airtable automation name | Trigger | File |
-|---|--------------------------|---------|------|
-| **101** | Zoom Attendance XP — Award Meeting XP | Zoom Meetings when `Zoom XP Reconciliation Needed? = 1`; dynamic `recordId`; no Create XP Events, Attendees, or Completed as primary condition | `101-zoom-attendance-xp-award-meeting-xp.js` (**v6.6** — GitHub canonical; Source Key `ZOOM_ATTEND_BASE\|{Zoom Meeting Key}\|{Enrollment RID}`; resolves one existing canonical WAS only; 031 is the sole WAS creator) |
-| **117** | Zoom — Create Zoom Recording Approval Communications Hub Handoff (**v2.1**). Automations **Name** matches Hub handoff; **Status = Live** (2026-08-21 evening Automations Code re-read). | Zoom Attendance · Satisfactory recording path | `117-zoom-send-recording-approval-email-to-make.js` — creates Email Handoff Queue only (Event Type `ZOOM_RECORDING_APPROVAL`, Template Key `ZOOM_RECORDING_APPROVED`). Does **not** write XP or call Make/Gmail/Resend. **079** → Hub → Resend. Not the Stage 17 orchestrator. Historical Make 117f: [C-025-117f-prod-zoom-recording-approval-email.md](./deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md) |
-| **117f** | Historical Make workflow identifier (not an Airtable slot) | Retired for email | Do not re-enable Make Gmail for Zoom. Current send plane: [email-send-plane.md](./integrations/email-send-plane.md) |
-| **Stage 17 modular / orchestrator** | Repository design alternatives — **not** PROD Airtable automations | Prefer consolidated paths; do **not** create 117a–e slots (automation-count limit) | `_design-alternatives/stage17-modular-reference/` · [numbering note](./deploy-checklists/C-025-117-numbering.md) |
-
-**Airtable automation-count constraint:** Use consolidated automations where practical. Repository-only modular alternatives must not be represented as active PROD automations. The active canonical automation directory must distinguish deployed scripts from archived/design alternatives.
-
-Live attendance XP remains **101** only. The canonical repository source is
-**v6.3**. Mike-supplied Production evidence from 2026-08-13 records **v6.1**
-installed and ON with the reconciliation trigger configured; that is historical
-installed-version evidence, not proof of the current installed version.
-The Introduction and Motivation future meetings both safely acknowledged empty
-rosters with no XP Event and Needed = 0. This is installation plus
-empty-roster proof only; live-attendee XP, withdrawal, bonuses, progression,
-standings, and recording XP remain pending. Gate Applied? / Perfect Week
-Applied? remain **042** / **057**. Recording `ZOOM_CREDIT` XP has **no**
-currently deployed Airtable writer (orchestrator/117c are design-only). Do
-**not** paste the Stage 17 orchestrator over PROD Automation 117.
-
-C-025 historical Stage 17 packets: [deploy-checklists/C-025-stage17-zoom-recording-production-installation-packet.md](./deploy-checklists/C-025-stage17-zoom-recording-production-installation-packet.md). Architecture history: [v2/C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md). Historical Make approval-email path (not current): [C-025-117f-prod-zoom-recording-approval-email.md](./deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md). Current email delivery: [integrations/email-send-plane.md](./integrations/email-send-plane.md).
 
 ---
 
