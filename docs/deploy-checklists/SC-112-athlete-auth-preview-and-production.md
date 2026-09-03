@@ -1,6 +1,6 @@
 # SC-112 — Athlete dashboard parent magic-link auth
 
-**Status:** Merged to `master` (auth PRs **#350–#357**; Family Dashboard nav **#358**) · Production enablement is Vercel-env gated (`ATHLETE_AUTH_ENABLED`) · confirm live env before treating Production as auth-on
+**Status:** Merged to `master` (auth PRs **#350–#357**; Family Dashboard nav **#358**; multi-child opaque select **#373**) · Production enablement is Vercel-env gated (`ATHLETE_AUTH_ENABLED`) · confirm live env before treating Production as auth-on · **multi-child not PRODUCTION-VERIFIED** until live ≥2-enrollment proof (see architecture doc)
 
 Authority: [web/docs/athlete-auth-architecture.md](../../web/docs/athlete-auth-architecture.md) · [ATHLETE-AUTH-DECISION.md](../overnight/web-integration/ATHLETE-AUTH-DECISION.md)
 
@@ -65,14 +65,15 @@ Use **only** `schmidt@fairfieldbasketballclub.com` as the delivery inbox during 
 1. **Anonymous dashboard:** Open `/shoot/dashboard` → expect redirect to `/shoot/dashboard/sign-in` or coming-soon if auth not yet enabled on that deployment.
 2. **Generic confirmation:** POST sign-in form (or `/shoot/api/auth/magic-link`) with any valid non-Gmail parent email → same friendly JSON message whether or not the email exists in Enrollments.
 3. **Test-mode delivery:** Confirm magic-link email arrives **only** at `schmidt@fairfieldbasketballclub.com`, not at the submitted address.
-4. **Link works once:** Open the link → lands on `/shoot/dashboard` with authenticated session.
+4. **Link works once:** Open the link → lands on `/shoot/dashboard` (single active enrollment) **or** `/shoot/dashboard/select` (two or more active enrollments) with an authenticated session.
 5. **Authorized data only:** Dashboard shows enrollment(s) for the verified parent email only.
-6. **URL tampering:** Append `?enrollmentId=rec…` for an unauthorized enrollment → access denied message; no other athlete data.
+6. **URL tampering:** Append `?enrollmentId=rec…` for an unauthorized enrollment → ignored for authorization; clean `/dashboard` / no other athlete data. Confirm address bar never shows Airtable `rec…` IDs after select/switch.
 7. **Reuse rejected:** Open the same magic link again → sign-in error (used/expired).
 8. **Sign out:** Use Sign out → session cleared; `/shoot/dashboard` protected again.
 9. **Privacy:** Browser must not show Airtable record IDs, raw tokens, or internal errors.
 10. **Public surface:** `/shoot/leaderboard`, `/shoot/homework`, `/shoot/athletes/[slug]` (approved profiles) still work anonymously.
 11. **Keep** `ATHLETE_AUTH_TEST_MODE=true` after Preview proof until Mike explicitly schedules Production family delivery.
+12. **Multi-child (when ≥2 active enrollments exist for the test parent email):** magic-link → `/dashboard/select` → choose child via opaque key → family switcher → sign-out. **Not PRODUCTION-VERIFIED** until this live path is completed; depends on second disposable enrollment + magic-link send authorization (Agent 1 / Agent 3). Behavior contract: [athlete-auth-architecture.md — Multi-child](../../web/docs/athlete-auth-architecture.md#multi-child-parent-authentication).
 
 Capture screenshots or a short screen recording for Phase 5 closeout.
 
@@ -125,15 +126,20 @@ npm run test
 npm run build
 npm run test:e2e -- tests/dashboard-privacy.spec.ts
 ATHLETE_AUTH_ENABLED=true ATHLETE_AUTH_SECRET=<secret> ATHLETE_AUTH_TEST_MODE=true ATHLETE_AUTH_DEV_BYPASS=true npm run test:e2e -- tests/athlete-auth-privacy.spec.ts
+ATHLETE_AUTH_ENABLED=true ATHLETE_AUTH_SECRET=<secret> ATHLETE_AUTH_TEST_MODE=true ATHLETE_AUTH_DEV_BYPASS=true npm run test:e2e -- tests/multi-child-auth.spec.ts
 npm run test:smoke
 ```
 
 Anonymous `/dashboard` smoke/privacy tests accept **either** coming-soon (auth off) **or** redirect to sign-in (auth on). Do not assert coming-soon alone against auth-enabled deployments.
+
+Offline multi-child coverage does **not** replace live Production multi-child proof.
+
 ---
 
 ## Remaining SC-112 work (future)
 
 - Optional Hub template `DASHBOARD_MAGIC_LINK` if Mike wants all outbound mail in Hub audit logs.
-- Multi-enrollment family picker when one parent email maps to several active athletes.
+- **Live multi-child Production/Preview proof** (second active enrollment + authorized magic-link send) — built in repo via PR **#373**; not PRODUCTION-VERIFIED until Agent 1 / Agent 3 evidence lands.
+- **Alumni / inactive enrollment access** — open product decision; auth grants Active? only today.
 - Separate parent vs athlete account views (product decision pending).
 - Upstash Redis required for reliable single-use tokens at Production scale (in-memory store is per-instance only).
