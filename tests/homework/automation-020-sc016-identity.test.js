@@ -77,8 +77,9 @@ const late = evaluateHomeworkSubmissionDeadline({
   phaDueDate: "2026-08-31",
   weekEndDate: "2026-08-24",
 });
-assert.strictEqual(late.creditEligible, false);
-assert.strictEqual(late.timingStatus, "late_ineligible");
+assert.strictEqual(late.creditEligible, true);
+assert.strictEqual(late.timingStatus, "late");
+assert.strictEqual(late.perfectWeekEligible, false);
 
 assert.strictEqual(
   buildHomeworkCompletionIdentityKeyByPha({ enrollmentId: enr, phaId: pha }),

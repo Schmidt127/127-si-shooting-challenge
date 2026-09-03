@@ -104,7 +104,14 @@ export function DashboardHomeworkSection({ items }: DashboardHomeworkSectionProp
                         {homeworkBadgeLabel(item.badgeStatus)}
                       </StatusBadge>
                     </td>
-                    <td className="px-3 py-3 text-muted">{item.submissionDate ?? "—"}</td>
+                    <td className="px-3 py-3 text-muted">
+                      {item.submissionDate ?? "—"}
+                      {item.lateSubmission ? (
+                        <span className="mt-0.5 block text-[10px] font-medium uppercase tracking-wide text-muted">
+                          Late · full credit if satisfactory
+                        </span>
+                      ) : null}
+                    </td>
                     <td className="px-3 py-3 font-mono text-brand-blue">
                       {item.xpAwarded != null ? `+${formatXp(item.xpAwarded)}` : "—"}
                     </td>
@@ -145,7 +152,14 @@ function HomeworkCard({ item }: { item: DashboardHomeworkItem }) {
         </div>
         <div>
           <dt className="text-muted">Submitted</dt>
-          <dd className="font-medium text-foreground">{item.submissionDate ?? "—"}</dd>
+          <dd className="font-medium text-foreground">
+            {item.submissionDate ?? "—"}
+            {item.lateSubmission ? (
+              <span className="mt-0.5 block text-[10px] font-medium uppercase tracking-wide text-muted">
+                Late · full credit if satisfactory
+              </span>
+            ) : null}
+          </dd>
         </div>
         {item.xpAwarded != null ? (
           <div>

@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-19
-Last GitHub Update: 2026-08-28 (v3.8 FUT-001 assignment identity + deadline)
+Last GitHub Update: 2026-09-03 (v3.9 late homework remains credit-eligible)
 
 Purpose:
 Link or create one Homework Completion from a homework Submission Asset,
@@ -31,11 +31,13 @@ v3.6 is live in Production Airtable (Mike 2026-08-19); v3.7 is structure-only.
  * 020 - HOMEWORK
  * Link or Create Homework Completion
  *
- * Version: v3.8
+ * Version: v3.9
  * Date Written: 2026-06-20
- * Last Updated: 2026-08-28
+ * Last Updated: 2026-09-03
  *
  * VERSION HISTORY
+ * - v3.9 (2026-09-03): Late submissions remain credit-eligible for homework XP.
+ *   Notes still record late timing; Perfect Week on-time gate stays in 057.
  * - v3.8 (2026-08-28): FUT-001 — match Homework Completion by Enrollment + PHA
  *   identity (not upload slot); accept alternate HW1/HW2 upload slot when assignment
  *   identity is unambiguous; enforce PHA Due Date with Week End Date fallback;
@@ -141,10 +143,10 @@ v3.6 is live in Production Airtable (Mike 2026-08-19); v3.7 is structure-only.
 
 const SCRIPT = {
   scriptName: "020 - Homework - Link or Create Homework Completion",
-  version: "v3.8",
-  versionDate: "2026-08-28",
+  version: "v3.9",
+  versionDate: "2026-09-03",
   originalWrittenDate: "2026-06-20",
-  lastUpdated: "2026-08-28",
+  lastUpdated: "2026-09-03",
   folder: "02 - Homework Review and XP",
   automationName: "020 - Homework - Link or Create Homework Completion",
 };
@@ -457,7 +459,9 @@ function evaluateHomeworkSubmissionDeadline({ submissionDateKey, phaDueDate, wee
       creditEligible: true,
       timingStatus: "unknown_submission_date",
       dueDateKey: dueKey,
-      reason: "Submission date missing; deadline not enforced.",
+      perfectWeekEligible: false,
+      reason:
+        "Submission date missing; deadline not enforced for XP. Perfect Week requires a known on-time Submission Date.",
     };
   }
   if (!dueKey) {
@@ -465,23 +469,31 @@ function evaluateHomeworkSubmissionDeadline({ submissionDateKey, phaDueDate, wee
       creditEligible: true,
       timingStatus: "no_due_date",
       dueDateKey: "",
+      perfectWeekEligible: true,
       reason: "No PHA Due Date or Week End Date; deadline not enforced.",
     };
   }
   if (submitKey > dueKey) {
     return {
-      creditEligible: false,
-      timingStatus: "late_ineligible",
+      creditEligible: true,
+      timingStatus: "late",
       dueDateKey: dueKey,
-      reason: `Submission date ${submitKey} is after assignment due date ${dueKey}.`,
+      perfectWeekEligible: false,
+      reason: `Submission date ${submitKey} is after assignment due date ${dueKey}. Full XP credit allowed; does not count toward Perfect Week.`,
     };
   }
-  return { creditEligible: true, timingStatus: "on_time", dueDateKey: dueKey, reason: "" };
+  return {
+    creditEligible: true,
+    timingStatus: "on_time",
+    dueDateKey: dueKey,
+    perfectWeekEligible: true,
+    reason: "",
+  };
 }
 
 function buildLateSubmissionNote({ timingStatus, dueDateKey, submissionDateKey }) {
-  if (timingStatus !== "late_ineligible") return "";
-  return `Late submission: activity date ${submissionDateKey} is after due date ${dueDateKey}. Not eligible for homework credit or XP unless an approved exception is recorded.`;
+  if (timingStatus !== "late" && timingStatus !== "late_ineligible") return "";
+  return `Late submission: activity date ${submissionDateKey} is after due date ${dueDateKey}. Full homework XP credit still applies once satisfactory; does not count toward Perfect Week for the original week.`;
 }
 
 function homeworkFieldForSlot(slot) {

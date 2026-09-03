@@ -263,7 +263,7 @@ describe("buildPublicHomeworkAssignments", () => {
     expect(serialized).not.toContain("lambda-url");
   });
 
-  it("marks late submissions as visible but not credit-eligible when XP was not awarded", () => {
+  it("marks late submissions as late while remaining credit-pending until graded", () => {
     const phaId = "recPha0000000001";
     const rows = buildPublicHomeworkAssignments({
       phaRecords: [pha(phaId, WEEK_1, [GRADE_3_4])],
@@ -285,7 +285,7 @@ describe("buildPublicHomeworkAssignments", () => {
     expect(rows[0]).toMatchObject({
       completionStatus: "submitted",
       lateSubmission: true,
-      creditEligible: false,
+      creditEligible: null,
     });
   });
 
@@ -360,7 +360,7 @@ describe("resolveHomeworkCreditEligibility", () => {
     ).toMatchObject({ creditEligible: true, lateSubmission: true });
   });
 
-  it("flags past-due not-started assignments as not credit eligible", () => {
+  it("flags past-due not-started assignments as still credit-eligible when graded later", () => {
     expect(
       resolveHomeworkCreditEligibility({
         dueDateKey: "2026-06-07",
@@ -370,7 +370,20 @@ describe("resolveHomeworkCreditEligibility", () => {
         xpAwarded: 0,
         todayKey: TODAY,
       }),
-    ).toMatchObject({ creditEligible: false, pastDue: true });
+    ).toMatchObject({ creditEligible: null, pastDue: true, lateSubmission: false });
+  });
+
+  it("keeps late ungraded submissions credit-pending (not ineligible)", () => {
+    expect(
+      resolveHomeworkCreditEligibility({
+        dueDateKey: "2026-06-07",
+        submissionDateKey: "2026-06-10",
+        completionStatus: "submitted",
+        satisfactory: false,
+        xpAwarded: 0,
+        todayKey: TODAY,
+      }),
+    ).toMatchObject({ creditEligible: null, pastDue: true, lateSubmission: true });
   });
 });
 

@@ -19,6 +19,7 @@ export type DashboardHomeworkItem = {
   assignedDate: string | null;
   dueDate: string | null;
   submissionDate: string | null;
+  lateSubmission: boolean;
   completionStatus: PublicHomeworkCompletionStatus;
   completionStatusLabel: string;
   satisfactory: boolean | null;

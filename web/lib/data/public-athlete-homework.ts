@@ -165,6 +165,7 @@ export function resolveHomeworkCreditEligibility(input: {
       input.submissionDateKey > input.dueDateKey,
   );
 
+  // Satisfactory (or XP already awarded) → full credit, even when late.
   if (input.satisfactory || input.xpAwarded > 0) {
     return { creditEligible: true, pastDue, lateSubmission };
   }
@@ -173,15 +174,9 @@ export function resolveHomeworkCreditEligibility(input: {
     return { creditEligible: false, pastDue, lateSubmission };
   }
 
-  if (lateSubmission) {
-    return { creditEligible: false, pastDue, lateSubmission };
-  }
-
-  if (pastDue && !input.submissionDateKey) {
-    return { creditEligible: false, pastDue, lateSubmission: false };
-  }
-
-  return { creditEligible: null, pastDue, lateSubmission: false };
+  // Late or past-due without a final grade remains credit-eligible once graded.
+  // Do not mark as ineligible merely because the due date has passed.
+  return { creditEligible: null, pastDue, lateSubmission };
 }
 
 function comparePublicHomeworkAssignments(a: SortableHomeworkRow, b: SortableHomeworkRow): number {
