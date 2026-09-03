@@ -3,7 +3,7 @@
 **Date:** 2026-09-03  
 **Backlog:** SC-112  
 **Branch:** `feature/sc-112-public-on-web`  
-**Git base:** `origin/master` **`a686e50b109337e4ad564be16ab8b98aedd9597f`**
+**Git base (PR #378 merge):** `a0e84533` · **origin/master tip (post-closeout):** `9a68281eadce33b101bcb2a1f0876530b9179e1d` · **Status:** **MERGED** (Public On Web sole public gate)
 
 ---
 

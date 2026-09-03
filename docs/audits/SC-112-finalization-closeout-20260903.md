@@ -1,25 +1,29 @@
 # SC-112 finalization closeout — repository / master-list (Agent 4)
 
 **Date:** 2026-09-03  
-**Branch:** `docs/sc-112-finalization-closeout-a4`  
-**Base:** `origin/master` @ `a686e50b109337e4ad564be16ab8b98aedd9597f`  
-**Mode:** Documentation only. No Season Sim execute. No formula/schema changes. No Airtable deletes. Automations **003 / 067 / 101 / 117 / SC-147** not modified.
+**Branch:** `docs/sc-112-final-coord-a4`  
+**Base:** `origin/master` @ `9a68281eadce33b101bcb2a1f0876530b9179e1d` (includes merged closeout PRs **#381** / **#382** / **#383**)  
+**Mode:** Documentation accuracy + safe local hygiene. No Season Sim execute. No formula/schema changes. No Airtable deletes. Automations **003 / 067 / 101 / 117 / SC-147** not modified. Do not create **121**.
 
 Status labels used below:  
-`COMPLETE` · `PRODUCTION-VERIFIED` · `MERGED/DEPLOYED` · `NEEDS-PRODUCTION-PROOF` · `CODE-ONLY` · `PASTE-ALIGNED` · `REQUIRES LIVE CONFIRMATION` · `DO-NOT-TOUCH` · `NOT AUTHORIZED`
+`COMPLETE` · `PRODUCTION-VERIFIED` · `MERGED/DEPLOYED` · `PARTIAL` · `NEEDS-MIKE` · `NEEDS-PRODUCTION-PROOF` · `PASTE-ALIGNED` · `REQUIRES LIVE CONFIRMATION` · `DO-NOT-TOUCH` · `NOT AUTHORIZED`
 
 ---
 
-## Open PR coordination (do not duplicate)
+## Post-merge reality (after #381 / #382 / #383)
 
-| PR | Topic | Agent 4 action |
+Prior Agent 4 closeout PR **#381** landed on tip `a686e50b`, then **#382** / **#383** corrected Public On Web + SHA typos. This board **updates** that closeout so tip SHA and PR statuses match **current** `origin/master` — do not treat “open #377/#379/#380/#378” wording from the first closeout draft as current.
+
+| PR | Topic | Current status |
 |---|---|---|
-| [#379](https://github.com/Schmidt127/127-si-shooting-challenge/pull/379) | Multi-child parent auth docs (`athlete-auth-architecture` + deploy checklist) | **Reference only** — do not rewrite; live auth overlay recorded in CURRENT-TRUTH + this board |
-| [#377](https://github.com/Schmidt127/127-si-shooting-challenge/pull/377) | Live email / magic-link cutover checklist | **Reference only** |
-| [#380](https://github.com/Schmidt127/127-si-shooting-challenge/pull/380) | Multi-child second-enrollment evidence | **Await Agent 1** — keep `NEEDS-PRODUCTION-PROOF` until confirmed |
-| [#378](https://github.com/Schmidt127/127-si-shooting-challenge/pull/378) | Public On Web awards code | Agent 2 owns — status `CODE-ONLY` / open |
-| [#376](https://github.com/Schmidt127/127-si-shooting-challenge/pull/376) | Earlier Public On Web awards PR | **SUPERSEDED by #378** — do not revive |
-| [#375](https://github.com/Schmidt127/127-si-shooting-challenge/pull/375) | Master list after SC-112 final wave | **MERGED** into base SHA |
+| [#381](https://github.com/Schmidt127/127-si-shooting-challenge/pull/381) | Finalization closeout + stale-doc corrections | **MERGED** |
+| [#382](https://github.com/Schmidt127/127-si-shooting-challenge/pull/382) | Public On Web / closeout PR status fix | **MERGED** |
+| [#383](https://github.com/Schmidt127/127-si-shooting-challenge/pull/383) | Restore corrupted PR 378 merge SHA | **MERGED** |
+| [#378](https://github.com/Schmidt127/127-si-shooting-challenge/pull/378) | Public On Web awards code | **MERGED** `a0e84533` (#376 closed superseded) |
+| [#377](https://github.com/Schmidt127/127-si-shooting-challenge/pull/377) | Live email / magic-link cutover checklist | **MERGED** |
+| [#379](https://github.com/Schmidt127/127-si-shooting-challenge/pull/379) | Multi-child parent auth docs | **MERGED** |
+| [#380](https://github.com/Schmidt127/127-si-shooting-challenge/pull/380) | Multi-child second-enrollment evidence | **MERGED** — walkthrough still **PARTIAL / NEEDS-MIKE** |
+| [#375](https://github.com/Schmidt127/127-si-shooting-challenge/pull/375) | Master list after SC-112 final wave | **MERGED** |
 
 ---
 
@@ -27,28 +31,38 @@ Status labels used below:
 
 | Fact | Status label | Evidence |
 |---|---|---|
-| Automation **003** | **COMPLETE + PRODUCTION-VERIFIED + active DO-NOT-TOUCH** | Prod completion [`prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md`](../prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md). Automations table 2026-09-03: **Name** `003 - …`, **Status** Live, **Automation Code** docblock **v2.0**. |
-| Automation **067** | **COMPLETE (Live) + active DO-NOT-TOUCH** | Automations table 2026-09-03: **Status** Live, **Automation Code** SCRIPT **v3.5** (aligned with GitHub header). Historical Option B / v3.x path Live Tested. Do not edit this closeout wave. |
-| Magic-link authentication | **MERGED/DEPLOYED** + **PARTIAL PRODUCTION-VERIFIED** | Merged PRs **#350–#357**. Vercel Production deployment SHA **`a686e50b`** (2026-09-03). Afternoon live pass (local audit note): auth **on** — anonymous `/shoot/dashboard` → sign-in; magic-link **request** returns uniform success. Full first-use / reuse / sign-out from inbox still **REQUIRES LIVE CONFIRMATION** (Mike / Agent 1). Deploy checklist default “auth off” is **stale** relative to that live pass — prefer this row + CURRENT-TRUTH overlay. Multi-child behavior docs: open **#379**. |
-| Multi-child parent auth code | **MERGED/DEPLOYED** + **NEEDS-PRODUCTION-PROOF** | PR **#373** merged `97548cee`. Deployed under Production SHA lineage through `a686e50b`. Production multi-child proof remains open via **#380** until Agent 1 confirms. |
-| Public awards gate | **MERGED** (#378 ? master `a0e84533`; #376 closed superseded) | `origin/master` still has `AWARD_RECIPIENT_PUBLICATION_FIELD = null` (PR **#367** fail-closed). Live schema **has** Award Recipients checkbox **`Public On Web`**. PR **#378** MERGED 2026-09-03; PR **#376** closed as superseded. Production deploy of awards gate follows Vercel after merge. |
-| Homework late-credit implementation | **GitHub COMPLETE** (**020 v3.9 / 065 v10.6 / 057 v2.3**) · **Production Automations Code PASTE-ALIGNED** | PR **#372** `da009262`. Live Automations Code 2026-09-03: **020 v3.9**, **065 v10.6**, **057 2.3**, all **Live**. Disposable behavior proof still **REQUIRES LIVE CONFIRMATION** if Mike wants a named late-HW Perfect Week exclusion test. |
-| Season Simulation formulas | **Normal `NOW()` / `TODAY()`** — **DO NOT change** | Live formula pass (afternoon reconciliation): Season Sim gates **not** active; Production NOW()/TODAY() paths. |
-| Season Simulation execute | **NOT currently authorized** | Master list + operator policy: next execute blocked pending separate Mike authorization + temporary formula re-paste. |
-| PR **#378** vs **#376** | **#378 supersedes #376** | Both open; Agent 2 owns **#378**; do not merge/revive **#376**. |
-| Communications **#50** | **CLOSED (not merged)** | Sibling repo `Schmidt127/communications`: **#50** closed 2026-09-03 without merge. Canonical Zoom restyle is **#49 MERGED** `796930af` (already noted on master list). |
-| Real-family enrollments | **None present** (read-only MCP 2026-09-03) | Production base `appn84sqPw03zEbTT`: **2** Athletes (Athlete1 Schmidt, VERIFY VERIFY-SC112-20260903); **3** Enrollments (Athlete1, Athlete 2 Schmidt linked to Athlete1, VERIFY). Parent emails = Mike school address only. **Stop condition not triggered.** |
+| Automation **003** | **COMPLETE + PRODUCTION-VERIFIED + active DO-NOT-TOUCH** | Prod completion [`prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md`](../prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md). Automations table: **Status** Live, **Automation Code** **v2.0**. Keep active. |
+| Automation **067** | **COMPLETE (Live) + active DO-NOT-TOUCH** | Automations Code SCRIPT **v3.5** Live. Do not edit this closeout wave. |
+| Magic-link authentication | **MERGED/DEPLOYED** + **works** | PRs **#350–#357**. Production auth **on**; magic-link request + delivery path operational for disposable/operator parent email. Full multi-child inbox walkthrough still separate (below). |
+| Multi-child parent auth | **MERGED/DEPLOYED** + **PARTIAL / NEEDS-MIKE** (+ **NEEDS-PRODUCTION-PROOF** for signed-in select/switch/sign-out) | Code PR **#373** `97548cee`. Docs **#379** MERGED. Evidence **#380** MERGED — disposable multi Active enrollments present; authenticated select/switch/reuse still needs Mike inbox walkthrough. See [`SC-112-multi-child-production-verification-20260903.md`](./SC-112-multi-child-production-verification-20260903.md). |
+| Public awards gate | **MERGED** (#378 `a0e84533`; #376 closed) | Live checkbox **`Public On Web`** is sole public publication gate. Fail-closed blank/false. |
+| Homework late-credit | **GitHub COMPLETE** · Production Automations Code **PASTE-ALIGNED** (**020 v3.9 / 065 v10.6 / 057 2.3**) | PR **#372** `da009262`. Disposable late-HW / PW exclusion behavior proof still **REQUIRES LIVE CONFIRMATION**. |
+| Email Live settings | **Operator checklist MERGED (#377)** — target Live values documented | Producers: `testMode=false` on 071/073/074/076/078A/117; 118 `dryRun=false` + `sendMode=Live`; 119 `dryRun=false`; Vercel `ATHLETE_AUTH_TEST_MODE=false` (magic-link to enrollment email). Checklist: [`parent-email-and-auth-live-cutover-2026-09-03.md`](../deploy-checklists/parent-email-and-auth-live-cutover-2026-09-03.md). Mike UI attestation remains authority if settings drift. |
+| Season Simulation formulas | **Normal `NOW()` / `TODAY()`** — **DO NOT change** | Temporary Season Sim gated formulas are **not** active. |
+| Season Simulation execute | **NOT currently authorized** | Next execute needs separate Mike authorization + temporary gated formula re-paste. |
+| Real-family enrollments | **None present** | Production disposable/operator only (Schmidt / VERIFY). Parent emails = Mike school address only. |
 
 ---
 
-## Stale documentation corrected in this PR
+## Tip SHA
 
-| Doc | Correction |
+| Check | Value |
 |---|---|
-| [`CURRENT-TRUTH.md`](../CURRENT-TRUTH.md) | Tip SHA → `a686e50b`; SC-112 / homework / awards / Season Sim / open-PR overlays |
-| [`127-SI-MASTER-FUTURE-WORK-LIST.md`](../127-SI-MASTER-FUTURE-WORK-LIST.md) | Late-credit paste status; SC-112 multi-child proof label; public awards → pending #378; #376 superseded; closeout snapshot |
-| [`AUTOMATION_VERSION_INVENTORY.md`](../AUTOMATION_VERSION_INVENTORY.md) | **020/065/057** GitHub + Automations Code late-credit; **067** v3.5 Live / DO-NOT-TOUCH |
-| This audit + untracked hygiene classification | Explicit status board + file classes |
+| `origin/master` tip (this board) | **`9a68281eadce33b101bcb2a1f0876530b9179e1d`** |
+| Prior stale tip in first closeout draft | `a686e50b…` (pre-#381–#383) — **superseded** |
+| Public On Web code merge | `a0e84533` (ancestor of tip) |
+
+Re-verify: `git fetch origin; git rev-parse origin/master`
+
+---
+
+## Hygiene (this coord pass)
+
+Follow [`SC-112-untracked-hygiene-classification-20260903.md`](./SC-112-untracked-hygiene-classification-20260903.md). Mike authorized archive/remove of **Remove after approval** (and archive of **Archive after approval**) one-off helpers.
+
+- Archived under `tools/season_simulation/_archive/session-20260903/` (and `docs/audits/_archive/session-20260903/` for the superseded master-list patch).
+- **Required** class left in place for future Season Sim recovery.
+- No `git clean` / `git reset --hard`. No secrets committed. No Season Sim package / formula changes.
 
 ---
 
@@ -57,19 +71,15 @@ Status labels used below:
 - No Season Simulation run  
 - No formula or schema changes  
 - No Airtable record deletes  
-- No edits to automations **003 / 067 / 101 / 117 / SC-147**  
-- No merge of open feature PRs from this agent  
-- Multi-child auth architecture prose deferred to **#379**  
-- Live email cutover prose deferred to **#377**  
+- No edits to automations **003 / 067 / 101 / 117 / SC-147**; do not create **121**  
+- Do not mark multi-child **PRODUCTION-VERIFIED** until Mike completes signed-in walkthrough  
 
 ---
 
-## Remaining Mike / Cursor docs actions
+## Remaining Mike actions
 
-1. Merge this docs PR when reviewed.  
-2. Close or mark **#376** superseded after **#378** lands (Mike).  
-3. Merge **#379** for multi-child auth documentation (do not duplicate here).  
-4. Agent 1 confirm multi-child Production proof → then flip `NEEDS-PRODUCTION-PROOF` → `PRODUCTION-VERIFIED` (via **#380** or follow-up).  
-5. Optionally run disposable late-homework Perfect Week exclusion proof (Automations Code already late-credit versions).  
-6. After Mike approval, apply untracked hygiene archive/remove classes — see [`SC-112-untracked-hygiene-classification-20260903.md`](./SC-112-untracked-hygiene-classification-20260903.md).  
-7. Do **not** authorize Season Sim execute until Mike separately approves + temporary formulas re-pasted.
+1. Merge this docs PR when reviewed (Agent 4 does not merge).  
+2. Complete signed-in multi-child walkthrough → then flip **PARTIAL / NEEDS-MIKE** → **PRODUCTION-VERIFIED**.  
+3. Optionally run disposable late-homework Perfect Week exclusion proof.  
+4. Confirm Email Live producer/Vercel setting names still match the cutover checklist.  
+5. Do **not** authorize Season Sim execute until Mike separately approves + temporary formulas re-pasted.

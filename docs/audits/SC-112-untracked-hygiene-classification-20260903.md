@@ -103,10 +103,24 @@ Cross-reference (merged proposal): [`SC-SEASON-SIM-helper-hygiene-proposal.md`](
 
 ---
 
-## D. Explicit non-actions
+## D. Explicit non-actions (classification PR)
 
-- No file deletions in this PR  
+- No file deletions in the classification-only PR  
 - No `git clean` / `git reset --hard`  
 - No Season Sim package code edits  
 - No Hub / Resend / Airtable mutations  
 - Automations **003 / 067 / 101 / 117 / SC-147** untouched  
+
+---
+
+## E. Archive execution (Agent 4 coord — 2026-09-03)
+
+Mike authorized archive/remove of clearly unnecessary local test helpers. Executed on tip base `9a68281e` branch `docs/sc-112-final-coord-a4`:
+
+| Action | Location |
+|---|---|
+| **Remove after approval** + **Archive after approval** `tools/season_simulation/_*.py` | Moved to `tools/season_simulation/_archive/session-20260903/` |
+| `SC-SEASON-SIM-002-MASTER-LIST-PROPOSED-PATCH.md` | Moved to `docs/audits/_archive/session-20260903/` |
+| **Required** class | Left in place (main tree / package) for Season Sim recovery |
+
+No secrets committed. No Season Sim formulas changed. Season Sim execute still **NOT authorized**.

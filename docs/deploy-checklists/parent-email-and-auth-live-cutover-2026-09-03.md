@@ -170,7 +170,7 @@ Confirm by setting name in UI / Vercel (do not print secrets or emails):
 5. 079 remains Hub dispatcher; Make/Gmail parent-email OFF  
 6. Optional: **one** Athlete1 disposable proof only — confirm no unintended queue rows for other enrollments  
 
-**Live cutover is not complete until Mike verifies Production settings after changes.**
+**Status (2026-09-03 Agent 4):** Checklist **MERGED** (PR **#377**). Target Live values above remain the accurate Email Live / magic-link settings contract. Magic-link **works** in Production. Mike UI attestation remains authority if producer `testMode` / scheduler / `ATHLETE_AUTH_TEST_MODE` drift from this table — re-confirm setting **names** in Automations UI and Vercel without logging secrets.
 
 ---
 

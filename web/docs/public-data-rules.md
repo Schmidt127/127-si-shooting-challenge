@@ -25,6 +25,7 @@ The following may be shown for a registered participant:
 - Daily and session bests
 - Public game/session history and recent performance trends
 - Achievement names and icons marked OK to publish
+- Award Recipient display fields **only when** Award Recipients checkbox **Public On Web** is checked (fail-closed if blank/false; Award Status alone does not publish) — PR **#378**
 - Homework / video **completion status** (e.g. "Reviewed", "Awarded") — not file URLs, coach feedback, or submission assets
 - Week labels and season name
 

@@ -139,7 +139,7 @@ Offline multi-child coverage does **not** replace live Production multi-child pr
 ## Remaining SC-112 work (future)
 
 - Optional Hub template `DASHBOARD_MAGIC_LINK` if Mike wants all outbound mail in Hub audit logs.
-- **Live multi-child Production/Preview proof** (second active enrollment + authorized magic-link send) — built in repo via PR **#373**; not PRODUCTION-VERIFIED until Agent 1 / Agent 3 evidence lands.
+- **Live multi-child Production proof** — code MERGED (**#373**); docs **#379** MERGED; second disposable enrollment evidence **#380** MERGED. Status remains **PARTIAL / NEEDS-MIKE** until Mike completes signed-in select → switch → sign-out → reused-link rejection. Magic-link itself **works** in Production.
 - **Alumni / inactive enrollment access** — open product decision; auth grants Active? only today.
 - Separate parent vs athlete account views (product decision pending).
 - Upstash Redis required for reliable single-use tokens at Production scale (in-memory store is per-instance only).

@@ -5,7 +5,7 @@
 > **⛔ Authority (2026-08-20):** Never use the obsolete Production **`Automations` data table** for DEV/PROD status, versions, triggers, or retirement. This inventory uses **GitHub SCRIPT headers** + Mike-dated overlays + docs references only. Live ON/OFF still requires Automations **UI** confirmation unless a Mike overlay says otherwise. See [CURRENT-TRUTH.md](./CURRENT-TRUTH.md).
 
 **Status:** Living inventory (GitHub headers + existing evidence)  
-**Last updated:** 2026-09-03 (SC-112 docs closeout — Automations Code MCP: **003 v2.0** COMPLETE/PRODUCTION-VERIFIED/DO-NOT-TOUCH; **067 v3.5** Live/DO-NOT-TOUCH; **020 v3.9 / 065 v10.6 / 057 2.3** late-credit PASTE-ALIGNED. Prior same-day: parent-email Live cutover audit — GitHub versions 071 v4.3, 072 v4.9.1, 073 v4.6, 074 v3.5, 076 v8.12, 078A v1.5, 079 v2.5, 117 v2.1, 118 v2.0, 119 v1.7)  
+**Last updated:** 2026-09-03 (SC-112 docs coord post-#381/#382/#383 — tip `9a68281e`; Automations Code: **003 v2.0** COMPLETE/PRODUCTION-VERIFIED/DO-NOT-TOUCH; **067 v3.5** Live/DO-NOT-TOUCH; **020 v3.9 / 065 v10.6 / 057 2.3** late-credit PASTE-ALIGNED. Prior same-day: parent-email Live cutover checklist **#377** MERGED — GitHub versions 071 v4.3, 072 v4.9.1, 073 v4.6, 074 v3.5, 076 v8.12, 078A v1.5, 079 v2.5, 117 v2.1, 118 v2.0, 119 v1.7)  
 **Source scripts:** `airtable/automations/shooting-challenge/*.js`  
 **Companion:** [automation-index.md](./automation-index.md) · [V2_RELEASE_CHECKLIST.md](./V2_RELEASE_CHECKLIST.md) · [deploy-checklists/DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md)
 

@@ -1,5 +1,7 @@
 # SC-SEASON-SIM-002 — Operator checklist (gated clock override)
 
+> **Current Production (2026-09-03):** Season Simulation execute is **NOT currently authorized**. Live formulas are normal **`NOW()` / `TODAY()`** — **DO NOT change** formulas in this closeout wave. Next execute requires separate Mike authorization + temporary gated formula re-paste from this packet.
+
 | | |
 |---|---|
 | **Backlog** | SC-SEASON-SIM-002 |
