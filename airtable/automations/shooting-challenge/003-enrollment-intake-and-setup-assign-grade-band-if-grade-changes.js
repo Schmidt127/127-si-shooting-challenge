@@ -2,24 +2,38 @@
 Automation: 003 - Enrollment Intake and Setup - Assign Grade Band - If Grade Changes
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: Production Copy
+Status: COMPLETE / PRODUCTION-VERIFIED (v2.0) — keep active
 Last Synced From Airtable: 2026-06-20
+Verified (Mike disposable VERIFY Enrollment): 2026-09-03
 
 Purpose:
-To be confirmed from production script.
+Refresh Grade Band after a post-enrollment Grade correction.
+Initial Grade Band assignment is handled separately by Automation 002.
+Grade-change correction is handled by this automation (003).
 
 Trigger:
-To be confirmed from Airtable automation.
+Enrollment enters the Grade Band refresh view
+(Automation - 003 - Grade Band Refresh Needed), typically when:
+- Grade Band is not empty
+- Grade is not empty
+- Athlete is not empty
+- Grade Band Refresh Needed = 1
+
+Input:
+Dynamic triggering Enrollment record ID (recordId).
 
 Important Tables:
-To be confirmed from production script.
+Enrollments, Grade Bands
 
-Important Fields:
-To be confirmed from production script.
+Important Fields (Enrollment writes):
+Grade Band, Grade Band (Auto Assign), Last Grade Used for Grade Band,
+Grade Band Status, Grade Band Assignment Status
+(does NOT write formula Grade Band Refresh Needed — formula returns to 0)
 
 Notes:
 GitHub is the source-of-truth copy.
 Airtable is the deployed/running copy.
+Retirement decision: keep active — legitimate production safeguard, not an unused slot.
 */
 
 /************************************************************

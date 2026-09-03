@@ -28,7 +28,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 |---|--------------------------|------------------------------|------|
 | 001 | Enrollment Intake and Setup — Find or Create Athlete and Link Enrollment | *confirm in Airtable* | `001-enrollment-intake-and-setup-find-or-create-athlete-and-link-enrollment.js` |
 | 002 | Enrollment Intake and Setup — Assign Grade Band — Initial | *confirm in Airtable* | `002-enrollment-intake-and-setup-assign-grade-band-initial.js` |
-| 003 | Enrollment Intake and Setup — Assign Grade Band — If Grade Changes | *confirm in Airtable* | `003-enrollment-intake-and-setup-assign-grade-band-if-grade-changes.js` |
+| **003** | Enrollment Intake and Setup — Assign Grade Band — If Grade Changes | Enrollments enter view **Automation - 003 - Grade Band Refresh Needed** (Grade Band / Grade / Athlete not empty; `Grade Band Refresh Needed = 1`); dynamic `recordId` | `003-enrollment-intake-and-setup-assign-grade-band-if-grade-changes.js` (**v2.0** — **COMPLETE / PRODUCTION-VERIFIED** 2026-09-03; keep active; initial assign = **002**; offline: `tests/enrollment-intake/automation-003-grade-change-refresh.test.js`; closeout [`prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md`](./prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md)) |
 
 ## Submission intake and assets (005–007, 009, 010, 013, 021–023)
 
