@@ -134,6 +134,7 @@ Anonymous `/dashboard` smoke/privacy tests accept **either** coming-soon (auth o
 ## Remaining SC-112 work (future)
 
 - Optional Hub template `DASHBOARD_MAGIC_LINK` if Mike wants all outbound mail in Hub audit logs.
-- Multi-enrollment family picker when one parent email maps to several active athletes.
 - Separate parent vs athlete account views (product decision pending).
 - Upstash Redis required for reliable single-use tokens at Production scale (in-memory store is per-instance only).
+
+**Done in repo:** Multi-enrollment family picker — `/dashboard/select` + session `selectedEnrollmentId` (no `?enrollmentId=`).

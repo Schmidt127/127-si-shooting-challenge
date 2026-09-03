@@ -30,7 +30,8 @@ Magic-link auth email is **web-initiated, synchronous, and single-recipient**. I
 - Uniform success response for known/unknown parent emails (no enumeration)
 - Rate limits by normalized email and client IP (in-memory; Redis-backed optional)
 - Blocks personal Gmail / Googlemail addresses at validation
-- Session determines authorized enrollments; URL `enrollmentId` is ignored or rejected
+- Session determines authorized enrollments; URL `enrollmentId` is never authoritative (stripped)
+- Child selection uses opaque POST tokens + `selectedEnrollmentId` in the signed session (v2)
 - No Airtable record IDs, tokens, or internal errors in browser-facing copy
 - `ATHLETE_AUTH_DEV_BYPASS` only honored when `NODE_ENV !== "production"` and explicit env set
 
@@ -58,11 +59,22 @@ Existing vars unchanged: `AIRTABLE_API_TOKEN`, `AIRTABLE_BASE_ID`, `SITE_ACCESS_
 |------|------|
 | `/dashboard/sign-in` | Request access form |
 | `/api/auth/magic-link` | POST — issue token + send email |
-| `/api/auth/verify` | GET — consume token, set session, redirect |
+| `/api/auth/verify` | GET — consume token, set session, redirect (1 child → `/dashboard`; N → `/dashboard/select`) |
+| `/api/auth/select-child` | POST — opaque selection token → bind `selectedEnrollmentId` in session → `/dashboard` |
 | `/api/auth/sign-out` | POST — clear session |
-| `/dashboard` | Protected when auth enabled; session-scoped data |
+| `/dashboard/select` | Multi-child picker (session required); program/season labels; no Airtable IDs in URLs |
+| `/dashboard` | Protected when auth enabled; loads **one** selected child’s private data |
 
 Public catalog routes (`/leaderboard`, `/athletes/[slug]`, etc.) are unchanged.
+
+## Multi-child session (v2)
+
+Session cookie payload `v:2` includes `parentEmail`, `enrollmentIds[]`, optional `selectedEnrollmentId`, and `exp`.
+
+- One active enrollment → auto-select and open `/dashboard`.
+- Multiple → `/dashboard/select`; POST opaque HMAC tokens (never `rec…` in query strings).
+- Every private load re-intersects session grant with live `Active?` + parent email.
+- Legacy `?enrollmentId=` is ignored and stripped.
 
 ## Mike manual steps before Production
 

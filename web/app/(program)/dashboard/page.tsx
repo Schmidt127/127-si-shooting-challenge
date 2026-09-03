@@ -5,8 +5,9 @@ import { SignOutButton } from "@/components/auth/sign-out-button";
 import { AthleteDashboardView } from "@/components/dashboard/athlete-dashboard-view";
 import { CtaLink, ProgramPage } from "@/components/site";
 import { EmptyState, ErrorState } from "@/components/ui";
-import { isAthleteAuthConfigured } from "@/lib/auth/config";
+import { getAthleteAuthSecret, isAthleteAuthConfigured } from "@/lib/auth/config";
 import { getAthleteSessionFromCookies } from "@/lib/auth/server-session";
+import { createOpaqueSelectionToken } from "@/lib/auth/selection-token";
 import { loadAuthenticatedAthleteDashboard } from "@/lib/data/athlete-dashboard";
 import { XpActivityLoadError } from "@/lib/data/xp-activity-loader";
 import { DASHBOARD_PLACEHOLDER } from "@/lib/release/public-surface";
@@ -27,25 +28,27 @@ type AthleteDashboardPageProps = {
 export default async function AthleteDashboardPage({ searchParams }: AthleteDashboardPageProps) {
   const { enrollmentId, slug } = await searchParams;
 
+  // Legacy ?enrollmentId= bookmarks are never authoritative — strip to a clean URL.
+  if (enrollmentId?.trim()) {
+    redirect("/dashboard");
+  }
+
   if (isAthleteAuthConfigured()) {
     const session = await getAthleteSessionFromCookies();
     if (!session) {
       redirect("/dashboard/sign-in");
     }
 
-    try {
-      const result = await loadAuthenticatedAthleteDashboard({
-        session,
-        urlEnrollmentId: enrollmentId?.trim() || undefined,
-      });
+    const secret = getAthleteAuthSecret();
+    if (!secret) {
+      redirect("/dashboard/sign-in");
+    }
 
-      if (result.status === "forbidden") {
-        return (
-          <ErrorState
-            title="Access denied"
-            message="That dashboard link is not authorized for your family sign-in. Open the dashboard without changing the enrollment link, or request a new sign-in email."
-          />
-        );
+    try {
+      const result = await loadAuthenticatedAthleteDashboard({ session });
+
+      if (result.status === "needs_selection") {
+        redirect("/dashboard/select");
       }
 
       if (result.status === "empty") {
@@ -57,10 +60,11 @@ export default async function AthleteDashboardPage({ searchParams }: AthleteDash
         );
       }
 
-      const activeToken =
-        enrollmentId?.trim() && session.enrollmentIds.includes(enrollmentId.trim())
-          ? enrollmentId.trim()
-          : session.enrollmentIds[0];
+      const selectedId =
+        session.selectedEnrollmentId &&
+        result.familyEnrollments.some((item) => item.enrollmentId === session.selectedEnrollmentId)
+          ? session.selectedEnrollmentId
+          : result.familyEnrollments[0]?.enrollmentId;
 
       return (
         <div data-testid="athlete-dashboard-authenticated">
@@ -72,11 +76,18 @@ export default async function AthleteDashboardPage({ searchParams }: AthleteDash
           </div>
           <AthleteDashboardView
             data={result.data}
-            activeEnrollmentToken={activeToken}
             familyEnrollments={result.familyEnrollments.map((item) => ({
               displayName: item.displayName,
-              slug: item.slug,
-              enrollmentToken: item.enrollmentId,
+              programLabel: item.programLabel,
+              seasonLabel: item.seasonLabel,
+              selectionToken: createOpaqueSelectionToken(
+                {
+                  enrollmentId: item.enrollmentId,
+                  parentEmail: session.parentEmail,
+                },
+                secret,
+              ),
+              active: item.enrollmentId === selectedId,
             }))}
           />
         </div>
@@ -91,7 +102,7 @@ export default async function AthleteDashboardPage({ searchParams }: AthleteDash
     }
   }
 
-  if (enrollmentId?.trim() || slug?.trim()) {
+  if (slug?.trim()) {
     console.warn(
       "[dashboard] Ignored query params on blocked athlete dashboard route (SC-112 pending).",
     );

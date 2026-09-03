@@ -1,14 +1,19 @@
+import { createHmac } from "node:crypto";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const findActiveEnrollmentsByParentEmailMock = vi.hoisted(() => vi.fn());
 const loadAuthorizedEnrollmentForSessionMock = vi.hoisted(() => vi.fn());
 
-vi.mock("@/lib/auth/enrollment-access", () => ({
-  findActiveEnrollmentsByParentEmail: findActiveEnrollmentsByParentEmailMock,
-  loadAuthorizedEnrollmentForSession: loadAuthorizedEnrollmentForSessionMock,
-  pickPrimaryEnrollment: vi.fn(),
-  resolveSessionEnrollment: vi.fn(),
-}));
+vi.mock("@/lib/auth/enrollment-access", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/auth/enrollment-access")>(
+    "@/lib/auth/enrollment-access",
+  );
+  return {
+    ...actual,
+    findActiveEnrollmentsByParentEmail: findActiveEnrollmentsByParentEmailMock,
+    loadAuthorizedEnrollmentForSession: loadAuthorizedEnrollmentForSessionMock,
+  };
+});
 
 import {
   MAGIC_LINK_CONFIRMATION_MESSAGE,
@@ -24,16 +29,35 @@ import {
   verifySignedAthleteSessionToken,
 } from "@/lib/auth/session";
 import {
+  createOpaqueSelectionToken,
+  verifyOpaqueSelectionToken,
+} from "@/lib/auth/selection-token";
+import {
   buildMagicLinkTokenRecord,
   getMagicLinkTokenStore,
   resetMagicLinkTokenStoreForTests,
 } from "@/lib/auth/token-store";
 import { generateMagicLinkToken, hashMagicLinkToken, safeCompareTokenHash } from "@/lib/auth/tokens";
-import { loadAuthorizedEnrollmentForSession } from "@/lib/auth/enrollment-access";
+import { resolveSessionEnrollment } from "@/lib/auth/enrollment-access";
 import { isMagicLinkTokenStoreAvailable } from "@/lib/auth/config";
 
 const ORIGINAL_ENV = { ...process.env };
 const TEST_SECRET = "unit-test-secret-at-least-32-characters";
+
+const SAMPLE_ENROLLMENT = {
+  enrollmentId: "recABCDEFGHIJKLM",
+  displayName: "Testing Athlete",
+  slug: "testing-athlete",
+  school: "Fairfield",
+  grade: "8",
+  level: "Shooter",
+  xpTotal: 100,
+  xpIntoLevel: 10,
+  xpForNextLevel: 50,
+  nextLevelLabel: "Hot Hand",
+  programLabel: "Shooting Challenge",
+  seasonLabel: "2026-2027",
+};
 
 describe("magic link tokens", () => {
   it("generates unique raw tokens and stable hashes", () => {
@@ -74,15 +98,90 @@ describe("session cookies", () => {
     expect(verifySignedAthleteSessionToken(token, TEST_SECRET, 200)).toBeNull();
   });
 
+  it("issues v2 sessions with optional selectedEnrollmentId", () => {
+    const token = createSignedAthleteSessionToken(
+      {
+        parentEmail: "parent@fairfield.k12.mt.us",
+        enrollmentIds: ["recABCDEFGHIJKLM", "recNOPQRSTUVWXYZ"],
+        selectedEnrollmentId: "recNOPQRSTUVWXYZ",
+      },
+      TEST_SECRET,
+    );
+    const session = verifySignedAthleteSessionToken(token, TEST_SECRET);
+    expect(session?.v).toBe(2);
+    expect(session?.selectedEnrollmentId).toBe("recNOPQRSTUVWXYZ");
+    expect(session?.enrollmentIds).toHaveLength(2);
+  });
+
+  it("migrates legacy v1 cookies to v2 without selection", () => {
+    const encoded = Buffer.from(
+      JSON.stringify({
+        v: 1,
+        parentEmail: "parent@fairfield.k12.mt.us",
+        enrollmentIds: ["recABCDEFGHIJKLM", "recNOPQRSTUVWXYZ"],
+        exp: 9_999_999_999,
+      }),
+      "utf8",
+    ).toString("base64url");
+    const signature = createHmac("sha256", TEST_SECRET).update(encoded).digest("base64url");
+    const session = verifySignedAthleteSessionToken(`${encoded}.${signature}`, TEST_SECRET);
+    expect(session?.v).toBe(2);
+    expect(session?.selectedEnrollmentId).toBeNull();
+    expect(session?.enrollmentIds).toEqual(["recABCDEFGHIJKLM", "recNOPQRSTUVWXYZ"]);
+  });
+
   it("denies cross-enrollment access", () => {
     const session = {
-      v: 1 as const,
+      v: 2 as const,
       parentEmail: "parent@fairfield.k12.mt.us",
       enrollmentIds: ["recABCDEFGHIJKLM"],
+      selectedEnrollmentId: "recABCDEFGHIJKLM",
       exp: 9_999_999_999,
     };
     expect(sessionOwnsEnrollment(session, "recABCDEFGHIJKLM")).toBe(true);
     expect(sessionOwnsEnrollment(session, "recHIJKLMNOPQRST")).toBe(false);
+  });
+});
+
+describe("opaque selection tokens", () => {
+  it("round-trips valid claims", () => {
+    const token = createOpaqueSelectionToken(
+      {
+        enrollmentId: "recABCDEFGHIJKLM",
+        parentEmail: "parent@fairfield.k12.mt.us",
+      },
+      TEST_SECRET,
+    );
+    const claims = verifyOpaqueSelectionToken(token, TEST_SECRET);
+    expect(claims?.enrollmentId).toBe("recABCDEFGHIJKLM");
+    expect(claims?.parentEmail).toBe("parent@fairfield.k12.mt.us");
+  });
+
+  it("rejects forged and expired tokens", () => {
+    const token = createOpaqueSelectionToken(
+      {
+        enrollmentId: "recABCDEFGHIJKLM",
+        parentEmail: "parent@fairfield.k12.mt.us",
+        ttlSeconds: 10,
+      },
+      TEST_SECRET,
+      1_000,
+    );
+    expect(verifyOpaqueSelectionToken(token, "wrong-secret-at-least-32-characters!", 1_005)).toBeNull();
+    expect(verifyOpaqueSelectionToken(token, TEST_SECRET, 1_020)).toBeNull();
+    expect(verifyOpaqueSelectionToken("not.a.token", TEST_SECRET)).toBeNull();
+  });
+
+  it("does not embed raw enrollment ids in the opaque token string", () => {
+    const token = createOpaqueSelectionToken(
+      {
+        enrollmentId: "recABCDEFGHIJKLM",
+        parentEmail: "parent@fairfield.k12.mt.us",
+      },
+      TEST_SECRET,
+    );
+    expect(token).not.toMatch(/rec[a-zA-Z0-9]{14}/);
+    expect(Buffer.from(token, "utf8").toString("utf8")).not.toContain("recABCDEFGHIJKLM");
   });
 });
 
@@ -133,20 +232,7 @@ describe("magic link request responses", () => {
     process.env.ATHLETE_AUTH_DEV_BYPASS = "false";
     delete process.env.UPSTASH_REDIS_REST_URL;
     delete process.env.UPSTASH_REDIS_REST_TOKEN;
-    findActiveEnrollmentsByParentEmailMock.mockResolvedValue([
-      {
-        enrollmentId: "recABCDEFGHIJKLM",
-        displayName: "Testing Athlete",
-        slug: "testing-athlete",
-        school: "Fairfield",
-        grade: "8",
-        level: "Shooter",
-        xpTotal: 100,
-        xpIntoLevel: 10,
-        xpForNextLevel: 50,
-        nextLevelLabel: "Hot Hand",
-      },
-    ]);
+    findActiveEnrollmentsByParentEmailMock.mockResolvedValue([SAMPLE_ENROLLMENT]);
 
     const response = await requestMagicLinkAccess(
       "parent@fairfield.k12.mt.us",
@@ -167,20 +253,7 @@ describe("magic link request responses", () => {
   });
 
   it("returns the same confirmation for known emails", async () => {
-    findActiveEnrollmentsByParentEmailMock.mockResolvedValue([
-      {
-        enrollmentId: "recABCDEFGHIJKLM",
-        displayName: "Testing Athlete",
-        slug: "testing-athlete",
-        school: "Fairfield",
-        grade: "8",
-        level: "Shooter",
-        xpTotal: 100,
-        xpIntoLevel: 10,
-        xpForNextLevel: 50,
-        nextLevelLabel: "Hot Hand",
-      },
-    ]);
+    findActiveEnrollmentsByParentEmailMock.mockResolvedValue([SAMPLE_ENROLLMENT]);
 
     const response = await requestMagicLinkAccess(
       "parent@fairfield.k12.mt.us",
@@ -267,19 +340,31 @@ describe("verifyMagicLinkToken", () => {
     if (!result.ok) expect(result.reason).toBe("invalid");
   });
 
-  it("creates a session for a valid one-time token", async () => {
+  it("auto-selects and redirects to dashboard for one child", async () => {
+    findActiveEnrollmentsByParentEmailMock.mockResolvedValue([SAMPLE_ENROLLMENT]);
+
+    const { raw, hash } = generateMagicLinkToken();
+    await getMagicLinkTokenStore().save(
+      hash,
+      buildMagicLinkTokenRecord("parent@fairfield.k12.mt.us"),
+    );
+
+    const result = await verifyMagicLinkToken(raw);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.redirectPath).toBe("/dashboard");
+    const session = verifySignedAthleteSessionToken(result.sessionToken, TEST_SECRET);
+    expect(session?.selectedEnrollmentId).toBe("recABCDEFGHIJKLM");
+  });
+
+  it("forces select page for multiple children", async () => {
     findActiveEnrollmentsByParentEmailMock.mockResolvedValue([
+      SAMPLE_ENROLLMENT,
       {
-        enrollmentId: "recABCDEFGHIJKLM",
-        displayName: "Testing Athlete",
-        slug: "testing-athlete",
-        school: "Fairfield",
-        grade: "8",
-        level: "Shooter",
-        xpTotal: 100,
-        xpIntoLevel: 10,
-        xpForNextLevel: 50,
-        nextLevelLabel: "Hot Hand",
+        ...SAMPLE_ENROLLMENT,
+        enrollmentId: "recNOPQRSTUVWXYZ",
+        displayName: "Sibling Athlete",
+        slug: "sibling-athlete",
       },
     ]);
 
@@ -291,27 +376,28 @@ describe("verifyMagicLinkToken", () => {
 
     const result = await verifyMagicLinkToken(raw);
     expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.redirectPath).toBe("/dashboard/select");
+    const session = verifySignedAthleteSessionToken(result.sessionToken, TEST_SECRET);
+    expect(session?.selectedEnrollmentId).toBeNull();
+    expect(session?.enrollmentIds).toHaveLength(2);
   });
 });
 
 describe("enrollment URL tampering", () => {
-  it("rejects unauthorized enrollment ids from the session", async () => {
-    loadAuthorizedEnrollmentForSessionMock.mockResolvedValue({
-      enrollments: [],
-      active: null,
-      rejectedUrlEnrollmentId: true,
-    });
-
-    const result = await loadAuthorizedEnrollmentForSession(
+  it("never authorizes URL enrollment ids", () => {
+    const result = resolveSessionEnrollment(
       {
-        v: 1,
+        v: 2,
         parentEmail: "parent@fairfield.k12.mt.us",
         enrollmentIds: ["recABCDEFGHIJKLM"],
+        selectedEnrollmentId: "recABCDEFGHIJKLM",
         exp: 9_999_999_999,
       },
       "recHIJKLMNOPQRST",
     );
 
     expect(result.rejectedUrlEnrollmentId).toBe(true);
+    expect(result.enrollment).toBeNull();
   });
 });

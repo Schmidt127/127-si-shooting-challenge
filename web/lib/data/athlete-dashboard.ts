@@ -274,19 +274,15 @@ export function getMockAthleteDashboard(): AthleteDashboardModel {
 
 export async function loadAuthenticatedAthleteDashboard(options: {
   session: AthleteSessionPayload;
-  urlEnrollmentId?: string;
 }): Promise<
   | { status: "ready"; data: AthleteDashboardModel; familyCount: number; familyEnrollments: AuthorizedEnrollment[] }
   | { status: "empty" }
-  | { status: "forbidden" }
+  | { status: "needs_selection"; familyEnrollments: AuthorizedEnrollment[] }
 > {
-  const access = await loadAuthorizedEnrollmentForSession(
-    options.session,
-    options.urlEnrollmentId,
-  );
+  const access = await loadAuthorizedEnrollmentForSession(options.session);
 
-  if (access.rejectedUrlEnrollmentId) {
-    return { status: "forbidden" };
+  if (access.needsSelection) {
+    return { status: "needs_selection", familyEnrollments: access.enrollments };
   }
 
   if (!access.active) {

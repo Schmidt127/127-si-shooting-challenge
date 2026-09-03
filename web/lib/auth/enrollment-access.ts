@@ -19,6 +19,8 @@ const ENROLLMENT_AUTH_FIELDS = [
   "XP Needed for Next Level",
   "Next Level",
   "Current Level - Public Facing Display",
+  "Program Instance Name Only",
+  "School Year",
 ] as const;
 
 export type AuthorizedEnrollment = {
@@ -32,6 +34,19 @@ export type AuthorizedEnrollment = {
   xpIntoLevel: number;
   xpForNextLevel: number;
   nextLevelLabel: string;
+  programLabel: string;
+  seasonLabel: string;
+};
+
+export type EnrollmentAccessResult = {
+  /** Live authorized enrollments (session ∩ Active? ∩ parent email). */
+  enrollments: AuthorizedEnrollment[];
+  /** Selected enrollment when ready to load private data. */
+  active: AuthorizedEnrollment | null;
+  /** True when multiple authorized children and no valid session selection. */
+  needsSelection: boolean;
+  /** Refreshed enrollment id list for rewriting the session cookie. */
+  liveEnrollmentIds: string[];
 };
 
 function isRecordId(value: string): boolean {
@@ -69,13 +84,16 @@ export async function findActiveEnrollmentsByParentEmail(
         xpIntoLevel: Number(asText(fields["XP Progress in Current Level"], "0")) || 0,
         xpForNextLevel: Number(asText(fields["XP Needed for Next Level"], "0")) || 0,
         nextLevelLabel: asText(fields["Next Level"], "Next level"),
+        programLabel:
+          asText(fields["Program Instance Name Only"], "") || "Shooting Challenge",
+        seasonLabel: asText(fields["School Year"], "") || "Current season",
       };
     });
 }
 
 export function pickPrimaryEnrollment(
   enrollments: AuthorizedEnrollment[],
-  preferredId?: string,
+  preferredId?: string | null,
 ): AuthorizedEnrollment | null {
   if (enrollments.length === 0) return null;
   if (preferredId) {
@@ -85,23 +103,85 @@ export function pickPrimaryEnrollment(
   return enrollments[0] ?? null;
 }
 
+/**
+ * Resolve the authorized enrollment for a private dashboard load.
+ * Ignores URL/query enrollment IDs — selection comes only from the signed session.
+ * Re-intersects session grant with live Active? + parent email on every call.
+ */
+export async function loadAuthorizedEnrollmentForSession(
+  session: AthleteSessionPayload,
+): Promise<EnrollmentAccessResult> {
+  const live = await findActiveEnrollmentsByParentEmail(session.parentEmail);
+  const enrollments = live.filter((item) => session.enrollmentIds.includes(item.enrollmentId));
+  const liveEnrollmentIds = enrollments.map((item) => item.enrollmentId);
+
+  if (enrollments.length === 0) {
+    return {
+      enrollments,
+      active: null,
+      needsSelection: false,
+      liveEnrollmentIds,
+    };
+  }
+
+  if (enrollments.length === 1) {
+    return {
+      enrollments,
+      active: enrollments[0] ?? null,
+      needsSelection: false,
+      liveEnrollmentIds,
+    };
+  }
+
+  const selectedId = session.selectedEnrollmentId?.trim() || null;
+  if (selectedId) {
+    const active = enrollments.find((item) => item.enrollmentId === selectedId) ?? null;
+    if (active) {
+      return {
+        enrollments,
+        active,
+        needsSelection: false,
+        liveEnrollmentIds,
+      };
+    }
+  }
+
+  return {
+    enrollments,
+    active: null,
+    needsSelection: true,
+    liveEnrollmentIds,
+  };
+}
+
+/**
+ * @deprecated URL enrollment IDs are never authoritative (SC-112 multi-child).
+ * Kept as a no-op reject helper for migration-era tests.
+ */
 export function resolveSessionEnrollment(
   session: AthleteSessionPayload,
   urlEnrollmentId?: string,
 ): { enrollment: AuthorizedEnrollment | null; rejectedUrlEnrollmentId: boolean } {
-  const allowed = session.enrollmentIds.filter(isRecordId);
-  if (allowed.length === 0) {
-    return { enrollment: null, rejectedUrlEnrollmentId: Boolean(urlEnrollmentId) };
-  }
-
   const trimmed = urlEnrollmentId?.trim();
   if (trimmed) {
-    if (!allowed.includes(trimmed)) {
-      return { enrollment: null, rejectedUrlEnrollmentId: true };
-    }
+    return { enrollment: null, rejectedUrlEnrollmentId: true };
   }
-
-  const primaryId = trimmed && allowed.includes(trimmed) ? trimmed : allowed[0];
+  const allowed = session.enrollmentIds.filter(isRecordId);
+  if (allowed.length === 0) {
+    return { enrollment: null, rejectedUrlEnrollmentId: false };
+  }
+  if (allowed.length > 1 && !session.selectedEnrollmentId) {
+    return { enrollment: null, rejectedUrlEnrollmentId: false };
+  }
+  const primaryId =
+    session.selectedEnrollmentId && allowed.includes(session.selectedEnrollmentId)
+      ? session.selectedEnrollmentId
+      : allowed.length === 1
+        ? allowed[0]
+        : null;
+  if (!primaryId) {
+    return { enrollment: null, rejectedUrlEnrollmentId: false };
+  }
   return {
     enrollment: {
       enrollmentId: primaryId,
@@ -114,28 +194,9 @@ export function resolveSessionEnrollment(
       xpIntoLevel: 0,
       xpForNextLevel: 0,
       nextLevelLabel: "",
+      programLabel: "",
+      seasonLabel: "",
     },
     rejectedUrlEnrollmentId: false,
   };
-}
-
-export async function loadAuthorizedEnrollmentForSession(
-  session: AthleteSessionPayload,
-  urlEnrollmentId?: string,
-): Promise<{
-  enrollments: AuthorizedEnrollment[];
-  active: AuthorizedEnrollment | null;
-  rejectedUrlEnrollmentId: boolean;
-}> {
-  const enrollments = (await findActiveEnrollmentsByParentEmail(session.parentEmail)).filter(
-    (item) => session.enrollmentIds.includes(item.enrollmentId),
-  );
-
-  const trimmed = urlEnrollmentId?.trim();
-  if (trimmed && !session.enrollmentIds.includes(trimmed)) {
-    return { enrollments, active: null, rejectedUrlEnrollmentId: true };
-  }
-
-  const active = pickPrimaryEnrollment(enrollments, trimmed);
-  return { enrollments, active, rejectedUrlEnrollmentId: false };
 }

@@ -30,6 +30,7 @@ describe("GET /api/auth/verify", () => {
       ok: true,
       sessionToken: "signed-session-token",
       maxAgeSeconds: 3600,
+      redirectPath: "/dashboard",
     });
 
     const response = await GET(new Request(VERIFY_URL));
@@ -45,6 +46,21 @@ describe("GET /api/auth/verify", () => {
     expect(setCookie).toContain(`${ATHLETE_SESSION_COOKIE}=`);
     expect(setCookie).toContain("HttpOnly");
     expect(setCookie.toLowerCase()).toContain("samesite=lax");
+  });
+
+  it("redirects multi-child families to /shoot/dashboard/select", async () => {
+    verifyMagicLinkTokenMock.mockResolvedValue({
+      ok: true,
+      sessionToken: "signed-session-token",
+      maxAgeSeconds: 3600,
+      redirectPath: "/dashboard/select",
+    });
+
+    const response = await GET(new Request(VERIFY_URL));
+    expect(response.headers.get("location")).toBe(
+      "https://www.fairfieldbasketballclub.com/shoot/dashboard/select",
+    );
+    expect(response.headers.get("location")).not.toContain("enrollmentId=");
   });
 
   it("redirects invalid tokens to /shoot/dashboard/sign-in without the token", async () => {
@@ -109,10 +125,12 @@ describe("verify route with ATHLETE_AUTH_DEV_BYPASS disabled", () => {
         {
           parentEmail: "parent@fairfield.k12.mt.us",
           enrollmentIds: ["recABCDEFGHIJKLM"],
+          selectedEnrollmentId: "recABCDEFGHIJKLM",
         },
         TEST_SECRET,
       ),
       maxAgeSeconds: 3600,
+      redirectPath: "/dashboard",
     });
 
     const response = await GET(new Request(VERIFY_URL));

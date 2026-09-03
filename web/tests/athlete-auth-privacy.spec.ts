@@ -54,4 +54,17 @@ test.describe("athlete auth privacy", () => {
     const unknownJson = await unknown.json();
     expect(knownJson.message).toBe(unknownJson.message);
   });
+
+  test("select and dashboard paths stay free of enrollmentId query params", async ({ page }) => {
+    test.skip(
+      process.env.ATHLETE_AUTH_ENABLED !== "true",
+      "Set ATHLETE_AUTH_ENABLED=true for auth e2e runs",
+    );
+
+    await page.goto("dashboard/select", { waitUntil: "domcontentloaded" });
+    // Anonymous users redirect to sign-in; authenticated multi-child stay on select.
+    const url = page.url();
+    expect(url).not.toContain("enrollmentId=");
+    expect(url).not.toMatch(/rec[a-zA-Z0-9]{14}/);
+  });
 });

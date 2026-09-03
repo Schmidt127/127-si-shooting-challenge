@@ -27,7 +27,9 @@ export async function GET(request: Request): Promise<Response> {
     return redirectToSignIn(request, reason);
   }
 
-  const response = NextResponse.redirect(buildAbsoluteAuthRedirectUrl(request, "/dashboard"));
+  const response = NextResponse.redirect(
+    buildAbsoluteAuthRedirectUrl(request, result.redirectPath),
+  );
   response.cookies.set(ATHLETE_SESSION_COOKIE, result.sessionToken, {
     httpOnly: true,
     sameSite: "lax",

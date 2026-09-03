@@ -16,7 +16,10 @@ import {
   magicLinkRateLimitedResponse,
   magicLinkRequestSuccessResponse,
 } from "@/lib/auth/responses";
-import { createSignedAthleteSessionToken } from "@/lib/auth/session";
+import {
+  ATHLETE_SESSION_COOKIE,
+  createSignedAthleteSessionToken,
+} from "@/lib/auth/session";
 import {
   buildMagicLinkTokenRecord,
   getMagicLinkTokenStore,
@@ -91,6 +94,8 @@ export async function verifyMagicLinkToken(rawToken: string): Promise<{
   ok: true;
   sessionToken: string;
   maxAgeSeconds: number;
+  /** Where to send the browser after setting the session cookie. */
+  redirectPath: "/dashboard" | "/dashboard/select";
 } | {
   ok: false;
   reason: "misconfigured" | "invalid" | "expired" | "used";
@@ -117,10 +122,14 @@ export async function verifyMagicLinkToken(rawToken: string): Promise<{
     return { ok: false, reason: "invalid" };
   }
 
+  const enrollmentIds = enrollments.map((item) => item.enrollmentId);
+  const selectedEnrollmentId = enrollmentIds.length === 1 ? enrollmentIds[0] : null;
+
   const sessionToken = createSignedAthleteSessionToken(
     {
       parentEmail: consumed.record.parentEmail,
-      enrollmentIds: enrollments.map((item) => item.enrollmentId),
+      enrollmentIds,
+      selectedEnrollmentId,
     },
     secret,
   );
@@ -129,12 +138,13 @@ export async function verifyMagicLinkToken(rawToken: string): Promise<{
     ok: true,
     sessionToken,
     maxAgeSeconds: getAthleteSessionTtlSeconds(),
+    redirectPath: enrollmentIds.length > 1 ? "/dashboard/select" : "/dashboard",
   };
 }
 
 export async function clearAthleteSessionCookie(): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.set("athlete_session", "", {
+  cookieStore.set(ATHLETE_SESSION_COOKIE, "", {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
