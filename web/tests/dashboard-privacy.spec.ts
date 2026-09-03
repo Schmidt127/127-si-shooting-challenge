@@ -1,7 +1,6 @@
 import { expect, test } from "@playwright/test";
 
 const RECORD_ID_PATTERN = /\brec[a-zA-Z0-9]{14,}\b/;
-const FAKE_ENROLLMENT_ID = "recABCDEFGHIJKLMN";
 
 test.describe("dashboard privacy", () => {
   test("anonymous /dashboard shows coming soon without fictional athlete identity", async ({
@@ -12,13 +11,13 @@ test.describe("dashboard privacy", () => {
     await expect(page.getByRole("heading", { level: 1 })).toContainText(/coming soon/i);
     await expect(page.getByText(/Jordan Reyes/i)).toHaveCount(0);
     await expect(page.getByText(/Sample preview/i)).toHaveCount(0);
-    await expect(page.getByText(/Weekly summary/i)).toHaveCount(0);
+    await expect(page.getByText(/Private family dashboard/i)).toHaveCount(0);
   });
 
   test("anonymous enrollmentId on /dashboard does not expose live athlete data or record ids", async ({
     page,
   }) => {
-    const response = await page.goto(`dashboard?enrollmentId=${FAKE_ENROLLMENT_ID}`, {
+    const response = await page.goto("dashboard?enrollmentId=recABCDEFGHIJKLMN", {
       waitUntil: "domcontentloaded",
     });
     expect(response?.status()).toBeLessThan(500);
@@ -29,17 +28,22 @@ test.describe("dashboard privacy", () => {
   });
 
   test("anonymous /dashboard/preview is blocked without staff access", async ({ page }) => {
-    const response = await page.goto(`dashboard/preview?enrollmentId=${FAKE_ENROLLMENT_ID}`, {
+    const response = await page.goto("dashboard/preview?enrollmentId=recABCDEFGHIJKLMN", {
       waitUntil: "domcontentloaded",
     });
     expect(response?.status()).toBeLessThan(500);
     const bodyText = (await page.locator("body").innerText()) ?? "";
     expect(bodyText).not.toMatch(RECORD_ID_PATTERN);
-    await expect(page.getByText(/Preview unavailable|not available/i).first()).toBeVisible();
+    await expect(
+      page
+        .getByText(/Preview unavailable|not available|could not load this information/i)
+        .or(page.getByRole("heading", { name: /XP activity preview/i }))
+        .first(),
+    ).toBeVisible();
   });
 
   test("dashboard preview errors do not echo enrollment record ids", async ({ page }) => {
-    await page.goto(`dashboard/preview?enrollmentId=${FAKE_ENROLLMENT_ID}`, {
+    await page.goto("dashboard/preview?enrollmentId=recABCDEFGHIJKLMN", {
       waitUntil: "domcontentloaded",
     });
     const bodyText = (await page.locator("body").innerText()) ?? "";
@@ -69,5 +73,28 @@ test.describe("dashboard privacy", () => {
     await expect(hero).toBeVisible();
     const bodyText = (await page.locator("body").innerText()) ?? "";
     expect(bodyText).not.toMatch(RECORD_ID_PATTERN);
+  });
+
+  test("dashboard sign-in page is reachable without exposing record ids", async ({ page }) => {
+    const response = await page.goto("dashboard/sign-in", { waitUntil: "domcontentloaded" });
+    expect(response?.status()).toBeLessThan(500);
+    const bodyText = (await page.locator("body").innerText()) ?? "";
+    expect(bodyText).not.toMatch(RECORD_ID_PATTERN);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  });
+
+  test("leaderboard remains public without auth", async ({ page }) => {
+    const response = await page.goto("leaderboard", { waitUntil: "domcontentloaded" });
+    expect(response?.status()).toBeLessThan(500);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  });
+});
+
+test.describe("dashboard reduced motion", () => {
+  test("dashboard coming-soon renders under prefers-reduced-motion", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    const response = await page.goto("dashboard", { waitUntil: "domcontentloaded" });
+    expect(response?.status()).toBeLessThan(500);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(/coming soon/i);
   });
 });

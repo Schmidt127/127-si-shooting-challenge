@@ -78,6 +78,13 @@ export type PublicEnrollmentFields = {
   "Public Missing Streak"?: unknown;
   "Program Instance Name Only"?: unknown;
   "Grade Band"?: unknown;
+  "Registration Source"?: unknown;
+  "Grade Band Label"?: unknown;
+  "Athlete Match Status"?: unknown;
+  "Grade Band Status"?: unknown;
+  "Level Status"?: unknown;
+  "Video Feedback"?: unknown;
+  "Award Recipients"?: unknown;
   /** Server-only link ids — never serialized to the public model. */
   "Homework Completions"?: unknown;
   Submissions?: unknown;

@@ -7,9 +7,7 @@ import { CtaLink, ProgramPage } from "@/components/site";
 import { EmptyState, ErrorState } from "@/components/ui";
 import { isAthleteAuthConfigured } from "@/lib/auth/config";
 import { getAthleteSessionFromCookies } from "@/lib/auth/server-session";
-import {
-  loadAuthenticatedAthleteDashboard,
-} from "@/lib/data/athlete-dashboard";
+import { loadAuthenticatedAthleteDashboard } from "@/lib/data/athlete-dashboard";
 import { XpActivityLoadError } from "@/lib/data/xp-activity-loader";
 import { DASHBOARD_PLACEHOLDER } from "@/lib/release/public-surface";
 import { DASHBOARD_GENERIC_UNAVAILABLE } from "@/lib/security";
@@ -17,7 +15,7 @@ import { buildPageMetadata, PRIVATE_ROBOTS_NOINDEX } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Dashboard",
-  description: DASHBOARD_PLACEHOLDER.description,
+  description: "Private family dashboard for enrolled Shooting Challenge athletes.",
   path: "/dashboard",
   robots: PRIVATE_ROBOTS_NOINDEX,
 });
@@ -26,10 +24,6 @@ type AthleteDashboardPageProps = {
   searchParams: Promise<{ enrollmentId?: string; slug?: string }>;
 };
 
-/**
- * Athlete dashboard — blocked until SC-112 is enabled in Vercel, then parent magic-link auth.
- * Query params such as enrollmentId are ignored or rejected to prevent live data exposure.
- */
 export default async function AthleteDashboardPage({ searchParams }: AthleteDashboardPageProps) {
   const { enrollmentId, slug } = await searchParams;
 
@@ -63,21 +57,34 @@ export default async function AthleteDashboardPage({ searchParams }: AthleteDash
         );
       }
 
+      const activeToken =
+        enrollmentId?.trim() && session.enrollmentIds.includes(enrollmentId.trim())
+          ? enrollmentId.trim()
+          : session.enrollmentIds[0];
+
       return (
-        <>
-          <div className="mb-4 flex justify-end">
+        <div data-testid="athlete-dashboard-authenticated">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm text-muted">
+              Private family dashboard · {result.data.programLabel} · {result.data.seasonLabel}
+            </p>
             <SignOutButton />
           </div>
-          <AthleteDashboardView data={result.data} />
-        </>
+          <AthleteDashboardView
+            data={result.data}
+            activeEnrollmentToken={activeToken}
+            familyEnrollments={result.familyEnrollments.map((item) => ({
+              displayName: item.displayName,
+              slug: item.slug,
+              enrollmentToken: item.enrollmentId,
+            }))}
+          />
+        </div>
       );
     } catch (error) {
       if (error instanceof XpActivityLoadError) {
         return (
-          <ErrorState
-            title="XP activity unavailable"
-            message={DASHBOARD_GENERIC_UNAVAILABLE}
-          />
+          <ErrorState title="XP activity unavailable" message={DASHBOARD_GENERIC_UNAVAILABLE} />
         );
       }
       throw error;
@@ -114,6 +121,9 @@ export default async function AthleteDashboardPage({ searchParams }: AthleteDash
           </CtaLink>
           <CtaLink href="/homework" variant="secondary">
             Homework catalog
+          </CtaLink>
+          <CtaLink href="/dashboard/sign-in" variant="secondary">
+            Parent sign-in
           </CtaLink>
           <CtaLink href="/" variant="secondary">
             Back to home
