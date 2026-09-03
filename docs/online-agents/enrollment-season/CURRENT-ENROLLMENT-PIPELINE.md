@@ -106,7 +106,9 @@ See docs/deploy-checklists/RETIRE-LEGACY-WELCOME-EMAIL-FIELDS.md.
 | Script | When | Writes |
 |--------|------|--------|
 | **002** | Grade present, Athlete present, Grade Band empty | Grade Band link, Grade Band (Auto Assign), Last Grade Used, Grade Band Status / Assignment Status |
-| **003** | Grade changes after prior assignment | Recomputes band when refresh conditions met |
+| **003** | Post-enrollment Grade correction when `Grade Band Refresh Needed = 1` (view: Grade Band / Grade / Athlete not empty); dynamic `recordId` | Grade Band link, Grade Band (Auto Assign), Last Grade Used, Grade Band Status / Assignment Status — does **not** write formula `Grade Band Refresh Needed` (returns to 0 via formula) |
+
+**003 status (2026-09-03):** **COMPLETE / PRODUCTION-VERIFIED** v2.0 — keep active (not an unused slot). Initial assignment stays **002**. Evidence: [`docs/prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md`](../../prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md). Offline: `node tests/enrollment-intake/automation-003-grade-change-refresh.test.js`.
 
 **Reads:** Enrollments.Grade; Grade Bands Min/Max Grade, Active?, Sort Order  
 **Downstream:** XP Reward Rules, WAS copy scripts (030), homework/video grade-band copy (063/111)

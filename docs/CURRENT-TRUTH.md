@@ -194,6 +194,7 @@ Do **not** treat other Automations-table columns (trigger/conditions) as authori
 
 | # | Production (Automations Code) | GitHub | Status | Notes |
 |---|-------------------------------|--------|--------|-------|
+| **003** | **v2.0** | v2.0 | **Live / COMPLETE / PRODUCTION-VERIFIED** | Grade-change Grade Band refresh; keep active; disposable VERIFY Enrollment 2026-09-03 — [`prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md`](./prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md). Initial assign remains **002**. |
 | **010** | **v10.12** | v10.12 | Live / **aligned** | Do not re-paste — [`010-v10.12-operator-packet.md`](./deploy-checklists/010-v10.12-operator-packet.md) |
 | **020** | **v3.8** | v3.8 | Live / **aligned** | FUT-001 — [`020-v3.8-fut-001-operator-packet.md`](./deploy-checklists/020-v3.8-fut-001-operator-packet.md) |
 | **022** | **v2.2** | v2.2 | Live / **aligned** | Lambda-only parent URL — [`022-v2.2-operator-packet.md`](./deploy-checklists/022-v2.2-operator-packet.md) |

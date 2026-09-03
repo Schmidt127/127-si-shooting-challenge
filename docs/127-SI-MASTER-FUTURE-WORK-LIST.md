@@ -1240,7 +1240,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-016** | Homework | Exactly one Homework Completion per assignment per enrollment | P0 | **COMPLETE** (2026-08-31) | SC-066, SC-014 | Multi-asset + 065 XP proven on Testing3; do **not** re-paste 020/065 scripts |
 | **SC-021** | Config | Config-over-code audit (no hardcoded season numbers in scripts) | P0 | Installed in PROD | SC-022 | Run 057 on CASE-01 WAS; CASE-01ΓÇª16 + verifier; migrate remaining hardcode consumers |
 | **SC-022** | Config | XP Reward Rules audit and cleanup | P0 | Installed in PROD | SC-021, SC-023 | Resolve Video XP 1-vs-25; decide Zoom Recording / Manual Bonus rule records; supervised streak proof still open |
-| **SC-023** | Config | Grade Bands as linked source of truth | P0 | Monitoring | SC-021 | Archive inactive legacy bands when ready; keep Min/Max match (no hard-coded band ID) |
+| **SC-023** | Config | Grade Bands as linked source of truth | P0 | Monitoring | SC-021 | **003 v2.0 COMPLETE / PRODUCTION-VERIFIED** (2026-09-03) — keep active; grade-change refresh on disposable VERIFY Enrollment; offline regression `tests/enrollment-intake/automation-003-grade-change-refresh.test.js`; closeout [`prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md`](./prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md). Archive inactive legacy bands when ready; keep Min/Max match (no hard-coded band ID); **002** remains initial assign |
 | **SC-027** | Config | Shot Milestones config + awards | P0 | Monitoring | SC-096 | Continue recurrence monitoring; no further 066 paste/replay unless source, trigger, schema, or milestone data changes |
 | **SC-031** | Config | Weekly schedule settings (build/send timing) | P0 | Installed in PROD | SC-051 | Proof slice for C-011 weekly email automation — keep open. Prove the normal `build_armed` and send-arm branches after a real eligible completed Week/package exists; keep 074 `sendMode=Live` where app |
 | **SC-032** | Config | Season settings (dates, windows) | P0 | Built in Repository | SC-065, SC-084 | Import Weeks in PROD; Mike UI attestations; authorize Launch Status fields; controlled activation |
@@ -1448,5 +1448,11 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **SC-WEEKLY-SETTLEMENT-E2E** | **COMPLETE** | Weekly settlement matrix (WAS / calc / PW fail-closed / handoff prep). Docs `docs/testing/weekly-settlement/`; harness `tools/testing/sc-weekly-settlement.mjs`; RESULTS + DEFECT-REPORT 2026-08-30. MRW-F10. |
 | **SC-SEASON-SIM-001** | **Planned / Future** | 60-day five-enrollment season simulation — narrative entry above § D / FUT-026; MRW-H11. Do **not** implement yet. FUT-010 unchanged. Reuse SC-PW-E2E later where appropriate. |
 | **SC-SEASON-SIM-002** | **COMPLETE — T213135Z** | Final execute + formula restore + cleanup 2026-09-02. Evidence `tools/season_simulation/reports/evidence-final-SEASON-SIM-2027-20260902T213135Z-athlete1.json`. Distinct from SC-SEASON-SIM-001. |
+
+### 2026-09-03 Automation 003 verification (SC-023)
+
+| Item | Status | Evidence |
+|---|---|---|
+| **Automation 003 v2.0** | **COMPLETE / PRODUCTION-VERIFIED** — keep active | Disposable VERIFY Enrollment grade-change refresh; dynamic `recordId`; refresh view conditions attested. Docs: [`prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md`](./prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md). Offline: `tests/enrollment-intake/automation-003-grade-change-refresh.test.js`. Initial assign remains **002**. No Production paste or formula change this closeout. |
 
 ---
