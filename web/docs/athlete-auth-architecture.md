@@ -1,8 +1,8 @@
 # Athlete dashboard auth — parent magic-link (SC-112)
 
-**Status:** Implementation in repository · **Not enabled in Production until Mike configures Vercel**
+**Status:** Built in repository (single-child + multi-child via merged PR **#373**) · Vercel-gated (`ATHLETE_AUTH_ENABLED`) · **Multi-child is not PRODUCTION-VERIFIED** until a live parent email with **two or more active enrollments** completes magic-link → select → switch → sign-out (depends on second disposable enrollment + magic-link send authorization — Agent 1 / Agent 3 evidence). Do not treat multi-child as Production-proven from unit/Playwright coverage alone.
 
-Authority: [ATHLETE-AUTH-DECISION.md](../../docs/overnight/web-integration/ATHLETE-AUTH-DECISION.md) (Option A — parent magic-link email)
+Authority: [ATHLETE-AUTH-DECISION.md](../../docs/overnight/web-integration/ATHLETE-AUTH-DECISION.md) (Option A — parent magic-link email) · Ops checklist: [SC-112 Preview and Production](../../docs/deploy-checklists/SC-112-athlete-auth-preview-and-production.md)
 
 ## Selected approach
 
@@ -39,19 +39,90 @@ Magic-link auth email is **web-initiated, synchronous, and single-recipient**. I
 
 ## Multi-child parent authentication
 
-One parent email may authorize multiple **active** enrollments (`Active?` + matching `Parent Email - Cleaned`).
+Behavior shipped in PR **#373** (`feature/sc-112-multi-child-auth`). One parent magic-link session can authorize every **active** Enrollment whose `Parent Email - Cleaned` matches the signed-in email.
 
-| Situation | Behavior |
+**Verification status:** Repository + offline/Playwright coverage exist. **Not PRODUCTION-VERIFIED for multi-child** until a live parent email with ≥2 active enrollments completes magic-link verify → `/dashboard/select` → switch → sign-out with no `enrollmentId=rec…` in the address bar. That proof depends on a second disposable enrollment and magic-link send authorization (Agent 1 / Agent 3). Do not mark multi-child PRODUCTION-VERIFIED from docs or unit tests alone.
+
+### 1. One parent email, multiple children
+
+Identity is the **parent email**, not the athlete. Magic-link issue and verify look up Enrollments with:
+
+`AND({Active?}, LOWER({Parent Email - Cleaned}) = LOWER(signed-in email))`
+
+All matching active rows become `session.enrollmentIds`. Siblings who share that cleaned parent email are one authorized family set under a single httpOnly `athlete_session` cookie (`v:2`).
+
+### 2. Single-child automatic routing
+
+If verify finds **exactly one** active enrollment:
+
+- Session is written with `selectedEnrollmentId` set to that enrollment
+- Browser redirects straight to `/dashboard` (no selection step)
+
+If a multi-child session later shrinks to one live active enrollment (intersect), `/dashboard/select` auto-redirects to `/dashboard` for that remaining child.
+
+### 3. Multiple-child selection (`/dashboard/select`)
+
+If verify finds **two or more** active enrollments:
+
+- Session is written with `selectedEnrollmentId: null` and the full grant in `enrollmentIds`
+- Browser redirects to `/dashboard/select` (“Choose athlete”)
+- UI lists each child with program/season labels and an **opaque selection key** (never an Airtable id)
+- Parent POSTs the chosen key to `/api/auth/select-enrollment`; server binds `selectedEnrollmentId` and redirects to `/dashboard` with a **clean URL** (no enrollment query param)
+
+### 4. Active versus inactive enrollments
+
+| Rule | Behavior |
+|------|----------|
+| Magic-link lookup | Only enrollments with `Active?` checked |
+| Every private load / switch | Re-fetches live Active? rows for the parent email, then **intersects** with `session.enrollmentIds` |
+| Selected child becomes inactive | Selection no longer matches; parent is sent to `/dashboard/select` (or empty state if none remain) |
+| Inactive / past-season rows | Not granted at sign-in and not restorable via URL or cookie alone |
+
+### 5. Multiple programs or seasons
+
+Distinct Enrollment rows (different Program Instances, School Years, or duplicate athlete rows) are **separate selectable options**. The select UI and family switcher show `Program Instance Name Only` and `School Year` when present so parents can tell siblings or seasons apart. The app does not collapse duplicates; prefer Airtable dedupe over UI heuristics.
+
+### 6. Secure switching
+
+After a child is selected, the dashboard family switcher can change children without a new magic link:
+
+1. Client POSTs another opaque `selectionKey` to `/api/auth/select-enrollment`
+2. Server resolves the key against the **session grant only** (HMAC recompute)
+3. Server re-checks **live** Active? + parent-email match + membership in `session.enrollmentIds`
+4. On success, rewrites the httpOnly cookie with the new `selectedEnrollmentId` (same `exp` / grant)
+5. On failure, returns forbidden / redirects back to select — raw `rec…` bodies are rejected
+
+### 7. No enrollment IDs in URLs
+
+Hard rule for parent UX:
+
+- `/dashboard` and `/dashboard/select` never put Airtable `rec…` IDs in path or query
+- Switcher/select forms use opaque keys only; `POST /api/auth/select-enrollment` rejects raw enrollment IDs
+- Legacy `?enrollmentId=` bookmarks are **ignored** for authorization and stripped (clean `/dashboard`)
+- Browser history / share / screenshots therefore do not leak enrollment record IDs
+
+Selection lives only in the signed httpOnly cookie (`selectedEnrollmentId` is server-side).
+
+### 8. Session expiration and sign-out
+
+| Mechanism | Behavior |
 |-----------|----------|
-| **One active enrollment** | After magic-link verify, session sets `selectedEnrollmentId` and redirects to `/dashboard` |
-| **Multiple active enrollments** | Verify redirects to `/dashboard/select`. Parent chooses a child via opaque key POST. Session stores `selectedEnrollmentId`; `/dashboard` has no enrollment query param |
-| **Switching children** | Family switcher POSTs the opaque key again; server re-checks live Active? + email + session membership before rewriting selection |
-| **Back button** | `/dashboard` and `/dashboard/select` never carry `rec…` in the URL, so history does not leak enrollment IDs. Legacy `?enrollmentId=` bookmarks are stripped |
-| **Inactive enrollments** | Excluded from magic-link lookup and from live intersect. If the selected child becomes inactive, selection is cleared and the parent is sent to select (or empty when none remain) |
-| **Duplicate enrollments** | Treated as separate selectable rows (labeled by program/season). Prefer Airtable dedupe over app heuristics |
-| **Shared parent email** | Two adults sharing one inbox are one principal and see the same authorized set |
-| **Multiple parents on one athlete** | Each parent only sees enrollments whose `Parent Email - Cleaned` matches **their** signed-in email |
-| **Different seasons/programs** | Selection and switcher UI show `Program Instance Name Only` and `School Year` when present |
+| Session TTL | `ATHLETE_AUTH_SESSION_TTL_DAYS` (default **30**). Cookie carries HMAC payload with `exp`; expired tokens fail verify and require a new magic link |
+| Magic-link TTL | `ATHLETE_AUTH_TOKEN_TTL_MINUTES` (default **15**), single-use; separate from session lifetime |
+| Sign-out | `POST /api/auth/sign-out` clears the `athlete_session` cookie. Next `/dashboard` visit requires sign-in again |
+| Mid-session revoke | If all authorized enrollments go inactive, dashboard/select show empty / no-active state; cookie may still exist until expiry or sign-out but cannot load private athlete data |
+
+### 9. Shared parent-email policy
+
+| Situation | Policy |
+|-----------|--------|
+| Two adults share one inbox / one `Parent Email - Cleaned` | Treated as **one principal**. Same authorized enrollment set; whoever opens the magic link can select any active child for that email |
+| Same athlete listed under two different parent emails | Each signed-in email only sees enrollments where **their** `Parent Email - Cleaned` matches — no cross-parent spill |
+| Operational note | Shared inboxes are a family choice, not a product multi-user ACL. Do not invent per-adult accounts on top of cleaned parent email without a new Master Future Work List decision |
+
+### 10. Future alumni policy (open decision)
+
+**Not implemented.** Auth grants only **active** enrollments today. Whether graduated / inactive athletes (alumni) should keep read-only dashboard access, season archives, or a separate alumni login is an **open product decision** — do not imply alumni access in parent copy or ops runbooks until SC-112 (or a follow-on ID) records an approved policy and implementation.
 
 ### Opaque selection (how it works)
 
@@ -59,6 +130,20 @@ One parent email may authorize multiple **active** enrollments (`Active?` + matc
 2. Client only ever sees/posts that opaque key (never the Airtable id).
 3. `POST /api/auth/select-enrollment` resolves the key by recomputing HMACs for the session’s enrollment grant, re-checks live Active? + email match, then rewrites the httpOnly session cookie with `selectedEnrollmentId`.
 4. Dashboard loaders use session selection only — URL params cannot authorize a different child.
+
+### Behavior matrix (quick reference)
+
+| Situation | Behavior |
+|-----------|----------|
+| **One active enrollment** | Verify sets `selectedEnrollmentId` → `/dashboard` |
+| **Multiple active enrollments** | Verify → `/dashboard/select` → opaque key POST → `/dashboard` |
+| **Switching children** | Family switcher POSTs opaque key; live Active? + email + grant re-check |
+| **Back button / bookmarks** | No `rec…` in URLs; legacy `?enrollmentId=` stripped / ignored |
+| **Inactive enrollments** | Excluded from lookup and live intersect; lost selection → select or empty |
+| **Duplicate / multi-season rows** | Separate selectable rows labeled by program/season |
+| **Shared parent email** | One principal, shared authorized set |
+| **Multiple parents on one athlete** | Each parent sees only their cleaned-email enrollments |
+| **Alumni / inactive past seasons** | Open decision — not granted today |
 
 ## Required environment variables (names only)
 
@@ -101,6 +186,7 @@ Summary:
 1. Set Vercel Preview env vars (names in table above).
 2. Confirm Resend sender domain and `RESEND_FROM_EMAIL`.
 3. Optionally provision Upstash Redis for token store in Production.
-4. Complete Preview proof with `ATHLETE_AUTH_TEST_MODE=true` and schmidt@ delivery only — include a multi-child parent email when available.
-5. Enable `ATHLETE_AUTH_ENABLED=true` in Production only after Preview evidence and Mike approval.
-6. Do **not** set `ATHLETE_AUTH_TEST_MODE=false` or send real family magic links until a separate approved cutover.
+4. Complete Preview proof with `ATHLETE_AUTH_TEST_MODE=true` and schmidt@ delivery only.
+5. **Multi-child proof (required before claiming Production multi-child):** parent email with ≥2 **active** enrollments → magic-link → `/dashboard/select` → switch → sign-out; confirm no `enrollmentId=rec…` in the address bar. Blocked until second disposable enrollment + magic-link send authorization (Agent 1 / Agent 3). Do not claim PRODUCTION-VERIFIED multi-child without that live evidence.
+6. Enable `ATHLETE_AUTH_ENABLED=true` in Production only after Preview evidence and Mike approval.
+7. Do **not** set `ATHLETE_AUTH_TEST_MODE=false` or send real family magic links until a separate approved cutover.
