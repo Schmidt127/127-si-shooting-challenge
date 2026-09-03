@@ -24,12 +24,17 @@ Airtable is the deployed/running copy.
 
 /***************************************************************************************************
  * 057 - Achievements and Milestones - Calculate Perfect Week Eligibility
- * Version: 2.2
+ * Version: 2.3
  * Date written: 2026-05-30
- * Last updated: 2026-08-27
+ * Last updated: 2026-09-03
  *
  * Purpose:
  * Calculates Perfect Week helper fields on one Weekly Athlete Summary record.
+ *
+ * Version 2.3 updates (homework late-credit / Perfect Week split):
+ * - Perfect Week homework count requires satisfactory AND on-time Submission Date
+ *   (PHA Due Date when present, else Week End Date). Late satisfactory homework
+ *   still earns full homework XP via 065 but does not satisfy Perfect Week.
  *
  * Version 2.2 updates (SC-034 config-only video minimum):
  * - Requires Config field `Perfect Week Video Minimum` (year-aware selection; fail-closed when
@@ -105,7 +110,9 @@ Airtable is the deployed/running copy.
  *    records for the week.
  * 4. Athlete must attend Zoom if a Zoom meeting exists for the linked Week
  *    (live Attendees OR Stage 17 approved recording credit that counts for Perfect Week).
- * 5. Athlete must satisfactorily complete 100% of homework assignments assigned for the week.
+ * 5. Athlete must satisfactorily complete 100% of homework assignments assigned for the week
+ *    with an on-time Submission Date (PHA Due Date, else Week End Date). Late satisfactory
+ *    homework earns XP but does not count toward Perfect Week.
  *
  * Notes:
  * - This script only calculates helper fields.
@@ -134,6 +141,7 @@ const CONFIG = {
     targetGoalShots: "Target Goal Shots",
     achievements: "Achievements",
     config: "Config",
+    pha: "Program Homework Assignments",
   },
 
   configFields: {
@@ -188,6 +196,7 @@ const CONFIG = {
 
   weekFields: {
     startDate: "Start Date",
+    endDate: "End Date",
   },
 
   submissionFields: {
@@ -213,6 +222,12 @@ const CONFIG = {
     homework: "Homework",
     satisfactory: "Satisfactory?",
     completionStatus: "Completion Status",
+    submissionDate: "Submission Date",
+    pha: "Program Homework Assignment",
+  },
+
+  phaFields: {
+    dueDate: "Due Date",
   },
 
   videoFields: {
@@ -510,6 +525,33 @@ function isHomeworkSatisfactory(record) {
 
   const status = record.getCellValueAsString(CONFIG.homeworkCompletionFields.completionStatus);
   return status.toLowerCase().includes("satisfactory");
+}
+
+/**
+ * Perfect Week homework on-time gate (Submission Date vs PHA Due Date / Week End).
+ * Late satisfactory homework still earns XP via 065 but does not count here.
+ */
+function isHomeworkOnTimeForPerfectWeek(record, dueDateByPhaId, weekEndDateKey) {
+  const submissionDateKey = getDateKeyFromDateOnly(
+    record.getCellValue(CONFIG.homeworkCompletionFields.submissionDate)
+  );
+  if (!submissionDateKey) return false;
+
+  const phaIds = getLinkedIds(record, CONFIG.homeworkCompletionFields.pha);
+  let dueKey = "";
+  if (phaIds.length === 1 && dueDateByPhaId && dueDateByPhaId.has(phaIds[0])) {
+    dueKey = dueDateByPhaId.get(phaIds[0]) || "";
+  }
+  if (!dueKey) dueKey = weekEndDateKey || "";
+  if (!dueKey) return true;
+  return submissionDateKey <= dueKey;
+}
+
+function countsTowardPerfectWeekHomework(record, dueDateByPhaId, weekEndDateKey) {
+  return (
+    isHomeworkSatisfactory(record) &&
+    isHomeworkOnTimeForPerfectWeek(record, dueDateByPhaId, weekEndDateKey)
+  );
 }
 
 async function updateWeekly(fields) {
@@ -832,7 +874,7 @@ try {
   }
 
   const weekRecord = await weeksTable.selectRecordAsync(weekId, {
-    fields: [CONFIG.weekFields.startDate],
+    fields: [CONFIG.weekFields.startDate, CONFIG.weekFields.endDate].filter(Boolean),
   });
 
   if (!weekRecord) {
@@ -849,6 +891,9 @@ try {
 
   const weekStartDateKey = getDateKeyFromDateOnly(
     weekRecord.getCellValue(CONFIG.weekFields.startDate)
+  );
+  const weekEndDateKey = getDateKeyFromDateOnly(
+    weekRecord.getCellValue(CONFIG.weekFields.endDate)
   );
 
   if (!weekStartDateKey) {
@@ -1124,7 +1169,9 @@ try {
    * 4B. Homework Requirement
    *
    * Rule:
-   * Perfect Week requires 100% of assigned homework to be satisfactorily completed.
+   * Perfect Week requires 100% of assigned homework to be satisfactorily completed
+   * on time (Submission Date <= PHA Due Date, else Week End Date).
+   * Late satisfactory homework earns XP (065) but does not count here.
    *
    * Source of assigned homework:
    * - Weekly Athlete Summary -> Homework
@@ -1146,13 +1193,43 @@ try {
   let assignedHomeworkCount = assignedHomeworkIds.length;
   let satisfactoryHomeworkCount = 0;
 
+  const homeworkCompletionSelectFields = [
+    CONFIG.homeworkCompletionFields.homework,
+    CONFIG.homeworkCompletionFields.satisfactory,
+    CONFIG.homeworkCompletionFields.completionStatus,
+    CONFIG.homeworkCompletionFields.submissionDate,
+    CONFIG.homeworkCompletionFields.pha,
+  ];
+
+  let dueDateByPhaId = new Map();
+  if (linkedHomeworkCompletionIds.length > 0) {
+    let phaTable = null;
+    try {
+      phaTable = base.getTable(CONFIG.tables.pha);
+    } catch (e) {
+      phaTable = null;
+    }
+    if (phaTable) {
+      const phaQuery = await phaTable.selectRecordsAsync({
+        fields: [CONFIG.phaFields.dueDate],
+      });
+      for (const phaRec of phaQuery.records) {
+        const dueKey = getDateKeyFromDateOnly(phaRec.getCellValue(CONFIG.phaFields.dueDate));
+        if (dueKey) dueDateByPhaId.set(phaRec.id, dueKey);
+      }
+      if (typeof phaQuery.unloadData === "function") {
+        try {
+          phaQuery.unloadData();
+        } catch (e) {
+          // unload is best-effort
+        }
+      }
+    }
+  }
+
   if (linkedHomeworkCompletionIds.length > 0) {
     const homeworkQuery = await homeworkCompletionsTable.selectRecordsAsync({
-      fields: [
-        CONFIG.homeworkCompletionFields.homework,
-        CONFIG.homeworkCompletionFields.satisfactory,
-        CONFIG.homeworkCompletionFields.completionStatus,
-      ],
+      fields: homeworkCompletionSelectFields,
     });
 
     const satisfactoryAssignedHomeworkIds = new Set();
@@ -1162,7 +1239,9 @@ try {
       const hwCompletion = homeworkQuery.getRecord(id);
       if (!hwCompletion) continue;
 
-      if (!isHomeworkSatisfactory(hwCompletion)) continue;
+      if (!countsTowardPerfectWeekHomework(hwCompletion, dueDateByPhaId, weekEndDateKey)) {
+        continue;
+      }
 
       const completionHomeworkIds = getLinkedIds(
         hwCompletion,
@@ -1186,6 +1265,14 @@ try {
     } else {
       satisfactoryHomeworkCount = satisfactoryUnmatchedCompletionCount;
     }
+
+    if (typeof homeworkQuery.unloadData === "function") {
+      try {
+        homeworkQuery.unloadData();
+      } catch (e) {
+        // unload is best-effort
+      }
+    }
   }
 
   /*
@@ -1197,11 +1284,7 @@ try {
    */
   if (assignedHomeworkCount === 0 && linkedHomeworkCompletionIds.length > 0) {
     const homeworkQuery = await homeworkCompletionsTable.selectRecordsAsync({
-      fields: [
-        CONFIG.homeworkCompletionFields.homework,
-        CONFIG.homeworkCompletionFields.satisfactory,
-        CONFIG.homeworkCompletionFields.completionStatus,
-      ],
+      fields: homeworkCompletionSelectFields,
     });
 
     const homeworkIdsFromCompletions = new Set();
@@ -1219,7 +1302,7 @@ try {
       for (const homeworkId of completionHomeworkIds) {
         homeworkIdsFromCompletions.add(homeworkId);
 
-        if (isHomeworkSatisfactory(hwCompletion)) {
+        if (countsTowardPerfectWeekHomework(hwCompletion, dueDateByPhaId, weekEndDateKey)) {
           satisfactoryHomeworkIdsFromCompletions.add(homeworkId);
         }
       }
@@ -1227,6 +1310,14 @@ try {
 
     assignedHomeworkCount = homeworkIdsFromCompletions.size;
     satisfactoryHomeworkCount = satisfactoryHomeworkIdsFromCompletions.size;
+
+    if (typeof homeworkQuery.unloadData === "function") {
+      try {
+        homeworkQuery.unloadData();
+      } catch (e) {
+        // unload is best-effort
+      }
+    }
   }
 
   const homeworkMet =

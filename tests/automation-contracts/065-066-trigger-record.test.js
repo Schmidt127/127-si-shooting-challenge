@@ -33,7 +33,7 @@ const s066 = fs.readFileSync(
 );
 
 test("065 documents dynamic triggering recordId input", () => {
-  assert.match(s065, /v10\.5/);
+  assert.match(s065, /v10\.6/);
   assert.match(s065, /readTriggerRecordId/);
   assert.match(s065, /Missing input variable: recordId/);
   assert.match(s065, /Invalid Homework Completion recordId/);

@@ -357,6 +357,10 @@ async function buildPrivateHomeworkItems(input: {
         ? null
         : Math.max(0, (Number.isFinite(baseXp) ? baseXp : 0) + (Number.isFinite(extraXp) ? extraXp : 0));
 
+    const dueDate = resolveAssignmentDueDateKey(pha.fields, weekMeta);
+    const submissionDate = asOptionalDateKey(completion?.["Submission Date"]);
+    const lateSubmission = Boolean(dueDate && submissionDate && submissionDate > dueDate);
+
     items.push({
       key: opaqueDashboardKey("hw", pha.id),
       assignmentName: resolveAssignmentDisplayName(library),
@@ -364,8 +368,9 @@ async function buildPrivateHomeworkItems(input: {
       weekLabel: weekMeta?.name ?? "Week",
       homeworkSlot: selectName(pha.fields["Homework Slot"], "") || null,
       assignedDate: weekMeta?.startDate ?? null,
-      dueDate: resolveAssignmentDueDateKey(pha.fields, weekMeta),
-      submissionDate: asOptionalDateKey(completion?.["Submission Date"]),
+      dueDate,
+      submissionDate,
+      lateSubmission,
       completionStatus,
       completionStatusLabel: completionStatusLabel(completionStatus),
       satisfactory: completion ? satisfactory : null,

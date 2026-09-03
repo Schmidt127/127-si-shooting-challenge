@@ -1973,7 +1973,9 @@ function evaluateHomeworkSubmissionDeadline({
       creditEligible: true,
       timingStatus: "unknown_submission_date",
       dueDateKey: dueKey,
-      reason: "Submission date missing; deadline not enforced.",
+      perfectWeekEligible: false,
+      reason:
+        "Submission date missing; deadline not enforced for XP. Perfect Week requires a known on-time Submission Date.",
     };
   }
   if (!dueKey) {
@@ -1981,28 +1983,31 @@ function evaluateHomeworkSubmissionDeadline({
       creditEligible: true,
       timingStatus: "no_due_date",
       dueDateKey: "",
+      perfectWeekEligible: true,
       reason: "No PHA Due Date or Week End Date; deadline not enforced.",
     };
   }
   if (submitKey > dueKey) {
     return {
-      creditEligible: false,
-      timingStatus: "late_ineligible",
+      creditEligible: true,
+      timingStatus: "late",
       dueDateKey: dueKey,
-      reason: `Submission date ${submitKey} is after assignment due date ${dueKey}.`,
+      perfectWeekEligible: false,
+      reason: `Submission date ${submitKey} is after assignment due date ${dueKey}. Full XP credit allowed; does not count toward Perfect Week.`,
     };
   }
   return {
     creditEligible: true,
     timingStatus: "on_time",
     dueDateKey: dueKey,
+    perfectWeekEligible: true,
     reason: "",
   };
 }
 
 function buildHomeworkLateSubmissionNote({ timingStatus = "", dueDateKey = "", submissionDateKey = "" } = {}) {
-  if (timingStatus !== "late_ineligible") return "";
-  return `Late submission: activity date ${submissionDateKey} is after due date ${dueDateKey}. Not eligible for homework credit or XP unless an approved exception is recorded.`;
+  if (timingStatus !== "late" && timingStatus !== "late_ineligible") return "";
+  return `Late submission: activity date ${submissionDateKey} is after due date ${dueDateKey}. Full homework XP credit still applies once satisfactory; does not count toward Perfect Week for the original week.`;
 }
 
 module.exports = {

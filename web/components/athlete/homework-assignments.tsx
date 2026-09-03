@@ -58,13 +58,15 @@ function statusTone(status: PublicHomeworkCompletionStatus): StatusBadgeTone {
 }
 
 function creditLabel(assignment: PublicHomeworkAssignment): string | null {
-  if (assignment.creditEligible === true) return "Credit earned";
+  if (assignment.creditEligible === true) {
+    return assignment.lateSubmission ? "Credit earned (late)" : "Credit earned";
+  }
   if (assignment.creditEligible === false) {
-    if (assignment.lateSubmission) return "Late — no credit";
-    if (assignment.pastDue && assignment.completionStatus === "not_started") {
-      return "Past due";
-    }
     return "No credit";
+  }
+  if (assignment.lateSubmission) return "Late — full credit if satisfactory";
+  if (assignment.pastDue && assignment.completionStatus === "not_started") {
+    return "Past due — still eligible";
   }
   return null;
 }

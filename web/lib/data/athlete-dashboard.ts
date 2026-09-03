@@ -224,6 +224,7 @@ export function getMockAthleteDashboard(): AthleteDashboardModel {
         assignedDate: "2026-07-07",
         dueDate: "2026-07-13",
         submissionDate: "2026-07-11",
+        lateSubmission: false,
         completionStatus: "submitted",
         completionStatusLabel: "Submitted",
         satisfactory: null,
