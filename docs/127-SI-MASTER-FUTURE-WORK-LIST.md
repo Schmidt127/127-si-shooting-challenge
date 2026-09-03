@@ -99,20 +99,22 @@ Priority: **P0** launch/security blocker · **P1** important parent/athlete expe
 ### FUT-001 — Match homework by assignment identity, not HW1/HW2 slot
 
 **Priority:** P1  
-**Status:** Complete (GitHub + Production paste — Automations Code 020 v3.8 / 065 v10.4 Live)  
+**Status:** Assignment-identity Complete (GitHub + Production paste — Automations Code historically 020 v3.8 / 065 v10.4 Live). **Late-credit policy supersession (2026-09-03):** GitHub **020 v3.9 / 065 v10.6 / 057 v2.3** merged via PR **#372** — **Production paste pending Mike** (do not treat Production behavior as updated until paste + disposable verify).  
 **Systems:** Airtable, homework intake, Homework Completions, XP, parent submission flow
 
 Allow a parent or athlete to submit an assignment in either visible homework slot. The system must identify the assignment by its assignment/lesson identity and match it to the correct scheduled assignment. The HW number is not authoritative because slot numbering may change from year to year.
 
-Parents may submit the assignment at any time before the assignment’s explicit **Due Date/Deadline**. For the upcoming challenge, Mike will set the Due Date to the final day of the challenge. Submissions after the Due Date receive no credit unless a separate approved exception is used.
+**Approved late-credit policy (2026-09-03):** Homework remains selectable whenever visible or assigned through a PHA. Students may submit before, during, or after the official week. Late satisfactory homework receives **full credit and normal XP**. Grading delay does not penalize. Submission Date is the student’s submission date. Needs Revision receives no homework XP until satisfactory. Revisions update the existing completion (no duplicate HC / XP Event). Late homework counts toward total homework history, XP, level gates, and the private dashboard, but **does not** count toward Perfect Week for the original week.
 
 The system must preserve checks for assignment identity, enrollment, challenge/season, and duplicate credit. Multiple uploads or repeat submissions are allowed, but only one Homework Completion and one XP award may be credited for the same athlete, assignment identity, and enrollment context.
 
-**Acceptance criteria:** correct assignment matching across either slot; deadline enforced; late submission clearly marked ineligible; repeat uploads reviewable; XP deduplicated; no dependence on HW1/HW2 names.
+**Acceptance criteria:** correct assignment matching across either slot; late full-credit XP once satisfactory; Perfect Week on-time gate; repeat uploads reviewable; XP deduplicated; no dependence on HW1/HW2 names.
 
 **Implementation (2026-08-25):** GitHub **020 v3.8** + **065 v10.4**; contracts in `lib/homework-contracts/assignment-identity.js`. Promotion doc: [FUT-001-homework-assignment-identity-deadline.md](./deploy-checklists/FUT-001-homework-assignment-identity-deadline.md).
 
-**PR #264 (2026-08-28):** Branch `fix/fut-001-homework-assignment-identity` — commit `91c65b36` + CI fix `3d497f4a` (065 offline Weeks mock). **Merged.** Production Automations Code **020 v3.8 / 065 v10.4 Live** (MCP 2026-08-29/30) — do not re-paste.
+**PR #264 (2026-08-28):** Branch `fix/fut-001-homework-assignment-identity` — commit `91c65b36` + CI fix `3d497f4a` (065 offline Weeks mock). **Merged.** Production Automations Code **020 v3.8 / 065 v10.4 Live** (MCP 2026-08-29/30) at that time.
+
+**PR #372 (2026-09-03):** Late-credit policy — merge `da009262`. Operator paste checklist: [`deploy-checklists/homework-late-credit-policy-020-057-065.md`](./deploy-checklists/homework-late-credit-policy-020-057-065.md). **Do not paste from agents.**
 
 ### FUT-002 — Audit and remove unused Airtable fields
 
@@ -1320,7 +1322,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-109** | Website | Game Manual from config | P2 | **Built in Repository** (deploy to PROD for live PDF) | SC-032, SC-082 | Approved Adobe Publish Online URL in `web/lib/game-manual/config.ts`; optional `NEXT_PUBLIC_GAME_MANUAL_URL` override — deploy checklist [`SC-109-game-manual-url-verification.md`](deploy-checklists/SC-109-game-manual-url-verification.md); editorial copy; Shot Milestones surface later |
 | **SC-110** | Website | Public display page | P2 | Installed in PROD | SC-054 | Wire Presentation fields; real season year after School Year fix |
 | **SC-111** | Website | Athlete profiles (real data, not mocks) | P2 | Live Tested in PROD | SC-103 | Optional: recreate `Web - Leaderboard` view (fallback OK) |
-| **SC-112** | Website | Athlete auth + dashboard | P2 | **Built in Repository** (parent magic-link) | SC-149 | Private `/shoot/dashboard`; public sign-in at `/shoot/dashboard/sign-in` |
+| **SC-112** | Website | Athlete auth + dashboard | P2 | **Built in Repository** (magic-link + multi-child) — **not Production-verified for multi-child** until real multi-child test | SC-149 | Private `/shoot/dashboard`; opaque selection keys (PR **#373** `97548cee`); public sign-in at `/shoot/dashboard/sign-in` |
 | **SC-149** | Website | Public Family Dashboard navigation | P1 | **Built in Repository** | SC-112 | Header, mobile, footer, parent/FAQ CTAs → `/shoot/dashboard/sign-in` |
 | **SC-113** | Website | Loading, empty, and error states | P2 | Live Tested in PROD | ΓÇö | Keep states aligned when SC-112 lands |
 | **SC-115** | Website | noindex removal / search indexing | P2 | **Complete** (2026-08-25, `647d465`; prod verified) | SC-114 | **Prod cutover verified** — Vercel Production `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`; public pages indexable; athlete profiles + private routes `noindex`; sitemap excludes athletes/public-display; `npm run test:smoke:prod` 50/50 after cross-env fix. Checklist: `docs/deploy-checklists/2026-08-25-web-search-indexing-cutover.md`. |
@@ -1399,8 +1401,10 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | **FUT-029 / MRW-H12** | **FUTURE** (design only) | Hybrid Fillout Homework — [`next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](./next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md); requested as FUT-018 (ID already used) |
 | **FUT-030** | **COMPLETE** (2026-08-31) | Full transactional record reset — **959** deleted; Weeks/Config/Library/rules/automations preserved; **18 PHA restored** same day (new RIDs); **075** absent; no external sends — [`testing/evidence/transactional-reset-2026-08-31/`](./testing/evidence/transactional-reset-2026-08-31/) |
 | **FUT-031** | **COMPLETE** (2026-09-01) | Game Log Extra Credit tagline — PR **#319** `de21fa36`; prod verified on athlete profile Game Log |
+| **Game Log category filters** | **Built in Repository** (2026-09-03) | PR **#366** `b7f80534` — nine category chips/filters; public-safe vs authorized private |
 | **FUT-032** | **COMPLETE** (2026-08-31) | Homework Hub → Resend source writeback — Hub PR [#42](https://github.com/Schmidt127/communications/pull/42) MERGED; Sent? + Sent On verified live after homework feedback — [`deploy-checklists/FUT-032-homework-hub-resend-writeback.md`](./deploy-checklists/FUT-032-homework-hub-resend-writeback.md) |
 | **065 v10.5** | **COMPLETE** (2026-08-31) | Points-reconcile fix pasted Live; Awarded + 071/Hub path verified — [`deploy-checklists/065-v10.5-points-reconcile-operator-packet.md`](./deploy-checklists/065-v10.5-points-reconcile-operator-packet.md) |
+| **065 v10.6 / 020 v3.9 / 057 v2.3 late-credit** | **Built in Repository / Paste Pending** (2026-09-03) | PR **#372** `da009262` — late full XP; Perfect Week on-time only — [`deploy-checklists/homework-late-credit-policy-020-057-065.md`](./deploy-checklists/homework-late-credit-policy-020-057-065.md) |
 
 ### 2026-08-31 approved brainstorming intake (documentation only)
 
@@ -1454,5 +1458,17 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 | Item | Status | Evidence |
 |---|---|---|
 | **Automation 003 v2.0** | **COMPLETE / PRODUCTION-VERIFIED** — keep active | Disposable VERIFY Enrollment grade-change refresh; dynamic `recordId`; refresh view conditions attested. Docs: [`prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md`](./prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md). Offline: `tests/enrollment-intake/automation-003-grade-change-refresh.test.js`. Initial assign remains **002**. No Production paste or formula change this closeout. |
+
+### 2026-09-03 SC-112 / final work wave merges
+
+| Item | Status | Evidence |
+|---|---|---|
+| **SC-112 multi-child parent auth** | **Built in Repository** — **not Production-verified** until real multi-child Preview/Production test | PR **#373** merged `97548cee`. Opaque HMAC selection keys; session `v:2` `selectedEnrollmentId`; `/dashboard/select`; no `enrollmentId=rec…` in URLs; live Active? re-check. |
+| **Homework late-credit policy (020/065/057)** | **Built in Repository / Paste Pending** — do **not** mark Production complete until Mike pastes + verifies | PR **#372** merged `da009262`. GitHub **020 v3.9 / 065 v10.6 / 057 v2.3**. Late satisfactory = full XP; late excluded from Perfect Week. Checklist: [`deploy-checklists/homework-late-credit-policy-020-057-065.md`](./deploy-checklists/homework-late-credit-policy-020-057-065.md). |
+| **Game Log category filters** | **Built in Repository** | PR **#366** merged `b7f80534`. Nine public-safe category slugs (shooting, homework, video, zoom, streak, weekly threshold, shot milestone, perfect week, manual award). |
+| **Public awards publication gate** | **Incomplete / fail-closed** — awaiting Airtable Award Recipients publication field confirmation | PR **#367** merged `a362633f`. No field invented; `AWARD_RECIPIENT_PUBLICATION_FIELD = null`. Audit: [`audits/SC-PUBLIC-PUBLISHED-AWARDS-SCHEMA-GAP.md`](./audits/SC-PUBLIC-PUBLISHED-AWARDS-SCHEMA-GAP.md). |
+| **ZOOM_RECORDING_APPROVED email restyle** | **Built in Communications repo** — no send in this wave | [communications#49](https://github.com/Schmidt127/communications/pull/49) merged `796930af`. Duplicate **#50** closed (not merged). Template key / Hub / Resend / idempotency preserved. |
+| **Season Sim helper hygiene proposal** | **Docs only** — no deletes performed | PR **#368** merged `9bfc38b6`. Classification only; untracked helpers / reports / evidence preserved. |
+| **Season Simulation next execute** | **Still blocked** pending separate Mike authorization | Temporary Season Simulation formulas left unchanged this wave. No Airtable record changes/deletes. No emails sent. Normal NOW()/TODAY() formulas unchanged. |
 
 ---
