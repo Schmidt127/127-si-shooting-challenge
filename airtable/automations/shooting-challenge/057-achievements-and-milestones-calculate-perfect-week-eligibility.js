@@ -945,7 +945,7 @@ try {
     console.log(
       JSON.stringify({
         automation: "057",
-        version: "2.2",
+        version: "2.3",
         recordId,
         action: "skipped_unsettled_goal",
         configuredGoal,
@@ -970,7 +970,7 @@ try {
     console.log(
       JSON.stringify({
         automation: "057",
-        version: "2.2",
+        version: "2.3",
         recordId,
         action: "skipped_unsettled_weekly_goal",
         configuredGoal,
@@ -1447,7 +1447,7 @@ try {
   console.log(
     JSON.stringify({
       automation: "057",
-      version: "2.2",
+      version: "2.3",
       recordId,
       action: "ready",
       configuredGoal,
