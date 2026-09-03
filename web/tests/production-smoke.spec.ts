@@ -149,6 +149,9 @@ test.describe("production smoke — mobile menu + More nav", () => {
     await expect(
       panel.getByRole("link", { name: /Achievements/i }),
     ).toBeVisible();
+    await expect(
+      panel.getByRole("link", { name: /Family Dashboard/i }),
+    ).toBeVisible();
 
     await page.keyboard.press("Escape");
     await expect(panel).toHaveCount(0);

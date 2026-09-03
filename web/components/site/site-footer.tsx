@@ -60,6 +60,11 @@ export function SiteFooter({
                 <Link
                   key={item.href}
                   href={item.href}
+                  data-testid={
+                    item.href === "/dashboard/sign-in"
+                      ? "family-dashboard-footer-link"
+                      : undefined
+                  }
                   className="sc-text-link inline-flex min-h-11 items-center text-sm"
                 >
                   {item.label}

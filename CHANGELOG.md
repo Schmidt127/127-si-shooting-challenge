@@ -6,6 +6,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Web
+
+#### Added
+- **SC-149 Family Dashboard navigation (2026-09-03)** — Public “Family Dashboard” entry to `/shoot/dashboard/sign-in` (Next.js `basePath`-aware) in the program header (desktop/tablet), mobile menu, footer quick links, homepage parent section, and FAQ get-started section. Outline/secondary styling stays below primary Register and Leaderboard actions. Private `/shoot/dashboard` data remains auth-gated. No Airtable, automation, email, AWS, or env-var changes.
+
 ### Airtable
 
 #### Changed

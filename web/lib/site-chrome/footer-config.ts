@@ -10,6 +10,7 @@ export const FOOTER_QUICK_LINKS: ProductNavItem[] = [
   { label: "Tutorials", href: "/tutorials" },
   { label: "Zoom Meetings", href: "/zoom-meetings" },
   { label: "FAQ", href: "/faq" },
+  { label: "Family Dashboard", href: "/dashboard/sign-in" },
   { label: "Game Manual", href: "/game-manual" },
 ];
 

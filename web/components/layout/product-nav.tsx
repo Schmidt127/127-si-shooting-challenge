@@ -13,12 +13,14 @@ import {
 import { ChevronDownIcon, MenuIcon, XIcon } from "lucide-react";
 
 import type { ProductNavItem } from "@/components/layout/product-shell";
+import { FamilyDashboardLink } from "@/components/site/family-dashboard-link";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { FAMILY_DASHBOARD_DESCRIPTION } from "@/lib/navigation/family-dashboard-link";
 import { splitNavItems } from "@/lib/navigation/nav-priority";
 import {
   DAILY_SUBMISSIONS,
@@ -304,6 +306,17 @@ export function ProductNav({ productName, items }: ProductNavProps) {
               >
                 {DAILY_SUBMISSIONS.cta}
               </a>
+              <p className="pt-2 text-[11px] font-bold uppercase tracking-[0.18em] text-accent-soft">
+                Already enrolled
+              </p>
+              <FamilyDashboardLink
+                testId="family-dashboard-mobile-link"
+                size="default"
+                className="w-full"
+              />
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                {FAMILY_DASHBOARD_DESCRIPTION}
+              </p>
             </div>
 
             <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-3" aria-label={landmark}>

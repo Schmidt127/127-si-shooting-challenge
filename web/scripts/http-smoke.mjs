@@ -32,6 +32,7 @@ const ROUTES = [
   "/game-manual",
   "/public-display",
   "/dashboard",
+  "/dashboard/sign-in",
   "/athletes/demo-athlete",
   "/athletes/schmidt",
   "/admin",

@@ -17,6 +17,7 @@ describe("footer configuration", () => {
     expect(hrefs).toContain("/achievements");
     expect(hrefs).toContain("/faq");
     expect(hrefs).toContain("/zoom-meetings");
+    expect(hrefs).toContain("/dashboard/sign-in");
     expect(hrefs).not.toContain("/dashboard");
     expect(hrefs).not.toContain("/public-display");
   });

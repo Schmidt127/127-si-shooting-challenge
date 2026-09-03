@@ -17,6 +17,7 @@ import { ProgramPricingSection } from "@/components/home/program-pricing-section
 import { RegistrationGateway } from "@/components/home/registration-gateway";
 import {
   CtaLink,
+  FamilyDashboardLink,
   FeatureCard,
   PageHero,
   SiteSection,
@@ -24,6 +25,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import type { ProgramPricing } from "@/lib/data/program-pricing";
 import { PLAYER_REGISTRATION } from "@/lib/registration";
+import { FAMILY_DASHBOARD_DESCRIPTION } from "@/lib/navigation/family-dashboard-link";
 import { ABOUT_THE_COACH } from "@/lib/seo/public-program-content";
 import {
   CHALLENGE_DATES,
@@ -465,7 +467,15 @@ export function HomePageView({ pricing = null }: HomePageViewProps) {
               eligibility and participation basics, then check the homework page for what is due each
               week.
             </p>
+            <p className="text-sm leading-relaxed text-foreground sm:text-base">
+              {FAMILY_DASHBOARD_DESCRIPTION}
+            </p>
             <div className="flex flex-wrap gap-3">
+              <FamilyDashboardLink
+                testId="family-dashboard-home-cta"
+                variant="outline"
+                size="default"
+              />
               <CtaLink href="/faq" variant="default" size="default">
                 Read program FAQ
               </CtaLink>
