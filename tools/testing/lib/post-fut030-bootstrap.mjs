@@ -20,7 +20,7 @@ export async function listFirst(token, baseId, table) {
   return rows[0] || null;
 }
 
-export async function bootstrapDisposableEnrollment(token, baseId, { stamp = null } = {}) {
+export async function bootstrapDisposableEnrollment(token, baseId, { stamp = null, parentEmail = "mschmidt@fairfield.k12.mt.us" } = {}) {
   const runStamp = stamp || new Date().toISOString().replace(/[:.]/g, "").slice(0, 15);
   const suffix = runStamp.slice(-8);
 
@@ -36,7 +36,7 @@ export async function bootstrapDisposableEnrollment(token, baseId, { stamp = nul
       fields: {
         "First Name": "VERIFY",
         "Last Name": suffix,
-        "Parent Email": "mschmidt@fairfield.k12.mt.us",
+        "Parent Email": parentEmail,
         "Active?": true,
       },
     },
@@ -51,8 +51,8 @@ export async function bootstrapDisposableEnrollment(token, baseId, { stamp = nul
         "Athlete Last Name": suffix,
         "Parent First Name": "Mike",
         "Parent Last Name": "Schmidt",
-        "Parent Email": "mschmidt@fairfield.k12.mt.us",
-        "Athlete Email": "mschmidt@fairfield.k12.mt.us",
+        "Parent Email": parentEmail,
+        "Athlete Email": parentEmail,
         "School Year": "2026-2027",
         Grade: "11",
         "Grade Band": [gradeBand.id],

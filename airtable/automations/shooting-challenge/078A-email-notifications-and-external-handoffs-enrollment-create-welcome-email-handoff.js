@@ -32,11 +32,13 @@ send email, render subject/HTML, modify Automation 079, or restore 075.
  * 078A - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Enrollment -> Create WELCOME Email Handoff
  *
- * Version: v1.4
+ * Version: v1.5
  * Date Written: 2026-08-11
- * Last Updated: 2026-08-22
+ * Last Updated: 2026-09-02
  *
  * VERSION HISTORY
+ * - v1.5 (2026-09-02): Make Test Mode? configurable via automation input
+ *   `testMode` (optional; default true for safe Production until Live cutover).
  * - v1.4 (2026-08-22): Enrich WELCOME Payload JSON with enrollment and Program
  *   Instance fields required by the redesigned Hub welcome template.
  * - v1.3 (2026-08-11): Use the verified Hub recipient contract with explicit
@@ -74,6 +76,9 @@ send email, render subject/HTML, modify Automation 079, or restore 075.
  * REQUIRED INPUT VARIABLES
  * - recordId = triggering Enrollments record ID.
  *
+ * OPTIONAL INPUT VARIABLES
+ * - testMode = optional; default true for controlled Hub sends until Live cutover
+ *
  * REQUIRED OUTPUTS
  * - statusOut = success | skipped | error
  * - actionOut = created-ready | duplicate-skipped | error
@@ -98,7 +103,7 @@ send email, render subject/HTML, modify Automation 079, or restore 075.
  * - Recipients JSON = role-qualified PARENT and ATHLETE objects
  * - Template Key = WELCOME
  * - Payload JSON = athleteName, programName, message
- * - Test Mode? = true
+ * - Test Mode? = automation input testMode (default true)
  * - Attempt Count = 0
  *
  * INSTALLATION / TESTING
@@ -111,10 +116,10 @@ send email, render subject/HTML, modify Automation 079, or restore 075.
 
 const SCRIPT = {
     scriptName: "078A - Enrollment -> Create WELCOME Email Handoff",
-    version: "v1.4",
-    versionDate: "2026-08-22",
+    version: "v1.5",
+    versionDate: "2026-09-02",
     originalWrittenDate: "2026-08-11",
-    lastUpdated: "2026-08-22",
+    lastUpdated: "2026-09-02",
     folder: "07 - Email, Notifications, and External Handoffs",
     automationName: "078A - Enrollment -> Create WELCOME Email Handoff",
 };
@@ -180,7 +185,6 @@ const CONFIG = {
         templateKeyWelcome: "WELCOME",
         recipientRoleParent: "PARENT",
         recipientRoleAthlete: "ATHLETE",
-        testMode: true,
         attemptCountInitial: 0,
     },
 };
@@ -418,6 +422,7 @@ async function main() {
         setOutputSafe("debugStep", debugStep);
         const cfg = input.config();
         context.enrollmentRecordId = requireRecordId(cfg.recordId, "Enrollment");
+        const testMode = cfg.testMode === undefined ? true : Boolean(cfg.testMode);
 
         debugStep = "2 - Load tables and validate schema";
         setOutputSafe("debugStep", debugStep);
@@ -541,7 +546,7 @@ async function main() {
             [CONFIG.queueFields.recipientsJson]: context.recipientsJson,
             [CONFIG.queueFields.templateKey]: CONFIG.values.templateKeyWelcome,
             [CONFIG.queueFields.payloadJson]: payloadJson,
-            [CONFIG.queueFields.testMode]: CONFIG.values.testMode,
+            [CONFIG.queueFields.testMode]: testMode,
             [CONFIG.queueFields.attemptCount]: CONFIG.values.attemptCountInitial,
         });
         setDomainOutputs(context, "created-ready", "success", "created-ready", "");
