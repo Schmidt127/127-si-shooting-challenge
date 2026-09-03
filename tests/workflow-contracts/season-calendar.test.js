@@ -149,14 +149,14 @@ test("completion after linked week but on/before June 29 remains credit-eligible
   assert.equal(result.expectedCreditWhenBeforeCommonDue, true);
 });
 
-test("completion after June 29 is late ineligible", () => {
+test("completion after June 29 is late but credit-eligible", () => {
   const result = evaluateLateWeekOnTimeDeadline({
     submissionDateKey: "2027-06-30",
     weekEndDate: "2027-05-08",
     phaDueDate: "2027-06-29",
   });
-  assert.equal(result.creditEligible, false);
-  assert.equal(result.timingStatus, "late_ineligible");
+  assert.equal(result.creditEligible, true);
+  assert.equal(result.timingStatus, "late");
 });
 
 test("homework XP policy is once per Homework Completion with Enrollment+PHA identity", () => {

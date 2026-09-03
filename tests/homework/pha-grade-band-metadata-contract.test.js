@@ -62,8 +62,8 @@ t("020/033/065/071 syntax", () => {
   }
 });
 
-t("020 v3.8 treats Grade Band as metadata only", () => {
-  assert.match(s020, /version:\s*"v3\.8"/);
+t("020 treats Grade Band as metadata only", () => {
+  assert.match(s020, /version:\s*"v3\.9"/);
   assert.match(s020, /Grade Band is eligibility\/descriptive metadata only/i);
   assert.match(s020, /Multi-band Grade Band never rejects/);
   assert.match(s020, /gradeBandSchedulingUsed:\s*false/);
@@ -80,7 +80,7 @@ t("033 does not select PHA by Grade Band", () => {
 });
 
 t("065 PHA validation ignores Grade Band and upload-slot mismatch", () => {
-  assert.match(s065, /version:\s*"v10\.4"/);
+  assert.match(s065, /version:\s*"v10\.6"/);
   assert.match(s065, /PHA Program Instance does not match Enrollment/);
   assert.match(s065, /PHA Week ownership mismatch/);
   assert.match(s065, /PHA Homework ownership mismatch/);

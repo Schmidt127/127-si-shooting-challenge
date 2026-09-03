@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-19
-Last GitHub Update: 2026-08-28 (v3.8 FUT-001 assignment identity + deadline)
+Last GitHub Update: 2026-09-03 (v3.9 late homework full credit policy)
 
 Purpose:
 Link or create one Homework Completion from a homework Submission Asset,
@@ -31,11 +31,15 @@ v3.6 is live in Production Airtable (Mike 2026-08-19); v3.7 is structure-only.
  * 020 - HOMEWORK
  * Link or Create Homework Completion
  *
- * Version: v3.8
+ * Version: v3.9
  * Date Written: 2026-06-20
- * Last Updated: 2026-08-28
+ * Last Updated: 2026-09-03
  *
  * VERSION HISTORY
+ * - v3.9 (2026-09-03): Late homework policy — submissions after PHA Due Date (Week End
+ *   fallback) remain credit-eligible (`timingStatus: late`); Notes reworded so late work
+ *   still earns full credit/XP once Satisfactory, and does not count toward Perfect Week
+ *   for the original week. HC create/link identity unchanged.
  * - v3.8 (2026-08-28): FUT-001 — match Homework Completion by Enrollment + PHA
  *   identity (not upload slot); accept alternate HW1/HW2 upload slot when assignment
  *   identity is unambiguous; enforce PHA Due Date with Week End Date fallback;
@@ -70,9 +74,11 @@ v3.6 is live in Production Airtable (Mike 2026-08-19); v3.7 is structure-only.
  *
  * PRODUCT RULE
  * - One Homework Completion per Enrollment + Program Homework Assignment (same assignment identity).
- * - Repeat uploads and multi-file submissions link to the same Homework Completion.
- * - Submissions after PHA Due Date (or Week End Date fallback) remain visible for coach review but
- *   are marked ineligible for credit in Notes; XP is blocked downstream in 065.
+ * - Repeat uploads and multi-file submissions link to the same Homework Completion (no duplicate HC/XP).
+ * - Homework may be completed before, during, or after the official week.
+ * - Submissions after PHA Due Date (or Week End Date fallback) are marked late in Notes but remain
+ *   full-credit / full-XP eligible once Satisfactory (065). Late does not count toward Perfect Week
+ *   for the original week (057). Submission Date = student submit/activity date (not grading date).
  *
  * IMPORTANT DESIGN RULES
  * - Fail closed on Upload Destination / Asset Purpose / attachment / link count errors
@@ -141,10 +147,10 @@ v3.6 is live in Production Airtable (Mike 2026-08-19); v3.7 is structure-only.
 
 const SCRIPT = {
   scriptName: "020 - Homework - Link or Create Homework Completion",
-  version: "v3.8",
-  versionDate: "2026-08-28",
+  version: "v3.9",
+  versionDate: "2026-09-03",
   originalWrittenDate: "2026-06-20",
-  lastUpdated: "2026-08-28",
+  lastUpdated: "2026-09-03",
   folder: "02 - Homework Review and XP",
   automationName: "020 - Homework - Link or Create Homework Completion",
 };
@@ -470,18 +476,18 @@ function evaluateHomeworkSubmissionDeadline({ submissionDateKey, phaDueDate, wee
   }
   if (submitKey > dueKey) {
     return {
-      creditEligible: false,
-      timingStatus: "late_ineligible",
+      creditEligible: true,
+      timingStatus: "late",
       dueDateKey: dueKey,
-      reason: `Submission date ${submitKey} is after assignment due date ${dueKey}.`,
+      reason: `Submission date ${submitKey} is after assignment due date ${dueKey}; late but credit-eligible once Satisfactory.`,
     };
   }
   return { creditEligible: true, timingStatus: "on_time", dueDateKey: dueKey, reason: "" };
 }
 
 function buildLateSubmissionNote({ timingStatus, dueDateKey, submissionDateKey }) {
-  if (timingStatus !== "late_ineligible") return "";
-  return `Late submission: activity date ${submissionDateKey} is after due date ${dueDateKey}. Not eligible for homework credit or XP unless an approved exception is recorded.`;
+  if (timingStatus !== "late" && timingStatus !== "late_ineligible") return "";
+  return `Late submission: activity date ${submissionDateKey} is after due date ${dueDateKey}. Full homework credit and XP still apply once marked Satisfactory. Late work does not count toward Perfect Week for the original week.`;
 }
 
 function homeworkFieldForSlot(slot) {

@@ -173,15 +173,13 @@ export function resolveHomeworkCreditEligibility(input: {
     return { creditEligible: false, pastDue, lateSubmission };
   }
 
-  if (lateSubmission) {
-    return { creditEligible: false, pastDue, lateSubmission };
-  }
-
+  // Late submissions remain credit-eligible once Satisfactory; do not deny credit
+  // solely because Submission Date is after the due date.
   if (pastDue && !input.submissionDateKey) {
     return { creditEligible: false, pastDue, lateSubmission: false };
   }
 
-  return { creditEligible: null, pastDue, lateSubmission: false };
+  return { creditEligible: null, pastDue, lateSubmission };
 }
 
 function comparePublicHomeworkAssignments(a: SortableHomeworkRow, b: SortableHomeworkRow): number {

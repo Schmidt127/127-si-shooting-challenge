@@ -42,18 +42,21 @@ test("005 v5.5 source contract — PHA direct load, slot-authoritative normalize
   assert.doesNotMatch(source, /phaTable\.selectRecordsAsync/);
 });
 
-test("020 v3.8 source contract — PHA identity validate, alternate slot tolerant", () => {
+test("020 v3.9 source contract — PHA identity validate, alternate slot tolerant, late credit", () => {
   const source = read(
     "airtable/automations/shooting-challenge/020-homework-link-or-create-homework-completion.js"
   );
-  assert.match(source, /version:\s*"v3\.8"/);
+  assert.match(source, /version:\s*"v3\.9"/);
   assert.match(source, /resolveHomeworkAssignmentIdentity/);
   assert.match(source, /enrollment_pha_identity/);
   assert.match(source, /evaluateHomeworkSubmissionDeadline/);
+  assert.match(source, /timingStatus:\s*"late"/);
+  assert.match(source, /Full homework credit and XP still apply/);
   assert.doesNotMatch(source, /slot mismatch: expected/);
   assert.doesNotMatch(source, /resolveProgramHomeworkAssignmentId/);
   assert.doesNotMatch(source, /phaTable\.selectRecordsAsync/);
   assert.doesNotMatch(source, /PHA Grade Band mismatch/);
+  assert.doesNotMatch(source, /Not eligible for homework credit or XP/);
 });
 
 test("005 — correct HW1/HW2 placement succeeds without normalization", async () => {
@@ -417,7 +420,7 @@ test("020 — repeat alternate-slot upload reuses one Homework Completion", asyn
   assert.equal(homework.createdPayloads.length, 0);
 });
 
-test("020 — late submission stays reviewable but marks ineligible", async () => {
+test("020 — late submission stays reviewable and credit-eligible", async () => {
   const base = build020PhaBase({
     submissionCells: {
       "Homework Name 1": [{ id: PHA_IDS.PHA_HW1 }],
@@ -437,10 +440,14 @@ test("020 — late submission stays reviewable but marks ineligible", async () =
   const homework = base.tables.get("Homework Completions");
   const { output, error } = await run020({ base });
   assert.equal(error, null, error && error.message);
-  assert.equal(output.values.creditEligible, false);
-  assert.equal(output.values.timingStatus, "late_ineligible");
+  assert.equal(output.values.creditEligible, true);
+  assert.equal(output.values.timingStatus, "late");
   assert.equal(homework.createdPayloads.length, 1);
   assert.match(String(homework.createdPayloads[0].payload.Notes || ""), /Late submission:/);
+  assert.match(
+    String(homework.createdPayloads[0].payload.Notes || ""),
+    /Full homework credit and XP still apply/
+  );
 });
 
 test("020 — on-time submission is credit eligible", async () => {
@@ -554,18 +561,19 @@ test("020 — blank PHA Due Date uses Week End Date for deadline", async () => {
   });
   const { output, error } = await run020({ base });
   assert.equal(error, null, error && error.message);
-  assert.equal(output.values.timingStatus, "late_ineligible");
+  assert.equal(output.values.timingStatus, "late");
   assert.equal(output.values.dueDateKey, "2026-08-31");
 });
 
-test("065 v10.4 source contract — deadline gate + slot-agnostic PHA + XP key", () => {
+test("065 v10.6 source contract — no late XP block + slot-agnostic PHA + XP key", () => {
   const source = read(
     "airtable/automations/shooting-challenge/065-homework-review-and-xp-create-homework-xp-event.js"
   );
-  assert.match(source, /version:\s*"v10\.4"/);
+  assert.match(source, /version:\s*"v10\.6"/);
   assert.match(source, /evaluateHomeworkSubmissionDeadline/);
   assert.match(source, /HOMEWORK_XP\|/);
   assert.match(source, /sourceKeyPrefix:\s*"HOMEWORK_XP\|"/);
   assert.doesNotMatch(source, /PHA Homework Slot ownership mismatch/);
-  assert.match(source, /Submission after assignment due date/);
+  assert.doesNotMatch(source, /late_ineligible/);
+  assert.doesNotMatch(source, /Submission after assignment due date/);
 });

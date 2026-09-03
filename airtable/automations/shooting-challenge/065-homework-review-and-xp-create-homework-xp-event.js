@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-14
-Last GitHub Update: 2026-08-31 (v10.5 reconcile XP points without ownership fail)
+Last GitHub Update: 2026-09-03 (v10.6 late homework full credit / XP)
 
 Purpose:
 Create, replay, repair, deactivate, or reactivate the exact canonical
@@ -32,17 +32,21 @@ v10.1 installed in Production per Mike evidence; v10.2 is structure-only.
  * 065 - HOMEWORK REVIEW AND XP
  * Create or Reconcile Homework XP Event
  *
- * Version: v10.5
+ * Version: v10.6
  * Date Written: 2026-06-06
- * Last Updated: 2026-08-31
+ * Last Updated: 2026-09-03
  *
  * VERSION HISTORY
+ * - v10.6 (2026-09-03): Late homework policy — stop blocking XP when Submission Date is
+ *   after PHA Due Date / Week End. Late remains full-credit eligible; Satisfactory? (and
+ *   Needs Revision / not satisfactory) remains the XP gate. Timing status late is
+ *   informational only for Perfect Week exclusion downstream in 057.
  * - v10.5 (2026-08-31): Ownership assert no longer requires XP Points to already equal
  *   Total Homework XP Awarded. Point changes (e.g. Extra Credit then Base XP) reconcile
  *   by updating the existing HOMEWORK_XP event instead of failing closed on mismatch.
  * - v10.4 (2026-08-28): FUT-001 — PHA eligibility no longer requires HC Item Slot to
- *   match PHA Homework Slot; block positive XP when submission is after PHA Due Date
- *   (Week End Date fallback).
+ *   match PHA Homework Slot; previously blocked positive XP when submission was after
+ *   PHA Due Date (Week End Date fallback) — superseded by v10.6 late-credit policy.
  * - v10.3 (2026-08-24): Require triggering Homework Completion recordId from
  *   input.config() only — no hardcoded record literals in executable logic;
  *   explicit missing/invalid input errors for safe manual runs.
@@ -134,10 +138,10 @@ const SOURCE_KEY_CONTRACT = {
 
 const SCRIPT = {
   scriptName: "065 - Homework Review and XP - Create or Reconcile Homework XP Event",
-  version: "v10.5",
-  versionDate: "2026-08-31",
+  version: "v10.6",
+  versionDate: "2026-09-03",
   originalWrittenDate: "2026-06-06",
-  lastUpdated: "2026-08-31",
+  lastUpdated: "2026-09-03",
   folder: "02 - Homework Review and XP",
   automationName: "065 - Homework Review and XP - Create or Reconcile Homework XP Event",
 };
@@ -389,10 +393,10 @@ function evaluateHomeworkSubmissionDeadline({ submissionDateKey = "", phaDueDate
   }
   if (submitKey > dueKey) {
     return {
-      creditEligible: false,
-      timingStatus: "late_ineligible",
+      creditEligible: true,
+      timingStatus: "late",
       dueDateKey: dueKey,
-      reason: `Submission date ${submitKey} is after assignment due date ${dueKey}.`,
+      reason: `Submission date ${submitKey} is after assignment due date ${dueKey}; late but credit-eligible once Satisfactory.`,
     };
   }
   return { creditEligible: true, timingStatus: "on_time", dueDateKey: dueKey, reason: "" };
@@ -551,7 +555,6 @@ async function validatePha(homeworkCompletion, enrollmentId, weekId) {
     CONFIG.pha.week,
     CONFIG.pha.programInstance,
   ];
-  if (getField(phaTable, CONFIG.pha.dueDate)) phaFieldNames.push(CONFIG.pha.dueDate);
   const pha = await phaTable.selectRecordAsync(phaIds[0], {
     fields: phaFieldNames.filter((name) => getField(phaTable, name)),
   });
@@ -584,28 +587,8 @@ async function validatePha(homeworkCompletion, enrollmentId, weekId) {
     };
   }
 
-  const submissionDateKey = toDateKeyFromText(
-    getText(homeworkCompletion, homeworkTable, CONFIG.homework.submissionDate)
-  );
-  let weekEndDate = "";
-  if (weeksTable && getField(weeksTable, CONFIG.weeks.endDate)) {
-    const weekRecord = await weeksTable.selectRecordAsync(weekId, {
-      fields: [CONFIG.weeks.endDate],
-    });
-    if (weekRecord) weekEndDate = getText(weekRecord, weeksTable, CONFIG.weeks.endDate);
-  }
-  const phaDueDate = getField(phaTable, CONFIG.pha.dueDate)
-    ? getText(pha, phaTable, CONFIG.pha.dueDate)
-    : "";
-  const deadline = evaluateHomeworkSubmissionDeadline({
-    submissionDateKey,
-    phaDueDate,
-    weekEndDate,
-  });
-  if (!deadline.creditEligible && deadline.timingStatus === "late_ineligible") {
-    return { eligible: false, reason: deadline.reason || "Submission after assignment due date." };
-  }
-
+  // Late Submission Date does not block XP (v10.6). Satisfactory? / review gates
+  // remain authoritative. Perfect Week late exclusion is owned by automation 057.
   return { eligible: true, reason: "" };
 }
 

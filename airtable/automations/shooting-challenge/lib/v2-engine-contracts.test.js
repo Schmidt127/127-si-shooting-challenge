@@ -816,8 +816,8 @@ test("FUT-001 evaluateHomeworkSubmissionDeadline PHA Due Date overrides week end
     phaDueDate: "2026-08-31",
     weekEndDate: "2026-08-24",
   });
-  assert.strictEqual(late.creditEligible, false);
-  assert.strictEqual(late.timingStatus, "late_ineligible");
+  assert.strictEqual(late.creditEligible, true);
+  assert.strictEqual(late.timingStatus, "late");
 });
 
 test("FUT-001 homework XP source key remains one key per Homework Completion", () => {

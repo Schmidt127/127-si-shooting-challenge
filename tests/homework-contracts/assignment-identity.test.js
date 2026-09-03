@@ -193,15 +193,16 @@ test("on-time submission before due date is credit eligible", () => {
   assert.equal(result.timingStatus, "on_time");
 });
 
-test("late submission after due date is ineligible", () => {
+test("late submission after due date is credit eligible with timingStatus late", () => {
   const result = evaluateHomeworkSubmissionDeadline({
     submissionDateKey: "2026-09-01",
     phaDueDate: "2026-08-31",
     weekEndDate: "2026-08-24",
   });
-  assert.equal(result.creditEligible, false);
-  assert.equal(result.timingStatus, "late_ineligible");
-  assert.match(buildLateSubmissionNote(result), /Not eligible for homework credit/);
+  assert.equal(result.creditEligible, true);
+  assert.equal(result.timingStatus, "late");
+  assert.match(buildLateSubmissionNote(result), /Full homework credit and XP still apply/);
+  assert.match(buildLateSubmissionNote(result), /does not count toward Perfect Week/);
 });
 
 test("PHA Due Date blank uses week end for late check", () => {
@@ -210,8 +211,29 @@ test("PHA Due Date blank uses week end for late check", () => {
     phaDueDate: "",
     weekEndDate: "2026-08-24",
   });
-  assert.equal(result.creditEligible, false);
+  assert.equal(result.creditEligible, true);
+  assert.equal(result.timingStatus, "late");
   assert.equal(result.dueDateKey, "2026-08-24");
+});
+
+test("on-time submission on due date remains on_time", () => {
+  const result = evaluateHomeworkSubmissionDeadline({
+    submissionDateKey: "2026-08-31",
+    phaDueDate: "2026-08-31",
+    weekEndDate: "2026-08-24",
+  });
+  assert.equal(result.creditEligible, true);
+  assert.equal(result.timingStatus, "on_time");
+});
+
+test("delayed grading does not change timing — Submission Date controls late status", () => {
+  const result = evaluateHomeworkSubmissionDeadline({
+    submissionDateKey: "2026-08-20",
+    phaDueDate: "2026-08-31",
+    weekEndDate: "2026-08-24",
+  });
+  assert.equal(result.timingStatus, "on_time");
+  assert.equal(result.creditEligible, true);
 });
 
 console.log("all assignment-identity tests passed");

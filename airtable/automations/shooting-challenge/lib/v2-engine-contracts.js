@@ -1986,10 +1986,10 @@ function evaluateHomeworkSubmissionDeadline({
   }
   if (submitKey > dueKey) {
     return {
-      creditEligible: false,
-      timingStatus: "late_ineligible",
+      creditEligible: true,
+      timingStatus: "late",
       dueDateKey: dueKey,
-      reason: `Submission date ${submitKey} is after assignment due date ${dueKey}.`,
+      reason: `Submission date ${submitKey} is after assignment due date ${dueKey}; late but credit-eligible once Satisfactory.`,
     };
   }
   return {
@@ -2001,8 +2001,8 @@ function evaluateHomeworkSubmissionDeadline({
 }
 
 function buildHomeworkLateSubmissionNote({ timingStatus = "", dueDateKey = "", submissionDateKey = "" } = {}) {
-  if (timingStatus !== "late_ineligible") return "";
-  return `Late submission: activity date ${submissionDateKey} is after due date ${dueDateKey}. Not eligible for homework credit or XP unless an approved exception is recorded.`;
+  if (timingStatus !== "late" && timingStatus !== "late_ineligible") return "";
+  return `Late submission: activity date ${submissionDateKey} is after due date ${dueDateKey}. Full homework credit and XP still apply once marked Satisfactory. Late work does not count toward Perfect Week for the original week.`;
 }
 
 module.exports = {

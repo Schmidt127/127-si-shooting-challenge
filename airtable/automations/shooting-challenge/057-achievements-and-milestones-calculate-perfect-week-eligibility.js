@@ -24,12 +24,18 @@ Airtable is the deployed/running copy.
 
 /***************************************************************************************************
  * 057 - Achievements and Milestones - Calculate Perfect Week Eligibility
- * Version: 2.2
+ * Version: 2.3
  * Date written: 2026-05-30
- * Last updated: 2026-08-27
+ * Last updated: 2026-09-03
  *
  * Purpose:
  * Calculates Perfect Week helper fields on one Weekly Athlete Summary record.
+ *
+ * Version 2.3 updates (homework late-credit Perfect Week exclusion):
+ * - Satisfactory homework still required for the Perfect Week homework gate.
+ * - Late homework (Submission Date after PHA Due Date, Week End Date fallback) does
+ *   NOT count toward Perfect Week for the original week — even when Satisfactory and
+ *   XP-eligible. Missing Submission Date does not exclude (timing unknown).
  *
  * Version 2.2 updates (SC-034 config-only video minimum):
  * - Requires Config field `Perfect Week Video Minimum` (year-aware selection; fail-closed when
@@ -93,7 +99,8 @@ Airtable is the deployed/running copy.
  * - Keeps same-day submission requirement.
  * - Keeps conditional Zoom requirement.
  * - Rewrites homework requirement:
- *   Perfect Week now requires 100% of assigned homework for the week to be satisfactorily completed.
+ *   Perfect Week now requires 100% of assigned homework for the week to be satisfactorily
+ *   completed on time (Submission Date on/before due). Late satisfactory homework is excluded.
  *
  * Perfect Week requirements calculated by this script:
  * 1. Athlete must have one qualifying shooting submission day for each official day
@@ -105,7 +112,9 @@ Airtable is the deployed/running copy.
  *    records for the week.
  * 4. Athlete must attend Zoom if a Zoom meeting exists for the linked Week
  *    (live Attendees OR Stage 17 approved recording credit that counts for Perfect Week).
- * 5. Athlete must satisfactorily complete 100% of homework assignments assigned for the week.
+ * 5. Athlete must satisfactorily complete 100% of homework assignments assigned for the week
+ *    with on-time Submission Date (not late vs PHA Due Date / Week End Date). Late satisfactory
+ *    homework earns credit/XP elsewhere but does not satisfy Perfect Week for that week.
  *
  * Notes:
  * - This script only calculates helper fields.
@@ -188,6 +197,7 @@ const CONFIG = {
 
   weekFields: {
     startDate: "Start Date",
+    endDate: "End Date",
   },
 
   submissionFields: {
@@ -213,7 +223,15 @@ const CONFIG = {
     homework: "Homework",
     satisfactory: "Satisfactory?",
     completionStatus: "Completion Status",
+    submissionDate: "Submission Date",
+    programHomeworkAssignment: "Program Homework Assignment",
   },
+
+  phaFields: {
+    dueDate: "Due Date",
+  },
+
+  phaTable: "Program Homework Assignments",
 
   videoFields: {
     enrollment: "Enrollment",
@@ -510,6 +528,47 @@ function isHomeworkSatisfactory(record) {
 
   const status = record.getCellValueAsString(CONFIG.homeworkCompletionFields.completionStatus);
   return status.toLowerCase().includes("satisfactory");
+}
+
+/**
+ * Perfect Week homework must be on-time for the original week.
+ * Late = Submission Date after PHA Due Date (Week End Date fallback).
+ * Missing Submission Date does not exclude (timing unknown).
+ */
+function resolveHomeworkDueDateKey(phaDueDate, weekEndDateKey) {
+  const fromPha = getDateKeyFromDateOnly(phaDueDate);
+  if (fromPha) return fromPha;
+  return weekEndDateKey || "";
+}
+
+function isHomeworkOnTimeForPerfectWeek(record, weekEndDateKey, phaDueDateById) {
+  if (!fieldExists(homeworkCompletionsTable, CONFIG.homeworkCompletionFields.submissionDate)) {
+    return true;
+  }
+  const submissionDateKey = getDateKeyFromDateOnly(
+    record.getCellValue(CONFIG.homeworkCompletionFields.submissionDate)
+  );
+  if (!submissionDateKey) return true;
+
+  let phaDueDate = "";
+  if (
+    fieldExists(homeworkCompletionsTable, CONFIG.homeworkCompletionFields.programHomeworkAssignment) &&
+    phaDueDateById
+  ) {
+    const phaIds = getLinkedIds(record, CONFIG.homeworkCompletionFields.programHomeworkAssignment);
+    if (phaIds.length === 1 && phaDueDateById.has(phaIds[0])) {
+      phaDueDate = phaDueDateById.get(phaIds[0]) || "";
+    }
+  }
+
+  const dueKey = resolveHomeworkDueDateKey(phaDueDate, weekEndDateKey);
+  if (!dueKey) return true;
+  return submissionDateKey <= dueKey;
+}
+
+function isHomeworkSatisfactoryForPerfectWeek(record, weekEndDateKey, phaDueDateById) {
+  if (!isHomeworkSatisfactory(record)) return false;
+  return isHomeworkOnTimeForPerfectWeek(record, weekEndDateKey, phaDueDateById);
 }
 
 async function updateWeekly(fields) {
@@ -831,8 +890,12 @@ try {
     );
   }
 
+  const weekFieldsToLoad = [CONFIG.weekFields.startDate];
+  if (fieldExists(weeksTable, CONFIG.weekFields.endDate)) {
+    weekFieldsToLoad.push(CONFIG.weekFields.endDate);
+  }
   const weekRecord = await weeksTable.selectRecordAsync(weekId, {
-    fields: [CONFIG.weekFields.startDate],
+    fields: weekFieldsToLoad,
   });
 
   if (!weekRecord) {
@@ -850,6 +913,9 @@ try {
   const weekStartDateKey = getDateKeyFromDateOnly(
     weekRecord.getCellValue(CONFIG.weekFields.startDate)
   );
+  const weekEndDateKey = fieldExists(weeksTable, CONFIG.weekFields.endDate)
+    ? getDateKeyFromDateOnly(weekRecord.getCellValue(CONFIG.weekFields.endDate))
+    : "";
 
   if (!weekStartDateKey) {
     await updateWeekly({
@@ -1124,7 +1190,9 @@ try {
    * 4B. Homework Requirement
    *
    * Rule:
-   * Perfect Week requires 100% of assigned homework to be satisfactorily completed.
+   * Perfect Week requires 100% of assigned homework to be satisfactorily completed on time.
+   * Late satisfactory homework (Submission Date after PHA Due Date / Week End) earns credit/XP
+   * elsewhere but does not count toward Perfect Week for the original week.
    *
    * Source of assigned homework:
    * - Weekly Athlete Summary -> Homework
@@ -1146,23 +1214,80 @@ try {
   let assignedHomeworkCount = assignedHomeworkIds.length;
   let satisfactoryHomeworkCount = 0;
 
+  const homeworkSelectFields = [
+    CONFIG.homeworkCompletionFields.homework,
+    CONFIG.homeworkCompletionFields.satisfactory,
+    CONFIG.homeworkCompletionFields.completionStatus,
+  ];
+  if (fieldExists(homeworkCompletionsTable, CONFIG.homeworkCompletionFields.submissionDate)) {
+    homeworkSelectFields.push(CONFIG.homeworkCompletionFields.submissionDate);
+  }
+  if (
+    fieldExists(homeworkCompletionsTable, CONFIG.homeworkCompletionFields.programHomeworkAssignment)
+  ) {
+    homeworkSelectFields.push(CONFIG.homeworkCompletionFields.programHomeworkAssignment);
+  }
+
+  async function loadPhaDueDateById(completionRecords) {
+    const phaDueDateById = new Map();
+    if (
+      !fieldExists(homeworkCompletionsTable, CONFIG.homeworkCompletionFields.programHomeworkAssignment)
+    ) {
+      return phaDueDateById;
+    }
+    const phaIds = new Set();
+    for (const hwCompletion of completionRecords) {
+      for (const phaId of getLinkedIds(
+        hwCompletion,
+        CONFIG.homeworkCompletionFields.programHomeworkAssignment
+      )) {
+        phaIds.add(phaId);
+      }
+    }
+    if (phaIds.size === 0) return phaDueDateById;
+
+    let phaTable = null;
+    try {
+      phaTable = base.getTable(CONFIG.phaTable);
+    } catch (e) {
+      phaTable = null;
+    }
+    if (!phaTable || !fieldExists(phaTable, CONFIG.phaFields.dueDate)) return phaDueDateById;
+
+    const phaQuery = await phaTable.selectRecordsAsync({
+      fields: [CONFIG.phaFields.dueDate],
+    });
+    for (const phaId of phaIds) {
+      const phaRecord = phaQuery.getRecord(phaId);
+      if (!phaRecord) continue;
+      phaDueDateById.set(
+        phaId,
+        getDateKeyFromDateOnly(phaRecord.getCellValue(CONFIG.phaFields.dueDate))
+      );
+    }
+    unloadQuerySafe(phaQuery);
+    return phaDueDateById;
+  }
+
   if (linkedHomeworkCompletionIds.length > 0) {
     const homeworkQuery = await homeworkCompletionsTable.selectRecordsAsync({
-      fields: [
-        CONFIG.homeworkCompletionFields.homework,
-        CONFIG.homeworkCompletionFields.satisfactory,
-        CONFIG.homeworkCompletionFields.completionStatus,
-      ],
+      fields: homeworkSelectFields,
     });
+
+    const linkedCompletions = [];
+    for (const id of linkedHomeworkCompletionIds) {
+      const hwCompletion = homeworkQuery.getRecord(id);
+      if (hwCompletion) linkedCompletions.push(hwCompletion);
+    }
+    const phaDueDateById = await loadPhaDueDateById(linkedCompletions);
 
     const satisfactoryAssignedHomeworkIds = new Set();
     let satisfactoryUnmatchedCompletionCount = 0;
 
-    for (const id of linkedHomeworkCompletionIds) {
-      const hwCompletion = homeworkQuery.getRecord(id);
-      if (!hwCompletion) continue;
-
-      if (!isHomeworkSatisfactory(hwCompletion)) continue;
+    for (const hwCompletion of linkedCompletions) {
+      if (!isHomeworkSatisfactoryForPerfectWeek(hwCompletion, weekEndDateKey, phaDueDateById)) {
+        continue;
+      }
 
       const completionHomeworkIds = getLinkedIds(
         hwCompletion,
@@ -1186,6 +1311,7 @@ try {
     } else {
       satisfactoryHomeworkCount = satisfactoryUnmatchedCompletionCount;
     }
+    unloadQuerySafe(homeworkQuery);
   }
 
   /*
@@ -1197,20 +1323,20 @@ try {
    */
   if (assignedHomeworkCount === 0 && linkedHomeworkCompletionIds.length > 0) {
     const homeworkQuery = await homeworkCompletionsTable.selectRecordsAsync({
-      fields: [
-        CONFIG.homeworkCompletionFields.homework,
-        CONFIG.homeworkCompletionFields.satisfactory,
-        CONFIG.homeworkCompletionFields.completionStatus,
-      ],
+      fields: homeworkSelectFields,
     });
+
+    const linkedCompletions = [];
+    for (const id of linkedHomeworkCompletionIds) {
+      const hwCompletion = homeworkQuery.getRecord(id);
+      if (hwCompletion) linkedCompletions.push(hwCompletion);
+    }
+    const phaDueDateById = await loadPhaDueDateById(linkedCompletions);
 
     const homeworkIdsFromCompletions = new Set();
     const satisfactoryHomeworkIdsFromCompletions = new Set();
 
-    for (const id of linkedHomeworkCompletionIds) {
-      const hwCompletion = homeworkQuery.getRecord(id);
-      if (!hwCompletion) continue;
-
+    for (const hwCompletion of linkedCompletions) {
       const completionHomeworkIds = getLinkedIds(
         hwCompletion,
         CONFIG.homeworkCompletionFields.homework
@@ -1219,7 +1345,7 @@ try {
       for (const homeworkId of completionHomeworkIds) {
         homeworkIdsFromCompletions.add(homeworkId);
 
-        if (isHomeworkSatisfactory(hwCompletion)) {
+        if (isHomeworkSatisfactoryForPerfectWeek(hwCompletion, weekEndDateKey, phaDueDateById)) {
           satisfactoryHomeworkIdsFromCompletions.add(homeworkId);
         }
       }
@@ -1227,6 +1353,7 @@ try {
 
     assignedHomeworkCount = homeworkIdsFromCompletions.size;
     satisfactoryHomeworkCount = satisfactoryHomeworkIdsFromCompletions.size;
+    unloadQuerySafe(homeworkQuery);
   }
 
   const homeworkMet =
