@@ -207,7 +207,7 @@ Deploy details: [deployment-notes.md](./deployment-notes.md), [web/docs/deployme
 | `/`, `/leaderboard`, `/homework`, `/homework/[id]` | Live — PHA-backed homework catalog (FUT-014 complete 2026-08-26) |
 | `/tutorials`, `/shoutouts`, `/articles` (+ detail) | Live — **Tutorials & Assets** (`tblDOTgsWfqPm18bw`); publish gate `OK to Publish on Softr` = `checked` |
 | `/zoom-meetings`, `/levels`, `/achievements`, `/game-manual`, `/public-display` | Live |
-| `/dashboard` | Live demo — **mock adapter** (no auth) |
+| `/dashboard` | SC-112 private family dashboard when `ATHLETE_AUTH_ENABLED`; otherwise coming-soon placeholder. Public sign-in: `/dashboard/sign-in` (SC-149 nav) |
 | `/athletes/[slug]` | **Live** — real enrollment-backed public profiles (SC-111); `noindex`; smoke slug `perfect-week-testing` on prod |
 | `/api/athletes/[slug]/game-log` | Live — server-side pagination (FUT-012) |
 | `/admin` | Placeholder — roadmap only; **no write controls**; no sensitive diagnostics without auth |
@@ -297,7 +297,7 @@ Full register: [KNOWN_ISSUES.md](./KNOWN_ISSUES.md)
 | Severity | Theme |
 |----------|--------|
 | High | Optional 066 OMNI sandbox confirm still open (version string is **v3.8**); automation version inventory still largely UNKNOWN beyond reconciled rows; athlete E2E matrix mostly untested |
-| Medium | 070a post-test ON/OFF policy still Mike decision; Perfect Week calendar-blocked (Days Logged 5); web auth/dashboard incomplete; Softr Obsolete / Not Used |
+| Medium | 070a post-test ON/OFF policy still Mike decision; Perfect Week calendar-blocked (Days Logged 5); SC-112 Production `ATHLETE_AUTH_*` enablement confirmation; Softr Obsolete / Not Used |
 | Low | Root marketing URL depends on landing hub; GitHub trigger headers often “confirm in Airtable” |
 
 ---

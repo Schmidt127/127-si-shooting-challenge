@@ -61,7 +61,7 @@ export const ADMIN_PLACEHOLDER = {
   allowsWrites: false,
 } as const;
 
-/** SC-112 — athlete sign-in not implemented; do not show mock or live private data. */
+/** SC-112 — shown only when `ATHLETE_AUTH_ENABLED` is off; never mock/live private data. */
 export const DASHBOARD_PLACEHOLDER = {
   title: "Athlete dashboard coming soon",
   description:

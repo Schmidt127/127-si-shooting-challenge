@@ -54,7 +54,8 @@ export const PUBLIC_SMOKE_ROUTES = [
   { name: "game-manual", path: "game-manual", heading: /game manual|manual/i },
   { name: "family-dashboard-sign-in", path: "dashboard/sign-in", heading: /sign-in|family/i },
   { name: "public-display", path: "public-display", heading: /season|display|leaderboard|standings/i },
-  { name: "dashboard", path: "dashboard", heading: /coming soon/i },
+  // Auth off → coming soon; auth on → redirect to sign-in (SC-112).
+  { name: "dashboard", path: "dashboard", heading: /coming soon|sign-in/i },
   { name: "athlete-profile", path: `athletes/${LOCAL_SMOKE_ATHLETE_SLUG}`, heading: /.+/ },
   { name: "admin", path: "admin", heading: /admin/i },
 ] as const;
