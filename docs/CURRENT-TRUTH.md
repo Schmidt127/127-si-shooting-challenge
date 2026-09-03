@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-09-03 — **origin/master** tip **`29904b45`** (PR **#358** SC-149 Family Dashboard nav). **SC-112** parent magic-link + private dashboard **built in repository** (PRs **#350–#357**); anonymous `/shoot/dashboard` is coming-soon when `ATHLETE_AUTH_ENABLED` is off, or redirects to `/shoot/dashboard/sign-in` when auth is on — Production enablement is Vercel-env gated (`REQUIRES LIVE CONFIRMATION`). **SC-147** recorded Zoom half-XP remains **101 v6.7** GitHub (PR **#338**); **Production paste pending Mike**. No DEV base (retired 2026-08-19). Prefer this file + [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md) + `git rev-parse HEAD` on `master`.  
+**Last verification (repo):** 2026-09-03 — **origin/master** tip **`a686e50b`** (PR **#375** Master Future Work List after SC-112 final wave). Vercel Production deployment SHA **`a686e50b`** (same tip). **SC-112** magic-link + private dashboard **MERGED/DEPLOYED** (PRs **#350–#357**); multi-child selection **MERGED/DEPLOYED** (PR **#373**) but **NEEDS-PRODUCTION-PROOF** until Agent 1 / PR **#380**. Live afternoon pass: Production auth **on** (anonymous `/dashboard` → sign-in); magic-link **request** path verified — full inbox first-use/reuse/sign-out still **REQUIRES LIVE CONFIRMATION**. Closeout board: [`audits/SC-112-finalization-closeout-20260903.md`](./audits/SC-112-finalization-closeout-20260903.md). **SC-147** remains **101 v6.7** GitHub (PR **#338**); **Production paste pending Mike**. No DEV base (retired 2026-08-19). Prefer this file + [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md) + `git rev-parse HEAD` on `master`.  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -66,10 +66,11 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | **`29904b45870ad2f4c85bf96cda65dc7a92559621`** — merge PR **#358** SC-149 Family Dashboard navigation. Re-verify: `git rev-parse HEAD` |
+| HEAD SHA | **`a686e50b109337e4ad564be16ab8b98aedd9597f`** — merge PR **#375** docs Master Future Work List after SC-112 final wave. Re-verify: `git rev-parse HEAD` |
 | `origin/master` | Should match HEAD after fetch — re-verify: `git rev-parse origin/master` |
 | Ahead / behind | **0 / 0** (re-verify after fetch) |
-| Recent merges (2026-09-03) | **#358** SC-149 Family Dashboard nav · **#357** SC-112 authenticated dashboard · **#356**/#354 SC-112 verify/magic-link · **#350** parent-email Live cutover |
+| Recent merges (2026-09-03) | **#375** master-list SC-112 wave · **#373** multi-child auth · **#372** homework late-credit · **#368** Season Sim hygiene proposal · **#367** public awards fail-closed · **#366** Game Log filters · **#362** Automation 003 PRODUCTION-VERIFIED · **#358** SC-149 Family Dashboard nav · **#357**/#354/#350 SC-112 auth |
+| Open PRs (docs/code ownership — do not duplicate) | **#379** multi-child auth docs · **#377** Live email cutover checklist · **#380** multi-child Production evidence · **#378** Public On Web awards (**supersedes #376**) |
 | Recent merges (2026-08-31) | **#312** multi-asset HW / 065 XP closeout |
 | Recent merges (2026-08-30) | **#311** gift-card/coach · **#308** public-app readiness · **#298** public copy · **#276** ATHWF · **#297** paste audit |
 | Prior integrity ship | `0b1d634…` (2026-08-20); XP activity ledger merge follows |
@@ -108,14 +109,17 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | Health | `GET /shoot/api/airtable` → token validity check |
 | Softr | **Obsolete / Not Used** — historical reference only |
 | SEO | **Public program pages indexable** — `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true` on Vercel Production (SC-115 cutover 2026-08-25). Athlete profiles + private routes remain `noindex`. Checklist: [`deploy-checklists/2026-08-25-web-search-indexing-cutover.md`](./deploy-checklists/2026-08-25-web-search-indexing-cutover.md). |
-| Production deploy | **Live** — Vercel Production SHA **`082edc7d`** (PR #298, 2026-08-30T17:04:57Z) · `GET /shoot` **200** · `GET /shoot/api/airtable` **200** (`tokenValid: true`) |
+| Production deploy | **Live** — Vercel Production SHA **`a686e50b`** (2026-09-03; matches `origin/master` tip). Prior “stuck on `082edc7d`” claim is **stale**. `GET /shoot` / `/shoot/api/airtable` last live-pass **200** (`tokenValid: true`) — re-confirm if needed |
 | Vitest / smoke | **483/483** Vitest pass (2026-08-30 release QA) · typecheck/lint/build PASS · prior smoke **50/50** (MRW-E04) |
 | FUT-016 Tutorials | **Complete** — portfolio catalog at `/shoot/tutorials` (PR **#284**, 2026-08-30) |
 | FUT-017 Zoom Meetings | **Complete** — portfolio catalog at `/shoot/zoom-meetings` (PR **#285**, 2026-08-30) |
 | FUT-025 athlete profiles | **Repo complete** — env-gated `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING`; Mike cutover pending ([`deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md`](./deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md)) |
 | SC-149 branding URLs | **Repo attestation complete (2026-08-30)** — prod render + smoke PASS; Mike Vercel env dashboard checkboxes pending ([`deploy-checklists/SC-149-fairfield-branding-url-verification.md`](./deploy-checklists/SC-149-fairfield-branding-url-verification.md)) |
 | SC-149 Family Dashboard navigation | **Merged** PR **#358** (`29904b45`) — header/mobile/footer/parent/FAQ CTAs → `/shoot/dashboard/sign-in`; private `/shoot/dashboard` remains auth-gated |
-| SC-112 Athlete auth + private dashboard | **Built in Repository** (PRs **#350–#357**) — parent magic-link; private panels when `ATHLETE_AUTH_ENABLED=true`; anonymous visitors see coming-soon **or** redirect to sign-in. Checklist: [`deploy-checklists/SC-112-athlete-auth-preview-and-production.md`](./deploy-checklists/SC-112-athlete-auth-preview-and-production.md). Production `ATHLETE_AUTH_*` enablement **REQUIRES LIVE CONFIRMATION** in Vercel |
+| SC-112 Athlete auth + private dashboard | **MERGED/DEPLOYED** (PRs **#350–#357**; Production SHA `a686e50b`). Live afternoon pass: auth **on** — anonymous `/dashboard` → `/dashboard/sign-in`; magic-link **request** uniform success. Full inbox first-use / reuse / sign-out **REQUIRES LIVE CONFIRMATION**. Multi-child code **MERGED** PR **#373** — **NEEDS-PRODUCTION-PROOF** (open **#380**). Multi-child docs: open **#379** (do not rewrite here). Checklist: [`deploy-checklists/SC-112-athlete-auth-preview-and-production.md`](./deploy-checklists/SC-112-athlete-auth-preview-and-production.md). Closeout: [`audits/SC-112-finalization-closeout-20260903.md`](./audits/SC-112-finalization-closeout-20260903.md) |
+| Public awards (`Public On Web`) | **CODE-ONLY** on master (`AWARD_RECIPIENT_PUBLICATION_FIELD = null`, PR **#367** fail-closed). Live Award Recipients schema **has** checkbox **`Public On Web`**. Wire-up pending open **#378** (**supersedes #376**). |
+| Transactional enrollments (2026-09-03 MCP) | **No real-family enrollments** — 2 Athletes / 3 Enrollments, all Schmidt / VERIFY disposable; parent email Mike school address only |
+| Season Simulation | **NOT currently authorized.** Live formulas are normal **`NOW()` / `TODAY()`** — **DO NOT change**. Next execute needs separate Mike authorization + temporary gated formula re-paste. Hygiene classification: [`audits/SC-112-untracked-hygiene-classification-20260903.md`](./audits/SC-112-untracked-hygiene-classification-20260903.md) |
 | SC-109 Game Manual PDF | **Built in Repository** — approved Adobe Publish Online URL baked into `web/lib/game-manual/config.ts` (env override optional); `/shoot/game-manual` live-config sections + PDF link render after deploy — checklist: [`deploy-checklists/SC-109-game-manual-url-verification.md`](./deploy-checklists/SC-109-game-manual-url-verification.md) |
 | FUT-002 field inventory | **Batch 1 COMPLETE (2026-08-31)** + **SA XP text stubs deleted** — Mike UI-deleted 5 quarantined fields, then unused SA text `XP Events` / `XP Events copy`; live Meta **1363** fields / **35** tables; batch-1 schema `airtable/schema/snapshots/prod-20260831-fut002-batch1/`; evidence [`testing/evidence/fut-002/batch1-live-verify.json`](./testing/evidence/fut-002/batch1-live-verify.json) · [`testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json`](./testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json). Later inventory batches remain FUTURE |
 | FUT-010 intake attachment cleanup | **Dry-run complete (R3 2026-08-30)** — **0 eligible**; no deletion request — [`testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md`](./testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md) |
@@ -194,17 +198,18 @@ Do **not** treat other Automations-table columns (trigger/conditions) as authori
 
 | # | Production (Automations Code) | GitHub | Status | Notes |
 |---|-------------------------------|--------|--------|-------|
-| **003** | **v2.0** | v2.0 | **Live / COMPLETE / PRODUCTION-VERIFIED** | Grade-change Grade Band refresh; keep active; disposable VERIFY Enrollment 2026-09-03 — [`prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md`](./prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md). Initial assign remains **002**. |
-| **010** | **v10.12** | v10.12 | Live / **aligned** | Do not re-paste — [`010-v10.12-operator-packet.md`](./deploy-checklists/010-v10.12-operator-packet.md) |
-| **020** | **v3.8** | v3.8 | Live / **aligned** | FUT-001 — [`020-v3.8-fut-001-operator-packet.md`](./deploy-checklists/020-v3.8-fut-001-operator-packet.md) |
+| **003** | **v2.0** | v2.0 | **Live / COMPLETE / PRODUCTION-VERIFIED / DO-NOT-TOUCH** | Grade-change Grade Band refresh; keep active; disposable VERIFY Enrollment 2026-09-03 — [`prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md`](./prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md). Initial assign remains **002**. |
+| **010** | **v10.12** | v10.12 | Live / **aligned** | Do not re-paste — [`010-v10.12-operator-packet.md`](./deploy-checklists/010-v10.12-operator-packet.md). Afternoon live-pass may show **v10.13** Season Sim dual-gate — treat UI script body as authority if it differs; **REQUIRES LIVE CONFIRMATION** before inventing inventory drift |
+| **020** | **v3.9** | v3.9 | Live / **PASTE-ALIGNED** (Automations Code 2026-09-03) | Late-credit policy (PR **#372**). Prior FUT-001 row **v3.8** superseded for Code column. Disposable late-HW behavior proof **REQUIRES LIVE CONFIRMATION**. Checklist: [`homework-late-credit-policy-020-057-065.md`](./deploy-checklists/homework-late-credit-policy-020-057-065.md) |
 | **022** | **v2.2** | v2.2 | Live / **aligned** | Lambda-only parent URL — [`022-v2.2-operator-packet.md`](./deploy-checklists/022-v2.2-operator-packet.md) |
 | **033** | **v4.4** | v4.4 | Live | |
 | **041** | **v5.1** | v5.1 | Live | Optional inputs only |
-| **057** | **v2.2** live script CONFIG `Perfect Week Video Minimum` | **v2.2** correct name | Live / **aligned** | Do **not** repaste. Automations **Code tracker** may still show stale typo — refresh Code text only if desired |
+| **057** | **2.3** | **2.3** | Live / **PASTE-ALIGNED** (Automations Code 2026-09-03) | Late homework excluded from Perfect Week counts (PR **#372**). Prior **v2.2** Perfect Week Video Minimum row historical for Code column. Disposable PW exclusion proof **REQUIRES LIVE CONFIRMATION** |
 | **058** | **1.5** | 1.5 | Live | Unlock only after Eligible + Ready |
 | **059** | **v3.7** | v3.7 | Live | |
 | **064** | **Production-verified current live** | v12.2 in repo | Live | Do not invent a new version string |
-| **065** | **v10.5** | v10.5 | Live / **aligned** | Mike pasted **v10.5** 2026-08-31; points-reconcile fix + parent feedback path verified (Sent? / Sent On) — [`065-v10.5-points-reconcile-operator-packet.md`](./deploy-checklists/065-v10.5-points-reconcile-operator-packet.md) |
+| **065** | **v10.6** | v10.6 | Live / **PASTE-ALIGNED** (Automations Code 2026-09-03) | Late-credit full XP (PR **#372**). Prior **v10.5** points-reconcile paste historical for Code column — [`065-v10.5-points-reconcile-operator-packet.md`](./deploy-checklists/065-v10.5-points-reconcile-operator-packet.md) |
+| **067** | **v3.5** | v3.5 | **Live / COMPLETE / DO-NOT-TOUCH** | Reflection quiz → Homework Completion. Automations Code 2026-09-03 SCRIPT **v3.5**. Do not edit this closeout wave |
 | **066** | **v3.9** | v3.9 | Live / live-tested | Dynamic `recordId`; replay verified 2026-08-24 |
 | **072** | **v4.8** | v4.8 | Live / **aligned** | [`072-v4.8-operator-packet.md`](./deploy-checklists/072-v4.8-operator-packet.md) |
 | **073** | **v4.4** | v4.4 | Live / **aligned** | [`073-v4.4-operator-packet.md`](./deploy-checklists/073-v4.4-operator-packet.md) |
@@ -248,7 +253,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Domain | Owner (repo contract) | Live proof |
 |--------|----------------------|------------|
 | Submission XP | **010** — Source Key `SUBMISSION_XP\|{submissionId}` | GitHub **v10.12**; prior Production run history v10.11 |
-| Homework XP | **064** prepares (`HOMEWORK_COMPLETION` rule); **065** creates/reconciles `HOMEWORK_XP\|{hcId}` (**020** HC create; **078** marks Parent Feedback Ready?) | **065 Production v10.4** (FUT-001); dynamic `recordId` remapped; multi-asset closeout **COMPLETE** 2026-08-31 (`HOMEWORK_XP\|rec8E94Jg7mpmuMW9` = `recwpzl8pkXecUqRK`, no duplicate) — trigger re-entry required after remap |
+| Homework XP | **064** prepares (`HOMEWORK_COMPLETION` rule); **065** creates/reconciles `HOMEWORK_XP\|{hcId}` (**020** HC create; **078** marks Parent Feedback Ready?) | **065 Production Automations Code v10.6** (late-credit PR **#372**); prior multi-asset closeout **COMPLETE** 2026-08-31 (`HOMEWORK_XP\|rec8E94Jg7mpmuMW9` = `recwpzl8pkXecUqRK`, no duplicate) |
 | Video XP | **113 / 114** (+ **013** VF create) | **Live v6.4 / v6.1**; **PKG-007 lifecycle proof PASS 2026-08-23** (`AUTONOMOUS_VIDEO_QA_20260823_164549`, Testing3). Native trigger + 073 OFF UI attestation open |
 | Shot milestones | **066** | Production **v3.9** live-tested 2026-08-24 |
 | Levels | **041 / 042** | **041 Production v5.1**; broader progression proof still open |
@@ -262,8 +267,8 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 
 | Path | State |
 |------|--------|
-| Homework assets → HC → XP → parent | **009** → **020 v3.8** → **070a v4.7 Live** (controlled window) → **064** prepare / **065 v10.4** → **078** Ready → **071** Hub |
-| Homework completion (**020**) | Production **v3.8** (FUT-001). **012** / **063** deleted — do not restore |
+| Homework assets → HC → XP → parent | **009** → **020 v3.9** → **070a v4.7 Live** (controlled window) → **064** prepare / **065 v10.6** → **078** Ready → **071** Hub |
+| Homework completion (**020**) | Production Automations Code **v3.9** (late-credit; PR **#372**). **012** / **063** deleted — do not restore |
 | Homework upload Make (**070a**) | Production **v4.7 Live** during Perfect Week controlled window (historically intentional OFF). Formula Ready alone does not send; **Send to Make Trigger** required |
 | Video upload (**070b** + Lambda + **070c**) | Production **070b v4.7** → Make → Lambda → **070c current live (repo v1.1)** verify. Optional retry proof + secret rotation **PENDING** |
 | Child upload writeback (**022**) | Production **v2.2** Live — Lambda viewer URL only; no Canonical S3 fallback |

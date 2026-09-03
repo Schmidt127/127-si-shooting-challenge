@@ -99,7 +99,7 @@ Priority: **P0** launch/security blocker · **P1** important parent/athlete expe
 ### FUT-001 — Match homework by assignment identity, not HW1/HW2 slot
 
 **Priority:** P1  
-**Status:** Assignment-identity Complete (GitHub + Production paste — Automations Code historically 020 v3.8 / 065 v10.4 Live). **Late-credit policy supersession (2026-09-03):** GitHub **020 v3.9 / 065 v10.6 / 057 v2.3** merged via PR **#372** — **Production paste pending Mike** (do not treat Production behavior as updated until paste + disposable verify).  
+**Status:** Assignment-identity Complete (GitHub + Production). **Late-credit policy (2026-09-03):** GitHub **020 v3.9 / 065 v10.6 / 057 v2.3** via PR **#372**. Production **Automations Code** 2026-09-03 MCP: **020 v3.9 / 065 v10.6 / 057 2.3** all **Live** (**PASTE-ALIGNED**). Disposable late-HW / Perfect Week exclusion behavior proof still **REQUIRES LIVE CONFIRMATION**.  
 **Systems:** Airtable, homework intake, Homework Completions, XP, parent submission flow
 
 Allow a parent or athlete to submit an assignment in either visible homework slot. The system must identify the assignment by its assignment/lesson identity and match it to the correct scheduled assignment. The HW number is not authoritative because slot numbering may change from year to year.
@@ -114,7 +114,7 @@ The system must preserve checks for assignment identity, enrollment, challenge/s
 
 **PR #264 (2026-08-28):** Branch `fix/fut-001-homework-assignment-identity` — commit `91c65b36` + CI fix `3d497f4a` (065 offline Weeks mock). **Merged.** Production Automations Code **020 v3.8 / 065 v10.4 Live** (MCP 2026-08-29/30) at that time.
 
-**PR #372 (2026-09-03):** Late-credit policy — merge `da009262`. Operator paste checklist: [`deploy-checklists/homework-late-credit-policy-020-057-065.md`](./deploy-checklists/homework-late-credit-policy-020-057-065.md). **Do not paste from agents.**
+**PR #372 (2026-09-03):** Late-credit policy — merge `da009262`. Operator checklist: [`deploy-checklists/homework-late-credit-policy-020-057-065.md`](./deploy-checklists/homework-late-credit-policy-020-057-065.md). Automations Code column **PASTE-ALIGNED** 2026-09-03 (Agent 4 MCP). **Do not paste from agents.**
 
 ### FUT-002 — Audit and remove unused Airtable fields
 
@@ -1242,7 +1242,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-016** | Homework | Exactly one Homework Completion per assignment per enrollment | P0 | **COMPLETE** (2026-08-31) | SC-066, SC-014 | Multi-asset + 065 XP proven on Testing3; do **not** re-paste 020/065 scripts |
 | **SC-021** | Config | Config-over-code audit (no hardcoded season numbers in scripts) | P0 | Installed in PROD | SC-022 | Run 057 on CASE-01 WAS; CASE-01ΓÇª16 + verifier; migrate remaining hardcode consumers |
 | **SC-022** | Config | XP Reward Rules audit and cleanup | P0 | Installed in PROD | SC-021, SC-023 | Resolve Video XP 1-vs-25; decide Zoom Recording / Manual Bonus rule records; supervised streak proof still open |
-| **SC-023** | Config | Grade Bands as linked source of truth | P0 | Monitoring | SC-021 | **003 v2.0 COMPLETE / PRODUCTION-VERIFIED** (2026-09-03) — keep active; grade-change refresh on disposable VERIFY Enrollment; offline regression `tests/enrollment-intake/automation-003-grade-change-refresh.test.js`; closeout [`prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md`](./prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md). Archive inactive legacy bands when ready; keep Min/Max match (no hard-coded band ID); **002** remains initial assign |
+| **SC-023** | Config | Grade Bands as linked source of truth | P0 | Monitoring | SC-021 | **003 v2.0 COMPLETE / PRODUCTION-VERIFIED / DO-NOT-TOUCH** (2026-09-03) — keep active; grade-change refresh on disposable VERIFY Enrollment; offline regression `tests/enrollment-intake/automation-003-grade-change-refresh.test.js`; closeout [`prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md`](./prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md). Archive inactive legacy bands when ready; keep Min/Max match (no hard-coded band ID); **002** remains initial assign |
 | **SC-027** | Config | Shot Milestones config + awards | P0 | Monitoring | SC-096 | Continue recurrence monitoring; no further 066 paste/replay unless source, trigger, schema, or milestone data changes |
 | **SC-031** | Config | Weekly schedule settings (build/send timing) | P0 | Installed in PROD | SC-051 | Proof slice for C-011 weekly email automation — keep open. Prove the normal `build_armed` and send-arm branches after a real eligible completed Week/package exists; keep 074 `sendMode=Live` where app |
 | **SC-032** | Config | Season settings (dates, windows) | P0 | Built in Repository | SC-065, SC-084 | Import Weeks in PROD; Mike UI attestations; authorize Launch Status fields; controlled activation |
@@ -1322,7 +1322,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-109** | Website | Game Manual from config | P2 | **Built in Repository** (deploy to PROD for live PDF) | SC-032, SC-082 | Approved Adobe Publish Online URL in `web/lib/game-manual/config.ts`; optional `NEXT_PUBLIC_GAME_MANUAL_URL` override — deploy checklist [`SC-109-game-manual-url-verification.md`](deploy-checklists/SC-109-game-manual-url-verification.md); editorial copy; Shot Milestones surface later |
 | **SC-110** | Website | Public display page | P2 | Installed in PROD | SC-054 | Wire Presentation fields; real season year after School Year fix |
 | **SC-111** | Website | Athlete profiles (real data, not mocks) | P2 | Live Tested in PROD | SC-103 | Optional: recreate `Web - Leaderboard` view (fallback OK) |
-| **SC-112** | Website | Athlete auth + dashboard | P2 | **Built in Repository** (magic-link + multi-child) — **not Production-verified for multi-child** until real multi-child test | SC-149 | Private `/shoot/dashboard`; opaque selection keys (PR **#373** `97548cee`); public sign-in at `/shoot/dashboard/sign-in` |
+| **SC-112** | Website | Athlete auth + dashboard | P2 | **MERGED/DEPLOYED** (magic-link) · multi-child **MERGED** + **NEEDS-PRODUCTION-PROOF** | SC-149 | Private `/shoot/dashboard`; opaque selection keys (PR **#373** `97548cee`); Production SHA `a686e50b`; multi-child proof open **#380**; auth docs open **#379**. Closeout: [`audits/SC-112-finalization-closeout-20260903.md`](./audits/SC-112-finalization-closeout-20260903.md) |
 | **SC-149** | Website | Public Family Dashboard navigation | P1 | **Built in Repository** | SC-112 | Header, mobile, footer, parent/FAQ CTAs → `/shoot/dashboard/sign-in` |
 | **SC-113** | Website | Loading, empty, and error states | P2 | Live Tested in PROD | ΓÇö | Keep states aligned when SC-112 lands |
 | **SC-115** | Website | noindex removal / search indexing | P2 | **Complete** (2026-08-25, `647d465`; prod verified) | SC-114 | **Prod cutover verified** — Vercel Production `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`; public pages indexable; athlete profiles + private routes `noindex`; sitemap excludes athletes/public-display; `npm run test:smoke:prod` 50/50 after cross-env fix. Checklist: `docs/deploy-checklists/2026-08-25-web-search-indexing-cutover.md`. |
@@ -1457,18 +1457,21 @@ Sorted by priority (P0→P3), then ID. Historical Sections A–F above remain fo
 
 | Item | Status | Evidence |
 |---|---|---|
-| **Automation 003 v2.0** | **COMPLETE / PRODUCTION-VERIFIED** — keep active | Disposable VERIFY Enrollment grade-change refresh; dynamic `recordId`; refresh view conditions attested. Docs: [`prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md`](./prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md). Offline: `tests/enrollment-intake/automation-003-grade-change-refresh.test.js`. Initial assign remains **002**. No Production paste or formula change this closeout. |
+| **Automation 003 v2.0** | **COMPLETE / PRODUCTION-VERIFIED / DO-NOT-TOUCH** — keep active | Disposable VERIFY Enrollment grade-change refresh; dynamic `recordId`; refresh view conditions attested. Docs: [`prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md`](./prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md). Offline: `tests/enrollment-intake/automation-003-grade-change-refresh.test.js`. Initial assign remains **002**. Automations Code Live **v2.0** (2026-09-03). |
 
 ### 2026-09-03 SC-112 / final work wave merges
 
 | Item | Status | Evidence |
 |---|---|---|
-| **SC-112 multi-child parent auth** | **Built in Repository** — **not Production-verified** until real multi-child Preview/Production test | PR **#373** merged `97548cee`. Opaque HMAC selection keys; session `v:2` `selectedEnrollmentId`; `/dashboard/select`; no `enrollmentId=rec…` in URLs; live Active? re-check. |
-| **Homework late-credit policy (020/065/057)** | **Built in Repository / Paste Pending** — do **not** mark Production complete until Mike pastes + verifies | PR **#372** merged `da009262`. GitHub **020 v3.9 / 065 v10.6 / 057 v2.3**. Late satisfactory = full XP; late excluded from Perfect Week. Checklist: [`deploy-checklists/homework-late-credit-policy-020-057-065.md`](./deploy-checklists/homework-late-credit-policy-020-057-065.md). |
+| **SC-112 magic-link + private dashboard** | **MERGED/DEPLOYED** + **PARTIAL PRODUCTION-VERIFIED** (request path) | PRs **#350–#357**. Vercel Production SHA **`a686e50b`**. Full inbox session proof **REQUIRES LIVE CONFIRMATION**. |
+| **SC-112 multi-child parent auth** | **MERGED/DEPLOYED** + **NEEDS-PRODUCTION-PROOF** | PR **#373** merged `97548cee`. Opaque HMAC selection keys; session `v:2` `selectedEnrollmentId`; `/dashboard/select`. Docs: open **#379**. Evidence: open **#380**. |
+| **Homework late-credit policy (020/065/057)** | **GitHub COMPLETE** · Production Automations Code **PASTE-ALIGNED** (**020 v3.9 / 065 v10.6 / 057 2.3** Live) · disposable behavior proof **REQUIRES LIVE CONFIRMATION** | PR **#372** merged `da009262`. Checklist: [`deploy-checklists/homework-late-credit-policy-020-057-065.md`](./deploy-checklists/homework-late-credit-policy-020-057-065.md). |
+| **Automation 067** | **COMPLETE (Live v3.5) / DO-NOT-TOUCH** | Automations Code 2026-09-03 SCRIPT **v3.5** Live. Do not edit this closeout wave. |
 | **Game Log category filters** | **Built in Repository** | PR **#366** merged `b7f80534`. Nine public-safe category slugs (shooting, homework, video, zoom, streak, weekly threshold, shot milestone, perfect week, manual award). |
-| **Public awards publication gate** | **Incomplete / fail-closed** — awaiting Airtable Award Recipients publication field confirmation | PR **#367** merged `a362633f`. No field invented; `AWARD_RECIPIENT_PUBLICATION_FIELD = null`. Audit: [`audits/SC-PUBLIC-PUBLISHED-AWARDS-SCHEMA-GAP.md`](./audits/SC-PUBLIC-PUBLISHED-AWARDS-SCHEMA-GAP.md). |
-| **ZOOM_RECORDING_APPROVED email restyle** | **Built in Communications repo** — no send in this wave | [communications#49](https://github.com/Schmidt127/communications/pull/49) merged `796930af`. Duplicate **#50** closed (not merged). Template key / Hub / Resend / idempotency preserved. |
-| **Season Sim helper hygiene proposal** | **Docs only** — no deletes performed | PR **#368** merged `9bfc38b6`. Classification only; untracked helpers / reports / evidence preserved. |
-| **Season Simulation next execute** | **Still blocked** pending separate Mike authorization | Temporary Season Simulation formulas left unchanged this wave. No Airtable record changes/deletes. No emails sent. Normal NOW()/TODAY() formulas unchanged. |
+| **Public awards publication gate** | **CODE-ONLY** — pending open **#378** (`Public On Web`); **#376 superseded** | PR **#367** merged `a362633f` fail-closed (`AWARD_RECIPIENT_PUBLICATION_FIELD = null`). Live schema has **`Public On Web`**. Do not revive **#376**. |
+| **ZOOM_RECORDING_APPROVED email restyle** | **Built in Communications repo** — no send in this wave | [communications#49](https://github.com/Schmidt127/communications/pull/49) merged. Duplicate **#50** **CLOSED** (not merged). |
+| **Season Sim helper hygiene proposal** | **Docs only** — no deletes performed | PR **#368** merged `9bfc38b6`. Untracked classification: [`audits/SC-112-untracked-hygiene-classification-20260903.md`](./audits/SC-112-untracked-hygiene-classification-20260903.md). |
+| **Season Simulation next execute** | **NOT currently authorized** | Temporary Season Simulation formulas are **not** active — live formulas are normal **`NOW()` / `TODAY()`**. **DO NOT change formulas.** No Airtable record changes/deletes. No emails sent. |
+| **SC-112 docs closeout (Agent 4)** | **This wave** | [`audits/SC-112-finalization-closeout-20260903.md`](./audits/SC-112-finalization-closeout-20260903.md) |
 
 ---
