@@ -134,10 +134,14 @@ export function RecentActivityLog({
       : `No ${gameLogCategoryLabel(categoryParam).toLowerCase()} activity yet.`;
 
   return (
-    <section aria-labelledby="activity-heading" data-testid="recent-activity">
+    <section
+      aria-labelledby="activity-heading"
+      data-testid="recent-activity"
+      className="min-w-0 w-full max-w-full"
+    >
       <ScCardSectionHeader eyebrow="Game log" title="Recent activity" titleId="activity-heading" />
 
-      <div className="mt-3">
+      <div className="mt-3 min-w-0 w-full max-w-full">
         <GameLogCategoryToolbar
           options={PUBLIC_GAME_LOG_CATEGORY_OPTIONS}
           value={filter}

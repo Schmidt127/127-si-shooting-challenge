@@ -38,16 +38,20 @@ export function AthleteProfileView({ data }: AthleteProfileViewProps) {
           loadUnavailable={data.mayBeStale}
         />
         <StreakSection streaks={data.streaks} streakAchievements={streakAchievements} />
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-10">
-          <RecentActivityLog
-            slug={data.identity.slug}
-            items={data.recentActivity}
-            totalCount={data.activityLedgerTotal}
-            hasMore={data.activityLedgerHasMore}
-            nextCursor={data.activityLedgerNextCursor}
-            notice={data.activityLedgerNotice}
-          />
-          <PerfectWeekPanel weeks={data.weekly} />
+        <div className="grid min-w-0 gap-12 lg:grid-cols-2 lg:gap-10">
+          <div className="min-w-0">
+            <RecentActivityLog
+              slug={data.identity.slug}
+              items={data.recentActivity}
+              totalCount={data.activityLedgerTotal}
+              hasMore={data.activityLedgerHasMore}
+              nextCursor={data.activityLedgerNextCursor}
+              notice={data.activityLedgerNotice}
+            />
+          </div>
+          <div className="min-w-0">
+            <PerfectWeekPanel weeks={data.weekly} />
+          </div>
         </div>
         <WeeklyPerformance weeks={data.weekly} />
         <AchievementCollection achievements={data.achievements} />

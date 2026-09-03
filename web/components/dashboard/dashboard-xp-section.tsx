@@ -31,14 +31,16 @@ export function DashboardXpSection({ rows, warning, totalAvailableRows }: Dashbo
   );
 
   return (
-    <section id="dashboard-xp" className="scroll-mt-24" aria-labelledby="dashboard-xp-heading">
-      <GameLogCategoryToolbar
-        options={PRIVATE_GAME_LOG_CATEGORY_OPTIONS}
-        value={filter}
-        onChange={setFilter}
-        ariaLabel="Filter XP activity by category"
-        testId="private-game-log-category-toolbar"
-      />
+    <section id="dashboard-xp" className="scroll-mt-24 min-w-0 w-full max-w-full" aria-labelledby="dashboard-xp-heading">
+      <div className="min-w-0 w-full max-w-full">
+        <GameLogCategoryToolbar
+          options={PRIVATE_GAME_LOG_CATEGORY_OPTIONS}
+          value={filter}
+          onChange={setFilter}
+          ariaLabel="Filter XP activity by category"
+          testId="private-game-log-category-toolbar"
+        />
+      </div>
 
       <div className="mt-4">
         <XpActivityTable

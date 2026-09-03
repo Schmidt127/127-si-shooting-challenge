@@ -16,7 +16,7 @@ type GameLogCategoryToolbarProps = {
 
 /**
  * Shared category chip toolbar for public Game Log + private XP activity.
- * Avoids pill-heavy marketing chrome: compact bordered chips, brand orange when selected.
+ * Compact bordered chips; brand orange when selected. Horizontal scroll on narrow viewports.
  */
 export function GameLogCategoryToolbar({
   options,
@@ -32,31 +32,33 @@ export function GameLogCategoryToolbar({
 
   return (
     <div
-      className="-mx-1 flex max-w-full gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:thin]"
+      className="w-full min-w-0 max-w-full overflow-x-auto overscroll-x-contain [scrollbar-width:thin]"
       role="toolbar"
       aria-label={ariaLabel}
       data-testid={testId}
     >
-      {chips.map((chip) => {
-        const selected = value === chip.id;
-        return (
-          <button
-            key={chip.id}
-            type="button"
-            onClick={() => onChange(chip.id)}
-            className={cn(
-              "min-h-10 shrink-0 rounded-md border px-3 py-1.5 text-xs font-semibold whitespace-nowrap transition-colors",
-              selected
-                ? "border-brand-orange bg-brand-orange text-white"
-                : "border-border bg-card text-muted hover:border-brand-orange/40 hover:text-foreground",
-            )}
-            aria-pressed={selected}
-            data-testid={`game-log-filter-${chip.id}`}
-          >
-            {chip.label}
-          </button>
-        );
-      })}
+      <div className="flex w-max min-w-full gap-2 pb-1">
+        {chips.map((chip) => {
+          const selected = value === chip.id;
+          return (
+            <button
+              key={chip.id}
+              type="button"
+              onClick={() => onChange(chip.id)}
+              className={cn(
+                "min-h-10 shrink-0 rounded-md border px-3 py-1.5 text-xs font-semibold whitespace-nowrap transition-colors",
+                selected
+                  ? "border-brand-orange bg-brand-orange text-white"
+                  : "border-border bg-card text-muted hover:border-brand-orange/40 hover:text-foreground",
+              )}
+              aria-pressed={selected}
+              data-testid={`game-log-filter-${chip.id}`}
+            >
+              {chip.label}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
