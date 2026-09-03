@@ -31,9 +31,9 @@ Public catalog routes and approved public athlete profiles remain public without
 - `RESEND_API_KEY`
 - `RESEND_FROM_EMAIL`
 
-**Optional:**
+**Optional (Preview may use in-memory for single-instance smoke tests only):**
 
-- `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` (recommended for multi-instance token store)
+- `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` (**required in Production** for reliable single-use tokens)
 - `ATHLETE_AUTH_TOKEN_TTL_MINUTES` (default 15)
 - `ATHLETE_AUTH_SESSION_TTL_DAYS` (default 30)
 

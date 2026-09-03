@@ -30,6 +30,7 @@ import {
 } from "@/lib/auth/token-store";
 import { generateMagicLinkToken, hashMagicLinkToken, safeCompareTokenHash } from "@/lib/auth/tokens";
 import { loadAuthorizedEnrollmentForSession } from "@/lib/auth/enrollment-access";
+import { isMagicLinkTokenStoreAvailable } from "@/lib/auth/config";
 
 const ORIGINAL_ENV = { ...process.env };
 const TEST_SECRET = "unit-test-secret-at-least-32-characters";
@@ -85,6 +86,33 @@ describe("session cookies", () => {
   });
 });
 
+describe("token store availability", () => {
+  afterEach(() => {
+    process.env = { ...ORIGINAL_ENV };
+  });
+
+  it("allows in-memory storage outside production", () => {
+    process.env.NODE_ENV = "test";
+    delete process.env.UPSTASH_REDIS_REST_URL;
+    delete process.env.UPSTASH_REDIS_REST_TOKEN;
+    expect(isMagicLinkTokenStoreAvailable()).toBe(true);
+  });
+
+  it("requires Upstash Redis in production", () => {
+    process.env.NODE_ENV = "production";
+    delete process.env.UPSTASH_REDIS_REST_URL;
+    delete process.env.UPSTASH_REDIS_REST_TOKEN;
+    expect(isMagicLinkTokenStoreAvailable()).toBe(false);
+  });
+
+  it("accepts Upstash Redis in production", () => {
+    process.env.NODE_ENV = "production";
+    process.env.UPSTASH_REDIS_REST_URL = "https://example.upstash.io";
+    process.env.UPSTASH_REDIS_REST_TOKEN = "token-value";
+    expect(isMagicLinkTokenStoreAvailable()).toBe(true);
+  });
+});
+
 describe("magic link request responses", () => {
   beforeEach(() => {
     resetMagicLinkTokenStoreForTests();
@@ -98,6 +126,33 @@ describe("magic link request responses", () => {
 
   afterEach(() => {
     process.env = { ...ORIGINAL_ENV };
+  });
+
+  it("returns misconfigured when production lacks Upstash", async () => {
+    process.env.NODE_ENV = "production";
+    process.env.ATHLETE_AUTH_DEV_BYPASS = "false";
+    delete process.env.UPSTASH_REDIS_REST_URL;
+    delete process.env.UPSTASH_REDIS_REST_TOKEN;
+    findActiveEnrollmentsByParentEmailMock.mockResolvedValue([
+      {
+        enrollmentId: "recABCDEFGHIJKLM",
+        displayName: "Testing Athlete",
+        slug: "testing-athlete",
+        school: "Fairfield",
+        grade: "8",
+        level: "Shooter",
+        xpTotal: 100,
+        xpIntoLevel: 10,
+        xpForNextLevel: 50,
+        nextLevelLabel: "Hot Hand",
+      },
+    ]);
+
+    const response = await requestMagicLinkAccess(
+      "parent@fairfield.k12.mt.us",
+      new Request("http://local"),
+    );
+    expect(response.status).toBe(503);
   });
 
   it("returns the same confirmation for unknown emails", async () => {

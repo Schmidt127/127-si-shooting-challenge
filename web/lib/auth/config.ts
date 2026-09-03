@@ -74,6 +74,15 @@ export function hasUpstashRedisConfig(): boolean {
   );
 }
 
+/**
+ * Production magic-link tokens must survive separate serverless invocations.
+ * Dev/tests may use the in-memory store; Production requires Upstash Redis.
+ */
+export function isMagicLinkTokenStoreAvailable(): boolean {
+  if (hasUpstashRedisConfig()) return true;
+  return process.env.NODE_ENV !== "production";
+}
+
 export const MAGIC_LINK_CONFIRMATION_MESSAGE =
   "If that email is registered for the Shooting Challenge, we sent a secure sign-in link. Check your inbox and spam folder.";
 

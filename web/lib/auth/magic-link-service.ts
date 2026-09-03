@@ -4,6 +4,7 @@ import {
   getAthleteAuthSecret,
   getAthleteSessionTtlSeconds,
   isAthleteAuthConfigured,
+  isMagicLinkTokenStoreAvailable,
 } from "@/lib/auth/config";
 import { findActiveEnrollmentsByParentEmail } from "@/lib/auth/enrollment-access";
 import { sendMagicLinkEmail } from "@/lib/auth/magic-link-email";
@@ -37,7 +38,7 @@ export async function requestMagicLinkAccess(
   rawEmail: string,
   request?: Request,
 ): Promise<Response> {
-  if (!isAthleteAuthConfigured()) {
+  if (!isAthleteAuthConfigured() || !isMagicLinkTokenStoreAvailable()) {
     return magicLinkMisconfiguredResponse();
   }
 
@@ -60,7 +61,11 @@ export async function requestMagicLinkAccess(
 
   const { raw, hash } = generateMagicLinkToken();
   const store = getMagicLinkTokenStore();
-  await store.save(hash, buildMagicLinkTokenRecord(validation.email));
+  try {
+    await store.save(hash, buildMagicLinkTokenRecord(validation.email));
+  } catch {
+    return magicLinkMisconfiguredResponse();
+  }
 
   const origin =
     headerStore.get("x-forwarded-proto") && headerStore.get("x-forwarded-host")
@@ -90,7 +95,7 @@ export async function verifyMagicLinkToken(rawToken: string): Promise<{
   ok: false;
   reason: "misconfigured" | "invalid" | "expired" | "used";
 }> {
-  if (!isAthleteAuthConfigured()) {
+  if (!isAthleteAuthConfigured() || !isMagicLinkTokenStoreAvailable()) {
     return { ok: false, reason: "misconfigured" };
   }
 
