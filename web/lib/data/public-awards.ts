@@ -117,8 +117,8 @@ export function mapPublishedPublicAwards(
 /**
  * Public profile / leaderboard surfaces must call this.
  * Empty when no records have Public On Web checked.
- * Public athlete profile does not yet surface awards in its typed payload —
- * call this only from surfaces that are already structured for PublicAwardItem[].
+ * Wired into the public athlete profile via `fetchPublicAthleteProfileBySlug`
+ * → `PublicAwardsSection` (display name, date, scope, description only).
  */
 export function listPublicAwardsForEnrollment(
   records: Array<{ id: string; fields: AwardRecipientPublicationFields }>,

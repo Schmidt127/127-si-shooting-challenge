@@ -8,6 +8,7 @@ import { ProfileAtAGlance } from "@/components/athlete/profile-at-a-glance";
 import { ProfileFreshnessNotice } from "@/components/athlete/profile-freshness-notice";
 import { ProfileHero } from "@/components/athlete/profile-hero";
 import { ProgressionPanel } from "@/components/athlete/progression-panel";
+import { PublicAwardsSection } from "@/components/athlete/public-awards-section";
 import { RecentActivityLog } from "@/components/athlete/recent-activity-log";
 import { ShootingStatLine } from "@/components/athlete/shooting-stat-line";
 import { StreakSection } from "@/components/athlete/streak-section";
@@ -50,6 +51,7 @@ export function AthleteProfileView({ data }: AthleteProfileViewProps) {
           <PerfectWeekPanel weeks={data.weekly} />
         </div>
         <WeeklyPerformance weeks={data.weekly} />
+        <PublicAwardsSection awards={data.awards} />
         <AchievementCollection achievements={data.achievements} />
         <p className="text-center text-xs text-muted">
           Public profile · personal contact details are never shown

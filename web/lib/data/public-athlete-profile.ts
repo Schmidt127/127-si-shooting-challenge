@@ -21,6 +21,7 @@ import type {
   PublicAthleteProfile,
   PublicHomeworkAssignment,
   PublicProgression,
+  PublicSeasonAward,
   PublicShootingSplit,
   PublicShootingStats,
   PublicWeeklySummary,
@@ -573,6 +574,7 @@ export type BuildPublicProfileInput = {
   weekly: PublicWeeklySummary[];
   homeworkAssignments?: PublicHomeworkAssignment[];
   achievements: PublicAchievement[];
+  awards?: PublicSeasonAward[];
 };
 
 export function buildPublicAthleteProfile(input: BuildPublicProfileInput): PublicAthleteProfile {
@@ -635,6 +637,7 @@ export function buildPublicAthleteProfile(input: BuildPublicProfileInput): Publi
     weekly: input.weekly,
     homeworkAssignments: input.homeworkAssignments ?? [],
     achievements: input.achievements,
+    awards: input.awards ?? [],
     fetchedAt: new Date().toISOString(),
     mayBeStale: resolvePublicProfileMayBeStale({
       homeworkLoadFailed: input.homeworkLoadFailed,

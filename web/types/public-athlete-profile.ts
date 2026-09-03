@@ -159,6 +159,16 @@ export type PublicAchievement = {
   badgeIconName: string | null;
 };
 
+/** Season award shown only when Award Recipients.Public On Web is checked. */
+export type PublicSeasonAward = {
+  /** Opaque client key — never an Airtable record id. */
+  key: string;
+  awardName: string;
+  awardDate: string | null;
+  scopeLabel: string | null;
+  description: string | null;
+};
+
 export type PublicAthleteProfile = {
   identity: PublicAthleteIdentity;
   performance: PublicPerformanceSummary;
@@ -177,6 +187,8 @@ export type PublicAthleteProfile = {
   weekly: PublicWeeklySummary[];
   homeworkAssignments: PublicHomeworkAssignment[];
   achievements: PublicAchievement[];
+  /** Public On Web–gated season awards only (empty when none published). */
+  awards: PublicSeasonAward[];
   fetchedAt: string;
   mayBeStale: boolean;
 };
