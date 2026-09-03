@@ -2,7 +2,6 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { CoachFeedbackQuote } from "@/components/coach-feedback-quote";
 import { StatusBadge, type StatusBadgeTone } from "@/components/ui/status-badge";
 import {
   scCardEmpty,
@@ -148,18 +147,6 @@ export function HomeworkAssignments({
                     <p className="mt-2 text-sm leading-relaxed text-foreground/85">
                       {assignment.description}
                     </p>
-                  ) : null}
-                  <CoachFeedbackQuote feedback={assignment.coachFeedback} />
-                  {assignment.viewSubmittedHomeworkHref ? (
-                    <a
-                      href={assignment.viewSubmittedHomeworkHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-3 inline-flex min-h-11 items-center text-sm font-semibold text-brand-blue underline-offset-2 hover:text-accent-soft hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-                      data-testid="view-submitted-homework-cta"
-                    >
-                      View Submitted Homework
-                    </a>
                   ) : null}
                 </div>
                 <p className="text-sm">
