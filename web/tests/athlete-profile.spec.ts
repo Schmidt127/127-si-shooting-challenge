@@ -152,6 +152,18 @@ test.describe("public athlete profiles", () => {
     expect(unique.size).toBe(rowTexts.length);
   });
 
+  test("game log category filter is visible on desktop and mobile widths", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("athletes/testing-schmidt", { waitUntil: "domcontentloaded" });
+    const filter = page.getByTestId("game-log-category-filter");
+    await expect(filter).toBeVisible();
+    await expect(page.getByTestId("game-log-category-homework")).toBeVisible();
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expect(filter).toBeVisible();
+    await expect(page.getByTestId("game-log-category-zoom")).toBeVisible();
+  });
+
   test("freshness notice appears only when profile may be stale", async ({ page }) => {
     await page.goto("athletes/testing-schmidt", { waitUntil: "domcontentloaded" });
     const notice = page.getByTestId("profile-freshness-notice");

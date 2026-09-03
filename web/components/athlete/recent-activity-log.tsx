@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState } from "react";
 
 import { withBasePath } from "@/lib/app-config";
+import { GameLogCategoryFilter } from "@/components/game-log/game-log-category-filter";
 import {
   ScCardList,
   ScCardRowItem,
@@ -13,6 +14,7 @@ import {
   formatGameLogDateLine,
   formatGameLogDisplayDate,
 } from "@/lib/data/game-log-presentation";
+import type { GameLogCategoryId } from "@/lib/data/game-log-categories";
 import { formatXp } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import type { PublicActivityItem } from "@/types/public-athlete-profile";
@@ -22,6 +24,7 @@ type GameLogApiResponse = {
   totalCount: number;
   hasMore: boolean;
   nextCursor: string | null;
+  category?: GameLogCategoryId | null;
 };
 
 type RecentActivityLogProps = {
@@ -36,58 +39,97 @@ type RecentActivityLogProps = {
 export function RecentActivityLog({
   slug,
   items: initialItems,
-  totalCount,
+  totalCount: initialTotalCount,
   hasMore: initialHasMore = false,
   nextCursor: initialNextCursor = null,
   notice,
 }: RecentActivityLogProps) {
+  const [category, setCategory] = useState<GameLogCategoryId | null>(null);
   const [items, setItems] = useState(initialItems);
+  const [totalCount, setTotalCount] = useState(initialTotalCount ?? initialItems.length);
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [nextCursor, setNextCursor] = useState<string | null>(initialNextCursor);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inflightRef = useRef(false);
 
-  const total = totalCount ?? items.length;
+  const total = totalCount;
   const visibleCount = items.length;
 
-  const loadMore = useCallback(async () => {
-    if (!hasMore || !nextCursor || inflightRef.current) return;
+  const fetchPage = useCallback(
+    async (opts: {
+      cursor: string | null;
+      category: GameLogCategoryId | null;
+      replace: boolean;
+    }) => {
+      if (inflightRef.current) return;
 
-    inflightRef.current = true;
-    setLoading(true);
-    setError(null);
+      inflightRef.current = true;
+      setLoading(true);
+      setError(null);
 
-    try {
-      const params = new URLSearchParams({ cursor: nextCursor });
-      const response = await fetch(
-        withBasePath(`/api/athletes/${encodeURIComponent(slug)}/game-log?${params.toString()}`),
-      );
+      try {
+        const params = new URLSearchParams();
+        if (opts.cursor) params.set("cursor", opts.cursor);
+        if (opts.category) params.set("category", opts.category);
 
-      if (!response.ok) {
-        throw new Error("load_failed");
+        const response = await fetch(
+          withBasePath(
+            `/api/athletes/${encodeURIComponent(slug)}/game-log?${params.toString()}`,
+          ),
+        );
+
+        if (!response.ok) {
+          throw new Error("load_failed");
+        }
+
+        const data = (await response.json()) as GameLogApiResponse;
+
+        setItems((current) => {
+          if (opts.replace) return data.rows;
+          const existingKeys = new Set(current.map((item) => item.key));
+          const appended = data.rows.filter((row) => !existingKeys.has(row.key));
+          return [...current, ...appended];
+        });
+        setTotalCount(data.totalCount);
+        setHasMore(data.hasMore);
+        setNextCursor(data.nextCursor);
+      } catch {
+        setError("Could not load activity. Try again.");
+      } finally {
+        setLoading(false);
+        inflightRef.current = false;
       }
+    },
+    [slug],
+  );
 
-      const data = (await response.json()) as GameLogApiResponse;
+  const loadMore = useCallback(async () => {
+    if (!hasMore || !nextCursor) return;
+    await fetchPage({ cursor: nextCursor, category, replace: false });
+  }, [category, fetchPage, hasMore, nextCursor]);
 
-      setItems((current) => {
-        const existingKeys = new Set(current.map((item) => item.key));
-        const appended = data.rows.filter((row) => !existingKeys.has(row.key));
-        return [...current, ...appended];
-      });
-      setHasMore(data.hasMore);
-      setNextCursor(data.nextCursor);
-    } catch {
-      setError("Could not load more activity. Try again.");
-    } finally {
-      setLoading(false);
-      inflightRef.current = false;
-    }
-  }, [hasMore, nextCursor, slug]);
+  const onCategoryChange = useCallback(
+    async (next: GameLogCategoryId | null) => {
+      setCategory(next);
+      if (next === null) {
+        setItems(initialItems);
+        setTotalCount(initialTotalCount ?? initialItems.length);
+        setHasMore(initialHasMore);
+        setNextCursor(initialNextCursor);
+        setError(null);
+        return;
+      }
+      await fetchPage({ cursor: null, category: next, replace: true });
+    },
+    [fetchPage, initialHasMore, initialItems, initialNextCursor, initialTotalCount],
+  );
 
   return (
     <section aria-labelledby="activity-heading" data-testid="recent-activity">
       <ScCardSectionHeader eyebrow="Game log" title="Recent activity" titleId="activity-heading" />
+
+      <GameLogCategoryFilter value={category} onChange={(next) => void onCategoryChange(next)} />
 
       {notice ? (
         <p
@@ -100,7 +142,8 @@ export function RecentActivityLog({
 
       {total > 0 ? (
         <p className="mt-3 text-xs text-muted" data-testid="recent-activity-count">
-          Showing {visibleCount} of {total} XP activity entries (newest first).
+          Showing {visibleCount} of {total} XP activity entries
+          {category ? " in this category" : ""} (newest first).
         </p>
       ) : null}
 
@@ -109,7 +152,9 @@ export function RecentActivityLog({
           className={cn(scCardEmpty(), "mt-4")}
           data-testid="recent-activity-empty"
         >
-          No approved public activity yet. Counted submissions and XP awards will appear here.
+          {category
+            ? "No public activity in this category yet."
+            : "No approved public activity yet. Counted submissions and XP awards will appear here."}
         </p>
       ) : (
         <>
@@ -174,7 +219,7 @@ export function RecentActivityLog({
               <button
                 type="button"
                 className="ml-2 font-semibold underline underline-offset-2"
-                onClick={() => loadMore()}
+                onClick={() => void loadMore()}
               >
                 Retry
               </button>
@@ -189,7 +234,7 @@ export function RecentActivityLog({
                 data-testid="recent-activity-load-more"
                 disabled={loading}
                 aria-busy={loading}
-                onClick={() => loadMore()}
+                onClick={() => void loadMore()}
               >
                 {loading ? "Loading…" : `Load more (${total - visibleCount} remaining)`}
               </button>
