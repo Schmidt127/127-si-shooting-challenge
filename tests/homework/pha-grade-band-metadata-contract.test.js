@@ -90,8 +90,8 @@ t("065 PHA validation ignores Grade Band and upload-slot mismatch", () => {
 });
 
 t("071 Hub handoff ignores PHA Grade Band", () => {
-  assert.match(s071, /Version: v4\.2/);
-  assert.match(s071, /version: "v4\.2"/);
+  assert.match(s071, /Version: v4\.3/);
+  assert.match(s071, /version: "v4\.3"/);
   assert.match(s071, /HOMEWORK_FEEDBACK\|HOMEWORK_COMPLETIONS\|/);
   assert.match(s071, /PHA operational identity is Program Instance \+ Week \+ Homework Assignment \+ Homework Slot/);
   assert.match(s071, /PHA Program Instance mismatch/);
