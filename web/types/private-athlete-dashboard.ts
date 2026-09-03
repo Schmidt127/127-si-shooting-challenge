@@ -55,6 +55,11 @@ export type DashboardAwardItem = {
   deliveryStatus: string | null;
   scope: string | null;
   weekLabel: string | null;
+  /**
+   * Fulfillment/status badge helper for the private dashboard only.
+   * NOT a public-publication flag — Award Recipients has no `Published?` field
+   * (see docs/audits/PUBLIC-PUBLISHED-AWARDS-SCHEMA-GAP-2026-09-03.md).
+   */
   publiclyVisible: boolean;
 };
 

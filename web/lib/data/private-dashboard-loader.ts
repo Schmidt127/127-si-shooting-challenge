@@ -269,6 +269,8 @@ function mapAwardRecords(
           null,
         scope: selectName(fields["Award Scope"], "") || null,
         weekLabel,
+        // Private dashboard fulfillment badge only — NOT public publication.
+        // Award Recipients has no Published? field (fail-closed on public surfaces).
         publiclyVisible: ["Approved", "Sent", "Delivered"].includes(status),
       };
     })

@@ -9,6 +9,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Added
+- **Public published awards fail-closed (2026-09-03)** — Award Recipients Aug 2026 schema has **no** `Published?` (or equivalent). Public award display blocked via `web/lib/data/public-awards.ts`; gap doc [`docs/audits/PUBLIC-PUBLISHED-AWARDS-SCHEMA-GAP-2026-09-03.md`](./docs/audits/PUBLIC-PUBLISHED-AWARDS-SCHEMA-GAP-2026-09-03.md). Private dashboard awards remain auth-only. No invented fields / no Airtable writes.
 - **SC-149 Family Dashboard navigation (2026-09-03)** — Public “Family Dashboard” entry to `/shoot/dashboard/sign-in` (Next.js `basePath`-aware) in the program header (desktop/tablet), mobile menu, footer quick links, homepage parent section, and FAQ get-started section. Outline/secondary styling stays below primary Register and Leaderboard actions. Private `/shoot/dashboard` data remains auth-gated. No Airtable, automation, email, AWS, or env-var changes.
 
 ### Airtable
