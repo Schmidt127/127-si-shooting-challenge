@@ -1,0 +1,170 @@
+{
+  "createdAt": "2026-09-03T22:18:49.021Z",
+  "baseId": "appn84sqPw03zEbTT",
+  "stamp": "VERIFY-SC112-20260903",
+  "parentEmail": "mschmidt@fairfield.k12.mt.us",
+  "gradeBandId": "recK7BDVSpHy2ipCS",
+  "gradeBandNote": "Reused Athlete1 Grade Band (K-2) recK7BDVSpHy2ipCS",
+  "schoolId": "recvQPRTplZeTmV0Y",
+  "programInstanceId": "rec5mEM0YPqPqq0hZ",
+  "newAthleteId": "rec0DOgWwzfDQxMaS",
+  "newEnrollmentId": "recr3OaRi1HdFCB2V",
+  "athlete1EnrollmentId": "recZEwkkXTJanDlG6",
+  "athlete1AthleteId": "recTfxT6WMsPvobAW",
+  "athlete1Unchanged": true,
+  "activeBeforeCount": 2,
+  "activeBefore": [
+    {
+      "id": "rec2UamYHzyc9ELd9",
+      "first": "Athlete 2",
+      "last": "Schmidt",
+      "athlete": [
+        "recTfxT6WMsPvobAW"
+      ]
+    },
+    {
+      "id": "recZEwkkXTJanDlG6",
+      "first": "Athlete1",
+      "last": "Schmidt",
+      "athlete": [
+        "recTfxT6WMsPvobAW"
+      ]
+    }
+  ],
+  "prePiQueueCount": 0,
+  "queueCancel": {
+    "handoffKey": "WELCOME|ENROLLMENTS|recr3OaRi1HdFCB2V",
+    "attempts": [
+      {
+        "attempt": 1,
+        "found": []
+      },
+      {
+        "attempt": 2,
+        "found": []
+      },
+      {
+        "attempt": 3,
+        "found": [
+          {
+            "id": "rec6VgBXOtasiPbbH",
+            "status": "Ready",
+            "key": "WELCOME|ENROLLMENTS|recr3OaRi1HdFCB2V",
+            "acceptedAt": null,
+            "hubAcceptedAt": null,
+            "testMode": true
+          }
+        ],
+        "canceled": [
+          "rec6VgBXOtasiPbbH"
+        ]
+      },
+      {
+        "attempt": 4,
+        "found": [
+          {
+            "id": "rec6VgBXOtasiPbbH",
+            "status": "Cancelled",
+            "key": "WELCOME|ENROLLMENTS|recr3OaRi1HdFCB2V",
+            "acceptedAt": null,
+            "hubAcceptedAt": null,
+            "testMode": true
+          }
+        ]
+      },
+      {
+        "attempt": 5,
+        "found": [
+          {
+            "id": "rec6VgBXOtasiPbbH",
+            "status": "Cancelled",
+            "key": "WELCOME|ENROLLMENTS|recr3OaRi1HdFCB2V",
+            "acceptedAt": null,
+            "hubAcceptedAt": null,
+            "testMode": true
+          }
+        ]
+      },
+      {
+        "attempt": 6,
+        "found": [
+          {
+            "id": "rec6VgBXOtasiPbbH",
+            "status": "Cancelled",
+            "key": "WELCOME|ENROLLMENTS|recr3OaRi1HdFCB2V",
+            "acceptedAt": null,
+            "hubAcceptedAt": null,
+            "testMode": true
+          }
+        ]
+      },
+      {
+        "attempt": 7,
+        "found": [
+          {
+            "id": "rec6VgBXOtasiPbbH",
+            "status": "Cancelled",
+            "key": "WELCOME|ENROLLMENTS|recr3OaRi1HdFCB2V",
+            "acceptedAt": null,
+            "hubAcceptedAt": null,
+            "testMode": true
+          }
+        ]
+      },
+      {
+        "attempt": 8,
+        "found": [
+          {
+            "id": "rec6VgBXOtasiPbbH",
+            "status": "Cancelled",
+            "key": "WELCOME|ENROLLMENTS|recr3OaRi1HdFCB2V",
+            "acceptedAt": null,
+            "hubAcceptedAt": null,
+            "testMode": true
+          }
+        ]
+      }
+    ],
+    "finalRows": [
+      {
+        "id": "rec6VgBXOtasiPbbH",
+        "fields": {
+          "Test Mode?": true,
+          "Status": "Cancelled",
+          "Handoff Key": "WELCOME|ENROLLMENTS|recr3OaRi1HdFCB2V"
+        }
+      }
+    ]
+  },
+  "anyQueueAcceptedOrSucceeded": false,
+  "parentActiveCountAfter": 3,
+  "parentActivesAfter": [
+    {
+      "id": "rec2UamYHzyc9ELd9",
+      "first": "Athlete 2",
+      "last": "Schmidt",
+      "athlete": "recTfxT6WMsPvobAW",
+      "cleaned": "mschmidt@fairfield.k12.mt.us",
+      "pi": "rec5mEM0YPqPqq0hZ",
+      "gradeBand": "rec75ruo3XT5nSvaK"
+    },
+    {
+      "id": "recZEwkkXTJanDlG6",
+      "first": "Athlete1",
+      "last": "Schmidt",
+      "athlete": "recTfxT6WMsPvobAW",
+      "cleaned": "mschmidt@fairfield.k12.mt.us",
+      "pi": "rec5mEM0YPqPqq0hZ",
+      "gradeBand": "recK7BDVSpHy2ipCS"
+    },
+    {
+      "id": "recr3OaRi1HdFCB2V",
+      "first": "VERIFY",
+      "last": "VERIFY-SC112-20260903",
+      "athlete": "rec0DOgWwzfDQxMaS",
+      "cleaned": "mschmidt@fairfield.k12.mt.us",
+      "pi": "rec5mEM0YPqPqq0hZ",
+      "gradeBand": "recK7BDVSpHy2ipCS"
+    }
+  ]
+}
