@@ -72,6 +72,13 @@ test("075 archive is labeled LEGACY/RETIRED and is not Zoom XP", () => {
   assert.doesNotMatch(body, /Zoom\s*\/\s*Attendance XP is Automation 075/i);
 });
 
+test("078A v1.5 supports optional testMode input defaulting safe", () => {
+  const a078 = script("078A-");
+  assert.match(a078.body, /version:\s*"v1\.5"/);
+  assert.match(a078.body, /testMode === undefined \? true|cfg\.testMode === undefined \? true/);
+  assert.match(a078.body, /Parent Email - Cleaned/);
+});
+
 test("078A and 079 do not read or write retired Enrollment welcome fields", () => {
   const a078 = script("078A-");
   const a079 = script("079-");
