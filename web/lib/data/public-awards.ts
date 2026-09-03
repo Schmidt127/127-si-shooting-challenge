@@ -1,26 +1,32 @@
 /**
  * Public Award Recipients — publication gate.
  *
- * Award Recipients (tblTyQXl8aEP93ubK) currently has NO Public / Published field
- * (inventory + live MCP schema 2026-09-03). Until Mike adds/confirms an explicit
- * publication checkbox/select, public surfaces must keep award recipients hidden.
+ * Award Recipients (tblTyQXl8aEP93ubK) uses the checkbox field exactly named
+ * **Public On Web** (`fldqX3U52KrfOKhua`) as the sole public-website publication
+ * control. The field exists in Production; do not create or rename it.
+ *
+ * Fail closed: unchecked, blank, missing value, or missing field key → not public.
+ * Award Status (Approved / Sent / Delivered / etc.) must NEVER gate public visibility.
  *
  * Do NOT reuse Awards catalog flags such as "Include in Overall Awards Section?" —
  * those drive weekly/overall email summary sections, not public website publication.
  *
- * Private dashboard continues to load Award Recipients for authorized enrollments.
+ * Private dashboard continues to load Award Recipients for authorized enrollments
+ * regardless of Public On Web (session-gated). Dashboard `publiclyVisible` is a
+ * status badge tone only — not this publication gate.
  */
 
 import { asBoolean, asText, selectName } from "@/lib/data/airtable-values";
 
 /**
- * Confirmed publication field on Award Recipients.
- * `null` = schema gap — no public publication control exists yet.
+ * Confirmed publication field on Award Recipients (checkbox).
+ * Fail closed when false, blank, or absent on the record.
  */
-export const AWARD_RECIPIENT_PUBLICATION_FIELD: string | null = null;
+export const AWARD_RECIPIENT_PUBLICATION_FIELD: string | null = "Public On Web";
 
-/** Candidate names reviewed against inventory + live schema — none present. */
+/** Candidate names reviewed against inventory + live schema. */
 export const AWARD_RECIPIENT_PUBLICATION_FIELD_CANDIDATES_CHECKED = [
+  "Public On Web",
   "Published?",
   "Public?",
   "Public",
@@ -64,8 +70,9 @@ export function evaluatePublicationFlag(
 }
 
 /**
- * True only when an explicit, configured publication field is present and truthy.
- * With AWARD_RECIPIENT_PUBLICATION_FIELD === null, always returns false.
+ * True only when Public On Web (or configured field) is present and truthy.
+ * Fail closed for false / blank / missing.
+ * Does not consult Award Status.
  */
 export function isAwardRecipientPubliclyPublished(
   fields: AwardRecipientPublicationFields,
@@ -75,8 +82,8 @@ export function isAwardRecipientPubliclyPublished(
 
 /**
  * Map Award Recipient records to public-safe award items.
- * Returns [] when publication field is missing/unset or record is not published.
- * Never includes parent email, Tremendous ids, coach-only notes, or record ids.
+ * Returns [] when publication field is unset/false or record is not published.
+ * Never includes parent email, Tremendous ids, amounts, coach-only notes, or record ids.
  */
 export function mapPublishedPublicAwards(
   records: Array<{ id: string; fields: AwardRecipientPublicationFields }>,
@@ -107,7 +114,12 @@ export function mapPublishedPublicAwards(
     });
 }
 
-/** Public profile / leaderboard surfaces must call this — empty until field exists. */
+/**
+ * Public profile / leaderboard surfaces must call this.
+ * Empty when no records have Public On Web checked.
+ * Public athlete profile does not yet surface awards in its typed payload —
+ * call this only from surfaces that are already structured for PublicAwardItem[].
+ */
 export function listPublicAwardsForEnrollment(
   records: Array<{ id: string; fields: AwardRecipientPublicationFields }>,
 ): PublicAwardItem[] {
