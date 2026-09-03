@@ -67,4 +67,5 @@ tools/testing/retrigger_*.mjs
 tools/testing/inspect_*.mjs
 docs/testing/perfect-week/fixtures/_*.json
 docs/testing/evidence/**/_*
+docs/testing/evidence/parent-email-live-cutover/*.json
 duplicate-enrollment-guard-*.patch

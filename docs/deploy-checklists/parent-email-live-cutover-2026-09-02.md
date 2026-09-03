@@ -201,7 +201,7 @@ Clear any stuck **`Send to Make?`** on WAS rows armed during weekly tests. Do no
 
 ## Evidence
 
-`docs/testing/evidence/parent-email-live-cutover/` — preflight and verify-all JSON.
+Local only (gitignored): `docs/testing/evidence/parent-email-live-cutover/*.json` from preflight and verify-all runs.
 
 ## Post-cutover docs
 
