@@ -22,14 +22,16 @@ export const PUBLIC_APP_ROUTES = [
   "/athletes/[slug]",
   "/admin",
   "/api/airtable",
+  "/dashboard/sign-in",
 ] as const;
 
 /** Routes that must remain demo/mock or gated until auth + cutover work. */
 export const NON_CUTOVER_READY_ROUTES = ["/dashboard", "/athletes/[slug]", "/admin"] as const;
 
 /**
- * Reachable by URL but excluded from ProductShell nav + homepage hub cards.
- * Dashboard: demo until SC-112. Public display: gym/kiosk standings, not family chrome.
+ * Reachable by URL but excluded from ProductShell catalog nav + homepage hub cards.
+ * `/dashboard` remains private (auth). Public display is gym/kiosk standings.
+ * Family Dashboard sign-in is linked from header, mobile menu, footer, and parent CTAs.
  */
 export const PUBLIC_CHROME_EXCLUDED_ROUTES = ["/dashboard", "/public-display"] as const;
 
@@ -133,6 +135,7 @@ export const FAMILY_FACING_SMOKE_PATHS = [
   "achievements",
   "zoom-meetings",
   "game-manual",
+  "dashboard/sign-in",
 ] as const;
 
 export const ACCESSIBILITY_LABELS = {

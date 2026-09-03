@@ -3,6 +3,7 @@ import { ProductNav } from "@/components/layout/product-nav";
 import type { ProductNavItem } from "@/components/layout/product-shell";
 import { SiteContainer } from "@/components/site/site-container";
 import { CtaLink } from "@/components/site/cta-link";
+import { FamilyDashboardLink } from "@/components/site/family-dashboard-link";
 import { LANDING_URL } from "@/lib/app-config";
 import { BRAND_ORG_NAME } from "@/lib/brand";
 
@@ -59,6 +60,10 @@ export function SiteHeader({
                 className="h-7 w-auto max-w-[10rem] object-contain object-right xl:h-8 xl:max-w-[12rem]"
               />
             </a>
+            <FamilyDashboardLink
+              testId="family-dashboard-header-link"
+              className="hidden max-w-[11rem] truncate md:inline-flex"
+            />
             <CtaLink
               href="/leaderboard"
               variant="cta"

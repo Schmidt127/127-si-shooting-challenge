@@ -1,5 +1,6 @@
 export { AccentRail, SectionMarker } from "./accent-rail";
 export { CtaLink } from "./cta-link";
+export { FamilyDashboardLink } from "./family-dashboard-link";
 export { FeatureCard } from "./feature-card";
 export { PageHero } from "./page-hero";
 export { DetailPageShell, ProgramPage } from "./program-page";

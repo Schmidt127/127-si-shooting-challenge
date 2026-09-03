@@ -73,6 +73,9 @@ test.describe("375px mobile usability", () => {
     await expect(
       panel.getByRole("link", { name: /Submit Today's Activity/i }),
     ).toBeVisible();
+    await expect(
+      panel.getByRole("link", { name: /Family Dashboard/i }),
+    ).toBeVisible();
 
     const close = page.getByTestId("mobile-nav-close");
     await expect(close).toBeFocused();

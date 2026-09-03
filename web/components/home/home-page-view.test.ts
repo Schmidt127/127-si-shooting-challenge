@@ -30,5 +30,7 @@ describe("Shooting Challenge home page layout", () => {
     expect(HOME_SOURCE).toContain("Video feedback expectations");
     expect(HOME_SOURCE).toContain('href="/faq#video-feedback"');
     expect(HOME_SOURCE).toContain("challenge schedule");
+    expect(HOME_SOURCE).toContain("family-dashboard-home-cta");
+    expect(HOME_SOURCE).toContain("FAMILY_DASHBOARD_DESCRIPTION");
   });
 });

@@ -93,6 +93,7 @@ describe("empty and loading state copy", () => {
 
   it("lists family-facing smoke paths including FAQ", () => {
     expect(FAMILY_FACING_SMOKE_PATHS).toContain("faq");
+    expect(FAMILY_FACING_SMOKE_PATHS).toContain("dashboard/sign-in");
     expect(FAMILY_FACING_SMOKE_PATHS).not.toContain("dashboard");
     expect(FAMILY_FACING_SMOKE_PATHS).not.toContain("public-display");
   });

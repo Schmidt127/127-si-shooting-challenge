@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { CtaLink, PageHero, SiteSection } from "@/components/site";
+import { CtaLink, FamilyDashboardLink, PageHero, SiteSection } from "@/components/site";
 import { Card, CardContent } from "@/components/ui/card";
 import type { FaqItem } from "@/lib/seo/faq-content";
 import { REGISTRATION_FACTS } from "@/lib/seo/program-facts";
@@ -77,6 +77,11 @@ export function FaqPageView({ items }: FaqPageViewProps) {
           <Link href="/#registration-gateway" className="sc-text-link text-sm font-semibold">
             View registration section on the homepage
           </Link>
+          <FamilyDashboardLink
+            testId="family-dashboard-faq-cta"
+            variant="outline"
+            size="default"
+          />
           <a
             href={DAILY_SUBMISSIONS.url}
             target="_blank"
