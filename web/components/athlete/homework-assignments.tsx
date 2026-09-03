@@ -2,7 +2,6 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { CoachFeedbackQuote } from "@/components/coach-feedback-quote";
 import { StatusBadge, type StatusBadgeTone } from "@/components/ui/status-badge";
 import {
   scCardEmpty,
@@ -86,8 +85,8 @@ export function HomeworkAssignments({
             Assignments
           </h2>
           <p className="mt-2 max-w-2xl text-sm text-muted">
-            Every active challenge assignment for this athlete&apos;s grade band, with submission status
-            and coach feedback.
+            Every active challenge assignment for this athlete&apos;s grade band, with public submission
+            status and XP. Coach notes and submitted files stay on the family dashboard.
           </p>
         </div>
         <div className="relative mx-auto h-20 w-20 shrink-0 sm:mx-0 sm:h-24 sm:w-24" aria-hidden="true">
@@ -148,18 +147,6 @@ export function HomeworkAssignments({
                     <p className="mt-2 text-sm leading-relaxed text-foreground/85">
                       {assignment.description}
                     </p>
-                  ) : null}
-                  <CoachFeedbackQuote feedback={assignment.coachFeedback} />
-                  {assignment.viewSubmittedHomeworkHref ? (
-                    <a
-                      href={assignment.viewSubmittedHomeworkHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-3 inline-flex min-h-11 items-center text-sm font-semibold text-brand-blue underline-offset-2 hover:text-accent-soft hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-                      data-testid="view-submitted-homework-cta"
-                    >
-                      View Submitted Homework
-                    </a>
                   ) : null}
                 </div>
                 <p className="text-sm">

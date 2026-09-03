@@ -53,7 +53,7 @@ describe("HomeworkAssignments UI", () => {
     }
   });
 
-  it("shows assignment name, due date, status, description, and feedback", () => {
+  it("shows assignment name, due date, status, and description without coach notes", () => {
     const html = render([
       assignment({
         assignmentName: "Shot Tracker Usage",
@@ -69,14 +69,13 @@ describe("HomeworkAssignments UI", () => {
 
     expect(html).toContain("Shot Tracker Usage");
     expect(html).toContain("Log every make in the tracker.");
-    expect(html).toContain("Nice work.");
-    expect(html).toContain('data-testid="coach-feedback-quote"');
-    expect(html).toContain("border-brand-orange");
-    expect(html).toContain("italic");
-    expect(html).not.toContain("Coach feedback:");
+    expect(html).not.toContain("Nice work.");
+    expect(html).not.toContain('data-testid="coach-feedback-quote"');
     expect(html).toContain("Satisfactory");
     expect(html).toContain("Credit earned");
     expect(html).not.toContain("HW99");
+    expect(html).toMatch(/family dashboard/i);
+    expect(html).not.toMatch(/with submission status\s+and coach feedback/i);
   });
 
   it("renders a clear empty state when no active assignments exist", () => {
@@ -109,9 +108,10 @@ describe("HomeworkAssignments UI", () => {
     expect(html).toContain("Not submitted");
   });
 
-  it("omits coach feedback quotation when feedback is absent", () => {
-    const html = render([assignment({ coachFeedback: null })]);
+  it("never renders coach feedback on the public homework list", () => {
+    const html = render([assignment({ coachFeedback: "Nice work." })]);
     expect(html).not.toContain('data-testid="coach-feedback-quote"');
+    expect(html).not.toContain("Nice work.");
   });
 
   it("uses responsive stacked-to-grid classes for mobile-safe rendering", () => {
@@ -120,7 +120,7 @@ describe("HomeworkAssignments UI", () => {
     expect(html).toContain("sm:grid-cols-[minmax(0,1.6fr)_repeat(4,minmax(0,1fr))]");
   });
 
-  it("shows View Submitted Homework CTA without a redundant Submitted Work card", () => {
+  it("never renders View Submitted Homework file links on the public homework list", () => {
     const reviewerUrl =
       "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/recReiXXBRtaW3lns?token=abc123";
     const html = render([
@@ -131,11 +131,11 @@ describe("HomeworkAssignments UI", () => {
       }),
     ]);
 
-    expect(html).toContain('data-testid="view-submitted-homework-cta"');
-    expect(html).toContain("View Submitted Homework");
-    expect(html).toContain(reviewerUrl);
+    expect(html).not.toContain('data-testid="view-submitted-homework-cta"');
+    expect(html).not.toContain("View Submitted Homework");
+    expect(html).not.toContain(reviewerUrl);
+    expect(html).not.toContain("token=abc123");
     expect(html).not.toContain('data-testid="submitted-work-card"');
-    expect(html).not.toMatch(/Submitted Work/i);
   });
 
   it("omits View Submitted Homework when no reviewer URL is available", () => {

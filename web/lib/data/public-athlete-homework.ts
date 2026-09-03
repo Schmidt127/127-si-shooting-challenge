@@ -260,14 +260,14 @@ export function buildPublicHomeworkAssignments(input: {
       completionStatusLabel: completionStatusLabel(completionStatus),
       submissionDate,
       xpAwarded,
-      coachFeedback: asText(completion?.["Coach Feedback"], "") || null,
+      // Public profiles: completion status + XP only. Coach notes and submission
+      // file links are private-dashboard / auth-required (public-data-rules.md).
+      coachFeedback: null,
       creditEligible: credit.creditEligible,
       pastDue: credit.pastDue,
       lateSubmission: credit.lateSubmission,
       homeworkDetailHref: homeworkId ? `/homework/${homeworkId}` : null,
-      viewSubmittedHomeworkHref: resolveViewSubmittedHomeworkHref(
-        completion?.["Submission Asset: Reviewer File URL (lookup)"],
-      ),
+      viewSubmittedHomeworkHref: null,
       sortWeekStart: weekMeta?.startDate ?? null,
       sortSlot: homeworkSlotOrder(slot),
       sortOrder: Number.isFinite(order) ? order : 0,
