@@ -66,8 +66,13 @@ Public catalog routes (`/leaderboard`, `/athletes/[slug]`, etc.) are unchanged.
 
 ## Mike manual steps before Production
 
-1. Set Vercel env vars above on the `web` project (Preview first).
+See **[SC-112 Preview and Production checklist](../deploy-checklists/SC-112-athlete-auth-preview-and-production.md)** for Preview setup, test procedure, Production enablement, and rollback.
+
+Summary:
+
+1. Set Vercel Preview env vars (names in table above).
 2. Confirm Resend sender domain and `RESEND_FROM_EMAIL`.
 3. Optionally provision Upstash Redis for token store in Production.
-4. Enable `ATHLETE_AUTH_ENABLED=true` only after Preview proof with test recipient.
-5. Do **not** enable Live parent delivery until test-mode proof is complete.
+4. Complete Preview proof with `ATHLETE_AUTH_TEST_MODE=true` and schmidt@ delivery only.
+5. Enable `ATHLETE_AUTH_ENABLED=true` in Production only after Preview evidence and Mike approval.
+6. Do **not** set `ATHLETE_AUTH_TEST_MODE=false` or send real family magic links until a separate approved cutover.
