@@ -1,17 +1,17 @@
 # Homework late-credit policy — Production paste (Mike-only)
 
-**GitHub branch:** `feature/homework-late-credit-policy`  
-**Status:** Repository complete — **do not paste from agents**. Mike pastes after DEV verification.
+**GitHub branch:** `feature/homework-late-credit-policy` (merged PR **#372**)  
+**Status (2026-09-03 Agent 4):** Production **Automations Code PASTE-ALIGNED** — **020 v3.9 / 065 v10.6 / 057 2.3** Live (MCP read of Name / Status / Automation Code). **Do not paste from agents.** Disposable late-HW / Perfect Week exclusion behavior proof still **REQUIRES LIVE CONFIRMATION**.
 
-## Scripts to paste (Mike-only, after DEV)
+## Scripts (versions)
 
-| Automation | GitHub version | Notes |
-|---|---|---|
-| **020** — Link or Create Homework Completion | **v3.9** | Late submissions remain `creditEligible`; Notes still record late timing |
-| **065** — Create or Reconcile Homework XP Event | **v10.6** | Late + satisfactory → full HOMEWORK_XP; no longer blocks on due date |
-| **057** — Calculate Perfect Week Eligibility | **2.3** | Perfect Week homework count requires **on-time** Submission Date |
+| Automation | GitHub version | Production Automations Code (2026-09-03) | Notes |
+|---|---|---|---|
+| **020** — Link or Create Homework Completion | **v3.9** | **v3.9 Live** | Late submissions remain `creditEligible`; Notes still record late timing |
+| **065** — Create or Reconcile Homework XP Event | **v10.6** | **v10.6 Live** | Late + satisfactory → full HOMEWORK_XP; no longer blocks on due date |
+| **057** — Calculate Perfect Week Eligibility | **2.3** | **2.3 Live** | Perfect Week homework count requires **on-time** Submission Date |
 
-Paste path: GitHub → Airtable Scripting action (skip GitHub header). Prefer DEV first when a DEV base is available; otherwise disposable Production VERIFY rows only.
+If Code column drifts behind GitHub, Mike pastes after DEV verification. Prefer DEV first when a DEV base is available; otherwise disposable Production VERIFY rows only.
 
 ## Policy summary
 
