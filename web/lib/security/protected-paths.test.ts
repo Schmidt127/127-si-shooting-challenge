@@ -9,6 +9,7 @@ import {
 describe("protected path scaffolding (SC-112 groundwork)", () => {
   it("recognizes future athlete-protected paths", () => {
     expect(isAthleteProtectedPath("/dashboard")).toBe(true);
+    expect(isAthleteProtectedPath("/dashboard/select")).toBe(true);
     expect(isAthleteProtectedPath("/dashboard/sign-in")).toBe(false);
     expect(isAthleteProtectedPath("/athletes/schmidt")).toBe(false);
     expect(isAthleteProtectedPath("/leaderboard")).toBe(false);

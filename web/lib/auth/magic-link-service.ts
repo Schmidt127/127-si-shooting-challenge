@@ -91,6 +91,9 @@ export async function verifyMagicLinkToken(rawToken: string): Promise<{
   ok: true;
   sessionToken: string;
   maxAgeSeconds: number;
+  /** One child → dashboard; multiple → child selection. */
+  redirectPath: "/dashboard" | "/dashboard/select";
+  enrollmentCount: number;
 } | {
   ok: false;
   reason: "misconfigured" | "invalid" | "expired" | "used";
@@ -117,10 +120,13 @@ export async function verifyMagicLinkToken(rawToken: string): Promise<{
     return { ok: false, reason: "invalid" };
   }
 
+  const enrollmentIds = enrollments.map((item) => item.enrollmentId);
+  const singleChild = enrollmentIds.length === 1;
   const sessionToken = createSignedAthleteSessionToken(
     {
       parentEmail: consumed.record.parentEmail,
-      enrollmentIds: enrollments.map((item) => item.enrollmentId),
+      enrollmentIds,
+      selectedEnrollmentId: singleChild ? enrollmentIds[0] : null,
     },
     secret,
   );
@@ -129,6 +135,8 @@ export async function verifyMagicLinkToken(rawToken: string): Promise<{
     ok: true,
     sessionToken,
     maxAgeSeconds: getAthleteSessionTtlSeconds(),
+    redirectPath: singleChild ? "/dashboard" : "/dashboard/select",
+    enrollmentCount: enrollmentIds.length,
   };
 }
 
