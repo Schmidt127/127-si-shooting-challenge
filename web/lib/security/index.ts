@@ -94,3 +94,20 @@ export function siteAccessQueryParam(): string {
 export function isSiteAccessGateEnabled(): boolean {
   return Boolean(getRequiredSiteAccessToken());
 }
+
+export {
+  buildSiteAccessRequest,
+  canAccessDashboardPreview,
+  canLoadLiveAthleteDashboardData,
+  DASHBOARD_PREVIEW_PATH,
+  isDashboardPreviewDevEnvironment,
+} from "@/lib/security/dashboard-access";
+
+export {
+  DASHBOARD_GENERIC_UNAVAILABLE,
+  DASHBOARD_PREVIEW_BLOCKED,
+  DASHBOARD_PREVIEW_MISSING_ENROLLMENT,
+  DASHBOARD_PREVIEW_MISSING_ENROLLMENT_DEV,
+  sanitizePublicText,
+  xpActivityPublicErrorMessage,
+} from "@/lib/security/user-facing-errors";

@@ -1,8 +1,4 @@
 import type { StatusBadgeTone } from "@/components/ui/status-badge";
-import {
-  loadXpActivityForEnrollment,
-  XpActivityLoadError,
-} from "@/lib/data/xp-activity-loader";
 import type { XpEventSummary } from "@/types/xp";
 
 /** Presentational athlete dashboard model — mockable without Airtable auth. */
@@ -190,55 +186,29 @@ export function getMockAthleteDashboard(): AthleteDashboardModel {
 }
 
 /**
- * Safe adapter entry point. When `enrollmentId` is provided, loads live XP activity
- * from Airtable; other dashboard sections remain mock until athlete auth ships.
+ * Mock-only adapter for UI development and unit tests.
+ * Live enrollment data requires SC-112 athlete authentication — never load by URL param.
  */
-export async function loadAthleteDashboard(options?: {
+export function loadAthleteDashboard(options?: {
   slug?: string;
   enrollmentId?: string;
-}): Promise<AthleteDashboardModel> {
+}): AthleteDashboardModel {
+  if (options?.enrollmentId?.trim()) {
+    throw new Error(
+      "Live athlete dashboard data requires athlete sign-in (SC-112). enrollmentId URL params are not supported.",
+    );
+  }
+
   const mock = getMockAthleteDashboard();
   const slug = options?.slug ?? mock.athlete.slug;
-  const enrollmentId = options?.enrollmentId?.trim();
 
-  if (!enrollmentId) {
-    if (!options?.slug) return mock;
-    return {
-      ...mock,
-      athlete: {
-        ...mock.athlete,
-        slug,
-      },
-    };
-  }
+  if (!options?.slug) return mock;
 
-  try {
-    const xpResult = await loadXpActivityForEnrollment(enrollmentId, { maxRows: 25 });
-    const warningParts: string[] = [];
-    if (xpResult.warning) warningParts.push(xpResult.warning);
-    if (xpResult.missingXpSubmissionIds.length > 0) {
-      warningParts.push(
-        `${xpResult.missingXpSubmissionIds.length} counted submission(s) have no XP Event.`,
-      );
-    }
-    return {
-      ...mock,
-      source: "airtable",
-      athlete: {
-        ...mock.athlete,
-        id: enrollmentId,
-        slug,
-      },
-      recentXp: xpResult.rows,
-      recentXpTotal: xpResult.totalAvailableRows,
-      xpWarning: warningParts.length > 0 ? warningParts.join(" ") : undefined,
-    };
-  } catch (error) {
-    if (error instanceof XpActivityLoadError) {
-      throw error;
-    }
-    throw new XpActivityLoadError("Failed to load athlete dashboard XP activity.", {
-      cause: error,
-    });
-  }
+  return {
+    ...mock,
+    athlete: {
+      ...mock.athlete,
+      slug,
+    },
+  };
 }
