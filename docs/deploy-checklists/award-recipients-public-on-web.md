@@ -29,7 +29,7 @@
 | Public mapper output | Display name, date, scope, description only — no record ids, parent email, Tremendous, amounts |
 | Private dashboard | Still loads authorized Award Recipients; `publiclyVisible` badge = Award Status tone only |
 
-Public athlete profile (`PublicAthleteProfile`) does **not** yet include an awards array. Do not invent private fields on public pages. Wire UI later only through `listPublicAwardsForEnrollment`.
+Public athlete profile (`PublicAthleteProfile.awards`) loads Award Recipients via enrollment links, filters with `listPublicAwardsForEnrollment`, and renders `PublicAwardsSection` (name, date, scope, description only). Private fields and record IDs are never serialized.
 
 ---
 

@@ -196,4 +196,13 @@ describe("public award publication gate", () => {
       }),
     ).toBe(false);
   });
+
+  it("public athlete profile fetch wires listPublicAwardsForEnrollment", () => {
+    const queries = readSource("lib/airtable/queries.ts");
+    expect(queries).toContain("listPublicAwardsForEnrollment");
+    expect(queries).toContain('"Public On Web"');
+    expect(queries).toContain('"Award Recipients"');
+    const view = readSource("components/athlete/athlete-profile-view.tsx");
+    expect(view).toContain("PublicAwardsSection");
+  });
 });
