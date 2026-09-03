@@ -50,8 +50,51 @@ describe("fetchPublicGameLogPage", () => {
     if (result.status === "ok") {
       expect(result.page.rows).toHaveLength(1);
       expect(result.page.rows[0].key).toMatch(/^gl-/);
+      expect(result.page.rows[0].category).toBe("shooting_submission");
       expect(result.page.totalCount).toBe(1);
       expect(result.page.hasMore).toBe(false);
+      expect(result.page.category).toBe(null);
+    }
+  });
+
+  it("filters by public-safe category before pagination", async () => {
+    resolveSlugMock.mockResolvedValue("recEnrollment0001");
+    loadXpMock.mockResolvedValue({
+      rows: [
+        {
+          id: "recXpShoot000001",
+          points: 10,
+          sourceLabel: "Submission Base",
+          activityDate: "2026-08-12",
+        },
+        {
+          id: "recXpHw000000001",
+          points: 25,
+          sourceLabel: "Homework Completion",
+          activityDate: "2026-08-11",
+        },
+        {
+          id: "recXpZoom0000001",
+          points: 15,
+          sourceLabel: "Zoom Attendance: Base",
+          activityDate: "2026-08-10",
+        },
+      ],
+      totalAvailableRows: 3,
+      strategy: "enrollment_record_id",
+      reconciliation: [],
+      missingXpSubmissionIds: [],
+    });
+
+    const result = await fetchPublicGameLogPage("testing-schmidt", null, 12, "homework");
+    expect(result.status).toBe("ok");
+    if (result.status === "ok") {
+      expect(result.page.rows).toHaveLength(1);
+      expect(result.page.totalCount).toBe(1);
+      expect(result.page.category).toBe("homework");
+      expect(result.page.rows[0].category).toBe("homework");
+      expect(result.page.rows[0].key).toMatch(/^gl-/);
+      expect(JSON.stringify(result.page)).not.toMatch(/recXp/);
     }
   });
 });

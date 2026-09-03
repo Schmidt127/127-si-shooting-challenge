@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 
 import {
   fetchPublicGameLogPage,
+  parseGameLogCategoryFromQuery,
   parseGameLogPageSizeFromQuery,
 } from "@/lib/data/public-game-log";
 
@@ -14,14 +15,16 @@ type RouteContext = {
 
 /**
  * Paginated public Game Log for one athlete profile slug.
- * GET /api/athletes/[slug]/game-log?cursor=...&limit=12
+ * GET /api/athletes/[slug]/game-log?cursor=...&limit=12&category=homework
+ * `category` is a public-safe display filter id (never Source Key / Airtable id).
  */
 export async function GET(request: NextRequest, context: RouteContext) {
   const { slug } = await context.params;
   const cursor = request.nextUrl.searchParams.get("cursor");
   const pageSize = parseGameLogPageSizeFromQuery(request.nextUrl.searchParams.get("limit"));
+  const category = parseGameLogCategoryFromQuery(request.nextUrl.searchParams.get("category"));
 
-  const result = await fetchPublicGameLogPage(slug, cursor, pageSize);
+  const result = await fetchPublicGameLogPage(slug, cursor, pageSize, category);
 
   switch (result.status) {
     case "ok":

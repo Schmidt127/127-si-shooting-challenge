@@ -2,13 +2,19 @@
 
 import { useCallback, useRef, useState } from "react";
 
-import { withBasePath } from "@/lib/app-config";
+import { GameLogCategoryToolbar, type GameLogFilterSelection } from "@/components/athlete/game-log-category-toolbar";
 import {
   ScCardList,
   ScCardRowItem,
   ScCardSectionHeader,
   scCardEmpty,
 } from "@/components/ui/sc-card";
+import { withBasePath } from "@/lib/app-config";
+import {
+  PUBLIC_GAME_LOG_CATEGORY_OPTIONS,
+  gameLogCategoryLabel,
+  type GameLogCategoryId,
+} from "@/lib/data/game-log-categories";
 import {
   formatGameLogDateLine,
   formatGameLogDisplayDate,
@@ -22,6 +28,7 @@ type GameLogApiResponse = {
   totalCount: number;
   hasMore: boolean;
   nextCursor: string | null;
+  category?: GameLogCategoryId | null;
 };
 
 type RecentActivityLogProps = {
@@ -36,58 +43,109 @@ type RecentActivityLogProps = {
 export function RecentActivityLog({
   slug,
   items: initialItems,
-  totalCount,
+  totalCount: initialTotalCount,
   hasMore: initialHasMore = false,
   nextCursor: initialNextCursor = null,
   notice,
 }: RecentActivityLogProps) {
+  const [filter, setFilter] = useState<GameLogFilterSelection>("all");
   const [items, setItems] = useState(initialItems);
+  const [totalCount, setTotalCount] = useState(initialTotalCount ?? initialItems.length);
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [nextCursor, setNextCursor] = useState<string | null>(initialNextCursor);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inflightRef = useRef(false);
 
-  const total = totalCount ?? items.length;
   const visibleCount = items.length;
+  const categoryParam = filter === "all" ? null : filter;
+
+  const fetchPage = useCallback(
+    async (options: { cursor: string | null; replace: boolean; category: GameLogCategoryId | null }) => {
+      if (inflightRef.current) return;
+
+      inflightRef.current = true;
+      setLoading(true);
+      setError(null);
+
+      try {
+        const params = new URLSearchParams();
+        if (options.cursor) params.set("cursor", options.cursor);
+        if (options.category) params.set("category", options.category);
+
+        const response = await fetch(
+          withBasePath(`/api/athletes/${encodeURIComponent(slug)}/game-log?${params.toString()}`),
+        );
+
+        if (!response.ok) {
+          throw new Error("load_failed");
+        }
+
+        const data = (await response.json()) as GameLogApiResponse;
+
+        setItems((current) => {
+          if (options.replace) return data.rows;
+          const existingKeys = new Set(current.map((item) => item.key));
+          const appended = data.rows.filter((row) => !existingKeys.has(row.key));
+          return [...current, ...appended];
+        });
+        setTotalCount(data.totalCount);
+        setHasMore(data.hasMore);
+        setNextCursor(data.nextCursor);
+      } catch {
+        setError(
+          options.replace
+            ? "Could not load activity for this filter. Try again."
+            : "Could not load more activity. Try again.",
+        );
+      } finally {
+        setLoading(false);
+        inflightRef.current = false;
+      }
+    },
+    [slug],
+  );
 
   const loadMore = useCallback(async () => {
-    if (!hasMore || !nextCursor || inflightRef.current) return;
+    if (!hasMore || !nextCursor) return;
+    await fetchPage({ cursor: nextCursor, replace: false, category: categoryParam });
+  }, [categoryParam, fetchPage, hasMore, nextCursor]);
 
-    inflightRef.current = true;
-    setLoading(true);
-    setError(null);
-
-    try {
-      const params = new URLSearchParams({ cursor: nextCursor });
-      const response = await fetch(
-        withBasePath(`/api/athletes/${encodeURIComponent(slug)}/game-log?${params.toString()}`),
-      );
-
-      if (!response.ok) {
-        throw new Error("load_failed");
+  const onFilterChange = useCallback(
+    (next: GameLogFilterSelection) => {
+      setFilter(next);
+      const nextCategory = next === "all" ? null : next;
+      if (next === "all") {
+        setItems(initialItems);
+        setTotalCount(initialTotalCount ?? initialItems.length);
+        setHasMore(initialHasMore);
+        setNextCursor(initialNextCursor);
+        setError(null);
+        return;
       }
+      void fetchPage({ cursor: null, replace: true, category: nextCategory });
+    },
+    [fetchPage, initialHasMore, initialItems, initialNextCursor, initialTotalCount],
+  );
 
-      const data = (await response.json()) as GameLogApiResponse;
-
-      setItems((current) => {
-        const existingKeys = new Set(current.map((item) => item.key));
-        const appended = data.rows.filter((row) => !existingKeys.has(row.key));
-        return [...current, ...appended];
-      });
-      setHasMore(data.hasMore);
-      setNextCursor(data.nextCursor);
-    } catch {
-      setError("Could not load more activity. Try again.");
-    } finally {
-      setLoading(false);
-      inflightRef.current = false;
-    }
-  }, [hasMore, nextCursor, slug]);
+  const emptyMessage =
+    filter === "all"
+      ? "No approved public activity yet. Counted submissions and XP awards will appear here."
+      : `No ${gameLogCategoryLabel(categoryParam).toLowerCase()} activity yet.`;
 
   return (
     <section aria-labelledby="activity-heading" data-testid="recent-activity">
       <ScCardSectionHeader eyebrow="Game log" title="Recent activity" titleId="activity-heading" />
+
+      <div className="mt-3">
+        <GameLogCategoryToolbar
+          options={PUBLIC_GAME_LOG_CATEGORY_OPTIONS}
+          value={filter}
+          onChange={onFilterChange}
+          ariaLabel="Filter public game log by category"
+          testId="public-game-log-category-toolbar"
+        />
+      </div>
 
       {notice ? (
         <p
@@ -98,18 +156,20 @@ export function RecentActivityLog({
         </p>
       ) : null}
 
-      {total > 0 ? (
+      {totalCount > 0 ? (
         <p className="mt-3 text-xs text-muted" data-testid="recent-activity-count">
-          Showing {visibleCount} of {total} XP activity entries (newest first).
+          Showing {visibleCount} of {totalCount} XP activity entries
+          {filter === "all" ? "" : ` · ${gameLogCategoryLabel(categoryParam)}`} (newest first).
         </p>
       ) : null}
 
-      {items.length === 0 ? (
-        <p
-          className={cn(scCardEmpty(), "mt-4")}
-          data-testid="recent-activity-empty"
-        >
-          No approved public activity yet. Counted submissions and XP awards will appear here.
+      {items.length === 0 && !loading ? (
+        <p className={cn(scCardEmpty(), "mt-4")} data-testid="recent-activity-empty">
+          {emptyMessage}
+        </p>
+      ) : items.length === 0 && loading ? (
+        <p className={cn(scCardEmpty(), "mt-4")} data-testid="recent-activity-loading">
+          Loading activity…
         </p>
       ) : (
         <>
@@ -174,7 +234,11 @@ export function RecentActivityLog({
               <button
                 type="button"
                 className="ml-2 font-semibold underline underline-offset-2"
-                onClick={() => loadMore()}
+                onClick={() =>
+                  nextCursor
+                    ? loadMore()
+                    : fetchPage({ cursor: null, replace: true, category: categoryParam })
+                }
               >
                 Retry
               </button>
@@ -191,7 +255,7 @@ export function RecentActivityLog({
                 aria-busy={loading}
                 onClick={() => loadMore()}
               >
-                {loading ? "Loading…" : `Load more (${total - visibleCount} remaining)`}
+                {loading ? "Loading…" : `Load more (${totalCount - visibleCount} remaining)`}
               </button>
             </div>
           ) : null}

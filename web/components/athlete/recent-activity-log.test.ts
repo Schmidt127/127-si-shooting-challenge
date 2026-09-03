@@ -29,6 +29,30 @@ function renderLog(items: PublicActivityItem[]) {
 }
 
 describe("XP Event Log presentation", () => {
+  it("renders public-safe category filter toolbar", () => {
+    const html = renderLog(
+      mapXpSummariesToPublicActivity([
+        xpRow({
+          id: "recSubFilter",
+          reasonPublic: "Shooting submission completed with 100 shots.",
+        }),
+      ]),
+    );
+    expect(html).toContain('data-testid="public-game-log-category-toolbar"');
+    expect(html).toContain("Shooting Submission");
+    expect(html).toContain("Homework");
+    expect(html).toContain("Video Feedback");
+    expect(html).toContain("Zoom");
+    expect(html).toContain("Streak");
+    expect(html).toContain("Weekly Threshold");
+    expect(html).toContain("Shot Milestone");
+    expect(html).toContain("Perfect Week");
+    expect(html).toContain("Manual Award");
+    expect(html).toContain("overflow-x-auto");
+    expect(html).not.toMatch(/recSubFilter/);
+    expect(html).not.toMatch(/SUBMISSION_XP\|/);
+  });
+
   it("does not display Date: in the markup", () => {
     const items = mapXpSummariesToPublicActivity([
       xpRow({

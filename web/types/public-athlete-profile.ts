@@ -86,6 +86,11 @@ export type PublicActivityItem = {
   dateOnSecondRowRight?: boolean;
   /** Optional note after the date on row 2 (e.g. Extra credit +125 XP). */
   dateTagline?: string | null;
+  /**
+   * Public-safe Game Log category id (display filter only).
+   * Never an Airtable id or Source Key.
+   */
+  category?: string | null;
 };
 
 export type PublicWeeklySummary = {

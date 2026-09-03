@@ -26,6 +26,7 @@ import type {
   PublicWeeklySummary,
 } from "@/types/public-athlete-profile";
 import type { XpEventSummary } from "@/types/xp";
+import { classifyGameLogCategory } from "@/lib/data/game-log-categories";
 import { formatGameLogPresentation } from "@/lib/data/game-log-presentation";
 import { opaqueGameLogRowKey } from "@/lib/data/game-log-pagination";
 import { resolvePublicProfileMayBeStale } from "@/lib/formatters/profile-freshness";
@@ -356,6 +357,7 @@ export function mapXpSummariesToPublicActivity(rows: XpEventSummary[]): PublicAc
       subline: presentation.subline ?? null,
       dateOnSecondRowRight: presentation.dateOnSecondRowRight ?? false,
       dateTagline: presentation.dateTagline ?? null,
+      category: classifyGameLogCategory(row),
     };
   });
 }

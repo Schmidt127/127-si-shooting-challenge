@@ -3,6 +3,11 @@
  */
 
 import { resolvePublicEnrollmentIdBySlug } from "@/lib/airtable/queries";
+import {
+  filterXpRowsByCategory,
+  parseGameLogCategoryParam,
+  type GameLogCategoryId,
+} from "@/lib/data/game-log-categories";
 import { mapXpSummariesToPublicActivity } from "@/lib/data/public-athlete-profile";
 import {
   GAME_LOG_MAX_FETCH,
@@ -20,6 +25,8 @@ export type PublicGameLogPage = {
   totalCount: number;
   hasMore: boolean;
   nextCursor: string | null;
+  /** Active public-safe category filter, or null for All. */
+  category: GameLogCategoryId | null;
 };
 
 export type PublicGameLogPageResult =
@@ -39,6 +46,7 @@ export async function fetchPublicGameLogPage(
   rawSlug: string,
   cursor: string | null,
   pageSize = GAME_LOG_PAGE_SIZE,
+  category: GameLogCategoryId | null = null,
 ): Promise<PublicGameLogPageResult> {
   try {
     const enrollmentId = await resolvePublicEnrollmentIdBySlug(rawSlug);
@@ -52,7 +60,9 @@ export async function fetchPublicGameLogPage(
       revalidateSeconds: REVALIDATE_SECONDS,
     });
 
-    const paginated = paginateSortedXpSummaries(xpActivity.rows, {
+    const filteredRows = filterXpRowsByCategory(xpActivity.rows, category);
+
+    const paginated = paginateSortedXpSummaries(filteredRows, {
       cursor,
       pageSize,
     });
@@ -61,9 +71,10 @@ export async function fetchPublicGameLogPage(
       status: "ok",
       page: {
         rows: mapXpSummariesToPublicActivity(paginated.pageRows),
-        totalCount: xpActivity.totalAvailableRows,
+        totalCount: filteredRows.length,
         hasMore: paginated.hasMore,
         nextCursor: paginated.nextCursor,
+        category,
       },
     };
   } catch (error) {
@@ -79,4 +90,8 @@ export async function fetchPublicGameLogPage(
 
 export function parseGameLogPageSizeFromQuery(raw: string | null): number {
   return parsePageSize(raw);
+}
+
+export function parseGameLogCategoryFromQuery(raw: string | null): GameLogCategoryId | null {
+  return parseGameLogCategoryParam(raw);
 }

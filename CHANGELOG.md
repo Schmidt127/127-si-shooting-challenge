@@ -9,6 +9,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Added
+- **Game Log category filters (public + private) (2026-09-03)** — Shared public-safe category chips: Shooting Submission, Homework, Video Feedback, Zoom, Streak, Weekly Threshold, Shot Milestone, Perfect Week, Manual Award. Public athlete Game Log filters via API `category` query (opaque row keys only — no Source Keys / Airtable ids). Private dashboard XP section uses the same vocabulary behind auth. Mobile chip row scrolls horizontally.
 - **SC-149 Family Dashboard navigation (2026-09-03)** — Public “Family Dashboard” entry to `/shoot/dashboard/sign-in` (Next.js `basePath`-aware) in the program header (desktop/tablet), mobile menu, footer quick links, homepage parent section, and FAQ get-started section. Outline/secondary styling stays below primary Register and Leaderboard actions. Private `/shoot/dashboard` data remains auth-gated. No Airtable, automation, email, AWS, or env-var changes.
 
 ### Airtable
