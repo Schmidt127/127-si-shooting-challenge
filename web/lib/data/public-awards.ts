@@ -1,33 +1,40 @@
 /**
  * Public Award Recipients — publication gate.
  *
- * Award Recipients (tblTyQXl8aEP93ubK) currently has NO Public / Published field
- * (inventory + live MCP schema 2026-09-03). Until Mike adds/confirms an explicit
- * publication checkbox/select, public surfaces must keep award recipients hidden.
+ * Exact Award Recipients checkbox (Mike-authorized): **Public On Web**
+ * - true → eligible for public display
+ * - false, blank, missing, or unavailable → private (fail closed)
  *
- * Do NOT reuse Awards catalog flags such as "Include in Overall Awards Section?" —
- * those drive weekly/overall email summary sections, not public website publication.
+ * Do NOT use Award Status as a public-visibility substitute.
+ * Do NOT reuse Awards catalog email-section flags.
  *
- * Private dashboard continues to load Award Recipients for authorized enrollments.
+ * Private dashboard may still show authorized private award details.
+ * Public surfaces never include amount, reason/coach notes, parent email,
+ * Tremendous ids, internal status, or Airtable record ids.
+ *
+ * Airtable rename required if Production still shows `Public on Web`
+ * (lowercase "on") — API field names are case-sensitive.
  */
+
+import { createHash } from "node:crypto";
 
 import { asBoolean, asText, selectName } from "@/lib/data/airtable-values";
 
-/**
- * Confirmed publication field on Award Recipients.
- * `null` = schema gap — no public publication control exists yet.
- */
-export const AWARD_RECIPIENT_PUBLICATION_FIELD: string | null = null;
+/** Exact Award Recipients publication checkbox — only this field gates public display. */
+export const AWARD_RECIPIENT_PUBLICATION_FIELD = "Public On Web" as const;
 
-/** Candidate names reviewed against inventory + live schema — none present. */
-export const AWARD_RECIPIENT_PUBLICATION_FIELD_CANDIDATES_CHECKED = [
-  "Published?",
-  "Public?",
-  "Public",
-  "OK to Publish",
-  "OK to Publish on Softr",
-  "Show on Public Profile?",
-  "Include on Public Profile?",
+/** Server-side Airtable formula: Public On Web checked. */
+export const PUBLIC_ON_WEB_FILTER_FORMULA = "{Public On Web}=TRUE()";
+
+/** Fields safe to request for public award mapping (no amount / email / Tremendous). */
+export const PUBLIC_AWARD_RECIPIENT_FIELDS = [
+  AWARD_RECIPIENT_PUBLICATION_FIELD,
+  "Award - Display",
+  "Award Recipient Display",
+  "Award Description - Display",
+  "Award Scope",
+  "Date Awarded",
+  "Tremendous Test Record?",
 ] as const;
 
 export type PublicAwardItem = {
@@ -41,9 +48,14 @@ export type PublicAwardItem = {
 
 export type AwardRecipientPublicationFields = Record<string, unknown>;
 
+function opaquePublicAwardKey(recordId: string): string {
+  const digest = createHash("sha256").update(`pub-award:${recordId}`).digest("hex").slice(0, 20);
+  return `pub-award-${digest}`;
+}
+
 /**
- * True only when an explicit publication field name is provided and truthy on the record.
- * Used by the public gate; tests may pass a candidate field name without inventing schema.
+ * True only when Public On Web is explicitly boolean true (or truthy checkbox).
+ * Missing / blank / false / unavailable → false.
  */
 export function evaluatePublicationFlag(
   fields: AwardRecipientPublicationFields,
@@ -51,21 +63,20 @@ export function evaluatePublicationFlag(
 ): boolean {
   if (!fieldName) return false;
 
+  if (!(fieldName in fields)) return false;
+
   const raw = fields[fieldName];
   if (raw === undefined || raw === null || raw === "") return false;
   if (typeof raw === "boolean") return raw === true;
+  if (raw === 1 || raw === "1") return true;
   if (asBoolean(raw)) return true;
 
-  const named = selectName(raw, "").toLowerCase();
-  if (named === "published" || named === "public" || named === "yes") return true;
-
-  const text = asText(raw, "").trim().toLowerCase();
-  return text === "true" || text === "yes" || text === "published" || text === "public";
+  return false;
 }
 
 /**
- * True only when an explicit, configured publication field is present and truthy.
- * With AWARD_RECIPIENT_PUBLICATION_FIELD === null, always returns false.
+ * True only when Public On Web is explicitly true on the record.
+ * Never consults Award Status.
  */
 export function isAwardRecipientPubliclyPublished(
   fields: AwardRecipientPublicationFields,
@@ -75,18 +86,15 @@ export function isAwardRecipientPubliclyPublished(
 
 /**
  * Map Award Recipient records to public-safe award items.
- * Returns [] when publication field is missing/unset or record is not published.
- * Never includes parent email, Tremendous ids, coach-only notes, or record ids.
+ * Returns [] when Public On Web is not explicitly true.
  */
 export function mapPublishedPublicAwards(
   records: Array<{ id: string; fields: AwardRecipientPublicationFields }>,
 ): PublicAwardItem[] {
-  if (!AWARD_RECIPIENT_PUBLICATION_FIELD) return [];
-
   return records
     .filter((record) => isAwardRecipientPubliclyPublished(record.fields))
     .filter((record) => !asBoolean(record.fields["Tremendous Test Record?"]))
-    .map((record, index) => {
+    .map((record) => {
       const fields = record.fields;
       const awardName =
         asText(fields["Award - Display"], "").trim() ||
@@ -95,21 +103,39 @@ export function mapPublishedPublicAwards(
       const description =
         asText(fields["Award Description - Display"], "").trim() || null;
       const scopeLabel = selectName(fields["Award Scope"], "") || null;
-      const awardDate = asText(fields["Date Awarded"], "").trim() || null;
+      const awardDateRaw = asText(fields["Date Awarded"], "").trim();
 
       return {
-        key: `pub-award-${index}-${awardName}`.replace(/\s+/g, "-").toLowerCase().slice(0, 80),
+        key: opaquePublicAwardKey(record.id),
         awardName,
-        awardDate: awardDate ? awardDate.slice(0, 10) : null,
+        awardDate: awardDateRaw ? awardDateRaw.slice(0, 10) : null,
         scopeLabel: scopeLabel || null,
         description,
       };
     });
 }
 
-/** Public profile / leaderboard surfaces must call this — empty until field exists. */
+/** Public profile / leaderboard surfaces must call this. */
 export function listPublicAwardsForEnrollment(
   records: Array<{ id: string; fields: AwardRecipientPublicationFields }>,
 ): PublicAwardItem[] {
   return mapPublishedPublicAwards(records);
+}
+
+/**
+ * Assert a public HTML / JSON payload never contains private award material.
+ * Used by tests — returns the first offending needle or null.
+ */
+export function findLeakedPrivateAwardMaterial(serialized: string): string | null {
+  if (/\brec[A-Za-z0-9]{14}\b/.test(serialized)) return "airtable-record-id";
+  for (const needle of [
+    "Award Amount",
+    "Parent Email",
+    "Tremendous",
+    "Award Status",
+    "Coach Feedback",
+  ]) {
+    if (serialized.includes(needle)) return needle;
+  }
+  return null;
 }

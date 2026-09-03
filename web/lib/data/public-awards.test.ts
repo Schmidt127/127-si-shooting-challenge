@@ -3,45 +3,86 @@ import { describe, expect, it } from "vitest";
 import {
   AWARD_RECIPIENT_PUBLICATION_FIELD,
   evaluatePublicationFlag,
+  findLeakedPrivateAwardMaterial,
   isAwardRecipientPubliclyPublished,
   listPublicAwardsForEnrollment,
   mapPublishedPublicAwards,
 } from "@/lib/data/public-awards";
 
-describe("public award publication gate", () => {
-  it("records that no Award Recipients publication field is configured yet", () => {
-    expect(AWARD_RECIPIENT_PUBLICATION_FIELD).toBeNull();
+describe("public award publication gate (Public On Web)", () => {
+  it("configures the exact Public On Web field", () => {
+    expect(AWARD_RECIPIENT_PUBLICATION_FIELD).toBe("Public On Web");
   });
 
-  it("hides awards when publication values are missing", () => {
+  it("allows public display when Public On Web is true", () => {
     const records = [
       {
-        id: "recAwardPrivate001",
+        id: "recAwardPublic0001",
         fields: {
-          "Award - Display": "Most Improved",
+          "Public On Web": true,
+          "Award - Display": "Weekly MVP",
+          "Award Description - Display": "Strong week",
+          "Award Scope": { name: "Weekly" },
+          "Date Awarded": "2026-09-01T12:00:00.000Z",
           "Award Status": "Delivered",
-          "Award Description - Display": "Great progress",
-          "Parent Email": "parent@example.com",
+          "Award Amount": 25,
+          "Parent Email - Send": "parent@example.com",
         },
       },
     ];
 
-    expect(isAwardRecipientPubliclyPublished(records[0].fields)).toBe(false);
-    expect(evaluatePublicationFlag(records[0].fields, "Published?")).toBe(false);
-    expect(mapPublishedPublicAwards(records)).toEqual([]);
-    expect(listPublicAwardsForEnrollment(records)).toEqual([]);
+    expect(isAwardRecipientPubliclyPublished(records[0].fields)).toBe(true);
+    const publicItems = listPublicAwardsForEnrollment(records);
+    expect(publicItems).toHaveLength(1);
+    expect(publicItems[0].awardName).toBe("Weekly MVP");
+    expect(publicItems[0].description).toBe("Strong week");
+    expect(publicItems[0].key).not.toContain("rec");
+    expect(publicItems[0]).not.toHaveProperty("amount");
+    expect(publicItems[0]).not.toHaveProperty("recipientStatus");
+
+    const html = JSON.stringify(publicItems);
+    expect(html).not.toContain("parent@");
+    expect(html).not.toContain("25");
+    expect(html).not.toContain("Delivered");
+    expect(html).not.toMatch(/rec[A-Za-z0-9]{14}/);
+    expect(findLeakedPrivateAwardMaterial(html)).toBeNull();
   });
 
-  it("treats an explicit Published? checkbox as public when present on the record", () => {
+  it("hides awards when Public On Web is false", () => {
     expect(
-      evaluatePublicationFlag({ "Published?": true, "Award - Display": "Weekly MVP" }, "Published?"),
-    ).toBe(true);
-    expect(
-      evaluatePublicationFlag({ "Published?": false, "Award - Display": "Weekly MVP" }, "Published?"),
+      evaluatePublicationFlag(
+        { "Public On Web": false, "Award - Display": "Hidden", "Award Status": "Approved" },
+        "Public On Web",
+      ),
     ).toBe(false);
+    expect(
+      mapPublishedPublicAwards([
+        {
+          id: "recAwardFalse00001",
+          fields: { "Public On Web": false, "Award - Display": "Hidden", "Award Status": "Approved" },
+        },
+      ]),
+    ).toEqual([]);
   });
 
-  it("keeps private-only records hidden even when status is Approved/Delivered", () => {
+  it("hides awards when Public On Web is blank", () => {
+    expect(evaluatePublicationFlag({ "Public On Web": "" }, "Public On Web")).toBe(false);
+    expect(evaluatePublicationFlag({ "Public On Web": null }, "Public On Web")).toBe(false);
+  });
+
+  it("hides awards when Public On Web is missing from the record", () => {
+    const fields = {
+      "Award - Display": "Most Improved",
+      "Award Status": "Delivered",
+      "Award Description - Display": "Great progress",
+      "Parent Email": "parent@example.com",
+    };
+    expect(isAwardRecipientPubliclyPublished(fields)).toBe(false);
+    expect(evaluatePublicationFlag(fields, "Public On Web")).toBe(false);
+    expect(mapPublishedPublicAwards([{ id: "recAwardMissing001", fields }])).toEqual([]);
+  });
+
+  it("never uses Award Status as a public-visibility substitute", () => {
     const records = [
       {
         id: "recAwardApproved01",
@@ -63,20 +104,28 @@ describe("public award publication gate", () => {
     expect(listPublicAwardsForEnrollment(records)).toEqual([]);
   });
 
-  it("does not leak parent emails or Airtable ids in the empty public list", () => {
+  it("keeps unauthorized private award details out of public mapping", () => {
     const publicItems = listPublicAwardsForEnrollment([
       {
         id: "recSecretAward0001",
         fields: {
+          "Public On Web": false,
           "Award - Display": "Secret Award",
+          "Award Amount": 100,
+          "Coach Feedback - Awards": "Private coach note",
           "Parent Email - Send": "secret@example.com",
           "Tremendous Order ID": "ord_secret",
+          "Award Status": "Sent",
         },
       },
     ]);
 
     expect(publicItems).toEqual([]);
-    expect(JSON.stringify(publicItems)).not.toContain("recSecret");
-    expect(JSON.stringify(publicItems)).not.toContain("secret@");
+    const serialized = JSON.stringify(publicItems);
+    expect(serialized).not.toContain("recSecret");
+    expect(serialized).not.toContain("secret@");
+    expect(serialized).not.toContain("Private coach");
+    expect(serialized).not.toContain("ord_secret");
+    expect(findLeakedPrivateAwardMaterial(serialized)).toBeNull();
   });
 });

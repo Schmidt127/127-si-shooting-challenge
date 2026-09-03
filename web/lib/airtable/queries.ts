@@ -50,6 +50,13 @@ import {
   type PublicUnlockFields,
   type PublicWasFields,
 } from "@/lib/data/public-athlete-profile";
+import {
+  AWARD_RECIPIENT_PUBLICATION_FIELD,
+  listPublicAwardsForEnrollment,
+  PUBLIC_AWARD_RECIPIENT_FIELDS,
+  PUBLIC_ON_WEB_FILTER_FORMULA,
+  type AwardRecipientPublicationFields,
+} from "@/lib/data/public-awards";
 import { fetchPublicAthleteHomeworkAssignments } from "@/lib/airtable/public-athlete-homework-queries";
 import {
   GAME_LOG_MAX_FETCH,
@@ -669,6 +676,7 @@ export const PUBLIC_PROFILE_ENROLLMENT_FIELDS = [
   "Weekly Athlete Summary",
   "Athlete Achievement Unlocks",
   "XP Events",
+  "Award Recipients",
 ] as const;
 
 const PUBLIC_PROFILE_REVALIDATE_SECONDS = 120;
@@ -796,6 +804,7 @@ export async function fetchPublicAthleteProfileBySlug(
   const wasIds = linkedRecordIds(fields["Weekly Athlete Summary"]).slice(0, 20);
   const unlockIds = linkedRecordIds(fields["Athlete Achievement Unlocks"]).slice(0, 50);
   const homeworkCompletionIds = linkedRecordIds(fields["Homework Completions"]);
+  const awardRecipientIds = linkedRecordIds(fields["Award Recipients"]).slice(0, 30);
   const enrollmentGradeBandId = linkedRecordIds(fields["Grade Band"])[0] ?? null;
 
   function recordIdOrFilter(ids: string[]): string | null {
@@ -806,8 +815,34 @@ export async function fetchPublicAthleteProfileBySlug(
 
   const wasFilter = recordIdOrFilter(wasIds);
   const unlockFilter = recordIdOrFilter(unlockIds);
+  const awardIdFilter = recordIdOrFilter(awardRecipientIds);
 
-  const [wasResponse, unlockResponse, xpActivity, leaderboard, linkedLevelsResponse, levelLadder, homeworkAssignmentsResult] =
+  async function loadPublicAwards(): Promise<
+    Array<{ id: string; fields: AwardRecipientPublicationFields }>
+  > {
+    if (!awardIdFilter) return [];
+    // Server-side filter: Public On Web must be true. Fail closed if field unavailable.
+    const combined = `AND(${awardIdFilter},${PUBLIC_ON_WEB_FILTER_FORMULA})`;
+    try {
+      const response = await listAirtableRecords<AwardRecipientPublicationFields>({
+        tableName: PUBLIC_AIRTABLE_TABLES.awardRecipients.name,
+        maxRecords: awardRecipientIds.length,
+        fields: [...PUBLIC_AWARD_RECIPIENT_FIELDS],
+        filterByFormula: combined,
+        sort: [{ field: "Date Awarded", direction: "desc" }],
+        revalidateSeconds: PUBLIC_PROFILE_REVALIDATE_SECONDS,
+      });
+      return response.records;
+    } catch (error) {
+      console.warn(
+        `[public-athlete-profile] Award Recipients public load failed (field ${AWARD_RECIPIENT_PUBLICATION_FIELD} may be missing/renamed). Failing closed.`,
+        error instanceof Error ? error.message : "unknown",
+      );
+      return [];
+    }
+  }
+
+  const [wasResponse, unlockResponse, xpActivity, leaderboard, linkedLevelsResponse, levelLadder, homeworkAssignmentsResult, awardRecords] =
     await Promise.all([
     wasFilter
       ? listAirtableRecords<PublicWasFields>({
@@ -854,6 +889,7 @@ export async function fetchPublicAthleteProfileBySlug(
       console.error("[public-athlete-profile] Homework assignments load failed:", error);
       return { rows: [] as PublicHomeworkAssignment[], failed: true as const };
     }),
+    loadPublicAwards(),
   ]);
 
   const homeworkAssignments = homeworkAssignmentsResult.rows;
@@ -1001,5 +1037,6 @@ export async function fetchPublicAthleteProfileBySlug(
     }),
     homeworkAssignments,
     achievements: mapPublicAchievements(visibleUnlocks, defsById),
+    awards: listPublicAwardsForEnrollment(awardRecords),
   });
 }

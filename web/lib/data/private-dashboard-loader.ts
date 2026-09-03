@@ -136,6 +136,7 @@ const PRIVATE_AR_FIELDS = [
   "Coach Feedback - Awards",
   "Week",
   "Tremendous Test Record?",
+  "Public On Web",
 ] as const;
 
 const ACHIEVEMENT_DEF_FIELDS = ["Achievement Name", "Badge Icon Name"] as const;
@@ -190,6 +191,7 @@ type AwardRecipientFields = {
   "Coach Feedback - Awards"?: unknown;
   Week?: unknown;
   "Tremendous Test Record?"?: unknown;
+  "Public On Web"?: unknown;
 };
 
 function mapVideoFeedbackStatus(fields: VideoFeedbackFields): DashboardVideoFeedbackItem["status"] {
@@ -269,7 +271,8 @@ function mapAwardRecords(
           null,
         scope: selectName(fields["Award Scope"], "") || null,
         weekLabel,
-        publiclyVisible: ["Approved", "Sent", "Delivered"].includes(status),
+        // Public badge uses Public On Web only — never Award Status.
+        publiclyVisible: asBoolean(fields["Public On Web"]) === true,
       };
     })
     .sort((a, b) => String(b.awardDate ?? "").localeCompare(String(a.awardDate ?? "")));
@@ -485,6 +488,19 @@ export async function loadPrivateAthleteDashboardPayload(
             filterByFormula: recordIdFormula(awardRecipientIds),
             sort: [{ field: "Date Awarded", direction: "desc" }],
             revalidateSeconds: REVALIDATE_SECONDS,
+          }).catch(async () => {
+            // Public On Web may not exist under that exact casing yet — load private details without it.
+            const fieldsWithoutPublication = PRIVATE_AR_FIELDS.filter(
+              (name) => name !== "Public On Web",
+            );
+            return listAirtableRecords<AwardRecipientFields>({
+              tableName: PUBLIC_AIRTABLE_TABLES.awardRecipients.name,
+              maxRecords: awardRecipientIds.length,
+              fields: [...fieldsWithoutPublication],
+              filterByFormula: recordIdFormula(awardRecipientIds),
+              sort: [{ field: "Date Awarded", direction: "desc" }],
+              revalidateSeconds: REVALIDATE_SECONDS,
+            });
           })
         : Promise.resolve({ records: [] as Array<{ id: string; fields: AwardRecipientFields }> }),
       loadXpActivityForEnrollment(enrollment.enrollmentId, { maxRows: 100 }),

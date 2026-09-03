@@ -412,7 +412,7 @@ export function AthleteDashboardView({
                 <div className="flex items-start justify-between gap-3">
                   <h3 className="text-lg font-bold text-foreground">{award.awardName}</h3>
                   <StatusBadge tone={award.publiclyVisible ? "success" : "neutral"}>
-                    {award.recipientStatus}
+                    {award.publiclyVisible ? "On public profile" : award.recipientStatus}
                   </StatusBadge>
                 </div>
                 {award.weekLabel ? (

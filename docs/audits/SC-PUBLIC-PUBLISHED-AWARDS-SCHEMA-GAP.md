@@ -1,38 +1,22 @@
-# SC — Public published awards (schema gap)
+# SC — Public published awards (schema status)
 
-**Date:** 2026-09-03  
-**Branch:** `feature/public-published-awards`  
-**Base:** `appn84sqPw03zEbTT` · Award Recipients `tblTyQXl8aEP93ubK`
+**Updated:** 2026-09-03  
+**Supersedes:** earlier “field missing” finding  
 
-## Finding — publication field missing
+## Live Production
 
-Live MCP `get_table_schema` + `docs/audits/field-inventory/_raw/meta_tables.json` show **no** Public / Published / OK-to-publish field on **Award Recipients**.
+Award Recipients has checkbox field id `fldqX3U52KrfOKhua`.
 
-Checked candidate names (none present on Award Recipients):
+| Current live name | Required exact name for web |
+|-------------------|-----------------------------|
+| `Public on Web` (lowercase “on”) | **`Public On Web`** |
 
-- `Published?`
-- `Public?` / `Public`
-- `OK to Publish` / `OK to Publish on Softr`
-- `Show on Public Profile?` / `Include on Public Profile?`
+Airtable API names are case-sensitive. Mike must rename in the UI to **`Public On Web`**.
 
-### Related Awards catalog fields (do **not** reuse for public web)
+## Web
 
-On **Awards** (`tbltlhInAQPtOB8hx`), these control weekly/overall **email summary** sections, not public website publication:
+- Constant: `AWARD_RECIPIENT_PUBLICATION_FIELD = "Public On Web"` in `web/lib/data/public-awards.ts`
+- Public profile loads only rows with `Public On Web` true (server-side formula + fail-closed)
+- Private dashboard still loads full authorized award details; `publiclyVisible` uses Public On Web only (never Award Status)
 
-- `Include in Overall Awards Section?` (`fld3iYVye7jgqXAh6`)
-- `Include in Weekly Awards Section?` (`fld3yQWw1Jb2Thy5n`)
-- `Eligible for Weekly Summary?` / `Eligible for Overall Summary?`
-
-## Product rule (code)
-
-- Public award display is gated by `AWARD_RECIPIENT_PUBLICATION_FIELD` in `web/lib/data/public-awards.ts`.
-- Field is currently `null` → `listPublicAwardsForEnrollment` always returns `[]`.
-- Private dashboard Award Recipients loading is unchanged (authorized enrollment only).
-
-## Mike action required
-
-1. Confirm whether public athlete pages should show season awards at all.
-2. If yes, add an explicit Award Recipients checkbox (recommended name: **`Published?`**) — or confirm an existing field if one is added later.
-3. After the field exists, tell Cursor the exact field name + id so `AWARD_RECIPIENT_PUBLICATION_FIELD` can be set and public mapping enabled (still excluding parent email, Tremendous ids, and internal notes).
-
-**Do not** create Airtable fields from this PR.
+See: [`docs/deploy-checklists/award-recipients-public-on-web.md`](../deploy-checklists/award-recipients-public-on-web.md)

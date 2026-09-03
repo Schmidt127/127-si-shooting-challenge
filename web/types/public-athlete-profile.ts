@@ -159,6 +159,15 @@ export type PublicAchievement = {
   badgeIconName: string | null;
 };
 
+/** Public-safe season award — never amounts, status, emails, or Airtable ids. */
+export type PublicAthleteAward = {
+  key: string;
+  awardName: string;
+  awardDate: string | null;
+  scopeLabel: string | null;
+  description: string | null;
+};
+
 export type PublicAthleteProfile = {
   identity: PublicAthleteIdentity;
   performance: PublicPerformanceSummary;
@@ -177,6 +186,8 @@ export type PublicAthleteProfile = {
   weekly: PublicWeeklySummary[];
   homeworkAssignments: PublicHomeworkAssignment[];
   achievements: PublicAchievement[];
+  /** Season awards explicitly marked Public On Web — never private amounts/status. */
+  awards: PublicAthleteAward[];
   fetchedAt: string;
   mayBeStale: boolean;
 };
