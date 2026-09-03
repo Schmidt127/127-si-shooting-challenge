@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   getMockAthleteDashboard,
+  loadAthleteDashboard,
   weeklyShotPercent,
 } from "@/lib/data/athlete-dashboard";
 import { formatXpSourceLabel } from "@/lib/formatters";
@@ -41,5 +42,11 @@ describe("athlete-dashboard mock readiness", () => {
     expect(weeklyShotPercent(10, 0)).toBe(0);
     expect(weeklyShotPercent(Number.NaN, 100)).toBe(0);
     expect(weeklyShotPercent(50, 100)).toBe(50);
+  });
+
+  it("rejects enrollmentId URL params until SC-112 athlete auth", () => {
+    expect(() =>
+      loadAthleteDashboard({ enrollmentId: "recABCDEFGHIJKLMN" }),
+    ).toThrow(/SC-112/i);
   });
 });

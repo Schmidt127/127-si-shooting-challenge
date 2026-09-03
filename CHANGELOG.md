@@ -33,6 +33,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **SC-112 dashboard privacy gate (2026-09-03)** — `/dashboard` shows coming-soon copy only (no mock/live athlete data; `enrollmentId`/`slug` query params ignored). `/dashboard/preview` blocked in production unless `SITE_ACCESS_TOKEN` staff gate or local dev; visitor errors are parent-friendly with diagnostics server-side only. Tests: `dashboard-privacy.spec.ts`, updated production smoke.
 - **FUT-008 video display filename (2026-09-01)** — Game Log and XP activity presentation use `web/lib/video-display-filename.ts` (mirror of `lib/video-display-filename/`). Exposes `videoDisplayFileName` plus raw `videoCustomFileName` / `videoOriginalFileName` on XP rows. No URL, S3, or playback changes.
 
 ### Airtable

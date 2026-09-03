@@ -59,6 +59,14 @@ export const ADMIN_PLACEHOLDER = {
   allowsWrites: false,
 } as const;
 
+/** SC-112 — athlete sign-in not implemented; do not show mock or live private data. */
+export const DASHBOARD_PLACEHOLDER = {
+  title: "Athlete dashboard coming soon",
+  description:
+    "Personal XP history, weekly progress, homework status, and coach feedback will appear here after athlete sign-in is enabled. Until then, use the season leaderboard and your published athlete profile when available.",
+  exposesParticipantData: false,
+} as const;
+
 export const EMPTY_STATE_COPY = {
   leaderboard: {
     title: "Leaderboard warming up",

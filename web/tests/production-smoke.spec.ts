@@ -252,7 +252,7 @@ test.describe("production smoke — navigation, assets, basePath", () => {
 test.describe("production smoke — athlete surfaces (read-only demo)", () => {
   test.use({ viewport: VIEWPORTS.desktop });
 
-  test("athlete dashboard shows weekly summary and video feedback sections", async ({
+  test("athlete dashboard shows coming-soon state without mock athlete data", async ({
     page,
   }) => {
     const response = await page.goto("dashboard", {
@@ -260,11 +260,22 @@ test.describe("production smoke — athlete surfaces (read-only demo)", () => {
     });
     await expectHealthyResponse(response, "dashboard");
     await expectSingleHeading(page, "dashboard");
-    await expect(page.getByText(/Weekly summary/i).first()).toBeVisible();
-    await expect(page.getByText(/Video feedback/i).first()).toBeVisible();
-    await expect(page.getByText(/Homework/i).first()).toBeVisible();
-    // Dashboard remains sample preview until SC-112 auth — smoke accepts preview labels.
-    await expect(page.getByText(/Sample preview|sample preview/i).first()).toBeVisible();
+    await expect(page.getByText(/Athlete dashboard coming soon/i).first()).toBeVisible();
+    await expect(page.getByText(/Jordan Reyes/i)).toHaveCount(0);
+    await expect(page.getByText(/Sample preview/i)).toHaveCount(0);
+  });
+
+  test("dashboard ignores enrollmentId query params for anonymous visitors", async ({
+    page,
+  }) => {
+    const response = await page.goto("dashboard?enrollmentId=recABCDEFGHIJKLMN", {
+      waitUntil: "domcontentloaded",
+    });
+    await expectHealthyResponse(response, "dashboard");
+    const bodyText = (await page.locator("body").innerText()) ?? "";
+    expect(bodyText).not.toMatch(/\brec[a-zA-Z0-9]{14,}\b/);
+    await expect(page.getByText(/Jordan Reyes/i)).toHaveCount(0);
+    await expect(page.getByText(/Athlete dashboard coming soon/i).first()).toBeVisible();
   });
 
   test("levels and achievements catalogs render", async ({ page }) => {
