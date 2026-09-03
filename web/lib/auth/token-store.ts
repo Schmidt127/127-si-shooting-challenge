@@ -93,7 +93,8 @@ class UpstashMagicLinkTokenStore implements MagicLinkTokenStore {
     | { status: "used" }
   > {
     const key = `athlete-magic:${hash}`;
-    const payload = await this.command(["get", key]);
+    // GETDEL is atomic — prevents concurrent verify requests from both succeeding.
+    const payload = await this.command(["getdel", key]);
     if (typeof payload !== "object" || payload === null || !("result" in payload)) {
       return { status: "missing" };
     }
@@ -104,17 +105,13 @@ class UpstashMagicLinkTokenStore implements MagicLinkTokenStore {
     try {
       record = JSON.parse(raw) as StoredMagicLinkToken;
     } catch {
-      await this.command(["del", key]);
       return { status: "missing" };
     }
 
     if (record.usedAt) return { status: "used" };
     if (record.expiresAt <= now) return { status: "expired" };
 
-    record.usedAt = now;
-    const ttlMs = Math.max(1, record.expiresAt - now);
-    await this.command(["set", key, JSON.stringify(record), "PX", String(Math.ceil(ttlMs))]);
-    return { status: "ok", record };
+    return { status: "ok", record: { ...record, usedAt: now } };
   }
 
   async clear(): Promise<void> {

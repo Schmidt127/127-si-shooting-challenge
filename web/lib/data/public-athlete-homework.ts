@@ -1,6 +1,9 @@
 /**
  * Map active Program Homework Assignments + Homework Completions → public profile rows.
  * Scope: Registering Shooting Challenge PI (2026–2027), Active PHA only, athlete grade band.
+ *
+ * Privacy (public-data-rules): public rows may show completion status / XP totals only.
+ * Coach notes and secure submission URLs belong on the authenticated family dashboard.
  */
 
 import {
@@ -13,6 +16,7 @@ import {
   lookupItems,
   selectName,
 } from "@/lib/data/airtable-values";
+import { opaqueDashboardKey } from "@/lib/data/opaque-dashboard-key";
 import { challengeTodayDateKey } from "@/lib/data/public-athlete-profile";
 import { parseWeekNumber, resolvePublicAssignmentName } from "@/lib/data/homework";
 import type {
@@ -251,7 +255,7 @@ export function buildPublicHomeworkAssignments(input: {
     const slot = selectName(pha.fields["Homework Slot"], "");
 
     rows.push({
-      key: `pha-${pha.id}`,
+      key: opaqueDashboardKey("pha", pha.id),
       assignmentName: resolveAssignmentDisplayName(libraryFields),
       description: resolveAssignmentDescription(libraryFields),
       weekLabel: weekMeta?.name ?? "Week",
@@ -260,14 +264,13 @@ export function buildPublicHomeworkAssignments(input: {
       completionStatusLabel: completionStatusLabel(completionStatus),
       submissionDate,
       xpAwarded,
-      coachFeedback: asText(completion?.["Coach Feedback"], "") || null,
+      // Auth-only: coach notes + secure reviewer URLs stay off public HTML.
+      coachFeedback: null,
       creditEligible: credit.creditEligible,
       pastDue: credit.pastDue,
       lateSubmission: credit.lateSubmission,
       homeworkDetailHref: homeworkId ? `/homework/${homeworkId}` : null,
-      viewSubmittedHomeworkHref: resolveViewSubmittedHomeworkHref(
-        completion?.["Submission Asset: Reviewer File URL (lookup)"],
-      ),
+      viewSubmittedHomeworkHref: null,
       sortWeekStart: weekMeta?.startDate ?? null,
       sortSlot: homeworkSlotOrder(slot),
       sortOrder: Number.isFinite(order) ? order : 0,
