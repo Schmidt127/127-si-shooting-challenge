@@ -3,7 +3,8 @@
  * Parent-email Live cutover — preflight + disposable path verification.
  *
  *   node tools/testing/parent-email-live-cutover.mjs preflight
- *   node tools/testing/parent-email-live-cutover.mjs verify-all [--apply]
+ *   node tools/testing/parent-email-live-cutover.mjs cleanup-welcome
+ *   node tools/testing/parent-email-live-cutover.mjs verify-all [--apply] [--skip-welcome]
  *
  * Safety: only schmidt@fairfieldbasketballclub.com; disposable VERIFY rows;
  * never logs secrets.
@@ -18,6 +19,10 @@ import {
   ROOT,
 } from "./lib/airtable-client.mjs";
 import { bootstrapDisposableEnrollment, cleanupBootstrapManifest } from "./lib/post-fut030-bootstrap.mjs";
+import {
+  cleanupScopedWelcome,
+  runRemainingPathApplies,
+} from "./lib/parent-email-path-verify.mjs";
 
 const SAFE_EMAIL = "schmidt@fairfieldbasketballclub.com";
 const HUB_HEALTH_URL = "https://communications-two-blue.vercel.app/api/health";
@@ -243,18 +248,41 @@ async function runPreflight() {
   if (report.stopReasons.length) process.exit(2);
 }
 
-async function runVerifyAll(apply) {
+async function runCleanupWelcome() {
+  const { token, baseId } = requireToken();
+  const report = await cleanupScopedWelcome(token, baseId, {
+    athleteId: "recAPXHpWRINmxl6R",
+    enrollmentId: "recVOEATdGqpydWCs",
+  });
+  mkdirSync(EVIDENCE_DIR, { recursive: true });
+  writeFileSync(
+    resolve(EVIDENCE_DIR, `${new Date().toISOString().slice(0, 10)}-cleanup-welcome.json`),
+    `${JSON.stringify(report, null, 2)}\n`
+  );
+  console.log(JSON.stringify(report, null, 2));
+  if (report.errors?.length) process.exit(2);
+}
+
+async function runVerifyAll(apply, skipWelcome) {
   const { token, baseId } = requireToken();
   const results = {
     at: new Date().toISOString(),
     apply,
+    skipWelcome,
     recipientSync: await ensureDisposableRecipient(token, baseId, apply),
     paths: {},
   };
-  if (apply) results.paths.WELCOME = await verifyWelcome(token, baseId);
-  for (const path of Object.keys(EVENT_MAP)) {
-    if (path === "WELCOME" && apply) continue;
-    results.paths[path] = await verifyPathFromExisting(token, baseId, path);
+  if (apply && !skipWelcome) results.paths.WELCOME = await verifyWelcome(token, baseId);
+  if (apply && skipWelcome) {
+    const applied = await runRemainingPathApplies(token, baseId);
+    results.manifest = applied.manifest;
+    results.bootstrapCleanup = applied.bootstrapCleanup;
+    results.paths = applied.paths;
+  } else {
+    for (const path of Object.keys(EVENT_MAP)) {
+      if (path === "WELCOME" && apply && !skipWelcome) continue;
+      results.paths[path] = await verifyPathFromExisting(token, baseId, path);
+    }
   }
   mkdirSync(EVIDENCE_DIR, { recursive: true });
   writeFileSync(
@@ -266,9 +294,11 @@ async function runVerifyAll(apply) {
 
 const cmd = process.argv[2];
 const apply = process.argv.includes("--apply");
+const skipWelcome = process.argv.includes("--skip-welcome");
 if (cmd === "preflight") await runPreflight();
-else if (cmd === "verify-all") await runVerifyAll(apply);
+else if (cmd === "cleanup-welcome") await runCleanupWelcome();
+else if (cmd === "verify-all") await runVerifyAll(apply, skipWelcome);
 else {
-  console.log("Usage: preflight | verify-all [--apply]");
+  console.log("Usage: preflight | cleanup-welcome | verify-all [--apply] [--skip-welcome]");
   process.exit(1);
 }
