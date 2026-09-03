@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { withBasePath } from "@/lib/app-config";
 import { clearAthleteSessionCookie } from "@/lib/auth/magic-link-service";
 
 export const runtime = "nodejs";
@@ -10,6 +11,6 @@ export async function POST(): Promise<Response> {
 
   return NextResponse.json({
     ok: true,
-    redirectTo: "/dashboard/sign-in",
+    redirectTo: withBasePath("/dashboard/sign-in"),
   });
 }

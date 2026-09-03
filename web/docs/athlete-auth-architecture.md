@@ -11,7 +11,7 @@ Authority: [ATHLETE-AUTH-DECISION.md](../../docs/overnight/web-integration/ATHLE
 | Identity | `Parent Email - Cleaned` on Enrollments | Already verified at registration; parent-mediated; no child passwords |
 | Session | HMAC-signed httpOnly cookie | Same proven pattern as `SITE_ACCESS_TOKEN` cookie handling in `web/lib/security/` |
 | Magic-link token | 32-byte random, SHA-256 hash stored server-side, single-use, 15-minute TTL (configurable) | Meets single-use + no plaintext storage requirements |
-| Token store | In-memory (dev/tests) or Upstash Redis (production multi-instance) | Serverless-safe invalidation; no Airtable writes |
+| Token store | In-memory (dev/tests) or **Upstash Redis (required in Production)** | Serverless-safe invalidation; no Airtable writes |
 | Email delivery | Direct Resend API from Vercel route handler | See bypass note below |
 | Feature gate | `ATHLETE_AUTH_ENABLED` must be `true` | Preserves mock/sample dashboard until Mike enables auth |
 
@@ -46,8 +46,8 @@ Magic-link auth email is **web-initiated, synchronous, and single-recipient**. I
 | `ATHLETE_AUTH_TEST_RECIPIENT` | Default `schmidt@fairfieldbasketballclub.com` |
 | `RESEND_API_KEY` | Resend API key for magic-link sends |
 | `RESEND_FROM_EMAIL` | Verified sender address in Resend |
-| `UPSTASH_REDIS_REST_URL` | Optional — shared token store across Vercel instances |
-| `UPSTASH_REDIS_REST_TOKEN` | Optional — pairs with URL above |
+| `UPSTASH_REDIS_REST_URL` | **Required in Production** — shared token store across Vercel instances |
+| `UPSTASH_REDIS_REST_TOKEN` | **Required in Production** — pairs with URL above |
 | `ATHLETE_AUTH_DEV_BYPASS` | Non-production only — skip email, log magic link to server console |
 
 Existing vars unchanged: `AIRTABLE_API_TOKEN`, `AIRTABLE_BASE_ID`, `SITE_ACCESS_TOKEN`, `NEXT_PUBLIC_*`.

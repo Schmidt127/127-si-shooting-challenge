@@ -1,0 +1,31 @@
+import { describe, expect, it } from "vitest";
+
+import { buildAbsoluteAuthRedirectUrl } from "@/lib/auth/redirect-url";
+
+describe("buildAbsoluteAuthRedirectUrl", () => {
+  it("includes /shoot basePath and origin from the incoming request", () => {
+    const request = new Request(
+      "https://www.fairfieldbasketballclub.com/shoot/api/auth/verify?token=abc",
+    );
+
+    expect(buildAbsoluteAuthRedirectUrl(request, "/dashboard")).toBe(
+      "https://www.fairfieldbasketballclub.com/shoot/dashboard",
+    );
+  });
+
+  it("preserves query params without exposing the magic-link token", () => {
+    const request = new Request(
+      "https://www.fairfieldbasketballclub.com/shoot/api/auth/verify?token=secret-token",
+    );
+
+    const url = buildAbsoluteAuthRedirectUrl(request, "/dashboard/sign-in", {
+      error: "invalid",
+    });
+
+    expect(url).toBe(
+      "https://www.fairfieldbasketballclub.com/shoot/dashboard/sign-in?error=invalid",
+    );
+    expect(url).not.toContain("token=");
+    expect(url).not.toContain("secret-token");
+  });
+});

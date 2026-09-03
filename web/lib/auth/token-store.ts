@@ -1,4 +1,8 @@
-import { getMagicLinkTokenTtlMs, hasUpstashRedisConfig } from "@/lib/auth/config";
+import {
+  getMagicLinkTokenTtlMs,
+  hasUpstashRedisConfig,
+  isMagicLinkTokenStoreAvailable,
+} from "@/lib/auth/config";
 
 export type StoredMagicLinkToken = {
   parentEmail: string;
@@ -118,6 +122,24 @@ class UpstashMagicLinkTokenStore implements MagicLinkTokenStore {
   }
 }
 
+/**
+ * Production without Upstash cannot share tokens across serverless instances.
+ * save() rejects so magic-link email is never sent with an unusable token.
+ */
+class UnavailableMagicLinkTokenStore implements MagicLinkTokenStore {
+  async save(): Promise<void> {
+    throw new Error("Magic link token store unavailable in production without Upstash Redis");
+  }
+
+  async consume(): Promise<{ status: "missing" }> {
+    return { status: "missing" };
+  }
+
+  async clear(): Promise<void> {
+    // no-op
+  }
+}
+
 let singletonStore: MagicLinkTokenStore | null = null;
 
 export function getMagicLinkTokenStore(): MagicLinkTokenStore {
@@ -128,6 +150,8 @@ export function getMagicLinkTokenStore(): MagicLinkTokenStore {
       process.env.UPSTASH_REDIS_REST_URL!.trim(),
       process.env.UPSTASH_REDIS_REST_TOKEN!.trim(),
     );
+  } else if (process.env.NODE_ENV === "production") {
+    singletonStore = new UnavailableMagicLinkTokenStore();
   } else {
     singletonStore = new InMemoryMagicLinkTokenStore();
   }
