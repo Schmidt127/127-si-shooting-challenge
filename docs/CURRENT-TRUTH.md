@@ -385,3 +385,15 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Integrity audit | [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md) |
 | Archived / superseded | [`ARCHIVED-AND-SUPERSEDED-FILES.md`](./ARCHIVED-AND-SUPERSEDED-FILES.md) |
 | Security / sensitive | [`SECURITY-AND-SENSITIVE-FILES.md`](./SECURITY-AND-SENSITIVE-FILES.md) |
+
+
+---
+
+## Overlay - Agent 1 SC-112 multi-child live finalization (2026-09-03)
+
+- Repo tip for this pass: origin/master **9a68281e**
+- Status: **PARTIAL** + **NEEDS-MIKE** (inbox) + **NEEDS-PRODUCTION-PROOF** (authenticated select/switch)
+- Evidence: [audits/SC-112-multi-child-live-a1-final-20260903.md](./audits/SC-112-multi-child-live-a1-final-20260903.md)
+- Tests: Vitest auth **56/56**; Production Playwright multi-child/privacy **12 passed / 4 skipped**
+- Airtable: **0** creates this pass; **3** Active enrollments already sharing approved parent
+- Controlled magic-link **request** sent (approved test-recipient category only); inbox click remains Mike
