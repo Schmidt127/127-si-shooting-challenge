@@ -1,8 +1,8 @@
 /**
- * Dashboard and XP preview access control (pre-SC-112).
+ * Dashboard and XP preview access control (SC-112).
  *
- * Athlete authentication is not implemented. Live enrollment-scoped data must
- * never be reachable by anonymous visitors supplying an enrollmentId in the URL.
+ * Live enrollment-scoped athlete dashboard data requires a valid parent
+ * athlete_session cookie. Anonymous visitors must not reach private data via URL params.
  */
 
 import {
@@ -31,7 +31,7 @@ export function canAccessDashboardPreview(request: Request): boolean {
   return isSiteAccessAuthorized(request);
 }
 
-/** Live athlete dashboard data requires SC-112 — never true today. */
+/** Live athlete dashboard data requires a valid athlete_session cookie. */
 export function canLoadLiveAthleteDashboardData(request: Request): boolean {
   return hasAthleteSession(request);
 }

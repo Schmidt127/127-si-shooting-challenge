@@ -33,6 +33,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Web
 
+#### Added
+- **SC-112 authenticated athlete dashboard (2026-09-03)** — Private family dashboard at `/shoot/dashboard` when `ATHLETE_AUTH_ENABLED=true`: live Airtable panels for enrollment, homework (secure reviewer links), video feedback, filterable XP activity, weekly progress, awards, and season overview. Session-scoped `athlete_session`; URL `enrollmentId` only when in session allowlist. Coming-soon placeholder when auth disabled.
+
 #### Fixed
 - **SC-112 magic-link verify redirect (2026-09-03)** — Production `GET /shoot/api/auth/verify` returned 500 because Next.js route handlers require absolute redirect URLs; success and error paths now redirect to `/shoot/dashboard` and `/shoot/dashboard/sign-in` without leaking the token query param. Production token store fails closed without Upstash Redis (in-memory cannot share tokens across serverless invocations). Tests: `verify-route.test.ts`, `redirect-url.test.ts`, extended `auth.test.ts`.
 
