@@ -5,6 +5,11 @@
 import { resolvePublicEnrollmentIdBySlug } from "@/lib/airtable/queries";
 import { mapXpSummariesToPublicActivity } from "@/lib/data/public-athlete-profile";
 import {
+  filterXpSummariesByCategory,
+  parseGameLogCategoryParam,
+  type GameLogCategoryId,
+} from "@/lib/data/game-log-categories";
+import {
   GAME_LOG_MAX_FETCH,
   GAME_LOG_PAGE_SIZE,
   GameLogCursorError,
@@ -20,13 +25,23 @@ export type PublicGameLogPage = {
   totalCount: number;
   hasMore: boolean;
   nextCursor: string | null;
+  /** Active category filter slug, or null for all public-safe activity. */
+  category: GameLogCategoryId | null;
 };
 
 export type PublicGameLogPageResult =
   | { status: "ok"; page: PublicGameLogPage }
   | { status: "not_found" }
   | { status: "invalid_cursor"; message: string }
+  | { status: "invalid_category"; message: string }
   | { status: "error"; message: string };
+
+export type FetchPublicGameLogPageOptions = {
+  cursor?: string | null;
+  pageSize?: number;
+  /** Stable category slug from `?category=` — never an Airtable id. */
+  category?: GameLogCategoryId | null;
+};
 
 function parsePageSize(raw: string | null): number {
   if (!raw) return GAME_LOG_PAGE_SIZE;
@@ -37,9 +52,18 @@ function parsePageSize(raw: string | null): number {
 
 export async function fetchPublicGameLogPage(
   rawSlug: string,
-  cursor: string | null,
-  pageSize = GAME_LOG_PAGE_SIZE,
+  cursorOrOptions: string | null | FetchPublicGameLogPageOptions = null,
+  pageSizeArg = GAME_LOG_PAGE_SIZE,
 ): Promise<PublicGameLogPageResult> {
+  const options: FetchPublicGameLogPageOptions =
+    cursorOrOptions && typeof cursorOrOptions === "object"
+      ? cursorOrOptions
+      : { cursor: cursorOrOptions ?? null, pageSize: pageSizeArg };
+
+  const cursor = options.cursor ?? null;
+  const pageSize = options.pageSize ?? GAME_LOG_PAGE_SIZE;
+  const category = options.category ?? null;
+
   try {
     const enrollmentId = await resolvePublicEnrollmentIdBySlug(rawSlug);
     if (!enrollmentId) {
@@ -52,7 +76,8 @@ export async function fetchPublicGameLogPage(
       revalidateSeconds: REVALIDATE_SECONDS,
     });
 
-    const paginated = paginateSortedXpSummaries(xpActivity.rows, {
+    const filteredRows = filterXpSummariesByCategory(xpActivity.rows, category);
+    const paginated = paginateSortedXpSummaries(filteredRows, {
       cursor,
       pageSize,
     });
@@ -61,9 +86,10 @@ export async function fetchPublicGameLogPage(
       status: "ok",
       page: {
         rows: mapXpSummariesToPublicActivity(paginated.pageRows),
-        totalCount: xpActivity.totalAvailableRows,
+        totalCount: filteredRows.length,
         hasMore: paginated.hasMore,
         nextCursor: paginated.nextCursor,
+        category,
       },
     };
   } catch (error) {
@@ -80,3 +106,5 @@ export async function fetchPublicGameLogPage(
 export function parseGameLogPageSizeFromQuery(raw: string | null): number {
   return parsePageSize(raw);
 }
+
+export { parseGameLogCategoryParam };

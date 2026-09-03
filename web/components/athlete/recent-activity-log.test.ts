@@ -28,6 +28,20 @@ function renderLog(items: PublicActivityItem[]) {
   );
 }
 
+describe("Game Log category filter UI", () => {
+  it("exposes category filter chips with stable slug test ids", () => {
+    const html = renderLog(
+      mapXpSummariesToPublicActivity([
+        xpRow({ id: "recPublicXp000001" }),
+      ]),
+    );
+    expect(html).toContain('data-testid="game-log-category-filter"');
+    expect(html).toContain('data-testid="game-log-category-shooting-submission"');
+    expect(html).toContain('data-testid="game-log-category-manual-award"');
+    expect(html).not.toContain("recPublicXp");
+  });
+});
+
 describe("XP Event Log presentation", () => {
   it("does not display Date: in the markup", () => {
     const items = mapXpSummariesToPublicActivity([

@@ -71,4 +71,26 @@ describe("XpActivityTable", () => {
     expect(html).toContain("+160 XP");
     expect(html).toContain("2026-08-22 · Extra credit +125 XP");
   });
+
+  it("renders category filter controls without leaking record ids", () => {
+    const html = renderToStaticMarkup(
+      createElement(XpActivityTable, {
+        rows: [
+          row({ id: "recSecretXp000001", sourceLabel: "Submission Base" }),
+          row({
+            id: "recSecretXp000002",
+            sourceLabel: "Homework Completion",
+            reasonPublic: "Homework completed.",
+            homeworkAssignmentTitle: "Film Study",
+          }),
+        ],
+      }),
+    );
+
+    expect(html).toContain('data-testid="game-log-category-filter"');
+    expect(html).toContain('data-testid="game-log-category-homework"');
+    expect(html).toContain("Shot Submission");
+    expect(html).toContain("Homework Completed");
+    expect(html).not.toContain("recSecretXp");
+  });
 });
