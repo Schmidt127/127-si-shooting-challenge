@@ -24,6 +24,9 @@ export const PUBLIC_AIRTABLE_TABLES = {
   zoomMeetings: { name: "Zoom Meetings", id: "tblWcSHEm8vNNIxyB" },
   xpRewardRules: { name: "XP Reward Rules", id: null },
   videoFeedback: { name: "Video Feedback", id: "tblOV6pJDxQFBSQ3q" },
+  awards: { name: "Awards", id: "tbltlhInAQPtOB8hx" },
+  awardRecipients: { name: "Award Recipients", id: "tblTyQXl8aEP93ubK" },
+  zoomAttendance: { name: "Zoom Attendance", id: "tblg8DPRu3j0dbuwi" },
 } as const;
 
 /** Season selection filter — historical Config rows are intentional and must not gate the site. */
