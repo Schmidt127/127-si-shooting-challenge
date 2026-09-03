@@ -9,6 +9,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Added
+- **SC-112 multi-child parent authentication (2026-09-03)** — Session `v:2` stores server-only `selectedEnrollmentId`. One active enrollment opens `/dashboard` directly; multiple enrollments use `/dashboard/select` with opaque HMAC selection keys via `POST /api/auth/select-enrollment`. Family switcher no longer uses `?enrollmentId=rec…`. Live Active? + parent-email re-check on every load/switch. Docs: `web/docs/athlete-auth-architecture.md`.
 - **SC-149 Family Dashboard navigation (2026-09-03)** — Public “Family Dashboard” entry to `/shoot/dashboard/sign-in` (Next.js `basePath`-aware) in the program header (desktop/tablet), mobile menu, footer quick links, homepage parent section, and FAQ get-started section. Outline/secondary styling stays below primary Register and Leaderboard actions. Private `/shoot/dashboard` data remains auth-gated. No Airtable, automation, email, AWS, or env-var changes.
 
 ### Airtable

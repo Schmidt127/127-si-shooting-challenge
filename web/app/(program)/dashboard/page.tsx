@@ -5,7 +5,8 @@ import { SignOutButton } from "@/components/auth/sign-out-button";
 import { AthleteDashboardView } from "@/components/dashboard/athlete-dashboard-view";
 import { CtaLink, ProgramPage } from "@/components/site";
 import { EmptyState, ErrorState } from "@/components/ui";
-import { isAthleteAuthConfigured } from "@/lib/auth/config";
+import { getAthleteAuthSecret, isAthleteAuthConfigured } from "@/lib/auth/config";
+import { mintEnrollmentSelectionKey } from "@/lib/auth/selection-token";
 import { getAthleteSessionFromCookies } from "@/lib/auth/server-session";
 import { loadAuthenticatedAthleteDashboard } from "@/lib/data/athlete-dashboard";
 import { XpActivityLoadError } from "@/lib/data/xp-activity-loader";
@@ -27,25 +28,27 @@ type AthleteDashboardPageProps = {
 export default async function AthleteDashboardPage({ searchParams }: AthleteDashboardPageProps) {
   const { enrollmentId, slug } = await searchParams;
 
+  // Legacy bookmarks with ?enrollmentId=rec… — strip to a clean private URL (IDs never authorize).
+  if (enrollmentId?.trim() || slug?.trim()) {
+    redirect("/dashboard");
+  }
+
   if (isAthleteAuthConfigured()) {
     const session = await getAthleteSessionFromCookies();
     if (!session) {
       redirect("/dashboard/sign-in");
     }
 
-    try {
-      const result = await loadAuthenticatedAthleteDashboard({
-        session,
-        urlEnrollmentId: enrollmentId?.trim() || undefined,
-      });
+    const secret = getAthleteAuthSecret();
+    if (!secret) {
+      redirect("/dashboard/sign-in");
+    }
 
-      if (result.status === "forbidden") {
-        return (
-          <ErrorState
-            title="Access denied"
-            message="That dashboard link is not authorized for your family sign-in. Open the dashboard without changing the enrollment link, or request a new sign-in email."
-          />
-        );
+    try {
+      const result = await loadAuthenticatedAthleteDashboard({ session });
+
+      if (result.status === "needs_selection") {
+        redirect("/dashboard/select");
       }
 
       if (result.status === "empty") {
@@ -57,10 +60,22 @@ export default async function AthleteDashboardPage({ searchParams }: AthleteDash
         );
       }
 
-      const activeToken =
-        enrollmentId?.trim() && session.enrollmentIds.includes(enrollmentId.trim())
-          ? enrollmentId.trim()
-          : session.enrollmentIds[0];
+      const activeSelectionKey = mintEnrollmentSelectionKey(
+        result.activeEnrollmentId,
+        session.parentEmail,
+        secret,
+      );
+
+      const familyOptions = result.familyEnrollments.map((item) => ({
+        displayName: item.displayName,
+        selectionKey: mintEnrollmentSelectionKey(
+          item.enrollmentId,
+          session.parentEmail,
+          secret,
+        ),
+        programLabel: item.programLabel,
+        seasonLabel: item.seasonLabel,
+      }));
 
       return (
         <div data-testid="athlete-dashboard-authenticated">
@@ -72,12 +87,8 @@ export default async function AthleteDashboardPage({ searchParams }: AthleteDash
           </div>
           <AthleteDashboardView
             data={result.data}
-            activeEnrollmentToken={activeToken}
-            familyEnrollments={result.familyEnrollments.map((item) => ({
-              displayName: item.displayName,
-              slug: item.slug,
-              enrollmentToken: item.enrollmentId,
-            }))}
+            activeSelectionKey={activeSelectionKey}
+            familyEnrollments={familyOptions}
           />
         </div>
       );
@@ -89,12 +100,6 @@ export default async function AthleteDashboardPage({ searchParams }: AthleteDash
       }
       throw error;
     }
-  }
-
-  if (enrollmentId?.trim() || slug?.trim()) {
-    console.warn(
-      "[dashboard] Ignored query params on blocked athlete dashboard route (SC-112 pending).",
-    );
   }
 
   return (

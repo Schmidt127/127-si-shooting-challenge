@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { FamilyEnrollmentSwitcher } from "@/components/auth/family-enrollment-switcher";
 import { DashboardHomeworkSection } from "@/components/dashboard/dashboard-homework-section";
 import { DashboardSectionNav } from "@/components/dashboard/dashboard-section-nav";
 import { DashboardXpSection } from "@/components/dashboard/dashboard-xp-section";
@@ -28,8 +29,13 @@ import type { DashboardVideoFeedbackItem } from "@/types/private-athlete-dashboa
 
 type AthleteDashboardViewProps = {
   data: AthleteDashboardModel;
-  familyEnrollments?: Array<{ displayName: string; slug: string; enrollmentToken: string }>;
-  activeEnrollmentToken?: string;
+  familyEnrollments?: Array<{
+    displayName: string;
+    selectionKey: string;
+    programLabel?: string;
+    seasonLabel?: string;
+  }>;
+  activeSelectionKey?: string;
 };
 
 function videoStatusLabel(status: DashboardVideoFeedbackItem["status"]): string {
@@ -61,7 +67,7 @@ function videoStatusTone(status: DashboardVideoFeedbackItem["status"]) {
 export function AthleteDashboardView({
   data,
   familyEnrollments = [],
-  activeEnrollmentToken,
+  activeSelectionKey,
 }: AthleteDashboardViewProps) {
   const weeklyPct = weeklyShotPercent(data.weekly.shots, data.weekly.goal);
   const goalPct = data.seasonOverview.goalProgressPercent ?? 0;
@@ -96,33 +102,12 @@ export function AthleteDashboardView({
       }
     >
       {familyEnrollments.length > 1 ? (
-        <div
-          className={cn(catalogPanelClass({ tint: "blue" }), "mb-6")}
-          data-testid="dashboard-family-switcher"
-        >
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-blue">
-            Family athletes
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {familyEnrollments.map((item) => {
-              const active = item.enrollmentToken === activeEnrollmentToken;
-              return (
-                <Link
-                  key={item.enrollmentToken}
-                  href={`/dashboard?enrollmentId=${encodeURIComponent(item.enrollmentToken)}`}
-                  className={cn(
-                    "min-h-10 rounded-full border px-4 py-2 text-sm font-semibold transition-colors",
-                    active
-                      ? "border-brand-blue bg-brand-blue text-white"
-                      : "border-border bg-card text-foreground hover:border-brand-blue/40",
-                  )}
-                  aria-current={active ? "page" : undefined}
-                >
-                  {item.displayName}
-                </Link>
-              );
-            })}
-          </div>
+        <div className={cn(catalogPanelClass({ tint: "blue" }), "mb-6")}>
+          <FamilyEnrollmentSwitcher
+            enrollments={familyEnrollments}
+            activeSelectionKey={activeSelectionKey}
+            variant="switcher"
+          />
         </div>
       ) : null}
 
