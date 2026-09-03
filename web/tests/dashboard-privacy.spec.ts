@@ -3,15 +3,18 @@ import { expect, test } from "@playwright/test";
 const RECORD_ID_PATTERN = /\brec[a-zA-Z0-9]{14,}\b/;
 
 test.describe("dashboard privacy", () => {
-  test("anonymous /dashboard shows coming soon without fictional athlete identity", async ({
+  test("anonymous /dashboard stays private without fictional athlete identity", async ({
     page,
   }) => {
     const response = await page.goto("dashboard", { waitUntil: "domcontentloaded" });
     expect(response?.status()).toBeLessThan(500);
-    await expect(page.getByRole("heading", { level: 1 })).toContainText(/coming soon/i);
+    // SC-112: auth off → coming soon; auth on → redirect to sign-in.
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(
+      /coming soon|sign-in/i,
+    );
     await expect(page.getByText(/Jordan Reyes/i)).toHaveCount(0);
     await expect(page.getByText(/Sample preview/i)).toHaveCount(0);
-    await expect(page.getByText(/Private family dashboard/i)).toHaveCount(0);
+    await expect(page.getByTestId("athlete-dashboard-authenticated")).toHaveCount(0);
   });
 
   test("anonymous enrollmentId on /dashboard does not expose live athlete data or record ids", async ({
@@ -24,7 +27,10 @@ test.describe("dashboard privacy", () => {
     const bodyText = (await page.locator("body").innerText()) ?? "";
     expect(bodyText).not.toMatch(RECORD_ID_PATTERN);
     await expect(page.getByText(/Jordan Reyes/i)).toHaveCount(0);
-    await expect(page.getByRole("heading", { level: 1 })).toContainText(/coming soon/i);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(
+      /coming soon|sign-in/i,
+    );
+    await expect(page.getByTestId("athlete-dashboard-authenticated")).toHaveCount(0);
   });
 
   test("anonymous /dashboard/preview is blocked without staff access", async ({ page }) => {
@@ -91,10 +97,12 @@ test.describe("dashboard privacy", () => {
 });
 
 test.describe("dashboard reduced motion", () => {
-  test("dashboard coming-soon renders under prefers-reduced-motion", async ({ page }) => {
+  test("anonymous dashboard renders under prefers-reduced-motion", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     const response = await page.goto("dashboard", { waitUntil: "domcontentloaded" });
     expect(response?.status()).toBeLessThan(500);
-    await expect(page.getByRole("heading", { level: 1 })).toContainText(/coming soon/i);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(
+      /coming soon|sign-in/i,
+    );
   });
 });

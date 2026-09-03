@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-09-02 — **SC-147** recorded Zoom half-XP **implemented in GitHub** as **101 v6.7** (PR **#338** merged `49098217`); **Production paste pending Mike**; **not Production-complete** until controlled disposable proof passes. **117** remains email-only; **121 not created**. OMNI reconciliation trigger review required before recording-only half-XP can fire reliably — [`deploy-checklists/SC-147-omni-reconciliation-trigger-review.md`](./deploy-checklists/SC-147-omni-reconciliation-trigger-review.md). No DEV base (retired 2026-08-19). Prefer this file + [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md) + `git rev-parse HEAD` on `master`.  
+**Last verification (repo):** 2026-09-03 — **origin/master** tip **`29904b45`** (PR **#358** SC-149 Family Dashboard nav). **SC-112** parent magic-link + private dashboard **built in repository** (PRs **#350–#357**); anonymous `/shoot/dashboard` is coming-soon when `ATHLETE_AUTH_ENABLED` is off, or redirects to `/shoot/dashboard/sign-in` when auth is on — Production enablement is Vercel-env gated (`REQUIRES LIVE CONFIRMATION`). **SC-147** recorded Zoom half-XP remains **101 v6.7** GitHub (PR **#338**); **Production paste pending Mike**. No DEV base (retired 2026-08-19). Prefer this file + [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md) + `git rev-parse HEAD` on `master`.  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -66,9 +66,10 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | **`f8a7365f`** — merge PR **#312** multi-asset homework XP closeout (prior web tip `bd7856ea` = #311). Re-verify: `git rev-parse HEAD` |
+| HEAD SHA | **`29904b45870ad2f4c85bf96cda65dc7a92559621`** — merge PR **#358** SC-149 Family Dashboard navigation. Re-verify: `git rev-parse HEAD` |
 | `origin/master` | Should match HEAD after fetch — re-verify: `git rev-parse origin/master` |
 | Ahead / behind | **0 / 0** (re-verify after fetch) |
+| Recent merges (2026-09-03) | **#358** SC-149 Family Dashboard nav · **#357** SC-112 authenticated dashboard · **#356**/#354 SC-112 verify/magic-link · **#350** parent-email Live cutover |
 | Recent merges (2026-08-31) | **#312** multi-asset HW / 065 XP closeout |
 | Recent merges (2026-08-30) | **#311** gift-card/coach · **#308** public-app readiness · **#298** public copy · **#276** ATHWF · **#297** paste audit |
 | Prior integrity ship | `0b1d634…` (2026-08-20); XP activity ledger merge follows |
@@ -113,6 +114,8 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | FUT-017 Zoom Meetings | **Complete** — portfolio catalog at `/shoot/zoom-meetings` (PR **#285**, 2026-08-30) |
 | FUT-025 athlete profiles | **Repo complete** — env-gated `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING`; Mike cutover pending ([`deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md`](./deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md)) |
 | SC-149 branding URLs | **Repo attestation complete (2026-08-30)** — prod render + smoke PASS; Mike Vercel env dashboard checkboxes pending ([`deploy-checklists/SC-149-fairfield-branding-url-verification.md`](./deploy-checklists/SC-149-fairfield-branding-url-verification.md)) |
+| SC-149 Family Dashboard navigation | **Merged** PR **#358** (`29904b45`) — header/mobile/footer/parent/FAQ CTAs → `/shoot/dashboard/sign-in`; private `/shoot/dashboard` remains auth-gated |
+| SC-112 Athlete auth + private dashboard | **Built in Repository** (PRs **#350–#357**) — parent magic-link; private panels when `ATHLETE_AUTH_ENABLED=true`; anonymous visitors see coming-soon **or** redirect to sign-in. Checklist: [`deploy-checklists/SC-112-athlete-auth-preview-and-production.md`](./deploy-checklists/SC-112-athlete-auth-preview-and-production.md). Production `ATHLETE_AUTH_*` enablement **REQUIRES LIVE CONFIRMATION** in Vercel |
 | SC-109 Game Manual PDF | **Built in Repository** — approved Adobe Publish Online URL baked into `web/lib/game-manual/config.ts` (env override optional); `/shoot/game-manual` live-config sections + PDF link render after deploy — checklist: [`deploy-checklists/SC-109-game-manual-url-verification.md`](./deploy-checklists/SC-109-game-manual-url-verification.md) |
 | FUT-002 field inventory | **Batch 1 COMPLETE (2026-08-31)** + **SA XP text stubs deleted** — Mike UI-deleted 5 quarantined fields, then unused SA text `XP Events` / `XP Events copy`; live Meta **1363** fields / **35** tables; batch-1 schema `airtable/schema/snapshots/prod-20260831-fut002-batch1/`; evidence [`testing/evidence/fut-002/batch1-live-verify.json`](./testing/evidence/fut-002/batch1-live-verify.json) · [`testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json`](./testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json). Later inventory batches remain FUTURE |
 | FUT-010 intake attachment cleanup | **Dry-run complete (R3 2026-08-30)** — **0 eligible**; no deletion request — [`testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md`](./testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md) |

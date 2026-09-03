@@ -1,6 +1,6 @@
 # SC-112 — Athlete dashboard parent magic-link auth
 
-**Status:** Merged to `master` (PR #352, merge commit on master) · **Preview proof required before Production enablement**
+**Status:** Merged to `master` (auth PRs **#350–#357**; Family Dashboard nav **#358**) · Production enablement is Vercel-env gated (`ATHLETE_AUTH_ENABLED`) · confirm live env before treating Production as auth-on
 
 Authority: [web/docs/athlete-auth-architecture.md](../../web/docs/athlete-auth-architecture.md) · [ATHLETE-AUTH-DECISION.md](../overnight/web-integration/ATHLETE-AUTH-DECISION.md)
 
@@ -128,6 +128,7 @@ ATHLETE_AUTH_ENABLED=true ATHLETE_AUTH_SECRET=<secret> ATHLETE_AUTH_TEST_MODE=tr
 npm run test:smoke
 ```
 
+Anonymous `/dashboard` smoke/privacy tests accept **either** coming-soon (auth off) **or** redirect to sign-in (auth on). Do not assert coming-soon alone against auth-enabled deployments.
 ---
 
 ## Remaining SC-112 work (future)
