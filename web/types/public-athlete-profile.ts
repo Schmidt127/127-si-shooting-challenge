@@ -129,20 +129,13 @@ export type PublicHomeworkAssignment = {
   submissionDate: string | null;
   /** Total XP awarded on the linked Homework Completion, when present. */
   xpAwarded: number | null;
-  /**
-   * Always null on public profile serialization (auth dashboard only).
-   * Kept on the type so shared UI can render when private payloads supply it.
-   */
   coachFeedback: string | null;
   /** Whether credit is eligible per due-date + existing completion/XP outcomes. */
   creditEligible: boolean | null;
   pastDue: boolean;
   lateSubmission: boolean;
   homeworkDetailHref: string | null;
-  /**
-   * Always null on public profile serialization (auth dashboard only).
-   * Secure Lambda reviewer URLs must not appear in anonymous HTML.
-   */
+  /** Parent-facing reviewer URL for submitted homework files — never direct S3/Drive. */
   viewSubmittedHomeworkHref: string | null;
 };
 

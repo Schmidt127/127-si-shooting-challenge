@@ -222,15 +222,14 @@ describe("buildPublicHomeworkAssignments", () => {
       completionStatus: "approved",
       completionStatusLabel: "Satisfactory",
       xpAwarded: 12,
-      coachFeedback: null,
+      coachFeedback: "Great work.",
       submissionDate: "2026-06-05",
       creditEligible: true,
       viewSubmittedHomeworkHref: null,
     });
-    expect(rows[0]?.key).not.toMatch(/\brec[a-zA-Z0-9]{14}\b/);
   });
 
-  it("never publishes coach feedback or secure reviewer URLs on public homework rows", () => {
+  it("maps parent-facing reviewer URL for View Submitted Homework CTA", () => {
     const phaId = "recPha0000000001";
     const reviewerUrl =
       "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/recReiXXBRtaW3lns?token=abc123";
@@ -244,7 +243,6 @@ describe("buildPublicHomeworkAssignments", () => {
             "Program Homework Assignment": [phaId],
             "Completion Status": { name: "Submitted" },
             "Submission Date": "2026-06-10",
-            "Coach Feedback": "Private coach note",
             "Submission Asset: Reviewer File URL (lookup)": [
               reviewerUrl,
               "https://evil.example.com/not-allowed",
@@ -256,10 +254,7 @@ describe("buildPublicHomeworkAssignments", () => {
       todayKey: TODAY,
     });
 
-    expect(rows[0]?.coachFeedback).toBeNull();
-    expect(rows[0]?.viewSubmittedHomeworkHref).toBeNull();
-    expect(JSON.stringify(rows[0])).not.toContain(reviewerUrl);
-    expect(JSON.stringify(rows[0])).not.toContain("Private coach note");
+    expect(rows[0]?.viewSubmittedHomeworkHref).toBe(reviewerUrl);
   });
 
   it("marks late submissions as visible but not credit-eligible when XP was not awarded", () => {

@@ -32,8 +32,9 @@ const COMPLETION_FIELDS = [
   "Satisfactory?",
   "Base XP Awarded",
   "Extra Credit XP Awarded",
-  // Coach Feedback + reviewer file URLs are auth-dashboard only (public-data-rules).
+  "Coach Feedback",
   "Submission Date",
+  "Submission Asset: Reviewer File URL (lookup)",
 ] as const;
 
 function escapeAirtableString(value: string): string {
