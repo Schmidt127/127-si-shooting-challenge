@@ -25,7 +25,7 @@ The following may be shown for a registered participant:
 - Daily and session bests
 - Public game/session history and recent performance trends
 - Achievement names and icons marked OK to publish
-- Homework / video **completion status** (e.g. "Reviewed", "Awarded") — not file URLs unless already public
+- Homework / video **completion status** (e.g. "Reviewed", "Awarded") — not file URLs, coach feedback, or submission assets
 - Week labels and season name
 
 ## Never expose on public routes
@@ -34,7 +34,8 @@ The following may be shown for a registered participant:
 - Full home addresses / ZIP
 - Internal record IDs in UI or public URLs (use a stable public profile slug)
 - `XP Reason Debug`, automation debug fields, Source Key internals
-- Unpublished coach notes on video feedback
+- Coach feedback / coach notes on homework or video feedback
+- Homework or video submission file URLs (including Lambda reviewer links with tokens)
 - Other athletes' detailed submission stats unless leaderboard-aggregated
 
 Public profiles (`/players/[publicPlayerId]`) may show approved enrollment

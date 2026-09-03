@@ -222,14 +222,14 @@ describe("buildPublicHomeworkAssignments", () => {
       completionStatus: "approved",
       completionStatusLabel: "Satisfactory",
       xpAwarded: 12,
-      coachFeedback: "Great work.",
+      coachFeedback: null,
       submissionDate: "2026-06-05",
       creditEligible: true,
       viewSubmittedHomeworkHref: null,
     });
   });
 
-  it("maps parent-facing reviewer URL for View Submitted Homework CTA", () => {
+  it("does not expose coach feedback or submission file URLs on public profiles", () => {
     const phaId = "recPha0000000001";
     const reviewerUrl =
       "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/recReiXXBRtaW3lns?token=abc123";
@@ -242,6 +242,7 @@ describe("buildPublicHomeworkAssignments", () => {
           fields: {
             "Program Homework Assignment": [phaId],
             "Completion Status": { name: "Submitted" },
+            "Coach Feedback": "Private coach note",
             "Submission Date": "2026-06-10",
             "Submission Asset: Reviewer File URL (lookup)": [
               reviewerUrl,
@@ -254,7 +255,8 @@ describe("buildPublicHomeworkAssignments", () => {
       todayKey: TODAY,
     });
 
-    expect(rows[0]?.viewSubmittedHomeworkHref).toBe(reviewerUrl);
+    expect(rows[0]?.coachFeedback).toBeNull();
+    expect(rows[0]?.viewSubmittedHomeworkHref).toBeNull();
   });
 
   it("marks late submissions as visible but not credit-eligible when XP was not awarded", () => {
