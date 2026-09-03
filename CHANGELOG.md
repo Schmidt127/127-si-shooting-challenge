@@ -42,7 +42,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 - **SC-112 authenticated athlete dashboard (2026-09-03)** — Private family dashboard at `/shoot/dashboard` when `ATHLETE_AUTH_ENABLED=true`: live Airtable panels for enrollment, homework (secure reviewer links), video feedback, filterable XP activity, weekly progress, awards, and season overview. Session-scoped `athlete_session`; URL `enrollmentId` only when in session allowlist. Coming-soon placeholder when auth disabled.
 
 #### Fixed
-- **SC-112 public profile homework privacy (2026-09-03)** — Public athlete profiles no longer serialize coach feedback or Lambda reviewer file URLs (`?token=`). Homework completion status and XP remain public; file links and coach notes stay on the authenticated family dashboard. Aligns with `web/docs/public-data-rules.md`.
+- **SC-112 public profile homework privacy (2026-09-03)** — Public athlete profiles no longer serialize coach feedback or Lambda reviewer file URLs (`?token=`). Public Airtable homework queries also stop requesting those private fields. Homework completion status and XP remain public; file links and coach notes stay on the authenticated family dashboard. Aligns with `web/docs/public-data-rules.md`.
 - **SC-112 magic-link verify redirect (2026-09-03)** — Production `GET /shoot/api/auth/verify` returned 500 because Next.js route handlers require absolute redirect URLs; success and error paths now redirect to `/shoot/dashboard` and `/shoot/dashboard/sign-in` without leaking the token query param. Production token store fails closed without Upstash Redis (in-memory cannot share tokens across serverless invocations). Tests: `verify-route.test.ts`, `redirect-url.test.ts`, extended `auth.test.ts`.
 
 #### Changed

@@ -74,6 +74,8 @@ describe("HomeworkAssignments UI", () => {
     expect(html).toContain("Satisfactory");
     expect(html).toContain("Credit earned");
     expect(html).not.toContain("HW99");
+    expect(html).toMatch(/family dashboard/i);
+    expect(html).not.toMatch(/with submission status\s+and coach feedback/i);
   });
 
   it("renders a clear empty state when no active assignments exist", () => {

@@ -26,15 +26,14 @@ const LIBRARY_FIELDS = [
 
 const WEEK_FIELDS = ["Week Name", "Start Date", "End Date"] as const;
 
+/** Public profile only — never request coach notes or tokenized file URLs. */
 const COMPLETION_FIELDS = [
   "Program Homework Assignment",
   "Completion Status",
   "Satisfactory?",
   "Base XP Awarded",
   "Extra Credit XP Awarded",
-  "Coach Feedback",
   "Submission Date",
-  "Submission Asset: Reviewer File URL (lookup)",
 ] as const;
 
 function escapeAirtableString(value: string): string {

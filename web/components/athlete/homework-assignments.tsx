@@ -85,8 +85,8 @@ export function HomeworkAssignments({
             Assignments
           </h2>
           <p className="mt-2 max-w-2xl text-sm text-muted">
-            Every active challenge assignment for this athlete&apos;s grade band, with submission status
-            and coach feedback.
+            Every active challenge assignment for this athlete&apos;s grade band, with public submission
+            status and XP. Coach notes and submitted files stay on the family dashboard.
           </p>
         </div>
         <div className="relative mx-auto h-20 w-20 shrink-0 sm:mx-0 sm:h-24 sm:w-24" aria-hidden="true">

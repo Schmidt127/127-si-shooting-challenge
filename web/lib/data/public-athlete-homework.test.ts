@@ -257,6 +257,10 @@ describe("buildPublicHomeworkAssignments", () => {
 
     expect(rows[0]?.coachFeedback).toBeNull();
     expect(rows[0]?.viewSubmittedHomeworkHref).toBeNull();
+    const serialized = JSON.stringify(rows);
+    expect(serialized).not.toContain("Private coach note");
+    expect(serialized).not.toContain("token=abc123");
+    expect(serialized).not.toContain("lambda-url");
   });
 
   it("marks late submissions as visible but not credit-eligible when XP was not awarded", () => {

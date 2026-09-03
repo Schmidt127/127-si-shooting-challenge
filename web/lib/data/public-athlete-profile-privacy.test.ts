@@ -135,3 +135,21 @@ describe("athlete profile page metadata wiring", () => {
     expect(pageSource).not.toContain("PRIVATE_ROBOTS_NOINDEX");
   });
 });
+
+describe("public homework query allowlist", () => {
+  it("does not request coach feedback or tokenized reviewer file URLs", () => {
+    const source = readSource("lib/airtable/public-athlete-homework-queries.ts");
+    expect(source).not.toMatch(/"Coach Feedback"/);
+    expect(source).not.toMatch(/Reviewer File URL/);
+    expect(source).toContain("Completion Status");
+    expect(source).toContain("Base XP Awarded");
+  });
+
+  it("public homework UI source never renders coach quotes or file CTAs", () => {
+    const source = readSource("components/athlete/homework-assignments.tsx");
+    expect(source).not.toContain("CoachFeedbackQuote");
+    expect(source).not.toContain("viewSubmittedHomeworkHref");
+    expect(source).not.toContain("View Submitted Homework");
+    expect(source).not.toMatch(/coach feedback/i);
+  });
+});

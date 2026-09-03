@@ -73,6 +73,12 @@ test.describe("dashboard privacy", () => {
     await expect(hero).toBeVisible();
     const bodyText = (await page.locator("body").innerText()) ?? "";
     expect(bodyText).not.toMatch(RECORD_ID_PATTERN);
+    const html = await page.content();
+    expect(html).not.toMatch(/[?&]token=/i);
+    expect(html).not.toMatch(/lambda-url\.[^"'<\s]+\/file\//i);
+    expect(html).not.toContain("View Submitted Homework");
+    expect(html).not.toContain('data-testid="coach-feedback-quote"');
+    expect(bodyText.toLowerCase()).not.toContain("coach feedback:");
   });
 
   test("dashboard sign-in page is reachable without exposing record ids", async ({ page }) => {
