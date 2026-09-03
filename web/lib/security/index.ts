@@ -1,27 +1,30 @@
 /**
  * Auth and access-control helpers for private dev and future admin routes.
  *
- * IMPORTANT: Nothing here is athlete authentication (SC-112 — Mike decision).
- * `SITE_ACCESS_TOKEN` is a deployment preview gate only. Do not treat presence
- * of these helpers as proof that `/dashboard` or `/athletes/*` are secured for
- * real participant data.
+ * `SITE_ACCESS_TOKEN` is a deployment preview gate only.
+ * Athlete parent magic-link sessions (SC-112) use a separate signed cookie when enabled.
  */
+
+import {
+  getAthleteAuthSecret,
+  isAthleteAuthEnabled,
+} from "@/lib/auth/config";
+import { readAthleteSessionFromRequest } from "@/lib/auth/session";
 
 const SITE_ACCESS_COOKIE = "site_access_token";
 const SITE_ACCESS_QUERY = "site_access_token";
 
 /**
- * Path prefixes that will require a real athlete/staff session after SC-112.
- * Used for documentation, release tests, and future middleware wiring.
- * Matching a path here does **not** currently enforce athlete auth.
+ * Path prefixes that require a real athlete/staff session when athlete auth is enabled.
  */
-export const ATHLETE_PROTECTED_PATH_PREFIXES = ["/dashboard", "/athletes"] as const;
+export const ATHLETE_PROTECTED_PATH_PREFIXES = ["/dashboard"] as const;
 
 export const STAFF_PROTECTED_PATH_PREFIXES = ["/admin"] as const;
 
-/** True when pathname is under a future athlete-protected prefix (scaffolding only). */
+/** True when pathname is under an athlete-protected prefix. */
 export function isAthleteProtectedPath(pathname: string): boolean {
   const path = pathname.split("?")[0] || "/";
+  if (path === "/dashboard/sign-in") return false;
   return ATHLETE_PROTECTED_PATH_PREFIXES.some(
     (prefix) => path === prefix || path.startsWith(`${prefix}/`),
   );
@@ -35,13 +38,18 @@ export function isStaffProtectedPath(pathname: string): boolean {
   );
 }
 
-/**
- * Placeholder for post-SC-112 session checks.
- * Always returns false today — never claim a visitor is an authenticated athlete.
- */
+export function isDashboardProtectedPath(pathname: string): boolean {
+  const path = pathname.split("?")[0] || "/";
+  if (path === "/dashboard/sign-in") return false;
+  if (path === "/dashboard/preview") return false;
+  return path === "/dashboard" || path.startsWith("/dashboard/");
+}
+
 export function hasAthleteSession(request: Request): boolean {
-  void request;
-  return false;
+  if (!isAthleteAuthEnabled()) return false;
+  const secret = getAthleteAuthSecret();
+  if (!secret) return false;
+  return Boolean(readAthleteSessionFromRequest(request, secret));
 }
 
 function getRequiredSiteAccessToken(): string | null {
@@ -111,3 +119,5 @@ export {
   sanitizePublicText,
   xpActivityPublicErrorMessage,
 } from "@/lib/security/user-facing-errors";
+
+export { getAthleteSession } from "@/lib/auth/get-athlete-session";

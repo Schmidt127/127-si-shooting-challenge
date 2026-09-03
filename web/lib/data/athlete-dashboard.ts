@@ -1,4 +1,13 @@
 import type { StatusBadgeTone } from "@/components/ui/status-badge";
+import type { AthleteSessionPayload } from "@/lib/auth/session";
+import {
+  loadAuthorizedEnrollmentForSession,
+  type AuthorizedEnrollment,
+} from "@/lib/auth/enrollment-access";
+import {
+  loadXpActivityForEnrollment,
+  XpActivityLoadError,
+} from "@/lib/data/xp-activity-loader";
 import type { XpEventSummary } from "@/types/xp";
 
 /** Presentational athlete dashboard model — mockable without Airtable auth. */
@@ -9,6 +18,7 @@ export type AthleteDashboardModel = {
   source: "mock" | "airtable";
   seasonLabel: string;
   athlete: {
+    /** Presentation-only identifier — never an Airtable record id in authenticated views. */
     id: string;
     slug: string;
     displayName: string;
@@ -137,7 +147,6 @@ export function getMockAthleteDashboard(): AthleteDashboardModel {
     feedback: {
       title: "Coach note on set point",
       preview: "Elbow stayed tight on the mid-range reps — keep that on game shots.",
-      // No public Video Feedback detail route yet — avoid linking to tutorials.
     },
     nextAction: {
       label: "Open this week’s homework",
@@ -183,6 +192,82 @@ export function getMockAthleteDashboard(): AthleteDashboardModel {
       },
     ],
   };
+}
+
+/**
+ * Authenticated dashboard adapter — session determines enrollment; URL enrollmentId is not trusted.
+ */
+export async function loadAuthenticatedAthleteDashboard(options: {
+  session: AthleteSessionPayload;
+  urlEnrollmentId?: string;
+}): Promise<
+  | { status: "ready"; data: AthleteDashboardModel; familyCount: number }
+  | { status: "empty" }
+  | { status: "forbidden" }
+> {
+  const access = await loadAuthorizedEnrollmentForSession(
+    options.session,
+    options.urlEnrollmentId,
+  );
+
+  if (access.rejectedUrlEnrollmentId) {
+    return { status: "forbidden" };
+  }
+
+  if (!access.active) {
+    return { status: "empty" };
+  }
+
+  const enrollment = access.active;
+  const data = await buildDashboardFromEnrollment(enrollment);
+  return { status: "ready", data, familyCount: access.enrollments.length };
+}
+
+async function buildDashboardFromEnrollment(
+  enrollment: AuthorizedEnrollment,
+): Promise<AthleteDashboardModel> {
+  const mock = getMockAthleteDashboard();
+
+  try {
+    const xpResult = await loadXpActivityForEnrollment(enrollment.enrollmentId, { maxRows: 25 });
+    const warningParts: string[] = [];
+    if (xpResult.warning) warningParts.push(xpResult.warning);
+    if (xpResult.missingXpSubmissionIds.length > 0) {
+      warningParts.push(
+        `${xpResult.missingXpSubmissionIds.length} counted submission(s) have no XP Event.`,
+      );
+    }
+
+    return {
+      ...mock,
+      source: "airtable",
+      seasonLabel: "Current season",
+      athlete: {
+        id: enrollment.slug || enrollment.displayName,
+        slug: enrollment.slug || "athlete",
+        displayName: enrollment.displayName,
+        school: enrollment.school,
+        grade: enrollment.grade,
+        level: enrollment.level,
+      },
+      xp: {
+        total: enrollment.xpTotal,
+        xpIntoLevel: enrollment.xpIntoLevel,
+        xpForNextLevel: enrollment.xpForNextLevel,
+        nextLevelLabel: enrollment.nextLevelLabel,
+      },
+      recentXp: xpResult.rows,
+      recentXpTotal: xpResult.totalAvailableRows,
+      xpWarning: warningParts.length > 0 ? warningParts.join(" ") : undefined,
+    };
+  } catch (error) {
+    if (error instanceof XpActivityLoadError) {
+      throw error;
+    }
+    throw new XpActivityLoadError("Failed to load athlete dashboard XP activity.", {
+      cause: error,
+    });
+  }
 }
 
 /**
