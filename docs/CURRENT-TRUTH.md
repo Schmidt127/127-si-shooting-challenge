@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-09-04 — Functional-closeout coordinator wave: tip **`5dcb8449`** (SC-156 close) + independent A1/A2/A3 re-verify. **SC-152/153/156 COMPLETE / Live Tested** (057 **v2.4** / 058 **v1.7** / 070a **v4.7** script-only). **SC-154/155/157 remain closed** (duplicate WAS disproven; level lag = expected ≤15m async; PR **#340** CLOSED superseded). Wave-blocking P0: **NONE**. Evidence: [`audits/COORD-WAVE-FUNCTIONAL-CLOSEOUT-20260904.md`](./audits/COORD-WAVE-FUNCTIONAL-CLOSEOUT-20260904.md) · A1/A2/A3 COORD-WAVE audits. Season Sim **NOT run**; no field deletion; 057/058/070a untouched.  
+**Last verification (repo):** 2026-09-04 — **SC-158 / SF-07 CLOSED**: Automation **006** **RETIRED** (not deployed). Presence = `Has Video?` formula; Perfect Week videos = **057** `Perfect Week Video Count`; orphan `Submissions.Video Count` mismatches detectable. Evidence [`audits/SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md`](./audits/SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md). Prior functional-closeout: **SC-152/153/156 COMPLETE / Live Tested**; **SC-154/155/157 closed**. Wave-blocking P0: **NONE**. Season Sim **NOT run**; no field deletion; 057/058/070a untouched for SF-07.  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)

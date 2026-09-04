@@ -39,15 +39,15 @@ See [`SC-155-LEVEL-LAG-RESULT-20260904.md`](./SC-155-LEVEL-LAG-RESULT-20260904.m
 
 Live **ON** v4.7; obsolete post-script Update removed + published; skip/idempotency PASS. Evidence [`SC-156-070A-LIVE-CLOSEOUT-20260904.md`](./SC-156-070A-LIVE-CLOSEOUT-20260904.md).
 
-### SF-07 — P2 — Video count automation 006 not deployed
+### SF-07 — P2 — Video count automation 006 not deployed — **CLOSED (SC-158 Live Tested 2026-09-04)**
 
 | | |
 |--|--|
 | **Workflow** | 006 Set Video Count (repo only) |
-| **Silent miss** | If Video Count is not formula-maintained, asset/video gates may use stale counts |
-| **Observable** | Video Count ≠ attachment count |
-| **Safe near-term** | Confirm whether Video Count is formula; if so, mark 006 retired in index |
-| **Separate implementation** | Deploy 006 or document formula ownership |
+| **Disposition** | **RETIRE 006** — do not deploy. `Video Count` is writable number (not formula); no live automation owns it. |
+| **Authoritative owners** | `Has Video?` formula on `Video Upload` (presence); **057** → `Perfect Week Video Count` from Video Feedback (week gate) |
+| **Observable** | `Video Count` ≠ attachment length (stranded/stale detectable) |
+| **Evidence** | [`SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md`](./SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md) |
 
 ### SF-08 — P2 — 059 positive Pending+Active trigger
 
@@ -93,4 +93,4 @@ Live **ON** v4.7; obsolete post-script Update removed + published; skip/idempote
 2. **WAS-UNIQUENESS** — Duplicate WAS detection + merge SOP (SF-03)
 3. **SC-147** — Resolve 101 v6.8/v6.7 + OMNI trigger (SF-05) — existing
 4. **070a-LAUNCH** — Confirm ON/OFF (SF-06)
-5. **006-DISPOSITION** — Deploy or retire (SF-07)
+5. ~~**006-DISPOSITION** — Deploy or retire (SF-07)~~ **CLOSED SC-158** — retired 006; presence/`057` own gates
