@@ -16,6 +16,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 - **Homework late-credit display (2026-09-03)** — Late submissions remain credit-eligible once satisfactory. Public homework labels no longer say “Late — no credit”; private dashboard marks late Submission Date with “Late · full credit if satisfactory.” Past-due unfinished assignments stay pending (still eligible when graded).
 
 #### Added
+- **SEO completion — catalog/detail structured data (2026-09-04)** — BreadcrumbList + CollectionPage/WebPage JSON-LD on public catalog and detail routes; FAQ graph breadcrumbs; mobile `themeColor` / `applicationName` / `formatDetection`; footer links for Shoutouts and Articles. Supersedes stale draft PR **#310**. Athlete indexing untouched (FUT-025 / Agent 2). Status: [`docs/audits/SEO-STATUS-20260904.md`](./docs/audits/SEO-STATUS-20260904.md).
 - **SC-112 multi-child parent authentication (2026-09-03)** — Session `v:2` stores server-only `selectedEnrollmentId`. One active enrollment opens `/dashboard` directly; multiple enrollments use `/dashboard/select` with opaque HMAC selection keys via `POST /api/auth/select-enrollment`. Family switcher no longer uses `?enrollmentId=rec…`. Live Active? + parent-email re-check on every load/switch. Docs: `web/docs/athlete-auth-architecture.md`.
 - **SC-149 Family Dashboard navigation (2026-09-03)** — Public “Family Dashboard” entry to `/shoot/dashboard/sign-in` (Next.js `basePath`-aware) in the program header (desktop/tablet), mobile menu, footer quick links, homepage parent section, and FAQ get-started section. Outline/secondary styling stays below primary Register and Leaderboard actions. Private `/shoot/dashboard` data remains auth-gated. No Airtable, automation, email, AWS, or env-var changes.
 
@@ -26,6 +27,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 - **Automation 003 v2.0 — COMPLETE / PRODUCTION-VERIFIED / DO-NOT-TOUCH (2026-09-03, SC-023)** — Documented Production grade-change Grade Band refresh (enabled; refresh-view conditions; dynamic `recordId`; disposable VERIFY Enrollment succeeded). **Keep active** — not an unused slot; initial assign remains **002**. No Production script/formula/behavior change this session. Offline regression: `tests/enrollment-intake/automation-003-grade-change-refresh.test.js`. Closeout: [`docs/prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md`](./docs/prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md).
 
 ### Docs
+
+#### Added
+- **SEO status 2026-09-04** — Authoritative SEO audit + PR #310 disposition: [`docs/audits/SEO-STATUS-20260904.md`](./docs/audits/SEO-STATUS-20260904.md).
 
 #### Changed
 - **FUT-025 Production cutover closeout (2026-09-04)** — Master Future Work List + deploy checklist marked COMPLETE / Live Tested after Production env enable + verify. Audit + evidence JSON committed.

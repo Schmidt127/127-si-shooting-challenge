@@ -6,6 +6,7 @@ import {
   TutorialMediaErrorState,
   TutorialMediaNotFoundState,
 } from "@/components/tutorial-media/tutorial-media-views";
+import { DetailStructuredData } from "@/components/seo/detail-structured-data";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchShoutoutItem } from "@/lib/airtable/queries";
 import { SHOUTOUTS_SECTION } from "@/lib/tutorial-media/config";
@@ -44,7 +45,17 @@ export default async function ShoutoutDetailPage({ params }: ShoutoutDetailPageP
   try {
     const item = await fetchShoutoutItem(id);
     if (!item) return <TutorialMediaNotFoundState config={SHOUTOUTS_SECTION} />;
-    return <TutorialMediaDetailView item={item} config={SHOUTOUTS_SECTION} />;
+    return (
+      <>
+        <DetailStructuredData
+          section="shoutouts"
+          itemName={item.name}
+          itemDescription={item.briefDescription || "Shooting Challenge athlete shoutout."}
+          itemPath={`/shoutouts/${id}`}
+        />
+        <TutorialMediaDetailView item={item} config={SHOUTOUTS_SECTION} />
+      </>
+    );
   } catch (error) {
     const message = publicErrorMessage(error);
     return <TutorialMediaErrorState config={SHOUTOUTS_SECTION} message={message} />;

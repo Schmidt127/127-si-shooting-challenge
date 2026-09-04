@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Maven_Pro } from "next/font/google";
 
 import "./globals.css";
-import { APP_BASE_PATH, SITE_URL } from "@/lib/app-config";
+import { APP_BASE_PATH, SHOOTING_CHALLENGE, SITE_URL } from "@/lib/app-config";
 import {
   defaultOpenGraphImage,
   resolvePublicRobots,
 } from "@/lib/seo/metadata";
 import { HOME_PAGE_TITLE, SITE_DESCRIPTION } from "@/lib/seo/program-facts";
-import { BRAND_ORG_NAME } from "@/lib/brand";
+import { BRAND_COLORS, BRAND_ORG_NAME } from "@/lib/brand";
 import { cn } from "@/lib/utils";
 
 const mavenPro = Maven_Pro({
@@ -31,8 +31,19 @@ const iconIco = `${APP_BASE_PATH}/favicon.ico`;
 
 const defaultOgImage = defaultOpenGraphImage();
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: BRAND_COLORS.blue,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  applicationName: SHOOTING_CHALLENGE.name,
+  formatDetection: {
+    telephone: false,
+    email: false,
+  },
   title: {
     default: HOME_PAGE_TITLE,
     template: "%s | Shooting Challenge",

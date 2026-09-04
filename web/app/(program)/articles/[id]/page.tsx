@@ -6,6 +6,7 @@ import {
   TutorialMediaErrorState,
   TutorialMediaNotFoundState,
 } from "@/components/tutorial-media/tutorial-media-views";
+import { DetailStructuredData } from "@/components/seo/detail-structured-data";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchArticleItem } from "@/lib/airtable/queries";
 import { ARTICLES_SECTION } from "@/lib/tutorial-media/config";
@@ -44,7 +45,17 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
   try {
     const item = await fetchArticleItem(id);
     if (!item) return <TutorialMediaNotFoundState config={ARTICLES_SECTION} />;
-    return <TutorialMediaDetailView item={item} config={ARTICLES_SECTION} />;
+    return (
+      <>
+        <DetailStructuredData
+          section="articles"
+          itemName={item.name}
+          itemDescription={item.briefDescription || "Shooting Challenge article book reading."}
+          itemPath={`/articles/${id}`}
+        />
+        <TutorialMediaDetailView item={item} config={ARTICLES_SECTION} />
+      </>
+    );
   } catch (error) {
     const message = publicErrorMessage(error);
     return <TutorialMediaErrorState config={ARTICLES_SECTION} message={message} />;

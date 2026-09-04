@@ -5,6 +5,7 @@ import {
   TutorialMediaErrorState,
   TutorialMediaGridView,
 } from "@/components/tutorial-media/tutorial-media-views";
+import { CatalogStructuredData } from "@/components/seo/catalog-structured-data";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchShoutoutCatalog } from "@/lib/airtable/queries";
 import { SHOUTOUTS_SECTION } from "@/lib/tutorial-media/config";
@@ -20,16 +21,33 @@ export const metadata: Metadata = buildPageMetadata({
 export const revalidate = 300;
 
 export default async function ShoutoutsPage() {
+  const structuredData = <CatalogStructuredData section="shoutouts" />;
+
   try {
     const data = await fetchShoutoutCatalog();
 
     if (data.totalTutorials === 0) {
-      return <TutorialMediaEmptyState config={SHOUTOUTS_SECTION} />;
+      return (
+        <>
+          {structuredData}
+          <TutorialMediaEmptyState config={SHOUTOUTS_SECTION} />
+        </>
+      );
     }
 
-    return <TutorialMediaGridView data={data} config={SHOUTOUTS_SECTION} />;
+    return (
+      <>
+        {structuredData}
+        <TutorialMediaGridView data={data} config={SHOUTOUTS_SECTION} />
+      </>
+    );
   } catch (error) {
     const message = publicErrorMessage(error);
-    return <TutorialMediaErrorState config={SHOUTOUTS_SECTION} message={message} />;
+    return (
+      <>
+        {structuredData}
+        <TutorialMediaErrorState config={SHOUTOUTS_SECTION} message={message} />
+      </>
+    );
   }
 }
