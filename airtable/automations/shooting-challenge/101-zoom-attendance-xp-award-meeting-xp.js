@@ -1010,6 +1010,7 @@ async function processRecordingCreditsForMeeting({
   meetingStatus,
   meetingDateKey,
   weekId,
+  weekSchoolYear = "",
   pendingTokens,
   xpQueryRecords,
   wasQueryRecords,
@@ -1036,14 +1037,22 @@ async function processRecordingCreditsForMeeting({
   }
 
   let configPercent = null;
-  if (configTable && fieldExists(configTable, CONFIG.recording.configXpPercent)) {
+  if (
+    configTable &&
+    fieldExists(configTable, CONFIG.recording.configXpPercent) &&
+    fieldExists(configTable, CONFIG.configFields.activeSchoolYear) &&
+    weekSchoolYear
+  ) {
     try {
       const configQuery = await configTable.selectRecordsAsync({
-        fields: buildFieldsToLoad(configTable, [CONFIG.recording.configXpPercent]),
+        fields: buildFieldsToLoad(configTable, [
+          CONFIG.configFields.activeSchoolYear,
+          CONFIG.recording.configXpPercent,
+        ]),
       });
-      // Exactly one Config row: use its percent. Multiple/zero → leave null (floor(live/2)).
-      if (configQuery.records.length === 1) {
-        for (const configRow of configQuery.records) {
+      for (const configRow of configQuery.records) {
+        const yearKey = getText(configRow, configTable, CONFIG.configFields.activeSchoolYear);
+        if (yearKey && normalizeText(yearKey) === normalizeText(weekSchoolYear)) {
           configPercent = getNumber(
             configRow,
             configTable,
@@ -1052,6 +1061,9 @@ async function processRecordingCreditsForMeeting({
           );
           break;
         }
+      }
+      if (typeof configQuery.unloadData === "function") {
+        configQuery.unloadData();
       }
     } catch {
       // Config percent is optional; floor(live/2) remains the fallback.
