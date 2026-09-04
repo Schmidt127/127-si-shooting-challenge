@@ -313,18 +313,20 @@ test.describe("production smoke — athlete surfaces (read-only demo)", () => {
     await expectHealthyResponse(response, "game-manual");
     await expectSingleHeading(page, "game-manual");
 
+    // SC-109: approved Adobe Publish Online URL is baked into
+    // web/lib/game-manual/config.ts (env override optional). Production must
+    // expose Open game manual — not the legacy “coming soon” empty state.
     const openManual = page.getByRole("link", { name: /open game manual/i });
-    const comingSoon = page.getByRole("heading", {
-      name: /official manual link coming soon/i,
-    });
-    const hasOpenLink = await openManual.isVisible().catch(() => false);
-    const hasComingSoon = await comingSoon.isVisible().catch(() => false);
-    expect(hasOpenLink || hasComingSoon).toBe(true);
-
-    if (hasOpenLink) {
-      await expect(openManual).toHaveAttribute("href", /^https?:\/\//i);
-      await expect(openManual).toHaveAttribute("target", "_blank");
-    }
+    await expect(openManual).toBeVisible();
+    await expect(openManual).toHaveAttribute("href", /^https?:\/\//i);
+    await expect(openManual).toHaveAttribute("target", "_blank");
+    await expect(openManual).toHaveAttribute(
+      "href",
+      /indd\.adobe\.com\/view\/|acrobat\.adobe\.com\//i,
+    );
+    await expect(
+      page.getByRole("heading", { name: /official manual link coming soon/i }),
+    ).toHaveCount(0);
 
     await expect(page.locator("main")).not.toContainText(
       /NEXT_PUBLIC_GAME_MANUAL_URL/i,

@@ -1,0 +1,29 @@
+{
+  "id": "SC-109",
+  "title": "Game Manual from config — Production attestation",
+  "attestedAt": "2026-09-04T12:37:00-06:00",
+  "attestedBy": "Cursor Agent 2 (remaining-finish audit)",
+  "status": "Live Tested in PROD",
+  "productionUrl": "https://www.fairfieldbasketballclub.com/shoot/game-manual",
+  "httpStatus": 200,
+  "checks": {
+    "openGameManualLinkVisible": true,
+    "comingSoonEmptyStateAbsent": true,
+    "adobePublishOnlineHref": "https://indd.adobe.com/view/f3dcc153-0837-461b-9e81-e3fa11558e84",
+    "envVarNameNotLeaked": true,
+    "howYouEarnXpVisible": true,
+    "levelLadderVisible": true
+  },
+  "repoDefault": {
+    "file": "web/lib/game-manual/config.ts",
+    "constant": "GAME_MANUAL_PUBLISH_URL",
+    "commitIntroduced": "0aa20e6d2ae491fecb5762a2e0877d4f4ad2de22",
+    "notes": "Approved Adobe Publish Online URL baked into repo; NEXT_PUBLIC_GAME_MANUAL_URL remains optional override only."
+  },
+  "checklist": "docs/deploy-checklists/SC-109-game-manual-url-verification.md",
+  "exclusions": [
+    "Shot Milestones / Perfect Week public config surfaces remain optional follow-ups (schema authorization).",
+    "SC-133 pre-season parent comms remains separate (depends on SC-109 complete).",
+    "No Vercel env write required — repo default is live without NEXT_PUBLIC_GAME_MANUAL_URL."
+  ]
+}

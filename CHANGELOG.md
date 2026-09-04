@@ -9,6 +9,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Changed
+- **SC-109 Game Manual Production attestation (2026-09-04)** — `/shoot/game-manual` Production verified: **Open game manual** → approved Adobe Publish Online URL (repo `GAME_MANUAL_PUBLISH_URL`; optional env override). Live XP rules + level ladder present; env var name not leaked. Smoke now requires the open link (no longer accepts legacy “coming soon”). Evidence [`docs/testing/evidence/SC-109-PROD-ATTESTATION-2026-09-04.json`](./docs/testing/evidence/SC-109-PROD-ATTESTATION-2026-09-04.json); checklist Promoted to Production.
 - **Homework late-credit display (2026-09-03)** — Late submissions remain credit-eligible once satisfactory. Public homework labels no longer say “Late — no credit”; private dashboard marks late Submission Date with “Late · full credit if satisfactory.” Past-due unfinished assignments stay pending (still eligible when graded).
 
 #### Added
