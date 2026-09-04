@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-09-04** (SC-152 + SC-153 + SC-156 Live Tested — 057 v2.4 / 058 v1.7 / 070a v4.7 script-only. Authority: [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) · [`audits/SC-156-070A-LIVE-CLOSEOUT-20260904.md`](./audits/SC-156-070A-LIVE-CLOSEOUT-20260904.md))
+Last updated: **2026-09-04** (Functional-closeout wave — tip `5dcb8449`; SC-152/153/156 Live Tested; SC-154/155/157 remain closed; PR #340 CLOSED superseded; wave-blocking P0 NONE. Authority: [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) · [`audits/COORD-WAVE-FUNCTIONAL-CLOSEOUT-20260904.md`](./audits/COORD-WAVE-FUNCTIONAL-CLOSEOUT-20260904.md))
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)

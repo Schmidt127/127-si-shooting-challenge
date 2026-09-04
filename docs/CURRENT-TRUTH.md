@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-09-04 — **SC-152 COMPLETE / Live Tested** (057 **v2.4**). **SC-153 COMPLETE / Live Tested** (058 **v1.7**). **SC-156 COMPLETE / Live Tested** (070a **v4.7** script-only; post-clear Update removed). Evidence: [`audits/SC-152-153-LIVE-VERIFICATION-20260904.md`](./audits/SC-152-153-LIVE-VERIFICATION-20260904.md) · [`audits/SC-153-058-V17-LIVE-VERIFICATION-20260904.md`](./audits/SC-153-058-V17-LIVE-VERIFICATION-20260904.md) · [`audits/SC-156-070A-LIVE-CLOSEOUT-20260904.md`](./audits/SC-156-070A-LIVE-CLOSEOUT-20260904.md). SC-154/155/157 closed. Season Sim **NOT run**; no field deletion.  
+**Last verification (repo):** 2026-09-04 — Functional-closeout coordinator wave: tip **`5dcb8449`** (SC-156 close) + independent A1/A2/A3 re-verify. **SC-152/153/156 COMPLETE / Live Tested** (057 **v2.4** / 058 **v1.7** / 070a **v4.7** script-only). **SC-154/155/157 remain closed** (duplicate WAS disproven; level lag = expected ≤15m async; PR **#340** CLOSED superseded). Wave-blocking P0: **NONE**. Evidence: [`audits/COORD-WAVE-FUNCTIONAL-CLOSEOUT-20260904.md`](./audits/COORD-WAVE-FUNCTIONAL-CLOSEOUT-20260904.md) · A1/A2/A3 COORD-WAVE audits. Season Sim **NOT run**; no field deletion; 057/058/070a untouched.  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -66,11 +66,11 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | **`42cc97cf21ff6c10bd6a7d09e61c3194fde4ffca`** — merge PR **#398** SC-147 / 101 v6.8 (after **#395–#397/#399** wave). Re-verify: `git rev-parse HEAD` |
+| HEAD SHA | **`5dcb8449ffce9c11a1a136f46c817f029dd72a10`** — SC-156 070a Live Tested (#411) after SC-152–157 wave. Re-verify: `git rev-parse HEAD` (post-closeout merge advances tip) |
 | `origin/master` | Should match HEAD after fetch — re-verify: `git rev-parse origin/master` |
 | Ahead / behind | **0 / 0** (re-verify after fetch) |
-| Recent merges (2026-09-04 completion wave) | **#398** SC-147 · **#399** SEO supersede **#310** · **#397** FUT-025 · **#396** SC-148 · **#395** SC-057/058 · **#394–#392** SC-149 · **#391/#389** SC-151 · **#390/#388** SC-112/SC-109 |
-| Open PRs | Older drafts only (e.g. **#340** optional SC-147 formula; **#353** parent-email). Wave **#395–#399** MERGED; **#310**/**#341** CLOSED |
+| Recent merges (2026-09-04 SF + reliability) | **#411** SC-156 · **#410/#409/#408** SC-153 · **#407** SF closeout · **#406** SC-152/153 · **#404** SC-154/155/156 · **#401** SC-157 closes **#340** · **#398** SC-147 · **#399** SEO · **#397** FUT-025 · **#396** SC-148 · **#395** SC-057/058 |
+| Open PRs | Drafts **#353** (parent-email harness), **#335** (S3 key investigation), **#244** (WAS XP tooling — review carefully). **#340** CLOSED superseded. Superseded drafts **#234/#237/#238/#262/#307/#316** closed in functional-closeout wave |
 | Recent merges (2026-08-31) | **#312** multi-asset HW / 065 XP closeout |
 | Recent merges (2026-08-30) | **#311** gift-card/coach · **#308** public-app readiness · **#298** public copy · **#276** ATHWF · **#297** paste audit |
 | Prior integrity ship | `0b1d634…` (2026-08-20); XP activity ledger merge follows |
@@ -109,7 +109,7 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | Health | `GET /shoot/api/airtable` → token validity check |
 | Softr | **Obsolete / Not Used** — historical reference only |
 | SEO | **COMPLETE** — program pages indexable (`NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`); structured data + mobile meta from PR **#399** (supersedes draft **#310**). Status: [`audits/SEO-STATUS-20260904.md`](./audits/SEO-STATUS-20260904.md). Private/auth routes remain `noindex`. |
-| Production deploy | **Live** — Vercel Production follows `master` (tip **`42cc97cf`**; deploy **`dpl_hnPCeD3gELNcQkJyQe9Mugao1jYc`** READY). `GET /shoot` / `/shoot/api/airtable` live-pass **200**. SC-149 branding env MATCH; Family Dashboard nav live; FUT-025 athlete indexing env on |
+| Production deploy | **Live** — Vercel Production follows `master` (repo tip **`5dcb8449`** after SC-156; prior attested deploy **`dpl_hnPCeD3gELNcQkJyQe9Mugao1jYc`** READY). `GET /shoot` / `/shoot/api/airtable` live-pass **200**. SC-149 branding env MATCH; Family Dashboard nav live; FUT-025 athlete indexing env on |
 | Vitest / smoke | **483/483** Vitest pass (2026-08-30 release QA) · typecheck/lint/build PASS · prior smoke **50/50** (MRW-E04) |
 | FUT-016 Tutorials | **Complete** — portfolio catalog at `/shoot/tutorials` (PR **#284**, 2026-08-30) |
 | FUT-017 Zoom Meetings | **Complete** — portfolio catalog at `/shoot/zoom-meetings` (PR **#285**, 2026-08-30) |
@@ -332,7 +332,8 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - Optional 066 OMNI sandbox confirm (K-H1)
 - Lambda Storage Key retry proof + secret rotation
 - RCC Airtable Interface install
-- Open PRs: release-QA **#299**, field inventory **#300**, drafts **#262**/#244/#238/#237/#234 — review before merge; superseded work may close without merge
+- Open PRs: drafts **#353** / **#335** / **#244** — review before merge. Superseded **#234/#237/#238/#262/#307/#316/#340** CLOSED without merge
+- Functional-closeout wave (2026-09-04): no remaining P0 silent-failure defect; next optional activation **FUT-009** (Lambda) when Mike authorizes — [`audits/COORD-WAVE-FUNCTIONAL-CLOSEOUT-20260904.md`](./audits/COORD-WAVE-FUNCTIONAL-CLOSEOUT-20260904.md)
 - FUT-025 athlete profile indexing cutover (Mike approval)
 - FUT-010 supervised attachment apply only if eligible rows appear (R3 dry-run **0 eligible**)
 - SC-147 Recorded Zoom half-XP — **COMPLETE / Live Tested** (101 **v6.8**; PR **#398**)

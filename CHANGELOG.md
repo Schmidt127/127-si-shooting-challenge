@@ -32,6 +32,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Docs
 
 #### Added
+- **Functional-closeout coordinator wave (2026-09-04)** — Three parallel worktree agents (A1 backlog truth, A2 PR #340 forensic, A3 live risk verify). Wave-blocking P0 **NONE**; SC-154/155/157 remain closed; PR **#340** leave CLOSED superseded. Reports: [`docs/audits/COORD-WAVE-FUNCTIONAL-CLOSEOUT-20260904.md`](./docs/audits/COORD-WAVE-FUNCTIONAL-CLOSEOUT-20260904.md) · A1/A2/A3 COORD-WAVE audits. Superseded draft PRs **#234/#237/#238/#262/#307/#316** closed without merge.
 - **SC-152–157 SF remediation wave closeout (2026-09-04)** — [`docs/audits/SC-152-157-COORDINATOR-WAVE-CLOSEOUT-20260904.md`](./docs/audits/SC-152-157-COORDINATOR-WAVE-CLOSEOUT-20260904.md). PR **#340** closed (SC-157).
 - **SEO status 2026-09-04** — Authoritative SEO audit + PR #310 disposition: [`docs/audits/SEO-STATUS-20260904.md`](./docs/audits/SEO-STATUS-20260904.md).
 
