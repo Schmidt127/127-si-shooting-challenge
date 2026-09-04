@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { LevelsEmptyState, LevelsErrorState, LevelsLadderView } from "@/components/levels/levels-ladder-view";
+import { CatalogStructuredData } from "@/components/seo/catalog-structured-data";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchLevelLadder } from "@/lib/airtable/queries";
 import { buildPageMetadata } from "@/lib/seo/metadata";
@@ -15,16 +16,33 @@ export const metadata: Metadata = buildPageMetadata({
 export const revalidate = 300;
 
 export default async function LevelsPage() {
+  const structuredData = <CatalogStructuredData section="levels" />;
+
   try {
     const data = await fetchLevelLadder();
 
     if (data.totalLevels === 0) {
-      return <LevelsEmptyState />;
+      return (
+        <>
+          {structuredData}
+          <LevelsEmptyState />
+        </>
+      );
     }
 
-    return <LevelsLadderView data={data} />;
+    return (
+      <>
+        {structuredData}
+        <LevelsLadderView data={data} />
+      </>
+    );
   } catch (error) {
     const message = publicErrorMessage(error);
-    return <LevelsErrorState message={message} />;
+    return (
+      <>
+        {structuredData}
+        <LevelsErrorState message={message} />
+      </>
+    );
   }
 }

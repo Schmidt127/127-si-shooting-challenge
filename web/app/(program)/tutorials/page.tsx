@@ -5,6 +5,7 @@ import {
   TutorialsErrorState,
   TutorialsGridView,
 } from "@/components/tutorials/tutorials-grid-view";
+import { CatalogStructuredData } from "@/components/seo/catalog-structured-data";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchTutorialCatalog } from "@/lib/airtable/queries";
 import { buildPageMetadata } from "@/lib/seo/metadata";
@@ -19,16 +20,33 @@ export const metadata: Metadata = buildPageMetadata({
 export const revalidate = 300;
 
 export default async function TutorialsPage() {
+  const structuredData = <CatalogStructuredData section="tutorials" />;
+
   try {
     const data = await fetchTutorialCatalog();
 
     if (data.totalTutorials === 0) {
-      return <TutorialsEmptyState />;
+      return (
+        <>
+          {structuredData}
+          <TutorialsEmptyState />
+        </>
+      );
     }
 
-    return <TutorialsGridView data={data} />;
+    return (
+      <>
+        {structuredData}
+        <TutorialsGridView data={data} />
+      </>
+    );
   } catch (error) {
     const message = publicErrorMessage(error);
-    return <TutorialsErrorState message={message} />;
+    return (
+      <>
+        {structuredData}
+        <TutorialsErrorState message={message} />
+      </>
+    );
   }
 }

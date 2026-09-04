@@ -4,6 +4,7 @@ import { PUBLIC_SITE_ORIGIN } from "@/lib/app-config";
 
 import {
   buildFaqPageJsonLd,
+  buildFaqRouteJsonLd,
   buildPageMetadata,
   buildProgramHomeJsonLd,
   buildSportsProgramJsonLd,
@@ -245,6 +246,18 @@ describe("buildFaqPageJsonLd", () => {
     const entities = jsonLd.mainEntity as Array<Record<string, unknown>>;
     expect(entities.length).toBe(PROGRAM_FAQ_ITEMS.length);
     expect(JSON.stringify(jsonLd)).not.toMatch(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i);
+    expect(JSON.stringify(jsonLd)).not.toMatch(/rec[a-zA-Z0-9]{14}/);
+  });
+});
+
+describe("buildFaqRouteJsonLd", () => {
+  it("includes FAQPage and BreadcrumbList in the graph", () => {
+    const jsonLd = buildFaqRouteJsonLd(PROGRAM_FAQ_ITEMS);
+    const graph = jsonLd["@graph"] as Array<Record<string, unknown>>;
+
+    expect(graph.some((node) => node["@type"] === "FAQPage")).toBe(true);
+    expect(graph.some((node) => node["@type"] === "BreadcrumbList")).toBe(true);
+    expect(graph.some((node) => node["@type"] === "Organization")).toBe(true);
     expect(JSON.stringify(jsonLd)).not.toMatch(/rec[a-zA-Z0-9]{14}/);
   });
 });

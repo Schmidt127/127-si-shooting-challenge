@@ -5,6 +5,7 @@ import {
   HomeworkEmptyState,
   HomeworkErrorState,
 } from "@/components/homework/homework-catalog-view";
+import { CatalogStructuredData } from "@/components/seo/catalog-structured-data";
 import { publicHomeworkErrorMessage } from "@/lib/airtable/homework-load-errors";
 import { loadHomeworkCatalog } from "@/lib/airtable/homework-queries";
 import { buildPageMetadata } from "@/lib/seo/metadata";
@@ -20,20 +21,34 @@ export const metadata: Metadata = buildPageMetadata({
 export const revalidate = 300;
 
 export default async function HomeworkPage() {
+  const structuredData = <CatalogStructuredData section="homework" />;
   const result = await loadHomeworkCatalog();
 
   if (result.status === "error") {
     return (
-      <HomeworkErrorState
-        message={publicHomeworkErrorMessage(result.error)}
-        retryable={result.error.retryable}
-      />
+      <>
+        {structuredData}
+        <HomeworkErrorState
+          message={publicHomeworkErrorMessage(result.error)}
+          retryable={result.error.retryable}
+        />
+      </>
     );
   }
 
   if (result.status === "empty" || result.data.totalAssignments === 0) {
-    return <HomeworkEmptyState />;
+    return (
+      <>
+        {structuredData}
+        <HomeworkEmptyState />
+      </>
+    );
   }
 
-  return <HomeworkCatalogView data={result.data} />;
+  return (
+    <>
+      {structuredData}
+      <HomeworkCatalogView data={result.data} />
+    </>
+  );
 }

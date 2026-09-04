@@ -6,6 +6,7 @@ import {
   ZoomMeetingNotFoundState,
   ZoomMeetingsErrorState,
 } from "@/components/zoom-meetings/zoom-meetings-views";
+import { DetailStructuredData } from "@/components/seo/detail-structured-data";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchZoomMeeting } from "@/lib/airtable/queries";
 import { buildPageMetadata } from "@/lib/seo/metadata";
@@ -43,7 +44,17 @@ export default async function ZoomMeetingDetailPage({ params }: ZoomMeetingDetai
   try {
     const meeting = await fetchZoomMeeting(id);
     if (!meeting) return <ZoomMeetingNotFoundState />;
-    return <ZoomMeetingDetailView meeting={meeting} />;
+    return (
+      <>
+        <DetailStructuredData
+          section="zoomMeetings"
+          itemName={meeting.name}
+          itemDescription={meeting.briefDescription || "Shooting Challenge zoom meeting."}
+          itemPath={`/zoom-meetings/${id}`}
+        />
+        <ZoomMeetingDetailView meeting={meeting} />
+      </>
+    );
   } catch (error) {
     const message = publicErrorMessage(error);
     return <ZoomMeetingsErrorState message={message} />;

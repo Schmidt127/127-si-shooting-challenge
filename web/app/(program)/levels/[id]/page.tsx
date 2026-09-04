@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { LevelDetailView, LevelNotFoundState } from "@/components/levels/level-detail-view";
 import { LevelsErrorState } from "@/components/levels/levels-ladder-view";
+import { DetailStructuredData } from "@/components/seo/detail-structured-data";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchLevelDefinition } from "@/lib/airtable/queries";
 import { buildPageMetadata } from "@/lib/seo/metadata";
@@ -40,7 +41,17 @@ export default async function LevelDetailPage({ params }: LevelDetailPageProps) 
   try {
     const level = await fetchLevelDefinition(id);
     if (!level) return <LevelNotFoundState />;
-    return <LevelDetailView level={level} />;
+    return (
+      <>
+        <DetailStructuredData
+          section="levels"
+          itemName={level.displayName}
+          itemDescription={`Reach ${level.displayName} at ${level.xpRequired} lifetime XP.`}
+          itemPath={`/levels/${id}`}
+        />
+        <LevelDetailView level={level} />
+      </>
+    );
   } catch (error) {
     const message = publicErrorMessage(error);
     return <LevelsErrorState message={message} />;

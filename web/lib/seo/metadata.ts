@@ -14,6 +14,7 @@ import {
   PROGRAM_HOME_LOCATION,
   SITE_DESCRIPTION,
 } from "@/lib/seo/program-facts";
+import { buildBreadcrumbListJsonLd } from "@/lib/seo/structured-data";
 
 /**
  * Program listing routes eligible for sitemap.xml.
@@ -290,10 +291,17 @@ export function buildProgramHomeJsonLd(): Record<string, unknown> {
   };
 }
 
-/** Organization + FAQ JSON-LD for the /faq route. */
+/** Organization + FAQ + breadcrumb JSON-LD for the /faq route. */
 export function buildFaqRouteJsonLd(items: FaqItem[]): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
-    "@graph": [buildOrganizationJsonLd(), buildFaqPageJsonLd(items)],
+    "@graph": [
+      buildOrganizationJsonLd(),
+      buildFaqPageJsonLd(items),
+      buildBreadcrumbListJsonLd([
+        { name: "Shooting Challenge", path: "" },
+        { name: "FAQ", path: "/faq" },
+      ]),
+    ],
   };
 }

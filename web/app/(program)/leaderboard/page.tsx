@@ -5,6 +5,7 @@ import {
   LeaderboardErrorState,
   LeaderboardView,
 } from "@/components/leaderboard/leaderboard-view";
+import { CatalogStructuredData } from "@/components/seo/catalog-structured-data";
 import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchLeaderboard } from "@/lib/airtable/queries";
 import { buildPageMetadata } from "@/lib/seo/metadata";
@@ -20,16 +21,33 @@ export const metadata: Metadata = buildPageMetadata({
 export const revalidate = 0;
 
 export default async function LeaderboardPage() {
+  const structuredData = <CatalogStructuredData section="leaderboard" />;
+
   try {
     const data = await fetchLeaderboard();
 
     if (data.entries.length === 0) {
-      return <LeaderboardEmptyState />;
+      return (
+        <>
+          {structuredData}
+          <LeaderboardEmptyState />
+        </>
+      );
     }
 
-    return <LeaderboardView data={data} />;
+    return (
+      <>
+        {structuredData}
+        <LeaderboardView data={data} />
+      </>
+    );
   } catch (error) {
     const message = publicErrorMessage(error);
-    return <LeaderboardErrorState message={message} />;
+    return (
+      <>
+        {structuredData}
+        <LeaderboardErrorState message={message} />
+      </>
+    );
   }
 }
