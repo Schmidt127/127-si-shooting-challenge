@@ -66,10 +66,10 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | **`78208ffc71e27047bf7cf8cc357d711f0201b590`** — merge PR **#388** SC-112 multi-child select 404 fix (includes **#385** Public On Web UI). Re-verify: `git rev-parse HEAD` |
+| HEAD SHA | **`a00ef7a5a3291f13550ee9f7e1b14609b01dce65`** — merge PR **#389** SC-151 Family Dashboard Gmail access (includes **#388** SC-112 select-404 fix). Re-verify: `git rev-parse HEAD` |
 | `origin/master` | Should match HEAD after fetch — re-verify: `git rev-parse origin/master` |
 | Ahead / behind | **0 / 0** (re-verify after fetch) |
-| Recent merges (2026-09-04) | **#388** SC-112 multi-child select 404 fix (`78208ffc` / `e3bb7e45`) — **PRODUCTION VERIFIED BY MIKE** |
+| Recent merges (2026-09-04) | **#389** SC-151 Gmail parent access (`a00ef7a5`) · **#388** SC-112 multi-child select 404 fix (`78208ffc` / `e3bb7e45`) — **SC-112 PRODUCTION VERIFIED BY MIKE** |
 | Recent merges (2026-09-03) | **#383**/**#382**/**#381** SC-112 docs closeout · **#380** multi-child evidence · **#379** multi-child auth docs · **#378** Public On Web · **#377** Live email cutover checklist · **#375** master-list · **#373** multi-child auth · **#372** homework late-credit · **#368** Season Sim hygiene · **#362** Automation 003 |
 | Open PRs (unrelated / do not duplicate SC-112 closeout) | Older open items only (e.g. **#364**, **#363**, **#341**) — SC-112 closeout PRs **#377–#383** and fix **#388** are **MERGED** |
 | Recent merges (2026-08-31) | **#312** multi-asset HW / 065 XP closeout |
