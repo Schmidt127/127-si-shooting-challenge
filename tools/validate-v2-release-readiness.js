@@ -514,12 +514,12 @@ if (/Ready for 059 XP/i.test(automationIndex) && !/Do NOT filter on Ready for 05
   pass("059 trigger docs do not incorrectly require Ready for 059 XP filter");
 }
 
-if (/RECOMMENDED TRIGGER[\s\S]{0,400}created/i.test(
+if (/RECOMMENDED TRIGGER[\s\S]{0,400}(created|059 Lifecycle Trigger\?)/i.test(
   byNumber.has("059") ? fs.readFileSync(byNumber.get("059")[0], "utf8") : "",
 )) {
-  pass("059 script documents recommended created trigger");
+  pass("059 script documents recommended trigger (created or SC-159 lifecycle formula)");
 } else if (byNumber.has("059")) {
-  fail("059 script missing RECOMMENDED TRIGGER created guidance");
+  fail("059 script missing RECOMMENDED TRIGGER created/lifecycle guidance");
 }
 
 // 043 retirement + 112 OFF must be explicit in index/inventory

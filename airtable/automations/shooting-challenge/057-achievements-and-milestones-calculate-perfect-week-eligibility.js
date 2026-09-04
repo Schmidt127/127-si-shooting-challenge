@@ -24,12 +24,21 @@ Airtable is the deployed/running copy.
 
 /***************************************************************************************************
  * 057 - Achievements and Milestones - Calculate Perfect Week Eligibility
- * Version: 2.4
+ * Version: 2.5
  * Date written: 2026-05-30
  * Last updated: 2026-09-04
  *
  * Purpose:
  * Calculates Perfect Week helper fields on one Weekly Athlete Summary record.
+ *
+ * Version 2.5 updates (SC-160 early / assigned-week homework timing):
+ * - Early satisfactory homework (Submission Date before Week Start) counts toward
+ *   Perfect Week homework for the assigned Week (same as on-time).
+ * - Late satisfactory homework still excluded from Perfect Week counts.
+ * - Helper writeback may run before Week End; Perfect Week award remains held until
+ *   the week evaluation window because Eligible? still requires daily/video/zoom gates
+ *   that cannot pass before the official week completes. dailyDetail notes the hold.
+ * - Does not modify Automation 059.
  *
  * Version 2.4 updates (SC-152 / SF-01 formula-queue reliability):
  * - Clears writable `Perfect Week Recalc Needed?` on every success or error writeback.
@@ -119,8 +128,10 @@ Airtable is the deployed/running copy.
  * 4. Athlete must attend Zoom if a Zoom meeting exists for the linked Week
  *    (live Attendees OR Stage 17 approved recording credit that counts for Perfect Week).
  * 5. Athlete must satisfactorily complete 100% of homework assignments assigned for the week
- *    with an on-time Submission Date (PHA Due Date, else Week End Date). Late satisfactory
- *    homework earns XP but does not count toward Perfect Week.
+ *    with an early or on-time Submission Date (PHA Due Date, else Week End Date Saturday
+ *    11:59:59pm America/Denver). Early counts for the assigned Week; late satisfactory
+ *    homework earns XP but does not count toward Perfect Week. Perfect Week award waits
+ *    for the week evaluation window (Eligible? cannot pass before official week completes).
  *
  * Notes:
  * - This script only calculates helper fields.
@@ -538,8 +549,9 @@ function isHomeworkSatisfactory(record) {
 }
 
 /**
- * Perfect Week homework on-time gate (Submission Date vs PHA Due Date / Week End).
- * Late satisfactory homework still earns XP via 065 but does not count here.
+ * Perfect Week homework on-time/early gate (Submission Date vs PHA Due Date / Week End).
+ * Early (before Week Start) and on-time both count. Late satisfactory homework still
+ * earns XP via 065 but does not count here.
  */
 function isHomeworkOnTimeForPerfectWeek(record, dueDateByPhaId, weekEndDateKey) {
   const submissionDateKey = getDateKeyFromDateOnly(
@@ -554,7 +566,35 @@ function isHomeworkOnTimeForPerfectWeek(record, dueDateByPhaId, weekEndDateKey) 
   }
   if (!dueKey) dueKey = weekEndDateKey || "";
   if (!dueKey) return true;
+  // Inclusive through due calendar day (Week End Saturday / PHA Due Date in Denver).
   return submissionDateKey <= dueKey;
+}
+
+/**
+ * SC-160: Perfect Week award evaluation window opens after Week End date
+ * (Saturday) in America/Denver — date-key: now > weekEndDateKey.
+ * Helper counts may still be written earlier; Eligible? cannot pass until
+ * daily/video/zoom gates for the official week are met.
+ */
+function isPerfectWeekEvaluationTimeReached(weekEndDateKey, nowDateKey) {
+  const endKey = String(weekEndDateKey || "").trim();
+  const nowKey = String(nowDateKey || "").trim();
+  if (!endKey || !nowKey) return true;
+  return nowKey > endKey;
+}
+
+function getDenverTodayDateKey(nowMs = Date.now()) {
+  try {
+    const formatter = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "America/Denver",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    return formatter.format(new Date(nowMs));
+  } catch (e) {
+    return getDateKeyFromDateOnly(new Date(nowMs));
+  }
 }
 
 function countsTowardPerfectWeekHomework(record, dueDateByPhaId, weekEndDateKey) {
@@ -960,7 +1000,7 @@ try {
     console.log(
       JSON.stringify({
         automation: "057",
-        version: "2.4",
+        version: "2.5",
         recordId,
         action: "skipped_unsettled_goal",
         configuredGoal,
@@ -985,7 +1025,7 @@ try {
     console.log(
       JSON.stringify({
         automation: "057",
-        version: "2.4",
+        version: "2.5",
         recordId,
         action: "skipped_unsettled_weekly_goal",
         configuredGoal,
@@ -1180,13 +1220,26 @@ try {
     dailyDetailLines.push("PASS: All seven official Sunday-Saturday dates met the grace-period daily shooting requirement.");
   }
 
+  const denverTodayKey = getDenverTodayDateKey();
+  const evaluationWindowOpen = isPerfectWeekEvaluationTimeReached(weekEndDateKey, denverTodayKey);
+  if (!evaluationWindowOpen) {
+    dailyDetailLines.push(
+      `SC-160: Perfect Week award held until week evaluation time (after Week End ${weekEndDateKey || "(unknown)"} 11:59:59pm America/Denver). Helper counts may update early.`
+    );
+  } else {
+    dailyDetailLines.push(
+      `Perfect Week evaluation window open (Denver today ${denverTodayKey} > Week End ${weekEndDateKey || "(unknown)"}).`
+    );
+  }
+
   /*************************************************************************************************
    * 4B. Homework Requirement
    *
    * Rule:
    * Perfect Week requires 100% of assigned homework to be satisfactorily completed
-   * on time (Submission Date <= PHA Due Date, else Week End Date).
-   * Late satisfactory homework earns XP (065) but does not count here.
+   * early or on time (Submission Date <= PHA Due Date, else Week End Date).
+   * Early (before Week Start) counts for the assigned Week. Late satisfactory
+   * homework earns XP (065) but does not count here.
    *
    * Source of assigned homework:
    * - Weekly Athlete Summary -> Homework
@@ -1462,7 +1515,7 @@ try {
   console.log(
     JSON.stringify({
       automation: "057",
-      version: "2.4",
+      version: "2.5",
       recordId,
       action: "ready",
       configuredGoal,

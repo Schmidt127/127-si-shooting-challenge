@@ -42,18 +42,20 @@ test("005 v5.5 source contract — PHA direct load, slot-authoritative normalize
   assert.doesNotMatch(source, /phaTable\.selectRecordsAsync/);
 });
 
-test("020 v3.9 source contract — PHA identity validate, alternate slot tolerant", () => {
+test("020 v4.0 source contract — PHA identity validate, alternate slot tolerant", () => {
   const source = read(
     "airtable/automations/shooting-challenge/020-homework-link-or-create-homework-completion.js"
   );
-  assert.match(source, /version:\s*"v3\.9"/);
+  assert.match(source, /version:\s*"v4\.0"/);
   assert.match(source, /resolveHomeworkAssignmentIdentity/);
+  assert.match(source, /resolveHomeworkAssignedWeekId/);
   assert.match(source, /enrollment_pha_identity/);
   assert.match(source, /evaluateHomeworkSubmissionDeadline/);
   assert.doesNotMatch(source, /slot mismatch: expected/);
   assert.doesNotMatch(source, /resolveProgramHomeworkAssignmentId/);
   assert.doesNotMatch(source, /phaTable\.selectRecordsAsync/);
   assert.doesNotMatch(source, /PHA Grade Band mismatch/);
+  assert.doesNotMatch(source, /Submission must have exactly one Week; found/);
 });
 
 test("005 — correct HW1/HW2 placement succeeds without normalization", async () => {
@@ -560,15 +562,15 @@ test("020 — blank PHA Due Date uses Week End Date for deadline", async () => {
   assert.equal(output.values.dueDateKey, "2026-08-31");
 });
 
-test("065 v10.6 source contract — late credit + slot-agnostic PHA + XP key", () => {
+test("065 v10.7 source contract — late credit + slot-agnostic PHA + XP key", () => {
   const source = read(
     "airtable/automations/shooting-challenge/065-homework-review-and-xp-create-homework-xp-event.js"
   );
-  assert.match(source, /version:\s*"v10\.6"/);
+  assert.match(source, /version:\s*"v10\.7"/);
   assert.match(source, /evaluateHomeworkSubmissionDeadline/);
   assert.match(source, /HOMEWORK_XP\|/);
   assert.match(source, /sourceKeyPrefix:\s*"HOMEWORK_XP\|"/);
   assert.doesNotMatch(source, /PHA Homework Slot ownership mismatch/);
   assert.doesNotMatch(source, /late_ineligible/);
-  assert.match(source, /Late vs on-time does not block homework XP/);
+  assert.match(source, /does not block homework XP/);
 });

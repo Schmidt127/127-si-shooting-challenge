@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-14
-Last GitHub Update: 2026-09-03 (v10.6 late homework remains XP-eligible)
+Last GitHub Update: 2026-09-04 (v10.7 SC-160 early/on-time/late timing)
 
 Purpose:
 Create, replay, repair, deactivate, or reactivate the exact canonical
@@ -32,11 +32,13 @@ v10.1 installed in Production per Mike evidence; v10.2 is structure-only.
  * 065 - HOMEWORK REVIEW AND XP
  * Create or Reconcile Homework XP Event
  *
- * Version: v10.6
+ * Version: v10.7
  * Date Written: 2026-06-06
- * Last Updated: 2026-09-03
+ * Last Updated: 2026-09-04
  *
  * VERSION HISTORY
+ * - v10.7 (2026-09-04): SC-160 — early/on-time/late timing tracked; early and late
+ *   remain full XP once satisfactory. Perfect Week early/on-time gate stays in 057.
  * - v10.6 (2026-09-03): Late homework remains full XP / credit eligible once satisfactory.
  *   Timing status is tracked as late for reporting; late does not block HOMEWORK_XP.
  *   Perfect Week on-time gate is enforced in 057 (not by withholding homework XP here).
@@ -137,10 +139,10 @@ const SOURCE_KEY_CONTRACT = {
 
 const SCRIPT = {
   scriptName: "065 - Homework Review and XP - Create or Reconcile Homework XP Event",
-  version: "v10.6",
-  versionDate: "2026-09-03",
+  version: "v10.7",
+  versionDate: "2026-09-04",
   originalWrittenDate: "2026-06-06",
-  lastUpdated: "2026-09-03",
+  lastUpdated: "2026-09-04",
   folder: "02 - Homework Review and XP",
   automationName: "065 - Homework Review and XP - Create or Reconcile Homework XP Event",
 };
@@ -188,6 +190,7 @@ const CONFIG = {
     dueDate: "Due Date",
   },
   weeks: {
+    startDate: "Start Date",
     endDate: "End Date",
   },
   enrollments: {
@@ -371,9 +374,10 @@ function resolveAssignmentDueDateKey(phaDueDate, weekEndDate) {
   return toDateKeyFromText(weekEndDate) || "";
 }
 
-function evaluateHomeworkSubmissionDeadline({ submissionDateKey = "", phaDueDate = "", weekEndDate = "" } = {}) {
+function evaluateHomeworkSubmissionDeadline({ submissionDateKey = "", phaDueDate = "", weekEndDate = "", weekStartDate = "" } = {}) {
   const submitKey = toDateKeyFromText(submissionDateKey);
   const dueKey = resolveAssignmentDueDateKey(phaDueDate, weekEndDate);
+  const weekStartKey = toDateKeyFromText(weekStartDate);
   if (!submitKey) {
     return {
       creditEligible: true,
@@ -385,12 +389,15 @@ function evaluateHomeworkSubmissionDeadline({ submissionDateKey = "", phaDueDate
     };
   }
   if (!dueKey) {
+    const early = Boolean(weekStartKey && submitKey < weekStartKey);
     return {
       creditEligible: true,
-      timingStatus: "no_due_date",
+      timingStatus: early ? "early" : "no_due_date",
       dueDateKey: "",
       perfectWeekEligible: true,
-      reason: "No PHA Due Date or Week End Date; deadline not enforced.",
+      reason: early
+        ? `Qualifying submit ${submitKey} is before assigned Week Start ${weekStartKey}.`
+        : "No PHA Due Date or Week End Date; deadline not enforced.",
     };
   }
   if (submitKey > dueKey) {
@@ -400,6 +407,15 @@ function evaluateHomeworkSubmissionDeadline({ submissionDateKey = "", phaDueDate
       dueDateKey: dueKey,
       perfectWeekEligible: false,
       reason: `Submission date ${submitKey} is after assignment due date ${dueKey}. Full XP credit allowed; does not count toward Perfect Week.`,
+    };
+  }
+  if (weekStartKey && submitKey < weekStartKey) {
+    return {
+      creditEligible: true,
+      timingStatus: "early",
+      dueDateKey: dueKey,
+      perfectWeekEligible: true,
+      reason: `Qualifying submit ${submitKey} is before assigned Week Start ${weekStartKey}. Counts toward assigned Week; Perfect Week award waits for week evaluation time.`,
     };
   }
   return {
@@ -596,8 +612,8 @@ async function validatePha(homeworkCompletion, enrollmentId, weekId) {
     };
   }
 
-  // Late vs on-time does not block homework XP (v10.6). Timing is tracked for
-  // reporting; Perfect Week on-time filtering is enforced in automation 057.
+  // Early / late vs on-time does not block homework XP (v10.7 / v10.6). Timing is tracked for
+  // reporting; Perfect Week early/on-time filtering is enforced in automation 057.
   return { eligible: true, reason: "" };
 }
 

@@ -69,3 +69,6 @@ docs/testing/perfect-week/fixtures/_*.json
 docs/testing/evidence/**/_*
 docs/testing/evidence/parent-email-live-cutover/*.json
 duplicate-enrollment-guard-*.patch
+
+node_modules/
+

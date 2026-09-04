@@ -53,7 +53,7 @@ Last updated: **2026-09-04** (Functional-closeout wave — tip `5dcb8449`; SC-15
 
 **101 overlay (final 2026-08-21):** Production Automation 101 is **v6.7** (live script body). Midday Automations Code-column **v6.6** snapshot is **historical / superseded**. Meeting `recxtpMu4ONbdDD45` safely skipped when reconciliation not needed.
 
-**Final production version reconciliation (2026-08-21):** See [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) §8. Overlay **2026-09-04:** **059 v3.8** Live / SC-159 Live Tested (formula lifecycle trigger). Historical 2026-08-21 row still listed **059 v3.6** — prefer CURRENT-TRUTH.
+**Final production version reconciliation (2026-08-21):** See [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) §8. Overlay **2026-09-04:** **059 v3.8** Live / SC-159 Live Tested (formula lifecycle trigger). **SC-160** GitHub ready (**009 v1.3 / 020 v4.0 / 065 v10.7 / 057 2.5**); Airtable UI publish still required — Ready/Why Not Ready still require Week until publish. Historical 2026-08-21 row still listed **059 v3.6** — prefer CURRENT-TRUTH.
 
 ---
 

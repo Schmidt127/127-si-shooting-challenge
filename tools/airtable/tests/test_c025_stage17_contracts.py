@@ -89,7 +89,7 @@ class TestStage17Contracts(unittest.TestCase):
         s42 = (ROOT / "042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js").read_text(
             encoding="utf-8"
         )
-        self.assertIn("Version: 2.4", s57)
+        self.assertIn("Version: 2.5", s57)
         self.assertIn("Submission Grace Period Hours", s57)
         self.assertIn("grace_period", s57)
         self.assertIn("Zoom Attendance", s57)
