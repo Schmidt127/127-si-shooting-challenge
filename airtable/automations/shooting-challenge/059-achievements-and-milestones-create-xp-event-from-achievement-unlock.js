@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-21
-Last GitHub Update: 2026-06-21
+Last GitHub Update: 2026-09-04
 
 Purpose:
 Creates one XP Event from one Athlete Achievement Unlock for Perfect Week or Shot Milestone.
@@ -26,9 +26,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 /***************************************************************************************************
  * 059 - Achievements and Milestones - Create XP Event from Achievement Unlock
  *
- * Version: v3.7
+ * Version: v3.8
  * Date Written: 2026-06-05
- * Last Updated: 2026-08-29
+ * Last Updated: 2026-09-04
  *
  * PURPOSE
  * - Creates one XP Event from one Athlete Achievement Unlock.
@@ -36,6 +36,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Supports Perfect Week and Shot Milestone achievement types.
  *
  * CHANGELOG
+ * - 2026-09-04: SF-08 — live trigger must OR award path with Shot Milestone Active?=false
+ *   withdrawal (positive Pending+Active alone silently left orphan XP). Unlock notes field =
+ *   Trigger Context (live); Milestone Source Key alias for unlock source text. lifecycleOut added.
  * - 2026-08-29: Perfect Week XP Source Key prefers Unlocks Milestone Source Key; unlock notes field = Coach Note.
  * - 2026-08-05: Recommended trigger lock — Pending only (no Shot Milestone filter) so Perfect Week unlocks from 058 fire 059.
  *
@@ -65,22 +68,26 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  *   both award/restoration and inactive-withdrawal updates).
  *
  * REQUIRED LIFECYCLE TRIGGER (Airtable UI)
- * - When a record is updated or created on Athlete Achievement Unlocks.
- * - Watch Active?, XP Award Status, XP Events, Enrollment, Shot Milestone,
- *   Week, and Milestone Source Key.
+ * - When a record matches conditions on Athlete Achievement Unlocks (preferred live shape),
+ *   OR an equivalent created/updated configuration that re-enters both paths below.
  * - Dynamic recordId maps to the triggering Athlete Achievement Unlock ID.
- * - The configuration must reach inactive Shot Milestone withdrawal as well
- *   as Pending award/restoration.
- * - Do NOT require Shot Milestone not empty — that filter blocks Perfect Week (058) unlocks.
+ * - REQUIRED filter OR (do not use Pending+Active alone — that is SF-08 silent miss):
+ *     (XP Award Status = Pending AND Active? = true)
+ *     OR (Active? = false AND Shot Milestone is not empty)
+ * - Award/restore path: Pending + Active. Withdrawal path: inactive Shot Milestone unlock.
+ * - Do NOT require Shot Milestone not empty on the award branch — that blocks Perfect Week (058).
  *   Script routes by Achievement Reward Rule Key (PERFECT_WEEK vs SHOT_MILESTONE).
  * - Do NOT filter on Ready for 059 XP? or XP Events empty — the formula requires
  *   empty XP Events; creating XP auto-links back and flips the formula to 0 mid-run.
  * - Script handles existing XP (marks Awarded) and duplicate protection.
+ * - Observable reconciliation: inactive SM unlock with Active XP Event (orphan) or
+ *   Trigger Context / XP Award Status = Error on failed ownership.
  * - PROD closeout: docs/deploy-checklists/059-perfect-week-trigger-coverage.md
+ *   SF-08: docs/audits/SF-08-059-LIFECYCLE-CLOSEOUT-20260904.md
  *
  * RECOMMENDED TRIGGER
- * - Prefer When a record is created or updated on Athlete Achievement Unlocks
- *   (Pending award/restoration + Active? withdrawal). Do NOT filter on Ready for 059 XP.
+ * - recordMatchesConditions with the OR above (Pending+Active award OR inactive SM withdrawal).
+ *   Do NOT filter on Ready for 059 XP.
  *
  * STUCK ROW REPAIR
  * - Pending + XP Events linked + Ready for 059 XP? = 0 → run extension script
@@ -94,6 +101,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - actionOut
  * - errorOut
  * - debugStep
+ * - lifecycleOut = award | withdraw | restore | skip | error (visible reconciliation)
  ***************************************************************************************************/
 
 // @ts-nocheck
@@ -104,7 +112,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
     scriptName: "059 - Achievements and Milestones - Create XP Event from Achievement Unlock",
-    version: "v3.7",
+    version: "v3.8",
 
     tables: {
         unlocks: "Athlete Achievement Unlocks",
@@ -156,11 +164,11 @@ const CONFIG = {
         milestoneSourceKey: "Milestone Source Key",
         milestoneActivityDate: "Milestone Activity Date",
 
-        // Unlocks has no "Source Key" field (that name is on XP Events). Prefer Milestone Source Key.
-        sourceKey: "Source Key",
+        // Live Unlocks key text (Milestone Source Key). XP Events keeps its own "Source Key".
+        sourceKey: "Milestone Source Key",
         unlockKey: "Unlock Key",
-        // Production Unlocks notes field (not "Notes").
-        notes: "Coach Note",
+        // Live Unlocks operator notes field (Trigger Context). Coach Note remains unused by 059.
+        notes: "Trigger Context",
 
         unlockedDate: "Unlocked Date",
         fallbackUnlockedDate: "Date Unlocked",
@@ -664,6 +672,7 @@ async function markUnlockError(message, debugStep, actionOut = "unlock_validatio
         result: message,
         unlockId: unlockRecord ? unlockRecord.id : "",
         debugStep,
+        lifecycleOut: "error",
     });
 }
 
@@ -745,7 +754,9 @@ function assertRequiredSchema() {
 
         sourceKey: optionalField(unlocksTable, CONFIG.unlockFields.sourceKey),
         unlockKey: optionalField(unlocksTable, CONFIG.unlockFields.unlockKey),
-        notes: optionalField(unlocksTable, CONFIG.unlockFields.notes),
+        notes:
+            optionalField(unlocksTable, CONFIG.unlockFields.notes) ||
+            optionalField(unlocksTable, "Coach Note"),
 
         unlockedDate: optionalField(unlocksTable, CONFIG.unlockFields.unlockedDate),
         fallbackUnlockedDate: optionalField(unlocksTable, CONFIG.unlockFields.fallbackUnlockedDate),
@@ -983,6 +994,7 @@ async function main() {
                 unlockId: unlockRecord.id,
                 xpEventId: candidates[0]?.id || "",
                 debugStep,
+                lifecycleOut: candidates.length ? "withdraw" : "skip",
             });
             return;
         }
@@ -996,6 +1008,7 @@ async function main() {
                 unlockId: unlockRecord.id,
                 debugStep,
                 milestoneReconciliation: "blocked_no_unlock_eligibility_signal",
+                lifecycleOut: "skip",
             });
             return;
         }
@@ -1084,6 +1097,7 @@ async function main() {
                 existingXpEventIds: existingXpEventIds.join(", "),
                 weeklySummaryId: weeklySummaryId || "",
                 debugStep,
+                lifecycleOut: linkedShotMilestoneId ? "restore" : "award",
             });
 
             console.log(JSON.stringify({
@@ -1096,6 +1110,7 @@ async function main() {
                 weeklySummaryId: weeklySummaryId || "",
                 debugStep,
                 milestoneReconciliation: "blocked_no_unlock_eligibility_signal",
+                lifecycleOut: linkedShotMilestoneId ? "restore" : "award",
             }));
 
             return;
@@ -1444,6 +1459,7 @@ async function main() {
                 weeklySummaryId: weeklySummaryId || "",
                 debugStep,
                 milestoneReconciliation: "blocked_no_unlock_eligibility_signal",
+                lifecycleOut: "restore",
             });
 
             console.log(JSON.stringify({
@@ -1587,6 +1603,7 @@ async function main() {
             xpActivityDateSource: xpActivityDateSourceValue,
             debugStep,
             milestoneReconciliation: "blocked_no_unlock_eligibility_signal",
+            lifecycleOut: "award",
         });
 
         console.log(JSON.stringify({

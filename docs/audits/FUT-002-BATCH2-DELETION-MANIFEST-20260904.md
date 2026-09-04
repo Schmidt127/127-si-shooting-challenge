@@ -1,8 +1,8 @@
 # FUT-002 Batch 2 — Deletion Manifest (2026-09-04)
 
-**Status: MANIFEST READY / DO NOT DELETE**  
+**Status: QUARANTINED (MCP rename) / UI TRASH PENDING**  
 **Phase gate:** Blocked until coordinator signals Phase 1 complete (**SF-07**, **SF-08**, **FUT-001**).  
-**As of this pass:** FUT-001 = COMPLETE; SF-07 / SF-08 = unfinished P2 → **no field deletes performed**.
+**As of coordinator integrate:** SF-07 + FUT-001 COMPLETE; SF-08 GitHub-ready (Mike paste). Four stubs **quarantine-renamed** via MCP 2026-09-04. Meta API cannot delete — **Mike UI trash** still required. No fields deleted by agent.
 
 **Agent:** A6  
 **Base:** `appn84sqPw03zEbTT`  
@@ -64,3 +64,16 @@
 - Stopped before any rename/delete due to Phase 1 gate (SF-07 / SF-08 unfinished).
 
 **Gate status for coordinator:** **MANIFEST READY / DO NOT DELETE**
+
+
+## Quarantine actions (coordinator 2026-09-04)
+
+| Field ID | MCP rename result |
+|----------|-------------------|
+| ldWnU9gJCsTmTLpK | Renamed to ZZZ DELETE — XP Events copy (text stub) |
+| ldVcHPjvuabirn6E | Renamed to ZZZ DELETE — XP Events copy (text stub) |
+| ld8tdkjgyYmrs4Eq | Renamed to ZZZ DELETE — Video Feedback (Weeks text stub) |
+| ldo906P9t7nj9xmn | Renamed to ZZZ DELETE — Submission Assets (Weeks text stub) |
+| ldTJd1LkzRRmBiAZ | Already absent (no action) |
+
+**Deleted by agent:** none (API unsupported).
