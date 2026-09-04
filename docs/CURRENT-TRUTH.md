@@ -209,7 +209,7 @@ Do **not** treat other Automations-table columns (trigger/conditions) as authori
 | **041** | **v5.1** | v5.1 | Live | Optional inputs only |
 | **057** | **2.4** | **2.4 Live** | Queue?=1; formula Pending OR Recalc | SC-152 **COMPLETE / Live Tested** 2026-09-04 |
 | **058** | **1.7** | **1.7 Live** | Lifecycle `recordUpdated` + nine fields | SC-153 **COMPLETE / Live Tested** — withdraw/restore/idempotency PASS ([`SC-153-058-V17-LIVE-VERIFICATION-20260904.md`](./audits/SC-153-058-V17-LIVE-VERIFICATION-20260904.md)) |
-| **059** | **v3.7** | v3.7 | Live | |
+| **059** | **v3.7** live | **v3.8** GitHub | Live / **SF-08 Mike publish gate** | Positive Pending+Active trigger silent-miss on Active? clear proven; OR trigger + v3.8 paste — [`deploy-checklists/059-sf08-lifecycle-trigger-or.md`](./deploy-checklists/059-sf08-lifecycle-trigger-or.md) · [`audits/SF-08-059-LIFECYCLE-CLOSEOUT-20260904.md`](./audits/SF-08-059-LIFECYCLE-CLOSEOUT-20260904.md) · **SC-158** |
 | **064** | **Production-verified current live** | v12.2 in repo | Live | Do not invent a new version string |
 | **065** | **v10.6** | v10.6 | Live / **PASTE-ALIGNED** (Automations Code 2026-09-03) | Late-credit full XP (PR **#372**). Prior **v10.5** points-reconcile paste historical for Code column — [`065-v10.5-points-reconcile-operator-packet.md`](./deploy-checklists/065-v10.5-points-reconcile-operator-packet.md) |
 | **067** | **v3.5** | v3.5 | **Live / COMPLETE / DO-NOT-TOUCH** | Reflection quiz → Homework Completion. Automations Code 2026-09-03 SCRIPT **v3.5**. Do not edit this closeout wave |
