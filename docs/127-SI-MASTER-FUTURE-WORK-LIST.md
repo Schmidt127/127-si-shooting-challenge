@@ -2675,7 +2675,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-157** | Platform | Draft PR **#340** disposition vs SC-147 closeout | P1 | **COMPLETE** (2026-09-04) | SC-147 | PR **#340** closed as fully superseded; evidence [`audits/SC-157-PR340-DISPOSITION-20260904.md`](./audits/SC-157-PR340-DISPOSITION-20260904.md). |
 
 | **SC-158** | Intake | Automation 006 / Submissions.Video Count ownership (SF-07) | P2 | **COMPLETE / Live Tested** (2026-09-04) | SF-07 | **RETIRE 006** (not deployed). Presence = Has Video? formula; PW videos = **057**. Orphan Video Count mismatches detectable. Evidence [udits/SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md](./audits/SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md). |
-| **SC-159** | Achievements | Automation 059 Active? lifecycle / positive-only trigger (SF-08) | P2 | **COMPLETE / GitHub ready - Mike publish gate** (2026-09-04) | SC-077, SC-066 | Silent miss proven; GitHub **059 v3.8** + OR trigger checklist; MCP cannot edit customScript. Evidence [udits/SF-08-059-LIFECYCLE-CLOSEOUT-20260904.md](./audits/SF-08-059-LIFECYCLE-CLOSEOUT-20260904.md) · [deploy-checklists/059-sf08-lifecycle-trigger-or.md](./deploy-checklists/059-sf08-lifecycle-trigger-or.md). |
+| **SC-159** | Achievements | Automation 059 Active? lifecycle / positive-only trigger (SF-08) | P2 | **OPEN - supported trigger redesign** (2026-09-04) | SC-077, SC-066 | Nested OR not representable in Automation UI. Use formula `059 Lifecycle Trigger?` (or dual 059/059B). Do not paste under superseded OR checklist. Evidence [`audits/SC-159-LIFECYCLE-TRIGGER-REDESIGN-20260904.md`](./audits/SC-159-LIFECYCLE-TRIGGER-REDESIGN-20260904.md) · [`deploy-checklists/059-sc159-lifecycle-formula-trigger.md`](./deploy-checklists/059-sc159-lifecycle-formula-trigger.md) · SF-08 proof [`audits/SF-08-059-LIFECYCLE-CLOSEOUT-20260904.md`](./audits/SF-08-059-LIFECYCLE-CLOSEOUT-20260904.md). |
 | **SC-113** | Website | Loading, empty, and error states | P2 | Live Tested in PROD | GÇö | Keep states aligned when SC-112 lands |
 
 | **SC-115** | Website | noindex removal / search indexing | P2 | **Complete** (2026-08-25, `647d465`; prod verified) | SC-114 | **Prod cutover verified** ? Vercel Production `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`; public pages indexable; athlete profiles + private routes `noindex`; sitemap excludes athletes/public-display; `npm run test:smoke:prod` 50/50 after cross-env fix. Checklist: `docs/deploy-checklists/2026-08-25-web-search-indexing-cutover.md`. |
@@ -2982,7 +2982,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | **SC-158 / SF-07 Video Count ownership** | **COMPLETE / Live Tested** (2026-09-04) | **RETIRE 006** (absent live). Presence = `Has Video?`; PW = **057**. Evidence [`audits/SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md`](./audits/SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md). |
 
-| **SC-159 / SF-08 Automation 059 lifecycle** | **COMPLETE / GitHub ready - Mike publish gate** (2026-09-04) | Silent miss proven; GitHub **059 v3.8** + OR trigger checklist; live paste pending Mike UI. Evidence [`audits/SF-08-059-LIFECYCLE-CLOSEOUT-20260904.md`](./audits/SF-08-059-LIFECYCLE-CLOSEOUT-20260904.md). |
+| **SC-159 / SF-08 Automation 059 lifecycle** | **OPEN - formula trigger redesign** (2026-09-04) | Nested OR UI blocker. Checklist [`deploy-checklists/059-sc159-lifecycle-formula-trigger.md`](./deploy-checklists/059-sc159-lifecycle-formula-trigger.md). Keep Batch 2 trash blocked. |
 
 
 

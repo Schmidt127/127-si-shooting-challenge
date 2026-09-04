@@ -36,9 +36,10 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Supports Perfect Week and Shot Milestone achievement types.
  *
  * CHANGELOG
- * - 2026-09-04: SF-08 — live trigger must OR award path with Shot Milestone Active?=false
- *   withdrawal (positive Pending+Active alone silently left orphan XP). Unlock notes field =
- *   Trigger Context (live); Milestone Source Key alias for unlock source text. lifecycleOut added.
+ * - 2026-09-04: SC-159 - nested OR not representable in Automation UI; trigger via formula
+ *   field 059 Lifecycle Trigger? (or dual 059/059B). OR checklist superseded.
+ * - 2026-09-04: SF-08 - Pending+Active alone left orphan XP on Active? clear; script
+ *   withdraw/restore + lifecycleOut; Unlock notes = Trigger Context; Milestone Source Key alias.
  * - 2026-08-29: Perfect Week XP Source Key prefers Unlocks Milestone Source Key; unlock notes field = Coach Note.
  * - 2026-08-05: Recommended trigger lock — Pending only (no Shot Milestone filter) so Perfect Week unlocks from 058 fire 059.
  *
@@ -67,26 +68,24 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - When record updated (or an equivalent native configuration that re-enters
  *   both award/restoration and inactive-withdrawal updates).
  *
- * REQUIRED LIFECYCLE TRIGGER (Airtable UI)
- * - When a record matches conditions on Athlete Achievement Unlocks (preferred live shape),
- *   OR an equivalent created/updated configuration that re-enters both paths below.
+ * REQUIRED LIFECYCLE TRIGGER (Airtable UI) - SC-159
+ * - Automation UI cannot nest OR-of-AND groups on "When record matches conditions".
+ * - REQUIRED supported design: formula field "059 Lifecycle Trigger?" = 1, then
+ *   recordMatchesConditions on that single field (see deploy checklist).
+ * - Exact formula:
+ *     IF(OR(AND({XP Award Status}="Pending",{Active?}),
+ *           AND(NOT({Active?}),{Shot Milestone},{XP Award Status}="Awarded")),1,0)
+ * - Awarded gate on withdraw branch forces formula to 0 after Skipped settle so restore can re-enter.
+ * - Do NOT use nested OR checklist (superseded). Do NOT flatten four conditions.
+ * - Do NOT filter on Ready for 059 XP? or XP Events empty.
+ * - Alternative: dual automations 059 + 059B (same script) - see redesign audit.
  * - Dynamic recordId maps to the triggering Athlete Achievement Unlock ID.
- * - REQUIRED filter OR (do not use Pending+Active alone — that is SF-08 silent miss):
- *     (XP Award Status = Pending AND Active? = true)
- *     OR (Active? = false AND Shot Milestone is not empty)
- * - Award/restore path: Pending + Active. Withdrawal path: inactive Shot Milestone unlock.
- * - Do NOT require Shot Milestone not empty on the award branch — that blocks Perfect Week (058).
- *   Script routes by Achievement Reward Rule Key (PERFECT_WEEK vs SHOT_MILESTONE).
- * - Do NOT filter on Ready for 059 XP? or XP Events empty — the formula requires
- *   empty XP Events; creating XP auto-links back and flips the formula to 0 mid-run.
- * - Script handles existing XP (marks Awarded) and duplicate protection.
- * - Observable reconciliation: inactive SM unlock with Active XP Event (orphan) or
- *   Trigger Context / XP Award Status = Error on failed ownership.
- * - PROD closeout: docs/deploy-checklists/059-perfect-week-trigger-coverage.md
- *   SF-08: docs/audits/SF-08-059-LIFECYCLE-CLOSEOUT-20260904.md
+ * - PROD: docs/deploy-checklists/059-sc159-lifecycle-formula-trigger.md
+ *   Design: docs/audits/SC-159-LIFECYCLE-TRIGGER-REDESIGN-20260904.md
+ *   SF-08 proof: docs/audits/SF-08-059-LIFECYCLE-CLOSEOUT-20260904.md
  *
  * RECOMMENDED TRIGGER
- * - recordMatchesConditions with the OR above (Pending+Active award OR inactive SM withdrawal).
+ * - recordMatchesConditions: 059 Lifecycle Trigger? = 1 only.
  *   Do NOT filter on Ready for 059 XP.
  *
  * STUCK ROW REPAIR
