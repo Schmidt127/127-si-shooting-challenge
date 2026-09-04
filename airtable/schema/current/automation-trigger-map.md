@@ -106,7 +106,7 @@ Do **not** treat Make/Gmail as the homework parent-email sender.
 | 055 | Submissions | *confirm* | `055-...-recalculate-current-shooting-streak-from-submission.js` | Streak rollups |
 | 056 | Enrollments | *scheduled* | `056-...-refresh-current-shooting-streaks-daily.js` | Streak refresh |
 | 057 | Weekly Athlete Summary | *confirm* | `057-...-calculate-perfect-week-eligibility.js` (**v2.4**) | Perfect week flags |
-| 058 | Weekly Athlete Summary | *confirm* | `058-...-create-perfect-week-unlock.js` (**v1.6**) | Achievement Unlocks |
+| 058 | Weekly Athlete Summary | *confirm* | `058-...-create-perfect-week-unlock.js` (**v1.7**) | Achievement Unlocks |
 | **059** | Athlete Achievement Unlocks | Lifecycle-reachable record update/create; watch Active?, XP Award Status, XP Events, Enrollment, Shot Milestone, Week, and Milestone Source Key; never filter Ready for 059 XP? or Shot Milestone presence | `059-...-create-xp-event-from-achievement-unlock.js` (**v3.6**) | **XP Events** (achievement); corrected-history milestone lifecycle |
 | 066 | Enrollments | `Run Shot Milestone Check?` checked; the upstream reconciliation must re-arm it after counted-total changes | `066-...-create-shot-milestone-unlocks.js` (**v3.8**) | Canonical shot-milestone unlocks; corrected-history lifecycle |
 

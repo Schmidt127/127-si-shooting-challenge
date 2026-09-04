@@ -24,13 +24,17 @@ Airtable is the deployed/running copy.
 
 /***************************************************************************************************
  * 058 - Achievements and Milestones - Create Perfect Week Unlock
- * Version: 1.6
+ * Version: 1.7
  * Date written: 2026-05-30
  * Last updated: 2026-09-04
  *
  * Purpose:
  * Creates one Athlete Achievement Unlock when a Weekly Athlete Summary record qualifies
  * for Perfect Week.
+ *
+ * v1.7 (2026-09-04 / SC-153 hotfix): Include Coach Note in unlock selectRecordsAsync field list
+ * and harden getText so deactivate/restore never throws when optional notes are unloaded.
+ * Live v1.6 withdraw failed with: Field "Coach Note" isn't in this record.
  *
  * v1.6 (2026-09-04 / SC-153 / SF-02): Lifecycle trigger + idempotent restore/deactivate.
  * - Live trigger must be recordUpdated on writable Perfect Week lifecycle fields
@@ -179,7 +183,12 @@ function getSingleSelectName(record, fieldName) {
 }
 
 function getText(record, fieldName) {
-  return record.getCellValueAsString(fieldName).trim();
+  try {
+    return record.getCellValueAsString(fieldName).trim();
+  } catch (_err) {
+    // Airtable Scripting throws when the field was not included in selectRecordsAsync.
+    return "";
+  }
 }
 
 function isTruthy(value) {
@@ -392,6 +401,12 @@ try {
     CONFIG.unlockFields.active,
     CONFIG.unlockFields.xpAwardStatus,
   ];
+  if (fieldExists(unlocksTable, CONFIG.unlockFields.notes)) {
+    unlockFieldsToQuery.push(CONFIG.unlockFields.notes);
+  }
+  if (fieldExists(unlocksTable, CONFIG.unlockFields.sourceStatus)) {
+    unlockFieldsToQuery.push(CONFIG.unlockFields.sourceStatus);
+  }
 
   const unlockQuery = await unlocksTable.selectRecordsAsync({
     fields: unlockFieldsToQuery,

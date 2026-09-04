@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-09-04** (SF remediation wave SC-152–157 — tip `97769698` + closeout PR; functional web baseline `42cc97cf` / `dpl_hnPCeD3gELNcQkJyQe9Mugao1jYc`. Authority: [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) · closeout [`audits/SC-152-157-COORDINATOR-WAVE-CLOSEOUT-20260904.md`](./audits/SC-152-157-COORDINATOR-WAVE-CLOSEOUT-20260904.md))
+Last updated: **2026-09-04** (SC-152 Live Tested; SC-153 partial pending 058 v1.7 withdraw paste — tip after closeout PR. Authority: [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) · [`audits/SC-152-153-LIVE-VERIFICATION-20260904.md`](./audits/SC-152-153-LIVE-VERIFICATION-20260904.md))
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)

@@ -17,19 +17,13 @@
 
 ## Ranked remaining risks (deferred implementation)
 
-### SF-01 — P0 — Perfect Week 057 queues on a formula field — **REMEDIATING (SC-152)**
+### SF-01 — P0 — Perfect Week 057 queues on a formula field — **CLOSED (SC-152 Live Tested 2026-09-04)**
 
-| | |
-|--|--|
-| **Status 2026-09-04** | Queue formula updated live (Pending OR Recalc Needed). GitHub **057 v2.4** merged. **UI paste pending** for script clear-Recalc behavior. |
-| **Separate implementation** | [`deploy-checklists/SC-152-153-perfect-week-lifecycle-057-058.md`](../deploy-checklists/SC-152-153-perfect-week-lifecycle-057-058.md) |
+Live 057 **v2.4** + Queue formula (Pending OR Recalc). Recalc re-entry attested. Evidence [`SC-152-153-LIVE-VERIFICATION-20260904.md`](./SC-152-153-LIVE-VERIFICATION-20260904.md).
 
-### SF-02 — P0 — Perfect Week 058 positive-only trigger blocks withdrawal — **REMEDIATING (SC-153)**
+### SF-02 — P0 — Perfect Week 058 positive-only trigger blocks withdrawal — **PARTIAL (SC-153)**
 
-| | |
-|--|--|
-| **Status 2026-09-04** | GitHub **058 v1.6** merged. Live trigger still positive-only until UI paste. |
-| **Separate implementation** | Same checklist as SF-01. |
+Lifecycle trigger + nine watched fields **live**. Create/award/restore PASS. **Withdraw fails** on live script **v1.6** (Coach Note not in unlock query). GitHub **v1.7** hotfix — UI paste then re-attest withdraw.
 
 ### SF-03 — P1 — Duplicate Weekly Athlete Summary — **CLOSED / DISPROVEN (SC-154)**
 

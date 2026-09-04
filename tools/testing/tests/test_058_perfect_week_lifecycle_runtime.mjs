@@ -35,9 +35,9 @@ const IDS = {
 const UNLOCK_SOURCE_KEY_FIELD = "Milestone Source Key";
 const UNLOCK_NOTES_FIELD = "Coach Note";
 
-test("loads committed Automation 058 v1.6 with production Unlocks field names", () => {
+test("loads committed Automation 058 v1.7 with production Unlocks field names", () => {
   const source = readFileSync(SCRIPT, "utf8");
-  assert.match(source, /Version:\s*1\.6/);
+  assert.match(source, /Version:\s*1\.7/);
   assert.match(source, /sourceKey:\s*"Milestone Source Key"/);
   assert.match(source, /notes:\s*"Coach Note"/);
   assert.doesNotMatch(source, /sourceKey:\s*"Source Key"/);
