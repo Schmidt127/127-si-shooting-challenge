@@ -312,10 +312,10 @@
 | Failure state | Perfect Week Automation Error (visible) |
 | Retry / recovery | Set Recalc Needed / Status→Pending; clear error; safe XP Source Key |
 | Reconciliation | Queue?=1 stranded; Eligible/Ready without Unlock; Unlock without final XP; Recalc stuck |
-| Test evidence | Live **057 2.4** SC-152 PASS; live **058 1.6** create/award/restore PASS, withdraw FAIL → GitHub **1.7** hotfix |
-| Deployed version | **057 MATCH**; **058 PARTIAL** (trigger live; script needs v1.7) |
+| Test evidence | Live **057 2.4** SC-152 PASS; live **058 1.7** SC-153 withdraw/restore/idempotency PASS |
+| Deployed version | **057 MATCH 2.4**; **058 MATCH 1.7** |
 | Last verified | 2026-09-04 |
-| Remaining risk | **P0 residual** — paste 058 v1.7 and re-attest withdraw ([checklist](../deploy-checklists/SC-152-153-perfect-week-lifecycle-057-058.md)) |
+| Remaining risk | Low — monitor operator reconciliation view |
 
 ### WF-EMAIL-072 / 074 / 118 / 119 — Weekly email
 

@@ -21,9 +21,9 @@
 
 Live 057 **v2.4** + Queue formula (Pending OR Recalc). Recalc re-entry attested. Evidence [`SC-152-153-LIVE-VERIFICATION-20260904.md`](./SC-152-153-LIVE-VERIFICATION-20260904.md).
 
-### SF-02 — P0 — Perfect Week 058 positive-only trigger blocks withdrawal — **PARTIAL (SC-153)**
+### SF-02 — P0 — Perfect Week 058 positive-only trigger blocks withdrawal — **CLOSED (SC-153 Live Tested 2026-09-04)**
 
-Lifecycle trigger + nine watched fields **live**. Create/award/restore PASS. **Withdraw fails** on live script **v1.6** (Coach Note not in unlock query). GitHub **v1.7** hotfix — UI paste then re-attest withdraw.
+Lifecycle trigger + nine watched fields live. Live **058 v1.7** withdraw/restore/idempotency PASS. Evidence [`SC-153-058-V17-LIVE-VERIFICATION-20260904.md`](./SC-153-058-V17-LIVE-VERIFICATION-20260904.md).
 
 ### SF-03 — P1 — Duplicate Weekly Athlete Summary — **CLOSED / DISPROVEN (SC-154)**
 

@@ -58,4 +58,4 @@ Deleted this verification’s disposable WAS, Unlock, and Perfect Week XP Event.
 | ID | Status |
 |----|--------|
 | SC-152 | **COMPLETE / Live Tested** |
-| SC-153 | **Partial — lifecycle live; withdraw blocked until 058 v1.7 paste + re-attest** |
+| SC-153 | **COMPLETE / Live Tested** — see [`SC-153-058-V17-LIVE-VERIFICATION-20260904.md`](./SC-153-058-V17-LIVE-VERIFICATION-20260904.md) (058 v1.7 withdraw PASS) |
