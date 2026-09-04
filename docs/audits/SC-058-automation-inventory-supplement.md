@@ -1,7 +1,9 @@
 # SC-058 — Automation version inventory supplement
 
 **Generated:** 2026-08-27 · **Branch:** `agent/config-automation-reliability`  
+**Live attestation overlay:** 2026-09-04 — [`SC-057-058-LIVE-ATTESTATION-20260904.md`](./SC-057-058-LIVE-ATTESTATION-20260904.md) (50 live automations; selective `get_automation` Version strings)  
 **Primary inventory:** [`docs/AUTOMATION_VERSION_INVENTORY.md`](../AUTOMATION_VERSION_INVENTORY.md)  
+**Workflow reliability inventory (authoritative 2026-09-04):** [`WORKFLOW-RELIABILITY-INVENTORY-20260904.md`](./WORKFLOW-RELIABILITY-INVENTORY-20260904.md)  
 **Trigger extract:** [`sc-057-trigger-inventory.json`](./sc-057-trigger-inventory.json)
 
 ## Repo verification (2026-08-27)
@@ -38,11 +40,26 @@
 
 Full table remains in `AUTOMATION_VERSION_INVENTORY.md` — this supplement adds **count verification** only.
 
+## Live version sample (2026-09-04 `get_automation`)
+
+| # | Live Version | GitHub | Notes |
+|---|--------------|--------|-------|
+| 010 | v10.13 | v10.13 | MATCH |
+| 041 | v5.1 | v5.1 | MATCH · cron 15m |
+| 057 | 2.3 | 2.3 | MATCH |
+| 058 | 1.5 | 1.5 | MATCH · trigger risk SF-02 |
+| 059 | v3.7 | v3.7 | MATCH |
+| 065 | v10.6 | v10.6 | MATCH |
+| 101 | v6.8 | v6.7 | Drift — Agent 1 / SC-147 |
+
+Production `Automations` table **Automation Code** column returned empty via MCP this pass — do not use it for version truth until Mike refreshes.
+
 ## Required Mike UI confirmations
 
-1. Paste pending: **022 v2.2**, **010 v10.12** (if not already live per run history).
-2. Confirm **112 OFF**, **077 deleted**, **070a** intentional OFF/ON per launch decision.
-3. Complete remaining `*confirm in Airtable*` rows from trigger inventory JSON.
+1. ~~Paste pending: **010 v10.12**.~~ Superseded — live **010 v10.13** attested 2026-09-04.
+2. Confirm **070a** intentional ON (live deployed) vs historical OFF launch decision.
+3. Optional spot-check remaining rows against live attestation list (50 automations).
+4. Leave **101** paste to Agent 1.
 
 ## Regenerate
 

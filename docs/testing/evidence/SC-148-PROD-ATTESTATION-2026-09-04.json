@@ -1,0 +1,39 @@
+{
+  "id": "SC-148",
+  "title": "Mobile usability + accessibility for public /shoot — Production attestation",
+  "attestedAt": "2026-09-04T07:45:00-06:00",
+  "attestedBy": "Cursor Agent 4 (SC-148 Mobile Accessibility)",
+  "status": "COMPLETE / Live Tested in PROD",
+  "productionUrl": "https://www.fairfieldbasketballclub.com/shoot",
+  "repoHeadAtStart": "8e662a38ab3d12a726dd7599ccdac4077db0e015",
+  "priorProof": "docs/prod-completion/2026-08-08/SC-148-149-FAIRFIELD-PROD-LIVE-PROOF.md",
+  "audit": "docs/audits/SC-148-mobile-a11y-prod-attestation-20260904.md",
+  "checks": {
+    "mobileMenuEscapeFocusReturn": true,
+    "skipLinkFocusMain": true,
+    "tapTargets44px": true,
+    "overflow375": true,
+    "overflow390": true,
+    "visibleFocusCue": true,
+    "registrationCtasInMenuAndGateway": true,
+    "footerTextLinks": true,
+    "singleH1SamplePages": true,
+    "signInParentEmailLabeled": true,
+    "unnamedInteractiveControls": 0,
+    "playwrightMobileA11yProd": "18/18 passed (pre-attestation suite vs Production)",
+    "playwrightMobileA11yLocalWithFixes": "21/21 passed (includes 390px, sign-in label, not-found main)",
+    "authenticatedAthleteSwitcher": "not retested — SC-112 closed",
+    "axeCoreFullAudit": "not run (optional / non-blocking)"
+  },
+  "functionalFixesInAttestationPr": [
+    "web/app/not-found.tsx — main#main-content landmark",
+    "web/app/error.tsx — main#main-content landmark",
+    "web/tests/mobile-a11y.spec.ts — 390px, sign-in label, not-found landmark coverage"
+  ],
+  "exclusions": [
+    "Cosmetic preference changes out of scope",
+    "SEO indexing gates untouched",
+    "Automation 101 / PR #310 files untouched",
+    "SC-109 / SC-112 / SC-149 / SC-151 remain closed"
+  ]
+}
