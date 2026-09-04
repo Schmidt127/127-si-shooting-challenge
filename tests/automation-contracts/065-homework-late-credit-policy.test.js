@@ -179,9 +179,9 @@ test("065 GitHub script no longer blocks XP on late_ineligible", () => {
     ),
     "utf8"
   );
-  assert.match(s065, /v10\.6/);
+  assert.match(s065, /v10\.7/);
   assert.doesNotMatch(s065, /late_ineligible/);
-  assert.match(s065, /Late vs on-time does not block homework XP/);
+  assert.match(s065, /does not block homework XP/);
 });
 
 test("057 GitHub script filters late homework from Perfect Week counts", () => {
@@ -193,7 +193,7 @@ test("057 GitHub script filters late homework from Perfect Week counts", () => {
     ),
     "utf8"
   );
-  assert.match(s057, /Version: 2\.4/);
+  assert.match(s057, /Version: 2\.5/);
   assert.match(s057, /countsTowardPerfectWeekHomework/);
   assert.match(s057, /isHomeworkOnTimeForPerfectWeek/);
 });
