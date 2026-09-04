@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-09-04 — **SC-158 / SF-07 CLOSED**: Automation **006** **RETIRED** (not deployed). Presence = `Has Video?` formula; Perfect Week videos = **057** `Perfect Week Video Count`; orphan `Submissions.Video Count` mismatches detectable. Evidence [`audits/SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md`](./audits/SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md). Prior functional-closeout: **SC-152/153/156 COMPLETE / Live Tested**; **SC-154/155/157 closed**. Wave-blocking P0: **NONE**. Season Sim **NOT run**; no field deletion; 057/058/070a untouched for SF-07.  
+**Last verification (repo):** 2026-09-04 — Final completion program: SF-07/SC-158 COMPLETE; FUT-001 late-credit COMPLETE; FUT-009 Lambda COMPLETE / Live Tested; SF-08/SC-159 GitHub **059 v3.8** ready (Mike paste gate); FUT-003 Make inactive (paid activation Mike); FUT-002 Batch 2 stubs quarantined (UI trash pending). Evidence [udits/FINAL-COMPLETION-PROGRAM-CLOSEOUT-20260904.md](./audits/FINAL-COMPLETION-PROGRAM-CLOSEOUT-20260904.md). Season Sim **NOT run**.
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)

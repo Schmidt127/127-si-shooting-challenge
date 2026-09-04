@@ -43,6 +43,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Docs
 
 #### Added
+- **Final completion program closeout (2026-09-04)** — SF-07/SC-158 retire 006; SF-08/SC-159 059 v3.8 GitHub (Mike paste); FUT-001 late-credit live proof; FUT-009 Lambda Live; FUT-003 Make-gated; drafts #353/#335/#244 disposed; FUT-002 Batch 2 quarantine renames. [docs/audits/FINAL-COMPLETION-PROGRAM-CLOSEOUT-20260904.md](./docs/audits/FINAL-COMPLETION-PROGRAM-CLOSEOUT-20260904.md).
 - **Functional-closeout coordinator wave (2026-09-04)** — Three parallel worktree agents (A1 backlog truth, A2 PR #340 forensic, A3 live risk verify). Wave-blocking P0 **NONE**; SC-154/155/157 remain closed; PR **#340** leave CLOSED superseded. Reports: [`docs/audits/COORD-WAVE-FUNCTIONAL-CLOSEOUT-20260904.md`](./docs/audits/COORD-WAVE-FUNCTIONAL-CLOSEOUT-20260904.md) · A1/A2/A3 COORD-WAVE audits. Superseded draft PRs **#234/#237/#238/#262/#307/#316** closed without merge.
 - **SC-152–157 SF remediation wave closeout (2026-09-04)** — [`docs/audits/SC-152-157-COORDINATOR-WAVE-CLOSEOUT-20260904.md`](./docs/audits/SC-152-157-COORDINATOR-WAVE-CLOSEOUT-20260904.md). PR **#340** closed (SC-157).
 - **SEO status 2026-09-04** — Authoritative SEO audit + PR #310 disposition: [`docs/audits/SEO-STATUS-20260904.md`](./docs/audits/SEO-STATUS-20260904.md).
