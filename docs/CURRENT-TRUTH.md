@@ -66,10 +66,10 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | **`a00ef7a5a3291f13550ee9f7e1b14609b01dce65`** — merge PR **#389** SC-151 Family Dashboard Gmail access (includes **#388** SC-112 select-404 fix). Re-verify: `git rev-parse HEAD` |
+| HEAD SHA | **`0479db22dcf85b46b8947864c72d09e7fabb4984`** — merge PR **#391** SC-151 deployed closeout (includes **#389** Gmail access + **#388** SC-112 select-404). Re-verify: `git rev-parse HEAD` |
 | `origin/master` | Should match HEAD after fetch — re-verify: `git rev-parse origin/master` |
 | Ahead / behind | **0 / 0** (re-verify after fetch) |
-| Recent merges (2026-09-04) | **#389** SC-151 Gmail parent access (`a00ef7a5`) · **#388** SC-112 multi-child select 404 fix (`78208ffc` / `e3bb7e45`) — **SC-112 PRODUCTION VERIFIED BY MIKE** |
+| Recent merges (2026-09-04) | **#391** SC-151 MERGED/DEPLOYED closeout (`0479db22` / `50600530`) · **#389** SC-151 Gmail access (`a00ef7a5` · prod `dpl_2mch4scL3c6bgHZgizDbsqPTywbW`) · **#388** SC-112 multi-child select 404 fix (`78208ffc` / `e3bb7e45`) — **SC-112 PRODUCTION VERIFIED BY MIKE** |
 | Recent merges (2026-09-03) | **#383**/**#382**/**#381** SC-112 docs closeout · **#380** multi-child evidence · **#379** multi-child auth docs · **#378** Public On Web · **#377** Live email cutover checklist · **#375** master-list · **#373** multi-child auth · **#372** homework late-credit · **#368** Season Sim hygiene · **#362** Automation 003 |
 | Open PRs (unrelated / do not duplicate SC-112 closeout) | Older open items only (e.g. **#364**, **#363**, **#341**) — SC-112 closeout PRs **#377–#383** and fix **#388** are **MERGED** |
 | Recent merges (2026-08-31) | **#312** multi-asset HW / 065 XP closeout |
@@ -118,6 +118,7 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | SC-149 branding URLs | **Repo attestation complete (2026-08-30)** — prod render + smoke PASS; Mike Vercel env dashboard checkboxes pending ([`deploy-checklists/SC-149-fairfield-branding-url-verification.md`](./deploy-checklists/SC-149-fairfield-branding-url-verification.md)) |
 | SC-149 Family Dashboard navigation | **Merged** PR **#358** (`29904b45`) — header/mobile/footer/parent/FAQ CTAs → `/shoot/dashboard/sign-in`; private `/shoot/dashboard` remains auth-gated |
 | SC-112 Athlete auth + private dashboard | **COMPLETE — PRODUCTION VERIFIED BY MIKE** (2026-09-04) — magic-link + multi-child three-athlete select/switch/sign-out verified on Production deploy `dpl_8TLH6uQAvLXUoQGDrGQ4NrFnWcVG` (merge `78208ffc` / PR **#388**). **No further SC-112 action.** Checklist: [`deploy-checklists/SC-112-athlete-auth-preview-and-production.md`](./deploy-checklists/SC-112-athlete-auth-preview-and-production.md). Ledger: [`audits/SC-112-multi-child-select-404-fix-20260904.md`](./audits/SC-112-multi-child-select-404-fix-20260904.md) |
+| SC-151 Family Dashboard Gmail access | **MERGED/DEPLOYED** — PR **#389** merge `a00ef7a5`; Production `dpl_2mch4scL3c6bgHZgizDbsqPTywbW`; docs closeout PR **#391** (`0479db22`). Sign-in shows registration-email instruction; Gmail prohibition gone. **SC-112 remains closed.** Audit: [`audits/SC-151-family-dashboard-gmail-access-20260904.md`](./audits/SC-151-family-dashboard-gmail-access-20260904.md) |
 | Public awards (`Public On Web`) | **MERGED** PR **#378** (`a0e84533`) — `AWARD_RECIPIENT_PUBLICATION_FIELD = "Public On Web"`. PR **#376** closed superseded. |
 | Transactional enrollments (2026-09-03 MCP) | **No real-family enrollments** — 2 Athletes / 3 Enrollments, all Schmidt / VERIFY disposable; parent email Mike school address only |
 | Season Simulation | **NOT currently authorized.** Live formulas are normal **`NOW()` / `TODAY()`** — **DO NOT change**. Next execute needs separate Mike authorization + temporary gated formula re-paste. Hygiene classification: [`audits/SC-112-untracked-hygiene-classification-20260903.md`](./audits/SC-112-untracked-hygiene-classification-20260903.md) |
