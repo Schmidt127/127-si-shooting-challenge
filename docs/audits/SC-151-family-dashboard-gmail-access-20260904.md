@@ -1,7 +1,11 @@
 # SC-151 — Family Dashboard Gmail access (2026-09-04)
 
 **Backlog ID:** SC-151  
-**Branch:** `fix/sc-151-family-dashboard-gmail-access`  
+**Status:** **MERGED/DEPLOYED**  
+**PR:** [#389](https://github.com/Schmidt127/127-si-shooting-challenge/pull/389)  
+**Merge SHA:** `a00ef7a5a3291f13550ee9f7e1b14609b01dce65`  
+**Production deployment:** `dpl_2mch4scL3c6bgHZgizDbsqPTywbW` (target `production`, commit SHA matches merge)  
+**Production URL:** https://www.fairfieldbasketballclub.com/shoot/dashboard/sign-in  
 **Related:** SC-112 (closed — do not reopen)
 
 > **SC-112 remains closed. This Gmail-access issue is separate from the multi-child redirect defect.**
@@ -43,10 +47,25 @@ SC-112 magic-link validation incorrectly treated personal Gmail as a blocked dom
 
 Uniform confirmation · rate limits · enrollment re-check · no Airtable IDs in URLs · single-use tokens · httpOnly signed session · test-mode recipient override · no auth weakening.
 
-## Tests
+## Tests (pre-merge)
 
-See PR / session report for exact pass/fail totals (Vitest auth suite, lint, typecheck, Playwright auth/privacy, production build).
+- Focused auth Vitest: 25/25  
+- Full Vitest: 655 passed | 1 skipped  
+- Lint: 0 errors, 5 pre-existing warnings  
+- Typecheck / production build: pass  
+- Playwright focused auth/sign-in: 13 passed | 4 skipped (`ATHLETE_AUTH_ENABLED` unset)  
+- Web CI on PR #389: pass  
+
+## Production smoke (2026-09-04, post-deploy)
+
+| Check | Result |
+|-------|--------|
+| Deployed SHA equals merge `a00ef7a5` | Pass |
+| `/shoot/dashboard/sign-in` loads | Pass (title: Family dashboard sign-in) |
+| “Personal Gmail … not accepted” absent | Pass |
+| Instruction: “Use the parent email entered on your Shooting Challenge registration.” | Pass |
+| Magic link sent for smoke | **Not sent** (by design) |
 
 ## Coordinator reconciliation
 
-If another agent is editing `docs/127-SI-MASTER-FUTURE-WORK-LIST.md`, integrate the **SC-151** row from this PR (or this note) without reopening SC-112.
+SC-151 Future Work List row updated to **MERGED/DEPLOYED**. **Do not reopen SC-112** for this defect. If another agent concurrently edits SC-112 / SC-109 rows, keep those edits; only SC-151 status was intentionally changed here.
