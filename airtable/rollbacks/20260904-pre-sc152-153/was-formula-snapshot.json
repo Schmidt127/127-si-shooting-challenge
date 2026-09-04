@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-09-04",
+  "tableId": "tbl9520d72adxlAKQ",
+  "tableName": "Weekly Athlete Summary",
+  "fields": {
+    "Perfect Week Calculation Queue?": {
+      "fieldId": "fldNvOVO3WidABUXS",
+      "type": "formula",
+      "formulaHuman": "IF(AND(Enrollment linked, Week linked, Goal Record linked, OR(Status=Pending, Status=Ready)), 1, 0)",
+      "formula": "IF(\r\n  AND(\r\n    LEN(ARRAYJOIN({fldNH81lfwL5dBnAw})) > 0,\r\n    LEN(ARRAYJOIN({fldNUSqzr3H0PE5Ex})) > 0,\r\n    LEN(ARRAYJOIN({fldNvhGv57qOqbsfN})) > 0,\r\n    OR(\r\n      {fldyFlpiRQiTpCKJz} = \"Pending\",\r\n      {fldyFlpiRQiTpCKJz} = \"Ready\"\r\n    )\r\n  ),\r\n  1,\r\n  0\r\n)",
+      "referenced": {
+        "fldNH81lfwL5dBnAw": "Enrollment",
+        "fldNUSqzr3H0PE5Ex": "Week",
+        "fldNvhGv57qOqbsfN": "Goal Record",
+        "fldyFlpiRQiTpCKJz": "Perfect Week Automation Status"
+      }
+    },
+    "Perfect Week Eligible?": {
+      "fieldId": "fld0re4ydFGq2vvZC",
+      "type": "formula",
+      "formulaHuman": "IF(AND(Status=Ready, Daily Met, Homework Met=1, Video Met=1, Zoom Met=1), 1, 0)",
+      "formula": "IF(\n  AND(\n    {fldyFlpiRQiTpCKJz} = \"Ready\",\n    {fld9whhW2WYo6Z3wD},\n    {fldK2cIQXX18OTdhS} = 1,\n    {fldat2jCxT2sc9pms} = 1,\n    {fldWok1MQBND9z0r9} = 1\n  ),\n  1,\n  0\n)",
+      "referenced": {
+        "fldyFlpiRQiTpCKJz": "Perfect Week Automation Status",
+        "fld9whhW2WYo6Z3wD": "Perfect Week Daily Requirement Met?",
+        "fldK2cIQXX18OTdhS": "Perfect Week Homework Requirement Met?",
+        "fldat2jCxT2sc9pms": "Perfect Week Video Requirement Met?",
+        "fldWok1MQBND9z0r9": "Perfect Week Zoom Requirement Met?"
+      }
+    },
+    "Perfect Week Automation Status": {
+      "fieldId": "fldyFlpiRQiTpCKJz",
+      "type": "singleSelect",
+      "choices": ["Pending", "Ready", "Created", "Skipped", "Error"]
+    }
+  }
+}
