@@ -4,38 +4,42 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-09
-Last GitHub Update: 2026-08-20 (v1.2 V2 standard structure + main())
+Last GitHub Update: 2026-09-04 (v1.3 SC-160 asset intake without Week)
 
 Purpose:
 Create one Submission Asset per source attachment/slot on a Submission,
 preserving provenance and safely replaying when Airtable replaces an attachment ID.
+Asset intake does not require Submission.Week (SC-160); week-dependent scoring stays separate.
 
 Trigger:
-Submissions when attachment source fields change (confirm exact conditions in Airtable UI);
-pass the dynamic recordId.
+Submissions when Ready for 009 Asset Creation? = 1 and Activity Date is not future
+(confirm exact conditions in Airtable UI); pass the dynamic recordId.
 
 Important Tables:
 Submissions, Submission Assets
 
 Important Fields:
 HW Sub 1, HW Sub 2, Video Upload, Homework Name 1, Homework Name 2,
-Enrollment, Week, Attachment Upload Status, Attachment Upload Error,
+Enrollment, Week (optional for intake), Attachment Upload Status, Attachment Upload Error,
 Asset Slot, Source Attachment ID, Airtable Attachment, Send to Make Trigger
 
 Notes:
 GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
-Contract: GitHub issue #103.
+Contract: GitHub issue #103 · SC-160.
 */
 
 /************************************************************
  * 009 - SUBMISSION INTAKE AND ASSET CREATION
  * Create Submission Assets
  *
- * Version: v1.2
+ * Version: v1.3
  * Date Written: 2026-06-20
- * Last Updated: 2026-08-20
+ * Last Updated: 2026-09-04
  *
  * VERSION HISTORY
+ * - v1.3 (2026-09-04): SC-160 — asset intake no longer requires Submission.Week.
+ *   Missing Week still creates one SA per authorized attachment; parent status notes
+ *   week-dependent scoring hold. Multi-Week still fails closed. Enrollment still required.
  * - v1.2 (2026-08-20): V2 Automation Standard structure — GitHub header,
  *   production docblock, SCRIPT metadata, numbered sections, async main(),
  *   required outputs (statusOut / actionOut / errorOut / debugStep).
@@ -50,9 +54,12 @@ Contract: GitHub issue #103.
  * - Reject homework attachments when the same-slot Homework Name is not exactly one link.
  * - Replay safely when Airtable replaces an attachment ID (compatible restoration).
  * - Update parent Attachment Upload Status / Error for downstream processing.
+ * - Allow intake when Week is missing (SC-160); leave a visible week-hold note.
  *
  * IMPORTANT DESIGN RULES
- * - Exactly one Enrollment and exactly one Week on the Submission (fail closed).
+ * - Exactly one Enrollment on the Submission (fail closed).
+ * - Week is optional for asset create: 0 links → create assets + week-hold note;
+ *   1 link → normal; >1 links → fail closed.
  * - HW1 / HW2 require exactly one Homework Name 1 / Homework Name 2 link; VIDEO has no homework gate.
  * - Exact Source Attachment ID match → skip (idempotent).
  * - Compatible restoration updates Source Attachment ID / attachment when Airtable re-IDs a file.
@@ -63,7 +70,8 @@ Contract: GitHub issue #103.
  * - Attachment Upload Status fan-out owner beyond parent status writeback (021).
  * - Make / S3 upload handoff (070a / 070b).
  * - Homework Completion create/link (020) or Video Feedback create/link (013).
- * - XP from submissions (010).
+ * - XP from submissions (010) or Perfect Week / week scoring (005 / 057).
+ * - Week assignment (005).
  *
  * FOLDER
  * - 01 - Submission Intake and Asset Creation
@@ -75,15 +83,16 @@ Contract: GitHub issue #103.
  * - Submissions
  *
  * RECOMMENDED TRIGGER CONDITIONS
- * - When a record matches conditions indicating new/changed attachments
- *   (HW Sub 1, HW Sub 2, and/or Video Upload) — confirm exact UI conditions in Airtable
+ * - Ready for 009 Asset Creation? = 1
+ * - Activity Date Is Future? = 0
  * - Input variable recordId = triggering Submission record ID
  *
  * OPTIONAL TRIGGER CONDITIONS
- * - Enrollment and Week already linked (script fails closed if missing)
+ * - Enrollment already linked (script fails closed if missing)
  *
  * DO NOT USE THIS TRIGGER CONDITION
  * - Attachment Upload Status alone (this script writes that field; avoid loops)
+ * - Week is not empty (SC-160: Week must not gate asset intake)
  *
  * REQUIRED INPUT VARIABLES
  * - recordId = triggering Submissions record ID
@@ -97,6 +106,8 @@ Contract: GitHub issue #103.
  * - submissionId = Submission record ID
  * - createdAssetCount / createdAssetIds
  * - repairedAssetCount / needsReviewCount
+ * - weekLinkedOut = true | false
+ * - weekHoldOut = true when Week missing and assets/repairs/skips were handled
  *
  * PRIMARY TABLES USED
  * - Submissions, Submission Assets
@@ -116,11 +127,11 @@ Contract: GitHub issue #103.
 
 const SCRIPT = {
   scriptName: "009 - Submission Intake - Create Submission Assets",
-  version: "v1.2",
-  versionNumber: "1.2",
-  versionDate: "2026-08-20",
+  version: "v1.3",
+  versionNumber: "1.3",
+  versionDate: "2026-09-04",
   originalWrittenDate: "2026-06-20",
-  lastUpdated: "2026-08-20",
+  lastUpdated: "2026-09-04",
   folder: "01 - Submission Intake and Asset Creation",
   automationName: "009 - Submission Intake - Create Submission Assets",
 };
@@ -364,9 +375,13 @@ async function main() {
   if (enrollmentIds.length !== 1) {
     throw new Error(`Submission must have exactly one Enrollment; found ${enrollmentIds.length}`);
   }
-  if (weekIds.length !== 1) {
-    throw new Error(`Submission must have exactly one Week; found ${weekIds.length}`);
+  // SC-160: Week is optional for asset intake. Multi-Week remains invalid.
+  if (weekIds.length > 1) {
+    throw new Error(`Submission must have at most one Week; found ${weekIds.length}`);
   }
+  const weekLinked = weekIds.length === 1;
+  const weekHoldNote =
+    "009: Week not linked — assets created; week-dependent scoring on hold";
 
   step("4 - Authorize slots");
   const sources = [
@@ -551,6 +566,8 @@ async function main() {
 
   step("8 - Update parent submission status");
   const parentUpdate = {};
+  const handledWithoutReview = createdIds.length || repairs.length || skipped.length;
+  const weekHoldOut = !weekLinked && Boolean(handledWithoutReview) && needsReview.length === 0;
   if (needsReview.length) {
     setChoice(parentUpdate, submissionsTable, CONFIG.submissions.attachmentUploadStatus, CONFIG.uploadStatuses.processing);
     setText(
@@ -560,10 +577,11 @@ async function main() {
       `009 needs review: ${needsReview.map((x) => `${x.slot}:${x.reason}`).join(" | ")}`,
       true
     );
-  } else if (createdIds.length || repairs.length || skipped.length) {
+  } else if (handledWithoutReview) {
     setChoice(parentUpdate, submissionsTable, CONFIG.submissions.attachmentUploadStatus, CONFIG.uploadStatuses.processing);
     if (isWritable(submissionsTable, CONFIG.submissions.attachmentUploadError)) {
-      parentUpdate[CONFIG.submissions.attachmentUploadError] = "";
+      // Visible hold when Week is missing; clear advisory when Week is present.
+      parentUpdate[CONFIG.submissions.attachmentUploadError] = weekHoldOut ? weekHoldNote : "";
     }
   } else {
     setChoice(parentUpdate, submissionsTable, CONFIG.submissions.attachmentUploadStatus, CONFIG.uploadStatuses.noFiles);
@@ -601,6 +619,8 @@ async function main() {
   setOutputSafe("createdAssetIds", createdIds);
   setOutputSafe("repairedAssetCount", repairs.length);
   setOutputSafe("needsReviewCount", needsReview.length);
+  setOutputSafe("weekLinkedOut", weekLinked);
+  setOutputSafe("weekHoldOut", weekHoldOut);
 
   console.log(
     JSON.stringify(
@@ -610,6 +630,8 @@ async function main() {
         statusOut,
         actionOut,
         submissionId: submission.id,
+        weekLinked,
+        weekHoldOut,
         created: createdIds.length,
         repaired: repairs.length,
         skipped: skipped.length,

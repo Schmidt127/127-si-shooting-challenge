@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-09-04 — **SC-159 COMPLETE / Live Tested**: formula `059 Lifecycle Trigger?` + Automation **059 v3.8** (deployed; formula=1 only). Disposable withdraw/restore/idempotency/Perfect Week PASS. Evidence [`audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md`](./audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md). Final completion program: SF-07/SC-158 COMPLETE; FUT-001 late-credit COMPLETE; FUT-009 Lambda COMPLETE; FUT-003 Make inactive (paid activation Mike); FUT-002 Batch 2 stubs quarantined (**UI trash still needs asset-intake review** — not unblocked by SC-159 alone). Season Sim **NOT run**.
+**Last verification (repo):** 2026-09-04 � **SC-159 COMPLETE / Live Tested** (formula `059 Lifecycle Trigger?` + **059 v3.8**). **SC-160 IN PROGRESS** (009 GitHub **v1.3**; Ready/Why Not Ready formula paste pending after script publish). Final completion: SF-07/SC-158 COMPLETE; FUT-001 late-credit COMPLETE; FUT-009 Lambda COMPLETE; FUT-003 Make inactive (paid activation Mike); FUT-002 Batch 2 stubs quarantined (**UI trash gated on SC-160 live proof**). Season Sim **NOT run**. SC-160 audit: [`audits/SC-160-ASSET-INTAKE-DECOUPLE-20260904.md`](./audits/SC-160-ASSET-INTAKE-DECOUPLE-20260904.md). SC-159 evidence: [`audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md`](./audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md).
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -344,6 +344,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - SC-148 mobile a11y — **COMPLETE / Live Tested** (PR **#396**)
 - SC-057 / SC-058 — **Complete / Live Tested** (PR **#395**; inventory + SF remediation)
 - Season Simulation — **NOT authorized** (explicit Mike instruction required later)
+- **SC-160** — Asset intake without Week (**009 GitHub v1.3**; formula + script paste pending) — [`audits/SC-160-ASSET-INTAKE-DECOUPLE-20260904.md`](./audits/SC-160-ASSET-INTAKE-DECOUPLE-20260904.md) · [`deploy-checklists/SC-160-009-asset-intake-decouple.md`](./deploy-checklists/SC-160-009-asset-intake-decouple.md)
 - Airtable field deletion — **deferred** until functional verification complete
 - Full administrative portal / optional card redesign — **deferred**
 - Landing FUT-033–036 + Hub FUT-041/042/046/047 — repo merged locally; **GitHub push + Vercel deploy** pending auth (2026-09-01)
