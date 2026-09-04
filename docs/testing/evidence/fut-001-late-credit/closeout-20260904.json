@@ -1,0 +1,81 @@
+{
+  "harness": "FUT-001-LATE-CREDIT",
+  "mode": "closeout",
+  "date": "2026-09-04",
+  "baseId": "appn84sqPw03zEbTT",
+  "branch": "final/a4-fut001-late-credit-20260904",
+  "startSha": "2c113c105769e9e3a75109f4846e71fb48d2c73d",
+  "liveVersions": {
+    "020": "v3.9",
+    "065": "v10.6",
+    "057": "2.4",
+    "065_recordId": "dynamic_trigger_id",
+    "source": "Automations MCP 2026-09-04"
+  },
+  "fixture": {
+    "athlete": "Athlete1 Schmidt (disposable)",
+    "week": "Early Bird",
+    "phaSlot": "HW1",
+    "dueDate": "2027-06-29",
+    "lateActivityDate": "2027-07-01",
+    "note": "Record IDs redacted in public docs; full ids retained only in local harness manifests during run."
+  },
+  "results": {
+    "020.late_asset_creates_hc": "PASS",
+    "020.official_week_is_pha_week": "PASS",
+    "020.late_submission_date_and_notes": "PASS",
+    "065.late_satisfactory_full_xp_exactly_one": "PASS",
+    "065.xp_week_is_official_pha_week": "PASS",
+    "065.idempotent_no_duplicate_on_rerun": "PASS",
+    "057.late_hw_excluded_from_pw_satisfactory": "PASS",
+    "ops.failures_or_stranded_detectable": "PASS"
+  },
+  "measured": {
+    "hcSubmissionDate": "2027-07-01",
+    "lateNotePresent": true,
+    "lateNoteSaysFullXp": true,
+    "lateNoteSaysNoPerfectWeek": true,
+    "xpSourceKeyPattern": "HOMEWORK_XP|{hcId}",
+    "xpPoints": 35,
+    "xpActive": true,
+    "xpCount": 1,
+    "idempotentXpCount": 1,
+    "awardStatus": "Awarded",
+    "reconcileNeededAfterAward": 0,
+    "perfectWeekHomeworkAssignedCount": 2,
+    "perfectWeekHomeworkSatisfactoryCount": 0,
+    "perfectWeekHomeworkRequirementMet": 0
+  },
+  "blockersEncountered": [
+    {
+      "id": "duplicate_was_blocked_065",
+      "severity": "Two exact Enrollment+Week WAS rows for Athlete1+Early Bird caused 065 requireCanonicalWas to throw; recordMatchesConditions left Reconcile=1 with no XP.",
+      "resolution": "Deleted disposable duplicate WAS; forced Last=Current → Reconcile 0 → clear Last → Reconcile 1 re-entry.",
+      "scriptChangeRequired": false
+    },
+    {
+      "id": "dual_enrollment_hc_fixture",
+      "severity": "Pre-existing HW1 HC linked both Athlete1 and Athlete2 enrollments; 020 linked existing on-time HC instead of creating late HC.",
+      "resolution": "Unlinked Athlete1 from that HC for disposable create path; left Athlete2 ownership.",
+      "scriptChangeRequired": false
+    }
+  ],
+  "cleanup": {
+    "deleted": [
+      "XP Event (HOMEWORK_XP late proof)",
+      "Homework Completion (late proof)",
+      "Submission Asset (late proof)",
+      "Submission (late proof)",
+      "Weekly Athlete Summary (created for proof)",
+      "Duplicate Early Bird WAS (blocker)"
+    ],
+    "weeksUntouched": true,
+    "seasonSimUnused": true,
+    "noScriptRepaste": true
+  },
+  "offlineContracts": {
+    "065-homework-late-credit-policy.test.js": "PASS",
+    "assignment-identity.test.js": "PASS"
+  },
+  "verdict": "FUT-001 late-credit live disposable proof COMPLETE"
+}

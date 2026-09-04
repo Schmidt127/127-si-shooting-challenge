@@ -203,7 +203,7 @@ Do **not** treat other Automations-table columns (trigger/conditions) as authori
 |---|-------------------------------|--------|--------|-------|
 | **003** | **v2.0** | v2.0 | **Live / COMPLETE / PRODUCTION-VERIFIED / DO-NOT-TOUCH** | Grade-change Grade Band refresh; keep active; disposable VERIFY Enrollment 2026-09-03 — [`prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md`](./prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md). Initial assign remains **002**. |
 | **010** | **v10.12** | v10.12 | Live / **aligned** | Do not re-paste — [`010-v10.12-operator-packet.md`](./deploy-checklists/010-v10.12-operator-packet.md). Afternoon live-pass may show **v10.13** Season Sim dual-gate — treat UI script body as authority if it differs; **REQUIRES LIVE CONFIRMATION** before inventing inventory drift |
-| **020** | **v3.9** | v3.9 | Live / **PASTE-ALIGNED** (Automations Code 2026-09-03) | Late-credit policy (PR **#372**). Prior FUT-001 row **v3.8** superseded for Code column. Disposable late-HW behavior proof **REQUIRES LIVE CONFIRMATION**. Checklist: [`homework-late-credit-policy-020-057-065.md`](./deploy-checklists/homework-late-credit-policy-020-057-065.md) |
+| **020** | **v3.9** | v3.9 | Live / **PASTE-ALIGNED** (Automations Code 2026-09-03) | Late-credit policy (PR **#372**). Prior FUT-001 row **v3.8** superseded for Code column. **Disposable late-HW behavior proof COMPLETE 2026-09-04** — [`audits/FUT-001-LATE-CREDIT-LIVE-PROOF-20260904.md`](./audits/FUT-001-LATE-CREDIT-LIVE-PROOF-20260904.md). Checklist: [`homework-late-credit-policy-020-057-065.md`](./deploy-checklists/homework-late-credit-policy-020-057-065.md) |
 | **022** | **v2.2** | v2.2 | Live / **aligned** | Lambda-only parent URL — [`022-v2.2-operator-packet.md`](./deploy-checklists/022-v2.2-operator-packet.md) |
 | **033** | **v4.4** | v4.4 | Live | |
 | **041** | **v5.1** | v5.1 | Live | Optional inputs only |
@@ -256,7 +256,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Domain | Owner (repo contract) | Live proof |
 |--------|----------------------|------------|
 | Submission XP | **010** — Source Key `SUBMISSION_XP\|{submissionId}` | GitHub **v10.12**; prior Production run history v10.11 |
-| Homework XP | **064** prepares (`HOMEWORK_COMPLETION` rule); **065** creates/reconciles `HOMEWORK_XP\|{hcId}` (**020** HC create; **078** marks Parent Feedback Ready?) | **065 Production Automations Code v10.6** (late-credit PR **#372**); prior multi-asset closeout **COMPLETE** 2026-08-31 (`HOMEWORK_XP\|rec8E94Jg7mpmuMW9` = `recwpzl8pkXecUqRK`, no duplicate) |
+| Homework XP | **064** prepares (`HOMEWORK_COMPLETION` rule); **065** creates/reconciles `HOMEWORK_XP\|{hcId}` (**020** HC create; **078** marks Parent Feedback Ready?) | **065 Production Automations Code v10.6** (late-credit PR **#372**); disposable late-credit proof **COMPLETE** 2026-09-04; prior multi-asset closeout **COMPLETE** 2026-08-31 |
 | Video XP | **113 / 114** (+ **013** VF create) | **Live v6.4 / v6.1**; **PKG-007 lifecycle proof PASS 2026-08-23** (`AUTONOMOUS_VIDEO_QA_20260823_164549`, Testing3). Native trigger + 073 OFF UI attestation open |
 | Shot milestones | **066** | Production **v3.9** live-tested 2026-08-24 |
 | Levels | **041 / 042** | **041 Production v5.1**; broader progression proof still open |
