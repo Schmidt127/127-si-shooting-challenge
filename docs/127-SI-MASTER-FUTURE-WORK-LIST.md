@@ -99,7 +99,7 @@ Priority: **P0** launch/security blocker · **P1** important parent/athlete expe
 ### FUT-001 — Match homework by assignment identity, not HW1/HW2 slot
 
 **Priority:** P1  
-**Status:** Assignment-identity Complete (GitHub + Production). **Late-credit policy (2026-09-03):** GitHub **020 v3.9 / 065 v10.6 / 057 v2.3** via PR **#372**. Production **Automations Code** 2026-09-03 MCP: **020 v3.9 / 065 v10.6 / 057 2.3** all **Live** (**PASTE-ALIGNED**). Disposable late-HW / Perfect Week exclusion behavior proof still **REQUIRES LIVE CONFIRMATION**.  
+**Status:** Assignment-identity Complete (GitHub + Production). **Late-credit policy (2026-09-03):** GitHub **020 v3.9 / 065 v10.6 / 057 v2.4** via PR **#372** (+ live 057 advanced to **2.4**). Production **Automations Code** 2026-09-04 MCP: **020 v3.9 / 065 v10.6 / 057 2.4** all **Live** (**PASTE-ALIGNED**). **Disposable late-HW / Perfect Week exclusion behavior proof COMPLETE 2026-09-04** — [`audits/FUT-001-LATE-CREDIT-LIVE-PROOF-20260904.md`](./audits/FUT-001-LATE-CREDIT-LIVE-PROOF-20260904.md) · [`testing/evidence/fut-001-late-credit/closeout-20260904.json`](./testing/evidence/fut-001-late-credit/closeout-20260904.json).  
 **Systems:** Airtable, homework intake, Homework Completions, XP, parent submission flow
 
 Allow a parent or athlete to submit an assignment in either visible homework slot. The system must identify the assignment by its assignment/lesson identity and match it to the correct scheduled assignment. The HW number is not authoritative because slot numbering may change from year to year.
@@ -115,6 +115,8 @@ The system must preserve checks for assignment identity, enrollment, challenge/s
 **PR #264 (2026-08-28):** Branch `fix/fut-001-homework-assignment-identity` — commit `91c65b36` + CI fix `3d497f4a` (065 offline Weeks mock). **Merged.** Production Automations Code **020 v3.8 / 065 v10.4 Live** (MCP 2026-08-29/30) at that time.
 
 **PR #372 (2026-09-03):** Late-credit policy — merge `da009262`. Operator checklist: [`deploy-checklists/homework-late-credit-policy-020-057-065.md`](./deploy-checklists/homework-late-credit-policy-020-057-065.md). Automations Code column **PASTE-ALIGNED** 2026-09-03 (Agent 4 MCP). **Do not paste from agents.**
+
+**Live disposable proof (2026-09-04 Agent 4):** Late HC Submission Date after PHA Due Date → full `HOMEWORK_XP` (35) on official Early Bird week; Perfect Week homework satisfactory count stayed **0**; no duplicate XP on re-grade. Report: [`audits/FUT-001-LATE-CREDIT-LIVE-PROOF-20260904.md`](./audits/FUT-001-LATE-CREDIT-LIVE-PROOF-20260904.md).
 
 ### FUT-002 — Audit and remove unused Airtable fields
 
@@ -1412,7 +1414,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A–F above remain for 
 | **Game Log category filters** | **Built in Repository** (2026-09-03) | PR **#366** `b7f80534` — nine category chips/filters; public-safe vs authorized private |
 | **FUT-032** | **COMPLETE** (2026-08-31) | Homework Hub ? Resend source writeback — Hub PR [#42](https://github.com/Schmidt127/communications/pull/42) MERGED; Sent? + Sent On verified live after homework feedback — [`deploy-checklists/FUT-032-homework-hub-resend-writeback.md`](./deploy-checklists/FUT-032-homework-hub-resend-writeback.md) |
 | **065 v10.5** | **COMPLETE** (2026-08-31) | Points-reconcile fix pasted Live; Awarded + 071/Hub path verified — [`deploy-checklists/065-v10.5-points-reconcile-operator-packet.md`](./deploy-checklists/065-v10.5-points-reconcile-operator-packet.md) |
-| **065 v10.6 / 020 v3.9 / 057 v2.3 late-credit** | **GitHub COMPLETE / Production PASTE-ALIGNED** (2026-09-03) | PR **#372** da009262. Live Automations Code **020 v3.9 / 065 v10.6 / 057 2.3**. Disposable behavior proof still REQUIRES LIVE CONFIRMATION. |
+| **065 v10.6 / 020 v3.9 / 057 v2.4 late-credit** | **COMPLETE** (GitHub + Production PASTE-ALIGNED + disposable live proof 2026-09-04) | PR **#372** da009262. Live Automations Code **020 v3.9 / 065 v10.6 / 057 2.4**. Proof: [`audits/FUT-001-LATE-CREDIT-LIVE-PROOF-20260904.md`](./audits/FUT-001-LATE-CREDIT-LIVE-PROOF-20260904.md). |
 
 ### 2026-08-31 approved brainstorming intake (documentation only)
 
@@ -1473,7 +1475,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A–F above remain for 
 |---|---|---|
 | **SC-112 magic-link + private dashboard** | **COMPLETE — PRODUCTION VERIFIED BY MIKE** | PRs **#350–#357**. Magic-link operational with Production auth **on**. |
 | **SC-112 multi-child parent auth** | **COMPLETE — PRODUCTION VERIFIED BY MIKE** (2026-09-04) · **no further action** | PR **#373** multi-child keys · select-404 fix PR **#388** merge **`78208ffc`** (fix `e3bb7e45`) · Production deploy **`dpl_8TLH6uQAvLXUoQGDrGQ4NrFnWcVG`**. Mike verified: three athletes presented; each selectable; correct dashboards; family switcher; sign-out; no Page Not Found; no `/shoot/shoot/`; no `rec…` in URLs. Evidence: [`audits/SC-112-multi-child-select-404-fix-20260904.md`](./audits/SC-112-multi-child-select-404-fix-20260904.md). |
-| **Homework late-credit policy (020/065/057)** | **GitHub COMPLETE** · Production Automations Code **PASTE-ALIGNED** (**020 v3.9 / 065 v10.6 / 057 2.3** Live) · disposable behavior proof **REQUIRES LIVE CONFIRMATION** | PR **#372** merged `da009262`. Checklist: [`deploy-checklists/homework-late-credit-policy-020-057-065.md`](./deploy-checklists/homework-late-credit-policy-020-057-065.md). |
+| **Homework late-credit policy (020/065/057)** | **COMPLETE** (GitHub + Production PASTE-ALIGNED + disposable live proof 2026-09-04) | PR **#372** merged `da009262`. Live **020 v3.9 / 065 v10.6 / 057 2.4**. Checklist: [`deploy-checklists/homework-late-credit-policy-020-057-065.md`](./deploy-checklists/homework-late-credit-policy-020-057-065.md). Proof: [`audits/FUT-001-LATE-CREDIT-LIVE-PROOF-20260904.md`](./audits/FUT-001-LATE-CREDIT-LIVE-PROOF-20260904.md). |
 | **Automation 067** | **COMPLETE (Live v3.5) / DO-NOT-TOUCH** | Automations Code 2026-09-03 SCRIPT **v3.5** Live. Do not edit this closeout wave. |
 | **Game Log category filters** | **Built in Repository** | PR **#366** merged `b7f80534`. Nine public-safe category slugs (shooting, homework, video, zoom, streak, weekly threshold, shot milestone, perfect week, manual award). |
 | **Public awards publication gate** | **MERGED** PR **#378** (a0e84533); **#376** closed superseded | Live checkbox **Public On Web** wired as sole public gate. Fail-closed blank/false. Vercel Production follows merge. |
