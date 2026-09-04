@@ -108,6 +108,22 @@ describe("buildAthleteProfilePageMetadata", () => {
     });
 
     expect(metadata.robots).toEqual(DEFAULT_ROBOTS_INDEX);
+    expect(String(metadata.alternates?.canonical)).toMatch(/\/athletes\/indexed-athlete$/);
+    expect(String(metadata.alternates?.canonical)).not.toMatch(/rec[a-zA-Z0-9]{14}/);
+    expect(String(metadata.alternates?.canonical)).not.toMatch(/[?&]/);
+  });
+
+  it("keeps noindex when athlete flag is explicitly false", () => {
+    vi.stubEnv("NEXT_PUBLIC_ALLOW_SEARCH_INDEXING", "true");
+    vi.stubEnv("NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING", "false");
+
+    const metadata = buildAthleteProfilePageMetadata({
+      slug: "gated-athlete",
+      displayName: "Gated Athlete",
+      found: true,
+    });
+
+    expect(metadata.robots).toEqual(PRIVATE_ROBOTS_NOINDEX);
   });
 
   it("omits sensitive detail from meta description for found profiles", () => {
@@ -151,6 +167,9 @@ describe("buildAthleteProfilePageMetadata", () => {
   });
 
   it("uses generic copy for not-found metadata shells", () => {
+    vi.stubEnv("NEXT_PUBLIC_ALLOW_SEARCH_INDEXING", "true");
+    vi.stubEnv("NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING", "true");
+
     const metadata = buildAthleteProfilePageMetadata({
       slug: "missing-athlete",
       displayName: null,
@@ -159,5 +178,19 @@ describe("buildAthleteProfilePageMetadata", () => {
 
     expect(metadata.robots).toEqual(PRIVATE_ROBOTS_NOINDEX);
     expect(String(metadata.description)).toContain("Athlete profile");
+  });
+
+  it("keeps not-found shells noindex even when cutover flags are enabled", () => {
+    vi.stubEnv("NEXT_PUBLIC_ALLOW_SEARCH_INDEXING", "true");
+    vi.stubEnv("NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING", "true");
+
+    const metadata = buildAthleteProfilePageMetadata({
+      slug: "gone-athlete",
+      displayName: "Should Not Matter",
+      found: false,
+    });
+
+    expect(metadata.robots).toEqual(PRIVATE_ROBOTS_NOINDEX);
+    expect(resolveAthleteProfileRobots()).toEqual(DEFAULT_ROBOTS_INDEX);
   });
 });

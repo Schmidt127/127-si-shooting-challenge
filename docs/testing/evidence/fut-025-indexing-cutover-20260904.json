@@ -1,0 +1,73 @@
+{
+  "task": "FUT-025",
+  "date": "2026-09-04",
+  "agent": "Agent 2 — Profile Indexing",
+  "authorization": "Mike authorized NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING=true Production cutover",
+  "env": {
+    "NEXT_PUBLIC_ALLOW_SEARCH_INDEXING": {
+      "production": true,
+      "preexisting": true
+    },
+    "NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING": {
+      "production": true,
+      "addedAt": "2026-09-04",
+      "method": "vercel env add … production"
+    }
+  },
+  "deploy": {
+    "priorReadyId": "dpl_4epsJG1hYnuQnBXFQsZpRGQnb14H",
+    "cutoverRedeployId": "dpl_4tbg25UzYPFruga1PzQthewWswNP",
+    "state": "READY",
+    "target": "production",
+    "commitSha": "8e662a38ab3d12a726dd7599ccdac4077db0e015",
+    "inspectUrl": "https://vercel.com/127-sports-intensity/127-si-shooting-challenge/4tbg25UzYPFruga1PzQthewWswNP"
+  },
+  "verification": {
+    "baseUrl": "https://www.fairfieldbasketballclub.com/shoot",
+    "robotsTxt": {
+      "allowShoot": true,
+      "disallowAthletes": false,
+      "disallowDashboard": true,
+      "disallowAdmin": true,
+      "disallowApi": true,
+      "disallowPublicDisplay": true
+    },
+    "sitemap": {
+      "athleteUrlCount": 0
+    },
+    "publicProfiles": [
+      {
+        "slug": "athlete1-schmidt",
+        "robots": "index, follow",
+        "canonical": "https://www.fairfieldbasketballclub.com/shoot/athletes/athlete1-schmidt",
+        "description": "Athlete1 Schmidt on the 127 SI Shooting Challenge leaderboard.",
+        "hasHero": true,
+        "headRecIdCount": 0,
+        "metaEmailCount": 0,
+        "metaGradeOrSchool": false
+      },
+      {
+        "slug": "athlete-2-schmidt",
+        "robots": "index, follow",
+        "hasHero": true
+      }
+    ],
+    "privateRoutesNoindex": [
+      "dashboard",
+      "dashboard/sign-in",
+      "dashboard/select",
+      "admin",
+      "public-display"
+    ],
+    "missingSlugShell": {
+      "slug": "testing-schmidt",
+      "note": "Not found in current Production enrollments; not-found path remains noindex via app/not-found.tsx"
+    }
+  },
+  "unitTests": {
+    "command": "npm run test -- lib/seo/athlete-profile-metadata.test.ts lib/seo/metadata.test.ts",
+    "passed": 39,
+    "files": 2
+  },
+  "rollback": "Remove or set NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING=false on Vercel Production and redeploy"
+}

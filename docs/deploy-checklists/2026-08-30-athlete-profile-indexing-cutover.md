@@ -6,7 +6,9 @@
 
 ## Status
 
-**Not enabled in production.** Athlete profiles remain `noindex, nofollow` and are excluded from `sitemap.xml` by default.
+**ENABLED in production (2026-09-04).** Mike authorized `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING=true`. Redeploy `dpl_4tbg25UzYPFruga1PzQthewWswNP` READY. Evidence: [`docs/audits/FUT-025-indexing-cutover-20260904.md`](../audits/FUT-025-indexing-cutover-20260904.md).
+
+Athlete profiles with Public Profile Enabled + slug are `index, follow`. They remain excluded from `sitemap.xml` by design.
 
 ## Consent assumptions (verify before cutover)
 
@@ -33,7 +35,7 @@ Set at **build time** (redeploy required):
 | `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING` | `true` | Already set for SC-115 program pages |
 | `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING` | `true` | **New** — athlete-specific cutover; default unset/false |
 
-Do **not** set `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING` until Mike explicitly approves athlete search indexing.
+Do **not** unset `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING` unless rolling back athlete search indexing.
 
 ## Expected behavior after cutover
 
