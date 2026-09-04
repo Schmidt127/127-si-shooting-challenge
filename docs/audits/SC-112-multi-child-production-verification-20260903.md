@@ -1,5 +1,7 @@
 # SC-112 / SC-SEASON-SIM-002 — Multi-child production verification (Agent 1)
 
+> **SUPERSEDED (2026-09-04):** SC-112 multi-child is **COMPLETE — PRODUCTION VERIFIED BY MIKE**. Merge `78208ffc` · PR **#388** · deploy `dpl_8TLH6uQAvLXUoQGDrGQ4NrFnWcVG`. Canonical status + ledger: [`SC-112-multi-child-select-404-fix-20260904.md`](./SC-112-multi-child-select-404-fix-20260904.md). Body below is a **historical** 2026-09-03 Agent 1 audit (PARTIAL / NEEDS-MIKE at that time) and must not be treated as current.
+
 **Date:** 2026-09-03  
 **Agent:** Agent 1 (multi-child production verification)  
 **Branch:** `verify/sc-112-multi-child-prod-a1`  
