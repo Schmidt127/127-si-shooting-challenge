@@ -87,6 +87,14 @@ test.describe("dashboard privacy", () => {
     expect(bodyText.toLowerCase()).not.toContain("coach feedback:");
   });
 
+  test("sign-in page does not prohibit personal Gmail", async ({ page }) => {
+    await page.goto("dashboard/sign-in", { waitUntil: "domcontentloaded" });
+    const bodyText = (await page.locator("body").innerText()) ?? "";
+    expect(bodyText.toLowerCase()).not.toContain("personal gmail");
+    expect(bodyText.toLowerCase()).not.toContain("not accepted for family dashboard");
+    await expect(page.getByText(/parent email entered on your shooting challenge registration/i)).toBeVisible();
+  });
+
   test("dashboard sign-in page is reachable without exposing record ids", async ({ page }) => {
     const response = await page.goto("dashboard/sign-in", { waitUntil: "domcontentloaded" });
     expect(response?.status()).toBeLessThan(500);

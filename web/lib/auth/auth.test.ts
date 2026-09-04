@@ -48,8 +48,20 @@ describe("magic link tokens", () => {
 });
 
 describe("parent email validation", () => {
-  it("blocks personal Gmail addresses", () => {
-    expect(validateParentEmailInput("Parent@Gmail.com").ok).toBe(false);
+  it("accepts personal Gmail addresses with case and whitespace normalization", () => {
+    const result = validateParentEmailInput("  Parent.Family@Gmail.com  ");
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.email).toBe("parent.family@gmail.com");
+    }
+  });
+
+  it("accepts googlemail.com addresses", () => {
+    const result = validateParentEmailInput("parent.family@googlemail.com");
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.email).toBe("parent.family@googlemail.com");
+    }
   });
 
   it("accepts school/district addresses", () => {
@@ -57,6 +69,14 @@ describe("parent email validation", () => {
     expect(result.ok).toBe(true);
     if (result.ok) {
       expect(result.email).toBe("parent@fairfield.k12.mt.us");
+    }
+  });
+
+  it("rejects malformed addresses without domain-specific messaging", () => {
+    const result = validateParentEmailInput("not-an-email");
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.reason).toBe("invalid");
     }
   });
 });
@@ -220,6 +240,83 @@ describe("magic link request responses", () => {
     );
     const payload = (await response.json()) as { message: string };
     expect(payload.message).toBe(MAGIC_LINK_CONFIRMATION_MESSAGE);
+  });
+
+  it("allows registered Gmail parents to request access without domain rejection", async () => {
+    findActiveEnrollmentsByParentEmailMock.mockResolvedValue([
+      {
+        enrollmentId: "recABCDEFGHIJKLM",
+        displayName: "Testing Athlete",
+        slug: "testing-athlete",
+        school: "Fairfield",
+        grade: "8",
+        level: "Shooter",
+        xpTotal: 100,
+        xpIntoLevel: 10,
+        xpForNextLevel: 50,
+        nextLevelLabel: "Hot Hand",
+      },
+    ]);
+
+    const response = await requestMagicLinkAccess(
+      "  Parent.Family@Gmail.com ",
+      new Request("http://local"),
+    );
+    expect(response.status).toBe(200);
+    const payload = (await response.json()) as { ok: boolean; message: string };
+    expect(payload.ok).toBe(true);
+    expect(payload.message).toBe(MAGIC_LINK_CONFIRMATION_MESSAGE);
+    expect(findActiveEnrollmentsByParentEmailMock).toHaveBeenCalledWith(
+      "parent.family@gmail.com",
+    );
+  });
+
+  it("returns the same confirmation for unregistered Gmail without revealing registration", async () => {
+    findActiveEnrollmentsByParentEmailMock.mockResolvedValue([]);
+
+    const response = await requestMagicLinkAccess(
+      "parent.family@gmail.com",
+      new Request("http://local"),
+    );
+    expect(response.status).toBe(200);
+    const payload = (await response.json()) as { ok: boolean; message: string };
+    expect(payload.ok).toBe(true);
+    expect(payload.message).toBe(MAGIC_LINK_CONFIRMATION_MESSAGE);
+    expect(findActiveEnrollmentsByParentEmailMock).toHaveBeenCalledWith(
+      "parent.family@gmail.com",
+    );
+  });
+
+  it("keeps non-Gmail parent requests intact alongside Gmail", async () => {
+    findActiveEnrollmentsByParentEmailMock.mockResolvedValue([
+      {
+        enrollmentId: "recABCDEFGHIJKLM",
+        displayName: "Testing Athlete",
+        slug: "testing-athlete",
+        school: "Fairfield",
+        grade: "8",
+        level: "Shooter",
+        xpTotal: 100,
+        xpIntoLevel: 10,
+        xpForNextLevel: 50,
+        nextLevelLabel: "Hot Hand",
+      },
+    ]);
+
+    const school = await requestMagicLinkAccess(
+      "parent@fairfield.k12.mt.us",
+      new Request("http://local"),
+    );
+    const gmail = await requestMagicLinkAccess(
+      "parent.family@gmail.com",
+      new Request("http://local"),
+    );
+    const schoolPayload = (await school.json()) as { message: string };
+    const gmailPayload = (await gmail.json()) as { message: string };
+    expect(school.status).toBe(200);
+    expect(gmail.status).toBe(200);
+    expect(schoolPayload.message).toBe(gmailPayload.message);
+    expect(schoolPayload.message).toBe(MAGIC_LINK_CONFIRMATION_MESSAGE);
   });
 });
 
