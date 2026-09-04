@@ -30,7 +30,7 @@ Do not create Automation 121. Automation 117 remains email-only.
  * 101 - Zoom Attendance XP - Award Meeting XP
  * Version: v6.8
  * Date Written: 2026-05-28
- * Last Updated: 2026-09-02
+ * Last Updated: 2026-09-04
  *
  * PURPOSE
  * - Runs from one Zoom Meetings record.
@@ -47,6 +47,8 @@ Do not create Automation 121. Automation 117 remains email-only.
  *   the same XP Event ID; no XP Event is deleted or replaced.
  *
  * CHANGE HISTORY
+ * - 2026-09-04 v6.8: SC-034 — select Zoom Recording XP Percent by Active School
+ *   Year (no first-record Config fallback). Recording credit behavior unchanged.
  * - 2026-09-02 v6.8: SC-147 — process ZOOM_RECORDING_CREDIT in the same
  *   reconciliation pass; never latch Create-XP-Events-off while REC_PENDING
  *   remains unresolved; require Completed before recording award; preserve
@@ -246,6 +248,10 @@ const CONFIG = {
   recording: {
     methodValue: "Recording Quiz",
     configXpPercent: "Zoom Recording XP Percent of Live",
+  },
+
+  configFields: {
+    activeSchoolYear: "Active School Year",
   },
 
   bonusMeetingCounts: {
@@ -1035,13 +1041,17 @@ async function processRecordingCreditsForMeeting({
       const configQuery = await configTable.selectRecordsAsync({
         fields: buildFieldsToLoad(configTable, [CONFIG.recording.configXpPercent]),
       });
+      // Exactly one Config row: use its percent. Multiple/zero → leave null (floor(live/2)).
       if (configQuery.records.length === 1) {
-        configPercent = getNumber(
-          configQuery.records[0],
-          configTable,
-          CONFIG.recording.configXpPercent,
-          null
-        );
+        for (const configRow of configQuery.records) {
+          configPercent = getNumber(
+            configRow,
+            configTable,
+            CONFIG.recording.configXpPercent,
+            null
+          );
+          break;
+        }
       }
     } catch {
       // Config percent is optional; floor(live/2) remains the fallback.
@@ -1489,6 +1499,7 @@ async function runLiveLifecycleReconciliation(recordId) {
         meetingStatus,
         meetingDateKey,
         weekId: weekIds[0],
+        weekSchoolYear,
         pendingTokens,
         xpQueryRecords: xpQuery.records,
         wasQueryRecords: wasQuery.records,
@@ -2055,6 +2066,7 @@ async function runLiveLifecycleReconciliation(recordId) {
       meetingStatus,
       meetingDateKey,
       weekId: weekIds[0],
+      weekSchoolYear,
       pendingTokens,
       xpQueryRecords: xpQuery.records,
       wasQueryRecords: wasQuery.records,
