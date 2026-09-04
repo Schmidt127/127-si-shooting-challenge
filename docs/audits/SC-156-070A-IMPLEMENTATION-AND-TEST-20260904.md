@@ -115,7 +115,7 @@ Hard throw paths (missing inputs, etc.) do not reach the Update node today; thos
 | Mike UI publish still required? | **Yes** — see publish checklist |
 | Test matrix | **BLOCKED_ON_PUBLISH** |
 | Cleanup | N/A (no fixtures created) |
-| Commit SHA | *(filled after commit)* |
+| Commit SHA | `692a22c565a3524730e2c60d2a7a82e8319b951e` (docs tip; branch also includes A1 `14eaa0db`) |
 | Blockers | Mike must delete Update node `wacpcvzcDB1KKjaKI` and **Update/Publish** in UI; then re-get and run matrix |
 
 ---
