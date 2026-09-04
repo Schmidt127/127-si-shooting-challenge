@@ -6,6 +6,7 @@ import { expect, test, type Page } from "@playwright/test";
 
 const VIEWPORTS = {
   mobile: { width: 375, height: 812 },
+  mobileAlt: { width: 390, height: 844 },
   tablet: { width: 768, height: 1024 },
   desktop: { width: 1440, height: 900 },
 } as const;
@@ -225,5 +226,50 @@ test.describe("desktop accessibility basics", () => {
       "href",
       "https://forms.fairfieldbasketballclub.com/shoot-dailysubmissions",
     );
+  });
+});
+
+test.describe("390px mobile attestation", () => {
+  test.use({ viewport: VIEWPORTS.mobileAlt });
+
+  test("home and leaderboard: single h1 + no horizontal scroll", async ({ page }) => {
+    for (const path of [".", "leaderboard"] as const) {
+      const response = await page.goto(path, { waitUntil: "domcontentloaded" });
+      expect(response?.status()).toBeLessThan(500);
+      await expectSingleH1(page, path);
+      expect(await horizontalOverflow(page)).toBeLessThanOrEqual(8);
+    }
+  });
+
+  test("sign-in email is labeled and meets 44px height", async ({ page }) => {
+    await page.goto("dashboard/sign-in", { waitUntil: "domcontentloaded" });
+    await expectSingleH1(page, "sign-in");
+    const email = page.getByLabel(/parent email/i);
+    await expect(email).toBeVisible();
+    const box = await email.boundingBox();
+    expect(box).toBeTruthy();
+    expect(box!.height).toBeGreaterThanOrEqual(44);
+    expect(await horizontalOverflow(page)).toBeLessThanOrEqual(8);
+  });
+});
+
+test.describe("not-found accessibility chrome", () => {
+  test.use({ viewport: VIEWPORTS.mobile });
+
+  test("unknown route exposes a main landmark and home CTA", async ({ page }) => {
+    const response = await page.goto("this-route-does-not-exist-sc148", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(response?.status()).toBe(404);
+    await expectSingleH1(page, "not-found");
+    const main = page.locator("main#main-content");
+    await expect(main).toBeVisible();
+    await expect(main).toHaveAttribute("tabindex", "-1");
+    const home = page.getByRole("link", { name: /Back to home/i });
+    await expect(home).toBeVisible();
+    const box = await home.boundingBox();
+    expect(box).toBeTruthy();
+    expect(box!.height).toBeGreaterThanOrEqual(44);
+    expect(await horizontalOverflow(page)).toBeLessThanOrEqual(8);
   });
 });

@@ -9,7 +9,11 @@ type ErrorPageProps = {
 
 export default function ErrorPage({ reset }: ErrorPageProps) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-6 py-24 text-foreground">
+    <main
+      id="main-content"
+      tabIndex={-1}
+      className="flex min-h-screen flex-col items-center justify-center bg-background px-6 py-24 text-foreground outline-none"
+    >
       <div className="max-w-md rounded-2xl border border-border bg-card p-8 text-center shadow-[0_8px_24px_-12px_rgba(38,38,38,0.18)]">
         <div className="mx-auto h-0.5 w-12 rounded-full bg-brand-orange/80" />
         <h1 className="font-display mt-6 text-2xl">Something went wrong</h1>
@@ -25,6 +29,6 @@ export default function ErrorPage({ reset }: ErrorPageProps) {
           </Link>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
