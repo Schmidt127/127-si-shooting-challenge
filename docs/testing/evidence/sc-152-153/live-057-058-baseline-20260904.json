@@ -1,0 +1,63 @@
+{
+  "capturedAt": "2026-09-04T14:17:00Z",
+  "agent": "A4",
+  "baseId": "appn84sqPw03zEbTT",
+  "method": "Airtable MCP get_automation includeDeployedVersion=true",
+  "automations": {
+    "057": {
+      "automationId": "wflVRPhgunsosFjWS",
+      "deploymentStatus": "deployed",
+      "deployedVersion": null,
+      "scriptVersion": "2.3",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tbl9520d72adxlAKQ",
+      "conditions": [
+        {
+          "fieldId": "fldNvOVO3WidABUXS",
+          "fieldName": "Perfect Week Calculation Queue?",
+          "operator": "=",
+          "value": 1
+        }
+      ],
+      "notes": [
+        "Formula-only queue trigger — SF-01 baseline confirmed",
+        "Perfect Week Recalc Needed? checkbox not present in live WAS schema at capture"
+      ]
+    },
+    "058": {
+      "automationId": "wflDinFz6FBIGEOMg",
+      "deploymentStatus": "deployed",
+      "deployedVersion": null,
+      "scriptVersion": "1.5",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tbl9520d72adxlAKQ",
+      "conditions": [
+        {
+          "fieldId": "fld0re4ydFGq2vvZC",
+          "fieldName": "Perfect Week Eligible?",
+          "operator": "=",
+          "value": 1
+        },
+        {
+          "fieldId": "fldJVKEeziY9l5Dbq",
+          "fieldName": "Perfect Week Unlock",
+          "operator": "isEmpty"
+        },
+        {
+          "fieldId": "fldyFlpiRQiTpCKJz",
+          "fieldName": "Perfect Week Automation Status",
+          "operator": "=",
+          "choiceId": "selPQUWvxM9lAp88R",
+          "choiceName": "Ready"
+        }
+      ],
+      "notes": [
+        "Positive-only trigger — SF-02 baseline confirmed",
+        "Script contains deactivate/restore but UI conditions block those paths"
+      ]
+    }
+  },
+  "sf01DoDMet": false,
+  "sf02DoDMet": false,
+  "fullMatrixStatus": "BLOCKED_PENDING_A2_PASTE"
+}

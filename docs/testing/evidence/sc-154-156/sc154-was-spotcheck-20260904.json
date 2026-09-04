@@ -1,0 +1,15 @@
+{
+  "capturedAt": "2026-09-04T14:17:00Z",
+  "agent": "A4",
+  "baseId": "appn84sqPw03zEbTT",
+  "tableId": "tbl9520d72adxlAKQ",
+  "scope": "Enrollment-Test (Schmidt Athlete1 VERIFY) — IDs redacted in narrative docs",
+  "wasRowsLinkedToEnrollmentTest": 2,
+  "week1ValidSingleEnrollmentPairCount": 1,
+  "earlyBirdMultiEnrollmentObserved": true,
+  "validEnrollmentWeekDuplicateForWeek1": false,
+  "notes": [
+    "Agrees with A3 disposable cleanup leaving pairCount=1 for Week 1",
+    "Multi-Enrollment Early Bird row is residual pollution, not a valid unique-key duplicate group"
+  ]
+}
