@@ -5,6 +5,7 @@ import {
   PUBLIC_SITE_ORIGIN,
   resolveLandingUrl,
   resolveSiteUrl,
+  toAppRouterHref,
   withBasePath,
 } from "./app-config";
 
@@ -106,6 +107,29 @@ describe("withBasePath", () => {
     expect(withBasePath("/favicon.png")).toBe("/shoot/favicon.png");
     expect(withBasePath("/shoot/favicon.png")).toBe("/shoot/favicon.png");
     expect(withBasePath("/leaderboard")).toBe("/shoot/leaderboard");
+  });
+});
+
+describe("toAppRouterHref", () => {
+  it("keeps app-relative paths for router.push / Link", () => {
+    expect(toAppRouterHref("/dashboard")).toBe("/dashboard");
+    expect(toAppRouterHref("/dashboard/sign-in")).toBe("/dashboard/sign-in");
+    expect(toAppRouterHref("/dashboard/select")).toBe("/dashboard/select");
+  });
+
+  it("strips a public /shoot prefix so router.push cannot double-prefix", () => {
+    expect(toAppRouterHref("/shoot/dashboard")).toBe("/dashboard");
+    expect(toAppRouterHref("/shoot/dashboard/sign-in")).toBe("/dashboard/sign-in");
+    expect(toAppRouterHref("/shoot")).toBe("/");
+    expect(toAppRouterHref("/shoot/shoot/dashboard")).toBe("/dashboard");
+  });
+
+  it("never produces /shoot/shoot/… paths", () => {
+    for (const input of ["/dashboard", "/shoot/dashboard", "/shoot/shoot/dashboard"]) {
+      const href = toAppRouterHref(input);
+      expect(href).not.toMatch(/^\/shoot(\/|$)/);
+      expect(href).not.toContain("/shoot/shoot");
+    }
   });
 });
 

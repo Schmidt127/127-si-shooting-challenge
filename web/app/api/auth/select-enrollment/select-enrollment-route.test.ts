@@ -91,7 +91,9 @@ describe("POST /api/auth/select-enrollment", () => {
     expect(response.status).toBe(200);
     const payload = (await response.json()) as { ok: boolean; redirectTo: string };
     expect(payload.ok).toBe(true);
-    expect(payload.redirectTo).toBe("/shoot/dashboard");
+    // App-relative for next/router — must NOT include /shoot (would 404 as /shoot/shoot/dashboard).
+    expect(payload.redirectTo).toBe("/dashboard");
+    expect(payload.redirectTo).not.toMatch(/^\/shoot(\/|$)/);
 
     const setCookie = response.headers.get("set-cookie") ?? "";
     expect(setCookie).toContain(ATHLETE_SESSION_COOKIE);
@@ -146,5 +148,29 @@ describe("POST /api/auth/select-enrollment", () => {
       }),
     );
     expect(response.status).toBe(401);
+  });
+
+  it("HTML form POST 303 redirects to absolute /shoot/dashboard (not /shoot/shoot)", async () => {
+    const selectionKey = mintEnrollmentSelectionKey(ENROLL_A, PARENT, TEST_SECRET);
+    const response = await POST(
+      new Request("https://www.fairfieldbasketballclub.com/shoot/api/auth/select-enrollment", {
+        method: "POST",
+        headers: {
+          "content-type": "application/x-www-form-urlencoded",
+          accept: "text/html",
+          cookie: sessionCookie(null),
+          "x-forwarded-proto": "https",
+          "x-forwarded-host": "www.fairfieldbasketballclub.com",
+        },
+        body: new URLSearchParams({ selectionKey }).toString(),
+      }),
+    );
+
+    expect(response.status).toBe(303);
+    const location = response.headers.get("location") ?? "";
+    expect(location).toBe(
+      "https://www.fairfieldbasketballclub.com/shoot/dashboard",
+    );
+    expect(location).not.toContain("/shoot/shoot/");
   });
 });

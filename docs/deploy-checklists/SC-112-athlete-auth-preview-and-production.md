@@ -139,7 +139,12 @@ Offline multi-child coverage does **not** replace live Production multi-child pr
 ## Remaining SC-112 work (future)
 
 - Optional Hub template `DASHBOARD_MAGIC_LINK` if Mike wants all outbound mail in Hub audit logs.
-- **Live multi-child Production proof** — code MERGED (**#373**); docs **#379** MERGED; second disposable enrollment evidence **#380** MERGED. Status remains **PARTIAL / NEEDS-MIKE** until Mike completes signed-in select → switch → sign-out → reused-link rejection. Magic-link itself **works** in Production.
+- **Live multi-child Production proof** — code MERGED (**#373**); **2026-09-04 select 404 fixed** (double basePath on `router.push` → `/shoot/shoot/dashboard`). Status: **CODE COMPLETE** for the 404; remains **NEEDS-PRODUCTION-DEPLOY** then **NEEDS-MIKE** for signed-in select → switch → sign-out → reused-link rejection. Magic-link itself **works** in Production.
+- Status distinctions for operators:
+  - **Code complete** — select/sign-out JSON redirects are app-relative; regression tests cover `/shoot/shoot` 404.
+  - **Production deployed** — merged fix live on fairfieldbasketballclub.com/shoot (pending until this PR deploys).
+  - **Multi-child production verified** — Mike completes three-child select → dashboard for each child (pending).
+  - **Remaining manual verification** — Mike inbox walkthrough after deploy.
 - **Alumni / inactive enrollment access** — open product decision; auth grants Active? only today.
 - Separate parent vs athlete account views (product decision pending).
 - Upstash Redis required for reliable single-use tokens at Production scale (in-memory store is per-instance only).

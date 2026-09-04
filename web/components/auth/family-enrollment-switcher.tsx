@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { toAppRouterHref } from "@/lib/app-config";
 import { cn } from "@/lib/utils";
 
 type FamilyEnrollmentOption = {
@@ -44,7 +45,8 @@ export function FamilyEnrollmentSwitcher({
         return;
       }
       const payload = (await response.json()) as { redirectTo?: string };
-      router.push(payload.redirectTo ?? "/dashboard");
+      // Must stay app-relative — router.push prepends basePath (/shoot).
+      router.push(toAppRouterHref(payload.redirectTo ?? "/dashboard"));
       router.refresh();
     } catch {
       setError("Could not switch athletes. Try again.");

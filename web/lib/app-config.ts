@@ -46,6 +46,27 @@ export function withBasePath(path: string): string {
   return `${APP_BASE_PATH}${normalized}`;
 }
 
+/**
+ * Href for `next/link` and `router.push` under `basePath`.
+ * Next.js prepends basePath itself — never pass a public `/shoot/...` path or
+ * navigation doubles to `/shoot/shoot/...` (404).
+ */
+export function toAppRouterHref(pathOrPublicPath: string): string {
+  if (!pathOrPublicPath) return "/";
+  if (/^https?:\/\//i.test(pathOrPublicPath)) return pathOrPublicPath;
+  let normalized = pathOrPublicPath.startsWith("/")
+    ? pathOrPublicPath
+    : `/${pathOrPublicPath}`;
+  const base = APP_BASE_PATH.replace(/\/$/, "") || "/shoot";
+  // Strip every leading basePath segment (defends against already-doubled inputs).
+  while (normalized === base || normalized.startsWith(`${base}/`)) {
+    if (normalized === base) return "/";
+    normalized = normalized.slice(base.length);
+    if (!normalized.startsWith("/")) normalized = `/${normalized}`;
+  }
+  return normalized;
+}
+
 function stripTrailingSlash(value: string): string {
   return value.replace(/\/$/, "");
 }
