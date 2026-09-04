@@ -61,8 +61,7 @@ export function SignInForm({ initialError = null }: SignInFormProps) {
         />
       </label>
       <p className="text-sm text-muted">
-        Use the parent email on your Shooting Challenge registration. Personal Gmail addresses are
-        not accepted for family dashboard access.
+        Use the parent email entered on your Shooting Challenge registration.
       </p>
       <Button type="submit" disabled={pending} className="min-h-11 w-full">
         {pending ? "Sending secure link…" : "Email me a secure sign-in link"}
