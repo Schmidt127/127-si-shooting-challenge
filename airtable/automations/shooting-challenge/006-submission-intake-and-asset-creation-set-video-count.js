@@ -2,34 +2,42 @@
 Automation: 006 - Submission Intake and Asset Creation - Set Video Count
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: Production Copy
+Status: LEGACY / RETIRED — DO NOT PASTE, ENABLE, OR RESTORE
 Last Synced From Airtable: 2026-06-20
+Retired: 2026-09-04 (SF-07 / SC-158)
 
 Purpose:
-To be confirmed from production script.
+HISTORICAL ONLY. Formerly counted Submissions.Video Upload attachments and
+wrote Submissions.Video Count. Not present in the live Automations list
+(Production base appn84sqPw03zEbTT, MCP list_automations 2026-09-04).
 
-Trigger:
-To be confirmed from Airtable automation.
-
-Important Tables:
-To be confirmed from production script.
-
-Important Fields:
-To be confirmed from production script.
+Current ownership model (do not restore 006):
+- Submissions.Has Video? — formula IF({Video Upload}, TRUE(), FALSE())
+  owns presence gates for intake / review.
+- Weekly Athlete Summary.Perfect Week Video Count — written by Automation
+  057 from Video Feedback rows linked to the week's submissions (not from
+  Submissions.Video Count).
+- Submissions.Video Count — orphaned writable number; not authoritative.
+  Stranded values are detectable when Video Count ≠ attachment length.
 
 Notes:
-GitHub is the source-of-truth copy.
-Airtable is the deployed/running copy.
+Retained in GitHub for audit history only. Aligns repo with live (no 006).
+Closeout: docs/audits/SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md
 */
 
 /************************************************************
  * AUTOMATION NAME
  * 006 - Submission Intake and Asset Creation - Set Video Count
  *
+ * *** LEGACY / RETIRED — DO NOT DEPLOY ***
+ * Presence owner: Submissions.Has Video? (formula on Video Upload)
+ * Perfect Week video owner: 057 → Perfect Week Video Count (Video Feedback)
+ *
  * Version: v3.0
  * Date Written: 2026-05-20
+ * Last Updated: 2026-09-04 (repo header — retired; no logic restore)
  *
- * PURPOSE
+ * PURPOSE (historical)
  * - Reads one Submission record.
  * - Counts attachments in Submissions.Video Upload.
  * - Writes the attachment count into Submissions.Video Count.
@@ -37,14 +45,14 @@ Airtable is the deployed/running copy.
  *
  * CURRENT SCHEMA NOTES
  * - Submissions.Video Upload is a multipleAttachments field.
- * - Submissions.Video Count is a writable number field.
+ * - Submissions.Video Count is a writable number field (orphaned; not formula).
  * - Submissions.Has Video? is a formula field and must NOT be written by script.
  * - Submissions.Has Review Assets? is a formula field and must NOT be written by script.
  *
  * REQUIRED AUTOMATION INPUT
  * - recordId: Airtable record ID from Submissions
  *
- * RECOMMENDED TRIGGER VIEW CONDITIONS
+ * RECOMMENDED TRIGGER VIEW CONDITIONS (historical — do not re-arm)
  * - Video Upload is not empty.
  * - OR Video Count does not equal the current number of attached video files.
  *

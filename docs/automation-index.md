@@ -35,7 +35,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
 | 005 | Submission Intake — Assign Week (Activity Date + PHA validate) | **paste v5.3 pending** | `005-submission-intake-and-asset-creation-assign-week-to-submission-homework-first.js` (**v5.3** — Homework Name 1/2 = PHA IDs; library via dereference) |
-| 006 | Submission Intake — Set Video Count | *confirm in Airtable* | `006-submission-intake-and-asset-creation-set-video-count.js` |
+| 006 | ~~Submission Intake — Set Video Count~~ | **LEGACY RETIRED — absent from live Automations; do not restore** (SF-07 / SC-158). Presence = `Has Video?` formula; Perfect Week videos = **057** `Perfect Week Video Count`. | `006-…js` *(historical only)* · [`audits/SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md`](./audits/SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md) |
 | 007 | Submission Intake — Duplicate Checker for Submissions | *confirm in Airtable* | `007-submission-intake-and-asset-creation-duplicate-checker-for-submissions.js` |
 | 009 | Submission Intake — Create Submission Assets | **Live v1.2** (Automations Code 2026-08-21) | `009-submission-intake-create-submission-assets.js` (**GitHub v1.2** — one asset per attachment; Source Attachment ID idempotent; see [HOMEWORK-ASSET-COMPLETION-RUNBOOK.md](./online-agents/homework-assets/HOMEWORK-ASSET-COMPLETION-RUNBOOK.md)) |
 | **010** | Submission Intake — Create/Reconcile XP Event from Submission | Submissions when `Reconciliation Needed? = 1`, dynamic `recordId` | `010-submission-intake-create-xp-event.js` (**Production v10.12 Live** — Automations Code MCP 2026-08-29/30; do not re-paste) |
