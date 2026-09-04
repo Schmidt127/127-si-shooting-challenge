@@ -6,6 +6,16 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Lambda
+
+#### Changed
+- **FUT-009 COMPLETE / Live Tested (2026-09-04)** — `POST /fut009/rename` CodeOnly deploy on `127si-upload-asset`: writeback omits absent Formatted Upload Name; activity date resolves from SA `Date` / VF lookup / Storage Key folder. Disposable Schmidt rename + idempotent re-run + dual S3 object proof. Automation **120** Live. Audit: [`docs/audits/FUT-009-LAMBDA-STATUS-20260904.md`](./docs/audits/FUT-009-LAMBDA-STATUS-20260904.md).
+
+### Make
+
+#### Changed
+- **FUT-003 status audit (2026-09-04)** — Paid PaymentIntent writeback remains validated / Make inactive until Mike activation; blueprint stub committed (`EXPORT_PENDING`). No live charges. Audit: [`docs/audits/FUT-003-STRIPE-STATUS-20260904.md`](./docs/audits/FUT-003-STRIPE-STATUS-20260904.md).
+
 ### Web
 
 #### Changed

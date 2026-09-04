@@ -136,7 +136,8 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | PHA Due Date | Public homework catalog + athlete homework assignments display PHA Due Date (fallback Week End Date); verified prod 2026-08-25 |
 | Homework catalog (FUT-014) | **Complete** — `/shoot/homework` PHA + Homework Library live catalog; Brief Description = **`Homework Library.Brief Description - Display`** (`fldAnHr3uTuDN5bs9`); 4 published cards verified prod 2026-08-26 |
 | XP Event Log (website) | **Complete** — two-row layout, ISO dates, linked headline details, same-date % sort; display-only (no XP calculation changes). Commits `6625559`, `f225f04`, `68c3a45`, `3306379` |
-| FUT-003 paid Make route | **Validated — ready for activation** (scenario **inactive** at Maia report 2026-08-26); free-payment architecture **deferred Nov/Dec 2026** |
+| FUT-003 paid Make route | **Validated — ready for Mike Make activation** (scenario **inactive** by design; A5 audit 2026-09-04); free-payment **deferred Nov/Dec 2026**; not a non-registration launch blocker — [`audits/FUT-003-STRIPE-STATUS-20260904.md`](./audits/FUT-003-STRIPE-STATUS-20260904.md) |
+| FUT-009 S3 video rename | **COMPLETE / Live Tested** — Lambda `/fut009/rename` + Automation **120** Live; disposable Schmidt rename + idempotent re-run 2026-09-04 — [`audits/FUT-009-LAMBDA-STATUS-20260904.md`](./audits/FUT-009-LAMBDA-STATUS-20260904.md) |
 | Live Vercel settings | Production env names verified via CLI 2026-08-25 (`NEXT_PUBLIC_ALLOW_SEARCH_INDEXING`, `NEXT_PUBLIC_SITE_URL`); do not log values |
 
 Evidence pointer: [`PROJECT_STATE.md`](./PROJECT_STATE.md) § Vercel / web app.
@@ -333,7 +334,8 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - Lambda Storage Key retry proof + secret rotation
 - RCC Airtable Interface install
 - Open PRs: drafts **#353** / **#335** / **#244** — review before merge. Superseded **#234/#237/#238/#262/#307/#316/#340** CLOSED without merge
-- Functional-closeout wave (2026-09-04): no remaining P0 silent-failure defect; next optional activation **FUT-009** (Lambda) when Mike authorizes — [`audits/COORD-WAVE-FUNCTIONAL-CLOSEOUT-20260904.md`](./audits/COORD-WAVE-FUNCTIONAL-CLOSEOUT-20260904.md)
+- Functional-closeout wave (2026-09-04): no remaining P0 silent-failure defect; **FUT-009 activated / Live Tested** 2026-09-04 — [`audits/FUT-009-LAMBDA-STATUS-20260904.md`](./audits/FUT-009-LAMBDA-STATUS-20260904.md) · prior wave [`audits/COORD-WAVE-FUNCTIONAL-CLOSEOUT-20260904.md`](./audits/COORD-WAVE-FUNCTIONAL-CLOSEOUT-20260904.md)
+- FUT-003 Make paid scenario still **inactive** until Mike activation — [`audits/FUT-003-STRIPE-STATUS-20260904.md`](./audits/FUT-003-STRIPE-STATUS-20260904.md)
 - FUT-025 athlete profile indexing cutover (Mike approval)
 - FUT-010 supervised attachment apply only if eligible rows appear (R3 dry-run **0 eligible**)
 - SC-147 Recorded Zoom half-XP — **COMPLETE / Live Tested** (101 **v6.8**; PR **#398**)

@@ -1,7 +1,7 @@
 # FUT-009 — Safe post-feedback S3 video rename (automatic)
 
 **Backlog:** FUT-009 (P2) · **FUT-007** (basename contract) · **Automation 120**  
-**Status:** **Built in repository — Lambda deploy + Automation 120 paste pending Mike approval**  
+**Status:** **COMPLETE / Live Tested (2026-09-04)** — Lambda route live; Automation 120 Live; disposable rename proof passed — [`../audits/FUT-009-LAMBDA-STATUS-20260904.md`](../audits/FUT-009-LAMBDA-STATUS-20260904.md)  
 **Systems:** Video Feedback, Submission Assets, AWS S3, Lambda `127si-upload-asset`, Automation **120**  
 **Related:** [FUT-007-S3-NAMING-CONTRACT-BRIEF.md](../next-wave/aws-media/FUT-007-S3-NAMING-CONTRACT-BRIEF.md) · [FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md](../next-wave/aws-media/FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md) · [120-v1.0-fut009-s3-video-rename-paste-packet.md](./120-v1.0-fut009-s3-video-rename-paste-packet.md)
 
@@ -77,7 +77,7 @@ When a coach enters **Custom Video File Name** on Video Feedback and checks **Co
 
 **Not required for v1:** S3 Rename Status / S3 Rename Error on Video Feedback — failures surface via automation run outputs and **Upload Error** on Submission Asset.
 
-**Existing fields used (no schema change):** Custom Video File Name, Submission Asset link, Storage Key, Canonical File URL, Formatted Upload Name, Original File Name, Reviewer File URL, Reviewer Access Token, Upload Error.
+**Existing fields used (no schema change):** Custom Video File Name, Submission Asset link, Storage Key, Canonical File URL, Original File Name, Reviewer File URL, Reviewer Access Token, Upload Error, Submission Assets **Date** (activity-date source). **Formatted Upload Name is not present in Production** — Lambda writeback omits it by default (2026-09-04).
 
 ---
 

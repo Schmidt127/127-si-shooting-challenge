@@ -203,14 +203,22 @@ def build_rename_writeback_fields(
     previous_storage_key: str,
     formatted_basename: str,
     include_audit_fields: bool = False,
+    include_formatted_upload_name: bool = False,
 ) -> dict[str, Any]:
-    """Fields to patch on Submission Asset after verified S3 copy."""
+    """Fields to patch on Submission Asset after verified S3 copy.
+
+    Production (verified 2026-09-04) has Storage Key + Canonical File URL + Upload Error,
+    but does **not** have Formatted Upload Name / Previous Storage Key / Renamed At.
+    Optional fields are omitted by default so writeback cannot fail UNKNOWN_FIELD_NAME
+    after a successful CopyObject.
+    """
     fields: dict[str, Any] = {
         FIELD_STORAGE_KEY: destination_key,
         FIELD_CANONICAL_FILE_URL: canonical_url(bucket, region, destination_key),
-        FIELD_FORMATTED_UPLOAD_NAME: formatted_basename,
         FIELD_UPLOAD_ERROR: None,
     }
+    if include_formatted_upload_name:
+        fields[FIELD_FORMATTED_UPLOAD_NAME] = formatted_basename
     if include_audit_fields:
         fields[FIELD_PREVIOUS_STORAGE_KEY] = previous_storage_key
         fields[FIELD_RENAMED_AT] = datetime.now(DENVER).isoformat(timespec="milliseconds")
