@@ -142,5 +142,5 @@ One-time live repair for WAS `reczxTIpVI8ZJLex0` was already applied during the 
 - [x] Classify all three drafts
 - [x] Extract #353 + #244 onto `final/a6-prs-cleanup-prep-20260904`
 - [x] Decline extract of #335 investigation
-- [ ] Push + open clean PR for docs + extracted tools
-- [ ] Close #353 / #335 / #244 with evidence comments pointing at disposition + new PR
+- [x] Push + open clean PR for docs + extracted tools — **#413**
+- [x] Close #353 / #335 / #244 with evidence comments pointing at disposition + #413
