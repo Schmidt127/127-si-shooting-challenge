@@ -3,7 +3,7 @@
 | Field | Value |
 |-------|--------|
 | Date | 2026-08-30 |
-| Status | **Vercel Production env MATCH verified (2026-09-04)** — Agent 3 CLI pull MATCH for all three `NEXT_PUBLIC_*` branding vars; live HTML + HTTP smoke PASS; no env change / redeploy required |
+| Status | **Promoted to Production (2026-09-04)** — Vercel Production env MATCH for all three `NEXT_PUBLIC_*` branding vars; live HTML + HTTP smoke PASS; dual SC-149 deliverables COMPLETE; no Mike follow-up |
 | Backlog | **SC-149**, **MRW-E02** |
 | Related | EXT-QA-011 (live `hooopchallenges.com` typo in Vercel env, 2026-07-25) |
 | Public route | `https://www.fairfieldbasketballclub.com/shoot` (`basePath` `/shoot`) |
@@ -74,7 +74,7 @@ Execute **in order**. No Airtable or credential changes in this package.
 | 5 | Trigger or wait for Vercel Production deploy from `master` | [x] `dpl_4WDcPGnGK8wet8pbBX5ZobqQwqWX` READY (no redeploy needed) |
 | 6 | Run production smoke (below) | [x] 2026-09-04 attestation + http-smoke PASS |
 | 7 | Visual check: logo + footer + “Home” hub link → Fairfield landing (not Hoop Challenges) | [x] Playwright desktop+mobile; hoop absent |
-| 8 | Update backlog: SC-149 → **Live Tested in PROD**; MRW-E02 → **COMPLETE** | [ ] coordinator |
+| 8 | Update backlog: SC-149 → **Live Tested in PROD**; MRW-E02 → **COMPLETE** | [x] 2026-09-04 coordinator closeout |
 
 ---
 
@@ -113,9 +113,9 @@ Rollback: revert Vercel env to previous values and redeploy (not recommended —
 
 ## Close-out
 
-After Mike completes steps above:
+- [x] `CHANGELOG.md` — SC-149 dual-deliverable closeout (2026-09-04)
+- [x] `docs/127-SI-MASTER-FUTURE-WORK-LIST.md` — both SC-149 rows **COMPLETE / Live Tested in PROD**
+- [x] `MASTER_REMAINING_WORK_LIST.md` — MRW-E02 **COMPLETE**
+- [x] This doc **Status** → **Promoted to Production** (2026-09-04)
 
-- [ ] `CHANGELOG.md` — `### Web` entry for SC-149 live attestation (if not already noted)
-- [ ] `docs/127-SI-MASTER-FUTURE-WORK-LIST.md` — SC-149 status
-- [ ] `MASTER_REMAINING_WORK_LIST.md` — MRW-E02 **COMPLETE**
-- [ ] This doc **Status** → `Promoted to Production`
+**Status:** **Promoted to Production** — no Mike routine follow-up remaining for SC-149 / MRW-E02.

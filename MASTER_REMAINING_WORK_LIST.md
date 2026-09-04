@@ -310,7 +310,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | ID | Title | Status | Notes |
 |----|-------|--------|-------|
 | MRW-E01 | Confirm Vercel Production tracks master after merges | **COMPLETE (2026-08-30)** | Production deploy SHA `082edc7d` (PR #298); `/` + `/shoot` + `/shoot/api/airtable` HTTP 200 `tokenValid:true` |
-| MRW-E02 | SC-149 branding URL env + smoke | **REPO COMPLETE** — prod attestation PASS 2026-08-30; Mike Vercel env dashboard checkboxes pending ([`SC-149-fairfield-branding-url-verification.md`](docs/deploy-checklists/SC-149-fairfield-branding-url-verification.md)) |
+| MRW-E02 | SC-149 branding URL env + smoke | **COMPLETE** (2026-09-04) — Production env MATCH + live attestation PASS; Mike checkbox gap closed by Agent 3 CLI ([`SC-149-fairfield-branding-url-verification.md`](docs/deploy-checklists/SC-149-fairfield-branding-url-verification.md) · [`SC-149-FAIRFIELD-ATTESTATION-2026-09-04.json`](docs/testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-09-04.json)) |
 | MRW-E03 | SC-148 mobile/a11y polish deploy | IN PROGRESS | Repo built; merge + smoke |
 | MRW-E04 | Production smoke suite after web merges | **COMPLETE** | Home hero assertion aligned to FUT-018 `HOME_HERO` copy; `npm run test:smoke:prod` **50/50** (2026-08-30) |
 
