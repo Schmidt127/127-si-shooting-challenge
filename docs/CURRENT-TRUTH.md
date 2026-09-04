@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-09-04 — **SC-149 COMPLETE** (Fairfield branding env MATCH + Family Dashboard public nav Live Tested). Checkpoint tip **`824062a0`** (PR **#390** closeout) · Production **`dpl_4WDcPGnGK8wet8pbBX5ZobqQwqWX`**. **SC-109** COMPLETE / Live Tested · **SC-112** COMPLETE — PRODUCTION VERIFIED BY MIKE (`78208ffc` / `dpl_8TLH6uQAvLXUoQGDrGQ4NrFnWcVG`) · **SC-151** MERGED/DEPLOYED (`a00ef7a5` / `dpl_2mch4scL3c6bgHZgizDbsqPTywbW`). Season Sim **NOT authorized**; formulas normal **`NOW()` / `TODAY()`**. No real-family enrollments. **SC-147** remains **101 v6.7** GitHub (PR **#338**); **Production paste pending Mike**. Prefer this file + [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md) + `git rev-parse HEAD` on `master`.  
+**Last verification (repo):** 2026-09-04 — **SC-149 COMPLETE** (Fairfield branding env MATCH + Family Dashboard public nav Live Tested). Tip **`03206fd4`** (PR **#393** after **#392** closeout) · Production **`dpl_FpvBs3heioXL7Pj2WWpKDvE8m2Pz`** (behavior attested on `824062a0` / `dpl_4WDcPGn…`). **SC-109** COMPLETE / Live Tested · **SC-112** COMPLETE — PRODUCTION VERIFIED BY MIKE (`78208ffc` / `dpl_8TLH6uQAvLXUoQGDrGQ4NrFnWcVG`) · **SC-151** MERGED/DEPLOYED (`a00ef7a5` / `dpl_2mch4scL3c6bgHZgizDbsqPTywbW`). Season Sim **NOT authorized**; formulas normal **`NOW()` / `TODAY()`**. No real-family enrollments. **SC-147** remains **101 v6.7** GitHub (PR **#338**); **Production paste pending Mike**. Prefer this file + [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md) + `git rev-parse HEAD` on `master`.  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -66,10 +66,10 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | **`824062a00a41f87838da18c6b60e2fe8a3675a68`** — merge PR **#390** SC-112/SC-109 closeout (includes **#391** SC-151 + **#389** Gmail + **#388** select-404). SC-149 closeout PR follows. Re-verify: `git rev-parse HEAD` |
+| HEAD SHA | **`03206fd4f44b665744c3c7ff5223c32fe2fcc766`** — merge PR **#393** tip align after **#392** SC-149 closeout (includes **#390**/**#391**/**#388**/**#389**). Re-verify: `git rev-parse HEAD` |
 | `origin/master` | Should match HEAD after fetch — re-verify: `git rev-parse origin/master` |
 | Ahead / behind | **0 / 0** (re-verify after fetch) |
-| Recent merges (2026-09-04) | **#390** SC-112/SC-109/SC-151 reconciliation (`824062a0`) · **#391** SC-151 MERGED/DEPLOYED closeout (`0479db22`) · **#389** SC-151 Gmail (`a00ef7a5` · `dpl_2mch4scL3c6bgHZgizDbsqPTywbW`) · **#388** SC-112 select-404 (`78208ffc`) — **SC-112 PRODUCTION VERIFIED BY MIKE** · **SC-149** dual-deliverable closeout (this wave) |
+| Recent merges (2026-09-04) | **#393** tip SHA · **#392** SC-149 COMPLETE (`8d77382b` / `dpl_55g5mkt…`) · **#390** SC-112/SC-109/SC-151 reconciliation (`824062a0`) · **#391** SC-151 closeout · **#389** Gmail · **#388** SC-112 select-404 — **SC-112 PRODUCTION VERIFIED BY MIKE** |
 | Recent merges (2026-09-03) | **#383**/**#382**/**#381** SC-112 docs closeout · **#380** multi-child evidence · **#379** multi-child auth docs · **#378** Public On Web · **#377** Live email cutover checklist · **#375** master-list · **#373** multi-child auth · **#372** homework late-credit · **#368** Season Sim hygiene · **#362** Automation 003 |
 | Open PRs (unrelated / do not duplicate SC-112 closeout) | Older open items only (e.g. **#364**, **#363**, **#341**) — SC-112 closeout PRs **#377–#383** and fix **#388** are **MERGED** |
 | Recent merges (2026-08-31) | **#312** multi-asset HW / 065 XP closeout |
@@ -110,7 +110,7 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | Health | `GET /shoot/api/airtable` → token validity check |
 | Softr | **Obsolete / Not Used** — historical reference only |
 | SEO | **Public program pages indexable** — `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true` on Vercel Production (SC-115 cutover 2026-08-25). Athlete profiles + private routes remain `noindex`. Checklist: [`deploy-checklists/2026-08-25-web-search-indexing-cutover.md`](./deploy-checklists/2026-08-25-web-search-indexing-cutover.md). |
-| Production deploy | **Live** — Vercel Production follows `master` (tip **`8d77382b`**; deploy **`dpl_55g5mktMQEoNQhUkvxjbE4yzkkcG`** READY). `GET /shoot` / `/shoot/api/airtable` live-pass **200** (`tokenValid: true`). SC-149 branding env MATCH; Family Dashboard nav live |
+| Production deploy | **Live** — Vercel Production follows `master` (tip **`03206fd4`**; deploy **`dpl_FpvBs3heioXL7Pj2WWpKDvE8m2Pz`** READY). `GET /shoot` / `/shoot/api/airtable` live-pass **200** (`tokenValid: true`). SC-149 branding env MATCH; Family Dashboard nav live |
 | Vitest / smoke | **483/483** Vitest pass (2026-08-30 release QA) · typecheck/lint/build PASS · prior smoke **50/50** (MRW-E04) |
 | FUT-016 Tutorials | **Complete** — portfolio catalog at `/shoot/tutorials` (PR **#284**, 2026-08-30) |
 | FUT-017 Zoom Meetings | **Complete** — portfolio catalog at `/shoot/zoom-meetings` (PR **#285**, 2026-08-30) |
