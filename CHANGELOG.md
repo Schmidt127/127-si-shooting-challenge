@@ -23,6 +23,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **SC-153 COMPLETE / Live Tested (2026-09-04)** — Production 058 **v1.7** withdraw/restore/idempotency PASS (Coach Note QueryResult defect closed). Evidence: [`docs/audits/SC-153-058-V17-LIVE-VERIFICATION-20260904.md`](./docs/audits/SC-153-058-V17-LIVE-VERIFICATION-20260904.md).
 - **SC-152 Live Tested + SC-153 058 v1.7 withdraw hotfix (2026-09-04)** — Production 057 **v2.4** Recalc re-entry PASS. 058 lifecycle trigger live; create/award/restore PASS; withdraw fails on live v1.6 Coach Note query — GitHub **058 v1.7** requires UI paste. Evidence: [`docs/audits/SC-152-153-LIVE-VERIFICATION-20260904.md`](./docs/audits/SC-152-153-LIVE-VERIFICATION-20260904.md).
 - **SC-152 / SC-153 Perfect Week lifecycle (2026-09-04)** — GitHub **057 v2.4** / **058 v1.6**; live Queue formula uses Recalc checkbox. UI paste required (`customScript` API read-only): [`docs/deploy-checklists/SC-152-153-perfect-week-lifecycle-057-058.md`](./docs/deploy-checklists/SC-152-153-perfect-week-lifecycle-057-058.md).
 - **SC-156 070a observability (2026-09-04)** — Live 070a **ON** v4.7; remove post-script clear-trigger step per [`docs/deploy-checklists/SC-156-070a-remove-post-clear-trigger-20260904.md`](./docs/deploy-checklists/SC-156-070a-remove-post-clear-trigger-20260904.md).

@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-09-04** (SC-152 Live Tested; SC-153 partial pending 058 v1.7 withdraw paste — tip after closeout PR. Authority: [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) · [`audits/SC-152-153-LIVE-VERIFICATION-20260904.md`](./audits/SC-152-153-LIVE-VERIFICATION-20260904.md))
+Last updated: **2026-09-04** (SC-152 + SC-153 Live Tested — 057 v2.4 / 058 v1.7. Authority: [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) · [`audits/SC-153-058-V17-LIVE-VERIFICATION-20260904.md`](./audits/SC-153-058-V17-LIVE-VERIFICATION-20260904.md))
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)

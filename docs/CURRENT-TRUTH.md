@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-09-04 — **SC-152 COMPLETE / Live Tested** (057 **v2.4** Recalc re-entry PASS). **SC-153 Partial:** 058 lifecycle trigger + nine watched fields live; create/award/restore PASS; **withdraw blocked** by Coach Note QueryResult bug on live **v1.6** — GitHub **058 v1.7** hotfix ready for UI paste. Evidence: [`audits/SC-152-153-LIVE-VERIFICATION-20260904.md`](./audits/SC-152-153-LIVE-VERIFICATION-20260904.md). SC-154/155/157 closed; SC-156 070a publish still pending (untouched this session). Season Sim **NOT run**; no field deletion.  
+**Last verification (repo):** 2026-09-04 — **SC-152 COMPLETE / Live Tested** (057 **v2.4**). **SC-153 COMPLETE / Live Tested** (058 **v1.7** lifecycle withdraw/restore/idempotency PASS). Evidence: [`audits/SC-152-153-LIVE-VERIFICATION-20260904.md`](./audits/SC-152-153-LIVE-VERIFICATION-20260904.md) · [`audits/SC-153-058-V17-LIVE-VERIFICATION-20260904.md`](./audits/SC-153-058-V17-LIVE-VERIFICATION-20260904.md). SC-154/155/157 closed; SC-156 070a publish still pending (untouched). Season Sim **NOT run**; no field deletion.  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -208,7 +208,7 @@ Do **not** treat other Automations-table columns (trigger/conditions) as authori
 | **033** | **v4.4** | v4.4 | Live | |
 | **041** | **v5.1** | v5.1 | Live | Optional inputs only |
 | **057** | **2.4** | **2.4 Live** | Queue?=1; formula Pending OR Recalc | SC-152 **COMPLETE / Live Tested** 2026-09-04 |
-| **058** | **1.7** | **1.6** until v1.7 UI paste | Lifecycle `recordUpdated` + nine fields live | Create/award/restore PASS; withdraw needs **v1.7** ([checklist](./deploy-checklists/SC-152-153-perfect-week-lifecycle-057-058.md)) |
+| **058** | **1.7** | **1.7 Live** | Lifecycle `recordUpdated` + nine fields | SC-153 **COMPLETE / Live Tested** — withdraw/restore/idempotency PASS ([`SC-153-058-V17-LIVE-VERIFICATION-20260904.md`](./audits/SC-153-058-V17-LIVE-VERIFICATION-20260904.md)) |
 | **059** | **v3.7** | v3.7 | Live | |
 | **064** | **Production-verified current live** | v12.2 in repo | Live | Do not invent a new version string |
 | **065** | **v10.6** | v10.6 | Live / **PASTE-ALIGNED** (Automations Code 2026-09-03) | Late-credit full XP (PR **#372**). Prior **v10.5** points-reconcile paste historical for Code column — [`065-v10.5-points-reconcile-operator-packet.md`](./deploy-checklists/065-v10.5-points-reconcile-operator-packet.md) |
