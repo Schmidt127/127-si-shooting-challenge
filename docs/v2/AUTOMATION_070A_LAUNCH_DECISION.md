@@ -1,9 +1,21 @@
 # Automation 070a — Homework upload launch decision
 
-**Status:** Decision record only — **do not enable PROD 070a** from this document
-**Date:** 2026-07-15
-**Script:** `070a-email-notifications-and-external-handoffs-send-homework-asset-payload-to-make.js`
-**Evidence sources:** [C-070a-production-overnight-package-2026-07-11.md](../deploy-checklists/C-070a-production-overnight-package-2026-07-11.md) · [PROD-promotion-rollback-index-stage10.md](../deploy-checklists/PROD-promotion-rollback-index-stage10.md) · [PROJECT_STATE.md](../PROJECT_STATE.md)
+**Status:** Live attestation supersedes historical OFF recommendation — see **Current Production status** below  
+**Original decision date:** 2026-07-15 · **Attested:** 2026-09-04 (SC-156)  
+**Script:** `070a-email-notifications-and-external-handoffs-send-homework-asset-payload-to-make.js`  
+**Evidence sources:** [SC-156-070A-ENABLED-OBSERVABILITY-20260904.md](../audits/SC-156-070A-ENABLED-OBSERVABILITY-20260904.md) · [C-070a-production-overnight-package-2026-07-11.md](../deploy-checklists/C-070a-production-overnight-package-2026-07-11.md) · [PROD-promotion-rollback-index-stage10.md](../deploy-checklists/PROD-promotion-rollback-index-stage10.md) · [PROJECT_STATE.md](../PROJECT_STATE.md)
+
+---
+
+## Current Production status (2026-09-04)
+
+| Field | Value |
+|-------|-------|
+| automationId | `wflIYVOmRRaHu9cl2` |
+| deploymentStatus | **deployed (ON)** |
+| Script | **v4.7** |
+| Long-term ON/OFF policy | Still Mike-owned; do not flip OFF/ON from this doc alone |
+| Open publish fix | Remove post-script Update that clears `Send to Make Trigger` — [SC-156 checklist](../deploy-checklists/SC-156-070a-remove-post-clear-trigger-20260904.md) |
 
 ---
 
@@ -15,7 +27,7 @@ It is the homework sibling of **070b** (video). Shared script bodies historicall
 
 ---
 
-## Why it is currently OFF in PROD
+## Why it was historically OFF in PROD (2026-07 decision)
 
 | Reason | Evidence |
 |--------|----------|
@@ -99,13 +111,6 @@ Overnight claims “Production E2E PASS 2026-07-12” for parts of this — **re
 
 ## Recommended launch decision (evidence-only)
 
-**Recommendation: Keep PROD 070a OFF for V2 launch.**
+**Historical (2026-07):** Keep PROD 070a OFF for V2 launch (video-first storage).
 
-Rationale:
-
-- Video upload path already covers the critical C-013 PROD storage launch.
-- Homework XP/review does not require S3 to function.
-- Overnight Production evidence exists but is not the same as a Mike-signed PROD promotion checklist on the current branch SHA.
-- Enabling homework upload is a **scheduled storage wave**, not a launch blocker for core XP/gates.
-
-**Revisit when:** Production evidence § above re-verified on current SHA + dedicated homework PROD promotion doc + Mike approval.
+**Current (2026-09-04 SC-156):** Production UI shows **070a deployed/ON** at v4.7. Treat that as live truth. Do not “enable from this document”; do not silently turn it OFF without Mike. Complete the [post-clear trigger removal](../deploy-checklists/SC-156-070a-remove-post-clear-trigger-20260904.md) so failures remain retryable, then Mike confirms long-term homework S3 policy.
