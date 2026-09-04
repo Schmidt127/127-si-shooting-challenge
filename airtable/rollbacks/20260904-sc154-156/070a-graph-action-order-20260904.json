@@ -1,0 +1,104 @@
+﻿{
+    "configurationStatus":  "valid",
+    "scriptVersion":  "v4.7",
+    "trigger":  {
+                    "tableId":  "tblhMLKxQK77agtME",
+                    "tableName":  "Submission Assets",
+                    "conditionsAnd":  [
+                                          {
+                                              "op":  "=",
+                                              "value":  true,
+                                              "fieldName":  "Send to Make Trigger",
+                                              "fieldId":  "fld8C43NVQQ1NeQ7Z"
+                                          },
+                                          {
+                                              "op":  "contains",
+                                              "value":  "READY_TO_SEND",
+                                              "fieldName":  "Ready to Send to Make?",
+                                              "fieldId":  "fldG5lWlsUcrDNlIg"
+                                          },
+                                          {
+                                              "choiceId":  "sel1x03bVpyf2dCcO",
+                                              "op":  "=",
+                                              "choiceName":  "Pending Link",
+                                              "fieldName":  "Upload Status",
+                                              "fieldId":  "fldPybPEvRcEVuNWl"
+                                          },
+                                          {
+                                              "op":  "isEmpty",
+                                              "fieldName":  "Reviewer File URL",
+                                              "fieldId":  "fld3O3MhDPbgyVw4f"
+                                          },
+                                          {
+                                              "op":  "=",
+                                              "value":  "Homework Completions",
+                                              "fieldName":  "Upload Destination",
+                                              "fieldId":  "fldox2Rjj9YL3EYK6"
+                                          },
+                                          {
+                                              "op":  "isNotEmpty",
+                                              "fieldName":  "Submission - Linked",
+                                              "fieldId":  "flddRCbWCegg4WCoZ"
+                                          },
+                                          {
+                                              "op":  "isNotEmpty",
+                                              "fieldName":  "Enrollment - Linked",
+                                              "fieldId":  "fldJRSvui8RPg0Vyb"
+                                          },
+                                          {
+                                              "op":  "isNotEmpty",
+                                              "fieldName":  "Airtable Attachment",
+                                              "fieldId":  "fldrGt7IsWDUAKfzD"
+                                          },
+                                          {
+                                              "op":  "isNotEmpty",
+                                              "fieldName":  "Homework Completions",
+                                              "fieldId":  "fldQF8OsfESrHdcUb"
+                                          }
+                                      ],
+                    "type":  "recordMatchesConditions"
+                },
+    "capturedAt":  "2026-09-04T15:26:44Z",
+    "actionOrder":  [
+                        {
+                            "inputs":  {
+                                           "webhookUrl":  "[REDACTED_MAKE_WEBHOOK_URL]",
+                                           "automationNumber":  "070a",
+                                           "recordId":  {
+                                                            "$ref":  "trigger",
+                                                            "path":  [
+                                                                         "id"
+                                                                     ]
+                                                        }
+                                       },
+                            "scriptBodyRollbackFile":  "070a-v4.7-pre-wave.js",
+                            "type":  "customScript",
+                            "key":  "wacZVMXuabTetYmQ7",
+                            "order":  1,
+                            "keepUnchanged":  true
+                        },
+                        {
+                            "fieldName":  "Send to Make Trigger",
+                            "setTo":  null,
+                            "type":  "updateRecord",
+                            "key":  "wacpcvzcDB1KKjaKI",
+                            "defect":  "Runs after soft-failure returns; clears trigger and defeats retry",
+                            "order":  2,
+                            "rowIdFrom":  "trigger.id",
+                            "fields":  {
+                                           "fld8C43NVQQ1NeQ7Z":  null
+                                       },
+                            "sc156Remove":  true,
+                            "tableId":  "tblhMLKxQK77agtME"
+                        }
+                    ],
+    "automationId":  "wflIYVOmRRaHu9cl2",
+    "backlogId":  "SC-156",
+    "name":  "070a - Email, Notifications, and External Handoffs - Send Homework Asset Payload to Make",
+    "baseId":  "appn84sqPw03zEbTT",
+    "draftEqualsDeployed":  true,
+    "deploymentStatus":  "deployed",
+    "fullSnapshot":  "070a-get-automation-live-snapshot-20260904.json",
+    "agent":  "A1-Live-Truth",
+    "deployedVersion":  null
+}
