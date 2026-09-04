@@ -1,0 +1,180 @@
+{
+  "harness": "SC-160-STAGE6",
+  "mode": "cleanup",
+  "startedAt": "2026-09-04T20:53:26.253Z",
+  "deleted": [],
+  "restored": [],
+  "notes": [
+    "Wrote _cleanup-needed.json (PAT delete 403)"
+  ],
+  "errors": [
+    {
+      "table": "Submission Assets",
+      "id": "rec3y…6pKo",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=rec3yi1oPKnZu6pKo 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recnU…Fbuy",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recnUjSJ2TRBAFbuy 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recEY…NyNC",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recEYF9K3OdXMNyNC 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "reczr…Fj6Z",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=reczr0AKpSVCiFj6Z 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recHc…SkYX",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recHclXnJFIGZSkYX 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recQH…t1Wv",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recQHNWVXnqIct1Wv 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recw0…0W1P",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recw0hEbCyWvU0W1P 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recwt…t06J",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recwt734DxGvPt06J 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recS3…jcrv",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recS3KZVEr4r6jcrv 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recdR…0uuz",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recdRFlI0w6W20uuz 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recYZ…1K46",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recYZpnrHaMEd1K46 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recva…UcE3",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recvahsTmFMb5UcE3 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recnt…Y18b",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recnt0AzGE2f1Y18b 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recYf…ODh5",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recYflHiAR9htODh5 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recjT…aw9h",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recjTHH3roIx2aw9h 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Homework Completions",
+      "id": "reckq…VibO",
+      "label": "hc",
+      "error": "DELETE Homework%20Completions?records[]=reckqW3ZkXTnkVibO 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check tha"
+    },
+    {
+      "table": "Submissions",
+      "id": "recYE…ki1S",
+      "label": "submission",
+      "error": "DELETE Submissions?records[]=recYETwVLV72tki1S 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your"
+    },
+    {
+      "table": "Submissions",
+      "id": "recnz…9Yso",
+      "label": "submission",
+      "error": "DELETE Submissions?records[]=recnzrPpXLmfy9Yso 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your"
+    },
+    {
+      "table": "Submissions",
+      "id": "reclA…Lbik",
+      "label": "submission",
+      "error": "DELETE Submissions?records[]=reclAFDbIl1YcLbik 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your"
+    },
+    {
+      "table": "Submissions",
+      "id": "recGD…msYj",
+      "label": "submission",
+      "error": "DELETE Submissions?records[]=recGDfP9wv5YRmsYj 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your"
+    },
+    {
+      "table": "Submissions",
+      "id": "recw4…ABle",
+      "label": "submission",
+      "error": "DELETE Submissions?records[]=recw42pbsylToABle 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your"
+    },
+    {
+      "table": "Submissions",
+      "id": "recaZ…nVoQ",
+      "label": "submission",
+      "error": "DELETE Submissions?records[]=recaZQqKRqENUnVoQ 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your"
+    },
+    {
+      "table": "Submissions",
+      "id": "rec8E…WlE5",
+      "label": "submission",
+      "error": "DELETE Submissions?records[]=rec8EYnGbPqYSWlE5 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your"
+    },
+    {
+      "table": "Submissions",
+      "id": "reckT…teCc",
+      "label": "submission",
+      "error": "DELETE Submissions?records[]=reckTXqA5IIAmteCc 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your"
+    },
+    {
+      "table": "Submissions",
+      "id": "rec4G…dm66",
+      "label": "submission",
+      "error": "DELETE Submissions?records[]=rec4GmCVyHv6Xdm66 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your"
+    },
+    {
+      "table": "Submissions",
+      "id": "recAu…qQc5",
+      "label": "submission",
+      "error": "DELETE Submissions?records[]=recAuTr9s54rTqQc5 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your"
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "id": "rec1g…tBVF",
+      "label": "was-created",
+      "error": "DELETE Weekly%20Athlete%20Summary?records[]=rec1gzscQN8dJtBVF 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check"
+    }
+  ],
+  "finishedAt": "2026-09-04T20:53:30.219Z",
+  "summary": {
+    "deletedCount": 0,
+    "errorCount": 27,
+    "restoredCount": 0
+  }
+}

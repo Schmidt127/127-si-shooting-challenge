@@ -1,6 +1,6 @@
 # FUT-002 Batch 2 — Deletion Manifest (2026-09-04)
 
-**Status: QUARANTINED (MCP rename) / UI TRASH PENDING**  
+**Status: QUARANTINED (MCP rename) / UI TRASH AUTHORIZED (SC-160 Stage 6 PASS)**  
 **Phase gate:** Blocked until coordinator signals Phase 1 complete (**SF-07**, **SF-08**, **FUT-001**).  
 **As of coordinator integrate:** SF-07 + FUT-001 COMPLETE; SF-08 GitHub-ready (Mike paste). Four stubs **quarantine-renamed** via MCP 2026-09-04. Meta API cannot delete — **Mike UI trash** still required. No fields deleted by agent.
 
@@ -63,7 +63,7 @@
 - Confirmed VF text stub already gone; did not invent a replacement delete.
 - Stopped before any rename/delete due to Phase 1 gate (SF-07 / SF-08 unfinished).
 
-**Gate status for coordinator:** **MANIFEST READY / DO NOT DELETE**
+**Gate status for coordinator:** **SC-160 PASS — Mike UI trash authorized for four stubs**
 
 
 ## Quarantine actions (coordinator 2026-09-04)

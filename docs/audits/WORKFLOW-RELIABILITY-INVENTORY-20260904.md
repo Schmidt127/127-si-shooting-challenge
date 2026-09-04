@@ -172,7 +172,7 @@
 | Retry / recovery | Re-fire 009 after attachment change |
 | Reconciliation | Submissions with attachments and zero assets |
 | Test evidence | Perfect Week asset proofs; 009 v1.2 |
-| Deployed version | **009 v1.2** prior attestation · others Live |
+| Deployed version | **009 v1.3** SC-160 Live Tested · others Live |
 | Last verified | 2026-09-04 ON |
 | Remaining risk | **006** not live — video count may be formula-only |
 
@@ -209,7 +209,7 @@
 | Failure state | Upload Error; missing child |
 | Retry / recovery | Re-check Send to Make; clear error; re-run 070c |
 | Reconciliation | Assets Pending Link / Error; VF missing for video assets |
-| Test evidence | 013 sole writer (112 absent); 020 v3.9 live prior |
+| Test evidence | 013 sole writer (112 absent); 020 v4.0 SC-160 Live Tested |
 | Deployed version | **013** Live · **020** v3.9 prior · **022** v2.2 · **070a–c** Live |
 | Last verified | 2026-09-04 ON |
 | Remaining risk | Low — soft-fail retention depends on script paths; monitor Upload Error + Trigger queue |
@@ -232,8 +232,8 @@
 | Failure state | Automation Error; ineligible deactivate |
 | Retry / recovery | Change review fields so signature differs |
 | Reconciliation | Homework XP Reconciliation Needed?=1 |
-| Test evidence | Live **065 v10.6**; late-credit contracts |
-| Deployed version | **065 v10.6** MATCH · 064 production-verified |
+| Test evidence | Live **065 v10.7** SC-160; late-credit contracts |
+| Deployed version | **065 v10.7** MATCH · 064 production-verified |
 | Last verified | 2026-09-04 |
 | Remaining risk | Low |
 
@@ -312,8 +312,8 @@
 | Failure state | Perfect Week Automation Error (visible) |
 | Retry / recovery | Set Recalc Needed / Status→Pending; clear error; safe XP Source Key |
 | Reconciliation | Queue?=1 stranded; Eligible/Ready without Unlock; Unlock without final XP; Recalc stuck |
-| Test evidence | Live **057 2.4** SC-152 PASS; live **058 1.7** SC-153 withdraw/restore/idempotency PASS |
-| Deployed version | **057 MATCH 2.4**; **058 MATCH 1.7** |
+| Test evidence | Live **057 2.5** SC-160 + SC-152 PASS; live **058 1.7** SC-153 withdraw/restore/idempotency PASS |
+| Deployed version | **057 MATCH 2.5**; **058 MATCH 1.7** |
 | Last verified | 2026-09-04 |
 | Remaining risk | Low — monitor operator reconciliation view |
 

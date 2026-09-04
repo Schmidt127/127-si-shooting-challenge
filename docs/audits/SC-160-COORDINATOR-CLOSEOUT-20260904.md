@@ -2,7 +2,7 @@
 
 ## Verdict
 
-**GitHub-ready / Airtable paste pending.** Systemic root cause fixed in repo. Live Production still blocks asset intake on Missing Week until Mike pastes **009 v1.3** then Ready formulas, then **020 / 065 / 057**.
+**COMPLETE / Live Tested (Stage 6).** Systemic root cause fixed in repo. Live Production still blocks asset intake on Missing Week until Mike pastes **009 v1.3** then Ready formulas, then **020 / 065 / 057**.
 
 ## Task classification
 
@@ -67,4 +67,4 @@
 
 ## Mike next action
 
-Paste per [`../deploy-checklists/SC-160-MASTER-PASTE-ORDER.md`](../deploy-checklists/SC-160-MASTER-PASTE-ORDER.md). After live disposable proof, close SC-160 and consider FUT-002 trash gate.
+Stage 6 live verification closed SC-160. Mike next: FUT-002 Batch 2 UI trash of four quarantined stubs. Evidence [`SC-160-STAGE6-LIVE-VERIFICATION-20260904.md`](./SC-160-STAGE6-LIVE-VERIFICATION-20260904.md).
