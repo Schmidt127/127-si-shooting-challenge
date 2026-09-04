@@ -1,0 +1,33 @@
+{
+  "capturedAt": "2026-09-04T13:42:27.257968+00:00",
+  "baseId": "appn84sqPw03zEbTT",
+  "automationId": "wfllWsq7qikhOujGl",
+  "automationName": "101 - Zoom / Attendance XP - Award Meeting XP",
+  "productionVersionBefore": "v6.8",
+  "productionVersionAfter": "v6.8",
+  "githubVersionBefore": "v6.7",
+  "githubVersionAfter": "v6.8",
+  "pastedV67": false,
+  "reasonNoPaste": "Production already Live on v6.8 with SC-147; repo v6.7 would downgrade",
+  "automationsTable": {
+    "recordId": "rec1nBt85M0EiFpUO",
+    "name": "101 - Zoom / Attendance XP - Award Meeting XP",
+    "status": "Live",
+    "automationCode": "File too large: github blob link (not authoritative version)"
+  },
+  "proof": {
+    "recordingXpEventId": "rec9N4T9SD8XmllzB",
+    "recordingSourceKey": "ZOOM_RECORDING_CREDIT|recZEwkkXTJanDlG6|recMFP2x5LDqea9ax",
+    "recordingPoints": 30,
+    "liveXpEventId": "recKpZVNbttUqgrdh",
+    "liveSourceKey": "ZOOM_ATTEND_BASE|recGJEtN9oWGTqcFZ|recZEwkkXTJanDlG6",
+    "livePoints": 60,
+    "recordingMeetingId": "recMFP2x5LDqea9ax",
+    "liveMeetingId": "recGJEtN9oWGTqcFZ",
+    "enrollmentId": "recZEwkkXTJanDlG6",
+    "finalNeededRecording": 0,
+    "finalNeededLive": 0
+  },
+  "noAutomation121": true,
+  "automation117Untouched": true
+}

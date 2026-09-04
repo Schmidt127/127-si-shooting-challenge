@@ -135,7 +135,7 @@ Do **not** treat Make/Gmail as the homework parent-email sender.
 
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
-| **101** | Zoom Meetings | **When record matches conditions:** sole condition `Zoom XP Reconciliation Needed? = 1`; dynamic triggering Zoom Meeting `recordId` | `101-zoom-attendance-xp-award-meeting-xp.js` (**v6.7** GitHub — SC-147 recording half-XP phase in same reconciliation pass; **NOT Live** until DEV proof). Do **not** use `Create XP Events` as the primary trigger condition. | **XP Events** (live attendance base + cumulative bonuses + SC-147 recording half-XP). Source Keys: live `ZOOM_ATTEND_BASE\|{Zoom Meeting Key}\|{Enrollment RID}`; recording `ZOOM_RECORDING_CREDIT\|{Enrollment RID}\|{Zoom Meeting RID}` |
+| **101** | Zoom Meetings | **When record matches conditions:** sole condition `Zoom XP Reconciliation Needed? = 1`; dynamic triggering Zoom Meeting `recordId` | `101-zoom-attendance-xp-award-meeting-xp.js` (**v6.8** Live — SC-147 recording half-XP in same reconciliation pass; no slot 121). Do **not** use `Create XP Events` as the primary trigger condition. | **XP Events** (live attendance base + cumulative bonuses + SC-147 recording half-XP). Source Keys: live `ZOOM_ATTEND_BASE\|{Zoom Meeting Key}\|{Enrollment RID}`; recording `ZOOM_RECORDING_CREDIT\|{Enrollment RID}\|{Zoom Meeting RID}` |
 
 ### PKG-034 Production evidence (Mike-supplied, 2026-08-13)
 
