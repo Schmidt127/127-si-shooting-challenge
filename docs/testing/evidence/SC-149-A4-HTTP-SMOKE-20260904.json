@@ -1,0 +1,157 @@
+{
+  "ok": true,
+  "base": "https://www.fairfieldbasketballclub.com/shoot",
+  "startedAt": "2026-09-04T13:11:31.838Z",
+  "finishedAt": "2026-09-04T13:11:35.901Z",
+  "failureCount": 0,
+  "failures": [],
+  "results": {
+    "routes": [
+      {
+        "path": "/",
+        "url": "https://www.fairfieldbasketballclub.com/shoot",
+        "status": 200
+      },
+      {
+        "path": "/faq",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/faq",
+        "status": 200
+      },
+      {
+        "path": "/leaderboard",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/leaderboard",
+        "status": 200
+      },
+      {
+        "path": "/homework",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/homework",
+        "status": 200
+      },
+      {
+        "path": "/tutorials",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/tutorials",
+        "status": 200
+      },
+      {
+        "path": "/shoutouts",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/shoutouts",
+        "status": 200
+      },
+      {
+        "path": "/articles",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/articles",
+        "status": 200
+      },
+      {
+        "path": "/levels",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/levels",
+        "status": 200
+      },
+      {
+        "path": "/achievements",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/achievements",
+        "status": 200
+      },
+      {
+        "path": "/zoom-meetings",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/zoom-meetings",
+        "status": 200
+      },
+      {
+        "path": "/game-manual",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/game-manual",
+        "status": 200
+      },
+      {
+        "path": "/public-display",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/public-display",
+        "status": 200
+      },
+      {
+        "path": "/dashboard",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/dashboard",
+        "status": 200
+      },
+      {
+        "path": "/dashboard/sign-in",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/dashboard/sign-in",
+        "status": 200
+      },
+      {
+        "path": "/athletes/demo-athlete",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/athletes/demo-athlete",
+        "status": 200
+      },
+      {
+        "path": "/athletes/schmidt",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/athletes/schmidt",
+        "status": 200
+      },
+      {
+        "path": "/admin",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/admin",
+        "status": 200
+      },
+      {
+        "path": "/api/airtable",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/api/airtable",
+        "status": 200
+      },
+      {
+        "path": "/definitely-not-a-smoke-route",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/definitely-not-a-smoke-route",
+        "status": 404
+      }
+    ],
+    "assets": [
+      {
+        "asset": "/favicon.ico",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/favicon.ico",
+        "status": 200
+      },
+      {
+        "asset": "/favicon.png",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/favicon.png",
+        "status": 200
+      },
+      {
+        "asset": "/brand/logo-circle-blue-orange.png",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/brand/logo-circle-blue-orange.png",
+        "status": 200
+      },
+      {
+        "asset": "/brand/logo-v1-blue-orange.png",
+        "url": "https://www.fairfieldbasketballclub.com/shoot/brand/logo-v1-blue-orange.png",
+        "status": 200
+      }
+    ],
+    "checks": [
+      {
+        "name": "airtable-health",
+        "tokenValid": true,
+        "configured": true,
+        "required": true
+      },
+      {
+        "name": "fillout-url",
+        "url": "https://forms.fairfieldbasketballclub.com/shoot-playerregistration",
+        "present": true
+      },
+      {
+        "name": "fillout-url",
+        "url": "https://forms.fairfieldbasketballclub.com/shoot-dailysubmissions",
+        "present": true
+      },
+      {
+        "name": "landing-url",
+        "url": "https://www.fairfieldbasketballclub.com",
+        "present": true
+      }
+    ]
+  },
+  "notes": [
+    "Read-only HTTP smoke — no form submissions, no Airtable writes.",
+    "Airtable health is required for this run.",
+    "Browser console and interactive nav coverage live in Playwright production-smoke.spec.ts."
+  ]
+}

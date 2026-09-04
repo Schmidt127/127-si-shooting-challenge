@@ -1,0 +1,130 @@
+{
+  "verifiedAt": "2026-09-04T13:13:41.297Z",
+  "productionShaExpected": "824062a00a41f87838da18c6b60e2fe8a3675a68",
+  "deploymentExpected": "dpl_4WDcPGnGK8wet8pbBX5ZobqQwqWX",
+  "statuses": {
+    "/": {
+      "status": 200,
+      "location": null,
+      "url": "https://www.fairfieldbasketballclub.com/shoot"
+    },
+    "/dashboard/sign-in": {
+      "status": 200,
+      "location": null,
+      "url": "https://www.fairfieldbasketballclub.com/shoot/dashboard/sign-in"
+    },
+    "/leaderboard": {
+      "status": 200,
+      "location": null,
+      "url": "https://www.fairfieldbasketballclub.com/shoot/leaderboard"
+    },
+    "/homework": {
+      "status": 200,
+      "location": null,
+      "url": "https://www.fairfieldbasketballclub.com/shoot/homework"
+    },
+    "/faq": {
+      "status": 200,
+      "location": null,
+      "url": "https://www.fairfieldbasketballclub.com/shoot/faq"
+    },
+    "/shoot": {
+      "status": 404,
+      "location": null,
+      "url": "https://www.fairfieldbasketballclub.com/shoot/shoot"
+    },
+    "/dashboard": {
+      "status": 200,
+      "location": null,
+      "url": "https://www.fairfieldbasketballclub.com/shoot/dashboard"
+    },
+    "/dashboard/select": {
+      "status": 200,
+      "location": null,
+      "url": "https://www.fairfieldbasketballclub.com/shoot/dashboard/select"
+    }
+  },
+  "home": {
+    "familyHeader": [
+      "/shoot/dashboard/sign-in"
+    ],
+    "familyFooter": [
+      "/shoot/dashboard/sign-in"
+    ],
+    "familyHomeCta": [
+      "/shoot/dashboard/sign-in"
+    ],
+    "familyMobile": [],
+    "signInPathCount": 3,
+    "hoopchallenges": false,
+    "shootShoot": false,
+    "fairfieldRoot": 3,
+    "fairfieldAny": 32,
+    "airtableRecInHref": 0
+  },
+  "signIn": {
+    "status": 200,
+    "titleOk": true,
+    "gmailProhibited": false,
+    "registrationInstruction": true,
+    "hoopchallenges": false,
+    "shootShoot": false,
+    "airtableRecInHref": 0,
+    "emailInput": true,
+    "instructionSnippet": "Use the parent email entered on your Shooting Challenge registration"
+  },
+  "faq": {
+    "status": 200,
+    "signInRefs": 3,
+    "familyTestId": true,
+    "hoopchallenges": false,
+    "faqCtaHrefs": [
+      "/shoot/dashboard/sign-in"
+    ]
+  },
+  "leaderboard": {
+    "status": 200,
+    "familyHeader": [
+      "/shoot/dashboard/sign-in"
+    ],
+    "hoopchallenges": false,
+    "shootShoot": false
+  },
+  "athleteProbe": {
+    "status": 200,
+    "location": null,
+    "bodyHasProbeRec": true
+  },
+  "magicLinkProbe": {
+    "status": 200,
+    "ok": true,
+    "message": "If that email is registered for the Shooting Challenge, we sent a secure sign-in link. Check your inbox and spam folder.",
+    "error": null,
+    "hasToken": false,
+    "bodyKeys": [
+      "message",
+      "ok"
+    ],
+    "leakedRec": false
+  },
+  "leaderboardAthleteHrefs": {
+    "count": 0,
+    "sample": [],
+    "recLikeCount": 0,
+    "recLikeSample": []
+  },
+  "anonymousDashboard": {
+    "status": 200,
+    "location": null,
+    "hasSignInPath": true,
+    "hasAuthenticatedMarker": false,
+    "h1": null
+  },
+  "anonymousSelect": {
+    "status": 200,
+    "location": null,
+    "hasSignInPath": true,
+    "hasAuthenticatedMarker": false,
+    "h1": null
+  }
+}

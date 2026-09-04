@@ -1,0 +1,116 @@
+{
+  "harness": "MRW-E02",
+  "backlog": [
+    "SC-149",
+    "MRW-E02"
+  ],
+  "startedAt": "2026-09-04T13:09:44.793Z",
+  "finishedAt": "2026-09-04T13:09:50.630Z",
+  "productionBase": "https://www.fairfieldbasketballclub.com/shoot",
+  "landingUrl": "https://www.fairfieldbasketballclub.com",
+  "pass": true,
+  "failureCount": 0,
+  "failures": [],
+  "checks": [
+    {
+      "route": "/",
+      "url": "https://www.fairfieldbasketballclub.com/shoot",
+      "status": 200,
+      "ok": true,
+      "landingLinkCount": 4,
+      "landingRootPresent": true,
+      "legacyHoopHost": false,
+      "duplicatedBasePath": false
+    },
+    {
+      "route": "/leaderboard",
+      "url": "https://www.fairfieldbasketballclub.com/shoot/leaderboard",
+      "status": 200,
+      "ok": true,
+      "landingLinkCount": 4,
+      "landingRootPresent": true,
+      "legacyHoopHost": false,
+      "duplicatedBasePath": false
+    },
+    {
+      "route": "/homework",
+      "url": "https://www.fairfieldbasketballclub.com/shoot/homework",
+      "status": 200,
+      "ok": true,
+      "landingLinkCount": 4,
+      "landingRootPresent": true,
+      "legacyHoopHost": false,
+      "duplicatedBasePath": false
+    },
+    {
+      "route": "/game-manual",
+      "url": "https://www.fairfieldbasketballclub.com/shoot/game-manual",
+      "status": 200,
+      "ok": true,
+      "landingLinkCount": 4,
+      "landingRootPresent": true,
+      "legacyHoopHost": false,
+      "duplicatedBasePath": false
+    },
+    {
+      "name": "fillout-url",
+      "url": "https://forms.fairfieldbasketballclub.com/shoot-playerregistration",
+      "present": true
+    },
+    {
+      "name": "fillout-url",
+      "url": "https://forms.fairfieldbasketballclub.com/shoot-dailysubmissions",
+      "present": true
+    }
+  ],
+  "httpSmoke": {
+    "exitCode": 0,
+    "ok": true,
+    "failureCount": 0
+  },
+  "vercelEnv": {
+    "verifiedAt": "2026-09-04T13:09:30.000Z",
+    "method": "vercel env pull --environment production (MATCH only; values not logged)",
+    "production": {
+      "NEXT_PUBLIC_LANDING_URL": "MATCH",
+      "NEXT_PUBLIC_SITE_URL": "MATCH",
+      "NEXT_PUBLIC_BASE_PATH": "MATCH"
+    },
+    "preview": {
+      "NEXT_PUBLIC_LANDING_URL": "NOT_SET",
+      "NEXT_PUBLIC_SITE_URL": "NOT_SET",
+      "NEXT_PUBLIC_BASE_PATH": "NOT_SET",
+      "note": "Repo defaults + resolveLandingUrl/resolveSiteUrl self-heal to Fairfield; Production explicit env is the ops requirement."
+    },
+    "actionsTaken": "none",
+    "productionDeployment": {
+      "id": "dpl_4WDcPGnGK8wet8pbBX5ZobqQwqWX",
+      "sha": "824062a00a41f87838da18c6b60e2fe8a3675a68",
+      "target": "production",
+      "state": "READY"
+    }
+  },
+  "browserChecks": {
+    "desktopHome": {
+      "url": "https://www.fairfieldbasketballclub.com/shoot/",
+      "fairfieldPresent": true,
+      "hoopchallengesAbsent": true,
+      "logoLandingPresent": true
+    },
+    "mobileHome": {
+      "viewport": "390x844",
+      "landingRootHrefCount": 3,
+      "hoopHrefCount": 0,
+      "htmlHasHoopHost": false
+    },
+    "leaderboard": {
+      "url": "https://www.fairfieldbasketballclub.com/shoot/leaderboard",
+      "landingRootHrefCount": 3,
+      "hoopHrefCount": 0,
+      "htmlHasHoopHost": false
+    }
+  },
+  "mikeStillRequired": [],
+  "checklist": "docs/deploy-checklists/SC-149-fairfield-branding-url-verification.md",
+  "verdict": "ALREADY CORRECT"
+}
