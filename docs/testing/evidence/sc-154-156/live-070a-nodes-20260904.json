@@ -1,0 +1,30 @@
+{
+  "capturedAt": "2026-09-04T14:17:00Z",
+  "agent": "A4",
+  "baseId": "appn84sqPw03zEbTT",
+  "automationId": "wflIYVOmRRaHu9cl2",
+  "name": "070a - Email, Notifications, and External Handoffs - Send Homework Asset Payload to Make",
+  "deploymentStatus": "deployed",
+  "scriptVersion": "v4.7",
+  "nodes": [
+    {
+      "key": "wacZVMXuabTetYmQ7",
+      "type": "customScript"
+    },
+    {
+      "key": "wacpcvzcDB1KKjaKI",
+      "type": "updateRecord",
+      "tableId": "tblhMLKxQK77agtME",
+      "fieldsCleared": [
+        {
+          "fieldId": "fld8C43NVQQ1NeQ7Z",
+          "fieldName": "Send to Make Trigger",
+          "setTo": null
+        }
+      ],
+      "defect": "Clears Send to Make Trigger after script even when script soft-fails and returns without throwing — breaks retry observability (SC-156 / SF-06)"
+    }
+  ],
+  "remediationLive": false,
+  "publishRequired": "Remove updateRecord node per SC-156-070a-remove-post-clear-trigger-20260904.md"
+}
