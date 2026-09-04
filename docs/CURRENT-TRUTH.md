@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-09-04 — **SC-152 COMPLETE / Live Tested** (057 **v2.4**). **SC-153 COMPLETE / Live Tested** (058 **v1.7** lifecycle withdraw/restore/idempotency PASS). Evidence: [`audits/SC-152-153-LIVE-VERIFICATION-20260904.md`](./audits/SC-152-153-LIVE-VERIFICATION-20260904.md) · [`audits/SC-153-058-V17-LIVE-VERIFICATION-20260904.md`](./audits/SC-153-058-V17-LIVE-VERIFICATION-20260904.md). SC-154/155/157 closed; SC-156 070a publish still pending (untouched). Season Sim **NOT run**; no field deletion.  
+**Last verification (repo):** 2026-09-04 — **SC-152 COMPLETE / Live Tested** (057 **v2.4**). **SC-153 COMPLETE / Live Tested** (058 **v1.7**). **SC-156 COMPLETE / Live Tested** (070a **v4.7** script-only; post-clear Update removed). Evidence: [`audits/SC-152-153-LIVE-VERIFICATION-20260904.md`](./audits/SC-152-153-LIVE-VERIFICATION-20260904.md) · [`audits/SC-153-058-V17-LIVE-VERIFICATION-20260904.md`](./audits/SC-153-058-V17-LIVE-VERIFICATION-20260904.md) · [`audits/SC-156-070A-LIVE-CLOSEOUT-20260904.md`](./audits/SC-156-070A-LIVE-CLOSEOUT-20260904.md). SC-154/155/157 closed. Season Sim **NOT run**; no field deletion.  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -166,7 +166,7 @@ Authority: [`integrations/email-send-plane.md`](./integrations/email-send-plane.
 | Scenario / blueprint | Status |
 |----------------------|--------|
 | Upload Engine → Lambda (070b/070c path) | **Active** upload path (non-email) |
-| Homework upload (070a) | **PROD OFF** by design |
+| Homework upload (070a) | **PROD Live v4.7** (SC-156 Complete — script-only graph) |
 | Weekly / parent notification email | **Retired for email** — Hub → Resend |
 | Make **117f** Zoom Gmail | **Historical** |
 | Tremendous awards v2 | **Implementation snapshot**; sandbox validated; scenario **OFF**; production API **PENDING** |
@@ -219,7 +219,7 @@ Do **not** treat other Automations-table columns (trigger/conditions) as authori
 | **071** | **v4.3** | v4.3 | Live / **aligned** | Homework Feedback Hub handoff — FUT-046 payload (`assignmentTitle`, athlete first/last); **do not re-paste** — [`071-v4.3-homework-feedback-paste-packet.md`](./deploy-checklists/071-v4.3-homework-feedback-paste-packet.md) |
 | **076** | **v8.12** | v8.12 | Live / **aligned** | Daily Submission Hub handoff — FUT-041 `xpEarned` / `xpExtraCredit`; **do not re-paste** — [`076-v8.12-daily-submission-paste-packet.md`](./deploy-checklists/076-v8.12-daily-submission-paste-packet.md) |
 | **074** | **v3.3** | v3.3 | Live / live-tested | Weekly summary Hub handoff |
-| **070a** | **v4.7** | v4.7 | **Off** by design | Homework upload Make path |
+| **070a** | **v4.7** | **v4.7 Live** | Script-only graph (SC-156); trigger clears via script | Homework upload Make path |
 | **070b** | **v4.7** | v4.7 | Live | |
 | **070c** | **current live (repo v1.1)** | v1.1 | Live/enabled | Do not invent a new version |
 | **101** | **v6.8** | v6.8 | Live / **SC-147 COMPLETE** | Recording half-XP Live Tested; GitHub synced PR **#398**. Optional: re-paste GitHub year-aware Config percent hardening for byte-match |

@@ -212,7 +212,7 @@
 | Test evidence | 013 sole writer (112 absent); 020 v3.9 live prior |
 | Deployed version | **013** Live · **020** v3.9 prior · **022** v2.2 · **070a–c** Live |
 | Last verified | 2026-09-04 ON |
-| Remaining risk | **070a** deployed — confirm intentional ON vs historical OFF decision |
+| Remaining risk | Low — soft-fail retention depends on script paths; monitor Upload Error + Trigger queue |
 
 ---
 

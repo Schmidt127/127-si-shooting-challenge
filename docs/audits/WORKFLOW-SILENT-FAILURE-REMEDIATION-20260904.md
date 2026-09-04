@@ -35,9 +35,9 @@ See [`SC-155-LEVEL-LAG-RESULT-20260904.md`](./SC-155-LEVEL-LAG-RESULT-20260904.m
 
 ### SF-05 — P1 — 101 version drift — **CLOSED (SC-147)**
 
-### SF-06 — P1 — 070a enabled-state — **PARTIAL (SC-156)**
+### SF-06 — P1 — 070a enabled-state — **CLOSED (SC-156 Live Tested 2026-09-04)**
 
-Live **ON**; publish remove clear-trigger step. [`SC-156-070A-ENABLED-OBSERVABILITY-20260904.md`](./SC-156-070A-ENABLED-OBSERVABILITY-20260904.md).
+Live **ON** v4.7; obsolete post-script Update removed + published; skip/idempotency PASS. Evidence [`SC-156-070A-LIVE-CLOSEOUT-20260904.md`](./SC-156-070A-LIVE-CLOSEOUT-20260904.md).
 
 ### SF-07 — P2 — Video count automation 006 not deployed
 

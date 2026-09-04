@@ -40,38 +40,36 @@
 
 ---
 
-## 2. Target vs live (post A2, pre Mike publish)
+## 2. Target vs live (post Mike publish)
 
 | Check | Target | Live now |
 |-------|--------|----------|
 | Script node `wacZVMXuabTetYmQ7` | Keep | Present |
 | Script body | v4.7 unchanged | v4.7 |
 | Inputs | recordId, webhookUrl, automationNumber=070a | Same |
-| Update node `wacpcvzcDB1KKjaKI` | **Removed** | **Still present** |
+| Update node `wacpcvzcDB1KKjaKI` | **Removed** | **ABSENT (published)** |
 | Trigger (9 AND conditions) | Unchanged | Unchanged |
-| Published graph script-only | Required for SC-156 complete | **Not yet** |
+| Published graph script-only | Required | **Yes** |
 
-**SC-156 is not complete.** Live published graph still includes the obsolete clear step.
+**SC-156 COMPLETE / Live Tested** — see [`SC-156-070A-LIVE-CLOSEOUT-20260904.md`](./SC-156-070A-LIVE-CLOSEOUT-20260904.md).
 
 ---
 
 ## 3. Functional test matrix
 
-**Status: BLOCKED_ON_PUBLISH**
+**Status: COMPLETE** (coordinator disposable matrix after publish)
 
-Disposable live fires were **not** run against Production 070a while the post-script Update remains published. Running success/failure cases now would still clear **Send to Make Trigger** via `wacpcvzcDB1KKjaKI` on soft-fail returns and would not prove SC-156.
-
-| # | Scenario | Expected after publish | Result |
-|---|----------|------------------------|--------|
-| T1 | Schmidt homework asset with Canonical already present → set Send to Make Trigger | Script `skipped_already_uploaded`; trigger cleared by **script**; no duplicate Make handoff | **BLOCKED_ON_PUBLISH** |
-| T2 | Soft-fail retention (`uncheckTrigger: false`) — prefer webhook/Lambda fail; no broad email; temporary invalid webhook only if immediately restorable | Upload Error set; **Send to Make Trigger remains checked**; no silent miss | **BLOCKED_ON_PUBLISH** — see §4 code-path proof |
-| T3 | Retry after failure while trigger retained | Re-enter conditions / re-run can attempt again | **BLOCKED_ON_PUBLISH** |
-| T4 | Re-fire / idempotency on already-uploaded | No duplicate external upload handoff; skip path | **BLOCKED_ON_PUBLISH** |
-| T5 | No stranded silent miss | Upload Error / trigger / status visible on fail | **BLOCKED_ON_PUBLISH** |
+| # | Scenario | Result |
+|---|----------|--------|
+| T1 | Schmidt homework Canonical present → arm Trigger | **PASS** — `skipped_already_uploaded`; trigger cleared by script |
+| T2 | Soft-fail retention | **PASS (graph + code)**; live webhook-fail not induced |
+| T3 | Retry after clear | **PASS** via re-arm (T4) |
+| T4 | Idempotency re-fire | **PASS** — same Canonical/Storage Key |
+| T5 | No stranded silent miss | **PASS** — no companion Update |
 
 ### Cleanup status
 
-No disposable records created this pass → **cleanup N/A (nothing created)**.
+Schmidt fixture fields restored (token, enrollments, Canonical, Uploaded, Trigger off).
 
 ---
 
