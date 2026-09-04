@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-09-04 — **Completion wave closed** (SC-147 / FUT-025 / SEO+#310 / SC-148 / SC-057–058). Tip **`42cc97cf`** (merge PR **#398** after **#395–#397/#399**) · Production **`dpl_hnPCeD3gELNcQkJyQe9Mugao1jYc`** READY. **SC-109 / SC-112 / SC-149 / SC-151 remain CLOSED.** Season Sim **NOT authorized**; formulas normal **`NOW()` / `TODAY()`**. No real-family enrollments. Prefer this file + [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md) + `git rev-parse HEAD` on `master`.  
+**Last verification (repo):** 2026-09-04 — **SF remediation wave** (SC-152–157). Tip **`97769698`** (PR **#406**) + coordinator closeout docs/contracts. Live Queue formula uses Recalc checkbox (SF-01 partial live). **057 v2.4 / 058 v1.6 GitHub ready — UI paste pending** (`customScript` API read-only). SC-154/155 attested; SC-156 070a ON + graph fix checklist; SC-157 PR **#340** closed. **SC-109 / SC-112 / SC-147 / SC-148 / SC-149 / SC-151 / FUT-025 / SEO / SC-057–058 attestations remain CLOSED.** Season Sim **NOT run**; no field deletion. Closeout: [`audits/SC-152-157-COORDINATOR-WAVE-CLOSEOUT-20260904.md`](./audits/SC-152-157-COORDINATOR-WAVE-CLOSEOUT-20260904.md).  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -207,8 +207,8 @@ Do **not** treat other Automations-table columns (trigger/conditions) as authori
 | **022** | **v2.2** | v2.2 | Live / **aligned** | Lambda-only parent URL — [`022-v2.2-operator-packet.md`](./deploy-checklists/022-v2.2-operator-packet.md) |
 | **033** | **v4.4** | v4.4 | Live | |
 | **041** | **v5.1** | v5.1 | Live | Optional inputs only |
-| **057** | **2.3** | **2.3** | Live / **PASTE-ALIGNED** (Automations Code 2026-09-03) | Late homework excluded from Perfect Week counts (PR **#372**). Prior **v2.2** Perfect Week Video Minimum row historical for Code column. Disposable PW exclusion proof **REQUIRES LIVE CONFIRMATION** |
-| **058** | **1.5** | 1.5 | Live | Unlock only after Eligible + Ready |
+| **057** | **2.4** | **2.3** until UI paste | Live trigger Queue?=1; **formula updated** (Pending OR Recalc Needed) | GitHub **v2.4** SC-152 clears Recalc on writeback. Paste checklist: [`deploy-checklists/SC-152-153-perfect-week-lifecycle-057-058.md`](./deploy-checklists/SC-152-153-perfect-week-lifecycle-057-058.md) |
+| **058** | **1.6** | **1.5** until UI paste | Still positive-only until paste | GitHub **v1.6** SC-153 lifecycle deactivate/restore. Same checklist. |
 | **059** | **v3.7** | v3.7 | Live | |
 | **064** | **Production-verified current live** | v12.2 in repo | Live | Do not invent a new version string |
 | **065** | **v10.6** | v10.6 | Live / **PASTE-ALIGNED** (Automations Code 2026-09-03) | Late-credit full XP (PR **#372**). Prior **v10.5** points-reconcile paste historical for Code column — [`065-v10.5-points-reconcile-operator-packet.md`](./deploy-checklists/065-v10.5-points-reconcile-operator-packet.md) |

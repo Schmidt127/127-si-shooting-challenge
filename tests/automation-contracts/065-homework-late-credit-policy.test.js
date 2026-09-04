@@ -193,7 +193,7 @@ test("057 GitHub script filters late homework from Perfect Week counts", () => {
     ),
     "utf8"
   );
-  assert.match(s057, /Version: 2\.3/);
+  assert.match(s057, /Version: 2\.4/);
   assert.match(s057, /countsTowardPerfectWeekHomework/);
   assert.match(s057, /isHomeworkOnTimeForPerfectWeek/);
 });

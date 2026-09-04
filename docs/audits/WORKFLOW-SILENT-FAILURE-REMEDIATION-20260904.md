@@ -17,67 +17,33 @@
 
 ## Ranked remaining risks (deferred implementation)
 
-### SF-01 — P0 — Perfect Week 057 queues on a formula field
+### SF-01 — P0 — Perfect Week 057 queues on a formula field — **REMEDIATING (SC-152)**
 
 | | |
 |--|--|
-| **Workflow** | 057 Calculate Perfect Week Eligibility |
-| **Silent miss** | Trigger is `Perfect Week Calculation Queue? = 1` (`fldNvOVO3WidABUXS`, **formula**). Eligible WAS rows can sit with Queue?=1 if Airtable does not re-fire on formula-only transitions, or if Status was left `Skipped` without a writable re-arm. |
-| **Observable** | WAS with Queue?=1 and Automation Status not progressing; Automation Error blank |
-| **Safe near-term** | Operator view: Queue?=1; Season Sim / disposable re-arm Status `Skipped`→`Pending` (already used in sim tooling) |
-| **Separate implementation** | Prefer writable reconciliation checkbox (or ensure a watched writable field flips when queue becomes 1). Do **not** delete the formula. |
-| **Owner** | Future PW reliability ticket (not this PR) |
+| **Status 2026-09-04** | Queue formula updated live (Pending OR Recalc Needed). GitHub **057 v2.4** merged. **UI paste pending** for script clear-Recalc behavior. |
+| **Separate implementation** | [`deploy-checklists/SC-152-153-perfect-week-lifecycle-057-058.md`](../deploy-checklists/SC-152-153-perfect-week-lifecycle-057-058.md) |
 
-### SF-02 — P0 — Perfect Week 058 positive-only trigger blocks withdrawal
+### SF-02 — P0 — Perfect Week 058 positive-only trigger blocks withdrawal — **REMEDIATING (SC-153)**
 
 | | |
 |--|--|
-| **Workflow** | 058 Create Perfect Week Unlock |
-| **Silent miss** | Live UI requires `Perfect Week Eligible? = 1` **AND** Unlock empty **AND** Status = Ready. Script **v1.5** contains deactivation/restore logic for non-eligible cases, but those branches **cannot run** when eligibility drops or Unlock is already linked. |
-| **Observable** | Unlock remains Active after eligibility loss; or Eligible=0 with Unlock still linked and no new 058 run |
-| **Safe near-term** | Manual deactivate unlock + clear Automation Error; document in inventory |
-| **Separate implementation** | Change trigger to lifecycle/update on Eligible?, Status, Unlock (per script RECOMMENDED TRIGGER) — **Mike UI change** or controlled paste packet. Aligns with existing 058 docblock warning. |
-| **Owner** | Perfect Week lifecycle ticket |
+| **Status 2026-09-04** | GitHub **058 v1.6** merged. Live trigger still positive-only until UI paste. |
+| **Separate implementation** | Same checklist as SF-01. |
 
-### SF-03 — P1 — Duplicate Weekly Athlete Summary (Enrollment+Week)
+### SF-03 — P1 — Duplicate Weekly Athlete Summary — **CLOSED / DISPROVEN (SC-154)**
 
-| | |
-|--|--|
-| **Workflow** | 031 find/create WAS + downstream 032–035 / 057–059 / weekly email |
-| **Silent miss** | Two WAS rows for same Enrollment+Week → homework/XP/PW/email attach to wrong row or fail closed |
-| **Observable** | Group-by Enrollment+Week count > 1 |
-| **Safe near-term** | Reconciliation view + Stage audits; do not auto-merge |
-| **Separate implementation** | Hard uniqueness guard + operator merge playbook |
+See [`SC-154-WAS-DUPLICATE-RESULT-20260904.md`](./SC-154-WAS-DUPLICATE-RESULT-20260904.md).
 
-### SF-04 — P1 — Levels lag / stuck queue (041 cron)
+### SF-04 — P1 — Levels lag — **CLOSED / EXPECTED ASYNC (SC-155)**
 
-| | |
-|--|--|
-| **Workflow** | 041 → 042 |
-| **Silent miss** | Signature changes wait up to **15 minutes**; if 042 view filter excludes a row, Level Recalc Needed? stays checked forever |
-| **Observable** | Needed?=1 older than 30 minutes |
-| **Safe near-term** | Monitoring view; controlled 041 `recordId` proof |
-| **Separate implementation** | Optional event-driven queue in addition to cron (capacity permitting) |
+See [`SC-155-LEVEL-LAG-RESULT-20260904.md`](./SC-155-LEVEL-LAG-RESULT-20260904.md).
 
-### SF-05 — P1 — 101 live version drift (Agent 1)
+### SF-05 — P1 — 101 version drift — **CLOSED (SC-147)**
 
-| | |
-|--|--|
-| **Workflow** | 101 Zoom Meeting XP |
-| **Silent miss** | Live paste reads **v6.8**; GitHub tip **v6.7**. Operators may paste wrong body or assume SC-147 complete. |
-| **Observable** | Script header Version mismatch |
-| **Safe near-term** | **Do not paste from Agent 5.** Leave to Agent 1 / SC-147 |
-| **Separate implementation** | SC-147 OMNI trigger review + intentional paste + disposable proof |
+### SF-06 — P1 — 070a enabled-state — **PARTIAL (SC-156)**
 
-### SF-06 — P1 — 070a homework Make upload is Live/deployed
-
-| | |
-|--|--|
-| **Workflow** | 070a |
-| **Silent miss / risk** | Historical launch decision kept homework upload OFF; live UI shows **deployed**. Unintended Make traffic or missed uploads depending on operator expectation. |
-| **Observable** | Automation 070a enabled; Send to Make Trigger on HW assets |
-| **Safe near-term** | Mike confirm intentional ON/OFF in UI |
-| **Separate implementation** | Align launch decision doc + UI |
+Live **ON**; publish remove clear-trigger step. [`SC-156-070A-ENABLED-OBSERVABILITY-20260904.md`](./SC-156-070A-ENABLED-OBSERVABILITY-20260904.md).
 
 ### SF-07 — P2 — Video count automation 006 not deployed
 

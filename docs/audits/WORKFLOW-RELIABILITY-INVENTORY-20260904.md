@@ -303,19 +303,19 @@
 | Field | Value |
 |-------|-------|
 | ID/name | **057** eligibility · **058** unlock · **059** unlock→XP |
-| Trigger | **057:** `Perfect Week Calculation Queue?=1` (formula) · **058:** Eligible=1 + Unlock empty + Status Ready · **059:** Unlock Active? + XP Award Status Pending |
+| Trigger | **057:** `Perfect Week Calculation Queue?=1` (formula = Pending OR Recalc Needed — **live**) · **058 live still:** Eligible=1 + Unlock empty + Status Ready · **058 intended:** lifecycle `recordUpdated` (SC-153) · **059:** Unlock Active? + XP Award Status Pending |
 | Eligibility | Active enrollment; PW math; goal settlement |
 | Required inputs | `recordId` |
-| Output / side effect | Status/Eligible helpers; Unlock `PERFECT_WEEK|{enr}|{week}`; XP Event |
+| Output / side effect | Status/Eligible helpers; Unlock `PERFECT_WEEK|{enr}|{week}`; XP Event; **057 v2.4** clears Recalc Needed |
 | Dedupe key | Milestone Source Key / XP Source Key |
-| Success state | Unlock Active + XP Awarded |
-| Failure state | Perfect Week Automation Error |
-| Retry / recovery | Reset Status Skipped→Pending (operator); clear error |
-| Reconciliation | Queue?=1 with Status not Ready; Eligible=1 without Unlock; Unlock Pending without XP |
-| Test evidence | Live **057 2.3** / **058 1.5** / **059 v3.7**; SC-PW-E2E |
-| Deployed version | MATCH GitHub |
+| Success state | Unlock Active + XP Awarded **or** evaluated Fail/non-eligible with unlock deactivated |
+| Failure state | Perfect Week Automation Error (visible) |
+| Retry / recovery | Set Recalc Needed / Status→Pending; clear error; safe XP Source Key |
+| Reconciliation | Queue?=1 stranded; Eligible/Ready without Unlock; Unlock without final XP; Recalc stuck |
+| Test evidence | GitHub **057 2.4** / **058 1.6**; live scripts still **2.3 / 1.5** until UI paste; SC-PW-E2E historical |
+| Deployed version | **PARTIAL** — formula live; scripts/058 trigger UI paste pending |
 | Last verified | 2026-09-04 |
-| Remaining risk | **High — SF-01/SF-02** formula queue + positive-only 058 |
+| Remaining risk | **P0 until paste** — SC-152/SC-153 ([checklist](../deploy-checklists/SC-152-153-perfect-week-lifecycle-057-058.md)) |
 
 ### WF-EMAIL-072 / 074 / 118 / 119 — Weekly email
 
