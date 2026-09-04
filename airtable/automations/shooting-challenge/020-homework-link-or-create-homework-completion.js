@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-19
-Last GitHub Update: 2026-09-03 (v3.9 late homework remains credit-eligible)
+Last GitHub Update: 2026-09-04 (v4.0 SC-160 PHA Week + Early/On Time/Late timing)
 
 Purpose:
 Link or create one Homework Completion from a homework Submission Asset,
@@ -31,11 +31,15 @@ v3.6 is live in Production Airtable (Mike 2026-08-19); v3.7 is structure-only.
  * 020 - HOMEWORK
  * Link or Create Homework Completion
  *
- * Version: v3.9
+ * Version: v4.0
  * Date Written: 2026-06-20
- * Last Updated: 2026-09-03
+ * Last Updated: 2026-09-04
  *
  * VERSION HISTORY
+ * - v4.0 (2026-09-04): SC-160 — HC Week from PHA.Week (Submission.Week optional).
+ *   Early / On Time / Late from qualifying asset Uploaded At (latest wins) vs
+ *   PHA Due Date or Week End Saturday 11:59:59pm America/Denver. Early counts
+ *   toward assigned Week; Perfect Week award waits for week evaluation time.
  * - v3.9 (2026-09-03): Late submissions remain credit-eligible for homework XP.
  *   Notes still record late timing; Perfect Week on-time gate stays in 057.
  * - v3.8 (2026-08-28): FUT-001 — match Homework Completion by Enrollment + PHA
@@ -59,13 +63,16 @@ v3.6 is live in Production Airtable (Mike 2026-08-19); v3.7 is structure-only.
  * - Submissions.Homework Name 1/2 store Program Homework Assignment (PHA) record IDs.
  * - 020 resolves the selected PHA by assignment identity (Homework Name 1/2), not by
  *   upload slot alone. Upload slot (HW Sub 1/2) is routing metadata only.
- * - 020 loads the selected PHA directly and validates PI + Week + Active + Homework Assignment.
+ * - 020 loads the selected PHA directly and validates PI + Active + Homework Assignment.
+ * - HC.Week comes from PHA.Week (authoritative). Submission.Week may be empty (early /
+ *   outside-calendar Activity Date). Submission.Week is never required for HC create/link.
  * - Homework Library content ID comes from PHA.Homework Assignment (exactly one link).
  * - HC.Homework = library ID; HC.Program Homework Assignment = PHA ID.
  * - HC Item Slot / Asset Slot are normalized to PHA.Homework Slot (official schedule slot).
  *
  * SCHEDULING RULE
  * - Operational identity is Enrollment + Program Homework Assignment (PHA record id).
+ * - PHA.Week is the assigned Week for timing, XP week link, and Perfect Week.
  * - PHA Grade Band is eligibility/descriptive metadata only and is NEVER used to resolve schedule ownership.
  * - A PHA may list all grade bands (K-2 … 9-12). Multi-band Grade Band never rejects a valid match.
  * - Athlete Grade Band may still be copied to Homework Completions as athlete metadata when available.
@@ -73,8 +80,10 @@ v3.6 is live in Production Airtable (Mike 2026-08-19); v3.7 is structure-only.
  * PRODUCT RULE
  * - One Homework Completion per Enrollment + Program Homework Assignment (same assignment identity).
  * - Repeat uploads and multi-file submissions link to the same Homework Completion.
- * - Submissions after PHA Due Date (or Week End Date fallback) remain visible for coach review but
- *   are marked ineligible for credit in Notes; XP is blocked downstream in 065.
+ * - Qualifying timestamp = latest linked asset Uploaded At (else Activity Date). Placeholder
+ *   before deadline + satisfactory replacement after → late for Perfect Week.
+ * - Early / On Time / Late recorded in Notes; late remains full XP via 065; Perfect Week
+ *   on-time/early gate stays in 057.
  *
  * IMPORTANT DESIGN RULES
  * - Fail closed on Upload Destination / Asset Purpose / attachment / link count errors
@@ -143,10 +152,10 @@ v3.6 is live in Production Airtable (Mike 2026-08-19); v3.7 is structure-only.
 
 const SCRIPT = {
   scriptName: "020 - Homework - Link or Create Homework Completion",
-  version: "v3.9",
-  versionDate: "2026-09-03",
+  version: "v4.0",
+  versionDate: "2026-09-04",
   originalWrittenDate: "2026-06-20",
-  lastUpdated: "2026-09-03",
+  lastUpdated: "2026-09-04",
   folder: "02 - Homework Review and XP",
   automationName: "020 - Homework - Link or Create Homework Completion",
 };
@@ -203,6 +212,7 @@ const CONFIG = {
     dueDate: "Due Date",
   },
   weeks: {
+    startDate: "Start Date",
     endDate: "End Date",
   },
   homework: {
@@ -451,26 +461,91 @@ function resolveAssignmentDueDateKey(phaDueDate, weekEndDate) {
   return toDateKeyFromText(weekEndDate) || "";
 }
 
-function evaluateHomeworkSubmissionDeadline({ submissionDateKey, phaDueDate, weekEndDate }) {
+/**
+ * SC-160: PHA.Week is authoritative for Homework Completion Week.
+ * Submission.Week may be empty (early / outside official calendar).
+ */
+function resolveHomeworkAssignedWeekId({ phaWeekId = "", submissionWeekId = "" } = {}) {
+  const phaWeek = String(phaWeekId || "").trim();
+  const submissionWeek = String(submissionWeekId || "").trim();
+  if (phaWeek) {
+    return {
+      ok: true,
+      weekId: phaWeek,
+      source: "pha_week",
+      submissionWeekIgnored: Boolean(submissionWeek && submissionWeek !== phaWeek),
+      reason:
+        submissionWeek && submissionWeek !== phaWeek
+          ? "Submission.Week differs from PHA.Week; PHA.Week is authoritative for Homework Completion."
+          : "PHA.Week is authoritative for Homework Completion.",
+    };
+  }
+  if (submissionWeek) {
+    return {
+      ok: true,
+      weekId: submissionWeek,
+      source: "submission_week_fallback",
+      submissionWeekIgnored: false,
+      reason: "PHA.Week missing; falling back to Submission.Week.",
+    };
+  }
+  return {
+    ok: false,
+    weekId: "",
+    source: "",
+    submissionWeekIgnored: false,
+    reason: "Neither PHA.Week nor Submission.Week is available.",
+  };
+}
+
+/**
+ * Qualifying athlete timestamp = latest Uploaded At among candidates (placeholder rule).
+ */
+function resolveQualifyingSubmissionDateKey({ assetUploadedAts = [], activityDateKey = "" } = {}) {
+  const keys = [];
+  for (const value of assetUploadedAts || []) {
+    const key = toDateKeyFromText(value);
+    if (key) keys.push(key);
+  }
+  if (keys.length) {
+    keys.sort();
+    return { dateKey: keys[keys.length - 1], source: "asset_uploaded_at" };
+  }
+  if (activityDateKey) return { dateKey: activityDateKey, source: "activity_date" };
+  return { dateKey: "", source: "" };
+}
+
+function evaluateHomeworkSubmissionDeadline({
+  submissionDateKey,
+  phaDueDate,
+  weekEndDate,
+  weekStartDate = "",
+}) {
   const submitKey = toDateKeyFromText(submissionDateKey);
   const dueKey = resolveAssignmentDueDateKey(phaDueDate, weekEndDate);
+  const weekStartKey = toDateKeyFromText(weekStartDate);
   if (!submitKey) {
     return {
       creditEligible: true,
       timingStatus: "unknown_submission_date",
       dueDateKey: dueKey,
+      weekStartDateKey: weekStartKey,
       perfectWeekEligible: false,
       reason:
         "Submission date missing; deadline not enforced for XP. Perfect Week requires a known on-time Submission Date.",
     };
   }
   if (!dueKey) {
+    const early = Boolean(weekStartKey && submitKey < weekStartKey);
     return {
       creditEligible: true,
-      timingStatus: "no_due_date",
+      timingStatus: early ? "early" : "no_due_date",
       dueDateKey: "",
+      weekStartDateKey: weekStartKey,
       perfectWeekEligible: true,
-      reason: "No PHA Due Date or Week End Date; deadline not enforced.",
+      reason: early
+        ? `Qualifying submit ${submitKey} is before assigned Week Start ${weekStartKey}.`
+        : "No PHA Due Date or Week End Date; deadline not enforced.",
     };
   }
   if (submitKey > dueKey) {
@@ -478,22 +553,43 @@ function evaluateHomeworkSubmissionDeadline({ submissionDateKey, phaDueDate, wee
       creditEligible: true,
       timingStatus: "late",
       dueDateKey: dueKey,
+      weekStartDateKey: weekStartKey,
       perfectWeekEligible: false,
       reason: `Submission date ${submitKey} is after assignment due date ${dueKey}. Full XP credit allowed; does not count toward Perfect Week.`,
+    };
+  }
+  if (weekStartKey && submitKey < weekStartKey) {
+    return {
+      creditEligible: true,
+      timingStatus: "early",
+      dueDateKey: dueKey,
+      weekStartDateKey: weekStartKey,
+      perfectWeekEligible: true,
+      reason: `Qualifying submit ${submitKey} is before assigned Week Start ${weekStartKey}. Counts toward assigned Week; Perfect Week award waits for week evaluation time.`,
     };
   }
   return {
     creditEligible: true,
     timingStatus: "on_time",
     dueDateKey: dueKey,
+    weekStartDateKey: weekStartKey,
     perfectWeekEligible: true,
     reason: "",
   };
 }
 
-function buildLateSubmissionNote({ timingStatus, dueDateKey, submissionDateKey }) {
-  if (timingStatus !== "late" && timingStatus !== "late_ineligible") return "";
-  return `Late submission: activity date ${submissionDateKey} is after due date ${dueDateKey}. Full homework XP credit still applies once satisfactory; does not count toward Perfect Week for the original week.`;
+function buildLateSubmissionNote({ timingStatus, dueDateKey, submissionDateKey, weekStartDateKey = "" }) {
+  return buildTimingSubmissionNote({ timingStatus, dueDateKey, submissionDateKey, weekStartDateKey });
+}
+
+function buildTimingSubmissionNote({ timingStatus, dueDateKey, submissionDateKey, weekStartDateKey = "" }) {
+  if (timingStatus === "late" || timingStatus === "late_ineligible") {
+    return `Late submission: activity date ${submissionDateKey} is after due date ${dueDateKey}. Full homework XP credit still applies once satisfactory; does not count toward Perfect Week for the original week.`;
+  }
+  if (timingStatus === "early") {
+    return `Early submission: qualifying date ${submissionDateKey} is before assigned Week Start ${weekStartDateKey || "(unknown)"}. Counts toward assigned Week; Perfect Week award waits until that Week's evaluation time (after Week End 11:59:59pm America/Denver).`;
+  }
+  return "";
 }
 
 function homeworkFieldForSlot(slot) {
@@ -518,15 +614,15 @@ function unloadQuerySafe(q) {
   }
 }
 
-async function validateSelectedPha({ phaId, programInstanceId, weekId }) {
+async function validateSelectedPha({ phaId, programInstanceId, weekId = "" }) {
   if (!phaTable) throw new Error("Program Homework Assignments table is unavailable; cannot validate scheduled homework.");
   if (!fieldExists(homeworkTable, CONFIG.homework.programHomeworkAssignment)) {
     throw new Error("Homework Completions.Program Homework Assignment field is unavailable.");
   }
   if (!phaId) throw new Error("Submission must link exactly one Program Homework Assignment for homework.");
-  if (!weekId || !programInstanceId) {
+  if (!programInstanceId) {
     throw new Error(
-      `Cannot validate PHA without Week and Program Instance. week=${weekId || "blank"}, programInstance=${programInstanceId || "blank"}, pha=${phaId || "blank"}`
+      `Cannot validate PHA without Program Instance. programInstance=${programInstanceId || "blank"}, pha=${phaId || "blank"}`
     );
   }
   const fields = [
@@ -551,9 +647,15 @@ async function validateSelectedPha({ phaId, programInstanceId, weekId }) {
       `Program Homework Assignment ${phaId} Program Instance mismatch: expected ${programInstanceId}, got ${phaPi || "blank"}. Grade Band is not part of scheduling.`
     );
   }
-  if (phaWeek !== weekId) {
+  if (!phaWeek) {
     throw new Error(
-      `Program Homework Assignment ${phaId} Week mismatch: expected ${weekId}, got ${phaWeek || "blank"}. Grade Band is not part of scheduling.`
+      `Program Homework Assignment ${phaId} is missing Week. PHA.Week is required for Homework Completion ownership.`
+    );
+  }
+  // When a Week is supplied for validation, it must be the PHA Week (SC-160).
+  if (weekId && phaWeek !== weekId) {
+    throw new Error(
+      `Program Homework Assignment ${phaId} Week mismatch: expected ${weekId}, got ${phaWeek}. PHA.Week is authoritative.`
     );
   }
   if (!(officialSlot === "HW1" || officialSlot === "HW2")) {
@@ -570,6 +672,7 @@ async function validateSelectedPha({ phaId, programInstanceId, weekId }) {
     phaId,
     libraryId: libraryIds[0],
     officialSlot,
+    phaWeekId: phaWeek,
     phaDueDate: fieldExists(phaTable, CONFIG.pha.dueDate) ? text(pha, CONFIG.pha.dueDate) : "",
   };
 }
@@ -746,10 +849,8 @@ async function main() {
   if (submissionEnrollmentIds.length !== 1 || submissionEnrollmentIds[0] !== enrollmentIds[0]) {
     await markAssetError(asset, "Submission Enrollment does not match Submission Asset Enrollment.");
   }
-  const weekIds = linkedIds(submission, CONFIG.submissions.week);
-  if (weekIds.length !== 1) {
-    await markAssetError(asset, `Submission must have exactly one Week; found ${weekIds.length}.`);
-  }
+  const submissionWeekIds = linkedIds(submission, CONFIG.submissions.week);
+  const submissionWeekId = submissionWeekIds.length === 1 ? submissionWeekIds[0] : "";
 
   const enrollmentFields = [CONFIG.enrollments.programInstance];
   if (fieldExists(enrollmentsTable, CONFIG.enrollments.gradeBand)) {
@@ -771,32 +872,57 @@ async function main() {
     : [];
   const gradeBandId = athleteGradeBandIds.length === 1 ? athleteGradeBandIds[0] : "";
 
-  step("6 - Validate selected PHA");
-  const { phaId, libraryId, officialSlot, phaDueDate } = await validateSelectedPha({
+  step("6 - Validate selected PHA (PHA.Week authoritative)");
+  const { phaId, libraryId, officialSlot, phaWeekId, phaDueDate } = await validateSelectedPha({
     phaId: phaIdFromSubmission,
     programInstanceId: programInstanceIds[0],
-    weekId: weekIds[0],
   });
+  const assignedWeek = resolveHomeworkAssignedWeekId({
+    phaWeekId,
+    submissionWeekId,
+  });
+  if (!assignedWeek.ok) {
+    await markAssetError(asset, assignedWeek.reason || "Unable to resolve assigned Week from PHA.");
+  }
+  const weekIds = [assignedWeek.weekId];
 
   let weekEndDate = "";
+  let weekStartDate = "";
   if (weeksTable) {
-    const weekFields = safeFields(weeksTable, [CONFIG.weeks.endDate]);
+    const weekFields = safeFields(weeksTable, [CONFIG.weeks.startDate, CONFIG.weeks.endDate]);
     const weekRecord = await weeksTable.selectRecordAsync(weekIds[0], { fields: weekFields });
     if (weekRecord && fieldExists(weeksTable, CONFIG.weeks.endDate)) {
       weekEndDate = text(weekRecord, CONFIG.weeks.endDate);
     }
+    if (weekRecord && fieldExists(weeksTable, CONFIG.weeks.startDate)) {
+      weekStartDate = text(weekRecord, CONFIG.weeks.startDate);
+    }
   }
-  const submissionDateKey = toDateKeyFromText(text(submission, CONFIG.submissions.activityDate));
+
+  const activityDateKey = toDateKeyFromText(text(submission, CONFIG.submissions.activityDate));
+  const existingAssetUploadKeys = [];
+  const assetUploadedAtText = text(asset, CONFIG.assets.uploadedAt);
+  if (assetUploadedAtText) existingAssetUploadKeys.push(assetUploadedAtText);
+  // Include Uploaded At from assets already linked on an existing HC when present later;
+  // for first-pass timing before HC load, current asset + activity date are enough.
+  const qualifying = resolveQualifyingSubmissionDateKey({
+    assetUploadedAts: existingAssetUploadKeys,
+    activityDateKey,
+  });
+  const submissionDateKey = qualifying.dateKey || activityDateKey;
   const deadline = evaluateHomeworkSubmissionDeadline({
     submissionDateKey,
     phaDueDate,
     weekEndDate,
+    weekStartDate,
   });
-  const lateNote = buildLateSubmissionNote({
+  const timingNote = buildTimingSubmissionNote({
     timingStatus: deadline.timingStatus,
     dueDateKey: deadline.dueDateKey,
     submissionDateKey,
+    weekStartDateKey: deadline.weekStartDateKey,
   });
+  const lateNote = timingNote;
 
   step("7 - Find existing homework completion");
   const homeworkFields = safeFields(homeworkTable, Object.values(CONFIG.homework));
@@ -880,14 +1006,47 @@ async function main() {
       );
     }
     Object.assign(updates, buildHomeworkUploadSyncFields(homeworkCompletion, asset));
-    if (lateNote && isWritable(homeworkTable, CONFIG.homework.notes)) {
+    // Keep HC.Week aligned to PHA.Week (SC-160).
+    if (firstLinkedId(homeworkCompletion, CONFIG.homework.week) !== weekIds[0]) {
+      setLink(updates, homeworkTable, CONFIG.homework.week, weekIds);
+    }
+    // Qualifying Submission Date = latest asset upload day when it is later than stored date.
+    const priorUploadKeys = [];
+    if (assetUploadedAtText) priorUploadKeys.push(assetUploadedAtText);
+    const currentUploadedAt = text(homeworkCompletion, CONFIG.homework.uploadedAt);
+    if (currentUploadedAt) priorUploadKeys.push(currentUploadedAt);
+    const refinedQualifying = resolveQualifyingSubmissionDateKey({
+      assetUploadedAts: priorUploadKeys,
+      activityDateKey,
+    });
+    if (refinedQualifying.dateKey) {
+      const existingSubmitKey = toDateKeyFromText(text(homeworkCompletion, CONFIG.homework.submissionDate));
+      if (!existingSubmitKey || refinedQualifying.dateKey > existingSubmitKey) {
+        setDate(updates, homeworkTable, CONFIG.homework.submissionDate, refinedQualifying.dateKey);
+      }
+    }
+    if (timingNote && isWritable(homeworkTable, CONFIG.homework.notes)) {
       const existingNotes = text(homeworkCompletion, CONFIG.homework.notes);
-      if (!existingNotes.includes("Late submission:")) {
+      const hasTimingNote =
+        existingNotes.includes("Late submission:") || existingNotes.includes("Early submission:");
+      if (!hasTimingNote) {
         setTextField(
           updates,
           homeworkTable,
           CONFIG.homework.notes,
-          existingNotes ? `${existingNotes}\n${lateNote}` : lateNote
+          existingNotes ? `${existingNotes}\n${timingNote}` : timingNote
+        );
+      } else if (
+        deadline.timingStatus === "late" &&
+        existingNotes.includes("Early submission:") &&
+        !existingNotes.includes("Late submission:")
+      ) {
+        // Placeholder early then late replacement — record late for Perfect Week.
+        setTextField(
+          updates,
+          homeworkTable,
+          CONFIG.homework.notes,
+          `${existingNotes}\n${timingNote}`
         );
       }
     }
@@ -914,7 +1073,12 @@ async function main() {
     }
     setLink(fields, homeworkTable, CONFIG.homework.weeklySummaryLink, linkedIds(submission, CONFIG.submissions.weeklySummary));
     setLink(fields, homeworkTable, CONFIG.homework.submissionAssets, [asset.id]);
-    setDate(fields, homeworkTable, CONFIG.homework.submissionDate, cell(submission, CONFIG.submissions.activityDate));
+    // Prefer qualifying asset upload day for Submission Date (timeliness); else Activity Date.
+    if (submissionDateKey) {
+      setDate(fields, homeworkTable, CONFIG.homework.submissionDate, submissionDateKey);
+    } else {
+      setDate(fields, homeworkTable, CONFIG.homework.submissionDate, cell(submission, CONFIG.submissions.activityDate));
+    }
     setSingleSelect(
       fields,
       homeworkTable,
@@ -936,8 +1100,8 @@ async function main() {
     if (selectName(asset, CONFIG.assets.uploadStatus) === "Uploaded") {
       setCheckbox(fields, homeworkTable, CONFIG.homework.writebackComplete, true);
     }
-    if (lateNote) {
-      setTextField(fields, homeworkTable, CONFIG.homework.notes, lateNote);
+    if (timingNote) {
+      setTextField(fields, homeworkTable, CONFIG.homework.notes, timingNote);
     }
     homeworkCompletionId = await homeworkTable.createRecordAsync(fields);
   }
@@ -971,6 +1135,8 @@ async function main() {
     creditEligible: deadline.creditEligible,
     timingStatus: deadline.timingStatus,
     dueDateKey: deadline.dueDateKey,
+    assignedWeekId: weekIds[0],
+    assignedWeekSource: assignedWeek.source,
     assignmentIdentityMethod: identity.method,
     alternateUploadSlot: Boolean(identity.alternateUploadSlot),
   });
