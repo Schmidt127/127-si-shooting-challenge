@@ -1,0 +1,48 @@
+{
+  "generated_at": "2026-09-04",
+  "base_id": "appn84sqPw03zEbTT",
+  "source": "airtable_mcp_list_automations",
+  "git_tip": "8e662a38ab3d12a726dd7599ccdac4077db0e015",
+  "live_count": 50,
+  "absent_retired_slots": ["043", "063", "068", "075", "077", "111", "112"],
+  "live_numbers": [
+    "001", "002", "003", "005", "007a", "009", "010", "013", "020", "021", "022", "023",
+    "030", "031", "032", "033", "034", "035", "041", "042", "053", "054", "055", "056",
+    "057", "058", "059", "064", "065", "066", "067", "070a", "070b", "070c", "071", "072",
+    "073", "074", "076", "078", "078A", "079", "101", "113", "114", "116", "117", "118",
+    "119", "120"
+  ],
+  "attested_script_versions": {
+    "010": "v10.13",
+    "041": "v5.1",
+    "057": "2.3",
+    "058": "1.5",
+    "059": "v3.7",
+    "065": "v10.6",
+    "101": "v6.8_live_vs_v6.7_github_agent1_owns"
+  },
+  "critical_triggers": {
+    "057": {
+      "automationId": "wflVRPhgunsosFjWS",
+      "type": "recordMatchesConditions",
+      "table": "Weekly Athlete Summary",
+      "conditions": ["Perfect Week Calculation Queue? = 1 (formula)"]
+    },
+    "058": {
+      "automationId": "wflDinFz6FBIGEOMg",
+      "type": "recordMatchesConditions",
+      "table": "Weekly Athlete Summary",
+      "conditions": [
+        "Perfect Week Eligible? = 1 (formula)",
+        "Perfect Week Unlock is empty",
+        "Perfect Week Automation Status = Ready"
+      ],
+      "risk": "positive_only_blocks_withdrawal"
+    },
+    "041": {
+      "automationId": "wflCRvaopntNPsc64",
+      "type": "cron",
+      "interval_minutes": 15
+    }
+  }
+}
