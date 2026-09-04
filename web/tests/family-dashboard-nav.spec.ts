@@ -56,6 +56,16 @@ test.describe("Family Dashboard public navigation", () => {
     await expect(page).toHaveURL(/\/shoot\/homework\/?$/);
     await expect(page.locator("h1")).toBeVisible();
   });
+
+  test("FAQ get-started CTA points to /shoot/dashboard/sign-in", async ({ page }) => {
+    await page.goto("faq", { waitUntil: "domcontentloaded" });
+    const faqCta = page.getByTestId("family-dashboard-faq-cta");
+    await expect(faqCta).toBeVisible();
+    await expect(faqCta).toHaveAttribute("href", FAMILY_DASHBOARD_HREF);
+    await faqCta.click();
+    await expect(page).toHaveURL(/\/shoot\/dashboard\/sign-in\/?$/);
+    await expect(page.getByTestId("athlete-dashboard-authenticated")).toHaveCount(0);
+  });
 });
 
 test.describe("Family Dashboard mobile navigation", () => {
