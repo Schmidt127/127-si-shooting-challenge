@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 
-import { withBasePath } from "@/lib/app-config";
 import { getAthleteAuthSecret, isAthleteAuthConfigured } from "@/lib/auth/config";
 import { findActiveEnrollmentsByParentEmail } from "@/lib/auth/enrollment-access";
 import { buildAbsoluteAuthRedirectUrl } from "@/lib/auth/redirect-url";
@@ -132,9 +131,10 @@ export async function POST(request: Request): Promise<Response> {
     return response;
   }
 
+  // App-relative for next/router (basePath is applied by the client, not here).
   const response = NextResponse.json({
     ok: true,
-    redirectTo: withBasePath("/dashboard"),
+    redirectTo: "/dashboard",
   });
   response.cookies.set(ATHLETE_SESSION_COOKIE, sessionToken, {
     httpOnly: true,

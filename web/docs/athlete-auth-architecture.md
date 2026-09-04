@@ -68,6 +68,8 @@ If verify finds **two or more** active enrollments:
 - Browser redirects to `/dashboard/select` (“Choose athlete”)
 - UI lists each child with program/season labels and an **opaque selection key** (never an Airtable id)
 - Parent POSTs the chosen key to `/api/auth/select-enrollment`; server binds `selectedEnrollmentId` and redirects to `/dashboard` with a **clean URL** (no enrollment query param)
+- **JSON clients** receive app-relative `redirectTo: "/dashboard"` for `router.push` (Next.js prepends `/shoot`). Returning `/shoot/dashboard` here caused Production 404s at `/shoot/shoot/dashboard`.
+- **HTML form POSTs** (no JS) still get an absolute `303` Location via `buildAbsoluteAuthRedirectUrl` (`…/shoot/dashboard`)
 
 ### 4. Active versus inactive enrollments
 
