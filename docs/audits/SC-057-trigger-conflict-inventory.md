@@ -1,8 +1,9 @@
 # SC-057 — Automation trigger duplicate/conflict inventory
 
 **Generated:** 2026-08-27 · **Branch:** `agent/config-automation-reliability`  
-**Machine-readable:** [`sc-057-trigger-inventory.json`](./sc-057-trigger-inventory.json)  
-**Evidence label:** Verified from repository (docblocks + automation-index). Live UI confirmation required for ON/OFF and exact conditions.
+**Live attestation overlay:** 2026-09-04 — [`SC-057-058-LIVE-ATTESTATION-20260904.md`](./SC-057-058-LIVE-ATTESTATION-20260904.md) · [`sc-057-058-live-attestation-20260904.json`](./sc-057-058-live-attestation-20260904.json)  
+**Machine-readable (repo extract):** [`sc-057-trigger-inventory.json`](./sc-057-trigger-inventory.json)  
+**Evidence label:** 2026-08-27 = repository docblocks. **2026-09-04 = live MCP** for all 50 deployed automations (duplicate-writer slots absent; 057/058/041 deep-read).
 
 ## Summary
 
@@ -78,8 +79,22 @@ Rebuild occurrences then award XP on Ready. **Not a duplicate**.
 - `tools/docs/extract-automation-triggers.mjs` — regenerates JSON inventory
 - Future: compare JSON to `airtable/schema/current/automation-trigger-map.md` on doc edits
 
+## Live disposition (2026-09-04 MCP)
+
+| Slot | Result |
+|------|--------|
+| 112 | **Absent** from live automations (not merely OFF) |
+| 043 | **Absent** |
+| 063 | **Absent** |
+| 068 | **Absent** |
+| 013 | **Deployed** (sole VF create/link) |
+| 042 | **Deployed** (sole level assignment writer) |
+
+**New high-risk finding (not a duplicate writer):** live **058** uses positive-only + empty-unlock conditions — see SF-02 in [`WORKFLOW-SILENT-FAILURE-REMEDIATION-20260904.md`](./WORKFLOW-SILENT-FAILURE-REMEDIATION-20260904.md).
+
 ## Mike actions (Airtable UI only)
 
-1. Confirm **112 OFF**, **043 not deployed**, **063 deleted**, **068 OFF**.
-2. UI-attest triggers for scripts still marked *confirm in Airtable* in automation-index.
+1. ~~Confirm **112 OFF**, **043 not deployed**, **063 deleted**, **068 OFF**.~~ **Done via MCP 2026-09-04** (all absent).
+2. Optional: UI-spot-check remaining *confirm in Airtable* rows against [`SC-057-058-LIVE-ATTESTATION-20260904.md`](./SC-057-058-LIVE-ATTESTATION-20260904.md).
 3. Verify no second automation awards the same Source Key family (run Stage B audit when season starts).
+4. Schedule separate ticket for **058 lifecycle trigger** + **057 formula-queue** remediation (SF-01/SF-02).
