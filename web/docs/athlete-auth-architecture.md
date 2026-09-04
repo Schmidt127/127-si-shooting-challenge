@@ -30,7 +30,7 @@ Magic-link auth email is **web-initiated, synchronous, and single-recipient**. I
 
 - Uniform success response for known/unknown parent emails (no enumeration)
 - Rate limits by normalized email and client IP (in-memory; Redis-backed optional)
-- Blocks personal Gmail / Googlemail addresses at validation
+- Parent email may be any valid mailbox domain (including personal Gmail) when it matches an eligible Active enrollment — domain is not an access gate (**SC-151**)
 - Session determines authorized enrollments; URL `enrollmentId` is **ignored** (legacy bookmarks redirect to a clean `/dashboard`)
 - Child switching uses opaque selection keys posted to `/api/auth/select-enrollment` — raw `rec…` IDs are rejected
 - Every private load re-fetches active enrollments for the parent email and intersects with `session.enrollmentIds`

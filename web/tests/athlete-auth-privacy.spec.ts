@@ -49,9 +49,30 @@ test.describe("athlete auth privacy", () => {
     const unknown = await request.post(`${basePath}/api/auth/magic-link`, {
       data: { email: "not-registered@fairfield.k12.mt.us" },
     });
+    const unknownGmail = await request.post(`${basePath}/api/auth/magic-link`, {
+      data: { email: "parent.family@gmail.com" },
+    });
 
     const knownJson = await known.json();
     const unknownJson = await unknown.json();
+    const unknownGmailJson = await unknownGmail.json();
     expect(knownJson.message).toBe(unknownJson.message);
+    expect(unknownGmailJson.message).toBe(unknownJson.message);
+    expect(unknownGmail.status()).not.toBe(400);
+  });
+
+  test("sign-in page instructs registration email without Gmail prohibition", async ({ page }) => {
+    test.skip(
+      process.env.ATHLETE_AUTH_ENABLED !== "true",
+      "Set ATHLETE_AUTH_ENABLED=true for auth e2e runs",
+    );
+
+    await page.goto("dashboard/sign-in", { waitUntil: "domcontentloaded" });
+    const bodyText = await page.locator("body").innerText();
+    expect(bodyText.toLowerCase()).not.toContain("personal gmail");
+    expect(bodyText.toLowerCase()).not.toContain("not accepted for family dashboard");
+    await expect(
+      page.getByText(/parent email entered on your shooting challenge registration/i),
+    ).toBeVisible();
   });
 });
