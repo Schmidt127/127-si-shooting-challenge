@@ -1,5 +1,7 @@
 # SC-112 — Multi-child live finalization (Agent 1)
 
+> **SUPERSEDED (2026-09-04):** SC-112 multi-child is **COMPLETE — PRODUCTION VERIFIED BY MIKE**. Canonical status + ledger: [`SC-112-multi-child-select-404-fix-20260904.md`](./SC-112-multi-child-select-404-fix-20260904.md). Body below is a **historical** 2026-09-03 Agent 1 audit (PARTIAL / NEEDS-MIKE inbox at that time).
+
 **Date:** 2026-09-03  
 **Agent:** Agent 1 (live multi-child Production verification)  
 **Branch:** `verify/sc-112-multi-child-live-a1-final`  
