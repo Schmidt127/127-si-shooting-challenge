@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-08-30** (docs closeout — `master` `9f4a64b6`; Vitest **481/481**; prod smoke **50/50**)
+Last updated: **2026-09-04** (completion wave closeout — `master` `42cc97cf`; Production `dpl_hnPCeD3gELNcQkJyQe9Mugao1jYc`)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)

@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-09-04 — **SC-149 COMPLETE** (Fairfield branding env MATCH + Family Dashboard public nav Live Tested). Tip **`03206fd4`** (PR **#393** after **#392** closeout) · Production **`dpl_FpvBs3heioXL7Pj2WWpKDvE8m2Pz`** (behavior attested on `824062a0` / `dpl_4WDcPGn…`). **SC-109** COMPLETE / Live Tested · **SC-112** COMPLETE — PRODUCTION VERIFIED BY MIKE (`78208ffc` / `dpl_8TLH6uQAvLXUoQGDrGQ4NrFnWcVG`) · **SC-151** MERGED/DEPLOYED (`a00ef7a5` / `dpl_2mch4scL3c6bgHZgizDbsqPTywbW`). Season Sim **NOT authorized**; formulas normal **`NOW()` / `TODAY()`**. No real-family enrollments. **SC-147** remains **101 v6.7** GitHub (PR **#338**); **Production paste pending Mike**. Prefer this file + [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md) + `git rev-parse HEAD` on `master`.  
+**Last verification (repo):** 2026-09-04 — **Completion wave closed** (SC-147 / FUT-025 / SEO+#310 / SC-148 / SC-057–058). Tip **`42cc97cf`** (merge PR **#398** after **#395–#397/#399**) · Production **`dpl_hnPCeD3gELNcQkJyQe9Mugao1jYc`** READY. **SC-109 / SC-112 / SC-149 / SC-151 remain CLOSED.** Season Sim **NOT authorized**; formulas normal **`NOW()` / `TODAY()`**. No real-family enrollments. Prefer this file + [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md) + `git rev-parse HEAD` on `master`.  
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -66,12 +66,11 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | **`03206fd4f44b665744c3c7ff5223c32fe2fcc766`** — merge PR **#393** tip align after **#392** SC-149 closeout (includes **#390**/**#391**/**#388**/**#389**). Re-verify: `git rev-parse HEAD` |
+| HEAD SHA | **`42cc97cf21ff6c10bd6a7d09e61c3194fde4ffca`** — merge PR **#398** SC-147 / 101 v6.8 (after **#395–#397/#399** wave). Re-verify: `git rev-parse HEAD` |
 | `origin/master` | Should match HEAD after fetch — re-verify: `git rev-parse origin/master` |
 | Ahead / behind | **0 / 0** (re-verify after fetch) |
-| Recent merges (2026-09-04) | **#393** tip SHA · **#392** SC-149 COMPLETE (`8d77382b` / `dpl_55g5mkt…`) · **#390** SC-112/SC-109/SC-151 reconciliation (`824062a0`) · **#391** SC-151 closeout · **#389** Gmail · **#388** SC-112 select-404 — **SC-112 PRODUCTION VERIFIED BY MIKE** |
-| Recent merges (2026-09-03) | **#383**/**#382**/**#381** SC-112 docs closeout · **#380** multi-child evidence · **#379** multi-child auth docs · **#378** Public On Web · **#377** Live email cutover checklist · **#375** master-list · **#373** multi-child auth · **#372** homework late-credit · **#368** Season Sim hygiene · **#362** Automation 003 |
-| Open PRs (unrelated / do not duplicate SC-112 closeout) | Older open items only (e.g. **#364**, **#363**, **#341**) — SC-112 closeout PRs **#377–#383** and fix **#388** are **MERGED** |
+| Recent merges (2026-09-04 completion wave) | **#398** SC-147 · **#399** SEO supersede **#310** · **#397** FUT-025 · **#396** SC-148 · **#395** SC-057/058 · **#394–#392** SC-149 · **#391/#389** SC-151 · **#390/#388** SC-112/SC-109 |
+| Open PRs | Older drafts only (e.g. **#340** optional SC-147 formula; **#353** parent-email). Wave **#395–#399** MERGED; **#310**/**#341** CLOSED |
 | Recent merges (2026-08-31) | **#312** multi-asset HW / 065 XP closeout |
 | Recent merges (2026-08-30) | **#311** gift-card/coach · **#308** public-app readiness · **#298** public copy · **#276** ATHWF · **#297** paste audit |
 | Prior integrity ship | `0b1d634…` (2026-08-20); XP activity ledger merge follows |
@@ -109,12 +108,12 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | Local | http://localhost:3001/shoot |
 | Health | `GET /shoot/api/airtable` → token validity check |
 | Softr | **Obsolete / Not Used** — historical reference only |
-| SEO | **Public program pages indexable** — `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true` on Vercel Production (SC-115 cutover 2026-08-25). Athlete profiles + private routes remain `noindex`. Checklist: [`deploy-checklists/2026-08-25-web-search-indexing-cutover.md`](./deploy-checklists/2026-08-25-web-search-indexing-cutover.md). |
-| Production deploy | **Live** — Vercel Production follows `master` (tip **`03206fd4`**; deploy **`dpl_FpvBs3heioXL7Pj2WWpKDvE8m2Pz`** READY). `GET /shoot` / `/shoot/api/airtable` live-pass **200** (`tokenValid: true`). SC-149 branding env MATCH; Family Dashboard nav live |
+| SEO | **COMPLETE** — program pages indexable (`NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`); structured data + mobile meta from PR **#399** (supersedes draft **#310**). Status: [`audits/SEO-STATUS-20260904.md`](./audits/SEO-STATUS-20260904.md). Private/auth routes remain `noindex`. |
+| Production deploy | **Live** — Vercel Production follows `master` (tip **`42cc97cf`**; deploy **`dpl_hnPCeD3gELNcQkJyQe9Mugao1jYc`** READY). `GET /shoot` / `/shoot/api/airtable` live-pass **200**. SC-149 branding env MATCH; Family Dashboard nav live; FUT-025 athlete indexing env on |
 | Vitest / smoke | **483/483** Vitest pass (2026-08-30 release QA) · typecheck/lint/build PASS · prior smoke **50/50** (MRW-E04) |
 | FUT-016 Tutorials | **Complete** — portfolio catalog at `/shoot/tutorials` (PR **#284**, 2026-08-30) |
 | FUT-017 Zoom Meetings | **Complete** — portfolio catalog at `/shoot/zoom-meetings` (PR **#285**, 2026-08-30) |
-| FUT-025 athlete profiles | **Repo complete** — env-gated `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING`; Mike cutover pending ([`deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md`](./deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md)) |
+| FUT-025 athlete profiles | **COMPLETE / Live Tested** — Production `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING=true`; cutover redeploy `dpl_4tbg25UzYPFruga1PzQthewWswNP`; public slug `athlete1-schmidt` → `index, follow`; `robots.txt` no longer Disallows `/shoot/athletes/`; sitemap still omits athlete URLs. Evidence [`audits/FUT-025-indexing-cutover-20260904.md`](./audits/FUT-025-indexing-cutover-20260904.md) |
 | SC-149 branding URLs | **COMPLETE / Live Tested in PROD** (2026-09-04) — Vercel Production env MATCH for `NEXT_PUBLIC_LANDING_URL` / `SITE_URL` / `BASE_PATH`; live HTML Fairfield; zero hoop hosts; no redeploy required. Evidence [`testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-09-04.json`](./testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-09-04.json) · checklist [`deploy-checklists/SC-149-fairfield-branding-url-verification.md`](./deploy-checklists/SC-149-fairfield-branding-url-verification.md) |
 | SC-149 Family Dashboard navigation | **COMPLETE / Live Tested in PROD** (2026-09-04) — PR **#358** (`29904b45`); header/mobile/footer/parent/FAQ CTAs → `/shoot/dashboard/sign-in`; private `/shoot/dashboard` remains auth-gated. Evidence [`audits/SC-149-family-dashboard-nav-prod-verification-20260904.md`](./audits/SC-149-family-dashboard-nav-prod-verification-20260904.md) · independent verify [`audits/SC-149-INDEPENDENT-VERIFY-20260904.md`](./audits/SC-149-INDEPENDENT-VERIFY-20260904.md) |
 | SC-112 Athlete auth + private dashboard | **COMPLETE — PRODUCTION VERIFIED BY MIKE** (2026-09-04) — magic-link + multi-child three-athlete select/switch/sign-out verified on Production deploy `dpl_8TLH6uQAvLXUoQGDrGQ4NrFnWcVG` (merge `78208ffc` / PR **#388**). **No further SC-112 action.** Checklist: [`deploy-checklists/SC-112-athlete-auth-preview-and-production.md`](./deploy-checklists/SC-112-athlete-auth-preview-and-production.md). Ledger: [`audits/SC-112-multi-child-select-404-fix-20260904.md`](./audits/SC-112-multi-child-select-404-fix-20260904.md) |
@@ -129,7 +128,9 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | Homework PHA 2026–27 | **18 active restored** after FUT-030 (2026-08-31) — new RIDs; Due Date **2027-06-29**; Homework Library **76** unchanged. Evidence: [`testing/evidence/transactional-reset-2026-08-31/11-pha-restore-created-20260831_133022.json`](./testing/evidence/transactional-reset-2026-08-31/11-pha-restore-created-20260831_133022.json). Prior audit (old RIDs historical): [`testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md`](./testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md) |
 | Transactional data | **Empty** after FUT-030 (except restored PHA) — Athletes/Enrollments/Submissions/Assets/HC/XP/WAS/VF/Unlocks/Streaks/Zoom Attendance/Award Recipients/Payments/Email Handoff Queue = **0**. Base ready for clean workflow rebuild. |
 | Phase 4 public copy | **Shipped** PR **#298** — CR-13/CR-17/CR-18 parent copy implemented 2026-09-01; optional Dashboard relabel complete (CR-12) |
-| SC-147 Recorded Zoom half-XP | **Built in Repository / Paste Pending** — **101 v6.7** merged PR **#338** (`49098217`); recording half-XP in same 101 pass; Source Key `ZOOM_RECORDING_CREDIT\|{Enrollment}\|{Meeting}`; **121 retired** (design artifact only); **117 email-only**; OMNI reconciliation trigger review **unresolved** — [`deploy-checklists/101-v6.7-sc-147-operator-packet.md`](./deploy-checklists/101-v6.7-sc-147-operator-packet.md) · [`SC-147-omni-reconciliation-trigger-review.md`](./deploy-checklists/SC-147-omni-reconciliation-trigger-review.md) |
+| SC-147 Recorded Zoom half-XP | **COMPLETE / Live Tested in PROD** — Automation **101 v6.8** Live; GitHub synced (PR **#398**); recording `ZOOM_RECORDING_CREDIT|*` @ 30 + live @ 60 on disposable VERIFY; **no 121**; **117** email-only. Optional residual: GitHub year-aware Config percent hardening may still need Airtable UI paste for byte-match. Evidence [`audits/SC-147-101-V68-PRODUCTION-CLOSEOUT-20260904.md`](./audits/SC-147-101-V68-PRODUCTION-CLOSEOUT-20260904.md) |
+| SC-148 mobile a11y | **COMPLETE / Live Tested in PROD** — interactive + Playwright attestation 2026-09-04. Evidence [`audits/SC-148-mobile-a11y-prod-attestation-20260904.md`](./audits/SC-148-mobile-a11y-prod-attestation-20260904.md) |
+| SC-057 / SC-058 | **Complete / Live Tested** — 50 Production automations MCP-attested; inventory [`audits/WORKFLOW-RELIABILITY-INVENTORY-20260904.md`](./audits/WORKFLOW-RELIABILITY-INVENTORY-20260904.md); silent-failure remediation [`audits/WORKFLOW-SILENT-FAILURE-REMEDIATION-20260904.md`](./audits/WORKFLOW-SILENT-FAILURE-REMEDIATION-20260904.md) |
 | MRW-F07 weekly email harness | **Complete (PR #289)** — disposable E2E tooling for `118→072→119→074→079`; live `--apply` on Mike disposable WAS still operator-only |
 | Production smoke athlete slug | `perfect-week-testing` (`testing-schmidt` is DEV-only) |
 | PHA Due Date | Public homework catalog + athlete homework assignments display PHA Due Date (fallback Week End Date); verified prod 2026-08-25 |
@@ -221,7 +222,7 @@ Do **not** treat other Automations-table columns (trigger/conditions) as authori
 | **070a** | **v4.7** | v4.7 | **Off** by design | Homework upload Make path |
 | **070b** | **v4.7** | v4.7 | Live | |
 | **070c** | **current live (repo v1.1)** | v1.1 | Live/enabled | Do not invent a new version |
-| **101** | **v6.7** | v6.7 | Live | meeting `recxtpMu4ONbdDD45` safely skipped when reconciliation not needed |
+| **101** | **v6.8** | v6.8 | Live / **SC-147 COMPLETE** | Recording half-XP Live Tested; GitHub synced PR **#398**. Optional: re-paste GitHub year-aware Config percent hardening for byte-match |
 | **117** | **v2.1** | v2.1 | **Live** | Dynamic inputs: `recordId`, `enrollmentRid`, `zoomMeetingRid` |
 
 **Record-ID classification (Mike final):** Dynamic for all record-based automations; optional on **041** only; intentionally blank on **056 / 078 / 118 / 119**. **065** and **066** use triggering-record `recordId` in Production. Closeout: [`deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md`](./deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md).
@@ -260,7 +261,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Shot milestones | **066** | Production **v3.9** live-tested 2026-08-24 |
 | Levels | **041 / 042** | **041 Production v5.1**; broader progression proof still open |
 | Perfect Week | **057 → 058 → 059** | **COMPLETE** for WAS `recl3DmBh22ADPWWe`: unlock `recJ5umer4J4FHTOz`, key `PERFECT_WEEK\|rec93mAfo5jKqP3g5\|recNzl4dNOtDmJqnV`, XP `reczehlzkA8fjiQh0`, Awarded, 100 XP, no duplicate unlock. Evidence: `docs/testing/evidence/sc-pw-e2e/award-was-recl3DmBh22ADPWWe-2026-08-29-mcp.json`. Do **not** re-`--apply` for this fixture. |
-| Zoom live attendance XP | **101** | Production **v6.7** (live script body). Meeting `recxtpMu4ONbdDD45` safe skip when reconciliation not needed. |
+| Zoom live attendance XP | **101** | Production **v6.8** Live (SC-147 recording half-XP). GitHub synced PR **#398**. |
 | Zoom recording XP under slot 117 | Not live | Slot **117** is email Hub handoff (**v2.1 Live**) |
 
 ---
@@ -276,7 +277,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Child upload writeback (**022**) | Production **v2.2** Live — Lambda viewer URL only; no Canonical S3 fallback |
 | Homework parent email | **078** Ready → **071** → **079** → Hub → Resend |
 | Video parent email | Video `Parent Feedback Ready?` **manual** → **073 v4.4** Live → Hub → Resend — parent URL must be Lambda viewer only |
-| Zoom live attendance | **101 v6.7** |
+| Zoom live attendance | **101 v6.8** (SC-147 recording half-XP Live Tested) |
 | Zoom recording approval email | **117 v2.1 Live** → Hub → Resend |
 | Fillout daily submission | **OFF** (contest intake closed) |
 
@@ -334,7 +335,14 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - Open PRs: release-QA **#299**, field inventory **#300**, drafts **#262**/#244/#238/#237/#234 — review before merge; superseded work may close without merge
 - FUT-025 athlete profile indexing cutover (Mike approval)
 - FUT-010 supervised attachment apply only if eligible rows appear (R3 dry-run **0 eligible**)
-- SC-147 Recorded Zoom half-XP — **101 v6.7 GitHub merged**; OMNI reconciliation trigger review; Mike Production paste + disposable proof — **not Production-complete until proof passes**
+- SC-147 Recorded Zoom half-XP — **COMPLETE / Live Tested** (101 **v6.8**; PR **#398**)
+- FUT-025 athlete profile indexing — **COMPLETE / Live Tested** (PR **#397** + env cutover)
+- SEO discoverability — **COMPLETE** (PR **#399**; draft **#310** closed)
+- SC-148 mobile a11y — **COMPLETE / Live Tested** (PR **#396**)
+- SC-057 / SC-058 — **Complete / Live Tested** (PR **#395**; inventory + SF remediation)
+- Season Simulation — **NOT authorized** (explicit Mike instruction required later)
+- Airtable field deletion — **deferred** until functional verification complete
+- Full administrative portal / optional card redesign — **deferred**
 - Landing FUT-033–036 + Hub FUT-041/042/046/047 — repo merged locally; **GitHub push + Vercel deploy** pending auth (2026-09-01)
 
 ### Blocked
