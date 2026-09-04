@@ -121,3 +121,5 @@ Closing #340 does not block or conflict with Perfect Week lifecycle remediation.
 | Reviewer | Agent 4 (`verify/sc-152-157-pw-verify-a4`) |
 | Base tip at review | `origin/master` `ec8070a7` |
 | PR #340 final state | **CLOSED** (not merged) |
+| Disposition PR | [#401](https://github.com/Schmidt127/127-si-shooting-challenge/pull/401) |
+| Related verify (same branch) | [`SC-152-153-INDEPENDENT-VERIFY-20260904.md`](./SC-152-153-INDEPENDENT-VERIFY-20260904.md) · [`SC-154-156-INDEPENDENT-VERIFY-20260904.md`](./SC-154-156-INDEPENDENT-VERIFY-20260904.md) |
