@@ -43,11 +43,11 @@
 | F Reconciliation | **PASS** | Recalc+Error stranded (Queue=1) detectable; 057 cleared Recalc |
 | G Status lifecycle | Observed Ready; Eligible 0↔1; Unlock Active↔Inactive (manual for withdraw); Awarded XP status preserved on restore |
 
-## Hotfix required before SC-153 close
+## Hotfix (resolved)
 
 **Root cause:** 058 v1.6 `deactivateExactOwnedUnlock` called `getCellValueAsString("Coach Note")` on unlock records queried without Coach Note in `fields`.
 
-**Fix:** GitHub **058 v1.7** — include Coach Note in unlock query + harden getText. Mike must UI-paste v1.7 (API cannot edit customScript), then re-run withdraw only.
+**Fix:** Live **058 v1.7** (Coach Note in unlock query + hardened getText). Withdraw re-attested in [`SC-153-058-V17-LIVE-VERIFICATION-20260904.md`](./SC-153-058-V17-LIVE-VERIFICATION-20260904.md).
 
 ## Cleanup
 

@@ -303,7 +303,7 @@
 | Field | Value |
 |-------|-------|
 | ID/name | **057** eligibility · **058** unlock · **059** unlock→XP |
-| Trigger | **057:** `Perfect Week Calculation Queue?=1` (formula = Pending OR Recalc Needed — **live**) · **058 live still:** Eligible=1 + Unlock empty + Status Ready · **058 intended:** lifecycle `recordUpdated` (SC-153) · **059:** Unlock Active? + XP Award Status Pending |
+| Trigger | **057:** `Perfect Week Calculation Queue?=1` (formula = Pending OR Recalc Needed — **live**) · **058 live:** lifecycle `recordUpdated` on nine WAS fields (Unlock not watched) — SC-153 Live Tested · **059:** Unlock Active? + XP Award Status Pending |
 | Eligibility | Active enrollment; PW math; goal settlement |
 | Required inputs | `recordId` |
 | Output / side effect | Status/Eligible helpers; Unlock `PERFECT_WEEK|{enr}|{week}`; XP Event; **057 v2.4** clears Recalc Needed |
