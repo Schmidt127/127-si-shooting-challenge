@@ -3,8 +3,8 @@ Automation: 101 - Zoom Attendance XP - Award Meeting XP
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
-Last Synced From Airtable: 2026-09-04
-Last GitHub Update: 2026-09-04
+Last Synced From Airtable: 2026-06-22
+Last GitHub Update: 2026-09-02
 
 Purpose:
 Awards Zoom live attendance XP and approved recording half-XP for one meeting
@@ -22,8 +22,7 @@ Create XP Events, Attendees, Week, XP Award Status, Recording Pending Reconcile 
 
 Notes:
 GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
-Production Live script body attested 2026-09-04 as v6.8 (SC-147).
-Do not create Automation 121. Automation 117 remains email-only.
+Production currently runs v6.6 until Mike pastes this corrected version.
 */
 
 /************************************************************
@@ -47,7 +46,7 @@ Do not create Automation 121. Automation 117 remains email-only.
  *   the same XP Event ID; no XP Event is deleted or replaced.
  *
  * CHANGE HISTORY
- * - 2026-09-02 v6.8: SC-147 — process ZOOM_RECORDING_CREDIT in the same
+ * - 2026-09-02 v6.8: SC-147 â€” process ZOOM_RECORDING_CREDIT in the same
  *   reconciliation pass; never latch Create-XP-Events-off while REC_PENDING
  *   remains unresolved; require Completed before recording award; preserve
  *   v6.7 Scheduled/In Progress live withdrawal fix.
@@ -129,7 +128,7 @@ Do not create Automation 121. Automation 117 remains email-only.
 
 
 /* =========================================================
-   SECTION 1 — CONFIGURATION
+   SECTION 1 â€” CONFIGURATION
 ========================================================= */
 
 const CONFIG = {
@@ -313,7 +312,7 @@ let zoomStartField = "";
 let configTable = null;
 
 /************************************************************************************************
- * SECTION 2 — HELPERS
+ * SECTION 2 â€” HELPERS
  ************************************************************************************************/
 
 function log(message, data = null) {
@@ -1284,7 +1283,7 @@ async function runLiveLifecycleReconciliation(recordId) {
    * signature and naturally re-enters this automation. This also acknowledges
    * the post-award CREATE=0 signature written by this automation itself.
    *
-   * Do NOT latch Create-XP-Events-off when REC_PENDING remains unresolved —
+   * Do NOT latch Create-XP-Events-off when REC_PENDING remains unresolved â€”
    * that would clear Needed? without awarding ZOOM_RECORDING_CREDIT (SC-147).
    */
   const createXpEvents = getBooleanish(
@@ -1638,7 +1637,7 @@ async function runLiveLifecycleReconciliation(recordId) {
     );
     /*
      * Positive award requires Completed. Do not treat Scheduled/In Progress as
-     * a withdrawal — otherwise roster expands acknowledge without awards and
+     * a withdrawal â€” otherwise roster expands acknowledge without awards and
      * incorrectly deactivate existing owned events (v6.7).
      *
      * Live create also requires Create XP Events (or an already-Awarded meeting
@@ -2647,7 +2646,7 @@ function assertRequiredSchema() {
 
 
 /* =========================================================
-   SECTION 3 — MAIN
+   SECTION 3 â€” MAIN
 ========================================================= */
 
 async function main() {
@@ -3278,7 +3277,7 @@ async function main() {
 
 
 /************************************************************************************************
- * SECTION 4 — RUN
+ * SECTION 4 â€” RUN
  ************************************************************************************************/
 
 await main();

@@ -1,31 +1,3 @@
-/*
-Automation: 101 - Zoom Attendance XP - Award Meeting XP
-System: 127 SI Shooting Challenge
-Source: Airtable Automation
-Status: GitHub Source of Truth
-Last Synced From Airtable: 2026-09-04
-Last GitHub Update: 2026-09-04
-
-Purpose:
-Awards Zoom live attendance XP and approved recording half-XP for one meeting
-reconciliation pass.
-
-Trigger:
-Zoom Meetings when Zoom XP Reconciliation Needed? equals numeric 1.
-
-Important Tables:
-Zoom Meetings, Zoom Attendance, Enrollments, XP Reward Rules, XP Events,
-Weekly Athlete Summary
-
-Important Fields:
-Create XP Events, Attendees, Week, XP Award Status, Recording Pending Reconcile Tokens
-
-Notes:
-GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
-Production Live script body attested 2026-09-04 as v6.8 (SC-147).
-Do not create Automation 121. Automation 117 remains email-only.
-*/
-
 /************************************************************
  * 101 - Zoom Attendance XP - Award Meeting XP
  * Version: v6.8

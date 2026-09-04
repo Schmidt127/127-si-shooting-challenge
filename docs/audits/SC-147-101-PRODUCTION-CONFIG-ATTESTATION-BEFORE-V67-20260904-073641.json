@@ -1,0 +1,22 @@
+{
+    "capturedAt":  "2026-09-04T07:37:26.1259250-06:00",
+    "baseId":  "appn84sqPw03zEbTT",
+    "automationId":  "wfllWsq7qikhOujGl",
+    "name":  "101 - Zoom / Attendance XP - Award Meeting XP",
+    "deploymentStatus":  "deployed",
+    "configurationStatus":  "valid",
+    "triggerType":  "recordMatchesConditions",
+    "triggerTableId":  null,
+    "triggerNote":  "fldxpTxg5IJsfGzHU = 1 (Zoom XP Reconciliation Needed?)",
+    "nodeKey":  "wacqTiuNqwfHpoxuj",
+    "nodeType":  "customScript",
+    "scriptLength":  109401,
+    "versionMarkers":  {
+                           "scriptBlockVersion":  "v6.8",
+                           "docblockVersion":  "v6.8",
+                           "lastUpdated":  "2026-09-02"
+                       },
+    "hasSc147Phase":  false,
+    "hasRecordingCreditPrefix":  true,
+    "hasRecordingRuleKey":  true
+}
