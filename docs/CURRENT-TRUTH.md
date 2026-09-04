@@ -110,7 +110,7 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | Health | `GET /shoot/api/airtable` → token validity check |
 | Softr | **Obsolete / Not Used** — historical reference only |
 | SEO | **Public program pages indexable** — `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true` on Vercel Production (SC-115 cutover 2026-08-25). Athlete profiles + private routes remain `noindex`. Checklist: [`deploy-checklists/2026-08-25-web-search-indexing-cutover.md`](./deploy-checklists/2026-08-25-web-search-indexing-cutover.md). |
-| Production deploy | **Live** — Vercel Production follows `master` (tip **`824062a0`**; deploy **`dpl_4WDcPGnGK8wet8pbBX5ZobqQwqWX`** READY). `GET /shoot` / `/shoot/api/airtable` live-pass **200** (`tokenValid: true`). SC-149 branding env MATCH; Family Dashboard nav live |
+| Production deploy | **Live** — Vercel Production follows `master` (tip **`8d77382b`**; deploy **`dpl_55g5mktMQEoNQhUkvxjbE4yzkkcG`** READY). `GET /shoot` / `/shoot/api/airtable` live-pass **200** (`tokenValid: true`). SC-149 branding env MATCH; Family Dashboard nav live |
 | Vitest / smoke | **483/483** Vitest pass (2026-08-30 release QA) · typecheck/lint/build PASS · prior smoke **50/50** (MRW-E04) |
 | FUT-016 Tutorials | **Complete** — portfolio catalog at `/shoot/tutorials` (PR **#284**, 2026-08-30) |
 | FUT-017 Zoom Meetings | **Complete** — portfolio catalog at `/shoot/zoom-meetings` (PR **#285**, 2026-08-30) |
