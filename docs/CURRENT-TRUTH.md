@@ -1,7 +1,7 @@
 # CURRENT TRUTH — 127 SI Shooting Challenge
 
 **Status:** Active — primary current-state document for this repository  
-**Last verification (repo):** 2026-09-04 — Final completion program: SF-07/SC-158 COMPLETE; FUT-001 late-credit COMPLETE; FUT-009 Lambda COMPLETE / Live Tested; SF-08/SC-159 GitHub **059 v3.8** ready (Mike paste gate); FUT-003 Make inactive (paid activation Mike); FUT-002 Batch 2 stubs quarantined (UI trash pending). Evidence [udits/FINAL-COMPLETION-PROGRAM-CLOSEOUT-20260904.md](./audits/FINAL-COMPLETION-PROGRAM-CLOSEOUT-20260904.md). Season Sim **NOT run**.
+**Last verification (repo):** 2026-09-04 — Final completion program: SF-07/SC-158 COMPLETE; FUT-001 late-credit COMPLETE; FUT-009 Lambda COMPLETE / Live Tested; SF-08/SC-159 GitHub **059 v3.8** ready (Mike paste gate); FUT-003 Make inactive (paid activation Mike); FUT-002 Batch 2 stubs quarantined (UI trash pending). Evidence [udits/FINAL-COMPLETION-PROGRAM-CLOSEOUT-20260904.md](./audits/FINAL-COMPLETION-PROGRAM-CLOSEOUT-20260904.md). Season Sim **NOT run**. **SC-159 OPEN** (formula lifecycle trigger redesign; do not use nested OR checklist; Batch 2 trash still blocked).
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)

@@ -1,3 +1,12 @@
+# SUPERSEDED — Do not use for Mike paste
+
+**Superseded 2026-09-04 by:** [`059-sc159-lifecycle-formula-trigger.md`](./059-sc159-lifecycle-formula-trigger.md)  
+**Why:** Airtable Automation “When record matches conditions” does **not** support nested conditional groups (OR of AND branches). That UI capability exists for **view filters** only. The nested OR below is **not representable** without changing Boolean meaning. Flattening is forbidden. Design authority: [`../audits/SC-159-LIFECYCLE-TRIGGER-REDESIGN-20260904.md`](../audits/SC-159-LIFECYCLE-TRIGGER-REDESIGN-20260904.md).
+
+**SC-159 remains OPEN** until the formula-supported (or dual-automation) design is live-tested.
+
+---
+
 # Deploy — Automation 059 SF-08 lifecycle OR trigger + v3.8 paste
 
 | Field | Value |
@@ -16,7 +25,7 @@ Live trigger was **positive-only**:
 
 Clearing `Active?` on an Awarded Shot Milestone unlock **does not re-enter** that set, so 059 never runs withdrawal. Script already supports deactivate/restore; the trigger never reached it (SF-08 silent miss).
 
-## Required UI change (≈2 minutes)
+## Required UI change (≈2 minutes) — **NOT CONFIGURABLE IN LIVE AUTOMATION UI**
 
 1. Open automation **059**.
 2. Keep trigger type **When a record matches conditions** on **Athlete Achievement Unlocks**.
