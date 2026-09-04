@@ -4,10 +4,21 @@ const LOCAL_BASE = "http://127.0.0.1:3001/shoot";
 const configuredBase = process.env.PLAYWRIGHT_BASE_URL?.trim().replace(/\/$/, "");
 const SITE_BASE = configuredBase || LOCAL_BASE;
 const INDEXING_ENABLED = process.env.NEXT_PUBLIC_ALLOW_SEARCH_INDEXING?.trim().toLowerCase();
+const ATHLETE_INDEXING_RAW =
+  process.env.NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING?.trim().toLowerCase();
 
 function indexingEnabled(): boolean {
   if (isProductionTarget()) return true;
   return INDEXING_ENABLED === "true" || INDEXING_ENABLED === "1";
+}
+
+/** Athlete cutover is explicit; production smoke must pass the env (or inherit from build). */
+function athleteProfileIndexingEnabled(): boolean {
+  if (ATHLETE_INDEXING_RAW === "true" || ATHLETE_INDEXING_RAW === "1") return true;
+  if (ATHLETE_INDEXING_RAW === "false" || ATHLETE_INDEXING_RAW === "0") return false;
+  // Production cutover (FUT-025): fairfield builds ship with the athlete flag enabled.
+  // Local/CI without the env stays fail-closed (noindex + Disallow /athletes/).
+  return isProductionTarget();
 }
 
 function isProductionTarget(): boolean {
@@ -65,8 +76,12 @@ test.describe("search indexing policy", () => {
     );
   });
 
-  test("athlete profiles remain noindex until athlete indexing cutover", async ({ page }) => {
-    await page.goto("athletes/demo-athlete", { waitUntil: "domcontentloaded" });
+  test("athlete profile robots follow NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING cutover", async ({
+    page,
+  }) => {
+    // Prefer a known public slug on production; demo slug is fine for local shells.
+    const slug = isProductionTarget() ? "athlete1-schmidt" : "demo-athlete";
+    await page.goto(`athletes/${slug}`, { waitUntil: "domcontentloaded" });
 
     const robotsTags = page.locator('meta[name="robots"]');
     const count = await robotsTags.count();
@@ -74,7 +89,12 @@ test.describe("search indexing policy", () => {
 
     for (let i = 0; i < count; i += 1) {
       const content = (await robotsTags.nth(i).getAttribute("content")) ?? "";
-      expect(content).toMatch(/noindex/i);
+      if (athleteProfileIndexingEnabled() && indexingEnabled()) {
+        expect(content).not.toMatch(/noindex/i);
+        expect(content).not.toMatch(/nofollow/i);
+      } else {
+        expect(content).toMatch(/noindex/i);
+      }
     }
 
     const description = page.locator('meta[name="description"]');
@@ -83,6 +103,7 @@ test.describe("search indexing policy", () => {
       expect(content.toLowerCase()).not.toMatch(/\bgrade\b/);
       expect(content.toLowerCase()).not.toMatch(/\bschool\b/);
       expect(content).not.toMatch(/@/);
+      expect(content).not.toMatch(/rec[a-zA-Z0-9]{14}/);
     }
 
     const ogDescription = page.locator('meta[property="og:description"]');
@@ -90,11 +111,26 @@ test.describe("search indexing policy", () => {
       const content = (await ogDescription.first().getAttribute("content")) ?? "";
       expect(content.toLowerCase()).not.toMatch(/\bgrade\b/);
       expect(content.toLowerCase()).not.toMatch(/\bschool\b/);
+      expect(content).not.toMatch(/rec[a-zA-Z0-9]{14}/);
+    }
+
+    if (isProductionTarget()) {
+      const canonical = await page.locator('link[rel="canonical"]').getAttribute("href");
+      expect(canonical).toBe(`${SITE_BASE}/athletes/${slug}`);
+      expect(canonical).toContain("fairfieldbasketballclub.com");
+      expect(canonical).toContain("/shoot/");
     }
   });
 
   test("private routes remain noindex", async ({ page }) => {
-    for (const path of ["admin", "public-display", "dashboard/preview"]) {
+    for (const path of [
+      "admin",
+      "public-display",
+      "dashboard",
+      "dashboard/sign-in",
+      "dashboard/select",
+      "dashboard/preview",
+    ]) {
       const response = await page.goto(path, { waitUntil: "domcontentloaded", timeout: 60_000 });
       expect(response?.status(), `${path} status`).toBeLessThan(500);
 
@@ -114,8 +150,12 @@ test.describe("robots.txt and sitemap.xml", () => {
     expect(body).toContain("Disallow: /shoot/admin");
     expect(body).toContain("Disallow: /shoot/api/");
     expect(body).toContain("Disallow: /shoot/dashboard");
-    expect(body).toContain("Disallow: /shoot/athletes/");
     expect(body).toContain("Disallow: /shoot/public-display");
+    if (athleteProfileIndexingEnabled() && indexingEnabled()) {
+      expect(body).not.toContain("Disallow: /shoot/athletes/");
+    } else {
+      expect(body).toContain("Disallow: /shoot/athletes/");
+    }
     expect(body).toMatch(/Sitemap: .+\/shoot\/sitemap\.xml/);
   });
 

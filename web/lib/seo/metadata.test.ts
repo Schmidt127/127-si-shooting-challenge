@@ -121,22 +121,47 @@ describe("resolveRobotsDisallowSegments", () => {
     expect(resolveRobotsDisallowSegments()).toContain("/athletes/");
   });
 
+  it("keeps /athletes/ disallow when only the athlete flag is true (fail-closed)", () => {
+    vi.stubEnv("NEXT_PUBLIC_ALLOW_SEARCH_INDEXING", "");
+    vi.stubEnv("NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING", "true");
+    expect(resolveRobotsDisallowSegments()).toContain("/athletes/");
+    expect(resolveRobotsDisallowSegments()).toContain("/dashboard");
+  });
+
   it("removes /athletes/ disallow only when both cutover flags are true", () => {
     vi.stubEnv("NEXT_PUBLIC_ALLOW_SEARCH_INDEXING", "true");
     vi.stubEnv("NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING", "true");
     expect(resolveRobotsDisallowSegments()).not.toContain("/athletes/");
     expect(resolveRobotsDisallowSegments()).toContain("/dashboard");
+    expect(resolveRobotsDisallowSegments()).toContain("/admin");
+    expect(resolveRobotsDisallowSegments()).toContain("/api/");
+    expect(resolveRobotsDisallowSegments()).toContain("/public-display");
   });
 });
 
 describe("robotsDisallowPaths", () => {
-  it("includes private routes under basePath", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("includes private routes under basePath when athlete indexing is off", () => {
+    vi.stubEnv("NEXT_PUBLIC_ALLOW_SEARCH_INDEXING", "true");
+    vi.stubEnv("NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING", "");
     const paths = robotsDisallowPaths("/shoot");
     expect(paths).toContain("/shoot/admin");
     expect(paths).toContain("/shoot/api/");
     expect(paths).toContain("/shoot/dashboard");
     expect(paths).toContain("/shoot/athletes/");
     expect(paths).toContain("/shoot/public-display");
+  });
+
+  it("omits /shoot/athletes/ under basePath when both cutover flags are true", () => {
+    vi.stubEnv("NEXT_PUBLIC_ALLOW_SEARCH_INDEXING", "true");
+    vi.stubEnv("NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING", "true");
+    const paths = robotsDisallowPaths("/shoot");
+    expect(paths).not.toContain("/shoot/athletes/");
+    expect(paths).toContain("/shoot/dashboard");
+    expect(paths).toContain("/shoot/admin");
   });
 });
 

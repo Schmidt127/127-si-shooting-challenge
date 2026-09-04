@@ -571,8 +571,9 @@ Add an appropriate FAQ and organization information where supported by the curre
 ### FUT-025 — Sitemap, indexing, and public athlete profiles
 
 **Priority:** P1  
-**Status:** **Complete** (2026-08-30) — env-gated athlete indexing cutover path verified; privacy/metadata audit closed; production defaults remain noindex  
+**Status:** **COMPLETE / Live Tested** (2026-09-04) — Production athlete indexing cutover enabled (`NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING=true`); privacy boundaries verified; sitemap still excludes athlete URLs  
 **Systems:** Sitemap, robots, athlete profile metadata, consent assumptions
+**Evidence:** [`docs/audits/FUT-025-indexing-cutover-20260904.md`](./audits/FUT-025-indexing-cutover-20260904.md) · [`docs/testing/evidence/fut-025-indexing-cutover-20260904.json`](./testing/evidence/fut-025-indexing-cutover-20260904.json) · deploy `dpl_4tbg25UzYPFruga1PzQthewWswNP`
 
 Create or verify a sitemap and indexability rules for public pages. Public athlete profiles may be indexable using the athlete’s full name because registration consent covers name, image, and likeness promotion. The public profile may display:
 
@@ -583,9 +584,9 @@ Create or verify a sitemap and indexability rules for public pages. Public athle
 
 Do not expose parent contact information, email addresses, private submission metadata, or sensitive information. The prompt must verify consent assumptions, route stability, metadata uniqueness, and search-engine behavior.
 
-**Policy (verified 2026-08-30):** Program listing pages indexable when `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`. Athlete profiles remain **`noindex`** until Mike sets **`NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING=true`** (fail-closed: requires program flag too). In-page profile HTML uses registration-consent allowlist only (`lib/data/public-athlete-profile.ts`, `PUBLIC_PROFILE_ENROLLMENT_FIELDS`). Metadata excludes grade/school via `buildAthleteProfilePageMetadata`. Sitemap intentionally excludes athlete slugs even after cutover (discovery via leaderboard links).
+**Policy (live 2026-09-04):** Program listing pages indexable when `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`. Athlete profiles are **`index, follow`** when **both** program and athlete flags are true **and** the enrollment has Public Profile Enabled + unique Public Profile Slug. Missing/disabled profiles stay **`noindex`**. In-page profile HTML uses registration-consent allowlist only (`lib/data/public-athlete-profile.ts`, `PUBLIC_PROFILE_ENROLLMENT_FIELDS`). Metadata excludes grade/school via `buildAthleteProfilePageMetadata`. Sitemap intentionally excludes athlete slugs even after cutover (discovery via leaderboard links). `robots.txt` omits `/athletes/` from Disallow when the athlete cutover flag is enabled.
 
-**Validation (2026-08-30):** `public-athlete-profile-privacy.test.ts` · `athlete-profile-metadata.test.ts` · `metadata.test.ts` · `sitemap-entries.test.ts` · `search-indexing.spec.ts` · deploy checklist [`docs/deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md`](../docs/deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md)
+**Validation (2026-09-04):** Production robots/profile/sitemap checks · `public-athlete-profile-privacy.test.ts` · `athlete-profile-metadata.test.ts` · `metadata.test.ts` · `search-indexing.spec.ts` · deploy checklist [`docs/deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md`](../docs/deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md)
 
 ### FUT-026 — Final Player Manual before challenge launch
 

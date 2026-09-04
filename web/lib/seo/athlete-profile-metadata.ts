@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import {
   buildPageMetadata,
   isAthleteProfileIndexingEnabled,
+  PRIVATE_ROBOTS_NOINDEX,
   resolveAthleteProfileRobots,
 } from "@/lib/seo/metadata";
 
@@ -34,7 +35,8 @@ export function buildAthleteProfilePageMetadata(
 ): Metadata {
   const path = `/athletes/${input.slug}`;
 
-  const robots = resolveAthleteProfileRobots();
+  // Missing / disabled profiles must never advertise indexability (404 shells stay noindex).
+  const robots = input.found ? resolveAthleteProfileRobots() : PRIVATE_ROBOTS_NOINDEX;
 
   if (!input.found || !input.displayName?.trim()) {
     return buildPageMetadata({

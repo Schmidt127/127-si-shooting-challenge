@@ -17,10 +17,10 @@ Unrelated working-tree changes (Airtable automations, homework contracts, testin
 | Control | Location |
 |---------|----------|
 | Program indexing | `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true` enables indexable robots on public program pages |
-| Athlete profile indexing | `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING=true` **and** program flag — separate Mike cutover; default off |
+| Athlete profile indexing | `NEXT_PUBLIC_ATHLETE_PROFILE_INDEXING=true` **and** program flag — **Production enabled 2026-09-04** (FUT-025) |
 | Default | `noindex, nofollow` when flags are unset |
 | Private routes | `/dashboard`, `/admin`, `/public-display`, `/api/*` stay `noindex` |
-| Athlete routes | `/athletes/*` stays `noindex` until athlete cutover flag; excluded from sitemap by design |
+| Athlete routes | `/athletes/*` indexable when athlete cutover flag is on **and** profile resolves; excluded from sitemap by design |
 | Sitemap | `/shoot/sitemap.xml` — static public routes + published Airtable catalog rows (no athlete slugs) |
 | Robots | `/shoot/robots.txt` — allow `/shoot/`, disallow private paths; `/athletes/` disallow removed only after athlete cutover |
 
