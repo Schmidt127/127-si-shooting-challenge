@@ -1,0 +1,35 @@
+{
+  "capturedAt": "2026-09-04",
+  "baseId": "appn84sqPw03zEbTT",
+  "automationId": "wflVRPhgunsosFjWS",
+  "name": "057 - Achievements and Milestones - Calculate Perfect Week Eligibility",
+  "deploymentStatus": "deployed",
+  "deployedVersion": null,
+  "configurationStatus": "valid",
+  "scriptVersionLive": "2.3",
+  "trigger": {
+    "type": "recordMatchesConditions",
+    "tableId": "tbl9520d72adxlAKQ",
+    "tableName": "Weekly Athlete Summary",
+    "filters": {
+      "operator": "and",
+      "conditions": [
+        {
+          "fieldId": "fldNvOVO3WidABUXS",
+          "fieldName": "Perfect Week Calculation Queue?",
+          "fieldType": "formula",
+          "operator": "=",
+          "value": 1
+        }
+      ]
+    }
+  },
+  "input": {
+    "recordId": { "$ref": "trigger.id" }
+  },
+  "notes": [
+    "Trigger watches a formula field only.",
+    "Queue formula is 1 when Enrollment+Week+Goal Record are linked AND Status is Pending OR Ready.",
+    "Queue stays 1 across Pending→Ready, so recordMatchesConditions does not re-enter after the first 0→1 edge."
+  ]
+}

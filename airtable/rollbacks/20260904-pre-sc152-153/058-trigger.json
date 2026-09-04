@@ -1,0 +1,46 @@
+{
+  "capturedAt": "2026-09-04",
+  "baseId": "appn84sqPw03zEbTT",
+  "automationId": "wflDinFz6FBIGEOMg",
+  "name": "058 - Achievements and Milestones - Create Perfect Week Unlock",
+  "deploymentStatus": "deployed",
+  "deployedVersion": null,
+  "configurationStatus": "valid",
+  "scriptVersionLive": "1.5",
+  "trigger": {
+    "type": "recordMatchesConditions",
+    "tableId": "tbl9520d72adxlAKQ",
+    "tableName": "Weekly Athlete Summary",
+    "filters": {
+      "operator": "and",
+      "conditions": [
+        {
+          "fieldId": "fld0re4ydFGq2vvZC",
+          "fieldName": "Perfect Week Eligible?",
+          "fieldType": "formula",
+          "operator": "=",
+          "value": 1
+        },
+        {
+          "fieldId": "fldJVKEeziY9l5Dbq",
+          "fieldName": "Perfect Week Unlock",
+          "fieldType": "multipleRecordLinks",
+          "operator": "isEmpty"
+        },
+        {
+          "fieldId": "fldyFlpiRQiTpCKJz",
+          "fieldName": "Perfect Week Automation Status",
+          "fieldType": "singleSelect",
+          "operator": "=",
+          "choiceId": "selPQUWvxM9lAp88R",
+          "choiceName": "Ready"
+        }
+      ]
+    }
+  },
+  "input": {
+    "recordId": { "$ref": "trigger.id" }
+  },
+  "scriptContractWarning": "Repo/live script v1.5 documents a lifecycle trigger (Eligible?, Status, Unlock, Enrollment, Week, Goal Record). Positive-only + empty-unlock UI conditions block withdrawal and same-unlock restoration branches.",
+  "dedupeKey": "PERFECT_WEEK|{enrollmentRecordId}|{weekRecordId} written to Athlete Achievement Unlocks.Milestone Source Key"
+}
