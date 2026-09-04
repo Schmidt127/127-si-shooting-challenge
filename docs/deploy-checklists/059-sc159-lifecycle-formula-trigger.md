@@ -2,13 +2,14 @@
 
 | Field | Value |
 |-------|--------|
-| Item | **SF-08** / **SC-159** — **OPEN until live-tested** |
+| Item | **SF-08** / **SC-159** — **COMPLETE / Live Tested** (2026-09-04) |
 | Supersedes | [`059-sf08-lifecycle-trigger-or.md`](./059-sf08-lifecycle-trigger-or.md) (nested OR **not** representable in Automation UI) |
 | Design authority | [`../audits/SC-159-LIFECYCLE-TRIGGER-REDESIGN-20260904.md`](../audits/SC-159-LIFECYCLE-TRIGGER-REDESIGN-20260904.md) |
+| Live closeout | [`../audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md`](../audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md) |
 | Base | `appn84sqPw03zEbTT` |
 | Automation | **059** (`wfltDo4HZxpYlbqn8`) — **059 - Achievements and Milestones - Create XP Event from Achievement Unlock** |
 | Script | `airtable/automations/shooting-challenge/059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` **v3.8** |
-| Live today | Script **v3.7**; trigger Pending **AND** Active? only |
+| Live today | Script **v3.8**; trigger `059 Lifecycle Trigger?` = 1 only |
 
 **Do not** configure nested OR branches in “When record matches conditions”.  
 **Do not** flatten four conditions.  
@@ -17,7 +18,11 @@
 
 ---
 
-## Mike UI steps (Option 1 — recommended)
+## Status
+
+Mike UI steps below are **historical / completed**. Live attestation: formula field present and valid; 059 deployed on formula=1; v3.8 published; disposable withdraw/restore/idempotency/Perfect Week/Error soak **PASS**.
+
+## Mike UI steps (Option 1 — completed 2026-09-04)
 
 ### A. Create formula field (Athlete Achievement Unlocks)
 
@@ -104,6 +109,6 @@ Then paste v3.8 into both. Soak matrix identical to §C.
 
 ## After successful verification
 
-1. Mark SC-159 **COMPLETE / Live Tested** in Master Future Work List + CURRENT-TRUTH.  
-2. Only then proceed with FUT-002 Batch 2 UI trash of quarantined stubs.  
+1. ~~Mark SC-159 COMPLETE / Live Tested~~ — **done** 2026-09-04.  
+2. FUT-002 Batch 2 UI trash of quarantined stubs still requires the separate early/late asset-intake dependency review (do not trash on SC-159 alone).  
 3. Leave `Ready for 059 XP?` in place (do not use as trigger; do not delete in Batch 2).

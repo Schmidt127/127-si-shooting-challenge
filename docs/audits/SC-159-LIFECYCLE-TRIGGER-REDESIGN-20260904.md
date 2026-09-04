@@ -1,11 +1,11 @@
 # SC-159 — Airtable-supported lifecycle trigger redesign (2026-09-04)
 
-**Status:** **OPEN** — prior OR-of-AND checklist **not representable** in live Automation UI  
-**Base (read-only evidence):** `appn84sqPw03zEbTT`  
+**Status:** **COMPLETE / Live Tested** (2026-09-04) — see [`SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md`](./SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md)  
+**Base:** `appn84sqPw03zEbTT`  
 **Automation 059:** `wfltDo4HZxpYlbqn8` — **059 - Achievements and Milestones - Create XP Event from Achievement Unlock**  
-**Live script:** **v3.7** (still Pending+Active-only trigger)  
-**GitHub script tip:** **v3.8** (lifecycle logic OK; trigger docs that required nested OR are **superseded**)  
-**Season Simulation / field trash:** not run this analysis  
+**Live script:** **v3.8** via formula `059 Lifecycle Trigger?` = 1  
+**GitHub script tip:** **v3.8** (nested OR checklist remains **superseded**)  
+**Season Simulation / field trash:** not run; FUT-002 Batch 2 trash still gated on asset-intake review  
 
 ---
 
@@ -196,4 +196,4 @@ Script body **v3.8** remains the correct logic once the supported trigger is in 
 
 ## 9. Batch 2 field trash
 
-**Still blocked.** Do not trash the four quarantined `ZZZ DELETE —` fields until SC-159 is **live-tested** closed under the supported design.
+**Still blocked on asset-intake.** SC-159 live verification **passed** (2026-09-04). Do **not** trash the four quarantined `ZZZ DELETE —` fields until the separate early/late asset-intake dependency review also completes.

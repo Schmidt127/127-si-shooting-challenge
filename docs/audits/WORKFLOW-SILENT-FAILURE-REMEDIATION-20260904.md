@@ -58,7 +58,8 @@ Live **ON** v4.7; obsolete post-script Update removed + published; skip/idempote
 | **Observable** | Inactive unlock with active XP Event (or reverse) |
 | **Safe near-term** | Stage B / Source Key audits |
 | **Separate implementation** | Lifecycle trigger covering Active? and Award Status |
-| **2026-09-04 Agent 3** | Silent miss **proven**; GitHub **059 v3.8** + OR trigger checklist; MCP cannot edit customScript — Mike paste/Update required. Closeout [`SF-08-059-LIFECYCLE-CLOSEOUT-20260904.md`](./SF-08-059-LIFECYCLE-CLOSEOUT-20260904.md) · checklist [`../deploy-checklists/059-sf08-lifecycle-trigger-or.md`](../deploy-checklists/059-sf08-lifecycle-trigger-or.md) · **SC-158** |
+| **2026-09-04 Agent 3** | Silent miss **proven**; GitHub **059 v3.8** |
+| **2026-09-04 live close** | **SC-159 COMPLETE / Live Tested** — formula `059 Lifecycle Trigger?` + v3.8; withdraw/restore/idempotency/PW PASS. Evidence [`SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md`](./SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md) · checklist [`../deploy-checklists/059-sc159-lifecycle-formula-trigger.md`](../deploy-checklists/059-sc159-lifecycle-formula-trigger.md) (nested OR checklist superseded) |
 
 ### SF-09 — P2 — Automations operator table Code empty
 

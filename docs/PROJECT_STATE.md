@@ -53,7 +53,7 @@ Last updated: **2026-09-04** (Functional-closeout wave — tip `5dcb8449`; SC-15
 
 **101 overlay (final 2026-08-21):** Production Automation 101 is **v6.7** (live script body). Midday Automations Code-column **v6.6** snapshot is **historical / superseded**. Meeting `recxtpMu4ONbdDD45` safely skipped when reconciliation not needed.
 
-**Final production version reconciliation (2026-08-21):** See [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) §8. Confirmed: **010 v10.11**, **041 v5.1**, **057 v1.7**, **058 v1.3**, **059 v3.6**, **101 v6.7**, **117 v2.1 Live**, **070a/070b v4.7**, **070c current live (repo v1.1)**, **020 v3.7**, **033 v4.4**, **064 Production-verified current live**, **065 v10.2**, **066 v3.8**. Perfect Week remains **pending** (Days Logged 5; Eligible false).
+**Final production version reconciliation (2026-08-21):** See [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) §8. Overlay **2026-09-04:** **059 v3.8** Live / SC-159 Live Tested (formula lifecycle trigger). Historical 2026-08-21 row still listed **059 v3.6** — prefer CURRENT-TRUTH.
 
 ---
 
