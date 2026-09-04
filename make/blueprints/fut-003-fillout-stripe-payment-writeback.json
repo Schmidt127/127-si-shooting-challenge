@@ -1,0 +1,25 @@
+{
+  "_meta": {
+    "scenarioName": "FUT-003 - Fillout Stripe Payment to Airtable Payment Transactions",
+    "status": "EXPORT_PENDING",
+    "note": "Placeholder only. Live Make scenario was validated 2026-08-26 (paid PaymentIntent path; scenario inactive). Mike must export the Production Make blueprint (redact webhook URLs and secrets) and replace this stub. Do not invent modules, products, prices, or refund policy here.",
+    "promotionDoc": "docs/deploy-checklists/FUT-003-fillout-stripe-payment-writeback.md",
+    "audit": "docs/audits/FUT-003-STRIPE-STATUS-20260904.md",
+    "baseId": "appn84sqPw03zEbTT",
+    "verifiedModules": [
+      "4 normalize webhook",
+      "16 find Enrollment by Fillout Submission Id",
+      "6 Stripe retrieve PaymentIntent",
+      "7 Payment Transactions search (dedupe)",
+      "8 Payment Transactions create",
+      "12 Enrollment link update"
+    ],
+    "deferred": [
+      "100% coupon / $0 route",
+      "Checkout Session webhook",
+      "coupon code capture",
+      "live customer billing without Mike approval"
+    ]
+  },
+  "flow": []
+}

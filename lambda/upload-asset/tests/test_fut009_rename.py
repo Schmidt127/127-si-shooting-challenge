@@ -205,6 +205,9 @@ class TestProcessRename(unittest.TestCase):
         )
         self.assertEqual(decision.action, "renamed")
         self.assertEqual(patched.get("Storage Key"), EXPECTED_DEST)
+        self.assertIn("Canonical File URL", patched)
+        # Production does not have Formatted Upload Name — omit by default
+        self.assertNotIn("Formatted Upload Name", patched)
         s3.copy_object.assert_called_once()
         self.assertNotIn("DeleteObject", str(s3.method_calls))
 

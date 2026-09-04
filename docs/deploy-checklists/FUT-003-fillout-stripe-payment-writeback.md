@@ -1,7 +1,7 @@
 # FUT-003 — Fillout Stripe payment writeback (Make.com)
 
 **Backlog:** FUT-003  
-**Status:** **Paid route validated — ready for activation** (2026-08-26, Maia final report)  
+**Status:** **Paid route validated — ready for Mike Make activation** (2026-08-26 Maia; A5 re-audit 2026-09-04 — [`../audits/FUT-003-STRIPE-STATUS-20260904.md`](../audits/FUT-003-STRIPE-STATUS-20260904.md))  
 **Production base:** `appn84sqPw03zEbTT`  
 **Make scenario:** `FUT-003 - Fillout Stripe Payment to Airtable Payment Transactions` — **inactive** at validation time (not activated in Production)
 

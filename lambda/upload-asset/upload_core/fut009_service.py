@@ -36,6 +36,7 @@ ACTIVITY_DATE_FIELDS = (
     "Activity Date",
     "Activity Date (from Submissions)",
     "Activity Date (from Submission)",
+    "Date",
 )
 
 SUCCESS_ACTIONS = frozenset({"renamed", "airtable_only_recovery", "skipped_already_named"})
@@ -120,6 +121,34 @@ def activity_date_from_fields(fields: dict[str, Any]) -> str:
         text = field_text(fields.get(key))
         if text:
             return text
+    return ""
+
+
+def activity_date_from_vf_or_key(
+    *,
+    asset_fields: dict[str, Any],
+    vf_fields: dict[str, Any] | None,
+) -> str:
+    """Resolve activity date for Option D path segment.
+
+    Production Submission Assets expose ``Date`` (not ``Activity Date``).
+    Video Feedback may carry ``Activity Date - Lkp``. Storage Key folder
+    ``YYYY-MM-DD`` is a last-resort fallback for disposable/legacy rows.
+    """
+    text = activity_date_from_fields(asset_fields)
+    if text:
+        return text
+
+    if vf_fields:
+        for key in ("Activity Date - Lkp", "Activity Date", *ACTIVITY_DATE_FIELDS):
+            text = field_text(vf_fields.get(key))
+            if text:
+                return text
+
+    source_key = str(asset_fields.get("Storage Key") or "").strip()
+    for part in source_key.split("/"):
+        if re.fullmatch(r"\d{4}-\d{2}-\d{2}", part or ""):
+            return part
     return ""
 
 
@@ -211,7 +240,7 @@ def load_rename_context(
         last_name=last_name,
         first_name=first_name,
         program_instance_name=program_instance_name,
-        activity_date=activity_date_from_fields(fields),
+        activity_date=activity_date_from_vf_or_key(asset_fields=fields, vf_fields=vf_fields),
         coach_confirmed=coach_confirmed,
     )
 
@@ -251,7 +280,24 @@ def handle_fut009_rename_request(config: UploadConfig, event: dict) -> tuple[int
     s3_client = None if dry_run else boto3.client("s3", region_name=config.aws_region)
 
     def patch_airtable(fields: dict[str, Any]) -> None:
-        patch_asset(config.airtable_token, config.airtable_base_id, asset_id, fields)
+        """Patch SA fields; strip unknown optional fields and retry once if needed."""
+        try:
+            patch_asset(config.airtable_token, config.airtable_base_id, asset_id, fields)
+            return
+        except Exception as exc:  # noqa: BLE001 — classify unknown-field then re-raise
+            message = str(exc)
+            if "UNKNOWN_FIELD_NAME" not in message and "unknown field name" not in message.lower():
+                raise
+            # Optional / deferred schema (not present in Production as of 2026-09-04)
+            optional = {
+                "Formatted Upload Name",
+                "Previous Storage Key",
+                "Renamed At",
+            }
+            trimmed = {k: v for k, v in fields.items() if k not in optional}
+            if trimmed == fields or not trimmed:
+                raise
+            patch_asset(config.airtable_token, config.airtable_base_id, asset_id, trimmed)
 
     def head_source(key: str) -> dict[str, Any] | None:
         try:

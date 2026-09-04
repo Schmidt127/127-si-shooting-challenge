@@ -141,9 +141,10 @@ After confirming no active dependency remains, delete the obsolete fields and up
 ### FUT-003 — Stripe payment writeback to Airtable
 
 **Priority:** P1  
-**Status:** **Paid route validated — ready for activation** (2026-08-26, Maia final report); Make scenario **inactive** (not activated in Production)  
+**Status:** **Paid route validated — ready for Mike Make activation** (2026-08-26 Maia; A5 re-audit 2026-09-04). Make scenario remains **inactive** by design until Mike turns it ON. Free/$0 path **deferred Nov/Dec 2026**. Not a website/XP launch blocker; **required when paid registration opens**.  
 **Systems:** Fillout webhook, Make.com, Stripe API, Airtable `Payment Transactions` + `Enrollments`  
-**Make scenario:** `FUT-003 - Fillout Stripe Payment to Airtable Payment Transactions` — **inactive** at validation time; ready for Mike activation when approved
+**Make scenario:** `FUT-003 - Fillout Stripe Payment to Airtable Payment Transactions` — **inactive** at validation time; ready for Mike activation when approved  
+**Audit (2026-09-04):** [`docs/audits/FUT-003-STRIPE-STATUS-20260904.md`](./audits/FUT-003-STRIPE-STATUS-20260904.md)
 
 After Stripe accepts a registration payment, write the payment result back to Airtable. At minimum, capture the amount paid and whether a coupon or promotion code was used.
 
@@ -278,8 +279,9 @@ Use the Custom Video File Name everywhere a parent-facing or coach-facing descri
 ### FUT-009 — AWS storage structure and corrected-video naming workflow
 
 **Priority:** P2  
-**Status:** **Repo implementation complete (2026-09-01)** — automatic trigger via **Automation 120** + Lambda `/fut009/rename`; Lambda deploy and Production paste pending Mike approval  
-**Systems:** Video Feedback correction interface, Lambda/S3, Airtable links
+**Status:** **COMPLETE / Live Tested (2026-09-04)** — Lambda `POST /fut009/rename` live; Automation **120** deployed **Live**; disposable Schmidt rename + idempotent re-run + dual S3 object proof passed. Writeback omits absent Formatted Upload Name; activity date resolves from SA `Date`.  
+**Systems:** Video Feedback correction interface, Lambda/S3, Airtable links  
+**Audit (2026-09-04):** [`docs/audits/FUT-009-LAMBDA-STATUS-20260904.md`](./audits/FUT-009-LAMBDA-STATUS-20260904.md)
 
 Combine the AWS bucket-structure review and corrected-video naming workflow into one future project. Review the current bucket structure, folder/key organization, naming rules, retention expectations, and separation of homework, video, and future headshot assets.
 
@@ -287,7 +289,7 @@ When Mike corrects a video and supplies a Custom Video File Name, provide a safe
 
 Keep the S3 bucket private and preserve the Lambda viewer architecture.
 
-**Delivered (2026-09-01):** Phase 2 brief — [`docs/next-wave/aws-media/FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md`](./next-wave/aws-media/FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md). **Implementation (2026-09-01):** FUT-009 rename worker (`lambda/upload-asset/upload_core/fut009_rename.py`), Option D destination builder, dual-prefix Storage Key validation (FUT-010 alignment), CLI `tools/airtable/fut_009_video_rename.py` (recovery/backfill only), extension `fut-009-video-rename.js`, **Automation 120** automatic trigger (`120-…-apply-fut009-s3-video-rename.js`), Lambda `POST /fut009/rename`, promotion doc [`docs/deploy-checklists/FUT-009-aws-storage-rename.md`](./deploy-checklists/FUT-009-aws-storage-rename.md). Coach confirmation via **Confirm S3 Video Rename** (PKG-004) triggers Automation 120. **No Production S3 writes, schema paste, Lambda deploy, or automation enable.**
+**Delivered (2026-09-01):** Phase 2 brief — [`docs/next-wave/aws-media/FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md`](./next-wave/aws-media/FUT-009-AWS-STORAGE-STRUCTURE-BRIEF.md). **Implementation (2026-09-01):** FUT-009 rename worker (`lambda/upload-asset/upload_core/fut009_rename.py`), Option D destination builder, dual-prefix Storage Key validation (FUT-010 alignment), CLI `tools/airtable/fut_009_video_rename.py` (recovery/backfill only), extension `fut-009-video-rename.js`, **Automation 120** automatic trigger (`120-…-apply-fut009-s3-video-rename.js`), Lambda `POST /fut009/rename`, promotion doc [`docs/deploy-checklists/FUT-009-aws-storage-rename.md`](./deploy-checklists/FUT-009-aws-storage-rename.md). Coach confirmation via **Confirm S3 Video Rename** triggers Automation 120. **Activated (2026-09-04):** CodeOnly Lambda deploy + disposable Production rename proof; Automations Status **Live**. Optional residual: secret rotation; PKG-004 audit fields; Formatted Upload Name if product wants basename writeback.
 
 ### FUT-010 — Delete Airtable intake attachments after verified S3 upload
 
