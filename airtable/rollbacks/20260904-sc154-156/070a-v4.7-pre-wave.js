@@ -21,9 +21,6 @@ Upload Status, Send to Make Trigger, Homework Completions, Canonical File URL, S
 Notes:
 Same script body as 070b - set input automationNumber to 070a in Airtable.
 GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
-SC-156 (2026-09-04): Do NOT add a companion Update-record step that clears
-Send to Make Trigger after this script — soft failures return without throwing
-and a post-clear defeats retry (Upload Error + trigger retention).
 */
 /********************************************************************
  * AUTOMATION:
