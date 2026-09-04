@@ -54,7 +54,7 @@ version/state/mapping must still be confirmed in the Airtable UI.
 | 063 | Homework Completions | *confirm* | `063-...-copy-enrollment-grade-band-to-homework-completion.js` | Grade Band |
 | 064 | Homework Completions | Satisfactory + Review Complete + Coach Feedback + Enrollment + Homework + Week present; no Submission Date/Base XP/XP Events-empty filter | `064-...-prepare-homework-xp-award.js` | XP prep fields |
 | **065** | Homework Completions | `Homework XP Reconciliation Needed? = 1` (formula-backed local + linked state signature) | `065-...-create-homework-xp-event.js` | **XP Events** (HOMEWORK) award, repair, deactivate, reactivate |
-| **070a** | Submission Assets | Send to Make + homework ready (**verify Live/Off in UI**) | `070a-...-send-homework-asset-payload-to-make.js` (**v4.7** — Airtable `fetch`) | **Make** upload engine (not parent email) |
+| **070a** | Submission Assets | When record matches conditions: Send to Make Trigger + Ready + Upload Status Pending Link + Reviewer URL empty + Homework Completions destination + required links/attachment; **script-only** (no post-script clear) | `070a-...-send-homework-asset-payload-to-make.js` (**v4.7** — SC-156 Live Tested) | **Make** upload engine (not parent email) |
 | **078** | Homework Completions | Satisfactory? + Coach Feedback (native Update Record) | *(no script)* | Sets Homework `Parent Feedback Ready?` |
 | **071** | Homework Completions | Parent Feedback Ready? + gates (see below) | `071-...-send-homework-feedback-email-webhook.js` (**v4.3**) | **Email Handoff Queue** → **079** → Hub → Resend |
 
@@ -163,7 +163,7 @@ proof remain pending.
 
 | Script | Scenario / blueprint | Payload highlights |
 |--------|---------------------|-------------------|
-| 070a | Upload Asset Engine — homework (**PROD OFF**) | Submission Asset routing payload |
+| 070a | Upload Asset Engine — homework (**PROD Live v4.7** — SC-156) | Submission Asset routing payload |
 | 070b | Upload Asset Engine — video | Submission Asset routing payload → Lambda writeback → **070c** verify |
 | 071 / 073 / 074 / 076 / 117 | — | **Not Make parent-email senders** — Hub queue create (historical Make email rows obsolete) |
 | 077 | Historical only — deleted from Airtable; do not recreate | Former Make daily email |
