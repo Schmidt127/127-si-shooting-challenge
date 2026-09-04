@@ -1,6 +1,6 @@
 # SC-112 — Athlete dashboard parent magic-link auth
 
-**Status:** Merged to `master` (auth PRs **#350–#357**; Family Dashboard nav **#358**; multi-child opaque select **#373**) · Production enablement is Vercel-env gated (`ATHLETE_AUTH_ENABLED`) · confirm live env before treating Production as auth-on · **multi-child not PRODUCTION-VERIFIED** until live ≥2-enrollment proof (see architecture doc)
+**Status:** **COMPLETE — PRODUCTION VERIFIED BY MIKE** (2026-09-04) · Merged to `master` (auth PRs **#350–#357**; Family Dashboard nav **#358**; multi-child opaque select **#373**; select-404 fix PR **#388** merge **`78208ffc`**) · Production deploy **`dpl_8TLH6uQAvLXUoQGDrGQ4NrFnWcVG`** · Production auth on · multi-child three-athlete path **verified** · **no further SC-112 action** (see [`audits/SC-112-multi-child-select-404-fix-20260904.md`](../audits/SC-112-multi-child-select-404-fix-20260904.md))
 
 Authority: [web/docs/athlete-auth-architecture.md](../../web/docs/athlete-auth-architecture.md) · [ATHLETE-AUTH-DECISION.md](../overnight/web-integration/ATHLETE-AUTH-DECISION.md)
 
@@ -8,13 +8,15 @@ Authority: [web/docs/athlete-auth-architecture.md](../../web/docs/athlete-auth-a
 
 ---
 
-## Safe defaults (Production today)
+## Production auth state (2026-09-04)
 
-| Variable | Production default | Notes |
-|----------|-------------------|--------|
-| `ATHLETE_AUTH_ENABLED` | **unset / false** | Dashboard shows coming-soon placeholder |
-| `ATHLETE_AUTH_TEST_MODE` | **unset / false** until Preview proof | When true, all magic links go to test recipient only |
+| Variable | Production today | Notes |
+|----------|------------------|--------|
+| `ATHLETE_AUTH_ENABLED` | **true** (verified) | Private Family Dashboard live; Mike multi-child path verified |
+| `ATHLETE_AUTH_TEST_MODE` | Operator-controlled | Keep `true` until separate approved family-delivery cutover |
 | `ATHLETE_AUTH_DEV_BYPASS` | **must not be set in Production** | Blocked when `NODE_ENV=production` |
+
+Historical safe-default before enablement was unset/`false` (coming-soon placeholder). Rollback still uses that pattern (see Rollback below).
 
 Public catalog routes and approved public athlete profiles remain public without auth.
 
@@ -73,7 +75,7 @@ Use **only** `schmidt@fairfieldbasketballclub.com` as the delivery inbox during 
 9. **Privacy:** Browser must not show Airtable record IDs, raw tokens, or internal errors.
 10. **Public surface:** `/shoot/leaderboard`, `/shoot/homework`, `/shoot/athletes/[slug]` (approved profiles) still work anonymously.
 11. **Keep** `ATHLETE_AUTH_TEST_MODE=true` after Preview proof until Mike explicitly schedules Production family delivery.
-12. **Multi-child (when ≥2 active enrollments exist for the test parent email):** magic-link → `/dashboard/select` → choose child via opaque key → family switcher → sign-out. **Not PRODUCTION-VERIFIED** until this live path is completed; depends on second disposable enrollment + magic-link send authorization (Agent 1 / Agent 3). Behavior contract: [athlete-auth-architecture.md — Multi-child](../../web/docs/athlete-auth-architecture.md#multi-child-parent-authentication).
+12. **Multi-child (when ≥2 active enrollments exist for the test parent email):** magic-link → `/dashboard/select` → choose child via opaque key → family switcher → sign-out. **PRODUCTION-VERIFIED BY MIKE** (2026-09-04) for three associated athletes — see completion ledger in [`audits/SC-112-multi-child-select-404-fix-20260904.md`](../audits/SC-112-multi-child-select-404-fix-20260904.md). Behavior contract: [athlete-auth-architecture.md — Multi-child](../../web/docs/athlete-auth-architecture.md#multi-child-parent-authentication).
 
 Capture screenshots or a short screen recording for Phase 5 closeout.
 
@@ -132,19 +134,23 @@ npm run test:smoke
 
 Anonymous `/dashboard` smoke/privacy tests accept **either** coming-soon (auth off) **or** redirect to sign-in (auth on). Do not assert coming-soon alone against auth-enabled deployments.
 
-Offline multi-child coverage does **not** replace live Production multi-child proof.
+Offline multi-child coverage did **not** replace live Production multi-child proof; that live proof is now **COMPLETE** (Mike, 2026-09-04).
 
 ---
 
-## Remaining SC-112 work (future)
+## SC-112 closeout (2026-09-04)
+
+**Authoritative status:** **COMPLETE — PRODUCTION VERIFIED BY MIKE** · merge **`78208ffc`** · deploy **`dpl_8TLH6uQAvLXUoQGDrGQ4NrFnWcVG`** · **no further SC-112 action**.
+
+Mike confirmed: three athletes presented and selectable; correct dashboards; family switcher; sign-out; no Page Not Found; no `/shoot/shoot/`; no `rec…` in URLs.
+
+Full ledger: [`audits/SC-112-multi-child-select-404-fix-20260904.md`](../audits/SC-112-multi-child-select-404-fix-20260904.md).
+
+---
+
+## Optional / out-of-scope follow-ons (not SC-112 blockers)
 
 - Optional Hub template `DASHBOARD_MAGIC_LINK` if Mike wants all outbound mail in Hub audit logs.
-- **Live multi-child Production proof** — code MERGED (**#373**); **2026-09-04 select 404 fixed** (double basePath on `router.push` → `/shoot/shoot/dashboard`). Status: **CODE COMPLETE** for the 404; remains **NEEDS-PRODUCTION-DEPLOY** then **NEEDS-MIKE** for signed-in select → switch → sign-out → reused-link rejection. Magic-link itself **works** in Production.
-- Status distinctions for operators:
-  - **Code complete** — select/sign-out JSON redirects are app-relative; regression tests cover `/shoot/shoot` 404.
-  - **Production deployed** — merged fix live on fairfieldbasketballclub.com/shoot (pending until this PR deploys).
-  - **Multi-child production verified** — Mike completes three-child select → dashboard for each child (pending).
-  - **Remaining manual verification** — Mike inbox walkthrough after deploy.
 - **Alumni / inactive enrollment access** — open product decision; auth grants Active? only today.
 - Separate parent vs athlete account views (product decision pending).
-- Upstash Redis required for reliable single-use tokens at Production scale (in-memory store is per-instance only).
+- Upstash Redis remains required for reliable single-use tokens at Production scale (in-memory store is per-instance only).

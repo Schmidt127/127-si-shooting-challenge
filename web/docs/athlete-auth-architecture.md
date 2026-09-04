@@ -1,6 +1,6 @@
 # Athlete dashboard auth — parent magic-link (SC-112)
 
-**Status:** Built in repository (single-child + multi-child via merged PR **#373**) · Vercel-gated (`ATHLETE_AUTH_ENABLED`) · Magic-link **works** in Production · Multi-child **PARTIAL / NEEDS-MIKE** (evidence **#380**: ≥2 disposable Active enrollments present; authenticated select → switch → sign-out walkthrough still incomplete). Do not treat multi-child as **PRODUCTION-VERIFIED** from unit/Playwright coverage alone.
+**Status:** **COMPLETE — PRODUCTION VERIFIED BY MIKE** (2026-09-04) · Built in repository (single-child + multi-child via PR **#373**; select-404 fix PR **#388** merge **`78208ffc`**) · Vercel-gated (`ATHLETE_AUTH_ENABLED`) · Magic-link **works** · Multi-child three-athlete select/switch/sign-out **PRODUCTION-VERIFIED** on deploy `dpl_8TLH6uQAvLXUoQGDrGQ4NrFnWcVG` · **no further SC-112 action**. Evidence: [`SC-112-multi-child-select-404-fix-20260904.md`](../../docs/audits/SC-112-multi-child-select-404-fix-20260904.md).
 
 Authority: [ATHLETE-AUTH-DECISION.md](../../docs/overnight/web-integration/ATHLETE-AUTH-DECISION.md) (Option A — parent magic-link email) · Ops checklist: [SC-112 Preview and Production](../../docs/deploy-checklists/SC-112-athlete-auth-preview-and-production.md)
 
@@ -41,7 +41,7 @@ Magic-link auth email is **web-initiated, synchronous, and single-recipient**. I
 
 Behavior shipped in PR **#373** (`feature/sc-112-multi-child-auth`). One parent magic-link session can authorize every **active** Enrollment whose `Parent Email - Cleaned` matches the signed-in email.
 
-**Verification status:** Repository + offline/Playwright coverage exist. Second disposable Active enrollment **present** (PR **#380**). Magic-link **works**. Multi-child remains **PARTIAL / NEEDS-MIKE** until Mike completes magic-link verify → `/dashboard/select` → switch → sign-out with no `enrollmentId=rec…` in the address bar. Do not mark multi-child PRODUCTION-VERIFIED from docs or unit tests alone.
+**Verification status:** **COMPLETE — PRODUCTION VERIFIED BY MIKE** (2026-09-04). Repository + offline/Playwright coverage plus live Production three-child walkthrough (select → dashboard for each child → family switcher → sign-out; no Page Not Found; no `/shoot/shoot/`; no `enrollmentId=rec…` in the address bar). Fix/deploy evidence: merge **`78208ffc`** · deploy **`dpl_8TLH6uQAvLXUoQGDrGQ4NrFnWcVG`**.
 
 ### 1. One parent email, multiple children
 
@@ -189,6 +189,6 @@ Summary:
 2. Confirm Resend sender domain and `RESEND_FROM_EMAIL`.
 3. Optionally provision Upstash Redis for token store in Production.
 4. Complete Preview proof with `ATHLETE_AUTH_TEST_MODE=true` and schmidt@ delivery only.
-5. **Multi-child proof (required before claiming Production multi-child):** parent email with ≥2 **active** enrollments → magic-link → `/dashboard/select` → switch → sign-out; confirm no `enrollmentId=rec…` in the address bar. Disposable multi Active data is present (**#380**); signed-in walkthrough still **NEEDS-MIKE**. Do not claim PRODUCTION-VERIFIED multi-child without that live evidence.
-6. Enable `ATHLETE_AUTH_ENABLED=true` in Production only after Preview evidence and Mike approval.
-7. Do **not** set `ATHLETE_AUTH_TEST_MODE=false` or send real family magic links until a separate approved cutover.
+5. **Multi-child proof:** **COMPLETE — PRODUCTION VERIFIED BY MIKE** (2026-09-04) — three active enrollments → select → switch → sign-out; no `enrollmentId=rec…` in the address bar. See [`SC-112-multi-child-select-404-fix-20260904.md`](../../docs/audits/SC-112-multi-child-select-404-fix-20260904.md).
+6. Enable `ATHLETE_AUTH_ENABLED=true` in Production only after Preview evidence and Mike approval. (**Done** for current Production.)
+7. Do **not** set `ATHLETE_AUTH_TEST_MODE=false` or send real family magic links until a separate approved cutover (independent of SC-112 closeout).

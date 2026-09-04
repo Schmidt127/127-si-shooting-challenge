@@ -10,6 +10,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 #### Changed
 - **SC-151 Family Dashboard Gmail access (2026-09-04)** — Removed incorrect `gmail.com` / `googlemail.com` domain block from parent magic-link validation. Registered parents may request dashboard access with the exact parent email on their enrollment, including personal Gmail. Sign-in copy no longer prohibits Gmail. Enrollment match, anti-enumeration, rate limits, and token/session controls unchanged. **SC-112 remains closed.** Audit: [`docs/audits/SC-151-family-dashboard-gmail-access-20260904.md`](./docs/audits/SC-151-family-dashboard-gmail-access-20260904.md).
+- **SC-109 Game Manual Production attestation (2026-09-04)** — `/shoot/game-manual` Production verified: **Open game manual** → approved Adobe Publish Online URL (repo `GAME_MANUAL_PUBLISH_URL`; optional env override). Live XP rules + level ladder present; env var name not leaked. Smoke now requires the open link (no longer accepts legacy “coming soon”). Evidence [`docs/testing/evidence/SC-109-PROD-ATTESTATION-2026-09-04.json`](./docs/testing/evidence/SC-109-PROD-ATTESTATION-2026-09-04.json); checklist Promoted to Production.
 - **Homework late-credit display (2026-09-03)** — Late submissions remain credit-eligible once satisfactory. Public homework labels no longer say “Late — no credit”; private dashboard marks late Submission Date with “Late · full credit if satisfactory.” Past-due unfinished assignments stay pending (still eligible when graded).
 
 #### Added
