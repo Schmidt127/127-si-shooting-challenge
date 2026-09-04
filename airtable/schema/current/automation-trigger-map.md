@@ -107,7 +107,7 @@ Do **not** treat Make/Gmail as the homework parent-email sender.
 | 056 | Enrollments | *scheduled* | `056-...-refresh-current-shooting-streaks-daily.js` | Streak refresh |
 | 057 | Weekly Athlete Summary | When record matches conditions: `Perfect Week Calculation Queue? = 1` (Pending OR Recalc Needed) | `057-...-calculate-perfect-week-eligibility.js` (**v2.4** — SC-152 Live Tested) | Perfect week flags |
 | 058 | Weekly Athlete Summary | When record updated; watch Week, Daily Met?, Video Count, Zoom Meeting/Attendance counts, Homework Met?, Automation Status, Enrollment, Goal Record; do **not** watch Perfect Week Unlock; dynamic `recordId` | `058-...-create-perfect-week-unlock.js` (**v1.7** — SC-153 Live Tested) | Achievement Unlocks |
-| **059** | Athlete Achievement Unlocks | Lifecycle-reachable record update/create; watch Active?, XP Award Status, XP Events, Enrollment, Shot Milestone, Week, and Milestone Source Key; never filter Ready for 059 XP? or Shot Milestone presence | `059-...-create-xp-event-from-achievement-unlock.js` (**v3.6**) | **XP Events** (achievement); corrected-history milestone lifecycle |
+| **059** | Athlete Achievement Unlocks | `059 Lifecycle Trigger?` = 1 (Pending+Active award/restore **or** Awarded+inactive Shot Milestone withdraw); never filter Ready for 059 XP? or XP Events empty | `059-...-create-xp-event-from-achievement-unlock.js` (**v3.8**) | **XP Events** (achievement); SC-159 formula lifecycle Live Tested |
 | 066 | Enrollments | `Run Shot Milestone Check?` checked; the upstream reconciliation must re-arm it after counted-total changes | `066-...-create-shot-milestone-unlocks.js` (**v3.8**) | Canonical shot-milestone unlocks; corrected-history lifecycle |
 
 ### Levels (041–043)

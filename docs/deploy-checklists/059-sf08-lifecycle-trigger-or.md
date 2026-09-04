@@ -3,7 +3,7 @@
 **Superseded 2026-09-04 by:** [`059-sc159-lifecycle-formula-trigger.md`](./059-sc159-lifecycle-formula-trigger.md)  
 **Why:** Airtable Automation “When record matches conditions” does **not** support nested conditional groups (OR of AND branches). That UI capability exists for **view filters** only. The nested OR below is **not representable** without changing Boolean meaning. Flattening is forbidden. Design authority: [`../audits/SC-159-LIFECYCLE-TRIGGER-REDESIGN-20260904.md`](../audits/SC-159-LIFECYCLE-TRIGGER-REDESIGN-20260904.md).
 
-**SC-159 remains OPEN** until the formula-supported (or dual-automation) design is live-tested.
+**SC-159 is COMPLETE / Live Tested** (2026-09-04) under the formula-supported design — see [`059-sc159-lifecycle-formula-trigger.md`](./059-sc159-lifecycle-formula-trigger.md) and [`../audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md`](../audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md).
 
 ---
 

@@ -303,7 +303,7 @@
 | Field | Value |
 |-------|-------|
 | ID/name | **057** eligibility · **058** unlock · **059** unlock→XP |
-| Trigger | **057:** `Perfect Week Calculation Queue?=1` (formula = Pending OR Recalc Needed — **live**) · **058 live:** lifecycle `recordUpdated` on nine WAS fields (Unlock not watched) — SC-153 Live Tested · **059:** Unlock Active? + XP Award Status Pending |
+| Trigger | **057:** `Perfect Week Calculation Queue?=1` (formula = Pending OR Recalc Needed — **live**) · **058 live:** lifecycle `recordUpdated` on nine WAS fields (Unlock not watched) — SC-153 Live Tested · **059:** `059 Lifecycle Trigger?` = 1 (SC-159 Live Tested) |
 | Eligibility | Active enrollment; PW math; goal settlement |
 | Required inputs | `recordId` |
 | Output / side effect | Status/Eligible helpers; Unlock `PERFECT_WEEK|{enr}|{week}`; XP Event; **057 v2.4** clears Recalc Needed |
@@ -421,17 +421,17 @@
 | Field | Value |
 |-------|-------|
 | ID/name | **059** Create XP Event from Achievement Unlock |
-| Trigger | Unlocks · XP Award Status Pending + Active? |
-| Eligibility | Pending award |
+| Trigger | Unlocks · `059 Lifecycle Trigger?` = 1 |
+| Eligibility | Pending+Active award/restore **or** Awarded+inactive Shot Milestone withdraw |
 | Required inputs | `recordId` |
-| Output / side effect | XP Event from unlock |
+| Output / side effect | XP Event from unlock; SM Active? lifecycle |
 | Dedupe key | Per-achievement Source Key family |
-| Success state | XP Award Status Awarded |
-| Failure state | Stuck Pending |
-| Retry / recovery | Reset Pending after fix |
-| Reconciliation | Active Unlock Pending without XP Event |
-| Test evidence | Live **v3.7** |
-| Deployed version | **v3.7** MATCH |
+| Success state | XP Award Status Awarded (or Skipped after SM withdraw) |
+| Failure state | XP Award Status Error / Trigger Context error |
+| Retry / recovery | Re-arm Pending (+ Active?) after fix |
+| Reconciliation | Formula=1 stuck; Awarded+inactive SM with Active XP; Error status |
+| Test evidence | Live **v3.8** SC-159 Live Tested 2026-09-04 |
+| Deployed version | **v3.8** MATCH |
 | Last verified | 2026-09-04 |
 | Remaining risk | Withdrawal path if Active cleared without status change |
 

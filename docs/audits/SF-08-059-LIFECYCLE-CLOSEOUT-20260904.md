@@ -88,4 +88,6 @@ Deleted this run’s disposable Athlete Achievement Unlocks and XP Events (award
 | Live OR trigger + v3.8 paste | **Mike publish gate** — checklist above |
 | SF-08 / SC-159 | **COMPLETE for Agent 3 deliverable**; live trigger promotion is the remaining operator step |
 
-**Do not** treat SF-08 as “live closed” until Mike publishes the OR trigger and a disposable withdraw re-test shows XP deactivated automatically.
+**Do not** treat SF-08 as “live closed” until Mike publishes the supported formula trigger and a disposable withdraw re-test shows XP deactivated automatically.
+
+**Overlay 2026-09-04:** Live formula + **059 v3.8** published; disposable withdraw/restore/idempotency/PW PASS — **SC-159 COMPLETE / Live Tested**. See [`SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md`](./SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md).
