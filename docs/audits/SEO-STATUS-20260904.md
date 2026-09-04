@@ -29,7 +29,7 @@
 | Created | 2026-08-30 |
 | State before this wave | OPEN draft, **CONFLICTING** with master (`mergeable: CONFLICTING`) |
 | Human reviews | None |
-| Decision | **Close as superseded** — recreate still-valid portions on a fresh master-based branch |
+| Decision | **Closed as superseded** by [#399](https://github.com/Schmidt127/127-si-shooting-challenge/pull/399) |
 
 ### Why not rebase #310 in place
 
