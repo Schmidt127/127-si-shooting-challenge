@@ -35,9 +35,9 @@ const IDS = {
 const UNLOCK_SOURCE_KEY_FIELD = "Milestone Source Key";
 const UNLOCK_NOTES_FIELD = "Coach Note";
 
-test("loads committed Automation 058 v1.5 with production Unlocks field names", () => {
+test("loads committed Automation 058 v1.6 with production Unlocks field names", () => {
   const source = readFileSync(SCRIPT, "utf8");
-  assert.match(source, /Version:\s*1\.5/);
+  assert.match(source, /Version:\s*1\.6/);
   assert.match(source, /sourceKey:\s*"Milestone Source Key"/);
   assert.match(source, /notes:\s*"Coach Note"/);
   assert.doesNotMatch(source, /sourceKey:\s*"Source Key"/);
@@ -279,7 +279,8 @@ test("058 withdraws and restores the same exact-owned unlock without replacement
   const restored = await run058(base);
   assert.equal(restored.error, null);
   assert.equal(unlocks.records.get(IDS.unlock).getCellValue("Active?"), true);
-  assert.equal(unlocks.records.get(IDS.unlock).getCellValue("XP Award Status"), "Pending");
+  // SC-153: preserve Awarded on restore to avoid duplicate Perfect Week XP via 059.
+  assert.equal(unlocks.records.get(IDS.unlock).getCellValue("XP Award Status")?.name || unlocks.records.get(IDS.unlock).getCellValue("XP Award Status"), "Awarded");
   assert.equal(unlocks.createdPayloads.length, 0);
   assert.deepEqual(
     weekly.getCellValue("Perfect Week Unlock"),
@@ -422,7 +423,9 @@ test("058 restores the concurrent exact candidate found by last-chance recheck",
   assert.equal(queryCount, 2);
   assert.equal(unlocks.createdPayloads.length, 0);
   assert.equal(unlocks.records.get(IDS.unlock).getCellValue("Active?"), true);
-  assert.equal(unlocks.records.get(IDS.unlock).getCellValue("XP Award Status"), "Pending");
+  // SC-153: preserve Awarded on restore (no duplicate Perfect Week XP).
+  const xpStatus = unlocks.records.get(IDS.unlock).getCellValue("XP Award Status");
+  assert.equal(xpStatus?.name || xpStatus, "Awarded");
   assert.deepEqual(
     base.getTable("Weekly Athlete Summary").records.get(IDS.summary).getCellValue("Perfect Week Unlock"),
     [{ id: IDS.unlock }]

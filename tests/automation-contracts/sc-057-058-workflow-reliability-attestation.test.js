@@ -70,7 +70,7 @@ test("058 script warns against positive-only eligibility triggers", () => {
   const text = fs.readFileSync(script058, "utf8");
   assert.match(text, /Do not use positive-only eligibility/i);
   assert.match(text, /PERFECT_WEEK\|/);
-  assert.match(text, /Version:\s*1\.5/);
+  assert.match(text, /Version:\s*1\.6/);
 });
 
 test("retired duplicate-writer slots remain non-production disposition in attestation", () => {

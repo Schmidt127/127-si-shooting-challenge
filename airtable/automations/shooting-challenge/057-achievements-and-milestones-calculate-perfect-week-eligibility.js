@@ -24,12 +24,20 @@ Airtable is the deployed/running copy.
 
 /***************************************************************************************************
  * 057 - Achievements and Milestones - Calculate Perfect Week Eligibility
- * Version: 2.3
+ * Version: 2.4
  * Date written: 2026-05-30
- * Last updated: 2026-09-03
+ * Last updated: 2026-09-04
  *
  * Purpose:
  * Calculates Perfect Week helper fields on one Weekly Athlete Summary record.
+ *
+ * Version 2.4 updates (SC-152 / SF-01 formula-queue reliability):
+ * - Clears writable `Perfect Week Recalc Needed?` on every success or error writeback.
+ * - Queue formula (retained) is 1 when Enr+Week+Goal linked AND (Status=Pending OR
+ *   Recalc Needed?). Ready alone no longer keeps Queue sticky at 1.
+ * - Trigger remains recordMatchesConditions on Queue?=1 — Recalc checkbox creates a
+ *   reliable 0→1 re-entry edge after Ready without deleting the Queue formula.
+ * - Operator / upstream re-arm: check Recalc Needed? or set Status→Pending.
  *
  * Version 2.3 updates (homework late-credit / Perfect Week split):
  * - Perfect Week homework count requires satisfactory AND on-time Submission Date
@@ -178,6 +186,8 @@ const CONFIG = {
 
     automationStatus: "Perfect Week Automation Status",
     automationError: "Perfect Week Automation Error",
+    // SC-152 writable re-arm (checkbox). Cleared on every 057 writeback when present.
+    recalcNeeded: "Perfect Week Recalc Needed?",
   },
   enrollmentFields: {
     programInstance: "Program Instance",
@@ -555,7 +565,12 @@ function countsTowardPerfectWeekHomework(record, dueDateByPhaId, weekEndDateKey)
 }
 
 async function updateWeekly(fields) {
-  await weeklyTable.updateRecordAsync(weeklyRecord.id, fields);
+  const payload = { ...fields };
+  // SC-152: always clear writable re-arm so Queue can leave match set after Ready/Error.
+  if (fieldExists(weeklyTable, CONFIG.weeklyFields.recalcNeeded)) {
+    payload[CONFIG.weeklyFields.recalcNeeded] = false;
+  }
+  await weeklyTable.updateRecordAsync(weeklyRecord.id, payload);
 }
 
 const SCHOOL_YEAR_RE = /^(\d{4})-(\d{4})$/;
@@ -945,7 +960,7 @@ try {
     console.log(
       JSON.stringify({
         automation: "057",
-        version: "2.3",
+        version: "2.4",
         recordId,
         action: "skipped_unsettled_goal",
         configuredGoal,
@@ -970,7 +985,7 @@ try {
     console.log(
       JSON.stringify({
         automation: "057",
-        version: "2.3",
+        version: "2.4",
         recordId,
         action: "skipped_unsettled_weekly_goal",
         configuredGoal,
@@ -1447,7 +1462,7 @@ try {
   console.log(
     JSON.stringify({
       automation: "057",
-      version: "2.3",
+      version: "2.4",
       recordId,
       action: "ready",
       configuredGoal,

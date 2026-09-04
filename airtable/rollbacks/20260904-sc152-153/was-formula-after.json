@@ -1,0 +1,8 @@
+{
+  "capturedAt": "2026-09-04",
+  "note": "Live Queue formula references Recalc checkbox fldH46SynZ19EosiG instead of Status=Ready.",
+  "queueFieldId": "fldNvOVO3WidABUXS",
+  "recalcFieldId": "fldH46SynZ19EosiG",
+  "recalcFieldName": "Perfect Week Recalc Needed?",
+  "queueFormulaLive": "IF(AND(Enrollment,Week,Goal, OR(Status=Pending, RecalcNeeded)),1,0)"
+}

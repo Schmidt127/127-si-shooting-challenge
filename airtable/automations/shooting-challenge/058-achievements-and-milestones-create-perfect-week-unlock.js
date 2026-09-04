@@ -24,13 +24,22 @@ Airtable is the deployed/running copy.
 
 /***************************************************************************************************
  * 058 - Achievements and Milestones - Create Perfect Week Unlock
- * Version: 1.5
+ * Version: 1.6
  * Date written: 2026-05-30
- * Last updated: 2026-08-29
+ * Last updated: 2026-09-04
  *
  * Purpose:
  * Creates one Athlete Achievement Unlock when a Weekly Athlete Summary record qualifies
  * for Perfect Week.
+ *
+ * v1.6 (2026-09-04 / SC-153 / SF-02): Lifecycle trigger + idempotent restore/deactivate.
+ * - Live trigger must be recordUpdated on writable Perfect Week lifecycle fields
+ *   (Status, Enrollment, Week, Goal Record, Daily/Homework/Video/Zoom helper counts) —
+ *   NOT positive-only Eligible=1 ∧ Unlock empty ∧ Ready.
+ * - Do not watch Perfect Week Unlock on the trigger (avoids create→writeback loops).
+ * - Restore/deactivate skip no-op writes when unlock + WAS already match desired state.
+ * - Still fail-closed on inactive Enrollment / invalid goal; Milestone Source Key dedupe
+ *   remains PERFECT_WEEK|{enrollmentRecordId}|{weekRecordId}.
  *
  * v1.5 (2026-08-29): Production Unlocks field alignment — write Milestone Source Key
  * (not Source Key) and Coach Note when present. Idempotency key remains
@@ -47,10 +56,12 @@ Airtable is the deployed/running copy.
  * Trigger:
  * Table: Weekly Athlete Summary
  * Lifecycle trigger contract:
- * - Trigger on record updates that include Perfect Week Eligible?, Perfect Week
- *   Automation Status, Enrollment, Week, Goal Record, and Perfect Week Unlock.
+ * - Trigger on record updates that include Perfect Week Automation Status, Enrollment,
+ *   Week, Goal Record, and Perfect Week helper fields that drive Eligible?
+ *   (Daily Met, Homework Met, Video Count, Zoom Meeting/Attendance counts).
  * - Do not use positive-only eligibility or empty-unlock conditions: they block
  *   withdrawal and same-unlock restoration.
+ * - Do not watch Perfect Week Unlock (script writes that field).
  *
  * Required input variable:
  * - recordId = Airtable record ID from triggering Weekly Athlete Summary record
@@ -206,32 +217,48 @@ async function deactivateExactOwnedUnlock(unlock, reason) {
   if (isTruthy(unlock.getCellValue(CONFIG.unlockFields.active))) {
     unlockUpdate[CONFIG.unlockFields.active] = false;
   }
+  const deactivationNote = `Deactivated by 058: ${reason}.`;
   if (fieldExists(unlocksTable, CONFIG.unlockFields.notes)) {
-    unlockUpdate[CONFIG.unlockFields.notes] = `Deactivated by 058: ${reason}.`;
+    if (getText(unlock, CONFIG.unlockFields.notes) !== deactivationNote) {
+      unlockUpdate[CONFIG.unlockFields.notes] = deactivationNote;
+    }
   }
   if (Object.keys(unlockUpdate).length > 0) {
     await unlocksTable.updateRecordAsync(unlock.id, unlockUpdate);
   }
-  await updateWeekly({
-    [CONFIG.weeklyFields.automationError]: `058 skipped: ${reason}.`,
-  });
+  const skipMessage = `058 skipped: ${reason}.`;
+  if (getText(weeklyRecord, CONFIG.weeklyFields.automationError) !== skipMessage) {
+    await updateWeekly({
+      [CONFIG.weeklyFields.automationError]: skipMessage,
+    });
+  }
 }
 
 async function restoreExactOwnedUnlock(unlock) {
   const unlockUpdate = {};
-  if (!isTruthy(unlock.getCellValue(CONFIG.unlockFields.active))) {
+  const wasActive = isTruthy(unlock.getCellValue(CONFIG.unlockFields.active));
+  if (!wasActive) {
     unlockUpdate[CONFIG.unlockFields.active] = true;
   }
   if (fieldExists(unlocksTable, CONFIG.unlockFields.xpAwardStatus)) {
-    unlockUpdate[CONFIG.unlockFields.xpAwardStatus] = { name: "Pending" };
+    const xpStatus = getSingleSelectName(unlock, CONFIG.unlockFields.xpAwardStatus);
+    // Preserve Awarded (no duplicate 059). Only fill blank/non-terminal statuses on restore.
+    if (!wasActive && xpStatus !== "Awarded" && xpStatus !== "Pending") {
+      unlockUpdate[CONFIG.unlockFields.xpAwardStatus] = { name: "Pending" };
+    }
   }
   if (Object.keys(unlockUpdate).length > 0) {
     await unlocksTable.updateRecordAsync(unlock.id, unlockUpdate);
   }
-  await updateWeekly({
-    [CONFIG.weeklyFields.perfectWeekUnlock]: [{ id: unlock.id }],
-    [CONFIG.weeklyFields.automationError]: "",
-  });
+  const linkedIds = getLinkedIds(weeklyRecord, CONFIG.weeklyFields.perfectWeekUnlock);
+  const alreadyLinked = linkedIds.length === 1 && linkedIds[0] === unlock.id;
+  const errorEmpty = getText(weeklyRecord, CONFIG.weeklyFields.automationError) === "";
+  if (!alreadyLinked || !errorEmpty) {
+    await updateWeekly({
+      [CONFIG.weeklyFields.perfectWeekUnlock]: [{ id: unlock.id }],
+      [CONFIG.weeklyFields.automationError]: "",
+    });
+  }
 }
 
 /***************************************************************************************************
@@ -414,9 +441,12 @@ try {
     if (existingUnlock) {
       await deactivateExactOwnedUnlock(existingUnlock, reason);
     } else {
-      await updateWeekly({
-        [CONFIG.weeklyFields.automationError]: `058 skipped: ${reason}.`,
-      });
+      const skipMessage = `058 skipped: ${reason}.`;
+      if (getText(weeklyRecord, CONFIG.weeklyFields.automationError) !== skipMessage) {
+        await updateWeekly({
+          [CONFIG.weeklyFields.automationError]: skipMessage,
+        });
+      }
     }
     return;
   }
@@ -493,9 +523,12 @@ try {
     if (existingUnlock) {
       await deactivateExactOwnedUnlock(existingUnlock, reason);
     } else {
-      await updateWeekly({
-        [CONFIG.weeklyFields.automationError]: `058 skipped: ${reason}.`,
-      });
+      const skipMessage = `058 skipped: ${reason}.`;
+      if (getText(weeklyRecord, CONFIG.weeklyFields.automationError) !== skipMessage) {
+        await updateWeekly({
+          [CONFIG.weeklyFields.automationError]: skipMessage,
+        });
+      }
     }
     return;
   }
