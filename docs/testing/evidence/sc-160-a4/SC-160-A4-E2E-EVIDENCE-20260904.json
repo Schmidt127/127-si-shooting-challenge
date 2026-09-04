@@ -1,0 +1,97 @@
+{
+  "auditId": "SC-160-INDEPENDENT-E2E-VERIFY-20260904",
+  "agent": "A4",
+  "generatedAt": "2026-09-04T19:40:00Z",
+  "baseId": "appn84sqPw03zEbTT",
+  "git": {
+    "verifyBranch": "sc160/a4-e2e-verify",
+    "verifyHead": "d2a103981a3ef3c32a15c08113834d18a3b35b37",
+    "requestedStartRef": "origin/master",
+    "requestedStartShaNote": "Agent brief expected ~95e83bf2; live origin/master advanced to d2a10398 (includes SC-159 closeout PR #422) during verification",
+    "agent2Branch": "sc160/a2-asset-intake-decouple",
+    "agent2Sha": "89b52947c75bc873181b4d5d465f9f22abc88bc8",
+    "agent2Pr": 420,
+    "agent3Branch": "sc160/a3-homework-timing",
+    "agent3Sha": "07849398d66a80b8f5a23565d9c3aa3dc16dfc42",
+    "agent3Pr": 421,
+    "agent2PrMerged": false,
+    "agent3PrMerged": false
+  },
+  "livePreFixState": {
+    "readyFor009FormulaRequiresWeek": true,
+    "whyNotReadyOrdersMissingWeekBeforeAssets": true,
+    "automation009DeployedVersion": "v1.2",
+    "automation009AutomationId": "wflGKNw4e06hCHyv9",
+    "automation009HardRequiresWeek": true,
+    "missingWeekSubmissionCount": 2,
+    "calendarEarliestWeekStartDenver": "2027-04-25",
+    "todayRelativeToCalendar": "outside_all_weeks"
+  },
+  "mikeReportedEvidenceRedacted": {
+    "touched": false,
+    "deleted": false,
+    "pattern": {
+      "activityDate": "2026-09-04",
+      "weekLinked": false,
+      "weekAssignmentStatus": "Needs Assignment",
+      "readyFor009": 0,
+      "whyNotReady": "Missing Week",
+      "attachmentUploadStatus": "Processing",
+      "hw1Attachments": 1,
+      "hw2Attachments": 1,
+      "videoAttachments": 3,
+      "submissionAssets": 0
+    }
+  },
+  "disposableLiveProof": {
+    "prefix": "SC160|A4|DISPOSABLE",
+    "cleanedUp": true,
+    "noWeekAssetCreate": {
+      "result": "PASS",
+      "createdAssetSlots": ["HW1", "HW2", "VIDEO", "VIDEO", "VIDEO"],
+      "assetCount": 5,
+      "uniqueSourceAttachmentIds": 5,
+      "submissionWeekEmpty": true,
+      "note": "MCP create of Submission Assets succeeded with empty Submission.Week; Week lookup omitted/empty. Proves data model allows intake without Week. Does NOT prove live Automation 009 v1.3 path."
+    },
+    "formulaOrderQuirkWithAssets": {
+      "result": "OBSERVED",
+      "whyNotReadyWithAssetsButNoWeek": "Missing Week",
+      "note": "Pre-fix formula checks Week before assets, so operators still see Missing Week even after assets exist. A2 SC-160 formula removes Week gate and checks assets earlier."
+    }
+  },
+  "offlineContractsAgainstBranchTips": {
+    "a2_009_decouple": { "file": "tests/homework/automation-009-sc160-asset-intake-decouple.test.js", "pass": 10, "fail": 0 },
+    "a3_timing_pw": { "file": "tests/automation-contracts/sc160-homework-timing-pw.test.js", "pass": 1, "fail": 0, "embeddedCases": 13 },
+    "a3_065_late_credit": { "file": "tests/automation-contracts/065-homework-late-credit-policy.test.js", "pass": 1, "fail": 0 },
+    "a3_assignment_identity": { "file": "tests/homework-contracts/assignment-identity.test.js", "pass": 1, "fail": 0 },
+    "a3_005_020_pha": { "file": "tests/homework/automation-005-020-pha-direct.test.js", "pass": 28, "fail": 0 },
+    "a3_057_video_min": { "file": "tests/automation-contracts/057-perfect-week-video-minimum.test.js", "pass": 1, "fail": 0 },
+    "a3_pha_grade_band": { "file": "tests/homework/pha-grade-band-metadata-contract.test.js", "pass": 1, "fail": 0 }
+  },
+  "priorLiveProofReuse": {
+    "fut001LateCredit": {
+      "audit": "docs/audits/FUT-001-LATE-CREDIT-LIVE-PROOF-20260904.md",
+      "coversMatrixItems": [4],
+      "result": "PASS_HISTORICAL",
+      "note": "Late satisfactory HOMEWORK_XP with Perfect Week homework exclusion already live-proved on 020 v3.9 / 065 v10.6 / 057 2.4. A3 advances early timing + PHA Week ownership; not yet live-pasted."
+    }
+  },
+  "privacy": {
+    "reportContainsRecordIds": false,
+    "reportContainsAttachmentUrls": false,
+    "reportContainsPiiBeyondRoleLabels": false,
+    "mikeSubmissionNotDeleted": true
+  },
+  "blockersForFullLiveAutomationE2E": [
+    "Mike paste Automation 009 v1.3 (PR #420) then Ready/Why Not Ready formulas",
+    "Mike paste Automations 020 v4.0 / 065 v10.7 / 057 2.5 (PR #421)",
+    "Do not flip Ready formulas before 009 v1.3 publish — Ready=1 would fire live v1.2 and fail closed on missing Week"
+  ],
+  "matrixSummary": {
+    "pass": ["1b_data_model_no_week_assets", "10_multi_video_no_artificial_week", "13_missing_week_visible", "14_reconciliation_attachments_missing_assets", "15_privacy"],
+    "pass_offline_branch_tip": ["2", "3", "4", "5", "6", "7", "8", "9", "11_contract", "12_contract"],
+    "pass_historical_live": ["4_late_xp_vs_pw"],
+    "blocked_live_automation_path": ["1a_009_trigger_path", "11_live_009_retry", "12_live_dup_prevention_via_009"]
+  }
+}
