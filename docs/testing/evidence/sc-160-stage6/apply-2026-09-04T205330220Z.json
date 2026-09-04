@@ -1,0 +1,569 @@
+{
+  "harness": "SC-160-STAGE6",
+  "mode": "apply",
+  "startedAt": "2026-09-04T20:47:27.681Z",
+  "checks": [
+    {
+      "id": "early.hc_linked",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "done": true,
+        "hcCount": 1,
+        "uploadStatus": "Pending Link",
+        "uploadError": ""
+      }
+    },
+    {
+      "id": "early.week_and_notes",
+      "pass": true,
+      "status": "PASS",
+      "expected": {
+        "expectTiming": "early",
+        "week": "recBrZ1sV8byWEHZU",
+        "activityDate": "2027-04-20"
+      },
+      "actual": {
+        "week": "recBr…EHZU",
+        "timingStatus": "early",
+        "notesSnippet": "Early submission: qualifying date 2027-04-20 is before assigned Week Start 2027-04-25. Counts toward assigned Week; Perfect Week award waits until that Week's evaluation time (after Week End 11:59:59pm America/Denver).",
+        "submitDate": "2027-04-20"
+      }
+    },
+    {
+      "id": "on_time.hc_linked",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "done": true,
+        "hcCount": 1,
+        "uploadStatus": "Pending Link",
+        "uploadError": ""
+      }
+    },
+    {
+      "id": "on_time.week_and_notes",
+      "pass": true,
+      "status": "PASS",
+      "expected": {
+        "expectTiming": "on_time",
+        "week": "recBrZ1sV8byWEHZU",
+        "activityDate": "2027-04-28"
+      },
+      "actual": {
+        "week": "recBr…EHZU",
+        "timingStatus": "on_time_or_empty",
+        "notesSnippet": "",
+        "submitDate": "2027-04-28"
+      }
+    },
+    {
+      "id": "deadline_boundary.hc_linked",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "done": true,
+        "hcCount": 1,
+        "uploadStatus": "Pending Link",
+        "uploadError": ""
+      }
+    },
+    {
+      "id": "deadline_boundary.week_and_notes",
+      "pass": true,
+      "status": "PASS",
+      "expected": {
+        "expectTiming": "on_time",
+        "week": "recBrZ1sV8byWEHZU",
+        "activityDate": "2027-06-29"
+      },
+      "actual": {
+        "week": "recBr…EHZU",
+        "timingStatus": "on_time_or_empty",
+        "notesSnippet": "",
+        "submitDate": "2027-06-29"
+      }
+    },
+    {
+      "id": "coach_delay.notes_still_on_time",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "timingStatus": "on_time_or_empty",
+        "notesSnippet": "",
+        "preGradeNotesSnippet": ""
+      }
+    },
+    {
+      "id": "after_deadline.hc_linked",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "done": true,
+        "hcCount": 1,
+        "uploadStatus": "Pending Link",
+        "uploadError": ""
+      }
+    },
+    {
+      "id": "after_deadline.week_and_notes",
+      "pass": true,
+      "status": "PASS",
+      "expected": {
+        "expectTiming": "late",
+        "week": "recBrZ1sV8byWEHZU",
+        "activityDate": "2027-06-30"
+      },
+      "actual": {
+        "week": "recBr…EHZU",
+        "timingStatus": "late",
+        "notesSnippet": "Late submission: activity date 2027-06-30 is after due date 2027-06-29. Full homework XP credit still applies once satisfactory; does not count toward Perfect Week for the original week.",
+        "submitDate": "2027-06-30"
+      }
+    },
+    {
+      "id": "late_xp_pw.exactly_one_homework_xp",
+      "pass": false,
+      "status": "FAIL",
+      "actual": {
+        "count": 0,
+        "ids": [],
+        "sourceKey": "HOMEWORK_XP|reckqW3ZkXTnkVibO",
+        "timeout": true,
+        "hcAfter": {
+          "reconcile": 1,
+          "awardStatus": "Pending",
+          "totalXp": 35,
+          "automationError": null
+        }
+      }
+    },
+    {
+      "id": "late_xp_pw.pw_satisfactory_unchanged",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "done": true,
+        "sat": 0,
+        "before": {
+          "satisfactory": null
+        },
+        "status": "Ready"
+      }
+    },
+    {
+      "id": "early.pw_award_waits_note",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "notesSnippet": "Early submission: qualifying date 2027-04-20 is before assigned Week Start 2027-04-25. Counts toward assigned Week; Perfect Week award waits until that Week's evaluation time (after Week End 11:59:59p"
+      }
+    },
+    {
+      "id": "placeholder_then_late.latest_wins_late",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "notesSnippet": "Early submission: qualifying date 2027-04-20 is before assigned Week Start 2027-04-25. Counts toward assigned Week; Perfect Week award waits until that Week's evaluation time (after Week End 11:59:59pm America/Denver).\nL",
+        "timeout": false
+      }
+    },
+    {
+      "id": "video_no_week.asset_created_week_empty",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "assetId": "recwt…t06J",
+        "weekLinks": 0,
+        "vfObserved": 0,
+        "uploadStatus": ""
+      }
+    },
+    {
+      "id": "multi_hw_video_no_week.five_unique_week_empty",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "assetCount": 5,
+        "uniqueSourceIds": 5,
+        "weekLinks": 0,
+        "createdSourceIds": 5
+      }
+    },
+    {
+      "id": "retry_dedupe.source_attachment_unique",
+      "pass": false,
+      "status": "OBSERVED",
+      "actual": {
+        "secondCreateFailed": false,
+        "sameSourceCount": 2,
+        "secondAssetId": "recjT…aw9h",
+        "note": "API allowed duplicate Source Attachment ID (policy gap observed)"
+      }
+    },
+    {
+      "id": "retry_dedupe.no_duplicate_hc_on_rearm",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "hcOnFirstAsset": 1,
+        "harnessHcForPhaSample": 0
+      }
+    },
+    {
+      "id": "recon_detect.no_week_zero_asset_formula",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "ready": 0,
+        "whyNotReady": "No HW Sub 1, HW Sub 2, or Video Upload attachment",
+        "weekEmpty": true,
+        "note": "Why Not Ready no longer gates on Missing Week"
+      }
+    }
+  ],
+  "defects": [
+    "late_xp_pw.exactly_one_homework_xp"
+  ],
+  "notes": [
+    "PHA_HW2=recfc…o6IT",
+    "late_xp_pw combined with after_deadline HC",
+    {
+      "lateXpPreGrade": {
+        "notesHasLate": true,
+        "reconcile": 0,
+        "awardStatus": "Pending",
+        "totalXp": 35,
+        "automationError": null
+      }
+    },
+    "Forced 065 re-entry",
+    "video_no_week VF observe: count=0 (non-fatal if zero)",
+    {
+      "reconProcessingSample": 5
+    },
+    "on_time scenario completed"
+  ],
+  "created": {
+    "batchKey": "SC160|S6|2026-09-04|mtnfdku9",
+    "enrollmentId": "recZEwkkXTJanDlG6",
+    "athleteId": "recTfxT6WMsPvobAW",
+    "weekId": "recBrZ1sV8byWEHZU",
+    "phaId": "recrpWRmt0MntieCL",
+    "phaHw2Id": "recfcXqQsk3W4o6IT",
+    "submissionIds": [
+      {
+        "id": "recYETwVLV72tki1S",
+        "tag": "early"
+      },
+      {
+        "id": "recnzrPpXLmfy9Yso",
+        "tag": "on_time"
+      },
+      {
+        "id": "reclAFDbIl1YcLbik",
+        "tag": "deadline_boundary"
+      },
+      {
+        "id": "recGDfP9wv5YRmsYj",
+        "tag": "coach_delay"
+      },
+      {
+        "id": "recw42pbsylToABle",
+        "tag": "after_deadline"
+      },
+      {
+        "id": "recaZQqKRqENUnVoQ",
+        "tag": "placeholder_then_late"
+      },
+      {
+        "id": "rec8EYnGbPqYSWlE5",
+        "tag": "video_no_week"
+      },
+      {
+        "id": "reckTXqA5IIAmteCc",
+        "tag": "multi_hw_video_no_week"
+      },
+      {
+        "id": "rec4GmCVyHv6Xdm66",
+        "tag": "retry_dedupe"
+      },
+      {
+        "id": "recAuTr9s54rTqQc5",
+        "tag": "recon_detect"
+      }
+    ],
+    "assetIds": [
+      {
+        "id": "rec3yi1oPKnZu6pKo",
+        "tag": "early"
+      },
+      {
+        "id": "recnUjSJ2TRBAFbuy",
+        "tag": "on_time"
+      },
+      {
+        "id": "recEYF9K3OdXMNyNC",
+        "tag": "deadline_boundary"
+      },
+      {
+        "id": "reczr0AKpSVCiFj6Z",
+        "tag": "coach_delay"
+      },
+      {
+        "id": "recHclXnJFIGZSkYX",
+        "tag": "after_deadline"
+      },
+      {
+        "id": "recQHNWVXnqIct1Wv",
+        "tag": "placeholder_then_late-early"
+      },
+      {
+        "id": "recw0hEbCyWvU0W1P",
+        "tag": "placeholder_then_late-late"
+      },
+      {
+        "id": "recwt734DxGvPt06J",
+        "tag": "video_no_week"
+      },
+      {
+        "id": "recS3KZVEr4r6jcrv",
+        "tag": "multi_hw_video_no_week-hw1"
+      },
+      {
+        "id": "recdRFlI0w6W20uuz",
+        "tag": "multi_hw_video_no_week-hw2"
+      },
+      {
+        "id": "recYZpnrHaMEd1K46",
+        "tag": "multi_hw_video_no_week-v1"
+      },
+      {
+        "id": "recvahsTmFMb5UcE3",
+        "tag": "multi_hw_video_no_week-v2"
+      },
+      {
+        "id": "recnt0AzGE2f1Y18b",
+        "tag": "multi_hw_video_no_week-v3"
+      },
+      {
+        "id": "recYflHiAR9htODh5",
+        "tag": "retry_dedupe-a"
+      },
+      {
+        "id": "recjTHH3roIx2aw9h",
+        "tag": "retry_dedupe-b"
+      }
+    ],
+    "homeworkIds": [
+      {
+        "id": "reckqW3ZkXTnkVibO",
+        "kind": "early"
+      },
+      {
+        "id": "reckqW3ZkXTnkVibO",
+        "kind": "on_time"
+      },
+      {
+        "id": "reckqW3ZkXTnkVibO",
+        "kind": "deadline_boundary"
+      },
+      {
+        "id": "reckqW3ZkXTnkVibO",
+        "kind": "coach_delay"
+      },
+      {
+        "id": "reckqW3ZkXTnkVibO",
+        "kind": "after_deadline"
+      },
+      {
+        "id": "reckqW3ZkXTnkVibO",
+        "kind": "placeholder_then_late"
+      },
+      {
+        "id": "reckqW3ZkXTnkVibO",
+        "kind": "retry_dedupe"
+      }
+    ],
+    "xpEventIds": [],
+    "vfIds": [],
+    "wasId": "rec1gzscQN8dJtBVF",
+    "wasCreated": true
+  },
+  "finishedAt": "2026-09-04T20:53:26.246Z",
+  "summary": {
+    "passCount": 16,
+    "failCount": 2,
+    "defectCount": 1
+  },
+  "cleanupEvidencePath": "C:\\Users\\mschmidt_fairfield\\.cursor\\worktrees\\sc160-coord-integrate\\docs\\testing\\evidence\\sc-160-stage6\\cleanup-2026-09-04T205330219Z.json",
+  "cleanupSummary": {
+    "deletedCount": 0,
+    "errorCount": 27,
+    "restoredCount": 0
+  },
+  "cleanupErrors": [
+    {
+      "table": "Submission Assets",
+      "id": "rec3y…6pKo",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=rec3yi1oPKnZu6pKo 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recnU…Fbuy",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recnUjSJ2TRBAFbuy 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recEY…NyNC",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recEYF9K3OdXMNyNC 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "reczr…Fj6Z",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=reczr0AKpSVCiFj6Z 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recHc…SkYX",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recHclXnJFIGZSkYX 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recQH…t1Wv",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recQHNWVXnqIct1Wv 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recw0…0W1P",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recw0hEbCyWvU0W1P 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recwt…t06J",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recwt734DxGvPt06J 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recS3…jcrv",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recS3KZVEr4r6jcrv 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recdR…0uuz",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recdRFlI0w6W20uuz 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recYZ…1K46",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recYZpnrHaMEd1K46 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recva…UcE3",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recvahsTmFMb5UcE3 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recnt…Y18b",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recnt0AzGE2f1Y18b 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recYf…ODh5",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recYflHiAR9htODh5 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Submission Assets",
+      "id": "recjT…aw9h",
+      "label": "asset",
+      "error": "DELETE Submission%20Assets?records[]=recjTHH3roIx2aw9h 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that b"
+    },
+    {
+      "table": "Homework Completions",
+      "id": "reckq…VibO",
+      "label": "hc",
+      "error": "DELETE Homework%20Completions?records[]=reckqW3ZkXTnkVibO 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check tha"
+    },
+    {
+      "table": "Submissions",
+      "id": "recYE…ki1S",
+      "label": "submission",
+      "error": "DELETE Submissions?records[]=recYETwVLV72tki1S 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your"
+    },
+    {
+      "table": "Submissions",
+      "id": "recnz…9Yso",
+      "label": "submission",
+      "error": "DELETE Submissions?records[]=recnzrPpXLmfy9Yso 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your"
+    },
+    {
+      "table": "Submissions",
+      "id": "reclA…Lbik",
+      "label": "submission",
+      "error": "DELETE Submissions?records[]=reclAFDbIl1YcLbik 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your"
+    },
+    {
+      "table": "Submissions",
+      "id": "recGD…msYj",
+      "label": "submission",
+      "error": "DELETE Submissions?records[]=recGDfP9wv5YRmsYj 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your"
+    },
+    {
+      "table": "Submissions",
+      "id": "recw4…ABle",
+      "label": "submission",
+      "error": "DELETE Submissions?records[]=recw42pbsylToABle 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your"
+    },
+    {
+      "table": "Submissions",
+      "id": "recaZ…nVoQ",
+      "label": "submission",
+      "error": "DELETE Submissions?records[]=recaZQqKRqENUnVoQ 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your"
+    },
+    {
+      "table": "Submissions",
+      "id": "rec8E…WlE5",
+      "label": "submission",
+      "error": "DELETE Submissions?records[]=rec8EYnGbPqYSWlE5 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your"
+    },
+    {
+      "table": "Submissions",
+      "id": "reckT…teCc",
+      "label": "submission",
+      "error": "DELETE Submissions?records[]=reckTXqA5IIAmteCc 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your"
+    },
+    {
+      "table": "Submissions",
+      "id": "rec4G…dm66",
+      "label": "submission",
+      "error": "DELETE Submissions?records[]=rec4GmCVyHv6Xdm66 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your"
+    },
+    {
+      "table": "Submissions",
+      "id": "recAu…qQc5",
+      "label": "submission",
+      "error": "DELETE Submissions?records[]=recAuTr9s54rTqQc5 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your"
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "id": "rec1g…tBVF",
+      "label": "was-created",
+      "error": "DELETE Weekly%20Athlete%20Summary?records[]=rec1gzscQN8dJtBVF 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check"
+    }
+  ]
+}

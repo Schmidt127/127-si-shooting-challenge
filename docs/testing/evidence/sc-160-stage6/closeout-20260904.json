@@ -1,0 +1,54 @@
+{
+  "auditId": "SC-160-STAGE6-LIVE-VERIFICATION-20260904",
+  "status": "COMPLETE_LIVE_TESTED",
+  "generatedAt": "2026-09-04T21:35:00Z",
+  "baseId": "appn84sqPw03zEbTT",
+  "githubPasteTip": "ccb230cf",
+  "liveVersions": {
+    "009": "v1.3",
+    "020": "v4.0",
+    "065": "v10.7",
+    "057": "2.5",
+    "058": "unchanged",
+    "059": "unchanged_sc159_closed",
+    "070a": "unchanged"
+  },
+  "formulas": {
+    "readyFor009RequiresWeek": false,
+    "whyNotReadyHasMissingWeek": false
+  },
+  "reportedSubmission": {
+    "preserved": true,
+    "assetCount": 5,
+    "uniqueSourceAttachmentIds": 5,
+    "homeworkCompletionsLinked": 2,
+    "videoFeedbackCount": 3,
+    "hcWeekFromPha": true,
+    "submissionWeekEmpty": true,
+    "oldV39ErrorsCleared": true
+  },
+  "disposableMatrix": {
+    "prefix": "SC160|S6|",
+    "primaryEvidence": "apply-2026-09-04T205330220Z.json",
+    "pass": [
+      "early",
+      "on_time",
+      "deadline_boundary",
+      "after_deadline",
+      "coach_delay",
+      "placeholder_then_late",
+      "video_no_week",
+      "multi_hw_video_no_week",
+      "retry_no_duplicate_hc",
+      "recon_no_missing_week_gate",
+      "late_xp_exactly_one",
+      "late_pw_satisfactory_unchanged"
+    ],
+    "observed": ["raw_api_allows_duplicate_source_attachment_id"]
+  },
+  "cleanup": {
+    "agentFixturesRemoved": true,
+    "mikeEvidencePreserved": true
+  },
+  "fut002TrashGate": "CLEARED_FOR_MIKE_UI"
+}

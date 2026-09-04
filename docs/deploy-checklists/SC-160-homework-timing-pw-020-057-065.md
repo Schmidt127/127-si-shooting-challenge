@@ -1,5 +1,7 @@
 # SC-160 — Homework timing / Perfect Week (020 / 065 / 057) paste checklist
 
+**Status: COMPLETE / Live Tested (Stage 6 2026-09-04)**
+
 **GitHub branch:** `sc160/a3-homework-timing`  
 **Status:** GitHub ready — **Mike paste required** (Airtable customScript is UI-only).  
 **Do not paste from agents into Production without DEV or disposable verify.**

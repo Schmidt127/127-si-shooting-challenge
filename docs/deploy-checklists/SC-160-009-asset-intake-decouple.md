@@ -1,5 +1,7 @@
 # SC-160 — Asset intake decoupled from Submission.Week (Mike paste)
 
+**Status: COMPLETE / Live Tested (Stage 6 2026-09-04)**
+
 **Backlog:** SC-160  
 **Automation:** **009** — Create Submission Assets from Submission (`wflGKNw4e06hCHyv9`)  
 **GitHub:** `009-submission-intake-create-submission-assets.js` **v1.3**  

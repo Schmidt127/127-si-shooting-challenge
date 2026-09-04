@@ -223,6 +223,7 @@ async function ensureCanonicalWas(token, baseId, created, report) {
   let exact = await listExactWas(token, baseId);
 
   // 065 fail-closes on multiple Enrollment+Week WAS — keep one, delete extras (disposable only).
+  // If PAT cannot DELETE, HARD STOP — never create another duplicate (SC-160 Stage 6 incident).
   if (exact.length > 1) {
     const keep = exact[0];
     const extras = exact.slice(1);
@@ -233,11 +234,16 @@ async function ensureCanonicalWas(token, baseId, created, report) {
         created.deletedDuplicateWasIds = [...(created.deletedDuplicateWasIds || []), row.id];
       } catch (err) {
         throw new Error(
-          `Multiple exact WAS for Athlete1+Early Bird and could not delete ${row.id}: ${String(err.message || err).slice(0, 160)}`
+          `FUT-001 HARD STOP: multiple WAS for Athlete1+Early Bird and could not delete ${row.id}: ${String(err.message || err).slice(0, 160)}. Do not create another WAS.`
         );
       }
     }
-    exact = [keep];
+    exact = await listExactWas(token, baseId);
+    if (exact.length !== 1) {
+      throw new Error(
+        `FUT-001 HARD STOP: still ${exact.length} WAS after dedupe attempt; resolve via MCP before continuing.`
+      );
+    }
   }
 
   if (exact.length === 1) {
@@ -259,6 +265,12 @@ async function ensureCanonicalWas(token, baseId, created, report) {
   created.wasId = wasId;
   created.wasCreated = true;
   report.notes.push(`Created canonical WAS ${redactId(wasId)} for Athlete1 + Early Bird`);
+  const after = await listExactWas(token, baseId);
+  if (after.length !== 1) {
+    throw new Error(
+      `FUT-001 HARD STOP after WAS create: expected 1, found ${after.length}. Reconcile duplicates before continuing.`
+    );
+  }
   return wasId;
 }
 

@@ -4,7 +4,7 @@
 **Policy:** Asset intake ALWAYS allowed without `Submission.Week`. Week-dependent scoring and Perfect Week are evaluated separately.  
 **Do not** flip Ready formulas before publishing **009 v1.3** (live **v1.2** still hard-requires Week).  
 **Do not** touch Automation **059** (SC-159 already Live).  
-**Do not** run Season Simulation. **Do not** trash FUT-002 Batch 2 fields until SC-160 live proof.
+**Do not** run Season Simulation. **FUT-002 Batch 2 UI trash now authorized** (SC-160 Stage 6 PASS).
 
 ## Ordered steps
 

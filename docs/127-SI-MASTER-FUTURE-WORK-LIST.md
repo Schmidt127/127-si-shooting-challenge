@@ -20,7 +20,7 @@
 
 
 
-**Operating mode:** [CHATGPT-PROJECT-OPERATING-MODE.md](./CHATGPT-PROJECT-OPERATING-MODE.md) · [AGENTS.md](../AGENTS.md)
+**Operating mode:** [CHATGPT-PROJECT-OPERATING-MODE.md](./CHATGPT-PROJECT-OPERATING-MODE.md) Â· [AGENTS.md](../AGENTS.md)
 
 
 
@@ -28,7 +28,7 @@
 
 
 
-**Historical evidence:** [SHOOTING_CHALLENGE_COMPLETION_MASTER.md](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md) · retired [v2-change-backlog.md](./v2-change-backlog.md) (git: `2f243d8`) · retired [CHATGPT-MASTER-PLAN-BRIEF.md](./CHATGPT-MASTER-PLAN-BRIEF.md) (git: `a081b76`)
+**Historical evidence:** [SHOOTING_CHALLENGE_COMPLETION_MASTER.md](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md) Â· retired [v2-change-backlog.md](./v2-change-backlog.md) (git: `2f243d8`) Â· retired [CHATGPT-MASTER-PLAN-BRIEF.md](./CHATGPT-MASTER-PLAN-BRIEF.md) (git: `a081b76`)
 
 
 
@@ -138,7 +138,7 @@ Repository and Production closeout for the bounded SC-034 / V2-002 pass:
 
 
 
-**Operator snapshot (Section G):** **COMPLETE** · **IN PROGRESS** · **BLOCKED** · **READY** · **DEFERRED**
+**Operator snapshot (Section G):** **COMPLETE** Â· **IN PROGRESS** Â· **BLOCKED** Â· **READY** Â· **DEFERRED**
 
 
 
@@ -182,7 +182,7 @@ Repository and Production closeout for the bounded SC-034 / V2-002 pass:
 
 
 
-Priority: **P0** launch/security blocker · **P1** important parent/athlete experience or reliability · **P2** valuable improvement · **P3** low priority/future experiment.
+Priority: **P0** launch/security blocker Â· **P1** important parent/athlete experience or reliability Â· **P2** valuable improvement Â· **P3** low priority/future experiment.
 
 
 
@@ -200,7 +200,7 @@ Priority: **P0** launch/security blocker · **P1** important parent/athlete expe
 
 **Priority:** P1  
 
-**Status:** Assignment-identity Complete (GitHub + Production). **Late-credit policy (2026-09-03):** GitHub **020 v3.9 / 065 v10.6 / 057 v2.4** via PR **#372** (+ live 057 advanced to **2.4**). Production **Automations Code** 2026-09-04 MCP: **020 v3.9 / 065 v10.6 / 057 2.4** all **Live** (**PASTE-ALIGNED**). **Disposable late-HW / Perfect Week exclusion behavior proof COMPLETE 2026-09-04** ? [`audits/FUT-001-LATE-CREDIT-LIVE-PROOF-20260904.md`](./audits/FUT-001-LATE-CREDIT-LIVE-PROOF-20260904.md) · [`testing/evidence/fut-001-late-credit/closeout-20260904.json`](./testing/evidence/fut-001-late-credit/closeout-20260904.json).  
+**Status:** Assignment-identity Complete (GitHub + Production). **Late-credit policy (2026-09-03):** GitHub **020 v3.9 / 065 v10.6 / 057 v2.4** via PR **#372** (+ live 057 advanced to **2.4**). Production **Automations Code** 2026-09-04 MCP: **020 v3.9 / 065 v10.6 / 057 2.4** all **Live** (**PASTE-ALIGNED**). **Disposable late-HW / Perfect Week exclusion behavior proof COMPLETE 2026-09-04** ? [`audits/FUT-001-LATE-CREDIT-LIVE-PROOF-20260904.md`](./audits/FUT-001-LATE-CREDIT-LIVE-PROOF-20260904.md) Â· [`testing/evidence/fut-001-late-credit/closeout-20260904.json`](./testing/evidence/fut-001-late-credit/closeout-20260904.json).  
 
 **Systems:** Airtable, homework intake, Homework Completions, XP, parent submission flow
 
@@ -266,11 +266,11 @@ After confirming no active dependency remains, delete the obsolete fields and up
 
 
 
-**Audit deliverables (2026-08-30):** [`docs/audits/FUT-002-unused-field-inventory-2026-08-30.md`](./audits/FUT-002-unused-field-inventory-2026-08-30.md) · [`docs/audits/fut-002-unused-field-inventory.json`](./audits/fut-002-unused-field-inventory.json) · tool `tools/airtable/fut_002_field_inventory.py`. Offline snapshot (pre-cleanup): **1347 fields**.
+**Audit deliverables (2026-08-30):** [`docs/audits/FUT-002-unused-field-inventory-2026-08-30.md`](./audits/FUT-002-unused-field-inventory-2026-08-30.md) Â· [`docs/audits/fut-002-unused-field-inventory.json`](./audits/fut-002-unused-field-inventory.json) Â· tool `tools/airtable/fut_002_field_inventory.py`. Offline snapshot (pre-cleanup): **1347 fields**.
 
 
 
-**Live cleanup (2026-08-30 ? batch-1 close 2026-08-31):** [`docs/audits/field-inventory/`](./audits/field-inventory/) · [`docs/audits/FUT-002-cleanup-session-2026-08-30.md`](./audits/FUT-002-cleanup-session-2026-08-30.md) · [`docs/audits/FUT-002-cleanup-queue.md`](./audits/FUT-002-cleanup-queue.md) · packet [`docs/deploy-checklists/FUT-002-batch1-quarantined-field-delete.md`](./deploy-checklists/FUT-002-batch1-quarantined-field-delete.md). Quarantine day: **1355 fields / 33 tables**; Asset Key retargeted; five fields quarantined then **Mike UI-deleted**. Post-delete verify: [`testing/evidence/fut-002/batch1-live-verify.json`](./testing/evidence/fut-002/batch1-live-verify.json) · schema `airtable/schema/snapshots/prod-20260831-fut002-batch1/` (**1350** fields). Meta API still cannot DELETE fields (404) ? UI required for any future batch.
+**Live cleanup (2026-08-30 ? batch-1 close 2026-08-31):** [`docs/audits/field-inventory/`](./audits/field-inventory/) Â· [`docs/audits/FUT-002-cleanup-session-2026-08-30.md`](./audits/FUT-002-cleanup-session-2026-08-30.md) Â· [`docs/audits/FUT-002-cleanup-queue.md`](./audits/FUT-002-cleanup-queue.md) Â· packet [`docs/deploy-checklists/FUT-002-batch1-quarantined-field-delete.md`](./deploy-checklists/FUT-002-batch1-quarantined-field-delete.md). Quarantine day: **1355 fields / 33 tables**; Asset Key retargeted; five fields quarantined then **Mike UI-deleted**. Post-delete verify: [`testing/evidence/fut-002/batch1-live-verify.json`](./testing/evidence/fut-002/batch1-live-verify.json) Â· schema `airtable/schema/snapshots/prod-20260831-fut002-batch1/` (**1350** fields). Meta API still cannot DELETE fields (404) ? UI required for any future batch.
 
 
 
@@ -278,7 +278,7 @@ After confirming no active dependency remains, delete the obsolete fields and up
 
 
 
-**Batch 2 audit (2026-09-01):** [`docs/audits/FUT-002-batch2-candidate-queue.md`](./audits/FUT-002-batch2-candidate-queue.md) · [`docs/audits/fut-002-batch2-candidates.json`](./audits/fut-002-batch2-candidates.json) · operator packet [`docs/deploy-checklists/FUT-002-batch2-quarantined-field-delete.md`](./deploy-checklists/FUT-002-batch2-quarantined-field-delete.md). **303** candidates reviewed; **5** quarantine-ready text stubs (AAU, Shot Milestones, VF, Weeks×2). Delete pending Mike UI. SNAPSHOT DATE: 2026-08-31 (no live Meta API in agent run).
+**Batch 2 audit (2026-09-01):** [`docs/audits/FUT-002-batch2-candidate-queue.md`](./audits/FUT-002-batch2-candidate-queue.md) Â· [`docs/audits/fut-002-batch2-candidates.json`](./audits/fut-002-batch2-candidates.json) Â· operator packet [`docs/deploy-checklists/FUT-002-batch2-quarantined-field-delete.md`](./deploy-checklists/FUT-002-batch2-quarantined-field-delete.md). **303** candidates reviewed; **5** quarantine-ready text stubs (AAU, Shot Milestones, VF, WeeksÃ—2). Delete pending Mike UI. SNAPSHOT DATE: 2026-08-31 (no live Meta API in agent run).
 
 
 
@@ -344,7 +344,7 @@ After Stripe accepts a registration payment, write the payment result back to Ai
 
 
 
-**Final tested transaction (Maia report):** Actual Amount Paid `$2.00` · Payment Status `Paid` · one Payment Transactions row · one Enrollment link update · no duplicate row.
+**Final tested transaction (Maia report):** Actual Amount Paid `$2.00` Â· Payment Status `Paid` Â· one Payment Transactions row Â· one Enrollment link update Â· no duplicate row.
 
 
 
@@ -490,7 +490,7 @@ Optional future work may improve visual presentation or wording, but email funct
 
 **Systems:** Upload Lambda, S3, Airtable storage-key/writeback fields  
 
-**Spec:** [FUT-007-AWS-MEDIA-NAMING-SPEC.md](./next-wave/aws-media/FUT-007-AWS-MEDIA-NAMING-SPEC.md) · Promotion: [FUT-007-aws-media-naming.md](./deploy-checklists/FUT-007-aws-media-naming.md) · Prep helpers: [`lib/aws-media-naming/`](../lib/aws-media-naming/) · Lambda: [`upload_core/fut007_basename.py`](../lambda/upload-asset/upload_core/fut007_basename.py)
+**Spec:** [FUT-007-AWS-MEDIA-NAMING-SPEC.md](./next-wave/aws-media/FUT-007-AWS-MEDIA-NAMING-SPEC.md) Â· Promotion: [FUT-007-aws-media-naming.md](./deploy-checklists/FUT-007-aws-media-naming.md) Â· Prep helpers: [`lib/aws-media-naming/`](../lib/aws-media-naming/) Â· Lambda: [`upload_core/fut007_basename.py`](../lambda/upload-asset/upload_core/fut007_basename.py)
 
 
 
@@ -694,7 +694,7 @@ Each page is a separate future item so it can receive its own focused Cursor pro
 
 **Priority:** P1  
 
-**Status:** Complete ? 2026-08-25 · implementation `901812e` · production verified `900e61c`  
+**Status:** Complete ? 2026-08-25 Â· implementation `901812e` Â· production verified `900e61c`  
 
 **Systems:** Website athlete profile, Airtable level data, design system
 
@@ -704,11 +704,11 @@ Each page is a separate future item so it can receive its own focused Cursor pro
 
 
 
-**Tests:** 349 Vitest · typecheck · lint · build pass.
+**Tests:** 349 Vitest Â· typecheck Â· lint Â· build pass.
 
 
 
-**Production verification (2026-08-25):** Vercel Production deploy `900e61c` success · slug `perfect-week-testing` · hero + glance + Game Log pass · mobile overflow 0px.
+**Production verification (2026-08-25):** Vercel Production deploy `900e61c` success Â· slug `perfect-week-testing` Â· hero + glance + Game Log pass Â· mobile overflow 0px.
 
 
 
@@ -726,7 +726,7 @@ On the athlete page, place the appropriate level graphic beside or near the athl
 
 **Priority:** P1  
 
-**Status:** Complete ? 2026-08-25 · implementation `901812e` · production verified `900e61c` · **XP Event Log presentation finalized 2026-08-26**  
+**Status:** Complete ? 2026-08-25 Â· implementation `901812e` Â· production verified `900e61c` Â· **XP Event Log presentation finalized 2026-08-26**  
 
 **Systems:** Website XP activity table, XP Events, Airtable presentation fields
 
@@ -772,11 +772,11 @@ On the athlete page, place the appropriate level graphic beside or near the athl
 
 
 
-**Commits:** `6625559` (details + ordering) · `f225f04` (Airtable field fallbacks) · `68c3a45` (same-date % sort) · `3306379` (Zoom attendance detail)
+**Commits:** `6625559` (details + ordering) Â· `f225f04` (Airtable field fallbacks) Â· `68c3a45` (same-date % sort) Â· `3306379` (Zoom attendance detail)
 
 
 
-**Tests:** `game-log-presentation.test.ts`, `recent-activity-log.test.ts`, `xp-activity-table.test.ts`, `xp-activity-loader.test.ts` · unit baseline **393/393** before final sorting adjustment · build pass · prod smoke **50/50** pass after final sorting update.
+**Tests:** `game-log-presentation.test.ts`, `recent-activity-log.test.ts`, `xp-activity-table.test.ts`, `xp-activity-loader.test.ts` Â· unit baseline **393/393** before final sorting adjustment Â· build pass Â· prod smoke **50/50** pass after final sorting update.
 
 
 
@@ -794,7 +794,7 @@ On the athlete page, place the appropriate level graphic beside or near the athl
 
 **Priority:** P1  
 
-**Status:** Complete ? 2026-08-25 · implementation `901812e` · production verified `900e61c`  
+**Status:** Complete ? 2026-08-25 Â· implementation `901812e` Â· production verified `900e61c`  
 
 **Systems:** Website, Weekly Athlete Summary, Perfect Week fields
 
@@ -818,7 +818,7 @@ On the athlete page, place the appropriate level graphic beside or near the athl
 
 | Vercel Production deploy | **Success** ? `207a2c1` on `www.fairfieldbasketballclub.com/shoot` (2026-08-25) |
 
-| Smoke stabilization commits | `0adcb8d` (Fairfield retry, image/footer hydration) · `fce037f` (profile freshness) on ancestry |
+| Smoke stabilization commits | `0adcb8d` (Fairfield retry, image/footer hydration) Â· `fce037f` (profile freshness) on ancestry |
 
 | Production smoke slug | `perfect-week-testing` (also `charlie-schmidt`, `curtis-schmidt`; `testing-schmidt` is DEV-only) |
 
@@ -888,15 +888,15 @@ On the athlete page, place the appropriate level graphic beside or near the athl
 
 
 
-**Does not use on catalog cards:** `Full Assignment Description` · `Description` · `Assignment Title` (card headline uses `title` with `displayName` fallback; brief text comes only from **`Brief Description - Display`**).
+**Does not use on catalog cards:** `Full Assignment Description` Â· `Description` Â· `Assignment Title` (card headline uses `title` with `displayName` fallback; brief text comes only from **`Brief Description - Display`**).
 
 
 
-**Completed features:** live PHA + Homework Library data · dynamic assignment count · active/published schedule display · newest week first · assignment title · assigned week · brief description · due date · `URL` · `URL Additional` · `Docs` links · keyboard-accessible links · detail-page links preserved · Operator Notes removed from public cards · mobile layout verified · **four published cards** verified in production.
+**Completed features:** live PHA + Homework Library data Â· dynamic assignment count Â· active/published schedule display Â· newest week first Â· assignment title Â· assigned week Â· brief description Â· due date Â· `URL` Â· `URL Additional` Â· `Docs` links Â· keyboard-accessible links Â· detail-page links preserved Â· Operator Notes removed from public cards Â· mobile layout verified Â· **four published cards** verified in production.
 
 
 
-**Commits:** `cdd2b97` (redesign + mapping verification) · `4a26aa4` (verification documentation)
+**Commits:** `cdd2b97` (redesign + mapping verification) Â· `4a26aa4` (verification documentation)
 
 
 
@@ -904,7 +904,7 @@ On the athlete page, place the appropriate level graphic beside or near the athl
 
 
 
-**Validation (2026-08-26):** lint ? (4 pre-existing unrelated warnings) · typecheck ? · vitest **406/406** ? · build ? · prod smoke **50/50** ? · homework-due-date **3/3** ? · desktop ? · mobile 390px ? · homework detail route ? · live Airtable spot-check ? (`rechVLOeyEVIqmy2v` ? `Brief Description - Display`)
+**Validation (2026-08-26):** lint ? (4 pre-existing unrelated warnings) Â· typecheck ? Â· vitest **406/406** ? Â· build ? Â· prod smoke **50/50** ? Â· homework-due-date **3/3** ? Â· desktop ? Â· mobile 390px ? Â· homework detail route ? Â· live Airtable spot-check ? (`rechVLOeyEVIqmy2v` ? `Brief Description - Display`)
 
 
 
@@ -928,7 +928,7 @@ Redesigned `/shoot/levels` with ascending Level 1?12 order, ladder-style hero ba
 
 
 
-**Validation (2026-08-26):** lint ? · typecheck ? · levels vitest ? · build ? · prod smoke **49/50** ? (levels route) · live verification ?
+**Validation (2026-08-26):** lint ? Â· typecheck ? Â· levels vitest ? Â· build ? Â· prod smoke **49/50** ? (levels route) Â· live verification ?
 
 
 
@@ -980,7 +980,7 @@ Create a new portfolio-style Zoom Meeting page using the approved design tools w
 
 
 
-**Validation (2026-08-30):** lint ? · typecheck ? · vitest ? · build ? · browser desktop + mobile ?
+**Validation (2026-08-30):** lint ? Â· typecheck ? Â· vitest ? Â· build ? Â· browser desktop + mobile ?
 
 
 
@@ -1098,7 +1098,7 @@ Rewrite the homepage title, main heading, description, internal links, and image
 
 **Systems:** Route audit, existing page adaptations  
 
-**Evidence:** `web/docs/seo.md` § FUT-022 route audit; only new route: `/faq`
+**Evidence:** `web/docs/seo.md` Â§ FUT-022 route audit; only new route: `/faq`
 
 
 
@@ -1156,7 +1156,7 @@ Add an appropriate FAQ and organization information where supported by the curre
 
 **Systems:** Sitemap, robots, athlete profile metadata, consent assumptions
 
-**Evidence:** [`docs/audits/FUT-025-indexing-cutover-20260904.md`](./audits/FUT-025-indexing-cutover-20260904.md) · [`docs/testing/evidence/fut-025-indexing-cutover-20260904.json`](./testing/evidence/fut-025-indexing-cutover-20260904.json) · deploy `dpl_4tbg25UzYPFruga1PzQthewWswNP`
+**Evidence:** [`docs/audits/FUT-025-indexing-cutover-20260904.md`](./audits/FUT-025-indexing-cutover-20260904.md) Â· [`docs/testing/evidence/fut-025-indexing-cutover-20260904.json`](./testing/evidence/fut-025-indexing-cutover-20260904.json) Â· deploy `dpl_4tbg25UzYPFruga1PzQthewWswNP`
 
 
 
@@ -1182,7 +1182,7 @@ Do not expose parent contact information, email addresses, private submission me
 
 
 
-**Validation (2026-09-04):** Production robots/profile/sitemap checks · `public-athlete-profile-privacy.test.ts` · `athlete-profile-metadata.test.ts` · `metadata.test.ts` · `search-indexing.spec.ts` · deploy checklist [`docs/deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md`](../docs/deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md)
+**Validation (2026-09-04):** Production robots/profile/sitemap checks Â· `public-athlete-profile-privacy.test.ts` Â· `athlete-profile-metadata.test.ts` Â· `metadata.test.ts` Â· `search-indexing.spec.ts` Â· deploy checklist [`docs/deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md`](../docs/deploy-checklists/2026-08-30-athlete-profile-indexing-cutover.md)
 
 
 
@@ -1336,7 +1336,7 @@ Mike-authorized **record deletion only** (not schema). Deleted **959** transacti
 
 
 
-**Summary:** Keep one Homework XP Event (base + extra credit total). When `Extra Credit XP Awarded` > 0, show a parent-visible tagline on the Game Log date row, e.g. `2026-08-31 · Extra credit +125 XP`. Display-only ? no XP calculation or Airtable award-logic changes.
+**Summary:** Keep one Homework XP Event (base + extra credit total). When `Extra Credit XP Awarded` > 0, show a parent-visible tagline on the Game Log date row, e.g. `2026-08-31 Â· Extra credit +125 XP`. Display-only ? no XP calculation or Airtable award-logic changes.
 
 
 
@@ -1358,9 +1358,9 @@ Mike-authorized **record deletion only** (not schema). Deleted **959** transacti
 
 **Systems:** Communications Hub, Resend webhooks, Homework Completions, Automation **071** / **079** (read-only for Sent?), Email Handoff Queue  
 
-**Related:** FUT-006 · Video Feedback Hub writeback ([`deploy-checklists/VIDEO-FEEDBACK-HUB-RESEND-WRITEBACK.md`](./deploy-checklists/VIDEO-FEEDBACK-HUB-RESEND-WRITEBACK.md)) · [`online-agents/homework-assets/HOMEWORK-ASSET-COMPLETION-RUNBOOK.md`](./online-agents/homework-assets/HOMEWORK-ASSET-COMPLETION-RUNBOOK.md) §7  
+**Related:** FUT-006 Â· Video Feedback Hub writeback ([`deploy-checklists/VIDEO-FEEDBACK-HUB-RESEND-WRITEBACK.md`](./deploy-checklists/VIDEO-FEEDBACK-HUB-RESEND-WRITEBACK.md)) Â· [`online-agents/homework-assets/HOMEWORK-ASSET-COMPLETION-RUNBOOK.md`](./online-agents/homework-assets/HOMEWORK-ASSET-COMPLETION-RUNBOOK.md) Â§7  
 
-**Promotion:** [`deploy-checklists/FUT-032-homework-hub-resend-writeback.md`](./deploy-checklists/FUT-032-homework-hub-resend-writeback.md) · Hub contract `communications/docs/contracts/HOMEWORK_FEEDBACK_SOURCE_WRITEBACK_v1.md`
+**Promotion:** [`deploy-checklists/FUT-032-homework-hub-resend-writeback.md`](./deploy-checklists/FUT-032-homework-hub-resend-writeback.md) Â· Hub contract `communications/docs/contracts/HOMEWORK_FEEDBACK_SOURCE_WRITEBACK_v1.md`
 
 
 
@@ -1418,7 +1418,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 **Correct repo:** `hoopchallenges-landing` (local clone `127si-landing-page`; not `/shoot` in this repo)  
 
-**Related:** FUT-034 · FUT-036 · SC-149 · [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) § Website · Mike-approved naming taxonomy above · [`audits/2026-09-01-FUT-033-047-LIVE-REMAINING-AUDIT.md`](./audits/2026-09-01-FUT-033-047-LIVE-REMAINING-AUDIT.md)
+**Related:** FUT-034 Â· FUT-036 Â· SC-149 Â· [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) Â§ Website Â· Mike-approved naming taxonomy above Â· [`audits/2026-09-01-FUT-033-047-LIVE-REMAINING-AUDIT.md`](./audits/2026-09-01-FUT-033-047-LIVE-REMAINING-AUDIT.md)
 
 
 
@@ -1460,7 +1460,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 **Correct repos:** `hoopchallenges-landing` + this repo (`web/`, Hub templates, docs) + Fillout + Jr. Referee Clinic product surfaces where the public name must match  
 
-**Related:** FUT-033 · FUT-036 · Mike-approved naming taxonomy above · SC-143 (multi-challenge ? do not merge)
+**Related:** FUT-033 Â· FUT-036 Â· Mike-approved naming taxonomy above Â· SC-143 (multi-challenge ? do not merge)
 
 
 
@@ -1502,7 +1502,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 **Correct repo:** `hoopchallenges-landing`  
 
-**Related:** FUT-019 (SC site footer ? **COMPLETE**, separate app) · SC-149 · `BRAND_STANDARDS.md` (sync check vs landing canonical brand doc)
+**Related:** FUT-019 (SC site footer ? **COMPLETE**, separate app) Â· SC-149 Â· `BRAND_STANDARDS.md` (sync check vs landing canonical brand doc)
 
 
 
@@ -1542,7 +1542,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 **Correct repo:** `hoopchallenges-landing`  
 
-**Related:** FUT-033 · FUT-034 · FUT-037 · SC-143
+**Related:** FUT-033 Â· FUT-034 Â· FUT-037 Â· SC-143
 
 
 
@@ -1630,7 +1630,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 **Correct repo:** this repo (+ Production Airtable after approved design)  
 
-**Related:** SC-034 / config-over-code · C-014 / SC-082 gate tuning · FUT-026 Player Manual · PKG-004 · [v2/03-business-rules.md](./v2/03-business-rules.md) · [next-wave/config-selection/CONFIG-CONSUMER-INVENTORY.md](./next-wave/config-selection/CONFIG-CONSUMER-INVENTORY.md) · [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) § XP / levels
+**Related:** SC-034 / config-over-code Â· C-014 / SC-082 gate tuning Â· FUT-026 Player Manual Â· PKG-004 Â· [v2/03-business-rules.md](./v2/03-business-rules.md) Â· [next-wave/config-selection/CONFIG-CONSUMER-INVENTORY.md](./next-wave/config-selection/CONFIG-CONSUMER-INVENTORY.md) Â· [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) Â§ XP / levels
 
 
 
@@ -1690,7 +1690,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 **Correct repo / surface:** Fillout.com + docs in this repo; coordinate with FUT-003 / FUT-029  
 
-**Related:** FUT-003 · FUT-029 · FUT-034 · FUT-035 · SC-060 / SC-146
+**Related:** FUT-003 Â· FUT-029 Â· FUT-034 Â· FUT-035 Â· SC-060 / SC-146
 
 
 
@@ -1730,7 +1730,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 **Correct repo:** this repo + AWS  
 
-**Related:** **FUT-010** (intake SA cleanup after verified upload ? dry-run complete; supervised apply pending) · FUT-007 (HEADSHOT naming) · FUT-009 · SC-094 · SC-095 · SC-096 · SC-099 · SC-100 · [deploy-checklists/FUT-010-intake-attachment-cleanup.md](./deploy-checklists/FUT-010-intake-attachment-cleanup.md) · [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) FUT-010 row
+**Related:** **FUT-010** (intake SA cleanup after verified upload ? dry-run complete; supervised apply pending) Â· FUT-007 (HEADSHOT naming) Â· FUT-009 Â· SC-094 Â· SC-095 Â· SC-096 Â· SC-099 Â· SC-100 Â· [deploy-checklists/FUT-010-intake-attachment-cleanup.md](./deploy-checklists/FUT-010-intake-attachment-cleanup.md) Â· [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) FUT-010 row
 
 
 
@@ -1794,7 +1794,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 **Correct repo:** this repo + Communications Hub templates  
 
-**Related:** FUT-006 · FUT-031 · [integrations/email-send-plane.md](./integrations/email-send-plane.md) · [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) § Email path · `docs/communications-hub/`
+**Related:** FUT-006 Â· FUT-031 Â· [integrations/email-send-plane.md](./integrations/email-send-plane.md) Â· [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) Â§ Email path Â· `docs/communications-hub/`
 
 
 
@@ -1812,7 +1812,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 - Display **0** when no extra credit is awarded.  
 
-- Example: XP Earned `10` · Extra Credit `0`.
+- Example: XP Earned `10` Â· Extra Credit `0`.
 
 
 
@@ -1832,7 +1832,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 **Correct repo:** this repo (`web/` + Hub email HTML)  
 
-**Related:** FUT-043 · FUT-032 · Automation **071** / homework feedback templates · `web/lib/data/public-athlete-homework.ts` (`Coach Feedback`)
+**Related:** FUT-043 Â· FUT-032 Â· Automation **071** / homework feedback templates Â· `web/lib/data/public-athlete-homework.ts` (`Coach Feedback`)
 
 
 
@@ -1870,7 +1870,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 **Correct repo:** this repo  
 
-**Related:** FUT-042 · FUT-044 · FUT-011?FUT-017 design patterns · Impeccable / `BRAND_STANDARDS.md` · `APP_CONTEXT.md`
+**Related:** FUT-042 Â· FUT-044 Â· FUT-011?FUT-017 design patterns Â· Impeccable / `BRAND_STANDARDS.md` Â· `APP_CONTEXT.md`
 
 
 
@@ -1902,7 +1902,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 **Correct repo:** this repo (`web/`)  
 
-**Related:** FUT-043 · FUT-014 · athlete homework presentation components
+**Related:** FUT-043 Â· FUT-014 Â· athlete homework presentation components
 
 
 
@@ -1918,7 +1918,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 
 
-**Validation:** `web` lint ? · typecheck ? · vitest homework-assignment + public-athlete-homework tests ?
+**Validation:** `web` lint ? Â· typecheck ? Â· vitest homework-assignment + public-athlete-homework tests ?
 
 
 
@@ -1934,7 +1934,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 **Correct repo:** this repo (+ Hub email payloads)  
 
-**Related:** FUT-001 · FUT-014 · chatgpt-sources platform-config notes on public assignment naming · Homework Library / PHA field map
+**Related:** FUT-001 Â· FUT-014 Â· chatgpt-sources platform-config notes on public assignment naming Â· Homework Library / PHA field map
 
 
 
@@ -1966,7 +1966,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 **Correct repo:** this repo + Communications Hub  
 
-**Related:** FUT-032 · FUT-045 · FUT-047 · `docs/communications-hub/README.md`
+**Related:** FUT-032 Â· FUT-045 Â· FUT-047 Â· `docs/communications-hub/README.md`
 
 
 
@@ -1998,7 +1998,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 **Correct repo:** this repo + Communications Hub templates  
 
-**Related:** FUT-046 · FUT-006 · email send plane docs
+**Related:** FUT-046 Â· FUT-006 Â· email send plane docs
 
 
 
@@ -2036,7 +2036,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 **Systems:** Testing harness, Enrollments (Testing3), Submissions, WAS, Homework Completions, Video Feedback, XP Events, streaks/levels contracts  
 
-**Related (distinct):** SC-005 matrix · **SC-PW-E2E** (COMPLETE ? do not re-`--apply`) · **SC-SEASON-SIM-001/002** · **SC-CORE-WF / MRW-F11** (COMPLETE) · MRW-F09
+**Related (distinct):** SC-005 matrix Â· **SC-PW-E2E** (COMPLETE ? do not re-`--apply`) Â· **SC-SEASON-SIM-001/002** Â· **SC-CORE-WF / MRW-F11** (COMPLETE) Â· MRW-F09
 
 
 
@@ -2044,11 +2044,11 @@ Prove the **single disposable athlete** path end-to-end before any multi-enrollm
 
 
 
-**Safety:** `ATHWF|` Week labels · Testing3 `recNu6fcBpF1GG3u5` only · dry-run default · no email / Resend / Make · cleanup only manifest records.
+**Safety:** `ATHWF|` Week labels Â· Testing3 `recNu6fcBpF1GG3u5` only Â· dry-run default Â· no email / Resend / Make Â· cleanup only manifest records.
 
 
 
-**Plan / harness / evidence:** [`docs/testing/athlete-workflow/SC-ATHLETE-WF.md`](./testing/athlete-workflow/SC-ATHLETE-WF.md) · `tools/testing/sc-athlete-wf.mjs` · [`docs/testing/evidence/sc-athlete-wf/apply-session-final-2026-08-30.json`](./testing/evidence/sc-athlete-wf/apply-session-final-2026-08-30.json)
+**Plan / harness / evidence:** [`docs/testing/athlete-workflow/SC-ATHLETE-WF.md`](./testing/athlete-workflow/SC-ATHLETE-WF.md) Â· `tools/testing/sc-athlete-wf.mjs` Â· [`docs/testing/evidence/sc-athlete-wf/apply-session-final-2026-08-30.json`](./testing/evidence/sc-athlete-wf/apply-session-final-2026-08-30.json)
 
 
 
@@ -2212,7 +2212,7 @@ Build reusable Python infrastructure for a full **Athlete 1** season simulation 
 
 
 
-**Paste packets:** [`SC-SEASON-SIM-002-automation-paste-010-114.md`](./deploy-checklists/SC-SEASON-SIM-002-automation-paste-010-114.md) · operator checklist · `tools/season_simulation/FORMULAS-TO-PASTE.txt`
+**Paste packets:** [`SC-SEASON-SIM-002-automation-paste-010-114.md`](./deploy-checklists/SC-SEASON-SIM-002-automation-paste-010-114.md) Â· operator checklist Â· `tools/season_simulation/FORMULAS-TO-PASTE.txt`
 
 ---
 
@@ -2388,7 +2388,7 @@ Removed corrupted migration row **SC-079**.
 
 
 
-## Section A GÇö Backlog waves (C- / V2- / PKG- / SCV2-)
+## Section A GÃ‡Ã¶ Backlog waves (C- / V2- / PKG- / SCV2-)
 
 
 
@@ -2398,13 +2398,13 @@ Removed corrupted migration row **SC-079**.
 
 | **V2-065-066-SCRIPT-INPUT-001** | Fix Production **065** / **066** hardcoded `recordId` script inputs | `repository-ready` | [`065-066-v10.3-v3.9-dynamic-trigger-record.md`](./deploy-checklists/065-066-v10.3-v3.9-dynamic-trigger-record.md) | Migrated from v2-change-backlog |
 
-| **V2-013** | **Multi-Year Architecture GÇö Program Instance Integration** | queued | Wave 1 hygiene, C-012 partial | Canonical for Program Instance architecture; merged SC-067. |
+| **V2-013** | **Multi-Year Architecture GÃ‡Ã¶ Program Instance Integration** | queued | Wave 1 hygiene, C-012 partial | Canonical for Program Instance architecture; merged SC-067. |
 
 | **V2-014b** | Email Message Center (EMC) | queued | V2-014, C-011 | Migrated from v2-change-backlog |
 
-| **C-012** | Stage K GÇö every field has one writer | queued | V2-013 | Migrated from v2-change-backlog |
+| **C-012** | Stage K GÃ‡Ã¶ every field has one writer | queued | V2-013 | Migrated from v2-change-backlog |
 
-| **C-026** | Merge **Tutorials** vs **Tutorials & Assets** GÇö keep one, delete duplicate | in progress | C-012 | Canonical for Tutorials table merge; merged SC-105 (web cutover proof, Dribble category audit EXT-QA-003). |
+| **C-026** | Merge **Tutorials** vs **Tutorials & Assets** GÃ‡Ã¶ keep one, delete duplicate | in progress | C-012 | Canonical for Tutorials table merge; merged SC-105 (web cutover proof, Dribble category audit EXT-QA-003). |
 
 | **C-024** | Rock-solid dedupe keys + safe backfill reruns | queued | C-012 | Migrated from v2-change-backlog |
 
@@ -2412,7 +2412,7 @@ Removed corrupted migration row **SC-079**.
 
 | **V2-002** | Config-over-scripts audit | **COMPLETE** (2026-08-27 repo pass) | C-021 | Canonical for config-over-scripts audit; merged SC-034. Evidence: `audits/2026-08-27-SC-034-config-hardcode-audit.md`. |
 
-| **C-022** | Public display fields GÇö not primary/formula | queued | C-012 | Canonical for Presentation-field policy; SC-117 web wiring tracked here; email slices V2-003/V2-004. |
+| **C-022** | Public display fields GÃ‡Ã¶ not primary/formula | queued | C-012 | Canonical for Presentation-field policy; SC-117 web wiring tracked here; email slices V2-003/V2-004. |
 
 | **V2-003** | Homework email column fix (**071**) | queued | C-022 | Migrated from v2-change-backlog |
 
@@ -2426,7 +2426,7 @@ Removed corrupted migration row **SC-079**.
 
 | **C-023** | File dedup by **content hash**, not title/filename | in progress | C-013, C-024 | Canonical for content-hash dedup; merged SC-097/SC-098 proof slices. |
 
-| **C-017** | Fillout GåÆ Athletes validation | queued | C-012 | Related to SC-060; keep both ? SC-060 covers intake-reopen validation. |
+| **C-017** | Fillout GÃ¥Ã† Athletes validation | queued | C-012 | Related to SC-060; keep both ? SC-060 covers intake-reopen validation. |
 
 | **C-018** | Intake open vs challenge run | queued | V2-013 | Canonical for intake-open vs challenge-run calendars; merged SC-064 wiring. |
 
@@ -2444,15 +2444,15 @@ Removed corrupted migration row **SC-079**.
 
 | **V2-010** | Pre-season parent comms | queued | V2-008 | Canonical for pre-season parent comms; merged SC-133. |
 
-| **C-027** | **Major-event** notifications GÇö level up, milestones (not daily XP) | queued | C-010, C-024, V2-008 | Migrated from v2-change-backlog |
+| **C-027** | **Major-event** notifications GÃ‡Ã¶ level up, milestones (not daily XP) | queued | C-010, C-024, V2-008 | Migrated from v2-change-backlog |
 
 | **C-028** | First Tremendous award send via Make.com sandbox | in-progress | Gift-card Award Recipients row | Migrated from v2-change-backlog |
 
 | **V2-011** | Full pre-season audit pack | queued | All above | Canonical for pre-season audit pack; merged SC-134. |
 
-| **V2-012** | Dry-run season on Schmidt test | queued | C-020, Wave 7GÇô9 | Canonical for Schmidt dry-run season; merged SC-135. |
+| **V2-012** | Dry-run season on Schmidt test | queued | C-020, Wave 7GÃ‡Ã´9 | Canonical for Schmidt dry-run season; merged SC-135. |
 
-| **C-025-EMAIL** | C-025 Stage 17 GÇö wire Zoom recording approval email webhook (117 blank) | queued | C-025 Stage 17 complete | Canonical for Zoom recording approval email; merged SC-088 live proof. |
+| **C-025-EMAIL** | C-025 Stage 17 GÃ‡Ã¶ wire Zoom recording approval email webhook (117 blank) | queued | C-025 Stage 17 complete | Canonical for Zoom recording approval email; merged SC-088 live proof. |
 
 
 
@@ -2460,7 +2460,7 @@ Removed corrupted migration row **SC-079**.
 
 
 
-## Section B GÇö Completion master (SC-)
+## Section B GÃ‡Ã¶ Completion master (SC-)
 
 
 
@@ -2474,15 +2474,15 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 
 | **SC-001** | Testing | Universal Testing Scenarios framework so Mike can run Fillout-shaped tests without Fillout | P0 | Live Tested in PROD | SC-004, SC-059 | Broader season matrix, Homework XP after review, Make/S3, and email remain separate release work |
 
-| **SC-004** | Testing | Permanent Schmidt testing enrollment for live PROD tests | P0 | Monitoring | GÇö | Keep emails Schmidt-only; **Schmidt remains visible on public standings**; optional refresh when foundation WAS IDs change |
+| **SC-004** | Testing | Permanent Schmidt testing enrollment for live PROD tests | P0 | Monitoring | GÃ‡Ã¶ | Keep emails Schmidt-only; **Schmidt remains visible on public standings**; optional refresh when foundation WAS IDs change |
 
-| **SC-005** | Testing | Full end-to-end live PROD matrix (all major paths) | P0 | Live Tested in PROD | SC-001GÇôSC-004, core pipelines | Unblock B3 policy / B5 backdate week; streak+milestone when unlocks exist; email/failure inject GåÆ SC-008 |
+| **SC-005** | Testing | Full end-to-end live PROD matrix (all major paths) | P0 | Live Tested in PROD | SC-001GÃ‡Ã´SC-004, core pipelines | Unblock B3 policy / B5 backdate week; streak+milestone when unlocks exist; email/failure inject GÃ¥Ã† SC-008 |
 
 | **SC-SEASON-SIM-001** | Testing | 60-day five-enrollment season simulation (reusable, unattended) | P2 | Planned / Future | Test isolation; field/automation inventory; cleanup/archive decision; polling/timeout design; SC-PW-E2E reuse; **FUT-010 separate** | Not active ? do not implement yet; five disposable profiles; harness + automation modes; stop on first material failure; evidence + cleanup/archive |
 
 | **SC-007** | Testing | Duplicate and rerun testing (idempotency proof) | P0 | Live Tested in PROD | SC-066, SC-096+ | Optional: 010 UI re-trigger attest; milestone/PW/Zoom-attend live fixtures when present |
 
-| **SC-010** | Homework | PDF / document homework submissions work end-to-end | P0 | Installed in PROD | SC-019 | Re-test PDF path; quiz uses Option B (no PDF asset GÇö SC-014) |
+| **SC-010** | Homework | PDF / document homework submissions work end-to-end | P0 | Installed in PROD | SC-019 | Re-test PDF path; quiz uses Option B (no PDF asset GÃ‡Ã¶ SC-014) |
 
 | **SC-011** | Homework | Video submissions as homework/learning assets | P0 | Installed in PROD | SC-133 | Re-test video as homework vs daily video rules; confirm purpose routing |
 
@@ -2492,7 +2492,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 
 | **SC-016** | Homework | Exactly one Homework Completion per assignment per enrollment | P0 | **COMPLETE** (2026-08-31) | SC-066, SC-014 | Multi-asset + 065 XP proven on Testing3; do **not** re-paste 020/065 scripts |
 
-| **SC-021** | Config | Config-over-code audit (no hardcoded season numbers in scripts) | P0 | Installed in PROD | SC-022 | Run 057 on CASE-01 WAS; CASE-01GÇª16 + verifier; migrate remaining hardcode consumers |
+| **SC-021** | Config | Config-over-code audit (no hardcoded season numbers in scripts) | P0 | Installed in PROD | SC-022 | Run 057 on CASE-01 WAS; CASE-01GÃ‡Âª16 + verifier; migrate remaining hardcode consumers |
 
 | **SC-022** | Config | XP Reward Rules audit and cleanup | P0 | Installed in PROD | SC-021, SC-023 | Resolve Video XP 1-vs-25; decide Zoom Recording / Manual Bonus rule records; supervised streak proof still open |
 
@@ -2504,17 +2504,17 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 
 | **SC-032** | Config | Season settings (dates, windows) | P0 | Built in Repository | SC-065, SC-084 | Import Weeks in PROD; Mike UI attestations; authorize Launch Status fields; controlled activation |
 
-| **SC-035** | Weekly Summary | Guaranteed Weekly Athlete Summary for every enrollment +ù ended week | P0 | Installed in PROD | SC-004, SC-082 | Proof slice for C-011 WAS build path ? keep open. Prove 118 `build_armed` with a real eligible completed Week; monitor WAS uniqueness and the downstream 072GåÆ119GåÆ074 handoff |
+| **SC-035** | Weekly Summary | Guaranteed Weekly Athlete Summary for every enrollment +Ã¹ ended week | P0 | Installed in PROD | SC-004, SC-082 | Proof slice for C-011 WAS build path ? keep open. Prove 118 `build_armed` with a real eligible completed Week; monitor WAS uniqueness and the downstream 072GÃ¥Ã†119GÃ¥Ã†074 handoff |
 
 | **SC-036** | Weekly Summary | Weekly summary calculations correct | P0 | Installed in PROD | SC-054 | Re-test calc fields on Schmidt; Presentation columns (SC-054) |
 
-| **SC-058** | Data Integrity | Automation version inventory filled from live UI | P0 | **Live Tested in PROD ? MCP attestation 2026-09-04** | SC-059 | 50 live automations attested; **101** GitHub+Live **v6.8** after PR **#398**. Evidence: [`audits/SC-057-058-LIVE-ATTESTATION-20260904.md`](./audits/SC-057-058-LIVE-ATTESTATION-20260904.md) · [`audits/WORKFLOW-RELIABILITY-INVENTORY-20260904.md`](./audits/WORKFLOW-RELIABILITY-INVENTORY-20260904.md) |
+| **SC-058** | Data Integrity | Automation version inventory filled from live UI | P0 | **Live Tested in PROD ? MCP attestation 2026-09-04** | SC-059 | 50 live automations attested; **101** GitHub+Live **v6.8** after PR **#398**. Evidence: [`audits/SC-057-058-LIVE-ATTESTATION-20260904.md`](./audits/SC-057-058-LIVE-ATTESTATION-20260904.md) Â· [`audits/WORKFLOW-RELIABILITY-INVENTORY-20260904.md`](./audits/WORKFLOW-RELIABILITY-INVENTORY-20260904.md) |
 
 | **SC-059** | Data Integrity | Retire legacy automations 112 and 043 | P0 | Installed in PROD / 043 not deployed | SC-001, SC-058 | Confirm 112 OFF and retain the no-recreate-043 disposition; do not restore 043 or the stale orphan-XP bulk count from #100 |
 
-| **SC-065** | Enrollment | Challenge dates / Weeks configuration rebuilt | P0 | **COMPLETE (calendar + 18 PHA)** | SC-032 | Early Bird Apr 25?May 1 countable finalized; 18 active PHA + June 29 due; Week 9/Post-Challenge no HW; archive WSTEST/PWTEST before season sim ? [`WEEKS-2026-27-AUDIT-2026-08-30.md`](./testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md) · [`HOMEWORK-PHA-18-AUDIT-2026-08-30.md`](./testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md) |
+| **SC-065** | Enrollment | Challenge dates / Weeks configuration rebuilt | P0 | **COMPLETE (calendar + 18 PHA)** | SC-032 | Early Bird Apr 25?May 1 countable finalized; 18 active PHA + June 29 due; Week 9/Post-Challenge no HW; archive WSTEST/PWTEST before season sim ? [`WEEKS-2026-27-AUDIT-2026-08-30.md`](./testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md) Â· [`HOMEWORK-PHA-18-AUDIT-2026-08-30.md`](./testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md) |
 
-| **SC-068** | Enrollment | Inactive / processing controls (`Active?` hardened) | P0 | Tracked under C-010 | SC-004 | PPE create/backfill; paste guards; resolve 072/118/119 Schmidt hard-exclude conflict vs GÇ£Schmidt visibleGÇ¥ web direction |
+| **SC-068** | Enrollment | Inactive / processing controls (`Active?` hardened) | P0 | Tracked under C-010 | SC-004 | PPE create/backfill; paste guards; resolve 072/118/119 Schmidt hard-exclude conflict vs GÃ‡Â£Schmidt visibleGÃ‡Â¥ web direction |
 
 | **SC-069** | Enrollment | Testing enrollment behavior documented and proven | P0 | Live Tested in PROD | SC-004, SC-068 | Email-path live proof still needed; standings web spot-check |
 
@@ -2542,7 +2542,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 
 | **SC-090** | Zoom | Level gate integration for Zoom credit | P0 | Installed in PROD | SC-080 | Live prove |
 
-| **SC-091** | Zoom | Perfect Week integration for Zoom credit | P0 | Installed in PROD | SC-077 | Fixture CASE-10GÇª13 (not required / attended / missing / cross-enrollment) |
+| **SC-091** | Zoom | Perfect Week integration for Zoom credit | P0 | Installed in PROD | SC-077 | Fixture CASE-10GÃ‡Âª13 (not required / attended / missing / cross-enrollment) |
 
 | **SC-094** | Assets | Video storage on program-owned S3 | P0 | Installed in PROD | SC-150 | Re-test writeback on Schmidt asset as needed |
 
@@ -2550,17 +2550,17 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 
 | **SC-096** | Assets | Canonical HTTPS URLs on assets | P0 | Installed in PROD | SC-094, SC-150 | Re-verify after wipe; do not make Canonical public |
 
-| **SC-099** | Assets | Writeback verification (070c) | P0 | Installed in PROD | SC-094 | Re-test AcceptedGåÆverify |
+| **SC-099** | Assets | Writeback verification (070c) | P0 | Installed in PROD | SC-094 | Re-test AcceptedGÃ¥Ã†verify |
 
-| **SC-135** | Platform | Dry-run full season on Schmidt before public intake | P0 | Tracked under V2-012 | SC-005 | Execute after phases 1GÇô13 |
+| **SC-135** | Platform | Dry-run full season on Schmidt before public intake | P0 | Tracked under V2-012 | SC-005 | Execute after phases 1GÃ‡Ã´13 |
 
-| **SC-147** | Data Integrity | Reliability Command Center GÇö workflow health visibility before prod failures | P0 | Built in Repository | SC-040, SC-046 | Mike/OMNI create views 1GÇô4; review first Sunday health; **no auto repairs** |
+| **SC-147** | Data Integrity | Reliability Command Center GÃ‡Ã¶ workflow health visibility before prod failures | P0 | Built in Repository | SC-040, SC-046 | Mike/OMNI create views 1GÃ‡Ã´4; review first Sunday health; **no auto repairs** |
 
-| **SC-149** | Website | Fairfield branding URLs (landing / site env / chrome ? not Hoop Challenges) | P0 | **COMPLETE / Live Tested in PROD** (2026-09-04) | SC-102 | Production Vercel env MATCH (`NEXT_PUBLIC_LANDING_URL` / `SITE_URL` / `BASE_PATH`); live HTML Fairfield; zero hoop hosts. Dual deliverable with Family Dashboard nav row below (same ID). Evidence [`testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-09-04.json`](testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-09-04.json) · ledger [`audits/SC-149-TRUTH-LEDGER-20260904.md`](./audits/SC-149-TRUTH-LEDGER-20260904.md) · checklist Promoted |
+| **SC-149** | Website | Fairfield branding URLs (landing / site env / chrome ? not Hoop Challenges) | P0 | **COMPLETE / Live Tested in PROD** (2026-09-04) | SC-102 | Production Vercel env MATCH (`NEXT_PUBLIC_LANDING_URL` / `SITE_URL` / `BASE_PATH`); live HTML Fairfield; zero hoop hosts. Dual deliverable with Family Dashboard nav row below (same ID). Evidence [`testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-09-04.json`](testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-09-04.json) Â· ledger [`audits/SC-149-TRUTH-LEDGER-20260904.md`](./audits/SC-149-TRUTH-LEDGER-20260904.md) Â· checklist Promoted |
 
-| **SC-002** | Testing | Test scenario library / templates for repeatable suites | P1 | Installed in PROD | SC-001 | Install/execute SCN-021GÇô043 on Schmidt; expand matrix; optional Airtable fields/UI only if approved |
+| **SC-002** | Testing | Test scenario library / templates for repeatable suites | P1 | Installed in PROD | SC-001 | Install/execute SCN-021GÃ‡Ã´043 on Schmidt; expand matrix; optional Airtable fields/UI only if approved |
 
-| **SC-008** | Testing | Email, Make, upload, and failure-path testing | P1 | Monitoring | SC-131+, SC-051+, SC-150 | Optional Mike-authorized live 074 invalid-webhook inject (SCN-029) GÇö offline+SOP already cover keep-Send-to-Make? |
+| **SC-008** | Testing | Email, Make, upload, and failure-path testing | P1 | Monitoring | SC-131+, SC-051+, SC-150 | Optional Mike-authorized live 074 invalid-webhook inject (SCN-029) GÃ‡Ã¶ offline+SOP already cover keep-Send-to-Make? |
 
 | **SC-012** | Homework | Written / reflection responses work | P1 | Installed in PROD | SC-019 | Re-test written-only HC; coach review + 071 |
 
@@ -2568,7 +2568,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 
 | **SC-018** | Homework | Learning Activities table (catalog of activities) | P1 | Built in Repository | SC-020 | Mike-authorized Airtable schema; seed catalog; keep FBC Curriculum SYNC unless decided otherwise |
 
-| **SC-019** | Homework | Learning Activity Responses table + ResponseGåÆasset routing | P1 | Built in Repository | SC-018 | Schema; automations; Fillout/web intake; route to Submission Assets / optional HC |
+| **SC-019** | Homework | Learning Activity Responses table + ResponseGÃ¥Ã†asset routing | P1 | Built in Repository | SC-018 | Schema; automations; Fillout/web intake; route to Submission Assets / optional HC |
 
 | **SC-020** | Homework | Activities that count as homework vs stand-alone | P1 | Planned | SC-018, SC-019 | Implement flag + automation filters + coach views |
 
@@ -2586,7 +2586,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 
 | **SC-056** | Data Integrity | Script input/output variables standardized | P1 | **Built in Repository ? standard + tests 2026-08-27** | SC-057 | 058 legacy output migration on next touch |
 
-| **SC-057** | Data Integrity | Automation trigger review (no duplicate triggers) | P1 | **Complete ? live MCP 2026-09-04** | SC-058 | 112/043/063/068/075/077/111 **absent**; no duplicate VF/level writers. Residual **SF-01/SF-02** (057 formula queue / 058 positive-only) tracked as separate remediation ? not duplicate triggers. Evidence: [`audits/SC-057-058-LIVE-ATTESTATION-20260904.md`](./audits/SC-057-058-LIVE-ATTESTATION-20260904.md) · [`audits/WORKFLOW-SILENT-FAILURE-REMEDIATION-20260904.md`](./audits/WORKFLOW-SILENT-FAILURE-REMEDIATION-20260904.md) |
+| **SC-057** | Data Integrity | Automation trigger review (no duplicate triggers) | P1 | **Complete ? live MCP 2026-09-04** | SC-058 | 112/043/063/068/075/077/111 **absent**; no duplicate VF/level writers. Residual **SF-01/SF-02** (057 formula queue / 058 positive-only) tracked as separate remediation ? not duplicate triggers. Evidence: [`audits/SC-057-058-LIVE-ATTESTATION-20260904.md`](./audits/SC-057-058-LIVE-ATTESTATION-20260904.md) Â· [`audits/WORKFLOW-SILENT-FAILURE-REMEDIATION-20260904.md`](./audits/WORKFLOW-SILENT-FAILURE-REMEDIATION-20260904.md) |
 
 | **SC-060** | Enrollment | Fillout enrollment validation is trustworthy | P1 | Live Tested in PROD | SC-081 | Related to C-017; keep open for intake-reopen validation work. Live Fillout tighten when intake reopens; retain broader intake proof boundaries |
 
@@ -2602,7 +2602,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 
 | **SC-083** | XP | Achievement unlock deduplication | P1 | Monitoring | SC-026 | Monitor recurrence; do not reintroduce stale orphan-XP bulk counts from #100 |
 
-| **SC-088** | Zoom | Recording approval email to parent | P1 | Tracked under C-025-EMAIL | SC-086 | Mike: create Recording Quiz Satisfactory fixture GåÆ Test 117 GåÆ expect sent/already_sent; no XP |
+| **SC-088** | Zoom | Recording approval email to parent | P1 | Tracked under C-025-EMAIL | SC-086 | Mike: create Recording Quiz Satisfactory fixture GÃ¥Ã† Test 117 GÃ¥Ã† expect sent/already_sent; no XP |
 
 | **SC-089** | Zoom | Total Zoom counts correct | P1 | Installed in PROD | SC-048 | Re-verify formulas after schema export |
 
@@ -2610,17 +2610,17 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 
 | **SC-097** | Assets | SHA-256 hashes recorded | P1 | Tracked under C-023 | SC-094 | Re-test hash write + review queue |
 
-| **SC-098** | Assets | Duplicate file reuse decision (manual, safe) | P1 | Tracked under C-023 | SC-097 | Re-test confirm/reversal; never auto-reuse another athleteGÇÖs object |
+| **SC-098** | Assets | Duplicate file reuse decision (manual, safe) | P1 | Tracked under C-023 | SC-097 | Re-test confirm/reversal; never auto-reuse another athleteGÃ‡Ã–s object |
 
 | **SC-102** | Website | Airtable-backed public pages work | P1 | Live Tested in PROD | SC-055 | Keep catalog content current; Presentation fields later (SC-054) |
 
 | **SC-117** | Website | Public Presentation fields consumed by web | P1 | Tracked under C-022 | SC-054 | Wire queries to Presentation fields only |
 
-| **SC-134** | Platform | Full pre-season audit pack green | P1 | Tracked under V2-011 | SC-046GÇôSC-058 | Extend audits; run on rebuilt PROD |
+| **SC-134** | Platform | Full pre-season audit pack green | P1 | Tracked under V2-011 | SC-046GÃ‡Ã´SC-058 | Extend audits; run on rebuilt PROD |
 
-| **SC-139** | Platform | Refresh stale status docs (KNOWN_ISSUES, inventory, E2E Zoom rows, brief) | P1 | **Partial ? CURRENT-TRUTH + audits 2026-08-27** | GÇö | Continue sweeping KNOWN_ISSUES / Zoom E2E stale rows / brief after each SC |
+| **SC-139** | Platform | Refresh stale status docs (KNOWN_ISSUES, inventory, E2E Zoom rows, brief) | P1 | **Partial ? CURRENT-TRUTH + audits 2026-08-27** | GÃ‡Ã¶ | Continue sweeping KNOWN_ISSUES / Zoom E2E stale rows / brief after each SC |
 
-| **SC-148** | Website | Mobile usability + accessibility for public `/shoot` | P1 | **COMPLETE / Live Tested in PROD** (2026-09-04) | SC-102, SC-113, SC-118 | Interactive prod attestation (Escape/focus return, skip link, 44px targets, 375/390 overflow, labeled sign-in). Playwright `mobile-a11y` **18/18** vs Production. Evidence [`audits/SC-148-mobile-a11y-prod-attestation-20260904.md`](./audits/SC-148-mobile-a11y-prod-attestation-20260904.md) · [`testing/evidence/SC-148-PROD-ATTESTATION-2026-09-04.json`](./testing/evidence/SC-148-PROD-ATTESTATION-2026-09-04.json). Optional later: full axe-core CI gate |
+| **SC-148** | Website | Mobile usability + accessibility for public `/shoot` | P1 | **COMPLETE / Live Tested in PROD** (2026-09-04) | SC-102, SC-113, SC-118 | Interactive prod attestation (Escape/focus return, skip link, 44px targets, 375/390 overflow, labeled sign-in). Playwright `mobile-a11y` **18/18** vs Production. Evidence [`audits/SC-148-mobile-a11y-prod-attestation-20260904.md`](./audits/SC-148-mobile-a11y-prod-attestation-20260904.md) Â· [`testing/evidence/SC-148-PROD-ATTESTATION-2026-09-04.json`](./testing/evidence/SC-148-PROD-ATTESTATION-2026-09-04.json). Optional later: full axe-core CI gate |
 
 | **SC-006** | Testing | Automatic Expected-versus-Actual results on scenarios | P2 | Monitoring | SC-001, SC-002 | Keep read-only unless Mike designates one Pass/Fail writer; optional wire CLI report into scenario UI manually |
 
@@ -2642,7 +2642,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 
 | **SC-104** | Website | Homework catalog | P2 | **Complete** (FUT-014, 2026-08-26) | SC-054 | PHA-backed live catalog at `/shoot/homework`; Brief Description = `Homework Library.Brief Description - Display`; commits `cdd2b97` / `4a26aa4`; optional: unpublish stale Week 10 prior-season rows (EXT-QA-006) |
 
-| **SC-105** | Website | Tutorials | P2 | Tracked under C-026 | SC-052 | Complete table merge SC-052; audit Article GÇ£DribbleGÇ¥ category (EXT-QA-003) |
+| **SC-105** | Website | Tutorials | P2 | Tracked under C-026 | SC-052 | Complete table merge SC-052; audit Article GÃ‡Â£DribbleGÃ‡Â¥ category (EXT-QA-003) |
 
 | **SC-106** | Website | Levels pages | P2 | Live Tested in PROD | SC-024 | Gate copy polish; cover 410 graceful fallback in web |
 
@@ -2650,17 +2650,17 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 
 | **SC-108** | Website | Zoom public pages | P2 | Live Tested in PROD | SC-093 | Refresh expired Cover Media URLs (EXT-QA-004); web now hides 410 images |
 
-| **SC-109** | Website | Game Manual from config | P2 | **COMPLETE / Live Tested in PROD** (2026-09-04) | SC-032, SC-082 | Adobe Publish Online link live on `/shoot/game-manual` (repo default `GAME_MANUAL_PUBLISH_URL`; env override optional). Evidence [`testing/evidence/SC-109-PROD-ATTESTATION-2026-09-04.json`](testing/evidence/SC-109-PROD-ATTESTATION-2026-09-04.json) · checklist [`SC-109-game-manual-url-verification.md`](deploy-checklists/SC-109-game-manual-url-verification.md). Optional later: Shot Milestones public config surface; SC-133 parent comms |
+| **SC-109** | Website | Game Manual from config | P2 | **COMPLETE / Live Tested in PROD** (2026-09-04) | SC-032, SC-082 | Adobe Publish Online link live on `/shoot/game-manual` (repo default `GAME_MANUAL_PUBLISH_URL`; env override optional). Evidence [`testing/evidence/SC-109-PROD-ATTESTATION-2026-09-04.json`](testing/evidence/SC-109-PROD-ATTESTATION-2026-09-04.json) Â· checklist [`SC-109-game-manual-url-verification.md`](deploy-checklists/SC-109-game-manual-url-verification.md). Optional later: Shot Milestones public config surface; SC-133 parent comms |
 
 | **SC-110** | Website | Public display page | P2 | Installed in PROD | SC-054 | Wire Presentation fields; real season year after School Year fix |
 
 | **SC-111** | Website | Athlete profiles (real data, not mocks) | P2 | Live Tested in PROD | SC-103 | Optional: recreate `Web - Leaderboard` view (fallback OK) |
 
-| **SC-112** | Website | Athlete auth + dashboard | P2 | **COMPLETE ? PRODUCTION VERIFIED BY MIKE** (2026-09-04) | SC-149 | Private `/shoot/dashboard`; opaque selection keys. Select 404 root cause: JSON `redirectTo` already had `/shoot`, `router.push` doubled basePath ? `/shoot/shoot/dashboard`. Fix commit `e3bb7e45` · merge `78208ffc` · PR **#388** · Production deploy `dpl_8TLH6uQAvLXUoQGDrGQ4NrFnWcVG`. Mike verified three-child select, switch, dashboards, sign-out; no `/shoot/shoot/`, no `rec?` in URLs. **No further SC-112 action.** Closeout: [`audits/SC-112-multi-child-select-404-fix-20260904.md`](./audits/SC-112-multi-child-select-404-fix-20260904.md) · [`audits/SC-112-finalization-closeout-20260903.md`](./audits/SC-112-finalization-closeout-20260903.md) |
+| **SC-112** | Website | Athlete auth + dashboard | P2 | **COMPLETE ? PRODUCTION VERIFIED BY MIKE** (2026-09-04) | SC-149 | Private `/shoot/dashboard`; opaque selection keys. Select 404 root cause: JSON `redirectTo` already had `/shoot`, `router.push` doubled basePath ? `/shoot/shoot/dashboard`. Fix commit `e3bb7e45` Â· merge `78208ffc` Â· PR **#388** Â· Production deploy `dpl_8TLH6uQAvLXUoQGDrGQ4NrFnWcVG`. Mike verified three-child select, switch, dashboards, sign-out; no `/shoot/shoot/`, no `rec?` in URLs. **No further SC-112 action.** Closeout: [`audits/SC-112-multi-child-select-404-fix-20260904.md`](./audits/SC-112-multi-child-select-404-fix-20260904.md) Â· [`audits/SC-112-finalization-closeout-20260903.md`](./audits/SC-112-finalization-closeout-20260903.md) |
 
 | **SC-149** | Website | Public Family Dashboard navigation | P1 | **COMPLETE / Live Tested in PROD** (2026-09-04) | SC-112 | Header, mobile, footer, parent/FAQ CTAs ? `/shoot/dashboard/sign-in`; private `/dashboard` remains auth-gated. PR **#358** merge `29904b45`. Evidence [`audits/SC-149-family-dashboard-nav-prod-verification-20260904.md`](./audits/SC-149-family-dashboard-nav-prod-verification-20260904.md) |
 
-| **SC-151** | Website | Family Dashboard allows registered Gmail parent emails | P1 | **MERGED/DEPLOYED** (PR **#389** · merge `a00ef7a5` · prod `dpl_2mch4scL3c6bgHZgizDbsqPTywbW`) | SC-112 | Removed incorrect Gmail domain block + fixed sign-in copy. Production smoke: `/shoot/dashboard/sign-in` shows registration-email instruction; Gmail prohibition gone. **SC-112 remains closed.** Audit: [`audits/SC-151-family-dashboard-gmail-access-20260904.md`](./audits/SC-151-family-dashboard-gmail-access-20260904.md) |
+| **SC-151** | Website | Family Dashboard allows registered Gmail parent emails | P1 | **MERGED/DEPLOYED** (PR **#389** Â· merge `a00ef7a5` Â· prod `dpl_2mch4scL3c6bgHZgizDbsqPTywbW`) | SC-112 | Removed incorrect Gmail domain block + fixed sign-in copy. Production smoke: `/shoot/dashboard/sign-in` shows registration-email instruction; Gmail prohibition gone. **SC-112 remains closed.** Audit: [`audits/SC-151-family-dashboard-gmail-access-20260904.md`](./audits/SC-151-family-dashboard-gmail-access-20260904.md) |
 
 | **SC-152** | Achievements | Perfect Week 057 formula-queue / trigger reliability (SF-01) | P0 | **COMPLETE / Live Tested** (2026-09-04) | SC-057 (attestation closed), SC-028 | Live 057 **v2.4**; Recalc re-entry PASS. Evidence [`audits/SC-152-153-LIVE-VERIFICATION-20260904.md`](./audits/SC-152-153-LIVE-VERIFICATION-20260904.md). |
 
@@ -2675,9 +2675,9 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-157** | Platform | Draft PR **#340** disposition vs SC-147 closeout | P1 | **COMPLETE** (2026-09-04) | SC-147 | PR **#340** closed as fully superseded; evidence [`audits/SC-157-PR340-DISPOSITION-20260904.md`](./audits/SC-157-PR340-DISPOSITION-20260904.md). |
 
 | **SC-158** | Intake | Automation 006 / Submissions.Video Count ownership (SF-07) | P2 | **COMPLETE / Live Tested** (2026-09-04) | SF-07 | **RETIRE 006** (not deployed). Presence = Has Video? formula; PW videos = **057**. Orphan Video Count mismatches detectable. Evidence [udits/SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md](./audits/SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md). |
-| **SC-159** | Achievements | Automation 059 Active? lifecycle / formula trigger (SF-08) | P2 | **COMPLETE / Live Tested** (2026-09-04) | SC-077, SC-066 | Live `059 Lifecycle Trigger?` + **059 v3.8**; withdraw/restore/idempotency/PW PASS. Nested OR checklist superseded. Evidence [`audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md`](./audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md) · redesign [`audits/SC-159-LIFECYCLE-TRIGGER-REDESIGN-20260904.md`](./audits/SC-159-LIFECYCLE-TRIGGER-REDESIGN-20260904.md) · checklist [`deploy-checklists/059-sc159-lifecycle-formula-trigger.md`](./deploy-checklists/059-sc159-lifecycle-formula-trigger.md). |
-| **SC-160** | Intake / Homework / PW | Asset intake without Submission.Week + early/on-time/late HW (009/020/065/057) | P0 | **IN PROGRESS — GitHub ready; Mike paste** (2026-09-04) | 009, 005, FUT-001 | **009 v1.3** (assets without Week); Ready/Why Not Ready drop Week gate; **020 v4.0** (HC Week=PHA.Week); **065 v10.7**; **057 2.5** (early counts PW HW; late XP ok / PW exclude). 059 untouched. Checklists [`deploy-checklists/SC-160-009-asset-intake-decouple.md`](./deploy-checklists/SC-160-009-asset-intake-decouple.md) · [`deploy-checklists/SC-160-homework-timing-pw-020-057-065.md`](./deploy-checklists/SC-160-homework-timing-pw-020-057-065.md). Audits [`audits/SC-160-ASSET-INTAKE-DECOUPLE-20260904.md`](./audits/SC-160-ASSET-INTAKE-DECOUPLE-20260904.md) · [`audits/SC-160-HOMEWORK-TIMING-PW-20260904.md`](./audits/SC-160-HOMEWORK-TIMING-PW-20260904.md). |
-| **SC-113** | Website | Loading, empty, and error states | P2 | Live Tested in PROD | GÇö | Keep states aligned when SC-112 lands |
+| **SC-159** | Achievements | Automation 059 Active? lifecycle / formula trigger (SF-08) | P2 | **COMPLETE / Live Tested** (2026-09-04) | SC-077, SC-066 | Live `059 Lifecycle Trigger?` + **059 v3.8**; withdraw/restore/idempotency/PW PASS. Nested OR checklist superseded. Evidence [`audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md`](./audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md) Â· redesign [`audits/SC-159-LIFECYCLE-TRIGGER-REDESIGN-20260904.md`](./audits/SC-159-LIFECYCLE-TRIGGER-REDESIGN-20260904.md) Â· checklist [`deploy-checklists/059-sc159-lifecycle-formula-trigger.md`](./deploy-checklists/059-sc159-lifecycle-formula-trigger.md). |
+| **SC-160** | Intake / Homework / PW | Asset intake without Submission.Week + early/on-time/late HW (009/020/065/057) | P0 | **COMPLETE / Live Tested** (2026-09-04) | 009, 005, FUT-001 | Live **009 v1.3 / 020 v4.0 / 065 v10.7 / 057 2.5**. Ready/Why Not Ready Week gate removed. Stage 6 evidence [`audits/SC-160-STAGE6-LIVE-VERIFICATION-20260904.md`](./audits/SC-160-STAGE6-LIVE-VERIFICATION-20260904.md). 059 untouched. |
+| **SC-113** | Website | Loading, empty, and error states | P2 | Live Tested in PROD | GÃ‡Ã¶ | Keep states aligned when SC-112 lands |
 
 | **SC-115** | Website | noindex removal / search indexing | P2 | **Complete** (2026-08-25, `647d465`; prod verified) | SC-114 | **Prod cutover verified** ? Vercel Production `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`; public pages indexable; athlete profiles + private routes `noindex`; sitemap excludes athletes/public-display; `npm run test:smoke:prod` 50/50 after cross-env fix. Checklist: `docs/deploy-checklists/2026-08-25-web-search-indexing-cutover.md`. |
 
@@ -2689,31 +2689,31 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 
 | **SC-144** | Website | Rename Softr-named publish flag | P2 | **DEFERRED** (general schema typo wave) | SC-054 | Gate summary / Softr flag / HC RID typos ? SAFE-MIGRATION-PLAN P3; **Perfect Week Video Minimum** typo fixed 2026-08-27 |
 
-| **SC-145** | Platform | Repo health / security audit follow-ups | P2 | Planned | GÇö | Triage findings into SC items as needed |
+| **SC-145** | Platform | Repo health / security audit follow-ups | P2 | Planned | GÃ‡Ã¶ | Triage findings into SC items as needed |
 
 | **SC-146** | Enrollment | Re-open Fillout daily intake when season ready | P2 | Deferred | SC-060, SC-135 | Turn on only after SC-135 dry-run |
 
-| **SC-147** | Zoom | Recorded meeting half-XP via Automation **101 v6.8** (no slot 121) | P1 | **COMPLETE / Live Tested in PROD** (2026-09-04) | SC-022, SC-087 | Production Live **v6.8** attested; GitHub synced to v6.8; disposable recording 30 + live 60; idempotent re-run; **no 121**; 117 email-only. Evidence [`audits/SC-147-101-V68-PRODUCTION-CLOSEOUT-20260904.md`](./audits/SC-147-101-V68-PRODUCTION-CLOSEOUT-20260904.md) · [`testing/evidence/SC-147-20260904/production-attestation.json`](./testing/evidence/SC-147-20260904/production-attestation.json) · prior [`testing/evidence/sc-147-101-v68/VERIFY-2026-09-02-POST-PASTE.md`](./testing/evidence/sc-147-101-v68/VERIFY-2026-09-02-POST-PASTE.md) |
+| **SC-147** | Zoom | Recorded meeting half-XP via Automation **101 v6.8** (no slot 121) | P1 | **COMPLETE / Live Tested in PROD** (2026-09-04) | SC-022, SC-087 | Production Live **v6.8** attested; GitHub synced to v6.8; disposable recording 30 + live 60; idempotent re-run; **no 121**; 117 email-only. Evidence [`audits/SC-147-101-V68-PRODUCTION-CLOSEOUT-20260904.md`](./audits/SC-147-101-V68-PRODUCTION-CLOSEOUT-20260904.md) Â· [`testing/evidence/SC-147-20260904/production-attestation.json`](./testing/evidence/SC-147-20260904/production-attestation.json) Â· prior [`testing/evidence/sc-147-101-v68/VERIFY-2026-09-02-POST-PASTE.md`](./testing/evidence/sc-147-101-v68/VERIFY-2026-09-02-POST-PASTE.md) |
 
-| **SC-066** | Enrollment | Early-bird periods supported for 2026?2027 | P3 | Decision resolved ? use early-bird registration | SC-065 | Decide if 2026GÇô27 uses early-bird; config if yes |
+| **SC-066** | Enrollment | Early-bird periods supported for 2026?2027 | P3 | Decision resolved ? use early-bird registration | SC-065 | Decide if 2026GÃ‡Ã´27 uses early-bird; config if yes |
 
-| **SC-067** | Enrollment | Program Instance multi-year design | P3 | Tracked under V2-013 | SC-032, SC-046 | Dedicated architecture wave later GÇö do not block season launch on PI redesign |
+| **SC-067** | Enrollment | Program Instance multi-year design | P3 | Tracked under V2-013 | SC-032, SC-046 | Dedicated architecture wave later GÃ‡Ã¶ do not block season launch on PI redesign |
 
 | **SC-100** | Assets | Attachment / Drive retirement strategy | P3 | Deferred | SC-095 | Plan retirement after S3 paths stable for HW+video |
 
 | **SC-116** | Website | Admin roadmap (gated read-only first) | P3 | Built in Repository | SC-112 | Staff auth then read-only aggregates; no writes in first slice |
 
-| **SC-127** | Awards | Award Recipients scope metadata cleanup | P3 | Deferred | GÇö | Optional if reports need it |
+| **SC-127** | Awards | Award Recipients scope metadata cleanup | P3 | Deferred | GÃ‡Ã¶ | Optional if reports need it |
 
-| **SC-128** | Awards | Awards catalog duplicate `thanks_for_playing` bucket | P3 | Deferred | GÇö | Consolidate Class/bucket |
+| **SC-128** | Awards | Awards catalog duplicate `thanks_for_playing` bucket | P3 | Deferred | GÃ‡Ã¶ | Consolidate Class/bucket |
 
-| **SC-129** | Other | Conquered Goal Date lookup filter | P3 | Deferred | GÇö | Only if parent-facing field wrong |
+| **SC-129** | Other | Conquered Goal Date lookup filter | P3 | Deferred | GÃ‡Ã¶ | Only if parent-facing field wrong |
 
 | **SC-131** | Media | Generate Media Kits as platform feature | P3 | Deferred | SC-094, SC-054 | Config tables + generator + UI later |
 
 | **SC-132** | Media | Facebook kits | P3 | Deferred | SC-131 | Not started |
 
-| **SC-143** | Platform | Educational Athletics multi-challenge platform (Dribble, etc.) | P3 | Deferred | GÇö | Separate repos/bases recommended |
+| **SC-143** | Platform | Educational Athletics multi-challenge platform (Dribble, etc.) | P3 | Deferred | GÃ‡Ã¶ | Separate repos/bases recommended |
 
 
 
@@ -2725,7 +2725,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 
 
 
-Unified status vocabulary for this snapshot: **COMPLETE** · **IN PROGRESS** · **BLOCKED** · **READY** · **DEFERRED**.
+Unified status vocabulary for this snapshot: **COMPLETE** Â· **IN PROGRESS** Â· **BLOCKED** Â· **READY** Â· **DEFERRED**.
 
 
 
@@ -2815,15 +2815,15 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | **076 v8.12** | **COMPLETE** (2026-09-01) | Daily Submission Hub handoff ? FUT-041 XP columns; Mike Production paste |
 
-| **FUT-001 / PR #264** | **COMPLETE** (repo + Production paste + multi-asset XP) | 020 v3.8 + 065 v10.4 Live; multi-asset 020 **PASS**; 065 dynamic `recordId` remapped; **trigger re-entry after remap** required; exactly one `HOMEWORK_XP\|rec8E94Jg7mpmuMW9` (`recwpzl8pkXecUqRK`, no duplicate) ? PR **#312** MERGED `f8a7365f` ? [`testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json`](./testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json) · [`deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](./deploy-checklists/065-recordId-dynamic-remap-operator-packet.md) |
+| **FUT-001 / PR #264** | **COMPLETE** (repo + Production paste + multi-asset XP) | 020 v3.8 + 065 v10.4 Live; multi-asset 020 **PASS**; 065 dynamic `recordId` remapped; **trigger re-entry after remap** required; exactly one `HOMEWORK_XP\|rec8E94Jg7mpmuMW9` (`recwpzl8pkXecUqRK`, no duplicate) ? PR **#312** MERGED `f8a7365f` ? [`testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json`](./testing/evidence/sc-multi-asset-homework/closeout-2026-08-31-065-xp.json) Â· [`deploy-checklists/065-recordId-dynamic-remap-operator-packet.md`](./deploy-checklists/065-recordId-dynamic-remap-operator-packet.md) |
 
 | **SC-015 / SC-016 / MRW-F02** | **COMPLETE** (2026-08-31) | Multi-asset ? one HC + one Homework XP; 065 remap + re-entry **COMPLETE**; **do not** re-paste 020/065; **do not** re-`--apply` |
 
-| **FUT-002 batch 1** | **COMPLETE** (2026-08-31) | Five `ZZZ DELETE ?` fields UI-deleted; then **1350** fields / **0** ZZZ; [`testing/evidence/fut-002/batch1-live-verify.json`](./testing/evidence/fut-002/batch1-live-verify.json) · schema `airtable/schema/snapshots/prod-20260831-fut002-batch1/` |
+| **FUT-002 batch 1** | **COMPLETE** (2026-08-31) | Five `ZZZ DELETE ?` fields UI-deleted; then **1350** fields / **0** ZZZ; [`testing/evidence/fut-002/batch1-live-verify.json`](./testing/evidence/fut-002/batch1-live-verify.json) Â· schema `airtable/schema/snapshots/prod-20260831-fut002-batch1/` |
 
-| **FUT-002 SA XP text stubs** | **COMPLETE** (2026-08-31) | Submission Assets unused text `XP Events` + `XP Events copy` UI-deleted; live **1363** fields / **35** tables ? [`deploy-checklists/FUT-002-sa-xp-text-stubs-delete.md`](./deploy-checklists/FUT-002-sa-xp-text-stubs-delete.md) · [`testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json`](./testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json) |
+| **FUT-002 SA XP text stubs** | **COMPLETE** (2026-08-31) | Submission Assets unused text `XP Events` + `XP Events copy` UI-deleted; live **1363** fields / **35** tables ? [`deploy-checklists/FUT-002-sa-xp-text-stubs-delete.md`](./deploy-checklists/FUT-002-sa-xp-text-stubs-delete.md) Â· [`testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json`](./testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json) |
 
-| **FUT-002 batch 2 audit** | **AUDIT READY** (2026-09-01) | **303** candidates / **5** quarantine-ready text stubs ? delete pending Mike UI ? [`FUT-002-batch2-candidate-queue.md`](./audits/FUT-002-batch2-candidate-queue.md) · [`FUT-002-batch2-quarantined-field-delete.md`](./deploy-checklists/FUT-002-batch2-quarantined-field-delete.md) |
+| **FUT-002 batch 2 audit** | **AUDIT READY** (2026-09-01) | **303** candidates / **5** quarantine-ready text stubs ? delete pending Mike UI ? [`FUT-002-batch2-candidate-queue.md`](./audits/FUT-002-batch2-candidate-queue.md) Â· [`FUT-002-batch2-quarantined-field-delete.md`](./deploy-checklists/FUT-002-batch2-quarantined-field-delete.md) |
 
 | **FUT-029 / MRW-H12** | **FUTURE** (design only) | Hybrid Fillout Homework ? [`next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](./next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md); requested as FUT-018 (ID already used) |
 
@@ -2929,7 +2929,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | **SC-WEEKLY-SETTLEMENT-E2E** | **COMPLETE** | Weekly settlement matrix (WAS / calc / PW fail-closed / handoff prep). Docs `docs/testing/weekly-settlement/`; harness `tools/testing/sc-weekly-settlement.mjs`; RESULTS + DEFECT-REPORT 2026-08-30. MRW-F10. |
 
-| **SC-SEASON-SIM-001** | **Planned / Future** | 60-day five-enrollment season simulation ? narrative entry above § D / FUT-026; MRW-H11. Do **not** implement yet. FUT-010 unchanged. Reuse SC-PW-E2E later where appropriate. |
+| **SC-SEASON-SIM-001** | **Planned / Future** | 60-day five-enrollment season simulation ? narrative entry above Â§ D / FUT-026; MRW-H11. Do **not** implement yet. FUT-010 unchanged. Reuse SC-PW-E2E later where appropriate. |
 
 | **SC-SEASON-SIM-002** | **COMPLETE ? T213135Z** | Final execute + formula restore + cleanup 2026-09-02. Evidence `tools/season_simulation/reports/evidence-final-SEASON-SIM-2027-20260902T213135Z-athlete1.json`. Distinct from SC-SEASON-SIM-001. |
 
@@ -2957,7 +2957,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | **SC-112 magic-link + private dashboard** | **COMPLETE ? PRODUCTION VERIFIED BY MIKE** | PRs **#350?#357**. Magic-link operational with Production auth **on**. |
 
-| **SC-112 multi-child parent auth** | **COMPLETE ? PRODUCTION VERIFIED BY MIKE** (2026-09-04) · **no further action** | PR **#373** multi-child keys · select-404 fix PR **#388** merge **`78208ffc`** (fix `e3bb7e45`) · Production deploy **`dpl_8TLH6uQAvLXUoQGDrGQ4NrFnWcVG`**. Mike verified: three athletes presented; each selectable; correct dashboards; family switcher; sign-out; no Page Not Found; no `/shoot/shoot/`; no `rec?` in URLs. Evidence: [`audits/SC-112-multi-child-select-404-fix-20260904.md`](./audits/SC-112-multi-child-select-404-fix-20260904.md). |
+| **SC-112 multi-child parent auth** | **COMPLETE ? PRODUCTION VERIFIED BY MIKE** (2026-09-04) Â· **no further action** | PR **#373** multi-child keys Â· select-404 fix PR **#388** merge **`78208ffc`** (fix `e3bb7e45`) Â· Production deploy **`dpl_8TLH6uQAvLXUoQGDrGQ4NrFnWcVG`**. Mike verified: three athletes presented; each selectable; correct dashboards; family switcher; sign-out; no Page Not Found; no `/shoot/shoot/`; no `rec?` in URLs. Evidence: [`audits/SC-112-multi-child-select-404-fix-20260904.md`](./audits/SC-112-multi-child-select-404-fix-20260904.md). |
 
 | **Homework late-credit policy (020/065/057)** | **COMPLETE** (GitHub + Production PASTE-ALIGNED + disposable live proof 2026-09-04) | PR **#372** merged `da009262`. Live **020 v3.9 / 065 v10.6 / 057 2.4**. Checklist: [`deploy-checklists/homework-late-credit-policy-020-057-065.md`](./deploy-checklists/homework-late-credit-policy-020-057-065.md). Proof: [`audits/FUT-001-LATE-CREDIT-LIVE-PROOF-20260904.md`](./audits/FUT-001-LATE-CREDIT-LIVE-PROOF-20260904.md). |
 
@@ -2973,18 +2973,18 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | **Season Simulation next execute** | **NOT currently authorized** | Temporary Season Simulation formulas are **not** active ? live formulas are normal **`NOW()` / `TODAY()`**. **DO NOT change formulas.** No Airtable record changes/deletes. No emails sent. |
 
-| **SC-112 docs closeout (Agent 4)** | **Updated 2026-09-04** ? Mike Production verify complete; tip includes **`78208ffc`** | [`audits/SC-112-multi-child-select-404-fix-20260904.md`](./audits/SC-112-multi-child-select-404-fix-20260904.md) · [`audits/SC-112-finalization-closeout-20260903.md`](./audits/SC-112-finalization-closeout-20260903.md) · hygiene archive `tools/season_simulation/_archive/session-20260903/` |
+| **SC-112 docs closeout (Agent 4)** | **Updated 2026-09-04** ? Mike Production verify complete; tip includes **`78208ffc`** | [`audits/SC-112-multi-child-select-404-fix-20260904.md`](./audits/SC-112-multi-child-select-404-fix-20260904.md) Â· [`audits/SC-112-finalization-closeout-20260903.md`](./audits/SC-112-finalization-closeout-20260903.md) Â· hygiene archive `tools/season_simulation/_archive/session-20260903/` |
 
 | **SC-109 Game Manual** | **COMPLETE / Live Tested in PROD** (2026-09-04) | Production `/shoot/game-manual` shows **Open game manual** ? Adobe Publish Online; XP + level ladder live. Evidence [`testing/evidence/SC-109-PROD-ATTESTATION-2026-09-04.json`](./testing/evidence/SC-109-PROD-ATTESTATION-2026-09-04.json). Optional later: Shot Milestones public config; SC-133 parent comms. |
 
 | **SC-151 Family Dashboard Gmail access** | **MERGED/DEPLOYED** | PR **#389** merge `a00ef7a5`; Production `dpl_2mch4scL3c6bgHZgizDbsqPTywbW`. Smoke: registration-email instruction; Gmail prohibition gone. **SC-112 remains closed.** [`audits/SC-151-family-dashboard-gmail-access-20260904.md`](./audits/SC-151-family-dashboard-gmail-access-20260904.md) |
 
-| **SC-149 Fairfield branding + Family Dashboard nav** | **COMPLETE / Live Tested in PROD** (2026-09-04) | Dual deliverables under one ID. Branding: Vercel Production env MATCH + attestation [`testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-09-04.json`](./testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-09-04.json). Nav: PR **#358** `29904b45` live. Ledger [`audits/SC-149-TRUTH-LEDGER-20260904.md`](./audits/SC-149-TRUTH-LEDGER-20260904.md) · verify [`audits/SC-149-INDEPENDENT-VERIFY-20260904.md`](./audits/SC-149-INDEPENDENT-VERIFY-20260904.md). **No Mike follow-up.** |
+| **SC-149 Fairfield branding + Family Dashboard nav** | **COMPLETE / Live Tested in PROD** (2026-09-04) | Dual deliverables under one ID. Branding: Vercel Production env MATCH + attestation [`testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-09-04.json`](./testing/evidence/SC-149-FAIRFIELD-ATTESTATION-2026-09-04.json). Nav: PR **#358** `29904b45` live. Ledger [`audits/SC-149-TRUTH-LEDGER-20260904.md`](./audits/SC-149-TRUTH-LEDGER-20260904.md) Â· verify [`audits/SC-149-INDEPENDENT-VERIFY-20260904.md`](./audits/SC-149-INDEPENDENT-VERIFY-20260904.md). **No Mike follow-up.** |
 
 | **SC-158 / SF-07 Video Count ownership** | **COMPLETE / Live Tested** (2026-09-04) | **RETIRE 006** (absent live). Presence = `Has Video?`; PW = **057**. Evidence [`audits/SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md`](./audits/SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md). |
 
 | **SC-159 / SF-08 Automation 059 lifecycle** | **COMPLETE / Live Tested** (2026-09-04) | Formula trigger + v3.8 live. Evidence [`audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md`](./audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md). FUT-002 Batch 2 trash still needs asset-intake dependency review. |
-| **SC-160 / asset intake + HW timing** | **IN PROGRESS � GitHub ready; Mike paste** (2026-09-04) | **009 v1.3** then Ready formulas; then **020/065/057**. See SC-160 row above. FUT-002 trash still gated. |
+| **SC-160 / asset intake + HW timing** | **COMPLETE / Live Tested** (2026-09-04) | Live **009 v1.3 / 020 v4.0 / 065 v10.7 / 057 2.5**. Evidence [`audits/SC-160-STAGE6-LIVE-VERIFICATION-20260904.md`](./audits/SC-160-STAGE6-LIVE-VERIFICATION-20260904.md). FUT-002 Batch 2 UI trash authorized. |
 
 
 
