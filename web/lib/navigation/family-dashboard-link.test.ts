@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 import { withBasePath } from "@/lib/app-config";
 import {
@@ -10,6 +12,10 @@ import {
 import { SHOOTING_CHALLENGE_NAV } from "@/lib/navigation/shooting-challenge-nav";
 import { FOOTER_QUICK_LINKS } from "@/lib/site-chrome/footer-config";
 
+const FAQ_SOURCE = readFileSync(
+  join(process.cwd(), "components/faq/faq-page-view.tsx"),
+  "utf8",
+);
 describe("Family Dashboard public entry", () => {
   it("uses a basePath-relative app href, not a hardcoded /dashboard root", () => {
     expect(FAMILY_DASHBOARD_APP_HREF).toBe("/dashboard/sign-in");
@@ -46,5 +52,10 @@ describe("Family Dashboard public entry", () => {
     expect(SHOOTING_CHALLENGE_NAV.some((item) => item.href === "/public-display")).toBe(
       false,
     );
+  });
+
+  it("keeps FAQ get-started CTA wired to the shared public entry", () => {
+    expect(FAQ_SOURCE).toContain("family-dashboard-faq-cta");
+    expect(FAQ_SOURCE).toContain("FamilyDashboardLink");
   });
 });
