@@ -6,9 +6,20 @@ import {
   LeaderboardView,
 } from "@/components/leaderboard/leaderboard-view";
 import { CatalogStructuredData } from "@/components/seo/catalog-structured-data";
-import { publicErrorMessage } from "@/lib/airtable/errors";
+import { AirtableApiError } from "@/lib/airtable/errors";
 import { fetchLeaderboard } from "@/lib/airtable/queries";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+
+/** Visitor-safe standings failure copy — never surfaces Airtable/internal details. */
+function leaderboardFailureMessage(error: unknown): string {
+  if (error instanceof Error && error.message.includes("Missing Airtable configuration")) {
+    return error.message;
+  }
+  if (error instanceof AirtableApiError) {
+    return "Live standings are temporarily unavailable. Please try again soon.";
+  }
+  return "Live standings are temporarily unavailable. Please try again soon.";
+}
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Season Leaderboard — Youth Basketball Rankings",
@@ -42,11 +53,10 @@ export default async function LeaderboardPage() {
       </>
     );
   } catch (error) {
-    const message = publicErrorMessage(error);
     return (
       <>
         {structuredData}
-        <LeaderboardErrorState message={message} />
+        <LeaderboardErrorState message={leaderboardFailureMessage(error)} />
       </>
     );
   }

@@ -258,39 +258,84 @@ describe("leaderboard eligibility contract", () => {
     ["negative XP", { "Lifetime XP Total": -1 }],
     ["blank shots", { "Total Shots Counted": "" }],
     ["negative shots", { "Total Shots Counted": -1 }],
-  ])("fails closed for %s", (_label, overrides) => {
-    expect(() =>
-      requireEligibleLeaderboardRecords([validRecord("rec1xxxxxxx0001", overrides)], scope),
-    ).toThrow();
+  ])("skips ineligible row for %s without blanking sibling rows", (_label, overrides) => {
+    const good = validRecord("recGoodxxxx0001", { "Athlete ID Lookup": ["athlete-good"] });
+    const bad = validRecord("recBadxxxxx0001", overrides);
+    const eligible = requireEligibleLeaderboardRecords([good, bad], scope);
+    expect(eligible.map((record) => record.id)).toEqual(["recGoodxxxx0001"]);
   });
 
-  it("rejects duplicate canonical Athlete + Program Instance + School Year identities", () => {
-    const first = validRecord("rec1xxxxxxx0001", { "Athlete ID Lookup": ["same-athlete"] });
-    const second = validRecord("rec2xxxxxxx0002", { "Athlete ID Lookup": ["same-athlete"] });
-    expect(() => requireEligibleLeaderboardRecords([first, second], scope)).toThrow(/Duplicate canonical/);
+  it("returns an empty list when every row is ineligible (legitimate empty board)", () => {
+    expect(
+      requireEligibleLeaderboardRecords(
+        [validRecord("rec1xxxxxxx0001", { "Active?": false })],
+        scope,
+      ),
+    ).toEqual([]);
   });
 
-  it("rejects an inactive or rank-mismatched Current Level", () => {
-    expect(() => requireEligibleLeaderboardRecords([
-      validRecord("rec1xxxxxxx0001", { "Level Sort Order - For Softr": [3] }),
-    ], scope)).toThrow(/inactive or mismatched/);
+  it("keeps the higher-ranked enrollment when duplicate canonical identities appear", () => {
+    const lower = validRecord("rec1xxxxxxx0001", {
+      "Athlete ID Lookup": ["same-athlete"],
+      "Lifetime XP Total": 100,
+      "Total Shots Counted": 50,
+    });
+    const higher = validRecord("rec2xxxxxxx0002", {
+      "Athlete ID Lookup": ["same-athlete"],
+      "Lifetime XP Total": 400,
+      "Total Shots Counted": 50,
+    });
+    const eligible = requireEligibleLeaderboardRecords([lower, higher], scope);
+    expect(eligible).toHaveLength(1);
+    expect(eligible[0].id).toBe("rec2xxxxxxx0002");
   });
 
-  it("rejects an unknown Current Level record id", () => {
-    expect(() => requireEligibleLeaderboardRecords([
-      validRecord("rec1xxxxxxx0001", { "Current Level": ["recUnknownLevelXXX"] }),
-    ], scope)).toThrow(/inactive or unknown Current Level/);
+  it("breaks duplicate ties by stable record id", () => {
+    const first = validRecord("recAxxxxxxx0001", {
+      "Athlete ID Lookup": ["same-athlete"],
+      "Lifetime XP Total": 200,
+      "Total Shots Counted": 100,
+    });
+    const second = validRecord("recBxxxxxxx0002", {
+      "Athlete ID Lookup": ["same-athlete"],
+      "Lifetime XP Total": 200,
+      "Total Shots Counted": 100,
+    });
+    const eligible = requireEligibleLeaderboardRecords([second, first], scope);
+    expect(eligible).toHaveLength(1);
+    expect(eligible[0].id).toBe("recAxxxxxxx0001");
   });
 
-  it("rejects a stale Current Level after a downward XP correction", () => {
+  it("skips an inactive or rank-mismatched Current Level", () => {
+    expect(
+      requireEligibleLeaderboardRecords(
+        [validRecord("rec1xxxxxxx0001", { "Level Sort Order - For Softr": [3] })],
+        scope,
+      ),
+    ).toEqual([]);
+  });
+
+  it("skips an unknown Current Level record id", () => {
+    expect(
+      requireEligibleLeaderboardRecords(
+        [validRecord("rec1xxxxxxx0001", { "Current Level": ["recUnknownLevelXXX"] })],
+        scope,
+      ),
+    ).toEqual([]);
+  });
+
+  it("skips a stale Current Level after a downward XP correction", () => {
     const thresholdScope = {
       ...scope,
       activeLevelsById: new Map([
         [FIXTURE_LEVEL_2_ID, { name: "Level 2", rank: 2, xpRequired: 200 }],
       ]),
     };
-    expect(() => requireEligibleLeaderboardRecords([
-      validRecord("rec1xxxxxxx0001", { "Lifetime XP Total": 199 }),
-    ], thresholdScope)).toThrow(/below its assigned Current Level threshold/);
+    expect(
+      requireEligibleLeaderboardRecords(
+        [validRecord("rec1xxxxxxx0001", { "Lifetime XP Total": 199 })],
+        thresholdScope,
+      ),
+    ).toEqual([]);
   });
 });

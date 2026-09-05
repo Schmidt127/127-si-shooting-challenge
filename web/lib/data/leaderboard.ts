@@ -144,99 +144,139 @@ export function sortLeaderboardRecords<T extends LeaderboardRecord>(records: T[]
 }
 
 /**
+ * Validate one enrollment row against the public standings contract.
+ * Throws LeaderboardIntegrityError when the row must not be published.
+ */
+function assertEligibleLeaderboardRecord(
+  record: LeaderboardRecord,
+  scope: LeaderboardScope,
+): string {
+  const { fields } = record;
+  const label = enrollmentLabel(record.id);
+
+  if (!asBoolean(fields["Active?"])) {
+    throw new LeaderboardIntegrityError(`Enrollment ${record.id} is inactive but was returned by standings.`);
+  }
+
+  integrity(() => requireExactlyOneLinkedRecordId(fields.Athlete, "Athlete link", label));
+  const athlete = integrity(() =>
+    requireExactlyOneLookupText(fields["Athlete ID Lookup"], "Athlete ID Lookup", label),
+  );
+  const programInstanceId = integrity(() =>
+    requireExactlyOneLinkedRecordId(fields["Program Instance"], "Program Instance link", label),
+  );
+  const schoolYear = integrity(() =>
+    requireSelectName(fields["School Year"], "School Year", label),
+  );
+
+  if (schoolYear !== scope.schoolYear || programInstanceId !== scope.programInstanceId) {
+    throw new LeaderboardIntegrityError(
+      `Enrollment ${record.id} is outside the configured standings scope (${schoolYear} / ${programInstanceId}).`,
+    );
+  }
+
+  // Live Airtable REST returns Current Level as linked record ids ["rec…"].
+  const currentLevelId = integrity(() =>
+    requireExactlyOneLinkedRecordId(fields["Current Level"], "Current Level", label),
+  );
+  const status = integrity(() =>
+    requireSelectName(fields["Level Status"], "Level Status", label),
+  );
+  if (status !== "Assigned" && status !== "Gate Blocked") {
+    throw new LeaderboardIntegrityError(
+      `Enrollment ${record.id} has non-settled Level Status "${status}".`,
+    );
+  }
+  const publicLevel = requireText(
+    fields["Current Level - Public Facing Display"],
+    "Current Level display",
+    record.id,
+  );
+  // Level Sort Order - For Softr is a lookup and may arrive as [n].
+  const levelRank = requireNonNegativeScalar(
+    fields["Level Sort Order - For Softr"],
+    "Level Rank",
+    record.id,
+  );
+  const activeLevel = scope.activeLevelsById.get(currentLevelId);
+  if (activeLevel === undefined) {
+    throw new LeaderboardIntegrityError(
+      `Enrollment ${record.id} has an inactive or unknown Current Level.`,
+    );
+  }
+  if (publicLevel !== activeLevel.name) {
+    throw new LeaderboardIntegrityError(
+      `Enrollment ${record.id} has mismatched Current Level display and link.`,
+    );
+  }
+  if (activeLevel.rank !== levelRank) {
+    throw new LeaderboardIntegrityError(
+      `Enrollment ${record.id} has an inactive or mismatched Current Level rank.`,
+    );
+  }
+  const xp = requireNonNegativeScalar(fields["Lifetime XP Total"], "Lifetime XP Total", record.id);
+  if (xp < activeLevel.xpRequired) {
+    throw new LeaderboardIntegrityError(
+      `Enrollment ${record.id} has XP below its assigned Current Level threshold.`,
+    );
+  }
+  requireNonNegativeScalar(fields["Total Shots Counted"], "Total Shots Counted", record.id);
+
+  return `${athlete}|${programInstanceId}|${schoolYear}`;
+}
+
+function preferLeaderboardRecord<T extends LeaderboardRecord>(candidate: T, incumbent: T): T {
+  // compareLeaderboardSortKeys(a, b) < 0 means a ranks above b (same order as Array.sort).
+  const cmp = compareLeaderboardSortKeys(
+    getLeaderboardSortKeys(candidate.fields),
+    getLeaderboardSortKeys(incumbent.fields),
+  );
+  if (cmp < 0) return candidate;
+  if (cmp > 0) return incumbent;
+  return candidate.id.localeCompare(incumbent.id) < 0 ? candidate : incumbent;
+}
+
+/**
  * The public query uses a named Airtable view as its primary scope, then checks
- * each returned row again. A broken view therefore fails closed instead of
- * publishing an inactive, prior-year, wrong-program, duplicate, or unsettled row.
+ * each returned row again. Ineligible rows (inactive, wrong season, unsettled
+ * level/XP, malformed links) are skipped so one bad enrollment cannot blank the
+ * public board. Duplicate Athlete + Program Instance + School Year identities
+ * keep the higher-ranked row (level → XP → shots → record id).
+ *
+ * Returns only publishable rows. Zero eligible rows is a legitimate empty board,
+ * not a hard failure — scope/config failures still throw upstream.
  */
 export function requireEligibleLeaderboardRecords<T extends LeaderboardRecord>(
   records: T[],
   scope: LeaderboardScope,
 ): T[] {
-  const canonicalIdentities = new Map<string, string>();
+  const byIdentity = new Map<string, T>();
+  let skippedCount = 0;
 
   for (const record of records) {
-    const { fields } = record;
-    const label = enrollmentLabel(record.id);
-
-    if (!asBoolean(fields["Active?"])) {
-      throw new LeaderboardIntegrityError(`Enrollment ${record.id} is inactive but was returned by standings.`);
+    try {
+      const identity = assertEligibleLeaderboardRecord(record, scope);
+      const incumbent = byIdentity.get(identity);
+      if (!incumbent) {
+        byIdentity.set(identity, record);
+        continue;
+      }
+      byIdentity.set(identity, preferLeaderboardRecord(record, incumbent));
+      skippedCount += 1;
+    } catch (error) {
+      if (error instanceof LeaderboardIntegrityError) {
+        skippedCount += 1;
+        continue;
+      }
+      throw error;
     }
-
-    integrity(() => requireExactlyOneLinkedRecordId(fields.Athlete, "Athlete link", label));
-    const athlete = integrity(() =>
-      requireExactlyOneLookupText(fields["Athlete ID Lookup"], "Athlete ID Lookup", label),
-    );
-    const programInstanceId = integrity(() =>
-      requireExactlyOneLinkedRecordId(fields["Program Instance"], "Program Instance link", label),
-    );
-    const schoolYear = integrity(() =>
-      requireSelectName(fields["School Year"], "School Year", label),
-    );
-
-    if (schoolYear !== scope.schoolYear || programInstanceId !== scope.programInstanceId) {
-      throw new LeaderboardIntegrityError(
-        `Enrollment ${record.id} is outside the configured standings scope (${schoolYear} / ${programInstanceId}).`,
-      );
-    }
-
-    const identity = `${athlete}|${programInstanceId}|${schoolYear}`;
-    const duplicate = canonicalIdentities.get(identity);
-    if (duplicate) {
-      throw new LeaderboardIntegrityError(
-        `Duplicate canonical Enrollment identity ${identity}: ${duplicate} and ${record.id}.`,
-      );
-    }
-    canonicalIdentities.set(identity, record.id);
-
-    // Live Airtable REST returns Current Level as linked record ids ["rec…"].
-    const currentLevelId = integrity(() =>
-      requireExactlyOneLinkedRecordId(fields["Current Level"], "Current Level", label),
-    );
-    const status = integrity(() =>
-      requireSelectName(fields["Level Status"], "Level Status", label),
-    );
-    if (status !== "Assigned" && status !== "Gate Blocked") {
-      throw new LeaderboardIntegrityError(
-        `Enrollment ${record.id} has non-settled Level Status "${status}".`,
-      );
-    }
-    const publicLevel = requireText(
-      fields["Current Level - Public Facing Display"],
-      "Current Level display",
-      record.id,
-    );
-    // Level Sort Order - For Softr is a lookup and may arrive as [n].
-    const levelRank = requireNonNegativeScalar(
-      fields["Level Sort Order - For Softr"],
-      "Level Rank",
-      record.id,
-    );
-    const activeLevel = scope.activeLevelsById.get(currentLevelId);
-    if (activeLevel === undefined) {
-      throw new LeaderboardIntegrityError(
-        `Enrollment ${record.id} has an inactive or unknown Current Level.`,
-      );
-    }
-    if (publicLevel !== activeLevel.name) {
-      throw new LeaderboardIntegrityError(
-        `Enrollment ${record.id} has mismatched Current Level display and link.`,
-      );
-    }
-    if (activeLevel.rank !== levelRank) {
-      throw new LeaderboardIntegrityError(
-        `Enrollment ${record.id} has an inactive or mismatched Current Level rank.`,
-      );
-    }
-    const xp = requireNonNegativeScalar(fields["Lifetime XP Total"], "Lifetime XP Total", record.id);
-    if (xp < activeLevel.xpRequired) {
-      throw new LeaderboardIntegrityError(
-        `Enrollment ${record.id} has XP below its assigned Current Level threshold.`,
-      );
-    }
-    requireNonNegativeScalar(fields["Total Shots Counted"], "Total Shots Counted", record.id);
   }
 
-  return records;
+  if (skippedCount > 0 && process.env.NODE_ENV !== "test") {
+    console.warn("[leaderboard] skipped ineligible standings rows", { skippedCount });
+  }
+
+  return [...byIdentity.values()];
 }
 
 function resolvePublicProfileSlug(fields: EnrollmentLeaderboardFields): string | null {
