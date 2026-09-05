@@ -1,0 +1,26 @@
+{
+  "Athletes": {
+    "present": true,
+    "count": 3
+  },
+  "Enrollments": {
+    "present": true,
+    "count": 4
+  },
+  "Submissions": {
+    "present": true,
+    "count": 6
+  },
+  "XP Events": {
+    "present": true,
+    "count": 83
+  },
+  "Email Handoff Queue": {
+    "present": true,
+    "count": 24
+  },
+  "Zoom Meetings": {
+    "present": true,
+    "count": 9
+  }
+}

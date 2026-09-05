@@ -1,0 +1,412 @@
+{
+  "phase": 2,
+  "started_at": "20260905_211903",
+  "base_id": "appn84sqPw03zEbTT",
+  "approval": "APPROVE TRANSACTIONAL PURGE",
+  "approved_manifest_stamp": "20260905_211033",
+  "planned_delete_total": 200,
+  "automation_pause": {
+    "paused": [],
+    "note": "Airtable MCP update_automation replaces full draft configs and cannot safely toggle ON/OFF. Proceeding with FUT-030 pattern: leaf\u2192parent explicit-ID delete with automations live, then remnant settle pass.",
+    "restored": []
+  },
+  "preflight": {
+    "Email Handoff Queue": {
+      "approved_count": 24,
+      "live_count": 24,
+      "new_unapproved_ids": [],
+      "new_unapproved_count": 0,
+      "already_gone": 0
+    },
+    "Award Recipients": {
+      "approved_count": 1,
+      "live_count": 1,
+      "new_unapproved_ids": [],
+      "new_unapproved_count": 0,
+      "already_gone": 0
+    },
+    "XP Events": {
+      "approved_count": 83,
+      "live_count": 83,
+      "new_unapproved_ids": [],
+      "new_unapproved_count": 0,
+      "already_gone": 0
+    },
+    "Athlete Achievement Unlocks": {
+      "approved_count": 12,
+      "live_count": 12,
+      "new_unapproved_ids": [],
+      "new_unapproved_count": 0,
+      "already_gone": 0
+    },
+    "Streak Occurrences": {
+      "approved_count": 35,
+      "live_count": 35,
+      "new_unapproved_ids": [],
+      "new_unapproved_count": 0,
+      "already_gone": 0
+    },
+    "Video Feedback": {
+      "approved_count": 7,
+      "live_count": 7,
+      "new_unapproved_ids": [],
+      "new_unapproved_count": 0,
+      "already_gone": 0
+    },
+    "Zoom Attendance": {
+      "approved_count": 3,
+      "live_count": 3,
+      "new_unapproved_ids": [],
+      "new_unapproved_count": 0,
+      "already_gone": 0
+    },
+    "Homework Completions": {
+      "approved_count": 2,
+      "live_count": 2,
+      "new_unapproved_ids": [],
+      "new_unapproved_count": 0,
+      "already_gone": 0
+    },
+    "Submission Assets": {
+      "approved_count": 5,
+      "live_count": 5,
+      "new_unapproved_ids": [],
+      "new_unapproved_count": 0,
+      "already_gone": 0
+    },
+    "Submissions": {
+      "approved_count": 6,
+      "live_count": 6,
+      "new_unapproved_ids": [],
+      "new_unapproved_count": 0,
+      "already_gone": 0
+    },
+    "Weekly Athlete Summary": {
+      "approved_count": 8,
+      "live_count": 8,
+      "new_unapproved_ids": [],
+      "new_unapproved_count": 0,
+      "already_gone": 0
+    },
+    "Enrollments": {
+      "approved_count": 4,
+      "live_count": 4,
+      "new_unapproved_ids": [],
+      "new_unapproved_count": 0,
+      "already_gone": 0
+    },
+    "Athletes": {
+      "approved_count": 3,
+      "live_count": 3,
+      "new_unapproved_ids": [],
+      "new_unapproved_count": 0,
+      "already_gone": 0
+    },
+    "Zoom Meetings (selected disposable)": {
+      "approved_count": 7,
+      "still_present": 7,
+      "already_gone": 0,
+      "preserve_zoom_missing": []
+    },
+    "protected_live": {
+      "Achievements": 15,
+      "Automations": 50,
+      "Awards": 31,
+      "Config": 4,
+      "Countries": 194,
+      "Grade Bands": 7,
+      "Homework Library": 121,
+      "Level Gate Rules": 12,
+      "Levels": 12,
+      "Program Homework Assignments": 18,
+      "Program Instance - Sync": 3,
+      "School - Synced": 1241,
+      "Shot Milestones": 61,
+      "State": 50,
+      "Target Goal Shots": 7,
+      "Testing Scenarios": 1,
+      "Tutorials & Assets": 32,
+      "Weeks": 11,
+      "XP Reward Rules": 31
+    },
+    "abort": false,
+    "safe_to_delete": true
+  },
+  "deletion": {
+    "Email Handoff Queue": {
+      "api_table": "Email Handoff Queue",
+      "planned": 24,
+      "attempted": 24,
+      "deleted": 24,
+      "already_gone": 0,
+      "failed_batches": []
+    },
+    "Award Recipients": {
+      "api_table": "Award Recipients",
+      "planned": 1,
+      "attempted": 1,
+      "deleted": 1,
+      "already_gone": 0,
+      "failed_batches": []
+    },
+    "XP Events": {
+      "api_table": "XP Events",
+      "planned": 83,
+      "attempted": 83,
+      "deleted": 83,
+      "already_gone": 0,
+      "failed_batches": []
+    },
+    "Athlete Achievement Unlocks": {
+      "api_table": "Athlete Achievement Unlocks",
+      "planned": 12,
+      "attempted": 12,
+      "deleted": 12,
+      "already_gone": 0,
+      "failed_batches": []
+    },
+    "Streak Occurrences": {
+      "api_table": "Streak Occurrences",
+      "planned": 35,
+      "attempted": 35,
+      "deleted": 35,
+      "already_gone": 0,
+      "failed_batches": []
+    },
+    "Video Feedback": {
+      "api_table": "Video Feedback",
+      "planned": 7,
+      "attempted": 7,
+      "deleted": 7,
+      "already_gone": 0,
+      "failed_batches": []
+    },
+    "Zoom Attendance": {
+      "api_table": "Zoom Attendance",
+      "planned": 3,
+      "attempted": 3,
+      "deleted": 3,
+      "already_gone": 0,
+      "failed_batches": []
+    },
+    "Zoom Meetings (selected disposable)": {
+      "api_table": "Zoom Meetings",
+      "planned": 7,
+      "attempted": 7,
+      "deleted": 7,
+      "already_gone": 0,
+      "failed_batches": []
+    },
+    "Homework Completions": {
+      "api_table": "Homework Completions",
+      "planned": 2,
+      "attempted": 2,
+      "deleted": 2,
+      "already_gone": 0,
+      "failed_batches": []
+    },
+    "Submission Assets": {
+      "api_table": "Submission Assets",
+      "planned": 5,
+      "attempted": 5,
+      "deleted": 5,
+      "already_gone": 0,
+      "failed_batches": []
+    },
+    "Submissions": {
+      "api_table": "Submissions",
+      "planned": 6,
+      "attempted": 6,
+      "deleted": 6,
+      "already_gone": 0,
+      "failed_batches": []
+    },
+    "Weekly Athlete Summary": {
+      "api_table": "Weekly Athlete Summary",
+      "planned": 8,
+      "attempted": 8,
+      "deleted": 8,
+      "already_gone": 0,
+      "failed_batches": []
+    },
+    "Enrollments": {
+      "api_table": "Enrollments",
+      "planned": 4,
+      "attempted": 4,
+      "deleted": 4,
+      "already_gone": 0,
+      "failed_batches": []
+    },
+    "Athletes": {
+      "api_table": "Athletes",
+      "planned": 3,
+      "attempted": 3,
+      "deleted": 3,
+      "already_gone": 0,
+      "failed_batches": []
+    }
+  },
+  "totals": {
+    "deleted": 204,
+    "failed": 0,
+    "skipped_already_gone": 0
+  },
+  "failures": [],
+  "post_immediate": {
+    "captured_at": "20260905_211950",
+    "purge_remaining": {
+      "Email Handoff Queue": 0,
+      "Award Recipients": 0,
+      "XP Events": 3,
+      "Athlete Achievement Unlocks": 0,
+      "Streak Occurrences": 0,
+      "Video Feedback": 1,
+      "Zoom Attendance": 0,
+      "Homework Completions": 0,
+      "Submission Assets": 0,
+      "Submissions": 0,
+      "Weekly Athlete Summary": 0,
+      "Enrollments": 0,
+      "Athletes": 0
+    },
+    "protected": {
+      "Achievements": 15,
+      "Automations": 50,
+      "Awards": 31,
+      "Config": 4,
+      "Countries": 194,
+      "Grade Bands": 7,
+      "Homework Library": 121,
+      "Level Gate Rules": 12,
+      "Levels": 12,
+      "Program Homework Assignments": 18,
+      "Program Instance - Sync": 3,
+      "School - Synced": 1241,
+      "Shot Milestones": 61,
+      "State": 50,
+      "Target Goal Shots": 7,
+      "Testing Scenarios": 1,
+      "Tutorials & Assets": 32,
+      "Weeks": 11,
+      "XP Reward Rules": 31
+    },
+    "zoom_remaining": [],
+    "zoom_remaining_ids": [
+      "recMFP2x5LDqea9ax",
+      "recb9EjQIJVzaRpZa"
+    ],
+    "zoom_remaining_count": 2,
+    "preserve_zoom_missing": []
+  },
+  "remnant_pass": {
+    "tables": {
+      "Email Handoff Queue": {
+        "remaining": 0,
+        "deleted": 0
+      },
+      "Award Recipients": {
+        "remaining": 0,
+        "deleted": 0
+      },
+      "XP Events": {
+        "remaining_before": 3,
+        "deleted": 3
+      },
+      "Athlete Achievement Unlocks": {
+        "remaining": 0,
+        "deleted": 0
+      },
+      "Streak Occurrences": {
+        "remaining": 0,
+        "deleted": 0
+      },
+      "Video Feedback": {
+        "remaining_before": 1,
+        "deleted": 1
+      },
+      "Zoom Attendance": {
+        "remaining": 0,
+        "deleted": 0
+      },
+      "Zoom Meetings": {
+        "remaining": 0,
+        "deleted": 0
+      },
+      "Homework Completions": {
+        "remaining": 0,
+        "deleted": 0
+      },
+      "Submission Assets": {
+        "remaining": 0,
+        "deleted": 0
+      },
+      "Submissions": {
+        "remaining": 0,
+        "deleted": 0
+      },
+      "Weekly Athlete Summary": {
+        "remaining": 0,
+        "deleted": 0
+      },
+      "Enrollments": {
+        "remaining": 0,
+        "deleted": 0
+      },
+      "Athletes": {
+        "remaining": 0,
+        "deleted": 0
+      }
+    },
+    "deleted": 4
+  },
+  "final": {
+    "captured_at": "20260905_212035",
+    "purge_remaining": {
+      "Email Handoff Queue": 0,
+      "Award Recipients": 0,
+      "XP Events": 0,
+      "Athlete Achievement Unlocks": 0,
+      "Streak Occurrences": 0,
+      "Video Feedback": 0,
+      "Zoom Attendance": 0,
+      "Homework Completions": 0,
+      "Submission Assets": 0,
+      "Submissions": 0,
+      "Weekly Athlete Summary": 0,
+      "Enrollments": 0,
+      "Athletes": 0
+    },
+    "protected": {
+      "Achievements": 15,
+      "Automations": 50,
+      "Awards": 31,
+      "Config": 4,
+      "Countries": 194,
+      "Grade Bands": 7,
+      "Homework Library": 121,
+      "Level Gate Rules": 12,
+      "Levels": 12,
+      "Program Homework Assignments": 18,
+      "Program Instance - Sync": 3,
+      "School - Synced": 1241,
+      "Shot Milestones": 61,
+      "State": 50,
+      "Target Goal Shots": 7,
+      "Testing Scenarios": 1,
+      "Tutorials & Assets": 32,
+      "Weeks": 11,
+      "XP Reward Rules": 31
+    },
+    "zoom": {
+      "count": 2,
+      "ids": [
+        "recMFP2x5LDqea9ax",
+        "recb9EjQIJVzaRpZa"
+      ],
+      "preserve_ok": true,
+      "no_disposable_left": true
+    }
+  },
+  "finished_at": "20260905_212053",
+  "success": true
+}

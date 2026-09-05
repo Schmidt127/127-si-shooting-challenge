@@ -1,0 +1,244 @@
+[
+  {
+    "id": "rec8mlIPUanko5aR7",
+    "createdTime": "2026-09-04T20:25:10.000Z",
+    "table_name": "Video Feedback",
+    "table_id": "tblOV6pJDxQFBSQ3q",
+    "fields": {
+      "Upload Status": "Uploaded",
+      "Record Id": "rec8mlIPUanko5aR7",
+      "Active?": true,
+      "Submission Asset": [
+        "rec0pKjaQoaC319f0"
+      ],
+      "Linked Asset Duplicate Notes": [
+        "No same-enrollment contextual reuse detected.\nCross-enrollment informational match(es): recLiRlImmPkZyTSF"
+      ],
+      "Video Asset Uploaded At": "2026-09-04T20:25:17.551Z",
+      "Video URL or Drive Link": "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/rec0pKjaQoaC319f0?token=gT6AjPPOj460W21z4meomNdrQHWnJvXaQcu-qy1qVI4",
+      "Submission": [
+        "recnkEQWB5SQ7OxSJ"
+      ],
+      "Video Feedback Name": "\"Schmidt, Rene' - 2026-2027\" -  - Video Feedback",
+      "Linked Asset Duplicate Match Strength": [
+        "Exact SHA-256 Hash"
+      ],
+      "Enrollment": [
+        "recp5z9S9WpLBzAZj"
+      ],
+      "Total Video XP Awarded": 0,
+      "Video File - AWS": [
+        "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/rec0pKjaQoaC319f0?token=gT6AjPPOj460W21z4meomNdrQHWnJvXaQcu-qy1qVI4"
+      ],
+      "Activity Date - Lkp": [
+        "2026-09-04"
+      ],
+      "Video Feedback Key": "VIDEO_FEEDBACK|rec0pKjaQoaC319f0",
+      "Activity XP Display Label": "Unable to generate formula",
+      "Created": "2026-09-04T20:25:10.000Z",
+      "Grade Band": [
+        "rec75ruo3XT5nSvaK"
+      ],
+      "Linked Asset Duplicate Status": [
+        "Exact Duplicate"
+      ],
+      "Video Asset File Name": "Beck_Carly_14.jpg",
+      "Linked Asset Duplicate?": [
+        null
+      ],
+      "Writeback Complete?": 1
+    }
+  },
+  {
+    "id": "recIJgqP5geas64Ra",
+    "createdTime": "2026-09-02T00:49:36.000Z",
+    "table_name": "Video Feedback",
+    "table_id": "tblOV6pJDxQFBSQ3q",
+    "fields": {
+      "Record Id": "recIJgqP5geas64Ra",
+      "Submission": [
+        "recrhaRHi5EHP3Xn8"
+      ],
+      "Video Feedback Name": " - Week 1 - Video Feedback",
+      "Award Status": "Pending",
+      "Week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "Total Video XP Awarded": 0,
+      "Activity Date - Lkp": [
+        "2026-05-10"
+      ],
+      "Activity XP Display Label": "Unable to generate formula",
+      "Created": "2026-09-02T00:49:36.000Z",
+      "Writeback Complete?": 0
+    }
+  },
+  {
+    "id": "recLAcUQt9vcMGChb",
+    "createdTime": "2026-09-04T20:25:11.000Z",
+    "table_name": "Video Feedback",
+    "table_id": "tblOV6pJDxQFBSQ3q",
+    "fields": {
+      "Upload Status": "Uploaded",
+      "Record Id": "recLAcUQt9vcMGChb",
+      "Active?": true,
+      "Submission Asset": [
+        "recKDwdL75HfGjObP"
+      ],
+      "Linked Asset Duplicate Notes": [
+        "No matching file hash found."
+      ],
+      "Video Asset Uploaded At": "2026-09-04T20:25:18.015Z",
+      "Video URL or Drive Link": "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/recKDwdL75HfGjObP?token=bWSr17NVN9fKK0yaKGzT8hWN4MxR8V69pHLJinLXbBU",
+      "Submission": [
+        "recnkEQWB5SQ7OxSJ"
+      ],
+      "Video Feedback Name": "\"Schmidt, Rene' - 2026-2027\" -  - Video Feedback",
+      "Linked Asset Duplicate Match Strength": [
+        "Exact SHA-256 Hash"
+      ],
+      "Enrollment": [
+        "recp5z9S9WpLBzAZj"
+      ],
+      "Total Video XP Awarded": 0,
+      "Video File - AWS": [
+        "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/recKDwdL75HfGjObP?token=bWSr17NVN9fKK0yaKGzT8hWN4MxR8V69pHLJinLXbBU"
+      ],
+      "Activity Date - Lkp": [
+        "2026-09-04"
+      ],
+      "Video Feedback Key": "VIDEO_FEEDBACK|recKDwdL75HfGjObP",
+      "Activity XP Display Label": "Unable to generate formula",
+      "Created": "2026-09-04T20:25:11.000Z",
+      "Grade Band": [
+        "rec75ruo3XT5nSvaK"
+      ],
+      "Linked Asset Duplicate Status": [
+        "Unique"
+      ],
+      "Video Asset File Name": "Bakkum_John_9.jpg",
+      "Linked Asset Duplicate?": [
+        null
+      ],
+      "Writeback Complete?": 1
+    }
+  },
+  {
+    "id": "recQLnAmvY206EqjT",
+    "createdTime": "2026-09-01T18:46:27.000Z",
+    "table_name": "Video Feedback",
+    "table_id": "tblOV6pJDxQFBSQ3q",
+    "fields": {
+      "Upload Status": "Uploaded",
+      "Record Id": "recQLnAmvY206EqjT",
+      "Video Feedback Name": " -  - Video Feedback",
+      "Total Video XP Awarded": 0,
+      "Activity XP Display Label": "Unable to generate formula",
+      "Created": "2026-09-01T18:46:27.000Z",
+      "Writeback Complete?": 1
+    }
+  },
+  {
+    "id": "reccooMwcidAeNker",
+    "createdTime": "2026-09-02T00:46:04.000Z",
+    "table_name": "Video Feedback",
+    "table_id": "tblOV6pJDxQFBSQ3q",
+    "fields": {
+      "Record Id": "reccooMwcidAeNker",
+      "Submission": [
+        "recNxV3Ml4akzKdKv"
+      ],
+      "Video Feedback Name": " - Week 1 - Video Feedback",
+      "Award Status": "Pending",
+      "Week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "Total Video XP Awarded": 0,
+      "Activity Date - Lkp": [
+        "2026-05-10"
+      ],
+      "Activity XP Display Label": "Unable to generate formula",
+      "Created": "2026-09-02T00:46:04.000Z",
+      "Writeback Complete?": 0
+    }
+  },
+  {
+    "id": "recfHth6ek4ekr8bA",
+    "createdTime": "2026-09-02T00:56:09.000Z",
+    "table_name": "Video Feedback",
+    "table_id": "tblOV6pJDxQFBSQ3q",
+    "fields": {
+      "Record Id": "recfHth6ek4ekr8bA",
+      "Active?": true,
+      "Video Feedback Workflow Status": "Review Complete",
+      "Feedback Posted?": true,
+      "Submission": [
+        "rec5sB0yBiDRD7Yet"
+      ],
+      "Video Feedback Name": " - Week 1 - Video Feedback",
+      "Award Status": "Pending",
+      "Week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "Ready for XP Automation?": true,
+      "Total Video XP Awarded": 0,
+      "Activity Date - Lkp": [
+        "2026-05-10"
+      ],
+      "Activity XP Display Label": "Unable to generate formula",
+      "Created": "2026-09-02T00:56:09.000Z",
+      "Coach Feedback": "VERIFY|2026-09-02T0040| coach review for XP path",
+      "Writeback Complete?": 0
+    }
+  },
+  {
+    "id": "reci8mb08XuwvY2Tb",
+    "createdTime": "2026-09-04T20:25:07.000Z",
+    "table_name": "Video Feedback",
+    "table_id": "tblOV6pJDxQFBSQ3q",
+    "fields": {
+      "Upload Status": "Uploaded",
+      "Record Id": "reci8mb08XuwvY2Tb",
+      "Active?": true,
+      "Submission Asset": [
+        "recCqOkwozXICtyYy"
+      ],
+      "Linked Asset Duplicate Notes": [
+        "No same-enrollment contextual reuse detected.\nCross-enrollment informational match(es): recwcdF0tgCnKDHF7"
+      ],
+      "Video Asset Uploaded At": "2026-09-04T20:25:14.597Z",
+      "Video URL or Drive Link": "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/recCqOkwozXICtyYy?token=O8cFS2uJgpNBrLWjXl_XRN0H0WhLWqJ8VCphjdmAq7U",
+      "Submission": [
+        "recnkEQWB5SQ7OxSJ"
+      ],
+      "Video Feedback Name": "\"Schmidt, Rene' - 2026-2027\" -  - Video Feedback",
+      "Linked Asset Duplicate Match Strength": [
+        "Exact SHA-256 Hash"
+      ],
+      "Enrollment": [
+        "recp5z9S9WpLBzAZj"
+      ],
+      "Total Video XP Awarded": 0,
+      "Video File - AWS": [
+        "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/recCqOkwozXICtyYy?token=O8cFS2uJgpNBrLWjXl_XRN0H0WhLWqJ8VCphjdmAq7U"
+      ],
+      "Activity Date - Lkp": [
+        "2026-09-04"
+      ],
+      "Video Feedback Key": "VIDEO_FEEDBACK|recCqOkwozXICtyYy",
+      "Activity XP Display Label": "Unable to generate formula",
+      "Created": "2026-09-04T20:25:07.000Z",
+      "Grade Band": [
+        "rec75ruo3XT5nSvaK"
+      ],
+      "Linked Asset Duplicate Status": [
+        "Exact Duplicate"
+      ],
+      "Video Asset File Name": "Arps_Terria_6.jpg",
+      "Linked Asset Duplicate?": [
+        null
+      ],
+      "Writeback Complete?": 1
+    }
+  }
+]

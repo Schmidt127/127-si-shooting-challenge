@@ -1,0 +1,812 @@
+[
+  {
+    "id": "recDeP2hv3dbCGEir",
+    "createdTime": "2026-09-02T00:59:14.000Z",
+    "table_name": "Weekly Athlete Summary",
+    "table_id": "tbl9520d72adxlAKQ",
+    "fields": {
+      "Perfect Week Eligible?": 0,
+      "Email Subject": "Weekly Shooting Challenge Summary for Athlete",
+      "Perfect Week Homework Completion %": 1,
+      "Homework": [
+        "recRZhsAtY9A6rDIu",
+        "recgQCc0Xvr6wQ0Ar"
+      ],
+      "Grade Band": [
+        "rec2VQFfGJa1ofA06"
+      ],
+      "Weekly Goal Shots Target": 1333.3333333333333,
+      "Perfect Week Daily Requirement Met? Calculated": 1,
+      "Overall Awards Placeholder": {
+        "state": "error",
+        "errorType": "emptyDependency",
+        "value": null,
+        "isStale": false
+      },
+      "Homework Satisfactory Count": 0,
+      "Zoom Meetings Summary": {
+        "state": "error",
+        "errorType": "emptyDependency",
+        "value": null,
+        "isStale": false
+      },
+      "Weekly Email Record ID": "recDeP2hv3dbCGEir",
+      "Total XP After Week": 0,
+      "Week Key - Lkp": [
+        "2026-2027|Week 1"
+      ],
+      "Perfect Week Daily Check Status": "Needs Review",
+      "Grade Band - Display": "7-8",
+      "Perfect Week Homework Requirement Status": "Not Calculated",
+      "Level Number": 1,
+      "Total Makes This Week": 0,
+      "Upcoming Zoom Link": [
+        "recMFP2x5LDqea9ax",
+        "recjEXvSb6yT7EMQW",
+        "recrKQTHboRp5vhhE",
+        "recqLd4T7Wh6aOUj1",
+        "recMJE0t5aR6ia8vl",
+        "recGJEtN9oWGTqcFZ"
+      ],
+      "Perfect Week Automation Error": "Goal Record recHE7FhreD1jqfXm is not one exact active numeric configuration for Enrollment Program Instance + Grade Band.",
+      "XP Earned This Week": 0,
+      "Homework Display": "MTFYA - Self Awareness - The Meditation Workout, MTFYA - Resilience Technique - Train Rough",
+      "Met Minimum Days Requirement?": 0,
+      "Created": "2026-09-02T00:59:14.000Z",
+      "Week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "Perfect Week Calculation Queue?": 0,
+      "Goal Record": [
+        "recHE7FhreD1jqfXm"
+      ],
+      "Days Logged This Week": 0,
+      "Perfect Week Zoom Requirement Status": "Not Calculated",
+      "Momentum Status": "First Week",
+      "Total Shots This Week": 0,
+      "Weekly Athlete Summary - Display": " - Week 1 - 7-8",
+      "Previous Total XP": 0,
+      "Perfect Week Zoom Requirement Met?": 0,
+      "Goal Shots Target": [
+        12000
+      ],
+      "Goal Completion %": 0,
+      "Perfect Week Video Requirement Met?": 0,
+      "Summary Calculation Status": "Complete",
+      "Threshold XP Ready?": 0,
+      "Duplicate Prevention Key": "-Week 1",
+      "Week - Display": "Week 1",
+      "RecordId": "recDeP2hv3dbCGEir",
+      "Weekly Summary Key": "|Week 1",
+      "Previous Week Shots": 0,
+      "Homework Assigned Count": 0,
+      "Perfect Week Automation Status": "Error"
+    }
+  },
+  {
+    "id": "recNEeoot6gc41zcs",
+    "createdTime": "2026-09-02T12:40:52.000Z",
+    "table_name": "Weekly Athlete Summary",
+    "table_id": "tbl9520d72adxlAKQ",
+    "fields": {
+      "Athlete": [
+        "recTfxT6WMsPvobAW"
+      ],
+      "Perfect Week Eligible?": 0,
+      "Email Subject": "Weekly Shooting Challenge Summary for Athlete1",
+      "XP Events": [
+        "rec9N4T9SD8XmllzB",
+        "recKpZVNbttUqgrdh"
+      ],
+      "Perfect Week Video Minimum": [
+        3
+      ],
+      "Perfect Week Homework Completion %": 1,
+      "Homework": [
+        "recRZhsAtY9A6rDIu",
+        "recgQCc0Xvr6wQ0Ar"
+      ],
+      "Grade Band": [
+        "recK7BDVSpHy2ipCS"
+      ],
+      "Weekly Goal Shots Target": 222.22222222222223,
+      "Perfect Week Daily Requirement Met? Calculated": 0,
+      "Overall Awards Placeholder": {
+        "state": "empty",
+        "value": null,
+        "isStale": true
+      },
+      "Homework Satisfactory Count": 0,
+      "Zoom Meetings Summary": {
+        "state": "empty",
+        "value": null,
+        "isStale": true
+      },
+      "Weekly Email Record ID": "recNEeoot6gc41zcs",
+      "Total XP After Week": 90,
+      "Week Key - Lkp": [
+        "2026-2027|Week 1"
+      ],
+      "Grade Band - Display": "K-2",
+      "Full Name - From Enrollment - Display": [
+        "Schmidt, Athlete1 - 2026-2027"
+      ],
+      "Perfect Week Homework Requirement Status": "Not Calculated",
+      "Level Number": 1,
+      "Total Makes This Week": 0,
+      "Upcoming Zoom Link": [
+        "recMFP2x5LDqea9ax",
+        "recjEXvSb6yT7EMQW",
+        "recrKQTHboRp5vhhE",
+        "recqLd4T7Wh6aOUj1",
+        "recMJE0t5aR6ia8vl",
+        "recGJEtN9oWGTqcFZ"
+      ],
+      "XP Earned This Week": 90,
+      "Enrollment Key - Lkp": [
+        "ATH-recTfxT6WMsPvobAW|2026-2027"
+      ],
+      "Grade": [
+        "K"
+      ],
+      "Parent Email - Cleaned": [
+        "mschmidt@fairfield.k12.mt.us"
+      ],
+      "Homework Display": "MTFYA - Self Awareness - The Meditation Workout, MTFYA - Resilience Technique - Train Rough",
+      "Enrollment": [
+        "recZEwkkXTJanDlG6"
+      ],
+      "Met Minimum Days Requirement?": 0,
+      "Created": "2026-09-02T12:40:52.000Z",
+      "Week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "Perfect Week Calculation Queue?": 0,
+      "Goal Record": [
+        "reczG19bSB6Aa3VbV"
+      ],
+      "Days Logged This Week": 0,
+      "Perfect Week Zoom Requirement Status": "Not Calculated",
+      "Momentum Status": "First Week",
+      "Total Shots This Week": 0,
+      "Weekly Athlete Summary - Display": "Schmidt, Athlete1 - 2026-2027 - Week 1 - K-2",
+      "Perfect Week Zoom Requirement Met?": 0,
+      "Goal Shots Target": [
+        2000
+      ],
+      "Goal Completion %": 0,
+      "Program Instance (from Enrollment)": [
+        "rec5mEM0YPqPqq0hZ"
+      ],
+      "Perfect Week Video Requirement Met?": 0,
+      "Summary Calculation Status": "Complete",
+      "Threshold XP Ready?": 0,
+      "Duplicate Prevention Key": "\"Schmidt, Athlete1 - 2026-2027\"-Week 1",
+      "Athlete Email - Cleaned": [
+        "schmidt@fairfieldbasketballclub.com"
+      ],
+      "Week - Display": "Week 1",
+      "Combined Recipient Emails": "mschmidt@fairfield.k12.mt.us, schmidt@fairfieldbasketballclub.com",
+      "RecordId": "recNEeoot6gc41zcs",
+      "Summary Key": "ATH-recTfxT6WMsPvobAW|2026-2027|2026-2027|Week 1",
+      "Weekly Summary Key": "\"Schmidt, Athlete1 - 2026-2027\"|Week 1",
+      "Athlete First Name": [
+        "Athlete1"
+      ],
+      "Athlete Last Name": [
+        "Schmidt"
+      ],
+      "Homework Assigned Count": 0
+    }
+  },
+  {
+    "id": "recQKEihlyzoOpdZb",
+    "createdTime": "2026-09-02T00:59:34.000Z",
+    "table_name": "Weekly Athlete Summary",
+    "table_id": "tbl9520d72adxlAKQ",
+    "fields": {
+      "Perfect Week Eligible?": 0,
+      "Email Subject": "Weekly Shooting Challenge Summary for Athlete",
+      "Perfect Week Homework Completion %": 1,
+      "Homework": [
+        "recRZhsAtY9A6rDIu",
+        "recgQCc0Xvr6wQ0Ar"
+      ],
+      "Grade Band": [
+        "rec2VQFfGJa1ofA06"
+      ],
+      "Weekly Goal Shots Target": 1333.3333333333333,
+      "Perfect Week Daily Requirement Met? Calculated": 1,
+      "Overall Awards Placeholder": {
+        "state": "error",
+        "errorType": "emptyDependency",
+        "value": null,
+        "isStale": false
+      },
+      "Homework Satisfactory Count": 0,
+      "Zoom Meetings Summary": {
+        "state": "error",
+        "errorType": "emptyDependency",
+        "value": null,
+        "isStale": false
+      },
+      "Weekly Email Record ID": "recQKEihlyzoOpdZb",
+      "Total XP After Week": 0,
+      "Week Key - Lkp": [
+        "2026-2027|Week 1"
+      ],
+      "Perfect Week Daily Check Status": "Needs Review",
+      "Grade Band - Display": "7-8",
+      "Perfect Week Homework Requirement Status": "Not Calculated",
+      "Level Number": 1,
+      "Total Makes This Week": 0,
+      "Upcoming Zoom Link": [
+        "recMFP2x5LDqea9ax",
+        "recjEXvSb6yT7EMQW",
+        "recrKQTHboRp5vhhE",
+        "recqLd4T7Wh6aOUj1",
+        "recMJE0t5aR6ia8vl",
+        "recGJEtN9oWGTqcFZ"
+      ],
+      "Perfect Week Automation Error": "Goal Record recHE7FhreD1jqfXm is not one exact active numeric configuration for Enrollment Program Instance + Grade Band.",
+      "XP Earned This Week": 0,
+      "Homework Display": "MTFYA - Self Awareness - The Meditation Workout, MTFYA - Resilience Technique - Train Rough",
+      "Met Minimum Days Requirement?": 0,
+      "Created": "2026-09-02T00:59:34.000Z",
+      "Week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "Perfect Week Calculation Queue?": 0,
+      "Goal Record": [
+        "recHE7FhreD1jqfXm"
+      ],
+      "Days Logged This Week": 0,
+      "Perfect Week Zoom Requirement Status": "Not Calculated",
+      "Momentum Status": "First Week",
+      "Total Shots This Week": 0,
+      "Weekly Athlete Summary - Display": " - Week 1 - 7-8",
+      "Previous Total XP": 0,
+      "Perfect Week Zoom Requirement Met?": 0,
+      "Goal Shots Target": [
+        12000
+      ],
+      "Goal Completion %": 0,
+      "Perfect Week Video Requirement Met?": 0,
+      "Summary Calculation Status": "Complete",
+      "Threshold XP Ready?": 0,
+      "Duplicate Prevention Key": "-Week 1",
+      "Week - Display": "Week 1",
+      "RecordId": "recQKEihlyzoOpdZb",
+      "Weekly Summary Key": "|Week 1",
+      "Previous Week Shots": 0,
+      "Homework Assigned Count": 0,
+      "Perfect Week Automation Status": "Error"
+    }
+  },
+  {
+    "id": "recSjN9HDxxDcJwGY",
+    "createdTime": "2026-08-31T16:43:18.000Z",
+    "table_name": "Weekly Athlete Summary",
+    "table_id": "tbl9520d72adxlAKQ",
+    "fields": {
+      "Athlete": [
+        "recTfxT6WMsPvobAW"
+      ],
+      "Perfect Week Eligible?": 0,
+      "Email Subject": "Weekly Shooting Challenge Summary for Athlete 2",
+      "Threshold XP Processed At": "2026-08-31T16:43:30.482Z",
+      "Perfect Week Video Minimum": [
+        3
+      ],
+      "Perfect Week Homework Completion %": 1,
+      "Homework": [
+        "rechVLOeyEVIqmy2v",
+        "rec6WmXjpLtIWDERo"
+      ],
+      "Grade Band": [
+        "recK7BDVSpHy2ipCS"
+      ],
+      "Weekly Goal Shots Target": 222.22222222222223,
+      "Perfect Week Daily Requirement Met? Calculated": 0,
+      "Overall Awards Placeholder": {
+        "state": "empty",
+        "value": null,
+        "isStale": true
+      },
+      "Homework Satisfactory Count": 0,
+      "Zoom Meetings Summary": {
+        "state": "empty",
+        "value": null,
+        "isStale": true
+      },
+      "Weekly Email Record ID": "recSjN9HDxxDcJwGY",
+      "Total XP After Week": 0,
+      "Week Key - Lkp": [
+        "2026-2027|Early Bird"
+      ],
+      "Grade Band - Display": "K-2",
+      "Full Name - From Enrollment - Display": [
+        "Schmidt, Athlete 2 - 2026-2027"
+      ],
+      "Perfect Week Homework Requirement Status": "Not Calculated",
+      "Level Number": 1,
+      "Total Makes This Week": 0,
+      "Upcoming Zoom Link": [
+        "recLf72BcLyvbJQZR",
+        "recLZmVTQveRkRpC4"
+      ],
+      "Perfect Week Automation Error": "058 skipped: Perfect Week Eligible? is not 1.",
+      "XP Earned This Week": 0,
+      "Enrollment Key - Lkp": [
+        "ATH-recTfxT6WMsPvobAW|2026-2027"
+      ],
+      "Grade": [
+        "12"
+      ],
+      "Parent Email - Cleaned": [
+        "mschmidt@fairfield.k12.mt.us"
+      ],
+      "Homework Display": "SA - Personal Game Plan - Shot Tracker Usage, SA - Personal Game Plan - Website Exploration",
+      "Threshold XP Status": "Processed",
+      "Enrollment": [
+        "rec2UamYHzyc9ELd9"
+      ],
+      "Met Minimum Days Requirement?": 0,
+      "Created": "2026-08-31T16:43:18.000Z",
+      "Week": [
+        "recBrZ1sV8byWEHZU"
+      ],
+      "Perfect Week Calculation Queue?": 0,
+      "Goal Record": [
+        "reczG19bSB6Aa3VbV"
+      ],
+      "Days Logged This Week": 0,
+      "Perfect Week Zoom Requirement Status": "Not Calculated",
+      "Momentum Status": "First Week",
+      "Total Shots This Week": 0,
+      "Weekly Athlete Summary - Display": "Schmidt, Athlete 2 - 2026-2027 - Early Bird - K-2",
+      "Perfect Week Zoom Requirement Met?": 0,
+      "Goal Shots Target": [
+        2000
+      ],
+      "Goal Completion %": 0,
+      "Program Instance (from Enrollment)": [
+        "rec5mEM0YPqPqq0hZ"
+      ],
+      "Perfect Week Video Requirement Met?": 0,
+      "Summary Calculation Status": "Complete",
+      "Threshold XP Ready?": 0,
+      "Duplicate Prevention Key": "\"Schmidt, Athlete 2 - 2026-2027\"-Early Bird",
+      "Athlete Email - Cleaned": [
+        "schmidt@fairfieldbasketballclub.com"
+      ],
+      "Week - Display": "Early Bird",
+      "Combined Recipient Emails": "mschmidt@fairfield.k12.mt.us, schmidt@fairfieldbasketballclub.com",
+      "RecordId": "recSjN9HDxxDcJwGY",
+      "Summary Key": "ATH-recTfxT6WMsPvobAW|2026-2027|2026-2027|Early Bird",
+      "Weekly Summary Key": "\"Schmidt, Athlete 2 - 2026-2027\"|Early Bird",
+      "Athlete First Name": [
+        "Athlete 2"
+      ],
+      "Athlete Last Name": [
+        "Schmidt"
+      ],
+      "Homework Assigned Count": 0
+    }
+  },
+  {
+    "id": "reccuoiSZS2ae0JcF",
+    "createdTime": "2026-09-05T11:30:42.000Z",
+    "table_name": "Weekly Athlete Summary",
+    "table_id": "tbl9520d72adxlAKQ",
+    "fields": {
+      "Athlete": [
+        "recLYou5LyBDC1re5"
+      ],
+      "Perfect Week Eligible?": 0,
+      "Perfect Week Zoom Meeting Count": 6,
+      "Submissions": [
+        "recnkEQWB5SQ7OxSJ"
+      ],
+      "Email Subject": "Weekly Shooting Challenge Summary for Rene'",
+      "XP Events": [
+        "reczyd3XENC0iHa5r"
+      ],
+      "Perfect Week Video Minimum": [
+        3
+      ],
+      "Perfect Week Homework Completion %": 1,
+      "Homework": [
+        "recRZhsAtY9A6rDIu",
+        "recgQCc0Xvr6wQ0Ar"
+      ],
+      "Homework Completed?": 0,
+      "Grade Band": [
+        "rec75ruo3XT5nSvaK"
+      ],
+      "Homework Completions Link": [
+        "reccy4JRFbRh7lqPl",
+        "recioBIj9w0K7rMOf"
+      ],
+      "Weekly Goal Shots Target": 1333.3333333333333,
+      "Perfect Week Daily Requirement Met? Calculated": 1,
+      "Overall Awards Placeholder": {
+        "state": "empty",
+        "value": null,
+        "isStale": true
+      },
+      "Homework Satisfactory Count": 1,
+      "Zoom Meetings Summary": {
+        "state": "empty",
+        "value": null,
+        "isStale": true
+      },
+      "Weekly Email Record ID": "reccuoiSZS2ae0JcF",
+      "Total XP After Week": 46,
+      "Week Key - Lkp": [
+        "2026-2027|Week 1"
+      ],
+      "Perfect Week Daily Check Status": "Fail",
+      "Grade Band - Display": "9-12",
+      "Full Name - From Enrollment - Display": [
+        "Schmidt, Rene' - 2026-2027"
+      ],
+      "Activity Dates": [
+        "2026-09-04T00:00:00.000Z"
+      ],
+      "Perfect Week Homework Requirement Status": "Not Required - No Homework This Week",
+      "Level Number": 1,
+      "Total Makes This Week": 0,
+      "Upcoming Zoom Link": [
+        "recMFP2x5LDqea9ax",
+        "recjEXvSb6yT7EMQW",
+        "recrKQTHboRp5vhhE",
+        "recqLd4T7Wh6aOUj1",
+        "recMJE0t5aR6ia8vl",
+        "recGJEtN9oWGTqcFZ"
+      ],
+      "Perfect Week Automation Error": "058 skipped: Perfect Week Eligible? is not 1.",
+      "XP Earned This Week": 46,
+      "Enrollment Key - Lkp": [
+        "ATH-recLYou5LyBDC1re5|2026-2027"
+      ],
+      "Grade": [
+        "12"
+      ],
+      "Perfect Week Homework Requirement Met?": 1,
+      "Parent Email - Cleaned": [
+        "mschmidt@fairfield.k12.mt.us"
+      ],
+      "Homework Display": "MTFYA - Self Awareness - The Meditation Workout, MTFYA - Resilience Technique - Train Rough",
+      "Enrollment": [
+        "recp5z9S9WpLBzAZj"
+      ],
+      "Met Minimum Days Requirement?": 0,
+      "Created": "2026-09-05T11:30:42.000Z",
+      "Week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "Perfect Week Calculation Queue?": 0,
+      "Goal Record": [
+        "recHE7FhreD1jqfXm"
+      ],
+      "Days Logged This Week": 0,
+      "Perfect Week Zoom Requirement Status": "Missed",
+      "Momentum Status": "First Week",
+      "Total Shots This Week": 0,
+      "Weekly Athlete Summary - Display": "Schmidt, Rene' - 2026-2027 - Week 1 - 9-12",
+      "Previous Total XP": 0,
+      "Perfect Week Zoom Attendance Count": 0,
+      "Perfect Week Zoom Requirement Met?": 0,
+      "Goal Shots Target": [
+        12000
+      ],
+      "Perfect Week Homework Assigned Count": 0,
+      "Goal Completion %": 0,
+      "Program Instance (from Enrollment)": [
+        "rec5mEM0YPqPqq0hZ"
+      ],
+      "Perfect Week Video Requirement Met?": 1,
+      "Summary Calculation Status": "Complete",
+      "Threshold XP Ready?": 0,
+      "Duplicate Prevention Key": "\"Schmidt, Rene' - 2026-2027\"-Week 1",
+      "Athlete Email - Cleaned": [
+        "mschmidt@fairfield.k12.mt.us"
+      ],
+      "Week - Display": "Week 1",
+      "Combined Recipient Emails": "mschmidt@fairfield.k12.mt.us, mschmidt@fairfield.k12.mt.us",
+      "RecordId": "reccuoiSZS2ae0JcF",
+      "Summary Key": "ATH-recLYou5LyBDC1re5|2026-2027|2026-2027|Week 1",
+      "Weekly Summary Key": "\"Schmidt, Rene' - 2026-2027\"|Week 1",
+      "Perfect Week Homework Satisfactory Count": 0,
+      "Athlete First Name": [
+        "Rene'"
+      ],
+      "Perfect Week Video Count": 3,
+      "Perfect Week Daily Check Detail": "Official week: 2027-05-02 through 2027-05-08\nWeekly goal: 1334\nDaily minimum: 191\nRequired qualifying videos: 3 (config_perfect_week_video_minimum)\nSubmission grace period (hours): 48\nPassing official days: 0/7\nTiming breakdown: on-time=1; grace-period=0; late=0; manual=0\nIgnored non-qualifying submissions: 1\nIgnored qualifying submissions outside official week: 0\nFAIL: Missing official week days: 2027-05-02; 2027-05-03; 2027-05-04; 2027-05-05; 2027-05-06; 2027-05-07; 2027-05-08\nSC-160: Perfect Week award held until week evaluation time (after Week End 2027-05-08 11:59:59pm America/Denver). Helper counts may update early.",
+      "Previous Week Shots": 0,
+      "Athlete Last Name": [
+        "Schmidt"
+      ],
+      "Homework Assigned Count": 2,
+      "Perfect Week Automation Status": "Ready"
+    }
+  },
+  {
+    "id": "recp12hqb0uaKZvTm",
+    "createdTime": "2026-09-02T00:46:07.000Z",
+    "table_name": "Weekly Athlete Summary",
+    "table_id": "tbl9520d72adxlAKQ",
+    "fields": {
+      "Perfect Week Eligible?": 0,
+      "Submissions": [
+        "recNxV3Ml4akzKdKv",
+        "recrhaRHi5EHP3Xn8",
+        "rec5sB0yBiDRD7Yet"
+      ],
+      "Email Subject": "Weekly Shooting Challenge Summary for Athlete",
+      "Perfect Week Homework Completion %": 1,
+      "Homework": [
+        "recRZhsAtY9A6rDIu",
+        "recgQCc0Xvr6wQ0Ar"
+      ],
+      "Grade Band": [
+        "rec2VQFfGJa1ofA06"
+      ],
+      "Weekly Goal Shots Target": 1111.111111111111,
+      "Perfect Week Daily Requirement Met? Calculated": 1,
+      "Overall Awards Placeholder": {
+        "state": "error",
+        "errorType": "emptyDependency",
+        "value": null,
+        "isStale": false
+      },
+      "Homework Satisfactory Count": 0,
+      "Zoom Meetings Summary": {
+        "state": "error",
+        "errorType": "emptyDependency",
+        "value": null,
+        "isStale": false
+      },
+      "Weekly Email Record ID": "recp12hqb0uaKZvTm",
+      "Total XP After Week": 0,
+      "Week Key - Lkp": [
+        "2026-2027|Week 1"
+      ],
+      "Grade Band - Display": "7-8",
+      "Activity Dates": [
+        "2026-05-10T00:00:00.000Z",
+        "2026-05-10T00:00:00.000Z",
+        "2026-05-10T00:00:00.000Z"
+      ],
+      "Perfect Week Homework Requirement Status": "Not Calculated",
+      "Level Number": 1,
+      "Total Makes This Week": 0,
+      "Upcoming Zoom Link": [
+        "recMFP2x5LDqea9ax",
+        "recjEXvSb6yT7EMQW",
+        "recrKQTHboRp5vhhE",
+        "recqLd4T7Wh6aOUj1",
+        "recMJE0t5aR6ia8vl",
+        "recGJEtN9oWGTqcFZ"
+      ],
+      "XP Earned This Week": 0,
+      "Homework Display": "MTFYA - Self Awareness - The Meditation Workout, MTFYA - Resilience Technique - Train Rough",
+      "Met Minimum Days Requirement?": 0,
+      "Created": "2026-09-02T00:46:07.000Z",
+      "Week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "Perfect Week Calculation Queue?": 0,
+      "Goal Record": [
+        "rechFso6HRLhqalFa"
+      ],
+      "Days Logged This Week": 1,
+      "Perfect Week Zoom Requirement Status": "Not Calculated",
+      "Momentum Status": "First Week",
+      "Total Shots This Week": 300,
+      "Weekly Athlete Summary - Display": " - Week 1 - 7-8",
+      "Perfect Week Zoom Requirement Met?": 0,
+      "Goal Shots Target": [
+        10000
+      ],
+      "Goal Completion %": 0.27,
+      "Perfect Week Video Requirement Met?": 0,
+      "Summary Calculation Status": "Complete",
+      "Threshold XP Ready?": 0,
+      "Duplicate Prevention Key": "-Week 1",
+      "Week - Display": "Week 1",
+      "RecordId": "recp12hqb0uaKZvTm",
+      "Weekly Summary Key": "|Week 1",
+      "Homework Assigned Count": 0
+    }
+  },
+  {
+    "id": "recvyEStp6TSc1IMJ",
+    "createdTime": "2026-09-03T03:59:35.000Z",
+    "table_name": "Weekly Athlete Summary",
+    "table_id": "tbl9520d72adxlAKQ",
+    "fields": {
+      "Perfect Week Eligible?": 0,
+      "Email Subject": "Weekly Shooting Challenge Summary for Athlete",
+      "Perfect Week Homework Completion %": 1,
+      "Homework": [
+        "rechVLOeyEVIqmy2v",
+        "rec6WmXjpLtIWDERo"
+      ],
+      "Grade Band": [
+        "rec2VQFfGJa1ofA06"
+      ],
+      "Weekly Goal Shots Target": 1333.3333333333333,
+      "Weekly Email Sent At": "2026-09-03T04:00:02.510Z",
+      "Perfect Week Daily Requirement Met? Calculated": 1,
+      "Overall Awards Placeholder": {
+        "state": "error",
+        "errorType": "emptyDependency",
+        "value": null,
+        "isStale": false
+      },
+      "Homework Satisfactory Count": 0,
+      "Weekly Email HTML": "<!doctype html><html><body style=\"margin:0;background:#F2F2F2;font-family:Arial,sans-serif;color:#262626\"><div style=\"max-width:650px;margin:auto;background:#fff\"><div style=\"background:#0034B7;color:#fff;padding:22px;border-bottom:6px solid #FF8B00\"><h2 style=\"margin:0\">Shooting Challenge Weekly Reminder</h2></div><div style=\"padding:22px\"><p>Hi VERIFY, no countable shooting activity was recorded for Early Bird.</p><p>Start a new week by getting one session logged and keep building consistency.</p></div></div></body></html>",
+      "Zoom Meetings Summary": {
+        "state": "error",
+        "errorType": "emptyDependency",
+        "value": null,
+        "isStale": false
+      },
+      "Weekly Email Sent?": true,
+      "Weekly Email Record ID": "recvyEStp6TSc1IMJ",
+      "Total XP After Week": 0,
+      "Week Key - Lkp": [
+        "2026-2027|Early Bird"
+      ],
+      "Perfect Week Daily Check Status": "Needs Review",
+      "Grade Band - Display": "7-8",
+      "Perfect Week Homework Requirement Status": "Not Calculated",
+      "Level Number": 1,
+      "Total Makes This Week": 0,
+      "Upcoming Zoom Link": [
+        "recLf72BcLyvbJQZR",
+        "recLZmVTQveRkRpC4"
+      ],
+      "Hub Event ID": "recjihikQNZ8xzlCW",
+      "Perfect Week Automation Error": "Goal Record recHE7FhreD1jqfXm is not one exact active numeric configuration for Enrollment Program Instance + Grade Band.",
+      "XP Earned This Week": 0,
+      "Homework Display": "SA - Personal Game Plan - Shot Tracker Usage, SA - Personal Game Plan - Website Exploration",
+      "Met Minimum Days Requirement?": 0,
+      "Created": "2026-09-03T03:59:35.000Z",
+      "Week": [
+        "recBrZ1sV8byWEHZU"
+      ],
+      "Perfect Week Calculation Queue?": 0,
+      "Goal Record": [
+        "recHE7FhreD1jqfXm"
+      ],
+      "Days Logged This Week": 0,
+      "Perfect Week Zoom Requirement Status": "Not Calculated",
+      "Weekly Email Week Label": "Early Bird",
+      "Momentum Status": "First Week",
+      "Total Shots This Week": 0,
+      "Weekly Email Ready?": true,
+      "Weekly Athlete Summary - Display": " - Early Bird - 7-8",
+      "Previous Total XP": 0,
+      "Weekly Summary Sent At": "2026-09-03T04:00:02.510Z",
+      "Perfect Week Zoom Requirement Met?": 0,
+      "Goal Shots Target": [
+        12000
+      ],
+      "Goal Completion %": 0,
+      "Perfect Week Video Requirement Met?": 0,
+      "Summary Calculation Status": "Complete",
+      "Threshold XP Ready?": 0,
+      "Weekly Email Revision": "v4.9.1",
+      "Weekly Email Payload JSON": "{\"version\":\"v4.9.1\",\"recordId\":\"recvyEStp6TSc1IMJ\",\"enrollmentId\":\"recDRjZTbsRptt9zx\",\"weekId\":\"recBrZ1sV8byWEHZU\",\"programId\":\"rec5mEM0YPqPqq0hZ\",\"gradeId\":\"rec2VQFfGJa1ofA06\",\"assignmentSource\":\"LEGACY_CURRICULUM_NO_PHA\",\"countableSubmissionCount\":0,\"activeXpCount\":0,\"canonicalWeekXp\":0,\"canonicalShots\":0,\"canonicalMakes\":0,\"canonicalDaysLogged\":0,\"canonicalShootingDaysLogged\":0,\"daysLoggedDisplay\":\"0/7\",\"shootingDaysDisplay\":\"0/7\",\"requiredShootingDays\":7,\"dailyShootingMinimum\":191,\"perfectWeekCriteria\":{\"requiredShootingDays\":7,\"dailyShootingMinimum\":191,\"shootingDaysLogged\":0,\"shootingDaysDisplay\":\"0/7\",\"daysLogged\":0,\"daysLoggedDisplay\":\"0/7\",\"perfectWeekQualifyingDaysDisplay\":\"0/7\",\"videoCount\":0,\"videoRequired\":null,\"videoRequirementMet\":false,\"videoProgressDisplay\":\"0 (requirement not met)\",\"zoomMeetingCount\":0,\"zoomAttendanceCount\":0,\"zoomRequirementStatus\":\"Not Calculated\",\"zoomRequirementMet\":false,\"homeworkRequirementStatus\":\"Not Calculated\",\"homeworkRequirementMet\":false,\"eligible\":false,\"perfectWeekXpAmount\":100},\"summaryDaysObserved\":0,\"perfectWeekDaysLogged\":0,\"canonicalGoalCompletionPercent\":0,\"goalCompletionRatio\":0,\"goalCompletionDisplay\":\"0%\",\"shootingPercentage\":0,\"summaryMakesObserved\":0,\"weekStartKey\":\"2027-04-25\",\"weekEndKey\":\"2027-05-02\",\"videoSubmissionCount\":0,\"missingSecureUrlCount\":0,\"videoSubmissions\":[],\"videosSubmittedThisWeek\":[],\"zoomAttendanceStatus\":\"Not Calculated\",\"zoomSummary\":\"Not Calculated\",\"summaryXpObserved\":0,\"summaryShotsObserved\":0,\"emptyWeekPolicy\":\"send_short\",\"packageKind\":\"short_no_activity\",\"sendMode\":\"test\",\"subject\":\"Shooting Challenge Weekly Reminder - VERIFY 07848177 - Early Bird\",\"recipients\":\"schmidt@fairfieldbasketballclub.com\"}",
+      "Duplicate Prevention Key": "-Early Bird",
+      "Week - Display": "Early Bird",
+      "RecordId": "recvyEStp6TSc1IMJ",
+      "Weekly Summary Key": "|Early Bird",
+      "Weekly Email Last Built At": "2026-09-03T03:59:45.985Z",
+      "Weekly Email Recipients": "schmidt@fairfieldbasketballclub.com",
+      "Previous Week Shots": 0,
+      "Weekly Email Text": "Shooting Challenge Weekly Reminder\nEarly Bird\n\nNo countable shooting activity was recorded this week.",
+      "Homework Assigned Count": 0,
+      "Weekly Email Subject": "Shooting Challenge Weekly Reminder - VERIFY 07848177 - Early Bird",
+      "Perfect Week Automation Status": "Error",
+      "Weekly Summary Email Status": "Sent"
+    }
+  },
+  {
+    "id": "recwgYJZ0Yn2YNEX4",
+    "createdTime": "2026-09-03T04:04:04.000Z",
+    "table_name": "Weekly Athlete Summary",
+    "table_id": "tbl9520d72adxlAKQ",
+    "fields": {
+      "Perfect Week Eligible?": 0,
+      "Email Subject": "Weekly Shooting Challenge Summary for Athlete",
+      "Perfect Week Homework Completion %": 1,
+      "Homework": [
+        "rechVLOeyEVIqmy2v",
+        "rec6WmXjpLtIWDERo"
+      ],
+      "Grade Band": [
+        "rec2VQFfGJa1ofA06"
+      ],
+      "Weekly Goal Shots Target": 1333.3333333333333,
+      "Weekly Email Sent At": "2026-09-03T04:04:35.587Z",
+      "Perfect Week Daily Requirement Met? Calculated": 1,
+      "Overall Awards Placeholder": {
+        "state": "error",
+        "errorType": "emptyDependency",
+        "value": null,
+        "isStale": false
+      },
+      "Homework Satisfactory Count": 0,
+      "Weekly Email HTML": "<!doctype html><html><body style=\"margin:0;background:#F2F2F2;font-family:Arial,sans-serif;color:#262626\"><div style=\"max-width:650px;margin:auto;background:#fff\"><div style=\"background:#0034B7;color:#fff;padding:22px;border-bottom:6px solid #FF8B00\"><h2 style=\"margin:0\">Shooting Challenge Weekly Reminder</h2></div><div style=\"padding:22px\"><p>Hi VERIFY, no countable shooting activity was recorded for Early Bird.</p><p>Start a new week by getting one session logged and keep building consistency.</p></div></div></body></html>",
+      "Zoom Meetings Summary": {
+        "state": "error",
+        "errorType": "emptyDependency",
+        "value": null,
+        "isStale": false
+      },
+      "Weekly Email Sent?": true,
+      "Weekly Email Record ID": "recwgYJZ0Yn2YNEX4",
+      "Total XP After Week": 0,
+      "Week Key - Lkp": [
+        "2026-2027|Early Bird"
+      ],
+      "Perfect Week Daily Check Status": "Needs Review",
+      "Grade Band - Display": "7-8",
+      "Perfect Week Homework Requirement Status": "Not Calculated",
+      "Level Number": 1,
+      "Total Makes This Week": 0,
+      "Upcoming Zoom Link": [
+        "recLf72BcLyvbJQZR",
+        "recLZmVTQveRkRpC4"
+      ],
+      "Hub Event ID": "recAuHb7TQd9tml1Q",
+      "Perfect Week Automation Error": "Goal Record recHE7FhreD1jqfXm is not one exact active numeric configuration for Enrollment Program Instance + Grade Band.",
+      "XP Earned This Week": 0,
+      "Homework Display": "SA - Personal Game Plan - Shot Tracker Usage, SA - Personal Game Plan - Website Exploration",
+      "Met Minimum Days Requirement?": 0,
+      "Created": "2026-09-03T04:04:04.000Z",
+      "Week": [
+        "recBrZ1sV8byWEHZU"
+      ],
+      "Perfect Week Calculation Queue?": 0,
+      "Goal Record": [
+        "recHE7FhreD1jqfXm"
+      ],
+      "Days Logged This Week": 0,
+      "Perfect Week Zoom Requirement Status": "Not Calculated",
+      "Weekly Email Week Label": "Early Bird",
+      "Momentum Status": "First Week",
+      "Total Shots This Week": 0,
+      "Weekly Email Ready?": true,
+      "Weekly Athlete Summary - Display": " - Early Bird - 7-8",
+      "Previous Total XP": 0,
+      "Weekly Summary Sent At": "2026-09-03T04:04:35.587Z",
+      "Perfect Week Zoom Requirement Met?": 0,
+      "Goal Shots Target": [
+        12000
+      ],
+      "Goal Completion %": 0,
+      "Perfect Week Video Requirement Met?": 0,
+      "Summary Calculation Status": "Complete",
+      "Threshold XP Ready?": 0,
+      "Weekly Email Revision": "v4.9.1",
+      "Weekly Email Payload JSON": "{\"version\":\"v4.9.1\",\"recordId\":\"recwgYJZ0Yn2YNEX4\",\"enrollmentId\":\"recHwyFTZ6XnFSTpI\",\"weekId\":\"recBrZ1sV8byWEHZU\",\"programId\":\"rec5mEM0YPqPqq0hZ\",\"gradeId\":\"rec2VQFfGJa1ofA06\",\"assignmentSource\":\"LEGACY_CURRICULUM_NO_PHA\",\"countableSubmissionCount\":0,\"activeXpCount\":0,\"canonicalWeekXp\":0,\"canonicalShots\":0,\"canonicalMakes\":0,\"canonicalDaysLogged\":0,\"canonicalShootingDaysLogged\":0,\"daysLoggedDisplay\":\"0/7\",\"shootingDaysDisplay\":\"0/7\",\"requiredShootingDays\":7,\"dailyShootingMinimum\":191,\"perfectWeekCriteria\":{\"requiredShootingDays\":7,\"dailyShootingMinimum\":191,\"shootingDaysLogged\":0,\"shootingDaysDisplay\":\"0/7\",\"daysLogged\":0,\"daysLoggedDisplay\":\"0/7\",\"perfectWeekQualifyingDaysDisplay\":\"0/7\",\"videoCount\":0,\"videoRequired\":null,\"videoRequirementMet\":false,\"videoProgressDisplay\":\"0 (requirement not met)\",\"zoomMeetingCount\":0,\"zoomAttendanceCount\":0,\"zoomRequirementStatus\":\"Not Calculated\",\"zoomRequirementMet\":false,\"homeworkRequirementStatus\":\"Not Calculated\",\"homeworkRequirementMet\":false,\"eligible\":false,\"perfectWeekXpAmount\":100},\"summaryDaysObserved\":0,\"perfectWeekDaysLogged\":0,\"canonicalGoalCompletionPercent\":0,\"goalCompletionRatio\":0,\"goalCompletionDisplay\":\"0%\",\"shootingPercentage\":0,\"summaryMakesObserved\":0,\"weekStartKey\":\"2027-04-25\",\"weekEndKey\":\"2027-05-02\",\"videoSubmissionCount\":0,\"missingSecureUrlCount\":0,\"videoSubmissions\":[],\"videosSubmittedThisWeek\":[],\"zoomAttendanceStatus\":\"Not Calculated\",\"zoomSummary\":\"Not Calculated\",\"summaryXpObserved\":0,\"summaryShotsObserved\":0,\"emptyWeekPolicy\":\"send_short\",\"packageKind\":\"short_no_activity\",\"sendMode\":\"test\",\"subject\":\"Shooting Challenge Weekly Reminder - VERIFY 08059855 - Early Bird\",\"recipients\":\"schmidt@fairfieldbasketballclub.com\"}",
+      "Duplicate Prevention Key": "-Early Bird",
+      "Week - Display": "Early Bird",
+      "RecordId": "recwgYJZ0Yn2YNEX4",
+      "Weekly Summary Key": "|Early Bird",
+      "Weekly Email Last Built At": "2026-09-03T04:04:19.529Z",
+      "Weekly Email Recipients": "schmidt@fairfieldbasketballclub.com",
+      "Previous Week Shots": 0,
+      "Weekly Email Text": "Shooting Challenge Weekly Reminder\nEarly Bird\n\nNo countable shooting activity was recorded this week.",
+      "Homework Assigned Count": 0,
+      "Weekly Email Subject": "Shooting Challenge Weekly Reminder - VERIFY 08059855 - Early Bird",
+      "Perfect Week Automation Status": "Error",
+      "Weekly Summary Email Status": "Sent"
+    }
+  }
+]

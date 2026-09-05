@@ -1,0 +1,714 @@
+{
+  "base_id": "appn84sqPw03zEbTT",
+  "zoom_meetings": [
+    {
+      "id": "recGJEtN9oWGTqcFZ",
+      "createdTime": "2026-09-02T12:43:26.000Z",
+      "meeting_name": "SC-147 VERIFY Live Zoom",
+      "looks_like_test_fixture": true,
+      "week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "attendees": [
+        "recZEwkkXTJanDlG6"
+      ],
+      "xp_events": [
+        "recKpZVNbttUqgrdh"
+      ],
+      "meeting_status": "Completed",
+      "start_time": "2027-05-04T18:00:00.000Z"
+    },
+    {
+      "id": "recLZmVTQveRkRpC4",
+      "createdTime": "2026-09-03T04:04:36.000Z",
+      "meeting_name": "VERIFY|PELC|paths|1788408059855|ZOOM",
+      "looks_like_test_fixture": true,
+      "week": [
+        "recBrZ1sV8byWEHZU"
+      ],
+      "attendees": null,
+      "xp_events": null,
+      "meeting_status": "Completed",
+      "start_time": "2027-04-26T18:00:00.000Z"
+    },
+    {
+      "id": "recLf72BcLyvbJQZR",
+      "createdTime": "2026-09-03T04:00:11.000Z",
+      "meeting_name": "PELC|zoom|1788408009744|ZOOM",
+      "looks_like_test_fixture": true,
+      "week": [
+        "recBrZ1sV8byWEHZU"
+      ],
+      "attendees": null,
+      "xp_events": null,
+      "meeting_status": "Completed",
+      "start_time": "2027-04-26T18:00:00.000Z"
+    },
+    {
+      "id": "recMFP2x5LDqea9ax",
+      "createdTime": "2026-08-05T14:41:53.000Z",
+      "meeting_name": "Introduction",
+      "looks_like_test_fixture": false,
+      "week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "attendees": null,
+      "xp_events": [
+        "rec9N4T9SD8XmllzB"
+      ],
+      "meeting_status": "Completed",
+      "start_time": "2027-05-03T00:00:00.000Z"
+    },
+    {
+      "id": "recMJE0t5aR6ia8vl",
+      "createdTime": "2026-09-02T00:53:04.000Z",
+      "meeting_name": "VERIFY|2026-09-02T0040|ZOOM-LIVE-101",
+      "looks_like_test_fixture": true,
+      "week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "attendees": null,
+      "xp_events": null,
+      "meeting_status": "Completed",
+      "start_time": "2026-05-15T18:00:00.000Z"
+    },
+    {
+      "id": "recb9EjQIJVzaRpZa",
+      "createdTime": "2026-08-05T14:41:48.000Z",
+      "meeting_name": "Motivation",
+      "looks_like_test_fixture": false,
+      "week": [
+        "recW3irij491AIPrl"
+      ],
+      "attendees": null,
+      "xp_events": null,
+      "meeting_status": "Scheduled",
+      "start_time": "2027-06-14T00:00:00.000Z"
+    },
+    {
+      "id": "recjEXvSb6yT7EMQW",
+      "createdTime": "2026-09-02T00:40:26.000Z",
+      "meeting_name": "VERIFY|2026-09-02T0040|ZOOM-LIVE-101",
+      "looks_like_test_fixture": true,
+      "week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "attendees": null,
+      "xp_events": null,
+      "meeting_status": "Completed",
+      "start_time": "2026-05-15T18:00:00.000Z"
+    },
+    {
+      "id": "recqLd4T7Wh6aOUj1",
+      "createdTime": "2026-09-02T00:49:28.000Z",
+      "meeting_name": "VERIFY|2026-09-02T0040|ZOOM-LIVE-101",
+      "looks_like_test_fixture": true,
+      "week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "attendees": null,
+      "xp_events": null,
+      "meeting_status": "Completed",
+      "start_time": "2026-05-15T18:00:00.000Z"
+    },
+    {
+      "id": "recrKQTHboRp5vhhE",
+      "createdTime": "2026-09-02T00:42:58.000Z",
+      "meeting_name": "VERIFY|2026-09-02T0040|ZOOM-LIVE-101",
+      "looks_like_test_fixture": true,
+      "week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "attendees": null,
+      "xp_events": null,
+      "meeting_status": "Completed",
+      "start_time": "2026-05-15T18:00:00.000Z"
+    }
+  ],
+  "weeks": [
+    {
+      "id": "rec2Rewxt21z7dI9f",
+      "createdTime": "2026-07-24T20:02:25.000Z",
+      "preview": {
+        "Reconciliation Source Signature": "rec2Rewxt21z7dI9f|PI=Shooting Challenge | 2026-2027|START=2027-05-02T06:00:00.000Z|END=2027-05-09T05:59:00.000Z",
+        "Record ID": "rec2Rewxt21z7dI9f",
+        "Weekly Athlete Summary": [
+          "recp12hqb0uaKZvTm",
+          "recDeP2hv3dbCGEir",
+          "recQKEihlyzoOpdZb",
+          "recNEeoot6gc41zcs",
+          "reccuoiSZS2ae0JcF"
+        ],
+        "Submissions": [
+          "recNxV3Ml4akzKdKv",
+          "recrhaRHi5EHP3Xn8",
+          "rec5sB0yBiDRD7Yet"
+        ],
+        "Homework Completions": [
+          "reccy4JRFbRh7lqPl",
+          "recioBIj9w0K7rMOf"
+        ],
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Zoom XP Week Signature": "rec2Rewxt21z7dI9f|PI=Shooting Challenge | 2026-2027|START=2027-05-02T06:00:00.000Z|END=2027-05-09T05:59:00.000Z",
+        "Week Key": "2026-2027|Week 1",
+        "End Date": "2027-05-09T05:59:00.000Z",
+        "Zoom Meetings": [
+          "recMFP2x5LDqea9ax",
+          "recjEXvSb6yT7EMQW",
+          "recrKQTHboRp5vhhE",
+          "recqLd4T7Wh6aOUj1",
+          "recMJE0t5aR6ia8vl",
+          "recGJEtN9oWGTqcFZ"
+        ],
+        "Start Date": "2027-05-02T06:00:00.000Z",
+        "XP Events": [
+          "rec9N4T9SD8XmllzB",
+          "recKpZVNbttUqgrdh",
+          "recKSEfYz8hmJ6RaY",
+          "reclFA1GPX986KcsI",
+          "rec4eQd3FMsgTFUdt",
+          "rec0qkvLSSEzd2tNL",
+          "recrGFZ1mcgYwU8rp",
+          "rec0cbgoablaLwi4W",
+          "recxvrLpeUJcxAnTD",
+          "rec3vipTQSeYpifI3",
+          "recubvPSqKtlqkIip",
+          "reczP05X1boYRtbEY",
+          "reczyd3XENC0iHa5r"
+        ],
+        "Program Homework Assignments": [
+          "rechCXdubiA1RPFEj",
+          "rec4iQ2WS04Arq3tB"
+        ],
+        "Counts Toward Challenge?": true,
+        "Config - Lnk": [
+          "rechc1f9f4kVM1tHP"
+        ],
+        "Week Name": "Week 1",
+        "Streak Occurrences": [
+          "recTjRayM2EBsJl4H",
+          "recF7PfGjxOjOBwQU",
+          "recpWKId1GPk4P4Hb",
+          "recSlpjybJCp5eGET",
+          "recgGWkoSu0ivlqTh",
+          "recV1vIWPGRNTkoLC"
+        ]
+      }
+    },
+    {
+      "id": "rec7RpUMVLbcrmn4h",
+      "createdTime": "2026-07-24T20:02:52.000Z",
+      "preview": {
+        "Reconciliation Source Signature": "rec7RpUMVLbcrmn4h|PI=Shooting Challenge | 2026-2027|START=2027-05-09T06:00:00.000Z|END=2027-05-16T05:59:00.000Z",
+        "Record ID": "rec7RpUMVLbcrmn4h",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Zoom XP Week Signature": "rec7RpUMVLbcrmn4h|PI=Shooting Challenge | 2026-2027|START=2027-05-09T06:00:00.000Z|END=2027-05-16T05:59:00.000Z",
+        "Week Key": "2026-2027|Week 2",
+        "End Date": "2027-05-16T05:59:00.000Z",
+        "Start Date": "2027-05-09T06:00:00.000Z",
+        "XP Events": [
+          "reck5Ii6mOZOWsXTv",
+          "rec6vl4wIqBxJRWCl",
+          "recjt6uuCJ2kyyG0S",
+          "recxONsP7rqtbCk71",
+          "recdgReNV1ivwCRat",
+          "recmos2cntwWXmun3",
+          "recGnZodBiqeXKeTJ",
+          "recw9CyKPaO1hDZfZ",
+          "reczZwKiGdwbIq1ik",
+          "rec1CuOR5P14akYTC"
+        ],
+        "Athlete Achievement Unlocks": [
+          "recCzNeM46KvZcNCr",
+          "recfwDejG2bL46rIv",
+          "recWCS9Cu4DR3S6tX"
+        ],
+        "Program Homework Assignments": [
+          "recWflbiYskBrZdr8",
+          "recmVgMrGNOQOphTe"
+        ],
+        "Counts Toward Challenge?": true,
+        "Config - Lnk": [
+          "rechc1f9f4kVM1tHP"
+        ],
+        "Week Name": "Week 2",
+        "Streak Occurrences": [
+          "recZLqvVDh9FKjAjb",
+          "recsUBXNkJJGAHdTi"
+        ]
+      }
+    },
+    {
+      "id": "recBrZ1sV8byWEHZU",
+      "createdTime": "2026-07-24T20:02:19.000Z",
+      "preview": {
+        "Reconciliation Source Signature": "recBrZ1sV8byWEHZU|PI=Shooting Challenge | 2026-2027|START=2027-04-25T06:00:00.000Z|END=2027-05-02T05:59:00.000Z",
+        "Record ID": "recBrZ1sV8byWEHZU",
+        "Weekly Athlete Summary": [
+          "recSjN9HDxxDcJwGY",
+          "recvyEStp6TSc1IMJ",
+          "recwgYJZ0Yn2YNEX4"
+        ],
+        "Submissions": [
+          "recFBItwl1pCboxlN",
+          "recTzi4c9vB7FN4Dr"
+        ],
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Zoom XP Week Signature": "recBrZ1sV8byWEHZU|PI=Shooting Challenge | 2026-2027|START=2027-04-25T06:00:00.000Z|END=2027-05-02T05:59:00.000Z",
+        "Week Key": "2026-2027|Early Bird",
+        "End Date": "2027-05-02T05:59:00.000Z",
+        "Zoom Meetings": [
+          "recLf72BcLyvbJQZR",
+          "recLZmVTQveRkRpC4"
+        ],
+        "Start Date": "2027-04-25T06:00:00.000Z",
+        "XP Events": [
+          "recvFionzVPusjgIg",
+          "recliQyGasFBCJHoQ",
+          "recsPg5grrXNqVlE7"
+        ],
+        "Program Homework Assignments": [
+          "recrpWRmt0MntieCL",
+          "recfcXqQsk3W4o6IT"
+        ],
+        "Counts Toward Challenge?": true,
+        "Award Recipients": [
+          "recaGvW4rcKKiK4xg"
+        ],
+        "Config - Lnk": [
+          "rechc1f9f4kVM1tHP"
+        ],
+        "Week Name": "Early Bird"
+      }
+    },
+    {
+      "id": "recCCpyqPKA580sdk",
+      "createdTime": "2026-07-24T20:02:52.000Z",
+      "preview": {
+        "Reconciliation Source Signature": "recCCpyqPKA580sdk|PI=Shooting Challenge | 2026-2027|START=2027-05-16T06:00:00.000Z|END=2027-05-23T05:59:00.000Z",
+        "Record ID": "recCCpyqPKA580sdk",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Zoom XP Week Signature": "recCCpyqPKA580sdk|PI=Shooting Challenge | 2026-2027|START=2027-05-16T06:00:00.000Z|END=2027-05-23T05:59:00.000Z",
+        "Week Key": "2026-2027|Week 3",
+        "End Date": "2027-05-23T05:59:00.000Z",
+        "Start Date": "2027-05-16T06:00:00.000Z",
+        "XP Events": [
+          "reciYXi5k0bL3Y4op",
+          "recsTfPepCtbPuVPC",
+          "reckxVT6w4HAw4Sip",
+          "recLXxhIkKLMJQUgs",
+          "recOFXuhdvaQpfM4W",
+          "recu7qzREwX0gzmtg",
+          "recl2gqOSslfg3GXq",
+          "recyUVJ6kAFZyqwcr"
+        ],
+        "Program Homework Assignments": [
+          "rec61sBU4DLFopm74",
+          "recBtXM5c29b83gOJ"
+        ],
+        "Counts Toward Challenge?": true,
+        "Config - Lnk": [
+          "rechc1f9f4kVM1tHP"
+        ],
+        "Week Name": "Week 3",
+        "Streak Occurrences": [
+          "recqJkL8S48oZ08je",
+          "recOYz3YGVuZWg4SA",
+          "recvmPoNXSGMXqL5j",
+          "rec4pJwhygR98amXb",
+          "rec0VkupN9J91HSxP",
+          "rechLrDwWMaQaGp6f"
+        ]
+      }
+    },
+    {
+      "id": "recEapVpi6u0oxuPy",
+      "createdTime": "2026-07-24T20:02:52.000Z",
+      "preview": {
+        "Reconciliation Source Signature": "recEapVpi6u0oxuPy|PI=Shooting Challenge | 2026-2027|START=2027-05-23T06:00:00.000Z|END=2027-05-30T05:59:00.000Z",
+        "Record ID": "recEapVpi6u0oxuPy",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Zoom XP Week Signature": "recEapVpi6u0oxuPy|PI=Shooting Challenge | 2026-2027|START=2027-05-23T06:00:00.000Z|END=2027-05-30T05:59:00.000Z",
+        "Week Key": "2026-2027|Week 4",
+        "End Date": "2027-05-30T05:59:00.000Z",
+        "Start Date": "2027-05-23T06:00:00.000Z",
+        "XP Events": [
+          "recLJDhrIndqCogXi",
+          "recMR6Hgkn3vBm9oD",
+          "recru99O6wCpxEnO9",
+          "recGMuXTHjxTDVQ2S",
+          "recHu3cE3YS5QeOp6",
+          "reca0Y1zDWBuhNqAT",
+          "recEP8l5P4zILdo17",
+          "recYDffVbnd7wSs46"
+        ],
+        "Athlete Achievement Unlocks": [
+          "recAmZ3PzDzqvQT4W",
+          "recMUvVZkXiOPI4si",
+          "recKyc47c4bppGSv9"
+        ],
+        "Program Homework Assignments": [
+          "recIaBVgLwlchUOH1",
+          "reczT4W04grfbDgOF"
+        ],
+        "Counts Toward Challenge?": true,
+        "Config - Lnk": [
+          "rechc1f9f4kVM1tHP"
+        ],
+        "Week Name": "Week 4",
+        "Streak Occurrences": [
+          "recDpqF2YLVcg8HtJ",
+          "recYlsrkcxK46yMme"
+        ]
+      }
+    },
+    {
+      "id": "recKJMGYbEzGHyXfd",
+      "createdTime": "2026-07-24T20:02:52.000Z",
+      "preview": {
+        "Reconciliation Source Signature": "recKJMGYbEzGHyXfd|PI=Shooting Challenge | 2026-2027|START=2027-05-30T06:00:00.000Z|END=2027-06-06T05:59:00.000Z",
+        "Record ID": "recKJMGYbEzGHyXfd",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Zoom XP Week Signature": "recKJMGYbEzGHyXfd|PI=Shooting Challenge | 2026-2027|START=2027-05-30T06:00:00.000Z|END=2027-06-06T05:59:00.000Z",
+        "Week Key": "2026-2027|Week 5",
+        "End Date": "2027-06-06T05:59:00.000Z",
+        "Start Date": "2027-05-30T06:00:00.000Z",
+        "XP Events": [
+          "recBzHV1E60XhWZXl",
+          "recEEDOwCgmlR8Umh",
+          "recg9LdHPb0goOjtI",
+          "rect4Femkgu2RaoZk",
+          "recTOaGTv0eTnOIQQ",
+          "recLn4ID07XJmyZKo",
+          "recfkwZX6W1FsSyfk",
+          "recqKYN8dhGiHCyDf",
+          "receBgGmRbbcVyKTX"
+        ],
+        "Athlete Achievement Unlocks": [
+          "recDIX4CLFqd1yNAB",
+          "recQb0PrdaXiP40U4",
+          "recWDQApHMkYlljj9"
+        ],
+        "Program Homework Assignments": [
+          "recFntj0WVUKFAPwB",
+          "rec2gN9Foyz2aUyto"
+        ],
+        "Counts Toward Challenge?": true,
+        "Config - Lnk": [
+          "rechc1f9f4kVM1tHP"
+        ],
+        "Week Name": "Week 5",
+        "Streak Occurrences": [
+          "recBspbfIwthrPuar",
+          "recxRcycwgVhKCaxK"
+        ]
+      }
+    },
+    {
+      "id": "recRp4y42EpLvtwk5",
+      "createdTime": "2026-07-24T20:02:52.000Z",
+      "preview": {
+        "Reconciliation Source Signature": "recRp4y42EpLvtwk5|PI=Shooting Challenge | 2026-2027|START=2027-06-06T06:00:00.000Z|END=2027-06-13T05:59:00.000Z",
+        "Record ID": "recRp4y42EpLvtwk5",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Zoom XP Week Signature": "recRp4y42EpLvtwk5|PI=Shooting Challenge | 2026-2027|START=2027-06-06T06:00:00.000Z|END=2027-06-13T05:59:00.000Z",
+        "Week Key": "2026-2027|Week 6",
+        "End Date": "2027-06-13T05:59:00.000Z",
+        "Start Date": "2027-06-06T06:00:00.000Z",
+        "XP Events": [
+          "rechZxjicpYnBm4ZX",
+          "recI8sDDxUZjcgwrn",
+          "recuCd4v6f5xZzFov",
+          "recwUgtQzlI3cZPbk",
+          "recETQiytyLoblVsY",
+          "recLWIrvGIkJUUaPZ",
+          "recreui3Oy8aH2nwl",
+          "recdxSiqImGzivHiW",
+          "reciKfMhv1waFCeEU",
+          "recKUNzK7RUgYkPdD"
+        ],
+        "Program Homework Assignments": [
+          "recdyoq0zOHIRwzWQ",
+          "rec9i9QHUDokBqea4"
+        ],
+        "Counts Toward Challenge?": true,
+        "Config - Lnk": [
+          "rechc1f9f4kVM1tHP"
+        ],
+        "Week Name": "Week 6",
+        "Streak Occurrences": [
+          "recYHAeh5scI2Jege",
+          "rec25AwM0g7Nm8Ez4",
+          "reclU2h03tqAea9Ds",
+          "recWa3vuQT9aK2jSw",
+          "recifagT6mYdEu4Po",
+          "recp2hFWe6S2eSwvJ",
+          "recENwLo6aikjEigv"
+        ]
+      }
+    },
+    {
+      "id": "recW3irij491AIPrl",
+      "createdTime": "2026-07-24T20:02:52.000Z",
+      "preview": {
+        "Reconciliation Source Signature": "recW3irij491AIPrl|PI=Shooting Challenge | 2026-2027|START=2027-06-13T06:00:00.000Z|END=2027-06-20T05:59:00.000Z",
+        "Record ID": "recW3irij491AIPrl",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Zoom XP Week Signature": "recW3irij491AIPrl|PI=Shooting Challenge | 2026-2027|START=2027-06-13T06:00:00.000Z|END=2027-06-20T05:59:00.000Z",
+        "Week Key": "2026-2027|Week 7",
+        "End Date": "2027-06-20T05:59:00.000Z",
+        "Zoom Meetings": [
+          "recb9EjQIJVzaRpZa"
+        ],
+        "Start Date": "2027-06-13T06:00:00.000Z",
+        "XP Events": [
+          "recvINAv9A8WkqVaS",
+          "recmw9M6dMxlPiVHJ",
+          "recIBx8iLAfXoomZH",
+          "recwO2OAuCjREIhIV",
+          "recHALyMBFli87wO0",
+          "rechqQVEPuXjzLPP5",
+          "recRfNlyR4t7dKwsf"
+        ],
+        "Program Homework Assignments": [
+          "recSlkwdNXPP89bVJ",
+          "recOsUr93hGddMCsJ"
+        ],
+        "Counts Toward Challenge?": true,
+        "Config - Lnk": [
+          "rechc1f9f4kVM1tHP"
+        ],
+        "Week Name": "Week 7",
+        "Streak Occurrences": [
+          "recE36BnJaLFTmloe",
+          "recDZaHweZt53UauB"
+        ]
+      }
+    },
+    {
+      "id": "recfu3dpVJAnVBvCB",
+      "createdTime": "2026-07-24T20:02:52.000Z",
+      "preview": {
+        "Reconciliation Source Signature": "recfu3dpVJAnVBvCB|PI=Shooting Challenge | 2026-2027|START=2027-06-20T06:00:00.000Z|END=2027-06-27T05:59:00.000Z",
+        "Record ID": "recfu3dpVJAnVBvCB",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Zoom XP Week Signature": "recfu3dpVJAnVBvCB|PI=Shooting Challenge | 2026-2027|START=2027-06-20T06:00:00.000Z|END=2027-06-27T05:59:00.000Z",
+        "Week Key": "2026-2027|Week 8",
+        "End Date": "2027-06-27T05:59:00.000Z",
+        "Start Date": "2027-06-20T06:00:00.000Z",
+        "XP Events": [
+          "recbv70Nrz2m2DNBn",
+          "recxO7zuinroPSqJY",
+          "rect9y8KaFhbBD4mw",
+          "recT4Muv3Q5M0UG9Z",
+          "recrwZyK94MnTzig4",
+          "reca2XIHvvxtHAjFR",
+          "recEOfcDHfsEkfglI",
+          "recexWsgyurjwHEa7",
+          "recHZe3iJX04qrn0E",
+          "rectYpiR9WtNX9i0k"
+        ],
+        "Athlete Achievement Unlocks": [
+          "rech72lbqawOGKT4a",
+          "reciCya8WZRbpvm6j",
+          "reccCqdW5iAd0iWYe"
+        ],
+        "Program Homework Assignments": [
+          "rec42dczQZ1T0Uoc7",
+          "recikGtvbcUSNVLAN"
+        ],
+        "Counts Toward Challenge?": true,
+        "Config - Lnk": [
+          "rechc1f9f4kVM1tHP"
+        ],
+        "Week Name": "Week 8",
+        "Streak Occurrences": [
+          "recdAzaqZRPJAmKdW",
+          "recQDYhVr6GT5d6iy",
+          "rechDLCYw1BCJ2it7",
+          "recdVMf8ZPsU70O8k",
+          "recHfTFxzAM0fNEnJ",
+          "rec9LPOy0hYLEhxGm"
+        ]
+      }
+    },
+    {
+      "id": "rech8lgJkNMStWh9A",
+      "createdTime": "2026-07-24T20:02:52.000Z",
+      "preview": {
+        "Reconciliation Source Signature": "rech8lgJkNMStWh9A|PI=Shooting Challenge | 2026-2027|START=2027-06-27T06:00:00.000Z|END=2027-07-01T05:59:00.000Z",
+        "Record ID": "rech8lgJkNMStWh9A",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Zoom XP Week Signature": "rech8lgJkNMStWh9A|PI=Shooting Challenge | 2026-2027|START=2027-06-27T06:00:00.000Z|END=2027-07-01T05:59:00.000Z",
+        "Week Key": "2026-2027|Week 9",
+        "End Date": "2027-07-01T05:59:00.000Z",
+        "Start Date": "2027-06-27T06:00:00.000Z",
+        "XP Events": [
+          "recizM7TBk6M7KBhA",
+          "recupFfHI7NYQusp2",
+          "rectnx6jZU6Z2mARJ",
+          "rec3OkLS6Y3wQsUGC",
+          "recy4x63HRpQqx8zz"
+        ],
+        "Counts Toward Challenge?": true,
+        "Config - Lnk": [
+          "rechc1f9f4kVM1tHP"
+        ],
+        "Week Name": "Week 9",
+        "Streak Occurrences": [
+          "recPl3qot8gGPtNZf",
+          "recofjM2HtRHSSZBJ"
+        ]
+      }
+    },
+    {
+      "id": "recsWuPMbRH0W5aRU",
+      "createdTime": "2026-07-24T20:02:52.000Z",
+      "preview": {
+        "Reconciliation Source Signature": "recsWuPMbRH0W5aRU|PI=Shooting Challenge | 2026-2027|START=2027-07-01T06:00:00.000Z|END=2027-07-04T05:59:00.000Z",
+        "Record ID": "recsWuPMbRH0W5aRU",
+        "Program Instance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "Zoom XP Week Signature": "recsWuPMbRH0W5aRU|PI=Shooting Challenge | 2026-2027|START=2027-07-01T06:00:00.000Z|END=2027-07-04T05:59:00.000Z",
+        "Week Key": "2026-2027|Post-Challenge",
+        "End Date": "2027-07-04T05:59:00.000Z",
+        "Start Date": "2027-07-01T06:00:00.000Z",
+        "Config - Lnk": [
+          "rechc1f9f4kVM1tHP"
+        ],
+        "Week Name": "Post-Challenge"
+      }
+    }
+  ],
+  "season_sim_T122531Z_ids": {
+    "Athletes/recMuAvqA0zH1eGFj": 403,
+    "Enrollments/recmImoXTlKb5NWSY": 403
+  },
+  "countries_sample": [
+    {
+      "id": "rec031bBP3hTNrxr6",
+      "fields": {
+        "Country Name": "San Marino"
+      }
+    },
+    {
+      "id": "rec0GrMooq9fgQa4p",
+      "fields": {
+        "Country Name": "Mauritius"
+      }
+    }
+  ],
+  "state_sample": [
+    {
+      "id": "rec0rV4Z1kZJDnhid",
+      "fields": {
+        "State/Province Name": "Colorado"
+      }
+    },
+    {
+      "id": "rec1msndtkdjPprrh",
+      "fields": {
+        "State/Province Name": "Delaware"
+      }
+    },
+    {
+      "id": "rec3KA09tr9w4k0xY",
+      "fields": {
+        "State/Province Name": "Utah"
+      }
+    }
+  ],
+  "state_primary": "State/Province Name",
+  "countries_count": 194,
+  "state_count": 50,
+  "handoff_template_counts": {
+    "WELCOME": 6,
+    "DAILY_SUBMISSION": 8,
+    "VIDEO_FEEDBACK": 3,
+    "HOMEWORK_FEEDBACK": 6,
+    "ZOOM_RECORDING_APPROVED": 1
+  },
+  "handoff_emails": [
+    "[{\"email\":\"mschmidt@fairfield.k12.mt.us\",\"role\":\"guardian\",\"displayname\":\"athlete1 schmidt\"}]",
+    "[{\"email\":\"mschmidt@fairfield.k12.mt.us\",\"role\":\"guardian\"}]",
+    "[{\"role\":\"parent\",\"email\":\"mschmidt@fairfield.k12.mt.us\"},{\"role\":\"athlete\",\"email\":\"mschmidt@fairfield.k12.mt.us\"}]",
+    "[{\"role\":\"parent\",\"email\":\"schmidt@fairfieldbasketballclub.com\"},{\"role\":\"athlete\",\"email\":\"schmidt@fairfieldbasketballclub.com\"}]",
+    "communications hub ingress failed with http 422: {\"error\":\"recipient is not on the active test allowlist: schmidt@fairfieldbasketballclub.com\"}"
+  ],
+  "handoff_count": 24,
+  "athletes": [
+    {
+      "id": "rec0DOgWwzfDQxMaS",
+      "full_name": "VERIFY VERIFY-SC112-20260903",
+      "parent_email": "mschmidt@fairfield.k12.mt.us",
+      "match_key": "mschmidt@fairfield.k12.mt.us|verify|verify-sc112-20260903",
+      "enrollments": [
+        "recr3OaRi1HdFCB2V"
+      ]
+    },
+    {
+      "id": "recLYou5LyBDC1re5",
+      "full_name": "Rene' Schmidt",
+      "parent_email": "mschmidt@fairfield.k12.mt.us",
+      "match_key": "mschmidt@fairfield.k12.mt.us|rene'|schmidt",
+      "enrollments": [
+        "recp5z9S9WpLBzAZj"
+      ]
+    },
+    {
+      "id": "recTfxT6WMsPvobAW",
+      "full_name": "Athlete1 Schmidt",
+      "parent_email": "mschmidt@fairfield.k12.mt.us",
+      "match_key": "mschmidt@fairfield.k12.mt.us|athlete1|schmidt",
+      "enrollments": [
+        "recZEwkkXTJanDlG6",
+        "rec2UamYHzyc9ELd9"
+      ]
+    }
+  ],
+  "enrollment_ids": [
+    "rec2UamYHzyc9ELd9",
+    "recZEwkkXTJanDlG6",
+    "recp5z9S9WpLBzAZj",
+    "recr3OaRi1HdFCB2V"
+  ],
+  "pha_primary": "Program Homework Assignment",
+  "pha_count_live": 18,
+  "testing_scenarios": [
+    {
+      "id": "recqACe5uN4aXlyoZ",
+      "fields": {
+        "Created": "2026-07-26",
+        "Scenario Requirements": "Catalog fixture: scn-008-missing-enrollment.json. Run Test remains off.",
+        "Last Run Status": "Not Run",
+        "Test Status": "Not Started",
+        "RecordId - Testing Scenarios": "recqACe5uN4aXlyoZ",
+        "Test Intake Name": "SCN-008 \u2014 missing-enrollment",
+        "Test Notes": "Repository catalog status: repository_test_pass.",
+        "Scenario Type": "Daily Submission",
+        "Expected Result": "Missing Enrollment fails safely with a clear error and no pipeline writes."
+      }
+    }
+  ]
+}

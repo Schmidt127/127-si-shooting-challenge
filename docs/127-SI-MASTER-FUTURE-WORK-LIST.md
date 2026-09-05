@@ -1298,6 +1298,23 @@ Build a grade-band homework player inside the existing application. The defining
 
 Mike-authorized **record deletion only** (not schema). Deleted **959** transactional records across all program years and test fixtures. No external sends. **18 seasonal PHA restored same day** (new RIDs; Due Date 2027-06-29) ? see `11-pha-restore-created-20260831_133022.json`. Base is ready for clean workflow rebuild.
 
+### OPS-PURGE-20260905 — Production transactional test-data purge (post Season Sim)
+
+**Priority:** P0  
+
+**Status:** **COMPLETE** (2026-09-05)  
+
+**Authorization:** Mike exact phrase `APPROVE TRANSACTIONAL PURGE` after Phase 1 v2 dry-run  
+
+**Deleted:** **204** records (200 approved manifest + 4 automation remnants: XP×3, VF×1). Athletes, Enrollments, Submissions, Submission Assets, Homework Completions, Video Feedback, Weekly Athlete Summary, XP Events, Athlete Achievement Unlocks, Streak Occurrences, Zoom Attendance, Award Recipients, Email Handoff Queue; plus **7** disposable VERIFY/PELC Zoom Meetings.  
+
+**Preserved:** Weeks (11), PHA (18), Homework Library (121), Countries (194), State (50), Config/rules/levels/milestones/achievements/awards/tutorials/automations/schools; reusable Zoom Meetings **Introduction** + **Motivation** only.  
+
+**Not changed:** Schema, formulas, views, Interfaces, automation scripts, payment/registration activation, S3/CloudFront files.  
+
+**Evidence:** [`testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md`](./testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md)  
+
+**Related:** FUT-030 (prior full reset 2026-08-31); SC-SEASON-SIM-002 cleanup already complete before this purge.
 
 
 ### FUT-031 ? Game Log: Extra Credit tagline after date
@@ -2960,6 +2977,8 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 | **FUT-029 / MRW-H12** | **Deferred — DO NOT IMPLEMENT** | Grade-Band Homework Platform + Homework Intake Adapter — not part of current app completion; wave 2026-09-05 out of scope; plan: [`next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md`](./next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md); Fillout brief superseded/history |
 
 | **FUT-030** | **COMPLETE** (2026-08-31) | Full transactional record reset ? **959** deleted; Weeks/Config/Library/rules/automations preserved; **18 PHA restored** same day (new RIDs); **075** absent; no external sends ? [`testing/evidence/transactional-reset-2026-08-31/`](./testing/evidence/transactional-reset-2026-08-31/) |
+
+| **OPS-PURGE-20260905** | **COMPLETE** (2026-09-05) | Production transactional test-data purge — **204** deleted (200 approved + 4 remnants); PHA/Weeks/Library/Countries/State/rules preserved; Zoom catalog Introduction+Motivation kept; no schema/external-file changes — [`testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md`](./testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md) |
 
 | **FUT-031** | **COMPLETE** (2026-09-01) | Game Log Extra Credit tagline ? PR **#319** `de21fa36`; prod verified on athlete profile Game Log |
 

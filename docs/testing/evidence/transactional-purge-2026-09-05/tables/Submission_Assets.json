@@ -1,0 +1,852 @@
+[
+  {
+    "id": "rec0pKjaQoaC319f0",
+    "createdTime": "2026-09-04T20:25:03.000Z",
+    "table_name": "Submission Assets",
+    "table_id": "tblhMLKxQK77agtME",
+    "fields": {
+      "Duplicate Match Strength": "Exact SHA-256 Hash",
+      "Duplicate Checked At": "2026-09-04T20:25:16.782Z",
+      "File Hash Algorithm": "SHA-256",
+      "Reviewer Access Token": "gT6AjPPOj460W21z4meomNdrQHWnJvXaQcu-qy1qVI4",
+      "Ready for Video Feedback Script?": 0,
+      "Reviewer File URL": "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/rec0pKjaQoaC319f0?token=gT6AjPPOj460W21z4meomNdrQHWnJvXaQcu-qy1qVI4",
+      "Submission Assets Full Name": "Schmidt, Rene' - 2026-2027 - Video Feedback - Video For Feedback",
+      "Asset Label": "VID-2",
+      "Last Name": [
+        "Schmidt"
+      ],
+      "Program Instance - Convert to File Name": "ShootingChallenge",
+      "Source Attachment ID": "atttHtD5FDpsMpH1O",
+      "Asset Slot Base": "VID",
+      "Asset Purpose": "Video For Feedback",
+      "Asset Type": "Video Feedback",
+      "Why Not Ready for Make?": "Send trigger is off",
+      "HW Sub 1": [
+        {
+          "id": "att2e74HOus6PIUO9",
+          "width": 1280,
+          "height": 1600,
+          "filename": "Arps_Terria_6.jpg",
+          "size": 286836,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "width": 29,
+              "height": 36
+            },
+            "large": {
+              "width": 512,
+              "height": 640
+            },
+            "full": {
+              "width": 1280,
+              "height": 1600
+            }
+          }
+        }
+      ],
+      "Ready to Send to Make?": "READY_TO_SEND",
+      "Enrollment - Linked": [
+        "recp5z9S9WpLBzAZj"
+      ],
+      "Storage Key": "Schmidt_Rene/Shooting_Challenge_2026-2027/2026-09-04/20260904T202503Z_VIDEO_rec0pKjaQoaC319f0_Beck_Carly_14.jpg",
+      "Record Id - Submission Assets": "rec0pKjaQoaC319f0",
+      "Created": "2026-09-04T20:25:03.000Z",
+      "File Content Hash": "b7d34a614d1668efe1d187e2f7e64539f5090ac048a53ed23b385632c025244f",
+      "Asset Slot": "VIDEO",
+      "Record Id (from Enrollment - Linked)": [
+        "recp5z9S9WpLBzAZj"
+      ],
+      "Upload Status": "Uploaded",
+      "Workflow Next Step": "Video Feedback linked",
+      "Duplicate File Status": "Exact Duplicate",
+      "Original File Name": "Beck_Carly_14.jpg",
+      "Duplicate Match Notes": "No same-enrollment contextual reuse detected.\nCross-enrollment informational match(es): recLiRlImmPkZyTSF",
+      "RecordId": "rec0pKjaQoaC319f0",
+      "Ready for Homework Completion Script?": 0,
+      "File Size Bytes": 235899,
+      "Upload Ready?": 1,
+      "HW Sub 2": [
+        {
+          "id": "attPvBYZoZOxBAN5e",
+          "width": 1280,
+          "height": 1600,
+          "filename": "Arps_Terria_6.jpg",
+          "size": 286836,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "width": 29,
+              "height": 36
+            },
+            "large": {
+              "width": 512,
+              "height": 640
+            },
+            "full": {
+              "width": 1280,
+              "height": 1600
+            }
+          }
+        }
+      ],
+      "Homework Name 2": [
+        "rec4iQ2WS04Arq3tB"
+      ],
+      "Submission - Linked": [
+        "recnkEQWB5SQ7OxSJ"
+      ],
+      "Exact Hash Match Found?": true,
+      "Program Instance - Raw": [
+        "Shooting Challenge"
+      ],
+      "Created Time": "2026-09-04T20:25:03.000Z",
+      "Canonical File URL": "https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/Schmidt_Rene/Shooting_Challenge_2026-2027/2026-09-04/20260904T202503Z_VIDEO_rec0pKjaQoaC319f0_Beck_Carly_14.jpg",
+      "File MIME Type": "image/jpeg",
+      "Upload Claim Run ID": "3e2971be-872c-4967-ad80-3aeb3db3c1d4",
+      "Homework Name 1": [
+        "rechCXdubiA1RPFEj"
+      ],
+      "Upload Destination": "Video Feedback",
+      "Asset Reuse Decision": "Not Reviewed",
+      "Airtable Attachment": [
+        {
+          "id": "attgKbJsFJ5nFV0bB",
+          "width": 1280,
+          "height": 1600,
+          "filename": "Beck_Carly_14.jpg",
+          "size": 235899,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "width": 29,
+              "height": 36
+            },
+            "large": {
+              "width": 512,
+              "height": 640
+            },
+            "full": {
+              "width": 1280,
+              "height": 1600
+            }
+          }
+        }
+      ],
+      "Asset Reuse Review Summary": "No same-enrollment contextual reuse detected.",
+      "Is True Video Feedback Asset?": 1,
+      "Writeback Complete?": 1,
+      "Athlete Full Name": [
+        "Schmidt, Rene' - 2026-2027"
+      ],
+      "Date": [
+        "2026-09-04"
+      ],
+      "Uploaded At": "2026-09-04T20:25:17.551Z",
+      "RecordId - Submission Table": [
+        "recnkEQWB5SQ7OxSJ"
+      ],
+      "First Name": [
+        "Rene'"
+      ],
+      "Video Feedback": [
+        "rec8mlIPUanko5aR7"
+      ],
+      "Date - Convert to File Name": "2026_09_04",
+      "Asset Key": "Rene' Schmidt - 9/4/2026 - No Week|rec0pKjaQoaC319f0",
+      "Is Homework Upload Asset?": 0,
+      "Processing Started At": "2026-09-04T20:25:15.637Z",
+      "Asset Type - Convert for File Name": "VideoFeedback"
+    }
+  },
+  {
+    "id": "recCEYPMCZzJqCy6q",
+    "createdTime": "2026-09-04T20:25:03.000Z",
+    "table_name": "Submission Assets",
+    "table_id": "tblhMLKxQK77agtME",
+    "fields": {
+      "Duplicate Match Strength": "Exact SHA-256 Hash",
+      "Duplicate Checked At": "2026-09-04T20:32:40.122Z",
+      "File Hash Algorithm": "SHA-256",
+      "Reviewer Access Token": "l-DrDJX43GB8sSi0L1TXunYkbvfize_KXo9-2RRX14M",
+      "Ready for Video Feedback Script?": 0,
+      "Potential Asset Reuse?": true,
+      "Reviewer File URL": "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/recCEYPMCZzJqCy6q?token=l-DrDJX43GB8sSi0L1TXunYkbvfize_KXo9-2RRX14M",
+      "Submission Assets Full Name": "Schmidt, Rene' - 2026-2027 - Homework Image - Homework 1",
+      "Asset Label": "HW1-1",
+      "Last Name": [
+        "Schmidt"
+      ],
+      "Program Instance - Convert to File Name": "ShootingChallenge",
+      "Source Attachment ID": "att2e74HOus6PIUO9",
+      "Homework Completions RID": [
+        "reccy4JRFbRh7lqPl"
+      ],
+      "Asset Slot Base": "HW1",
+      "Asset Purpose": "Homework 1",
+      "Asset Type": "Homework Image",
+      "Why Not Ready for Make?": "Send trigger is off",
+      "HW Sub 1": [
+        {
+          "id": "att2e74HOus6PIUO9",
+          "width": 1280,
+          "height": 1600,
+          "filename": "Arps_Terria_6.jpg",
+          "size": 286836,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "width": 29,
+              "height": 36
+            },
+            "large": {
+              "width": 512,
+              "height": 640
+            },
+            "full": {
+              "width": 1280,
+              "height": 1600
+            }
+          }
+        }
+      ],
+      "Ready to Send to Make?": "READY_TO_SEND",
+      "Enrollment - Linked": [
+        "recp5z9S9WpLBzAZj"
+      ],
+      "Storage Key": "Schmidt_Rene/Shooting_Challenge_2026-2027/2026-09-04/20260904T202503Z_HW1_recCEYPMCZzJqCy6q_Arps_Terria_6.jpg",
+      "Record Id - Submission Assets": "recCEYPMCZzJqCy6q",
+      "Asset Reuse Review Primary Reason": "Video Feedback Used for Homework",
+      "Created": "2026-09-04T20:25:03.000Z",
+      "Asset Reuse Review Reasons": [
+        "Video Feedback Used for Homework",
+        "Different Assignment Reuse"
+      ],
+      "File Content Hash": "6ab968f4943b30813d5e752ecc9b9912b6a0d0f5b3934ffc075a62c5cdc5ba0a",
+      "From field: Duplicate Match Records (All)": [
+        "recwAb5aPEBL7dqcV"
+      ],
+      "Asset Slot": "HW1",
+      "Record Id (from Enrollment - Linked)": [
+        "recp5z9S9WpLBzAZj"
+      ],
+      "Upload Status": "Uploaded",
+      "Workflow Next Step": "Homework Completion linked",
+      "Homework Completions": [
+        "reccy4JRFbRh7lqPl"
+      ],
+      "Duplicate File Status": "Exact Duplicate",
+      "Original File Name": "Arps_Terria_6.jpg",
+      "Duplicate Match Notes": "Video Feedback Used for Homework: identical file was previously submitted for VID-1 / Submission recnkEQWB5SQ7OxSJ and was submitted again for \"Shooting Challenge | 2026-2027 | Week 1 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1 | MTFYA - Self Awareness - The Meditation Workout\" / Submission recnkEQWB5SQ7OxSJ. (1 cross-enrollment informational match(es).)",
+      "RecordId": "recCEYPMCZzJqCy6q",
+      "Ready for Homework Completion Script?": 0,
+      "File Size Bytes": 286836,
+      "Upload Ready?": 1,
+      "Same Enrollment Match Found?": true,
+      "HW Sub 2": [
+        {
+          "id": "attPvBYZoZOxBAN5e",
+          "width": 1280,
+          "height": 1600,
+          "filename": "Arps_Terria_6.jpg",
+          "size": 286836,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "width": 29,
+              "height": 36
+            },
+            "large": {
+              "width": 512,
+              "height": 640
+            },
+            "full": {
+              "width": 1280,
+              "height": 1600
+            }
+          }
+        }
+      ],
+      "Homework Name 2": [
+        "rec4iQ2WS04Arq3tB"
+      ],
+      "Submission - Linked": [
+        "recnkEQWB5SQ7OxSJ"
+      ],
+      "Exact Hash Match Found?": true,
+      "Program Instance - Raw": [
+        "Shooting Challenge"
+      ],
+      "Created Time": "2026-09-04T20:25:03.000Z",
+      "Homework Name - Slot Correct": "\"Shooting Challenge | 2026-2027 | Week 1 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1 | MTFYA - Self Awareness - The Meditation Workout\"",
+      "Canonical File URL": "https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/Schmidt_Rene/Shooting_Challenge_2026-2027/2026-09-04/20260904T202503Z_HW1_recCEYPMCZzJqCy6q_Arps_Terria_6.jpg",
+      "File MIME Type": "image/jpeg",
+      "Upload Claim Run ID": "a3946ed8-4929-4e89-8d51-2f0c2e144867",
+      "Homework Name 1": [
+        "rechCXdubiA1RPFEj"
+      ],
+      "Duplicate Match Records (All)": [
+        "recCqOkwozXICtyYy"
+      ],
+      "Upload Destination": "Homework Completions",
+      "Asset Reuse Decision": "Not Reviewed",
+      "Airtable Attachment": [
+        {
+          "id": "attP9SM8xzKFe7iB6",
+          "width": 1280,
+          "height": 1600,
+          "filename": "Arps_Terria_6.jpg",
+          "size": 286836,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "width": 29,
+              "height": 36
+            },
+            "large": {
+              "width": 512,
+              "height": 640
+            },
+            "full": {
+              "width": 1280,
+              "height": 1600
+            }
+          }
+        }
+      ],
+      "Asset Reuse Review Summary": "Video Feedback Used for Homework: identical file was previously submitted for VID-1 / Submission recnkEQWB5SQ7OxSJ and was submitted again for \"Shooting Challenge | 2026-2027 | Week 1 | K-2, 3-4, 5-6, 7-8, 9-12 | HW1 | MTFYA - Self Awareness - The Meditation Workout\" / Submission recnkEQWB5SQ7OxSJ. (1 cross-enrollment informational match(es).)",
+      "Duplicate Match Record": [
+        "recCqOkwozXICtyYy"
+      ],
+      "Is True Video Feedback Asset?": 0,
+      "Writeback Complete?": 1,
+      "Athlete Full Name": [
+        "Schmidt, Rene' - 2026-2027"
+      ],
+      "Date": [
+        "2026-09-04"
+      ],
+      "Uploaded At": "2026-09-04T20:32:40.416Z",
+      "RecordId - Submission Table": [
+        "recnkEQWB5SQ7OxSJ"
+      ],
+      "First Name": [
+        "Rene'"
+      ],
+      "Date - Convert to File Name": "2026_09_04",
+      "Asset Key": "Rene' Schmidt - 9/4/2026 - No Week|recCEYPMCZzJqCy6q",
+      "Is Homework Upload Asset?": 1,
+      "Processing Started At": "2026-09-04T20:32:38.979Z",
+      "Asset Type - Convert for File Name": "HomeworkImage"
+    }
+  },
+  {
+    "id": "recCqOkwozXICtyYy",
+    "createdTime": "2026-09-04T20:25:03.000Z",
+    "table_name": "Submission Assets",
+    "table_id": "tblhMLKxQK77agtME",
+    "fields": {
+      "Duplicate Match Strength": "Exact SHA-256 Hash",
+      "Duplicate Checked At": "2026-09-04T20:25:13.754Z",
+      "File Hash Algorithm": "SHA-256",
+      "Reviewer Access Token": "O8cFS2uJgpNBrLWjXl_XRN0H0WhLWqJ8VCphjdmAq7U",
+      "Ready for Video Feedback Script?": 0,
+      "Reviewer File URL": "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/recCqOkwozXICtyYy?token=O8cFS2uJgpNBrLWjXl_XRN0H0WhLWqJ8VCphjdmAq7U",
+      "Submission Assets Full Name": "Schmidt, Rene' - 2026-2027 - Video Feedback - Video For Feedback",
+      "Asset Label": "VID-1",
+      "Last Name": [
+        "Schmidt"
+      ],
+      "Program Instance - Convert to File Name": "ShootingChallenge",
+      "Source Attachment ID": "attpsLxfdIzFb7T9i",
+      "Asset Slot Base": "VID",
+      "Asset Purpose": "Video For Feedback",
+      "Asset Type": "Video Feedback",
+      "Why Not Ready for Make?": "Send trigger is off",
+      "HW Sub 1": [
+        {
+          "id": "att2e74HOus6PIUO9",
+          "width": 1280,
+          "height": 1600,
+          "filename": "Arps_Terria_6.jpg",
+          "size": 286836,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "width": 29,
+              "height": 36
+            },
+            "large": {
+              "width": 512,
+              "height": 640
+            },
+            "full": {
+              "width": 1280,
+              "height": 1600
+            }
+          }
+        }
+      ],
+      "From field: Duplicate Match Record": [
+        "recCEYPMCZzJqCy6q",
+        "recwAb5aPEBL7dqcV"
+      ],
+      "Ready to Send to Make?": "READY_TO_SEND",
+      "Enrollment - Linked": [
+        "recp5z9S9WpLBzAZj"
+      ],
+      "Storage Key": "Schmidt_Rene/Shooting_Challenge_2026-2027/2026-09-04/20260904T202503Z_VIDEO_recCqOkwozXICtyYy_Arps_Terria_6.jpg",
+      "Record Id - Submission Assets": "recCqOkwozXICtyYy",
+      "Created": "2026-09-04T20:25:03.000Z",
+      "File Content Hash": "6ab968f4943b30813d5e752ecc9b9912b6a0d0f5b3934ffc075a62c5cdc5ba0a",
+      "From field: Duplicate Match Records (All)": [
+        "recCEYPMCZzJqCy6q",
+        "recwAb5aPEBL7dqcV"
+      ],
+      "Asset Slot": "VIDEO",
+      "Record Id (from Enrollment - Linked)": [
+        "recp5z9S9WpLBzAZj"
+      ],
+      "Upload Status": "Uploaded",
+      "Workflow Next Step": "Video Feedback linked",
+      "Duplicate File Status": "Exact Duplicate",
+      "Original File Name": "Arps_Terria_6.jpg",
+      "Duplicate Match Notes": "No same-enrollment contextual reuse detected.\nCross-enrollment informational match(es): recwcdF0tgCnKDHF7",
+      "RecordId": "recCqOkwozXICtyYy",
+      "Ready for Homework Completion Script?": 0,
+      "File Size Bytes": 286836,
+      "Upload Ready?": 1,
+      "HW Sub 2": [
+        {
+          "id": "attPvBYZoZOxBAN5e",
+          "width": 1280,
+          "height": 1600,
+          "filename": "Arps_Terria_6.jpg",
+          "size": 286836,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "width": 29,
+              "height": 36
+            },
+            "large": {
+              "width": 512,
+              "height": 640
+            },
+            "full": {
+              "width": 1280,
+              "height": 1600
+            }
+          }
+        }
+      ],
+      "Homework Name 2": [
+        "rec4iQ2WS04Arq3tB"
+      ],
+      "Submission - Linked": [
+        "recnkEQWB5SQ7OxSJ"
+      ],
+      "Exact Hash Match Found?": true,
+      "Program Instance - Raw": [
+        "Shooting Challenge"
+      ],
+      "Created Time": "2026-09-04T20:25:03.000Z",
+      "Canonical File URL": "https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/Schmidt_Rene/Shooting_Challenge_2026-2027/2026-09-04/20260904T202503Z_VIDEO_recCqOkwozXICtyYy_Arps_Terria_6.jpg",
+      "File MIME Type": "image/jpeg",
+      "Upload Claim Run ID": "5a503205-ae80-4228-a9a1-0c3bda862ce9",
+      "Homework Name 1": [
+        "rechCXdubiA1RPFEj"
+      ],
+      "Upload Destination": "Video Feedback",
+      "Asset Reuse Decision": "Not Reviewed",
+      "Airtable Attachment": [
+        {
+          "id": "atttXzDPX5PqjgYdi",
+          "width": 1280,
+          "height": 1600,
+          "filename": "Arps_Terria_6.jpg",
+          "size": 286836,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "width": 29,
+              "height": 36
+            },
+            "large": {
+              "width": 512,
+              "height": 640
+            },
+            "full": {
+              "width": 1280,
+              "height": 1600
+            }
+          }
+        }
+      ],
+      "Asset Reuse Review Summary": "No same-enrollment contextual reuse detected.",
+      "Is True Video Feedback Asset?": 1,
+      "Writeback Complete?": 1,
+      "Athlete Full Name": [
+        "Schmidt, Rene' - 2026-2027"
+      ],
+      "Date": [
+        "2026-09-04"
+      ],
+      "Uploaded At": "2026-09-04T20:25:14.597Z",
+      "RecordId - Submission Table": [
+        "recnkEQWB5SQ7OxSJ"
+      ],
+      "First Name": [
+        "Rene'"
+      ],
+      "Video Feedback": [
+        "reci8mb08XuwvY2Tb"
+      ],
+      "Date - Convert to File Name": "2026_09_04",
+      "Asset Key": "Rene' Schmidt - 9/4/2026 - No Week|recCqOkwozXICtyYy",
+      "Is Homework Upload Asset?": 0,
+      "Processing Started At": "2026-09-04T20:25:12.806Z",
+      "Asset Type - Convert for File Name": "VideoFeedback"
+    }
+  },
+  {
+    "id": "recKDwdL75HfGjObP",
+    "createdTime": "2026-09-04T20:25:03.000Z",
+    "table_name": "Submission Assets",
+    "table_id": "tblhMLKxQK77agtME",
+    "fields": {
+      "Duplicate Match Strength": "Exact SHA-256 Hash",
+      "Duplicate Checked At": "2026-09-04T20:25:17.415Z",
+      "File Hash Algorithm": "SHA-256",
+      "Reviewer Access Token": "bWSr17NVN9fKK0yaKGzT8hWN4MxR8V69pHLJinLXbBU",
+      "Ready for Video Feedback Script?": 0,
+      "Reviewer File URL": "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/recKDwdL75HfGjObP?token=bWSr17NVN9fKK0yaKGzT8hWN4MxR8V69pHLJinLXbBU",
+      "Submission Assets Full Name": "Schmidt, Rene' - 2026-2027 - Video Feedback - Video For Feedback",
+      "Asset Label": "VID-3",
+      "Last Name": [
+        "Schmidt"
+      ],
+      "Program Instance - Convert to File Name": "ShootingChallenge",
+      "Source Attachment ID": "attHmPmODUP6DypZd",
+      "Asset Slot Base": "VID",
+      "Asset Purpose": "Video For Feedback",
+      "Asset Type": "Video Feedback",
+      "Why Not Ready for Make?": "Send trigger is off",
+      "HW Sub 1": [
+        {
+          "id": "att2e74HOus6PIUO9",
+          "width": 1280,
+          "height": 1600,
+          "filename": "Arps_Terria_6.jpg",
+          "size": 286836,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "width": 29,
+              "height": 36
+            },
+            "large": {
+              "width": 512,
+              "height": 640
+            },
+            "full": {
+              "width": 1280,
+              "height": 1600
+            }
+          }
+        }
+      ],
+      "Ready to Send to Make?": "READY_TO_SEND",
+      "Enrollment - Linked": [
+        "recp5z9S9WpLBzAZj"
+      ],
+      "Storage Key": "Schmidt_Rene/Shooting_Challenge_2026-2027/2026-09-04/20260904T202503Z_VIDEO_recKDwdL75HfGjObP_Bakkum_John_9.jpg",
+      "Record Id - Submission Assets": "recKDwdL75HfGjObP",
+      "Created": "2026-09-04T20:25:03.000Z",
+      "File Content Hash": "4d705b5848b896b2d3efe297dd49d35dd1d5157e78d88115417943f099cd4981",
+      "Asset Slot": "VIDEO",
+      "Record Id (from Enrollment - Linked)": [
+        "recp5z9S9WpLBzAZj"
+      ],
+      "Upload Status": "Uploaded",
+      "Workflow Next Step": "Video Feedback linked",
+      "Duplicate File Status": "Unique",
+      "Original File Name": "Bakkum_John_9.jpg",
+      "Duplicate Match Notes": "No matching file hash found.",
+      "RecordId": "recKDwdL75HfGjObP",
+      "Ready for Homework Completion Script?": 0,
+      "File Size Bytes": 226920,
+      "Upload Ready?": 1,
+      "HW Sub 2": [
+        {
+          "id": "attPvBYZoZOxBAN5e",
+          "width": 1280,
+          "height": 1600,
+          "filename": "Arps_Terria_6.jpg",
+          "size": 286836,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "width": 29,
+              "height": 36
+            },
+            "large": {
+              "width": 512,
+              "height": 640
+            },
+            "full": {
+              "width": 1280,
+              "height": 1600
+            }
+          }
+        }
+      ],
+      "Homework Name 2": [
+        "rec4iQ2WS04Arq3tB"
+      ],
+      "Submission - Linked": [
+        "recnkEQWB5SQ7OxSJ"
+      ],
+      "Program Instance - Raw": [
+        "Shooting Challenge"
+      ],
+      "Created Time": "2026-09-04T20:25:03.000Z",
+      "Canonical File URL": "https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/Schmidt_Rene/Shooting_Challenge_2026-2027/2026-09-04/20260904T202503Z_VIDEO_recKDwdL75HfGjObP_Bakkum_John_9.jpg",
+      "File MIME Type": "image/jpeg",
+      "Upload Claim Run ID": "38d928a8-e3c9-4392-8c37-b75e273acfa3",
+      "Homework Name 1": [
+        "rechCXdubiA1RPFEj"
+      ],
+      "Upload Destination": "Video Feedback",
+      "Asset Reuse Decision": "Not Reviewed",
+      "Airtable Attachment": [
+        {
+          "id": "attJUYcKiCFvdeIQn",
+          "width": 1280,
+          "height": 1600,
+          "filename": "Bakkum_John_9.jpg",
+          "size": 226920,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "width": 29,
+              "height": 36
+            },
+            "large": {
+              "width": 512,
+              "height": 640
+            },
+            "full": {
+              "width": 1280,
+              "height": 1600
+            }
+          }
+        }
+      ],
+      "Is True Video Feedback Asset?": 1,
+      "Writeback Complete?": 1,
+      "Athlete Full Name": [
+        "Schmidt, Rene' - 2026-2027"
+      ],
+      "Date": [
+        "2026-09-04"
+      ],
+      "Uploaded At": "2026-09-04T20:25:18.015Z",
+      "RecordId - Submission Table": [
+        "recnkEQWB5SQ7OxSJ"
+      ],
+      "First Name": [
+        "Rene'"
+      ],
+      "Video Feedback": [
+        "recLAcUQt9vcMGChb"
+      ],
+      "Date - Convert to File Name": "2026_09_04",
+      "Asset Key": "Rene' Schmidt - 9/4/2026 - No Week|recKDwdL75HfGjObP",
+      "Is Homework Upload Asset?": 0,
+      "Processing Started At": "2026-09-04T20:25:16.245Z",
+      "Asset Type - Convert for File Name": "VideoFeedback"
+    }
+  },
+  {
+    "id": "recwAb5aPEBL7dqcV",
+    "createdTime": "2026-09-04T20:25:03.000Z",
+    "table_name": "Submission Assets",
+    "table_id": "tblhMLKxQK77agtME",
+    "fields": {
+      "Duplicate Match Strength": "Exact SHA-256 Hash",
+      "Duplicate Checked At": "2026-09-04T20:32:42.939Z",
+      "File Hash Algorithm": "SHA-256",
+      "Reviewer Access Token": "7mw7EMvxpDVMVLyn7bimPeCzRrYY5b4fbe_B520az7w",
+      "Ready for Video Feedback Script?": 0,
+      "Potential Asset Reuse?": true,
+      "Reviewer File URL": "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/recwAb5aPEBL7dqcV?token=7mw7EMvxpDVMVLyn7bimPeCzRrYY5b4fbe_B520az7w",
+      "Submission Assets Full Name": "Schmidt, Rene' - 2026-2027 - Homework Image - Homework 2",
+      "Asset Label": "HW2-1",
+      "Last Name": [
+        "Schmidt"
+      ],
+      "Program Instance - Convert to File Name": "ShootingChallenge",
+      "Source Attachment ID": "attPvBYZoZOxBAN5e",
+      "Homework Completions RID": [
+        "recioBIj9w0K7rMOf"
+      ],
+      "Asset Slot Base": "HW2",
+      "Asset Purpose": "Homework 2",
+      "Asset Type": "Homework Image",
+      "Why Not Ready for Make?": "Send trigger is off",
+      "HW Sub 1": [
+        {
+          "id": "att2e74HOus6PIUO9",
+          "width": 1280,
+          "height": 1600,
+          "filename": "Arps_Terria_6.jpg",
+          "size": 286836,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "width": 29,
+              "height": 36
+            },
+            "large": {
+              "width": 512,
+              "height": 640
+            },
+            "full": {
+              "width": 1280,
+              "height": 1600
+            }
+          }
+        }
+      ],
+      "Ready to Send to Make?": "READY_TO_SEND",
+      "Enrollment - Linked": [
+        "recp5z9S9WpLBzAZj"
+      ],
+      "Storage Key": "Schmidt_Rene/Shooting_Challenge_2026-2027/2026-09-04/20260904T202503Z_HW2_recwAb5aPEBL7dqcV_Arps_Terria_6.jpg",
+      "Record Id - Submission Assets": "recwAb5aPEBL7dqcV",
+      "Asset Reuse Review Primary Reason": "Video Feedback Used for Homework",
+      "Created": "2026-09-04T20:25:03.000Z",
+      "Asset Reuse Review Reasons": [
+        "Different Assignment Reuse",
+        "Video Feedback Used for Homework",
+        "Multiple Prior Uses"
+      ],
+      "File Content Hash": "6ab968f4943b30813d5e752ecc9b9912b6a0d0f5b3934ffc075a62c5cdc5ba0a",
+      "Asset Slot": "HW2",
+      "Record Id (from Enrollment - Linked)": [
+        "recp5z9S9WpLBzAZj"
+      ],
+      "Upload Status": "Uploaded",
+      "Workflow Next Step": "Homework Completion linked",
+      "Homework Completions": [
+        "recioBIj9w0K7rMOf"
+      ],
+      "Duplicate File Status": "Exact Duplicate",
+      "Original File Name": "Arps_Terria_6.jpg",
+      "Duplicate Match Notes": "Video Feedback Used for Homework: identical file was previously submitted for VID-1 / Submission recnkEQWB5SQ7OxSJ and was submitted again for \"Shooting Challenge | 2026-2027 | Week 1 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2 | MTFYA - Resilience Technique - Train Rough\" / Submission recnkEQWB5SQ7OxSJ. Multiple prior same-enrollment uses exist. (1 cross-enrollment informational match(es).)",
+      "RecordId": "recwAb5aPEBL7dqcV",
+      "Ready for Homework Completion Script?": 0,
+      "File Size Bytes": 286836,
+      "Upload Ready?": 1,
+      "Same Enrollment Match Found?": true,
+      "HW Sub 2": [
+        {
+          "id": "attPvBYZoZOxBAN5e",
+          "width": 1280,
+          "height": 1600,
+          "filename": "Arps_Terria_6.jpg",
+          "size": 286836,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "width": 29,
+              "height": 36
+            },
+            "large": {
+              "width": 512,
+              "height": 640
+            },
+            "full": {
+              "width": 1280,
+              "height": 1600
+            }
+          }
+        }
+      ],
+      "Homework Name 2": [
+        "rec4iQ2WS04Arq3tB"
+      ],
+      "Submission - Linked": [
+        "recnkEQWB5SQ7OxSJ"
+      ],
+      "Exact Hash Match Found?": true,
+      "Program Instance - Raw": [
+        "Shooting Challenge"
+      ],
+      "Created Time": "2026-09-04T20:25:03.000Z",
+      "Homework Name - Slot Correct": "\"Shooting Challenge | 2026-2027 | Week 1 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2 | MTFYA - Resilience Technique - Train Rough\"",
+      "Canonical File URL": "https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/Schmidt_Rene/Shooting_Challenge_2026-2027/2026-09-04/20260904T202503Z_HW2_recwAb5aPEBL7dqcV_Arps_Terria_6.jpg",
+      "File MIME Type": "image/jpeg",
+      "Upload Claim Run ID": "2e4883d3-cc2b-45a3-b043-cf6d680b9346",
+      "Homework Name 1": [
+        "rechCXdubiA1RPFEj"
+      ],
+      "Duplicate Match Records (All)": [
+        "recCEYPMCZzJqCy6q",
+        "recCqOkwozXICtyYy"
+      ],
+      "Upload Destination": "Homework Completions",
+      "Asset Reuse Decision": "Not Reviewed",
+      "Airtable Attachment": [
+        {
+          "id": "attoDu5iVMyMrUiHl",
+          "width": 1280,
+          "height": 1600,
+          "filename": "Arps_Terria_6.jpg",
+          "size": 286836,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "width": 29,
+              "height": 36
+            },
+            "large": {
+              "width": 512,
+              "height": 640
+            },
+            "full": {
+              "width": 1280,
+              "height": 1600
+            }
+          }
+        }
+      ],
+      "Asset Reuse Review Summary": "Video Feedback Used for Homework: identical file was previously submitted for VID-1 / Submission recnkEQWB5SQ7OxSJ and was submitted again for \"Shooting Challenge | 2026-2027 | Week 1 | K-2, 3-4, 5-6, 7-8, 9-12 | HW2 | MTFYA - Resilience Technique - Train Rough\" / Submission recnkEQWB5SQ7OxSJ. Multiple prior same-enrollment uses exist. (1 cross-enrollment informational match(es).)",
+      "Duplicate Match Record": [
+        "recCqOkwozXICtyYy"
+      ],
+      "Is True Video Feedback Asset?": 0,
+      "Writeback Complete?": 1,
+      "Athlete Full Name": [
+        "Schmidt, Rene' - 2026-2027"
+      ],
+      "Date": [
+        "2026-09-04"
+      ],
+      "Uploaded At": "2026-09-04T20:32:43.696Z",
+      "RecordId - Submission Table": [
+        "recnkEQWB5SQ7OxSJ"
+      ],
+      "First Name": [
+        "Rene'"
+      ],
+      "Date - Convert to File Name": "2026_09_04",
+      "Asset Key": "Rene' Schmidt - 9/4/2026 - No Week|recwAb5aPEBL7dqcV",
+      "Is Homework Upload Asset?": 1,
+      "Processing Started At": "2026-09-04T20:32:41.057Z",
+      "Asset Type - Convert for File Name": "HomeworkImage"
+    }
+  }
+]

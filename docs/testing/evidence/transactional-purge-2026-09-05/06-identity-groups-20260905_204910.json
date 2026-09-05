@@ -1,0 +1,237 @@
+{
+  "Athletes": [
+    {
+      "id": "rec0DOgWwzfDQxMaS",
+      "createdTime": "2026-09-03T22:18:35.000Z",
+      "preview": {
+        "Athlete ID": "ATH-rec0DOgWwzfDQxMaS",
+        "Athlete Match Key": "mschmidt@fairfield.k12.mt.us|verify|verify-sc112-20260903",
+        "Full Name": "VERIFY VERIFY-SC112-20260903",
+        "First Name": "VERIFY",
+        "Enrollments": [
+          "recr3OaRi1HdFCB2V"
+        ],
+        "RecordId": "rec0DOgWwzfDQxMaS",
+        "Register Date": "2026-09-03T22:18:35.000Z",
+        "Last Name": "VERIFY-SC112-20260903",
+        "Parent Email": "mschmidt@fairfield.k12.mt.us",
+        "Active?": true
+      }
+    },
+    {
+      "id": "recLYou5LyBDC1re5",
+      "createdTime": "2026-09-04T18:55:52.000Z",
+      "preview": {
+        "Athlete ID": "ATH-recLYou5LyBDC1re5",
+        "Athlete Match Key": "mschmidt@fairfield.k12.mt.us|rene'|schmidt",
+        "Submissions": [
+          "recnkEQWB5SQ7OxSJ"
+        ],
+        "Full Name": "Rene' Schmidt",
+        "First Name": "Rene'",
+        "Enrollments": [
+          "recp5z9S9WpLBzAZj"
+        ],
+        "RecordId": "recLYou5LyBDC1re5",
+        "Register Date": "2026-09-04T18:55:52.000Z",
+        "Last Name": "Schmidt",
+        "Parent Email": "mschmidt@fairfield.k12.mt.us",
+        "Active?": true
+      }
+    },
+    {
+      "id": "recTfxT6WMsPvobAW",
+      "createdTime": "2026-08-31T16:16:32.000Z",
+      "preview": {
+        "Athlete ID": "ATH-recTfxT6WMsPvobAW",
+        "Athlete Match Key": "mschmidt@fairfield.k12.mt.us|athlete1|schmidt",
+        "Full Name": "Athlete1 Schmidt",
+        "First Name": "Athlete1",
+        "Enrollments": [
+          "recZEwkkXTJanDlG6",
+          "rec2UamYHzyc9ELd9"
+        ],
+        "RecordId": "recTfxT6WMsPvobAW",
+        "Register Date": "2026-08-31T16:16:32.000Z",
+        "Last Name": "Schmidt",
+        "Parent Email": "mschmidt@fairfield.k12.mt.us",
+        "Active?": true
+      }
+    }
+  ],
+  "Enrollments": [
+    {
+      "id": "rec2UamYHzyc9ELd9",
+      "createdTime": "2026-09-03T22:15:40.000Z",
+      "preview": {
+        "Gate Enabled?": [
+          true
+        ],
+        "Current Level XP Required": [
+          200
+        ],
+        "Parent Cell Number": "+14065902677",
+        "Meets Gate: Streak": 1,
+        "Athlete Folder Name": "Schmidt_Athlete 2_2026-2027",
+        "Longest Streak Days": 0,
+        "Total Shots Submitted": 0,
+        "Athlete First Name": "Athlete 2",
+        "Public Missing Videos": "8 video reviews",
+        "Public Gate Missing Reason": "Missing: 15 submissions, 2 homework completions, 8 video reviews",
+        "Athlete Cell Number": "+14065902677",
+        "Gate Summary": "Level 3 Gate: Gate requirements not met. See Gate Debug Summary.",
+        "Gate Minimum: Submissions": [
+          15
+        ],
+        "Athlete": [
+          "recTfxT6WMsPvobAW"
+        ],
+        "Current Level XP Ceiling": 399,
+        "Gate-Test Eligible Level": [
+          "recOdLPbf4Vl43kP7"
+        ],
+        "Physical Address Submitted": "PO Box 572",
+        "School Name Lookup": [
+          "Aberdeen"
+        ],
+        "Public Profile Slug": "athlete-2-schmidt",
+        "Zoom XP Enrollment Signature": "rec2UamYHzyc9ELd9|ACTIVE=0|PI=Shooting Challenge | 2026-2027|SY=2026-2027",
+        "XP Progress in Current Level": 0,
+        "Parent Full Name Submitted": "Mike Schmidt",
+        "Gate Failure Summary - Formula": "Level 3 Gate: Gate requirements not met. See Gate Debug Summary.",
+        "Athlete Email - Cleaned": "schmidt@fairfieldbasketballclub.com",
+        "Meets Gate: Videos": 0
+      }
+    },
+    {
+      "id": "recZEwkkXTJanDlG6",
+      "createdTime": "2026-08-31T16:16:27.000Z",
+      "preview": {
+        "Gate Enabled?": [
+          true
+        ],
+        "Current Level XP Required": [
+          0
+        ],
+        "Lifetime XP Manual Adjustments": 0,
+        "Parent Cell Number": "+14065902677",
+        "Meets Gate: Streak": 1,
+        "Athlete Folder Name": "Schmidt_Athlete1_2026-2027",
+        "Longest Streak Days": 0,
+        "Total Shots Submitted": 0,
+        "Athlete First Name": "Athlete1",
+        "Public Missing Videos": "6 video reviews",
+        "Public Gate Missing Reason": "Missing: 10 submissions, 6 video reviews",
+        "Athlete Cell Number": "+14065902677",
+        "Gate Summary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+        "Gate Minimum: Submissions": [
+          10
+        ],
+        "Athlete": [
+          "recTfxT6WMsPvobAW"
+        ],
+        "Current Level XP Ceiling": 199,
+        "Gate-Test Eligible Level": [
+          "rec1EJLJLmfdJLtoF"
+        ],
+        "Physical Address Submitted": "PO Box 572",
+        "School Name Lookup": [
+          "Aberdeen"
+        ],
+        "Public Profile Slug": "athlete1-schmidt",
+        "Zoom XP Enrollment Signature": "recZEwkkXTJanDlG6|ACTIVE=1|PI=Shooting Challenge | 2026-2027|SY=2026-2027",
+        "XP Progress in Current Level": 90,
+        "Parent Full Name Submitted": "Mike Schmidt",
+        "Gate Failure Summary - Formula": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+        "Athlete Email - Cleaned": "schmidt@fairfieldbasketballclub.com"
+      }
+    },
+    {
+      "id": "recp5z9S9WpLBzAZj",
+      "createdTime": "2026-09-04T18:55:47.000Z",
+      "preview": {
+        "Gate Enabled?": [
+          true
+        ],
+        "Current Level XP Required": [
+          0
+        ],
+        "Parent Cell Number": "+14065902677",
+        "Meets Gate: Streak": 1,
+        "Athlete Folder Name": "Schmidt_Rene'_2026-2027",
+        "Longest Streak Days": 0,
+        "Total Shots Submitted": 0,
+        "Athlete First Name": "Rene'",
+        "Public Missing Videos": "1 video review",
+        "Public Gate Missing Reason": "Missing: 9 submissions, 1 video review",
+        "Athlete Cell Number": "+14065902677",
+        "Gate Summary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+        "Gate Minimum: Submissions": [
+          10
+        ],
+        "Athlete": [
+          "recLYou5LyBDC1re5"
+        ],
+        "Current Level XP Ceiling": 199,
+        "Gate-Test Eligible Level": [
+          "rec1EJLJLmfdJLtoF"
+        ],
+        "Physical Address Submitted": "PO Box 572",
+        "School Name Lookup": [
+          "Ambrose"
+        ],
+        "Public Profile Slug": "rene'-schmidt",
+        "Zoom XP Enrollment Signature": "recp5z9S9WpLBzAZj|ACTIVE=1|PI=Shooting Challenge | 2026-2027|SY=2026-2027",
+        "XP Progress in Current Level": 46,
+        "Parent Full Name Submitted": "Mike Schmidt",
+        "Gate Failure Summary - Formula": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+        "Athlete Email - Cleaned": "mschmidt@fairfield.k12.mt.us",
+        "Meets Gate: Videos": 0
+      }
+    },
+    {
+      "id": "recr3OaRi1HdFCB2V",
+      "createdTime": "2026-09-03T22:18:36.000Z",
+      "preview": {
+        "Gate Enabled?": [
+          true
+        ],
+        "Current Level XP Required": [
+          0
+        ],
+        "Meets Gate: Streak": 1,
+        "Athlete Folder Name": "VERIFY-SC112-20260903_VERIFY_2026-2027",
+        "Longest Streak Days": 0,
+        "Total Shots Submitted": 0,
+        "Athlete First Name": "VERIFY",
+        "Public Missing Videos": "6 video reviews",
+        "Public Gate Missing Reason": "Missing: 10 submissions, 6 video reviews",
+        "Gate Summary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+        "Gate Minimum: Submissions": [
+          10
+        ],
+        "Athlete": [
+          "rec0DOgWwzfDQxMaS"
+        ],
+        "Current Level XP Ceiling": 199,
+        "Gate-Test Eligible Level": [
+          "rec1EJLJLmfdJLtoF"
+        ],
+        "School Name Lookup": [
+          "Aberdeen"
+        ],
+        "Public Profile Slug": "verify-verify-sc112-20260903",
+        "Zoom XP Enrollment Signature": "recr3OaRi1HdFCB2V|ACTIVE=1|PI=Shooting Challenge | 2026-2027|SY=2026-2027",
+        "XP Progress in Current Level": 0,
+        "Parent Full Name Submitted": "Mike Schmidt",
+        "Gate Failure Summary - Formula": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+        "Athlete Email - Cleaned": "mschmidt@fairfield.k12.mt.us",
+        "Meets Gate: Videos": 0,
+        "Parent Email - Cleaned": "mschmidt@fairfield.k12.mt.us",
+        "Level Status": "Assigned",
+        "Active?": true
+      }
+    }
+  ],
+  "Registrations": []
+}

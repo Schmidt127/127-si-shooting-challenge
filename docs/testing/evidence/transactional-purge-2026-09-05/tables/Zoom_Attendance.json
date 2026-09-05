@@ -1,0 +1,171 @@
+[
+  {
+    "id": "reck9L0WU7ScuwdGT",
+    "createdTime": "2026-09-03T04:00:12.000Z",
+    "table_name": "Zoom Attendance",
+    "table_id": "tblg8DPRu3j0dbuwi",
+    "fields": {
+      "Recording Quiz Satisfactory?": true,
+      "Effective Recording Counts for Level Gate?": [
+        1
+      ],
+      "Effective Recording Counts for Perfect Week?": [
+        1
+      ],
+      "Zoom Meeting": [
+        "recLf72BcLyvbJQZR"
+      ],
+      "Zoom Credit Approved?": 0,
+      "Zoom Credit Pre-Approved?": 0,
+      "Effective Recording Quiz Requires Coach Approval?": [
+        1
+      ],
+      "Effective Recording Makeup Window Days": [
+        0
+      ],
+      "RecordId": "reck9L0WU7ScuwdGT",
+      "Attendance Method": "Recording Quiz",
+      "Effective Recording Deadline Mode": [
+        "Later of Both"
+      ],
+      "Id": 18,
+      "Zoom Gate Credit Earned?": 0,
+      "Zoom XP Amount": 0,
+      "Zoom Recording Quiz \u2014 Past Deadline (view marker)": 1,
+      "Meeting Approved Preconflict Pair Tags": [
+        null
+      ],
+      "Zoom XP Percentage": 0,
+      "Meeting Zoom Meeting Key - Lkp": [
+        "recLf72BcLyvbJQZR"
+      ],
+      "Effective Recording XP Percentage": [
+        50
+      ],
+      "Zoom Meeting RID": [
+        "recLf72BcLyvbJQZR"
+      ],
+      "Zoom Credit Conflict?": 0,
+      "Effective Recording Makeup Enabled?": [
+        1
+      ],
+      "Zoom Credit Debug": "Method=Recording Quiz | LiveConfirmed=N | Review= | Satisfactory=Y | PreApproved=N | Conflict=N | Approved=N | Pct=0 | XP=0 | Gate=N | Key= | EnrollmentRID= | MeetingRID=recLf72BcLyvbJQZR | EffectivePct=50 | EffectiveGate=1 | EffectiveCoachApproval=1 | Deadline="
+    }
+  },
+  {
+    "id": "recuWvwQEYEq3lZyj",
+    "createdTime": "2026-09-03T04:04:37.000Z",
+    "table_name": "Zoom Attendance",
+    "table_id": "tblg8DPRu3j0dbuwi",
+    "fields": {
+      "Recording Quiz Satisfactory?": true,
+      "Effective Recording Counts for Level Gate?": [
+        1
+      ],
+      "Effective Recording Counts for Perfect Week?": [
+        1
+      ],
+      "Zoom Meeting": [
+        "recLZmVTQveRkRpC4"
+      ],
+      "Zoom Credit Approved?": 0,
+      "Zoom Credit Pre-Approved?": 0,
+      "Effective Recording Quiz Requires Coach Approval?": [
+        1
+      ],
+      "Effective Recording Makeup Window Days": [
+        0
+      ],
+      "RecordId": "recuWvwQEYEq3lZyj",
+      "Attendance Method": "Recording Quiz",
+      "Effective Recording Deadline Mode": [
+        "Later of Both"
+      ],
+      "Id": 19,
+      "Zoom Gate Credit Earned?": 0,
+      "Zoom XP Amount": 0,
+      "Zoom Recording Quiz \u2014 Past Deadline (view marker)": 1,
+      "Meeting Approved Preconflict Pair Tags": [
+        null
+      ],
+      "Zoom XP Percentage": 0,
+      "Meeting Zoom Meeting Key - Lkp": [
+        "recLZmVTQveRkRpC4"
+      ],
+      "Effective Recording XP Percentage": [
+        50
+      ],
+      "Zoom Meeting RID": [
+        "recLZmVTQveRkRpC4"
+      ],
+      "Zoom Credit Conflict?": 0,
+      "Effective Recording Makeup Enabled?": [
+        1
+      ],
+      "Zoom Credit Debug": "Method=Recording Quiz | LiveConfirmed=N | Review= | Satisfactory=Y | PreApproved=N | Conflict=N | Approved=N | Pct=0 | XP=0 | Gate=N | Key= | EnrollmentRID= | MeetingRID=recLZmVTQveRkRpC4 | EffectivePct=50 | EffectiveGate=1 | EffectiveCoachApproval=1 | Deadline="
+    }
+  },
+  {
+    "id": "recyGpMJWvNR7YCtq",
+    "createdTime": "2026-09-02T11:57:12.000Z",
+    "table_name": "Zoom Attendance",
+    "table_id": "tblg8DPRu3j0dbuwi",
+    "fields": {
+      "Recording Quiz Satisfactory?": true,
+      "Effective Recording Counts for Level Gate?": [
+        0
+      ],
+      "Effective Recording Counts for Perfect Week?": [
+        1
+      ],
+      "Zoom Meeting": [
+        "recMFP2x5LDqea9ax"
+      ],
+      "Zoom Credit Approved?": 0,
+      "Zoom Credit Pre-Approved?": 0,
+      "Effective Recording Quiz Requires Coach Approval?": [
+        1
+      ],
+      "Effective Recording Makeup Window Days": [
+        7
+      ],
+      "Zoom Credit Key": "ZOOM_CREDIT|recZEwkkXTJanDlG6|recMFP2x5LDqea9ax",
+      "RecordId": "recyGpMJWvNR7YCtq",
+      "Enrollment RID": [
+        "recZEwkkXTJanDlG6"
+      ],
+      "Attendance Method": "Recording Quiz",
+      "Effective Recording Deadline Mode": [
+        "Later of Both"
+      ],
+      "Enrollment": [
+        "recZEwkkXTJanDlG6"
+      ],
+      "Id": 7,
+      "Zoom Gate Credit Earned?": 0,
+      "Zoom XP Amount": 0,
+      "Zoom Recording Quiz \u2014 Past Deadline (view marker)": 1,
+      "Meeting XP Source Keys - Lkp": [
+        "ZOOM_RECORDING_CREDIT|recZEwkkXTJanDlG6|recMFP2x5LDqea9ax"
+      ],
+      "Meeting Approved Preconflict Pair Tags": [
+        null
+      ],
+      "Zoom XP Percentage": 0,
+      "Meeting Zoom Meeting Key - Lkp": [
+        "recMFP2x5LDqea9ax"
+      ],
+      "Effective Recording XP Percentage": [
+        50
+      ],
+      "Zoom Meeting RID": [
+        "recMFP2x5LDqea9ax"
+      ],
+      "Zoom Credit Conflict?": 0,
+      "Effective Recording Makeup Enabled?": [
+        1
+      ],
+      "Zoom Credit Debug": "Method=Recording Quiz | LiveConfirmed=N | Review= | Satisfactory=Y | PreApproved=N | Conflict=N | Approved=N | Pct=0 | XP=0 | Gate=N | Key=ZOOM_CREDIT|recZEwkkXTJanDlG6|recMFP2x5LDqea9ax | EnrollmentRID=recZEwkkXTJanDlG6 | MeetingRID=recMFP2x5LDqea9ax | EffectivePct=50 | EffectiveGate=0 | EffectiveCoachApproval=1 | Deadline="
+    }
+  }
+]
