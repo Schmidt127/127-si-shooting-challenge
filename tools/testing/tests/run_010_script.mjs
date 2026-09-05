@@ -201,7 +201,7 @@ export function build010Base(opts = {}) {
       "Weekly Summary Key": "",
       "Streak Occurrence Key": "",
       ...xpEventCells,
-    }),
+    }, "2026-08-07T12:00:00.000Z"),
   ];
 
   const xpEventRecords = xpEvents === null

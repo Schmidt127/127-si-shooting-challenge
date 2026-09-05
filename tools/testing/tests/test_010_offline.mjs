@@ -349,3 +349,162 @@ test("Homework XP linked to the same Submission does not interfere with Submissi
   const homework = base.getTable("XP Events").records.get(IDS.HOMEWORK_XP_EVENT);
   assert.equal(homework.getCellValue("Source Key"), `HOMEWORK_XP|${IDS.SUBMISSION}`);
 });
+
+test("SC-167 concurrent create race consolidates to one active award", async () => {
+  const base = build010Base({
+    submissionCells: {
+      "XP Events": [],
+      "Last Reconciled Signature": "",
+    },
+    xpEvents: [],
+  });
+  const xpTable = base.getTable("XP Events");
+  const originalCreate = xpTable.createRecordAsync.bind(xpTable);
+  xpTable.createRecordAsync = async (payload) => {
+    const id = await originalCreate(payload);
+    // Inject a peer create that won the race (earlier createdTime).
+    const peerId = "recPeerRaceXp00001";
+    xpTable.records.set(
+      peerId,
+      new MockRecord(
+        peerId,
+        {
+          ...Object.fromEntries(
+            Object.entries(payload).map(([k, v]) => [
+              k,
+              v && typeof v === "object" && v.name !== undefined && !Array.isArray(v) ? v.name : v,
+            ])
+          ),
+          "Active?": true,
+        },
+        "2026-09-05T11:59:59.000Z"
+      )
+    );
+    return id;
+  };
+
+  const { output, error } = await run010({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.statusOut, "success");
+  assert.equal(output.values.actionOut, "consolidated_duplicate_canonical");
+  const rows = [...xpTable.records.values()].filter(
+    (row) => row.getCellValue("Source Key") === `SUBMISSION_XP|${IDS.SUBMISSION}`
+  );
+  assert.equal(rows.length, 2);
+  const actives = rows.filter((row) => row.getCellValue("Active?") === true);
+  assert.equal(actives.length, 1);
+  assert.equal(actives[0].id, "recPeerRaceXp00001");
+  assert.equal(output.values.xpEventId, "recPeerRaceXp00001");
+});
+
+test("SC-167 pre-existing duplicate canonical keys consolidate on reconcile", async () => {
+  const peerId = "recDupCanonXp00002";
+  const base = build010Base({
+    submissionCells: {
+      "XP Events": [
+        { id: IDS.XP_EVENT, name: "Submission XP" },
+        { id: peerId, name: "Duplicate XP" },
+      ],
+      "Last Reconciled Signature": "",
+    },
+    xpEvents: [
+      new MockRecord(
+        IDS.XP_EVENT,
+        {
+          Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
+          Submission: [{ id: IDS.SUBMISSION, name: "Submission" }],
+          Week: [{ id: IDS.WEEK, name: "Early Bird" }],
+          "Weekly Athlete Summary": [{ id: IDS.SUMMARY_CANONICAL, name: "Canonical Summary" }],
+          "XP Source": { id: "selZw4nOkwMJCgGyR", name: "Submission Base" },
+          "XP Bucket": { name: "Shooting Base" },
+          "XP Points": 20,
+          "XP Reason Public": "",
+          "XP Reason Debug": "",
+          "Active?": true,
+          "Source Key": `SUBMISSION_XP|${IDS.SUBMISSION}`,
+          "XP Activity Date": "2026-08-07",
+          "XP Activity Date Source": { name: "Submission Activity Date" },
+        },
+        "2026-09-05T12:00:00.000Z"
+      ),
+      new MockRecord(
+        peerId,
+        {
+          Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
+          Submission: [{ id: IDS.SUBMISSION, name: "Submission" }],
+          Week: [{ id: IDS.WEEK, name: "Early Bird" }],
+          "Weekly Athlete Summary": [{ id: IDS.SUMMARY_CANONICAL, name: "Canonical Summary" }],
+          "XP Source": { id: "selZw4nOkwMJCgGyR", name: "Submission Base" },
+          "XP Bucket": { name: "Shooting Base" },
+          "XP Points": 20,
+          "XP Reason Public": "",
+          "XP Reason Debug": "",
+          "Active?": true,
+          "Source Key": `SUBMISSION_XP|${IDS.SUBMISSION}`,
+          "XP Activity Date": "2026-08-07",
+          "XP Activity Date Source": { name: "Submission Activity Date" },
+        },
+        "2026-09-05T12:00:05.000Z"
+      ),
+    ],
+  });
+
+  const { output, error } = await run010({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.actionOut, "consolidated_duplicate_canonical");
+  assert.equal(output.values.xpEventId, IDS.XP_EVENT);
+  assert.equal(base.getTable("XP Events").records.get(IDS.XP_EVENT).getCellValue("Active?"), true);
+  assert.equal(base.getTable("XP Events").records.get(peerId).getCellValue("Active?"), false);
+});
+
+test("SC-167 ambiguous ownership on duplicate keys fails closed", async () => {
+  const peerId = "recDupAmbiguous0001";
+  const base = build010Base({
+    submissionCells: {
+      "XP Events": [
+        { id: IDS.XP_EVENT, name: "Submission XP" },
+        { id: peerId, name: "Ambiguous XP" },
+      ],
+      "Last Reconciled Signature": "",
+    },
+    xpEvents: [
+      new MockRecord(
+        IDS.XP_EVENT,
+        {
+          Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
+          Submission: [{ id: IDS.SUBMISSION, name: "Submission" }],
+          Week: [{ id: IDS.WEEK, name: "Early Bird" }],
+          "Weekly Athlete Summary": [{ id: IDS.SUMMARY_CANONICAL, name: "Canonical Summary" }],
+          "XP Source": { id: "selZw4nOkwMJCgGyR", name: "Submission Base" },
+          "XP Bucket": { name: "Shooting Base" },
+          "XP Points": 20,
+          "Active?": true,
+          "Source Key": `SUBMISSION_XP|${IDS.SUBMISSION}`,
+        },
+        "2026-09-05T12:00:00.000Z"
+      ),
+      new MockRecord(
+        peerId,
+        {
+          Enrollment: [{ id: "recWrongEnrollment1", name: "Wrong" }],
+          Submission: [{ id: IDS.SUBMISSION, name: "Submission" }],
+          Week: [{ id: IDS.WEEK, name: "Early Bird" }],
+          "Weekly Athlete Summary": [{ id: IDS.SUMMARY_CANONICAL, name: "Canonical Summary" }],
+          "XP Source": { id: "selZw4nOkwMJCgGyR", name: "Submission Base" },
+          "XP Bucket": { name: "Shooting Base" },
+          "XP Points": 20,
+          "Active?": true,
+          "Source Key": `SUBMISSION_XP|${IDS.SUBMISSION}`,
+        },
+        "2026-09-05T12:00:05.000Z"
+      ),
+    ],
+  });
+
+  const before = totalWrites(base);
+  const { error } = await run010({ base });
+  assert.ok(error);
+  assert.match(String(error.message), /ambiguous ownership|ownership mismatch/i);
+  assert.equal(totalWrites(base), before);
+  assert.equal(base.getTable("XP Events").records.get(peerId).getCellValue("Active?"), true);
+});
