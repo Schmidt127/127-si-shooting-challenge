@@ -30,7 +30,7 @@ const STATUS_OVERLAYS = {
   "FUT-036": "COMPLETE",
   "FUT-024": "COMPLETE",
   "SC-166": "MIKE-OWNED / MANUAL",
-  "SC-SEASON-SIM-002": "READY",
+  "SC-SEASON-SIM-002": "COMPLETE",
   "FUT-029": "DEFERRED",
   "FUT-048": "DEFERRED",
   "MRW-H12": "DEFERRED",
@@ -256,12 +256,9 @@ function classifyOwner(item, snapshot) {
 }
 
 function isLaunchRequirement(item, snapshot) {
-  const launchIds = new Set([
-    "FUT-003",
-    "FUT-026",
-    "SC-SEASON-SIM-001",
-    "SC-SEASON-SIM-002",
-  ]);
+  // SC-SEASON-SIM-002 package is COMPLETE / closed; next execute is NOT authorized
+  // and must not appear as an active launch requirement until Mike re-authorizes.
+  const launchIds = new Set(["FUT-003", "FUT-026", "SC-SEASON-SIM-001"]);
   return launchIds.has(item.id);
 }
 
@@ -376,19 +373,23 @@ function renderGenerated(rows, summary, generatedAt) {
     );
   }
   lines.push("");
-  lines.push("## Classification notes (2026-09-05 reconciliation)");
+  lines.push("## Classification notes (2026-09-05 reconciliation; post-#457)");
   lines.push("");
   lines.push("- **SC-163** = COMPLETE / Live Tested under Automation **066 v4.1**.");
   lines.push(
     "- **SC-166** = Mike-owned/manual Interface filter fine-tuning; Interfaces published; **not** a core application blocker.",
   );
+  lines.push("- **SC-167 / 168 / 169** = COMPLETE / Live Tested (010 **v10.14**; weekly-email expectation; unlock count).");
+  lines.push("- **OPS-PURGE-20260905** = COMPLETE (transactional purge; tip `ba969433` / PR **#457**).");
   lines.push("- **FUT-029** = Deferred — DO NOT IMPLEMENT; outside current app completion.");
+  lines.push("- **FUT-048** = Deferred optional CloudFront custom domain; keep `d21ixrrrqpqz29.cloudfront.net`.");
   lines.push("- **AUT-013 / AUT-067** pastes = optional/declined maintenance (not paste-pending blockers).");
   lines.push("- **AUT-122** = superseded; never install.");
   lines.push(
-    "- **SC-SEASON-SIM-002** package = reusable and READY for Mike authorization later; **not currently running**; temporary formulas inactive (live `NOW()` / `TODAY()`); prior Sept 2 run cleaned; next execute needs a **new** simulation ID and exact phrase `RUN SEASON SIMULATION`.",
+    "- **SC-SEASON-SIM-002** = **COMPLETE (package closed)** — T122531Z cleaned; formulas restored to live `NOW()` / `TODAY()`; next execute **NOT authorized** (do not treat as active/READY). Re-run only with a **new** simulation ID and exact phrase `RUN SEASON SIMULATION`.",
   );
   lines.push("- Launch-time requirements are flagged `Launch? = yes` separately from future enhancements.");
+  lines.push("- Vocabulary buckets are mutually exclusive — no item is both COMPLETE and READY/IN PROGRESS.");
   lines.push("");
   return lines.join("\n");
 }

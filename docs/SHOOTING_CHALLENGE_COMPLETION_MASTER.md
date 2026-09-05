@@ -10,7 +10,7 @@ This is the **detailed completion matrix and historical traceability record** fo
 | Field | Value |
 |-------|--------|
 | **Purpose** | Completion matrix, package traceability, and preserved historical evidence |
-| **Last updated** | **2026-09-05** (Master List reconciliation after `2131f7d5` / #447; SC-163 **COMPLETE / Live Tested** — **066 v4.1**; SC-161/162/164/165 live-tested; SC-166 Mike-owned/manual not core blocker; FUT-029 deferred; Season Sim package READY / **not running**)
+| **Last updated** | **2026-09-05** (post-#457 tip \a969433\; SC-167/168/169 **COMPLETE / Live Tested** — **010 v10.14**; transactional purge COMPLETE; Season Sim **CLOSED** / next execute NOT authorized; formulas restored; SC-163 **COMPLETE** — **066 v4.1**; SC-161/162/164/165 live-tested; SC-166 Mike-owned/manual not core blocker; FUT-029 + FUT-048 deferred — keep \d21ixrrrqpqz29.cloudfront.net\)
 | **Production branch** | `master` |
 | **Vercel root** | `web/` |
 | **Production website** | https://www.fairfieldbasketballclub.com/shoot |

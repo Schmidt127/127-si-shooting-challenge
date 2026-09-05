@@ -1,7 +1,7 @@
 # CURRENT TRUTH â 127 SI Shooting Challenge
 
 **Status:** Active â primary current-state document for this repository  
-**Last verification (repo):** 2026-09-05 — **Production transactional test-data purge COMPLETE** (Mike `APPROVE TRANSACTIONAL PURGE`). Deleted **204** records (200 approved + 4 automation remnants). Athletes/Enrollments/Submissions/Assets/HC/XP/WAS/VF/Unlocks/Streaks/Zoom Attendance/Award Recipients/Email Handoff = **0**. Zoom Meetings retained **2** (Introduction, Motivation). Countries/State/PHA/Weeks/Homework Library/rules/config preserved. Evidence: [`testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md`](./testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md). Prior: SC-167/168/169 COMPLETE; formulas **`NOW()` / `TODAY()`**; next Season Sim execute NOT authorized.
+**Last verification (repo):** 2026-09-05 — **`origin/master` = `ba969433`** (PR **#457** transactional-purge closeout). Production transactional test-data purge **COMPLETE** (Mike `APPROVE TRANSACTIONAL PURGE`). Deleted **204** records (200 approved + 4 automation remnants). Athletes/Enrollments/Submissions/Assets/HC/XP/WAS/VF/Unlocks/Streaks/Zoom Attendance/Award Recipients/Email Handoff = **0**. Zoom Meetings retained **2** (Introduction, Motivation). Countries/State/PHA/Weeks/Homework Library/rules/config preserved. Evidence: [`testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md`](./testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md). Prior: SC-167/168/169 COMPLETE; **010 v10.14** Live Tested; formulas **`NOW()` / `TODAY()`**; Season Sim closed — next execute NOT authorized; **FUT-048** deferred (`d21ixrrrqpqz29.cloudfront.net`).
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -13,9 +13,9 @@
 | Start here | Why |
 |---|---|
 | This file | Live bases, automation versions, pending queue |
-| [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md) | Canonical future work â **FUT-033â047** new intake; **FUT-032** / **065 v10.5** COMPLETE |
-| `master` after merge | Source of truth for Cloud Agents â confirm `git fetch` + `git rev-parse HEAD` |
-| Landing hub items FUT-033â037 | Implement in **`hoopchallenges-landing`**, not this repoâs `web/` |
+| [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md) | Canonical future work — **FUT-033–048** intake; **FUT-032** / **065 v10.5** COMPLETE; Section G post-#457 |
+| `master` after merge | Source of truth for Cloud Agents — confirm `git fetch` + `git rev-parse HEAD` |
+| Landing hub items FUT-033–037 | Implement in **`hoopchallenges-landing`**, not this repo’s `web/` |
 
 ---
 
@@ -66,9 +66,10 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | Re-verify after transactional-purge closeout merge: `git fetch origin && git rev-parse origin/master` |
-| `origin/master` | Should match HEAD after fetch — re-verify: `git rev-parse origin/master` |
+| HEAD SHA | **`ba969433c84b8418fd453658df0a5a39ca5e679e`** (PR **#457** purge closeout) |
+| `origin/master` | **`ba969433c84b8418fd453658df0a5a39ca5e679e`** |
 | Ahead / behind | **0 / 0** (re-verify after fetch) |
+| Recent merges (2026-09-05 purge + SC-167 complete) | **#457** transactional purge (`ba969433`) · **#456** SC-167 complete docs (`57831fe7`) · **#455** SC-167/168/169 live-status |
 | Recent merges (2026-09-05 discrepancy wave) | **#450** backlog intake · **#451** SC-168 (`fba62be0`) · **#453** SC-167 010 v10.14 (`08da8b03`) · **#452** SC-169 (`caad5ba9`). Wave: [`audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md`](./audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md) |
 | Recent merges (2026-09-05 completion wave) | **#435** A1 truth (`7c63dd00`) · **#440** SC-161 (`0eb1ed28`) · **#438** SC-163 repo (`43d353a4`) · **#437** SC-162 (`f8a1c9ee`) · **#439** SC-164/165 (`9869a2eb`) · **#436** SC-166 (`bd0198a4`) · **#444** SC-163 066 v4.1 live closeout (`480771fc`) · **#446** dual-enrollment cleanup (`58663cfd`) · **#447** Season Sim preflight (`2131f7d5`) · **#448** Master List reconciliation (`3cf3b568`). Evidence: [`audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md`](./audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md) · [`audits/SC-WAVE-20260905-CLOSEOUT.md`](./audits/SC-WAVE-20260905-CLOSEOUT.md) · [`audits/MASTER-LIST-RECONCILIATION-20260905.md`](./audits/MASTER-LIST-RECONCILIATION-20260905.md) |
 | Recent merges (2026-09-04 SF + reliability) | **#411** SC-156 · **#410/#409/#408** SC-153 · **#407** SF closeout · **#406** SC-152/153 · **#404** SC-154/155/156 · **#401** SC-157 closes **#340** · **#398** SC-147 · **#399** SEO · **#397** FUT-025 · **#396** SC-148 · **#395** SC-057/058 |
@@ -111,7 +112,7 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | Health | `GET /shoot/api/airtable` â token validity check |
 | Softr | **Obsolete / Not Used** â historical reference only |
 | SEO | **COMPLETE** â program pages indexable (`NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`); structured data + mobile meta from PR **#399** (supersedes draft **#310**). Status: [`audits/SEO-STATUS-20260904.md`](./audits/SEO-STATUS-20260904.md). Private/auth routes remain `noindex`. |
-| Production deploy | **Live** — Vercel Production follows `master` (repo tip **`bd0198a4`** after SC wave 2026-09-05). `GET /shoot` / `/shoot/api/airtable` live-pass **200**. Leaderboard **3 athletes** live; homework compact list live; Levels **Your Level Progress** live; SC-149 branding + FD More residual live; FUT-025 athlete indexing env on |
+| Production deploy | **Live** — Vercel Production follows `master` (docs tip **`ba969433`** after PR **#457** purge closeout; web tip may lag docs-only merges). `GET /shoot` / `/shoot/api/airtable` live-pass **200**. Post-purge transactional athlete tables empty; homework compact list + Levels + SC-149 branding live; FUT-025 athlete indexing env on |
 | Vitest / smoke | **483/483** Vitest pass (2026-08-30 release QA) Â· typecheck/lint/build PASS Â· prior smoke **50/50** (MRW-E04) |
 | FUT-016 Tutorials | **Complete** â portfolio catalog at `/shoot/tutorials` (PR **#284**, 2026-08-30) |
 | FUT-017 Zoom Meetings | **Complete** â portfolio catalog at `/shoot/zoom-meetings` (PR **#285**, 2026-08-30) |
@@ -214,7 +215,7 @@ Do **not** treat other Automations-table columns (trigger/conditions) as authori
 | # | Production (Automations Code) | GitHub | Status | Notes |
 |---|-------------------------------|--------|--------|-------|
 | **003** | **v2.0** | v2.0 | **Live / COMPLETE / PRODUCTION-VERIFIED / DO-NOT-TOUCH** | Grade-change Grade Band refresh; keep active; disposable VERIFY Enrollment 2026-09-03 â [`prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md`](./prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md). Initial assign remains **002**. |
-| **010** | **v10.13** | v10.13 | Live / **aligned** | Live body confirmed **v10.13** 2026-09-05 (Automations Code). Repeated failure on `reczBZnA4DEiaP3P0` was contaminated Athlete1/Athlete 2 dual-enrollment fixture data — cleaned; **010 unchanged** — [`audits/010-DUAL-ENROLLMENT-FIXTURE-CLEANUP-20260905.md`](./audits/010-DUAL-ENROLLMENT-FIXTURE-CLEANUP-20260905.md). Do not re-paste for that incident. |
+| **010** | **v10.14** | v10.14 | Live / **SC-167 COMPLETE / Live Tested** | Option A create+retry proof 2026-09-05; one Active `SUBMISSION_XP`; formulas restored — [`audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md`](./audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md). Prior dual-enrollment fixture cleanup historical — [`audits/010-DUAL-ENROLLMENT-FIXTURE-CLEANUP-20260905.md`](./audits/010-DUAL-ENROLLMENT-FIXTURE-CLEANUP-20260905.md). |
 | **020** | **v4.1** | v4.1 | Live / **PASTE-ALIGNED** (SC-160 COMPLETE 2026-09-05) | HC Week = PHA.Week; Submission.Week optional; Early/On Time/Late Notes; WAS find-or-create for Enrollment+PHA.Week. Evidence [`audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md`](./audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md) |
 | **022** | **v2.2** | v2.2 | Live / **aligned** | Lambda-only parent URL â [`022-v2.2-operator-packet.md`](./deploy-checklists/022-v2.2-operator-packet.md) |
 | **033** | **v4.4** | v4.4 | Live | |
@@ -269,7 +270,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 
 | Domain | Owner (repo contract) | Live proof |
 |--------|----------------------|------------|
-| Submission XP | **010** â Source Key `SUBMISSION_XP\|{submissionId}` | GitHub **v10.12**; prior Production run history v10.11 |
+| Submission XP | **010** — Source Key `SUBMISSION_XP\|{submissionId}` | GitHub + Live **v10.14** (SC-167 COMPLETE / Live Tested) |
 | Homework XP | **064** prepares (`HOMEWORK_COMPLETION` rule); **065** creates/reconciles `HOMEWORK_XP|{hcId}` (**020** HC create; **078** marks Parent Feedback Ready?) | **065 Production v10.7** (SC-160); late-credit + weekless WAS paths Live Tested |
 | Video XP | **113 / 114** (+ **013** VF create) | **Live v6.4 / v6.1**; **PKG-007 lifecycle proof PASS 2026-08-23** (`AUTONOMOUS_VIDEO_QA_20260823_164549`, Testing3). Native trigger + 073 OFF UI attestation open |
 | Shot milestones | **066** | Production **v4.1** Live Tested (SC-163 Goal Met Date + milestones) |
@@ -329,12 +330,13 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 
 - Wave 0 2025â26 close-out; H-001; many PKG merges on `master`
 - Email plane migrated to Hub â Resend (Mike 2026-08-19)
-- Confirmed Production pastes aligned: **010 v10.12**, **020 v3.8**, **022 v2.2**, **065 v10.5**, **071 v4.3**, **076 v8.12**, **072 v4.8**, **073 v4.4**, **066**, **070b**, **117**
+- Confirmed Production pastes aligned: **010 v10.14**, **020 v4.1**, **022 v2.2**, **065 v10.7**, **071 v4.3**, **076 v8.12**, **072 v4.8**, **073 v4.4**, **066 v4.1**, **070b**, **117**
 - Tremendous sandbox validation
 - Lambda season CodeOnly deploy (optional follow-ups open)
 - Repository integrity + PII redaction pass
-- Secure video URL pipeline **Live** (022/072/073) â Lambda viewer only; direct S3 AccessDenied expected
+- Secure video URL pipeline **Live** (022/072/073) — Lambda viewer only; direct S3 AccessDenied expected
 - **2026-08-24:** **066 v3.9** dynamic `recordId` verified; historical audit artifacts documented
+- **2026-09-05:** SC-167/168/169 COMPLETE; OPS-PURGE COMPLETE; Season Sim closed; formulas `NOW()`/`TODAY()`
 
 ### Open Mike UI actions (wave 2026-09-05)
 
@@ -360,10 +362,11 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - SEO discoverability â **COMPLETE** (PR **#399**; draft **#310** closed)
 - SC-148 mobile a11y â **COMPLETE / Live Tested** (PR **#396**)
 - SC-057 / SC-058 â **Complete / Live Tested** (PR **#395**; inventory + SF remediation)
-- Season Simulation — **T122531Z closed**; **SC-167/168/169 ALL COMPLETE / Live Tested**; next execute **NOT authorized** without new Mike authorization
+- Season Simulation — **T122531Z CLOSED**; **SC-167/168/169 ALL COMPLETE / Live Tested**; next execute **NOT authorized** without new Mike authorization
 - **SC-160** — **COMPLETE / Live Tested** — asset intake without Week + early/on-time/late HW + weekless WAS-for-PHA-Week — live **009 v1.3 / 020 v4.1 / 065 v10.7 / 057 2.5** — [audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md](./audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md)
-- **SC wave 2026-09-05** — SC-161/162/163/164/165/149 residual **COMPLETE / Live Tested**; SC-166 **Mike-owned/manual** (not core blocker); FUT-029 Deferred; **FUT-048** Deferred optional CloudFront custom domain (docs-only); Season Sim package READY / not running (#447) — [audits/SC-WAVE-20260905-CLOSEOUT.md](./audits/SC-WAVE-20260905-CLOSEOUT.md) · [audits/MASTER-LIST-RECONCILIATION-20260905.md](./audits/MASTER-LIST-RECONCILIATION-20260905.md)
-- **SC-167/168/169 discrepancy wave** — [audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md](./audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md) · [audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md](./audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md) · PRs **#451/#453/#452/#454/#455** + SC-167 complete docs PR
+- **SC wave 2026-09-05** — SC-161/162/163/164/165/149 residual **COMPLETE / Live Tested**; SC-166 **Mike-owned/manual** (not core blocker); FUT-029 Deferred; **FUT-048** Deferred optional CloudFront custom domain (keep `d21ixrrrqpqz29.cloudfront.net`); Season Sim package **CLOSED** / next execute NOT authorized; purge **#457** — [audits/SC-WAVE-20260905-CLOSEOUT.md](./audits/SC-WAVE-20260905-CLOSEOUT.md) · [audits/MASTER-LIST-RECONCILIATION-20260905.md](./audits/MASTER-LIST-RECONCILIATION-20260905.md)
+- **SC-167/168/169 discrepancy wave** — [audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md](./audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md) · [audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md](./audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md) · PRs **#451/#453/#452/#454/#455/#456**
+- **OPS-PURGE-20260905** — **COMPLETE** — PR **#457** `ba969433` — [testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md](./testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md)
 - Airtable field deletion — **deferred** until functional verification complete
 - Full administrative portal / optional card redesign — **deferred**
 - **FUT-048** CloudFront custom domain for homework resources — **deferred** optional/low; keep `d21ixrrrqpqz29.cloudfront.net`; not required now

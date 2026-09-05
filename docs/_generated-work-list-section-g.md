@@ -9,14 +9,14 @@
 | Metric | Count |
 |---|---|
 | Total items | 77 |
-| COMPLETE | 62 |
+| COMPLETE | 63 |
 | IN PROGRESS | 3 |
 | BLOCKED | 0 |
-| READY | 2 |
+| READY | 1 |
 | DEFERRED | 10 |
-| Production actions remaining | 5 |
-| Items requiring Mike | 10 |
-| Items requiring Cursor | 2 |
+| Production actions remaining | 4 |
+| Items requiring Mike | 9 |
+| Items requiring Cursor | 1 |
 | Items requiring OMNI/Airtable | 2 |
 
 Unified vocabulary: **COMPLETE** · **IN PROGRESS** · **BLOCKED** · **READY** · **DEFERRED**.
@@ -95,7 +95,7 @@ Unified vocabulary: **COMPLETE** · **IN PROGRESS** · **BLOCKED** · **READY** 
 | **SC-165** | P2 | COMPLETE | no | — | Awards + coaching messaging (Overview / What's Included) |
 | **SC-ATHLETE-WF-001** | P2 | COMPLETE | no | — | ? Individual athlete workflow QA (pre?season simulation) |
 | **SC-PW-E2E** | P2 | COMPLETE | no | — | Disposable Perfect Week E2E |
-| **SC-SEASON-SIM-002** | P2 | READY | yes | Cursor | ? Athlete 1 Season Simulation Infrastructure (May?June 2027) |
+| **SC-SEASON-SIM-002** | P2 | COMPLETE | no | — | ? Athlete 1 Season Simulation Infrastructure (May?June 2027) |
 | **AUT-013-PASTE** | P3 | DEFERRED | no | Mike | Optional Automation 013 structural paste (v3.1.0 live; GitHub v3.2.0) |
 | **AUT-067-PASTE** | P3 | DEFERRED | no | Mike | Optional Automation 067 structural paste (v3.4 live; GitHub v3.5) |
 | **AUT-122** | P3 | DEFERRED | no | — | Automation 122 Goal Met Date stamp — never install |
@@ -103,13 +103,17 @@ Unified vocabulary: **COMPLETE** · **IN PROGRESS** · **BLOCKED** · **READY** 
 | **FUT-005** | P3 | DEFERRED | no | — | ? Automated accomplishment emails |
 | **FUT-048** | P3 | DEFERRED | no | — | CloudFront Custom Domain for Homework Resources |
 
-## Classification notes (2026-09-05 reconciliation)
+## Classification notes (2026-09-05 reconciliation; post-#457)
 
 - **SC-163** = COMPLETE / Live Tested under Automation **066 v4.1**.
 - **SC-166** = Mike-owned/manual Interface filter fine-tuning; Interfaces published; **not** a core application blocker.
+- **SC-167 / 168 / 169** = COMPLETE / Live Tested (010 **v10.14**; weekly-email expectation; unlock count).
+- **OPS-PURGE-20260905** = COMPLETE (transactional purge; tip `ba969433` / PR **#457**).
 - **FUT-029** = Deferred — DO NOT IMPLEMENT; outside current app completion.
+- **FUT-048** = Deferred optional CloudFront custom domain; keep `d21ixrrrqpqz29.cloudfront.net`.
 - **AUT-013 / AUT-067** pastes = optional/declined maintenance (not paste-pending blockers).
 - **AUT-122** = superseded; never install.
-- **SC-SEASON-SIM-002** package = reusable and READY for Mike authorization later; **not currently running**; temporary formulas inactive (live `NOW()` / `TODAY()`); prior Sept 2 run cleaned; next execute needs a **new** simulation ID and exact phrase `RUN SEASON SIMULATION`.
+- **SC-SEASON-SIM-002** = **COMPLETE (package closed)** — T122531Z cleaned; formulas restored to live `NOW()` / `TODAY()`; next execute **NOT authorized** (do not treat as active/READY). Re-run only with a **new** simulation ID and exact phrase `RUN SEASON SIMULATION`.
 - Launch-time requirements are flagged `Launch? = yes` separately from future enhancements.
+- Vocabulary buckets are mutually exclusive — no item is both COMPLETE and READY/IN PROGRESS.
 

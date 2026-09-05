@@ -6,6 +6,8 @@
 **Operator queue:** [`docs/deploy-checklists/2026-08-29-PRODUCTION-OPERATOR-QUEUE.md`](./docs/deploy-checklists/2026-08-29-PRODUCTION-OPERATOR-QUEUE.md) · paste audit historical [`docs/deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md`](./docs/deploy-checklists/2026-08-30-OUTSTANDING-PRODUCTION-PASTE-AUDIT.md)  
 **Baseline date:** 2026-08-31 (**FUT-030** transactional record reset COMPLETE — clean base for workflow rebuild; prior FUT-002 batch-1 + SC-MULTI-ASSET-HW / 065 XP closeout; PR **#312** / **#311**)
 
+> **Overlay 2026-09-05 (post-#457):** Living tip **`ba969433`**. SC-167/168/169 COMPLETE; **010 v10.14** Live Tested; OPS-PURGE COMPLETE; Season Sim closed (next execute NOT authorized); formulas `NOW()`/`TODAY()`; FUT-048 deferred — keep `d21ixrrrqpqz29.cloudfront.net`. Prefer [`docs/CURRENT-TRUTH.md`](./docs/CURRENT-TRUTH.md) + Section G for operator truth. Rows below remain the 2026-08-31 release-baseline evidence packet.
+
 > Claims below are backed by command output or platform evidence from this session unless marked `PENDING`.
 
 ---

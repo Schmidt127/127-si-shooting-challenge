@@ -418,15 +418,15 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 ## Recommended next task for Mike
 
 1. **SC-166 (Mike-owned/manual; not core blocker):** Optional Active + Completed/History Interface filter fine-tuning — [`docs/deploy-checklists/SC-166-coach-work-queue-filters.md`](docs/deploy-checklists/SC-166-coach-work-queue-filters.md). Interfaces published.
-2. **Archive overlapping WSTEST/PWTEST Weeks** in Program Instance `Shooting Challenge | 2026-2027` (OMNI) before season simulation.  
-3. **Do not** re-paste 010/020/022/057/058/059/065/066/072/073; **do not** restore 075; live fixture `--apply` evidence is historical after **FUT-030** wipe.  
+2. **Archive overlapping WSTEST/PWTEST Weeks** in Program Instance `Shooting Challenge | 2026-2027` (OMNI) before any future season simulation.  
+3. **Do not** re-paste 010/020/022/057/058/059/065/066/072/073; **do not** restore 075; live fixture `--apply` evidence is historical after **FUT-030** + **OPS-PURGE-20260905**.  
 4. **FUT-010:** dry-run R3 still **0 eligible** — no deletion request.  
 5. Optional: refresh Automations **Code** text for 057 (tracker lag) — live script already correct.  
 7. **Do not** activate FUT-003 until registration intentionally opens.  
 8. **Do not** implement **FUT-029** (Grade-Band Homework Platform / Homework Intake Adapter) — **Deferred — DO NOT IMPLEMENT** (**MRW-H12**); not part of current app completion.  
 8b. **Do not** implement **FUT-048** CloudFront custom domain now (**MRW-H13**) — optional/low cosmetic; keep `d21ixrrrqpqz29.cloudfront.net`; do not delay homework-resource migration.  
-9. **FUT-030 COMPLETE** — transactional tables empty; **18 PHA restored** same day. **FUT-002 Batch 1 + Batch 2 COMPLETE**. After WSTEST cleanup: **SC-SEASON-SIM-001** remains FUTURE.  
-10. Wave closeout: [`docs/audits/SC-WAVE-20260905-CLOSEOUT.md`](docs/audits/SC-WAVE-20260905-CLOSEOUT.md) (tip `bd0198a4`).
+9. **FUT-030** + **OPS-PURGE-20260905 COMPLETE** — transactional tables empty; **18 PHA** preserved. **FUT-002 Batch 1 + Batch 2 COMPLETE**. **SC-SEASON-SIM-001** remains FUTURE; **SC-SEASON-SIM-002** package **CLOSED** (next execute NOT authorized).  
+10. Wave closeout: tip **`ba969433`** (PR **#457**) · [`docs/audits/SC-WAVE-20260905-CLOSEOUT.md`](docs/audits/SC-WAVE-20260905-CLOSEOUT.md) · [`docs/audits/MASTER-LIST-RECONCILIATION-20260905.md`](docs/audits/MASTER-LIST-RECONCILIATION-20260905.md).
 
 ---
 
@@ -447,9 +447,10 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 - **FUT-029 / MRW-H12** → **Deferred — DO NOT IMPLEMENT** — Grade-Band Homework Platform + Homework Intake Adapter; Fillout brief superseded/history; not required for current app completion; wave 2026-09-05 out of scope.  
 - **FUT-048 / MRW-H13** → **DEFERRED** (Optional / low) — CloudFront custom domain for homework resources; current `d21ixrrrqpqz29.cloudfront.net` acceptable; not FUT-029; no AWS/DNS/Airtable/Production change required now.  
 - **SC-160** → **COMPLETE / Live Tested** (2026-09-05).  
-- **Wave 2026-09-05** → tip through `2131f7d5` (#447 Season Sim preflight). SC-161/162/163/164/165/149 residual **COMPLETE / Live Tested**; **SC-166 Mike-owned/manual** (not core blocker); closeout [`docs/audits/SC-WAVE-20260905-CLOSEOUT.md`](docs/audits/SC-WAVE-20260905-CLOSEOUT.md).  
+- **Wave 2026-09-05** → tip **`ba969433`** (PR **#457** purge closeout). SC-161/162/163/164/165/149 residual / **SC-167/168/169** **COMPLETE / Live Tested**; **SC-166 Mike-owned/manual** (not core blocker); Season Sim **CLOSED**; closeout [`docs/audits/SC-WAVE-20260905-CLOSEOUT.md`](docs/audits/SC-WAVE-20260905-CLOSEOUT.md).  
+- **OPS-PURGE-20260905** → **COMPLETE** — 204 transactional records deleted; PHA/Weeks/Library/config preserved — [`docs/testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md`](docs/testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md).  
 - **FUT-030** → **COMPLETE** (2026-08-31) — full transactional record reset (959 deleted); PHA emptied; Weeks/Library/config preserved; base ready for clean rebuild.  
-- **SC-SEASON-SIM-002** → **COMPLETE (package) / READY for Mike authorization** — [`docs/deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md`](docs/deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md). **Not running.** Formulas normal NOW()/TODAY(). Prior Sept 2 cleaned; next run needs **new** sim ID + exact `RUN SEASON SIMULATION`.
+- **SC-SEASON-SIM-002** → **COMPLETE (package closed)** — next execute **NOT authorized**. Formulas normal NOW()/TODAY(). [`docs/deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md`](docs/deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md).
 - **Automation 043** → **absent** from live automations list (MRW-C09 COMPLETE).  
 - **Automation 075** → **retired / absent** — do not restore.  
 - **Weeks 2026–27** → calendar rows **preserved**; **18 PHA** must be recreated after FUT-030 before homework tests.  
