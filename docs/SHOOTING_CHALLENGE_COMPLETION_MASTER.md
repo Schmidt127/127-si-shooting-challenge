@@ -10,7 +10,7 @@ This is the **detailed completion matrix and historical traceability record** fo
 | Field | Value |
 |-------|--------|
 | **Purpose** | Completion matrix, package traceability, and preserved historical evidence |
-| **Last updated** | **2026-08-31** (FUT-002 SA XP text stubs deleted; FUT-002 batch 1 COMPLETE; multi-asset HW / SC-015 / SC-016 / MRW-F02 / 065 remap COMPLETE; FUT-029 design-only; prior release closeout #301–#305 / #312) |
+| **Last updated** | **2026-09-05** (FUT-029 deferred grade-band homework platform plan — not part of current app completion; prior: FUT-002 SA XP text stubs deleted; FUT-002 batch 1 COMPLETE; multi-asset HW / SC-015 / SC-016 / MRW-F02 / 065 remap COMPLETE; prior release closeout #301–#305 / #312) |
 | **Production branch** | `master` |
 | **Vercel root** | `web/` |
 | **Production website** | https://www.fairfieldbasketballclub.com/shoot |
@@ -273,6 +273,7 @@ Report: [`WAS_EMAIL_QA_20260824_FINAL_REPORT.md`](./testing/autonomous-qa/WAS_EM
 | Item | Owner | Status |
 |------|-------|--------|
 | SEO / public indexing (SC-115) | Mike | `deferred` |
+| **FUT-029 Grade-Band Homework Platform / Homework Intake Adapter** | Mike | `deferred` — implementation-ready design only; **not required** for current app completion; plan [`next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md`](./next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md) |
 | Learning Activities schema (PKG-005) | Mike | `Mike decision` |
 | Zoom recording-credit architecture (PKG-010) | Mike | `Mike decision` |
 | Tremendous production activation (C-028) | Mike | `blocked` |

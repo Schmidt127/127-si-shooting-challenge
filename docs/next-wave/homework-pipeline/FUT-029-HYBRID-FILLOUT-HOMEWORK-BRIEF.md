@@ -1,11 +1,16 @@
-# FUT-029 — Hybrid Fillout Homework Submission System
+# FUT-029 — Hybrid Fillout Homework Submission System (HISTORICAL)
 
-**Status:** Concept / design only — **do not implement** until separately authorized  
-**Canonical ID:** **FUT-029**  
+> **SUPERSEDED (2026-09-05).** Canonical direction is **FUT-029 — Grade-Band Homework Platform and Homework Intake Adapter** in [`FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md`](./FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md).  
+> Status remains **Deferred / implementation-ready design** — **do not implement** until Mike separately authorizes. Not required to finish the current app.  
+> This Fillout-centered brief is retained as historical evidence only. Do not treat it as the active architecture.
+
+**Status:** Historical / superseded — **do not implement** from this brief  
+**Canonical ID:** **FUT-029** (see grade-band plan for current scope)  
 **Requested label:** FUT-018 (unavailable — that ID is already **COMPLETE** for Landing Page / Shooting Challenge page improvements; FUT-027/028 also assigned)  
 **Master Remaining Work:** **MRW-H12**  
 **Related (do not merge blindly):** SC-018 / SC-019 / SC-020 (Learning Activities), FUT-001 / SC-015 / SC-016 (Enrollment+PHA HC identity), HW17 Fillout quiz path, FUT-014 Homework Library web catalog  
 **Date captured:** 2026-08-31  
+**Superseded:** 2026-09-05  
 
 ---
 

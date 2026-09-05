@@ -1242,61 +1242,39 @@ Add a parent-facing About the Coach section identifying Mike Schmidt's education
 
 
 
-### FUT-029 ? Hybrid Fillout Homework Submission System
+### FUT-029 — Grade-Band Homework Platform and Homework Intake Adapter
 
 
 
 **Priority:** P2 (long-term)  
 
-**Status:** **Brief Needed / FUTURE** ? concept/design only; **do not implement** until separately authorized  
+**Status:** **Deferred / implementation-ready design** — **do not implement** until Mike separately authorizes. **Not required** to finish the current Shooting Challenge app.
 
-**Systems:** Homework Library, Program Homework Assignments, Fillout, Homework Completions, Submissions / Submission Assets, Automations **020 / 033 / 064 / 065 / 071** (preserve)  
+**Systems:** Existing Next.js/Vercel app, Family Dashboard auth, Airtable Homework Library / PHA / Homework Completions, Submission Assets, coach review, XP, Weekly Athlete Summary, Perfect Week; durable object storage (provider TBD)
 
 **Master Remaining Work:** **MRW-H12**  
 
-**ID note:** Intake requested label **FUT-018**; that ID is already **COMPLETE** (Landing Page / Shooting Challenge page improvements). FUT-027/028 also assigned. Canonical ID is **FUT-029**.  
+**ID note:** Intake originally requested **FUT-018** (already COMPLETE for landing pages). Earlier Fillout-centered brief retained as history only. Canonical ID remains **FUT-029**.
 
-**Brief:** [`next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](./next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md)
+**Authoritative plan:** [`next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md`](./next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md)  
 
-
-
-Expand Homework Library from ~70 to **100+** assignments and add **online Fillout answer forms** as an additional homework submission method.
+**Historical brief (superseded):** [`next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](./next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md)
 
 
 
-**Confirmed requirements (2026-08-31):**
+Build a grade-band homework player inside the existing application. The defining integration component is the **Homework Intake Adapter**, which replaces only the athlete-facing intake method and must produce exactly one validated, canonical Homework Completion indistinguishable to downstream workflows from a correctly produced completion under the existing system.
 
 
 
-- Fillout begins **optional**; may later become **primary** for assignments that work well online.
-
-- **Paper** remains for handwriting, drawing, physical work, and similar.
-
-- **Photo / video** uploads remain when required.
-
-- Use **separate grade-band versions** when content differs substantially.
-
-- Combine **automatic grading** and **coach-reviewed** responses.
-
-- Keep **Homework Library** separate from seasonal **Program Homework Assignments**.
-
-- Preserve the current **18-assignment** seasonal design.
-
-- Each seasonal assignment links to a reusable Library assignment and the appropriate grade-band version.
-
-- Fillout and traditional asset submissions connect to the **same Homework Completion** workflow.
-
-- Prevent **duplicate Homework Completions** and **duplicate Homework XP**.
-
-- Preserve automations **020, 033, 064, 065, 071** and related homework workflows.
+**Locked product direction (2026-09-05):** preserve current PHA/scheduling activation; server-selected Enrollment grade band (never trust the browser); one-session completion with no user-facing draft workflow; immutable attempts; coach Satisfactory / Needs Revision; coach-authorized redo only; XP only after Satisfactory via existing Homework XP automation; paper/photo/video paths preserved until separately authorized migration; one award-bearing HC per Enrollment+PHA with child attempts.
 
 
 
-**Out of scope until authorized:** Fillout form creation, Airtable schema changes, live automation edits, changing the 18 PHA rows, homework XP/grading rule changes.
+**Out of scope until separately authorized:** application routes/APIs, Airtable schema/Interfaces, storage-provider activation, live automation edits, PHA row changes, XP/Perfect Week logic changes, Fillout/path retirement, Season Simulation for this item.
 
 
 
-**Related (coordinate, do not silently merge):** SC-018 / SC-019 / SC-020 Learning Activities; existing HW17 Fillout quiz path; FUT-001 / SC-015 / SC-016 HC identity.
+**Related (coordinate, do not silently merge):** SC-018 / SC-019 / SC-020 Learning Activities; existing HW17 Fillout quiz path; FUT-001 / SC-015 / SC-016 HC identity; SC-160 timing/WAS spine (re-verify live versions before any future implementation).
 
 
 
@@ -1688,7 +1666,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 **Systems:** Fillout forms (registration, homework, and related SC forms)  
 
-**Correct repo / surface:** Fillout.com + docs in this repo; coordinate with FUT-003 / FUT-029  
+**Correct repo / surface:** Fillout.com + docs in this repo; coordinate with FUT-003 / FUT-029 (deferred in-app homework platform — theme inheritance only if any Fillout homework fallback remains)  
 
 **Related:** FUT-003 Â· FUT-029 Â· FUT-034 Â· FUT-035 Â· SC-060 / SC-146
 
@@ -2825,7 +2803,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | **FUT-002 batch 2 audit** | **AUDIT READY** (2026-09-01) | **303** candidates / **5** quarantine-ready text stubs ? delete pending Mike UI ? [`FUT-002-batch2-candidate-queue.md`](./audits/FUT-002-batch2-candidate-queue.md) Â· [`FUT-002-batch2-quarantined-field-delete.md`](./deploy-checklists/FUT-002-batch2-quarantined-field-delete.md) |
 
-| **FUT-029 / MRW-H12** | **FUTURE** (design only) | Hybrid Fillout Homework ? [`next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](./next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md); requested as FUT-018 (ID already used) |
+| **FUT-029 / MRW-H12** | **Deferred / implementation-ready** | Grade-Band Homework Platform + Homework Intake Adapter — not part of current app completion; plan: [`next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md`](./next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md); Fillout brief superseded/history |
 
 | **FUT-030** | **COMPLETE** (2026-08-31) | Full transactional record reset ? **959** deleted; Weeks/Config/Library/rules/automations preserved; **18 PHA restored** same day (new RIDs); **075** absent; no external sends ? [`testing/evidence/transactional-reset-2026-08-31/`](./testing/evidence/transactional-reset-2026-08-31/) |
 
@@ -2879,7 +2857,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | **FUT-047** | **COMPLETE** (2026-09-01) | Monitored contact in Hub homework email |
 
-| **FUT-029** | **Brief Needed** (design only) | Hybrid Fillout Homework ? do not implement |
+| **FUT-029** | **Deferred / implementation-ready** | Grade-band homework platform + intake adapter; do not implement until separately authorized; not required for current app completion |
 
 
 

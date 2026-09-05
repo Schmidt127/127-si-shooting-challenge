@@ -188,7 +188,7 @@ Classification key: **genuinely unfinished** · **monitoring only** · **optiona
 | Item | Class | Blocker |
 |------|-------|---------|
 | **SC-SEASON-SIM-001** / next Season Sim execute | **blocked** | Explicit Mike authorization required; formulas must stay `NOW()`/`TODAY()` |
-| **FUT-038** / **FUT-040** / **FUT-029** | **blocked** | Brief Needed — do not implement |
+| **FUT-038** / **FUT-040** / **FUT-029** | **blocked** / deferred | Do not implement. **Clarification 2026-09-05:** FUT-029 is **Deferred / implementation-ready design** (grade-band platform + intake adapter), not “Brief Needed”; still not part of current app completion — see [`FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md`](../next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md) |
 | **Tremendous Production API** | **blocked** | External approval; sandbox already validated |
 | **PKG-004** schema gate | **blocked** | Ownership before schema features |
 | Landing **FUT-033–036** live-vs-deploy drift claims | **wrong repo / verify elsewhere** | Implementation in `hoopchallenges-landing`; Section G marks COMPLETE 2026-09-01 — re-verify live landing outside this repo if needed |

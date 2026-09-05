@@ -47,7 +47,7 @@ The brainstorm list status labels are **stale**. Several items are already live;
 |----|------------------|-----|
 | **FUT-038** | Config has some enable flags (Submission XP, HW/Video review, Zoom recording) but **no** global category on/off architecture for GOAT-safe disable. | Brief first |
 | **FUT-040** | Headshot attachment + Writeback fields exist; no automatic migrate→verify→delete pipeline. FUT-010 dry-run was 0 eligible. | Brief first |
-| **FUT-029** | Design only — do not implement. | Defer |
+| **FUT-029** | Design deferred — Grade-Band Homework Platform + Homework Intake Adapter; do not implement; not required for current app completion. Plan: [`next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md`](../next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md) | Defer |
 
 ### Ops (not Master design items, still Mike)
 
