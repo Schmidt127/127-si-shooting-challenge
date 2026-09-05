@@ -1376,11 +1376,11 @@ Mike-authorized **record deletion only** (not schema). Deleted **959** transacti
 
 
 
-Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-047**. Documentation-only intake; **do not implement from this section alone** ? convert each item to a Phase 2 brief before code, schema, Fillout, or Production changes. Do not reopen completed **FUT-018** / **FUT-019** / **FUT-010** as duplicates; new IDs own the new scope and cross-reference related work.
+Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-048**. Documentation-only intake; **do not implement from this section alone** ? convert each item to a Phase 2 brief before code, schema, Fillout, or Production changes. Do not reopen completed **FUT-018** / **FUT-019** / **FUT-010** as duplicates; new IDs own the new scope and cross-reference related work.
 
 
 
-**Repo routing:** Club marketing root / ?More than a Scoreboard? / Upcoming Programs (**FUT-033?FUT-037**) ? implement in **`hoopchallenges-landing`** (Fairfield Basketball Club landing). Shooting Challenge app, Airtable, Hub email, Fillout SC forms, and S3 pipeline items (**FUT-038?FUT-047**) ? this repo and linked systems unless noted.
+**Repo routing:** Club marketing root / ?More than a Scoreboard? / Upcoming Programs (**FUT-033?FUT-037**) ? implement in **`hoopchallenges-landing`** (Fairfield Basketball Club landing). Shooting Challenge app, Airtable, Hub email, Fillout SC forms, and S3 pipeline items (**FUT-038?FUT-048**) ? this repo and linked systems unless noted.
 
 
 
@@ -1997,6 +1997,88 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 
 **Shipped (2026-09-01):** Hub `HOMEWORK_FEEDBACK` template footer updated; `mailto:` link on address. Reply-To / From headers unchanged. Homework-only v1 (video/welcome copy unchanged). Checklist: [`docs/deploy-checklists/FUT-047-homework-feedback-contact-copy.md`](./deploy-checklists/FUT-047-homework-feedback-contact-copy.md).
+
+
+
+---
+
+
+
+### FUT-048 — CloudFront Custom Domain for Homework Resources
+
+
+
+**Priority:** P3 (Optional / low)  
+
+**Status:** **DEFERRED** — optional branding and infrastructure; **not a launch blocker**; **do not implement now**  
+
+**Type:** Branding and infrastructure  
+
+**Systems:** AWS S3 (`resources-homework`), CloudFront (`resources-homework-cf`), DNS / ACM, Airtable homework resource URLs, website homework links  
+
+**Correct repo:** this repo + AWS / DNS (when separately authorized)  
+
+**Related:** SC-162 durable homework links · Homework Library resource URLs · **not** FUT-029 · **not** FUT-040 athlete-attachment migration
+
+
+
+**Current truth (acceptable as-is):**
+
+
+
+- S3 bucket: **`resources-homework`**
+
+- CloudFront distribution: **`resources-homework-cf`**
+
+- Permanent CloudFront domain: **`d21ixrrrqpqz29.cloudfront.net`**
+
+- Current CloudFront URLs are **acceptable** for Airtable and Production use.
+
+
+
+**Future objective (optional):** Replace the CloudFront-provided domain with a branded hostname such as **`homework.fairfieldbasketballclub.com`**.
+
+
+
+**Future work (when authorized — documentation only until then):**
+
+
+
+1. Obtain or validate an ACM TLS certificate.
+
+2. Add the custom domain to the CloudFront distribution.
+
+3. Create the required DNS record.
+
+4. Verify HTTPS and PDF delivery.
+
+5. Decide whether existing Airtable URLs should be migrated.
+
+6. Test website homework links.
+
+7. Preserve the existing **`*.cloudfront.net`** domain as a fallback.
+
+8. Document rollback.
+
+
+
+**Hard constraints for this backlog item:**
+
+
+
+- **No custom-domain work is required now.**
+
+- Do **not** change CloudFront, DNS, S3, Airtable, or Production under this ID until separately authorized.
+
+- Existing CloudFront URLs remain valid.
+
+- Do **not** delay current homework-resource migration for this cosmetic improvement.
+
+- This item **does not belong to FUT-029** implementation.
+
+
+
+**Acceptance (future):** Branded HTTPS domain serves homework PDFs; `cloudfront.net` fallback preserved; Airtable/web migration decision documented; rollback documented; no surprise breakage of existing links.
 
 
 
@@ -2728,7 +2810,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 |---|---|
 
-| Total items | 76 |
+| Total items | 77 |
 
 | COMPLETE | 62 |
 
@@ -2738,7 +2820,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | READY | 2 |
 
-| DEFERRED | 9 |
+| DEFERRED | 10 |
 
 | Production actions remaining | 5 |
 
@@ -2747,6 +2829,12 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 | Items requiring Cursor | 2 |
 
 | Items requiring OMNI/Airtable | 2 |
+
+
+
+
+
+
 
 
 
@@ -2874,6 +2962,10 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | **FUT-047** | **COMPLETE** (2026-09-01) | Monitored contact in Hub homework email |
 
+
+
+| **FUT-048** | **DEFERRED** (Optional / low) | CloudFront custom domain for homework resources (`homework.fairfieldbasketballclub.com`); keep `d21ixrrrqpqz29.cloudfront.net`; not FUT-029; do not delay resource migration |
+
 | **FUT-029** | **Deferred — DO NOT IMPLEMENT** | Grade-band homework platform + intake adapter; do not implement until separately authorized; not required for current app completion; wave 2026-09-05 out of scope |
 
 
@@ -2992,11 +3084,17 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 | **SC-165** | **COMPLETE / Live Tested** | PR **#439**; [`audits/SC-165-AWARDS-COACHING-MESSAGING-20260905.md`](./audits/SC-165-AWARDS-COACHING-MESSAGING-20260905.md) |
 | **SC-149 residual** | **COMPLETE** | PR **#439**; Family Dashboard under More |
 | **SC-166** | **Mike-owned/manual** (not core app blocker) | Interfaces published; filter fine-tuning checklist [`deploy-checklists/SC-166-coach-work-queue-filters.md`](./deploy-checklists/SC-166-coach-work-queue-filters.md) |
+| **FUT-048** | **DEFERRED** (Optional / low) | CloudFront custom domain for homework resources — not required now; not FUT-029 |
+
+
+
 | **FUT-029** | **Deferred — DO NOT IMPLEMENT** | Outside current app completion |
 | **AUT-013 / AUT-067 pastes** | **Optional / declined** | Structure-only GitHub newer; Mike declined paste 2026-09-05 |
 | **AUT-122** | **Superseded — never install** | Goal Met Date owned by **066 v4.1** |
 | **Season Simulation** | **NOT currently authorized / not running** | Live formulas normal `NOW()` / `TODAY()` |
-| **Core application** | **Functionally complete** for current app scope | Remaining = launch-time ops (FUT-003/026/Season Sim), Mike-owned SC-166 polish, deferred FUT-029 / cosmetic |
+| **Core application** | **Functionally complete** for current app scope | Remaining = launch-time ops (FUT-003/026/Season Sim), Mike-owned SC-166 polish, deferred FUT-029 / cosmetic (incl. **FUT-048** CloudFront custom domain) |
+
+**FUT-048 intake (2026-09-05):** Deferred optional CloudFront custom domain for `resources-homework` / `resources-homework-cf` — keep `d21ixrrrqpqz29.cloudfront.net`; no AWS/DNS/Airtable/Production changes required now.
 
 **Regenerated operator queue:** [`_generated-work-list-section-g.md`](./_generated-work-list-section-g.md) via `node tools/docs/generate-work-list-section-g.mjs --patch-master`.
 
