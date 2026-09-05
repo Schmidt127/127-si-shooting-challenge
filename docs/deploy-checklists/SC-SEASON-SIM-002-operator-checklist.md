@@ -1,6 +1,6 @@
 # SC-SEASON-SIM-002 — Operator checklist (gated clock override)
 
-> **Current Production (2026-09-03):** Season Simulation execute is **NOT currently authorized**. Live formulas are normal **`NOW()` / `TODAY()`** — **DO NOT change** formulas in this closeout wave. Next execute requires separate Mike authorization + temporary gated formula re-paste from this packet.
+> **Current Production (2026-09-05 preflight):** Season Simulation execute is **NOT currently authorized** until Mike says exactly `RUN SEASON SIMULATION`. Live formulas are normal **`NOW()` / `TODAY()`** (Season Sim gates **off**). Season Sim Submissions fields exist but are unused. Live automations **010 v10.13 / 114 v6.2 / 073 v4.6** already include Season Sim date-gate helpers. Full ready-to-run path: [`SC-SEASON-SIM-002-EXECUTION-MANIFEST.md`](./SC-SEASON-SIM-002-EXECUTION-MANIFEST.md).
 
 | | |
 |---|---|
