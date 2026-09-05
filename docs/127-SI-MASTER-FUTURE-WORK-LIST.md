@@ -2296,11 +2296,11 @@ Build reusable Python infrastructure for a full **Athlete 1** season simulation 
 ### SC-167 — Duplicate Submission XP (Season Sim T122531Z follow-up)
 
 **Priority:** P0  
-**Status:** **IN PROGRESS** (2026-09-05)  
-**Systems:** Automation **010**, XP Events, Season Simulation harness  
+**Status:** **In PR — paste pending** (2026-09-05)  
+**Systems:** Automation **010** v10.14, XP Events, Season Simulation harness  
 **Related:** SC-SEASON-SIM-002 closeout discrepancies  
 
-Investigate and remediate one duplicate `SUBMISSION_XP|{submissionId}` XP Event observed on run `SEASON-SIM-2027-20260905T122531Z-athlete1` (59 rows / 58 unique keys). Harden idempotency/concurrency if a real duplication risk exists; otherwise correct simulation expectation. Do not change XP amounts or eligibility rules. Do not rerun full Season Simulation without separate Mike authorization.
+**Classification:** Confirmed Production TOCTOU defect in 010 create path (amplified by Season Sim Enrollment clear/restore). Fix: deterministic canonical Source Key ownership + post-create consolidate; ambiguous ownership fails closed. Evidence [`audits/SC-167-DUPLICATE-SUBMISSION-XP-20260905.md`](./audits/SC-167-DUPLICATE-SUBMISSION-XP-20260905.md). Paste checklist [`deploy-checklists/SC-167-010-v10.14-duplicate-consolidate.md`](./deploy-checklists/SC-167-010-v10.14-duplicate-consolidate.md). Do not change XP amounts or eligibility rules. Do not rerun full Season Simulation without separate Mike authorization.
 
 ### SC-168 — Missing Weekly Email Handoffs (Season Sim T122531Z follow-up)
 
@@ -2789,7 +2789,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-164** | Website | Levels progress UX simplification | P1 | **COMPLETE / Live Tested** (2026-09-05) | FUT-015 | PR **#439** (`9869a2eb`); **Your Level Progress** + on-card gates. Evidence [`audits/SC-164-LEVELS-PROGRESS-UX-20260905.md`](./audits/SC-164-LEVELS-PROGRESS-UX-20260905.md). |
 | **SC-165** | Website | Awards + coaching messaging (Overview / What's Included) | P2 | **COMPLETE / Live Tested** (2026-09-05) | FUT-027 | PR **#439**; FAQ gift-card left as detail page. Evidence [`audits/SC-165-AWARDS-COACHING-MESSAGING-20260905.md`](./audits/SC-165-AWARDS-COACHING-MESSAGING-20260905.md). |
 | **SC-166** | Coach ops | Coach Homework + Video Feedback active work queues | P1 | **Mike-owned/manual** (2026-09-05) — Interfaces published; filter/layout fine-tuning is Mike UI only; **not a core application blocker** | — | PR **#436** (`bd0198a4`); checklist [`deploy-checklists/SC-166-coach-work-queue-filters.md`](./deploy-checklists/SC-166-coach-work-queue-filters.md). Repo + published Interfaces done; remaining filter polish is operator-owned. |
-| **SC-167** | XP | Season Sim T122531Z duplicate `SUBMISSION_XP` (59 rows / 58 unique keys) | P0 | **IN PROGRESS** (2026-09-05) | SC-SEASON-SIM-002, Automation 010 | Root-cause + harden 010 idempotency / concurrency OR correct expectation if one Active + correctly voided. Branch `fix/sc-167-duplicate-submission-xp`. Do **not** rerun full Season Sim. |
+| **SC-167** | XP / Automations | Duplicate SUBMISSION_XP harden (010) | P0 | **In PR — paste pending** (2026-09-05) | SC-SEASON-SIM-002 T122531Z, Automation 010 | Confirmed TOCTOU defect. Automation **010 v10.14**: deterministic Source Key ownership + post-create consolidate; fail closed on ambiguous ownership. Evidence [`audits/SC-167-DUPLICATE-SUBMISSION-XP-20260905.md`](./audits/SC-167-DUPLICATE-SUBMISSION-XP-20260905.md) · checklist [`deploy-checklists/SC-167-010-v10.14-duplicate-consolidate.md`](./deploy-checklists/SC-167-010-v10.14-duplicate-consolidate.md). Branch `fix/sc-167-duplicate-submission-xp`. Do **not** rerun full Season Sim. |
 | **SC-168** | Email | Season Sim T122531Z missing weekly-summary email handoffs (0 WEEKLY) | P0 | **IN PROGRESS** (2026-09-05) | SC-SEASON-SIM-002, 072/074/079/118/119 | Writer armed 6× `Build Weekly Email Now?` but 0 WEEKLY Hub handoffs. Prove 072→079 gap vs harness expectation. Allowlist-only live proof to Mike. Branch `fix/sc-168-weekly-email-handoffs`. |
 | **SC-169** | Achievements | Season Sim T122531Z zero Athlete Achievement Unlocks (SHOT_MILESTONE XP=4) | P0 | **IN PROGRESS** (2026-09-05) | SC-SEASON-SIM-002, 053/054/057/058/059/066 | Reconstruct expected unlocks for Grade 12 / 13906 shots; fix writer or correct sim expectation. Branch `fix/sc-169-achievement-unlocks`. |
 | **SC-149 residual** | Website | Family Dashboard under More menu | P1 | **COMPLETE** (2026-09-05 with SC-164/165) | SC-149 | PR **#439**; `MORE_NAV_HREFS` includes FD → `/dashboard/sign-in`. Evidence [`audits/SC-149-MORE-FAMILY-DASHBOARD-20260905.md`](./audits/SC-149-MORE-FAMILY-DASHBOARD-20260905.md). |
@@ -3135,7 +3135,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 | **SC-165** | **COMPLETE / Live Tested** | PR **#439**; [`audits/SC-165-AWARDS-COACHING-MESSAGING-20260905.md`](./audits/SC-165-AWARDS-COACHING-MESSAGING-20260905.md) |
 | **SC-149 residual** | **COMPLETE** | PR **#439**; Family Dashboard under More |
 | **SC-166** | **Mike-owned/manual** (not core app blocker) | Interfaces published; filter fine-tuning checklist [`deploy-checklists/SC-166-coach-work-queue-filters.md`](./deploy-checklists/SC-166-coach-work-queue-filters.md) |
-| **SC-167** | **IN PROGRESS** | Duplicate `SUBMISSION_XP` from Season Sim T122531Z — branch `fix/sc-167-duplicate-submission-xp` |
+| **SC-167** | **In PR — paste pending** | 010 v10.14 duplicate SUBMISSION_XP consolidate; [`audits/SC-167-DUPLICATE-SUBMISSION-XP-20260905.md`](./audits/SC-167-DUPLICATE-SUBMISSION-XP-20260905.md) |
 | **SC-168** | **IN PROGRESS** | Missing weekly email handoffs from Season Sim T122531Z — branch `fix/sc-168-weekly-email-handoffs` |
 | **SC-169** | **IN PROGRESS** | Zero achievement unlocks from Season Sim T122531Z — branch `fix/sc-169-achievement-unlocks` |
 | **FUT-048** | **DEFERRED** (Optional / low) | CloudFront custom domain for homework resources — not required now; not FUT-029 |

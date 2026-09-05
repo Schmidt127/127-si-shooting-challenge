@@ -8,9 +8,10 @@
  */
 
 export class MockRecord {
-  constructor(id, cells) {
+  constructor(id, cells, createdTime = null) {
     this.id = id;
     this.cells = { ...cells };
+    this.createdTime = createdTime || cells?.Created || null;
   }
 
   getCellValue(fieldName) {
@@ -58,7 +59,8 @@ export class MockTable {
   async createRecordAsync(payload) {
     const id = `rec${this.name.replace(/\W/g, "").slice(0, 6)}NEW${this._nextId++}`;
     this.createdPayloads.push({ id, payload });
-    this.records.set(id, new MockRecord(id, payloadToCells(payload)));
+    const createdTime = new Date(Date.now() + this._nextId).toISOString();
+    this.records.set(id, new MockRecord(id, payloadToCells(payload), createdTime));
     return id;
   }
 

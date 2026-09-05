@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-21
-Last GitHub Update: 2026-09-02
+Last GitHub Update: 2026-09-05
 
 Purpose:
 Reconcile one Submission's canonical Submission Base XP Event.
@@ -31,9 +31,18 @@ ownership cannot be proven.
  * 010 - SUBMISSION INTAKE AND ASSET CREATION
  * Create/Reconcile Submission Base XP Event
  *
- * Version: v10.13
+ * Version: v10.14
  * Date Written: 2026-06-06
- * Last Updated: 2026-09-02
+ * Last Updated: 2026-09-05
+ *
+ * Version v10.14 updates (SC-167 duplicate SUBMISSION_XP harden):
+ * - Deterministic canonical Source Key ownership when duplicate
+ *   SUBMISSION_XP|{submissionId} rows exist with matching ownership: keep the
+ *   earliest createdTime (then lowest record id) Active?, deactivate extras.
+ * - Conflicting ownership on duplicate canonical keys still fails closed.
+ * - Post-create uniqueness recheck consolidates concurrent-create races without
+ *   deleting XP Events or changing XP amounts / eligibility rules.
+ * - Pure planner mirrored in lib/sc167-submission-xp-dedupe.js for offline tests.
  *
  * Version v10.13 updates (SC-SEASON-SIM-002 gated sim clock):
  * - Dual-gated Season Simulation path: when Season Sim Test Record? is checked
@@ -61,14 +70,15 @@ ownership cannot be proven.
  * - Source Key is exactly SUBMISSION_XP|{Submission Record ID}.
  * - XP Events are append-only; no XP Event is deleted.
  * - Exact Enrollment, Week, WAS, and event ownership are required.
- * - Zero/multiple Submission Base candidates, duplicate canonical keys, conflicting
- *   canonical/legacy Submission Base pairs, wrong ownership, future dates,
+ * - Duplicate canonical keys with matching ownership consolidate to one Active?
+ *   award; conflicting ownership, legacy conflicts, wrong links, future dates,
  *   formula lag, and partial writes fail closed.
  * - Future Activity Date uses wall-clock todayKey() unless BOTH Season Sim Test
  *   Record? = true AND Video Upload Note contains SEASON-SIM|; then compare
  *   against Season Sim Clock Now (date key). Missing clock on a gated row falls
  *   back to wall-clock today (fail closed for unset clocks).
- * - Airtable has no atomic uniqueness; the final recheck is mandatory.
+ * - Airtable has no atomic uniqueness; the final recheck (and post-create
+ *   uniqueness consolidate) is mandatory.
  * - Last Reconciled Signature is written only after the expected Active? state
  *   is visible and Reconciliation Needed? rereads as 0.
  * - This is not the milestone/streak XP writer; 041/042 remain progression
@@ -107,8 +117,9 @@ ownership cannot be proven.
  * OUTPUTS (automation script action outputs)
  * - statusOut = success | skipped | error
  * - actionOut = created | reactivated_same_event | repaired_same_event |
- *   deactivated_same_event | skipped_ineligible | skipped_not_ready |
- *   skipped_already_reconciled | blocked_* | error
+ *   consolidated_duplicate_canonical | deactivated_same_event |
+ *   skipped_ineligible | skipped_not_ready | skipped_already_reconciled |
+ *   blocked_* | error
  * - errorOut = message or empty
  * - debugStep = last step reached
  * - reconciliationAcknowledged = true only after post-write latch proof
@@ -132,10 +143,10 @@ ownership cannot be proven.
 
 const SCRIPT = {
   scriptName: "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
-  version: "v10.13",
-  versionDate: "2026-09-02",
+  version: "v10.14",
+  versionDate: "2026-09-05",
   originalWrittenDate: "2026-06-06",
-  lastUpdated: "2026-09-02",
+  lastUpdated: "2026-09-05",
   folder: "01 - Submission Intake and Asset Creation",
   automationName: "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
 };
@@ -669,10 +680,161 @@ function findSubmissionBaseCandidates(records, submissionId) {
   return records.filter((row) => isSubmissionBaseCandidate(row, submissionId));
 }
 
-function resolveSubmissionBaseLookup(records, submissionId) {
+/** SC-167 — keep in sync with lib/sc167-submission-xp-dedupe.js */
+function compareSubmissionXpOwnerOrder(a, b) {
+  const aTime = Date.parse(String(a?.createdTime || "")) || Number.POSITIVE_INFINITY;
+  const bTime = Date.parse(String(b?.createdTime || "")) || Number.POSITIVE_INFINITY;
+  if (aTime !== bTime) return aTime - bTime;
+  return String(a?.id || "").localeCompare(String(b?.id || ""));
+}
+
+/** SC-167 — keep in sync with lib/sc167-submission-xp-dedupe.js */
+function planSubmissionXpCanonicalDedupe({ submissionId, rows = [], requireExactOwnership = true }) {
+  const sid = String(submissionId || "").trim();
+  const expectedKey = sourceKey(sid);
+  const matches = (rows || []).filter((row) => String(row?.sourceKey || "").trim() === expectedKey);
+  if (matches.length === 0) {
+    return { ambiguous: false, reason: "none", ownerId: "", deactivateIds: [], activeOwnerIds: [] };
+  }
+  for (const row of matches) {
+    const linkedSub = String(row?.submissionId || "").trim();
+    if (linkedSub && linkedSub !== sid) {
+      return {
+        ambiguous: true,
+        reason: "canonical_key_linked_to_other_submission",
+        ownerId: "",
+        deactivateIds: [],
+        activeOwnerIds: matches.filter((r) => r.active).map((r) => r.id),
+      };
+    }
+    if (!linkedSub) {
+      return {
+        ambiguous: true,
+        reason: "canonical_key_missing_submission_link",
+        ownerId: "",
+        deactivateIds: [],
+        activeOwnerIds: matches.filter((r) => r.active).map((r) => r.id),
+      };
+    }
+    if (requireExactOwnership && row.ownershipExact === false) {
+      return {
+        ambiguous: true,
+        reason: "canonical_key_ownership_mismatch",
+        ownerId: "",
+        deactivateIds: [],
+        activeOwnerIds: matches.filter((r) => r.active).map((r) => r.id),
+      };
+    }
+  }
+  if (matches.length === 1) {
+    return {
+      ambiguous: false,
+      reason: "single",
+      ownerId: matches[0].id,
+      deactivateIds: [],
+      activeOwnerIds: matches[0].active ? [matches[0].id] : [],
+    };
+  }
+  const ordered = [...matches].sort(compareSubmissionXpOwnerOrder);
+  return {
+    ambiguous: false,
+    reason: "duplicate_canonical_consolidated",
+    ownerId: ordered[0].id,
+    deactivateIds: ordered.slice(1).map((row) => row.id),
+    activeOwnerIds: matches.filter((r) => r.active).map((r) => r.id),
+  };
+}
+
+function toCanonicalDedupeRow(event, submissionId, enrollmentId, weekId, wasId) {
+  return {
+    id: event.id,
+    sourceKey: sourceKeyText(event),
+    submissionId: one(event, xpEventsTable, CONFIG.xpEvents.submission) || "",
+    enrollmentId: one(event, xpEventsTable, CONFIG.xpEvents.enrollment) || "",
+    weekId: one(event, xpEventsTable, CONFIG.xpEvents.week) || "",
+    weeklySummaryId: one(event, xpEventsTable, CONFIG.xpEvents.weeklySummary) || "",
+    active: booleanish(event, xpEventsTable, CONFIG.xpEvents.active),
+    createdTime: event.createdTime || null,
+    ownershipExact: eventOwned(event, submissionId, enrollmentId, weekId, wasId),
+  };
+}
+
+async function deactivateCanonicalDuplicates(deactivateIds, ownerId, submissionId) {
+  for (const id of deactivateIds) {
+    const reason = [
+      `${SCRIPT.scriptName} ${SCRIPT.version}.`,
+      "Action: consolidated_duplicate_canonical.",
+      `Submission: ${submissionId}.`,
+      `Source Key: ${sourceKey(submissionId)}.`,
+      `Kept owner XP Event: ${ownerId}.`,
+      `Deactivated duplicate XP Event: ${id}.`,
+    ].join(" ");
+    const patch = { [CONFIG.xpEvents.active]: false };
+    if (isWritable(field(xpEventsTable, CONFIG.xpEvents.xpReasonDebug))) {
+      patch[CONFIG.xpEvents.xpReasonDebug] = reason;
+    }
+    await xpEventsTable.updateRecordAsync(id, patch);
+  }
+}
+
+/**
+ * SC-167: when duplicate canonical keys share exact ownership, keep one Active?
+ * award and deactivate extras. Ambiguous ownership fails closed.
+ */
+async function consolidateCanonicalSubmissionXp(submissionId, enrollmentId, weekId, wasId) {
+  const query = await loadXpEvents();
+  const exactKeyMatches = query.records.filter((row) => isCanonicalSubmissionBaseKey(row, submissionId));
+  if (exactKeyMatches.length <= 1) {
+    return {
+      owner: exactKeyMatches[0] || null,
+      deactivatedIds: [],
+      consolidated: false,
+      records: query.records,
+    };
+  }
+  const plan = planSubmissionXpCanonicalDedupe({
+    submissionId,
+    rows: exactKeyMatches.map((row) => toCanonicalDedupeRow(row, submissionId, enrollmentId, weekId, wasId)),
+    requireExactOwnership: true,
+  });
+  if (plan.ambiguous) {
+    throw new Error(
+      `Duplicate canonical Source Key with ambiguous ownership: ${sourceKey(submissionId)} (${plan.reason}).`,
+    );
+  }
+  if (plan.deactivateIds.length > 0) {
+    await deactivateCanonicalDuplicates(plan.deactivateIds, plan.ownerId, submissionId);
+  }
+  const refreshed = await loadXpEvents();
+  const owner = refreshed.records.find((row) => row.id === plan.ownerId) || null;
+  if (!owner) {
+    throw new Error(`Canonical XP Event owner missing after consolidate for ${sourceKey(submissionId)}.`);
+  }
+  return {
+    owner,
+    deactivatedIds: plan.deactivateIds,
+    consolidated: plan.deactivateIds.length > 0,
+    records: refreshed.records,
+  };
+}
+
+function resolveSubmissionBaseLookup(records, submissionId, enrollmentId = "", weekId = "", wasId = "") {
   const exactKeyMatches = records.filter((row) => isCanonicalSubmissionBaseKey(row, submissionId));
   if (exactKeyMatches.length > 1) {
-    throw new Error(`Duplicate canonical Source Key: ${sourceKey(submissionId)}`);
+    if (!enrollmentId || !weekId || !wasId) {
+      throw new Error(`Duplicate canonical Source Key: ${sourceKey(submissionId)}`);
+    }
+    const plan = planSubmissionXpCanonicalDedupe({
+      submissionId,
+      rows: exactKeyMatches.map((row) => toCanonicalDedupeRow(row, submissionId, enrollmentId, weekId, wasId)),
+      requireExactOwnership: true,
+    });
+    if (plan.ambiguous) {
+      throw new Error(
+        `Duplicate canonical Source Key with ambiguous ownership: ${sourceKey(submissionId)} (${plan.reason}).`,
+      );
+    }
+    // Caller must run consolidateCanonicalSubmissionXp before relying on Active? state.
   }
   const linkedCandidates = findSubmissionBaseCandidates(
     records.filter((row) => submissionLinked(row, submissionId)),
@@ -680,19 +842,35 @@ function resolveSubmissionBaseLookup(records, submissionId) {
   );
   const canonicalLinked = linkedCandidates.filter((row) => isCanonicalSubmissionBaseKey(row, submissionId));
   const legacyLinked = linkedCandidates.filter((row) => isLegacySubmissionBaseCandidate(row, submissionId));
-  if (canonicalLinked.length > 1) {
+  if (canonicalLinked.length > 1 && enrollmentId && weekId && wasId) {
+    const plan = planSubmissionXpCanonicalDedupe({
+      submissionId,
+      rows: canonicalLinked.map((row) => toCanonicalDedupeRow(row, submissionId, enrollmentId, weekId, wasId)),
+      requireExactOwnership: true,
+    });
+    if (plan.ambiguous) {
+      throw new Error(`Multiple Submission Base XP Events are linked to Submission ${submissionId}.`);
+    }
+  } else if (canonicalLinked.length > 1) {
     throw new Error(`Multiple Submission Base XP Events are linked to Submission ${submissionId}.`);
   }
   if (legacyLinked.length > 1) {
     throw new Error(`Multiple legacy Submission Base XP Events are linked to Submission ${submissionId}.`);
   }
-  if (canonicalLinked.length === 1 && legacyLinked.length === 1 && canonicalLinked[0].id !== legacyLinked[0].id) {
+  const preferredCanonical = exactKeyMatches.length > 1 && enrollmentId && weekId && wasId
+    ? (() => {
+      const plan = planSubmissionXpCanonicalDedupe({
+        submissionId,
+        rows: exactKeyMatches.map((row) => toCanonicalDedupeRow(row, submissionId, enrollmentId, weekId, wasId)),
+        requireExactOwnership: true,
+      });
+      return exactKeyMatches.find((row) => row.id === plan.ownerId) || exactKeyMatches[0];
+    })()
+    : exactKeyMatches[0];
+  if (preferredCanonical && legacyLinked.length === 1 && preferredCanonical.id !== legacyLinked[0].id) {
     throw new Error(`Submission ${submissionId} has conflicting canonical and legacy Submission Base XP Events.`);
   }
-  if (exactKeyMatches[0] && legacyLinked.length === 1 && exactKeyMatches[0].id !== legacyLinked[0].id) {
-    throw new Error(`Submission ${submissionId} has conflicting canonical and legacy Submission Base XP Events.`);
-  }
-  const resolved = exactKeyMatches[0] || canonicalLinked[0] || legacyLinked[0] || null;
+  const resolved = preferredCanonical || canonicalLinked[0] || legacyLinked[0] || null;
   if (resolved && !submissionLinked(resolved, submissionId) && isCanonicalSubmissionBaseKey(resolved, submissionId)) {
     throw new Error(`Canonical XP Event ownership mismatch for ${sourceKey(submissionId)}.`);
   }
@@ -705,25 +883,28 @@ function resolveSubmissionBaseLookup(records, submissionId) {
   ) {
     throw new Error(`Submission ${submissionId} has an XP Event with a non-canonical Source Key.`);
   }
-  if (exactKeyMatches[0] && !submissionLinked(exactKeyMatches[0], submissionId)) {
+  if (preferredCanonical && !submissionLinked(preferredCanonical, submissionId)) {
     throw new Error(`Canonical XP Event ownership mismatch for ${sourceKey(submissionId)}.`);
   }
   return resolved;
 }
 
 async function findExactEvent(submissionId, enrollmentId, weekId, wasId) {
-  const query = await loadXpEvents();
-  const resolved = resolveSubmissionBaseLookup(query.records, submissionId);
+  const consolidated = await consolidateCanonicalSubmissionXp(submissionId, enrollmentId, weekId, wasId);
+  const queryRecords = consolidated.records;
+  const resolved = resolveSubmissionBaseLookup(queryRecords, submissionId, enrollmentId, weekId, wasId);
   const linkedBaseCandidates = findSubmissionBaseCandidates(
-    query.records.filter((row) => submissionLinked(row, submissionId)),
+    queryRecords.filter((row) => submissionLinked(row, submissionId)),
     submissionId,
   );
-  const exactKeyMatches = query.records.filter((row) => isCanonicalSubmissionBaseKey(row, submissionId));
-  if (exactKeyMatches.some((row) => !eventOwned(row, submissionId, enrollmentId, weekId, wasId))) {
+  const exactKeyMatches = queryRecords.filter((row) => isCanonicalSubmissionBaseKey(row, submissionId));
+  const activeExact = exactKeyMatches.filter((row) => booleanish(row, xpEventsTable, CONFIG.xpEvents.active));
+  if (activeExact.some((row) => !eventOwned(row, submissionId, enrollmentId, weekId, wasId))) {
     throw new Error(`Canonical XP Event ownership mismatch for ${sourceKey(submissionId)}.`);
   }
   if (linkedBaseCandidates.some((row) =>
     isCanonicalSubmissionBaseKey(row, submissionId)
+    && booleanish(row, xpEventsTable, CONFIG.xpEvents.active)
     && !eventOwned(row, submissionId, enrollmentId, weekId, wasId))) {
     throw new Error(`Submission ${submissionId} has an XP Event with wrong ownership or links.`);
   }
@@ -733,10 +914,15 @@ async function findExactEvent(submissionId, enrollmentId, weekId, wasId) {
     }
     throw new Error(`Submission ${submissionId} has an XP Event with wrong ownership or links.`);
   }
+  if (resolved) resolved._sc167Consolidated = consolidated.consolidated;
   return resolved;
 }
 
-async function findCanonicalKeyEvent(submissionId) {
+async function findCanonicalKeyEvent(submissionId, enrollmentId = "", weekId = "", wasId = "") {
+  if (enrollmentId && weekId && wasId) {
+    const consolidated = await consolidateCanonicalSubmissionXp(submissionId, enrollmentId, weekId, wasId);
+    return resolveSubmissionBaseLookup(consolidated.records, submissionId, enrollmentId, weekId, wasId);
+  }
   const query = await loadXpEvents();
   return resolveSubmissionBaseLookup(query.records, submissionId);
 }
@@ -909,7 +1095,7 @@ async function main() {
     }
 
     const wasId = wasCandidates[0];
-    const canonicalKeyEvent = await findCanonicalKeyEvent(recordId);
+    const canonicalKeyEvent = await findCanonicalKeyEvent(recordId, enrollmentId, weekId, wasId);
     const enrollment = enrollmentId ? await enrollmentsTable.selectRecordAsync(enrollmentId) : null;
     const week = weekId ? await weeksTable.selectRecordAsync(weekId) : null;
     const activityDate = dateKey(raw(submission, submissionsTable, CONFIG.submissions.activityDate));
@@ -993,15 +1179,34 @@ async function main() {
     const lastChance = await findExactEvent(recordId, enrollmentId, weekId, wasId);
     let xpEventId;
     let actionOut;
+    let consolidatedDuplicates = Boolean(lastChance && lastChance._sc167Consolidated);
     if (lastChance) {
       await xpEventsTable.updateRecordAsync(lastChance.id, payload);
       xpEventId = lastChance.id;
-      actionOut = !booleanish(lastChance, xpEventsTable, CONFIG.xpEvents.active)
-        ? "reactivated_same_event"
-        : "repaired_same_event";
+      if (consolidatedDuplicates) {
+        actionOut = "consolidated_duplicate_canonical";
+      } else {
+        actionOut = !booleanish(lastChance, xpEventsTable, CONFIG.xpEvents.active)
+          ? "reactivated_same_event"
+          : "repaired_same_event";
+      }
     } else {
       xpEventId = await xpEventsTable.createRecordAsync(payload);
       actionOut = "created";
+      // SC-167: concurrent create race — another run may have inserted the same key.
+      const postCreate = await consolidateCanonicalSubmissionXp(recordId, enrollmentId, weekId, wasId);
+      if (postCreate.consolidated) {
+        consolidatedDuplicates = true;
+        const ownerId = postCreate.owner.id;
+        if (ownerId !== xpEventId) {
+          await xpEventsTable.updateRecordAsync(ownerId, payload);
+          xpEventId = ownerId;
+        }
+        actionOut = "consolidated_duplicate_canonical";
+      } else if (postCreate.owner && postCreate.owner.id !== xpEventId) {
+        // Ambiguous path should have thrown; treat unexpected owner swap as fail-closed.
+        throw new Error(`Post-create canonical XP Event ownership mismatch for ${sourceKey(recordId)}.`);
+      }
     }
     const currentLinks = ids(submission, submissionsTable, CONFIG.submissions.xpEvents);
     const submissionUpdate = {};
