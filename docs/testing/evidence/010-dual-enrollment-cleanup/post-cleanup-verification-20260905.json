@@ -1,0 +1,60 @@
+{
+  "incident": "010-dual-enrollment-fixture-cleanup",
+  "date": "2026-09-05",
+  "baseId": "appn84sqPw03zEbTT",
+  "startingMasterSha": "a40a04e8fc3a0edae3b848fe37b9cea67339b1ad",
+  "verification": {
+    "failingSubmissionAbsent": true,
+    "athlete1Athlete2SubmissionsRemaining": 0,
+    "dualEnrollmentXpRemaining": 0,
+    "orphanedSubmissionAssets": 0,
+    "orphanedHomeworkCompletions": 0,
+    "orphanedVideoFeedback": 0,
+    "achievementUnlocksRemainingForA1A2": 0,
+    "xpReferencingDeletedSubmission": 0,
+    "preservedSingleEnrollmentZoomXp": ["rec9N4T9SD8XmllzB", "recKpZVNbttUqgrdh"],
+    "preservedWas": {
+      "athlete2EarlyBird": "recSjN9HDxxDcJwGY",
+      "athlete1Week1": "recNEeoot6gc41zcs",
+      "note": "Preserved; still linked to Enrollments/Weeks. Athlete2 Early Bird WAS has no remaining Submissions/HC; Athlete1 Week1 WAS retains Zoom XP only."
+    },
+    "rene": {
+      "enrollmentPresent": true,
+      "enrollmentId": "recp5z9S9WpLBzAZj",
+      "submissionCount": 1,
+      "submissionId": "recnkEQWB5SQ7OxSJ"
+    },
+    "automation010": {
+      "version": "v10.13",
+      "status": "Live",
+      "unchanged": true
+    },
+    "remainingReconciliationNeededOutsideScope": [
+      "Unknown Athlete Season Sim style fixtures",
+      "Rene Schmidt No Week submission (protected; not modified)"
+    ],
+    "emailHandoffReadyMatches": 0,
+    "settlementWaitSeconds": 90,
+    "newDuplicateActiveXpCreatedDuringCleanup": false
+  },
+  "recordsDeletedByTable": {
+    "XP Events": 26,
+    "Athlete Achievement Unlocks": 8,
+    "Streak Occurrences": 1,
+    "Homework Completions": 2,
+    "Video Feedback": 3,
+    "Submission Assets": 6,
+    "Submissions": 11
+  },
+  "prohibitedActionsNotTaken": [
+    "No Automation 010 code change",
+    "No Weeks deleted",
+    "No Enrollments deleted",
+    "No Rene records modified",
+    "No Season Simulation / FUT-029",
+    "No email send triggered by this cleanup",
+    "No schema/config/library/definition deletes",
+    "No S3 object deletes"
+  ],
+  "finalStatus": "COMPLETE"
+}
