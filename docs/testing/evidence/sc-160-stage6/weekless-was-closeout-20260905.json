@@ -1,0 +1,33 @@
+{
+  "auditId": "SC-160-WEEKLESS-WAS-020-V41-CLOSEOUT-20260905",
+  "status": "COMPLETE_LIVE_TESTED",
+  "generatedAt": "2026-09-05T12:20:00Z",
+  "baseId": "appn84sqPw03zEbTT",
+  "liveVersions": {
+    "009": "v1.3",
+    "020": "v4.1",
+    "065": "v10.7",
+    "057": "2.5"
+  },
+  "primaryApplyEvidence": "weekless-was-apply-2026-09-05T121633848Z.json",
+  "checks": {
+    "weekless_hc_create": "PASS",
+    "hc_week_from_pha": "PASS",
+    "exactly_one_was": "PASS_MCP_RECONCILED",
+    "hc_links_was": "PASS_MCP_RECONCILED",
+    "submission_week_empty": "PASS",
+    "homework_xp_exactly_one": "PASS",
+    "retry_no_duplicate_hc": "PASS",
+    "retry_no_duplicate_was": "PASS_MCP_RECONCILED",
+    "retry_no_duplicate_xp": "PASS",
+    "cleanup": "PASS",
+    "mike_evidence_preserved": "PASS"
+  },
+  "xp": {
+    "points": 35,
+    "active": true,
+    "week": "Early Bird"
+  },
+  "harnessFalseNegative": "FIND_ARRAYJOIN_Week_missed_existing_WAS; MCP hasAnyOf count=1 authoritative",
+  "fut002TrashGate": "CLEARED_FOR_MIKE_UI"
+}

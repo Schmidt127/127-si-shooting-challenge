@@ -1,8 +1,9 @@
 # SC-160 Stage 6 — Duplicate / Missing WAS Incident (PAUSE)
 
-**Status:** Duplicate Athlete1 condition **cleared**; Mike reported HW1 XP **restored**; SC-160 remains **PAUSED** for a production WAS gap below  
+**Status:** **RESOLVED / SC-160 COMPLETE** (2026-09-05 final closeout)  
 **Base:** Production `appn84sqPw03zEbTT`  
-**Related:** Automation **065** v10.7 · Automation **031** · Stage 6 harness `tools/testing/sc-160-stage6-live-proof.mjs`
+**Related:** Automation **065** v10.7 · Automation **031** · Automation **020 v4.1** · Stage 6 harness  
+**Final closeout:** [`SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md`](./SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md)
 
 ## Task Classification
 
@@ -110,13 +111,12 @@ So: the **six-way duplicate** Mike inspected was the Stage 6 Athlete1 harness pi
 
 ## Remaining Stage 6 status
 
-**IN PROGRESS — not COMPLETE.**
+**COMPLETE / Live Tested** — see [`SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md`](./SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md).
 
 - Duplicate six-row condition: **resolved**  
-- Mike reported HW1 XP: **restored** (prior repair)  
-- Late XP disposable recovery: **PASS** (2026-09-05)  
-- Harness FIND/ARRAYJOIN miss: **fixed** in repo  
-- Production 020 WAS-for-PHA-Week: **GitHub v4.1**; **paste pending**  
-- FUT-002 Batch 2 UI trash: **hold** until SC-160 COMPLETE  
+- Mike reported HW1 XP: **restored**  
+- Late XP disposable recovery: **PASS**  
+- Production **020 v4.1** pasted + weekless WAS→065 proof: **PASS**  
+- FUT-002 Batch 2 UI trash: **authorized**  
 
-Evidence companion: [`SC-160-STAGE6-RECOVERY-CLOSEOUT-20260905.md`](./SC-160-STAGE6-RECOVERY-CLOSEOUT-20260905.md).
+Evidence companion: prior Stage 6 / recovery docs remain historical; this incident is closed by the final closeout.
