@@ -1,7 +1,7 @@
 # Archived and Superseded Files
 
 **Status:** Active index  
-**Last updated:** 2026-08-20  
+**Last updated:** 2026-09-05  
 **Current truth:** [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md)
 
 This index explains what is historical vs current. Historical evidence is **preserved**. It must not be treated as live configuration.
@@ -53,6 +53,7 @@ This index explains what is historical vs current. Historical evidence is **pres
 | Automation **117** | Hub handoff **v2.1** | Stage 17 orchestrator designs; S16 117a/117b; Make 117f |
 | Automation **022** | **v2.1** | 2026-08-16 packet’s v2.0 claim (path evidence only) |
 | Automation **020** | **v3.6** | Earlier v3.5 install evidence |
+| Automation **021** Phase A combined paste | Live **v2.0** attachment-status only (aligned with GitHub) | [`archive/phase-a-021-combined/PHASE-A-021-combined-v1.0.0-PASTE.txt`](./archive/phase-a-021-combined/PHASE-A-021-combined-v1.0.0-PASTE.txt) — **proposed/historical; never installed**; do not paste; 006 stays retired ([`audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md`](./audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md)) |
 | Automation **070b** | **v4.6** | C-013 v4.4 E2E (historical proof of prior route) |
 | Automation **066** | **v3.8** | v3.2/v3.3/v3.4/v3.5 era wording |
 | Automation **010** | **v10.10** | PKG-006R v10.8/v10.9 paste-queue rows |
