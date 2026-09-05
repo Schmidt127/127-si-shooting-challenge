@@ -9,24 +9,85 @@ import { SafeExternalImage } from "@/components/media/safe-external-image";
 import { CtaLink, DetailPageShell } from "@/components/site";
 import { EmptyState } from "@/components/ui";
 import { buttonVariants } from "@/components/ui/button";
+import { formatHomeworkDueDate } from "@/components/athlete/homework-assignments";
+import { withBasePath } from "@/lib/app-config";
+import { isEphemeralAirtableAttachmentUrl } from "@/lib/data/homework-resources";
 import { cn } from "@/lib/utils";
-import type { HomeworkAssignment } from "@/types/homework";
+import type { HomeworkAssignment, HomeworkAttachment } from "@/types/homework";
 
 type HomeworkDetailViewProps = {
   assignment: HomeworkAssignment;
 };
 
+function publicHref(href: string): string {
+  if (!href) return "";
+  if (/^https?:\/\//i.test(href)) return href;
+  return withBasePath(href);
+}
+
 function ResourceLink({ href, label }: { href: string; label: string }) {
   return (
     <a
-      href={href}
+      href={publicHref(href)}
       target="_blank"
       rel="noopener noreferrer"
       className={buttonVariants({ variant: "default" })}
+      data-testid="homework-detail-resource-link"
     >
       {label}
       <span aria-hidden>↗</span>
     </a>
+  );
+}
+
+function UnavailableResource({ label }: { label: string }) {
+  return (
+    <p
+      role="status"
+      data-testid="homework-detail-resource-unavailable"
+      className={cn(
+        catalogInsetClass(),
+        "px-4 py-3 text-sm text-muted-foreground",
+      )}
+    >
+      {label} is temporarily unavailable. The source file may have been removed or the
+      stored link expired — check back after coaches refresh the assignment resources.
+    </p>
+  );
+}
+
+function assertNoEphemeralInHtml(href: string): string {
+  // Defense in depth: never emit Airtable CDN hosts into the document.
+  if (isEphemeralAirtableAttachmentUrl(href)) return "";
+  return href;
+}
+
+function DocRow({ doc }: { doc: HomeworkAttachment }) {
+  const href = assertNoEphemeralInHtml(doc.url);
+  if (doc.availability === "unavailable" || !href) {
+    return (
+      <li>
+        <UnavailableResource label={doc.filename || "Download"} />
+      </li>
+    );
+  }
+
+  return (
+    <li>
+      <a
+        href={publicHref(href)}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-testid="homework-detail-doc-link"
+        className={cn(
+          catalogInsetClass(),
+          "flex min-h-[2.75rem] items-center justify-between px-4 py-3 text-sm transition hover:border-brand-orange/30 hover:text-accent-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/40",
+        )}
+      >
+        <span>{doc.filename}</span>
+        <span aria-hidden>↓</span>
+      </a>
+    </li>
   );
 }
 
@@ -35,14 +96,30 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
     assignment.fullDescription ||
     assignment.assignmentDescription ||
     assignment.briefDescription;
+  const dueLabel = assignment.dueDate
+    ? formatHomeworkDueDate(assignment.dueDate)
+    : "No due date provided";
+  const primaryHref = assertNoEphemeralInHtml(assignment.url);
+  const additionalHref = assertNoEphemeralInHtml(assignment.urlAdditional);
+  const coverHref =
+    assignment.coverImage && assignment.coverImage.availability === "available"
+      ? assertNoEphemeralInHtml(assignment.coverImage.url)
+      : "";
+
+  const showPrimaryUnavailable =
+    assignment.urlAvailability === "unavailable" ||
+    (assignment.urlAvailability === "available" && !primaryHref);
+  const showAdditionalUnavailable =
+    assignment.urlAdditionalAvailability === "unavailable" ||
+    (assignment.urlAdditionalAvailability === "available" && !additionalHref);
 
   return (
     <DetailPageShell backHref="/homework" backLabel="All homework">
       <header className={cn(catalogHeroClass(), "relative")}>
-        {assignment.coverImage ? (
+        {coverHref ? (
           <div className="relative aspect-[21/9] w-full overflow-hidden bg-black/40">
             <SafeExternalImage
-              src={assignment.coverImage.url}
+              src={publicHref(coverHref)}
               alt={assignment.title ? `${assignment.title} cover` : "Homework cover"}
               className="h-full w-full object-cover"
             />
@@ -55,9 +132,9 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
             <span className="rounded-md border border-brand-blue/35 bg-brand-blue/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-brand-blue">
               {assignment.weekName}
             </span>
-            {assignment.homeworkNumber ? (
+            {assignment.categoryLabel ? (
               <span className="rounded-md border border-border bg-brand-light-gray px-3 py-1 text-xs font-medium text-foreground">
-                {assignment.homeworkNumber}
+                {assignment.categoryLabel}
               </span>
             ) : null}
             {assignment.book ? (
@@ -74,12 +151,39 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
             accent={assignment.briefDescription || undefined}
           />
 
+          <dl className="mt-4 grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
+            <div>
+              <dt className="text-[10px] font-semibold uppercase tracking-wider">Due</dt>
+              <dd className="mt-0.5 text-foreground">{dueLabel}</dd>
+            </div>
+            {assignment.submissionRequirement ? (
+              <div className="sm:col-span-2">
+                <dt className="text-[10px] font-semibold uppercase tracking-wider">
+                  Submission
+                </dt>
+                <dd className="mt-0.5 leading-relaxed text-foreground">
+                  {assignment.submissionRequirement}
+                </dd>
+              </div>
+            ) : null}
+          </dl>
+
           <div className="mt-6 flex flex-wrap gap-3">
-            {assignment.url ? <ResourceLink href={assignment.url} label="Open assignment" /> : null}
-            {assignment.urlAdditional ? (
-              <ResourceLink href={assignment.urlAdditional} label="Additional resource" />
+            {primaryHref ? <ResourceLink href={primaryHref} label="Open assignment" /> : null}
+            {additionalHref ? (
+              <ResourceLink href={additionalHref} label="Additional resource" />
             ) : null}
           </div>
+          {showPrimaryUnavailable ? (
+            <div className="mt-3">
+              <UnavailableResource label="Open assignment" />
+            </div>
+          ) : null}
+          {showAdditionalUnavailable ? (
+            <div className="mt-3">
+              <UnavailableResource label="Additional resource" />
+            </div>
+          ) : null}
         </div>
       </header>
 
@@ -125,20 +229,7 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
           <SectionHeading label="Resources" title="Downloads" />
           <ul className="mt-4 space-y-2">
             {assignment.docs.map((doc) => (
-              <li key={doc.id}>
-                <a
-                  href={doc.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={cn(
-                    catalogInsetClass(),
-                    "flex min-h-[2.75rem] items-center justify-between px-4 py-3 text-sm transition hover:border-brand-orange/30 hover:text-accent-soft",
-                  )}
-                >
-                  <span>{doc.filename}</span>
-                  <span aria-hidden>↓</span>
-                </a>
-              </li>
+              <DocRow key={doc.id} doc={doc} />
             ))}
           </ul>
         </section>

@@ -1,6 +1,5 @@
 import type {
   HomeworkAssignment,
-  HomeworkAttachment,
   HomeworkCatalogData,
   HomeworkWeekGroup,
 } from "@/types/homework";
@@ -15,6 +14,11 @@ import {
   selectName,
   selectNames,
 } from "./airtable-values";
+import {
+  mapPublicHomeworkAttachments,
+  resolveHomeworkCategoryLabel,
+  resolvePublicHomeworkLink,
+} from "./homework-resources";
 
 export type PublicAssignmentNameFields = {
   "Assignment Title"?: unknown;
@@ -96,12 +100,6 @@ export type WeekFields = {
   "Week Name"?: unknown;
   "Start Date"?: unknown;
   "End Date"?: unknown;
-};
-
-type RawAttachment = {
-  id?: string;
-  url?: string;
-  filename?: string;
 };
 
 export function parseWeekNumber(weekName: string): number {
@@ -319,21 +317,35 @@ export function applyGradeBandLabelsToPhaRows(
   }));
 }
 
-export function mapAttachments(value: unknown): HomeworkAttachment[] {
+/**
+ * Map attachments for non-homework consumers (tutorials).
+ * Homework catalog/detail must use `mapPublicHomeworkAttachments` so ephemeral
+ * Airtable CDN URLs never reach page HTML.
+ */
+export function mapAttachments(value: unknown): Array<{
+  id: string;
+  url: string;
+  filename: string;
+  availability: "available" | "unavailable";
+}> {
   if (!Array.isArray(value)) return [];
 
   return value
     .map((item) => {
       if (typeof item !== "object" || item === null) return null;
-      const raw = item as RawAttachment;
+      const raw = item as { id?: string; url?: string; filename?: string };
       if (!raw.url) return null;
       return {
         id: raw.id ?? raw.url,
         url: raw.url,
         filename: raw.filename ?? "Download",
+        availability: "available" as const,
       };
     })
-    .filter((item): item is HomeworkAttachment => item !== null);
+    .filter(
+      (item): item is { id: string; url: string; filename: string; availability: "available" } =>
+        item !== null,
+    );
 }
 
 /** @deprecated Prefer selectNames from airtable-values. */
@@ -350,11 +362,26 @@ export function mapCurriculumToAssignment(
   const weekId = phaRow?.weekId ?? getFirstLinkedId(fields.Week);
   const weekMeta = weekIndex.get(weekId);
   const weekName = weekMeta?.name ?? "Unassigned Week";
-  const coverImages = mapAttachments(fields["Cover Images"]);
+  const coverImages = mapPublicHomeworkAttachments(
+    record.id,
+    "Cover Images",
+    fields["Cover Images"],
+  );
+  const docs = mapPublicHomeworkAttachments(record.id, "Docs", fields.Docs);
   const briefDescription = asText(fields["Brief Description - Display"], "");
   const submissionsHint = asText(fields.Submissions, "");
+  const homeworkSlot = phaRow?.homeworkSlot ?? "";
+  const homeworkNumber = asText(fields["Homework Number"], "");
+  const topics = mapSelectOptions(fields["Assignment Topic"]);
+  const bookAbbreviation = asText(fields["Book Abbreviation"], "");
 
   const publicName = resolvePublicAssignmentName(fields);
+  const primaryLink = resolvePublicHomeworkLink(record.id, "URL", asUrl(fields.URL));
+  const additionalLink = resolvePublicHomeworkLink(
+    record.id,
+    "URL Additional",
+    asUrl(fields["URL Additional"]),
+  );
 
   return {
     id: record.id,
@@ -368,10 +395,10 @@ export function mapCurriculumToAssignment(
     weekNumber: weekMeta?.weekNumber ?? parseWeekNumber(weekName),
     weekStartDate: weekMeta?.startDate ?? null,
     weekEndDate: weekMeta?.endDate ?? null,
-    homeworkNumber: asText(fields["Homework Number"], ""),
+    homeworkNumber,
     assignmentNumber: asNumber(fields["Assignment Number"]),
     order: asNumber(fields.Order),
-    homeworkSlot: phaRow?.homeworkSlot ?? "",
+    homeworkSlot,
     dueDate: phaRow
       ? resolveAssignmentDueDateKey(phaRow.dueDate, weekMeta)
       : weekMeta?.endDate ?? null,
@@ -381,18 +408,26 @@ export function mapCurriculumToAssignment(
       : resolveSubmissionRequirement("", submissionsHint),
     operatorNotes: phaRow?.operatorNotes ?? null,
     book: asText(fields.Book, ""),
-    bookAbbreviation: asText(fields["Book Abbreviation"], ""),
-    topics: mapSelectOptions(fields["Assignment Topic"]),
+    bookAbbreviation,
+    topics,
     coverImage: coverImages[0] ?? null,
-    url: asUrl(fields.URL),
-    urlAdditional: asUrl(fields["URL Additional"]),
+    url: primaryLink.href,
+    urlAvailability: primaryLink.availability,
+    urlAdditional: additionalLink.href,
+    urlAdditionalAvailability: additionalLink.availability,
     gradeBandLabel: asText(fields["Grade Band"], ""),
     fullDescription: asText(fields["Full Assignment Description"], ""),
     assignmentDescription: asText(fields["Assignment Description"], ""),
     specificSteps: asText(fields["Specific Steps"], ""),
     assignmentRationale: asText(fields["Assignment Rationale"], ""),
     ageAppropriate: mapSelectOptions(fields["Age Appropriate"]),
-    docs: mapAttachments(fields.Docs),
+    docs,
+    categoryLabel: resolveHomeworkCategoryLabel({
+      homeworkSlot,
+      homeworkNumber,
+      topics,
+      bookAbbreviation,
+    }),
   };
 }
 

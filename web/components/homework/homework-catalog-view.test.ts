@@ -39,7 +39,9 @@ function assignment(overrides: Partial<HomeworkAssignment> = {}): HomeworkAssign
     topics: [],
     coverImage: null,
     url: "",
+    urlAvailability: "absent",
     urlAdditional: "",
+    urlAdditionalAvailability: "absent",
     gradeBandLabel: "",
     fullDescription: "Full multi-paragraph instructions that must not appear on catalog cards.",
     assignmentDescription: "",
@@ -47,6 +49,7 @@ function assignment(overrides: Partial<HomeworkAssignment> = {}): HomeworkAssign
     assignmentRationale: "",
     ageAppropriate: [],
     docs: [],
+    categoryLabel: "HW1",
     ...overrides,
   };
 }
@@ -65,14 +68,58 @@ function catalog(assignments: HomeworkAssignment[]): HomeworkCatalogData {
   };
 }
 
-describe("HomeworkCatalogView", () => {
-  it("renders human-readable Due labels on catalog cards", () => {
+describe("HomeworkCatalogView compact list", () => {
+  it("renders compact rows with title, week, due date, category, and View assignment", () => {
     const html = renderToStaticMarkup(
-      createElement(HomeworkCatalogView, { data: catalog([assignment()]) }),
+      createElement(HomeworkCatalogView, {
+        data: catalog([
+          assignment({
+            title: "Form Shooting Log",
+            weekName: "Week 10",
+            categoryLabel: "HW2",
+            dueDate: "2027-06-29",
+          }),
+        ]),
+      }),
     );
     expect(html).toContain("data-testid=\"homework-catalog-card\"");
-    expect(html).toContain("Due");
-    expect(html).toMatch(/Jun(?:e)? 29, 2027/);
+    expect(html).toContain("Form Shooting Log");
+    expect(html).toContain("Week 10");
+    expect(html).toContain("HW2");
+    expect(html).toMatch(/Due[\s\S]*Jun(?:e)? 29, 2027/);
+    expect(html).toContain("View assignment");
+    expect(html).toContain('data-testid="homework-catalog-view-assignment"');
+    expect(html).toContain('href="/homework/rechVLOeyEVIqmy2v"');
+  });
+
+  it("does not render full instructions, resource links, or cover imagery on the list", () => {
+    const html = renderToStaticMarkup(
+      createElement(HomeworkCatalogView, {
+        data: catalog([
+          assignment({
+            briefDescription: "Film 50 form shots.",
+            instructionsPreview: "Film 50 form shots.",
+            fullDescription: "Full multi-paragraph instructions that must not appear on catalog cards.",
+            url: "https://example.com/homework",
+            urlAvailability: "available",
+            docs: [
+              {
+                id: "att1",
+                url: "/api/homework/rechVLOeyEVIqmy2v/attachment/att1?field=Docs",
+                filename: "Worksheet.pdf",
+                availability: "available",
+              },
+            ],
+          }),
+        ]),
+      }),
+    );
+    expect(html).not.toContain("Full multi-paragraph instructions");
+    expect(html).not.toContain("Film 50 form shots.");
+    expect(html).not.toContain("data-testid=\"homework-catalog-resources\"");
+    expect(html).not.toContain("https://example.com/homework");
+    expect(html).not.toContain("Worksheet.pdf");
+    expect(html).not.toContain("airtableusercontent.com");
   });
 
   it("shows fallback copy when assignment dueDate is blank", () => {
@@ -104,74 +151,7 @@ describe("HomeworkCatalogView", () => {
     }
   });
 
-  it("renders assignment title and assigned week on each card", () => {
-    const html = renderToStaticMarkup(
-      createElement(HomeworkCatalogView, {
-        data: catalog([assignment({ title: "Form Shooting Log", weekName: "Week 10" })]),
-      }),
-    );
-    expect(html).toContain("Form Shooting Log");
-    expect(html).toContain("Week 10");
-  });
-
-  it("uses brief description preview and not full assignment instructions", () => {
-    const html = renderToStaticMarkup(
-      createElement(HomeworkCatalogView, {
-        data: catalog([
-          assignment({
-            briefDescription: "Film 50 form shots.",
-            instructionsPreview: "Film 50 form shots.",
-            fullDescription: "Full multi-paragraph instructions that must not appear on catalog cards.",
-          }),
-        ]),
-      }),
-    );
-    expect(html).toContain("Film 50 form shots.");
-    expect(html).not.toContain("Full multi-paragraph instructions");
-  });
-
-  it("shows safe fallback copy when brief description is blank", () => {
-    const html = renderToStaticMarkup(
-      createElement(HomeworkCatalogView, {
-        data: catalog([
-          assignment({
-            briefDescription: "",
-            instructionsPreview: "Instructions coming soon.",
-          }),
-        ]),
-      }),
-    );
-    expect(html).toContain("Instructions coming soon.");
-  });
-
-  it("renders resource links when URL or document attachments are present", () => {
-    const html = renderToStaticMarkup(
-      createElement(HomeworkCatalogView, {
-        data: catalog([
-          assignment({
-            url: "https://example.com/homework",
-            urlAdditional: "https://example.com/extra",
-            docs: [{ id: "att1", url: "https://example.com/doc.pdf", filename: "Worksheet.pdf" }],
-          }),
-        ]),
-      }),
-    );
-    expect(html).toContain("data-testid=\"homework-catalog-resources\"");
-    expect(html).toContain("https://example.com/homework");
-    expect(html).toContain("https://example.com/extra");
-    expect(html).toContain("Worksheet.pdf");
-  });
-
-  it("omits resource links when no URLs or documents are available", () => {
-    const html = renderToStaticMarkup(
-      createElement(HomeworkCatalogView, {
-        data: catalog([assignment({ url: "", urlAdditional: "", docs: [] })]),
-      }),
-    );
-    expect(html).not.toContain("data-testid=\"homework-catalog-resources\"");
-  });
-
-  it("does not render private Airtable record IDs in card copy", () => {
+  it("does not render private Airtable record IDs or operator notes in card copy", () => {
     const html = renderToStaticMarkup(
       createElement(HomeworkCatalogView, {
         data: catalog([
@@ -184,14 +164,6 @@ describe("HomeworkCatalogView", () => {
     );
     expect(html).not.toContain("recPHAPrivate00001");
     expect(html).not.toContain("Internal scheduling note");
-  });
-
-  it("links each card title and CTA to the homework detail route", () => {
-    const html = renderToStaticMarkup(
-      createElement(HomeworkCatalogView, { data: catalog([assignment()]) }),
-    );
-    expect(html).toContain('href="/homework/rechVLOeyEVIqmy2v"');
-    expect(html).toContain("View details");
   });
 });
 
