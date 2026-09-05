@@ -31,7 +31,7 @@
 | **SC-163** | **COMPLETE / Live Tested** | Live **066 v4.1** = GitHub; Goal Met Date date-only; Athlete1 **8/30/2026** stamp + retry; no duplicate milestones; 066 may remain ON. [`SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md`](./SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md) |
 | **SC-164** | **COMPLETE / Live Tested** | Production `/shoot/levels` — single **Your Level Progress** section; on-card gates. [`SC-164-LEVELS-PROGRESS-UX-20260905.md`](./SC-164-LEVELS-PROGRESS-UX-20260905.md) |
 | **SC-165** | **COMPLETE / Live Tested** | Overview shows awards (Amazon gift via Award Recipients) + coaching messaging. [`SC-165-AWARDS-COACHING-MESSAGING-20260905.md`](./SC-165-AWARDS-COACHING-MESSAGING-20260905.md) |
-| **SC-166** | **PARTIALLY COMPLETE — MIKE UI ACTION REQUIRED** | Rules + Interface filter checklist only. **Not live-complete.** [`../deploy-checklists/SC-166-coach-work-queue-filters.md`](../deploy-checklists/SC-166-coach-work-queue-filters.md) |
+| **SC-166** | **Mike-owned/manual** (not core app blocker) | Interfaces published; filter fine-tuning remains Mike UI. Checklist [`../deploy-checklists/SC-166-coach-work-queue-filters.md`](../deploy-checklists/SC-166-coach-work-queue-filters.md) |
 | **SC-149 residual** | **COMPLETE** (with SC-164/165) | Family Dashboard under More. [`SC-149-MORE-FAMILY-DASHBOARD-20260905.md`](./SC-149-MORE-FAMILY-DASHBOARD-20260905.md) |
 | **SC-160** | **COMPLETE / Live Tested** (pre-wave) | Unchanged this wave |
 | **FUT-002 Batch 2** | **COMPLETE** (pre-wave) | Unchanged this wave |
@@ -78,13 +78,13 @@ Checklist: [`../deploy-checklists/SC-166-coach-work-queue-filters.md`](../deploy
 21. SC-149 residual closed with A5 merge (#439).  
 22. SC-166: coach Active vs Completed/History rules documented.  
 23. SC-166: Interface filters are **UI-only** (MCP cannot set them).  
-24. SC-166: **not** live-complete until Mike applies filters.  
+24. SC-166: Mike-owned/manual Interface fine-tuning — **not** a core application blocker.  
 25. FUT-029 remains **Deferred — DO NOT IMPLEMENT**.  
 26. SC-160 + FUT-002 Batch 2 remain **COMPLETE**.  
 27. Game Manual / SC-109 untouched this wave.  
 28. Season Sim not authorized / not run.  
 29. Live **066 v4.1** paste + proof by Mike; agents did not paste.  
-30. Docs reconciled; remaining Mike UI = **SC-166** only.
+30. Docs reconciled; remaining Mike-owned polish = **SC-166** filters (optional/manual); Season Sim package READY separately (#447).
 
 ---
 

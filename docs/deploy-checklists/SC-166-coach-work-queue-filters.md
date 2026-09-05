@@ -1,6 +1,6 @@
 # SC-166 — Mike checklist: Coach Active + Completed/History filters
 
-**Status:** **NOT COMPLETE** until Mike applies filters in Airtable UI and checks boxes below.  
+**Status:** **Mike-owned/manual** — Interfaces published; filter/layout fine-tuning remains Mike UI. **Not a core application blocker.** Checklist below is optional operator polish until boxes are checked.  
 **Repo docs only** — agents cannot set Interface page filters via MCP.  
 **Do not delete** Homework Completions or Video Feedback records.
 

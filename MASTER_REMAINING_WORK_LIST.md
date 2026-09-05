@@ -416,7 +416,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 
 ## Recommended next task for Mike
 
-1. **SC-166 (open):** Apply Active + Completed/History filters on Homework + Video Feedback Interface queues — [`docs/deploy-checklists/SC-166-coach-work-queue-filters.md`](docs/deploy-checklists/SC-166-coach-work-queue-filters.md). **Not live-complete.**  
+1. **SC-166 (Mike-owned/manual; not core blocker):** Optional Active + Completed/History Interface filter fine-tuning — [`docs/deploy-checklists/SC-166-coach-work-queue-filters.md`](docs/deploy-checklists/SC-166-coach-work-queue-filters.md). Interfaces published.
 2. **Archive overlapping WSTEST/PWTEST Weeks** in Program Instance `Shooting Challenge | 2026-2027` (OMNI) before season simulation.  
 3. **Do not** re-paste 010/020/022/057/058/059/065/066/072/073; **do not** restore 075; live fixture `--apply` evidence is historical after **FUT-030** wipe.  
 4. **FUT-010:** dry-run R3 still **0 eligible** — no deletion request.  
@@ -444,9 +444,9 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 - **SC-015 / SC-016 / MRW-F02 / 065 remap** → **COMPLETE** (2026-08-31) — multi-asset `--apply` → one HC + one Homework XP; 065 dynamic `recordId` + trigger re-entry proven; **do not** re-paste 020/065; **do not** re-`--apply`.  
 - **FUT-029 / MRW-H12** → **Deferred — DO NOT IMPLEMENT** — Grade-Band Homework Platform + Homework Intake Adapter; Fillout brief superseded/history; not required for current app completion; wave 2026-09-05 out of scope.  
 - **SC-160** → **COMPLETE / Live Tested** (2026-09-05).  
-- **Wave 2026-09-05** → tip `bd0198a4`; SC-161/162/164/165/149 residual **COMPLETE / Live Tested**; SC-163/166 **PARTIALLY COMPLETE — Mike UI**; closeout [`docs/audits/SC-WAVE-20260905-CLOSEOUT.md`](docs/audits/SC-WAVE-20260905-CLOSEOUT.md).  
+- **Wave 2026-09-05** → tip through `2131f7d5` (#447 Season Sim preflight). SC-161/162/163/164/165/149 residual **COMPLETE / Live Tested**; **SC-166 Mike-owned/manual** (not core blocker); closeout [`docs/audits/SC-WAVE-20260905-CLOSEOUT.md`](docs/audits/SC-WAVE-20260905-CLOSEOUT.md).  
 - **FUT-030** → **COMPLETE** (2026-08-31) — full transactional record reset (959 deleted); PHA emptied; Weeks/Library/config preserved; base ready for clean rebuild.  
-- **SC-SEASON-SIM-002** → **Execute writer ready** (`tools/season_simulation/` + operator checklist); offline tests green; gated formula paste still required before countable E2E; do not run full season simulation until Mike authorizes.  
+- **SC-SEASON-SIM-002** → **COMPLETE (package) / READY for Mike authorization** — [`docs/deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md`](docs/deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md). **Not running.** Formulas normal NOW()/TODAY(). Prior Sept 2 cleaned; next run needs **new** sim ID + exact `RUN SEASON SIMULATION`.
 - **Automation 043** → **absent** from live automations list (MRW-C09 COMPLETE).  
 - **Automation 075** → **retired / absent** — do not restore.  
 - **Weeks 2026–27** → calendar rows **preserved**; **18 PHA** must be recreated after FUT-030 before homework tests.  

@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-09-05** (SC-163 COMPLETE / Live Tested — live **066 v4.1**; tip `480771fc` / PR **#444**; SC-161/162/164/165/149 residual COMPLETE / Live Tested; SC-166 PARTIAL — Mike UI; FUT-029 Deferred. Authority: [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) · [`audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md`](./audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md) · [`audits/SC-WAVE-20260905-CLOSEOUT.md`](./audits/SC-WAVE-20260905-CLOSEOUT.md))
+Last updated: **2026-09-05** (Master List reconciliation after tip `2131f7d5` / PR **#447** Season Sim preflight; SC-163 COMPLETE / Live Tested — **066 v4.1**; SC-161/162/164/165 COMPLETE; SC-166 Mike-owned/manual not core blocker; FUT-029 Deferred; Season Sim **READY for authorization / not running**. Authority: [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) · [`audits/MASTER-LIST-RECONCILIATION-20260905.md`](./audits/MASTER-LIST-RECONCILIATION-20260905.md))
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
@@ -53,7 +53,7 @@ Last updated: **2026-09-05** (SC-163 COMPLETE / Live Tested — live **066 v4.1*
 
 **101 overlay (final 2026-08-21):** Production Automation 101 is **v6.7** (live script body). Midday Automations Code-column **v6.6** snapshot is **historical / superseded**. Meeting `recxtpMu4ONbdDD45` safely skipped when reconciliation not needed.
 
-**Final production version reconciliation (2026-08-21):** See [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) §8. Overlay **2026-09-05:** **059 v3.8** Live / SC-159 Live Tested. **SC-160 COMPLETE / Live Tested** — live **009 v1.3 / 020 v4.1 / 065 v10.7 / 057 2.5**. **FUT-002 Batch 2 COMPLETE** — live **1375** fields / **35** tables. **066 v4.1** Live / SC-163 Live Tested. **Completion wave tip `bd0198a4`** + SC-163 closeout PR **#444:** SC-161/162/163/164/165 Live Tested; SC-166 Mike UI remaining. Evidence [`audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md`](./audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md) · [`audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md`](./audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md) · [`audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md`](./audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md) · [`audits/SC-WAVE-20260905-CLOSEOUT.md`](./audits/SC-WAVE-20260905-CLOSEOUT.md).
+**Final production version reconciliation (2026-08-21):** See [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) §8. Overlay **2026-09-05:** **059 v3.8** Live / SC-159 Live Tested. **SC-160 COMPLETE / Live Tested** — live **009 v1.3 / 020 v4.1 / 065 v10.7 / 057 2.5**. **FUT-002 Batch 2 COMPLETE** — live **1375** fields / **35** tables. **066 v4.1** Live / SC-163 Live Tested. **Tips `bd0198a4` → `480771fc` → `58663cfd` → `2131f7d5`:** SC-161/162/163/164/165 Live Tested; SC-166 Mike-owned/manual (not core blocker); Season Sim package READY / not running. Evidence [`audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md`](./audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md) · [`audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md`](./audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md) · [`audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md`](./audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md) · [`audits/SC-WAVE-20260905-CLOSEOUT.md`](./audits/SC-WAVE-20260905-CLOSEOUT.md).
 
 ---
 
