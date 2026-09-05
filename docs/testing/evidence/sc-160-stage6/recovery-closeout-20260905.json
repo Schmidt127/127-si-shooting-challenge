@@ -1,0 +1,61 @@
+{
+  "auditId": "SC-160-STAGE6-RECOVERY-CLOSEOUT-20260905",
+  "status": "IN_PROGRESS_020_V41_PASTE_PENDING",
+  "generatedAt": "2026-09-05T12:30:00Z",
+  "baseId": "appn84sqPw03zEbTT",
+  "priorPauseTip": "30db121c",
+  "priorStage6CloseoutTip": "b93bc0cd",
+  "whyPriorStopped": [
+    "late_xp timeout in apply-2026-09-04T205330220Z.json",
+    "duplicate Athlete1+Early Bird WAS blocked 065",
+    "PAUSE message unanswered (session stalled)",
+    "production gap: weekless intake leaves HC without WAS for PHA Week"
+  ],
+  "alreadyCompletedNotRerun": [
+    "early",
+    "on_time",
+    "deadline_boundary",
+    "after_deadline_notes",
+    "coach_delay",
+    "placeholder_then_late",
+    "video_no_week",
+    "multi_hw_video_no_week",
+    "retry_no_duplicate_hc",
+    "recon_no_missing_week_gate",
+    "reported_020_rearm"
+  ],
+  "resumed": {
+    "late_xp_after_was_cleanup": "PASS",
+    "xpPoints": 35,
+    "idempotentRetry": "PASS",
+    "wasSingletonAfterOrphanDelete": true
+  },
+  "reportedSubmission": {
+    "preserved": true,
+    "attachmentUploadStatus": "Processing",
+    "processingReason": "expected_week_hold_plus_009_intentional_processing_writeback",
+    "assetsUploaded": 5,
+    "homeworkCompletions": 2,
+    "hw1Awarded": true,
+    "hw1Xp": 46,
+    "hw2PendingUngraded": true,
+    "videoFeedbackUploaded": 3,
+    "submissionWeekEmpty": true
+  },
+  "duplicateWasRootCause": "harness_listExactWas_FIND_ARRAYJOIN_miss_not_031",
+  "harnessFix": "list_by_week_js_exact_match_plus_post_create_verify",
+  "productionFix": {
+    "script": "020",
+    "version": "v4.1",
+    "githubReady": true,
+    "pastePending": true,
+    "checklist": "docs/deploy-checklists/SC-160-020-v4.1-was-pha-week.md"
+  },
+  "productionPasteRequired": true,
+  "cleanup": {
+    "agentFixturesRemoved": true,
+    "mikeEvidencePreserved": true,
+    "athlete1EarlyBirdWasCount": 0
+  },
+  "fut002TrashGate": "HOLD_UNTIL_SC160_COMPLETE"
+}

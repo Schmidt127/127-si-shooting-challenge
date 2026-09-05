@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-19
-Last GitHub Update: 2026-09-04 (v4.0 SC-160 PHA Week + Early/On Time/Late timing)
+Last GitHub Update: 2026-09-05 (v4.1 SC-160 WAS find-or-create for PHA Week)
 
 Purpose:
 Link or create one Homework Completion from a homework Submission Asset,
@@ -31,11 +31,15 @@ v3.6 is live in Production Airtable (Mike 2026-08-19); v3.7 is structure-only.
  * 020 - HOMEWORK
  * Link or Create Homework Completion
  *
- * Version: v4.0
+ * Version: v4.1
  * Date Written: 2026-06-20
- * Last Updated: 2026-09-04
+ * Last Updated: 2026-09-05
  *
  * VERSION HISTORY
+ * - v4.1 (2026-09-05): SC-160 — find-or-create canonical Weekly Athlete Summary for
+ *   Enrollment + PHA.Week when linking/creating HC. Do not copy WAS only from
+ *   Submission (weekless intake left HC without WAS → 065 blocked). Fail closed if
+ *   multiple Enrollment+Week WAS exist. Never invent Submission.Week.
  * - v4.0 (2026-09-04): SC-160 — HC Week from PHA.Week (Submission.Week optional).
  *   Early / On Time / Late from qualifying asset Uploaded At (latest wins) vs
  *   PHA Due Date or Week End Saturday 11:59:59pm America/Denver. Early counts
@@ -66,6 +70,8 @@ v3.6 is live in Production Airtable (Mike 2026-08-19); v3.7 is structure-only.
  * - 020 loads the selected PHA directly and validates PI + Active + Homework Assignment.
  * - HC.Week comes from PHA.Week (authoritative). Submission.Week may be empty (early /
  *   outside-calendar Activity Date). Submission.Week is never required for HC create/link.
+ * - Canonical WAS is Enrollment + PHA.Week (find-or-create); HC Weekly Athlete Summary Link
+ *   must point at that WAS even when Submission.Week / Submission.WAS are empty.
  * - Homework Library content ID comes from PHA.Homework Assignment (exactly one link).
  * - HC.Homework = library ID; HC.Program Homework Assignment = PHA ID.
  * - HC Item Slot / Asset Slot are normalized to PHA.Homework Slot (official schedule slot).
@@ -152,10 +158,10 @@ v3.6 is live in Production Airtable (Mike 2026-08-19); v3.7 is structure-only.
 
 const SCRIPT = {
   scriptName: "020 - Homework - Link or Create Homework Completion",
-  version: "v4.0",
-  versionDate: "2026-09-04",
+  version: "v4.1",
+  versionDate: "2026-09-05",
   originalWrittenDate: "2026-06-20",
-  lastUpdated: "2026-09-04",
+  lastUpdated: "2026-09-05",
   folder: "02 - Homework Review and XP",
   automationName: "020 - Homework - Link or Create Homework Completion",
 };
@@ -172,6 +178,12 @@ const CONFIG = {
     enrollments: "Enrollments",
     programHomeworkAssignments: "Program Homework Assignments",
     weeks: "Weeks",
+    weeklySummary: "Weekly Athlete Summary",
+  },
+  weeklySummary: {
+    enrollment: "Enrollment",
+    week: "Week",
+    submissions: "Submissions",
   },
   assets: {
     submission: "Submission - Linked",
@@ -271,6 +283,7 @@ let homeworkTable;
 let enrollmentsTable;
 let phaTable;
 let weeksTable;
+let weeklySummaryTable;
 
 function setOutputSafe(name, value) {
   try {
@@ -769,6 +782,75 @@ async function markAssetError(asset, message) {
   throw new Error(message);
 }
 
+/**
+ * SC-160: Homework XP (065) requires exactly one WAS for Enrollment + HC.Week (PHA.Week).
+ * Weekless Submissions never arm 031, so 020 must find-or-create that canonical WAS.
+ * Never invents Submission.Week. Fail closed on multiple Enrollment+Week rows.
+ */
+async function ensureCanonicalWasForPhaWeek(enrollmentId, weekId, submissionId) {
+  if (!enrollmentId || !weekId) {
+    throw new Error("ensureCanonicalWasForPhaWeek requires enrollmentId and weekId.");
+  }
+  const query = await weeklySummaryTable.selectRecordsAsync({
+    fields: safeFields(weeklySummaryTable, [
+      CONFIG.weeklySummary.enrollment,
+      CONFIG.weeklySummary.week,
+      CONFIG.weeklySummary.submissions,
+    ]),
+  });
+  const candidates = query.records.filter((row) => {
+    const e = linkedIds(row, CONFIG.weeklySummary.enrollment);
+    const w = linkedIds(row, CONFIG.weeklySummary.week);
+    return e.length === 1 && e[0] === enrollmentId && w.length === 1 && w[0] === weekId;
+  });
+  try {
+    query.unloadData();
+  } catch {
+    // ignore
+  }
+  if (candidates.length > 1) {
+    throw new Error(
+      `Multiple canonical Weekly Athlete Summaries for Enrollment ${enrollmentId} + Week ${weekId}; Needs Review: ${candidates
+        .map((x) => x.id)
+        .join(", ")}`
+    );
+  }
+  let wasId = candidates.length === 1 ? candidates[0].id : "";
+  if (!wasId) {
+    const createFields = {};
+    setLink(createFields, weeklySummaryTable, CONFIG.weeklySummary.enrollment, [enrollmentId]);
+    setLink(createFields, weeklySummaryTable, CONFIG.weeklySummary.week, [weekId]);
+    if (submissionId && isWritable(weeklySummaryTable, CONFIG.weeklySummary.submissions)) {
+      setLink(createFields, weeklySummaryTable, CONFIG.weeklySummary.submissions, [submissionId]);
+    }
+    wasId = await weeklySummaryTable.createRecordAsync(createFields);
+  } else if (submissionId && isWritable(weeklySummaryTable, CONFIG.weeklySummary.submissions)) {
+    const existing = candidates[0];
+    const linkedSubs = linkedIds(existing, CONFIG.weeklySummary.submissions);
+    if (!linkedSubs.includes(submissionId)) {
+      await weeklySummaryTable.updateRecordAsync(wasId, {
+        [CONFIG.weeklySummary.submissions]: [...linkedSubs, submissionId].map((id) => ({ id })),
+      });
+    }
+  }
+
+  // Best-effort: link Submission → WAS when empty (does not set Submission.Week).
+  if (submissionId && isWritable(submissionsTable, CONFIG.submissions.weeklySummary)) {
+    const sub = await submissionsTable.selectRecordAsync(submissionId, {
+      fields: safeFields(submissionsTable, [CONFIG.submissions.weeklySummary]),
+    });
+    const existingWas = linkedIds(sub, CONFIG.submissions.weeklySummary);
+    if (!existingWas.length) {
+      const subUpdate = {};
+      setLink(subUpdate, submissionsTable, CONFIG.submissions.weeklySummary, [wasId]);
+      await submissionsTable.updateRecordAsync(submissionId, subUpdate);
+    } else if (existingWas.length === 1 && existingWas[0] !== wasId) {
+      // Do not steal a different WAS already on the Submission; HC still gets PHA-week WAS.
+    }
+  }
+  return wasId;
+}
+
 /* =========================================================
    SECTION 4: MAIN
 ========================================================= */
@@ -787,6 +869,7 @@ async function main() {
   enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
   phaTable = base.getTable(CONFIG.tables.programHomeworkAssignments);
   weeksTable = base.getTable(CONFIG.tables.weeks);
+  weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
 
   step("3 - Load submission asset");
   const assetQuery = await assetsTable.selectRecordsAsync({
@@ -976,6 +1059,9 @@ async function main() {
   let actionOut = "";
   let gradeBandActionOut = gradeBandId ? "" : "skipped_no_enrollment_grade_band";
 
+  step("8b - Ensure canonical WAS for Enrollment + PHA.Week");
+  const wasId = await ensureCanonicalWasForPhaWeek(enrollmentIds[0], weekIds[0], submissionId);
+
   if (homeworkCompletion) {
     step("9 - Link existing homework completion");
     actionOut =
@@ -1009,6 +1095,10 @@ async function main() {
     // Keep HC.Week aligned to PHA.Week (SC-160).
     if (firstLinkedId(homeworkCompletion, CONFIG.homework.week) !== weekIds[0]) {
       setLink(updates, homeworkTable, CONFIG.homework.week, weekIds);
+    }
+    // Keep HC WAS link on Enrollment + PHA.Week canonical summary (SC-160 weekless intake).
+    if (firstLinkedId(homeworkCompletion, CONFIG.homework.weeklySummaryLink) !== wasId) {
+      setLink(updates, homeworkTable, CONFIG.homework.weeklySummaryLink, [wasId]);
     }
     // Qualifying Submission Date = latest asset upload day when it is later than stored date.
     const priorUploadKeys = [];
@@ -1071,7 +1161,7 @@ async function main() {
       setLink(fields, homeworkTable, CONFIG.homework.gradeBand, [gradeBandId]);
       gradeBandActionOut = "copied_grade_band";
     }
-    setLink(fields, homeworkTable, CONFIG.homework.weeklySummaryLink, linkedIds(submission, CONFIG.submissions.weeklySummary));
+    setLink(fields, homeworkTable, CONFIG.homework.weeklySummaryLink, [wasId]);
     setLink(fields, homeworkTable, CONFIG.homework.submissionAssets, [asset.id]);
     // Prefer qualifying asset upload day for Submission Date (timeliness); else Activity Date.
     if (submissionDateKey) {

@@ -186,11 +186,13 @@ async function waitForAssetHc(token, baseId, assetId, { timeoutMs = 180000 } = {
 }
 
 async function listExactWas(token, baseId) {
-  // Prefer structured filter — ARRAYJOIN FIND can miss linked-record matches.
+  // Do NOT rely on FIND(ARRAYJOIN({Enrollment})) — it intermittently misses freshly
+  // linked (and sometimes settled) linked-record rows, which caused harness WAS storms.
+  // Filter by Week in formula, then exact Enrollment+Week match in JS.
   const existing = await listRecords(token, baseId, "Weekly Athlete Summary", {
-    filterByFormula: `AND(FIND("${ENROLLMENT_ID}", ARRAYJOIN({Enrollment}&"")), FIND("${EARLY_BIRD_WEEK}", ARRAYJOIN({Week}&"")))`,
-    fields: ["Enrollment", "Week", "Weekly Athlete Summary - Display"],
-    maxRecords: 20,
+    filterByFormula: `FIND("${EARLY_BIRD_WEEK}", ARRAYJOIN({Week}&""))`,
+    fields: ["Enrollment", "Week", "Weekly Athlete Summary - Display", "Summary Key"],
+    maxRecords: 100,
   });
   const rows = Array.isArray(existing) ? existing : existing?.records || [];
   return rows.filter((r) => {
@@ -265,10 +267,34 @@ async function ensureCanonicalWas(token, baseId, created, report) {
   created.wasId = wasId;
   created.wasCreated = true;
   report.notes.push(`Created canonical WAS ${redactId(wasId)} for Athlete1 + Early Bird`);
-  const after = await listExactWas(token, baseId);
-  if (after.length !== 1) {
+  // Fresh linked-record FIND/ARRAYJOIN can lag; poll then fall back to created id.
+  let after = [];
+  for (let i = 0; i < 6; i += 1) {
+    after = await listExactWas(token, baseId);
+    if (after.length >= 1) break;
+    await sleep(1500);
+  }
+  if (after.length > 1) {
     throw new Error(
       `FUT-001 HARD STOP after WAS create: expected 1, found ${after.length}. Reconcile duplicates before continuing.`
+    );
+  }
+  if (after.length === 1 && after[0].id !== wasId) {
+    throw new Error(
+      `FUT-001 HARD STOP after WAS create: created ${redactId(wasId)} but lookup returned different ${redactId(after[0].id)}.`
+    );
+  }
+  if (after.length === 0) {
+    const verify = await getRecord(token, baseId, "Weekly Athlete Summary", wasId);
+    const e = linkIds(verify.fields?.Enrollment);
+    const w = linkIds(verify.fields?.Week);
+    if (!(e.length === 1 && e[0] === ENROLLMENT_ID && w.length === 1 && w[0] === EARLY_BIRD_WEEK)) {
+      throw new Error(
+        `FUT-001 HARD STOP after WAS create: created row ${redactId(wasId)} missing expected Enrollment+Week links.`
+      );
+    }
+    report.notes.push(
+      `WAS listExactWas lagged after create; verified created row ${redactId(wasId)} directly`
     );
   }
   return wasId;

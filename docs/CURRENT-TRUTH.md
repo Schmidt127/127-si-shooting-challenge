@@ -1,7 +1,7 @@
 # CURRENT TRUTH â 127 SI Shooting Challenge
 
 **Status:** Active â primary current-state document for this repository  
-**Last verification (repo):** 2026-09-04 — **SC-160 PAUSED** (WAS gap after weekless intake; see Stage 6 WAS incident) (live **009 v1.3 / 020 v4.0 / 065 v10.7 / 057 2.5**; Ready/Why Not Ready Week gate removed; Stage 6 matrix + reported re-arm PASS). **SC-159 COMPLETE / Live Tested** (formula `059 Lifecycle Trigger?` + **059 v3.8**). Final completion: SF-07/SC-158 COMPLETE; FUT-001 late-credit COMPLETE; FUT-009 Lambda COMPLETE; FUT-003 Make inactive (paid activation Mike); FUT-002 Batch 2 stubs quarantined (**Mike UI trash now authorized**). Season Sim **NOT run**. SC-160 evidence: [`audits/SC-160-STAGE6-LIVE-VERIFICATION-20260904.md`](./audits/SC-160-STAGE6-LIVE-VERIFICATION-20260904.md). SC-159 evidence: [`audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md`](./audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md).
+**Last verification (repo):** 2026-09-05 — **SC-160 IN PROGRESS** (Stage 6 recovery: late XP + harness WAS lookup fixed; GitHub **020 v4.1** WAS find-or-create for PHA Week **paste pending**). Live **009 v1.3 / 020 v4.0 / 065 v10.7 / 057 2.5**. **SC-159 COMPLETE / Live Tested**. FUT-002 Batch 2 trash **hold** until SC-160 COMPLETE. Season Sim **NOT run**. Evidence: [udits/SC-160-STAGE6-RECOVERY-CLOSEOUT-20260905.md](./audits/SC-160-STAGE6-RECOVERY-CLOSEOUT-20260905.md) · paste [deploy-checklists/SC-160-020-v4.1-was-pha-week.md](./deploy-checklists/SC-160-020-v4.1-was-pha-week.md).
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -344,7 +344,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - SC-148 mobile a11y â **COMPLETE / Live Tested** (PR **#396**)
 - SC-057 / SC-058 â **Complete / Live Tested** (PR **#395**; inventory + SF remediation)
 - Season Simulation â **NOT authorized** (explicit Mike instruction required later)
-- **SC-160** — **COMPLETE / Live Tested** — asset intake without Week + early/on-time/late HW — live **009 v1.3 / 020 v4.0 / 065 v10.7 / 057 2.5** — [udits/SC-160-STAGE6-LIVE-VERIFICATION-20260904.md](./audits/SC-160-STAGE6-LIVE-VERIFICATION-20260904.md)
+- **SC-160** — **IN PROGRESS** — Stage 6 matrix recovered; GitHub **020 v4.1** paste pending for WAS-for-PHA-Week — [udits/SC-160-STAGE6-RECOVERY-CLOSEOUT-20260905.md](./audits/SC-160-STAGE6-RECOVERY-CLOSEOUT-20260905.md) · [deploy-checklists/SC-160-020-v4.1-was-pha-week.md](./deploy-checklists/SC-160-020-v4.1-was-pha-week.md)
 - Airtable field deletion â **deferred** until functional verification complete
 - Full administrative portal / optional card redesign â **deferred**
 - Landing FUT-033â036 + Hub FUT-041/042/046/047 â repo merged locally; **GitHub push + Vercel deploy** pending auth (2026-09-01)
