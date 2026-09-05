@@ -97,3 +97,18 @@ FUT-029, Season Sim, broad Airtable cleanup, Automation 021/013/067 pastes, rest
 | 4 | wave/a4-goal-met-date-20260905 | C:/Users/mschmidt_fairfield/.cursor/worktrees/sc-wave-20260905/a4-goal-met |
 | 5 | wave/a5-nav-levels-messaging-20260905 | C:/Users/mschmidt_fairfield/.cursor/worktrees/sc-wave-20260905/a5-nav-levels |
 | 6 | wave/a6-coach-queues-qa-20260905 | C:/Users/mschmidt_fairfield/.cursor/worktrees/sc-wave-20260905/a6-coach-qa |
+| Closeout | docs/sc-wave-20260905-closeout | C:/Users/mschmidt_fairfield/.cursor/worktrees/sc-wave-20260905/closeout |
+
+## Closeout status (2026-09-05)
+
+**Ending tip:** `bd0198a4` · Full board: [`SC-WAVE-20260905-CLOSEOUT.md`](./SC-WAVE-20260905-CLOSEOUT.md)
+
+| ID | Final status |
+|---|---|
+| SC-161 | COMPLETE / Live Tested |
+| SC-162 | COMPLETE / Live Tested |
+| SC-163 | PARTIALLY COMPLETE — Mike UI |
+| SC-164 | COMPLETE / Live Tested |
+| SC-165 | COMPLETE / Live Tested |
+| SC-166 | PARTIALLY COMPLETE — Mike UI |
+| SC-149 residual | COMPLETE (with SC-164/165) |
