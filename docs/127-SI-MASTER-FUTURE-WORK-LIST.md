@@ -1248,7 +1248,7 @@ Add a parent-facing About the Coach section identifying Mike Schmidt's education
 
 **Priority:** P2 (long-term)  
 
-**Status:** **Deferred / implementation-ready design** — **do not implement** until Mike separately authorizes. **Not required** to finish the current Shooting Challenge app.
+**Status:** **Deferred — DO NOT IMPLEMENT** (wave 2026-09-05 lock). Implementation-ready design only — **do not implement** until Mike separately authorizes. **Not required** to finish the current Shooting Challenge app. Out of scope for SC-162 and completion wave 2026-09-05.
 
 **Systems:** Existing Next.js/Vercel app, Family Dashboard auth, Airtable Homework Library / PHA / Homework Completions, Submission Assets, coach review, XP, Weekly Athlete Summary, Perfect Week; durable object storage (provider TBD)
 
@@ -2655,6 +2655,13 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-158** | Intake | Automation 006 / Submissions.Video Count ownership (SF-07) | P2 | **COMPLETE / Live Tested** (2026-09-04) | SF-07 | **RETIRE 006** (not deployed). Presence = Has Video? formula; PW videos = **057**. Orphan Video Count mismatches detectable. Evidence [audits/SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md](./audits/SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md). |
 | **SC-159** | Achievements | Automation 059 Active? lifecycle / formula trigger (SF-08) | P2 | **COMPLETE / Live Tested** (2026-09-04) | SC-077, SC-066 | Live `059 Lifecycle Trigger?` + **059 v3.8**; withdraw/restore/idempotency/PW PASS. Nested OR checklist superseded. Evidence [`audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md`](./audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md) Â· redesign [`audits/SC-159-LIFECYCLE-TRIGGER-REDESIGN-20260904.md`](./audits/SC-159-LIFECYCLE-TRIGGER-REDESIGN-20260904.md) Â· checklist [`deploy-checklists/059-sc159-lifecycle-formula-trigger.md`](./deploy-checklists/059-sc159-lifecycle-formula-trigger.md). |
 | **SC-160** | Intake / Homework / PW | Asset intake without Submission.Week + early/on-time/late HW (009/020/065/057) | P0 | **COMPLETE / Live Tested** (2026-09-05) | 009, 005, FUT-001 | Live **009 v1.3 / 020 v4.1 / 065 v10.7 / 057 2.5**. Weekless WAS→065 proof [audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md](./audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md). FUT-002 Batch 2 COMPLETE. |
+| **SC-161** | Website | Leaderboard Production functional repair | P0 | Planned (wave 2026-09-05) | SC-103, PKG-040 | Reopen live-proof gap; **not** a duplicate of SC-103 hygiene. Owner: Agent 2. |
+| **SC-162** | Website | Homework compact list + durable assignment links | P1 | Planned (wave 2026-09-05) | FUT-014 | Follow-on to FUT-014. **Not FUT-029** — do not implement grade-band player / intake adapter. Owner: Agent 3. |
+| **SC-163** | Enrollment | Enrollments Goal Met Date reliability + backfill | P1 | Planned (wave 2026-09-05) | — | New. Weeks excluded. Owner: Agent 4. |
+| **SC-164** | Website | Levels progress UX simplification | P1 | Planned (wave 2026-09-05) | FUT-015 | Follow-on to FUT-015; no XP/gate logic change. Owner: Agent 5. |
+| **SC-165** | Website | Awards + coaching messaging (Overview / What's Included) | P2 | Planned (wave 2026-09-05) | FUT-027 | FAQ gift-card (FUT-027/MRW-G13) already COMPLETE — do not reopen FAQ as primary. Owner: Agent 5. |
+| **SC-166** | Coach ops | Coach Homework + Video Feedback active work queues | P1 | Planned (wave 2026-09-05) | — | Interface/filter likely UI-only. Owner: Agent 6. |
+| **SC-149 residual** | Website | Family Dashboard under More menu | P1 | Planned (wave 2026-09-05) | SC-149 | Footer already has FD; `MORE_NAV_HREFS` does not — add consistently. Branding/nav SC-149 remains COMPLETE. Owner: Agent 5. |
 | **SC-113** | Website | Loading, empty, and error states | P2 | Live Tested in PROD | GÃ‡Ã¶ | Keep states aligned when SC-112 lands |
 
 | **SC-115** | Website | noindex removal / search indexing | P2 | **Complete** (2026-08-25, `647d465`; prod verified) | SC-114 | **Prod cutover verified** ? Vercel Production `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`; public pages indexable; athlete profiles + private routes `noindex`; sitemap excludes athletes/public-display; `npm run test:smoke:prod` 50/50 after cross-env fix. Checklist: `docs/deploy-checklists/2026-08-25-web-search-indexing-cutover.md`. |
@@ -2803,7 +2810,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | **FUT-002 batch 2** | **COMPLETE** (2026-09-05) | Five Batch 2 text-stub IDs absent; live **1375** fields / **35** tables — [`FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md`](./audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md) · [`batch2-live-verify-20260905.json`](./testing/evidence/fut-002/batch2-live-verify-20260905.json) · schema `airtable/schema/snapshots/prod-20260905-fut002-batch2/` |
 
-| **FUT-029 / MRW-H12** | **Deferred / implementation-ready** | Grade-Band Homework Platform + Homework Intake Adapter — not part of current app completion; plan: [`next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md`](./next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md); Fillout brief superseded/history |
+| **FUT-029 / MRW-H12** | **Deferred — DO NOT IMPLEMENT** | Grade-Band Homework Platform + Homework Intake Adapter — not part of current app completion; wave 2026-09-05 out of scope; plan: [`next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md`](./next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md); Fillout brief superseded/history |
 
 | **FUT-030** | **COMPLETE** (2026-08-31) | Full transactional record reset ? **959** deleted; Weeks/Config/Library/rules/automations preserved; **18 PHA restored** same day (new RIDs); **075** absent; no external sends ? [`testing/evidence/transactional-reset-2026-08-31/`](./testing/evidence/transactional-reset-2026-08-31/) |
 
@@ -2857,7 +2864,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | **FUT-047** | **COMPLETE** (2026-09-01) | Monitored contact in Hub homework email |
 
-| **FUT-029** | **Deferred / implementation-ready** | Grade-band homework platform + intake adapter; do not implement until separately authorized; not required for current app completion |
+| **FUT-029** | **Deferred — DO NOT IMPLEMENT** | Grade-band homework platform + intake adapter; do not implement until separately authorized; not required for current app completion; wave 2026-09-05 out of scope |
 
 
 

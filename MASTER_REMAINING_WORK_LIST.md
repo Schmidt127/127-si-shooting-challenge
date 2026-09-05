@@ -360,7 +360,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 
 | ID | Title | Status | Notes |
 |----|-------|--------|-------|
-| MRW-H01 | FUT-002 unused Airtable field purge | **BATCH 1 COMPLETE** | Mike UI-deleted 5 quarantined fields (2026-08-31); live **1350** fields / **0** `ZZZ DELETE —`; evidence [`docs/testing/evidence/fut-002/batch1-live-verify.json`](docs/testing/evidence/fut-002/batch1-live-verify.json). Later Drive/unknown batches remain FUTURE |
+| MRW-H01 | FUT-002 unused Airtable field purge | **BATCH 1 + BATCH 2 COMPLETE** | Batch 1: 5 quarantined fields UI-deleted (2026-08-31). Batch 2 COMPLETE (2026-09-05): five stub IDs absent; live **1375** fields / **35** tables — [`docs/audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md`](docs/audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md). Later Drive/unknown batches remain FUTURE |
 | MRW-H02 | FUT-004 award emailer (replace Tremendous) | FUTURE | Deferred |
 | MRW-H03 | FUT-005 accomplishment emails | FUTURE | Deferred |
 | MRW-H04 | FUT-007/009 AWS naming + corrected-video workflow | FUTURE | |
@@ -371,7 +371,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-H09 | Early-bird registration config (SC-066) | FUTURE | Decision: use early-bird; dates TBD |
 | MRW-H10 | Recorded Zoom half-XP writer (SC-147) | **Repo prep shipped** | Draft + offline conflict matrix; Mike: slot + `ZOOM_RECORDING` rule row; do not overload 117 |
 | MRW-H11 | SC-SEASON-SIM-001 60-day five-enrollment season simulation | **FUTURE** | Planned only — no full simulation run. **SC-SEASON-SIM-002** full execute writer + clock-override package in repo (`tools/season_simulation/` + operator checklist); early countable E2E needs Mike OMNI gated formula paste — execute not run. |
-| MRW-H12 | FUT-029 Grade-Band Homework Platform and Homework Intake Adapter | **Deferred / implementation-ready** | In-app grade-band homework player + Homework Intake Adapter feeding existing HC/XP/feedback/WAS/Perfect Week spine. **Not required** to finish the current app. **Do not implement** until Mike separately authorizes. Plan: [`docs/next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md`](docs/next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md). Historical Fillout brief superseded: [`docs/next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](docs/next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md). *(Requested as FUT-018; that ID already used for landing-page work.)* |
+| MRW-H12 | FUT-029 Grade-Band Homework Platform and Homework Intake Adapter | **Deferred — DO NOT IMPLEMENT** | In-app grade-band homework player + Homework Intake Adapter feeding existing HC/XP/feedback/WAS/Perfect Week spine. **Not required** to finish the current app. **Do not implement** until Mike separately authorizes. Out of scope for completion wave 2026-09-05 / SC-162. Plan: [`docs/next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md`](docs/next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md). Historical Fillout brief superseded: [`docs/next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](docs/next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md). *(Requested as FUT-018; that ID already used for landing-page work.)* |
 
 ## F+. Weekly settlement QA (pre–season simulation)
 
@@ -421,8 +421,9 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 3. **FUT-010:** dry-run R3 still **0 eligible** — no deletion request.  
 4. Optional: refresh Automations **Code** text for 057 (tracker lag) — live script already correct.  
 5. **Do not** activate FUT-003 until registration intentionally opens.  
-6. **Do not** implement **FUT-029** (Grade-Band Homework Platform / Homework Intake Adapter) — deferred implementation-ready design only (**MRW-H12**); not part of current app completion.  
-7. **FUT-030 COMPLETE** — transactional tables empty; **18 PHA restored** same day. FUT-002 batch 1 COMPLETE. After WSTEST cleanup: **SC-SEASON-SIM-001** remains FUTURE.
+6. **Do not** implement **FUT-029** (Grade-Band Homework Platform / Homework Intake Adapter) — **Deferred — DO NOT IMPLEMENT** (**MRW-H12**); not part of current app completion; out of scope for wave 2026-09-05 / SC-162.  
+7. **FUT-030 COMPLETE** — transactional tables empty; **18 PHA restored** same day. **FUT-002 Batch 1 + Batch 2 COMPLETE**. After WSTEST cleanup: **SC-SEASON-SIM-001** remains FUTURE.
+8. **Completion wave 2026-09-05:** SC-161…SC-166 + SC-149 residual — see [`docs/audits/SC-WAVE-20260905-OWNERSHIP-LEDGER.md`](docs/audits/SC-WAVE-20260905-OWNERSHIP-LEDGER.md) · [`docs/audits/SC-WAVE-20260905-PREFLIGHT.md`](docs/audits/SC-WAVE-20260905-PREFLIGHT.md).
 
 ---
 
@@ -431,7 +432,8 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 - **Paste debt C01–C05c + 058/059** → **COMPLETE** (live 057 correct; Automations Code tracker may lag).  
 - **SC-034 / V2-002 / PW config items** → schema + live 057 CONFIG **COMPLETE**.  
 - **Public copy Phase 4 + chrome** → PR **#298** / **#301** / **#304**.  
-- **FUT-002 batch 1** → **COMPLETE** (2026-08-31) — 5 `ZZZ DELETE —` fields deleted; live 1350 fields; later batches FUTURE.  
+- **FUT-002 batch 1** → **COMPLETE** (2026-08-31) — 5 `ZZZ DELETE —` fields deleted; live 1350 fields.  
+- **FUT-002 batch 2** → **COMPLETE** (2026-09-05) — five stub IDs absent; live **1375** fields / **35** tables; later Drive/unknown batches remain FUTURE.  
 - **FUT-010** → dry-run **0 eligible** (R3); no delete request.  
 - **Weeks 2026–27 + 18 PHA** → **COMPLETE** (Early Bird Apr 25–May 1; due June 29; Week 9/Post-Challenge no HW).  
 - **SC-SEASON-SIM-001 / MRW-H11** → **FUTURE / Planned only** — not active.  
@@ -439,7 +441,9 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 - **SC-ATHLETE-WF-001 / MRW-F09** → **COMPLETE (harness)**; **MRW-I13 CLOSED** (once per Count It).  
 - **SC-CORE-WF / MRW-F11** → **COMPLETE** (2026-08-30) — live Weeks/PHA audit + disposable apply; orphan inactive PHA deleted.  
 - **SC-015 / SC-016 / MRW-F02 / 065 remap** → **COMPLETE** (2026-08-31) — multi-asset `--apply` → one HC + one Homework XP; 065 dynamic `recordId` + trigger re-entry proven; **do not** re-paste 020/065; **do not** re-`--apply`.  
-- **FUT-029 / MRW-H12** → **Deferred / implementation-ready** — Grade-Band Homework Platform + Homework Intake Adapter; Fillout brief superseded/history; not required for current app completion.  
+- **FUT-029 / MRW-H12** → **Deferred — DO NOT IMPLEMENT** — Grade-Band Homework Platform + Homework Intake Adapter; Fillout brief superseded/history; not required for current app completion; wave 2026-09-05 out of scope.  
+- **SC-160** → **COMPLETE / Live Tested** (2026-09-05).  
+- **Wave 2026-09-05 IDs** → SC-161…SC-166 + SC-149 residual Planned (not duplicates of SC-103 / FUT-014 / FUT-015 / FUT-027 / SC-149 branding).  
 - **FUT-030** → **COMPLETE** (2026-08-31) — full transactional record reset (959 deleted); PHA emptied; Weeks/Library/config preserved; base ready for clean rebuild.  
 - **SC-SEASON-SIM-002** → **Execute writer ready** (`tools/season_simulation/` + operator checklist); offline tests green; gated formula paste still required before countable E2E; do not run full season simulation until Mike authorizes.  
 - **Automation 043** → **absent** from live automations list (MRW-C09 COMPLETE).  
