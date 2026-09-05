@@ -1,0 +1,74 @@
+{
+  "generated_at": "2026-09-05T13:51:48.656370+00:00",
+  "goal_met_date_schema": "multipleLookupValues id=fldohCsXsrU4hYqrJ",
+  "active_enrollments": 4,
+  "counts_by_category": {
+    "ok": 3,
+    "met_blank_date": 1
+  },
+  "would_write_count": 1,
+  "applied_count": 0,
+  "rows": [
+    {
+      "enrollment_id": "rec2UamYHzyc9ELd9",
+      "name": "Athlete 2 Schmidt",
+      "shots": 6331,
+      "target": 12000,
+      "goal_met": false,
+      "lookup_goal_met_date": null,
+      "lookup_raw": "",
+      "computed_first_date": null,
+      "crossing_submission": null,
+      "crossing_before": null,
+      "crossing_after": null,
+      "category": "ok",
+      "would_write": false
+    },
+    {
+      "enrollment_id": "recZEwkkXTJanDlG6",
+      "name": "Athlete1 Schmidt",
+      "shots": 6331,
+      "target": 2000,
+      "goal_met": true,
+      "lookup_goal_met_date": null,
+      "lookup_raw": "",
+      "computed_first_date": "2026-08-30",
+      "crossing_submission": "recu6m5asBhfi0nYd",
+      "crossing_before": 1000,
+      "crossing_after": 2500,
+      "category": "met_blank_date",
+      "would_write": true
+    },
+    {
+      "enrollment_id": "recp5z9S9WpLBzAZj",
+      "name": "Rene' Schmidt",
+      "shots": 0,
+      "target": 12000,
+      "goal_met": false,
+      "lookup_goal_met_date": null,
+      "lookup_raw": "",
+      "computed_first_date": null,
+      "crossing_submission": null,
+      "crossing_before": null,
+      "crossing_after": null,
+      "category": "ok",
+      "would_write": false
+    },
+    {
+      "enrollment_id": "recr3OaRi1HdFCB2V",
+      "name": "VERIFY VERIFY-SC112-20260903",
+      "shots": 0,
+      "target": 2000,
+      "goal_met": false,
+      "lookup_goal_met_date": null,
+      "lookup_raw": "",
+      "computed_first_date": null,
+      "crossing_submission": null,
+      "crossing_before": null,
+      "crossing_after": null,
+      "category": "ok",
+      "would_write": false
+    }
+  ],
+  "applied": []
+}

@@ -99,6 +99,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **058** | Achievements — Create Perfect Week Unlock | Lifecycle-capable WAS trigger; dynamic `recordId` | `058-achievements-and-milestones-create-perfect-week-unlock.js` (**v1.7** — SC-153 Coach Note query hotfix for withdraw; lifecycle deactivate/restore; Milestone Source Key `PERFECT_WEEK|{enr}|{week}`) |
 | **059** | Achievements — Create/Reconcile XP Event from Achievement Unlock | Athlete Achievement Unlocks · **`059 Lifecycle Trigger?` = 1** only; **Do NOT filter on Ready for 059 XP** or XP Events empty | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.8** — SC-159 formula trigger Live Tested; Trigger Context; Milestone Source Key; `lifecycleOut`) |
 | 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.9** — dynamic `recordId` from trigger; **live-tested 2026-08-24**) |
+| **122** | Achievements — Stamp Goal Met Date (**SC-163**) | Enrollments · Goal Met? not empty · Goal Met Date empty (after date field conversion) | `122-achievements-and-milestones-stamp-goal-met-date.js` (**v1.0** — first counted Activity Date crossing; never overwrite; **paste pending** — [`SC-163-goal-met-date.md`](./deploy-checklists/SC-163-goal-met-date.md)) |
 
 ## Email handoffs (070b/070c upload are not parent email)
 
