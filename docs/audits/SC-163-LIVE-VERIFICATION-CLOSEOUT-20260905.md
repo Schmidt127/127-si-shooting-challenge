@@ -5,7 +5,7 @@
 **Production base:** `appn84sqPw03zEbTT`  
 **Automation:** 066 — Create Shot Milestone Unlocks (+ Goal Met Date)  
 **Live + GitHub version:** **v4.1** (aligned)  
-**PR:** [#444](https://github.com/Schmidt127/127-si-shooting-challenge/pull/444)
+**PR:** [#444](https://github.com/Schmidt127/127-si-shooting-challenge/pull/444) (`480771fc`)
 
 ---
 
