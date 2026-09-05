@@ -371,7 +371,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-H09 | Early-bird registration config (SC-066) | FUTURE | Decision: use early-bird; dates TBD |
 | MRW-H10 | Recorded Zoom half-XP writer (SC-147) | **Repo prep shipped** | Draft + offline conflict matrix; Mike: slot + `ZOOM_RECORDING` rule row; do not overload 117 |
 | MRW-H11 | SC-SEASON-SIM-001 60-day five-enrollment season simulation | **FUTURE** | Planned only — no full simulation run. **SC-SEASON-SIM-002** full execute writer + clock-override package in repo (`tools/season_simulation/` + operator checklist); early countable E2E needs Mike OMNI gated formula paste — execute not run. |
-| MRW-H12 | FUT-029 Hybrid Fillout Homework Submission System | **FUTURE** | Expand Library 70→100+; optional→primary Fillout answers; paper/photo/video preserved; same HC/XP spine; keep 18 PHA. **Do not implement** until authorized. Brief: [`docs/next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](docs/next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md). *(Requested as FUT-018; that ID already used for landing-page work.)* |
+| MRW-H12 | FUT-029 Grade-Band Homework Platform and Homework Intake Adapter | **Deferred / implementation-ready** | In-app grade-band homework player + Homework Intake Adapter feeding existing HC/XP/feedback/WAS/Perfect Week spine. **Not required** to finish the current app. **Do not implement** until Mike separately authorizes. Plan: [`docs/next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md`](docs/next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md). Historical Fillout brief superseded: [`docs/next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](docs/next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md). *(Requested as FUT-018; that ID already used for landing-page work.)* |
 
 ## F+. Weekly settlement QA (pre–season simulation)
 
@@ -421,7 +421,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 3. **FUT-010:** dry-run R3 still **0 eligible** — no deletion request.  
 4. Optional: refresh Automations **Code** text for 057 (tracker lag) — live script already correct.  
 5. **Do not** activate FUT-003 until registration intentionally opens.  
-6. **Do not** implement **FUT-029** (Hybrid Fillout Homework) yet — design brief only (**MRW-H12**).  
+6. **Do not** implement **FUT-029** (Grade-Band Homework Platform / Homework Intake Adapter) — deferred implementation-ready design only (**MRW-H12**); not part of current app completion.  
 7. **FUT-030 COMPLETE** — transactional tables empty; **18 PHA restored** same day. FUT-002 batch 1 COMPLETE. After WSTEST cleanup: **SC-SEASON-SIM-001** remains FUTURE.
 
 ---
@@ -439,7 +439,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 - **SC-ATHLETE-WF-001 / MRW-F09** → **COMPLETE (harness)**; **MRW-I13 CLOSED** (once per Count It).  
 - **SC-CORE-WF / MRW-F11** → **COMPLETE** (2026-08-30) — live Weeks/PHA audit + disposable apply; orphan inactive PHA deleted.  
 - **SC-015 / SC-016 / MRW-F02 / 065 remap** → **COMPLETE** (2026-08-31) — multi-asset `--apply` → one HC + one Homework XP; 065 dynamic `recordId` + trigger re-entry proven; **do not** re-paste 020/065; **do not** re-`--apply`.  
-- **FUT-029 / MRW-H12** → **FUTURE** — Hybrid Fillout Homework concept only (requested FUT-018 already used).  
+- **FUT-029 / MRW-H12** → **Deferred / implementation-ready** — Grade-Band Homework Platform + Homework Intake Adapter; Fillout brief superseded/history; not required for current app completion.  
 - **FUT-030** → **COMPLETE** (2026-08-31) — full transactional record reset (959 deleted); PHA emptied; Weeks/Library/config preserved; base ready for clean rebuild.  
 - **SC-SEASON-SIM-002** → **Execute writer ready** (`tools/season_simulation/` + operator checklist); offline tests green; gated formula paste still required before countable E2E; do not run full season simulation until Mike authorizes.  
 - **Automation 043** → **absent** from live automations list (MRW-C09 COMPLETE).  

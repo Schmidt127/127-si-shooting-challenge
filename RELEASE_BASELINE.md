@@ -148,7 +148,7 @@ git status -sb
 
 **Mike / Cursor:** Recreate **18 Program Homework Assignments** for 2026–27 (EB + Weeks 1–8 × HW1/HW2; due 2027-06-29) before homework workflow testing. Then create disposable Schmidt enrollment(s) for clean rebuild tests. Archive overlapping WSTEST/PWTEST Weeks (OMNI) before season sim.
 
-**Do not:** re-paste 010/020/022/057/058/059/065/072/073; restore 075; re-`--apply` Perfect Week for WAS `recl3DmBh22ADPWWe`; re-`--apply` multi-asset homework; run full season-simulation execute yet; implement FUT-029.
+**Do not:** re-paste 010/020/022/057/058/059/065/072/073; restore 075; re-`--apply` Perfect Week for WAS `recl3DmBh22ADPWWe`; re-`--apply` multi-asset homework; run full season-simulation execute yet; implement **FUT-029** (deferred grade-band homework platform — not required for current app completion).
 
 **Already COMPLETE (do not reopen):** FUT-002 batch-1 field deletes; SC-MULTI-ASSET-HW / SC-015 / SC-016 / MRW-F02; 065 dynamic `recordId` remap + trigger re-entry proof (`HOMEWORK_XP|rec8E94Jg7mpmuMW9`).
 
@@ -170,3 +170,4 @@ git status -sb
 | 2026-08-31 (multi-asset HW XP) | PR **#312** MERGED `f8a7365f` — SC-015 / SC-016 / MRW-F02 COMPLETE; 065 dynamic `recordId` + trigger re-entry; exactly one Homework XP; no repaste |
 | 2026-08-31 (FUT-002 batch 1) | Mike UI-deleted 5 `ZZZ DELETE —` fields; live verify PASS; schema refresh **1350** fields; docs closeout (no new `--apply`) |
 | 2026-08-31 (FUT-029 design) | Hybrid Fillout Homework Submission System captured as **FUT-029** / **MRW-H12** (requested FUT-018 already used); concept only — no schema/forms/automation changes |
+| 2026-09-05 (FUT-029 plan) | Canonical **Grade-Band Homework Platform and Homework Intake Adapter** plan; status **Deferred / implementation-ready**; Fillout brief superseded/history; not part of current app completion — docs only |

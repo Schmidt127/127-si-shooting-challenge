@@ -5,7 +5,7 @@
 **Date:** 2026-09-01  
 **Decisions locked:** 2026-09-01 (Mike)  
 **Base SHA:** `e9e3bbd8` (`origin/master`)  
-**Related:** FUT-003 (Stripe payment writeback) · FUT-029 (hybrid homework Fillout) · FUT-034 (Jr. Referee Clinic naming — **COMPLETE** landing/docs; Fillout titles optional follow-up) · FUT-035 (landing royal blue — **COMPLETE**) · SC-060 (enrollment validation) · SC-146 (reopen daily intake) · [FILLOUT-FORM-INVENTORY.md](./FILLOUT-FORM-INVENTORY.md) · [BRAND_STANDARDS.md](../../../BRAND_STANDARDS.md) · [127-SI-MASTER-FUTURE-WORK-LIST.md](../../127-SI-MASTER-FUTURE-WORK-LIST.md) § FUT-039
+**Related:** FUT-003 (Stripe payment writeback) · FUT-029 (deferred grade-band homework platform / intake adapter — not Fillout-primary; see plan) · FUT-034 (Jr. Referee Clinic naming — **COMPLETE** landing/docs; Fillout titles optional follow-up) · FUT-035 (landing royal blue — **COMPLETE**) · SC-060 (enrollment validation) · SC-146 (reopen daily intake) · [FILLOUT-FORM-INVENTORY.md](./FILLOUT-FORM-INVENTORY.md) · [BRAND_STANDARDS.md](../../../BRAND_STANDARDS.md) · [127-SI-MASTER-FUTURE-WORK-LIST.md](../../127-SI-MASTER-FUTURE-WORK-LIST.md) § FUT-039
 
 ---
 
@@ -24,7 +24,7 @@ Shooting Challenge parent and athlete intake runs through **Fillout** forms on t
 - **Do not break** FUT-003 paid Stripe → Make → `Payment Transactions` writeback.  
 - **Do not break** SC-060 enrollment field contract / validation ([`FILLOUT-ENROLLMENT-CONTRACT.md`](../../online-agents/enrollment-season/FILLOUT-ENROLLMENT-CONTRACT.md)).  
 - **Do not change** Airtable schema, automation scripts, or `/shoot` web deploy as part of branding work.  
-- **Coordinate** with FUT-029 — future homework Fillout forms inherit the same theme spec but are implemented under FUT-029 authorization.
+- **Coordinate** with FUT-029 — if any future Fillout homework surfaces remain as optional fallback, inherit the same theme; primary athlete homework intake is the deferred in-app **Homework Intake Adapter** ([plan](../homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md)).
 
 **Non-goals for this brief:** FUT-029 form creation, C-009 HW17 attachment schema, Fillout field mapping changes, SC-146 intake reopen, Make scenario activation, custom domain DNS changes, Jr. Referee Clinic product forms (`127-si-jr-ref` repo).
 
@@ -47,7 +47,7 @@ Full table: **[FILLOUT-FORM-INVENTORY.md](./FILLOUT-FORM-INVENTORY.md)** — **1
 | Form | Evidence | v1 |
 |------|----------|-----|
 | HW17 Final Reflection Quiz | [`lib/homework-contracts/quiz-path.js`](../../../lib/homework-contracts/quiz-path.js), automation **067** | **N** (v2) |
-| FUT-029 per-assignment homework | [`FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](../homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md) | **N** |
+| FUT-029 per-assignment homework (historical Fillout idea) | [`FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](../homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md) (superseded) · [`FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md`](../homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md) | **N** |
 | Test / ETF clones | SC-001, season launch docs | **N** |
 
 ### 2.3 Integration-only (not Fillout URLs)
@@ -188,7 +188,7 @@ Use Fillout theme editor for 90% (colors, logo, font); CSS only for header orang
 | Item | Reason |
 |------|--------|
 | HW17 quiz form | C-009 / **067** path in flux; URL not in repo |
-| FUT-029 homework forms | Not authorized; inherit theme when built |
+| FUT-029 homework (deferred in-app) | Not authorized; if any Fillout fallback is later authorized, inherit theme |
 | SC-019 learning forms | Not live |
 | Test form clones | Apply prod theme after prod validated |
 | FUT-034 Fillout title audit | Optional; separate OMNI pass for Jr. Ref naming |
@@ -233,7 +233,7 @@ Use Fillout theme editor for 90% (colors, logo, font); CSS only for header orang
 | **3d — Edit submission form** | Theme on `vNgeHardYcus`; custom URL `shoot-editsubmission` | Update Submissions **Edit Submission - Parent** formula (Mike decision #6) |
 | **3e — Confirmation screens** | Custom endings aligned with email copy | F-ATT-05 answers documented |
 | **3f — Org default + docs** | Set org default theme; update inventory IDs | FILLOUT-FORM-INVENTORY.md refresh |
-| **3g — FUT-029 handoff** | Theme name + CSS path for future homework forms | Section in FUT-029 brief cross-link |
+| **3g — FUT-029 handoff** | Theme name + CSS path if any Fillout homework fallback is later authorized | Cross-link to FUT-029 plan |
 | **3h — Promotion** | `docs/deploy-checklists/FUT-039-fillout-branding.md` | Mike sign-off; CHANGELOG |
 
 **Order:** **3a → 3b → 3c → 3d → 3e → 3f**; **3g** parallel documentation; **3h** last.
@@ -284,7 +284,7 @@ Mike decisions (§11) ──► 3a theme artifact
 | **PKG-004** | **Not required** for CSS-only work — no Airtable schema |
 | **FUT-003** | Promotion checklist must include post-branding paid webhook smoke |
 | **SC-060 / SC-146** | Enrollment + daily reopen checklists reference branding completion |
-| **FUT-029** | Future homework forms **inherit** theme; no duplicate brand system |
+| **FUT-029** | Deferred in-app platform; any optional Fillout fallback **inherits** theme; no duplicate brand system |
 
 ### 9.2 Promotion artifacts (Phase 3)
 
@@ -342,7 +342,7 @@ Plus one Schmidt Fillout submission per form + FUT-003 Make manual test when pay
 - Enrollment contract: [FILLOUT-ENROLLMENT-CONTRACT.md](../../online-agents/enrollment-season/FILLOUT-ENROLLMENT-CONTRACT.md)  
 - Season activation: [FILLOUT-SEASON-ACTIVATION.md](../../challenge-year/FILLOUT-SEASON-ACTIVATION.md)  
 - FUT-003 payment: [FUT-003-fillout-stripe-payment-writeback.md](../../deploy-checklists/FUT-003-fillout-stripe-payment-writeback.md)  
-- FUT-029 homework: [FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md](../homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md)  
+- FUT-029 homework: [FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md](../homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md) (canonical) · historical Fillout brief [FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md](../homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md)  
 - Homework Fillout integration: [HOMEWORK-FILLOUT-INTEGRATION.md](../../prod-completion/2026-08-09/HOMEWORK-FILLOUT-INTEGRATION.md)  
 - Production smoke runbook: [PRODUCTION-SMOKE-RUNBOOK.md](../../testing/PRODUCTION-SMOKE-RUNBOOK.md)  
 - Fillout custom CSS docs: https://www.fillout.com/help/custom-css  

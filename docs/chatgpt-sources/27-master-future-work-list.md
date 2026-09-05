@@ -455,6 +455,7 @@ These are not deleted or re-created as future-work items in this document:
 - Separate duplicate SEO pages when an existing page can be adapted: rejected.
 - One large website redesign prompt: rejected in favor of separate page/component prompts.
 - HW1/HW2 slot as the homework identity: rejected; assignment name/identity is authoritative.
+- **FUT-029 Fillout-centered homework architecture (2026-08-31 brief):** superseded 2026-09-05 by **Grade-Band Homework Platform and Homework Intake Adapter**. Canonical plan: [`docs/next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md`](../next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md). Status: **Deferred / implementation-ready**; not required for current app completion. Prefer canonical [`docs/127-SI-MASTER-FUTURE-WORK-LIST.md`](../127-SI-MASTER-FUTURE-WORK-LIST.md) § FUT-029 over older copies of this ChatGPT source file.
 
 ---
 
