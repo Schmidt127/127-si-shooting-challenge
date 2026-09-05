@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-09-05** (**FUT-048** Deferred optional CloudFront custom domain for homework resources — docs-only intake; keep `d21ixrrrqpqz29.cloudfront.net`; not FUT-029; no AWS/DNS/S3/Airtable/Production change). Prior: Master List reconciliation after tip `2131f7d5` / PR **#447** Season Sim preflight; SC-163 COMPLETE / Live Tested — **066 v4.1**; SC-161/162/164/165 COMPLETE; SC-166 Mike-owned/manual not core blocker; FUT-029 Deferred; Season Sim **READY for authorization / not running**. Authority: [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) · [`audits/MASTER-LIST-RECONCILIATION-20260905.md`](./audits/MASTER-LIST-RECONCILIATION-20260905.md) · [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md) § FUT-048
+Last updated: **2026-09-05** (**SC-167/168/169** Season Sim T122531Z discrepancy wave closed in GitHub — tip `caad5ba9`; **010 v10.14** paste pending). Prior: **FUT-048** Deferred optional CloudFront custom domain; Master List reconciliation; SC-163 COMPLETE / Live Tested — **066 v4.1**; SC-161/162/164/165 COMPLETE; SC-166 Mike-owned/manual not core blocker; FUT-029 Deferred; Season Sim **not running**. Authority: [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) · [`audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md`](./audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md) · [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)

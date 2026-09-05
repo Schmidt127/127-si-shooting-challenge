@@ -9,6 +9,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Docs
 
 #### Added
+- **SC-167/168/169 Season Sim T122531Z discrepancy wave closeout (2026-09-05)** — Coordinator wave after SC-SEASON-SIM-002: duplicate SUBMISSION_XP (SC-167), missing weekly emails (SC-168), unlocks=0 false negative (SC-169). Merged **#450/#451/#453/#452**. Wave audit: [`docs/audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md`](./docs/audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md). **Mike:** paste Automation **010 v10.14** ([`docs/deploy-checklists/SC-167-010-v10.14-duplicate-consolidate.md`](./docs/deploy-checklists/SC-167-010-v10.14-duplicate-consolidate.md)). Full Season Sim not rerun.
 - **FUT-048 CloudFront custom domain for homework resources (2026-09-05)** — Deferred optional / low branding item: branded domain such as `homework.fairfieldbasketballclub.com` for S3 `resources-homework` / CloudFront `resources-homework-cf`. Current permanent domain `d21ixrrrqpqz29.cloudfront.net` remains acceptable. **Not a launch blocker**; **not FUT-029**; do not delay homework-resource migration; no CloudFront/DNS/S3/Airtable/Production changes in this intake. Living docs: Master List § FUT-048 · CURRENT-TRUTH · PROJECT_STATE · MASTER_REMAINING **MRW-H13**.
 
 #### Changed
@@ -24,11 +25,18 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **SC-167 Automation 010 v10.14 (2026-09-05)** — GitHub harden against concurrent duplicate `SUBMISSION_XP|{submissionId}` creates: deterministic owner + post-create consolidate (deactivate extras); fail closed on ambiguous ownership. PR **#453**. **Live paste pending** — [`docs/deploy-checklists/SC-167-010-v10.14-duplicate-consolidate.md`](./docs/deploy-checklists/SC-167-010-v10.14-duplicate-consolidate.md). Does not change XP amounts or eligibility.
 - **SC-163 Goal Met Date timezone fix — 066 v4.1 (2026-09-05)** — Live v4.0 stamped Athlete1 as `2026-08-29` (UTC midnight → Denver) and dateTime display showed 8/28 6:00 PM. v4.1 preserves date-only Activity Date keys (no TZ convert of YYYY-MM-DD); chronology by date key → createdTime → id; schema must be date-only with time off. **COMPLETE / Live Tested** — stamp **8/30/2026**, retry preserved, no duplicate milestones; 066 may remain ON. Checklist: [`docs/deploy-checklists/SC-163-goal-met-date.md`](./docs/deploy-checklists/SC-163-goal-met-date.md).
 - **SC-163 Goal Met Date → Automation 066 v4.0 (2026-09-05)** — Capacity full: do **not** install Automation 122 (SUPERSEDED stub). Extends **066** with isolated Goal Met Date stamp (first counted Activity Date crossing; never overwrite; fail closed). Shared helpers + backfill v1.1 + Mike checklist. **Superseded for live paste by v4.1 timezone fix.** Docs: [`docs/audits/SC-163-GOAL-MET-DATE-RELIABILITY.md`](./docs/audits/SC-163-GOAL-MET-DATE-RELIABILITY.md) · [`docs/deploy-checklists/SC-163-goal-met-date.md`](./docs/deploy-checklists/SC-163-goal-met-date.md).
 
 #### Added
 - **SC-163 Goal Met Date reliability (2026-09-05)** — Root cause: `Goal Met Date` was a lookup of Award Recipients → Date Awarded. Initial repo wave added Automation **122** (later **superseded** by 066 v4.0), extension backfill, probe, and Mike checklist to convert field lookup → date. **Now COMPLETE / Live Tested** via 066 v4.1. Docs: [`docs/audits/SC-163-GOAL-MET-DATE-RELIABILITY.md`](./docs/audits/SC-163-GOAL-MET-DATE-RELIABILITY.md) · [`docs/deploy-checklists/SC-163-goal-met-date.md`](./docs/deploy-checklists/SC-163-goal-met-date.md).
+
+### Tools
+
+#### Added
+- **SC-168 weekly-email-stage (2026-09-05)** — Season Sim expectation contract + opt-in 119-substitute CLI (`weekly-email-stage` plan/verify/apply); allowlist hard stops; default limit=1. PR **#451**. Audit: [`docs/audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md`](./docs/audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md).
+- **SC-169 unlock cascade query + expectations (2026-09-05)** — Correct expected unlocks=4 for T122531Z; safe Unlocks Source Key query; cleanup merges automation unlocks. PR **#452**. Audit: [`docs/audits/SC-169-ACHIEVEMENT-UNLOCKS-20260905.md`](./docs/audits/SC-169-ACHIEVEMENT-UNLOCKS-20260905.md).
 
 ### Lambda
 
