@@ -8,15 +8,15 @@
 
 > **Evidence boundary:** This file records the best repository-backed truth plus Mike-dated overlays already committed in-repo. It does **not** invent live Airtable / Make / Vercel / Tremendous UI state. Claims that need a live re-read are labeled `UNVERIFIED`, `PENDING`, or `REQUIRES LIVE CONFIRMATION`.
 
-### Evening handoff for remote Cursor agents (2026-08-31)
+### Evening handoff for remote Cursor agents (2026-09-05 EOD)
 
 | Start here | Why |
 |---|---|
+| [audits/EOD-BASELINE-20260905.md](./audits/EOD-BASELINE-20260905.md) | Authoritative end-of-day live-verification baseline |
 | This file | Live bases, automation versions, pending queue |
-| [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md) | Canonical future work — **FUT-033–048** intake; **FUT-032** / **065 v10.5** COMPLETE; Section G post-#457 |
-| `master` after merge | Source of truth for Cloud Agents — confirm `git fetch` + `git rev-parse HEAD` |
-| Landing hub items FUT-033–037 | Implement in **`hoopchallenges-landing`**, not this repo’s `web/` |
-
+| [127-SI-MASTER-FUTURE-WORK-LIST.md](./127-SI-MASTER-FUTURE-WORK-LIST.md) | Canonical future work; FUT-029/FUT-048 deferred |
+| master tip | Confirm with git fetch + git rev-parse origin/master |
+| Landing hub FUT-033-037 | Implement in hoopchallenges-landing, not this repo web/ |
 ---
 
 ## Authority rule â Production `Automations` table (updated 2026-08-20)
