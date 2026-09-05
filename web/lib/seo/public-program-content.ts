@@ -21,3 +21,15 @@ export const ABOUT_THE_COACH = {
     "The goal is simple: help young athletes become better shooters, better learners, and better people through meaningful practice and thoughtful feedback.",
   ],
 } as const;
+
+/**
+ * Concise Overview / What's Included parent messaging (SC-165).
+ * FAQ gift-card commitment (FUT-027) remains the detailed award policy page.
+ * Do not imply automated delivery; Award Recipients workflow stays operational truth.
+ */
+export const OVERVIEW_AWARDS_COACHING = {
+  awards:
+    "Athletes can earn real prizes and recognition. Eligible awards are provided as Amazon gift cards through the program's Award Recipient process — not as an automatic payout for every participant.",
+  coaching:
+    "This is more than a shot-count contest: athletes get real coaching, personalized video feedback, educational homework review, goal support, accountability, encouragement, and skill development across the season.",
+} as const;

@@ -116,6 +116,35 @@ describe("LevelsLadderView", () => {
     expect(withoutGate).toContain("No extra gates");
   });
 
+  it("does not repeat a Full gate checklist CTA on every card", () => {
+    const html = renderToStaticMarkup(
+      createElement(LevelsLadderView, { data: ladder(buildTwelveLevels()) }),
+    );
+
+    expect(html).not.toContain("Full gate checklist");
+    expect(html).toContain("Level details →");
+  });
+
+  it("uses disclosure for long gate checklists and keeps short gates visible", () => {
+    const longGate =
+      "Complete Perfect Week requirements, attend the published Zoom session for this tier, and finish the assigned homework review before advancing to the next level on the ladder.";
+    const longHtml = renderToStaticMarkup(
+      createElement(LevelsLadderView, {
+        data: ladder([level({ gateCriteria: longGate })]),
+      }),
+    );
+    const shortHtml = renderToStaticMarkup(
+      createElement(LevelsLadderView, {
+        data: ladder([level({ gateCriteria: "Attend one Zoom session" })]),
+      }),
+    );
+
+    expect(longHtml).toContain("<details");
+    expect(longHtml).toContain("expand checklist");
+    expect(shortHtml).not.toContain("<details");
+    expect(shortHtml).toContain("Attend one Zoom session");
+  });
+
   it("names the next level on each card", () => {
     const html = renderToStaticMarkup(
       createElement(LevelsLadderView, {
@@ -140,16 +169,19 @@ describe("LevelsLadderView", () => {
     expect(html).toMatch(/bg-brand-blue\/1[04]/);
   });
 
-  it("explains current level, next level, gate, and level terminology", () => {
+  it("explains current level, next level, and gates in one progress section", () => {
     const html = renderToStaticMarkup(
       createElement(LevelsLadderView, { data: ladder([level()]) }),
     );
 
-    expect(html).toContain('data-testid="levels-terminology"');
+    expect(html).toContain('data-testid="levels-progress"');
+    expect(html).toContain("Your Level Progress");
     expect(html).toContain("Current level");
     expect(html).toContain("Next level");
-    expect(html).toContain("Gate");
+    expect(html).toContain("Gates");
     expect(html).toContain("ascending order");
+    expect(html).not.toContain("How to read this ladder");
+    expect(html).not.toContain("Current level, next level, and gates");
   });
 
   it("does not duplicate level cards", () => {

@@ -95,8 +95,10 @@ export async function fetchRegisteringProgramPricing(
     priceFrom: Math.min(...candidates),
     whatIsIncluded: [
       "Season-long Shooting Challenge participation",
+      "Real coaching touchpoints: personalized video feedback, homework review, goal support, and accountability",
       "Homework, levels, leaderboard, and progress tracking",
       "Access to tutorials, Zoom coaching sessions, and game manual resources",
+      "Eligible season awards and recognition provided as Amazon gift cards through Award Recipients",
     ],
     registrationUrl,
   };

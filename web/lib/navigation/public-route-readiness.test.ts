@@ -27,7 +27,10 @@ describe("public route readiness — family chrome", () => {
     expect(PUBLIC_SMOKE_ROUTES.some((route) => route.path === "faq")).toBe(true);
   });
 
-  it("includes Family Dashboard sign-in in family smoke without adding private /dashboard to catalog nav", () => {
+  it("includes Family Dashboard sign-in in More nav, footer, and family smoke without private /dashboard", () => {
+    expect(SHOOTING_CHALLENGE_NAV.some((item) => item.href === "/dashboard/sign-in")).toBe(
+      true,
+    );
     expect(SHOOTING_CHALLENGE_NAV.some((item) => item.href === "/dashboard")).toBe(false);
     expect(FOOTER_QUICK_LINKS.some((item) => item.href === "/dashboard/sign-in")).toBe(true);
     expect(FAMILY_FACING_SMOKE_PATHS).toContain("dashboard/sign-in");
@@ -36,6 +39,7 @@ describe("public route readiness — family chrome", () => {
     );
     expect(SITEMAP_PUBLIC_ROUTES).not.toContain("/dashboard/sign-in");
   });
+
 
   it("covers every family-facing smoke path in Playwright smoke routes", () => {
     const smokePaths = new Set(

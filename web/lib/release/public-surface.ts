@@ -31,7 +31,8 @@ export const NON_CUTOVER_READY_ROUTES = ["/dashboard", "/athletes/[slug]", "/adm
 /**
  * Reachable by URL but excluded from ProductShell catalog nav + homepage hub cards.
  * `/dashboard` remains private (auth). Public display is gym/kiosk standings.
- * Family Dashboard sign-in is linked from header, mobile menu, footer, and parent CTAs.
+ * Family Dashboard sign-in is linked from header, More menu, mobile enrolled CTA,
+ * footer, and parent CTAs — never via the private `/dashboard` data route.
  */
 export const PUBLIC_CHROME_EXCLUDED_ROUTES = ["/dashboard", "/public-display"] as const;
 

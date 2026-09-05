@@ -20,8 +20,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { FAMILY_DASHBOARD_DESCRIPTION } from "@/lib/navigation/family-dashboard-link";
+import {
+  FAMILY_DASHBOARD_APP_HREF,
+  FAMILY_DASHBOARD_DESCRIPTION,
+} from "@/lib/navigation/family-dashboard-link";
 import { splitNavItems } from "@/lib/navigation/nav-priority";
+
 import {
   DAILY_SUBMISSIONS,
   PLAYER_REGISTRATION,
@@ -108,7 +112,11 @@ export function ProductNav({ productName, items }: ProductNavProps) {
 
   const moreActive = more.some((item) => pathMatches(pathname, item.href));
   const resourcesActive = resources.some((item) => pathMatches(pathname, item.href));
-  const allItems = [...primary, ...resources, ...more];
+  // Mobile already surfaces Family Dashboard in the enrolled CTA — omit from the
+  // catalog list so Playwright/a11y do not see duplicate identical links.
+  const allItems = [...primary, ...resources, ...more].filter(
+    (item) => item.href !== FAMILY_DASHBOARD_APP_HREF,
+  );
   const landmark = navLandmarkLabel(productName);
 
   const trapFocus = (event: ReactKeyboardEvent<HTMLDivElement>) => {

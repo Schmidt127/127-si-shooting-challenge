@@ -26,7 +26,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import type { ProgramPricing } from "@/lib/data/program-pricing";
 import { PLAYER_REGISTRATION } from "@/lib/registration";
 import { FAMILY_DASHBOARD_DESCRIPTION } from "@/lib/navigation/family-dashboard-link";
-import { ABOUT_THE_COACH } from "@/lib/seo/public-program-content";
+import { ABOUT_THE_COACH, OVERVIEW_AWARDS_COACHING } from "@/lib/seo/public-program-content";
 import {
   CHALLENGE_DATES,
   CHALLENGE_SEASON_LABEL,
@@ -279,7 +279,7 @@ export function HomePageView({ pricing = null }: HomePageViewProps) {
         eyebrow="What is the Shooting Challenge?"
         title="A two-month online Educational Athletics challenge"
         titleId="what-is-heading"
-        description="More than a shooting contest — a structured program that combines basketball training, accountability, learning, and coaching feedback."
+        description="More than a shooting contest — structured training, coaching, accountability, and recognition for the season."
         aria-labelledby="what-is-heading"
       >
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
@@ -291,11 +291,8 @@ export function HomePageView({ pricing = null }: HomePageViewProps) {
                 goals, complete homework, submit videos for coaching feedback, and participate in
                 other Educational Athletics activities — all online.
               </p>
-              <p>
-                Success is not about racking up the most shots. It requires well-rounded
-                participation: consistent training, completed assignments, coachable video work, and
-                steady XP growth across the full challenge.
-              </p>
+              <p>{OVERVIEW_AWARDS_COACHING.coaching}</p>
+              <p>{OVERVIEW_AWARDS_COACHING.awards}</p>
               <p className="text-muted-foreground">
                 {PROGRAM_IDENTITY.philosophy}: {PROGRAM_IDENTITY.philosophyTagline}
               </p>

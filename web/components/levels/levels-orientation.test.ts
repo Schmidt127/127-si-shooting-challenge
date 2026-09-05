@@ -1,30 +1,19 @@
 import { describe, expect, it } from "vitest";
 
-import { LEVELS_ORIENTATION_STEPS, LEVELS_TERMINOLOGY } from "./levels-orientation";
+import { LEVELS_PROGRESS_INTRO, LEVELS_PROGRESS_POINTS } from "./levels-orientation";
 
-describe("levels orientation", () => {
-  it("covers current level, next level, requirements, and advancement", () => {
-    expect(LEVELS_ORIENTATION_STEPS).toHaveLength(4);
+describe("levels progress orientation", () => {
+  it("frames current level, next level, and gates without a separate intro stack", () => {
+    expect(LEVELS_PROGRESS_INTRO.toLowerCase()).toContain("current level");
+    expect(LEVELS_PROGRESS_INTRO.toLowerCase()).toContain("next");
+    expect(LEVELS_PROGRESS_INTRO).toMatch(/XP/i);
 
-    const copy = LEVELS_ORIENTATION_STEPS.map((step) => `${step.title} ${step.description}`).join(
-      " ",
-    );
-
-    expect(copy).toContain("current level");
-    expect(copy).toContain("next level");
-    expect(copy).toContain("advance requirements");
-    expect(copy).toContain("XP");
+    const terms = LEVELS_PROGRESS_POINTS.map((item) => item.term);
+    expect(terms).toEqual(["Current level", "Next level", "Gates"]);
   });
 
-  it("keeps progression values sourced from the configured ladder", () => {
-    expect(LEVELS_ORIENTATION_STEPS[2].description).toContain("program configuration");
-    expect(LEVELS_ORIENTATION_STEPS[3].description).toContain("source for the current path");
-  });
-
-  it("defines level, current level, next level, and gate terminology", () => {
-    const terms = LEVELS_TERMINOLOGY.map((item) => item.term);
-    expect(terms).toEqual(["Level", "Current level", "Next level", "Gate"]);
-    expect(LEVELS_TERMINOLOGY[0].definition).toContain("Sort Order");
-    expect(LEVELS_TERMINOLOGY[3].definition).toContain("lifetime XP");
+  it("points families at current and next gate details first", () => {
+    expect(LEVELS_PROGRESS_POINTS[1].definition.toLowerCase()).toContain("gate");
+    expect(LEVELS_PROGRESS_POINTS[2].definition).toMatch(/lifetime XP/i);
   });
 });
