@@ -15,10 +15,11 @@ const automation122 = fs.readFileSync(
   "utf8"
 );
 
-test("066 v4.0 owns SC-163 Goal Met Date", () => {
-  assert.match(automation066, /Version: v4\.0/);
-  assert.match(automation066, /version: "v4\.0"/);
+test("066 v4.1 owns SC-163 Goal Met Date", () => {
+  assert.match(automation066, /Version: v4\.1/);
+  assert.match(automation066, /version: "v4\.1"/);
   assert.match(automation066, /maybeStampGoalMetDateIsolated/);
+  assert.match(automation066, /preserveActivityDateKeyFromRecord/);
   assert.match(automation066, /goalMetDateActionOut/);
   assert.match(automation066, /stamped/);
   assert.match(automation066, /skipped_already_set/);
@@ -27,6 +28,8 @@ test("066 v4.0 owns SC-163 Goal Met Date", () => {
   assert.match(automation066, /error_ambiguous/);
   assert.match(automation066, /Never overwrite/i);
   assert.match(automation066, /do not install Automation 122/i);
+  assert.match(automation066, /Do not timezone-convert a YYYY-MM-DD/i);
+  assert.match(automation066, /date-only \(Include time = off\)/i);
   assert.doesNotMatch(automation066, /tables:\s*\{[^}]*Award Recipients/s);
   assert.match(automation066, /Conquered Goal award fulfillment \/ Award Recipients\.Date Awarded/);
 });
@@ -35,7 +38,7 @@ test("122 is superseded and refuses install", () => {
   assert.match(automation122, /SUPERSEDED/i);
   assert.match(automation122, /Do NOT create or paste/i);
   assert.match(automation122, /throw new Error/);
-  assert.match(automation122, /066 v4\.0/);
+  assert.match(automation122, /066 v4/);
 });
 
 test("066 Goal Met Date outputs omit athlete/submission public IDs", () => {
