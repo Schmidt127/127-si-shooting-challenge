@@ -78,3 +78,26 @@ Do **not** change XP amounts or eligibility rules for this proof.
    - **B:** Authorize a bounded Season Sim disposable run that includes at least one counted submission and the same retry latch check.
 2. **SC-168 / SC-169:** No paste, no config change, no required Mike action.
 3. Optional later (not blocking): `weekly-email-stage apply --weekly-email-limit 1` to `schmidt@fairfieldbasketballclub.com` on a Ready disposable WAS.
+
+---
+
+## Addendum — SC-167 Option A COMPLETE (2026-09-05 later)
+
+Mike authorized Option A. Bounded Live **010 v10.14** proof finished:
+
+- Temporary Season Sim gate on Activity Date Is Future? only (MCP)
+- Athlete1 Submission ecsDWizt4kD7dXR8 → XP ecEywgydqkh9JI2H
+- Create: Action: created → one Active SUBMISSION_XP|recsDWizt4kD7dXR8
+- Retry: Action: reactivated_or_repaired → **same** Active id
+- Cleanup + exact NOW() restore + preflight PASS
+
+Full evidence: [SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md](./SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md)
+
+| ID | Final status |
+|---|---|
+| SC-167 | **COMPLETE / Live Tested** |
+| SC-168 | **COMPLETE** |
+| SC-169 | **COMPLETE** |
+| Wave | **ALL COMPLETE** |
+
+Mike remaining actions: **none** for this wave.
