@@ -115,6 +115,31 @@ def build_cleanup_plan(
     if not reg.enrollment_id and targets.get("Enrollments"):
         warnings.append("Registry has enrollment rows but enrollment_id meta is empty")
 
+    # SC-169: Automation 066/058 unlocks are not writer-registry rows. After
+    # Enrollment delete they orphan with empty Enrollment links but retain
+    # Milestone Source Key SHOT_MILESTONE|{enr}|… / PERFECT_WEEK|{enr}|….
+    # Do not query Unlocks via Enrollment Record ID (field does not exist).
+    if client is not None and reg.enrollment_id:
+        try:
+            from .unlock_cascade_query import list_unlocks_for_enrollment
+
+            unlock_rows = list_unlocks_for_enrollment(
+                client.list_records,
+                reg.enrollment_id,
+            )
+            unlock_ids = [str(r.get("id") or "") for r in unlock_rows if r.get("id")]
+            if unlock_ids:
+                targets.setdefault("Athlete Achievement Unlocks", [])
+                for uid in unlock_ids:
+                    if uid not in targets["Athlete Achievement Unlocks"]:
+                        targets["Athlete Achievement Unlocks"].append(uid)
+                warnings.append(
+                    f"SC-169: added {len(unlock_ids)} unlock(s) via Milestone Source Key "
+                    f"for enrollment {reg.enrollment_id} (automation-created, not registry)"
+                )
+        except Exception as exc:  # noqa: BLE001
+            warnings.append(f"SC-169 unlock Source Key scan skipped: {exc}")
+
     marker = run_marker(run_id)
     warnings.append(
         f"Primary targeting uses local registry; marker {marker!r} is secondary evidence"
