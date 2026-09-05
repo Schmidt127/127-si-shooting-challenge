@@ -1,0 +1,184 @@
+{
+  "harness": "FUT-001-LATE-CREDIT",
+  "mode": "apply",
+  "startedAt": "2026-09-05T11:36:11.368Z",
+  "liveVersionsObserved": {
+    "020": "v3.9",
+    "065": "v10.6",
+    "057": "2.4",
+    "source": "Automations Code MCP preflight 2026-09-04"
+  },
+  "checks": [
+    {
+      "id": "020.late_asset_creates_or_links_hc",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "done": true,
+        "timeout": false,
+        "hcCount": 1,
+        "uploadStatus": "Pending Link",
+        "uploadError": ""
+      }
+    },
+    {
+      "id": "020.official_week_is_pha_week",
+      "pass": true,
+      "status": "PASS",
+      "expected": {
+        "week": "recBrZ1sV8byWEHZU",
+        "pha": "recrpWRmt0MntieCL",
+        "enrollment": "recZEwkkXTJanDlG6"
+      },
+      "actual": {
+        "week": "recBrZ1sV8byWEHZU",
+        "pha": "recrpWRmt0MntieCL",
+        "enrollment": "recZEwkkXTJanDlG6",
+        "homework": "rechVLOeyEVIqmy2v"
+      }
+    },
+    {
+      "id": "020.late_submission_date_and_notes",
+      "pass": true,
+      "status": "PASS",
+      "expected": {
+        "submissionDate": "2027-07-01",
+        "dueDate": "2027-06-29",
+        "lateNote": true,
+        "createdNotLinkedReuse": true
+      },
+      "actual": {
+        "submissionDate": "2027-07-01",
+        "notesHasLate": true,
+        "notesHasFullXp": true,
+        "notesHasPwExclude": true,
+        "notesSnippet": "Late submission: activity date 2027-07-01 is after due date 2027-06-29. Full homework XP credit still applies once satisfactory; does not count toward Perfect Week for the original week.",
+        "createdTime": "2026-09-05T11:36:30.000Z"
+      }
+    },
+    {
+      "id": "065.late_satisfactory_full_xp_exactly_one",
+      "pass": false,
+      "status": "FAIL",
+      "expected": {
+        "count": 1,
+        "sourceKey": "HOMEWORK_XP|recGZQMi17TKeeIEB"
+      },
+      "actual": {
+        "count": 0,
+        "ids": [],
+        "points": [],
+        "active": [],
+        "week": [],
+        "poll": {
+          "done": false,
+          "reconcile": 1,
+          "totalXp": 35,
+          "awardStatus": "Pending"
+        }
+      }
+    },
+    {
+      "id": "065.xp_week_is_official_pha_week",
+      "pass": false,
+      "status": "FAIL",
+      "actual": {
+        "week": null
+      }
+    },
+    {
+      "id": "065.idempotent_no_duplicate_on_rerun",
+      "pass": false,
+      "status": "FAIL",
+      "actual": {
+        "count": 0,
+        "ids": []
+      }
+    },
+    {
+      "id": "057.late_hw_excluded_from_pw_satisfactory",
+      "pass": true,
+      "status": "PASS",
+      "expected": {
+        "satisfactoryCountUnchangedOrZero": true,
+        "dueDateGate": "2027-06-29"
+      },
+      "actual": {
+        "done": true,
+        "timeout": false,
+        "status": "Ready",
+        "recalc": true,
+        "assigned": 2,
+        "satisfactory": 0,
+        "before": {
+          "assigned": null,
+          "satisfactory": null,
+          "met": null
+        },
+        "hwStatus": "Incomplete - 0%"
+      }
+    },
+    {
+      "id": "ops.failures_or_stranded_detectable",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "automationError": null,
+        "reconcileNeeded": 1,
+        "awardStatus": "Pending",
+        "totalHomeworkXp": 35
+      }
+    }
+  ],
+  "defects": [
+    "065 did not award XP for late HC (Source Key HOMEWORK_XP|recGZQMi17TKeeIEB)"
+  ],
+  "notes": [
+    "Created canonical WAS recUY…QdBT for Athlete1 + Early Bird",
+    "WAS listExactWas lagged after create; verified created row recUY…QdBT directly",
+    {
+      "pwBefore": {
+        "assigned": null,
+        "satisfactory": null,
+        "met": null
+      }
+    },
+    "Forced 065 Reconcile 1→0→1 re-entry"
+  ],
+  "created": {
+    "batchKey": "FUT001|LATE|2026-09-05|mtob4hns",
+    "enrollmentId": "recZEwkkXTJanDlG6",
+    "athleteId": "recTfxT6WMsPvobAW",
+    "weekId": "recBrZ1sV8byWEHZU",
+    "phaId": "recrpWRmt0MntieCL",
+    "lateActivityDate": "2027-07-01",
+    "dueDateExpected": "2027-06-29",
+    "submissionIds": [
+      {
+        "id": "recPxa4U18yDDXPTn",
+        "tag": "late-hw1"
+      }
+    ],
+    "assetIds": [
+      {
+        "id": "recYo0UZthugCfxU7",
+        "tag": "late-hw1"
+      }
+    ],
+    "homeworkIds": [
+      {
+        "id": "recGZQMi17TKeeIEB",
+        "kind": "late-hw1"
+      }
+    ],
+    "xpEventIds": [],
+    "wasId": "recUY1msQEUU1QdBT",
+    "wasCreated": true
+  },
+  "finishedAt": "2026-09-05T11:41:26.656Z",
+  "summary": {
+    "passCount": 5,
+    "failCount": 3,
+    "defectCount": 1
+  }
+}

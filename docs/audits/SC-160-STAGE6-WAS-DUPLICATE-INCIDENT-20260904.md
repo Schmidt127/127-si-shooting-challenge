@@ -102,19 +102,21 @@ So: the **six-way duplicate** Mike inspected was the Stage 6 Athlete1 harness pi
 
 ## Remaining production fix (blocks SC-160 close)
 
-020 currently copies `Weekly Athlete Summary` **from the Submission only**. For weekless intake that field is empty, so HC with PHA Week has no WAS path.
+**GitHub ready:** Automation **020 v4.1** find-or-creates canonical WAS for `Enrollment + PHA.Week` when linking/creating HC; fail-closes on multiples; does not invent Submission.Week.
 
-**Required before SC-160 COMPLETE:** 020 (or a dedicated follow-on) must find-or-create the canonical WAS for `Enrollment + assigned PHA Week` when linking/creating HC, fail-closed if multiple exist, and never invent a Submission.Week.
+**Still required:** Mike paste per [`../deploy-checklists/SC-160-020-v4.1-was-pha-week.md`](../deploy-checklists/SC-160-020-v4.1-was-pha-week.md) + disposable weekless live proof → then mark SC-160 COMPLETE.
 
 ---
 
 ## Remaining Stage 6 status
 
-**PAUSED — not COMPLETE.**
+**IN PROGRESS — not COMPLETE.**
 
 - Duplicate six-row condition: **resolved**  
-- Mike reported HW1 XP: **restored**  
-- Matrix resume: **do not resume** until production WAS-for-PHA-Week path is implemented and live-tested  
-- FUT-002 Batch 2 UI trash: **hold** until SC-160 truly closed again  
+- Mike reported HW1 XP: **restored** (prior repair)  
+- Late XP disposable recovery: **PASS** (2026-09-05)  
+- Harness FIND/ARRAYJOIN miss: **fixed** in repo  
+- Production 020 WAS-for-PHA-Week: **GitHub v4.1**; **paste pending**  
+- FUT-002 Batch 2 UI trash: **hold** until SC-160 COMPLETE  
 
-Evidence companion: prior Stage 6 closeout docs remain historical for paste/version attestation; this file is the pause authority for WAS.
+Evidence companion: [`SC-160-STAGE6-RECOVERY-CLOSEOUT-20260905.md`](./SC-160-STAGE6-RECOVERY-CLOSEOUT-20260905.md).
