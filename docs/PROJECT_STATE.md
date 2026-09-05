@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-09-05** (**SC-167/168/169 ALL COMPLETE / Live Tested** — SC-167 Option A 010 v10.14 proof; tip pending closeout merge). Prior: #455 live-status docs; FUT-048 Deferred; SC-163 COMPLETE; Season Sim **not running**. Authority: [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) · [`audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md`](./audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md) · [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md)
+Last updated: **2026-09-05** (**`origin/master` = `ba969433`** / PR **#457** purge closeout). **SC-167/168/169 ALL COMPLETE / Live Tested** (010 **v10.14**); transactional purge COMPLETE; Season Sim **CLOSED** (next execute NOT authorized); formulas **`NOW()` / `TODAY()`**; FUT-048 Deferred (`d21ixrrrqpqz29.cloudfront.net`); SC-166 Mike-owned/manual not core blocker. Authority: [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) · [`audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md`](./audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md) · [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
@@ -37,7 +37,7 @@ Last updated: **2026-09-05** (**SC-167/168/169 ALL COMPLETE / Live Tested** — 
 
 **066 overlay (Mike 2026-08-19):** Production Automation 066 is **v3.8**. Historical v3.3 failure / v3.4–v3.5 proofs remain history.
 
-**010 overlay (2026-08-23 API read):** Production Automations Code column = **v10.10**. GitHub = **v10.12**. Paste needed per [`deploy-checklists/010-v10.12-formula-settlement-grace.md`](./deploy-checklists/010-v10.12-formula-settlement-grace.md). Prior v10.11 run-history note remains historical.
+**010 overlay (2026-09-05 SC-167):** Production Automations + GitHub = **v10.14** — COMPLETE / Live Tested (Option A create+retry). Prior Code-column **v10.10**/GitHub **v10.12** paste notes and dual-enrollment fixture cleanup are historical.
 
 **057 overlay (2026-08-24):** Production **057 v2.0** — Perfect Week eligibility with **48-hour submission grace period**. Live-tested on disposable weekly-email E2E fixture (4/7 PW qualifying days). Deploy: [`deploy-checklists/057-v2.0-perfect-week-grace-period.md`](./deploy-checklists/057-v2.0-perfect-week-grace-period.md).
 
@@ -53,7 +53,7 @@ Last updated: **2026-09-05** (**SC-167/168/169 ALL COMPLETE / Live Tested** — 
 
 **101 overlay (final 2026-08-21):** Production Automation 101 is **v6.7** (live script body). Midday Automations Code-column **v6.6** snapshot is **historical / superseded**. Meeting `recxtpMu4ONbdDD45` safely skipped when reconciliation not needed.
 
-**Final production version reconciliation (2026-08-21):** See [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) §8. Overlay **2026-09-05:** **059 v3.8** Live / SC-159 Live Tested. **SC-160 COMPLETE / Live Tested** — live **009 v1.3 / 020 v4.1 / 065 v10.7 / 057 2.5**. **FUT-002 Batch 2 COMPLETE** — live **1375** fields / **35** tables. **066 v4.1** Live / SC-163 Live Tested. **Tips `bd0198a4` → `480771fc` → `58663cfd` → `2131f7d5`:** SC-161/162/163/164/165 Live Tested; SC-166 Mike-owned/manual (not core blocker); Season Sim package READY / not running. Evidence [`audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md`](./audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md) · [`audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md`](./audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md) · [`audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md`](./audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md) · [`audits/SC-WAVE-20260905-CLOSEOUT.md`](./audits/SC-WAVE-20260905-CLOSEOUT.md).
+**Final production version reconciliation (2026-08-21):** See [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) §8. Overlay **2026-09-05:** **059 v3.8** Live / SC-159 Live Tested. **SC-160 COMPLETE / Live Tested** — live **009 v1.3 / 020 v4.1 / 065 v10.7 / 057 2.5**. **FUT-002 Batch 2 COMPLETE** — live **1375** fields / **35** tables. **066 v4.1** Live / SC-163 Live Tested. **010 v10.14** Live / SC-167 Live Tested. Tip **`ba969433`** (PR **#457**): SC-161/162/163/164/165/167/168/169 Live Tested; SC-166 Mike-owned/manual (not core blocker); Season Sim **CLOSED** / next execute NOT authorized; transactional purge COMPLETE. Evidence [`audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md`](./audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md) · [`audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md`](./audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md) · [`audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md`](./audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md) · [`audits/SC-WAVE-20260905-CLOSEOUT.md`](./audits/SC-WAVE-20260905-CLOSEOUT.md) · [`testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md`](./testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md).
 
 ---
 

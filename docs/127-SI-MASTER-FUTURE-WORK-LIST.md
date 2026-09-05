@@ -2272,7 +2272,7 @@ Create a reusable, unattended end-to-end simulation of a complete **60-day** Sho
 
 **Priority:** P2  
 
-**Status:** **COMPLETE (package) / READY for Mike authorization (2026-09-05)** — Prior controlled run `SEASON-SIM-2027-20260902T213135Z-athlete1` cleaned; Production formulas restored to normal **`NOW()` / `TODAY()`** (temporary Season Sim formulas **not** active). Package reusable via [`deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md`](./deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md). **Not currently running.** Next execute needs a **new** simulation ID and Mike saying exactly `RUN SEASON SIMULATION`.
+**Status:** **COMPLETE (package closed)** (2026-09-05) — Controlled run T122531Z + prior `SEASON-SIM-2027-20260902T213135Z-athlete1` cleaned; Production formulas restored to normal **`NOW()` / `TODAY()`** (temporary Season Sim formulas **not** active). Package reusable via [`deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md`](./deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md). **Not currently running.** Next execute **NOT authorized** — needs a **new** simulation ID and Mike saying exactly `RUN SEASON SIMULATION`.
 
 **Systems:** `tools/season_simulation/`, Airtable gated formulas (temporary), automations 010/114/073/053/055/057/072, Hub Test Allowlist  
 
@@ -2878,23 +2878,31 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | Total items | 77 |
 
-| COMPLETE | 62 |
+| COMPLETE | 63 |
 
 | IN PROGRESS | 3 |
 
 | BLOCKED | 0 |
 
-| READY | 2 |
+| READY | 1 |
 
 | DEFERRED | 10 |
 
-| Production actions remaining | 5 |
+| Production actions remaining | 4 |
 
-| Items requiring Mike | 10 |
+| Items requiring Mike | 9 |
 
-| Items requiring Cursor | 2 |
+| Items requiring Cursor | 1 |
 
 | Items requiring OMNI/Airtable | 2 |
+
+
+
+
+
+
+
+
 
 
 
@@ -3086,7 +3094,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | **SC-SEASON-SIM-001** | **Planned / Future** | 60-day five-enrollment season simulation ? narrative entry above Â§ D / FUT-026; MRW-H11. Do **not** implement yet. FUT-010 unchanged. Reuse SC-PW-E2E later where appropriate. |
 
-| **SC-SEASON-SIM-002** | **COMPLETE (package) / READY for authorization** | Prior Sept 2 run cleaned; formulas normal NOW()/TODAY(); package READY — [`deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md`](./deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md). **Not running.** Authorize only with exact `RUN SEASON SIMULATION`; use a **new** simulation ID. |
+| **SC-SEASON-SIM-002** | **COMPLETE (package closed)** | T122531Z cleaned; formulas normal NOW()/TODAY(); next execute **NOT authorized** — [`deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md`](./deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md). Re-authorize only with exact `RUN SEASON SIMULATION` + **new** simulation ID. |
 
 | **SC-168** | **CORRECTED EXPECTATION + STAGE SHIPPED** | T122531Z 0 WEEKLY handoffs = harness gap (execute arms Build only; 118/119 cron). [`audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md`](./audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md) · `weekly-email-stage` CLI |
 
@@ -3128,7 +3136,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | **Season Sim helper hygiene** | **Archive executed (Agent 4 coord)** ? Remove/Archive classes moved under `_archive/session-20260903/`; Required class preserved | Classification: [`audits/SC-112-untracked-hygiene-classification-20260903.md`](./audits/SC-112-untracked-hygiene-classification-20260903.md). Proposal PR **#368**. No Season Sim package edits. |
 
-| **Season Simulation next execute** | **NOT currently authorized / NOT running** | Package READY for later Mike authorization ([`SC-SEASON-SIM-002-EXECUTION-MANIFEST.md`](./deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md)). Temporary formulas **not** active — live **`NOW()` / `TODAY()`**. **DO NOT change formulas.** Do not execute until Mike says exactly `RUN SEASON SIMULATION`. |
+| **Season Simulation next execute** | **NOT authorized / NOT running** | Package **COMPLETE / closed** for T122531Z wave ([`SC-SEASON-SIM-002-EXECUTION-MANIFEST.md`](./deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md)). Temporary formulas **not** active — live **`NOW()` / `TODAY()`**. **DO NOT change formulas.** Do not execute until Mike says exactly `RUN SEASON SIMULATION`. |
 
 | **SC-112 docs closeout (Agent 4)** | **Updated 2026-09-04** ? Mike Production verify complete; tip includes **`78208ffc`** | [`audits/SC-112-multi-child-select-404-fix-20260904.md`](./audits/SC-112-multi-child-select-404-fix-20260904.md) Â· [`audits/SC-112-finalization-closeout-20260903.md`](./audits/SC-112-finalization-closeout-20260903.md) Â· hygiene archive `tools/season_simulation/_archive/session-20260903/` |
 
@@ -3165,8 +3173,9 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 | **FUT-029** | **Deferred — DO NOT IMPLEMENT** | Outside current app completion |
 | **AUT-013 / AUT-067 pastes** | **Optional / declined** | Structure-only GitHub newer; Mike declined paste 2026-09-05 |
 | **AUT-122** | **Superseded — never install** | Goal Met Date owned by **066 v4.1** |
-| **Season Simulation** | **NOT currently authorized / not running** | Live formulas normal `NOW()` / `TODAY()` |
-| **Core application** | **Functionally complete** for current app scope | Remaining = launch-time ops (FUT-003/026/Season Sim), Mike-owned SC-166 polish, deferred FUT-029 / cosmetic (incl. **FUT-048** CloudFront custom domain) |
+| **Season Simulation** | **CLOSED / next execute NOT authorized** | Live formulas normal `NOW()` / `TODAY()`; tip includes purge **#457** `ba969433` |
+| **Core application** | **Functionally complete** for current app scope | Remaining = launch-time ops (FUT-003/026; SC-SEASON-SIM-001 future), Mike-owned SC-166 polish, deferred FUT-029 / cosmetic (incl. **FUT-048** CloudFront custom domain) |
+| **OPS-PURGE-20260905** | **COMPLETE** | Transactional purge PR **#457**; evidence [`testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md`](./testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md) |
 
 **FUT-048 intake (2026-09-05):** Deferred optional CloudFront custom domain for `resources-homework` / `resources-homework-cf` — keep `d21ixrrrqpqz29.cloudfront.net`; no AWS/DNS/Airtable/Production changes required now.
 

@@ -50,10 +50,20 @@ test("generate-work-list-section-g produces matching summary arithmetic", () => 
   assert.match(generated, /\*\*SC-163\*\*.*COMPLETE/s);
   assert.match(generated, /\*\*SC-166\*\*.*Mike-owned\/manual/s);
   assert.match(generated, /\*\*FUT-029\*\*.*DEFERRED/s);
+  assert.match(generated, /\*\*FUT-048\*\*.*DEFERRED/s);
   assert.match(generated, /\*\*AUT-122\*\*.*DEFERRED/s);
   assert.match(generated, /never install/i);
-  assert.match(generated, /\*\*SC-SEASON-SIM-002\*\*.*READY/s);
-  assert.match(generated, /RUN SEASON SIMULATION/);
+  assert.match(
+    generated,
+    /\|\s*\*\*SC-SEASON-SIM-002\*\*\s*\|\s*P2\s*\|\s*COMPLETE\s*\|\s*no\s*\|/,
+  );
+  assert.match(generated, /NOT authorized/i);
+  assert.match(generated, /d21ixrrrqpqz29\.cloudfront\.net/);
+  assert.doesNotMatch(
+    generated,
+    /\|\s*\*\*SC-SEASON-SIM-002\*\*\s*\|\s*P2\s*\|\s*READY/,
+    "SC-SEASON-SIM-002 queue row must not be READY",
+  );
 });
 
 test("master list Section G summary matches generated file", () => {
