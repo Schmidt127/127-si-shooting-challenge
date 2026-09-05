@@ -438,7 +438,9 @@ def build_intended_writes(
                 },
                 "notes": (
                     "072 arm false→true after day loop; Production 072 recordId "
-                    "must be trigger WAS ($ref), not a hardcoded test id"
+                    "must be trigger WAS ($ref), not a hardcoded test id. "
+                    "SC-168: does not arm Send to Make? — use weekly-email-stage "
+                    "for 119 substitute; cron 118/119 not driven by sim clock"
                 ),
             }
         )
@@ -562,6 +564,8 @@ def summarize_intended_write_readiness(
         "recorded_zoom_attendance": len(rec_za),
         "live_create_xp_event_arms": len(create_xp_arms),
         "weekly_email_arms": len(weekly_arms),
+        "weekly_hub_handoffs_expected_from_execute_alone": False,
+        "weekly_hub_handoffs_require_stage": "weekly-email-stage",
         "perfect_week_requeues": len(pw_requeues),
         "all_submissions_countable": len(submissions) > 0
         and len(uncountable) == 0,

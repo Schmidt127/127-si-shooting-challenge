@@ -452,6 +452,10 @@ def build_athlete1_scenario(
             }
         )
         # Weekly athlete summary email on each Saturday in window.
+        # SC-168: intended pipeline only — execute + --enable-email-delivery
+        # arms Build Weekly (072); WEEKLY Hub handoffs require
+        # `weekly-email-stage` apply (119 substitute). Sim clock does not
+        # fire 118/119 Sunday cron.
         if meta.activity_date.weekday() == 5:  # Saturday
             emails.append(
                 {
@@ -460,6 +464,8 @@ def build_athlete1_scenario(
                     "week_sunday": sunday_of(meta.activity_date).isoformat(),
                     "recipient": SAFE_EMAIL_RECIPIENT,
                     "send": False,
+                    "expected_from_execute_alone": False,
+                    "requires_weekly_email_stage": True,
                 }
             )
             emails.append(

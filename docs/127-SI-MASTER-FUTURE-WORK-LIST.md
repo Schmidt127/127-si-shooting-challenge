@@ -2230,6 +2230,25 @@ Create a reusable, unattended end-to-end simulation of a complete **60-day** Sho
 
 
 
+### SC-168 — Missing Weekly Email Handoffs (Season Sim expectation)
+
+**Priority:** P1  
+**Status:** **CORRECTED EXPECTATION + STAGE SHIPPED (repo)** — 2026-09-05  
+**Systems:** Season Sim harness; 118 → 072 → 119 → 074 → Hub  
+**Related:** SC-SEASON-SIM-002; T122531Z discrepancy #2  
+
+**Finding:** Controlled run `SEASON-SIM-2027-20260905T122531Z-athlete1` produced **0** `WEEKLY_ATHLETE_SUMMARY` Hub handoffs while arming **6** Build Weekly flags and accepting **69** other emails to the allowlist. Prior T213135Z showed **6 WEEKLY Accepted** only after an explicit Send-to-Make arm (119 substitute).
+
+**Classification:** **EXPECTED_BEHAVIOR_HARNESS_GAP** — not a Production 072/118/119/074 logic defect. Simulation clock does not fire Sunday cron (118/119). Execute `--enable-email-delivery` arms Build Weekly only.
+
+**Repo fix:** `expectations_weekly_email.py` + `weekly_email_stage` CLI (plan/verify/apply) + tests. Audit: [`audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md`](./audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md). Checklist: [`deploy-checklists/SC-168-weekly-email-stage.md`](./deploy-checklists/SC-168-weekly-email-stage.md).
+
+**Live proof:** N/A on cleaned T122531Z graph; next disposable run may apply `weekly-email-stage` (limit 1, allowlist only).
+
+**Do not:** Change Sunday schedules; force Send to Make inside execute by default; send to families.
+
+
+
 ### SC-SEASON-SIM-002 ? Athlete 1 Season Simulation Infrastructure (May?June 2027)
 
 
@@ -3049,6 +3068,8 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 | **SC-SEASON-SIM-001** | **Planned / Future** | 60-day five-enrollment season simulation ? narrative entry above Â§ D / FUT-026; MRW-H11. Do **not** implement yet. FUT-010 unchanged. Reuse SC-PW-E2E later where appropriate. |
 
 | **SC-SEASON-SIM-002** | **COMPLETE (package) / READY for authorization** | Prior Sept 2 run cleaned; formulas normal NOW()/TODAY(); package READY — [`deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md`](./deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md). **Not running.** Authorize only with exact `RUN SEASON SIMULATION`; use a **new** simulation ID. |
+
+| **SC-168** | **CORRECTED EXPECTATION + STAGE SHIPPED** | T122531Z 0 WEEKLY handoffs = harness gap (execute arms Build only; 118/119 cron). [`audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md`](./audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md) · `weekly-email-stage` CLI |
 
 
 

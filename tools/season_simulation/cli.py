@@ -39,6 +39,12 @@ from .reports import write_dry_run_report
 from .run_registry import new_run_id, validate_run_id
 from .scenarios import scenario_from_reference
 from .simulation_clock import SimulationClock
+from .weekly_email_stage import (
+    apply_weekly_email_send_arm,
+    plan_weekly_email_stage,
+    verify_weekly_email_stage,
+    write_stage_report,
+)
 
 PACKAGE_DIR = Path(__file__).resolve().parent
 REPORTS_DIR = PACKAGE_DIR / "reports"
@@ -51,10 +57,19 @@ def _parser() -> argparse.ArgumentParser:
     )
     p.add_argument(
         "command",
-        choices=["preflight", "dry-run", "execute", "cleanup", "plan", "evidence"],
+        choices=[
+            "preflight",
+            "dry-run",
+            "execute",
+            "cleanup",
+            "plan",
+            "evidence",
+            "weekly-email-stage",
+        ],
         help=(
             "preflight=read-only checks; dry-run=default plan; "
-            "execute/cleanup require confirm gates; evidence=export latest reports"
+            "execute/cleanup require confirm gates; evidence=export latest reports; "
+            "weekly-email-stage=SC-168 119-substitute plan/verify/apply"
         ),
     )
     p.add_argument(
@@ -95,8 +110,34 @@ def _parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--enable-email-delivery",
         action="store_true",
-        help="Authorized runs only; still restricted to "
-        f"{SAFE_EMAIL_RECIPIENT}",
+        help=(
+            "Authorized runs only; still restricted to "
+            f"{SAFE_EMAIL_RECIPIENT}. Arms Build Weekly (072 path) only — "
+            "WEEKLY Hub handoffs need weekly-email-stage (SC-168)."
+        ),
+    )
+    p.add_argument(
+        "--weekly-email-mode",
+        choices=["plan", "verify", "apply"],
+        default="plan",
+        help="For weekly-email-stage: plan (default), verify, or apply send-arm",
+    )
+    p.add_argument(
+        "--was-id",
+        action="append",
+        default=[],
+        help="Optional WAS record id(s) for weekly-email-stage (repeatable)",
+    )
+    p.add_argument(
+        "--enrollment-id",
+        default="",
+        help="Optional enrollment scope for weekly-email-stage",
+    )
+    p.add_argument(
+        "--weekly-email-limit",
+        type=int,
+        default=1,
+        help="Max Ready WAS rows to arm on weekly-email-stage apply (default 1)",
     )
     p.add_argument(
         "--base-id",
@@ -266,8 +307,72 @@ def cmd_dry_run(args: argparse.Namespace) -> int:
         f"live_xp={write_readiness.get('live_create_xp_event_arms')}; "
         f"weekly_arms={write_readiness.get('weekly_email_arms')}"
     )
+    print(
+        "SC-168: weekly_arms count Build Weekly flags only; "
+        "0 WEEKLY Hub handoffs after execute alone is expected until "
+        "weekly-email-stage apply (119 substitute)."
+    )
     print(f"Wrote {paths['json']}")
     print(f"Wrote {paths['md']}")
+    return 0
+
+
+def cmd_weekly_email_stage(args: argparse.Namespace) -> int:
+    """SC-168: plan/verify/apply weekly send-arm (119 substitute)."""
+    if not args.run_id:
+        print("weekly-email-stage requires --run-id / --simulation-id", file=sys.stderr)
+        return 2
+    validate_run_id(args.run_id)
+    mode = args.weekly_email_mode
+    was_ids = list(args.was_id or []) or None
+    enrollment_id = args.enrollment_id or None
+
+    if mode == "apply":
+        if not args.execute:
+            print(
+                "weekly-email-stage apply requires --execute plus confirm gates",
+                file=sys.stderr,
+            )
+            return 2
+        client = _client(args, allow_writes=True)
+        try:
+            report = apply_weekly_email_send_arm(
+                client,
+                run_id=args.run_id,
+                registry_dir=Path(args.registry_dir),
+                confirm=args.confirm,
+                confirm_disposable=args.confirm_disposable,
+                enrollment_id=enrollment_id,
+                was_ids=was_ids,
+                limit=max(1, int(args.weekly_email_limit)),
+            )
+        except ValueError as exc:
+            print(f"Apply refused: {exc}", file=sys.stderr)
+            return 2
+    else:
+        client = _client(args, allow_writes=False)
+        if mode == "verify":
+            report = verify_weekly_email_stage(
+                client,
+                run_id=args.run_id,
+                registry_dir=Path(args.registry_dir),
+                enrollment_id=enrollment_id,
+                was_ids=was_ids,
+            )
+        else:
+            report = plan_weekly_email_stage(
+                client,
+                run_id=args.run_id,
+                registry_dir=Path(args.registry_dir),
+                enrollment_id=enrollment_id,
+                was_ids=was_ids,
+            )
+
+    path = write_stage_report(report, Path(args.out_dir))
+    print(json.dumps(report.to_dict(), indent=2, default=str))
+    print(f"Wrote {path}")
+    if report.errors:
+        return 3
     return 0
 
 
@@ -437,6 +542,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_cleanup(args)
     if args.command == "evidence":
         return cmd_evidence(args)
+    if args.command == "weekly-email-stage":
+        return cmd_weekly_email_stage(args)
     return 1
 
 
