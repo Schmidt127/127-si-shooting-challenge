@@ -18,8 +18,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Airtable
 
+#### Changed
+- **SC-163 Goal Met Date → Automation 066 v4.0 (2026-09-05)** — Capacity full: do **not** install Automation 122 (SUPERSEDED stub). Extends **066** with isolated Goal Met Date stamp (first counted Activity Date crossing; never overwrite; fail closed). Shared helpers + backfill v1.1 + Mike checklist. **Not live-complete until schema convert + 066 paste + backfill.** Docs: [`docs/audits/SC-163-GOAL-MET-DATE-RELIABILITY.md`](./docs/audits/SC-163-GOAL-MET-DATE-RELIABILITY.md) · [`docs/deploy-checklists/SC-163-goal-met-date.md`](./docs/deploy-checklists/SC-163-goal-met-date.md).
+
 #### Added
-- **SC-163 Goal Met Date reliability (2026-09-05)** — Root cause: `Goal Met Date` was a lookup of Award Recipients → Date Awarded. Repo adds Automation **122** (first counted Activity Date crossing; never overwrite), extension backfill, probe, and Mike checklist to convert field lookup → date. **Not live-complete until schema + paste.** Docs: [`docs/audits/SC-163-GOAL-MET-DATE-RELIABILITY.md`](./docs/audits/SC-163-GOAL-MET-DATE-RELIABILITY.md) · [`docs/deploy-checklists/SC-163-goal-met-date.md`](./docs/deploy-checklists/SC-163-goal-met-date.md).
+- **SC-163 Goal Met Date reliability (2026-09-05)** — Root cause: `Goal Met Date` was a lookup of Award Recipients → Date Awarded. Initial repo wave added Automation **122** (later **superseded** by 066 v4.0), extension backfill, probe, and Mike checklist to convert field lookup → date. **Not live-complete until schema + paste.** Docs: [`docs/audits/SC-163-GOAL-MET-DATE-RELIABILITY.md`](./docs/audits/SC-163-GOAL-MET-DATE-RELIABILITY.md) · [`docs/deploy-checklists/SC-163-goal-met-date.md`](./docs/deploy-checklists/SC-163-goal-met-date.md).
 
 ### Lambda
 

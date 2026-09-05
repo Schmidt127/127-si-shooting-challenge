@@ -74,10 +74,10 @@ function makeStrictTable() {
 }
 
 (async () => {
-  test("repo script declares v3.9 and normalizeCreateRecordPayload", () => {
+  test("repo script declares v4.0 and normalizeCreateRecordPayload", () => {
     const text = fs.readFileSync(SCRIPT_PATH, "utf8");
-    assert.match(text, /Version:\s*v3\.9/);
-    assert.match(text, /version:\s*"v3\.9"/);
+    assert.match(text, /Version:\s*v4\.0/);
+    assert.match(text, /version:\s*"v4\.0"/);
     assert.match(text, /function normalizeCreateRecordPayload/);
     assert.match(text, /await table\.createRecordsAsync\(batch\)/);
     // Historical bug: raw payloads passed straight to createRecordsAsync in multi-path

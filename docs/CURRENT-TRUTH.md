@@ -336,7 +336,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 
 ### Open Mike UI actions (wave 2026-09-05)
 
-- **SC-163:** Convert Enrollments Goal Met Date lookup → date; paste Automation **122**; run backfill — [`deploy-checklists/SC-163-goal-met-date.md`](./deploy-checklists/SC-163-goal-met-date.md). **Not live-complete.**
+- **SC-163:** Convert Enrollments Goal Met Date lookup → date; paste Automation **066 v4.0** (122 SUPERSEDED — do not install); run backfill — [`deploy-checklists/SC-163-goal-met-date.md`](./deploy-checklists/SC-163-goal-met-date.md). **Not live-complete.**
 - **SC-166:** Apply Active + Completed/History Interface filters — [`deploy-checklists/SC-166-coach-work-queue-filters.md`](./deploy-checklists/SC-166-coach-work-queue-filters.md). **Not live-complete.**
 
 ### Pending / needs live proof

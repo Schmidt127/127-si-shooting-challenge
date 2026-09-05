@@ -41,7 +41,7 @@ test("065 documents dynamic triggering recordId input", () => {
 });
 
 test("066 documents dynamic triggering recordId input", () => {
-  assert.match(s066, /v3\.9/);
+  assert.match(s066, /v4\.0/);
   assert.match(s066, /readTriggerRecordId/);
   assert.match(s066, /Missing input variable: recordId/);
   assert.match(s066, /Invalid Enrollment recordId/);
