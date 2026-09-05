@@ -1,0 +1,608 @@
+[
+  {
+    "id": "rec5sB0yBiDRD7Yet",
+    "createdTime": "2026-09-02T00:56:09.000Z",
+    "table_name": "Submissions",
+    "table_id": "tblEVjVpGGlPTsYSt",
+    "fields": {
+      "Count This Submission?": 1,
+      "Submission Has Detailed Stats?": 0,
+      "Ready for 009 Asset Creation?": 0,
+      "Created": "2026-09-02T00:56:09.000Z",
+      "Submission Assets Ready?": 0,
+      "Last Reconciled Signature": "rec5sB0yBiDRD7Yet|COUNT=1|MODE=Simple Total|DUP=Count It|VALID=|FUTURE=0|SHOTS=100|DATE=2026-05-10T00:00:00.000Z|ENR=recn1QUIGO1PjbnnY|ACTIVE=1|PI=Shooting Challenge | 2026-2027|YEAR=2026-2027|WEEK=rec2Rewxt21z7dI9f|PI=Shooting Challenge | 2026-2027|START=2027-05-02T06:00:00.000Z|END=2027-05-09T05:59:00.000Z|WAS=\"-02T0040, VERIFY - 2026-2027 - Week 1 - 7-8\"|XP_SIG=|XP_KEYS=|XP_SUBS=|XP_ENRS=",
+      "XP Award Ready?": 0,
+      "Submitted At": "2026-09-02T00:56:09.000Z",
+      "Why Not Ready for 009?": "Missing Enrollment",
+      "Needs Week Assignment?": 0,
+      "Counted Activity Date Key": "2026-05-10",
+      "Total Shots Canonical": 100,
+      "Has Review Assets?": 0,
+      "Week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "Total Shots Counted": 100,
+      "Submission Stat Mode": "Simple Total",
+      "3PT Attempted Counted": 0,
+      "Submitted Same Day?": 0,
+      "RecordId": "rec5sB0yBiDRD7Yet",
+      "FT Attempted Counted": 0,
+      "Has Video?": 0,
+      "XP Award Status": "Pending",
+      "Coach Feedback (from Video Feedback)": [
+        "VERIFY|2026-09-02T0040| coach review for XP path"
+      ],
+      "Edit Submission - Parent": "https://form.fillout.com/t/vNgeHardYcus?id=rec5sB0yBiDRD7Yet",
+      "FT Made Counted": 0,
+      "Activity Date Key": "2026-05-10",
+      "Perfect Week Grace Eligible?": 0,
+      "XP Volume Bonus": 4,
+      "Ready to Send Attachments to Make?": 0,
+      "XP Base Points": 5,
+      "3PT Made Counted": 0,
+      "Video Feedback": [
+        "recfHth6ek4ekr8bA"
+      ],
+      "Video Count": 0,
+      "Week Assignment Status": "Assigned",
+      "Perfect Week Countable Submission?": 0,
+      "XP Accuracy Bonus": 0,
+      "Weekly Athlete Summary": [
+        "recp12hqb0uaKZvTm"
+      ],
+      "Ready for Homework Completion Automation?": 0,
+      "Week Counts Toward Challenge?": [
+        true
+      ],
+      "XP Detailed Stats Bonus": 0,
+      "Reconciliation Week Signature - Lkp": [
+        "rec2Rewxt21z7dI9f|PI=Shooting Challenge | 2026-2027|START=2027-05-02T06:00:00.000Z|END=2027-05-09T05:59:00.000Z"
+      ],
+      "Total Makes Counted": 0,
+      "Has HW2?": 0,
+      "Attachment Upload Status": "No Files",
+      "Current Reconciliation Signature": "rec5sB0yBiDRD7Yet|COUNT=1|MODE=Simple Total|DUP=Count It|VALID=|FUTURE=0|SHOTS=100|DATE=2026-05-10T00:00:00.000Z|ENR=|WEEK=rec2Rewxt21z7dI9f|PI=Shooting Challenge | 2026-2027|START=2027-05-02T06:00:00.000Z|END=2027-05-09T05:59:00.000Z|WAS= - Week 1 - 7-8|XP_SIG=|XP_KEYS=|XP_SUBS=|XP_ENRS=",
+      "XP Total Points": 5,
+      "Homework Completion Ready?": 0,
+      "XP Bonus Points": 4,
+      "Submission Key": "-Week 1-rec5sB0yBiDRD7Yet",
+      "Activity Date": "2026-05-10",
+      "2PT Attempted Counted": 0,
+      "Has HW1?": 0,
+      "Reconciliation Needed?": 1,
+      "Shot Total": 100,
+      "Duplicate Review Status": "Count It",
+      "Ready for Weekly Summary?": 1,
+      "Activity Date Is Future?": 0,
+      "2PT Made Counted": 0,
+      "Submission Full Name": "Unknown Athlete - 5/10/2026 - Week 1"
+    }
+  },
+  {
+    "id": "recFBItwl1pCboxlN",
+    "createdTime": "2026-09-03T03:57:29.000Z",
+    "table_name": "Submissions",
+    "table_id": "tblEVjVpGGlPTsYSt",
+    "fields": {
+      "Count This Submission?": 0,
+      "Submission Has Detailed Stats?": 0,
+      "Ready for 009 Asset Creation?": 0,
+      "Created": "2026-09-03T03:57:29.000Z",
+      "Submission Assets Ready?": 0,
+      "XP Award Ready?": 0,
+      "Submitted At": "2026-09-03T03:57:29.000Z",
+      "Why Not Ready for 009?": "Missing Enrollment",
+      "Needs Week Assignment?": 0,
+      "Total Shots Canonical": 55,
+      "Has Review Assets?": 0,
+      "Week": [
+        "recBrZ1sV8byWEHZU"
+      ],
+      "Total Shots Counted": 0,
+      "Submission Stat Mode": "Simple Total",
+      "3PT Attempted Counted": 0,
+      "Submitted Same Day?": 0,
+      "RecordId": "recFBItwl1pCboxlN",
+      "FT Attempted Counted": 0,
+      "Has Video?": 0,
+      "XP Award Status": "Pending",
+      "Edit Submission - Parent": "https://form.fillout.com/t/vNgeHardYcus?id=recFBItwl1pCboxlN",
+      "FT Made Counted": 0,
+      "Activity Date Key": "2027-04-28",
+      "Perfect Week Grace Eligible?": 0,
+      "XP Volume Bonus": 0,
+      "Ready to Send Attachments to Make?": 0,
+      "XP Base Points": 0,
+      "3PT Made Counted": 0,
+      "Video Count": 0,
+      "Daily Email Subject": "PELC|probe|1788407848177|daily",
+      "Week Assignment Status": "Activity Date in Future",
+      "Perfect Week Countable Submission?": 0,
+      "XP Accuracy Bonus": 0,
+      "Ready for Homework Completion Automation?": 0,
+      "Week Counts Toward Challenge?": [
+        true
+      ],
+      "XP Detailed Stats Bonus": 0,
+      "Reconciliation Week Signature - Lkp": [
+        "recBrZ1sV8byWEHZU|PI=Shooting Challenge | 2026-2027|START=2027-04-25T06:00:00.000Z|END=2027-05-02T05:59:00.000Z"
+      ],
+      "Total Makes Counted": 0,
+      "Has HW2?": 0,
+      "Attachment Upload Status": "No Files",
+      "Current Reconciliation Signature": "recFBItwl1pCboxlN|COUNT=0|MODE=Simple Total|DUP=Count It|VALID=|FUTURE=1|SHOTS=0|DATE=2027-04-28T00:00:00.000Z|ENR=|WEEK=recBrZ1sV8byWEHZU|PI=Shooting Challenge | 2026-2027|START=2027-04-25T06:00:00.000Z|END=2027-05-02T05:59:00.000Z|WAS=|XP_SIG=|XP_KEYS=|XP_SUBS=|XP_ENRS=",
+      "XP Total Points": 0,
+      "Homework Completion Ready?": 0,
+      "XP Bonus Points": 0,
+      "Submission Key": "-Early Bird-recFBItwl1pCboxlN",
+      "Activity Date": "2027-04-28",
+      "2PT Attempted Counted": 0,
+      "Has HW1?": 0,
+      "Reconciliation Needed?": 1,
+      "Shot Total": 55,
+      "Duplicate Review Status": "Count It",
+      "Ready for Weekly Summary?": 0,
+      "Activity Date Is Future?": 1,
+      "2PT Made Counted": 0,
+      "Submission Full Name": "Unknown Athlete - 4/28/2027 - Early Bird"
+    }
+  },
+  {
+    "id": "recNxV3Ml4akzKdKv",
+    "createdTime": "2026-09-02T00:46:03.000Z",
+    "table_name": "Submissions",
+    "table_id": "tblEVjVpGGlPTsYSt",
+    "fields": {
+      "Count This Submission?": 1,
+      "Submission Has Detailed Stats?": 0,
+      "Ready for 009 Asset Creation?": 0,
+      "Created": "2026-09-02T00:46:03.000Z",
+      "Submission Assets Ready?": 0,
+      "Last Reconciled Signature": "recNxV3Ml4akzKdKv|COUNT=1|MODE=Simple Total|DUP=Count It|VALID=|FUTURE=0|SHOTS=100|DATE=2026-05-10T00:00:00.000Z|ENR=recn1QUIGO1PjbnnY|ACTIVE=1|PI=Shooting Challenge | 2026-2027|YEAR=2026-2027|WEEK=rec2Rewxt21z7dI9f|PI=Shooting Challenge | 2026-2027|START=2027-05-02T06:00:00.000Z|END=2027-05-09T05:59:00.000Z|WAS=\"-02T0040, VERIFY - 2026-2027 - Week 1 - 7-8\"|XP_SIG=|XP_KEYS=|XP_SUBS=|XP_ENRS=",
+      "XP Award Ready?": 0,
+      "Submitted At": "2026-09-02T00:46:03.000Z",
+      "Why Not Ready for 009?": "Missing Enrollment",
+      "Needs Week Assignment?": 0,
+      "Counted Activity Date Key": "2026-05-10",
+      "Total Shots Canonical": 100,
+      "Has Review Assets?": 0,
+      "Week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "Total Shots Counted": 100,
+      "Submission Stat Mode": "Simple Total",
+      "3PT Attempted Counted": 0,
+      "Submitted Same Day?": 0,
+      "RecordId": "recNxV3Ml4akzKdKv",
+      "FT Attempted Counted": 0,
+      "Has Video?": 0,
+      "XP Award Status": "Pending",
+      "Edit Submission - Parent": "https://form.fillout.com/t/vNgeHardYcus?id=recNxV3Ml4akzKdKv",
+      "FT Made Counted": 0,
+      "Activity Date Key": "2026-05-10",
+      "Perfect Week Grace Eligible?": 0,
+      "XP Volume Bonus": 4,
+      "Ready to Send Attachments to Make?": 0,
+      "XP Base Points": 5,
+      "3PT Made Counted": 0,
+      "Video Feedback": [
+        "reccooMwcidAeNker"
+      ],
+      "Video Count": 0,
+      "Week Assignment Status": "Assigned",
+      "Perfect Week Countable Submission?": 0,
+      "XP Accuracy Bonus": 0,
+      "Weekly Athlete Summary": [
+        "recp12hqb0uaKZvTm"
+      ],
+      "Ready for Homework Completion Automation?": 0,
+      "Week Counts Toward Challenge?": [
+        true
+      ],
+      "XP Detailed Stats Bonus": 0,
+      "Reconciliation Week Signature - Lkp": [
+        "rec2Rewxt21z7dI9f|PI=Shooting Challenge | 2026-2027|START=2027-05-02T06:00:00.000Z|END=2027-05-09T05:59:00.000Z"
+      ],
+      "Build Daily Email Now?": true,
+      "Total Makes Counted": 0,
+      "Has HW2?": 0,
+      "Attachment Upload Status": "No Files",
+      "Current Reconciliation Signature": "recNxV3Ml4akzKdKv|COUNT=1|MODE=Simple Total|DUP=Count It|VALID=|FUTURE=0|SHOTS=100|DATE=2026-05-10T00:00:00.000Z|ENR=|WEEK=rec2Rewxt21z7dI9f|PI=Shooting Challenge | 2026-2027|START=2027-05-02T06:00:00.000Z|END=2027-05-09T05:59:00.000Z|WAS= - Week 1 - 7-8|XP_SIG=|XP_KEYS=|XP_SUBS=|XP_ENRS=",
+      "XP Total Points": 5,
+      "Homework Completion Ready?": 0,
+      "XP Bonus Points": 4,
+      "Submission Key": "-Week 1-recNxV3Ml4akzKdKv",
+      "Activity Date": "2026-05-10",
+      "2PT Attempted Counted": 0,
+      "Has HW1?": 0,
+      "Reconciliation Needed?": 1,
+      "Shot Total": 100,
+      "Duplicate Review Status": "Count It",
+      "Ready for Weekly Summary?": 1,
+      "Activity Date Is Future?": 0,
+      "2PT Made Counted": 0,
+      "Submission Full Name": "Unknown Athlete - 5/10/2026 - Week 1"
+    }
+  },
+  {
+    "id": "recTzi4c9vB7FN4Dr",
+    "createdTime": "2026-09-03T04:01:01.000Z",
+    "table_name": "Submissions",
+    "table_id": "tblEVjVpGGlPTsYSt",
+    "fields": {
+      "Count This Submission?": 0,
+      "Submission Has Detailed Stats?": 0,
+      "Ready for 009 Asset Creation?": 0,
+      "Created": "2026-09-03T04:01:01.000Z",
+      "Submission Assets Ready?": 0,
+      "XP Award Ready?": 0,
+      "Submitted At": "2026-09-03T04:01:01.000Z",
+      "Why Not Ready for 009?": "Missing Enrollment",
+      "Needs Week Assignment?": 0,
+      "Total Shots Canonical": 55,
+      "Has Review Assets?": 0,
+      "Week": [
+        "recBrZ1sV8byWEHZU"
+      ],
+      "Total Shots Counted": 0,
+      "Submission Stat Mode": "Simple Total",
+      "3PT Attempted Counted": 0,
+      "Submitted Same Day?": 0,
+      "RecordId": "recTzi4c9vB7FN4Dr",
+      "FT Attempted Counted": 0,
+      "Has Video?": 0,
+      "XP Award Status": "Pending",
+      "Edit Submission - Parent": "https://form.fillout.com/t/vNgeHardYcus?id=recTzi4c9vB7FN4Dr",
+      "FT Made Counted": 0,
+      "Activity Date Key": "2027-04-28",
+      "Perfect Week Grace Eligible?": 0,
+      "XP Volume Bonus": 0,
+      "Ready to Send Attachments to Make?": 0,
+      "XP Base Points": 0,
+      "3PT Made Counted": 0,
+      "Video Count": 0,
+      "Daily Email Subject": "VERIFY|PELC|paths|1788408059855|daily",
+      "Week Assignment Status": "Activity Date in Future",
+      "Perfect Week Countable Submission?": 0,
+      "XP Accuracy Bonus": 0,
+      "Ready for Homework Completion Automation?": 0,
+      "Week Counts Toward Challenge?": [
+        true
+      ],
+      "XP Detailed Stats Bonus": 0,
+      "Reconciliation Week Signature - Lkp": [
+        "recBrZ1sV8byWEHZU|PI=Shooting Challenge | 2026-2027|START=2027-04-25T06:00:00.000Z|END=2027-05-02T05:59:00.000Z"
+      ],
+      "Total Makes Counted": 0,
+      "Has HW2?": 0,
+      "Attachment Upload Status": "No Files",
+      "Current Reconciliation Signature": "recTzi4c9vB7FN4Dr|COUNT=0|MODE=Simple Total|DUP=Count It|VALID=|FUTURE=1|SHOTS=0|DATE=2027-04-28T00:00:00.000Z|ENR=|WEEK=recBrZ1sV8byWEHZU|PI=Shooting Challenge | 2026-2027|START=2027-04-25T06:00:00.000Z|END=2027-05-02T05:59:00.000Z|WAS=|XP_SIG=|XP_KEYS=|XP_SUBS=|XP_ENRS=",
+      "XP Total Points": 0,
+      "Homework Completion Ready?": 0,
+      "XP Bonus Points": 0,
+      "Submission Key": "-Early Bird-recTzi4c9vB7FN4Dr",
+      "Activity Date": "2027-04-28",
+      "2PT Attempted Counted": 0,
+      "Has HW1?": 0,
+      "Reconciliation Needed?": 1,
+      "Shot Total": 55,
+      "Duplicate Review Status": "Count It",
+      "Ready for Weekly Summary?": 0,
+      "Activity Date Is Future?": 1,
+      "2PT Made Counted": 0,
+      "Submission Full Name": "Unknown Athlete - 4/28/2027 - Early Bird"
+    }
+  },
+  {
+    "id": "recnkEQWB5SQ7OxSJ",
+    "createdTime": "2026-09-04T19:04:06.000Z",
+    "table_name": "Submissions",
+    "table_id": "tblEVjVpGGlPTsYSt",
+    "fields": {
+      "Enrollment": [
+        "recp5z9S9WpLBzAZj"
+      ],
+      "Video Upload": [
+        {
+          "id": "attpsLxfdIzFb7T9i",
+          "width": 1280,
+          "height": 1600,
+          "filename": "Arps_Terria_6.jpg",
+          "size": 286836,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "width": 29,
+              "height": 36
+            },
+            "large": {
+              "width": 512,
+              "height": 640
+            },
+            "full": {
+              "width": 1280,
+              "height": 1600
+            }
+          }
+        },
+        {
+          "id": "atttHtD5FDpsMpH1O",
+          "width": 1280,
+          "height": 1600,
+          "filename": "Beck_Carly_14.jpg",
+          "size": 235899,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "width": 29,
+              "height": 36
+            },
+            "large": {
+              "width": 512,
+              "height": 640
+            },
+            "full": {
+              "width": 1280,
+              "height": 1600
+            }
+          }
+        },
+        {
+          "id": "attHmPmODUP6DypZd",
+          "width": 1280,
+          "height": 1600,
+          "filename": "Bakkum_John_9.jpg",
+          "size": 226920,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "width": 29,
+              "height": 36
+            },
+            "large": {
+              "width": 512,
+              "height": 640
+            },
+            "full": {
+              "width": 1280,
+              "height": 1600
+            }
+          }
+        }
+      ],
+      "Count This Submission?": 0,
+      "Submission Assets": [
+        "recCEYPMCZzJqCy6q",
+        "recwAb5aPEBL7dqcV",
+        "recCqOkwozXICtyYy",
+        "rec0pKjaQoaC319f0",
+        "recKDwdL75HfGjObP"
+      ],
+      "HW1 Coach Feedback": [
+        "Rene, great job.  very impressive, keep it up and keep shooting.  ii really think you are >  ajsdf;lk ajsd;flkjas d;lfkjas dasdklff asdf;as jdfklasd ;lfas;dfkj asdv asd;fkjasd faksdjf asl;kdfj asdkjfal sdfj;alks df;las dasdf fadslf;k jdf asdlkfa dsf ajfaskdl asd;lkfa jsdlfjas dlkfa ;ldkfj ;asdf;asdfjlk|idempotency"
+      ],
+      "Reconciliation XP Event Enrollment IDs - Lkp": [
+        "recp5z9S9WpLBzAZj"
+      ],
+      "Submission Has Detailed Stats?": 0,
+      "Ready for 009 Asset Creation?": 0,
+      "Reconciliation Enrollment Signature - Lkp": [
+        "recp5z9S9WpLBzAZj|ACTIVE=1|PI=Shooting Challenge | 2026-2027|YEAR=2026-2027"
+      ],
+      "Created": "2026-09-04T19:04:06.000Z",
+      "Submission Assets Ready?": 0,
+      "Reconciliation XP Event Source Keys - Lkp": [
+        "HOMEWORK_XP|reccy4JRFbRh7lqPl"
+      ],
+      "XP Award Ready?": 0,
+      "Submitted At": "2026-09-04T19:04:06.000Z",
+      "Why Not Ready for 009?": "Already has Submission Assets",
+      "Needs Week Assignment?": 1,
+      "Reconciliation XP Event Submission IDs - Lkp": [
+        "recnkEQWB5SQ7OxSJ"
+      ],
+      "Duplicate Key": "\"Schmidt, Rene' - 2026-2027\"|2026-09-04|1:00 am|Simple Total|1500",
+      "Total Shots Canonical": 1500,
+      "Has Review Assets?": 1,
+      "Total Shots Counted": 0,
+      "Submission Stat Mode": "Simple Total",
+      "Homework Completions": [
+        "reccy4JRFbRh7lqPl",
+        "recioBIj9w0K7rMOf"
+      ],
+      "Homework Name 1": [
+        "rechCXdubiA1RPFEj"
+      ],
+      "3PT Attempted Counted": 0,
+      "Submitted Same Day?": 1,
+      "RecordId": "recnkEQWB5SQ7OxSJ",
+      "FT Attempted Counted": 0,
+      "Enrollment Record ID Lookup": [
+        "recp5z9S9WpLBzAZj"
+      ],
+      "Has Video?": 1,
+      "XP Award Status": "Pending",
+      "Attachment Upload Error": "009: Week not linked \u2014 assets created; week-dependent scoring on hold",
+      "Edit Submission - Parent": "https://form.fillout.com/t/vNgeHardYcus?id=recnkEQWB5SQ7OxSJ",
+      "FT Made Counted": 0,
+      "Activity Date Key": "2026-09-04",
+      "Perfect Week Grace Eligible?": 0,
+      "XP Volume Bonus": 0,
+      "Ready to Send Attachments to Make?": 1,
+      "XP Base Points": 0,
+      "3PT Made Counted": 0,
+      "Video Feedback": [
+        "reci8mb08XuwvY2Tb",
+        "rec8mlIPUanko5aR7",
+        "recLAcUQt9vcMGChb"
+      ],
+      "HW Sub 2": [
+        {
+          "id": "attPvBYZoZOxBAN5e",
+          "width": 1280,
+          "height": 1600,
+          "filename": "Arps_Terria_6.jpg",
+          "size": 286836,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "width": 29,
+              "height": 36
+            },
+            "large": {
+              "width": 512,
+              "height": 640
+            },
+            "full": {
+              "width": 1280,
+              "height": 1600
+            }
+          }
+        }
+      ],
+      "Video Count": 3,
+      "Week Assignment Status": "Needs Assignment",
+      "XP Events": [
+        "reczyd3XENC0iHa5r"
+      ],
+      "Perfect Week Countable Submission?": 0,
+      "XP Accuracy Bonus": 0,
+      "Weekly Athlete Summary": [
+        "reccuoiSZS2ae0JcF"
+      ],
+      "Ready for Homework Completion Automation?": 0,
+      "XP Detailed Stats Bonus": 0,
+      "Activity Date - Time": "1:00 am",
+      "Athlete": [
+        "recLYou5LyBDC1re5"
+      ],
+      "Total Makes Counted": 0,
+      "Has HW2?": 1,
+      "Attachment Upload Status": "Processing",
+      "Current Reconciliation Signature": "recnkEQWB5SQ7OxSJ|COUNT=0|MODE=Simple Total|DUP=Count It|VALID=|FUTURE=0|SHOTS=0|DATE=2026-09-04T00:00:00.000Z|ENR=recp5z9S9WpLBzAZj|ACTIVE=1|PI=Shooting Challenge | 2026-2027|YEAR=2026-2027|WEEK=|WAS=\"Schmidt, Rene' - 2026-2027 - Week 1 - 9-12\"|XP_SIG=reczyd3XENC0iHa5r|ACTIVE=1|KEY=HOMEWORK_XP|reccy4JRFbRh7lqPl|SUB=Rene' Schmidt - 9/4/2026 - No Week|ENR=\"Schmidt, Rene' - 2026-2027\"|WEEK=Week 1|WAS=\"Schmidt, Rene' - 2026-2027 - Week 1 - 9-12\"|SOURCE=Homework Completion|BUCKET=Homework Completion|POINTS=46|XP_KEYS=HOMEWORK_XP|reccy4JRFbRh7lqPl|XP_SUBS=Rene' Schmidt - 9/4/2026 - No Week|XP_ENRS=\"Schmidt, Rene' - 2026-2027\"",
+      "XP Total Points": 0,
+      "Homework Completion Ready?": 0,
+      "XP Bonus Points": 0,
+      "Homework Name 2": [
+        "rec4iQ2WS04Arq3tB"
+      ],
+      "Submission Key": "\"Schmidt, Rene' - 2026-2027\"--recnkEQWB5SQ7OxSJ",
+      "Activity Date": "2026-09-04",
+      "2PT Attempted Counted": 0,
+      "Has HW1?": 1,
+      "Athlete Name": [
+        "Rene' Schmidt"
+      ],
+      "Reconciliation Needed?": 1,
+      "Shot Total": 1500,
+      "HW Sub 1": [
+        {
+          "id": "att2e74HOus6PIUO9",
+          "width": 1280,
+          "height": 1600,
+          "filename": "Arps_Terria_6.jpg",
+          "size": 286836,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "width": 29,
+              "height": 36
+            },
+            "large": {
+              "width": 512,
+              "height": 640
+            },
+            "full": {
+              "width": 1280,
+              "height": 1600
+            }
+          }
+        }
+      ],
+      "Duplicate Review Status": "Count It",
+      "Reconciliation XP Event Signatures - Lkp": [
+        "reczyd3XENC0iHa5r|ACTIVE=1|KEY=HOMEWORK_XP|reccy4JRFbRh7lqPl|SUB=Rene' Schmidt - 9/4/2026 - No Week|ENR=\"Schmidt, Rene' - 2026-2027\"|WEEK=Week 1|WAS=\"Schmidt, Rene' - 2026-2027 - Week 1 - 9-12\"|SOURCE=Homework Completion|BUCKET=Homework Completion|POINTS=46"
+      ],
+      "Ready for Weekly Summary?": 0,
+      "Activity Date Is Future?": 0,
+      "2PT Made Counted": 0,
+      "Submission Full Name": "Rene' Schmidt - 9/4/2026 - No Week"
+    }
+  },
+  {
+    "id": "recrhaRHi5EHP3Xn8",
+    "createdTime": "2026-09-02T00:49:36.000Z",
+    "table_name": "Submissions",
+    "table_id": "tblEVjVpGGlPTsYSt",
+    "fields": {
+      "Count This Submission?": 1,
+      "Submission Has Detailed Stats?": 0,
+      "Ready for 009 Asset Creation?": 0,
+      "Created": "2026-09-02T00:49:36.000Z",
+      "Submission Assets Ready?": 0,
+      "Last Reconciled Signature": "recrhaRHi5EHP3Xn8|COUNT=1|MODE=Simple Total|DUP=Count It|VALID=|FUTURE=0|SHOTS=100|DATE=2026-05-10T00:00:00.000Z|ENR=recn1QUIGO1PjbnnY|ACTIVE=1|PI=Shooting Challenge | 2026-2027|YEAR=2026-2027|WEEK=rec2Rewxt21z7dI9f|PI=Shooting Challenge | 2026-2027|START=2027-05-02T06:00:00.000Z|END=2027-05-09T05:59:00.000Z|WAS=\"-02T0040, VERIFY - 2026-2027 - Week 1 - 7-8\"|XP_SIG=|XP_KEYS=|XP_SUBS=|XP_ENRS=",
+      "XP Award Ready?": 0,
+      "Submitted At": "2026-09-02T00:49:36.000Z",
+      "Why Not Ready for 009?": "Missing Enrollment",
+      "Needs Week Assignment?": 0,
+      "Counted Activity Date Key": "2026-05-10",
+      "Total Shots Canonical": 100,
+      "Has Review Assets?": 0,
+      "Week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "Total Shots Counted": 100,
+      "Submission Stat Mode": "Simple Total",
+      "3PT Attempted Counted": 0,
+      "Submitted Same Day?": 0,
+      "RecordId": "recrhaRHi5EHP3Xn8",
+      "FT Attempted Counted": 0,
+      "Has Video?": 0,
+      "XP Award Status": "Pending",
+      "Edit Submission - Parent": "https://form.fillout.com/t/vNgeHardYcus?id=recrhaRHi5EHP3Xn8",
+      "FT Made Counted": 0,
+      "Activity Date Key": "2026-05-10",
+      "Perfect Week Grace Eligible?": 0,
+      "XP Volume Bonus": 4,
+      "Ready to Send Attachments to Make?": 0,
+      "XP Base Points": 5,
+      "3PT Made Counted": 0,
+      "Video Feedback": [
+        "recIJgqP5geas64Ra"
+      ],
+      "Video Count": 0,
+      "Week Assignment Status": "Assigned",
+      "Perfect Week Countable Submission?": 0,
+      "XP Accuracy Bonus": 0,
+      "Weekly Athlete Summary": [
+        "recp12hqb0uaKZvTm"
+      ],
+      "Ready for Homework Completion Automation?": 0,
+      "Week Counts Toward Challenge?": [
+        true
+      ],
+      "XP Detailed Stats Bonus": 0,
+      "Reconciliation Week Signature - Lkp": [
+        "rec2Rewxt21z7dI9f|PI=Shooting Challenge | 2026-2027|START=2027-05-02T06:00:00.000Z|END=2027-05-09T05:59:00.000Z"
+      ],
+      "Total Makes Counted": 0,
+      "Has HW2?": 0,
+      "Attachment Upload Status": "No Files",
+      "Current Reconciliation Signature": "recrhaRHi5EHP3Xn8|COUNT=1|MODE=Simple Total|DUP=Count It|VALID=|FUTURE=0|SHOTS=100|DATE=2026-05-10T00:00:00.000Z|ENR=|WEEK=rec2Rewxt21z7dI9f|PI=Shooting Challenge | 2026-2027|START=2027-05-02T06:00:00.000Z|END=2027-05-09T05:59:00.000Z|WAS= - Week 1 - 7-8|XP_SIG=|XP_KEYS=|XP_SUBS=|XP_ENRS=",
+      "XP Total Points": 5,
+      "Homework Completion Ready?": 0,
+      "XP Bonus Points": 4,
+      "Submission Key": "-Week 1-recrhaRHi5EHP3Xn8",
+      "Activity Date": "2026-05-10",
+      "2PT Attempted Counted": 0,
+      "Has HW1?": 0,
+      "Reconciliation Needed?": 1,
+      "Shot Total": 100,
+      "Duplicate Review Status": "Count It",
+      "Ready for Weekly Summary?": 1,
+      "Activity Date Is Future?": 0,
+      "2PT Made Counted": 0,
+      "Submission Full Name": "Unknown Athlete - 5/10/2026 - Week 1"
+    }
+  }
+]

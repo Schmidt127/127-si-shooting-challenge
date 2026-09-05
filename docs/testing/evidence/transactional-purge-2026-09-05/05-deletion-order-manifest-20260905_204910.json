@@ -1,0 +1,89 @@
+{
+  "captured_at": "20260905_204910",
+  "base_id": "appn84sqPw03zEbTT",
+  "child_to_parent_order": [
+    "Email Handoff Queue",
+    "Award Recipients",
+    "XP Events",
+    "Athlete Achievement Unlocks",
+    "Streak Occurrences",
+    "Video Feedback",
+    "Zoom Attendance",
+    "Homework Completions",
+    "Submission Assets",
+    "Submissions",
+    "Weekly Athlete Summary",
+    "Enrollments",
+    "Athletes",
+    "Payment Transactions",
+    "Final Reflection Quiz Submissions"
+  ],
+  "empty_transactional_tables": [
+    "Final Reflection Quiz Submissions",
+    "Payment Transactions"
+  ],
+  "purge_all_tables": [
+    "Email Handoff Queue",
+    "Award Recipients",
+    "XP Events",
+    "Athlete Achievement Unlocks",
+    "Streak Occurrences",
+    "Video Feedback",
+    "Zoom Attendance",
+    "Homework Completions",
+    "Submission Assets",
+    "Submissions",
+    "Weekly Athlete Summary",
+    "Enrollments",
+    "Athletes"
+  ],
+  "preserve_configuration": [
+    "Achievements",
+    "Automations",
+    "Config",
+    "Grade Bands",
+    "Level Gate Rules",
+    "Levels",
+    "Program Instance - Sync",
+    "School - Synced",
+    "Shot Milestones",
+    "Target Goal Shots",
+    "XP Reward Rules"
+  ],
+  "preserve_reusable": [
+    "Awards",
+    "Homework Library",
+    "Program Homework Assignments",
+    "Testing Scenarios",
+    "Tutorials & Assets",
+    "Weeks",
+    "Zoom Meetings"
+  ],
+  "ambiguous": [
+    "Countries",
+    "State"
+  ],
+  "not_in_base_expected_names": [
+    "Registrations"
+  ],
+  "hard_abort_if_deleted": [
+    "Achievements",
+    "Automations",
+    "Config",
+    "Grade Bands",
+    "Homework Library",
+    "Level Gate Rules",
+    "Levels",
+    "Program Homework Assignments",
+    "Program Instance - Sync",
+    "School - Synced",
+    "Shot Milestones",
+    "Target Goal Shots",
+    "Tutorials & Assets",
+    "Weeks",
+    "XP Reward Rules"
+  ],
+  "pha_policy": "PRESERVE \u2014 do not delete Program Homework Assignments (unlike FUT-030)",
+  "payment_transactions_policy": "PURGE ALL if present \u2014 transactional payment rows, not pricing config",
+  "zoom_meetings_policy": "PRESERVE reusable meeting catalog; purge Zoom Attendance only"
+}

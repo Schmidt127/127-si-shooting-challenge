@@ -1,0 +1,1088 @@
+[
+  {
+    "id": "rec0VkupN9J91HSxP",
+    "createdTime": "2026-09-05T18:27:34.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-05-20",
+      "Streak Start Date": "2027-05-16",
+      "Trigger Submission Date": "2027-05-20T12:00:00.000Z",
+      "Active?": true,
+      "Achievement Key": [
+        "5-day_streak"
+      ],
+      "Gate Eligible Streak Days": 5,
+      "Record Id": "rec0VkupN9J91HSxP",
+      "Streak Occurrence Name": " - 5-Day Streak - 5/20/2027",
+      "Awarded At": "2026-09-05T18:27:34.000Z",
+      "Streak Days": 5,
+      "Achievement": [
+        "rechOec7g8LBLcdgl"
+      ],
+      "Week": [
+        "recCCpyqPKA580sdk"
+      ],
+      "Streak Date Key": "2027-05-20",
+      "Created Time": "2026-09-05T18:27:34.000Z",
+      "Source Submission Date": "2027-05-20T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-05T18:46:51.932Z",
+      "Notes": "054 awarded/repaired streak XP through XP Event rec4IZcqxCnv7QIS9. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-20.\n054 awarded/repaired streak XP through XP Event rec4IZcqxCnv7QIS9. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-20.\n054 awarded/repaired streak XP through XP Event rec4IZcqxCnv7QIS9. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-20.\n054 awarded/repaired streak XP through XP Event rec4IZcqxCnv7QIS9. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-20.\n054 awarded/repaired streak XP through XP Event rec4IZcqxCnv7QIS9. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-20.\n054 awarded/repaired streak XP through XP Event rec4IZcqxCnv7QIS9. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-20.\n054 awarded/repaired streak XP through XP Event rec4IZcqxCnv7QIS9. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-20.\n054 awarded/repaired streak XP through XP Event rec4IZcqxCnv7QIS9. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-20.\n054 awarded/repaired streak XP through XP Event rec4IZcqxCnv7QIS9. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-20.\n054 awarded/repaired streak XP through XP Event rec4IZcqxCnv7QIS9. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-20.\n054 awarded/repaired streak XP through XP Event rec4IZcqxCnv7QIS9. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-20.",
+      "Source Status": "Awarded"
+    }
+  },
+  {
+    "id": "rec25AwM0g7Nm8Ez4",
+    "createdTime": "2026-09-02T21:35:22.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-06-10",
+      "Streak Start Date": "2027-06-06",
+      "Trigger Submission Date": "2027-06-10T12:00:00.000Z",
+      "Achievement Key": [
+        "5-day_streak"
+      ],
+      "Record Id": "rec25AwM0g7Nm8Ez4",
+      "Streak Occurrence Name": " - 5-Day Streak - 6/10/2027",
+      "Awarded At": "2026-09-02T21:35:22.000Z",
+      "Streak Days": 5,
+      "Achievement": [
+        "rechOec7g8LBLcdgl"
+      ],
+      "Week": [
+        "recRp4y42EpLvtwk5"
+      ],
+      "Streak Date Key": "2027-06-10",
+      "Created Time": "2026-09-02T21:35:22.000Z",
+      "Source Submission Date": "2027-06-10T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-02T21:53:46.782Z",
+      "Notes": "053 deactivated unsupported streak occurrence: recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-06-10.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-06-10; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-06-10.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-06-10; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-06-10.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-06-10; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-06-10.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-06-10; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-06-10.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-06-10; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-06-10.",
+      "Source Status": "Error"
+    }
+  },
+  {
+    "id": "rec4pJwhygR98amXb",
+    "createdTime": "2026-09-05T18:27:34.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-05-18",
+      "Streak Start Date": "2027-05-16",
+      "Trigger Submission Date": "2027-05-18T12:00:00.000Z",
+      "Active?": true,
+      "Achievement Key": [
+        "3-day_streak"
+      ],
+      "Gate Eligible Streak Days": 3,
+      "Record Id": "rec4pJwhygR98amXb",
+      "Streak Occurrence Name": " - 3-Day Streak - 5/18/2027",
+      "Awarded At": "2026-09-05T18:27:34.000Z",
+      "Streak Days": 3,
+      "Achievement": [
+        "recQuAtXyT2wKJNGI"
+      ],
+      "Week": [
+        "recCCpyqPKA580sdk"
+      ],
+      "Streak Date Key": "2027-05-18",
+      "Created Time": "2026-09-05T18:27:34.000Z",
+      "Source Submission Date": "2027-05-18T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-05T18:46:47.692Z",
+      "Notes": "054 awarded/repaired streak XP through XP Event recTMgna2HCF4v587. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-18.\n054 awarded/repaired streak XP through XP Event recTMgna2HCF4v587. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-18.\n054 awarded/repaired streak XP through XP Event recTMgna2HCF4v587. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-18.\n054 awarded/repaired streak XP through XP Event recTMgna2HCF4v587. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-18.\n054 awarded/repaired streak XP through XP Event recTMgna2HCF4v587. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-18.\n054 awarded/repaired streak XP through XP Event recTMgna2HCF4v587. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-18.\n054 awarded/repaired streak XP through XP Event recTMgna2HCF4v587. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-18.\n054 awarded/repaired streak XP through XP Event recTMgna2HCF4v587. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-18.\n054 awarded/repaired streak XP through XP Event recTMgna2HCF4v587. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-18.\n054 awarded/repaired streak XP through XP Event recTMgna2HCF4v587. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-18.\n054 awarded/repaired streak XP through XP Event recTMgna2HCF4v587. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-18.\n054 awarded/repaired streak XP through XP Event recTMgna2HCF4v587. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-18.",
+      "Source Status": "Awarded"
+    }
+  },
+  {
+    "id": "rec9LPOy0hYLEhxGm",
+    "createdTime": "2026-09-05T18:30:16.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-06-26",
+      "Streak Start Date": "2027-06-20",
+      "Trigger Submission Date": "2027-06-26T12:00:00.000Z",
+      "Active?": true,
+      "Achievement Key": [
+        "7-day_streak"
+      ],
+      "Gate Eligible Streak Days": 7,
+      "Record Id": "rec9LPOy0hYLEhxGm",
+      "Streak Occurrence Name": " - 7-Day Streak - 6/26/2027",
+      "Awarded At": "2026-09-05T18:30:16.000Z",
+      "Streak Days": 7,
+      "Achievement": [
+        "recP8QP4uhEXaiZAX"
+      ],
+      "Week": [
+        "recfu3dpVJAnVBvCB"
+      ],
+      "Streak Date Key": "2027-06-26",
+      "Created Time": "2026-09-05T18:30:16.000Z",
+      "Source Submission Date": "2027-06-26T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-05T18:48:10.473Z",
+      "Notes": "054 awarded/repaired streak XP through XP Event rec0cuDKOKpAX3sbd. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-26.\n054 awarded/repaired streak XP through XP Event rec0cuDKOKpAX3sbd. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-26.\n054 awarded/repaired streak XP through XP Event rec0cuDKOKpAX3sbd. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-26.\n054 awarded/repaired streak XP through XP Event rec0cuDKOKpAX3sbd. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-26.\n054 awarded/repaired streak XP through XP Event rec0cuDKOKpAX3sbd. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-26.\n054 awarded/repaired streak XP through XP Event rec0cuDKOKpAX3sbd. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-26.\n054 awarded/repaired streak XP through XP Event rec0cuDKOKpAX3sbd. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-26.\n054 awarded/repaired streak XP through XP Event rec0cuDKOKpAX3sbd. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-26.\n054 awarded/repaired streak XP through XP Event rec0cuDKOKpAX3sbd. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-26.\n054 awarded/repaired streak XP through XP Event rec0cuDKOKpAX3sbd. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-26.\n054 awarded/repaired streak XP through XP Event rec0cuDKOKpAX3sbd. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-26.\n054 awarded/repaired streak XP through XP Event rec0cuDKOKpAX3sbd. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-26.\n054 awarded/repaired streak XP through XP Event rec0cuDKOKpAX3sbd. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-26.\n054 awarded/repaired streak XP through XP Event rec0cuDKOKpAX3sbd. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-26.",
+      "Source Status": "Awarded"
+    }
+  },
+  {
+    "id": "recBspbfIwthrPuar",
+    "createdTime": "2026-09-02T21:35:22.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-06-04",
+      "Streak Start Date": "2027-05-16",
+      "Trigger Submission Date": "2027-06-04T12:00:00.000Z",
+      "Achievement Key": [
+        "20-day_streak"
+      ],
+      "Record Id": "recBspbfIwthrPuar",
+      "Streak Occurrence Name": " - 20-Day Streak - 6/4/2027",
+      "Awarded At": "2026-09-02T21:35:22.000Z",
+      "Streak Days": 20,
+      "Achievement": [
+        "recJ2caP3qBUfqzEp"
+      ],
+      "Week": [
+        "recKJMGYbEzGHyXfd"
+      ],
+      "Streak Date Key": "2027-06-04",
+      "Created Time": "2026-09-02T21:35:22.000Z",
+      "Source Submission Date": "2027-06-04T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-02T21:53:44.744Z",
+      "Notes": "053 deactivated unsupported streak occurrence: recLlFgEVhhiCWSRY|recJ2caP3qBUfqzEp|2027-06-04.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recJ2caP3qBUfqzEp|2027-06-04; found STREAK_XP|recLlFgEVhhiCWSRY|recJ2caP3qBUfqzEp|2027-06-04.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recJ2caP3qBUfqzEp|2027-06-04; found STREAK_XP|recLlFgEVhhiCWSRY|recJ2caP3qBUfqzEp|2027-06-04.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recJ2caP3qBUfqzEp|2027-06-04; found STREAK_XP|recLlFgEVhhiCWSRY|recJ2caP3qBUfqzEp|2027-06-04.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recJ2caP3qBUfqzEp|2027-06-04; found STREAK_XP|recLlFgEVhhiCWSRY|recJ2caP3qBUfqzEp|2027-06-04.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recJ2caP3qBUfqzEp|2027-06-04; found STREAK_XP|recLlFgEVhhiCWSRY|recJ2caP3qBUfqzEp|2027-06-04.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recJ2caP3qBUfqzEp|2027-06-04; found STREAK_XP|recLlFgEVhhiCWSRY|recJ2caP3qBUfqzEp|2027-06-04.",
+      "Source Status": "Error"
+    }
+  },
+  {
+    "id": "recDZaHweZt53UauB",
+    "createdTime": "2026-09-05T18:30:16.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-06-15",
+      "Streak Start Date": "2027-06-06",
+      "Trigger Submission Date": "2027-06-15T12:00:00.000Z",
+      "Active?": true,
+      "Achievement Key": [
+        "10-day_streak"
+      ],
+      "Gate Eligible Streak Days": 10,
+      "Record Id": "recDZaHweZt53UauB",
+      "Streak Occurrence Name": " - 10-Day Streak - 6/15/2027",
+      "Awarded At": "2026-09-05T18:30:16.000Z",
+      "Streak Days": 10,
+      "Achievement": [
+        "recxzySdFFaAOqNNG"
+      ],
+      "Week": [
+        "recW3irij491AIPrl"
+      ],
+      "Streak Date Key": "2027-06-15",
+      "Created Time": "2026-09-05T18:30:16.000Z",
+      "Source Submission Date": "2027-06-15T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-05T18:48:12.394Z",
+      "Notes": "054 awarded/repaired streak XP through XP Event recDOZ279A4r8Cz6K. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-06-15.\n054 awarded/repaired streak XP through XP Event recDOZ279A4r8Cz6K. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-06-15.\n054 awarded/repaired streak XP through XP Event recDOZ279A4r8Cz6K. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-06-15.\n054 awarded/repaired streak XP through XP Event recDOZ279A4r8Cz6K. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-06-15.\n054 awarded/repaired streak XP through XP Event recDOZ279A4r8Cz6K. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-06-15.\n054 awarded/repaired streak XP through XP Event recDOZ279A4r8Cz6K. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-06-15.\n054 awarded/repaired streak XP through XP Event recDOZ279A4r8Cz6K. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-06-15.\n054 awarded/repaired streak XP through XP Event recDOZ279A4r8Cz6K. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-06-15.\n054 awarded/repaired streak XP through XP Event recDOZ279A4r8Cz6K. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-06-15.\n054 awarded/repaired streak XP through XP Event recDOZ279A4r8Cz6K. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-06-15.\n054 awarded/repaired streak XP through XP Event recDOZ279A4r8Cz6K. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-06-15.",
+      "Source Status": "Awarded"
+    }
+  },
+  {
+    "id": "recDpqF2YLVcg8HtJ",
+    "createdTime": "2026-09-02T21:34:09.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-05-25",
+      "Streak Start Date": "2027-05-16",
+      "Trigger Submission Date": "2027-05-25T12:00:00.000Z",
+      "Achievement Key": [
+        "10-day_streak"
+      ],
+      "Record Id": "recDpqF2YLVcg8HtJ",
+      "Streak Occurrence Name": " - 10-Day Streak - 5/25/2027",
+      "Awarded At": "2026-09-02T21:34:09.000Z",
+      "Streak Days": 10,
+      "Achievement": [
+        "recxzySdFFaAOqNNG"
+      ],
+      "Week": [
+        "recEapVpi6u0oxuPy"
+      ],
+      "Streak Date Key": "2027-05-25",
+      "Created Time": "2026-09-02T21:34:09.000Z",
+      "Source Submission Date": "2027-05-25T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-02T21:53:42.167Z",
+      "Notes": "053 deactivated unsupported streak occurrence: recLlFgEVhhiCWSRY|recxzySdFFaAOqNNG|2027-05-25.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recxzySdFFaAOqNNG|2027-05-25; found STREAK_XP|recLlFgEVhhiCWSRY|recxzySdFFaAOqNNG|2027-05-25.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recxzySdFFaAOqNNG|2027-05-25; found STREAK_XP|recLlFgEVhhiCWSRY|recxzySdFFaAOqNNG|2027-05-25.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recxzySdFFaAOqNNG|2027-05-25; found STREAK_XP|recLlFgEVhhiCWSRY|recxzySdFFaAOqNNG|2027-05-25.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recxzySdFFaAOqNNG|2027-05-25; found STREAK_XP|recLlFgEVhhiCWSRY|recxzySdFFaAOqNNG|2027-05-25.",
+      "Source Status": "Error"
+    }
+  },
+  {
+    "id": "recE36BnJaLFTmloe",
+    "createdTime": "2026-09-02T21:35:22.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-06-15",
+      "Streak Start Date": "2027-06-06",
+      "Trigger Submission Date": "2027-06-15T12:00:00.000Z",
+      "Achievement Key": [
+        "10-day_streak"
+      ],
+      "Record Id": "recE36BnJaLFTmloe",
+      "Streak Occurrence Name": " - 10-Day Streak - 6/15/2027",
+      "Awarded At": "2026-09-02T21:35:22.000Z",
+      "Streak Days": 10,
+      "Achievement": [
+        "recxzySdFFaAOqNNG"
+      ],
+      "Week": [
+        "recW3irij491AIPrl"
+      ],
+      "Streak Date Key": "2027-06-15",
+      "Created Time": "2026-09-02T21:35:22.000Z",
+      "Source Submission Date": "2027-06-15T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-02T21:53:51.858Z",
+      "Notes": "053 deactivated unsupported streak occurrence: recLlFgEVhhiCWSRY|recxzySdFFaAOqNNG|2027-06-15.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recxzySdFFaAOqNNG|2027-06-15; found STREAK_XP|recLlFgEVhhiCWSRY|recxzySdFFaAOqNNG|2027-06-15.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recxzySdFFaAOqNNG|2027-06-15; found STREAK_XP|recLlFgEVhhiCWSRY|recxzySdFFaAOqNNG|2027-06-15.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recxzySdFFaAOqNNG|2027-06-15; found STREAK_XP|recLlFgEVhhiCWSRY|recxzySdFFaAOqNNG|2027-06-15.",
+      "Source Status": "Error"
+    }
+  },
+  {
+    "id": "recENwLo6aikjEigv",
+    "createdTime": "2026-09-05T18:30:16.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-06-12",
+      "Streak Start Date": "2027-06-06",
+      "Trigger Submission Date": "2027-06-12T12:00:00.000Z",
+      "Active?": true,
+      "Achievement Key": [
+        "7-day_streak"
+      ],
+      "Gate Eligible Streak Days": 7,
+      "Record Id": "recENwLo6aikjEigv",
+      "Streak Occurrence Name": " - 7-Day Streak - 6/12/2027",
+      "Awarded At": "2026-09-05T18:30:16.000Z",
+      "Streak Days": 7,
+      "Achievement": [
+        "recP8QP4uhEXaiZAX"
+      ],
+      "Week": [
+        "recRp4y42EpLvtwk5"
+      ],
+      "Streak Date Key": "2027-06-12",
+      "Created Time": "2026-09-05T18:30:16.000Z",
+      "Source Submission Date": "2027-06-12T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-05T18:48:08.627Z",
+      "Notes": "054 awarded/repaired streak XP through XP Event receOKwOdIq6eFpOK. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-12.\n054 awarded/repaired streak XP through XP Event receOKwOdIq6eFpOK. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-12.\n054 awarded/repaired streak XP through XP Event receOKwOdIq6eFpOK. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-12.\n054 awarded/repaired streak XP through XP Event receOKwOdIq6eFpOK. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-12.\n054 awarded/repaired streak XP through XP Event receOKwOdIq6eFpOK. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-12.\n054 awarded/repaired streak XP through XP Event receOKwOdIq6eFpOK. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-12.\n054 awarded/repaired streak XP through XP Event receOKwOdIq6eFpOK. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-12.\n054 awarded/repaired streak XP through XP Event receOKwOdIq6eFpOK. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-12.\n054 awarded/repaired streak XP through XP Event receOKwOdIq6eFpOK. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-06-12.",
+      "Source Status": "Awarded"
+    }
+  },
+  {
+    "id": "recF7PfGjxOjOBwQU",
+    "createdTime": "2026-09-02T21:32:56.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-05-05",
+      "Streak Start Date": "2027-05-01",
+      "Trigger Submission Date": "2027-05-05T12:00:00.000Z",
+      "Achievement Key": [
+        "5-day_streak"
+      ],
+      "Record Id": "recF7PfGjxOjOBwQU",
+      "Streak Occurrence Name": " - 5-Day Streak - 5/5/2027",
+      "Awarded At": "2026-09-02T21:32:56.000Z",
+      "Streak Days": 5,
+      "Achievement": [
+        "rechOec7g8LBLcdgl"
+      ],
+      "Week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "Streak Date Key": "2027-05-05",
+      "Created Time": "2026-09-02T21:32:56.000Z",
+      "Source Submission Date": "2027-05-05T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-02T21:53:31.350Z",
+      "Notes": "053 deactivated unsupported streak occurrence: recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-05.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-05-05; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-05.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-05-05; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-05.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-05-05; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-05.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-05-05; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-05.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-05-05; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-05.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-05-05; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-05.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-05-05; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-05.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-05-05; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-05.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-05-05; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-05.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-05-05; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-05.",
+      "Source Status": "Error"
+    }
+  },
+  {
+    "id": "recHfTFxzAM0fNEnJ",
+    "createdTime": "2026-09-05T18:30:16.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-06-24",
+      "Streak Start Date": "2027-06-20",
+      "Trigger Submission Date": "2027-06-24T12:00:00.000Z",
+      "Active?": true,
+      "Achievement Key": [
+        "5-day_streak"
+      ],
+      "Gate Eligible Streak Days": 5,
+      "Record Id": "recHfTFxzAM0fNEnJ",
+      "Streak Occurrence Name": " - 5-Day Streak - 6/24/2027",
+      "Awarded At": "2026-09-05T18:30:16.000Z",
+      "Streak Days": 5,
+      "Achievement": [
+        "rechOec7g8LBLcdgl"
+      ],
+      "Week": [
+        "recfu3dpVJAnVBvCB"
+      ],
+      "Streak Date Key": "2027-06-24",
+      "Created Time": "2026-09-05T18:30:16.000Z",
+      "Source Submission Date": "2027-06-24T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-05T18:48:14.396Z",
+      "Notes": "054 awarded/repaired streak XP through XP Event recJtHDzhaFCz7WtW. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-06-24.\n054 awarded/repaired streak XP through XP Event recJtHDzhaFCz7WtW. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-06-24.\n054 awarded/repaired streak XP through XP Event recJtHDzhaFCz7WtW. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-06-24.\n054 awarded/repaired streak XP through XP Event recJtHDzhaFCz7WtW. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-06-24.\n054 awarded/repaired streak XP through XP Event recJtHDzhaFCz7WtW. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-06-24.\n054 awarded/repaired streak XP through XP Event recJtHDzhaFCz7WtW. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-06-24.\n054 awarded/repaired streak XP through XP Event recJtHDzhaFCz7WtW. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-06-24.\n054 awarded/repaired streak XP through XP Event recJtHDzhaFCz7WtW. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-06-24.\n054 awarded/repaired streak XP through XP Event recJtHDzhaFCz7WtW. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-06-24.\n054 awarded/repaired streak XP through XP Event recJtHDzhaFCz7WtW. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-06-24.",
+      "Source Status": "Awarded"
+    }
+  },
+  {
+    "id": "recOYz3YGVuZWg4SA",
+    "createdTime": "2026-09-02T21:34:09.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-05-20",
+      "Streak Start Date": "2027-05-16",
+      "Trigger Submission Date": "2027-05-20T12:00:00.000Z",
+      "Achievement Key": [
+        "5-day_streak"
+      ],
+      "Record Id": "recOYz3YGVuZWg4SA",
+      "Streak Occurrence Name": " - 5-Day Streak - 5/20/2027",
+      "Awarded At": "2026-09-02T21:34:09.000Z",
+      "Streak Days": 5,
+      "Achievement": [
+        "rechOec7g8LBLcdgl"
+      ],
+      "Week": [
+        "recCCpyqPKA580sdk"
+      ],
+      "Streak Date Key": "2027-05-20",
+      "Created Time": "2026-09-02T21:34:09.000Z",
+      "Source Submission Date": "2027-05-20T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-02T21:53:39.140Z",
+      "Notes": "053 deactivated unsupported streak occurrence: recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-20.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-05-20; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-20.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-05-20; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-20.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-05-20; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-20.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-05-20; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-20.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-05-20; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-20.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-05-20; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-20.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-05-20; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-20.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-05-20; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-20.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-05-20; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-20.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-05-20; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-05-20.",
+      "Source Status": "Error"
+    }
+  },
+  {
+    "id": "recPl3qot8gGPtNZf",
+    "createdTime": "2026-09-02T21:37:02.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-06-29",
+      "Streak Start Date": "2027-06-20",
+      "Trigger Submission Date": "2027-06-29T12:00:00.000Z",
+      "Achievement Key": [
+        "10-day_streak"
+      ],
+      "Record Id": "recPl3qot8gGPtNZf",
+      "Streak Occurrence Name": " - 10-Day Streak - 6/29/2027",
+      "Awarded At": "2026-09-02T21:37:02.000Z",
+      "Streak Days": 10,
+      "Achievement": [
+        "recxzySdFFaAOqNNG"
+      ],
+      "Week": [
+        "rech8lgJkNMStWh9A"
+      ],
+      "Streak Date Key": "2027-06-29",
+      "Created Time": "2026-09-02T21:37:02.000Z",
+      "Source Submission Date": "2027-06-29T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-02T21:53:58.599Z",
+      "Notes": "053 deactivated unsupported streak occurrence: recLlFgEVhhiCWSRY|recxzySdFFaAOqNNG|2027-06-29.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recxzySdFFaAOqNNG|2027-06-29; found STREAK_XP|recLlFgEVhhiCWSRY|recxzySdFFaAOqNNG|2027-06-29.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recxzySdFFaAOqNNG|2027-06-29; found STREAK_XP|recLlFgEVhhiCWSRY|recxzySdFFaAOqNNG|2027-06-29.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recxzySdFFaAOqNNG|2027-06-29; found STREAK_XP|recLlFgEVhhiCWSRY|recxzySdFFaAOqNNG|2027-06-29.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recxzySdFFaAOqNNG|2027-06-29; found STREAK_XP|recLlFgEVhhiCWSRY|recxzySdFFaAOqNNG|2027-06-29.",
+      "Source Status": "Error"
+    }
+  },
+  {
+    "id": "recQDYhVr6GT5d6iy",
+    "createdTime": "2026-09-02T21:35:22.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-06-24",
+      "Streak Start Date": "2027-06-20",
+      "Trigger Submission Date": "2027-06-24T12:00:00.000Z",
+      "Achievement Key": [
+        "5-day_streak"
+      ],
+      "Record Id": "recQDYhVr6GT5d6iy",
+      "Streak Occurrence Name": " - 5-Day Streak - 6/24/2027",
+      "Awarded At": "2026-09-02T21:35:22.000Z",
+      "Streak Days": 5,
+      "Achievement": [
+        "rechOec7g8LBLcdgl"
+      ],
+      "Week": [
+        "recfu3dpVJAnVBvCB"
+      ],
+      "Streak Date Key": "2027-06-24",
+      "Created Time": "2026-09-02T21:35:22.000Z",
+      "Source Submission Date": "2027-06-24T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-02T21:53:55.762Z",
+      "Notes": "053 deactivated unsupported streak occurrence: recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-06-24.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-06-24; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-06-24.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||rechOec7g8LBLcdgl|2027-06-24; found STREAK_XP|recLlFgEVhhiCWSRY|rechOec7g8LBLcdgl|2027-06-24.",
+      "Source Status": "Error"
+    }
+  },
+  {
+    "id": "recSlpjybJCp5eGET",
+    "createdTime": "2026-09-05T18:26:06.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-05-03",
+      "Streak Start Date": "2027-05-01",
+      "Trigger Submission Date": "2027-05-03T12:00:00.000Z",
+      "Active?": true,
+      "Achievement Key": [
+        "3-day_streak"
+      ],
+      "Gate Eligible Streak Days": 3,
+      "Record Id": "recSlpjybJCp5eGET",
+      "Streak Occurrence Name": " - 3-Day Streak - 5/3/2027",
+      "Awarded At": "2026-09-05T18:26:06.000Z",
+      "Streak Days": 3,
+      "Achievement": [
+        "recQuAtXyT2wKJNGI"
+      ],
+      "Week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "Streak Date Key": "2027-05-03",
+      "Created Time": "2026-09-05T18:26:06.000Z",
+      "Source Submission Date": "2027-05-03T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-05T18:47:01.852Z",
+      "Notes": "054 awarded/repaired streak XP through XP Event recsT5QBrsizeXob1. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-03.\n054 awarded/repaired streak XP through XP Event recsT5QBrsizeXob1. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-03.\n054 awarded/repaired streak XP through XP Event recsT5QBrsizeXob1. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-03.\n054 awarded/repaired streak XP through XP Event recsT5QBrsizeXob1. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-03.\n054 awarded/repaired streak XP through XP Event recsT5QBrsizeXob1. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-03.\n054 awarded/repaired streak XP through XP Event recsT5QBrsizeXob1. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-03.\n054 awarded/repaired streak XP through XP Event recsT5QBrsizeXob1. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-03.\n054 awarded/repaired streak XP through XP Event recsT5QBrsizeXob1. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-03.\n054 awarded/repaired streak XP through XP Event recsT5QBrsizeXob1. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-03.\n054 awarded/repaired streak XP through XP Event recsT5QBrsizeXob1. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-05-03.",
+      "Source Status": "Awarded"
+    }
+  },
+  {
+    "id": "recTjRayM2EBsJl4H",
+    "createdTime": "2026-09-02T21:32:56.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-05-03",
+      "Streak Start Date": "2027-05-01",
+      "Trigger Submission Date": "2027-05-03T12:00:00.000Z",
+      "Achievement Key": [
+        "3-day_streak"
+      ],
+      "Record Id": "recTjRayM2EBsJl4H",
+      "Streak Occurrence Name": " - 3-Day Streak - 5/3/2027",
+      "Awarded At": "2026-09-02T21:32:56.000Z",
+      "Streak Days": 3,
+      "Achievement": [
+        "recQuAtXyT2wKJNGI"
+      ],
+      "Week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "Streak Date Key": "2027-05-03",
+      "Created Time": "2026-09-02T21:32:56.000Z",
+      "Source Submission Date": "2027-05-03T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-02T21:53:31.282Z",
+      "Notes": "053 deactivated unsupported streak occurrence: recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-05-03.\n054 deactivated same streak XP Event rec9SkrnsWuWFPT5O; restoration must reactivate this same event.\n054 deactivated same streak XP Event rec9SkrnsWuWFPT5O; restoration must reactivate this same event.\n054 deactivated same streak XP Event rec9SkrnsWuWFPT5O; restoration must reactivate this same event.\n054 deactivated same streak XP Event rec9SkrnsWuWFPT5O; restoration must reactivate this same event.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-05-03; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-05-03.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-05-03; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-05-03.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-05-03; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-05-03.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-05-03; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-05-03.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-05-03; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-05-03.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-05-03; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-05-03.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-05-03; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-05-03.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-05-03; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-05-03.",
+      "Source Status": "Error"
+    }
+  },
+  {
+    "id": "recV1vIWPGRNTkoLC",
+    "createdTime": "2026-09-05T18:26:06.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-05-07",
+      "Streak Start Date": "2027-05-01",
+      "Trigger Submission Date": "2027-05-07T12:00:00.000Z",
+      "Active?": true,
+      "Achievement Key": [
+        "7-day_streak"
+      ],
+      "Gate Eligible Streak Days": 7,
+      "Record Id": "recV1vIWPGRNTkoLC",
+      "Streak Occurrence Name": " - 7-Day Streak - 5/7/2027",
+      "Awarded At": "2026-09-05T18:26:06.000Z",
+      "Streak Days": 7,
+      "Achievement": [
+        "recP8QP4uhEXaiZAX"
+      ],
+      "Week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "Streak Date Key": "2027-05-07",
+      "Created Time": "2026-09-05T18:26:06.000Z",
+      "Source Submission Date": "2027-05-07T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-05T18:47:37.566Z",
+      "Notes": "054 awarded/repaired streak XP through XP Event recrpyjGRUnruC6aj. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-07.\n054 awarded/repaired streak XP through XP Event recrpyjGRUnruC6aj. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-07.\n054 awarded/repaired streak XP through XP Event recrpyjGRUnruC6aj. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-07.\n054 awarded/repaired streak XP through XP Event recrpyjGRUnruC6aj. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-07.\n054 awarded/repaired streak XP through XP Event recrpyjGRUnruC6aj. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-07.\n054 awarded/repaired streak XP through XP Event recrpyjGRUnruC6aj. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-07.\n054 awarded/repaired streak XP through XP Event recrpyjGRUnruC6aj. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-07.\n054 awarded/repaired streak XP through XP Event recrpyjGRUnruC6aj. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-07.\n054 awarded/repaired streak XP through XP Event recrpyjGRUnruC6aj. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-07.\n054 awarded/repaired streak XP through XP Event recrpyjGRUnruC6aj. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-07.\n054 awarded/repaired streak XP through XP Event recrpyjGRUnruC6aj. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-07.\n054 awarded/repaired streak XP through XP Event recrpyjGRUnruC6aj. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-07.\n054 awarded/repaired streak XP through XP Event recrpyjGRUnruC6aj. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-07.",
+      "Source Status": "Awarded"
+    }
+  },
+  {
+    "id": "recWa3vuQT9aK2jSw",
+    "createdTime": "2026-09-05T18:27:41.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-06-08",
+      "Streak Start Date": "2027-06-06",
+      "Trigger Submission Date": "2027-06-08T12:00:00.000Z",
+      "Active?": true,
+      "Achievement Key": [
+        "3-day_streak"
+      ],
+      "Gate Eligible Streak Days": 3,
+      "Record Id": "recWa3vuQT9aK2jSw",
+      "Streak Occurrence Name": " - 3-Day Streak - 6/8/2027",
+      "Awarded At": "2026-09-05T18:27:41.000Z",
+      "Streak Days": 3,
+      "Achievement": [
+        "recQuAtXyT2wKJNGI"
+      ],
+      "Week": [
+        "recRp4y42EpLvtwk5"
+      ],
+      "Streak Date Key": "2027-06-08",
+      "Created Time": "2026-09-05T18:27:41.000Z",
+      "Source Submission Date": "2027-06-08T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-05T18:46:43.809Z",
+      "Notes": "053 reconciliation failed closed: 2 records share recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-06-08.",
+      "Source Status": "Error"
+    }
+  },
+  {
+    "id": "recYHAeh5scI2Jege",
+    "createdTime": "2026-09-02T21:35:22.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-06-08",
+      "Streak Start Date": "2027-06-06",
+      "Trigger Submission Date": "2027-06-08T12:00:00.000Z",
+      "Achievement Key": [
+        "3-day_streak"
+      ],
+      "Record Id": "recYHAeh5scI2Jege",
+      "Streak Occurrence Name": " - 3-Day Streak - 6/8/2027",
+      "Awarded At": "2026-09-02T21:35:22.000Z",
+      "Streak Days": 3,
+      "Achievement": [
+        "recQuAtXyT2wKJNGI"
+      ],
+      "Week": [
+        "recRp4y42EpLvtwk5"
+      ],
+      "Streak Date Key": "2027-06-08",
+      "Created Time": "2026-09-02T21:35:22.000Z",
+      "Source Submission Date": "2027-06-08T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-02T21:53:46.159Z",
+      "Notes": "053 deactivated unsupported streak occurrence: recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-06-08.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-06-08; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-06-08.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-06-08; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-06-08.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-06-08; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-06-08.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-06-08; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-06-08.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-06-08; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-06-08.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-06-08; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-06-08.",
+      "Source Status": "Error"
+    }
+  },
+  {
+    "id": "recYlsrkcxK46yMme",
+    "createdTime": "2026-09-05T18:27:34.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-05-25",
+      "Streak Start Date": "2027-05-16",
+      "Trigger Submission Date": "2027-05-25T12:00:00.000Z",
+      "Active?": true,
+      "Achievement Key": [
+        "10-day_streak"
+      ],
+      "Gate Eligible Streak Days": 10,
+      "Record Id": "recYlsrkcxK46yMme",
+      "Streak Occurrence Name": " - 10-Day Streak - 5/25/2027",
+      "Awarded At": "2026-09-05T18:27:34.000Z",
+      "Streak Days": 10,
+      "Achievement": [
+        "recxzySdFFaAOqNNG"
+      ],
+      "Week": [
+        "recEapVpi6u0oxuPy"
+      ],
+      "Streak Date Key": "2027-05-25",
+      "Created Time": "2026-09-05T18:27:34.000Z",
+      "Source Submission Date": "2027-05-25T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-05T18:46:54.350Z",
+      "Notes": "054 awarded/repaired streak XP through XP Event recdEpKC4TQ3gNbuc. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-05-25.\n054 awarded/repaired streak XP through XP Event recdEpKC4TQ3gNbuc. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-05-25.\n054 awarded/repaired streak XP through XP Event recdEpKC4TQ3gNbuc. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-05-25.\n054 awarded/repaired streak XP through XP Event recdEpKC4TQ3gNbuc. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-05-25.\n054 awarded/repaired streak XP through XP Event recdEpKC4TQ3gNbuc. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-05-25.\n054 awarded/repaired streak XP through XP Event recdEpKC4TQ3gNbuc. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-05-25.",
+      "Source Status": "Awarded"
+    }
+  },
+  {
+    "id": "recZLqvVDh9FKjAjb",
+    "createdTime": "2026-09-02T21:32:56.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-05-10",
+      "Streak Start Date": "2027-05-01",
+      "Trigger Submission Date": "2027-05-10T12:00:00.000Z",
+      "Achievement Key": [
+        "10-day_streak"
+      ],
+      "Record Id": "recZLqvVDh9FKjAjb",
+      "Streak Occurrence Name": " - 10-Day Streak - 5/10/2027",
+      "Awarded At": "2026-09-02T21:32:56.000Z",
+      "Streak Days": 10,
+      "Achievement": [
+        "recxzySdFFaAOqNNG"
+      ],
+      "Week": [
+        "rec7RpUMVLbcrmn4h"
+      ],
+      "Streak Date Key": "2027-05-10",
+      "Created Time": "2026-09-02T21:32:56.000Z",
+      "Source Submission Date": "2027-05-10T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-02T21:53:35.700Z",
+      "Notes": "053 deactivated unsupported streak occurrence: recLlFgEVhhiCWSRY|recxzySdFFaAOqNNG|2027-05-10.\n054 deactivated same streak XP Event reccu5MgBzxqj3LAr; restoration must reactivate this same event.\n054 deactivated same streak XP Event reccu5MgBzxqj3LAr; restoration must reactivate this same event.\n054 deactivated same streak XP Event reccu5MgBzxqj3LAr; restoration must reactivate this same event.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recxzySdFFaAOqNNG|2027-05-10; found STREAK_XP|recLlFgEVhhiCWSRY|recxzySdFFaAOqNNG|2027-05-10.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recxzySdFFaAOqNNG|2027-05-10; found STREAK_XP|recLlFgEVhhiCWSRY|recxzySdFFaAOqNNG|2027-05-10.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recxzySdFFaAOqNNG|2027-05-10; found STREAK_XP|recLlFgEVhhiCWSRY|recxzySdFFaAOqNNG|2027-05-10.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recxzySdFFaAOqNNG|2027-05-10; found STREAK_XP|recLlFgEVhhiCWSRY|recxzySdFFaAOqNNG|2027-05-10.",
+      "Source Status": "Error"
+    }
+  },
+  {
+    "id": "recdAzaqZRPJAmKdW",
+    "createdTime": "2026-09-02T21:35:22.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-06-22",
+      "Streak Start Date": "2027-06-20",
+      "Trigger Submission Date": "2027-06-22T12:00:00.000Z",
+      "Achievement Key": [
+        "3-day_streak"
+      ],
+      "Record Id": "recdAzaqZRPJAmKdW",
+      "Streak Occurrence Name": " - 3-Day Streak - 6/22/2027",
+      "Awarded At": "2026-09-02T21:35:22.000Z",
+      "Streak Days": 3,
+      "Achievement": [
+        "recQuAtXyT2wKJNGI"
+      ],
+      "Week": [
+        "recfu3dpVJAnVBvCB"
+      ],
+      "Streak Date Key": "2027-06-22",
+      "Created Time": "2026-09-02T21:35:22.000Z",
+      "Source Submission Date": "2027-06-22T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-02T21:53:54.615Z",
+      "Notes": "053 deactivated unsupported streak occurrence: recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-06-22.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-06-22; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-06-22.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-06-22; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-06-22.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-06-22; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-06-22.",
+      "Source Status": "Error"
+    }
+  },
+  {
+    "id": "recdVMf8ZPsU70O8k",
+    "createdTime": "2026-09-05T18:30:16.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-06-22",
+      "Streak Start Date": "2027-06-20",
+      "Trigger Submission Date": "2027-06-22T12:00:00.000Z",
+      "Active?": true,
+      "Achievement Key": [
+        "3-day_streak"
+      ],
+      "Gate Eligible Streak Days": 3,
+      "Record Id": "recdVMf8ZPsU70O8k",
+      "Streak Occurrence Name": " - 3-Day Streak - 6/22/2027",
+      "Awarded At": "2026-09-05T18:30:16.000Z",
+      "Streak Days": 3,
+      "Achievement": [
+        "recQuAtXyT2wKJNGI"
+      ],
+      "Week": [
+        "recfu3dpVJAnVBvCB"
+      ],
+      "Streak Date Key": "2027-06-22",
+      "Created Time": "2026-09-05T18:30:16.000Z",
+      "Source Submission Date": "2027-06-22T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-05T18:48:09.748Z",
+      "Notes": "054 awarded/repaired streak XP through XP Event recEWAZ1FEdw7dWV8. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-06-22.\n054 awarded/repaired streak XP through XP Event recEWAZ1FEdw7dWV8. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-06-22.\n054 awarded/repaired streak XP through XP Event recEWAZ1FEdw7dWV8. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-06-22.\n054 awarded/repaired streak XP through XP Event recEWAZ1FEdw7dWV8. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-06-22.\n054 awarded/repaired streak XP through XP Event recEWAZ1FEdw7dWV8. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-06-22.\n054 awarded/repaired streak XP through XP Event recEWAZ1FEdw7dWV8. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-06-22.\n054 awarded/repaired streak XP through XP Event recEWAZ1FEdw7dWV8. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-06-22.\n054 awarded/repaired streak XP through XP Event recEWAZ1FEdw7dWV8. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-06-22.\n054 awarded/repaired streak XP through XP Event recEWAZ1FEdw7dWV8. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-06-22.\n054 awarded/repaired streak XP through XP Event recEWAZ1FEdw7dWV8. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-06-22.",
+      "Source Status": "Awarded"
+    }
+  },
+  {
+    "id": "recgGWkoSu0ivlqTh",
+    "createdTime": "2026-09-05T18:26:06.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-05-05",
+      "Streak Start Date": "2027-05-01",
+      "Trigger Submission Date": "2027-05-05T12:00:00.000Z",
+      "Active?": true,
+      "Achievement Key": [
+        "5-day_streak"
+      ],
+      "Gate Eligible Streak Days": 5,
+      "Record Id": "recgGWkoSu0ivlqTh",
+      "Streak Occurrence Name": " - 5-Day Streak - 5/5/2027",
+      "Awarded At": "2026-09-05T18:26:06.000Z",
+      "Streak Days": 5,
+      "Achievement": [
+        "rechOec7g8LBLcdgl"
+      ],
+      "Week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "Streak Date Key": "2027-05-05",
+      "Created Time": "2026-09-05T18:26:06.000Z",
+      "Source Submission Date": "2027-05-05T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-05T18:47:35.009Z",
+      "Notes": "054 awarded/repaired streak XP through XP Event rec2pAZuVoYhh3dcp. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-05.\n054 awarded/repaired streak XP through XP Event rec2pAZuVoYhh3dcp. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-05.\n054 awarded/repaired streak XP through XP Event rec2pAZuVoYhh3dcp. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-05.\n054 awarded/repaired streak XP through XP Event rec2pAZuVoYhh3dcp. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-05.\n054 awarded/repaired streak XP through XP Event rec2pAZuVoYhh3dcp. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-05.\n054 awarded/repaired streak XP through XP Event rec2pAZuVoYhh3dcp. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-05.\n054 awarded/repaired streak XP through XP Event rec2pAZuVoYhh3dcp. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-05.\n054 awarded/repaired streak XP through XP Event rec2pAZuVoYhh3dcp. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-05.\n054 awarded/repaired streak XP through XP Event rec2pAZuVoYhh3dcp. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-05.\n054 awarded/repaired streak XP through XP Event rec2pAZuVoYhh3dcp. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-05.\n054 awarded/repaired streak XP through XP Event rec2pAZuVoYhh3dcp. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-05.\n054 awarded/repaired streak XP through XP Event rec2pAZuVoYhh3dcp. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-05-05.",
+      "Source Status": "Awarded"
+    }
+  },
+  {
+    "id": "rechDLCYw1BCJ2it7",
+    "createdTime": "2026-09-02T21:35:22.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-06-26",
+      "Streak Start Date": "2027-06-20",
+      "Trigger Submission Date": "2027-06-26T12:00:00.000Z",
+      "Achievement Key": [
+        "7-day_streak"
+      ],
+      "Record Id": "rechDLCYw1BCJ2it7",
+      "Streak Occurrence Name": " - 7-Day Streak - 6/26/2027",
+      "Awarded At": "2026-09-02T21:35:22.000Z",
+      "Streak Days": 7,
+      "Achievement": [
+        "recP8QP4uhEXaiZAX"
+      ],
+      "Week": [
+        "recfu3dpVJAnVBvCB"
+      ],
+      "Streak Date Key": "2027-06-26",
+      "Created Time": "2026-09-02T21:35:22.000Z",
+      "Source Submission Date": "2027-06-26T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-02T21:53:58.668Z",
+      "Notes": "053 deactivated unsupported streak occurrence: recLlFgEVhhiCWSRY|recP8QP4uhEXaiZAX|2027-06-26.\n054 deactivated same streak XP Event recF6m1wQrXAkDola; restoration must reactivate this same event.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recP8QP4uhEXaiZAX|2027-06-26; found STREAK_XP|recLlFgEVhhiCWSRY|recP8QP4uhEXaiZAX|2027-06-26.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recP8QP4uhEXaiZAX|2027-06-26; found STREAK_XP|recLlFgEVhhiCWSRY|recP8QP4uhEXaiZAX|2027-06-26.",
+      "Source Status": "Error"
+    }
+  },
+  {
+    "id": "rechLrDwWMaQaGp6f",
+    "createdTime": "2026-09-05T18:27:34.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-05-22",
+      "Streak Start Date": "2027-05-16",
+      "Trigger Submission Date": "2027-05-22T12:00:00.000Z",
+      "Active?": true,
+      "Achievement Key": [
+        "7-day_streak"
+      ],
+      "Gate Eligible Streak Days": 7,
+      "Record Id": "rechLrDwWMaQaGp6f",
+      "Streak Occurrence Name": " - 7-Day Streak - 5/22/2027",
+      "Awarded At": "2026-09-05T18:27:34.000Z",
+      "Streak Days": 7,
+      "Achievement": [
+        "recP8QP4uhEXaiZAX"
+      ],
+      "Week": [
+        "recCCpyqPKA580sdk"
+      ],
+      "Streak Date Key": "2027-05-22",
+      "Created Time": "2026-09-05T18:27:34.000Z",
+      "Source Submission Date": "2027-05-22T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-05T18:46:48.524Z",
+      "Notes": "054 awarded/repaired streak XP through XP Event reclxrhvTtQKxyIVh. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-22.\n054 awarded/repaired streak XP through XP Event reclxrhvTtQKxyIVh. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-22.\n054 awarded/repaired streak XP through XP Event reclxrhvTtQKxyIVh. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-22.\n054 awarded/repaired streak XP through XP Event reclxrhvTtQKxyIVh. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-22.\n054 awarded/repaired streak XP through XP Event reclxrhvTtQKxyIVh. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-22.\n054 awarded/repaired streak XP through XP Event reclxrhvTtQKxyIVh. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-22.\n054 awarded/repaired streak XP through XP Event reclxrhvTtQKxyIVh. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-22.\n054 awarded/repaired streak XP through XP Event reclxrhvTtQKxyIVh. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-22.\n054 awarded/repaired streak XP through XP Event reclxrhvTtQKxyIVh. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-22.\n054 awarded/repaired streak XP through XP Event reclxrhvTtQKxyIVh. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-22.\n054 awarded/repaired streak XP through XP Event reclxrhvTtQKxyIVh. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recP8QP4uhEXaiZAX|2027-05-22.",
+      "Source Status": "Awarded"
+    }
+  },
+  {
+    "id": "recifagT6mYdEu4Po",
+    "createdTime": "2026-09-05T18:27:41.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-06-08",
+      "Streak Start Date": "2027-06-06",
+      "Trigger Submission Date": "2027-06-08T12:00:00.000Z",
+      "Active?": true,
+      "Achievement Key": [
+        "3-day_streak"
+      ],
+      "Gate Eligible Streak Days": 3,
+      "Record Id": "recifagT6mYdEu4Po",
+      "Streak Occurrence Name": " - 3-Day Streak - 6/8/2027",
+      "Awarded At": "2026-09-05T18:27:41.000Z",
+      "Streak Days": 3,
+      "Achievement": [
+        "recQuAtXyT2wKJNGI"
+      ],
+      "Week": [
+        "recRp4y42EpLvtwk5"
+      ],
+      "Streak Date Key": "2027-06-08",
+      "Created Time": "2026-09-05T18:27:41.000Z",
+      "Source Submission Date": "2027-06-08T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-05T18:46:43.809Z",
+      "Notes": "053 reconciliation failed closed: 2 records share recmImoXTlKb5NWSY|recQuAtXyT2wKJNGI|2027-06-08.",
+      "Source Status": "Error"
+    }
+  },
+  {
+    "id": "reclU2h03tqAea9Ds",
+    "createdTime": "2026-09-02T21:35:22.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-06-12",
+      "Streak Start Date": "2027-06-06",
+      "Trigger Submission Date": "2027-06-12T12:00:00.000Z",
+      "Achievement Key": [
+        "7-day_streak"
+      ],
+      "Record Id": "reclU2h03tqAea9Ds",
+      "Streak Occurrence Name": " - 7-Day Streak - 6/12/2027",
+      "Awarded At": "2026-09-02T21:35:22.000Z",
+      "Streak Days": 7,
+      "Achievement": [
+        "recP8QP4uhEXaiZAX"
+      ],
+      "Week": [
+        "recRp4y42EpLvtwk5"
+      ],
+      "Streak Date Key": "2027-06-12",
+      "Created Time": "2026-09-02T21:35:22.000Z",
+      "Source Submission Date": "2027-06-12T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-02T21:53:47.407Z",
+      "Notes": "053 deactivated unsupported streak occurrence: recLlFgEVhhiCWSRY|recP8QP4uhEXaiZAX|2027-06-12.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recP8QP4uhEXaiZAX|2027-06-12; found STREAK_XP|recLlFgEVhhiCWSRY|recP8QP4uhEXaiZAX|2027-06-12.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recP8QP4uhEXaiZAX|2027-06-12; found STREAK_XP|recLlFgEVhhiCWSRY|recP8QP4uhEXaiZAX|2027-06-12.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recP8QP4uhEXaiZAX|2027-06-12; found STREAK_XP|recLlFgEVhhiCWSRY|recP8QP4uhEXaiZAX|2027-06-12.",
+      "Source Status": "Error"
+    }
+  },
+  {
+    "id": "recofjM2HtRHSSZBJ",
+    "createdTime": "2026-09-05T18:30:16.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-06-29",
+      "Streak Start Date": "2027-06-20",
+      "Trigger Submission Date": "2027-06-29T12:00:00.000Z",
+      "Active?": true,
+      "Achievement Key": [
+        "10-day_streak"
+      ],
+      "Gate Eligible Streak Days": 10,
+      "Record Id": "recofjM2HtRHSSZBJ",
+      "Streak Occurrence Name": " - 10-Day Streak - 6/29/2027",
+      "Awarded At": "2026-09-05T18:30:16.000Z",
+      "Streak Days": 10,
+      "Achievement": [
+        "recxzySdFFaAOqNNG"
+      ],
+      "Week": [
+        "rech8lgJkNMStWh9A"
+      ],
+      "Streak Date Key": "2027-06-29",
+      "Created Time": "2026-09-05T18:30:16.000Z",
+      "Source Submission Date": "2027-06-29T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-05T18:47:30.289Z",
+      "Notes": "054 awarded/repaired streak XP through XP Event recJ9PUvkcwLwdMj6. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-06-29.\n054 awarded/repaired streak XP through XP Event recJ9PUvkcwLwdMj6. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-06-29.\n054 awarded/repaired streak XP through XP Event recJ9PUvkcwLwdMj6. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-06-29.\n054 awarded/repaired streak XP through XP Event recJ9PUvkcwLwdMj6. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-06-29.\n054 awarded/repaired streak XP through XP Event recJ9PUvkcwLwdMj6. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-06-29.\n054 awarded/repaired streak XP through XP Event recJ9PUvkcwLwdMj6. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-06-29.\n054 awarded/repaired streak XP through XP Event recJ9PUvkcwLwdMj6. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-06-29.\n054 awarded/repaired streak XP through XP Event recJ9PUvkcwLwdMj6. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-06-29.\n054 awarded/repaired streak XP through XP Event recJ9PUvkcwLwdMj6. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-06-29.\n054 awarded/repaired streak XP through XP Event recJ9PUvkcwLwdMj6. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-06-29.",
+      "Source Status": "Awarded"
+    }
+  },
+  {
+    "id": "recp2hFWe6S2eSwvJ",
+    "createdTime": "2026-09-05T18:30:16.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-06-10",
+      "Streak Start Date": "2027-06-06",
+      "Trigger Submission Date": "2027-06-10T12:00:00.000Z",
+      "Active?": true,
+      "Achievement Key": [
+        "5-day_streak"
+      ],
+      "Gate Eligible Streak Days": 5,
+      "Record Id": "recp2hFWe6S2eSwvJ",
+      "Streak Occurrence Name": " - 5-Day Streak - 6/10/2027",
+      "Awarded At": "2026-09-05T18:30:16.000Z",
+      "Streak Days": 5,
+      "Achievement": [
+        "rechOec7g8LBLcdgl"
+      ],
+      "Week": [
+        "recRp4y42EpLvtwk5"
+      ],
+      "Streak Date Key": "2027-06-10",
+      "Created Time": "2026-09-05T18:30:16.000Z",
+      "Source Submission Date": "2027-06-10T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-05T18:48:04.913Z",
+      "Notes": "054 awarded/repaired streak XP through XP Event recyqpnIGrTN6GK79. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-06-10.\n054 awarded/repaired streak XP through XP Event recyqpnIGrTN6GK79. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-06-10.\n054 awarded/repaired streak XP through XP Event recyqpnIGrTN6GK79. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-06-10.\n054 awarded/repaired streak XP through XP Event recyqpnIGrTN6GK79. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-06-10.\n054 awarded/repaired streak XP through XP Event recyqpnIGrTN6GK79. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-06-10.\n054 awarded/repaired streak XP through XP Event recyqpnIGrTN6GK79. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-06-10.\n054 awarded/repaired streak XP through XP Event recyqpnIGrTN6GK79. Source Key: STREAK_XP|recmImoXTlKb5NWSY|rechOec7g8LBLcdgl|2027-06-10.",
+      "Source Status": "Awarded"
+    }
+  },
+  {
+    "id": "recpWKId1GPk4P4Hb",
+    "createdTime": "2026-09-02T21:32:56.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-05-07",
+      "Streak Start Date": "2027-05-01",
+      "Trigger Submission Date": "2027-05-07T12:00:00.000Z",
+      "Achievement Key": [
+        "7-day_streak"
+      ],
+      "Record Id": "recpWKId1GPk4P4Hb",
+      "Streak Occurrence Name": " - 7-Day Streak - 5/7/2027",
+      "Awarded At": "2026-09-02T21:32:56.000Z",
+      "Streak Days": 7,
+      "Achievement": [
+        "recP8QP4uhEXaiZAX"
+      ],
+      "Week": [
+        "rec2Rewxt21z7dI9f"
+      ],
+      "Streak Date Key": "2027-05-07",
+      "Created Time": "2026-09-02T21:32:56.000Z",
+      "Source Submission Date": "2027-05-07T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-02T21:53:34.363Z",
+      "Notes": "053 deactivated unsupported streak occurrence: recLlFgEVhhiCWSRY|recP8QP4uhEXaiZAX|2027-05-07.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recP8QP4uhEXaiZAX|2027-05-07; found STREAK_XP|recLlFgEVhhiCWSRY|recP8QP4uhEXaiZAX|2027-05-07.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recP8QP4uhEXaiZAX|2027-05-07; found STREAK_XP|recLlFgEVhhiCWSRY|recP8QP4uhEXaiZAX|2027-05-07.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recP8QP4uhEXaiZAX|2027-05-07; found STREAK_XP|recLlFgEVhhiCWSRY|recP8QP4uhEXaiZAX|2027-05-07.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recP8QP4uhEXaiZAX|2027-05-07; found STREAK_XP|recLlFgEVhhiCWSRY|recP8QP4uhEXaiZAX|2027-05-07.",
+      "Source Status": "Error"
+    }
+  },
+  {
+    "id": "recqJkL8S48oZ08je",
+    "createdTime": "2026-09-02T21:34:09.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-05-18",
+      "Streak Start Date": "2027-05-16",
+      "Trigger Submission Date": "2027-05-18T12:00:00.000Z",
+      "Achievement Key": [
+        "3-day_streak"
+      ],
+      "Record Id": "recqJkL8S48oZ08je",
+      "Streak Occurrence Name": " - 3-Day Streak - 5/18/2027",
+      "Awarded At": "2026-09-02T21:34:09.000Z",
+      "Streak Days": 3,
+      "Achievement": [
+        "recQuAtXyT2wKJNGI"
+      ],
+      "Week": [
+        "recCCpyqPKA580sdk"
+      ],
+      "Streak Date Key": "2027-05-18",
+      "Created Time": "2026-09-02T21:34:09.000Z",
+      "Source Submission Date": "2027-05-18T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-02T21:53:38.430Z",
+      "Notes": "053 deactivated unsupported streak occurrence: recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-05-18.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-05-18; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-05-18.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-05-18; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-05-18.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-05-18; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-05-18.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-05-18; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-05-18.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-05-18; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-05-18.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-05-18; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-05-18.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-05-18; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-05-18.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recQuAtXyT2wKJNGI|2027-05-18; found STREAK_XP|recLlFgEVhhiCWSRY|recQuAtXyT2wKJNGI|2027-05-18.",
+      "Source Status": "Error"
+    }
+  },
+  {
+    "id": "recsUBXNkJJGAHdTi",
+    "createdTime": "2026-09-05T18:27:34.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-05-10",
+      "Streak Start Date": "2027-05-01",
+      "Trigger Submission Date": "2027-05-10T12:00:00.000Z",
+      "Active?": true,
+      "Achievement Key": [
+        "10-day_streak"
+      ],
+      "Gate Eligible Streak Days": 10,
+      "Record Id": "recsUBXNkJJGAHdTi",
+      "Streak Occurrence Name": " - 10-Day Streak - 5/10/2027",
+      "Awarded At": "2026-09-05T18:27:34.000Z",
+      "Streak Days": 10,
+      "Achievement": [
+        "recxzySdFFaAOqNNG"
+      ],
+      "Week": [
+        "rec7RpUMVLbcrmn4h"
+      ],
+      "Streak Date Key": "2027-05-10",
+      "Created Time": "2026-09-05T18:27:34.000Z",
+      "Source Submission Date": "2027-05-10T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-05T18:47:51.406Z",
+      "Notes": "054 awarded/repaired streak XP through XP Event recvygvhKbJ3nR3wn. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-05-10.\n054 awarded/repaired streak XP through XP Event recvygvhKbJ3nR3wn. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-05-10.\n054 awarded/repaired streak XP through XP Event recvygvhKbJ3nR3wn. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-05-10.\n054 awarded/repaired streak XP through XP Event recvygvhKbJ3nR3wn. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-05-10.\n054 awarded/repaired streak XP through XP Event recvygvhKbJ3nR3wn. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-05-10.\n054 awarded/repaired streak XP through XP Event recvygvhKbJ3nR3wn. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-05-10.\n054 awarded/repaired streak XP through XP Event recvygvhKbJ3nR3wn. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-05-10.\n054 awarded/repaired streak XP through XP Event recvygvhKbJ3nR3wn. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-05-10.\n054 awarded/repaired streak XP through XP Event recvygvhKbJ3nR3wn. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-05-10.\n054 awarded/repaired streak XP through XP Event recvygvhKbJ3nR3wn. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recxzySdFFaAOqNNG|2027-05-10.",
+      "Source Status": "Awarded"
+    }
+  },
+  {
+    "id": "recvmPoNXSGMXqL5j",
+    "createdTime": "2026-09-02T21:34:09.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-05-22",
+      "Streak Start Date": "2027-05-16",
+      "Trigger Submission Date": "2027-05-22T12:00:00.000Z",
+      "Achievement Key": [
+        "7-day_streak"
+      ],
+      "Record Id": "recvmPoNXSGMXqL5j",
+      "Streak Occurrence Name": " - 7-Day Streak - 5/22/2027",
+      "Awarded At": "2026-09-02T21:34:09.000Z",
+      "Streak Days": 7,
+      "Achievement": [
+        "recP8QP4uhEXaiZAX"
+      ],
+      "Week": [
+        "recCCpyqPKA580sdk"
+      ],
+      "Streak Date Key": "2027-05-22",
+      "Created Time": "2026-09-02T21:34:09.000Z",
+      "Source Submission Date": "2027-05-22T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-02T21:53:40.540Z",
+      "Notes": "053 deactivated unsupported streak occurrence: recLlFgEVhhiCWSRY|recP8QP4uhEXaiZAX|2027-05-22.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recP8QP4uhEXaiZAX|2027-05-22; found STREAK_XP|recLlFgEVhhiCWSRY|recP8QP4uhEXaiZAX|2027-05-22.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recP8QP4uhEXaiZAX|2027-05-22; found STREAK_XP|recLlFgEVhhiCWSRY|recP8QP4uhEXaiZAX|2027-05-22.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recP8QP4uhEXaiZAX|2027-05-22; found STREAK_XP|recLlFgEVhhiCWSRY|recP8QP4uhEXaiZAX|2027-05-22.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recP8QP4uhEXaiZAX|2027-05-22; found STREAK_XP|recLlFgEVhhiCWSRY|recP8QP4uhEXaiZAX|2027-05-22.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recP8QP4uhEXaiZAX|2027-05-22; found STREAK_XP|recLlFgEVhhiCWSRY|recP8QP4uhEXaiZAX|2027-05-22.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recP8QP4uhEXaiZAX|2027-05-22; found STREAK_XP|recLlFgEVhhiCWSRY|recP8QP4uhEXaiZAX|2027-05-22.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recP8QP4uhEXaiZAX|2027-05-22; found STREAK_XP|recLlFgEVhhiCWSRY|recP8QP4uhEXaiZAX|2027-05-22.\n054 error: Inactive Streak Occurrence XP ownership failed closed. Expected STREAK_XP||recP8QP4uhEXaiZAX|2027-05-22; found STREAK_XP|recLlFgEVhhiCWSRY|recP8QP4uhEXaiZAX|2027-05-22.",
+      "Source Status": "Error"
+    }
+  },
+  {
+    "id": "recxRcycwgVhKCaxK",
+    "createdTime": "2026-09-05T18:27:34.000Z",
+    "table_name": "Streak Occurrences",
+    "table_id": "tbl9VxLdBiNcev4He",
+    "fields": {
+      "Streak End Date": "2027-06-04",
+      "Streak Start Date": "2027-05-16",
+      "Trigger Submission Date": "2027-06-04T12:00:00.000Z",
+      "Active?": true,
+      "Achievement Key": [
+        "20-day_streak"
+      ],
+      "Gate Eligible Streak Days": 20,
+      "Record Id": "recxRcycwgVhKCaxK",
+      "Streak Occurrence Name": " - 20-Day Streak - 6/4/2027",
+      "Awarded At": "2026-09-05T18:27:34.000Z",
+      "Streak Days": 20,
+      "Achievement": [
+        "recJ2caP3qBUfqzEp"
+      ],
+      "Week": [
+        "recKJMGYbEzGHyXfd"
+      ],
+      "Streak Date Key": "2027-06-04",
+      "Created Time": "2026-09-05T18:27:34.000Z",
+      "Source Submission Date": "2027-06-04T12:00:00.000Z",
+      "Last Evaluated At": "2026-09-05T18:46:55.273Z",
+      "Notes": "054 awarded/repaired streak XP through XP Event recDU5Anh1QPrRlll. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recJ2caP3qBUfqzEp|2027-06-04.\n054 awarded/repaired streak XP through XP Event recDU5Anh1QPrRlll. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recJ2caP3qBUfqzEp|2027-06-04.\n054 awarded/repaired streak XP through XP Event recDU5Anh1QPrRlll. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recJ2caP3qBUfqzEp|2027-06-04.\n054 awarded/repaired streak XP through XP Event recDU5Anh1QPrRlll. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recJ2caP3qBUfqzEp|2027-06-04.\n054 awarded/repaired streak XP through XP Event recDU5Anh1QPrRlll. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recJ2caP3qBUfqzEp|2027-06-04.\n054 awarded/repaired streak XP through XP Event recDU5Anh1QPrRlll. Source Key: STREAK_XP|recmImoXTlKb5NWSY|recJ2caP3qBUfqzEp|2027-06-04.",
+      "Source Status": "Awarded"
+    }
+  }
+]

@@ -1,0 +1,455 @@
+{
+  "count": 50,
+  "automations": [
+    {
+      "id": "wflM3vw4mgP50HsWe",
+      "name": "001 - Enrollment Intake and Setup - Find or Create Athlete and Link Enrollment",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordEntersView",
+      "tableId": "tbl3PFmwbRoabu1YV",
+      "viewId": "viwNV87i8BwPBxYlq"
+    },
+    {
+      "id": "wfl6hwR395yps49UD",
+      "name": "007a - Submission Intake and Asset Creation - Duplicate Checker for Submissions",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "viewId": null
+    },
+    {
+      "id": "wfloqdrjhDcGwBBnI",
+      "name": "076 - Daily Submission Communications Hub Handoff",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "viewId": null
+    },
+    {
+      "id": "wflKviSzqoWMnKNrE",
+      "name": "031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordEntersView",
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "viewId": "viwQaroOS7ymoWGLC"
+    },
+    {
+      "id": "wflr13bp3RfyCtIey",
+      "name": "002 - Enrollment Intake and Setup - Assign Grade Band - Initial",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordEntersView",
+      "tableId": "tbl3PFmwbRoabu1YV",
+      "viewId": "viwitHfNChfwjvFkr"
+    },
+    {
+      "id": "wfl7AvilhlV0TYuwG",
+      "name": "003 - Enrollment Intake and Setup - Assign Grade Band - If Grade Changes",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordEntersView",
+      "tableId": "tbl3PFmwbRoabu1YV",
+      "viewId": "viwWfoiEzXoIIcBse"
+    },
+    {
+      "id": "wfld5XC7BPXRtftOZ",
+      "name": "005 - Submission Intake and Asset Creation - Assign Week to Submission - Homework First",
+      "deploymentStatus": "undeployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "viewId": null
+    },
+    {
+      "id": "wflJUkUJYTtRWJCyH",
+      "name": "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "viewId": null
+    },
+    {
+      "id": "wflieZd3s3o8SB0xD",
+      "name": "030 - Weekly Summary and Goal Logic - Copy Enrollment Grade Band to Weekly Summary",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordEntersView",
+      "tableId": "tbl9520d72adxlAKQ",
+      "viewId": "viwGlczA6iOB2CwSw"
+    },
+    {
+      "id": "wfl5bUBHJGLVFWuQA",
+      "name": "020 - Submission Intake and Asset Creation - Link or Create Homework Completion from Submission Asset",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblhMLKxQK77agtME",
+      "viewId": null
+    },
+    {
+      "id": "wflIYVOmRRaHu9cl2",
+      "name": "070a - Email, Notifications, and External Handoffs - Send Homework Asset Payload to Make",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblhMLKxQK77agtME",
+      "viewId": null
+    },
+    {
+      "id": "wflkSZX2nWn8ZK9L5",
+      "name": "034 - Weekly Summary and Goal Logic - Set Previous Week Helper Values",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tbl9520d72adxlAKQ",
+      "viewId": null
+    },
+    {
+      "id": "wfltkJQsWm7FcUYq8",
+      "name": "023 - Submission Intake and Asset Creation - Assign Enrollment to Submission",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "viewId": null
+    },
+    {
+      "id": "wflPcB9g4WptRgBhA",
+      "name": "021 - Submission Intake and Asset Creation - Set Attachment Upload Status",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "viewId": null
+    },
+    {
+      "id": "wfllkhzl3R6OlClzy",
+      "name": "065 - Homework Review and XP - Create or Update Homework XP Event",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblv58ppTFDBXb3nv",
+      "viewId": null
+    },
+    {
+      "id": "wfl91138bIIQynAl5",
+      "name": "114 - Video Review and XP - Create or Update Video XP Event",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordUpdated",
+      "tableId": "tblOV6pJDxQFBSQ3q",
+      "viewId": null
+    },
+    {
+      "id": "wflfKRNcfiNLtib7X",
+      "name": "113 - Video Review and XP - Assign Base Video XP by Grade Band",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordUpdated",
+      "tableId": "tblOV6pJDxQFBSQ3q",
+      "viewId": null
+    },
+    {
+      "id": "wfl0pe3wmT8WTTDRL",
+      "name": "070c-email-notifications-and-external-handoffs-verify-async-video-asset-upload.js",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblhMLKxQK77agtME",
+      "viewId": null
+    },
+    {
+      "id": "wfllWsq7qikhOujGl",
+      "name": "101 - Zoom / Attendance XP - Award Meeting XP",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblWcSHEm8vNNIxyB",
+      "viewId": null
+    },
+    {
+      "id": "wflKKgCAfXwmzjmhO",
+      "name": "064 - Homework Review and XP - Assign Base Homework XP",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblv58ppTFDBXb3nv",
+      "viewId": null
+    },
+    {
+      "id": "wflpgZsyC16gI56Fi",
+      "name": "071 - Email, Notifications, and External Handoffs - Send Homework Feedback Email Webhook",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblv58ppTFDBXb3nv",
+      "viewId": null
+    },
+    {
+      "id": "wflCRvaopntNPsc64",
+      "name": "041 - Levels and Progression - Mark Enrollment for Level Recalculation",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "cron",
+      "tableId": null,
+      "viewId": null
+    },
+    {
+      "id": "wflGKNw4e06hCHyv9",
+      "name": "009 - Submission Intake and Asset Creation - Create Submission Assets from Submission",
+      "deploymentStatus": "undeployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "viewId": null
+    },
+    {
+      "id": "wflp25FlsKCpW0vtk",
+      "name": "078 - Email, Notifications, and External Handoffs - Mark Homework Parent Feedback Ready",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblv58ppTFDBXb3nv",
+      "viewId": null
+    },
+    {
+      "id": "wflnFeGqUMJFUaUOQ",
+      "name": "072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tbl9520d72adxlAKQ",
+      "viewId": null
+    },
+    {
+      "id": "wfl3aiiK8vI2tz0HA",
+      "name": "042 - Levels and Progression - Assign Current and Next Level",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordEntersView",
+      "tableId": "tbl3PFmwbRoabu1YV",
+      "viewId": "viwm9OgwkPKI2bii3"
+    },
+    {
+      "id": "wfl7CPqiuntYBYeFP",
+      "name": "073 - Email, Notifications, and External Handoffs - Send Video Feedback Parent Email Webhook",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblOV6pJDxQFBSQ3q",
+      "viewId": null
+    },
+    {
+      "id": "wflxGeLKCL9ToB9cp",
+      "name": "053 - Achievements and Milestones - Streak Occurrences - Rebuild and Upsert From Submissions",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordUpdated",
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "viewId": null
+    },
+    {
+      "id": "wflNfKv5hFknF69cz",
+      "name": "054 - Achievements and Milestones, Streak Occurrences - Create or Repair Streak XP Event",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordUpdated",
+      "tableId": "tbl9VxLdBiNcev4He",
+      "viewId": null
+    },
+    {
+      "id": "wfloWQRJJ54eKYKpC",
+      "name": "055 - Achievements and Milestones - Recalculate Current Shooting Streak from Submission",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "viewId": null
+    },
+    {
+      "id": "wflWppw6j9AdWdCcy",
+      "name": "056 - Achievements and Milestones - Refresh Current Shooting Streaks Daily",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "cron",
+      "tableId": null,
+      "viewId": null
+    },
+    {
+      "id": "wflVRPhgunsosFjWS",
+      "name": "057 - Achievements and Milestones - Calculate Perfect Week Eligibility",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tbl9520d72adxlAKQ",
+      "viewId": null
+    },
+    {
+      "id": "wflDinFz6FBIGEOMg",
+      "name": "058 - Achievements and Milestones - Create Perfect Week Unlock",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordUpdated",
+      "tableId": "tbl9520d72adxlAKQ",
+      "viewId": null
+    },
+    {
+      "id": "wfltDo4HZxpYlbqn8",
+      "name": "059 - Achievements and Milestones - Create XP Event from Achievement Unlock",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblyT2AQo1JbvmvZS",
+      "viewId": null
+    },
+    {
+      "id": "wflSMXHrUoFZEBLqf",
+      "name": "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tbl3PFmwbRoabu1YV",
+      "viewId": null
+    },
+    {
+      "id": "wflM5RiPPcuERcwSq",
+      "name": "070b - Email, Notifications, and External Handoffs - Send Video Asset Payload to Make",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblhMLKxQK77agtME",
+      "viewId": null
+    },
+    {
+      "id": "wflZwhJqLWwAlCHMv",
+      "name": "013 - Submission Intake - Create or Link Video Feedback",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblhMLKxQK77agtME",
+      "viewId": null
+    },
+    {
+      "id": "wflXNNNCH0ocI1qav",
+      "name": "022 - Submission Intake - Sync Child Upload Writeback from Submission Asset",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblhMLKxQK77agtME",
+      "viewId": null
+    },
+    {
+      "id": "wflaMSBUbfR4NhVPk",
+      "name": "067 - Homework - Link Reflection Quiz to Homework Completion",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tbl6ORxLs192mXEWp",
+      "viewId": null
+    },
+    {
+      "id": "wflNzKKLVhjdNzMhU",
+      "name": "116 - Submission Assets - Apply Asset Reuse Decision Consequences",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordUpdated",
+      "tableId": "tblhMLKxQK77agtME",
+      "viewId": null
+    },
+    {
+      "id": "wflBMRCDdNwY08yu6",
+      "name": "117 - Zoom - Create Zoom Recording Approval Communications Hub Handoff",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblg8DPRu3j0dbuwi",
+      "viewId": null
+    },
+    {
+      "id": "wflaSFRTHs6rNzs5L",
+      "name": "118 - Email - Schedule Weekly Summary Email Build",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "cron",
+      "tableId": null,
+      "viewId": null
+    },
+    {
+      "id": "wflPOA06rNdPhlaMR",
+      "name": "119 - Email - Schedule Weekly Summary Email Send",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "cron",
+      "tableId": null,
+      "viewId": null
+    },
+    {
+      "id": "wflQDjG1OphlQ03S5",
+      "name": "035 \u2013 Weekly Summary and Goal Logic \u2013 Create Weekly Threshold XP Events",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tbl9520d72adxlAKQ",
+      "viewId": null
+    },
+    {
+      "id": "wfl1trFEUOV3yIMHM",
+      "name": "033 - Weekly Summary and Goal Logic - Assign Homework to Weekly Athlete Summary",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tbl9520d72adxlAKQ",
+      "viewId": null
+    },
+    {
+      "id": "wflMFP6CtbrObUhpx",
+      "name": "079 \u2013 Send to Communications Hub - NEW",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblQA3Evz3fNlXvD7",
+      "viewId": null
+    },
+    {
+      "id": "wflMcjmOa06vGi2yf",
+      "name": "078A \u2014 Enrollment \u2192 Create WELCOME Email Handoff",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tbl3PFmwbRoabu1YV",
+      "viewId": null
+    },
+    {
+      "id": "wflOHqpcDF2F8oItI",
+      "name": "032 - Weekly Summary and Goal Logic - Link Challenge Goal Record to Weekly Athlete Summary",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tbl9520d72adxlAKQ",
+      "viewId": null
+    },
+    {
+      "id": "wfluWC1sX7XyqxCDm",
+      "name": "074 - Email, Notifications, and External Handoffs - Create Weekly Summary Hub Handoff",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tbl9520d72adxlAKQ",
+      "viewId": null
+    },
+    {
+      "id": "wfl36qsR7FbeJI2gh",
+      "name": "120 \u2013 Video \u2013 Automatic S3 Video Rename",
+      "deploymentStatus": "deployed",
+      "configurationStatus": "valid",
+      "triggerType": "recordMatchesConditions",
+      "tableId": "tblOV6pJDxQFBSQ3q",
+      "viewId": null
+    }
+  ]
+}

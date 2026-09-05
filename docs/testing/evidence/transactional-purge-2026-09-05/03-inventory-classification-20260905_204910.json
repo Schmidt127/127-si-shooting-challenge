@@ -1,0 +1,362 @@
+{
+  "captured_at": "20260905_204910",
+  "base_id": "appn84sqPw03zEbTT",
+  "tables": {
+    "Achievements": {
+      "table_id": "tblrADEQbvH9kBfMZ",
+      "primary_field": "Achievement Name",
+      "record_count": 15,
+      "classification": "PRESERVE CONFIGURATION",
+      "rationale": "Rules, inventory, sync, or operational configuration",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 15,
+      "expected_post_purge_count": 15
+    },
+    "Athlete Achievement Unlocks": {
+      "table_id": "tblyT2AQo1JbvmvZS",
+      "primary_field": "Achievement Unlock Display",
+      "record_count": 12,
+      "classification": "PURGE ALL RECORDS",
+      "rationale": "Athlete/workflow transactional records (test/disposable)",
+      "planned_delete_count": 12,
+      "planned_preserve_count": 0,
+      "expected_post_purge_count": 0
+    },
+    "Athletes": {
+      "table_id": "tblTluxBr3DcVrh6h",
+      "primary_field": "Full Name",
+      "record_count": 3,
+      "classification": "PURGE ALL RECORDS",
+      "rationale": "Athlete/workflow transactional records (test/disposable)",
+      "planned_delete_count": 3,
+      "planned_preserve_count": 0,
+      "expected_post_purge_count": 0
+    },
+    "Automations": {
+      "table_id": "tblfpqKqPEbkPnN8E",
+      "primary_field": "Name",
+      "record_count": 50,
+      "classification": "PRESERVE CONFIGURATION",
+      "rationale": "Rules, inventory, sync, or operational configuration",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 50,
+      "expected_post_purge_count": 50
+    },
+    "Award Recipients": {
+      "table_id": "tblTyQXl8aEP93ubK",
+      "primary_field": "Award Recipient Display",
+      "record_count": 1,
+      "classification": "PURGE ALL RECORDS",
+      "rationale": "Athlete/workflow transactional records (test/disposable)",
+      "planned_delete_count": 1,
+      "planned_preserve_count": 0,
+      "expected_post_purge_count": 0
+    },
+    "Awards": {
+      "table_id": "tbltlhInAQPtOB8hx",
+      "primary_field": "Award Name",
+      "record_count": 31,
+      "classification": "PRESERVE REUSABLE CONTENT",
+      "rationale": "Curriculum, schedule, catalogs, or reusable reference",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 31,
+      "expected_post_purge_count": 31
+    },
+    "Config": {
+      "table_id": "tblRB6sh77NxjS568",
+      "primary_field": "Active School Year",
+      "record_count": 4,
+      "classification": "PRESERVE CONFIGURATION",
+      "rationale": "Rules, inventory, sync, or operational configuration",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 4,
+      "expected_post_purge_count": 4
+    },
+    "Countries": {
+      "table_id": "tbl1h6ucRzctRjCc8",
+      "primary_field": "Country Name",
+      "record_count": 194,
+      "classification": "AMBIGUOUS \u2014 MIKE DECISION REQUIRED",
+      "rationale": "Not in FUT-030 preserve/delete sets \u2014 do not delete without explicit decision",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 194,
+      "expected_post_purge_count": 194
+    },
+    "Email Handoff Queue": {
+      "table_id": "tblQA3Evz3fNlXvD7",
+      "primary_field": "Handoff Key",
+      "record_count": 24,
+      "classification": "PURGE ALL RECORDS",
+      "rationale": "Athlete/workflow transactional records (test/disposable)",
+      "planned_delete_count": 24,
+      "planned_preserve_count": 0,
+      "expected_post_purge_count": 0
+    },
+    "Enrollments": {
+      "table_id": "tbl3PFmwbRoabu1YV",
+      "primary_field": "Full Athlete Name - Backward",
+      "record_count": 4,
+      "classification": "PURGE ALL RECORDS",
+      "rationale": "Athlete/workflow transactional records (test/disposable)",
+      "planned_delete_count": 4,
+      "planned_preserve_count": 0,
+      "expected_post_purge_count": 0
+    },
+    "Final Reflection Quiz Submissions": {
+      "table_id": "tbl6ORxLs192mXEWp",
+      "primary_field": "Quiz Submission Name",
+      "record_count": 0,
+      "classification": "EMPTY TRANSACTIONAL TABLE",
+      "rationale": "Transactional table currently empty; keep structure",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 0,
+      "expected_post_purge_count": 0
+    },
+    "Grade Bands": {
+      "table_id": "tblOhHrIqpjcsk2WG",
+      "primary_field": "Grade Band Name",
+      "record_count": 7,
+      "classification": "PRESERVE CONFIGURATION",
+      "rationale": "Rules, inventory, sync, or operational configuration",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 7,
+      "expected_post_purge_count": 7
+    },
+    "Homework Completions": {
+      "table_id": "tblv58ppTFDBXb3nv",
+      "primary_field": "Homework Completion Full Name",
+      "record_count": 2,
+      "classification": "PURGE ALL RECORDS",
+      "rationale": "Athlete/workflow transactional records (test/disposable)",
+      "planned_delete_count": 2,
+      "planned_preserve_count": 0,
+      "expected_post_purge_count": 0
+    },
+    "Homework Library": {
+      "table_id": "tblUuxwYlX4EQ9MKE",
+      "primary_field": "Assignment Full Name",
+      "record_count": 121,
+      "classification": "PRESERVE REUSABLE CONTENT",
+      "rationale": "Curriculum, schedule, catalogs, or reusable reference",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 121,
+      "expected_post_purge_count": 121
+    },
+    "Level Gate Rules": {
+      "table_id": "tblWIb8JCuQ842HI8",
+      "primary_field": "Level Gate Rule Name",
+      "record_count": 12,
+      "classification": "PRESERVE CONFIGURATION",
+      "rationale": "Rules, inventory, sync, or operational configuration",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 12,
+      "expected_post_purge_count": 12
+    },
+    "Levels": {
+      "table_id": "tblU6EWmc1jCpgRHe",
+      "primary_field": "Level Name",
+      "record_count": 12,
+      "classification": "PRESERVE CONFIGURATION",
+      "rationale": "Rules, inventory, sync, or operational configuration",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 12,
+      "expected_post_purge_count": 12
+    },
+    "Payment Transactions": {
+      "table_id": "tblD3kluJLIgPsiFg",
+      "primary_field": "Payment Transaction",
+      "record_count": 0,
+      "classification": "EMPTY TRANSACTIONAL TABLE",
+      "rationale": "Transactional table currently empty; keep structure",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 0,
+      "expected_post_purge_count": 0
+    },
+    "Program Homework Assignments": {
+      "table_id": "tblhA3maf7xOa8EUS",
+      "primary_field": "Program Homework Assignment",
+      "record_count": 18,
+      "classification": "PRESERVE REUSABLE CONTENT",
+      "rationale": "Curriculum, schedule, catalogs, or reusable reference",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 18,
+      "expected_post_purge_count": 18
+    },
+    "Program Instance - Sync": {
+      "table_id": "tblMfALZa4YYUy70P",
+      "primary_field": "Name - Program Instance",
+      "record_count": 3,
+      "classification": "PRESERVE CONFIGURATION",
+      "rationale": "Rules, inventory, sync, or operational configuration",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 3,
+      "expected_post_purge_count": 3
+    },
+    "School - Synced": {
+      "table_id": "tblyAJ36QvA7Wa2gU",
+      "primary_field": "Name",
+      "record_count": 1241,
+      "classification": "PRESERVE CONFIGURATION",
+      "rationale": "Rules, inventory, sync, or operational configuration",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 1241,
+      "expected_post_purge_count": 1241
+    },
+    "Shot Milestones": {
+      "table_id": "tbl5C4TsQpOigIyRz",
+      "primary_field": "Milestone Label",
+      "record_count": 61,
+      "classification": "PRESERVE CONFIGURATION",
+      "rationale": "Rules, inventory, sync, or operational configuration",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 61,
+      "expected_post_purge_count": 61
+    },
+    "State": {
+      "table_id": "tblCk8BXCiYPK0O1y",
+      "primary_field": "State/Province Name",
+      "record_count": 50,
+      "classification": "AMBIGUOUS \u2014 MIKE DECISION REQUIRED",
+      "rationale": "Not in FUT-030 preserve/delete sets \u2014 do not delete without explicit decision",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 50,
+      "expected_post_purge_count": 50
+    },
+    "Streak Occurrences": {
+      "table_id": "tbl9VxLdBiNcev4He",
+      "primary_field": "Streak Occurrence Name",
+      "record_count": 35,
+      "classification": "PURGE ALL RECORDS",
+      "rationale": "Athlete/workflow transactional records (test/disposable)",
+      "planned_delete_count": 35,
+      "planned_preserve_count": 0,
+      "expected_post_purge_count": 0
+    },
+    "Submission Assets": {
+      "table_id": "tblhMLKxQK77agtME",
+      "primary_field": "Submission Assets Full Name",
+      "record_count": 5,
+      "classification": "PURGE ALL RECORDS",
+      "rationale": "Athlete/workflow transactional records (test/disposable)",
+      "planned_delete_count": 5,
+      "planned_preserve_count": 0,
+      "expected_post_purge_count": 0
+    },
+    "Submissions": {
+      "table_id": "tblEVjVpGGlPTsYSt",
+      "primary_field": "Submission Full Name",
+      "record_count": 6,
+      "classification": "PURGE ALL RECORDS",
+      "rationale": "Athlete/workflow transactional records (test/disposable)",
+      "planned_delete_count": 6,
+      "planned_preserve_count": 0,
+      "expected_post_purge_count": 0
+    },
+    "Target Goal Shots": {
+      "table_id": "tbleCfuAt3rY8unU3",
+      "primary_field": "Target Label",
+      "record_count": 7,
+      "classification": "PRESERVE CONFIGURATION",
+      "rationale": "Rules, inventory, sync, or operational configuration",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 7,
+      "expected_post_purge_count": 7
+    },
+    "Testing Scenarios": {
+      "table_id": "tblagI7Q5wXQm2XGS",
+      "primary_field": "Test Intake Name",
+      "record_count": 1,
+      "classification": "PRESERVE REUSABLE CONTENT",
+      "rationale": "Curriculum, schedule, catalogs, or reusable reference",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 1,
+      "expected_post_purge_count": 1
+    },
+    "Tutorials & Assets": {
+      "table_id": "tblDOTgsWfqPm18bw",
+      "primary_field": "\ufeffName",
+      "record_count": 32,
+      "classification": "PRESERVE REUSABLE CONTENT",
+      "rationale": "Curriculum, schedule, catalogs, or reusable reference",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 32,
+      "expected_post_purge_count": 32
+    },
+    "Video Feedback": {
+      "table_id": "tblOV6pJDxQFBSQ3q",
+      "primary_field": "Video Feedback Name",
+      "record_count": 7,
+      "classification": "PURGE ALL RECORDS",
+      "rationale": "Athlete/workflow transactional records (test/disposable)",
+      "planned_delete_count": 7,
+      "planned_preserve_count": 0,
+      "expected_post_purge_count": 0
+    },
+    "Weekly Athlete Summary": {
+      "table_id": "tbl9520d72adxlAKQ",
+      "primary_field": "Weekly Athlete Summary - Display",
+      "record_count": 8,
+      "classification": "PURGE ALL RECORDS",
+      "rationale": "Athlete/workflow transactional records (test/disposable)",
+      "planned_delete_count": 8,
+      "planned_preserve_count": 0,
+      "expected_post_purge_count": 0
+    },
+    "Weeks": {
+      "table_id": "tblcsKugv1cla36A6",
+      "primary_field": "Week Name",
+      "record_count": 11,
+      "classification": "PRESERVE REUSABLE CONTENT",
+      "rationale": "Curriculum, schedule, catalogs, or reusable reference",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 11,
+      "expected_post_purge_count": 11
+    },
+    "XP Events": {
+      "table_id": "tblmGSiNA1akW8KnU",
+      "primary_field": "XP Event Display",
+      "record_count": 83,
+      "classification": "PURGE ALL RECORDS",
+      "rationale": "Athlete/workflow transactional records (test/disposable)",
+      "planned_delete_count": 83,
+      "planned_preserve_count": 0,
+      "expected_post_purge_count": 0
+    },
+    "XP Reward Rules": {
+      "table_id": "tblnTLz8eDcyi8f3j",
+      "primary_field": "Reward Rule",
+      "record_count": 31,
+      "classification": "PRESERVE CONFIGURATION",
+      "rationale": "Rules, inventory, sync, or operational configuration",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 31,
+      "expected_post_purge_count": 31
+    },
+    "Zoom Attendance": {
+      "table_id": "tblg8DPRu3j0dbuwi",
+      "primary_field": "Id",
+      "record_count": 3,
+      "classification": "PURGE ALL RECORDS",
+      "rationale": "Athlete/workflow transactional records (test/disposable)",
+      "planned_delete_count": 3,
+      "planned_preserve_count": 0,
+      "expected_post_purge_count": 0
+    },
+    "Zoom Meetings": {
+      "table_id": "tblWcSHEm8vNNIxyB",
+      "primary_field": "Meeting Display Name",
+      "record_count": 9,
+      "classification": "PRESERVE REUSABLE CONTENT",
+      "rationale": "Curriculum, schedule, catalogs, or reusable reference",
+      "planned_delete_count": 0,
+      "planned_preserve_count": 9,
+      "expected_post_purge_count": 9
+    }
+  },
+  "totals": {
+    "tables": 35,
+    "records": 2103,
+    "planned_delete": 193,
+    "planned_preserve": 1910
+  }
+}

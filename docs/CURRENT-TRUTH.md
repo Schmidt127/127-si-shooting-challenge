@@ -1,7 +1,7 @@
 # CURRENT TRUTH â 127 SI Shooting Challenge
 
 **Status:** Active â primary current-state document for this repository  
-**Last verification (repo):** 2026-09-05 — **SC-167/168/169 ALL COMPLETE / Live Tested.** SC-167 Option A disposable proof of Live **010 v10.14** (create + retry → one Active `SUBMISSION_XP`; formula restored to `NOW()`). Evidence: [audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md](./audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md) · [audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md](./audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md). Live formulas normal **`NOW()` / `TODAY()`**. **Next Season Sim execute NOT authorized.**
+**Last verification (repo):** 2026-09-05 — **Production transactional test-data purge COMPLETE** (Mike `APPROVE TRANSACTIONAL PURGE`). Deleted **204** records (200 approved + 4 automation remnants). Athletes/Enrollments/Submissions/Assets/HC/XP/WAS/VF/Unlocks/Streaks/Zoom Attendance/Award Recipients/Email Handoff = **0**. Zoom Meetings retained **2** (Introduction, Motivation). Countries/State/PHA/Weeks/Homework Library/rules/config preserved. Evidence: [`testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md`](./testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md). Prior: SC-167/168/169 COMPLETE; formulas **`NOW()` / `TODAY()`**; next Season Sim execute NOT authorized.
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -66,7 +66,7 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | Re-verify after SC-167 complete docs merge: `git fetch origin && git rev-parse origin/master` — expect tip including SC-167 Option A live-proof docs |
+| HEAD SHA | Re-verify after transactional-purge closeout merge: `git fetch origin && git rev-parse origin/master` |
 | `origin/master` | Should match HEAD after fetch — re-verify: `git rev-parse origin/master` |
 | Ahead / behind | **0 / 0** (re-verify after fetch) |
 | Recent merges (2026-09-05 discrepancy wave) | **#450** backlog intake · **#451** SC-168 (`fba62be0`) · **#453** SC-167 010 v10.14 (`08da8b03`) · **#452** SC-169 (`caad5ba9`). Wave: [`audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md`](./audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md) |
@@ -137,7 +137,7 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | FUT-010 intake attachment cleanup | **Dry-run complete (R3 2026-08-30)** â **0 eligible**; no deletion request â [`testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md`](./testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md) |
 | Weeks 2026â27 | **Finalized** â Early Bird **Apr 25âMay 1, 2027** countable; May 1 â Early Bird; Week 1 starts May 2 â [`testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md`](./testing/evidence/WEEKS-2026-27-AUDIT-2026-08-30.md) |
 | Homework PHA 2026â27 | **18 active restored** after FUT-030 (2026-08-31) â new RIDs; Due Date **2027-06-29**; Homework Library **76** unchanged. Evidence: [`testing/evidence/transactional-reset-2026-08-31/11-pha-restore-created-20260831_133022.json`](./testing/evidence/transactional-reset-2026-08-31/11-pha-restore-created-20260831_133022.json). Prior audit (old RIDs historical): [`testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md`](./testing/evidence/HOMEWORK-PHA-18-AUDIT-2026-08-30.md) |
-| Transactional data | **Empty** after FUT-030 (except restored PHA) â Athletes/Enrollments/Submissions/Assets/HC/XP/WAS/VF/Unlocks/Streaks/Zoom Attendance/Award Recipients/Payments/Email Handoff Queue = **0**. Base ready for clean workflow rebuild. |
+| Transactional data | **Empty** after 2026-09-05 purge — Athletes/Enrollments/Submissions/Assets/HC/XP/WAS/VF/Unlocks/Streaks/Zoom Attendance/Award Recipients/Payments/Email Handoff Queue = **0**. Zoom Meetings **2** catalog (Introduction, Motivation). PHA **18** / Weeks **11** / Homework Library **121** / Countries **194** / State **50** preserved. Evidence: [`testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md`](./testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md). Prior FUT-030 reset 2026-08-31. |
 | Phase 4 public copy | **Shipped** PR **#298** â CR-13/CR-17/CR-18 parent copy implemented 2026-09-01; optional Dashboard relabel complete (CR-12) |
 | SC-147 Recorded Zoom half-XP | **COMPLETE / Live Tested in PROD** â Automation **101 v6.8** Live; GitHub synced (PR **#398**); recording `ZOOM_RECORDING_CREDIT|*` @ 30 + live @ 60 on disposable VERIFY; **no 121**; **117** email-only. Optional residual: GitHub year-aware Config percent hardening may still need Airtable UI paste for byte-match. Evidence [`audits/SC-147-101-V68-PRODUCTION-CLOSEOUT-20260904.md`](./audits/SC-147-101-V68-PRODUCTION-CLOSEOUT-20260904.md) |
 | SC-148 mobile a11y | **COMPLETE / Live Tested in PROD** â interactive + Playwright attestation 2026-09-04. Evidence [`audits/SC-148-mobile-a11y-prod-attestation-20260904.md`](./audits/SC-148-mobile-a11y-prod-attestation-20260904.md) |

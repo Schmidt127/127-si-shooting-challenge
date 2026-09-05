@@ -1,0 +1,94 @@
+{
+  "captured_at": "20260905_211033",
+  "revision": "v2",
+  "base_id": "appn84sqPw03zEbTT",
+  "planned_delete_total": 200,
+  "child_to_parent_order": [
+    "Email Handoff Queue",
+    "Award Recipients",
+    "XP Events",
+    "Athlete Achievement Unlocks",
+    "Streak Occurrences",
+    "Video Feedback",
+    "Zoom Attendance",
+    "Zoom Meetings (selected disposable VERIFY/PELC/SC-147)",
+    "Homework Completions",
+    "Submission Assets",
+    "Submissions",
+    "Weekly Athlete Summary",
+    "Enrollments",
+    "Athletes"
+  ],
+  "purge_all_tables": [
+    "Email Handoff Queue",
+    "Award Recipients",
+    "XP Events",
+    "Athlete Achievement Unlocks",
+    "Streak Occurrences",
+    "Video Feedback",
+    "Zoom Attendance",
+    "Homework Completions",
+    "Submission Assets",
+    "Submissions",
+    "Weekly Athlete Summary",
+    "Enrollments",
+    "Athletes"
+  ],
+  "purge_selected": {
+    "Zoom Meetings": {
+      "ids": [
+        "recGJEtN9oWGTqcFZ",
+        "recLZmVTQveRkRpC4",
+        "recLf72BcLyvbJQZR",
+        "recMJE0t5aR6ia8vl",
+        "recjEXvSb6yT7EMQW",
+        "recqLd4T7Wh6aOUj1",
+        "recrKQTHboRp5vhhE"
+      ],
+      "names": [
+        "SC-147 VERIFY Live Zoom",
+        "VERIFY|PELC|paths|1788408059855|ZOOM",
+        "PELC|zoom|1788408009744|ZOOM",
+        "VERIFY|2026-09-02T0040|ZOOM-LIVE-101",
+        "VERIFY|2026-09-02T0040|ZOOM-LIVE-101",
+        "VERIFY|2026-09-02T0040|ZOOM-LIVE-101",
+        "VERIFY|2026-09-02T0040|ZOOM-LIVE-101"
+      ],
+      "count": 7
+    }
+  },
+  "preserve_reusable_zoom_meetings": [
+    {
+      "id": "recMFP2x5LDqea9ax",
+      "name": "Introduction",
+      "why": "Human catalog meeting title with curriculum/media signals; created as seasonal Zoom catalog (not VERIFY/PELC harness naming)."
+    },
+    {
+      "id": "recb9EjQIJVzaRpZa",
+      "name": "Motivation",
+      "why": "Human catalog meeting title with curriculum/media signals; created as seasonal Zoom catalog (not VERIFY/PELC harness naming)."
+    }
+  ],
+  "preserve_countries_state": true,
+  "hard_abort_if_deleted": [
+    "Weeks",
+    "Program Homework Assignments",
+    "Homework Library",
+    "Countries",
+    "State",
+    "Config",
+    "XP Reward Rules",
+    "Achievements",
+    "Levels",
+    "Level Gate Rules",
+    "Shot Milestones",
+    "Grade Bands",
+    "Awards",
+    "Tutorials & Assets",
+    "Automations",
+    "Introduction Zoom Meeting",
+    "Motivation Zoom Meeting"
+  ],
+  "approval_phrase": "APPROVE TRANSACTIONAL PURGE",
+  "approval_scope": "Delete exactly 200 records per revised v2 manifest; preserve Countries, State, reusable Zoom Meetings Introduction+Motivation, PHA, Weeks, curriculum, rules, configuration."
+}

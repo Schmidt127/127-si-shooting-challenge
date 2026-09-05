@@ -1,0 +1,190 @@
+{
+  "planned_delete_total": 200,
+  "breakdown": {
+    "Email Handoff Queue": 24,
+    "Award Recipients": 1,
+    "XP Events": 83,
+    "Athlete Achievement Unlocks": 12,
+    "Streak Occurrences": 35,
+    "Video Feedback": 7,
+    "Homework Completions": 2,
+    "Submission Assets": 5,
+    "Submissions": 6,
+    "Weekly Athlete Summary": 8,
+    "Enrollments": 4,
+    "Athletes": 3,
+    "Zoom Meetings disposable": 7
+  },
+  "disposable_zoom": [
+    {
+      "id": "recGJEtN9oWGTqcFZ",
+      "name": "SC-147 VERIFY Live Zoom",
+      "why": "Disposable test fixture: VERIFY/PELC/SC-147 harness naming, no reusable catalog title; created for automation live proof."
+    },
+    {
+      "id": "recLZmVTQveRkRpC4",
+      "name": "VERIFY|PELC|paths|1788408059855|ZOOM",
+      "why": "Disposable test fixture: VERIFY/PELC/SC-147 harness naming, no reusable catalog title; created for automation live proof."
+    },
+    {
+      "id": "recLf72BcLyvbJQZR",
+      "name": "PELC|zoom|1788408009744|ZOOM",
+      "why": "Disposable test fixture: VERIFY/PELC/SC-147 harness naming, no reusable catalog title; created for automation live proof."
+    },
+    {
+      "id": "recMJE0t5aR6ia8vl",
+      "name": "VERIFY|2026-09-02T0040|ZOOM-LIVE-101",
+      "why": "Disposable test fixture: VERIFY/PELC/SC-147 harness naming, no reusable catalog title; created for automation live proof."
+    },
+    {
+      "id": "recjEXvSb6yT7EMQW",
+      "name": "VERIFY|2026-09-02T0040|ZOOM-LIVE-101",
+      "why": "Disposable test fixture: VERIFY/PELC/SC-147 harness naming, no reusable catalog title; created for automation live proof."
+    },
+    {
+      "id": "recqLd4T7Wh6aOUj1",
+      "name": "VERIFY|2026-09-02T0040|ZOOM-LIVE-101",
+      "why": "Disposable test fixture: VERIFY/PELC/SC-147 harness naming, no reusable catalog title; created for automation live proof."
+    },
+    {
+      "id": "recrKQTHboRp5vhhE",
+      "name": "VERIFY|2026-09-02T0040|ZOOM-LIVE-101",
+      "why": "Disposable test fixture: VERIFY/PELC/SC-147 harness naming, no reusable catalog title; created for automation live proof."
+    }
+  ],
+  "preserve_zoom": [
+    {
+      "id": "recMFP2x5LDqea9ax",
+      "name": "Introduction",
+      "why": "Human catalog meeting title with curriculum/media signals; created as seasonal Zoom catalog (not VERIFY/PELC harness naming)."
+    },
+    {
+      "id": "recb9EjQIJVzaRpZa",
+      "name": "Motivation",
+      "why": "Human catalog meeting title with curriculum/media signals; created as seasonal Zoom catalog (not VERIFY/PELC harness naming)."
+    }
+  ],
+  "ambiguous_zoom": [],
+  "validation": {
+    "all_exports_match_live": true,
+    "export_record_total": 200,
+    "inventory_planned_delete": 200,
+    "protected_not_in_manifest": true,
+    "pha_in_manifest": false,
+    "weeks_in_manifest": false,
+    "homework_library_in_manifest": false,
+    "reusable_zoom_in_manifest": false,
+    "countries_in_manifest": false,
+    "state_in_manifest": false
+  },
+  "protected_checks": {
+    "Program Homework Assignments": {
+      "count": 18,
+      "in_delete_manifest": false,
+      "classification": "PRESERVE"
+    },
+    "Weeks": {
+      "count": 11,
+      "in_delete_manifest": false,
+      "classification": "PRESERVE"
+    },
+    "Homework Library": {
+      "count": 121,
+      "in_delete_manifest": false,
+      "classification": "PRESERVE"
+    },
+    "Countries": {
+      "count": 194,
+      "in_delete_manifest": false,
+      "classification": "PRESERVE REUSABLE CONTENT / CONFIGURATION"
+    },
+    "State": {
+      "count": 50,
+      "in_delete_manifest": false,
+      "classification": "PRESERVE REUSABLE CONTENT / CONFIGURATION"
+    },
+    "Config": {
+      "count": 4,
+      "in_delete_manifest": false,
+      "classification": "PRESERVE"
+    },
+    "XP Reward Rules": {
+      "count": 31,
+      "in_delete_manifest": false,
+      "classification": "PRESERVE"
+    },
+    "Achievements": {
+      "count": 15,
+      "in_delete_manifest": false,
+      "classification": "PRESERVE"
+    },
+    "Levels": {
+      "count": 12,
+      "in_delete_manifest": false,
+      "classification": "PRESERVE"
+    },
+    "Level Gate Rules": {
+      "count": 12,
+      "in_delete_manifest": false,
+      "classification": "PRESERVE"
+    },
+    "Shot Milestones": {
+      "count": 61,
+      "in_delete_manifest": false,
+      "classification": "PRESERVE"
+    },
+    "Grade Bands": {
+      "count": 7,
+      "in_delete_manifest": false,
+      "classification": "PRESERVE"
+    },
+    "Awards": {
+      "count": 31,
+      "in_delete_manifest": false,
+      "classification": "PRESERVE"
+    },
+    "Tutorials & Assets": {
+      "count": 32,
+      "in_delete_manifest": false,
+      "classification": "PRESERVE"
+    },
+    "Automations": {
+      "count": 50,
+      "in_delete_manifest": false,
+      "classification": "PRESERVE"
+    },
+    "Program Instance - Sync": {
+      "count": 3,
+      "in_delete_manifest": false,
+      "classification": "PRESERVE"
+    },
+    "Target Goal Shots": {
+      "count": 7,
+      "in_delete_manifest": false,
+      "classification": "PRESERVE"
+    },
+    "School - Synced": {
+      "count": 1241,
+      "in_delete_manifest": false,
+      "classification": "PRESERVE"
+    },
+    "Testing Scenarios": {
+      "count": 1,
+      "in_delete_manifest": false,
+      "classification": "PRESERVE"
+    },
+    "Zoom Meetings (reusable retained)": {
+      "count": 2,
+      "ids": [
+        "recMFP2x5LDqea9ax",
+        "recb9EjQIJVzaRpZa"
+      ],
+      "names": [
+        "Introduction",
+        "Motivation"
+      ],
+      "in_delete_manifest": false,
+      "classification": "PRESERVE REUSABLE CONTENT"
+    }
+  }
+}
