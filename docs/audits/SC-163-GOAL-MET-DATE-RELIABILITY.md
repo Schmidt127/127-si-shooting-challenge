@@ -1,18 +1,18 @@
 # SC-163 — Goal Met Date reliability
 
-**Status:** Repo ready — **not live-complete** until Mike schema + automation install  
-**Date:** 2026-09-05  
+**Status:** Repo ready under Automation **066 v4.0** — **not live-complete** until Mike schema + 066 paste + backfill  
+**Date:** 2026-09-05 (ownership revision)  
 **Base:** `appn84sqPw03zEbTT`  
-**Branch:** `wave/a4-goal-met-date-20260905`
+**Branch:** `feature/sc-163-066-goal-met-date`
 
 ## Task Classification
 
 | Field | Value |
 |---|---|
 | Type | Data reliability / automation |
-| Priority | P1 (Completion Wave) |
-| Difficulty | Medium |
-| Owner | Agent 4 |
+| Priority | P1 |
+| Difficulty | High |
+| Owner | Cursor |
 | Backlog ID | SC-163 |
 | Phase | 3 Implementation (+ Phase 5 close after Mike install) |
 | Correct tool | Cursor (repo) + Mike Airtable UI for schema |
@@ -31,17 +31,48 @@ Live meta (2026-09-05): `multipleLookupValues id=fldohCsXsrU4hYqrJ`.
 
 | Concept | Authority |
 |---|---|
-| **Goal Met?** | Formula on Enrollment: live counted shots vs target (may go blank if rollup later drops). |
+| **Goal Met?** | Formula on Enrollment: live counted shots vs target (may go blank if rollup later drops). **Do not change.** |
 | **Goal Met Date** | Writable **date**: first America/Denver **Activity Date** where cumulative **counted** Submissions cross Target Goal Shots. Blank until met. **Never overwrite** once set. Stable if totals change. |
 | **Conquered Goal / Date Awarded** | Award Recipients fulfillment log for gift card — **not** Goal Met Date. |
 
-## Preferred behavior (implemented)
+## Ownership decision (capacity)
+
+Airtable automation capacity is **full**. Do **not** create Automation 122.
+
+| Check | Result |
+|---|---|
+| Live 066 trigger | Enrollments when `Run Shot Milestone Check?` (`fldwsuKGoypFBn2w4`) is checked |
+| Who arms the trigger | Automation **010** after successful submission reconciliation |
+| Enrollment context | Yes — `recordId` = triggering Enrollment |
+| Counted-shot chronology | Same filter as milestones: `Count This Submission?` (excludes future/dup/invalid), Activity Date, Total Shots Counted > 0 |
+| Isolation | Goal Met Date step is try/catch isolated; does not roll back unlock writes |
+| Retries | Safe — never overwrite non-blank Goal Met Date; milestone Source Key unchanged |
+| Live vs GitHub (pre-v4.0) | Live **v3.9** matched GitHub body (trailing newline only) |
+
+**Decision:** Extend **Automation 066** to v4.0. Mark Automation **122** SUPERSEDED.
+
+### Assumptions retained from the 122 proposal
+
+- Blank until met; first provable Activity Date only  
+- Never invent; never overwrite; never use award date / NOW()  
+- Same counting rules as Enrollment totals via `Count This Submission?`  
+- Fail closed when met but crossing unprovable  
+- Schema conversion lookup → writable date required before stamp  
+- Dry-run backfill for historical blanks  
+
+### Assumptions retired
+
+- Standalone automation / free slot / optional `Run Goal Met Date Check?` checkbox  
+- Installing Automation 122 under any name  
+
+## Preferred behavior (implemented in 066)
 
 1. Blank until met  
 2. Record FIRST provable Activity Date from counted submissions  
 3. Never overwrite  
 4. Stable if totals change later  
-5. Retry-safe / deduped (skip when already set)
+5. Retry-safe / deduped (`skipped_already_set`)  
+6. Fail closed: `error_unprovable` / `error_ambiguous`  
 
 ## Live dry-run (2026-09-05)
 
@@ -66,29 +97,9 @@ Evidence: `docs/audits/SC-163-goal-met-date-dry-run-20260905.json`
 ## Correction (smallest safe)
 
 1. **Schema (Mike UI):** Convert `Goal Met Date` lookup → **Date** (US / local date). Existing lookup values do not persist as stored dates — expect blanks, then backfill.  
-2. **Automation 122:** Stamp blank Goal Met Date on first proven crossing (capacity: confirm free slot; do not restore retired automations).  
+2. **Paste Automation 066 v4.0** (no new automation).  
 3. **Extension backfill:** `backfill-goal-met-date.js` dry-run then `CONFIRM_WRITE` for blanks only.
-
-## Disposable live test (pending Mike install)
-
-After schema + 122 paste:
-
-1. Confirm Athlete1 Schmidt still Goal Met? true and Goal Met Date blank.  
-2. Trigger 122 on `recZEwkkXTJanDlG6` (or re-evaluate match conditions).  
-3. Expect Goal Met Date = `2026-08-30`; re-run → `skipped_already_set`.  
-4. Do not delete Weeks / payment / secrets / S3.
-
-## Repo artifacts
-
-| Path | Role |
-|---|---|
-| `airtable/automations/.../lib/sc-163-goal-met-date.js` | Pure crossing / write-decision helpers |
-| `airtable/automations/.../lib/sc-163-goal-met-date.test.js` | Unit tests |
-| `airtable/automations/.../122-...-stamp-goal-met-date.js` | Production automation (paste after schema) |
-| `airtable/extension-scripts/safe-backfills/backfill-goal-met-date.js` | Dry-run / apply backfill |
-| `tools/airtable/sc163_goal_met_date_probe.py` | API dry-run probe |
-| `docs/deploy-checklists/SC-163-goal-met-date.md` | Mike paste/config checklist |
 
 ## Explicit non-goals
 
-No XP amount changes, Perfect Week, Automation 021, paste 013/067, restore retired automations.
+No XP amount changes, Perfect Week, Automation 010/021, paste 013/067, restore retired automations, FUT-029, Season Simulation, unrelated data deletes.

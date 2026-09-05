@@ -4,34 +4,42 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-20
-Last GitHub Update: 2026-08-24 (v3.9 dynamic triggering recordId)
+Last GitHub Update: 2026-09-05 (v4.0 SC-163 Goal Met Date)
 
 Purpose:
 Creates Athlete Achievement Unlock rows when an Enrollment crosses configured Shot Milestone thresholds.
+Also stamps Enrollments.Goal Met Date (SC-163) with the first counted Activity Date crossing.
 
 Trigger:
 Enrollments when Run Shot Milestone Check? is checked (confirm conditions in Airtable UI).
+Armed by Automation 010 after successful submission reconciliation.
 
 Important Tables:
 Enrollments, Submissions, Shot Milestones, Achievements, Athlete Achievement Unlocks, Weeks
 
 Important Fields:
-Run Shot Milestone Check?, Grade Band, Milestone Source Key, Milestone Activity Date, Week
+Run Shot Milestone Check?, Grade Band, Milestone Source Key, Milestone Activity Date, Week,
+Goal Met?, Goal Met Date, Target Goal Shots, Total Shots Counted
 
 Notes:
 GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 First automation upgraded to V2 Automation Standard (2026-07-05).
+SC-163 Goal Met Date lives here (capacity-safe). Do not install Automation 122.
 */
 
 /************************************************************
  * 066 - ACHIEVEMENTS AND MILESTONES
  * Create Shot Milestone Unlocks
  *
- * Version: v3.9
+ * Version: v4.0
  * Date Written: 2026-06-17
- * Last Updated: 2026-08-24
+ * Last Updated: 2026-09-05
  *
  * VERSION HISTORY
+ * - v4.0 (2026-09-05): SC-163 — stamp Enrollments.Goal Met Date with the first
+ *   counted Activity Date that crosses Target Goal Shots. Isolated from milestone
+ *   writes (never invent; never overwrite; fail closed when unprovable). Supersedes
+ *   proposed Automation 122 (capacity full — do not install 122).
  * - v3.9 (2026-08-24): Require triggering Enrollment recordId from input.config()
  *   only — no hardcoded record literals in executable logic; explicit missing/
  *   invalid input errors for safe manual runs.
@@ -59,6 +67,8 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
  * - Determines which milestones were crossed and on which submission date.
  * - Creates one Athlete Achievement Unlock per milestone using Milestone Source Key dedupe.
  * - Writes Milestone Activity Date, Week (from Weeks date ranges within Program Instance), and Pending XP status.
+ * - SC-163: when Goal Met? / counted total reaches Target Goal Shots and Goal Met Date
+ *   is blank, stamps the first provable counted Activity Date crossing (America/Denver).
  * - Clears Run Shot Milestone Check? when finished (except on error — leave checked for triage).
  *
  * IMPORTANT DESIGN RULES
@@ -73,11 +83,17 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
  * - Grade Band matching: linked record IDs first; normalized display label only as fallback.
  * - Week resolution uses Weeks.Start Date / End Date ranges (America/Denver) scoped by
  *   Enrollment.Program Instance — never date-only across years.
+ * - Goal Met Date uses the same counted-submission filter and chronology as milestone
+ *   crossings (Count This Submission?, Activity Date, Total Shots Counted > 0).
+ * - Goal Met Date never overwrites a non-blank value; never uses NOW()/award dates.
+ * - Goal Met Date failures are isolated (do not roll back milestone unlock writes).
  *
  * THIS IS NOT
  * - XP award automation (059 / achievement-to-XP chain handles Pending unlocks).
  * - Perfect Week unlocks (058).
  * - Streak unlocks (053–054).
+ * - Conquered Goal award fulfillment / Award Recipients.Date Awarded.
+ * - Standalone Automation 122 (superseded — do not install).
  *
  * FOLDER
  * - 06 - Achievements and Milestones
@@ -107,6 +123,9 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
  * - createdUnlocksOut
  * - updatedUnlocksOut
  * - skippedExistingUnlocksOut
+ * - goalMetDateActionOut = stamped | skipped_not_met | skipped_already_set | skipped_no_target |
+ *   skipped_field_not_writable | skipped_field_missing | error_unprovable | error_ambiguous | ""
+ * - goalMetDateOut = YYYY-MM-DD (America/Denver) or empty — no athlete names / no submission IDs
  *
  * PRIMARY TABLES USED
  * - Enrollments, Submissions, Shot Milestones, Achievements, Athlete Achievement Unlocks, Weeks
@@ -115,6 +134,7 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
  * - Athlete Achievement Unlocks → Enrollment, Achievement, Shot Milestone, Milestone Source Key,
  *   Milestone Activity Date, Week, XP Award Status, Notes
  * - Enrollments → Run Shot Milestone Check? (cleared on success/skip paths)
+ * - Enrollments → Goal Met Date (once, when blank and crossing is provable; SC-163)
  ************************************************************/
 
 // @ts-nocheck
@@ -125,10 +145,10 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
 
 const SCRIPT = {
   scriptName: "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
-  version: "v3.9",
-  versionDate: "2026-08-24",
+  version: "v4.0",
+  versionDate: "2026-09-05",
   originalWrittenDate: "2026-06-17",
-  lastUpdated: "2026-08-24",
+  lastUpdated: "2026-09-05",
   folder: "06 - Achievements and Milestones",
   automationName: "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
 };
@@ -159,8 +179,12 @@ const CONFIG = {
     active: "Active?",
     gradeBand: "Grade Band",
     totalShots: "Total Shots Submitted",
+    totalShotsCounted: "Total Shots Counted",
     runCheck: "Run Shot Milestone Check?",
     programInstance: "Program Instance",
+    goalMet: "Goal Met?",
+    goalMetDate: "Goal Met Date",
+    targetGoalShots: "Target Goal Shots",
   },
 
   submissionFields: {
@@ -228,6 +252,17 @@ const CONFIG = {
   },
 
   sourceKeyPrefix: "SHOT_MILESTONE|",
+
+  goalMetDateActions: {
+    stamped: "stamped",
+    skippedNotMet: "skipped_not_met",
+    skippedAlreadySet: "skipped_already_set",
+    skippedNoTarget: "skipped_no_target",
+    skippedFieldNotWritable: "skipped_field_not_writable",
+    skippedFieldMissing: "skipped_field_missing",
+    errorUnprovable: "error_unprovable",
+    errorAmbiguous: "error_ambiguous",
+  },
 };
 
 const fieldCache = new Map();
@@ -781,6 +816,207 @@ async function updateRecordsInBatches(table, updates) {
 }
 
 /* =========================================================
+   SECTION 7b — SC-163 GOAL MET DATE (isolated; keep in sync with
+   lib/sc-163-goal-met-date.js)
+========================================================= */
+
+function goalMetTruthy(record, fieldName) {
+  const text = getText(record, fieldName);
+  if (!text) return false;
+  const lower = text.toLowerCase();
+  return lower !== "false" && lower !== "0" && lower !== "no";
+}
+
+function resolveTargetGoalShotsFromRecord(record, fieldName) {
+  if (!fieldName) return { status: "missing", target: 0 };
+  const raw = record.getCellValue(fieldName);
+  if (raw == null || raw === "") return { status: "missing", target: 0 };
+  if (Array.isArray(raw)) {
+    const nums = [];
+    for (const item of raw) {
+      const n = typeof item === "number" ? item : Number(item);
+      if (Number.isFinite(n) && n > 0) nums.push(n);
+    }
+    const unique = [...new Set(nums)];
+    if (unique.length === 0) return { status: "missing", target: 0 };
+    if (unique.length > 1) return { status: "ambiguous", target: 0 };
+    return { status: "ok", target: unique[0] };
+  }
+  const n = typeof raw === "number" ? raw : Number(raw);
+  if (!Number.isFinite(n) || n <= 0) return { status: "missing", target: 0 };
+  return { status: "ok", target: n };
+}
+
+function findFirstGoalMetCrossingFromSubmissions(submissions, targetGoalShots) {
+  const target = Number(targetGoalShots);
+  if (!Number.isFinite(target) || target <= 0) return null;
+  let runningTotal = 0;
+  for (const submission of submissions) {
+    const shots = Number(submission.totalShotsCounted) || 0;
+    if (shots <= 0 || !(submission.activityDate instanceof Date)) continue;
+    const beforeTotal = runningTotal;
+    runningTotal += shots;
+    if (beforeTotal < target && runningTotal >= target) {
+      return {
+        date: submission.activityDate,
+        dateKey: toDateKeyFromDateObject(submission.activityDate, CONFIG.timeZone),
+        submissionId: submission.record.id,
+        beforeTotal,
+        afterTotal: runningTotal,
+        submissionShots: shots,
+      };
+    }
+  }
+  return null;
+}
+
+function decideGoalMetDateWriteInline(input) {
+  const existing = input.existingDate;
+  const existingKey = existing
+    ? toDateKeyFromDateObject(existing, CONFIG.timeZone) ||
+      String(existing || "").trim().slice(0, 10)
+    : "";
+  if (existingKey) {
+    return { action: CONFIG.goalMetDateActions.skippedAlreadySet, dateKey: existingKey };
+  }
+  if (input.targetStatus === "ambiguous") {
+    return { action: CONFIG.goalMetDateActions.errorAmbiguous };
+  }
+  if (input.targetStatus === "missing") {
+    return { action: CONFIG.goalMetDateActions.skippedNoTarget };
+  }
+  if (!input.goalMetNow) {
+    return { action: CONFIG.goalMetDateActions.skippedNotMet };
+  }
+  const target = Number(input.target) || 0;
+  const calculated = Number(input.calculatedTotal);
+  if (Number.isFinite(calculated) && target > 0 && calculated < target && input.goalMetNow) {
+    return { action: CONFIG.goalMetDateActions.errorAmbiguous };
+  }
+  if (!input.crossing || !input.crossing.dateKey) {
+    return { action: CONFIG.goalMetDateActions.errorUnprovable };
+  }
+  return {
+    action: CONFIG.goalMetDateActions.stamped,
+    dateKey: input.crossing.dateKey,
+    crossing: input.crossing,
+  };
+}
+
+function emitGoalMetDateOutputs(result) {
+  setOutputSafe("goalMetDateActionOut", result.action || "");
+  setOutputSafe("goalMetDateOut", result.dateKey || "");
+}
+
+/**
+ * Isolated Goal Met Date stamp. Never throws into milestone flow.
+ * Public outputs omit athlete names and submission/enrollment IDs.
+ */
+async function maybeStampGoalMetDateIsolated({
+  enrollmentsTable,
+  enrollmentRecord,
+  enrollmentSubmissions,
+  calculatedTotalShots,
+}) {
+  const empty = { action: "", dateKey: "" };
+  try {
+    const goalMetDateField = CONFIG.enrollmentFields.goalMetDate;
+    if (!fieldExists(enrollmentsTable, goalMetDateField)) {
+      return { action: CONFIG.goalMetDateActions.skippedFieldMissing, dateKey: "" };
+    }
+    if (!isWritableField(enrollmentsTable, goalMetDateField)) {
+      return { action: CONFIG.goalMetDateActions.skippedFieldNotWritable, dateKey: "" };
+    }
+
+    const existingDate = getDateValue(enrollmentRecord, goalMetDateField);
+    const targetResolved = fieldExists(enrollmentsTable, CONFIG.enrollmentFields.targetGoalShots)
+      ? resolveTargetGoalShotsFromRecord(enrollmentRecord, CONFIG.enrollmentFields.targetGoalShots)
+      : { status: "missing", target: 0 };
+
+    const reportedTotal = fieldExists(enrollmentsTable, CONFIG.enrollmentFields.totalShotsCounted)
+      ? getNumber(enrollmentRecord, CONFIG.enrollmentFields.totalShotsCounted)
+      : calculatedTotalShots;
+
+    const goalMetFromFormula = fieldExists(enrollmentsTable, CONFIG.enrollmentFields.goalMet)
+      ? goalMetTruthy(enrollmentRecord, CONFIG.enrollmentFields.goalMet)
+      : false;
+    const goalMetNow =
+      goalMetFromFormula ||
+      (targetResolved.status === "ok" &&
+        (reportedTotal >= targetResolved.target || calculatedTotalShots >= targetResolved.target));
+
+    const crossing =
+      targetResolved.status === "ok"
+        ? findFirstGoalMetCrossingFromSubmissions(enrollmentSubmissions, targetResolved.target)
+        : null;
+
+    const decision = decideGoalMetDateWriteInline({
+      existingDate,
+      goalMetNow,
+      crossing,
+      targetStatus: targetResolved.status,
+      target: targetResolved.target,
+      calculatedTotal: calculatedTotalShots,
+      reportedTotal,
+    });
+
+    if (decision.action === CONFIG.goalMetDateActions.stamped && decision.crossing) {
+      // Date-only stamp: prefer YYYY-MM-DD key for US local date fields.
+      await enrollmentsTable.updateRecordAsync(enrollmentRecord.id, {
+        [goalMetDateField]: decision.dateKey,
+      });
+      console.log(
+        JSON.stringify({
+          automation: SCRIPT.scriptName,
+          version: SCRIPT.version,
+          debugStep: "goalMetDate_stamped",
+          goalMetDateActionOut: decision.action,
+          goalMetDateOut: decision.dateKey,
+          beforeTotal: decision.crossing.beforeTotal,
+          afterTotal: decision.crossing.afterTotal,
+          target: targetResolved.target,
+        })
+      );
+      return { action: decision.action, dateKey: decision.dateKey };
+    }
+
+    if (
+      decision.action === CONFIG.goalMetDateActions.errorUnprovable ||
+      decision.action === CONFIG.goalMetDateActions.errorAmbiguous
+    ) {
+      console.log(
+        JSON.stringify({
+          automation: SCRIPT.scriptName,
+          version: SCRIPT.version,
+          debugStep: "goalMetDate_fail_closed",
+          goalMetDateActionOut: decision.action,
+          calculatedTotalShots,
+          reportedTotal,
+          targetStatus: targetResolved.status,
+        })
+      );
+    }
+
+    return { action: decision.action, dateKey: decision.dateKey || "" };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.log(
+      JSON.stringify({
+        automation: SCRIPT.scriptName,
+        version: SCRIPT.version,
+        debugStep: "goalMetDate_isolated_error",
+        goalMetDateActionOut: CONFIG.goalMetDateActions.errorAmbiguous,
+        errorClass: message.slice(0, 120),
+      })
+    );
+    return {
+      action: CONFIG.goalMetDateActions.errorAmbiguous,
+      dateKey: empty.dateKey,
+    };
+  }
+}
+
+/* =========================================================
    SECTION 8 — MAIN
 ========================================================= */
 
@@ -831,8 +1067,12 @@ async function main() {
     CONFIG.enrollmentFields.active,
     CONFIG.enrollmentFields.gradeBand,
     CONFIG.enrollmentFields.totalShots,
+    CONFIG.enrollmentFields.totalShotsCounted,
     CONFIG.enrollmentFields.runCheck,
     CONFIG.enrollmentFields.programInstance,
+    CONFIG.enrollmentFields.goalMet,
+    CONFIG.enrollmentFields.goalMetDate,
+    CONFIG.enrollmentFields.targetGoalShots,
   ]);
 
   const enrollmentRecord = await enrollmentsTable.selectRecordAsync(recordId, {
@@ -1002,6 +1242,17 @@ async function main() {
     CONFIG.enrollmentFields.totalShots
   );
 
+  debugStep = "5b - SC-163 Goal Met Date (isolated)";
+  setOutputSafe("debugStep", debugStep);
+
+  const goalMetDateResult = await maybeStampGoalMetDateIsolated({
+    enrollmentsTable,
+    enrollmentRecord,
+    enrollmentSubmissions,
+    calculatedTotalShots,
+  });
+  emitGoalMetDateOutputs(goalMetDateResult);
+
   debugStep = "6 - Resolve Shot Milestone achievement";
   setOutputSafe("debugStep", debugStep);
 
@@ -1144,6 +1395,7 @@ async function main() {
       debugStep,
       enrollmentId,
     });
+    emitGoalMetDateOutputs(goalMetDateResult);
     return;
   }
 
@@ -1361,6 +1613,7 @@ async function main() {
   setOutputSafe("skippedExistingUnlocksOut", skippedExistingCount);
   setOutputSafe("deactivatedUnlocksOut", deactivatedCount);
   setOutputSafe("milestoneReconciliationOut", "active_unlock_lifecycle_reconciled");
+  emitGoalMetDateOutputs(goalMetDateResult);
 
   console.log(
     JSON.stringify(
@@ -1381,6 +1634,8 @@ async function main() {
         weekWrites: weekWriteCount,
         deactivatedUnlocks: deactivatedCount,
         milestoneReconciliation: "active_unlock_lifecycle_reconciled",
+        goalMetDateActionOut: goalMetDateResult.action || "",
+        goalMetDateOut: goalMetDateResult.dateKey || "",
       },
       null,
       2

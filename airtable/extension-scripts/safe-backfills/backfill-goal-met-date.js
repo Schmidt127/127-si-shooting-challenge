@@ -5,12 +5,14 @@ Purpose:
   Dry-run / apply backfill for Enrollments.Goal Met Date using the first
   Activity Date where cumulative counted Submissions cross Target Goal Shots.
 
-  Rules (same as Automation 122):
+  Rules (same as Automation 066 SC-163 / lib/sc-163-goal-met-date.js):
   - Blank until met
   - Write FIRST provable Activity Date only
   - Never invent
   - Never overwrite a non-empty existing Goal Met Date
+  - Never use award date or current date
   - Skip if Goal Met Date is still a lookup (not writable date)
+  - Report unprovable rows separately (fail closed — do not invent)
 
 Safety:
   - DRY_RUN defaults to true
@@ -27,7 +29,7 @@ const DEBUG_ENROLLMENT_ID = "";
 
 const CONFIG = {
   scriptName: "backfill-goal-met-date",
-  version: "v1.0",
+  version: "v1.1",
   timeZone: "America/Denver",
 
   tables: {
@@ -222,7 +224,10 @@ const skipped = {
   notMet: 0,
   noTarget: 0,
   unprovable: 0,
+  ambiguous: 0,
 };
+const unprovableRows = [];
+const ambiguousRows = [];
 
 for (const enrollment of enrollmentQuery.records) {
   if (DEBUG_ENROLLMENT_ID && enrollment.id !== DEBUG_ENROLLMENT_ID) continue;
@@ -284,6 +289,13 @@ for (const enrollment of enrollmentQuery.records) {
   const crossing = findFirstGoalMetCrossing(counted, target);
   if (!crossing) {
     skipped.unprovable += 1;
+    unprovableRows.push({
+      enrollmentId: enrollment.id,
+      name: getText(enrollment, CONFIG.enrollments.name) || enrollment.id,
+      target,
+      reportedTotal,
+      calculatedTotal: counted.reduce((sum, row) => sum + row.totalShotsCounted, 0),
+    });
     continue;
   }
 
@@ -308,8 +320,27 @@ output.markdown(`- Planned writes: **${planned.length}**`);
 output.markdown(`- This batch: **${batch.length}**`);
 output.markdown(`- Remaining after batch: **${remainingCount}**`);
 output.markdown(
-  `- Skipped: alreadySet=${skipped.alreadySet}, notMet=${skipped.notMet}, noTarget=${skipped.noTarget}, unprovable=${skipped.unprovable}, inactive=${skipped.inactive}`
+  `- Skipped: alreadySet=${skipped.alreadySet}, notMet=${skipped.notMet}, noTarget=${skipped.noTarget}, unprovable=${skipped.unprovable}, ambiguous=${skipped.ambiguous}, inactive=${skipped.inactive}`
 );
+
+if (unprovableRows.length > 0) {
+  output.markdown("## Unprovable (fail closed — not written)");
+  output.markdown(
+    [
+      "| Athlete | Enrollment | Target | Reported | Calculated |",
+      "| --- | --- | --- | --- | --- |",
+      ...unprovableRows.map(
+        (row) =>
+          `| ${row.name} | ${row.enrollmentId} | ${row.target} | ${row.reportedTotal} | ${row.calculatedTotal} |`
+      ),
+    ].join("\n")
+  );
+}
+
+if (ambiguousRows.length > 0) {
+  output.markdown("## Ambiguous (fail closed — not written)");
+  output.markdown(`Count: **${ambiguousRows.length}**`);
+}
 
 if (batch.length === 0) {
   output.markdown("_No rows to write._");

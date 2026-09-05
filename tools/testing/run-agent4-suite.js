@@ -126,6 +126,15 @@ const COMMANDS = [
     args: ["airtable/automations/shooting-challenge/lib/066-create-records-batch.test.js"],
   },
   {
+    name: "sc-163-goal-met-date",
+    cmd: process.execPath,
+    args: [
+      "--test",
+      "airtable/automations/shooting-challenge/lib/sc-163-goal-met-date.test.js",
+      "airtable/automations/shooting-challenge/lib/sc-163-066-contract.test.js",
+    ],
+  },
+  {
     name: "script-header-contract",
     args: ["airtable/automations/shooting-challenge/lib/script-header-contract.test.js"],
   },

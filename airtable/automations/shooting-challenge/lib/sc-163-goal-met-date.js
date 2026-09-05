@@ -1,12 +1,14 @@
 /**
  * SC-163 Goal Met Date — pure helpers (no Airtable I/O).
  *
- * Ownership rule:
+ * Ownership (production):
  * - Goal Met? (formula) = live Total Shots Counted >= Target Goal Shots.
  * - Goal Met Date = FIRST Activity Date where cumulative counted shots cross the
  *   Target Goal Shots line. Blank until met. Never overwrite once set.
  * - Award Recipients / Date Awarded are fulfillment (Conquered Goal gift card),
  *   not the activity Goal Met Date.
+ * - Automation **066** stamps Goal Met Date (capacity-safe). Automation 122 is
+ *   superseded and must not be installed.
  */
 
 "use strict";
@@ -14,6 +16,18 @@
 /**
  * @typedef {{ id: string, activityDate: Date, totalShotsCounted: number, createdTime?: string }} CountedSubmission
  * @typedef {{ date: Date, dateKey: string, submissionId: string, beforeTotal: number, afterTotal: number, submissionShots: number }} GoalMetCrossing
+ * @typedef {{
+ *   action:
+ *     | 'stamped'
+ *     | 'skipped_already_set'
+ *     | 'skipped_not_met'
+ *     | 'skipped_no_target'
+ *     | 'error_unprovable'
+ *     | 'error_ambiguous',
+ *   dateKey?: string,
+ *   crossing?: GoalMetCrossing,
+ *   target?: number,
+ * }} GoalMetDateDecision
  */
 
 /**
@@ -56,6 +70,31 @@ function toDenverDateKey(value, timeZone = "America/Denver") {
 }
 
 /**
+ * Resolve Target Goal Shots from a raw cell value (number or lookup array).
+ * @param {unknown} raw
+ * @returns {{ status: 'ok'|'missing'|'ambiguous', target: number }}
+ */
+function resolveTargetGoalShots(raw) {
+  if (raw == null || raw === "") {
+    return { status: "missing", target: 0 };
+  }
+  if (Array.isArray(raw)) {
+    const nums = [];
+    for (const item of raw) {
+      const n = typeof item === "number" ? item : Number(item);
+      if (Number.isFinite(n) && n > 0) nums.push(n);
+    }
+    const unique = [...new Set(nums)];
+    if (unique.length === 0) return { status: "missing", target: 0 };
+    if (unique.length > 1) return { status: "ambiguous", target: 0 };
+    return { status: "ok", target: unique[0] };
+  }
+  const n = typeof raw === "number" ? raw : Number(raw);
+  if (!Number.isFinite(n) || n <= 0) return { status: "missing", target: 0 };
+  return { status: "ok", target: n };
+}
+
+/**
  * First Activity Date where running counted shots cross target.
  * @param {CountedSubmission[]} submissions - already filtered to counted + shots > 0 + activity date
  * @param {number} targetGoalShots
@@ -70,7 +109,11 @@ function findFirstGoalMetCrossing(submissions, targetGoalShots, options = {}) {
   let runningTotal = 0;
   for (const submission of ordered) {
     const shots = Number(submission.totalShotsCounted) || 0;
-    if (shots <= 0 || !(submission.activityDate instanceof Date) || Number.isNaN(submission.activityDate.getTime())) {
+    if (
+      shots <= 0 ||
+      !(submission.activityDate instanceof Date) ||
+      Number.isNaN(submission.activityDate.getTime())
+    ) {
       continue;
     }
     const beforeTotal = runningTotal;
@@ -92,8 +135,18 @@ function findFirstGoalMetCrossing(submissions, targetGoalShots, options = {}) {
 /**
  * Decide whether Goal Met Date may be written.
  * Never invent. Never overwrite a non-empty existing date.
- * @param {{ existingDate: Date|string|null|undefined, goalMetNow: boolean, crossing: GoalMetCrossing|null }} input
- * @returns {{ action: 'write'|'skip_already_set'|'skip_not_met'|'skip_unprovable', dateKey?: string, crossing?: GoalMetCrossing }}
+ * Fail closed when met but crossing cannot be proven.
+ *
+ * @param {{
+ *   existingDate: Date|string|null|undefined,
+ *   goalMetNow: boolean,
+ *   crossing: GoalMetCrossing|null,
+ *   targetStatus?: 'ok'|'missing'|'ambiguous',
+ *   calculatedTotal?: number,
+ *   reportedTotal?: number,
+ *   target?: number,
+ * }} input
+ * @returns {GoalMetDateDecision}
  */
 function decideGoalMetDateWrite(input) {
   const existing = input.existingDate;
@@ -102,24 +155,68 @@ function decideGoalMetDateWrite(input) {
       ? toDenverDateKey(existing)
       : String(existing || "").trim().slice(0, 10);
   if (existingKey) {
-    return { action: "skip_already_set", dateKey: existingKey };
+    return { action: "skipped_already_set", dateKey: existingKey };
   }
+
+  const targetStatus = input.targetStatus || "ok";
+  if (targetStatus === "ambiguous") {
+    return { action: "error_ambiguous" };
+  }
+  if (targetStatus === "missing") {
+    return { action: "skipped_no_target" };
+  }
+
   if (!input.goalMetNow) {
-    return { action: "skip_not_met" };
+    return { action: "skipped_not_met" };
   }
+
+  const target = Number(input.target) || 0;
+  const calculated = Number(input.calculatedTotal);
+  if (
+    Number.isFinite(calculated) &&
+    target > 0 &&
+    calculated < target &&
+    input.goalMetNow
+  ) {
+    // Formula/rollup claims met, but counted submissions cannot reach target.
+    return { action: "error_ambiguous" };
+  }
+
   if (!input.crossing || !input.crossing.dateKey) {
-    return { action: "skip_unprovable" };
+    return { action: "error_unprovable" };
   }
+
   return {
-    action: "write",
+    action: "stamped",
     dateKey: input.crossing.dateKey,
     crossing: input.crossing,
+    target,
   };
+}
+
+/** @deprecated Use decideGoalMetDateWrite; kept for older callers expecting write/skip_* names. */
+function decideGoalMetDateWriteLegacy(input) {
+  const decision = decideGoalMetDateWrite(input);
+  if (decision.action === "stamped") {
+    return { action: "write", dateKey: decision.dateKey, crossing: decision.crossing };
+  }
+  if (decision.action === "error_unprovable") {
+    return { action: "skip_unprovable" };
+  }
+  if (decision.action === "skipped_already_set") {
+    return { action: "skip_already_set", dateKey: decision.dateKey };
+  }
+  if (decision.action === "skipped_not_met") {
+    return { action: "skip_not_met" };
+  }
+  return { action: decision.action };
 }
 
 module.exports = {
   sortCountedSubmissions,
   toDenverDateKey,
+  resolveTargetGoalShots,
   findFirstGoalMetCrossing,
   decideGoalMetDateWrite,
+  decideGoalMetDateWriteLegacy,
 };
