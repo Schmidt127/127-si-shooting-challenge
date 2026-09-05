@@ -1,6 +1,6 @@
 # SC-160 Stage 6 — Live Verification Closeout (2026-09-04)
 
-**Status: COMPLETE / Live Tested**  
+**Status: PAUSED — superseded for closeout by WAS incident**  
 **Base:** Production `appn84sqPw03zEbTT`  
 **GitHub tip at paste:** `ccb230cf` (PR #424)  
 **Evidence:** [`../testing/evidence/sc-160-stage6/`](../testing/evidence/sc-160-stage6/) · harness `tools/testing/sc-160-stage6-live-proof.mjs`
