@@ -18,7 +18,7 @@
 | 4 | [#437](https://github.com/Schmidt127/127-si-shooting-challenge/pull/437) | SC-162 homework | `f8a1c9ee` |
 | 5 | [#439](https://github.com/Schmidt127/127-si-shooting-challenge/pull/439) | SC-164/165 nav/levels/messaging | `9869a2eb` |
 | 6 | [#436](https://github.com/Schmidt127/127-si-shooting-challenge/pull/436) | SC-166 coach queues docs | `bd0198a4` |
-| 7 | [#444](https://github.com/Schmidt127/127-si-shooting-challenge/pull/444) | SC-163 066 v4.1 timezone + live closeout | *(merge SHA on land)* |
+| 7 | [#444](https://github.com/Schmidt127/127-si-shooting-challenge/pull/444) | SC-163 066 v4.1 timezone + live closeout | `480771fc` |
 
 ---
 
