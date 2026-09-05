@@ -1,7 +1,7 @@
 # CURRENT TRUTH â 127 SI Shooting Challenge
 
 **Status:** Active â primary current-state document for this repository  
-**Last verification (repo):** 2026-09-05 — **`origin/master` = `ba969433`** (PR **#457** transactional-purge closeout). Production transactional test-data purge **COMPLETE** (Mike `APPROVE TRANSACTIONAL PURGE`). Deleted **204** records (200 approved + 4 automation remnants). Athletes/Enrollments/Submissions/Assets/HC/XP/WAS/VF/Unlocks/Streaks/Zoom Attendance/Award Recipients/Email Handoff = **0**. Zoom Meetings retained **2** (Introduction, Motivation). Countries/State/PHA/Weeks/Homework Library/rules/config preserved. Evidence: [`testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md`](./testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md). Prior: SC-167/168/169 COMPLETE; **010 v10.14** Live Tested; formulas **`NOW()` / `TODAY()`**; Season Sim closed — next execute NOT authorized; **FUT-048** deferred (`d21ixrrrqpqz29.cloudfront.net`).
+**Last verification (repo):** 2026-09-05 — **docs tip after #458–#460**; functional/app deploy baseline **`ba969433`** (#457); purge COMPLETE. Production transactional test-data purge **COMPLETE** (Mike `APPROVE TRANSACTIONAL PURGE`). Deleted **204** records (200 approved + 4 automation remnants). Athletes/Enrollments/Submissions/Assets/HC/XP/WAS/VF/Unlocks/Streaks/Zoom Attendance/Award Recipients/Email Handoff = **0**. Zoom Meetings retained **2** (Introduction, Motivation). Countries/State/PHA/Weeks/Homework Library/rules/config preserved. Evidence: [`testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md`](./testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md). Prior: SC-167/168/169 COMPLETE; **010 v10.14** Live Tested; formulas **`NOW()` / `TODAY()`**; Season Sim closed — next execute NOT authorized; **FUT-048** deferred (`d21ixrrrqpqz29.cloudfront.net`).
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -225,12 +225,12 @@ Do **not** treat other Automations-table columns (trigger/conditions) as authori
 | **059** | **v3.8** | v3.8 | Live / **SC-159 COMPLETE / Live Tested** | Formula `059 Lifecycle Trigger?` = 1 only; withdraw/restore/idempotency/PW PASS â [`audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md`](./audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md) Â· checklist [`deploy-checklists/059-sc159-lifecycle-formula-trigger.md`](./deploy-checklists/059-sc159-lifecycle-formula-trigger.md) (nested OR checklist superseded) |
 | **064** | **Production-verified current live** | v12.2 in repo | Live | Do not invent a new version string |
 | **065** | **v10.7** | v10.7 | Live / **PASTE-ALIGNED** (SC-160 Stage 6 2026-09-04) | Early/late full homework XP when satisfactory. Evidence [`audits/SC-160-STAGE6-LIVE-VERIFICATION-20260904.md`](./audits/SC-160-STAGE6-LIVE-VERIFICATION-20260904.md) |
-| **067** | **v3.4** (live body) | v3.5 | Live / paste declined | Reflection quiz → Homework Completion. Live **v3.4**; GitHub **v3.5** structure-only. Mike declined paste 2026-09-05. Safe inventory AI Agent: **v3.4** — [`audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md`](./audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md) |
+| **067** | **v3.5** | v3.5 | Live / **aligned** (no paste needed) | Reflection quiz → Homework Completion. Live body matches GitHub **v3.5** (Agent 3 MCP 2026-09-05). Prior decline note historical — [`audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md`](./audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md) |
 | **066** | **v4.1** | v4.1 | Live / **SC-163 COMPLETE / Live Tested** | Goal Met Date date-only + milestones; Athlete1 stamped **8/30/2026**; may remain ON — [`audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md`](./audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md) |
-| **013** | **v3.1.0** (live body) | v3.2.0 | Live / paste declined | MCP 2026-09-05 live **v3.1.0**; GitHub v3.2.0 structure-only. Mike declined paste 2026-09-05. Safe inventory AI Agent: **v3.1.0** — [`audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md`](./audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md) |
+| **013** | **v3.2.0** | v3.2.0 | Live / **aligned** (no paste needed) | VF create path. Live body matches GitHub **v3.2.0** (Agent 3 MCP 2026-09-05). Prior decline note historical — [`audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md`](./audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md) |
 | **021** | **v2.0** | v2.0 | **Live / ALIGNED** | Attachment Upload Status only; exact byte match GitHub; Phase A combined paste never installed — same correction audit |
-| **072** | **v4.8** | v4.8 | Live / **aligned** | [`072-v4.8-operator-packet.md`](./deploy-checklists/072-v4.8-operator-packet.md) |
-| **073** | **v4.4** | v4.4 | Live / **aligned** | [`073-v4.4-operator-packet.md`](./deploy-checklists/073-v4.4-operator-packet.md) |
+| **072** | **v4.9.1** | v4.9.1 | Live / **aligned** | Weekly summary email build — Agent 3 MCP 2026-09-05. Prior v4.8 packet historical — [`072-v4.8-operator-packet.md`](./deploy-checklists/072-v4.8-operator-packet.md) |
+| **073** | **v4.6** | v4.6 | Live / **aligned** | Video parent email Hub path — Agent 3 MCP 2026-09-05. Prior v4.4 packet historical — [`073-v4.4-operator-packet.md`](./deploy-checklists/073-v4.4-operator-packet.md) |
 | **071** | **v4.3** | v4.3 | Live / **aligned** | Homework Feedback Hub handoff â FUT-046 payload (`assignmentTitle`, athlete first/last); **do not re-paste** â [`071-v4.3-homework-feedback-paste-packet.md`](./deploy-checklists/071-v4.3-homework-feedback-paste-packet.md) |
 | **076** | **v8.12** | v8.12 | Live / **aligned** | Daily Submission Hub handoff â FUT-041 `xpEarned` / `xpExtraCredit`; **do not re-paste** â [`076-v8.12-daily-submission-paste-packet.md`](./deploy-checklists/076-v8.12-daily-submission-paste-packet.md) |
 | **074** | **v3.3** | v3.3 | Live / live-tested | Weekly summary Hub handoff |
@@ -272,7 +272,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 |--------|----------------------|------------|
 | Submission XP | **010** — Source Key `SUBMISSION_XP\|{submissionId}` | GitHub + Live **v10.14** (SC-167 COMPLETE / Live Tested) |
 | Homework XP | **064** prepares (`HOMEWORK_COMPLETION` rule); **065** creates/reconciles `HOMEWORK_XP|{hcId}` (**020** HC create; **078** marks Parent Feedback Ready?) | **065 Production v10.7** (SC-160); late-credit + weekless WAS paths Live Tested |
-| Video XP | **113 / 114** (+ **013** VF create) | **Live v6.4 / v6.1**; **PKG-007 lifecycle proof PASS 2026-08-23** (`AUTONOMOUS_VIDEO_QA_20260823_164549`, Testing3). Native trigger + 073 OFF UI attestation open |
+| Video XP | **113 / 114** (+ **013** VF create) | **Live v6.4 / v6.2**; **PKG-007 lifecycle proof PASS 2026-08-23** (`AUTONOMOUS_VIDEO_QA_20260823_164549`, Testing3). Native trigger + 073 OFF UI attestation open |
 | Shot milestones | **066** | Production **v4.1** Live Tested (SC-163 Goal Met Date + milestones) |
 | Levels | **041 / 042** | **041 Production v5.1**; broader progression proof still open |
 | Perfect Week | **057 â 058 â 059** | **COMPLETE** for WAS `recl3DmBh22ADPWWe`: unlock `recJ5umer4J4FHTOz`, key `PERFECT_WEEK\|rec93mAfo5jKqP3g5\|recNzl4dNOtDmJqnV`, XP `reczehlzkA8fjiQh0`, Awarded, 100 XP, no duplicate unlock. Evidence: `docs/testing/evidence/sc-pw-e2e/award-was-recl3DmBh22ADPWWe-2026-08-29-mcp.json`. Do **not** re-`--apply` for this fixture. |
@@ -330,7 +330,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 
 - Wave 0 2025â26 close-out; H-001; many PKG merges on `master`
 - Email plane migrated to Hub â Resend (Mike 2026-08-19)
-- Confirmed Production pastes aligned: **010 v10.14**, **020 v4.1**, **022 v2.2**, **065 v10.7**, **071 v4.3**, **076 v8.12**, **072 v4.8**, **073 v4.4**, **066 v4.1**, **070b**, **117**
+- Confirmed Production pastes aligned: **010 v10.14**, **020 v4.1**, **022 v2.2**, **065 v10.7**, **071 v4.3**, **076 v8.12**, **072 v4.9.1**, **073 v4.6**, **066 v4.1**, **013 v3.2.0**, **067 v3.5**, **070b**, **117**
 - Tremendous sandbox validation
 - Lambda season CodeOnly deploy (optional follow-ups open)
 - Repository integrity + PII redaction pass
