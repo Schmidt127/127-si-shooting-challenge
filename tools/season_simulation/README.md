@@ -2,13 +2,14 @@
 
 Infrastructure for a full-season disposable simulation of the Shooting Challenge.
 **Default mode is dry-run / read-only.** Do not run execute until the gated clock
-override is live and Mike authorizes.
+override is live and Mike authorizes with exactly: `RUN SEASON SIMULATION`.
 
 | | |
 |---|---|
 | **Backlog ID** | SC-SEASON-SIM-002 |
 | **Athlete** | Athlete 1 · Grade 12 (disposable VERIFY only) |
 | **Window** | 2027-05-01 → 2027-06-30 inclusive (**61** days) |
+| **Execution manifest** | [`docs/deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md`](../../docs/deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md) — single path when Mike says `RUN SEASON SIMULATION` |
 | **Operator checklist** | [`docs/deploy-checklists/SC-SEASON-SIM-002-operator-checklist.md`](../../docs/deploy-checklists/SC-SEASON-SIM-002-operator-checklist.md) |
 | **Related** | SC-SEASON-SIM-001 (five-enrollment unattended — still Planned / Future) |
 

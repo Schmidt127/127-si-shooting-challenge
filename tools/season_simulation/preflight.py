@@ -260,13 +260,45 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
         "Perfect Week Grace Eligible? uses Activity Date <= TODAY() unless "
         "`Perfect Week Manual Exception?` is checked on disposable sim rows.",
     ]
+    fields_present = dict(readiness.required_fields_present or {})
+    missing_sim_fields = [
+        name
+        for name in (
+            SEASON_SIM_TEST_RECORD_FIELD,
+            SEASON_SIM_CLOCK_NOW_FIELD,
+            SEASON_SIM_TEST_SUBMITTED_AT_FIELD,
+        )
+        if not fields_present.get(name)
+    ]
+    if missing_sim_fields:
+        field_req = (
+            "REQUIRED before early execute: create missing Submissions fields: "
+            + ", ".join(f"`{n}`" for n in missing_sim_fields)
+            + "."
+        )
+    else:
+        field_req = (
+            "Season Sim Submissions fields PRESENT "
+            f"(`{SEASON_SIM_TEST_RECORD_FIELD}`, `{SEASON_SIM_CLOCK_NOW_FIELD}`, "
+            f"`{SEASON_SIM_TEST_SUBMITTED_AT_FIELD}`) — unused while unchecked / unstamped."
+        )
+
+    if formula_gate_active:
+        future_req = (
+            "Activity Date Is Future? Season Sim gate is ACTIVE — restore Production "
+            "NOW()-only formula immediately after the run (see rollback in operator checklist)."
+        )
+    else:
+        future_req = (
+            "REQUIRED for early execute: temporarily replace `Activity Date Is Future?` with "
+            "the gated formula in docs/deploy-checklists/SC-SEASON-SIM-002-operator-checklist.md "
+            "and tools/season_simulation/FORMULAS-TO-PASTE.txt; restore Production NOW() "
+            "formula immediately after the run."
+        )
+
     schema_requirements = [
-        "REQUIRED for early (pre-2027-05-01) execute: create Submissions checkbox "
-        f"`{SEASON_SIM_TEST_RECORD_FIELD}` + dateTime `{SEASON_SIM_CLOCK_NOW_FIELD}` "
-        f"(recommended) + dateTime `{SEASON_SIM_TEST_SUBMITTED_AT_FIELD}` (for same-day).",
-        "REQUIRED for early execute: temporarily replace `Activity Date Is Future?` with "
-        "the gated formula in docs/deploy-checklists/SC-SEASON-SIM-002-operator-checklist.md; "
-        "restore Production NOW() formula immediately after the run.",
+        field_req,
+        future_req,
         "Production formula (restore target):\n" + PRODUCTION_ACTIVITY_DATE_IS_FUTURE_FORMULA,
         "Gated formula (temporary):\n" + GATED_ACTIVITY_DATE_IS_FUTURE_FORMULA,
         "REQUIRED: Weeks rows covering every date from 2027-05-01 through 2027-06-30.",
