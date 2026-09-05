@@ -416,7 +416,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 
 ## Recommended next task for Mike
 
-1. **SC-163 (open):** Convert Enrollments **Goal Met Date** lookup → date; paste Automation **122**; run backfill — [`docs/deploy-checklists/SC-163-goal-met-date.md`](docs/deploy-checklists/SC-163-goal-met-date.md). **Not live-complete.**  
+1. **SC-163 (open):** Convert Enrollments **Goal Met Date** lookup → date; paste Automation **066 v4.0** (do **not** install 122); run backfill — [`docs/deploy-checklists/SC-163-goal-met-date.md`](docs/deploy-checklists/SC-163-goal-met-date.md). **Not live-complete.**  
 2. **SC-166 (open):** Apply Active + Completed/History filters on Homework + Video Feedback Interface queues — [`docs/deploy-checklists/SC-166-coach-work-queue-filters.md`](docs/deploy-checklists/SC-166-coach-work-queue-filters.md). **Not live-complete.**  
 3. **Archive overlapping WSTEST/PWTEST Weeks** in Program Instance `Shooting Challenge | 2026-2027` (OMNI) before season simulation.  
 4. **Do not** re-paste 010/020/022/057/058/059/065/072/073; **do not** restore 075; live fixture `--apply` evidence is historical after **FUT-030** wipe.  

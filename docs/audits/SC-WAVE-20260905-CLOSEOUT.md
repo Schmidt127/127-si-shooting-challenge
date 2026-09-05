@@ -44,7 +44,7 @@
 ### SC-163 — Goal Met Date
 
 1. Convert Enrollments **Goal Met Date** lookup → **Date** (writable).  
-2. Create/paste Automation **122** (confirm free automation slot first).  
+2. Paste Automation **066 v4.0** (Goal Met Date ownership). Do **not** create/install Automation **122** (SUPERSEDED; capacity full).  
 3. Dry-run then apply goal-met-date backfill; probe until `met_blank_date` clear for provable rows.  
 4. Disposable Schmidt live test (stamp + idempotent skip).  
 
