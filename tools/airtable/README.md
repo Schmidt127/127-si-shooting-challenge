@@ -97,6 +97,7 @@ During award catalog rename/cleanup, many **Award Recipients** rows kept the sam
 |--------|--------|---------|
 | `compare_award_recipients_snapshot.py` | `_preview/award-recipients-snapshot-vs-live.md` | Compare snapshot vs live; **done when** wrong links = 0, manual = 0, dupes = 0 |
 | `audit_goal_conquer_reconciliation.py` | `_preview/goal-conquer-reconciliation.md` | **Separate** from award-link fix: Enrollment `Goal Met?` vs Conquered Goal recipient rows |
+| `sc163_goal_met_date_probe.py` | `_preview/SC-163-goal-met-date-dry-run.json` | **SC-163:** Goal Met Date vs first counted Activity Date crossing (read-only; `--apply` only after date field conversion) |
 | `audit_awards_catalog_and_connections.py` | `_preview/awards-catalog-audit-report.md` | Awards catalog + recipient connection audit |
 | `audit_final_awards.py` | `_preview/final-awards-audit-report.md` | End-of-challenge cart + grade-band standings |
 | `preview_final_email.py` | `_preview/geraghty-final-email.html` | Per-athlete final summary email preview (revision `final-summary-2026-07-03-v2`) |

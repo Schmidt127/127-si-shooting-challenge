@@ -82,6 +82,7 @@ Finish with **`audit-field-coverage-report.js`** to identify unused fields.
 | `repair-kimm-lyle-restore-excluded-submissions.js` | Close-out: Lyle Kimm — Count It on two excluded duplicate submissions (+340 shots) | **Ready** |
 | `repair-final-090f-unlock-week-from-source.js` | Final close: fill empty Week on unlocks from milestone activity date | **Stub — DRY_RUN** |
 | `repair-final-090g-build-final-challenge-summary-email.js` | Final close: one-page season recap email (days, HW, streaks, milestones, videos, awards) | **Ready — DRY_RUN** |
+| `backfill-goal-met-date.js` | **SC-163:** Enrollments Goal Met Date = first counted Activity Date crossing Target Goal Shots; never invent/overwrite; blocks if field still lookup | **Ready — DRY_RUN** (requires date field conversion first) |
 | `migrate-tutorials-into-tutorials-and-assets.js` | **C-026 preview:** Tutorials → Tutorials & Assets; creates unmatched only; overlaps → Tutorial Migration Review; never deletes/merges | **Ready — DRY_RUN** |
 | `merge-three-tutorials-possible-matches.js` | **C-026 possible matches:** merge 3 named Tutorials rows into Tutorials & Assets; Parent Motivation keeps authoritative target video | **Ready — previewOnly default** |
 

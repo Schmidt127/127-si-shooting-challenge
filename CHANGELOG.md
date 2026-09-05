@@ -6,6 +6,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Airtable
+
+#### Added
+- **SC-163 Goal Met Date reliability (2026-09-05)** — Root cause: `Goal Met Date` was a lookup of Award Recipients → Date Awarded. Repo adds Automation **122** (first counted Activity Date crossing; never overwrite), extension backfill, probe, and Mike checklist to convert field lookup → date. **Not live-complete until schema + paste.** Docs: [`docs/audits/SC-163-GOAL-MET-DATE-RELIABILITY.md`](./docs/audits/SC-163-GOAL-MET-DATE-RELIABILITY.md) · [`docs/deploy-checklists/SC-163-goal-met-date.md`](./docs/deploy-checklists/SC-163-goal-met-date.md).
+
 ### Docs
 
 #### Changed
