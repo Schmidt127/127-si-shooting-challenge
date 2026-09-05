@@ -9,6 +9,6 @@
 | This paste | Combined 006+021 Phase A **v1.0.0** proposal |
 | Automation 006 | Remains retired (SF-07) — do not restore |
 
-Authority: [`../audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md`](../audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md)
+Authority: [`../../audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md`](../../audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md)
 
 **Do not paste** `PHASE-A-021-combined-v1.0.0-PASTE.txt` into Airtable.
