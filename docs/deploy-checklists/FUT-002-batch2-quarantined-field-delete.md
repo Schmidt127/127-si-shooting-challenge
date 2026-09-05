@@ -1,7 +1,7 @@
 # FUT-002 batch 2 — quarantine five text-stub fields (Mike UI)
 
 **Date opened:** 2026-09-01  
-**Status:** **AUDIT READY** — batch 2 candidate queue complete; Mike UI delete **pending**  
+**Status:** **COMPLETE** — Mike UI delete + post-delete verify **2026-09-05**  
 **Base:** [127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026](https://airtable.com/appn84sqPw03zEbTT) (`appn84sqPw03zEbTT`)  
 **API:** Field DELETE is **not supported** by Airtable Meta API (`DELETE …/fields/{id}` → `404 NOT_FOUND`). **UI delete required** (same as batch 1).
 
@@ -17,57 +17,32 @@
 
 ## Batch 2 scope (Phase A — text stubs only)
 
-These five fields are unused **singleLineText** stubs. Real XP links and Weeks link fields remain. Submission Assets text stubs `XP Events` / `XP Events copy` were **already deleted 2026-08-31**.
+These five fields were unused **singleLineText** stubs. Real XP links and Weeks link fields remain. Submission Assets text stubs `XP Events` / `XP Events copy` were **already deleted 2026-08-31**.
 
-| # | Table | Current name | Field ID | Type | Quarantine rename |
-|---|-------|--------------|----------|------|-------------------|
-| 1 | Athlete Achievement Unlocks | XP Events copy | `fldWnU9gJCsTmTLpK` | singleLineText | `ZZZ DELETE — XP Events copy (text stub)` |
-| 2 | Shot Milestones | XP Events copy | `fldVcHPjvuabirn6E` | singleLineText | `ZZZ DELETE — XP Events copy (text stub)` |
-| 3 | Video Feedback | DELETE MAYBE - XP Events copy | `fldTJd1LkzRRmBiAZ` | singleLineText | `ZZZ DELETE — DELETE MAYBE XP Events copy (text stub)` |
-| 4 | Weeks | Video Feedback | `fld8tdkjgyYmrs4Eq` | singleLineText | `ZZZ DELETE — Video Feedback (Weeks text stub)` |
-| 5 | Weeks | Submission Assets | `fldo906P9t7nj9xmn` | singleLineText | `ZZZ DELETE — Submission Assets (Weeks text stub)` |
+| # | Table | Historical name | Field ID | Type | Quarantine rename | Post-delete |
+|---|-------|-----------------|----------|------|-------------------|-------------|
+| 1 | Athlete Achievement Unlocks | XP Events copy | `fldWnU9gJCsTmTLpK` | singleLineText | `ZZZ DELETE — XP Events copy (text stub)` | **ABSENT** (UI 2026-09-05) |
+| 2 | Shot Milestones | XP Events copy | `fldVcHPjvuabirn6E` | singleLineText | `ZZZ DELETE — XP Events copy (text stub)` | **ABSENT** (UI 2026-09-05) |
+| 3 | Video Feedback | DELETE MAYBE - XP Events copy | `fldTJd1LkzRRmBiAZ` | singleLineText | `ZZZ DELETE — DELETE MAYBE XP Events copy (text stub)` | **ABSENT** (prior to Batch 2 session) |
+| 4 | Weeks | Video Feedback | `fld8tdkjgyYmrs4Eq` | singleLineText | `ZZZ DELETE — Video Feedback (Weeks text stub)` | **ABSENT** (UI 2026-09-05) |
+| 5 | Weeks | Submission Assets | `fldo906P9t7nj9xmn` | singleLineText | `ZZZ DELETE — Submission Assets (Weeks text stub)` | **ABSENT** (UI 2026-09-05) |
 
 **Note on Weeks rows #4–5:** Automations reference the **Video Feedback** and **Submission Assets** *tables*, not these Weeks text fields. Repo grep found **zero** hits on field IDs `fld8tdkjgyYmrs4Eq` / `fldo906P9t7nj9xmn`.
 
-**Note:** Weeks table has no `XP Events copy` text stub in the post-batch-1 snapshot (only real `XP Events` link field — **keep**).
+**Note:** Weeks table has no `XP Events copy` text stub in the post-batch-1 snapshot (only real `XP Events` link field — **kept**).
 
-## Pre-delete verification (Mike)
+## Post-delete verification (2026-09-05) — PASS
 
-```powershell
-# Confirm each field ID + name still present before rename/delete
-python tools/airtable/fut_002_batch2_candidates.py
-# Optional live Meta check when PAT available:
-# python tools/airtable/export_airtable_schema.py -v --skip-views --out-dir airtable/schema/snapshots/prod-YYYYMMDD-fut002-batch2
-```
+| Check | Result |
+|-------|--------|
+| Five batch-2 field IDs absent | **PASS** |
+| Live field count | **1375** / **35** tables (quarantine baseline 1378; observed **−3**; see closeout note on +1 concurrent drift) |
+| Protected tables/fields (links + Config Drive roots) | **PASS** |
+| Automations 020/033/065/071 present; 075 absent | **PASS** |
+| Meta invalid fields | **0** |
+| Interfaces (Homework / VF grading) | **PASS** (XP Events links intact; no stub IDs) |
 
-| Check | Expected |
-|-------|----------|
-| Five field IDs present with names above | PASS before quarantine |
-| No automation reads these field IDs | PASS (audit 2026-09-01) |
-| Real XP Events links on HC/Weeks/XP Events table | **Unchanged** |
-| Config Drive roots | **Present — do not delete** |
-
-## Quarantine procedure (mirror batch 1)
-
-1. Rename each field to its **Quarantine rename** name (`ZZZ DELETE — …`).
-2. Optional: add field description `FUT-002 batch 2 — unused text stub; safe to trash`.
-3. Confirm no interface/view uses the field (OMNI spot-check if unsure).
-4. Trash field in Airtable UI (not API).
-5. Post-delete: export schema + run live verify (template below).
-
-## Post-delete verification (after Mike UI delete)
-
-```powershell
-python tools/airtable/export_airtable_schema.py -v --skip-views --out-dir airtable/schema/snapshots/prod-YYYYMMDD-fut002-batch2
-python tools/airtable/fut_002_field_inventory.py --snapshot airtable/schema/snapshots/prod-YYYYMMDD-fut002-batch2/schema_doc_*.md
-```
-
-| Check | Expected |
-|-------|----------|
-| Five batch-2 field IDs absent | PASS |
-| Live field count delta | **−5** from pre-delete baseline |
-| Protected tables/fields | PASS |
-| Automations 020/033/065/071 present; 075 absent | PASS |
+Evidence: [`../testing/evidence/fut-002/batch2-live-verify-20260905.json`](../testing/evidence/fut-002/batch2-live-verify-20260905.json) · closeout [`../audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md`](../audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md) · schema `airtable/schema/snapshots/prod-20260905-fut002-batch2/`
 
 ## Deferred (not this packet)
 
@@ -85,13 +60,14 @@ python tools/airtable/fut_002_field_inventory.py --snapshot airtable/schema/snap
 | Quarantine-ready JSON | [`docs/audits/fut-002-batch2-candidates.json`](../audits/fut-002-batch2-candidates.json) |
 | Tool | `tools/airtable/fut_002_batch2_candidates.py` |
 | Batch 1 packet (historical) | [`FUT-002-batch1-quarantined-field-delete.md`](./FUT-002-batch1-quarantined-field-delete.md) |
+| Post-delete closeout | [`../audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md`](../audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md) |
 
 ## Status
 
 | Step | Status |
 |------|--------|
 | Dependency check + candidate queue | **Done** (2026-09-01) |
-| Live ID/name confirm | **Pending** Mike |
-| Quarantine rename (5 fields) | **Pending** Mike |
-| Mike UI delete | **Pending** Mike |
-| Post-delete verify + docs | **Pending** Mike |
+| Live ID/name confirm | **Done** |
+| Quarantine rename (4 remaining fields) | **Done** (2026-09-04 MCP) |
+| Mike UI delete (4 fields) | **Done** (2026-09-05) |
+| Post-delete verify + docs | **Done** (2026-09-05) |

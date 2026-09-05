@@ -9,6 +9,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Docs
 
 #### Changed
+- **FUT-002 Batch 2 COMPLETE (2026-09-05)** — Mike UI-deleted four quarantined text stubs (row #3 already gone). Post-delete verify: five Batch 2 field IDs absent; live **1375** fields / **35** tables; protected links + Config Drive roots intact; automations **020/033/065/071** present, **075** absent. Evidence: [`docs/testing/evidence/fut-002/batch2-live-verify-20260905.json`](./docs/testing/evidence/fut-002/batch2-live-verify-20260905.json) · [`docs/audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md`](./docs/audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md) · schema `airtable/schema/snapshots/prod-20260905-fut002-batch2/`. No Airtable restores; Season Sim / FUT-029 not run.
 - **FUT-029 Grade-Band Homework Platform plan (2026-09-05)** — Canonical deferred architecture for in-app grade-band homework + **Homework Intake Adapter**. Status: **Deferred / implementation-ready design**; **not required** to finish the current app; separate Mike authorization before implementation. Fillout-centered brief superseded (retained as history). Plan: [`docs/next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md`](./docs/next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md). **Documentation only** — no Airtable, automation, Vercel, storage, or Production changes.
 
 ### Lambda

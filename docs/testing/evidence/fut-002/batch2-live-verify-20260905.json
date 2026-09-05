@@ -1,0 +1,353 @@
+{
+  "ok": true,
+  "auditId": "FUT-002-BATCH2-POST-DELETE-VERIFY-20260905",
+  "status": "BATCH_2_COMPLETE",
+  "generatedAt": "2026-09-05T12:28:00Z",
+  "baseId": "appn84sqPw03zEbTT",
+  "fieldCount": {
+    "baseline20260904Quarantine": 1378,
+    "live": 1375,
+    "tables": 35,
+    "observedDelta": -3
+  },
+  "sessionDeletes": 4,
+  "batch2TotalRemoved": 5,
+  "checks": [
+    {
+      "check": "delete_target_absent",
+      "row": 1,
+      "table": "Athlete Achievement Unlocks",
+      "fieldId": "fldWnU9gJCsTmTLpK",
+      "sessionDelete": true,
+      "result": "PASS",
+      "detail": "absent"
+    },
+    {
+      "check": "delete_target_absent",
+      "row": 2,
+      "table": "Shot Milestones",
+      "fieldId": "fldVcHPjvuabirn6E",
+      "sessionDelete": true,
+      "result": "PASS",
+      "detail": "absent"
+    },
+    {
+      "check": "delete_target_absent",
+      "row": 3,
+      "table": "Video Feedback",
+      "fieldId": "fldTJd1LkzRRmBiAZ",
+      "sessionDelete": false,
+      "result": "PASS",
+      "detail": "absent"
+    },
+    {
+      "check": "delete_target_absent",
+      "row": 4,
+      "table": "Weeks",
+      "fieldId": "fld8tdkjgyYmrs4Eq",
+      "sessionDelete": true,
+      "result": "PASS",
+      "detail": "absent"
+    },
+    {
+      "check": "delete_target_absent",
+      "row": 5,
+      "table": "Weeks",
+      "fieldId": "fldo906P9t7nj9xmn",
+      "sessionDelete": true,
+      "result": "PASS",
+      "detail": "absent"
+    },
+    {
+      "check": "zzz_delete_prefix_absent",
+      "result": "PASS",
+      "remaining": []
+    },
+    {
+      "check": "protected_field",
+      "fieldId": "fldvG7kDIreffetRt",
+      "expectedTable": "Config",
+      "expectedName": "Root Google Drive Folder ID",
+      "result": "PASS",
+      "live": [
+        "Config",
+        "Root Google Drive Folder ID",
+        "singleLineText"
+      ]
+    },
+    {
+      "check": "protected_field",
+      "fieldId": "fldwRqavjwXbCHzar",
+      "expectedTable": "Config",
+      "expectedName": "Root Google Drive Folder Link",
+      "result": "PASS",
+      "live": [
+        "Config",
+        "Root Google Drive Folder Link",
+        "url"
+      ]
+    },
+    {
+      "check": "protected_field",
+      "fieldId": "fldchUzF9JSCQzxai",
+      "expectedTable": "Weeks",
+      "expectedName": "XP Events",
+      "result": "PASS",
+      "live": [
+        "Weeks",
+        "XP Events",
+        "multipleRecordLinks"
+      ]
+    },
+    {
+      "check": "protected_field",
+      "fieldId": "fldBCFzjforqsWunR",
+      "expectedTable": "Weeks",
+      "expectedName": "Homework Completions",
+      "result": "PASS",
+      "live": [
+        "Weeks",
+        "Homework Completions",
+        "multipleRecordLinks"
+      ]
+    },
+    {
+      "check": "protected_field",
+      "fieldId": "fld8hxWh7fATBLghL",
+      "expectedTable": "Weeks",
+      "expectedName": "Submissions",
+      "result": "PASS",
+      "live": [
+        "Weeks",
+        "Submissions",
+        "multipleRecordLinks"
+      ]
+    },
+    {
+      "check": "protected_field",
+      "fieldId": "fldkTbQ1yyK0qOyLp",
+      "expectedTable": "Video Feedback",
+      "expectedName": "XP Events",
+      "result": "PASS",
+      "live": [
+        "Video Feedback",
+        "XP Events",
+        "multipleRecordLinks"
+      ]
+    },
+    {
+      "check": "protected_field",
+      "fieldId": "fldmmFEzJt3kmEDh4",
+      "expectedTable": "Shot Milestones",
+      "expectedName": "XP Events",
+      "result": "PASS",
+      "live": [
+        "Shot Milestones",
+        "XP Events",
+        "multipleRecordLinks"
+      ]
+    },
+    {
+      "check": "protected_field",
+      "fieldId": "fldBv878RIIC5tpE0",
+      "expectedTable": "Homework Completions",
+      "expectedName": "XP Events",
+      "result": "PASS",
+      "live": [
+        "Homework Completions",
+        "XP Events",
+        "multipleRecordLinks"
+      ]
+    },
+    {
+      "check": "protected_field",
+      "fieldId": "fldVewtOPR0DmVg12",
+      "expectedTable": "Submissions",
+      "expectedName": "XP Events",
+      "result": "PASS",
+      "live": [
+        "Submissions",
+        "XP Events",
+        "multipleRecordLinks"
+      ]
+    },
+    {
+      "check": "protected_field",
+      "fieldId": "fldQF8OsfESrHdcUb",
+      "expectedTable": "Submission Assets",
+      "expectedName": "Homework Completions",
+      "result": "PASS",
+      "live": [
+        "Submission Assets",
+        "Homework Completions",
+        "multipleRecordLinks"
+      ]
+    },
+    {
+      "check": "protected_field",
+      "fieldId": "fldxapOLpLH4KaXOb",
+      "expectedTable": "Submission Assets",
+      "expectedName": "Video Feedback",
+      "result": "PASS",
+      "live": [
+        "Submission Assets",
+        "Video Feedback",
+        "multipleRecordLinks"
+      ]
+    },
+    {
+      "check": "protected_field",
+      "fieldId": "fldKy5hltmJc6A8Jx",
+      "expectedTable": "Homework Completions",
+      "expectedName": "Submission Assets",
+      "result": "PASS",
+      "live": [
+        "Homework Completions",
+        "Submission Assets",
+        "multipleRecordLinks"
+      ]
+    },
+    {
+      "check": "automation_inventory",
+      "code": "020",
+      "mustExist": true,
+      "result": "PASS",
+      "matches": [
+        "020 - Submission Intake and Asset Creation - Link or Create Homework Completion from Submission Asset"
+      ]
+    },
+    {
+      "check": "automation_inventory",
+      "code": "033",
+      "mustExist": true,
+      "result": "PASS",
+      "matches": [
+        "033 - Weekly Summary and Goal Logic - Assign Homework to Weekly Athlete Summary"
+      ]
+    },
+    {
+      "check": "automation_inventory",
+      "code": "065",
+      "mustExist": true,
+      "result": "PASS",
+      "matches": [
+        "065 - Homework Review and XP - Create or Update Homework XP Event"
+      ]
+    },
+    {
+      "check": "automation_inventory",
+      "code": "071",
+      "mustExist": true,
+      "result": "PASS",
+      "matches": [
+        "071 - Email, Notifications, and External Handoffs - Create Homework Feedback Communications Hub Handoff"
+      ]
+    },
+    {
+      "check": "automation_inventory",
+      "code": "075",
+      "mustExist": false,
+      "result": "PASS",
+      "matches": []
+    },
+    {
+      "check": "live_automation",
+      "code": "020",
+      "mustExist": true,
+      "result": "PASS",
+      "matches": [
+        {
+          "name": "020 - Submission Intake and Asset Creation - Link or Create Homework Completion from Submission Asset",
+          "deploymentStatus": "deployed",
+          "configurationStatus": "valid"
+        }
+      ]
+    },
+    {
+      "check": "live_automation",
+      "code": "033",
+      "mustExist": true,
+      "result": "PASS",
+      "matches": [
+        {
+          "name": "033 - Weekly Summary and Goal Logic - Assign Homework to Weekly Athlete Summary",
+          "deploymentStatus": "deployed",
+          "configurationStatus": "valid"
+        }
+      ]
+    },
+    {
+      "check": "live_automation",
+      "code": "065",
+      "mustExist": true,
+      "result": "PASS",
+      "matches": [
+        {
+          "name": "065 - Homework Review and XP - Create or Update Homework XP Event",
+          "deploymentStatus": "deployed",
+          "configurationStatus": "valid"
+        }
+      ]
+    },
+    {
+      "check": "live_automation",
+      "code": "071",
+      "mustExist": true,
+      "result": "PASS",
+      "matches": [
+        {
+          "name": "071 - Email, Notifications, and External Handoffs - Send Homework Feedback Email Webhook",
+          "deploymentStatus": "deployed",
+          "configurationStatus": "valid"
+        }
+      ]
+    },
+    {
+      "check": "live_automation",
+      "code": "075",
+      "mustExist": false,
+      "result": "PASS",
+      "matches": []
+    },
+    {
+      "check": "automation_configuration_valid",
+      "result": "PASS",
+      "invalidCount": 0,
+      "invalidSample": []
+    },
+    {
+      "check": "no_live_schema_refs_to_deleted_ids",
+      "result": "PASS",
+      "hits": []
+    },
+    {
+      "check": "field_count_delta",
+      "baseline20260904": 1378,
+      "live": 1375,
+      "tables": 35,
+      "observedDelta": -3,
+      "expectedIfNoDrift": -4,
+      "result": "PASS",
+      "note": "Live 1375 = 1378\u22123. All four session field IDs absent. Absolute delta \u22123 vs pure \u22124 implies +1 concurrent non-Batch-2 field since 2026-09-04 baseline (or equivalent MCP/schema drift). Five Batch 2 IDs total remain absent (row #3 prior)."
+    }
+  ],
+  "failed": [],
+  "inventoryMatches": [
+    [
+      "065 - Homework Review and XP - Create or Update Homework XP Event",
+      "Live"
+    ],
+    [
+      "033 - Weekly Summary and Goal Logic - Assign Homework to Weekly Athlete Summary",
+      "Live"
+    ],
+    [
+      "071 - Email, Notifications, and External Handoffs - Create Homework Feedback Communications Hub Handoff",
+      "Live"
+    ],
+    [
+      "020 - Submission Intake and Asset Creation - Link or Create Homework Completion from Submission Asset",
+      "Live"
+    ]
+  ]
+}

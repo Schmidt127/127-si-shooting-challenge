@@ -244,7 +244,7 @@ The system must preserve checks for assignment identity, enrollment, challenge/s
 
 **Priority:** P2  
 
-**Status:** **Batch 1 COMPLETE (2026-08-31)** + **SA XP text stubs deleted (2026-08-31)** + **Batch 2 audit READY (2026-09-01)** ? five `ZZZ DELETE ?` fields + Submission Assets unused text fields `XP Events` / `XP Events copy` removed. Live after SA stubs: **1363 fields / 35 tables**. Batch 2 Phase A: **5** quarantine-ready text stubs (Mike UI delete pending). Later: Config Drive roots + `unknown` interface review.  
+**Status:** **Batch 1 COMPLETE (2026-08-31)** + **SA XP text stubs deleted (2026-08-31)** + **Batch 2 COMPLETE (2026-09-05)** — five Batch 2 text-stub field IDs absent (four UI-deleted this session; row #3 prior). Live Meta: **1375 fields / 35 tables**. Schema `airtable/schema/snapshots/prod-20260905-fut002-batch2/`. Evidence [`testing/evidence/fut-002/batch2-live-verify-20260905.json`](./testing/evidence/fut-002/batch2-live-verify-20260905.json). Later: Config Drive roots + `unknown` interface review.  
 
 **Systems:** Airtable schema, automations, email payloads, website/data contracts
 
@@ -278,7 +278,7 @@ After confirming no active dependency remains, delete the obsolete fields and up
 
 
 
-**Batch 2 audit (2026-09-01):** [`docs/audits/FUT-002-batch2-candidate-queue.md`](./audits/FUT-002-batch2-candidate-queue.md) Â· [`docs/audits/fut-002-batch2-candidates.json`](./audits/fut-002-batch2-candidates.json) Â· operator packet [`docs/deploy-checklists/FUT-002-batch2-quarantined-field-delete.md`](./deploy-checklists/FUT-002-batch2-quarantined-field-delete.md). **303** candidates reviewed; **5** quarantine-ready text stubs (AAU, Shot Milestones, VF, WeeksÃ—2). Delete pending Mike UI. SNAPSHOT DATE: 2026-08-31 (no live Meta API in agent run).
+**Batch 2 COMPLETE (2026-09-05):** Mike UI-deleted four quarantined stubs; row #3 already gone. Post-delete verify PASS. Packet [`docs/deploy-checklists/FUT-002-batch2-quarantined-field-delete.md`](./deploy-checklists/FUT-002-batch2-quarantined-field-delete.md) · closeout [`docs/audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md`](./audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md) · evidence [`testing/evidence/fut-002/batch2-live-verify-20260905.json`](./testing/evidence/fut-002/batch2-live-verify-20260905.json) · schema `airtable/schema/snapshots/prod-20260905-fut002-batch2/`.
 
 
 
@@ -2654,7 +2654,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 
 | **SC-158** | Intake | Automation 006 / Submissions.Video Count ownership (SF-07) | P2 | **COMPLETE / Live Tested** (2026-09-04) | SF-07 | **RETIRE 006** (not deployed). Presence = Has Video? formula; PW videos = **057**. Orphan Video Count mismatches detectable. Evidence [audits/SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md](./audits/SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md). |
 | **SC-159** | Achievements | Automation 059 Active? lifecycle / formula trigger (SF-08) | P2 | **COMPLETE / Live Tested** (2026-09-04) | SC-077, SC-066 | Live `059 Lifecycle Trigger?` + **059 v3.8**; withdraw/restore/idempotency/PW PASS. Nested OR checklist superseded. Evidence [`audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md`](./audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md) Â· redesign [`audits/SC-159-LIFECYCLE-TRIGGER-REDESIGN-20260904.md`](./audits/SC-159-LIFECYCLE-TRIGGER-REDESIGN-20260904.md) Â· checklist [`deploy-checklists/059-sc159-lifecycle-formula-trigger.md`](./deploy-checklists/059-sc159-lifecycle-formula-trigger.md). |
-| **SC-160** | Intake / Homework / PW | Asset intake without Submission.Week + early/on-time/late HW (009/020/065/057) | P0 | **COMPLETE / Live Tested** (2026-09-05) | 009, 005, FUT-001 | Live **009 v1.3 / 020 v4.1 / 065 v10.7 / 057 2.5**. Weekless WAS→065 proof [audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md](./audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md). FUT-002 Batch 2 UI trash authorized. |
+| **SC-160** | Intake / Homework / PW | Asset intake without Submission.Week + early/on-time/late HW (009/020/065/057) | P0 | **COMPLETE / Live Tested** (2026-09-05) | 009, 005, FUT-001 | Live **009 v1.3 / 020 v4.1 / 065 v10.7 / 057 2.5**. Weekless WAS→065 proof [audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md](./audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md). FUT-002 Batch 2 COMPLETE. |
 | **SC-113** | Website | Loading, empty, and error states | P2 | Live Tested in PROD | GÃ‡Ã¶ | Keep states aligned when SC-112 lands |
 
 | **SC-115** | Website | noindex removal / search indexing | P2 | **Complete** (2026-08-25, `647d465`; prod verified) | SC-114 | **Prod cutover verified** ? Vercel Production `NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`; public pages indexable; athlete profiles + private routes `noindex`; sitemap excludes athletes/public-display; `npm run test:smoke:prod` 50/50 after cross-env fix. Checklist: `docs/deploy-checklists/2026-08-25-web-search-indexing-cutover.md`. |
@@ -2801,7 +2801,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | **FUT-002 SA XP text stubs** | **COMPLETE** (2026-08-31) | Submission Assets unused text `XP Events` + `XP Events copy` UI-deleted; live **1363** fields / **35** tables ? [`deploy-checklists/FUT-002-sa-xp-text-stubs-delete.md`](./deploy-checklists/FUT-002-sa-xp-text-stubs-delete.md) Â· [`testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json`](./testing/evidence/fut-002/sa-xp-text-stubs-deleted-2026-08-31.json) |
 
-| **FUT-002 batch 2 audit** | **AUDIT READY** (2026-09-01) | **303** candidates / **5** quarantine-ready text stubs ? delete pending Mike UI ? [`FUT-002-batch2-candidate-queue.md`](./audits/FUT-002-batch2-candidate-queue.md) Â· [`FUT-002-batch2-quarantined-field-delete.md`](./deploy-checklists/FUT-002-batch2-quarantined-field-delete.md) |
+| **FUT-002 batch 2** | **COMPLETE** (2026-09-05) | Five Batch 2 text-stub IDs absent; live **1375** fields / **35** tables — [`FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md`](./audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md) · [`batch2-live-verify-20260905.json`](./testing/evidence/fut-002/batch2-live-verify-20260905.json) · schema `airtable/schema/snapshots/prod-20260905-fut002-batch2/` |
 
 | **FUT-029 / MRW-H12** | **Deferred / implementation-ready** | Grade-Band Homework Platform + Homework Intake Adapter — not part of current app completion; plan: [`next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md`](./next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md); Fillout brief superseded/history |
 
@@ -2961,8 +2961,8 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | **SC-158 / SF-07 Video Count ownership** | **COMPLETE / Live Tested** (2026-09-04) | **RETIRE 006** (absent live). Presence = `Has Video?`; PW = **057**. Evidence [`audits/SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md`](./audits/SF-07-VIDEO-COUNT-CLOSEOUT-20260904.md). |
 
-| **SC-159 / SF-08 Automation 059 lifecycle** | **COMPLETE / Live Tested** (2026-09-04) | Formula trigger + v3.8 live. Evidence [`audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md`](./audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md). FUT-002 Batch 2 trash still needs asset-intake dependency review. |
-| **SC-160 / asset intake + HW timing** | **COMPLETE / Live Tested** (2026-09-05) | Live **009 v1.3 / 020 v4.1 / 065 v10.7 / 057 2.5**. Evidence [audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md](./audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md). FUT-002 Batch 2 UI trash authorized. |
+| **SC-159 / SF-08 Automation 059 lifecycle** | **COMPLETE / Live Tested** (2026-09-04) | Formula trigger + v3.8 live. Evidence [`audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md`](./audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md). |
+| **SC-160 / asset intake + HW timing** | **COMPLETE / Live Tested** (2026-09-05) | Live **009 v1.3 / 020 v4.1 / 065 v10.7 / 057 2.5**. Evidence [audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md](./audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md). FUT-002 Batch 2 COMPLETE. |
 
 
 
