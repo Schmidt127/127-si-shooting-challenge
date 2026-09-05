@@ -81,7 +81,10 @@ Categories are exclusive: a row is MATCH **or** LIVE PASTE PENDING **or** anothe
 
 **Difference class:** **Structural / V2 standard only.** GitHub changelog: *“Business logic unchanged from v3.1.0.”* Core helpers (`decideGradeBandRepair`, `findCandidates`, `assertOwnership`, `videoKey`) are **byte-identical** after extraction. GitHub adds SCRIPT metadata, numbered `step()` debug labels, and formatting — not provenance/ownership rule changes.
 
-**Paste recommendation:** **Optional, low priority.** Not required for functional correctness. Inventory Code already shows v3.2.0 while live remains v3.1.0 (inventory ahead of live). Paste only for three-way structure alignment.
+**Paste recommendation:** **Declined by Mike (2026-09-05).** Keep live **v3.1.0**. Optional structure paste remains available later; not scheduled.
+
+**Safe Automations inventory `Version Number - AI Agent` value:** `v3.1.0`  
+(Current AI Agent / Code columns still show v3.2.0 — inventory lag; do not treat as live.)
 
 ---
 
@@ -103,7 +106,10 @@ Categories are exclusive: a row is MATCH **or** LIVE PASTE PENDING **or** anothe
 
 **Retracted docs claim:** CURRENT-TRUTH / inventory “**Live v3.5 / DO-NOT-TOUCH**” overstated live version. Live script body is **v3.4**. Inventory Code text was refreshed to v3.5 without a live paste.
 
-**Paste recommendation:** **Optional, low priority.** Same as 013 — structure alignment only. Live v3.4 already owns HW17 PHA-first / fail-closed identity behavior covered by offline PHA tests.
+**Paste recommendation:** **Declined by Mike (2026-09-05).** Keep live **v3.4**. Optional structure paste remains available later; not scheduled.
+
+**Safe Automations inventory `Version Number - AI Agent` value:** `v3.4`  
+(Current AI Agent / Code columns still show v3.5 — inventory lag; do not treat as live.)
 
 ---
 
@@ -120,7 +126,7 @@ node --test tests/homework/automation-067-pha-direct.test.js tests/homework-cont
 | `tests/automation-ownership/test-contract-harness.mjs` | **PASS** (013 authoritative writer; 112 legacy_off) |
 | `tests/homework-contracts/067-summary-link.test.js` | **PASS** |
 | `tests/homework/automation-067-pha-direct.test.js` behavioral cases | **PASS** (22/23 overall file) |
-| `067 v3.4 source contract` (asserts `version: "v3.4"` in GitHub file) | **FAIL** — expected: GitHub is now **v3.5** structure bump; test still pins v3.4 string |
+| `067 v3.4 source contract` (asserts `version: "v3.4"` in GitHub file) | **FIXED** in follow-on hygiene — test now asserts repo **v3.5** + documents live **v3.4** |
 
 Interpretation: GitHub **v3.5** behavioral contracts pass; one stale source-string assertion needs a follow-up test update (out of scope for this docs-only PR).
 

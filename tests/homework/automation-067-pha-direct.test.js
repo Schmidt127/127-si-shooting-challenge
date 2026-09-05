@@ -1,6 +1,12 @@
 #!/usr/bin/env node
 /**
- * Offline tests for 067 v3.4 PHA-first HW17 quiz path.
+ * Offline tests for 067 PHA-first HW17 quiz path.
+ *
+ * Version authority (2026-09-05):
+ * - Repository (GitHub) SCRIPT/CONFIG version: v3.5 (V2 structure-only bump)
+ * - Current live Airtable Automation 067 script body: v3.4
+ * - Mike declined the optional structure-only paste; do not treat v3.5 as live.
+ * Evidence: docs/audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md
  */
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -27,11 +33,37 @@ import {
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const read = (rel) => readFileSync(path.join(ROOT, rel), "utf8");
 
-test("067 v3.4 source contract — PI-first HW17 PHA resolution + fail-closed linked HC", () => {
+/** Documented live Production body version — not the GitHub SCRIPT version. */
+const LIVE_AIRTABLE_067_VERSION = "v3.4";
+/** Current repository SCRIPT / CONFIG version (structure-only vs live). */
+const REPO_067_VERSION = "v3.5";
+
+test("067 source contract — repo v3.5 declares structure-only lineage from live v3.4", () => {
   const source = read(
     "airtable/automations/shooting-challenge/067-homework-link-or-create-completion-from-reflection-quiz.js"
   );
-  assert.match(source, /version:\s*"v3\.4"/);
+
+  // Repository version (GitHub canonical file)
+  assert.match(source, new RegExp(`version:\\s*"${REPO_067_VERSION.replace(/\./g, "\\.")}"`));
+  assert.match(source, /\*\s*Version:\s*v3\.5\b/);
+  assert.match(
+    source,
+    /Business logic unchanged from v3\.4|v3\.5 is structure-only|structure-only/i
+  );
+
+  // Explicit non-claim: this file must not be treated as proving live Airtable is v3.5
+  assert.equal(
+    LIVE_AIRTABLE_067_VERSION,
+    "v3.4",
+    "Documented live Airtable 067 remains v3.4 until Mike pastes GitHub v3.5"
+  );
+  assert.notEqual(
+    REPO_067_VERSION,
+    LIVE_AIRTABLE_067_VERSION,
+    "Repo v3.5 is intentionally ahead of live v3.4 (optional structure paste declined)"
+  );
+
+  // Behavioral contracts shared by live v3.4 and repo v3.5
   assert.match(source, /resolveHw17PhaForEnrollment/);
   assert.match(source, /homeworkName1.*PHA record ID/s);
   assert.match(source, /validateLinkedHomeworkCompletion/);
