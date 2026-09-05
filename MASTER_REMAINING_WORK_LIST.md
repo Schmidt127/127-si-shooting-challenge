@@ -416,14 +416,16 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 
 ## Recommended next task for Mike
 
-1. **Archive overlapping WSTEST/PWTEST Weeks** in Program Instance `Shooting Challenge | 2026-2027` (OMNI) before season simulation.  
-2. **Do not** re-paste 010/020/022/057/058/059/065/072/073; **do not** restore 075; live fixture `--apply` evidence is historical after **FUT-030** wipe.  
-3. **FUT-010:** dry-run R3 still **0 eligible** — no deletion request.  
-4. Optional: refresh Automations **Code** text for 057 (tracker lag) — live script already correct.  
-5. **Do not** activate FUT-003 until registration intentionally opens.  
-6. **Do not** implement **FUT-029** (Grade-Band Homework Platform / Homework Intake Adapter) — **Deferred — DO NOT IMPLEMENT** (**MRW-H12**); not part of current app completion; out of scope for wave 2026-09-05 / SC-162.  
-7. **FUT-030 COMPLETE** — transactional tables empty; **18 PHA restored** same day. **FUT-002 Batch 1 + Batch 2 COMPLETE**. After WSTEST cleanup: **SC-SEASON-SIM-001** remains FUTURE.
-8. **Completion wave 2026-09-05:** SC-161…SC-166 + SC-149 residual — see [`docs/audits/SC-WAVE-20260905-OWNERSHIP-LEDGER.md`](docs/audits/SC-WAVE-20260905-OWNERSHIP-LEDGER.md) · [`docs/audits/SC-WAVE-20260905-PREFLIGHT.md`](docs/audits/SC-WAVE-20260905-PREFLIGHT.md).
+1. **SC-163 (open):** Convert Enrollments **Goal Met Date** lookup → date; paste Automation **122**; run backfill — [`docs/deploy-checklists/SC-163-goal-met-date.md`](docs/deploy-checklists/SC-163-goal-met-date.md). **Not live-complete.**  
+2. **SC-166 (open):** Apply Active + Completed/History filters on Homework + Video Feedback Interface queues — [`docs/deploy-checklists/SC-166-coach-work-queue-filters.md`](docs/deploy-checklists/SC-166-coach-work-queue-filters.md). **Not live-complete.**  
+3. **Archive overlapping WSTEST/PWTEST Weeks** in Program Instance `Shooting Challenge | 2026-2027` (OMNI) before season simulation.  
+4. **Do not** re-paste 010/020/022/057/058/059/065/072/073; **do not** restore 075; live fixture `--apply` evidence is historical after **FUT-030** wipe.  
+5. **FUT-010:** dry-run R3 still **0 eligible** — no deletion request.  
+6. Optional: refresh Automations **Code** text for 057 (tracker lag) — live script already correct.  
+7. **Do not** activate FUT-003 until registration intentionally opens.  
+8. **Do not** implement **FUT-029** (Grade-Band Homework Platform / Homework Intake Adapter) — **Deferred — DO NOT IMPLEMENT** (**MRW-H12**); not part of current app completion.  
+9. **FUT-030 COMPLETE** — transactional tables empty; **18 PHA restored** same day. **FUT-002 Batch 1 + Batch 2 COMPLETE**. After WSTEST cleanup: **SC-SEASON-SIM-001** remains FUTURE.  
+10. Wave closeout: [`docs/audits/SC-WAVE-20260905-CLOSEOUT.md`](docs/audits/SC-WAVE-20260905-CLOSEOUT.md) (tip `bd0198a4`).
 
 ---
 
@@ -443,7 +445,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 - **SC-015 / SC-016 / MRW-F02 / 065 remap** → **COMPLETE** (2026-08-31) — multi-asset `--apply` → one HC + one Homework XP; 065 dynamic `recordId` + trigger re-entry proven; **do not** re-paste 020/065; **do not** re-`--apply`.  
 - **FUT-029 / MRW-H12** → **Deferred — DO NOT IMPLEMENT** — Grade-Band Homework Platform + Homework Intake Adapter; Fillout brief superseded/history; not required for current app completion; wave 2026-09-05 out of scope.  
 - **SC-160** → **COMPLETE / Live Tested** (2026-09-05).  
-- **Wave 2026-09-05 IDs** → SC-161…SC-166 + SC-149 residual Planned (not duplicates of SC-103 / FUT-014 / FUT-015 / FUT-027 / SC-149 branding).  
+- **Wave 2026-09-05** → tip `bd0198a4`; SC-161/162/164/165/149 residual **COMPLETE / Live Tested**; SC-163/166 **PARTIALLY COMPLETE — Mike UI**; closeout [`docs/audits/SC-WAVE-20260905-CLOSEOUT.md`](docs/audits/SC-WAVE-20260905-CLOSEOUT.md).  
 - **FUT-030** → **COMPLETE** (2026-08-31) — full transactional record reset (959 deleted); PHA emptied; Weeks/Library/config preserved; base ready for clean rebuild.  
 - **SC-SEASON-SIM-002** → **Execute writer ready** (`tools/season_simulation/` + operator checklist); offline tests green; gated formula paste still required before countable E2E; do not run full season simulation until Mike authorizes.  
 - **Automation 043** → **absent** from live automations list (MRW-C09 COMPLETE).  

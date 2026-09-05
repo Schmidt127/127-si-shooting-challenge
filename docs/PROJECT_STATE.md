@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-09-04** (Functional-closeout wave — tip `5dcb8449`; SC-152/153/156 Live Tested; SC-154/155/157 remain closed; PR #340 CLOSED superseded; wave-blocking P0 NONE. Authority: [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) · [`audits/COORD-WAVE-FUNCTIONAL-CLOSEOUT-20260904.md`](./audits/COORD-WAVE-FUNCTIONAL-CLOSEOUT-20260904.md))
+Last updated: **2026-09-05** (SC completion wave closeout — tip `bd0198a4`; SC-161/162/164/165/149 residual COMPLETE / Live Tested; SC-163/166 PARTIAL — Mike UI; FUT-029 Deferred. Authority: [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) · [`audits/SC-WAVE-20260905-CLOSEOUT.md`](./audits/SC-WAVE-20260905-CLOSEOUT.md))
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
@@ -53,7 +53,7 @@ Last updated: **2026-09-04** (Functional-closeout wave — tip `5dcb8449`; SC-15
 
 **101 overlay (final 2026-08-21):** Production Automation 101 is **v6.7** (live script body). Midday Automations Code-column **v6.6** snapshot is **historical / superseded**. Meeting `recxtpMu4ONbdDD45` safely skipped when reconciliation not needed.
 
-**Final production version reconciliation (2026-08-21):** See [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) §8. Overlay **2026-09-05:** **059 v3.8** Live / SC-159 Live Tested. **SC-160 COMPLETE / Live Tested** — live **009 v1.3 / 020 v4.1 / 065 v10.7 / 057 2.5**. **FUT-002 Batch 2 COMPLETE** — live **1375** fields / **35** tables. Evidence [`audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md`](./audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md) · [`audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md`](./audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md).
+**Final production version reconciliation (2026-08-21):** See [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) §8. Overlay **2026-09-05:** **059 v3.8** Live / SC-159 Live Tested. **SC-160 COMPLETE / Live Tested** — live **009 v1.3 / 020 v4.1 / 065 v10.7 / 057 2.5**. **FUT-002 Batch 2 COMPLETE** — live **1375** fields / **35** tables. **Completion wave tip `bd0198a4`:** SC-161/162/164/165 Live Tested; SC-163/166 Mike UI remaining. Evidence [`audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md`](./audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md) · [`audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md`](./audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md) · [`audits/SC-WAVE-20260905-CLOSEOUT.md`](./audits/SC-WAVE-20260905-CLOSEOUT.md).
 
 ---
 

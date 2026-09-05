@@ -6,19 +6,20 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
-### Airtable
-
-#### Added
-- **SC-163 Goal Met Date reliability (2026-09-05)** — Root cause: `Goal Met Date` was a lookup of Award Recipients → Date Awarded. Repo adds Automation **122** (first counted Activity Date crossing; never overwrite), extension backfill, probe, and Mike checklist to convert field lookup → date. **Not live-complete until schema + paste.** Docs: [`docs/audits/SC-163-GOAL-MET-DATE-RELIABILITY.md`](./docs/audits/SC-163-GOAL-MET-DATE-RELIABILITY.md) · [`docs/deploy-checklists/SC-163-goal-met-date.md`](./docs/deploy-checklists/SC-163-goal-met-date.md).
-
 ### Docs
 
 #### Changed
+- **SC completion wave 2026-09-05 closeout** — Tip **`bd0198a4`** (start `ba287eef`). Merged **#435→#440→#438→#437→#439→#436**. **SC-161/162/164/165/149 residual COMPLETE / Live Tested**; **SC-163/166 PARTIALLY COMPLETE — Mike UI** (not live-complete). **FUT-029** still Deferred. Game Manual unchanged. Closeout: [`docs/audits/SC-WAVE-20260905-CLOSEOUT.md`](./docs/audits/SC-WAVE-20260905-CLOSEOUT.md).
 - **067 source-contract hygiene (2026-09-05)** — Offline test no longer expects GitHub 067 to declare `v3.4`. Asserts repository **v3.5** (structure-only) and documents live Airtable **v3.4**; Mike declined optional paste. Safe inventory AI Agent values: **013 = v3.1.0**, **067 = v3.4**. Evidence: [`docs/audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md`](./docs/audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md). Repo-only — no Airtable paste.
 - **Version-audit correction 021 / 013 / 067 (2026-09-05)** — Retract false “021 live Phase A v1.0.0 / GitHub recovery” finding. Live 021 = GitHub = inventory **v2.0** (exact byte match). Phase A combined paste archived as historical/proposed-only. Independently verified live **013 v3.1.0** vs GitHub **v3.2.0** and live **067 v3.4** vs GitHub **v3.5** (structure-only; optional pastes). Corrected audit classification counts. Evidence: [`docs/audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md`](./docs/audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md). **Documentation only** — no Airtable paste or Production change.
 - **FUT-002 Batch 2 COMPLETE (2026-09-05)** — Mike UI-deleted four quarantined text stubs (row #3 already gone). Post-delete verify: five Batch 2 field IDs absent; live **1375** fields / **35** tables; protected links + Config Drive roots intact; automations **020/033/065/071** present, **075** absent. Evidence: [`docs/testing/evidence/fut-002/batch2-live-verify-20260905.json`](./docs/testing/evidence/fut-002/batch2-live-verify-20260905.json) · [`docs/audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md`](./docs/audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md) · schema `airtable/schema/snapshots/prod-20260905-fut002-batch2/`. No Airtable restores; Season Sim / FUT-029 not run.
 - **FUT-029 Grade-Band Homework Platform plan (2026-09-05)** — Canonical deferred architecture for in-app grade-band homework + **Homework Intake Adapter**. Status: **Deferred — DO NOT IMPLEMENT**; **not required** to finish the current app; separate Mike authorization before implementation. Out of scope for completion wave 2026-09-05 / SC-162. Fillout-centered brief superseded (retained as history). Plan: [`docs/next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md`](./docs/next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md). **Documentation only** — no Airtable, automation, Vercel, storage, or Production changes.
 - **SC completion wave 2026-09-05 Agent 1 preflight** — Registered backlog IDs SC-161…SC-166 + SC-149 residual; confirmed SC-160 COMPLETE + FUT-002 Batch 2 COMPLETE; published ownership/preflight/stale-claims/contracts packets under `docs/audits/SC-WAVE-20260905-*`. Fixed stale Automation 058 contract assertion v1.6→v1.7 (repo only). PR for branch `wave/a1-truth-preflight-20260905`.
+
+### Airtable
+
+#### Added
+- **SC-163 Goal Met Date reliability (2026-09-05)** — Root cause: `Goal Met Date` was a lookup of Award Recipients → Date Awarded. Repo adds Automation **122** (first counted Activity Date crossing; never overwrite), extension backfill, probe, and Mike checklist to convert field lookup → date. **Not live-complete until schema + paste.** Docs: [`docs/audits/SC-163-GOAL-MET-DATE-RELIABILITY.md`](./docs/audits/SC-163-GOAL-MET-DATE-RELIABILITY.md) · [`docs/deploy-checklists/SC-163-goal-met-date.md`](./docs/deploy-checklists/SC-163-goal-met-date.md).
 
 ### Lambda
 
