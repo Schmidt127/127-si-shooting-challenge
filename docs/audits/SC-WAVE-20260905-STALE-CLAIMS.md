@@ -41,6 +41,7 @@
 | `MASTER_REMAINING_WORK_LIST.md` MRW-H01 (pre-A1) | Batch 1 COMPLETE only | Batch 2 also COMPLETE (updated this preflight) |
 | Completion Master § older SC-149 / SC-103 rows | “Built” / early Live Tested language mixed with later attestations | Prefer CURRENT-TRUTH + dated audits over §4 historical Built rows |
 | Automation contract `sc-057-058-…` (pre-fix) | Asserted 058 **v1.6** | Repo + live = **v1.7**; assertion fixed in-repo only |
+| `CHANGELOG.md` Unreleased Airtable (pre-fix) | Mid-wave **020 v4.1 Paste pending** sat under **SC-160 COMPLETE** | Mid-wave row marked historical; paste completed same day — COMPLETE entry is authority |
 | automation-index older prose | Occasional “paste with 058 v1.5” historical phrasing | Index table row for 058 correctly says **v1.7** |
 
 ---
