@@ -125,14 +125,13 @@ node --test tests/homework/automation-067-pha-direct.test.js tests/homework-cont
 |-------|--------|
 | `tests/automation-ownership/test-contract-harness.mjs` | **PASS** (013 authoritative writer; 112 legacy_off) |
 | `tests/homework-contracts/067-summary-link.test.js` | **PASS** |
-| `tests/homework/automation-067-pha-direct.test.js` behavioral cases | **PASS** (22/23 overall file) |
-| `067 v3.4 source contract` (asserts `version: "v3.4"` in GitHub file) | **FIXED** in follow-on hygiene — test now asserts repo **v3.5** + documents live **v3.4** |
+| `tests/homework/automation-067-pha-direct.test.js` | **PASS** (23/23) — source contract asserts repo **v3.5** + documents live **v3.4** |
 
-Interpretation: GitHub **v3.5** behavioral contracts pass; one stale source-string assertion needs a follow-up test update (out of scope for this docs-only PR).
+Interpretation: GitHub **v3.5** behavioral contracts pass. Source-contract hygiene complete (Mike declined optional structure paste). Dated historical audits that once said “067 Live v3.5” remain historical evidence only.
 
 ---
 
-## Paste procedures (future — not executed here)
+## Paste procedures (deferred — Mike declined 2026-09-05; not scheduled)
 
 ### 013 (optional)
 

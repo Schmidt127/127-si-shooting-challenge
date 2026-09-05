@@ -34,7 +34,7 @@ Production final verification overlays: **101 v6.8 Live + SC-147 verified 2026-0
 | Numbered automation scripts in repo | 50+ |
 | Rows with UNKNOWN GitHub version date / sparse headers | Common on legacy scripts — fill from Airtable UI at promote time |
 | Rows with strong PROD evidence (final 2026-08-21) | **010 v10.11**, **020 v3.7**, **033 v4.4**, **041 v5.1**, **057 v1.7**, **058 v1.3**, **059 v3.6**, **064 current live**, **065 v10.2**, **066 v3.8**, **070a/070b v4.7**, **070c current live**, **101 v6.7**, **117 v2.1 Live** |
-| Additional PROD-verified overlays | **003 v2.0** COMPLETE / PRODUCTION-VERIFIED / DO-NOT-TOUCH 2026-09-03 (SC-023; keep active). **021 v2.0** live=GitHub=inventory ALIGNED 2026-09-05 (not Phase A). **067 live v3.4** (inventory/GitHub **v3.5** structure-only — optional paste). Late-credit **020 v3.9 / 065 v10.6 / 057 2.3** Automations Code PASTE-ALIGNED 2026-09-03 |
+| Additional PROD-verified overlays | **003 v2.0** COMPLETE / PRODUCTION-VERIFIED / DO-NOT-TOUCH 2026-09-03 (SC-023; keep active). **021 v2.0** live=GitHub=inventory ALIGNED 2026-09-05 (not Phase A). **067 live v3.4** (GitHub **v3.5** structure-only; **paste declined** 2026-09-05). Late-credit **020 v3.9 / 065 v10.6 / 057 2.3** Automations Code PASTE-ALIGNED 2026-09-03 |
 | Production-only by design | 115 (Engineering Test Framework) |
 | Explicitly leave PROD OFF until scheduled | (none for 070a — SC-156 Live ON) |
 | C-025 / slot 117 | **Email Hub handoff v2.1 live** (Mike paste). Recording XP orchestrator = design alternative only. Table rows for 117a/117b below are **historical S16**. |
