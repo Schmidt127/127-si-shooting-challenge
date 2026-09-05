@@ -13,7 +13,12 @@ export const PRIMARY_NAV_HREFS = [
 export const RESOURCES_NAV_HREFS = ["/tutorials", "/shoutouts", "/articles"] as const;
 
 /** Nested under the responsive “More” menu. All listed routes remain available. */
-export const MORE_NAV_HREFS = ["/game-manual", "/faq", "/achievements"] as const;
+export const MORE_NAV_HREFS = [
+  "/game-manual",
+  "/faq",
+  "/achievements",
+  "/dashboard/sign-in",
+] as const;
 
 const PRIMARY_SET = new Set<string>(PRIMARY_NAV_HREFS);
 const RESOURCES_SET = new Set<string>(RESOURCES_NAV_HREFS);

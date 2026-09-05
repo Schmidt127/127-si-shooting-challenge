@@ -57,6 +57,17 @@ test.describe("Family Dashboard public navigation", () => {
     await expect(page.locator("h1")).toBeVisible();
   });
 
+  test("More menu includes Family Dashboard sign-in", async ({ page }) => {
+    await page.goto(".", { waitUntil: "domcontentloaded" });
+    const nav = page.getByRole("navigation", { name: "Shooting Challenge navigation" });
+    await nav.getByRole("button", { name: /More navigation/i }).click();
+    const moreLink = page.getByRole("menuitem", { name: FAMILY_DASHBOARD_LABEL });
+    await expect(moreLink).toBeVisible();
+    await moreLink.click();
+    await expect(page).toHaveURL(/\/shoot\/dashboard\/sign-in\/?$/);
+    await expect(page).not.toHaveURL(/\/shoot\/shoot\//);
+  });
+
   test("FAQ get-started CTA points to /shoot/dashboard/sign-in", async ({ page }) => {
     await page.goto("faq", { waitUntil: "domcontentloaded" });
     const faqCta = page.getByTestId("family-dashboard-faq-cta");

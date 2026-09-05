@@ -33,4 +33,9 @@ describe("Shooting Challenge home page layout", () => {
     expect(HOME_SOURCE).toContain("family-dashboard-home-cta");
     expect(HOME_SOURCE).toContain("FAMILY_DASHBOARD_DESCRIPTION");
   });
+
+  it("surfaces concise awards and coaching messaging on Overview", () => {
+    expect(HOME_SOURCE).toContain("OVERVIEW_AWARDS_COACHING");
+    expect(HOME_SOURCE).toContain('eyebrow="What is the Shooting Challenge?"');
+  });
 });

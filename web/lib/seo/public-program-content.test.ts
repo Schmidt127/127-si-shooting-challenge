@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { ABOUT_THE_COACH, GIFT_CARD_AWARD_COMMITMENT } from "./public-program-content";
+import { ABOUT_THE_COACH, GIFT_CARD_AWARD_COMMITMENT, OVERVIEW_AWARDS_COACHING } from "./public-program-content";
 
 describe("public program content", () => {
   it("states the program-wide gift card commitment without refund language", () => {
@@ -21,5 +21,15 @@ describe("public program content", () => {
     expect(serialized).not.toMatch(/Make\.com/i);
     expect(serialized).not.toMatch(/\bWAS\b/);
     expect(serialized).not.toMatch(/\bPHA\b/);
+  });
+
+  it("keeps Overview awards/coaching blurbs concise and non-automated", () => {
+    expect(OVERVIEW_AWARDS_COACHING.awards).toMatch(/Amazon gift cards/i);
+    expect(OVERVIEW_AWARDS_COACHING.awards).toMatch(/Award Recipient/i);
+    expect(OVERVIEW_AWARDS_COACHING.awards).toMatch(/not as an automatic payout/i);
+    expect(OVERVIEW_AWARDS_COACHING.awards.toLowerCase()).not.toMatch(/instantly|\$\d/);
+    expect(OVERVIEW_AWARDS_COACHING.coaching).toMatch(/video feedback/i);
+    expect(OVERVIEW_AWARDS_COACHING.coaching).toMatch(/homework review/i);
+    expect(OVERVIEW_AWARDS_COACHING.coaching).toMatch(/accountability/i);
   });
 });

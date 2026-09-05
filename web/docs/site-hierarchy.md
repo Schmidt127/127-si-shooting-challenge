@@ -63,23 +63,28 @@ Order from `SHOOTING_CHALLENGE_NAV` + `nav-priority.ts`:
 2. Leaderboard → `/leaderboard`
 3. Homework → `/homework`
 4. Levels → `/levels`
-5. Tutorials → `/tutorials`
-6. Zoom Meetings → `/zoom-meetings`
-7. FAQ → `/faq`
-8. Game Manual → `/game-manual`
+5. Zoom Meetings → `/zoom-meetings`
+
+**Resources**
+
+6. Tutorials → `/tutorials`
+7. Shoutouts → `/shoutouts`
+8. Articles → `/articles`
 
 **More**
 
-9. Shoutouts → `/shoutouts`
-10. Articles → `/articles`
+9. Game Manual → `/game-manual`
+10. FAQ → `/faq`
 11. Achievements → `/achievements`
+12. Family Dashboard → `/dashboard/sign-in`
 
 **Not in public catalog chrome** (direct URL only except Family Dashboard sign-in): `/dashboard` (private), `/public-display`, `/admin`, `/athletes/[slug]`
 
 Family Dashboard sign-in (`/dashboard/sign-in` → public `/shoot/dashboard/sign-in`) appears in:
 
 - Header (desktop/tablet, outline button — secondary to Leaderboard)
-- Mobile navigation menu
+- Main nav → More (desktop/tablet)
+- Mobile navigation enrolled CTA (catalog list omits a duplicate FD row)
 - Footer quick links
 - Homepage parent section and FAQ get-started section
 

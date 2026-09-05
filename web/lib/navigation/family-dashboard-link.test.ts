@@ -47,12 +47,22 @@ describe("Family Dashboard public entry", () => {
     );
   });
 
-  it("does not add the private dashboard route to the public product nav list", () => {
+  it("adds Family Dashboard sign-in to the public product nav without the private data route", () => {
+    expect(
+      SHOOTING_CHALLENGE_NAV.some((item) => item.href === FAMILY_DASHBOARD_APP_HREF),
+    ).toBe(true);
+    expect(
+      SHOOTING_CHALLENGE_NAV.some((item) => item.label === FAMILY_DASHBOARD_LABEL),
+    ).toBe(true);
     expect(SHOOTING_CHALLENGE_NAV.some((item) => item.href === "/dashboard")).toBe(false);
     expect(SHOOTING_CHALLENGE_NAV.some((item) => item.href === "/public-display")).toBe(
       false,
     );
+    expect(SHOOTING_CHALLENGE_NAV.some((item) => item.href.startsWith("/shoot/"))).toBe(
+      false,
+    );
   });
+
 
   it("keeps FAQ get-started CTA wired to the shared public entry", () => {
     expect(FAQ_SOURCE).toContain("family-dashboard-faq-cta");
