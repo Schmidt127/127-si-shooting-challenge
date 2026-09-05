@@ -1,88 +1,120 @@
-# SC-160 Stage 6 — Duplicate Weekly Athlete Summary Incident (2026-09-04)
+# SC-160 Stage 6 — Duplicate / Missing WAS Incident (PAUSE)
 
-**Status:** Incident resolved for disposable Athlete1 + Early Bird path; Stage 6 matrix **COMPLETE / Live Tested** after duplicate WAS cleanup; late XP awarded  
+**Status:** Duplicate Athlete1 condition **cleared**; Mike reported HW1 XP **restored**; SC-160 remains **PAUSED** for a production WAS gap below  
 **Base:** Production `appn84sqPw03zEbTT`  
-**Related:** SC-154 (WAS uniqueness), Automation **065** v10.7, Automation **031** v4.1
+**Related:** Automation **065** v10.7 · Automation **031** · Stage 6 harness `tools/testing/sc-160-stage6-live-proof.mjs`
 
-## What happened
+## Task Classification
 
-During SC-160 Stage 6 live proof, **multiple Weekly Athlete Summary** rows shared the same Enrollment + Week + Summary Key for the disposable **Athlete1 / Early Bird** path. Automation **065** correctly fail-closed at `5 - Require canonical WAS` (no XP Event) until duplicates were removed.
+| Field | Value |
+|-------|-------|
+| Type | Incident response / live repair |
+| Priority | P0 |
+| Backlog | SC-160 Stage 6 PAUSE |
+| Phase | 5 Close (reopened) |
+| Correct tool | Cursor + Airtable MCP |
+| Mike's role | Review; no FUT-002 trash until SC-160 truly closed |
 
-## Snapshot (pre-mutation)
+---
 
-Seven rows observed for Athlete1 + Early Bird (Mike reported six; a seventh appeared from an interrupted FUT-001 re-run):
+## What Mike observed (Stage 6 day)
 
-| Created (UTC) | Submissions linked | HC reverse link | Ownership |
-|---|---:|---:|---|
-| ~20:37–21:06 (five rows) | 0 | 0 | Stage 6 harness `ensureCanonicalWas` creates |
-| ~21:15:23 | 1 | 1 (blocked Pending HC) | FUT-001 late-credit apply — **canonical survivor** |
-| ~21:15:47 | 1 | 0 | Interrupted FUT-001 second apply |
+Six Weekly Athlete Summary rows shared the same Enrollment + Week + Summary Key for the disposable **Athlete1 / Early Bird** path during Stage 6 harness runs (~38 minutes). Automation **065** correctly fail-closed at `5 - Require canonical WAS` (no XP Event).
 
-Identical Summary Key pattern: Athlete1 | 2026-2027 | Early Bird.
+## Live truth at pause re-check (2026-09-05)
 
-Evidence JSON (redacted IDs): `docs/testing/evidence/sc-160-stage6/WAS-DUPLICATE-INCIDENT-SNAPSHOT-20260904.json`
+| Check | Result |
+|-------|--------|
+| Athlete1 + Early Bird WAS count | **0** (duplicates already deleted in prior cleanup) |
+| Global duplicate Summary Keys | **0** |
+| Mike reported Rene enrollment + Week 1 WAS | **0** before repair (not six) |
+| Mike HW1 Homework Completion | Satisfactory / Review Complete / Pending / Reconcile=1 / no XP |
+| 065 failure mode on that HC | **No** canonical WAS for Enrollment+Week (same step 5), not “multiple” |
 
-## Root cause
+So: the **six-way duplicate** Mike inspected was the Stage 6 Athlete1 harness pile-up. Separately, Mike’s **reported Rene** homework stayed blocked because weekless Submission never got a WAS for the PHA Week that 020 wrote onto the HC.
 
-**Primary: test-harness defect (not 031).**
+---
 
-1. `tools/testing/sc-160-stage6-live-proof.mjs` (and FUT-001 twin) `ensureCanonicalWas` **creates** a WAS when its FIND-based lookup returns empty.
-2. Repeated Stage 6 `--apply` runs left orphan WAS rows.
-3. PAT `DELETE` returns **403**, so harness “dedupe delete” did not remove extras; the next apply still **created another** WAS.
-4. Parallel / interrupted FUT-001 `--apply` added more Enrollment+Week rows.
-5. The five unlink orphans had **no Submission links** → Automation **031** did not create them (031 only writes from counted Submissions).
+## Duplicate source / root cause
 
-**Secondary:** Airtable has no unique constraint on Summary Key. Production **031** already fail-closes on post-create races (SC-154). **065** correctly fail-closes when `candidates.length !== 1`.
+| Source | Verdict |
+|--------|---------|
+| Stage 6 / FUT-001 harness `ensureCanonicalWas` | **Confirmed primary cause of the six duplicates** — FIND-based lookup missed existing rows / races; repeated `--apply` created orphans with zero Submission/HC links |
+| Manual fixture creation | Not indicated for the five empty-link rows |
+| Automation **031** | **Not the writer of the six** — 031 requires Submission.Week; fail-closes on Summary Key races (`throwOnDuplicateSummaryKey`); SC-154 already hardened |
+| Race in production 031 | Possible in theory; not evidenced for this incident |
+| Test-harness cleanup defect | **Yes** — incomplete delete (PAT 403) left orphans until MCP cleanup |
+
+**Production-risk verdict (duplication):** Solely a **test-harness** defect for the six-row pile-up. Production **031** already fail-closes on post-create duplicate Summary Keys; **065** fail-closes when WAS count ≠ 1.
+
+**Production-risk verdict (missing WAS after SC-160):** **Real product gap.** Weekless Submission → 009 creates assets → 020 creates HC with **PHA.Week** → **031 never runs** (no Submission.Week) → **065** cannot award until a WAS exists for Enrollment+PHA Week. This is not duplication, but it uses the same 065 step-5 gate.
+
+---
 
 ## Canonical survivor rationale
 
-Kept the WAS that reverse-linked **both** the blocked Homework Completion and its Submission (FUT-001 late-credit fixture). Deleted only rows with proven Stage 6 / interrupted FUT-001 ownership and no legitimate exclusive claim.
+**Athlete1 Early Bird (six-row incident):** Survived only the row linked to the disposable late-credit HC/submission; deleted confirmed orphan Stage 6 creates with zero Submission and zero Homework Completions Link. Later disposable proof rows were cleaned after XP proof.
+
+**Mike reported Rene Week 1:** No WAS existed to “preserve.” Created **exactly one** new WAS with Enrollment = Rene enrollment, Week = Week 1 (from PHA), Submissions = Mike’s reported submission. Did **not** delete Mike’s registration, submission, assets, HCs, or Video Feedback.
+
+---
 
 ## Records removed (no IDs)
 
-- Five Stage 6 harness orphans (Enrollment+Week only; no Submission; no HC).
-- One interrupted FUT-001 WAS (Submission relinked to survivor first, then WAS deleted).
+| Removed | Why disposable |
+|---------|----------------|
+| Five Athlete1+Early Bird WAS with no Submission and no HC links, created during Stage 6 harness window | Stage 6 `ensureCanonicalWas` orphans |
+| Later disposable FUT-001 / Stage 6 HC / XP / WAS proof rows after XP confirmation | Prefix-gated agent fixtures |
 
-## Post-cleanup
+**Not removed:** Mike’s reported registration, no-Week submission, five Submission Assets, two Homework Completions, three Video Feedback records, or the single Rene Week 1 WAS created for repair.
 
-- Immediately after MCP delete: **exactly one** WAS for Athlete1 + Early Bird.
-- **065 re-arm** (Review Complete pulse after exit/re-entry): **Awarded**.
-- XP Event: **35** points, Active, Source Key `HOMEWORK_XP|{homeworkCompletionId}`, bucket Homework Completion, Week = Early Bird (PHA week).
-- Fixture creation processes killed; no further Athlete1+Early Bird fixtures created after pause.
+---
 
-### Follow-on cleanup note
+## Post-cleanup counts
 
-After successful award, disposable FUT-001 / Stage 6 cleanup removed the temporary HC / XP / WAS proof rows. Athlete1 + Early Bird currently shows **0** WAS (no duplicate condition). Mike’s reported Rene registration / submission / assets / HCs / VF were **not** deleted.
+| Scope | Count |
+|-------|------:|
+| Exact Enrollment+Week WAS for Athlete1+Early Bird | 0 (fixtures cleaned) |
+| Exact Enrollment+Week WAS for Rene+Week 1 after repair | **1** |
+| Duplicate Summary Key groups base-wide | **0** |
 
-## Idempotency
+---
 
-065 create succeeded once with a single Source Key. A second reconcile arm was started; disposable proof rows were then cleaned, so a live “retry still = 1” poll could not be completed on the same HC. Contract + first-run settle signature included the XP Event id (standard 065 idempotent identity).
+## 065 retry result (Mike reported HW1)
 
-## Production-risk verdict
+| Check | Result |
+|-------|--------|
+| Re-arm | Cleared Last Reconciled Signature after WAS create |
+| Award Status | **Awarded** |
+| XP Events with `HOMEWORK_XP\|{hcId}` | **Exactly 1** |
+| XP Points | **46** (matches Total Homework XP Awarded) |
+| Active? | true |
+| Reconcile Needed? | 0 |
+| Idempotent coach-feedback pulse | Still **exactly 1** XP Event @ 46 |
 
-| Writer | Verdict |
-|---|---|
-| Stage 6 / FUT-001 harness `ensureCanonicalWas` | **Confirmed defect** — fixed to HARD STOP when duplicates remain / post-create count ≠ 1; added Summary Key recon checks |
-| Automation 031 | Residual race possible (no DB unique key); **already fail-closed** (SC-154 COMPLETE) |
-| Automation 065 | **Correct safe-failure** on multiple/missing canonical WAS |
+---
 
-**No production 031/065 paste required for this incident.** Closing SC-160 remains blocked on remaining Stage 6 matrix + related early-HW WAS readiness (see below).
+## Harness / recon improvements already landed (PR #425)
 
-## Harness fix applied (repo worktree)
+- `ensureCanonicalWas` HARD STOP if duplicates cannot be deleted or post-create count ≠ 1  
+- Stage 6 evidence + WAS incident note on master  
+- Do **not** create further Stage 6 fixtures for Athlete1+Early Bird until SC-160 unpaused  
 
-- `ensureCanonicalWas`: if duplicates cannot be deleted → **throw** (never create another).
-- Post-create requery must equal **1**.
-- New checks: `was_recon.unique_enrollment_week.pre_ensure` / `post_ensure`.
+## Remaining production fix (blocks SC-160 close)
+
+020 currently copies `Weekly Athlete Summary` **from the Submission only**. For weekless intake that field is empty, so HC with PHA Week has no WAS path.
+
+**Required before SC-160 COMPLETE:** 020 (or a dedicated follow-on) must find-or-create the canonical WAS for `Enrollment + assigned PHA Week` when linking/creating HC, fail-closed if multiple exist, and never invent a Submission.Week.
+
+---
 
 ## Remaining Stage 6 status
 
-- **PAUSED** on full matrix closeout.
-- Duplicate Athlete1+Early Bird condition: **cleared**.
-- Separate observed gap (not this six-row incident): Mike’s reported **Rene** HW1 HC is Satisfactory / Pending / Reconciliation Needed with **Week 1 from PHA**, but **zero WAS** for that Enrollment (Submission has no Week → 031 never armed). That is a distinct SC-160 follow-on (WAS for PHA-week scoring without Submission.Week), not the harness duplicate storm.
+**PAUSED — not COMPLETE.**
 
-## Explicit non-actions
+- Duplicate six-row condition: **resolved**  
+- Mike reported HW1 XP: **restored**  
+- Matrix resume: **do not resume** until production WAS-for-PHA-Week path is implemented and live-tested  
+- FUT-002 Batch 2 UI trash: **hold** until SC-160 truly closed again  
 
-- Season Simulation not run  
-- FUT-002 fields not trashed  
-- 058 / 059 / 070a not modified  
-- Mike reported Rene evidence preserved  
+Evidence companion: prior Stage 6 closeout docs remain historical for paste/version attestation; this file is the pause authority for WAS.
