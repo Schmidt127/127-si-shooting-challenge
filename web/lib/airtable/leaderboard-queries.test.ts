@@ -251,15 +251,24 @@ describe("fetchLeaderboard Airtable adapter", () => {
     expect((await fetchLeaderboard()).entries.map((entry) => entry.displayName)).toEqual(["Blair", "Avery"]);
   });
 
-  it("rejects a duplicate canonical enrollment identity returned by the view", async () => {
+  it("publishes the higher-ranked enrollment when a duplicate identity appears in the view", async () => {
     installQueryMock([
-      enrollment("recAxxxxxxx00001", "Avery", { "Athlete ID Lookup": ["same-athlete"] }),
-      enrollment("recBxxxxxxx00002", "Avery", { "Athlete ID Lookup": ["same-athlete"] }),
+      enrollment("recAxxxxxxx00001", "Avery", {
+        "Athlete ID Lookup": ["same-athlete"],
+        "Lifetime XP Total": 100,
+      }),
+      enrollment("recBxxxxxxx00002", "Blair", {
+        "Athlete ID Lookup": ["same-athlete"],
+        "Lifetime XP Total": 300,
+      }),
     ]);
-    await expect(fetchLeaderboard()).rejects.toThrow(/Duplicate canonical Enrollment identity/);
+    const data = await fetchLeaderboard();
+    expect(data.entries).toHaveLength(1);
+    expect(data.entries[0].displayName).toBe("Blair");
+    expect(data.entries[0].xp).toBe(300);
   });
 
-  it("rejects a stale level after a downward XP correction", async () => {
+  it("skips a stale level after a downward XP correction instead of blanking the board", async () => {
     installQueryMock([enrollment("recAxxxxxxx00001", "Avery", { "Lifetime XP Total": 100 })]);
     listAirtableRecordsMock.mockImplementation(async (params: { tableName: string }) => {
       if (params.tableName === "Program Instance - Sync") {
@@ -275,7 +284,7 @@ describe("fetchLeaderboard Airtable adapter", () => {
       }
       return { records: [enrollment("recAxxxxxxx00001", "Avery", { "Lifetime XP Total": 100 })] };
     });
-    await expect(fetchLeaderboard()).rejects.toThrow(/below its assigned Current Level threshold/);
+    await expect(fetchLeaderboard()).resolves.toMatchObject({ entries: [] });
   });
 
   it("uses the canonical Registering Program Instance name when validating season selection", () => {

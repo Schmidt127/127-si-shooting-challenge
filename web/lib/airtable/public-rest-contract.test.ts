@@ -124,8 +124,8 @@ describe("standings eligibility against live REST fixtures", () => {
     expect(records).toHaveLength(1);
   });
 
-  it("fails closed when Current Level is a display-name object instead of a record id", () => {
-    expect(() =>
+  it("skips a Current Level display-name object instead of failing the whole board", () => {
+    expect(
       requireEligibleLeaderboardRecords(
         [
           {
@@ -137,11 +137,11 @@ describe("standings eligibility against live REST fixtures", () => {
         ],
         scope,
       ),
-    ).toThrow(/exactly one Current Level/);
+    ).toEqual([]);
   });
 
-  it("fails closed when Level Sort Order lookup is empty or multi-valued", () => {
-    expect(() =>
+  it("skips when Level Sort Order lookup is empty or multi-valued", () => {
+    expect(
       requireEligibleLeaderboardRecords(
         [
           {
@@ -153,8 +153,8 @@ describe("standings eligibility against live REST fixtures", () => {
         ],
         scope,
       ),
-    ).toThrow(/Level Rank/);
-    expect(() =>
+    ).toEqual([]);
+    expect(
       requireEligibleLeaderboardRecords(
         [
           {
@@ -166,7 +166,7 @@ describe("standings eligibility against live REST fixtures", () => {
         ],
         scope,
       ),
-    ).toThrow(/Level Rank/);
+    ).toEqual([]);
   });
 });
 

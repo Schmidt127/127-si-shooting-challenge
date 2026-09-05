@@ -85,9 +85,14 @@ export function LeaderboardErrorState({ message }: { message: string }) {
           title="Could not load leaderboard"
           message={message}
           action={
-            <CtaLink href="/" variant="secondary">
-              ← Shooting Challenge
-            </CtaLink>
+            <>
+              <CtaLink href="/leaderboard" variant="default">
+                Try again
+              </CtaLink>
+              <CtaLink href="/" variant="secondary">
+                ← Shooting Challenge
+              </CtaLink>
+            </>
           }
         />
       </div>
