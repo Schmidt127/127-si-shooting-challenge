@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-20
-Last GitHub Update: 2026-09-05 (v4.0 SC-163 Goal Met Date)
+Last GitHub Update: 2026-09-05 (v4.1 SC-163 Goal Met Date timezone fix)
 
 Purpose:
 Creates Athlete Achievement Unlock rows when an Enrollment crosses configured Shot Milestone thresholds.
@@ -31,11 +31,17 @@ SC-163 Goal Met Date lives here (capacity-safe). Do not install Automation 122.
  * 066 - ACHIEVEMENTS AND MILESTONES
  * Create Shot Milestone Unlocks
  *
- * Version: v4.0
+ * Version: v4.1
  * Date Written: 2026-06-17
  * Last Updated: 2026-09-05
  *
  * VERSION HISTORY
+ * - v4.1 (2026-09-05): SC-163 — preserve date-only Activity Date calendar keys
+ *   (getCellValueAsString / toDateKeyFromText / toSafeDateKey). Do not timezone-
+ *   convert YYYY-MM-DD UTC-midnight Dates through America/Denver (v4.0 live
+ *   regression: 2026-08-30 → 2026-08-29 → display 8/28). Chronology sorts by
+ *   preserved date key, then createdTime, then record id. Goal Met Date field
+ *   must be date-only (time disabled). Milestone unlock behavior unchanged.
  * - v4.0 (2026-09-05): SC-163 — stamp Enrollments.Goal Met Date with the first
  *   counted Activity Date that crosses Target Goal Shots. Isolated from milestone
  *   writes (never invent; never overwrite; fail closed when unprovable). Supersedes
@@ -68,7 +74,8 @@ SC-163 Goal Met Date lives here (capacity-safe). Do not install Automation 122.
  * - Creates one Athlete Achievement Unlock per milestone using Milestone Source Key dedupe.
  * - Writes Milestone Activity Date, Week (from Weeks date ranges within Program Instance), and Pending XP status.
  * - SC-163: when Goal Met? / counted total reaches Target Goal Shots and Goal Met Date
- *   is blank, stamps the first provable counted Activity Date crossing (America/Denver).
+ *   is blank, stamps the first provable counted Activity Date crossing (preserved
+ *   calendar date key — never TZ-shift date-only YYYY-MM-DD).
  * - Clears Run Shot Milestone Check? when finished (except on error — leave checked for triage).
  *
  * IMPORTANT DESIGN RULES
@@ -84,9 +91,12 @@ SC-163 Goal Met Date lives here (capacity-safe). Do not install Automation 122.
  * - Week resolution uses Weeks.Start Date / End Date ranges (America/Denver) scoped by
  *   Enrollment.Program Instance — never date-only across years.
  * - Goal Met Date uses the same counted-submission filter and chronology as milestone
- *   crossings (Count This Submission?, Activity Date, Total Shots Counted > 0).
+ *   crossings (Count This Submission?, preserved Activity Date key, createdTime, record id).
+ * - Do not timezone-convert a YYYY-MM-DD date-only Activity Date (prefer
+ *   getCellValueAsString / toDateKeyFromText / toSafeDateKey before Date construction).
  * - Goal Met Date never overwrites a non-blank value; never uses NOW()/award dates.
  * - Goal Met Date failures are isolated (do not roll back milestone unlock writes).
+ * - Enrollments.Goal Met Date must be date-only (Include time = off).
  *
  * THIS IS NOT
  * - XP award automation (059 / achievement-to-XP chain handles Pending unlocks).
@@ -125,7 +135,7 @@ SC-163 Goal Met Date lives here (capacity-safe). Do not install Automation 122.
  * - skippedExistingUnlocksOut
  * - goalMetDateActionOut = stamped | skipped_not_met | skipped_already_set | skipped_no_target |
  *   skipped_field_not_writable | skipped_field_missing | error_unprovable | error_ambiguous | ""
- * - goalMetDateOut = YYYY-MM-DD (America/Denver) or empty — no athlete names / no submission IDs
+ * - goalMetDateOut = YYYY-MM-DD (preserved Activity Date calendar key) or empty — no athlete names / no submission IDs
  *
  * PRIMARY TABLES USED
  * - Enrollments, Submissions, Shot Milestones, Achievements, Athlete Achievement Unlocks, Weeks
@@ -145,7 +155,7 @@ SC-163 Goal Met Date lives here (capacity-safe). Do not install Automation 122.
 
 const SCRIPT = {
   scriptName: "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
-  version: "v4.0",
+  version: "v4.1",
   versionDate: "2026-09-05",
   originalWrittenDate: "2026-06-17",
   lastUpdated: "2026-09-05",
@@ -587,6 +597,30 @@ function toSafeDateKey(record, table, fieldName) {
   return toDateKeyFromDateObject(raw, CONFIG.timeZone);
 }
 
+/**
+ * Preserve a date-only Activity Date calendar key.
+ * Prefer getCellValueAsString text; never TZ-convert YYYY-MM-DD.
+ * Date-only UTC midnight fallback uses UTC Y-M-D (Airtable date-only shape).
+ */
+function preserveActivityDateKeyFromRecord(record, fieldName) {
+  if (!fieldName) return "";
+  const raw = record.getCellValue(fieldName);
+  const text = getText(record, fieldName);
+  const fromText = toDateKeyFromText(text);
+  if (fromText) return fromText;
+  if (typeof raw === "string") {
+    const fromRaw = toDateKeyFromText(raw);
+    if (fromRaw) return fromRaw;
+  }
+  if (raw instanceof Date && !Number.isNaN(raw.getTime())) {
+    const year = raw.getUTCFullYear();
+    const month = String(raw.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(raw.getUTCDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+  return "";
+}
+
 function compareDateKeys(a, b) {
   if (!a && !b) return 0;
   if (!a) return -1;
@@ -594,12 +628,17 @@ function compareDateKeys(a, b) {
   return String(a).localeCompare(String(b));
 }
 
-function formatDateForNotes(dateValue) {
+function formatDateForNotes(dateValue, dateKeyOpt) {
+  const key = dateKeyOpt && String(dateKeyOpt).trim();
+  if (key && /^\d{4}-\d{2}-\d{2}$/.test(key)) return key;
   if (!dateValue) return "No date";
-  const year = dateValue.getFullYear();
-  const month = String(dateValue.getMonth() + 1).padStart(2, "0");
-  const day = String(dateValue.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
+  if (dateValue instanceof Date && !Number.isNaN(dateValue.getTime())) {
+    const year = dateValue.getUTCFullYear();
+    const month = String(dateValue.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(dateValue.getUTCDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+  return "No date";
 }
 
 function addIfWritable(table, payload, fieldName, value) {
@@ -694,9 +733,12 @@ function resolveWeekIdForActivityDate(
   weekRecords,
   weeksTable,
   activityDate,
-  programInstanceId
+  programInstanceId,
+  activityDateKeyOpt
 ) {
-  const dateKey = toDateKeyFromDateObject(activityDate, CONFIG.timeZone);
+  const dateKey =
+    (activityDateKeyOpt && String(activityDateKeyOpt).trim()) ||
+    toDateKeyFromDateObject(activityDate, CONFIG.timeZone);
   if (!dateKey) return { weekId: "", dateKey: "" };
   const weekRecord = findWeekForDate(
     weekRecords,
@@ -853,13 +895,14 @@ function findFirstGoalMetCrossingFromSubmissions(submissions, targetGoalShots) {
   let runningTotal = 0;
   for (const submission of submissions) {
     const shots = Number(submission.totalShotsCounted) || 0;
-    if (shots <= 0 || !(submission.activityDate instanceof Date)) continue;
+    const dateKey = String(submission.activityDateKey || "").trim();
+    if (shots <= 0 || !/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) continue;
     const beforeTotal = runningTotal;
     runningTotal += shots;
     if (beforeTotal < target && runningTotal >= target) {
       return {
         date: submission.activityDate,
-        dateKey: toDateKeyFromDateObject(submission.activityDate, CONFIG.timeZone),
+        dateKey,
         submissionId: submission.record.id,
         beforeTotal,
         afterTotal: runningTotal,
@@ -873,8 +916,17 @@ function findFirstGoalMetCrossingFromSubmissions(submissions, targetGoalShots) {
 function decideGoalMetDateWriteInline(input) {
   const existing = input.existingDate;
   const existingKey = existing
-    ? toDateKeyFromDateObject(existing, CONFIG.timeZone) ||
-      String(existing || "").trim().slice(0, 10)
+    ? toDateKeyFromText(
+        existing instanceof Date ? "" : String(existing || "")
+      ) ||
+      (existing instanceof Date
+        ? (() => {
+            const year = existing.getUTCFullYear();
+            const month = String(existing.getUTCMonth() + 1).padStart(2, "0");
+            const day = String(existing.getUTCDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+          })()
+        : String(existing || "").trim().slice(0, 10))
     : "";
   if (existingKey) {
     return { action: CONFIG.goalMetDateActions.skippedAlreadySet, dateKey: existingKey };
@@ -928,7 +980,13 @@ async function maybeStampGoalMetDateIsolated({
       return { action: CONFIG.goalMetDateActions.skippedFieldNotWritable, dateKey: "" };
     }
 
-    const existingDate = getDateValue(enrollmentRecord, goalMetDateField);
+    const existingDateRaw = enrollmentRecord.getCellValue(goalMetDateField);
+    const existingDateText = getText(enrollmentRecord, goalMetDateField);
+    const existingDateKey = preserveActivityDateKeyFromRecord(
+      enrollmentRecord,
+      goalMetDateField
+    );
+    const existingDate = existingDateKey || existingDateRaw || existingDateText || null;
     const targetResolved = fieldExists(enrollmentsTable, CONFIG.enrollmentFields.targetGoalShots)
       ? resolveTargetGoalShotsFromRecord(enrollmentRecord, CONFIG.enrollmentFields.targetGoalShots)
       : { status: "missing", target: 0 };
@@ -1211,6 +1269,10 @@ async function main() {
     .map((submission) => ({
       record: submission,
       activityDate: getDateValue(submission, CONFIG.submissionFields.activityDate),
+      activityDateKey: preserveActivityDateKeyFromRecord(
+        submission,
+        CONFIG.submissionFields.activityDate
+      ),
       totalShotsCounted: getNumber(submission, CONFIG.submissionFields.totalShotsCounted),
       countThisSubmission: getBooleanish(
         submission,
@@ -1220,12 +1282,12 @@ async function main() {
     }))
     .filter((submission) =>
       submission.countThisSubmission &&
-      submission.activityDate &&
+      submission.activityDateKey &&
       submission.totalShotsCounted > 0
     )
     .sort((a, b) => {
-      const dateDiff = a.activityDate.getTime() - b.activityDate.getTime();
-      if (dateDiff !== 0) return dateDiff;
+      const keyDiff = compareDateKeys(a.activityDateKey, b.activityDateKey);
+      if (keyDiff !== 0) return keyDiff;
       const createdA = a.record.createdTime ? new Date(a.record.createdTime).getTime() : 0;
       const createdB = b.record.createdTime ? new Date(b.record.createdTime).getTime() : 0;
       if (createdA !== createdB) return createdA - createdB;
@@ -1415,6 +1477,7 @@ async function main() {
       if (beforeTotal < milestone.shotCount && runningTotal >= milestone.shotCount) {
         crossingByMilestoneId.set(milestone.record.id, {
           activityDate: submission.activityDate,
+          activityDateKey: submission.activityDateKey,
           submissionRecordId: submission.record.id,
           beforeTotal,
           afterTotal: runningTotal,
@@ -1439,7 +1502,7 @@ async function main() {
   for (const milestone of eligibleMilestones) {
     const crossing = crossingByMilestoneId.get(milestone.record.id);
 
-    if (!crossing || !crossing.activityDate) {
+    if (!crossing || !(crossing.activityDateKey || crossing.activityDate)) {
       missingCrossingDateCount += 1;
       continue;
     }
@@ -1448,7 +1511,8 @@ async function main() {
       weekQuery.records,
       weeksTable,
       crossing.activityDate,
-      enrollmentProgramInstanceId
+      enrollmentProgramInstanceId,
+      crossing.activityDateKey
     );
 
     const existingUnlock = existingUnlockBySourceKey.get(milestone.sourceKey);
@@ -1480,7 +1544,7 @@ async function main() {
           unlocksTable,
           updatePayload,
           CONFIG.unlockFields.milestoneActivityDate,
-          crossing.activityDate
+          crossing.activityDateKey || crossing.activityDate
         );
         didUpdate = true;
       }
@@ -1501,7 +1565,7 @@ async function main() {
           CONFIG.unlockFields.notes,
           [
             getOptionalText(existingUnlock, unlocksTable, CONFIG.unlockFields.notes),
-            `Updated by ${SCRIPT.scriptName} ${SCRIPT.version}. Milestone Activity Date: ${formatDateForNotes(crossing.activityDate)}. Week: ${weekResolved.weekName || weekResolved.weekId || "unresolved"}. Crossing Submission: ${crossing.submissionRecordId}.`,
+            `Updated by ${SCRIPT.scriptName} ${SCRIPT.version}. Milestone Activity Date: ${formatDateForNotes(crossing.activityDate, crossing.activityDateKey)}. Week: ${weekResolved.weekName || weekResolved.weekId || "unresolved"}. Crossing Submission: ${crossing.submissionRecordId}.`,
           ]
             .filter(Boolean)
             .join("\n")
@@ -1535,7 +1599,7 @@ async function main() {
       unlocksTable,
       unlockPayload,
       CONFIG.unlockFields.milestoneActivityDate,
-      crossing.activityDate
+      crossing.activityDateKey || crossing.activityDate
     );
 
     if (weekResolved.weekId) {
@@ -1565,7 +1629,7 @@ async function main() {
         `Milestone: ${milestone.label || milestone.shotCount}.`,
         `Milestone Shot Count: ${milestone.shotCount}.`,
         `Points Awarded: ${milestone.points}.`,
-        `Milestone Activity Date: ${formatDateForNotes(crossing.activityDate)}.`,
+        `Milestone Activity Date: ${formatDateForNotes(crossing.activityDate, crossing.activityDateKey)}.`,
         `Week: ${weekResolved.weekName || weekResolved.weekId || "unresolved"}.`,
         `Crossing Submission: ${crossing.submissionRecordId}.`,
         `Running total crossed from ${crossing.beforeTotal} to ${crossing.afterTotal}.`,

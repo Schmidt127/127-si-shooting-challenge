@@ -3,7 +3,7 @@ Automation: 122 - Achievements and Milestones - Stamp Goal Met Date
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: SUPERSEDED — DO NOT INSTALL
-Last GitHub Update: 2026-09-05 (superseded by 066 v4.0)
+Last GitHub Update: 2026-09-05 (superseded by 066 v4.1)
 
 Purpose:
 SUPERSEDED stub. Goal Met Date ownership moved to Automation 066.
@@ -23,7 +23,7 @@ See docs/deploy-checklists/SC-163-goal-met-date.md
  *
  * PURPOSE
  * - Intentionally non-runnable stub so future agents do not install 122.
- * - Production Goal Met Date writer is Automation 066 v4.0+.
+ * - Production Goal Met Date writer is Automation 066 v4.1+.
  *
  * RETAINED PRODUCT RULES (implemented in 066 / lib/sc-163-goal-met-date.js)
  * - Goal Met? formula is authoritative for "met"
@@ -55,5 +55,5 @@ const SCRIPT = {
 };
 
 throw new Error(
-  "SC-163: Automation 122 is SUPERSEDED. Paste Automation 066 v4.0+ for Goal Met Date. Do not install 122."
+  "SC-163: Automation 122 is SUPERSEDED. Paste Automation 066 v4.1+ for Goal Met Date. Do not install 122."
 );

@@ -85,7 +85,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 ## Achievements and streaks (053–059, 066)
 
 > **PKG-038 status:** **COMPLETE** (Production proof passed 2026-08-16). 053 v5.5,
-> 054 v5.8, **066 v4.0** (GitHub; live still **v3.9** until SC-163 paste — Goal Met Date + milestones), and 059 v3.7 (repo; paste with 058 v1.5) are the GitHub source. Charlie Schmidt Early
+> 054 v5.8, **066 v4.1** (Live / GitHub aligned — SC-163 Goal Met Date + milestones COMPLETE / Live Tested), and 059 v3.7 (repo; paste with 058 v1.5) are the GitHub source. Charlie Schmidt Early
 > Bird path proven; audit v2.1 issueTotal = 0. **Do not retest** unless source,
 > trigger, or schema changes. Resume after first regular Week closes (~May 8, 2027).
 
@@ -98,8 +98,8 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **057** | Achievements — Calculate Perfect Week Eligibility | WAS Perfect Week recalc | `057-achievements-and-milestones-calculate-perfect-week-eligibility.js` (**Live v2.5** — SC-160 early HW counts for assigned-week Perfect Week; late still excluded; SC-152 clears `Perfect Week Recalc Needed?` on writeback; Config-driven Perfect Week video minimum (SC-034); inactive enrollment and unsettled/multiple/wrong-scope goals fail closed; requires lookup parity with the linked active goal) |
 | **058** | Achievements — Create Perfect Week Unlock | Lifecycle-capable WAS trigger; dynamic `recordId` | `058-achievements-and-milestones-create-perfect-week-unlock.js` (**v1.7** — SC-153 Coach Note query hotfix for withdraw; lifecycle deactivate/restore; Milestone Source Key `PERFECT_WEEK|{enr}|{week}`) |
 | **059** | Achievements — Create/Reconcile XP Event from Achievement Unlock | Athlete Achievement Unlocks · **`059 Lifecycle Trigger?` = 1** only; **Do NOT filter on Ready for 059 XP** or XP Events empty | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.8** — SC-159 formula trigger Live Tested; Trigger Context; Milestone Source Key; `lifecycleOut`) |
-| 066 | Achievements — Create Shot Milestone Unlocks (+ **SC-163 Goal Met Date**) | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v4.0** — milestones + Goal Met Date stamp; **paste pending** for SC-163 — prior live **v3.9** 2026-08-24; checklist [`SC-163-goal-met-date.md`](./deploy-checklists/SC-163-goal-met-date.md)) |
-| ~~122~~ | ~~Stamp Goal Met Date~~ | — | **SUPERSEDED** — do not install. Capacity full; ownership is **066 v4.0**. Stub: `122-achievements-and-milestones-stamp-goal-met-date.js` |
+| 066 | Achievements — Create Shot Milestone Unlocks (+ **SC-163 Goal Met Date**) | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v4.1** Live / GitHub — milestones + Goal Met Date date-key preserve; SC-163 **COMPLETE / Live Tested**; may remain ON; closeout [`SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md`](./audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md)) |
+| ~~122~~ | ~~Stamp Goal Met Date~~ | — | **SUPERSEDED** — do not install. Capacity full; ownership is **066 v4.1**. Stub: `122-achievements-and-milestones-stamp-goal-met-date.js` |
 
 ## Email handoffs (070b/070c upload are not parent email)
 

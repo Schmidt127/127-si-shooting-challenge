@@ -107,7 +107,7 @@ FUT-029, Season Sim, broad Airtable cleanup, Automation 021/013/067 pastes, rest
 |---|---|
 | SC-161 | COMPLETE / Live Tested |
 | SC-162 | COMPLETE / Live Tested |
-| SC-163 | PARTIALLY COMPLETE — Mike UI |
+| SC-163 | COMPLETE / Live Tested |
 | SC-164 | COMPLETE / Live Tested |
 | SC-165 | COMPLETE / Live Tested |
 | SC-166 | PARTIALLY COMPLETE — Mike UI |
