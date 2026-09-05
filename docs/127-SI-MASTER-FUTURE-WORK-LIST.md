@@ -2939,7 +2939,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | **Homework late-credit policy (020/065/057)** | **COMPLETE** (GitHub + Production PASTE-ALIGNED + disposable live proof 2026-09-04) | PR **#372** merged `da009262`. Live **020 v3.9 / 065 v10.6 / 057 2.4**. Checklist: [`deploy-checklists/homework-late-credit-policy-020-057-065.md`](./deploy-checklists/homework-late-credit-policy-020-057-065.md). Proof: [`audits/FUT-001-LATE-CREDIT-LIVE-PROOF-20260904.md`](./audits/FUT-001-LATE-CREDIT-LIVE-PROOF-20260904.md). |
 
-| **Automation 067** | **COMPLETE (Live v3.5) / DO-NOT-TOUCH** | Automations Code 2026-09-03 SCRIPT **v3.5** Live. Do not edit this closeout wave. |
+| **Automation 067** | **Live v3.4** (GitHub/inventory Code **v3.5** structure-only) | MCP 2026-09-05 live script body **v3.4**. Prior “Live v3.5 DO-NOT-TOUCH” overstated inventory Code. Optional structure paste only — [`audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md`](./audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md). |
 
 | **Game Log category filters** | **Built in Repository** | PR **#366** merged `b7f80534`. Nine public-safe category slugs (shooting, homework, video, zoom, streak, weekly threshold, shot milestone, perfect week, manual award). |
 
