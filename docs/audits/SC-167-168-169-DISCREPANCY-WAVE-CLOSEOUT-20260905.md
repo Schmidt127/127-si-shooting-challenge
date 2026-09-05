@@ -16,7 +16,7 @@ Live verification addendum: [`SC-167-168-169-LIVE-VERIFICATION-20260905.md`](./S
 
 | ID | Discrepancy | Classification | Verdict |
 |---|---|---|---|
-| **SC-167** | SUBMISSION_XP 59 rows / 58 unique | **Confirmed Production defect** (010 TOCTOU) | GitHub **010 v10.14** merged (#453); **Live pasted + verified v10.14**; eligible disposable create+retry **LIVE TEST REQUIRED** (2027 Weeks + wall-clock formulas) |
+| **SC-167** | SUBMISSION_XP 59 rows / 58 unique | **Confirmed Production defect** (010 TOCTOU) | GitHub **010 v10.14** merged (#453); **Live pasted + verified v10.14**; **COMPLETE / Live Tested** (Option A 2026-09-05) |
 | **SC-168** | 0 WEEKLY Hub handoffs | **Expected harness gap** | Execute arms Build only; 118/119 cron not sim-driven (#451) — **COMPLETE** |
 | **SC-169** | Unlocks = 0 | **False-negative count + cleanup gap** | Expected **4** shot-milestone unlocks; 066→059 worked; orphans deleted (#452) — **COMPLETE** |
 
@@ -46,15 +46,7 @@ Worktrees: `…/sc-sim-disc-20260905/a1-dup-xp`, `a2-weekly-email`, `a3-achievem
 
 ---
 
-## Remaining Mike action
-
-**SC-167 only:** authorize temporary Season Sim clock gate (or next disposable Season Sim) to finish create → one Active XP → latch retry → still one Active → cleanup → restore `NOW()` formulas.
-
-Checklist: [`deploy-checklists/SC-167-010-v10.14-duplicate-consolidate.md`](../deploy-checklists/SC-167-010-v10.14-duplicate-consolidate.md)
-
-**SC-168 / SC-169:** no paste / no required Mike action.
-
-Optional later: `weekly-email-stage apply --weekly-email-limit 1` ([`SC-168-weekly-email-stage.md`](../deploy-checklists/SC-168-weekly-email-stage.md)).
+## Remaining Mike action`n`n**None** for SC-167/168/169. Optional later: `weekly-email-stage apply --weekly-email-limit 1` ([`SC-168-weekly-email-stage.md`](../deploy-checklists/SC-168-weekly-email-stage.md)).
 
 ---
 
@@ -65,3 +57,4 @@ Optional later: `weekly-email-stage apply --weekly-email-limit 1` ([`SC-168-week
 - Automations **013 / 067 / 122** not pasted; **021** unchanged  
 - FUT-029 not implemented  
 - No real-family communication  
+
