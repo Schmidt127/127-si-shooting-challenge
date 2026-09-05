@@ -12,6 +12,7 @@
 
 import { expect, test } from "@playwright/test";
 
+import { FAMILY_DASHBOARD_LABEL } from "../lib/navigation/family-dashboard-link";
 import {
   FILL_OUT,
   OFFICIAL_LANDING_URL,
@@ -204,15 +205,23 @@ test.describe("production smoke — navigation, assets, basePath", () => {
     }
 
     await nav.getByRole("button", { name: /More/i }).click();
-    for (const moreLabel of ["Game Manual", "FAQ", "Achievements"]) {
+    for (const moreLabel of [
+      "Game Manual",
+      "FAQ",
+      "Achievements",
+      FAMILY_DASHBOARD_LABEL,
+    ]) {
       await expect(
-        page.getByRole("menuitem", { name: moreLabel }),
+        page.getByRole("menuitem", { name: moreLabel, exact: true }),
         `More menu item ${moreLabel}`,
       ).toBeVisible();
     }
-    await expect(page.getByRole("menuitem", { name: "Dashboard" })).toHaveCount(0);
-    await expect(page.getByRole("menuitem", { name: "Display" })).toHaveCount(0);
-    await page.getByRole("menuitem", { name: "Achievements" }).click();
+    // Private gym Display stays out of chrome. Do not assert name:"Dashboard"
+    // with count 0 — Playwright substring match falsely hits Family Dashboard.
+    await expect(
+      page.getByRole("menuitem", { name: "Display", exact: true }),
+    ).toHaveCount(0);
+    await page.getByRole("menuitem", { name: "Achievements", exact: true }).click();
     await expect(page).toHaveURL(/\/achievements/);
     await expectSingleHeading(page, "nav→Achievements via More");
   });
