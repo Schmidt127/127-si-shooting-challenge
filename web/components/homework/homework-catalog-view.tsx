@@ -5,7 +5,6 @@ import { HomeworkRetryActions } from "@/components/homework/homework-retry-actio
 import { formatHomeworkDueDate } from "@/components/athlete/homework-assignments";
 import { catalogCardClass } from "@/components/catalog/catalog-surface";
 import { IconBook } from "@/components/icons/shoot-icons";
-import { SafeExternalImage } from "@/components/media/safe-external-image";
 import {
   AccentRail,
   CtaLink,
@@ -15,48 +14,36 @@ import {
 import { ProgramFeatureBanner } from "@/components/site/program-feature-image";
 import { FEATURE_BANNER_ARIA } from "@/lib/seo/program-facts";
 import { EmptyState, ErrorState } from "@/components/ui";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { formatRelativeUpdate } from "@/lib/formatters";
+import {
+  homeworkDueStatusLabel,
+  resolveHomeworkDueStatus,
+} from "@/lib/data/homework-resources";
 import { ACCESSIBILITY_LABELS, EMPTY_STATE_COPY } from "@/lib/release/public-surface";
+import { cn } from "@/lib/utils";
 import type { HomeworkAssignment, HomeworkCatalogData } from "@/types/homework";
 
 type HomeworkCatalogViewProps = {
   data: HomeworkCatalogData;
 };
 
-function HomeworkResourceLinks({ assignment }: { assignment: HomeworkAssignment }) {
-  const links: Array<{ href: string; label: string }> = [];
-
-  if (assignment.url.trim()) {
-    links.push({ href: assignment.url.trim(), label: "Open assignment" });
+function dueStatusTone(
+  status: ReturnType<typeof resolveHomeworkDueStatus>,
+): "neutral" | "warn" | "danger" | "blue" {
+  switch (status) {
+    case "past_due":
+      return "danger";
+    case "due_soon":
+      return "warn";
+    case "upcoming":
+      return "blue";
+    default:
+      return "neutral";
   }
-  if (assignment.urlAdditional.trim()) {
-    links.push({ href: assignment.urlAdditional.trim(), label: "Additional resource" });
-  }
-  for (const doc of assignment.docs) {
-    links.push({ href: doc.url, label: doc.filename });
-  }
-
-  if (links.length === 0) return null;
-
-  return (
-    <div className="mt-4 flex flex-wrap gap-2" data-testid="homework-catalog-resources">
-      {links.map((link) => (
-        <a
-          key={`${link.href}-${link.label}`}
-          href={link.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex min-h-11 items-center gap-1 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold text-accent-soft transition hover:border-brand-orange/35 hover:bg-brand-light-gray/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/40"
-        >
-          {link.label}
-          <span aria-hidden>↗</span>
-        </a>
-      ))}
-    </div>
-  );
 }
 
-function HomeworkCard({
+function HomeworkCompactRow({
   assignment,
   index,
   isLatestWeek,
@@ -65,129 +52,71 @@ function HomeworkCard({
   index: number;
   isLatestWeek: boolean;
 }) {
-  const hwLabel =
-    assignment.homeworkSlot ||
-    assignment.homeworkNumber ||
-    (assignment.assignmentNumber ? `Assignment ${assignment.assignmentNumber}` : `Assignment ${index + 1}`);
+  const detailHref = `/homework/${assignment.id}`;
+  const title = assignment.title || assignment.displayName;
   const dueLabel = assignment.dueDate
     ? formatHomeworkDueDate(assignment.dueDate)
     : "No due date provided";
-  const gradeBandLabel =
-    assignment.gradeBands.length > 0
-      ? assignment.gradeBands.join(", ")
-      : assignment.gradeBandLabel.trim() || null;
+  const dueStatus = resolveHomeworkDueStatus(assignment.dueDate);
+  const dueStatusText = homeworkDueStatusLabel(dueStatus);
+  const category = assignment.categoryLabel || "Assignment";
 
   return (
-      <article
-        data-testid="homework-catalog-card"
-        className={catalogCardClass(
-          isLatestWeek && index === 0 ? { featured: "accent" } : undefined,
-        )}
-      >
-        <div className="flex min-w-0 flex-col sm:flex-row">
-          {assignment.coverImage ? (
-            <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-brand-light-gray sm:aspect-auto sm:h-auto sm:w-44 md:w-52">
-              <SafeExternalImage
-                src={assignment.coverImage.url}
-                alt={assignment.title ? `${assignment.title} cover` : "Homework cover"}
-                className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
-                fallback={
-                  <div className="flex h-full min-h-[8.5rem] w-full items-center justify-center bg-brand-blue/15">
-                    <span className="font-mono text-4xl font-black text-brand-blue/25">{hwLabel}</span>
-                  </div>
-                }
-              />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent to-card/90 sm:bg-gradient-to-t sm:to-card/90" />
-            </div>
-          ) : (
-            <div className="flex w-full items-center justify-center border-b border-border-subtle bg-brand-blue/15 py-10 sm:w-44 sm:border-b-0 sm:border-r md:w-52">
-              <span className="font-mono text-4xl font-black text-brand-blue/25">{hwLabel}</span>
-            </div>
-          )}
-
-          <div className="flex min-w-0 flex-1 flex-col justify-center p-5 sm:p-6">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-md bg-brand-orange/10 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-accent-soft">
-                {hwLabel}
-              </span>
-              {assignment.order > 0 ? (
-                <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  Order {assignment.order}
-                </span>
-              ) : null}
-              {assignment.bookAbbreviation ? (
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  {assignment.bookAbbreviation}
-                </span>
-              ) : null}
-            </div>
-
-            <h3 className="mt-3 text-lg font-bold leading-snug text-foreground sm:text-xl">
-              <Link
-                href={`/homework/${assignment.id}`}
-                className="transition hover:text-accent-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/40"
-              >
-                {assignment.title || assignment.displayName}
-              </Link>
-            </h3>
-
-            <p
-              className="mt-2 line-clamp-3 text-sm leading-relaxed text-foreground"
-              data-testid="homework-catalog-brief"
-            >
-              {assignment.instructionsPreview}
-            </p>
-
-            <dl className="mt-4 grid min-w-0 gap-2 text-xs text-muted-foreground sm:grid-cols-2">
-              <div className="min-w-0">
-                <dt className="font-semibold uppercase tracking-wider text-[10px] text-muted-foreground">Week</dt>
-                <dd className="mt-0.5 break-words text-sm text-foreground">{assignment.weekName}</dd>
-              </div>
-              <div className="min-w-0">
-                <dt className="font-semibold uppercase tracking-wider text-[10px] text-muted-foreground">Due</dt>
-                <dd className="mt-0.5 break-words text-sm text-foreground">{dueLabel}</dd>
-              </div>
-              {gradeBandLabel ? (
-                <div className="min-w-0">
-                  <dt className="font-semibold uppercase tracking-wider text-[10px] text-muted-foreground">Grade band</dt>
-                  <dd className="mt-0.5 break-words text-sm text-foreground">{gradeBandLabel}</dd>
-                </div>
-              ) : null}
-              {assignment.submissionRequirement ? (
-                <div className="min-w-0 sm:col-span-2">
-                  <dt className="font-semibold uppercase tracking-wider text-[10px] text-muted-foreground">Submission</dt>
-                  <dd className="mt-0.5 break-words text-sm leading-relaxed text-foreground">
-                    {assignment.submissionRequirement}
-                  </dd>
-                </div>
-              ) : null}
-            </dl>
-
-            {assignment.topics.length > 0 ? (
-              <div className="mt-3 flex flex-wrap gap-1.5">
-                {assignment.topics.slice(0, 4).map((topic) => (
-                  <span
-                    key={topic}
-                    className="rounded-md border border-border bg-brand-light-gray/80 px-2 py-0.5 text-[11px] font-medium text-muted-foreground"
-                  >
-                    {topic}
-                  </span>
-                ))}
-              </div>
+    <article
+      data-testid="homework-catalog-card"
+      className={cn(
+        catalogCardClass(isLatestWeek && index === 0 ? { featured: "accent" } : undefined),
+        "group",
+      )}
+    >
+      <div className="flex min-w-0 flex-col gap-3 p-4 sm:flex-row sm:items-center sm:gap-4 sm:p-4">
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded-md bg-brand-orange/10 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-accent-soft">
+              {category}
+            </span>
+            {dueStatusText ? (
+              <StatusBadge tone={dueStatusTone(dueStatus)}>{dueStatusText}</StatusBadge>
             ) : null}
-
-            <HomeworkResourceLinks assignment={assignment} />
-
-            <Link
-              href={`/homework/${assignment.id}`}
-              className="mt-4 inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-accent-soft transition hover:translate-x-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/40"
-            >
-              View details
-              <span aria-hidden>→</span>
-            </Link>
           </div>
+
+          <h3 className="mt-2 text-base font-bold leading-snug text-foreground sm:text-lg">
+            <Link
+              href={detailHref}
+              className="transition hover:text-accent-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/40"
+            >
+              {title}
+            </Link>
+          </h3>
+
+          <dl className="mt-2 flex min-w-0 flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
+            <div className="min-w-0">
+              <dt className="sr-only">Assigned week</dt>
+              <dd className="break-words text-foreground" data-testid="homework-catalog-week">
+                {assignment.weekName}
+              </dd>
+            </div>
+            <div className="min-w-0">
+              <dt className="sr-only">Due date</dt>
+              <dd className="break-words" data-testid="homework-catalog-due">
+                Due {dueLabel}
+              </dd>
+            </div>
+          </dl>
         </div>
-      </article>
+
+        <div className="shrink-0 sm:self-center">
+          <Link
+            href={detailHref}
+            data-testid="homework-catalog-view-assignment"
+            className="inline-flex min-h-11 min-w-[10.5rem] items-center justify-center gap-1 rounded-md border border-brand-orange/40 bg-brand-orange/10 px-4 text-sm font-semibold text-accent-soft transition hover:border-brand-orange/60 hover:bg-brand-orange/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/40"
+          >
+            View assignment
+            <span aria-hidden>→</span>
+          </Link>
+        </div>
+      </div>
+    </article>
   );
 }
 
@@ -209,14 +138,17 @@ function WeekSection({
       />
 
       <AccentRail tone="orange">
-        {assignments.map((assignment, index) => (
-          <HomeworkCard
-            key={assignment.id}
-            assignment={assignment}
-            index={index}
-            isLatestWeek={isLatestWeek}
-          />
-        ))}
+        <ul className="space-y-3" role="list">
+          {assignments.map((assignment, index) => (
+            <li key={assignment.id}>
+              <HomeworkCompactRow
+                assignment={assignment}
+                index={index}
+                isLatestWeek={isLatestWeek}
+              />
+            </li>
+          ))}
+        </ul>
       </AccentRail>
     </section>
   );
@@ -227,7 +159,7 @@ export function HomeworkCatalogView({ data }: HomeworkCatalogViewProps) {
     <ProgramPage
       eyebrow="Curriculum drop"
       title="Homework HQ"
-      description="Film study, faith, and basketball assignments — published from the challenge curriculum. Newest week at the top."
+      description="Film study, faith, and basketball assignments — published from the challenge curriculum. Newest week at the top. Open an assignment for full instructions and resources."
       heroVariant="light"
       ambientVariant="homework"
       meta={
@@ -239,11 +171,15 @@ export function HomeworkCatalogView({ data }: HomeworkCatalogViewProps) {
       <div className="space-y-8">
         <ProgramFeatureBanner
           title="Homework"
-          caption="Find the current curriculum and keep every assignment moving forward."
+          caption="Scan the week, then open an assignment for steps, files, and how to submit."
           mark="HW"
           ariaLabel={FEATURE_BANNER_ARIA.homework}
         />
-        <div className="mx-auto max-w-4xl min-w-0 space-y-14" data-testid="homework-catalog-list" aria-label={ACCESSIBILITY_LABELS.homeworkCatalog}>
+        <div
+          className="mx-auto max-w-3xl min-w-0 space-y-12"
+          data-testid="homework-catalog-list"
+          aria-label={ACCESSIBILITY_LABELS.homeworkCatalog}
+        >
           {data.weekGroups.map((group, groupIndex) => (
             <WeekSection
               key={group.weekId || group.weekName}

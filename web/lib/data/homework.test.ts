@@ -281,6 +281,34 @@ describe("homework catalog grouping", () => {
     expect(assignment.briefDescription).toBe("Watch the game film and take notes.");
     expect(assignment.instructionsPreview).toBe("Watch the game film and take notes.");
     expect(assignment.url).toBe("https://example.com/homework/week-10");
+    expect(assignment.urlAvailability).toBe("available");
+    expect(assignment.categoryLabel).toBe("Assignment");
+  });
+
+  it("rewrites Docs attachments to delivery paths instead of ephemeral CDN URLs", () => {
+    const assignment = mapCurriculumToAssignment(
+      {
+        id: "rechVLOeyEVIqmy2v",
+        fields: {
+          "Assignment Full Name - Display": "Film Study",
+          Week: ["recWEEK10"],
+          Docs: [
+            {
+              id: "attDoc000000001",
+              url: "https://v5.airtableusercontent.com/v0/stale.pdf",
+              filename: "Worksheet.pdf",
+            },
+          ],
+          URL: "https://v5.airtableusercontent.com/v0/also-stale.pdf",
+        },
+      },
+      weekIndex,
+    );
+
+    expect(assignment.docs[0].url).toContain("/api/homework/rechVLOeyEVIqmy2v/attachment/");
+    expect(assignment.docs[0].url).not.toContain("airtableusercontent.com");
+    expect(assignment.url).toContain("/api/homework/rechVLOeyEVIqmy2v/link");
+    expect(assignment.url).not.toContain("airtableusercontent.com");
   });
 
   it("builds PHA-backed catalog without hardcoded assignment limits", () => {

@@ -1,7 +1,11 @@
+export type HomeworkResourceAvailability = "available" | "unavailable" | "absent";
+
 export type HomeworkAttachment = {
   id: string;
+  /** Public-safe href (delivery path or durable https). Never an ephemeral Airtable CDN URL. */
   url: string;
   filename: string;
+  availability: Exclude<HomeworkResourceAvailability, "absent">;
 };
 
 export type HomeworkAssignment = {
@@ -31,8 +35,14 @@ export type HomeworkAssignment = {
   bookAbbreviation: string;
   topics: string[];
   coverImage: HomeworkAttachment | null;
+  /**
+   * Public-safe primary assignment link.
+   * Durable https, or `/api/homework/.../link` delivery path — never ephemeral CDN in HTML.
+   */
   url: string;
+  urlAvailability: HomeworkResourceAvailability;
   urlAdditional: string;
+  urlAdditionalAvailability: HomeworkResourceAvailability;
   /** Legacy library `Grade Band` text when present; PHA grade bands are authoritative for schedule. */
   gradeBandLabel: string;
   fullDescription: string;
@@ -41,6 +51,8 @@ export type HomeworkAssignment = {
   assignmentRationale: string;
   ageAppropriate: string[];
   docs: HomeworkAttachment[];
+  /** Short type/category for compact list rows. */
+  categoryLabel: string;
 };
 
 export type HomeworkWeekGroup = {
