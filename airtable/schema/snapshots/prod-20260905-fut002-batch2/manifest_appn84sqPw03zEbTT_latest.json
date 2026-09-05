@@ -1,0 +1,23 @@
+{
+  "generatedAt": "2026-09-05T06:28:12",
+  "scriptVersion": "2.4.0",
+  "baseId": "appn84sqPw03zEbTT",
+  "baseName": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026",
+  "selectedTables": [],
+  "files": {
+    "rawSchema": "airtable\\schema\\snapshots\\prod-20260905-fut002-batch2\\schema_raw_appn84sqPw03zEbTT_20260905_062812.json",
+    "enhancedSchema": "airtable\\schema\\snapshots\\prod-20260905-fut002-batch2\\schema_enhanced_appn84sqPw03zEbTT_20260905_062812.json",
+    "dependencies": "airtable\\schema\\snapshots\\prod-20260905-fut002-batch2\\dependencies_appn84sqPw03zEbTT_20260905_062812.json",
+    "viewsBasicJson": "airtable\\schema\\snapshots\\prod-20260905-fut002-batch2\\views_basic_appn84sqPw03zEbTT_20260905_062812.json",
+    "viewsDetailedJson": "airtable\\schema\\snapshots\\prod-20260905-fut002-batch2\\views_detailed_appn84sqPw03zEbTT_20260905_062812.json",
+    "viewsMarkdown": "airtable\\schema\\snapshots\\prod-20260905-fut002-batch2\\views_appn84sqPw03zEbTT_20260905_062812.md",
+    "baseSummary": "airtable\\schema\\snapshots\\prod-20260905-fut002-batch2\\base_summary_appn84sqPw03zEbTT_20260905_062812.json",
+    "healthReport": "airtable\\schema\\snapshots\\prod-20260905-fut002-batch2\\export_health_report_appn84sqPw03zEbTT_20260905_062812.json",
+    "fieldIndex": "airtable\\schema\\snapshots\\prod-20260905-fut002-batch2\\field_index_appn84sqPw03zEbTT_20260905_062812.json",
+    "invalidFields": "airtable\\schema\\snapshots\\prod-20260905-fut002-batch2\\invalid_fields_appn84sqPw03zEbTT_20260905_062812.json",
+    "complexFormulas": "airtable\\schema\\snapshots\\prod-20260905-fut002-batch2\\complex_formulas_appn84sqPw03zEbTT_20260905_062812.json",
+    "schemaMarkdown": "airtable\\schema\\snapshots\\prod-20260905-fut002-batch2\\schema_doc_appn84sqPw03zEbTT_20260905_062812.md",
+    "mermaidERD": "airtable\\schema\\snapshots\\prod-20260905-fut002-batch2\\schema_erd_appn84sqPw03zEbTT_20260905_062812.mmd",
+    "workflowCompanion": "airtable\\schema\\snapshots\\prod-20260905-fut002-batch2\\workflow_companion_appn84sqPw03zEbTT_20260905_062812.md"
+  }
+}
