@@ -1,0 +1,169 @@
+{
+  "harness": "SC-160-WEEKLESS-WAS",
+  "mode": "apply",
+  "startedAt": "2026-09-05T12:13:35.780Z",
+  "liveVersionsExpected": {
+    "020": "v4.1",
+    "065": "v10.7"
+  },
+  "checks": [
+    {
+      "id": "020.weekless_asset_creates_or_links_hc",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "done": true,
+        "timeout": false,
+        "hcCount": 1,
+        "uploadStatus": "Pending Link",
+        "uploadError": ""
+      }
+    },
+    {
+      "id": "020.hc_week_from_pha",
+      "pass": true,
+      "status": "PASS",
+      "expected": {
+        "week": "recBrZ1sV8byWEHZU",
+        "pha": "recrpWRmt0MntieCL"
+      },
+      "actual": {
+        "week": "recBrZ1sV8byWEHZU",
+        "pha": "recrpWRmt0MntieCL"
+      }
+    },
+    {
+      "id": "submission.week_remains_empty",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "weekLinks": 0
+      }
+    },
+    {
+      "id": "020.exactly_one_was_enrollment_pha_week",
+      "pass": false,
+      "status": "FAIL",
+      "actual": {
+        "count": 0,
+        "ids": [],
+        "wasCreatedBy020": true
+      }
+    },
+    {
+      "id": "020.hc_links_canonical_was",
+      "pass": false,
+      "status": "FAIL",
+      "actual": {
+        "hcWas": "recfG…mEh7",
+        "canonicalWas": null
+      }
+    },
+    {
+      "id": "065.exactly_one_homework_xp",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "count": 1,
+        "points": [
+          35
+        ],
+        "active": [
+          true
+        ],
+        "week": [
+          "recBrZ1sV8byWEHZU"
+        ],
+        "sourceKey": "HOMEWORK_XP|rec6M9c5eDlb9lrjR",
+        "timeout": false
+      }
+    },
+    {
+      "id": "retry.020_no_duplicate_hc",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "before": 1,
+        "after": 1,
+        "sameHc": true
+      }
+    },
+    {
+      "id": "retry.020_no_duplicate_was",
+      "pass": false,
+      "status": "FAIL",
+      "actual": {
+        "count": 0,
+        "ids": []
+      }
+    },
+    {
+      "id": "retry.065_no_duplicate_xp",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "count": 1,
+        "ids": [
+          "recgn…E3BR"
+        ]
+      }
+    },
+    {
+      "id": "submission.week_still_empty_after_flow",
+      "pass": true,
+      "status": "PASS",
+      "actual": {
+        "weekLinks": 0
+      }
+    }
+  ],
+  "defects": [
+    "020.exactly_one_was_enrollment_pha_week",
+    "020.hc_links_canonical_was",
+    "retry.020_no_duplicate_was"
+  ],
+  "notes": [
+    {
+      "preWasCount": 0,
+      "preWasIds": []
+    },
+    "Forced 065 Reconcile 1→0→1 re-entry",
+    "Forced 065 Reconcile 1→0→1 re-entry"
+  ],
+  "created": {
+    "batchKey": "SC160|WL|2026-09-05|mtocglgk",
+    "enrollmentId": "recZEwkkXTJanDlG6",
+    "athleteId": "recTfxT6WMsPvobAW",
+    "phaWeekId": "recBrZ1sV8byWEHZU",
+    "phaId": "recrpWRmt0MntieCL",
+    "submissionIds": [
+      {
+        "id": "reckR2ApBxA4dAdSe",
+        "tag": "weekless-hw1"
+      }
+    ],
+    "assetIds": [
+      {
+        "id": "rec64TCpHyoeJ9lRF",
+        "tag": "weekless-hw1"
+      }
+    ],
+    "homeworkIds": [
+      {
+        "id": "rec6M9c5eDlb9lrjR",
+        "kind": "weekless-hw1"
+      }
+    ],
+    "xpEventIds": [
+      "recgnGmPFwdWPE3BR"
+    ],
+    "wasId": "recfG09LKSz9omEh7",
+    "wasCreatedBy020": true
+  },
+  "finishedAt": "2026-09-05T12:16:33.848Z",
+  "summary": {
+    "passCount": 7,
+    "failCount": 3,
+    "defectCount": 3
+  }
+}

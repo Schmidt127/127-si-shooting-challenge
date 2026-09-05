@@ -1,13 +1,7 @@
 # SC-160 Stage 6 — Recovery Closeout (2026-09-05)
 
-**Status: IN PROGRESS — Stage 6 recovery proven; 020 v4.1 paste pending**  
-**Base:** Production `appn84sqPw03zEbTT`  
-**Recovery branch:** `recover/sc-160-stage6-resume`  
-**Prior tip:** `30db121c` (PR #427 pause) · prior Stage 6 merge `b93bc0cd` (PR #425)
-
-## Verdict
-
-Stage 6 matrix + late XP recovery evidence is complete. **SC-160 cannot be marked COMPLETE** until Mike pastes GitHub **020 v4.1** (WAS find-or-create for Enrollment + PHA.Week) and weekless HC→WAS→065 is live-tested. Paste packet: [`../deploy-checklists/SC-160-020-v4.1-was-pha-week.md`](../deploy-checklists/SC-160-020-v4.1-was-pha-week.md). FUT-002 trash remains **hold**.
+**Status: COMPLETE / Live Tested** (superseded by final closeout after 020 v4.1 proof)  
+**See:** [`SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md`](./SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md)
 
 ## 1. Why the prior run stopped
 
@@ -106,7 +100,7 @@ Athlete1+Early Bird WAS count after cleanup: **0**.
 
 ## 13. SC-160 final status
 
-**IN PROGRESS** — recovery PASS; **020 v4.1 paste + weekless WAS live proof** still required before COMPLETE / Live Tested.
+**COMPLETE / Live Tested** — see [`SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md`](./SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md).
 
 ## 14. Explicit non-actions
 
@@ -117,10 +111,8 @@ Athlete1+Early Bird WAS count after cleanup: **0**.
 
 ## 15. FUT-002 gate
 
-**HOLD** until SC-160 is formally COMPLETE after 020 v4.1 live proof. Four-field trash checklist remains in [`FUT-002-batch2-quarantined-field-delete.md`](../deploy-checklists/FUT-002-batch2-quarantined-field-delete.md) (row #3 already gone).
+**CLEARED** — Mike may UI-trash the four quarantined Batch 2 stubs (row #3 already gone). Checklist: [`FUT-002-batch2-quarantined-field-delete.md`](../deploy-checklists/FUT-002-batch2-quarantined-field-delete.md).
 
 ## 16. Mike’s next action
 
-1. Paste GitHub **020 v4.1** per [`../deploy-checklists/SC-160-020-v4.1-was-pha-week.md`](../deploy-checklists/SC-160-020-v4.1-was-pha-week.md).
-2. Tell Cursor to run the weekless WAS→065 live proof.
-3. Do **not** trash FUT-002 Batch 2 fields until SC-160 is formally COMPLETE.
+UI-trash the four FUT-002 Batch 2 quarantined stub fields (exact checklist in final closeout report).

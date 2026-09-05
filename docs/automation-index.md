@@ -50,7 +50,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| **020** | Homework — Link or Create Homework Completion | Submission Assets when homework asset ready — **Live v4.0** (SC-160 Stage 6 Live Tested) | `020-homework-link-or-create-homework-completion.js` (**v4.0** — HC Week = PHA.Week; Submission.Week optional; Early/Late Notes; checklist [SC-160-homework-timing-pw-020-057-065.md](./deploy-checklists/SC-160-homework-timing-pw-020-057-065.md)). Upstream assets: **009**. |
+| **020** | Homework — Link or Create Homework Completion | Submission Assets when homework asset ready — **Live v4.1** (SC-160 Stage 6 Live Tested) | `020-homework-link-or-create-homework-completion.js` (**v4.1** — HC Week = PHA.Week; Submission.Week optional; Early/Late Notes; find-or-create WAS for Enrollment+PHA.Week; checklist [SC-160-020-v4.1-was-pha-week.md](./deploy-checklists/SC-160-020-v4.1-was-pha-week.md) · [SC-160-homework-timing-pw-020-057-065.md](./deploy-checklists/SC-160-homework-timing-pw-020-057-065.md)). Upstream assets: **009**. |
 | 012 | ~~Legacy HC create~~ | **DELETED** — do not restore | — |
 | 063 | ~~Homework Review — Copy Enrollment Grade Band~~ | **DELETED / RETIRED in PROD** — do not restore; repo runtime stop | `063-…js` *(historical only)* |
 | 064 | Homework Review — Prepare Homework XP Award | **Production-verified current live** — prepares XP from rule `HOMEWORK_COMPLETION`; **does not create XP Event** (repo header v12.2) | `064-homework-review-and-xp-prepare-homework-xp-award.js` |
