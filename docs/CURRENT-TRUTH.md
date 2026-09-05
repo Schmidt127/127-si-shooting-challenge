@@ -1,7 +1,7 @@
 # CURRENT TRUTH â 127 SI Shooting Challenge
 
 **Status:** Active â primary current-state document for this repository  
-**Last verification (repo):** 2026-09-05 — **SC-160 COMPLETE / Live Tested** (live **009 v1.3 / 020 v4.1 / 065 v10.7 / 057 2.5**; weekless WAS→065 disposable proof PASS). **SC-159 COMPLETE / Live Tested**. FUT-002 Batch 2 stubs quarantined (**Mike UI trash now authorized**). Season Sim **NOT run**. Evidence: [udits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md](./audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md).
+**Last verification (repo):** 2026-09-05 — **SC-160 COMPLETE / Live Tested** (live **009 v1.3 / 020 v4.1 / 065 v10.7 / 057 2.5**; weekless WAS→065 disposable proof PASS). **SC-159 COMPLETE / Live Tested**. FUT-002 Batch 2 stubs quarantined (**Mike UI trash now authorized**). Season Sim **NOT run**. Evidence: [audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md](./audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md).
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -204,7 +204,7 @@ Do **not** treat other Automations-table columns (trigger/conditions) as authori
 |---|-------------------------------|--------|--------|-------|
 | **003** | **v2.0** | v2.0 | **Live / COMPLETE / PRODUCTION-VERIFIED / DO-NOT-TOUCH** | Grade-change Grade Band refresh; keep active; disposable VERIFY Enrollment 2026-09-03 â [`prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md`](./prod-completion/2026-09-03/AUTOMATION-003-GRADE-CHANGE-VERIFIED.md). Initial assign remains **002**. |
 | **010** | **v10.12** | v10.12 | Live / **aligned** | Do not re-paste â [`010-v10.12-operator-packet.md`](./deploy-checklists/010-v10.12-operator-packet.md). Afternoon live-pass may show **v10.13** Season Sim dual-gate â treat UI script body as authority if it differs; **REQUIRES LIVE CONFIRMATION** before inventing inventory drift |
-| **020** | **v4.1** | v4.1 | Live / **PASTE-ALIGNED** (SC-160 Stage 6 final 2026-09-05) | HC Week = PHA.Week; Submission.Week optional; Early/On Time/Late Notes. Evidence [`audits/SC-160-STAGE6-LIVE-VERIFICATION-20260904.md`](./audits/SC-160-STAGE6-LIVE-VERIFICATION-20260904.md) |
+| **020** | **v4.1** | v4.1 | Live / **PASTE-ALIGNED** (SC-160 COMPLETE 2026-09-05) | HC Week = PHA.Week; Submission.Week optional; Early/On Time/Late Notes; WAS find-or-create for Enrollment+PHA.Week. Evidence [`audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md`](./audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md) |
 | **022** | **v2.2** | v2.2 | Live / **aligned** | Lambda-only parent URL â [`022-v2.2-operator-packet.md`](./deploy-checklists/022-v2.2-operator-packet.md) |
 | **033** | **v4.4** | v4.4 | Live | |
 | **041** | **v5.1** | v5.1 | Live | Optional inputs only |
@@ -344,7 +344,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - SC-148 mobile a11y â **COMPLETE / Live Tested** (PR **#396**)
 - SC-057 / SC-058 â **Complete / Live Tested** (PR **#395**; inventory + SF remediation)
 - Season Simulation â **NOT authorized** (explicit Mike instruction required later)
-- **SC-160** — **COMPLETE / Live Tested** — asset intake without Week + early/on-time/late HW + weekless WAS-for-PHA-Week — live **009 v1.3 / 020 v4.1 / 065 v10.7 / 057 2.5** — [udits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md](./audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md)
+- **SC-160** — **COMPLETE / Live Tested** — asset intake without Week + early/on-time/late HW + weekless WAS-for-PHA-Week — live **009 v1.3 / 020 v4.1 / 065 v10.7 / 057 2.5** — [audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md](./audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md)
 - Airtable field deletion â **deferred** until functional verification complete
 - Full administrative portal / optional card redesign â **deferred**
 - Landing FUT-033â036 + Hub FUT-041/042/046/047 â repo merged locally; **GitHub push + Vercel deploy** pending auth (2026-09-01)

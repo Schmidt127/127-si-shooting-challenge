@@ -3,7 +3,9 @@
 **Status: COMPLETE / Live Tested**  
 **Date:** 2026-09-05  
 **Base:** Production `appn84sqPw03zEbTT`  
-**GitHub tip:** see merge SHA in closeout PR  
+**Closeout PR:** [#430](https://github.com/Schmidt127/127-si-shooting-challenge/pull/430)  
+**GitHub tip:** see merge SHA after merge to `master`  
+
 **Live 020:** **v4.1** (Automations inventory; script contains `ensureCanonicalWasForPhaWeek`)  
 **Live 065:** **v10.7** (unchanged)  
 **Harness:** `tools/testing/sc-160-weekless-was-proof.mjs`  
