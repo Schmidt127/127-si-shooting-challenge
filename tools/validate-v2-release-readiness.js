@@ -463,12 +463,12 @@ const automationIndex = exists("docs/automation-index.md") ? read("docs/automati
 const knownIssues = exists("docs/known-issues.md") ? read("docs/known-issues.md") : "";
 const inventoryText = inventory;
 
-// 066: current GitHub is v4.0 (SC-163 Goal Met Date); live paste may still be v3.9 until Mike promotes.
+// 066: current GitHub + live are v4.1 (SC-163 Goal Met Date timezone fix).
 if (byNumber.has("066")) {
   const text066 = fs.readFileSync(byNumber.get("066")[0], "utf8");
   const ver066 = extractDeclaredVersion(text066) || "";
-  if (/v?4\.0/i.test(ver066)) pass("066 script declares v4.0");
-  else fail(`066 script expected v4.0, found: ${ver066 || "(none)"}`);
+  if (/v?4\.1/i.test(ver066)) pass("066 script declares v4.1");
+  else fail(`066 script expected v4.1, found: ${ver066 || "(none)"}`);
 
   if (/Airtable paste not done/i.test(projectState) && /H-002.*066/i.test(projectState)) {
     fail("PROJECT_STATE still claims H-002/066 Airtable paste not done (contradicts backlog + automation-index)");
@@ -478,6 +478,7 @@ if (byNumber.has("066")) {
 
   if (
     /Automation 066 v3\.[0-9]\b/i.test(projectState) &&
+    !/066.*v4\.1/i.test(projectState) &&
     !/066.*v4\.0/i.test(projectState) &&
     !/066.*v3\.9/i.test(projectState)
   ) {

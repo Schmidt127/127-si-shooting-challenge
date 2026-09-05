@@ -416,12 +416,11 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 
 ## Recommended next task for Mike
 
-1. **SC-163 (open):** Convert Enrollments **Goal Met Date** lookup → date; paste Automation **066 v4.0** (do **not** install 122); run backfill — [`docs/deploy-checklists/SC-163-goal-met-date.md`](docs/deploy-checklists/SC-163-goal-met-date.md). **Not live-complete.**  
-2. **SC-166 (open):** Apply Active + Completed/History filters on Homework + Video Feedback Interface queues — [`docs/deploy-checklists/SC-166-coach-work-queue-filters.md`](docs/deploy-checklists/SC-166-coach-work-queue-filters.md). **Not live-complete.**  
-3. **Archive overlapping WSTEST/PWTEST Weeks** in Program Instance `Shooting Challenge | 2026-2027` (OMNI) before season simulation.  
-4. **Do not** re-paste 010/020/022/057/058/059/065/072/073; **do not** restore 075; live fixture `--apply` evidence is historical after **FUT-030** wipe.  
-5. **FUT-010:** dry-run R3 still **0 eligible** — no deletion request.  
-6. Optional: refresh Automations **Code** text for 057 (tracker lag) — live script already correct.  
+1. **SC-166 (open):** Apply Active + Completed/History filters on Homework + Video Feedback Interface queues — [`docs/deploy-checklists/SC-166-coach-work-queue-filters.md`](docs/deploy-checklists/SC-166-coach-work-queue-filters.md). **Not live-complete.**  
+2. **Archive overlapping WSTEST/PWTEST Weeks** in Program Instance `Shooting Challenge | 2026-2027` (OMNI) before season simulation.  
+3. **Do not** re-paste 010/020/022/057/058/059/065/066/072/073; **do not** restore 075; live fixture `--apply` evidence is historical after **FUT-030** wipe.  
+4. **FUT-010:** dry-run R3 still **0 eligible** — no deletion request.  
+5. Optional: refresh Automations **Code** text for 057 (tracker lag) — live script already correct.  
 7. **Do not** activate FUT-003 until registration intentionally opens.  
 8. **Do not** implement **FUT-029** (Grade-Band Homework Platform / Homework Intake Adapter) — **Deferred — DO NOT IMPLEMENT** (**MRW-H12**); not part of current app completion.  
 9. **FUT-030 COMPLETE** — transactional tables empty; **18 PHA restored** same day. **FUT-002 Batch 1 + Batch 2 COMPLETE**. After WSTEST cleanup: **SC-SEASON-SIM-001** remains FUTURE.  
