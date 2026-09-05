@@ -789,6 +789,8 @@ class TestWriterFullCreate(unittest.TestCase):
         self.assertTrue(readiness["recorded_xp_path_planned"])
         self.assertEqual(readiness["video_parent_feedback_ready_arms"], 4)
         self.assertGreaterEqual(readiness["weekly_email_arms"], 1)
+        self.assertFalse(readiness["weekly_hub_handoffs_expected_from_execute_alone"])
+        self.assertEqual(readiness["weekly_hub_handoffs_require_stage"], "weekly-email-stage")
         self.assertGreater(readiness["homework_needs_revision"], 0)
         self.assertEqual(readiness["homework_071_structural"], 18)
         live_confirmed = [

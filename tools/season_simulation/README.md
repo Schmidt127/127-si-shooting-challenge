@@ -34,6 +34,11 @@ Exercise as much of the live system as possible once authorized:
 - Video feedback, Zoom attendance (do not change 101 / SC-147)
 - XP events, achievements, shot milestones
 - Weekly summaries, weekly emails, coach digest, inactivity alerts
+  - **SC-168:** `--enable-email-delivery` arms **Build Weekly** (072 path) only.
+    118/119 are Sunday cron schedules; the sim clock does **not** fire them.
+    WEEKLY Hub handoffs require opt-in `weekly-email-stage` (119 substitute)
+    after packages are `Weekly Email Ready?`. Zero WEEKLY handoffs after
+    execute alone is **expected**.
 - Level advancement, level gates, gate-blocked probes
 - Same-day and backdated Activity Date behavior (harness + gated fields)
 - Email handoff → Hub → Resend (allowlist only)
@@ -54,6 +59,8 @@ tools/season_simulation/
   writer.py              Full idempotent execute writer (resume-safe)
   memory_client.py       In-memory Airtable client for offline writer tests
   execute.py             Gated execute orchestration + intended-write planner
+  weekly_email_stage.py  SC-168 opt-in 119-substitute plan/verify/apply
+  expectations_weekly_email.py  SC-168 WEEKLY handoff expectation contract
   cleanup.py             Gated delete-by-run-id (dry-run default)
   recipient_safety.py    Allowlist: schmidt@fairfieldbasketballclub.com only
   run_registry.py        Local JSON registry of created record IDs + status
@@ -193,6 +200,31 @@ Optional email arm (allowlist only):
 ```powershell
 # …same flags… --enable-email-delivery
 ```
+
+`--enable-email-delivery` arms **Build Weekly Email Now?** only (072). It does
+**not** create WEEKLY Hub handoffs by itself (SC-168).
+
+### Weekly email stage (SC-168 — authorized 119 substitute)
+
+After execute has Ready weekly packages (072 built), exercise Hub handoff:
+
+```powershell
+# plan / verify (read-only)
+python -m season_simulation weekly-email-stage --run-id "SEASON-SIM-2027-…" --weekly-email-mode plan
+python -m season_simulation weekly-email-stage --run-id "SEASON-SIM-2027-…" --weekly-email-mode verify
+
+# apply one Ready allowlisted WAS (default --weekly-email-limit 1)
+python -m season_simulation weekly-email-stage `
+  --run-id "SEASON-SIM-2027-…" `
+  --weekly-email-mode apply `
+  --weekly-email-limit 1 `
+  --execute `
+  --confirm "SEASON-SIMULATION-2027" `
+  --confirm-disposable "CONFIRM-DISPOSABLE-SEASON-SIM"
+```
+
+Hard stops: recipients must be allowlist-only; apply refuses otherwise. Retry
+re-arm probes 074 dedupe (same Handoff Key → no second row).
 
 ### Cleanup
 

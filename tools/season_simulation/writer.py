@@ -1158,6 +1158,10 @@ class SeasonSimWriter:
         Production prerequisite (OMNI, not writer): 072 ``recordId`` input must be
         the trigger WAS id (``$ref: trigger → id``), not a hardcoded test record.
         A static recordId leaves Build=true with no package/handoff.
+
+        SC-168: This does **not** arm Send to Make? (119 / Sunday 10:00 Denver).
+        The simulation clock does not fire Airtable cron. WEEKLY Hub handoffs
+        require the opt-in ``weekly-email-stage`` command after packages are Ready.
         """
         _ = enrollment_id  # reserved for future recipient checks
         for day in self.scenario.days:
