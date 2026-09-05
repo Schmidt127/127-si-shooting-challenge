@@ -107,6 +107,11 @@ const COMMANDS = [
     args: ["--test", "tools/testing/tests/test_057_runtime.mjs"],
   },
   {
+    name: "master-list-section-g",
+    cmd: process.execPath,
+    args: ["--test", "tools/testing/tests/test_generate_work_list_section_g.mjs"],
+  },
+  {
     name: "season-simulation-offline",
     cmd: process.platform === "win32" ? "python" : "python3",
     args: ["-m", "unittest", "season_simulation.tests.test_offline"],

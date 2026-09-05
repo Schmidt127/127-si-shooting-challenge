@@ -1390,13 +1390,13 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 **Priority:** P1  
 
-**Status:** **IMPLEMENTED (landing repo)** ? deploy pending (`hoopchallenges-landing` master merge). Live audit 2026-09-01 showed stale copy; corrected same day.  
+**Status:** **COMPLETE** (2026-09-01) — landing Youth Programs vs Coach Tools copy shipped; live audit corrections applied same day.  
 
 **Systems:** Club landing / public website copy  
 
 **Correct repo:** `hoopchallenges-landing` (local clone `127si-landing-page`; not `/shoot` in this repo)  
 
-**Related:** FUT-034 Â· FUT-036 Â· SC-149 Â· [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) Â§ Website Â· Mike-approved naming taxonomy above Â· [`audits/2026-09-01-FUT-033-047-LIVE-REMAINING-AUDIT.md`](./audits/2026-09-01-FUT-033-047-LIVE-REMAINING-AUDIT.md)
+**Related:** FUT-034 · FUT-036 · SC-149 · [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) § Website · Mike-approved naming taxonomy above · [`audits/2026-09-01-FUT-033-047-LIVE-REMAINING-AUDIT.md`](./audits/2026-09-01-FUT-033-047-LIVE-REMAINING-AUDIT.md)
 
 
 
@@ -1432,7 +1432,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 **Priority:** P1  
 
-**Status:** **IMPLEMENTED (landing repo)** ? deploy pending. Live audit 2026-09-01 found **0** hits for ?Jr. Referee Clinic? and user-facing **Jr. Ref** still live.  
+**Status:** **COMPLETE** (2026-09-01) — Jr. Referee Clinic naming shipped on landing; Section G overlay authoritative.
 
 **Systems:** Public website, emails, Fillout forms, documentation, user-facing copy (cross-repo)  
 
@@ -1474,7 +1474,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 **Priority:** P2  
 
-**Status:** **IMPLEMENTED (landing repo)** ? deploy pending. Live audit 2026-09-01 still measured Club/#About as navy `#061a43`.  
+**Status:** **COMPLETE** (2026-09-01) — landing navy→brand blue shipped; Section G overlay authoritative.
 
 **Systems:** Club landing visual design (header, ?More than a Scoreboard,? related image/content section; footer already brand blue)  
 
@@ -1514,7 +1514,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 **Priority:** P1  
 
-**Status:** **IMPLEMENTED (landing repo)** ? deploy pending. Live audit 2026-09-01 showed **3** youth cards only (not six).  
+**Status:** **COMPLETE** (2026-09-01) — six Upcoming Programs cards shipped; Section G overlay authoritative.
 
 **Systems:** Club landing Upcoming Programs UI  
 
@@ -2154,7 +2154,7 @@ Create a reusable, unattended end-to-end simulation of a complete **60-day** Sho
 
 **Priority:** P2  
 
-**Status:** **COMPLETE (2026-09-02)** ? Final controlled run `SEASON-SIM-2027-20260902T213135Z-athlete1` writer complete; cascade verified (58 countable / 13,906 shots during gated formulas; Submission Base XP 58; 17 Streak Occurrences; Zoom live+recording XP; 6 WEEKLY Accepted/Hub sent allowlisted only; PW Eligible=0 expected). Production formulas restored; disposable run cleaned. Evidence (gitignored reports dir): `tools/season_simulation/reports/evidence-final-SEASON-SIM-2027-20260902T213135Z-athlete1.json`. **Next execute: NOT currently authorized.** Live formulas are normal **`NOW()` / `TODAY()`** ? **DO NOT change**.  
+**Status:** **COMPLETE (package) / READY for Mike authorization (2026-09-05)** — Prior controlled run `SEASON-SIM-2027-20260902T213135Z-athlete1` cleaned; Production formulas restored to normal **`NOW()` / `TODAY()`** (temporary Season Sim formulas **not** active). Package reusable via [`deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md`](./deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md). **Not currently running.** Next execute needs a **new** simulation ID and Mike saying exactly `RUN SEASON SIMULATION`.
 
 **Systems:** `tools/season_simulation/`, Airtable gated formulas (temporary), automations 010/114/073/053/055/057/072, Hub Test Allowlist  
 
@@ -2660,7 +2660,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-163** | Enrollment | Enrollments Goal Met Date reliability + backfill | P1 | **COMPLETE / Live Tested** (2026-09-05) | — | Live **066 v4.1** aligned with GitHub; Goal Met Date **date-only**; Athlete1 stamped **8/30/2026**, retry preserved, no duplicate milestones; 066 may remain ON. PR **#444** (`480771fc`). Evidence [`audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md`](./audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md) · checklist [`deploy-checklists/SC-163-goal-met-date.md`](./deploy-checklists/SC-163-goal-met-date.md). |
 | **SC-164** | Website | Levels progress UX simplification | P1 | **COMPLETE / Live Tested** (2026-09-05) | FUT-015 | PR **#439** (`9869a2eb`); **Your Level Progress** + on-card gates. Evidence [`audits/SC-164-LEVELS-PROGRESS-UX-20260905.md`](./audits/SC-164-LEVELS-PROGRESS-UX-20260905.md). |
 | **SC-165** | Website | Awards + coaching messaging (Overview / What's Included) | P2 | **COMPLETE / Live Tested** (2026-09-05) | FUT-027 | PR **#439**; FAQ gift-card left as detail page. Evidence [`audits/SC-165-AWARDS-COACHING-MESSAGING-20260905.md`](./audits/SC-165-AWARDS-COACHING-MESSAGING-20260905.md). |
-| **SC-166** | Coach ops | Coach Homework + Video Feedback active work queues | P1 | **PARTIALLY COMPLETE — MIKE UI ACTION REQUIRED** (2026-09-05) | — | PR **#436** (`bd0198a4`); Interface filter checklist only. Checklist [`deploy-checklists/SC-166-coach-work-queue-filters.md`](./deploy-checklists/SC-166-coach-work-queue-filters.md). **Not live-complete.** |
+| **SC-166** | Coach ops | Coach Homework + Video Feedback active work queues | P1 | **Mike-owned/manual** (2026-09-05) — Interfaces published; filter/layout fine-tuning is Mike UI only; **not a core application blocker** | — | PR **#436** (`bd0198a4`); checklist [`deploy-checklists/SC-166-coach-work-queue-filters.md`](./deploy-checklists/SC-166-coach-work-queue-filters.md). Repo + published Interfaces done; remaining filter polish is operator-owned. |
 | **SC-149 residual** | Website | Family Dashboard under More menu | P1 | **COMPLETE** (2026-09-05 with SC-164/165) | SC-149 | PR **#439**; `MORE_NAV_HREFS` includes FD → `/dashboard/sign-in`. Evidence [`audits/SC-149-MORE-FAMILY-DASHBOARD-20260905.md`](./audits/SC-149-MORE-FAMILY-DASHBOARD-20260905.md). |
 | **SC-113** | Website | Loading, empty, and error states | P2 | Live Tested in PROD | GÃ‡Ã¶ | Keep states aligned when SC-112 lands |
 
@@ -2706,7 +2706,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 
 
 
-## G. Current work list snapshot (2026-08-27)
+## G. Current work list snapshot (2026-09-05)
 
 
 
@@ -2724,31 +2724,41 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 ### Summary
 
-
-
 | Metric | Count |
 
 |---|---|
 
-| Total items | 173 |
+| Total items | 76 |
 
-| COMPLETE | 46 |
+| COMPLETE | 62 |
 
-| IN PROGRESS | 68 |
+| IN PROGRESS | 3 |
 
-| BLOCKED | 1 |
+| BLOCKED | 0 |
 
-| READY | 46 |
+| READY | 2 |
 
-| DEFERRED | 12 |
+| DEFERRED | 9 |
 
-| Production actions remaining | 18 |
+| Production actions remaining | 5 |
 
-| Items requiring Mike | 16 |
+| Items requiring Mike | 10 |
 
-| Items requiring Cursor | 13 |
+| Items requiring Cursor | 2 |
 
-| Items requiring OMNI/Airtable | 6 |
+| Items requiring OMNI/Airtable | 2 |
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2916,7 +2926,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | **SC-SEASON-SIM-001** | **Planned / Future** | 60-day five-enrollment season simulation ? narrative entry above Â§ D / FUT-026; MRW-H11. Do **not** implement yet. FUT-010 unchanged. Reuse SC-PW-E2E later where appropriate. |
 
-| **SC-SEASON-SIM-002** | **COMPLETE ? T213135Z** | Final execute + formula restore + cleanup 2026-09-02. Evidence `tools/season_simulation/reports/evidence-final-SEASON-SIM-2027-20260902T213135Z-athlete1.json`. Distinct from SC-SEASON-SIM-001. |
+| **SC-SEASON-SIM-002** | **COMPLETE (package) / READY for authorization** | Prior Sept 2 run cleaned; formulas normal NOW()/TODAY(); package READY — [`deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md`](./deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md). **Not running.** Authorize only with exact `RUN SEASON SIMULATION`; use a **new** simulation ID. |
 
 
 
@@ -2956,7 +2966,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | **Season Sim helper hygiene** | **Archive executed (Agent 4 coord)** ? Remove/Archive classes moved under `_archive/session-20260903/`; Required class preserved | Classification: [`audits/SC-112-untracked-hygiene-classification-20260903.md`](./audits/SC-112-untracked-hygiene-classification-20260903.md). Proposal PR **#368**. No Season Sim package edits. |
 
-| **Season Simulation next execute** | **NOT currently authorized** | Temporary Season Simulation formulas are **not** active ? live formulas are normal **`NOW()` / `TODAY()`**. **DO NOT change formulas.** No Airtable record changes/deletes. No emails sent. |
+| **Season Simulation next execute** | **NOT currently authorized / NOT running** | Package READY for later Mike authorization ([`SC-SEASON-SIM-002-EXECUTION-MANIFEST.md`](./deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md)). Temporary formulas **not** active — live **`NOW()` / `TODAY()`**. **DO NOT change formulas.** Do not execute until Mike says exactly `RUN SEASON SIMULATION`. |
 
 | **SC-112 docs closeout (Agent 4)** | **Updated 2026-09-04** ? Mike Production verify complete; tip includes **`78208ffc`** | [`audits/SC-112-multi-child-select-404-fix-20260904.md`](./audits/SC-112-multi-child-select-404-fix-20260904.md) Â· [`audits/SC-112-finalization-closeout-20260903.md`](./audits/SC-112-finalization-closeout-20260903.md) Â· hygiene archive `tools/season_simulation/_archive/session-20260903/` |
 
@@ -2971,7 +2981,24 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 | **SC-159 / SF-08 Automation 059 lifecycle** | **COMPLETE / Live Tested** (2026-09-04) | Formula trigger + v3.8 live. Evidence [`audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md`](./audits/SC-159-LIVE-VERIFICATION-CLOSEOUT-20260904.md). |
 | **SC-160 / asset intake + HW timing** | **COMPLETE / Live Tested** (2026-09-05) | Live **009 v1.3 / 020 v4.1 / 065 v10.7 / 057 2.5**. Evidence [audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md](./audits/SC-160-STAGE6-FINAL-CLOSEOUT-20260905.md). FUT-002 Batch 2 COMPLETE. |
 
+### 2026-09-05 completion wave + master-list reconciliation
 
+| Item | Status | Evidence |
+|---|---|---|
+| **SC-161** | **COMPLETE / Live Tested** | PR **#440**; [`audits/SC-161-LEADERBOARD-REPAIR-20260905.md`](./audits/SC-161-LEADERBOARD-REPAIR-20260905.md) |
+| **SC-162** | **COMPLETE / Live Tested** | PR **#437**; not FUT-029; [`audits/SC-162-HOMEWORK-COMPACT-DURABLE-LINKS.md`](./audits/SC-162-HOMEWORK-COMPACT-DURABLE-LINKS.md) |
+| **SC-163** | **COMPLETE / Live Tested** | Live **066 v4.1**; PR **#444**; [`audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md`](./audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md) |
+| **SC-164** | **COMPLETE / Live Tested** | PR **#439**; [`audits/SC-164-LEVELS-PROGRESS-UX-20260905.md`](./audits/SC-164-LEVELS-PROGRESS-UX-20260905.md) |
+| **SC-165** | **COMPLETE / Live Tested** | PR **#439**; [`audits/SC-165-AWARDS-COACHING-MESSAGING-20260905.md`](./audits/SC-165-AWARDS-COACHING-MESSAGING-20260905.md) |
+| **SC-149 residual** | **COMPLETE** | PR **#439**; Family Dashboard under More |
+| **SC-166** | **Mike-owned/manual** (not core app blocker) | Interfaces published; filter fine-tuning checklist [`deploy-checklists/SC-166-coach-work-queue-filters.md`](./deploy-checklists/SC-166-coach-work-queue-filters.md) |
+| **FUT-029** | **Deferred — DO NOT IMPLEMENT** | Outside current app completion |
+| **AUT-013 / AUT-067 pastes** | **Optional / declined** | Structure-only GitHub newer; Mike declined paste 2026-09-05 |
+| **AUT-122** | **Superseded — never install** | Goal Met Date owned by **066 v4.1** |
+| **Season Simulation** | **NOT currently authorized / not running** | Live formulas normal `NOW()` / `TODAY()` |
+| **Core application** | **Functionally complete** for current app scope | Remaining = launch-time ops (FUT-003/026/Season Sim), Mike-owned SC-166 polish, deferred FUT-029 / cosmetic |
+
+**Regenerated operator queue:** [`_generated-work-list-section-g.md`](./_generated-work-list-section-g.md) via `node tools/docs/generate-work-list-section-g.mjs --patch-master`.
 
 ---
 

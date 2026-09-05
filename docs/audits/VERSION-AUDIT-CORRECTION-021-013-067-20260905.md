@@ -53,7 +53,7 @@ Prior morning report totals (69 inventory/script rows) with **021 corrected**:
 | Classification | Prior count | Corrected count | Notes |
 |----------------|------------:|----------------:|-------|
 | MATCH — all three agree | 43 | **44** | +021 |
-| LIVE PASTE PENDING — inventory + GitHub agree, live older | 2 | **2** | 013, 067 (confirmed) |
+| LIVE PASTE PENDING — inventory + GitHub agree, live older | 2 | **0** | 013 + 067 reclassified **optional / paste declined** (Mike 2026-09-05) |
 | THREE-WAY MISMATCH | 1 | **0** | 021 retracted |
 | INVENTORY STALE — live + GitHub agree | 3 | 3 | unchanged this pass |
 | NO-CODE — version N/A | 1 | 1 | unchanged |
@@ -157,3 +157,8 @@ Interpretation: GitHub **v3.5** behavioral contracts pass. Source-contract hygie
 ## Production unchanged
 
 This package is documentation-only. No automation paste, run, trigger/input/output edit, or Airtable record write.
+
+
+## Post-correction disposition (Master List reconciliation 2026-09-05)
+
+Mike declined optional structural pastes for **013** and **067**. Treat as **optional / declined maintenance**, not paste-pending launch blockers. Safe inventory AI Agent versions remain live **013 = v3.1.0**, **067 = v3.4**.

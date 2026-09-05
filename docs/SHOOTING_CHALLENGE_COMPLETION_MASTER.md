@@ -10,7 +10,7 @@ This is the **detailed completion matrix and historical traceability record** fo
 | Field | Value |
 |-------|--------|
 | **Purpose** | Completion matrix, package traceability, and preserved historical evidence |
-| **Last updated** | **2026-09-05** (SC-163 **COMPLETE / Live Tested** — live **066 v4.1**; SC-161/162/164/165 live-tested; SC-166 Mike UI remaining; FUT-029 deferred; prior: FUT-002 SA XP text stubs deleted; FUT-002 batch 1 COMPLETE; multi-asset HW / SC-015 / SC-016 / MRW-F02 / 065 remap COMPLETE; prior release closeout #301–#305 / #312) |
+| **Last updated** | **2026-09-05** (Master List reconciliation after `2131f7d5` / #447; SC-163 **COMPLETE / Live Tested** — **066 v4.1**; SC-161/162/164/165 live-tested; SC-166 Mike-owned/manual not core blocker; FUT-029 deferred; Season Sim package READY / **not running**)
 | **Production branch** | `master` |
 | **Vercel root** | `web/` |
 | **Production website** | https://www.fairfieldbasketballclub.com/shoot |
