@@ -194,6 +194,78 @@ function decideGoalMetDateWrite(input) {
   };
 }
 
+/**
+ * Post-conversion / migration decision.
+ *
+ * Legacy Award Recipient lookup dates must not become permanently accepted.
+ * Preserve an existing stored date only when it equals the provable crossing.
+ * Replace mismatches only with a provable crossing. Never invent.
+ * Clear unprovable legacy values so award dates cannot stick.
+ *
+ * @param {{
+ *   existingDate: Date|string|null|undefined,
+ *   goalMetNow: boolean,
+ *   crossing: GoalMetCrossing|null,
+ *   targetStatus?: 'ok'|'missing'|'ambiguous',
+ *   calculatedTotal?: number,
+ *   reportedTotal?: number,
+ *   target?: number,
+ *   legacyLookupDate?: Date|string|null|undefined,
+ * }} input
+ * @returns {GoalMetDateDecision & { action: GoalMetDateDecision['action'] | 'replaced_mismatch' | 'clear_unprovable_legacy' }}
+ */
+function decideGoalMetDateMigrationWrite(input) {
+  const existingKey =
+    input.existingDate instanceof Date
+      ? toDenverDateKey(input.existingDate)
+      : String(input.existingDate || "").trim().slice(0, 10);
+  const crossingKey = input.crossing && input.crossing.dateKey ? input.crossing.dateKey : "";
+  const legacyKey =
+    input.legacyLookupDate instanceof Date
+      ? toDenverDateKey(input.legacyLookupDate)
+      : String(input.legacyLookupDate || "").trim().slice(0, 10);
+
+  const targetStatus = input.targetStatus || "ok";
+  if (targetStatus === "ambiguous") {
+    return { action: "error_ambiguous" };
+  }
+  if (targetStatus === "missing") {
+    return { action: "skipped_no_target" };
+  }
+
+  // Existing equals provable crossing → keep forever.
+  if (existingKey && crossingKey && existingKey === crossingKey) {
+    return { action: "skipped_already_set", dateKey: existingKey, crossing: input.crossing };
+  }
+
+  // Mismatch (including legacy award date that survived conversion) → replace only if provable.
+  if (existingKey && crossingKey && existingKey !== crossingKey) {
+    return {
+      action: "replaced_mismatch",
+      dateKey: crossingKey,
+      crossing: input.crossing,
+      target: Number(input.target) || 0,
+    };
+  }
+
+  // Existing date with no provable crossing: clear so legacy award dates cannot stick.
+  if (existingKey && !crossingKey) {
+    return { action: "clear_unprovable_legacy", dateKey: "" };
+  }
+
+  // Blank existing → same blank-path rules as steady-state writer.
+  const blankDecision = decideGoalMetDateWrite({
+    ...input,
+    existingDate: null,
+  });
+  // If snapshot said a legacy lookup existed for this enrollment but the cell is
+  // already blank after conversion, do not invent — blankDecision already fails closed.
+  if (legacyKey && blankDecision.action === "skipped_not_met") {
+    return blankDecision;
+  }
+  return blankDecision;
+}
+
 /** @deprecated Use decideGoalMetDateWrite; kept for older callers expecting write/skip_* names. */
 function decideGoalMetDateWriteLegacy(input) {
   const decision = decideGoalMetDateWrite(input);
@@ -218,5 +290,6 @@ module.exports = {
   resolveTargetGoalShots,
   findFirstGoalMetCrossing,
   decideGoalMetDateWrite,
+  decideGoalMetDateMigrationWrite,
   decideGoalMetDateWriteLegacy,
 };

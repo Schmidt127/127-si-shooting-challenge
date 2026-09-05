@@ -19,6 +19,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **SC-163 pre-conversion data safety (2026-09-05)** — Read-only inventory: **0** nonblank Goal Met Date lookups; **1** blank-but-met-provable (Athlete1 Schmidt → `2026-08-30`; award date `2026-09-03` must not stick). Conversion expected to **clear** lookup values. Backfill **v1.2** migration mode preserves only crossing-equal dates, replaces mismatches, clears unprovable legacy. Evidence: [`docs/audits/SC-163-preconversion-snapshot-20260905.json`](./docs/audits/SC-163-preconversion-snapshot-20260905.json). **No Production write.**
 - **SC-163 Goal Met Date → Automation 066 v4.0 (2026-09-05)** — Capacity full: do **not** install Automation 122 (SUPERSEDED stub). Extends **066** with isolated Goal Met Date stamp (first counted Activity Date crossing; never overwrite; fail closed). Shared helpers + backfill v1.1 + Mike checklist. **Not live-complete until schema convert + 066 paste + backfill.** Docs: [`docs/audits/SC-163-GOAL-MET-DATE-RELIABILITY.md`](./docs/audits/SC-163-GOAL-MET-DATE-RELIABILITY.md) · [`docs/deploy-checklists/SC-163-goal-met-date.md`](./docs/deploy-checklists/SC-163-goal-met-date.md).
 
 #### Added

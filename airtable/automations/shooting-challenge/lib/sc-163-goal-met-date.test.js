@@ -5,6 +5,7 @@ const assert = require("node:assert/strict");
 const {
   findFirstGoalMetCrossing,
   decideGoalMetDateWrite,
+  decideGoalMetDateMigrationWrite,
   toDenverDateKey,
   sortCountedSubmissions,
   resolveTargetGoalShots,
@@ -206,6 +207,50 @@ test("10. Retry → unchanged (same as already set)", () => {
     calculatedTotal: 2500,
   });
   assert.equal(decision.action, "skipped_already_set");
+});
+
+test("migration: preserve existing only when equal to crossing", () => {
+  const crossing = findFirstGoalMetCrossing(
+    [sub("recA", "2026-08-30T18:00:00.000Z", 2500)],
+    2000
+  );
+  const keep = decideGoalMetDateMigrationWrite({
+    existingDate: "2026-08-30",
+    goalMetNow: true,
+    crossing,
+    targetStatus: "ok",
+    target: 2000,
+  });
+  assert.equal(keep.action, "skipped_already_set");
+});
+
+test("migration: replace mismatched legacy award date with provable crossing", () => {
+  const crossing = findFirstGoalMetCrossing(
+    [sub("recA", "2026-08-30T18:00:00.000Z", 2500)],
+    2000
+  );
+  const replaced = decideGoalMetDateMigrationWrite({
+    existingDate: "2026-09-03",
+    goalMetNow: true,
+    crossing,
+    targetStatus: "ok",
+    target: 2000,
+    legacyLookupDate: "2026-09-03",
+  });
+  assert.equal(replaced.action, "replaced_mismatch");
+  assert.equal(replaced.dateKey, crossing.dateKey);
+});
+
+test("migration: clear unprovable legacy date — never invent", () => {
+  const cleared = decideGoalMetDateMigrationWrite({
+    existingDate: "2026-09-03",
+    goalMetNow: true,
+    crossing: null,
+    targetStatus: "ok",
+    target: 2000,
+    calculatedTotal: 2500,
+  });
+  assert.equal(cleared.action, "clear_unprovable_legacy");
 });
 
 test("stable sort: same Activity Date uses createdTime then id", () => {

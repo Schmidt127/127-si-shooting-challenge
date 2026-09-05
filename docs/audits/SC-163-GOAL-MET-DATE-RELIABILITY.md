@@ -96,10 +96,11 @@ Evidence: `docs/audits/SC-163-goal-met-date-dry-run-20260905.json`
 
 ## Correction (smallest safe)
 
-1. **Schema (Mike UI):** Convert `Goal Met Date` lookup → **Date** (US / local date). Existing lookup values do not persist as stored dates — expect blanks, then backfill.  
-2. **Paste Automation 066 v4.0** (no new automation).  
-3. **Extension backfill:** `backfill-goal-met-date.js` dry-run then `CONFIRM_WRITE` for blanks only.
+1. **Pre-conversion inventory (done 2026-09-05):** 0 nonblank lookups; 1 blank-but-met-provable (Athlete1 → `2026-08-30`). Snapshot + rollback evidence under `docs/audits/SC-163-preconversion-*`.  
+2. **Schema (Mike UI):** Convert `Goal Met Date` lookup → **Date** (US / local date). Expect **cleared** cells; verify blanks before paste.  
+3. **Paste Automation 066 v4.0** (no new automation).  
+4. **Migration backfill v1.2:** `MIGRATION_MODE=true` — preserve only crossing-equal dates; replace mismatches; clear unprovable legacy; never invent.  
 
 ## Explicit non-goals
 
-No XP amount changes, Perfect Week, Automation 010/021, paste 013/067, restore retired automations, FUT-029, Season Simulation, unrelated data deletes.
+No XP amount changes, Perfect Week, Automation 010/021, paste 013/067, restore retired automations, FUT-029, Season Simulation, unrelated data deletes. **No Production write in the pre-conversion safety pass.**

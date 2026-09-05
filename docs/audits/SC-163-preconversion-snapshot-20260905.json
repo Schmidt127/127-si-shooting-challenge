@@ -1,0 +1,194 @@
+{
+  "generated_at": "2026-09-05T14:51:28.547408+00:00",
+  "base_id": "appn84sqPw03zEbTT",
+  "purpose": "SC-163 pre-conversion Goal Met Date safety snapshot",
+  "production_unchanged": true,
+  "field": {
+    "name": "Goal Met Date",
+    "id": "fldohCsXsrU4hYqrJ",
+    "type": "multipleLookupValues"
+  },
+  "total_enrollments": 4,
+  "active_enrollments": 3,
+  "inactive_enrollments": 1,
+  "nonblank_lookup_count": 0,
+  "counts": {
+    "blank_and_not_met": 3,
+    "blank_but_met_provable": 1,
+    "nonblank_equal_to_crossing": 0,
+    "nonblank_and_different": 0,
+    "met_but_unprovable": 0,
+    "nonblank_not_met": 0,
+    "other": 0
+  },
+  "conversion_assessment": {
+    "field_id": "fldohCsXsrU4hYqrJ",
+    "current_type": "multipleLookupValues",
+    "source": "Award Recipients \u2192 Date Awarded",
+    "target_type": "date (date-only, US local)",
+    "expected_behavior": "cleared",
+    "confidence": "high",
+    "rationale": [
+      "Lookup values are computed arrays from linked Award Recipients; they are not stored writable cell values.",
+      "Converting the field to a writable date type replaces the computed lookup with an empty writable date field.",
+      "Airtable does not materialize lookup arrays into stored date cells during this conversion.",
+      "Conversion is not expected to be blocked for lookup \u2192 date in the field-type UI.",
+      "This assessment is read-only / not live-proven; Mike should verify the field is blank immediately after conversion before paste/backfill."
+    ],
+    "not_expected": [
+      "preserved",
+      "conversion_blocked"
+    ]
+  },
+  "nonblank_rows": [],
+  "blank_but_met_provable_rows": [
+    {
+      "enrollment_id": "recZEwkkXTJanDlG6",
+      "name": "Athlete1 Schmidt",
+      "active": true,
+      "shots": 6331,
+      "target": 2000,
+      "goal_met": true,
+      "lookup_goal_met_date": null,
+      "lookup_raw": "",
+      "lookup_value_count": 0,
+      "award_recipients": [
+        {
+          "award_recipient_id": "recaGvW4rcKKiK4xg",
+          "date_awarded": "2026-09-03",
+          "award": "recAVeLrL82B4ApZh"
+        }
+      ],
+      "award_dates": [
+        "2026-09-03"
+      ],
+      "earliest_award_date": "2026-09-03",
+      "computed_first_date": "2026-08-30",
+      "crossing_submission": "recu6m5asBhfi0nYd",
+      "crossing_before": 1000,
+      "crossing_after": 2500,
+      "category": "blank_but_met_provable",
+      "legacy_matches_crossing": false,
+      "legacy_differs_from_crossing": false
+    }
+  ],
+  "met_but_unprovable_rows": [],
+  "all_rows": [
+    {
+      "enrollment_id": "rec2UamYHzyc9ELd9",
+      "name": "Athlete 2 Schmidt",
+      "active": false,
+      "shots": 6331,
+      "target": 12000,
+      "goal_met": false,
+      "lookup_goal_met_date": null,
+      "lookup_raw": "",
+      "lookup_value_count": 0,
+      "award_recipients": [],
+      "award_dates": [],
+      "earliest_award_date": null,
+      "computed_first_date": null,
+      "crossing_submission": null,
+      "crossing_before": null,
+      "crossing_after": null,
+      "category": "blank_and_not_met",
+      "legacy_matches_crossing": false,
+      "legacy_differs_from_crossing": false
+    },
+    {
+      "enrollment_id": "recZEwkkXTJanDlG6",
+      "name": "Athlete1 Schmidt",
+      "active": true,
+      "shots": 6331,
+      "target": 2000,
+      "goal_met": true,
+      "lookup_goal_met_date": null,
+      "lookup_raw": "",
+      "lookup_value_count": 0,
+      "award_recipients": [
+        {
+          "award_recipient_id": "recaGvW4rcKKiK4xg",
+          "date_awarded": "2026-09-03",
+          "award": "recAVeLrL82B4ApZh"
+        }
+      ],
+      "award_dates": [
+        "2026-09-03"
+      ],
+      "earliest_award_date": "2026-09-03",
+      "computed_first_date": "2026-08-30",
+      "crossing_submission": "recu6m5asBhfi0nYd",
+      "crossing_before": 1000,
+      "crossing_after": 2500,
+      "category": "blank_but_met_provable",
+      "legacy_matches_crossing": false,
+      "legacy_differs_from_crossing": false
+    },
+    {
+      "enrollment_id": "recp5z9S9WpLBzAZj",
+      "name": "Rene' Schmidt",
+      "active": true,
+      "shots": 0,
+      "target": 12000,
+      "goal_met": false,
+      "lookup_goal_met_date": null,
+      "lookup_raw": "",
+      "lookup_value_count": 0,
+      "award_recipients": [],
+      "award_dates": [],
+      "earliest_award_date": null,
+      "computed_first_date": null,
+      "crossing_submission": null,
+      "crossing_before": null,
+      "crossing_after": null,
+      "category": "blank_and_not_met",
+      "legacy_matches_crossing": false,
+      "legacy_differs_from_crossing": false
+    },
+    {
+      "enrollment_id": "recr3OaRi1HdFCB2V",
+      "name": "VERIFY VERIFY-SC112-20260903",
+      "active": true,
+      "shots": 0,
+      "target": 2000,
+      "goal_met": false,
+      "lookup_goal_met_date": null,
+      "lookup_raw": "",
+      "lookup_value_count": 0,
+      "award_recipients": [],
+      "award_dates": [],
+      "earliest_award_date": null,
+      "computed_first_date": null,
+      "crossing_submission": null,
+      "crossing_before": null,
+      "crossing_after": null,
+      "category": "blank_and_not_met",
+      "legacy_matches_crossing": false,
+      "legacy_differs_from_crossing": false
+    }
+  ],
+  "legacy_lookup_fingerprint": {
+    "rec2UamYHzyc9ELd9": {
+      "lookup_goal_met_date": null,
+      "award_dates": [],
+      "computed_first_date": null
+    },
+    "recZEwkkXTJanDlG6": {
+      "lookup_goal_met_date": null,
+      "award_dates": [
+        "2026-09-03"
+      ],
+      "computed_first_date": "2026-08-30"
+    },
+    "recp5z9S9WpLBzAZj": {
+      "lookup_goal_met_date": null,
+      "award_dates": [],
+      "computed_first_date": null
+    },
+    "recr3OaRi1HdFCB2V": {
+      "lookup_goal_met_date": null,
+      "award_dates": [],
+      "computed_first_date": null
+    }
+  }
+}

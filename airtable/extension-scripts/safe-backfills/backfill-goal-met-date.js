@@ -9,10 +9,15 @@ Purpose:
   - Blank until met
   - Write FIRST provable Activity Date only
   - Never invent
-  - Never overwrite a non-empty existing Goal Met Date
   - Never use award date or current date
   - Skip if Goal Met Date is still a lookup (not writable date)
   - Report unprovable rows separately (fail closed — do not invent)
+
+  Migration mode (MIGRATION_MODE = true — required for first post-conversion pass):
+  - Preserve existing stored date ONLY when it equals the provable crossing
+  - Replace mismatched existing dates ONLY with a provable crossing
+  - Clear unprovable existing dates so legacy Award Recipient dates cannot stick
+  - Steady-state after migration: set MIGRATION_MODE = false (never overwrite)
 
 Safety:
   - DRY_RUN defaults to true
@@ -24,12 +29,25 @@ Safety:
 
 const DRY_RUN = true;
 const CONFIRM_WRITE = false;
+const MIGRATION_MODE = true;
 const BATCH_LIMIT = 25;
 const DEBUG_ENROLLMENT_ID = "";
 
+/**
+ * Pre-conversion snapshot fingerprint (2026-09-05).
+ * Lookup cells were blank; award dates recorded for pollution awareness.
+ * Keys = enrollmentId → legacy lookup date (null if blank at snapshot).
+ */
+const LEGACY_LOOKUP_BY_ENROLLMENT = {
+  rec2UamYHzyc9ELd9: null,
+  recZEwkkXTJanDlG6: null,
+  recp5z9S9WpLBzAZj: null,
+  recr3OaRi1HdFCB2V: null,
+};
+
 const CONFIG = {
   scriptName: "backfill-goal-met-date",
-  version: "v1.1",
+  version: "v1.2",
   timeZone: "America/Denver",
 
   tables: {
@@ -172,9 +190,32 @@ function findFirstGoalMetCrossing(submissions, targetGoalShots) {
   return null;
 }
 
+/**
+ * Keep in sync with lib/sc-163-goal-met-date.js decideGoalMetDateMigrationWrite.
+ */
+function decideMigrationAction({ existingKey, crossing, goalMetNow, target }) {
+  const crossingKey = crossing && crossing.dateKey ? crossing.dateKey : "";
+  if (!target || target <= 0) return { action: "skipped_no_target" };
+
+  if (existingKey && crossingKey && existingKey === crossingKey) {
+    return { action: "skipped_already_set", dateKey: existingKey };
+  }
+  if (existingKey && crossingKey && existingKey !== crossingKey) {
+    return { action: "replaced_mismatch", dateKey: crossingKey, crossing };
+  }
+  if (existingKey && !crossingKey) {
+    return { action: "clear_unprovable_legacy" };
+  }
+  if (!goalMetNow) return { action: "skipped_not_met" };
+  if (!crossingKey) return { action: "error_unprovable" };
+  return { action: "stamped", dateKey: crossingKey, crossing };
+}
+
 output.clear();
 output.markdown(`# ${CONFIG.scriptName} ${CONFIG.version}`);
-output.markdown(`DRY_RUN=${DRY_RUN} CONFIRM_WRITE=${CONFIRM_WRITE} BATCH_LIMIT=${BATCH_LIMIT}`);
+output.markdown(
+  `DRY_RUN=${DRY_RUN} CONFIRM_WRITE=${CONFIRM_WRITE} MIGRATION_MODE=${MIGRATION_MODE} BATCH_LIMIT=${BATCH_LIMIT}`
+);
 
 const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
 const submissionsTable = base.getTable(CONFIG.tables.submissions);
@@ -218,6 +259,7 @@ for (const submission of submissionQuery.records) {
 }
 
 const planned = [];
+const plannedClears = [];
 const skipped = {
   inactive: 0,
   alreadySet: 0,
@@ -227,7 +269,6 @@ const skipped = {
   ambiguous: 0,
 };
 const unprovableRows = [];
-const ambiguousRows = [];
 
 for (const enrollment of enrollmentQuery.records) {
   if (DEBUG_ENROLLMENT_ID && enrollment.id !== DEBUG_ENROLLMENT_ID) continue;
@@ -241,24 +282,12 @@ for (const enrollment of enrollmentQuery.records) {
   }
 
   const existing = getDateValue(enrollment, CONFIG.enrollments.goalMetDate);
-  if (existing) {
-    skipped.alreadySet += 1;
-    continue;
-  }
-
+  const existingKey = existing ? toDenverDateKey(existing) : "";
   const target = getNumber(enrollment, CONFIG.enrollments.targetGoalShots);
-  if (!target || target <= 0) {
-    skipped.noTarget += 1;
-    continue;
-  }
-
   const reportedTotal = getNumber(enrollment, CONFIG.enrollments.totalShotsCounted);
   const goalMetNow =
-    goalMetTruthy(enrollment, CONFIG.enrollments.goalMet) || reportedTotal >= target;
-  if (!goalMetNow) {
-    skipped.notMet += 1;
-    continue;
-  }
+    goalMetTruthy(enrollment, CONFIG.enrollments.goalMet) ||
+    (target > 0 && reportedTotal >= target);
 
   const counted = (byEnrollment.get(enrollment.id) || [])
     .map((submission) => ({
@@ -286,37 +315,122 @@ for (const enrollment of enrollmentQuery.records) {
       return a.record.id.localeCompare(b.record.id);
     });
 
-  const crossing = findFirstGoalMetCrossing(counted, target);
-  if (!crossing) {
-    skipped.unprovable += 1;
-    unprovableRows.push({
+  const crossing = target > 0 ? findFirstGoalMetCrossing(counted, target) : null;
+  const name = getText(enrollment, CONFIG.enrollments.name) || enrollment.id;
+  const legacyLookup = Object.prototype.hasOwnProperty.call(
+    LEGACY_LOOKUP_BY_ENROLLMENT,
+    enrollment.id
+  )
+    ? LEGACY_LOOKUP_BY_ENROLLMENT[enrollment.id]
+    : undefined;
+
+  if (!MIGRATION_MODE) {
+    if (existingKey) {
+      skipped.alreadySet += 1;
+      continue;
+    }
+    if (!target || target <= 0) {
+      skipped.noTarget += 1;
+      continue;
+    }
+    if (!goalMetNow) {
+      skipped.notMet += 1;
+      continue;
+    }
+    if (!crossing) {
+      skipped.unprovable += 1;
+      unprovableRows.push({
+        enrollmentId: enrollment.id,
+        name,
+        target,
+        reportedTotal,
+        calculatedTotal: counted.reduce((sum, row) => sum + row.totalShotsCounted, 0),
+      });
+      continue;
+    }
+    planned.push({
       enrollmentId: enrollment.id,
-      name: getText(enrollment, CONFIG.enrollments.name) || enrollment.id,
+      name,
+      action: "stamped",
       target,
       reportedTotal,
-      calculatedTotal: counted.reduce((sum, row) => sum + row.totalShotsCounted, 0),
+      dateKey: crossing.dateKey,
+      date: crossing.date,
+      submissionId: crossing.submissionId,
+      beforeTotal: crossing.beforeTotal,
+      afterTotal: crossing.afterTotal,
+      legacyLookup,
     });
     continue;
   }
 
-  planned.push({
-    enrollmentId: enrollment.id,
-    name: getText(enrollment, CONFIG.enrollments.name) || enrollment.id,
+  const decision = decideMigrationAction({
+    existingKey,
+    crossing,
+    goalMetNow,
     target,
-    reportedTotal,
-    dateKey: crossing.dateKey,
-    date: crossing.date,
-    submissionId: crossing.submissionId,
-    beforeTotal: crossing.beforeTotal,
-    afterTotal: crossing.afterTotal,
   });
+
+  if (decision.action === "skipped_already_set") {
+    skipped.alreadySet += 1;
+    continue;
+  }
+  if (decision.action === "skipped_not_met") {
+    skipped.notMet += 1;
+    continue;
+  }
+  if (decision.action === "skipped_no_target") {
+    skipped.noTarget += 1;
+    continue;
+  }
+  if (decision.action === "error_unprovable") {
+    skipped.unprovable += 1;
+    unprovableRows.push({
+      enrollmentId: enrollment.id,
+      name,
+      target,
+      reportedTotal,
+      calculatedTotal: counted.reduce((sum, row) => sum + row.totalShotsCounted, 0),
+      existingKey,
+    });
+    continue;
+  }
+  if (decision.action === "clear_unprovable_legacy") {
+    plannedClears.push({
+      enrollmentId: enrollment.id,
+      name,
+      action: "clear_unprovable_legacy",
+      existingKey,
+      legacyLookup,
+    });
+    continue;
+  }
+  if (decision.action === "replaced_mismatch" || decision.action === "stamped") {
+    planned.push({
+      enrollmentId: enrollment.id,
+      name,
+      action: decision.action,
+      target,
+      reportedTotal,
+      dateKey: decision.dateKey,
+      date: decision.crossing.date,
+      submissionId: decision.crossing.submissionId,
+      beforeTotal: decision.crossing.beforeTotal,
+      afterTotal: decision.crossing.afterTotal,
+      existingKey,
+      legacyLookup,
+    });
+  }
 }
 
-const batch = planned.slice(0, BATCH_LIMIT);
-const remainingCount = Math.max(0, planned.length - batch.length);
+const writeQueue = [...planned, ...plannedClears];
+const batch = writeQueue.slice(0, BATCH_LIMIT);
+const remainingCount = Math.max(0, writeQueue.length - batch.length);
 
 output.markdown("## Summary");
-output.markdown(`- Planned writes: **${planned.length}**`);
+output.markdown(`- Migration mode: **${MIGRATION_MODE}**`);
+output.markdown(`- Planned stamps/replaces: **${planned.length}**`);
+output.markdown(`- Planned clears (unprovable legacy): **${plannedClears.length}**`);
 output.markdown(`- This batch: **${batch.length}**`);
 output.markdown(`- Remaining after batch: **${remainingCount}**`);
 output.markdown(
@@ -324,22 +438,17 @@ output.markdown(
 );
 
 if (unprovableRows.length > 0) {
-  output.markdown("## Unprovable (fail closed — not written)");
+  output.markdown("## Unprovable (fail closed — not invented)");
   output.markdown(
     [
-      "| Athlete | Enrollment | Target | Reported | Calculated |",
-      "| --- | --- | --- | --- | --- |",
+      "| Athlete | Enrollment | Target | Reported | Calculated | Existing |",
+      "| --- | --- | --- | --- | --- | --- |",
       ...unprovableRows.map(
         (row) =>
-          `| ${row.name} | ${row.enrollmentId} | ${row.target} | ${row.reportedTotal} | ${row.calculatedTotal} |`
+          `| ${row.name} | ${row.enrollmentId} | ${row.target} | ${row.reportedTotal} | ${row.calculatedTotal} | ${row.existingKey || "—"} |`
       ),
     ].join("\n")
   );
-}
-
-if (ambiguousRows.length > 0) {
-  output.markdown("## Ambiguous (fail closed — not written)");
-  output.markdown(`Count: **${ambiguousRows.length}**`);
 }
 
 if (batch.length === 0) {
@@ -348,12 +457,14 @@ if (batch.length === 0) {
   output.markdown("## Batch");
   output.markdown(
     [
-      "| Athlete | Enrollment | Date | Crossing Submission | Before→After | Target |",
-      "| --- | --- | --- | --- | --- | --- |",
-      ...batch.map(
-        (row) =>
-          `| ${row.name} | ${row.enrollmentId} | ${row.dateKey} | ${row.submissionId} | ${row.beforeTotal}→${row.afterTotal} | ${row.target} |`
-      ),
+      "| Action | Athlete | Enrollment | Date | Existing | Crossing Submission | Before→After |",
+      "| --- | --- | --- | --- | --- | --- | --- |",
+      ...batch.map((row) => {
+        if (row.action === "clear_unprovable_legacy") {
+          return `| clear | ${row.name} | ${row.enrollmentId} | (blank) | ${row.existingKey || "—"} | — | — |`;
+        }
+        return `| ${row.action} | ${row.name} | ${row.enrollmentId} | ${row.dateKey} | ${row.existingKey || "—"} | ${row.submissionId} | ${row.beforeTotal}→${row.afterTotal} |`;
+      }),
     ].join("\n")
   );
 }
@@ -361,9 +472,15 @@ if (batch.length === 0) {
 let wrote = 0;
 if (!DRY_RUN && CONFIRM_WRITE && batch.length > 0) {
   for (const row of batch) {
-    await enrollmentsTable.updateRecordAsync(row.enrollmentId, {
-      [CONFIG.enrollments.goalMetDate]: row.date,
-    });
+    if (row.action === "clear_unprovable_legacy") {
+      await enrollmentsTable.updateRecordAsync(row.enrollmentId, {
+        [CONFIG.enrollments.goalMetDate]: null,
+      });
+    } else {
+      await enrollmentsTable.updateRecordAsync(row.enrollmentId, {
+        [CONFIG.enrollments.goalMetDate]: row.date,
+      });
+    }
     wrote += 1;
   }
   output.markdown(`## Applied writes: **${wrote}**`);
@@ -377,7 +494,9 @@ console.log(
     version: CONFIG.version,
     dryRun: DRY_RUN,
     confirmWrite: CONFIRM_WRITE,
+    migrationMode: MIGRATION_MODE,
     planned: planned.length,
+    plannedClears: plannedClears.length,
     batch: batch.length,
     remainingCount,
     wrote,
