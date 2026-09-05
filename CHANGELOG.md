@@ -9,6 +9,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Docs
 
 #### Added
+- **EOD baseline live-evidence packet (2026-09-05)** — GitHub/Vercel/Airtable/smoke verification companion after #457/#458. Authority: [docs/audits/EOD-BASELINE-20260905.md](./docs/audits/EOD-BASELINE-20260905.md).
 - **SC-167 COMPLETE / Live Tested (2026-09-05)** — Option A bounded proof: temporary Season Sim `Activity Date Is Future?` gate → Athlete1 disposable Submission → Live **010 v10.14** created one Active `SUBMISSION_XP|{id}` → latch retry `reactivated_or_repaired` same id → cleanup → exact `NOW()` formula restored; preflight PASS. Evidence: [`docs/audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md`](./docs/audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md).
 - **SC-167/168/169 live verification (2026-09-05)** — Live **010 v10.14** MCP-verified (`wflJUkUJYTtRWJCyH`); SC-168/169 **COMPLETE**; SC-167 later completed via Option A proof above. Audit: [`docs/audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md`](./docs/audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md).
 - **SC-167/168/169 Season Sim T122531Z discrepancy wave closeout (2026-09-05)** — Coordinator wave after SC-SEASON-SIM-002: duplicate SUBMISSION_XP (SC-167), missing weekly emails (SC-168), unlocks=0 false negative (SC-169). Merged **#450/#451/#453/#452/#454/#455**. Wave audit: [`docs/audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md`](./docs/audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md). Full Season Sim not rerun.
