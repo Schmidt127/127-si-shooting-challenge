@@ -55,7 +55,7 @@ test("067 source contract — repo v3.5 declares structure-only lineage from liv
   assert.equal(
     LIVE_AIRTABLE_067_VERSION,
     "v3.4",
-    "Documented live Airtable 067 remains v3.4 until Mike pastes GitHub v3.5"
+    "Documented live Airtable 067 is v3.4; Mike declined the optional GitHub v3.5 structure paste"
   );
   assert.notEqual(
     REPO_067_VERSION,
