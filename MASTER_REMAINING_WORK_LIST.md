@@ -372,6 +372,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-H10 | Recorded Zoom half-XP writer (SC-147) | **Repo prep shipped** | Draft + offline conflict matrix; Mike: slot + `ZOOM_RECORDING` rule row; do not overload 117 |
 | MRW-H11 | SC-SEASON-SIM-001 60-day five-enrollment season simulation | **FUTURE** | Planned only — no full simulation run. **SC-SEASON-SIM-002** full execute writer + clock-override package in repo (`tools/season_simulation/` + operator checklist); early countable E2E needs Mike OMNI gated formula paste — execute not run. |
 | MRW-H12 | FUT-029 Grade-Band Homework Platform and Homework Intake Adapter | **Deferred — DO NOT IMPLEMENT** | In-app grade-band homework player + Homework Intake Adapter feeding existing HC/XP/feedback/WAS/Perfect Week spine. **Not required** to finish the current app. **Do not implement** until Mike separately authorizes. Out of scope for completion wave 2026-09-05 / SC-162. Plan: [`docs/next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md`](docs/next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md). Historical Fillout brief superseded: [`docs/next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](docs/next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md). *(Requested as FUT-018; that ID already used for landing-page work.)* |
+| MRW-H13 | FUT-048 CloudFront Custom Domain for Homework Resources | **DEFERRED** (Optional / low) | Optional branded domain (e.g. `homework.fairfieldbasketballclub.com`) for S3 **`resources-homework`** / CloudFront **`resources-homework-cf`**. Current permanent domain **`d21ixrrrqpqz29.cloudfront.net` is acceptable** for Airtable and Production. **Not a launch blocker.** **Not part of FUT-029.** No CloudFront/DNS/S3/Airtable/Production work required now; do **not** delay homework-resource migration for this cosmetic improvement. Preserve `*.cloudfront.net` as fallback if ever done. Master list: [`docs/127-SI-MASTER-FUTURE-WORK-LIST.md`](docs/127-SI-MASTER-FUTURE-WORK-LIST.md) § FUT-048. |
 
 ## F+. Weekly settlement QA (pre–season simulation)
 
@@ -423,6 +424,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 5. Optional: refresh Automations **Code** text for 057 (tracker lag) — live script already correct.  
 7. **Do not** activate FUT-003 until registration intentionally opens.  
 8. **Do not** implement **FUT-029** (Grade-Band Homework Platform / Homework Intake Adapter) — **Deferred — DO NOT IMPLEMENT** (**MRW-H12**); not part of current app completion.  
+8b. **Do not** implement **FUT-048** CloudFront custom domain now (**MRW-H13**) — optional/low cosmetic; keep `d21ixrrrqpqz29.cloudfront.net`; do not delay homework-resource migration.  
 9. **FUT-030 COMPLETE** — transactional tables empty; **18 PHA restored** same day. **FUT-002 Batch 1 + Batch 2 COMPLETE**. After WSTEST cleanup: **SC-SEASON-SIM-001** remains FUTURE.  
 10. Wave closeout: [`docs/audits/SC-WAVE-20260905-CLOSEOUT.md`](docs/audits/SC-WAVE-20260905-CLOSEOUT.md) (tip `bd0198a4`).
 
@@ -443,6 +445,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 - **SC-CORE-WF / MRW-F11** → **COMPLETE** (2026-08-30) — live Weeks/PHA audit + disposable apply; orphan inactive PHA deleted.  
 - **SC-015 / SC-016 / MRW-F02 / 065 remap** → **COMPLETE** (2026-08-31) — multi-asset `--apply` → one HC + one Homework XP; 065 dynamic `recordId` + trigger re-entry proven; **do not** re-paste 020/065; **do not** re-`--apply`.  
 - **FUT-029 / MRW-H12** → **Deferred — DO NOT IMPLEMENT** — Grade-Band Homework Platform + Homework Intake Adapter; Fillout brief superseded/history; not required for current app completion; wave 2026-09-05 out of scope.  
+- **FUT-048 / MRW-H13** → **DEFERRED** (Optional / low) — CloudFront custom domain for homework resources; current `d21ixrrrqpqz29.cloudfront.net` acceptable; not FUT-029; no AWS/DNS/Airtable/Production change required now.  
 - **SC-160** → **COMPLETE / Live Tested** (2026-09-05).  
 - **Wave 2026-09-05** → tip through `2131f7d5` (#447 Season Sim preflight). SC-161/162/163/164/165/149 residual **COMPLETE / Live Tested**; **SC-166 Mike-owned/manual** (not core blocker); closeout [`docs/audits/SC-WAVE-20260905-CLOSEOUT.md`](docs/audits/SC-WAVE-20260905-CLOSEOUT.md).  
 - **FUT-030** → **COMPLETE** (2026-08-31) — full transactional record reset (959 deleted); PHA emptied; Weeks/Library/config preserved; base ready for clean rebuild.  

@@ -8,6 +8,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Docs
 
+#### Added
+- **FUT-048 CloudFront custom domain for homework resources (2026-09-05)** — Deferred optional / low branding item: branded domain such as `homework.fairfieldbasketballclub.com` for S3 `resources-homework` / CloudFront `resources-homework-cf`. Current permanent domain `d21ixrrrqpqz29.cloudfront.net` remains acceptable. **Not a launch blocker**; **not FUT-029**; do not delay homework-resource migration; no CloudFront/DNS/S3/Airtable/Production changes in this intake. Living docs: Master List § FUT-048 · CURRENT-TRUTH · PROJECT_STATE · MASTER_REMAINING **MRW-H13**.
+
 #### Changed
 - **Master List reconciliation (2026-09-05)** — Regenerated Section G operator queue (`tools/docs/generate-work-list-section-g.mjs` → `docs/_generated-work-list-section-g.md`); corrected stale counts/statuses across CURRENT-TRUTH / PROJECT_STATE / MASTER_REMAINING / Completion Master. SC-163 COMPLETE under **066 v4.1**; SC-166 Mike-owned/manual (not core blocker); FUT-029 deferred; 013/067 pastes optional/declined; Automation 122 superseded; Season Sim package READY / not running (#447 manifest). Audit: [`docs/audits/MASTER-LIST-RECONCILIATION-20260905.md`](./docs/audits/MASTER-LIST-RECONCILIATION-20260905.md).
 - **SC-163 COMPLETE / Live Tested (2026-09-05)** — Live **066 v4.1** = GitHub; Goal Met Date date-only; Athlete1 stamped **8/30/2026**, retry preserved, no duplicate milestones; 066 may remain ON. Evidence: [`docs/audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md`](./docs/audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md) · checklist [`docs/deploy-checklists/SC-163-goal-met-date.md`](./docs/deploy-checklists/SC-163-goal-met-date.md).

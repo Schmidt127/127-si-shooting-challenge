@@ -8,12 +8,12 @@
 
 | Metric | Count |
 |---|---|
-| Total items | 76 |
+| Total items | 77 |
 | COMPLETE | 62 |
 | IN PROGRESS | 3 |
 | BLOCKED | 0 |
 | READY | 2 |
-| DEFERRED | 9 |
+| DEFERRED | 10 |
 | Production actions remaining | 5 |
 | Items requiring Mike | 10 |
 | Items requiring Cursor | 2 |
@@ -101,6 +101,7 @@ Unified vocabulary: **COMPLETE** · **IN PROGRESS** · **BLOCKED** · **READY** 
 | **AUT-122** | P3 | DEFERRED | no | — | Automation 122 Goal Met Date stamp — never install |
 | **FUT-004** | P3 | DEFERRED | no | — | ? Automated award emailer to replace Tremendous |
 | **FUT-005** | P3 | DEFERRED | no | — | ? Automated accomplishment emails |
+| **FUT-048** | P3 | DEFERRED | no | — | CloudFront Custom Domain for Homework Resources |
 
 ## Classification notes (2026-09-05 reconciliation)
 
