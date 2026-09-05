@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-09-05** (**SC-167/168/169** Season Sim T122531Z discrepancy wave closed in GitHub — tip `caad5ba9`; **010 v10.14** paste pending). Prior: **FUT-048** Deferred optional CloudFront custom domain; Master List reconciliation; SC-163 COMPLETE / Live Tested — **066 v4.1**; SC-161/162/164/165 COMPLETE; SC-166 Mike-owned/manual not core blocker; FUT-029 Deferred; Season Sim **not running**. Authority: [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) · [`audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md`](./audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md) · [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md)
+Last updated: **2026-09-05** (**SC-167/168/169** live verification — tip `33e636ec`; Live **010 v10.14** pasted; SC-167 disposable XP proof still **LIVE TEST REQUIRED**; SC-168/169 **COMPLETE**). Prior: **FUT-048** Deferred optional CloudFront custom domain; Master List reconciliation; SC-163 COMPLETE / Live Tested — **066 v4.1**; SC-161/162/164/165 COMPLETE; SC-166 Mike-owned/manual not core blocker; FUT-029 Deferred; Season Sim **not running**. Authority: [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) · [`audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md`](./audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md) · [`audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md`](./audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md) · [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)

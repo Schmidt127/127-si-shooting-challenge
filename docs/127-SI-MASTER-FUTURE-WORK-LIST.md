@@ -2243,7 +2243,7 @@ Create a reusable, unattended end-to-end simulation of a complete **60-day** Sho
 
 **Repo fix:** `expectations_weekly_email.py` + `weekly_email_stage` CLI (plan/verify/apply) + tests. Audit: [`audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md`](./audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md). Checklist: [`deploy-checklists/SC-168-weekly-email-stage.md`](./deploy-checklists/SC-168-weekly-email-stage.md).
 
-**Live proof:** N/A on cleaned T122531Z graph; next disposable run may apply `weekly-email-stage` (limit 1, allowlist only).
+**Live proof:** N/A on cleaned T122531Z graph (0 Ready WAS with Enrollment). Historical T213135Z proved WEEKLY after Send-arm. Optional later: `weekly-email-stage` (limit 1, allowlist only). **No Production paste.**
 
 **Do not:** Change Sunday schedules; force Send to Make inside execute by default; send to families.
 
@@ -2296,29 +2296,29 @@ Build reusable Python infrastructure for a full **Athlete 1** season simulation 
 ### SC-167 — Duplicate Submission XP (Season Sim T122531Z follow-up)
 
 **Priority:** P0  
-**Status:** **In PR — paste pending** (2026-09-05)  
+**Status:** **LIVE TEST REQUIRED** (2026-09-05) — Live **010 v10.14** pasted + MCP-verified; eligible disposable create+retry outstanding  
 **Systems:** Automation **010** v10.14, XP Events, Season Simulation harness  
 **Related:** SC-SEASON-SIM-002 closeout discrepancies  
 
-**Classification:** Confirmed Production TOCTOU defect in 010 create path (amplified by Season Sim Enrollment clear/restore). Fix: deterministic canonical Source Key ownership + post-create consolidate; ambiguous ownership fails closed. Evidence [`audits/SC-167-DUPLICATE-SUBMISSION-XP-20260905.md`](./audits/SC-167-DUPLICATE-SUBMISSION-XP-20260905.md). Paste checklist [`deploy-checklists/SC-167-010-v10.14-duplicate-consolidate.md`](./deploy-checklists/SC-167-010-v10.14-duplicate-consolidate.md). Do not change XP amounts or eligibility rules. Do not rerun full Season Simulation without separate Mike authorization.
+**Classification:** Confirmed Production TOCTOU defect in 010 create path (amplified by Season Sim Enrollment clear/restore). Fix: deterministic canonical Source Key ownership + post-create consolidate; ambiguous ownership fails closed. Evidence [`audits/SC-167-DUPLICATE-SUBMISSION-XP-20260905.md`](./audits/SC-167-DUPLICATE-SUBMISSION-XP-20260905.md). Live status [`audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md`](./audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md). Paste checklist [`deploy-checklists/SC-167-010-v10.14-duplicate-consolidate.md`](./deploy-checklists/SC-167-010-v10.14-duplicate-consolidate.md). Do not change XP amounts or eligibility rules. Do not rerun full Season Simulation without separate Mike authorization.
 
 ### SC-168 — Missing Weekly Email Handoffs (Season Sim T122531Z follow-up)
 
 **Priority:** P0  
-**Status:** **IN PROGRESS** (2026-09-05)  
+**Status:** **COMPLETE / Corrected expectation** (2026-09-05)  
 **Systems:** Automations **072 / 074 / 079 / 118 / 119**, WAS, Email Handoff Queue, Season Simulation writer  
 **Related:** SC-SEASON-SIM-002  
 
-Investigate zero `WEEKLY_ATHLETE_SUMMARY` Hub handoffs despite six writer `WAS_EMAIL_ARM` arms and six intended weekly emails. Fix Production defect only with proof; otherwise correct harness expectations and add an explicit weekly-email test stage. Live proof only to `schmidt@fairfieldbasketballclub.com` with Hub Test Mode + allowlist.
+Zero `WEEKLY_ATHLETE_SUMMARY` Hub handoffs after execute alone is **expected** (Build arm only; 118/119 cron not sim-driven). Production weekly pipeline **unchanged**. Repo: `expectations_weekly_email.py` + `weekly-email-stage` CLI. Audit [`audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md`](./audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md). Optional later allowlisted stage on Ready WAS only.
 
 ### SC-169 — Missing Achievement Unlocks (Season Sim T122531Z follow-up)
 
 **Priority:** P0  
-**Status:** **IN PROGRESS** (2026-09-05)  
+**Status:** **COMPLETE / Live evidence** (2026-09-05)  
 **Systems:** Automations **053 / 054 / 057 / 058 / 059 / 066**, Athlete Achievement Unlocks, Shot Milestones  
 **Related:** SC-SEASON-SIM-002  
 
-Investigate zero Athlete Achievement Unlocks despite SHOT_MILESTONE XP = 4, streaks, and 13906 counted shots (Perfect Week Eligible = 0 expected). Fix unlock path if qualified awards were missed; otherwise correct simulation expected results and add threshold-crossing scenarios. Do not alter thresholds or XP amounts without authoritative evidence.
+**False-negative cascade count** — expected **4** shot-milestone unlocks for T122531Z; 066→059 awarded them (matched SHOT_MILESTONE XP); orphans deleted. Production award logic **unchanged**. Audit [`audits/SC-169-ACHIEVEMENT-UNLOCKS-20260905.md`](./audits/SC-169-ACHIEVEMENT-UNLOCKS-20260905.md). No automation paste.
 
 ---
 
@@ -2789,9 +2789,9 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-164** | Website | Levels progress UX simplification | P1 | **COMPLETE / Live Tested** (2026-09-05) | FUT-015 | PR **#439** (`9869a2eb`); **Your Level Progress** + on-card gates. Evidence [`audits/SC-164-LEVELS-PROGRESS-UX-20260905.md`](./audits/SC-164-LEVELS-PROGRESS-UX-20260905.md). |
 | **SC-165** | Website | Awards + coaching messaging (Overview / What's Included) | P2 | **COMPLETE / Live Tested** (2026-09-05) | FUT-027 | PR **#439**; FAQ gift-card left as detail page. Evidence [`audits/SC-165-AWARDS-COACHING-MESSAGING-20260905.md`](./audits/SC-165-AWARDS-COACHING-MESSAGING-20260905.md). |
 | **SC-166** | Coach ops | Coach Homework + Video Feedback active work queues | P1 | **Mike-owned/manual** (2026-09-05) — Interfaces published; filter/layout fine-tuning is Mike UI only; **not a core application blocker** | — | PR **#436** (`bd0198a4`); checklist [`deploy-checklists/SC-166-coach-work-queue-filters.md`](./deploy-checklists/SC-166-coach-work-queue-filters.md). Repo + published Interfaces done; remaining filter polish is operator-owned. |
-| **SC-167** | XP / Automations | Duplicate SUBMISSION_XP harden (010) | P0 | **MERGED — Live paste pending** (2026-09-05) | SC-SEASON-SIM-002 T122531Z, Automation 010 | Confirmed TOCTOU defect. Automation **010 v10.14** on GitHub (PR **#453** `08da8b03`): deterministic Source Key ownership + post-create consolidate; fail closed on ambiguous ownership. Evidence [`audits/SC-167-DUPLICATE-SUBMISSION-XP-20260905.md`](./audits/SC-167-DUPLICATE-SUBMISSION-XP-20260905.md) · checklist [`deploy-checklists/SC-167-010-v10.14-duplicate-consolidate.md`](./deploy-checklists/SC-167-010-v10.14-duplicate-consolidate.md). **Mike: paste Live 010 → v10.14.** |
-| **SC-168** | Email | Season Sim T122531Z missing weekly-summary email handoffs (0 WEEKLY) | P0 | **COMPLETE / Corrected expectation** (2026-09-05) | SC-SEASON-SIM-002, 072/074/079/118/119 | Expected harness gap: execute arms Build Weekly only; 118/119 Sunday cron not sim-driven. PR **#451**. Audit [`audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md`](./audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md) · `weekly-email-stage` CLI. |
-| **SC-169** | Achievements | Season Sim T122531Z “unlocks=0” discrepancy | P0 | **COMPLETE / Repository** (2026-09-05) | SC-SEASON-SIM-002 | **False-negative count + cleanup gap** — 066/059 awarded 4 shot-milestone unlocks (matched 4 SHOT_MILESTONE XP); cascade used non-existent Unlocks.`Enrollment Record ID`; orphans deleted. Evidence [`audits/SC-169-ACHIEVEMENT-UNLOCKS-20260905.md`](./audits/SC-169-ACHIEVEMENT-UNLOCKS-20260905.md). **No automation paste.** PR **#452**. |
+| **SC-167** | XP / Automations | Duplicate SUBMISSION_XP harden (010) | P0 | **LIVE TEST REQUIRED** (2026-09-05) | SC-SEASON-SIM-002 T122531Z, Automation 010 | Confirmed TOCTOU defect. **010 v10.14** GitHub + **Live pasted** (PR **#453** `08da8b03`; MCP `wflJUkUJYTtRWJCyH`). Eligible disposable create+retry blocked until Season Sim clock gate (2027 Weeks + wall-clock `NOW()`). Evidence [`audits/SC-167-DUPLICATE-SUBMISSION-XP-20260905.md`](./audits/SC-167-DUPLICATE-SUBMISSION-XP-20260905.md) · live [`audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md`](./audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md) · checklist [`deploy-checklists/SC-167-010-v10.14-duplicate-consolidate.md`](./deploy-checklists/SC-167-010-v10.14-duplicate-consolidate.md). |
+| **SC-168** | Email | Season Sim T122531Z missing weekly-summary email handoffs (0 WEEKLY) | P0 | **COMPLETE / Corrected expectation** (2026-09-05) | SC-SEASON-SIM-002, 072/074/079/118/119 | Expected harness gap: execute arms Build Weekly only; 118/119 Sunday cron not sim-driven. Production pipeline unchanged. PR **#451**. Audit [`audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md`](./audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md) · `weekly-email-stage` CLI. |
+| **SC-169** | Achievements | Season Sim T122531Z “unlocks=0” discrepancy | P0 | **COMPLETE / Live evidence** (2026-09-05) | SC-SEASON-SIM-002 | **False-negative count + cleanup gap** — 066/059 awarded 4 shot-milestone unlocks (matched 4 SHOT_MILESTONE XP); cascade used non-existent Unlocks.`Enrollment Record ID`; orphans deleted (0 remaining). Evidence [`audits/SC-169-ACHIEVEMENT-UNLOCKS-20260905.md`](./audits/SC-169-ACHIEVEMENT-UNLOCKS-20260905.md). **No automation paste.** PR **#452**. |
 | **SC-149 residual** | Website | Family Dashboard under More menu | P1 | **COMPLETE** (2026-09-05 with SC-164/165) | SC-149 | PR **#439**; `MORE_NAV_HREFS` includes FD → `/dashboard/sign-in`. Evidence [`audits/SC-149-MORE-FAMILY-DASHBOARD-20260905.md`](./audits/SC-149-MORE-FAMILY-DASHBOARD-20260905.md). |
 | **SC-113** | Website | Loading, empty, and error states | P2 | Live Tested in PROD | GÃ‡Ã¶ | Keep states aligned when SC-112 lands |
 
@@ -3135,10 +3135,10 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 | **SC-165** | **COMPLETE / Live Tested** | PR **#439**; [`audits/SC-165-AWARDS-COACHING-MESSAGING-20260905.md`](./audits/SC-165-AWARDS-COACHING-MESSAGING-20260905.md) |
 | **SC-149 residual** | **COMPLETE** | PR **#439**; Family Dashboard under More |
 | **SC-166** | **Mike-owned/manual** (not core app blocker) | Interfaces published; filter fine-tuning checklist [`deploy-checklists/SC-166-coach-work-queue-filters.md`](./deploy-checklists/SC-166-coach-work-queue-filters.md) |
-| **SC-167** | **MERGED — Live paste pending** | 010 v10.14 duplicate SUBMISSION_XP consolidate (PR **#453**); [`audits/SC-167-DUPLICATE-SUBMISSION-XP-20260905.md`](./audits/SC-167-DUPLICATE-SUBMISSION-XP-20260905.md) · checklist [`deploy-checklists/SC-167-010-v10.14-duplicate-consolidate.md`](./deploy-checklists/SC-167-010-v10.14-duplicate-consolidate.md) |
+| **SC-167** | **LIVE TEST REQUIRED** | Live **010 v10.14** pasted; eligible disposable create+retry outstanding ([`audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md`](./audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md)) |
 | **SC-168** | **COMPLETE / Corrected expectation** | PR **#451**; [`audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md`](./audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md) · `weekly-email-stage` CLI |
-| **SC-169** | **COMPLETE / Repository** | PR **#452**; expected unlocks=4; orphans deleted; [`audits/SC-169-ACHIEVEMENT-UNLOCKS-20260905.md`](./audits/SC-169-ACHIEVEMENT-UNLOCKS-20260905.md) |
-| **SC-167/168/169 wave** | **GitHub closed; 010 paste remaining** | [`audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md`](./audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md) |
+| **SC-169** | **COMPLETE / Live evidence** | PR **#452**; expected unlocks=4; orphans deleted; [`audits/SC-169-ACHIEVEMENT-UNLOCKS-20260905.md`](./audits/SC-169-ACHIEVEMENT-UNLOCKS-20260905.md) |
+| **SC-167/168/169 wave** | **SC-168/169 closed; SC-167 live XP proof remaining** | [`audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md`](./audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md) · [`audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md`](./audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md) |
 | **FUT-048** | **DEFERRED** (Optional / low) | CloudFront custom domain for homework resources — not required now; not FUT-029 |
 
 
