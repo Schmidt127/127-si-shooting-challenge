@@ -1,0 +1,104 @@
+{
+  "incident": "010-dual-enrollment-fixture-cleanup",
+  "date": "2026-09-05",
+  "baseId": "appn84sqPw03zEbTT",
+  "startingMasterSha": "a40a04e8fc3a0edae3b848fe37b9cea67339b1ad",
+  "knownFailingSubmission": "reczBZnA4DEiaP3P0",
+  "automation010": {
+    "recordId": "recXe0fCpXweqIwFs",
+    "version": "v10.13",
+    "status": "Live",
+    "unchanged": true
+  },
+  "rootCause": "Contaminated disposable Athlete1/Athlete 2 test data with dual Enrollment links and mismatched WAS ownership; Automation 010 correctly fails closed.",
+  "sourceOfSecondEnrollment": {
+    "athlete1Enrollment": "recZEwkkXTJanDlG6",
+    "athlete2Enrollment": "rec2UamYHzyc9ELd9",
+    "sharedAthleteRecord": "recTfxT6WMsPvobAW",
+    "evidence": "Last Reconciled Signature on reczBZnA4DEiaP3P0 originally referenced Athlete1-only ownership and Athlete1 Early Bird WAS; current state links both enrollments and Athlete 2 Early Bird WAS. SC-112 docs note Athlete 2 enrollment already shared Athlete1 athlete identity."
+  },
+  "primaryFixture": {
+    "submission": "reczBZnA4DEiaP3P0",
+    "enrollments": ["recZEwkkXTJanDlG6", "rec2UamYHzyc9ELd9"],
+    "week": "recBrZ1sV8byWEHZU",
+    "was": "recSjN9HDxxDcJwGY",
+    "xpEvents": ["rechNA1K1Pv7h67D4", "rec1A2w51GpEX2oaQ"],
+    "submissionAssets": ["reckhqICA7I5IFQYy"],
+    "videoFeedback": ["recTHQVTrP4gWq8j1"],
+    "reconciliationNeeded": 1
+  },
+  "expandedAnomalyCluster": {
+    "dualEnrollmentSubmissions": [
+      "rec1Urq8ifO1Sbvb8",
+      "rec8vKW0j9hFQctvt",
+      "recGXCZunPyzeyGn3",
+      "recHhThTZVedfdEIN",
+      "recReBysyVRnsGGCp",
+      "recWG2qD3zMMNYgIV",
+      "recc7dFGfO8mimIrp",
+      "recg5vVjpwcTuVetO",
+      "recu6m5asBhfi0nYd",
+      "recwioyhX2wWQzm1S",
+      "reczBZnA4DEiaP3P0"
+    ],
+    "note": "All Athlete1/Athlete 2 Submissions found in scan had dual Enrollment links and Reconciliation Needed? = 1."
+  },
+  "dryRunDeletionPlan": {
+    "XP Events": {
+      "count": 26,
+      "purpose": "Dual-enrollment Submission Base / Video / Homework XP exclusive to contaminated Submissions, plus dual-enrollment milestone/threshold/streak XP owned only by Athlete1+Athlete2 enrollments"
+    },
+    "Athlete Achievement Unlocks": {
+      "count": 8,
+      "purpose": "Dual-enrollment shot-milestone unlocks for Athlete1/Athlete2 Early Bird"
+    },
+    "Streak Occurrences": {
+      "count": 1,
+      "purpose": "Dual-enrollment 3-day streak occurrence"
+    },
+    "Homework Completions": {
+      "count": 2,
+      "purpose": "Test homework completions linked only to contaminated Submissions"
+    },
+    "Video Feedback": {
+      "count": 3,
+      "purpose": "Test video feedback rows exclusive to contaminated Submissions"
+    },
+    "Submission Assets": {
+      "count": 6,
+      "purpose": "Test assets exclusive to contaminated Submissions"
+    },
+    "Submissions": {
+      "count": 11,
+      "purpose": "All dual-enrollment Athlete1/Athlete 2 Submissions including known 010 failure"
+    },
+    "Weekly Athlete Summaries": {
+      "count": 0,
+      "purpose": "Preserve; still legitimately linked to preserved Enrollments/Weeks"
+    },
+    "Enrollments": {
+      "count": 0,
+      "purpose": "Preserve Athlete1 and Athlete 2 Enrollments per authorization"
+    }
+  },
+  "preserved": {
+    "enrollments": ["recZEwkkXTJanDlG6", "rec2UamYHzyc9ELd9"],
+    "athlete": "recTfxT6WMsPvobAW",
+    "weeks": ["recBrZ1sV8byWEHZU", "rec2Rewxt21z7dI9f"],
+    "was": ["recSjN9HDxxDcJwGY", "recNEeoot6gc41zcs"],
+    "singleEnrollmentZoomXp": ["rec9N4T9SD8XmllzB", "recKpZVNbttUqgrdh"],
+    "reneEnrollment": "recp5z9S9WpLBzAZj",
+    "reneSubmissionBaselineCount": 1,
+    "reneSubmissionSample": "recnkEQWB5SQ7OxSJ"
+  },
+  "sharedOrAmbiguousLeftUntouched": [
+    "Athlete1 and Athlete 2 Enrollments",
+    "Athlete record shared by Athlete1/Athlete2 enrollments",
+    "Early Bird and Week 1 Weeks",
+    "Weekly Athlete Summaries for Athlete2 Early Bird and Athlete1 Week 1",
+    "Single-enrollment Athlete1 Zoom XP Events",
+    "Rene Schmidt Enrollment and Submissions",
+    "All configuration / library / achievement definition records"
+  ],
+  "sanitizationNote": "No parent emails, phone numbers, attachment URLs, or secrets included."
+}
