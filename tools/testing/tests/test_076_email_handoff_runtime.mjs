@@ -370,8 +370,9 @@ await test("submission base xp maps to xpEarned with zero extra credit", async (
 
   assert.equal(result.threw, null);
   assert.equal(payload.xpEarned, 10);
-  assert.equal(payload.xpExtraCredit, 0);
   assert.equal(payload.submissionXp, 10);
+  assert.equal(payload.xpExtraCredit, undefined);
+  assert.equal(payload.shootingPercentage, undefined);
 });
 
 await test("idempotent replay reuses matching queue without another create", async () => {

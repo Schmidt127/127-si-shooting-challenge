@@ -6,10 +6,19 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Airtable
+
+#### Changed
+- **SC-171 Daily Submission + Homework Feedback presentation (2026-09-06)** — **076 v8.13** removes `xpExtraCredit` and `shootingPercentage` from daily handoff payload; computes `currentStreak` from counted Submission Activity Dates (055-aligned) instead of stale `Enrollments.Current Shooting Streak`. **071 v4.4** adds `submittedDate`, `reviewedDate`, and `athleteProfileUrl` for homework feedback. No XP award logic changes. Evidence: [`docs/audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md`](./docs/audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md) · checklist [`docs/deploy-checklists/SC-171-email-homework-presentation.md`](./docs/deploy-checklists/SC-171-email-homework-presentation.md).
+
+### Web
+
+*(no SC-171 web changes — presentation is Communications Hub email templates)*
+
 ### Docs
 
 #### Added
-- **SC-SEASON-SIM-001 three-athlete preparation (2026-09-06)** — Reusable Perfect / Recovery / Edge profiles; expectation matrices; execution manifest + operator checklist + scenario matrix; CLI `dry-run-three`. **READY — not executed.** Authorization: `RUN 3-ATHLETE SEASON SIMULATION`. **No DEV environment.** Supersedes five-enrollment design. SC-SEASON-SIM-002 remains COMPLETE historical infrastructure.
+- **CURRENT-TRUTH automation matrix (2026-09-05 EOD follow-up)** — Align live body versions for **013 v3.2.0**, **067 v3.5**, **072 v4.9.1**, **073 v4.6**, **114 v6.2** per Agent 3 MCP read; no paste required.
 - **EOD baseline live-evidence packet (2026-09-05)** — GitHub/Vercel/Airtable/smoke verification companion after #457/#458. Authority: [docs/audits/EOD-BASELINE-20260905.md](./docs/audits/EOD-BASELINE-20260905.md).
 - **SC-167 COMPLETE / Live Tested (2026-09-05)** — Option A bounded proof: temporary Season Sim `Activity Date Is Future?` gate → Athlete1 disposable Submission → Live **010 v10.14** created one Active `SUBMISSION_XP|{id}` → latch retry `reactivated_or_repaired` same id → cleanup → exact `NOW()` formula restored; preflight PASS. Evidence: [`docs/audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md`](./docs/audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md).
 - **SC-167/168/169 live verification (2026-09-05)** — Live **010 v10.14** MCP-verified (`wflJUkUJYTtRWJCyH`); SC-168/169 **COMPLETE**; SC-167 later completed via Option A proof above. Audit: [`docs/audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md`](./docs/audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md).

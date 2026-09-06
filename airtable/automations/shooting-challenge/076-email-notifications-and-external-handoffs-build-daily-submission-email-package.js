@@ -33,11 +33,15 @@ Filename may still say email package; current path is Hub queue create only.
  * 076 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Daily Submission Communications Hub Handoff
  *
- * Version: v8.12
+ * Version: v8.13
  * Date Written: 2026-05-29
- * Last Updated: 2026-09-01
+ * Last Updated: 2026-09-06
  *
  * VERSION HISTORY
+ * - v8.13 (2026-09-06): SC-171 — Daily Submission email payload computes
+ *   currentStreak deterministically from counted Submission Activity Dates
+ *   (055-aligned logic; avoids stale Enrollment reads). Removes xpExtraCredit and
+ *   shootingPercentage from the parent-facing daily payload surface.
  * - v8.12 (2026-09-01): FUT-041 — payload adds xpEarned (SUBMISSION_XP| active
  *   points) and xpExtraCredit (0 until a stored daily extra-credit source exists).
  *   submissionXp mirrors xpEarned for backward-compatible Hub contracts.
@@ -145,10 +149,10 @@ Filename may still say email package; current path is Hub queue create only.
 
 const SCRIPT = {
   scriptName: "076 - Daily Submission Communications Hub Handoff",
-  version: "v8.12",
-  versionDate: "2026-09-01",
+  version: "v8.13",
+  versionDate: "2026-09-06",
   originalWrittenDate: "2026-05-29",
-  lastUpdated: "2026-09-01",
+  lastUpdated: "2026-09-06",
   folder: "07 - Email, Notifications, and External Handoffs",
   automationName: "076 - Daily Submission Communications Hub Handoff",
 };
@@ -588,6 +592,100 @@ function slot(value) {
     .replace(/[^A-Z0-9]/g, "");
 }
 
+/** SC-171 — keep in sync with lib/shooting-streak-from-submissions.js */
+function pad2(value) {
+  return String(value).padStart(2, "0");
+}
+
+function subtractOneDayFromDateKey(dateKey) {
+  const [year, month, day] = String(dateKey || "")
+    .split("-")
+    .map((value) => Number(value));
+  if (!year || !month || !day) return "";
+  const date = new Date(Date.UTC(year, month - 1, day));
+  date.setUTCDate(date.getUTCDate() - 1);
+  return `${date.getUTCFullYear()}-${pad2(date.getUTCMonth() + 1)}-${pad2(date.getUTCDate())}`;
+}
+
+function getTodayDateKey() {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: TZ,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const year = parts.find((part) => part.type === "year")?.value;
+  const month = parts.find((part) => part.type === "month")?.value;
+  const day = parts.find((part) => part.type === "day")?.value;
+  if (!year || !month || !day) throw new Error("Could not determine today's date key.");
+  return `${year}-${month}-${day}`;
+}
+
+function activityDateKeyFromRecord(r, t, name) {
+  const value = raw(r, t, name);
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return `${value.getUTCFullYear()}-${pad2(value.getUTCMonth() + 1)}-${pad2(value.getUTCDate())}`;
+  }
+  const asText = text(r, t, name);
+  if (!asText) return "";
+  const slashMatch = asText.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (slashMatch) {
+    return `${slashMatch[3]}-${pad2(Number(slashMatch[1]))}-${pad2(Number(slashMatch[2]))}`;
+  }
+  const isoMatch = asText.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (isoMatch) return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
+  const parsed = new Date(asText);
+  if (!Number.isNaN(parsed.getTime())) {
+    return `${parsed.getUTCFullYear()}-${pad2(parsed.getUTCMonth() + 1)}-${pad2(parsed.getUTCDate())}`;
+  }
+  return "";
+}
+
+function findMostRecentDateKey(dateKeys) {
+  const sorted = [...dateKeys].sort();
+  return sorted.length ? sorted[sorted.length - 1] : "";
+}
+
+function calculateStreakEndingAt(dateKeys, anchorDateKey) {
+  if (!anchorDateKey || !dateKeys.has(anchorDateKey)) return 0;
+  let streak = 0;
+  let currentDateKey = anchorDateKey;
+  while (dateKeys.has(currentDateKey)) {
+    streak += 1;
+    currentDateKey = subtractOneDayFromDateKey(currentDateKey);
+  }
+  return streak;
+}
+
+function computeCurrentShootingStreakFromSubmissions(countedDateKeys) {
+  const todayKey = getTodayDateKey();
+  const yesterdayKey = subtractOneDayFromDateKey(todayKey);
+  const mostRecentDateKey = findMostRecentDateKey(countedDateKeys);
+  if (!mostRecentDateKey) return 0;
+  const streakIsStillCurrent =
+    mostRecentDateKey === todayKey ||
+    mostRecentDateKey === yesterdayKey ||
+    mostRecentDateKey > todayKey;
+  if (!streakIsStillCurrent) return 0;
+  return calculateStreakEndingAt(countedDateKeys, mostRecentDateKey);
+}
+
+async function getCountedSubmissionDateKeysForEnrollment(subT, enrollmentId) {
+  const query = await load(subT, [
+    CONFIG.fields.sub.enrollment,
+    CONFIG.fields.sub.activity,
+    CONFIG.fields.sub.count,
+  ]);
+  const dateKeys = new Set();
+  for (const row of query.records) {
+    if (!same(ids(row, subT, CONFIG.fields.sub.enrollment), [enrollmentId])) continue;
+    if (!checkedReadiness(row, subT, CONFIG.fields.sub.count)) continue;
+    const key = activityDateKeyFromRecord(row, subT, CONFIG.fields.sub.activity);
+    if (key) dateKeys.add(key);
+  }
+  return dateKeys;
+}
+
 function queueFields(queueT, values) {
   return Object.fromEntries(Object.entries(values).filter(([name]) => exists(queueT, name)));
 }
@@ -747,7 +845,6 @@ async function main() {
   const xpEarned = submissionBaseXpRows.length
     ? submissionBaseXpRows.reduce((sum, row) => sum + num(row, xpT, CONFIG.fields.xp.points), 0)
     : null;
-  const xpExtraCredit = 0;
   const submissionXp = xpEarned;
   const weeklyXp = activeXp.reduce((sum, row) => sum + num(row, xpT, CONFIG.fields.xp.points), 0);
   const weeklyShots = num(was, wasT, CONFIG.fields.was.shots);
@@ -847,6 +944,10 @@ async function main() {
   }
   if (!parent) throw new Error("No usable cleaned parent recipient.");
 
+  step("03b - Compute current shooting streak from counted submissions");
+  const countedSubmissionDateKeys = await getCountedSubmissionDateKeysForEnrollment(subT, enrollmentId);
+  const currentStreak = computeCurrentShootingStreakFromSubmissions(countedSubmissionDateKeys);
+
   const statModeNormalized = normalizedStatMode(sub, subT, CONFIG.fields.sub.mode);
   const submissionStatMode = statModeNormalized === "detailed shooting" ? "Detailed Shooting" : "Simple Total";
   const [currentLevelInfo, nextLevelInfo] = await Promise.all([
@@ -867,16 +968,14 @@ async function main() {
     shots,
     makes,
     ...(shootingDetails ? { shootingDetails } : {}),
-    shootingPercentage: shots > 0 ? Math.round((makes / shots) * 100) : null,
     submissionXp,
     xpEarned,
-    xpExtraCredit,
     ...(submissionXp === null ? { submissionXpStatus: "Pending / not yet awarded" } : {}),
     weeklyShots,
     weeklyGoal,
     weeklyGoalPercentage: pct(weeklyShots, weeklyGoal),
     weeklyXp,
-    currentStreak: num(enrollment, enrT, CONFIG.fields.enr.streak),
+    currentStreak,
     currentLevel: first(currentLevelInfo.name, text(enrollment, enrT, CONFIG.fields.enr.currentLevel)),
     nextLevel: first(nextLevelInfo.name, text(enrollment, enrT, CONFIG.fields.enr.nextLevel)),
     ...(currentLevelInfo.imageUrl ? { currentLevelImageUrl: currentLevelInfo.imageUrl } : {}),
