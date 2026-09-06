@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""CLI for Athlete 1 season simulation infrastructure (SC-SEASON-SIM-002).
+"""CLI for season simulation (SC-SEASON-SIM-001 three-athlete + SC-SEASON-SIM-002).
 
 Default mode is dry-run. Execute and cleanup require explicit multi-gate flags.
 
@@ -23,9 +23,11 @@ from .confirmation import is_execute_fully_gated
 from .constants import (
     CONFIRM_CLEANUP_TOKEN,
     CONFIRM_DISPOSABLE_TOKEN,
+    CONFIRM_THREE_ATHLETE_TOKEN,
     CONFIRM_TOKEN,
     SAFE_EMAIL_RECIPIENT,
     SIM_START,
+    THREE_ATHLETE_AUTHORIZATION_PHRASE,
 )
 from .execute import (
     ExecuteAborted,
@@ -39,6 +41,7 @@ from .reports import write_dry_run_report
 from .run_registry import new_run_id, validate_run_id
 from .scenarios import scenario_from_reference
 from .simulation_clock import SimulationClock
+from .three_athlete import new_three_athlete_run_id, run_three_athlete_dry_run
 from .weekly_email_stage import (
     apply_weekly_email_send_arm,
     plan_weekly_email_stage,
@@ -60,6 +63,7 @@ def _parser() -> argparse.ArgumentParser:
         choices=[
             "preflight",
             "dry-run",
+            "dry-run-three",
             "execute",
             "cleanup",
             "plan",
@@ -67,7 +71,7 @@ def _parser() -> argparse.ArgumentParser:
             "weekly-email-stage",
         ],
         help=(
-            "preflight=read-only checks; dry-run=default plan; "
+            "preflight=read-only checks; dry-run/dry-run-three=plan; "
             "execute/cleanup require confirm gates; evidence=export latest reports; "
             "weekly-email-stage=SC-168 119-substitute plan/verify/apply"
         ),
@@ -98,6 +102,16 @@ def _parser() -> argparse.ArgumentParser:
         "--confirm-cleanup",
         default="",
         help=f'Must equal "{CONFIRM_CLEANUP_TOKEN}" for cleanup deletes',
+    )
+    p.add_argument(
+        "--confirm-three-athlete",
+        default="",
+        help=f'SC-001 execute: must equal "{CONFIRM_THREE_ATHLETE_TOKEN}"',
+    )
+    p.add_argument(
+        "--authorization-phrase",
+        default="",
+        help=f'SC-001 execute: must equal "{THREE_ATHLETE_AUTHORIZATION_PHRASE}"',
     )
     p.add_argument(
         "--acknowledge-clock-override",
@@ -314,6 +328,33 @@ def cmd_dry_run(args: argparse.Namespace) -> int:
     )
     print(f"Wrote {paths['json']}")
     print(f"Wrote {paths['md']}")
+    return 0
+
+
+def cmd_dry_run_three(args: argparse.Namespace) -> int:
+    run_id = args.run_id or new_three_athlete_run_id()
+    client = None if args.offline_fixture else _client(args, allow_writes=False)
+    payload = run_three_athlete_dry_run(
+        run_id=run_id,
+        client=client,
+        offline_fixture=args.offline_fixture,
+        out_dir=Path(args.out_dir),
+    )
+    print(f"SC-SEASON-SIM-001 dry-run complete for run_id={run_id}")
+    print(f"Status: {payload.get('status')} — NOT EXECUTED")
+    print(f"Authorization phrase required: {THREE_ATHLETE_AUTHORIZATION_PHRASE}")
+    for profile, summary in (
+        (p, s.get("intended_writes_summary") or {})
+        for p, s in (payload.get("scenarios") or {}).items()
+    ):
+        print(
+            f"  {profile}: submit_days={summary.get('submit_days')} "
+            f"shots={summary.get('total_planned_shots')} "
+            f"miss={summary.get('miss_days')}"
+        )
+    paths = payload.get("report_paths") or {}
+    print(f"Wrote {paths.get('json')}")
+    print(f"Wrote {paths.get('md')}")
     return 0
 
 
@@ -536,6 +577,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_preflight(args)
     if args.command in {"dry-run", "plan"}:
         return cmd_dry_run(args)
+    if args.command == "dry-run-three":
+        return cmd_dry_run_three(args)
     if args.command == "execute":
         return cmd_execute(args)
     if args.command == "cleanup":

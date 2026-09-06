@@ -1,4 +1,4 @@
-"""Shared constants for Athlete 1 season simulation (SC-SEASON-SIM-002)."""
+"""Shared constants for season simulation (SC-SEASON-SIM-001 / SC-SEASON-SIM-002)."""
 
 from __future__ import annotations
 
@@ -17,14 +17,56 @@ CONFIRM_TOKEN = "SEASON-SIMULATION-2027"
 CONFIRM_DISPOSABLE_TOKEN = "CONFIRM-DISPOSABLE-SEASON-SIM"
 CONFIRM_CLEANUP_TOKEN = "CONFIRM-CLEANUP-SEASON-SIM"
 
+# SC-SEASON-SIM-001 three-athlete authorization (Mike must say exactly this phrase).
+THREE_ATHLETE_AUTHORIZATION_PHRASE = "RUN 3-ATHLETE SEASON SIMULATION"
+THREE_ATHLETE_RUN_SUFFIX = "threeathlete"
+CONFIRM_THREE_ATHLETE_TOKEN = "THREE-ATHLETE-SEASON-SIM-2027"
+
 # Only allowed email recipient for authorized live-looking delivery.
 SAFE_EMAIL_RECIPIENT = "schmidt@fairfieldbasketballclub.com"
 
-# Athlete 1 identity (transactional; not configuration).
+# Athlete 1 identity — SC-SEASON-SIM-002 historical (mixed path; do not reuse for SC-001).
 ATHLETE_FIRST_NAME = "Athlete"
 ATHLETE_LAST_NAME = "1"
 ATHLETE_DISPLAY_NAME = "Athlete 1"
 ATHLETE_GRADE = "12"
+
+# SC-SEASON-SIM-001 three disposable athletes (Production VERIFY only).
+SC001_ATHLETES = (
+    {
+        "profile": "athlete1_perfect",
+        "first_name": "Sim",
+        "last_name": "Perfect",
+        "display_suffix": "Athlete 1 Perfect",
+        "grade": "12",
+    },
+    {
+        "profile": "athlete2_recovery",
+        "first_name": "Sim",
+        "last_name": "Recovery",
+        "display_suffix": "Athlete 2 Recovery",
+        "grade": "10",
+    },
+    {
+        "profile": "athlete3_edge",
+        "first_name": "Sim",
+        "last_name": "Edge",
+        "display_suffix": "Athlete 3 Edge",
+        "grade": "8",
+    },
+)
+
+# Offline Grade 12 shot milestones (9–12 band) — verify live at preflight.
+DEFAULT_SHOT_MILESTONES_912 = (
+    (3000, 10, "25%"),
+    (6000, 15, "50%"),
+    (9000, 20, "75%"),
+    (12000, 30, "100%"),
+    (14400, 40, "120%"),
+)
+
+# Gate-eligible streak day thresholds (Achievements table; offline planning).
+DEFAULT_STREAK_GATE_THRESHOLDS = (3, 7, 10, 14, 21, 30, 45, 60)
 
 # Marker embedded in writable Notes fields where schema permits.
 RUN_MARKER_PREFIX = "SEASON-SIM"
