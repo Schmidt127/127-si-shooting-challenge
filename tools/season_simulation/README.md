@@ -188,14 +188,39 @@ python -m season_simulation evidence --simulation-id "SEASON-SIM-2027-…"
 
 ### SC-SEASON-SIM-001 three-athlete dry-run (default)
 
+| Command | Runner | Writes |
+|---|---|---|
+| `dry-run-three` | `three_athlete.run_three_athlete_dry_run` | Never (forced `allow_writes=False`) |
+| `execute-three` | `execute_three.run_execute_three` | Only with all gates + `--execute` |
+| `execute` | SC-002 `execute.run_execute` (single athlete) | SC-002 gates only — never three-athlete |
+
 ```powershell
 python -m season_simulation dry-run-three
 python -m season_simulation dry-run-three --offline-fixture
 ```
 
-Future live execute requires Mike phrase **`RUN 3-ATHLETE SEASON SIMULATION`** plus
-`--confirm-three-athlete THREE-ATHLETE-SEASON-SIM-2027` and
-`--authorization-phrase "RUN 3-ATHLETE SEASON SIMULATION"`.
+### SC-SEASON-SIM-001 three-athlete execute (gated)
+
+Prep / dry-plan (no writes):
+
+```powershell
+python -m season_simulation execute-three `
+  --offline-fixture `
+  --simulation-id "SEASON-SIM-2027-<utc>-threeathlete"
+```
+
+Live execute requires Mike phrase **`RUN 3-ATHLETE SEASON SIMULATION`** plus all tokens:
+
+```powershell
+python -m season_simulation execute-three `
+  --execute `
+  --simulation-id "SEASON-SIM-2027-<utc>-threeathlete" `
+  --confirm "SEASON-SIMULATION-2027" `
+  --confirm-disposable "CONFIRM-DISPOSABLE-SEASON-SIM" `
+  --confirm-three-athlete "THREE-ATHLETE-SEASON-SIM-2027" `
+  --authorization-phrase "RUN 3-ATHLETE SEASON SIMULATION" `
+  --acknowledge-clock-override
+```
 
 ### SC-SEASON-SIM-002 single-athlete (historical)
 

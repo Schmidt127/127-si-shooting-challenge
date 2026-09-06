@@ -256,3 +256,46 @@ def three_athlete_execute_allowed(**kwargs: Any) -> bool:
         return True
     except ConfirmationError:
         return False
+
+
+def run_execute_three(
+    *,
+    run_id: str | None = None,
+    client: Any | None = None,
+    offline_fixture: bool = False,
+    out_dir: Path,
+    registry_dir: Path,
+    execute: bool = False,
+    confirm: str | None = None,
+    confirm_disposable: str | None = None,
+    confirm_three_athlete: str | None = None,
+    authorization_phrase: str | None = None,
+    allow_writes: bool | None = None,
+    enable_email_delivery: bool = False,
+    acknowledge_clock_override: bool = False,
+    execute_context: Any | None = None,
+) -> dict[str, Any]:
+    """Gated three-athlete execute orchestration (re-exported from execute_three)."""
+    from .execute_three import run_execute_three as _run
+
+    rid = run_id or new_three_athlete_run_id()
+    effective_allow_writes = False if allow_writes is None and not execute else allow_writes
+    if not execute:
+        effective_allow_writes = False
+
+    return _run(
+        run_id=rid,
+        execute=execute,
+        confirm=confirm,
+        confirm_disposable=confirm_disposable,
+        confirm_three_athlete=confirm_three_athlete,
+        authorization_phrase=authorization_phrase,
+        registry_dir=registry_dir,
+        out_dir=out_dir,
+        client=client,
+        offline_fixture=offline_fixture,
+        allow_writes=effective_allow_writes,
+        enable_email_delivery=enable_email_delivery,
+        acknowledge_clock_override=acknowledge_clock_override,
+        execute_context=execute_context,
+    )
