@@ -45,6 +45,9 @@ const homeworkSample = {
   totalHomeworkXpAwarded: 25,
   homeworkSlot: "HW1",
   reviewStatus: "Satisfactory",
+  submittedDate: "Aug. 21, 2026",
+  reviewedDate: "Aug. 22, 2026",
+  athleteProfileUrl: "https://www.fairfieldbasketballclub.com/shoot/athletes/athlete1-schmidt",
   submittedFiles: [{ url: "https://cdn.example.com/homework.pdf", label: "Taylor homework.pdf" }],
   landingPageUrl: BRAND.landingUrl,
   shootPageUrl: BRAND.shootUrl,
@@ -65,8 +68,8 @@ const videoSample = {
   shootPageUrl: BRAND.shootUrl,
 };
 
-test("071 v4.3 enriches branded template payload without changing Hub routing", () => {
-  assert.match(s071, /Version: v4\.3/);
+test("071 v4.4 enriches branded template payload without changing Hub routing", () => {
+  assert.match(s071, /Version: v4\.4/);
   assert.match(s071, /reviewStatus: "Satisfactory"/);
   assert.match(s071, /landingPageUrl: CANONICAL_URLS\.landing/);
   assert.match(s071, /shootPageUrl: CANONICAL_URLS\.shoot/);
@@ -76,8 +79,8 @@ test("071 v4.3 enriches branded template payload without changing Hub routing", 
   assert.match(s071, /Parent Feedback Sent\? is already checked/);
 });
 
-test("073 v4.5 enriches branded template payload without changing Hub routing", () => {
-  assert.match(s073, /Version: v4\.5/);
+test("073 v4.6 enriches branded template payload without changing Hub routing", () => {
+  assert.match(s073, /Version: v4\.6/);
   assert.match(s073, /reviewStatus: "Review complete"/);
   assert.match(s073, /landingPageUrl: CANONICAL_URLS\.landing/);
   assert.match(s073, /shootPageUrl: CANONICAL_URLS\.shoot/);
@@ -98,6 +101,19 @@ test("homework and video templates share approved header and footer", async () =
     assert.match(rendered.html, /Shooting Challenge Page/);
     assert.match(rendered.html, /Daily Submission Form/);
   }
+});
+
+test("homework feedback renders SC-171 parent-facing presentation", async () => {
+  const rendered = await renderTemplateCandidate("HOMEWORK_FEEDBACK", homeworkSample);
+  assert.match(rendered.html, /Homework Files Uploaded/);
+  assert.match(rendered.html, /Submitted Date/);
+  assert.match(rendered.html, /Reviewed Date/);
+  assert.match(rendered.html, /View Athlete Details/);
+  assert.match(rendered.html, /shoot\/athletes\/athlete1-schmidt/);
+  assert.doesNotMatch(rendered.html, /Program:/);
+  assert.doesNotMatch(rendered.html, /Homework slot:/i);
+  assert.doesNotMatch(rendered.html, /Submitted Work/);
+  assert.doesNotMatch(rendered.html, /rec[A-Za-z0-9]{14}/);
 });
 
 test("homework feedback renders personalization, links, and plain text", async () => {

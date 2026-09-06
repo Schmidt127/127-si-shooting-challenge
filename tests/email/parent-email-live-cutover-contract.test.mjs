@@ -28,10 +28,10 @@ function script(slotPrefix) {
 }
 
 const PRODUCERS = [
-  { slot: "071", version: "v4.3" },
+  { slot: "071", version: "v4.4" },
   { slot: "073", version: "v4.6" },
   { slot: "074", version: "v3.5" },
-  { slot: "076", version: "v8.12" },
+  { slot: "076", version: "v8.13" },
   { slot: "078A", version: "v1.5" },
   { slot: "117", version: "v2.1" },
 ];

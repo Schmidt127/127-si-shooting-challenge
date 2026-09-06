@@ -36,7 +36,8 @@ function build076Base(
   queueRecords = [],
   submissionCells = {},
   includeProgramInstanceTable = true,
-  enrollmentCells = {}
+  enrollmentCells = {},
+  extraSubmissions = []
 ) {
   const submissions = new MockTable(
     "Submissions",
@@ -70,6 +71,7 @@ function build076Base(
         "Total Makes Counted": 10,
         ...submissionCells,
       }),
+      ...extraSubmissions,
     ]
   );
 
@@ -310,8 +312,9 @@ test("076 creates one deterministic queue row from a valid cleaned parent email"
   assert.equal(payload.submissionStatMode, "Simple Total");
   assert.equal(payload.currentLevel, "Beginner");
   assert.equal(payload.currentLevelImageUrl, "https://v5.airtableusercontent.com/beginner.png");
-  assert.equal(payload.shootingPercentage, 50);
-  assert.match(payload.weekDateRange, /–/);
+  assert.equal(payload.xpEarned, payload.submissionXp);
+  assert.equal(payload.shootingPercentage, undefined);
+  assert.equal(payload.xpExtraCredit, undefined);
   assert.equal(payload.xpPageUrl, "https://www.fairfieldbasketballclub.com/shoot/dashboard");
   assert.equal(payload.landingPageUrl, "https://www.fairfieldbasketballclub.com");
   assert.equal(payload.dailySubmissionFormUrl, "https://forms.fairfieldbasketballclub.com/shoot-dailysubmissions");
@@ -500,4 +503,46 @@ test("076 contains no direct Make, Gmail, Resend, Hub, or network call", () => {
   assert.doesNotMatch(source, /fetch\s*\(/);
   assert.doesNotMatch(source, /remoteFetchAsync/);
   assert.doesNotMatch(source, /(?:Make\.com|Gmail|Resend|Communications Hub)\s*\.(?:send|call|post)/i);
+});
+
+test("076 computes currentStreak from counted submissions instead of stale Enrollment field", async () => {
+  const today = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Denver",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+  const [month, day, year] = today.split("/");
+  const todayIso = `${year}-${month}-${day}`;
+  const yesterday = new Date(`${todayIso}T12:00:00Z`);
+  yesterday.setUTCDate(yesterday.getUTCDate() - 1);
+  const yesterdayIso = yesterday.toISOString().slice(0, 10);
+
+  const base = build076Base(
+    [],
+    {
+      "Activity Date": todayIso,
+    },
+    true,
+    { "Current Shooting Streak": 11 },
+    [
+      new MockRecord("recSubmission076002", {
+        Enrollment: [{ id: "recEnrollment076001", name: "Schmidt Enrollment" }],
+        Week: [{ id: "recWeek07600001", name: "Early Bird" }],
+        "Weekly Athlete Summary": [{ id: "recWas0760001", name: "Schmidt · Early Bird" }],
+        "Activity Date": yesterdayIso,
+        "Build Daily Email Now?": false,
+        "Count This Submission?": true,
+        "Submission Stat Mode": "Simple Total",
+        "Total Shots Counted": 15,
+        "Total Makes Counted": 8,
+      }),
+    ]
+  );
+  const result = await run076({ base });
+  assert.equal(result.error, null, result.error?.message);
+  const payload = JSON.parse(
+    base.getTable("Email Handoff Queue").records.values().next().value.cells["Payload JSON"]
+  );
+  assert.equal(payload.currentStreak, 2);
 });

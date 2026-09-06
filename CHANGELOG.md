@@ -6,6 +6,15 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Airtable
+
+#### Changed
+- **SC-171 Daily Submission + Homework Feedback presentation (2026-09-06)** — **076 v8.13** removes `xpExtraCredit` and `shootingPercentage` from daily handoff payload; computes `currentStreak` from counted Submission Activity Dates (055-aligned) instead of stale `Enrollments.Current Shooting Streak`. **071 v4.4** adds `submittedDate`, `reviewedDate`, and `athleteProfileUrl` for homework feedback. No XP award logic changes. Evidence: [`docs/audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md`](./docs/audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md) · checklist [`docs/deploy-checklists/SC-171-email-homework-presentation.md`](./docs/deploy-checklists/SC-171-email-homework-presentation.md).
+
+### Web
+
+*(no SC-171 web changes — presentation is Communications Hub email templates)*
+
 ### Docs
 
 #### Added

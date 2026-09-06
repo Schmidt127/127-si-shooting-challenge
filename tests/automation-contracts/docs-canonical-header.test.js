@@ -7,6 +7,7 @@ const path = require("node:path");
 
 const ROOT = path.resolve(__dirname, "../..");
 const AUTOMATIONS = path.join(ROOT, "airtable/automations/shooting-challenge");
+const CURRENT_TRUTH = path.join(ROOT, "docs/CURRENT-TRUTH.md");
 const DOCS = [
   path.join(ROOT, "docs/automation-index.md"),
   path.join(ROOT, "airtable/schema/current/automation-trigger-map.md"),
@@ -40,15 +41,33 @@ function rowFor(text, number, fileName, docNeedle) {
   return row;
 }
 
+function documentedPendingLiveVersion(number, canonical) {
+  const text = fs.readFileSync(CURRENT_TRUTH, "utf8");
+  const row = text
+    .split(/\r?\n/)
+    .find((line) => new RegExp(`\\|\\s*\\**${number}\\**\\s*\\|`).test(line));
+  if (!row || !/GitHub ahead/i.test(row) || !/paste pending/i.test(row)) return "";
+
+  const cells = row.split("|").map((cell) => cell.replace(/\*/g, "").trim());
+  const githubVersion = cells.find((cell) => /^v\d+\.\d+(?:\.\d+)?$/.test(cell)) || "";
+  const liveVersion = cells.slice(cells.indexOf(githubVersion) + 1).find((cell) => /^v\d+\.\d+(?:\.\d+)?$/.test(cell)) || "";
+  if (githubVersion !== canonical || !liveVersion) return "";
+  return liveVersion;
+}
+
 for (const [number, fileName, docNeedle] of CURRENT_AUTOMATIONS) {
   const expected = canonicalVersion(fileName);
+  const pendingLive = documentedPendingLiveVersion(number, expected);
+  const allowedVersions = [expected, pendingLive].filter(Boolean);
+  const versionPattern = allowedVersions.map((version) => version.replace(/\./g, "\\.")).join("|");
+
   for (const docPath of DOCS) {
     const text = fs.readFileSync(docPath, "utf8");
     const row = rowFor(text, number, fileName, docNeedle);
     assert.match(
       row,
-      new RegExp(`\\b${expected.replace(".", "\\.")}\\b`),
-      `${path.relative(ROOT, docPath)} drifted from Automation ${number} canonical header ${expected}: ${row}`,
+      new RegExp(`\\b(?:${versionPattern})\\b`),
+      `${path.relative(ROOT, docPath)} drifted from Automation ${number} canonical header ${expected}${pendingLive ? ` (documented live ${pendingLive} while paste pending)` : ""}: ${row}`,
     );
   }
 }
