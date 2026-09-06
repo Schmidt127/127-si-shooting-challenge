@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import { LadderHeroDecoration } from "@/components/site/ladder-hero-decoration";
+import { LeaderboardHeroDecoration } from "@/components/site/leaderboard-hero-decoration";
 import { SiteContainer } from "@/components/site/site-container";
 import { cn } from "@/lib/utils";
 
@@ -13,7 +14,7 @@ type PageHeroProps = {
   /** `contrast` = blue performance band; `light` = white/light surface. */
   variant?: "contrast" | "light";
   /** Optional decorative background for catalog heroes. */
-  decoration?: "ladder";
+  decoration?: "ladder" | "leaderboard";
   className?: string;
 };
 
@@ -69,6 +70,7 @@ export function PageHero({
           </>
         )}
         {decoration === "ladder" ? <LadderHeroDecoration /> : null}
+        {decoration === "leaderboard" ? <LeaderboardHeroDecoration /> : null}
       </div>
 
       <SiteContainer className="relative py-9 sm:py-12 lg:py-14">

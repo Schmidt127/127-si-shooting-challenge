@@ -59,6 +59,7 @@ describe("leaderboard mapping", () => {
       displayName: "Jordan S.",
       school: "Test High",
       grade: "8",
+      gradeBandLabel: null,
       level: "Level 3",
       headshot: {
         url: "https://example.com/headshot.jpg",
@@ -67,6 +68,21 @@ describe("leaderboard mapping", () => {
       totalShots: 900,
       publicProfileSlug: null,
     });
+  });
+
+  it("maps Grade Band Label onto leaderboard entries for filters", () => {
+    const entry = mapEnrollmentToLeaderboardEntry(
+      {
+        id: "recTESTBand",
+        fields: standingsEnrollmentFields({
+          "Full Athlete Name": "Band Athlete",
+          "Grade Band Label": ["3-4"],
+          "Lifetime XP Total": 200,
+        }),
+      },
+      1,
+    );
+    expect(entry.gradeBandLabel).toBe("3-4");
   });
 
   it("maps enabled public profile slug onto leaderboard entries", () => {

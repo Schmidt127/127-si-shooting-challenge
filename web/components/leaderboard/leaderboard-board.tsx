@@ -1,42 +1,66 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { usePathname } from "next/navigation";
 
 import { GradeBandFilter } from "@/components/leaderboard/grade-band-filter";
 import { LeaderboardTable } from "@/components/leaderboard/leaderboard-table";
+import { withBasePath } from "@/lib/app-config";
 import {
+  ALL_GRADE_BANDS_ID,
+  countEntriesByGradeBand,
   filterByGradeBand,
-  gradeToBand,
+  resolveSelectedGradeBandId,
   withFilteredRanks,
-  type GradeBandId,
+  type GradeBandOption,
 } from "@/lib/data/grade-bands";
 import type { LeaderboardEntry } from "@/types/leaderboard";
 
 type LeaderboardBoardProps = {
   entries: LeaderboardEntry[];
+  gradeBandOptions: GradeBandOption[];
+  /** Resolved band id from the server (stale query already mapped to `all`). */
+  initialBandId?: string;
 };
 
-export function LeaderboardBoard({ entries }: LeaderboardBoardProps) {
-  const [band, setBand] = useState<GradeBandId>("all");
+function syncBandQuery(pathname: string, bandId: string) {
+  const base = withBasePath(pathname || "/leaderboard");
+  const href =
+    !bandId || bandId === ALL_GRADE_BANDS_ID
+      ? base
+      : `${base}?band=${encodeURIComponent(bandId)}`;
+  window.history.replaceState(null, "", href);
+}
 
-  const counts = useMemo(() => {
-    const next: Partial<Record<GradeBandId, number>> = {
-      all: entries.length,
-      elementary: 0,
-      middle: 0,
-      high: 0,
-      other: 0,
-    };
-    for (const entry of entries) {
-      const id = gradeToBand(entry.grade);
-      next[id] = (next[id] ?? 0) + 1;
-    }
-    return next;
-  }, [entries]);
+export function LeaderboardBoard({
+  entries,
+  gradeBandOptions,
+  initialBandId = ALL_GRADE_BANDS_ID,
+}: LeaderboardBoardProps) {
+  const pathname = usePathname();
+  const options =
+    gradeBandOptions.length > 0
+      ? gradeBandOptions
+      : [{ id: ALL_GRADE_BANDS_ID, label: "All Grade Bands", shortLabel: "All", minGrade: null, maxGrade: null, sortOrder: 0 }];
+
+  const [band, setBand] = useState(() =>
+    resolveSelectedGradeBandId(initialBandId, options),
+  );
+
+  const counts = useMemo(() => countEntriesByGradeBand(entries, options), [entries, options]);
 
   const filtered = useMemo(
     () => withFilteredRanks(filterByGradeBand(entries, band)),
     [entries, band],
+  );
+
+  const onChange = useCallback(
+    (next: string) => {
+      const resolved = resolveSelectedGradeBandId(next, options);
+      setBand(resolved);
+      syncBandQuery(pathname, resolved);
+    },
+    [options, pathname],
   );
 
   return (
@@ -55,7 +79,7 @@ export function LeaderboardBoard({ entries }: LeaderboardBoardProps) {
             Showing {filtered.length} of {entries.length}
           </p>
         </div>
-        <GradeBandFilter value={band} onChange={setBand} counts={counts} />
+        <GradeBandFilter value={band} onChange={onChange} counts={counts} options={options} />
       </div>
 
       {filtered.length === 0 ? (
@@ -66,7 +90,7 @@ export function LeaderboardBoard({ entries }: LeaderboardBoardProps) {
         <LeaderboardTable
           entries={filtered}
           skipFirst={0}
-          heading={band === "all" ? "Full rankings" : "Band rankings"}
+          heading={band === ALL_GRADE_BANDS_ID ? "Full rankings" : "Band rankings"}
         />
       )}
     </div>

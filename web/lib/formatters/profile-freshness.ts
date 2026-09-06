@@ -1,16 +1,13 @@
 /** Parent-friendly timestamps and freshness messaging for public athlete profiles. */
 
-export function formatProfileFetchedAt(fetchedAt: string): string | null {
-  const parsed = Date.parse(fetchedAt);
-  if (Number.isNaN(parsed)) return null;
+import { formatMontanaDateTime } from "@/lib/formatters/montana-time";
 
-  return new Date(parsed).toLocaleString("en-US", {
+export function formatProfileFetchedAt(fetchedAt: string): string | null {
+  return formatMontanaDateTime(fetchedAt, {
     month: "short",
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
-    timeZone: "America/Denver",
-    timeZoneName: "short",
   });
 }
 

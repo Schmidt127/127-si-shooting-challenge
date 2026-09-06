@@ -1,6 +1,7 @@
 import { CtaLink, ProgramPage } from "@/components/site";
 import { EmptyState, ErrorState } from "@/components/ui";
 import { formatRelativeUpdate } from "@/lib/formatters";
+import { resolveSelectedGradeBandId } from "@/lib/data/grade-bands";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import type { LeaderboardData } from "@/types/leaderboard";
 
@@ -11,9 +12,13 @@ import { LeaderboardRankingExplanation } from "./leaderboard-ranking-explanation
 
 type LeaderboardViewProps = {
   data: LeaderboardData;
+  /** Raw `?band=` query; resolved against configured options (stale → All). */
+  bandQuery?: string | null;
 };
 
-export function LeaderboardView({ data }: LeaderboardViewProps) {
+export function LeaderboardView({ data, bandQuery }: LeaderboardViewProps) {
+  const initialBandId = resolveSelectedGradeBandId(bandQuery, data.gradeBandOptions);
+
   return (
     <ProgramPage
       eyebrow="Season standings"
@@ -21,6 +26,7 @@ export function LeaderboardView({ data }: LeaderboardViewProps) {
       description="See who is leading the season by level, XP, and total shots — ranked for fair competition."
       heroVariant="contrast"
       ambientVariant="leaderboard"
+      heroDecoration="leaderboard"
       actions={
         <CtaLink href="/faq" variant="contrast">
           Program FAQ
@@ -38,7 +44,11 @@ export function LeaderboardView({ data }: LeaderboardViewProps) {
     >
       <div className="space-y-6">
         <LeaderboardRankingExplanation />
-        <LeaderboardBoard entries={data.entries} />
+        <LeaderboardBoard
+          entries={data.entries}
+          gradeBandOptions={data.gradeBandOptions}
+          initialBandId={initialBandId}
+        />
       </div>
     </ProgramPage>
   );
@@ -52,6 +62,7 @@ export function LeaderboardEmptyState() {
       description="See who is leading the season by level, XP, and total shots — ranked for fair competition."
       heroVariant="contrast"
       ambientVariant="leaderboard"
+      heroDecoration="leaderboard"
     >
       <div className="space-y-8">
         <LeaderboardRankingExplanation />
@@ -78,6 +89,7 @@ export function LeaderboardErrorState({ message }: { message: string }) {
       description="See who is leading the season by level, XP, and total shots — ranked for fair competition."
       heroVariant="contrast"
       ambientVariant="leaderboard"
+      heroDecoration="leaderboard"
     >
       <div className="space-y-8">
         <LeaderboardRankingExplanation />

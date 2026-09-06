@@ -1,3 +1,4 @@
+import type { GradeBandOption } from "@/lib/data/grade-bands";
 import type { LeaderboardData, LeaderboardEntry } from "@/types/leaderboard";
 
 import {
@@ -22,6 +23,8 @@ export type EnrollmentLeaderboardFields = {
   "Full Athlete Name"?: unknown;
   "School Name Lookup"?: unknown;
   Grade?: unknown;
+  "Grade Band"?: unknown;
+  "Grade Band Label"?: unknown;
   "Current Level"?: unknown;
   "Current Level - Public Facing Display"?: unknown;
   "Level Sort Order - For Softr"?: unknown;
@@ -287,6 +290,12 @@ function resolvePublicProfileSlug(fields: EnrollmentLeaderboardFields): string |
   return isValidPublicSlug(cleaned) ? cleaned : null;
 }
 
+function resolveGradeBandLabel(fields: EnrollmentLeaderboardFields): string | null {
+  const fromLookup = asText(fields["Grade Band Label"], "");
+  if (fromLookup && fromLookup !== "—") return fromLookup;
+  return null;
+}
+
 export function mapEnrollmentToLeaderboardEntry(
   record: LeaderboardRecord,
   rank: number,
@@ -300,6 +309,7 @@ export function mapEnrollmentToLeaderboardEntry(
     displayName: asText(fields["Full Athlete Name"], "Unknown Athlete"),
     school: asText(fields["School Name Lookup"]),
     grade: selectName(fields.Grade, asText(fields.Grade)),
+    gradeBandLabel: resolveGradeBandLabel(fields),
     level: asText(fields["Current Level - Public Facing Display"]),
     headshot: headshot?.url ? { url: headshot.url } : null,
     xp: sortKeys.xp,
@@ -311,6 +321,7 @@ export function mapEnrollmentToLeaderboardEntry(
 export function buildLeaderboardData(
   records: LeaderboardRecord[],
   seasonLabel = "Current Season",
+  gradeBandOptions: GradeBandOption[] = [],
 ): LeaderboardData {
   const sorted = sortLeaderboardRecords(records);
   const entries = sorted.map((record, index) =>
@@ -321,6 +332,7 @@ export function buildLeaderboardData(
     entries,
     updatedAt: new Date().toISOString(),
     seasonLabel,
+    gradeBandOptions,
   };
 }
 

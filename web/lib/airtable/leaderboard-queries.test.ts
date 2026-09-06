@@ -54,6 +54,22 @@ function installQueryMock(records: ReturnType<typeof enrollment>[]) {
         }],
       };
     }
+    if (params.tableName === "Grade Bands") {
+      return {
+        records: [
+          {
+            id: "recBand34",
+            fields: {
+              "Grade Band Name": "3-4",
+              "Active?": true,
+              "Sort Order": 1,
+              "Min Grade": 3,
+              "Max Grade": 4,
+            },
+          },
+        ],
+      };
+    }
     if (params.tableName === "Enrollments") return { records };
     throw new Error(`Unexpected table ${params.tableName}`);
   });
@@ -126,6 +142,9 @@ describe("fetchLeaderboard Airtable adapter", () => {
           }],
         };
       }
+      if (params.tableName === "Grade Bands") {
+        return { records: [] };
+      }
       if (params.tableName === "Enrollments") {
         return { records: [enrollment("recAxxxxxxx00001", "Avery")] };
       }
@@ -196,6 +215,7 @@ describe("fetchLeaderboard Airtable adapter", () => {
 
   it("fails closed when School Year - Linked is missing or the Program Instance name is not canonical", async () => {
     listAirtableRecordsMock.mockImplementation(async (params: { tableName: string }) => {
+      if (params.tableName === "Grade Bands") return { records: [] };
       if (params.tableName === "Program Instance - Sync") {
         return { records: [registeringProgramInstance({ "School Year - Linked": "" })] };
       }
@@ -204,6 +224,7 @@ describe("fetchLeaderboard Airtable adapter", () => {
     await expect(fetchLeaderboard()).rejects.toThrow(/missing School Year - Linked/);
 
     listAirtableRecordsMock.mockImplementation(async (params: { tableName: string }) => {
+      if (params.tableName === "Grade Bands") return { records: [] };
       if (params.tableName === "Program Instance - Sync") {
         return {
           records: [registeringProgramInstance({
@@ -229,12 +250,16 @@ describe("fetchLeaderboard Airtable adapter", () => {
           records: [{ id: FIXTURE_LEVEL_2_ID, fields: activeLevel2Fields() }],
         };
       }
+      if (params.tableName === "Grade Bands") {
+        return { records: [] };
+      }
       throw new AirtableApiError(422, JSON.stringify({ error: { type: "VIEW_NAME_NOT_FOUND" } }));
     });
 
     await expect(fetchLeaderboard()).rejects.toThrow(/VIEW_NAME_NOT_FOUND/);
-    expect(listAirtableRecordsMock).toHaveBeenCalledTimes(3);
-    expect(listAirtableRecordsMock.mock.calls[2][0].filterByFormula).toBeUndefined();
+    expect(listAirtableRecordsMock.mock.calls.some(
+      ([params]) => params.tableName === "Enrollments" && params.filterByFormula === undefined,
+    )).toBe(true);
   });
 
   it("reflects upward and downward corrected values on the next revalidated adapter read", async () => {
@@ -282,9 +307,25 @@ describe("fetchLeaderboard Airtable adapter", () => {
           }],
         };
       }
-      return { records: [enrollment("recAxxxxxxx00001", "Avery", { "Lifetime XP Total": 100 })] };
+      if (params.tableName === "Grade Bands") {
+        return { records: [] };
+      }
+      if (params.tableName === "Enrollments") {
+        return { records: [enrollment("recAxxxxxxx00001", "Avery", { "Lifetime XP Total": 100 })] };
+      }
+      throw new Error(`Unexpected table ${params.tableName}`);
     });
     await expect(fetchLeaderboard()).resolves.toMatchObject({ entries: [] });
+  });
+
+  it("includes grade band filter options from Airtable without using record ids as slugs", async () => {
+    installQueryMock([
+      enrollment("recAxxxxxxx00001", "Avery", { "Grade Band Label": ["3-4"] }),
+    ]);
+    const data = await fetchLeaderboard();
+    expect(data.gradeBandOptions.map((o) => o.id)).toEqual(["all", "3-4"]);
+    expect(data.entries[0].gradeBandLabel).toBe("3-4");
+    expect(data.gradeBandOptions.every((o) => !o.id.startsWith("rec"))).toBe(true);
   });
 
   it("uses the canonical Registering Program Instance name when validating season selection", () => {

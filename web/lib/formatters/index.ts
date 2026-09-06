@@ -4,6 +4,10 @@
  */
 
 import type { XpSourceLabel } from "@/types/xp";
+import {
+  formatMontanaDateTime,
+  MONTANA_TIME_ZONE_LABEL,
+} from "@/lib/formatters/montana-time";
 
 export function formatXp(points: number): string {
   if (!Number.isFinite(points)) return "0";
@@ -49,29 +53,27 @@ export function formatXpSourceLabel(source: string | null | undefined): string {
   return aliases[raw.toLowerCase()] ?? raw;
 }
 
+/** Public "Updated …" stamps in America/Denver with a fixed MT label. */
 export function formatRelativeUpdate(iso: string | null | undefined): string {
-  if (!iso || !String(iso).trim()) return "Updated recently";
-  const updated = new Date(iso);
-  if (Number.isNaN(updated.getTime())) return "Updated recently";
-  return updated.toLocaleString("en-US", {
+  const formatted = formatMontanaDateTime(iso, {
     month: "short",
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
   });
+  return formatted ?? "Updated recently";
 }
 
+/** Zoom / meeting datetime labels in America/Denver with a fixed MT label. */
 export function formatMeetingDateTime(iso: string | null): string {
-  if (!iso) return "Date TBD";
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return "Date TBD";
-
-  return date.toLocaleString("en-US", {
-    timeZone: "America/Denver",
+  const formatted = formatMontanaDateTime(iso, {
     weekday: "short",
     month: "short",
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
   });
+  return formatted ?? "Date TBD";
 }
+
+export { MONTANA_TIME_ZONE_LABEL };

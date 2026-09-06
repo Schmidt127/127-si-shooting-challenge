@@ -108,11 +108,16 @@ describe("catalog presentation helpers", () => {
     ).toBe("HW2");
   });
 
-  it("classifies due status by calendar day", () => {
-    const now = new Date("2026-09-05T12:00:00.000Z");
-    expect(resolveHomeworkDueStatus("2026-09-01", now)).toBe("past_due");
-    expect(resolveHomeworkDueStatus("2026-09-06", now)).toBe("due_soon");
-    expect(resolveHomeworkDueStatus("2026-10-01", now)).toBe("upcoming");
-    expect(resolveHomeworkDueStatus(null, now)).toBe("no_due");
+  it("classifies due status by Montana calendar day (not UTC)", () => {
+    // 2026-09-06 05:00Z is still Sep 5 evening in Denver
+    const lateUtc = new Date("2026-09-06T05:00:00.000Z");
+    expect(resolveHomeworkDueStatus("2026-09-05", lateUtc)).toBe("due_soon");
+    expect(resolveHomeworkDueStatus("2026-09-04", lateUtc)).toBe("past_due");
+
+    const middayUtc = new Date("2026-09-05T18:00:00.000Z");
+    expect(resolveHomeworkDueStatus("2026-09-01", middayUtc)).toBe("past_due");
+    expect(resolveHomeworkDueStatus("2026-09-06", middayUtc)).toBe("due_soon");
+    expect(resolveHomeworkDueStatus("2026-10-01", middayUtc)).toBe("upcoming");
+    expect(resolveHomeworkDueStatus(null, middayUtc)).toBe("no_due");
   });
 });

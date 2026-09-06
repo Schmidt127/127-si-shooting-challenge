@@ -5,6 +5,7 @@
 
 import { isMissingAirtableViewError } from "@/lib/airtable/errors";
 import { listAirtableRecords } from "@/lib/airtable/client";
+import { fetchActiveGradeBandOptions } from "@/lib/airtable/grade-band-queries";
 import {
   PUBLIC_AIRTABLE_TABLES,
   PUBLIC_ENROLLMENT_VIEW,
@@ -107,6 +108,8 @@ export const LEADERBOARD_FIELDS = [
   "Full Athlete Name",
   "School Name Lookup",
   "Grade",
+  "Grade Band",
+  "Grade Band Label",
   "Current Level",
   "Current Level - Public Facing Display",
   "Level Sort Order - For Softr",
@@ -298,7 +301,10 @@ async function getStandingsScope(): Promise<{
  * or renamed view fails closed; table-wide fallback could leak another season.
  */
 export async function fetchLeaderboard(): Promise<LeaderboardData> {
-  const scope = await getStandingsScope();
+  const [scope, gradeBandOptions] = await Promise.all([
+    getStandingsScope(),
+    fetchActiveGradeBandOptions(),
+  ]);
   const baseParams = {
     tableName: AIRTABLE_TABLES.enrollments,
     fields: [...LEADERBOARD_FIELDS],
@@ -311,7 +317,7 @@ export async function fetchLeaderboard(): Promise<LeaderboardData> {
   });
   const eligibleRecords = requireEligibleLeaderboardRecords(response.records, scope);
   const seasonLabel = inferSeasonLabel(eligibleRecords);
-  return buildLeaderboardData(eligibleRecords, seasonLabel);
+  return buildLeaderboardData(eligibleRecords, seasonLabel, gradeBandOptions);
 }
 
 async function listActiveLevelRecords(): Promise<Array<{ id: string; fields: LevelFields }>> {

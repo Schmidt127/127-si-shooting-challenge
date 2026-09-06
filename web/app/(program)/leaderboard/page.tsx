@@ -31,8 +31,19 @@ export const metadata: Metadata = buildPageMetadata({
 /** Airtable's 120-second data cache is the sole standings cache layer. */
 export const revalidate = 0;
 
-export default async function LeaderboardPage() {
+type LeaderboardPageProps = {
+  searchParams: Promise<{ band?: string | string[] }>;
+};
+
+function firstQueryValue(value: string | string[] | undefined): string | null {
+  if (Array.isArray(value)) return value[0] ?? null;
+  return value ?? null;
+}
+
+export default async function LeaderboardPage({ searchParams }: LeaderboardPageProps) {
   const structuredData = <CatalogStructuredData section="leaderboard" />;
+  const params = await searchParams;
+  const bandQuery = firstQueryValue(params.band);
 
   try {
     const data = await fetchLeaderboard();
@@ -49,7 +60,7 @@ export default async function LeaderboardPage() {
     return (
       <>
         {structuredData}
-        <LeaderboardView data={data} />
+        <LeaderboardView data={data} bandQuery={bandQuery} />
       </>
     );
   } catch (error) {
