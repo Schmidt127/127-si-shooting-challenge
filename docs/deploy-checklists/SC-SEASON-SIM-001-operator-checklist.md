@@ -1,7 +1,7 @@
 # SC-SEASON-SIM-001 — Operator Checklist
 
 **Backlog:** SC-SEASON-SIM-001  
-**Status:** READY (preparation completing) — **NOT authorized for live execute**  
+**Status:** READY (preparation) — **NOT authorized for live execute**  
 **Environment:** Production `appn84sqPw03zEbTT` only — **no DEV environment**
 
 ---
@@ -23,7 +23,6 @@
 cd tools
 python3 -m season_simulation preflight
 python3 -m season_simulation dry-run-three
-python3 -m season_simulation dry-run-three --offline-fixture
 ```
 
 - [ ] Review `tools/season_simulation/reports/sc001-dry-run-latest.md`
@@ -32,7 +31,11 @@ python3 -m season_simulation dry-run-three --offline-fixture
 
 ---
 
-## C. Temporary formula paste (Mike OMNI — authorized only)
+## C. Temporary formula paste (Mike — authorized only)
+
+**Do NOT use OMNI / in-base AI to generate formulas.** OMNI has returned
+``Unable to generate formula`` and left fields invalid. Paste **exact** text from
+repo docs only, or future Meta API / MCP ``update_field`` with snapshot text.
 
 Same reversible gates as SC-SEASON-SIM-002:
 
@@ -42,9 +45,35 @@ Same reversible gates as SC-SEASON-SIM-002:
 
 Source: `tools/season_simulation/FORMULAS-TO-PASTE.txt` + [`SC-SEASON-SIM-002-operator-checklist.md`](./SC-SEASON-SIM-002-operator-checklist.md)
 
-- [ ] Record exact Production formulas before paste (restore manifest)
-- [ ] Paste temporary formulas
-- [ ] Re-run preflight with `--acknowledge-clock-override` intent confirmed
+Lifecycle (repo — `tools/season_simulation/formula_lifecycle.py`):
+
+- [ ] **Snapshot** Production formulas before paste (`snapshot_formulas_from_meta`)
+- [ ] Paste temporary formulas from repo (not OMNI)
+- [ ] **Verify** gated state (`verify_formula_state(expect_gated=True)`)
+- [ ] **Stage Z** restore on success, failure, or interrupt (`restore_stage_z` / context manager)
+
+---
+
+## C2. Pre-execution safety gates (read-only)
+
+Run before live execute (`tools/season_simulation/safety_gates.py`):
+
+| Check | Stop if |
+|-------|---------|
+| Base ID | Not Production `appn84sqPw03zEbTT` |
+| Git SHA | Pinned SHA mismatch (when manifest pins) |
+| Automations | Not **010 v10.14**, **066 v4.1**, **114 v6.2** |
+| Formula | OMNI failure text, verify fail, wrong mode |
+| Email | Any enrollment/parent email ≠ allowlist |
+| Transactional | Non-zero Athletes/Enrollments/Submissions pre-run |
+| Weeks / PHA | Weeks missing; PHA ≠ 18 |
+| Competing run | Another registry `status=running` |
+| Profiles | Three-athlete run ≠ 3 profiles |
+| Descendants | Unresolved automation orphans flagged pre-cleanup |
+| Real athletes | Unexpected `Athlete 1` / `2` / `3` names |
+| Payment | Registration/payment rows in sim scope |
+
+Email **OFF** by default. Allowlist only: `schmidt@fairfieldbasketballclub.com`.
 
 ---
 
@@ -76,28 +105,44 @@ Execute **must fail closed** if any gate missing.
 
 ## F. Cleanup
 
-```powershell
-# Cleanup preview (default — lists targets, no deletes)
-python3 -m season_simulation cleanup --run-id $RUN
+Preview (read-only — default):
 
-# Cleanup execute
-python3 -m season_simulation cleanup `
+```powershell
+python3 -m season_simulation cleanup-preview-three --run-id $RUN
+```
+
+Execute delete (requires gates):
+
+```powershell
+python3 -m season_simulation cleanup-three --run-id $RUN
+python3 -m season_simulation cleanup-three `
   --run-id $RUN `
   --execute `
   --confirm "SEASON-SIMULATION-2027" `
   --confirm-cleanup "CONFIRM-CLEANUP-SEASON-SIM"
 ```
 
-- [ ] Registry cleanup complete
-- [ ] Extras pass for XP / Email Handoff / Streaks tied to run marker
-- [ ] Verify Athletes/Enrollments/Submissions = 0 for sim names
-- [ ] Restore Production formulas (Stage Z)
-- [ ] **Restore verification:** MCP confirm `Activity Date Is Future?` has no Season Sim branch (NOW()-only)
+Legacy single-athlete cleanup still available via `cleanup` command.
+
+- [ ] Registry cleanup complete (per-athlete enrollment IDs in `meta.profiles`)
+- [ ] Automation descendants merged (XP / unlocks / streaks / Email Handoff via Source Key + marker)
+- [ ] **Never delete** Weeks, PHA, Homework Library, curriculum, Countries/States, reusable Zoom catalog
+- [ ] Post-cleanup zero-remnant audit (`zero_remnant_audit.py`) — Sim Perfect/Recovery/Edge names = 0
+- [ ] Restore Production formulas (**Stage Z**)
+- [ ] MCP verify `Activity Date Is Future?` has no Season Sim branch
+
+Offline safety tests:
+
+```powershell
+cd tools
+python -m unittest season_simulation.tests.test_sc001_safety_cleanup -v
+```
 
 ---
 
 ## G. Prohibited
 
+- Do **not** use OMNI to generate or paste formulas
 - Do **not** create DEV Airtable base or DEV Vercel project
 - Do **not** send family emails (allowlist only)
 - Do **not** install automation **122**
@@ -115,3 +160,11 @@ IF({Activity Date}, IF({Activity Date} > NOW(), 1, 0), BLANK())
 ```
 
 Record paste timestamps in cleanup closeout evidence.
+
+## Future live execute (NOT authorized in prep)
+
+```powershell
+cd tools
+$RUN = "SEASON-SIM-2027-$(Get-Date -Format 'yyyyMMddTHHmmssZ')-threeathlete"
+python -m season_simulation execute-three --execute --simulation-id $RUN --confirm "SEASON-SIMULATION-2027" --confirm-disposable "CONFIRM-DISPOSABLE-SEASON-SIM" --confirm-three-athlete "THREE-ATHLETE-SEASON-SIM-2027" --authorization-phrase "RUN 3-ATHLETE SEASON SIMULATION" --acknowledge-clock-override
+```

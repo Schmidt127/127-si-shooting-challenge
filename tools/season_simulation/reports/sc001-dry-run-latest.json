@@ -1,0 +1,1485 @@
+{
+  "backlog_id": "SC-SEASON-SIM-001",
+  "run_id": "SEASON-SIM-2027-OFFLINE-FIXTURE-threeathlete",
+  "status": "READY",
+  "executed": false,
+  "reference_meta": {
+    "mode": "offline_fixture",
+    "warning": "synthetic IDs \u2014 not for live execute"
+  },
+  "expectations": {
+    "backlog_id": "SC-SEASON-SIM-001",
+    "athlete_count": 3,
+    "matrices": {
+      "athlete1_perfect": {
+        "profile": "athlete1_perfect",
+        "athlete_name": "Sim Perfect",
+        "season_goal": 12000,
+        "total_planned_shots": 16630,
+        "submit_days": 61,
+        "miss_days": 0,
+        "weekly_rows": [
+          {
+            "week_label": "Early Bird",
+            "daily_shots": [
+              278
+            ],
+            "weekly_total": 278,
+            "weekly_goal_estimate": 197,
+            "goal_pct": 141.1,
+            "threshold_tiers": [
+              100,
+              125
+            ],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 1,
+            "zoom_state": "live",
+            "streak_state": "longest_run\u226560",
+            "milestone_crossings": [],
+            "perfect_week": "pass",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION",
+              "WEEKLY_THRESHOLD"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 1",
+            "daily_shots": [
+              222,
+              285,
+              218,
+              272,
+              225,
+              268,
+              278
+            ],
+            "weekly_total": 1768,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 128.4,
+            "threshold_tiers": [
+              100,
+              125
+            ],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 3,
+            "zoom_state": "none",
+            "streak_state": "longest_run\u226560",
+            "milestone_crossings": [],
+            "perfect_week": "pass",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION",
+              "WEEKLY_THRESHOLD"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 2",
+            "daily_shots": [
+              222,
+              285,
+              218,
+              272,
+              225,
+              268,
+              278
+            ],
+            "weekly_total": 1768,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 128.4,
+            "threshold_tiers": [
+              100,
+              125
+            ],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 3,
+            "zoom_state": "live",
+            "streak_state": "longest_run\u226560",
+            "milestone_crossings": [
+              "3000 (25%)"
+            ],
+            "perfect_week": "pass",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION",
+              "WEEKLY_THRESHOLD"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 3",
+            "daily_shots": [
+              270,
+              333,
+              266,
+              320,
+              273,
+              316,
+              326
+            ],
+            "weekly_total": 2104,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 152.8,
+            "threshold_tiers": [
+              100,
+              125,
+              150
+            ],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 3,
+            "zoom_state": "live",
+            "streak_state": "longest_run\u226560",
+            "milestone_crossings": [],
+            "perfect_week": "pass",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION",
+              "WEEKLY_THRESHOLD"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 4",
+            "daily_shots": [
+              222,
+              285,
+              218,
+              272,
+              225,
+              268,
+              278
+            ],
+            "weekly_total": 1768,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 128.4,
+            "threshold_tiers": [
+              100,
+              125
+            ],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 3,
+            "zoom_state": "live",
+            "streak_state": "longest_run\u226560",
+            "milestone_crossings": [
+              "6000 (50%)"
+            ],
+            "perfect_week": "pass",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION",
+              "WEEKLY_THRESHOLD"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 5",
+            "daily_shots": [
+              257,
+              320,
+              253,
+              307,
+              260,
+              303,
+              313
+            ],
+            "weekly_total": 2013,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 146.2,
+            "threshold_tiers": [
+              100,
+              125
+            ],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 3,
+            "zoom_state": "recorded",
+            "streak_state": "longest_run\u226560",
+            "milestone_crossings": [
+              "9000 (75%)"
+            ],
+            "perfect_week": "pass",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION",
+              "WEEKLY_THRESHOLD"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 6",
+            "daily_shots": [
+              222,
+              285,
+              218,
+              272,
+              225,
+              268,
+              278
+            ],
+            "weekly_total": 1768,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 128.4,
+            "threshold_tiers": [
+              100,
+              125
+            ],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 3,
+            "zoom_state": "live",
+            "streak_state": "longest_run\u226560",
+            "milestone_crossings": [],
+            "perfect_week": "pass",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION",
+              "WEEKLY_THRESHOLD"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 7",
+            "daily_shots": [
+              284,
+              347,
+              280,
+              334,
+              287,
+              330,
+              340
+            ],
+            "weekly_total": 2202,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 159.9,
+            "threshold_tiers": [
+              100,
+              125,
+              150
+            ],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 3,
+            "zoom_state": "live",
+            "streak_state": "longest_run\u226560",
+            "milestone_crossings": [
+              "12000 (100%)"
+            ],
+            "perfect_week": "pass",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION",
+              "WEEKLY_THRESHOLD"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 8",
+            "daily_shots": [
+              222,
+              285,
+              218,
+              272,
+              253,
+              296,
+              306
+            ],
+            "weekly_total": 1852,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 134.5,
+            "threshold_tiers": [
+              100,
+              125
+            ],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 3,
+            "zoom_state": "live",
+            "streak_state": "longest_run\u226560",
+            "milestone_crossings": [
+              "14400 (120%)"
+            ],
+            "perfect_week": "pass",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION",
+              "WEEKLY_THRESHOLD"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 9",
+            "daily_shots": [
+              250,
+              313,
+              246,
+              300
+            ],
+            "weekly_total": 1109,
+            "weekly_goal_estimate": 787,
+            "goal_pct": 140.9,
+            "threshold_tiers": [
+              100,
+              125
+            ],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 3,
+            "zoom_state": "none",
+            "streak_state": "longest_run\u226560",
+            "milestone_crossings": [],
+            "perfect_week": "pass_partial_window",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION",
+              "WEEKLY_THRESHOLD"
+            ],
+            "level_gate_note": ""
+          }
+        ],
+        "expected_perfect_week_count": 10,
+        "expected_streak_achievements": [
+          3,
+          7,
+          10,
+          14,
+          21,
+          30,
+          45,
+          60
+        ],
+        "expected_shot_milestones": [
+          3000,
+          6000,
+          9000,
+          12000,
+          14400
+        ],
+        "expected_weekly_threshold_awards": [
+          {
+            "week": "Early Bird",
+            "tier": 100
+          },
+          {
+            "week": "Early Bird",
+            "tier": 125
+          },
+          {
+            "week": "Week 1",
+            "tier": 100
+          },
+          {
+            "week": "Week 1",
+            "tier": 125
+          },
+          {
+            "week": "Week 2",
+            "tier": 100
+          },
+          {
+            "week": "Week 2",
+            "tier": 125
+          },
+          {
+            "week": "Week 3",
+            "tier": 100
+          },
+          {
+            "week": "Week 3",
+            "tier": 125
+          },
+          {
+            "week": "Week 3",
+            "tier": 150
+          },
+          {
+            "week": "Week 4",
+            "tier": 100
+          },
+          {
+            "week": "Week 4",
+            "tier": 125
+          },
+          {
+            "week": "Week 5",
+            "tier": 100
+          },
+          {
+            "week": "Week 5",
+            "tier": 125
+          },
+          {
+            "week": "Week 6",
+            "tier": 100
+          },
+          {
+            "week": "Week 6",
+            "tier": 125
+          },
+          {
+            "week": "Week 7",
+            "tier": 100
+          },
+          {
+            "week": "Week 7",
+            "tier": 125
+          },
+          {
+            "week": "Week 7",
+            "tier": 150
+          },
+          {
+            "week": "Week 8",
+            "tier": 100
+          },
+          {
+            "week": "Week 8",
+            "tier": 125
+          },
+          {
+            "week": "Week 9",
+            "tier": 100
+          },
+          {
+            "week": "Week 9",
+            "tier": 125
+          }
+        ],
+        "expected_xp_by_category": {
+          "SUBMISSION_XP": 61,
+          "WEEKLY_THRESHOLD": 22,
+          "HOMEWORK_XP": 18,
+          "VIDEO_SUBMISSION": 28,
+          "STREAK_XP": 8,
+          "SHOT_MILESTONE": 5,
+          "ZOOM_ATTEND_BASE": 7,
+          "ZOOM_RECORDING_CREDIT": 1,
+          "PERFECT_WEEK": 10
+        },
+        "expected_level_note": "Maximum realistic level progression \u2014 all gates satisfied",
+        "expected_goal_met_date": "2027-06-14 (cumulative 12,098 shots)",
+        "expected_goal_met_cumulative_shots": 12098,
+        "expected_email_handoffs": {
+          "daily_submission_emails": 61,
+          "homework_feedback_emails_if_graded": 18,
+          "weekly_summary_build_arms": 9,
+          "weekly_hub_handoffs_after_stage": 1,
+          "recipient_allowlist": "schmidt@fairfieldbasketballclub.com",
+          "verify_send_status_writeback": true,
+          "no_real_family_recipients": true,
+          "events_from_scenario": 70
+        },
+        "notes": [
+          "Day 61: late homework probe \u2014 Week 8 PHA completed after due 2027-06-29 (Week 9 has no Week-9 PHAs; this is a late Week 8 completion).",
+          "Week 9 (2027-06-27..2027-06-30): no homework attached (policy)",
+          "Athlete 1 perfect path: 61 submit days, 0 misses, 28 video days, all homework Satisfactory."
+        ]
+      },
+      "athlete2_recovery": {
+        "profile": "athlete2_recovery",
+        "athlete_name": "Sim Recovery",
+        "season_goal": 12000,
+        "total_planned_shots": 8274,
+        "submit_days": 53,
+        "miss_days": 8,
+        "weekly_rows": [
+          {
+            "week_label": "Early Bird",
+            "daily_shots": [
+              106
+            ],
+            "weekly_total": 106,
+            "weekly_goal_estimate": 197,
+            "goal_pct": 53.8,
+            "threshold_tiers": [],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 1,
+            "zoom_state": "none",
+            "streak_state": "longest_run\u226510",
+            "milestone_crossings": [],
+            "perfect_week": "fail_weekly_shots",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 1",
+            "daily_shots": [
+              117,
+              128,
+              150,
+              161,
+              105,
+              116
+            ],
+            "weekly_total": 777,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 56.4,
+            "threshold_tiers": [],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 2,
+            "zoom_state": "none",
+            "streak_state": "longest_run\u226510",
+            "milestone_crossings": [],
+            "perfect_week": "fail_weekly_shots",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 2",
+            "daily_shots": [
+              127,
+              138,
+              160,
+              104,
+              115,
+              126
+            ],
+            "weekly_total": 770,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 55.9,
+            "threshold_tiers": [],
+            "homework_expected": "skipped",
+            "homework_timing": "skipped",
+            "video_count": 1,
+            "zoom_state": "none",
+            "streak_state": "longest_run\u226510",
+            "milestone_crossings": [],
+            "perfect_week": "fail_homework_skipped",
+            "xp_categories": [
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 3",
+            "daily_shots": [
+              125,
+              136,
+              91,
+              102,
+              113,
+              124
+            ],
+            "weekly_total": 691,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 50.2,
+            "threshold_tiers": [],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 0,
+            "zoom_state": "none",
+            "streak_state": "longest_run\u226510",
+            "milestone_crossings": [],
+            "perfect_week": "fail_video_count",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 4",
+            "daily_shots": [
+              155,
+              166,
+              121,
+              132,
+              143,
+              154
+            ],
+            "weekly_total": 871,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 63.3,
+            "threshold_tiers": [],
+            "homework_expected": "needs_revision_then_fix",
+            "homework_timing": "on_time",
+            "video_count": 3,
+            "zoom_state": "none",
+            "streak_state": "longest_run\u226510",
+            "milestone_crossings": [
+              "3000 (25%)"
+            ],
+            "perfect_week": "fail_required_zoom",
+            "xp_categories": [
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 5",
+            "daily_shots": [
+              202,
+              146,
+              168,
+              179,
+              190,
+              201
+            ],
+            "weekly_total": 1086,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 78.9,
+            "threshold_tiers": [],
+            "homework_expected": "skipped",
+            "homework_timing": "skipped",
+            "video_count": 2,
+            "zoom_state": "recorded",
+            "streak_state": "longest_run\u226510",
+            "milestone_crossings": [],
+            "perfect_week": "fail_homework_skipped",
+            "xp_categories": [
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 6",
+            "daily_shots": [
+              193,
+              193,
+              193,
+              193,
+              193,
+              193
+            ],
+            "weekly_total": 1158,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 84.1,
+            "threshold_tiers": [],
+            "homework_expected": "late_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 1,
+            "zoom_state": "none",
+            "streak_state": "longest_run\u226510",
+            "milestone_crossings": [],
+            "perfect_week": "fail_homework_timing",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 7",
+            "daily_shots": [
+              213,
+              197,
+              201,
+              205,
+              209,
+              213,
+              197
+            ],
+            "weekly_total": 1435,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 104.2,
+            "threshold_tiers": [
+              100
+            ],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 3,
+            "zoom_state": "live",
+            "streak_state": "longest_run\u226510",
+            "milestone_crossings": [
+              "6000 (50%)"
+            ],
+            "perfect_week": "pass",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION",
+              "WEEKLY_THRESHOLD"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 8",
+            "daily_shots": [
+              210,
+              221,
+              140,
+              140,
+              140,
+              140
+            ],
+            "weekly_total": 991,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 72.0,
+            "threshold_tiers": [],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 2,
+            "zoom_state": "none",
+            "streak_state": "longest_run\u226510",
+            "milestone_crossings": [],
+            "perfect_week": "fail_weekly_shots",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 9",
+            "daily_shots": [
+              141,
+              152,
+              96
+            ],
+            "weekly_total": 389,
+            "weekly_goal_estimate": 787,
+            "goal_pct": 49.4,
+            "threshold_tiers": [],
+            "homework_expected": "late_satisfactory",
+            "homework_timing": "late_ineligible",
+            "video_count": 1,
+            "zoom_state": "none",
+            "streak_state": "longest_run\u226510",
+            "milestone_crossings": [],
+            "perfect_week": "fail_weekly_shots",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION"
+            ],
+            "level_gate_note": ""
+          }
+        ],
+        "expected_perfect_week_count": 1,
+        "expected_streak_achievements": [
+          3,
+          7,
+          10
+        ],
+        "expected_shot_milestones": [
+          3000,
+          6000
+        ],
+        "expected_weekly_threshold_awards": [
+          {
+            "week": "Week 7",
+            "tier": 100
+          }
+        ],
+        "expected_xp_by_category": {
+          "SUBMISSION_XP": 53,
+          "WEEKLY_THRESHOLD": 1,
+          "HOMEWORK_XP": 13,
+          "VIDEO_SUBMISSION": 16,
+          "STREAK_XP": 3,
+          "SHOT_MILESTONE": 2,
+          "ZOOM_ATTEND_BASE": 1,
+          "ZOOM_RECORDING_CREDIT": 1,
+          "PERFECT_WEEK": 1
+        },
+        "expected_level_note": "Slower progression \u2014 streak/homework gates delay level ups",
+        "expected_goal_met_date": "Not reached \u2014 8,274 planned of 12,000 goal",
+        "expected_goal_met_cumulative_shots": 8274,
+        "expected_email_handoffs": {
+          "daily_submission_emails": 53,
+          "homework_feedback_emails_if_graded": 14,
+          "weekly_summary_build_arms": 9,
+          "weekly_hub_handoffs_after_stage": 1,
+          "recipient_allowlist": "schmidt@fairfieldbasketballclub.com",
+          "verify_send_status_writeback": true,
+          "no_real_family_recipients": true,
+          "events_from_scenario": 9
+        },
+        "notes": [
+          "Day 61: late homework probe \u2014 Week 8 PHA completed after due 2027-06-29 (Week 9 has no Week-9 PHAs; this is a late Week 8 completion).",
+          "Week 9 (2027-06-28..2027-06-30): no homework attached (policy)",
+          "Athlete 2: skip homework week Week 2 (day 9)",
+          "Athlete 2: skip homework week Week 2 (day 12)",
+          "Day 27: Needs Revision \u2192 corrected later (Week 4)",
+          "Athlete 2: skip homework week Week 5 (day 30)",
+          "Athlete 2: skip homework week Week 5 (day 33)",
+          "Day 41: late homework submission (Week 6)",
+          "Week 4: missed required live Zoom (Athlete 2)",
+          "Week 4: missed required live Zoom (Athlete 2)",
+          "Week 4: missed required live Zoom (Athlete 2)",
+          "Week 4: missed required live Zoom (Athlete 2)",
+          "Week 4: missed required live Zoom (Athlete 2)",
+          "Week 4: missed required live Zoom (Athlete 2)",
+          "Day 40 writes backdated activity for day 38"
+        ]
+      },
+      "athlete3_edge": {
+        "profile": "athlete3_edge",
+        "athlete_name": "Sim Edge",
+        "season_goal": 12000,
+        "total_planned_shots": 13200,
+        "submit_days": 62,
+        "miss_days": 0,
+        "weekly_rows": [
+          {
+            "week_label": "Early Bird",
+            "daily_shots": [
+              200
+            ],
+            "weekly_total": 200,
+            "weekly_goal_estimate": 197,
+            "goal_pct": 101.5,
+            "threshold_tiers": [
+              100
+            ],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 1,
+            "zoom_state": "none",
+            "streak_state": "longest_run\u226530",
+            "milestone_crossings": [],
+            "perfect_week": "pass",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION",
+              "WEEKLY_THRESHOLD"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 1",
+            "daily_shots": [
+              203,
+              206,
+              209,
+              197,
+              200,
+              203,
+              206
+            ],
+            "weekly_total": 1424,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 103.4,
+            "threshold_tiers": [
+              100
+            ],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 3,
+            "zoom_state": "none",
+            "streak_state": "longest_run\u226530",
+            "milestone_crossings": [],
+            "perfect_week": "pass",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION",
+              "WEEKLY_THRESHOLD"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 2",
+            "daily_shots": [
+              111,
+              124,
+              137,
+              150,
+              163,
+              277,
+              131
+            ],
+            "weekly_total": 1093,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 79.4,
+            "threshold_tiers": [],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 0,
+            "zoom_state": "none",
+            "streak_state": "longest_run\u226530",
+            "milestone_crossings": [],
+            "perfect_week": "fail_daily_shooting",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 3",
+            "daily_shots": [
+              144,
+              157,
+              112,
+              125,
+              45,
+              138,
+              151,
+              164
+            ],
+            "weekly_total": 1036,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 75.2,
+            "threshold_tiers": [],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 4,
+            "zoom_state": "live",
+            "streak_state": "longest_run\u226530",
+            "milestone_crossings": [
+              "3000 (25%)"
+            ],
+            "perfect_week": "fail_video_count",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 4",
+            "daily_shots": [
+              119,
+              132,
+              145,
+              158,
+              113,
+              1377,
+              139
+            ],
+            "weekly_total": 2183,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 158.5,
+            "threshold_tiers": [
+              100,
+              125,
+              150
+            ],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 0,
+            "zoom_state": "none",
+            "streak_state": "longest_run\u226530",
+            "milestone_crossings": [],
+            "perfect_week": "fail_required_zoom",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "WEEKLY_THRESHOLD"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 5",
+            "daily_shots": [
+              152,
+              165,
+              120,
+              133,
+              1378,
+              159,
+              114
+            ],
+            "weekly_total": 2221,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 161.3,
+            "threshold_tiers": [
+              100,
+              125,
+              150
+            ],
+            "homework_expected": "late_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 0,
+            "zoom_state": "none",
+            "streak_state": "longest_run\u226530",
+            "milestone_crossings": [
+              "6000 (50%)"
+            ],
+            "perfect_week": "fail_homework_timing",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "WEEKLY_THRESHOLD"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 6",
+            "daily_shots": [
+              203,
+              206,
+              209,
+              197,
+              200,
+              203,
+              206
+            ],
+            "weekly_total": 1424,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 103.4,
+            "threshold_tiers": [
+              100
+            ],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 3,
+            "zoom_state": "recorded",
+            "streak_state": "longest_run\u226530",
+            "milestone_crossings": [
+              "9000 (75%)"
+            ],
+            "perfect_week": "pass",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION",
+              "WEEKLY_THRESHOLD"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 7",
+            "daily_shots": [
+              209,
+              197,
+              200,
+              203,
+              206,
+              209,
+              197
+            ],
+            "weekly_total": 1421,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 103.2,
+            "threshold_tiers": [
+              100
+            ],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 3,
+            "zoom_state": "live",
+            "streak_state": "longest_run\u226530",
+            "milestone_crossings": [],
+            "perfect_week": "pass",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION",
+              "WEEKLY_THRESHOLD"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 8",
+            "daily_shots": [
+              198,
+              198,
+              198,
+              198,
+              198,
+              198,
+              198
+            ],
+            "weekly_total": 1386,
+            "weekly_goal_estimate": 1377,
+            "goal_pct": 100.7,
+            "threshold_tiers": [
+              100
+            ],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 2,
+            "zoom_state": "none",
+            "streak_state": "longest_run\u226530",
+            "milestone_crossings": [
+              "12000 (100%)"
+            ],
+            "perfect_week": "fail_single_requirement",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION",
+              "WEEKLY_THRESHOLD"
+            ],
+            "level_gate_note": ""
+          },
+          {
+            "week_label": "Week 9",
+            "daily_shots": [
+              206,
+              209,
+              197,
+              200
+            ],
+            "weekly_total": 812,
+            "weekly_goal_estimate": 787,
+            "goal_pct": 103.2,
+            "threshold_tiers": [
+              100
+            ],
+            "homework_expected": "complete_satisfactory",
+            "homework_timing": "on_time",
+            "video_count": 3,
+            "zoom_state": "none",
+            "streak_state": "longest_run\u226530",
+            "milestone_crossings": [],
+            "perfect_week": "pass_partial_window",
+            "xp_categories": [
+              "HOMEWORK_XP",
+              "SUBMISSION_XP",
+              "VIDEO_SUBMISSION",
+              "WEEKLY_THRESHOLD"
+            ],
+            "level_gate_note": ""
+          }
+        ],
+        "expected_perfect_week_count": 5,
+        "expected_streak_achievements": [
+          3,
+          7,
+          10,
+          14,
+          21,
+          30
+        ],
+        "expected_shot_milestones": [
+          3000,
+          6000,
+          9000,
+          12000
+        ],
+        "expected_weekly_threshold_awards": [
+          {
+            "week": "Early Bird",
+            "tier": 100
+          },
+          {
+            "week": "Week 1",
+            "tier": 100
+          },
+          {
+            "week": "Week 4",
+            "tier": 100
+          },
+          {
+            "week": "Week 4",
+            "tier": 125
+          },
+          {
+            "week": "Week 4",
+            "tier": 150
+          },
+          {
+            "week": "Week 5",
+            "tier": 100
+          },
+          {
+            "week": "Week 5",
+            "tier": 125
+          },
+          {
+            "week": "Week 5",
+            "tier": 150
+          },
+          {
+            "week": "Week 6",
+            "tier": 100
+          },
+          {
+            "week": "Week 7",
+            "tier": 100
+          },
+          {
+            "week": "Week 8",
+            "tier": 100
+          },
+          {
+            "week": "Week 9",
+            "tier": 100
+          }
+        ],
+        "expected_xp_by_category": {
+          "SUBMISSION_XP": 62,
+          "WEEKLY_THRESHOLD": 12,
+          "HOMEWORK_XP": 18,
+          "VIDEO_SUBMISSION": 19,
+          "STREAK_XP": 6,
+          "SHOT_MILESTONE": 4,
+          "ZOOM_ATTEND_BASE": 2,
+          "ZOOM_RECORDING_CREDIT": 1,
+          "PERFECT_WEEK": 5
+        },
+        "expected_level_note": "Mixed progression \u2014 partial gate satisfaction",
+        "expected_goal_met_date": "2027-06-25 (cumulative 12,190 shots)",
+        "expected_goal_met_cumulative_shots": 12190,
+        "expected_email_handoffs": {
+          "daily_submission_emails": 62,
+          "homework_feedback_emails_if_graded": 18,
+          "weekly_summary_build_arms": 9,
+          "weekly_hub_handoffs_after_stage": 1,
+          "recipient_allowlist": "schmidt@fairfieldbasketballclub.com",
+          "verify_send_status_writeback": true,
+          "no_real_family_recipients": true,
+          "events_from_scenario": 9
+        },
+        "notes": [
+          "Day 61: late homework probe \u2014 Week 8 PHA completed after due 2027-06-29 (Week 9 has no Week-9 PHAs; this is a late Week 8 completion).",
+          "Week 9 (2027-06-27..2027-06-30): no homework attached (policy)",
+          "Day 33: late Satisfactory homework \u2014 XP yes, no retro Perfect Week",
+          "Day 61: Week 8 PHA forced on-time so Week 9 Perfect Week passes (late homework probe lives on day 33 / Week 5).",
+          "Day 19: second same-day submission (supported path)",
+          "Day 38 backdates activity to day 36 (boundary probe)"
+        ]
+      }
+    },
+    "combined_coverage": [
+      "Athletes",
+      "Enrollments",
+      "Submissions",
+      "Submission Assets",
+      "Homework Completions",
+      "Video Feedback",
+      "Zoom Meetings",
+      "Zoom Attendance",
+      "Weekly Athlete Summary",
+      "XP Events",
+      "Streak Occurrences",
+      "Athlete Achievement Unlocks",
+      "Shot Milestones",
+      "Perfect Week",
+      "Weekly Threshold awards",
+      "Level progression / gates",
+      "Goal Met Date",
+      "Email Handoff Queue (allowlist)"
+    ],
+    "email_verification": {
+      "recipient_allowlist_only": true,
+      "expect_daily_submission_emails": true,
+      "expect_homework_feedback_when_graded": true,
+      "expect_weekly_summary_arms": true,
+      "expect_weekly_hub_after_stage": true,
+      "verify_send_status_writeback": true,
+      "no_send_during_preparation": true
+    },
+    "authorization_phrase": "RUN 3-ATHLETE SEASON SIMULATION",
+    "status": "READY \u2014 not executed"
+  },
+  "scenarios_summary": {
+    "athlete1_perfect": {
+      "profile": "athlete1_perfect",
+      "meta": {
+        "path": "perfect_max_compliance",
+        "expected_perfect_weeks": 10,
+        "expected_goal_met": true,
+        "total_planned_shots": 16630,
+        "goal_coverage_ratio": 1.386,
+        "video_days": [
+          1,
+          2,
+          4,
+          6,
+          9,
+          11,
+          13,
+          16,
+          18,
+          20,
+          23,
+          25,
+          27,
+          30,
+          32,
+          34,
+          37,
+          39,
+          41,
+          44,
+          46,
+          48,
+          51,
+          53,
+          55,
+          58,
+          59,
+          60
+        ],
+        "miss_days": [],
+        "expected_goal_met_date": "2027-06-14",
+        "expected_goal_met_day_number": 45,
+        "cumulative_shots_before_crossing": 11751,
+        "cumulative_shots_on_crossing_date": 12098
+      },
+      "intended_writes_summary": {
+        "simulation_days": 61,
+        "submit_days": 61,
+        "miss_days": 0,
+        "total_planned_shots": 16630,
+        "homework_completions": 18,
+        "video_feedback_days": 28,
+        "zoom_attendance_events": 8,
+        "same_day_submissions": 61,
+        "backdated_submissions": 0,
+        "replay_probes": 0,
+        "profile": "athlete1_perfect"
+      }
+    },
+    "athlete2_recovery": {
+      "profile": "athlete2_recovery",
+      "meta": {
+        "path": "inconsistent_recovery",
+        "miss_days": [
+          4,
+          11,
+          18,
+          25,
+          32,
+          39,
+          53,
+          58
+        ],
+        "expected_perfect_weeks": 1,
+        "recovery_perfect_week": "Week 7",
+        "perfect_week_failure_modes": {
+          "Early Bird": "fail_weekly_shots",
+          "Week 1": "fail_weekly_shots",
+          "Week 2": "fail_homework_skipped",
+          "Week 3": "fail_video_count",
+          "Week 4": "fail_required_zoom",
+          "Week 5": "fail_homework_skipped",
+          "Week 6": "fail_homework_timing",
+          "Week 8": "fail_weekly_shots",
+          "Week 9": "fail_weekly_shots"
+        },
+        "expected_goal_met": "late_if_at_all",
+        "total_planned_shots": 8274,
+        "video_day_map": {
+          "Early Bird:0": 1,
+          "Week 1:0": 2,
+          "Week 1:1": 3,
+          "Week 2:0": 9,
+          "Week 4:0": 23,
+          "Week 4:1": 24,
+          "Week 4:2": 26,
+          "Week 5:0": 30,
+          "Week 5:1": 31,
+          "Week 6:0": 37,
+          "Week 7:0": 44,
+          "Week 7:1": 45,
+          "Week 7:2": 46,
+          "Week 8:0": 51,
+          "Week 8:1": 52,
+          "Week 9:0": 59
+        }
+      },
+      "intended_writes_summary": {
+        "simulation_days": 61,
+        "submit_days": 53,
+        "miss_days": 8,
+        "total_planned_shots": 8274,
+        "homework_completions": 14,
+        "video_feedback_days": 16,
+        "zoom_attendance_events": 2,
+        "same_day_submissions": 52,
+        "backdated_submissions": 1,
+        "replay_probes": 0,
+        "profile": "athlete2_recovery"
+      }
+    },
+    "athlete3_edge": {
+      "profile": "athlete3_edge",
+      "meta": {
+        "path": "edge_idempotency",
+        "replay_probe_days": [
+          10,
+          29,
+          45,
+          58
+        ],
+        "expected_perfect_weeks": 5,
+        "perfect_week_truth_table": {
+          "Early Bird": {
+            "outcome": "pass",
+            "mode": "pass"
+          },
+          "Week 1": {
+            "outcome": "pass",
+            "mode": "pass"
+          },
+          "Week 2": {
+            "outcome": "fail",
+            "mode": "fail_daily_shooting"
+          },
+          "Week 3": {
+            "outcome": "fail",
+            "mode": "fail_video_count"
+          },
+          "Week 4": {
+            "outcome": "fail",
+            "mode": "fail_required_zoom"
+          },
+          "Week 5": {
+            "outcome": "fail",
+            "mode": "fail_homework_timing"
+          },
+          "Week 6": {
+            "outcome": "pass",
+            "mode": "pass"
+          },
+          "Week 7": {
+            "outcome": "pass",
+            "mode": "pass"
+          },
+          "Week 8": {
+            "outcome": "fail",
+            "mode": "fail_single_requirement"
+          },
+          "Week 9": {
+            "outcome": "pass",
+            "mode": "pass"
+          }
+        }
+      },
+      "intended_writes_summary": {
+        "simulation_days": 62,
+        "submit_days": 62,
+        "miss_days": 0,
+        "total_planned_shots": 13200,
+        "homework_completions": 18,
+        "video_feedback_days": 18,
+        "zoom_attendance_events": 3,
+        "same_day_submissions": 61,
+        "backdated_submissions": 1,
+        "replay_probes": 4,
+        "profile": "athlete3_edge"
+      }
+    }
+  },
+  "sanitized": true,
+  "note": "Full day plans omitted. Regenerate with: python -m season_simulation dry-run-three --offline-fixture",
+  "generated_at": "2026-09-06T12:00:00+00:00"
+}
