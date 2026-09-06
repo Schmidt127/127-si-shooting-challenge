@@ -10,7 +10,7 @@ This is the **detailed completion matrix and historical traceability record** fo
 | Field | Value |
 |-------|--------|
 | **Purpose** | Completion matrix, package traceability, and preserved historical evidence |
-| **Last updated** | **2026-09-06** (presim docs closeout tip **`4a81c0cf`** — PR **#472**/**#473**; Hub **PR #52** `e79637f`; **117 v2.2** paste pending Mike; ZA Attendance Label live / primary Id pending UI; **THREE-ATHLETE SIMULATION READY — NOT EXECUTED**; prior post-#457 `ba969433`; SC-167/168/169 **COMPLETE**; SC-002 CLOSED; SC-163 **066 v4.1**; FUT-029 + FUT-048 deferred)
+| **Last updated** | **2026-09-06** (presim docs closeout tip **`4a81c0cf`** — PR **#472**/**#473**; Hub **PR #52** `e79637f`; **117 v2.2** GitHub ahead of Live (Mike install required); ZA Attendance Label live / primary Id pending UI; **THREE-ATHLETE SIMULATION READY — NOT EXECUTED**; prior post-#457 `ba969433`; SC-167/168/169 **COMPLETE**; SC-002 CLOSED; SC-163 **066 v4.1**; FUT-029 + FUT-048 deferred)
 | **Production branch** | `master` |
 | **Vercel root** | `web/` |
 | **Production website** | https://www.fairfieldbasketballclub.com/shoot |
@@ -597,6 +597,8 @@ Execution matrix IDs advanced: PKG-041 — 2026-08-23 Completion Master reconcil
 Execution matrix IDs advanced: PKG-041 — 2026-08-23 production-readiness cleanup: merged XP activity ledger (enrollment-scoped loader, pagination, date normalization), Perfect Week Testing XP repair tooling, restored offline DEV runbook fixtures with historical banners, reconciled CURRENT-TRUTH/PROJECT_STATE for production-only operation, and validated 29/29 agent4 suites + web build. No live Airtable writes; no automation logic changed for test convenience. Inventory: [`audits/2026-08-23-production-readiness-inventory.md`](./audits/2026-08-23-production-readiness-inventory.md).
 
 Execution matrix IDs advanced: PKG-043 — 2026-08-24 secure video URL pipeline: **022 v2.2** (Lambda viewer only, no Canonical S3 fallback), **072 v4.8**, **073 v4.4**, shared `lib/secure-video-url.js`, repair tools, tests, and deploy bundles. Repository evidence only; Production Airtable paste and controlled email verification remain Mike-owned. Checklist: [`deploy-checklists/022-v2.2-secure-video-url-pipeline.md`](./deploy-checklists/022-v2.2-secure-video-url-pipeline.md).
+
+Execution matrix IDs advanced: PKG-041 — 2026-09-06 presim docs closeout: tip `4a81c0cf` (#472/#473); Hub PR #52 `e79637f`; ZOOM-ATTENDANCE live field IDs + parent-email version matrix overlays. Docs only; no runtime/automation paste in this PR.
 
 Execution matrix IDs advanced: PKG-044 — 2026-08-29 release baseline: land FUT-001 (020 v3.8 / 065 v10.4 assignment identity), FUT-010 fail-closed intake attachment cleanup (dry-run default), SC-PW-E2E harness hardening; add root `MASTER_REMAINING_WORK_LIST.md` + `RELEASE_BASELINE.md`. Offline suites pass; no Production paste, attachment delete, or Perfect Week award claim. SC-PW-E2E Production apply 2026-08-28 remains blocked at Automation 058 (Eligible=1, unlock missing).
 
