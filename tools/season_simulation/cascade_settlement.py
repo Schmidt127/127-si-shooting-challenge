@@ -312,6 +312,17 @@ def summarize_statuses(statuses: list[SubmissionXpStatus]) -> dict[str, Any]:
         and s.countable
     ]
     settled = [s.submission_id for s in statuses if s.classification == "settled"]
+    # Vacuous 0/0 must not count as complete when the registry has Submissions —
+    # formulas may still be settling (all temporarily inapplicable).
+    has_submissions = any(True for _ in statuses)
+    complete = (
+        has_submissions
+        and len(expected) > 0
+        and len(by["pending"]) == 0
+        and len(by["not_ready"]) == 0
+        and len(by["stuck"]) == 0
+        and len(expected) == len(settled)
+    )
     return {
         "expected_countable": len(expected),
         "settled_countable": len(settled),
@@ -319,12 +330,8 @@ def summarize_statuses(statuses: list[SubmissionXpStatus]) -> dict[str, Any]:
         "not_ready": by["not_ready"],
         "inapplicable": by["inapplicable"],
         "stuck": by["stuck"],
-        "complete": (
-            len(by["pending"]) == 0
-            and len(by["not_ready"]) == 0
-            and len(by["stuck"]) == 0
-            and len(expected) == len(settled)
-        ),
+        "complete": complete,
+        "vacuous": has_submissions and len(expected) == 0 and len(settled) == 0,
     }
 
 
