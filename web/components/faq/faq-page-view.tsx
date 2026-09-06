@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { FaqDetailsItem } from "@/components/faq/faq-details-item";
 import { CtaLink, FamilyDashboardLink, PageHero, SiteSection } from "@/components/site";
 import type { FaqItem } from "@/lib/seo/faq-content";
 import { REGISTRATION_FACTS } from "@/lib/seo/program-facts";
@@ -11,7 +12,8 @@ type FaqPageViewProps = {
 
 /**
  * Accessible FAQ accordion — closed by default; native details/summary
- * for keyboard support without a new UI library.
+ * for keyboard support without a new UI library. Hash deep links
+ * (`/faq#video-feedback`) open the matching item on the client.
  */
 export function FaqPageView({ items }: FaqPageViewProps) {
   return (
@@ -46,28 +48,7 @@ export function FaqPageView({ items }: FaqPageViewProps) {
       >
         <div className="mx-auto flex max-w-3xl flex-col gap-3">
           {items.map((item) => (
-            <details
-              key={item.id}
-              id={item.id}
-              className="group rounded-lg border border-border bg-card shadow-site-sm open:shadow-site-sm motion-safe:transition-shadow"
-            >
-              <summary className="cursor-pointer list-none px-5 py-4 font-display text-lg font-bold text-foreground marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60 focus-visible:ring-offset-2 sm:text-xl [&::-webkit-details-marker]:hidden">
-                <span className="flex items-start justify-between gap-3">
-                  <span>{item.question}</span>
-                  <span
-                    className="mt-1 shrink-0 text-sm font-semibold text-muted motion-safe:transition-transform motion-safe:group-open:rotate-45"
-                    aria-hidden
-                  >
-                    +
-                  </span>
-                </span>
-              </summary>
-              <div className="border-t border-border px-5 pb-4 pt-3">
-                <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  {item.answer}
-                </p>
-              </div>
-            </details>
+            <FaqDetailsItem key={item.id} item={item} />
           ))}
         </div>
       </SiteSection>

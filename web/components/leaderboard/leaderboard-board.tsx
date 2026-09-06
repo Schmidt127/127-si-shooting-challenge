@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 
 import { GradeBandFilter } from "@/components/leaderboard/grade-band-filter";
@@ -8,6 +8,7 @@ import { LeaderboardTable } from "@/components/leaderboard/leaderboard-table";
 import { withBasePath } from "@/lib/app-config";
 import {
   ALL_GRADE_BANDS_ID,
+  buildAllGradeBandOption,
   countEntriesByGradeBand,
   filterByGradeBand,
   resolveSelectedGradeBandId,
@@ -38,14 +39,19 @@ export function LeaderboardBoard({
   initialBandId = ALL_GRADE_BANDS_ID,
 }: LeaderboardBoardProps) {
   const pathname = usePathname();
-  const options =
-    gradeBandOptions.length > 0
-      ? gradeBandOptions
-      : [{ id: ALL_GRADE_BANDS_ID, label: "All Grade Bands", shortLabel: "All", minGrade: null, maxGrade: null, sortOrder: 0 }];
+  const options = useMemo(
+    () => (gradeBandOptions.length > 0 ? gradeBandOptions : [buildAllGradeBandOption()]),
+    [gradeBandOptions],
+  );
 
   const [band, setBand] = useState(() =>
     resolveSelectedGradeBandId(initialBandId, options),
   );
+
+  // Client navigations can pass a new `?band=` without remounting this board.
+  useEffect(() => {
+    setBand(resolveSelectedGradeBandId(initialBandId, options));
+  }, [initialBandId, options]);
 
   const counts = useMemo(() => countEntriesByGradeBand(entries, options), [entries, options]);
 

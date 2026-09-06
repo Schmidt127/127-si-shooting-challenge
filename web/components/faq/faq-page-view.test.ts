@@ -1,9 +1,16 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 import { FaqPageView } from "@/components/faq/faq-page-view";
 import { PROGRAM_FAQ_ITEMS } from "@/lib/seo/faq-content";
+
+const DETAILS_SOURCE = readFileSync(
+  join(process.cwd(), "components/faq/faq-details-item.tsx"),
+  "utf8",
+);
 
 describe("FaqPageView accordion", () => {
   it("renders each FAQ as a closed details/summary accordion item", () => {
@@ -13,6 +20,7 @@ describe("FaqPageView accordion", () => {
 
     expect(html).toContain("<details");
     expect(html).toContain("<summary");
+    // SSR / first paint: closed by default (hash open happens client-side).
     expect(html).not.toMatch(/<details[^>]*\sopen[\s>]/);
 
     for (const item of PROGRAM_FAQ_ITEMS) {
@@ -39,5 +47,12 @@ describe("FaqPageView accordion", () => {
       createElement(FaqPageView, { items: PROGRAM_FAQ_ITEMS.slice(0, 1) }),
     );
     expect(html).toContain("motion-safe:transition");
+  });
+
+  it("opens the matching details item from location.hash on the client", () => {
+    expect(DETAILS_SOURCE).toContain("use client");
+    expect(DETAILS_SOURCE).toContain('window.addEventListener("hashchange"');
+    expect(DETAILS_SOURCE).toContain("resolveFaqDetailsOpen");
+    expect(DETAILS_SOURCE).toContain("window.location.hash");
   });
 });
