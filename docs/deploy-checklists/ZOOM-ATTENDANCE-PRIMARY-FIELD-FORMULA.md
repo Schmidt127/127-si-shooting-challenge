@@ -1,22 +1,25 @@
-# Zoom Attendance primary field — formula conversion (docs only)
+# Zoom Attendance primary field — formula conversion
 
-**Status:** Documentation / Mike UI required — **not executed in this PR**  
+**Status:** Supporting fields **LIVE** (2026-09-06); primary convert still **Mike UI required**  
 **Production base:** `appn84sqPw03zEbTT`  
 **Table:** Zoom Attendance — `tblg8DPRu3j0dbuwi`  
-**Current primary:** `Id` — `fldXHFpB3MrOVevYL` (autoNumber)
+**Current primary:** `Id` — `fldXHFpB3MrOVevYL` (autoNumber) — **unchanged**
 
-**Rule:** MCP / Meta API cannot convert an autoNumber primary field to a formula. Mike must convert in the Airtable UI, **or** create the supporting lookups first and have a coordinator attempt `create_field` for non-primary helpers only.
+**Rule:** MCP / Meta API cannot convert an autoNumber primary field to a formula. Mike must convert in the Airtable UI.
 
 ---
 
-## Current identity fields
+## Live field IDs (2026-09-06)
 
-| Field | Field ID | Type | Role |
-|-------|----------|------|------|
-| **Id** (primary) | `fldXHFpB3MrOVevYL` | autoNumber | Current primary display |
-| **RecordId** | (existing) | formula `RECORD_ID()` | Stable identity for automations / links |
+| Field | Field ID | Type | Status |
+|-------|----------|------|--------|
+| **Id** (primary) | `fldXHFpB3MrOVevYL` | autoNumber | Still primary — Mike UI convert pending |
+| **Athlete Name** | `fld7nVhauRqRAWxq4` | lookup | **Created live** |
+| **Meeting Name** | `fld819uQNx6BcoMjk` | lookup | **Created live** |
+| **Meeting Date** | `fld96KGsXVst9UGNx` | lookup | **Created live** |
+| **Attendance Label** | `fldVILeOyW1jepScv` | formula | **Created live** (`isValid` true) |
 
-Automations and scripts address Zoom Attendance by **record ID** (`rec…`), not by the primary `Id` display value. Do not treat autoNumber as an operational key.
+**RecordId** (existing formula `RECORD_ID()`) remains the stable identity for automations / links. Automations address Zoom Attendance by **record ID** (`rec…`), not by the primary display value.
 
 ---
 
@@ -33,43 +36,34 @@ Automations and scripts address Zoom Attendance by **record ID** (`rec…`), not
 
 ---
 
-## Required lookups (create if missing)
+## Exact Mike UI step (primary convert)
 
-Create these **lookup** fields on Zoom Attendance before (or with) the primary formula so the formula can read display values:
-
-| Proposed field name | From | Source field |
-|---------------------|------|--------------|
-| **Athlete Name** | Enrollment | Full Athlete Name |
-| **Meeting Name** | Zoom Meeting | Meeting Name |
-| **Meeting Start** | Zoom Meeting | Start Time |
-
-If any of these already exist under equivalent names, reuse them — do not duplicate.
+1. Open **Zoom Attendance** → customize primary field **Id** (`fldXHFpB3MrOVevYL`).
+2. Change field type from **Autonumber** → **Formula**.
+3. Paste the formula from **Attendance Label** (`fldVILeOyW1jepScv`) — or copy the formula text from that field — so primary display matches Attendance Label.
+4. Optionally delete the duplicate **Attendance Label** field after the primary formula is confirmed.
+5. Spot-check Automation **117** still receives ZA `rec…` IDs; confirm **RecordId** still matches `RECORD_ID()`.
 
 ---
 
-## Proposed primary formula
+## Attendance Label / proposed primary formula shape
 
-Replace primary `Id` (autoNumber) with a formula primary (hyphen-spaced):
-
-```
-CONCATENATE(
-  {Athlete Name},
-  " - ",
-  {Meeting Name},
-  " - ",
-  DATETIME_FORMAT(
-    SET_TIMEZONE({Meeting Start}, "America/Denver"),
-    "MMMM D, YYYY"
-  )
-)
-```
-
-Display shape: `Athlete Name - Meeting Name - Meeting Date`  
-Timezone for the date segment: **America/Denver**.
+Display shape: `Athlete Name - Meeting Name - Meeting Date` (America/Denver date segment). Prefer copying the live **Attendance Label** formula text rather than re-authoring from memory.
 
 ---
 
 ## Rollback
+
+If the supporting-field creates need revert, Airtable `revert_action` IDs (2026-09-06):
+
+| Action ID | Use |
+|-----------|-----|
+| `actTBXer96T8FZM66` | Revert supporting create (as applicable) |
+| `actIrT5IajKwmvv6k` | Revert supporting create (as applicable) |
+| `actiZj2x7HgdYRwgN` | Revert supporting create (as applicable) |
+| `actSsbDl3kzzAtnBV` | Revert supporting create (as applicable) |
+
+Primary convert rollback (after Mike UI):
 
 1. Convert primary back to **autoNumber** named `Id` (or restore prior primary type in UI).
 2. **Note:** Prior autoNumber values are **not recoverable** after conversion away from autoNumber. New numbers will restart / renumber.
@@ -77,9 +71,8 @@ Timezone for the date segment: **America/Denver**.
 
 ---
 
-## Execution notes (Mike / coordinator)
+## Execution notes
 
-1. **Docs-only in this PR** — no live schema change from GitHub agents.
+1. Lookups + Attendance Label are **already live** — do not recreate.
 2. MCP/`create_field` cannot convert autoNumber → formula primary; **Mike UI conversion required**.
-3. Optional path: create lookups via UI or API first; then Mike converts primary; coordinator may attempt `create_field` only for missing non-primary lookups (not for converting the primary).
-4. After conversion: spot-check Automation 117 inputs still pass ZA `rec…` IDs; confirm RecordId still matches `RECORD_ID()`.
+3. After conversion: confirm Automation 117 inputs still pass ZA `rec…` IDs.

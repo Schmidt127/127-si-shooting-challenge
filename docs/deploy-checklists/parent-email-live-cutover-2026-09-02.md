@@ -5,6 +5,14 @@
 **Disposable proof recipient:** `schmidt@fairfieldbasketballclub.com` only  
 **Hub:** Communications Hub → Resend (no Make/Gmail email send)
 
+### Email version matrix overlay (2026-09-06)
+
+| Plane | Version / SHA | Status |
+|-------|---------------|--------|
+| Communications Hub `main` | **`e79637f`** (PR **#52** MERGED) | Athlete name helpers, welcome dual CTAs, Zoom MT session details |
+| SC Automation **117** | GitHub **v2.2** / Live **v2.1** | **Airtable paste pending Mike** before Live E2E with Hub #52 |
+| Related producers (`athleteFirstName`) | **072 v4.9.2**, **073 v4.7**, **074 v3.6**, **076 v8.14**, **078A v1.6** | GitHub ahead — paste with 117 as needed |
+
 ## Email plane (all paths)
 
 | Path | Event type | Template key | Queue producer | Dispatcher |

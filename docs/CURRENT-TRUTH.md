@@ -1,7 +1,7 @@
 # CURRENT TRUTH â 127 SI Shooting Challenge
 
 **Status:** Active â primary current-state document for this repository  
-**Last verification (repo):** 2026-09-06 — **SC-SEASON-SIM-001** three-athlete prep **READY (not executed)**; five-enrollment design **superseded** ([`audits/OWNER-DECISIONS-20260906.md`](./audits/OWNER-DECISIONS-20260906.md)). **SC-171** GitHub ready; Production paste + Hub deploy **PENDING**. Prior baseline 2026-09-05 — functional/app deploy **`ba969433`** (#457); purge COMPLETE. **SC-SEASON-SIM-002** T122531Z **COMPLETE / cleaned**; formulas **`NOW()` / `TODAY()`**; SC-002 next execute **NOT authorized**. **FUT-048** deferred (`d21ixrrrqpqz29.cloudfront.net`).
+**Last verification (repo):** 2026-09-06 — tip **`4a81c0cf`** (PR **#472** web + **#473** email payloads). **THREE-ATHLETE SIMULATION READY — NOT EXECUTED** (SC-SEASON-SIM-001; five-enrollment superseded — [`audits/OWNER-DECISIONS-20260906.md`](./audits/OWNER-DECISIONS-20260906.md)). Website: dynamic Grade Bands filters, leaderboard hero, America/Denver+MT, FAQ accordion. Email: Hub **PR #52** merged (`e79637f`); SC **117 v2.2** + `athleteFirstName` producers in GitHub — **Airtable paste pending Mike**. Zoom Attendance: lookups + **Attendance Label** formula **created live**; primary still **Id** autoNumber pending Mike UI convert. Prior: SC-171 GitHub ready; **SC-SEASON-SIM-002** CLOSED; purge **`ba969433`** (#457); **FUT-048** deferred.
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -66,9 +66,10 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | **`ba969433c84b8418fd453658df0a5a39ca5e679e`** (PR **#457** purge closeout) |
-| `origin/master` | **`ba969433c84b8418fd453658df0a5a39ca5e679e`** |
+| HEAD SHA | **`4a81c0cfe70f287a7b15ac8e7c9f7935d271b8b1`** (PR **#473** email payloads; includes **#472** web) |
+| `origin/master` | **`4a81c0cfe70f287a7b15ac8e7c9f7935d271b8b1`** |
 | Ahead / behind | **0 / 0** (re-verify after fetch) |
+| Recent merges (2026-09-06 presim web + email) | **#473** email name/Zoom payloads (`4a81c0cf`) · **#472** Grade Bands / leaderboard hero / MT / FAQ (`75632e88`). Hub communications **PR #52** merged (`e79637f`) — SC **117 v2.2** Airtable paste still **pending Mike**. |
 | Recent merges (2026-09-05 purge + SC-167 complete) | **#457** transactional purge (`ba969433`) · **#456** SC-167 complete docs (`57831fe7`) · **#455** SC-167/168/169 live-status |
 | Recent merges (2026-09-05 discrepancy wave) | **#450** backlog intake · **#451** SC-168 (`fba62be0`) · **#453** SC-167 010 v10.14 (`08da8b03`) · **#452** SC-169 (`caad5ba9`). Wave: [`audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md`](./audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md) |
 | Recent merges (2026-09-05 completion wave) | **#435** A1 truth (`7c63dd00`) · **#440** SC-161 (`0eb1ed28`) · **#438** SC-163 repo (`43d353a4`) · **#437** SC-162 (`f8a1c9ee`) · **#439** SC-164/165 (`9869a2eb`) · **#436** SC-166 (`bd0198a4`) · **#444** SC-163 066 v4.1 live closeout (`480771fc`) · **#446** dual-enrollment cleanup (`58663cfd`) · **#447** Season Sim preflight (`2131f7d5`) · **#448** Master List reconciliation (`3cf3b568`). Evidence: [`audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md`](./audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md) · [`audits/SC-WAVE-20260905-CLOSEOUT.md`](./audits/SC-WAVE-20260905-CLOSEOUT.md) · [`audits/MASTER-LIST-RECONCILIATION-20260905.md`](./audits/MASTER-LIST-RECONCILIATION-20260905.md) |
@@ -112,7 +113,8 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | Health | `GET /shoot/api/airtable` â token validity check |
 | Softr | **Obsolete / Not Used** â historical reference only |
 | SEO | **COMPLETE** â program pages indexable (`NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`); structured data + mobile meta from PR **#399** (supersedes draft **#310**). Status: [`audits/SEO-STATUS-20260904.md`](./audits/SEO-STATUS-20260904.md). Private/auth routes remain `noindex`. |
-| Production deploy | **Live** — Vercel Production follows `master` (docs tip **`ba969433`** after PR **#457** purge closeout; web tip may lag docs-only merges). `GET /shoot` / `/shoot/api/airtable` live-pass **200**. Post-purge transactional athlete tables empty; homework compact list + Levels + SC-149 branding live; FUT-025 athlete indexing env on |
+| Production deploy | **Live** — Vercel Production follows `master` (tip **`4a81c0cf`** after PR **#472**/**#473**; prior docs tip **`ba969433`** #457). `GET /shoot` / `/shoot/api/airtable` live-pass **200**. Post-purge transactional athlete tables empty; homework compact list + Levels + SC-149 branding live; FUT-025 athlete indexing env on |
+| Presim web UX (2026-09-06) | **Merged** PR **#472** (`75632e88`) — dynamic **Grade Bands** leaderboard filters; leaderboard hero; public datetimes **America/Denver** with fixed **MT** label; FAQ accordion (hash deep-links) |
 | Vitest / smoke | **483/483** Vitest pass (2026-08-30 release QA) Â· typecheck/lint/build PASS Â· prior smoke **50/50** (MRW-E04) |
 | FUT-016 Tutorials | **Complete** â portfolio catalog at `/shoot/tutorials` (PR **#284**, 2026-08-30) |
 | FUT-017 Zoom Meetings | **Complete** â portfolio catalog at `/shoot/zoom-meetings` (PR **#285**, 2026-08-30) |
@@ -132,7 +134,8 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | SC-151 Family Dashboard Gmail access | **MERGED/DEPLOYED** â PR **#389** merge `a00ef7a5`; Production `dpl_2mch4scL3c6bgHZgizDbsqPTywbW`; docs closeout PR **#391** (`0479db22`). Sign-in shows registration-email instruction; Gmail prohibition gone. **SC-112 remains closed.** Audit: [`audits/SC-151-family-dashboard-gmail-access-20260904.md`](./audits/SC-151-family-dashboard-gmail-access-20260904.md) |
 | Public awards (`Public On Web`) | **MERGED** PR **#378** (`a0e84533`) â `AWARD_RECIPIENT_PUBLICATION_FIELD = "Public On Web"`. PR **#376** closed superseded. |
 | Transactional enrollments | **Empty** after OPS-PURGE-20260905 — Athletes/Enrollments = **0**. Prior 2026-09-03 MCP note (2/3 Schmidt VERIFY) is historical.
-| Season Simulation | **SC-002 T122531Z COMPLETE / cleaned (2026-09-05).** **SC-001 three-athlete prep READY (not executed).** Discrepancy wave **SC-167/168/169 ALL COMPLETE / Live Tested**. Live formulas normal **`NOW()` / `TODAY()`** — **DO NOT change** until authorized SC-001 execute. SC-002 rerun **NOT authorized**. SC-001 live execute requires **`RUN 3-ATHLETE SEASON SIMULATION`**. Readiness: [`audits/SC-SEASON-SIM-001-THREE-ATHLETE-PREP-READINESS-20260906.md`](./audits/SC-SEASON-SIM-001-THREE-ATHLETE-PREP-READINESS-20260906.md). |
+| Season Simulation | **THREE-ATHLETE SIMULATION READY — NOT EXECUTED.** **SC-002 T122531Z COMPLETE / cleaned (2026-09-05).** **SC-001 three-athlete prep READY (not executed).** Discrepancy wave **SC-167/168/169 ALL COMPLETE / Live Tested**. Live formulas normal **`NOW()` / `TODAY()`** — **DO NOT change** until authorized SC-001 execute. SC-002 rerun **NOT authorized**. SC-001 live execute requires **`RUN 3-ATHLETE SEASON SIMULATION`**. Readiness: [`audits/SC-SEASON-SIM-001-THREE-ATHLETE-PREP-READINESS-20260906.md`](./audits/SC-SEASON-SIM-001-THREE-ATHLETE-PREP-READINESS-20260906.md). |
+| Zoom Attendance primary (2026-09-06) | Lookups + **Attendance Label** formula **created live** (`fldVILeOyW1jepScv`, isValid). Primary still **Id** `fldXHFpB3MrOVevYL` autoNumber — Mike UI convert pending. Checklist: [`deploy-checklists/ZOOM-ATTENDANCE-PRIMARY-FIELD-FORMULA.md`](./deploy-checklists/ZOOM-ATTENDANCE-PRIMARY-FIELD-FORMULA.md). |
 | SC-109 Game Manual PDF | **COMPLETE / Live Tested in PROD (2026-09-04)** â `/shoot/game-manual` shows **Open game manual** â Adobe Publish Online (`GAME_MANUAL_PUBLISH_URL` repo default; env override optional); How you earn XP + Level ladder render; no env-name leak â evidence [`testing/evidence/SC-109-PROD-ATTESTATION-2026-09-04.json`](./testing/evidence/SC-109-PROD-ATTESTATION-2026-09-04.json) Â· checklist [`deploy-checklists/SC-109-game-manual-url-verification.md`](./deploy-checklists/SC-109-game-manual-url-verification.md) |
 | FUT-002 field inventory | **Batch 1 COMPLETE** + **SA XP stubs deleted** + **Batch 2 COMPLETE (2026-09-05)** — five Batch 2 text-stub IDs absent; live Meta **1375** fields / **35** tables; schema `airtable/schema/snapshots/prod-20260905-fut002-batch2/`; evidence [`testing/evidence/fut-002/batch2-live-verify-20260905.json`](./testing/evidence/fut-002/batch2-live-verify-20260905.json) · closeout [`audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md`](./audits/FUT-002-BATCH2-POST-DELETE-CLOSEOUT-20260905.md). Later: Config Drive roots + `unknown` interface review remain FUTURE |
 | FUT-010 intake attachment cleanup | **Dry-run complete (R3 2026-08-30)** â **0 eligible**; no deletion request â [`testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md`](./testing/evidence/FUT-010-DRY-RUN-2026-08-30-R3.md) |
@@ -167,7 +170,8 @@ Evidence pointer: [`PROJECT_STATE.md`](./PROJECT_STATE.md) Â§ Vercel / web app
 | Homework feedback path | **071 v4.3 Live** → GitHub **v4.4** **PENDING paste** (SC-171: dates + athlete profile URL) → **079** → Hub → Resend |
 | Automation **077** | **Retired / deleted from Production** (Mike-dated docs: 2026-08-13). Do not restore Make daily email. GitHub source retained as archive only. **Do not** trust obsolete `Automations` table rows that once showed 077 as Live. |
 | Queue producers (repo) | Include Hub handoff scripts; **079** dispatches Ready queue â Hub â Resend |
-| Automation **117** | **v2.1** Hub queue create for Zoom recording approval. Automations **Name** = Hub handoff title; **Status = Live** (2026-08-21 evening re-read). Not XP; not Make 117f. |
+| Automation **117** | Live **v2.1**; GitHub **v2.2** (**paste pending Mike**) — Hub queue create + `athleteFirstName` / meeting display / proof timestamps (PR **#473**). Not XP; not Make 117f. |
+| Hub templates (comms) | Communications Hub **PR #52** **MERGED** to `main` @ **`e79637f`** (athlete name helpers, welcome dual CTAs, Zoom MT session details). SC **117 v2.2** producers still need Airtable paste before end-to-end Live proof. Version matrix: [`deploy-checklists/parent-email-live-cutover-2026-09-02.md`](./deploy-checklists/parent-email-live-cutover-2026-09-02.md) · [`communications-hub/README.md`](./communications-hub/README.md). |
 | Parent-email + auth Live cutover (2026-09-03) | Operator checklist **MERGED** PR **#377** â [`deploy-checklists/parent-email-and-auth-live-cutover-2026-09-03.md`](./deploy-checklists/parent-email-and-auth-live-cutover-2026-09-03.md). Target Live: producer `testMode=false` (071/073/074/076/078A/117); 118 `dryRun=false` + `sendMode=Live`; 119 `dryRun=false`; Vercel `ATHLETE_AUTH_TEST_MODE=false`. Magic-link **works**. Mike UI attestation remains authority if settings drift. |
 
 Authority: [`integrations/email-send-plane.md`](./integrations/email-send-plane.md) Â· Completion Master Â· [`automation-index.md`](./automation-index.md). Live Automations UI attestation still preferred if Mike re-confirms.
@@ -194,7 +198,7 @@ Authority: [`integrations/tremendous-award-fulfillment.md`](./integrations/treme
 | Item | State |
 |------|--------|
 | Role | Queue + Resend delivery for SC notification email |
-| Zoom recording approval | Automation **117 v2.1** â Email Handoff Queue â **079** â Hub â Resend |
+| Zoom recording approval | Live **117 v2.1** â Email Handoff Queue â **079** â Hub â Resend. GitHub **117 v2.2** + Hub **PR #52** (`e79637f`) ready — **Airtable paste pending Mike**. |
 | Welcome / participant activation | Hub path documented; full participant activation still **PENDING** live proof |
 | Template registry | See `docs/communications-hub/` â treat audit dated 2026-08-17 as evidence, not invent live template IDs |
 
@@ -293,7 +297,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 | Homework parent email | **078** Ready â **071** â **079** â Hub â Resend |
 | Video parent email | Video `Parent Feedback Ready?` **manual** â **073 v4.4** Live â Hub â Resend â parent URL must be Lambda viewer only |
 | Zoom live attendance | **101 v6.8** (SC-147 recording half-XP Live Tested) |
-| Zoom recording approval email | **117 v2.1 Live** â Hub â Resend |
+| Zoom recording approval email | **117 v2.1 Live** â Hub â Resend; GitHub **v2.2** paste pending (Hub `main` **e79637f**) |
 | Fillout daily submission | **OFF** (contest intake closed) |
 
 ---

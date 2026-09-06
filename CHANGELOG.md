@@ -8,6 +8,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Docs
 
+#### Changed
+- **Presim web/email/Airtable closeout (2026-09-06)** — Living docs tip **`4a81c0cf`** (#472/#473). CURRENT-TRUTH / PROJECT_STATE / MASTER_REMAINING / Completion Master overlays: dynamic Grade Bands filters, leaderboard hero, America/Denver+MT, FAQ accordion; Hub **PR #52** (`e79637f`); **117 v2.2** + `athleteFirstName` producers paste-pending; ZA lookups + Attendance Label live / primary Id pending Mike UI; **THREE-ATHLETE SIMULATION READY — NOT EXECUTED** unchanged. Checklist: [`docs/deploy-checklists/ZOOM-ATTENDANCE-PRIMARY-FIELD-FORMULA.md`](./docs/deploy-checklists/ZOOM-ATTENDANCE-PRIMARY-FIELD-FORMULA.md).
+
 #### Added
 - **Zoom Attendance primary field formula (2026-09-06)** — Docs-only plan to convert ZA primary `Id` (autoNumber) to a human-readable formula (`Athlete Name - Meeting Name - Meeting Date`, America/Denver). Mike UI required; MCP cannot convert autoNumber→formula. Checklist: [`docs/deploy-checklists/ZOOM-ATTENDANCE-PRIMARY-FIELD-FORMULA.md`](./docs/deploy-checklists/ZOOM-ATTENDANCE-PRIMARY-FIELD-FORMULA.md).
 - **SC-SEASON-SIM-001 three-athlete prep truth (2026-09-06)** — Agent 4 docs wave: Master List narrative restored from owner decision; five-enrollment design **superseded**; Section G regenerated; living docs (CURRENT-TRUTH, PROJECT_STATE, MASTER_REMAINING, Completion Master) aligned. Readiness audit: [`docs/audits/SC-SEASON-SIM-001-THREE-ATHLETE-PREP-READINESS-20260906.md`](./docs/audits/SC-SEASON-SIM-001-THREE-ATHLETE-PREP-READINESS-20260906.md). **No live execution.** Future auth: **`RUN 3-ATHLETE SEASON SIMULATION`**.
@@ -18,12 +21,19 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
-- **Parent email Hub payloads — athlete first name + Zoom meeting display (2026-09-06)** — **117 v2.2** prefers `Meeting Name` for `meetingName` (no silent Meeting Display Name substitute), adds optional `meetingDisplayName`, `athleteFirstName`, proof/review timestamps (`proofSubmittedAt` / `recordingQuizSubmittedAt`, `reviewedAt` / `recordingQuizReviewedAt`) with America/Denver `dateText`. Light `athleteFirstName` adds: **072 v4.9.2**, **073 v4.7**, **074 v3.6**, **076 v8.14**, **078A v1.6** (071 already had it). Trigger/recipient logic unchanged. ZA primary formula remains docs-only (see Docs).
+- **Zoom Attendance supporting fields LIVE (2026-09-06)** — Lookups **Athlete Name** `fld7nVhauRqRAWxq4`, **Meeting Name** `fld819uQNx6BcoMjk`, **Meeting Date** `fld96KGsXVst9UGNx`; formula **Attendance Label** `fldVILeOyW1jepScv` (`isValid` true). Primary still **Id** `fldXHFpB3MrOVevYL` autoNumber — Mike UI convert pending. Rollback action IDs: `actTBXer96T8FZM66`, `actIrT5IajKwmvv6k`, `actiZj2x7HgdYRwgN`, `actSsbDl3kzzAtnBV`. Checklist: [`docs/deploy-checklists/ZOOM-ATTENDANCE-PRIMARY-FIELD-FORMULA.md`](./docs/deploy-checklists/ZOOM-ATTENDANCE-PRIMARY-FIELD-FORMULA.md).
+- **Parent email Hub payloads — athlete first name + Zoom meeting display (2026-09-06)** — **117 v2.2** prefers `Meeting Name` for `meetingName` (no silent Meeting Display Name substitute), adds optional `meetingDisplayName`, `athleteFirstName`, proof/review timestamps (`proofSubmittedAt` / `recordingQuizSubmittedAt`, `reviewedAt` / `recordingQuizReviewedAt`) with America/Denver `dateText`. Light `athleteFirstName` adds: **072 v4.9.2**, **073 v4.7**, **074 v3.6**, **076 v8.14**, **078A v1.6** (071 already had it). Trigger/recipient logic unchanged. ZA primary formula remains Mike UI (see Airtable / Docs).
 - **SC-171 Daily Submission + Homework Feedback presentation (2026-09-06)** — **076 v8.13** removes `xpExtraCredit` and `shootingPercentage` from daily handoff payload; computes `currentStreak` from counted Submission Activity Dates (055-aligned) instead of stale `Enrollments.Current Shooting Streak`. **071 v4.4** adds `submittedDate`, `reviewedDate`, and `athleteProfileUrl` for homework feedback. No XP award logic changes. Evidence: [`docs/audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md`](./docs/audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md) · checklist [`docs/deploy-checklists/SC-171-email-homework-presentation.md`](./docs/deploy-checklists/SC-171-email-homework-presentation.md).
 
 ### Web
 
-*(no SC-171 web changes — presentation is Communications Hub email templates)*
+#### Changed
+- **Presim public UX (2026-09-06)** — PR **#472**: dynamic Grade Bands filters on leaderboard; leaderboard hero; public datetime formatting locked to **America/Denver** with fixed **MT** label; FAQ accordion with hash deep-links.
+
+### Make / Communications
+
+#### Changed
+- **Hub email version matrix (2026-09-06)** — Communications Hub **PR #52** **MERGED** to `main` @ **`e79637f`** (athlete name helpers, welcome dual CTAs, Zoom MT session details). SC **117 v2.2** + related `athleteFirstName` producers remain **pending Mike Airtable paste** before Live end-to-end. Pointers: [`docs/deploy-checklists/parent-email-live-cutover-2026-09-02.md`](./docs/deploy-checklists/parent-email-live-cutover-2026-09-02.md) · [`docs/communications-hub/README.md`](./docs/communications-hub/README.md). Make.com still not the email sender.
 
 ### Docs
 
