@@ -59,7 +59,7 @@ Historical **SC-SEASON-SIM-002** (`athlete1_sc002` mixed path) remains **COMPLET
 
 | Command | Result |
 |---------|--------|
-| `python3 -m unittest season_simulation.tests.test_sc001_three_athlete …` | **PASS** (24 tests) |
+| `python3 -m unittest season_simulation.tests.test_sc001_three_athlete season_simulation.tests.test_sc001_expectations …` | **PASS** (42 tests) |
 | `python3 -m unittest season_simulation.tests.test_offline …` | **PASS** (124 tests) |
 | `python3 -m season_simulation dry-run-three --offline-fixture` | **PASS** — matrices written |
 

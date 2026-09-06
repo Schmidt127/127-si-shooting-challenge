@@ -60,22 +60,34 @@
 
 ## Athlete 3 — Sim Edge (`athlete3_edge`)
 
-**Design intent:** Stress timing/idempotency — explicit week-by-week Perfect Week truth table (`ATHLETE3_PERFECT_WEEK_TRUTH_TABLE`), same-day double submission day 19, backdate day 38→36, distinct failure modes, replay probe days 10/29/45/58.
+**Design intent:** Stress timing/idempotency — explicit week-by-week Perfect Week truth table (`ATHLETE3_PERFECT_WEEK_TRUTH_TABLE`), same-day double submission day 19, backdate day 38→36, replay probe days 10/29/45/58, late homework day 33 (Week 5).
 
-| Week | Outcome | Failure mode (if any) |
-|------|---------|------------------------|
-| Early Bird | **PASS** | — |
-| Week 1 | **PASS** | — |
-| Week 2 | fail | fail_daily_shooting |
-| Week 3 | fail | fail_video_count |
-| Week 4 | fail | fail_required_zoom |
-| Week 5 | fail | fail_homework_timing (late HW day 33) |
-| Week 6 | **PASS** | — |
-| Week 7 | **PASS** | — |
-| Week 8 | fail | fail_single_requirement (2 videos only) |
-| Week 9 | **PASS** | pass_partial_window |
+| Week | Weekly shots | Goal est. | % | Thresholds | HW | Videos | Zoom | Perfect Week |
+|------|-------------:|----------:|--:|------------|----|-------:|------|--------------|
+| Early Bird | 200 | 197 | 101.5% | 100 | complete_satisfactory | 1 | none | pass |
+| Week 1 | 1424 | 1377 | 103.4% | 100 | complete_satisfactory | 3 | none | pass |
+| Week 2 | 1093 | 1377 | 79.4% | — | complete_satisfactory | 0 | none | fail_daily_shooting |
+| Week 3 | 1036 | 1377 | 75.2% | — | complete_satisfactory | 4 | live | fail_video_count |
+| Week 4 | 2183 | 1377 | 158.5% | 100,125,150 | complete_satisfactory | 0 | none | fail_required_zoom |
+| Week 5 | 2221 | 1377 | 161.3% | 100,125,150 | late_satisfactory | 0 | none | fail_homework_timing |
+| Week 6 | 1424 | 1377 | 103.4% | 100 | complete_satisfactory | 3 | recorded | pass |
+| Week 7 | 1421 | 1377 | 103.2% | 100 | complete_satisfactory | 3 | live | pass |
+| Week 8 | 1386 | 1377 | 100.7% | 100 | complete_satisfactory | 2 | none | fail_single_requirement |
+| Week 9 | 812 | 787 | 103.2% | 100 | complete_satisfactory | 3 | none | pass_partial_window |
 
-**Totals:** 13,200 planned shots · **5** expected Perfect Weeks (derived from table) · milestones **3000–12000** · Goal Met **2027-06-25** @ 12,190 cumulative
+**Totals:** 13,200 planned shots · **5** expected Perfect Weeks · milestones **3000–12000** (4) · Goal Met **2027-06-25** @ 12,190 cumulative · streak gates **3–30** (6 tiers)
+
+**Expected XP buckets (derived):** SUBMISSION_XP 62 · WEEKLY_THRESHOLD 12 · HOMEWORK_XP 18 · VIDEO 19 · STREAK 6 · SHOT_MILESTONE 4 · PERFECT_WEEK **5**
+
+---
+
+## SC-167 / SC-168 / SC-169 expectation contracts
+
+| Lesson | Offline expectation |
+|--------|---------------------|
+| **SC-167 SUBMISSION_XP** | One idempotent XP Event per countable submission (`SUBMISSION_XP\|{submissionId}`); Athlete 3 day-19 same-day double uses distinct dedupe keys (`SUB` vs `SUB2`) |
+| **SC-168 Weekly email** | Execute arms **Build Weekly** (072 path) on Saturdays; **0 WEEKLY Hub handoffs after execute alone** is expected — Hub requires SC-168 `weekly-email-stage` (119 substitute) |
+| **SC-169 Unlocks** | Shot milestones via `SHOT_MILESTONE\|{enrollmentId}\|{milestoneId}`; Perfect Week via `PERFECT_WEEK\|{enrollmentId}\|{weekId}`; streaks use 053/054 (not unlock table) |
 
 ---
 
