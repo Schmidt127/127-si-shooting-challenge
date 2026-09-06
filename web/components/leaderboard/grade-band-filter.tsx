@@ -1,28 +1,30 @@
 "use client";
 
-import { GRADE_BAND_OPTIONS, type GradeBandId } from "@/lib/data/grade-bands";
+import { ALL_GRADE_BANDS_ID, type GradeBandOption } from "@/lib/data/grade-bands";
 import { ACCESSIBILITY_LABELS } from "@/lib/release/public-surface";
 import { cn } from "@/lib/utils";
 
 type GradeBandFilterProps = {
-  value: GradeBandId;
-  onChange: (band: GradeBandId) => void;
-  counts?: Partial<Record<GradeBandId, number>>;
+  options: GradeBandOption[];
+  value: string;
+  onChange: (bandId: string) => void;
+  counts?: Record<string, number>;
 };
 
-export function GradeBandFilter({ value, onChange, counts }: GradeBandFilterProps) {
+export function GradeBandFilter({ options, value, onChange, counts }: GradeBandFilterProps) {
   return (
     <div
       className="flex flex-wrap gap-2"
       role="group"
       aria-label={ACCESSIBILITY_LABELS.gradeBandFilter}
     >
-      {GRADE_BAND_OPTIONS.map((option) => {
+      {options.map((option) => {
         const selected = value === option.id;
         const count = counts?.[option.id];
-        const hideOtherEmpty = option.id === "other" && (count === 0 || count === undefined);
+        const hideEmptyConfigured =
+          option.id !== ALL_GRADE_BANDS_ID && (count === 0 || count === undefined) && !selected;
 
-        if (hideOtherEmpty && !selected) return null;
+        if (hideEmptyConfigured) return null;
 
         return (
           <button

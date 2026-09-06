@@ -10,9 +10,11 @@ import {
 } from "@/lib/formatters/profile-freshness";
 
 describe("formatProfileFetchedAt", () => {
-  it("formats a valid ISO timestamp", () => {
+  it("formats a valid ISO timestamp with MT", () => {
     const label = formatProfileFetchedAt("2026-08-25T18:00:00.000Z");
     expect(label).toMatch(/Aug/);
+    expect(label).toContain("MT");
+    expect(label).not.toMatch(/\bMST\b|\bMDT\b/);
   });
 
   it("returns null for invalid timestamps", () => {

@@ -19,7 +19,7 @@ type ProgramPageProps = {
   /** Optional meta line under the hero (counts, updated timestamps). */
   meta?: ReactNode;
   /** Optional decorative hero background (e.g. ladder rails on Levels). */
-  heroDecoration?: "ladder";
+  heroDecoration?: "ladder" | "leaderboard";
   /** When false, children render full-bleed (caller supplies SiteSection/containers). */
   contain?: boolean;
   className?: string;

@@ -6,6 +6,11 @@
  * re-fetches a fresh authorized URL at request time.
  */
 
+import {
+  addCalendarDays,
+  montanaDateKey,
+} from "@/lib/formatters/montana-time";
+
 export const HOMEWORK_ATTACHMENT_FIELDS = ["Docs", "Cover Images"] as const;
 export type HomeworkAttachmentField = (typeof HOMEWORK_ATTACHMENT_FIELDS)[number];
 
@@ -165,22 +170,18 @@ export function resolveHomeworkCategoryLabel(input: {
 
 export type HomeworkDueStatus = "no_due" | "past_due" | "due_soon" | "upcoming";
 
-/** Calendar-day due status for public catalog chips (not athlete completion). */
+/** Calendar-day due status for public catalog chips (Montana day, not UTC). */
 export function resolveHomeworkDueStatus(
   dueDate: string | null,
   now: Date = new Date(),
 ): HomeworkDueStatus {
-  if (!dueDate) return "no_due";
-  const due = Date.parse(`${dueDate}T23:59:59`);
-  if (Number.isNaN(due)) return "no_due";
+  if (!dueDate || !/^\d{4}-\d{2}-\d{2}$/.test(dueDate)) return "no_due";
 
-  const todayStart = Date.parse(
-    `${now.toISOString().slice(0, 10)}T00:00:00`,
-  );
-  if (due < todayStart) return "past_due";
+  const todayKey = montanaDateKey(now);
+  if (dueDate < todayKey) return "past_due";
 
-  const soon = todayStart + 3 * 24 * 60 * 60 * 1000;
-  if (due <= soon) return "due_soon";
+  const soonKey = addCalendarDays(todayKey, 3);
+  if (soonKey && dueDate <= soonKey) return "due_soon";
   return "upcoming";
 }
 

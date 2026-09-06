@@ -12,6 +12,7 @@ import {
 import { withBasePath } from "@/lib/app-config";
 import { cn } from "@/lib/utils";
 import { formatXp } from "@/lib/formatters";
+import { formatMontanaDateOnly } from "@/lib/formatters/montana-time";
 import { PROFILE_HOMEWORK_UNAVAILABLE_MESSAGE } from "@/lib/formatters/profile-freshness";
 import type {
   PublicHomeworkAssignment,
@@ -23,15 +24,10 @@ type HomeworkAssignmentsProps = {
   loadUnavailable?: boolean;
 };
 
+/** Date-only due labels — calendar day must not shift across timezones. */
 export function formatHomeworkDueDate(dateKey: string | null): string {
   if (!dateKey) return "No due date";
-  const parsed = Date.parse(`${dateKey}T12:00:00`);
-  if (Number.isNaN(parsed)) return dateKey;
-  return new Date(parsed).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+  return formatMontanaDateOnly(dateKey) ?? dateKey;
 }
 
 export function formatHomeworkXp(assignment: PublicHomeworkAssignment): string {

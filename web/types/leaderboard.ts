@@ -1,3 +1,5 @@
+import type { GradeBandOption } from "@/lib/data/grade-bands";
+
 /** Leaderboard row mapped from Airtable Enrollments. */
 export type PublicLeaderboardHeadshot = {
   url: string;
@@ -8,6 +10,8 @@ export type LeaderboardEntry = {
   displayName: string;
   school: string;
   grade: string;
+  /** Airtable Grade Band Label (lookup of Grade Band Name); used for band filters. */
+  gradeBandLabel: string | null;
   level: string;
   headshot: PublicLeaderboardHeadshot | null;
   xp: number;
@@ -22,4 +26,6 @@ export type LeaderboardData = {
   entries: LeaderboardEntry[];
   updatedAt: string;
   seasonLabel: string;
+  /** Active Grade Band filter options (includes All Grade Bands). */
+  gradeBandOptions: GradeBandOption[];
 };

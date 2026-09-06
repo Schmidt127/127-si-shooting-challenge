@@ -1,7 +1,7 @@
 import Link from "next/link";
 
+import { FaqDetailsItem } from "@/components/faq/faq-details-item";
 import { CtaLink, FamilyDashboardLink, PageHero, SiteSection } from "@/components/site";
-import { Card, CardContent } from "@/components/ui/card";
 import type { FaqItem } from "@/lib/seo/faq-content";
 import { REGISTRATION_FACTS } from "@/lib/seo/program-facts";
 import { DAILY_SUBMISSIONS } from "@/lib/registration";
@@ -10,6 +10,11 @@ type FaqPageViewProps = {
   items: FaqItem[];
 };
 
+/**
+ * Accessible FAQ accordion — closed by default; native details/summary
+ * for keyboard support without a new UI library. Hash deep links
+ * (`/faq#video-feedback`) open the matching item on the client.
+ */
 export function FaqPageView({ items }: FaqPageViewProps) {
   return (
     <div>
@@ -43,16 +48,7 @@ export function FaqPageView({ items }: FaqPageViewProps) {
       >
         <div className="mx-auto flex max-w-3xl flex-col gap-3">
           {items.map((item) => (
-            <Card key={item.id} id={item.id} className="rounded-lg shadow-site-sm">
-              <CardContent className="pt-(--card-spacing)">
-                <h2 className="font-display text-lg font-bold text-foreground sm:text-xl">
-                  {item.question}
-                </h2>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  {item.answer}
-                </p>
-              </CardContent>
-            </Card>
+            <FaqDetailsItem key={item.id} item={item} />
           ))}
         </div>
       </SiteSection>

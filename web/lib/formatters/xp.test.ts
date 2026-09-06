@@ -25,9 +25,11 @@ describe("formatXpSourceLabel", () => {
 });
 
 describe("formatRelativeUpdate", () => {
-  it("formats valid timestamps", () => {
+  it("formats valid timestamps in Montana time with MT", () => {
     const formatted = formatRelativeUpdate("2026-07-14T18:30:00.000Z");
     expect(formatted).toContain("Jul");
+    expect(formatted).toContain("MT");
+    expect(formatted).not.toMatch(/\bMST\b|\bMDT\b/);
     expect(formatted).not.toBe("Updated recently");
   });
 
