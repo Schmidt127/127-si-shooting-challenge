@@ -364,6 +364,36 @@ def build_three_athlete_expectation_package(
     }
 
 
+def build_sanitized_dry_run_artifact(payload: dict[str, Any]) -> dict[str, Any]:
+    """Strip bulky/volatile fields for committed ``sc001-dry-run-latest.json``.
+
+    Keeps expectation matrices and per-profile summaries only (offline fixture IDs).
+    """
+    scenarios_summary: dict[str, Any] = {}
+    for profile, scenario in (payload.get("scenarios") or {}).items():
+        if not isinstance(scenario, dict):
+            continue
+        scenarios_summary[profile] = {
+            "profile": scenario.get("profile"),
+            "meta": scenario.get("meta"),
+            "intended_writes_summary": scenario.get("intended_writes_summary"),
+        }
+    return {
+        "backlog_id": payload.get("backlog_id"),
+        "run_id": payload.get("run_id"),
+        "status": payload.get("status"),
+        "executed": payload.get("executed"),
+        "reference_meta": payload.get("reference_meta"),
+        "expectations": payload.get("expectations"),
+        "scenarios_summary": scenarios_summary,
+        "sanitized": True,
+        "note": (
+            "Full day plans omitted. Regenerate with: "
+            "python -m season_simulation dry-run-three --offline-fixture"
+        ),
+    }
+
+
 def format_weekly_table_markdown(matrix: AthleteExpectationMatrix) -> str:
     lines = [
         f"### {matrix.athlete_name} (`{matrix.profile}`)",
