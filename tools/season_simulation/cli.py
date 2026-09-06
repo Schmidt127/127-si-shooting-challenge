@@ -70,6 +70,7 @@ def _parser() -> argparse.ArgumentParser:
             "cleanup",
             "cleanup-preview-three",
             "cleanup-three",
+            "rearm-submission-xp",
             "plan",
             "evidence",
             "weekly-email-stage",
@@ -78,6 +79,8 @@ def _parser() -> argparse.ArgumentParser:
             "preflight=read-only checks; dry-run/dry-run-three=plan; "
             "execute/execute-three/cleanup require confirm gates; "
             "cleanup-preview-three/cleanup-three=SC-001 three-athlete (preview read-only); "
+            "rearm-submission-xp=dry-run by default; clear Last Reconciled Signature "
+            "on owned sim submissions missing Active SUBMISSION_XP; "
             "evidence=export latest reports; "
             "weekly-email-stage=SC-168 119-substitute plan/verify/apply"
         ),
@@ -439,7 +442,8 @@ def cmd_execute_three(args: argparse.Namespace) -> int:
     elif not args.execute:
         client = _client(args, allow_writes=False)
     else:
-        client = _client(args, allow_writes=False)
+        # Writes stay gated inside execute-three / writer; client must allow them.
+        client = _client(args, allow_writes=True)
 
     try:
         result = run_execute_three(
@@ -621,6 +625,35 @@ def cmd_cleanup_three(args: argparse.Namespace) -> int:
     return 1 if result.errors else 0
 
 
+def cmd_rearm_submission_xp(args: argparse.Namespace) -> int:
+    """Dry-run by default: preview safe 010 re-arm for owned sim submissions."""
+    from .rearm_submission_xp import run_rearm_submission_xp
+
+    if not args.run_id:
+        print("rearm-submission-xp requires --run-id / --simulation-id", file=sys.stderr)
+        return 2
+    client = None
+    try:
+        client = _client(args, allow_writes=bool(args.execute))
+    except SystemExit:
+        if args.execute:
+            print("Live re-arm requires Airtable token", file=sys.stderr)
+            return 2
+        print("No Airtable token — cannot build re-arm plan", file=sys.stderr)
+        return 2
+    result = run_rearm_submission_xp(
+        run_id=args.run_id,
+        registry_dir=Path(args.registry_dir),
+        client=client,
+        execute=bool(args.execute),
+        confirm=args.confirm,
+        confirm_disposable=args.confirm_disposable,
+        out_dir=Path(args.out_dir),
+    )
+    print(json.dumps(result.to_dict(), indent=2, default=str))
+    return 1 if result.errors else 0
+
+
 def cmd_cleanup(args: argparse.Namespace) -> int:
     if not args.run_id:
         print("cleanup requires --run-id / --simulation-id", file=sys.stderr)
@@ -693,6 +726,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_cleanup_preview_three(args)
     if args.command == "cleanup-three":
         return cmd_cleanup_three(args)
+    if args.command == "rearm-submission-xp":
+        return cmd_rearm_submission_xp(args)
     if args.command == "evidence":
         return cmd_evidence(args)
     if args.command == "weekly-email-stage":

@@ -2139,7 +2139,7 @@ Prove the **single disposable athlete** path end-to-end before any multi-enrollm
 
 **Priority:** P1  
 
-**Status:** **READY (preparation completing â€” NOT executed)** (2026-09-06) â€” extends **SC-SEASON-SIM-002** infrastructure; **no DEV environment**; Production disposable records only  
+**Status:** **CASCADE FIX READY — full three-athlete rerun NOT yet re-authorized** (2026-09-06) — T144833Z writer completed but XP cascade partial; harness settlement/re-arm/cleanup fixes + targeted live mini verify passed — see [`audits/SC-SEASON-SIM-001-CASCADE-FAILURE-20260906.md`](./audits/SC-SEASON-SIM-001-CASCADE-FAILURE-20260906.md)
 
 **Systems:** `tools/season_simulation/`, Enrollments, Submissions, Homework Completions, Video Feedback, Zoom, WAS, XP Events, streaks, milestones, Perfect Week, weekly email stage (SC-168), Hub allowlist  
 

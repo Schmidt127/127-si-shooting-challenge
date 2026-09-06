@@ -384,19 +384,33 @@ def run_three_athlete_cleanup(
     out_dir: Path | None = None,
 ) -> CleanupResult:
     """Three-athlete cleanup — dry-run by default; deletes only with full gates."""
+    from .confirmation import ConfirmationError, require_cleanup_gates
+
     validate_three_athlete_run_id(run_id)
-    if not execute:
-        return cleanup_preview_three(
-            run_id=run_id,
-            registry_dir=registry_dir,
-            client=client,
-        )
-    # Delegate to run_cleanup after descendant merge via pre-built plan
     plan = build_three_athlete_cleanup_plan(
         run_id=run_id,
         registry_dir=registry_dir,
         client=client,
+        discover_descendants=True,
     )
+    # Ignore missing shared (non-profile) registry — profile registries are enough.
+    plan.errors = [
+        e
+        for e in plan.errors
+        if f"No local registry for run_id={run_id}" not in e
+    ]
+
+    if not execute:
+        result = CleanupResult(
+            run_id=run_id,
+            dry_run=True,
+            deleted={},
+            plan=plan.to_dict(),
+            errors=list(plan.errors),
+        )
+        _write_cleanup_report(result, out_dir)
+        return result
+
     if plan.errors:
         result = CleanupResult(
             run_id=run_id,
@@ -407,16 +421,96 @@ def run_three_athlete_cleanup(
         )
         _write_cleanup_report(result, out_dir)
         return result
-    return run_cleanup(
+
+    try:
+        require_cleanup_gates(
+            execute=True,
+            confirm=confirm,
+            confirm_cleanup=confirm_cleanup,
+            simulation_id=run_id,
+        )
+    except ConfirmationError as exc:
+        result = CleanupResult(
+            run_id=run_id,
+            dry_run=True,
+            deleted={},
+            plan=plan.to_dict(),
+            errors=[str(exc)],
+        )
+        _write_cleanup_report(result, out_dir)
+        return result
+
+    if not plan.targets and not plan.attendees_patches:
+        result = CleanupResult(
+            run_id=run_id,
+            dry_run=True,
+            deleted={},
+            plan=plan.to_dict(),
+            errors=["Cleanup refused: merged profile registries have no deletable targets"],
+        )
+        _write_cleanup_report(result, out_dir)
+        return result
+
+    if client is None:
+        client = AirtableClient(allow_writes=True)
+    else:
+        client.allow_writes = True
+
+    deleted: dict[str, list[str]] = {}
+    errors: list[str] = []
+
+    for patch in plan.attendees_patches:
+        meeting_id = patch.get("meeting_id") or ""
+        enrollment_id = patch.get("enrollment_id") or ""
+        if not meeting_id or not enrollment_id:
+            continue
+        try:
+            rec = client.get_record("Zoom Meetings", meeting_id)
+            raw = (rec.get("fields") or {}).get("Attendees") or []
+            current: list[str] = []
+            if isinstance(raw, list):
+                for item in raw:
+                    if isinstance(item, str):
+                        current.append(item)
+                    elif isinstance(item, dict) and item.get("id"):
+                        current.append(str(item["id"]))
+            next_ids = [x for x in current if x != enrollment_id]
+            client.update_records(
+                "Zoom Meetings",
+                [{"id": meeting_id, "fields": {"Attendees": next_ids}}],
+            )
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"Failed to reverse Attendees on {meeting_id}: {exc}")
+
+    for table in DELETE_ORDER:
+        ids = plan.targets.get(table) or []
+        if not ids:
+            continue
+        if (
+            table in REFERENCE_TABLES
+            and table not in REGISTRY_DELETABLE_REFERENCE_TABLES
+        ):
+            errors.append(f"Refusing to delete reference table {table}")
+            continue
+        try:
+            client.delete_records(table, ids)
+            deleted[table] = list(ids)
+        except WriteBlockedError as exc:
+            errors.append(str(exc))
+            break
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"Delete failed for {table}: {exc}")
+            break
+
+    result = CleanupResult(
         run_id=run_id,
-        registry_dir=registry_dir,
-        execute=True,
-        confirm=confirm,
-        confirm_cleanup=confirm_cleanup,
-        simulation_id=run_id,
-        client=client,
-        out_dir=out_dir,
+        dry_run=False,
+        deleted=deleted,
+        plan=plan.to_dict(),
+        errors=errors,
     )
+    _write_cleanup_report(result, out_dir)
+    return result
 
 
 def build_cleanup_plan(

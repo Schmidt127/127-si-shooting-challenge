@@ -1,8 +1,8 @@
-# SC-SEASON-SIM-001 — Three-Athlete Dry-Run Report (committed artifact)
+# SC-SEASON-SIM-001 — Three-Athlete Dry-Run Report
 
-**Run ID:** `SEASON-SIM-2027-OFFLINE-FIXTURE-threeathlete`
+**Run ID:** `SEASON-SIM-2027-20260906T144223Z-threeathlete`
 **Status:** READY — **NOT EXECUTED**
-**Generated:** 2026-09-06T12:00:00+00:00 (fixed timestamp for determinism)
+**Generated:** 2026-09-06T14:42:25.821400+00:00
 
 ## Authorization
 
@@ -10,7 +10,7 @@ Future live execute requires Mike to say exactly: **`RUN 3-ATHLETE SEASON SIMULA
 
 ## Environment
 
-- Offline fixture only — synthetic IDs, no live Airtable record IDs
+- **No DEV environment** — Production disposable records only
 - Dry-run default; no Airtable writes in this report
 
 ## Weekly expectation matrices
@@ -85,12 +85,18 @@ Future live execute requires Mike to say exactly: **`RUN 3-ATHLETE SEASON SIMULA
 - **Email handoffs:** `{'daily_submission_emails': 62, 'homework_feedback_emails_if_graded': 18, 'weekly_summary_build_arms': 9, 'weekly_hub_handoffs_after_stage': 1, 'recipient_allowlist': 'schmidt@fairfieldbasketballclub.com', 'verify_send_status_writeback': True, 'no_real_family_recipients': True, 'events_from_scenario': 9}`
 
 
-## SC-167 / SC-168 / SC-169
+## Email verification (allowlist only)
 
-- SUBMISSION_XP: one per countable submission (Athlete 3 day 19 = 2 submissions, distinct dedupe keys)
-- Weekly BUILD arms on Saturdays; 0 WEEKLY Hub after execute alone (SC-168 stage required)
-- Unlocks: SHOT_MILESTONE|enrollment|milestoneId; PERFECT_WEEK|enrollment|weekId
+- Daily Submission emails expected per submit day
+- Homework Feedback emails when grading/review is exercised
+- Weekly summary build arms (Saturdays) + Hub handoffs after SC-168 stage
+- Recipient allowlist: `schmidt@fairfieldbasketballclub.com` only
+- Verify send status / writeback on Email Handoff Queue at execute
+- **No emails sent during dry-run / preparation**
 
-## Regenerate
+## Safety controls
 
-cd tools && python -m season_simulation dry-run-three --offline-fixture
+- Run-ID scoped cleanup only
+- Allowlist email: `schmidt@fairfieldbasketballclub.com`
+- SC-SEASON-SIM-002 historical run T122531Z remains COMPLETE — do not rerun
+- Formulas stay Production-normal until Mike authorizes temporary gate paste

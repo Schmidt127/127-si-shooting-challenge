@@ -82,6 +82,7 @@ def build_three_athlete_scenarios(
                 "Reference resolution failed: "
                 + "; ".join(snap.errors or ["missing grade band or goal"])
             )
+        weeks_objs = list(snap.weeks_covering_window)
         ref = {
             "grade_band_id": snap.grade_band.record_id,
             "goal_record_id": snap.highest_goal.record_id,
@@ -106,11 +107,18 @@ def build_three_athlete_scenarios(
                     "name": w.name,
                     "start": w.start.isoformat() if w.start else None,
                     "end": w.end.isoformat() if w.end else None,
+                    "program_instance_id": w.program_instance_id,
                 }
-                for w in snap.weeks_covering_window
+                for w in weeks_objs
             ],
         }
         ref_meta["homework_count"] = len(snap.homework)
+        # Live execute needs WeekInfo objects + goal PI for ExecuteContext.
+        ref_meta["weeks_objs"] = weeks_objs
+        ref_meta["goal_program_instance_ids"] = list(
+            snap.highest_goal.program_instance_ids or []
+        )
+        ref_meta["school_year"] = "2026-2027"
 
     scenarios = build_all_sc001_scenarios(run_id=run_id, **ref)
     return scenarios, ref_meta

@@ -19,9 +19,10 @@ Without all gates: zero writes. dry-run-three and prep mode (no --execute) plan 
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 from .confirmation import ConfirmationError, require_three_athlete_execute_gates
 from .constants import SIM_START, THREE_ATHLETE_RUN_SUFFIX
@@ -36,12 +37,22 @@ from .formula_lifecycle import (
     snapshot_formulas,
     stage_f_formula_verify_hook,
 )
+from .cascade_settlement import stage_d_settlement_hook, stage_e_reconcile_hook
 from .cleanup import stage_h_cleanup_preview_hook
-from .run_registry import load_registry, save_registry
-from .writer import load_or_new_registry
+from .rearm_submission_xp import run_rearm_submission_xp
+from .run_registry import save_registry
+from .writer import (
+    build_execute_context_from_reference,
+    field_names_for_table,
+    load_or_new_registry,
+)
 from .scenario_base import athlete_marker
 from .simulation_clock import SimulationClock
 from .three_athlete import build_three_athlete_scenarios
+
+# Per-profile cascade settle before the next athlete starts writing.
+DEFAULT_PROFILE_SETTLEMENT_TIMEOUT_S = 300.0
+DEFAULT_PROFILE_SETTLEMENT_POLL_S = 5.0
 
 # Ordered profile execution — athlete1 perfect first, then recovery, then edge.
 PROFILE_ORDER = (
@@ -122,8 +133,11 @@ def _run_profile_writer(
 ) -> dict[str, Any]:
     """Invoke SC-002 writer path for one profile with profile-scoped registry."""
     reg_run_id = profile_registry_run_id(run_id, profile)
+    # Isolate Athlete/Enrollment registry keys per profile while keeping DayPlan
+    # dedupe keys (already profile-scoped at scenario build) unchanged.
+    write_scenario = replace(scenario, run_id=reg_run_id)
     if not allow_writes or not execute:
-        intended = build_intended_writes(scenario, clock, ctx=execute_context)
+        intended = build_intended_writes(write_scenario, clock, ctx=execute_context)
         return {
             "mode": "dry-plan",
             "profile": profile,
@@ -133,8 +147,14 @@ def _run_profile_writer(
             "write_readiness": summarize_intended_write_readiness(intended),
         }
 
+    if execute_context is None:
+        raise ExecuteAborted(
+            "ExecuteContext missing — weeks / Program Instance must be resolved "
+            "before three-athlete writes"
+        )
+
     result = run_execute(
-        scenario=scenario,
+        scenario=write_scenario,
         clock=clock,
         execute=True,
         confirm=confirm,
@@ -150,6 +170,7 @@ def _run_profile_writer(
     result["profile"] = profile
     result["registry_run_id"] = reg_run_id
     result["ownership_namespace"] = profile_ownership_namespace(run_id, profile)
+    result["shared_run_id"] = run_id
     return result
 
 
@@ -260,7 +281,11 @@ def run_execute_three(
         clock = SimulationClock(enabled=True, current_date=SIM_START, run_id=run_id)
         payload["stages"]["A_assemble"] = {
             "status": "ok",
-            "reference_meta": ref_meta,
+            "reference_meta": {
+                k: v
+                for k, v in ref_meta.items()
+                if k not in {"weeks_objs"}  # WeekInfo objects are not JSON-serializable
+            },
             "ownership_namespaces": {
                 p: profile_ownership_namespace(run_id, p) for p in PROFILE_ORDER
             },
@@ -270,30 +295,38 @@ def run_execute_three(
             if hasattr(client, "allow_writes"):
                 client.allow_writes = True
 
-        stage_runners: list[tuple[str, Callable[..., dict[str, Any]]]] = [
-            ("B_create", lambda **kw: _stage_stub("B_create", **kw)),
-            ("C_activity", lambda **kw: _stage_stub("C_activity", **kw)),
-            ("D_settlement", lambda **kw: _stage_stub("D_settlement", **kw)),
-            ("E_reconcile", lambda **kw: _stage_stub("E_reconcile", **kw)),
-            (
-                "F_formula_verify",
-                lambda **kw: stage_f_formula_verify_hook(
-                    client,
-                    expect_gated=acknowledge_clock_override,
-                    snapshot_bundle=(snapshot_result or {}).get("bundle"),
-                ),
-            ),
-            ("G_email_verify", lambda **kw: _stage_stub("G_email_verify", **kw)),
-            (
-                "H_cleanup_hooks",
-                lambda **kw: stage_h_cleanup_preview_hook(
-                    run_id=run_id,
-                    registry_dir=registry_dir,
-                    client=client,
-                    profile=kw.get("profile"),
-                ),
-            ),
-        ]
+        # Build one ExecuteContext per profile from live Weeks / goal PI.
+        # Offline fixture without weeks_objs keeps execute_context=None (plan-only).
+        shared_execute_context = execute_context
+        weeks_objs = ref_meta.get("weeks_objs") or []
+        if shared_execute_context is None and weeks_objs and writes_allowed and execute:
+            sample = scenarios[PROFILE_ORDER[0]]
+            sub_fields = field_names_for_table(client, "Submissions") if client else set()
+            vf_fields = field_names_for_table(client, "Video Feedback") if client else set()
+            zm_fields = field_names_for_table(client, "Zoom Meetings") if client else set()
+            za_fields = field_names_for_table(client, "Zoom Attendance") if client else set()
+            try:
+                shared_execute_context = build_execute_context_from_reference(
+                    scenario=sample,
+                    weeks=weeks_objs,
+                    school_year=str(ref_meta.get("school_year") or "2026-2027"),
+                    goal_program_instance_ids=list(
+                        ref_meta.get("goal_program_instance_ids") or []
+                    ),
+                    submission_field_names=sub_fields or None,
+                    video_feedback_field_names=vf_fields or None,
+                    zoom_meeting_field_names=zm_fields or None,
+                    zoom_attendance_field_names=za_fields or None,
+                )
+                payload["stages"]["A_assemble"]["execute_context"] = {
+                    "program_instance_id": shared_execute_context.program_instance_id,
+                    "school_year": shared_execute_context.school_year,
+                    "week_count": len(shared_execute_context.weeks_by_id),
+                }
+            except (ValueError, AssertionError) as exc:
+                payload["errors"].append(f"ExecuteContext build failed: {exc}")
+                payload["stages"]["A_assemble"]["execute_context_error"] = str(exc)
+                return payload
 
         for profile in PROFILE_ORDER:
             scenario = scenarios[profile]
@@ -316,6 +349,14 @@ def run_execute_three(
             # Stage B + C — writer path (dry-plan when writes_allowed is False).
             # Per-profile SC-002 writer reuse is intentional — not CLI fall-through.
             try:
+                # Per-profile context: clone shared PI/weeks; goal/band from this scenario.
+                profile_ctx = shared_execute_context
+                if shared_execute_context is not None:
+                    profile_ctx = replace(
+                        shared_execute_context,
+                        goal_record_id=scenario.goal_record_id,
+                        grade_band_id=scenario.grade_band_id,
+                    )
                 writer_result = _run_profile_writer(
                     scenario=scenario,
                     clock=clock,
@@ -329,14 +370,43 @@ def run_execute_three(
                     confirm_disposable=confirm_disposable,
                     enable_email_delivery=enable_email_delivery,
                     acknowledge_clock_override=acknowledge_clock_override,
-                    execute_context=execute_context,
+                    execute_context=profile_ctx,
                 )
                 profile_payload["B_create"] = writer_result
                 profile_payload["C_activity"] = {
                     "status": "delegated_to_writer" if writes_allowed and execute else "planned",
                     "writer_status": writer_result.get("writer_status"),
                 }
+                # Writer owns the registry file on execute — reload before status stamp
+                # so we do not clobber created record IDs with a stale empty registry.
+                if writes_allowed and execute:
+                    reg = load_or_new_registry(
+                        run_id=profile_registry_run_id(run_id, profile),
+                        registry_dir=registry_dir,
+                        athlete_name=str(scenario.athlete.get("display_name") or profile),
+                        meta={
+                            "shared_run_id": run_id,
+                            "profile": profile,
+                            "ownership_namespace": profile_ownership_namespace(run_id, profile),
+                        },
+                    )
                 reg.last_completed_step = "C_activity"
+                if writes_allowed and execute and writer_result.get("errors"):
+                    reg.status = "paused"
+                    reg.pause_reason = "; ".join(str(e) for e in writer_result["errors"][:3])
+                    save_registry(reg, registry_dir)
+                    payload["errors"].append(
+                        f"{profile}: " + "; ".join(str(e) for e in writer_result["errors"][:5])
+                    )
+                    profile_payload["H_cleanup_hooks"] = stage_h_cleanup_preview_hook(
+                        run_id=run_id,
+                        registry_dir=registry_dir,
+                        client=client,
+                        profile=profile,
+                    )
+                    payload["profile_results"][profile] = profile_payload
+                    payload["stages"]["failure_cleanup_preview"] = profile_payload["H_cleanup_hooks"]
+                    break
                 reg.status = "running" if writes_allowed and execute else "planned"
                 save_registry(reg, registry_dir)
             except (ExecuteAborted, ConfirmationError) as exc:
@@ -356,12 +426,106 @@ def run_execute_three(
                 payload["stages"]["failure_cleanup_preview"] = profile_payload["H_cleanup_hooks"]
                 break
 
-            for stage_name, runner in stage_runners[2:]:
-                hook = runner(allow_writes=writes_allowed, profile=profile)
-                profile_payload[stage_name] = hook
-                reg.last_completed_step = stage_name
-                save_registry(reg, registry_dir)
+            # Stage D — observed-state XP settlement (live execute only).
+            if writes_allowed and execute:
+                settlement = stage_d_settlement_hook(
+                    client,
+                    reg,
+                    run_id=run_id,
+                    profile=profile,
+                    allow_writes=False,
+                    timeout_s=DEFAULT_PROFILE_SETTLEMENT_TIMEOUT_S,
+                    poll_interval_s=DEFAULT_PROFILE_SETTLEMENT_POLL_S,
+                )
+                # Bounded safe re-arm for stuck latched rows, then re-poll once.
+                stuck = ((settlement.get("result") or {}).get("stuck") or [])
+                if stuck and not settlement.get("complete"):
+                    rearm = run_rearm_submission_xp(
+                        run_id=profile_registry_run_id(run_id, profile),
+                        registry_dir=registry_dir,
+                        client=client,
+                        execute=True,
+                        confirm=confirm,
+                        confirm_disposable=confirm_disposable,
+                        out_dir=out_dir,
+                    )
+                    settlement["rearm"] = rearm.to_dict()
+                    settlement = stage_d_settlement_hook(
+                        client,
+                        reg,
+                        run_id=run_id,
+                        profile=profile,
+                        allow_writes=False,
+                        timeout_s=DEFAULT_PROFILE_SETTLEMENT_TIMEOUT_S,
+                        poll_interval_s=DEFAULT_PROFILE_SETTLEMENT_POLL_S,
+                    )
+                    settlement["rearm_applied"] = True
+                profile_payload["D_settlement"] = settlement
+            else:
+                profile_payload["D_settlement"] = {
+                    "stage": "D_settlement",
+                    "profile": profile,
+                    "status": "planned",
+                    "writes": False,
+                    "complete": False,
+                    "note": "Settlement runs only on gated live execute",
+                }
 
+            # Stage E — truthful reconcile (writer complete ≠ cascade complete).
+            created_n = len(writer_result.get("created_records") or [])
+            reconcile = stage_e_reconcile_hook(
+                profile_payload.get("D_settlement"),
+                profile=profile,
+                writer_created=created_n,
+            )
+            if not writes_allowed or not execute:
+                reconcile = {
+                    **reconcile,
+                    "status": "planned",
+                    "complete": False,
+                    "note": "Dry-plan: cascade reconcile deferred to live execute",
+                    "errors": [],
+                }
+            profile_payload["E_reconcile"] = reconcile
+            reg.last_completed_step = "E_reconcile"
+
+            if writes_allowed and execute and not reconcile.get("complete"):
+                reg.status = "paused"
+                reg.pause_reason = "cascade_reconciliation_incomplete"
+                save_registry(reg, registry_dir)
+                payload["errors"].append(
+                    f"{profile}: cascade incomplete — "
+                    + "; ".join(reconcile.get("errors") or ["settlement failed"])
+                )
+                profile_payload["H_cleanup_hooks"] = stage_h_cleanup_preview_hook(
+                    run_id=run_id,
+                    registry_dir=registry_dir,
+                    client=client,
+                    profile=profile,
+                )
+                payload["profile_results"][profile] = profile_payload
+                payload["stages"]["failure_cleanup_preview"] = profile_payload["H_cleanup_hooks"]
+                # Stop before the next profile floods Automations 010/053 further.
+                break
+
+            profile_payload["F_formula_verify"] = stage_f_formula_verify_hook(
+                client,
+                expect_gated=acknowledge_clock_override,
+                snapshot_bundle=(snapshot_result or {}).get("bundle"),
+            )
+            profile_payload["G_email_verify"] = _stage_stub(
+                "G_email_verify", allow_writes=writes_allowed, profile=profile
+            )
+            profile_payload["H_cleanup_hooks"] = stage_h_cleanup_preview_hook(
+                run_id=run_id,
+                registry_dir=registry_dir,
+                client=client,
+                profile=profile,
+            )
+            if writes_allowed and execute:
+                reg.status = "complete"
+                reg.last_completed_step = "H_cleanup_hooks"
+            save_registry(reg, registry_dir)
             payload["profile_results"][profile] = profile_payload
 
     finally:
@@ -374,12 +538,40 @@ def run_execute_three(
                 snapshot_bundle=(snapshot_result or {}).get("bundle"),
             )
 
+        profiles_complete = sum(
+            1
+            for pr in payload["profile_results"].values()
+            if (pr.get("E_reconcile") or {}).get("complete")
+            or (
+                not execute
+                and (pr.get("B_create") or {}).get("mode") == "dry-plan"
+            )
+        )
+        writer_only_complete = sum(
+            1
+            for pr in payload["profile_results"].values()
+            if (pr.get("B_create") or {}).get("writer_status") == "complete"
+        )
+        cascade_ok = (
+            bool(execute and writes_allowed and payload["gates_passed"])
+            and profiles_complete == len(PROFILE_ORDER)
+            and not payload["errors"]
+        )
         payload["stages"]["Final"] = {
-            "status": "complete" if not payload["errors"] else "partial",
+            "status": "complete" if cascade_ok else ("partial" if payload["profile_results"] else "failed"),
             "executed": bool(execute and writes_allowed and payload["gates_passed"]),
             "profile_count": len(payload["profile_results"]),
+            "profiles_cascade_complete": profiles_complete,
+            "profiles_writer_complete": writer_only_complete,
+            "cascade_complete": cascade_ok,
+            "truth": (
+                "all_profiles_xp_reconciled"
+                if cascade_ok
+                else "writer_complete_is_not_simulation_success"
+            ),
             "stage_z_required": stage_z_required,
         }
+        payload["cascade_complete"] = cascade_ok
 
         payload["airtable_writes_performed"] = _count_client_writes(client) - writes_before
 
