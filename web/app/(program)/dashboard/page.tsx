@@ -77,13 +77,25 @@ export default async function AthleteDashboardPage({ searchParams }: AthleteDash
         seasonLabel: item.seasonLabel,
       }));
 
+      const basePath = process.env.NEXT_PUBLIC_BASE_PATH?.replace(/\/$/, "") || "/shoot";
+
       return (
         <div data-testid="athlete-dashboard-authenticated">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm text-muted">
               Private family dashboard · {result.data.programLabel} · {result.data.seasonLabel}
             </p>
-            <SignOutButton />
+            <div className="flex flex-wrap items-center gap-2">
+              <form method="post" action={`${basePath}/api/curriculum/start`}>
+                <button
+                  type="submit"
+                  className="inline-flex min-h-10 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  Open Homework
+                </button>
+              </form>
+              <SignOutButton />
+            </div>
           </div>
           <AthleteDashboardView
             data={result.data}
