@@ -8,6 +8,7 @@ import { EmptyState, ErrorState } from "@/components/ui";
 import { getAthleteAuthSecret, isAthleteAuthConfigured } from "@/lib/auth/config";
 import { mintEnrollmentSelectionKey } from "@/lib/auth/selection-token";
 import { getAthleteSessionFromCookies } from "@/lib/auth/server-session";
+import { getCurriculumHubUrl } from "@/lib/curriculum/handoff";
 import { loadAuthenticatedAthleteDashboard } from "@/lib/data/athlete-dashboard";
 import { XpActivityLoadError } from "@/lib/data/xp-activity-loader";
 import { DASHBOARD_PLACEHOLDER } from "@/lib/release/public-surface";
@@ -77,13 +78,31 @@ export default async function AthleteDashboardPage({ searchParams }: AthleteDash
         seasonLabel: item.seasonLabel,
       }));
 
+      const basePath = process.env.NEXT_PUBLIC_BASE_PATH?.replace(/\/$/, "") || "/shoot";
+      const curriculumConfigured = Boolean(
+        getCurriculumHubUrl() &&
+          (process.env.CURRICULUM_HANDOFF_SECRET?.trim().length ?? 0) >= 32,
+      );
+
       return (
         <div data-testid="athlete-dashboard-authenticated">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm text-muted">
               Private family dashboard · {result.data.programLabel} · {result.data.seasonLabel}
             </p>
-            <SignOutButton />
+            <div className="flex flex-wrap items-center gap-2">
+              {curriculumConfigured ? (
+                <form method="post" action={`${basePath}/api/curriculum/start`}>
+                  <button
+                    type="submit"
+                    className="inline-flex min-h-10 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  >
+                    Open Homework
+                  </button>
+                </form>
+              ) : null}
+              <SignOutButton />
+            </div>
           </div>
           <AthleteDashboardView
             data={result.data}
