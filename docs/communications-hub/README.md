@@ -18,7 +18,9 @@
 
 **Mike 2026-08-19:** Make.com does **not** handle any Shooting Challenge emails. All of those emails go through **Resend** (Communications Hub). See [`../integrations/email-send-plane.md`](../integrations/email-send-plane.md).
 
-Exact Airtable script versions are still unconfirmed. This table is the Hub event map in GitHub, not a live version poll.
+**Version matrix overlay (2026-09-06):** Hub `main` **`e79637f`** (PR **#52** MERGED). SC **117 v2.2** (+ `athleteFirstName` producers) remain **pending Mike Airtable paste**. Cutover pointer: [`../deploy-checklists/parent-email-live-cutover-2026-09-02.md`](../deploy-checklists/parent-email-live-cutover-2026-09-02.md).
+
+Exact Airtable script versions are still unconfirmed for Live paste. This table is the Hub event map in GitHub, not a live version poll.
 
 | Source automation | Event / template | Dedupe key | GitHub contract | Live delivery |
 |-------------------|------------------|------------|-----------------|---------------|

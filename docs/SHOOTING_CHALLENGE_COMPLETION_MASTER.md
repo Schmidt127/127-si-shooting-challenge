@@ -10,7 +10,7 @@ This is the **detailed completion matrix and historical traceability record** fo
 | Field | Value |
 |-------|--------|
 | **Purpose** | Completion matrix, package traceability, and preserved historical evidence |
-| **Last updated** | **2026-09-06** (SC-SEASON-SIM-001 three-athlete prep **READY (not executed)**; five-enrollment superseded; post-#457 tip `ba969433`; SC-167/168/169 **COMPLETE / Live Tested** — **010 v10.14**; transactional purge COMPLETE; **SC-SEASON-SIM-002 CLOSED** / SC-001 prep completing; formulas restored; SC-163 **COMPLETE** — **066 v4.1**; SC-161/162/164/165 live-tested; SC-166 COMPLETE owner-verified 2026-09-06; FUT-029 + FUT-048 deferred — keep `d21ixrrrqpqz29.cloudfront.net`)
+| **Last updated** | **2026-09-06** (presim docs closeout tip **`4a81c0cf`** — PR **#472**/**#473**; Hub **PR #52** `e79637f`; **117 v2.2** paste pending Mike; ZA Attendance Label live / primary Id pending UI; **THREE-ATHLETE SIMULATION READY — NOT EXECUTED**; prior post-#457 `ba969433`; SC-167/168/169 **COMPLETE**; SC-002 CLOSED; SC-163 **066 v4.1**; FUT-029 + FUT-048 deferred)
 | **Production branch** | `master` |
 | **Vercel root** | `web/` |
 | **Production website** | https://www.fairfieldbasketballclub.com/shoot |
