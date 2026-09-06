@@ -209,7 +209,9 @@ python -m season_simulation execute-three `
   --simulation-id "SEASON-SIM-2027-<utc>-threeathlete"
 ```
 
-Live execute requires Mike phrase **`RUN 3-ATHLETE SEASON SIMULATION`** plus all tokens:
+Live execute requires Mike phrase **`RUN 3-ATHLETE SEASON SIMULATION`** plus all tokens.
+Completion requires **cascade XP reconciliation** (`cascade_complete`), not writer creates alone.
+Between profiles the harness polls Submission Base XP and may re-arm stuck sim rows.
 
 ```powershell
 python -m season_simulation execute-three `
@@ -221,6 +223,20 @@ python -m season_simulation execute-three `
   --authorization-phrase "RUN 3-ATHLETE SEASON SIMULATION" `
   --acknowledge-clock-override
 ```
+
+Three-athlete cleanup (merges `__athlete*-` registries; dry-run default):
+
+```powershell
+python -m season_simulation cleanup-three --simulation-id "SEASON-SIM-2027-<utc>-threeathlete"
+```
+
+Safe 010 re-arm preview (owned sim submissions only; dry-run default):
+
+```powershell
+python -m season_simulation rearm-submission-xp --simulation-id "SEASON-SIM-2027-<utc>-threeathlete"
+```
+
+Cascade failure investigation (T144833Z): [`docs/audits/SC-SEASON-SIM-001-CASCADE-FAILURE-20260906.md`](../../docs/audits/SC-SEASON-SIM-001-CASCADE-FAILURE-20260906.md)
 
 ### SC-SEASON-SIM-002 single-athlete (historical)
 

@@ -22,7 +22,7 @@ import json
 from dataclasses import replace
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 from .confirmation import ConfirmationError, require_three_athlete_execute_gates
 from .constants import SIM_START, THREE_ATHLETE_RUN_SUFFIX
@@ -37,8 +37,10 @@ from .formula_lifecycle import (
     snapshot_formulas,
     stage_f_formula_verify_hook,
 )
+from .cascade_settlement import stage_d_settlement_hook, stage_e_reconcile_hook
 from .cleanup import stage_h_cleanup_preview_hook
-from .run_registry import load_registry, save_registry
+from .rearm_submission_xp import run_rearm_submission_xp
+from .run_registry import save_registry
 from .writer import (
     build_execute_context_from_reference,
     field_names_for_table,
@@ -47,6 +49,10 @@ from .writer import (
 from .scenario_base import athlete_marker
 from .simulation_clock import SimulationClock
 from .three_athlete import build_three_athlete_scenarios
+
+# Per-profile cascade settle before the next athlete starts writing.
+DEFAULT_PROFILE_SETTLEMENT_TIMEOUT_S = 300.0
+DEFAULT_PROFILE_SETTLEMENT_POLL_S = 5.0
 
 # Ordered profile execution — athlete1 perfect first, then recovery, then edge.
 PROFILE_ORDER = (
@@ -322,31 +328,6 @@ def run_execute_three(
                 payload["stages"]["A_assemble"]["execute_context_error"] = str(exc)
                 return payload
 
-        stage_runners: list[tuple[str, Callable[..., dict[str, Any]]]] = [
-            ("B_create", lambda **kw: _stage_stub("B_create", **kw)),
-            ("C_activity", lambda **kw: _stage_stub("C_activity", **kw)),
-            ("D_settlement", lambda **kw: _stage_stub("D_settlement", **kw)),
-            ("E_reconcile", lambda **kw: _stage_stub("E_reconcile", **kw)),
-            (
-                "F_formula_verify",
-                lambda **kw: stage_f_formula_verify_hook(
-                    client,
-                    expect_gated=acknowledge_clock_override,
-                    snapshot_bundle=(snapshot_result or {}).get("bundle"),
-                ),
-            ),
-            ("G_email_verify", lambda **kw: _stage_stub("G_email_verify", **kw)),
-            (
-                "H_cleanup_hooks",
-                lambda **kw: stage_h_cleanup_preview_hook(
-                    run_id=run_id,
-                    registry_dir=registry_dir,
-                    client=client,
-                    profile=kw.get("profile"),
-                ),
-            ),
-        ]
-
         for profile in PROFILE_ORDER:
             scenario = scenarios[profile]
             profile_payload: dict[str, Any] = {
@@ -445,12 +426,106 @@ def run_execute_three(
                 payload["stages"]["failure_cleanup_preview"] = profile_payload["H_cleanup_hooks"]
                 break
 
-            for stage_name, runner in stage_runners[2:]:
-                hook = runner(allow_writes=writes_allowed, profile=profile)
-                profile_payload[stage_name] = hook
-                reg.last_completed_step = stage_name
-                save_registry(reg, registry_dir)
+            # Stage D — observed-state XP settlement (live execute only).
+            if writes_allowed and execute:
+                settlement = stage_d_settlement_hook(
+                    client,
+                    reg,
+                    run_id=run_id,
+                    profile=profile,
+                    allow_writes=False,
+                    timeout_s=DEFAULT_PROFILE_SETTLEMENT_TIMEOUT_S,
+                    poll_interval_s=DEFAULT_PROFILE_SETTLEMENT_POLL_S,
+                )
+                # Bounded safe re-arm for stuck latched rows, then re-poll once.
+                stuck = ((settlement.get("result") or {}).get("stuck") or [])
+                if stuck and not settlement.get("complete"):
+                    rearm = run_rearm_submission_xp(
+                        run_id=profile_registry_run_id(run_id, profile),
+                        registry_dir=registry_dir,
+                        client=client,
+                        execute=True,
+                        confirm=confirm,
+                        confirm_disposable=confirm_disposable,
+                        out_dir=out_dir,
+                    )
+                    settlement["rearm"] = rearm.to_dict()
+                    settlement = stage_d_settlement_hook(
+                        client,
+                        reg,
+                        run_id=run_id,
+                        profile=profile,
+                        allow_writes=False,
+                        timeout_s=DEFAULT_PROFILE_SETTLEMENT_TIMEOUT_S,
+                        poll_interval_s=DEFAULT_PROFILE_SETTLEMENT_POLL_S,
+                    )
+                    settlement["rearm_applied"] = True
+                profile_payload["D_settlement"] = settlement
+            else:
+                profile_payload["D_settlement"] = {
+                    "stage": "D_settlement",
+                    "profile": profile,
+                    "status": "planned",
+                    "writes": False,
+                    "complete": False,
+                    "note": "Settlement runs only on gated live execute",
+                }
 
+            # Stage E — truthful reconcile (writer complete ≠ cascade complete).
+            created_n = len(writer_result.get("created_records") or [])
+            reconcile = stage_e_reconcile_hook(
+                profile_payload.get("D_settlement"),
+                profile=profile,
+                writer_created=created_n,
+            )
+            if not writes_allowed or not execute:
+                reconcile = {
+                    **reconcile,
+                    "status": "planned",
+                    "complete": False,
+                    "note": "Dry-plan: cascade reconcile deferred to live execute",
+                    "errors": [],
+                }
+            profile_payload["E_reconcile"] = reconcile
+            reg.last_completed_step = "E_reconcile"
+
+            if writes_allowed and execute and not reconcile.get("complete"):
+                reg.status = "paused"
+                reg.pause_reason = "cascade_reconciliation_incomplete"
+                save_registry(reg, registry_dir)
+                payload["errors"].append(
+                    f"{profile}: cascade incomplete — "
+                    + "; ".join(reconcile.get("errors") or ["settlement failed"])
+                )
+                profile_payload["H_cleanup_hooks"] = stage_h_cleanup_preview_hook(
+                    run_id=run_id,
+                    registry_dir=registry_dir,
+                    client=client,
+                    profile=profile,
+                )
+                payload["profile_results"][profile] = profile_payload
+                payload["stages"]["failure_cleanup_preview"] = profile_payload["H_cleanup_hooks"]
+                # Stop before the next profile floods Automations 010/053 further.
+                break
+
+            profile_payload["F_formula_verify"] = stage_f_formula_verify_hook(
+                client,
+                expect_gated=acknowledge_clock_override,
+                snapshot_bundle=(snapshot_result or {}).get("bundle"),
+            )
+            profile_payload["G_email_verify"] = _stage_stub(
+                "G_email_verify", allow_writes=writes_allowed, profile=profile
+            )
+            profile_payload["H_cleanup_hooks"] = stage_h_cleanup_preview_hook(
+                run_id=run_id,
+                registry_dir=registry_dir,
+                client=client,
+                profile=profile,
+            )
+            if writes_allowed and execute:
+                reg.status = "complete"
+                reg.last_completed_step = "H_cleanup_hooks"
+            save_registry(reg, registry_dir)
             payload["profile_results"][profile] = profile_payload
 
     finally:
@@ -463,12 +538,40 @@ def run_execute_three(
                 snapshot_bundle=(snapshot_result or {}).get("bundle"),
             )
 
+        profiles_complete = sum(
+            1
+            for pr in payload["profile_results"].values()
+            if (pr.get("E_reconcile") or {}).get("complete")
+            or (
+                not execute
+                and (pr.get("B_create") or {}).get("mode") == "dry-plan"
+            )
+        )
+        writer_only_complete = sum(
+            1
+            for pr in payload["profile_results"].values()
+            if (pr.get("B_create") or {}).get("writer_status") == "complete"
+        )
+        cascade_ok = (
+            bool(execute and writes_allowed and payload["gates_passed"])
+            and profiles_complete == len(PROFILE_ORDER)
+            and not payload["errors"]
+        )
         payload["stages"]["Final"] = {
-            "status": "complete" if not payload["errors"] else "partial",
+            "status": "complete" if cascade_ok else ("partial" if payload["profile_results"] else "failed"),
             "executed": bool(execute and writes_allowed and payload["gates_passed"]),
             "profile_count": len(payload["profile_results"]),
+            "profiles_cascade_complete": profiles_complete,
+            "profiles_writer_complete": writer_only_complete,
+            "cascade_complete": cascade_ok,
+            "truth": (
+                "all_profiles_xp_reconciled"
+                if cascade_ok
+                else "writer_complete_is_not_simulation_success"
+            ),
             "stage_z_required": stage_z_required,
         }
+        payload["cascade_complete"] = cascade_ok
 
         payload["airtable_writes_performed"] = _count_client_writes(client) - writes_before
 

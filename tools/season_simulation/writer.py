@@ -67,6 +67,9 @@ NEVER_WRITE_FIELDS = frozenset(
 # does not fire 053 after create. Wait for formulas, then Enrollment clear→restore.
 FORMULA_WAIT_TIMEOUT_S = 60.0
 FORMULA_WAIT_POLL_S = 1.0
+# Bound wait for Automation 010 before Enrollment clear→restore (053 arm).
+SUBMISSION_XP_WAIT_TIMEOUT_S = 45.0
+SUBMISSION_XP_WAIT_POLL_S = 2.0
 # 055 (recordMatchesConditions) updates Current Shooting Streak independently of 053.
 # Gate Longest Streak Days is a rollup of Streak Occurrences.Gate Eligible Streak Days.
 
@@ -955,6 +958,51 @@ class SeasonSimWriter:
                 )
             time.sleep(FORMULA_WAIT_POLL_S)
 
+    def _wait_submission_base_xp_ready(self, submission_id: str) -> None:
+        """Best-effort wait for Automation 010 before Enrollment clear/restore.
+
+        Does not fail the writer on timeout — Stage D settlement / re-arm handle
+        residual gaps. Waiting here reduces SC-167-style concurrent 010 races
+        caused by clearing Enrollment while 010 is still creating XP.
+
+        Skipped for MemoryAirtableClient (no live Automations).
+        """
+        from .memory_client import MemoryAirtableClient
+
+        if isinstance(self.client, MemoryAirtableClient):
+            return
+
+        from .cascade_settlement import list_active_submission_xp_ids
+
+        deadline = time.monotonic() + SUBMISSION_XP_WAIT_TIMEOUT_S
+        list_records = getattr(self.client, "list_records", None)
+        while True:
+            if callable(list_records):
+                try:
+                    if list_active_submission_xp_ids(list_records, submission_id):
+                        return
+                except Exception:  # noqa: BLE001
+                    pass
+            try:
+                rec = self.client.get_record("Submissions", submission_id)
+                fields = rec.get("fields") or {}
+                needed = fields.get("Reconciliation Needed?")
+                last_sig = str(fields.get("Last Reconciled Signature") or "")
+                try:
+                    needed_one = (
+                        int(float(needed)) == 1 if needed not in (None, "") else False
+                    )
+                except (TypeError, ValueError):
+                    needed_one = bool(needed)
+                xp_links = fields.get("XP Events") or []
+                if isinstance(xp_links, list) and xp_links and last_sig and not needed_one:
+                    return
+            except Exception:  # noqa: BLE001
+                pass
+            if time.monotonic() >= deadline:
+                return
+            time.sleep(SUBMISSION_XP_WAIT_POLL_S)
+
     def _arm_submission_post_create(
         self,
         submission_id: str,
@@ -1029,6 +1077,10 @@ class SeasonSimWriter:
             return
 
         self._wait_submission_formulas_ready(submission_id)
+        # Prefer 010 Settlement before Enrollment clear/restore (053 arm).
+        # Clearing Enrollment while 010 is mid-flight re-arms Reconciliation Needed?
+        # and was the SC-167 amplifier; wait for Active SUBMISSION_XP or latch.
+        self._wait_submission_base_xp_ready(submission_id)
         # Watched-field delta that actually changes after create.
         self._update_records(
             "Submissions",
