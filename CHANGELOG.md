@@ -6,6 +6,14 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Docs
+
+#### Added
+- **SC-SEASON-SIM-001 three-athlete prep truth (2026-09-06)** — Agent 4 docs wave: Master List narrative restored from owner decision; five-enrollment design **superseded**; Section G regenerated; living docs (CURRENT-TRUTH, PROJECT_STATE, MASTER_REMAINING, Completion Master) aligned. Readiness audit: [`docs/audits/SC-SEASON-SIM-001-THREE-ATHLETE-PREP-READINESS-20260906.md`](./docs/audits/SC-SEASON-SIM-001-THREE-ATHLETE-PREP-READINESS-20260906.md). **No live execution.** Future auth: **`RUN 3-ATHLETE SEASON SIMULATION`**.
+
+#### Changed
+- **SC-SEASON-SIM-001 scope revision (2026-09-06)** — Replaces five-enrollment Planned/Future wording with three-athlete **READY (preparation completing — NOT executed)**. SC-SEASON-SIM-002 remains COMPLETE historical single-athlete package. Owner decision: [`docs/audits/OWNER-DECISIONS-20260906.md`](./docs/audits/OWNER-DECISIONS-20260906.md).
+
 ### Airtable
 
 #### Changed

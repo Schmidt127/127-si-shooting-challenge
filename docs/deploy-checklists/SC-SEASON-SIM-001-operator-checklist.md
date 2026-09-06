@@ -160,3 +160,11 @@ IF({Activity Date}, IF({Activity Date} > NOW(), 1, 0), BLANK())
 ```
 
 Record paste timestamps in cleanup closeout evidence.
+
+## Future live execute (NOT authorized in prep)
+
+```powershell
+cd tools
+$RUN = "SEASON-SIM-2027-$(Get-Date -Format 'yyyyMMddTHHmmssZ')-threeathlete"
+python -m season_simulation execute-three --execute --simulation-id $RUN --confirm "SEASON-SIMULATION-2027" --confirm-disposable "CONFIRM-DISPOSABLE-SEASON-SIM" --confirm-three-athlete "THREE-ATHLETE-SEASON-SIM-2027" --authorization-phrase "RUN 3-ATHLETE SEASON SIMULATION" --acknowledge-clock-override
+```

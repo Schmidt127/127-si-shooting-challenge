@@ -22,6 +22,7 @@
 | Public UX chrome | PR **#301** / **#304** MERGED `f3be964f` | MRW-G11 / CR-12 shipped |
 | FUT-002 cleanup | **Batch 1 COMPLETE** 2026-08-31 | Mike UI-deleted 5 `ZZZ DELETE —` fields; live **1350** fields / **0** ZZZ remaining; [`docs/testing/evidence/fut-002/batch1-live-verify.json`](docs/testing/evidence/fut-002/batch1-live-verify.json) |
 | Season-sim preflight | PR **#302** MERGED `eca40509` | SC-SEASON-SIM-002 + 057 no-repaste |
+| SC-001 three-athlete prep | Docs wave 2026-09-06 | **READY (not executed)**; five-enrollment superseded; no live execute |
 | This package | Core workflow reliability (MRW-F11 / MRW-I13) | PR **#305** |
 | Working tree note | Parallel agent WIP may remain in other worktrees | `git status` |
 

@@ -1,6 +1,6 @@
 # Generated Section G — operator queue
 
-**Generated:** 2026-09-05
+**Generated:** 2026-09-06
 **Command:** `node tools/docs/generate-work-list-section-g.mjs`
 **Source:** `docs/127-SI-MASTER-FUTURE-WORK-LIST.md`
 
@@ -71,7 +71,7 @@ Unified vocabulary: **COMPLETE** · **IN PROGRESS** · **BLOCKED** · **READY** 
 | **SC-163** | P1 | COMPLETE | no | — | Enrollments Goal Met Date reliability + backfill |
 | **SC-164** | P1 | COMPLETE | no | — | Levels progress UX simplification |
 | **SC-166** | P1 | IN PROGRESS (Mike-owned/manual; not core app blocker) | no | Mike | Coach Homework + Video Feedback active work queues |
-| **SC-SEASON-SIM-001** | P1 | READY | yes | Mike | ? 60-Day Five-Enrollment Season Simulation |
+| **SC-SEASON-SIM-001** | P1 | READY | yes | Mike | Three-Athlete Full-Season Simulation |
 | **FUT-002** | P2 | COMPLETE | no | — | ? Audit and remove unused Airtable fields |
 | **FUT-007** | P2 | IN PROGRESS | no | Cursor | ? Simplify future AWS media naming and support future media types |
 | **FUT-009** | P2 | COMPLETE | no | — | ? AWS storage structure and corrected-video naming workflow |

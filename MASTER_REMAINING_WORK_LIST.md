@@ -391,7 +391,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | **Verification required** | Met — see RESULTS.md |
 | **Recommended priority** | — |
 | **Definition of done** | Met 2026-08-30 |
-| **Notes** | Do not re-apply SC-PW-E2E for WAS `recl3DmBh22ADPWWe`. Season simulation still FUTURE (MRW-H11). |
+| **Notes** | Do not re-apply SC-PW-E2E for WAS `recl3DmBh22ADPWWe`. **SC-SEASON-SIM-001 / MRW-H11** three-athlete prep **READY (not executed)** — not FUTURE. |
 
 ---
 
@@ -425,7 +425,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 7. **Do not** activate FUT-003 until registration intentionally opens.  
 8. **Do not** implement **FUT-029** (Grade-Band Homework Platform / Homework Intake Adapter) — **Deferred — DO NOT IMPLEMENT** (**MRW-H12**); not part of current app completion.  
 8b. **Do not** implement **FUT-048** CloudFront custom domain now (**MRW-H13**) — optional/low cosmetic; keep `d21ixrrrqpqz29.cloudfront.net`; do not delay homework-resource migration.  
-9. **FUT-030** + **OPS-PURGE-20260905 COMPLETE** — transactional tables empty; **18 PHA** preserved. **FUT-002 Batch 1 + Batch 2 COMPLETE**. **SC-SEASON-SIM-001** remains FUTURE; **SC-SEASON-SIM-002** package **CLOSED** (next execute NOT authorized).  
+9. **FUT-030** + **OPS-PURGE-20260905 COMPLETE** — transactional tables empty; **18 PHA** preserved. **FUT-002 Batch 1 + Batch 2 COMPLETE**. **SC-SEASON-SIM-001** three-athlete prep **READY (not executed)**; **SC-SEASON-SIM-002** package **CLOSED** (next execute NOT authorized).  
 10. Wave closeout: tip **`ba969433`** (PR **#457**) · [`docs/audits/SC-WAVE-20260905-CLOSEOUT.md`](docs/audits/SC-WAVE-20260905-CLOSEOUT.md) · [`docs/audits/MASTER-LIST-RECONCILIATION-20260905.md`](docs/audits/MASTER-LIST-RECONCILIATION-20260905.md).
 
 ---
@@ -439,7 +439,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 - **FUT-002 batch 2** → **COMPLETE** (2026-09-05) — five stub IDs absent; live **1375** fields / **35** tables; later Drive/unknown batches remain FUTURE.  
 - **FUT-010** → dry-run **0 eligible** (R3); no delete request.  
 - **Weeks 2026–27 + 18 PHA** → **COMPLETE** (Early Bird Apr 25–May 1; due June 29; Week 9/Post-Challenge no HW).  
-- **SC-SEASON-SIM-001 / MRW-H11** → **FUTURE / Planned only** — not active.  
+- **SC-SEASON-SIM-001 / MRW-H11** → **READY (not executed)** — three-athlete prep completing 2026-09-06; five-enrollment **superseded**; live execute requires `RUN 3-ATHLETE SEASON SIMULATION`.  
 - **SC-WEEKLY-SETTLEMENT-E2E / MRW-F10** → **COMPLETE** (2026-08-30).  
 - **SC-ATHLETE-WF-001 / MRW-F09** → **COMPLETE (harness)**; **MRW-I13 CLOSED** (once per Count It).  
 - **SC-CORE-WF / MRW-F11** → **COMPLETE** (2026-08-30) — live Weeks/PHA audit + disposable apply; orphan inactive PHA deleted.  
