@@ -1,10 +1,10 @@
-"""Formula snapshot / restore lifecycle for SC-001 three-athlete execute (Stage Z).
+﻿"""Formula snapshot / restore lifecycle for SC-001 three-athlete execute (Stage Z).
 
 **Never use OMNI / in-base AI to generate or paste formulas.** OMNI has produced
 ``Unable to generate formula`` failures that leave fields invalid. Operators must
 paste from ``tools/season_simulation/FORMULAS-TO-PASTE.txt`` or committed docs,
 or use the Airtable Meta API / MCP ``update_field`` with **exact** formula text
-from this repo (documented hooks only — not invoked by default in season sim).
+from this repo (documented hooks only â€” not invoked by default in season sim).
 
 Stage Z (restore Production-normal) must run on success, failure, and interrupt
 whenever a temporary gated formula was installed.
@@ -146,12 +146,12 @@ def reject_invalid_formula_text(formula_text: str | None, *, field_name: str) ->
     text = (formula_text or "").strip()
     if not text:
         raise FormulaLifecycleError(
-            f"Formula for {field_name!r} is empty — refuse install/restore"
+            f"Formula for {field_name!r} is empty â€” refuse install/restore"
         )
     if OMNI_FORMULA_FAILURE_STRING in text:
         raise FormulaLifecycleError(
             f"Formula for {field_name!r} contains OMNI failure "
-            f"{OMNI_FORMULA_FAILURE_STRING!r} — refuse (paste from repo docs)"
+            f"{OMNI_FORMULA_FAILURE_STRING!r} â€” refuse (paste from repo docs)"
         )
 
 
@@ -197,7 +197,7 @@ def snapshot_formulas_from_meta(
     for table_name, field_name in fields:
         fld = _field_from_meta(meta_tables, table_name, field_name)
         if fld is None:
-            notes.append(f"Missing field {table_name}.{field_name} — skipped")
+            notes.append(f"Missing field {table_name}.{field_name} â€” skipped")
             continue
         opts = fld.get("options") or {}
         formula_text = str(opts.get("formula") or "")
@@ -229,7 +229,7 @@ def snapshot_formulas(
     confirm: str | None = None,
     run_id: str = "",
 ) -> dict[str, Any]:
-    """Stage 0 hook — capture Production formula text before temporary gate paste.
+    """Stage 0 hook â€” capture Production formula text before temporary gate paste.
 
     Read-only by default. Refuses live schema writes (fail-closed).
     """
@@ -240,7 +240,7 @@ def snapshot_formulas(
     )
     if allow_writes:
         raise FormulaLifecycleError(
-            "snapshot_formulas refuses live writes — read-only Meta snapshot only"
+            "snapshot_formulas refuses live writes â€” read-only Meta snapshot only"
         )
 
     meta_tables = _meta_tables_from_client(client)
@@ -336,7 +336,7 @@ def verify_formula_state(
     if expect_gated and not gated_any:
         errors.append(
             "Gated formula expected but Season Sim gate not detected "
-            "(verify paste from FORMULAS-TO-PASTE.txt — not OMNI)"
+            "(verify paste from FORMULAS-TO-PASTE.txt â€” not OMNI)"
         )
 
     ok = not errors
@@ -357,7 +357,7 @@ def stage_f_formula_verify_hook(
     expect_gated: bool = False,
     snapshot_bundle: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Stage F hook for execute-three — read-only formula verification."""
+    """Stage F hook for execute-three â€” read-only formula verification."""
     meta_tables = _meta_tables_from_client(client)
     baseline = None
     if snapshot_bundle:
@@ -393,7 +393,7 @@ def install_formula_hooks(
     bundle: FormulaSnapshotBundle | None = None,
     target_mode: str = "gated",
 ) -> dict[str, Any]:
-    """Document install hooks for temporary gated formulas — never writes live."""
+    """Document install hooks for temporary gated formulas â€” never writes live."""
     gated_targets = {
         "Submissions.Activity Date Is Future?": GATED_ACTIVITY_DATE_IS_FUTURE_FORMULA,
     }
@@ -440,7 +440,7 @@ def restore_stage_z(
         writer = getattr(client, "update_formula_field", None)
         if not callable(writer):
             errors.append(
-                f"No update_formula_field on client — Stage Z dry-run only for {key}"
+                f"No update_formula_field on client â€” Stage Z dry-run only for {key}"
             )
             continue
         try:
@@ -470,7 +470,7 @@ def restore_production_formulas(
     snapshot_bundle: dict[str, Any] | FormulaSnapshotBundle | None = None,
     reason: str = "stage_z_closeout",
 ) -> dict[str, Any]:
-    """Stage Z hook — restore Production-normal formulas after sim execute.
+    """Stage Z hook â€” restore Production-normal formulas after sim execute.
 
     Default dry-run. Pass ``snapshot_bundle`` from Stage 0 ``snapshot_formulas`` result.
     """
@@ -494,13 +494,13 @@ def restore_production_formulas(
             "restored": False,
             "dry_run": True,
             "client_present": client is not None,
-            "note": "No snapshot bundle — Stage Z restore skipped (nothing to restore)",
+            "note": "No snapshot bundle â€” Stage Z restore skipped (nothing to restore)",
             "errors": [],
         }
 
     if allow_writes:
         raise FormulaLifecycleError(
-            "restore_production_formulas refuses live writes — use Mike-authorized "
+            "restore_production_formulas refuses live writes â€” use Mike-authorized "
             "Meta API restore with dry_run=False when implemented"
         )
 
@@ -522,7 +522,7 @@ def restore_production_formulas(
 
 
 class FormulaLifecycleContext(AbstractContextManager["FormulaLifecycleContext"]):
-    """Context manager — Stage Z restore on __exit__ (always, including errors)."""
+    """Context manager â€” Stage Z restore on __exit__ (always, including errors)."""
 
     def __init__(
         self,
@@ -572,76 +572,3 @@ __all__ = [
     "save_formula_snapshot",
     "load_formula_snapshot",
 ]
-
-def snapshot_formulas(
-    client: Any | None,
-    *,
-    allow_writes: bool = False,
-    confirm: str | None = None,
-) -> dict[str, Any]:
-    """A1 execute-three Stage 0 hook — read-only snapshot when client has meta.
-
-    Never writes. ``allow_writes`` / ``confirm`` reserved for future live paste.
-    """
-    del confirm  # reserved
-    if allow_writes:
-        raise FormulaLifecycleError(
-            "snapshot_formulas refuses live schema writes — use documented Meta API paste"
-        )
-    if client is None:
-        return {
-            "status": "skipped",
-            "snapshotted": False,
-            "client_present": False,
-            "note": "No client — dry-plan Stage 0",
-        }
-    meta_fn = getattr(client, "meta_tables", None)
-    if not callable(meta_fn):
-        return {
-            "status": "skipped",
-            "snapshotted": False,
-            "client_present": True,
-            "note": "Client has no meta_tables — snapshot deferred",
-        }
-    try:
-        tables = meta_fn()
-        bundle = snapshot_formulas_from_meta(tables, run_id="stage0-preview")
-        return {
-            "status": "ok",
-            "snapshotted": True,
-            "client_present": True,
-            "bundle": bundle.to_dict(),
-        }
-    except Exception as exc:  # noqa: BLE001
-        return {
-            "status": "error",
-            "snapshotted": False,
-            "client_present": True,
-            "error": str(exc),
-        }
-
-
-def restore_production_formulas(
-    client: Any | None,
-    *,
-    allow_writes: bool = False,
-    confirm: str | None = None,
-) -> dict[str, Any]:
-    """A1 execute-three Stage Z hook — dry-run restore documentation by default.
-
-    Live restore requires allow_writes + explicit future authorization path via
-    ``restore_stage_z`` with a saved FormulaSnapshotBundle.
-    """
-    del confirm
-    if allow_writes:
-        raise FormulaLifecycleError(
-            "restore_production_formulas refuses unconstrained live writes — "
-            "call restore_stage_z(bundle, dry_run=False) only when authorized"
-        )
-    return {
-        "status": "dry_run",
-        "restored": False,
-        "client_present": client is not None,
-        "hooks": FORMULA_RESTORE_API_HOOK,
-        "note": "Stage Z documented; no formula mutation without saved snapshot + authorization",
-    }

@@ -16,7 +16,7 @@ from .constants import (
     TRANSACTIONAL_TABLES,
 )
 from .constants import THREE_ATHLETE_RUN_SUFFIX
-from .run_registry import RunRegistry, load_registry, run_marker
+from .run_registry import RunRegistry, load_registry, registry_path, run_marker
 
 # Tables that must never appear in delete targets (Weeks, PHA, curriculum, etc.).
 PROTECTED_NEVER_DELETE: frozenset[str] = frozenset(REFERENCE_TABLES) | frozenset(
@@ -226,6 +226,41 @@ def validate_three_athlete_run_id(run_id: str) -> None:
         )
 
 
+def three_athlete_registry_run_ids(shared_run_id: str) -> list[str]:
+    """Shared run_id plus per-profile registry keys from execute-three."""
+    validate_three_athlete_run_id(shared_run_id)
+    profile_suffixes = (
+        "athlete1-perfect",
+        "athlete2-recovery",
+        "athlete3-edge",
+    )
+    return [shared_run_id] + [f"{shared_run_id}__{suffix}" for suffix in profile_suffixes]
+
+
+def stage_h_cleanup_preview_hook(
+    *,
+    run_id: str,
+    registry_dir: Path,
+    client: Any | None = None,
+    profile: str | None = None,
+) -> dict[str, Any]:
+    """Stage H hook — read-only cleanup preview for shared + profile registries."""
+    preview = cleanup_preview_three(
+        run_id=run_id,
+        registry_dir=registry_dir,
+        client=client,
+    )
+    return {
+        "stage": "H_cleanup_hooks",
+        "profile": profile,
+        "status": "ok" if not preview.errors else "failed",
+        "writes": False,
+        "dry_run": True,
+        "plan_total": preview.plan.get("total_records", 0),
+        "errors": list(preview.errors),
+    }
+
+
 def build_three_athlete_cleanup_plan(
     *,
     run_id: str,
@@ -235,19 +270,83 @@ def build_three_athlete_cleanup_plan(
 ) -> CleanupPlan:
     """Registry-scoped cleanup plan for SC-SEASON-SIM-001 three-athlete runs."""
     validate_three_athlete_run_id(run_id)
-    plan = build_cleanup_plan(run_id=run_id, registry_dir=registry_dir, client=client)
+    sub_plans: list[CleanupPlan] = []
+    for reg_id in three_athlete_registry_run_ids(run_id):
+        sub = build_cleanup_plan(
+            run_id=reg_id,
+            registry_dir=registry_dir,
+            client=None,
+        )
+        if sub.total_records() > 0 or not sub.errors:
+            sub_plans.append(sub)
 
-    try:
-        reg = load_registry(registry_dir, run_id)
-        profiles = (reg.meta or {}).get("profiles") or {}
-        if isinstance(profiles, dict) and len(profiles) not in {0, 3}:
-            plan.warnings.append(
-                f"Expected 0 or 3 profiles in registry meta; got {len(profiles)}"
-            )
-    except FileNotFoundError:
-        pass
+    if not sub_plans:
+        return build_cleanup_plan(
+            run_id=run_id,
+            registry_dir=registry_dir,
+            client=client,
+        )
 
-    return plan
+    merged_targets: dict[str, list[str]] = {t: [] for t in DELETE_ORDER}
+    errors: list[str] = []
+    warnings: list[str] = []
+    attendees_patches: list[dict[str, Any]] = []
+    enrollment_ids: list[str] = []
+
+    for sub in sub_plans:
+        errors.extend(sub.errors)
+        warnings.extend(sub.warnings)
+        attendees_patches.extend(sub.attendees_patches)
+        for table, ids in sub.targets.items():
+            merged_targets.setdefault(table, [])
+            for rid in ids:
+                if rid not in merged_targets[table]:
+                    merged_targets[table].append(rid)
+        try:
+            reg = load_registry(registry_dir, sub.run_id)
+            for eid in enrollment_ids_from_registry(reg):
+                if eid not in enrollment_ids:
+                    enrollment_ids.append(eid)
+        except FileNotFoundError:
+            pass
+
+    merged_targets = {k: v for k, v in merged_targets.items() if v}
+
+    if client is not None and enrollment_ids:
+        descendants, desc_warnings = discover_automation_descendants(
+            client,
+            run_id=run_id,
+            enrollment_ids=enrollment_ids,
+        )
+        for table, ids in descendants.items():
+            merged_targets.setdefault(table, [])
+            for rid in ids:
+                if rid not in merged_targets[table]:
+                    merged_targets[table].append(rid)
+        warnings.extend(desc_warnings)
+
+    protected_errors = assert_no_protected_delete_targets(merged_targets)
+    errors.extend(protected_errors)
+
+    profile_count = sum(
+        1
+        for reg_id in three_athlete_registry_run_ids(run_id)[1:]
+        if registry_path(registry_dir, reg_id).exists()
+    )
+    if profile_count and profile_count != 3:
+        warnings.append(
+            f"Expected 3 profile registries; found {profile_count} under {run_id}"
+        )
+
+    return CleanupPlan(
+        run_id=run_id,
+        dry_run=True,
+        targets=merged_targets,
+        skipped_reference_tables=list(REFERENCE_TABLES),
+        attendees_patches=attendees_patches,
+        errors=errors,
+        warnings=warnings,
+    )
 
 
 def cleanup_preview_three(
