@@ -15,7 +15,18 @@ from .constants import (
     REGISTRY_DELETABLE_REFERENCE_TABLES,
     TRANSACTIONAL_TABLES,
 )
-from .run_registry import load_registry, run_marker
+from .constants import THREE_ATHLETE_RUN_SUFFIX
+from .run_registry import RunRegistry, load_registry, run_marker
+
+# Tables that must never appear in delete targets (Weeks, PHA, curriculum, etc.).
+PROTECTED_NEVER_DELETE: frozenset[str] = frozenset(REFERENCE_TABLES) | frozenset(
+    {
+        "Countries",
+        "States",
+        "Automations",
+        "Communications Hub",
+    }
+)
 
 # Delete order: dependents before parents.
 DELETE_ORDER = [
@@ -65,6 +76,248 @@ class CleanupResult:
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+def assert_no_protected_delete_targets(targets: dict[str, list[str]]) -> list[str]:
+    """Return errors if any protected table appears in delete targets."""
+    errors: list[str] = []
+    for table in targets:
+        if table in PROTECTED_NEVER_DELETE and table not in REGISTRY_DELETABLE_REFERENCE_TABLES:
+            errors.append(
+                f"Protected table {table!r} must never be in cleanup delete set"
+            )
+    return errors
+
+
+def enrollment_ids_from_registry(reg: RunRegistry) -> list[str]:
+    """Collect enrollment IDs for single- or three-athlete runs."""
+    ids: list[str] = []
+    if reg.enrollment_id:
+        ids.append(reg.enrollment_id)
+    profiles = (reg.meta or {}).get("profiles") or {}
+    if isinstance(profiles, dict):
+        for pdata in profiles.values():
+            if isinstance(pdata, dict):
+                eid = str(pdata.get("enrollment_id") or "").strip()
+                if eid.startswith("rec") and eid not in ids:
+                    ids.append(eid)
+    for rid in reg.ids_by_table().get("Enrollments") or []:
+        if rid not in ids:
+            ids.append(rid)
+    return ids
+
+
+def discover_automation_descendants(
+    client: Any,
+    *,
+    run_id: str,
+    enrollment_ids: list[str],
+) -> tuple[dict[str, list[str]], list[str]]:
+    """Discover XP / unlocks / streaks / email handoffs not in writer registry.
+
+    Returns (targets_by_table, warnings). Read-only — uses list_records only.
+    """
+    targets: dict[str, list[str]] = {}
+    warnings: list[str] = []
+    marker = run_marker(run_id)
+    list_records = getattr(client, "list_records", None)
+    if not callable(list_records):
+        warnings.append("No list_records on client — descendant scan skipped")
+        return targets, warnings
+
+    for enrollment_id in enrollment_ids:
+        # SC-169 unlock cascade
+        try:
+            from .unlock_cascade_query import list_unlocks_for_enrollment
+
+            unlock_rows = list_unlocks_for_enrollment(list_records, enrollment_id)
+            for row in unlock_rows:
+                uid = str(row.get("id") or "")
+                if uid:
+                    targets.setdefault("Athlete Achievement Unlocks", []).append(uid)
+        except Exception as exc:  # noqa: BLE001
+            warnings.append(f"Unlock scan for {enrollment_id}: {exc}")
+
+        # XP Events — Source Key / debug marker
+        for formula in (
+            f"FIND('{enrollment_id}', {{Source Key}} & '')",
+            f"FIND('{marker}', {{XP Reason Debug}} & '')",
+        ):
+            try:
+                rows = list_records(
+                    "XP Events",
+                    fields=["Source Key", "XP Reason Debug", "Active?"],
+                    formula=formula,
+                    max_records=300,
+                )
+            except Exception as exc:  # noqa: BLE001
+                warnings.append(f"XP scan {formula[:40]}…: {exc}")
+                continue
+            for row in rows or []:
+                rid = str(row.get("id") or "")
+                if rid:
+                    targets.setdefault("XP Events", []).append(rid)
+
+        # Streak Occurrences
+        for formula in (
+            f"FIND('{enrollment_id}', {{Enrollment Record ID}} & '')",
+            f"FIND('{marker}', {{Notes}} & '')",
+        ):
+            try:
+                rows = list_records(
+                    "Streak Occurrences",
+                    fields=["Notes", "Enrollment Record ID"],
+                    formula=formula,
+                    max_records=200,
+                )
+            except Exception as exc:  # noqa: BLE001
+                warnings.append(f"Streak scan: {exc}")
+                continue
+            for row in rows or []:
+                rid = str(row.get("id") or "")
+                if rid:
+                    targets.setdefault("Streak Occurrences", []).append(rid)
+
+        # Email Handoff Queue
+        for formula in (
+            f"FIND('{enrollment_id}', {{Enrollment Record ID}} & '')",
+            f"FIND('{marker}', {{Handoff Key}} & '')",
+        ):
+            try:
+                rows = list_records(
+                    "Email Handoff Queue",
+                    fields=["Handoff Key", "Enrollment Record ID"],
+                    formula=formula,
+                    max_records=200,
+                )
+            except Exception as exc:  # noqa: BLE001
+                warnings.append(f"Email handoff scan: {exc}")
+                continue
+            for row in rows or []:
+                rid = str(row.get("id") or "")
+                if rid:
+                    targets.setdefault("Email Handoff Queue", []).append(rid)
+
+    # Dedupe per table
+    for table, ids in list(targets.items()):
+        seen: list[str] = []
+        for rid in ids:
+            if rid not in seen:
+                seen.append(rid)
+        targets[table] = seen
+
+    return targets, warnings
+
+
+def merge_descendants_into_plan(plan: CleanupPlan, descendants: dict[str, list[str]]) -> None:
+    """Merge automation descendant IDs into an existing plan (registry wins first)."""
+    for table, ids in descendants.items():
+        plan.targets.setdefault(table, [])
+        for rid in ids:
+            if rid not in plan.targets[table]:
+                plan.targets[table].append(rid)
+
+
+def validate_three_athlete_run_id(run_id: str) -> None:
+    if THREE_ATHLETE_RUN_SUFFIX not in (run_id or ""):
+        raise ValueError(
+            f"Three-athlete cleanup requires run_id containing "
+            f"{THREE_ATHLETE_RUN_SUFFIX!r}: got {run_id!r}"
+        )
+
+
+def build_three_athlete_cleanup_plan(
+    *,
+    run_id: str,
+    registry_dir: Path,
+    client: AirtableClient | None = None,
+    discover_descendants: bool = True,
+) -> CleanupPlan:
+    """Registry-scoped cleanup plan for SC-SEASON-SIM-001 three-athlete runs."""
+    validate_three_athlete_run_id(run_id)
+    plan = build_cleanup_plan(run_id=run_id, registry_dir=registry_dir, client=client)
+
+    try:
+        reg = load_registry(registry_dir, run_id)
+        profiles = (reg.meta or {}).get("profiles") or {}
+        if isinstance(profiles, dict) and len(profiles) not in {0, 3}:
+            plan.warnings.append(
+                f"Expected 0 or 3 profiles in registry meta; got {len(profiles)}"
+            )
+    except FileNotFoundError:
+        pass
+
+    return plan
+
+
+def cleanup_preview_three(
+    *,
+    run_id: str,
+    registry_dir: Path,
+    client: AirtableClient | None = None,
+) -> CleanupResult:
+    """Read-only cleanup preview for three-athlete run (never deletes)."""
+    plan = build_three_athlete_cleanup_plan(
+        run_id=run_id,
+        registry_dir=registry_dir,
+        client=client,
+        discover_descendants=True,
+    )
+    audit = assert_no_protected_delete_targets(plan.targets)
+    errors = list(plan.errors) + audit
+    return CleanupResult(
+        run_id=run_id,
+        dry_run=True,
+        deleted={},
+        plan=plan.to_dict(),
+        errors=errors,
+    )
+
+
+def run_three_athlete_cleanup(
+    *,
+    run_id: str,
+    registry_dir: Path,
+    execute: bool = False,
+    confirm: str | None = None,
+    confirm_cleanup: str | None = None,
+    client: AirtableClient | None = None,
+    out_dir: Path | None = None,
+) -> CleanupResult:
+    """Three-athlete cleanup — dry-run by default; deletes only with full gates."""
+    validate_three_athlete_run_id(run_id)
+    if not execute:
+        return cleanup_preview_three(
+            run_id=run_id,
+            registry_dir=registry_dir,
+            client=client,
+        )
+    # Delegate to run_cleanup after descendant merge via pre-built plan
+    plan = build_three_athlete_cleanup_plan(
+        run_id=run_id,
+        registry_dir=registry_dir,
+        client=client,
+    )
+    if plan.errors:
+        result = CleanupResult(
+            run_id=run_id,
+            dry_run=True,
+            deleted={},
+            plan=plan.to_dict(),
+            errors=plan.errors,
+        )
+        _write_cleanup_report(result, out_dir)
+        return result
+    return run_cleanup(
+        run_id=run_id,
+        registry_dir=registry_dir,
+        execute=True,
+        confirm=confirm,
+        confirm_cleanup=confirm_cleanup,
+        simulation_id=run_id,
+        client=client,
+        out_dir=out_dir,
+    )
 
 
 def build_cleanup_plan(
@@ -180,6 +433,24 @@ def build_cleanup_plan(
 
     # Drop empty tables
     targets = {k: v for k, v in targets.items() if v}
+
+    # Automation descendants (XP / streaks / email) for all enrollments on run.
+    enrollment_ids = enrollment_ids_from_registry(reg) if not errors else []
+    if client is not None and enrollment_ids:
+        descendants, desc_warnings = discover_automation_descendants(
+            client,
+            run_id=run_id,
+            enrollment_ids=enrollment_ids,
+        )
+        for table, ids in descendants.items():
+            targets.setdefault(table, [])
+            for rid in ids:
+                if rid not in targets[table]:
+                    targets[table].append(rid)
+        warnings.extend(desc_warnings)
+
+    protected_errors = assert_no_protected_delete_targets(targets)
+    errors.extend(protected_errors)
 
     return CleanupPlan(
         run_id=run_id,
