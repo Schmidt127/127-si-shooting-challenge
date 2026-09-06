@@ -439,7 +439,8 @@ def cmd_execute_three(args: argparse.Namespace) -> int:
     elif not args.execute:
         client = _client(args, allow_writes=False)
     else:
-        client = _client(args, allow_writes=False)
+        # Writes stay gated inside execute-three / writer; client must allow them.
+        client = _client(args, allow_writes=True)
 
     try:
         result = run_execute_three(
