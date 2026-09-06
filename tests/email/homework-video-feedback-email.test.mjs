@@ -79,8 +79,8 @@ test("071 v4.4 enriches branded template payload without changing Hub routing", 
   assert.match(s071, /Parent Feedback Sent\? is already checked/);
 });
 
-test("073 v4.6 enriches branded template payload without changing Hub routing", () => {
-  assert.match(s073, /Version: v4\.6/);
+test("073 v4.7 enriches branded template payload without changing Hub routing", () => {
+  assert.match(s073, /Version: v4\.7/);
   assert.match(s073, /reviewStatus: "Review complete"/);
   assert.match(s073, /landingPageUrl: CANONICAL_URLS\.landing/);
   assert.match(s073, /shootPageUrl: CANONICAL_URLS\.shoot/);

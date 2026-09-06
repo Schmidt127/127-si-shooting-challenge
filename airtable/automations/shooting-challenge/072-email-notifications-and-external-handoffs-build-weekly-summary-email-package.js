@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-09
-Last GitHub Update: 2026-09-01 (v4.9 videosSubmittedThisWeek Hub payload)
+Last GitHub Update: 2026-09-06 (v4.9.2 athleteFirstName payload)
 
 Purpose:
 Build the Weekly Athlete Summary email package (subject/HTML/text/payload)
@@ -32,11 +32,13 @@ Send plane: 118 → 072 → 119 → 074 → 079 → Communications Hub → Resen
  * 072 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Build Weekly Summary Email Package
  *
- * Version: v4.9.1
+ * Version: v4.9.2
  * Date Written: 2026-06-20
- * Last Updated: 2026-09-01
+ * Last Updated: 2026-09-06
  *
  * VERSION HISTORY
+ * - v4.9.2 (2026-09-06): Weekly package JSON adds athleteFirstName (mirrors firstName
+ *   from Enrollment Athlete First Name) for Hub parent-email templates.
  * - v4.9.1 (2026-09-01): videoSubmissions payload and legacy lines use Custom Video File Name
  *   display precedence (custom → Video Asset File Name → "Video submission"); preserve both
  *   filename fields in payload for Hub/audit.
@@ -136,10 +138,10 @@ Send plane: 118 → 072 → 119 → 074 → 079 → Communications Hub → Resen
 
 const SCRIPT = {
   scriptName: "072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package",
-  version: "v4.9.1",
-  versionDate: "2026-09-01",
+  version: "v4.9.2",
+  versionDate: "2026-09-06",
   originalWrittenDate: "2026-06-20",
-  lastUpdated: "2026-09-01",
+  lastUpdated: "2026-09-06",
   folder: "07 - Email, Notifications, and External Handoffs",
   automationName: "072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package",
 };
@@ -1372,6 +1374,7 @@ async function main() {
   const packageData = {
     athleteName,
     firstName,
+    athleteFirstName: firstName,
     weekLabel,
     shootingDaysLogged,
     shootingDaysDisplay: perfectWeekCriteria.shootingDaysDisplay,

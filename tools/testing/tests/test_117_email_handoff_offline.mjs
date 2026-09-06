@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Offline tests for canonical Automation 117 (email-to-Make handoff).
+ * Offline contract tests for canonical Automation 117 (Hub handoff).
  * Does NOT test Stage 17 orchestrator (design-alt only).
  *
  * Run: node tools/testing/tests/test_117_email_handoff_offline.mjs
@@ -9,7 +9,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import vm from "node:vm";
+import { spawnSync } from "node:child_process";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const SCRIPT_PATH = resolve(
@@ -27,177 +27,54 @@ async function test(name, fn) {
   }
 }
 
-function makeOutput() {
-  const values = {};
-  return {
-    values,
-    set(k, v) {
-      values[k] = v;
-    },
-  };
-}
+const src = readFileSync(SCRIPT_PATH, "utf8");
 
-async function run117({ inputs, fetchImpl }) {
-  const source = readFileSync(SCRIPT_PATH, "utf8");
-  const output = makeOutput();
-  const logs = [];
-  const context = {
-    console: {
-      log: (...args) => logs.push(args),
-    },
-    input: {
-      config: () => ({ ...inputs }),
-    },
-    output,
-    fetch: fetchImpl,
-    remoteFetchAsync: undefined,
-    URL,
-    JSON,
-    String,
-    Error,
-    Date,
-    Math,
-    Object,
-    Array,
-    Map,
-    Set,
-    Promise,
-    parseInt,
-    Number,
-    Boolean,
-  };
-  vm.createContext(context);
-  let threw = null;
-  try {
-    await vm.runInContext("(async () => {\n" + source + "\n})()", context, {
-      timeout: 5000,
-      filename: "117-email.js",
-    });
-  } catch (e) {
-    threw = e;
+await test("117 is Hub handoff v2.2 (not Make webhook)", async () => {
+  assert.match(src, /version: "v2\.2"/);
+  assert.match(src, /Version: v2\.2/);
+  assert.match(src, /Email Handoff Queue/);
+  assert.match(src, /ZOOM_RECORDING_APPROVAL\|ZOOM_ATTENDANCE\|/);
+  assert.match(src, /templateKey: "ZOOM_RECORDING_APPROVED"/);
+  assert.doesNotMatch(src, /makeWebhookUrl|webhookUrl|hook\.us1\.make\.com|remoteFetchAsync/);
+  assert.doesNotMatch(src, /automationNumber\s*[:=]/);
+});
+
+await test("117 meetingName prefers Meeting Name without Display Name substitute", async () => {
+  assert.match(src, /meetingName: "Meeting Name"/);
+  assert.match(src, /Prefer Meeting Name only/);
+  assert.match(src, /meetingDisplayName: "Meeting Display Name"/);
+  assert.match(src, /payload\.meetingDisplayName/);
+  assert.match(src, /meetingDisplayName !== meetingName/);
+});
+
+await test("117 payload includes athleteFirstName and proof/review timestamps", async () => {
+  assert.match(src, /athleteFirst: "Athlete First Name"/);
+  assert.match(src, /payload\.athleteFirstName/);
+  assert.match(src, /recordingQuizSubmittedAt: "Recording Quiz Submitted At"/);
+  assert.match(src, /recordingQuizReviewedAt: "Recording Quiz Reviewed At"/);
+  assert.match(src, /payload\.proofSubmittedAt/);
+  assert.match(src, /payload\.recordingQuizSubmittedAt/);
+  assert.match(src, /payload\.reviewedAt/);
+  assert.match(src, /payload\.recordingQuizReviewedAt/);
+});
+
+await test("117 dateText uses America/Denver", async () => {
+  assert.match(src, /const TZ = "America\/Denver"/);
+  assert.match(src, /timeZone: TZ/);
+});
+
+await test("117 creates Email Handoff Queue rows", async () => {
+  assert.match(src, /createRecordAsync/);
+  assert.match(src, /created_handoff/);
+  assert.match(src, /existing_handoff/);
+});
+
+await test("script parses with node --check (await in top-level ok)", async () => {
+  const result = spawnSync(process.execPath, ["--check", SCRIPT_PATH], { encoding: "utf8" });
+  if (result.status !== 0) {
+    const err = `${result.stderr || ""}${result.stdout || ""}`;
+    assert.ok(/await is only valid in async functions/.test(err), err || "node --check failed");
   }
-  return { output, threw, logs };
-}
-
-const GOOD_URL = "https://hook.us1.make.com/abcdefghijklmnopqrstuvwxyz012345";
-const IDS = {
-  za: "recZoomAttend00001",
-  enr: "recEnrollment0001",
-  mtg: "recZoomMeeting001",
-};
-
-await test("sent response → success + actionOut=sent", async () => {
-  const { output, threw } = await run117({
-    inputs: {
-      webhookUrl: GOOD_URL,
-      recordId: IDS.za,
-      enrollmentRid: IDS.enr,
-      zoomMeetingRid: IDS.mtg,
-    },
-    fetchImpl: async () => ({
-      ok: true,
-      status: 200,
-      text: async () => JSON.stringify({ status: "sent" }),
-    }),
-  });
-  assert.equal(threw, null);
-  assert.equal(output.values.statusOut, "success");
-  assert.equal(output.values.actionOut, "sent");
-  assert.equal(output.values.makeStatus, "sent");
-  assert.equal(
-    output.values.sendKey,
-    `ZOOM_REC_EMAIL|${IDS.enr}|${IDS.mtg}|${IDS.za}`
-  );
-});
-
-await test("already_sent → success (idempotent)", async () => {
-  const { output, threw } = await run117({
-    inputs: {
-      webhookUrl: GOOD_URL,
-      recordId: IDS.za,
-      enrollmentRid: IDS.enr,
-      zoomMeetingRid: IDS.mtg,
-    },
-    fetchImpl: async () => ({
-      ok: true,
-      status: 200,
-      text: async () => JSON.stringify({ status: "already_sent" }),
-    }),
-  });
-  assert.equal(threw, null);
-  assert.equal(output.values.statusOut, "success");
-  assert.equal(output.values.actionOut, "already_sent");
-});
-
-await test("rejects non-US1 webhook host", async () => {
-  const { output, threw } = await run117({
-    inputs: {
-      webhookUrl: "https://hook.eu1.make.com/abc",
-      recordId: IDS.za,
-      enrollmentRid: IDS.enr,
-      zoomMeetingRid: IDS.mtg,
-    },
-    fetchImpl: async () => ({ ok: true, status: 200, text: async () => "{}" }),
-  });
-  assert.ok(threw);
-  assert.equal(output.values.statusOut, "error");
-});
-
-await test("rejects invalid recordId", async () => {
-  const { threw } = await run117({
-    inputs: {
-      webhookUrl: GOOD_URL,
-      recordId: "not-a-rec",
-      enrollmentRid: IDS.enr,
-      zoomMeetingRid: IDS.mtg,
-    },
-    fetchImpl: async () => ({ ok: true, status: 200, text: async () => "{}" }),
-  });
-  assert.ok(threw);
-});
-
-await test("HTTP 502 → error and does not claim sent", async () => {
-  const { output, threw } = await run117({
-    inputs: {
-      webhookUrl: GOOD_URL,
-      recordId: IDS.za,
-      enrollmentRid: IDS.enr,
-      zoomMeetingRid: IDS.mtg,
-    },
-    fetchImpl: async () => ({
-      ok: false,
-      status: 502,
-      text: async () => "bad gateway",
-    }),
-  });
-  assert.ok(threw);
-  assert.equal(output.values.statusOut, "error");
-  assert.notEqual(output.values.actionOut, "sent");
-});
-
-await test("unexpected Make status → error", async () => {
-  const { output, threw } = await run117({
-    inputs: {
-      webhookUrl: GOOD_URL,
-      recordId: IDS.za,
-      enrollmentRid: IDS.enr,
-      zoomMeetingRid: IDS.mtg,
-    },
-    fetchImpl: async () => ({
-      ok: true,
-      status: 200,
-      text: async () => JSON.stringify({ status: "queued" }),
-    }),
-  });
-  assert.ok(threw);
-  assert.equal(output.values.statusOut, "error");
-});
-
-await test("script does not reference Airtable base writes", async () => {
-  const src = readFileSync(SCRIPT_PATH, "utf8");
-  assert.equal(/updateRecordAsync|createRecordAsync/.test(src), false);
-  assert.ok(src.includes('automationNumber: "117f"') || src.includes('automationNumber: CONFIG.automationNumber'));
-  assert.ok(src.includes("ZOOM_RECORDING_APPROVED"));
 });
 
 const failed = results.filter((r) => !r.pass);

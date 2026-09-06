@@ -32,11 +32,13 @@ send email, render subject/HTML, modify Automation 079, or restore 075.
  * 078A - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Enrollment -> Create WELCOME Email Handoff
  *
- * Version: v1.5
+ * Version: v1.6
  * Date Written: 2026-08-11
- * Last Updated: 2026-09-02
+ * Last Updated: 2026-09-06
  *
  * VERSION HISTORY
+ * - v1.6 (2026-09-06): WELCOME payload adds athleteFirstName from Enrollment
+ *   Athlete First Name (or Athlete.First Name) when present.
  * - v1.5 (2026-09-02): Make Test Mode? configurable via automation input
  *   `testMode` (optional; default true for safe Production until Live cutover).
  * - v1.4 (2026-08-22): Enrich WELCOME Payload JSON with enrollment and Program
@@ -116,10 +118,10 @@ send email, render subject/HTML, modify Automation 079, or restore 075.
 
 const SCRIPT = {
     scriptName: "078A - Enrollment -> Create WELCOME Email Handoff",
-    version: "v1.5",
-    versionDate: "2026-09-02",
+    version: "v1.6",
+    versionDate: "2026-09-06",
     originalWrittenDate: "2026-08-11",
-    lastUpdated: "2026-09-02",
+    lastUpdated: "2026-09-06",
     folder: "07 - Email, Notifications, and External Handoffs",
     automationName: "078A - Enrollment -> Create WELCOME Email Handoff",
 };
@@ -144,6 +146,7 @@ const CONFIG = {
         parentFirstName: "Parent First Name",
         programInstance: "Program Instance",
         fullAthleteName: "Full Athlete Name",
+        athleteFirstName: "Athlete First Name",
         grade: "Grade",
         gradeBand: "Grade Band",
         schoolYear: "School Year",
@@ -329,6 +332,7 @@ function buildPayloadJson(payload) {
         athleteName,
         programName,
         programInstanceName: programName,
+        athleteFirstName: payload.athleteFirstName || undefined,
         parentName: payload.parentFirstName || undefined,
         parentFirstName: payload.parentFirstName || undefined,
         grade: payload.grade || undefined,
@@ -496,6 +500,10 @@ async function main() {
         const payloadJson = buildPayloadJson({
             athleteName,
             programName,
+            athleteFirstName: firstNonBlank(
+                getText(enrollment, CONFIG.enrollmentFields.athleteFirstName),
+                getText(athlete, CONFIG.athleteFields.firstName)
+            ),
             parentFirstName: getText(enrollment, CONFIG.enrollmentFields.parentFirstName),
             grade: getText(enrollment, CONFIG.enrollmentFields.grade),
             gradeBand: gradeBandName,

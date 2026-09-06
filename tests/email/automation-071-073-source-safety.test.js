@@ -75,17 +75,19 @@ t("071 does not write final sent fields", () => {
   assert.doesNotMatch(s071, /\[["']Parent Feedback Sent On["']\]\s*:/);
   assert.doesNotMatch(s071, /\[["']Parent Feedback Sent\?["']\]\s*:/);
 });
-t("073 v4.6 creates Communications Hub queue handoff (not Make webhook)", () => {
-  assert.match(s073, /Version: v4\.6/);
+t("073 v4.7 creates Communications Hub queue handoff (not Make webhook)", () => {
+  assert.match(s073, /Version: v4\.7/);
   assert.match(s073, /Email Handoff Queue/);
   assert.match(s073, /VIDEO_FEEDBACK\|VIDEO_FEEDBACK\|/);
   assert.match(s073, /created_handoff/);
   assert.match(s073, /existing_handoff/);
   assert.doesNotMatch(s073, /makeWebhookUrl|hook\.us1\.make\.com|remoteFetchAsync|sendTag:"VIDEO_FEEDBACK_PARENT"/);
 });
-t("073 v4.6 enriches branded template URLs and review status", () => {
+t("073 v4.7 enriches branded template URLs and athleteFirstName", () => {
   assert.match(s073, /landingPageUrl: CANONICAL_URLS\.landing/);
   assert.match(s073, /reviewStatus: "Review complete"/);
+  assert.match(s073, /athleteFirst: "Athlete First Name"/);
+  assert.match(s073, /payload\.athleteFirstName/);
 });
 t("073 validates active canonical Video Feedback source", () => {
   assert.match(s073, /Video Feedback is inactive\/retired/);
@@ -111,8 +113,8 @@ t("073 does not write final Sent fields", () => {
   assert.doesNotMatch(s073, /\[["']Parent Feedback Sent On["']\]\s*:/);
   assert.doesNotMatch(s073, /\[["']Parent Feedback Sent\?["']\]\s*:/);
 });
-t("074 v3.5 creates Communications Hub queue handoff (not Make webhook)", () => {
-  assert.match(s074, /Version: v3\.5/);
+t("074 v3.6 creates Communications Hub queue handoff (not Make webhook)", () => {
+  assert.match(s074, /Version: v3\.6/);
   assert.match(s074, /Email Handoff Queue/);
   assert.match(s074, /WEEKLY_ATHLETE_SUMMARY\|WEEKLY_ATHLETE_SUMMARY\|/);
   assert.match(s074, /created_handoff/);
@@ -124,8 +126,8 @@ t("074 clears Send to Make? and does not write Sent fields", () => {
   assert.doesNotMatch(s074, /\[["']Weekly Email Sent\?["']\]\s*:\s*true/);
   assert.doesNotMatch(s074, /\[["']Weekly Email Sent At["']\]\s*:/);
 });
-t("117 v2.1 creates Communications Hub queue handoff (not Make webhook)", () => {
-  assert.match(s117, /version: "v2\.1"/);
+t("117 v2.2 creates Communications Hub queue handoff (not Make webhook)", () => {
+  assert.match(s117, /version: "v2\.2"/);
   assert.match(s117, /Email Handoff Queue/);
   assert.match(s117, /eventType: "ZOOM_RECORDING_APPROVAL"/);
   assert.match(s117, /templateKey: "ZOOM_RECORDING_APPROVED"/);
