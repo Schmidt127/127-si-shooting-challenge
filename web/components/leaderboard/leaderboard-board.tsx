@@ -90,7 +90,9 @@ export function LeaderboardBoard({
 
       {filtered.length === 0 ? (
         <p className="rounded-2xl border border-border bg-card/60 px-6 py-12 text-center text-sm text-muted">
-          No athletes in this grade band yet.
+          {entries.length === 0
+            ? "Season standings will appear here once athletes are on the board."
+            : "No athletes in this grade band yet."}
         </p>
       ) : (
         <LeaderboardTable
