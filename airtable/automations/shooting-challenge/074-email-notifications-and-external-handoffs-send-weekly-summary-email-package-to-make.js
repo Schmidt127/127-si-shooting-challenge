@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-17
-Last GitHub Update: 2026-09-01 (v3.4 videosSubmittedThisWeek forwarding)
+Last GitHub Update: 2026-09-06 (v3.6 athleteFirstName payload)
 
 Purpose:
 Validate one Weekly Athlete Summary ready for parent email and create exactly
@@ -31,11 +31,13 @@ Filename may still say Make; current path is Hub queue create only.
  * 074 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Create Weekly Athlete Summary Communications Hub Handoff
  *
- * Version: v3.5
+ * Version: v3.6
  * Date Written: 2026-05-29
- * Last Updated: 2026-09-01
+ * Last Updated: 2026-09-06
  *
  * VERSION HISTORY
+ * - v3.6 (2026-09-06): Hub payload adds athleteFirstName from Enrollment
+ *   Athlete First Name (or 072 package firstName) when present.
  * - v3.5 (2026-09-01): videoFeedbackStatus summary uses Custom Video File Name display
  *   precedence (custom → Video Asset File Name → "Video submission").
  * - v3.4 (2026-09-01): Forward 072 v4.9 videosSubmittedThisWeek to Hub payload.
@@ -114,10 +116,10 @@ Filename may still say Make; current path is Hub queue create only.
 
 const SCRIPT = {
   scriptName: "074 - Email, Notifications, and External Handoffs - Create Weekly Athlete Summary Communications Hub Handoff",
-  version: "v3.5",
-  versionDate: "2026-09-01",
+  version: "v3.6",
+  versionDate: "2026-09-06",
   originalWrittenDate: "2026-05-29",
-  lastUpdated: "2026-09-01",
+  lastUpdated: "2026-09-06",
   folder: "07 - Email, Notifications, and External Handoffs",
   automationName: "074 - Email, Notifications, and External Handoffs - Create Weekly Athlete Summary Communications Hub Handoff",
 };
@@ -172,6 +174,7 @@ const CONFIG = {
       parentClean: "Parent Email - Cleaned",
       parentFirst: "Parent First Name",
       athlete: "Full Athlete Name",
+      athleteFirst: "Athlete First Name",
       level: "Current Level",
       nextLevel: "Next Level",
       streak: "Current Shooting Streak",
@@ -564,6 +567,11 @@ async function main() {
       : "No video submissions recorded for this week.";
 
   const recipients = [{ email: parent, role: "guardian" }];
+  const athleteFirstName = firstNonEmpty(
+    getText(enrollment, enrollmentsTable, CONFIG.fields.enr.athleteFirst),
+    prepared?.athleteFirstName,
+    prepared?.firstName
+  );
   const payload = {
     athleteName,
     parentFirstName: getText(enrollment, enrollmentsTable, CONFIG.fields.enr.parentFirst),
@@ -599,6 +607,7 @@ async function main() {
     zoomAttendanceStatus,
     perfectWeekCriteria,
   };
+  if (athleteFirstName) payload.athleteFirstName = athleteFirstName;
   if (weeklyVideoTarget != null) payload.weeklyVideoTarget = weeklyVideoTarget;
   if (nextLevel) payload.nextLevel = nextLevel;
   if (programName) payload.programName = programName;

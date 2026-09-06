@@ -29,11 +29,11 @@ function script(slotPrefix) {
 
 const PRODUCERS = [
   { slot: "071", version: "v4.4" },
-  { slot: "073", version: "v4.6" },
-  { slot: "074", version: "v3.5" },
-  { slot: "076", version: "v8.13" },
-  { slot: "078A", version: "v1.5" },
-  { slot: "117", version: "v2.1" },
+  { slot: "073", version: "v4.7" },
+  { slot: "074", version: "v3.6" },
+  { slot: "076", version: "v8.14" },
+  { slot: "078A", version: "v1.6" },
+  { slot: "117", version: "v2.2" },
 ];
 
 test("queue producers default testMode to safe true", () => {
@@ -48,9 +48,9 @@ test("queue producers default testMode to safe true", () => {
   }
 });
 
-test("078A v1.5 exposes optional testMode automation input without hardcoded recipient", () => {
+test("078A v1.6 exposes optional testMode automation input without hardcoded recipient", () => {
   const { body } = script("078A");
-  assert.match(body, /version:\s*"v1\.5"/);
+  assert.match(body, /version:\s*"v1\.6"/);
   assert.match(body, /testMode/);
   assert.match(body, /Parent Email - Cleaned/);
   assert.doesNotMatch(body, /schmidt@|mschmidt@fairfield/i);

@@ -14,7 +14,7 @@
 | WEEKLY | `WEEKLY_ATHLETE_SUMMARY` | `WEEKLY_ATHLETE_SUMMARY` | **074 v3.5** (after **072 v4.9.1** / **118 v2.0** / **119 v1.7**) | **079** |
 | HOMEWORK | `HOMEWORK_FEEDBACK` | `HOMEWORK_FEEDBACK` | **071 v4.3** | **079** |
 | VIDEO | `VIDEO_FEEDBACK` | `VIDEO_FEEDBACK` | **073 v4.6** | **079** |
-| ZOOM recording approval | `ZOOM_RECORDING_APPROVAL` | `ZOOM_RECORDING_APPROVED` | **117 v2.1** | **079** |
+| ZOOM recording approval | `ZOOM_RECORDING_APPROVAL` | `ZOOM_RECORDING_APPROVED` | **117 v2.2** | **079** |
 
 **Do not:** create Automation **121**; modify **101** / SC-147; re-enable Make/Gmail parent-email scenarios; run season simulation.
 
@@ -33,7 +33,7 @@ Compare Production `Automation Code` to GitHub `SCRIPT.version` / docblock befor
 | **076** | v8.12 | Confirm match |
 | **078A** | **v1.5** | **Paste v1.5 if UI/table not already v1.5** |
 | **079** | v2.5 | Confirm match; confirm `ingressSecret` input configured |
-| **117** | v2.1 | Confirm match |
+| **117** | v2.2 | Confirm match |
 | **118** | v2.0 | Confirm match (header may say “not yet deployed”) |
 | **119** | v1.7 | Confirm match |
 

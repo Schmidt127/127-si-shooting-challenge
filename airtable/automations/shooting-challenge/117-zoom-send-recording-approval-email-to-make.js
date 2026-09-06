@@ -5,9 +5,9 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 
-Version: v2.1
+Version: v2.2
 Date Written: 2026-07-20
-Last Updated: 2026-08-17
+Last Updated: 2026-09-06
 
 PURPOSE
 - Validate one Zoom Attendance recording-approval path for parent email.
@@ -25,6 +25,9 @@ IMPORTANT DESIGN RULES
 - Validate enrollmentRid and zoomMeetingRid match linked records when links exist.
 - Never mention Make route 117f in runtime payload.
 - testMode defaults true for controlled Hub sends.
+- meetingName prefers Zoom Meetings.Meeting Name only; never silently substitute Meeting Display Name.
+- meetingDisplayName is optional and only included when present and different from meetingName.
+- Date display fields use America/Denver via dateText.
 
 THIS IS NOT
 - Automation 117 orchestrator (normalize / XP / gate / perfect-week).
@@ -59,10 +62,10 @@ OUTPUTS
 
 const SCRIPT = {
   scriptName: "117 - Zoom - Create Zoom Recording Approval Communications Hub Handoff",
-  version: "v2.1",
-  versionDate: "2026-08-17",
+  version: "v2.2",
+  versionDate: "2026-09-06",
   originalWrittenDate: "2026-07-20",
-  lastUpdated: "2026-08-17",
+  lastUpdated: "2026-09-06",
   folder: "17 - Zoom Recording Credit",
   automationName: "117 - Zoom - Create Zoom Recording Approval Communications Hub Handoff",
 };
@@ -81,6 +84,8 @@ const CONFIG = {
       zoomMeeting: "Zoom Meeting",
       satisfactory: "Recording Quiz Satisfactory?",
       xpAmount: "Zoom XP Amount",
+      recordingQuizSubmittedAt: "Recording Quiz Submitted At",
+      recordingQuizReviewedAt: "Recording Quiz Reviewed At",
     },
     enr: {
       active: "Active?",
@@ -88,9 +93,11 @@ const CONFIG = {
       parentClean: "Parent Email - Cleaned",
       parentFirst: "Parent First Name",
       athlete: "Full Athlete Name",
+      athleteFirst: "Athlete First Name",
     },
     zm: {
       meetingName: "Meeting Name",
+      meetingDisplayName: "Meeting Display Name",
       recordingVideo: "Recording Link - Video",
       startTime: "Start Time",
     },
@@ -300,10 +307,15 @@ async function main() {
   if (!parent) throw new Error("No usable cleaned parent recipient on Enrollment.");
 
   const athleteName = first(text(enr, enrT, CONFIG.fields.enr.athlete), "Athlete");
+  const athleteFirstName = text(enr, enrT, CONFIG.fields.enr.athleteFirst);
+  // Prefer Meeting Name only — do not silently substitute Meeting Display Name.
   const meetingName = first(text(zm, zmT, CONFIG.fields.zm.meetingName), zm.name, "Zoom Meeting");
+  const meetingDisplayName = first(text(zm, zmT, CONFIG.fields.zm.meetingDisplayName), zm.name);
   const meetingStartText = dateText(raw(zm, zmT, CONFIG.fields.zm.startTime));
   const recordingUrl = text(zm, zmT, CONFIG.fields.zm.recordingVideo);
   const recordingXpValue = number(za, zaT, CONFIG.fields.za.xpAmount);
+  const proofSubmittedAt = dateText(raw(za, zaT, CONFIG.fields.za.recordingQuizSubmittedAt));
+  const recordingQuizReviewedAt = dateText(raw(za, zaT, CONFIG.fields.za.recordingQuizReviewedAt));
 
   const recipients = [{ email: parent, role: "guardian" }];
   const payload = {
@@ -313,6 +325,10 @@ async function main() {
     approvalResult: CONFIG.values.approvalResult,
     timing: CONFIG.values.timing,
   };
+  if (athleteFirstName) payload.athleteFirstName = athleteFirstName;
+  if (meetingDisplayName && meetingDisplayName !== meetingName) {
+    payload.meetingDisplayName = meetingDisplayName;
+  }
   if (meetingStartText) {
     payload.meetingDate = meetingStartText;
     payload.meetingStartText = meetingStartText;
@@ -320,6 +336,14 @@ async function main() {
   if (recordingUrl) payload.recordingUrl = recordingUrl;
   if (Number.isFinite(recordingXpValue) && recordingXpValue > 0) {
     payload.recordingXp = recordingXpValue;
+  }
+  if (proofSubmittedAt) {
+    payload.proofSubmittedAt = proofSubmittedAt;
+    payload.recordingQuizSubmittedAt = proofSubmittedAt;
+  }
+  if (recordingQuizReviewedAt) {
+    payload.reviewedAt = recordingQuizReviewedAt;
+    payload.recordingQuizReviewedAt = recordingQuizReviewedAt;
   }
 
   const queueData = queueFields(queueT, {

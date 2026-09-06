@@ -33,11 +33,13 @@ Filename may still say email package; current path is Hub queue create only.
  * 076 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Daily Submission Communications Hub Handoff
  *
- * Version: v8.13
+ * Version: v8.14
  * Date Written: 2026-05-29
  * Last Updated: 2026-09-06
  *
  * VERSION HISTORY
+ * - v8.14 (2026-09-06): Hub payload adds athleteFirstName from Enrollment
+ *   Athlete First Name when present (omit if blank).
  * - v8.13 (2026-09-06): SC-171 — Daily Submission email payload computes
  *   currentStreak deterministically from counted Submission Activity Dates
  *   (055-aligned logic; avoids stale Enrollment reads). Removes xpExtraCredit and
@@ -149,7 +151,7 @@ Filename may still say email package; current path is Hub queue create only.
 
 const SCRIPT = {
   scriptName: "076 - Daily Submission Communications Hub Handoff",
-  version: "v8.13",
+  version: "v8.14",
   versionDate: "2026-09-06",
   originalWrittenDate: "2026-05-29",
   lastUpdated: "2026-09-06",
@@ -989,6 +991,8 @@ async function main() {
     ...(homeworkItems.length ? { homeworkItems } : {}),
     ...(assignments.length ? { homeworkAssignments: assignments } : {}),
   };
+  const athleteFirstName = text(enrollment, enrT, CONFIG.fields.enr.first);
+  if (athleteFirstName) payload.athleteFirstName = athleteFirstName;
   if (!payload.activityDate || !payload.weekName) throw new Error("Submission Activity Date and Week Name are required.");
   if (payload.makes > payload.shots) throw new Error("Total Makes Counted cannot exceed Total Shots Counted.");
 

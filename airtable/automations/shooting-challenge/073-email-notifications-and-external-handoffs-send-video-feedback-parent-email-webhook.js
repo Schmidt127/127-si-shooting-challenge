@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-17
-Last GitHub Update: 2026-09-02 (v4.6 Season Sim Activity Date gate)
+Last GitHub Update: 2026-09-06 (v4.7 athleteFirstName payload)
 
 Purpose:
 Validate one Video Feedback record ready for parent email and create exactly
@@ -31,11 +31,13 @@ Filename may still say webhook; current path is Hub queue create only.
  * 073 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Create Video Feedback Communications Hub Handoff
  *
- * Version: v4.6
+ * Version: v4.7
  * Date Written: 2026-06-17
- * Last Updated: 2026-09-02
+ * Last Updated: 2026-09-06
  *
  * VERSION HISTORY
+ * - v4.7 (2026-09-06): Hub payload adds athleteFirstName from Enrollment
+ *   Athlete First Name when present (omit if blank).
  * - v4.6 (2026-09-02): SC-SEASON-SIM-002 dual gate — when linked Submission is a
  *   Season Sim test record (checkbox + SEASON-SIM| in Video Upload Note), compare
  *   Activity Date to Season Sim Clock Now instead of wall-clock today so future
@@ -130,10 +132,10 @@ Filename may still say webhook; current path is Hub queue create only.
 
 const SCRIPT = {
   scriptName: "073 - Email, Notifications, and External Handoffs - Create Video Feedback Communications Hub Handoff",
-  version: "v4.6",
-  versionDate: "2026-09-02",
+  version: "v4.7",
+  versionDate: "2026-09-06",
   originalWrittenDate: "2026-06-17",
-  lastUpdated: "2026-09-02",
+  lastUpdated: "2026-09-06",
   folder: "07 - Email, Notifications, and External Handoffs",
   automationName: "073 - Email, Notifications, and External Handoffs - Create Video Feedback Communications Hub Handoff",
 };
@@ -205,6 +207,7 @@ const CONFIG = {
       parentClean: "Parent Email - Cleaned",
       parentFirst: "Parent First Name",
       athlete: "Full Athlete Name",
+      athleteFirst: "Athlete First Name",
     },
     sub: {
       enrollment: "Enrollment",
@@ -664,6 +667,7 @@ async function main() {
     // Optional display field only.
   }
   const recipients = [{ email: parent, role: "guardian", displayName: athleteName }];
+  const athleteFirstName = getText(enrollment, enrollmentsTable, CONFIG.fields.enr.athleteFirst);
   const payload = {
     athleteName,
     parentFirstName: getText(enrollment, enrollmentsTable, CONFIG.fields.enr.parentFirst),
@@ -688,6 +692,7 @@ async function main() {
     canonicalSubmissionAssetId: assetId,
     canonicalWeekId: weekId,
   };
+  if (athleteFirstName) payload.athleteFirstName = athleteFirstName;
   if (!payload.programName) delete payload.programName;
 
   const queueData = queueFields(queueTable, {

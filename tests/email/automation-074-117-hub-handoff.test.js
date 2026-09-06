@@ -36,7 +36,7 @@ t("074 syntax", () => checkSyntax(p074));
 t("117 syntax", () => checkSyntax(p117));
 
 t("074 Hub key and event/template", () => {
-  assert.match(s074, /version: "v3\.5"/);
+  assert.match(s074, /version: "v3\.6"/);
   assert.match(s074, /eventType: "WEEKLY_ATHLETE_SUMMARY"/);
   assert.match(s074, /templateKey: "WEEKLY_ATHLETE_SUMMARY"/);
   assert.match(s074, /sourceTableToken: "WEEKLY_ATHLETE_SUMMARY"/);
@@ -54,6 +54,7 @@ t("074 no Make POST and clears handoff trigger only", () => {
 
 t("074 payload includes athlete and week fields", () => {
   assert.match(s074, /athleteName/);
+  assert.match(s074, /athleteFirstName/);
   assert.match(s074, /weekLabel/);
   assert.match(s074, /daysLogged/);
   assert.match(s074, /weeklyXp/);
@@ -61,7 +62,7 @@ t("074 payload includes athlete and week fields", () => {
 });
 
 t("117 Hub key and event/template", () => {
-  assert.match(s117, /version: "v2\.1"/);
+  assert.match(s117, /version: "v2\.2"/);
   assert.match(s117, /eventType: "ZOOM_RECORDING_APPROVAL"/);
   assert.match(s117, /templateKey: "ZOOM_RECORDING_APPROVED"/);
   assert.match(s117, /sourceTableToken: "ZOOM_ATTENDANCE"/);
@@ -75,6 +76,26 @@ t("117 no Make POST and no 117f runtime payload", () => {
   assert.doesNotMatch(payloadBlock, /117f|automationNumber|make/i);
   assert.match(s117, /approvalResult: CONFIG\.values\.approvalResult/);
   assert.match(s117, /timing: CONFIG\.values\.timing/);
+});
+
+t("117 v2.2 enriches meeting name / athlete / proof timestamps", () => {
+  assert.match(s117, /meetingName: "Meeting Name"/);
+  assert.match(s117, /meetingDisplayName: "Meeting Display Name"/);
+  assert.match(s117, /athleteFirst: "Athlete First Name"/);
+  assert.match(s117, /recordingQuizSubmittedAt: "Recording Quiz Submitted At"/);
+  assert.match(s117, /recordingQuizReviewedAt: "Recording Quiz Reviewed At"/);
+  assert.match(s117, /payload\.meetingDisplayName/);
+  assert.match(s117, /payload\.athleteFirstName/);
+  assert.match(s117, /payload\.proofSubmittedAt/);
+  assert.match(s117, /payload\.recordingQuizSubmittedAt/);
+  assert.match(s117, /payload\.reviewedAt/);
+  assert.match(s117, /payload\.recordingQuizReviewedAt/);
+  assert.match(s117, /timeZone:\s*TZ/);
+  assert.match(s117, /America\/Denver/);
+  assert.doesNotMatch(
+    s117,
+    /meetingName = first\([\s\S]*Meeting Display Name/
+  );
 });
 
 t("117 validates enrollment/meeting inputs against links", () => {

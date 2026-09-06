@@ -9,6 +9,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Docs
 
 #### Added
+- **Zoom Attendance primary field formula (2026-09-06)** — Docs-only plan to convert ZA primary `Id` (autoNumber) to a human-readable formula (`Athlete Name - Meeting Name - Meeting Date`, America/Denver). Mike UI required; MCP cannot convert autoNumber→formula. Checklist: [`docs/deploy-checklists/ZOOM-ATTENDANCE-PRIMARY-FIELD-FORMULA.md`](./docs/deploy-checklists/ZOOM-ATTENDANCE-PRIMARY-FIELD-FORMULA.md).
 - **SC-SEASON-SIM-001 three-athlete prep truth (2026-09-06)** — Agent 4 docs wave: Master List narrative restored from owner decision; five-enrollment design **superseded**; Section G regenerated; living docs (CURRENT-TRUTH, PROJECT_STATE, MASTER_REMAINING, Completion Master) aligned. Readiness audit: [`docs/audits/SC-SEASON-SIM-001-THREE-ATHLETE-PREP-READINESS-20260906.md`](./docs/audits/SC-SEASON-SIM-001-THREE-ATHLETE-PREP-READINESS-20260906.md). **No live execution.** Future auth: **`RUN 3-ATHLETE SEASON SIMULATION`**.
 
 #### Changed
@@ -17,6 +18,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **Parent email Hub payloads — athlete first name + Zoom meeting display (2026-09-06)** — **117 v2.2** prefers `Meeting Name` for `meetingName` (no silent Meeting Display Name substitute), adds optional `meetingDisplayName`, `athleteFirstName`, proof/review timestamps (`proofSubmittedAt` / `recordingQuizSubmittedAt`, `reviewedAt` / `recordingQuizReviewedAt`) with America/Denver `dateText`. Light `athleteFirstName` adds: **072 v4.9.2**, **073 v4.7**, **074 v3.6**, **076 v8.14**, **078A v1.6** (071 already had it). Trigger/recipient logic unchanged. ZA primary formula remains docs-only (see Docs).
 - **SC-171 Daily Submission + Homework Feedback presentation (2026-09-06)** — **076 v8.13** removes `xpExtraCredit` and `shootingPercentage` from daily handoff payload; computes `currentStreak` from counted Submission Activity Dates (055-aligned) instead of stale `Enrollments.Current Shooting Streak`. **071 v4.4** adds `submittedDate`, `reviewedDate`, and `athleteProfileUrl` for homework feedback. No XP award logic changes. Evidence: [`docs/audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md`](./docs/audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md) · checklist [`docs/deploy-checklists/SC-171-email-homework-presentation.md`](./docs/deploy-checklists/SC-171-email-homework-presentation.md).
 
 ### Web
