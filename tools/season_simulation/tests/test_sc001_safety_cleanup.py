@@ -37,7 +37,9 @@ from season_simulation.formula_lifecycle import (  # noqa: E402
     OMNI_FORMULA_FAILURE_STRING,
     install_formula_hooks,
     reject_invalid_formula_text,
+    restore_production_formulas,
     restore_stage_z,
+    snapshot_formulas,
     snapshot_formulas_from_meta,
     verify_formula_state,
 )
@@ -112,6 +114,19 @@ class TestFormulaLifecycle(unittest.TestCase):
             restore_mock.call_args.kwargs.get("reason"),
             "stage_z_failure_or_interrupt",
         )
+
+    def test_snapshot_formulas_hook_extends_stub(self):
+        result = snapshot_formulas(None, allow_writes=False, run_id=RUN_ID)
+        self.assertIn(result["status"], {"partial", "ok", "skipped"})
+        self.assertFalse(result.get("snapshotted") and result["status"] == "stub")
+        self.assertTrue(result.get("prohibit_omni_formula_generation"))
+
+    def test_restore_production_formulas_skips_without_bundle(self):
+        from season_simulation.formula_lifecycle import restore_production_formulas
+
+        result = restore_production_formulas(None, allow_writes=False)
+        self.assertEqual(result["status"], "skipped")
+        self.assertFalse(result["restored"])
 
     def test_install_hooks_never_executes(self):
         hooks = install_formula_hooks(target_mode="gated")

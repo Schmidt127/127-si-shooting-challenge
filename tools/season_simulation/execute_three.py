@@ -31,7 +31,12 @@ from .execute import (
     run_execute,
     summarize_intended_write_readiness,
 )
-from .formula_lifecycle import restore_production_formulas, snapshot_formulas
+from .formula_lifecycle import (
+    restore_production_formulas,
+    snapshot_formulas,
+    stage_f_formula_verify_hook,
+)
+from .cleanup import stage_h_cleanup_preview_hook
 from .run_registry import load_registry, save_registry
 from .writer import load_or_new_registry
 from .scenario_base import athlete_marker
@@ -197,6 +202,7 @@ def run_execute_three(
     }
 
     writes_before = _count_client_writes(client)
+    snapshot_result: dict[str, Any] | None = None
 
     # Stage 0 — Auth: full gates required only before live writes (--execute).
     if execute:
@@ -208,13 +214,15 @@ def run_execute_three(
             payload["stages"]["0_auth"] = {"status": "refused", "error": str(exc)}
             payload["airtable_writes_performed"] = _count_client_writes(client) - writes_before
             return payload
+        snapshot_result = snapshot_formulas(
+            client,
+            allow_writes=False,
+            confirm=confirm_for_formula or confirm,
+            run_id=run_id,
+        )
         payload["stages"]["0_auth"] = {
             "status": "passed",
-            "formula_snapshot": snapshot_formulas(
-                client,
-                allow_writes=False,
-                confirm=confirm_for_formula or confirm,
-            ),
+            "formula_snapshot": snapshot_result,
         }
     else:
         payload["gates_passed"] = False
@@ -261,9 +269,24 @@ def run_execute_three(
         ("C_activity", lambda **kw: _stage_stub("C_activity", **kw)),
         ("D_settlement", lambda **kw: _stage_stub("D_settlement", **kw)),
         ("E_reconcile", lambda **kw: _stage_stub("E_reconcile", **kw)),
-        ("F_formula_verify", lambda **kw: _stage_stub("F_formula_verify", **kw)),
+        (
+            "F_formula_verify",
+            lambda **kw: stage_f_formula_verify_hook(
+                client,
+                expect_gated=acknowledge_clock_override,
+                snapshot_bundle=(snapshot_result or {}).get("bundle"),
+            ),
+        ),
         ("G_email_verify", lambda **kw: _stage_stub("G_email_verify", **kw)),
-        ("H_cleanup_hooks", lambda **kw: _stage_stub("H_cleanup_hooks", **kw)),
+        (
+            "H_cleanup_hooks",
+            lambda **kw: stage_h_cleanup_preview_hook(
+                run_id=run_id,
+                registry_dir=registry_dir,
+                client=client,
+                profile=kw.get("profile"),
+            ),
+        ),
     ]
 
     for profile in PROFILE_ORDER:
@@ -326,11 +349,12 @@ def run_execute_three(
 
         payload["profile_results"][profile] = profile_payload
 
-    # Stage Z — formula restore (always stub in prep; no writes).
+    # Stage Z — formula restore (dry-run; uses Stage 0 snapshot when present).
     payload["stages"]["Z_formula_restore"] = restore_production_formulas(
         client,
         allow_writes=False,
         confirm=confirm_for_formula or confirm,
+        snapshot_bundle=(snapshot_result or {}).get("bundle"),
     )
 
     payload["stages"]["Final"] = {
