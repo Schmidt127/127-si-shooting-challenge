@@ -203,172 +203,191 @@ def run_execute_three(
 
     writes_before = _count_client_writes(client)
     snapshot_result: dict[str, Any] | None = None
+    # When --execute is requested, temporary formulas may already be live (operator
+    # paste). Stage Z must run on every exit path after that, including gate refusal,
+    # assemble failure, profile abort, and interrupt.
+    stage_z_required = bool(execute)
 
-    # Stage 0 — Auth: full gates required only before live writes (--execute).
-    if execute:
-        try:
-            require_three_athlete_execute_gates(**gates)
-            payload["gates_passed"] = True
-        except ConfirmationError as exc:
-            payload["errors"].append(str(exc))
-            payload["stages"]["0_auth"] = {"status": "refused", "error": str(exc)}
-            payload["airtable_writes_performed"] = _count_client_writes(client) - writes_before
-            return payload
-        snapshot_result = snapshot_formulas(
-            client,
-            allow_writes=False,
-            confirm=confirm_for_formula or confirm,
-            run_id=run_id,
-        )
-        payload["stages"]["0_auth"] = {
-            "status": "passed",
-            "formula_snapshot": snapshot_result,
-        }
-    else:
-        payload["gates_passed"] = False
-        payload["stages"]["0_auth"] = {
-            "status": "dry-plan",
-            "note": "Full gates evaluated only with --execute",
-        }
-
-    if THREE_ATHLETE_RUN_SUFFIX not in run_id:
-        payload["errors"].append(
-            f"run_id must contain {THREE_ATHLETE_RUN_SUFFIX!r}; got {run_id!r}"
-        )
-        payload["airtable_writes_performed"] = _count_client_writes(client) - writes_before
-        return payload
-
-    # Stage A — Assemble three profiles under shared run_id.
     try:
-        scenarios, ref_meta = build_three_athlete_scenarios(
-            run_id=run_id,
-            client=client,
-            offline_fixture=offline_fixture,
-        )
-    except ValueError as exc:
-        payload["errors"].append(str(exc))
-        payload["stages"]["A_assemble"] = {"status": "failed", "error": str(exc)}
-        payload["airtable_writes_performed"] = _count_client_writes(client) - writes_before
-        return payload
-
-    clock = SimulationClock(enabled=True, current_date=SIM_START, run_id=run_id)
-    payload["stages"]["A_assemble"] = {
-        "status": "ok",
-        "reference_meta": ref_meta,
-        "ownership_namespaces": {
-            p: profile_ownership_namespace(run_id, p) for p in PROFILE_ORDER
-        },
-    }
-
-    if client is not None and writes_allowed:
-        if hasattr(client, "allow_writes"):
-            client.allow_writes = True
-
-    stage_runners: list[tuple[str, Callable[..., dict[str, Any]]]] = [
-        ("B_create", lambda **kw: _stage_stub("B_create", **kw)),
-        ("C_activity", lambda **kw: _stage_stub("C_activity", **kw)),
-        ("D_settlement", lambda **kw: _stage_stub("D_settlement", **kw)),
-        ("E_reconcile", lambda **kw: _stage_stub("E_reconcile", **kw)),
-        (
-            "F_formula_verify",
-            lambda **kw: stage_f_formula_verify_hook(
+        # Stage 0 — snapshot first (read-only), then auth gates before any mutation.
+        if execute:
+            snapshot_result = snapshot_formulas(
                 client,
-                expect_gated=acknowledge_clock_override,
-                snapshot_bundle=(snapshot_result or {}).get("bundle"),
-            ),
-        ),
-        ("G_email_verify", lambda **kw: _stage_stub("G_email_verify", **kw)),
-        (
-            "H_cleanup_hooks",
-            lambda **kw: stage_h_cleanup_preview_hook(
+                allow_writes=False,
+                confirm=confirm_for_formula or confirm,
                 run_id=run_id,
-                registry_dir=registry_dir,
-                client=client,
-                profile=kw.get("profile"),
-            ),
-        ),
-    ]
+            )
+            try:
+                require_three_athlete_execute_gates(**gates)
+                payload["gates_passed"] = True
+            except ConfirmationError as exc:
+                payload["errors"].append(str(exc))
+                payload["stages"]["0_auth"] = {
+                    "status": "refused",
+                    "error": str(exc),
+                    "formula_snapshot": snapshot_result,
+                }
+                return payload
+            payload["stages"]["0_auth"] = {
+                "status": "passed",
+                "formula_snapshot": snapshot_result,
+            }
+        else:
+            payload["gates_passed"] = False
+            payload["stages"]["0_auth"] = {
+                "status": "dry-plan",
+                "note": "Full gates evaluated only with --execute",
+            }
 
-    for profile in PROFILE_ORDER:
-        scenario = scenarios[profile]
-        profile_payload: dict[str, Any] = {
-            "ownership_namespace": profile_ownership_namespace(run_id, profile),
-            "registry_run_id": profile_registry_run_id(run_id, profile),
+        if THREE_ATHLETE_RUN_SUFFIX not in run_id:
+            payload["errors"].append(
+                f"run_id must contain {THREE_ATHLETE_RUN_SUFFIX!r}; got {run_id!r}"
+            )
+            return payload
+
+        # Stage A — Assemble three profiles under shared run_id.
+        try:
+            scenarios, ref_meta = build_three_athlete_scenarios(
+                run_id=run_id,
+                client=client,
+                offline_fixture=offline_fixture,
+            )
+        except ValueError as exc:
+            payload["errors"].append(str(exc))
+            payload["stages"]["A_assemble"] = {"status": "failed", "error": str(exc)}
+            return payload
+
+        clock = SimulationClock(enabled=True, current_date=SIM_START, run_id=run_id)
+        payload["stages"]["A_assemble"] = {
+            "status": "ok",
+            "reference_meta": ref_meta,
+            "ownership_namespaces": {
+                p: profile_ownership_namespace(run_id, p) for p in PROFILE_ORDER
+            },
         }
 
-        reg = load_or_new_registry(
-            run_id=profile_registry_run_id(run_id, profile),
-            registry_dir=registry_dir,
-            athlete_name=str(scenario.athlete.get("display_name") or profile),
-            meta={
-                "shared_run_id": run_id,
-                "profile": profile,
+        if client is not None and writes_allowed:
+            if hasattr(client, "allow_writes"):
+                client.allow_writes = True
+
+        stage_runners: list[tuple[str, Callable[..., dict[str, Any]]]] = [
+            ("B_create", lambda **kw: _stage_stub("B_create", **kw)),
+            ("C_activity", lambda **kw: _stage_stub("C_activity", **kw)),
+            ("D_settlement", lambda **kw: _stage_stub("D_settlement", **kw)),
+            ("E_reconcile", lambda **kw: _stage_stub("E_reconcile", **kw)),
+            (
+                "F_formula_verify",
+                lambda **kw: stage_f_formula_verify_hook(
+                    client,
+                    expect_gated=acknowledge_clock_override,
+                    snapshot_bundle=(snapshot_result or {}).get("bundle"),
+                ),
+            ),
+            ("G_email_verify", lambda **kw: _stage_stub("G_email_verify", **kw)),
+            (
+                "H_cleanup_hooks",
+                lambda **kw: stage_h_cleanup_preview_hook(
+                    run_id=run_id,
+                    registry_dir=registry_dir,
+                    client=client,
+                    profile=kw.get("profile"),
+                ),
+            ),
+        ]
+
+        for profile in PROFILE_ORDER:
+            scenario = scenarios[profile]
+            profile_payload: dict[str, Any] = {
                 "ownership_namespace": profile_ownership_namespace(run_id, profile),
-            },
-        )
-
-        # Stage B + C — writer path (dry-plan when writes_allowed is False).
-        try:
-            writer_result = _run_profile_writer(
-                scenario=scenario,
-                clock=clock,
-                run_id=run_id,
-                profile=profile,
-                registry_dir=registry_dir,
-                client=client,
-                allow_writes=writes_allowed,
-                execute=execute,
-                confirm=confirm,
-                confirm_disposable=confirm_disposable,
-                enable_email_delivery=enable_email_delivery,
-                acknowledge_clock_override=acknowledge_clock_override,
-                execute_context=execute_context,
-            )
-            profile_payload["B_create"] = writer_result
-            profile_payload["C_activity"] = {
-                "status": "delegated_to_writer" if writes_allowed and execute else "planned",
-                "writer_status": writer_result.get("writer_status"),
+                "registry_run_id": profile_registry_run_id(run_id, profile),
             }
-            reg.last_completed_step = "C_activity"
-            reg.status = "running" if writes_allowed and execute else "planned"
-            save_registry(reg, registry_dir)
-        except (ExecuteAborted, ConfirmationError) as exc:
-            profile_payload["error"] = str(exc)
-            reg.status = "paused"
-            reg.pause_reason = str(exc)
-            save_registry(reg, registry_dir)
-            payload["errors"].append(f"{profile}: {exc}")
+
+            reg = load_or_new_registry(
+                run_id=profile_registry_run_id(run_id, profile),
+                registry_dir=registry_dir,
+                athlete_name=str(scenario.athlete.get("display_name") or profile),
+                meta={
+                    "shared_run_id": run_id,
+                    "profile": profile,
+                    "ownership_namespace": profile_ownership_namespace(run_id, profile),
+                },
+            )
+
+            # Stage B + C — writer path (dry-plan when writes_allowed is False).
+            # Per-profile SC-002 writer reuse is intentional — not CLI fall-through.
+            try:
+                writer_result = _run_profile_writer(
+                    scenario=scenario,
+                    clock=clock,
+                    run_id=run_id,
+                    profile=profile,
+                    registry_dir=registry_dir,
+                    client=client,
+                    allow_writes=writes_allowed,
+                    execute=execute,
+                    confirm=confirm,
+                    confirm_disposable=confirm_disposable,
+                    enable_email_delivery=enable_email_delivery,
+                    acknowledge_clock_override=acknowledge_clock_override,
+                    execute_context=execute_context,
+                )
+                profile_payload["B_create"] = writer_result
+                profile_payload["C_activity"] = {
+                    "status": "delegated_to_writer" if writes_allowed and execute else "planned",
+                    "writer_status": writer_result.get("writer_status"),
+                }
+                reg.last_completed_step = "C_activity"
+                reg.status = "running" if writes_allowed and execute else "planned"
+                save_registry(reg, registry_dir)
+            except (ExecuteAborted, ConfirmationError) as exc:
+                profile_payload["error"] = str(exc)
+                reg.status = "paused"
+                reg.pause_reason = str(exc)
+                save_registry(reg, registry_dir)
+                payload["errors"].append(f"{profile}: {exc}")
+                # Failure path: always run read-only cleanup preview + continue to Stage Z.
+                profile_payload["H_cleanup_hooks"] = stage_h_cleanup_preview_hook(
+                    run_id=run_id,
+                    registry_dir=registry_dir,
+                    client=client,
+                    profile=profile,
+                )
+                payload["profile_results"][profile] = profile_payload
+                payload["stages"]["failure_cleanup_preview"] = profile_payload["H_cleanup_hooks"]
+                break
+
+            for stage_name, runner in stage_runners[2:]:
+                hook = runner(allow_writes=writes_allowed, profile=profile)
+                profile_payload[stage_name] = hook
+                reg.last_completed_step = stage_name
+                save_registry(reg, registry_dir)
+
             payload["profile_results"][profile] = profile_payload
-            break
 
-        for stage_name, runner in stage_runners[2:]:
-            hook = runner(allow_writes=writes_allowed, profile=profile)
-            profile_payload[stage_name] = hook
-            reg.last_completed_step = stage_name
-            save_registry(reg, registry_dir)
+    finally:
+        # Stage Z — guaranteed after --execute (success, refusal, failure, interrupt).
+        if stage_z_required:
+            payload["stages"]["Z_formula_restore"] = restore_production_formulas(
+                client,
+                allow_writes=False,
+                confirm=confirm_for_formula or confirm,
+                snapshot_bundle=(snapshot_result or {}).get("bundle"),
+            )
 
-        payload["profile_results"][profile] = profile_payload
+        payload["stages"]["Final"] = {
+            "status": "complete" if not payload["errors"] else "partial",
+            "executed": bool(execute and writes_allowed and payload["gates_passed"]),
+            "profile_count": len(payload["profile_results"]),
+            "stage_z_required": stage_z_required,
+        }
 
-    # Stage Z — formula restore (dry-run; uses Stage 0 snapshot when present).
-    payload["stages"]["Z_formula_restore"] = restore_production_formulas(
-        client,
-        allow_writes=False,
-        confirm=confirm_for_formula or confirm,
-        snapshot_bundle=(snapshot_result or {}).get("bundle"),
-    )
+        payload["airtable_writes_performed"] = _count_client_writes(client) - writes_before
 
-    payload["stages"]["Final"] = {
-        "status": "complete" if not payload["errors"] else "partial",
-        "executed": bool(execute and writes_allowed and payload["gates_passed"]),
-        "profile_count": len(payload["profile_results"]),
-    }
+        out_dir.mkdir(parents=True, exist_ok=True)
+        report_path = out_dir / f"execute-three-{run_id}.json"
+        report_path.write_text(json.dumps(payload, indent=2, default=str) + "\n", encoding="utf-8")
+        payload["report_path"] = str(report_path)
 
-    payload["airtable_writes_performed"] = _count_client_writes(client) - writes_before
-
-    out_dir.mkdir(parents=True, exist_ok=True)
-    report_path = out_dir / f"execute-three-{run_id}.json"
-    report_path.write_text(json.dumps(payload, indent=2, default=str) + "\n", encoding="utf-8")
-    payload["report_path"] = str(report_path)
     return payload
 
 

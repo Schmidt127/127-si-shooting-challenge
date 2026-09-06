@@ -313,5 +313,53 @@ class TestDryRunThreeNeverWrites(unittest.TestCase):
             self.assertEqual(sum(len(t) for t in client.tables.values()), 0)
 
 
+class TestExecuteThreeStageZFinally(unittest.TestCase):
+    def test_wrong_phrase_still_runs_stage_z(self):
+        """--execute with bad gates must still invoke Stage Z (formulas may already be live)."""
+        client = MemoryAirtableClient(allow_writes=True)
+        with tempfile.TemporaryDirectory() as tmp:
+            result = run_execute_three(
+                run_id=RUN_ID,
+                execute=True,
+                confirm=CONFIRM_TOKEN,
+                confirm_disposable=CONFIRM_DISPOSABLE_TOKEN,
+                confirm_three_athlete="WRONG",
+                authorization_phrase="WRONG",
+                registry_dir=Path(tmp),
+                out_dir=Path(tmp),
+                client=client,
+                offline_fixture=True,
+                allow_writes=True,
+            )
+            self.assertFalse(result["gates_passed"])
+            self.assertEqual(result["airtable_writes_performed"], 0)
+            self.assertIn("Z_formula_restore", result["stages"])
+            self.assertTrue(result["stages"]["Final"].get("stage_z_required"))
+
+    def test_writer_abort_runs_cleanup_preview_and_stage_z(self):
+        from season_simulation.execute import ExecuteAborted as RealAbort
+
+        client = MemoryAirtableClient(allow_writes=True)
+        with tempfile.TemporaryDirectory() as tmp:
+            with mock.patch(
+                "season_simulation.execute_three._run_profile_writer",
+                side_effect=RealAbort("simulated abort"),
+            ):
+                result = run_execute_three(
+                    run_id=RUN_ID,
+                    **_gate_execute_kwargs(),
+                    registry_dir=Path(tmp),
+                    out_dir=Path(tmp),
+                    client=client,
+                    offline_fixture=True,
+                    allow_writes=False,
+                )
+            self.assertTrue(result["gates_passed"])
+            self.assertIn("Z_formula_restore", result["stages"])
+            first = next(iter(result["profile_results"].values()))
+            self.assertIn("H_cleanup_hooks", first)
+            self.assertIn("failure_cleanup_preview", result["stages"])
+
+
 if __name__ == "__main__":
     unittest.main()
