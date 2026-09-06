@@ -18,7 +18,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from .airtable_client import AirtableClient
-from .cleanup import run_cleanup
+from .cleanup import cleanup_preview_three, run_cleanup, run_three_athlete_cleanup
 from .confirmation import is_execute_fully_gated
 from .constants import (
     CONFIRM_CLEANUP_TOKEN,
@@ -68,13 +68,17 @@ def _parser() -> argparse.ArgumentParser:
             "execute",
             "execute-three",
             "cleanup",
+            "cleanup-preview-three",
+            "cleanup-three",
             "plan",
             "evidence",
             "weekly-email-stage",
         ],
         help=(
             "preflight=read-only checks; dry-run/dry-run-three=plan; "
-            "execute/execute-three/cleanup require confirm gates; evidence=export latest reports; "
+            "execute/execute-three/cleanup require confirm gates; "
+            "cleanup-preview-three/cleanup-three=SC-001 three-athlete (preview read-only); "
+            "evidence=export latest reports; "
             "weekly-email-stage=SC-168 119-substitute plan/verify/apply"
         ),
     )
@@ -571,6 +575,52 @@ def cmd_execute(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_cleanup_preview_three(args: argparse.Namespace) -> int:
+    if not args.run_id:
+        print(
+            "cleanup-preview-three requires --run-id / --simulation-id",
+            file=sys.stderr,
+        )
+        return 2
+    client = None
+    try:
+        client = _client(args, allow_writes=False)
+    except SystemExit:
+        print("No Airtable token — building cleanup plan from local registry only")
+    result = cleanup_preview_three(
+        run_id=args.run_id,
+        registry_dir=Path(args.registry_dir),
+        client=client,
+    )
+    print(json.dumps(result.to_dict(), indent=2))
+    return 1 if result.errors else 0
+
+
+def cmd_cleanup_three(args: argparse.Namespace) -> int:
+    if not args.run_id:
+        print("cleanup-three requires --run-id / --simulation-id", file=sys.stderr)
+        return 2
+    client = None
+    try:
+        client = _client(args, allow_writes=bool(args.execute))
+    except SystemExit:
+        if args.execute:
+            print("Execute cleanup requires Airtable token", file=sys.stderr)
+            return 2
+        print("No Airtable token — preview from local registry only")
+    result = run_three_athlete_cleanup(
+        run_id=args.run_id,
+        registry_dir=Path(args.registry_dir),
+        execute=bool(args.execute),
+        confirm=args.confirm,
+        confirm_cleanup=args.confirm_cleanup,
+        client=client,
+        out_dir=Path(args.out_dir),
+    )
+    print(json.dumps(result.to_dict(), indent=2))
+    return 1 if result.errors else 0
+
+
 def cmd_cleanup(args: argparse.Namespace) -> int:
     if not args.run_id:
         print("cleanup requires --run-id / --simulation-id", file=sys.stderr)
@@ -639,6 +689,10 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_execute_three(args)
     if args.command == "cleanup":
         return cmd_cleanup(args)
+    if args.command == "cleanup-preview-three":
+        return cmd_cleanup_preview_three(args)
+    if args.command == "cleanup-three":
+        return cmd_cleanup_three(args)
     if args.command == "evidence":
         return cmd_evidence(args)
     if args.command == "weekly-email-stage":
