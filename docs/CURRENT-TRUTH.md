@@ -229,16 +229,16 @@ Do **not** treat other Automations-table columns (trigger/conditions) as authori
 | **066** | **v4.1** | v4.1 | Live / **SC-163 COMPLETE / Live Tested** | Goal Met Date date-only + milestones; Athlete1 stamped **8/30/2026**; may remain ON — [`audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md`](./audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md) |
 | **013** | **v3.2.0** | v3.2.0 | Live / **aligned** (no paste needed) | VF create path. Live body matches GitHub **v3.2.0** (Agent 3 MCP 2026-09-05). Prior decline note historical — [`audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md`](./audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md) |
 | **021** | **v2.0** | v2.0 | **Live / ALIGNED** | Attachment Upload Status only; exact byte match GitHub; Phase A combined paste never installed — same correction audit |
-| **072** | **v4.9.1** | v4.9.1 | Live / **aligned** | Weekly summary email build — Agent 3 MCP 2026-09-05. Prior v4.8 packet historical — [`072-v4.8-operator-packet.md`](./deploy-checklists/072-v4.8-operator-packet.md) |
-| **073** | **v4.6** | v4.6 | Live / **aligned** | Video parent email Hub path — Agent 3 MCP 2026-09-05. Prior v4.4 packet historical — [`073-v4.4-operator-packet.md`](./deploy-checklists/073-v4.4-operator-packet.md) |
+| **072** | **v4.9.2** | v4.9.1 | GitHub ahead / **paste pending** | Weekly summary email build — `athleteFirstName` payload (2026-09-06). Prior live **v4.9.1** — [`072-v4.8-operator-packet.md`](./deploy-checklists/072-v4.8-operator-packet.md) |
+| **073** | **v4.7** | v4.6 | GitHub ahead / **paste pending** | Video parent email Hub path — `athleteFirstName` payload (2026-09-06). Prior live **v4.6** — [`073-v4.4-operator-packet.md`](./deploy-checklists/073-v4.4-operator-packet.md) |
 | **071** | **v4.4** | v4.3 | GitHub ahead / **SC-171 paste pending** | Homework Feedback — SC-171 dates + `athleteProfileUrl`; checklist [`SC-171-email-homework-presentation.md`](./deploy-checklists/SC-171-email-homework-presentation.md) |
-| **076** | **v8.13** | v8.12 | GitHub ahead / **SC-171 paste pending** | Daily Submission — SC-171 streak compute + payload trim; same checklist |
-| **074** | **v3.3** | v3.3 | Live / live-tested | Weekly summary Hub handoff |
+| **076** | **v8.14** | v8.12 | GitHub ahead / **paste pending** | Daily Submission — SC-171 streak + `athleteFirstName` (2026-09-06); live still **v8.12** until paste |
+| **074** | **v3.6** | v3.3 | GitHub ahead / **paste pending** | Weekly summary Hub handoff — `athleteFirstName` payload (2026-09-06); live still **v3.3** until paste |
 | **070a** | **v4.7** | **v4.7 Live** | Script-only graph (SC-156); trigger clears via script | Homework upload Make path |
 | **070b** | **v4.7** | v4.7 | Live | |
 | **070c** | **current live (repo v1.1)** | v1.1 | Live/enabled | Do not invent a new version |
 | **101** | **v6.8** | v6.8 | Live / **SC-147 COMPLETE** | Recording half-XP Live Tested; GitHub synced PR **#398**. Optional: re-paste GitHub year-aware Config percent hardening for byte-match |
-| **117** | **v2.1** | v2.1 | **Live** | Dynamic inputs: `recordId`, `enrollmentRid`, `zoomMeetingRid` |
+| **117** | **v2.2** | v2.1 | GitHub ahead / **paste pending** | Zoom recording approval Hub handoff — meeting display + athlete/timestamps (2026-09-06); live still **v2.1** until paste |
 
 **Record-ID classification (Mike final):** Dynamic for all record-based automations; optional on **041** only; intentionally blank on **056 / 078 / 118 / 119**. **065** and **066** use triggering-record `recordId` in Production. Closeout: [`deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md`](./deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md).
 
@@ -254,7 +254,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 |---|-------------------------|--------|
 | 070a | v4.7 | **Live** during Perfect Week controlled window (historically intentional OFF) |
 | 070c | v1.1 | **Enabled in PROD** â async video writeback verify after **070b**; do not invent a new version |
-| 076 | **v8.13** (GitHub) / **v8.12** (Live) | Daily Hub queue create — SC-171 streak + presentation trim pending paste |
+| 076 | **v8.14** (GitHub) / **v8.12** (Live) | Daily Hub queue create — streak + `athleteFirstName` pending paste |
 | 077 | v5.0 archive | **Deleted from Production** (2026-08-13 docs) â not live Make send |
 | 079 | v2.5 (GitHub + prod) | Ready queue â Hub â Resend; E2E weekly send 2026-08-24 |
 | 112 | legacy | Expected **OFF** |

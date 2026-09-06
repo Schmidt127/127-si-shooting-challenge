@@ -126,7 +126,7 @@ Do **not** treat Make/Gmail as the homework parent-email sender.
 | 074 | Weekly Athlete Summary | *confirm* | `074-...-send-weekly-summary-email-package-to-make.js` | Hub queue (filename historical “Make”) |
 | **078A** | Enrollments | Athlete + Parent Email - Cleaned + Program Instance | `078A-...-enrollment-create-welcome-email-handoff.js` | Email Handoff Queue `WELCOME` row |
 | 075 | Enrollments | **LEGACY RETIRED — do not enable** | `075-...-build-challenge-welcome-email.js` (archive only) | Formerly Enrollment subject/HTML; superseded by **078A → 079 → Hub** |
-| 076 | Submissions / Enrollments | *confirm* | `076-...-build-daily-submission-email-package.js` (**v8.12**) | Daily email package |
+| 076 | Submissions / Enrollments | *confirm* | `076-...-build-daily-submission-email-package.js` (**v8.14**) | Daily email package |
 | **079** | Email Handoff Queue | Status = Ready — *confirm in Airtable* | `079-...-send-queue-handoff-to-communications-hub.js` (**v2.5**) | Communications Hub WELCOME / DAILY_SUBMISSION handoff |
 | **118** | Weeks / Enrollments | Scheduled Sunday 05:00 America/Denver | `118-...-schedule-weekly-summary-email-build.js` (**v2.0**) | Arms Weekly Athlete Summary email build |
 | 077 | — | **Retired / deleted from Airtable — do not recreate** | `077-...-send-daily-submission-email-package-to-make.js` (GitHub historical source only) | No active native automation; daily-email Hub boundary is 076 → 079 |
