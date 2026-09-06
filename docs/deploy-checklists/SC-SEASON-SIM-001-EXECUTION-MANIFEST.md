@@ -1,4 +1,4 @@
-# SC-SEASON-SIM-001 — Execution Manifest (READY — NOT AUTHORIZED)
+# SC-SEASON-SIM-001 — Execution Manifest (READY — preparation completing — NOT AUTHORIZED)
 
 | | |
 |---|---|
@@ -8,7 +8,7 @@
 | **Athletes** | 3 disposable VERIFY profiles (Perfect / Recovery / Edge) |
 | **Window** | 2027-05-01 → 2027-06-30 inclusive (61 days) |
 | **Authorize command** | Mike says exactly: **`RUN 3-ATHLETE SEASON SIMULATION`** |
-| **This document does NOT authorize execute** | Preparation complete at **READY** |
+| **This document does NOT authorize execute** | Preparation completing in Agent 1–3 wiring wave; coordinator will stamp COMPLETE prep after merges |
 
 ---
 
@@ -24,8 +24,12 @@ python -m season_simulation preflight
 
 # 2) Three-athlete dry-run (read-only planner + expectation matrices)
 python -m season_simulation dry-run-three
+python -m season_simulation dry-run-three --offline-fixture
 
-# 3) EXECUTE — NEW run id required (never reuse T122531Z or other closed IDs)
+# 3) Future preflight (after temporary formula paste — same as SC-002)
+python -m season_simulation preflight --acknowledge-clock-override
+
+# 4) EXECUTE (future — NOT authorized during prep) — NEW run id required
 $RUN = "SEASON-SIM-2027-$(Get-Date -Format 'yyyyMMddTHHmmssZ')-threeathlete"
 python -m season_simulation execute `
   --execute `
@@ -40,6 +44,17 @@ python -m season_simulation execute `
 **Note:** Multi-athlete live writer orchestration is staged per profile using SC-002 writer (three sequential enrollments under one run ID). Execute without all three-athlete gates **must fail closed**.
 
 Optional email (allowlist only): add `--enable-email-delivery`, then SC-168 `weekly-email-stage` per enrollment.
+
+# 5) Cleanup preview (default — no deletes)
+python -m season_simulation cleanup --run-id $RUN
+
+# 6) Cleanup execute + formula restore verification (post-run)
+python -m season_simulation cleanup `
+  --run-id $RUN `
+  --execute `
+  --confirm "SEASON-SIMULATION-2027" `
+  --confirm-cleanup "CONFIRM-CLEANUP-SEASON-SIM"
+# Then MCP-verify Activity Date Is Future? restored to NOW()-only (Stage Z)
 
 ---
 
@@ -115,4 +130,4 @@ Live numbers may shift slightly when weekly goals resolve from Airtable Goal Rec
 - SC-002 historical closeout: [`../audits/SC-SEASON-SIM-002-T122531Z-CLOSEOUT-20260905.md`](../audits/SC-SEASON-SIM-002-T122531Z-CLOSEOUT-20260905.md)
 - Cleanup manifest: reuse SC-002 cleanup gates with SC-001 run ID
 
-**Status:** **READY** — simulation **NOT executed** during preparation.
+**Status:** **READY (preparation completing)** — simulation **NOT executed** during prep wave. Five-enrollment design **superseded** (2026-09-06).

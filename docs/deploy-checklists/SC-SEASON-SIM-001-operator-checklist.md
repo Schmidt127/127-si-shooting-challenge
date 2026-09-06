@@ -1,7 +1,7 @@
 # SC-SEASON-SIM-001 — Operator Checklist
 
 **Backlog:** SC-SEASON-SIM-001  
-**Status:** READY (preparation) — **NOT authorized for live execute**  
+**Status:** READY (preparation completing) — **NOT authorized for live execute**  
 **Environment:** Production `appn84sqPw03zEbTT` only — **no DEV environment**
 
 ---
@@ -23,6 +23,7 @@
 cd tools
 python3 -m season_simulation preflight
 python3 -m season_simulation dry-run-three
+python3 -m season_simulation dry-run-three --offline-fixture
 ```
 
 - [ ] Review `tools/season_simulation/reports/sc001-dry-run-latest.md`
@@ -76,7 +77,10 @@ Execute **must fail closed** if any gate missing.
 ## F. Cleanup
 
 ```powershell
+# Cleanup preview (default — lists targets, no deletes)
 python3 -m season_simulation cleanup --run-id $RUN
+
+# Cleanup execute
 python3 -m season_simulation cleanup `
   --run-id $RUN `
   --execute `
@@ -88,7 +92,7 @@ python3 -m season_simulation cleanup `
 - [ ] Extras pass for XP / Email Handoff / Streaks tied to run marker
 - [ ] Verify Athletes/Enrollments/Submissions = 0 for sim names
 - [ ] Restore Production formulas (Stage Z)
-- [ ] MCP verify `Activity Date Is Future?` has no Season Sim branch
+- [ ] **Restore verification:** MCP confirm `Activity Date Is Future?` has no Season Sim branch (NOW()-only)
 
 ---
 

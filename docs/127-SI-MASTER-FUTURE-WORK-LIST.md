@@ -2133,117 +2133,57 @@ Prove the **single disposable athlete** path end-to-end before any multi-enrollm
 
 
 
-### SC-SEASON-SIM-001 ? 60-Day Five-Enrollment Season Simulation
+### SC-SEASON-SIM-001 — Three-Athlete Full-Season Simulation
 
 
 
-**Priority:** P2  
+**Priority:** P1  
 
-**Status:** Planned / Future ? **not active**; do **not** begin implementation until Phase 2 brief and dependencies below are satisfied  
+**Status:** **READY (preparation completing — NOT executed)** (2026-09-06) — extends **SC-SEASON-SIM-002** infrastructure; **no DEV environment**; Production disposable records only  
 
-**Systems:** Testing harness, Program Instances, Enrollments, Submissions, Homework Completions, Video Feedback, Zoom attendance, Weekly Athlete Summaries, XP Events, achievements/milestones, email handoff (test mode), SC-PW-E2E infrastructure  
+**Systems:** `tools/season_simulation/`, Enrollments, Submissions, Homework Completions, Video Feedback, Zoom, WAS, XP Events, streaks, milestones, Perfect Week, weekly email stage (SC-168), Hub allowlist  
 
-**Related (distinct):** SC-001 / SC-002 / SC-005 (scenario matrix), **SC-PW-E2E** (Perfect Week disposable proof ? COMPLETE; do not re-`--apply` for closed fixtures), **FUT-010** (intake attachment cleanup ? **separate and unchanged**)
+**Related (distinct):** **SC-SEASON-SIM-002** (COMPLETE historical single-athlete package — do not rerun T122531Z) · SC-167/168/169 (COMPLETE) · **FUT-010** separate · **FUT-029** deferred · **SC-112** three-athlete auth (distinct — parent multi-child select, not season sim)
 
 
 
-Create a reusable, unattended end-to-end simulation of a complete **60-day** Shooting Challenge season using **five disposable test enrollments**. Reuse and extend existing **SC-PW-E2E** infrastructure where appropriate. Support both **controlled harness mode** and **production-like Airtable automation mode**.
+Reusable **three-athlete** full-season simulation (May 1 – June 30, 2027) proving success **and** failure branches together:
 
 
 
-**Purpose (eventual coverage):**
+| Athlete | Profile | Purpose |
+|---------|---------|---------|
+| Sim Perfect | `athlete1_perfect` | Maximum compliance — daily submissions, all homework, ≥3 videos/week, all Perfect Weeks, all reachable milestones |
+| Sim Recovery | `athlete2_recovery` | Missed days, broken streaks, mixed homework/video/Zoom, one late Perfect Week |
+| Sim Edge | `athlete3_edge` | Timing, idempotency, PW failure modes, late homework XP without retro PW |
 
 
 
-- Daily submissions  
+**Package (repo):** `scenarios_sc001.py`, `expectations_matrix.py`, `three_athlete.py`, CLI `dry-run-three`  
 
-- Missed days and broken streaks  
+**Manifest:** [`deploy-checklists/SC-SEASON-SIM-001-EXECUTION-MANIFEST.md`](./deploy-checklists/SC-SEASON-SIM-001-EXECUTION-MANIFEST.md)  
 
-- Homework completion and incomplete homework  
+**Operator:** [`deploy-checklists/SC-SEASON-SIM-001-operator-checklist.md`](./deploy-checklists/SC-SEASON-SIM-001-operator-checklist.md)  
 
-- Video submissions and feedback  
+**Matrix:** [`deploy-checklists/SC-SEASON-SIM-001-SCENARIO-MATRIX.md`](./deploy-checklists/SC-SEASON-SIM-001-SCENARIO-MATRIX.md)  
 
-- Zoom attendance  
+**Readiness audit:** [`audits/SC-SEASON-SIM-001-THREE-ATHLETE-PREP-READINESS-20260906.md`](./audits/SC-SEASON-SIM-001-THREE-ATHLETE-PREP-READINESS-20260906.md)
 
-- Weekly summaries and XP  
 
-- Levels and gates  
 
-- Streak achievements  
+**Authorization:** Mike must say exactly **`RUN 3-ATHLETE SEASON SIMULATION`** plus CLI confirm gates (`--confirm-three-athlete`, `--authorization-phrase`). Execute **NOT authorized** until Mike explicitly authorizes.
 
-- Shot milestones  
 
-- Perfect Week success and failure  
 
-- Backdated activity  
+**Historical note:** Prior five-enrollment design is **superseded** by this three-athlete package (2026-09-06). Do not implement five-enrollment paths.
 
-- Email handoffs in **test mode only** (no live delivery)  
 
-- Correction, replay, deduplication, and failure handling  
 
+**Acceptance (live execute — future):** Three disposable athletes created under new run ID; cascade matches precomputed expectation matrices; allowlist email only; cleanup + formula restore verified.
 
 
-**Proposed test profiles:**
 
-
-
-1. Complete season  
-
-2. Missed days and broken streaks  
-
-3. Strong shooting with incomplete homework/videos  
-
-4. Backdated activity and correction/replay  
-
-5. Perfect Week, milestones, levels, and edge cases  
-
-
-
-**Hard requirements (when implemented):**
-
-
-
-- Separate test program instance: **?Season Simulation Testing?**  
-
-- Test-only enrollment allowlist  
-
-- No real participant records  
-
-- No live email delivery  
-
-- Stop on first material failure  
-
-- Detailed evidence and failure report  
-
-- Automatic cleanup **or** clearly marked archive  
-
-- Controlled harness mode **and** production-like Airtable automation mode  
-
-- Reuse/extend SC-PW-E2E where appropriate  
-
-
-
-**Dependencies (must be resolved before implementation):**
-
-
-
-1. **FUT-010** remains separate and unchanged (this item does not own attachment cleanup).  
-
-2. Confirmed **test-environment isolation** (program instance + allowlist + no real participants).  
-
-3. Final **field and automation inventory** for the season path under test.  
-
-4. Decision on **cleanup vs archive** strategy for disposable simulation records.  
-
-5. Design of **automation polling and timeout handling** for unattended runs.
-
-
-
-**Acceptance criteria (future):** Phase 2 implementation brief exists; five profiles run unattended against the Season Simulation Testing instance; material failures stop the run with evidence; cleanup/archive policy executed; no live email; no real participant mutation; harness and automation modes both documented.
-
-
-
-**Do not implement from this entry alone.** Convert to a Phase 2 brief first. Do not modify Airtable or FUT-010 under this ID until that brief is approved.
+**Do not:** Create DEV base; rerun SC-SEASON-SIM-002 T122531Z; install 122; implement FUT-029; confuse with SC-161 leaderboard "3 athletes" or SC-112 multi-child auth.
 
 
 
@@ -2276,7 +2216,7 @@ Create a reusable, unattended end-to-end simulation of a complete **60-day** Sho
 
 **Systems:** `tools/season_simulation/`, Airtable gated formulas (temporary), automations 010/114/073/053/055/057/072, Hub Test Allowlist  
 
-**Related (distinct):** **SC-SEASON-SIM-001** (five-enrollment unattended package ? still Planned / Future; not started)
+**Related (distinct):** **SC-SEASON-SIM-001** (three-athlete reusable package — **READY**, not executed; supersedes five-enrollment design)
 
 
 
@@ -2616,7 +2556,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 
 | **SC-005** | Testing | Full end-to-end live PROD matrix (all major paths) | P0 | Live Tested in PROD | SC-001GÃ‡Ã´SC-004, core pipelines | Unblock B3 policy / B5 backdate week; streak+milestone when unlocks exist; email/failure inject GÃ¥Ã† SC-008 |
 
-| **SC-SEASON-SIM-001** | Testing | 60-day five-enrollment season simulation (reusable, unattended) | P2 | Planned / Future | Test isolation; field/automation inventory; cleanup/archive decision; polling/timeout design; SC-PW-E2E reuse; **FUT-010 separate** | Not active ? do not implement yet; five disposable profiles; harness + automation modes; stop on first material failure; evidence + cleanup/archive |
+| **SC-SEASON-SIM-001** | Testing | Three-athlete full-season simulation (Perfect / Recovery / Edge) | P1 | **READY** (not executed) | SC-SEASON-SIM-002 package; SC-167/168/169; allowlist; **no DEV** | Preparation completing 2026-09-06; live execute requires `RUN 3-ATHLETE SEASON SIMULATION`; stop on material failure; cleanup + formula restore |
 
 | **SC-007** | Testing | Duplicate and rerun testing (idempotency proof) | P0 | Live Tested in PROD | SC-066, SC-096+ | Optional: 010 UI re-trigger attest; milestone/PW/Zoom-attend live fixtures when present |
 
@@ -2940,6 +2880,8 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 
 
+
+
 ### 2026-08-27 SC-034 / Perfect Week closeout
 
 
@@ -3108,7 +3050,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | **SC-WEEKLY-SETTLEMENT-E2E** | **COMPLETE** | Weekly settlement matrix (WAS / calc / PW fail-closed / handoff prep). Docs `docs/testing/weekly-settlement/`; harness `tools/testing/sc-weekly-settlement.mjs`; RESULTS + DEFECT-REPORT 2026-08-30. MRW-F10. |
 
-| **SC-SEASON-SIM-001** | **Planned / Future** | 60-day five-enrollment season simulation ? narrative entry above Â§ D / FUT-026; MRW-H11. Do **not** implement yet. FUT-010 unchanged. Reuse SC-PW-E2E later where appropriate. |
+| **SC-SEASON-SIM-001** | **READY (not executed)** | Three-athlete full-season simulation — narrative entry above § D; MRW-H11. Preparation completing 2026-09-06. Live execute requires **`RUN 3-ATHLETE SEASON SIMULATION`**. **No DEV environment.** FUT-010 unchanged. Five-enrollment design **superseded**. |
 
 | **SC-SEASON-SIM-002** | **COMPLETE (package closed)** | T122531Z cleaned; formulas normal NOW()/TODAY(); next execute **NOT authorized** — [`deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md`](./deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md). Re-authorize only with exact `RUN SEASON SIMULATION` + **new** simulation ID. |
 
@@ -3189,8 +3131,8 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 | **FUT-029** | **Deferred — DO NOT IMPLEMENT** | Outside current app completion |
 | **AUT-013 / AUT-067 pastes** | **Optional / declined** | Structure-only GitHub newer; Mike declined paste 2026-09-05 |
 | **AUT-122** | **Superseded — never install** | Goal Met Date owned by **066 v4.1** |
-| **Season Simulation** | **CLOSED / next execute NOT authorized** | Live formulas normal `NOW()` / `TODAY()`; tip includes purge **#457** `ba969433` |
-| **Core application** | **Functionally complete** for current app scope | Remaining = launch-time ops (FUT-003/026; SC-SEASON-SIM-001 future), Mike-owned SC-166 polish, deferred FUT-029 / cosmetic (incl. **FUT-048** CloudFront custom domain) |
+| **Season Simulation** | **SC-002 CLOSED / SC-001 READY (not executed)** | SC-SEASON-SIM-002 T122531Z cleaned; formulas normal `NOW()` / `TODAY()`. SC-SEASON-SIM-001 three-athlete prep completing — live execute **NOT authorized** until Mike says `RUN 3-ATHLETE SEASON SIMULATION`. |
+| **Core application** | **Functionally complete** for current app scope | Remaining = launch-time ops (FUT-003/026; SC-SEASON-SIM-001 live execute when authorized), deferred FUT-029 / cosmetic (incl. **FUT-048** CloudFront custom domain) |
 | **OPS-PURGE-20260905** | **COMPLETE** | Transactional purge PR **#457**; evidence [`testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md`](./testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md) |
 
 **FUT-048 intake (2026-09-05):** Deferred optional CloudFront custom domain for `resources-homework` / `resources-homework-cf` — keep `d21ixrrrqpqz29.cloudfront.net`; no AWS/DNS/Airtable/Production changes required now.

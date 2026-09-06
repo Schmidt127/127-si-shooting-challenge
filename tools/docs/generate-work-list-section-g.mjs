@@ -182,7 +182,7 @@ function parseScWaveRows(text) {
 function parseSeasonSimAndSpecial(text) {
   const items = [];
   const specials = [
-    ["SC-SEASON-SIM-001", "60-Day Five-Enrollment Season Simulation"],
+    ["SC-SEASON-SIM-001", "Three-Athlete Full-Season Simulation"],
     ["SC-SEASON-SIM-002", "Athlete 1 Season Simulation Infrastructure"],
     ["SC-ATHLETE-WF-001", "Individual athlete workflow QA"],
     ["SC-PW-E2E", "Disposable Perfect Week E2E"],
@@ -200,7 +200,7 @@ function parseSeasonSimAndSpecial(text) {
     const g = text.split(/## G\. Current work list snapshot/)[1] || "";
     const gRow = g.match(new RegExp(`\\| \\*\\*${id}\\*\\* \\| \\*\\*?([^|\\n]+)`));
     if (gRow) statusRaw = gRow[1].replace(/\*\*/g, "").trim();
-    if (!statusRaw && id === "SC-SEASON-SIM-001") statusRaw = "Planned / Future";
+    if (!statusRaw && id === "SC-SEASON-SIM-001") statusRaw = "READY (not executed)";
     if (!statusRaw && id === "SC-SEASON-SIM-002") statusRaw = "COMPLETE";
     items.push({
       id,

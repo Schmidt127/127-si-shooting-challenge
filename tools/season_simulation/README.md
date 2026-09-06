@@ -5,7 +5,7 @@ Infrastructure for full-season disposable simulations of the Shooting Challenge.
 
 | | |
 |---|---|
-| **SC-SEASON-SIM-001** | Three-athlete package (Perfect / Recovery / Edge) — **READY, not executed** |
+| **SC-SEASON-SIM-001** | Three-athlete package (Perfect / Recovery / Edge) — **READY (prep completing)**, not executed |
 | **SC-SEASON-SIM-002** | Single-athlete historical package — **COMPLETE** (T122531Z) |
 | **Window** | 2027-05-01 → 2027-06-30 inclusive (**61** days) |
 | **Environment** | Production `appn84sqPw03zEbTT` only — **no DEV environment** |

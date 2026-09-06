@@ -4,7 +4,7 @@
 
 Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-09-05** (**`origin/master` = `ba969433`** / PR **#457** purge closeout). **SC-167/168/169 ALL COMPLETE / Live Tested** (010 **v10.14**); transactional purge COMPLETE; Season Sim **CLOSED** (next execute NOT authorized); formulas **`NOW()` / `TODAY()`**; FUT-048 Deferred (`d21ixrrrqpqz29.cloudfront.net`); SC-166 Mike-owned/manual not core blocker. Authority: [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) · [`audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md`](./audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md) · [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md)
+Last updated: **2026-09-06** (**SC-SEASON-SIM-001** three-athlete prep **READY (not executed)**; five-enrollment superseded). Prior baseline **2026-09-05** (`origin/master` = `ba969433` / PR **#457**). **SC-167/168/169 ALL COMPLETE / Live Tested** (010 **v10.14**); transactional purge COMPLETE; **SC-SEASON-SIM-002 CLOSED** (next execute NOT authorized); **SC-SEASON-SIM-001** prep completing; formulas **`NOW()` / `TODAY()`**; FUT-048 Deferred (`d21ixrrrqpqz29.cloudfront.net`); SC-166 COMPLETE per owner decision 2026-09-06. Authority: [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) · [`audits/SC-SEASON-SIM-001-THREE-ATHLETE-PREP-READINESS-20260906.md`](./audits/SC-SEASON-SIM-001-THREE-ATHLETE-PREP-READINESS-20260906.md) · [`127-SI-MASTER-FUTURE-WORK-LIST.md`](./127-SI-MASTER-FUTURE-WORK-LIST.md)
 
 **Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
