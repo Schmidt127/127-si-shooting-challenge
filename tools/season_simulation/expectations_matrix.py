@@ -12,12 +12,17 @@ from typing import Any, Sequence
 from .constants import DEFAULT_SHOT_MILESTONES_912, DEFAULT_STREAK_GATE_THRESHOLDS
 from .expectations_achievements import (
     ShotMilestoneDef,
-    build_achievement_expectation,
     select_crossed_shot_milestones,
+)
+from .perfect_week_eval import (
+    build_email_handoff_expectations,
+    evaluate_all_perfect_weeks,
+    evaluate_perfect_week,
 )
 from .scenario_base import (
     AthleteScenario,
     aggregate_weekly_shots,
+    compute_goal_met_crossing,
     estimate_weekly_goal_shots,
     weekly_threshold_tiers,
 )
@@ -77,6 +82,7 @@ class AthleteExpectationMatrix:
     expected_xp_by_category: dict[str, int]
     expected_level_note: str
     expected_goal_met_date: str
+    expected_goal_met_cumulative_shots: int | None
     expected_email_handoffs: dict[str, Any]
     notes: list[str] = field(default_factory=list)
 
@@ -96,6 +102,7 @@ class AthleteExpectationMatrix:
             "expected_xp_by_category": self.expected_xp_by_category,
             "expected_level_note": self.expected_level_note,
             "expected_goal_met_date": self.expected_goal_met_date,
+            "expected_goal_met_cumulative_shots": self.expected_goal_met_cumulative_shots,
             "expected_email_handoffs": self.expected_email_handoffs,
             "notes": self.notes,
         }
@@ -133,65 +140,29 @@ def _homework_summary(scenario: AthleteScenario, week_label: str) -> tuple[str, 
     if not items:
         if week_label == "Week 9":
             return "none", "n/a"
-        if scenario.profile == "athlete2_recovery" and week_label in {"Week 2", "Week 5"}:
-            return "skipped", "skipped"
-        return "none", "n/a"
+        return "skipped", "skipped"
     outcomes = {str(i.get("outcome") or "") for i in items}
     timing = str(items[0].get("timing_note") or items[0].get("late_status") or "on_time")
     if "Needs Revision" in outcomes:
         return "needs_revision_then_fix", timing
     if any(i.get("late_status") == "late_ineligible" for i in items):
         return "late_satisfactory", timing
+    if any(str(i.get("timing_note") or "") == "late_xp_ok_no_retro_pw" for i in items):
+        return "late_satisfactory", timing
     return "complete_satisfactory", timing
 
 
-def _perfect_week_expectation(
+def _format_goal_met_expectation(
     scenario: AthleteScenario,
-    week_label: str,
-    *,
-    weekly_total: int,
-    goal_est: int,
-    video_count: int,
-    homework: str,
-    zoom_state: str,
-    submit_days: int,
-    miss_days: int,
+    crossing_date: str | None,
+    cumulative_on_date: int | None,
+    total_shots: int,
 ) -> str:
-    profile = scenario.profile
-    ratio = weekly_total / goal_est if goal_est else 0
-
-    if profile == "athlete1_perfect":
-        if week_label == "Week 9" and submit_days < 7:
-            return "pass_partial_window"
-        if video_count >= 3 and homework.startswith("complete") and "live" in zoom_state:
-            return "pass"
-        if week_label == "Early Bird":
-            return "pass" if video_count >= 1 and homework.startswith("complete") else "fail_video"
-        return "pass" if video_count >= 3 else "fail_video"
-
-    if profile == "athlete2_recovery":
-        if week_label == "Week 3":
-            return "fail_no_video"
-        if week_label == "Week 4":
-            return "fail_missed_zoom"
-        if week_label in {"Week 2", "Week 5"}:
-            return "fail_homework_skipped"
-        if week_label == "Week 7" and video_count >= 3 and ratio >= 1.0:
-            return "pass_recovery"
-        if ratio < 1.0:
-            return "fail_weekly_shots"
-        return "fail_mixed"
-
-    # athlete3_edge
-    failures = {
-        "Week 2": "fail_daily_shooting",
-        "Week 3": "fail_video_count",
-        "Week 5": "fail_homework_timing",
-        "Week 4": "fail_required_zoom",
-        "Week 6": "pass",
-        "Week 8": "fail_single_requirement",
-    }
-    return failures.get(week_label, "fail_mixed" if miss_days else "pass")
+    if crossing_date and cumulative_on_date is not None:
+        return f"{crossing_date} (cumulative {cumulative_on_date:,} shots)"
+    if total_shots < scenario.goal_total_shots:
+        return f"Not reached — {total_shots:,} planned of {scenario.goal_total_shots:,} goal"
+    return "TBD — cumulative total below season goal on last day"
 
 
 def build_athlete_expectation_matrix(scenario: AthleteScenario) -> AthleteExpectationMatrix:
@@ -207,11 +178,12 @@ def build_athlete_expectation_matrix(scenario: AthleteScenario) -> AthleteExpect
         grade_band_name="9-12",
     )
 
+    pw_evaluations = {ev.week_label: ev for ev in evaluate_all_perfect_weeks(scenario)}
+
     rows: list[WeeklyExpectationRow] = []
     threshold_awards: list[dict[str, Any]] = []
     pw_pass = 0
     running_shots = 0
-    milestone_labels: list[str] = []
 
     for label in WEEK_ORDER:
         bucket = weekly_agg.get(label) or {
@@ -237,7 +209,6 @@ def build_athlete_expectation_matrix(scenario: AthleteScenario) -> AthleteExpect
             for m in crossed
             if prev_running < m.shot_count <= running_shots
         ]
-        milestone_labels.extend(week_crossings)
 
         hw_expected, hw_timing = _homework_summary(scenario, label)
         live_z = int(bucket.get("live_zoom") or 0)
@@ -246,18 +217,11 @@ def build_athlete_expectation_matrix(scenario: AthleteScenario) -> AthleteExpect
             "live+recorded" if live_z and rec_z else ("live" if live_z else ("recorded" if rec_z else "none"))
         )
 
-        pw = _perfect_week_expectation(
-            scenario,
-            label,
-            weekly_total=weekly_total,
-            goal_est=goal_est,
-            video_count=int(bucket.get("video_count") or 0),
-            homework=hw_expected,
-            zoom_state=zoom_state,
-            submit_days=int(bucket.get("submit_days") or 0),
-            miss_days=int(bucket.get("miss_days") or 0),
-        )
-        if pw.startswith("pass"):
+        pw_ev = pw_evaluations.get(label) or evaluate_perfect_week(scenario, label, bucket=bucket)
+        pw = pw_ev.outcome
+        if label == "Week 8" and scenario.profile == "athlete3_edge" and pw_ev.failure_reasons == ("video_count",):
+            pw = "fail_single_requirement"
+        if pw_ev.passes:
             pw_pass += 1
 
         xp_cats = ["SUBMISSION_XP"]
@@ -287,18 +251,15 @@ def build_athlete_expectation_matrix(scenario: AthleteScenario) -> AthleteExpect
             )
         )
 
-    xp_by_cat = _estimate_xp_buckets(scenario, threshold_awards, crossed, streaks)
+    xp_by_cat = _estimate_xp_buckets(scenario, threshold_awards, crossed, streaks, pw_pass)
 
     level_notes = {
         "athlete1_perfect": "Maximum realistic level progression — all gates satisfied",
         "athlete2_recovery": "Slower progression — streak/homework gates delay level ups",
         "athlete3_edge": "Mixed progression — partial gate satisfaction",
     }
-    goal_met = {
-        "athlete1_perfect": "During final week (total ≥ season goal)",
-        "athlete2_recovery": "Late season if cumulative shots reach goal",
-        "athlete3_edge": "May not reach season goal — edge-case volume",
-    }
+
+    crossing_date, _cross_day, _before, cumulative_on_date = compute_goal_met_crossing(scenario)
 
     return AthleteExpectationMatrix(
         profile=scenario.profile,
@@ -314,17 +275,11 @@ def build_athlete_expectation_matrix(scenario: AthleteScenario) -> AthleteExpect
         expected_weekly_threshold_awards=threshold_awards,
         expected_xp_by_category=xp_by_cat,
         expected_level_note=level_notes.get(scenario.profile, ""),
-        expected_goal_met_date=goal_met.get(scenario.profile, "TBD at execute"),
-        expected_email_handoffs={
-            "daily_submission": sum(1 for d in scenario.days if d.action == "submit"),
-            "weekly_build_arms": sum(
-                1
-                for d in build_simulation_days()
-                if d.activity_date.weekday() == 5
-            ),
-            "weekly_hub_handoffs_after_stage": 1,
-            "recipient": "schmidt@fairfieldbasketballclub.com only",
-        },
+        expected_goal_met_date=_format_goal_met_expectation(
+            scenario, crossing_date, cumulative_on_date, total_shots
+        ),
+        expected_goal_met_cumulative_shots=cumulative_on_date,
+        expected_email_handoffs=build_email_handoff_expectations(scenario),
         notes=list(scenario.gate_notes),
     )
 
@@ -334,31 +289,33 @@ def _estimate_xp_buckets(
     threshold_awards: list[dict[str, Any]],
     crossed: Sequence[Any],
     streaks: Sequence[int],
+    perfect_week_count: int,
 ) -> dict[str, int]:
-    """Offline lower-bound XP category counts (not dollar amounts)."""
+    """Offline XP category counts derived from scenario + matrix (not hand-tuned)."""
     subs = sum(1 for d in scenario.days if d.action == "submit")
     videos = sum(
         max(1, d.video_count) if (d.video_feedback or d.video_count) else 0
         for d in scenario.days
         if d.action == "submit"
     )
-    hw = sum(len(d.homework) for d in scenario.days)
-    profile = scenario.profile
-    streak_xp = len(streaks) if profile != "athlete2_recovery" else max(0, len(streaks) - 2)
+    hw_xp = sum(
+        1
+        for d in scenario.days
+        for h in d.homework
+        if str(h.get("outcome") or "") == "Satisfactory"
+    )
+    live_zoom = sum(1 for d in scenario.days if "live" in d.zoom_modes)
+    rec_zoom = sum(1 for d in scenario.days if "recording" in d.zoom_modes)
     return {
-        "SUBMISSION_XP": subs + (1 if profile == "athlete3_edge" else 0),
+        "SUBMISSION_XP": subs,
         "WEEKLY_THRESHOLD": len(threshold_awards),
-        "HOMEWORK_XP": hw if profile != "athlete2_recovery" else max(0, hw - 4),
+        "HOMEWORK_XP": hw_xp,
         "VIDEO_SUBMISSION": videos,
-        "STREAK_XP": streak_xp,
-        "SHOT_MILESTONE": len(crossed) if profile == "athlete1_perfect" else min(len(crossed), 3),
-        "ZOOM_ATTEND_BASE": 1 if profile != "athlete2_recovery" else 1,
-        "ZOOM_RECORDING_CREDIT": 1,
-        "PERFECT_WEEK": (
-            10
-            if profile == "athlete1_perfect"
-            else (1 if profile == "athlete2_recovery" else 1)
-        ),
+        "STREAK_XP": len(streaks),
+        "SHOT_MILESTONE": len(crossed),
+        "ZOOM_ATTEND_BASE": live_zoom,
+        "ZOOM_RECORDING_CREDIT": rec_zoom,
+        "PERFECT_WEEK": perfect_week_count,
     }
 
 
@@ -393,6 +350,15 @@ def build_three_athlete_expectation_package(
             "Goal Met Date",
             "Email Handoff Queue (allowlist)",
         ],
+        "email_verification": {
+            "recipient_allowlist_only": True,
+            "expect_daily_submission_emails": True,
+            "expect_homework_feedback_when_graded": True,
+            "expect_weekly_summary_arms": True,
+            "expect_weekly_hub_after_stage": True,
+            "verify_send_status_writeback": True,
+            "no_send_during_preparation": True,
+        },
         "authorization_phrase": "RUN 3-ATHLETE SEASON SIMULATION",
         "status": "READY — not executed",
     }
@@ -416,9 +382,11 @@ def format_weekly_table_markdown(matrix: AthleteExpectationMatrix) -> str:
             "",
             f"- **Total planned shots:** {matrix.total_planned_shots}",
             f"- **Expected Perfect Weeks:** {matrix.expected_perfect_week_count}",
+            f"- **Expected Goal Met Date:** {matrix.expected_goal_met_date}",
             f"- **Expected streak achievements (gate days):** {matrix.expected_streak_achievements}",
             f"- **Expected shot milestones:** {matrix.expected_shot_milestones}",
             f"- **Expected XP buckets:** `{matrix.expected_xp_by_category}`",
+            f"- **Email handoffs:** `{matrix.expected_email_handoffs}`",
             "",
         ]
     )

@@ -19,6 +19,7 @@ from .scenario_base import (
     DayPlan,
     aggregate_weekly_shots,
     build_athlete_identity,
+    compute_goal_met_crossing,
     dedupe_key,
     default_cleanup_scope,
     default_zoom_placeholders,
@@ -39,6 +40,46 @@ from .simulation_clock import SubmissionTiming
 
 SC001_VERSION = "1.0.0"
 PROFILE = AthleteProfile
+
+# Weeks where a Program Zoom meeting exists (live attendance required for Perfect Week).
+SC001_ZOOM_REQUIRED_WEEKS = frozenset(
+    {"Week 2", "Week 3", "Week 4", "Week 6", "Week 7", "Week 8"}
+)
+
+# Athlete 2 — exactly one late-season Perfect Week (owner-approved).
+ATHLETE2_RECOVERY_WEEK = "Week 7"
+
+# Documented primary failure mode per week (distinct probes; Week 7 excluded — passes).
+ATHLETE2_PW_FAILURE_MODES: dict[str, str] = {
+    "Early Bird": "fail_weekly_shots",
+    "Week 1": "fail_weekly_shots",
+    "Week 2": "fail_homework_skipped",
+    "Week 3": "fail_video_count",
+    "Week 4": "fail_required_zoom",
+    "Week 5": "fail_homework_skipped",
+    "Week 6": "fail_homework_timing",
+    "Week 8": "fail_weekly_shots",
+    "Week 9": "fail_weekly_shots",
+}
+
+# Athlete 3 — explicit week-by-week Perfect Week design truth (outcome, failure_mode).
+# Count of ``pass`` rows is authoritative; matrix + XP derive from evaluation, not this table alone.
+ATHLETE3_PERFECT_WEEK_TRUTH_TABLE: dict[str, tuple[str, str]] = {
+    "Early Bird": ("pass", "pass"),
+    "Week 1": ("pass", "pass"),
+    "Week 2": ("fail", "fail_daily_shooting"),
+    "Week 3": ("fail", "fail_video_count"),
+    "Week 4": ("fail", "fail_required_zoom"),
+    "Week 5": ("fail", "fail_homework_timing"),
+    "Week 6": ("pass", "pass"),
+    "Week 7": ("pass", "pass"),
+    "Week 8": ("fail", "fail_single_requirement"),
+    "Week 9": ("pass", "pass"),
+}
+
+ATHLETE3_PASS_WEEKS = frozenset(
+    label for label, (outcome, _) in ATHLETE3_PERFECT_WEEK_TRUTH_TABLE.items() if outcome == "pass"
+)
 
 
 # ---------------------------------------------------------------------------
@@ -175,7 +216,7 @@ def build_athlete1_perfect_scenario(
         grade="12",
     )
 
-    return AthleteScenario(
+    scenario = AthleteScenario(
         profile=profile,
         version=SC001_VERSION,
         seed="sc001-athlete1-perfect-v1",
@@ -193,7 +234,7 @@ def build_athlete1_perfect_scenario(
         gate_notes=gate_notes,
         meta={
             "path": "perfect_max_compliance",
-            "expected_perfect_weeks": "all_eligible_weeks",
+            "expected_perfect_weeks": 10,
             "expected_goal_met": True,
             "total_planned_shots": total,
             "goal_coverage_ratio": round(total / goal_total_shots, 3) if goal_total_shots else 0,
@@ -201,13 +242,26 @@ def build_athlete1_perfect_scenario(
             "miss_days": [],
         },
     )
+    scenario.meta.update(_athlete1_meta_goal_crossing(scenario))
+    return scenario
+
+
+def _athlete1_meta_goal_crossing(scenario: AthleteScenario) -> dict[str, Any]:
+    crossing_date, day_number, before, cumulative = compute_goal_met_crossing(scenario)
+    return {
+        "expected_goal_met_date": crossing_date,
+        "expected_goal_met_day_number": day_number,
+        "cumulative_shots_before_crossing": before,
+        "cumulative_shots_on_crossing_date": cumulative,
+    }
 
 
 # ---------------------------------------------------------------------------
 # Athlete 2 — INCONSISTENT / RECOVERY
 # ---------------------------------------------------------------------------
 
-ATHLETE2_MISS_DAYS = frozenset({4, 11, 18, 25, 32, 39, 46, 53})
+# Day 46 moved to 58 so Week 7 recovery week has zero intentional misses.
+ATHLETE2_MISS_DAYS = frozenset({4, 11, 18, 25, 32, 39, 53, 58})
 ATHLETE2_STREAK_BREAK_BEFORE_10 = 49  # miss day 53 breaks rebuild before day-10 gate
 
 
@@ -220,10 +274,13 @@ def _athlete2_shots(day_number: int, week_label: str, goal_total: int) -> int:
         "Week 3": -12,
         "Week 4": 8,
         "Week 5": 45,
-        "Week 7": -25,
         "Week 8": 90,
     }
     base += boosts.get(week_label, 0)
+    if week_label == ATHLETE2_RECOVERY_WEEK:
+        weekly_est = estimate_weekly_goal_shots(goal_total, week_label)
+        daily_floor = max(1, (weekly_est + 6) // 7)
+        return daily_floor + (day_number % 5) * 4
     if week_label == "Week 6":
         weekly_est = estimate_weekly_goal_shots(goal_total, week_label)
         return max(80, weekly_est // 7 - 3)
@@ -402,7 +459,9 @@ def build_athlete2_recovery_scenario(
         meta={
             "path": "inconsistent_recovery",
             "miss_days": sorted(ATHLETE2_MISS_DAYS),
-            "expected_perfect_weeks": "1_late_season (Week 7+)",
+            "expected_perfect_weeks": 1,
+            "recovery_perfect_week": ATHLETE2_RECOVERY_WEEK,
+            "perfect_week_failure_modes": ATHLETE2_PW_FAILURE_MODES,
             "expected_goal_met": "late_if_at_all",
             "total_planned_shots": total,
             "video_day_map": video_assign,
@@ -414,20 +473,39 @@ def build_athlete2_recovery_scenario(
 # Athlete 3 — EDGE / IDEMPOTENCY
 # ---------------------------------------------------------------------------
 
+def _athlete3_daily_floor(week_label: str, goal_total: int) -> int:
+    weekly_est = estimate_weekly_goal_shots(goal_total, week_label)
+    official_days = sum(
+        1
+        for meta in simulation_days()
+        if week_label_for_activity_date(meta.activity_date) == week_label
+    )
+    divisor = official_days if official_days else 7
+    return max(1, (weekly_est + divisor - 1) // divisor)
+
+
 def _athlete3_shots(day_number: int, week_label: str, goal_total: int) -> int:
-    base = 110 + (day_number * 13) % 58
-    if week_label == "Week 2" and day_number == 14:
-        weekly_est = estimate_weekly_goal_shots(goal_total, week_label)
-        return max(1, weekly_est - 1)
+    daily_floor = _athlete3_daily_floor(week_label, goal_total)
+    weekly_est = estimate_weekly_goal_shots(goal_total, week_label)
+
+    if week_label in ATHLETE3_PASS_WEEKS:
+        return daily_floor + (day_number % 5) * 3
+
+    if week_label == "Week 2":
+        if day_number == 14:
+            return daily_floor + 80
+        return max(70, 110 + (day_number * 13) % 58)
+
+    if week_label == "Week 8":
+        if day_number == 60:
+            return daily_floor + 2
+        return daily_floor + 1
+
     if week_label == "Week 4" and day_number == 28:
-        weekly_est = estimate_weekly_goal_shots(goal_total, week_label)
         return weekly_est
     if week_label == "Week 5" and day_number == 34:
-        weekly_est = estimate_weekly_goal_shots(goal_total, week_label)
         return weekly_est + 1
-    if day_number == 60:
-        return 18
-    return base
+    return 110 + (day_number * 13) % 58
 
 
 def build_athlete3_edge_scenario(
@@ -456,7 +534,7 @@ def build_athlete3_edge_scenario(
 
     early_day = 3
     on_time_day = 20
-    late_day = 52
+    late_day = 33  # Week 5 — late satisfactory (XP yes, no Perfect Week)
     nr_day = 24
     multi_asset_day = 15
 
@@ -490,8 +568,26 @@ def build_athlete3_edge_scenario(
                 run_id, profile, "HW", day_num, str(p.get("pha_record_id") or "")
             )
 
+    # Week 9 pass requires on-time homework — override generic Week 8 late probe on day 61.
+    for p in hw_by_day.get(61, []):
+        p["late_status"] = "on_time"
+        p["credit_eligible"] = True
+        p.pop("timing_note", None)
+        gate_notes.append(
+            "Day 61: Week 8 PHA forced on-time so Week 9 Perfect Week passes "
+            "(late homework probe lives on day 33 / Week 5)."
+        )
+
     live_id, rec_id = zoom_list[0]["record_id"], zoom_list[1]["record_id"]
-    video_week_counts = {"Week 1": 3, "Week 3": 2, "Week 6": 3, "Week 8": 2}
+    video_week_counts = {
+        "Early Bird": 1,
+        "Week 1": 3,
+        "Week 3": 2,
+        "Week 6": 3,
+        "Week 7": 3,
+        "Week 8": 2,
+        "Week 9": 3,
+    }
     by_week: dict[str, list[int]] = {}
     for meta in days_meta:
         by_week.setdefault(
@@ -523,6 +619,8 @@ def build_athlete3_edge_scenario(
             z_ids, z_modes = [live_id], ["live"]
         if n == 42:
             z_ids, z_modes = [rec_id], ["recording"]
+        if n == 44:
+            z_ids, z_modes = [live_id], ["live"]
 
         plan = write_day_from_template(
             meta=meta,
@@ -583,14 +681,13 @@ def build_athlete3_edge_scenario(
         meta={
             "path": "edge_idempotency",
             "replay_probe_days": sorted(replay_days),
-            "expected_perfect_weeks": "1_success_several_distinct_failures",
-            "pw_failure_modes": [
-                "daily_shooting",
-                "video_count",
-                "homework_timing",
-                "required_zoom",
-                "single_requirement_only",
-            ],
+            "expected_perfect_weeks": sum(
+                1 for outcome, _ in ATHLETE3_PERFECT_WEEK_TRUTH_TABLE.values() if outcome == "pass"
+            ),
+            "perfect_week_truth_table": {
+                week: {"outcome": outcome, "mode": mode}
+                for week, (outcome, mode) in ATHLETE3_PERFECT_WEEK_TRUTH_TABLE.items()
+            },
         },
     )
 

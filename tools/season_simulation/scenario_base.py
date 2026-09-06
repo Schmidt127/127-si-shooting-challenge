@@ -150,6 +150,32 @@ def simulation_days() -> list[Any]:
     return assert_window_integrity(build_simulation_days(SIM_START, SIM_END))
 
 
+def compute_goal_met_crossing(
+    scenario: AthleteScenario,
+) -> tuple[str | None, int | None, int | None, int]:
+    """Return (activity_date_iso, day_number, shots_before, cumulative_on_date) at first ≥ goal."""
+    goal = int(scenario.goal_total_shots or 0)
+    if goal <= 0:
+        return None, None, None, 0
+
+    cumulative = 0
+    ordered = sorted(
+        (d for d in scenario.days if d.action == "submit"),
+        key=lambda p: (p.activity_date, p.day_number),
+    )
+    for plan in ordered:
+        prev = cumulative
+        cumulative += plan.shot_total
+        if prev < goal <= cumulative:
+            return (
+                plan.activity_date.isoformat(),
+                plan.day_number,
+                prev,
+                cumulative,
+            )
+    return None, None, None, cumulative
+
+
 def weekly_threshold_tiers(ratio: float) -> list[int]:
     """Return 100/125/150 tiers met at given goal-completion ratio."""
     tiers: list[int] = []
