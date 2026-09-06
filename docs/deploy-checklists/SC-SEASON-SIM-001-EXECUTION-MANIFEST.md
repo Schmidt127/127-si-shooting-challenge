@@ -59,7 +59,7 @@ Historical **SC-SEASON-SIM-002** (`athlete1_sc002` mixed path) remains **COMPLET
 
 | Command | Result |
 |---------|--------|
-| `python3 -m unittest season_simulation.tests.test_sc001_three_athlete …` | **PASS** (10 tests) |
+| `python3 -m unittest season_simulation.tests.test_sc001_three_athlete …` | **PASS** (22 tests) |
 | `python3 -m unittest season_simulation.tests.test_offline …` | **PASS** (124 tests) |
 | `python3 -m season_simulation dry-run-three --offline-fixture` | **PASS** — matrices written |
 
@@ -73,11 +73,12 @@ Reports: `tools/season_simulation/reports/sc001-dry-run-latest.{json,md}`
 |--------|------------------:|-------------------:|---------------:|
 | Submit days | 61 | 53 | 62 |
 | Miss days | 0 | 8 | 0 |
-| Planned shots | 16,630 | 7,554 | 12,109 |
-| Perfect Weeks (expected) | 10 | 0 | 5 |
+| Planned shots | 16,630 | 8,274 | 13,200 |
+| Perfect Weeks (expected) | 10 | **1** (Week 7) | 5 |
+| Goal Met Date | **2027-06-14** @ 12,098 | Not reached | 2027-06-25 @ 12,190 |
 | Shot milestones | 3000–14400 (5) | 3000, 6000 | 3000–12000 (4) |
-| Streak gate days | 3–60 (8 tiers) | 3, 7 | 3–30 (6 tiers) |
-| Weekly threshold awards | 22 | 0 | 9 |
+| Streak gate days | 3–60 (8 tiers) | 3, 7, 10 | 3–30 (6 tiers) |
+| Weekly threshold awards | 22 | 1 | 12 |
 
 Live numbers may shift slightly when weekly goals resolve from Airtable Goal Record + Weeks.
 

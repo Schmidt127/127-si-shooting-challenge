@@ -5,13 +5,16 @@
 **Status:** READY — pre-execute expectations only  
 **Source of truth at execute:** `tools/season_simulation/reports/sc001-dry-run-latest.md` (regenerate with `dry-run-three`)
 
-> **No DEV environment.** Production disposable records only when authorized.
+> **No DEV environment.** Production disposable records only when authorized.  
+> Expectations derive from scenario plans + Production-aligned Perfect Week rules (057). No independent hardcoded PW / Goal Met / XP counts.
 
 ---
 
 ## Athlete 1 — Sim Perfect (`athlete1_perfect`)
 
 **Design intent:** Gold-standard success — 61/61 submit days, 0 misses, all 18 homework Satisfactory/on-time, ≥3 qualifying videos every week, live Zoom on required weeks + one recorded credit, all reachable milestones, maximum streak tiers, all weekly threshold tiers where volume supports.
+
+**Goal Met Date (derived):** **2027-06-14** — cumulative countable shots first reach **12,098** (11,751 immediately prior).
 
 | Week | Weekly shots | Goal est. | % | Thresholds | HW | Videos | Zoom | Perfect Week |
 |------|-------------:|----------:|--:|------------|----|-------:|------|--------------|
@@ -28,53 +31,63 @@
 
 **Totals:** 16,630 planned shots · **10** expected Perfect Weeks · milestones **3000–14400** · streak gates **3–60**
 
-**Expected XP buckets:** SUBMISSION_XP 61 · WEEKLY_THRESHOLD 22 · HOMEWORK_XP 18 · VIDEO 28 · STREAK 8 · SHOT_MILESTONE 5 · ZOOM live 1 + recording 1 · PERFECT_WEEK 10
+**Expected XP buckets (derived):** SUBMISSION_XP 61 · WEEKLY_THRESHOLD 22 · HOMEWORK_XP 18 · VIDEO 28 · STREAK 8 · SHOT_MILESTONE 5 · PERFECT_WEEK **10**
 
 ---
 
 ## Athlete 2 — Sim Recovery (`athlete2_recovery`)
 
-**Design intent:** Irregular participation — 8 miss days (days 4,11,18,25,32,39,46,53), broken streaks, skipped homework weeks 2/5, Needs Revision week 4, late homework week 6, zero-video week 3, missed live Zoom week 4, one recovery-oriented strong week 7 (still below PW due to prior damage).
+**Design intent:** Irregular participation — 8 miss days (days **4, 11, 18, 25, 32, 39, 53, 58**), broken streaks, skipped homework weeks 2/5, Needs Revision week 4, late homework week 6, zero-video week 3, missed live Zoom week 4, **exactly one** late-season Perfect Week on **Week 7** after recovery volume + compliance.
 
 | Week | Weekly shots | Goal est. | % | Thresholds | HW | Videos | Zoom | Perfect Week |
 |------|-------------:|----------:|--:|------------|----|-------:|------|--------------|
 | Early Bird | 106 | 197 | 53.8% | — | complete_satisfactory | 1 | none | fail_weekly_shots |
 | Week 1 | 777 | 1377 | 56.4% | — | complete_satisfactory | 2 | none | fail_weekly_shots |
 | Week 2 | 770 | 1377 | 55.9% | — | skipped | 1 | none | fail_homework_skipped |
-| Week 3 | 691 | 1377 | 50.2% | — | complete_satisfactory | 0 | none | fail_no_video |
-| Week 4 | 871 | 1377 | 63.3% | — | needs_revision_then_fix | 3 | none | fail_missed_zoom |
+| Week 3 | 691 | 1377 | 50.2% | — | complete_satisfactory | 0 | none | fail_video_count |
+| Week 4 | 871 | 1377 | 63.3% | — | needs_revision_then_fix | 3 | none | fail_required_zoom |
 | Week 5 | 1086 | 1377 | 78.9% | — | skipped | 2 | recorded | fail_homework_skipped |
-| Week 6 | 1158 | 1377 | 84.1% | — | late_satisfactory | 1 | none | fail_weekly_shots |
-| Week 7 | 585 | 1377 | 42.5% | — | complete_satisfactory | 3 | live | fail_weekly_shots |
+| Week 6 | 1158 | 1377 | 84.1% | — | late_satisfactory | 1 | none | fail_homework_timing |
+| Week 7 | 1435 | 1377 | 104.2% | 100 | complete_satisfactory | 3 | live | **pass** |
 | Week 8 | 991 | 1377 | 72.0% | — | complete_satisfactory | 2 | none | fail_weekly_shots |
-| Week 9 | 519 | 787 | 65.9% | — | late_satisfactory | 1 | none | fail_weekly_shots |
+| Week 9 | 389 | 787 | 49.4% | — | late_satisfactory | 1 | none | fail_weekly_shots |
 
-**Totals:** 7,554 planned shots · **0** expected Perfect Weeks · milestones **3000, 6000** · streak gates **3, 7**
+**Totals:** 8,274 planned shots · **1** expected Perfect Week (Week 7) · milestones **3000, 6000** · streak gates **3, 7, 10**
 
-**Boundary probes:** Week 6 near-target volume · backdated submission day 40→38 · streak break before day-10 gate (miss day 53)
+**Week 7 pass rationale:** 7/7 submit days (miss moved off Week 7), weekly shots ≥ goal, 3 videos, on-time homework, live Zoom attended.
 
 ---
 
 ## Athlete 3 — Sim Edge (`athlete3_edge`)
 
-**Design intent:** Stress timing/idempotency — early/on-time/late homework, same-day double submission day 19, backdate day 38→36, exact threshold hits/misses, distinct Perfect Week failure modes, replay probe days 10/29/45/58.
+**Design intent:** Stress timing/idempotency — explicit week-by-week Perfect Week truth table (`ATHLETE3_PERFECT_WEEK_TRUTH_TABLE`), same-day double submission day 19, backdate day 38→36, distinct failure modes, replay probe days 10/29/45/58.
 
-| Week | Weekly shots | Goal est. | % | Thresholds | HW | Videos | Zoom | Perfect Week |
-|------|-------------:|----------:|--:|------------|----|-------:|------|--------------|
-| Early Bird | 123 | 197 | 62.4% | — | complete_satisfactory | 0 | none | pass |
-| Week 1 | 993 | 1377 | 72.1% | — | complete_satisfactory | 3 | none | pass |
-| Week 2 | 2192 | 1377 | 159.2% | 100,125,150 | complete_satisfactory | 0 | none | fail_daily_shooting |
-| Week 3 | 1036 | 1377 | 75.2% | — | complete_satisfactory | 4 | live | fail_video_count |
-| Week 4 | 2183 | 1377 | 158.5% | 100,125,150 | complete_satisfactory | 0 | none | fail_required_zoom |
-| Week 5 | 2221 | 1377 | 161.3% | 100,125,150 | complete_satisfactory | 0 | none | fail_homework_timing |
-| Week 6 | 988 | 1377 | 71.8% | — | complete_satisfactory | 3 | recorded | pass |
-| Week 7 | 987 | 1377 | 71.7% | — | complete_satisfactory | 0 | none | pass |
-| Week 8 | 986 | 1377 | 71.6% | — | complete_satisfactory | 2 | none | fail_single_requirement |
-| Week 9 | 400 | 787 | 50.8% | — | late_satisfactory | 0 | none | pass |
+| Week | Outcome | Failure mode (if any) |
+|------|---------|------------------------|
+| Early Bird | **PASS** | — |
+| Week 1 | **PASS** | — |
+| Week 2 | fail | fail_daily_shooting |
+| Week 3 | fail | fail_video_count |
+| Week 4 | fail | fail_required_zoom |
+| Week 5 | fail | fail_homework_timing (late HW day 33) |
+| Week 6 | **PASS** | — |
+| Week 7 | **PASS** | — |
+| Week 8 | fail | fail_single_requirement (2 videos only) |
+| Week 9 | **PASS** | pass_partial_window |
 
-**Totals:** 12,109 planned shots · **5** expected Perfect Weeks · milestones **3000–12000** · replay probes on 4 days
+**Totals:** 13,200 planned shots · **5** expected Perfect Weeks (derived from table) · milestones **3000–12000** · Goal Met **2027-06-25** @ 12,190 cumulative
 
-**Idempotency:** Re-arm expectations documented in operator checklist — one canonical HC/XP/unlock per source key after replay.
+---
+
+## Email verification (READY package)
+
+When live execute is authorized, verify **allowlist only** (`schmidt@fairfieldbasketballclub.com`):
+
+- Daily Submission emails (one per submit day per athlete)
+- Homework Feedback emails when grading/review is exercised
+- Weekly summary build arms (Saturdays) + Hub handoffs after SC-168 stage
+- Send status / writeback on Email Handoff Queue
+- **No send during preparation** — dry-run only
 
 ---
 
@@ -85,7 +98,7 @@
 - [x] Video Feedback / Zoom Meetings / Zoom Attendance
 - [x] Weekly Athlete Summary / XP Events / Streak Occurrences
 - [x] Athlete Achievement Unlocks / Shot Milestones / Perfect Week
-- [x] Weekly threshold awards / Level gates / Goal Met Date (Athlete 1)
+- [x] Weekly threshold awards / Level gates / Goal Met Date (derived)
 - [x] Email handoff path (SC-168 stage — allowlist only)
 
-**Regenerate:** `cd tools && python3 -m season_simulation dry-run-three`
+**Regenerate:** `cd tools && python3 -m season_simulation dry-run-three --offline-fixture`
