@@ -5,9 +5,9 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 
-Version: v4.3
+Version: v4.4
 Date Written: 2026-06-17
-Last Updated: 2026-09-01
+Last Updated: 2026-09-06
 
 PURPOSE
 - Validate one Homework Completion record that is ready for parent email.
@@ -59,10 +59,10 @@ AUTOMATION NAME
 
 const SCRIPT = {
   scriptName: "071 - Email, Notifications, and External Handoffs - Create Homework Feedback Communications Hub Handoff",
-  version: "v4.3",
-  versionDate: "2026-09-01",
+  version: "v4.4",
+  versionDate: "2026-09-06",
   originalWrittenDate: "2026-06-17",
-  lastUpdated: "2026-09-01",
+  lastUpdated: "2026-09-06",
   folder: "07 - Email, Notifications, and External Handoffs",
   automationName: "071 - Email, Notifications, and External Handoffs - Create Homework Feedback Communications Hub Handoff",
 };
@@ -109,6 +109,8 @@ const CONFIG = {
       subject: "Parent Feedback Subject",
       totalXp: "Total Homework XP Awarded",
       baseXp: "Base XP Awarded",
+      submissionDate: "Submission Date",
+      reviewedAt: "Reviewed At",
     },
     enr: {
       active: "Active?",
@@ -119,6 +121,8 @@ const CONFIG = {
       athlete: "Full Athlete Name",
       athleteFirst: "Athlete First Name",
       athleteLast: "Athlete Last Name",
+      publicProfileEnabled: "Public Profile Enabled",
+      publicProfileSlug: "Public Profile Slug",
     },
     pha: {
       homework: "Homework Assignment",
@@ -231,6 +235,38 @@ function sameSet(left, right) {
 
 function first(...values) {
   return values.map((value) => String(value ?? "").trim()).find(Boolean) || "";
+}
+
+const TZ = "America/Denver";
+
+function dateText(value) {
+  const date = value instanceof Date ? value : new Date(value);
+  if (!value || Number.isNaN(date.getTime())) {
+    return "";
+  }
+  const formatted = new Intl.DateTimeFormat("en-US", {
+    timeZone: TZ,
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
+  return formatted.replace(/^([A-Za-z]{3})\s/, "$1. ");
+}
+
+function bool(rec, table, name) {
+  const value = raw(rec, table, name);
+  if (value === true || value === 1) return true;
+  if (value === false || value === 0) return false;
+  return ["true", "yes", "checked", "1"].includes(text(rec, table, name).toLowerCase());
+}
+
+function buildAthleteProfileUrl(enr, enrT) {
+  const enabled = bool(enr, enrT, CONFIG.fields.enr.publicProfileEnabled);
+  const slug = text(enr, enrT, CONFIG.fields.enr.publicProfileSlug);
+  if (enabled && slug) {
+    return `${CANONICAL_URLS.shoot}/athletes/${encodeURIComponent(slug)}`;
+  }
+  return "";
 }
 
 function resolvePublicAssignmentName(rec, recTable, fallback = "Homework Assignment") {
@@ -496,6 +532,9 @@ async function main() {
   } catch {}
 
   const recipients = [{ email: parent, role: "guardian" }];
+  const submittedDate = dateText(raw(hc, hcT, CONFIG.fields.hc.submissionDate));
+  const reviewedDate = dateText(raw(hc, hcT, CONFIG.fields.hc.reviewedAt));
+  const athleteProfileUrl = buildAthleteProfileUrl(enr, enrT);
   const payload = {
     athleteName,
     athleteFirstName: athleteFirstName || undefined,
@@ -512,6 +551,11 @@ async function main() {
     programName: programName || undefined,
     weekName: weekName || undefined,
     reviewStatus: "Satisfactory",
+    submittedDate: submittedDate || undefined,
+    submissionDate: submittedDate || undefined,
+    reviewedDate: reviewedDate || undefined,
+    reviewedAt: reviewedDate || undefined,
+    athleteProfileUrl: athleteProfileUrl || undefined,
     landingPageUrl: CANONICAL_URLS.landing,
     shootPageUrl: CANONICAL_URLS.shoot,
     homeworkPageUrl: CANONICAL_URLS.homework,
@@ -524,6 +568,11 @@ async function main() {
   if (!payload.athleteLastName) delete payload.athleteLastName;
   if (!payload.programName) delete payload.programName;
   if (!payload.weekName) delete payload.weekName;
+  if (!payload.submittedDate) delete payload.submittedDate;
+  if (!payload.submissionDate) delete payload.submissionDate;
+  if (!payload.reviewedDate) delete payload.reviewedDate;
+  if (!payload.reviewedAt) delete payload.reviewedAt;
+  if (!payload.athleteProfileUrl) delete payload.athleteProfileUrl;
   if (!payload.canonicalGradeBandId) delete payload.canonicalGradeBandId;
 
   const queueData = queueFields(queueT, {

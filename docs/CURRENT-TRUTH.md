@@ -1,7 +1,7 @@
 # CURRENT TRUTH â 127 SI Shooting Challenge
 
 **Status:** Active â primary current-state document for this repository  
-**Last verification (repo):** 2026-09-05 — **docs tip after #458–#460**; functional/app deploy baseline **`ba969433`** (#457); purge COMPLETE. Production transactional test-data purge **COMPLETE** (Mike `APPROVE TRANSACTIONAL PURGE`). Deleted **204** records (200 approved + 4 automation remnants). Athletes/Enrollments/Submissions/Assets/HC/XP/WAS/VF/Unlocks/Streaks/Zoom Attendance/Award Recipients/Email Handoff = **0**. Zoom Meetings retained **2** (Introduction, Motivation). Countries/State/PHA/Weeks/Homework Library/rules/config preserved. Evidence: [`testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md`](./testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md). Prior: SC-167/168/169 COMPLETE; **010 v10.14** Live Tested; formulas **`NOW()` / `TODAY()`**; Season Sim closed — next execute NOT authorized; **FUT-048** deferred (`d21ixrrrqpqz29.cloudfront.net`).
+**Last verification (repo):** 2026-09-06 — **SC-171** GitHub ready (Daily Submission + Homework Feedback presentation); Production paste + Hub deploy **PENDING**. Prior baseline 2026-09-05 — docs tip after #458–#460; functional/app deploy baseline **`ba969433`** (#457); purge COMPLETE. Production transactional test-data purge **COMPLETE** (Mike `APPROVE TRANSACTIONAL PURGE`). Deleted **204** records (200 approved + 4 automation remnants). Athletes/Enrollments/Submissions/Assets/HC/XP/WAS/VF/Unlocks/Streaks/Zoom Attendance/Award Recipients/Email Handoff = **0**. Zoom Meetings retained **2** (Introduction, Motivation). Countries/State/PHA/Weeks/Homework Library/rules/config preserved. Evidence: [`testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md`](./testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md). Prior: SC-167/168/169 COMPLETE; **010 v10.14** Live Tested; formulas **`NOW()` / `TODAY()`**; Season Sim closed — next execute NOT authorized; **FUT-048** deferred (`d21ixrrrqpqz29.cloudfront.net`).
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -163,8 +163,8 @@ Evidence pointer: [`PROJECT_STATE.md`](./PROJECT_STATE.md) Â§ Vercel / web app
 | Sender | **Resend** via Communications Hub |
 | Make.com email | **None** â Make does not send SC parent/athlete notification email |
 | Gmail Make scenarios | **Historical only** |
-| Daily submission path | **076 v8.12** (Hub queue create) â **079** â Hub â Resend â FUT-041 XP Earned \| Extra Credit columns |
-| Homework feedback path | **071 v4.3** â **079** â Hub â Resend â FUT-046 subject + FUT-047 contact copy |
+| Daily submission path | **076 v8.12 Live** → GitHub **v8.13** **PENDING paste** (SC-171: streak fix; no Extra Credit / Shooting % in template) → **079** → Hub → Resend |
+| Homework feedback path | **071 v4.3 Live** → GitHub **v4.4** **PENDING paste** (SC-171: dates + athlete profile URL) → **079** → Hub → Resend |
 | Automation **077** | **Retired / deleted from Production** (Mike-dated docs: 2026-08-13). Do not restore Make daily email. GitHub source retained as archive only. **Do not** trust obsolete `Automations` table rows that once showed 077 as Live. |
 | Queue producers (repo) | Include Hub handoff scripts; **079** dispatches Ready queue â Hub â Resend |
 | Automation **117** | **v2.1** Hub queue create for Zoom recording approval. Automations **Name** = Hub handoff title; **Status = Live** (2026-08-21 evening re-read). Not XP; not Make 117f. |
@@ -231,8 +231,8 @@ Do **not** treat other Automations-table columns (trigger/conditions) as authori
 | **021** | **v2.0** | v2.0 | **Live / ALIGNED** | Attachment Upload Status only; exact byte match GitHub; Phase A combined paste never installed — same correction audit |
 | **072** | **v4.9.1** | v4.9.1 | Live / **aligned** | Weekly summary email build — Agent 3 MCP 2026-09-05. Prior v4.8 packet historical — [`072-v4.8-operator-packet.md`](./deploy-checklists/072-v4.8-operator-packet.md) |
 | **073** | **v4.6** | v4.6 | Live / **aligned** | Video parent email Hub path — Agent 3 MCP 2026-09-05. Prior v4.4 packet historical — [`073-v4.4-operator-packet.md`](./deploy-checklists/073-v4.4-operator-packet.md) |
-| **071** | **v4.3** | v4.3 | Live / **aligned** | Homework Feedback Hub handoff â FUT-046 payload (`assignmentTitle`, athlete first/last); **do not re-paste** â [`071-v4.3-homework-feedback-paste-packet.md`](./deploy-checklists/071-v4.3-homework-feedback-paste-packet.md) |
-| **076** | **v8.12** | v8.12 | Live / **aligned** | Daily Submission Hub handoff â FUT-041 `xpEarned` / `xpExtraCredit`; **do not re-paste** â [`076-v8.12-daily-submission-paste-packet.md`](./deploy-checklists/076-v8.12-daily-submission-paste-packet.md) |
+| **071** | **v4.4** | v4.3 | GitHub ahead / **SC-171 paste pending** | Homework Feedback — SC-171 dates + `athleteProfileUrl`; checklist [`SC-171-email-homework-presentation.md`](./deploy-checklists/SC-171-email-homework-presentation.md) |
+| **076** | **v8.13** | v8.12 | GitHub ahead / **SC-171 paste pending** | Daily Submission — SC-171 streak compute + payload trim; same checklist |
 | **074** | **v3.3** | v3.3 | Live / live-tested | Weekly summary Hub handoff |
 | **070a** | **v4.7** | **v4.7 Live** | Script-only graph (SC-156); trigger clears via script | Homework upload Make path |
 | **070b** | **v4.7** | v4.7 | Live | |
@@ -254,7 +254,7 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 |---|-------------------------|--------|
 | 070a | v4.7 | **Live** during Perfect Week controlled window (historically intentional OFF) |
 | 070c | v1.1 | **Enabled in PROD** â async video writeback verify after **070b**; do not invent a new version |
-| 076 | **v8.12** (Production) | Daily Hub queue create â FUT-041 `xpEarned`/`xpExtraCredit` payload |
+| 076 | **v8.13** (GitHub) / **v8.12** (Live) | Daily Hub queue create — SC-171 streak + presentation trim pending paste |
 | 077 | v5.0 archive | **Deleted from Production** (2026-08-13 docs) â not live Make send |
 | 079 | v2.5 (GitHub + prod) | Ready queue â Hub â Resend; E2E weekly send 2026-08-24 |
 | 112 | legacy | Expected **OFF** |

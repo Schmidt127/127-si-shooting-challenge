@@ -2337,6 +2337,21 @@ Zero `WEEKLY_ATHLETE_SUMMARY` Hub handoffs after execute alone is **expected** (
 
 **False-negative cascade count** — expected **4** shot-milestone unlocks for T122531Z; 066→059 awarded them (matched SHOT_MILESTONE XP); orphans deleted. Production award logic **unchanged**. Audit [`audits/SC-169-ACHIEVEMENT-UNLOCKS-20260905.md`](./audits/SC-169-ACHIEVEMENT-UNLOCKS-20260905.md). No automation paste.
 
+### SC-171 — Daily Submission + Homework Feedback parent presentation
+
+**Priority:** P1  
+**Status:** **GitHub ready / PENDING Production paste + Hub deploy** (2026-09-06)  
+**Systems:** Automation **076 v8.13**, **071 v4.4**; Communications Hub daily + homework templates  
+**Related:** FUT-045 assignment naming; parent email migration; **no XP logic changes**  
+
+**Scope:** Daily Submission — remove Extra Credit XP and Shooting Percentage; fix stale streak (076 computes from counted submissions, 055-aligned). Homework Feedback — remove Program/slot from display; prominent assignment name; Submitted/Reviewed dates; Homework Files Uploaded; View Athlete Details → `/shoot/athletes/{slug}`.
+
+**Streak root cause:** 076 read `Enrollments.Current Shooting Streak` before 055 finished updating enrollment.
+
+**Evidence:** [`audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md`](./audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md) · checklist [`deploy-checklists/SC-171-email-homework-presentation.md`](./deploy-checklists/SC-171-email-homework-presentation.md).
+
+**Live verify:** Pending — post-purge transactional tables empty; disposable Schmidt records + Hub allowlist only.
+
 ---
 
 
@@ -2809,6 +2824,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-167** | XP / Automations | Duplicate SUBMISSION_XP harden (010) | P0 | **COMPLETE / Live Tested** (2026-09-05) | SC-SEASON-SIM-002 T122531Z, Automation 010 | Confirmed TOCTOU defect. **010 v10.14** GitHub + Live (PR **#453**). Option A proof: create + latch retry → one Active `SUBMISSION_XP`; formula restored. Evidence [`audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md`](./audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md). |
 | **SC-168** | Email | Season Sim T122531Z missing weekly-summary email handoffs (0 WEEKLY) | P0 | **COMPLETE / Corrected expectation** (2026-09-05) | SC-SEASON-SIM-002, 072/074/079/118/119 | Expected harness gap: execute arms Build Weekly only; 118/119 Sunday cron not sim-driven. Production pipeline unchanged. PR **#451**. Audit [`audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md`](./audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md) · `weekly-email-stage` CLI. |
 | **SC-169** | Achievements | Season Sim T122531Z “unlocks=0” discrepancy | P0 | **COMPLETE / Live evidence** (2026-09-05) | SC-SEASON-SIM-002 | **False-negative count + cleanup gap** — 066/059 awarded 4 shot-milestone unlocks (matched 4 SHOT_MILESTONE XP); cascade used non-existent Unlocks.`Enrollment Record ID`; orphans deleted (0 remaining). Evidence [`audits/SC-169-ACHIEVEMENT-UNLOCKS-20260905.md`](./audits/SC-169-ACHIEVEMENT-UNLOCKS-20260905.md). **No automation paste.** PR **#452**. |
+| **SC-171** | Email / UI | Daily Submission + Homework Feedback parent presentation | P1 | **GitHub ready / PENDING paste + Hub deploy** (2026-09-06) | FUT-045 | **076 v8.13** streak fix + payload trim; **071 v4.4** dates + athlete profile URL; Hub templates. No XP logic changes. Evidence [`audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md`](./audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md). |
 | **SC-149 residual** | Website | Family Dashboard under More menu | P1 | **COMPLETE** (2026-09-05 with SC-164/165) | SC-149 | PR **#439**; `MORE_NAV_HREFS` includes FD → `/dashboard/sign-in`. Evidence [`audits/SC-149-MORE-FAMILY-DASHBOARD-20260905.md`](./audits/SC-149-MORE-FAMILY-DASHBOARD-20260905.md). |
 | **SC-113** | Website | Loading, empty, and error states | P2 | Live Tested in PROD | GÃ‡Ã¶ | Keep states aligned when SC-112 lands |
 
