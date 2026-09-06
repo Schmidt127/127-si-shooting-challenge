@@ -4,11 +4,12 @@ Creates one disposable Sim athlete + enrollment + WAS + 2 countable submissions,
 waits for Automation 010 Submission Base XP, then cleans up and restores the
 Activity Date Is Future? Production formula.
 
-Requires AIRTABLE_API_TOKEN. Does not send email.
+Requires AIRTABLE_API_TOKEN and execute confirm gates (--execute --confirm --confirm-disposable). Does not send email.
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 import time
@@ -27,7 +28,12 @@ from season_simulation.clock_override import (  # noqa: E402
     GATED_ACTIVITY_DATE_IS_FUTURE_FORMULA,
     PRODUCTION_ACTIVITY_DATE_IS_FUTURE_FORMULA,
 )
-from season_simulation.constants import SAFE_EMAIL_RECIPIENT  # noqa: E402
+from season_simulation.confirmation import ConfirmationError, require_execute_gates  # noqa: E402
+from season_simulation.constants import (  # noqa: E402
+    CONFIRM_DISPOSABLE_TOKEN,
+    CONFIRM_TOKEN,
+    SAFE_EMAIL_RECIPIENT,
+)
 from season_simulation.reference_data import load_reference_snapshot  # noqa: E402
 from season_simulation.run_registry import new_run_id, run_marker  # noqa: E402
 
@@ -63,8 +69,35 @@ def _patch_formula_via_meta(token: str, formula: str) -> dict:
     return body
 
 
-def main() -> int:
-    run_id = new_run_id(suffix="cascade1")
+def _parse_args(argv=None):
+    p = argparse.ArgumentParser(description='Gated mini cascade live verify')
+    p.add_argument('--execute', action='store_true')
+    p.add_argument('--confirm', default='')
+    p.add_argument('--confirm-disposable', default='')
+    p.add_argument('--simulation-id', default='')
+    return p.parse_args(argv)
+
+
+def main(argv=None) -> int:
+    args = _parse_args(argv)
+    run_id = args.simulation_id or new_run_id(suffix='cascade1')
+    try:
+        require_execute_gates(
+            execute=bool(args.execute),
+            confirm=args.confirm,
+            confirm_disposable=args.confirm_disposable,
+            simulation_id=run_id,
+            action='cascade mini live verify',
+        )
+    except ConfirmationError as exc:
+        print(
+            f'Refused: {exc}\n'
+            f'Required: --execute --confirm "{CONFIRM_TOKEN}" '
+            f'--confirm-disposable "{CONFIRM_DISPOSABLE_TOKEN}"',
+            file=sys.stderr,
+        )
+        return 2
+
     marker = run_marker(run_id)
     out = {
         "run_id": run_id,

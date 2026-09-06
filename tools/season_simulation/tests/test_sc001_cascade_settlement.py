@@ -488,6 +488,26 @@ class TestDuplicateXpPreventionSemantics(unittest.TestCase):
         self.assertFalse(summary["complete"])
         self.assertEqual(summary["settled_countable"], 1)
 
+    def test_vacuous_zero_zero_not_complete(self):
+        from season_simulation.cascade_settlement import SubmissionXpStatus
+
+        statuses = [
+            SubmissionXpStatus(
+                submission_id="a",
+                countable=False,
+                enrollment_linked=True,
+                week_linked=True,
+                was_linked=True,
+                reconciliation_needed=0,
+                last_reconciled_signature="",
+                active_submission_xp_ids=[],
+                classification="inapplicable",
+            )
+        ]
+        summary = summarize_statuses(statuses)
+        self.assertFalse(summary["complete"])
+        self.assertTrue(summary["vacuous"])
+
 
 if __name__ == "__main__":
     unittest.main()
