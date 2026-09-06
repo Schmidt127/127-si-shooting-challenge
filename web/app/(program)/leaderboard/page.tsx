@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import {
-  LeaderboardEmptyState,
   LeaderboardErrorState,
   LeaderboardView,
 } from "@/components/leaderboard/leaderboard-view";
@@ -48,15 +47,8 @@ export default async function LeaderboardPage({ searchParams }: LeaderboardPageP
   try {
     const data = await fetchLeaderboard();
 
-    if (data.entries.length === 0) {
-      return (
-        <>
-          {structuredData}
-          <LeaderboardEmptyState />
-        </>
-      );
-    }
-
+    // Always render LeaderboardView (including empty transactional DB) so
+    // configured Grade Band filters stay visible for verification and UX.
     return (
       <>
         {structuredData}
