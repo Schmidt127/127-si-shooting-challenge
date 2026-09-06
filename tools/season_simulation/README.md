@@ -1,24 +1,24 @@
-# Season simulation — Athlete 1 (SC-SEASON-SIM-002)
+# Season simulation — SC-SEASON-SIM-001 (three-athlete) + SC-SEASON-SIM-002 (historical)
 
-Infrastructure for a full-season disposable simulation of the Shooting Challenge.
-**Default mode is dry-run / read-only.** Do not run execute until the gated clock
-override is live and Mike authorizes with exactly: `RUN SEASON SIMULATION`.
+Infrastructure for full-season disposable simulations of the Shooting Challenge.
+**Default mode is dry-run / read-only.** Do not run execute until authorized.
 
 | | |
 |---|---|
-| **Backlog ID** | SC-SEASON-SIM-002 |
-| **Athlete** | Athlete 1 · Grade 12 (disposable VERIFY only) |
+| **SC-SEASON-SIM-001** | Three-athlete package (Perfect / Recovery / Edge) — **READY, not executed** |
+| **SC-SEASON-SIM-002** | Single-athlete historical package — **COMPLETE** (T122531Z) |
 | **Window** | 2027-05-01 → 2027-06-30 inclusive (**61** days) |
-| **Execution manifest** | [`docs/deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md`](../../docs/deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md) — single path when Mike says `RUN SEASON SIMULATION` |
-| **Operator checklist** | [`docs/deploy-checklists/SC-SEASON-SIM-002-operator-checklist.md`](../../docs/deploy-checklists/SC-SEASON-SIM-002-operator-checklist.md) |
-| **Related** | SC-SEASON-SIM-001 (five-enrollment unattended — still Planned / Future) |
+| **Environment** | Production `appn84sqPw03zEbTT` only — **no DEV environment** |
+| **SC-001 manifest** | [`docs/deploy-checklists/SC-SEASON-SIM-001-EXECUTION-MANIFEST.md`](../../docs/deploy-checklists/SC-SEASON-SIM-001-EXECUTION-MANIFEST.md) |
+| **SC-002 manifest** | [`docs/deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md`](../../docs/deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md) |
 
 ## Can it run today?
 
 | Mode | Ready? |
 |---|---|
 | Offline tests / dry-run / preflight | Yes |
-| Full execute writer (idempotent) | **Yes in code** — creates Athlete, Enrollment (+ Program Instance), WAS, Submissions, Assets, HC, VF, Zoom Attendance, live `Attendees` patch |
+| Full execute writer (idempotent) | **Yes in code** — SC-002 single-athlete proven; SC-001 three-athlete dry-run + gates ready |
+| SC-001 three-athlete dry-run | **Yes** — `python -m season_simulation dry-run-three` |
 | Complete countable E2E on wall-clock 2026 | Formulas + writer ready; **paste 010 v10.13 / 114 v6.2 / 073 v4.6** before next execute (see operator checklist). Hub allowlist includes `schmidt@fairfieldbasketballclub.com`. |
 
 `CREATED_TIME()` / `Submitted At` **cannot** be API-backdated. Same-day / Perfect Week timing uses gated `Season Sim Test Submitted At` and/or `Perfect Week Manual Exception?` on disposable rows only.
@@ -51,7 +51,11 @@ Configuration is **always read from Airtable at runtime** — never hardcoded.
 tools/season_simulation/
   cli.py / __main__.py   CLI entry (`python -m season_simulation …`)
   preflight.py           Read-only connectivity + clock readiness
-  scenarios.py           Deterministic Athlete 1 61-day plan
+  scenarios.py           SC-SEASON-SIM-002 Athlete 1 mixed-path plan (historical)
+  scenarios_sc001.py     SC-SEASON-SIM-001 three-athlete plans
+  scenario_base.py       Shared DayPlan / AthleteScenario types
+  expectations_matrix.py Pre-execute weekly + XP expectation tables
+  three_athlete.py       SC-001 orchestration + dry-run-three
   simulation_clock.py    Harness clock (Activity Date / day number)
   clock_override.py      Gated Production vs sim future-date / same-day model
   season_policy.py       Early Bird / Week 9 / 18 PHA / late homework
@@ -182,7 +186,18 @@ python -m season_simulation dry-run --offline-fixture
 python -m season_simulation evidence --simulation-id "SEASON-SIM-2027-…"
 ```
 
-### Execute (multi-gate — authorized only)
+### SC-SEASON-SIM-001 three-athlete dry-run (default)
+
+```powershell
+python -m season_simulation dry-run-three
+python -m season_simulation dry-run-three --offline-fixture
+```
+
+Future live execute requires Mike phrase **`RUN 3-ATHLETE SEASON SIMULATION`** plus
+`--confirm-three-athlete THREE-ATHLETE-SEASON-SIM-2027` and
+`--authorization-phrase "RUN 3-ATHLETE SEASON SIMULATION"`.
+
+### SC-SEASON-SIM-002 single-athlete (historical)
 
 Record creation does **not** require `--enable-email-delivery` (email stays off by default).
 

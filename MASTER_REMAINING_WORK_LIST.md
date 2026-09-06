@@ -331,7 +331,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-F07 | 118/119 weekly scheduler positive arm (SC-031/035) | **COMPLETE** (harness 2026-08-30) | `docs/testing/weekly-email/MRW-F07-POSITIVE-ARM-HARNESS.md`; live `--apply` Mike disposable WAS |
 | MRW-F08 | Offline contract suite green on master after merges | **COMPLETE** | repository-qa workflow; docs-canonical-header drift fixed 2026-08-30 |
 
-> **Future (not active):** **SC-SEASON-SIM-001** / **MRW-H11** — 60-day five-enrollment season simulation. Tracked under Section H as **FUTURE**. Distinct from SC-005 matrix and from completed SC-PW-E2E. Do not start implementation from this note.
+> **SC-SEASON-SIM-001 / MRW-H11** — three-athlete full-season simulation. **READY** (preparation 2026-09-06); live execute **NOT authorized**. Extends completed **SC-SEASON-SIM-002** package. **No DEV environment.**
 
 ---
 
@@ -370,7 +370,7 @@ Do **not** re-run these for WAS `recl3DmBh22ADPWWe`. Steps 6–9 already satisfi
 | MRW-H08 | C-027 major-event notifications | FUTURE | |
 | MRW-H09 | Early-bird registration config (SC-066) | FUTURE | Decision: use early-bird; dates TBD |
 | MRW-H10 | Recorded Zoom half-XP writer (SC-147) | **Repo prep shipped** | Draft + offline conflict matrix; Mike: slot + `ZOOM_RECORDING` rule row; do not overload 117 |
-| MRW-H11 | SC-SEASON-SIM-001 60-day five-enrollment season simulation | **FUTURE** | Planned only — no full simulation run. **SC-SEASON-SIM-002** full execute writer + clock-override package in repo (`tools/season_simulation/` + operator checklist); early countable E2E needs Mike OMNI gated formula paste — execute not run. |
+| MRW-H11 | SC-SEASON-SIM-001 three-athlete season simulation | **READY** (not executed) | Preparation complete 2026-09-06: `dry-run-three`, expectation matrices, SC-001 manifests. **SC-SEASON-SIM-002** COMPLETE (T122531Z). Live execute requires Mike phrase `RUN 3-ATHLETE SEASON SIMULATION`. **No DEV.** |
 | MRW-H12 | FUT-029 Grade-Band Homework Platform and Homework Intake Adapter | **Deferred — DO NOT IMPLEMENT** | In-app grade-band homework player + Homework Intake Adapter feeding existing HC/XP/feedback/WAS/Perfect Week spine. **Not required** to finish the current app. **Do not implement** until Mike separately authorizes. Out of scope for completion wave 2026-09-05 / SC-162. Plan: [`docs/next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md`](docs/next-wave/homework-pipeline/FUT-029-GRADE-BAND-HOMEWORK-PLATFORM-PLAN.md). Historical Fillout brief superseded: [`docs/next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md`](docs/next-wave/homework-pipeline/FUT-029-HYBRID-FILLOUT-HOMEWORK-BRIEF.md). *(Requested as FUT-018; that ID already used for landing-page work.)* |
 | MRW-H13 | FUT-048 CloudFront Custom Domain for Homework Resources | **DEFERRED** (Optional / low) | Optional branded domain (e.g. `homework.fairfieldbasketballclub.com`) for S3 **`resources-homework`** / CloudFront **`resources-homework-cf`**. Current permanent domain **`d21ixrrrqpqz29.cloudfront.net` is acceptable** for Airtable and Production. **Not a launch blocker.** **Not part of FUT-029.** No CloudFront/DNS/S3/Airtable/Production work required now; do **not** delay homework-resource migration for this cosmetic improvement. Preserve `*.cloudfront.net` as fallback if ever done. Master list: [`docs/127-SI-MASTER-FUTURE-WORK-LIST.md`](docs/127-SI-MASTER-FUTURE-WORK-LIST.md) § FUT-048. |
 

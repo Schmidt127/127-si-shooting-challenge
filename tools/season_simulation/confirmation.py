@@ -5,7 +5,10 @@ from __future__ import annotations
 from .constants import (
     CONFIRM_CLEANUP_TOKEN,
     CONFIRM_DISPOSABLE_TOKEN,
+    CONFIRM_THREE_ATHLETE_TOKEN,
     CONFIRM_TOKEN,
+    THREE_ATHLETE_AUTHORIZATION_PHRASE,
+    THREE_ATHLETE_RUN_SUFFIX,
 )
 
 
@@ -92,6 +95,67 @@ def is_execute_fully_gated(
             execute=execute,
             confirm=confirm,
             confirm_disposable=confirm_disposable,
+            simulation_id=simulation_id,
+        )
+        return True
+    except ConfirmationError:
+        return False
+
+
+def require_three_athlete_execute_gates(
+    *,
+    execute: bool,
+    confirm: str | None,
+    confirm_disposable: str | None,
+    confirm_three_athlete: str | None,
+    authorization_phrase: str | None,
+    simulation_id: str | None,
+    action: str = "three-athlete season simulation execute",
+) -> None:
+    """SC-SEASON-SIM-001 execute — stricter than single-athlete SC-002."""
+    require_execute_gates(
+        execute=execute,
+        confirm=confirm,
+        confirm_disposable=confirm_disposable,
+        simulation_id=simulation_id,
+        action=action,
+    )
+    if (confirm_three_athlete or "") != CONFIRM_THREE_ATHLETE_TOKEN:
+        raise ConfirmationError(
+            f"{action} requires --confirm-three-athlete "
+            f"\"{CONFIRM_THREE_ATHLETE_TOKEN}\" exactly; "
+            f"got {confirm_three_athlete!r}"
+        )
+    if (authorization_phrase or "").strip() != THREE_ATHLETE_AUTHORIZATION_PHRASE:
+        raise ConfirmationError(
+            f"{action} requires --authorization-phrase "
+            f"\"{THREE_ATHLETE_AUTHORIZATION_PHRASE}\" exactly; "
+            f"got {authorization_phrase!r}"
+        )
+    sid = (simulation_id or "").strip()
+    if THREE_ATHLETE_RUN_SUFFIX not in sid:
+        raise ConfirmationError(
+            f"{action} requires --simulation-id containing "
+            f"\"{THREE_ATHLETE_RUN_SUFFIX}\"; got {simulation_id!r}"
+        )
+
+
+def is_three_athlete_execute_gated(
+    *,
+    execute: bool,
+    confirm: str | None,
+    confirm_disposable: str | None,
+    confirm_three_athlete: str | None,
+    authorization_phrase: str | None,
+    simulation_id: str | None,
+) -> bool:
+    try:
+        require_three_athlete_execute_gates(
+            execute=execute,
+            confirm=confirm,
+            confirm_disposable=confirm_disposable,
+            confirm_three_athlete=confirm_three_athlete,
+            authorization_phrase=authorization_phrase,
             simulation_id=simulation_id,
         )
         return True

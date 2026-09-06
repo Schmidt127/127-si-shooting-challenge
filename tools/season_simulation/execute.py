@@ -25,7 +25,7 @@ from .confirmation import ConfirmationError, require_execute_gates
 from .constants import SAFE_EMAIL_RECIPIENT, SIM_START
 from .recipient_safety import assert_safe_recipient
 from .run_registry import run_marker
-from .scenarios import Athlete1Scenario
+from .scenario_base import AthleteScenario
 from .season_policy import week_label_for_activity_date
 from .simulation_clock import SimulationClock
 from .writer import (
@@ -43,7 +43,7 @@ class ExecuteAborted(RuntimeError):
 
 
 def build_intended_writes(
-    scenario: Athlete1Scenario,
+    scenario: AthleteScenario,
     clock: SimulationClock,
     *,
     ctx: ExecuteContext | None = None,
@@ -606,7 +606,7 @@ def assert_execute_clock_ready(
 
 def run_execute(
     *,
-    scenario: Athlete1Scenario,
+    scenario: AthleteScenario,
     clock: SimulationClock,
     execute: bool,
     confirm: str | None,
