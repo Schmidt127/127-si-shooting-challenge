@@ -15,6 +15,10 @@ export const PUBLIC_AIRTABLE_TABLES = {
   achievementUnlocks: { name: "Athlete Achievement Unlocks", id: "tblyT2AQo1JbvmvZS" },
   submissions: { name: "Submissions", id: "tblEVjVpGGlPTsYSt" },
   homeworkCompletions: { name: "Homework Completions", id: "tblv58ppTFDBXb3nv" },
+  /** Immutable Curriculum Hub attempt history. */
+  homeworkAttempts: { name: "Homework Attempts", id: "tblaSFVpgXW1e7Qng" },
+  /** Immutable per-question Curriculum Hub responses. */
+  homeworkResponses: { name: "Homework Responses", id: "tblQ1KR8l14e5FyVX" },
   /** Live public homework content table name (formerly FBC Curriculum - SYNC). */
   homeworkLibrary: { name: "Homework Library", id: "tblUuxwYlX4EQ9MKE" },
   programHomeworkAssignments: { name: "Program Homework Assignments", id: "tblhA3maf7xOa8EUS" },
