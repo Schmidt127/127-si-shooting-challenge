@@ -527,6 +527,42 @@ export async function processCurriculumHomeworkSubmit(input: {
       completionStatus !== "" &&
       completionStatus !== "Not Submitted"
     ) {
+      // Assignment already finalized on a prior Curriculum submit (often a new
+      // Idempotency-Key retry after Hub outbox lost the Delivered receipt).
+      // Return the existing attempt receipt instead of a hard conflict.
+      const priorAttempts = await listAttemptsForCompletion(existing.id);
+      const latest = priorAttempts.reduce<{
+        id: string;
+        attemptNumber: number;
+      } | null>((best, row) => {
+        const n =
+          typeof row.fields["Attempt Number"] === "number" ? row.fields["Attempt Number"] : 0;
+        if (n < 1) return best;
+        if (!best || n > best.attemptNumber) {
+          return { id: row.id, attemptNumber: n };
+        }
+        return best;
+      }, null);
+
+      if (latest) {
+        logSubmit("already_submitted_recovery", {
+          enrollmentId: payload.enrollmentId,
+          assignmentKey: payload.assignmentKey,
+          homeworkCompletionId: existing.id,
+          attemptNumber: latest.attemptNumber,
+          completionStatus,
+        });
+        return {
+          ok: true,
+          idempotent: true,
+          receipt: {
+            submissionId: latest.id,
+            homeworkCompletionId: existing.id,
+            attemptNumber: latest.attemptNumber,
+          },
+        };
+      }
+
       return {
         ok: false,
         status: 409,
