@@ -226,6 +226,7 @@ export type HomeworkCompletionWriteFields = {
   Homework: string[];
   "Program Homework Assignment"?: string[];
   Week?: string[];
+  "Grade Band"?: string[];
   "Completion Status": "Submitted";
   "Review Status": "Ready for Review";
   "Submission Date": string;
@@ -240,12 +241,16 @@ export type HomeworkCompletionWriteFields = {
 /**
  * Map a validated submit payload into HC write fields.
  * Never sets Satisfactory?, Review Complete, Coach Feedback, or XP fields.
+ *
+ * Grade Band on HC is the Enrollment-linked Grade Bands record (SC model:
+ * K-2 / 3-4 / 5-6 / …), not the Curriculum Hub session band string (K-3 / 4-6 / …).
  */
 export function buildHomeworkCompletionFields(input: {
   enrollmentId: string;
   libraryId: string;
   phaId: string | null;
   weekId: string | null;
+  gradeBandId: string | null;
   idempotencyKey: string;
   assignmentKey: string;
   submittedAt: string;
@@ -272,6 +277,9 @@ export function buildHomeworkCompletionFields(input: {
   }
   if (input.weekId) {
     fields.Week = [input.weekId];
+  }
+  if (input.gradeBandId) {
+    fields["Grade Band"] = [input.gradeBandId];
   }
   if (notes.length > 0) {
     fields.Notes = notes.join("\n");
