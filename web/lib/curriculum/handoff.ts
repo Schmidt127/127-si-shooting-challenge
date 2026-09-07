@@ -8,7 +8,7 @@ export type CurriculumHandoffRecord = {
   enrollmentId: string;
   gradeBand: CurriculumGradeBand;
   displayName: string;
-  /** When set, Hub opens `/homework/{Curriculum Assignment Slug}` for this key. */
+  /** When set, Hub opens `/{Curriculum Assignment Slug}` for this key. */
   assignmentKey?: string;
   createdAt: number;
   expiresAt: number;
