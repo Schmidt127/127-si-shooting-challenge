@@ -33,6 +33,7 @@ export async function GET(request: Request) {
     {
       enrollmentId: result.enrollmentId,
       assignments: result.assignments,
+      ...(result.emptyReason ? { emptyReason: result.emptyReason } : {}),
     },
     {
       status: 200,

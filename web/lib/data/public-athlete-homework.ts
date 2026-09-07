@@ -15,6 +15,7 @@ import {
 } from "@/lib/data/airtable-values";
 import { challengeTodayDateKey } from "@/lib/data/public-athlete-profile";
 import { parseWeekNumber, resolvePublicAssignmentName } from "@/lib/data/homework";
+import { resolveAthleteHomeworkDetailHref } from "@/lib/curriculum/homework-link";
 import type {
   PublicHomeworkAssignment,
   PublicHomeworkCompletionStatus,
@@ -33,6 +34,7 @@ export type PublicHomeworkLibraryFields = {
   "Assignment Full Name"?: unknown;
   "Assignment Full Name - Display"?: unknown;
   "Assignment Title"?: unknown;
+  "Assignment Key"?: unknown;
   "Brief Description - Display"?: unknown;
   "Homework Number"?: unknown;
   "Assignment Number"?: unknown;
@@ -261,7 +263,10 @@ export function buildPublicHomeworkAssignments(input: {
       creditEligible: credit.creditEligible,
       pastDue: credit.pastDue,
       lateSubmission: credit.lateSubmission,
-      homeworkDetailHref: homeworkId ? `/homework/${homeworkId}` : null,
+      homeworkDetailHref: resolveAthleteHomeworkDetailHref({
+        assignmentKey: libraryFields["Assignment Key"],
+        homeworkLibraryRecordId: homeworkId,
+      }),
       viewSubmittedHomeworkHref: null,
       sortWeekStart: weekMeta?.startDate ?? null,
       sortSlot: homeworkSlotOrder(slot),
