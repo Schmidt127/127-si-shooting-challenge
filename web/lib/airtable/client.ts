@@ -203,3 +203,123 @@ export async function listAirtableRecords<TFields extends Record<string, unknown
   const { baseId } = requireAirtableConfig();
   return listAirtableRecordsForBase<TFields>(baseId, params);
 }
+
+export type AirtableWriteParams = {
+  tableName: string;
+  fields: Record<string, unknown>;
+  /** Allow Airtable to create missing single-select choices (e.g. Source System). */
+  typecast?: boolean;
+};
+
+export type AirtableUpdateParams = AirtableWriteParams & {
+  recordId: string;
+};
+
+type AirtableMutationResponse<TFields extends Record<string, unknown>> = {
+  id: string;
+  fields: TFields;
+  createdTime?: string;
+};
+
+type AirtableBatchCreateResponse<TFields extends Record<string, unknown>> = {
+  records: Array<AirtableMutationResponse<TFields>>;
+};
+
+/**
+ * Create one record in the Shooting Challenge base.
+ * Server-only — never log field values that may contain athlete answers.
+ */
+export async function createAirtableRecord<TFields extends Record<string, unknown>>(
+  params: AirtableWriteParams,
+): Promise<AirtableMutationResponse<TFields>> {
+  const { token, baseId } = requireAirtableConfig();
+  const url = `${AIRTABLE_API_BASE}/${baseId}/${encodeURIComponent(params.tableName)}`;
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      fields: params.fields,
+      typecast: params.typecast === true,
+    }),
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new AirtableApiError(response.status, body);
+  }
+
+  return (await response.json()) as AirtableMutationResponse<TFields>;
+}
+
+/**
+ * Patch one record in the Shooting Challenge base.
+ * Server-only — never log field values that may contain athlete answers.
+ */
+export async function updateAirtableRecord<TFields extends Record<string, unknown>>(
+  params: AirtableUpdateParams,
+): Promise<AirtableMutationResponse<TFields>> {
+  const { token, baseId } = requireAirtableConfig();
+  const url = `${AIRTABLE_API_BASE}/${baseId}/${encodeURIComponent(params.tableName)}/${encodeURIComponent(params.recordId)}`;
+  const response = await fetch(url, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      fields: params.fields,
+      typecast: params.typecast === true,
+    }),
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new AirtableApiError(response.status, body);
+  }
+
+  return (await response.json()) as AirtableMutationResponse<TFields>;
+}
+
+/**
+ * Create up to 10 records in one request (Airtable batch limit).
+ * Server-only — never log answer bodies.
+ */
+export async function createAirtableRecords<TFields extends Record<string, unknown>>(params: {
+  tableName: string;
+  records: Array<{ fields: Record<string, unknown> }>;
+  typecast?: boolean;
+}): Promise<AirtableBatchCreateResponse<TFields>> {
+  if (params.records.length === 0) {
+    return { records: [] };
+  }
+  if (params.records.length > 10) {
+    throw new Error("Airtable batch create supports at most 10 records per request.");
+  }
+
+  const { token, baseId } = requireAirtableConfig();
+  const url = `${AIRTABLE_API_BASE}/${baseId}/${encodeURIComponent(params.tableName)}`;
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      records: params.records,
+      typecast: params.typecast === true,
+    }),
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new AirtableApiError(response.status, body);
+  }
+
+  return (await response.json()) as AirtableBatchCreateResponse<TFields>;
+}
