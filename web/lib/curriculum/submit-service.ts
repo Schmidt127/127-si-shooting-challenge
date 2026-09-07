@@ -8,6 +8,7 @@ import { AirtableApiError } from "@/lib/airtable/errors";
 import { PHA_AIRTABLE_FIELDS } from "@/lib/airtable/pha-field-map";
 import { PUBLIC_AIRTABLE_TABLES } from "@/lib/airtable/public-tables";
 import { asBoolean, linkedRecordIds, selectName } from "@/lib/data/airtable-values";
+import { phaMatchesEnrollmentGradeBand } from "@/lib/data/public-athlete-homework";
 import { escapeAirtableString } from "@/lib/data/public-athlete-profile";
 import {
   assertNoForbiddenHcFields,
@@ -24,6 +25,7 @@ const TABLES = PUBLIC_AIRTABLE_TABLES;
 type EnrollmentFields = {
   "Active?"?: unknown;
   "Program Instance"?: unknown;
+  "Grade Band"?: unknown;
   "Homework Completions"?: unknown;
 };
 
@@ -36,6 +38,7 @@ type HcFields = {
   Homework?: unknown;
   "Program Homework Assignment"?: unknown;
   Week?: unknown;
+  "Grade Band"?: unknown;
   "Completion Status"?: unknown;
   "Curriculum Idempotency Key"?: unknown;
   "Assignment Key"?: unknown;
@@ -73,12 +76,13 @@ async function findEnrollment(enrollmentId: string): Promise<{
   id: string;
   active: boolean;
   programInstanceId: string | null;
+  gradeBandId: string | null;
   homeworkCompletionIds: string[];
 } | null> {
   const response = await listAirtableRecords<EnrollmentFields>({
     tableName: TABLES.enrollments.name,
     filterByFormula: `RECORD_ID()='${escapeAirtableString(enrollmentId)}'`,
-    fields: ["Active?", "Program Instance", "Homework Completions"],
+    fields: ["Active?", "Program Instance", "Grade Band", "Homework Completions"],
     maxRecords: 1,
     revalidateSeconds: 0,
   });
@@ -88,6 +92,7 @@ async function findEnrollment(enrollmentId: string): Promise<{
     id: record.id,
     active: asBoolean(record.fields["Active?"]),
     programInstanceId: linkedRecordIds(record.fields["Program Instance"])[0] ?? null,
+    gradeBandId: linkedRecordIds(record.fields["Grade Band"])[0] ?? null,
     homeworkCompletionIds: linkedRecordIds(record.fields["Homework Completions"]),
   };
 }
@@ -176,16 +181,40 @@ async function findPriorByIdempotencyKey(
   };
 }
 
+/**
+ * Filter active Program Instance PHAs down to library + enrollment Grade Band.
+ * Exported for unit tests — keep in sync with assignments-service band matching.
+ */
+export function filterPhaCandidatesForSubmit(input: {
+  records: Array<{ id: string; fields: PhaFields }>;
+  libraryId: string;
+  enrollmentGradeBandId: string;
+}): Array<{ id: string; fields: PhaFields }> {
+  return input.records.filter((record) => {
+    if (record.fields[PHA_AIRTABLE_FIELDS.active] !== true) return false;
+    const libraryIds = linkedRecordIds(record.fields[PHA_AIRTABLE_FIELDS.homeworkAssignment]);
+    if (!libraryIds.includes(input.libraryId)) return false;
+    return phaMatchesEnrollmentGradeBand(
+      linkedRecordIds(record.fields[PHA_AIRTABLE_FIELDS.gradeBand]),
+      input.enrollmentGradeBandId,
+    );
+  });
+}
+
 async function resolvePhaForLibrary(input: {
   libraryId: string;
   programInstanceId: string | null;
+  enrollmentGradeBandId: string | null;
 }): Promise<
-  | { status: "resolved"; phaId: string; weekId: string | null }
+  | { status: "resolved"; phaId: string; weekId: string }
   | { status: "unresolved"; reason: string }
-  | { status: "ambiguous" }
+  | { status: "ambiguous"; reason: string }
 > {
   if (!input.programInstanceId) {
     return { status: "unresolved", reason: "Enrollment has no Program Instance link." };
+  }
+  if (!input.enrollmentGradeBandId) {
+    return { status: "unresolved", reason: "Enrollment has no Grade Band link." };
   }
 
   const filterByFormula = `AND({${PHA_AIRTABLE_FIELDS.active}}=1,FIND('${escapeAirtableString(input.programInstanceId)}',ARRAYJOIN({${PHA_AIRTABLE_FIELDS.programInstanceRid}})))`;
@@ -195,6 +224,7 @@ async function resolvePhaForLibrary(input: {
     fields: [
       PHA_AIRTABLE_FIELDS.homeworkAssignment,
       PHA_AIRTABLE_FIELDS.week,
+      PHA_AIRTABLE_FIELDS.gradeBand,
       PHA_AIRTABLE_FIELDS.active,
       PHA_AIRTABLE_FIELDS.programInstanceRid,
     ],
@@ -202,25 +232,39 @@ async function resolvePhaForLibrary(input: {
     revalidateSeconds: 0,
   });
 
-  const matches = response.records.filter((record) =>
-    linkedRecordIds(record.fields[PHA_AIRTABLE_FIELDS.homeworkAssignment]).includes(input.libraryId),
-  );
+  const matches = filterPhaCandidatesForSubmit({
+    records: response.records,
+    libraryId: input.libraryId,
+    enrollmentGradeBandId: input.enrollmentGradeBandId,
+  });
 
   if (matches.length === 0) {
     return {
       status: "unresolved",
-      reason: "No active Program Homework Assignment for this library + program instance.",
+      reason:
+        "No active Program Homework Assignment matches this Homework Library + Program Instance + Enrollment Grade Band.",
     };
   }
   if (matches.length > 1) {
-    return { status: "ambiguous" };
+    return {
+      status: "ambiguous",
+      reason: "Multiple active Program Homework Assignments match this enrollment and assignment.",
+    };
   }
 
   const pha = matches[0];
+  const weekId = linkedRecordIds(pha.fields[PHA_AIRTABLE_FIELDS.week])[0] ?? null;
+  if (!weekId) {
+    return {
+      status: "unresolved",
+      reason: "Matched Program Homework Assignment has no Week link.",
+    };
+  }
+
   return {
     status: "resolved",
     phaId: pha.id,
-    weekId: linkedRecordIds(pha.fields[PHA_AIRTABLE_FIELDS.week])[0] ?? null,
+    weekId,
   };
 }
 
@@ -245,6 +289,7 @@ async function loadCompletionsByIds(
         "Homework",
         "Program Homework Assignment",
         "Week",
+        "Grade Band",
         "Completion Status",
         "Curriculum Idempotency Key",
         "Assignment Key",
@@ -482,23 +527,32 @@ export async function processCurriculumHomeworkSubmit(input: {
     const phaResult = await resolvePhaForLibrary({
       libraryId: library.id,
       programInstanceId: enrollment.programInstanceId,
+      enrollmentGradeBandId: enrollment.gradeBandId,
     });
     if (phaResult.status === "ambiguous") {
       return {
         ok: false,
         status: 409,
-        error: "Multiple Program Homework Assignments match this enrollment and assignment.",
+        error: phaResult.reason,
+      };
+    }
+    if (phaResult.status === "unresolved") {
+      logSubmit("pha_unresolved", {
+        enrollmentId: payload.enrollmentId,
+        assignmentKey: payload.assignmentKey,
+        reason: phaResult.reason,
+      });
+      return {
+        ok: false,
+        status: 422,
+        error: `Structured Curriculum scheduling context incomplete: ${phaResult.reason}`,
       };
     }
 
-    const phaId = phaResult.status === "resolved" ? phaResult.phaId : null;
-    const weekId = phaResult.status === "resolved" ? phaResult.weekId : null;
+    const phaId = phaResult.phaId;
+    const weekId = phaResult.weekId;
+    const gradeBandId = enrollment.gradeBandId!;
     const notes: string[] = [];
-    if (phaResult.status === "unresolved") {
-      notes.push(
-        `Curriculum Hub submit: PHA unresolved (${phaResult.reason}). HC created with Enrollment+Homework for correction pipeline.`,
-      );
-    }
 
     const completions = await loadCompletionsByIds(enrollment.homeworkCompletionIds);
     const existingPick = pickExistingCompletion({
@@ -545,6 +599,41 @@ export async function processCurriculumHomeworkSubmit(input: {
       }, null);
 
       if (latest) {
+        const missingPha =
+          linkedRecordIds(existing.fields["Program Homework Assignment"]).length === 0;
+        const missingWeek = linkedRecordIds(existing.fields.Week).length === 0;
+        const missingGradeBand = linkedRecordIds(existing.fields["Grade Band"]).length === 0;
+        if (missingPha || missingWeek || missingGradeBand) {
+          // Repair HCs created before Structured Curriculum required full
+          // scheduling context (Enrollment+Homework only / PHA unresolved note).
+          await updateAirtableRecord({
+            tableName: TABLES.homeworkCompletions.name,
+            recordId: existing.id,
+            fields: {
+              "Program Homework Assignment": [phaId],
+              Week: [weekId],
+              "Grade Band": [gradeBandId],
+              Notes:
+                typeof existing.fields.Notes === "string" &&
+                /PHA unresolved/i.test(existing.fields.Notes)
+                  ? existing.fields.Notes.replace(
+                      /Curriculum Hub submit: PHA unresolved[^\n]*/gi,
+                      "Curriculum Hub submit: scheduling context backfilled after PHA resolution.",
+                    ).trim()
+                  : existing.fields.Notes,
+            },
+            typecast: true,
+          });
+          logSubmit("scheduling_context_backfill", {
+            enrollmentId: payload.enrollmentId,
+            assignmentKey: payload.assignmentKey,
+            homeworkCompletionId: existing.id,
+            phaId,
+            weekId,
+            gradeBandId,
+          });
+        }
+
         logSubmit("already_submitted_recovery", {
           enrollmentId: payload.enrollmentId,
           assignmentKey: payload.assignmentKey,
@@ -611,6 +700,7 @@ export async function processCurriculumHomeworkSubmit(input: {
       libraryId: library.id,
       phaId,
       weekId,
+      gradeBandId,
       idempotencyKey,
       assignmentKey: payload.assignmentKey,
       submittedAt: payload.submittedAt,

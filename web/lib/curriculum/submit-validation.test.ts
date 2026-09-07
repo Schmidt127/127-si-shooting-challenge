@@ -149,11 +149,12 @@ describe("HC field mapping", () => {
       libraryId: "recLibrary0000001",
       phaId: "recPha00000000001",
       weekId: "recWeek0000000001",
+      gradeBandId: "recGradeBand00001",
       idempotencyKey: "idem-key-123456",
       assignmentKey: "AESOP_CROW_PITCHER",
       submittedAt: "2026-09-07T18:30:00.000Z",
       answers,
-      notes: ["PHA unresolved note"],
+      notes: ["Operator note"],
     });
 
     expect(fields).toMatchObject({
@@ -161,6 +162,7 @@ describe("HC field mapping", () => {
       Homework: ["recLibrary0000001"],
       "Program Homework Assignment": ["recPha00000000001"],
       Week: ["recWeek0000000001"],
+      "Grade Band": ["recGradeBand00001"],
       "Completion Status": "Submitted",
       "Review Status": "Ready for Review",
       "Submission Date": "2026-09-07",
@@ -170,7 +172,7 @@ describe("HC field mapping", () => {
       "Assignment Key": "AESOP_CROW_PITCHER",
     });
     expect(fields["Curriculum Answers Snapshot"]).toContain("Q1. First?");
-    expect(fields.Notes).toContain("PHA unresolved note");
+    expect(fields.Notes).toContain("Operator note");
 
     for (const forbidden of FORBIDDEN_HC_WRITE_FIELDS) {
       expect(Object.prototype.hasOwnProperty.call(fields, forbidden)).toBe(false);
@@ -181,12 +183,13 @@ describe("HC field mapping", () => {
     ).toThrow(/Satisfactory/);
   });
 
-  it("omits PHA and Week when unresolved", () => {
+  it("omits PHA, Week, and Grade Band when unresolved ids are null", () => {
     const fields = buildHomeworkCompletionFields({
       enrollmentId: "recEnroll00000001",
       libraryId: "recLibrary0000001",
       phaId: null,
       weekId: null,
+      gradeBandId: null,
       idempotencyKey: "idem-key-123456",
       assignmentKey: "AESOP_CROW_PITCHER",
       submittedAt: "2026-09-07T18:30:00.000Z",
@@ -194,6 +197,7 @@ describe("HC field mapping", () => {
     });
     expect(fields["Program Homework Assignment"]).toBeUndefined();
     expect(fields.Week).toBeUndefined();
+    expect(fields["Grade Band"]).toBeUndefined();
   });
 });
 
