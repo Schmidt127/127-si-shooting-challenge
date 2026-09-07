@@ -12,6 +12,7 @@ import { phaMatchesEnrollmentGradeBand } from "@/lib/data/public-athlete-homewor
 import { escapeAirtableString } from "@/lib/data/public-athlete-profile";
 import {
   assertNoForbiddenHcFields,
+  answersForHomeworkResponses,
   buildAttemptKey,
   buildHomeworkCompletionFields,
   buildResponseKey,
@@ -19,6 +20,7 @@ import {
   type CurriculumSubmitPayload,
   type CurriculumSubmitReceipt,
 } from "@/lib/curriculum/submit-validation";
+import { bindCurriculumSubmitAssets } from "@/lib/curriculum/upload-staging-service";
 
 const TABLES = PUBLIC_AIRTABLE_TABLES;
 
@@ -347,8 +349,12 @@ async function listAttemptsForCompletion(homeworkCompletionId: string): Promise<
 async function writeResponses(input: {
   attemptKey: string;
   answers: CurriculumSubmitPayload["answers"];
+  assets?: CurriculumSubmitPayload["assets"];
 }): Promise<void> {
-  const sorted = [...input.answers].sort((a, b) => a.questionOrder - b.questionOrder);
+  // file_upload answers associate via Submission Asset Label = questionKey — no Response row.
+  const sorted = answersForHomeworkResponses(input.answers, input.assets).sort(
+    (a, b) => a.questionOrder - b.questionOrder,
+  );
   for (let i = 0; i < sorted.length; i += 10) {
     const chunk = sorted.slice(i, i + 10);
     await createAirtableRecords({
@@ -396,7 +402,11 @@ async function createAttemptRecord(input: {
     },
   });
 
-  await writeResponses({ attemptKey, answers: input.payload.answers });
+  await writeResponses({
+    attemptKey,
+    answers: input.payload.answers,
+    assets: input.payload.assets,
+  });
   return { id: created.id };
 }
 
@@ -705,6 +715,7 @@ export async function processCurriculumHomeworkSubmit(input: {
       assignmentKey: payload.assignmentKey,
       submittedAt: payload.submittedAt,
       answers: payload.answers,
+      assets: payload.assets,
       notes,
     });
 
@@ -732,6 +743,45 @@ export async function processCurriculumHomeworkSubmit(input: {
       idempotencyKey,
     });
 
+    let assetIds: string[] | undefined;
+    if (payload.assets && payload.assets.length > 0) {
+      // After HC + Attempt + non-file Responses: bind staged files → Submission Assets.
+      // No Daily Submission. SA links HC + Enrollment; Submission - Linked blank.
+      try {
+        const bound = await bindCurriculumSubmitAssets({
+          enrollmentId: payload.enrollmentId,
+          homeworkCompletionId: written.id,
+          attemptId: attempt.id,
+          assets: payload.assets,
+        });
+        assetIds = bound.map((row) => row.assetId);
+        logSubmit("assets_bound", {
+          enrollmentId: payload.enrollmentId,
+          assignmentKey: payload.assignmentKey,
+          homeworkCompletionId: written.id,
+          assetCount: assetIds.length,
+        });
+      } catch (error) {
+        const code =
+          error instanceof Error && "code" in error
+            ? String((error as { code?: string }).code ?? "")
+            : "";
+        if (
+          code === "STAGING_MISSING" ||
+          code === "STAGING_MISMATCH" ||
+          code === "STAGING_BYTES_MISSING"
+        ) {
+          return {
+            ok: false,
+            status: 422,
+            error:
+              "One or more staged file uploads are missing, expired, or do not match this submit.",
+          };
+        }
+        throw error;
+      }
+    }
+
     logSubmit("accepted", {
       enrollmentId: payload.enrollmentId,
       assignmentKey: payload.assignmentKey,
@@ -748,6 +798,7 @@ export async function processCurriculumHomeworkSubmit(input: {
         submissionId: attempt.id,
         homeworkCompletionId: written.id,
         attemptNumber,
+        ...(assetIds ? { assetIds } : {}),
       },
     };
   } catch (error) {

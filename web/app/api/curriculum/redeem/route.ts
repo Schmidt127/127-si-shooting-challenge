@@ -31,6 +31,7 @@ export async function POST(request: Request) {
     {
       enrollmentId: record.enrollmentId,
       gradeBand: record.gradeBand,
+      ...(record.sourceGrade ? { sourceGrade: record.sourceGrade } : {}),
       displayName: record.displayName,
       ...(record.assignmentKey ? { assignmentKey: record.assignmentKey } : {}),
     },

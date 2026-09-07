@@ -323,3 +323,39 @@ export async function createAirtableRecords<TFields extends Record<string, unkno
 
   return (await response.json()) as AirtableBatchCreateResponse<TFields>;
 }
+
+/**
+ * Upload binary content onto an existing record's attachment field
+ * via Airtable Content API (no public intermediate URL required).
+ * Server-only — never log file bytes.
+ */
+export async function uploadAirtableAttachmentContent(params: {
+  recordId: string;
+  attachmentFieldId: string;
+  fileName: string;
+  mimeType: string;
+  bytes: Buffer;
+}): Promise<void> {
+  const { token, baseId } = requireAirtableConfig();
+  const url =
+    `https://content.airtable.com/v0/${encodeURIComponent(baseId)}/` +
+    `${encodeURIComponent(params.recordId)}/` +
+    `${encodeURIComponent(params.attachmentFieldId)}/uploadAttachment`;
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": params.mimeType,
+      "x-filename": params.fileName,
+      "x-airtable-filename": params.fileName,
+    },
+    body: new Uint8Array(params.bytes),
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new AirtableApiError(response.status, body);
+  }
+}
