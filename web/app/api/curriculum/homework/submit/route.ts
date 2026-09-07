@@ -49,10 +49,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: result.error }, { status: result.status });
   }
 
-  return NextResponse.json(result.receipt, {
-    status: 200,
-    headers: {
-      "Cache-Control": "no-store",
+  return NextResponse.json(
+    {
+      status: result.idempotent ? "already_submitted" : "submitted",
+      attemptNumber: result.receipt.attemptNumber,
+      receipt: {
+        submissionId: result.receipt.submissionId,
+        homeworkCompletionId: result.receipt.homeworkCompletionId,
+      },
     },
-  });
+    {
+      status: 200,
+      headers: {
+        "Cache-Control": "no-store",
+      },
+    },
+  );
 }
