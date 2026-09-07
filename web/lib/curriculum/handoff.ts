@@ -8,6 +8,8 @@ export type CurriculumHandoffRecord = {
   enrollmentId: string;
   gradeBand: CurriculumGradeBand;
   displayName: string;
+  /** When set, Hub opens `/homework/{Curriculum Assignment Slug}` for this key. */
+  assignmentKey?: string;
   createdAt: number;
   expiresAt: number;
 };
@@ -54,6 +56,7 @@ export async function mintCurriculumHandoff(input: {
   enrollmentId: string;
   grade: string;
   displayName: string;
+  assignmentKey?: string | null;
   now?: number;
 }): Promise<string> {
   const gradeBand = curriculumGradeBandFromGrade(input.grade);
@@ -62,10 +65,16 @@ export async function mintCurriculumHandoff(input: {
   const now = input.now ?? Date.now();
   const rawToken = randomBytes(32).toString("base64url");
   const hash = tokenHash(rawToken);
+  const assignmentKey =
+    typeof input.assignmentKey === "string" &&
+    /^[A-Z][A-Z0-9]*(_[A-Z0-9]+)+$/.test(input.assignmentKey)
+      ? input.assignmentKey
+      : undefined;
   const record: CurriculumHandoffRecord = {
     enrollmentId: input.enrollmentId,
     gradeBand,
     displayName: cleanDisplayName(input.displayName),
+    ...(assignmentKey ? { assignmentKey } : {}),
     createdAt: now,
     expiresAt: now + HANDOFF_TTL_MS,
   };

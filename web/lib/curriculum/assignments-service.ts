@@ -53,7 +53,12 @@ export type CurriculumHubPhaAssignment = {
 };
 
 export type CurriculumAssignmentsResult =
-  | { ok: true; enrollmentId: string; assignments: CurriculumHubPhaAssignment[] }
+  | {
+      ok: true;
+      enrollmentId: string;
+      assignments: CurriculumHubPhaAssignment[];
+      emptyReason?: string;
+    }
   | { ok: false; status: 404 | 422; error: string };
 
 type EnrollmentFields = {
@@ -127,7 +132,13 @@ export async function listCurriculumAssignmentsForEnrollment(
   const homeworkCompletionIds = linkedRecordIds(enrollment.fields["Homework Completions"]);
 
   if (!programInstanceId) {
-    return { ok: true, enrollmentId, assignments: [] };
+    return {
+      ok: true,
+      enrollmentId,
+      assignments: [],
+      emptyReason:
+        "Enrollment has no Program Instance link, so Program Homework Assignments cannot be resolved.",
+    };
   }
 
   const phaFilter = `AND({${PHA_AIRTABLE_FIELDS.active}}=1,FIND('${escapeAirtableString(programInstanceId)}',ARRAYJOIN({${PHA_AIRTABLE_FIELDS.programInstanceRid}})))`;

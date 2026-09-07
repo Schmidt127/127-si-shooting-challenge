@@ -187,11 +187,18 @@ function HomeworkCard({ item }: { item: DashboardHomeworkItem }) {
 }
 
 function HomeworkLinks({ item, compact = false }: { item: DashboardHomeworkItem; compact?: boolean }) {
+  const isCurriculumHub =
+    Boolean(item.homeworkDetailHref?.includes("/api/curriculum/start"));
   return (
     <div className={cn("flex flex-wrap gap-3", compact ? "text-xs" : "text-sm")}>
       {item.homeworkDetailHref ? (
-        <CtaLink href={item.homeworkDetailHref} variant="link" className="px-0">
-          Assignment details
+        <CtaLink
+          href={item.homeworkDetailHref}
+          variant="link"
+          className="px-0"
+          prefetch={false}
+        >
+          {isCurriculumHub ? "Open Homework" : "Assignment details"}
         </CtaLink>
       ) : null}
       {item.viewSubmittedHomeworkHref ? (

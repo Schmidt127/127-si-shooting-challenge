@@ -18,6 +18,7 @@ import {
   selectName,
 } from "@/lib/data/airtable-values";
 import { mapAttachments, parseWeekNumber } from "@/lib/data/homework";
+import { resolveAthleteHomeworkDetailHref } from "@/lib/curriculum/homework-link";
 import { opaqueDashboardKey } from "@/lib/data/opaque-dashboard-key";
 import {
   completionStatusLabel,
@@ -379,7 +380,10 @@ async function buildPrivateHomeworkItems(input: {
       coachFeedback: asText(completion?.["Coach Feedback"], "") || null,
       parentFeedbackReady: completion ? asBoolean(completion["Parent Feedback Ready?"]) : null,
       parentFeedbackSent: completion ? asBoolean(completion["Parent Feedback Sent?"]) : null,
-      homeworkDetailHref: homeworkId ? `/homework/${homeworkId}` : null,
+      homeworkDetailHref: resolveAthleteHomeworkDetailHref({
+        assignmentKey: library["Assignment Key"],
+        homeworkLibraryRecordId: homeworkId,
+      }),
       viewSubmittedHomeworkHref: resolveViewSubmittedHomeworkHref(
         completion?.["Submission Asset: Reviewer File URL (lookup)"],
       ),
@@ -565,6 +569,7 @@ export async function loadPrivateAthleteDashboardPayload(
             "Assignment Full Name",
             "Assignment Full Name - Display",
             "Assignment Title",
+            "Assignment Key",
             "Brief Description - Display",
             "Homework Number",
             "Assignment Number",

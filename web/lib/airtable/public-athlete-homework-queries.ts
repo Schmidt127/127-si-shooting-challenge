@@ -18,6 +18,7 @@ const LIBRARY_FIELDS = [
   "Assignment Full Name",
   "Assignment Full Name - Display",
   "Assignment Title",
+  "Assignment Key",
   "Brief Description - Display",
   "Homework Number",
   "Assignment Number",

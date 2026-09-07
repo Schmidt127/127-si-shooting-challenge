@@ -220,7 +220,7 @@ export function AthleteDashboardView({
             </p>
           </div>
 
-          <Link href={data.nextAction.href} className="block">
+          <Link href={data.nextAction.href} className="block" prefetch={false}>
             <InteractiveCard featured="accent" className="h-full p-6 sm:p-8">
               <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-soft">
                 Next action
