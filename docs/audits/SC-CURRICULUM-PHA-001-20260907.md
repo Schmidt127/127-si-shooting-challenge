@@ -1,7 +1,9 @@
 # SC-CURRICULUM-PHA-001 — Structured Curriculum PHA / Week / Grade Band
 
 **Date:** 2026-09-07  
-**Status:** Code + fixture fix (see PR)
+**Status:** COMPLETE / production-verified  
+**SC PR:** [#484](https://github.com/Schmidt127/127-si-shooting-challenge/pull/484) (`001167dc`)  
+**Hub PRs:** [#16](https://github.com/Schmidt127/127-si-curriculum-hub/pull/16), [#17](https://github.com/Schmidt127/127-si-curriculum-hub/pull/17)
 
 ## Audit answers
 
@@ -11,11 +13,11 @@
 | Exact match requirements | Homework Library link, Program Instance (via RID), Enrollment Grade Band (`phaMatchesEnrollmentGradeBand`), Active? |
 | Does resolved PHA provide Week? | Yes — Week is required; missing Week → 422. |
 | Grade Band source on HC | **Enrollment-linked Grade Bands record** (SC model K-2/3-4/5-6…). Not Curriculum Hub session string (K-3/4-6…). Attempt still stores Hub band as `Grade Band Snapshot`. |
-| Writes PHA / Week / Grade Band when resolved? | Yes (after this fix). Prior code wrote PHA+Week only when resolved; **never wrote Grade Band**. |
+| Writes PHA / Week / Grade Band when resolved? | Yes. Prior code wrote PHA+Week only when resolved; **never wrote Grade Band**. |
 | Missing Program Instance | Was soft-create HC + Notes; **now 422** with diagnostic. |
 | Missing PHA | Same — **422**, no guessed Week/Band. |
 | Duplicate PHA | **409** ambiguous. |
-| Incomplete HC fallback | Removed for new Structured Curriculum submits. Existing incomplete HCs can recover and **backfill** scheduling links. |
+| Incomplete HC fallback | Removed for new Structured Curriculum submits. Existing incomplete HCs recover and **backfill** scheduling links. |
 
 ## Root cause (Crow `recM42xDs8QGf46Ve`)
 
@@ -31,3 +33,15 @@
 - Library Crow `recdCjWNaBBjqTp7k` (`AESOP_CROW_PITCHER`)
 - Active PHA `rec07GWst0ZXBKz7U` — Week 1 `rec2Rewxt21z7dI9f`
 - Duplicate Crow PHA `recb0qvjifBgiGJ8W` — **Inactive**
+
+## Acceptance results (2026-09-07)
+
+| Test | Result |
+|------|--------|
+| A Valid PHA (recovery + backfill) | PASS — HC has Enrollment + Homework + PHA + Week + Grade Band |
+| B Missing Program Instance | PASS — 422 diagnostic |
+| C Missing PHA | PASS — 422 diagnostic |
+| D Duplicate PHA | PASS — 409 ambiguous |
+| E Retry/idempotency | PASS — same HC/Attempt, no duplicates |
+| F Needs Revision | PASS — Attempt `recy1uZYS0NHKVNK1` (#2) on same HC; Attempt 1 Superseded; PHA/Week/Band preserved; 5 responses |
+| Daily Submissions | **0** (path unchanged) |
