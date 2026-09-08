@@ -63,6 +63,142 @@ test("mixed fixture detects submission and XP problems", () => {
   assert.ok(c.has("source_completed_without_xp_event"));
 });
 
+test("XP issue #100 detects active blank-Enrollment orphan as delete-eligible only", () => {
+  const result = runAudit({
+    enrollments: [],
+    xpEvents: [
+      {
+        id: "rec00000000000101",
+        fields: {
+          "Active?": true,
+          "XP Source": "Submission Base",
+          "XP Points": 20,
+          "Source Key": "SUBMISSION_XP|rec00000000000102",
+        },
+      },
+    ],
+  }, { workflows: ["xpEvents"] });
+  const issue = result.issues.find((i) => i.code === "xp_active_orphan_blank_enrollment");
+  assert.ok(issue);
+  assert.strictEqual(issue.meta.orphanDeleteEligible, true);
+  assert.strictEqual(issue.meta.permanentDeleteException, "active_blank_enrollment_only");
+});
+
+test("XP issue #100 detects missing authoritative direct source", () => {
+  const result = runAudit({
+    enrollments: [{ id: "rec00000000000111", fields: { "Active?": true } }],
+    submissions: [],
+    xpEvents: [
+      {
+        id: "rec00000000000112",
+        fields: {
+          Enrollment: ["rec00000000000111"],
+          "Active?": true,
+          "XP Source": "Submission Base",
+          "XP Points": 20,
+          "Source Key": "SUBMISSION_XP|rec00000000000113",
+        },
+      },
+    ],
+  }, { workflows: ["xpEvents"] });
+  const issue = result.issues.find((i) => i.code === "xp_authoritative_source_missing");
+  assert.ok(issue);
+  assert.strictEqual(issue.meta.sourceAuthorityFamily, "submission");
+  assert.strictEqual(issue.meta.reconciliationAction, "retire_and_request_level_recalc");
+});
+
+test("XP issue #100 detects authoritative source moved to another Enrollment", () => {
+  const result = runAudit({
+    enrollments: [
+      { id: "rec00000000000121", fields: { "Active?": true } },
+      { id: "rec00000000000122", fields: { "Active?": true } },
+    ],
+    homeworkCompletions: [
+      {
+        id: "rec00000000000123",
+        fields: { Enrollment: ["rec00000000000122"] },
+      },
+    ],
+    xpEvents: [
+      {
+        id: "rec00000000000124",
+        fields: {
+          Enrollment: ["rec00000000000121"],
+          "Homework Completion": ["rec00000000000123"],
+          "Active?": true,
+          "XP Source": "Homework Completion",
+          "XP Points": 35,
+          "Source Key": "HOMEWORK_XP|rec00000000000123",
+        },
+      },
+    ],
+  }, { workflows: ["xpEvents"] });
+  const issue = result.issues.find((i) => i.code === "xp_source_enrollment_mismatch");
+  assert.ok(issue);
+  assert.strictEqual(issue.meta.sourceEnrollmentId, "rec00000000000122");
+});
+
+test("XP issue #100 detects explicitly inactive authoritative source", () => {
+  const result = runAudit({
+    enrollments: [{ id: "rec00000000000131", fields: { "Active?": true } }],
+    videoFeedback: [
+      {
+        id: "rec00000000000132",
+        fields: {
+          Enrollment: ["rec00000000000131"],
+          "Active?": false,
+        },
+      },
+    ],
+    xpEvents: [
+      {
+        id: "rec00000000000133",
+        fields: {
+          Enrollment: ["rec00000000000131"],
+          "Video Feedback": ["rec00000000000132"],
+          "Active?": true,
+          "XP Source": "Video Feedback",
+          "XP Points": 25,
+          "Source Key": "VIDEO_SUBMISSION|rec00000000000132",
+        },
+      },
+    ],
+  }, { workflows: ["xpEvents"] });
+  const issue = result.issues.find((i) => i.code === "xp_authoritative_source_inactive");
+  assert.ok(issue);
+  assert.strictEqual(issue.meta.reconciliationAction, "retire_and_request_level_recalc");
+});
+
+test("XP issue #100 leaves valid direct source ownership untouched", () => {
+  const result = runAudit({
+    enrollments: [{ id: "rec00000000000141", fields: { "Active?": true } }],
+    submissions: [
+      {
+        id: "rec00000000000142",
+        fields: { Enrollment: ["rec00000000000141"] },
+      },
+    ],
+    xpEvents: [
+      {
+        id: "rec00000000000143",
+        fields: {
+          Enrollment: ["rec00000000000141"],
+          Submission: ["rec00000000000142"],
+          "Active?": true,
+          "XP Source": "Submission Base",
+          "XP Points": 20,
+          "Source Key": "SUBMISSION_XP|rec00000000000142",
+        },
+      },
+    ],
+  }, { workflows: ["xpEvents"] });
+  const c = codes(result);
+  assert.ok(!c.has("xp_active_orphan_blank_enrollment"));
+  assert.ok(!c.has("xp_authoritative_source_missing"));
+  assert.ok(!c.has("xp_source_enrollment_mismatch"));
+  assert.ok(!c.has("xp_authoritative_source_inactive"));
+});
+
 test("mixed fixture detects homework zoom video achievement level", () => {
   const c = codes(runAudit(load("mixed-health.json")));
   assert.ok(c.has("asset_ready_without_homework_completion"));
