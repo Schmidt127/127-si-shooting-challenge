@@ -1,0 +1,78 @@
+name: Apply Wave B closeout patch
+
+on:
+  push:
+    branches:
+      - test-reliability/orchestrator
+    paths:
+      - .github/workflows/apply-wave-b-closeout.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apply-wave-b-closeout
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: test-reliability/orchestrator
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Verify expected base ancestry
+        run: |
+          git merge-base --is-ancestor 8dab48313da76b770e63c00885dbaa80dc77be2c HEAD
+
+      - name: Download verified handoff patch
+        run: |
+          curl --fail --location --retry 3 \
+            https://raw.githubusercontent.com/Schmidt127/127-si-curriculum-hub/main/docs/patches/SC-003-SC-008-WAVE-B-CLOSEOUT.patch \
+            --output /tmp/wave-b-closeout.patch
+          test "$(wc -c < /tmp/wave-b-closeout.patch)" -gt 400000
+
+      - name: Enforce PR 486 no-touch boundary
+        run: |
+          blocked='airtable/automations/shooting-challenge/070a-email-notifications-and-external-handoffs-send-homework-asset-payload-to-make.js|airtable/automations/shooting-challenge/070b-email-notifications-and-external-handoffs-send-video-asset-payload-to-make.js|airtable/automations/shooting-challenge/lib/070a-submission-gate.js|airtable/automations/shooting-challenge/lib/070a-submission-gate.test.js|web/app/api/curriculum/homework/submit/route.ts|web/app/api/curriculum/homework/upload-staging/route.ts|web/app/api/curriculum/redeem/route.ts|web/lib/airtable/client.ts|web/lib/curriculum/handoff.ts|web/lib/curriculum/submit-service.ts|web/lib/curriculum/submit-validation.ts|web/lib/curriculum/submit-validation.test.ts|web/lib/curriculum/upload-staging-service.ts|web/lib/curriculum/upload-staging-store.ts|web/lib/curriculum/upload-staging-validation.ts|web/lib/curriculum/upload-staging.test.ts|web/types/optional-aws-sdk.d.ts|docs/audits/SC-CURRICULUM-PHA-001-20260907.md|docs/audits/SC-STRUCTURED-HOMEWORK-FILES-001-070a-trigger-20260907.md'
+          if grep -E "^diff --git a/(${blocked}) b/" /tmp/wave-b-closeout.patch; then
+            echo "Patch touches PR #486 no-touch files"
+            exit 1
+          fi
+
+      - name: Check patch applicability
+        run: |
+          git am --show-current-patch >/dev/null 2>&1 && exit 1 || true
+          git apply --check <(sed -n '/^diff --git /,$p' /tmp/wave-b-closeout.patch) || true
+          # Authoritative check is git am itself below because this is a multi-commit format-patch.
+
+      - name: Apply five Wave B commits
+        run: |
+          git am --3way /tmp/wave-b-closeout.patch
+          count=$(git rev-list --count HEAD ^$(git rev-parse HEAD~5))
+          test "$count" -eq 5
+
+      - name: Verify final no-touch diff
+        run: |
+          blocked='airtable/automations/shooting-challenge/070a-email-notifications-and-external-handoffs-send-homework-asset-payload-to-make.js|airtable/automations/shooting-challenge/070b-email-notifications-and-external-handoffs-send-video-asset-payload-to-make.js|airtable/automations/shooting-challenge/lib/070a-submission-gate.js|airtable/automations/shooting-challenge/lib/070a-submission-gate.test.js|web/app/api/curriculum/homework/submit/route.ts|web/app/api/curriculum/homework/upload-staging/route.ts|web/app/api/curriculum/redeem/route.ts|web/lib/airtable/client.ts|web/lib/curriculum/handoff.ts|web/lib/curriculum/submit-service.ts|web/lib/curriculum/submit-validation.ts|web/lib/curriculum/submit-validation.test.ts|web/lib/curriculum/upload-staging-service.ts|web/lib/curriculum/upload-staging-store.ts|web/lib/curriculum/upload-staging-validation.ts|web/lib/curriculum/upload-staging.test.ts|web/types/optional-aws-sdk.d.ts|docs/audits/SC-CURRICULUM-PHA-001-20260907.md|docs/audits/SC-STRUCTURED-HOMEWORK-FILES-001-070a-trigger-20260907.md'
+          if git diff --name-only 8dab48313da76b770e63c00885dbaa80dc77be2c..HEAD | grep -E "^(${blocked})$"; then
+            echo "Final diff touches PR #486 no-touch files"
+            exit 1
+          fi
+
+      - name: Remove one-shot workflow from final tree
+        run: |
+          git rm .github/workflows/apply-wave-b-closeout.yml
+          git commit -m "chore(testing): remove one-shot Wave B patch applier"
+
+      - name: Push completed branch
+        run: |
+          git push origin HEAD:test-reliability/orchestrator
