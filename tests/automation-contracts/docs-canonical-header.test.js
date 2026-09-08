@@ -8,6 +8,7 @@ const path = require("node:path");
 const ROOT = path.resolve(__dirname, "../..");
 const AUTOMATIONS = path.join(ROOT, "airtable/automations/shooting-challenge");
 const CURRENT_TRUTH = path.join(ROOT, "docs/CURRENT-TRUTH.md");
+const PENDING_CUTOVERS = path.join(ROOT, "docs/deploy-checklists/PENDING-AUTOMATION-CUTOVERS.md");
 const DOCS = [
   path.join(ROOT, "docs/automation-index.md"),
   path.join(ROOT, "airtable/schema/current/automation-trigger-map.md"),
@@ -41,18 +42,29 @@ function rowFor(text, number, fileName, docNeedle) {
   return row;
 }
 
-function documentedPendingLiveVersion(number, canonical) {
-  const text = fs.readFileSync(CURRENT_TRUTH, "utf8");
-  const row = text
-    .split(/\r?\n/)
-    .find((line) => new RegExp(`\\|\\s*\\**${number}\\**\\s*\\|`).test(line));
+function pendingLiveFromRow(row, canonical) {
   if (!row || !/GitHub ahead/i.test(row) || !/paste pending/i.test(row)) return "";
-
   const cells = row.split("|").map((cell) => cell.replace(/\*/g, "").trim());
   const githubVersion = cells.find((cell) => /^v\d+\.\d+(?:\.\d+)?$/.test(cell)) || "";
   const liveVersion = cells.slice(cells.indexOf(githubVersion) + 1).find((cell) => /^v\d+\.\d+(?:\.\d+)?$/.test(cell)) || "";
   if (githubVersion !== canonical || !liveVersion) return "";
   return liveVersion;
+}
+
+function documentedPendingLiveVersion(number, canonical) {
+  const currentTruth = fs.readFileSync(CURRENT_TRUTH, "utf8");
+  const currentTruthRow = currentTruth
+    .split(/\r?\n/)
+    .find((line) => new RegExp(`\\|\\s*\\**${number}\\**\\s*\\|`).test(line));
+  const fromCurrentTruth = pendingLiveFromRow(currentTruthRow, canonical);
+  if (fromCurrentTruth) return fromCurrentTruth;
+
+  if (!fs.existsSync(PENDING_CUTOVERS)) return "";
+  const cutovers = fs.readFileSync(PENDING_CUTOVERS, "utf8");
+  const cutoverRow = cutovers
+    .split(/\r?\n/)
+    .find((line) => new RegExp(`\\|\\s*\\**${number}\\**\\s*\\|`).test(line));
+  return pendingLiveFromRow(cutoverRow, canonical);
 }
 
 for (const [number, fileName, docNeedle] of CURRENT_AUTOMATIONS) {
