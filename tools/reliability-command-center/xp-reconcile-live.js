@@ -19,6 +19,8 @@
  * - never moves XP Events between Enrollments
  * - never writes Current Level / Next Level / Level Status
  * - only queues Enrollments.Level Recalc Needed? for Automation 042
+ * - replay-safe: retired targets become NOOP_ALREADY_INACTIVE; deleted targets become
+ *   ALREADY_ABSENT no-ops rather than failures or recreation attempts
  */
 
 const { writeFileSync, mkdirSync } = require("node:fs");
@@ -82,6 +84,21 @@ async function airtableRequest(method, table, recordId, body) {
   return text ? JSON.parse(text) : {};
 }
 
+/**
+ * Fetch one XP Event regardless of Active? state.
+ * A missing/deleted target is a safe idempotent terminal state, not an error.
+ */
+async function fetchXpRecordById(recordId) {
+  const token = airtableToken();
+  if (!token) throw new Error("AIRTABLE_API_TOKEN missing");
+  const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent("XP Events")}/${recordId}`;
+  const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+  const text = await res.text();
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`GET XP Events/${recordId} ${res.status}: ${text.slice(0, 180)}`);
+  return text ? JSON.parse(text) : null;
+}
+
 async function executeAction(action) {
   if (action.type === "DELETE_RECORD") {
     return airtableRequest("DELETE", action.table, action.recordId);
@@ -92,21 +109,27 @@ async function executeAction(action) {
   throw new Error(`unsupported action type: ${action.type}`);
 }
 
-function targetRecords(snapshot, ids) {
-  const byId = new Map((snapshot.xpEvents || []).map((row) => [row.id, row]));
+function targetRecords(rows, ids) {
+  const byId = new Map((rows || []).map((row) => [row.id, row]));
   return ids.map((id) => byId.get(id)).filter(Boolean);
 }
 
 async function buildCurrentPlan(ids) {
+  // Health snapshot intentionally contains active XP only so the global audit stays focused.
   const snapshot = await fetchXpHealthSnapshot();
   const audit = runAudit(snapshot, {
     workflows: ["xpEvents", "xpSourceAuthority"],
     source: "prod-xp-reconcile-live",
   });
-  const rows = targetRecords(snapshot, ids);
-  const missingTargets = ids.filter((id) => !rows.some((row) => row.id === id));
+
+  // Target state is fetched separately without an Active? filter so a replay after a
+  // successful retirement becomes NOOP_ALREADY_INACTIVE instead of a false missing error.
+  const fetchedTargets = await Promise.all(ids.map((id) => fetchXpRecordById(id)));
+  const existingTargets = fetchedTargets.filter(Boolean);
+  const absentTargetIds = ids.filter((id, index) => !fetchedTargets[index]);
+  const rows = targetRecords(existingTargets, ids);
   const batch = planBatch({ xpRecords: rows, issues: audit.issues });
-  return { snapshot, audit, batch, missingTargets };
+  return { snapshot, audit, batch, absentTargetIds };
 }
 
 function evidencePath() {
@@ -130,6 +153,10 @@ Live write gate:
 Additional orphan deletion gate:
   --confirm-destructive
 
+Replay behavior:
+  already inactive target -> no-op
+  already deleted/absent target -> no-op
+
 Examples:
   node tools/reliability-command-center/xp-reconcile-live.js --record-ids recXXXXXXXXXXXXXX
   node tools/reliability-command-center/xp-reconcile-live.js --record-ids recXXXXXXXXXXXXXX --execute --acknowledge-prod
@@ -142,9 +169,6 @@ Examples:
 
   // Fresh PROD read immediately before planning.
   const before = await buildCurrentPlan(ids);
-  if (before.missingTargets.length) {
-    throw new Error(`target XP Event(s) are not currently active or do not exist: ${before.missingTargets.join(",")}`);
-  }
 
   const dryRun = args.execute !== true;
   const payload = {
@@ -152,6 +176,7 @@ Examples:
     mode: dryRun ? "DRY_RUN" : "EXECUTE",
     baseId: BASE_ID,
     explicitRecordIds: ids,
+    alreadyAbsentTargetIds: before.absentTargetIds,
     plan: before.batch,
     writesPerformed: [],
     verification: null,
@@ -174,7 +199,7 @@ Examples:
     throw new Error("orphan deletion requires --confirm-destructive");
   }
 
-  // No-op targets are allowed, but only planned actions are executed.
+  // No-op and already-absent targets are allowed; only planned actions are executed.
   for (const plan of before.batch.plans) {
     for (const action of plan.actions) {
       const result = await executeAction(action);
@@ -201,6 +226,7 @@ Examples:
     remainingTargetIssueCount: remainingTargetIssues.length,
     remainingTargetIssueCodes: remainingTargetIssues.map((issue) => issue.code),
     stillActiveTargetIds: ids.filter((id) => activeTargetIds.has(id)),
+    alreadyAbsentTargetIds: before.absentTargetIds,
     activeBlankEnrollmentOrphanCount: (afterSnapshot.xpEvents || []).filter((row) => {
       const f = row.fields || {};
       return f["Active?"] === true && (!Array.isArray(f.Enrollment) || f.Enrollment.length === 0);
@@ -224,6 +250,8 @@ if (require.main === module) {
 module.exports = {
   parseArgs,
   parseRecordIds,
+  airtableRequest,
+  fetchXpRecordById,
   targetRecords,
   buildCurrentPlan,
   executeAction,
