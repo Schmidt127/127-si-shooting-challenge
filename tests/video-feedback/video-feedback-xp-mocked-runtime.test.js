@@ -62,6 +62,7 @@ function links(values) { return values.map((id) => ({ id })); }
 function clone(value) { return value === undefined ? undefined : JSON.parse(JSON.stringify(value)); }
 
 function createRuntime(seed, options = {}) {
+  options.selectCounts ||= {};
   const records = {};
   let nextId = 1;
   for (const [table, rows] of Object.entries(seed)) records[table] = new Map(rows.map((row) => [row.id, clone(row)]));
