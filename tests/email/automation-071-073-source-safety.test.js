@@ -23,16 +23,16 @@ t("073 syntax", () => checkSyntax(p073));
 t("074 syntax", () => checkSyntax(p074));
 t("079 syntax", () => checkSyntax(p079));
 t("117 syntax", () => checkSyntax(p117));
-t("071 v4.4 creates Communications Hub queue handoff (not Make webhook)", () => {
-  assert.match(s071, /Version: v4\.4/);
+t("071 v4.5 creates Communications Hub queue handoff (not Make webhook)", () => {
+  assert.match(s071, /Version: v4\.5/);
   assert.match(s071, /Email Handoff Queue/);
   assert.match(s071, /HOMEWORK_FEEDBACK\|HOMEWORK_COMPLETIONS\|/);
   assert.match(s071, /created_handoff/);
   assert.match(s071, /existing_handoff/);
   assert.doesNotMatch(s071, /makeWebhookUrl|hook\.us1\.make\.com|remoteFetchAsync|sendTag:"HOMEWORK_FEEDBACK_PARENT"|semanticFailure/);
 });
-t("071 v4.4 enriches homework feedback payload for parent-facing presentation", () => {
-  assert.match(s071, /Version: v4\.4/);
+t("071 v4.5 enriches homework feedback payload for parent-facing presentation", () => {
+  assert.match(s071, /Version: v4\.5/);
   assert.match(s071, /landingPageUrl: CANONICAL_URLS\.landing/);
   assert.match(s071, /homeworkPageUrl: CANONICAL_URLS\.homework/);
   assert.match(s071, /reviewStatus: "Satisfactory"/);
@@ -60,6 +60,8 @@ t("071 validates asset ownership and HW slot", () => {
   assert.match(s071, /Asset .* Enrollment mismatch/);
   assert.match(s071, /does not match \$\{hcSlot\}/);
   assert.match(s071, /source Submission ownership\/Week mismatch/);
+  assert.match(s071, /must not link a Submission on HC-only Structured Curriculum homework/);
+  assert.match(s071, /Homework Completion may link at most one Submission/);
 });
 t("071 preserves attachment-less quiz source", () => {
   assert.match(s071, /Final Reflection Quiz/);

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Automation 071 Hub handoff — parent-facing homework URL contract (v4.1). */
+/** Automation 071 Hub handoff — parent-facing homework URL contract (v4.5). */
 "use strict";
 const assert = require("assert");
 const fs = require("fs");
@@ -25,8 +25,8 @@ test("syntax", () => {
   const r = spawnSync(process.execPath, ["--check", SCRIPT_PATH], { encoding: "utf8" });
   assert.strictEqual(r.status, 0, r.stderr);
 });
-test("version is v4.1 Hub handoff", () => {
-  assert.match(source, /Version: v4\.1/);
+test("version is v4.5 Hub handoff", () => {
+  assert.match(source, /Version: v4\.5/);
   assert.match(source, /Email Handoff Queue/);
   assert.match(source, /HOMEWORK_FEEDBACK\|HOMEWORK_COMPLETIONS\|/);
 });
