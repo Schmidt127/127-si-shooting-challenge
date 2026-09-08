@@ -4,20 +4,22 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-21
-Last GitHub Update: 2026-09-02
+Last GitHub Update: 2026-09-07
 
 Purpose:
-Creates or updates Video Submission XP Events from Video Feedback records.
+Creates, updates, reactivates, or retires the exact Video Submission XP Event
+for one Video Feedback record after validating the authoritative Submission.
 
 Trigger:
 Video Feedback lifecycle reconciliation; the native trigger must reach both
 positive award/reactivation and withdrawal/deactivation updates.
 
 Important Tables:
-Video Feedback, Submissions, XP Events, Weekly Athlete Summary
+Video Feedback, Submissions, Enrollments, XP Events, Weekly Athlete Summary
 
 Important Fields:
-Total Video XP Awarded, Submission, Enrollment, XP Events, Weekly Athlete Summary, Award Status
+Total Video XP Awarded, Submission, Enrollment, XP Events, Award Status,
+Count This Submission?, Activity Date Is Future?, Week, Level Recalc Needed?
 
 Notes:
 GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
@@ -27,12 +29,19 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 114 - VIDEO REVIEW AND XP
  * Create or Update Video XP Event
  *
- * Version: v6.2
+ * Version: v6.3
  * Date Written: 2026-05-23
- * Last Updated: 2026-09-02
- * Updated Reason: SC-SEASON-SIM-002 dual-gated Season Sim Clock Now for future
- * Activity Date checks on disposable sim Submissions only. Ordinary rows keep
- * wall-clock America/Denver today.
+ * Last Updated: 2026-09-07
+ *
+ * VERSION HISTORY
+ * - v6.3 (2026-09-07 / #101): Require authoritative Submission countability,
+ *   non-future state, one Week, and matching Enrollment before positive award.
+ *   Source loss retires the exact canonical XP Event, resets Video Feedback
+ *   readiness/status, and queues Enrollment level recalculation. Source
+ *   validation runs before positive readiness/XP gates so a disarmed invalid
+ *   source cannot leave old XP active.
+ * - v6.2 (2026-09-02): SC-SEASON-SIM-002 dual-gated Season Sim Clock Now for
+ *   direct future Activity Date checks on disposable sim Submissions only.
  *
  * PURPOSE
  * - Runs from one Video Feedback record.
@@ -43,41 +52,32 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Writes XP Source correctly as the single-select value "Video Submission".
  * - Writes XP Bucket Key correctly as the single-select value "Video Feedback".
  * - Writes XP Reason Public and XP Reason Debug.
- * - Optionally writes XP Source Date and XP Date Source when those fields exist and are writable.
  * - Links the XP Event back to the Video Feedback record.
- * - Links the XP Event to Weekly Athlete Summary when resolvable from Submission
- *   or by Enrollment + Week lookup.
- * - Marks the Video Feedback record as Awarded after XP Event creation/update.
- * - Fails closed when the Video Feedback and Submission identity chain is
- *   incomplete, mismatched, or future-dated.
- * - Season Simulation (SC-SEASON-SIM-002): when linked Submission has Season Sim
- *   Test Record? checked AND Video Upload Note contains SEASON-SIM|, compare
- *   Activity Date to Season Sim Clock Now instead of wall-clock today.
+ * - Links the XP Event to Weekly Athlete Summary when resolvable.
+ * - Retires the exact XP Event when Video Feedback or Submission eligibility is lost.
+ * - Queues Level Recalc Needed? only after an active Enrollment-owned XP Event
+ *   is actually retired; Automation 042 remains the sole progression writer.
+ *
+ * SOURCE AUTHORITY CONTRACT (#101)
+ * - Submission Enrollment must exactly equal Video Feedback Enrollment.
+ * - Count This Submission? must equal 1/true.
+ * - Activity Date Is Future? must equal 0/false.
+ * - Submission must link exactly one Week.
+ * - Activity Date must exist and must not be future under the direct Denver
+ *   defense-in-depth check (Season Sim dual gate preserved).
+ * - Any invalid source retires only the exact canonical Video Feedback XP Event.
  *
  * IMPORTANT DESIGN RULE
  * - One Video Feedback record = one XP Event.
  * - Do NOT dedupe video feedback by Enrollment or Enrollment + XP Source only.
  * - Source Key must remain: VIDEO_SUBMISSION|recordId
- * - Future Activity Date skip uses wall-clock Denver unless the dual Season Sim
- *   gate is open; then Season Sim Clock Now is "today". Missing clock falls back
- *   to wall-clock (fail closed). Non-sim future-date protection is unchanged.
- * - This is not an email automation and does not create Email Handoff Queue
- *   records, invoke Make, or dispatch parent email.
+ * - Never move or steal an XP Event to another Enrollment/Submission/Video Feedback.
+ * - This is not an email automation.
  *
  * XP EVENT MATCH ORDER (safest first)
  * 1. XP Event already linked to this exact Video Feedback record ID.
  * 2. XP Event Source Key / XP Dedupe Key Normalized for this exact Video Feedback record ID.
  * - Never match by Enrollment + Submission + Week alone.
- *
- * CONFLICT GUARD
- * - If a candidate XP Event has a different Submission or Week than the current Video
- *   Feedback submission/week, do not reuse it. Throw a clear manual-review error when
- *   the Video Feedback record is already linked to that conflicting XP Event.
- *
- * FIELD RENAME FIX
- * - Old field removed/renamed: XP Reason
- * - New public field: XP Reason Public
- * - New debug field: XP Reason Debug
  *
  * FOLDER
  * - 11 - Video Review and XP
@@ -103,27 +103,15 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  *
  * REQUIRED INPUT VARIABLES
  * - recordId = Airtable record ID from the triggering Video Feedback record
- *
- * REQUIRED OUTPUTS
- * - statusOut = created | updated | skipped | error
- * - actionOut
- * - errorOut
- * - debugStep
- * - xpEventIdOut
- * - weeklySummaryIdOut
  ************************************************************/
 
 // @ts-nocheck
 
-/* =========================================================
-   SECTION 1 — CONFIGURATION
-========================================================= */
-
 const CONFIG = {
   scriptName: "114 - Video Review and XP - Create or Update Video XP Event",
-  version: "v6.2",
-  versionDate: "2026-09-02",
-  lastUpdated: "2026-09-02",
+  version: "v6.3",
+  versionDate: "2026-09-07",
+  lastUpdated: "2026-09-07",
 
   tables: {
     videoFeedback: "Video Feedback",
@@ -150,8 +138,9 @@ const CONFIG = {
     enrollment: "Enrollment",
     week: "Week",
     activityDate: "Activity Date",
+    countThisSubmission: "Count This Submission?",
+    activityDateIsFuture: "Activity Date Is Future?",
     weeklySummary: "Weekly Athlete Summary",
-    // SC-SEASON-SIM-002 dual gate (optional; missing fields = non-sim path).
     seasonSimTestRecord: "Season Sim Test Record?",
     seasonSimClockNow: "Season Sim Clock Now",
     videoUploadNote: "Video Upload Note",
@@ -159,6 +148,7 @@ const CONFIG = {
 
   enrollments: {
     active: "Active?",
+    levelRecalcNeeded: "Level Recalc Needed?",
   },
 
   weeklySummary: {
@@ -180,8 +170,6 @@ const CONFIG = {
     active: "Active?",
     sourceKey: "Source Key",
     xpDedupeKeyNormalized: "XP Dedupe Key Normalized",
-
-    // Optional newer date-normalization fields.
     xpSourceDate: "XP Source Date",
     xpDateSource: "XP Date Source",
   },
@@ -197,37 +185,23 @@ const CONFIG = {
   },
 };
 
-
 let videoTable = null;
 let submissionsTable = null;
 let enrollmentsTable = null;
 let xpEventsTable = null;
 let weeklySummaryTable = null;
 let weeklySummaryQueryCache = null;
-
 const fieldCache = new Map();
 
-/************************************************************************************************
- * SECTION 2 — HELPERS
- ************************************************************************************************/
-
 function log(message, data = null) {
-  if (data === null || data === undefined) {
-    console.log(message);
-  } else {
-    console.log(message, JSON.stringify(data, null, 2));
-  }
+  if (data === null || data === undefined) console.log(message);
+  else console.log(message, JSON.stringify(data, null, 2));
 }
 
-/**
- * Airtable Scripting sometimes exposes unloadData on QueryResult; some automation
- * runtimes do not. Never let cleanup throw after successful business work.
- */
 function unloadQuerySafe(queryResult) {
   if (typeof queryResult?.unloadData === "function") {
-    try {
-      queryResult.unloadData();
-    } catch (error) {
+    try { queryResult.unloadData(); }
+    catch (error) {
       log("Query unloadData skipped/failed (non-fatal)", {
         error: error instanceof Error ? error.message : String(error),
       });
@@ -236,436 +210,208 @@ function unloadQuerySafe(queryResult) {
 }
 
 function setOutputSafe(name, value) {
-  try {
-    output.set(name, value);
-  } catch {
-    // Ignore output mapping errors.
-  }
+  try { output.set(name, value); } catch { /* optional output */ }
 }
 
 function getFieldSafe(table, fieldName) {
   if (!table || !fieldName) return null;
-
-  const tableName = table.name || "unknown-table";
-  const cacheKey = `${tableName}:${fieldName}`;
-
-  if (fieldCache.has(cacheKey)) {
-    return fieldCache.get(cacheKey);
-  }
-
+  const key = `${table.name || "unknown-table"}:${fieldName}`;
+  if (fieldCache.has(key)) return fieldCache.get(key);
   try {
     const field = table.getField(fieldName);
-    fieldCache.set(cacheKey, field);
+    fieldCache.set(key, field);
     return field;
   } catch {
-    fieldCache.set(cacheKey, null);
+    fieldCache.set(key, null);
     return null;
   }
 }
 
-function fieldExists(table, fieldName) {
-  return !!getFieldSafe(table, fieldName);
-}
-
+function fieldExists(table, fieldName) { return !!getFieldSafe(table, fieldName); }
 function requireField(table, fieldName) {
-  if (!fieldExists(table, fieldName)) {
-    throw new Error(`Missing required field on ${table.name}: ${fieldName}`);
-  }
+  if (!fieldExists(table, fieldName)) throw new Error(`Missing required field on ${table.name}: ${fieldName}`);
 }
-
-function fieldHasType(table, fieldName, allowedTypes) {
-  const field = getFieldSafe(table, fieldName);
-  return !!field && allowedTypes.includes(field.type);
-}
-
 function requireFieldType(table, fieldName, allowedTypes) {
   requireField(table, fieldName);
-
   const field = getFieldSafe(table, fieldName);
-
   if (!allowedTypes.includes(field.type)) {
-    throw new Error(
-      `Field ${table.name}.${fieldName} has type "${field.type}" but expected one of: ${allowedTypes.join(", ")}`
-    );
+    throw new Error(`Field ${table.name}.${fieldName} has type "${field.type}" but expected one of: ${allowedTypes.join(", ")}`);
   }
 }
-
 function isWritableField(table, fieldName) {
   const field = getFieldSafe(table, fieldName);
-  if (!field) return false;
-
-  if (field.isComputed === true) {
-    return false;
-  }
-
-  const nonWritableTypes = new Set([
-    "formula",
-    "rollup",
-    "count",
-    "lookup",
-    "multipleLookupValues",
-    "createdTime",
-    "lastModifiedTime",
-    "createdBy",
-    "lastModifiedBy",
-    "autoNumber",
-    "button",
-    "aiText",
-    "externalSyncSource",
-  ]);
-
-  return !nonWritableTypes.has(field.type);
+  if (!field || field.isComputed === true) return false;
+  return !new Set([
+    "formula", "rollup", "count", "lookup", "multipleLookupValues",
+    "createdTime", "lastModifiedTime", "createdBy", "lastModifiedBy",
+    "autoNumber", "button", "aiText", "externalSyncSource",
+  ]).has(field.type);
 }
-
 function requireWritableField(table, fieldName) {
   requireField(table, fieldName);
-
-  if (!isWritableField(table, fieldName)) {
-    throw new Error(`Field ${table.name}.${fieldName} exists but is not writable.`);
-  }
+  if (!isWritableField(table, fieldName)) throw new Error(`Field ${table.name}.${fieldName} exists but is not writable.`);
 }
-
-function normalizeText(value) {
-  return String(value || "").trim().toLowerCase();
-}
-
+function normalizeText(value) { return String(value || "").trim().toLowerCase(); }
 function singleSelectOptionExists(table, fieldName, optionName) {
   const field = getFieldSafe(table, fieldName);
-
-  if (!field || field.type !== "singleSelect") {
-    return true;
-  }
-
-  return field.options?.choices?.some(
-    choice => normalizeText(choice?.name) === normalizeText(optionName)
-  ) === true;
+  if (!field || field.type !== "singleSelect") return true;
+  return field.options?.choices?.some(choice => normalizeText(choice?.name) === normalizeText(optionName)) === true;
 }
-
 function requireSingleSelectOption(table, fieldName, optionName) {
   requireFieldType(table, fieldName, ["singleSelect"]);
-
   if (!singleSelectOptionExists(table, fieldName, optionName)) {
-    const field = getFieldSafe(table, fieldName);
-    const available = field?.options?.choices?.map(choice => choice.name).join(", ") || "";
-
-    throw new Error(
-      `Missing single-select option "${optionName}" in ${table.name}.${fieldName}. Available options: ${available}`
-    );
+    const available = getFieldSafe(table, fieldName)?.options?.choices?.map(c => c.name).join(", ") || "";
+    throw new Error(`Missing single-select option "${optionName}" in ${table.name}.${fieldName}. Available options: ${available}`);
   }
 }
-
 function buildSingleSelectValue(table, fieldName, optionName) {
   const field = getFieldSafe(table, fieldName);
-
-  if (!field || field.type !== "singleSelect") {
-    return optionName;
-  }
-
-  const choices = field?.options?.choices || [];
-
-  const match = choices.find(choice =>
-    normalizeText(choice?.name) === normalizeText(optionName)
-  );
-
-  if (!match) {
-    const available = choices.map(choice => choice.name).join(", ");
-    throw new Error(
-      `Missing single-select option "${optionName}" in ${table.name}.${fieldName}. Available options: ${available}`
-    );
-  }
-
+  if (!field || field.type !== "singleSelect") return optionName;
+  const match = (field.options?.choices || []).find(c => normalizeText(c?.name) === normalizeText(optionName));
+  if (!match) throw new Error(`Missing single-select option "${optionName}" in ${table.name}.${fieldName}.`);
   return { id: match.id };
 }
-
 function buildOptionalFieldValue(table, fieldName, value) {
   const field = getFieldSafe(table, fieldName);
-
   if (!field) return undefined;
-
   if (field.type === "singleSelect") {
-    if (!singleSelectOptionExists(table, fieldName, value)) {
-      log(`Optional single-select write skipped. Missing option: ${table.name}.${fieldName} = ${value}`);
-      return undefined;
-    }
-
+    if (!singleSelectOptionExists(table, fieldName, value)) return undefined;
     return buildSingleSelectValue(table, fieldName, value);
   }
-
   return value;
 }
-
 function getRaw(record, table, fieldName) {
   if (!record || !fieldExists(table, fieldName)) return null;
   return record.getCellValue(fieldName);
 }
-
 function getText(record, table, fieldName) {
   if (!record || !fieldExists(table, fieldName)) return "";
   return String(record.getCellValueAsString(fieldName) || "").trim();
 }
-
 function getNumber(record, table, fieldName, fallback = 0) {
   const raw = getRaw(record, table, fieldName);
-
-  if (typeof raw === "number" && Number.isFinite(raw)) {
-    return raw;
-  }
-
-  const text = String(raw ?? "")
-    .replace(/[$,%]/g, "")
-    .replace(/,/g, "")
-    .trim();
-
+  if (typeof raw === "number" && Number.isFinite(raw)) return raw;
+  const text = String(raw ?? "").replace(/[$,%]/g, "").replace(/,/g, "").trim();
   if (!text) return fallback;
-
   const n = Number(text);
   return Number.isFinite(n) ? n : fallback;
 }
-
 function getCheckbox(record, table, fieldName) {
   const raw = getRaw(record, table, fieldName);
-
-  if (raw === true) return true;
-  if (raw === false) return false;
-  if (raw === 1) return true;
-  if (raw === 0) return false;
-
+  if (raw === true || raw === 1) return true;
+  if (raw === false || raw === 0) return false;
   if (raw && typeof raw === "object" && raw.name) {
-    const name = String(raw.name).trim().toLowerCase();
-    return ["true", "yes", "checked", "1", "active"].includes(name);
+    return ["true", "yes", "checked", "1", "active"].includes(String(raw.name).trim().toLowerCase());
   }
-
-  const text = String(raw ?? "").trim().toLowerCase();
-  return ["true", "yes", "checked", "1", "active"].includes(text);
+  return ["true", "yes", "checked", "1", "active"].includes(String(raw ?? "").trim().toLowerCase());
 }
-
 function getLinkedIds(record, table, fieldName) {
   const raw = getRaw(record, table, fieldName);
-
   if (!Array.isArray(raw)) return [];
-
-  return raw
-    .map(item => item?.id)
-    .filter(Boolean);
+  return raw.map(item => item?.id).filter(Boolean);
 }
-
-function getFirstLinkedId(record, table, fieldName) {
-  const ids = getLinkedIds(record, table, fieldName);
-  return ids[0] || "";
-}
-
-function getExactlyOneLinkedId(record, table, fieldName, label) {
-  const ids = uniqueIds(getLinkedIds(record, table, fieldName));
-
-  if (ids.length !== 1) {
-    throw new Error(`${label} must contain exactly one linked record; found ${ids.length}.`);
-  }
-
-  return ids[0];
-}
-
-function uniqueIds(ids) {
-  return [...new Set((ids || []).filter(Boolean))];
-}
-
+function getFirstLinkedId(record, table, fieldName) { return getLinkedIds(record, table, fieldName)[0] || ""; }
+function uniqueIds(ids) { return [...new Set((ids || []).filter(Boolean))]; }
 function parseDate(value) {
-  if (value instanceof Date) {
-    return Number.isNaN(value.getTime()) ? null : value;
-  }
-
+  if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value;
   const parsed = new Date(value);
   return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
-
 function denverDateKey(value) {
   const date = parseDate(value);
   if (!date) return "";
-
   return new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Denver",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
+    timeZone: "America/Denver", year: "numeric", month: "2-digit", day: "2-digit",
   }).format(date);
 }
-
-/**
- * SC-SEASON-SIM-002 dual gate on the linked Submission.
- * Both required: Season Sim Test Record? AND Video Upload Note contains SEASON-SIM|.
- */
 function isSeasonSimRecord(submission) {
-  if (!getCheckbox(submission, submissionsTable, CONFIG.submissions.seasonSimTestRecord)) {
-    return false;
-  }
-  const note = getText(submission, submissionsTable, CONFIG.submissions.videoUploadNote);
-  return note.includes("SEASON-SIM|");
+  if (!fieldExists(submissionsTable, CONFIG.submissions.seasonSimTestRecord)) return false;
+  if (!getCheckbox(submission, submissionsTable, CONFIG.submissions.seasonSimTestRecord)) return false;
+  if (!fieldExists(submissionsTable, CONFIG.submissions.videoUploadNote)) return false;
+  return getText(submission, submissionsTable, CONFIG.submissions.videoUploadNote).includes("SEASON-SIM|");
 }
-
-/**
- * "Today" for Activity Date future checks. Ordinary: wall-clock Denver.
- * Dual-gated sim: Season Sim Clock Now (fallback wall-clock if blank).
- */
 function effectiveTodayDenverKey(submission) {
   if (!isSeasonSimRecord(submission)) return denverDateKey(new Date());
-  const clockKey = denverDateKey(
-    getRaw(submission, submissionsTable, CONFIG.submissions.seasonSimClockNow)
-  );
+  const clockKey = fieldExists(submissionsTable, CONFIG.submissions.seasonSimClockNow)
+    ? denverDateKey(getRaw(submission, submissionsTable, CONFIG.submissions.seasonSimClockNow))
+    : "";
   return clockKey || denverDateKey(new Date());
 }
 
 async function loadWeeklySummaryQuery() {
-  if (weeklySummaryQueryCache) {
-    return weeklySummaryQueryCache;
+  if (!weeklySummaryQueryCache) {
+    weeklySummaryQueryCache = await weeklySummaryTable.selectRecordsAsync({
+      fields: [CONFIG.weeklySummary.enrollment, CONFIG.weeklySummary.week],
+    });
   }
-
-  weeklySummaryQueryCache = await weeklySummaryTable.selectRecordsAsync({
-    fields: [
-      CONFIG.weeklySummary.enrollment,
-      CONFIG.weeklySummary.week,
-    ],
-  });
-
   return weeklySummaryQueryCache;
 }
-
 async function findWeeklySummaryId(enrollmentId, weekId) {
-  const cleanEnrollmentId = String(enrollmentId || "").trim();
-  const cleanWeekId = String(weekId || "").trim();
-
-  if (!cleanEnrollmentId || !cleanWeekId) {
-    return "";
-  }
-
+  if (!enrollmentId || !weekId) return "";
   const query = await loadWeeklySummaryQuery();
-
-  const matches = query.records.filter((record) => {
-    const summaryEnrollmentId = getFirstLinkedId(
-      record,
-      weeklySummaryTable,
-      CONFIG.weeklySummary.enrollment
-    );
-    const summaryWeekId = getFirstLinkedId(
-      record,
-      weeklySummaryTable,
-      CONFIG.weeklySummary.week
-    );
-
-    return (
-      summaryEnrollmentId === cleanEnrollmentId &&
-      summaryWeekId === cleanWeekId
-    );
-  });
-
-  if (matches.length > 1) {
-    throw new Error(
-      `Multiple Weekly Athlete Summary records for Enrollment ${cleanEnrollmentId} + Week ${cleanWeekId}: ${matches.map((record) => record.id).join(", ")}`
-    );
-  }
-
-  return matches.length === 1 ? matches[0].id : "";
+  const matches = query.records.filter(record =>
+    getFirstLinkedId(record, weeklySummaryTable, CONFIG.weeklySummary.enrollment) === enrollmentId &&
+    getFirstLinkedId(record, weeklySummaryTable, CONFIG.weeklySummary.week) === weekId
+  );
+  if (matches.length > 1) throw new Error(`Multiple Weekly Athlete Summary records for Enrollment ${enrollmentId} + Week ${weekId}: ${matches.map(r => r.id).join(", ")}`);
+  return matches[0]?.id || "";
 }
-
-async function resolveWeeklySummaryId({
-  sourceWeeklySummaryIds = [],
-  enrollmentId = "",
-  weekId = "",
-}) {
+async function resolveWeeklySummaryId({ sourceWeeklySummaryIds = [], enrollmentId = "", weekId = "" }) {
   const fromSource = uniqueIds(sourceWeeklySummaryIds);
-
-  if (fromSource.length === 1) {
-    return fromSource[0];
-  }
-
-  if (fromSource.length > 1) {
-    throw new Error(
-      `Source record has multiple Weekly Athlete Summary links: ${fromSource.join(", ")}`
-    );
-  }
-
+  if (fromSource.length === 1) return fromSource[0];
+  if (fromSource.length > 1) throw new Error(`Source record has multiple Weekly Athlete Summary links: ${fromSource.join(", ")}`);
   return findWeeklySummaryId(enrollmentId, weekId);
 }
 
-async function ensureXpEventWeeklySummaryLink(xpEventId, weeklySummaryId) {
-  if (!xpEventId || !weeklySummaryId) {
-    return false;
-  }
-
-  const payload = {};
-
-  addIfWritable(
-    payload,
-    xpEventsTable,
-    CONFIG.xpEvents.weeklySummary,
-    [{ id: weeklySummaryId }]
-  );
-
-  if (Object.keys(payload).length === 0) {
-    return false;
-  }
-
-  await xpEventsTable.updateRecordAsync(xpEventId, payload);
-  return true;
-}
-
 function addIfWritable(payload, table, fieldName, value) {
-  if (!fieldExists(table, fieldName)) {
-    log(`Skipped missing field: ${table?.name || "unknown"}.${fieldName}`);
-    return;
-  }
-
-  if (!isWritableField(table, fieldName)) {
-    log(`Skipped non-writable field: ${table.name}.${fieldName}`);
-    return;
-  }
-
-  if (value === null || value === undefined) return;
-  if (typeof value === "string" && value.trim() === "") return;
-
+  if (!fieldExists(table, fieldName) || !isWritableField(table, fieldName)) return;
+  if (value === null || value === undefined || (typeof value === "string" && !value.trim())) return;
   payload[fieldName] = value;
 }
-
-async function updateRecordSafe(table, recordIdToUpdate, updates) {
-  const safeUpdates = {};
-
-  for (const [fieldName, value] of Object.entries(updates || {})) {
-    addIfWritable(safeUpdates, table, fieldName, value);
-  }
-
-  if (Object.keys(safeUpdates).length === 0) {
-    return false;
-  }
-
-  await table.updateRecordAsync(recordIdToUpdate, safeUpdates);
+async function updateRecordSafe(table, recordId, updates) {
+  const safe = {};
+  for (const [fieldName, value] of Object.entries(updates || {})) addIfWritable(safe, table, fieldName, value);
+  if (!Object.keys(safe).length) return false;
+  await table.updateRecordAsync(recordId, safe);
   return true;
 }
-
-async function updateRecordBestEffort(table, recordIdToUpdate, updates) {
-  try {
-    return await updateRecordSafe(table, recordIdToUpdate, updates);
-  } catch (error) {
-    log("Best-effort update failed", {
-      table: table?.name || "",
-      recordId: recordIdToUpdate,
-      error: error instanceof Error ? error.message : String(error),
-    });
-    return false;
-  }
+async function ensureXpEventWeeklySummaryLink(xpEventId, weeklySummaryId) {
+  if (!xpEventId || !weeklySummaryId) return false;
+  return updateRecordSafe(xpEventsTable, xpEventId, { [CONFIG.xpEvents.weeklySummary]: [{ id: weeklySummaryId }] });
 }
 
-async function deactivateExactXpEvent({
-  existingXpEvent,
-  recordId,
-  reason,
-  awardStatus,
-}) {
+async function deactivateExactXpEvent({ existingXpEvent, recordId, reason, awardStatus }) {
   let xpDeactivated = false;
+  let levelRecalcQueued = false;
   let videoFeedbackWritebackWarning = "";
+  let enrollmentRecalcWarning = "";
+
+  let ownedEnrollmentId = "";
+  if (existingXpEvent) {
+    const eventEnrollmentIds = uniqueIds(getLinkedIds(existingXpEvent, xpEventsTable, CONFIG.xpEvents.enrollment));
+    if (eventEnrollmentIds.length > 1) {
+      throw new Error(`XP Event ${existingXpEvent.id} has multiple Enrollment links; refusing automatic retirement.`);
+    }
+    ownedEnrollmentId = eventEnrollmentIds[0] || "";
+  }
 
   if (existingXpEvent && getCheckbox(existingXpEvent, xpEventsTable, CONFIG.xpEvents.active)) {
-    await updateRecordSafe(xpEventsTable, existingXpEvent.id, {
-      [CONFIG.xpEvents.active]: false,
-    });
+    await updateRecordSafe(xpEventsTable, existingXpEvent.id, { [CONFIG.xpEvents.active]: false });
     xpDeactivated = true;
+  }
+
+  if (xpDeactivated && ownedEnrollmentId) {
+    try {
+      const owner = await enrollmentsTable.selectRecordAsync(ownedEnrollmentId);
+      if (owner && getCheckbox(owner, enrollmentsTable, CONFIG.enrollments.active)) {
+        await updateRecordSafe(enrollmentsTable, ownedEnrollmentId, {
+          [CONFIG.enrollments.levelRecalcNeeded]: true,
+        });
+        levelRecalcQueued = true;
+      }
+    } catch (error) {
+      enrollmentRecalcWarning = error instanceof Error ? error.message : String(error);
+    }
   }
 
   const videoUpdates = {};
@@ -674,413 +420,131 @@ async function deactivateExactXpEvent({
   }
   if (awardStatus) {
     videoUpdates[CONFIG.videoFeedback.awardStatus] = buildSingleSelectValue(
-      videoTable,
-      CONFIG.videoFeedback.awardStatus,
-      awardStatus
+      videoTable, CONFIG.videoFeedback.awardStatus, awardStatus
     );
   }
+  try { await updateRecordSafe(videoTable, recordId, videoUpdates); }
+  catch (error) { videoFeedbackWritebackWarning = error instanceof Error ? error.message : String(error); }
 
-  try {
-    await updateRecordSafe(videoTable, recordId, videoUpdates);
-  } catch (error) {
-    videoFeedbackWritebackWarning =
-      error instanceof Error ? error.message : String(error);
-  }
-
-  return { xpDeactivated, videoFeedbackWritebackWarning, reason };
+  return { xpDeactivated, levelRecalcQueued, videoFeedbackWritebackWarning, enrollmentRecalcWarning, reason };
 }
 
 function setSkippedOutputs(actionOut, errorOut, details = {}) {
   setOutputSafe("statusOut", "skipped");
   setOutputSafe("actionOut", actionOut || "skipped");
-  setOutputSafe("xpEventIdOut", "");
+  setOutputSafe("xpEventIdOut", details.existingXpEventId || "");
   setOutputSafe("sourceKeyOut", details.sourceKey || "");
   setOutputSafe("videoFeedbackDisplayKeyOut", details.videoFeedbackDisplayKey || "");
   setOutputSafe("xpPointsOut", details.xpPoints ?? "");
   setOutputSafe("submissionIdOut", details.submissionId || "");
   setOutputSafe("enrollmentIdOut", details.enrollmentId || "");
   setOutputSafe("weekIdOut", details.weekId || "");
-  setOutputSafe("weekWrittenOut", details.weekId ? "yes" : "no");
   setOutputSafe("weeklySummaryIdOut", details.weeklySummaryId || "");
   setOutputSafe("xpSourceDateOut", details.xpSourceDate || "");
   setOutputSafe("deactivatedOut", details.xpDeactivated ? "yes" : "no");
-  setOutputSafe(
-    "videoFeedbackWritebackWarningOut",
-    details.videoFeedbackWritebackWarning || ""
-  );
+  setOutputSafe("levelRecalcQueuedOut", details.levelRecalcQueued ? "yes" : "no");
   setOutputSafe("errorOut", errorOut || "");
-
-  if (details.debugStep) {
-    setOutputSafe("debugStep", details.debugStep);
-  }
-
-  console.log(JSON.stringify({
-    automation: CONFIG.scriptName,
-    version: CONFIG.version,
-    statusOut: "skipped",
-    actionOut,
-    errorOut,
-    ...details,
-  }, null, 2));
-}
-
-function buildXpReasonDebug({
-  existingXpEvent,
-  recordId,
-  videoFeedbackDisplayKey,
-  submissionId,
-  enrollmentId,
-  weekId,
-  xpSourceDateText,
-  sourceKey,
-  xpPoints,
-}) {
-  return [
-    "Video Feedback XP awarded from Automation 114.",
-    `Automation: ${CONFIG.scriptName}`,
-    `Version: ${CONFIG.version}`,
-    `Video Feedback Record ID: ${recordId}`,
-    `Video Feedback Display Key: ${videoFeedbackDisplayKey || "blank"}`,
-    `Submission Record ID: ${submissionId}`,
-    `Enrollment Record ID: ${enrollmentId}`,
-    `Week Record ID: ${weekId || "none"}`,
-    `XP Source Date: ${xpSourceDateText || "none"}`,
-    `Source Key: ${sourceKey}`,
-    `XP Source: ${CONFIG.values.xpSource}`,
-    `XP Bucket Key: ${CONFIG.values.xpBucketKey}`,
-    `XP Points: ${xpPoints}`,
-    `Existing XP Event Found: ${existingXpEvent ? "yes" : "no"}`,
-  ].join("\n");
+  if (details.debugStep) setOutputSafe("debugStep", details.debugStep);
+  console.log(JSON.stringify({ automation: CONFIG.scriptName, version: CONFIG.version, statusOut: "skipped", actionOut, errorOut, ...details }, null, 2));
 }
 
 function buildXpMatchFieldsToLoad() {
   return [
-    CONFIG.xpEvents.sourceKey,
-    CONFIG.xpEvents.xpDedupeKeyNormalized,
-    CONFIG.xpEvents.videoFeedback,
-    CONFIG.xpEvents.enrollment,
-    CONFIG.xpEvents.submission,
-    CONFIG.xpEvents.week,
-    CONFIG.xpEvents.xpBucketKey,
-    CONFIG.xpEvents.active,
+    CONFIG.xpEvents.sourceKey, CONFIG.xpEvents.xpDedupeKeyNormalized,
+    CONFIG.xpEvents.videoFeedback, CONFIG.xpEvents.enrollment,
+    CONFIG.xpEvents.submission, CONFIG.xpEvents.week,
+    CONFIG.xpEvents.xpBucketKey, CONFIG.xpEvents.active,
   ].filter(fieldName => fieldExists(xpEventsTable, fieldName));
 }
-
 function extractVideoFeedbackIdFromSourceKey(sourceKey) {
   const raw = String(sourceKey || "").trim();
-  const marker = "video_submission|";
-
-  if (!normalizeText(raw).startsWith(marker)) {
-    return "";
-  }
-
+  if (!normalizeText(raw).startsWith("video_submission|")) return "";
   return raw.slice(raw.indexOf("|") + 1).trim();
 }
-
 function xpEventLinksVideoFeedback(record, videoFeedbackId) {
-  return getLinkedIds(
-    record,
-    xpEventsTable,
-    CONFIG.xpEvents.videoFeedback
-  ).includes(videoFeedbackId);
+  return getLinkedIds(record, xpEventsTable, CONFIG.xpEvents.videoFeedback).includes(videoFeedbackId);
 }
-
-function getXpEventSubmissionId(record) {
-  return getFirstLinkedId(record, xpEventsTable, CONFIG.xpEvents.submission);
-}
-
-function getXpEventWeekId(record) {
-  return getFirstLinkedId(record, xpEventsTable, CONFIG.xpEvents.week);
-}
-
-function getXpEventBucketName(record) {
-  return getText(record, xpEventsTable, CONFIG.xpEvents.xpBucketKey);
-}
-
 function sourceKeyMatchesCurrentVideoFeedback(record, currentRecordId, currentSourceKey) {
-  const existingSourceKey = getText(record, xpEventsTable, CONFIG.xpEvents.sourceKey);
-  const existingDedupeKey = fieldExists(xpEventsTable, CONFIG.xpEvents.xpDedupeKeyNormalized)
-    ? getText(record, xpEventsTable, CONFIG.xpEvents.xpDedupeKeyNormalized)
-    : "";
-
-  if (normalizeText(existingSourceKey) === normalizeText(currentSourceKey)) {
-    return true;
-  }
-
-  if (existingDedupeKey && normalizeText(existingDedupeKey) === normalizeText(currentSourceKey)) {
-    return true;
-  }
-
-  const sourceKeyVideoFeedbackId = extractVideoFeedbackIdFromSourceKey(existingSourceKey);
-  if (sourceKeyVideoFeedbackId && sourceKeyVideoFeedbackId === currentRecordId) {
-    return true;
-  }
-
-  const dedupeKeyVideoFeedbackId = extractVideoFeedbackIdFromSourceKey(existingDedupeKey);
-  if (dedupeKeyVideoFeedbackId && dedupeKeyVideoFeedbackId === currentRecordId) {
-    return true;
-  }
-
-  return false;
+  const source = getText(record, xpEventsTable, CONFIG.xpEvents.sourceKey);
+  const dedupe = fieldExists(xpEventsTable, CONFIG.xpEvents.xpDedupeKeyNormalized)
+    ? getText(record, xpEventsTable, CONFIG.xpEvents.xpDedupeKeyNormalized) : "";
+  if (normalizeText(source) === normalizeText(currentSourceKey)) return true;
+  if (dedupe && normalizeText(dedupe) === normalizeText(currentSourceKey)) return true;
+  return extractVideoFeedbackIdFromSourceKey(source) === currentRecordId ||
+    extractVideoFeedbackIdFromSourceKey(dedupe) === currentRecordId;
 }
-
-function compositeContextMatches(record, matchContext) {
-  const {
-    currentRecordId,
-    enrollmentId,
-    submissionId,
-    weekId,
-  } = matchContext;
-
-  const linkedVideoFeedbackIds = getLinkedIds(
-    record,
-    xpEventsTable,
-    CONFIG.xpEvents.videoFeedback
-  );
-
-  if (
-    linkedVideoFeedbackIds.length > 0 &&
-    !linkedVideoFeedbackIds.includes(currentRecordId)
-  ) {
-    return false;
-  }
-
-  if (normalizeText(getXpEventBucketName(record)) !== normalizeText(CONFIG.values.xpBucketKey)) {
-    return false;
-  }
-
-  if (getFirstLinkedId(record, xpEventsTable, CONFIG.xpEvents.enrollment) !== enrollmentId) {
-    return false;
-  }
-
-  if (getXpEventSubmissionId(record) !== submissionId) {
-    return false;
-  }
-
-  if (!weekId) {
-    return false;
-  }
-
-  return getXpEventWeekId(record) === weekId;
-}
-
 function assertXpEventCompatibleOrThrow(existingXpEvent, matchContext) {
-  if (!existingXpEvent) {
-    return;
+  if (!existingXpEvent) return;
+  const { currentRecordId, enrollmentId, submissionId, weekId, currentSourceKey } = matchContext;
+  const vfIds = uniqueIds(getLinkedIds(existingXpEvent, xpEventsTable, CONFIG.xpEvents.videoFeedback));
+  if (vfIds.length > 0 && !vfIds.includes(currentRecordId)) {
+    throw new Error(`XP Event ${existingXpEvent.id} is linked to another Video Feedback record: ${vfIds.join(", ")}.`);
   }
-
-  const {
-    currentRecordId,
-    submissionId,
-    weekId,
-    currentSourceKey,
-  } = matchContext;
-
-  const linkedVideoFeedbackIds = getLinkedIds(
-    existingXpEvent,
-    xpEventsTable,
-    CONFIG.xpEvents.videoFeedback
-  );
-
-  if (
-    linkedVideoFeedbackIds.length > 0 &&
-    !linkedVideoFeedbackIds.includes(currentRecordId)
-  ) {
-    throw new Error(
-      `XP Event ${existingXpEvent.id} is already linked to another Video Feedback record: ${linkedVideoFeedbackIds.join(", ")}. Refusing to reuse for Video Feedback ${currentRecordId}.`
-    );
+  const xpEnrollmentIds = uniqueIds(getLinkedIds(existingXpEvent, xpEventsTable, CONFIG.xpEvents.enrollment));
+  if (xpEnrollmentIds.length > 1) throw new Error(`XP Event ${existingXpEvent.id} has multiple Enrollment links.`);
+  if (enrollmentId && xpEnrollmentIds[0] && xpEnrollmentIds[0] !== enrollmentId) {
+    throw new Error(`XP Event ${existingXpEvent.id} belongs to Enrollment ${xpEnrollmentIds[0]}, not current Enrollment ${enrollmentId}. Refusing to move/steal.`);
   }
-
-  const xpSubmissionId = getXpEventSubmissionId(existingXpEvent);
-  if (xpSubmissionId && xpSubmissionId !== submissionId) {
-    throw new Error(
-      `XP Event ${existingXpEvent.id} belongs to Submission ${xpSubmissionId}, not current Submission ${submissionId}. Refusing to reuse for Video Feedback ${currentRecordId}. Manual review required.`
-    );
+  const xpSubmissionId = getFirstLinkedId(existingXpEvent, xpEventsTable, CONFIG.xpEvents.submission);
+  if (submissionId && xpSubmissionId && xpSubmissionId !== submissionId) {
+    throw new Error(`XP Event ${existingXpEvent.id} belongs to Submission ${xpSubmissionId}, not ${submissionId}.`);
   }
-
-  const xpWeekId = getXpEventWeekId(existingXpEvent);
+  const xpWeekId = getFirstLinkedId(existingXpEvent, xpEventsTable, CONFIG.xpEvents.week);
   if (weekId && xpWeekId && xpWeekId !== weekId) {
-    throw new Error(
-      `XP Event ${existingXpEvent.id} belongs to Week ${xpWeekId}, not current Week ${weekId}. Refusing to reuse for Video Feedback ${currentRecordId}. Manual review required.`
-    );
+    throw new Error(`XP Event ${existingXpEvent.id} belongs to Week ${xpWeekId}, not ${weekId}.`);
   }
-
-  const existingSourceKey = getText(existingXpEvent, xpEventsTable, CONFIG.xpEvents.sourceKey);
-  const sourceKeyVideoFeedbackId = extractVideoFeedbackIdFromSourceKey(existingSourceKey);
-
-  if (sourceKeyVideoFeedbackId && sourceKeyVideoFeedbackId !== currentRecordId) {
-    throw new Error(
-      `XP Event ${existingXpEvent.id} Source Key references Video Feedback ${sourceKeyVideoFeedbackId}, not current Video Feedback ${currentRecordId}. Refusing to reuse. Manual review required.`
-    );
-  }
-
-  const existingDedupeKey = fieldExists(xpEventsTable, CONFIG.xpEvents.xpDedupeKeyNormalized)
-    ? getText(existingXpEvent, xpEventsTable, CONFIG.xpEvents.xpDedupeKeyNormalized)
-    : "";
-
-  if (
-    existingDedupeKey &&
-    normalizeText(existingDedupeKey) !== normalizeText(currentSourceKey)
-  ) {
-    const dedupeKeyVideoFeedbackId = extractVideoFeedbackIdFromSourceKey(existingDedupeKey);
-
-    if (dedupeKeyVideoFeedbackId && dedupeKeyVideoFeedbackId !== currentRecordId) {
-      throw new Error(
-        `XP Event ${existingXpEvent.id} XP Dedupe Key Normalized references Video Feedback ${dedupeKeyVideoFeedbackId}, not current Video Feedback ${currentRecordId}. Refusing to reuse. Manual review required.`
-      );
-    }
+  const source = getText(existingXpEvent, xpEventsTable, CONFIG.xpEvents.sourceKey);
+  const sourceVf = extractVideoFeedbackIdFromSourceKey(source);
+  if (sourceVf && sourceVf !== currentRecordId) throw new Error(`XP Event ${existingXpEvent.id} Source Key references Video Feedback ${sourceVf}.`);
+  const dedupe = fieldExists(xpEventsTable, CONFIG.xpEvents.xpDedupeKeyNormalized)
+    ? getText(existingXpEvent, xpEventsTable, CONFIG.xpEvents.xpDedupeKeyNormalized) : "";
+  const dedupeVf = extractVideoFeedbackIdFromSourceKey(dedupe);
+  if (dedupeVf && dedupeVf !== currentRecordId) throw new Error(`XP Event ${existingXpEvent.id} dedupe key references Video Feedback ${dedupeVf}.`);
+  if (source && !sourceKeyMatchesCurrentVideoFeedback(existingXpEvent, currentRecordId, currentSourceKey) && vfIds.length === 0) {
+    throw new Error(`XP Event ${existingXpEvent.id} does not belong to current Video Feedback ${currentRecordId}.`);
   }
 }
-
-function guardAgainstXpEventStealing(existingXpEvent, matchContext) {
-  assertXpEventCompatibleOrThrow(existingXpEvent, matchContext);
-}
-
 function findMatchingXpEvents(xpRecords, matchContext) {
-  const {
-    currentRecordId,
-    currentSourceKey,
-    linkedXpEventIds = [],
-    enrollmentId,
-    submissionId,
-    weekId,
-  } = matchContext;
-
-  const tier1Matches = [];
-  const tier2Matches = [];
-  const seenIds = new Set();
-
-  function addMatch(targetTier, record) {
-    if (!record || seenIds.has(record.id)) {
-      return;
-    }
-
-    seenIds.add(record.id);
-    targetTier.push(record);
-  }
-
+  const seen = new Map();
   for (const record of xpRecords) {
-    if (xpEventLinksVideoFeedback(record, currentRecordId)) {
-      addMatch(tier1Matches, record);
+    if (xpEventLinksVideoFeedback(record, matchContext.currentRecordId) ||
+        sourceKeyMatchesCurrentVideoFeedback(record, matchContext.currentRecordId, matchContext.currentSourceKey) ||
+        (matchContext.linkedXpEventIds || []).includes(record.id)) {
+      assertXpEventCompatibleOrThrow(record, matchContext);
+      seen.set(record.id, record);
     }
   }
-
-  for (const linkedXpEventId of linkedXpEventIds) {
-    const linkedRecord = xpRecords.find(record => record.id === linkedXpEventId);
-
-    if (!linkedRecord) {
-      continue;
-    }
-
-    try {
-      assertXpEventCompatibleOrThrow(linkedRecord, matchContext);
-    } catch (error) {
-      throw new Error(
-        `Video Feedback ${currentRecordId} is linked to XP Event ${linkedXpEventId}, but that XP Event conflicts with the current submission/week/video feedback context: ${error.message}`
-      );
-    }
-
-    const isDirectVideoFeedbackLink = xpEventLinksVideoFeedback(linkedRecord, currentRecordId);
-    const isSourceKeyMatch = sourceKeyMatchesCurrentVideoFeedback(
-      linkedRecord,
-      currentRecordId,
-      currentSourceKey
-    );
-    if (!isDirectVideoFeedbackLink && !isSourceKeyMatch) {
-      throw new Error(
-        `Video Feedback ${currentRecordId} is linked to XP Event ${linkedXpEventId}, but that XP Event does not belong to this exact Video Feedback record or Source Key. Manual review required.`
-      );
-    }
-
-    addMatch(tier1Matches, linkedRecord);
-  }
-
-  for (const record of xpRecords) {
-    if (seenIds.has(record.id)) {
-      continue;
-    }
-
-    if (sourceKeyMatchesCurrentVideoFeedback(record, currentRecordId, currentSourceKey)) {
-      addMatch(tier2Matches, record);
-    }
-  }
-
-  // A direct Video Feedback link is the preferred reuse candidate, but it
-  // cannot hide a second event with the same canonical source key. Preserve
-  // both tiers so the caller fails closed on any duplicate identity.
-  const selectedTier = [...tier1Matches, ...tier2Matches];
-
-  for (const record of selectedTier) {
-    assertXpEventCompatibleOrThrow(record, matchContext);
-  }
-
-  return selectedTier;
+  return [...seen.values()];
 }
-
 async function findExistingXpEventOrThrow(matchContext) {
-  const xpQuery = await xpEventsTable.selectRecordsAsync({
-    fields: buildXpMatchFieldsToLoad(),
-  });
-
+  const query = await xpEventsTable.selectRecordsAsync({ fields: buildXpMatchFieldsToLoad() });
   try {
-    const matches = findMatchingXpEvents(xpQuery.records, matchContext);
-
+    const matches = findMatchingXpEvents(query.records, matchContext);
     if (matches.length > 1) {
-      throw new Error(
-        `Duplicate XP Events found for Video Feedback ${matchContext.currentRecordId} / Source Key ${matchContext.currentSourceKey}: ${matches.map(record => record.id).join(", ")}. One Video Feedback record must have exactly one XP Event.`
-      );
+      throw new Error(`Duplicate XP Events found for Video Feedback ${matchContext.currentRecordId}: ${matches.map(r => r.id).join(", ")}.`);
     }
-
     return matches[0] || null;
-  } finally {
-    unloadQuerySafe(xpQuery);
-  }
+  } finally { unloadQuerySafe(query); }
 }
 
 function assertRequiredSchema() {
-  const requiredVideoFields = [
-    CONFIG.videoFeedback.submission,
-    CONFIG.videoFeedback.enrollment,
-    CONFIG.videoFeedback.totalVideoXpAwarded,
-    CONFIG.videoFeedback.doNotAwardXp,
-    CONFIG.videoFeedback.awardStatus,
-    CONFIG.videoFeedback.feedbackPosted,
-  ];
-
-  for (const fieldName of requiredVideoFields) {
-    requireField(videoTable, fieldName);
-  }
-
-  const requiredXpFields = [
-    CONFIG.xpEvents.enrollment,
-    CONFIG.xpEvents.submission,
-    CONFIG.xpEvents.week,
-    CONFIG.xpEvents.weeklySummary,
-    CONFIG.xpEvents.videoFeedback,
-    CONFIG.xpEvents.xpSource,
-    CONFIG.xpEvents.xpBucketKey,
-    CONFIG.xpEvents.xpPoints,
-    CONFIG.xpEvents.xpReasonPublic,
-    CONFIG.xpEvents.xpReasonDebug,
-    CONFIG.xpEvents.active,
-    CONFIG.xpEvents.sourceKey,
-  ];
-
-  for (const fieldName of requiredXpFields) {
-    requireField(xpEventsTable, fieldName);
-  }
-
-  const requiredSubmissionFields = [
-    CONFIG.submissions.enrollment,
-    CONFIG.submissions.week,
-    CONFIG.submissions.activityDate,
-  ];
-
-  for (const fieldName of requiredSubmissionFields) {
-    requireField(submissionsTable, fieldName);
-  }
-
-  requireField(enrollmentsTable, CONFIG.enrollments.active);
+  [
+    CONFIG.videoFeedback.submission, CONFIG.videoFeedback.enrollment,
+    CONFIG.videoFeedback.totalVideoXpAwarded, CONFIG.videoFeedback.doNotAwardXp,
+    CONFIG.videoFeedback.awardStatus, CONFIG.videoFeedback.feedbackPosted,
+  ].forEach(f => requireField(videoTable, f));
+  [
+    CONFIG.submissions.enrollment, CONFIG.submissions.week,
+    CONFIG.submissions.activityDate, CONFIG.submissions.countThisSubmission,
+    CONFIG.submissions.activityDateIsFuture,
+  ].forEach(f => requireField(submissionsTable, f));
+  [CONFIG.enrollments.active, CONFIG.enrollments.levelRecalcNeeded].forEach(f => requireField(enrollmentsTable, f));
+  [
+    CONFIG.xpEvents.enrollment, CONFIG.xpEvents.submission, CONFIG.xpEvents.week,
+    CONFIG.xpEvents.weeklySummary, CONFIG.xpEvents.videoFeedback, CONFIG.xpEvents.xpSource,
+    CONFIG.xpEvents.xpBucketKey, CONFIG.xpEvents.xpPoints, CONFIG.xpEvents.xpReasonPublic,
+    CONFIG.xpEvents.xpReasonDebug, CONFIG.xpEvents.active, CONFIG.xpEvents.sourceKey,
+  ].forEach(f => requireField(xpEventsTable, f));
 
   requireFieldType(videoTable, CONFIG.videoFeedback.submission, ["multipleRecordLinks"]);
   requireFieldType(videoTable, CONFIG.videoFeedback.enrollment, ["multipleRecordLinks"]);
@@ -1088,215 +552,64 @@ function assertRequiredSchema() {
   requireFieldType(submissionsTable, CONFIG.submissions.enrollment, ["multipleRecordLinks"]);
   requireFieldType(submissionsTable, CONFIG.submissions.week, ["multipleRecordLinks"]);
   requireFieldType(enrollmentsTable, CONFIG.enrollments.active, ["checkbox"]);
+  requireFieldType(enrollmentsTable, CONFIG.enrollments.levelRecalcNeeded, ["checkbox"]);
 
-  if (fieldExists(videoTable, CONFIG.videoFeedback.xpEvents)) {
-    requireFieldType(videoTable, CONFIG.videoFeedback.xpEvents, ["multipleRecordLinks"]);
-  }
-
-  requireFieldType(xpEventsTable, CONFIG.xpEvents.enrollment, ["multipleRecordLinks"]);
-  requireFieldType(xpEventsTable, CONFIG.xpEvents.submission, ["multipleRecordLinks"]);
-  requireFieldType(xpEventsTable, CONFIG.xpEvents.week, ["multipleRecordLinks"]);
-  requireFieldType(xpEventsTable, CONFIG.xpEvents.weeklySummary, ["multipleRecordLinks"]);
-  requireFieldType(xpEventsTable, CONFIG.xpEvents.videoFeedback, ["multipleRecordLinks"]);
+  [
+    CONFIG.xpEvents.enrollment, CONFIG.xpEvents.submission, CONFIG.xpEvents.week,
+    CONFIG.xpEvents.weeklySummary, CONFIG.xpEvents.videoFeedback,
+  ].forEach(f => requireFieldType(xpEventsTable, f, ["multipleRecordLinks"]));
   requireFieldType(xpEventsTable, CONFIG.xpEvents.xpSource, ["singleSelect"]);
   requireFieldType(xpEventsTable, CONFIG.xpEvents.xpBucketKey, ["singleSelect"]);
 
-  requireWritableField(xpEventsTable, CONFIG.xpEvents.enrollment);
-  requireWritableField(xpEventsTable, CONFIG.xpEvents.submission);
-  requireWritableField(xpEventsTable, CONFIG.xpEvents.week);
-  requireWritableField(xpEventsTable, CONFIG.xpEvents.weeklySummary);
-  requireWritableField(xpEventsTable, CONFIG.xpEvents.videoFeedback);
-  requireWritableField(xpEventsTable, CONFIG.xpEvents.xpSource);
-  requireWritableField(xpEventsTable, CONFIG.xpEvents.xpBucketKey);
-  requireWritableField(xpEventsTable, CONFIG.xpEvents.xpPoints);
-  requireWritableField(xpEventsTable, CONFIG.xpEvents.xpReasonPublic);
-  requireWritableField(xpEventsTable, CONFIG.xpEvents.xpReasonDebug);
-  requireWritableField(xpEventsTable, CONFIG.xpEvents.active);
-  requireWritableField(xpEventsTable, CONFIG.xpEvents.sourceKey);
+  [
+    CONFIG.xpEvents.enrollment, CONFIG.xpEvents.submission, CONFIG.xpEvents.week,
+    CONFIG.xpEvents.weeklySummary, CONFIG.xpEvents.videoFeedback, CONFIG.xpEvents.xpSource,
+    CONFIG.xpEvents.xpBucketKey, CONFIG.xpEvents.xpPoints, CONFIG.xpEvents.xpReasonPublic,
+    CONFIG.xpEvents.xpReasonDebug, CONFIG.xpEvents.active, CONFIG.xpEvents.sourceKey,
+  ].forEach(f => requireWritableField(xpEventsTable, f));
   requireWritableField(videoTable, CONFIG.videoFeedback.awardStatus);
-
-  requireSingleSelectOption(
-    xpEventsTable,
-    CONFIG.xpEvents.xpSource,
-    CONFIG.values.xpSource
-  );
-
-  requireSingleSelectOption(
-    xpEventsTable,
-    CONFIG.xpEvents.xpBucketKey,
-    CONFIG.values.xpBucketKey
-  );
-
-  requireSingleSelectOption(
-    videoTable,
-    CONFIG.videoFeedback.awardStatus,
-    CONFIG.values.awardStatusAwarded
-  );
+  requireWritableField(enrollmentsTable, CONFIG.enrollments.levelRecalcNeeded);
+  requireSingleSelectOption(xpEventsTable, CONFIG.xpEvents.xpSource, CONFIG.values.xpSource);
+  requireSingleSelectOption(xpEventsTable, CONFIG.xpEvents.xpBucketKey, CONFIG.values.xpBucketKey);
+  requireSingleSelectOption(videoTable, CONFIG.videoFeedback.awardStatus, CONFIG.values.awardStatusAwarded);
+  requireSingleSelectOption(videoTable, CONFIG.videoFeedback.awardStatus, CONFIG.values.awardStatusPending);
 }
 
-function buildXpPayload({
-  existingXpEvent,
-  xpSourceDate,
-  weeklySummaryId,
-  recordId,
-  videoFeedbackDisplayKey,
-  submissionId,
-  enrollmentId,
-  weekId,
-  xpSourceDateText,
-  sourceKey,
-  xpPoints,
-}) {
-  const xpReasonPublic = CONFIG.values.xpReasonPublic;
-
-  const xpReasonDebug = buildXpReasonDebug({
-    existingXpEvent,
-    recordId,
-    videoFeedbackDisplayKey,
-    submissionId,
-    enrollmentId,
-    weekId,
-    xpSourceDateText,
-    sourceKey,
-    xpPoints,
-  });
-
-  const xpPayload = {};
-
-  addIfWritable(
-    xpPayload,
-    xpEventsTable,
-    CONFIG.xpEvents.enrollment,
-    [{ id: enrollmentId }]
-  );
-
-  addIfWritable(
-    xpPayload,
-    xpEventsTable,
-    CONFIG.xpEvents.submission,
-    [{ id: submissionId }]
-  );
-
-  addIfWritable(
-    xpPayload,
-    xpEventsTable,
-    CONFIG.xpEvents.videoFeedback,
-    [{ id: recordId }]
-  );
-
-  addIfWritable(
-    xpPayload,
-    xpEventsTable,
-    CONFIG.xpEvents.xpSource,
-    buildSingleSelectValue(
-      xpEventsTable,
-      CONFIG.xpEvents.xpSource,
-      CONFIG.values.xpSource
-    )
-  );
-
-  addIfWritable(
-    xpPayload,
-    xpEventsTable,
-    CONFIG.xpEvents.xpBucketKey,
-    buildSingleSelectValue(
-      xpEventsTable,
-      CONFIG.xpEvents.xpBucketKey,
-      CONFIG.values.xpBucketKey
-    )
-  );
-
-  addIfWritable(
-    xpPayload,
-    xpEventsTable,
-    CONFIG.xpEvents.xpPoints,
-    xpPoints
-  );
-
-  addIfWritable(
-    xpPayload,
-    xpEventsTable,
-    CONFIG.xpEvents.xpReasonPublic,
-    xpReasonPublic
-  );
-
-  addIfWritable(
-    xpPayload,
-    xpEventsTable,
-    CONFIG.xpEvents.xpReasonDebug,
-    xpReasonDebug
-  );
-
-  addIfWritable(
-    xpPayload,
-    xpEventsTable,
-    CONFIG.xpEvents.active,
-    true
-  );
-
-  addIfWritable(
-    xpPayload,
-    xpEventsTable,
-    CONFIG.xpEvents.sourceKey,
-    sourceKey
-  );
-
-  if (weekId) {
-    addIfWritable(
-      xpPayload,
-      xpEventsTable,
-      CONFIG.xpEvents.week,
-      [{ id: weekId }]
-    );
-  }
-
+function buildXpPayload({ existingXpEvent, xpSourceDate, weeklySummaryId, recordId, videoFeedbackDisplayKey, submissionId, enrollmentId, weekId, xpSourceDateText, sourceKey, xpPoints }) {
+  const xpReasonDebug = [
+    "Video Feedback XP awarded from Automation 114.",
+    `Automation: ${CONFIG.scriptName}`,
+    `Version: ${CONFIG.version}`,
+    `Video Feedback Record ID: ${recordId}`,
+    `Video Feedback Display Key: ${videoFeedbackDisplayKey || "blank"}`,
+    `Submission Record ID: ${submissionId}`,
+    `Enrollment Record ID: ${enrollmentId}`,
+    `Week Record ID: ${weekId}`,
+    `XP Source Date: ${xpSourceDateText || "none"}`,
+    `Source Key: ${sourceKey}`,
+    `XP Points: ${xpPoints}`,
+    `Existing XP Event Found: ${existingXpEvent ? "yes" : "no"}`,
+  ].join("\n");
+  const payload = {};
+  addIfWritable(payload, xpEventsTable, CONFIG.xpEvents.enrollment, [{ id: enrollmentId }]);
+  addIfWritable(payload, xpEventsTable, CONFIG.xpEvents.submission, [{ id: submissionId }]);
+  addIfWritable(payload, xpEventsTable, CONFIG.xpEvents.videoFeedback, [{ id: recordId }]);
+  addIfWritable(payload, xpEventsTable, CONFIG.xpEvents.xpSource, buildSingleSelectValue(xpEventsTable, CONFIG.xpEvents.xpSource, CONFIG.values.xpSource));
+  addIfWritable(payload, xpEventsTable, CONFIG.xpEvents.xpBucketKey, buildSingleSelectValue(xpEventsTable, CONFIG.xpEvents.xpBucketKey, CONFIG.values.xpBucketKey));
+  addIfWritable(payload, xpEventsTable, CONFIG.xpEvents.xpPoints, xpPoints);
+  addIfWritable(payload, xpEventsTable, CONFIG.xpEvents.xpReasonPublic, CONFIG.values.xpReasonPublic);
+  addIfWritable(payload, xpEventsTable, CONFIG.xpEvents.xpReasonDebug, xpReasonDebug);
+  addIfWritable(payload, xpEventsTable, CONFIG.xpEvents.active, true);
+  addIfWritable(payload, xpEventsTable, CONFIG.xpEvents.sourceKey, sourceKey);
+  addIfWritable(payload, xpEventsTable, CONFIG.xpEvents.week, [{ id: weekId }]);
   if (xpSourceDate) {
-    addIfWritable(
-      xpPayload,
-      xpEventsTable,
-      CONFIG.xpEvents.xpSourceDate,
-      xpSourceDate
-    );
-
-    const optionalXpDateSourceValue = buildOptionalFieldValue(
-      xpEventsTable,
-      CONFIG.xpEvents.xpDateSource,
-      CONFIG.values.xpDateSource
-    );
-
-    if (optionalXpDateSourceValue !== undefined) {
-      addIfWritable(
-        xpPayload,
-        xpEventsTable,
-        CONFIG.xpEvents.xpDateSource,
-        optionalXpDateSourceValue
-      );
-    }
+    addIfWritable(payload, xpEventsTable, CONFIG.xpEvents.xpSourceDate, xpSourceDate);
+    const dateSource = buildOptionalFieldValue(xpEventsTable, CONFIG.xpEvents.xpDateSource, CONFIG.values.xpDateSource);
+    if (dateSource !== undefined) addIfWritable(payload, xpEventsTable, CONFIG.xpEvents.xpDateSource, dateSource);
   }
-
-  if (weeklySummaryId) {
-    addIfWritable(
-      xpPayload,
-      xpEventsTable,
-      CONFIG.xpEvents.weeklySummary,
-      [{ id: weeklySummaryId }]
-    );
-  }
-
-  if (Object.keys(xpPayload).length === 0) {
-    throw new Error("No writable fields were found for XP Event payload.");
-  }
-
-  return {
-    xpPayload,
-    xpReasonPublic,
-    xpReasonDebug,
-  };
+  if (weeklySummaryId) addIfWritable(payload, xpEventsTable, CONFIG.xpEvents.weeklySummary, [{ id: weeklySummaryId }]);
+  return { xpPayload: payload, xpReasonDebug };
 }
-
-/* =========================================================
-   SECTION 3 — MAIN
-========================================================= */
 
 async function main() {
   let debugStep = "1 - Start";
@@ -1310,595 +623,220 @@ async function main() {
   let xpSourceDateText = "";
 
   try {
-    setOutputSafe("debugStep", debugStep);
+    const cfg = typeof input !== "undefined" && input?.config ? input.config() : {};
+    recordId = String(cfg.recordId || "").trim();
+    if (!recordId || !recordId.startsWith("rec")) throw new Error(`Invalid or missing Video Feedback recordId: ${recordId}`);
+    sourceKey = `VIDEO_SUBMISSION|${recordId}`;
 
-  debugStep = "1 - Read Input";
-  setOutputSafe("debugStep", debugStep);
+    debugStep = "2 - Load Table References";
+    videoTable = base.getTable(CONFIG.tables.videoFeedback);
+    submissionsTable = base.getTable(CONFIG.tables.submissions);
+    enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
+    xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
+    weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
+    weeklySummaryQueryCache = null;
+    assertRequiredSchema();
 
-  const cfg =
-    typeof input !== "undefined" && input && typeof input.config === "function"
-      ? input.config()
-      : {};
+    debugStep = "4 - Load Video Feedback";
+    const videoRecord = await videoTable.selectRecordAsync(recordId);
+    if (!videoRecord) throw new Error(`Video Feedback record not found: ${recordId}`);
 
-  recordId = String(cfg.recordId || "").trim();
+    const feedbackPosted = getCheckbox(videoRecord, videoTable, CONFIG.videoFeedback.feedbackPosted);
+    const videoActive = fieldExists(videoTable, CONFIG.videoFeedback.active)
+      ? getCheckbox(videoRecord, videoTable, CONFIG.videoFeedback.active) : true;
+    const doNotAward = getCheckbox(videoRecord, videoTable, CONFIG.videoFeedback.doNotAwardXp);
+    const readyForXpAutomation = fieldExists(videoTable, CONFIG.videoFeedback.readyForXpAutomation)
+      ? getCheckbox(videoRecord, videoTable, CONFIG.videoFeedback.readyForXpAutomation) : true;
+    const submissionIds = uniqueIds(getLinkedIds(videoRecord, videoTable, CONFIG.videoFeedback.submission));
+    const enrollmentIds = uniqueIds(getLinkedIds(videoRecord, videoTable, CONFIG.videoFeedback.enrollment));
+    const existingLinkedXpEventIds = fieldExists(videoTable, CONFIG.videoFeedback.xpEvents)
+      ? uniqueIds(getLinkedIds(videoRecord, videoTable, CONFIG.videoFeedback.xpEvents)) : [];
+    submissionId = submissionIds[0] || "";
+    enrollmentId = enrollmentIds[0] || "";
+    xpPoints = getNumber(videoRecord, videoTable, CONFIG.videoFeedback.totalVideoXpAwarded, 0);
+    videoFeedbackDisplayKey = fieldExists(videoTable, CONFIG.videoFeedback.videoFeedbackKey)
+      ? getText(videoRecord, videoTable, CONFIG.videoFeedback.videoFeedbackKey) : "";
 
-  if (!recordId) {
-    throw new Error("Missing required input: recordId");
-  }
-
-  if (!recordId.startsWith("rec")) {
-    throw new Error(`Invalid Video Feedback recordId input: ${recordId}`);
-  }
-
-  sourceKey = `VIDEO_SUBMISSION|${recordId}`;
-
-  /* ---------------------------------------------------------
-     5.2 Table References
-  --------------------------------------------------------- */
-
-  debugStep = "2 - Load Table References";
-  setOutputSafe("debugStep", debugStep);
-
-  videoTable = base.getTable(CONFIG.tables.videoFeedback);
-  submissionsTable = base.getTable(CONFIG.tables.submissions);
-  enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
-  xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
-  weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
-  weeklySummaryQueryCache = null;
-
-  /* ---------------------------------------------------------
-     5.3 Validate Required Fields / Field Types / Select Options
-  --------------------------------------------------------- */
-
-  debugStep = "3 - Validate Required Schema";
-  setOutputSafe("debugStep", debugStep);
-
-  assertRequiredSchema();
-
-  /* ---------------------------------------------------------
-     5.4 Load Video Feedback Record
-  --------------------------------------------------------- */
-
-  debugStep = "4 - Load Video Feedback";
-  setOutputSafe("debugStep", debugStep);
-
-  const videoRecord = await videoTable.selectRecordAsync(recordId);
-
-  if (!videoRecord) {
-    throw new Error(`Video Feedback record not found: ${recordId}`);
-  }
-
-  /* ---------------------------------------------------------
-     5.5 Read Video Feedback Values
-  --------------------------------------------------------- */
-
-  debugStep = "5 - Read Video Feedback Values";
-  setOutputSafe("debugStep", debugStep);
-
-  const feedbackPosted = getCheckbox(
-    videoRecord,
-    videoTable,
-    CONFIG.videoFeedback.feedbackPosted
-  );
-
-  const videoActive = fieldExists(videoTable, CONFIG.videoFeedback.active)
-    ? getCheckbox(videoRecord, videoTable, CONFIG.videoFeedback.active)
-    : true;
-
-  const submissionIds = uniqueIds(
-    getLinkedIds(videoRecord, videoTable, CONFIG.videoFeedback.submission)
-  );
-
-  const enrollmentIds = uniqueIds(
-    getLinkedIds(videoRecord, videoTable, CONFIG.videoFeedback.enrollment)
-  );
-
-  submissionId = submissionIds[0] || "";
-  enrollmentId = enrollmentIds[0] || "";
-
-  videoFeedbackDisplayKey = fieldExists(videoTable, CONFIG.videoFeedback.videoFeedbackKey)
-    ? getText(videoRecord, videoTable, CONFIG.videoFeedback.videoFeedbackKey)
-    : "";
-
-  xpPoints = getNumber(
-    videoRecord,
-    videoTable,
-    CONFIG.videoFeedback.totalVideoXpAwarded,
-    0
-  );
-
-  const doNotAward = getCheckbox(
-    videoRecord,
-    videoTable,
-    CONFIG.videoFeedback.doNotAwardXp
-  );
-
-  const readyForXpAutomation = fieldExists(videoTable, CONFIG.videoFeedback.readyForXpAutomation)
-    ? getCheckbox(videoRecord, videoTable, CONFIG.videoFeedback.readyForXpAutomation)
-    : true;
-
-  const existingLinkedXpEventIds = fieldExists(videoTable, CONFIG.videoFeedback.xpEvents)
-    ? getLinkedIds(videoRecord, videoTable, CONFIG.videoFeedback.xpEvents)
-    : [];
-
-  // Resolve the exact canonical event before positive-award gates so that
-  // withdrawn eligibility can deactivate this event rather than minting a replacement.
-  const exactXpMatchContext = {
-    currentRecordId: recordId,
-    currentSourceKey: sourceKey,
-    linkedXpEventIds: existingLinkedXpEventIds,
-    enrollmentId,
-    submissionId,
-    weekId: "",
-  };
-  let existingXpEvent = await findExistingXpEventOrThrow(exactXpMatchContext);
-
-  setOutputSafe("sourceKeyOut", sourceKey);
-  setOutputSafe("videoFeedbackDisplayKeyOut", videoFeedbackDisplayKey);
-  setOutputSafe("xpPointsOut", xpPoints);
-  setOutputSafe("submissionIdOut", submissionId);
-  setOutputSafe("enrollmentIdOut", enrollmentId);
-
-  /* ---------------------------------------------------------
-     5.6 Validation / Skip Logic
-  --------------------------------------------------------- */
-
-  debugStep = "6 - Validate Skip Conditions";
-  setOutputSafe("debugStep", debugStep);
-
-  if (!videoActive) {
-    const lifecycle = await deactivateExactXpEvent({
-      existingXpEvent,
-      recordId,
-      reason: "video_inactive",
-      awardStatus: CONFIG.values.awardStatusPending,
-    });
-    setSkippedOutputs("skipped_inactive", "Active? is unchecked.", {
-      debugStep,
-      sourceKey,
-      videoFeedbackDisplayKey,
-      xpPoints,
-      submissionId,
+    let existingXpEvent = await findExistingXpEventOrThrow({
+      currentRecordId: recordId,
+      currentSourceKey: sourceKey,
+      linkedXpEventIds: existingLinkedXpEventIds,
       enrollmentId,
-      ...lifecycle,
-    });
-    return;
-  }
-
-  if (!feedbackPosted) {
-    const lifecycle = await deactivateExactXpEvent({
-      existingXpEvent,
-      recordId,
-      reason: "feedback_not_posted",
-      awardStatus: CONFIG.values.awardStatusPending,
-    });
-    setSkippedOutputs("skipped_feedback_not_posted", "Feedback Posted? is not checked.", {
-      debugStep,
-      sourceKey,
-      videoFeedbackDisplayKey,
-      xpPoints,
       submissionId,
-      enrollmentId,
-      ...lifecycle,
+      weekId: "",
     });
-    return;
-  }
 
-  if (doNotAward) {
-    const lifecycle = await deactivateExactXpEvent({
-      existingXpEvent,
-      recordId,
-      reason: "do_not_award",
-      awardStatus: CONFIG.values.awardStatusDoNotAward,
+    const retire = async (action, error, extra = {}) => {
+      const lifecycle = await deactivateExactXpEvent({
+        existingXpEvent, recordId, reason: action, awardStatus: CONFIG.values.awardStatusPending,
+      });
+      setSkippedOutputs(action, error, {
+        debugStep, sourceKey, videoFeedbackDisplayKey, xpPoints, submissionId,
+        enrollmentId, weekId, existingXpEventId: existingXpEvent?.id || "", ...extra, ...lifecycle,
+      });
+    };
+
+    debugStep = "6 - Validate Video Feedback Lifecycle";
+    if (!videoActive) { await retire("skipped_inactive", "Active? is unchecked."); return; }
+    if (!feedbackPosted) { await retire("skipped_feedback_not_posted", "Feedback Posted? is not checked."); return; }
+    if (doNotAward) {
+      const lifecycle = await deactivateExactXpEvent({ existingXpEvent, recordId, reason: "do_not_award", awardStatus: CONFIG.values.awardStatusDoNotAward });
+      setSkippedOutputs("skipped_do_not_award", "Do Not Award XP? is checked.", {
+        debugStep, sourceKey, videoFeedbackDisplayKey, xpPoints, submissionId, enrollmentId,
+        existingXpEventId: existingXpEvent?.id || "", ...lifecycle,
+      });
+      return;
+    }
+
+    // Source identity/countability is intentionally validated before positive-only
+    // Ready/XP gates. This allows source loss to retire old XP even after 113 disarms.
+    debugStep = "7 - Validate Authoritative Submission Source";
+    if (submissionIds.length !== 1) { await retire("skipped_invalid_submission_link", `Submission must contain exactly one linked record; found ${submissionIds.length}.`); return; }
+    if (enrollmentIds.length !== 1) { await retire("skipped_invalid_enrollment_link", `Enrollment must contain exactly one linked record; found ${enrollmentIds.length}.`); return; }
+
+    const [enrollmentRecord, submissionRecord] = await Promise.all([
+      enrollmentsTable.selectRecordAsync(enrollmentId),
+      submissionsTable.selectRecordAsync(submissionId),
+    ]);
+    if (!enrollmentRecord) throw new Error(`Linked Enrollment record not found: ${enrollmentId}`);
+    if (!submissionRecord) throw new Error(`Linked Submission record not found: ${submissionId}`);
+
+    if (!getCheckbox(enrollmentRecord, enrollmentsTable, CONFIG.enrollments.active)) {
+      await retire("skipped_inactive_enrollment", "Linked Enrollment Active? is unchecked."); return;
+    }
+
+    const submissionEnrollmentIds = uniqueIds(getLinkedIds(submissionRecord, submissionsTable, CONFIG.submissions.enrollment));
+    if (submissionEnrollmentIds.length !== 1 || submissionEnrollmentIds[0] !== enrollmentId) {
+      await retire(
+        "skipped_submission_enrollment_mismatch",
+        `Submission Enrollment ${submissionEnrollmentIds.join(",") || "blank"} does not exactly match Video Feedback Enrollment ${enrollmentId}.`
+      );
+      return;
+    }
+
+    const weekIds = uniqueIds(getLinkedIds(submissionRecord, submissionsTable, CONFIG.submissions.week));
+    if (weekIds.length !== 1) {
+      await retire("skipped_submission_week_invalid", `Submission Week must contain exactly one linked record; found ${weekIds.length}.`);
+      return;
+    }
+    weekId = weekIds[0];
+
+    if (!getCheckbox(submissionRecord, submissionsTable, CONFIG.submissions.countThisSubmission)) {
+      await retire("skipped_submission_not_countable", "Count This Submission? is not 1/true.");
+      return;
+    }
+
+    if (getCheckbox(submissionRecord, submissionsTable, CONFIG.submissions.activityDateIsFuture)) {
+      await retire("skipped_submission_future_formula", "Activity Date Is Future? is 1/true.");
+      return;
+    }
+
+    const xpSourceDate = getRaw(submissionRecord, submissionsTable, CONFIG.submissions.activityDate);
+    xpSourceDateText = getText(submissionRecord, submissionsTable, CONFIG.submissions.activityDate);
+    const sourceDateKey = denverDateKey(xpSourceDate);
+    const todayDenverKey = effectiveTodayDenverKey(submissionRecord);
+    if (!sourceDateKey) {
+      await retire("skipped_submission_activity_date_missing", "Linked Submission Activity Date is blank or invalid.");
+      return;
+    }
+    if (sourceDateKey > todayDenverKey) {
+      await retire("skipped_submission_activity_date_future", "Linked Submission Activity Date is in the future.", { xpSourceDate: xpSourceDateText });
+      return;
+    }
+
+    // Re-resolve with complete Week context and fail closed on any ownership conflict.
+    existingXpEvent = await findExistingXpEventOrThrow({
+      currentRecordId: recordId, currentSourceKey: sourceKey,
+      linkedXpEventIds: existingLinkedXpEventIds, enrollmentId, submissionId, weekId,
     });
-    setSkippedOutputs("skipped_do_not_award", "Do Not Award XP? is checked.", {
-      debugStep,
-      sourceKey,
-      videoFeedbackDisplayKey,
-      xpPoints,
-      submissionId,
-      enrollmentId,
-      ...lifecycle,
+
+    debugStep = "8 - Validate Positive Award Gates";
+    if (!readyForXpAutomation) {
+      setSkippedOutputs("skipped_not_ready_for_xp_automation", "Ready for XP Automation? is not checked.", {
+        debugStep, sourceKey, videoFeedbackDisplayKey, xpPoints, submissionId, enrollmentId, weekId,
+        existingXpEventId: existingXpEvent?.id || "",
+      });
+      return;
+    }
+    if (!(xpPoints > 0)) {
+      setSkippedOutputs("skipped_zero_xp", "Total Video XP Awarded is blank or 0.", {
+        debugStep, sourceKey, videoFeedbackDisplayKey, xpPoints, submissionId, enrollmentId, weekId,
+        existingXpEventId: existingXpEvent?.id || "",
+      });
+      return;
+    }
+
+    debugStep = "9 - Resolve Weekly Summary";
+    const submissionWasIds = fieldExists(submissionsTable, CONFIG.submissions.weeklySummary)
+      ? getLinkedIds(submissionRecord, submissionsTable, CONFIG.submissions.weeklySummary) : [];
+    const weeklySummaryId = await resolveWeeklySummaryId({ sourceWeeklySummaryIds: submissionWasIds, enrollmentId, weekId });
+
+    debugStep = "10 - Build/Create/Update XP Event";
+    const matchContext = {
+      currentRecordId: recordId, currentSourceKey: sourceKey,
+      linkedXpEventIds: existingLinkedXpEventIds, enrollmentId, submissionId, weekId,
+    };
+    const { xpPayload, xpReasonDebug } = buildXpPayload({
+      existingXpEvent, xpSourceDate, weeklySummaryId, recordId, videoFeedbackDisplayKey,
+      submissionId, enrollmentId, weekId, xpSourceDateText, sourceKey, xpPoints,
     });
-    return;
-  }
 
-  if (!readyForXpAutomation) {
-    setSkippedOutputs("skipped_not_ready_for_xp_automation", "Ready for XP Automation? is not checked.", {
-      debugStep,
-      sourceKey,
-      videoFeedbackDisplayKey,
-      xpPoints,
-      submissionId,
-      enrollmentId,
-    });
-    return;
-  }
-
-  if (!(xpPoints > 0)) {
-    setSkippedOutputs("skipped_zero_xp", "Total Video XP Awarded is blank or 0.", {
-      debugStep,
-      sourceKey,
-      videoFeedbackDisplayKey,
-      xpPoints,
-      submissionId,
-      enrollmentId,
-    });
-    return;
-  }
-
-  if (submissionIds.length !== 1) {
-    setSkippedOutputs("skipped_invalid_submission_link", "Submission must contain exactly one linked record.", {
-      debugStep,
-      sourceKey,
-      videoFeedbackDisplayKey,
-      xpPoints,
-      enrollmentId,
-    });
-    return;
-  }
-
-  if (enrollmentIds.length !== 1) {
-    setSkippedOutputs("skipped_invalid_enrollment_link", "Enrollment must contain exactly one linked record.", {
-      debugStep,
-      sourceKey,
-      videoFeedbackDisplayKey,
-      xpPoints,
-      submissionId,
-    });
-    return;
-  }
-
-  /* ---------------------------------------------------------
-     5.7 Validate Enrollment and Submission / Find Week and XP Source Date
-  --------------------------------------------------------- */
-
-  debugStep = "7 - Validate Enrollment and Submission";
-  setOutputSafe("debugStep", debugStep);
-
-  let xpSourceDate = null;
-
-  const [enrollmentRecord, submissionRecord] = await Promise.all([
-    enrollmentsTable.selectRecordAsync(enrollmentId),
-    submissionsTable.selectRecordAsync(submissionId),
-  ]);
-
-  if (!enrollmentRecord) {
-    throw new Error(`Linked Enrollment record not found: ${enrollmentId}`);
-  }
-
-  if (!submissionRecord) {
-    throw new Error(`Linked Submission record not found: ${submissionId}`);
-  }
-
-  if (!getCheckbox(enrollmentRecord, enrollmentsTable, CONFIG.enrollments.active)) {
-    setSkippedOutputs("skipped_inactive_enrollment", "Linked Enrollment Active? is unchecked.", {
-      debugStep,
-      sourceKey,
-      videoFeedbackDisplayKey,
-      xpPoints,
-      submissionId,
-      enrollmentId,
-    });
-    return;
-  }
-
-  const submissionEnrollmentId = getExactlyOneLinkedId(
-    submissionRecord,
-    submissionsTable,
-    CONFIG.submissions.enrollment,
-    "Submission Enrollment"
-  );
-
-  if (submissionEnrollmentId !== enrollmentId) {
-    setSkippedOutputs(
-      "skipped_submission_enrollment_mismatch",
-      `Submission Enrollment ${submissionEnrollmentId} does not match Video Feedback Enrollment ${enrollmentId}.`,
-      {
-        debugStep,
-        sourceKey,
-        videoFeedbackDisplayKey,
-        xpPoints,
-        submissionId,
-        enrollmentId,
-      }
-    );
-    return;
-  }
-
-  weekId = getExactlyOneLinkedId(
-    submissionRecord,
-    submissionsTable,
-    CONFIG.submissions.week,
-    "Submission Week"
-  );
-
-  xpSourceDate = getRaw(
-    submissionRecord,
-    submissionsTable,
-    CONFIG.submissions.activityDate
-  );
-  xpSourceDateText = getText(
-    submissionRecord,
-    submissionsTable,
-    CONFIG.submissions.activityDate
-  );
-
-  const sourceDateKey = denverDateKey(xpSourceDate);
-  const todayDenverKey = effectiveTodayDenverKey(submissionRecord);
-
-  if (!sourceDateKey) {
-    setSkippedOutputs("skipped_submission_activity_date_missing", "Linked Submission Activity Date is blank or invalid.", {
-      debugStep,
-      sourceKey,
-      videoFeedbackDisplayKey,
-      xpPoints,
-      submissionId,
-      enrollmentId,
-      weekId,
-    });
-    return;
-  }
-
-  if (sourceDateKey > todayDenverKey) {
-    setSkippedOutputs("skipped_submission_activity_date_future", "Linked Submission Activity Date is in the future.", {
-      debugStep,
-      sourceKey,
-      videoFeedbackDisplayKey,
-      xpPoints,
-      submissionId,
-      enrollmentId,
-      weekId,
-      xpSourceDate: xpSourceDateText,
-    });
-    return;
-  }
-
-  setOutputSafe("weekIdOut", weekId || "");
-  setOutputSafe("weekWrittenOut", weekId ? "yes" : "no");
-  setOutputSafe("xpSourceDateOut", xpSourceDateText || "");
-
-  /* ---------------------------------------------------------
-     5.8 Find Existing XP Event
-     Important:
-     - Match only this exact Video Feedback record.
-     - Do not match only by Enrollment + Submission + XP Source.
-  --------------------------------------------------------- */
-
-  debugStep = "8 - Find Existing XP Event";
-  setOutputSafe("debugStep", debugStep);
-
-  const xpMatchContext = {
-    currentRecordId: recordId,
-    currentSourceKey: sourceKey,
-    linkedXpEventIds: existingLinkedXpEventIds,
-    enrollmentId,
-    submissionId,
-    weekId,
-  };
-
-  existingXpEvent = await findExistingXpEventOrThrow(xpMatchContext);
-
-  /* ---------------------------------------------------------
-     5.9 Build XP Event Payload
-  --------------------------------------------------------- */
-
-  debugStep = "9 - Build XP Event Payload";
-  setOutputSafe("debugStep", debugStep);
-
-  const submissionWeeklySummaryIds =
-    submissionRecord &&
-    fieldExists(submissionsTable, CONFIG.submissions.weeklySummary)
-      ? getLinkedIds(
-          submissionRecord,
-          submissionsTable,
-          CONFIG.submissions.weeklySummary
-        )
-      : [];
-
-  const weeklySummaryId = await resolveWeeklySummaryId({
-    sourceWeeklySummaryIds: submissionWeeklySummaryIds,
-    enrollmentId,
-    weekId,
-  });
-
-  log("Weekly Athlete Summary resolution", {
-    submissionWeeklySummaryIds,
-    weeklySummaryId: weeklySummaryId || "",
-    enrollmentId,
-    weekId,
-  });
-
-  const {
-    xpPayload,
-    xpReasonPublic,
-    xpReasonDebug,
-  } = buildXpPayload({
-    existingXpEvent,
-    xpSourceDate,
-    weeklySummaryId,
-    recordId,
-    videoFeedbackDisplayKey,
-    submissionId,
-    enrollmentId,
-    weekId,
-    xpSourceDateText,
-    sourceKey,
-    xpPoints,
-  });
-
-  /* ---------------------------------------------------------
-     5.10 Create or Update XP Event
-  --------------------------------------------------------- */
-
-  debugStep = "10 - Create or Update XP Event";
-  setOutputSafe("debugStep", debugStep);
-
-  let xpEventId = "";
-  let actionOut = "";
-
-  if (existingXpEvent) {
-    guardAgainstXpEventStealing(existingXpEvent, xpMatchContext);
-
-    await xpEventsTable.updateRecordAsync(existingXpEvent.id, xpPayload);
-    xpEventId = existingXpEvent.id;
-    actionOut = "updated";
-  } else {
-    debugStep = "10a - Last-Chance XP Event Recheck Before Create";
-    setOutputSafe("debugStep", debugStep);
-
-    existingXpEvent = await findExistingXpEventOrThrow(xpMatchContext);
-
+    let xpEventId = "";
+    let actionOut = "";
     if (existingXpEvent) {
-      guardAgainstXpEventStealing(existingXpEvent, xpMatchContext);
-
+      assertXpEventCompatibleOrThrow(existingXpEvent, matchContext);
       await xpEventsTable.updateRecordAsync(existingXpEvent.id, xpPayload);
       xpEventId = existingXpEvent.id;
-      actionOut = "updated-after-recheck";
+      actionOut = "updated";
     } else {
-      debugStep = "10b - Create XP Event";
-      setOutputSafe("debugStep", debugStep);
-
-      xpEventId = await xpEventsTable.createRecordAsync(xpPayload);
-      actionOut = "created";
+      existingXpEvent = await findExistingXpEventOrThrow(matchContext);
+      if (existingXpEvent) {
+        assertXpEventCompatibleOrThrow(existingXpEvent, matchContext);
+        await xpEventsTable.updateRecordAsync(existingXpEvent.id, xpPayload);
+        xpEventId = existingXpEvent.id;
+        actionOut = "updated-after-recheck";
+      } else {
+        xpEventId = await xpEventsTable.createRecordAsync(xpPayload);
+        actionOut = "created";
+      }
     }
-  }
+    await ensureXpEventWeeklySummaryLink(xpEventId, weeklySummaryId);
 
-  await ensureXpEventWeeklySummaryLink(xpEventId, weeklySummaryId);
-
-  /* ---------------------------------------------------------
-     5.11 Writeback to Video Feedback
-  --------------------------------------------------------- */
-
-  debugStep = "11 - Writeback to Video Feedback";
-  setOutputSafe("debugStep", debugStep);
-
-  const videoUpdateFields = {};
-
-  videoUpdateFields[CONFIG.videoFeedback.awardStatus] = buildSingleSelectValue(
-    videoTable,
-    CONFIG.videoFeedback.awardStatus,
-    CONFIG.values.awardStatusAwarded
-  );
-
-  if (fieldExists(videoTable, CONFIG.videoFeedback.readyForXpAutomation)) {
-    if (isWritableField(videoTable, CONFIG.videoFeedback.readyForXpAutomation)) {
-      videoUpdateFields[CONFIG.videoFeedback.readyForXpAutomation] = false;
-    } else {
-      log(
-        `Skipped writeback for non-writable field: ${videoTable.name}.${CONFIG.videoFeedback.readyForXpAutomation}`
-      );
+    debugStep = "11 - Writeback";
+    const videoUpdates = {
+      [CONFIG.videoFeedback.awardStatus]: buildSingleSelectValue(videoTable, CONFIG.videoFeedback.awardStatus, CONFIG.values.awardStatusAwarded),
+    };
+    if (fieldExists(videoTable, CONFIG.videoFeedback.readyForXpAutomation) && isWritableField(videoTable, CONFIG.videoFeedback.readyForXpAutomation)) {
+      videoUpdates[CONFIG.videoFeedback.readyForXpAutomation] = false;
     }
-  }
+    await updateRecordSafe(videoTable, recordId, videoUpdates);
 
-  let videoFeedbackWritebackWarning = "";
-  try {
-    await updateRecordSafe(videoTable, recordId, videoUpdateFields);
-  } catch (error) {
-    videoFeedbackWritebackWarning =
-      error instanceof Error ? error.message : String(error);
-    log("Video Feedback writeback warning", { recordId, videoFeedbackWritebackWarning });
-  }
-
-  /* ---------------------------------------------------------
-     5.12 Outputs
-  --------------------------------------------------------- */
-
-  debugStep = "12 - Outputs";
-  setOutputSafe("debugStep", debugStep);
-
-  const statusOut = actionOut === "created" ? "created" : "updated";
-
-  setOutputSafe("statusOut", statusOut);
-  setOutputSafe("actionOut", actionOut);
-  setOutputSafe("xpEventIdOut", xpEventId);
-  setOutputSafe("sourceKeyOut", sourceKey);
-  setOutputSafe("videoFeedbackDisplayKeyOut", videoFeedbackDisplayKey);
-  setOutputSafe("xpPointsOut", xpPoints);
-  setOutputSafe("submissionIdOut", submissionId);
-  setOutputSafe("enrollmentIdOut", enrollmentId);
-  setOutputSafe("weekIdOut", weekId || "");
-  setOutputSafe("weekWrittenOut", weekId ? "yes" : "no");
-  setOutputSafe("weeklySummaryIdOut", weeklySummaryId || "");
-  setOutputSafe("xpSourceDateOut", xpSourceDateText || "");
-  setOutputSafe("deactivatedOut", "no");
-  setOutputSafe("videoFeedbackWritebackWarningOut", videoFeedbackWritebackWarning);
-  setOutputSafe("errorOut", "");
-
-  console.log(JSON.stringify({
-    automation: CONFIG.scriptName,
-    version: CONFIG.version,
-    statusOut,
-    actionOut,
-    xpEventIdOut: xpEventId,
-    weeklySummaryIdOut: weeklySummaryId || "",
-    sourceKeyOut: sourceKey,
-    videoFeedbackDisplayKeyOut: videoFeedbackDisplayKey,
-    xpPointsOut: xpPoints,
-    xpSourceWritten: CONFIG.values.xpSource,
-    xpBucketKeyWritten: CONFIG.values.xpBucketKey,
-    xpReasonPublicWritten: xpReasonPublic,
-    xpReasonDebugWritten: xpReasonDebug ? "yes" : "no",
-    submissionIdOut: submissionId,
-    enrollmentIdOut: enrollmentId,
-    weekIdOut: weekId || "",
-    weekWrittenOut: weekId ? "yes" : "no",
-    xpSourceDateOut: xpSourceDateText || "",
-    xpSourceDateWritten: xpSourceDate ? "yes" : "no",
-    xpDateSourceWritten: xpSourceDate ? CONFIG.values.xpDateSource : "",
-    videoUpdateFieldsWritten: Object.keys(videoUpdateFields),
-    deactivatedOut: "no",
-    videoFeedbackWritebackWarningOut: videoFeedbackWritebackWarning,
-    debugStep,
-  }, null, 2));
+    setOutputSafe("statusOut", actionOut === "created" ? "created" : "updated");
+    setOutputSafe("actionOut", actionOut);
+    setOutputSafe("xpEventIdOut", xpEventId);
+    setOutputSafe("weeklySummaryIdOut", weeklySummaryId || "");
+    setOutputSafe("sourceKeyOut", sourceKey);
+    setOutputSafe("submissionIdOut", submissionId);
+    setOutputSafe("enrollmentIdOut", enrollmentId);
+    setOutputSafe("weekIdOut", weekId);
+    setOutputSafe("xpSourceDateOut", xpSourceDateText);
+    setOutputSafe("deactivatedOut", "no");
+    setOutputSafe("levelRecalcQueuedOut", "no");
+    setOutputSafe("errorOut", "");
+    log("114 complete", {
+      version: CONFIG.version, actionOut, xpEventId, sourceKey, submissionId,
+      enrollmentId, weekId, weeklySummaryId, xpPoints,
+      xpReasonDebugWritten: xpReasonDebug ? "yes" : "no",
+    });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-
-    log("Automation 114 error", {
-      recordId,
-      debugStep,
-      error: message,
-    });
-
     setOutputSafe("statusOut", "error");
     setOutputSafe("actionOut", "error");
-    setOutputSafe("xpEventIdOut", "");
-    setOutputSafe("sourceKeyOut", sourceKey || "");
-    setOutputSafe("videoFeedbackDisplayKeyOut", videoFeedbackDisplayKey || "");
-    setOutputSafe("xpPointsOut", xpPoints || 0);
-    setOutputSafe("submissionIdOut", submissionId || "");
-    setOutputSafe("enrollmentIdOut", enrollmentId || "");
-    setOutputSafe("weekIdOut", weekId || "");
-    setOutputSafe("weekWrittenOut", weekId ? "yes" : "no");
-    setOutputSafe("weeklySummaryIdOut", "");
-    setOutputSafe("xpSourceDateOut", xpSourceDateText || "");
     setOutputSafe("errorOut", message);
     setOutputSafe("debugStep", debugStep);
-
-    console.log(JSON.stringify({
-      automation: CONFIG.scriptName,
-      version: CONFIG.version,
-      statusOut: "error",
-      actionOut: "error",
-      sourceKeyOut: sourceKey || "",
-      videoFeedbackDisplayKeyOut: videoFeedbackDisplayKey || "",
-      xpPointsOut: xpPoints || 0,
-      submissionIdOut: submissionId || "",
-      enrollmentIdOut: enrollmentId || "",
-      weekIdOut: weekId || "",
-      weeklySummaryIdOut: "",
-      xpSourceDateOut: xpSourceDateText || "",
-      errorOut: message,
-      debugStep,
-    }, null, 2));
-
+    log("Automation 114 error", { recordId, debugStep, error: message });
     throw error;
   }
 }
-
-
-/************************************************************************************************
- * SECTION 4 — RUN
- ************************************************************************************************/
 
 await main();
