@@ -4,6 +4,10 @@
 const assert = require("assert");
 const { checkXpSourceAuthority } = require("../../lib/reliability-command-center/workflows/xp-source-authority");
 const { proposeRepair } = require("../../tools/reliability-command-center/repair-preview");
+const {
+  summarizeXpHealth,
+  xpHealthChecks,
+} = require("../../tools/testing/sc-test-control/lib/readonly-expected-actual");
 
 function rec(id, fields) {
   return { id, fields };
@@ -206,6 +210,45 @@ test("repair preview preserves narrow orphan permanent-delete exception", () => 
   assert.strictEqual(plan.explicitOperatorAction, true);
   assert.ok(plan.proposedChanges.some((c) => /fresh exact re-query/i.test(c.to)));
   assert.strictEqual(plan.apply, false);
+});
+
+test("readonly XP health passes an empty post-reset Production baseline", () => {
+  const summary = summarizeXpHealth({ xpEvents: [] });
+  assert.strictEqual(summary.pass, true);
+  assert.strictEqual(summary.activeXpCount, 0);
+  assert.strictEqual(summary.activeOrphanCount, 0);
+  assert.strictEqual(summary.blockingIssueCount, 0);
+  const checks = xpHealthChecks(summary);
+  assert.ok(checks.every((c) => c.status === "PASS"));
+});
+
+test("readonly XP health fails when active orphan XP appears", () => {
+  const summary = summarizeXpHealth({
+    xpEvents: [
+      rec("rec10000000000011", {
+        "Enrollment": [],
+        "Active?": true,
+        "XP Source": "Submission Base",
+        "XP Points": 20,
+        "Source Key": "SUBMISSION_XP|rec20000000000001",
+      }),
+    ],
+  });
+  assert.strictEqual(summary.pass, false);
+  assert.strictEqual(summary.activeOrphanCount, 1);
+  assert.ok(summary.issuesByCode.xp_active_orphan_blank_enrollment >= 1);
+  assert.strictEqual(xpHealthChecks(summary).find((c) => c.id === "xp.active_orphan_zero").status, "FAIL");
+});
+
+test("readonly XP health fails on authoritative source mismatch", () => {
+  const summary = summarizeXpHealth({
+    xpEvents: [xp("rec10000000000012", `ZOOM_ATTEND_BASE|${MEETING}|${ENR2}`, "Zoom Attendance")],
+    zoomMeetings: [rec(MEETING, { "Attendees": [ENR2] })],
+  });
+  assert.strictEqual(summary.pass, false);
+  assert.ok(summary.blockingIssueCount >= 1);
+  assert.ok(summary.issuesByCode.xp_source_key_enrollment_mismatch >= 1);
+  assert.strictEqual(xpHealthChecks(summary).find((c) => c.id === "xp.authority_integrity").status, "FAIL");
 });
 
 console.log("xp-source-authority.test.js passed");
