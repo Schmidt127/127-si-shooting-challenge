@@ -3,6 +3,7 @@
 
 const assert = require("assert");
 const { checkXpSourceAuthority } = require("../../lib/reliability-command-center/workflows/xp-source-authority");
+const { proposeRepair } = require("../../tools/reliability-command-center/repair-preview");
 
 function rec(id, fields) {
   return { id, fields };
@@ -174,6 +175,37 @@ test("Manual Bonus without audit owner/reason fails closed to manual review", ()
     xpEvents: [xp("rec10000000000010", `MANUAL_BONUS|${ENR}|adjustment-2`, "Manual Bonus")],
   });
   assert.ok(c.has("manual_bonus_missing_audit_ownership"));
+});
+
+test("repair preview retires unsupported Enrollment-owned XP and queues level recalculation", () => {
+  const plan = proposeRepair({
+    code: "xp_authoritative_source_missing",
+    retryEligibility: "manual_review_required",
+  });
+  assert.strictEqual(plan.explicitOperatorAction, true);
+  assert.ok(plan.proposedChanges.some((c) => c.targetTable === "XP Events" && c.field === "Active?"));
+  assert.ok(plan.proposedChanges.some((c) => c.targetTable === "Enrollments" && c.field === "Level Recalc Needed?"));
+  assert.strictEqual(plan.apply, false, "preview tool never performs live writes");
+});
+
+test("repair preview fails closed on ownership ambiguity", () => {
+  const plan = proposeRepair({
+    code: "xp_authoritative_source_ambiguous",
+    retryEligibility: "manual_review_required",
+  });
+  assert.strictEqual(plan.explicitOperatorAction, true);
+  assert.ok(plan.proposedChanges.some((c) => /manual domain reconciliation/i.test(c.to)));
+  assert.strictEqual(plan.apply, false);
+});
+
+test("repair preview preserves narrow orphan permanent-delete exception", () => {
+  const plan = proposeRepair({
+    code: "xp_active_orphan_blank_enrollment",
+    retryEligibility: "manual_review_required",
+  });
+  assert.strictEqual(plan.explicitOperatorAction, true);
+  assert.ok(plan.proposedChanges.some((c) => /fresh exact re-query/i.test(c.to)));
+  assert.strictEqual(plan.apply, false);
 });
 
 console.log("xp-source-authority.test.js passed");
