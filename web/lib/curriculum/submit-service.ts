@@ -44,6 +44,7 @@ type HcFields = {
   "Completion Status"?: unknown;
   "Curriculum Idempotency Key"?: unknown;
   "Assignment Key"?: unknown;
+  "Weekly Athlete Summary Link"?: unknown;
   Notes?: unknown;
 };
 
@@ -268,6 +269,63 @@ async function resolvePhaForLibrary(input: {
     phaId: pha.id,
     weekId,
   };
+}
+
+type WeeklySummaryFields = {
+  Enrollment?: unknown;
+  Week?: unknown;
+};
+
+/**
+ * Structured Curriculum has no Daily Submission, but Homework XP 065 still requires
+ * exactly one canonical WAS for Enrollment + assigned PHA Week. Find-or-create that
+ * identity and link the HC directly. Never create a Submission.
+ */
+async function ensureCanonicalWeeklySummaryForCurriculum(input: {
+  enrollmentId: string;
+  weekId: string;
+  homeworkCompletionId: string;
+}): Promise<string> {
+  const response = await listAirtableRecords<WeeklySummaryFields>({
+    tableName: TABLES.weeklySummary.name,
+    filterByFormula: `AND(FIND('${escapeAirtableString(input.enrollmentId)}',ARRAYJOIN({Enrollment})),FIND('${escapeAirtableString(input.weekId)}',ARRAYJOIN({Week})))`,
+    fields: ["Enrollment", "Week"],
+    maxRecords: 3,
+    revalidateSeconds: 0,
+  });
+
+  const candidates = response.records.filter((row) => {
+    const enrollmentIds = linkedRecordIds(row.fields.Enrollment);
+    const weekIds = linkedRecordIds(row.fields.Week);
+    return enrollmentIds.length === 1 && enrollmentIds[0] === input.enrollmentId &&
+      weekIds.length === 1 && weekIds[0] === input.weekId;
+  });
+
+  if (candidates.length > 1) {
+    throw Object.assign(
+      new Error(`Multiple canonical Weekly Athlete Summaries for Enrollment ${input.enrollmentId} + Week ${input.weekId}.`),
+      { code: "WAS_AMBIGUOUS" as const },
+    );
+  }
+
+  let weeklySummaryId = candidates[0]?.id ?? "";
+  if (!weeklySummaryId) {
+    const created = await createAirtableRecord({
+      tableName: TABLES.weeklySummary.name,
+      fields: { Enrollment: [input.enrollmentId], Week: [input.weekId] },
+      typecast: true,
+    });
+    weeklySummaryId = created.id;
+  }
+
+  await updateAirtableRecord({
+    tableName: TABLES.homeworkCompletions.name,
+    recordId: input.homeworkCompletionId,
+    fields: { "Weekly Athlete Summary Link": [weeklySummaryId] },
+    typecast: true,
+  });
+
+  return weeklySummaryId;
 }
 
 async function loadCompletionsByIds(
@@ -731,6 +789,19 @@ export async function processCurriculumHomeworkSubmit(input: {
         homeworkCompletionId: written.id,
       });
     }
+
+    const weeklySummaryId = await ensureCanonicalWeeklySummaryForCurriculum({
+      enrollmentId: payload.enrollmentId,
+      weekId,
+      homeworkCompletionId: written.id,
+    });
+    logSubmit("weekly_summary_linked", {
+      enrollmentId: payload.enrollmentId,
+      assignmentKey: payload.assignmentKey,
+      homeworkCompletionId: written.id,
+      weeklySummaryId,
+      weekId,
+    });
 
     if (isNeedsRevision && priorAttempts.length > 0) {
       await supersedePriorAttempts(priorAttempts, attemptNumber);
