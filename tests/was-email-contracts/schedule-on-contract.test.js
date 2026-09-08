@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
  * Current source and authority docs must preserve the 118/119 schedule.
+ * SC-121: partial terminal Week selection must remain compatible with those schedules.
  */
 "use strict";
 
