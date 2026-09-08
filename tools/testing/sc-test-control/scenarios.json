@@ -1,7 +1,8 @@
 {
-  "registry_version": "1.0.0",
+  "registry_version": "1.1.0",
   "generated_at": "2026-09-08",
   "source": "docs/V2_END_TO_END_TEST_MATRIX.md",
+  "identity_verdict": "IDENTITY_VERIFIED_NON_EMAIL",
   "total_matrix_rows": 66,
   "scenarios": [
     {
@@ -12,15 +13,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": false,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": true,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "Requires operator UI",
       "expectedSummary": {
         "passCriteria": "New enrollment creates/links athlete"
       }
@@ -33,15 +35,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": false,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": true,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "Requires operator UI",
       "expectedSummary": {
         "passCriteria": "Grade change reassigns band"
       }
@@ -54,15 +57,16 @@
       "classification": "READ_ONLY_PROD",
       "implemented": true,
       "liveReady": true,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "agent-2",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Submission gets enrollment + week"
       }
@@ -75,6 +79,7 @@
       "classification": "OFFLINE_UNIT",
       "implemented": true,
       "liveReady": true,
+      "readyForWaveC": true,
       "requiresIdentity": false,
       "requiresEmail": false,
       "requiresUpload": false,
@@ -83,7 +88,7 @@
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "agent-2",
-      "notes": "",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Malformed recordId input"
       }
@@ -96,15 +101,16 @@
       "classification": "READ_ONLY_PROD",
       "implemented": true,
       "liveReady": true,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "agent-2",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "First counted submission day awards XP"
       }
@@ -117,15 +123,16 @@
       "classification": "READ_ONLY_PROD",
       "implemented": true,
       "liveReady": true,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "agent-2",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Same submission automation rerun"
       }
@@ -138,15 +145,16 @@
       "classification": "READ_ONLY_PROD",
       "implemented": true,
       "liveReady": true,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "agent-2",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Second submission same calendar day"
       }
@@ -159,15 +167,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Duplicate key collision"
       }
@@ -180,15 +189,16 @@
       "classification": "READ_ONLY_PROD",
       "implemented": true,
       "liveReady": true,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "agent-2",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Backdated submission date"
       }
@@ -201,15 +211,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Homework asset creates completion"
       }
@@ -222,15 +233,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Homework asset rerun / duplicate"
       }
@@ -243,15 +255,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": false,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": true,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "Requires operator UI",
       "expectedSummary": {
         "passCriteria": "Unsatisfactory review — no XP"
       }
@@ -264,15 +277,16 @@
       "classification": "READ_ONLY_PROD",
       "implemented": true,
       "liveReady": true,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "agent-2",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Satisfactory review awards XP"
       }
@@ -285,15 +299,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Homework XP rerun"
       }
@@ -306,15 +321,16 @@
       "classification": "READ_ONLY_PROD",
       "implemented": true,
       "liveReady": true,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "agent-2",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Reflection quiz → completion"
       }
@@ -327,15 +343,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": true,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Homework upload to storage (070a legacy)"
       }
@@ -348,11 +365,12 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": true,
       "liveReady": false,
+      "readyForWaveC": false,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": true,
       "blockedByEmailInstall": false,
       "owner": "post-486",
@@ -369,15 +387,16 @@
       "classification": "READ_ONLY_PROD",
       "implemented": true,
       "liveReady": true,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "agent-2",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Video asset → Video Feedback"
       }
@@ -390,15 +409,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Base video XP assigned"
       }
@@ -411,15 +431,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Posted feedback creates XP"
       }
@@ -432,15 +453,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Video XP steal-guard"
       }
@@ -453,15 +475,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Video XP rerun"
       }
@@ -474,15 +497,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": true,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Async video upload success"
       }
@@ -495,15 +519,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": true,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Duplicate bytes / reuse decision"
       }
@@ -516,15 +541,16 @@
       "classification": "FAILURE_INJECTION",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": true,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Malformed Lambda / writeback"
       }
@@ -537,15 +563,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Build 3-day contiguous streak"
       }
@@ -558,15 +585,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Gap breaks streak blocks"
       }
@@ -579,15 +607,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Streak XP award"
       }
@@ -600,15 +629,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Streak XP rerun / repair"
       }
@@ -621,15 +651,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Daily streak refresh"
       }
@@ -642,15 +673,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Cross single threshold"
       }
@@ -663,15 +695,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Cross multiple thresholds same run"
       }
@@ -684,15 +717,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Milestone rerun"
       }
@@ -705,15 +739,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Milestone XP via unlock"
       }
@@ -726,15 +761,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Eligible Perfect Week"
       }
@@ -747,15 +783,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Missing one required day"
       }
@@ -768,15 +805,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Create unlock"
       }
@@ -789,15 +827,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Unlock rerun"
       }
@@ -810,15 +849,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Unlock → XP"
       }
@@ -831,15 +871,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "XP-only advance (no gate)"
       }
@@ -852,15 +893,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Gate Blocked"
       }
@@ -873,15 +915,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Gate clears"
       }
@@ -894,15 +937,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Recalc mark from XP Event"
       }
@@ -915,15 +959,16 @@
       "classification": "READ_ONLY_PROD",
       "implemented": true,
       "liveReady": true,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "agent-2",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "WAS create from counted submission"
       }
@@ -936,15 +981,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "WAS rerun"
       }
@@ -957,15 +1003,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Goal + homework attach"
       }
@@ -978,15 +1025,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Previous week helpers"
       }
@@ -999,15 +1047,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": false,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": true,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "Requires operator UI",
       "expectedSummary": {
         "passCriteria": "Build weekly email package"
       }
@@ -1020,15 +1069,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": false,
       "requiresIdentity": true,
       "requiresEmail": true,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": true,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "EMAIL_TEST_IDENTITY_NOT_CONFIGURED",
       "expectedSummary": {
         "passCriteria": "Send weekly package (controlled)"
       }
@@ -1041,15 +1091,16 @@
       "classification": "READ_ONLY_PROD",
       "implemented": true,
       "liveReady": true,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "agent-2",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Live attendance base XP"
       }
@@ -1062,15 +1113,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Live attendance bonuses"
       }
@@ -1083,15 +1135,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Attendance rerun"
       }
@@ -1104,15 +1157,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Zoom recording credit"
       }
@@ -1125,15 +1179,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Recording credit rerun"
       }
@@ -1146,15 +1201,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Recording approval email"
       }
@@ -1167,15 +1223,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": true,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Valid uploaded writeback"
       }
@@ -1188,15 +1245,16 @@
       "classification": "FAILURE_INJECTION",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": true,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Invalid SHA-256"
       }
@@ -1209,15 +1267,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Missing enrollment/week on WAS"
       }
@@ -1230,15 +1289,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Blank Duplicate Key"
       }
@@ -1251,6 +1311,7 @@
       "classification": "OFFLINE_UNIT",
       "implemented": true,
       "liveReady": true,
+      "readyForWaveC": true,
       "requiresIdentity": false,
       "requiresEmail": false,
       "requiresUpload": false,
@@ -1259,7 +1320,7 @@
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "agent-2",
-      "notes": "",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "XP Source Key idempotency battery"
       }
@@ -1272,15 +1333,16 @@
       "classification": "CONTROLLED_PROD_WRITE",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "READY_FOR_WAVE_C",
       "expectedSummary": {
         "passCriteria": "Unlock Source Key idempotency"
       }
@@ -1293,15 +1355,16 @@
       "classification": "FAILURE_INJECTION",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": false,
       "requiresIdentity": true,
       "requiresEmail": true,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": true,
       "owner": "wave-c",
-      "notes": "Blocked until IDENTITY_VERIFIED",
+      "notes": "EMAIL_TEST_IDENTITY_NOT_CONFIGURED",
       "expectedSummary": {
         "passCriteria": "Email send trigger resilience"
       }
@@ -1314,6 +1377,7 @@
       "classification": "CONTRACT",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": false,
       "requiresIdentity": false,
       "requiresEmail": false,
       "requiresUpload": false,
@@ -1322,7 +1386,7 @@
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "",
+      "notes": "Contract/web scenario",
       "expectedSummary": {
         "passCriteria": "/shoot loads"
       }
@@ -1335,6 +1399,7 @@
       "classification": "CONTRACT",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": false,
       "requiresIdentity": false,
       "requiresEmail": false,
       "requiresUpload": false,
@@ -1343,7 +1408,7 @@
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "",
+      "notes": "Contract/web scenario",
       "expectedSummary": {
         "passCriteria": "Airtable health"
       }
@@ -1356,6 +1421,7 @@
       "classification": "CONTRACT",
       "implemented": false,
       "liveReady": false,
+      "readyForWaveC": false,
       "requiresIdentity": false,
       "requiresEmail": false,
       "requiresUpload": false,
@@ -1364,7 +1430,7 @@
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "wave-c",
-      "notes": "",
+      "notes": "Contract/web scenario",
       "expectedSummary": {
         "passCriteria": "Leaderboard / homework catalog reads"
       }
@@ -1377,15 +1443,16 @@
       "classification": "READ_ONLY_PROD",
       "implemented": true,
       "liveReady": true,
+      "readyForWaveC": true,
       "requiresIdentity": true,
       "requiresEmail": false,
       "requiresUpload": false,
       "requiresOperatorUI": false,
-      "blockedByIdentity": true,
+      "blockedByIdentity": false,
       "blockedBy486": false,
       "blockedByEmailInstall": false,
       "owner": "agent-3",
-      "notes": "Writeback disabled per SC-006 decision",
+      "notes": "READY_FOR_WAVE_C — writeback disabled per SC-006 decision",
       "expectedSummary": {
         "writebackEnabled": false
       }

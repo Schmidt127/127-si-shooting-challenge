@@ -1,53 +1,36 @@
 # SC-003–SC-008 — Wave B Closeout State
 
 **Date:** 2026-09-08  
-**Branch:** `test-reliability/orchestrator`
+**Branch:** `test-reliability/orchestrator`  
+**Verdict:** `WAVE B COMPLETE — READY FOR CONTROLLED WAVE C` (pending PR CI)
 
-## Cleared blockers
-
-### Controlled identity
-
-A new controlled Production identity exists after the September purge removed the historical fixture:
+## Identity
 
 - Athlete `recshWT5DQPUZXDvr` — Testing Schmidt
-- Enrollment `recn54wbxTjygydqa` — Testing Schmidt
-- Program Instance `rec5mEM0YPqPqq0hZ` — Shooting Challenge | 2026-2027
-- School Year `2026-2027`
-- Grade `12`
+- Enrollment `recn54wbxTjygydqa`
+- Program Instance `rec5mEM0YPqPqq0hZ`
 - Grade Band `9-12`
-- Enrollment Active = true
-- Parent/Athlete email intentionally blank
+- Verdict: `IDENTITY_VERIFIED_NON_EMAIL` (live PAT verify PASS)
+- Email execute: **blocked** — `EMAIL_TEST_IDENTITY_NOT_CONFIGURED`
 
-See `docs/testing/IDENTITY-CONTRACT.md`.
+## Published Wave B framework
 
-This changes the identity verdict from `IDENTITY_RECONTRACT_REQUIRED` to `IDENTITY_VERIFIED` for non-email controlled scenarios. Email-capable scenarios remain blocked until an explicit allowlisted test recipient is intentionally attached.
+- `tools/testing/sc-test-control/` — shared CLI, identity gate, safety, scenario registry
+- `tools/testing/idempotency-contracts.json` — 15 domains
+- Failure injection — 14 presets; SC-008 pack 12/12 PASS
+- Run suite **8/8 PASS**; paste bundles aligned (057 v2.5 canonical)
 
-### GitHub branch
+## Scenario registry
 
-The remote branch `test-reliability/orchestrator` now exists and accepts writes through the connected GitHub integration.
+| Metric | Count |
+|--------|------:|
+| Total | 66 |
+| Ready for Wave C | 56 |
+| Blocked #486 | 1 (C8) |
+| Blocked UI | 4 |
+| Blocked email | 2 |
+| Not implemented | 52 |
 
-The prior `cursor[bot]` git-push 403 is therefore not a repository-wide write blocker; it is specific to that credential path.
+## NO-TOUCH
 
-## Still pending
-
-### Wave B local implementation import
-
-The audited Wave B implementation was reported as four local commits on `cursor/test-reliability-orchestrator-fa75`, with patch artifacts under `/opt/cursor/artifacts/shooting-challenge-wave-b-patches/` in the Cursor environment.
-
-Those local patch bytes are not present in this GitHub branch yet. Do not claim the shared CLI / scenario registry / idempotency registry / failure framework has been published merely because this branch exists.
-
-Next Cursor/operator action: apply the four verified local commits/patches onto `test-reliability/orchestrator`, preserving the current identity-contract commits, then run CI and open the focused PR(s).
-
-### 057 paste-bundle integrity
-
-Current GitHub source for Automation 057 declares Version 2.5, while `tools/testing/tests/test_paste_bundle_integrity.mjs` still references the historical `057-v1.9-PASTE.txt` bundle/version. The run-suite failure must be resolved by regenerating the deploy paste bundle from the current canonical 057 source and updating the integrity spec to the current generated bundle; do not weaken or remove the integrity assertion.
-
-### Structured Curriculum
-
-SC-STRUCTURED-HOMEWORK-FILES-001 / PR #486 remains NO-TOUCH for this testing program until its separate cutover is complete.
-
-## Current execution gate
-
-Non-email `--execute` may be enabled only after the published CLI is updated to require the new controlled identity and all existing safety gates still pass.
-
-Until then, repository branch existence alone does not authorize Production execution.
+PR #486 files unchanged. Wave C entry deferred until PR CI green.

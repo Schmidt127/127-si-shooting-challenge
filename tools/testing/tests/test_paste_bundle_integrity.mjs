@@ -14,13 +14,13 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const BUNDLES = [
   {
     id: "010",
-    version: "v10.12",
+    version: "v10.14",
     source:
       "airtable/automations/shooting-challenge/010-submission-intake-create-xp-event.js",
-    paste: "docs/deploy-checklists/010-v10.12-PASTE.txt",
+    paste: "docs/deploy-checklists/010-v10.14-PASTE.txt",
     start: "/************************************************************\n * 010 - SUBMISSION INTAKE",
     mustInclude: [
-      'version: "v10.12"',
+      'version: "v10.14"',
       "skipped_not_ready",
       "formulaSettlementAttempts",
       "SUBMISSION_XP|",
@@ -29,14 +29,14 @@ const BUNDLES = [
   },
   {
     id: "057",
-    version: "1.9",
+    version: "2.5",
     source:
       "airtable/automations/shooting-challenge/057-achievements-and-milestones-calculate-perfect-week-eligibility.js",
-    paste: "docs/deploy-checklists/057-v1.9-PASTE.txt",
+    paste: "docs/deploy-checklists/057-v2.5-PASTE.txt",
     start:
       "/***************************************************************************************************\n * 057 - Achievements",
     mustInclude: [
-      "Version: 1.9",
+      "Version: 2.5",
       "Goal Shots Target",
       "Weekly Goal Shots Target",
       "America/Denver",
@@ -45,13 +45,13 @@ const BUNDLES = [
   },
   {
     id: "072",
-    version: "v4.3",
+    version: "v4.9.2",
     source:
       "airtable/automations/shooting-challenge/072-email-notifications-and-external-handoffs-build-weekly-summary-email-package.js",
-    paste: "docs/deploy-checklists/072-v4.3-PASTE.txt",
+    paste: "docs/deploy-checklists/072-v4.9.2-PASTE.txt",
     start: "/************************************************************\n * 072 - EMAIL",
     mustInclude: [
-      'version: "v4.3"',
+      'version: "v4.9.2"',
       "Unlinked canonical XP",
       "WAS-linked active XP",
       "orphanXp",

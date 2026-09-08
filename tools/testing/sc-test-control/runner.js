@@ -81,10 +81,10 @@ function collectBlockReasons(scenario) {
 
 function resolveDryRunResult(scenario) {
   if (scenario.blockedBy486) return "BLOCKED";
-  if (scenario.blockedByIdentity) return "BLOCKED";
   if (scenario.blockedByEmailInstall) return "BLOCKED";
   if (scenario.requiresOperatorUI && !scenario.implemented) return "BLOCKED";
   if (!scenario.implemented) return "SKIPPED";
+  if (scenario.readyForWaveC && !scenario.liveReady) return "WARN";
   if (scenario.liveReady) return "PASS";
   return "WARN";
 }

@@ -8,8 +8,9 @@ const EXECUTABLE = new Set([
   "A3", "A4", "B1", "B2", "B3", "B5", "C4", "C6", "D1", "I1", "J1", "L1", "SC006-WRITEBACK",
 ]);
 const OFFLINE = new Set(["A4", "L1"]);
-const BLOCKED_486 = new Set(["C8"]); // future structured curriculum row
+const BLOCKED_486 = new Set(["C8"]);
 const EMAIL = new Set(["I6", "L3"]);
+const OPERATOR_UI = new Set(["A1", "A2", "C3", "I5"]);
 
 const ROWS = [
   ["A1", "enrollment", "New enrollment creates/links athlete"],
@@ -89,30 +90,40 @@ function classify(id, domain) {
 
 const scenarios = ROWS.map(([matrixId, domain, name]) => {
   const blockedBy486 = BLOCKED_486.has(matrixId);
-  const implemented = EXECUTABLE.has(matrixId) || OFFLINE.has(matrixId) || matrixId === "SC006-WRITEBACK";
+  const blockedByEmailInstall = EMAIL.has(matrixId);
+  const requiresOperatorUI = OPERATOR_UI.has(matrixId);
+  const implemented = EXECUTABLE.has(matrixId) || OFFLINE.has(matrixId) || blockedBy486;
   const liveReady = EXECUTABLE.has(matrixId);
-  const blockedByIdentity = !OFFLINE.has(matrixId) && domain !== "web";
+  const readyForWaveC =
+    domain !== "web" && !blockedBy486 && !blockedByEmailInstall && !requiresOperatorUI;
   return {
     scenarioId: matrixId,
     matrixId,
     name,
     domain,
     classification: classify(matrixId, domain),
-    implemented: implemented || blockedBy486,
+    implemented,
     liveReady,
+    readyForWaveC,
     requiresIdentity: domain !== "web" && !OFFLINE.has(matrixId),
     requiresEmail: EMAIL.has(matrixId),
     requiresUpload: domain === "upload" || ["C7", "D6", "K1"].includes(matrixId),
-    requiresOperatorUI: ["A1", "A2", "C3", "I5"].includes(matrixId),
-    blockedByIdentity,
+    requiresOperatorUI,
+    blockedByIdentity: false,
     blockedBy486,
-    blockedByEmailInstall: EMAIL.has(matrixId),
+    blockedByEmailInstall,
     owner: blockedBy486 ? "post-486" : EXECUTABLE.has(matrixId) ? "agent-2" : "wave-c",
     notes: blockedBy486
       ? "BLOCKED_BY_SC_STRUCTURED_HOMEWORK_FILES_001 until PR #486 merged"
-      : blockedByIdentity
-        ? "Blocked until IDENTITY_VERIFIED"
-        : "",
+      : blockedByEmailInstall
+        ? "EMAIL_TEST_IDENTITY_NOT_CONFIGURED"
+        : readyForWaveC
+          ? "READY_FOR_WAVE_C"
+          : requiresOperatorUI
+            ? "Requires operator UI"
+            : domain === "web"
+              ? "Contract/web scenario"
+              : "",
     expectedSummary: { passCriteria: name },
   };
 });
@@ -125,25 +136,32 @@ scenarios.push({
   classification: "READ_ONLY_PROD",
   implemented: true,
   liveReady: true,
+  readyForWaveC: true,
   requiresIdentity: true,
   requiresEmail: false,
   requiresUpload: false,
   requiresOperatorUI: false,
-  blockedByIdentity: true,
+  blockedByIdentity: false,
   blockedBy486: false,
   blockedByEmailInstall: false,
   owner: "agent-3",
-  notes: "Writeback disabled per SC-006 decision",
+  notes: "READY_FOR_WAVE_C — writeback disabled per SC-006 decision",
   expectedSummary: { writebackEnabled: false },
 });
 
-const out = {
-  registry_version: "1.0.0",
-  generated_at: new Date().toISOString().slice(0, 10),
-  source: "docs/V2_END_TO_END_TEST_MATRIX.md",
-  total_matrix_rows: scenarios.length,
-  scenarios,
-};
-
-writeFileSync(resolve(__dirname, "../scenarios.json"), JSON.stringify(out, null, 2));
+writeFileSync(
+  resolve(__dirname, "../scenarios.json"),
+  JSON.stringify(
+    {
+      registry_version: "1.1.0",
+      generated_at: new Date().toISOString().slice(0, 10),
+      source: "docs/V2_END_TO_END_TEST_MATRIX.md",
+      identity_verdict: "IDENTITY_VERIFIED_NON_EMAIL",
+      total_matrix_rows: scenarios.length,
+      scenarios,
+    },
+    null,
+    2
+  )
+);
 console.log(`Wrote ${scenarios.length} scenarios`);

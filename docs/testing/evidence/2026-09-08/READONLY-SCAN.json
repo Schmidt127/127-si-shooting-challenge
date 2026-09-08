@@ -1,0 +1,120 @@
+{
+  "generated_at": "2026-09-08T00:53:54.223Z",
+  "overall": "PASS",
+  "counts": {
+    "PASS": 14,
+    "FAIL": 0,
+    "BLOCKED": 0
+  },
+  "checks": [
+    {
+      "id": "enrollment.exists",
+      "status": "PASS",
+      "expected": "recn54wbxTjygydqa",
+      "actual": "recn54wbxTjygydqa"
+    },
+    {
+      "id": "enrollment.active",
+      "status": "PASS",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "id": "enrollment.program_instance",
+      "status": "PASS",
+      "expected": "rec5mEM0YPqPqq0hZ",
+      "actual": "rec5mEM0YPqPqq0hZ"
+    },
+    {
+      "id": "enrollment.grade",
+      "status": "PASS",
+      "expected": "12",
+      "actual": "12"
+    },
+    {
+      "id": "enrollment.grade_band",
+      "status": "PASS",
+      "expected": "9-12",
+      "actual": "9-12"
+    },
+    {
+      "id": "athlete.id",
+      "status": "PASS",
+      "expected": "recshWT5DQPUZXDvr",
+      "actual": "recshWT5DQPUZXDvr"
+    },
+    {
+      "id": "athlete.label",
+      "status": "PASS",
+      "expected": "Testing Schmidt",
+      "actual": "Testing Schmidt"
+    },
+    {
+      "id": "count.submissions",
+      "status": "PASS",
+      "expected": ">=0",
+      "actual": 0,
+      "notes": "Empty baseline acceptable for newly created controlled identity"
+    },
+    {
+      "id": "count.homeworkCompletions",
+      "status": "PASS",
+      "expected": ">=0",
+      "actual": 0,
+      "notes": "Empty baseline acceptable for newly created controlled identity"
+    },
+    {
+      "id": "count.videoFeedback",
+      "status": "PASS",
+      "expected": ">=0",
+      "actual": 0,
+      "notes": "Empty baseline acceptable for newly created controlled identity"
+    },
+    {
+      "id": "count.zoomAttendance",
+      "status": "PASS",
+      "expected": ">=0",
+      "actual": 0,
+      "notes": "Empty baseline acceptable for newly created controlled identity"
+    },
+    {
+      "id": "count.xpEvents",
+      "status": "PASS",
+      "expected": ">=0",
+      "actual": 0,
+      "notes": "Empty baseline acceptable for newly created controlled identity"
+    },
+    {
+      "id": "count.was",
+      "status": "PASS",
+      "expected": ">=0",
+      "actual": 0,
+      "notes": "Empty baseline acceptable for newly created controlled identity"
+    },
+    {
+      "id": "count.achievementUnlocks",
+      "status": "PASS",
+      "expected": ">=0",
+      "actual": 0,
+      "notes": "Empty baseline acceptable for newly created controlled identity"
+    }
+  ],
+  "liveSnapshot": {
+    "enrollmentId": "recn54wbxTjygydqa",
+    "athleteId": "recshWT5DQPUZXDvr",
+    "programInstanceId": "rec5mEM0YPqPqq0hZ",
+    "grade": "12",
+    "gradeBand": "9-12",
+    "active": true,
+    "athleteLabel": "Testing Schmidt",
+    "recordCounts": {
+      "submissions": 0,
+      "homeworkCompletions": 0,
+      "videoFeedback": 0,
+      "zoomAttendance": 0,
+      "xpEvents": 0,
+      "was": 0,
+      "achievementUnlocks": 0
+    }
+  }
+}

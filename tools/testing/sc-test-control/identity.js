@@ -1,13 +1,15 @@
 "use strict";
 
 const { readFileSync, existsSync, writeFileSync, mkdirSync } = require("node:fs");
-const { resolve, dirname } = require("node:path");
+const { resolve } = require("node:path");
 const {
   BASE_ID,
+  CANONICAL_IDENTITY,
   HISTORICAL_IDENTITY,
-  CANDIDATE_ENROLLMENTS,
   resolvedIdentity,
-  PROGRAM_INSTANCE_HINT,
+  TEST_RECIPIENT_ALLOWLIST,
+  IDENTITY_STATES,
+  executeIdentityAllowed,
   EVIDENCE_DIR,
 } = require("./config");
 const { createResult } = require("./result-schema");
@@ -27,12 +29,20 @@ function loadEnvLocal() {
       if (!process.env[m[1]]) process.env[m[1]] = val;
     }
   }
+  if (!process.env.AIRTABLE_API_TOKEN && process.env.CURRICULUM_AIRTABLE_TOKEN) {
+    process.env.AIRTABLE_API_TOKEN = process.env.CURRICULUM_AIRTABLE_TOKEN;
+  }
+}
+
+function airtableToken() {
+  return process.env.AIRTABLE_API_TOKEN || process.env.CURRICULUM_AIRTABLE_TOKEN || null;
 }
 
 async function fetchRecord(table, id) {
+  const token = airtableToken();
   const res = await fetch(
     `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(table)}/${id}`,
-    { headers: { Authorization: `Bearer ${process.env.AIRTABLE_API_TOKEN}` } }
+    { headers: { Authorization: `Bearer ${token}` } }
   );
   const text = await res.text();
   if (!res.ok) {
@@ -51,44 +61,94 @@ async function searchEnrollment(id) {
   }
 }
 
-function applyResolved(record, status) {
+function athleteLabelFromRecord(athlete) {
+  if (!athlete) return CANONICAL_IDENTITY.athleteLabel;
+  return (
+    athlete.fields?.["Full Name"] ||
+    athlete.fields?.Name ||
+    athlete.fields?.["Athlete Name"] ||
+    CANONICAL_IDENTITY.athleteLabel
+  );
+}
+
+function resolveVerdictFromEmails(emails) {
+  const normalized = emails.map((e) => String(e).trim().toLowerCase()).filter(Boolean);
+  resolvedIdentity.testRecipientEmails = normalized;
+  const hasAllowlisted = normalized.some((e) =>
+    TEST_RECIPIENT_ALLOWLIST.some((a) => a.toLowerCase() === e)
+  );
+  return hasAllowlisted ? IDENTITY_STATES.VERIFIED_EMAIL : IDENTITY_STATES.VERIFIED_NON_EMAIL;
+}
+
+function applyResolved(enrollment, status, athlete = null) {
   resolvedIdentity.status = status;
   resolvedIdentity.verifiedAt = new Date().toISOString();
-  if (record && !record.__missing) {
-    resolvedIdentity.enrollmentId = record.id;
-    resolvedIdentity.athleteId = (record.fields?.Athlete || [])[0] || null;
-    resolvedIdentity.programInstanceId = (record.fields?.["Program Instance"] || [])[0] || null;
-    resolvedIdentity.active = record.fields?.["Active?"] ?? null;
-    resolvedIdentity.weekId = (record.fields?.Week || [])[0] || null;
-    resolvedIdentity.wasId = (record.fields?.["Weekly Athlete Summary"] || [])[0] || null;
-    const parent = record.fields?.["Parent Email - Cleaned"] || record.fields?.["Parent Email"] || "";
-    const athlete = record.fields?.["Athlete Email - Cleaned"] || record.fields?.["Athlete Email"] || "";
-    resolvedIdentity.testRecipientEmails = [parent, athlete].filter(Boolean).map(String);
+  if (enrollment && !enrollment.__missing) {
+    resolvedIdentity.enrollmentId = enrollment.id;
+    resolvedIdentity.athleteId = (enrollment.fields?.Athlete || [])[0] || null;
+    resolvedIdentity.programInstanceId = (enrollment.fields?.["Program Instance"] || [])[0] || null;
+    resolvedIdentity.active = enrollment.fields?.["Active?"] ?? null;
+    resolvedIdentity.weekId = (enrollment.fields?.Week || [])[0] || null;
+    resolvedIdentity.wasId = (enrollment.fields?.["Weekly Athlete Summary"] || [])[0] || null;
+    resolvedIdentity.gradeBand =
+      (Array.isArray(enrollment.fields?.["Grade Band Label"])
+        ? enrollment.fields["Grade Band Label"].join(", ")
+        : enrollment.fields?.["Grade Band Label"]) ||
+      CANONICAL_IDENTITY.gradeBand;
+    const parent = enrollment.fields?.["Parent Email - Cleaned"] || enrollment.fields?.["Parent Email"] || "";
+    const athleteEmail =
+      enrollment.fields?.["Athlete Email - Cleaned"] || enrollment.fields?.["Athlete Email"] || "";
+    const verdict = resolveVerdictFromEmails([parent, athleteEmail].filter(Boolean));
+    if (status === IDENTITY_STATES.VERIFIED_NON_EMAIL || status === IDENTITY_STATES.VERIFIED_EMAIL) {
+      resolvedIdentity.status = verdict;
+    }
   }
+  resolvedIdentity.athleteLabel = athleteLabelFromRecord(athlete);
 }
 
 function getIdentitySnapshot() {
   return {
     baseId: BASE_ID,
-    historical: { ...HISTORICAL_IDENTITY },
+    canonical: { ...CANONICAL_IDENTITY },
+    historical: { ...HISTORICAL_IDENTITY, status: "PURGED / DO NOT REUSE" },
     resolved: { ...resolvedIdentity },
-    candidates: CANDIDATE_ENROLLMENTS.map((c) => ({ ...c })),
-    programInstanceHint: PROGRAM_INSTANCE_HINT,
-    executeEnabled: resolvedIdentity.status === "IDENTITY_VERIFIED",
+    executeEnabled: executeIdentityAllowed(resolvedIdentity.status),
+    emailExecuteEnabled: resolvedIdentity.status === IDENTITY_STATES.VERIFIED_EMAIL,
+    emailTestConfigured: resolvedIdentity.status === IDENTITY_STATES.VERIFIED_EMAIL,
   };
 }
 
 async function verifyIdentity() {
   loadEnvLocal();
-  const purgeEvidence = {
-    source: "docs/testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md",
-    athletes: 0,
-    enrollments: 0,
-    note: "Post-purge zero Athletes/Enrollments documented",
-  };
 
-  if (!process.env.AIRTABLE_API_TOKEN) {
-    applyResolved(null, "IDENTITY_RECONTRACT_REQUIRED");
+  if (!airtableToken()) {
+    applyResolved(null, IDENTITY_STATES.BLOCKED);
+    return createResult({
+      scenarioId: "identity-verify",
+      domain: "enrollment",
+      classification: "READ_ONLY_PROD",
+      mode: "readonly",
+      result: "BLOCKED",
+      actual: { verdict: IDENTITY_STATES.BLOCKED, reason: "AIRTABLE_API_TOKEN missing" },
+    });
+  }
+
+  const historical = await searchEnrollment(HISTORICAL_IDENTITY.enrollmentId);
+  if (!historical.__missing) {
+    applyResolved(historical, IDENTITY_STATES.BLOCKED);
+    return createResult({
+      scenarioId: "identity-verify",
+      domain: "enrollment",
+      classification: "READ_ONLY_PROD",
+      mode: "readonly",
+      result: "BLOCKED",
+      actual: { verdict: IDENTITY_STATES.BLOCKED, reason: "Historical enrollment must remain purged" },
+    });
+  }
+
+  const enrollment = await searchEnrollment(CANONICAL_IDENTITY.enrollmentId);
+  if (enrollment.__missing) {
+    applyResolved(null, IDENTITY_STATES.RECONTRACT);
     return createResult({
       scenarioId: "identity-verify",
       domain: "enrollment",
@@ -96,67 +156,53 @@ async function verifyIdentity() {
       mode: "readonly",
       result: "BLOCKED",
       actual: {
-        verdict: "IDENTITY_RECONTRACT_REQUIRED",
-        reason: "AIRTABLE_API_TOKEN missing; historical identity wiped per 2026-09-05 purge",
-        purgeEvidence,
+        verdict: IDENTITY_STATES.RECONTRACT,
+        expectedEnrollmentId: CANONICAL_IDENTITY.enrollmentId,
       },
-      notes: ["Run with PAT after operator restores controlled enrollment"],
     });
   }
 
-  const historical = await searchEnrollment(HISTORICAL_IDENTITY.enrollmentId);
-  if (!historical.__missing) {
-    applyResolved(historical, "IDENTITY_VERIFIED");
-    return createResult({
-      scenarioId: "identity-verify",
-      domain: "enrollment",
-      classification: "READ_ONLY_PROD",
-      mode: "readonly",
-      result: "PASS",
-      actual: {
-        verdict: "IDENTITY_VERIFIED",
-        enrollmentId: historical.id,
-        active: historical.fields?.["Active?"],
-      },
-      identity: getIdentitySnapshot().resolved,
-    });
-  }
-
-  for (const candidate of CANDIDATE_ENROLLMENTS) {
-    const rec = await searchEnrollment(candidate.id);
-    if (!rec.__missing) {
-      applyResolved(rec, "IDENTITY_VERIFIED");
-      return createResult({
-        scenarioId: "identity-verify",
-        domain: "enrollment",
-        classification: "READ_ONLY_PROD",
-        mode: "readonly",
-        result: "WARN",
-        actual: {
-          verdict: "IDENTITY_VERIFIED",
-          note: `Using candidate harness enrollment: ${candidate.label}`,
-          enrollmentId: rec.id,
-        },
-        identity: getIdentitySnapshot().resolved,
-        notes: ["Update IDENTITY-CONTRACT.md with verified canonical RID"],
-      });
+  const athleteId = (enrollment.fields?.Athlete || [])[0] || null;
+  let athlete = null;
+  if (athleteId) {
+    try {
+      athlete = await fetchRecord("Athletes", athleteId);
+    } catch {
+      athlete = null;
     }
   }
 
-  applyResolved(null, "IDENTITY_RECONTRACT_REQUIRED");
+  const mismatches = [];
+  if (athleteId !== CANONICAL_IDENTITY.athleteId) mismatches.push("athleteId");
+  const programInstance = (enrollment.fields?.["Program Instance"] || [])[0];
+  if (programInstance !== CANONICAL_IDENTITY.programInstanceId) mismatches.push("programInstanceId");
+  if (enrollment.fields?.["Active?"] !== true) mismatches.push("active");
+
+  applyResolved(enrollment, IDENTITY_STATES.VERIFIED_NON_EMAIL, athlete);
+  if (!/testing schmidt/i.test(resolvedIdentity.athleteLabel || "")) mismatches.push("athleteLabel");
+
   return createResult({
     scenarioId: "identity-verify",
     domain: "enrollment",
     classification: "READ_ONLY_PROD",
     mode: "readonly",
-    result: "BLOCKED",
+    result: mismatches.length ? "WARN" : "PASS",
     actual: {
-      verdict: "IDENTITY_RECONTRACT_REQUIRED",
-      historicalMissing: true,
-      candidatesChecked: CANDIDATE_ENROLLMENTS.map((c) => c.id),
-      purgeEvidence,
+      verdict: resolvedIdentity.status,
+      enrollmentId: enrollment.id,
+      athleteId,
+      programInstanceId: programInstance,
+      gradeBand: resolvedIdentity.gradeBand,
+      active: enrollment.fields?.["Active?"],
+      athleteLabel: resolvedIdentity.athleteLabel,
+      emailConfigured: resolvedIdentity.status === IDENTITY_STATES.VERIFIED_EMAIL,
+      mismatches,
     },
-    notes: ["Operator must create controlled test Athlete+Enrollment before --execute"],
+    identity: getIdentitySnapshot().resolved,
+    notes:
+      resolvedIdentity.status === IDENTITY_STATES.VERIFIED_NON_EMAIL
+        ? ["EMAIL_TEST_IDENTITY_NOT_CONFIGURED — non-email execute allowed"]
+        : [],
   });
 }
 
@@ -176,4 +222,7 @@ module.exports = {
   getIdentitySnapshot,
   writeIdentityEvidence,
   applyResolved,
+  loadEnvLocal,
+  airtableToken,
+  fetchRecord,
 };

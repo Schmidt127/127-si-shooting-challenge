@@ -1,14 +1,15 @@
 {
-  "runId": "wave-b",
+  "runId": "wave-b-closeout",
   "summary": {
     "total": 66,
     "executable": 13,
-    "fixtureOnly": 0,
-    "blockedIdentity": 61,
+    "readyForWaveC": 56,
+    "fixtureOnly": 1,
+    "blockedIdentity": 0,
     "blocked486": 1,
     "blockedUI": 4,
     "blockedEmail": 2,
     "notImplemented": 52
   },
-  "generated_at": "2026-09-08T00:41:41.893Z"
+  "generated_at": "2026-09-08T00:55:15.565Z"
 }

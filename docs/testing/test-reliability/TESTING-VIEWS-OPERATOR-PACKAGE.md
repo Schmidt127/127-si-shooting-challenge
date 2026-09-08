@@ -3,11 +3,11 @@
 **SC:** SC-003  
 **Date:** 2026-09-08  
 **Spec:** `docs/testing/views/TESTING-VIEWS-SPEC.json`  
-**Live installed?:** **UNKNOWN** — requires Meta API verifier with PAT after identity restore
+**Live installed?:** **READY_FOR_OPERATOR** — Meta API verifier with PAT; views not auto-installed by Wave B
 
 ## Rule
 
-Do not hide Schmidt from public standings. Filter on **live** controlled Enrollment RID once `IDENTITY-CONTRACT.md` verdict is `IDENTITY_VERIFIED`.
+Do not hide Schmidt from public standings. Filter on **live** controlled Enrollment RID `recn54wbxTjygydqa`.
 
 ## Required views (10 + 2 optional)
 

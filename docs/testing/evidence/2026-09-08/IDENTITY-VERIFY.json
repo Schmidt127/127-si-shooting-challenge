@@ -1,7 +1,16 @@
 {
-  "generated_at": "2026-09-08T00:41:32.742Z",
+  "generated_at": "2026-09-08T00:55:15.541Z",
   "snapshot": {
     "baseId": "appn84sqPw03zEbTT",
+    "canonical": {
+      "athleteId": "recshWT5DQPUZXDvr",
+      "athleteLabel": "Testing Schmidt",
+      "enrollmentId": "recn54wbxTjygydqa",
+      "programInstanceId": "rec5mEM0YPqPqq0hZ",
+      "gradeBand": "9-12",
+      "schoolYear": "2026-2027",
+      "grade": "12"
+    },
     "historical": {
       "athleteId": "recgqVstObQRzgXJF",
       "enrollmentId": "recgP9qZYjAhE7NXm",
@@ -9,67 +18,65 @@
       "wasId": "recuxvGq2kY8WKcey",
       "scenarioId": "recPdyfYRFgDtpzQ8",
       "homeworkCompletionId": "recrBnHbLvDpFyIeO",
-      "homeworkXpId": "rec6xE4V1t0atiTIP"
+      "homeworkXpId": "rec6xE4V1t0atiTIP",
+      "status": "PURGED / DO NOT REUSE"
     },
     "resolved": {
-      "status": "IDENTITY_RECONTRACT_REQUIRED",
-      "athleteId": null,
-      "enrollmentId": null,
-      "programInstanceId": null,
-      "active": null,
+      "status": "IDENTITY_VERIFIED_NON_EMAIL",
+      "athleteId": "recshWT5DQPUZXDvr",
+      "enrollmentId": "recn54wbxTjygydqa",
+      "programInstanceId": "rec5mEM0YPqPqq0hZ",
+      "gradeBand": "9-12",
+      "active": true,
       "weekId": null,
       "wasId": null,
       "testRecipientEmails": [],
-      "verifiedAt": "2026-09-08T00:41:32.741Z"
+      "athleteLabel": "Testing Schmidt",
+      "verifiedAt": "2026-09-08T00:55:15.541Z"
     },
-    "candidates": [
-      {
-        "id": "recZEwkkXTJanDlG6",
-        "label": "Athlete1 Schmidt (Sept 2026 audits)"
-      },
-      {
-        "id": "recNu6fcBpF1GG3u5",
-        "label": "Testing3 SC-ATHLETE-WF"
-      },
-      {
-        "id": "recCyFEPeATOVNlr9",
-        "label": "115 allowlist alternate"
-      }
-    ],
-    "programInstanceHint": "rec5mEM0YPqPqq0hZ",
-    "executeEnabled": false
+    "executeEnabled": true,
+    "emailExecuteEnabled": false,
+    "emailTestConfigured": false
   },
   "result": {
     "scenarioId": "identity-verify",
     "domain": "enrollment",
     "classification": "READ_ONLY_PROD",
     "mode": "readonly",
-    "timestamp": "2026-09-08T00:41:32.742Z",
-    "identity": {},
+    "timestamp": "2026-09-08T00:55:15.541Z",
+    "identity": {
+      "status": "IDENTITY_VERIFIED_NON_EMAIL",
+      "athleteId": "recshWT5DQPUZXDvr",
+      "enrollmentId": "recn54wbxTjygydqa",
+      "programInstanceId": "rec5mEM0YPqPqq0hZ",
+      "gradeBand": "9-12",
+      "active": true,
+      "weekId": null,
+      "wasId": null,
+      "testRecipientEmails": [],
+      "athleteLabel": "Testing Schmidt",
+      "verifiedAt": "2026-09-08T00:55:15.541Z"
+    },
     "preconditions": {},
     "expected": {},
     "actual": {
-      "verdict": "IDENTITY_RECONTRACT_REQUIRED",
-      "historicalMissing": true,
-      "candidatesChecked": [
-        "recZEwkkXTJanDlG6",
-        "recNu6fcBpF1GG3u5",
-        "recCyFEPeATOVNlr9"
-      ],
-      "purgeEvidence": {
-        "source": "docs/testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md",
-        "athletes": 0,
-        "enrollments": 0,
-        "note": "Post-purge zero Athletes/Enrollments documented"
-      }
+      "verdict": "IDENTITY_VERIFIED_NON_EMAIL",
+      "enrollmentId": "recn54wbxTjygydqa",
+      "athleteId": "recshWT5DQPUZXDvr",
+      "programInstanceId": "rec5mEM0YPqPqq0hZ",
+      "gradeBand": "9-12",
+      "active": true,
+      "athleteLabel": "Testing Schmidt",
+      "emailConfigured": false,
+      "mismatches": []
     },
     "recordIds": [],
     "dedupeKeys": [],
     "mutations": [],
     "cleanup": {},
-    "result": "BLOCKED",
+    "result": "PASS",
     "notes": [
-      "Operator must create controlled test Athlete+Enrollment before --execute"
+      "EMAIL_TEST_IDENTITY_NOT_CONFIGURED — non-email execute allowed"
     ],
     "runId": null
   }

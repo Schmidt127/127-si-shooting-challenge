@@ -34,12 +34,13 @@ function summarizeRegistry() {
   return {
     total: rows.length,
     executable: count((r) => r.implemented && r.liveReady),
+    readyForWaveC: count((r) => r.readyForWaveC),
     fixtureOnly: count((r) => r.implemented && !r.liveReady && !r.blockedByIdentity),
     blockedIdentity: count((r) => r.blockedByIdentity),
     blocked486: count((r) => r.blockedBy486),
     blockedUI: count((r) => r.requiresOperatorUI),
     blockedEmail: count((r) => r.blockedByEmailInstall),
-    notImplemented: count((r) => !r.implemented),
+    notImplemented: count((r) => !r.implemented && !r.blockedBy486),
   };
 }
 
