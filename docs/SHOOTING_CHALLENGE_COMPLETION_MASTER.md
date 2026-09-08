@@ -73,7 +73,7 @@ Live Airtable readback confirmed Week 9 and Post-Challenge boundaries. Repositor
 
 - Homework scheduling is **PHA-first and just-in-time**. There is no fixed 90-row season seed.
 - Automation 067’s PHA-first defect is resolved; issue #120 is closed Completed.
-- Public Homework catalog/detail is PHA-first in repository source; #125 remains open only for final production runtime verification.
+- Public Homework catalog/detail is **PHA-first and Production-runtime verified**; issue #125 is closed Completed. Live Fairfield proof confirms 19 active PHA rows resolve to 18 schedulable assignments with one deterministic Week 1 / HW1 duplicate, unassigned published curriculum fails closed, and assigned detail pages use the PHA Week/slot.
 - Structured Curriculum file assets PR **#486** is merged (`04448e13c423306ca0d4afcf28f2a1cd394da65d`). Remaining cutover: paste **070a/070b v4.8**, remove only 070a trigger condition `Submission - Linked isNotEmpty`, then run the signed Shot Tracker file-upload E2E proving HC + Submission Asset + canonical URL and **0 Daily Submissions**.
 
 ### XP integrity and progression
@@ -107,9 +107,9 @@ Live Airtable readback confirmed Week 9 and Post-Challenge boundaries. Repositor
 
 ### Issue reconciliation already completed on 2026-09-08
 
-Closed Completed: **#56, #98, #100, #103, #118, #120**.  
+Closed Completed: **#56, #98, #100, #103, #118, #120, #125**.  
 Merged repository repairs include **#486, #489–#495, #497**.  
-Still live-proof dependent: **#101, #102, #104, #105, #121, #125, #126**.
+Still live-proof dependent: **#101, #102, #104, #105, #121, #126**.
 
 
 ---
