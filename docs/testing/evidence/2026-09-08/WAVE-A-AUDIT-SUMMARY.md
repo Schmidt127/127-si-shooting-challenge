@@ -91,3 +91,34 @@ No planned agent-owned files overlap PR #486 paths if agents respect NO-TOUCH bo
 | Curriculum Hub PR #18 | Out of repo scope |
 
 **Wave B gate:** OPEN (proceed)
+
+---
+
+## Reconciled cross-agent conclusions (Wave A complete)
+
+All specialist audits finished. Synthesis:
+
+| Theme | Conclusion | Blocking? |
+|-------|------------|-----------|
+| **Controlled identity (Agent 1)** | Canonical SC-004 RIDs (`recgP9qZYjAhE7NXm`) likely **absent** after FUT-030 + 2026-09-05 purge; disposable Athlete1 (`recZEwkkXTJanDlG6`) is de facto live path; views may exist but filter on empty enrollment | **YES** — Wave D blocked until identity restored or contract updated |
+| **E2E matrix (Agent 2)** | ~27% of 64-row matrix in executable runner (17 rows); 43 SCN fixtures with 19 `repository_fixture_ready` not live; strong offline layer | No — Wave B can unify CLI |
+| **Idempotency (Agent 4)** | SC-007 architecture solid; `idempotency-contracts.json` missing; `run-suite.js` may be **5/8** on current env (Lambda Python + 2 reconciliation tests) | No — Wave B registry + suite hygiene |
+| **Failure recovery (Agent 5)** | SC-008 offline pack strong; live webhook inject optional; G-09 non-email partial-failure harness absent | No |
+| **Upload (Agent 6)** | Legacy 070a/b→Make→Lambda path testable on master; structured curriculum **blocked** until #486; SC-156 trigger-retention watch | No for legacy |
+| **Email (Agent 7)** | Hub→Resend plane complete offline; Issues **#104**/#**105** live paste gaps; doc drift (Make/Gmail references) | Operator for live send proof |
+| **PR #486** | All agents: no overlap if NO-TOUCH respected | — |
+
+### Wave B gate adjustment
+
+Wave B (shared infrastructure) remains **OPEN**. Wave D (controlled PROD proof) is **BLOCKED** on:
+
+1. Live identity re-verification or documented disposable identity contract (`IDENTITY-CONTRACT.md`)
+2. Restoration of permanent Testing Schmidt enrollment **or** explicit program adoption of disposable harness RIDs
+
+### Wave B priority order (reconciled)
+
+1. Agent 1: `IDENTITY-CONTRACT.md` + live verifier run (read-only)
+2. Agent 0: merge orchestrator schemas (already local)
+3. Agent 2: `sc-test-control` CLI skeleton
+4. Agent 4: `idempotency-contracts.json` + fix `run-suite.js` drift
+5. Agent 3/5/6/7: parallel domain modules after CLI exists

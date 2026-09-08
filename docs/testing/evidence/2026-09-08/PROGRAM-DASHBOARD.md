@@ -21,7 +21,7 @@
 | Uncontrolled emails sent | NO |
 | Duplicate writers introduced | NO |
 | Cleanup complete | N/A (Wave A read-only) |
-| Remaining operator actions | Re-verify Testing Views; re-resolve Schmidt identity live |
+| Remaining operator actions | **P0:** Restore or re-document controlled enrollment post-purge; re-run identity + views verifiers; reconcile Completion Master SC-003/SC-004 |
 
 ## Branch registry
 
@@ -40,8 +40,8 @@
 
 | Wave | Status |
 |------|--------|
-| A — Audit | **COMPLETE** |
+| A — Audit | **COMPLETE** (all 7 specialist audits reconciled) |
 | B — Shared infrastructure | **READY** |
-| C — Domain tests | BLOCKED |
-| D — Controlled PROD proof | BLOCKED |
-| E — Final report | BLOCKED |
+| C — Domain tests | BLOCKED on B |
+| D — Controlled PROD proof | **BLOCKED** on identity re-verification |
+| E — Final report | BLOCKED on D |
