@@ -1,6 +1,6 @@
 {
   "$schema_note": "Authoritative XP / unlock / email Source Key registry for Agent 9 automation ownership contract. Scripts write Source Key (text). XP Dedupe Key and XP Dedupe Key Normalized are formula-only — never write.",
-  "generated_at": "2026-07-24",
+  "generated_at": "2026-09-08",
   "agent": "agent-9-automation-ownership",
   "formula_only_fields": [
     "XP Dedupe Key",
@@ -142,7 +142,7 @@
       "legacy": false,
       "script_path": "airtable/automations/shooting-challenge/101-zoom-attendance-xp-award-meeting-xp.js",
       "destination_table": "XP Events",
-      "ordering_note": "meetingId before enrollmentId (opposite of ZOOM_CREDIT enrollment-first ordering)",
+      "ordering_note": "meetingId before enrollmentId (opposite of ZOOM_RECORDING_CREDIT enrollment-first ordering)",
       "reads_formula_dedupe": false,
       "writes_formula_dedupe": false
     },
@@ -173,8 +173,24 @@
       "destination_table": "XP Events"
     },
     {
-      "prefix": "ZOOM_CREDIT|",
+      "prefix": "ZOOM_RECORDING_CREDIT|",
       "family": "zoom_recording_credit_xp",
+      "format": "ZOOM_RECORDING_CREDIT|{enrollmentId}|{meetingId}",
+      "components": ["enrollmentId", "meetingId"],
+      "component_order": ["enrollmentId", "meetingId"],
+      "authoritative_writer": "101",
+      "competing_writers": [],
+      "status": "canonical",
+      "legacy": false,
+      "script_path": "airtable/automations/shooting-challenge/101-zoom-attendance-xp-award-meeting-xp.js",
+      "destination_table": "XP Events",
+      "ordering_note": "enrollmentId before meetingId; live attendance remains meetingId before enrollmentId",
+      "disjoint_from": ["ZOOM_ATTEND_BASE|", "ZOOM_RECORDING|", "ZOOM_CREDIT|"],
+      "notes": "Production 101 v6.8 creates approved recording half-XP in the same reconciliation pass. Automation 117 remains email-only; do not create Automation 121."
+    },
+    {
+      "prefix": "ZOOM_CREDIT|",
+      "family": "zoom_recording_credit_design_alternative",
       "format": "ZOOM_CREDIT|{enrollmentId}|{meetingId}",
       "components": ["enrollmentId", "meetingId"],
       "component_order": ["enrollmentId", "meetingId"],
@@ -182,15 +198,13 @@
       "authoritative_writer_candidates": [],
       "competing_writers": [],
       "status": "design_alternative_not_deployed",
-      "legacy": false,
+      "legacy": true,
       "script_paths": [
         "airtable/automations/shooting-challenge/_design-alternatives/stage17-modular-reference/117-zoom-recording-credit-orchestrator.js",
         "airtable/automations/shooting-challenge/_design-alternatives/stage17-modular-reference/117c-zoom-recording-create-zoom-xp-event.js"
       ],
       "destination_table": "XP Events",
-      "ordering_note": "enrollmentId before meetingId (opposite of ZOOM_ATTEND_BASE meeting-first ordering)",
-      "disjoint_from": ["ZOOM_ATTEND_BASE|", "ZOOM_RECORDING|"],
-      "notes": "PROD Automation 117 is the recording-approval email handoff only (not ZOOM_CREDIT). Orchestrator/117c are repository design alternatives under _design-alternatives/; not installed because of Airtable automation-count limit. Live Zoom XP remains 101 (ZOOM_ATTEND_BASE). Do not invent a deployed ZOOM_CREDIT writer without a new attested automation slot."
+      "notes": "Historical Stage 17 modular design artifact only. Current Production 101 uses ZOOM_RECORDING_CREDIT|; 117 is email-only. No live writer should mint ZOOM_CREDIT|."
     },
     {
       "prefix": "ZOOM_RECORDING|",
@@ -204,7 +218,7 @@
       "legacy": true,
       "script_path": "airtable/automations/shooting-challenge/_superseded/117a-s16-homework-completions-award-xp-SUPERSEDED.js",
       "destination_table": "XP Events",
-      "notes": "S16 design superseded by Stage 17 ZOOM_CREDIT. v2-engine-contracts still lists ZOOM_RECORDING for historical contract tests — not a live writer."
+      "notes": "S16 design superseded. Current Production recording credit uses ZOOM_RECORDING_CREDIT| via Automation 101."
     },
     {
       "prefix": "ZOOM_LIVE|",
@@ -240,16 +254,16 @@
     {
       "prefix": "MANUAL_BONUS|",
       "family": "manual_bonus_xp",
-      "format": "UNKNOWN / operator process — Lifetime XP Manual Adjustments on Enrollments; no MANUAL_BONUS Source Key creator in repo",
-      "components": ["unknown"],
-      "component_order": ["unknown"],
+      "format": "MANUAL_BONUS|{enrollmentId}|{operatorDefinedAuditId}",
+      "components": ["enrollmentId", "operatorDefinedAuditId"],
+      "component_order": ["enrollmentId", "operatorDefinedAuditId"],
       "authoritative_writer": null,
       "competing_writers": [],
       "status": "manual_process",
       "legacy": false,
       "script_path": null,
       "destination_table": "XP Events",
-      "notes": "Do not invent a scripted writer. Blank-key risk if operators create freeform XP Events."
+      "notes": "Operator-documented exception only. No scripted writer exists or should be invented. Active Manual Bonus XP must retain explicit operator/audit ownership and reason; Lifetime XP Manual Adjustments remains human-owned."
     },
     {
       "prefix": "WEEKLY_EMAIL|",
@@ -300,10 +314,10 @@
   "flags": {
     "duplicate_prefixes": [
       {
-        "family": "zoom_recording_credit_xp",
-        "issue": "Historical dual-path design (orchestrator vs 117c) for ZOOM_CREDIT|; neither is a live PROD Airtable automation under slot 117",
+        "family": "zoom_recording_credit_design_alternative",
+        "issue": "Historical ZOOM_CREDIT| modular design remains in repository references but is not a live Production Source Key",
         "severity": "resolved_not_deployed",
-        "resolution": "design_alternatives_only_prod_117_is_email_handoff"
+        "resolution": "production_101_uses_ZOOM_RECORDING_CREDIT_prod_117_is_email_handoff"
       },
       {
         "family": "video_feedback_identity",
@@ -314,19 +328,20 @@
     ],
     "legacy_formats": [
       "HOMEWORK_COMPLETION|",
+      "ZOOM_CREDIT|",
       "ZOOM_RECORDING|",
       "ZOOM_LIVE|"
     ],
     "variable_ordering_differences": [
       {
         "a": "ZOOM_ATTEND_BASE|{meetingId}|{enrollmentId}",
-        "b": "ZOOM_CREDIT|{enrollmentId}|{meetingId}",
-        "note": "Intentional disjoint families with reversed component order — do not unify."
+        "b": "ZOOM_RECORDING_CREDIT|{enrollmentId}|{meetingId}",
+        "note": "Intentional disjoint live families with reversed component order — do not unify."
       },
       {
         "a": "ZOOM_RECORDING|{meetingId}|{enrollmentId}",
-        "b": "ZOOM_CREDIT|{enrollmentId}|{meetingId}",
-        "note": "S16 vs Stage 17 ordering and prefix differ."
+        "b": "ZOOM_RECORDING_CREDIT|{enrollmentId}|{meetingId}",
+        "note": "Superseded S16 prefix/order differs from current Production 101 recording credit."
       }
     ],
     "date_normalization_differences": [
@@ -356,7 +371,7 @@
       }
     ],
     "missing_registry_writer_gaps": [
-      "MANUAL_BONUS|"
+      "MANUAL_BONUS| (intentional manual-process exception; no scripted writer)"
     ]
   }
 }
