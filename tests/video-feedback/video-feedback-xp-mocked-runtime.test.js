@@ -277,7 +277,7 @@ async function test(name, fn) { await fn(); console.log(`ok - ${name}`); }
     const runtime = createRuntime(seed([video("recVideoOne", { "Ready for XP Automation?": true })]), {
       selectCounts: {},
       onSelectRecords({ tableName, count, records }) {
-        if (tableName === "XP Events" && count === 2) {
+        if (tableName === "XP Events" && count === 3) {
           records.set("recConcurrent", { id: "recConcurrent", fields: {
             "Source Key": "VIDEO_SUBMISSION|recVideoOne", "Video Feedback": links(["recVideoOne"]),
             Enrollment: links(["recEnrollment"]), Submission: links(["recSubmission"]), Week: links(["recWeek"]),
