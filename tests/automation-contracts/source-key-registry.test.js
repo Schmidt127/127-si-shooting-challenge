@@ -105,4 +105,16 @@ test("complex XP source authority suite passes", () => {
   assert.strictEqual(run.status, 0);
 });
 
+test("bounded XP reconciliation execute-gate suite passes", () => {
+  const run = spawnSync(process.execPath, ["tests/reliability-command-center/xp-reconciliation-plan.test.js"], {
+    cwd: repoRoot,
+    encoding: "utf8",
+  });
+  if (run.status !== 0) {
+    console.error(run.stdout || "");
+    console.error(run.stderr || "");
+  }
+  assert.strictEqual(run.status, 0);
+});
+
 console.log("source-key-registry tests passed");
