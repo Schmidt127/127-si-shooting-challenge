@@ -1,0 +1,76 @@
+{
+  "generated_at": "2026-09-08T00:41:32.742Z",
+  "snapshot": {
+    "baseId": "appn84sqPw03zEbTT",
+    "historical": {
+      "athleteId": "recgqVstObQRzgXJF",
+      "enrollmentId": "recgP9qZYjAhE7NXm",
+      "foundationWeekId": "recVDKiYATgzsfpmE",
+      "wasId": "recuxvGq2kY8WKcey",
+      "scenarioId": "recPdyfYRFgDtpzQ8",
+      "homeworkCompletionId": "recrBnHbLvDpFyIeO",
+      "homeworkXpId": "rec6xE4V1t0atiTIP"
+    },
+    "resolved": {
+      "status": "IDENTITY_RECONTRACT_REQUIRED",
+      "athleteId": null,
+      "enrollmentId": null,
+      "programInstanceId": null,
+      "active": null,
+      "weekId": null,
+      "wasId": null,
+      "testRecipientEmails": [],
+      "verifiedAt": "2026-09-08T00:41:32.741Z"
+    },
+    "candidates": [
+      {
+        "id": "recZEwkkXTJanDlG6",
+        "label": "Athlete1 Schmidt (Sept 2026 audits)"
+      },
+      {
+        "id": "recNu6fcBpF1GG3u5",
+        "label": "Testing3 SC-ATHLETE-WF"
+      },
+      {
+        "id": "recCyFEPeATOVNlr9",
+        "label": "115 allowlist alternate"
+      }
+    ],
+    "programInstanceHint": "rec5mEM0YPqPqq0hZ",
+    "executeEnabled": false
+  },
+  "result": {
+    "scenarioId": "identity-verify",
+    "domain": "enrollment",
+    "classification": "READ_ONLY_PROD",
+    "mode": "readonly",
+    "timestamp": "2026-09-08T00:41:32.742Z",
+    "identity": {},
+    "preconditions": {},
+    "expected": {},
+    "actual": {
+      "verdict": "IDENTITY_RECONTRACT_REQUIRED",
+      "historicalMissing": true,
+      "candidatesChecked": [
+        "recZEwkkXTJanDlG6",
+        "recNu6fcBpF1GG3u5",
+        "recCyFEPeATOVNlr9"
+      ],
+      "purgeEvidence": {
+        "source": "docs/testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md",
+        "athletes": 0,
+        "enrollments": 0,
+        "note": "Post-purge zero Athletes/Enrollments documented"
+      }
+    },
+    "recordIds": [],
+    "dedupeKeys": [],
+    "mutations": [],
+    "cleanup": {},
+    "result": "BLOCKED",
+    "notes": [
+      "Operator must create controlled test Athlete+Enrollment before --execute"
+    ],
+    "runId": null
+  }
+}

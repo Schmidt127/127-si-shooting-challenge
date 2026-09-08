@@ -1,8 +1,9 @@
 # Shooting Challenge Controlled Test Identity Contract
 
-**Status:** IDENTITY_VERIFIED for non-email controlled testing  
+**Status:** `IDENTITY_VERIFIED_NON_EMAIL`  
 **Date:** 2026-09-08  
-**Base:** Production `appn84sqPw03zEbTT`
+**Base:** Production `appn84sqPw03zEbTT`  
+**Program:** SC-003–SC-008 Test & Reliability
 
 ## Current controlled identity
 
@@ -16,46 +17,35 @@
 | Grade Band | `9-12` |
 | Enrollment Active? | `true` |
 | Registration Source | `Manual` |
+| Parent/Athlete email | **blank intentionally** |
 
-The Athlete and Enrollment were created specifically as controlled Production testing records after the September purge removed the prior test identity. They must never be treated as a genuine participant.
+## Identity verdict states
 
-## Historical identities
+| State | Meaning |
+|-------|---------|
+| `IDENTITY_VERIFIED_NON_EMAIL` | Safe for controlled non-email Production `--execute` |
+| `IDENTITY_VERIFIED_EMAIL` | Allowlisted test recipient attached and verified |
+| `IDENTITY_RECONTRACT_REQUIRED` | No usable controlled identity |
+| `IDENTITY_BLOCKED` | PAT missing or live read failed |
 
-The prior documented identities are historical only and must not be used by automated `--execute` scenarios without a fresh live read proving they exist and are intentionally restored.
+**Current expected:** `IDENTITY_VERIFIED_NON_EMAIL`
 
-- Athlete `recgqVstObQRzgXJF` — HISTORICAL / PURGED
-- Enrollment `recgP9qZYjAhE7NXm` — HISTORICAL / PURGED
-- Other prior candidate test enrollments discovered in old docs are not authoritative.
+## Historical identities (PURGED — do not reuse)
 
-## Safety contract
+| Field | RID | Status |
+|-------|-----|--------|
+| Athlete | `recgqVstObQRzgXJF` | **PURGED / DO NOT REUSE** |
+| Enrollment | `recgP9qZYjAhE7NXm` | **PURGED / DO NOT REUSE** |
 
-Production `--execute` may proceed only when all of the following are true:
+## Execute gate (shared CLI)
 
-1. live Enrollment RID equals `recn54wbxTjygydqa`;
-2. live Athlete RID equals `recshWT5DQPUZXDvr`;
-3. Enrollment is Active;
-4. Program Instance is `rec5mEM0YPqPqq0hZ`;
-5. School Year is `2026-2027`;
-6. grade-band resolution remains `9-12`;
-7. CLI receives the explicit Production acknowledgement required by the test harness;
-8. scenario declares expected mutations and cleanup;
-9. scenario is not blocked by another active work item such as SC-STRUCTURED-HOMEWORK-FILES-001 / PR #486.
+Non-email `--execute` requires `IDENTITY_VERIFIED_NON_EMAIL`+, canonical Enrollment/Athlete RIDs, `--acknowledge-prod`, declared mutations/cleanup, and scenario not blocked by PR #486.
 
-Fail closed if any assertion differs.
+Email `--execute` requires `IDENTITY_VERIFIED_EMAIL`. **Currently blocked** — `EMAIL_TEST_IDENTITY_NOT_CONFIGURED`.
 
-## Email safety
+Default: `--dry-run`. Fail closed otherwise.
 
-No Parent Email or Athlete Email was populated when this identity was created. Therefore:
+## References
 
-- non-email controlled scenarios may use this identity once the CLI contract matches these RIDs;
-- any scenario that can send email remains BLOCKED until an explicitly allowlisted test recipient is deliberately attached and reverified;
-- do not infer or copy a family email from another Enrollment;
-- do not use a genuine participant as a recipient fixture.
-
-## Testing Week / WAS
-
-A permanent controlled Testing Week and canonical WAS were not recreated as part of the identity transaction. Scenarios requiring a dedicated testing Week or WAS must either resolve a current safe fixture or create a narrowly scoped disposable fixture under the scenario's declared cleanup contract.
-
-## Reverification
-
-Before each controlled Production execution, the identity verifier should read the Enrollment and confirm the contract above. A missing record, changed Program Instance, inactive state, mismatched grade band, or unexpected recipient field must return BLOCKED rather than attempting repair automatically.
+- `tools/testing/sc-test-control/config.js`
+- `docs/testing/views/TESTING-VIEWS-SPEC.json` — filter RID `recn54wbxTjygydqa`

@@ -1,0 +1,14 @@
+{
+  "runId": "wave-b",
+  "summary": {
+    "total": 66,
+    "executable": 13,
+    "fixtureOnly": 0,
+    "blockedIdentity": 61,
+    "blocked486": 1,
+    "blockedUI": 4,
+    "blockedEmail": 2,
+    "notImplemented": 52
+  },
+  "generated_at": "2026-09-08T00:41:41.893Z"
+}
