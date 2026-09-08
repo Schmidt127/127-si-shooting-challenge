@@ -200,7 +200,7 @@ async function main() {
       FIND('SUBMISSION_XP|', {Source Key}&''),
       FIND('HOMEWORK_XP|', {Source Key}&''),
       FIND('VIDEO_SUBMISSION|', {Source Key}&''),
-      FIND('ZOOM_CREDIT|', {Source Key}&''),
+      FIND('ZOOM_RECORDING_CREDIT|', {Source Key}&''),
       FIND('ZOOM_ATTEND_', {Source Key}&''),
       FIND('STREAK_XP|', {Source Key}&''),
       FIND('SHOT_MILESTONE|', {Source Key}&''),
@@ -240,7 +240,6 @@ async function main() {
         ? redactUrl(f["Reviewer File URL"]).replace(/token=\[REDACTED\]/, "token=[PRESENT]")
         : "",
     });
-    // Re-evaluate with real token presence (boolean) without exporting the token
     assetContract = evaluateFinalUploadSuccessContract({
       ...f,
       "Reviewer Access Token": f["Reviewer Access Token"] ? "present-nonblank-token" : "",
@@ -301,7 +300,7 @@ async function main() {
     "daily-submission-xp": "SUBMISSION_XP|",
     "homework-xp": "HOMEWORK_XP|",
     "video-xp": "VIDEO_SUBMISSION|",
-    "zoom-credit": "ZOOM_CREDIT|",
+    "zoom-credit": "ZOOM_RECORDING_CREDIT|",
     "zoom-attend-base": "ZOOM_ATTEND_BASE|",
     "streak-xp": "STREAK_XP|",
     "shot-milestone": "SHOT_MILESTONE|",
