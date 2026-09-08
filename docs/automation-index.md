@@ -113,9 +113,9 @@ Current parent/athlete **email delivery** is Communications Hub → **Resend**. 
 
 | # | Airtable automation name | Trigger / schedule | File / notes |
 |---|--------------------------|--------------------|--------------|
-| **118** | Email — Schedule Weekly Summary Email Build | Sunday **5:00 AM** America/Denver | `118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js` (**v2.0** — arms build; does not send email) |
+| **118** | Email — Schedule Weekly Summary Email Build | Sunday **5:00 AM** America/Denver | `118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js` (**GitHub v2.1; Live v2.0 pending SC-121 paste** — arms build; does not send email) |
 | **072** | Email — Build Weekly Summary Email Package | WAS when `Build Weekly Email Now?` checked | `072-…-build-weekly-summary-email-package.js` — owns **`emptyWeekPolicy`** (`send_short` default); does **not** send email |
-| **119** | Email — Schedule Weekly Summary Email Send | Sunday **10:00 AM** America/Denver | `119-…-schedule-weekly-summary-email-send.js` — arms send; does **not** send email |
+| **119** | Email — Schedule Weekly Summary Email Send | Sunday **10:00 AM** America/Denver | `119-…-schedule-weekly-summary-email-send.js` (**GitHub v1.8; Live v1.7 pending SC-121 paste**) — arms send; does **not** send email |
 | **074** | Email — Weekly summary Hub handoff | WAS Ready? + !Sent? + Send to Make? + package fields | `074-…-send-weekly-summary-email-package-to-make.js` — GitHub is Hub queue create (filename still says Make). **Does not send via Make/Gmail.** Current delivery is Hub → Resend. Historical 2026-07-24 Make webhook proof is evidence only. |
 | **079** | Email — Send queue handoff to Communications Hub | Email Handoff Queue when Status is Ready | Shared dispatcher to Hub / Resend |
 | Make (historical) | `Weekly Athlete Summary - Bulk Email - May 18` | Retired for email | Do not treat as the current sender |
