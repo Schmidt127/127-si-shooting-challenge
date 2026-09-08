@@ -1,0 +1,27 @@
+name: SC-121 truth one-shot
+
+on:
+  push:
+    branches: ["reliability-wave/sc-121-terminal-week-boundary"]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: reliability-wave/sc-121-terminal-week-boundary
+          fetch-depth: 0
+      - name: Apply final SC-121 truth alignment
+        run: python3 tools/testing/sc121_truth_patch.py
+      - name: Commit and remove one-shot helpers
+        run: |
+          rm -f .github/workflows/sc121-truth-one-shot.yml tools/testing/sc121_truth_patch.py
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "test(sc-121): align runtime and canonical docs"
+          git push origin HEAD:reliability-wave/sc-121-terminal-week-boundary
