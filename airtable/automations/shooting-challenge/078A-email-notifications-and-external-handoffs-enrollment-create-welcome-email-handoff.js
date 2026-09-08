@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-11
-Last GitHub Update: 2026-08-11
+Last GitHub Update: 2026-09-08
 
 Purpose:
 Creates one Ready WELCOME handoff row for an eligible Enrollment.
@@ -32,11 +32,15 @@ send email, render subject/HTML, modify Automation 079, or restore 075.
  * 078A - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Enrollment -> Create WELCOME Email Handoff
  *
- * Version: v1.6
+ * Version: v1.7
  * Date Written: 2026-08-11
- * Last Updated: 2026-09-06
+ * Last Updated: 2026-09-08
  *
  * VERSION HISTORY
+ * - v1.7 (2026-09-08): Align deterministic Welcome business key with the
+ *   authoritative Communications Hub source contract:
+ *   WELCOME|SHOOTING_CHALLENGE|{Enrollment Record ID}. Replay/retry must reuse
+ *   this key; no recipient, payload, Test Mode, or send-plane behavior changed.
  * - v1.6 (2026-09-06): WELCOME payload adds athleteFirstName from Enrollment
  *   Athlete First Name (or Athlete.First Name) when present.
  * - v1.5 (2026-09-02): Make Test Mode? configurable via automation input
@@ -50,7 +54,7 @@ send email, render subject/HTML, modify Automation 079, or restore 075.
  * PURPOSE
  * - Runs from one Enrollment after Automation 001 links an Athlete.
  * - Creates exactly one Ready WELCOME row in Email Handoff Queue.
- * - Uses WELCOME|ENROLLMENTS|{Enrollment Record ID} as the idempotency key.
+ * - Uses WELCOME|SHOOTING_CHALLENGE|{Enrollment Record ID} as the idempotency key.
  *
  * WORKFLOW / CONTRACT NOTES
  * - Automation 078A creates the queue row; Automation 079 dispatches it.
@@ -95,7 +99,7 @@ send email, render subject/HTML, modify Automation 079, or restore 075.
  * - Email Handoff Queue
  *
  * OUTPUT / WRITEBACK FIELDS
- * - Email Handoff Queue.Handoff Key = WELCOME|ENROLLMENTS|{Enrollment Record ID}
+ * - Email Handoff Queue.Handoff Key = WELCOME|SHOOTING_CHALLENGE|{Enrollment Record ID}
  * - Status = { name: "Ready" }
  * - Event Type = { name: "WELCOME" }
  * - Source Table = Enrollments
@@ -111,17 +115,17 @@ send email, render subject/HTML, modify Automation 079, or restore 075.
  * INSTALLATION / TESTING
  * - Add a single Airtable input variable named recordId mapped to the trigger record ID.
  * - Paste the production docblock through the end into the Airtable script action.
- * - Test first with an approved DEV/allowlisted Enrollment; do not activate participant-wide sends.
+ * - Test first with an approved controlled/allowlisted Enrollment; do not activate participant-wide sends.
  ************************************************************/
 
 // @ts-nocheck
 
 const SCRIPT = {
     scriptName: "078A - Enrollment -> Create WELCOME Email Handoff",
-    version: "v1.6",
-    versionDate: "2026-09-06",
+    version: "v1.7",
+    versionDate: "2026-09-08",
     originalWrittenDate: "2026-08-11",
-    lastUpdated: "2026-09-06",
+    lastUpdated: "2026-09-08",
     folder: "07 - Email, Notifications, and External Handoffs",
     automationName: "078A - Enrollment -> Create WELCOME Email Handoff",
 };
@@ -182,7 +186,7 @@ const CONFIG = {
     },
     values: {
         sourceTable: "Enrollments",
-        handoffPrefix: "WELCOME|ENROLLMENTS|",
+        handoffPrefix: "WELCOME|SHOOTING_CHALLENGE|",
         statusReady: "Ready",
         eventTypeWelcome: "WELCOME",
         templateKeyWelcome: "WELCOME",
