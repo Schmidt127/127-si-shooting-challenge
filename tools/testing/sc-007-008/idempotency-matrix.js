@@ -19,9 +19,9 @@ const {
   planHomeworkMultiAssetCompletion,
 } = require("../../../airtable/automations/shooting-challenge/lib/v2-engine-contracts");
 
-const {
-  buildZoomCreditSourceKey,
-} = require("../../../airtable/automations/shooting-challenge/lib/c025-stage17-zoom-attendance");
+function buildZoomRecordingCreditSourceKey(enrollmentId, meetingId) {
+  return `ZOOM_RECORDING_CREDIT|${enrollmentId}|${meetingId}`;
+}
 
 /** Stable synthetic RIDs for offline proofs (not live Airtable IDs). */
 const FIX = {
@@ -132,15 +132,15 @@ const IDEMPOTENCY_PATHS = [
     id: "zoom-credit",
     label: "Zoom recording credit XP",
     domain: "xp",
-    canonicalDedupeKey: buildZoomCreditSourceKey(FIX.enrollment, FIX.zoomMeeting),
-    expectedWriter:
-      "117-zoom-recording-credit-orchestrator.js OR 117c (design-alts only; not deployed under PROD 117 — PROD 117 is email-to-Make)",
-    firstRun: "create ZOOM_CREDIT|{enrollmentId}|{meetingId}",
-    secondRun: "skip_existing",
-    retryAfterPartialFailure: "soft-void + recheck Source Key; never write Attendees",
-    evidenceFields: ["Source Key", "Enrollment", "XP Points"],
+    canonicalDedupeKey: buildZoomRecordingCreditSourceKey(FIX.enrollment, FIX.zoomMeeting),
+    expectedWriter: "101-zoom-attendance-xp-award-meeting-xp.js v6.8+",
+    firstRun: "create ZOOM_RECORDING_CREDIT|{enrollmentId}|{meetingId}",
+    secondRun: "reuse exact owned event; no second recording-credit XP Event",
+    retryAfterPartialFailure:
+      "recheck Source Key and recording evidence; never write live Attendees",
+    evidenceFields: ["Source Key", "Enrollment", "Zoom Meeting", "XP Points"],
     notes:
-      "Live PROD family is ZOOM_CREDIT. Contract alt ZOOM_RECORDING|{meeting}|{enrollment} is legacy/S16 — do not mix.",
+      "Production 101 owns recording half-XP. Historical ZOOM_CREDIT| belongs only to undeployed Stage 17 design alternatives.",
   },
   {
     id: "zoom-attend-base",
@@ -150,7 +150,7 @@ const IDEMPOTENCY_PATHS = [
     expectedWriter: "101-zoom-attendance-xp-award-meeting-xp.js",
     firstRun: "create ZOOM_ATTEND_BASE|{meeting}|{enrollment}",
     secondRun: "skip_existing",
-    retryAfterPartialFailure: "recheck Source Key; disjoint from ZOOM_CREDIT",
+    retryAfterPartialFailure: "recheck Source Key; disjoint from ZOOM_RECORDING_CREDIT",
     evidenceFields: ["Source Key", "Enrollment", "XP Points"],
     notes: "Fixtures permit when Zoom Attendance rows exist",
   },
@@ -300,5 +300,5 @@ module.exports = {
   IDEMPOTENCY_PATHS,
   proveXpRerun,
   proveHomeworkCompletionRerun,
-  buildZoomCreditSourceKey,
+  buildZoomRecordingCreditSourceKey,
 };

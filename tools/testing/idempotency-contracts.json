@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.0.1",
   "generated_at": "2026-09-08",
   "source": "tools/testing/sc-007-008/idempotency-matrix.js",
   "contracts": [
@@ -54,23 +54,23 @@
       "cleanupPolicy": "delete XP when VF deleted"
     },
     {
-      "domain": "zoom-credit-xp",
-      "writer": "117-zoom-recording-credit-orchestrator.js",
-      "sourceTable": "Zoom Meetings / Enrollments",
+      "domain": "zoom-recording-credit-xp",
+      "writer": "101-zoom-attendance-xp-award-meeting-xp.js v6.8+",
+      "sourceTable": "Zoom Meetings / Zoom Attendance / Enrollments",
       "outputTable": "XP Events",
-      "keyPattern": "ZOOM_CREDIT|{enrollmentId}|{meetingId}",
-      "replayPolicy": "skip_existing",
-      "partialFailurePolicy": "soft-void + recheck Source Key",
-      "cleanupPolicy": "delete disposable credit XP"
+      "keyPattern": "ZOOM_RECORDING_CREDIT|{enrollmentId}|{meetingId}",
+      "replayPolicy": "reuse exact owned event; no second recording-credit XP Event",
+      "partialFailurePolicy": "recheck Source Key and recording evidence; never write live Attendees",
+      "cleanupPolicy": "retire unsupported Enrollment-owned XP; delete only disposable test XP under explicit cleanup policy"
     },
     {
       "domain": "zoom-attend-xp",
       "writer": "101-zoom-attendance-xp-award-meeting-xp.js",
-      "sourceTable": "Zoom Attendance",
+      "sourceTable": "Zoom Meetings / Zoom Attendance",
       "outputTable": "XP Events",
       "keyPattern": "ZOOM_ATTEND_BASE|{meetingId}|{enrollmentId}",
       "replayPolicy": "skip_existing",
-      "partialFailurePolicy": "disjoint from ZOOM_CREDIT keys",
+      "partialFailurePolicy": "recheck Source Key; disjoint from ZOOM_RECORDING_CREDIT keys",
       "cleanupPolicy": "delete attendance + XP for disposable meetings"
     },
     {
@@ -86,7 +86,7 @@
     {
       "domain": "shot-milestone",
       "writer": "066 unlock → 059 XP",
-      "sourceTable": "Enrollments / Shot Milestones",
+      "sourceTable": "Athlete Achievement Unlocks / Shot Milestones",
       "outputTable": "Athlete Achievement Unlocks + XP Events",
       "keyPattern": "SHOT_MILESTONE|{enrollmentId}|{milestoneId}",
       "replayPolicy": "skip when unlock Source Key present",
@@ -96,7 +96,7 @@
     {
       "domain": "perfect-week",
       "writer": "058 unlock → 059 XP",
-      "sourceTable": "Weekly Athlete Summary",
+      "sourceTable": "Weekly Athlete Summary / Athlete Achievement Unlocks",
       "outputTable": "Athlete Achievement Unlocks + XP Events",
       "keyPattern": "PERFECT_WEEK|{enrollmentId}|{weekId}",
       "replayPolicy": "skip_existing",
@@ -112,6 +112,16 @@
       "replayPolicy": "skip tiers already awarded",
       "partialFailurePolicy": "recheck Source Key per tier",
       "cleanupPolicy": "delete threshold XP for test WAS"
+    },
+    {
+      "domain": "manual-bonus-xp",
+      "writer": "manual operator process only",
+      "sourceTable": "XP Events / Enrollment operator audit context",
+      "outputTable": "XP Events",
+      "keyPattern": "MANUAL_BONUS|{enrollmentId}|{operatorDefinedAuditId}",
+      "replayPolicy": "operator must preserve one explicit audit-owned exception; no scripted replay writer",
+      "partialFailurePolicy": "manual review only; never infer or invent ownership",
+      "cleanupPolicy": "never bulk-delete Enrollment-linked Manual Bonus XP"
     },
     {
       "domain": "weekly-athlete-summary",

@@ -4,6 +4,7 @@
 const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
+const { spawnSync } = require("child_process");
 
 function test(name, fn) {
   try {
@@ -29,7 +30,7 @@ const required = [
   { prefix: "VIDEO_SUBMISSION|", scriptToken: "VIDEO_SUBMISSION", script: "airtable/automations/shooting-challenge/114-video-review-and-xp-create-or-update-video-xp-event.js" },
   { prefix: "STREAK_XP|", scriptToken: "STREAK_XP", script: "airtable/automations/shooting-challenge/054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js" },
   { prefix: "ZOOM_ATTEND_BASE|", scriptToken: "ZOOM_ATTEND_BASE", script: "airtable/automations/shooting-challenge/101-zoom-attendance-xp-award-meeting-xp.js" },
-  { prefix: "ZOOM_CREDIT|", scriptToken: "ZOOM_CREDIT", script: "airtable/automations/shooting-challenge/_design-alternatives/stage17-modular-reference/117-zoom-recording-credit-orchestrator.js" },
+  { prefix: "ZOOM_RECORDING_CREDIT|", scriptToken: "ZOOM_RECORDING_CREDIT", script: "airtable/automations/shooting-challenge/101-zoom-attendance-xp-award-meeting-xp.js" },
   { prefix: "WEEKLY_EMAIL|", scriptToken: "WEEKLY_EMAIL", script: "airtable/automations/shooting-challenge/119-email-notifications-and-external-handoffs-schedule-weekly-summary-email-send.js" },
 ];
 
@@ -40,6 +41,15 @@ test("registry lists canonical prefixes used by required scripts", () => {
     const body = fs.readFileSync(path.join(repoRoot, row.script), "utf8");
     assert.ok(body.includes(row.scriptToken), `${row.script} must reference ${row.scriptToken}`);
   }
+});
+
+test("Zoom recording credit authority is Production 101 v6.8+", () => {
+  const row = (registry.prefixes || []).find((p) => p.prefix === "ZOOM_RECORDING_CREDIT|");
+  assert.ok(row, "registry missing ZOOM_RECORDING_CREDIT|");
+  assert.strictEqual(row.status, "canonical");
+  assert.strictEqual(row.authoritative_writer, "101");
+  assert.strictEqual(row.format, "ZOOM_RECORDING_CREDIT|{enrollmentId}|{meetingId}");
+  assert.ok(row.script_path.endsWith("101-zoom-attendance-xp-award-meeting-xp.js"));
 });
 
 test("formula-only fields are marked never-write in registry", () => {
@@ -60,7 +70,6 @@ test("WEEKLY_THRESHOLD writer is canonical 035 after SC-049 rebuild", () => {
   assert.ok(body.includes("createRecordAsync"));
   assert.ok(body.includes('version: "v1.3"'));
   assert.ok(body.includes("existingXpSourceLabels"), "035 must semantic-dedupe via XP Source labels");
-  // Writer mint pattern must match registry format placeholders.
   assert.ok(
     /\$\{CONFIG\.values\.sourceKeyPrefix\}\$\{enrollmentId\}\|\$\{weekId\}\|\$\{percent\}/.test(body)
       || /WEEKLY_THRESHOLD\|\$\{enrollmentId\}\|\$\{weekId\}\|\$\{percent\}/.test(body)
@@ -82,6 +91,18 @@ test("every canonical registry writer with script_path mints its prefix", () => 
       `${row.script_path} must mint/reference ${token} for registry prefix ${row.prefix}`
     );
   }
+});
+
+test("complex XP source authority suite passes", () => {
+  const run = spawnSync(process.execPath, ["tests/reliability-command-center/xp-source-authority.test.js"], {
+    cwd: repoRoot,
+    encoding: "utf8",
+  });
+  if (run.status !== 0) {
+    console.error(run.stdout || "");
+    console.error(run.stderr || "");
+  }
+  assert.strictEqual(run.status, 0);
 });
 
 console.log("source-key-registry tests passed");
