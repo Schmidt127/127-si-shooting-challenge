@@ -273,7 +273,7 @@ test("Lambda auth + viewer unit suites cover secret/token failure paths", () => 
       encoding: "utf8",
       env: {
         ...process.env,
-        PYTHONPATH: [cwd, path.join(cwd, "tests"), process.env.PYTHONPATH]
+        PYTHONPATH: [path.join(cwd, "tests"), cwd, process.env.PYTHONPATH]
           .filter(Boolean)
           .join(path.delimiter),
       },

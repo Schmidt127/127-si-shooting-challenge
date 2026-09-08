@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://127si.dev/schemas/shooting-challenge/test-result.schema.json",
+  "title": "ShootingChallengeTestResult",
+  "description": "Shared evidence record for Test & Reliability Program scenarios (Agent 0 contract).",
+  "type": "object",
+  "required": [
+    "scenarioId",
+    "domain",
+    "mode",
+    "classification",
+    "timestamp",
+    "preconditions",
+    "expected",
+    "actual",
+    "result"
+  ],
+  "properties": {
+    "scenarioId": {
+      "type": "string",
+      "description": "Stable scenario identifier, e.g. SCN-001 or matrix row A3"
+    },
+    "domain": {
+      "type": "string",
+      "description": "Functional domain: enrollment, daily-submission, xp, homework, video, zoom, was, achievements, levels, upload, email"
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["dry-run", "execute", "readonly"],
+      "description": "Execution mode; default dry-run"
+    },
+    "classification": {
+      "type": "string",
+      "enum": [
+        "OFFLINE_UNIT",
+        "CONTRACT",
+        "READ_ONLY_PROD",
+        "CONTROLLED_PROD_WRITE",
+        "FAILURE_INJECTION",
+        "REPLAY",
+        "CLEANUP",
+        "OPERATOR_UI_REQUIRED"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "testIdentity": {
+      "type": "object",
+      "properties": {
+        "athleteId": { "type": "string" },
+        "enrollmentId": { "type": "string" },
+        "programInstanceId": { "type": "string" },
+        "weekId": { "type": "string" },
+        "wasId": { "type": "string" },
+        "testRecipientEmails": {
+          "type": "array",
+          "items": { "type": "string", "format": "email" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "preconditions": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "actual": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "recordIds": {
+      "type": "object",
+      "properties": {
+        "created": { "type": "array", "items": { "type": "string" } },
+        "modified": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "dedupeKeys": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "mutations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["table", "recordId", "action"],
+        "properties": {
+          "table": { "type": "string" },
+          "recordId": { "type": "string" },
+          "action": { "type": "string", "enum": ["create", "update", "delete", "link"] },
+          "fields": { "type": "object", "additionalProperties": true }
+        }
+      }
+    },
+    "cleanup": {
+      "type": "object",
+      "properties": {
+        "keep": { "type": "array", "items": { "type": "string" } },
+        "delete": { "type": "array", "items": { "type": "string" } },
+        "restore": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["table", "recordId", "field", "value"],
+            "properties": {
+              "table": { "type": "string" },
+              "recordId": { "type": "string" },
+              "field": { "type": "string" },
+              "value": {}
+            }
+          }
+        },
+        "verify": { "type": "array", "items": { "type": "string" } },
+        "result": { "type": "string", "enum": ["PASS", "FAIL", "SKIPPED", "PENDING"] }
+      },
+      "additionalProperties": false
+    },
+    "result": {
+      "type": "string",
+      "enum": ["PASS", "FAIL", "BLOCKED", "UNKNOWN"]
+    },
+    "notes": {
+      "type": "string"
+    },
+    "runId": {
+      "type": "string",
+      "description": "Optional batch run identifier for report aggregation"
+    },
+    "authoritativeSource": {
+      "type": "string",
+      "description": "For FAIL results: where expected state was defined"
+    },
+    "actualSource": {
+      "type": "string",
+      "description": "For FAIL results: where actual state was read"
+    },
+    "likelyOwningAutomation": {
+      "type": "string",
+      "description": "For FAIL results: probable writer script"
+    }
+  },
+  "additionalProperties": false
+}

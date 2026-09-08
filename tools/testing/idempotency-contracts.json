@@ -1,0 +1,157 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-09-08",
+  "source": "tools/testing/sc-007-008/idempotency-matrix.js",
+  "contracts": [
+    {
+      "domain": "submission-xp",
+      "writer": "010-submission-intake-create-xp-event.js",
+      "sourceTable": "Submissions",
+      "outputTable": "XP Events",
+      "keyPattern": "SUBMISSION_XP|{submissionId}",
+      "replayPolicy": "skip_existing — no second XP Event",
+      "partialFailurePolicy": "recheck Source Key before create; repair_link if linked XP missing",
+      "cleanupPolicy": "delete disposable XP only when Submission deleted"
+    },
+    {
+      "domain": "homework-completion",
+      "writer": "020-homework-link-or-create-homework-completion.js / 067",
+      "sourceTable": "Submissions / Program Homework Assignments",
+      "outputTable": "Homework Completions",
+      "keyPattern": "{enrollmentId}|{weekId}|{homeworkAssignmentId}",
+      "replayPolicy": "link_existing — never second HC for same identity",
+      "partialFailurePolicy": "planHomeworkMultiAssetCompletion reuses existing HC",
+      "cleanupPolicy": "delete disposable HC when test prefix guarded"
+    },
+    {
+      "domain": "homework-xp",
+      "writer": "065-homework-review-and-xp-create-homework-xp-event.js",
+      "sourceTable": "Homework Completions",
+      "outputTable": "XP Events",
+      "keyPattern": "HOMEWORK_XP|{homeworkCompletionId}",
+      "replayPolicy": "skip_existing — one XP per HC",
+      "partialFailurePolicy": "recheck Source Key; refuse steal",
+      "cleanupPolicy": "delete XP when HC deleted"
+    },
+    {
+      "domain": "video-feedback",
+      "writer": "013-submission-intake-create-or-link-video-feedback.js",
+      "sourceTable": "Submissions",
+      "outputTable": "Video Feedback",
+      "keyPattern": "one VF per submission/video asset path",
+      "replayPolicy": "link existing VF",
+      "partialFailurePolicy": "do not create duplicate VF rows",
+      "cleanupPolicy": "delete disposable VF with test assets"
+    },
+    {
+      "domain": "video-xp",
+      "writer": "114-video-review-and-xp-create-or-update-video-xp-event.js",
+      "sourceTable": "Video Feedback",
+      "outputTable": "XP Events",
+      "keyPattern": "VIDEO_SUBMISSION|{videoFeedbackId}",
+      "replayPolicy": "skip_existing",
+      "partialFailurePolicy": "steal-guard if linked XP belongs to another VF",
+      "cleanupPolicy": "delete XP when VF deleted"
+    },
+    {
+      "domain": "zoom-credit-xp",
+      "writer": "117-zoom-recording-credit-orchestrator.js",
+      "sourceTable": "Zoom Meetings / Enrollments",
+      "outputTable": "XP Events",
+      "keyPattern": "ZOOM_CREDIT|{enrollmentId}|{meetingId}",
+      "replayPolicy": "skip_existing",
+      "partialFailurePolicy": "soft-void + recheck Source Key",
+      "cleanupPolicy": "delete disposable credit XP"
+    },
+    {
+      "domain": "zoom-attend-xp",
+      "writer": "101-zoom-attendance-xp-award-meeting-xp.js",
+      "sourceTable": "Zoom Attendance",
+      "outputTable": "XP Events",
+      "keyPattern": "ZOOM_ATTEND_BASE|{meetingId}|{enrollmentId}",
+      "replayPolicy": "skip_existing",
+      "partialFailurePolicy": "disjoint from ZOOM_CREDIT keys",
+      "cleanupPolicy": "delete attendance + XP for disposable meetings"
+    },
+    {
+      "domain": "streak-unlock",
+      "writer": "054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js",
+      "sourceTable": "Streak Occurrences",
+      "outputTable": "XP Events",
+      "keyPattern": "STREAK_XP|{enrollmentId}|{achievementId}|{endDate}",
+      "replayPolicy": "skip_existing",
+      "partialFailurePolicy": "recheck Source Key before create",
+      "cleanupPolicy": "delete streak occurrence + XP for test enrollments"
+    },
+    {
+      "domain": "shot-milestone",
+      "writer": "066 unlock → 059 XP",
+      "sourceTable": "Enrollments / Shot Milestones",
+      "outputTable": "Athlete Achievement Unlocks + XP Events",
+      "keyPattern": "SHOT_MILESTONE|{enrollmentId}|{milestoneId}",
+      "replayPolicy": "skip when unlock Source Key present",
+      "partialFailurePolicy": "detectShotMilestoneCrossings ignores unlocked",
+      "cleanupPolicy": "delete unlock + XP for test crossing"
+    },
+    {
+      "domain": "perfect-week",
+      "writer": "058 unlock → 059 XP",
+      "sourceTable": "Weekly Athlete Summary",
+      "outputTable": "Athlete Achievement Unlocks + XP Events",
+      "keyPattern": "PERFECT_WEEK|{enrollmentId}|{weekId}",
+      "replayPolicy": "skip_existing",
+      "partialFailurePolicy": "eligibility re-eval must not mint second unlock",
+      "cleanupPolicy": "retain PWTEST fixtures per SC-PW-E2E policy"
+    },
+    {
+      "domain": "weekly-threshold-xp",
+      "writer": "035-weekly-summary-and-goal-logic-create-weekly-threshold-xp-events.js",
+      "sourceTable": "Weekly Athlete Summary",
+      "outputTable": "XP Events",
+      "keyPattern": "WEEKLY_THRESHOLD|{enrollmentId}|{weekId}|{percent}",
+      "replayPolicy": "skip tiers already awarded",
+      "partialFailurePolicy": "recheck Source Key per tier",
+      "cleanupPolicy": "delete threshold XP for test WAS"
+    },
+    {
+      "domain": "weekly-athlete-summary",
+      "writer": "031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js",
+      "sourceTable": "Submissions",
+      "outputTable": "Weekly Athlete Summary",
+      "keyPattern": "{enrollmentId}|{weekId} (Summary Key formula — never write)",
+      "replayPolicy": "find existing — no second WAS",
+      "partialFailurePolicy": "find-or-create by Enrollment+Week",
+      "cleanupPolicy": "delete disposable WAS when submissions cleaned"
+    },
+    {
+      "domain": "weekly-email-send",
+      "writer": "072 build → 074 handoff → 079 Hub → Resend",
+      "sourceTable": "Weekly Athlete Summary",
+      "outputTable": "Email Handoff Queue / Sent fields",
+      "keyPattern": "WEEKLY_EMAIL|{enrollmentId}|{weekId}",
+      "replayPolicy": "error_duplicate_send_blocked when Sent?=true",
+      "partialFailurePolicy": "webhook failure keeps Send to Make?; single retry after restore",
+      "cleanupPolicy": "never clear Sent? on real sent week; test mode only"
+    },
+    {
+      "domain": "upload-asset",
+      "writer": "Lambda 127si-upload-asset + 070a/070b/070c",
+      "sourceTable": "Submission Assets",
+      "outputTable": "Submission Assets (writeback fields)",
+      "keyPattern": "asset:{assetId}|status:Uploaded|storageKey",
+      "replayPolicy": "skipped_already_uploaded — preserve token",
+      "partialFailurePolicy": "retry from Pending Link; never regress Uploaded→Processing",
+      "cleanupPolicy": "delete disposable S3 + SA rows with test prefix"
+    },
+    {
+      "domain": "reviewer-link",
+      "writer": "Lambda viewer + SC-150 Reviewer File URL formula",
+      "sourceTable": "Submission Assets",
+      "outputTable": "Reviewer Access Token / Reviewer File URL",
+      "keyPattern": "deterministic token per asset after upload success",
+      "replayPolicy": "preserve token on retry",
+      "partialFailurePolicy": "regenerate only when Uploaded reset intentionally",
+      "cleanupPolicy": "rotate tokens only on asset delete"
+    }
+  ]
+}
