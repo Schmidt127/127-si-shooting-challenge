@@ -1,18 +1,43 @@
 # SC-003–SC-008 — Wave B Status
 
 **Date:** 2026-09-08  
-**Verdict:** `WAVE B NOT COMPLETE` (repository infrastructure complete; operator identity restore + GitHub publish remain)
+**Verdict:** `WAVE B COMPLETE — MERGED`
 
 ---
 
-## Identity
+## Merge / publication
 
 | Field | Value |
 |-------|-------|
-| Historical identity | Athlete `recgqVstObQRzgXJF`, Enrollment `recgP9qZYjAhE7NXm` — **HISTORICAL / MUST REVERIFY** |
-| Current resolved identity | **None** — all historical + candidate RIDs missing in live PROD |
-| Verdict | **`IDENTITY_RECONTRACT_REQUIRED`** (live-confirmed) |
-| Execute enabled? | **No** |
+| PR | #487 — SC-003–SC-008 testing control framework and reliability harness |
+| Merge commit | `fb954807eeda8e66d263bc21959efe21dd813c26` |
+| Branch | `test-reliability/orchestrator` |
+| Repository QA | automation-contracts PASS; python-contracts PASS |
+| #486 overlap | 0 implementation files |
+
+---
+
+## Controlled identity — live verified
+
+Live Airtable read-only verification on 2026-09-08:
+
+| Field | Value |
+|-------|-------|
+| Athlete | `recshWT5DQPUZXDvr` — Testing Schmidt |
+| Enrollment | `recn54wbxTjygydqa` |
+| Enrollment Active? | true |
+| Program Instance | `rec5mEM0YPqPqq0hZ` — Shooting Challenge \| 2026-2027 |
+| School Year | 2026-2027 |
+| Grade | 12 |
+| Grade Band | 9-12 |
+| Lifetime XP | 0 |
+| Total Submissions | 0 |
+| Total Homework Completions | 0 |
+| Total Video Submissions | 0 |
+| Total Zoom Attendances | 0 |
+| Identity verdict | `IDENTITY_VERIFIED_NON_EMAIL` |
+
+The previous historical IDs remain historical only and must not be used for new Production tests.
 
 ---
 
@@ -22,9 +47,9 @@
 |-------|-------|
 | Path | `tools/testing/sc-test-control/` |
 | Commands | `list`, `identity verify\|show`, `scenario`, `domain`, `report`, `verify-cleanup`, `failures list`, `readonly-scan` |
-| Dry-run safety | Proven — default mode; zero mutations |
-| Execute gate | Proven — fails without `IDENTITY_VERIFIED`, `--acknowledge-prod`, allowlist |
-| Tests | `node --test tools/testing/sc-test-control/tests/cli-safety.test.js` — **7/7 PASS** |
+| Default mode | dry-run / read-only |
+| Execute gate | requires verified controlled identity + explicit Production acknowledgement |
+| Email execute | remains blocked pending allowlisted test recipient |
 
 ---
 
@@ -33,46 +58,24 @@
 | Metric | Count |
 |--------|------:|
 | Total | **66** |
-| Executable now (liveReady) | **13** |
+| Live-ready in registry | **13** |
 | Fixture-only / offline | **2** |
-| Blocked identity | **63** |
-| Blocked #486 | **1** (C8) |
-| Blocked UI | **4** |
-| Blocked email install | **2** |
-| Not implemented | **51** |
+| Structured Curriculum C8 | blocked pending #486 merge/deploy/proof |
+| Operator UI scenarios | remain operator-gated |
 
-Report: `docs/testing/evidence/2026-09-08/SCENARIO-REGISTRY-REPORT.json`
+Registry report: `docs/testing/evidence/2026-09-08/SCENARIO-REGISTRY-REPORT.json`
 
 ---
 
-## Idempotency
+## Idempotency / failure recovery
 
-| Field | Value |
-|-------|-------|
-| Registry | `tools/testing/idempotency-contracts.json` — **15 domains** |
-| Validation | `node --test tools/testing/tests/test_idempotency_contracts.test.js` — **3/3 PASS** |
-| Gaps | Curriculum staging keys post-#486; live replay proofs deferred to Wave C/D |
-
----
-
-## Failure Recovery
-
-| Field | Value |
-|-------|-------|
-| Framework | `tools/testing/sc-test-control/lib/failure-injection.js` |
-| Failure classes | HTTP 400/401/403/404/429/500, malformed JSON, semantic 200, timeout, missing attachment/source/week, wrong ownership, unsupported route |
-| Tests | SC-008 failure-path-pack — **12/12 PASS** (after PYTHONPATH fix + boto3) |
-| Gaps | paste-bundle-integrity (057 paste drift — operator regenerate) |
-
----
-
-## Expected vs Actual
-
-| Field | Value |
-|-------|-------|
-| Domains | Enrollment, writeback policy via `lib/readonly-expected-actual.js` |
-| Read-only result | BLOCKED without live snapshot; writeback policy PASS (disabled) |
-| Discrepancies | Full domain scan requires identity restore + PAT fetch |
+| Area | Result |
+|------|--------|
+| SC-007/008 run-suite | **8/8 PASS** |
+| Idempotency registry | **3/3 PASS** |
+| CLI safety | **PASS** |
+| Idempotency domains | 15 |
+| Failure framework | installed under `tools/testing/sc-test-control/lib/failure-injection.js` |
 
 ---
 
@@ -81,64 +84,23 @@ Report: `docs/testing/evidence/2026-09-08/SCENARIO-REGISTRY-REPORT.json`
 | Field | Value |
 |-------|-------|
 | Package | `docs/testing/test-reliability/TESTING-VIEWS-OPERATOR-PACKAGE.md` |
-| Live installed? | **Unknown** — verifier not re-run post-purge |
-| Operator work | Restore Enrollment RID; update view filters; run `--require-installed` |
+| Live installed? | Still requires Airtable view-level verification |
+| Identity blocker | **CLEARED** |
+| Remaining operator work | verify/update Testing Views filters against `recn54wbxTjygydqa` and run installed-view verification |
 
 ---
 
-## Upload
+## Upload / email boundaries
 
-| Legacy | Structured Curriculum | #486 untouched |
-|--------|----------------------|----------------|
-| Ready for offline + read-only proofs | **BLOCKED** until PR #486 merge | **Yes** |
-
-Doc: `docs/testing/test-reliability/UPLOAD-PIPELINE-READINESS.md`
-
----
-
-## Email
-
-| Field | Value |
-|-------|-------|
-| Live-version gaps | #104 072/076 paste; #105 071/073 paste |
-| Paste gaps | 057 deploy paste bundle drift |
-| Test-mode readiness | Offline contracts pass; live send **BLOCKED** |
-
-Doc: `docs/testing/test-reliability/EMAIL-HANDOFF-RECONCILIATION.md`
+- Legacy upload pipeline may proceed with read-only/offline proofs.
+- Structured Curriculum upload/submit remains isolated until PR #486 is merged/deployed/proven.
+- Email live execution remains blocked until an allowlisted test recipient is configured.
+- No genuine participant records may be used for controlled tests.
 
 ---
 
-## GitHub
+## Wave transition
 
-| Field | Value |
-|-------|-------|
-| Branch | `cursor/test-reliability-orchestrator-fa75` (local) |
-| PR(s) | Not published — integration lacks push permission to `127-si-shooting-challenge` |
-| Owner/admin write used? | **Attempted** — `gh api` reports `push: false` for cursor integration |
-| Remaining blockers | Publish branch via owner credentials; operator identity restore |
+**Wave B is complete and merged. Wave C may proceed with read-only domain baselines against Testing Schmidt.**
 
----
-
-## Run-suite (B8)
-
-| Before | After Wave B |
-|--------|--------------|
-| 5/8 | **7/8** |
-
-Classification: `docs/testing/evidence/2026-09-08/RUN-SUITE-CLASSIFICATION.md`
-
----
-
-## Remaining blockers (true)
-
-1. **Operator:** Create/restore controlled test Athlete + Enrollment in PROD → `IDENTITY_VERIFIED`
-2. **Operator:** Regenerate 057 deploy paste bundle OR accept paste-bundle test as operator-gated
-3. **Publish:** Push Wave B branch to GitHub (owner/admin path outside cursor[bot] integration)
-
----
-
-## Verdict
-
-**`WAVE B NOT COMPLETE`**
-
-Repository Wave B infrastructure is in place; completion requires identity recontract operator action and GitHub publication.
+Production write scenarios remain gated individually by scenario classification, expected mutations, cleanup, controlled identity, and recipient safety.
