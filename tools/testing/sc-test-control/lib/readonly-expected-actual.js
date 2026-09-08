@@ -4,8 +4,33 @@ const { writeFileSync, mkdirSync } = require("node:fs");
 const { resolve } = require("node:path");
 const { BASE_ID, CANONICAL_IDENTITY, EVIDENCE_DIR } = require("../config");
 const { loadEnvLocal, airtableToken, fetchRecord } = require("../identity");
+const { runAudit } = require("../../../../lib/reliability-command-center");
 
 const ROOT = resolve(__dirname, "../../../..");
+
+async function airtableList(table, { filterByFormula, fields, maxRecords = 8000 } = {}) {
+  const token = airtableToken();
+  if (!token) throw new Error("AIRTABLE_API_TOKEN missing");
+  const records = [];
+  let offset;
+  do {
+    const params = new URLSearchParams({ pageSize: "100" });
+    if (offset) params.set("offset", offset);
+    if (filterByFormula) params.set("filterByFormula", filterByFormula);
+    for (const field of fields || []) params.append("fields[]", field);
+    const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(table)}?${params}`;
+    const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+    if (!res.ok) {
+      const body = await res.text();
+      throw new Error(`${table} list ${res.status}: ${body.slice(0, 180)}`);
+    }
+    const data = await res.json();
+    records.push(...(data.records || []));
+    offset = data.offset;
+    if (records.length >= maxRecords) break;
+  } while (offset);
+  return records;
+}
 
 async function listCount(table, enrollmentId, fieldName) {
   const token = airtableToken();
@@ -64,6 +89,130 @@ async function fetchLiveSnapshot() {
   };
 }
 
+/**
+ * Fetch only the fields needed by issue #100 reconciliation checks.
+ * This is deliberately read-only and scans active XP against authoritative sources.
+ */
+async function fetchXpHealthSnapshot() {
+  const [
+    xpEvents,
+    submissions,
+    homeworkCompletions,
+    videoFeedback,
+    zoomMeetings,
+    zoomAttendance,
+    streakOccurrences,
+    achievementUnlocks,
+    weeklyAthleteSummaries,
+    enrollments,
+  ] = await Promise.all([
+    airtableList("XP Events", {
+      filterByFormula: "{Active?}=1",
+      fields: [
+        "Enrollment",
+        "Active?",
+        "Source Key",
+        "XP Source",
+        "XP Points",
+        "Submission",
+        "Homework Completion",
+        "Video Feedback",
+        "Zoom Meeting",
+        "Streak Occurrence",
+        "Achievement Unlock",
+        "Weekly Athlete Summary",
+        "Awarded By",
+        "XP Reason Public",
+      ],
+    }),
+    airtableList("Submissions", {
+      fields: ["Enrollment", "Count This Submission?", "XP Award Status", "Week"],
+    }),
+    airtableList("Homework Completions", {
+      fields: ["Enrollment", "Award Status", "Satisfactory?", "Week"],
+    }),
+    airtableList("Video Feedback", {
+      fields: ["Enrollment", "Active?", "Award Status", "Submission", "Week"],
+    }),
+    airtableList("Zoom Meetings", {
+      fields: ["Attendees", "Meeting Status", "Week", "XP Events"],
+    }),
+    airtableList("Zoom Attendance", {
+      fields: [
+        "Enrollment",
+        "Zoom Meeting",
+        "Attendance Method",
+        "Recording Quiz Satisfactory?",
+        "Zoom Credit Approved?",
+      ],
+    }),
+    airtableList("Streak Occurrences", {
+      fields: ["Enrollment", "Achievement", "Streak End Date", "Active?", "Source Status", "XP Events"],
+    }),
+    airtableList("Athlete Achievement Unlocks", {
+      fields: [
+        "Enrollment",
+        "Shot Milestone",
+        "Week",
+        "Milestone Source Key",
+        "Active?",
+        "Source Status",
+        "XP Award Status",
+        "XP Events",
+      ],
+    }),
+    airtableList("Weekly Athlete Summary", {
+      fields: ["Enrollment", "Week", "Threshold XP Status", "Goal Completion %", "XP Events"],
+    }),
+    airtableList("Enrollments", {
+      fields: ["Active?", "School Year", "Program Instance", "Level Recalc Needed?"],
+    }),
+  ]);
+
+  return {
+    xpEvents,
+    submissions,
+    homeworkCompletions,
+    videoFeedback,
+    zoomMeetings,
+    zoomAttendance,
+    streakOccurrences,
+    achievementUnlocks,
+    weeklyAthleteSummaries,
+    enrollments,
+  };
+}
+
+function summarizeXpHealth(snapshot) {
+  const activeXp = (snapshot.xpEvents || []).filter((row) => row?.fields?.["Active?"] === true);
+  const orphanActiveXp = activeXp.filter((row) => !Array.isArray(row.fields?.Enrollment) || row.fields.Enrollment.length === 0);
+  const audit = runAudit(snapshot, {
+    workflows: ["xpEvents", "xpSourceAuthority"],
+    source: "prod-readonly-scan",
+  });
+  const blocking = audit.issues.filter((issue) =>
+    ["P0", "P1"].includes(issue.priority) || issue.healthStatus === "Blocking Error"
+  );
+  const byCode = {};
+  for (const issue of audit.issues) byCode[issue.code] = (byCode[issue.code] || 0) + 1;
+  const byPrefix = {};
+  for (const row of activeXp) {
+    const key = String(row.fields?.["Source Key"] || "");
+    const prefix = key.includes("|") ? `${key.split("|")[0]}|` : key || "[blank]";
+    byPrefix[prefix] = (byPrefix[prefix] || 0) + 1;
+  }
+  return {
+    activeXpCount: activeXp.length,
+    activeOrphanCount: orphanActiveXp.length,
+    issueCount: audit.issues.length,
+    blockingIssueCount: blocking.length,
+    issuesByCode: byCode,
+    activeSourcePrefixes: byPrefix,
+    affectedRecordIds: Array.from(new Set(audit.issues.map((issue) => issue.sourceRecordId).filter(Boolean))),
+    pass: orphanActiveXp.length === 0 && blocking.length === 0,
+  };
+}
+
 function identityChecks(live) {
   const checks = [];
   const push = (id, pass, expected, actual, notes) => {
@@ -108,6 +257,32 @@ function identityChecks(live) {
   return checks;
 }
 
+function xpHealthChecks(xpHealth) {
+  return [
+    {
+      id: "xp.active_orphan_zero",
+      status: xpHealth.activeOrphanCount === 0 ? "PASS" : "FAIL",
+      expected: 0,
+      actual: xpHealth.activeOrphanCount,
+      notes: "Issue #100 health invariant: Active?=true + Enrollment blank must remain zero.",
+    },
+    {
+      id: "xp.authority_integrity",
+      status: xpHealth.blockingIssueCount === 0 ? "PASS" : "FAIL",
+      expected: 0,
+      actual: xpHealth.blockingIssueCount,
+      notes: "Layer 1/2 XP authority checks: missing/inactive/moved/ambiguous sources and unaudited manual bonus fail closed.",
+    },
+    {
+      id: "xp.active_inventory",
+      status: "PASS",
+      expected: ">=0",
+      actual: xpHealth.activeXpCount,
+      notes: `Active Source Key prefixes: ${JSON.stringify(xpHealth.activeSourcePrefixes)}`,
+    },
+  ];
+}
+
 async function runReadOnlyScan() {
   loadEnvLocal();
   if (!airtableToken()) {
@@ -118,8 +293,10 @@ async function runReadOnlyScan() {
     };
   }
   let live;
+  let xpHealth;
   try {
     live = await fetchLiveSnapshot();
+    xpHealth = summarizeXpHealth(await fetchXpHealthSnapshot());
   } catch (err) {
     return {
       overall: "BLOCKED",
@@ -127,7 +304,7 @@ async function runReadOnlyScan() {
       checks: [{ id: "readonly.live-fetch", status: "BLOCKED", notes: err.message }],
     };
   }
-  const checks = identityChecks(live);
+  const checks = [...identityChecks(live), ...xpHealthChecks(xpHealth)];
   const statusCounts = { PASS: 0, FAIL: 0, BLOCKED: 0 };
   for (const c of checks) statusCounts[c.status] = (statusCounts[c.status] || 0) + 1;
   const out = {
@@ -143,6 +320,7 @@ async function runReadOnlyScan() {
       active: live.active,
       athleteLabel: live.athleteLabel,
       recordCounts: live.counts,
+      xpHealth,
     },
   };
   const outDir = resolve(ROOT, EVIDENCE_DIR);
@@ -153,4 +331,10 @@ async function runReadOnlyScan() {
   return out;
 }
 
-module.exports = { runReadOnlyScan, fetchLiveSnapshot };
+module.exports = {
+  runReadOnlyScan,
+  fetchLiveSnapshot,
+  fetchXpHealthSnapshot,
+  summarizeXpHealth,
+  xpHealthChecks,
+};
