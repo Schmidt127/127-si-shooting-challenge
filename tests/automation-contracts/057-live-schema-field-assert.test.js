@@ -10,9 +10,6 @@
  *
  * Optional live half: when AIRTABLE_API_TOKEN (or AIRTABLE_TOKEN) is set and
  * ASSERT_057_LIVE=1, fetch Config Meta and assert the field exists by name.
- *
- * Evidence companion (MCP get_automation 2026-08-30): live script CONFIG already
- * uses the correct name — do not repaste. Automations Code tracker column may lag.
  */
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
@@ -49,7 +46,7 @@ test("057 repo source CONFIG matches live Config field name", () => {
     /perfectWeekVideoMinimum:\s*"Perfect Week Video Minimum"/
   );
   assert.doesNotMatch(script, /Perfect Week Video MInimum/);
-  assert.match(script, /Version:\s*2\.5/);
+  assert.match(script, /Version:\s*2\.6/);
 });
 
 async function optionalLiveMetaAssert() {
