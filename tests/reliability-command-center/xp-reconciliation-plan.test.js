@@ -8,6 +8,7 @@ const {
 } = require("../../lib/reliability-command-center/xp-reconciliation-plan");
 const {
   parseRecordIds,
+  targetRecords,
 } = require("../../tools/reliability-command-center/xp-reconcile-live");
 
 function test(name, fn) {
@@ -110,6 +111,24 @@ test("healthy active XP is an idempotent no-op", () => {
   const second = planXpReconciliation({ xpRecord: xp(), issues: [] });
   assert.strictEqual(first.status, "NOOP_HEALTHY");
   assert.deepStrictEqual(first, second);
+});
+
+test("target selection retains inactive records so a retirement replay can no-op", () => {
+  const inactive = xp(XP, { "Active?": false });
+  const selected = targetRecords([inactive], [XP]);
+  assert.strictEqual(selected.length, 1);
+  assert.strictEqual(selected[0].id, XP);
+  const plan = planXpReconciliation({ xpRecord: selected[0], issues: [] });
+  assert.strictEqual(plan.status, "NOOP_ALREADY_INACTIVE");
+  assert.strictEqual(plan.actions.length, 0);
+});
+
+test("target selection safely omits an already-deleted record", () => {
+  const selected = targetRecords([], [XP]);
+  assert.deepStrictEqual(selected, []);
+  const batch = planBatch({ xpRecords: selected, issues: [] });
+  assert.strictEqual(batch.executeAllowed, true);
+  assert.strictEqual(batch.targetCount, 0);
 });
 
 test("batch refuses execute if any target is ambiguous", () => {
