@@ -49,8 +49,9 @@ function proposeRepair(issue) {
     };
   }
 
-  /** @type {{ field: string, from: string, to: string }[]} */
+  /** @type {{ field: string, from: string, to: string, targetTable?: string }[]} */
   const proposedChanges = [];
+  let explicitOperatorAction = false;
 
   switch (issue.code) {
     case "sent_still_armed":
@@ -88,6 +89,53 @@ function proposeRepair(issue) {
         to: "unchecked until Ready?",
       });
       break;
+    case "xp_authoritative_source_missing":
+    case "xp_authoritative_source_inactive":
+      explicitOperatorAction = true;
+      proposedChanges.push(
+        {
+          targetTable: "XP Events",
+          field: "Active?",
+          from: "checked",
+          to: "unchecked — preserve XP Event row, amount, Source Key, and history",
+        },
+        {
+          targetTable: "Enrollments",
+          field: "Level Recalc Needed?",
+          from: "current value",
+          to: "checked for issue.enrollmentRecordId; Automation 042 remains sole level writer",
+        }
+      );
+      break;
+    case "xp_source_enrollment_mismatch":
+    case "xp_source_key_enrollment_mismatch":
+    case "xp_authoritative_source_ambiguous":
+      explicitOperatorAction = true;
+      proposedChanges.push({
+        targetTable: "XP Events / authoritative source",
+        field: "Ownership",
+        from: "conflicted/ambiguous",
+        to: "manual domain reconciliation required — never move or steal XP automatically",
+      });
+      break;
+    case "manual_bonus_missing_audit_ownership":
+      explicitOperatorAction = true;
+      proposedChanges.push({
+        targetTable: "XP Events",
+        field: "Manual Bonus audit ownership",
+        from: "missing/incomplete",
+        to: "manual review; require MANUAL_BONUS| Source Key plus explicit operator/audit owner and reason",
+      });
+      break;
+    case "xp_active_orphan_blank_enrollment":
+      explicitOperatorAction = true;
+      proposedChanges.push({
+        targetTable: "XP Events",
+        field: "record",
+        from: "Active?=true + Enrollment blank",
+        to: "permanent delete only after fresh exact re-query under approved #100 orphan policy",
+      });
+      break;
     default:
       if (eligibility === RETRY_CLASS.AUTOMATICALLY_RETRYABLE) {
         proposedChanges.push({
@@ -100,9 +148,12 @@ function proposeRepair(issue) {
   }
 
   return {
+    // This tool is preview-only. `apply` means an automatic retry is theoretically
+    // eligible, not that a live mutation will occur here.
     apply: proposedChanges.length > 0 && eligibility === RETRY_CLASS.AUTOMATICALLY_RETRYABLE,
     reason: eligibility,
     proposedChanges,
+    explicitOperatorAction,
   };
 }
 
@@ -117,7 +168,7 @@ Required:
 
 Optional:
   --execute   accepted but IGNORED for live writes in this tool
-              (preview-only; use Mike-authorized backfills for real repairs)
+              (preview-only; use Mike-authorized backfills/operator actions for real repairs)
 `);
     process.exit(0);
   }
@@ -152,10 +203,13 @@ Optional:
     return {
       dryRun: true,
       sourceRecordId: issue.sourceRecordId,
+      enrollmentRecordId: issue.enrollmentRecordId || "",
+      sourceKey: issue.sourceKey || "",
       code: issue.code,
       healthStatus: issue.healthStatus,
       retryEligibility: issue.retryEligibility,
       recommendedAction: issue.recommendedAction,
+      reconciliationAction: issue.meta?.reconciliationAction || "",
       ...repair,
       completedUpdate: null,
       note:
@@ -169,16 +223,18 @@ Optional:
     tool: "reliability-command-center/repair-preview",
     dryRun: true,
     liveWrites: false,
+    boundedByExplicitRecordIds: true,
     recordIds,
     findingCount: matched.length,
     previews,
-    skippedCompletedOrDuplicate: previews.filter((p) => !p.apply).length,
+    automaticRetryEligible: previews.filter((p) => p.apply).length,
+    explicitOperatorActions: previews.filter((p) => p.explicitOperatorAction).length,
   };
 
   console.log(JSON.stringify(payload, null, 2));
   for (const p of previews) {
     console.error(
-      `[preview] ${p.sourceRecordId} ${p.code} apply=${p.apply} changes=${p.proposedChanges.length}`
+      `[preview] ${p.sourceRecordId} ${p.code} apply=${p.apply} operator=${p.explicitOperatorAction} changes=${p.proposedChanges.length}`
     );
   }
 }
