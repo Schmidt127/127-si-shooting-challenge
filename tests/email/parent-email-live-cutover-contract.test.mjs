@@ -32,7 +32,7 @@ const PRODUCERS = [
   { slot: "073", version: "v4.7" },
   { slot: "074", version: "v3.6" },
   { slot: "076", version: "v8.14" },
-  { slot: "078A", version: "v1.6" },
+  { slot: "078A", version: "v1.7" },
   { slot: "117", version: "v2.2" },
 ];
 
@@ -48,11 +48,13 @@ test("queue producers default testMode to safe true", () => {
   }
 });
 
-test("078A v1.6 exposes optional testMode automation input without hardcoded recipient", () => {
+test("078A v1.7 exposes optional testMode automation input without hardcoded recipient", () => {
   const { body } = script("078A");
-  assert.match(body, /version:\s*"v1\.6"/);
+  assert.match(body, /version:\s*"v1\.7"/);
   assert.match(body, /testMode/);
   assert.match(body, /Parent Email - Cleaned/);
+  assert.match(body, /WELCOME\|SHOOTING_CHALLENGE\|/);
+  assert.doesNotMatch(body, /WELCOME\|ENROLLMENTS\|/);
   assert.doesNotMatch(body, /schmidt@|mschmidt@fairfield/i);
   assert.doesNotMatch(body, /\brec[a-zA-Z0-9]{14}\b/);
 });
@@ -92,7 +94,7 @@ test("duplicate handoff keys are stable per event type", () => {
     ["071", "HOMEWORK_FEEDBACK\\|HOMEWORK_COMPLETIONS\\|"],
     ["073", "VIDEO_FEEDBACK\\|VIDEO_FEEDBACK\\|"],
     ["074", "WEEKLY_ATHLETE_SUMMARY\\|WEEKLY_ATHLETE_SUMMARY\\|"],
-    ["078A", "WELCOME\\|ENROLLMENTS\\|"],
+    ["078A", "WELCOME\\|SHOOTING_CHALLENGE\\|"],
     ["117", "ZOOM_RECORDING_APPROVAL\\|ZOOM_ATTENDANCE\\|"],
   ];
   for (const [slot, pattern] of keys) {
