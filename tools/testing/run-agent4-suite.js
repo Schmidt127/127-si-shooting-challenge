@@ -80,6 +80,7 @@ const COMMANDS = [
   { name: "mrw-f07-was-writeback-contract", cmd: process.execPath, args: ["tools/testing/tests/test_mrw_f07_was_writeback_contract.mjs"] },
   { name: "validate-v2-release-readiness", args: ["tools/validate-v2-release-readiness.js"] },
   { name: "challenge-year-engine", args: ["tests/challenge-year/challenge-year-engine.test.js"] },
+  { name: "sc-121-season-boundary", args: ["tests/challenge-year/sc-121-season-boundary.test.js"] },
   { name: "season-launch-control", args: ["tests/challenge-year/season-launch-control.test.js"] },
 ];
 
