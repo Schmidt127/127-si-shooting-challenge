@@ -2,32 +2,43 @@
 Automation: 113 - Video Review and XP - Assign Base Video XP
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: Production Copy
+Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-20
+Last GitHub Update: 2026-09-07
 
 Purpose:
-To be confirmed from production script.
+Prepare Video Feedback for canonical XP reconciliation only when the linked
+Submission is currently authoritative and countable.
 
 Trigger:
-To be confirmed from Airtable automation.
+Video Feedback positive review/preparation path. Automation 114 owns XP Event
+creation, reactivation, retirement, and source-loss reconciliation.
 
 Important Tables:
-To be confirmed from production script.
+Video Feedback, XP Reward Rules, Submissions, XP Events
 
 Important Fields:
-To be confirmed from production script.
+Feedback Posted?, Do Not Award XP?, Enrollment, Submission, Base XP Awarded,
+Award Status, Ready for XP Automation?, Count This Submission?,
+Activity Date Is Future?, Week
 
 Notes:
-GitHub is the source-of-truth copy.
-Airtable is the deployed/running copy.
+GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 */
 
 /************************************************************
  * 113 - VIDEO REVIEW AND XP
  * Assign Base Video XP
  *
- * Version: v6.4
- * Date Updated: 2026-08-12
+ * Version: v6.5
+ * Date Updated: 2026-09-07
+ *
+ * VERSION HISTORY
+ * - v6.5 (2026-09-07 / #101): Fail closed unless linked Submission is
+ *   countable, non-future, Week-assigned, and owned by the same Enrollment.
+ *   Invalid source state disarms Ready for XP Automation? and returns Award
+ *   Status to Pending. 113 remains positive-prep only; 114 owns withdrawal.
+ * - v6.4 (2026-08-12): Exact canonical XP identity/re-arm safeguards.
  *
  * PURPOSE
  * - Runs from one Video Feedback record.
@@ -43,6 +54,13 @@ Airtable is the deployed/running copy.
  * - Does NOT create, deactivate, or reactivate the XP Event.
  * - May re-arm 114 only for one correctly owned inactive canonical XP Event.
  *
+ * SOURCE AUTHORITY CONTRACT (#101)
+ * - Submission Enrollment must exactly equal Video Feedback Enrollment.
+ * - Count This Submission? must equal 1/true.
+ * - Activity Date Is Future? must equal 0/false.
+ * - Submission must link exactly one Week.
+ * - Any failure disarms Ready for XP Automation? and leaves retirement to 114.
+ *
  * REQUIRED INPUT VARIABLE
  * - recordId = Airtable record ID from the triggering Video Feedback record
  ************************************************************/
@@ -52,7 +70,7 @@ Airtable is the deployed/running copy.
 async function main() {
     const CONFIG = {
         automation: "113 - Video Review and XP - Assign Base Video XP",
-        version: "v6.4",
+        version: "v6.5",
 
         tables: {
             videoFeedback: "Video Feedback",
@@ -89,6 +107,9 @@ async function main() {
 
         submissionFields: {
             enrollment: "Enrollment",
+            week: "Week",
+            countThisSubmission: "Count This Submission?",
+            activityDateIsFuture: "Activity Date Is Future?",
         },
 
         xpEventFields: {
@@ -315,6 +336,31 @@ async function main() {
         fields[fieldName] = value;
     }
 
+    async function markSourceInvalid(action, error) {
+        const fields = {};
+        addIfWritable(
+            fields,
+            videoTable,
+            CONFIG.videoFields.awardStatus,
+            buildSingleSelectValue(videoTable, CONFIG.videoFields.awardStatus, CONFIG.values.awardStatusPending)
+        );
+        addIfWritable(
+            fields,
+            videoTable,
+            CONFIG.videoFields.readyForXpAutomation,
+            false
+        );
+        if (Object.keys(fields).length) {
+            await videoTable.updateRecordAsync(recordId, fields);
+        }
+        finish("skipped", action, {
+            awardStatusWritten: CONFIG.values.awardStatusPending,
+            readyForXpAutomationWritten: false,
+            updateFieldsWritten: Object.keys(fields),
+            error,
+        });
+    }
+
     function ruleKeyMatches(ruleRecord) {
         return normalize(
             getText(ruleRecord, rulesTable, CONFIG.ruleFields.ruleKey)
@@ -355,7 +401,13 @@ async function main() {
         CONFIG.ruleFields.xpAmount,
     ].forEach(fieldName => requireField(rulesTable, fieldName));
 
-    requireField(submissionsTable, CONFIG.submissionFields.enrollment);
+    [
+        CONFIG.submissionFields.enrollment,
+        CONFIG.submissionFields.week,
+        CONFIG.submissionFields.countThisSubmission,
+        CONFIG.submissionFields.activityDateIsFuture,
+    ].forEach(fieldName => requireField(submissionsTable, fieldName));
+
     [
         CONFIG.xpEventFields.sourceKey,
         CONFIG.xpEventFields.videoFeedback,
@@ -490,9 +542,39 @@ async function main() {
         submissionEnrollmentIds.length !== 1 ||
         submissionEnrollmentIds[0] !== enrollmentId
     ) {
-        finish("skipped", "submission_enrollment_mismatch", {
-            error: "Submission Enrollment must contain exactly the Video Feedback Enrollment.",
-        });
+        await markSourceInvalid(
+            "submission_enrollment_mismatch",
+            "Submission Enrollment must contain exactly the Video Feedback Enrollment."
+        );
+        return;
+    }
+
+    const submissionWeekIds = getLinkedIds(
+        submissionRecord,
+        submissionsTable,
+        CONFIG.submissionFields.week
+    );
+    if (submissionWeekIds.length !== 1) {
+        await markSourceInvalid(
+            "submission_week_invalid",
+            `Submission Week must contain exactly one linked record; found ${submissionWeekIds.length}.`
+        );
+        return;
+    }
+
+    if (!getCheckbox(submissionRecord, submissionsTable, CONFIG.submissionFields.countThisSubmission)) {
+        await markSourceInvalid(
+            "submission_not_countable",
+            "Count This Submission? is not 1/true."
+        );
+        return;
+    }
+
+    if (getCheckbox(submissionRecord, submissionsTable, CONFIG.submissionFields.activityDateIsFuture)) {
+        await markSourceInvalid(
+            "submission_activity_date_future",
+            "Activity Date Is Future? is 1/true."
+        );
         return;
     }
 
@@ -682,7 +764,7 @@ try {
 
     console.log("113 failed", JSON.stringify({
         automation: "113 - Video Review and XP - Assign Base Video XP",
-        version: "v6.4",
+        version: "v6.5",
         statusOut: "error",
         actionOut: "error",
         errorOut: message,

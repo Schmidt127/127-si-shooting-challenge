@@ -15,78 +15,27 @@ const COMMANDS = [
   { name: "was-email-contracts", args: ["tests/was-email-contracts/run-all.js"] },
   { name: "homework-contracts", args: ["tests/homework-contracts/run-all.js"] },
   { name: "config-selection", args: ["tests/config-selection/resolve-config.test.js"] },
-  {
-    name: "v2-engine-contracts",
-    args: ["airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js"],
-  },
-  {
-    name: "072-074-email-helpers",
-    args: ["airtable/automations/shooting-challenge/lib/072-074-email-helpers.test.js"],
-  },
-  {
-    name: "118-119-week-key",
-    args: ["airtable/automations/shooting-challenge/lib/118-119-week-key.test.js"],
-  },
-  {
-    name: "c011-weekly-email-schedule",
-    args: ["airtable/automations/shooting-challenge/lib/c011-weekly-email-schedule.test.js"],
-  },
-  {
-    name: "overnight-perfect-week",
-    args: ["airtable/automations/shooting-challenge/lib/overnight-perfect-week.test.js"],
-  },
-  {
-    name: "agent4-perfect-week-edges",
-    args: ["airtable/automations/shooting-challenge/lib/agent4-perfect-week-edges.test.js"],
-  },
-  {
-    name: "overnight-streak-milestone-dedupe",
-    args: ["airtable/automations/shooting-challenge/lib/overnight-streak-milestone-dedupe.test.js"],
-  },
-  {
-    name: "overnight-level-gate-boundaries",
-    args: ["airtable/automations/shooting-challenge/lib/overnight-level-gate-boundaries.test.js"],
-  },
-  {
-    name: "overnight-xp-rules-and-unlocks",
-    args: ["airtable/automations/shooting-challenge/lib/overnight-xp-rules-and-unlocks.test.js"],
-  },
-  {
-    name: "overnight-xp-date-source",
-    args: ["airtable/automations/shooting-challenge/lib/overnight-xp-date-source.test.js"],
-  },
-  {
-    name: "agent4-xp-dedupe-matrix",
-    args: ["airtable/automations/shooting-challenge/lib/agent4-xp-dedupe-matrix.test.js"],
-  },
-  {
-    name: "weekly-threshold-xp",
-    args: ["airtable/automations/shooting-challenge/lib/weekly-threshold-xp.test.js"],
-  },
-  {
-    name: "agent1-contract-hardening",
-    args: ["airtable/automations/shooting-challenge/lib/agent1-contract-hardening.test.js"],
-  },
-  {
-    name: "xp-date-normalization",
-    args: ["airtable/automations/shooting-challenge/lib/xp-date-normalization.test.js"],
-  },
-  {
-    name: "source-key-registry",
-    args: ["tests/automation-contracts/source-key-registry.test.js"],
-  },
-  {
-    name: "scenario-catalog",
-    args: ["tools/testing/validate-scenario-catalog.js"],
-  },
-  {
-    name: "completion-master-integrity",
-    args: ["tools/testing/check-completion-master-integrity.js"],
-  },
-  {
-    name: "065-066-trigger-record-contract",
-    args: ["tests/automation-contracts/065-066-trigger-record.test.js"],
-  },
+  { name: "v2-engine-contracts", args: ["airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js"] },
+  { name: "072-074-email-helpers", args: ["airtable/automations/shooting-challenge/lib/072-074-email-helpers.test.js"] },
+  { name: "118-119-week-key", args: ["airtable/automations/shooting-challenge/lib/118-119-week-key.test.js"] },
+  { name: "c011-weekly-email-schedule", args: ["airtable/automations/shooting-challenge/lib/c011-weekly-email-schedule.test.js"] },
+  { name: "overnight-perfect-week", args: ["airtable/automations/shooting-challenge/lib/overnight-perfect-week.test.js"] },
+  { name: "agent4-perfect-week-edges", args: ["airtable/automations/shooting-challenge/lib/agent4-perfect-week-edges.test.js"] },
+  { name: "overnight-streak-milestone-dedupe", args: ["airtable/automations/shooting-challenge/lib/overnight-streak-milestone-dedupe.test.js"] },
+  { name: "overnight-level-gate-boundaries", args: ["airtable/automations/shooting-challenge/lib/overnight-level-gate-boundaries.test.js"] },
+  { name: "overnight-xp-rules-and-unlocks", args: ["airtable/automations/shooting-challenge/lib/overnight-xp-rules-and-unlocks.test.js"] },
+  { name: "overnight-xp-date-source", args: ["airtable/automations/shooting-challenge/lib/overnight-xp-date-source.test.js"] },
+  { name: "agent4-xp-dedupe-matrix", args: ["airtable/automations/shooting-challenge/lib/agent4-xp-dedupe-matrix.test.js"] },
+  { name: "weekly-threshold-xp", args: ["airtable/automations/shooting-challenge/lib/weekly-threshold-xp.test.js"] },
+  { name: "agent1-contract-hardening", args: ["airtable/automations/shooting-challenge/lib/agent1-contract-hardening.test.js"] },
+  { name: "xp-date-normalization", args: ["airtable/automations/shooting-challenge/lib/xp-date-normalization.test.js"] },
+  { name: "video-xp-lifecycle", args: ["tests/video-feedback/video-feedback-xp-lifecycle.test.js"] },
+  { name: "video-xp-readiness", args: ["tests/video-feedback/video-feedback-xp-readiness.test.js"] },
+  { name: "video-xp-mocked-runtime", args: ["tests/video-feedback/video-feedback-xp-mocked-runtime.test.js"] },
+  { name: "source-key-registry", args: ["tests/automation-contracts/source-key-registry.test.js"] },
+  { name: "scenario-catalog", args: ["tools/testing/validate-scenario-catalog.js"] },
+  { name: "completion-master-integrity", args: ["tools/testing/check-completion-master-integrity.js"] },
+  { name: "065-066-trigger-record-contract", args: ["tests/automation-contracts/065-066-trigger-record.test.js"] },
   {
     name: "automation-contracts (docs/hardcode/io/057/legacy)",
     cmd: process.execPath,
@@ -101,94 +50,40 @@ const COMMANDS = [
       "tests/automation-contracts/057-live-schema-field-assert.test.js",
     ],
   },
-  {
-    name: "057-runtime-offline",
-    cmd: process.execPath,
-    args: ["--test", "tools/testing/tests/test_057_runtime.mjs"],
-  },
-  {
-    name: "master-list-section-g",
-    cmd: process.execPath,
-    args: ["--test", "tools/testing/tests/test_generate_work_list_section_g.mjs"],
-  },
+  { name: "057-runtime-offline", cmd: process.execPath, args: ["--test", "tools/testing/tests/test_057_runtime.mjs"] },
+  { name: "master-list-section-g", cmd: process.execPath, args: ["--test", "tools/testing/tests/test_generate_work_list_section_g.mjs"] },
   {
     name: "season-simulation-offline",
     cmd: process.platform === "win32" ? "python" : "python3",
     args: ["-m", "unittest", "season_simulation.tests.test_offline"],
     env: { PYTHONPATH: path.join(root, "tools") },
   },
-  {
-    name: "065-066-trigger-record-offline",
-    cmd: process.execPath,
-    args: ["--test", "tools/testing/tests/test_065_066_trigger_record.mjs"],
-  },
-  {
-    name: "066-milestone-crossing",
-    args: ["airtable/automations/shooting-challenge/lib/066-milestone-crossing-harness.test.js"],
-  },
-  {
-    name: "066-create-records-batch",
-    args: ["airtable/automations/shooting-challenge/lib/066-create-records-batch.test.js"],
-  },
+  { name: "065-066-trigger-record-offline", cmd: process.execPath, args: ["--test", "tools/testing/tests/test_065_066_trigger_record.mjs"] },
+  { name: "066-milestone-crossing", args: ["airtable/automations/shooting-challenge/lib/066-milestone-crossing-harness.test.js"] },
+  { name: "066-create-records-batch", args: ["airtable/automations/shooting-challenge/lib/066-create-records-batch.test.js"] },
   {
     name: "sc-163-goal-met-date",
     cmd: process.execPath,
-    args: [
-      "--test",
-      "airtable/automations/shooting-challenge/lib/sc-163-goal-met-date.test.js",
-      "airtable/automations/shooting-challenge/lib/sc-163-066-contract.test.js",
-    ],
+    args: ["--test", "airtable/automations/shooting-challenge/lib/sc-163-goal-met-date.test.js", "airtable/automations/shooting-challenge/lib/sc-163-066-contract.test.js"],
   },
-  {
-    name: "script-header-contract",
-    args: ["airtable/automations/shooting-challenge/lib/script-header-contract.test.js"],
-  },
-  {
-    name: "upload-make-lambda-response",
-    args: ["airtable/automations/shooting-challenge/lib/upload-make-lambda-response.test.js"],
-  },
-  {
-    name: "c025-zoom-recording-credit",
-    args: ["airtable/automations/shooting-challenge/lib/c025-zoom-recording-credit.test.js"],
-  },
-  {
-    name: "sc-147-zoom-recording-credit",
-    args: ["airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.test.js"],
-  },
+  { name: "script-header-contract", args: ["airtable/automations/shooting-challenge/lib/script-header-contract.test.js"] },
+  { name: "upload-make-lambda-response", args: ["airtable/automations/shooting-challenge/lib/upload-make-lambda-response.test.js"] },
+  { name: "c025-zoom-recording-credit", args: ["airtable/automations/shooting-challenge/lib/c025-zoom-recording-credit.test.js"] },
+  { name: "sc-147-zoom-recording-credit", args: ["airtable/automations/shooting-challenge/lib/sc-147-zoom-recording-credit.test.js"] },
   {
     name: "tools/testing node --test (115/117/verifier)",
     cmd: process.execPath,
-    args: [
-      "--test",
-      "tools/testing/tests/test_115_offline.mjs",
-      "tools/testing/tests/test_117_offline.mjs",
-      "tools/testing/tests/test_expected_actual.mjs",
-    ],
+    args: ["--test", "tools/testing/tests/test_115_offline.mjs", "tools/testing/tests/test_117_offline.mjs", "tools/testing/tests/test_expected_actual.mjs"],
   },
-  {
-    name: "mrw-f07-weekly-email-contract",
-    cmd: process.execPath,
-    args: ["tools/testing/tests/test_mrw_f07_weekly_email_contract.mjs"],
-  },
-  {
-    name: "mrw-f07-was-writeback-contract",
-    cmd: process.execPath,
-    args: ["tools/testing/tests/test_mrw_f07_was_writeback_contract.mjs"],
-  },
+  { name: "mrw-f07-weekly-email-contract", cmd: process.execPath, args: ["tools/testing/tests/test_mrw_f07_weekly_email_contract.mjs"] },
+  { name: "mrw-f07-was-writeback-contract", cmd: process.execPath, args: ["tools/testing/tests/test_mrw_f07_was_writeback_contract.mjs"] },
   { name: "validate-v2-release-readiness", args: ["tools/validate-v2-release-readiness.js"] },
-  {
-    name: "challenge-year-engine",
-    args: ["tests/challenge-year/challenge-year-engine.test.js"],
-  },
-  {
-    name: "season-launch-control",
-    args: ["tests/challenge-year/season-launch-control.test.js"],
-  },
+  { name: "challenge-year-engine", args: ["tests/challenge-year/challenge-year-engine.test.js"] },
+  { name: "season-launch-control", args: ["tests/challenge-year/season-launch-control.test.js"] },
 ];
 
 const results = [];
 let failed = 0;
-
 for (const entry of COMMANDS) {
   const cmd = entry.cmd || process.execPath;
   const args = entry.args;
@@ -200,12 +95,7 @@ for (const entry of COMMANDS) {
   });
   const ok = run.status === 0;
   if (!ok) failed += 1;
-  results.push({
-    name: entry.name,
-    ok,
-    status: run.status,
-    ms: Date.now() - started,
-  });
+  results.push({ name: entry.name, ok, status: run.status, ms: Date.now() - started });
   console.log(`${ok ? "PASS" : "FAIL"}  ${entry.name} (${Date.now() - started}ms)`);
   if (!ok) {
     if (run.stdout) console.log(run.stdout.slice(-2000));
