@@ -10,10 +10,10 @@ const SCRIPT_PATH = path.join(
   __dirname,
   "..",
   "..",
+  "tools",
   "airtable",
-  "automations",
-  "shooting-challenge",
-  "120-weekly-threshold-xp-eligibility-reconciliation.js"
+  "admin",
+  "weekly-threshold-xp-eligibility-reconciliation.js"
 );
 
 function test(name, fn) {
@@ -26,7 +26,7 @@ function test(name, fn) {
   }
 }
 
-assert.ok(fs.existsSync(SCRIPT_PATH), "Automation 120 script must exist");
+assert.ok(fs.existsSync(SCRIPT_PATH), "Threshold reconciliation admin script must exist");
 const body = fs.readFileSync(SCRIPT_PATH, "utf8");
 
 function loadHelpers() {
@@ -52,13 +52,13 @@ function fakeRecord(fields) {
   };
 }
 
-test("Automation 120 is dry-run by default and requires explicit execute=true for writes", () => {
+test("admin reconciler is dry-run by default and requires explicit execute=true for writes", () => {
   assert.ok(body.includes("const execute ="));
   assert.ok(body.includes("dryRun: !execute"));
   assert.ok(body.includes("if (execute) {"));
 });
 
-test("Automation 120 never creates XP Events and delegates missing eligible awards to 035", () => {
+test("admin reconciler never creates XP Events and delegates missing eligible awards to 035", () => {
   assert.ok(!body.includes("xpTable.createRecordAsync"));
   assert.ok(!body.includes("xpTable.createRecordsAsync"));
   assert.ok(body.includes("eligible_award_missing_delegate_to_035"));
@@ -121,7 +121,7 @@ test("lost eligibility retires and regained eligibility reactivates the same eve
   assert.ok(body.includes("[CONFIG.xp.active]: true"));
   assert.ok(body.includes("reactivation_blocked_owner_or_program_instance"));
   assert.ok(body.includes("legacy) update[CONFIG.xp.sourceKey] = key"));
-  assert.ok(!body.includes("XP Points"] ="));
+  assert.ok(!body.includes("XP Points] ="));
 });
 
 test("every lifecycle transition queues existing Enrollment level recalculation flag", () => {
@@ -143,4 +143,4 @@ test("replay-safe debug note helper does not append duplicate identical lifecycl
   assert.strictEqual(once, twice);
 });
 
-console.log("Automation 120 threshold reconciliation contracts: PASS");
+console.log("Threshold reconciliation admin-script contracts: PASS");
