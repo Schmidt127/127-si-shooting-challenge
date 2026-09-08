@@ -1,0 +1,211 @@
+name: SC-121 terminal Week one-shot
+
+on:
+  push:
+    branches:
+      - reliability-wave/sc-121-terminal-week-boundary
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: reliability-wave/sc-121-terminal-week-boundary
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Patch 057 and add SC-121 contracts
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          root = Path('.')
+          p = root / 'airtable/automations/shooting-challenge/057-achievements-and-milestones-calculate-perfect-week-eligibility.js'
+          text = p.read_text()
+
+          def rep(old, new, count=1):
+              global text
+              actual = text.count(old)
+              if actual < count:
+                  raise SystemExit(f'missing expected pattern ({actual} < {count}): {old[:120]!r}')
+              text = text.replace(old, new, count)
+
+          rep(' * Version: 2.5\n * Date written: 2026-05-30\n * Last updated: 2026-09-04\n',
+              ' * Version: 2.6\n * Date written: 2026-05-30\n * Last updated: 2026-09-08\n')
+          rep(' * Version 2.5 updates (SC-160 early / assigned-week homework timing):\n',
+              ' * Version 2.6 updates (SC-121 terminal partial Week boundary):\n'
+              ' * - Required official shooting dates derive from the linked Week Start Date through End Date inclusive.\n'
+              ' * - Normal seven-day Weeks are unchanged; the partial terminal Week requires only its actual official dates.\n'
+              ' * - Daily shot pace remains 1/7 of Weekly Goal Shots Target, so a shortened terminal Week does not raise the per-day minimum.\n'
+              ' * - Week spans outside 1-7 calendar days fail closed.\n'
+              ' *\n'
+              ' * Version 2.5 updates (SC-160 early / assigned-week homework timing):\n')
+          rep(' * 1. Athlete must have one qualifying shooting submission day for each official day\n *    of the linked Week, Sunday through Saturday. Qualifying submissions must be\n',
+              ' * 1. Athlete must have one qualifying shooting submission day for each official day\n *    from the linked Week Start Date through End Date. Normal Weeks are Sunday-Saturday;\n *    the terminal challenge Week may be partial. Qualifying submissions must be\n')
+          rep('  requiredDailyCount: 7,\n',
+              '  // Normal-week daily pace divisor. Official required date count comes from Week Start/End.\n  requiredDailyCount: 7,\n')
+          rep('function buildRequiredWeekDates(startDateKey) {\n  const dates = [];\n  for (let i = 0; i < CONFIG.requiredDailyCount; i += 1) {\n    dates.push(addDaysToDateKey(startDateKey, i));\n  }\n  return dates;\n}\n',
+              'function buildRequiredWeekDates(startDateKey, endDateKey) {\n'
+              '  const start = String(startDateKey || "").trim();\n'
+              '  const end = String(endDateKey || "").trim();\n'
+              '  if (!start || !end || end < start) return [];\n'
+              '  const dates = [];\n'
+              '  let current = start;\n'
+              '  for (let i = 0; i < CONFIG.requiredDailyCount; i += 1) {\n'
+              '    dates.push(current);\n'
+              '    if (current === end) return dates;\n'
+              '    current = addDaysToDateKey(current, 1);\n'
+              '    if (!current) return [];\n'
+              '  }\n'
+              '  // More than seven official dates is invalid for a Shooting Challenge Week.\n'
+              '  return [];\n'
+              '}\n')
+          rep('  if (!weekStartDateKey) {\n', '  if (!weekStartDateKey || !weekEndDateKey) {\n')
+          rep('      [CONFIG.weeklyFields.dailyDetail]: "Missing Week Start Date.",\n',
+              '      [CONFIG.weeklyFields.dailyDetail]: "Missing Week Start Date or End Date.",\n')
+          rep('      [CONFIG.weeklyFields.automationError]: "Missing Weeks -> Start Date.",\n',
+              '      [CONFIG.weeklyFields.automationError]: "Missing Weeks -> Start Date or End Date.",\n')
+          rep('  const requiredDateKeys = buildRequiredWeekDates(weekStartDateKey);\n  const requiredDateSet = new Set(requiredDateKeys);\n',
+              '  const requiredDateKeys = buildRequiredWeekDates(weekStartDateKey, weekEndDateKey);\n'
+              '  if (requiredDateKeys.length === 0) {\n'
+              '    throw new Error(`Linked Week must span 1-${CONFIG.requiredDailyCount} official calendar days; got ${weekStartDateKey} through ${weekEndDateKey}.`);\n'
+              '  }\n'
+              '  const requiredDateSet = new Set(requiredDateKeys);\n')
+          rep('  dailyDetailLines.push(`Official week: ${requiredDateKeys[0]} through ${requiredDateKeys[6]}`);\n',
+              '  dailyDetailLines.push(`Official week: ${requiredDateKeys[0]} through ${requiredDateKeys[requiredDateKeys.length - 1]}`);\n')
+          rep('  dailyDetailLines.push(`Passing official days: ${passingDays.length}/7`);\n',
+              '  dailyDetailLines.push(`Passing official days: ${passingDays.length}/${requiredDateKeys.length}`);\n')
+          rep('    dailyDetailLines.push("PASS: All seven official Sunday-Saturday dates met the grace-period daily shooting requirement.");\n',
+              '    dailyDetailLines.push(`PASS: All ${requiredDateKeys.length} official Week dates met the grace-period daily shooting requirement.`);\n')
+          text = text.replace('version: "2.5"', 'version: "2.6"')
+          p.write_text(text)
+
+          # Regenerate canonical Airtable paste body.
+          marker = '/***************************************************************************************************\n * 057 - Achievements'
+          idx = text.find(marker)
+          if idx < 0:
+              raise SystemExit('057 paste marker missing')
+          (root / 'docs/deploy-checklists/057-v2.6-PASTE.txt').write_text(text[idx:])
+
+          # Update paste-bundle integrity spec, preserving v2.5 as historical.
+          t = root / 'tools/testing/tests/test_paste_bundle_integrity.mjs'
+          ttext = t.read_text()
+          ttext = ttext.replace('id: "057",\n    version: "2.5",', 'id: "057",\n    version: "2.6",', 1)
+          ttext = ttext.replace('paste: "docs/deploy-checklists/057-v2.5-PASTE.txt",', 'paste: "docs/deploy-checklists/057-v2.6-PASTE.txt",', 1)
+          ttext = ttext.replace('"Version: 2.5",', '"Version: 2.6",', 1)
+          needle = '      "Perfect Week Automation Status",\n'
+          if needle not in ttext:
+              raise SystemExit('paste test insertion marker missing')
+          ttext = ttext.replace(needle, needle + '      "terminal partial Week",\n', 1)
+          t.write_text(ttext)
+
+          # Add exact season boundary + 057 partial Week regression contract.
+          test_path = root / 'tests/challenge-year/sc-121-season-boundary.test.js'
+          test_path.write_text(r'''#!/usr/bin/env node
+"use strict";
+
+const assert = require("assert");
+const fs = require("fs");
+const path = require("path");
+const { resolveWeekForActivityDate } = require("../../lib/challenge-year");
+
+function test(name, fn) {
+  try {
+    fn();
+    console.log(`ok - ${name}`);
+  } catch (error) {
+    console.error(`FAIL - ${name}`);
+    throw error;
+  }
+}
+
+const PI = "rec5mEM0YPqPqq0hZ";
+const WEEKS_2027 = [
+  { id: "recEarlyBird00001", displayLabel: "Early Bird", weekKey: "2026-2027|Early Bird", challengeYear: "2026-2027", programInstanceId: PI, startDate: "2027-04-25", endDate: "2027-05-01", active: true },
+  { id: "recWeek1000000001", displayLabel: "Week 1", weekKey: "2026-2027|Week 1", challengeYear: "2026-2027", programInstanceId: PI, startDate: "2027-05-02", endDate: "2027-05-08", active: true },
+  { id: "recWeek2000000002", displayLabel: "Week 2", weekKey: "2026-2027|Week 2", challengeYear: "2026-2027", programInstanceId: PI, startDate: "2027-05-09", endDate: "2027-05-15", active: true },
+  { id: "recWeek3000000003", displayLabel: "Week 3", weekKey: "2026-2027|Week 3", challengeYear: "2026-2027", programInstanceId: PI, startDate: "2027-05-16", endDate: "2027-05-22", active: true },
+  { id: "recWeek4000000004", displayLabel: "Week 4", weekKey: "2026-2027|Week 4", challengeYear: "2026-2027", programInstanceId: PI, startDate: "2027-05-23", endDate: "2027-05-29", active: true },
+  { id: "recWeek5000000005", displayLabel: "Week 5", weekKey: "2026-2027|Week 5", challengeYear: "2026-2027", programInstanceId: PI, startDate: "2027-05-30", endDate: "2027-06-05", active: true },
+  { id: "recWeek6000000006", displayLabel: "Week 6", weekKey: "2026-2027|Week 6", challengeYear: "2026-2027", programInstanceId: PI, startDate: "2027-06-06", endDate: "2027-06-12", active: true },
+  { id: "recWeek7000000007", displayLabel: "Week 7", weekKey: "2026-2027|Week 7", challengeYear: "2026-2027", programInstanceId: PI, startDate: "2027-06-13", endDate: "2027-06-19", active: true },
+  { id: "recWeek8000000008", displayLabel: "Week 8", weekKey: "2026-2027|Week 8", challengeYear: "2026-2027", programInstanceId: PI, startDate: "2027-06-20", endDate: "2027-06-26", active: true },
+  { id: "recWeek9000000009", displayLabel: "Week 9", weekKey: "2026-2027|Week 9", challengeYear: "2026-2027", programInstanceId: PI, startDate: "2027-06-27", endDate: "2027-06-30", active: true },
+  { id: "recPostChallenge01", displayLabel: "Post-Challenge", weekKey: "2026-2027|Post-Challenge", challengeYear: "2026-2027", programInstanceId: PI, startDate: "2027-07-01", endDate: "2027-07-03", active: true },
+];
+
+function resolve(activityDate) {
+  return resolveWeekForActivityDate({
+    activityDate,
+    weeks: WEEKS_2027,
+    challengeYear: "2026-2027",
+    programInstanceId: PI,
+    timezone: "America/Denver",
+  });
+}
+
+test("SC-121 exact 2027 boundary maps June 30 to Week 9", () => {
+  const result = resolve("2027-06-30");
+  assert.equal(result.ok, true);
+  assert.equal(result.week.displayLabel, "Week 9");
+});
+
+test("SC-121 exact 2027 boundary maps July 1 to Post-Challenge", () => {
+  const result = resolve("2027-07-01");
+  assert.equal(result.ok, true);
+  assert.equal(result.week.displayLabel, "Post-Challenge");
+});
+
+test("Automation 005 uses inclusive Start/End matching inside Program Instance", () => {
+  const body = fs.readFileSync(path.join(__dirname, "../../airtable/automations/shooting-challenge/005-submission-intake-and-asset-creation-assign-week-to-submission-homework-first.js"), "utf8");
+  assert.ok(body.includes("activityDateKey >= start && activityDateKey <= end"));
+  assert.ok(body.includes("pi === programInstanceId"));
+});
+
+test("057 v2.6 derives official date count from actual Week Start/End span", () => {
+  const body = fs.readFileSync(path.join(__dirname, "../../airtable/automations/shooting-challenge/057-achievements-and-milestones-calculate-perfect-week-eligibility.js"), "utf8");
+  assert.ok(body.includes("Version: 2.6"));
+  assert.ok(body.includes("buildRequiredWeekDates(weekStartDateKey, weekEndDateKey)"));
+  assert.ok(body.includes("Passing official days: ${passingDays.length}/${requiredDateKeys.length}"));
+  assert.ok(body.includes("requiredDateKeys[requiredDateKeys.length - 1]"));
+  assert.ok(!body.includes("requiredDateKeys[6]"));
+});
+
+test("057 keeps normal 1/7 daily shot pace for shortened terminal Week", () => {
+  const body = fs.readFileSync(path.join(__dirname, "../../airtable/automations/shooting-challenge/057-achievements-and-milestones-calculate-perfect-week-eligibility.js"), "utf8");
+  assert.ok(body.includes("dailyMinimum = Math.ceil(weeklyGoal / CONFIG.requiredDailyCount)"));
+  assert.ok(body.includes("requiredDailyCount: 7"));
+});
+
+test("Week 9 and Post-Challenge are contiguous with no overlap", () => {
+  const week9 = WEEKS_2027.find((w) => w.displayLabel === "Week 9");
+  const post = WEEKS_2027.find((w) => w.displayLabel === "Post-Challenge");
+  assert.equal(week9.endDate, "2027-06-30");
+  assert.equal(post.startDate, "2027-07-01");
+});
+
+console.log("SC-121 season boundary contracts: PASS");
+''')
+
+          # Make the new boundary contract part of the permanent repository QA suite.
+          r = root / 'tools/testing/run-agent4-suite.js'
+          rtext = r.read_text()
+          marker2 = '  { name: "challenge-year-engine", args: ["tests/challenge-year/challenge-year-engine.test.js"] },\n'
+          if marker2 not in rtext:
+              raise SystemExit('run-agent4 insertion marker missing')
+          rtext = rtext.replace(marker2, marker2 + '  { name: "sc-121-season-boundary", args: ["tests/challenge-year/sc-121-season-boundary.test.js"] },\n', 1)
+          r.write_text(rtext)
+          PY
+
+          rm -f .github/workflows/sc121-terminal-week-one-shot.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "fix(sc-121): support partial terminal Week in Perfect Week"
+          git push origin HEAD:reliability-wave/sc-121-terminal-week-boundary
