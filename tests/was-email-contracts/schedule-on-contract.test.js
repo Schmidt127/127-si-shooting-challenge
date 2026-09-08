@@ -50,18 +50,22 @@ test("PROJECT_STATE does not instruct keeping schedules OFF", () => {
   assert.ok(/118\/119 schedules ON|118.*ON.*119.*ON/s.test(projectState) || /schedules ON/i.test(projectState));
 });
 
-test("118 v2.0 Live season: no Live+!dryRun hard-stop; writes input sendMode", () => {
-  assert.ok(/version:\s*"v2\.0"/.test(s118));
+test("118 v2.1 Live season: no Live+!dryRun hard-stop; writes input sendMode", () => {
+  assert.ok(/version:\s*"v2\.1"/.test(s118));
   assert.ok(!/refuses sendMode=Live when dryRun=false/.test(s118));
   assert.ok(/refuses sendMode=Live when includeSchmidt=true/.test(s118));
   assert.ok(/\{ name: sendMode \}/.test(s118));
+  assert.ok(/latestCompletedChallengeEndKey/.test(s118));
+  assert.ok(/!isPostChallengeWeek/.test(s118));
 });
 
-test("119 current source preserves Sunday send arming contract", () => {
-  assert.ok(/version:\s*"v1\.7"/.test(s119));
+test("119 v1.8 current source preserves Sunday send arming contract", () => {
+  assert.ok(/version:\s*"v1\.8"/.test(s119));
   assert.ok(/Send to Make\?/.test(s119));
   assert.ok(/scheduledWeekEndKeyOut/.test(s119));
   assert.ok(!/\bfetch\s*\(/.test(s119));
+  assert.ok(/latestCompletedChallengeEndKey/.test(s119));
+  assert.ok(/!isPostChallengeWeek/.test(s119));
 });
 
 console.log("schedule-on-contract tests passed");
