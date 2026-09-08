@@ -139,8 +139,14 @@ function buildBase({
     { name: "Perfect Week Credit Applied?", type: "checkbox" },
     { name: "Recording Quiz Review Status", type: "singleSelect" },
   ], zoomAttendanceRecords);
-  const weeks = new MockTable("Weeks", [{ name: "Start Date", type: "date" }], [
-    new MockRecord(IDS.week, { "Start Date": "2026-08-02" }),
+  const weeks = new MockTable("Weeks", [
+    { name: "Start Date", type: "date" },
+    { name: "End Date", type: "date" },
+  ], [
+    new MockRecord(IDS.week, {
+      "Start Date": "2026-08-02",
+      "End Date": "2026-08-08",
+    }),
   ]);
   const enrollments = new MockTable("Enrollments", [
     { name: "Program Instance", type: "multipleRecordLinks" },
