@@ -49,18 +49,20 @@ test("072 v4.9.2 enforces empty-week policies and does not call Make/fetch webho
   assert.ok(!/makeWebhookUrl/.test(s072), "072 must not take Make webhook input");
 });
 
-test("119 v1.7 only arms Send to Make? and does not post webhook", () => {
-  assert.ok(/version:\s*"v1\.7"/.test(s119));
+test("119 v1.8 only arms Send to Make? and does not post webhook", () => {
+  assert.ok(/version:\s*"v1\.8"/.test(s119));
   assert.ok(/Send to Make\?/.test(s119) || /sendToMake/.test(s119));
   assert.ok(/Does not POST Make/.test(s119) || /Does not call Make itself/.test(s119));
   assert.ok(!/\bfetch\s*\(/.test(s119), "119 must not fetch/webhook");
   assert.ok(!/makeWebhookUrl/.test(s119));
   assert.ok(!/emptyWeekPolicy recorded but not enforced/.test(s119));
   assert.ok(/send_short/.test(s119));
+  assert.ok(/latestCompletedChallengeEndKey/.test(s119));
+  assert.ok(/!isPostChallengeWeek/.test(s119));
 });
 
-test("118 v2.0 does not create WAS, build HTML, or post webhook; arms sendMode from input", () => {
-  assert.ok(/version:\s*"v2\.0"/.test(s118));
+test("118 v2.1 does not create WAS, build HTML, or post webhook; arms sendMode from input", () => {
+  assert.ok(/version:\s*"v2\.1"/.test(s118));
   assert.ok(/Build Weekly Email Now\?/.test(s118) || /buildNow/.test(s118));
   assert.ok(!/\bfetch\s*\(/.test(s118));
   assert.ok(!/wasTable\.createRecordAsync/.test(s118), "118 must never create a WAS");
@@ -68,6 +70,8 @@ test("118 v2.0 does not create WAS, build HTML, or post webhook; arms sendMode f
   assert.ok(!/emptyWeekPolicy recorded but not enforced/.test(s118));
   assert.ok(/refuses sendMode=Live when includeSchmidt=true/.test(s118));
   assert.ok(/update\[CONFIG\.was\.sendMode\]\s*=\s*\{\s*name:\s*sendMode\s*\}/.test(s118));
+  assert.ok(/latestCompletedChallengeEndKey/.test(s118));
+  assert.ok(/!isPostChallengeWeek/.test(s118));
 });
 
 test("074 owns Hub queue handoff; does not mark Sent?; blocks duplicate Sent?", () => {

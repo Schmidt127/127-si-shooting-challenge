@@ -19,11 +19,12 @@ At a scheduled time — Weekly — Sunday 10:00 — America/Denver
 /************************************************************
  * 119 - Email - Schedule Weekly Summary Email Send
  *
- * Version: v1.7
+ * Version: v1.8
  * Date Written: 2026-07-16
- * Last Updated: 2026-08-06
+ * Last Updated: 2026-09-08
  *
  * VERSION HISTORY
+ * - v1.8 (2026-09-08 / SC-121): Match 118 v2.1 by targeting the latest active non-Post-Challenge Week that has actually ended in America/Denver, so partial terminal Week 9 is not skipped.
  * - v1.7 (2026-08-06): Program Instance isolation — Week End Date match rejects
  *   multi-PI collisions; exclude both Schmidt test enrollment RIDs.
  * - v1.6 (2026-08-05): Airtable runtime compatibility — guard optional
@@ -45,7 +46,7 @@ At a scheduled time — Weekly — Sunday 10:00 — America/Denver
  * - v1.0 (2026-07-16): Initial schedule-arm script.
  *
  * PURPOSE
- * - Resolve prior ended Week (same Saturday-end rule as 118).
+ * - Resolve the latest active non-Post-Challenge Week whose End Date is before today in Denver (same rule as 118).
  * - For WAS rows on that Week: if Ready? and package present and !Sent?
  *   and enrollment Active? (not Schmidt) → set Send to Make? = true.
  *
@@ -54,7 +55,7 @@ At a scheduled time — Weekly — Sunday 10:00 — America/Denver
  * - Skips Sent?, inactive, Schmidt, empty package.
  * - dryRun=true (default) counts only.
  * - eventId for Make: WEEKLY_EMAIL|{enrollmentId}|{weekId} (074 payload).
- * - Scheduled date key = prior Saturday Week End (America/Denver).
+ * - Scheduled Week End key = latest completed active non-Post-Challenge Week (America/Denver).
  *
  * FOLDER
  * - 07 - Email, Notifications, and External Handoffs
@@ -83,9 +84,9 @@ At a scheduled time — Weekly — Sunday 10:00 — America/Denver
 
 const CONFIG = {
   scriptName: "119 - Email - Schedule Weekly Summary Email Send",
-  version: "v1.7",
-  versionDate: "2026-08-06",
-  lastUpdated: "2026-08-06",
+  version: "v1.8",
+  versionDate: "2026-09-08",
+  lastUpdated: "2026-09-08",
   timeZone: "America/Denver",
   schmidtEnrollmentId: "recCyFEPeATOVNlr9",
   schmidtEnrollmentIds: ["recCyFEPeATOVNlr9", "recgP9qZYjAhE7NXm"],
@@ -104,6 +105,7 @@ const CONFIG = {
   weeks: {
     endDate: "End Date",
     weekEndKey: "Week End Key",
+    weekKey: "Week Key",
     weekCode: "Week Code",
     active: "Active?",
     activeWeek: "Active Week?",
@@ -260,6 +262,19 @@ function dateKeyFromCell(value) {
   return `${y}-${mo}-${day}`;
 }
 
+function latestCompletedChallengeEndKey(endKeys, todayKey) {
+  const today = String(todayKey || "").trim();
+  if (!today) return "";
+  const eligible = [...new Set((endKeys || []).map((v) => String(v || "").trim()).filter((v) => v && v < today))];
+  eligible.sort();
+  return eligible.length ? eligible[eligible.length - 1] : "";
+}
+
+function isPostChallengeWeek(record) {
+  const identity = `${text(record, CONFIG.weeks.weekKey)} ${text(record, CONFIG.weeks.weekCode)}`.trim();
+  return /post[\s_-]*challenge/i.test(identity) || /^post\b/i.test(identity);
+}
+
 function weeklyEmailEventId(enrollmentId, weekId) {
   return `WEEKLY_EMAIL|${enrollmentId}|${weekId}`;
 }
@@ -297,7 +312,6 @@ async function main() {
   debugStep = "2 - Resolve target week";
   setOutputSafe("debugStep", debugStep);
 
-  const targetEndKey = priorSaturdayKeyDenver();
   let weeksQuery = null;
   let enrQuery = null;
   let wasQuery = null;
@@ -323,18 +337,16 @@ async function main() {
     return false;
   }
 
-  const endDateMatches = [];
-  for (const w of weeksQuery.records) {
+  const todayKey = dateKeyFromCell(new Date());
+  const eligibleWeeks = weeksQuery.records.filter((w) => weekIsActive(w) && !isPostChallengeWeek(w));
+  const eligibleEndKeys = eligibleWeeks.map((w) =>
+    text(w, CONFIG.weeks.weekEndKey) || dateKeyFromCell(cell(w, CONFIG.weeks.endDate))
+  );
+  const targetEndKey = latestCompletedChallengeEndKey(eligibleEndKeys, todayKey);
+  const targetCandidates = eligibleWeeks.filter((w) => {
     const endKey = text(w, CONFIG.weeks.weekEndKey) || dateKeyFromCell(cell(w, CONFIG.weeks.endDate));
-    if (endKey === targetEndKey) {
-      endDateMatches.push(w);
-    }
-  }
-
-  let targetCandidates = endDateMatches.filter((w) => weekIsActive(w));
-  if (targetCandidates.length === 0) {
-    targetCandidates = endDateMatches;
-  }
+    return endKey === targetEndKey;
+  });
 
   if (targetCandidates.length > 1) {
     const diag = targetCandidates

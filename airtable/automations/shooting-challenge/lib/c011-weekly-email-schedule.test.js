@@ -31,12 +31,12 @@ test("118/119 default dryRun true; 118 allows Live input and refuses Live+Schmid
   assert.ok(/parseBool\(inputConfig\.dryRun,\s*true\)/.test(s119));
   assert.ok(
     !/refuses sendMode=Live when dryRun=false/.test(s118),
-    "v1.7 must allow PROD Live schedule (dryRun=false + sendMode=Live)"
+    "118 must allow PROD Live schedule (dryRun=false + sendMode=Live)"
   );
   assert.ok(/refuses sendMode=Live when includeSchmidt=true/.test(s118));
   assert.ok(/update\[CONFIG\.was\.sendMode\]\s*=\s*\{\s*name:\s*sendMode\s*\}/.test(s118));
-  assert.ok(/version:\s*"v2\.0"/.test(s118));
-  assert.ok(/version:\s*"v1\.7"/.test(s119));
+  assert.ok(/version:\s*"v2\.1"/.test(s118));
+  assert.ok(/version:\s*"v1\.8"/.test(s119));
   assert.ok(/Program Instance/.test(s118));
   assert.ok(/Program Instance/.test(s119));
   assert.ok(/schmidtEnrollmentIds/.test(s118));
@@ -54,6 +54,10 @@ test("118/119 default dryRun true; 118 allows Live input and refuses Live+Schmid
   assert.ok(!/emptyWeekPolicy recorded but not enforced/.test(s119));
   assert.ok(/\{Enrollment Key\}\|\{Week Key\}/.test(s118));
   assert.ok(!/\bfetch\s*\(/.test(s119), "119 must not webhook");
+  assert.ok(/latestCompletedChallengeEndKey/.test(s118));
+  assert.ok(/latestCompletedChallengeEndKey/.test(s119));
+  assert.ok(/!isPostChallengeWeek/.test(s118));
+  assert.ok(/!isPostChallengeWeek/.test(s119));
 });
 
 test("074 creates the canonical Hub handoff and never writes Weekly Email Sent?", () => {
@@ -65,9 +69,8 @@ test("074 creates the canonical Hub handoff and never writes Weekly Email Sent?"
   assert.ok(/Version:\s*v3\.6/.test(s074));
 });
 
-test("priorSaturdayKeyDenver Sunday→Saturday boundary", () => {
-  // 2026-07-19 is Sunday in America/Denver calendar math when constructed as UTC noon.
-  const sunday = new Date(Date.UTC(2026, 6, 19, 18, 0, 0)); // afternoon UTC → still Sunday Denver
+test("legacy priorSaturdayKeyDenver Sunday→Saturday helper remains stable", () => {
+  const sunday = new Date(Date.UTC(2026, 6, 19, 18, 0, 0));
   const key = priorSaturdayKeyDenver(sunday);
   assert.strictEqual(key, "2026-07-18");
   const eventId = buildWeeklyEmailEventId("recEnrollment0001", "recWeek0000000001");

@@ -29,18 +29,19 @@ const BUNDLES = [
   },
   {
     id: "057",
-    version: "2.5",
+    version: "2.6",
     source:
       "airtable/automations/shooting-challenge/057-achievements-and-milestones-calculate-perfect-week-eligibility.js",
-    paste: "docs/deploy-checklists/057-v2.5-PASTE.txt",
+    paste: "docs/deploy-checklists/057-v2.6-PASTE.txt",
     start:
       "/***************************************************************************************************\n * 057 - Achievements",
     mustInclude: [
-      "Version: 2.5",
+      "Version: 2.6",
       "Goal Shots Target",
       "Weekly Goal Shots Target",
       "America/Denver",
       "Perfect Week Automation Status",
+      "terminal partial Week",
     ],
   },
   {

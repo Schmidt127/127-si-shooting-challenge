@@ -139,8 +139,14 @@ function buildBase({
     { name: "Perfect Week Credit Applied?", type: "checkbox" },
     { name: "Recording Quiz Review Status", type: "singleSelect" },
   ], zoomAttendanceRecords);
-  const weeks = new MockTable("Weeks", [{ name: "Start Date", type: "date" }], [
-    new MockRecord(IDS.week, { "Start Date": "2026-08-02" }),
+  const weeks = new MockTable("Weeks", [
+    { name: "Start Date", type: "date" },
+    { name: "End Date", type: "date" },
+  ], [
+    new MockRecord(IDS.week, {
+      "Start Date": "2026-08-02",
+      "End Date": "2026-08-08",
+    }),
   ]);
   const enrollments = new MockTable("Enrollments", [
     { name: "Program Instance", type: "multipleRecordLinks" },
@@ -221,7 +227,7 @@ function lastWeeklyUpdate(base) {
 
 test("executes the committed Automation 057 source", () => {
   assert.match(SOURCE, /057 - Achievements and Milestones - Calculate Perfect Week Eligibility/);
-  assert.match(SOURCE, /Version: 2\.5/);
+  assert.match(SOURCE, /Version: 2\.6/);
   console.log(`SOURCE_EXECUTED ${SCRIPT_PATH} sha256=${SOURCE_SHA256}`);
 });
 
@@ -244,7 +250,7 @@ test("settled season lookup with fractional weekly goal reaches Ready", async ()
   assert.equal(weeklyCells(base)["Perfect Week Automation Status"], "Ready");
   assert.equal(weeklyCells(base)["Perfect Week Daily Check Status"], "Fail");
   assert.ok(
-    captured.lines.some((line) => /"version":"2\.5"/.test(line) && /"action":"ready"/.test(line)),
+    captured.lines.some((line) => /"version":"2\.6"/.test(line) && /"action":"ready"/.test(line)),
     "success path must emit versioned console JSON"
   );
 });
