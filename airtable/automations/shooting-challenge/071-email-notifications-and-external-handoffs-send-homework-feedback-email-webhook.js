@@ -5,14 +5,22 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 
-Version: v4.4
+Version: v4.5
 Date Written: 2026-06-17
-Last Updated: 2026-09-06
+Last Updated: 2026-09-08
 
 PURPOSE
 - Validate one Homework Completion record that is ready for parent email.
 - Create exactly one Ready Email Handoff Queue row for Communications Hub.
 - Hand off template data to Automation 079 / Communications Hub / Resend.
+
+VERSION HISTORY
+- v4.5 (2026-09-08): Structured Curriculum HC-only assets may hand off with blank
+  Submission - Linked when HC has zero Submissions and PHA/Enrollment ownership is
+  valid. Legacy Submission-backed ownership remains strict. Mixed topology fails
+  closed. No Daily Submission is created or required for HC-only homework.
+- v4.4 (2026-09-06): SC-171 parent presentation fields (submitted/reviewed dates,
+  athlete profile URL).
 
 IMPORTANT DESIGN RULES
 - Hub owns subject, HTML, plain text, branding, delivery, and Delivery proof.
@@ -25,6 +33,11 @@ IMPORTANT DESIGN RULES
 - PHA operational identity is Program Instance + Week + Homework Assignment + Homework Slot.
 - PHA Grade Band is descriptive eligibility metadata only (may list all bands). Never reject a handoff for Grade Band mismatch.
 - Athlete Enrollment Grade Band may exist for display/XP elsewhere; it is not a PHA matching key.
+- Submission topology (aligned with 065):
+  - Submission-backed: HC links exactly one Submission; each asset must link that same Submission.
+  - Structured Curriculum HC-only: HC links zero Submissions; each asset must link zero Submissions.
+  - Mixed topology (HC blank + asset linked, or HC linked + asset blank) fails closed.
+  - Never invent or attach a Daily Submission merely to satisfy this handoff.
 - Homework asset URL uses Reviewer File URL only (no Google Drive fallback).
 - Quiz-only path without assets must still work.
 - Enrollment Parent Email - Cleaned is the authoritative recipient.
@@ -59,10 +72,10 @@ AUTOMATION NAME
 
 const SCRIPT = {
   scriptName: "071 - Email, Notifications, and External Handoffs - Create Homework Feedback Communications Hub Handoff",
-  version: "v4.4",
-  versionDate: "2026-09-06",
+  version: "v4.5",
+  versionDate: "2026-09-08",
   originalWrittenDate: "2026-06-17",
-  lastUpdated: "2026-09-06",
+  lastUpdated: "2026-09-08",
   folder: "07 - Email, Notifications, and External Handoffs",
   automationName: "071 - Email, Notifications, and External Handoffs - Create Homework Feedback Communications Hub Handoff",
 };
@@ -438,6 +451,15 @@ async function main() {
 
   debug("04 - Validate linked submissions, assets, and quiz path");
   const hcSubIds = ids(hc, hcT, CONFIG.fields.hc.subs);
+  if (hcSubIds.length > 1) {
+    throw new Error(
+      `Homework Completion may link at most one Submission; found ${hcSubIds.length}.`
+    );
+  }
+  // v4.5: zero Submission links is valid for canonical PHA-backed Structured Curriculum HC-only.
+  // Exactly one Submission remains the legacy Submission-backed topology.
+  const submissionBacked = hcSubIds.length === 1;
+
   for (const sid of hcSubIds) {
     const s = await subT.selectRecordAsync(sid);
     if (!s) throw new Error(`Linked Submission not found: ${sid}`);
@@ -454,7 +476,11 @@ async function main() {
   for (const aid of assetIds) {
     const a = await assetT.selectRecordAsync(aid);
     if (!a) throw new Error(`Submission Asset not found: ${aid}`);
-    if (!sameSet(ids(a, assetT, CONFIG.fields.asset.enr), [enrollmentId])) {
+    const assetEnrIds = ids(a, assetT, CONFIG.fields.asset.enr);
+    if (assetEnrIds.length !== 1) {
+      throw new Error(`Asset ${aid} must link exactly one Enrollment.`);
+    }
+    if (assetEnrIds[0] !== enrollmentId) {
       throw new Error(`Asset ${aid} Enrollment mismatch.`);
     }
     const slot = normalizeSlot(text(a, assetT, CONFIG.fields.asset.slot));
@@ -462,17 +488,33 @@ async function main() {
       throw new Error(`Asset ${aid} slot ${slot || "blank"} does not match ${hcSlot}.`);
     }
     const sourceSubs = ids(a, assetT, CONFIG.fields.asset.sub);
-    if (sourceSubs.length !== 1) {
-      throw new Error(`Asset ${aid} must link exactly one Submission.`);
+
+    if (submissionBacked) {
+      // Legacy path: asset must link exactly the HC's canonical Submission.
+      if (sourceSubs.length !== 1) {
+        throw new Error(`Asset ${aid} must link exactly one Submission.`);
+      }
+      if (sourceSubs[0] !== hcSubIds[0]) {
+        throw new Error(`Asset ${aid} Submission must match Homework Completion Submission.`);
+      }
+      const s = await subT.selectRecordAsync(sourceSubs[0]);
+      if (
+        !s ||
+        !sameSet(ids(s, subT, CONFIG.fields.sub.enr), [enrollmentId]) ||
+        !sameSet(ids(s, subT, CONFIG.fields.sub.week), [weekId])
+      ) {
+        throw new Error(`Asset ${aid} source Submission ownership/Week mismatch.`);
+      }
+    } else {
+      // HC-only Structured Curriculum: asset Submission - Linked must be blank.
+      // Fail closed if an asset unexpectedly links a Daily Submission.
+      if (sourceSubs.length !== 0) {
+        throw new Error(
+          `Asset ${aid} must not link a Submission on HC-only Structured Curriculum homework.`
+        );
+      }
     }
-    const s = await subT.selectRecordAsync(sourceSubs[0]);
-    if (
-      !s ||
-      !sameSet(ids(s, subT, CONFIG.fields.sub.enr), [enrollmentId]) ||
-      !sameSet(ids(s, subT, CONFIG.fields.sub.week), [weekId])
-    ) {
-      throw new Error(`Asset ${aid} source Submission ownership/Week mismatch.`);
-    }
+
     const url = assetUrl(a, assetT);
     if (!url) throw new Error(`Asset ${aid} has no safe parent-facing URL.`);
     files.push({
