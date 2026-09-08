@@ -488,19 +488,19 @@ if (byNumber.has("066")) {
   }
 }
 
-// 070b / 070c version wording must match scripts
+// 070b / 070c version wording must match repository source while preserving the live v4.7 cutover boundary.
 if (byNumber.has("070b") && byNumber.has("070c")) {
   const ver070b = extractDeclaredVersion(fs.readFileSync(byNumber.get("070b")[0], "utf8"));
   const ver070c = extractDeclaredVersion(fs.readFileSync(byNumber.get("070c")[0], "utf8"));
-  if (ver070b === "v4.7") pass("070b declared version v4.7");
-  else fail(`070b expected v4.7, found ${ver070b || "(none)"}`);
+  if (ver070b === "v4.8") pass("070b declared repository version v4.8");
+  else fail(`070b expected repository v4.8, found ${ver070b || "(none)"}`);
   if (ver070c === "v1.1") pass("070c declared version v1.1");
   else fail(`070c expected v1.1, found ${ver070c || "(none)"}`);
 
   if (/070b.*v4\.7/i.test(inventoryText) && /070c.*v1\.1/i.test(inventoryText)) {
-    pass("inventory documents 070b v4.7 and 070c v1.1");
+    pass("inventory preserves live 070b v4.7 and documents 070c v1.1; GitHub source is v4.8 pending paste");
   } else {
-    fail("inventory missing aligned 070b v4.7 / 070c v1.1 wording");
+    fail("inventory missing live 070b v4.7 / 070c v1.1 wording");
   }
 }
 
