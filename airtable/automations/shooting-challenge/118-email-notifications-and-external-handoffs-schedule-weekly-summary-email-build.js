@@ -22,11 +22,12 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
 /************************************************************
  * 118 - Email - Schedule Weekly Summary Email Build
  *
- * Version: v2.0
+ * Version: v2.1
  * Date Written: 2026-07-16
- * Last Updated: 2026-08-13
+ * Last Updated: 2026-09-08
  *
  * VERSION HISTORY
+ * - v2.1 (2026-09-08 / SC-121): Target the latest active non-Post-Challenge Week that has actually ended in America/Denver, instead of assuming every Week ends Saturday. This preserves normal Sunday behavior and correctly selects partial terminal Week 9 (Jun 27-Jun 30, 2027) on the Jul 4 scheduler run.
  * - v2.0 (2026-08-13): Requires a settled exact Summary Key as well as exact
  *   Enrollment + Week before arming an eligible WAS; formula lag now stops
  *   safely instead of permitting an email handoff.
@@ -64,7 +65,7 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
  * - v1.0 (2026-07-16): Initial schedule-arm script.
  *
  * PURPOSE
- * - Resolve prior ended Week (Saturday just ended at Sunday 05:00 Denver).
+ * - Resolve the latest active non-Post-Challenge Week whose End Date is before today in Denver.
  * - For each Active? enrollment (excluding Schmidt), resolve one existing WAS.
  * - Skip if Weekly Email Sent? or no cleaned email.
  * - Set Build Weekly Email Now? = true and WAS sendMode from input when dryRun=false.
@@ -77,7 +78,7 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
  * - Schmidt enrollment excluded by default: recgP9qZYjAhE7NXm
  *   (override only via includeSchmidt=true for controlled Test-mode runs)
  * - Never combine includeSchmidt=true with sendMode=Live.
- * - Scheduled date key = prior Saturday Week End (America/Denver).
+ * - Scheduled Week End key = latest completed active non-Post-Challenge Week (America/Denver).
  * - Automation 031 is the sole create-capable Weekly Athlete Summary owner.
  * - Idempotent only when exactly one canonical WAS identity is provable;
  *   ambiguity or absence fails closed rather than selecting or creating one.
@@ -111,7 +112,7 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
 
 const CONFIG = {
   scriptName: "118 - Email - Schedule Weekly Summary Email Build",
-  version: "v2.0",
+  version: "v2.1",
   timeZone: "America/Denver",
   // Exclude both historical and current Schmidt test enrollments by default.
   schmidtEnrollmentId: "recCyFEPeATOVNlr9",
@@ -296,6 +297,19 @@ function dateKeyFromCell(value) {
   return `${y}-${mo}-${day}`;
 }
 
+function latestCompletedChallengeEndKey(endKeys, todayKey) {
+  const today = String(todayKey || "").trim();
+  if (!today) return "";
+  const eligible = [...new Set((endKeys || []).map((v) => String(v || "").trim()).filter((v) => v && v < today))];
+  eligible.sort();
+  return eligible.length ? eligible[eligible.length - 1] : "";
+}
+
+function isPostChallengeWeek(record) {
+  const identity = `${text(record, CONFIG.weeks.weekKey)} ${text(record, CONFIG.weeks.weekCode)}`.trim();
+  return /post[\s_-]*challenge/i.test(identity) || /^post\b/i.test(identity);
+}
+
 async function main() {
   let debugStep = "1 - Start";
   setOutputSafe("debugStep", debugStep);
@@ -337,7 +351,6 @@ async function main() {
   debugStep = "2 - Resolve target week";
   setOutputSafe("debugStep", debugStep);
 
-  const targetEndKey = priorSaturdayKeyDenver();
   const weekFields = safeFields(weeksTable, Object.values(CONFIG.weeks));
   let weeksQuery = null;
   let enrollmentsQuery = null;
@@ -363,18 +376,16 @@ async function main() {
     return false;
   }
 
-  const endDateMatches = [];
-  for (const w of weeksQuery.records) {
+  const todayKey = dateKeyFromCell(new Date());
+  const eligibleWeeks = weeksQuery.records.filter((w) => weekIsActive(w) && !isPostChallengeWeek(w));
+  const eligibleEndKeys = eligibleWeeks.map((w) =>
+    text(w, CONFIG.weeks.weekEndKey) || dateKeyFromCell(cell(w, CONFIG.weeks.endDate))
+  );
+  const targetEndKey = latestCompletedChallengeEndKey(eligibleEndKeys, todayKey);
+  const targetCandidates = eligibleWeeks.filter((w) => {
     const endKey = text(w, CONFIG.weeks.weekEndKey) || dateKeyFromCell(cell(w, CONFIG.weeks.endDate));
-    if (endKey === targetEndKey) {
-      endDateMatches.push(w);
-    }
-  }
-
-  let targetCandidates = endDateMatches.filter((w) => weekIsActive(w));
-  if (targetCandidates.length === 0) {
-    targetCandidates = endDateMatches;
-  }
+    return endKey === targetEndKey;
+  });
 
   if (targetCandidates.length > 1) {
     const diag = targetCandidates
