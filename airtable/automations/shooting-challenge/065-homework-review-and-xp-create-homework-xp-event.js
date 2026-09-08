@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-14
-Last GitHub Update: 2026-09-04 (v10.7 SC-160 early/on-time/late timing)
+Last GitHub Update: 2026-09-08 (v10.8 Structured Curriculum HC-only XP)
 
 Purpose:
 Create, replay, repair, deactivate, or reactivate the exact canonical
@@ -32,11 +32,14 @@ v10.1 installed in Production per Mike evidence; v10.2 is structure-only.
  * 065 - HOMEWORK REVIEW AND XP
  * Create or Reconcile Homework XP Event
  *
- * Version: v10.7
+ * Version: v10.8
  * Date Written: 2026-06-06
- * Last Updated: 2026-09-04
+ * Last Updated: 2026-09-08
  *
  * VERSION HISTORY
+ * - v10.8 (2026-09-08): Structured Curriculum HC-only homework may award canonical Homework XP
+ *   with zero Submission links when PHA/Enrollment/Week/WAS ownership is valid. Submission-backed
+ *   homework remains exact-one-Submission. XP Event Submission topology is immutable across replay.
  * - v10.7 (2026-09-04): SC-160 — early/on-time/late timing tracked; early and late
  *   remain full XP once satisfactory. Perfect Week early/on-time gate stays in 057.
  * - v10.6 (2026-09-03): Late homework remains full XP / credit eligible once satisfactory.
@@ -68,12 +71,13 @@ v10.1 installed in Production per Mike evidence; v10.2 is structure-only.
  * IMPORTANT DESIGN RULES
  * - Source Key is exactly HOMEWORK_XP|{Homework Completion Record ID}.
  * - XP Events are append-only; no XP Event is deleted.
- * - Exact Enrollment, Week, Homework Completion, and Submission ownership required.
+ * - Exact Enrollment, Week, Homework Completion, and Submission topology ownership required.
+ *   Submission-backed HCs require exactly one Submission; Structured Curriculum HC-only HCs require zero.
  * - XP Points may differ from Total Homework XP Awarded before step 7 write — that is a
  *   normal reconcile case (do not treat points mismatch as stolen ownership).
  * - Positive award/reactivation requires review eligibility + PHA eligibility (when PHA present)
  *   + Total Homework XP Awarded > 0 + exactly one canonical WAS.
- * - New XP also requires exactly one Submission link when no owned event exists yet.
+ * - New XP permits exactly one Submission link (traditional path) or zero Submission links (canonical PHA-backed Structured Curriculum path).
  * - Final recheck before create/update is mandatory (Airtable has no atomic uniqueness).
  * - Last Homework XP Reconciled Signature is written only after formula settles and
  *   Homework XP Reconciliation Needed? rereads as 0.
@@ -139,10 +143,10 @@ const SOURCE_KEY_CONTRACT = {
 
 const SCRIPT = {
   scriptName: "065 - Homework Review and XP - Create or Reconcile Homework XP Event",
-  version: "v10.7",
-  versionDate: "2026-09-04",
+  version: "v10.8",
+  versionDate: "2026-09-08",
   originalWrittenDate: "2026-06-06",
-  lastUpdated: "2026-09-04",
+  lastUpdated: "2026-09-08",
   folder: "02 - Homework Review and XP",
   automationName: "065 - Homework Review and XP - Create or Reconcile Homework XP Event",
 };
@@ -496,9 +500,11 @@ function assertOwned(xpEvent, ctx) {
   if (!sameIds(linkedIds(xpEvent, xpEventsTable, CONFIG.xpEvents.week), [ctx.week])) {
     throw new Error(`XP Event ${xpEvent.id} Week ownership mismatch.`);
   }
-  const submissionIds = linkedIds(xpEvent, xpEventsTable, CONFIG.xpEvents.submission);
-  if (submissionIds.length !== 1 || !ctx.subs.includes(submissionIds[0])) {
-    throw new Error(`XP Event ${xpEvent.id} Submission ownership mismatch.`);
+  const eventSubmissionIds = linkedIds(xpEvent, xpEventsTable, CONFIG.xpEvents.submission);
+  if (!sameIds(eventSubmissionIds, ctx.subs)) {
+    throw new Error(
+      `XP Event ${xpEvent.id} Submission topology mismatch. Expected [${ctx.subs.join(",")}], got [${eventSubmissionIds.join(",")}].`
+    );
   }
 }
 
@@ -696,7 +702,9 @@ async function main() {
   if (weekIds.length !== 1) {
     throw new Error(`Week must contain exactly one link; found ${weekIds.length}.`);
   }
-  if (!submissionIds.length) throw new Error(`At least one Submission link is required.`);
+  if (submissionIds.length > 1) {
+    throw new Error(`Homework Completion may link at most one Submission; found ${submissionIds.length}.`);
+  }
   if (linkedXpIds.length > 1) throw new Error(`Multiple linked XP Events: ${linkedXpIds.join(", ")}`);
   if (!getText(homeworkCompletion, homeworkTable, CONFIG.homework.completionKey)) {
     throw new Error(`Homework Completion Key is blank.`);
@@ -764,9 +772,8 @@ async function main() {
   }
 
   if (!(totalXp > 0)) throw new Error(`Total Homework XP Awarded must be positive.`);
-  if (submissionIds.length !== 1 && !xpEvent) {
-    throw new Error(`New Homework XP requires exactly one canonical Submission; found ${submissionIds.length}.`);
-  }
+  // v10.8: zero Submission links is valid through the canonical PHA-backed Structured Curriculum path.
+  // One Submission remains the traditional topology; more than one is rejected above.
 
   step("5 - Require canonical WAS");
   const weeklySummaryId = await requireCanonicalWas(enrollmentIds[0], weekIds[0]);
@@ -776,9 +783,9 @@ async function main() {
     [CONFIG.xpEvents.enrollment]: linkedCell(enrollmentIds),
     [CONFIG.xpEvents.week]: linkedCell(weekIds),
     [CONFIG.xpEvents.homeworkCompletion]: linkedCell([recordId]),
-    [CONFIG.xpEvents.submission]: linkedCell([
-      xpEvent ? linkedIds(xpEvent, xpEventsTable, CONFIG.xpEvents.submission)[0] : submissionIds[0],
-    ]),
+    [CONFIG.xpEvents.submission]: linkedCell(
+      xpEvent ? linkedIds(xpEvent, xpEventsTable, CONFIG.xpEvents.submission) : submissionIds
+    ),
     [CONFIG.xpEvents.bucket]: selectChoice(xpEventsTable, CONFIG.xpEvents.bucket, CONFIG.values.bucket),
     [CONFIG.xpEvents.source]: selectChoice(xpEventsTable, CONFIG.xpEvents.source, CONFIG.values.source),
     [CONFIG.xpEvents.points]: totalXp,
