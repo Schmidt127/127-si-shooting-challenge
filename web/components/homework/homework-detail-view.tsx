@@ -156,16 +156,6 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
               <dt className="text-[10px] font-semibold uppercase tracking-wider">Due</dt>
               <dd className="mt-0.5 text-foreground">{dueLabel}</dd>
             </div>
-            {assignment.submissionRequirement ? (
-              <div className="sm:col-span-2">
-                <dt className="text-[10px] font-semibold uppercase tracking-wider">
-                  Submission
-                </dt>
-                <dd className="mt-0.5 leading-relaxed text-foreground">
-                  {assignment.submissionRequirement}
-                </dd>
-              </div>
-            ) : null}
           </dl>
 
           <div className="mt-6 flex flex-wrap gap-3">

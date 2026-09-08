@@ -24,7 +24,7 @@ function assignment(overrides: Partial<HomeworkAssignment> = {}): HomeworkAssign
     homeworkSlot: "HW1",
     dueDate: "2027-06-29",
     gradeBands: ["3-4"],
-    submissionRequirement: "Submit through the daily form Homework 1 field.",
+    submissionRequirement: "Testing Schmidt - 8/4/2026 - Week 1",
     operatorNotes: null,
     book: "Skill Book",
     bookAbbreviation: "SB",
@@ -47,12 +47,13 @@ function assignment(overrides: Partial<HomeworkAssignment> = {}): HomeworkAssign
 }
 
 describe("HomeworkDetailView durable resources", () => {
-  it("preserves instructions, steps, rationale, and submission requirements", () => {
+  it("preserves public assignment content without rendering submission-linked data", () => {
     const html = renderToStaticMarkup(createElement(HomeworkDetailView, { assignment: assignment() }));
     expect(html).toContain("Full multi-paragraph instructions");
     expect(html).toContain("1. Film. 2. Submit.");
     expect(html).toContain("Builds consistency.");
-    expect(html).toContain("Submit through the daily form Homework 1 field.");
+    expect(html).not.toContain("Testing Schmidt - 8/4/2026 - Week 1");
+    expect(html).not.toContain(">Submission<");
     expect(html).toContain("https://example.com/homework");
   });
 
