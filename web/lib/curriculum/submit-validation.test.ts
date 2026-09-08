@@ -109,6 +109,30 @@ describe("parseCurriculumSubmitPayload", () => {
     );
   });
 
+  it("accepts Hub bands and structured five-band snapshots", () => {
+    expect(parseCurriculumSubmitPayload({ ...validBody, gradeBand: "K-3" }).ok).toBe(true);
+    expect(parseCurriculumSubmitPayload({ ...validBody, gradeBand: "3-4" }).ok).toBe(true);
+    expect(parseCurriculumSubmitPayload({ ...validBody, gradeBand: "5-6" }).ok).toBe(true);
+    expect(parseCurriculumSubmitPayload({ ...validBody, gradeBand: "1-2" }).ok).toBe(true);
+  });
+
+  it("accepts assets-only submit when answers is empty", () => {
+    const result = parseCurriculumSubmitPayload({
+      ...validBody,
+      answers: [],
+      assets: [
+        {
+          questionKey: "AESOP_CROW_PITCHER.4-6.Q07",
+          stagingId: "stg_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          fileName: "proof.jpg",
+          mimeType: "image/jpeg",
+          sizeBytes: 100,
+        },
+      ],
+    });
+    expect(result.ok).toBe(true);
+  });
+
   it("rejects parentAttemptNumber >= attemptNumber", () => {
     const result = parseCurriculumSubmitPayload({
       ...validBody,

@@ -2,11 +2,14 @@ import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
 
 import { hasUpstashRedisConfig } from "@/lib/auth/config";
 
-export type CurriculumGradeBand = "K-3" | "4-6" | "7-8" | "9-12";
+/** Structured Curriculum five-band set (Shot Tracker, etc.). Legacy Crow still maps via Hub fallbacks. */
+export type CurriculumGradeBand = "1-2" | "3-4" | "5-6" | "7-8" | "9-12" | "K-3" | "4-6";
 
 export type CurriculumHandoffRecord = {
   enrollmentId: string;
   gradeBand: CurriculumGradeBand;
+  /** Numeric grade or K — Hub uses this to map five-band → legacy Crow bands without ambiguity. */
+  sourceGrade?: string;
   displayName: string;
   /** When set, Hub opens `/{Curriculum Assignment Slug}` for this key. */
   assignmentKey?: string;
@@ -27,15 +30,28 @@ function cleanDisplayName(value: string): string {
   return first.replace(/[^\p{L}\p{N}'’-]/gu, "").slice(0, 40) || "Athlete";
 }
 
-export function curriculumGradeBandFromGrade(rawGrade: string): CurriculumGradeBand | null {
+/** Normalize raw enrollment grade to a compact source token for Hub legacy mapping. */
+export function curriculumSourceGradeFromGrade(rawGrade: string): string | null {
   const grade = rawGrade.trim().toLowerCase();
   if (!grade) return null;
-  if (grade === "k" || grade.includes("kindergarten")) return "K-3";
+  if (grade === "k" || grade.includes("kindergarten")) return "K";
   const match = grade.match(/(?:^|\D)(1[0-2]|[1-9])(?:\D|$)/);
   if (!match) return null;
-  const numeric = Number(match[1]);
-  if (numeric >= 1 && numeric <= 3) return "K-3";
-  if (numeric >= 4 && numeric <= 6) return "4-6";
+  return match[1];
+}
+
+/**
+ * Structured Curriculum standard bands: 1-2 / 3-4 / 5-6 / 7-8 / 9-12.
+ * Hub maps these onto legacy Crow K-3 / 4-6 question sets when needed.
+ */
+export function curriculumGradeBandFromGrade(rawGrade: string): CurriculumGradeBand | null {
+  const source = curriculumSourceGradeFromGrade(rawGrade);
+  if (!source) return null;
+  if (source === "K") return "1-2";
+  const numeric = Number(source);
+  if (numeric >= 1 && numeric <= 2) return "1-2";
+  if (numeric >= 3 && numeric <= 4) return "3-4";
+  if (numeric >= 5 && numeric <= 6) return "5-6";
   if (numeric >= 7 && numeric <= 8) return "7-8";
   if (numeric >= 9 && numeric <= 12) return "9-12";
   return null;
@@ -61,6 +77,7 @@ export async function mintCurriculumHandoff(input: {
 }): Promise<string> {
   const gradeBand = curriculumGradeBandFromGrade(input.grade);
   if (!gradeBand) throw new Error("Curriculum grade band unavailable");
+  const sourceGrade = curriculumSourceGradeFromGrade(input.grade) ?? undefined;
 
   const now = input.now ?? Date.now();
   const rawToken = randomBytes(32).toString("base64url");
@@ -73,6 +90,7 @@ export async function mintCurriculumHandoff(input: {
   const record: CurriculumHandoffRecord = {
     enrollmentId: input.enrollmentId,
     gradeBand,
+    ...(sourceGrade ? { sourceGrade } : {}),
     displayName: cleanDisplayName(input.displayName),
     ...(assignmentKey ? { assignmentKey } : {}),
     createdAt: now,

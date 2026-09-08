@@ -4,10 +4,10 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-27
-Last GitHub Update: 2026-08-21
+Last GitHub Update: 2026-09-07
 
 Purpose:
-Sends one video Submission Asset to the shared Make Upload Engine (v4.7 Production sync — Airtable fetch; v4.6 Program Instance season contract retained).
+Sends one video Submission Asset to the shared Make Upload Engine (v4.8 shared body with 070a — HC blank-Submission exception does not apply to Video Feedback).
 
 Trigger:
 Submission Assets when Send to Make Trigger is checked and video asset is ready.
@@ -21,6 +21,7 @@ Upload Status, Send to Make Trigger, Video Feedback, Canonical File URL, Storage
 Notes:
 Same script body as 070a — set input automationNumber to 070b in Airtable.
 GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
+SC-STRUCTURED-HOMEWORK-FILES-001: shared v4.8 gate; Video Feedback still requires Submission.
 */
 
 /********************************************************************
@@ -37,15 +38,21 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * Submission Assets
  *
  * VERSION:
- * v4.7 - Airtable Automation fetch for Make upload webhook (Production v4.7 sync)
+ * v4.8 - Structured Curriculum HC-linked assets may omit Submission - Linked
  *
  * CREATED:
  * 2026-06-27
  *
  * LAST UPDATED:
- * 2026-08-21
+ * 2026-09-07
  *
  * CHANGE HISTORY:
+ * 2026-09-07 - v4.8 (SC-STRUCTURED-HOMEWORK-FILES-001)
+ * - Allow blank Submission - Linked when Upload Destination is Homework Completions
+ *   AND (Homework Completions link OR HC RID) AND Enrollment - Linked present.
+ * - Video Feedback / legacy Daily Submission paths still require Submission.
+ * - Keep gate helper in sync with lib/070a-submission-gate.js (offline tests).
+ *
  * 2026-08-21 - v4.7 (070a / 070b — synced from confirmed Production v4.7)
  * - Replace remoteFetchAsync with fetch (Automation "Run a script" global).
  * - Production failure was remoteFetchAsync is not defined.
@@ -139,7 +146,7 @@ async function main() {
 
     const CONFIG = {
         scriptName: "070a/070b - Send Upload Asset Payload to Make",
-        version: "v4.7",
+        version: "v4.8",
 
         tables: {
             submissionAssets: "Submission Assets",
@@ -158,6 +165,7 @@ async function main() {
             enrollmentProgramInstance: "Program Instance",
 
             homeworkCompletions: "Homework Completions",
+            homeworkCompletionsRid: "Homework Completions RID",
             videoFeedback: "Video Feedback",
 
             canonicalFileUrl: "Canonical File URL",
@@ -754,14 +762,39 @@ async function main() {
         return;
     }
 
-    if (submissionRecordIds.length === 0) {
+    // SC-STRUCTURED-HOMEWORK-FILES-001 / v4.8 — keep in sync with lib/070a-submission-gate.js
+    const homeworkCompletionsLinkedCount = getLinkedIds(
+        assetRecord,
+        assetsTable,
+        CONFIG.fields.homeworkCompletions
+    ).length;
+    const homeworkCompletionsRid = getText(
+        assetRecord,
+        assetsTable,
+        CONFIG.fields.homeworkCompletionsRid
+    );
+    const submissionGateOk =
+        submissionRecordIds.length > 0 ||
+        (uploadDestination === "Homework Completions" &&
+            (homeworkCompletionsLinkedCount > 0 ||
+                Boolean(targetRecordId) ||
+                /^rec[a-zA-Z0-9]{14}$/.test(homeworkCompletionsRid)) &&
+            enrollmentRecordIds.length > 0);
+
+    if (!submissionGateOk) {
         await stopWithAssetUpdate({
             statusOut: "error",
             actionOut: "error_missing_submission",
             uploadStatus: CONFIG.values.statusError,
             uploadError: "Submission - Linked is missing.",
             message: "Missing Submission - Linked.",
-            extra: { uploadDestination, routeKey: route.routeKey, targetTable: route.targetTable },
+            extra: {
+                uploadDestination,
+                routeKey: route.routeKey,
+                targetTable: route.targetTable,
+                homeworkCompletionsLinkedCount,
+                enrollmentLinkedCount: enrollmentRecordIds.length,
+            },
         });
         return;
     }

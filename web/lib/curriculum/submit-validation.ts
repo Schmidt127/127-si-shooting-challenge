@@ -1,6 +1,27 @@
-import type { CurriculumGradeBand } from "@/lib/curriculum/handoff";
-
+/** Legacy Hub session bands (handoff / player UX). */
 export const CURRICULUM_GRADE_BANDS = ["K-3", "4-6", "7-8", "9-12"] as const;
+
+/**
+ * Structured Curriculum five-band snapshots accepted on submit.
+ * Snapshot only — PHA matching still uses Enrollment Grade Band record.
+ * Overlaps 7-8 / 9-12 with Hub bands; adds 1-2 / 3-4 / 5-6.
+ */
+export const STRUCTURED_CURRICULUM_GRADE_BANDS = [
+  "1-2",
+  "3-4",
+  "5-6",
+  "7-8",
+  "9-12",
+] as const;
+
+export const CURRICULUM_SUBMIT_GRADE_BANDS = [
+  ...CURRICULUM_GRADE_BANDS,
+  "1-2",
+  "3-4",
+  "5-6",
+] as const;
+
+export type CurriculumSubmitGradeBand = (typeof CURRICULUM_SUBMIT_GRADE_BANDS)[number];
 
 export type CurriculumSubmitAnswer = {
   questionKey: string;
@@ -10,21 +31,32 @@ export type CurriculumSubmitAnswer = {
   value: string;
 };
 
+/** Staging refs from Hub upload-staging — never include file bytes. */
+export type CurriculumSubmitAssetRef = {
+  questionKey: string;
+  stagingId: string;
+  fileName: string;
+  mimeType: string;
+  sizeBytes: number;
+};
+
 export type CurriculumSubmitPayload = {
   enrollmentId: string;
   assignmentKey: string;
   curriculumVersion: number;
-  gradeBand: CurriculumGradeBand;
+  gradeBand: CurriculumSubmitGradeBand;
   attemptNumber: number;
   parentAttemptNumber: number | null;
   submittedAt: string;
   answers: CurriculumSubmitAnswer[];
+  assets?: CurriculumSubmitAssetRef[];
 };
 
 export type CurriculumSubmitReceipt = {
   submissionId: string;
   homeworkCompletionId: string;
   attemptNumber: number;
+  assetIds?: string[];
 };
 
 export type ValidationFailure = {
@@ -48,12 +80,16 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function isGradeBand(value: unknown): value is CurriculumGradeBand {
+function isGradeBand(value: unknown): value is CurriculumSubmitGradeBand {
   return (
     typeof value === "string" &&
-    (CURRICULUM_GRADE_BANDS as readonly string[]).includes(value)
+    (CURRICULUM_SUBMIT_GRADE_BANDS as readonly string[]).includes(value)
   );
 }
+
+const STAGING_ID_RE = /^stg_[a-f0-9]{32}$/;
+/** File-answer values must stay small metadata — never base64/binary. */
+const MAX_FILE_ANSWER_VALUE_CHARS = 2048;
 
 /** Idempotency-Key header: required, opaque, no secrets/answers. */
 export function parseIdempotencyKey(raw: string | null): ValidationResult<string> {
@@ -92,6 +128,18 @@ function parseAnswer(raw: unknown, index: number): ValidationResult<CurriculumSu
     return { ok: false, status: 422, error: `answers[${index}].value must be a string.` };
   }
 
+  // file_upload values are small JSON metadata only — never base64/binary.
+  if (
+    responseType === "file_upload" &&
+    raw.value.length > MAX_FILE_ANSWER_VALUE_CHARS
+  ) {
+    return {
+      ok: false,
+      status: 422,
+      error: `answers[${index}].value for file_upload exceeds metadata size limit.`,
+    };
+  }
+
   return {
     ok: true,
     value: {
@@ -102,6 +150,63 @@ function parseAnswer(raw: unknown, index: number): ValidationResult<CurriculumSu
       value: raw.value,
     },
   };
+}
+
+function parseAssetRef(raw: unknown, index: number): ValidationResult<CurriculumSubmitAssetRef> {
+  if (!isPlainObject(raw)) {
+    return { ok: false, status: 422, error: `assets[${index}] must be an object.` };
+  }
+  const questionKey = typeof raw.questionKey === "string" ? raw.questionKey.trim() : "";
+  if (!QUESTION_KEY_RE.test(questionKey)) {
+    return { ok: false, status: 422, error: `assets[${index}].questionKey is invalid.` };
+  }
+  const stagingId = typeof raw.stagingId === "string" ? raw.stagingId.trim() : "";
+  if (!STAGING_ID_RE.test(stagingId)) {
+    return { ok: false, status: 422, error: `assets[${index}].stagingId is invalid.` };
+  }
+  const fileName = typeof raw.fileName === "string" ? raw.fileName.trim() : "";
+  if (!fileName || fileName.length > 180 || /[\\/]/.test(fileName)) {
+    return { ok: false, status: 422, error: `assets[${index}].fileName is invalid.` };
+  }
+  const mimeType = typeof raw.mimeType === "string" ? raw.mimeType.trim().toLowerCase() : "";
+  if (!mimeType || mimeType.length > 100) {
+    return { ok: false, status: 422, error: `assets[${index}].mimeType is invalid.` };
+  }
+  if (
+    typeof raw.sizeBytes !== "number" ||
+    !Number.isInteger(raw.sizeBytes) ||
+    raw.sizeBytes < 1 ||
+    raw.sizeBytes > 20 * 1024 * 1024
+  ) {
+    return { ok: false, status: 422, error: `assets[${index}].sizeBytes is invalid.` };
+  }
+
+  return {
+    ok: true,
+    value: {
+      questionKey,
+      stagingId,
+      fileName,
+      mimeType,
+      sizeBytes: raw.sizeBytes,
+    },
+  };
+}
+
+/**
+ * Homework Responses are for text/choice answers only.
+ * file_upload answers associate via Submission Asset Label/Slot = questionKey — no Response row.
+ */
+export function answersForHomeworkResponses(
+  answers: CurriculumSubmitAnswer[],
+  assets?: CurriculumSubmitAssetRef[],
+): CurriculumSubmitAnswer[] {
+  const assetKeys = new Set((assets ?? []).map((asset) => asset.questionKey));
+  return answers.filter((answer) => {
+    if (answer.responseType === "file_upload") return false;
+    if (assetKeys.has(answer.questionKey)) return false;
+    return true;
+  });
 }
 
 /** Validate Curriculum Hub submit JSON body (no Airtable I/O). */
@@ -156,8 +261,8 @@ export function parseCurriculumSubmitPayload(body: unknown): ValidationResult<Cu
     return { ok: false, status: 422, error: "submittedAt must be an ISO-8601 datetime." };
   }
 
-  if (!Array.isArray(body.answers) || body.answers.length === 0) {
-    return { ok: false, status: 422, error: "answers must be a non-empty array." };
+  if (!Array.isArray(body.answers)) {
+    return { ok: false, status: 422, error: "answers must be an array." };
   }
   if (body.answers.length > 50) {
     return { ok: false, status: 422, error: "answers exceeds the maximum length." };
@@ -168,6 +273,26 @@ export function parseCurriculumSubmitPayload(body: unknown): ValidationResult<Cu
     const parsed = parseAnswer(body.answers[i], i);
     if (!parsed.ok) return parsed;
     answers.push(parsed.value);
+  }
+
+  let assets: CurriculumSubmitAssetRef[] | undefined;
+  if (body.assets != null) {
+    if (!Array.isArray(body.assets)) {
+      return { ok: false, status: 422, error: "assets must be an array." };
+    }
+    if (body.assets.length > 20) {
+      return { ok: false, status: 422, error: "assets exceeds the maximum length." };
+    }
+    assets = [];
+    for (let i = 0; i < body.assets.length; i += 1) {
+      const parsed = parseAssetRef(body.assets[i], i);
+      if (!parsed.ok) return parsed;
+      assets.push(parsed.value);
+    }
+  }
+
+  if (answers.length === 0 && (!assets || assets.length === 0)) {
+    return { ok: false, status: 422, error: "answers or assets must be non-empty." };
   }
 
   if (parentAttemptNumber != null && parentAttemptNumber >= body.attemptNumber) {
@@ -185,20 +310,38 @@ export function parseCurriculumSubmitPayload(body: unknown): ValidationResult<Cu
       parentAttemptNumber,
       submittedAt: body.submittedAt,
       answers,
+      ...(assets && assets.length > 0 ? { assets } : {}),
     },
   };
 }
 
 /** Coach-readable Q/A snapshot for Homework Completions (no XP). */
-export function formatCurriculumAnswersSnapshot(answers: CurriculumSubmitAnswer[]): string {
+export function formatCurriculumAnswersSnapshot(
+  answers: CurriculumSubmitAnswer[],
+  assets?: CurriculumSubmitAssetRef[],
+): string {
   const sorted = [...answers].sort((a, b) => a.questionOrder - b.questionOrder);
-  return sorted
+  const answerBlock = sorted
     .map((answer) => {
       const prompt = answer.promptSnapshot.trim();
-      const value = answer.value.trim() || "(no response)";
+      let value = answer.value.trim() || "(no response)";
+      if (answer.responseType === "file_upload") {
+        value = value ? `file_upload: ${value}` : "(file — see Submission Asset)";
+      }
       return `Q${answer.questionOrder}. ${prompt}\nA: ${value}`;
     })
     .join("\n\n");
+
+  if (!assets || assets.length === 0) return answerBlock;
+
+  const assetBlock = assets
+    .map(
+      (asset) =>
+        `File [${asset.questionKey}]: ${asset.fileName} (${asset.mimeType}, ${asset.sizeBytes} bytes)`,
+    )
+    .join("\n");
+
+  return [answerBlock, "--- Files ---", assetBlock].filter(Boolean).join("\n\n");
 }
 
 export function buildAttemptKey(input: {
@@ -255,6 +398,7 @@ export function buildHomeworkCompletionFields(input: {
   assignmentKey: string;
   submittedAt: string;
   answers: CurriculumSubmitAnswer[];
+  assets?: CurriculumSubmitAssetRef[];
   notes?: string[];
   sourceSystem?: "Curriculum Hub" | "Other";
 }): HomeworkCompletionWriteFields {
@@ -269,7 +413,10 @@ export function buildHomeworkCompletionFields(input: {
     "Item Type": "Homework",
     "Curriculum Idempotency Key": input.idempotencyKey,
     "Assignment Key": input.assignmentKey,
-    "Curriculum Answers Snapshot": formatCurriculumAnswersSnapshot(input.answers),
+    "Curriculum Answers Snapshot": formatCurriculumAnswersSnapshot(
+      input.answers,
+      input.assets,
+    ),
   };
 
   if (input.phaId) {

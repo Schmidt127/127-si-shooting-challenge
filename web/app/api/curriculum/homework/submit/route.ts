@@ -56,6 +56,7 @@ export async function POST(request: Request) {
       receipt: {
         submissionId: result.receipt.submissionId,
         homeworkCompletionId: result.receipt.homeworkCompletionId,
+        ...(result.receipt.assetIds ? { assetIds: result.receipt.assetIds } : {}),
       },
     },
     {
