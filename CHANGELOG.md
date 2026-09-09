@@ -28,6 +28,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Web
 
+#### Added
+- **Curriculum Homework Library Assignment Key sync (2026-09-09)** — `POST /shoot/api/curriculum/library/sync` (Bearer `CURRICULUM_INGRESS_SECRET`) lets Curriculum Hub propagate authoritative `assignmentKey` onto Homework Library rows idempotently. Preserves existing keys; 409 on duplicate or conflicting overwrite. Dashboard `homeworkDetailHref` resolves to `/api/curriculum/start?assignmentKey=…` once synced. Hub must call on Structured lesson create (or backfill via `phaRecordId` from assignments API). Checklist: [`docs/deploy-checklists/curriculum-library-assignment-key-sync.md`](./docs/deploy-checklists/curriculum-library-assignment-key-sync.md).
+
 #### Changed
 - **Presim public UX (2026-09-06)** — PR **#472**: dynamic Grade Bands filters on leaderboard; leaderboard hero; public datetime formatting locked to **America/Denver** with fixed **MT** label; FAQ accordion with hash deep-links.
 
