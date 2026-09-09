@@ -97,7 +97,7 @@ export function phaMatchesEnrollmentGradeBand(
   phaGradeBandIds: string[],
   enrollmentGradeBandId: string | null,
 ): boolean {
-  if (!enrollmentGradeBandId) return true;
+  if (!enrollmentGradeBandId) return false;
   if (phaGradeBandIds.length === 0) return false;
   return phaGradeBandIds.includes(enrollmentGradeBandId);
 }

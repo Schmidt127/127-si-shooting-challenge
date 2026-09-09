@@ -131,6 +131,14 @@ export async function listCurriculumAssignmentsForEnrollment(
   const enrollmentGradeBandId = linkedRecordIds(enrollment.fields["Grade Band"])[0] ?? null;
   const homeworkCompletionIds = linkedRecordIds(enrollment.fields["Homework Completions"]);
 
+  if (!enrollmentGradeBandId) {
+    return {
+      ok: false,
+      status: 422,
+      error: "Enrollment has no Grade Band; structured homework assignments unavailable.",
+    };
+  }
+
   if (!programInstanceId) {
     return {
       ok: true,

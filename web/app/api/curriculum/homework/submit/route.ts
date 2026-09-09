@@ -4,6 +4,10 @@ import {
   bearerTokenFromAuthorization,
   curriculumIngressSecretValid,
 } from "@/lib/curriculum/ingress-auth";
+import {
+  loadCurriculumSubmitAuthorization,
+  parseSubmitAuthorizationToken,
+} from "@/lib/curriculum/submit-auth";
 import { processCurriculumHomeworkSubmit } from "@/lib/curriculum/submit-service";
 import {
   parseCurriculumSubmitPayload,
@@ -14,7 +18,8 @@ export const dynamic = "force-dynamic";
 
 /**
  * Curriculum Hub → Shooting Challenge homework submit ingress.
- * Auth: Bearer CURRICULUM_INGRESS_SECRET (separate from handoff).
+ * Auth: Bearer CURRICULUM_INGRESS_SECRET + X-Curriculum-Submit-Authorization
+ * (minted at handoff redeem; binds enrollment/assignment to this submit).
  * Live path (basePath /shoot): POST /shoot/api/curriculum/homework/submit
  */
 export async function POST(request: Request) {
@@ -40,9 +45,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: parsed.error }, { status: parsed.status });
   }
 
+  const submitAuthToken = parseSubmitAuthorizationToken({
+    header: request.headers.get("x-curriculum-submit-authorization"),
+    bodyField:
+      typeof body === "object" && body !== null && "submitAuthorizationToken" in body
+        ? (body as { submitAuthorizationToken?: unknown }).submitAuthorizationToken
+        : null,
+  });
+  const submitAuthorization = submitAuthToken
+    ? await loadCurriculumSubmitAuthorization(submitAuthToken)
+    : null;
+
   const result = await processCurriculumHomeworkSubmit({
     payload: parsed.value,
     idempotencyKey: idempotency.value,
+    submitAuthorization,
   });
 
   if (!result.ok) {

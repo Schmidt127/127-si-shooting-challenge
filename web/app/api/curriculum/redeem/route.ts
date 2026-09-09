@@ -4,6 +4,7 @@ import {
   consumeCurriculumHandoff,
   curriculumHandoffSecretValid,
 } from "@/lib/curriculum/handoff";
+import { mintCurriculumSubmitAuthorization } from "@/lib/curriculum/submit-auth";
 
 export async function POST(request: Request) {
   const authorization = request.headers.get("authorization");
@@ -27,10 +28,22 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid or expired handoff" }, { status: 410 });
   }
 
+  let submitAuthorizationToken: string;
+  try {
+    submitAuthorizationToken = await mintCurriculumSubmitAuthorization({
+      enrollmentId: record.enrollmentId,
+      gradeBand: record.gradeBand,
+      assignmentKey: record.assignmentKey,
+    });
+  } catch {
+    return NextResponse.json({ error: "Curriculum submit authorization unavailable." }, { status: 503 });
+  }
+
   return NextResponse.json(
     {
       enrollmentId: record.enrollmentId,
       gradeBand: record.gradeBand,
+      submitAuthorizationToken,
       ...(record.sourceGrade ? { sourceGrade: record.sourceGrade } : {}),
       displayName: record.displayName,
       ...(record.assignmentKey ? { assignmentKey: record.assignmentKey } : {}),
