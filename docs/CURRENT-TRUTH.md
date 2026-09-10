@@ -1,7 +1,7 @@
 # CURRENT TRUTH â 127 SI Shooting Challenge
 
 **Status:** Active â primary current-state document for this repository  
-**Last verification (repo):** 2026-09-06 — tip **`4a81c0cf`** (PR **#472** web + **#473** email payloads). **THREE-ATHLETE SIMULATION READY — NOT EXECUTED** (SC-SEASON-SIM-001; five-enrollment superseded — [`audits/OWNER-DECISIONS-20260906.md`](./audits/OWNER-DECISIONS-20260906.md)). Website: dynamic Grade Bands filters, leaderboard hero, America/Denver+MT, FAQ accordion. Email: Hub **PR #52** merged (`e79637f`); SC **117 v2.2** + `athleteFirstName` producers in GitHub — **Airtable paste pending Mike**. Zoom Attendance: lookups + **Attendance Label** formula **created live**; primary still **Id** autoNumber pending Mike UI convert. Prior: SC-171 GitHub ready; **SC-SEASON-SIM-002** CLOSED; purge **`ba969433`** (#457); **FUT-048** deferred.
+**Last verification (repo):** 2026-09-10 — tip **`ba3f17dd`** (PR **#505** SC-172 health/diagnostics). Prior: **`4a81c0cf`** (PR **#472**/**#473**). **THREE-ATHLETE SIMULATION READY — NOT EXECUTED** (SC-SEASON-SIM-001; five-enrollment superseded — [`audits/OWNER-DECISIONS-20260906.md`](./audits/OWNER-DECISIONS-20260906.md)). Website: dynamic Grade Bands filters, leaderboard hero, America/Denver+MT, FAQ accordion. Email: Hub **PR #52** merged (`e79637f`); SC **117 v2.2** + `athleteFirstName` producers in GitHub — **Airtable paste pending Mike**. Zoom Attendance: lookups + **Attendance Label** formula **created live**; primary still **Id** autoNumber pending Mike UI convert. Prior: SC-171 GitHub ready; **SC-SEASON-SIM-002** CLOSED; purge **`ba969433`** (#457); **FUT-048** deferred.
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -66,8 +66,8 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | **`4a81c0cfe70f287a7b15ac8e7c9f7935d271b8b1`** (PR **#473** email payloads; includes **#472** web) |
-| `origin/master` | **`4a81c0cfe70f287a7b15ac8e7c9f7935d271b8b1`** |
+| HEAD SHA | **`ba3f17dd`** (PR **#505** SC-172; includes **#504** structured curriculum + prior **#472**/**#473**) |
+| `origin/master` | **`ba3f17dd`** (re-verify after fetch) |
 | Ahead / behind | **0 / 0** (re-verify after fetch) |
 | Recent merges (2026-09-06 presim web + email) | **#473** email name/Zoom payloads (`4a81c0cf`) · **#472** Grade Bands / leaderboard hero / MT / FAQ (`75632e88`). Hub communications **PR #52** merged (`e79637f`) — SC **117 v2.2** Airtable paste still **pending Mike**. |
 | Recent merges (2026-09-05 purge + SC-167 complete) | **#457** transactional purge (`ba969433`) · **#456** SC-167 complete docs (`57831fe7`) · **#455** SC-167/168/169 live-status |
@@ -110,10 +110,12 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 |------|--------|
 | Public URL | https://www.fairfieldbasketballclub.com/shoot |
 | Local | http://localhost:3001/shoot |
-| Health | `GET /shoot/api/airtable` â token validity check |
+| Health | `GET /shoot/api/health` â public `{ "status": "ok" }` (SC-172). Legacy: `GET /shoot/api/airtable` â token validity check |
 | Softr | **Obsolete / Not Used** â historical reference only |
 | SEO | **COMPLETE** â program pages indexable (`NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`); structured data + mobile meta from PR **#399** (supersedes draft **#310**). Status: [`audits/SEO-STATUS-20260904.md`](./audits/SEO-STATUS-20260904.md). Private/auth routes remain `noindex`. |
-| Production deploy | **Live** — Vercel Production follows `master` (tip **`4a81c0cf`** after PR **#472**/**#473**; prior docs tip **`ba969433`** #457). `GET /shoot` / `/shoot/api/airtable` live-pass **200**. Post-purge transactional athlete tables empty; homework compact list + Levels + SC-149 branding live; FUT-025 athlete indexing env on |
+| Production deploy | **Live** — Vercel Production follows `master` (tip **`ba3f17dd`** after PR **#505** SC-172; prior **`4a81c0cf`** #472/#473). `GET /shoot/api/health` live **200** (2026-09-10). Post-purge transactional athlete tables empty; homework compact list + Levels + SC-149 branding live; FUT-025 athlete indexing env on |
+| SC-172 Health + admin diagnostics | **LIVE / token pending** (2026-09-10) — PR **#505** merged; Production health **200**; diagnostics **403** until `ADMIN_DIAGNOSTICS_TOKEN` set. Evidence [`audits/SC-172-PRODUCTION-VERIFY-20260910.md`](./audits/SC-172-PRODUCTION-VERIFY-20260910.md) · checklist [`deploy-checklists/SC-172-health-admin-diagnostics.md`](./deploy-checklists/SC-172-health-admin-diagnostics.md) |
+| Structured Curriculum Hub cutover | **PENDING Mike** — SC routes live (401 not 404); Hub Production redeem/submit URLs empty at prep; Outbox retry fields missing. Checklist [`deploy-checklists/structured-curriculum-hub-production-cutover.md`](./deploy-checklists/structured-curriculum-hub-production-cutover.md) |
 | Presim web UX (2026-09-06) | **Merged** PR **#472** (`75632e88`) — dynamic **Grade Bands** leaderboard filters; leaderboard hero; public datetimes **America/Denver** with fixed **MT** label; FAQ accordion (hash deep-links) |
 | Vitest / smoke | **483/483** Vitest pass (2026-08-30 release QA) Â· typecheck/lint/build PASS Â· prior smoke **50/50** (MRW-E04) |
 | FUT-016 Tutorials | **Complete** â portfolio catalog at `/shoot/tutorials` (PR **#284**, 2026-08-30) |
