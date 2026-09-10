@@ -28,6 +28,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Web
 
+#### Added
+- **Structured Curriculum submit authorization (2026-09-09)** — Mint `submitAuthorizationToken` on handoff redeem; require `X-Curriculum-Submit-Authorization` on homework submit to bind enrollment/assignment. Fail closed when enrollment Grade Band is missing; validate grade-band snapshot against enrollment + session. Hub contract: [`docs/interfaces/curriculum-hub-submit-authorization.md`](./docs/interfaces/curriculum-hub-submit-authorization.md). Env checklist: [`docs/deploy-checklists/structured-curriculum-vercel-env-checklist.md`](./docs/deploy-checklists/structured-curriculum-vercel-env-checklist.md).
+
 #### Changed
 - **Presim public UX (2026-09-06)** — PR **#472**: dynamic Grade Bands filters on leaderboard; leaderboard hero; public datetime formatting locked to **America/Denver** with fixed **MT** label; FAQ accordion with hash deep-links.
 

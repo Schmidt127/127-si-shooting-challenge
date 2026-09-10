@@ -20,7 +20,11 @@ import {
   type CurriculumSubmitPayload,
   type CurriculumSubmitReceipt,
 } from "@/lib/curriculum/submit-validation";
+import { validateSubmittedGradeBandSnapshot } from "@/lib/curriculum/grade-band-validation";
+import type { CurriculumSubmitAuthorization } from "@/lib/curriculum/submit-auth";
+import { validateCurriculumSubmitAuthorization } from "@/lib/curriculum/submit-auth";
 import { bindCurriculumSubmitAssets } from "@/lib/curriculum/upload-staging-service";
+import { asText } from "@/lib/data/airtable-values";
 
 const TABLES = PUBLIC_AIRTABLE_TABLES;
 
@@ -64,7 +68,7 @@ type PhaFields = {
 
 export type SubmitServiceResult =
   | { ok: true; receipt: CurriculumSubmitReceipt; idempotent: boolean }
-  | { ok: false; status: 404 | 409 | 422 | 503; error: string };
+  | { ok: false; status: 401 | 403 | 404 | 409 | 422 | 503; error: string };
 
 function isRecordId(value: string): boolean {
   return /^rec[a-zA-Z0-9]{14}$/.test(value);
@@ -75,11 +79,25 @@ function logSubmit(event: string, detail: Record<string, string | number | boole
   console.info(`[curriculum-submit] ${event}`, detail);
 }
 
+async function findEnrollmentGradeBandName(gradeBandId: string | null): Promise<string | null> {
+  if (!gradeBandId) return null;
+  const response = await listAirtableRecords<{ "Grade Band Name"?: unknown }>({
+    tableName: TABLES.gradeBands.name,
+    filterByFormula: `RECORD_ID()='${escapeAirtableString(gradeBandId)}'`,
+    fields: ["Grade Band Name"],
+    maxRecords: 1,
+    revalidateSeconds: 0,
+  });
+  const name = asText(response.records[0]?.fields["Grade Band Name"], "").trim();
+  return name || null;
+}
+
 async function findEnrollment(enrollmentId: string): Promise<{
   id: string;
   active: boolean;
   programInstanceId: string | null;
   gradeBandId: string | null;
+  gradeBandName: string | null;
   homeworkCompletionIds: string[];
 } | null> {
   const response = await listAirtableRecords<EnrollmentFields>({
@@ -91,11 +109,14 @@ async function findEnrollment(enrollmentId: string): Promise<{
   });
   const record = response.records[0];
   if (!record) return null;
+  const gradeBandId = linkedRecordIds(record.fields["Grade Band"])[0] ?? null;
+  const gradeBandName = await findEnrollmentGradeBandName(gradeBandId);
   return {
     id: record.id,
     active: asBoolean(record.fields["Active?"]),
     programInstanceId: linkedRecordIds(record.fields["Program Instance"])[0] ?? null,
-    gradeBandId: linkedRecordIds(record.fields["Grade Band"])[0] ?? null,
+    gradeBandId,
+    gradeBandName,
     homeworkCompletionIds: linkedRecordIds(record.fields["Homework Completions"]),
   };
 }
@@ -551,8 +572,9 @@ async function writeHomeworkCompletion(input: {
 export async function processCurriculumHomeworkSubmit(input: {
   payload: CurriculumSubmitPayload;
   idempotencyKey: string;
+  submitAuthorization?: CurriculumSubmitAuthorization | null;
 }): Promise<SubmitServiceResult> {
-  const { payload, idempotencyKey } = input;
+  const { payload, idempotencyKey, submitAuthorization = null } = input;
 
   try {
     const prior = await findPriorByIdempotencyKey(idempotencyKey);
@@ -572,6 +594,46 @@ export async function processCurriculumHomeworkSubmit(input: {
     }
     if (!enrollment.active) {
       return { ok: false, status: 404, error: "Enrollment is not active." };
+    }
+
+    const authCheck = validateCurriculumSubmitAuthorization({
+      authorization: submitAuthorization,
+      enrollmentId: payload.enrollmentId,
+      assignmentKey: payload.assignmentKey,
+      gradeBand: payload.gradeBand,
+    });
+    if (!authCheck.ok) {
+      logSubmit("submit_auth_rejected", {
+        enrollmentId: payload.enrollmentId,
+        assignmentKey: payload.assignmentKey,
+        status: authCheck.status,
+      });
+      return { ok: false, status: authCheck.status, error: authCheck.error };
+    }
+
+    const gradeBandCheck = validateSubmittedGradeBandSnapshot({
+      enrollmentGradeBandName: enrollment.gradeBandName,
+      authorizedGradeBand: authCheck.authorization.gradeBand,
+      submittedGradeBand: payload.gradeBand,
+    });
+    if (!gradeBandCheck.ok) {
+      logSubmit("grade_band_rejected", {
+        enrollmentId: payload.enrollmentId,
+        assignmentKey: payload.assignmentKey,
+      });
+      return { ok: false, status: gradeBandCheck.status, error: gradeBandCheck.error };
+    }
+
+    if (!enrollment.gradeBandId) {
+      logSubmit("grade_band_missing", {
+        enrollmentId: payload.enrollmentId,
+        assignmentKey: payload.assignmentKey,
+      });
+      return {
+        ok: false,
+        status: 422,
+        error: "Enrollment has no Grade Band; structured homework submit rejected.",
+      };
     }
 
     let library: { id: string };

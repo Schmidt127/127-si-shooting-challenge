@@ -426,6 +426,11 @@ describe("helpers", () => {
     expect(phaMatchesEnrollmentGradeBand([GRADE_5_6], GRADE_3_4)).toBe(false);
   });
 
+  it("fails closed when enrollment has no grade band", () => {
+    expect(phaMatchesEnrollmentGradeBand([GRADE_3_4, GRADE_5_6], null)).toBe(false);
+    expect(phaMatchesEnrollmentGradeBand([], null)).toBe(false);
+  });
+
   it("resolveViewSubmittedHomeworkHref accepts only lambda reviewer URLs", () => {
     const safe =
       "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/recReiXXBRtaW3lns?token=abc123";
