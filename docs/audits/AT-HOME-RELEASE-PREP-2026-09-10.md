@@ -106,24 +106,37 @@ Verified by name during prep; **no secret values recorded**.
 
 ---
 
+## Production probe (post-merge)
+
+| URL | Result (2026-09-10) |
+|---|---|
+| `GET /shoot/api/health` | **200** `{"status":"ok"}` |
+| `GET /shoot/api/admin/diagnostics` (no auth) | **403** — gate not configured |
+| `GET /shoot/admin/diagnostics` (no auth) | **200** HTML Forbidden (no payload) |
+
+Full probe log: [`SC-172-PRODUCTION-VERIFY-20260910.md`](./SC-172-PRODUCTION-VERIFY-20260910.md)
+
+---
+
 ## Live E2E
 
 **Not executed** — no authorized live submission this session. Blockers for a future live pass:
 
-1. Vercel Production deploy of SC-172 (`master` @ `ba3f17dd` or later)
-2. Hub Production redeem + submit URLs
-3. Hub Outbox five retry fields
-4. Disposable test enrollment + Mike allowlist
+1. ~~Vercel Production deploy of SC-172~~ **DONE** (health 200)
+2. **`ADMIN_DIAGNOSTICS_TOKEN`** on Shooting Challenge Production
+3. Hub Production redeem + submit URLs
+4. Hub Outbox five retry fields
+5. Disposable test enrollment + Mike allowlist
 
 ---
 
 ## Ordered operator next steps
 
-1. Confirm Vercel Production deployed `master` after PR **#505** merge.
-2. Set **`ADMIN_DIAGNOSTICS_TOKEN`** in Shooting Challenge Vercel Production; smoke `/shoot/api/health` and gated diagnostics.
-3. Set Hub Production **redeem** and **submit** URLs.
+1. ~~Confirm Vercel Production deployed `master` after PR **#505** merge~~ **DONE**
+2. Set **`ADMIN_DIAGNOSTICS_TOKEN`** in Shooting Challenge Vercel Production; smoke gated diagnostics.
+3. Set Hub Production **redeem** and **submit** URLs — [`deploy-checklists/structured-curriculum-hub-production-cutover.md`](../deploy-checklists/structured-curriculum-hub-production-cutover.md)
 4. Add five **Submission Outbox** retry fields in Hub Airtable.
-5. Run one disposable structured-homework E2E on allowlisted email when steps 1–4 are complete.
+5. Run one disposable structured-homework E2E on allowlisted email when steps 2–4 are complete.
 
 ---
 

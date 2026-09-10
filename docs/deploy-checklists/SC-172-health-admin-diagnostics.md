@@ -30,6 +30,8 @@ Auth order:
 
 After merge to `master`, confirm Vercel Production finished deploying the commit that includes SC-172 (`ba3f17dd` or later).
 
+**Verified 2026-09-10:** `GET /shoot/api/health` → **200**. Evidence: [`docs/audits/SC-172-PRODUCTION-VERIFY-20260910.md`](../audits/SC-172-PRODUCTION-VERIFY-20260910.md).
+
 ### 2. Set admin diagnostics token
 
 In Vercel → **127-si-shooting-challenge** → Settings → Environment Variables → **Production**:
