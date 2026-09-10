@@ -26,6 +26,9 @@
 | `CURRICULUM_HANDOFF_SECRET` | **Same value** | Redeem handoff from SC |
 | `CURRICULUM_INGRESS_SECRET` | **Same value** | Submit, assignments, upload-staging |
 | SC public base URL + `/shoot` | N/A | Handoff redirect target |
+| Redeem URL (Production) | N/A | Must point to `https://www.fairfieldbasketballclub.com/shoot/api/curriculum/redeem` — **empty at 2026-09-10 prep** |
+| Submit URL (Production) | N/A | Must point to `https://www.fairfieldbasketballclub.com/shoot/api/curriculum/homework/submit` — **empty at 2026-09-10 prep** |
+| Upload URL (Production) | N/A | Staging upload endpoint — verified correct at prep |
 
 ## Pre-staging dependencies
 

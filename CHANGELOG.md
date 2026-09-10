@@ -8,6 +8,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Docs
 
+#### Added
+- **At-home release prep closeout (2026-09-10)** — Audit [`docs/audits/AT-HOME-RELEASE-PREP-2026-09-10.md`](./docs/audits/AT-HOME-RELEASE-PREP-2026-09-10.md); SC-172 operator checklist [`docs/deploy-checklists/SC-172-health-admin-diagnostics.md`](./docs/deploy-checklists/SC-172-health-admin-diagnostics.md); Hub cutover checklist [`docs/deploy-checklists/structured-curriculum-hub-production-cutover.md`](./docs/deploy-checklists/structured-curriculum-hub-production-cutover.md); production verify [`docs/audits/SC-172-PRODUCTION-VERIFY-20260910.md`](./docs/audits/SC-172-PRODUCTION-VERIFY-20260910.md); CURRENT-TRUTH + PROJECT_STATE SC-172 overlays.
+
 #### Changed
 - **Presim web/email/Airtable closeout (2026-09-06)** — Living docs tip **`4a81c0cf`** (#472/#473). CURRENT-TRUTH / PROJECT_STATE / MASTER_REMAINING / Completion Master overlays: dynamic Grade Bands filters, leaderboard hero, America/Denver+MT, FAQ accordion; Hub **PR #52** (`e79637f`); **117 v2.2** + `athleteFirstName` producers paste-pending; ZA lookups + Attendance Label live / primary Id pending Mike UI; **THREE-ATHLETE SIMULATION READY — NOT EXECUTED** unchanged. Checklist: [`docs/deploy-checklists/ZOOM-ATTENDANCE-PRIMARY-FIELD-FORMULA.md`](./docs/deploy-checklists/ZOOM-ATTENDANCE-PRIMARY-FIELD-FORMULA.md).
 
