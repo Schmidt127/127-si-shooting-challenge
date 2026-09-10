@@ -2297,15 +2297,17 @@ Zero `WEEKLY_ATHLETE_SUMMARY` Hub handoffs after execute alone is **expected** (
 ### SC-172 — Production health + admin diagnostics routes
 
 **Priority:** P0  
-**Status:** **IN PROGRESS / Built in Repository** (2026-09-10)  
+**Status:** **GitHub ready / PENDING Production deploy + `ADMIN_DIAGNOSTICS_TOKEN` + smoke** (2026-09-10)  
 **Systems:** Next.js `/shoot` web app (`web/app/api/health`, `web/app/admin/diagnostics`, `web/app/api/admin/diagnostics`)  
 **Related:** SC-116 admin roadmap; SC-102 / SC-118 smoke; existing `/api/airtable` config probe  
 
-**Problem:** After production redeploy from `master` @ `56e8ebaf`, `/shoot` loaded but `/shoot/api/health`, `/shoot/admin/diagnostics`, and `/shoot/api/admin/diagnostics` returned 404. Inspection found those routes were **never present** on `master` or any recoverable local/remote dashboard/configuration branch in this repository (no git ancestry for the route files).
+**Problem:** After production redeploy from `master` @ `56e8ebaf`, `/shoot` loaded but `/shoot/api/health`, `/shoot/admin/diagnostics`, and `/shoot/api/admin/diagnostics` returned 404. Inspection found those routes were **never present** on `master` until SC-172 landed.
 
 **Scope:** Add public minimal health probe (`{ "status": "ok" }` only) and fail-closed staff diagnostics (config presence + secret redaction; no athlete data). Auth via `ADMIN_DIAGNOSTICS_TOKEN` (preferred) or `SITE_ACCESS_TOKEN`; athlete sessions denied. Do not change production env values in this item — operators set the admin token separately when ready.
 
 **Acceptance:** Routes exist under `basePath` `/shoot`; health public; diagnostics 401/403 without staff token; no secrets/athlete data in responses; `Cache-Control: no-store`; tests + production build green.
+
+**Evidence:** PR **#505** merged `master` @ `ba3f17dd` · prep [`audits/AT-HOME-RELEASE-PREP-2026-09-10.md`](./audits/AT-HOME-RELEASE-PREP-2026-09-10.md) · checklist [`deploy-checklists/SC-172-health-admin-diagnostics.md`](./deploy-checklists/SC-172-health-admin-diagnostics.md)
 
 ---
 
@@ -2780,7 +2782,7 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-168** | Email | Season Sim T122531Z missing weekly-summary email handoffs (0 WEEKLY) | P0 | **COMPLETE / Corrected expectation** (2026-09-05) | SC-SEASON-SIM-002, 072/074/079/118/119 | Expected harness gap: execute arms Build Weekly only; 118/119 Sunday cron not sim-driven. Production pipeline unchanged. PR **#451**. Audit [`audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md`](./audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md) Â· `weekly-email-stage` CLI. |
 | **SC-169** | Achievements | Season Sim T122531Z â€œunlocks=0â€ discrepancy | P0 | **COMPLETE / Live evidence** (2026-09-05) | SC-SEASON-SIM-002 | **False-negative count + cleanup gap** â€” 066/059 awarded 4 shot-milestone unlocks (matched 4 SHOT_MILESTONE XP); cascade used non-existent Unlocks.`Enrollment Record ID`; orphans deleted (0 remaining). Evidence [`audits/SC-169-ACHIEVEMENT-UNLOCKS-20260905.md`](./audits/SC-169-ACHIEVEMENT-UNLOCKS-20260905.md). **No automation paste.** PR **#452**. |
 | **SC-171** | Email / UI | Daily Submission + Homework Feedback parent presentation | P1 | **GitHub ready / PENDING paste + Hub deploy** (2026-09-06) | FUT-045 | **076 v8.13** streak fix + payload trim; **071 v4.4** dates + athlete profile URL; Hub templates. No XP logic changes. Evidence [`audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md`](./audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md). |
-| **SC-172** | Website / Ops | Production health + admin diagnostics routes | P0 | **IN PROGRESS / Built in Repository** (2026-09-10) | SC-116, SC-118 | Routes missing from `master` @ `56e8ebaf` (never committed). Add `/shoot/api/health`, `/shoot/admin/diagnostics`, `/shoot/api/admin/diagnostics`; fail-closed staff auth; secret redaction; no athlete data. |
+| **SC-172** | Website / Ops | Production health + admin diagnostics routes | P0 | **PENDING prod deploy + token + smoke** (2026-09-10) | SC-116, SC-118 | PR **#505** merged `ba3f17dd`. Set `ADMIN_DIAGNOSTICS_TOKEN`; smoke health + diagnostics. Checklist [`deploy-checklists/SC-172-health-admin-diagnostics.md`](./deploy-checklists/SC-172-health-admin-diagnostics.md). |
 | **SC-149 residual** | Website | Family Dashboard under More menu | P1 | **COMPLETE** (2026-09-05 with SC-164/165) | SC-149 | PR **#439**; `MORE_NAV_HREFS` includes FD â†’ `/dashboard/sign-in`. Evidence [`audits/SC-149-MORE-FAMILY-DASHBOARD-20260905.md`](./audits/SC-149-MORE-FAMILY-DASHBOARD-20260905.md). |
 | **SC-113** | Website | Loading, empty, and error states | P2 | Live Tested in PROD | GÃƒâ€¡ÃƒÂ¶ | Keep states aligned when SC-112 lands |
 
