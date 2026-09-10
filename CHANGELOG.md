@@ -32,8 +32,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Added
-- **SC-172 production health + admin diagnostics (2026-09-10)** — Public `GET /shoot/api/health` returns only `{ "status": "ok" }`. Staff `GET /shoot/api/admin/diagnostics` and `/shoot/admin/diagnostics` expose configuration presence with secret redaction, fail-closed auth (`ADMIN_DIAGNOSTICS_TOKEN` preferred, else `SITE_ACCESS_TOKEN`), no athlete data, `Cache-Control: no-store`. Proxy keeps `/api/health` public when site-access gate is enabled.
-- **Structured Curriculum submit authorization (2026-09-09)** — Mint `submitAuthorizationToken` on handoff redeem; require `X-Curriculum-Submit-Authorization` on homework submit to bind enrollment/assignment. Fail closed when enrollment Grade Band is missing; validate grade-band snapshot against enrollment + session. Hub contract: [`docs/interfaces/curriculum-hub-submit-authorization.md`](./docs/interfaces/curriculum-hub-submit-authorization.md). Env checklist: [`docs/deploy-checklists/structured-curriculum-vercel-env-checklist.md`](./docs/deploy-checklists/structured-curriculum-vercel-env-checklist.md).
+
 
 #### Changed
 - **Presim public UX (2026-09-06)** — PR **#472**: dynamic Grade Bands filters on leaderboard; leaderboard hero; public datetime formatting locked to **America/Denver** with fixed **MT** label; FAQ accordion with hash deep-links.
