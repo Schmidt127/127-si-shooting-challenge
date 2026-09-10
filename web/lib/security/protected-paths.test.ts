@@ -18,6 +18,7 @@ describe("protected path scaffolding (SC-112 groundwork)", () => {
   it("recognizes future staff-protected paths", () => {
     expect(isStaffProtectedPath("/admin")).toBe(true);
     expect(isStaffProtectedPath("/admin/tools")).toBe(true);
+    expect(isStaffProtectedPath("/admin/diagnostics")).toBe(true);
     expect(isStaffProtectedPath("/dashboard")).toBe(false);
   });
 

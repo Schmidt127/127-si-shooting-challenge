@@ -8,7 +8,17 @@ import {
   siteAccessQueryParam,
 } from "@/lib/security";
 
+/** Public probes that must remain reachable when SITE_ACCESS_TOKEN is set. */
+function isPublicProbePath(pathname: string): boolean {
+  return pathname === "/api/health" || pathname.startsWith("/api/health/");
+}
+
 export function proxy(request: NextRequest) {
+  // SC-172: /api/health is intentionally public even on gated preview deployments.
+  if (isPublicProbePath(request.nextUrl.pathname)) {
+    return NextResponse.next();
+  }
+
   if (isSiteAccessAuthorized(request)) {
     const required = process.env.SITE_ACCESS_TOKEN?.trim();
     const queryToken = request.nextUrl.searchParams.get(siteAccessQueryParam());
