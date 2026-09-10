@@ -2,7 +2,7 @@
 
 **Scope:** Curriculum Hub (separate repo / Vercel project) + Hub Airtable  
 **SC repo status:** PR **#504** merged; curriculum routes live on Production (401 without secrets)  
-**Blockers found at prep (2026-09-10):** Hub Production redeem + submit URLs empty; Submission Outbox missing five retry fields  
+**Blockers at prep (2026-09-10):** Hub Production redeem + submit URLs empty · ~~Submission Outbox retry fields~~ **DONE — Mike UI 2026-09-10**  
 **Live E2E:** Not run — requires steps below + disposable test enrollment
 
 ---
@@ -63,19 +63,15 @@ Hub must implement contract [`docs/interfaces/curriculum-hub-submit-authorizatio
 
 ---
 
-## Mike — Hub Airtable (Submission Outbox)
+## Hub Airtable — Submission Outbox retry fields
 
-Add these fields to **Submission Outbox** before retry-dependent live tests (schema change — Mike UI or OMNI):
+**COMPLETE (2026-09-10)** — Mike added five fields on **Submission Outbox** in Curriculum Hub base:
 
-| Field | Suggested type | Purpose |
-|---|---|---|
-| Retry Payload | Long text | JSON retry body |
-| Delivery Attempt Count | Number | Monotonic counter |
-| Last Attempt At | Date/time | Last delivery try |
-| Delivered At | Date/time | Success timestamp |
-| Processing Claim | Single line text | Worker concurrency lock |
+Retry Payload · Delivery Attempt Count · Last Attempt At · Delivered At · Processing Claim
 
-**Note:** Retry payload is **JSON, not encrypted** per prep review of Hub PR #21.
+Checklist: [`HUB-SUBMISSION-OUTBOX-RETRY-FIELDS.md`](./HUB-SUBMISSION-OUTBOX-RETRY-FIELDS.md)
+
+**Note:** Retry payload is **JSON, not encrypted** per prep review of Hub PR #21. Agent did not live-verify field IDs — Hub PR #21 merge + E2E is authority.
 
 ---
 

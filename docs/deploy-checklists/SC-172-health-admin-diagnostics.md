@@ -90,15 +90,7 @@ Full SC-side env checklist: [`structured-curriculum-vercel-env-checklist.md`](./
 
 ### Hub Airtable — Submission Outbox fields
 
-Add before retry-dependent live tests (Mike UI / OMNI — schema change):
-
-| Field | Suggested type |
-|---|---|
-| Retry Payload | Long text (JSON) |
-| Delivery Attempt Count | Number |
-| Last Attempt At | Date/time |
-| Delivered At | Date/time |
-| Processing Claim | Single line text or formula per Hub design |
+**COMPLETE (2026-09-10)** — Mike added five retry fields on Hub **Submission Outbox**. See [`HUB-SUBMISSION-OUTBOX-RETRY-FIELDS.md`](./HUB-SUBMISSION-OUTBOX-RETRY-FIELDS.md).
 
 ---
 

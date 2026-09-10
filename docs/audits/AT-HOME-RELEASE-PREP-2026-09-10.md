@@ -125,7 +125,7 @@ Full probe log: [`SC-172-PRODUCTION-VERIFY-20260910.md`](./SC-172-PRODUCTION-VER
 1. ~~Vercel Production deploy of SC-172~~ **DONE** (health 200)
 2. **`ADMIN_DIAGNOSTICS_TOKEN`** on Shooting Challenge Production
 3. Hub Production redeem + submit URLs
-4. Hub Outbox five retry fields
+4. ~~Hub Outbox five retry fields~~ **DONE — Mike UI 2026-09-10**
 5. Disposable test enrollment + Mike allowlist
 
 ---
@@ -135,8 +135,8 @@ Full probe log: [`SC-172-PRODUCTION-VERIFY-20260910.md`](./SC-172-PRODUCTION-VER
 1. ~~Confirm Vercel Production deployed `master` after PR **#505** merge~~ **DONE**
 2. Set **`ADMIN_DIAGNOSTICS_TOKEN`** in Shooting Challenge Vercel Production; smoke gated diagnostics.
 3. Set Hub Production **redeem** and **submit** URLs — [`deploy-checklists/structured-curriculum-hub-production-cutover.md`](../deploy-checklists/structured-curriculum-hub-production-cutover.md)
-4. Add five **Submission Outbox** retry fields in Hub Airtable.
-5. Run one disposable structured-homework E2E on allowlisted email when steps 2–4 are complete.
+4. ~~Add five **Submission Outbox** retry fields in Hub Airtable~~ **DONE — Mike UI 2026-09-10**
+5. Run one disposable structured-homework E2E on allowlisted email when steps 2–3 are complete.
 
 ---
 

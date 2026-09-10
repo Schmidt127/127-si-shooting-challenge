@@ -8,6 +8,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Docs
 
+#### Changed
+- **Hub Submission Outbox retry fields (2026-09-10)** — Mike added five fields in Curriculum Hub Airtable (Submission Outbox). Living docs updated; agent did not live-verify schema. Checklist [`docs/deploy-checklists/HUB-SUBMISSION-OUTBOX-RETRY-FIELDS.md`](./docs/deploy-checklists/HUB-SUBMISSION-OUTBOX-RETRY-FIELDS.md).
+
 #### Added
 - **At-home release prep closeout (2026-09-10)** — Audit [`docs/audits/AT-HOME-RELEASE-PREP-2026-09-10.md`](./docs/audits/AT-HOME-RELEASE-PREP-2026-09-10.md); SC-172 operator checklist [`docs/deploy-checklists/SC-172-health-admin-diagnostics.md`](./docs/deploy-checklists/SC-172-health-admin-diagnostics.md); Hub cutover checklist [`docs/deploy-checklists/structured-curriculum-hub-production-cutover.md`](./docs/deploy-checklists/structured-curriculum-hub-production-cutover.md); production verify [`docs/audits/SC-172-PRODUCTION-VERIFY-20260910.md`](./docs/audits/SC-172-PRODUCTION-VERIFY-20260910.md); CURRENT-TRUTH + PROJECT_STATE SC-172 overlays.
 
