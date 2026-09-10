@@ -21,6 +21,15 @@ from .clock_override import (
     sim_submission_override_fields,
 )
 from .constants import SAFE_EMAIL_RECIPIENT, SIM_START
+from .video_feedback_contract import (
+    build_video_asset_create_fields,
+    build_video_asset_finalize_fields,
+    build_video_feedback_arm_fields,
+    build_video_feedback_create_fields,
+    build_video_feedback_pipeline_fields,
+    sim_source_attachment_id,
+    sim_video_upload_attachment,
+)
 from .reference_data import parse_date_value
 from .run_registry import RunRegistry, load_registry, run_marker, save_registry
 from .scenarios import Athlete1Scenario
@@ -51,6 +60,10 @@ NEVER_WRITE_FIELDS = frozenset(
         "Total Homework XP Awarded",
         "Total Video XP Awarded",
         "Ready for XP Automation?",
+        "Is True Video Feedback Asset?",
+        "Base XP Awarded",
+        "Total Video XP Awarded",
+        "XP Events",
         "Zoom Credit Approved?",
         "Zoom Credit Pre-Approved?",
         "Created Time",
@@ -380,6 +393,7 @@ class SeasonSimWriter:
             "Athlete First Name": self.scenario.athlete["first_name"],
             "Athlete Last Name": self.scenario.athlete["last_name"],
             "Parent Email": SAFE_EMAIL_RECIPIENT,
+            "Parent Email - Cleaned": SAFE_EMAIL_RECIPIENT,
             "Athlete Email": SAFE_EMAIL_RECIPIENT,
             "School Year": self.ctx.school_year,
             "Grade": self.scenario.athlete["grade"],
@@ -570,6 +584,14 @@ class SeasonSimWriter:
             if len(day.homework) > 1:
                 sub_fields["Homework Name 2"] = [day.homework[1]["pha_record_id"]]
 
+        if day.video_feedback:
+            source_attachment_id = sim_source_attachment_id(self.marker, day.day_number)
+            video_filename = f"season-sim-video-d{day.day_number:02d}.mp4"
+            sub_fields["Video Upload"] = sim_video_upload_attachment(
+                source_attachment_id,
+                video_filename,
+            )
+
         was_id = self.reg.find_by_dedupe_key(f"{self.marker}|WAS|{week_id}")
         if was_id:
             sub_fields["Weekly Athlete Summary"] = [was_id]
@@ -691,45 +713,102 @@ class SeasonSimWriter:
         submission_id: str,
         day: Any,
     ) -> None:
-        asset_fields = {
-            "Asset Label": f"{self.marker}|VIDEO|D{day.day_number:02d}",
-            "Asset Purpose": "Video For Feedback",
-            "Asset Slot": "VIDEO",
-            "Asset Type": "Video",
-            "Original File Name": f"season-sim-video-d{day.day_number:02d}.mp4",
-            "Source Attachment ID": f"{self.marker}|SA|VIDEO|D{day.day_number:02d}",
-            "Submission - Linked": [submission_id],
-            "Enrollment - Linked": [enrollment_id],
-            "Send to Make Trigger": False,
-        }
+        source_attachment_id = sim_source_attachment_id(self.marker, day.day_number)
+        video_filename = f"season-sim-video-d{day.day_number:02d}.mp4"
+        asset_fields = build_video_asset_create_fields(
+            marker=self.marker,
+            day_number=day.day_number,
+            submission_id=submission_id,
+            enrollment_id=enrollment_id,
+            source_attachment_id=source_attachment_id,
+            filename=video_filename,
+        )
         asset_id = self._ensure(
             table="Submission Assets",
             dedupe_key=f"{self.marker}|SA|VIDEO|D{day.day_number:02d}",
             fields=asset_fields,
             step=f"submission_asset|video|D{day.day_number:02d}",
         )
-        vf_fields: dict[str, Any] = {
-            "Enrollment": [enrollment_id],
-            "Submission": [submission_id],
-            "Active?": True,
-            "Award Status": "Pending",
-            "Video Feedback Key": f"{self.marker}|VF|D{day.day_number:02d}|{asset_id}",
-            "Coach Feedback": f"{self.marker}|video review",
-            # Feedback Posted? is armed in a separate update so 113/114
-            # recordUpdated triggers fire (create-only does not).
-        }
         vf_names = self.ctx.video_feedback_field_names or field_names_for_table(
             self.client, "Video Feedback"
         )
-        if "Grade Band" in vf_names and self.ctx.grade_band_id:
-            vf_fields["Grade Band"] = [self.ctx.grade_band_id]
+        grade_band_id = (
+            self.ctx.grade_band_id if "Grade Band" in vf_names else None
+        )
+        vf_fields = build_video_feedback_create_fields(
+            enrollment_id=enrollment_id,
+            submission_id=submission_id,
+            asset_id=asset_id,
+            coach_feedback=f"{self.marker}|video review",
+            grade_band_id=grade_band_id,
+        )
         vf_id = self._ensure(
             table="Video Feedback",
             dedupe_key=f"{self.marker}|VF|D{day.day_number:02d}",
             fields=vf_fields,
             step=f"video_feedback|D{day.day_number:02d}",
         )
+        self._finalize_video_pipeline_sim(
+            vf_id=vf_id,
+            asset_id=asset_id,
+            day_number=day.day_number,
+        )
         self._arm_video_feedback_update_trigger(vf_id, day_number=day.day_number)
+
+    def _finalize_video_pipeline_sim(
+        self, *, vf_id: str, asset_id: str, day_number: int
+    ) -> None:
+        """Deterministic post-013/070b/022 state without Make/Lambda/S3 calls."""
+        dedupe = f"{self.marker}|VF_PIPELINE|D{day_number:02d}"
+        done = set(self.reg.meta.get("completed_dedupe_keys") or [])
+        if dedupe in done or self.reg.has_dedupe_key(dedupe):
+            self.reused.append(
+                {
+                    "table": "Video Feedback",
+                    "id": vf_id,
+                    "dedupe_key": dedupe,
+                    "step": f"video_feedback_pipeline|D{day_number:02d}",
+                }
+            )
+            return
+        asset_patch = build_video_asset_finalize_fields(video_feedback_id=vf_id)
+        vf_patch = build_video_feedback_pipeline_fields(asset_id=asset_id)
+        self._update_records(
+            "Submission Assets",
+            [{"id": asset_id, "fields": asset_patch}],
+        )
+        self._update_records(
+            "Video Feedback",
+            [{"id": vf_id, "fields": vf_patch}],
+        )
+        self.reg.add(
+            "Submission Assets",
+            asset_id,
+            dedupe_key=f"{dedupe}|ASSET",
+            notes="canonical_vf_backlink_post_pipeline",
+            fields_snapshot=dict(asset_patch),
+        )
+        self.reg.add(
+            "Video Feedback",
+            vf_id,
+            dedupe_key=dedupe,
+            notes="022_writeback_sim_lambda_viewer_url",
+            fields_snapshot=dict(vf_patch),
+        )
+        self.reg.meta.setdefault("completed_dedupe_keys", [])
+        if dedupe not in self.reg.meta["completed_dedupe_keys"]:
+            self.reg.meta["completed_dedupe_keys"].append(dedupe)
+        self.created.append(
+            {
+                "table": "Video Feedback",
+                "id": vf_id,
+                "dedupe_key": dedupe,
+                "step": f"video_feedback_pipeline|D{day_number:02d}",
+                "op": "update_pipeline_sim",
+            }
+        )
+        self.reg.last_completed_step = f"video_feedback_pipeline|D{day_number:02d}"
+        self._save()
 
     def _arm_video_feedback_update_trigger(
         self, vf_id: str, *, day_number: int
@@ -753,13 +832,8 @@ class SeasonSimWriter:
                 }
             )
             return
-        arm_fields: dict[str, Any] = {
-            "Feedback Posted?": True,
-            # Simulated coach feedback is complete — arm 073 handoff gate.
-            "Parent Feedback Ready?": True,
-            "Parent Feedback Sent?": False,
-            # Do not set Ready for XP Automation? — 113 owns that after Base XP.
-        }
+        arm_fields: dict[str, Any] = dict(build_video_feedback_arm_fields())
+        # Do not set Ready for XP Automation? — 113 owns that after Base XP.
         self._update_records(
             "Video Feedback",
             [{"id": vf_id, "fields": arm_fields}],

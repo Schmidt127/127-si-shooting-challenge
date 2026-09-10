@@ -42,12 +42,14 @@ class MemoryAirtableClient:
                 "Athlete First Name",
                 "Athlete Last Name",
                 "Parent Email",
+                "Parent Email - Cleaned",
                 "Athlete Email",
                 "School Year",
                 "Grade",
                 "Grade Band",
                 "Program Instance",
                 "Active?",
+                "Level Recalc Needed?",
             },
             "Submissions": {
                 "Enrollment",
@@ -56,6 +58,7 @@ class MemoryAirtableClient:
                 "Activity Date",
                 "Shot Total",
                 "Duplicate Review Status",
+                "Video Upload",
                 "Video Upload Note",
                 "Daily Email Subject",
                 "Season Sim Test Record?",
@@ -66,6 +69,8 @@ class MemoryAirtableClient:
                 "Homework Name 2",
                 "Weekly Athlete Summary",
                 "Build Daily Email Now?",
+                "Count This Submission?",
+                "Activity Date Is Future?",
             },
             "Submission Assets": {
                 "Asset Label",
@@ -76,8 +81,12 @@ class MemoryAirtableClient:
                 "Source Attachment ID",
                 "Submission - Linked",
                 "Enrollment - Linked",
+                "Video Feedback",
+                "Airtable Attachment",
+                "Upload Status",
                 "Send to Make Trigger",
                 "Reviewer Access Token",
+                "Is True Video Feedback Asset?",
             },
             "Homework Completions": {
                 "Enrollment",
@@ -101,6 +110,7 @@ class MemoryAirtableClient:
             "Video Feedback": {
                 "Enrollment",
                 "Submission",
+                "Submission Asset",
                 "Active?",
                 "Award Status",
                 "Video Feedback Key",
@@ -111,6 +121,23 @@ class MemoryAirtableClient:
                 "Ready for XP Automation?",
                 "Do Not Award XP?",
                 "Grade Band",
+                "Week",
+                "Video URL or Drive Link",
+                "Upload Status",
+                "Video Asset File Name",
+                "Base XP Awarded",
+                "Total Video XP Awarded",
+                "XP Events",
+            },
+            "XP Events": {
+                "Enrollment",
+                "Submission",
+                "Week",
+                "Video Feedback",
+                "XP Points",
+                "Active?",
+                "Source Key",
+                "XP Source Date",
             },
             "Zoom Attendance": {
                 "Enrollment",
@@ -186,7 +213,7 @@ class MemoryAirtableClient:
         for fields in records:
             rid = _new_rec_id()
             merged = dict(fields)
-            self._apply_submission_formula_sim(table, merged)
+            self._apply_formula_sim(table, merged)
             rec = {"id": rid, "fields": merged}
             self.tables[table][rid] = rec
             out.append(rec)
@@ -201,27 +228,50 @@ class MemoryAirtableClient:
             if rid not in self.tables[table]:
                 self.tables[table][rid] = {"id": rid, "fields": {}}
             self.tables[table][rid]["fields"].update(u["fields"])
-            self._apply_submission_formula_sim(
-                table, self.tables[table][rid]["fields"]
-            )
+            self._apply_formula_sim(table, self.tables[table][rid]["fields"])
             out.append(self.tables[table][rid])
         return out
 
-    def _apply_submission_formula_sim(self, table: str, fields: dict[str, Any]) -> None:
-        """Offline stand-in for Count This / Total Shots Counted after create."""
-        if table != "Submissions":
-            return
-        enrollment = fields.get("Enrollment") or []
-        activity = fields.get("Activity Date")
-        shot_total = fields.get("Shot Total")
-        dup = fields.get("Duplicate Review Status")
-        if enrollment and activity and shot_total and dup == "Count It":
-            fields["Count This Submission?"] = 1
-            fields["Total Shots Counted"] = shot_total
-        elif not enrollment:
-            # Cleared Enrollment during 053 re-arm — formulas fail closed.
-            fields["Count This Submission?"] = 0
-            fields["Total Shots Counted"] = 0
+    def _apply_formula_sim(self, table: str, fields: dict[str, Any]) -> None:
+        """Offline stand-in for computed fields after create/update."""
+        if table == "Submissions":
+            enrollment = fields.get("Enrollment") or []
+            activity = fields.get("Activity Date")
+            shot_total = fields.get("Shot Total")
+            dup = fields.get("Duplicate Review Status")
+            if enrollment and activity and shot_total and dup == "Count It":
+                fields["Count This Submission?"] = 1
+                fields["Total Shots Counted"] = shot_total
+            elif not enrollment:
+                fields["Count This Submission?"] = 0
+                fields["Total Shots Counted"] = 0
+            clock = fields.get("Season Sim Clock Now")
+            if activity and clock:
+                try:
+                    act_day = str(activity)[:10]
+                    clock_day = str(clock)[:10]
+                    fields["Activity Date Is Future?"] = 1 if act_day > clock_day else 0
+                except (TypeError, ValueError):
+                    fields["Activity Date Is Future?"] = 0
+        if table == "Submission Assets":
+            slot = fields.get("Asset Slot")
+            purpose = fields.get("Asset Purpose")
+            if slot == "VIDEO" and purpose == "Video For Feedback":
+                fields["Is True Video Feedback Asset?"] = 1
+            else:
+                fields["Is True Video Feedback Asset?"] = 0
+        if table == "Video Feedback":
+            week = fields.get("Week")
+            if not week and fields.get("Submission"):
+                # Week lookup from linked Submission when present in store.
+                sub_ids = fields.get("Submission") or []
+                if sub_ids and "Submissions" in self.tables:
+                    sub_id = sub_ids[0] if isinstance(sub_ids[0], str) else sub_ids[0].get("id")
+                    sub = self.tables["Submissions"].get(sub_id)
+                    if sub:
+                        sub_week = (sub.get("fields") or {}).get("Week")
+                        if sub_week:
+                            fields["Week"] = sub_week
 
     def delete_records(self, table: str, record_ids: list[str]) -> list[dict]:
         self._require_writes(table)

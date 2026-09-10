@@ -126,11 +126,13 @@ class TestWriterFullCreate(unittest.TestCase):
                 "Season Sim Clock Now",
                 "Season Sim Test Submitted At",
                 "Video Upload Note",
+                "Video Upload",
                 "Perfect Week Manual Exception?",
             },
             video_feedback_field_names={
                 "Enrollment",
                 "Submission",
+                "Submission Asset",
                 "Active?",
                 "Award Status",
                 "Video Feedback Key",
@@ -140,6 +142,10 @@ class TestWriterFullCreate(unittest.TestCase):
                 "Parent Feedback Sent?",
                 "Ready for XP Automation?",
                 "Grade Band",
+                "Week",
+                "Video URL or Drive Link",
+                "Upload Status",
+                "Video Asset File Name",
             },
             zoom_meeting_field_names={
                 "Meeting Name",
@@ -240,13 +246,17 @@ class TestWriterFullCreate(unittest.TestCase):
         vf = list(self.client.tables.get("Video Feedback", {}).values())
         self.assertEqual(len(vf), 4)  # VIDEO_FEEDBACK_DAYS
         for row in vf:
-            self.assertTrue(row["fields"].get("Feedback Posted?"), row["id"])
-            self.assertTrue(row["fields"].get("Parent Feedback Ready?"), row["id"])
-            self.assertIs(row["fields"].get("Parent Feedback Sent?"), False)
-            self.assertTrue(row["fields"].get("Coach Feedback"))
-            self.assertEqual(row["fields"].get("Grade Band"), ["recBAND12"])
+            f = row["fields"]
+            self.assertTrue(f.get("Feedback Posted?"), row["id"])
+            self.assertTrue(f.get("Parent Feedback Ready?"), row["id"])
+            self.assertIs(f.get("Parent Feedback Sent?"), False)
+            self.assertTrue(f.get("Coach Feedback"))
+            self.assertEqual(f.get("Grade Band"), ["recBAND12"])
+            self.assertTrue(f.get("Submission Asset"), row["id"])
+            self.assertIn("lambda-url.us-east-2.on.aws", f.get("Video URL or Drive Link") or "")
+            self.assertTrue(f.get("Week"), row["id"])
             # Ready for XP is owned by Automation 113 after Base XP — not pre-set.
-            self.assertFalse(row["fields"].get("Ready for XP Automation?"))
+            self.assertFalse(f.get("Ready for XP Automation?"))
         # Four create + four Feedback Posted? arm updates tracked in registry.
         vf_arms = [
             r

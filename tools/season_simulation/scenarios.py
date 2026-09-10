@@ -451,6 +451,17 @@ def build_athlete1_scenario(
                 "send": False,  # dry-run default; execute enables pipeline, not direct SMTP
             }
         )
+        if video:
+            emails.append(
+                {
+                    "event_type": "VIDEO_FEEDBACK",
+                    "day_number": n,
+                    "recipient": SAFE_EMAIL_RECIPIENT,
+                    "send": False,
+                    "expected_from_execute_alone": True,
+                    "requires_parent_feedback_ready": True,
+                }
+            )
         # Weekly athlete summary email on each Saturday in window.
         # SC-168: intended pipeline only — execute + --enable-email-delivery
         # arms Build Weekly (072); WEEKLY Hub handoffs require
