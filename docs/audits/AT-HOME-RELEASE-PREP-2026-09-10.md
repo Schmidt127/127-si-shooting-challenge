@@ -1,6 +1,6 @@
 # At-home release prep — 2026-09-10
 
-**Status:** **SC-172 merged to `master`** (PR **#505** @ `ba3f17dd`) · Hub PR **#21** open · Live E2E not run  
+**Status:** **SC-172 LIVE on Production (health 200)** · diagnostics fail-closed pending `ADMIN_DIAGNOSTICS_TOKEN` · Hub PR **#21** open · Live E2E not run  
 **Repos:** `Schmidt127/127-si-shooting-challenge` · Curriculum Hub (separate) · `Schmidt127/communications` (Hub PR context)  
 **Production base:** `appn84sqPw03zEbTT` (Shooting Challenge)
 
@@ -10,7 +10,7 @@
 
 Pre-release verification for Shooting Challenge health/diagnostics (**SC-172**) and Curriculum Hub structured homework (**PR #21**). SC-172 CI and Vercel preview were green; routes were absent from production before merge. Hub typecheck/tests/build passed; Hub Production redeem and submit URLs were empty; Hub Airtable Submission Outbox was missing five retry fields.
 
-**Merge outcome (follow-up):** PR **#505** merged to `master` @ `ba3f17dd` after this prep session. Vercel production deploy and operator env steps remain.
+**Merge outcome (follow-up):** PR **#505** merged to `master` @ `ba3f17dd`. Vercel Production deployed SC-172 — health **200** on live probe; diagnostics **403** until `ADMIN_DIAGNOSTICS_TOKEN` is set. Evidence: [`SC-172-PRODUCTION-VERIFY-20260910.md`](./SC-172-PRODUCTION-VERIFY-20260910.md).
 
 ---
 

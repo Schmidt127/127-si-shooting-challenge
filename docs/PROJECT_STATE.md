@@ -210,8 +210,11 @@ Deploy details: [deployment-notes.md](./deployment-notes.md), [web/docs/deployme
 | `/dashboard` | SC-112 private family dashboard (**COMPLETE — PRODUCTION VERIFIED BY MIKE** 2026-09-04; multi-child select/switch/sign-out). Public sign-in: `/dashboard/sign-in` (SC-149 nav). Auth gated by `ATHLETE_AUTH_ENABLED`. |
 | `/athletes/[slug]` | **Live** — real enrollment-backed public profiles (SC-111); `noindex`; smoke slug `perfect-week-testing` on prod |
 | `/api/athletes/[slug]/game-log` | Live — server-side pagination (FUT-012) |
-| `/admin` | Placeholder — roadmap only; **no write controls**; no sensitive diagnostics without auth |
-| `/api/airtable` | Health check only |
+| `/admin` | Roadmap + link to diagnostics; **no write controls** |
+| `/admin/diagnostics` | **Live (SC-172)** — staff config presence; fail-closed without `ADMIN_DIAGNOSTICS_TOKEN` or `SITE_ACCESS_TOKEN` |
+| `/api/health` | **Live (SC-172)** — public `{ "status": "ok" }` only |
+| `/api/admin/diagnostics` | **Live (SC-172)** — staff JSON diagnostics; same auth as page |
+| `/api/airtable` | Legacy Airtable token validity check |
 
 Canonical map: [web/docs/site-hierarchy.md](../web/docs/site-hierarchy.md)
 Admin roadmap: [web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md)
@@ -225,9 +228,13 @@ Admin roadmap: [web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md)
 | **FUT-003** — Fillout Stripe paid writeback (Make) | **Validated — ready for activation** | Scenario **inactive** at Maia report 2026-08-26; `$2.00` paid test; free-payment architecture **deferred Nov/Dec 2026**; [FUT-003 checklist](./deploy-checklists/FUT-003-fillout-stripe-payment-writeback.md) |
 | Production URL | https://www.fairfieldbasketballclub.com/shoot/homework | Vitest **481/481** · smoke **50/50** · homework-due-date **3/3** · build pass |
 
-### Admin page status
+### Admin / ops diagnostics (SC-172)
 
-`/shoot/admin` is a **placeholder**. No staff authentication is wired. Until auth exists, the page must not expose private participant diagnostics. Safe future work: read-only health + aggregate pipeline readiness behind `SITE_ACCESS_TOKEN` or staff SSO — see admin roadmap.
+**Shipped (2026-09-10, PR #505):** Public `GET /shoot/api/health`; staff `/shoot/admin/diagnostics` + `/shoot/api/admin/diagnostics` with config presence only (no athlete data, no secret values). Auth: `ADMIN_DIAGNOSTICS_TOKEN` preferred; else `SITE_ACCESS_TOKEN` when site gate enabled; athlete sessions denied.
+
+**Production (2026-09-10 probe):** Health **200**; diagnostics **403** until Mike sets `ADMIN_DIAGNOSTICS_TOKEN`. Checklist: [`deploy-checklists/SC-172-health-admin-diagnostics.md`](./deploy-checklists/SC-172-health-admin-diagnostics.md) · verify [`audits/SC-172-PRODUCTION-VERIFY-20260910.md`](./audits/SC-172-PRODUCTION-VERIFY-20260910.md).
+
+`/shoot/admin` remains a roadmap shell with no write controls. Future staff SSO beyond token gate: [`web/docs/admin-roadmap.md`](../web/docs/admin-roadmap.md).
 
 ---
 
