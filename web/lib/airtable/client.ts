@@ -8,6 +8,7 @@
 import { AirtableApiError } from "@/lib/airtable/errors";
 
 const AIRTABLE_API_BASE = "https://api.airtable.com/v0";
+const AIRTABLE_MAX_READ_ATTEMPTS = 4;
 
 export type AirtableConfigStatus = {
   configured: boolean;
@@ -21,6 +22,38 @@ export type AirtableTokenValidation = {
   error: string | null;
 };
 
+function retryDelayMs(response: Response, attempt: number): number {
+  const retryAfter = response.headers.get("retry-after");
+  if (retryAfter) {
+    const seconds = Number(retryAfter);
+    if (Number.isFinite(seconds) && seconds >= 0) {
+      return Math.min(5000, Math.max(100, seconds * 1000));
+    }
+  }
+
+  const exponential = Math.min(2000, 250 * 2 ** attempt);
+  const jitter = Math.floor(Math.random() * 150);
+  return exponential + jitter;
+}
+
+async function sleep(ms: number): Promise<void> {
+  await new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function fetchAirtableReadWithRetry(url: string, init: RequestInit): Promise<Response> {
+  let response: Response | null = null;
+
+  for (let attempt = 0; attempt < AIRTABLE_MAX_READ_ATTEMPTS; attempt += 1) {
+    response = await fetch(url, init);
+    if (response.status !== 429 || attempt === AIRTABLE_MAX_READ_ATTEMPTS - 1) {
+      return response;
+    }
+    await sleep(retryDelayMs(response, attempt));
+  }
+
+  return response as Response;
+}
+
 /** Live check that the PAT is accepted by Airtable (not just present in env). */
 export async function validateAirtableToken(): Promise<AirtableTokenValidation> {
   const token = process.env.AIRTABLE_API_TOKEN?.trim();
@@ -29,7 +62,7 @@ export async function validateAirtableToken(): Promise<AirtableTokenValidation> 
   }
 
   try {
-    const response = await fetch("https://api.airtable.com/v0/meta/whoami", {
+    const response = await fetchAirtableReadWithRetry("https://api.airtable.com/v0/meta/whoami", {
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
     });
@@ -171,7 +204,7 @@ export async function listAirtableRecordsForBase<TFields extends Record<string, 
       offset,
     );
 
-    const response = await fetch(url, {
+    const response = await fetchAirtableReadWithRetry(url, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
