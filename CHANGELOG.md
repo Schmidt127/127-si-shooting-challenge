@@ -35,6 +35,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 
 #### Changed
+- **Tier 1 launch ops runbook (2026-09-11)** — Consolidated email paste + SC-172 + Curriculum Hub + Zoom primary checklist [`docs/deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md`](./docs/deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md). Regenerated paste bundles **071 v4.5**, **073 v4.7**, **074 v3.6**, **076 v8.14**, **117 v2.2** via `tools/airtable/extract_email_paste_bundles.py`; expanded `test_paste_bundle_integrity.mjs`.
 - **FUT-043 card design system completion (2026-09-11)** — Extended `sc-card` helpers (`scCardAlert`, `scCardAccordion`); aligned shadcn `Card`, page headers, level indicator, loading/tutorials/FAQ/media shells to `--sc-card-*` tokens. Hub mirror reference: [`docs/communications-hub/card-tokens-mirror-reference.js`](./docs/communications-hub/card-tokens-mirror-reference.js). Checklist: [`docs/deploy-checklists/FUT-043-card-design-system.md`](./docs/deploy-checklists/FUT-043-card-design-system.md).
 - **Presim public UX (2026-09-06)** — PR **#472**: dynamic Grade Bands filters on leaderboard; leaderboard hero; public datetime formatting locked to **America/Denver** with fixed **MT** label; FAQ accordion with hash deep-links.
 

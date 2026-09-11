@@ -10,8 +10,8 @@
 | Plane | Version / SHA | Status |
 |-------|---------------|--------|
 | Communications Hub `main` | **`e79637f`** (PR **#52** MERGED) | Athlete name helpers, welcome dual CTAs, Zoom MT session details |
-| SC Automation **117** | GitHub **v2.2** / Live **v2.1** | **Airtable paste pending Mike** before Live E2E with Hub #52 |
-| Related producers (`athleteFirstName`) | **072 v4.9.2**, **073 v4.7**, **074 v3.6**, **076 v8.14**, **078A v1.6** | GitHub ahead — paste with 117 as needed |
+| SC Automation **117** | GitHub **v2.2** / Live **v2.1** | Paste [`117-v2.2-PASTE.txt`](./117-v2.2-PASTE.txt) — see [`TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md`](./TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md) |
+| Related producers (`athleteFirstName`) | **071 v4.5**, **072 v4.9.2**, **073 v4.7**, **074 v3.6**, **076 v8.14**, **078A v1.6** | Paste bundles in Tier 1 runbook |
 
 ## Email plane (all paths)
 
@@ -34,11 +34,11 @@ Compare Production `Automation Code` to GitHub `SCRIPT.version` / docblock befor
 
 | Slot | GitHub version | Production paste required? |
 |------|----------------|----------------------------|
-| **071** | v4.3 | Confirm match |
-| **072** | v4.9.1 | Confirm match |
-| **073** | v4.6 | Confirm match |
-| **074** | v3.5 | Confirm match |
-| **076** | v8.12 | Confirm match |
+| **071** | **v4.5** | Paste if Live < v4.5 |
+| **072** | **v4.9.2** | Paste if Live < v4.9.2 |
+| **073** | **v4.7** | Paste if Live < v4.7 |
+| **074** | **v3.6** | Paste if Live < v3.6 |
+| **076** | **v8.14** | Paste if Live < v8.14 |
 | **078A** | **v1.5** | **Paste v1.5 if UI/table not already v1.5** |
 | **079** | v2.5 | Confirm match; confirm `ingressSecret` input configured |
 | **117** | v2.2 | Confirm match |
