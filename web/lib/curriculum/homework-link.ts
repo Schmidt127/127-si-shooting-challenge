@@ -42,3 +42,25 @@ export function resolveAthleteHomeworkDetailHref(input: {
   }
   return null;
 }
+
+/**
+ * Primary CTA label for Curriculum Hub rows on the SC dashboard.
+ * Submitted / complete work stays openable for review, but must not look like a new attempt.
+ */
+export function curriculumHubCtaLabel(input: {
+  badgeStatus: string;
+  completionStatus?: string | null;
+}): string {
+  if (input.badgeStatus === "needs_revision") return "Revise homework";
+  if (
+    input.badgeStatus === "submitted" ||
+    input.badgeStatus === "awarded" ||
+    input.badgeStatus === "complete" ||
+    input.completionStatus === "submitted" ||
+    input.completionStatus === "under_review" ||
+    input.completionStatus === "approved"
+  ) {
+    return "View submission";
+  }
+  return "Open Homework";
+}

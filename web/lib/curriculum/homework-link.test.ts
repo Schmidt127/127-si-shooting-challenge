@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   curriculumHomeworkStartHref,
+  curriculumHubCtaLabel,
   normalizeCurriculumAssignmentKey,
   resolveAthleteHomeworkDetailHref,
 } from "./homework-link";
@@ -37,5 +38,26 @@ describe("curriculum homework links", () => {
     expect(curriculumHomeworkStartHref("AESOP_CROW_PITCHER")).toBe(
       "/api/curriculum/start?assignmentKey=AESOP_CROW_PITCHER",
     );
+  });
+
+  it("labels submitted Curriculum rows as View submission", () => {
+    expect(
+      curriculumHubCtaLabel({
+        badgeStatus: "submitted",
+        completionStatus: "submitted",
+      }),
+    ).toBe("View submission");
+    expect(
+      curriculumHubCtaLabel({
+        badgeStatus: "needs_revision",
+        completionStatus: "needs_revision",
+      }),
+    ).toBe("Revise homework");
+    expect(
+      curriculumHubCtaLabel({
+        badgeStatus: "pending",
+        completionStatus: "not_started",
+      }),
+    ).toBe("Open Homework");
   });
 });
