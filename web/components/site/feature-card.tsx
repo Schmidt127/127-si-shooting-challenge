@@ -43,7 +43,7 @@ export function FeatureCard({
     <Card
       size="sm"
       className={cn(
-        "h-full rounded-lg transition duration-200",
+        "h-full transition duration-200",
         benefit
           ? "bg-transparent shadow-none ring-0 border-0 gap-0 py-0"
           : featured
@@ -59,7 +59,8 @@ export function FeatureCard({
       <CardHeader
         className={cn(
           "gap-2",
-          benefit && "rounded-lg border border-border/80 bg-card/70 px-3 py-3 sm:px-4 sm:py-4",
+          benefit &&
+            "rounded-[var(--sc-card-radius-sm)] border border-border/80 bg-card/70 px-3 py-3 sm:px-4 sm:py-4",
         )}
       >
         {Icon ? (
@@ -95,7 +96,7 @@ export function FeatureCard({
   return (
     <Link
       href={href}
-      className="group block h-full rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2"
+      className="group block h-full rounded-[var(--sc-card-radius)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2"
     >
       {body}
     </Link>

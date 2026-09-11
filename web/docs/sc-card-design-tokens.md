@@ -35,7 +35,9 @@ Import helpers from `@/components/ui/sc-card`:
 - `ScCardList` + `ScCardRowItem` — Game Log and XP activity
 - `ScCardSectionHeader` — shared section eyebrow + title
 - `scCardEmpty()` — dashed empty states
-- `scCardPanel()` / `catalogPanelClass()` — dashboard panels
+- `scCardAlert()` — inline amber load/pagination notices
+- `scCardAccordion()` — FAQ details/summary rows
+- `scCardPanel()` / `catalogPanelClass()` — dashboard panels, page headers, loading states
 
 ## Email usage
 
@@ -44,6 +46,8 @@ import { scCardShellStyle, scCardHeadingStyle, SC_CARD } from "../lib/card-token
 ```
 
 Inline styles only (email clients); keep numeric values aligned with the table above when changing either side.
+
+Reference mirror for Hub PRs (not deployed from this repo): [`docs/communications-hub/card-tokens-mirror-reference.js`](../../docs/communications-hub/card-tokens-mirror-reference.js).
 
 ## Related
 

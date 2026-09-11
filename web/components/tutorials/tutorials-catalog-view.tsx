@@ -7,6 +7,7 @@ import { SafeExternalImage } from "@/components/media/safe-external-image";
 import { AccentRail, CtaLink, ProgramPage, SectionMarker } from "@/components/site";
 import { ProgramFeatureBanner } from "@/components/site/program-feature-image";
 import { EmptyState, ErrorState } from "@/components/ui";
+import { scCardPanel, scCardSectionEyebrow, scCardSectionTitle } from "@/components/ui/sc-card";
 import { hasCatalogVideoUrl } from "@/lib/data/tutorials";
 import {
   buildTutorialCatalogDisplay,
@@ -37,10 +38,8 @@ function TutorialsMediaGuide() {
   return (
     <section aria-labelledby="tutorials-media-guide-heading" data-testid="tutorials-media-guide">
       <div className="mb-4">
-        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-accent-soft">
-          How clips work
-        </p>
-        <h2 id="tutorials-media-guide-heading" className="font-display mt-1 text-2xl text-foreground">
+        <p className={cn(scCardSectionEyebrow(), "text-accent-soft")}>How clips work</p>
+        <h2 id="tutorials-media-guide-heading" className={cn(scCardSectionTitle(), "font-display sm:text-2xl")}>
           In-page video vs external links
         </h2>
         <p className="mt-2 max-w-3xl text-sm leading-relaxed text-foreground">
@@ -50,10 +49,7 @@ function TutorialsMediaGuide() {
       </div>
       <dl className="grid gap-3 sm:grid-cols-3">
         {TUTORIALS_MEDIA_GUIDE.map((item) => (
-          <div
-            key={item.term}
-            className="rounded-lg border border-border bg-card p-4 shadow-site-sm"
-          >
+          <div key={item.term} className={scCardPanel()}>
             <dt className="text-sm font-semibold text-foreground">{item.term}</dt>
             <dd className="mt-1.5 text-sm leading-relaxed text-foreground">{item.definition}</dd>
           </div>
@@ -67,19 +63,14 @@ function TutorialsOrientation() {
   return (
     <section aria-labelledby="tutorials-orientation-heading">
       <div className="mb-4">
-        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-accent-soft">
-          Film room workflow
-        </p>
-        <h2 id="tutorials-orientation-heading" className="font-display mt-1 text-2xl text-foreground">
+        <p className={cn(scCardSectionEyebrow(), "text-accent-soft")}>Film room workflow</p>
+        <h2 id="tutorials-orientation-heading" className={cn(scCardSectionTitle(), "font-display sm:text-2xl")}>
           How to use this catalog
         </h2>
       </div>
       <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {TUTORIALS_ORIENTATION_STEPS.map((step, index) => (
-          <li
-            key={step.title}
-            className="rounded-lg border border-border bg-card p-4 shadow-site-sm"
-          >
+          <li key={step.title} className={scCardPanel()}>
             <p className="font-mono text-xs font-semibold text-brand-blue">0{index + 1}</p>
             <h3 className="mt-3 text-base font-semibold text-foreground">{step.title}</h3>
             <p className="mt-2 text-sm leading-relaxed text-foreground">{step.description}</p>

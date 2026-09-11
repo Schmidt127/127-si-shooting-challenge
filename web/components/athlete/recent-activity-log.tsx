@@ -8,6 +8,7 @@ import {
   ScCardList,
   ScCardRowItem,
   ScCardSectionHeader,
+  scCardAlert,
   scCardEmpty,
 } from "@/components/ui/sc-card";
 import {
@@ -133,7 +134,7 @@ export function RecentActivityLog({
 
       {notice ? (
         <p
-          className="mt-3 rounded-[var(--sc-card-radius)] border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900"
+          className={cn(scCardAlert(), "mt-3")}
           data-testid="recent-activity-notice"
         >
           {notice}
@@ -211,7 +212,7 @@ export function RecentActivityLog({
 
           {error ? (
             <div
-              className="mt-4 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900"
+              className={cn(scCardAlert(), "mt-4 text-sm")}
               role="alert"
               data-testid="recent-activity-error"
             >

@@ -1859,7 +1859,7 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 **Priority:** P2  
 
-**Status:** READY (optional after 042) ? do not treat prior COMPLETE claim as live without re-verify  
+**Status:** **COMPLETE** (2026-09-11) — web surfaces re-verified; Hub mirror reference in `docs/communications-hub/card-tokens-mirror-reference.js`  
 
 **Systems:** Relevant website components and email cards  
 
@@ -3004,7 +3004,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | **FUT-042** | **COMPLETE** (2026-09-01) | Coach Feedback quotation ? web + Hub |
 
-| **FUT-043** | READY | Consistent card design system (optional) |
+| **FUT-043** | **COMPLETE** (2026-09-11) | Consistent card design system (web); Hub paste separate |
 
 | **FUT-044** | **COMPLETE** (website) | View Submitted Homework CTA |
 

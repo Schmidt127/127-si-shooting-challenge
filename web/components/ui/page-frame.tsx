@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { scCardPanel, scCardSectionEyebrow } from "@/components/ui/sc-card";
 import { cn } from "@/lib/utils";
 
 type PageFrameProps = {
@@ -42,13 +43,14 @@ export function PageHeader({
   align = "left",
 }: PageHeaderProps) {
   return (
-    <header className={cn("relative mb-8 overflow-hidden rounded-xl border border-border bg-card p-5 shadow-[0_4px_16px_-10px_rgba(38,38,38,0.12)] sm:mb-10 sm:p-6", align === "center" && "text-center")}>
+    <header className={cn(scCardPanel(), "relative mb-8 sm:mb-10", align === "center" && "text-center")}>
       <div className="pointer-events-none absolute inset-0 court-lines opacity-30" aria-hidden />
       <div className="relative">
         {eyebrow ? (
           <p
             className={cn(
-              "text-[11px] font-bold uppercase tracking-[0.28em] text-accent-soft",
+              scCardSectionEyebrow(),
+              "tracking-[0.28em] text-accent-soft",
               align === "center" && "mx-auto",
             )}
           >

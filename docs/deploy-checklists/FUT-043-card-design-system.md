@@ -1,8 +1,8 @@
 # FUT-043 — Consistent card design system (website + Hub emails)
 
 **Backlog:** FUT-043  
-**Status:** DEV complete — Vercel preview + Hub email render tests  
-**Branch:** `cursor/fut-043-card-design-system-e772`
+**Status:** COMPLETE (web repo) — Hub mirror paste still separate (`communications` repo)  
+**Branch:** `cursor/fut-043-card-design-system-1f7b`
 
 ## Summary
 
@@ -24,6 +24,9 @@ See also: [`web/docs/sc-card-design-tokens.md`](../../web/docs/sc-card-design-to
 - Dashboard XP activity table (`xp-activity-table.tsx`)
 - Athlete Game Log (`recent-activity-log.tsx`)
 - Dashboard achievement inset rows + catalog panels (`athlete-dashboard-view.tsx`, `catalog-surface.ts`)
+- Page headers, level indicator, loading state (`page-frame.tsx`, `level-indicator.tsx`, `loading-state.tsx`)
+- Tutorials guide/orientation panels, FAQ accordion, media empty state
+- Base shadcn `Card` radius/border aligned to `--sc-card-*` tokens
 
 **Out of scope (FUT-042):** coach feedback quotation inner block styling.
 
@@ -51,7 +54,7 @@ See also: [`web/docs/sc-card-design-tokens.md`](../../web/docs/sc-card-design-to
 
 ## Validation checklist
 
-- [ ] `web`: lint, typecheck, vitest (homework + game log + xp activity)
+- [x] `web`: lint, typecheck, vitest (includes `sc-card.test.ts`)
 - [ ] `communications`: `npm test` email render tests
 - [ ] Browser: athlete profile homework section at mobile + desktop widths
 - [ ] Email HTML: InfoCard / MetricCard borders match web token table
