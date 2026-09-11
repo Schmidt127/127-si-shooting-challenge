@@ -11,6 +11,32 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 
+const PRODUCTION_DOCBLOCK = "/************************************************************\n * 0";
+
+function extractFromProductionDocblock(text) {
+  const idx = text.indexOf(PRODUCTION_DOCBLOCK);
+  assert.ok(idx >= 0, "production docblock marker missing");
+  return text.slice(idx);
+}
+
+function extractFromSingleCommentBlock(text) {
+  assert.ok(text.startsWith("/*"), "expected opening block comment");
+  const lines = text.split("\n");
+  const out = ["/*"];
+  let pastHeader = false;
+  for (const line of lines.slice(1)) {
+    if (!pastHeader) {
+      if (line.trim().startsWith("Version:")) {
+        pastHeader = true;
+        out.push(line);
+      }
+      continue;
+    }
+    out.push(line);
+  }
+  return out.join("\n");
+}
+
 const BUNDLES = [
   {
     id: "010",
@@ -18,7 +44,12 @@ const BUNDLES = [
     source:
       "airtable/automations/shooting-challenge/010-submission-intake-create-xp-event.js",
     paste: "docs/deploy-checklists/010-v10.14-PASTE.txt",
-    start: "/************************************************************\n * 010 - SUBMISSION INTAKE",
+    extract: (text) => {
+      const start = "/************************************************************\n * 010 - SUBMISSION INTAKE";
+      const idx = text.indexOf(start);
+      assert.ok(idx >= 0, "010 start marker missing");
+      return text.slice(idx);
+    },
     mustInclude: [
       'version: "v10.14"',
       "skipped_not_ready",
@@ -33,8 +64,13 @@ const BUNDLES = [
     source:
       "airtable/automations/shooting-challenge/057-achievements-and-milestones-calculate-perfect-week-eligibility.js",
     paste: "docs/deploy-checklists/057-v2.6-PASTE.txt",
-    start:
-      "/***************************************************************************************************\n * 057 - Achievements",
+    extract: (text) => {
+      const idx = text.indexOf(
+        "/***************************************************************************************************\n * 057 - Achievements",
+      );
+      assert.ok(idx >= 0);
+      return text.slice(idx);
+    },
     mustInclude: [
       "Version: 2.6",
       "Goal Shots Target",
@@ -45,14 +81,25 @@ const BUNDLES = [
     ],
   },
   {
+    id: "071",
+    version: "v4.5",
+    source:
+      "airtable/automations/shooting-challenge/071-email-notifications-and-external-handoffs-send-homework-feedback-email-webhook.js",
+    paste: "docs/deploy-checklists/071-v4.5-PASTE.txt",
+    extract: extractFromSingleCommentBlock,
+    mustInclude: ['version: "v4.5"', "athleteProfileUrl", "Structured Curriculum HC-only"],
+    mustExclude: ["fetch(", "makeWebhookUrl"],
+  },
+  {
     id: "072",
     version: "v4.9.2",
     source:
       "airtable/automations/shooting-challenge/072-email-notifications-and-external-handoffs-build-weekly-summary-email-package.js",
     paste: "docs/deploy-checklists/072-v4.9.2-PASTE.txt",
-    start: "/************************************************************\n * 072 - EMAIL",
+    extract: extractFromProductionDocblock,
     mustInclude: [
       'version: "v4.9.2"',
+      "athleteFirstName",
       "Unlinked canonical XP",
       "WAS-linked active XP",
       "orphanXp",
@@ -60,18 +107,62 @@ const BUNDLES = [
     ],
     mustExclude: ["fetch(", "makeWebhookUrl"],
   },
+  {
+    id: "073",
+    version: "v4.7",
+    source:
+      "airtable/automations/shooting-challenge/073-email-notifications-and-external-handoffs-send-video-feedback-parent-email-webhook.js",
+    paste: "docs/deploy-checklists/073-v4.7-PASTE.txt",
+    extract: extractFromProductionDocblock,
+    mustInclude: ['version: "v4.7"', "athleteFirstName", "valid_lambda_viewer"],
+    mustExclude: ["fetch(", "makeWebhookUrl"],
+  },
+  {
+    id: "074",
+    version: "v3.6",
+    source:
+      "airtable/automations/shooting-challenge/074-email-notifications-and-external-handoffs-send-weekly-summary-email-package-to-make.js",
+    paste: "docs/deploy-checklists/074-v3.6-PASTE.txt",
+    extract: extractFromProductionDocblock,
+    mustInclude: ['version: "v3.6"', "athleteFirstName", "WEEKLY_ATHLETE_SUMMARY"],
+    mustExclude: ["fetch(", "makeWebhookUrl"],
+  },
+  {
+    id: "076",
+    version: "v8.14",
+    source:
+      "airtable/automations/shooting-challenge/076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js",
+    paste: "docs/deploy-checklists/076-v8.14-PASTE.txt",
+    extract: extractFromProductionDocblock,
+    mustInclude: [
+      'version: "v8.14"',
+      "athleteFirstName",
+      "currentStreak",
+      "DAILY_SUBMISSION",
+      "Removes xpExtraCredit",
+    ],
+  },
+  {
+    id: "117",
+    version: "v2.2",
+    source:
+      "airtable/automations/shooting-challenge/117-zoom-send-recording-approval-email-to-make.js",
+    paste: "docs/deploy-checklists/117-v2.2-PASTE.txt",
+    extract: extractFromSingleCommentBlock,
+    mustInclude: [
+      'version: "v2.2"',
+      "athleteFirstName",
+      "ZOOM_RECORDING_APPROVAL",
+      "meetingDisplayName",
+    ],
+    mustExclude: ["makeWebhookUrl", 'automationNumber: "117f"'],
+  },
 ];
-
-function extractBody(text, start) {
-  const idx = text.indexOf(start);
-  assert.ok(idx >= 0, `start marker missing`);
-  return text.slice(idx);
-}
 
 for (const spec of BUNDLES) {
   const sourceText = readFileSync(resolve(ROOT, spec.source), "utf8");
   const pasteText = readFileSync(resolve(ROOT, spec.paste), "utf8");
-  const expected = extractBody(sourceText, spec.start);
+  const expected = spec.extract(sourceText);
   assert.equal(pasteText, expected, `${spec.id} paste bundle drift from source`);
   assert.ok(!/\bimport\s+/.test(pasteText), `${spec.id} must not use ES imports`);
   assert.ok(!/\brequire\s*\(/.test(pasteText), `${spec.id} must not use require()`);

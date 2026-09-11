@@ -13,8 +13,8 @@
 
 ## What ships
 
-1. **Automation 076 v8.13** — Remove `xpExtraCredit` / `shootingPercentage` from daily handoff payload; compute `currentStreak` from counted submissions (055-aligned), not stale Enrollment field.
-2. **Automation 071 v4.4** — Add `submittedDate`, `reviewedDate`, `athleteProfileUrl` to homework feedback handoff payload.
+1. **Automation 076 v8.14** — Remove `xpExtraCredit` / `shootingPercentage` from daily handoff payload; compute `currentStreak` from counted submissions (055-aligned); add `athleteFirstName`.
+2. **Automation 071 v4.5** — SC-171 presentation fields (`submittedDate`, `reviewedDate`, `athleteProfileUrl`) plus Structured Curriculum HC-only asset path (v4.5).
 3. **Communications Hub** — Daily Submission template (no Extra Credit / Shooting %); Homework Feedback template (SC-171 presentation + View Athlete Details).
 
 ---
@@ -36,8 +36,10 @@
 
 | Automation | GitHub file | Version |
 |---|---|---|
-| 076 | `airtable/automations/shooting-challenge/076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js` | **v8.13** |
-| 071 | `airtable/automations/shooting-challenge/071-email-notifications-and-external-handoffs-send-homework-feedback-email-webhook.js` | **v4.4** |
+| 076 | `airtable/automations/shooting-challenge/076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js` | **v8.14** — [`076-v8.14-PASTE.txt`](./076-v8.14-PASTE.txt) |
+| 071 | `airtable/automations/shooting-challenge/071-email-notifications-and-external-handoffs-send-homework-feedback-email-webhook.js` | **v4.5** — [`071-v4.5-PASTE.txt`](./071-v4.5-PASTE.txt) |
+
+**Full Tier 1 packet (all six email producers + SC-172 + Hub + Zoom):** [`TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md`](./TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md)
 
 Verify Production `Automations` table **Name / Status / Automation Code** matches GitHub after paste.
 
