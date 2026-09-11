@@ -1,7 +1,8 @@
-import { createHash, randomBytes } from "node:crypto";
-
 import { hasUpstashRedisConfig } from "@/lib/auth/config";
+import { allowedCurriculumSubmitBandsForProgramBand } from "@/lib/curriculum/grade-band-validation";
 import type { CurriculumGradeBand } from "@/lib/curriculum/handoff";
+import type { CurriculumSubmitGradeBand } from "@/lib/curriculum/submit-validation";
+import { createHash, randomBytes } from "node:crypto";
 
 /** Server-side submit session minted when Hub redeems a one-time handoff. */
 export type CurriculumSubmitAuthorization = {
@@ -146,11 +147,19 @@ export function validateCurriculumSubmitAuthorization(input: {
   }
 
   if (input.authorization.gradeBand !== input.gradeBand) {
-    return {
-      ok: false,
-      status: 422,
-      error: "Submit grade band does not match authorized session.",
-    };
+    const allowed = allowedCurriculumSubmitBandsForProgramBand(
+      input.authorization.gradeBand,
+    );
+    if (
+      !allowed ||
+      !allowed.includes(input.gradeBand as CurriculumSubmitGradeBand)
+    ) {
+      return {
+        ok: false,
+        status: 422,
+        error: "Submit grade band does not match authorized session.",
+      };
+    }
   }
 
   return { ok: true, authorization: input.authorization };

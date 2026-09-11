@@ -100,6 +100,17 @@ describe("validateCurriculumSubmitAuthorization", () => {
     expect(result.status).toBe(422);
   });
 
+  it("accepts Curriculum question set 4-6 when auth carries program band 5-6", () => {
+    expect(
+      validateCurriculumSubmitAuthorization({
+        authorization: auth,
+        enrollmentId: "recEnroll00000001",
+        assignmentKey: "AESOP_CROW_PITCHER",
+        gradeBand: "4-6",
+      }).ok,
+    ).toBe(true);
+  });
+
   it("rejects missing authorization", () => {
     const result = validateCurriculumSubmitAuthorization({
       authorization: null,
