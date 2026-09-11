@@ -18,10 +18,10 @@
 | Path | Event type | Template key | Queue producer | Dispatcher |
 |------|------------|--------------|----------------|------------|
 | WELCOME | `WELCOME` | `WELCOME` | **078A v1.5** | **079 v2.5** |
-| DAILY | `DAILY_SUBMISSION` | `DAILY_SUBMISSION` | **076 v8.12** | **079** |
-| WEEKLY | `WEEKLY_ATHLETE_SUMMARY` | `WEEKLY_ATHLETE_SUMMARY` | **074 v3.5** (after **072 v4.9.1** / **118 v2.0** / **119 v1.7**) | **079** |
-| HOMEWORK | `HOMEWORK_FEEDBACK` | `HOMEWORK_FEEDBACK` | **071 v4.3** | **079** |
-| VIDEO | `VIDEO_FEEDBACK` | `VIDEO_FEEDBACK` | **073 v4.6** | **079** |
+| DAILY | `DAILY_SUBMISSION` | `DAILY_SUBMISSION` | **076 v8.12 Live** (GitHub **v8.14** paste pending) | **079** |
+| WEEKLY | `WEEKLY_ATHLETE_SUMMARY` | `WEEKLY_ATHLETE_SUMMARY` | **074 v3.3 Live** (GitHub **v3.6**; after **072 v4.9.1** / **118 v2.0** / **119 v1.7**) | **079** |
+| HOMEWORK | `HOMEWORK_FEEDBACK` | `HOMEWORK_FEEDBACK` | **071 v4.3 Live** (GitHub **v4.5** paste pending) | **079** |
+| VIDEO | `VIDEO_FEEDBACK` | `VIDEO_FEEDBACK` | **073 v4.6 Live** (GitHub **v4.7** paste pending) | **079** |
 | ZOOM recording approval | `ZOOM_RECORDING_APPROVAL` | `ZOOM_RECORDING_APPROVED` | **117 v2.2** | **079** |
 
 **Do not:** create Automation **121**; modify **101** / SC-147; re-enable Make/Gmail parent-email scenarios; run season simulation.

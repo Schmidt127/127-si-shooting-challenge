@@ -2280,15 +2280,15 @@ Zero `WEEKLY_ATHLETE_SUMMARY` Hub handoffs after execute alone is **expected** (
 ### SC-171 â€” Daily Submission + Homework Feedback parent presentation
 
 **Priority:** P1  
-**Status:** **GitHub ready / PENDING Production paste + Hub deploy** (2026-09-06)  
-**Systems:** Automation **076 v8.13**, **071 v4.4**; Communications Hub daily + homework templates  
+**Status:** **GitHub ready / PENDING Production paste + Hub deploy** (2026-09-11)  
+**Systems:** Automation **076 v8.14**, **071 v4.5**; Communications Hub daily + homework templates (Hub **PR #52** @ `e79637f` merged)  
 **Related:** FUT-045 assignment naming; parent email migration; **no XP logic changes**  
 
 **Scope:** Daily Submission â€” remove Extra Credit XP and Shooting Percentage; fix stale streak (076 computes from counted submissions, 055-aligned). Homework Feedback â€” remove Program/slot from display; prominent assignment name; Submitted/Reviewed dates; Homework Files Uploaded; View Athlete Details â†’ `/shoot/athletes/{slug}`.
 
 **Streak root cause:** 076 read `Enrollments.Current Shooting Streak` before 055 finished updating enrollment.
 
-**Evidence:** [`audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md`](./audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md) Â· checklist [`deploy-checklists/SC-171-email-homework-presentation.md`](./deploy-checklists/SC-171-email-homework-presentation.md).
+**Evidence:** [`audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md`](./audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md) Â· checklist [`deploy-checklists/SC-171-email-homework-presentation.md`](./deploy-checklists/SC-171-email-homework-presentation.md) Â· Tier 1 operator runbook [`deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md`](./deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md) (paste bundles **076 v8.14**, **071 v4.5**).
 
 **Live verify:** Pending â€” post-purge transactional tables empty; disposable Schmidt records + Hub allowlist only.
 
@@ -2297,7 +2297,7 @@ Zero `WEEKLY_ATHLETE_SUMMARY` Hub handoffs after execute alone is **expected** (
 ### SC-172 — Production health + admin diagnostics routes
 
 **Priority:** P0  
-**Status:** **GitHub ready / PENDING Production deploy + `ADMIN_DIAGNOSTICS_TOKEN` + smoke** (2026-09-10)  
+**Status:** **Deployed / PENDING `ADMIN_DIAGNOSTICS_TOKEN` + diagnostics smoke** (2026-09-11)  
 **Systems:** Next.js `/shoot` web app (`web/app/api/health`, `web/app/admin/diagnostics`, `web/app/api/admin/diagnostics`)  
 **Related:** SC-116 admin roadmap; SC-102 / SC-118 smoke; existing `/api/airtable` config probe  
 
@@ -2307,7 +2307,7 @@ Zero `WEEKLY_ATHLETE_SUMMARY` Hub handoffs after execute alone is **expected** (
 
 **Acceptance:** Routes exist under `basePath` `/shoot`; health public; diagnostics 401/403 without staff token; no secrets/athlete data in responses; `Cache-Control: no-store`; tests + production build green.
 
-**Evidence:** PR **#505** merged `master` @ `ba3f17dd` · prep [`audits/AT-HOME-RELEASE-PREP-2026-09-10.md`](./audits/AT-HOME-RELEASE-PREP-2026-09-10.md) · checklist [`deploy-checklists/SC-172-health-admin-diagnostics.md`](./deploy-checklists/SC-172-health-admin-diagnostics.md)
+**Evidence:** PR **#505** merged `master` @ `ba3f17dd`; health **200** live (2026-09-10). Remaining: set `ADMIN_DIAGNOSTICS_TOKEN` (Tier 1 Phase B). Prep [`audits/AT-HOME-RELEASE-PREP-2026-09-10.md`](./audits/AT-HOME-RELEASE-PREP-2026-09-10.md) · checklist [`deploy-checklists/SC-172-health-admin-diagnostics.md`](./deploy-checklists/SC-172-health-admin-diagnostics.md) · runbook [`deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md`](./deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md)
 
 ---
 
@@ -2781,8 +2781,8 @@ Open SC items with remaining work (status not Complete / Superseded / Not Needed
 | **SC-167** | XP / Automations | Duplicate SUBMISSION_XP harden (010) | P0 | **COMPLETE / Live Tested** (2026-09-05) | SC-SEASON-SIM-002 T122531Z, Automation 010 | Confirmed TOCTOU defect. **010 v10.14** GitHub + Live (PR **#453**). Option A proof: create + latch retry â†’ one Active `SUBMISSION_XP`; formula restored. Evidence [`audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md`](./audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md). |
 | **SC-168** | Email | Season Sim T122531Z missing weekly-summary email handoffs (0 WEEKLY) | P0 | **COMPLETE / Corrected expectation** (2026-09-05) | SC-SEASON-SIM-002, 072/074/079/118/119 | Expected harness gap: execute arms Build Weekly only; 118/119 Sunday cron not sim-driven. Production pipeline unchanged. PR **#451**. Audit [`audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md`](./audits/SC-168-WEEKLY-EMAIL-HANDOFFS-20260905.md) Â· `weekly-email-stage` CLI. |
 | **SC-169** | Achievements | Season Sim T122531Z â€œunlocks=0â€ discrepancy | P0 | **COMPLETE / Live evidence** (2026-09-05) | SC-SEASON-SIM-002 | **False-negative count + cleanup gap** â€” 066/059 awarded 4 shot-milestone unlocks (matched 4 SHOT_MILESTONE XP); cascade used non-existent Unlocks.`Enrollment Record ID`; orphans deleted (0 remaining). Evidence [`audits/SC-169-ACHIEVEMENT-UNLOCKS-20260905.md`](./audits/SC-169-ACHIEVEMENT-UNLOCKS-20260905.md). **No automation paste.** PR **#452**. |
-| **SC-171** | Email / UI | Daily Submission + Homework Feedback parent presentation | P1 | **GitHub ready / PENDING paste + Hub deploy** (2026-09-06) | FUT-045 | **076 v8.13** streak fix + payload trim; **071 v4.4** dates + athlete profile URL; Hub templates. No XP logic changes. Evidence [`audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md`](./audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md). |
-| **SC-172** | Website / Ops | Production health + admin diagnostics routes | P0 | **PENDING prod deploy + token + smoke** (2026-09-10) | SC-116, SC-118 | PR **#505** merged `ba3f17dd`. Set `ADMIN_DIAGNOSTICS_TOKEN`; smoke health + diagnostics. Checklist [`deploy-checklists/SC-172-health-admin-diagnostics.md`](./deploy-checklists/SC-172-health-admin-diagnostics.md). |
+| **SC-171** | Email / UI | Daily Submission + Homework Feedback parent presentation | P1 | **GitHub ready / PENDING paste + Hub deploy** (2026-09-11) | FUT-045 | **076 v8.14** streak fix + payload trim + `athleteFirstName`; **071 v4.5** dates + athlete profile URL + Structured Curriculum HC-only path; Hub templates merged. Paste via [`deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md`](./deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md). Evidence [`audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md`](./audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md). |
+| **SC-172** | Website / Ops | Production health + admin diagnostics routes | P0 | **PENDING `ADMIN_DIAGNOSTICS_TOKEN` + diagnostics smoke** (2026-09-11) | SC-116, SC-118 | PR **#505** merged; health **200** live. Set `ADMIN_DIAGNOSTICS_TOKEN` (Tier 1 Phase B). Checklist [`deploy-checklists/SC-172-health-admin-diagnostics.md`](./deploy-checklists/SC-172-health-admin-diagnostics.md) · runbook [`deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md`](./deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md). |
 | **SC-149 residual** | Website | Family Dashboard under More menu | P1 | **COMPLETE** (2026-09-05 with SC-164/165) | SC-149 | PR **#439**; `MORE_NAV_HREFS` includes FD â†’ `/dashboard/sign-in`. Evidence [`audits/SC-149-MORE-FAMILY-DASHBOARD-20260905.md`](./audits/SC-149-MORE-FAMILY-DASHBOARD-20260905.md). |
 | **SC-113** | Website | Loading, empty, and error states | P2 | Live Tested in PROD | GÃƒâ€¡ÃƒÂ¶ | Keep states aligned when SC-112 lands |
 

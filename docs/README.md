@@ -84,6 +84,7 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 | Doc | Purpose |
 |-----|---------|
 | [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) | **Primary current-state document** — git identity, bases, email, overlays, work ledger |
+| [deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md](./deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md) | **Tier 1 Mike operator runbook** — email paste bundles, SC-172 token, Curriculum Hub cutover, Zoom primary, Live testMode flip |
 | [PROJECT_STATE.md](./PROJECT_STATE.md) | **Live ops snapshot** — must agree with CURRENT-TRUTH; routes, C-025/C-011, Softr obsolete |
 | [KNOWN_ISSUES.md](./KNOWN_ISSUES.md) | **Canonical known issues** — Critical / High / Medium / Low with owners |
 | [deploy-checklists/SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md) | Softr → Next.js cutover checklist (no cutover until approved) |
