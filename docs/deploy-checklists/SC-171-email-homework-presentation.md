@@ -9,6 +9,8 @@
 
 **Closeout:** [`../audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md`](../audits/SC-171-EMAIL-HOMEWORK-PRESENTATION-CLOSEOUT-20260906.md)
 
+**Tier 1 operator runbook (2026-09-11):** [`TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md`](./TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md) — consolidated paste order for **076 v8.14** and **071 v4.5** plus related email producers.
+
 ---
 
 ## What ships

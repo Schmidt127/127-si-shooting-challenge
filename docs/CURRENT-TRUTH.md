@@ -1,7 +1,7 @@
 # CURRENT TRUTH â 127 SI Shooting Challenge
 
 **Status:** Active â primary current-state document for this repository  
-**Last verification (repo):** 2026-09-10 — tip **`ba3f17dd`** (PR **#505** SC-172 health/diagnostics). Prior: **`4a81c0cf`** (PR **#472**/**#473**). **THREE-ATHLETE SIMULATION READY — NOT EXECUTED** (SC-SEASON-SIM-001; five-enrollment superseded — [`audits/OWNER-DECISIONS-20260906.md`](./audits/OWNER-DECISIONS-20260906.md)). Website: dynamic Grade Bands filters, leaderboard hero, America/Denver+MT, FAQ accordion. Email: Hub **PR #52** merged (`e79637f`); SC **117 v2.2** + `athleteFirstName` producers in GitHub — **Airtable paste pending Mike**. Zoom Attendance: lookups + **Attendance Label** formula **created live**; primary still **Id** autoNumber pending Mike UI convert. Prior: SC-171 GitHub ready; **SC-SEASON-SIM-002** CLOSED; purge **`ba969433`** (#457); **FUT-048** deferred.
+**Last verification (repo):** 2026-09-11 — tip **`8590c9ec`** (PR **#517** Tier 1 launch ops runbook + paste bundles; includes **#516** FUT-043 card system @ `3703ffdc`). Prior: **`ba3f17dd`** (PR **#505** SC-172). **THREE-ATHLETE SIMULATION READY — NOT EXECUTED** (SC-SEASON-SIM-001; five-enrollment superseded — [`audits/OWNER-DECISIONS-20260906.md`](./audits/OWNER-DECISIONS-20260906.md)). Website: FUT-043 card tokens live on `/shoot`; dynamic Grade Bands filters, leaderboard hero, America/Denver+MT, FAQ accordion. Email: Hub **PR #52** merged (`e79637f`); GitHub producers **076 v8.14 / 071 v4.5 / 072 v4.9.2 / 073 v4.7 / 074 v3.6 / 117 v2.2** — **Airtable paste pending Mike** — operator packet [`deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md`](./deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md). Zoom Attendance: lookups + **Attendance Label** formula **created live**; primary still **Id** autoNumber pending Mike UI convert. Prior: SC-171 GitHub ready; **SC-SEASON-SIM-002** CLOSED; purge **`ba969433`** (#457); **FUT-048** deferred.
 **Companion release status:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)  
 **Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)  
 **Integrity audit:** [`REPOSITORY-INTEGRITY-AUDIT.md`](./REPOSITORY-INTEGRITY-AUDIT.md)
@@ -66,10 +66,11 @@ Repository docs (`automation-index.md`, inventories, Completion Master) are **do
 | Check | Result |
 |-------|--------|
 | Branch | `master` (not detached) |
-| HEAD SHA | **`ba3f17dd`** (PR **#505** SC-172; includes **#504** structured curriculum + prior **#472**/**#473**) |
-| `origin/master` | **`ba3f17dd`** (re-verify after fetch) |
+| HEAD SHA | **`8590c9ec`** (PR **#517** Tier 1 launch ops; includes **#516** FUT-043 @ `3703ffdc`, **#505** SC-172 @ `ba3f17dd`) |
+| `origin/master` | **`8590c9ec`** (re-verify after fetch) |
 | Ahead / behind | **0 / 0** (re-verify after fetch) |
-| Recent merges (2026-09-06 presim web + email) | **#473** email name/Zoom payloads (`4a81c0cf`) · **#472** Grade Bands / leaderboard hero / MT / FAQ (`75632e88`). Hub communications **PR #52** merged (`e79637f`) — SC **117 v2.2** Airtable paste still **pending Mike**. |
+| Recent merges (2026-09-11 launch ops + card system) | **#517** Tier 1 runbook + email paste bundles (`8590c9ec`) · **#516** FUT-043 card design system (`3703ffdc`). Email producer pastes still **pending Mike** — [`deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md`](./deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md). |
+| Recent merges (2026-09-06 presim web + email) | **#473** email name/Zoom payloads (`4a81c0cf`) · **#472** Grade Bands / leaderboard hero / MT / FAQ (`75632e88`). Hub communications **PR #52** merged (`e79637f`). |
 | Recent merges (2026-09-05 purge + SC-167 complete) | **#457** transactional purge (`ba969433`) · **#456** SC-167 complete docs (`57831fe7`) · **#455** SC-167/168/169 live-status |
 | Recent merges (2026-09-05 discrepancy wave) | **#450** backlog intake · **#451** SC-168 (`fba62be0`) · **#453** SC-167 010 v10.14 (`08da8b03`) · **#452** SC-169 (`caad5ba9`). Wave: [`audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md`](./audits/SC-167-168-169-DISCREPANCY-WAVE-CLOSEOUT-20260905.md) |
 | Recent merges (2026-09-05 completion wave) | **#435** A1 truth (`7c63dd00`) · **#440** SC-161 (`0eb1ed28`) · **#438** SC-163 repo (`43d353a4`) · **#437** SC-162 (`f8a1c9ee`) · **#439** SC-164/165 (`9869a2eb`) · **#436** SC-166 (`bd0198a4`) · **#444** SC-163 066 v4.1 live closeout (`480771fc`) · **#446** dual-enrollment cleanup (`58663cfd`) · **#447** Season Sim preflight (`2131f7d5`) · **#448** Master List reconciliation (`3cf3b568`). Evidence: [`audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md`](./audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md) · [`audits/SC-WAVE-20260905-CLOSEOUT.md`](./audits/SC-WAVE-20260905-CLOSEOUT.md) · [`audits/MASTER-LIST-RECONCILIATION-20260905.md`](./audits/MASTER-LIST-RECONCILIATION-20260905.md) |
@@ -113,7 +114,7 @@ Schema snapshots under `airtable/schema/snapshots/prod-20260706/` and `dev-20260
 | Health | `GET /shoot/api/health` â public `{ "status": "ok" }` (SC-172). Legacy: `GET /shoot/api/airtable` â token validity check |
 | Softr | **Obsolete / Not Used** â historical reference only |
 | SEO | **COMPLETE** â program pages indexable (`NEXT_PUBLIC_ALLOW_SEARCH_INDEXING=true`); structured data + mobile meta from PR **#399** (supersedes draft **#310**). Status: [`audits/SEO-STATUS-20260904.md`](./audits/SEO-STATUS-20260904.md). Private/auth routes remain `noindex`. |
-| Production deploy | **Live** — Vercel Production follows `master` (tip **`ba3f17dd`** after PR **#505** SC-172; prior **`4a81c0cf`** #472/#473). `GET /shoot/api/health` live **200** (2026-09-10). Post-purge transactional athlete tables empty; homework compact list + Levels + SC-149 branding live; FUT-025 athlete indexing env on |
+| Production deploy | **Live** — Vercel Production follows `master` (tip **`8590c9ec`** after PR **#517**/#516; prior **`ba3f17dd`** #505 SC-172). `GET /shoot/api/health` live **200** (2026-09-10). Post-purge transactional athlete tables empty; FUT-043 card tokens + homework compact list + Levels + SC-149 branding live; FUT-025 athlete indexing env on |
 | SC-172 Health + admin diagnostics | **LIVE / token pending** (2026-09-10) — PR **#505** merged; Production health **200**; diagnostics **403** until `ADMIN_DIAGNOSTICS_TOKEN` set. Evidence [`audits/SC-172-PRODUCTION-VERIFY-20260910.md`](./audits/SC-172-PRODUCTION-VERIFY-20260910.md) · checklist [`deploy-checklists/SC-172-health-admin-diagnostics.md`](./deploy-checklists/SC-172-health-admin-diagnostics.md) |
 | Structured Curriculum Hub cutover | **PENDING Mike** — SC routes live (401 not 404); Hub Production redeem/submit URLs empty at prep; Outbox retry fields missing. Checklist [`deploy-checklists/structured-curriculum-hub-production-cutover.md`](./deploy-checklists/structured-curriculum-hub-production-cutover.md) |
 | Presim web UX (2026-09-06) | **Merged** PR **#472** (`75632e88`) — dynamic **Grade Bands** leaderboard filters; leaderboard hero; public datetimes **America/Denver** with fixed **MT** label; FAQ accordion (hash deep-links) |
@@ -168,8 +169,9 @@ Evidence pointer: [`PROJECT_STATE.md`](./PROJECT_STATE.md) Â§ Vercel / web app
 | Sender | **Resend** via Communications Hub |
 | Make.com email | **None** â Make does not send SC parent/athlete notification email |
 | Gmail Make scenarios | **Historical only** |
-| Daily submission path | **076 v8.12 Live** → GitHub **v8.13** **PENDING paste** (SC-171: streak fix; no Extra Credit / Shooting % in template) → **079** → Hub → Resend |
-| Homework feedback path | **071 v4.3 Live** → GitHub **v4.4** **PENDING paste** (SC-171: dates + athlete profile URL) → **079** → Hub → Resend |
+| Daily submission path | **076 v8.12 Live** → GitHub **v8.14** **PENDING paste** (SC-171 streak + `athleteFirstName`; no Extra Credit / Shooting % in template) → **079** → Hub → Resend |
+| Homework feedback path | **071 v4.3 Live** → GitHub **v4.5** **PENDING paste** (SC-171 dates + athlete profile URL; Structured Curriculum HC-only path) → **079** → Hub → Resend |
+| Tier 1 operator packet | [`deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md`](./deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md) — ordered paste bundles for **076→071→072→074→073→117** plus SC-172 token, Curriculum Hub cutover, Zoom primary, Live testMode flip |
 | Automation **077** | **Retired / deleted from Production** (Mike-dated docs: 2026-08-13). Do not restore Make daily email. GitHub source retained as archive only. **Do not** trust obsolete `Automations` table rows that once showed 077 as Live. |
 | Queue producers (repo) | Include Hub handoff scripts; **079** dispatches Ready queue â Hub â Resend |
 | Automation **117** | Live **v2.1**; GitHub **v2.2** (**paste pending Mike**) — Hub queue create + `athleteFirstName` / meeting display / proof timestamps (PR **#473**). Not XP; not Make 117f. |
@@ -235,16 +237,16 @@ Do **not** treat other Automations-table columns (trigger/conditions) as authori
 | **066** | **v4.1** | v4.1 | Live / **SC-163 COMPLETE / Live Tested** | Goal Met Date date-only + milestones; Athlete1 stamped **8/30/2026**; may remain ON — [`audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md`](./audits/SC-163-LIVE-VERIFICATION-CLOSEOUT-20260905.md) |
 | **013** | **v3.2.0** | v3.2.0 | Live / **aligned** (no paste needed) | VF create path. Live body matches GitHub **v3.2.0** (Agent 3 MCP 2026-09-05). Prior decline note historical — [`audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md`](./audits/VERSION-AUDIT-CORRECTION-021-013-067-20260905.md) |
 | **021** | **v2.0** | v2.0 | **Live / ALIGNED** | Attachment Upload Status only; exact byte match GitHub; Phase A combined paste never installed — same correction audit |
-| **072** | **v4.9.2** | v4.9.1 | GitHub ahead / **paste pending** | Weekly summary email build — `athleteFirstName` payload (2026-09-06). Prior live **v4.9.1** — [`072-v4.8-operator-packet.md`](./deploy-checklists/072-v4.8-operator-packet.md) |
-| **073** | **v4.7** | v4.6 | GitHub ahead / **paste pending** | Video parent email Hub path — `athleteFirstName` payload (2026-09-06). Prior live **v4.6** — [`073-v4.4-operator-packet.md`](./deploy-checklists/073-v4.4-operator-packet.md) |
-| **071** | **v4.4** | v4.3 | GitHub ahead / **SC-171 paste pending** | Homework Feedback — SC-171 dates + `athleteProfileUrl`; checklist [`SC-171-email-homework-presentation.md`](./deploy-checklists/SC-171-email-homework-presentation.md) |
-| **076** | **v8.14** | v8.12 | GitHub ahead / **paste pending** | Daily Submission — SC-171 streak + `athleteFirstName` (2026-09-06); live still **v8.12** until paste |
-| **074** | **v3.6** | v3.3 | GitHub ahead / **paste pending** | Weekly summary Hub handoff — `athleteFirstName` payload (2026-09-06); live still **v3.3** until paste |
+| **072** | **v4.9.1** | v4.9.2 | GitHub ahead / **paste pending** | Weekly summary email build — `athleteFirstName` payload. Paste [`072-v4.9.2-PASTE.txt`](./deploy-checklists/072-v4.9.2-PASTE.txt) via Tier 1 runbook |
+| **073** | **v4.6** | v4.7 | GitHub ahead / **paste pending** | Video parent email Hub path — `athleteFirstName` payload. Paste [`073-v4.7-PASTE.txt`](./deploy-checklists/073-v4.7-PASTE.txt) |
+| **071** | **v4.3** | v4.5 | GitHub ahead / **SC-171 paste pending** | Homework Feedback — SC-171 dates + `athleteProfileUrl` + Structured Curriculum HC-only path. Paste [`071-v4.5-PASTE.txt`](./deploy-checklists/071-v4.5-PASTE.txt) |
+| **076** | **v8.12** | v8.14 | GitHub ahead / **paste pending** | Daily Submission — SC-171 streak + `athleteFirstName`. Paste [`076-v8.14-PASTE.txt`](./deploy-checklists/076-v8.14-PASTE.txt) |
+| **074** | **v3.3** | v3.6 | GitHub ahead / **paste pending** | Weekly summary Hub handoff — `athleteFirstName` payload. Paste [`074-v3.6-PASTE.txt`](./deploy-checklists/074-v3.6-PASTE.txt) |
 | **070a** | **v4.7** | **v4.7 Live** | Script-only graph (SC-156); trigger clears via script | Homework upload Make path |
 | **070b** | **v4.7** | v4.7 | Live | |
 | **070c** | **current live (repo v1.1)** | v1.1 | Live/enabled | Do not invent a new version |
 | **101** | **v6.8** | v6.8 | Live / **SC-147 COMPLETE** | Recording half-XP Live Tested; GitHub synced PR **#398**. Optional: re-paste GitHub year-aware Config percent hardening for byte-match |
-| **117** | **v2.2** | v2.1 | GitHub ahead / **paste pending** | Zoom recording approval Hub handoff — meeting display + athlete/timestamps (2026-09-06); live still **v2.1** until paste |
+| **117** | **v2.1** | v2.2 | GitHub ahead / **paste pending** | Zoom recording approval Hub handoff — meeting display + athlete/timestamps. Paste [`117-v2.2-PASTE.txt`](./deploy-checklists/117-v2.2-PASTE.txt) |
 
 **Record-ID classification (Mike final):** Dynamic for all record-based automations; optional on **041** only; intentionally blank on **056 / 078 / 118 / 119**. **065** and **066** use triggering-record `recordId` in Production. Closeout: [`deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md`](./deploy-checklists/2026-08-24-065-066-dynamic-trigger-closeout.md).
 
@@ -345,8 +347,9 @@ Live ON/OFF for rows without Mike UI confirmation = `UNVERIFIED`. Full table: [`
 - **2026-09-06:** SC-SEASON-SIM-001 three-athlete prep READY (not executed); five-enrollment superseded
 - **2026-09-05:** SC-167/168/169 COMPLETE; OPS-PURGE COMPLETE; SC-SEASON-SIM-002 closed; formulas `NOW()`/`TODAY()`
 
-### Open Mike UI actions (wave 2026-09-05)
+### Open Mike UI actions (Tier 1 launch ops — 2026-09-11)
 
+- **Tier 1 launch ops runbook:** [`deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md`](./deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md) — Phase A email pastes (**076→071→072→074→073→117**); Phase B SC-172 `ADMIN_DIAGNOSTICS_TOKEN`; Phase C Structured Curriculum Hub cutover; Phase D Zoom Attendance primary formula; Phase E Live testMode flip.
 - **SC-166 (Mike-owned/manual; not core blocker):** Optional Interface Active/History filter fine-tuning — [`deploy-checklists/SC-166-coach-work-queue-filters.md`](./deploy-checklists/SC-166-coach-work-queue-filters.md).
 
 ### Pending / needs live proof

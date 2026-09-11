@@ -1,4 +1,4 @@
-> **Historical handoff (2026-08-30).** For current Production truth see [`docs/CURRENT-TRUTH.md`](../CURRENT-TRUTH.md). **071 v4.3** and **076 v8.12** were later updated in Production on **2026-09-01** — paste queue empty. **SC-147** (Recorded Zoom half-XP) remains **pending** — no Production automation slot assigned; do **not** treat Automation 147 as existing.
+> **Historical handoff (2026-08-30).** For current Production truth see [`docs/CURRENT-TRUTH.md`](../CURRENT-TRUTH.md). **071 v4.3** and **076 v8.12** were updated in Production on **2026-09-01** (FUT-041/FUT-046). GitHub advanced **2026-09-11** — paste **076 v8.14 / 071 v4.5 / 072 v4.9.2 / 073 v4.7 / 074 v3.6 / 117 v2.2** via [`deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md`](../deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md). **SC-147** is **COMPLETE** (101 v6.8).
 
 # ChatGPT session handoff — 127 SI Shooting Challenge (2026-08-30)
 

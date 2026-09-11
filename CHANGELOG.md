@@ -8,6 +8,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Docs
 
+#### Changed
+- **Living docs sync (2026-09-11)** — Tip **`8590c9ec`** (#517 Tier 1 runbook + #516 FUT-043). CURRENT-TRUTH / PROJECT_STATE / email-send-plane / Master List SC-171 + SC-172 / parent-email cutover / docs README aligned to GitHub email producer versions (**076 v8.14**, **071 v4.5**, **072 v4.9.2**, **073 v4.7**, **074 v3.6**, **117 v2.2**) with paste-pending Live overlays; Tier 1 runbook git tip corrected; Section G regenerated.
+
 #### Added
 - **At-home release prep closeout (2026-09-10)** — Audit [`docs/audits/AT-HOME-RELEASE-PREP-2026-09-10.md`](./docs/audits/AT-HOME-RELEASE-PREP-2026-09-10.md); SC-172 operator checklist [`docs/deploy-checklists/SC-172-health-admin-diagnostics.md`](./docs/deploy-checklists/SC-172-health-admin-diagnostics.md); Hub cutover checklist [`docs/deploy-checklists/structured-curriculum-hub-production-cutover.md`](./docs/deploy-checklists/structured-curriculum-hub-production-cutover.md); production verify [`docs/audits/SC-172-PRODUCTION-VERIFY-20260910.md`](./docs/audits/SC-172-PRODUCTION-VERIFY-20260910.md); CURRENT-TRUTH + PROJECT_STATE SC-172 overlays.
 

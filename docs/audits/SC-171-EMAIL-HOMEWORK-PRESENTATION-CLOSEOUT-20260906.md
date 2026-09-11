@@ -5,6 +5,8 @@
 **Production base:** `appn84sqPw03zEbTT` (no DEV base)  
 **Repos:** `Schmidt127/127-si-shooting-challenge` · `Schmidt127/communications`
 
+> **Operator pointer (2026-09-11):** Paste bundles and ordered steps live in [`deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md`](../deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md). GitHub versions advanced to **076 v8.14** and **071 v4.5** (includes Structured Curriculum HC-only path).
+
 ---
 
 ## Summary
@@ -15,7 +17,7 @@ Parent-facing email and homework-feedback presentation corrections without chang
 |---|---|
 | Daily Submission email | Remove Extra Credit XP and Shooting Percentage; fix stale shooting streak |
 | Homework Feedback email | Remove Program/slot clutter; prominent assignment name; Submitted/Reviewed dates; Homework Files Uploaded; View Athlete Details CTA |
-| Automations | **076 v8.13** (streak + payload trim) · **071 v4.4** (dates + athlete profile URL) |
+| Automations | **076 v8.14** (streak + payload trim + `athleteFirstName`) · **071 v4.5** (dates + athlete profile URL + Structured Curriculum HC-only path) |
 | Hub templates | `daily-submission-email.js` · `homework-feedback-email.js` · `formatParentFacingDate()` |
 
 ---
@@ -26,7 +28,7 @@ Parent-facing email and homework-feedback presentation corrections without chang
 
 **Cause:** Automation **076** read `Enrollments.Current Shooting Streak` at handoff-build time. That field is updated by Automation **055** (recalculate streak from submissions). When **076** ran before **055** finished (or on a stale rollup), the email carried yesterday’s enrollment snapshot — not the post-submission active streak.
 
-**Fix:** **076 v8.13** computes `currentStreak` deterministically from all **counted** Submission `Activity Date` values for the enrollment, using logic aligned with **055** (anchor = most recent counted date; streak active if anchor is today, yesterday, or future per rules; broken/missed → 0). Does **not** use `Longest Streak Days` or enrollment rollup at send time.
+**Fix:** **076 v8.14** computes `currentStreak` deterministically from all **counted** Submission `Activity Date` values for the enrollment, using logic aligned with **055** (anchor = most recent counted date; streak active if anchor is today, yesterday, or future per rules; broken/missed → 0). Does **not** use `Longest Streak Days` or enrollment rollup at send time.
 
 **Authoritative streak source after fix:** `computeCurrentShootingStreakFromSubmissions()` in **076** (inline; mirrored in `airtable/automations/shooting-challenge/lib/shooting-streak-from-submissions.js` for tests).
 
@@ -65,7 +67,7 @@ Parent-facing email and homework-feedback presentation corrections without chang
 | “Submitted Work” + file links | **Homework Files Uploaded** + file links |
 | “View Submitted Homework” → reviewer file | **View Athlete Details** → public athlete profile |
 
-**Date sources (071 v4.4):**
+**Date sources (071 v4.5):**
 
 | Label | Airtable field | Homework Completions |
 |---|---|---|
@@ -109,8 +111,8 @@ Checklist: [`../deploy-checklists/SC-171-email-homework-presentation.md`](../dep
 
 | Check | Status |
 |---|---|
-| Paste **076 v8.13** to Production Airtable | Pending |
-| Paste **071 v4.4** to Production Airtable | Pending |
+| Paste **076 v8.14** to Production Airtable | Pending — [`TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md`](../deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md) |
+| Paste **071 v4.5** to Production Airtable | Pending — same runbook |
 | Deploy Communications Hub templates | Pending |
 | Daily Submission render: no Extra Credit, no Shooting %, streak increments | Pending |
 | Homework Feedback: no Program/slot, dates, Homework Files Uploaded, View Athlete Details | Pending |
@@ -120,6 +122,6 @@ Checklist: [`../deploy-checklists/SC-171-email-homework-presentation.md`](../dep
 
 ## Files changed
 
-**Shooting Challenge:** 076 v8.13, 071 v4.4, `lib/shooting-streak-from-submissions.js`, email contract tests, runtime test 076.
+**Shooting Challenge:** 076 v8.14, 071 v4.5, `lib/shooting-streak-from-submissions.js`, email contract tests, runtime test 076.
 
 **Communications:** `emails/daily-submission-email.js`, `emails/homework-feedback-email.js`, `emails/lib/formatters.js`, template tests, `docs/contracts/DAILY_SUBMISSION_v1.md` (presentation note).

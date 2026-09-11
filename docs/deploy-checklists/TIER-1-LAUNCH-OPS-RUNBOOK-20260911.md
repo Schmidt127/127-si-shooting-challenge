@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-11  
 **Production base:** `appn84sqPw03zEbTT` (Production only — no DEV base)  
-**Git tip when written:** `3703ffdc` (includes FUT-043 #516)  
+**Git tip when written:** `8590c9ec` (includes FUT-043 #516 @ `3703ffdc` + paste bundles #517)  
 **Disposable proof email:** `schmidt@fairfieldbasketballclub.com` only
 
 This packet combines the highest-impact launch ops from CURRENT-TRUTH into **one ordered checklist**. Cursor cannot paste Airtable automations or set Vercel env vars — Mike UI only for execution steps.

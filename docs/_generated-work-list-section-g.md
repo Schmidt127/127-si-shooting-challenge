@@ -1,6 +1,6 @@
 # Generated Section G — operator queue
 
-**Generated:** 2026-09-06
+**Generated:** 2026-09-11
 **Command:** `node tools/docs/generate-work-list-section-g.mjs`
 **Source:** `docs/127-SI-MASTER-FUTURE-WORK-LIST.md`
 
@@ -71,7 +71,7 @@ Unified vocabulary: **COMPLETE** · **IN PROGRESS** · **BLOCKED** · **READY** 
 | **SC-163** | P1 | COMPLETE | no | — | Enrollments Goal Met Date reliability + backfill |
 | **SC-164** | P1 | COMPLETE | no | — | Levels progress UX simplification |
 | **SC-166** | P1 | IN PROGRESS (Mike-owned/manual; not core app blocker) | no | Mike | Coach Homework + Video Feedback active work queues |
-| **SC-SEASON-SIM-001** | P1 | READY | yes | Mike | Three-Athlete Full-Season Simulation |
+| **SC-SEASON-SIM-001** | P1 | READY | yes | Mike | â€” Three-Athlete Full-Season Simulation |
 | **FUT-002** | P2 | COMPLETE | no | — | ? Audit and remove unused Airtable fields |
 | **FUT-007** | P2 | IN PROGRESS | no | Cursor | ? Simplify future AWS media naming and support future media types |
 | **FUT-009** | P2 | COMPLETE | no | — | ? AWS storage structure and corrected-video naming workflow |
@@ -79,7 +79,7 @@ Unified vocabulary: **COMPLETE** · **IN PROGRESS** · **BLOCKED** · **READY** 
 | **FUT-016** | P2 | COMPLETE | no | — | ? Tutorials page redesign |
 | **FUT-017** | P2 | COMPLETE | no | — | ? Zoom Meeting page redesign |
 | **FUT-019** | P2 | COMPLETE | no | — | ? Website footer consistency |
-| **FUT-029** | P2 | DEFERRED | no | — | Grade-Band Homework Platform and Homework Intake Adapter |
+| **FUT-029** | P2 | DEFERRED | no | — | â€” Grade-Band Homework Platform and Homework Intake Adapter |
 | **FUT-031** | P2 | COMPLETE | no | — | ? Game Log: Extra Credit tagline after date |
 | **FUT-035** | P2 | COMPLETE | no | — | ? Replace navy-blue landing treatments with royal blue / orange brand system |
 | **FUT-039** | P2 | COMPLETE | no | — | ? Fillout.com branding and CSS consistency (planning only) |
@@ -101,7 +101,7 @@ Unified vocabulary: **COMPLETE** · **IN PROGRESS** · **BLOCKED** · **READY** 
 | **AUT-122** | P3 | DEFERRED | no | — | Automation 122 Goal Met Date stamp — never install |
 | **FUT-004** | P3 | DEFERRED | no | — | ? Automated award emailer to replace Tremendous |
 | **FUT-005** | P3 | DEFERRED | no | — | ? Automated accomplishment emails |
-| **FUT-048** | P3 | DEFERRED | no | — | CloudFront Custom Domain for Homework Resources |
+| **FUT-048** | P3 | DEFERRED | no | — | â€” CloudFront Custom Domain for Homework Resources |
 
 ## Classification notes (2026-09-05 reconciliation; post-#457)
 
