@@ -1,6 +1,15 @@
 /**
  * Curriculum Hub → SC: sync authoritative Assignment Key onto Homework Library.
  * Hub owns lesson identity (assignmentKey); SC owns the Airtable library row used by PHA + dashboard.
+ *
+ * Writable Homework Library fields used here (live schema tblUuxwYlX4EQ9MKE):
+ * - Assignment Key (singleLineText)
+ * - Assignment Title (singleLineText) — create only
+ * - Active? / Published? (checkbox) — create only
+ *
+ * Never write:
+ * - Brief Description - Display (aiText / computed — Airtable 422)
+ * - Notes (field does not exist on Homework Library)
  */
 
 import {
@@ -20,7 +29,6 @@ const TABLES = PUBLIC_AIRTABLE_TABLES;
 type LibraryFields = {
   "Assignment Key"?: unknown;
   "Assignment Title"?: unknown;
-  "Brief Description - Display"?: unknown;
 };
 
 type PhaFields = {
@@ -35,6 +43,75 @@ export type LibrarySyncResult =
       action: "created" | "updated" | "unchanged";
     }
   | { ok: false; status: 404 | 409 | 422 | 503; error: string };
+
+/** Fields safe to PATCH on an existing Homework Library row (identity only). */
+export function buildExistingRowPatchFields(
+  payload: Pick<LibrarySyncPayload, "assignmentKey">,
+): Record<string, unknown> {
+  return {
+    "Assignment Key": payload.assignmentKey,
+  };
+}
+
+/** Fields safe to POST when creating a new Homework Library row. */
+export function buildCreateFields(
+  payload: LibrarySyncPayload,
+): Record<string, unknown> {
+  return {
+    "Assignment Key": payload.assignmentKey,
+    "Assignment Title": payload.assignmentTitle ?? payload.assignmentKey,
+    "Active?": true,
+    "Published?": true,
+  };
+}
+
+/**
+ * Sanitize Airtable failures for operators/logs.
+ * Includes status/type/message/table/record/field names — never tokens or secrets.
+ */
+export function sanitizeAirtableSyncError(input: {
+  error: unknown;
+  tableName: string;
+  recordId?: string;
+  fieldNames: string[];
+}): string {
+  const { error, tableName, recordId, fieldNames } = input;
+  const fields = fieldNames.join(", ") || "(none)";
+  const target = recordId
+    ? `table=${tableName} recordId=${recordId} fields=[${fields}]`
+    : `table=${tableName} fields=[${fields}]`;
+
+  if (error instanceof AirtableApiError) {
+    let airtableType = "unknown";
+    let airtableMessage = "unavailable";
+    try {
+      const parsed = JSON.parse(error.body) as {
+        error?: { type?: string; message?: string };
+      };
+      if (parsed.error?.type) airtableType = String(parsed.error.type).slice(0, 80);
+      if (parsed.error?.message) {
+        airtableMessage = String(parsed.error.message)
+          .replace(/Bearer\s+\S+/gi, "[REDACTED]")
+          .replace(/pat[a-zA-Z0-9._-]{10,}/gi, "[REDACTED]")
+          .slice(0, 240);
+      }
+    } catch {
+      airtableMessage = error.body
+        .replace(/Bearer\s+\S+/gi, "[REDACTED]")
+        .replace(/pat[a-zA-Z0-9._-]{10,}/gi, "[REDACTED]")
+        .slice(0, 240);
+    }
+    return (
+      `Homework Library sync failed (Airtable ${error.status} ${airtableType}: ${airtableMessage}; ${target})`
+    );
+  }
+
+  const message =
+    error instanceof Error
+      ? error.message.replace(/Bearer\s+\S+/gi, "[REDACTED]").slice(0, 200)
+      : "unknown error";
+  return `Homework Library sync failed (${message}; ${target})`;
+}
 
 function isRecordId(value: string): boolean {
   return /^rec[a-zA-Z0-9]{14}$/.test(value);
@@ -58,11 +135,13 @@ async function findLibraryByAssignmentKey(
   return response.records;
 }
 
-async function loadLibraryById(recordId: string): Promise<{ id: string; fields: LibraryFields } | null> {
+async function loadLibraryById(
+  recordId: string,
+): Promise<{ id: string; fields: LibraryFields } | null> {
   const response = await listAirtableRecords<LibraryFields>({
     tableName: TABLES.homeworkLibrary.name,
     filterByFormula: `RECORD_ID()='${escapeAirtableString(recordId)}'`,
-    fields: ["Assignment Key", "Assignment Title", "Brief Description - Display"],
+    fields: ["Assignment Key", "Assignment Title"],
     maxRecords: 1,
     revalidateSeconds: 0,
   });
@@ -82,43 +161,35 @@ async function resolveLibraryIdFromPha(phaRecordId: string): Promise<string | nu
   return linkedRecordIds(pha.fields[PHA_AIRTABLE_FIELDS.homeworkAssignment])[0] ?? null;
 }
 
-function buildCreateFields(payload: LibrarySyncPayload): Record<string, unknown> {
-  const fields: Record<string, unknown> = {
-    "Assignment Key": payload.assignmentKey,
-    "Assignment Title": payload.assignmentTitle ?? payload.assignmentKey,
-    "Active?": true,
-    "Published?": true,
-  };
-  if (payload.briefDescription) {
-    fields["Brief Description - Display"] = payload.briefDescription;
-  }
-  if (payload.curriculumVersion != null) {
-    fields.Notes = `Structured Curriculum sync (Hub) · curriculumVersion ${payload.curriculumVersion}`;
-  }
-  return fields;
-}
-
-function buildPatchFields(payload: LibrarySyncPayload): Record<string, unknown> {
-  const fields: Record<string, unknown> = {
-    "Assignment Key": payload.assignmentKey,
-  };
-  const existingTitle = payload.assignmentTitle?.trim();
-  if (existingTitle) {
-    fields["Assignment Title"] = existingTitle;
-  }
-  if (payload.briefDescription) {
-    fields["Brief Description - Display"] = payload.briefDescription;
-  }
-  return fields;
+async function findLibraryByExactTitle(
+  assignmentTitle: string,
+): Promise<Array<{ id: string; fields: LibraryFields }>> {
+  const response = await listAirtableRecords<LibraryFields>({
+    tableName: TABLES.homeworkLibrary.name,
+    filterByFormula: `{Assignment Title}='${escapeAirtableString(assignmentTitle)}'`,
+    fields: ["Assignment Key", "Assignment Title"],
+    maxRecords: 3,
+    revalidateSeconds: 0,
+  });
+  return response.records;
 }
 
 /**
  * Idempotent sync: one assignmentKey maps to exactly one Homework Library row.
  * Never overwrites a different existing Assignment Key on a library row.
+ * Existing-row updates patch Assignment Key only (no descriptive field overwrites).
+ *
+ * Homework Library is an externally synced Airtable table — CREATE is rejected by
+ * Airtable (403). New Hub lessons must already exist in the synced catalog (matched
+ * by Assignment Title) so this path can PATCH Assignment Key only.
  */
 export async function syncHomeworkLibraryAssignmentKey(
   payload: LibrarySyncPayload,
 ): Promise<LibrarySyncResult> {
+  const lastTable = TABLES.homeworkLibrary.name;
+  let lastRecordId: string | undefined;
+  let lastFields: string[] = [];
+
   try {
     const existingByKey = await findLibraryByAssignmentKey(payload.assignmentKey);
 
@@ -127,7 +198,11 @@ export async function syncHomeworkLibraryAssignmentKey(
       (payload.phaRecordId ? await resolveLibraryIdFromPha(payload.phaRecordId) : undefined);
 
     if (payload.phaRecordId && !targetLibraryId) {
-      return { ok: false, status: 404, error: "Program Homework Assignment not found or has no Homework link." };
+      return {
+        ok: false,
+        status: 404,
+        error: "Program Homework Assignment not found or has no Homework link.",
+      };
     }
 
     if (existingByKey.length > 1) {
@@ -161,7 +236,36 @@ export async function syncHomeworkLibraryAssignmentKey(
       }
     }
 
+    // Synced catalog: resolve by exact Assignment Title before attempting CREATE.
+    if (!targetLibraryId && payload.assignmentTitle) {
+      const byTitle = await findLibraryByExactTitle(payload.assignmentTitle);
+      if (byTitle.length > 1) {
+        return {
+          ok: false,
+          status: 409,
+          error: "Multiple Homework Library rows match this Assignment Title.",
+        };
+      }
+      if (byTitle.length === 1) {
+        const titleRow = byTitle[0]!;
+        const stored = normalizeStoredKey(titleRow.fields["Assignment Key"]);
+        if (stored && stored !== payload.assignmentKey) {
+          return {
+            ok: false,
+            status: 409,
+            error:
+              "Homework Library title match already has a different Assignment Key; refusing to overwrite.",
+          };
+        }
+        targetLibraryId = titleRow.id;
+      }
+    }
+
     if (targetLibraryId) {
+      if (!isRecordId(targetLibraryId)) {
+        return { ok: false, status: 422, error: "homeworkLibraryRecordId is invalid." };
+      }
+
       const library = await loadLibraryById(targetLibraryId);
       if (!library) {
         return { ok: false, status: 404, error: "Homework Library record not found." };
@@ -186,10 +290,14 @@ export async function syncHomeworkLibraryAssignmentKey(
         };
       }
 
+      const patchFields = buildExistingRowPatchFields(payload);
+      lastRecordId = library.id;
+      lastFields = Object.keys(patchFields);
+
       const updated = await updateAirtableRecord({
         tableName: TABLES.homeworkLibrary.name,
         recordId: library.id,
-        fields: buildPatchFields(payload),
+        fields: patchFields,
         typecast: true,
       });
 
@@ -205,34 +313,62 @@ export async function syncHomeworkLibraryAssignmentKey(
       return {
         ok: false,
         status: 422,
-        error: "assignmentTitle is required to create a new Homework Library row.",
+        error: "assignmentTitle is required to locate or create a Homework Library row.",
       };
     }
 
-    const created = await createAirtableRecord({
-      tableName: TABLES.homeworkLibrary.name,
-      fields: buildCreateFields(payload),
-      typecast: true,
-    });
+    const createFields = buildCreateFields(payload);
+    lastFields = Object.keys(createFields);
 
-    return {
-      ok: true,
-      homeworkLibraryRecordId: created.id,
-      assignmentKey: payload.assignmentKey,
-      action: "created",
-    };
+    try {
+      const created = await createAirtableRecord({
+        tableName: TABLES.homeworkLibrary.name,
+        fields: createFields,
+        typecast: true,
+      });
+
+      return {
+        ok: true,
+        homeworkLibraryRecordId: created.id,
+        assignmentKey: payload.assignmentKey,
+        action: "created",
+      };
+    } catch (createError) {
+      // Synced tables reject CREATE (403 INVALID_PERMISSIONS). Surface a precise operator message.
+      if (
+        createError instanceof AirtableApiError &&
+        createError.status === 403 &&
+        /externally synced/i.test(createError.body)
+      ) {
+        return {
+          ok: false,
+          status: 422,
+          error:
+            "Homework Library is an externally synced table — rows cannot be created via API. Ensure the lesson already exists in the synced catalog (matching Assignment Title), then retry so Assignment Key can be patched.",
+        };
+      }
+      throw createError;
+    }
   } catch (error) {
+    const sanitized = sanitizeAirtableSyncError({
+      error,
+      tableName: lastTable,
+      recordId: lastRecordId,
+      fieldNames: lastFields,
+    });
+    console.warn("[curriculum-library-sync]", sanitized);
+
     if (error instanceof AirtableApiError) {
       return {
         ok: false,
         status: error.status === 404 ? 404 : 503,
-        error: "Homework Library sync temporarily unavailable.",
+        error: sanitized,
       };
     }
     return {
       ok: false,
       status: 503,
-      error: "Homework Library sync temporarily unavailable.",
+      error: sanitized,
     };
   }
 }
