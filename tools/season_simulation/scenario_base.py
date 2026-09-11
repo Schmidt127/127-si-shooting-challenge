@@ -329,6 +329,17 @@ def write_day_from_template(
                 "send": False,
             }
         )
+        if video_feedback:
+            emails.append(
+                {
+                    "event_type": "VIDEO_FEEDBACK",
+                    "day_number": n,
+                    "recipient": SAFE_EMAIL_RECIPIENT,
+                    "send": False,
+                    "expected_from_execute_alone": True,
+                    "requires_parent_feedback_ready": True,
+                }
+            )
     kind = "SUB" if action == "submit" else "MISS"
     return DayPlan(
         day_number=n,

@@ -23,6 +23,15 @@ from .clock_override import (
 )
 from .confirmation import ConfirmationError, require_execute_gates
 from .constants import SAFE_EMAIL_RECIPIENT, SIM_START
+from .video_feedback_contract import (
+    build_video_asset_create_fields,
+    build_video_asset_finalize_fields,
+    build_video_feedback_arm_fields,
+    build_video_feedback_create_fields,
+    build_video_feedback_pipeline_fields,
+    sim_source_attachment_id,
+    sim_video_upload_attachment,
+)
 from .recipient_safety import assert_safe_recipient
 from .run_registry import run_marker
 from .scenario_base import AthleteScenario
@@ -209,6 +218,13 @@ def build_intended_writes(
             wid = ctx.week_for(day.activity_date)
             if wid:
                 fields["Week"] = [wid]
+        if day.video_feedback:
+            source_attachment_id = sim_source_attachment_id(marker, day.day_number)
+            video_filename = f"season-sim-video-d{day.day_number:02d}.mp4"
+            fields["Video Upload"] = sim_video_upload_attachment(
+                source_attachment_id,
+                video_filename,
+            )
         writes.append(
             {
                 "table": "Submissions",
@@ -348,23 +364,33 @@ def build_intended_writes(
                     }
                 )
         if day.video_feedback:
+            source_attachment_id = sim_source_attachment_id(marker, day.day_number)
+            video_filename = f"season-sim-video-d{day.day_number:02d}.mp4"
+            asset_create = build_video_asset_create_fields(
+                marker=marker,
+                day_number=day.day_number,
+                submission_id="<submission_id>",
+                enrollment_id="<enrollment_id>",
+                source_attachment_id=source_attachment_id,
+                filename=video_filename,
+            )
             writes.append(
                 {
                     "table": "Submission Assets",
                     "op": "create",
                     "day_number": day.day_number,
                     "dedupe_key": f"{marker}|SA|VIDEO|D{day.day_number:02d}",
-                    "fields": {"Asset Purpose": "Video"},
+                    "fields": asset_create,
+                    "notes": "013-compatible video asset; canonical provenance",
                 }
             )
-            vf_create_fields: dict[str, Any] = {
-                "Active?": True,
-                "Award Status": "Pending",
-                "Video Feedback Key": f"{marker}|VF|D{day.day_number:02d}",
-                "Coach Feedback": f"{marker}|video review",
-            }
-            if scenario.grade_band_id:
-                vf_create_fields["Grade Band"] = [scenario.grade_band_id]
+            vf_create_fields = build_video_feedback_create_fields(
+                enrollment_id="<enrollment_id>",
+                submission_id="<submission_id>",
+                asset_id="<asset_id>",
+                coach_feedback=f"{marker}|video review",
+                grade_band_id=scenario.grade_band_id,
+            )
             writes.append(
                 {
                     "table": "Video Feedback",
@@ -372,6 +398,29 @@ def build_intended_writes(
                     "day_number": day.day_number,
                     "dedupe_key": f"{marker}|VF|D{day.day_number:02d}",
                     "fields": vf_create_fields,
+                    "notes": "Canonical VF key VIDEO_FEEDBACK|{asset_id}",
+                }
+            )
+            writes.append(
+                {
+                    "table": "Submission Assets",
+                    "op": "update",
+                    "day_number": day.day_number,
+                    "dedupe_key": f"{marker}|VF_PIPELINE|D{day.day_number:02d}|ASSET",
+                    "fields": build_video_asset_finalize_fields(
+                        video_feedback_id="<video_feedback_id>"
+                    ),
+                    "notes": "Post-013 asset back-link; post-070b Uploaded",
+                }
+            )
+            writes.append(
+                {
+                    "table": "Video Feedback",
+                    "op": "update",
+                    "day_number": day.day_number,
+                    "dedupe_key": f"{marker}|VF_PIPELINE|D{day.day_number:02d}",
+                    "fields": build_video_feedback_pipeline_fields(asset_id="<asset_id>"),
+                    "notes": "022 writeback sim — Lambda viewer URL on VF",
                 }
             )
             writes.append(
@@ -380,11 +429,7 @@ def build_intended_writes(
                     "op": "update",
                     "day_number": day.day_number,
                     "dedupe_key": f"{marker}|VF_ARM_POSTED|D{day.day_number:02d}",
-                    "fields": {
-                        "Feedback Posted?": True,
-                        "Parent Feedback Ready?": True,
-                        "Parent Feedback Sent?": False,
-                    },
+                    "fields": build_video_feedback_arm_fields(),
                     "notes": (
                         "Arms 113/114/073; does not create XP Events; "
                         "does not set Ready for XP Automation?"
@@ -490,8 +535,18 @@ def summarize_intended_write_readiness(
     vf_creates = [
         w for w in writes if w.get("table") == "Video Feedback" and w.get("op") == "create"
     ]
-    vf_arms = [
+    vf_updates = [
         w for w in writes if w.get("table") == "Video Feedback" and w.get("op") == "update"
+    ]
+    vf_arms = [
+        w
+        for w in vf_updates
+        if "VF_ARM_POSTED" in str(w.get("dedupe_key") or "")
+    ]
+    vf_pipeline = [
+        w
+        for w in vf_updates
+        if "VF_PIPELINE" in str(w.get("dedupe_key") or "")
     ]
     live_za = [
         w
@@ -559,6 +614,7 @@ def summarize_intended_write_readiness(
         "homework_needs_revision": len(hw_needs_revision),
         "video_feedback_creates": len(vf_creates),
         "video_feedback_update_arms": len(vf_arms),
+        "video_feedback_pipeline_sim": len(vf_pipeline),
         "video_parent_feedback_ready_arms": len(vf_parent_ready),
         "live_zoom_attendance": len(live_za),
         "recorded_zoom_attendance": len(rec_za),
@@ -577,6 +633,8 @@ def summarize_intended_write_readiness(
         "daily_email_arm_planned": len(sub_post) == len(submissions) and len(submissions) > 0,
         "perfect_week_requeue_planned": len(pw_requeues) > 0,
         "video_update_triggers_planned": len(vf_arms) == len(vf_creates)
+        and len(vf_creates) > 0,
+        "video_pipeline_sim_planned": len(vf_pipeline) == len(vf_creates)
         and len(vf_creates) > 0,
         "live_xp_path_planned": len(live_za) == 1 and len(create_xp_arms) == 1,
         "recorded_xp_path_planned": len(rec_za) == 1,

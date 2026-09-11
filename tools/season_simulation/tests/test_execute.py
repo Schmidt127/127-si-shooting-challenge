@@ -431,15 +431,33 @@ class TestExecuteOrchestration(unittest.TestCase):
         )
         live = [w for w in zoom if w.get("zoom_mode") == "live"]
         self.assertTrue(live[0]["fields"].get("Live Attendance Confirmed?"))
-        vf_arms = [
+        vf_updates = [
             w
             for w in writes
             if w.get("table") == "Video Feedback" and w.get("op") == "update"
         ]
+        vf_arms = [
+            w
+            for w in vf_updates
+            if "VF_ARM_POSTED" in str(w.get("dedupe_key") or "")
+        ]
+        vf_pipeline = [
+            w
+            for w in vf_updates
+            if "VF_PIPELINE" in str(w.get("dedupe_key") or "")
+        ]
         self.assertEqual(len(vf_arms), len(VIDEO_FEEDBACK_DAYS))
+        self.assertEqual(len(vf_pipeline), len(VIDEO_FEEDBACK_DAYS))
         self.assertTrue(all(w["fields"].get("Feedback Posted?") is True for w in vf_arms))
         self.assertTrue(
             all(w["fields"].get("Parent Feedback Ready?") is True for w in vf_arms)
+        )
+        self.assertTrue(
+            all(
+                "lambda-url.us-east-2.on.aws"
+                in str((w.get("fields") or {}).get("Video URL or Drive Link") or "")
+                for w in vf_pipeline
+            )
         )
         vf_creates = [
             w
@@ -447,6 +465,14 @@ class TestExecuteOrchestration(unittest.TestCase):
             if w.get("table") == "Video Feedback" and w.get("op") == "create"
         ]
         self.assertTrue(all((w.get("fields") or {}).get("Grade Band") for w in vf_creates))
+        self.assertTrue(
+            all(
+                str((w.get("fields") or {}).get("Video Feedback Key") or "").startswith(
+                    "VIDEO_FEEDBACK|"
+                )
+                for w in vf_creates
+            )
+        )
 
     def test_streak_achievement_level_plan_signals(self):
         s = self.scenario
