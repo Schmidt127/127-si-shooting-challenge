@@ -44,7 +44,7 @@ export const PROGRAM_LEVEL_LADDER = [
 
 /** National-first site description — used in layout defaults and JSON-LD. */
 export const SITE_DESCRIPTION =
-  "Online youth basketball shooting challenge for grades 1–12. Track daily work, earn XP, climb 12 levels, complete homework, and get coaching feedback.";
+  "Online youth basketball shooting challenge for grades 1–12, May 1–June 30. Earn XP, climb 12 levels, complete homework, and get coaching feedback.";
 
 /** Homepage absolute document title. */
 export const HOME_PAGE_TITLE = "Shooting Challenge | Earn XP & Climb 12 Levels";
