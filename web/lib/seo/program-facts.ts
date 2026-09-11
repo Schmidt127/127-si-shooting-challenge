@@ -44,11 +44,10 @@ export const PROGRAM_LEVEL_LADDER = [
 
 /** National-first site description — used in layout defaults and JSON-LD. */
 export const SITE_DESCRIPTION =
-  "Annual online Educational Athletics shooting challenge for boys and girls in grades 1–12. May 1–June 30. Earn XP, climb 12 levels from Beginner to G.O.A.T., complete homework, submit videos for coaching feedback, and train from anywhere in the world.";
+  "Online youth basketball shooting challenge for grades 1–12. Track daily work, earn XP, climb 12 levels, complete homework, and get coaching feedback.";
 
 /** Homepage absolute document title. */
-export const HOME_PAGE_TITLE =
-  "Shooting Challenge | Online Youth Basketball — Earn XP, Climb 12 Levels";
+export const HOME_PAGE_TITLE = "Shooting Challenge | Online Youth Basketball Training";
 
 export const HOME_HERO = {
   eyebrow: "127 Sports Intensity · Educational Athletics · 100% Online",
