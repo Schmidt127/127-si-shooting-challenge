@@ -47,7 +47,7 @@ export const SITE_DESCRIPTION =
   "Online youth basketball shooting challenge for grades 1–12. Track daily work, earn XP, climb 12 levels, complete homework, and get coaching feedback.";
 
 /** Homepage absolute document title. */
-export const HOME_PAGE_TITLE = "Shooting Challenge | Online Youth Basketball Training";
+export const HOME_PAGE_TITLE = "Shooting Challenge | Earn XP & Climb 12 Levels";
 
 export const HOME_HERO = {
   eyebrow: "127 Sports Intensity · Educational Athletics · 100% Online",
