@@ -34,7 +34,7 @@ export function EmptyState({
       <div className={catalogStatePanelClass(false)}>
         {icon ? (
           <div
-            className="mx-auto inline-flex rounded-lg border border-border bg-brand-light-gray p-3.5 text-muted-foreground"
+            className="mx-auto inline-flex rounded-[var(--sc-card-radius-sm)] border border-border bg-brand-light-gray p-3.5 text-muted-foreground"
             aria-hidden
           >
             {icon}

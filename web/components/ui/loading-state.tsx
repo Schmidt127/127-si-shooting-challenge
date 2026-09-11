@@ -1,3 +1,4 @@
+import { scCardPanel } from "@/components/ui/sc-card";
 import { cn } from "@/lib/utils";
 
 type LoadingStateProps = {
@@ -17,7 +18,7 @@ export function LoadingState({ label = "Loading…", className }: LoadingStatePr
       aria-busy="true"
       aria-label={label}
     >
-      <div className="w-full max-w-sm rounded-lg border border-border bg-card p-6 text-center shadow-site-sm sm:p-8">
+      <div className={cn(scCardPanel(), "w-full max-w-sm text-center")}>
         <p className="text-sm font-bold text-foreground">Please wait</p>
         <div className="relative mx-auto mt-4 h-1.5 w-40 max-w-full overflow-hidden rounded-full bg-brand-light-gray">
           <div

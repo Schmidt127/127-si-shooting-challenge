@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState, type SyntheticEvent } from "react";
 
+import { scCardAccordion } from "@/components/ui/sc-card";
 import type { FaqItem } from "@/lib/seo/faq-content";
 
 import { resolveFaqDetailsOpen } from "./faq-hash";
@@ -45,7 +46,7 @@ export function FaqDetailsItem({ item }: FaqDetailsItemProps) {
       id={item.id}
       open={open}
       onToggle={onToggle}
-      className="group rounded-lg border border-border bg-card shadow-site-sm open:shadow-site-sm motion-safe:transition-shadow"
+      className={scCardAccordion("group")}
     >
       <summary className="cursor-pointer list-none px-5 py-4 font-display text-lg font-bold text-foreground marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange/60 focus-visible:ring-offset-2 sm:text-xl [&::-webkit-details-marker]:hidden">
         <span className="flex items-start justify-between gap-3">

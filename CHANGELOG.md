@@ -35,6 +35,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 
 #### Changed
+- **FUT-043 card design system completion (2026-09-11)** — Extended `sc-card` helpers (`scCardAlert`, `scCardAccordion`); aligned shadcn `Card`, page headers, level indicator, loading/tutorials/FAQ/media shells to `--sc-card-*` tokens. Hub mirror reference: [`docs/communications-hub/card-tokens-mirror-reference.js`](./docs/communications-hub/card-tokens-mirror-reference.js). Checklist: [`docs/deploy-checklists/FUT-043-card-design-system.md`](./docs/deploy-checklists/FUT-043-card-design-system.md).
 - **Presim public UX (2026-09-06)** — PR **#472**: dynamic Grade Bands filters on leaderboard; leaderboard hero; public datetime formatting locked to **America/Denver** with fixed **MT** label; FAQ accordion with hash deep-links.
 
 ### Make / Communications

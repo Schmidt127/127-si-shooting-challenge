@@ -9,6 +9,8 @@ export {
   ScCardList,
   ScCardRowItem,
   ScCardSectionHeader,
+  scCardAccordion,
+  scCardAlert,
   scCardEmpty,
   scCardHeading,
   scCardInset,

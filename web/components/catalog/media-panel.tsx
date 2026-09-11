@@ -60,11 +60,7 @@ export function VideoComingSoon({
   description?: string;
 }) {
   return (
-    <div
-      className="overflow-hidden rounded-lg border border-border bg-card text-card-foreground shadow-site-sm"
-      data-video-empty="true"
-      role="status"
-    >
+    <div className={catalogCardClass()} data-video-empty="true" role="status">
       <div className="flex aspect-video flex-col items-center justify-center gap-2 bg-brand-light-gray px-6 text-center">
         <p className="text-base font-semibold text-foreground">{title}</p>
         <p className="max-w-md text-sm leading-relaxed text-foreground">{description}</p>

@@ -51,6 +51,22 @@ export function scCardEmpty(className?: string): string {
   );
 }
 
+/** Inline warning / notice (Game Log + XP activity load issues). */
+export function scCardAlert(className?: string): string {
+  return cn(
+    "sc-card-alert rounded-[var(--sc-card-radius-sm)] border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900",
+    className,
+  );
+}
+
+/** Native details/summary accordion row (FAQ). */
+export function scCardAccordion(className?: string): string {
+  return cn(
+    "sc-card-accordion overflow-hidden rounded-[var(--sc-card-radius)] border border-border bg-card shadow-site-sm motion-safe:transition-shadow open:shadow-site-sm",
+    className,
+  );
+}
+
 export function scCardSectionEyebrow(className?: string): string {
   return cn(
     "sc-card-section-eyebrow text-[length:var(--sc-card-eyebrow-size)] font-[number:var(--sc-card-eyebrow-weight)] uppercase tracking-[var(--sc-card-eyebrow-tracking)] text-brand-blue",

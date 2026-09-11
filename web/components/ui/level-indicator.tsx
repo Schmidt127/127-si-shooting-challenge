@@ -1,5 +1,6 @@
 import { LevelBadge } from "@/components/leaderboard/level-badge";
 import { ProgressMeter } from "@/components/ui/progress-meter";
+import { scCardPanel, scCardSectionEyebrow } from "@/components/ui/sc-card";
 import { formatXp } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 
@@ -27,23 +28,16 @@ export function LevelIndicator({
     xpForNextLevel > 0 ? Math.min(100, Math.round((xpIntoLevel / xpForNextLevel) * 100)) : 100;
 
   return (
-    <div
-      className={cn(
-        "rounded-2xl border border-border bg-card p-5 shadow-[0_4px_16px_-10px_rgba(38,38,38,0.12)]",
-        className,
-      )}
-    >
+    <div className={cn(scCardPanel(), className)}>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-muted">Level</p>
+          <p className={cn(scCardSectionEyebrow(), "text-muted")}>Level</p>
           <div className="mt-2">
             <LevelBadge level={level} size="lg" />
           </div>
         </div>
         <div className="text-right">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-muted">
-            Lifetime XP
-          </p>
+          <p className={cn(scCardSectionEyebrow(), "text-muted")}>Lifetime XP</p>
           <p className="mt-1 font-mono text-2xl font-bold text-brand-orange">{formatXp(totalXp)}</p>
         </div>
       </div>
