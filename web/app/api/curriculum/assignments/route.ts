@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 
-import { AirtableApiError } from "@/lib/airtable/errors";
 import { listCurriculumAssignmentsForEnrollment } from "@/lib/curriculum/assignments-service";
 import {
   bearerTokenFromAuthorization,
@@ -8,33 +7,6 @@ import {
 } from "@/lib/curriculum/ingress-auth";
 
 export const dynamic = "force-dynamic";
-
-const MAX_AIRTABLE_ATTEMPTS = 4;
-
-async function sleep(ms: number): Promise<void> {
-  await new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function listAssignmentsWithRateLimitRetry(enrollmentId: string) {
-  let lastError: unknown;
-
-  for (let attempt = 0; attempt < MAX_AIRTABLE_ATTEMPTS; attempt += 1) {
-    try {
-      return await listCurriculumAssignmentsForEnrollment(enrollmentId);
-    } catch (error) {
-      lastError = error;
-      const retryable = error instanceof AirtableApiError && error.status === 429;
-      if (!retryable || attempt === MAX_AIRTABLE_ATTEMPTS - 1) {
-        throw error;
-      }
-
-      const backoffMs = Math.min(2000, 250 * 2 ** attempt) + Math.floor(Math.random() * 150);
-      await sleep(backoffMs);
-    }
-  }
-
-  throw lastError;
-}
 
 /**
  * Curriculum Hub → Shooting Challenge: PHA assignments for one enrollment.
@@ -52,7 +24,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "enrollmentId is required." }, { status: 400 });
   }
 
-  const result = await listAssignmentsWithRateLimitRetry(enrollmentId);
+  const result = await listCurriculumAssignmentsForEnrollment(enrollmentId);
   if (!result.ok) {
     return NextResponse.json({ error: result.error }, { status: result.status });
   }
