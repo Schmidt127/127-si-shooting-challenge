@@ -1393,11 +1393,11 @@ Mike-authorized **record deletion only** (not schema). Deleted **959** transacti
 
 
 
-Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-048**. Documentation-only intake; **do not implement from this section alone** ? convert each item to a Phase 2 brief before code, schema, Fillout, or Production changes. Do not reopen completed **FUT-018** / **FUT-019** / **FUT-010** as duplicates; new IDs own the new scope and cross-reference related work.
+Owner-approved product/UX/infrastructure items captured below as **FUT-033–FUT-049**. Documentation-only intake; **do not implement from this section alone** — convert each item to a Phase 2 brief before code, schema, Fillout, or Production changes. Do not reopen completed **FUT-018** / **FUT-019** / **FUT-010** as duplicates; new IDs own the new scope and cross-reference related work.
 
 
 
-**Repo routing:** Club marketing root / ?More than a Scoreboard? / Upcoming Programs (**FUT-033?FUT-037**) ? implement in **`hoopchallenges-landing`** (Fairfield Basketball Club landing). Shooting Challenge app, Airtable, Hub email, Fillout SC forms, and S3 pipeline items (**FUT-038?FUT-048**) ? this repo and linked systems unless noted.
+**Repo routing:** Club marketing root / “More than a Scoreboard” / Upcoming Programs (**FUT-033–FUT-037**) — implement in **`hoopchallenges-landing`** (Fairfield Basketball Club landing). Shooting Challenge app, Airtable, Hub email, Fillout SC forms, and S3 pipeline items (**FUT-038–FUT-048**) — this repo and linked systems unless noted. **FUT-049** is cross-app Curriculum Hub architecture (deferred; multiple 127 SI apps).
 
 
 
@@ -2096,6 +2096,134 @@ Owner-approved product/UX/infrastructure items captured below as **FUT-033?FUT-0
 
 
 **Acceptance (future):** Branded HTTPS domain serves homework PDFs; `cloudfront.net` fallback preserved; Airtable/web migration decision documented; rollback documented; no surprise breakage of existing links.
+
+
+
+---
+
+
+
+### FUT-049 — Shared Curriculum Hub — Cross-App Assignment, Submission, Grading, and Result Return
+
+
+
+**Priority:** P3  
+
+**Status:** **DEFERRED — DO NOT IMPLEMENT** — architecture radar only; **not a current release blocker**; put on the radar for future deferred/architecture work  
+
+**Type:** Cross-app architecture / shared educational service  
+
+**Systems:** Curriculum Hub; Shooting Challenge; Team Shot Tracker; Jr. Referee Clinic; future 127 Sports Intensity programs; Communications Hub (parallel shared-service pattern)  
+
+**Correct repo:** architecture brief first (this repo + Curriculum Hub + affected app repos when authorized)  
+
+**Related:** FUT-029 (grade-band homework platform — distinct; do not reopen as this item) · Communications Hub reusable shared-service direction · current Structured Curriculum / Homework Completions ownership in Shooting Challenge
+
+
+
+**Owner intent:** Evaluate the Curriculum Hub as a **shared educational service** for multiple 127 Sports Intensity applications, rather than remaining tightly coupled to the Shooting Challenge alone.
+
+
+
+**Potential originating applications:**
+
+
+
+- Shooting Challenge
+
+- Team Shot Tracker
+
+- Jr. Referee Clinic
+
+- future 127 Sports Intensity programs
+
+
+
+**Future architecture concept (radar only):**
+
+
+
+1. An originating app assigns or launches a Curriculum Hub assignment.
+
+2. The originating app sends the Hub the required participant / enrollment / application context.
+
+3. The athlete completes the assignment through the Curriculum Hub.
+
+4. The Curriculum Hub owns the educational workflow: assignment definitions, grade-band questions, submission attempts, written answers, uploaded files, grading/review queue, satisfactory / needs-revision status, coach/instructor feedback, correction workflow, and result-delivery reliability / retry behavior.
+
+5. A coach/instructor can review submissions from multiple source applications in one Curriculum Hub administrative review experience.
+
+6. After review, the Curriculum Hub returns a normalized completion/result event to the originating application.
+
+7. The originating application remains responsible for application-specific consequences.
+
+
+
+**Ownership boundary:**
+
+
+
+Curriculum Hub **MAY** own: assignments, questions, responses, files, grading, corrections, feedback, satisfactory / not-satisfactory, completion result, attempt history, and generic outbound result delivery.
+
+
+
+Originating apps **MUST** continue to own app-specific business rules. Examples:
+
+
+
+- Shooting Challenge owns XP, levels, streaks, Perfect Week, achievements, and other Shooting Challenge progression.
+
+- Jr. Referee Clinic would own certification / progression consequences.
+
+- Team Shot Tracker would own any team-specific consequences.
+
+- Curriculum Hub must **not** become the owner of those app-specific rules.
+
+
+
+**Contract identifiers to consider (future brief):** `sourceApp`, `sourceEnrollmentId`, participant/person identity, `assignmentKey`, `gradeBand`, `attemptId`, submission status, review status, completion/result status, source callback / result destination, dedupe / idempotency key.
+
+
+
+**Relationship to Communications Hub:** Design consistently with the Communications Hub becoming a reusable shared service for multiple applications. Communications Hub should accept normalized communication requests from multiple source applications while each originating app continues to decide when/why a communication should occur.
+
+
+
+**Hard constraints for this backlog item (now):**
+
+
+
+- Do **not** refactor the current Structured Curriculum release.
+
+- Do **not** move existing Homework Completions today.
+
+- Do **not** redesign the current Hub schema today.
+
+- Do **not** change Shooting Challenge XP / homework logic.
+
+- Do **not** modify Team Shot Tracker or Jr. Referee Clinic.
+
+- Do **not** delay the current Curriculum Hub release.
+
+- Do **not** create Production records or fields.
+
+- Do **not** open implementation PRs under this ID.
+
+
+
+**When deferred architecture work is authorized:** Convert this item first into a **Phase 2 architecture/design brief** comparing:
+
+
+
+- **A.** current Shooting-Challenge-owned grading model
+
+- **B.** Hub-owned shared grading model
+
+- **C.** migration strategy that preserves existing Production behavior
+
+
+
+**Acceptance (this intake only):** Item listed as **P3 / DEFERRED — DO NOT IMPLEMENT**; Section G / generated queue updated; no implementation, schema, Production, or cross-app code changes.
 
 
 
@@ -2850,7 +2978,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 |---|---|
 
-| Total items | 77 |
+| Total items | 78 |
 
 | COMPLETE | 63 |
 
@@ -2860,7 +2988,7 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | READY | 1 |
 
-| DEFERRED | 10 |
+| DEFERRED | 11 |
 
 | Production actions remaining | 4 |
 
@@ -2869,6 +2997,10 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 | Items requiring Cursor | 1 |
 
 | Items requiring OMNI/Airtable | 2 |
+
+
+
+
 
 
 
@@ -3018,6 +3150,8 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 
 | **FUT-048** | **DEFERRED** (Optional / low) | CloudFront custom domain for homework resources (`homework.fairfieldbasketballclub.com`); keep `d21ixrrrqpqz29.cloudfront.net`; not FUT-029; do not delay resource migration |
 
+| **FUT-049** | **DEFERRED — DO NOT IMPLEMENT** (P3) | Shared Curriculum Hub — cross-app assignment, submission, grading, result return; architecture radar only; do not refactor current Structured Curriculum / Homework Completions |
+
 | **FUT-029** | **Deferred â€” DO NOT IMPLEMENT** | Grade-band homework platform + intake adapter; do not implement until separately authorized; not required for current app completion; wave 2026-09-05 out of scope |
 
 
@@ -3144,16 +3278,20 @@ Sorted by priority (P0?P3), then ID. Historical Sections A?F above remain for na
 | **SC-167/168/169 wave** | **ALL COMPLETE** | [`audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md`](./audits/SC-167-010-V1014-OPTION-A-LIVE-PROOF-20260905.md) Â· [`audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md`](./audits/SC-167-168-169-LIVE-VERIFICATION-20260905.md) |
 | **FUT-048** | **DEFERRED** (Optional / low) | CloudFront custom domain for homework resources â€” not required now; not FUT-029 |
 
+| **FUT-049** | **DEFERRED — DO NOT IMPLEMENT** (P3) | Shared Curriculum Hub cross-app architecture — radar only; no Structured Curriculum / schema / Production work now |
+
 
 
 | **FUT-029** | **Deferred â€” DO NOT IMPLEMENT** | Outside current app completion |
 | **AUT-013 / AUT-067 pastes** | **Optional / declined** | Structure-only GitHub newer; Mike declined paste 2026-09-05 |
 | **AUT-122** | **Superseded â€” never install** | Goal Met Date owned by **066 v4.1** |
 | **Season Simulation** | **SC-002 CLOSED / SC-001 READY (not executed)** | SC-SEASON-SIM-002 T122531Z cleaned; formulas normal `NOW()` / `TODAY()`. SC-SEASON-SIM-001 three-athlete prep complete â€” live execute **NOT authorized** until Mike says `RUN 3-ATHLETE SEASON SIMULATION`. |
-| **Core application** | **Functionally complete** for current app scope | Remaining = launch-time ops (FUT-003/026; SC-SEASON-SIM-001 live execute when authorized), deferred FUT-029 / cosmetic (incl. **FUT-048** CloudFront custom domain) |
+| **Core application** | **Functionally complete** for current app scope | Remaining = launch-time ops (FUT-003/026; SC-SEASON-SIM-001 live execute when authorized), deferred FUT-029 / **FUT-049** (shared Curriculum Hub architecture) / cosmetic (incl. **FUT-048** CloudFront custom domain) |
 | **OPS-PURGE-20260905** | **COMPLETE** | Transactional purge PR **#457**; evidence [`testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md`](./testing/evidence/transactional-purge-2026-09-05/CLOSEOUT.md) |
 
 **FUT-048 intake (2026-09-05):** Deferred optional CloudFront custom domain for `resources-homework` / `resources-homework-cf` â€” keep `d21ixrrrqpqz29.cloudfront.net`; no AWS/DNS/Airtable/Production changes required now.
+
+**FUT-049 intake (2026-09-11):** Deferred P3 architecture radar — Shared Curriculum Hub as cross-app assignment / submission / grading / result-return service; Communications Hub parallel shared-service pattern; **DO NOT IMPLEMENT**; no Structured Curriculum refactor, Homework Completions move, Hub schema redesign, XP/homework logic change, or Production records/fields under this ID.
 
 **Regenerated operator queue:** [`_generated-work-list-section-g.md`](./_generated-work-list-section-g.md) via `node tools/docs/generate-work-list-section-g.mjs --patch-master`.
 

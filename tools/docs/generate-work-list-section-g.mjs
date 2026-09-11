@@ -33,6 +33,7 @@ const STATUS_OVERLAYS = {
   "SC-SEASON-SIM-002": "COMPLETE",
   "FUT-029": "DEFERRED",
   "FUT-048": "DEFERRED",
+  "FUT-049": "DEFERRED",
   "MRW-H12": "DEFERRED",
   "AUT-013-PASTE": "OPTIONAL / DECLINED",
   "AUT-067-PASTE": "OPTIONAL / DECLINED",
@@ -383,6 +384,9 @@ function renderGenerated(rows, summary, generatedAt) {
   lines.push("- **OPS-PURGE-20260905** = COMPLETE (transactional purge; tip `ba969433` / PR **#457**).");
   lines.push("- **FUT-029** = Deferred — DO NOT IMPLEMENT; outside current app completion.");
   lines.push("- **FUT-048** = Deferred optional CloudFront custom domain; keep `d21ixrrrqpqz29.cloudfront.net`.");
+  lines.push(
+    "- **FUT-049** = Deferred P3 — Shared Curriculum Hub cross-app architecture; DO NOT IMPLEMENT; radar only.",
+  );
   lines.push("- **AUT-013 / AUT-067** pastes = optional/declined maintenance (not paste-pending blockers).");
   lines.push("- **AUT-122** = superseded; never install.");
   lines.push(

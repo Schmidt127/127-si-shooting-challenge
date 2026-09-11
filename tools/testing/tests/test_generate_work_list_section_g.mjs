@@ -51,6 +51,8 @@ test("generate-work-list-section-g produces matching summary arithmetic", () => 
   assert.match(generated, /\*\*SC-166\*\*.*Mike-owned\/manual/s);
   assert.match(generated, /\*\*FUT-029\*\*.*DEFERRED/s);
   assert.match(generated, /\*\*FUT-048\*\*.*DEFERRED/s);
+  assert.match(generated, /\*\*FUT-049\*\*.*DEFERRED/s);
+  assert.match(generated, /Shared Curriculum Hub/i);
   assert.match(generated, /\*\*AUT-122\*\*.*DEFERRED/s);
   assert.match(generated, /never install/i);
   assert.match(
