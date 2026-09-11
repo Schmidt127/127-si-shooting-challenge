@@ -9,6 +9,7 @@ import {
   homeworkBadgeLabel,
   homeworkBadgeTone,
 } from "@/lib/data/athlete-dashboard";
+import { curriculumHubCtaLabel } from "@/lib/curriculum/homework-link";
 import { formatXp } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import type { DashboardHomeworkItem } from "@/types/private-athlete-dashboard";
@@ -189,6 +190,10 @@ function HomeworkCard({ item }: { item: DashboardHomeworkItem }) {
 function HomeworkLinks({ item, compact = false }: { item: DashboardHomeworkItem; compact?: boolean }) {
   const isCurriculumHub =
     Boolean(item.homeworkDetailHref?.includes("/api/curriculum/start"));
+  const hubCta = curriculumHubCtaLabel({
+    badgeStatus: item.badgeStatus,
+    completionStatus: item.completionStatus,
+  });
   return (
     <div className={cn("flex flex-wrap gap-3", compact ? "text-xs" : "text-sm")}>
       {item.homeworkDetailHref ? (
@@ -198,7 +203,7 @@ function HomeworkLinks({ item, compact = false }: { item: DashboardHomeworkItem;
           className="px-0"
           prefetch={false}
         >
-          {isCurriculumHub ? "Open Homework" : "Assignment details"}
+          {isCurriculumHub ? hubCta : "Assignment details"}
         </CtaLink>
       ) : null}
       {item.viewSubmittedHomeworkHref ? (

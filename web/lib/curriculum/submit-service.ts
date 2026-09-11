@@ -59,7 +59,10 @@ type AttemptFields = {
   Status?: unknown;
   "Idempotency Key"?: unknown;
   "Enrollment ID"?: unknown;
+  /** Legacy text diagnostic / filter key — keep writing alongside the link. */
   "Homework Completion ID"?: unknown;
+  /** Linked record to Homework Completions. */
+  "Homework Completion"?: unknown;
 };
 
 type PhaFields = {
@@ -427,6 +430,8 @@ async function listAttemptsForCompletion(homeworkCompletionId: string): Promise<
 
 async function writeResponses(input: {
   attemptKey: string;
+  attemptRecordId: string;
+  homeworkCompletionId: string;
   answers: CurriculumSubmitPayload["answers"];
   assets?: CurriculumSubmitPayload["assets"];
 }): Promise<void> {
@@ -441,7 +446,11 @@ async function writeResponses(input: {
       records: chunk.map((answer) => ({
         fields: {
           "Response Key": buildResponseKey(input.attemptKey, answer.questionKey),
+          // Text key retained for diagnostics / idempotency tooling.
           "Attempt Key": input.attemptKey,
+          // Linked records for Airtable relationship views.
+          "Homework Attempt": [input.attemptRecordId],
+          "Homework Completion": [input.homeworkCompletionId],
           "Question Key": answer.questionKey,
           "Question Order": answer.questionOrder,
           "Prompt Snapshot": answer.promptSnapshot,
@@ -477,12 +486,16 @@ async function createAttemptRecord(input: {
       "Submitted At": input.payload.submittedAt,
       "Idempotency Key": input.idempotencyKey,
       "Enrollment ID": input.payload.enrollmentId,
+      // Text diagnostic field + linked parent completion (both required).
       "Homework Completion ID": input.homeworkCompletionId,
+      "Homework Completion": [input.homeworkCompletionId],
     },
   });
 
   await writeResponses({
     attemptKey,
+    attemptRecordId: created.id,
+    homeworkCompletionId: input.homeworkCompletionId,
     answers: input.payload.answers,
     assets: input.payload.assets,
   });

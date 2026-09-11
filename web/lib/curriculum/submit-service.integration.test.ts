@@ -197,6 +197,28 @@ describe("processCurriculumHomeworkSubmit integration", () => {
     expect(result.receipt.attemptNumber).toBe(1);
     expect(createAirtableRecordMock).toHaveBeenCalled();
     expect(createAirtableRecordsMock).toHaveBeenCalled();
+
+    const attemptCreate = createAirtableRecordMock.mock.calls.find(
+      (call) => call[0]?.tableName === "Homework Attempts",
+    )?.[0] as { fields: Record<string, unknown> };
+    expect(attemptCreate.fields["Homework Completion ID"]).toBe("recHcNew000000001");
+    expect(attemptCreate.fields["Homework Completion"]).toEqual(["recHcNew000000001"]);
+
+    const responseCreate = createAirtableRecordsMock.mock.calls.find(
+      (call) => call[0]?.tableName === "Homework Responses",
+    )?.[0] as {
+      records: Array<{ fields: Record<string, unknown> }>;
+    };
+    expect(responseCreate.records).toHaveLength(1);
+    expect(responseCreate.records[0].fields["Attempt Key"]).toBe(
+      `${ENROLLMENT}|AESOP_CROW_PITCHER|1`,
+    );
+    expect(responseCreate.records[0].fields["Homework Attempt"]).toEqual([
+      "recAttempt0000001",
+    ]);
+    expect(responseCreate.records[0].fields["Homework Completion"]).toEqual([
+      "recHcNew000000001",
+    ]);
   });
 
   it("returns idempotent receipt for duplicate Idempotency-Key without re-auth", async () => {
@@ -227,5 +249,133 @@ describe("processCurriculumHomeworkSubmit integration", () => {
     if (!result.ok) return;
     expect(result.idempotent).toBe(true);
     expect(result.receipt.homeworkCompletionId).toBe("recHcPrior0000001");
+    expect(createAirtableRecordMock).not.toHaveBeenCalled();
+    expect(createAirtableRecordsMock).not.toHaveBeenCalled();
+  });
+
+  it("Needs Revision creates Attempt N+1 linked to the same Homework Completion", async () => {
+    const existingHcId = "recHcNeedsRev0001";
+    const priorAttemptId = "recAttemptPrior01";
+
+    listAirtableRecordsMock.mockImplementation(async (params: { tableName: string; filterByFormula?: string }) => {
+      if (params.tableName === "Enrollments") {
+        return {
+          records: [
+            enrollmentRecord({
+              "Homework Completions": [{ id: existingHcId }],
+            }),
+          ],
+        };
+      }
+      if (params.tableName === "Grade Bands") {
+        return { records: [{ id: GRADE_BAND, fields: { "Grade Band Name": "5-6" } }] };
+      }
+      if (params.tableName === "Homework Library") {
+        return { records: [{ id: LIBRARY, fields: { "Assignment Key": "AESOP_CROW_PITCHER" } }] };
+      }
+      if (params.tableName === "Program Homework Assignments") {
+        return {
+          records: [
+            {
+              id: PHA,
+              fields: {
+                [PHA_AIRTABLE_FIELDS.active]: true,
+                [PHA_AIRTABLE_FIELDS.homeworkAssignment]: [{ id: LIBRARY }],
+                [PHA_AIRTABLE_FIELDS.week]: [{ id: WEEK }],
+                [PHA_AIRTABLE_FIELDS.gradeBand]: [{ id: GRADE_BAND }],
+                [PHA_AIRTABLE_FIELDS.programInstanceRid]: "recProgramInst0001",
+              },
+            },
+          ],
+        };
+      }
+      if (params.tableName === "Homework Completions") {
+        if (params.filterByFormula?.includes("Curriculum Idempotency Key")) {
+          return { records: [] };
+        }
+        return {
+          records: [
+            {
+              id: existingHcId,
+              fields: {
+                Homework: [{ id: LIBRARY }],
+                "Program Homework Assignment": [{ id: PHA }],
+                "Completion Status": { name: "Needs Revision" },
+                "Curriculum Idempotency Key": "idem-prior-attempt-1",
+              },
+            },
+          ],
+        };
+      }
+      if (params.tableName === "Homework Attempts") {
+        if (params.filterByFormula?.includes("Idempotency Key")) {
+          return { records: [] };
+        }
+        return {
+          records: [
+            {
+              id: priorAttemptId,
+              fields: {
+                "Attempt Key": `${ENROLLMENT}|AESOP_CROW_PITCHER|1`,
+                "Attempt Number": 1,
+                Status: { name: "Submitted" },
+                "Idempotency Key": "idem-prior-attempt-1",
+                "Homework Completion ID": existingHcId,
+              },
+            },
+          ],
+        };
+      }
+      if (params.tableName === "Weekly Athlete Summary") {
+        return { records: [] };
+      }
+      return { records: [] };
+    });
+
+    createAirtableRecordMock.mockImplementation(async (params: { tableName: string }) => ({
+      id:
+        params.tableName === "Homework Attempts"
+          ? "recAttempt0000002"
+          : "recWasNew000000001",
+    }));
+    createAirtableRecordsMock.mockResolvedValue({ records: [] });
+    updateAirtableRecordMock.mockImplementation(async (params: { recordId: string }) => ({
+      id: params.recordId,
+    }));
+
+    const result = await processCurriculumHomeworkSubmit({
+      payload: {
+        ...basePayload,
+        attemptNumber: 2,
+        parentAttemptNumber: 1,
+      },
+      idempotencyKey: "idem-needs-revision-02",
+      submitAuthorization: submitAuth,
+    });
+
+    expect(result.receipt.attemptNumber).toBe(2);
+    expect(result.receipt.homeworkCompletionId).toBe(existingHcId);
+
+    const attemptCreate = createAirtableRecordMock.mock.calls.find(
+      (call) => call[0]?.tableName === "Homework Attempts",
+    )?.[0] as { fields: Record<string, unknown> };
+    expect(attemptCreate.fields["Attempt Number"]).toBe(2);
+    expect(attemptCreate.fields["Homework Completion ID"]).toBe(existingHcId);
+    expect(attemptCreate.fields["Homework Completion"]).toEqual([existingHcId]);
+
+    const responseCreate = createAirtableRecordsMock.mock.calls.find(
+      (call) => call[0]?.tableName === "Homework Responses",
+    )?.[0] as {
+      records: Array<{ fields: Record<string, unknown> }>;
+    };
+    expect(responseCreate.records[0].fields["Attempt Key"]).toBe(
+      `${ENROLLMENT}|AESOP_CROW_PITCHER|2`,
+    );
+    expect(responseCreate.records[0].fields["Homework Attempt"]).toEqual([
+      "recAttempt0000002",
+    ]);
+    expect(responseCreate.records[0].fields["Homework Completion"]).toEqual([
+      existingHcId,
+    ]);
   });
 });
