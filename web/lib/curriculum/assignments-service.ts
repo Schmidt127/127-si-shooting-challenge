@@ -117,7 +117,7 @@ export async function listCurriculumAssignmentsForEnrollment(
     filterByFormula: `RECORD_ID()='${escapeAirtableString(enrollmentId)}'`,
     fields: ["Active?", "Program Instance", "Grade Band", "Homework Completions"],
     maxRecords: 1,
-    revalidateSeconds: 0,
+    revalidateSeconds: 15,
   });
   const enrollment = enrollmentResponse.records[0];
   if (!enrollment) {
@@ -163,7 +163,7 @@ export async function listCurriculumAssignmentsForEnrollment(
       PHA_AIRTABLE_FIELDS.programInstanceRid,
     ],
     maxRecords: 200,
-    revalidateSeconds: 0,
+    revalidateSeconds: 60,
   });
 
   const matchedPha = phaResponse.records.filter((pha) => {
@@ -196,7 +196,7 @@ export async function listCurriculumAssignmentsForEnrollment(
           filterByFormula: recordIdFormula(libraryIds),
           fields: ["Assignment Key", "Assignment Title", "Order"],
           maxRecords: libraryIds.length,
-          revalidateSeconds: 0,
+          revalidateSeconds: 300,
         })
       : Promise.resolve({ records: [] as Array<{ id: string; fields: LibraryFields }> }),
     weekIds.length
@@ -205,7 +205,7 @@ export async function listCurriculumAssignmentsForEnrollment(
           filterByFormula: recordIdFormula(weekIds),
           fields: ["Week Name", "Start Date", "End Date"],
           maxRecords: weekIds.length,
-          revalidateSeconds: 0,
+          revalidateSeconds: 300,
         })
       : Promise.resolve({
           records: [] as Array<{ id: string; fields: PublicHomeworkWeekFields }>,
@@ -222,7 +222,7 @@ export async function listCurriculumAssignmentsForEnrollment(
             "Coach Feedback",
           ],
           maxRecords: homeworkCompletionIds.length,
-          revalidateSeconds: 0,
+          revalidateSeconds: 10,
         })
       : Promise.resolve({ records: [] as Array<{ id: string; fields: HcFields }> }),
   ]);
