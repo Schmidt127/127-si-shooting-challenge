@@ -213,7 +213,7 @@ test("057 GitHub script documents early homework + week evaluation hold", () => 
     ),
     "utf8"
   );
-  assert.match(s057, /Version: 2\.5/);
+  assert.match(s057, /Version: 2\.7/);
   assert.match(s057, /week evaluation time|evaluation window/i);
   assert.match(s057, /early/i);
   assert.match(s057, /countsTowardPerfectWeekHomework/);
