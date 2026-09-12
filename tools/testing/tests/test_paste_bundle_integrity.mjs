@@ -60,10 +60,10 @@ const BUNDLES = [
   },
   {
     id: "057",
-    version: "2.6",
+    version: "2.7",
     source:
       "airtable/automations/shooting-challenge/057-achievements-and-milestones-calculate-perfect-week-eligibility.js",
-    paste: "docs/deploy-checklists/057-v2.6-PASTE.txt",
+    paste: "docs/deploy-checklists/057-v2.7-PASTE.txt",
     extract: (text) => {
       const idx = text.indexOf(
         "/***************************************************************************************************\n * 057 - Achievements",
@@ -72,7 +72,8 @@ const BUNDLES = [
       return text.slice(idx);
     },
     mustInclude: [
-      "Version: 2.6",
+      "Version: 2.7",
+      "Week End Saturday only",
       "Goal Shots Target",
       "Weekly Goal Shots Target",
       "America/Denver",

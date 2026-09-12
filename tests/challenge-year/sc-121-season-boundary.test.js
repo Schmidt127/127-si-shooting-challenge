@@ -17,9 +17,9 @@ test("Automation 005 uses inclusive Program-Instance-scoped Week matching", () =
   assert.ok(body.includes("activityDateKey >= start && activityDateKey <= end"));
   assert.ok(body.includes("pi === programInstanceId"));
 });
-test("057 v2.6 derives official dates from Week Start and End", () => {
+test("057 v2.7 derives official dates from Week Start and End", () => {
   const body = fs.readFileSync(path.join(__dirname, "../../airtable/automations/shooting-challenge/057-achievements-and-milestones-calculate-perfect-week-eligibility.js"), "utf8");
-  assert.ok(body.includes("Version: 2.6"));
+  assert.ok(body.includes("Version: 2.7"));
   assert.ok(body.includes("buildRequiredWeekDates(weekStartDateKey, weekEndDateKey)"));
   assert.ok(body.includes("requiredDateKeys[requiredDateKeys.length - 1]"));
   assert.ok(body.includes("Passing official days: ${passingDays.length}/${requiredDateKeys.length}"));

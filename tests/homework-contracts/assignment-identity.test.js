@@ -174,7 +174,7 @@ test("different PHA creates separate identity match space", () => {
   assert.equal(match.homeworkCompletion, null);
 });
 
-test("PHA Due Date overrides Week End Date", () => {
+test("PHA Due Date overrides Week End Date for catalog due only", () => {
   assert.equal(resolveAssignmentDueDateKey("2026-08-31", "2026-08-24"), "2026-08-31");
 });
 
@@ -183,7 +183,7 @@ test("blank PHA Due Date falls back to Week End Date", () => {
   assert.equal(resolveAssignmentDueDateKey(null, "8/24/2026"), "2026-08-24");
 });
 
-test("on-time submission before due date is credit eligible", () => {
+test("on-time submission before Week End is Perfect Week eligible", () => {
   const result = evaluateHomeworkSubmissionDeadline({
     submissionDateKey: "2026-08-20",
     phaDueDate: "2026-08-31",
@@ -192,9 +192,24 @@ test("on-time submission before due date is credit eligible", () => {
   assert.equal(result.creditEligible, true);
   assert.equal(result.timingStatus, "on_time");
   assert.equal(result.perfectWeekEligible, true);
+  assert.equal(result.perfectWeekDeadlineKey, "2026-08-24");
+  assert.equal(result.assignmentDueDateKey, "2026-08-31");
 });
 
-test("late submission after due date remains credit eligible for XP", () => {
+test("after Week End but before catch-up PHA Due -> XP ok, Perfect Week excluded", () => {
+  const result = evaluateHomeworkSubmissionDeadline({
+    submissionDateKey: "2026-08-26",
+    phaDueDate: "2026-08-31",
+    weekEndDate: "2026-08-24",
+  });
+  assert.equal(result.creditEligible, true);
+  assert.equal(result.timingStatus, "late");
+  assert.equal(result.perfectWeekEligible, false);
+  assert.equal(result.perfectWeekDeadlineKey, "2026-08-24");
+  assert.equal(result.assignmentDueDateKey, "2026-08-31");
+});
+
+test("late submission after Week End remains credit eligible for XP", () => {
   const result = evaluateHomeworkSubmissionDeadline({
     submissionDateKey: "2026-09-01",
     phaDueDate: "2026-08-31",
@@ -203,8 +218,10 @@ test("late submission after due date remains credit eligible for XP", () => {
   assert.equal(result.creditEligible, true);
   assert.equal(result.timingStatus, "late");
   assert.equal(result.perfectWeekEligible, false);
-  assert.match(buildLateSubmissionNote(result), /Full homework XP credit/);
-  assert.match(buildLateSubmissionNote(result), /does not count toward Perfect Week/);
+  const note = buildLateSubmissionNote({ ...result, submissionDateKey: "2026-09-01" });
+  assert.match(note, /Full homework XP credit/);
+  assert.match(note, /does not count toward Perfect Week/);
+  assert.match(note, /Week End/);
 });
 
 test("PHA Due Date blank uses week end for late check", () => {
@@ -217,6 +234,18 @@ test("PHA Due Date blank uses week end for late check", () => {
   assert.equal(result.timingStatus, "late");
   assert.equal(result.dueDateKey, "2026-08-24");
   assert.equal(result.perfectWeekEligible, false);
+});
+
+test("season catch-up PHA Due Date does not expand Perfect Week window", () => {
+  const result = evaluateHomeworkSubmissionDeadline({
+    submissionDateKey: "2027-06-15",
+    phaDueDate: "2027-06-29",
+    weekEndDate: "2027-05-08",
+  });
+  assert.equal(result.creditEligible, true);
+  assert.equal(result.timingStatus, "late");
+  assert.equal(result.perfectWeekEligible, false);
+  assert.equal(result.perfectWeekDeadlineKey, "2027-05-08");
 });
 
 console.log("all assignment-identity tests passed");
