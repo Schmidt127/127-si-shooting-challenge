@@ -26,13 +26,29 @@ class MemoryAirtableClient:
             raise WriteBlockedError(f"Write blocked for table {table!r}")
 
     def meta_tables(self) -> list[dict]:
-        return [
-            {
-                "name": name,
-                "fields": [{"name": f} for f in self._known_fields(name)],
-            }
-            for name in sorted(self.tables.keys() | set(self._schema_defaults()))
-        ]
+        """Return schema stubs; formula fields include Production-shaped options."""
+        from .clock_override import PRODUCTION_ACTIVITY_DATE_IS_FUTURE_FORMULA
+        from .same_day_contracts import (
+            PERFECT_WEEK_GRACE_ROLLBACK,
+            SUBMITTED_SAME_DAY_ROLLBACK,
+        )
+
+        formula_by_field = {
+            "Activity Date Is Future?": PRODUCTION_ACTIVITY_DATE_IS_FUTURE_FORMULA,
+            "Submitted Same Day?": SUBMITTED_SAME_DAY_ROLLBACK,
+            "Perfect Week Grace Eligible?": PERFECT_WEEK_GRACE_ROLLBACK,
+        }
+        out: list[dict] = []
+        for name in sorted(self.tables.keys() | set(self._schema_defaults())):
+            fields = []
+            for fname in sorted(self._known_fields(name)):
+                entry: dict[str, Any] = {"name": fname}
+                if fname in formula_by_field:
+                    entry["type"] = "formula"
+                    entry["options"] = {"formula": formula_by_field[fname]}
+                fields.append(entry)
+            out.append({"name": name, "fields": fields})
+        return out
 
     def _schema_defaults(self) -> dict[str, set[str]]:
         return {
@@ -71,6 +87,8 @@ class MemoryAirtableClient:
                 "Build Daily Email Now?",
                 "Count This Submission?",
                 "Activity Date Is Future?",
+                "Submitted Same Day?",
+                "Perfect Week Grace Eligible?",
             },
             "Submission Assets": {
                 "Asset Label",

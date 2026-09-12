@@ -1,31 +1,62 @@
-# SC-SEASON-SIM-002 — Execution Manifest (READY FOR AUTHORIZATION)
+# SC-SEASON-SIM-002 — Execution Manifest (PREP 2026-09-12 — NOT READY TO EXECUTE)
 
 | | |
 |---|---|
 | **Backlog** | SC-SEASON-SIM-002 |
-| **Preflight date** | 2026-09-05 |
+| **Prep date** | 2026-09-12 (Agent 3 final preparation) |
 | **Package** | `tools/season_simulation/` |
 | **Base** | Production `appn84sqPw03zEbTT` (no DEV base) |
-| **Master SHA at preflight** | `58663cfdef1c4ae74ad63ae5f998dccdd0f22474` |
 | **Authorize command** | Mike says exactly: `RUN SEASON SIMULATION` |
-| **This document does NOT authorize execute** | Preflight only — no Production writes performed |
+| **This document does NOT authorize execute** | Preflight + dry-run only — no Production execute performed |
+| **Verdict** | **SEASON SIMULATION NOT READY** — restore/confirm 18 active PHA before execute |
 
 ---
 
-## 0. Single entrypoint after authorization
+## 0. 2026-09-12 prep snapshot (read-only)
 
-From repo `tools/` (PowerShell), after Stage A temporary controls are live:
+| Check | Status |
+|---|---|
+| Window / scenario | **61 days** 2027-05-01 → 2027-06-30; Athlete 1 mixed path **unchanged** (still intended) |
+| Preflight connectivity | **PASS** (`appn84sqPw03zEbTT`) |
+| `Activity Date Is Future?` | **Season Sim gate ACTIVE** (temporary) — normal athletes still on NOW() branch |
+| `Submitted Same Day?` | **Season Sim gate ACTIVE** (temporary) |
+| `Perfect Week Grace Eligible?` | **Season Sim gate ACTIVE** (temporary) |
+| Season Sim fields | Present (`Season Sim Test Record?`, `Season Sim Clock Now`, `Season Sim Test Submitted At`) |
+| Same-day logic accurate for sim | **True** |
+| `ready_for_early_execute` (clock) | **True** (gate detected) |
+| Active PHA (Grade 12 band) | **4** (Early Bird ×2 + Week 1 ×2) — **need 18** |
+| Weeks covering window | **10** |
+| Zoom VERIFY meetings | **2** (informational; execute still creates disposable live/recording) |
+| XP Reward Rules | **31** active — families covered (see §XP) |
+| Dry-run writes | See §Dry-run (HW completions **4**/4 under live PHA — not 18) |
+| Offline tests | **261 PASS** including `test_sc002_prep_coverage` |
+
+### Hard blocker before execute
+
+**Restore 14 missing active Program Homework Assignments** (Weeks 2–8 × HW1/HW2) so active PHA count returns to **18**. Live table currently has **only 4 PHA rows total** (created 2026-09-09…09-11) — Weeks 2–8 are absent, not merely inactive.
+
+Until PHA = 18: `sufficient_for_final_run=False`. Do **not** execute.
+
+### Temporary formula note
+
+Season Sim gated formulas are **already live**. They are simulation-scoped (checkbox + `SEASON-SIM|` marker). If execute is deferred, **restore Production NOW()/TODAY()/CREATED_TIME rollbacks now** and re-paste immediately before the authorized run (Stage A → Stage Z discipline).
+
+---
+
+## 0b. Single entrypoint after authorization
+
+From repo `tools/` (PowerShell), after Stage A temporary controls are live **and** PHA = 18:
 
 ```powershell
 cd tools
 
-# 1) Reconfirm Production-readiness (must show formula gates active)
+# 1) Reconfirm Production-readiness (must show formula gates active + PHA 18)
 python -m season_simulation preflight
 
-# 2) Live dry-run (read-only planner)
+# 2) Live dry-run (read-only planner) — expect HW 18/18
 python -m season_simulation dry-run
 
-# 3) EXECUTE — generate a NEW run id (never reuse cleaned Sept 2 IDs)
+# 3) EXECUTE — generate a NEW run id (never reuse cleaned Sept 2 / Sept 5 IDs)
 $RUN = "SEASON-SIM-2027-$(Get-Date -Format 'yyyyMMddTHHmmssZ')-athlete1"
 python -m season_simulation execute `
   --execute `
@@ -57,9 +88,11 @@ Then delete any out-of-registry dependents for **that enrollment only** (XP Even
 
 ---
 
-## 1. Pre-run snapshot (2026-09-05 read-only)
+## 0c. Prior preflight snapshot (2026-09-05 read-only) — historical
 
-### Production-normal mode — CONFIRMED
+> Superseded by §0 for readiness. Kept for audit trail.
+
+### Production-normal mode — was CONFIRMED on 2026-09-05
 
 | Check | Evidence |
 |---|---|
@@ -102,7 +135,48 @@ GitHub copies match these versions. **Do not paste 013 / 067 / 122** as part of 
 
 ---
 
-## 2. Previous simulation evidence (Sept 2, 2026)
+## XP event families (live 2026-09-12)
+
+From Production `XP Reward Rules` (31 active) + cascade-only sources:
+
+| Family | Source |
+|---|---|
+| Submission Base | Rule `SHOOTING_BASE` → Automation **010** Source Key `SUBMISSION_XP|{id}` |
+| Homework completion / review XP | Rule `HOMEWORK_COMPLETION` → **064/065** `HOMEWORK_XP|{hcId}` |
+| Video XP | Rule `VIDEO_SUBMISSION` → **114** |
+| Zoom live attendance | `ZOOM_ATTEND_BASE` (+ bonus 2/3) |
+| Zoom recording | Cascade **101** `ZOOM_RECORDING_CREDIT|*` (not a Reward Rules row) |
+| Streak | `STREAK_*DAY` rules |
+| Weekly threshold | `WEEKLY_THRESHOLD_*_912` (and other bands) |
+| Perfect Week | Rule `PERFECT_WEEK` (Athlete 1 **expects 0** Eligible by design) |
+| Shot milestones | Achievements **066→059** `SHOT_MILESTONE|*` (not a Reward Rules row) |
+| Level progression | Enrollment recalc from cumulative XP (not a Reward Rules row) |
+
+Offline classifier: `tools/season_simulation/xp_event_families.py` + `tests/test_sc002_prep_coverage.py`.
+
+---
+
+## Dry-run write counts (live 2026-09-12 — PHA=4)
+
+| Table / op | Count | Notes |
+|---|---:|---|
+| Athletes create | 1 | |
+| Enrollments create | 1 | |
+| Submissions create | 58 | +116 updates (post-create / streak arms) |
+| Weekly Athlete Summary create | 10 | +16 updates |
+| Homework Completions create | **4** | **Would be 18 after PHA restore** |
+| Submission Assets create/update | 13 | HW + video |
+| Video Feedback create/update | 12 | 4 creates + arms |
+| Zoom Meetings create | 2 | disposable live + recording |
+| Zoom Attendance create | 2 | |
+| Zoom Meetings attendees_patch | 1 | live only |
+| Email Handoff expect_pipeline | 75 | not sent (dry-run) |
+| Miss skips | 3 | days 15/36/50 |
+| **Airtable writes performed** | **0** | |
+
+---
+
+## 1. Previous simulation evidence (Sept 2 / Sept 5, 2026)
 
 | Run ID | Outcome | Cleanup |
 |---|---|---|
