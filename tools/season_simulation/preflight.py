@@ -307,20 +307,26 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
         "REQUIRED: Resend domain/sender already used by live Hub pipeline must be verified before enabling delivery.",
         "Do not permanently weaken production future-date protections for normal athletes.",
         "Do not modify SC-147, Automation 101, or Zoom credit logic for this simulation.",
-        "REQUIRED before Perfect Week / same-day accuracy: temporary gated formulas on "
-        "Submitted Same Day? and Perfect Week Grace Eligible? (see operator checklist); "
-        "restore rollbacks after the run with Activity Date Is Future? NOW()-only.",
         "No DEV Airtable base — disposable Production VERIFY/Schmidt records only; "
         "email allowlist schmidt@fairfieldbasketballclub.com when email phase enabled.",
     ]
 
     if not same_day.same_day_logic_accurate_for_sim:
+        schema_requirements.append(
+            "REQUIRED before Perfect Week / same-day accuracy: temporary gated formulas on "
+            "Submitted Same Day? and Perfect Week Grace Eligible? (see operator checklist); "
+            "restore rollbacks after the run with Activity Date Is Future? NOW()-only."
+        )
         warnings.append(
             "Same-day / Perfect Week NOT accurate for sim yet: paste temporary "
             "Submitted Same Day? + Perfect Week Grace Eligible? Season Sim gates "
             "(operator checklist). Do not claim Perfect Week success from record create alone."
         )
     else:
+        schema_requirements.append(
+            "Submitted Same Day? + Perfect Week Grace Eligible? Season Sim gates are ACTIVE — "
+            "restore Production rollbacks immediately after the run (or if execute is deferred)."
+        )
         warnings.append(
             "Same-day / Perfect Week Season Sim gates ACTIVE — restore rollbacks after the run."
         )

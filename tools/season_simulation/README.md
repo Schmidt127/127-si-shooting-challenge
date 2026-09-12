@@ -6,7 +6,7 @@ Infrastructure for full-season disposable simulations of the Shooting Challenge.
 | | |
 |---|---|
 | **SC-SEASON-SIM-001** | Three-athlete package (Perfect / Recovery / Edge) — **READY (prep completing)**, not executed |
-| **SC-SEASON-SIM-002** | Single-athlete historical package — **COMPLETE** (T122531Z) |
+| **SC-SEASON-SIM-002** | Single-athlete historical package — **PREP 2026-09-12 NOT READY** (PHA=4/18 blocker; clock gates live) |
 | **Window** | 2027-05-01 → 2027-06-30 inclusive (**61** days) |
 | **Environment** | Production `appn84sqPw03zEbTT` only — **no DEV environment** |
 | **SC-001 manifest** | [`docs/deploy-checklists/SC-SEASON-SIM-001-EXECUTION-MANIFEST.md`](../../docs/deploy-checklists/SC-SEASON-SIM-001-EXECUTION-MANIFEST.md) |
@@ -17,9 +17,9 @@ Infrastructure for full-season disposable simulations of the Shooting Challenge.
 | Mode | Ready? |
 |---|---|
 | Offline tests / dry-run / preflight | Yes |
-| Full execute writer (idempotent) | **Yes in code** — SC-002 single-athlete proven; SC-001 three-athlete dry-run + gates ready |
+| Full execute writer (idempotent) | **Code ready** — blocked on Production PHA restore (need **18** active; live **4**) + Stage A/Z formula discipline |
 | SC-001 three-athlete dry-run | **Yes** — `python -m season_simulation dry-run-three` |
-| Complete countable E2E on wall-clock 2026 | Formulas + writer ready; **paste 010 v10.13 / 114 v6.2 / 073 v4.6** before next execute (see operator checklist). Hub allowlist includes `schmidt@fairfieldbasketballclub.com`. |
+| Complete countable E2E on wall-clock 2026 | Formulas: Season Sim gates **currently ACTIVE** on Production (restore after run). Hub allowlist includes `schmidt@fairfieldbasketballclub.com`. |
 
 `CREATED_TIME()` / `Submitted At` **cannot** be API-backdated. Same-day / Perfect Week timing uses gated `Season Sim Test Submitted At` and/or `Perfect Week Manual Exception?` on disposable rows only.
 
