@@ -7,10 +7,26 @@
 **Repository:** `Schmidt127/127-si-shooting-challenge`  
 
 **Created:** 2026-08-24  
+**Reconciled:** 2026-09-12 — [`audits/SOURCE-OF-TRUTH-RECONCILIATION-20260912.md`](./audits/SOURCE-OF-TRUTH-RECONCILIATION-20260912.md)
 
 **Purpose:** One owner-approved list of future app, Airtable, AWS, email, payment, award, and website work. Each item is written so it can later become a focused Cursor or Airtable/OMNI prompt.
 
+## Required before close (authoritative)
 
+| ID | Status | Notes |
+|----|--------|-------|
+| **SC-SEASON-SIM-001** | **READY — NOT EXECUTED** | Three-athlete season simulation **execution** + reconciliation. Requires exact owner authorization. |
+| **SC-SEASON-SIM-002** | **COMPLETE (infrastructure / package closed)** | Do **not** claim season simulation has been executed successfully. Do not re-run T122531Z. |
+
+Curriculum Hub Homework lifecycle, private SEO, 52 structured-enabled lessons, SC Assignment Key Sync, and lesson hero are **COMPLETE** — remove from active future work; reopen Hub only for Production defects.
+
+## Optional / deferred (not close blockers)
+
+- SMS / Twilio
+- Additional Curriculum lessons beyond the verified 52
+- Cosmetic / polish
+- Orchestration / agent improvements
+- Enhancements (including deferred **FUT-029**, **FUT-048**, optional AUT pastes, Mike-owned Interface fine-tuning)
 
 ## Governance
 

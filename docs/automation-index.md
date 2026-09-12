@@ -2,6 +2,18 @@
 
 Production scripts: `airtable/automations/shooting-challenge/` (numbered `001`–`119`, plus `070a/b/c`, `117a–f`).
 
+## Live MCP inventory overlay (2026-09-12)
+
+Base **`appn84sqPw03zEbTT`** — Airtable MCP `list_automations`: **50** automations · **48 deployed** · **2 undeployed**. Full packet: [`audits/SOURCE-OF-TRUTH-RECONCILIATION-20260912.md`](./audits/SOURCE-OF-TRUTH-RECONCILIATION-20260912.md).
+
+**Deployed:** 001, 002, 003, 007a, 010, 013, 020–023, 030–035, 041, 042, 053–059, 064–067, 070a/b/c, 071–074, 076, 078, 078A, 079, 101, 113, 114, 116–120.
+
+**Undeployed (present, OFF — confirm in UI; do not reopen/paste from docs alone):** **005**, **009**.
+
+**Legacy / absent (do not restore):** 006, 007 (replaced by 007a), 008, 012, 043, 063, 068, 075, 077, 111, 112, 115.
+
+This overlay documents live presence only. Historical Live Tested version claims below remain evidence; they do not authorize script changes when MCP shows undeployed/absent.
+
 **Reliability audit (2026-07-24):** [next-wave/reliability-audit-2026-07-24/REPORT.md](./next-wave/reliability-audit-2026-07-24/REPORT.md) — trust bands, input/dedupe/ownership audits, ranked repairs, Mike actions. **Do not create a second index.**
 
 **Reference corrections:** 012→**020**; 051/052→**053→054**; **075 is LEGACY RETIRED** (historical Enrollment welcome *build* only — not live; not Zoom XP); Zoom live XP=**101**; recording approval **email** = Automation **117 v2.2** → Email Handoff Queue → **079** → Communications Hub → **Resend** (Make 117f Gmail is historical); **WELCOME = 078A → Email Handoff Queue → 079 → Communications Hub → Resend**; recording XP credit has **no** deployed Airtable writer under slot 117. Current email plane: [integrations/email-send-plane.md](./integrations/email-send-plane.md). Legacy Enrollment fields `Parent Email Subject`, `Parent Email HTML`, `Welcome Email Status`, `Welcome Email Sent At`, `Welcome Email Error`, `Welcome Email Ready?` are retired — see [deploy-checklists/RETIRE-LEGACY-WELCOME-EMAIL-FIELDS.md](./deploy-checklists/RETIRE-LEGACY-WELCOME-EMAIL-FIELDS.md).
