@@ -24,12 +24,18 @@ Airtable is the deployed/running copy.
 
 /***************************************************************************************************
  * 057 - Achievements and Milestones - Calculate Perfect Week Eligibility
- * Version: 2.6
+ * Version: 2.7
  * Date written: 2026-05-30
- * Last updated: 2026-09-08
+ * Last updated: 2026-09-12
  *
  * Purpose:
  * Calculates Perfect Week helper fields on one Weekly Athlete Summary record.
+ *
+ * Version 2.7 updates (Perfect Week homework = Week End Saturday only):
+ * - Perfect Week homework on-time gate uses assigned Week End Date (Saturday
+ *   11:59:59pm America/Denver) only — never PHA catch-up Due Date.
+ * - Production PHA Due Dates may be season-end catch-up (e.g. 2027-06-29); those
+ *   must not expand Perfect Week eligibility. Late Satisfactory still earns Homework XP via 065.
  *
  * Version 2.6 updates (SC-121 terminal partial Week boundary):
  * - Required official shooting dates derive from the linked Week Start Date through End Date inclusive.
@@ -135,9 +141,9 @@ Airtable is the deployed/running copy.
  * 4. Athlete must attend Zoom if a Zoom meeting exists for the linked Week
  *    (live Attendees OR Stage 17 approved recording credit that counts for Perfect Week).
  * 5. Athlete must satisfactorily complete 100% of homework assignments assigned for the week
- *    with an early or on-time Submission Date (PHA Due Date, else Week End Date Saturday
- *    11:59:59pm America/Denver). Early counts for the assigned Week; late satisfactory
- *    homework earns XP but does not count toward Perfect Week. Perfect Week award waits
+ *    with an early or on-time Submission Date vs assigned Week End Date Saturday
+ *    11:59:59pm America/Denver (never PHA catch-up Due Date). Early counts for the assigned Week;
+ *    late satisfactory homework earns XP but does not count toward Perfect Week. Perfect Week award waits
  *    for the week evaluation window (Eligible? cannot pass before official week completes).
  *
  * Notes:
@@ -564,24 +570,20 @@ function isHomeworkSatisfactory(record) {
 }
 
 /**
- * Perfect Week homework on-time/early gate (Submission Date vs PHA Due Date / Week End).
+ * Perfect Week homework on-time/early gate (Submission Date vs Week End Saturday only).
  * Early (before Week Start) and on-time both count. Late satisfactory homework still
  * earns XP via 065 but does not count here.
+ * Never use PHA catch-up Due Date — Production PHA Due Dates may be season-end.
  */
-function isHomeworkOnTimeForPerfectWeek(record, dueDateByPhaId, weekEndDateKey) {
+function isHomeworkOnTimeForPerfectWeek(record, _dueDateByPhaIdIgnored, weekEndDateKey) {
   const submissionDateKey = getDateKeyFromDateOnly(
     record.getCellValue(CONFIG.homeworkCompletionFields.submissionDate)
   );
   if (!submissionDateKey) return false;
 
-  const phaIds = getLinkedIds(record, CONFIG.homeworkCompletionFields.pha);
-  let dueKey = "";
-  if (phaIds.length === 1 && dueDateByPhaId && dueDateByPhaId.has(phaIds[0])) {
-    dueKey = dueDateByPhaId.get(phaIds[0]) || "";
-  }
-  if (!dueKey) dueKey = weekEndDateKey || "";
-  if (!dueKey) return true;
-  // Inclusive through due calendar day (Week End Saturday / PHA Due Date in Denver).
+  const dueKey = String(weekEndDateKey || "").trim();
+  if (!dueKey) return false;
+  // Inclusive through Week End Saturday calendar day in Denver (date-only compare).
   return submissionDateKey <= dueKey;
 }
 
@@ -1255,9 +1257,9 @@ try {
    *
    * Rule:
    * Perfect Week requires 100% of assigned homework to be satisfactorily completed
-   * early or on time (Submission Date <= PHA Due Date, else Week End Date).
+   * early or on time (Submission Date <= assigned Week End Date Saturday).
    * Early (before Week Start) counts for the assigned Week. Late satisfactory
-   * homework earns XP (065) but does not count here.
+   * homework earns XP (065) but does not count here. PHA catch-up Due Date is ignored.
    *
    * Source of assigned homework:
    * - Weekly Athlete Summary -> Homework
@@ -1288,30 +1290,7 @@ try {
   ];
 
   let dueDateByPhaId = new Map();
-  if (linkedHomeworkCompletionIds.length > 0) {
-    let phaTable = null;
-    try {
-      phaTable = base.getTable(CONFIG.tables.pha);
-    } catch (e) {
-      phaTable = null;
-    }
-    if (phaTable) {
-      const phaQuery = await phaTable.selectRecordsAsync({
-        fields: [CONFIG.phaFields.dueDate],
-      });
-      for (const phaRec of phaQuery.records) {
-        const dueKey = getDateKeyFromDateOnly(phaRec.getCellValue(CONFIG.phaFields.dueDate));
-        if (dueKey) dueDateByPhaId.set(phaRec.id, dueKey);
-      }
-      if (typeof phaQuery.unloadData === "function") {
-        try {
-          phaQuery.unloadData();
-        } catch (e) {
-          // unload is best-effort
-        }
-      }
-    }
-  }
+  // v2.7: Perfect Week homework timing uses Week End only; PHA Due Date is not loaded for this gate.
 
   if (linkedHomeworkCompletionIds.length > 0) {
     const homeworkQuery = await homeworkCompletionsTable.selectRecordsAsync({

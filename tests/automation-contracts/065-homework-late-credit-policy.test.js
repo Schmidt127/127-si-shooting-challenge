@@ -68,6 +68,43 @@ test("late satisfactory → full XP (credit eligible, timing late)", () => {
   assert.equal(result.xpAction, "create");
 });
 
+test("after Week End before catch-up Due -> XP yes, Perfect Week no", () => {
+  const result = evaluateHomeworkXpAwardDecision({
+    satisfactory: true,
+    reviewComplete: true,
+    hasCoachFeedback: true,
+    phaOwnershipEligible: true,
+    submissionDateKey: "2026-08-26",
+    phaDueDate: DUE,
+    weekEndDate: WEEK_END,
+    homeworkCompletionId: HC_ID,
+  });
+  assert.equal(result.xpEligible, true);
+  assert.equal(result.timingStatus, "late");
+  assert.equal(result.perfectWeekEligible, false);
+});
+
+test("season catch-up PHA Due Date cannot grant Perfect Week after Week End", () => {
+  assert.equal(
+    countsTowardPerfectWeekHomework({
+      satisfactory: true,
+      submissionDateKey: "2027-06-15",
+      phaDueDate: "2027-06-29",
+      weekEndDate: "2027-05-08",
+    }),
+    false
+  );
+  assert.equal(
+    countsTowardPerfectWeekHomework({
+      satisfactory: true,
+      submissionDateKey: "2027-05-08",
+      phaDueDate: "2027-06-29",
+      weekEndDate: "2027-05-08",
+    }),
+    true
+  );
+});
+
 test("delayed grading (submit on-time, grade later) is not penalized", () => {
   const deadline = evaluateHomeworkSubmissionDeadline({
     submissionDateKey: "2026-08-20",
@@ -179,9 +216,10 @@ test("065 GitHub script no longer blocks XP on late_ineligible", () => {
     ),
     "utf8"
   );
-  assert.match(s065, /v10\.7/);
+  assert.match(s065, /v10\.9/);
   assert.doesNotMatch(s065, /late_ineligible/);
   assert.match(s065, /does not block homework XP/);
+  assert.match(s065, /resolvePerfectWeekHomeworkDeadlineKey/);
 });
 
 test("057 GitHub script filters late homework from Perfect Week counts", () => {
@@ -193,9 +231,10 @@ test("057 GitHub script filters late homework from Perfect Week counts", () => {
     ),
     "utf8"
   );
-  assert.match(s057, /Version: 2\.5/);
+  assert.match(s057, /Version: 2\.7/);
   assert.match(s057, /countsTowardPerfectWeekHomework/);
   assert.match(s057, /isHomeworkOnTimeForPerfectWeek/);
+  assert.match(s057, /never PHA catch-up Due Date/);
 });
 
 console.log("065 homework late-credit policy contract tests passed");

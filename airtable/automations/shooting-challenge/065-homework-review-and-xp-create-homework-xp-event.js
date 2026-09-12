@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-14
-Last GitHub Update: 2026-09-08 (v10.8 Structured Curriculum HC-only XP)
+Last GitHub Update: 2026-09-12 (v10.9 Perfect Week Week-End homework boundary)
 
 Purpose:
 Create, replay, repair, deactivate, or reactivate the exact canonical
@@ -32,11 +32,13 @@ v10.1 installed in Production per Mike evidence; v10.2 is structure-only.
  * 065 - HOMEWORK REVIEW AND XP
  * Create or Reconcile Homework XP Event
  *
- * Version: v10.8
+ * Version: v10.9
  * Date Written: 2026-06-06
- * Last Updated: 2026-09-08
+ * Last Updated: 2026-09-12
  *
  * VERSION HISTORY
+ * - v10.9 (2026-09-12): Timing notes / Perfect Week eligibility use assigned Week End
+ *   Saturday only (never PHA catch-up Due Date). Homework XP still unblocked by late timing.
  * - v10.8 (2026-09-08): Structured Curriculum HC-only homework may award canonical Homework XP
  *   with zero Submission links when PHA/Enrollment/Week/WAS ownership is valid. Submission-backed
  *   homework remains exact-one-Submission. XP Event Submission topology is immutable across replay.
@@ -143,8 +145,8 @@ const SOURCE_KEY_CONTRACT = {
 
 const SCRIPT = {
   scriptName: "065 - Homework Review and XP - Create or Reconcile Homework XP Event",
-  version: "v10.8",
-  versionDate: "2026-09-08",
+  version: "v10.9",
+  versionDate: "2026-09-12",
   originalWrittenDate: "2026-06-06",
   lastUpdated: "2026-09-08",
   folder: "02 - Homework Review and XP",
@@ -378,9 +380,15 @@ function resolveAssignmentDueDateKey(phaDueDate, weekEndDate) {
   return toDateKeyFromText(weekEndDate) || "";
 }
 
+function resolvePerfectWeekHomeworkDeadlineKey(weekEndDate) {
+  return toDateKeyFromText(weekEndDate) || "";
+}
+
 function evaluateHomeworkSubmissionDeadline({ submissionDateKey = "", phaDueDate = "", weekEndDate = "", weekStartDate = "" } = {}) {
   const submitKey = toDateKeyFromText(submissionDateKey);
-  const dueKey = resolveAssignmentDueDateKey(phaDueDate, weekEndDate);
+  const assignmentDueKey = resolveAssignmentDueDateKey(phaDueDate, weekEndDate);
+  const perfectWeekDeadlineKey = resolvePerfectWeekHomeworkDeadlineKey(weekEndDate);
+  const dueKey = perfectWeekDeadlineKey || assignmentDueKey;
   const weekStartKey = toDateKeyFromText(weekStartDate);
   if (!submitKey) {
     return {
@@ -389,35 +397,35 @@ function evaluateHomeworkSubmissionDeadline({ submissionDateKey = "", phaDueDate
       dueDateKey: dueKey,
       perfectWeekEligible: false,
       reason:
-        "Submission date missing; deadline not enforced for XP. Perfect Week requires a known on-time Submission Date.",
+        "Submission date missing; deadline not enforced for XP. Perfect Week requires a known on-time Submission Date vs Week End Saturday.",
     };
   }
-  if (!dueKey) {
+  if (!perfectWeekDeadlineKey) {
     const early = Boolean(weekStartKey && submitKey < weekStartKey);
     return {
       creditEligible: true,
       timingStatus: early ? "early" : "no_due_date",
-      dueDateKey: "",
-      perfectWeekEligible: true,
+      dueDateKey: assignmentDueKey,
+      perfectWeekEligible: false,
       reason: early
         ? `Qualifying submit ${submitKey} is before assigned Week Start ${weekStartKey}.`
-        : "No PHA Due Date or Week End Date; deadline not enforced.",
+        : "Week End Date missing; deadline not enforced for XP. Perfect Week requires assigned Week End Saturday.",
     };
   }
-  if (submitKey > dueKey) {
+  if (submitKey > perfectWeekDeadlineKey) {
     return {
       creditEligible: true,
       timingStatus: "late",
-      dueDateKey: dueKey,
+      dueDateKey: perfectWeekDeadlineKey,
       perfectWeekEligible: false,
-      reason: `Submission date ${submitKey} is after assignment due date ${dueKey}. Full XP credit allowed; does not count toward Perfect Week.`,
+      reason: `Submission date ${submitKey} is after assigned Week End ${perfectWeekDeadlineKey}. Full XP credit allowed; does not count toward Perfect Week.`,
     };
   }
   if (weekStartKey && submitKey < weekStartKey) {
     return {
       creditEligible: true,
       timingStatus: "early",
-      dueDateKey: dueKey,
+      dueDateKey: perfectWeekDeadlineKey,
       perfectWeekEligible: true,
       reason: `Qualifying submit ${submitKey} is before assigned Week Start ${weekStartKey}. Counts toward assigned Week; Perfect Week award waits for week evaluation time.`,
     };
@@ -425,7 +433,7 @@ function evaluateHomeworkSubmissionDeadline({ submissionDateKey = "", phaDueDate
   return {
     creditEligible: true,
     timingStatus: "on_time",
-    dueDateKey: dueKey,
+    dueDateKey: perfectWeekDeadlineKey,
     perfectWeekEligible: true,
     reason: "",
   };
