@@ -1,20 +1,47 @@
 import type { ProductNavItem } from "@/components/layout/product-shell";
 import { DAILY_SUBMISSIONS, PLAYER_REGISTRATION } from "@/lib/registration";
 
-/** Primary in-app destinations surfaced in the shared program footer. */
-export const FOOTER_QUICK_LINKS: ProductNavItem[] = [
-  { label: "Leaderboard", href: "/leaderboard" },
-  { label: "Homework", href: "/homework" },
-  { label: "Levels", href: "/levels" },
-  { label: "Achievements", href: "/achievements" },
-  { label: "Tutorials", href: "/tutorials" },
-  { label: "Shoutouts", href: "/shoutouts" },
-  { label: "Articles", href: "/articles" },
-  { label: "Zoom Meetings", href: "/zoom-meetings" },
-  { label: "FAQ", href: "/faq" },
-  { label: "Family Dashboard", href: "/dashboard/sign-in" },
-  { label: "Game Manual", href: "/game-manual" },
+export type FooterQuickLinkGroup = {
+  /** Natural section label for the landing footer only (Compete / Learn / Account). */
+  heading: string;
+  links: ProductNavItem[];
+};
+
+/**
+ * Landing footer quick-link groups. Flat `FOOTER_QUICK_LINKS` is derived from this
+ * so catalog destinations stay in one place.
+ */
+export const FOOTER_QUICK_LINK_GROUPS: FooterQuickLinkGroup[] = [
+  {
+    heading: "Compete",
+    links: [
+      { label: "Leaderboard", href: "/leaderboard" },
+      { label: "Homework", href: "/homework" },
+      { label: "Levels", href: "/levels" },
+      { label: "Achievements", href: "/achievements" },
+    ],
+  },
+  {
+    heading: "Learn",
+    links: [
+      { label: "Tutorials", href: "/tutorials" },
+      { label: "Shoutouts", href: "/shoutouts" },
+      { label: "Articles", href: "/articles" },
+      { label: "Zoom Meetings", href: "/zoom-meetings" },
+      { label: "FAQ", href: "/faq" },
+      { label: "Game Manual", href: "/game-manual" },
+    ],
+  },
+  {
+    heading: "Account",
+    links: [{ label: "Family Dashboard", href: "/dashboard/sign-in" }],
+  },
 ];
+
+/** Primary in-app destinations surfaced in the shared program footer. */
+export const FOOTER_QUICK_LINKS: ProductNavItem[] = FOOTER_QUICK_LINK_GROUPS.flatMap(
+  (group) => group.links,
+);
 
 export const FOOTER_REGISTRATION_LINKS = [
   {

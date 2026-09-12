@@ -1,4 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 import { PUBLIC_SITE_ORIGIN } from "@/lib/app-config";
 
@@ -292,5 +294,39 @@ describe("buildSportsProgramJsonLd", () => {
     const node = buildSportsProgramJsonLd();
     expect(node.sport).toBe("Basketball");
     expect(JSON.stringify(node)).toMatch(/Fairfield/i);
+  });
+});
+
+describe("private route page metadata contract", () => {
+  it("keeps dashboard, admin, public-display, and sign-in pages on PRIVATE_ROBOTS_NOINDEX", () => {
+    const webRoot = join(__dirname, "../..");
+    const privatePages = [
+      "app/(program)/dashboard/page.tsx",
+      "app/(program)/dashboard/sign-in/page.tsx",
+      "app/(program)/dashboard/select/page.tsx",
+      "app/(program)/dashboard/preview/page.tsx",
+      "app/(program)/admin/page.tsx",
+      "app/(program)/admin/diagnostics/page.tsx",
+      "app/(program)/public-display/page.tsx",
+    ];
+
+    for (const relative of privatePages) {
+      const source = readFileSync(join(webRoot, relative), "utf8");
+      expect(source, relative).toContain("PRIVATE_ROBOTS_NOINDEX");
+      expect(source, relative).toMatch(/robots:\s*PRIVATE_ROBOTS_NOINDEX/);
+    }
+  });
+
+  it("keeps private segments out of the public sitemap list", () => {
+    for (const path of [
+      "/dashboard",
+      "/dashboard/sign-in",
+      "/admin",
+      "/api",
+      "/public-display",
+      "/athletes",
+    ]) {
+      expect(SITEMAP_PUBLIC_ROUTES).not.toContain(path);
+    }
   });
 });

@@ -1,4 +1,7 @@
-import { SiteFooter } from "@/components/site/site-footer";
+import {
+  SiteFooter,
+  type SiteFooterVariant,
+} from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
 import { SkipToContent } from "@/components/site/skip-to-content";
 
@@ -12,6 +15,8 @@ type ProductShellProps = {
   productLabel?: string;
   navItems: ProductNavItem[];
   children: React.ReactNode;
+  /** Optional footer layout override; omit to let SiteFooter detect `/` landing. */
+  footerVariant?: SiteFooterVariant;
 };
 
 /**
@@ -23,6 +28,7 @@ export function ProductShell({
   productLabel,
   navItems,
   children,
+  footerVariant,
 }: ProductShellProps) {
   return (
     <div className="relative flex min-h-screen flex-col bg-background">
@@ -42,7 +48,7 @@ export function ProductShell({
         {children}
       </main>
 
-      <SiteFooter productName={productName} />
+      <SiteFooter productName={productName} variant={footerVariant} />
     </div>
   );
 }
