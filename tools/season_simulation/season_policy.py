@@ -11,9 +11,9 @@ from typing import Any, Sequence
 
 # Confirmed 2026–2027 challenge calendar (America/Denver date keys).
 EARLY_BIRD_START = date(2027, 4, 25)
-EARLY_BIRD_END = date(2027, 5, 1)  # inclusive — SIM_START is the last Early Bird day
+EARLY_BIRD_END = date(2027, 5, 1)  # inclusive — full Early Bird Sun–Sat week
 WEEK1_START = date(2027, 5, 2)
-PROGRAM_END = date(2027, 6, 30)
+PROGRAM_END = date(2027, 6, 30)  # inclusive end of challenge (11:59 PM Denver)
 COMMON_HOMEWORK_DUE_DATE = date(2027, 6, 29)
 EXPECTED_ACTIVE_PHA_COUNT = 18
 HOMEWORK_SLOTS_PER_HOMEWORK_WEEK = 2

@@ -18,6 +18,7 @@ from season_simulation.constants import (  # noqa: E402
     CONFIRM_TOKEN,
     SAFE_EMAIL_RECIPIENT,
     SIM_START,
+    SIMULATION_DAY_COUNT,
 )
 from season_simulation.cleanup import build_cleanup_plan, run_cleanup  # noqa: E402
 from season_simulation.cli import cmd_evidence  # noqa: E402
@@ -56,7 +57,7 @@ from season_simulation.writer import (  # noqa: E402
 
 
 def _weeks_covering_window():
-    """Synthetic Weeks covering May 1 – June 30, 2027 (Sun–Sat blocks)."""
+    """Synthetic Weeks covering April 25 – June 30, 2027 (Sun–Sat blocks)."""
     weeks = []
     # Early Bird 2027-04-25 … 05-01
     weeks.append(
@@ -199,7 +200,7 @@ class TestWriterFullCreate(unittest.TestCase):
         self.assertEqual(ef["Parent Email"], SAFE_EMAIL_RECIPIENT)
 
         subs = list(self.client.tables.get("Submissions", {}).values())
-        self.assertEqual(len(subs), 58)  # 61 - 3 misses
+        self.assertEqual(len(subs), SIMULATION_DAY_COUNT - 3)  # misses
         sample = subs[0]["fields"]
         self.assertEqual(sample["Duplicate Review Status"], "Count It")
         # Date-only write — no evening timezone that shifts UTC calendar day.
@@ -300,7 +301,7 @@ class TestWriterFullCreate(unittest.TestCase):
     def test_intended_writes_readiness(self):
         writes = build_intended_writes(self.scenario, self.clock, ctx=self.ctx)
         readiness = summarize_intended_write_readiness(writes)
-        self.assertEqual(readiness["submission_creates"], 58)
+        self.assertEqual(readiness["submission_creates"], SIMULATION_DAY_COUNT - 3)
         self.assertTrue(readiness["all_submissions_countable"])
         self.assertEqual(readiness["homework_completions"], 18)
         self.assertTrue(readiness["all_homework_dual_linked"])
@@ -431,7 +432,7 @@ class TestWriterFullCreate(unittest.TestCase):
         self._writer().run()
         for sub in self.client.tables.get("Submissions", {}).values():
             ad = sub["fields"]["Activity Date"]
-            self.assertTrue(ad.startswith("2027-05-") or ad.startswith("2027-06-"))
+            self.assertTrue(ad.startswith("2027-04-") or ad.startswith("2027-05-") or ad.startswith("2027-06-"))
 
     def test_email_allowlist_and_default_no_send(self):
         result = self._writer(enable_email=False).run()
@@ -540,8 +541,8 @@ class TestWriterFullCreate(unittest.TestCase):
         streak_arms = [
             r for r in result.created if r.get("op") == "submission_streak_arm"
         ]
-        self.assertEqual(len(post_arms), 58)
-        self.assertEqual(len(streak_arms), 58)
+        self.assertEqual(len(post_arms), SIMULATION_DAY_COUNT - 3)
+        self.assertEqual(len(streak_arms), SIMULATION_DAY_COUNT - 3)
         for sub in self.client.tables.get("Submissions", {}).values():
             f = sub["fields"]
             self.assertNotIn("Submission Stat Mode", f)
@@ -566,8 +567,8 @@ class TestWriterFullCreate(unittest.TestCase):
             for r in r2.reused
             if "SUB_STREAK_ARM" in str(r.get("dedupe_key") or "")
         ]
-        self.assertEqual(len(reused_post), 58)
-        self.assertEqual(len(reused_streak), 58)
+        self.assertEqual(len(reused_post), SIMULATION_DAY_COUNT - 3)
+        self.assertEqual(len(reused_streak), SIMULATION_DAY_COUNT - 3)
 
     def test_streak_arm_waits_for_formulas_then_relinks_enrollment(self):
         """053 requires a real Enrollment change after Count This / shots settle."""
@@ -692,7 +693,7 @@ class TestWriterFullCreate(unittest.TestCase):
         self.client = healthy
         resumed = self._writer(reg=reg).run()
         self.assertEqual(resumed.status, "complete", resumed.errors)
-        self.assertEqual(len(self.client.tables.get("Submissions", {})), 58)
+        self.assertEqual(len(self.client.tables.get("Submissions", {})), SIMULATION_DAY_COUNT - 3)
         for t, n in before.items():
             self.assertEqual(len(self.client.tables.get(t, {})), n, t)
         # Recorded path present; Create XP only on live.
@@ -718,7 +719,7 @@ class TestWriterFullCreate(unittest.TestCase):
         self.assertEqual(reg2.status, "complete")
         again = self._writer(reg=reg2).run()
         self.assertEqual(again.status, "complete")
-        self.assertEqual(len(self.client.tables.get("Submissions", {})), 58)
+        self.assertEqual(len(self.client.tables.get("Submissions", {})), SIMULATION_DAY_COUNT - 3)
         self.assertGreater(len(again.reused), 0)
 
     def test_weekly_email_arm_when_delivery_enabled(self):
@@ -762,7 +763,7 @@ class TestWriterFullCreate(unittest.TestCase):
         # Missed days produce no submissions
         activity_days = {
             date.fromisoformat(str(s["fields"]["Activity Date"])[:10]).toordinal()
-            - date(2027, 5, 1).toordinal()
+            - SIM_START.toordinal()
             + 1
             for s in self.client.tables.get("Submissions", {}).values()
         }
@@ -772,7 +773,7 @@ class TestWriterFullCreate(unittest.TestCase):
         self.assertEqual(len(VIDEO_FEEDBACK_DAYS), 4)
         vf_weeks = set()
         for n in VIDEO_FEEDBACK_DAYS:
-            ad = date(2027, 5, 1) + timedelta(days=n - 1)
+            ad = SIM_START + timedelta(days=n - 1)
             vf_weeks.add(self.ctx.week_for(ad))
         self.assertEqual(len(vf_weeks), len(VIDEO_FEEDBACK_DAYS))
         # At least one Needs Revision homework remains incomplete for PW gate

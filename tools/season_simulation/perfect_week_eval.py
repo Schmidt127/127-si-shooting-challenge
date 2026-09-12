@@ -5,7 +5,8 @@ Mirrors Automation 057 eligibility rules at planning granularity:
 - each day meets at least 1/7 of the weekly shot goal;
 - video minimum (Config ``Perfect Week Video Minimum``, default 3);
 - live Zoom when a meeting exists for the week (recording credit counts);
-- homework 100% satisfactory with on-time Submission Date for the assigned week.
+- homework 100% satisfactory with Submission Date on/before assigned Week End
+  Saturday 11:59 PM America/Denver (not catch-up PHA Due Date).
 """
 
 from __future__ import annotations

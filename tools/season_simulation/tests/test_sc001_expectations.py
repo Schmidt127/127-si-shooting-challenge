@@ -83,7 +83,7 @@ def _expectation_totals(scenarios: dict) -> dict[str, dict]:
 
 
 class TestSc001WindowAndProfiles(unittest.TestCase):
-    def test_simulation_window_61_days(self):
+    def test_simulation_window_full_challenge_days(self):
         rid = new_run_id(suffix="threeathlete")
         scenarios = build_all_sc001_scenarios(**_offline_kwargs(rid))
         for profile, scenario in scenarios.items():
@@ -94,10 +94,10 @@ class TestSc001WindowAndProfiles(unittest.TestCase):
             by_num = sorted(scenario.days, key=lambda d: (d.day_number, d.dedupe_key))
             first = by_num[0].activity_date.isoformat()
             last = by_num[-1].activity_date.isoformat()
-            self.assertEqual(first, "2027-05-01", profile)
+            self.assertEqual(first, "2027-04-25", profile)
             self.assertEqual(last, "2027-06-30", profile)
         a3 = scenarios["athlete3_edge"]
-        self.assertEqual(len(a3.days), 62)  # day 19 same-day double
+        self.assertEqual(len(a3.days), SIMULATION_DAY_COUNT + 1)  # same-day double
 
     def test_profile_keys_and_grades(self):
         rid = new_run_id(suffix="threeathlete")
@@ -120,32 +120,32 @@ class TestSc001Athlete2MissDays(unittest.TestCase):
         self.assertEqual(miss, ATHLETE2_MISS_DAYS)
         self.assertEqual(
             miss,
-            frozenset({4, 11, 18, 25, 32, 39, 53, 58}),
+            frozenset({10, 17, 24, 31, 38, 45, 59, 64}),
         )
-        self.assertNotIn(46, miss)
+        self.assertNotIn(52, miss)  # Week 7 recovery must stay miss-free
 
 
 class TestSc001Athlete3EdgeProbes(unittest.TestCase):
     def test_same_day_double_submission(self):
         rid = new_run_id(suffix="threeathlete")
         a3 = build_all_sc001_scenarios(**_offline_kwargs(rid))["athlete3_edge"]
-        day19 = [d for d in a3.days if d.day_number == 19 and d.action == "submit"]
-        self.assertEqual(len(day19), 2)
-        self.assertEqual(sum(d.shot_total for d in day19), day19[0].shot_total + 45)
+        day25 = [d for d in a3.days if d.day_number == 25 and d.action == "submit"]
+        self.assertEqual(len(day25), 2)
+        self.assertEqual(sum(d.shot_total for d in day25), day25[0].shot_total + 45)
 
     def test_backdate_probe(self):
         rid = new_run_id(suffix="threeathlete")
         a3 = build_all_sc001_scenarios(**_offline_kwargs(rid))["athlete3_edge"]
         backdated = [d for d in a3.days if d.timing == SubmissionTiming.BACKDATED.value]
         self.assertEqual(len(backdated), 1)
-        self.assertEqual(backdated[0].day_number, 36)
-        self.assertEqual(backdated[0].write_on_day_number, 38)
+        self.assertEqual(backdated[0].day_number, 42)
+        self.assertEqual(backdated[0].write_on_day_number, 44)
 
     def test_replay_probe_days(self):
         rid = new_run_id(suffix="threeathlete")
         a3 = build_all_sc001_scenarios(**_offline_kwargs(rid))["athlete3_edge"]
         replay = {d.day_number for d in a3.days if d.replay_probe}
-        self.assertEqual(replay, {10, 29, 45, 58})
+        self.assertEqual(replay, {16, 35, 51, 64})
 
 
 class TestSc001Sc167SubmissionXp(unittest.TestCase):
@@ -166,11 +166,11 @@ class TestSc001Sc167SubmissionXp(unittest.TestCase):
         a3 = build_all_sc001_scenarios(**_offline_kwargs(rid))["athlete3_edge"]
         keys = [d.dedupe_key for d in a3.days if d.action == "submit"]
         self.assertEqual(len(keys), len(set(keys)))
-        day19_keys = [d.dedupe_key for d in a3.days if d.day_number == 19]
-        self.assertEqual(len(day19_keys), 2)
-        self.assertNotEqual(day19_keys[0], day19_keys[1])
-        self.assertTrue(any("|SUB2|" in k for k in day19_keys))
-        self.assertTrue(any("|SUB|" in k and "|SUB2|" not in k for k in day19_keys))
+        day25_keys = [d.dedupe_key for d in a3.days if d.day_number == 25]
+        self.assertEqual(len(day25_keys), 2)
+        self.assertNotEqual(day25_keys[0], day25_keys[1])
+        self.assertTrue(any("|SUB2|" in k for k in day25_keys))
+        self.assertTrue(any("|SUB|" in k and "|SUB2|" not in k for k in day25_keys))
 
     def test_submission_xp_source_key_prefix_documented(self):
         self.assertTrue(SUBMISSION_XP_PREFIX.startswith("SUBMISSION_XP|"))
@@ -237,12 +237,12 @@ class TestSc001GoalMetAndDeterminism(unittest.TestCase):
         rid = new_run_id(suffix="threeathlete")
         scenarios = build_all_sc001_scenarios(**_offline_kwargs(rid))
         a1_cross = compute_goal_met_crossing(scenarios["athlete1_perfect"])
-        self.assertEqual(a1_cross[0], "2027-06-14")
+        self.assertEqual(a1_cross[0], "2027-06-08")
         self.assertEqual(a1_cross[3], 12098)
 
         a3_cross = compute_goal_met_crossing(scenarios["athlete3_edge"])
-        self.assertEqual(a3_cross[0], "2027-06-25")
-        self.assertEqual(a3_cross[3], 12190)
+        self.assertEqual(a3_cross[0], "2027-06-22")
+        self.assertEqual(a3_cross[3], 12005)
 
         a2_cross = compute_goal_met_crossing(scenarios["athlete2_recovery"])
         self.assertIsNone(a2_cross[0])

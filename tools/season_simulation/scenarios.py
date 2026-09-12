@@ -1,4 +1,4 @@
-"""Deterministic Athlete 1 scenario for May 1 – June 30, 2027.
+"""Deterministic Athlete 1 scenario for April 25 – June 30, 2027.
 
 All reference record IDs (homework, Zoom, goals, weeks) are injected at
 runtime from Airtable — this module never fabricates those IDs.
@@ -38,7 +38,7 @@ from .simulation_clock import (
 SCENARIO_SEED = "athlete1-2027-v1"
 SCENARIO_VERSION = "1.0.0"
 
-# Fixed day numbers (1..61) for special behaviors — documented & deterministic.
+# Fixed day numbers (1..SIMULATION_DAY_COUNT) for special behaviors — documented & deterministic.
 MISS_DAYS = frozenset({15, 36, 50})  # break streaks / inactivity signals
 SAME_DAY_SUBMIT_DAY = 8  # clock on day 8, activity date day 8
 BACKDATE_WRITE_DAY = 22  # when clock is on day 22, write activity for day 20
@@ -47,8 +47,8 @@ INACTIVITY_GAP_START = 49  # miss 50; light activity after for alert windows
 VIDEO_FEEDBACK_DAYS = frozenset({5, 19, 33, 47})
 # Gate-pressure signal: mark this day's homework Needs Revision (do NOT skip a PHA).
 GATE_BLOCK_PROBE_DAY = 28
-# Day 61 = 2027-06-30 (after common due 2027-06-29) → late homework probe for one Week 8 PHA
-LATE_HOMEWORK_PROBE_DAY = 61
+# Day 67 = 2027-06-30 (after common due 2027-06-29) → late homework probe for one Week 8 PHA
+LATE_HOMEWORK_PROBE_DAY = 67
 # Flag Perfect Week Manual Exception on a mid-season same-day week for PW timing
 PW_MANUAL_EXCEPTION_DAY = SAME_DAY_SUBMIT_DAY
 
@@ -222,7 +222,7 @@ def _schedule_homework_attachments(
         phas = by_label.get(label) or []
         days = list(submit_days_by_label.get(label) or [])
         if label == "Week 8" and days:
-            # Reserve last Week 8 PHA for late probe on day 61 when possible.
+            # Reserve last Week 8 PHA for late probe on day 67 when possible.
             late_meta = next(
                 (m for m in days_meta if m.day_number == LATE_HOMEWORK_PROBE_DAY),
                 None,
@@ -234,11 +234,10 @@ def _schedule_homework_attachments(
         if not slots:
             continue
 
-        # Prefer spreading across distinct submit days; stack on one day if needed
-        # (Early Bird has only SIM_START inside the sim window).
+        # Prefer spreading across distinct submit days; stack on one day if needed.
         target_days: list[Any] = []
         if late_meta is not None and len(slots) >= 2:
-            # First Week 8 PHA(s) stay in-week; last PHA completes late on day 61.
+            # First Week 8 PHA(s) stay in-week; last PHA completes late on day 67.
             in_week_count = len(slots) - 1
             if days:
                 if len(days) >= in_week_count:
@@ -343,7 +342,7 @@ def build_athlete1_scenario(
     zoom_meetings: Sequence[dict[str, Any]],
     weeks: Sequence[dict[str, Any]] | None = None,
 ) -> Athlete1Scenario:
-    """Build the full 61-day plan.
+    """Build the full challenge-window day plan (SIM_START..SIM_END inclusive).
 
     ``homework`` / ``zoom_meetings`` items are dicts with at least ``record_id``.
     They must come from Airtable resolution — empty lists are allowed for dry
@@ -604,8 +603,8 @@ def build_athlete1_scenario(
                 (h.get("program_instance_id") for h in hw_list if h.get("program_instance_id")),
                 "",
             ),
-            # SIM_START (May 1) is the last Early Bird day — both Early Bird PHAs attach that day.
-            "early_bird_handling": "last_early_bird_day_in_window",
+            # Full Early Bird week (Apr 25–May 1) is inside the sim window.
+            "early_bird_handling": "full_early_bird_week_in_window",
             "early_bird_in_window": True,
             "homework_weeks_policy": (
                 "early_bird_plus_weeks_1_through_8_two_slots_each; week_9_zero_homework; "

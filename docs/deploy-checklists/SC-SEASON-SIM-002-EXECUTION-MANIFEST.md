@@ -16,7 +16,7 @@
 
 | Check | Status |
 |---|---|
-| Window / scenario | **61 days** 2027-05-01 → 2027-06-30; Athlete 1 mixed path **unchanged** (still intended) |
+| Window / scenario | **67 days** 2027-04-25 → 2027-06-30 11:59 PM America/Denver; Athlete 1 mixed path (miss 15/36/50) |
 | Preflight connectivity | **PASS** (`appn84sqPw03zEbTT`) |
 | `Activity Date Is Future?` | **Season Sim gate ACTIVE** (temporary) — normal athletes still on NOW() branch |
 | `Submitted Same Day?` | **Season Sim gate ACTIVE** (temporary) |
@@ -129,7 +129,7 @@ GitHub copies match these versions. **Do not paste 013 / 067 / 122** as part of 
 |---|---|
 | `python -m unittest season_simulation.tests.test_offline …` (full suite under `tests/`) | **PASS** — 124 tests |
 | `python -m season_simulation preflight` | **PASS** connectivity; `sufficient_for_final_run=False` (expected — formula gates off) |
-| `python -m season_simulation dry-run --offline-fixture` | **PASS** — 61 days / 13906 shots |
+| `python -m season_simulation dry-run --offline-fixture` | **PASS** — 67 days / 14052 shots (offline) |
 | `python -m season_simulation dry-run` (live read) | **PASS** — same plan; write readiness countable 58/58, HW 18/18, weekly_arms 6 |
 | Write block (`allow_writes=False`) | **PASS** `WriteBlockedError` |
 
@@ -202,7 +202,7 @@ Prior fixtures / formula overrides are **gone** — do not assume gated formulas
 | School Year | Runtime resolve (prefer **2026–2027** active config row) |
 | Grade Band | Runtime: **9–12** (`rec75ruo3XT5nSvaK` as of preflight) |
 | Shot goal | Highest for band: **12000** (`recHE7FhreD1jqfXm`) |
-| Window | **2027-05-01 → 2027-06-30** inclusive (**61** days) |
+| Window | **2027-04-25 → 2027-06-30** 11:59 PM America/Denver inclusive (**67** days) |
 | Scenario seed | `athlete1-2027-v1` |
 | Miss days | 15, 36, 50 |
 | Perfect Week Eligible | **Expected 0** (negative scenario by design) |
@@ -214,11 +214,11 @@ Prior fixtures / formula overrides are **gone** — do not assume gated formulas
 
 | Artifact | Planned count | Notes |
 |---|---:|---|
-| Simulation days | 61 | Inclusive window |
-| Submissions (submit) | **58** | 61 − 3 misses |
+| Simulation days | 67 | Inclusive window (Apr 25–Jun 30) |
+| Submissions (submit) | **64** | 67 − 3 misses |
 | Miss days | 3 | 15 / 36 / 50 |
-| Planned shots | **13906** | ≥ goal 12000 |
-| Same-day submissions | 57 | Day 8 same-day probe |
+| Planned shots | **14052** | ≥ goal 12000 |
+| Same-day submissions | 63 | Day 8 same-day probe |
 | Backdated submissions | 1 | Write day 22 / activity day 20 |
 | Weekly Athlete Summary | ~10 | One per covering Week + Grade Band + Goal at create |
 | Homework Completions | **18** | Early Bird + Weeks 1–8 × 2; Week 9 = 0 PHA |

@@ -260,9 +260,9 @@ def _athlete1_meta_goal_crossing(scenario: AthleteScenario) -> dict[str, Any]:
 # Athlete 2 — INCONSISTENT / RECOVERY
 # ---------------------------------------------------------------------------
 
-# Day 46 moved to 58 so Week 7 recovery week has zero intentional misses.
-ATHLETE2_MISS_DAYS = frozenset({4, 11, 18, 25, 32, 39, 53, 58})
-ATHLETE2_STREAK_BREAK_BEFORE_10 = 49  # miss day 53 breaks rebuild before day-10 gate
+# Day 46→58 historically; +6 day shift with Apr 25 window so Week 7 recovery stays miss-free.
+ATHLETE2_MISS_DAYS = frozenset({10, 17, 24, 31, 38, 45, 59, 64})
+ATHLETE2_STREAK_BREAK_BEFORE_10 = 55  # miss day 59 breaks rebuild before day-10 gate
 
 
 def _athlete2_shots(day_number: int, week_label: str, goal_total: int) -> int:
@@ -284,7 +284,7 @@ def _athlete2_shots(day_number: int, week_label: str, goal_total: int) -> int:
     if week_label == "Week 6":
         weekly_est = estimate_weekly_goal_shots(goal_total, week_label)
         return max(80, weekly_est // 7 - 3)
-    if week_label == "Week 8" and day_number >= 54:
+    if week_label == "Week 8" and day_number >= 60:
         return 140
     return max(70, base)
 
@@ -294,8 +294,8 @@ def _athlete2_homework_overrides(
     gate_notes: list[str],
 ) -> None:
     skip_weeks = {"Week 2", "Week 5"}
-    late_day = 41
-    nr_day = 27
+    late_day = 47  # Week 6 (calendar-shifted +6 from prior May-1 window)
+    nr_day = 33
     for day_num, payloads in list(hw_by_day.items()):
         label = payloads[0].get("week_label") if payloads else ""
         if label in skip_weeks:
@@ -400,19 +400,19 @@ def build_athlete2_recovery_scenario(
         shots = _athlete2_shots(n, label, goal_total_shots)
         z_ids: list[str] = []
         z_modes: list[str] = []
-        if label == "Week 7" and n == 47:
+        if label == "Week 7" and n == 53:
             z_ids, z_modes = [live_id], ["live"]
-        if label == "Week 5" and n == 33:
+        if label == "Week 5" and n == 39:
             z_ids, z_modes = [rec_id], ["recording"]
         if label == missed_live_week:
             gate_notes.append(f"Week 4: missed required live Zoom (Athlete 2)")
 
         timing = SubmissionTiming.SAME_DAY.value
         write_on = n
-        if n == 38:
+        if n == 44:
             timing = SubmissionTiming.BACKDATED.value
-            write_on = 40
-            gate_notes.append("Day 40 writes backdated activity for day 38")
+            write_on = 46
+            gate_notes.append("Day 46 writes backdated activity for day 44")
 
         day_plans.append(
             write_day_from_template(
@@ -492,18 +492,18 @@ def _athlete3_shots(day_number: int, week_label: str, goal_total: int) -> int:
         return daily_floor + (day_number % 5) * 3
 
     if week_label == "Week 2":
-        if day_number == 14:
+        if day_number == 20:
             return daily_floor + 80
         return max(70, 110 + (day_number * 13) % 58)
 
     if week_label == "Week 8":
-        if day_number == 60:
+        if day_number == 66:
             return daily_floor + 2
         return daily_floor + 1
 
-    if week_label == "Week 4" and day_number == 28:
+    if week_label == "Week 4" and day_number == 34:
         return weekly_est
-    if week_label == "Week 5" and day_number == 34:
+    if week_label == "Week 5" and day_number == 40:
         return weekly_est + 1
     return 110 + (day_number * 13) % 58
 
@@ -533,10 +533,10 @@ def build_athlete3_edge_scenario(
     )
 
     early_day = 3
-    on_time_day = 20
-    late_day = 33  # Week 5 — late satisfactory (XP yes, no Perfect Week)
-    nr_day = 24
-    multi_asset_day = 15
+    on_time_day = 26
+    late_day = 39  # Week 5 — late satisfactory (XP yes, no Perfect Week)
+    nr_day = 30
+    multi_asset_day = 21
 
     for day_num, payloads in hw_by_day.items():
         for p in payloads:
@@ -568,19 +568,19 @@ def build_athlete3_edge_scenario(
                 run_id, profile, "HW", day_num, str(p.get("pha_record_id") or "")
             )
 
-    # Week 9 pass requires on-time homework — override generic Week 8 late probe on day 61.
-    for p in hw_by_day.get(61, []):
+    # Week 9 pass requires on-time homework — override generic Week 8 late probe on day 67.
+    for p in hw_by_day.get(67, []):
         p["late_status"] = "on_time"
         p["credit_eligible"] = True
         p.pop("timing_note", None)
         gate_notes.append(
-            "Day 61: Week 8 PHA forced on-time so Week 9 Perfect Week passes "
-            "(late homework probe lives on day 33 / Week 5)."
+            "Day 67: Week 8 PHA forced on-time so Week 9 Perfect Week passes "
+            "(late homework probe lives on day 39 / Week 5)."
         )
 
     live_id, rec_id = zoom_list[0]["record_id"], zoom_list[1]["record_id"]
     video_week_counts = {
-        "Early Bird": 1,
+        "Early Bird": 3,
         "Week 1": 3,
         "Week 3": 2,
         "Week 6": 3,
@@ -598,8 +598,8 @@ def build_athlete3_edge_scenario(
         for dn in (by_week.get(label) or [])[:count]:
             video_days.add(dn)
 
-    same_day_extra = 19
-    replay_days = frozenset({10, 29, 45, 58})
+    same_day_extra = 25
+    replay_days = frozenset({16, 35, 51, 64})
     day_plans: list[Any] = []
 
     for meta in days_meta:
@@ -608,18 +608,18 @@ def build_athlete3_edge_scenario(
         shots = _athlete3_shots(n, label, goal_total_shots)
         timing = SubmissionTiming.SAME_DAY.value
         write_on = n
-        if n == 36:
+        if n == 42:
             timing = SubmissionTiming.BACKDATED.value
-            write_on = 38
-            gate_notes.append("Day 38 backdates activity to day 36 (boundary probe)")
+            write_on = 44
+            gate_notes.append("Day 44 backdates activity to day 42 (boundary probe)")
 
         z_ids: list[str] = []
         z_modes: list[str] = []
-        if n == 21:
+        if n == 27:
             z_ids, z_modes = [live_id], ["live"]
-        if n == 42:
+        if n == 48:
             z_ids, z_modes = [rec_id], ["recording"]
-        if n == 44:
+        if n == 50:
             z_ids, z_modes = [live_id], ["live"]
 
         plan = write_day_from_template(

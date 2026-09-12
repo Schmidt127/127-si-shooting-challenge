@@ -7,10 +7,11 @@ from zoneinfo import ZoneInfo
 
 DENVER = ZoneInfo("America/Denver")
 
-# Canonical simulation window (inclusive).
-SIM_START = date(2027, 5, 1)
+# Canonical simulation window (inclusive) — full challenge calendar.
+# April 25, 2027 through June 30, 2027 11:59 PM America/Denver = 67 days.
+SIM_START = date(2027, 4, 25)
 SIM_END = date(2027, 6, 30)
-SIMULATION_DAY_COUNT = 61  # (SIM_END - SIM_START).days + 1
+SIMULATION_DAY_COUNT = 67  # (SIM_END - SIM_START).days + 1
 
 # Explicit gates for execute / cleanup writes (all required for live writes).
 CONFIRM_TOKEN = "SEASON-SIMULATION-2027"

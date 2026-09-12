@@ -7,7 +7,7 @@ Infrastructure for full-season disposable simulations of the Shooting Challenge.
 |---|---|
 | **SC-SEASON-SIM-001** | Three-athlete package (Perfect / Recovery / Edge) — **READY (prep completing)**, not executed |
 | **SC-SEASON-SIM-002** | Single-athlete historical package — **PREP 2026-09-12 NOT READY** (PHA=4/18 blocker; clock gates live) |
-| **Window** | 2027-05-01 → 2027-06-30 inclusive (**61** days) |
+| **Window** | 2027-04-25 → 2027-06-30 11:59 PM America/Denver inclusive (**67** days) |
 | **Environment** | Production `appn84sqPw03zEbTT` only — **no DEV environment** |
 | **SC-001 manifest** | [`docs/deploy-checklists/SC-SEASON-SIM-001-EXECUTION-MANIFEST.md`](../../docs/deploy-checklists/SC-SEASON-SIM-001-EXECUTION-MANIFEST.md) |
 | **SC-002 manifest** | [`docs/deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md`](../../docs/deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md) |
@@ -29,7 +29,7 @@ Exercise as much of the live system as possible once authorized:
 
 - Daily submissions, missed days, streaks, weekly goals
 - Homework (incl. multi-asset) satisfactory / unsatisfactory / late paths
-- Early Bird (2027-04-25…05-01; May 1 is last Early Bird day)
+- Early Bird (2027-04-25…05-01; full Sun–Sat week now inside the sim window)
 - Week 9 shooting with **no** homework; **18** active PHA expected
 - Video feedback, Zoom attendance (do not change 101 / SC-147)
 - XP events, achievements, shot milestones
@@ -309,7 +309,7 @@ python -m season_simulation cleanup `
 ## Before the final authorized run
 
 1. Finish **Program Homework Assignments** (18) and **Zoom Meetings**
-2. Ensure **Weeks** cover May 1 – June 30, 2027
+2. Ensure **Weeks** cover April 25 – June 30, 2027
 3. Apply gated clock override per operator checklist; keep restore formula ready
 4. Verify Resend sender already used by live Hub pipeline
 5. Confirm enrollment Parent Email is the allowlist address

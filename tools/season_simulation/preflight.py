@@ -301,7 +301,7 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
         future_req,
         "Production formula (restore target):\n" + PRODUCTION_ACTIVITY_DATE_IS_FUTURE_FORMULA,
         "Gated formula (temporary):\n" + GATED_ACTIVITY_DATE_IS_FUTURE_FORMULA,
-        "REQUIRED: Weeks rows covering every date from 2027-05-01 through 2027-06-30.",
+        "REQUIRED: Weeks rows covering every date from 2027-04-25 through 2027-06-30.",
         f"REQUIRED before final run: {EXPECTED_ACTIVE_PHA_COUNT} active Program Homework "
         "Assignments (Early Bird + Weeks 1–8 × 2 slots); Week 9 must have 0 PHA.",
         "REQUIRED: Resend domain/sender already used by live Hub pipeline must be verified before enabling delivery.",

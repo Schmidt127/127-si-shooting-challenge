@@ -6,7 +6,7 @@
 | **Package** | `tools/season_simulation/` (extends SC-SEASON-SIM-002) |
 | **Base** | Production `appn84sqPw03zEbTT` only — **no DEV environment** |
 | **Athletes** | 3 disposable VERIFY profiles (Perfect / Recovery / Edge) |
-| **Window** | 2027-05-01 → 2027-06-30 inclusive (61 days) |
+| **Window** | 2027-04-25 → 2027-06-30 11:59 PM America/Denver inclusive (67 days) |
 | **Authorize command** | Mike says exactly: **`RUN 3-ATHLETE SEASON SIMULATION`** |
 | **This document does NOT authorize execute** | Preparation completing in Agent 1–3 wiring wave; coordinator will stamp COMPLETE prep after merges |
 
@@ -86,14 +86,14 @@ Reports: `tools/season_simulation/reports/sc001-dry-run-latest.{json,md}`
 
 | Metric | Athlete 1 Perfect | Athlete 2 Recovery | Athlete 3 Edge |
 |--------|------------------:|-------------------:|---------------:|
-| Submit days | 61 | 53 | 62 |
+| Submit days | 67 | 59 | 68 |
 | Miss days | 0 | 8 | 0 |
-| Planned shots | 16,630 | 8,274 | 13,200 |
+| Planned shots | 18,294 | 8,806 | 13,466 |
 | Perfect Weeks (expected) | 10 | **1** (Week 7) | 5 |
-| Goal Met Date | **2027-06-14** @ 12,098 | Not reached | 2027-06-25 @ 12,190 |
-| Shot milestones | 3000–14400 (5) | 3000, 6000 | 3000–12000 (4) |
-| Streak gate days | 3–60 (8 tiers) | 3, 7, 10 | 3–30 (6 tiers) |
-| Weekly threshold awards | 22 | 1 | 12 |
+| Goal Met Date | Runtime (perfect path) | late_if_at_all | Runtime |
+| Shot milestones | through 18000 (6) perfect path | lower volume | edge path |
+| Streak awards (XP) | 3–60 (9) | recovery path | edge path |
+| Weekly threshold awards | 26 (perfect oracle) | recovery path | edge path |
 
 Live numbers may shift slightly when weekly goals resolve from Airtable Goal Record + Weeks.
 

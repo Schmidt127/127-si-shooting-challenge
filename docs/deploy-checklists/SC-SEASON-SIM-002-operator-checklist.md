@@ -5,7 +5,7 @@
 | | |
 |---|---|
 | **Backlog** | SC-SEASON-SIM-002 |
-| **Window** | 2027-05-01 → 2027-06-30 (61 days) |
+| **Window** | 2027-04-25 → 2027-06-30 11:59 PM America/Denver (67 days) |
 | **Base** | Production `appn84sqPw03zEbTT` (no DEV base) |
 | **Athlete** | Disposable Athlete 1 / VERIFY only |
 | **Email** | `schmidt@fairfieldbasketballclub.com` only |
@@ -131,7 +131,7 @@ Harness stamps `Perfect Week Manual Exception?` on the same-day probe day so Gra
 
 ### A5. Weeks / PHA / Zoom
 
-- Weeks covering every date 2027-05-01 … 2027-06-30
+- Weeks covering every date 2027-04-25 … 2027-06-30
 - **18** active Program Homework Assignments (Early Bird + Weeks 1–8 × 2)
 - Week 9: **0** PHA
 - Common homework due date: **2027-06-29**

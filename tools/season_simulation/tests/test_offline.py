@@ -86,14 +86,14 @@ from season_simulation.simulation_clock import (  # noqa: E402
 
 
 class TestDateWindow(unittest.TestCase):
-    def test_exactly_61_days(self):
+    def test_exactly_simulation_day_count(self):
         days = assert_window_integrity()
         self.assertEqual(len(days), SIMULATION_DAY_COUNT)
         self.assertEqual(SIMULATION_DAY_COUNT, (SIM_END - SIM_START).days + 1)
 
-    def test_may1_through_june30_2027(self):
+    def test_apr25_through_june30_2027(self):
         days = build_simulation_days()
-        self.assertEqual(days[0].activity_date, date(2027, 5, 1))
+        self.assertEqual(days[0].activity_date, date(2027, 4, 25))
         self.assertEqual(days[-1].activity_date, date(2027, 6, 30))
 
     def test_day_numbering(self):
@@ -149,7 +149,7 @@ class TestSimulationClock(unittest.TestCase):
         )
         self.assertEqual(clock.day_number, 1)
         clock.advance_to(SIM_END)
-        self.assertEqual(clock.day_number, 61)
+        self.assertEqual(clock.day_number, SIMULATION_DAY_COUNT)
 
 
 class TestClockOverride(unittest.TestCase):
@@ -419,9 +419,9 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(a.to_dict()["days"], b.to_dict()["days"])
         self.assertEqual(a.intended_writes_summary, b.intended_writes_summary)
 
-    def test_61_days_and_misses(self):
+    def test_simulation_days_and_misses(self):
         s = self._scenario()
-        self.assertEqual(len(s.days), 61)
+        self.assertEqual(len(s.days), SIMULATION_DAY_COUNT)
         misses = [d for d in s.days if d.action == "miss"]
         self.assertEqual(len(misses), len(MISS_DAYS))
 
@@ -450,7 +450,7 @@ class TestScenario(unittest.TestCase):
     def test_early_bird_day_one(self):
         s = self._scenario()
         self.assertEqual(s.meta["early_bird_day_1"], "Early Bird")
-        self.assertEqual(s.days[0].activity_date, date(2027, 5, 1))
+        self.assertEqual(s.days[0].activity_date, date(2027, 4, 25))
 
     def test_late_homework_probe(self):
         s = self._scenario()
@@ -482,13 +482,12 @@ class TestScenario(unittest.TestCase):
             for d in s.days
             if week_label_for_activity_date(d.activity_date) == "Early Bird"
         ]
-        self.assertEqual(len(early_days), 1)
-        self.assertEqual(early_days[0].activity_date, date(2027, 5, 1))
-        self.assertEqual(len(early_days[0].homework), 2)
-        self.assertEqual(
-            {hw.get("week_label") for hw in early_days[0].homework},
-            {"Early Bird"},
-        )
+        self.assertEqual(len(early_days), 7)
+        self.assertEqual(early_days[0].activity_date, date(2027, 4, 25))
+        self.assertEqual(early_days[-1].activity_date, date(2027, 5, 1))
+        early_hw = [hw for d in early_days for hw in d.homework]
+        self.assertEqual(len(early_hw), 2)
+        self.assertEqual({hw.get("week_label") for hw in early_hw}, {"Early Bird"})
 
     def test_week9_has_zero_week9_pha_completions(self):
         s = self._scenario(18)
@@ -505,7 +504,7 @@ class TestScenario(unittest.TestCase):
             if hw.get("week_label") == "Week 9"
         ]
         self.assertEqual(week9_owned, [])
-        # Late Week 8 probe may land on day 61 (calendar Week 9) — still not a Week 9 PHA.
+        # Late Week 8 probe may land on final sim day (calendar Week 9) — still not a Week 9 PHA.
         late = next(d for d in s.days if d.day_number == LATE_HOMEWORK_PROBE_DAY)
         if late.homework:
             self.assertEqual(late.homework[0].get("week_label"), "Week 8")

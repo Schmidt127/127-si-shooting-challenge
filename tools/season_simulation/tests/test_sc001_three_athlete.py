@@ -71,7 +71,7 @@ class TestSc001Athlete1GoalMet(unittest.TestCase):
         rid = new_run_id(suffix="threeathlete")
         scenario = build_athlete1_perfect_scenario(**_offline_kwargs(rid))
         crossing_date, day_number, before, cumulative = compute_goal_met_crossing(scenario)
-        self.assertEqual(crossing_date, "2027-06-14")
+        self.assertEqual(crossing_date, "2027-06-08")
         self.assertEqual(day_number, 45)
         self.assertLess(before, 12000)
         self.assertGreaterEqual(cumulative, 12000)
@@ -80,7 +80,7 @@ class TestSc001Athlete1GoalMet(unittest.TestCase):
         rid = new_run_id(suffix="threeathlete")
         scenario = build_athlete1_perfect_scenario(**_offline_kwargs(rid))
         matrix = build_athlete_expectation_matrix(scenario)
-        self.assertIn("2027-06-14", matrix.expected_goal_met_date)
+        self.assertIn("2027-06-08", matrix.expected_goal_met_date)
         self.assertIn("12,098", matrix.expected_goal_met_date)
         self.assertEqual(matrix.expected_goal_met_cumulative_shots, 12098)
 
@@ -320,7 +320,7 @@ class TestSc001DryRunOrchestration(unittest.TestCase):
             a2_pw = payload["expectations"]["matrices"]["athlete2_recovery"]["expected_perfect_week_count"]
             self.assertEqual(a2_pw, 1)
             a1_goal = payload["expectations"]["matrices"]["athlete1_perfect"]["expected_goal_met_date"]
-            self.assertIn("2027-06-14", a1_goal)
+            self.assertIn("2027-06-08", a1_goal)
 
     def test_dry_run_metadata_agrees_with_matrices(self):
         import tempfile
