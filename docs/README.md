@@ -4,7 +4,7 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 
 > **Repo:** `127-si-shooting-challenge` — public app at `/shoot` on fairfieldbasketballclub.com. Official landing: https://www.fairfieldbasketballclub.com.
 
-**Current project truth?** Use [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) first (branch/SHA, bases, email plane, automation overlays, pending/blocked work). Integrity companions: [REPOSITORY-INTEGRITY-AUDIT.md](./REPOSITORY-INTEGRITY-AUDIT.md) · [ARCHIVED-AND-SUPERSEDED-FILES.md](./ARCHIVED-AND-SUPERSEDED-FILES.md) · [SECURITY-AND-SENSITIVE-FILES.md](./SECURITY-AND-SENSITIVE-FILES.md).
+**Current project truth?** Use [CURRENT-TRUTH.md](./CURRENT-TRUTH.md) first (branch/SHA, bases, email plane, automation overlays, pending/blocked work). Latest reconciliation: [audits/SOURCE-OF-TRUTH-RECONCILIATION-20260912.md](./audits/SOURCE-OF-TRUTH-RECONCILIATION-20260912.md). Integrity companions: [REPOSITORY-INTEGRITY-AUDIT.md](./REPOSITORY-INTEGRITY-AUDIT.md) · [ARCHIVED-AND-SUPERSEDED-FILES.md](./ARCHIVED-AND-SUPERSEDED-FILES.md) · [SECURITY-AND-SENSITIVE-FILES.md](./SECURITY-AND-SENSITIVE-FILES.md).
 
 > **Authority:** The obsolete Production `Automations` data table is **not** a source of truth — see CURRENT-TRUTH Authority rule.
 

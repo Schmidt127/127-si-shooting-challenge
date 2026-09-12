@@ -10,7 +10,7 @@ This is the **detailed completion matrix and historical traceability record** fo
 | Field | Value |
 |-------|--------|
 | **Purpose** | Completion matrix, package traceability, and preserved historical evidence |
-| **Last updated** | **2026-09-11** — living docs synced to tip **`8590c9ec`** (#517 Tier 1 runbook, #516 FUT-043); see [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) for email paste queue and Mike operator steps |
+| **Last updated** | **2026-09-12** — living docs synced to tip **`94429042`** (#521); Production **`dpl_6h8wT3nFtuxGveW8DaoN34CWCVyA`**; Hub Homework COMPLETE; season sim **READY — NOT EXECUTED**; see [`CURRENT-TRUTH.md`](./CURRENT-TRUTH.md) + [`audits/SOURCE-OF-TRUTH-RECONCILIATION-20260912.md`](./audits/SOURCE-OF-TRUTH-RECONCILIATION-20260912.md) |
 | **Production branch** | `master` |
 | **Vercel root** | `web/` |
 | **Production website** | https://www.fairfieldbasketballclub.com/shoot |
@@ -40,7 +40,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 
 ## 0Z. Authoritative current-state overlay — 2026-09-08
 
-> **2026-09-11 doc sync:** Git tip **`8590c9ec`**. **FUT-043** card design system merged (#516). **Tier 1 launch ops** runbook + email paste bundles (#517) — Mike must paste **076 v8.14 / 071 v4.5 / 072 v4.9.2 / 073 v4.7 / 074 v3.6 / 117 v2.2** per [`deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md`](./deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md). SC-172 health live; **`ADMIN_DIAGNOSTICS_TOKEN`** still pending.
+> **2026-09-12 doc sync:** Git tip **`94429042`** (Production deploy match). Curriculum Hub Homework **COMPLETE / PRODUCTION VERIFIED** (52 structured-enabled; private SEO; Assignment Key Sync). **Required before close:** SC-SEASON-SIM-001 execution + reconciliation only — infrastructure (SC-SEASON-SIM-002) is package-complete, **not** executed. **FUT-043** (#516) + Tier 1 runbook (#517) remain; Mike paste queue **076 v8.14 / 071 v4.5 / 072 v4.9.2 / 073 v4.7 / 074 v3.6 / 117 v2.2** per [`deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md`](./deploy-checklists/TIER-1-LAUNCH-OPS-RUNBOOK-20260911.md). SC-172 health live; **`ADMIN_DIAGNOSTICS_TOKEN`** still pending.
 
 > **This overlay supersedes the older “current” dashboards and issue-era statements below wherever they conflict.** Historical dated sections remain preserved evidence and are not being rewritten. For exact live automation versions, use `CURRENT-TRUTH.md`, the Automation Version Inventory, and the named GitHub issues/evidence.
 
