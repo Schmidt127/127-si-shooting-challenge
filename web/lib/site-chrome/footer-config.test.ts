@@ -4,6 +4,7 @@ import { LANDING_URL } from "@/lib/app-config";
 import { DAILY_SUBMISSIONS, PLAYER_REGISTRATION } from "@/lib/registration";
 import {
   FOOTER_CONSENT_COPY,
+  FOOTER_QUICK_LINK_GROUPS,
   FOOTER_QUICK_LINKS,
   FOOTER_REGISTRATION_LINKS,
 } from "@/lib/site-chrome/footer-config";
@@ -23,6 +24,18 @@ describe("footer configuration", () => {
     expect(hrefs).toContain("/dashboard/sign-in");
     expect(hrefs).not.toContain("/dashboard");
     expect(hrefs).not.toContain("/public-display");
+  });
+
+  it("groups landing quick links into Compete / Learn / Account without losing destinations", () => {
+    expect(FOOTER_QUICK_LINK_GROUPS.map((group) => group.heading)).toEqual([
+      "Compete",
+      "Learn",
+      "Account",
+    ]);
+    expect(FOOTER_QUICK_LINKS).toEqual(
+      FOOTER_QUICK_LINK_GROUPS.flatMap((group) => group.links),
+    );
+    expect(FOOTER_QUICK_LINKS).toHaveLength(11);
   });
 
   it("uses canonical Fillout registration URLs", () => {

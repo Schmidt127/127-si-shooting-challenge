@@ -56,6 +56,8 @@ describe("site chrome landing links", () => {
     expect(footer).toContain("FOOTER_CONSENT_COPY");
     expect(footer).toContain('rel="noopener noreferrer"');
     expect(footer).toContain('href="/faq"');
+    expect(footer).toContain('data-testid={footerLinkTestId(item.href)}');
+    expect(footer).toContain('"landing"');
   });
 
   it("BackToHubLink Home control uses LANDING_URL", () => {
