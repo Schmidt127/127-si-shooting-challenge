@@ -218,7 +218,7 @@ class TestSc001Sc169UnlockSourceKeys(unittest.TestCase):
         rid = new_run_id(suffix="threeathlete")
         scenarios = build_all_sc001_scenarios(**_offline_kwargs(rid))
         expected = {
-            "athlete1_perfect": [3000, 6000, 9000, 12000, 14400],
+            "athlete1_perfect": [3000, 6000, 9000, 12000, 14400, 18000],
             "athlete2_recovery": [3000, 6000],
             "athlete3_edge": [3000, 6000, 9000, 12000],
         }

@@ -49,46 +49,73 @@ def _official_days_in_week(week_label: str) -> int:
     )
 
 
-def _effective_video_minimum(submit_days: int, official_days: int) -> int:
-    """Short windows (Early Bird, Week 9) scale the video floor down."""
-    cap = min(submit_days, official_days) if official_days else submit_days
-    return min(PERFECT_WEEK_VIDEO_MINIMUM, max(1, cap))
-
-
-def _daily_shot_floor(weekly_goal: int, official_days: int) -> float:
-    divisor = official_days if official_days else 7
-    return weekly_goal / divisor
-
-
 def _homework_status(
     scenario: AthleteScenario,
     week_label: str,
 ) -> tuple[bool, bool, bool, bool]:
-    """Return (on_time_satisfactory, skipped_week, late_timing, needs_revision)."""
+    """Return (on_time_satisfactory, skipped_week, late_timing, needs_revision).
+
+    Homework is attributed by payload ``week_label`` (PHA scheduling identity),
+    not by the activity-date week of the completion day — late completions keep
+    their original week identity and cannot retroactively repair Perfect Week.
+    """
     items: list[dict[str, Any]] = []
     for plan in scenario.days:
-        if week_label_for_activity_date(plan.activity_date) != week_label:
-            continue
-        items.extend(plan.homework)
+        for hw in plan.homework:
+            hw_week = str(hw.get("week_label") or "").strip()
+            if hw_week:
+                if hw_week == week_label:
+                    items.append(hw)
+            elif week_label_for_activity_date(plan.activity_date) == week_label:
+                items.append(hw)
 
     if not items:
         if week_label == "Week 9":
+            # Production: Week 9 has 0 PHA — homework requirement vacuously met.
             return True, False, False, False
         return False, True, False, False
 
     needs_revision = any(str(i.get("outcome") or "") == "Needs Revision" for i in items)
     late_timing = any(
-        str(i.get("late_status") or "") == "late_ineligible"
+        i.get("perfect_week_homework_eligible") is False
+        or str(i.get("late_status") or "")
+        in {"late_ineligible", "late_xp_ok_no_retro_pw"}
         or str(i.get("timing_note") or "") == "late_xp_ok_no_retro_pw"
         for i in items
     )
     on_time = all(
         str(i.get("outcome") or "") == "Satisfactory"
-        and str(i.get("late_status") or "on_time") != "late_ineligible"
+        and i.get("perfect_week_homework_eligible", True) is not False
+        and str(i.get("late_status") or "on_time")
+        not in {"late_ineligible", "late_xp_ok_no_retro_pw"}
         and str(i.get("timing_note") or "") != "late_xp_ok_no_retro_pw"
         for i in items
     )
     return on_time, False, late_timing, needs_revision
+
+
+def _effective_video_minimum(submit_days: int, official_days: int) -> int:
+    """Perfect Week video minimum does not auto-scale for partial weeks.
+
+    Production Config ``Perfect Week Video Minimum`` = 3. Week 9 (4 days) still
+    requires 3 videos unless Production explicitly changes that rule.
+    """
+    del submit_days, official_days  # retained for call-site compatibility
+    return PERFECT_WEEK_VIDEO_MINIMUM
+
+
+def _daily_shot_floor(weekly_goal: int, official_days: int) -> float:
+    """Daily minimum = normal weekly target / 7 (unchanged on partial weeks)."""
+    # Prefer full-week divisor so partial weeks keep the same daily floor.
+    return weekly_goal / 7 if official_days else 0.0
+
+
+def _partial_week_shot_target(normal_weekly_target: int, official_days: int) -> int:
+    if official_days <= 0:
+        return 0
+    if official_days >= 7:
+        return normal_weekly_target
+    return max(1, round(normal_weekly_target * official_days / 7))
 
 
 def _week_zoom_attended(scenario: AthleteScenario, week_label: str) -> bool:
@@ -104,14 +131,6 @@ def _week_zoom_attended(scenario: AthleteScenario, week_label: str) -> bool:
     return live > 0 or rec > 0
 
 
-def _plans_for_week(scenario: AthleteScenario, week_label: str) -> list[DayPlan]:
-    return [
-        p
-        for p in scenario.days
-        if week_label_for_activity_date(p.activity_date) == week_label
-    ]
-
-
 def evaluate_perfect_week(
     scenario: AthleteScenario,
     week_label: str,
@@ -125,8 +144,17 @@ def evaluate_perfect_week(
     miss_days = int(bucket.get("miss_days") or 0)
     weekly_total = int(bucket.get("weekly_shots") or 0)
     video_count = int(bucket.get("video_count") or 0)
-    goal_est = estimate_weekly_goal_shots(scenario.goal_total_shots, week_label)
-    daily_floor = _daily_shot_floor(goal_est, official_days)
+    season_days = len(simulation_days())
+    # Daily minimum = Normal Weekly / 7 = season_goal / season_days.
+    # Integer shot totals meet the floor when >= floor(exact share).
+    exact_daily = (
+        scenario.goal_total_shots / season_days if season_days else 0.0
+    )
+    daily_floor = int(exact_daily)  # e.g. floor(12000/67) = 179
+    if 0 < official_days < 7:
+        goal_est = max(1, round(exact_daily * official_days))
+    else:
+        goal_est = estimate_weekly_goal_shots(scenario.goal_total_shots, week_label)
     daily_shots = list(bucket.get("daily_shots") or [])
 
     reasons: list[str] = []
@@ -159,7 +187,7 @@ def evaluate_perfect_week(
         reasons.append("required_zoom")
 
     if not reasons:
-        outcome = "pass_partial_window" if submit_days < 7 and week_label == "Week 9" else "pass"
+        outcome = "pass_partial_window" if official_days < 7 else "pass"
         return PerfectWeekEvaluation(week_label, outcome, True, ())
 
     if scenario.profile == "athlete2_recovery" and week_label != ATHLETE2_RECOVERY_WEEK:

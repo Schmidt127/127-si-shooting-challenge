@@ -383,17 +383,39 @@ class TestSeasonPolicy(unittest.TestCase):
         self.assertTrue(w1.ok)
 
     def test_late_homework_after_due(self):
-        on_time = evaluate_late_homework(
-            submission_date=COMMON_HOMEWORK_DUE_DATE,
-            due_date=COMMON_HOMEWORK_DUE_DATE,
-        )
-        self.assertTrue(on_time.credit_eligible)
-        late = evaluate_late_homework(
+        # Catalog Due Date alone must NOT block Homework XP.
+        after_catalog_due = evaluate_late_homework(
             submission_date=date(2027, 6, 30),
             due_date=COMMON_HOMEWORK_DUE_DATE,
         )
-        self.assertFalse(late.credit_eligible)
-        self.assertEqual(late.timing_status, "late_ineligible")
+        self.assertTrue(after_catalog_due.homework_xp_eligible)
+        self.assertTrue(after_catalog_due.credit_eligible)
+
+        # Perfect Week uses Week End cutoff (Week 8 Saturday = Jun 26).
+        on_time = evaluate_late_homework(
+            submission_date=date(2027, 6, 26),
+            due_date=COMMON_HOMEWORK_DUE_DATE,
+            week_label="Week 8",
+        )
+        self.assertTrue(on_time.homework_xp_eligible)
+        self.assertTrue(on_time.perfect_week_homework_eligible)
+        self.assertEqual(on_time.timing_status, "on_time")
+
+        late_for_pw = evaluate_late_homework(
+            submission_date=date(2027, 6, 30),
+            due_date=COMMON_HOMEWORK_DUE_DATE,
+            week_label="Week 8",
+        )
+        self.assertTrue(late_for_pw.homework_xp_eligible)
+        self.assertFalse(late_for_pw.perfect_week_homework_eligible)
+        self.assertEqual(late_for_pw.timing_status, "late_xp_ok_no_retro_pw")
+
+        # Week 9 cutoff is Wed Jun 30 — on-time that day still PW-eligible.
+        week9 = evaluate_late_homework(
+            submission_date=date(2027, 6, 30),
+            week_label="Week 9",
+        )
+        self.assertTrue(week9.perfect_week_homework_eligible)
 
 
 class TestScenario(unittest.TestCase):
@@ -457,8 +479,13 @@ class TestScenario(unittest.TestCase):
         late_day = next(d for d in s.days if d.day_number == LATE_HOMEWORK_PROBE_DAY)
         self.assertEqual(late_day.activity_date, date(2027, 6, 30))
         self.assertTrue(late_day.homework)
-        self.assertFalse(late_day.homework[0]["credit_eligible"])
-        self.assertEqual(late_day.homework[0].get("week_label"), "Week 8")
+        hw = late_day.homework[0]
+        self.assertEqual(hw.get("week_label"), "Week 8")
+        # Normal Homework XP still allowed; Perfect Week for Week 8 is not.
+        self.assertTrue(hw["homework_xp_eligible"])
+        self.assertTrue(hw["credit_eligible"])
+        self.assertFalse(hw["perfect_week_homework_eligible"])
+        self.assertEqual(hw["late_status"], "late_xp_ok_no_retro_pw")
 
     def test_eighteen_homework_selected(self):
         s = self._scenario(18)
@@ -508,7 +535,8 @@ class TestScenario(unittest.TestCase):
         late = next(d for d in s.days if d.day_number == LATE_HOMEWORK_PROBE_DAY)
         if late.homework:
             self.assertEqual(late.homework[0].get("week_label"), "Week 8")
-            self.assertFalse(late.homework[0]["credit_eligible"])
+            self.assertTrue(late.homework[0]["homework_xp_eligible"])
+            self.assertFalse(late.homework[0]["perfect_week_homework_eligible"])
 
     def test_dedupe_keys_unique_for_subs(self):
         s = self._scenario()

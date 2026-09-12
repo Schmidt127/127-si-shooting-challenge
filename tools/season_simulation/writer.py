@@ -669,7 +669,9 @@ class SeasonSimWriter:
             )
             asset_ids.append(aid)
 
-        satisfactory = hw.get("outcome") == "Satisfactory" and hw.get("credit_eligible", True)
+        satisfactory = hw.get("outcome") == "Satisfactory" and hw.get(
+            "homework_xp_eligible", hw.get("credit_eligible", True)
+        )
         library_id = str(hw.get("library_id") or "").strip()
         if not library_id:
             raise RuntimeError(

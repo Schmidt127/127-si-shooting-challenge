@@ -15,7 +15,7 @@
   "rule_set": "Shooting Challenge 2026-2027",
   "captured_at": "2026-09-12",
   "purpose": "Post-run comparison only. Simulation engine must NOT use this file to decide awards.",
-        "verdict": "PERFECT SEASON XP ORACLE VERIFIED",
+  "verdict": "67-DAY PERFECT SEASON ORACLE VERIFIED",
   "expected_perfect_season_xp": 5340,
   "cross_check": {
     "source_by_source_total": 5340,
@@ -537,8 +537,8 @@
       "week": "Week 8",
       "weekly_shots": 1964,
       "goal_estimate": 1254,
-      "xp_this_week": 575,
-      "cumulative_xp": 4940,
+      "xp_this_week": 610,
+      "cumulative_xp": 4975,
       "expected_level": "G.O.A.T.",
       "perfect_week": "pass",
       "threshold_tiers": [
@@ -551,7 +551,7 @@
       "week": "Week 9",
       "weekly_shots": 1115,
       "goal_estimate": 716,
-      "xp_this_week": 400,
+      "xp_this_week": 365,
       "cumulative_xp": 5340,
       "expected_level": "G.O.A.T.",
       "perfect_week": "pass_partial_window",
@@ -2448,11 +2448,21 @@
       "date": "2027-06-23",
       "day": 60,
       "week": "Week 8",
+      "source": "HOMEWORK_COMPLETION",
+      "rule_key": "HOMEWORK_COMPLETION",
+      "xp": 35,
+      "detail": "satisfactory homework completion",
+      "cumulative_xp": 4605
+    },
+    {
+      "date": "2027-06-23",
+      "day": 60,
+      "week": "Week 8",
       "source": "SHOOTING_BASE",
       "rule_key": "SHOOTING_BASE",
       "xp": 20,
       "detail": "counted submission D60",
-      "cumulative_xp": 4590
+      "cumulative_xp": 4625
     },
     {
       "date": "2027-06-23",
@@ -2462,7 +2472,7 @@
       "rule_key": "STREAK_60DAY",
       "xp": 105,
       "detail": "60-day streak unlock",
-      "cumulative_xp": 4695
+      "cumulative_xp": 4730
     },
     {
       "date": "2027-06-24",
@@ -2472,7 +2482,7 @@
       "rule_key": "SHOOTING_BASE",
       "xp": 20,
       "detail": "counted submission D61",
-      "cumulative_xp": 4715
+      "cumulative_xp": 4750
     },
     {
       "date": "2027-06-24",
@@ -2482,7 +2492,7 @@
       "rule_key": "VIDEO_SUBMISSION",
       "xp": 25,
       "detail": "satisfactory video 1",
-      "cumulative_xp": 4740
+      "cumulative_xp": 4775
     },
     {
       "date": "2027-06-25",
@@ -2492,7 +2502,7 @@
       "rule_key": "SHOOTING_BASE",
       "xp": 20,
       "detail": "counted submission D62",
-      "cumulative_xp": 4760
+      "cumulative_xp": 4795
     },
     {
       "date": "2027-06-26",
@@ -2502,7 +2512,7 @@
       "rule_key": "PERFECT_WEEK",
       "xp": 100,
       "detail": "pass",
-      "cumulative_xp": 4860
+      "cumulative_xp": 4895
     },
     {
       "date": "2027-06-26",
@@ -2512,7 +2522,7 @@
       "rule_key": "SHOOTING_BASE",
       "xp": 20,
       "detail": "counted submission D63",
-      "cumulative_xp": 4880
+      "cumulative_xp": 4915
     },
     {
       "date": "2027-06-26",
@@ -2522,7 +2532,7 @@
       "rule_key": "WEEKLY_THRESHOLD_100_912",
       "xp": 10,
       "detail": "100% weekly goal (shots=1964, goal_est=1254)",
-      "cumulative_xp": 4890
+      "cumulative_xp": 4925
     },
     {
       "date": "2027-06-26",
@@ -2532,7 +2542,7 @@
       "rule_key": "WEEKLY_THRESHOLD_125_912",
       "xp": 20,
       "detail": "125% weekly goal (shots=1964, goal_est=1254)",
-      "cumulative_xp": 4910
+      "cumulative_xp": 4945
     },
     {
       "date": "2027-06-26",
@@ -2542,7 +2552,7 @@
       "rule_key": "WEEKLY_THRESHOLD_150_912",
       "xp": 30,
       "detail": "150% weekly goal (shots=1964, goal_est=1254)",
-      "cumulative_xp": 4940
+      "cumulative_xp": 4975
     },
     {
       "date": "2027-06-27",
@@ -2552,7 +2562,7 @@
       "rule_key": "SHOOTING_BASE",
       "xp": 20,
       "detail": "counted submission D64",
-      "cumulative_xp": 4960
+      "cumulative_xp": 4995
     },
     {
       "date": "2027-06-27",
@@ -2562,7 +2572,7 @@
       "rule_key": "VIDEO_SUBMISSION",
       "xp": 25,
       "detail": "satisfactory video 1",
-      "cumulative_xp": 4985
+      "cumulative_xp": 5020
     },
     {
       "date": "2027-06-28",
@@ -2572,7 +2582,7 @@
       "rule_key": "SHOOTING_BASE",
       "xp": 20,
       "detail": "counted submission D65",
-      "cumulative_xp": 5005
+      "cumulative_xp": 5040
     },
     {
       "date": "2027-06-28",
@@ -2582,7 +2592,7 @@
       "rule_key": "VIDEO_SUBMISSION",
       "xp": 25,
       "detail": "satisfactory video 1",
-      "cumulative_xp": 5030
+      "cumulative_xp": 5065
     },
     {
       "date": "2027-06-29",
@@ -2592,7 +2602,7 @@
       "rule_key": "SHOOTING_BASE",
       "xp": 20,
       "detail": "counted submission D66",
-      "cumulative_xp": 5050
+      "cumulative_xp": 5085
     },
     {
       "date": "2027-06-29",
@@ -2602,7 +2612,7 @@
       "rule_key": "SHOT_MILESTONE",
       "xp": 50,
       "detail": "18000 shots (150%) cumulative=18048",
-      "cumulative_xp": 5100
+      "cumulative_xp": 5135
     },
     {
       "date": "2027-06-29",
@@ -2612,16 +2622,6 @@
       "rule_key": "VIDEO_SUBMISSION",
       "xp": 25,
       "detail": "satisfactory video 1",
-      "cumulative_xp": 5125
-    },
-    {
-      "date": "2027-06-30",
-      "day": 67,
-      "week": "Week 9",
-      "source": "HOMEWORK_COMPLETION",
-      "rule_key": "HOMEWORK_COMPLETION",
-      "xp": 35,
-      "detail": "satisfactory homework completion",
       "cumulative_xp": 5160
     },
     {
@@ -4210,11 +4210,21 @@
       "date": "2027-06-23",
       "day": 60,
       "week": "Week 8",
+      "source": "HOMEWORK_COMPLETION",
+      "rule_key": "HOMEWORK_COMPLETION",
+      "xp": 35,
+      "detail": "satisfactory homework completion",
+      "cumulative_xp": 4605
+    },
+    {
+      "date": "2027-06-23",
+      "day": 60,
+      "week": "Week 8",
       "source": "SHOOTING_BASE",
       "rule_key": "SHOOTING_BASE",
       "xp": 20,
       "detail": "counted submission D60",
-      "cumulative_xp": 4590
+      "cumulative_xp": 4625
     },
     {
       "date": "2027-06-23",
@@ -4224,7 +4234,7 @@
       "rule_key": "STREAK_60DAY",
       "xp": 105,
       "detail": "60-day streak unlock",
-      "cumulative_xp": 4695
+      "cumulative_xp": 4730
     },
     {
       "date": "2027-06-24",
@@ -4234,7 +4244,7 @@
       "rule_key": "SHOOTING_BASE",
       "xp": 20,
       "detail": "counted submission D61",
-      "cumulative_xp": 4715
+      "cumulative_xp": 4750
     },
     {
       "date": "2027-06-24",
@@ -4244,7 +4254,7 @@
       "rule_key": "VIDEO_SUBMISSION",
       "xp": 25,
       "detail": "satisfactory video 1",
-      "cumulative_xp": 4740
+      "cumulative_xp": 4775
     },
     {
       "date": "2027-06-25",
@@ -4254,7 +4264,7 @@
       "rule_key": "SHOOTING_BASE",
       "xp": 20,
       "detail": "counted submission D62",
-      "cumulative_xp": 4760
+      "cumulative_xp": 4795
     },
     {
       "date": "2027-06-26",
@@ -4264,7 +4274,7 @@
       "rule_key": "PERFECT_WEEK",
       "xp": 100,
       "detail": "pass",
-      "cumulative_xp": 4860
+      "cumulative_xp": 4895
     },
     {
       "date": "2027-06-26",
@@ -4274,7 +4284,7 @@
       "rule_key": "SHOOTING_BASE",
       "xp": 20,
       "detail": "counted submission D63",
-      "cumulative_xp": 4880
+      "cumulative_xp": 4915
     },
     {
       "date": "2027-06-26",
@@ -4284,7 +4294,7 @@
       "rule_key": "WEEKLY_THRESHOLD_100_912",
       "xp": 10,
       "detail": "100% weekly goal (shots=1964, goal_est=1254)",
-      "cumulative_xp": 4890
+      "cumulative_xp": 4925
     },
     {
       "date": "2027-06-26",
@@ -4294,7 +4304,7 @@
       "rule_key": "WEEKLY_THRESHOLD_125_912",
       "xp": 20,
       "detail": "125% weekly goal (shots=1964, goal_est=1254)",
-      "cumulative_xp": 4910
+      "cumulative_xp": 4945
     },
     {
       "date": "2027-06-26",
@@ -4304,7 +4314,7 @@
       "rule_key": "WEEKLY_THRESHOLD_150_912",
       "xp": 30,
       "detail": "150% weekly goal (shots=1964, goal_est=1254)",
-      "cumulative_xp": 4940
+      "cumulative_xp": 4975
     },
     {
       "date": "2027-06-27",
@@ -4314,7 +4324,7 @@
       "rule_key": "SHOOTING_BASE",
       "xp": 20,
       "detail": "counted submission D64",
-      "cumulative_xp": 4960
+      "cumulative_xp": 4995
     },
     {
       "date": "2027-06-27",
@@ -4324,7 +4334,7 @@
       "rule_key": "VIDEO_SUBMISSION",
       "xp": 25,
       "detail": "satisfactory video 1",
-      "cumulative_xp": 4985
+      "cumulative_xp": 5020
     },
     {
       "date": "2027-06-28",
@@ -4334,7 +4344,7 @@
       "rule_key": "SHOOTING_BASE",
       "xp": 20,
       "detail": "counted submission D65",
-      "cumulative_xp": 5005
+      "cumulative_xp": 5040
     },
     {
       "date": "2027-06-28",
@@ -4344,7 +4354,7 @@
       "rule_key": "VIDEO_SUBMISSION",
       "xp": 25,
       "detail": "satisfactory video 1",
-      "cumulative_xp": 5030
+      "cumulative_xp": 5065
     },
     {
       "date": "2027-06-29",
@@ -4354,7 +4364,7 @@
       "rule_key": "SHOOTING_BASE",
       "xp": 20,
       "detail": "counted submission D66",
-      "cumulative_xp": 5050
+      "cumulative_xp": 5085
     },
     {
       "date": "2027-06-29",
@@ -4364,7 +4374,7 @@
       "rule_key": "SHOT_MILESTONE",
       "xp": 50,
       "detail": "18000 shots (150%) cumulative=18048",
-      "cumulative_xp": 5100
+      "cumulative_xp": 5135
     },
     {
       "date": "2027-06-29",
@@ -4374,16 +4384,6 @@
       "rule_key": "VIDEO_SUBMISSION",
       "xp": 25,
       "detail": "satisfactory video 1",
-      "cumulative_xp": 5125
-    },
-    {
-      "date": "2027-06-30",
-      "day": 67,
-      "week": "Week 9",
-      "source": "HOMEWORK_COMPLETION",
-      "rule_key": "HOMEWORK_COMPLETION",
-      "xp": 35,
-      "detail": "satisfactory homework completion",
       "cumulative_xp": 5160
     },
     {

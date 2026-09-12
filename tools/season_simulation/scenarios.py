@@ -23,6 +23,7 @@ from .run_registry import run_marker
 from .season_policy import (
     COMMON_HOMEWORK_DUE_DATE,
     evaluate_late_homework,
+    week_end_cutoff_for_label,
     week_label_for_activity_date,
 )
 from .simulation_clock import (
@@ -199,8 +200,15 @@ def _schedule_homework_attachments(
     hw_list: Sequence[dict[str, Any]],
     weeks: Sequence[dict[str, Any]] | None,
     gate_notes: list[str],
+    allow_late_probe: bool = True,
+    force_satisfactory: bool = False,
 ) -> dict[int, list[dict[str, Any]]]:
-    """Return day_number → homework payloads. Each PHA exactly once; Week 9 empty."""
+    """Return day_number → homework payloads. Each PHA exactly once; Week 9 empty.
+
+    ``allow_late_probe`` — SC-002 mixed path may complete one Week 8 PHA after
+    that week's Saturday cutoff (normal XP still yes; Perfect Week no).
+    Perfect-athlete paths must pass ``allow_late_probe=False``.
+    """
     by_label = group_phas_by_homework_week(hw_list, weeks)
     attachments: dict[int, list[dict[str, Any]]] = {}
     assigned_pha_ids: list[str] = []
@@ -221,14 +229,13 @@ def _schedule_homework_attachments(
     for label in HOMEWORK_WEEK_ORDER:
         phas = by_label.get(label) or []
         days = list(submit_days_by_label.get(label) or [])
-        if label == "Week 8" and days:
+        late_meta = None
+        if allow_late_probe and label == "Week 8" and days:
             # Reserve last Week 8 PHA for late probe on day 67 when possible.
             late_meta = next(
                 (m for m in days_meta if m.day_number == LATE_HOMEWORK_PROBE_DAY),
                 None,
             )
-        else:
-            late_meta = None
 
         slots = list(phas)
         if not slots:
@@ -252,8 +259,10 @@ def _schedule_homework_attachments(
             target_days.append(late_meta)
             gate_notes.append(
                 f"Day {LATE_HOMEWORK_PROBE_DAY}: late homework probe — "
-                f"Week 8 PHA completed after due {COMMON_HOMEWORK_DUE_DATE} "
-                "(Week 9 has no Week-9 PHAs; this is a late Week 8 completion)."
+                f"Week 8 PHA after Week End {week_end_cutoff_for_label('Week 8')} "
+                "(normal Homework XP still eligible; Perfect Week not retroactively repaired). "
+                "Catalog due "
+                f"{COMMON_HOMEWORK_DUE_DATE} is display-only."
             )
         else:
             if not days:
@@ -281,16 +290,18 @@ def _schedule_homework_attachments(
             late = evaluate_late_homework(
                 submission_date=meta.activity_date,
                 due_date=COMMON_HOMEWORK_DUE_DATE,
+                week_label=label,
             )
-            outcome = "Satisfactory" if hw_index % 2 == 0 else "Needs Revision"
-            if n == GATE_BLOCK_PROBE_DAY:
-                outcome = "Needs Revision"
-                gate_notes.append(
-                    f"Day {n}: gate-pressure homework marked Needs Revision "
-                    "(PHA still completed — 18/18 coverage preserved)"
-                )
-            if n == LATE_HOMEWORK_PROBE_DAY or not late.credit_eligible:
-                outcome = "Needs Revision"
+            if force_satisfactory:
+                outcome = "Satisfactory"
+            else:
+                outcome = "Satisfactory" if hw_index % 2 == 0 else "Needs Revision"
+                if n == GATE_BLOCK_PROBE_DAY:
+                    outcome = "Needs Revision"
+                    gate_notes.append(
+                        f"Day {n}: gate-pressure homework marked Needs Revision "
+                        "(PHA still completed — 18/18 coverage preserved)"
+                    )
             multi_asset = hw_index % 4 == 0
             library_id = str(pha.get("library_id") or "").strip()
             payload = {
@@ -301,9 +312,17 @@ def _schedule_homework_attachments(
                 "outcome": outcome,
                 "asset_count": 2 if multi_asset else 1,
                 "late_status": late.timing_status,
-                "credit_eligible": late.credit_eligible,
+                "homework_xp_eligible": late.homework_xp_eligible,
+                "perfect_week_homework_eligible": late.perfect_week_homework_eligible,
+                # Backward-compat: credit_eligible means normal Homework XP (not PW).
+                "credit_eligible": late.homework_xp_eligible,
+                "week_end_cutoff": (
+                    late.week_end_cutoff.isoformat() if late.week_end_cutoff else None
+                ),
                 "dedupe_key": _dedupe_key(run_id, "HW", n, pha["record_id"]),
             }
+            if late.timing_status == "late_xp_ok_no_retro_pw":
+                payload["timing_note"] = "late_xp_ok_no_retro_pw"
             attachments.setdefault(n, []).append(payload)
             assigned_pha_ids.append(str(pha["record_id"]))
             hw_index += 1
@@ -311,7 +330,8 @@ def _schedule_homework_attachments(
     if week9_days:
         gate_notes.append(
             f"Week 9 ({week9_days[0].activity_date}..{week9_days[-1].activity_date}): "
-            "no homework attached (policy)"
+            "no PHA attached (Production: 18 = Early Bird + Weeks 1–8; "
+            "Perfect Week homework vacuously satisfied)."
         )
 
     # Safety: every selected PHA must appear exactly once when count is 18.

@@ -1,8 +1,8 @@
 # SC-SEASON-SIM-001 — Three-Athlete Dry-Run Report
 
-**Run ID:** `SEASON-SIM-2027-20260906T144223Z-threeathlete`
+**Run ID:** `SEASON-SIM-2027-20260912T215630Z-threeathlete`
 **Status:** READY — **NOT EXECUTED**
-**Generated:** 2026-09-06T14:42:25.821400+00:00
+**Generated:** 2026-09-12T21:56:32.226902+00:00
 
 ## Authorization
 
@@ -19,70 +19,70 @@ Future live execute requires Mike to say exactly: **`RUN 3-ATHLETE SEASON SIMULA
 
 | Week | Weekly shots | Goal est. | % | Thresholds | HW | Videos | Zoom | Perfect Week |
 |------|-------------:|----------:|--:|------------|----|-------:|------|--------------|
-| Early Bird | 278 | 197 | 141.1% | 100,125 | complete_satisfactory | 1 | live | pass |
-| Week 1 | 1768 | 1377 | 128.4% | 100,125 | complete_satisfactory | 3 | none | pass |
-| Week 2 | 1768 | 1377 | 128.4% | 100,125 | complete_satisfactory | 3 | live | pass |
-| Week 3 | 2104 | 1377 | 152.8% | 100,125,150 | complete_satisfactory | 3 | live | pass |
-| Week 4 | 1768 | 1377 | 128.4% | 100,125 | complete_satisfactory | 3 | live | pass |
-| Week 5 | 2013 | 1377 | 146.2% | 100,125 | complete_satisfactory | 3 | recorded | pass |
-| Week 6 | 1768 | 1377 | 128.4% | 100,125 | complete_satisfactory | 3 | live | pass |
-| Week 7 | 2202 | 1377 | 159.9% | 100,125,150 | complete_satisfactory | 3 | live | pass |
-| Week 8 | 1852 | 1377 | 134.5% | 100,125 | complete_satisfactory | 3 | live | pass |
-| Week 9 | 1109 | 787 | 140.9% | 100,125 | complete_satisfactory | 3 | none | pass_partial_window |
+| Early Bird | 1768 | 1254 | 141.0% | 100,125 | complete_satisfactory | 3 | live | pass |
+| Week 1 | 1768 | 1254 | 141.0% | 100,125 | complete_satisfactory | 3 | none | pass |
+| Week 2 | 2056 | 1254 | 164.0% | 100,125,150 | complete_satisfactory | 3 | live | pass |
+| Week 3 | 1816 | 1254 | 144.8% | 100,125 | complete_satisfactory | 3 | live | pass |
+| Week 4 | 1978 | 1254 | 157.7% | 100,125,150 | complete_satisfactory | 3 | live | pass |
+| Week 5 | 1803 | 1254 | 143.8% | 100,125 | complete_satisfactory | 3 | recorded | pass |
+| Week 6 | 2140 | 1254 | 170.7% | 100,125,150 | complete_satisfactory | 3 | live | pass |
+| Week 7 | 1886 | 1254 | 150.4% | 100,125,150 | complete_satisfactory | 3 | live | pass |
+| Week 8 | 1964 | 1254 | 156.6% | 100,125,150 | complete_satisfactory | 3 | live | pass |
+| Week 9 | 1115 | 716 | 155.7% | 100,125,150 | none | 3 | none | pass_partial_window |
 
-- **Total planned shots:** 16630
+- **Total planned shots:** 18294
 - **Expected Perfect Weeks:** 10
-- **Expected Goal Met Date:** 2027-06-14 (cumulative 12,098 shots)
-- **Expected streak achievements (gate days):** [3, 7, 10, 14, 21, 30, 45, 60]
-- **Expected shot milestones:** [3000, 6000, 9000, 12000, 14400]
-- **Expected XP buckets:** `{'SUBMISSION_XP': 61, 'WEEKLY_THRESHOLD': 22, 'HOMEWORK_XP': 18, 'VIDEO_SUBMISSION': 28, 'STREAK_XP': 8, 'SHOT_MILESTONE': 5, 'ZOOM_ATTEND_BASE': 7, 'ZOOM_RECORDING_CREDIT': 1, 'PERFECT_WEEK': 10}`
-- **Email handoffs:** `{'daily_submission_emails': 61, 'homework_feedback_emails_if_graded': 18, 'weekly_summary_build_arms': 9, 'weekly_hub_handoffs_after_stage': 1, 'recipient_allowlist': 'schmidt@fairfieldbasketballclub.com', 'verify_send_status_writeback': True, 'no_real_family_recipients': True, 'events_from_scenario': 70}`
+- **Expected Goal Met Date:** 2027-06-08 (cumulative 12,098 shots)
+- **Expected streak achievements (gate days):** [3, 5, 7, 10, 20, 30, 40, 50, 60]
+- **Expected shot milestones:** [3000, 6000, 9000, 12000, 14400, 18000]
+- **Expected XP buckets:** `{'SUBMISSION_XP': 67, 'WEEKLY_THRESHOLD': 26, 'HOMEWORK_XP': 18, 'VIDEO_SUBMISSION': 30, 'STREAK_XP': 9, 'SHOT_MILESTONE': 6, 'ZOOM_ATTEND_BASE': 7, 'ZOOM_RECORDING_CREDIT': 1, 'PERFECT_WEEK': 10, 'ZOOM_ATTEND_BONUS_2': 1, 'ZOOM_ATTEND_BONUS_3': 1}`
+- **Email handoffs:** `{'daily_submission_emails': 67, 'homework_feedback_emails_if_graded': 18, 'weekly_summary_build_arms': 9, 'weekly_hub_handoffs_after_stage': 1, 'recipient_allowlist': 'schmidt@fairfieldbasketballclub.com', 'verify_send_status_writeback': True, 'no_real_family_recipients': True, 'events_from_scenario': 106}`
 
 ### Sim Recovery (`athlete2_recovery`)
 
 | Week | Weekly shots | Goal est. | % | Thresholds | HW | Videos | Zoom | Perfect Week |
 |------|-------------:|----------:|--:|------------|----|-------:|------|--------------|
-| Early Bird | 106 | 197 | 53.8% | — | complete_satisfactory | 1 | none | fail_weekly_shots |
-| Week 1 | 777 | 1377 | 56.4% | — | complete_satisfactory | 2 | none | fail_weekly_shots |
-| Week 2 | 770 | 1377 | 55.9% | — | skipped | 1 | none | fail_homework_skipped |
-| Week 3 | 691 | 1377 | 50.2% | — | complete_satisfactory | 0 | none | fail_video_count |
-| Week 4 | 871 | 1377 | 63.3% | — | needs_revision_then_fix | 3 | none | fail_required_zoom |
-| Week 5 | 1086 | 1377 | 78.9% | — | skipped | 2 | recorded | fail_homework_skipped |
-| Week 6 | 1158 | 1377 | 84.1% | — | late_satisfactory | 1 | none | fail_homework_timing |
-| Week 7 | 1435 | 1377 | 104.2% | 100 | complete_satisfactory | 3 | live | pass |
-| Week 8 | 991 | 1377 | 72.0% | — | complete_satisfactory | 2 | none | fail_weekly_shots |
-| Week 9 | 389 | 787 | 49.4% | — | late_satisfactory | 1 | none | fail_weekly_shots |
+| Early Bird | 906 | 1254 | 72.2% | — | complete_satisfactory | 1 | none | fail_weekly_shots |
+| Week 1 | 771 | 1254 | 61.5% | — | complete_satisfactory | 2 | none | fail_weekly_shots |
+| Week 2 | 764 | 1254 | 60.9% | — | skipped | 1 | none | fail_homework_skipped |
+| Week 3 | 685 | 1254 | 54.6% | — | complete_satisfactory | 0 | none | fail_video_count |
+| Week 4 | 865 | 1254 | 69.0% | — | needs_revision_then_fix | 3 | none | fail_required_zoom |
+| Week 5 | 1080 | 1254 | 86.1% | — | skipped | 2 | recorded | fail_homework_skipped |
+| Week 6 | 1056 | 1254 | 84.2% | — | late_satisfactory | 1 | none | fail_homework_timing |
+| Week 7 | 1304 | 1254 | 104.0% | 100 | complete_satisfactory | 3 | live | pass |
+| Week 8 | 989 | 1254 | 78.9% | — | complete_satisfactory | 2 | none | fail_weekly_shots |
+| Week 9 | 386 | 716 | 53.9% | — | late_satisfactory | 1 | none | fail_weekly_shots |
 
-- **Total planned shots:** 8274
+- **Total planned shots:** 8806
 - **Expected Perfect Weeks:** 1
-- **Expected Goal Met Date:** Not reached — 8,274 planned of 12,000 goal
-- **Expected streak achievements (gate days):** [3, 7, 10]
+- **Expected Goal Met Date:** Not reached — 8,806 planned of 12,000 goal
+- **Expected streak achievements (gate days):** [3, 5, 7, 10]
 - **Expected shot milestones:** [3000, 6000]
-- **Expected XP buckets:** `{'SUBMISSION_XP': 53, 'WEEKLY_THRESHOLD': 1, 'HOMEWORK_XP': 13, 'VIDEO_SUBMISSION': 16, 'STREAK_XP': 3, 'SHOT_MILESTONE': 2, 'ZOOM_ATTEND_BASE': 1, 'ZOOM_RECORDING_CREDIT': 1, 'PERFECT_WEEK': 1}`
-- **Email handoffs:** `{'daily_submission_emails': 53, 'homework_feedback_emails_if_graded': 14, 'weekly_summary_build_arms': 9, 'weekly_hub_handoffs_after_stage': 1, 'recipient_allowlist': 'schmidt@fairfieldbasketballclub.com', 'verify_send_status_writeback': True, 'no_real_family_recipients': True, 'events_from_scenario': 9}`
+- **Expected XP buckets:** `{'SUBMISSION_XP': 59, 'WEEKLY_THRESHOLD': 1, 'HOMEWORK_XP': 13, 'VIDEO_SUBMISSION': 16, 'STREAK_XP': 4, 'SHOT_MILESTONE': 2, 'ZOOM_ATTEND_BASE': 1, 'ZOOM_RECORDING_CREDIT': 1, 'PERFECT_WEEK': 1}`
+- **Email handoffs:** `{'daily_submission_emails': 59, 'homework_feedback_emails_if_graded': 14, 'weekly_summary_build_arms': 9, 'weekly_hub_handoffs_after_stage': 1, 'recipient_allowlist': 'schmidt@fairfieldbasketballclub.com', 'verify_send_status_writeback': True, 'no_real_family_recipients': True, 'events_from_scenario': 9}`
 
 ### Sim Edge (`athlete3_edge`)
 
 | Week | Weekly shots | Goal est. | % | Thresholds | HW | Videos | Zoom | Perfect Week |
 |------|-------------:|----------:|--:|------------|----|-------:|------|--------------|
-| Early Bird | 200 | 197 | 101.5% | 100 | complete_satisfactory | 1 | none | pass |
-| Week 1 | 1424 | 1377 | 103.4% | 100 | complete_satisfactory | 3 | none | pass |
-| Week 2 | 1093 | 1377 | 79.4% | — | complete_satisfactory | 0 | none | fail_daily_shooting |
-| Week 3 | 1036 | 1377 | 75.2% | — | complete_satisfactory | 4 | live | fail_video_count |
-| Week 4 | 2183 | 1377 | 158.5% | 100,125,150 | complete_satisfactory | 0 | none | fail_required_zoom |
-| Week 5 | 2221 | 1377 | 161.3% | 100,125,150 | late_satisfactory | 0 | none | fail_homework_timing |
-| Week 6 | 1424 | 1377 | 103.4% | 100 | complete_satisfactory | 3 | recorded | pass |
-| Week 7 | 1421 | 1377 | 103.2% | 100 | complete_satisfactory | 3 | live | pass |
-| Week 8 | 1386 | 1377 | 100.7% | 100 | complete_satisfactory | 2 | none | fail_single_requirement |
-| Week 9 | 812 | 787 | 103.2% | 100 | complete_satisfactory | 3 | none | pass_partial_window |
+| Early Bird | 1299 | 1254 | 103.6% | 100 | complete_satisfactory | 3 | none | pass |
+| Week 1 | 1311 | 1254 | 104.5% | 100 | complete_satisfactory | 3 | none | pass |
+| Week 2 | 1080 | 1254 | 86.1% | — | complete_satisfactory | 0 | none | fail_daily_shooting |
+| Week 3 | 1002 | 1254 | 79.9% | — | complete_satisfactory | 4 | live | fail_video_count |
+| Week 4 | 2122 | 1254 | 169.2% | 100,125,150 | complete_satisfactory | 0 | none | fail_required_zoom |
+| Week 5 | 2044 | 1254 | 163.0% | 100,125,150 | complete_satisfactory | 0 | none | fail_homework_timing |
+| Week 6 | 1311 | 1254 | 104.5% | 100 | complete_satisfactory | 3 | recorded | pass |
+| Week 7 | 1293 | 1254 | 103.1% | 100 | complete_satisfactory | 3 | live | pass |
+| Week 8 | 1267 | 1254 | 101.0% | 100 | complete_satisfactory | 2 | none | fail_single_requirement |
+| Week 9 | 737 | 716 | 102.9% | 100 | late_satisfactory | 3 | none | pass_partial_window |
 
-- **Total planned shots:** 13200
+- **Total planned shots:** 13466
 - **Expected Perfect Weeks:** 5
-- **Expected Goal Met Date:** 2027-06-25 (cumulative 12,190 shots)
-- **Expected streak achievements (gate days):** [3, 7, 10, 14, 21, 30]
+- **Expected Goal Met Date:** 2027-06-22 (cumulative 12,005 shots)
+- **Expected streak achievements (gate days):** [3, 5, 7, 10, 20, 30, 40]
 - **Expected shot milestones:** [3000, 6000, 9000, 12000]
-- **Expected XP buckets:** `{'SUBMISSION_XP': 62, 'WEEKLY_THRESHOLD': 12, 'HOMEWORK_XP': 18, 'VIDEO_SUBMISSION': 19, 'STREAK_XP': 6, 'SHOT_MILESTONE': 4, 'ZOOM_ATTEND_BASE': 2, 'ZOOM_RECORDING_CREDIT': 1, 'PERFECT_WEEK': 5}`
-- **Email handoffs:** `{'daily_submission_emails': 62, 'homework_feedback_emails_if_graded': 18, 'weekly_summary_build_arms': 9, 'weekly_hub_handoffs_after_stage': 1, 'recipient_allowlist': 'schmidt@fairfieldbasketballclub.com', 'verify_send_status_writeback': True, 'no_real_family_recipients': True, 'events_from_scenario': 9}`
+- **Expected XP buckets:** `{'SUBMISSION_XP': 68, 'WEEKLY_THRESHOLD': 12, 'HOMEWORK_XP': 18, 'VIDEO_SUBMISSION': 21, 'STREAK_XP': 7, 'SHOT_MILESTONE': 4, 'ZOOM_ATTEND_BASE': 2, 'ZOOM_RECORDING_CREDIT': 1, 'PERFECT_WEEK': 5, 'ZOOM_ATTEND_BONUS_2': 1}`
+- **Email handoffs:** `{'daily_submission_emails': 68, 'homework_feedback_emails_if_graded': 18, 'weekly_summary_build_arms': 9, 'weekly_hub_handoffs_after_stage': 1, 'recipient_allowlist': 'schmidt@fairfieldbasketballclub.com', 'verify_send_status_writeback': True, 'no_real_family_recipients': True, 'events_from_scenario': 9}`
 
 
 ## Email verification (allowlist only)

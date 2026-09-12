@@ -160,14 +160,18 @@ def build_athlete1_perfect_scenario(
         hw_list=hw_list,
         weeks=weeks,
         gate_notes=gate_notes,
+        allow_late_probe=False,
+        force_satisfactory=True,
     )
-    # Force all homework Satisfactory / on-time for perfect path.
+    # Perfect path: all homework Satisfactory / on-time for Perfect Week.
     for day_num, payloads in hw_by_day.items():
         for p in payloads:
             p["outcome"] = "Satisfactory"
             p["late_status"] = "on_time"
+            p["homework_xp_eligible"] = True
+            p["perfect_week_homework_eligible"] = True
             p["credit_eligible"] = True
-
+            p.pop("timing_note", None)
     # Athlete-scoped dedupe keys (shared run_id across three enrollments).
     for day_num, payloads in hw_by_day.items():
         for p in payloads:
@@ -307,9 +311,12 @@ def _athlete2_homework_overrides(
                 p["outcome"] = "Needs Revision"
                 gate_notes.append(f"Day {nr_day}: Needs Revision → corrected later (Week 4)")
             elif day_num == late_day:
-                p["late_status"] = "late_ineligible"
-                p["credit_eligible"] = False
+                p["late_status"] = "late_xp_ok_no_retro_pw"
+                p["homework_xp_eligible"] = True
+                p["perfect_week_homework_eligible"] = False
+                p["credit_eligible"] = True
                 p["outcome"] = "Satisfactory"
+                p["timing_note"] = "late_xp_ok_no_retro_pw"
                 gate_notes.append(f"Day {late_day}: late homework submission (Week 6)")
             else:
                 p["outcome"] = "Satisfactory"
@@ -547,7 +554,9 @@ def build_athlete3_edge_scenario(
                 p["timing_note"] = "in_week"
                 p["outcome"] = "Satisfactory"
             elif day_num == late_day:
-                p["late_status"] = "late_ineligible"
+                p["late_status"] = "late_xp_ok_no_retro_pw"
+                p["homework_xp_eligible"] = True
+                p["perfect_week_homework_eligible"] = False
                 p["credit_eligible"] = True
                 p["outcome"] = "Satisfactory"
                 p["timing_note"] = "late_xp_ok_no_retro_pw"

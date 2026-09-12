@@ -5,21 +5,37 @@ Infrastructure for full-season disposable simulations of the Shooting Challenge.
 
 | | |
 |---|---|
-| **SC-SEASON-SIM-001** | Three-athlete package (Perfect / Recovery / Edge) — **READY (prep completing)**, not executed |
-| **SC-SEASON-SIM-002** | Single-athlete historical package — **PREP 2026-09-12 NOT READY** (PHA=4/18 blocker; clock gates live) |
+| **SC-SEASON-SIM-001** | Three-athlete package (Perfect / Recovery / Edge) — **READY FOR EXECUTE** pending gates below; **NOT executed** |
+| **SC-SEASON-SIM-002** | Single-athlete historical package — **COMPLETE** (T122531Z); do not rerun |
 | **Window** | 2027-04-25 → 2027-06-30 11:59 PM America/Denver inclusive (**67** days) |
+| **Challenge weeks** | **10** — Early Bird + Week 1–9 (Week 9 = 10th ordinal, **4 days**, partial **4/7** shot target) |
+| **PHA** | **18** active = Early Bird + Weeks 1–8 (2 each); **Week 9 = 0 PHA** (Perfect Week homework vacuously OK) |
+| **Oracle** | `EXPECTED PERFECT-SEASON XP = 5340` → Level **G.O.A.T.** (`expected_perfect_season_xp.json`) |
 | **Environment** | Production `appn84sqPw03zEbTT` only — **no DEV environment** |
 | **SC-001 manifest** | [`docs/deploy-checklists/SC-SEASON-SIM-001-EXECUTION-MANIFEST.md`](../../docs/deploy-checklists/SC-SEASON-SIM-001-EXECUTION-MANIFEST.md) |
 | **SC-002 manifest** | [`docs/deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md`](../../docs/deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md) |
+| **Readiness audit** | [`docs/audits/SEASON-SIM-READINESS-20260912.md`](../../docs/audits/SEASON-SIM-READINESS-20260912.md) |
+
+### Late Homework
+
+- **Normal Homework XP:** always if Satisfactory (lateness does not block XP).
+- **Perfect Week homework:** must be on/before **Week End** cutoff (Sat 11:59 PM Denver; **Week 9 = Wed Jun 30**). PHA Due Date is display-only.
+
+### NEXT REQUIRED ACTION
+
+1. Mike authorization phrase exactly: **`RUN 3-ATHLETE SEASON SIMULATION`**
+2. Production paste of **057 v2.7** if not yet live (audit 2026-09-12: Production still **v2.6**)
+
+Simulation **NOT executed**. Season Sim formula gates are **already ACTIVE** on Production — restore after run (or if execute is deferred).
 
 ## Can it run today?
 
 | Mode | Ready? |
 |---|---|
 | Offline tests / dry-run / preflight | Yes |
-| Full execute writer (idempotent) | **Code ready** — blocked on Production PHA restore (need **18** active; live **4**) + Stage A/Z formula discipline |
-| SC-001 three-athlete dry-run | **Yes** — `python -m season_simulation dry-run-three` |
-| Complete countable E2E on wall-clock 2026 | Formulas: Season Sim gates **currently ACTIVE** on Production (restore after run). Hub allowlist includes `schmidt@fairfieldbasketballclub.com`. |
+| SC-001 three-athlete dry-run | **Yes** — `python -m season_simulation dry-run-three` (oracle **5340** matches) |
+| Full execute writer (idempotent) | **Code ready** — blocked on Mike phrase + Production **057 v2.7** paste |
+| Complete countable E2E on wall-clock 2026 | Season Sim gates **currently ACTIVE** on Production (restore after run). Hub allowlist includes `schmidt@fairfieldbasketballclub.com`. |
 
 `CREATED_TIME()` / `Submitted At` **cannot** be API-backdated. Same-day / Perfect Week timing uses gated `Season Sim Test Submitted At` and/or `Perfect Week Manual Exception?` on disposable rows only.
 
@@ -29,7 +45,7 @@ Exercise as much of the live system as possible once authorized:
 
 - Daily submissions, missed days, streaks, weekly goals
 - Homework (incl. multi-asset) satisfactory / unsatisfactory / late paths
-- Early Bird (2027-04-25…05-01; full Sun–Sat week now inside the sim window)
+- Early Bird (2027-04-25…05-01; full Sun–Sat week inside the sim window)
 - Week 9 shooting with **no** homework; **18** active PHA expected
 - Video feedback, Zoom attendance (do not change 101 / SC-147)
 - XP events, achievements, shot milestones
@@ -212,11 +228,11 @@ python -m season_simulation execute-three `
 Live execute requires Mike phrase **`RUN 3-ATHLETE SEASON SIMULATION`** plus all tokens.
 Completion requires **cascade XP reconciliation** (`cascade_complete`), not writer creates alone.
 Between profiles the harness polls Submission Base XP and may re-arm stuck sim rows.
+`--simulation-id` is optional (auto-generated with `threeathlete` suffix if omitted).
 
 ```powershell
 python -m season_simulation execute-three `
   --execute `
-  --simulation-id "SEASON-SIM-2027-<utc>-threeathlete" `
   --confirm "SEASON-SIMULATION-2027" `
   --confirm-disposable "CONFIRM-DISPOSABLE-SEASON-SIM" `
   --confirm-three-athlete "THREE-ATHLETE-SEASON-SIM-2027" `
@@ -299,7 +315,7 @@ python -m season_simulation cleanup `
 ## Safety controls
 
 - Dry-run is default; `AirtableClient(allow_writes=False)` raises on create/update/delete
-- Execute requires `--execute` + `--simulation-id` + `--confirm` + `--confirm-disposable`
+- Execute requires `--execute` + `--confirm` + `--confirm-disposable`
 - Cleanup deletes require a **separate** `--confirm-cleanup`
 - Early execute also requires gated formula readiness (or `--acknowledge-clock-override` after OMNI paste)
 - Email recipient allowlist: **`schmidt@fairfieldbasketballclub.com` only**
@@ -308,11 +324,11 @@ python -m season_simulation cleanup `
 
 ## Before the final authorized run
 
-1. Finish **Program Homework Assignments** (18) and **Zoom Meetings**
-2. Ensure **Weeks** cover April 25 – June 30, 2027
-3. Apply gated clock override per operator checklist; keep restore formula ready
+1. Confirm **Program Homework Assignments** = **18** active (Early Bird + Weeks 1–8); Week 9 = 0
+2. Ensure **Weeks** cover April 25 – June 30, 2027 (10 challenge weeks)
+3. Paste Production **057 v2.7** if still on v2.6; Season Sim formula gates already ACTIVE — keep restore formulas ready
 4. Verify Resend sender already used by live Hub pipeline
 5. Confirm enrollment Parent Email is the allowlist address
 6. Run `preflight` until `sufficient_for_final_run` (or knowingly accept warnings)
-7. Run `dry-run` and review reports
-8. Only then run execute with all confirm tokens + `--enable-email-delivery`
+7. Run `dry-run-three` and confirm oracle **5340** / Level G.O.A.T.
+8. Only then run `execute-three` with Mike phrase + all confirm tokens (+ optional `--enable-email-delivery`)
