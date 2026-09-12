@@ -86,8 +86,8 @@ test("057 Perfect Week date keys use America/Denver (not UTC ISO slice)", () => 
   );
   assert.ok(/timezone:\s*"America\/Denver"/.test(s057));
   assert.ok(
-    /Version:\s*v?2\.6/.test(s057) || /version:\s*"v?2\.6"/.test(s057),
-    "057 header must declare current repository version 2.6"
+    /Version:\s*v?2\.7/.test(s057) || /version:\s*"v?2\.7"/.test(s057),
+    "057 header must declare current repository version 2.7"
   );
   assert.ok(
     /gracePeriodHours|Submission Grace Period Hours|grace period/i.test(s057),

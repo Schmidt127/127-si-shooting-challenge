@@ -46,7 +46,7 @@ test("057 repo source CONFIG matches live Config field name", () => {
     /perfectWeekVideoMinimum:\s*"Perfect Week Video Minimum"/
   );
   assert.doesNotMatch(script, /Perfect Week Video MInimum/);
-  assert.match(script, /Version:\s*2\.6/);
+  assert.match(script, /Version:\s*2\.7/);
 });
 
 async function optionalLiveMetaAssert() {

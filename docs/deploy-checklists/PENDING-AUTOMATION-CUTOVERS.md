@@ -6,7 +6,7 @@ It is consumed by `tests/automation-contracts/docs-canonical-header.test.js`. A 
 
 | Automation | GitHub Version | Live Version | State | Reason |
 |---|---|---|---|---|
-| **057** | **v2.6** | **v2.5** | **GitHub ahead / paste pending** | SC-121 partial terminal Week Perfect Week repair. Install v2.6 in native Airtable and live-prove before closing #121. |
+| **057** | **v2.7** | **v2.6** | **GitHub ahead / paste pending** | Perfect Week homework gate uses Week End only (not catch-up PHA Due Date). Live still v2.6 as of 2026-09-12 audit; install v2.7 and live-prove before SC-001 execute. |
 | **118** | **v2.1** | **v2.0** | **GitHub ahead / paste pending** | SC-121 weekly-summary scheduler repair for the partial terminal Week. |
 | **119** | **v1.8** | **v1.7** | **GitHub ahead / paste pending** | SC-121 weekly-summary send scheduler repair for the partial terminal Week. |
 

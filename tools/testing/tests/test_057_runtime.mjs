@@ -227,7 +227,7 @@ function lastWeeklyUpdate(base) {
 
 test("executes the committed Automation 057 source", () => {
   assert.match(SOURCE, /057 - Achievements and Milestones - Calculate Perfect Week Eligibility/);
-  assert.match(SOURCE, /Version: 2\.6/);
+  assert.match(SOURCE, /Version: 2\.7/);
   console.log(`SOURCE_EXECUTED ${SCRIPT_PATH} sha256=${SOURCE_SHA256}`);
 });
 
@@ -250,7 +250,7 @@ test("settled season lookup with fractional weekly goal reaches Ready", async ()
   assert.equal(weeklyCells(base)["Perfect Week Automation Status"], "Ready");
   assert.equal(weeklyCells(base)["Perfect Week Daily Check Status"], "Fail");
   assert.ok(
-    captured.lines.some((line) => /"version":"2\.6"/.test(line) && /"action":"ready"/.test(line)),
+    captured.lines.some((line) => /"version":"2\.7"/.test(line) && /"action":"ready"/.test(line)),
     "success path must emit versioned console JSON"
   );
 });

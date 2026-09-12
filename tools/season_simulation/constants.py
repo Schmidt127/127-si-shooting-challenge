@@ -7,10 +7,11 @@ from zoneinfo import ZoneInfo
 
 DENVER = ZoneInfo("America/Denver")
 
-# Canonical simulation window (inclusive).
-SIM_START = date(2027, 5, 1)
+# Canonical simulation window (inclusive) — full challenge calendar.
+# April 25, 2027 through June 30, 2027 11:59 PM America/Denver = 67 days.
+SIM_START = date(2027, 4, 25)
 SIM_END = date(2027, 6, 30)
-SIMULATION_DAY_COUNT = 61  # (SIM_END - SIM_START).days + 1
+SIMULATION_DAY_COUNT = 67  # (SIM_END - SIM_START).days + 1
 
 # Explicit gates for execute / cleanup writes (all required for live writes).
 CONFIRM_TOKEN = "SEASON-SIMULATION-2027"
@@ -57,16 +58,21 @@ SC001_ATHLETES = (
 )
 
 # Offline Grade 12 shot milestones (9–12 band) — verify live at preflight.
+# Active Production 9-12 / 12000 goal: 25/50/75/100/120/150% (175/200 beyond perfect season).
 DEFAULT_SHOT_MILESTONES_912 = (
     (3000, 10, "25%"),
     (6000, 15, "50%"),
     (9000, 20, "75%"),
     (12000, 30, "100%"),
     (14400, 40, "120%"),
+    (18000, 50, "150%"),
 )
 
 # Gate-eligible streak day thresholds (Achievements table; offline planning).
 DEFAULT_STREAK_GATE_THRESHOLDS = (3, 7, 10, 14, 21, 30, 45, 60)
+
+# Active Production XP streak award thresholds (XP Reward Rules / 053–054).
+DEFAULT_STREAK_XP_THRESHOLDS = (3, 5, 7, 10, 20, 30, 40, 50, 60)
 
 # Marker embedded in writable Notes fields where schema permits.
 RUN_MARKER_PREFIX = "SEASON-SIM"

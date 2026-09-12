@@ -19,6 +19,7 @@ from season_simulation.constants import (  # noqa: E402
     CONFIRM_TOKEN,
     SAFE_EMAIL_RECIPIENT,
     SIM_START,
+    SIMULATION_DAY_COUNT,
 )
 from season_simulation.execute import (  # noqa: E402
     build_intended_writes,
@@ -101,9 +102,9 @@ def _full_scenario():
 
 
 class TestScenarioCoverage(unittest.TestCase):
-    def test_61_days_goal_coverage_and_week9_zero_hw(self):
+    def test_simulation_days_goal_coverage_and_week9_zero_hw(self):
         s = _full_scenario()
-        self.assertEqual(s.intended_writes_summary["simulation_days"], 61)
+        self.assertEqual(s.intended_writes_summary["simulation_days"], SIMULATION_DAY_COUNT)
         self.assertGreaterEqual(s.intended_writes_summary["total_planned_shots"], 12000)
         self.assertEqual(s.intended_writes_summary["miss_days"], len(MISS_DAYS))
         self.assertEqual(s.intended_writes_summary["video_feedback_days"], len(VIDEO_FEEDBACK_DAYS))
@@ -117,7 +118,7 @@ class TestScenarioCoverage(unittest.TestCase):
         self.assertEqual(live.zoom_modes, ["live"])
         self.assertEqual(rec.zoom_modes, ["recording"])
         self.assertTrue(s.meta.get("early_bird_in_window"))
-        self.assertEqual(s.meta.get("early_bird_handling"), "last_early_bird_day_in_window")
+        self.assertEqual(s.meta.get("early_bird_handling"), "full_early_bird_week_in_window")
         self.assertTrue(s.meta.get("week9_zero_homework"))
         bounds = s.meta.get("week9_bounds")
         self.assertIsNotNone(bounds)
@@ -371,7 +372,7 @@ class TestExecuteOrchestration(unittest.TestCase):
             for w in writes
             if w.get("table") == "Submissions" and w.get("op") == "create"
         ]
-        self.assertEqual(len(subs), 58)
+        self.assertEqual(len(subs), SIMULATION_DAY_COUNT - len(MISS_DAYS))
         for w in subs:
             self.assertTrue(w.get("expected_countable"), w.get("day_number"))
             self.assertRegex(str(w["fields"]["Activity Date"]), r"^2027-\d{2}-\d{2}$")
@@ -391,8 +392,8 @@ class TestExecuteOrchestration(unittest.TestCase):
             and w.get("op") == "update"
             and "SUB_STREAK_ARM" in str(w.get("dedupe_key") or "")
         ]
-        self.assertEqual(len(sub_post), 58)
-        self.assertEqual(len(sub_streak), 58)
+        self.assertEqual(len(sub_post), SIMULATION_DAY_COUNT - len(MISS_DAYS))
+        self.assertEqual(len(sub_streak), SIMULATION_DAY_COUNT - len(MISS_DAYS))
         self.assertTrue(
             all((w.get("fields") or {}).get("Build Daily Email Now?") for w in sub_post)
         )

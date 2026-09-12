@@ -5,7 +5,7 @@ Writes require:
   --confirm-disposable CONFIRM-DISPOSABLE-SEASON-SIM
 
 Email delivery stays off unless --enable-email-delivery (allowlist only).
-Clock-override readiness is required when wall date is before 2027-05-01.
+Clock-override readiness is required when wall date is before 2027-04-25.
 """
 
 from __future__ import annotations

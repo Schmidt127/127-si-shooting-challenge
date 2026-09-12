@@ -1,4 +1,4 @@
-"""Controlled simulation clock for May–June 2027 season simulation.
+"""Controlled simulation clock for April 25 – June 30, 2027 season simulation.
 
 Airtable ``CREATED_TIME()`` / ``Submitted At`` cannot be future-dated via API.
 Business dates use writable ``Activity Date`` (and equivalent activity fields).
@@ -48,7 +48,7 @@ class SubmissionTiming(str, Enum):
 
 @dataclass(frozen=True)
 class SimulationDay:
-    day_number: int  # 1..61
+    day_number: int  # 1..SIMULATION_DAY_COUNT
     activity_date: date
     week_sunday: date  # Sunday start of Sunday–Saturday week containing activity_date
     week_saturday: date

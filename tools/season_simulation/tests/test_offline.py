@@ -86,14 +86,14 @@ from season_simulation.simulation_clock import (  # noqa: E402
 
 
 class TestDateWindow(unittest.TestCase):
-    def test_exactly_61_days(self):
+    def test_exactly_simulation_day_count(self):
         days = assert_window_integrity()
         self.assertEqual(len(days), SIMULATION_DAY_COUNT)
         self.assertEqual(SIMULATION_DAY_COUNT, (SIM_END - SIM_START).days + 1)
 
-    def test_may1_through_june30_2027(self):
+    def test_apr25_through_june30_2027(self):
         days = build_simulation_days()
-        self.assertEqual(days[0].activity_date, date(2027, 5, 1))
+        self.assertEqual(days[0].activity_date, date(2027, 4, 25))
         self.assertEqual(days[-1].activity_date, date(2027, 6, 30))
 
     def test_day_numbering(self):
@@ -149,7 +149,7 @@ class TestSimulationClock(unittest.TestCase):
         )
         self.assertEqual(clock.day_number, 1)
         clock.advance_to(SIM_END)
-        self.assertEqual(clock.day_number, 61)
+        self.assertEqual(clock.day_number, SIMULATION_DAY_COUNT)
 
 
 class TestClockOverride(unittest.TestCase):
@@ -383,17 +383,39 @@ class TestSeasonPolicy(unittest.TestCase):
         self.assertTrue(w1.ok)
 
     def test_late_homework_after_due(self):
-        on_time = evaluate_late_homework(
-            submission_date=COMMON_HOMEWORK_DUE_DATE,
-            due_date=COMMON_HOMEWORK_DUE_DATE,
-        )
-        self.assertTrue(on_time.credit_eligible)
-        late = evaluate_late_homework(
+        # Catalog Due Date alone must NOT block Homework XP.
+        after_catalog_due = evaluate_late_homework(
             submission_date=date(2027, 6, 30),
             due_date=COMMON_HOMEWORK_DUE_DATE,
         )
-        self.assertFalse(late.credit_eligible)
-        self.assertEqual(late.timing_status, "late_ineligible")
+        self.assertTrue(after_catalog_due.homework_xp_eligible)
+        self.assertTrue(after_catalog_due.credit_eligible)
+
+        # Perfect Week uses Week End cutoff (Week 8 Saturday = Jun 26).
+        on_time = evaluate_late_homework(
+            submission_date=date(2027, 6, 26),
+            due_date=COMMON_HOMEWORK_DUE_DATE,
+            week_label="Week 8",
+        )
+        self.assertTrue(on_time.homework_xp_eligible)
+        self.assertTrue(on_time.perfect_week_homework_eligible)
+        self.assertEqual(on_time.timing_status, "on_time")
+
+        late_for_pw = evaluate_late_homework(
+            submission_date=date(2027, 6, 30),
+            due_date=COMMON_HOMEWORK_DUE_DATE,
+            week_label="Week 8",
+        )
+        self.assertTrue(late_for_pw.homework_xp_eligible)
+        self.assertFalse(late_for_pw.perfect_week_homework_eligible)
+        self.assertEqual(late_for_pw.timing_status, "late_xp_ok_no_retro_pw")
+
+        # Week 9 cutoff is Wed Jun 30 — on-time that day still PW-eligible.
+        week9 = evaluate_late_homework(
+            submission_date=date(2027, 6, 30),
+            week_label="Week 9",
+        )
+        self.assertTrue(week9.perfect_week_homework_eligible)
 
 
 class TestScenario(unittest.TestCase):
@@ -419,9 +441,9 @@ class TestScenario(unittest.TestCase):
         self.assertEqual(a.to_dict()["days"], b.to_dict()["days"])
         self.assertEqual(a.intended_writes_summary, b.intended_writes_summary)
 
-    def test_61_days_and_misses(self):
+    def test_simulation_days_and_misses(self):
         s = self._scenario()
-        self.assertEqual(len(s.days), 61)
+        self.assertEqual(len(s.days), SIMULATION_DAY_COUNT)
         misses = [d for d in s.days if d.action == "miss"]
         self.assertEqual(len(misses), len(MISS_DAYS))
 
@@ -450,15 +472,20 @@ class TestScenario(unittest.TestCase):
     def test_early_bird_day_one(self):
         s = self._scenario()
         self.assertEqual(s.meta["early_bird_day_1"], "Early Bird")
-        self.assertEqual(s.days[0].activity_date, date(2027, 5, 1))
+        self.assertEqual(s.days[0].activity_date, date(2027, 4, 25))
 
     def test_late_homework_probe(self):
         s = self._scenario()
         late_day = next(d for d in s.days if d.day_number == LATE_HOMEWORK_PROBE_DAY)
         self.assertEqual(late_day.activity_date, date(2027, 6, 30))
         self.assertTrue(late_day.homework)
-        self.assertFalse(late_day.homework[0]["credit_eligible"])
-        self.assertEqual(late_day.homework[0].get("week_label"), "Week 8")
+        hw = late_day.homework[0]
+        self.assertEqual(hw.get("week_label"), "Week 8")
+        # Normal Homework XP still allowed; Perfect Week for Week 8 is not.
+        self.assertTrue(hw["homework_xp_eligible"])
+        self.assertTrue(hw["credit_eligible"])
+        self.assertFalse(hw["perfect_week_homework_eligible"])
+        self.assertEqual(hw["late_status"], "late_xp_ok_no_retro_pw")
 
     def test_eighteen_homework_selected(self):
         s = self._scenario(18)
@@ -482,13 +509,12 @@ class TestScenario(unittest.TestCase):
             for d in s.days
             if week_label_for_activity_date(d.activity_date) == "Early Bird"
         ]
-        self.assertEqual(len(early_days), 1)
-        self.assertEqual(early_days[0].activity_date, date(2027, 5, 1))
-        self.assertEqual(len(early_days[0].homework), 2)
-        self.assertEqual(
-            {hw.get("week_label") for hw in early_days[0].homework},
-            {"Early Bird"},
-        )
+        self.assertEqual(len(early_days), 7)
+        self.assertEqual(early_days[0].activity_date, date(2027, 4, 25))
+        self.assertEqual(early_days[-1].activity_date, date(2027, 5, 1))
+        early_hw = [hw for d in early_days for hw in d.homework]
+        self.assertEqual(len(early_hw), 2)
+        self.assertEqual({hw.get("week_label") for hw in early_hw}, {"Early Bird"})
 
     def test_week9_has_zero_week9_pha_completions(self):
         s = self._scenario(18)
@@ -505,11 +531,12 @@ class TestScenario(unittest.TestCase):
             if hw.get("week_label") == "Week 9"
         ]
         self.assertEqual(week9_owned, [])
-        # Late Week 8 probe may land on day 61 (calendar Week 9) — still not a Week 9 PHA.
+        # Late Week 8 probe may land on final sim day (calendar Week 9) — still not a Week 9 PHA.
         late = next(d for d in s.days if d.day_number == LATE_HOMEWORK_PROBE_DAY)
         if late.homework:
             self.assertEqual(late.homework[0].get("week_label"), "Week 8")
-            self.assertFalse(late.homework[0]["credit_eligible"])
+            self.assertTrue(late.homework[0]["homework_xp_eligible"])
+            self.assertFalse(late.homework[0]["perfect_week_homework_eligible"])
 
     def test_dedupe_keys_unique_for_subs(self):
         s = self._scenario()

@@ -57,7 +57,7 @@ REGISTRY_DIR = PACKAGE_DIR / "run_registries"
 
 def _parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
-        description="Athlete 1 season simulation (May 1 – June 30, 2027)"
+        description="Athlete 1 season simulation (April 25 – June 30, 2027)"
     )
     p.add_argument(
         "command",
@@ -492,7 +492,7 @@ def cmd_execute(args: argparse.Namespace) -> int:
             f'--confirm "{CONFIRM_TOKEN}" '
             f'--confirm-disposable "{CONFIRM_DISPOSABLE_TOKEN}"\n'
             "Plus --acknowledge-clock-override after OMNI gated formula paste "
-            "(when wall date is before 2027-05-01).\n"
+            "(when wall date is before 2027-04-25).\n"
             "Email stays off unless --enable-email-delivery.",
             file=sys.stderr,
         )

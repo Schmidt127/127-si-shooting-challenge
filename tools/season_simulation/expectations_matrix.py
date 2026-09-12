@@ -9,7 +9,11 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, field
 from typing import Any, Sequence
 
-from .constants import DEFAULT_SHOT_MILESTONES_912, DEFAULT_STREAK_GATE_THRESHOLDS
+from .constants import (
+    DEFAULT_SHOT_MILESTONES_912,
+    DEFAULT_STREAK_GATE_THRESHOLDS,
+    DEFAULT_STREAK_XP_THRESHOLDS,
+)
 from .expectations_achievements import (
     ShotMilestoneDef,
     select_crossed_shot_milestones,
@@ -115,8 +119,12 @@ def _milestone_defs(grade_band_id: str = "recSIMGB912") -> list[ShotMilestoneDef
     ]
 
 
-def _streaks_from_submit_days(submit_day_numbers: Sequence[int]) -> list[int]:
-    """Gate-eligible streak thresholds crossed by longest contiguous runs."""
+def _streaks_from_submit_days(
+    submit_day_numbers: Sequence[int],
+    *,
+    thresholds: Sequence[int] = DEFAULT_STREAK_GATE_THRESHOLDS,
+) -> list[int]:
+    """Streak thresholds crossed by longest contiguous submit-day run."""
     if not submit_day_numbers:
         return []
     days = sorted(submit_day_numbers)
@@ -128,7 +136,7 @@ def _streaks_from_submit_days(submit_day_numbers: Sequence[int]) -> list[int]:
             best = max(best, cur)
             cur = 1
     best = max(best, cur)
-    return [t for t in DEFAULT_STREAK_GATE_THRESHOLDS if best >= t]
+    return [t for t in thresholds if best >= t]
 
 
 def _homework_summary(scenario: AthleteScenario, week_label: str) -> tuple[str, str]:
@@ -145,9 +153,12 @@ def _homework_summary(scenario: AthleteScenario, week_label: str) -> tuple[str, 
     timing = str(items[0].get("timing_note") or items[0].get("late_status") or "on_time")
     if "Needs Revision" in outcomes:
         return "needs_revision_then_fix", timing
-    if any(i.get("late_status") == "late_ineligible" for i in items):
-        return "late_satisfactory", timing
-    if any(str(i.get("timing_note") or "") == "late_xp_ok_no_retro_pw" for i in items):
+    if any(
+        i.get("late_status") in {"late_ineligible", "late_xp_ok_no_retro_pw"}
+        or i.get("perfect_week_homework_eligible") is False
+        or str(i.get("timing_note") or "") == "late_xp_ok_no_retro_pw"
+        for i in items
+    ):
         return "late_satisfactory", timing
     return "complete_satisfactory", timing
 
@@ -168,7 +179,10 @@ def _format_goal_met_expectation(
 def build_athlete_expectation_matrix(scenario: AthleteScenario) -> AthleteExpectationMatrix:
     weekly_agg = aggregate_weekly_shots(scenario.days)
     submit_nums = [d.day_number for d in scenario.days if d.action == "submit"]
-    streaks = _streaks_from_submit_days(submit_nums)
+    streak_gates = _streaks_from_submit_days(submit_nums)
+    streak_xp = _streaks_from_submit_days(
+        submit_nums, thresholds=DEFAULT_STREAK_XP_THRESHOLDS
+    )
     milestones = _milestone_defs(scenario.grade_band_id or "recSIMGB912")
     total_shots = sum(d.shot_total for d in scenario.days if d.action == "submit")
     crossed = select_crossed_shot_milestones(
@@ -244,14 +258,16 @@ def build_athlete_expectation_matrix(scenario: AthleteScenario) -> AthleteExpect
                 homework_timing=hw_timing,
                 video_count=int(bucket.get("video_count") or 0),
                 zoom_state=zoom_state,
-                streak_state=f"longest_run≥{max(streaks) if streaks else 0}",
+                streak_state=f"longest_run≥{max(streak_xp) if streak_xp else 0}",
                 milestone_crossings=week_crossings,
                 perfect_week=pw,
                 xp_categories=sorted(set(xp_cats)),
             )
         )
 
-    xp_by_cat = _estimate_xp_buckets(scenario, threshold_awards, crossed, streaks, pw_pass)
+    xp_by_cat = _estimate_xp_buckets(
+        scenario, threshold_awards, crossed, streak_xp, pw_pass
+    )
 
     level_notes = {
         "athlete1_perfect": "Maximum realistic level progression — all gates satisfied",
@@ -270,7 +286,7 @@ def build_athlete_expectation_matrix(scenario: AthleteScenario) -> AthleteExpect
         miss_days=sum(1 for d in scenario.days if d.action == "miss"),
         weekly_rows=rows,
         expected_perfect_week_count=pw_pass,
-        expected_streak_achievements=streaks,
+        expected_streak_achievements=streak_xp,
         expected_shot_milestones=[m.shot_count for m in crossed],
         expected_weekly_threshold_awards=threshold_awards,
         expected_xp_by_category=xp_by_cat,
@@ -280,7 +296,10 @@ def build_athlete_expectation_matrix(scenario: AthleteScenario) -> AthleteExpect
         ),
         expected_goal_met_cumulative_shots=cumulative_on_date,
         expected_email_handoffs=build_email_handoff_expectations(scenario),
-        notes=list(scenario.gate_notes),
+        notes=list(scenario.gate_notes) + [
+            f"Streak gate thresholds crossed: {streak_gates}",
+            f"Streak XP thresholds crossed: {streak_xp}",
+        ],
     )
 
 
@@ -306,7 +325,7 @@ def _estimate_xp_buckets(
     )
     live_zoom = sum(1 for d in scenario.days if "live" in d.zoom_modes)
     rec_zoom = sum(1 for d in scenario.days if "recording" in d.zoom_modes)
-    return {
+    buckets = {
         "SUBMISSION_XP": subs,
         "WEEKLY_THRESHOLD": len(threshold_awards),
         "HOMEWORK_XP": hw_xp,
@@ -317,6 +336,12 @@ def _estimate_xp_buckets(
         "ZOOM_RECORDING_CREDIT": rec_zoom,
         "PERFECT_WEEK": perfect_week_count,
     }
+    # Production Zoom Attendance Bonus 2 / Bonus 3 fire once each when live count ≥ 2 / ≥ 3.
+    if live_zoom >= 2:
+        buckets["ZOOM_ATTEND_BONUS_2"] = 1
+    if live_zoom >= 3:
+        buckets["ZOOM_ATTEND_BONUS_3"] = 1
+    return buckets
 
 
 def build_three_athlete_expectation_package(
