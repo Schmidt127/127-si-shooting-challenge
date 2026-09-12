@@ -42,8 +42,8 @@ See [`docs/deploy-checklists/057-v2.7-perfect-week-homework-week-end-PASTE.md`](
 
 ## Oracle Perfect Week implications
 
-Perfect-athlete (18 HW Satisfactory within each Week End Saturday) unchanged:
+Perfect-athlete (18 HW Satisfactory within each Week End Saturday):
 
 - Perfect Weeks: **10** (Early Bird + Weeks 1–9)
-- Perfect Week XP: **1000**
-- Season total **5000** — **no revision**
+- Perfect Week XP: **1000** (unchanged by this timing fix)
+- Season Lifetime XP total is owned by the **67-day** oracle in PR #529 (**5340**), not the prior 61-day **5000** figure
