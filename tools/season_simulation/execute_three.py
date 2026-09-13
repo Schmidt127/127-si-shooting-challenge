@@ -37,7 +37,9 @@ from .formula_lifecycle import (
     snapshot_formulas,
     stage_f_formula_verify_hook,
 )
+from .business_reconciliation import stage_e2_business_success_hook
 from .cascade_settlement import stage_d_settlement_hook, stage_e_reconcile_hook
+from .downstream_settlement import stage_d_downstream_settlement_hook
 from .cleanup import stage_h_cleanup_preview_hook
 from .rearm_submission_xp import run_rearm_submission_xp
 from .run_registry import save_registry
@@ -53,6 +55,8 @@ from .three_athlete import build_three_athlete_scenarios
 # Per-profile cascade settle before the next athlete starts writing.
 DEFAULT_PROFILE_SETTLEMENT_TIMEOUT_S = 300.0
 DEFAULT_PROFILE_SETTLEMENT_POLL_S = 5.0
+DEFAULT_DOWNSTREAM_SETTLEMENT_TIMEOUT_S = 600.0
+DEFAULT_DOWNSTREAM_SETTLEMENT_POLL_S = 5.0
 
 # Ordered profile execution — athlete1 perfect first, then recovery, then edge.
 PROFILE_ORDER = (
@@ -471,6 +475,37 @@ def run_execute_three(
                     "note": "Settlement runs only on gated live execute",
                 }
 
+            # Stage D downstream — HW / streak / threshold / PW / zoom gate settlement.
+            enrollment_id = reg.enrollment_id or ""
+            if writes_allowed and execute and enrollment_id:
+                downstream = stage_d_downstream_settlement_hook(
+                    client,
+                    reg,
+                    run_id=run_id,
+                    profile=profile,
+                    enrollment_id=enrollment_id,
+                    timeout_s=DEFAULT_DOWNSTREAM_SETTLEMENT_TIMEOUT_S,
+                    poll_interval_s=DEFAULT_DOWNSTREAM_SETTLEMENT_POLL_S,
+                )
+                profile_payload["D_settlement"]["downstream"] = downstream
+            else:
+                profile_payload.setdefault("D_settlement", {})["downstream"] = {
+                    "stage": "D_downstream_settlement",
+                    "profile": profile,
+                    "status": "planned",
+                    "complete": False,
+                }
+
+            downstream_complete = bool(
+                (profile_payload.get("D_settlement") or {})
+                .get("downstream", {})
+                .get("complete")
+            )
+            submission_complete = bool(
+                (profile_payload.get("D_settlement") or {}).get("complete")
+            )
+            cascade_complete = submission_complete and downstream_complete
+
             # Stage E — truthful reconcile (writer complete ≠ cascade complete).
             created_n = len(writer_result.get("created_records") or [])
             reconcile = stage_e_reconcile_hook(
@@ -478,6 +513,22 @@ def run_execute_three(
                 profile=profile,
                 writer_created=created_n,
             )
+            if cascade_complete:
+                reconcile["complete"] = True
+                reconcile["status"] = "ok"
+                reconcile["errors"] = []
+                reconcile["truth"] = "submission_and_downstream_reconciled"
+            elif submission_complete and not downstream_complete:
+                downstream_errors = (
+                    (profile_payload.get("D_settlement") or {})
+                    .get("downstream", {})
+                    .get("errors")
+                    or []
+                )
+                reconcile["errors"] = list(reconcile.get("errors") or []) + list(
+                    downstream_errors[:10]
+                )
+                reconcile["truth"] = "submission_complete_downstream_incomplete"
             if not writes_allowed or not execute:
                 reconcile = {
                     **reconcile,
@@ -487,15 +538,26 @@ def run_execute_three(
                     "errors": [],
                 }
             profile_payload["E_reconcile"] = reconcile
-            reg.last_completed_step = "E_reconcile"
 
-            if writes_allowed and execute and not reconcile.get("complete"):
+            # Stage E2 — live XP bucket reconciliation (authoritative business gate).
+            e2 = stage_e2_business_success_hook(
+                client,
+                enrollment_id=enrollment_id,
+                profile=profile,
+                cascade_complete=cascade_complete if writes_allowed and execute else False,
+                downstream_complete=downstream_complete if writes_allowed and execute else False,
+            )
+            profile_payload["E2_business_success"] = e2
+            reg.last_completed_step = "E2_business_success"
+
+            business_ok = bool(e2.get("pass")) if writes_allowed and execute else False
+            if writes_allowed and execute and not business_ok:
                 reg.status = "paused"
-                reg.pause_reason = "cascade_reconciliation_incomplete"
+                reg.pause_reason = "business_reconciliation_failed"
                 save_registry(reg, registry_dir)
                 payload["errors"].append(
-                    f"{profile}: cascade incomplete — "
-                    + "; ".join(reconcile.get("errors") or ["settlement failed"])
+                    f"{profile}: reconciliation FAIL — "
+                    + "; ".join(e2.get("errors") or reconcile.get("errors") or ["business gate failed"])
                 )
                 profile_payload["H_cleanup_hooks"] = stage_h_cleanup_preview_hook(
                     run_id=run_id,
@@ -505,7 +567,6 @@ def run_execute_three(
                 )
                 payload["profile_results"][profile] = profile_payload
                 payload["stages"]["failure_cleanup_preview"] = profile_payload["H_cleanup_hooks"]
-                # Stop before the next profile floods Automations 010/053 further.
                 break
 
             profile_payload["F_formula_verify"] = stage_f_formula_verify_hook(
@@ -541,11 +602,16 @@ def run_execute_three(
         profiles_complete = sum(
             1
             for pr in payload["profile_results"].values()
-            if (pr.get("E_reconcile") or {}).get("complete")
+            if (pr.get("E2_business_success") or {}).get("pass")
             or (
                 not execute
                 and (pr.get("B_create") or {}).get("mode") == "dry-plan"
             )
+        )
+        profiles_business_success = sum(
+            1
+            for pr in payload["profile_results"].values()
+            if (pr.get("E2_business_success") or {}).get("pass")
         )
         writer_only_complete = sum(
             1
@@ -562,16 +628,19 @@ def run_execute_three(
             "executed": bool(execute and writes_allowed and payload["gates_passed"]),
             "profile_count": len(payload["profile_results"]),
             "profiles_cascade_complete": profiles_complete,
+            "profiles_business_success": profiles_business_success,
             "profiles_writer_complete": writer_only_complete,
             "cascade_complete": cascade_ok,
+            "business_success": cascade_ok,
             "truth": (
-                "all_profiles_xp_reconciled"
+                "all_profiles_business_reconciled"
                 if cascade_ok
                 else "writer_complete_is_not_simulation_success"
             ),
             "stage_z_required": stage_z_required,
         }
         payload["cascade_complete"] = cascade_ok
+        payload["business_success"] = cascade_ok
 
         payload["airtable_writes_performed"] = _count_client_writes(client) - writes_before
 

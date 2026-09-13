@@ -257,6 +257,20 @@ def filter_writable_fields(fields: dict[str, Any]) -> dict[str, Any]:
     return {k: v for k, v in fields.items() if k not in NEVER_WRITE_FIELDS}
 
 
+def _link_ids(value: Any) -> list[str]:
+    if not value:
+        return []
+    if isinstance(value, list):
+        out: list[str] = []
+        for item in value:
+            if isinstance(item, str) and item.startswith("rec"):
+                out.append(item)
+            elif isinstance(item, dict) and str(item.get("id") or "").startswith("rec"):
+                out.append(str(item["id"]))
+        return out
+    return []
+
+
 class SeasonSimWriter:
     """Idempotent, resumable writer keyed by run registry dedupe keys."""
 
@@ -347,9 +361,14 @@ class SeasonSimWriter:
             self._create_weekly_summaries(enrollment_id)
             self._ensure_sim_zoom_meetings()
             self._create_day_loop(athlete_id, enrollment_id)
+            self._link_homework_completions_to_was(enrollment_id)
+            self._requeue_homework_assignment_on_was()
             self._requeue_perfect_week_calculations()
+            self._requeue_threshold_xp_all_was()
             self._apply_zoom_live_attendees(enrollment_id)
             self._arm_live_zoom_create_xp_events()
+            self._arm_level_recalc_after_zoom(enrollment_id)
+            self._arm_final_streak_rebuild(enrollment_id)
             self._register_email_intents()
             if self.enable_email_delivery:
                 self._arm_was_email_flags(enrollment_id)
@@ -1191,6 +1210,181 @@ class SeasonSimWriter:
         )
         self.reg.last_completed_step = streak_step
         self._save()
+
+    def _link_homework_completions_to_was(self, enrollment_id: str) -> None:
+        """Set Weekly Athlete Summary Link on each registry HC (033 deferred path).
+
+        Second-slot homework rows often miss 033 reconcile when created after the
+        first HC in the same week — direct link prevents 065 WAS canonical block.
+        """
+        _ = enrollment_id
+        hc_fields = field_names_for_table(self.client, "Homework Completions")
+        if "Weekly Athlete Summary Link" not in hc_fields:
+            return
+        hc_ids = sorted(
+            {
+                r.record_id
+                for r in self.reg.records
+                if r.table == "Homework Completions" and r.record_id
+            }
+        )
+        for hc_id in hc_ids:
+            dedupe = f"{self.marker}|HC_WAS_LINK|{hc_id}"
+            if self.reg.has_dedupe_key(dedupe):
+                continue
+            try:
+                raw = self.client.get_record("Homework Completions", hc_id)
+            except Exception:  # noqa: BLE001
+                continue
+            fields = raw.get("fields") or {}
+            if _link_ids(fields.get("Weekly Athlete Summary Link")):
+                continue
+            week_ids = _link_ids(fields.get("Week"))
+            if not week_ids:
+                continue
+            was_id = self.reg.find_by_dedupe_key(f"{self.marker}|WAS|{week_ids[0]}")
+            if not was_id:
+                continue
+            self._update_records(
+                "Homework Completions",
+                [
+                    {
+                        "id": hc_id,
+                        "fields": {"Weekly Athlete Summary Link": [was_id]},
+                    }
+                ],
+            )
+            self.reg.add(
+                "Homework Completions",
+                hc_id,
+                dedupe_key=dedupe,
+                notes="direct_was_link_for_064_065",
+            )
+            self._save()
+
+    def _requeue_homework_assignment_on_was(self) -> None:
+        """Nudge Automation 033 on each WAS when assignment queue field exists."""
+        was_fields = field_names_for_table(self.client, "Weekly Athlete Summary")
+        queue_field = "Homework Assignment Queue?"
+        if queue_field not in was_fields:
+            return
+        was_ids = sorted(
+            {
+                r.record_id
+                for r in self.reg.records
+                if r.table == "Weekly Athlete Summary"
+                and r.record_id
+                and r.dedupe_key.startswith(f"{self.marker}|WAS|")
+            }
+        )
+        for was_id in was_ids:
+            dedupe = f"{self.marker}|WAS_HW_ASSIGN|{was_id}"
+            if self.reg.has_dedupe_key(dedupe):
+                continue
+            try:
+                self._update_records(
+                    "Weekly Athlete Summary",
+                    [{"id": was_id, "fields": {queue_field: False}}],
+                )
+                self._update_records(
+                    "Weekly Athlete Summary",
+                    [{"id": was_id, "fields": {queue_field: True}}],
+                )
+                self.reg.add(
+                    "Weekly Athlete Summary",
+                    was_id,
+                    dedupe_key=dedupe,
+                    notes="requeue_033_deferred_hc",
+                )
+                self._save()
+            except Exception:  # noqa: BLE001
+                continue
+
+    def _requeue_threshold_xp_all_was(self) -> None:
+        """Arm Requeue Threshold XP on every sim WAS so 035 can award tiers."""
+        was_fields = field_names_for_table(self.client, "Weekly Athlete Summary")
+        if "Requeue Threshold XP" not in was_fields:
+            return
+        was_ids = sorted(
+            {
+                r.record_id
+                for r in self.reg.records
+                if r.table == "Weekly Athlete Summary"
+                and r.record_id
+                and r.dedupe_key.startswith(f"{self.marker}|WAS|")
+            }
+        )
+        for was_id in was_ids:
+            dedupe = f"{self.marker}|WAS_THR_REQUEUE|{was_id}"
+            if self.reg.has_dedupe_key(dedupe):
+                continue
+            self._update_records(
+                "Weekly Athlete Summary",
+                [{"id": was_id, "fields": {"Requeue Threshold XP": False}}],
+            )
+            self._update_records(
+                "Weekly Athlete Summary",
+                [{"id": was_id, "fields": {"Requeue Threshold XP": True}}],
+            )
+            self.reg.add(
+                "Weekly Athlete Summary",
+                was_id,
+                dedupe_key=dedupe,
+                notes="requeue_035_threshold_xp",
+            )
+            self._save()
+
+    def _arm_level_recalc_after_zoom(self, enrollment_id: str) -> None:
+        """Ensure 041/042 re-evaluate after live + recording Zoom XP paths."""
+        dedupe = f"{self.marker}|LEVEL_RECALC_POST_ZOOM"
+        if self.reg.has_dedupe_key(dedupe):
+            return
+        self._update_records(
+            "Enrollments",
+            [{"id": enrollment_id, "fields": {"Level Recalc Needed?": True}}],
+        )
+        self.reg.add(
+            "Enrollments",
+            enrollment_id,
+            dedupe_key=dedupe,
+            notes="arm_041_042_after_zoom_xp",
+        )
+        self._save()
+
+    def _arm_final_streak_rebuild(self, enrollment_id: str) -> None:
+        """Post-season 053 arm on last submission (50/60 occurrence materialization)."""
+        sub_ids = sorted(
+            {
+                r.record_id
+                for r in self.reg.records
+                if r.table == "Submissions" and r.record_id
+            }
+        )
+        if not sub_ids:
+            return
+        last_id = sub_ids[-1]
+        dedupe = f"{self.marker}|FINAL_STREAK_REBUILD"
+        if self.reg.has_dedupe_key(dedupe):
+            return
+        try:
+            self._update_records(
+                "Submissions", [{"id": last_id, "fields": {"Enrollment": []}}]
+            )
+            raw = self.client.get_record("Submissions", last_id)
+            fields = raw.get("fields") or {}
+            restore: dict[str, Any] = {"Enrollment": [enrollment_id]}
+            if fields.get("Activity Date"):
+                restore["Activity Date"] = fields["Activity Date"]
+            self._update_records("Submissions", [{"id": last_id, "fields": restore}])
+            self.reg.add(
+                "Submissions",
+                last_id,
+                dedupe_key=dedupe,
+                notes="final_053_rebuild_after_all_days",
+            )
+            self._save()
+        except Exception:  # noqa: BLE001
+            return
 
     def _requeue_perfect_week_calculations(self) -> None:
         """Re-enter 057 after submissions are linked (WAS was created empty first).

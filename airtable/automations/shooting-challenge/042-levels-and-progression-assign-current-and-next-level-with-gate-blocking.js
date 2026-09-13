@@ -24,9 +24,9 @@ Airtable is the deployed/running copy.
 
 /************************************************************************************************
  * 042 - Levels and Progression - Assign Current and Next Level with Gate Blocking
- * Version: 4.1.2
+ * Version: 4.1.3
  * Date Written: 2026-06-02
- * Last Updated: 2026-08-14
+ * Last Updated: 2026-09-13
  *
  * Purpose:
  * Recalculates an Enrollment's Current Level and Next Level based on Lifetime XP Total,
@@ -59,6 +59,12 @@ Airtable is the deployed/running copy.
  * - Removes unsupported Airtable timer waits from formula settlement.
  * - Uses bounded immediate rereads and preserves Level Recalc Needed? when the
  *   authoritative inputs do not settle during this invocation.
+ *
+ * Version 4.1.3 (2026-09-13):
+ * - Persists live∪recording effective Zoom gate meeting count to
+ *   Enrollments.Effective Zoom Gate Meetings when the field exists so Gate Debug
+ *   / Meets Gate formulas can match 042 gate decisions (Total Zoom Attendances
+ *   remains live-only by design).
  *
  * Version 3.2 (2026-08-05):
  * - Airtable runtime compatibility: guard optional QueryResult.unloadData() cleanup
@@ -137,7 +143,7 @@ Airtable is the deployed/running copy.
 const CONFIG = {
     automation: {
         name: "042 - Levels and Progression - Assign Current and Next Level with Gate Blocking",
-        version: "4.1.2",
+        version: "4.1.3",
     },
 
     tables: {
@@ -163,6 +169,7 @@ const CONFIG = {
         totalHomeworkCompletions: "Total Homework Completions",
         totalVideoSubmissions: "Total Video Submissions",
         totalZoomAttendances: "Total Zoom Attendances",
+        effectiveZoomGateMeetings: "Effective Zoom Gate Meetings",
         longestStreakDays: "Longest Streak Days",
         schoolYear: "School Year",
         programInstance: "Program Instance",
@@ -1382,6 +1389,14 @@ async function main() {
 
             [CONFIG.enrollmentFields.levelRecalcNeeded]: false,
         };
+
+        if (
+            fieldExists(enrollmentsTable, CONFIG.enrollmentFields.effectiveZoomGateMeetings) &&
+            isWritableField(enrollmentsTable, CONFIG.enrollmentFields.effectiveZoomGateMeetings)
+        ) {
+            assignmentFields[CONFIG.enrollmentFields.effectiveZoomGateMeetings] =
+                stats.totalZoomAttendances;
+        }
 
         await enrollmentsTable.updateRecordAsync(recordId, assignmentFields);
 
