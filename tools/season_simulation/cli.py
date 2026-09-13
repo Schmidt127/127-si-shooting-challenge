@@ -74,11 +74,15 @@ def _parser() -> argparse.ArgumentParser:
             "plan",
             "evidence",
             "weekly-email-stage",
+            "verify-post-042",
+            "cleanup-preview-preserved",
         ],
         help=(
             "preflight=read-only checks; dry-run/dry-run-three=plan; "
             "execute/execute-three/cleanup require confirm gates; "
             "cleanup-preview-three/cleanup-three=SC-001 three-athlete (preview read-only); "
+            "verify-post-042=read-only gate after 042 v4.1.3 publish; "
+            "cleanup-preview-preserved=Production scan for preserved failed run; "
             "rearm-submission-xp=dry-run by default; clear Last Reconciled Signature "
             "on owned sim submissions missing Active SUBMISSION_XP; "
             "evidence=export latest reports; "
@@ -679,6 +683,43 @@ def cmd_cleanup(args: argparse.Namespace) -> int:
     return 1 if result.errors else 0
 
 
+def cmd_verify_post_042(args: argparse.Namespace) -> int:
+    from .production_readiness import (
+        PRESERVED_FAILED_RUN_ID,
+        run_post_042_verification,
+        write_post_042_verification_report,
+    )
+
+    client = _client(args, allow_writes=False)
+    preserved = args.run_id or PRESERVED_FAILED_RUN_ID
+    report = run_post_042_verification(client, preserved_run_id=preserved)
+    paths = write_post_042_verification_report(report, Path(args.out_dir))
+    print(report.summary_text())
+    print(f"Wrote {paths['json']}")
+    print(f"Wrote {paths['md']}")
+    return 0 if report.ok else 2
+
+
+def cmd_cleanup_preview_preserved(args: argparse.Namespace) -> int:
+    from .production_cleanup_scan import (
+        PRESERVED_FAILED_RUN_ID,
+        build_production_cleanup_preview,
+        write_cleanup_preview_report,
+    )
+
+    run_id = args.run_id or PRESERVED_FAILED_RUN_ID
+    client = _client(args, allow_writes=False)
+    preview = build_production_cleanup_preview(
+        client,
+        run_id=run_id,
+        registry_dir=Path(args.registry_dir),
+    )
+    paths = write_cleanup_preview_report(preview, Path(args.out_dir))
+    print(json.dumps(preview.to_dict(), indent=2))
+    print(f"Wrote {paths['json']}")
+    return 0 if not preview.errors else 2
+
+
 def cmd_evidence(args: argparse.Namespace) -> int:
     """Bundle latest preflight/dry-run reports into an evidence manifest."""
     out_dir = Path(args.out_dir)
@@ -732,6 +773,10 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_evidence(args)
     if args.command == "weekly-email-stage":
         return cmd_weekly_email_stage(args)
+    if args.command == "verify-post-042":
+        return cmd_verify_post_042(args)
+    if args.command == "cleanup-preview-preserved":
+        return cmd_cleanup_preview_preserved(args)
     return 1
 
 

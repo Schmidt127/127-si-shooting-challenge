@@ -32,8 +32,25 @@ PERFECT_BUSINESS_EXPECTATIONS: dict[str, Any] = {
     "minimum_longest_streak_days": 60,
 }
 
+RECOVERY_BUSINESS_EXPECTATIONS: dict[str, Any] = {
+    "total_xp": 2305,
+    "perfect_weeks": 1,
+    "public_level": None,  # gate-limited; reconciled at E2 from live Enrollment
+    "buckets": {},  # bucket oracle verified at dry-run / execute report
+}
+
+EDGE_BUSINESS_EXPECTATIONS: dict[str, Any] = {
+    "total_xp": 3620,
+    "perfect_weeks": 5,
+    "public_level": None,  # 45-day gate blocks higher level
+    "minimum_longest_streak_days": 40,
+    "buckets": {},
+}
+
 PROFILE_BUSINESS_EXPECTATIONS: dict[str, dict[str, Any]] = {
     "athlete1_perfect": PERFECT_BUSINESS_EXPECTATIONS,
+    "athlete2_recovery": RECOVERY_BUSINESS_EXPECTATIONS,
+    "athlete3_edge": EDGE_BUSINESS_EXPECTATIONS,
 }
 
 

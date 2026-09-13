@@ -8,4 +8,8 @@
 !final-production-run-*.json
 !final-production-run-*.md
 !zoom-gate-production-prep.md
+!final-rerun-ready-checklist.md
+!post-042-verification-latest.json
+!post-042-verification-latest.md
+!cleanup-preview-*.json
 

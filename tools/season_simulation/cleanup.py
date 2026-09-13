@@ -786,6 +786,112 @@ def run_cleanup(
     return result
 
 
+def run_three_athlete_cleanup_with_residue_pass(
+    *,
+    run_id: str,
+    registry_dir: Path,
+    execute: bool = False,
+    confirm: str | None = None,
+    confirm_cleanup: str | None = None,
+    client: AirtableClient | None = None,
+    out_dir: Path | None = None,
+    max_residue_passes: int = 2,
+) -> dict[str, Any]:
+    """Cleanup with post-delete residue scan and optional late-descendant pass.
+
+    1. Initial deletion (registry + descendants)
+    2. Zero-remnant audit
+    3. Re-scan automation descendants; delete same-run residue if any
+    4. Final zero-remnant verification
+
+    Dry-run by default (``execute=False``) — plans only.
+    """
+    from .production_cleanup_scan import build_production_cleanup_preview
+    from .zero_remnant_audit import run_zero_remnant_audit
+
+    validate_three_athlete_run_id(run_id)
+    passes: list[dict[str, Any]] = []
+
+    first = run_three_athlete_cleanup(
+        run_id=run_id,
+        registry_dir=registry_dir,
+        execute=execute,
+        confirm=confirm,
+        confirm_cleanup=confirm_cleanup,
+        client=client,
+        out_dir=out_dir,
+    )
+    passes.append({"pass": 1, "phase": "initial", "result": first.to_dict()})
+
+    list_records = getattr(client, "list_records", None) if client else None
+    audit1 = run_zero_remnant_audit(run_id=run_id, list_records=list_records)
+    passes.append({"pass": 1, "phase": "post_delete_audit", "audit": audit1.to_dict()})
+
+    if execute and client is not None and not first.errors:
+        enrollment_ids: list[str] = []
+        for reg_id in three_athlete_registry_run_ids(run_id):
+            try:
+                reg = load_registry(registry_dir, reg_id)
+                enrollment_ids.extend(enrollment_ids_from_registry(reg))
+            except FileNotFoundError:
+                pass
+        if not enrollment_ids:
+            preview = build_production_cleanup_preview(client, run_id=run_id, registry_dir=registry_dir)
+            enrollment_ids = list(preview.enrollment_ids)
+
+        deleted_late: dict[str, list[str]] = {}
+        for residue_pass in range(2, max_residue_passes + 2):
+            descendants, _ = discover_automation_descendants(
+                client,
+                run_id=run_id,
+                enrollment_ids=list(dict.fromkeys(enrollment_ids)),
+            )
+            late_targets = {k: v for k, v in descendants.items() if v}
+            if not late_targets:
+                break
+            pass_errors: list[str] = []
+            for table in DELETE_ORDER:
+                ids = late_targets.get(table) or []
+                if not ids:
+                    continue
+                try:
+                    client.delete_records(table, ids)
+                    deleted_late.setdefault(table, []).extend(ids)
+                except Exception as exc:  # noqa: BLE001
+                    pass_errors.append(f"Late delete {table}: {exc}")
+            passes.append(
+                {
+                    "pass": residue_pass,
+                    "phase": "late_descendant_cleanup",
+                    "targets": late_targets,
+                    "deleted": deleted_late,
+                    "errors": pass_errors,
+                }
+            )
+            if pass_errors:
+                break
+
+    final_audit = run_zero_remnant_audit(run_id=run_id, list_records=list_records)
+    passes.append({"pass": "final", "phase": "zero_remnant_verify", "audit": final_audit.to_dict()})
+
+    ok = not first.errors and final_audit.ok
+    summary = {
+        "run_id": run_id,
+        "execute": execute,
+        "ok": ok,
+        "passes": passes,
+        "final_audit_ok": final_audit.ok,
+        "final_hit_count": len(final_audit.hits),
+    }
+    if out_dir is not None:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        path = out_dir / f"cleanup-residue-{run_id}-{stamp}.json"
+        path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+        summary["report_path"] = str(path)
+    return summary
+
+
 def _write_cleanup_report(result: CleanupResult, out_dir: Path | None) -> None:
     if out_dir is None:
         return

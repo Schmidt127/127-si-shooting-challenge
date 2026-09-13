@@ -1,0 +1,124 @@
+{
+  "ok": false,
+  "generated_at": "2026-09-13T03:20:56.809513+00:00",
+  "base_id": "appn84sqPw03zEbTT",
+  "preserved_run_id": "SEASON-SIM-2027-20260913T010724Z-threeathlete",
+  "automation_versions": {
+    "114": "6.3",
+    "101": "6.9",
+    "073": "4.7",
+    "054": "5.8",
+    "072": "4.9.2",
+    "066": "4.1",
+    "022": "2.2",
+    "053": "5.6",
+    "042": "4.1.2",
+    "118": "2.1",
+    "065": "10.8",
+    "032": "3.4",
+    "057": "2.7",
+    "034": "3.4",
+    "058": "1.7",
+    "056": "1.2",
+    "033": "4.4",
+    "067": "3.5",
+    "064": "2026",
+    "020": "4.1",
+    "031": "4.1",
+    "076": "8.15",
+    "059": "3.8",
+    "030": "3.0",
+    "074": "3.6",
+    "119": "1.8",
+    "055": "3.2",
+    "079": "2.5",
+    "009": "1.3",
+    "041": "5.1",
+    "113": "6.5",
+    "013": "3.2.0"
+  },
+  "automation_pins": {
+    "ok": false,
+    "observed": {
+      "042": "4.1.2",
+      "053": "5.6",
+      "076": "8.15",
+      "101": "6.9"
+    },
+    "required": {
+      "042": "4.1.3",
+      "053": "5.6",
+      "076": "8.15",
+      "101": "6.9"
+    },
+    "mismatches": [
+      "042: got '4.1.2' want '4.1.3'"
+    ]
+  },
+  "zoom_gate_schema": {
+    "ok": true,
+    "effective_field_id": "fldBII3Mnj2OZXfQb",
+    "errors": []
+  },
+  "submission_formulas": {
+    "ok": true,
+    "gated_fields": [],
+    "errors": [],
+    "verify": {
+      "ok": true,
+      "production_normal": true,
+      "gated_detected": false,
+      "field_results": {
+        "Submissions.Activity Date Is Future?": {
+          "present": true,
+          "valid": true,
+          "gated": false,
+          "production_normal": true,
+          "length": 79
+        },
+        "Submissions.Submitted Same Day?": {
+          "present": true,
+          "valid": true,
+          "gated": false,
+          "production_normal": true,
+          "length": 300
+        },
+        "Submissions.Perfect Week Grace Eligible?": {
+          "present": true,
+          "valid": true,
+          "gated": false,
+          "production_normal": true,
+          "length": 832
+        }
+      },
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "preserved_run": {
+    "ok": true,
+    "errors": [],
+    "sim_athlete_names": [
+      "Sim Edge",
+      "Sim Perfect",
+      "Sim Recovery"
+    ],
+    "enrollments_found": [
+      {
+        "id": "recFcH7qLPzzso9s3",
+        "name": "Sim Perfect"
+      }
+    ],
+    "submissions_with_run_marker": 67,
+    "run_id": "SEASON-SIM-2027-20260913T010724Z-threeathlete"
+  },
+  "older_run_residue": {
+    "ok": true,
+    "other_runs": {},
+    "total_other_markers": 0
+  },
+  "errors": [
+    "042: got '4.1.2' want '4.1.3'"
+  ],
+  "warnings": []
+}
