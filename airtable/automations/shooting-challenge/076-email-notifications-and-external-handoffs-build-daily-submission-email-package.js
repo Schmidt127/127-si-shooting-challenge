@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-08-13
-Last GitHub Update: 2026-08-20 (v8.7 V2 standard structure)
+Last GitHub Update: 2026-09-12 (v8.15 concurrent handoff collapse)
 
 Purpose:
 Validate a fully processed Submission and create exactly one Ready
@@ -27,17 +27,26 @@ Parent Email - Cleaned, Athlete Email - Cleaned, Handoff Key, Status
 Notes:
 GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 Filename may still say email package; current path is Hub queue create only.
+Paste target for this release: v8.15.
 */
 
 /************************************************************
  * 076 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Daily Submission Communications Hub Handoff
  *
- * Version: v8.14
+ * Version: v8.15
  * Date Written: 2026-05-29
- * Last Updated: 2026-09-06
+ * Last Updated: 2026-09-12
+ * Updated Reason: Close concurrent Email Handoff Queue create race that
+ * produced duplicate Handoff Keys (season-sim Edge forensic: 6 Needs Review
+ * rows = 3 keys × 2). Pre-create recheck immediately before create; on
+ * duplicate keys keep oldest Ready and mark extras Needs Review. Recipient
+ * allowlist / email safety and normal eligibility logic unchanged.
  *
  * VERSION HISTORY
+ * - v8.15 (2026-09-12): Concurrent/idempotent handoff create — pre-create
+ *   recheck; collapse duplicate Handoff Keys (oldest Ready, extras Needs
+ *   Review). Does not change recipient allowlist or eligibility gates.
  * - v8.14 (2026-09-06): Hub payload adds athleteFirstName from Enrollment
  *   Athlete First Name when present (omit if blank).
  * - v8.13 (2026-09-06): SC-171 — Daily Submission email payload computes
@@ -88,6 +97,9 @@ Filename may still say email package; current path is Hub queue create only.
  *   never produces a daily email.
  * - Enrollment `Parent Email - Cleaned` is the authoritative parent recipient;
  *   raw `Parent Email` is never used as a fallback.
+ * - Concurrent creates for the same Handoff Key: pre-create recheck; if
+ *   duplicates still appear, keep oldest Ready and mark extras Needs Review
+ *   (do not fail-all into Needs Review).
  * - 077 is retired as a pending retirement candidate and is never armed by
  *   this script.
  *
@@ -151,10 +163,10 @@ Filename may still say email package; current path is Hub queue create only.
 
 const SCRIPT = {
   scriptName: "076 - Daily Submission Communications Hub Handoff",
-  version: "v8.14",
-  versionDate: "2026-09-06",
+  version: "v8.15",
+  versionDate: "2026-09-12",
   originalWrittenDate: "2026-05-29",
-  lastUpdated: "2026-09-06",
+  lastUpdated: "2026-09-12",
   folder: "07 - Email, Notifications, and External Handoffs",
   automationName: "076 - Daily Submission Communications Hub Handoff",
 };
@@ -730,6 +742,49 @@ const markQueueNeedsReview = async (queueTable, rows) => {
   }
 };
 
+const sortHandoffRowsOldestFirst = (rows) =>
+  rows.slice().sort((a, b) => {
+    const aCreated = a.createdTime || "";
+    const bCreated = b.createdTime || "";
+    return aCreated < bCreated ? -1 : aCreated > bCreated ? 1 : 0;
+  });
+
+/** Keep oldest row Ready; mark extras Needs Review. Returns kept record. */
+const collapseDuplicateHandoffs = async (queueTable, rows) => {
+  const sorted = sortHandoffRowsOldestFirst(rows);
+  const keep = sorted[0];
+  const extras = sorted.slice(1);
+  if (extras.length) {
+    await markQueueNeedsReview(queueTable, extras);
+  }
+  if (exists(queueTable, CONFIG.fields.queue.status)) {
+    await queueTable.updateRecordAsync(keep.id, {
+      [CONFIG.fields.queue.status]: selectValue(
+        queueTable,
+        CONFIG.fields.queue.status,
+        CONFIG.statuses.ready
+      ),
+    });
+  }
+  return { keep, extrasCollapsed: extras.length };
+};
+
+const loadRowsByHandoffKey = async (queueTable, handoffKey) => {
+  const fields = exists(queueTable, CONFIG.fields.queue.key)
+    ? [CONFIG.fields.queue.key]
+    : [];
+  if (exists(queueTable, CONFIG.fields.queue.payload)) {
+    fields.push(CONFIG.fields.queue.payload);
+  }
+  if (exists(queueTable, CONFIG.fields.queue.status)) {
+    fields.push(CONFIG.fields.queue.status);
+  }
+  const query = await queueTable.selectRecordsAsync({ fields });
+  return query.records.filter(
+    (row) => text(row, queueTable, CONFIG.fields.queue.key) === handoffKey
+  );
+};
+
 /* =========================================================
    SECTION 4: MAIN
 ========================================================= */
@@ -1012,17 +1067,24 @@ async function main() {
   });
 
   step("04 - Idempotent Email Handoff Queue create");
-  const existing = (
-    await queueT.selectRecordsAsync({
-      fields: Object.values(CONFIG.fields.queue).filter((name) => exists(queueT, name)),
-    })
-  ).records.filter((row) => text(row, queueT, CONFIG.fields.queue.key) === handoffKey);
+  // Single-flight create path: load by Handoff Key, reuse or collapse, then
+  // pre-create recheck immediately before createRecordAsync (one create only).
+  let existing = await loadRowsByHandoffKey(queueT, handoffKey);
 
   if (existing.length > 1) {
-    await markQueueNeedsReview(queueT, existing);
-    setOutputSafe("statusOut", "error");
-    setOutputSafe("actionOut", "needs_review");
-    throw new Error(`Multiple Email Handoff Queue rows match ${handoffKey}.`);
+    const collapsed = await collapseDuplicateHandoffs(queueT, existing);
+    await clearBuildSignal(subT, recordId);
+    setOutputSafe("statusOut", "success");
+    setOutputSafe("actionOut", "existing_handoff_collapsed_concurrent");
+    setOutputSafe("queueRecordId", collapsed.keep.id);
+    setOutputSafe("handoffKey", handoffKey);
+    setOutputSafe(
+      "errorOut",
+      collapsed.extrasCollapsed
+        ? `Collapsed ${collapsed.extrasCollapsed} concurrent duplicate(s) for ${handoffKey}`
+        : ""
+    );
+    return;
   }
 
   if (existing.length === 1) {
@@ -1038,35 +1100,48 @@ async function main() {
     return;
   }
 
-  const recheck = (
-    await queueT.selectRecordsAsync({
-      fields: [CONFIG.fields.queue.key].filter((name) => exists(queueT, name)),
-    })
-  ).records.filter((row) => text(row, queueT, CONFIG.fields.queue.key) === handoffKey);
-
-  if (recheck.length) {
-    if (recheck.length > 1) {
-      await markQueueNeedsReview(queueT, recheck);
-      throw new Error(`Multiple Email Handoff Queue rows match ${handoffKey} after recheck.`);
-    }
+  // Immediate pre-create recheck (closes TOCTOU between first load and create).
+  const preCreate = await loadRowsByHandoffKey(queueT, handoffKey);
+  if (preCreate.length === 1) {
     await clearBuildSignal(subT, recordId);
     setOutputSafe("statusOut", "success");
     setOutputSafe("actionOut", "existing_handoff");
-    setOutputSafe("queueRecordId", recheck[0].id);
+    setOutputSafe("queueRecordId", preCreate[0].id);
     setOutputSafe("handoffKey", handoffKey);
     return;
   }
+  if (preCreate.length > 1) {
+    const collapsed = await collapseDuplicateHandoffs(queueT, preCreate);
+    await clearBuildSignal(subT, recordId);
+    setOutputSafe("statusOut", "success");
+    setOutputSafe("actionOut", "existing_handoff_collapsed_concurrent");
+    setOutputSafe("queueRecordId", collapsed.keep.id);
+    setOutputSafe("handoffKey", handoffKey);
+    setOutputSafe(
+      "errorOut",
+      `Collapsed ${collapsed.extrasCollapsed} concurrent duplicate(s) for ${handoffKey}`
+    );
+    return;
+  }
 
+  // Exactly one create for this Handoff Key on this run.
   const created = await queueT.createRecordAsync(queueData);
-  const afterCreate = (
-    await queueT.selectRecordsAsync({
-      fields: [CONFIG.fields.queue.key].filter((name) => exists(queueT, name)),
-    })
-  ).records.filter((row) => text(row, queueT, CONFIG.fields.queue.key) === handoffKey);
+  const afterCreate = await loadRowsByHandoffKey(queueT, handoffKey);
 
   if (afterCreate.length !== 1) {
-    await markQueueNeedsReview(queueT, afterCreate);
-    throw new Error(`Concurrent Email Handoff Queue creation requires review for ${handoffKey}.`);
+    const collapsed = await collapseDuplicateHandoffs(queueT, afterCreate);
+    await clearBuildSignal(subT, recordId);
+    setOutputSafe("statusOut", "success");
+    setOutputSafe("actionOut", "created_handoff_collapsed_concurrent");
+    setOutputSafe("queueRecordId", collapsed.keep.id);
+    setOutputSafe("handoffKey", handoffKey);
+    setOutputSafe(
+      "errorOut",
+      collapsed.extrasCollapsed
+        ? `Collapsed ${collapsed.extrasCollapsed} concurrent duplicate(s) for ${handoffKey}`
+        : ""
+    );
+    return;
   }
 
   await queueT.updateRecordAsync(created, {
