@@ -377,7 +377,7 @@ def build_athlete1_scenario(
     hw_list = list(homework)
     zoom_list = list(zoom_meetings)[:2]  # optional plan hints; execute creates disposable meetings
     # Prefer create-during-execute placeholders when no meetings supplied so dry-run
-    # planning still shows day 12 / day 40 Zoom events without VERIFY 2026 IDs.
+    # planning still shows Week 1 live / Week 7 recording without VERIFY 2026 IDs.
     if not zoom_list:
         zoom_list = [
             {
@@ -445,16 +445,15 @@ def build_athlete1_scenario(
 
         zoom_ids: list[str] = []
         zoom_modes: list[str] = []
-        # Place the two selected Zoom meetings on two fixed days if available.
-        # Day 12 = Live (Attendees path); Day 40 = Recording Quiz (never Attendees).
+        # Production-aligned: Day 12 = Week 1 live; Day 53 = Week 7 recording makeup.
         if zoom_list:
             if n == 12 and len(zoom_list) >= 1:
                 zoom_ids = [zoom_list[0]["record_id"]]
                 zoom_modes = ["live"]
-            if n == 40 and len(zoom_list) >= 2:
+            if n == 53 and len(zoom_list) >= 2:
                 zoom_ids = [zoom_list[1]["record_id"]]
                 zoom_modes = ["recording"]
-            elif n == 40 and len(zoom_list) == 1:
+            elif n == 53 and len(zoom_list) == 1:
                 zoom_ids = [zoom_list[0]["record_id"]]
                 zoom_modes = ["recording"]
 

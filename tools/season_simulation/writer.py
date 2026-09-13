@@ -28,7 +28,6 @@ from .video_feedback_contract import (
     build_video_feedback_create_fields,
     build_video_feedback_pipeline_fields,
     sim_source_attachment_id,
-    sim_video_upload_attachment,
 )
 from .reference_data import parse_date_value
 from .run_registry import RunRegistry, load_registry, run_marker, save_registry
@@ -71,6 +70,9 @@ NEVER_WRITE_FIELDS = frozenset(
         "Perfect Week Calculation Queue?",
         "Longest Streak Days",
         "Gate Eligible Streak Days",
+        # Enrollments — formula from Parent Email / Athlete Email (never write)
+        "Parent Email - Cleaned",
+        "Athlete Email - Cleaned",
     }
 )
 
@@ -347,9 +349,12 @@ class SeasonSimWriter:
             self._create_weekly_summaries(enrollment_id)
             self._ensure_sim_zoom_meetings()
             self._create_day_loop(athlete_id, enrollment_id)
-            self._requeue_perfect_week_calculations()
+            # Live Attendees must exist before 057 Perfect Week Zoom evaluation.
             self._apply_zoom_live_attendees(enrollment_id)
             self._arm_live_zoom_create_xp_events()
+            self._arm_enrollment_level_recalc(enrollment_id)
+            # Re-enter 057 after submissions + HC→WAS links + Zoom attendees settle.
+            self._requeue_perfect_week_calculations()
             self._register_email_intents()
             if self.enable_email_delivery:
                 self._arm_was_email_flags(enrollment_id)
@@ -388,12 +393,12 @@ class SeasonSimWriter:
 
     def _create_enrollment(self, athlete_id: str) -> str:
         step = "enrollment"
+        # Writable emails only — Parent/Athlete Email - Cleaned are formulas.
         fields = {
             "Athlete": [athlete_id],
             "Athlete First Name": self.scenario.athlete["first_name"],
             "Athlete Last Name": self.scenario.athlete["last_name"],
             "Parent Email": SAFE_EMAIL_RECIPIENT,
-            "Parent Email - Cleaned": SAFE_EMAIL_RECIPIENT,
             "Athlete Email": SAFE_EMAIL_RECIPIENT,
             "School Year": self.ctx.school_year,
             "Grade": self.scenario.athlete["grade"],
@@ -443,22 +448,36 @@ class SeasonSimWriter:
         """Stable America/Denver midday for Zoom Start Time (no UTC date roll)."""
         return f"{activity_date.isoformat()}T12:00:00-06:00"
 
-    def _ensure_sim_zoom_meetings(self) -> None:
-        """Create disposable Zoom Meetings aligned to sim weeks (not VERIFY 2026 rows).
+    def _zoom_mode_days(self) -> dict[str, int]:
+        """First scenario day number for each zoom mode (live / recording)."""
+        out: dict[str, int] = {}
+        for day in self.scenario.days:
+            for mode in day.zoom_modes or []:
+                key = "live" if mode == "live" else ("recording" if mode in {"recording", "recorded"} else "")
+                if key and key not in out:
+                    out[key] = day.day_number
+        return out
 
-        Live → day 12 week; Recording → day 40 week. Both registered for cleanup.
+    def _ensure_sim_zoom_meetings(self) -> None:
+        """Create disposable Zoom Meetings aligned to scenario zoom days (not VERIFY 2026 rows).
+
+        Production 2026–27 has two catalog meetings (Week 1 + Week 7). Sim creates
+        disposable Completed mirrors for the live day and/or recording day present
+        on this athlete scenario. Both registered for cleanup.
         """
-        day12 = next((d for d in self.scenario.days if d.day_number == 12), None)
-        day40 = next((d for d in self.scenario.days if d.day_number == 40), None)
-        if not day12 or not day40:
-            raise RuntimeError("Scenario missing day 12 / day 40 for Zoom meeting create")
-        week_live = self.ctx.week_for(day12.activity_date)
-        week_rec = self.ctx.week_for(day40.activity_date)
-        if not week_live or not week_rec:
-            raise RuntimeError(
-                f"No Week covering Zoom days "
-                f"(live={day12.activity_date}, rec={day40.activity_date})"
-            )
+        mode_days = self._zoom_mode_days()
+        live_day_n = mode_days.get("live")
+        rec_day_n = mode_days.get("recording")
+        day_live = next((d for d in self.scenario.days if d.day_number == live_day_n), None) if live_day_n else None
+        day_rec = next((d for d in self.scenario.days if d.day_number == rec_day_n), None) if rec_day_n else None
+        if not day_live and not day_rec:
+            return
+        week_live = self.ctx.week_for(day_live.activity_date) if day_live else None
+        week_rec = self.ctx.week_for(day_rec.activity_date) if day_rec else None
+        if day_live and not week_live:
+            raise RuntimeError(f"No Week covering live Zoom day {day_live.activity_date}")
+        if day_rec and not week_rec:
+            raise RuntimeError(f"No Week covering recording Zoom day {day_rec.activity_date}")
 
         zm_fields = self.ctx.zoom_meeting_field_names or field_names_for_table(
             self.client, "Zoom Meetings"
@@ -488,41 +507,45 @@ class SeasonSimWriter:
                 fields["Program Instance"] = [self.ctx.program_instance_id]
             return fields
 
-        live_id = self._ensure(
-            table="Zoom Meetings",
-            dedupe_key=f"{self.marker}|ZOOM_MEETING|LIVE",
-            fields=_meeting_fields(
-                name=f"{self.marker}|LIVE|D12",
-                activity=day12.activity_date,
-                week_id=week_live,
-                create_xp_events=False,
-            ),
-            step="zoom_meeting|live",
-        )
-        rec_id = self._ensure(
-            table="Zoom Meetings",
-            dedupe_key=f"{self.marker}|ZOOM_MEETING|REC",
-            fields=_meeting_fields(
-                name=f"{self.marker}|REC|D40",
-                activity=day40.activity_date,
-                week_id=week_rec,
-                create_xp_events=False,
-            ),
-            step="zoom_meeting|recorded",
-        )
-        self.ctx.zoom_live_meeting_id = live_id
-        self.ctx.zoom_recorded_meeting_id = rec_id
-        self.reg.meta["zoom_live_meeting_id"] = live_id
-        self.reg.meta["zoom_recorded_meeting_id"] = rec_id
+        if day_live and week_live:
+            live_id = self._ensure(
+                table="Zoom Meetings",
+                dedupe_key=f"{self.marker}|ZOOM_MEETING|LIVE",
+                fields=_meeting_fields(
+                    name=f"{self.marker}|LIVE|D{day_live.day_number:02d}",
+                    activity=day_live.activity_date,
+                    week_id=week_live,
+                    create_xp_events=False,
+                ),
+                step="zoom_meeting|live",
+            )
+            self.ctx.zoom_live_meeting_id = live_id
+            self.reg.meta["zoom_live_meeting_id"] = live_id
+        if day_rec and week_rec:
+            rec_id = self._ensure(
+                table="Zoom Meetings",
+                dedupe_key=f"{self.marker}|ZOOM_MEETING|REC",
+                fields=_meeting_fields(
+                    name=f"{self.marker}|REC|D{day_rec.day_number:02d}",
+                    activity=day_rec.activity_date,
+                    week_id=week_rec,
+                    create_xp_events=False,
+                ),
+                step="zoom_meeting|recorded",
+            )
+            self.ctx.zoom_recorded_meeting_id = rec_id
+            self.reg.meta["zoom_recorded_meeting_id"] = rec_id
         self._save()
 
     def _zoom_ids_for_day(self, day: Any) -> list[tuple[str, str]]:
-        """Return (meeting_id, mode) pairs for this sim day — always uses created meetings."""
-        if day.day_number == 12 and self.ctx.zoom_live_meeting_id:
-            return [(self.ctx.zoom_live_meeting_id, "live")]
-        if day.day_number == 40 and self.ctx.zoom_recorded_meeting_id:
-            return [(self.ctx.zoom_recorded_meeting_id, "recorded")]
-        return []
+        """Return (meeting_id, mode) pairs from this day's scenario zoom plan."""
+        out: list[tuple[str, str]] = []
+        for mode in day.zoom_modes or []:
+            if mode == "live" and self.ctx.zoom_live_meeting_id:
+                out.append((self.ctx.zoom_live_meeting_id, "live"))
+            elif mode in {"recording", "recorded"} and self.ctx.zoom_recorded_meeting_id:
+                out.append((self.ctx.zoom_recorded_meeting_id, "recorded"))
+        return out
 
     def _create_day_loop(self, athlete_id: str, enrollment_id: str) -> None:
         for day in self.scenario.days:
@@ -584,13 +607,9 @@ class SeasonSimWriter:
             if len(day.homework) > 1:
                 sub_fields["Homework Name 2"] = [day.homework[1]["pha_record_id"]]
 
-        if day.video_feedback:
-            source_attachment_id = sim_source_attachment_id(self.marker, day.day_number)
-            video_filename = f"season-sim-video-d{day.day_number:02d}.mp4"
-            sub_fields["Video Upload"] = sim_video_upload_attachment(
-                source_attachment_id,
-                video_filename,
-            )
+        # Live Season Sim never writes Submissions.Video Upload — placeholder
+        # attachment objects are rejected by Airtable (INVALID_ATTACHMENT_OBJECT).
+        # Video pipeline is created explicitly via Submission Asset + Video Feedback.
 
         was_id = self.reg.find_by_dedupe_key(f"{self.marker}|WAS|{week_id}")
         if was_id:
@@ -679,6 +698,9 @@ class SeasonSimWriter:
                 "library_id (Homework Library link required for Automation 064)"
             )
         slot = str(hw.get("slot") or "HW1").strip() or "HW1"
+        # Link HC → WAS so 057 can read Satisfactory homework via inverse
+        # Weekly Athlete Summary.Homework Completions Link (not the unused text field).
+        was_id = self.reg.find_by_dedupe_key(f"{self.marker}|WAS|{week_id}")
         hc_fields: dict[str, Any] = {
             "Enrollment": [enrollment_id],
             "Week": [week_id],
@@ -698,6 +720,8 @@ class SeasonSimWriter:
             "Submission Assets": asset_ids,
             "Parent Feedback Sent?": False,
         }
+        if was_id:
+            hc_fields["Weekly Athlete Summary Link"] = [was_id]
         # Needs Revision stays pending / not Ready; 078 arms Ready when Satisfactory.
         if not satisfactory:
             hc_fields["Satisfactory?"] = False
@@ -1003,6 +1027,54 @@ class SeasonSimWriter:
                 "dedupe_key": dedupe,
                 "step": step,
                 "op": "arm_create_xp_events",
+            }
+        )
+        self.reg.last_completed_step = step
+        self._save()
+
+    def _arm_enrollment_level_recalc(self, enrollment_id: str) -> None:
+        """Force 041/042 re-entry after Zoom live+recording credit settles.
+
+        Total Zoom Attendances stays live-only; 042 unions recording gate credit
+        only when Level Recalc Needed? queues a fresh assignment pass.
+        """
+        step = f"enrollment_level_recalc|{enrollment_id}"
+        dedupe = f"{self.marker}|LEVEL_RECALC|{enrollment_id}"
+        done = set(self.reg.meta.get("completed_dedupe_keys") or [])
+        if dedupe in done or self.reg.has_dedupe_key(dedupe):
+            self.reused.append(
+                {
+                    "table": "Enrollments",
+                    "id": enrollment_id,
+                    "dedupe_key": dedupe,
+                    "step": step,
+                }
+            )
+            return
+        enr_fields = field_names_for_table(self.client, "Enrollments")
+        if "Level Recalc Needed?" not in enr_fields:
+            return
+        self._update_records(
+            "Enrollments",
+            [{"id": enrollment_id, "fields": {"Level Recalc Needed?": True}}],
+        )
+        self.reg.add(
+            "Enrollments",
+            enrollment_id,
+            dedupe_key=dedupe,
+            notes="arm_level_recalc_after_zoom_live_and_recording",
+            fields_snapshot={"Level Recalc Needed?": True},
+        )
+        self.reg.meta.setdefault("completed_dedupe_keys", [])
+        if dedupe not in self.reg.meta["completed_dedupe_keys"]:
+            self.reg.meta["completed_dedupe_keys"].append(dedupe)
+        self.created.append(
+            {
+                "table": "Enrollments",
+                "id": enrollment_id,
+                "dedupe_key": dedupe,
+                "step": step,
+                "op": "arm_level_recalc",
             }
         )
         self.reg.last_completed_step = step

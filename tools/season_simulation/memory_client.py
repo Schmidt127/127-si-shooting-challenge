@@ -124,6 +124,8 @@ class MemoryAirtableClient:
                 "Parent Feedback Ready?",
                 "Award Status",
                 "Base XP Awarded",
+                "Homework XP Reconciliation Needed?",
+                "Weekly Athlete Summary Link",
             },
             "Video Feedback": {
                 "Enrollment",
@@ -182,7 +184,12 @@ class MemoryAirtableClient:
                 "Build Weekly Email Now?",
                 "Send to Make?",
                 "Weekly Email Sent?",
+                "Homework Completions Link",
+                "Perfect Week Calculation Queue?",
                 "Perfect Week Automation Status",
+                "Perfect Week Eligible?",
+                "Perfect Week Homework Satisfactory Count",
+                "Perfect Week Homework Assigned Count",
             },
             "Streak Occurrences": {
                 "Active?",
@@ -193,6 +200,7 @@ class MemoryAirtableClient:
                 "Streak End Date",
                 "Source Status",
                 "Gate Eligible Streak Days",
+                "Streak Occurrence Key",
             },
             "Weeks": {"Week Name", "Start Date", "End Date", "Program Instance"},
         }
@@ -234,6 +242,7 @@ class MemoryAirtableClient:
             self._apply_formula_sim(table, merged)
             rec = {"id": rid, "fields": merged}
             self.tables[table][rid] = rec
+            self._sync_hc_was_inverse(table, rid, merged)
             out.append(rec)
         return out
 
@@ -247,8 +256,49 @@ class MemoryAirtableClient:
                 self.tables[table][rid] = {"id": rid, "fields": {}}
             self.tables[table][rid]["fields"].update(u["fields"])
             self._apply_formula_sim(table, self.tables[table][rid]["fields"])
+            self._sync_hc_was_inverse(table, rid, self.tables[table][rid]["fields"])
             out.append(self.tables[table][rid])
         return out
+
+    def _sync_hc_was_inverse(
+        self, table: str, hc_id: str, fields: dict[str, Any]
+    ) -> None:
+        """Mirror Production inverse: HC Weekly Athlete Summary Link ↔ WAS Homework Completions Link."""
+        if table != "Homework Completions":
+            return
+        was_links = fields.get("Weekly Athlete Summary Link") or []
+        was_ids: list[str] = []
+        for item in was_links if isinstance(was_links, list) else [was_links]:
+            if isinstance(item, str) and item.startswith("rec"):
+                was_ids.append(item)
+            elif isinstance(item, dict) and str(item.get("id") or "").startswith("rec"):
+                was_ids.append(str(item["id"]))
+        if not was_ids:
+            return
+        self.tables.setdefault("Weekly Athlete Summary", {})
+        for was_id in was_ids:
+            was = self.tables["Weekly Athlete Summary"].setdefault(
+                was_id, {"id": was_id, "fields": {}}
+            )
+            existing = list(was["fields"].get("Homework Completions Link") or [])
+            if hc_id not in existing:
+                existing.append(hc_id)
+            was["fields"]["Homework Completions Link"] = existing
+            # Offline stand-in for 057 homework helper when Satisfactory? is set.
+            if fields.get("Satisfactory?") in (True, 1, "1"):
+                was["fields"]["Perfect Week Homework Satisfactory Count"] = len(
+                    [
+                        hid
+                        for hid in existing
+                        if (
+                            (self.tables.get("Homework Completions") or {})
+                            .get(hid, {})
+                            .get("fields", {})
+                            .get("Satisfactory?")
+                            in (True, 1, "1")
+                        )
+                    ]
+                )
 
     def _apply_formula_sim(self, table: str, fields: dict[str, Any]) -> None:
         """Offline stand-in for computed fields after create/update."""

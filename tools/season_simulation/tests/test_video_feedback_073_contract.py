@@ -135,7 +135,12 @@ class TestVideoFeedback073Contract(unittest.TestCase):
 
             self.assertTrue(sub_f.get("Enrollment"))
             self.assertEqual(len(sub_f.get("Week") or []), 1)
-            self.assertTrue(sub_f.get("Video Upload"))
+            # Live Season Sim omits Video Upload attachment objects.
+            self.assertNotIn("Video Upload", sub_f)
+            self.assertNotIn("Airtable Attachment", asset_f)
+            self.assertTrue(asset_f.get("Source Attachment ID"))
+            self.assertEqual(asset_f.get("Asset Purpose"), "Video For Feedback")
+            self.assertEqual(asset_f.get("Asset Slot"), "VIDEO")
             self.assertEqual(sub_f.get("Count This Submission?"), 1)
             self.assertEqual(
                 vf_f.get("Video Feedback Key"),
@@ -150,10 +155,12 @@ class TestVideoFeedback073Contract(unittest.TestCase):
             self.assertTrue(vf_f.get("Feedback Posted?"))
             self.assertTrue(vf_f.get("Parent Feedback Ready?"))
             self.assertTrue(enr["fields"].get("Active?"))
+            # Writable input only — Parent Email - Cleaned is a formula (computed from Parent Email).
             self.assertEqual(
-                enr["fields"].get("Parent Email - Cleaned"),
+                enr["fields"].get("Parent Email"),
                 SAFE_EMAIL_RECIPIENT,
             )
+            self.assertNotIn("Parent Email - Cleaned", enr["fields"])
             self.assertTrue(vf_f.get("Week"))
 
     def test_073_structural_eligibility(self):
@@ -230,19 +237,26 @@ class TestVideoFeedback073Contract(unittest.TestCase):
         self.assertFalse(result.eligible)
         self.assertTrue(any("Key mismatch" in e for e in result.errors))
 
-    def test_negative_missing_video_upload(self):
+    def test_negative_missing_video_provenance(self):
+        """Neither Video Upload nor Source Attachment ID / video purpose → ineligible."""
         bundle = self.bundles[0]
         broken_sub = dict(bundle["submission"])
         broken_sub["fields"] = dict(bundle["submission"]["fields"])
         broken_sub["fields"]["Video Upload"] = []
+        broken_asset = dict(bundle["asset"])
+        broken_asset["fields"] = dict(bundle["asset"]["fields"])
+        broken_asset["fields"]["Source Attachment ID"] = ""
+        broken_asset["fields"]["Asset Purpose"] = "Homework 1"
+        broken_asset["fields"]["Asset Slot"] = "HW1"
         result = validate_073_eligibility(
             video_feedback=bundle["vf"],
             submission=broken_sub,
-            submission_asset=bundle["asset"],
+            submission_asset=broken_asset,
             enrollment=bundle["enrollment"],
             require_xp_gates=False,
         )
         self.assertFalse(result.eligible)
+        self.assertTrue(any("Video Upload" in e or "provenance" in e for e in result.errors))
 
     def test_negative_missing_lambda_url(self):
         bundle = self.bundles[0]

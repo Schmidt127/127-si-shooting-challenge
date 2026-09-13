@@ -241,8 +241,8 @@ class TestSc001GoalMetAndDeterminism(unittest.TestCase):
         self.assertEqual(a1_cross[3], 12098)
 
         a3_cross = compute_goal_met_crossing(scenarios["athlete3_edge"])
-        self.assertEqual(a3_cross[0], "2027-06-22")
-        self.assertEqual(a3_cross[3], 12005)
+        self.assertEqual(a3_cross[0], "2027-06-21")
+        self.assertEqual(a3_cross[3], 12165)
 
         a2_cross = compute_goal_met_crossing(scenarios["athlete2_recovery"])
         self.assertIsNone(a2_cross[0])

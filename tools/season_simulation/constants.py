@@ -74,6 +74,12 @@ DEFAULT_STREAK_GATE_THRESHOLDS = (3, 7, 10, 14, 21, 30, 45, 60)
 # Active Production XP streak award thresholds (XP Reward Rules / 053–054).
 DEFAULT_STREAK_XP_THRESHOLDS = (3, 5, 7, 10, 20, 30, 40, 50, 60)
 
+# Production WAS "Weekly Goal Shots Target" for 9–12 / 12_000 season goal (live 057).
+# Automation 057: dailyMinimum = Math.ceil(weeklyGoal / 7) → ceil(1334/7) = 191.
+PRODUCTION_WAS_WEEKLY_GOAL_SHOTS = 1334
+PRODUCTION_PERFECT_WEEK_DAILY_MINIMUM = 191
+PRODUCTION_PERFECT_WEEK_REQUIRED_DAILY_COUNT = 7
+
 # Marker embedded in writable Notes fields where schema permits.
 RUN_MARKER_PREFIX = "SEASON-SIM"
 

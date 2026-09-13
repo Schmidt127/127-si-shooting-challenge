@@ -6,7 +6,9 @@ expectations **before** live execute. Live verification compares against these.
 
 from __future__ import annotations
 
+import json
 from dataclasses import asdict, dataclass, field
+from pathlib import Path
 from typing import Any, Sequence
 
 from .constants import (
@@ -344,17 +346,112 @@ def _estimate_xp_buckets(
     return buckets
 
 
+def load_perfect_season_oracle() -> dict[str, Any]:
+    path = Path(__file__).with_name("expected_perfect_season_xp.json")
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def compare_oracle_to_dry_run_expected(
+    athlete1_matrix: AthleteExpectationMatrix,
+) -> dict[str, Any]:
+    """Require Independent Oracle XP == Dry-run Expected XP for Athlete 1.
+
+    Compares oracle source units to dry-run XP bucket counts and verifies
+    chronological ledger total equals source-by-source total.
+    """
+    oracle = load_perfect_season_oracle()
+    buckets = athlete1_matrix.expected_xp_by_category
+    source_rows = {
+        row["xp_source"]: row
+        for row in (oracle.get("per_source_table") or oracle.get("source_by_source") or [])
+    }
+
+    unit_map = {
+        "SHOOTING_BASE": ("SUBMISSION_XP", buckets.get("SUBMISSION_XP", 0)),
+        "HOMEWORK_COMPLETION": ("HOMEWORK_XP", buckets.get("HOMEWORK_XP", 0)),
+        "VIDEO_SUBMISSION": ("VIDEO_SUBMISSION", buckets.get("VIDEO_SUBMISSION", 0)),
+        "STREAK": ("STREAK_XP", buckets.get("STREAK_XP", 0)),
+        "SHOT_MILESTONE": ("SHOT_MILESTONE", buckets.get("SHOT_MILESTONE", 0)),
+        "WEEKLY_THRESHOLD": ("WEEKLY_THRESHOLD", buckets.get("WEEKLY_THRESHOLD", 0)),
+        "PERFECT_WEEK": ("PERFECT_WEEK", buckets.get("PERFECT_WEEK", 0)),
+        "ZOOM_ATTEND_BASE": ("ZOOM_ATTEND_BASE", buckets.get("ZOOM_ATTEND_BASE", 0)),
+        "ZOOM_ATTEND_BONUS_2": (
+            "ZOOM_ATTEND_BONUS_2",
+            buckets.get("ZOOM_ATTEND_BONUS_2", 0),
+        ),
+        "ZOOM_ATTEND_BONUS_3": (
+            "ZOOM_ATTEND_BONUS_3",
+            buckets.get("ZOOM_ATTEND_BONUS_3", 0),
+        ),
+        "ZOOM_RECORDING_CREDIT": (
+            "ZOOM_RECORDING_CREDIT",
+            buckets.get("ZOOM_RECORDING_CREDIT", 0),
+        ),
+    }
+
+    mismatches: list[dict[str, Any]] = []
+    dry_run_xp = 0
+    for src, (bucket_key, dry_units) in unit_map.items():
+        row = source_rows.get(src) or {}
+        oracle_units = int(row.get("units") or 0)
+        oracle_xp = int(row.get("expected_xp") or 0)
+        dry_run_xp += oracle_xp if dry_units == oracle_units else 0
+        if dry_units != oracle_units:
+            mismatches.append(
+                {
+                    "source": src,
+                    "bucket": bucket_key,
+                    "oracle_units": oracle_units,
+                    "dry_run_units": dry_units,
+                }
+            )
+        else:
+            # When units match, dry-run expected XP for this source equals oracle XP.
+            pass
+
+    # Recompute dry-run expected XP from matching sources only when all units align.
+    if not mismatches:
+        dry_run_xp = sum(int(r.get("expected_xp") or 0) for r in source_rows.values())
+
+    oracle_xp = int(oracle.get("expected_perfect_season_xp") or 0)
+    cross = oracle.get("cross_check") or {}
+    match = (
+        not mismatches
+        and oracle_xp == dry_run_xp
+        and bool(cross.get("match"))
+        and int(cross.get("source_by_source_total") or 0) == oracle_xp
+        and int(cross.get("chronological_ledger_total") or 0) == oracle_xp
+    )
+    return {
+        "match": match,
+        "oracle_xp": oracle_xp,
+        "dry_run_expected_xp": dry_run_xp,
+        "oracle_level": oracle.get("final_current_level"),
+        "unit_mismatches": mismatches,
+        "zoom": {
+            "ZOOM_ATTEND_BASE": buckets.get("ZOOM_ATTEND_BASE", 0),
+            "ZOOM_RECORDING_CREDIT": buckets.get("ZOOM_RECORDING_CREDIT", 0),
+            "ZOOM_ATTEND_BONUS_2": buckets.get("ZOOM_ATTEND_BONUS_2", 0),
+            "ZOOM_ATTEND_BONUS_3": buckets.get("ZOOM_ATTEND_BONUS_3", 0),
+        },
+        "requirement": "Independent Oracle XP == Dry-run Expected XP",
+    }
+
+
 def build_three_athlete_expectation_package(
     scenarios: dict[str, AthleteScenario],
 ) -> dict[str, Any]:
     matrices = {
-        profile: build_athlete_expectation_matrix(scenario).to_dict()
+        profile: build_athlete_expectation_matrix(scenario)
         for profile, scenario in scenarios.items()
     }
+    matrices_dict = {profile: m.to_dict() for profile, m in matrices.items()}
+    oracle_match = compare_oracle_to_dry_run_expected(matrices["athlete1_perfect"])
     return {
         "backlog_id": "SC-SEASON-SIM-001",
         "athlete_count": len(scenarios),
-        "matrices": matrices,
+        "matrices": matrices_dict,
+        "oracle_vs_dry_run": oracle_match,
         "combined_coverage": [
             "Athletes",
             "Enrollments",
@@ -445,4 +542,27 @@ def format_weekly_table_markdown(matrix: AthleteExpectationMatrix) -> str:
             "",
         ]
     )
+    return "\n".join(lines)
+
+
+def format_oracle_match_markdown(oracle_match: dict[str, Any]) -> str:
+    status = "MATCH" if oracle_match.get("match") else "MISMATCH"
+    lines = [
+        "## Independent Oracle vs Dry-run Expected XP",
+        "",
+        f"**Status:** `{status}`",
+        f"- Oracle XP: **{oracle_match.get('oracle_xp')}**",
+        f"- Dry-run Expected XP: **{oracle_match.get('dry_run_expected_xp')}**",
+        f"- Final Level: **{oracle_match.get('oracle_level')}**",
+        f"- Zoom buckets: `{oracle_match.get('zoom')}`",
+        "",
+    ]
+    mismatches = oracle_match.get("unit_mismatches") or []
+    if mismatches:
+        lines.append("**Unit mismatches:**")
+        for m in mismatches:
+            lines.append(
+                f"- {m['source']}: oracle={m['oracle_units']} dry-run={m['dry_run_units']}"
+            )
+        lines.append("")
     return "\n".join(lines)

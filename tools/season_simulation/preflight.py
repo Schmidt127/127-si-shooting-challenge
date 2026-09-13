@@ -28,6 +28,7 @@ from .constants import (
     SIMULATION_DAY_COUNT,
     TRANSACTIONAL_TABLES,
 )
+from .live_write_contract import build_contract_validation_for_client
 from .recipient_safety import resolve_simulation_recipient
 from .reference_data import load_reference_snapshot
 from .same_day_contracts import assess_same_day_readiness
@@ -53,6 +54,7 @@ class PreflightReport:
     clock_override_readiness: dict[str, Any] = field(default_factory=dict)
     same_day_readiness: dict[str, Any] = field(default_factory=dict)
     dependency_impact: dict[str, str] = field(default_factory=dict)
+    live_write_contract: dict[str, Any] = field(default_factory=dict)
     errors: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
     sufficient_for_final_run: bool = False
@@ -62,12 +64,32 @@ class PreflightReport:
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
+    def _zoom_contract_line(self) -> str:
+        contract = self.live_write_contract or {}
+        structural = contract.get("structural") or {}
+        zoom = structural.get("zoom_contract") or {}
+        if zoom.get("summary"):
+            # summary already includes "Zoom contract: PASS — …"
+            return str(zoom["summary"]).removeprefix("Zoom contract: ").strip()
+        for note in contract.get("notes") or []:
+            if isinstance(note, str) and note.startswith("Zoom contract:"):
+                return note.removeprefix("Zoom contract: ").strip()
+        if contract.get("ok") is False and not zoom:
+            return "FAIL — not evaluated"
+        return "SKIPPED"
+
     def summary_text(self) -> str:
+        contract = self.live_write_contract or {}
+        contract_status = contract.get("status") or (
+            "PASS" if contract.get("ok") else ("FAIL" if contract else "SKIPPED")
+        )
         lines = [
             f"Season simulation preflight — {'PASS' if self.ok else 'FAIL'}",
             f"Base: {self.base_id}",
             f"Window: {SIM_START} .. {SIM_END} ({SIMULATION_DAY_COUNT} days)",
             f"Connectivity: {self.connectivity.get('status')}",
+            f"Live write contract: {contract_status}",
+            f"Zoom contract: {self._zoom_contract_line()}",
             f"Grade band: {self.reference.get('grade_band')}",
             f"Highest goal: {self.reference.get('highest_goal')}",
             f"Homework (active for band): {self.reference.get('homework_count')}",
@@ -92,10 +114,29 @@ class PreflightReport:
         lines.extend(f"  - {b}" for b in self.simulation_clock_blockers)
         lines.append("Schema / temporary config requirements:")
         lines.extend(f"  - {s}" for s in self.schema_requirements)
+        if contract:
+            lines.append("")
+            lines.append(f"Live write contract: {contract_status}")
+            if contract.get("writes_checked") is not None:
+                lines.append(
+                    f"  Writes checked: {contract.get('writes_checked')} "
+                    f"/ fields: {contract.get('fields_checked')}"
+                )
+            for v in (contract.get("violations") or [])[:20]:
+                lines.append(
+                    f"  - [{v.get('table')}.{v.get('field')}] "
+                    f"type={v.get('field_type')} — {v.get('reason')}"
+                )
         return "\n".join(lines) + "\n"
 
 
-def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
+def run_preflight(
+    client: AirtableClient | None = None,
+    *,
+    acknowledge_clock_override: bool = False,
+    simulation_id: str | None = None,
+    registry_dir: Path | str | None = None,
+) -> PreflightReport:
     """Perform read-only checks. Never writes."""
     errors: list[str] = []
     warnings: list[str] = []
@@ -159,7 +200,7 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
         wall_date=date.today(),
         submission_field_names=sub_fields or None,
         formula_text_activity_date_is_future=formula_future or None,
-        formula_override_acknowledged=False,
+        formula_override_acknowledged=acknowledge_clock_override,
     )
     warnings.extend(readiness.warnings)
     # Clock blockers are informational for preflight (do not fail connectivity).
@@ -332,17 +373,67 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
         )
 
     hw_count = int(reference_dict.get("homework_count") or 0)
-    zoom_count = int(reference_dict.get("zoom_meetings_count") or 0)
     weeks_count = int(reference_dict.get("weeks_count") or 0)
-    sufficient = (
-        not errors
+    # Live write contract — schema-driven validation of every intended write payload.
+    live_write_contract: dict[str, Any] = {}
+    zoom_contract_ok = False
+    if meta_tables and connectivity.get("status") == "ok":
+        try:
+            from .live_write_contract import discover_paused_three_athlete_run_id
+
+            reg_path = Path(registry_dir) if registry_dir else (
+                Path(__file__).resolve().parent / "run_registries"
+            )
+            contract_run_id = (simulation_id or "").strip()
+            if not contract_run_id:
+                contract_run_id = discover_paused_three_athlete_run_id(reg_path)
+            if not contract_run_id:
+                contract_run_id = (
+                    "SEASON-SIM-2027-"
+                    + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+                    + "-threeathlete"
+                )
+            contract = build_contract_validation_for_client(
+                client,
+                run_id=contract_run_id,
+                offline_fixture=False,
+                acknowledge_clock_override=acknowledge_clock_override,
+                registry_dir=reg_path,
+            )
+            live_write_contract = contract.to_dict()
+            zoom_contract_ok = bool(
+                ((contract.structural or {}).get("zoom_contract") or {}).get("ok")
+            )
+            if not contract.ok:
+                errors.append(
+                    "Live write contract FAIL — "
+                    + "; ".join(
+                        f"{v.table}.{v.field}: {v.reason}"
+                        for v in contract.violations[:8]
+                    )
+                )
+        except Exception as exc:  # noqa: BLE001
+            live_write_contract = {
+                "ok": False,
+                "status": "FAIL",
+                "error": str(exc),
+            }
+            errors.append(f"Live write contract validation error: {exc}")
+    else:
+        live_write_contract = {
+            "ok": False,
+            "status": "FAIL",
+            "error": "skipped — no live Meta schema",
+        }
+        if connectivity.get("status") == "ok":
+            errors.append("Live write contract FAIL — empty Meta schema")
+
+    final_ready = bool(
+        len(errors) == 0
         and reference_dict.get("highest_goal")
         and weeks_count > 0
-    )
-    final_ready = bool(
-        sufficient
         and hw_count >= EXPECTED_ACTIVE_PHA_COUNT
-        and zoom_count >= 1
+        and zoom_contract_ok
         and reference_dict.get("xp_reward_rules_count", 0) > 0
         and readiness.ready_for_early_execute
     )
@@ -356,7 +447,7 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
     if not final_ready and not errors:
         warnings.append(
             "Configuration is readable but not marked sufficient_for_final_run "
-            "(need 18 active PHA for the Grade 12 band, Zoom meeting(s), weeks coverage, "
+            "(need 18 active PHA for the Grade 12 band, Zoom contract PASS, weeks coverage, "
             "XP rules, gated clock override readiness, and no errors)."
         )
 
@@ -375,13 +466,14 @@ def run_preflight(client: AirtableClient | None = None) -> PreflightReport:
         clock_override_readiness=readiness.to_dict(),
         same_day_readiness=same_day_dict,
         dependency_impact=dependency_impact_matrix(),
+        live_write_contract=live_write_contract,
         errors=errors,
         warnings=warnings,
         sufficient_for_final_run=final_ready,
         sufficient_for_same_day_perfect_week=bool(
             final_ready and same_day.sufficient_for_same_day_perfect_week
         ),
-        no_dev_base=True,
+        no_dev_base=client.base_id != "appTetnuCZlCZdTCT",
     )
 
 

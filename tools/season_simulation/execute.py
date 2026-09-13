@@ -30,7 +30,6 @@ from .video_feedback_contract import (
     build_video_feedback_create_fields,
     build_video_feedback_pipeline_fields,
     sim_source_attachment_id,
-    sim_video_upload_attachment,
 )
 from .recipient_safety import assert_safe_recipient
 from .run_registry import run_marker
@@ -122,12 +121,15 @@ def build_intended_writes(
         )
 
     # Disposable Zoom Meetings created by the writer (aligned Start Time + Week).
-    day12 = next((d for d in scenario.days if d.day_number == 12), None)
-    day40 = next((d for d in scenario.days if d.day_number == 40), None)
     planned_live_id = "__SIM_ZOOM_LIVE__"
     planned_rec_id = "__SIM_ZOOM_REC__"
-    if day12 and ctx:
-        week_live = ctx.week_for(day12.activity_date)
+    live_day = next((d for d in scenario.days if "live" in (d.zoom_modes or [])), None)
+    rec_day = next(
+        (d for d in scenario.days if set(d.zoom_modes or []) & {"recording", "recorded"}),
+        None,
+    )
+    if live_day and ctx:
+        week_live = ctx.week_for(live_day.activity_date)
         writes.append(
             {
                 "table": "Zoom Meetings",
@@ -135,9 +137,9 @@ def build_intended_writes(
                 "dedupe_key": f"{marker}|ZOOM_MEETING|LIVE",
                 "zoom_mode": "live",
                 "fields": {
-                    "Meeting Name": f"{marker}|LIVE|D12",
+                    "Meeting Name": f"{marker}|LIVE|D{live_day.day_number:02d}",
                     "Meeting Status": "Completed",
-                    "Start Time": f"{day12.activity_date.isoformat()}T12:00:00-06:00",
+                    "Start Time": f"{live_day.activity_date.isoformat()}T12:00:00-06:00",
                     "Week": [week_live] if week_live else [],
                     "Attendees": [],
                     "Create XP Events": False,
@@ -147,8 +149,8 @@ def build_intended_writes(
                 ),
             }
         )
-    if day40 and ctx:
-        week_rec = ctx.week_for(day40.activity_date)
+    if rec_day and ctx:
+        week_rec = ctx.week_for(rec_day.activity_date)
         writes.append(
             {
                 "table": "Zoom Meetings",
@@ -156,9 +158,9 @@ def build_intended_writes(
                 "dedupe_key": f"{marker}|ZOOM_MEETING|REC",
                 "zoom_mode": "recorded",
                 "fields": {
-                    "Meeting Name": f"{marker}|REC|D40",
+                    "Meeting Name": f"{marker}|REC|D{rec_day.day_number:02d}",
                     "Meeting Status": "Completed",
-                    "Start Time": f"{day40.activity_date.isoformat()}T12:00:00-06:00",
+                    "Start Time": f"{rec_day.activity_date.isoformat()}T12:00:00-06:00",
                     "Week": [week_rec] if week_rec else [],
                     "Attendees": [],
                     "Create XP Events": False,
@@ -218,13 +220,7 @@ def build_intended_writes(
             wid = ctx.week_for(day.activity_date)
             if wid:
                 fields["Week"] = [wid]
-        if day.video_feedback:
-            source_attachment_id = sim_source_attachment_id(marker, day.day_number)
-            video_filename = f"season-sim-video-d{day.day_number:02d}.mp4"
-            fields["Video Upload"] = sim_video_upload_attachment(
-                source_attachment_id,
-                video_filename,
-            )
+        # Live Season Sim omits Video Upload attachment objects (API rejects placeholders).
         writes.append(
             {
                 "table": "Submissions",
@@ -275,10 +271,12 @@ def build_intended_writes(
                 "Satisfactory?": satisfactory,
                 "Review Complete": True,
                 "Notes": marker,
-                "asset_count_intended": hw["asset_count"],
                 "Submission Date": activity_date_write_value(day.activity_date),
                 "Item Slot": slot,
                 "Parent Feedback Sent?": False,
+                # Link field (not legacy text "Weekly Athlete Summary") so 057
+                # can read Satisfactory homework via WAS.Homework Completions Link.
+                "Weekly Athlete Summary Link": ["<was_id>"],
             }
             if library_id:
                 hc_fields["Homework"] = [library_id]
@@ -289,8 +287,10 @@ def build_intended_writes(
                     "day_number": day.day_number,
                     "dedupe_key": hw["dedupe_key"],
                     "fields": hc_fields,
+                    "asset_count_intended": hw["asset_count"],
                     "notes": (
-                        "071 structural fields; do not force Awarded — Needs Revision stays pending"
+                        "071 structural fields + Weekly Athlete Summary Link; "
+                        "do not force Awarded — Needs Revision stays pending"
                     ),
                 }
             )
@@ -308,12 +308,13 @@ def build_intended_writes(
                         },
                     }
                 )
-        # Zoom attendance uses writer-created meetings (day 12 live / day 40 recorded).
+        # Zoom attendance follows scenario day zoom_modes (Production: Week 1 live / Week 7 recording).
         zoom_plan: list[tuple[str, str]] = []
-        if day.day_number == 12:
-            zoom_plan.append((planned_live_id, "live"))
-        elif day.day_number == 40:
-            zoom_plan.append((planned_rec_id, "recorded"))
+        for mode in day.zoom_modes or []:
+            if mode == "live":
+                zoom_plan.append((planned_live_id, "live"))
+            elif mode in {"recording", "recorded"}:
+                zoom_plan.append((planned_rec_id, "recorded"))
         for zid, mode in zoom_plan:
             za_fields: dict[str, Any] = {
                 "Zoom Meeting": [zid],

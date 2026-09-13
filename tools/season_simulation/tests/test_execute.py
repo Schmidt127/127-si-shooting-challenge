@@ -114,7 +114,7 @@ class TestScenarioCoverage(unittest.TestCase):
         if probe.homework:
             self.assertEqual(probe.homework[0]["outcome"], "Needs Revision")
         live = next(d for d in s.days if d.day_number == 12)
-        rec = next(d for d in s.days if d.day_number == 40)
+        rec = next(d for d in s.days if d.day_number == 53)
         self.assertEqual(live.zoom_modes, ["live"])
         self.assertEqual(rec.zoom_modes, ["recording"])
         self.assertTrue(s.meta.get("early_bird_in_window"))
