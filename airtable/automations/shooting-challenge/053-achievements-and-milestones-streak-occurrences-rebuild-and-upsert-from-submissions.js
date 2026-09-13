@@ -24,12 +24,13 @@ Airtable is the deployed/running copy.
 
 /************************************************************************************************
  * 053 - Achievements and Milestones - Streak Occurrences - Rebuild and Upsert From Submissions
- * Version: 5.5
+ * Version: 5.6
  * Date Written: 2026-06-09
- * Last Updated: 2026-08-14
- * Updated Reason: Preserve Airtable's create/update trigger semantics by creating new
- * positive/restored occurrences without Source Status = Ready for XP, then setting
- * that status in a separate update so 054 receives the first-create handoff.
+ * Last Updated: 2026-09-12
+ * Updated Reason: Close concurrent-create race that produced duplicate Streak
+ * Occurrence Keys (season-sim Edge forensic). Create missing occurrences
+ * one-at-a-time with a pre-create recheck; on duplicates keep the oldest Active
+ * Ready row and mark extras Duplicate + inactive (instead of Error-all).
  *
  * SCRIPT TYPE
  * - Airtable Automation Script
@@ -55,18 +56,23 @@ Airtable is the deployed/running copy.
  * - Never write to formula fields such as Streak Occurrence Key.
  * - Reconciles all identifiable Enrollment-owned streak occurrences: unsupported
  *   occurrences are deactivated, and an exact restored occurrence is reactivated.
- * - Never chooses a canonical record when an occurrence identity is ambiguous.
- *   Ambiguous candidates are marked Error and no XP ownership is changed.
+ * - When duplicate Streak Occurrence identities exist, keep the oldest Active
+ *   Ready row and mark extras Duplicate + inactive (closes concurrent-create race).
  * - Creates new positive/restored occurrences without Ready for XP, then sets every
  *   canonical occurrence to Ready for XP in the separate reconciliation update so
  *   054 receives a real record-update event.
  *
- * IMPORTANT FIX IN THIS VERSION
+ * IMPORTANT FIX IN THIS VERSION (v5.6)
+ * - Concurrent create path: one-at-a-time create with pre-create recheck.
+ * - Duplicate collapse keeps one canonical occurrence (no longer Error-all).
+ *
+ * PRIOR NOTES (still in force)
  * - Activity / week date keys use America/Denver (not UTC ISO slice) so
  *   Sunday–Saturday week boundaries match 005/034/066.
  * - Streak Occurrences → Source Status is a single-select field.
  * - This script now writes Source Status as { name: "Ready for XP" }, etc.
  * - Week resolution filters by Enrollment.Program Instance.
+ * - v5.5: create without Ready for XP, then separate update so 054 gets handoff.
  ************************************************************************************************/
 
 async function main() {
@@ -895,7 +901,70 @@ async function main() {
     }
 
     if (recordsToCreate.length > 0) {
-        await batchCreate(streakOccurrencesTable, recordsToCreate);
+        // Create one-at-a-time with immediate recheck to close the concurrent
+        // 053 race that previously produced duplicate Streak Occurrence Keys
+        // (Edge forensic: streak|…|30-day_streak|… count=2).
+        for (const createPayload of recordsToCreate) {
+            const enrollmentLink = createPayload.fields[CONFIG.streakOccurrences.enrollment];
+            const achievementLink = createPayload.fields[CONFIG.streakOccurrences.achievement];
+            const endDate = createPayload.fields[CONFIG.streakOccurrences.streakEndDate];
+            const enrollmentIdForKey =
+                Array.isArray(enrollmentLink) && enrollmentLink[0]
+                    ? enrollmentLink[0].id || enrollmentLink[0]
+                    : null;
+            const achievementIdForKey =
+                Array.isArray(achievementLink) && achievementLink[0]
+                    ? achievementLink[0].id || achievementLink[0]
+                    : null;
+            const endKey = toDateKey(endDate);
+            if (!enrollmentIdForKey || !achievementIdForKey || !endKey) {
+                continue;
+            }
+            const occurrenceKey = makeOccurrenceKey(
+                enrollmentIdForKey,
+                achievementIdForKey,
+                endKey
+            );
+            const preCreate = await streakOccurrencesTable.selectRecordsAsync({
+                fields: optionalFields(streakOccurrencesTable, [
+                    CONFIG.streakOccurrences.enrollment,
+                    CONFIG.streakOccurrences.achievement,
+                    CONFIG.streakOccurrences.streakEndDate,
+                ]),
+            });
+            let alreadyExists = false;
+            try {
+                for (const occurrence of preCreate.records) {
+                    const occurrenceEnrollmentId = getLinkedRecordId(
+                        occurrence,
+                        streakOccurrencesTable,
+                        CONFIG.streakOccurrences.enrollment
+                    );
+                    if (occurrenceEnrollmentId !== enrollmentIdForKey) continue;
+                    const existingAchievementId = getLinkedRecordId(
+                        occurrence,
+                        streakOccurrencesTable,
+                        CONFIG.streakOccurrences.achievement
+                    );
+                    const existingEnd = toDateKey(
+                        occurrence.getCellValue(CONFIG.streakOccurrences.streakEndDate)
+                    );
+                    if (
+                        existingAchievementId === achievementIdForKey &&
+                        existingEnd === endKey
+                    ) {
+                        alreadyExists = true;
+                        break;
+                    }
+                }
+            } finally {
+                // selectRecordsAsync queries do not always expose unload; ignore.
+            }
+            if (alreadyExists) {
+                continue;
+            }
+            await streakOccurrencesTable.createRecordAsync(createPayload.fields);
+        }
     }
 
 
@@ -1004,15 +1073,49 @@ async function main() {
         }
 
         if (matchingOccurrences.length !== 1) {
-            for (const occurrence of matchingOccurrences) {
+            // Keep oldest as canonical Active; mark extras Duplicate + inactive.
+            const sorted = matchingOccurrences.slice().sort((a, b) => {
+                const aCreated = a.createdTime || "";
+                const bCreated = b.createdTime || "";
+                return aCreated < bCreated ? -1 : aCreated > bCreated ? 1 : 0;
+            });
+            const canonical = sorted[0];
+            for (let i = 0; i < sorted.length; i++) {
+                const occurrence = sorted[i];
                 const fields = {};
-                addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.sourceStatus, CONFIG.values.statusError);
+                if (i === 0) {
+                    addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.active, true);
+                    addWritable(
+                        fields,
+                        streakOccurrencesTable,
+                        CONFIG.streakOccurrences.sourceStatus,
+                        CONFIG.values.statusReady
+                    );
+                    addWritable(
+                        fields,
+                        streakOccurrencesTable,
+                        CONFIG.streakOccurrences.notes,
+                        `053 kept canonical for ${target.occurrenceKey} after duplicate collapse.`
+                    );
+                } else {
+                    addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.active, false);
+                    addWritable(
+                        fields,
+                        streakOccurrencesTable,
+                        CONFIG.streakOccurrences.sourceStatus,
+                        CONFIG.values.statusDuplicate
+                    );
+                    addWritable(
+                        fields,
+                        streakOccurrencesTable,
+                        CONFIG.streakOccurrences.notes,
+                        `053 marked duplicate of ${canonical.id} for ${target.occurrenceKey}.`
+                    );
+                    duplicateCount++;
+                }
                 addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.lastEvaluatedAt, nowIso);
-                addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.notes,
-                    `053 reconciliation failed closed: ${matchingOccurrences.length} records share ${target.occurrenceKey}.`);
                 if (Object.keys(fields).length > 0) recordsToUpdate.push({ id: occurrence.id, fields });
             }
-            ambiguousIdentityCount++;
             continue;
         }
 
