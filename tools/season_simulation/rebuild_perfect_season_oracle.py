@@ -9,16 +9,16 @@ import json
 from collections import defaultdict
 from pathlib import Path
 
-from tools.season_simulation.constants import SIM_END, SIM_START, SIMULATION_DAY_COUNT
-from tools.season_simulation.perfect_week_eval import evaluate_all_perfect_weeks
-from tools.season_simulation.scenario_base import (
+from .constants import SIM_END, SIM_START, SIMULATION_DAY_COUNT
+from .perfect_week_eval import evaluate_all_perfect_weeks
+from .scenario_base import (
     aggregate_weekly_shots,
     compute_goal_met_crossing,
     estimate_weekly_goal_shots,
     weekly_threshold_tiers,
 )
-from tools.season_simulation.scenarios_sc001 import build_athlete1_perfect_scenario
-from tools.season_simulation.season_policy import week_label_for_activity_date
+from .scenarios_sc001 import build_athlete1_perfect_scenario
+from .season_policy import week_label_for_activity_date
 
 SHOOTING_BASE = 20
 STREAK = {3: 10, 5: 15, 7: 20, 10: 30, 20: 50, 30: 60, 40: 75, 50: 90, 60: 105}
@@ -415,28 +415,34 @@ def main() -> None:
             "units": zoom_live,
             "xp_per_unit": 60,
             "expected_xp": by_src["ZOOM_ATTEND_BASE"]["xp"],
-            "formula": f"{zoom_live} live attendances × 60 (design-intent scheduled Zooms)",
+            "formula": (
+                f"{zoom_live} live attendance × 60 "
+                "(Production 2026–27: Introduction Week 1)"
+            ),
         },
         {
             "xp_source": "ZOOM_ATTEND_BONUS_2",
             "units": by_src["ZOOM_ATTEND_BONUS_2"]["units"],
             "xp_per_unit": 30,
             "expected_xp": by_src["ZOOM_ATTEND_BONUS_2"]["xp"],
-            "formula": "once when qualifying live count reaches 2",
+            "formula": "once when qualifying live count reaches 2 (not earned with 1 live)",
         },
         {
             "xp_source": "ZOOM_ATTEND_BONUS_3",
             "units": by_src["ZOOM_ATTEND_BONUS_3"]["units"],
             "xp_per_unit": 40,
             "expected_xp": by_src["ZOOM_ATTEND_BONUS_3"]["xp"],
-            "formula": "once when qualifying live count reaches 3",
+            "formula": "once when qualifying live count reaches 3 (not earned with 1 live)",
         },
         {
             "xp_source": "ZOOM_RECORDING_CREDIT",
             "units": rec_u,
             "xp_per_unit": 30,
             "expected_xp": by_src.get("ZOOM_RECORDING_CREDIT", {"xp": 0})["xp"],
-            "formula": "1 recording × floor(60 × 50% Config Zoom Recording XP Percent of Live)",
+            "formula": (
+                f"{rec_u} recording makeup × floor(60×50%) "
+                "(Production 2026–27: Motivation Week 7)"
+            ),
         },
         {
             "xp_source": "SHOT_MILESTONE",
@@ -530,9 +536,10 @@ def main() -> None:
                 "Repeatable? applies after a break."
             ),
             (
-                "Zoom units follow perfect-athlete design intent "
-                f"({zoom_live} live + bonuses + {rec_u} recording). "
-                "Current writer may under-emit Zoom until per-week meetings exist."
+                "Zoom units follow Production 2026–2027 catalog "
+                f"({zoom_live} live attendance + {rec_u} recording makeup). "
+                "Bonus 2/3 require 2+/3+ qualifying live meetings — not awarded "
+                "when the season has only one live attendance."
             ),
             (
                 "Weekly goal estimates use scenario-matrix proportional share "

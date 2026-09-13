@@ -10,7 +10,7 @@ Infrastructure for full-season disposable simulations of the Shooting Challenge.
 | **Window** | 2027-04-25 → 2027-06-30 11:59 PM America/Denver inclusive (**67** days) |
 | **Challenge weeks** | **10** — Early Bird + Week 1–9 (Week 9 = 10th ordinal, **4 days**, partial **4/7** shot target) |
 | **PHA** | **18** active = Early Bird + Weeks 1–8 (2 each); **Week 9 = 0 PHA** (Perfect Week homework vacuously OK) |
-| **Oracle** | `EXPECTED PERFECT-SEASON XP = 5340` → Level **G.O.A.T.** (`expected_perfect_season_xp.json`) |
+| **Oracle** | Perfect-season XP **4910** → Level **G.O.A.T.** (Zoom XP **90** = 1 live + 1 recording; no Bonus 2/3; obsolete 7-live **5340** retired) → `expected_perfect_season_xp.json` |
 | **Environment** | Production `appn84sqPw03zEbTT` only — **no DEV environment** |
 | **SC-001 manifest** | [`docs/deploy-checklists/SC-SEASON-SIM-001-EXECUTION-MANIFEST.md`](../../docs/deploy-checklists/SC-SEASON-SIM-001-EXECUTION-MANIFEST.md) |
 | **SC-002 manifest** | [`docs/deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md`](../../docs/deploy-checklists/SC-SEASON-SIM-002-EXECUTION-MANIFEST.md) |
@@ -33,7 +33,7 @@ Simulation **NOT executed**. Season Sim formula gates are **already ACTIVE** on 
 | Mode | Ready? |
 |---|---|
 | Offline tests / dry-run / preflight | Yes |
-| SC-001 three-athlete dry-run | **Yes** — `python -m season_simulation dry-run-three` (oracle **5340** matches) |
+| SC-001 three-athlete dry-run | **Yes** — `python -m season_simulation dry-run-three` (Independent Oracle XP == Dry-run Expected XP) |
 | Full execute writer (idempotent) | **Code ready** — blocked on Mike phrase + Production **057 v2.7** paste |
 | Complete countable E2E on wall-clock 2026 | Season Sim gates **currently ACTIVE** on Production (restore after run). Hub allowlist includes `schmidt@fairfieldbasketballclub.com`. |
 
@@ -103,7 +103,7 @@ Idempotent by `SEASON-SIM|<run_id>|…` dedupe keys in the local run registry:
 | Submission Assets | Homework 1 / Video For Feedback (metadata; no Make send) |
 | Homework Completions | PHA + Homework library + **`Submission Date`** + review fields |
 | Video Feedback | Enrollment + Submission + Grade Band + Feedback Posted? arm |
-| Zoom Meetings | **Disposable** Completed live (day 12) + recording (day 40); registry-cleaned |
+| Zoom Meetings | **Disposable** Completed live (Week 1 / day 12) + recording (Week 7 / day 53); registry-cleaned |
 | Zoom Attendance | **Live** vs **Recording Quiz** (+ Satisfactory; never on recording Attendees) |
 | Zoom Meetings.Attendees | **live meeting only** (patch; reversed on cleanup) |
 
@@ -226,7 +226,7 @@ python -m season_simulation execute-three `
 ```
 
 Live execute requires Mike phrase **`RUN 3-ATHLETE SEASON SIMULATION`** plus all tokens.
-Completion requires **cascade XP reconciliation** (`cascade_complete`), not writer creates alone.
+Completion requires **business-success reconciliation** (`business_success`), not writer creates or `cascade_complete` alone. Stage `H_post_cascade_hooks` is a read-only post-cascade preview — it does **not** delete Production records or restore formula gates.
 Between profiles the harness polls Submission Base XP and may re-arm stuck sim rows.
 `--simulation-id` is optional (auto-generated with `threeathlete` suffix if omitted).
 
@@ -330,5 +330,5 @@ python -m season_simulation cleanup `
 4. Verify Resend sender already used by live Hub pipeline
 5. Confirm enrollment Parent Email is the allowlist address
 6. Run `preflight` until `sufficient_for_final_run` (or knowingly accept warnings)
-7. Run `dry-run-three` and confirm oracle **5340** / Level G.O.A.T.
+7. Run `dry-run-three` and confirm Independent Oracle XP == Dry-run Expected XP
 8. Only then run `execute-three` with Mike phrase + all confirm tokens (+ optional `--enable-email-delivery`)

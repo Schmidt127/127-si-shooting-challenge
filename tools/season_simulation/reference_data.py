@@ -466,7 +466,7 @@ def load_reference_snapshot(client: AirtableClient) -> ReferenceSnapshot:
     if zoom:
         warnings.append(
             f"Found {len(zoom)} existing Zoom Meetings (informational only); "
-            "execute creates two disposable meetings (live day 12 / recording day 40) "
+            "execute creates two disposable meetings (live Week 1 / recording Week 7) "
             "registered for cleanup — VERIFY meetings are never reused"
         )
     else:

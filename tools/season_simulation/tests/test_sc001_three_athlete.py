@@ -248,6 +248,22 @@ class TestSc001ThreeAthletePack(unittest.TestCase):
         }
         self.assertEqual(len(set(totals.values())), 3)
 
+    def test_oracle_matches_dry_run_expected_xp(self):
+        rid = new_run_id(suffix="threeathlete")
+        scenarios = build_all_sc001_scenarios(**_offline_kwargs(rid))
+        pkg = build_three_athlete_expectation_package(scenarios)
+        match = pkg["oracle_vs_dry_run"]
+        self.assertTrue(match["match"], match)
+        self.assertEqual(match["oracle_xp"], match["dry_run_expected_xp"])
+        self.assertEqual(match["zoom"]["ZOOM_ATTEND_BASE"], 1)
+        self.assertEqual(match["zoom"]["ZOOM_RECORDING_CREDIT"], 1)
+        self.assertEqual(match["zoom"]["ZOOM_ATTEND_BONUS_2"], 0)
+        self.assertEqual(match["zoom"]["ZOOM_ATTEND_BONUS_3"], 0)
+        a1 = build_athlete_expectation_matrix(scenarios["athlete1_perfect"])
+        self.assertEqual(a1.expected_xp_by_category["ZOOM_ATTEND_BASE"], 1)
+        self.assertNotIn("ZOOM_ATTEND_BONUS_2", a1.expected_xp_by_category)
+        self.assertNotIn("ZOOM_ATTEND_BONUS_3", a1.expected_xp_by_category)
+
     def test_athlete2_has_misses_and_recovery(self):
         rid = new_run_id(suffix="threeathlete")
         scenarios = build_all_sc001_scenarios(**_offline_kwargs(rid))

@@ -23,6 +23,7 @@ from .execute import build_intended_writes, summarize_intended_write_readiness
 from .expectations_matrix import (
     build_athlete_expectation_matrix,
     build_three_athlete_expectation_package,
+    format_oracle_match_markdown,
     format_weekly_table_markdown,
 )
 from .reference_data import load_reference_snapshot
@@ -113,6 +114,8 @@ def build_three_athlete_scenarios(
             ],
         }
         ref_meta["homework_count"] = len(snap.homework)
+        ref_meta["zoom_count"] = len(snap.zoom_meetings)
+        ref_meta["weeks_count"] = len(weeks_objs)
         # Live execute needs WeekInfo objects + goal PI for ExecuteContext.
         ref_meta["weeks_objs"] = weeks_objs
         ref_meta["goal_program_instance_ids"] = list(
@@ -151,12 +154,13 @@ def run_three_athlete_dry_run(
         format_weekly_table_markdown(build_athlete_expectation_matrix(s))
         for s in scenarios.values()
     )
+    oracle_md = format_oracle_match_markdown(expectation_pkg.get("oracle_vs_dry_run") or {})
 
     payload: dict[str, Any] = {
         "backlog_id": "SC-SEASON-SIM-001",
         "run_id": rid,
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "status": "READY",
+        "status": "READY" if (expectation_pkg.get("oracle_vs_dry_run") or {}).get("match") else "NOT_READY",
         "executed": False,
         "authorization_phrase_required": THREE_ATHLETE_AUTHORIZATION_PHRASE,
         "reference_meta": ref_meta,
@@ -184,7 +188,7 @@ def run_three_athlete_dry_run(
     json_path.write_text(json.dumps(payload, indent=2, default=str) + "\n", encoding="utf-8")
     latest_json.write_text(json_path.read_text(encoding="utf-8"), encoding="utf-8")
 
-    md_body = _format_dry_run_markdown(payload, matrices_md)
+    md_body = _format_dry_run_markdown(payload, matrices_md, oracle_md)
     md_path.write_text(md_body, encoding="utf-8")
     latest_md.write_text(md_body, encoding="utf-8")
 
@@ -197,7 +201,7 @@ def run_three_athlete_dry_run(
     return payload
 
 
-def _format_dry_run_markdown(payload: dict[str, Any], matrices_md: str) -> str:
+def _format_dry_run_markdown(payload: dict[str, Any], matrices_md: str, oracle_md: str = "") -> str:
     lines = [
         "# SC-SEASON-SIM-001 — Three-Athlete Dry-Run Report",
         "",
@@ -209,6 +213,7 @@ def _format_dry_run_markdown(payload: dict[str, Any], matrices_md: str) -> str:
         "",
         f"Future live execute requires Mike to say exactly: **`{THREE_ATHLETE_AUTHORIZATION_PHRASE}`**",
         "",
+        oracle_md,
         "## Environment",
         "",
         "- **No DEV environment** — Production disposable records only",

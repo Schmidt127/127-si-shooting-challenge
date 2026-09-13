@@ -41,10 +41,12 @@ from .simulation_clock import SubmissionTiming
 SC001_VERSION = "1.0.0"
 PROFILE = AthleteProfile
 
-# Weeks where a Program Zoom meeting exists (live attendance required for Perfect Week).
-SC001_ZOOM_REQUIRED_WEEKS = frozenset(
-    {"Week 2", "Week 3", "Week 4", "Week 6", "Week 7", "Week 8"}
-)
+# Production 2026–2027 Zoom catalog: exactly two meetings (Introduction Week 1,
+# Motivation Week 7). Both are Attendance Method=Live with recording makeup enabled.
+# Season sim exercises one live path + one recording/makeup path — never invent extra live meetings.
+SC001_ZOOM_REQUIRED_WEEKS = frozenset({"Week 1", "Week 7"})
+SC001_ZOOM_LIVE_DAY = 12  # Week 1 (Introduction) — live attendance
+SC001_ZOOM_RECORDING_DAY = 53  # Week 7 (Motivation) — recording/makeup path
 
 # Athlete 2 — exactly one late-season Perfect Week (owner-approved).
 ATHLETE2_RECOVERY_WEEK = "Week 7"
@@ -52,10 +54,10 @@ ATHLETE2_RECOVERY_WEEK = "Week 7"
 # Documented primary failure mode per week (distinct probes; Week 7 excluded — passes).
 ATHLETE2_PW_FAILURE_MODES: dict[str, str] = {
     "Early Bird": "fail_weekly_shots",
-    "Week 1": "fail_weekly_shots",
+    "Week 1": "fail_required_zoom",
     "Week 2": "fail_homework_skipped",
     "Week 3": "fail_video_count",
-    "Week 4": "fail_required_zoom",
+    "Week 4": "fail_daily_shooting",
     "Week 5": "fail_homework_skipped",
     "Week 6": "fail_homework_timing",
     "Week 8": "fail_weekly_shots",
@@ -69,7 +71,7 @@ ATHLETE3_PERFECT_WEEK_TRUTH_TABLE: dict[str, tuple[str, str]] = {
     "Week 1": ("pass", "pass"),
     "Week 2": ("fail", "fail_daily_shooting"),
     "Week 3": ("fail", "fail_video_count"),
-    "Week 4": ("fail", "fail_required_zoom"),
+    "Week 4": ("fail", "fail_video_count"),
     "Week 5": ("fail", "fail_homework_timing"),
     "Week 6": ("pass", "pass"),
     "Week 7": ("pass", "pass"),
@@ -122,19 +124,15 @@ def _athlete1_video_days(days_meta: Sequence[Any]) -> frozenset[int]:
 
 
 def _athlete1_zoom(days_meta: Sequence[Any]) -> dict[int, tuple[list[str], list[str]]]:
-    """Live attendance every homework week + one recorded credit (Week 5)."""
+    """Production schedule: 1 live (Week 1) + 1 recording makeup (Week 7)."""
     zoom = default_zoom_placeholders()
     live_id, rec_id = zoom[0]["record_id"], zoom[1]["record_id"]
     out: dict[int, tuple[list[str], list[str]]] = {}
-    live_weeks = {"Week 2", "Week 3", "Week 4", "Week 6", "Week 7", "Week 8"}
     for meta in days_meta:
-        label = week_label_for_activity_date(meta.activity_date)
-        if label in live_weeks and meta.day_number % 7 == 3:
+        if meta.day_number == SC001_ZOOM_LIVE_DAY:
             out[meta.day_number] = ([live_id], ["live"])
-        if label == "Week 5" and meta.day_number % 9 == 0:
+        elif meta.day_number == SC001_ZOOM_RECORDING_DAY:
             out[meta.day_number] = ([rec_id], ["recording"])
-    # Ensure Early Bird live on day 1
-    out[1] = ([live_id], ["live"])
     return out
 
 
@@ -270,7 +268,13 @@ ATHLETE2_STREAK_BREAK_BEFORE_10 = 55  # miss day 59 breaks rebuild before day-10
 
 
 def _athlete2_shots(day_number: int, week_label: str, goal_total: int) -> int:
-    """Lower irregular totals — boundary tests per week."""
+    """Lower irregular totals — boundary tests per week.
+
+    Intended Perfect Week pass weeks must meet Production 057 daily minimum
+    (ceil(WAS weekly goal / 7) = 191), not the softer offline day-share floor.
+    """
+    from .constants import PRODUCTION_PERFECT_WEEK_DAILY_MINIMUM
+
     if day_number in ATHLETE2_MISS_DAYS:
         return 0
     base = 95 + (day_number * 11) % 67
@@ -282,9 +286,8 @@ def _athlete2_shots(day_number: int, week_label: str, goal_total: int) -> int:
     }
     base += boosts.get(week_label, 0)
     if week_label == ATHLETE2_RECOVERY_WEEK:
-        weekly_est = estimate_weekly_goal_shots(goal_total, week_label)
-        daily_floor = max(1, (weekly_est + 6) // 7)
-        return daily_floor + (day_number % 5) * 4
+        # Every official day must clear Production daily minimum (191).
+        return PRODUCTION_PERFECT_WEEK_DAILY_MINIMUM + (day_number % 5) * 4
     if week_label == "Week 6":
         weekly_est = estimate_weekly_goal_shots(goal_total, week_label)
         return max(80, weekly_est // 7 - 3)
@@ -382,8 +385,7 @@ def build_athlete2_recovery_scenario(
 
     video_assign = _athlete2_video_days(days_meta)
     video_day_set = frozenset(video_assign.values())
-    live_id, rec_id = zoom_list[0]["record_id"], zoom_list[1]["record_id"]
-    missed_live_week = "Week 4"
+    live_id, _rec_id = zoom_list[0]["record_id"], zoom_list[1]["record_id"]
     day_plans: list[Any] = []
 
     for meta in days_meta:
@@ -407,12 +409,14 @@ def build_athlete2_recovery_scenario(
         shots = _athlete2_shots(n, label, goal_total_shots)
         z_ids: list[str] = []
         z_modes: list[str] = []
-        if label == "Week 7" and n == 53:
+        # Miss Week 1 Introduction Zoom (fail_required_zoom); live Week 7 Motivation for recovery PW.
+        if n == SC001_ZOOM_RECORDING_DAY:
             z_ids, z_modes = [live_id], ["live"]
-        if label == "Week 5" and n == 39:
-            z_ids, z_modes = [rec_id], ["recording"]
-        if label == missed_live_week:
-            gate_notes.append(f"Week 4: missed required live Zoom (Athlete 2)")
+            gate_notes.append(
+                f"Week 7 day {n}: live Zoom for recovery Perfect Week (Athlete 2)"
+            )
+        if label == "Week 1":
+            gate_notes.append("Week 1: missed required Zoom (Athlete 2)")
 
         timing = SubmissionTiming.SAME_DAY.value
         write_on = n
@@ -481,14 +485,11 @@ def build_athlete2_recovery_scenario(
 # ---------------------------------------------------------------------------
 
 def _athlete3_daily_floor(week_label: str, goal_total: int) -> int:
-    weekly_est = estimate_weekly_goal_shots(goal_total, week_label)
-    official_days = sum(
-        1
-        for meta in simulation_days()
-        if week_label_for_activity_date(meta.activity_date) == week_label
-    )
-    divisor = official_days if official_days else 7
-    return max(1, (weekly_est + divisor - 1) // divisor)
+    """Daily floor for Edge intended-pass weeks — Production 057 ceil(weekly/7)."""
+    from .constants import PRODUCTION_PERFECT_WEEK_DAILY_MINIMUM
+
+    del week_label, goal_total
+    return PRODUCTION_PERFECT_WEEK_DAILY_MINIMUM
 
 
 def _athlete3_shots(day_number: int, week_label: str, goal_total: int) -> int:
@@ -504,8 +505,7 @@ def _athlete3_shots(day_number: int, week_label: str, goal_total: int) -> int:
         return max(70, 110 + (day_number * 13) % 58)
 
     if week_label == "Week 8":
-        if day_number == 66:
-            return daily_floor + 2
+        # Keep daily minimum satisfied so the documented failure stays video/homework.
         return daily_floor + 1
 
     if week_label == "Week 4" and day_number == 34:
@@ -624,12 +624,11 @@ def build_athlete3_edge_scenario(
 
         z_ids: list[str] = []
         z_modes: list[str] = []
-        if n == 27:
+        # Production: one live (Week 1) + one recording makeup (Week 7) — no Bonus 2/3.
+        if n == SC001_ZOOM_LIVE_DAY:
             z_ids, z_modes = [live_id], ["live"]
-        if n == 48:
+        if n == SC001_ZOOM_RECORDING_DAY:
             z_ids, z_modes = [rec_id], ["recording"]
-        if n == 50:
-            z_ids, z_modes = [live_id], ["live"]
 
         plan = write_day_from_template(
             meta=meta,

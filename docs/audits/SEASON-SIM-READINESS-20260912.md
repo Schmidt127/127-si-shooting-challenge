@@ -1,4 +1,4 @@
-# Season Sim Readiness — 2026-09-12
+﻿# Season Sim Readiness — 2026-09-12
 
 **Backlog:** SC-SEASON-SIM-001  
 **Branch context:** `chore/sim-window-apr25-jun30-67day`  
@@ -12,7 +12,7 @@
 |------|--------|
 | Calendar / window | **READY** — Apr 25–Jun 30 2027, **67** days, **10** challenge weeks |
 | Active PHA | **READY** — **18** live (not the stale PHA=4 blocker) |
-| Oracle | **READY** — perfect-season XP **5340** → Level **G.O.A.T.**; matches dry-run |
+| Oracle | **READY** — perfect-season XP **4910** → Level **G.O.A.T.** (Zoom XP **90**); matches dry-run; obsolete 7-live **5340** retired |
 | Season Sim formula gates | **ACTIVE** on Production — restore after run / if deferred |
 | Simulation executed? | **No** |
 | **Execute** | **NOT READY** until (a) Mike phrase + (b) Production **057 v2.7** |
@@ -57,7 +57,7 @@ Late homework: normal XP if Satisfactory; Perfect Week requires Week End cutoff 
 
 | Metric | Value |
 |--------|------:|
-| `EXPECTED PERFECT-SEASON XP` | **5340** |
+| `EXPECTED PERFECT-SEASON XP` | **4910** |
 | Final level | **G.O.A.T.** |
 | Window days | 67 |
 | Source | `tools/season_simulation/expected_perfect_season_xp.json` |

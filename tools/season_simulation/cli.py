@@ -194,7 +194,12 @@ def _client(args: argparse.Namespace, *, allow_writes: bool) -> AirtableClient:
 
 def cmd_preflight(args: argparse.Namespace) -> int:
     client = _client(args, allow_writes=False)
-    report = run_preflight(client)
+    report = run_preflight(
+        client,
+        acknowledge_clock_override=bool(args.acknowledge_clock_override),
+        simulation_id=args.run_id or None,
+        registry_dir=Path(args.registry_dir),
+    )
     paths = write_preflight_reports(report, Path(args.out_dir))
     print(report.summary_text())
     print(f"Wrote {paths['json']}")

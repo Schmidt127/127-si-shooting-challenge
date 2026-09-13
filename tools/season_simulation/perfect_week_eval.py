@@ -14,7 +14,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Sequence
 
-from .constants import SAFE_EMAIL_RECIPIENT
+from .constants import (
+    PRODUCTION_PERFECT_WEEK_REQUIRED_DAILY_COUNT,
+    PRODUCTION_WAS_WEEKLY_GOAL_SHOTS,
+    SAFE_EMAIL_RECIPIENT,
+)
 from .scenario_base import (
     AthleteScenario,
     DayPlan,
@@ -104,10 +108,18 @@ def _effective_video_minimum(submit_days: int, official_days: int) -> int:
     return PERFECT_WEEK_VIDEO_MINIMUM
 
 
-def _daily_shot_floor(weekly_goal: int, official_days: int) -> float:
-    """Daily minimum = normal weekly target / 7 (unchanged on partial weeks)."""
-    # Prefer full-week divisor so partial weeks keep the same daily floor.
-    return weekly_goal / 7 if official_days else 0.0
+def _daily_shot_floor(weekly_goal: int, official_days: int) -> int:
+    """Match Automation 057: Math.ceil(weeklyGoal / requiredDailyCount).
+
+    Production uses WAS Weekly Goal Shots Target (≈1334 for 9–12 / 12k) and
+    always divides by 7 — partial Week 9 keeps the same daily floor.
+    """
+    del official_days  # 057 always uses requiredDailyCount=7
+    goal = int(weekly_goal or PRODUCTION_WAS_WEEKLY_GOAL_SHOTS)
+    return max(
+        1,
+        -(-goal // PRODUCTION_PERFECT_WEEK_REQUIRED_DAILY_COUNT),  # ceil div
+    )
 
 
 def _partial_week_shot_target(normal_weekly_target: int, official_days: int) -> int:
@@ -144,17 +156,13 @@ def evaluate_perfect_week(
     miss_days = int(bucket.get("miss_days") or 0)
     weekly_total = int(bucket.get("weekly_shots") or 0)
     video_count = int(bucket.get("video_count") or 0)
-    season_days = len(simulation_days())
-    # Daily minimum = Normal Weekly / 7 = season_goal / season_days.
-    # Integer shot totals meet the floor when >= floor(exact share).
-    exact_daily = (
-        scenario.goal_total_shots / season_days if season_days else 0.0
-    )
-    daily_floor = int(exact_daily)  # e.g. floor(12000/67) = 179
+    # Align with live WAS Weekly Goal Shots Target used by 057 (not day-share estimate).
+    weekly_goal = PRODUCTION_WAS_WEEKLY_GOAL_SHOTS
     if 0 < official_days < 7:
-        goal_est = max(1, round(exact_daily * official_days))
+        goal_est = _partial_week_shot_target(weekly_goal, official_days)
     else:
-        goal_est = estimate_weekly_goal_shots(scenario.goal_total_shots, week_label)
+        goal_est = weekly_goal
+    daily_floor = _daily_shot_floor(weekly_goal, official_days)
     daily_shots = list(bucket.get("daily_shots") or [])
 
     reasons: list[str] = []

@@ -1,4 +1,4 @@
-# Perfect Week homework timing — Week End Saturday boundary
+﻿# Perfect Week homework timing — Week End Saturday boundary
 
 **Date:** 2026-09-12  
 **Base:** Production `appn84sqPw03zEbTT`  
@@ -46,4 +46,4 @@ Perfect-athlete (18 HW Satisfactory within each Week End Saturday):
 
 - Perfect Weeks: **10** (Early Bird + Weeks 1–9)
 - Perfect Week XP: **1000** (unchanged by this timing fix)
-- Season Lifetime XP total is owned by the **67-day** oracle in PR #529 (**5340**), not the prior 61-day **5000** figure
+- Season Lifetime XP total is owned by the **67-day** oracle in PR #529 (**4910**), not the prior 61-day **5000** figure

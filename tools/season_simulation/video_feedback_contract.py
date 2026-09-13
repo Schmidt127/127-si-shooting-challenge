@@ -51,7 +51,10 @@ def sim_video_upload_attachment(
     source_attachment_id: str,
     filename: str,
 ) -> list[dict[str, Any]]:
-    """Submission.Video Upload shape — id must match asset Source Attachment ID."""
+    """Offline-only Submission.Video Upload shape (invalid for live Airtable writes).
+
+    Live Season Sim creates the video pipeline without attachment objects.
+    """
     return [
         {
             "id": source_attachment_id,
@@ -62,6 +65,7 @@ def sim_video_upload_attachment(
 
 
 def sim_airtable_attachment(filename: str) -> list[dict[str, Any]]:
+    """Offline-only Submission Assets.Airtable Attachment (invalid for live writes)."""
     return [{"url": SIM_VIDEO_PLACEHOLDER_URL, "filename": filename}]
 
 
@@ -73,9 +77,15 @@ def build_video_asset_create_fields(
     enrollment_id: str,
     source_attachment_id: str,
     filename: str,
+    include_synthetic_attachments: bool = False,
 ) -> dict[str, Any]:
-    """Submission Asset fields at create (013-compatible; pre-VF back-link)."""
-    return {
+    """Submission Asset fields at create (013-compatible; pre-VF back-link).
+
+    Live Season Sim omits ``Airtable Attachment`` — placeholder URLs are rejected
+    by the Airtable API. Offline fixtures may pass
+    ``include_synthetic_attachments=True``.
+    """
+    fields: dict[str, Any] = {
         "Asset Label": f"{marker}|VIDEO|D{day_number:02d}",
         "Asset Purpose": "Video For Feedback",
         "Asset Slot": "VIDEO",
@@ -84,11 +94,13 @@ def build_video_asset_create_fields(
         "Source Attachment ID": source_attachment_id,
         "Submission - Linked": [submission_id],
         "Enrollment - Linked": [enrollment_id],
-        "Airtable Attachment": sim_airtable_attachment(filename),
         "Send to Make Trigger": False,
         "Reviewer Access Token": SIM_VIDEO_REVIEWER_ACCESS_TOKEN,
         "Upload Status": "Uploaded",
     }
+    if include_synthetic_attachments:
+        fields["Airtable Attachment"] = sim_airtable_attachment(filename)
+    return fields
 
 
 def build_video_feedback_create_fields(
@@ -255,8 +267,18 @@ def validate_073_eligibility(
         errors.append("Video Feedback Week lookup is blank.")
     if not _truthy(sub.get("Count This Submission?")):
         errors.append("Linked Submission is not countable/current.")
-    if _attachment_count(sub.get("Video Upload")) == 0:
-        errors.append("Linked Submission has no Video Upload.")
+    # Live Season Sim omits Video Upload attachment objects (API rejects placeholders).
+    # Accept deterministic Source Attachment ID + video asset purpose/slot instead.
+    has_video_upload = _attachment_count(sub.get("Video Upload")) > 0
+    has_sim_video_provenance = (
+        bool(_text(asset.get("Source Attachment ID")))
+        and _text(asset.get("Asset Purpose")) == "Video For Feedback"
+        and _text(asset.get("Asset Slot")) == "VIDEO"
+    )
+    if not has_video_upload and not has_sim_video_provenance:
+        errors.append(
+            "Linked Submission has no Video Upload and asset lacks Season Sim video provenance."
+        )
 
     activity_raw = sub.get("Activity Date")
     if not activity_raw:

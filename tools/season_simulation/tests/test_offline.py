@@ -547,9 +547,9 @@ class TestScenario(unittest.TestCase):
         s = self._scenario(2)
         self.assertEqual(s.zoom_selected[0]["record_id"], "recZ1")
         z12 = next(d for d in s.days if d.day_number == 12)
-        z40 = next(d for d in s.days if d.day_number == 40)
+        z53 = next(d for d in s.days if d.day_number == 53)
         self.assertEqual(z12.zoom_meeting_ids, ["recZ1"])
-        self.assertEqual(z40.zoom_meeting_ids, ["recZ2"])
+        self.assertEqual(z53.zoom_meeting_ids, ["recZ2"])
 
     def test_recipient_on_emails(self):
         s = self._scenario()

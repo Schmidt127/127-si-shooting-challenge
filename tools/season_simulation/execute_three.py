@@ -9,7 +9,7 @@ Stages (ordered):
   E  — Reconcile hooks (registry vs Airtable — Agent 3)
   F  — Formula / clock verification hooks
   G  — Email arm verification hooks (no send)
-  H  — Cleanup registration hooks (pre-final)
+  H  — Post-cascade hooks (read-only cleanup preview — not Production delete)
   Z  — Formula restore hook
   Final — Report + registry persist
 
@@ -37,8 +37,16 @@ from .formula_lifecycle import (
     snapshot_formulas,
     stage_f_formula_verify_hook,
 )
+from .live_write_contract import (
+    LiveWriteContractError,
+    assert_live_write_contract_pass,
+    build_contract_validation_for_client,
+)
 from .cascade_settlement import stage_d_settlement_hook, stage_e_reconcile_hook
-from .cleanup import stage_h_cleanup_preview_hook
+from .cleanup import stage_h_post_cascade_hooks
+from .downstream_settlement import stage_d_downstream_settlement_hook
+from .business_reconciliation import stage_e2_business_success_hook
+from .expectations_matrix import build_athlete_expectation_matrix
 from .rearm_submission_xp import run_rearm_submission_xp
 from .run_registry import save_registry
 from .writer import (
@@ -253,6 +261,35 @@ def run_execute_three(
                 "status": "passed",
                 "formula_snapshot": snapshot_result,
             }
+            # Hard gate: live write contract must PASS before any mutation.
+            # No warning-only bypass — fail closed.
+            try:
+                contract = build_contract_validation_for_client(
+                    client,
+                    run_id=run_id,
+                    offline_fixture=offline_fixture,
+                    acknowledge_clock_override=acknowledge_clock_override,
+                    registry_dir=registry_dir,
+                )
+                payload["stages"]["0_live_write_contract"] = contract.to_dict()
+                assert_live_write_contract_pass(contract)
+            except LiveWriteContractError as exc:
+                payload["gates_passed"] = False
+                payload["errors"].append(str(exc))
+                payload["stages"]["0_live_write_contract"] = exc.report.to_dict()
+                # Force no writes even if caller set allow_writes.
+                writes_allowed = False
+                return payload
+            except Exception as exc:  # noqa: BLE001
+                payload["gates_passed"] = False
+                payload["errors"].append(f"Live write contract error: {exc}")
+                payload["stages"]["0_live_write_contract"] = {
+                    "ok": False,
+                    "status": "FAIL",
+                    "error": str(exc),
+                }
+                writes_allowed = False
+                return payload
         else:
             payload["gates_passed"] = False
             payload["stages"]["0_auth"] = {
@@ -398,14 +435,16 @@ def run_execute_three(
                     payload["errors"].append(
                         f"{profile}: " + "; ".join(str(e) for e in writer_result["errors"][:5])
                     )
-                    profile_payload["H_cleanup_hooks"] = stage_h_cleanup_preview_hook(
+                    profile_payload["H_post_cascade_hooks"] = stage_h_post_cascade_hooks(
                         run_id=run_id,
                         registry_dir=registry_dir,
                         client=client,
                         profile=profile,
                     )
                     payload["profile_results"][profile] = profile_payload
-                    payload["stages"]["failure_cleanup_preview"] = profile_payload["H_cleanup_hooks"]
+                    payload["stages"]["failure_cleanup_preview"] = profile_payload[
+                        "H_post_cascade_hooks"
+                    ]
                     break
                 reg.status = "running" if writes_allowed and execute else "planned"
                 save_registry(reg, registry_dir)
@@ -416,14 +455,16 @@ def run_execute_three(
                 save_registry(reg, registry_dir)
                 payload["errors"].append(f"{profile}: {exc}")
                 # Failure path: always run read-only cleanup preview + continue to Stage Z.
-                profile_payload["H_cleanup_hooks"] = stage_h_cleanup_preview_hook(
+                profile_payload["H_post_cascade_hooks"] = stage_h_post_cascade_hooks(
                     run_id=run_id,
                     registry_dir=registry_dir,
                     client=client,
                     profile=profile,
                 )
                 payload["profile_results"][profile] = profile_payload
-                payload["stages"]["failure_cleanup_preview"] = profile_payload["H_cleanup_hooks"]
+                payload["stages"]["failure_cleanup_preview"] = profile_payload[
+                    "H_post_cascade_hooks"
+                ]
                 break
 
             # Stage D — observed-state XP settlement (live execute only).
@@ -460,6 +501,27 @@ def run_execute_three(
                         poll_interval_s=DEFAULT_PROFILE_SETTLEMENT_POLL_S,
                     )
                     settlement["rearm_applied"] = True
+                # Hard HW / Perfect Week / threshold / streak settlement.
+                matrix = build_athlete_expectation_matrix(scenario)
+                expected_streaks = list(matrix.expected_streak_achievements)
+                downstream = stage_d_downstream_settlement_hook(
+                    client,
+                    reg,
+                    run_id=run_id,
+                    profile=profile,
+                    expected_perfect_weeks=matrix.expected_perfect_week_count,
+                    expected_threshold_events=len(matrix.expected_weekly_threshold_awards),
+                    expected_streak_thresholds=expected_streaks,
+                    timeout_s=DEFAULT_PROFILE_SETTLEMENT_TIMEOUT_S,
+                    poll_interval_s=DEFAULT_PROFILE_SETTLEMENT_POLL_S,
+                )
+                settlement["downstream"] = downstream
+                if not downstream.get("complete"):
+                    settlement["complete"] = False
+                    settlement["status"] = "failed"
+                    settlement.setdefault("errors", []).extend(
+                        downstream.get("errors") or ["downstream settlement failed"]
+                    )
                 profile_payload["D_settlement"] = settlement
             else:
                 profile_payload["D_settlement"] = {
@@ -489,22 +551,43 @@ def run_execute_three(
             profile_payload["E_reconcile"] = reconcile
             reg.last_completed_step = "E_reconcile"
 
-            if writes_allowed and execute and not reconcile.get("complete"):
+            # Stage E2 — business-success gate (cascade_complete alone never PASSes).
+            matrix_for_biz = build_athlete_expectation_matrix(scenario)
+            business = stage_e2_business_success_hook(
+                profile=profile,
+                matrix=matrix_for_biz,
+                cascade_complete=bool(reconcile.get("complete")),
+                planned=not (writes_allowed and execute),
+            )
+            profile_payload["E2_business_success"] = business
+
+            if writes_allowed and execute and (
+                not reconcile.get("complete") or not business.get("pass")
+            ):
                 reg.status = "paused"
-                reg.pause_reason = "cascade_reconciliation_incomplete"
-                save_registry(reg, registry_dir)
-                payload["errors"].append(
-                    f"{profile}: cascade incomplete — "
-                    + "; ".join(reconcile.get("errors") or ["settlement failed"])
+                reg.pause_reason = (
+                    "cascade_reconciliation_incomplete"
+                    if not reconcile.get("complete")
+                    else "business_success_reconciliation_failed"
                 )
-                profile_payload["H_cleanup_hooks"] = stage_h_cleanup_preview_hook(
+                save_registry(reg, registry_dir)
+                fail_errs = list(reconcile.get("errors") or []) + list(
+                    business.get("errors") or []
+                )
+                payload["errors"].append(
+                    f"{profile}: reconciliation FAIL — "
+                    + "; ".join(fail_errs or ["expectations unmet"])
+                )
+                profile_payload["H_post_cascade_hooks"] = stage_h_post_cascade_hooks(
                     run_id=run_id,
                     registry_dir=registry_dir,
                     client=client,
                     profile=profile,
                 )
                 payload["profile_results"][profile] = profile_payload
-                payload["stages"]["failure_cleanup_preview"] = profile_payload["H_cleanup_hooks"]
+                payload["stages"]["failure_cleanup_preview"] = profile_payload[
+                    "H_post_cascade_hooks"
+                ]
                 # Stop before the next profile floods Automations 010/053 further.
                 break
 
@@ -516,7 +599,7 @@ def run_execute_three(
             profile_payload["G_email_verify"] = _stage_stub(
                 "G_email_verify", allow_writes=writes_allowed, profile=profile
             )
-            profile_payload["H_cleanup_hooks"] = stage_h_cleanup_preview_hook(
+            profile_payload["H_post_cascade_hooks"] = stage_h_post_cascade_hooks(
                 run_id=run_id,
                 registry_dir=registry_dir,
                 client=client,
@@ -524,7 +607,7 @@ def run_execute_three(
             )
             if writes_allowed and execute:
                 reg.status = "complete"
-                reg.last_completed_step = "H_cleanup_hooks"
+                reg.last_completed_step = "H_post_cascade_hooks"
             save_registry(reg, registry_dir)
             payload["profile_results"][profile] = profile_payload
 
@@ -538,14 +621,19 @@ def run_execute_three(
                 snapshot_bundle=(snapshot_result or {}).get("bundle"),
             )
 
-        profiles_complete = sum(
+        profiles_business = sum(
             1
             for pr in payload["profile_results"].values()
-            if (pr.get("E_reconcile") or {}).get("complete")
+            if (pr.get("E2_business_success") or {}).get("pass")
             or (
                 not execute
                 and (pr.get("B_create") or {}).get("mode") == "dry-plan"
             )
+        )
+        profiles_cascade = sum(
+            1
+            for pr in payload["profile_results"].values()
+            if (pr.get("E_reconcile") or {}).get("complete")
         )
         writer_only_complete = sum(
             1
@@ -554,24 +642,36 @@ def run_execute_three(
         )
         cascade_ok = (
             bool(execute and writes_allowed and payload["gates_passed"])
-            and profiles_complete == len(PROFILE_ORDER)
+            and profiles_cascade == len(PROFILE_ORDER)
             and not payload["errors"]
         )
+        business_ok = (
+            bool(execute and writes_allowed and payload["gates_passed"])
+            and profiles_business == len(PROFILE_ORDER)
+            and not payload["errors"]
+            and all(
+                (pr.get("E2_business_success") or {}).get("pass")
+                for pr in payload["profile_results"].values()
+            )
+        )
         payload["stages"]["Final"] = {
-            "status": "complete" if cascade_ok else ("partial" if payload["profile_results"] else "failed"),
+            "status": "complete" if business_ok else ("partial" if payload["profile_results"] else "failed"),
             "executed": bool(execute and writes_allowed and payload["gates_passed"]),
             "profile_count": len(payload["profile_results"]),
-            "profiles_cascade_complete": profiles_complete,
+            "profiles_cascade_complete": profiles_cascade,
+            "profiles_business_success": profiles_business,
             "profiles_writer_complete": writer_only_complete,
             "cascade_complete": cascade_ok,
+            "business_success": business_ok,
             "truth": (
-                "all_profiles_xp_reconciled"
-                if cascade_ok
-                else "writer_complete_is_not_simulation_success"
+                "business_success_requires_expectation_match"
+                if business_ok
+                else "cascade_complete_is_not_simulation_pass"
             ),
             "stage_z_required": stage_z_required,
         }
         payload["cascade_complete"] = cascade_ok
+        payload["business_success"] = business_ok
 
         payload["airtable_writes_performed"] = _count_client_writes(client) - writes_before
 

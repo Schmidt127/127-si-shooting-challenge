@@ -1,4 +1,4 @@
-# SC-SEASON-SIM-001 — Execution Manifest (READY FOR EXECUTE — NOT AUTHORIZED)
+﻿# SC-SEASON-SIM-001 — Execution Manifest (READY FOR EXECUTE — NOT AUTHORIZED)
 
 | | |
 |---|---|
@@ -7,7 +7,7 @@
 | **Base** | Production `appn84sqPw03zEbTT` only — **no DEV environment** |
 | **Athletes** | 3 disposable VERIFY profiles (Perfect / Recovery / Edge) |
 | **Window** | 2027-04-25 → 2027-06-30 11:59 PM America/Denver inclusive (**67** days) |
-| **Oracle** | Perfect-season XP **5340** → Level **G.O.A.T.** (matches dry-run) |
+| **Oracle** | Perfect-season XP **4910** → Level **G.O.A.T.** (matches dry-run) |
 | **Authorize command** | Mike says exactly: **`RUN 3-ATHLETE SEASON SIMULATION`** |
 | **This document does NOT authorize execute** | Pending gates in §0 |
 
@@ -19,7 +19,7 @@
 |------|---------------------|
 | **(a)** Mike authorization phrase `RUN 3-ATHLETE SEASON SIMULATION` | **Required** — not yet given |
 | **(b)** Production automation **057** must be **v2.7** | **Blocked** — live **v2.6** as of 2026-09-12 audit; GitHub has v2.7 ([paste checklist](./057-v2.7-perfect-week-homework-week-end-PASTE.md)) |
-| Oracle **5340** vs dry-run | **Match** |
+| Oracle **4910** vs dry-run | **Match** |
 | Active PHA | **18** (Early Bird + Weeks 1–8 × 2); Week 9 = 0 — **not** the old PHA=4 blocker |
 | Simulation executed? | **No** |
 
@@ -101,7 +101,7 @@ Historical **SC-SEASON-SIM-002** (`athlete1_sc002` mixed path) remains **COMPLET
 | Command | Result |
 |---------|--------|
 | Offline SC-001 + offline suites | PASS (see `tools/season_simulation/tests/`) |
-| `python -m season_simulation dry-run-three` | **PASS** — oracle **5340** / G.O.A.T. |
+| `python -m season_simulation dry-run-three` | **PASS** — oracle **4910** / G.O.A.T. |
 
 Reports: `tools/season_simulation/reports/sc001-dry-run-latest.{json,md}`  
 Readiness: [`../audits/SEASON-SIM-READINESS-20260912.md`](../audits/SEASON-SIM-READINESS-20260912.md)
@@ -120,7 +120,7 @@ Readiness: [`../audits/SEASON-SIM-READINESS-20260912.md`](../audits/SEASON-SIM-R
 | Shot milestones | through 18000 (6) perfect path | lower volume | edge path |
 | Streak awards (XP) | 3–60 (9) | recovery path | edge path |
 | Weekly threshold awards | 26 (perfect oracle) | recovery path | edge path |
-| Perfect-season XP (oracle) | **5340** → **G.O.A.T.** | — | — |
+| Perfect-season XP (oracle) | **4910** → **G.O.A.T.** | — | — |
 
 Live numbers may shift slightly when weekly goals resolve from Airtable Goal Record + Weeks.
 

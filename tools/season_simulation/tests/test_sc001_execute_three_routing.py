@@ -357,7 +357,7 @@ class TestExecuteThreeStageZFinally(unittest.TestCase):
             self.assertTrue(result["gates_passed"])
             self.assertIn("Z_formula_restore", result["stages"])
             first = next(iter(result["profile_results"].values()))
-            self.assertIn("H_cleanup_hooks", first)
+            self.assertIn("H_post_cascade_hooks", first)
             self.assertIn("failure_cleanup_preview", result["stages"])
 
 

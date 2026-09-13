@@ -237,21 +237,26 @@ def three_athlete_registry_run_ids(shared_run_id: str) -> list[str]:
     return [shared_run_id] + [f"{shared_run_id}__{suffix}" for suffix in profile_suffixes]
 
 
-def stage_h_cleanup_preview_hook(
+def stage_h_post_cascade_hooks(
     *,
     run_id: str,
     registry_dir: Path,
     client: Any | None = None,
     profile: str | None = None,
 ) -> dict[str, Any]:
-    """Stage H hook — read-only cleanup preview for shared + profile registries."""
+    """Stage H — post-cascade hooks (read-only preview; not Production cleanup)."""
     preview = cleanup_preview_three(
         run_id=run_id,
         registry_dir=registry_dir,
         client=client,
     )
     return {
-        "stage": "H_cleanup_hooks",
+        "stage": "H_post_cascade_hooks",
+        "note": (
+            "Read-only preview only — does NOT delete Production records, "
+            "does NOT restore formula gates. Cleanup and formula restoration "
+            "remain explicit authorized stages (cleanup CLI / Stage Z)."
+        ),
         "profile": profile,
         "status": "ok" if not preview.errors else "failed",
         "writes": False,
@@ -259,6 +264,10 @@ def stage_h_cleanup_preview_hook(
         "plan_total": preview.plan.get("total_records", 0),
         "errors": list(preview.errors),
     }
+
+
+# Back-compat alias (name was misleading — this never cleaned Production).
+stage_h_cleanup_preview_hook = stage_h_post_cascade_hooks
 
 
 def build_three_athlete_cleanup_plan(

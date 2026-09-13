@@ -198,6 +198,9 @@ class TestWriterFullCreate(unittest.TestCase):
         self.assertEqual(ef["School Year"], "2026-2027")
         self.assertEqual(ef["Athlete"], [result.registry.athlete_id])
         self.assertEqual(ef["Parent Email"], SAFE_EMAIL_RECIPIENT)
+        self.assertEqual(ef["Athlete Email"], SAFE_EMAIL_RECIPIENT)
+        self.assertNotIn("Parent Email - Cleaned", ef)
+        self.assertNotIn("Athlete Email - Cleaned", ef)
 
         subs = list(self.client.tables.get("Submissions", {}).values())
         self.assertEqual(len(subs), SIMULATION_DAY_COUNT - 3)  # misses
@@ -644,6 +647,135 @@ class TestWriterFullCreate(unittest.TestCase):
         self.assertTrue(cleaned.get("Build Daily Email Now?"))
         self.assertNotIn("Submission Stat Mode", cleaned)
         self.assertNotIn("Reviewer File URL", cleaned)
+
+    def test_enrollment_create_payload_excludes_computed_email_fields(self):
+        """Enrollment create must write raw emails only — never formula/lookup/rollup/createdTime.
+
+        Live Production: Parent Email / Athlete Email are writable; *-Cleaned are formulas.
+        """
+        # Live-schema computed / read-only fields that must never appear on Enrollment create.
+        enrollment_never_write = frozenset(
+            {
+                "Parent Email - Cleaned",  # formula
+                "Athlete Email - Cleaned",  # formula
+                "Full Athlete Name",  # formula
+                "Full Athlete Name - Backward",  # formula
+                "Record Id",  # formula
+                "Lifetime XP Total",  # formula
+                "Enrollment Key",  # formula
+                "Grade Band Label",  # lookup
+                "School Name Lookup",  # lookup
+                "School Mascot Lookup",  # lookup
+                "Athlete ID Lookup",  # lookup
+                "Athlete Match Key Lookup",  # lookup
+                "Total Makes Submitted",  # rollup
+                "Total 2PT Attempted",  # rollup
+                "Total 2PT Made",  # rollup
+                "Total 3PT Attempted",  # rollup
+                "Total 3PT Made",  # rollup
+                "Total FT Attempted",  # rollup
+                "Total FT Made",  # rollup
+                "Overall FG Attempted",  # formula
+                "Overall FG Made",  # formula
+                "Overall FG %",  # formula
+                "Overall 2PT %",  # formula
+                "Overall 3PT %",  # formula
+                "Overall FT %",  # formula
+                "Parent Full Name Submitted",  # formula
+                "Welcome Email To",  # formula
+                "Grade Band Refresh Needed",  # formula
+                "Registered At",  # createdTime
+                "Created Time",
+                "Last Modified Time",
+            }
+        )
+        self.assertIn("Parent Email - Cleaned", NEVER_WRITE_FIELDS)
+        self.assertIn("Athlete Email - Cleaned", NEVER_WRITE_FIELDS)
+
+        # Intended-write plan (execute.py) must stay clean.
+        writes = build_intended_writes(self.scenario, self.clock, ctx=self.ctx)
+        enr_writes = [w for w in writes if w.get("table") == "Enrollments"]
+        self.assertTrue(enr_writes)
+        for w in enr_writes:
+            fields = w.get("fields") or {}
+            for banned in enrollment_never_write:
+                self.assertNotIn(banned, fields, banned)
+            self.assertEqual(fields.get("Parent Email"), SAFE_EMAIL_RECIPIENT)
+            self.assertEqual(fields.get("Athlete Email"), SAFE_EMAIL_RECIPIENT)
+
+        # Defensive strip if a caller still passes formula email fields.
+        stripped = filter_writable_fields(
+            {
+                "Parent Email": SAFE_EMAIL_RECIPIENT,
+                "Parent Email - Cleaned": SAFE_EMAIL_RECIPIENT,
+                "Athlete Email": SAFE_EMAIL_RECIPIENT,
+                "Athlete Email - Cleaned": SAFE_EMAIL_RECIPIENT,
+            }
+        )
+        self.assertEqual(stripped.get("Parent Email"), SAFE_EMAIL_RECIPIENT)
+        self.assertEqual(stripped.get("Athlete Email"), SAFE_EMAIL_RECIPIENT)
+        self.assertNotIn("Parent Email - Cleaned", stripped)
+        self.assertNotIn("Athlete Email - Cleaned", stripped)
+
+        # Live writer create path must not persist cleaned formula fields.
+        result = self._writer().run()
+        self.assertEqual(result.status, "complete")
+        enroll = self.client.get_record("Enrollments", result.registry.enrollment_id)
+        ef = enroll["fields"]
+        for banned in enrollment_never_write:
+            self.assertNotIn(banned, ef, banned)
+        self.assertEqual(ef.get("Parent Email"), SAFE_EMAIL_RECIPIENT)
+        self.assertEqual(ef.get("Athlete Email"), SAFE_EMAIL_RECIPIENT)
+
+    def test_live_writer_video_payloads_omit_synthetic_attachments(self):
+        """Live writer must never POST invalid.example attachment objects.
+
+        Season Sim creates Submission Asset + Video Feedback explicitly; real
+        Airtable attachment uploads are not required (and placeholder URLs fail).
+        """
+        from season_simulation.video_feedback_contract import SIM_VIDEO_PLACEHOLDER_URL
+
+        writes = build_intended_writes(self.scenario, self.clock, ctx=self.ctx)
+        for w in writes:
+            fields = w.get("fields") or {}
+            self.assertNotIn("Video Upload", fields, w.get("dedupe_key"))
+            self.assertNotIn("Airtable Attachment", fields, w.get("dedupe_key"))
+            blob = str(fields)
+            self.assertNotIn(SIM_VIDEO_PLACEHOLDER_URL, blob, w.get("dedupe_key"))
+            self.assertNotIn("invalid.example", blob, w.get("dedupe_key"))
+
+        result = self._writer().run()
+        self.assertEqual(result.status, "complete")
+
+        for sub in self.client.tables.get("Submissions", {}).values():
+            fields = sub["fields"]
+            self.assertNotIn("Video Upload", fields, sub["id"])
+            self.assertNotIn(SIM_VIDEO_PLACEHOLDER_URL, str(fields), sub["id"])
+
+        video_assets = [
+            a
+            for a in self.client.tables.get("Submission Assets", {}).values()
+            if a["fields"].get("Asset Slot") == "VIDEO"
+        ]
+        self.assertGreaterEqual(len(video_assets), 1)
+        for asset in video_assets:
+            fields = asset["fields"]
+            self.assertNotIn("Airtable Attachment", fields, asset["id"])
+            self.assertNotIn(SIM_VIDEO_PLACEHOLDER_URL, str(fields), asset["id"])
+            self.assertTrue(fields.get("Source Attachment ID"), asset["id"])
+            self.assertEqual(fields.get("Asset Purpose"), "Video For Feedback")
+            self.assertEqual(fields.get("Original File Name")[:16], "season-sim-video")
+            self.assertTrue(fields.get("Reviewer Access Token"))
+            self.assertEqual(fields.get("Upload Status"), "Uploaded")
+            self.assertTrue(fields.get("Submission - Linked"))
+            self.assertTrue(fields.get("Enrollment - Linked"))
+
+        vfs = list(self.client.tables.get("Video Feedback", {}).values())
+        self.assertGreaterEqual(len(vfs), 1)
+        for vf in vfs:
+            url = vf["fields"].get("Video URL or Drive Link") or ""
+            self.assertIn("lambda-url.us-east-2.on.aws", url)
+            self.assertNotIn("invalid.example", url)
 
     def test_resume_after_zoom_meetings_before_submissions(self):
         """Mirrors paused run …T202049Z: athlete/enrollment/WAS/zoom exist; day loop pending."""
