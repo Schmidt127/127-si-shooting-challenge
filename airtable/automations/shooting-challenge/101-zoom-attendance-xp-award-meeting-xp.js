@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-09-04
-Last GitHub Update: 2026-09-04
+Last GitHub Update: 2026-09-12 (v6.9 Level Recalc after recording credit)
 
 Purpose:
 Awards Zoom live attendance XP and approved recording half-XP for one meeting
@@ -23,14 +23,18 @@ Create XP Events, Attendees, Week, XP Award Status, Recording Pending Reconcile 
 Notes:
 GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 Production Live script body attested 2026-09-04 as v6.8 (SC-147).
+Paste target for this release: v6.9.
 Do not create Automation 121. Automation 117 remains email-only.
 */
 
 /************************************************************
  * 101 - Zoom Attendance XP - Award Meeting XP
- * Version: v6.8
+ * Version: v6.9
  * Date Written: 2026-05-28
- * Last Updated: 2026-09-04
+ * Last Updated: 2026-09-12
+ * Updated Reason: After recording credit XP create, arm Enrollment
+ * Level Recalc Needed? so 042 re-evaluates Zoom gate with live∪recording
+ * effective count. Total Zoom Attendances stays live-only (do not inflate).
  *
  * PURPOSE
  * - Runs from one Zoom Meetings record.
@@ -47,6 +51,9 @@ Do not create Automation 121. Automation 117 remains email-only.
  *   the same XP Event ID; no XP Event is deleted or replaced.
  *
  * CHANGE HISTORY
+ * - 2026-09-12 v6.9: After recording credit XP create, arm Enrollment
+ *   Level Recalc Needed? so 042 reapplies live∪recording Zoom gate credit.
+ *   Total Zoom Attendances remains the live Attendees count (do not inflate).
  * - 2026-09-04 v6.8: SC-034 — select Zoom Recording XP Percent by Active School
  *   Year (no first-record Config fallback). Recording credit behavior unchanged.
  * - 2026-09-02 v6.8: SC-147 — process ZOOM_RECORDING_CREDIT in the same
@@ -136,7 +143,7 @@ Do not create Automation 121. Automation 117 remains email-only.
 
 const CONFIG = {
   scriptName: "101 - Zoom Attendance XP - Award Meeting XP",
-  version: "v6.8",
+  version: "v6.9",
 
   timeZone: "America/Denver",
   formulaSettlementAttempts: 5,
@@ -1224,6 +1231,21 @@ async function processRecordingCreditsForMeeting({
       result.created += 1;
       result.formulaSignatureMustChange = true;
       result.actionOut = "created_recording_credit";
+      // Recording gate credit does not change live Total Zoom Attendances, so 041
+      // will not queue by fingerprint alone. Arm Level Recalc so 042 re-runs and
+      // applies computeEffectiveZoomAttendanceCount (live ∪ recording).
+      try {
+        const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
+        if (fieldExists(enrollmentsTable, "Level Recalc Needed?")) {
+          await enrollmentsTable.updateRecordAsync(enrollmentId, {
+            "Level Recalc Needed?": true,
+          });
+        }
+      } catch (recalcErr) {
+        result.warnings.push(
+          `Level Recalc arm after recording credit failed: ${recalcErr.message || recalcErr}`
+        );
+      }
     } catch (error) {
       result.warnings.push(
         `Recording XP Event ${sourceKey} create failed: ${error.message || error}`
