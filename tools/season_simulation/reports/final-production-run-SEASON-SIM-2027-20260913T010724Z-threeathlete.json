@@ -1,0 +1,213 @@
+{
+  "report_type": "final-production-run",
+  "backlog_id": "SC-SEASON-SIM-001",
+  "run_id": "SEASON-SIM-2027-20260913T010724Z-threeathlete",
+  "production_base_id": "appn84sqPw03zEbTT",
+  "generated_at": "2026-09-13T01:40:16.898238+00:00",
+  "execution_started_at": "2026-09-13T01:07:24.309825+00:00",
+  "execution_ended_at": "2026-09-13T01:33:41.179Z",
+  "automation_versions": {
+    "053": "v5.6",
+    "076": "v8.15",
+    "101": "v6.9"
+  },
+  "temporary_formula_gates": {
+    "installed_before_execute": true,
+    "verified_match_canonical": true,
+    "fields": [
+      "Activity Date Is Future?",
+      "Submitted Same Day?",
+      "Perfect Week Grace Eligible?"
+    ]
+  },
+  "execution_status": "FAILED_STOPPED_AFTER_ATHLETE1",
+  "business_reconciliation_status": "FAIL",
+  "profiles": {
+    "athlete1_perfect": {
+      "executed": true,
+      "athlete_id": "rec5QYk66wEXMdCNG",
+      "enrollment_id": "recFcH7qLPzzso9s3",
+      "athlete_name": "Sim Perfect",
+      "parent_email": "schmidt@fairfieldbasketballclub.com",
+      "expected": {
+        "total_xp": 4910,
+        "perfect_weeks": 10,
+        "public_level": "G.O.A.T.",
+        "buckets": {
+          "Submission XP": 1340,
+          "Homework XP": 630,
+          "Video XP": 750,
+          "Streak XP": 455,
+          "Weekly Threshold XP": 480,
+          "Perfect Week XP": 1000,
+          "Shot Milestone XP": 165,
+          "Zoom XP": 90
+        },
+        "streak_thresholds": [
+          3,
+          5,
+          7,
+          10,
+          20,
+          30,
+          40,
+          50,
+          60
+        ]
+      },
+      "actual": {
+        "total_xp": 4085,
+        "bucket_total_from_events": 4085,
+        "buckets": {
+          "Submission XP": 1340,
+          "Homework XP": 350,
+          "Video XP": 750,
+          "Streak XP": 260,
+          "Weekly Threshold XP": 130,
+          "Perfect Week XP": 1000,
+          "Shot Milestone XP": 165,
+          "Zoom XP": 90
+        },
+        "xp_event_prefixes": {
+          "WEEKLY_THRESHOLD": 11,
+          "STREAK_XP": 7,
+          "SUBMISSION_XP": 67,
+          "HOMEWORK_XP": 10,
+          "VIDEO_SUBMISSION": 30,
+          "PERFECT_WEEK": 10,
+          "SHOT_MILESTONE": 6,
+          "ZOOM_RECORDING_CREDIT": 1,
+          "ZOOM_ATTEND_BASE": 1
+        },
+        "perfect_weeks_xp_events": 10,
+        "public_level": "All-Star",
+        "level_status": "Gate Blocked",
+        "gate_debug": "Rule=Level 11 Gate | Enabled=Yes | Sub 67/52 | HW 18/18 | Vid 53/24 | Zoom 1/2 | Streak 40/45",
+        "current_streak": 67,
+        "longest_streak": 40,
+        "streak_occurrence_keys": [
+          "streak|recfch7qlpzzso9s3|5-day_streak|2027-04-29",
+          "streak|recfch7qlpzzso9s3|10-day_streak|2027-05-04",
+          "streak|recfch7qlpzzso9s3|3-day_streak|2027-04-27",
+          "streak|recfch7qlpzzso9s3|40-day_streak|2027-06-03",
+          "streak|recfch7qlpzzso9s3|7-day_streak|2027-05-01",
+          "streak|recfch7qlpzzso9s3|30-day_streak|2027-05-24",
+          "streak|recfch7qlpzzso9s3|20-day_streak|2027-05-14"
+        ],
+        "homework": {
+          "registry_count": 18,
+          "was_linked": 18,
+          "awarded": 10,
+          "pending": 8
+        },
+        "email": {
+          "count": 79,
+          "statuses": {
+            "Accepted": 79
+          },
+          "duplicate_handoff_keys": {},
+          "unsafe_recipients": []
+        },
+        "duplicate_xp_source_keys": {}
+      },
+      "bucket_comparison": [
+        {
+          "bucket": "Submission XP",
+          "expected": 1340,
+          "actual": 1340,
+          "delta": 0,
+          "ok": true
+        },
+        {
+          "bucket": "Homework XP",
+          "expected": 630,
+          "actual": 350,
+          "delta": -280,
+          "ok": false
+        },
+        {
+          "bucket": "Video XP",
+          "expected": 750,
+          "actual": 750,
+          "delta": 0,
+          "ok": true
+        },
+        {
+          "bucket": "Streak XP",
+          "expected": 455,
+          "actual": 260,
+          "delta": -195,
+          "ok": false
+        },
+        {
+          "bucket": "Weekly Threshold XP",
+          "expected": 480,
+          "actual": 130,
+          "delta": -350,
+          "ok": false
+        },
+        {
+          "bucket": "Perfect Week XP",
+          "expected": 1000,
+          "actual": 1000,
+          "delta": 0,
+          "ok": true
+        },
+        {
+          "bucket": "Shot Milestone XP",
+          "expected": 165,
+          "actual": 165,
+          "delta": 0,
+          "ok": true
+        },
+        {
+          "bucket": "Zoom XP",
+          "expected": 90,
+          "actual": 90,
+          "delta": 0,
+          "ok": true
+        }
+      ],
+      "pass": false,
+      "failure_reasons": [
+        "total XP expected 4910 actual 4085",
+        "Homework XP expected 630 actual 350 (8 completions still Award Status=Pending)",
+        "Streak XP expected 455 actual 260 (occurrences through 40 only; missing 50/60; Current=67 Longest=40)",
+        "Weekly Threshold XP expected 480 actual 130",
+        "public level expected G.O.A.T. actual All-Star (Gate Blocked)",
+        "Zoom gate effective Rule=Level 11 Gate | Enabled=Yes | Sub 67/52 | HW 18/18 | Vid 53/24 | Zoom 1/2 | Streak 40/45"
+      ]
+    },
+    "athlete2_recovery": {
+      "executed": false,
+      "expected_total_xp": 2305,
+      "expected_perfect_weeks": 1,
+      "actual": null,
+      "pass": false,
+      "failure_reasons": [
+        "Not executed \u2014 harness stopped after athlete1 business FAIL"
+      ]
+    },
+    "athlete3_edge": {
+      "executed": false,
+      "expected_total_xp": 3620,
+      "expected_perfect_weeks": 5,
+      "actual": null,
+      "pass": false,
+      "failure_reasons": [
+        "Not executed \u2014 harness stopped after athlete1 business FAIL"
+      ]
+    }
+  },
+  "tooling_notes": [
+    "Stage E2_business_success did not receive live XP events (reported actual 0); post-run forensic used Enrollment-linked XP Events.",
+    "WAS links were set on all 18 Homework Completions (orchestration fix confirmed).",
+    "No cleanup performed on this run per Mike authorization.",
+    "Prior failed run SEASON-SIM-2027-20260912T222521Z-threeathlete residue remained zero at pre-execute."
+  ],
+  "final_verdict": "FINAL SEASON SIMULATION FAIL \u2014 Perfect athlete Lifetime XP 4085/4910 (HW pending 8/18, streak capped at 40 missing 50/60, weekly thresholds short); Recovery and Edge not executed",
+  "records_preserved": true,
+  "cleanup_performed": false,
+  "production_formulas_restored": true,
+  "production_formulas_restore_verified_no_season_sim": true
+}
